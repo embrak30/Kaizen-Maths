@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Exit Ticket Choice Board</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #172033;
+      --muted: #5f6f86;
+      --panel: rgba(255, 255, 255, 0.92);
+      --line: rgba(255, 255, 255, 0.42);
+      --purple: #6f3fd7;
+      --turquoise: #00a7b5;
+      --blue: #245b95;
+      --gold: #f5c84c;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(0, 203, 214, 0.34), transparent 28rem),
+        radial-gradient(circle at 86% 18%, rgba(124, 75, 214, 0.34), transparent 26rem),
+        linear-gradient(135deg, #233f72 0%, #5b3aa0 50%, #087b8f 100%);
+      overflow-x: hidden;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 18px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 14px;
+    }
+
+    .header {
+      width: min(1160px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .title-block h1 {
+      font-size: clamp(1.7rem, 3vw, 2.7rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
+    }
+
+    .title-block p {
+      margin-top: 6px;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+    }
+
+    .timer-card {
+      min-width: 300px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.14);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(10px);
+    }
+
+    .timer {
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      font-size: clamp(2rem, 4vw, 3.05rem);
+      font-weight: 800;
+      line-height: 1;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.38);
+    }
+
+    .timer.warning { color: #ffb14a; }
+    .timer.done { color: #ff6b6b; }
+
+    .timer-controls,
+    .board-actions {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.52);
+      border-radius: 7px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.14);
+      padding: 9px 14px;
+      font-weight: 750;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.23);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--turquoise), var(--purple));
+    }
+
+    .instruction {
+      width: min(1160px, 100%);
+      margin: 0 auto;
+      padding: 12px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.13);
+      color: rgba(255, 255, 255, 0.92);
+      text-align: center;
+      font-size: 1rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .choice-shell {
+      width: min(1160px, 100%);
+      margin: 0 auto;
+      display: grid;
+      align-items: center;
+    }
+
+    .choice-board {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(58px, 1fr));
+      gap: clamp(8px, 1.5vw, 14px);
+      padding: clamp(14px, 2vw, 24px);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .color-choice {
+      width: clamp(54px, 6.8vw, 82px);
+      aspect-ratio: 1;
+      justify-self: center;
+      border: 3px solid rgba(255, 255, 255, 0.48);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.2), 0 8px 18px rgba(0, 0, 0, 0.28);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .color-choice:hover,
+    .color-choice:focus-visible {
+      transform: translateY(-3px) scale(1.1);
+      border-color: #fff;
+      box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.28), 0 14px 28px rgba(0, 0, 0, 0.34);
+      outline: none;
+    }
+
+    .exit-ticket {
+      min-height: min(48vh, 420px);
+      width: min(930px, 96%);
+      margin: 8px auto 0;
+      padding: clamp(26px, 5vw, 54px);
+      display: grid;
+      align-content: center;
+      gap: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 14px;
+      background: var(--panel);
+      color: var(--ink);
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+    }
+
+    .ticket-label {
+      color: var(--turquoise);
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.82rem;
+    }
+
+    .exit-ticket h2 {
+      color: var(--blue);
+      font-size: clamp(1.35rem, 3vw, 2.1rem);
+      line-height: 1.1;
+    }
+
+    .exit-ticket p {
+      color: #25324a;
+      font-size: clamp(1.45rem, 3.3vw, 2.3rem);
+      line-height: 1.45;
+      font-weight: 650;
+    }
+
+    .back-btn {
+      justify-self: center;
+      border: 0;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--purple), var(--turquoise));
+      color: #fff;
+      padding: 12px 18px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(49, 54, 121, 0.28);
+    }
+
+    .teacher-tab {
+      position: fixed;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      border: 0;
+      border-radius: 8px 0 0 8px;
+      padding: 12px 7px;
+      color: #fff;
+      background: #172033;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: -3px 0 14px rgba(0, 0, 0, 0.24);
+    }
+
+    .teacher-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 18;
+      background: rgba(14, 20, 35, 0.52);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.18s ease, visibility 0.18s ease;
+    }
+
+    .teacher-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .teacher-panel {
+      position: fixed;
+      right: -390px;
+      top: 0;
+      z-index: 19;
+      width: min(390px, 92vw);
+      height: 100vh;
+      overflow-y: auto;
+      padding: 26px;
+      background: #fff;
+      color: var(--ink);
+      box-shadow: -12px 0 36px rgba(0, 0, 0, 0.32);
+      transition: right 0.22s ease;
+    }
+
+    .teacher-panel.open { right: 0; }
+
+    .teacher-panel h2 {
+      color: var(--blue);
+      margin-bottom: 14px;
+      font-size: 1.45rem;
+    }
+
+    .teacher-panel h3 {
+      color: var(--blue);
+      margin: 20px 0 8px;
+      font-size: 1.02rem;
+      border-bottom: 2px solid #d9eef3;
+      padding-bottom: 5px;
+    }
+
+    .teacher-panel p,
+    .teacher-panel li {
+      color: #41506a;
+      line-height: 1.55;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .teacher-panel ul { padding-left: 19px; }
+
+    .callout {
+      margin: 16px 0;
+      padding: 13px;
+      border-left: 4px solid var(--turquoise);
+      border-radius: 8px;
+      background: #edfafd;
+    }
+
+    .hidden { display: none; }
+
+    @media (max-width: 860px) {
+      .page { padding: 14px; }
+      .header { grid-template-columns: 1fr; text-align: center; }
+      .timer-card { min-width: 0; width: 100%; }
+      .choice-board { grid-template-columns: repeat(6, 1fr); }
+    }
+
+    @media (max-width: 560px) {
+      .choice-board { grid-template-columns: repeat(4, 1fr); }
+      .teacher-tab { top: auto; bottom: 18px; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <button class="teacher-tab" type="button" onclick="toggleTeacherGuide()">Teacher Guide</button>
+  <div class="teacher-overlay" onclick="closeTeacherGuide()"></div>
+  <aside class="teacher-panel" id="teacherPanel">
+    <h2>Teacher Guide</h2>
+    <p>This choice board gives students a quick, low-stakes reflective prompt at the end of a mathematics lesson.</p>
+
+    <h3>How To Use It</h3>
+    <ul>
+      <li>Project the colour board at the end of the lesson.</li>
+      <li>Ask one student, a group, or the class to choose a colour.</li>
+      <li>Click the colour to reveal a prompt and start the five-minute timer.</li>
+      <li>Students respond in books, on mini-whiteboards, verbally, or digitally.</li>
+    </ul>
+
+    <div class="callout">
+      <p><strong>Useful routine:</strong> Keep the prompt unknown until a colour is chosen. It makes the task feel fresh and reduces students trying to pick an easier reflection.</p>
+    </div>
+
+    <h3>Prompt Types</h3>
+    <ul>
+      <li>Understanding and confidence checks.</li>
+      <li>Misconception spotting and help requests.</li>
+      <li>Connections to earlier learning or real-world use.</li>
+      <li>Metacognition: strategies, effort, mistakes, and next steps.</li>
+    </ul>
+
+    <h3>Using The Responses</h3>
+    <ul>
+      <li>Choose one response to open the next lesson.</li>
+      <li>Group students by support need.</li>
+      <li>Spot where a topic needs another example or a different representation.</li>
+      <li>Save strong responses as models for future classes.</li>
+    </ul>
+  </aside>
+
+  <main class="page">
+    <header class="header">
+      <div class="title-block">
+        <h1>Math Exit Ticket Choice Board</h1>
+        <p>Choose a colour to reveal a reflective mathematics prompt.</p>
+      </div>
+
+      <section class="timer-card" aria-label="Timer">
+        <div class="timer" id="timer">5:00</div>
+        <div class="timer-controls">
+          <button class="btn primary" type="button" onclick="startTimer()">Start</button>
+          <button class="btn" type="button" onclick="pauseTimer()">Pause</button>
+          <button class="btn" type="button" onclick="resetTimer()">Reset</button>
+        </div>
+      </section>
+    </header>
+
+    <p class="instruction" id="instruction">Students choose any colour. The prompt appears on the board, and the timer can run while they write their response.</p>
+
+    <section class="choice-shell" aria-live="polite">
+      <div class="choice-board" id="choiceBoard" aria-label="Exit ticket colour choices"></div>
+      <div id="exitTicketContainer"></div>
+    </section>
+  </main>
+
+  <script>
+    const exitTickets = [
+      ["Reflection Station", "Write one thing you learned in today's maths lesson. Be specific."],
+      ["Confidence Check", "Rate your understanding of today's topic from 1 to 5. Explain why you chose that number."],
+      ["Question Corner", "What is one question you still have about today's maths lesson?"],
+      ["Connection Central", "How does today's maths connect to something you learned before?"],
+      ["Challenge Check", "What was the most challenging part of today's lesson? How did you work through it?"],
+      ["Strategy Spotlight", "What strategy or method helped you the most during today's lesson?"],
+      ["Summary Station", "In one sentence, summarize what today's maths lesson was about."],
+      ["Traffic Light", "Green: I get it. Yellow: I am getting there. Red: I need help. Choose one and explain why."],
+      ["Teaching Time", "How would you explain today's maths concept to a friend who was absent?"],
+      ["Real World Ready", "Think of one way you might use today's maths outside of school."],
+      ["Growth Mindset", "What mistake did you make today that helped you learn something new?"],
+      ["Next Steps", "What do you want to learn next in maths? How does it connect to today?"],
+      ["Effort Scale", "Rate your effort in today's lesson from 1 to 10. What could you do to improve it?"],
+      ["Lightbulb Moment", "Describe a moment when something suddenly made sense to you today."],
+      ["Help Needed", "What specific help do you need to better understand today's topic?"],
+      ["Study Plan", "What will you do tonight to practise or review today's maths concept?"],
+      ["Compare And Contrast", "How is today's topic similar to or different from something else we have learned?"],
+      ["Key Vocabulary", "Write the most important maths word from today and define it in your own words."],
+      ["Problem Solver", "Describe what you did when you got stuck on a problem today."],
+      ["Most Valuable", "What was the most valuable part of today's lesson for your learning?"],
+      ["Ready Or Not", "Do you feel ready to move on to the next topic? Explain your answer."],
+      ["Goal Check", "Think about what you wanted to learn today. Did you achieve that goal?"],
+      ["Maths Talk", "What maths vocabulary did you use correctly today? Give an example."],
+      ["Pattern Detective", "What pattern or connection did you notice in today's work?"],
+      ["Before And After", "How has your understanding changed from the beginning to the end of class?"],
+      ["Curiosity Corner", "What made you most curious during today's maths lesson?"],
+      ["Application Station", "When might someone in a specific job use what we learned today?"],
+      ["Peer Helper", "What advice would you give to a classmate who is struggling with today's topic?"],
+      ["Memory Maker", "What will help you remember this concept next week?"],
+      ["Success Story", "Describe a moment when you felt successful in today's maths lesson."],
+      ["Think Back", "What topic from earlier this year connects to what we learned today?"],
+      ["Practice Focus", "What specific skill from today do you need to practise more?"],
+      ["Explanation Station", "Explain today's main concept using simple words a younger student would understand."],
+      ["Future Focus", "How do you think today's learning will help you in future maths classes?"],
+      ["Mistake Manager", "What mistake do students commonly make with this topic? How can it be avoided?"],
+      ["Speed Check", "Did today's lesson feel too fast, too slow, or just right? Explain."],
+      ["Resource Review", "What resource was most useful today: notes, examples, discussion, or something else?"],
+      ["Understanding Bridge", "What helped move your understanding from confusion to clarity today?"],
+      ["Essential Question", "If you could ask the teacher one question right now, what would it be?"],
+      ["Concept Web", "What are three things that connect to today's main concept?"],
+      ["Progress Point", "How much closer are you to mastering this topic after today's lesson?"],
+      ["Review Readiness", "What from today's lesson do you think will be important for our next test?"]
+    ];
+
+    let timerInterval = null;
+    let timeLeft = 300;
+    let isTimerRunning = false;
+
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${minutes}:${secs.toString().padStart(2, "0")}`;
+    }
+
+    function updateTimerDisplay() {
+      const timer = document.getElementById("timer");
+      timer.textContent = timeLeft > 0 ? formatTime(timeLeft) : "Time's Up";
+      timer.className = "timer";
+      if (timeLeft <= 0) timer.classList.add("done");
+      else if (timeLeft <= 60) timer.classList.add("warning");
+    }
+
+    function startTimer() {
+      if (isTimerRunning) return;
+      isTimerRunning = true;
+      timerInterval = setInterval(() => {
+        timeLeft -= 1;
+        updateTimerDisplay();
+        if (timeLeft <= 0) pauseTimer();
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      isTimerRunning = false;
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      timeLeft = 300;
+      updateTimerDisplay();
+    }
+
+    function colourForIndex(index) {
+      const hueA = (index * 37 + 190) % 360;
+      const hueB = (hueA + 58) % 360;
+      return `linear-gradient(135deg, hsl(${hueA} 78% 58%), hsl(${hueB} 82% 50%))`;
+    }
+
+    function revealTicket(index) {
+      const [title, content] = exitTickets[index];
+      document.getElementById("choiceBoard").classList.add("hidden");
+      document.getElementById("instruction").classList.add("hidden");
+      document.getElementById("exitTicketContainer").innerHTML = `
+        <article class="exit-ticket">
+          <span class="ticket-label">Exit Ticket</span>
+          <h2>${title}</h2>
+          <p>${content}</p>
+          <button class="back-btn" type="button" onclick="resetBoard()">Back to Choice Board</button>
+        </article>
+      `;
+      if (!isTimerRunning && timeLeft === 300) startTimer();
+    }
+
+    function resetBoard() {
+      document.getElementById("choiceBoard").classList.remove("hidden");
+      document.getElementById("instruction").classList.remove("hidden");
+      document.getElementById("exitTicketContainer").innerHTML = "";
+    }
+
+    function generateChoiceBoard() {
+      const board = document.getElementById("choiceBoard");
+      board.innerHTML = "";
+      exitTickets.forEach((ticket, index) => {
+        const button = document.createElement("button");
+        button.className = "color-choice";
+        button.type = "button";
+        button.style.background = colourForIndex(index);
+        button.setAttribute("aria-label", `Reveal exit ticket ${index + 1}`);
+        button.addEventListener("click", () => revealTicket(index));
+        board.appendChild(button);
+      });
+    }
+
+    function toggleTeacherGuide() {
+      document.getElementById("teacherPanel").classList.toggle("open");
+      document.querySelector(".teacher-overlay").classList.toggle("active");
+    }
+
+    function closeTeacherGuide() {
+      document.getElementById("teacherPanel").classList.remove("open");
+      document.querySelector(".teacher-overlay").classList.remove("active");
+    }
+
+    updateTimerDisplay();
+    generateChoiceBoard();
+  </script>
+</body>
+</html>

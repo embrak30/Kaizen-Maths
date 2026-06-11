@@ -965,16 +965,21 @@ const tools = [
   },
   {
     slug: "exit-ticket-game",
-    title: "Exit Ticket Game",
+    title: "Math Exit Ticket Choice Board",
     category: "Classroom Tools",
     level: "All",
     type: "Classroom Routine",
     access: "Free",
-    status: "Legacy",
-    description: "A quick-check classroom game for lesson endings and retrieval practice.",
-    tags: ["classroom", "game", "assessment"],
-    toolPath: "tools/exit-ticket-game/index.html?v=worksheet-standard-3",
-    imported: false
+    status: "Imported",
+    description: "A colour-choice exit ticket board with reflective mathematics prompts and a five-minute classroom timer.",
+    tags: ["classroom", "exit ticket", "reflection", "assessment", "plenary", "routine"],
+    toolPath: "tools/exit-ticket-game/index.html?v=exit-ticket-choice-board-1",
+    imported: true,
+    teacherNotes: [
+      "Designed for end-of-lesson reflection, quick confidence checks, and formative assessment.",
+      "Students choose a colour without seeing the prompt first, keeping the routine light and engaging.",
+      "Prompts are deliberately topic-neutral so they can be used after almost any mathematics lesson."
+    ]
   },
   {
     slug: "interface-guide",
