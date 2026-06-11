@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exponents and Index Notation</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+      background: #f0f4f8;
+      color: #1a365d;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      z-index: 1001;
+      transform: translateY(-50%);
+      padding: 15px 8px;
+      border-radius: 0 8px 8px 0;
+      background: #1a365d;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700;
+      writing-mode: vertical-rl;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .teacher-tab:hover { background: #2d5a87; transform: translateY(-50%) translateX(5px); }
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      background: rgba(0,0,0,0.5);
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .sidebar-overlay.active { visibility: visible; opacity: 1; }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -400px;
+      z-index: 1000;
+      width: 400px;
+      height: 100vh;
+      overflow-y: auto;
+      background: #fff;
+      box-shadow: 2px 0 20px rgba(0,0,0,0.3);
+      transition: left 0.25s ease;
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-header {
+      padding: 20px;
+      background: #1a365d;
+      color: #fff;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .sidebar-content { padding: 25px; line-height: 1.6; }
+    .sidebar-content h3 {
+      margin: 20px 0 10px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #3182ce;
+      color: #1a365d;
+      font-size: 1.08rem;
+    }
+    .sidebar-content p, .sidebar-content li { margin-bottom: 8px; color: #555; }
+    .sidebar-content ul { margin-bottom: 15px; padding-left: 20px; }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .header {
+      position: relative;
+      overflow: hidden;
+      padding: 25px;
+      background: #2d5a87;
+      background-image:
+        linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce),
+        linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      color: #fff;
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.2);
+    }
+    .header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent 50%, rgba(0,0,0,0.05));
+    }
+    .header h1, .header p { position: relative; z-index: 1; }
+    .header h1 { margin-bottom: 5px; font-size: 2.15rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    .header p { opacity: 0.92; font-size: 1.05rem; }
+    .tabs { display: flex; background: #e2e8f0; }
+    .tab {
+      flex: 1;
+      min-height: 58px;
+      padding: 14px;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      background: #e2e8f0;
+      color: #1a365d;
+      cursor: pointer;
+      font-size: 1.05rem;
+      font-weight: 700;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .tab:hover { background: #cbd5e0; }
+    .tab.active { background: #fff; border-bottom-color: #3182ce; color: #3182ce; }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 24px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f7fafc;
+    }
+    .level-info h3 { margin-bottom: 5px; color: #1a365d; font-size: 1.3rem; }
+    .level-info p { color: #718096; }
+    .dropdown-container { display: none; margin-top: 10px; }
+    .dropdown-container.visible { display: block; }
+    .type-dropdown {
+      min-width: 380px;
+      max-width: 100%;
+      padding: 8px 12px;
+      border: 2px solid #cbd5e0;
+      border-radius: 6px;
+      background: #fff;
+      color: #1a365d;
+      font-size: 1rem;
+    }
+    .type-dropdown:focus { border-color: #3182ce; outline: none; }
+    .timer-section, .action-buttons { display: flex; align-items: center; gap: 10px; }
+    .timer-display {
+      min-width: 120px;
+      padding: 10px 18px;
+      border: 2px solid #cbd5e0;
+      border-radius: 6px;
+      background: #fff;
+      color: #1a365d;
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .timer-display.active { border-color: #3182ce; color: #3182ce; }
+    .timer-display.warning { border-color: #e53e3e; color: #e53e3e; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+    .btn {
+      min-width: 85px;
+      padding: 12px 22px;
+      border: 0;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: #3182ce; }
+    .btn-primary:hover { background: #2c5282; }
+    .btn-success { background: #38a169; }
+    .btn-success:hover { background: #2f855a; }
+    .btn-warning { background: #d69e2e; }
+    .btn-warning:hover { background: #b7791f; }
+    .btn-danger { background: #e53e3e; }
+    .btn-danger:hover { background: #c53030; }
+    .problems-section { min-height: 500px; padding: 20px; }
+    .problem-set-header {
+      display: none;
+      margin-bottom: 15px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #38a169;
+      color: #fff;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .problem-set-header.visible { display: block; }
+    .problem-set-header.multiplication { background: #e53e3e; }
+    .problem-set-header.division { background: #d69e2e; }
+    .problem-set-header.power { background: #3182ce; }
+    .problem-set-header.advanced { background: #805ad5; }
+    .problem-set-header.complex { background: #2d5a87; }
+    .problem-list { list-style: none; }
+    .problem-item {
+      margin: 10px 0;
+      padding: 15px;
+      border-left: 4px solid #3182ce;
+      border-radius: 8px;
+      background: #f7fafc;
+      transition: transform 0.2s ease;
+    }
+    .problem-item:hover { transform: translateX(2px); }
+    .problem-header { display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+    .problem-left { display: flex; align-items: center; flex: 1; min-width: 0; }
+    .problem-number {
+      display: flex;
+      flex: 0 0 30px;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      margin-right: 15px;
+      border-radius: 50%;
+      background: #3182ce;
+      color: #fff;
+      font-weight: 800;
+    }
+    .equation {
+      color: #1a365d;
+      font-family: "Times New Roman", serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .problem-answer {
+      display: none;
+      margin-left: 12px;
+      padding: 8px 15px;
+      border-radius: 20px;
+      background: #38a169;
+      color: #fff;
+      font-size: 1.08rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .problem-answer.visible { display: block; animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+    .steps-section {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border-left: 3px solid #3182ce;
+      border-radius: 6px;
+      background: #ebf8ff;
+    }
+    .steps-section.visible { display: block; animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .answer-label { margin-bottom: 8px; color: #3182ce; font-weight: 800; }
+    .solution-steps { font-size: 1.05rem; line-height: 1.45; }
+    .step { margin: 6px 0; color: #1a365d; }
+    .step-equation {
+      margin: 8px 0;
+      color: #805ad5;
+      font-family: "Times New Roman", serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    .final-answer {
+      margin-top: 10px;
+      padding: 8px 15px;
+      border-radius: 6px;
+      background: #38a169;
+      color: #fff;
+      font-size: 1.18rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .base { color: #3182ce; font-weight: 800; background: rgba(49,130,206,0.1); padding: 2px 4px; border-radius: 3px; }
+    .index { color: #2f855a; font-weight: 800; background: rgba(56,161,105,0.1); padding: 2px 4px; border-radius: 3px; }
+    .operation { color: #b7791f; font-weight: 800; background: rgba(214,158,46,0.1); padding: 2px 4px; border-radius: 3px; }
+    .fraction {
+      display: inline-block;
+      min-width: 1.1em;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .fraction .numerator { display: block; padding: 0 3px 2px; border-bottom: 1px solid currentColor; line-height: 1; }
+    .fraction .denominator { display: block; padding: 2px 3px 0; line-height: 1; }
+    .superscript { vertical-align: super; font-size: 0.75em; }
+    .step-arrow { margin: 0 10px; color: #3182ce; font-size: 1.35em; }
+    .step-indicator { margin-right: 10px; padding: 4px 8px; border-radius: 4px; background: #3182ce; color: #fff; font-size: 0.9em; font-weight: 800; }
+    .timer-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1002;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+      max-width: 350px;
+      padding: 35px;
+      border-radius: 12px;
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .modal-content h2 { margin-bottom: 18px; color: #e53e3e; font-size: 1.9rem; }
+    .modal-content p { margin-bottom: 25px; color: #718096; font-size: 1.05rem; }
+    .hidden { display: none; }
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .controls { flex-direction: column; align-items: stretch; padding: 15px; }
+      .timer-section, .action-buttons { justify-content: center; flex-wrap: wrap; }
+      .tabs { flex-wrap: wrap; }
+      .tab { flex: 1 1 50%; }
+      .sidebar { left: -320px; width: 320px; }
+      .type-dropdown { min-width: 100%; }
+      .problem-header { align-items: flex-start; flex-direction: column; }
+      .problem-answer { margin-left: 45px; white-space: normal; }
+      .equation { font-size: 1.35rem; }
+    }
+    @media (min-width: 1200px) {
+      .equation { font-size: 1.8rem; }
+      .problem-item { margin: 12px 0; padding: 18px; }
+      .problem-number { width: 35px; height: 35px; flex-basis: 35px; font-size: 1.1rem; }
+      .solution-steps { font-size: 1.15rem; }
+      .step-equation { font-size: 1.3rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Exponents and Indices</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool builds index notation fluency from repeated multiplication through systematic use of index laws.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Products in index form, evaluating powers, prime factorisation, and zero or negative indices.</li>
+        <li><strong>Level 2:</strong> Same-base multiplication, same-base division, powers of powers, and mixed same-base practice.</li>
+        <li><strong>Level 3:</strong> Complex multi-step simplification using several index laws.</li>
+      </ul>
+      <h3>Key Index Laws</h3>
+      <ul>
+        <li><strong>Multiplication:</strong> a<sup>m</sup> × a<sup>n</sup> = a<sup>m+n</sup>.</li>
+        <li><strong>Division:</strong> a<sup>m</sup> ÷ a<sup>n</sup> = a<sup>m-n</sup>.</li>
+        <li><strong>Power of a power:</strong> (a<sup>m</sup>)<sup>n</sup> = a<sup>mn</sup>.</li>
+        <li><strong>Zero index:</strong> a<sup>0</sup> = 1 where a is not 0.</li>
+        <li><strong>Negative index:</strong> a<sup>-n</sup> = 1/a<sup>n</sup>.</li>
+      </ul>
+      <h3>Teaching Strategies</h3>
+      <ul>
+        <li>Emphasise that same-base laws require the same base.</li>
+        <li>Connect index notation to repeated multiplication before abstract laws.</li>
+        <li>Ask students to name the rule before calculating.</li>
+        <li>Use complex examples to practise one clean step at a time.</li>
+      </ul>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Adding indices for division instead of subtracting.</li>
+        <li>Multiplying indices when multiplying same-base terms.</li>
+        <li>Treating negative indices as negative values rather than reciprocals.</li>
+        <li>Forgetting that any non-zero base to the power 0 is 1.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header">
+      <h1>Exponents and Index Notation</h1>
+      <p>Repeated multiplication, prime factorisation, index laws, and multi-step simplification</p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Fundamentals</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Index Laws</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Complex Simplification</button>
+    </nav>
+
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Fundamentals of Index Notation</h3>
+        <p id="level-description">Writing products in index form, evaluating indices, prime factorisation, and zero or negative indices.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up</h2>
+      <p>Ready to review the answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Fundamentals of Index Notation",
+        description: "Writing products in index form, evaluating indices, prime factorisation, and zero or negative indices.",
+        options: [
+          ["select", "Select Question Type"],
+          ["products_to_index", "Type 1: Writing products in index form"],
+          ["evaluating_indices", "Type 2: Evaluating numbers in index form"],
+          ["prime_factorization", "Type 3: Prime factorisation in index form"],
+          ["zero_negative_indices", "Type 4: Zero and negative indices"]
+        ]
+      },
+      2: {
+        title: "Level 2: Index Laws and Operations",
+        description: "Same-base multiplication, division, powers of powers, and mixed same-base exercises.",
+        options: [
+          ["select", "Select Question Type"],
+          ["same_base_multiplication", "Type 1: Same base multiplication"],
+          ["same_base_division", "Type 2: Same base division"],
+          ["power_of_power", "Type 3: Power of a power"],
+          ["mixed_same_base", "Type 4: Mixed same-base exercises"]
+        ]
+      },
+      3: {
+        title: "Level 3: Complex Multi-Step Index Simplification",
+        description: "Expressions requiring several systematic steps using multiple index laws.",
+        options: [
+          ["select", "Select Question Type"],
+          ["multiple_operations", "Type 1: Multiple same-base operations"],
+          ["mixed_powers", "Type 2: Mixed power operations"],
+          ["complex_brackets", "Type 3: Complex bracket expressions"]
+        ]
+      }
+    };
+
+    const typeNames = {
+      products_to_index: ["basic", "Products in Index Form"],
+      evaluating_indices: ["basic", "Evaluating Indices"],
+      prime_factorization: ["basic", "Prime Factorisation"],
+      zero_negative_indices: ["advanced", "Zero and Negative Indices"],
+      same_base_multiplication: ["multiplication", "Same-Base Multiplication"],
+      same_base_division: ["division", "Same-Base Division"],
+      power_of_power: ["power", "Power of a Power"],
+      mixed_same_base: ["advanced", "Mixed Same-Base Rules"],
+      multiple_operations: ["complex", "Multiple Same-Base Operations"],
+      mixed_powers: ["complex", "Mixed Power Operations"],
+      complex_brackets: ["complex", "Complex Bracket Expressions"]
+    };
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomElement(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function sup(text) {
+      return `<span class="superscript">${text}</span>`;
+    }
+
+    function fraction(numerator, denominator) {
+      return `<span class="fraction"><span class="numerator">${numerator}</span><span class="denominator">${denominator}</span></span>`;
+    }
+
+    function highlightBase(base) {
+      return `<span class="base">${base}</span>`;
+    }
+
+    function highlightIndex(index) {
+      return `<span class="index">${index}</span>`;
+    }
+
+    function highlightOperation(operation) {
+      return `<span class="operation">${operation}</span>`;
+    }
+
+    function power(base, index) {
+      if (index === 0) return "1";
+      if (index === 1) return `${base}`;
+      if (index < 0) return fraction("1", `${base}${sup(Math.abs(index))}`);
+      return `${base}${sup(index)}`;
+    }
+
+    function primeFactorisation(number) {
+      const factors = {};
+      let remaining = number;
+      for (let candidate = 2; candidate <= remaining; candidate++) {
+        while (remaining % candidate === 0) {
+          factors[candidate] = (factors[candidate] || 0) + 1;
+          remaining /= candidate;
+        }
+      }
+      return factors;
+    }
+
+    function factorText(factors) {
+      return Object.keys(factors).map(prime => {
+        const count = factors[prime];
+        return count === 1 ? prime : `${prime}${sup(count)}`;
+      }).join(" × ");
+    }
+
+    function generateProblem() {
+      switch (currentType) {
+        case "products_to_index": {
+          const base = randomElement([2, 3, 5, 7]);
+          const count = random(3, 6);
+          const product = Array(count).fill(base).join(" × ");
+          return {
+            badge: "basic",
+            equation: `Write in index form: ${product}`,
+            answer: power(base, count),
+            steps: [
+              `<span class="step-indicator">Step 1</span> Identify the repeated factor.`,
+              `The base is ${highlightBase(base)} and it appears ${highlightIndex(count)} times.`,
+              `<span class="step-indicator">Step 2</span> Write the repeated multiplication as a power.`,
+              `<span class="step-arrow">→</span> ${product} = ${power(base, count)}`
+            ]
+          };
+        }
+        case "evaluating_indices": {
+          const base = randomElement([2, 3, 4, 5]);
+          const index = random(2, 4);
+          const result = base ** index;
+          return {
+            badge: "basic",
+            equation: `Evaluate: ${power(base, index)}`,
+            answer: String(result),
+            steps: [
+              `${power(base, index)} means ${highlightBase(base)} multiplied by itself ${highlightIndex(index)} times.`,
+              `${power(base, index)} = ${Array(index).fill(base).join(" × ")}`,
+              `${Array(index).fill(base).join(" × ")} = ${result}`
+            ]
+          };
+        }
+        case "prime_factorization": {
+          const number = randomElement([12, 18, 20, 24, 28, 30, 36, 40, 45, 48, 50, 54, 60, 63, 72]);
+          const factors = primeFactorisation(number);
+          return {
+            badge: "basic",
+            equation: `Express ${number} as a product of prime factors in index form`,
+            answer: factorText(factors),
+            steps: [
+              `Divide ${number} by prime factors systematically.`,
+              ...Object.keys(factors).map(prime => `${highlightBase(prime)} appears ${highlightIndex(factors[prime])} time${factors[prime] > 1 ? "s" : ""}.`),
+              `${number} = ${factorText(factors)}`
+            ]
+          };
+        }
+        case "zero_negative_indices": {
+          const base = randomElement(["a", "b", "x", "y"]);
+          if (Math.random() < 0.5) {
+            return {
+              badge: "advanced",
+              equation: `Simplify: ${base}${sup(0)}`,
+              answer: "1",
+              steps: [
+                `Apply the zero index rule: ${highlightBase("a")}${sup(highlightIndex(0))} = ${highlightOperation(1)} where a is not 0.`,
+                `<span class="step-arrow">→</span>${base}${sup(0)} = 1`
+              ]
+            };
+          }
+          const index = random(1, 4);
+          return {
+            badge: "advanced",
+            equation: `Simplify: ${base}${sup(`-${index}`)}`,
+            answer: fraction("1", `${base}${sup(index)}`),
+            steps: [
+              `A negative index means reciprocal, not a negative value.`,
+              `${highlightBase("a")}${sup(highlightIndex("-n"))} = ${highlightOperation(fraction("1", `a${sup("n")}`))}`,
+              `<span class="step-arrow">→</span>${base}${sup(`-${index}`)} = ${fraction("1", `${base}${sup(index)}`)}`
+            ]
+          };
+        }
+        case "same_base_multiplication": {
+          const base = randomElement(["a", "b", "x", "y"]);
+          const left = random(2, 6);
+          const right = random(2, 6);
+          const result = left + right;
+          return {
+            badge: "multiplication",
+            equation: `Simplify: ${power(base, left)} × ${power(base, right)}`,
+            answer: power(base, result),
+            steps: [
+              `Both terms have the same base: ${highlightBase(base)}.`,
+              `${highlightBase("a")}${sup(highlightIndex("m"))} × ${highlightBase("a")}${sup(highlightIndex("n"))} = ${highlightBase("a")}${sup(highlightOperation("m+n"))}`,
+              `${left} + ${right} = ${result}`,
+              `<span class="step-arrow">→</span>${power(base, left)} × ${power(base, right)} = ${power(base, result)}`
+            ]
+          };
+        }
+        case "same_base_division": {
+          const base = randomElement(["p", "q", "m", "n"]);
+          const top = random(6, 10);
+          const bottom = random(2, 5);
+          const result = top - bottom;
+          return {
+            badge: "division",
+            equation: `Simplify: ${power(base, top)} ÷ ${power(base, bottom)}`,
+            answer: power(base, result),
+            steps: [
+              `Both terms have the same base: ${highlightBase(base)}.`,
+              `${highlightBase("a")}${sup(highlightIndex("m"))} ÷ ${highlightBase("a")}${sup(highlightIndex("n"))} = ${highlightBase("a")}${sup(highlightOperation("m-n"))}`,
+              `${top} - ${bottom} = ${result}`,
+              `<span class="step-arrow">→</span>${power(base, top)} ÷ ${power(base, bottom)} = ${power(base, result)}`
+            ]
+          };
+        }
+        case "power_of_power": {
+          const base = randomElement(["a", "b", "x", "y"]);
+          const inner = random(2, 5);
+          const outer = random(2, 4);
+          const result = inner * outer;
+          return {
+            badge: "power",
+            equation: `Simplify: (${power(base, inner)})${sup(outer)}`,
+            answer: power(base, result),
+            steps: [
+              `Apply the power of a power rule.`,
+              `(${highlightBase("a")}${sup(highlightIndex("m"))})${sup(highlightIndex("n"))} = ${highlightBase("a")}${sup(highlightOperation("m×n"))}`,
+              `${inner} × ${outer} = ${result}`,
+              `<span class="step-arrow">→</span>(${power(base, inner)})${sup(outer)} = ${power(base, result)}`
+            ]
+          };
+        }
+        case "mixed_same_base": {
+          const options = ["same_base_multiplication", "same_base_division", "power_of_power"];
+          const original = currentType;
+          currentType = randomElement(options);
+          const problem = generateProblem();
+          currentType = original;
+          problem.badge = "advanced";
+          return problem;
+        }
+        case "multiple_operations": {
+          const base = randomElement([2, 3, 5, 7, "a", "x", "y", "m"]);
+          const a = random(2, 5);
+          const b = random(1, 4);
+          const c = random(2, 4);
+          const d = random(1, 3);
+          const afterMultiply = a + b;
+          const afterDivide = afterMultiply - c;
+          const final = afterDivide + d;
+          const expr = `${power(base, a)} × ${power(base, b)} ÷ ${power(base, c)} × ${power(base, d)}`;
+          return {
+            badge: "complex",
+            equation: `Simplify: ${expr}`,
+            answer: power(base, final),
+            steps: [
+              `${power(base, a)} × ${power(base, b)} = ${power(base, afterMultiply)}`,
+              `${power(base, afterMultiply)} ÷ ${power(base, c)} = ${power(base, afterDivide)}`,
+              `${power(base, afterDivide)} × ${power(base, d)} = ${power(base, final)}`,
+              `<span class="step-arrow">→</span>${expr} = ${power(base, final)}`
+            ]
+          };
+        }
+        case "mixed_powers": {
+          const base = randomElement(["a", "x", "b", "y", "p", "q"]);
+          const a = random(2, 4);
+          const b = random(2, 4);
+          const c = random(2, 4);
+          const d = random(2, 3);
+          const e = random(2, 4);
+          const leftPower = a * b;
+          const rightPower = d * e;
+          const combined = leftPower + c;
+          const final = combined - rightPower;
+          const expr = `(${power(base, a)})${sup(b)} × ${power(base, c)} ÷ (${power(base, d)})${sup(e)}`;
+          return {
+            badge: "complex",
+            equation: `Simplify: ${expr}`,
+            answer: power(base, final),
+            steps: [
+              `(${power(base, a)})${sup(b)} = ${power(base, leftPower)}`,
+              `(${power(base, d)})${sup(e)} = ${power(base, rightPower)}`,
+              `${power(base, leftPower)} × ${power(base, c)} = ${power(base, combined)}`,
+              `${power(base, combined)} ÷ ${power(base, rightPower)} = ${power(base, final)}`,
+              `<span class="step-arrow">→</span>${expr} = ${power(base, final)}`
+            ]
+          };
+        }
+        case "complex_brackets": {
+          const base = randomElement([2, 3, 5, "a", "x", "y", "p"]);
+          const a = random(2, 4);
+          const b = random(2, 3);
+          const c = random(2, 5);
+          const d = random(2, 4);
+          const bracketPower = a * b;
+          const combined = bracketPower + c;
+          const final = combined - d;
+          const expr = `((${power(base, a)})${sup(b)} × ${power(base, c)}) ÷ ${power(base, d)}`;
+          return {
+            badge: "complex",
+            equation: `Simplify: ${expr}`,
+            answer: power(base, final),
+            steps: [
+              `Work from the innermost brackets first.`,
+              `(${power(base, a)})${sup(b)} = ${power(base, bracketPower)}`,
+              `${power(base, bracketPower)} × ${power(base, c)} = ${power(base, combined)}`,
+              `${power(base, combined)} ÷ ${power(base, d)} = ${power(base, final)}`,
+              `<span class="step-arrow">→</span>${expr} = ${power(base, final)}`
+            ]
+          };
+        }
+        default:
+          return fallbackProblem();
+      }
+    }
+
+    function fallbackProblem() {
+      return {
+        badge: "basic",
+        equation: "Write in index form: 2 × 2 × 2",
+        answer: `2${sup(3)}`,
+        steps: [`There are three factors of 2.`, `2 × 2 × 2 = 2${sup(3)}`]
+      };
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => {
+        tab.classList.toggle("active", index + 1 === level);
+      });
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = config.options.map(([value, label]) => `<option value="${value}">${label}</option>`).join("");
+      dropdown.value = "select";
+      document.getElementById("dropdown-container").classList.add("visible");
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function showBlankPage() {
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      document.getElementById("problem-set-header").classList.remove("visible");
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center; padding:40px; color:#718096; font-size:1.1rem;">Please select a question type to begin exploring exponents and index notation.</li>';
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      for (let i = 0; i < 5; i++) problems.push(generateProblem());
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const header = document.getElementById("problem-set-header");
+      const meta = typeNames[currentType] || ["basic", "Index Notation Problems"];
+      header.textContent = meta[1];
+      header.className = `problem-set-header visible ${meta[0]}`;
+      const container = document.getElementById("problem-list");
+      container.innerHTML = "";
+      problems.forEach((problem, index) => {
+        const stepsHTML = problem.steps.map(step => {
+          const className = (step.includes("=") || step.includes("×") || step.includes("÷") || step.includes("→")) ? "step-equation" : "step";
+          return `<div class="${className}">${step}</div>`;
+        }).join("");
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index + 1}</div>
+              <div class="equation">${problem.equation}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Solution Steps:</div>
+            <div class="solution-steps">
+              ${stepsHTML}
+              <div class="final-answer">${problem.answer}</div>
+            </div>
+          </div>
+        `;
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const answer = document.getElementById(`quick-answer-${i}`);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      }
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const steps = document.getElementById(`steps-${i}`);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      }
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById("timer-display");
+      display.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      if (timeRemaining <= 30) display.className = "timer-display warning";
+      else if (timerActive) display.className = "timer-display active";
+      else display.className = "timer-display";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      const display = document.getElementById("timer-display");
+      display.textContent = "Time Up";
+      display.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

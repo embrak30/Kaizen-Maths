@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conic Intersections Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#4a5568;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d3748;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s ease;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#4a5568;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#4a5568;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #805ad5;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#4a5568;background-image:radial-gradient(circle at 25% 25%,#805ad5 0%,transparent 50%),radial-gradient(circle at 75% 75%,#d53f8c 0%,transparent 50%);color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 50%,rgba(0,0,0,.05) 100%)}.header h1{font-size:2.2em;margin-bottom:5px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:18px;background:#e2e8f0;border:0;cursor:pointer;font-size:1.1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#805ad5;color:#805ad5}
+    .controls{padding:25px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#4a5568;margin-bottom:5px;font-size:1.3em}.level-info p{color:#718096;font-size:1em}.dropdown-container{margin-top:10px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:300px;max-width:100%}.type-dropdown:focus{border-color:#805ad5;outline:0}
+    .timer-section{display:flex;align-items:center;gap:15px}.timer-display{font-size:2em;font-weight:700;color:#4a5568;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #cbd5e0;min-width:120px;text-align:center}.timer-display.active{border-color:#805ad5;color:#805ad5}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px}.btn{padding:12px 22px;border:0;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}.btn-primary{background:#805ad5;color:#fff}.btn-primary:hover{background:#6b46c1;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:28px;min-height:580px}.problem-list{list-style:none}.problem-item{background:#f7fafc;margin:18px 0;padding:22px;border-radius:10px;border-left:5px solid #805ad5;transition:.3s}.problem-item:hover{transform:translateX(3px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:15px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#805ad5;color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:22px;font-size:1.2em;flex-shrink:0}.equation{font-size:1.55em;font-family:'Times New Roman',serif;color:#4a5568;font-weight:600;line-height:1.4;max-width:100%;overflow-x:auto}.problem-answer{background:#38a169;color:#fff;padding:12px 18px;border-radius:25px;font-weight:700;font-size:1.05em;display:none;margin-left:16px;max-width:44%;white-space:nowrap;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .fraction{display:inline-block;vertical-align:middle;text-align:center;margin:0 3px;line-height:1}.fraction .numerator{display:block;border-bottom:2px solid currentColor;padding:0 4px 2px}.fraction .denominator{display:block;padding:2px 4px 0}.coordinate{font-family:'Times New Roman',serif;font-weight:700}.system-equations{margin:12px 0}.system-line{margin:6px 0;font-size:.92em}.step-highlight{background:#fff8db;padding:9px 10px;border-radius:5px;margin:10px 0;border-left:4px solid #d69e2e;font-weight:700}
+    .steps-section{margin-top:20px;padding:18px;background:#ebf8ff;border-radius:8px;border-left:4px solid #805ad5;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#805ad5;margin-bottom:12px;font-size:1.15em}.solution-steps{font-size:1.08em;line-height:1.55}.step{margin:9px 0;color:#4a5568}.step-equation{font-family:'Times New Roman',serif;font-weight:700;color:#805ad5;text-align:center;margin:12px 0;font-size:1.25em;background:#f7fafc;padding:10px;border-radius:5px;overflow-x:auto}.final-answer{background:#38a169;color:#fff;padding:12px 18px;border-radius:8px;text-align:center;font-weight:700;font-size:1.12em;margin-top:16px;overflow-x:auto}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none!important}
+    @media(max-width:768px){body{padding:15px}.controls{flex-direction:column;align-items:stretch;padding:14px}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%;padding:10px}.sidebar{width:320px;left:-320px}.problems-section{padding:12px}.problem-item{padding:12px;margin:10px 0}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{max-width:100%;margin-left:62px}.equation{font-size:1.22em}.solution-steps{font-size:1em}.step-equation{font-size:1.05em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool helps students practise finding intersection points of conic sections with lines. Each set contains two longer challenge problems with worked solutions.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1 - Circles:</strong> Circle-line intersections including secants, tangents, and no-intersection cases.</li>
+        <li><strong>Level 2 - Parabolas:</strong> Parabola-line intersections by substitution.</li>
+        <li><strong>Level 3 - Hyperbolas:</strong> Hyperbola-line intersections and asymptote-adjacent cases.</li>
+        <li><strong>Level 4 - Mixed:</strong> Mixed conics and special cases.</li>
+      </ul>
+      <h3>Core Method</h3>
+      <ul>
+        <li>Substitute the line equation into the conic equation.</li>
+        <li>Simplify to a quadratic in one variable.</li>
+        <li>Use the discriminant to decide how many intersections exist.</li>
+        <li>Substitute each x-value back into the line to find y.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header"><h1>Conic Intersections Practice Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Circles</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Parabolas</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Hyperbolas</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Mixed</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Circle-Line Intersections</h3>
+        <p id="level-description">Find intersection points of circles and lines</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="circle_line_two_points">Type 1: Circle-line (2 intersections)</option>
+            <option value="circle_line_tangent">Type 2: Circle-line (tangent)</option>
+            <option value="circle_line_general">Type 3: Circle-line (general case)</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(8)">8 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: { title:'Level 1: Circle-Line Intersections', description:'Find intersection points of circles and lines', types:['circle_line_two_points','circle_line_tangent','circle_line_general'] },
+      2: { title:'Level 2: Parabola-Line Intersections', description:'Find intersection points of parabolas and lines', types:['parabola_line_vertical','parabola_line_horizontal','parabola_line_general'] },
+      3: { title:'Level 3: Hyperbola-Line Intersections', description:'Find intersection points of hyperbolas and lines', types:['hyperbola_line_standard','hyperbola_line_asymptote','hyperbola_line_general'] },
+      4: { title:'Level 4: Mixed Conic Intersections', description:'Advanced problems with various conics', types:['mixed_advanced','parametric_forms','special_cases'] }
+    };
+
+    function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.sidebar-overlay').classList.toggle('active'); }
+    function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.querySelector('.sidebar-overlay').classList.remove('active'); }
+    function randomInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function randomCoeff(min=-5,max=5){ let n; do{ n=randomInt(min,max); }while(n===0 || n===1 || n===-1); return n; }
+    function fmt(n){ return n >= 0 ? ' + ' + n : ' - ' + Math.abs(n); }
+    function sup(n){ return '<sup>' + n + '</sup>'; }
+    function signedTerm(n, variable){ if(n===0) return ''; const abs=Math.abs(n); const body=(abs===1 ? variable : abs + variable); return n>0 ? ' + ' + body : ' - ' + body; }
+    function coord(x,y){ return '(' + Number(x).toFixed(3).replace(/\\.000$/,'') + ', ' + Number(y).toFixed(3).replace(/\\.000$/,'') + ')'; }
+    function squareShift(v,name){ return '(' + name + (v>=0 ? ' - ' + v : ' + ' + Math.abs(v)) + ')' + sup(2); }
+    function lineEq(m,c){ return 'y = ' + (m===1 ? 'x' : m===-1 ? '-x' : m + 'x') + (c===0 ? '' : fmt(c)); }
+    function quadText(a,b,c){ const x2='x' + sup(2); let out=(a===1?x2:a===-1?'-'+x2:a+x2); out += signedTerm(b,'x'); if(c!==0) out += fmt(c); return out; }
+    function solveQuadratic(a,b,c){
+      const D = b*b - 4*a*c;
+      if(D < -1e-9) return {type:'none', D, roots:[]};
+      if(Math.abs(D) < 1e-9) return {type:'one', D:0, roots:[-b/(2*a)]};
+      const r=Math.sqrt(D);
+      return {type:'two', D, roots:[(-b+r)/(2*a),(-b-r)/(2*a)]};
+    }
+    function answerFromRoots(roots,m,c){
+      if(roots.length===0) return 'No intersection points';
+      const pts=roots.map(x=>coord(x,m*x+c));
+      return roots.length===1 ? 'One intersection point: ' + pts[0] : 'Two intersection points: ' + pts.join(' and ');
+    }
+    function baseSteps(label, conicEq, line, quadratic, result, m, c){
+      const steps = [
+        '<div class="step-highlight">Given equations</div>',
+        label + ': ' + conicEq,
+        'Line: ' + line,
+        '<div class="step-highlight">Substitute the line into the conic</div>',
+        'This gives the quadratic:',
+        '<div class="step-equation">' + quadratic + ' = 0</div>',
+        '<div class="step-highlight">Use the discriminant</div>',
+        'D = b' + sup(2) + ' - 4ac = ' + result.D.toFixed(3).replace(/\\.000$/,'')
+      ];
+      if(result.roots.length===0){
+        steps.push('Since D < 0, there are no real intersection points.');
+      } else {
+        steps.push('Solve the quadratic to find x-values: ' + result.roots.map(x=>x.toFixed(3)).join(', '));
+        steps.push('Substitute each x-value into ' + line + ' to find y.');
+        result.roots.forEach((x,i)=>steps.push('Point ' + (i+1) + ': x = ' + x.toFixed(3) + ', y = ' + (m*x+c).toFixed(3) + ', so ' + coord(x,m*x+c)));
+      }
+      return steps;
+    }
+
+    function generateProblem(){
+      const types = currentType==='select' || currentType==='all' ? levelConfigs[currentLevel].types : [currentType];
+      const type = types[Math.floor(Math.random()*types.length)];
+      if(type==='circle_line_two_points') return circleLine('two');
+      if(type==='circle_line_tangent') return circleLine('tangent');
+      if(type==='circle_line_general') return circleLine('general');
+      if(type==='parabola_line_vertical') return parabolaLine('vertical');
+      if(type==='parabola_line_horizontal') return parabolaLine('horizontal');
+      if(type==='parabola_line_general') return parabolaLine('general');
+      if(type==='hyperbola_line_standard') return hyperbolaLine('standard');
+      if(type==='hyperbola_line_asymptote') return hyperbolaLine('asymptote');
+      if(type==='hyperbola_line_general') return hyperbolaLine('general');
+      if(type==='mixed_advanced') return [circleLine,parabolaLine,hyperbolaLine][randomInt(0,2)]('general');
+      if(type==='parametric_forms') return parabolaLine('parametric');
+      if(type==='special_cases') return circleLine(Math.random()<.5 ? 'tangent' : 'none');
+      return circleLine('general');
+    }
+
+    function circleLine(kind){
+      const h=randomInt(-2,2), k=randomInt(-2,2), r=randomInt(3,5);
+      let m=randomCoeff(-3,3), c=randomInt(-4,4), result, A, B, C, guard=0;
+      do{
+        guard++;
+        if(kind==='tangent'){
+          const t=randomInt(-2,2);
+          const yOn=k + (Math.random()<.5 ? 1 : -1) * Math.sqrt(Math.max(0,r*r-(t-h)*(t-h)));
+          m = t===h ? 0 : -(t-h)/(yOn-k);
+          if(!Number.isFinite(m) || Math.abs(m)<0.2) m=randomCoeff(-3,3);
+          c = yOn - m*t;
+        } else {
+          m=randomCoeff(-3,3);
+          c=randomInt(-5,5);
+          if(kind==='none') c += c>=0 ? 8 : -8;
+        }
+        A=1+m*m;
+        B=-2*h+2*m*(c-k);
+        C=h*h+(c-k)*(c-k)-r*r;
+        result=solveQuadratic(A,B,C);
+      } while(((kind==='two' && result.type!=='two') || (kind==='tangent' && result.type!=='one') || (kind==='none' && result.type!=='none')) && guard<120);
+      const circle = squareShift(h,'x') + ' + ' + squareShift(k,'y') + ' = ' + (r*r);
+      const line = lineEq(roundNice(m), roundNice(c));
+      const quadratic = quadText(roundNice(A), roundNice(B), roundNice(C));
+      const answer = answerFromRoots(result.roots,m,c);
+      const steps = baseSteps('Circle', circle, line, quadratic, result, m, c);
+      return { equation:'Find the intersection points:<div class="system-equations"><div class="system-line">Circle: '+circle+'</div><div class="system-line">Line: '+line+'</div></div>', answer, steps };
+    }
+
+    function parabolaLine(kind){
+      const a=randomCoeff(2,4), b=randomCoeff(-4,4), p=randomInt(-4,4);
+      let m=randomCoeff(-3,3), c=randomInt(-5,5);
+      if(kind==='horizontal'){ m=0; c=randomInt(-4,8); }
+      if(kind==='vertical'){
+        const x0=randomInt(-4,4);
+        const y=a*x0*x0+b*x0+p;
+        return {
+          equation:'Find the intersection point:<div class="system-equations"><div class="system-line">Parabola: y = '+quadText(a,b,p)+'</div><div class="system-line">Line: x = '+x0+'</div></div>',
+          answer:'One intersection point: ' + coord(x0,y),
+          steps:['<div class="step-highlight">Substitute x = '+x0+' into the parabola</div>','y = '+a+'('+x0+')' + sup(2) + signedTerm(b*x0,'') + fmt(p),'y = '+y,'Intersection point: '+coord(x0,y)]
+        };
+      }
+      const A=a, B=b-m, C=p-c;
+      const result=solveQuadratic(A,B,C);
+      const parabola='y = ' + quadText(a,b,p);
+      const line=lineEq(m,c);
+      const answer=answerFromRoots(result.roots,m,c);
+      const steps=baseSteps('Parabola',parabola,line,quadText(A,B,C),result,m,c);
+      return { equation:'Find the intersection points:<div class="system-equations"><div class="system-line">Parabola: '+parabola+'</div><div class="system-line">Line: '+line+'</div></div>', answer, steps };
+    }
+
+    function hyperbolaLine(kind){
+      const a=randomInt(2,4), b=randomInt(2,4);
+      let m=randomCoeff(-2,2), c=randomInt(-3,3);
+      if(kind==='asymptote'){ m=b/a; c=randomInt(-2,2); }
+      let A=b*b-a*a*m*m, B=-2*a*a*m*c, C=-a*a*c*c-a*a*b*b;
+      let guard=0;
+      while(Math.abs(A)<1e-9 && guard<60){ guard++; m=randomCoeff(-3,3); c=randomInt(-3,3); A=b*b-a*a*m*m; B=-2*a*a*m*c; C=-a*a*c*c-a*a*b*b; }
+      const result=solveQuadratic(A,B,C);
+      const hyper='<span class="fraction"><span class="numerator">x'+sup(2)+'</span><span class="denominator">'+(a*a)+'</span></span> - <span class="fraction"><span class="numerator">y'+sup(2)+'</span><span class="denominator">'+(b*b)+'</span></span> = 1';
+      const line=lineEq(roundNice(m),roundNice(c));
+      const answer=answerFromRoots(result.roots,m,c);
+      const steps=baseSteps('Hyperbola',hyper,line,quadText(roundNice(A),roundNice(B),roundNice(C)),result,m,c);
+      return { equation:'Find the intersection points:<div class="system-equations"><div class="system-line">Hyperbola: '+hyper+'</div><div class="system-line">Line: '+line+'</div></div>', answer, steps };
+    }
+
+    function roundNice(n){ return Math.abs(n-Math.round(n))<1e-9 ? Math.round(n) : Number(n.toFixed(3)); }
+
+    function switchLevel(level){
+      currentLevel=level; currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      const opts={
+        1:[['circle_line_two_points','Type 1: Circle-line (2 intersections)'],['circle_line_tangent','Type 2: Circle-line (tangent)'],['circle_line_general','Type 3: Circle-line (general case)']],
+        2:[['parabola_line_vertical','Type 1: Vertical line with parabola'],['parabola_line_horizontal','Type 2: Horizontal line with parabola'],['parabola_line_general','Type 3: General parabola-line']],
+        3:[['hyperbola_line_standard','Type 1: Standard hyperbola-line'],['hyperbola_line_asymptote','Type 2: Asymptote-related line'],['hyperbola_line_general','Type 3: General hyperbola-line']],
+        4:[['mixed_advanced','Type 1: Mixed advanced problems'],['parametric_forms','Type 2: Parameter-style substitution'],['special_cases','Type 3: Special cases']]
+      };
+      const dropdown=document.getElementById('type-dropdown');
+      dropdown.innerHTML='<option value="select">Select Question Type</option>' + opts[level].map(([v,l])=>'<option value="'+v+'">'+l+'</option>').join('');
+      dropdown.value='select';
+      showBlankPage();
+    }
+    function typeChanged(){ currentType=document.getElementById('type-dropdown').value; currentType==='select' ? showBlankPage() : generateNewSet(); }
+    function showBlankPage(){ document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:50px;color:#718096;font-size:1.2em">Please select a question type to begin.</li>'; }
+    function generateNewSet(){
+      if(currentType==='select'){ showBlankPage(); return; }
+      problems=[]; answersVisible=false; stepsVisible=false;
+      const seen=new Set(); let guard=0;
+      while(problems.length<2 && guard<80){ guard++; const p=generateProblem(); const key=p.equation+'|'+p.answer; if(!seen.has(key)){ seen.add(key); problems.push(p); } }
+      while(problems.length<2) problems.push(generateProblem());
+      renderProblems();
+    }
+    function renderProblems(){
+      const container=document.getElementById('problem-list'); container.innerHTML='';
+      problems.forEach((problem,index)=>{
+        const li=document.createElement('li'); li.className='problem-item';
+        const stepsHTML=problem.steps.map(step=>'<div class="step">'+step+'</div>').join('');
+        li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(index+1)+'</div><div class="equation">'+problem.equation+'</div></div><div class="problem-answer" id="quick-answer-'+index+'">'+problem.answer+'</div></div><div class="steps-section" id="steps-'+index+'"><div class="answer-label">Complete Solution:</div><div class="solution-steps">'+stepsHTML+'<div class="final-answer">'+problem.answer+'</div></div></div>';
+        container.appendChild(li);
+      });
+    }
+    function showAnswers(){ answersVisible=!answersVisible; problems.forEach((_,i)=>{ const el=document.getElementById('quick-answer-'+i); if(el) el.classList.toggle('visible',answersVisible); }); }
+    function showSteps(){ stepsVisible=!stepsVisible; problems.forEach((_,i)=>{ const el=document.getElementById('steps-'+i); if(el) el.classList.toggle('visible',stepsVisible); }); }
+    function startTimer(minutes){ if(timerActive) stopTimer(); timeRemaining=minutes*60; timerActive=true; updateTimerDisplay(); timerInterval=setInterval(()=>{ timeRemaining--; updateTimerDisplay(); if(timeRemaining<=0) timerFinished(); },1000); }
+    function stopTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } timerActive=false; const el=document.getElementById('timer-display'); el.textContent='Ready'; el.className='timer-display'; }
+    function updateTimerDisplay(){ const m=Math.floor(timeRemaining/60), s=timeRemaining%60, el=document.getElementById('timer-display'); el.textContent=m+':'+String(s).padStart(2,'0'); if(timeRemaining<=30&&timerActive) el.className='timer-display warning'; else if(timerActive) el.className='timer-display active'; else el.className='timer-display'; }
+    function timerFinished(){ stopTimer(); const el=document.getElementById('timer-display'); el.textContent='Time Up!'; el.className='timer-display warning'; document.getElementById('timer-modal').classList.remove('hidden'); }
+    function closeModal(){ document.getElementById('timer-modal').classList.add('hidden'); }
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

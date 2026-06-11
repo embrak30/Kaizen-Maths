@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quadratic Factorisation Teaching Tool</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s ease;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}
+    .sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}
+    .header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}
+    .header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 50%,rgba(0,0,0,.05) 100%)}.header h1{font-size:2.2em;margin-bottom:5px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:18px;background:#e2e8f0;border:0;cursor:pointer;font-size:1.1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:25px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.3em}.level-info p{color:#718096;font-size:1em}.dropdown-container{margin-top:10px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:380px;max-width:100%}.type-dropdown:focus{border-color:#3182ce;outline:0}
+    .timer-section{display:flex;align-items:center;gap:15px}.timer-display{font-size:2em;font-weight:700;color:#1a365d;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #cbd5e0;min-width:120px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px}.btn{padding:12px 22px;border:0;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:35px;min-height:600px}.problem-list{list-style:none}.problem-set-header{background:#3182ce;color:#fff;padding:14px 20px;border-radius:8px;margin:0 0 12px;text-align:center;font-size:1.35em;font-weight:700}.problem-set-header.basic{background:#38a169}.problem-set-header.advanced{background:#3182ce}.problem-set-header.mixed{background:#805ad5}
+    .problem-item{background:#f7fafc;margin:20px 0;padding:25px;border-radius:10px;border-left:5px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(3px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-answer{background:#38a169;color:#fff;padding:10px 18px;border-radius:25px;font-weight:700;font-size:1.2em;display:none;margin-left:20px;max-width:42%;white-space:nowrap;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .4s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}.problem-number{background:#3182ce;color:#fff;width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:20px;font-size:1.1em;flex-shrink:0}.equation{font-size:1.8em;font-family:'Times New Roman',serif;color:#1a365d;font-weight:600;line-height:1.4;overflow-x:auto;max-width:100%}
+    .steps-section{margin-top:18px;padding:18px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .4s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:600;color:#38a169;margin-bottom:10px;font-size:1.1em}.solution-steps{font-size:1.15em;line-height:1.5}.step{margin:8px 0;color:#1a365d}.step-equation{font-family:'Times New Roman',serif;font-weight:600;color:#805ad5;text-align:center;margin:10px 0;font-size:1.3em;overflow-x:auto;max-width:100%;padding-bottom:2px}.final-answer{background:#38a169;color:#fff;padding:10px 18px;border-radius:6px;text-align:center;font-weight:700;font-size:1.3em;margin-top:12px;overflow-x:auto}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none!important}
+    .current-term{color:#3182ce;font-weight:700;background:rgba(49,130,206,.1);padding:2px 4px;border-radius:3px}.factor-pairs{color:#38a169;font-weight:700;background:rgba(56,161,105,.1);padding:2px 4px;border-radius:3px}.coefficient-process{color:#d69e2e;font-weight:700;background:rgba(214,158,46,.1);padding:2px 4px;border-radius:3px}.bracket-formation{color:#805ad5;font-weight:700;background:rgba(128,90,213,.1);padding:2px 4px;border-radius:3px}.step-indicator{background:#3182ce;color:#fff;padding:4px 8px;border-radius:4px;font-size:.9em;font-weight:700;margin-right:10px}.power{font-size:.8em;vertical-align:super}
+    @media(max-width:768px){body{padding:15px}.controls{flex-direction:column;align-items:stretch;padding:15px}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%;padding:10px}.sidebar{width:300px;left:-300px}.type-dropdown{min-width:250px}.problems-section{padding:15px}.equation{font-size:1.4em}.problem-item{padding:15px;margin:8px 0}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{max-width:100%;margin-left:55px}.header h1{font-size:1.6em}.header{padding:15px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool demonstrates systematic quadratic factorisation. Students practise extracting common factors, recognising special forms, and factorising trinomials.</p>
+      <h3>Level Guide</h3>
+      <ul><li><strong>Level 1 - Basic:</strong> Common factors, difference of squares, perfect square trinomials.</li><li><strong>Level 2 - Advanced:</strong> Standard trinomials, grouping, and mixed expressions.</li></ul>
+      <h3>Teaching Strategies</h3>
+      <ul><li>Always check for common factors first.</li><li>After factoring, check whether the expression can be factored further.</li><li>Use expansion to verify the final answer.</li></ul>
+      <h3>Common Mistakes</h3>
+      <ul><li>Forgetting common factors.</li><li>Stopping before complete factorisation.</li><li>Mixing up sign patterns in special forms.</li><li>Not checking by expanding.</li></ul>
+    </div>
+  </div>
+  <div class="container">
+    <div class="header"><h1>Quadratic Factorisation Teaching Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Basic Factorisation</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Advanced Factorisation</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Basic Quadratic Factorisation</h3>
+        <p id="level-description">Factor simple quadratic expressions using fundamental techniques</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="common_factor">Type 1: Common factor extraction</option>
+            <option value="difference_squares">Type 2: Difference of squares</option>
+            <option value="perfect_square">Type 3: Perfect square trinomials</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section"><ol id="problem-list" class="problem-list"></ol></div>
+  </div>
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content"><h2>Time's Up!</h2><p>Ready to review answers?</p><button class="btn btn-primary" onclick="closeModal()">OK</button></div>
+  </div>
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={1:{title:'Level 1: Basic Quadratic Factorisation',description:'Factor simple quadratic expressions using fundamental techniques',types:['common_factor','difference_squares','perfect_square']},2:{title:'Level 2: Advanced Quadratic Factorisation',description:'Factor complex quadratic expressions and trinomials',types:['standard_trinomial','factoring_grouping','mixed_expressions']}};
+    const typeDisplayNames={
+      common_factor:'Common factor extraction',
+      difference_squares:'Difference of squares',
+      perfect_square:'Perfect square trinomials',
+      standard_trinomial:'Standard trinomials',
+      factoring_grouping:'Factorising by grouping',
+      mixed_expressions:'Mixed expressions requiring multiple techniques'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function randomElement(array){return array[Math.floor(Math.random()*array.length)]}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);return b===0?a:gcd(b,a%b)}
+    function formatCoeff(coeff){if(coeff===1)return'';if(coeff===-1)return'-';return String(coeff)}
+    function formatTerm(coeff,variable,power,isFirst=false){if(coeff===0)return'';let result='';if(!isFirst){result+=coeff>0?' + ':' - ';coeff=Math.abs(coeff)}else if(coeff<0){result+='-';coeff=Math.abs(coeff)}if(power===0)result+=coeff;else if(power===1)result+=formatCoeff(coeff)+variable;else result+=formatCoeff(coeff)+variable+'<span class="power">'+power+'</span>';return result}
+    function plainTerm(coeff,variable,power,isFirst=false){return formatTerm(coeff,variable,power,isFirst).replaceAll('<span class="power">','^').replaceAll('</span>','')}
+    const hi=t=>'<span class="current-term">'+t+'</span>', pairs=t=>'<span class="factor-pairs">'+t+'</span>', proc=t=>'<span class="coefficient-process">'+t+'</span>', br=t=>'<span class="bracket-formation">'+t+'</span>';
+    function binomial(a,b){return '('+formatTerm(a,'x',1,true)+formatTerm(b,'',0)+')'}
+    function createCommonFactorProblem(){const factor=randomElement([2,3,4,5,6]),innerA=random(2,5),innerB=random(2,7),p=random(2,4),coeff1=factor*innerA,coeff2=factor*innerB,expr=formatTerm(coeff1,'x',p,true)+formatTerm(coeff2,'x',p-1),hcf=gcd(coeff1,coeff2),ans=formatTerm(hcf,'x',p-1,true)+'('+formatTerm(coeff1/hcf,'x',1,true)+formatTerm(coeff2/hcf,'',0)+')';return{badge:'basic',equation:'Factorise: '+expr,answer:ans,steps:['<span class="step-indicator">Step 1</span> Look for common factors in all terms','The terms are '+hi(formatTerm(coeff1,'x',p,true))+' and '+hi(formatTerm(coeff2,'x',p-1,true)),'<span class="step-indicator">Step 2</span> Extract the highest common factor','Coefficients have HCF '+pairs(hcf)+' and variables have HCF '+pairs('x'+(p-1)),'<span class="step-equation">'+expr+' = '+br(ans)+'</span>','<span class="step-indicator">Step 3</span> Check by expanding',ans+' = '+expr+' ✓']}}
+    function createDifferenceSquaresProblem(){const a=randomElement([2,3,4,5]),b=randomElement([2,3,4,5].filter(x=>x!==a)),expr=formatTerm(a*a,'x',2,true)+formatTerm(-(b*b),'',0),ans=binomial(a,b)+binomial(a,-b);return{badge:'basic',equation:'Factorise: '+expr,answer:ans,steps:['<span class="step-indicator">Step 1</span> Identify the difference of squares pattern','This matches '+hi('a² - b²')+' = '+proc('(a + b)(a - b)'),`Here a = ${a}x and b = ${b}`,'<span class="step-equation">'+expr+' = '+br(ans)+'</span>','<span class="step-indicator">Step 2</span> Check by expanding',ans+' = '+expr+' ✓']}}
+    function createPerfectSquareProblem(){const a=randomElement([2,3,4]),b=randomElement([2,3,4].filter(x=>x!==a)),sign=randomElement([1,-1]),expr=formatTerm(a*a,'x',2,true)+formatTerm(2*a*b*sign,'x',1)+formatTerm(b*b,'',0),ans=binomial(a,b*sign)+'²';return{badge:'basic',equation:'Factorise: '+expr,answer:ans,steps:['<span class="step-indicator">Step 1</span> Identify the perfect square pattern','This matches '+hi('a² ± 2ab + b²'),`First term is (${a}x)² and last term is ${b}²`,'Middle term check: '+proc('2 × '+a+'x × '+(sign>0?b:'-'+b)+' = '+(2*a*b*sign)+'x'),'<span class="step-equation">'+expr+' = '+br(ans)+'</span>','<span class="step-indicator">Step 2</span> Check by expanding',ans+' = '+expr+' ✓']}}
+    function createStandardTrinomialProblem(){const p=randomElement([2,3,4]),r=randomElement([1,2,3]),q=randomElement([1,2,3,4,5]),s=randomElement([1,2,3,4,5]),a=p*r,b=p*s+q*r,c=q*s,expr=formatTerm(a,'x',2,true)+formatTerm(b,'x',1)+formatTerm(c,'',0),ans=binomial(p,q)+binomial(r,s);return{badge:'advanced',equation:'Factorise: '+expr,answer:ans,steps:['<span class="step-indicator">Step 1</span> Identify ax² + bx + c',`Here a = ${a}, b = ${b}, c = ${c}`,'<span class="step-indicator">Step 2</span> Find binomials whose outer and inner terms add to the middle coefficient',pairs(`${p}x × ${s} = ${p*s}x and ${q} × ${r}x = ${q*r}x`),'These add to '+proc(`${b}x`),'<span class="step-equation">'+expr+' = '+br(ans)+'</span>','<span class="step-indicator">Step 3</span> Check by expanding',ans+' = '+expr+' ✓']}}
+    function createFactoringGroupingProblem(){const p=randomElement([2,3,4]),r=randomElement([1,2,3]),q=randomElement([2,3,4]),s=randomElement([2,3,4,5]),terms=[p*r,p*s,q*r,q*s],expr=formatTerm(terms[0],'x',2,true)+formatTerm(terms[1],'x',1)+formatTerm(terms[2],'x',1)+formatTerm(terms[3],'',0),collected=formatTerm(terms[0],'x',2,true)+formatTerm(terms[1]+terms[2],'x',1)+formatTerm(terms[3],'',0),ans=binomial(p,q)+binomial(r,s);return{badge:'advanced',equation:'Factorise by grouping: '+expr,answer:ans,steps:['<span class="step-indicator">Step 1</span> Group terms in pairs','('+formatTerm(terms[0],'x',2,true)+formatTerm(terms[1],'x',1)+') + ('+formatTerm(terms[2],'x',1,true)+formatTerm(terms[3],'',0)+')','<span class="step-indicator">Step 2</span> Factor each group',`${p}x(${r}x + ${s}) + ${q}(${r}x + ${s})`,'<span class="step-indicator">Step 3</span> Factor out the common binomial','<span class="step-equation">'+expr+' = '+br(ans)+'</span>','Collected form: '+collected]}}
+    function createMixedExpressionProblem(){const outside=randomElement([2,3,4,5]),p=randomElement([1,2,3]),q=randomElement([2,3,4]),expr=formatTerm(outside,'x',3,true)+formatTerm(outside*(p+q),'x',2)+formatTerm(outside*p*q,'x',1),ans=formatTerm(outside,'x',1,true)+binomial(1,p)+binomial(1,q);return{badge:'mixed',equation:'Factorise completely: '+expr,answer:ans,steps:['<span class="step-indicator">Step 1</span> Extract the common factor first','Common factor is '+proc(formatTerm(outside,'x',1,true)),'<span class="step-equation">'+expr+' = '+formatTerm(outside,'x',1,true)+'('+formatTerm(1,'x',2,true)+formatTerm(p+q,'x',1)+formatTerm(p*q,'',0)+')</span>','<span class="step-indicator">Step 2</span> Factor the quadratic inside the brackets','The pair '+pairs(`${p} and ${q}`)+' multiplies to '+(p*q)+' and adds to '+(p+q),'<span class="step-equation">'+expr+' = '+br(ans)+'</span>','<span class="step-indicator">Step 3</span> Check by expanding']}}
+    function generateProblem(){let types=levelConfigs[currentLevel].types;if(currentType!=='select')types=[currentType];const type=randomElement(types);if(type==='common_factor')return createCommonFactorProblem();if(type==='difference_squares')return createDifferenceSquaresProblem();if(type==='perfect_square')return createPerfectSquareProblem();if(type==='standard_trinomial')return createStandardTrinomialProblem();if(type==='factoring_grouping')return createFactoringGroupingProblem();if(type==='mixed_expressions')return createMixedExpressionProblem();return createCommonFactorProblem()}
+    function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index+1===level));const config=levelConfigs[level];document.getElementById('level-title').textContent=config.title;document.getElementById('level-description').textContent=config.description;const dropdown=document.getElementById('type-dropdown');document.getElementById('dropdown-container').classList.add('visible');if(level===1){dropdown.innerHTML='<option value="select">Select Question Type</option><option value="common_factor">Type 1: Common factor extraction</option><option value="difference_squares">Type 2: Difference of squares</option><option value="perfect_square">Type 3: Perfect square trinomials</option>'}else{dropdown.innerHTML='<option value="select">Select Question Type</option><option value="standard_trinomial">Type 1: Standard trinomials ax² + bx + c</option><option value="factoring_grouping">Type 2: Factorising by grouping</option><option value="mixed_expressions">Type 3: Mixed expressions requiring multiple techniques</option>'}dropdown.value='select';showBlankPage()}
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;if(currentType==='select')showBlankPage();else generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-list').innerHTML='<div style="text-align:center;padding:40px;color:#718096;font-size:1.2em;">Please select a question type to begin exploring quadratic factorisation</div>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<5;i++)problems.push(generateProblem());renderProblems()}
+    function renderProblems(){const container=document.getElementById('problem-list');container.innerHTML='';if(!problems.length)return;const typeNames={basic:'Basic Factorisation',advanced:'Advanced Factorisation',mixed:'Mixed Expressions'};const header=document.createElement('div');header.className='problem-set-header '+problems[0].badge;header.textContent=typeNames[problems[0].badge]||'Factorisation Problems';container.appendChild(header);problems.forEach((problem,index)=>{const li=document.createElement('li');li.className='problem-item';const stepsHTML=problem.steps.map(step=>step.includes('=')||step.includes('×')||step.includes('²')||step.includes('(')||step.includes(')')||step.includes('<span class="step-equation">')?'<div class="step-equation">'+step+'</div>':'<div class="step">'+step+'</div>').join('');li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(index+1)+'</div><div class="equation">'+problem.equation+'</div></div><div class="problem-answer" id="quick-answer-'+index+'">'+problem.answer+'</div></div><div class="steps-section" id="steps-'+index+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+stepsHTML+'<div class="final-answer">'+problem.answer+'</div></div></div>';container.appendChild(li)})}
+    function showAnswers(){answersVisible=!answersVisible;for(let i=0;i<5;i++){const el=document.getElementById('quick-answer-'+i);if(el)el.classList.toggle('visible',answersVisible)}}
+    function showSteps(){stepsVisible=!stepsVisible;for(let i=0;i<5;i++){const el=document.getElementById('steps-'+i);if(el)el.classList.toggle('visible',stepsVisible)}}
+    function startTimer(minutes){if(timerActive)stopTimer();timeRemaining=minutes*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;document.getElementById('timer-display').textContent='Ready';document.getElementById('timer-display').className='timer-display'}
+    function updateTimerDisplay(){const m=Math.floor(timeRemaining/60),s=timeRemaining%60,el=document.getElementById('timer-display');el.textContent=m+':'+s.toString().padStart(2,'0');if(timeRemaining<=30&&timerActive)el.className='timer-display warning';else if(timerActive)el.className='timer-display active';else el.className='timer-display'}
+    function timerFinished(){stopTimer();const el=document.getElementById('timer-display');el.textContent='Time Up!';el.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

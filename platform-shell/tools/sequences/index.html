@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sequences Practice Tool</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; min-height: 100vh; padding: 15px; overflow-x: hidden; }
+    .teacher-tab { position: fixed; left: 0; top: 50%; transform: translateY(-50%); background: #2c3e50; color: white; padding: 12px 6px; writing-mode: vertical-rl; text-orientation: mixed; cursor: pointer; z-index: 1001; border-radius: 0 6px 6px 0; font-weight: 600; font-size: 0.85em; transition: all 0.3s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.2); }
+    .teacher-tab:hover { background: #34495e; transform: translateY(-50%) translateX(5px); }
+    .sidebar { position: fixed; left: -420px; top: 0; width: 420px; height: 100vh; background: white; z-index: 1000; transition: left 0.3s ease; box-shadow: 2px 0 20px rgba(0,0,0,0.3); overflow-y: auto; }
+    .sidebar.open { left: 0; }
+    .sidebar-header { background: #2c3e50; color: white; padding: 20px; font-size: 1.3em; font-weight: 600; }
+    .sidebar-content { padding: 25px; line-height: 1.6; }
+    .sidebar-content h3 { color: #2c3e50; margin: 20px 0 10px; font-size: 1.1em; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
+    .sidebar-content p, .sidebar-content li { margin-bottom: 8px; color: #555; }
+    .sidebar-content ul { padding-left: 20px; margin-bottom: 15px; }
+    .standards-box { background: #e8f4fd; border-left: 4px solid #3498db; padding: 12px; margin: 10px 0; border-radius: 4px; }
+    .standard-code { font-weight: 700; color: #2980b9; font-family: monospace; }
+    .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 999; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+    .sidebar-overlay.active { opacity: 1; visibility: visible; }
+    .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 3px 15px rgba(0,0,0,0.1); overflow: hidden; }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 2px, transparent 2px); background-size: 50px 50px; color: white; padding: 18px 20px; text-align: center; position: relative; overflow: hidden; }
+    .header::before { content: ''; position: absolute; inset: 0; background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%); animation: shimmer 3s ease-in-out infinite; }
+    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+    .header h1 { font-size: 1.9em; margin-bottom: 3px; position: relative; z-index: 1; }
+    .tabs { display: flex; background: #ecf0f1; }
+    .tab { flex: 1; padding: 14px; background: #ecf0f1; border: none; cursor: pointer; font-size: 1em; font-weight: 600; transition: all 0.3s ease; border-bottom: 3px solid transparent; }
+    .tab:hover { background: #d5dbdb; }
+    .tab.active { background: white; border-bottom: 3px solid #3498db; color: #3498db; }
+    .controls { padding: 16px 18px; background: #f8f9fa; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid #e9ecef; }
+    .level-info h3 { color: #2c3e50; margin-bottom: 4px; font-size: 1.15em; }
+    .level-info p { color: #7f8c8d; font-size: 0.9em; }
+    .dropdown-container { margin-top: 8px; display: none; }
+    .dropdown-container.visible { display: block; }
+    .type-dropdown { padding: 7px 10px; border: 2px solid #bdc3c7; border-radius: 5px; font-size: 0.92em; background: white; cursor: pointer; min-width: 320px; }
+    .type-dropdown:focus { border-color: #3498db; outline: none; }
+    .timer-section { display: flex; align-items: center; gap: 10px; }
+    .timer-display { font-size: 1.7em; font-weight: bold; color: #2c3e50; background: white; padding: 7px 14px; border-radius: 5px; border: 2px solid #bdc3c7; min-width: 105px; text-align: center; }
+    .timer-display.active { border-color: #3498db; color: #3498db; }
+    .timer-display.warning { color: #e74c3c; border-color: #e74c3c; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+    .action-buttons { display: flex; gap: 8px; }
+    .btn { padding: 9px 16px; border: none; border-radius: 5px; font-size: 0.9em; font-weight: 600; cursor: pointer; transition: all 0.3s ease; min-width: 70px; }
+    .btn-primary { background: #3498db; color: white; } .btn-primary:hover { background: #2980b9; transform: translateY(-1px); }
+    .btn-success { background: #27ae60; color: white; } .btn-success:hover { background: #229954; transform: translateY(-1px); }
+    .btn-warning { background: #f39c12; color: white; } .btn-warning:hover { background: #e67e22; transform: translateY(-1px); }
+    .btn-danger { background: #e74c3c; color: white; } .btn-danger:hover { background: #c0392b; transform: translateY(-1px); }
+    .problems-section { padding: 18px 20px; min-height: 400px; }
+    .problem-set-header { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 14px 20px; margin: 0 0 12px; border-radius: 6px; text-align: center; font-size: 1.35em; font-weight: 700; box-shadow: 0 2px 8px rgba(52,152,219,0.3); display: none; letter-spacing: 0.3px; }
+    .problem-set-header.visible { display: block; }
+    .problem-set-header.arithmetic_next { background: linear-gradient(135deg, #27ae60 0%, #219a52 100%); }
+    .problem-set-header.geometric_next { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
+    .problem-set-header.arithmetic_formula { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); }
+    .problem-set-header.linear_from_terms { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); }
+    .problem-set-header.arithmetic_specific { background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); }
+    .problem-set-header.simple_quadratic { background: linear-gradient(135deg, #16a085 0%, #138d75 100%); }
+    .problem-set-header.quadratic_next { background: linear-gradient(135deg, #d35400 0%, #ba4a00 100%); }
+    .problem-set-header.complex_quadratic { background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%); }
+    .problem-list { list-style: none; }
+    .problem-item { background: #f8f9fa; margin: 10px 0; padding: 14px 16px; border-radius: 6px; border-left: 4px solid #3498db; transition: all 0.3s ease; }
+    .problem-item:hover { transform: translateX(2px); }
+    .problem-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: 12px; }
+    .problem-left { display: flex; align-items: center; flex: 1; min-width: 0; }
+    .problem-answer { background: #27ae60; color: white; padding: 7px 14px; border-radius: 18px; font-weight: bold; font-size: 1.05em; display: none; margin-left: 12px; white-space: nowrap; }
+    .problem-answer.visible { display: block; animation: slideIn 0.4s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(15px); } to { opacity: 1; transform: translateX(0); } }
+    .problem-number { background: #3498db; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 14px; font-size: 0.95em; flex: 0 0 auto; }
+    .sequence { font-size: 1.5em; font-family: 'Times New Roman', serif; color: #2c3e50; font-weight: 600; overflow-wrap: anywhere; }
+    .steps-section { margin-top: 10px; padding: 11px 13px; background: #f0f8ff; border-radius: 5px; border-left: 3px solid #3498db; display: none; }
+    .steps-section.visible { display: block; animation: slideDown 0.4s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .answer-label { font-weight: 600; color: #27ae60; margin-bottom: 7px; font-size: 0.95em; }
+    .solution-steps { font-size: 1.05em; line-height: 1.35; }
+    .step { margin: 5px 0; color: #2c3e50; }
+    .step-equation { font-family: 'Times New Roman', serif; font-weight: 600; color: #8e44ad; text-align: center; margin: 7px 0; font-size: 1.15em; }
+    .final-answer { background: #27ae60; color: white; padding: 7px 14px; border-radius: 5px; text-align: center; font-weight: bold; font-size: 1.15em; margin-top: 9px; }
+    .timer-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-content { background: white; padding: 28px; border-radius: 10px; text-align: center; max-width: 310px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+    .modal-content h2 { color: #e74c3c; margin-bottom: 14px; font-size: 1.75em; }
+    .modal-content p { color: #7f8c8d; margin-bottom: 18px; font-size: 0.98em; }
+    .hidden { display: none; }
+    @media (max-width: 768px) {
+      .controls { flex-direction: column; align-items: stretch; }
+      .timer-section { justify-content: center; }
+      .tabs { flex-wrap: wrap; }
+      .tab { flex: 1 1 50%; }
+      .sidebar { width: 340px; left: -340px; }
+      .type-dropdown { min-width: 100%; }
+      .problem-header { align-items: flex-start; }
+    }
+    @media (min-width: 1200px) {
+      .sequence { font-size: 1.85em; }
+      .problem-item { padding: 17px 19px; margin: 12px 0; }
+      .problem-number { width: 32px; height: 32px; font-size: 1.05em; }
+      .solution-steps { font-size: 1.18em; }
+      .step-equation { font-size: 1.35em; }
+      .problem-set-header { font-size: 1.55em; padding: 16px 24px; }
+    }
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">📐 Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool helps students practise sequences and nth term formulas at different difficulty levels. Perfect for whole-class projection and individual practice.</p>
+      <h3>US Math Standards Covered</h3>
+      <div class="standards-box"><p><span class="standard-code">8.F.A.1</span> - Understand that a function assigns exactly one output to each input.</p></div>
+      <div class="standards-box"><p><span class="standard-code">F-IF.A.3</span> - Recognize sequences as functions whose domain is a subset of integers.</p></div>
+      <div class="standards-box"><p><span class="standard-code">F-BF.A.2</span> - Write arithmetic and geometric sequences recursively and explicitly.</p></div>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1 - Basic Sequences:</strong> Finding next terms in arithmetic and geometric sequences.</li>
+        <li><strong>Level 2 - nth Term Formulas:</strong> Finding and using nth term formulas for linear and quadratic sequences.</li>
+      </ul>
+      <h3>Sequence Types Covered</h3>
+      <ul>
+        <li><strong>Arithmetic:</strong> Constant difference.</li>
+        <li><strong>Geometric:</strong> Constant ratio.</li>
+        <li><strong>Linear nth term:</strong> an + b formulas.</li>
+        <li><strong>Quadratic nth term:</strong> an² + bn + c formulas.</li>
+      </ul>
+      <h3>Teaching Tips</h3>
+      <ul>
+        <li>Start with Level 1 and specific sequence types.</li>
+        <li>Use Steps to model systematic formula derivation.</li>
+        <li>Compare arithmetic, geometric, and quadratic patterns.</li>
+        <li>Connect formulas to position numbers, not just term values.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header"><h1>📐 LYSIS - Sequences & nth Terms</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Basic</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: nth Terms</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <div class="level-controls">
+          <div>
+            <h3 id="level-title">Level 1: Basic Sequences</h3>
+            <p id="level-description">Find next terms in arithmetic and geometric sequences</p>
+          </div>
+          <div class="dropdown-container" id="dropdown-container">
+            <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+          </div>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>⏰ Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: { title: "Level 1: Basic Sequences", description: "Find next terms in arithmetic and geometric sequences", types: ['arithmetic_next', 'geometric_next'] },
+      2: { title: "Level 2: nth Term Formulas", description: "Find and use nth term formulas for linear and quadratic sequences", types: ['arithmetic_formula', 'linear_from_terms', 'arithmetic_specific', 'simple_quadratic', 'quadratic_next', 'complex_quadratic'] }
+    };
+
+    const typeDescriptions = {
+      arithmetic_next: 'Arithmetic Sequences: Find Next Terms',
+      geometric_next: 'Geometric Sequences: Find Next Terms',
+      arithmetic_formula: 'Find nth Term Formula: Arithmetic Sequences',
+      linear_from_terms: 'Linear nth Term: From Given Terms',
+      arithmetic_specific: 'Use Formula: Find Specific Terms',
+      simple_quadratic: 'Simple Quadratic Sequences',
+      quadratic_next: 'Quadratic Sequences: Find Next Terms',
+      complex_quadratic: 'Complex Quadratic nth Terms'
+    };
+    window.typeDisplayNames = typeDescriptions;
+
+    function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.sidebar-overlay').classList.toggle('active'); }
+    function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.querySelector('.sidebar-overlay').classList.remove('active'); }
+    function random(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function sup2(text){ return String(text).replaceAll('²', '<sup>2</sup>'); }
+
+    function updateProblemSetHeader(){
+      const header = document.getElementById('problem-set-header');
+      if(currentType === 'select' || !currentType){
+        header.classList.remove('visible');
+        return;
+      }
+      header.textContent = typeDescriptions[currentType] || 'Problem Set';
+      header.className = `problem-set-header visible ${currentType}`;
+    }
+
+    function generateProblem(){
+      const config = levelConfigs[currentLevel];
+      let types = config.types;
+      if(currentType !== 'all' && currentType !== 'select') types = [currentType];
+      const type = types[Math.floor(Math.random() * types.length)];
+
+      switch(type){
+        case 'arithmetic_next': {
+          const first = random(2, 10), diff = random(2, 8);
+          const terms = [first, first + diff, first + 2 * diff, first + 3 * diff];
+          const next1 = first + 4 * diff, next2 = first + 5 * diff;
+          return {
+            sequence: `${terms.join(', ')}, ___, ___`,
+            answer: `${next1}, ${next2}`,
+            steps: [`Look for the pattern:`, `${terms.join(' → ')}`, `The difference between consecutive terms is ${diff}.`, `So the pattern is +${diff}.`, `${terms[3]} + ${diff} = ${next1}`, `${next1} + ${diff} = ${next2}`]
+          };
+        }
+        case 'geometric_next': {
+          const first = random(2, 5), ratio = random(2, 4);
+          const terms = [first, first * ratio, first * ratio ** 2, first * ratio ** 3];
+          const next1 = first * ratio ** 4, next2 = first * ratio ** 5;
+          return {
+            sequence: `${terms.join(', ')}, ___, ___`,
+            answer: `${next1}, ${next2}`,
+            steps: [`Look for the pattern:`, `${terms.join(' → ')}`, `The ratio between consecutive terms is ×${ratio}.`, `So multiply by ${ratio}.`, `${terms[3]} × ${ratio} = ${next1}`, `${next1} × ${ratio} = ${next2}`]
+          };
+        }
+        case 'arithmetic_formula': {
+          const a = random(2, 8), b = random(1, 10);
+          const sequence = [a + b, 2 * a + b, 3 * a + b, 4 * a + b];
+          return {
+            sequence: `${sequence.join(', ')}, ...`,
+            answer: `${a}n + ${b}`,
+            steps: [`Find the first differences:`, `${sequence[1]} - ${sequence[0]} = ${a}`, `${sequence[2]} - ${sequence[1]} = ${a}`, `${sequence[3]} - ${sequence[2]} = ${a}`, `Common difference = ${a}`, `Formula: nth term = ${a}n + c`, `Using the 1st term: ${a}(1) + c = ${sequence[0]}`, `c = ${sequence[0]} - ${a} = ${b}`, `nth term = ${a}n + ${b}`]
+          };
+        }
+        case 'linear_from_terms': {
+          const coeff = random(3, 7), constTerm = random(1, 8);
+          const pos1 = random(3, 6), pos2 = pos1 + random(2, 4);
+          const term1 = coeff * pos1 + constTerm, term2 = coeff * pos2 + constTerm;
+          return {
+            sequence: `T<sub>${pos1}</sub> = ${term1}, T<sub>${pos2}</sub> = ${term2}`,
+            answer: `${coeff}n + ${constTerm}`,
+            steps: [`Given T<sub>${pos1}</sub> = ${term1} and T<sub>${pos2}</sub> = ${term2}.`, `For a linear sequence, T<sub>n</sub> = an + b.`, `Change in terms: ${term2} - ${term1} = ${term2 - term1}`, `Change in position: ${pos2} - ${pos1} = ${pos2 - pos1}`, `a = ${(term2 - term1)} ÷ ${(pos2 - pos1)} = ${coeff}`, `Substitute: ${coeff} × ${pos1} + b = ${term1}`, `b = ${constTerm}`, `T<sub>n</sub> = ${coeff}n + ${constTerm}`]
+          };
+        }
+        case 'arithmetic_specific': {
+          const a = random(3, 8), b = random(2, 12), n = random(8, 15);
+          const result = a * n + b;
+          return {
+            sequence: `T<sub>n</sub> = ${a}n + ${b}, find T<sub>${n}</sub>`,
+            answer: `${result}`,
+            steps: [`Given T<sub>n</sub> = ${a}n + ${b}.`, `Substitute n = ${n}.`, `T<sub>${n}</sub> = ${a}(${n}) + ${b}`, `T<sub>${n}</sub> = ${a * n} + ${b}`, `T<sub>${n}</sub> = ${result}`]
+          };
+        }
+        case 'simple_quadratic': {
+          const a = random(1, 3), b = random(1, 5), c = random(0, 3);
+          const seq = [1, 2, 3, 4].map(n => a * n * n + b * n + c);
+          const fd = [seq[1] - seq[0], seq[2] - seq[1], seq[3] - seq[2]];
+          const sd = [fd[1] - fd[0], fd[2] - fd[1]];
+          return {
+            sequence: `${seq.join(', ')}, ...`,
+            answer: `${a}n² + ${b}n + ${c}`,
+            steps: [`Step 1: Find first differences.`, `First differences: ${fd.join(', ')}`, `Step 2: Find second differences.`, `Second differences: ${sd.join(', ')}`, `Second differences are constant, so the sequence is quadratic.`, `Second difference = 2a, so 2a = ${sd[0]}.`, `a = ${a}`, `Using the first terms gives b = ${b} and c = ${c}.`, `T<sub>n</sub> = ${a}n² + ${b}n + ${c}`]
+          };
+        }
+        case 'quadratic_next': {
+          const a = random(1, 2), b = random(1, 4), c = random(0, 2);
+          const seq = [1, 2, 3, 4].map(n => a * n * n + b * n + c);
+          const fd = [seq[1] - seq[0], seq[2] - seq[1], seq[3] - seq[2]];
+          const second = fd[1] - fd[0];
+          const nextDiff = fd[2] + second, followingDiff = nextDiff + second;
+          const next1 = seq[3] + nextDiff, next2 = next1 + followingDiff;
+          return {
+            sequence: `${seq.join(', ')}, ___, ___`,
+            answer: `${next1}, ${next2}`,
+            steps: [`First differences: ${fd.join(', ')}`, `Second difference: ${second}`, `Continue first differences: ${nextDiff}, ${followingDiff}`, `5th term: ${seq[3]} + ${nextDiff} = ${next1}`, `6th term: ${next1} + ${followingDiff} = ${next2}`]
+          };
+        }
+        case 'complex_quadratic': {
+          const a = random(2, 4), b = random(-3, -1), c = random(3, 8);
+          const seq = [1, 2, 3, 4].map(n => a * n * n + b * n + c);
+          const fd = [seq[1] - seq[0], seq[2] - seq[1], seq[3] - seq[2]];
+          const sd = [fd[1] - fd[0], fd[2] - fd[1]];
+          return {
+            sequence: `${seq.join(', ')}, ...`,
+            answer: `${a}n² ${b >= 0 ? '+' : ''}${b}n + ${c}`,
+            steps: [`Terms: ${seq.join(', ')}`, `First differences: ${fd.join(', ')}`, `Second differences: ${sd.join(', ')}`, `Second difference = 2a = ${sd[0]}, so a = ${a}.`, `Use T<sub>1</sub>, T<sub>2</sub>, and T<sub>3</sub> to solve for b and c.`, `b = ${b}, c = ${c}`, `T<sub>n</sub> = ${a}n² ${b >= 0 ? '+' : ''}${b}n + ${c}`]
+          };
+        }
+        default:
+          return generateProblem();
+      }
+    }
+
+    function switchLevel(level){
+      currentLevel = level;
+      currentType = 'select';
+      document.querySelectorAll('.tab').forEach((tab, index) => tab.classList.toggle('active', index + 1 === level));
+      const config = levelConfigs[level];
+      document.getElementById('level-title').textContent = config.title;
+      document.getElementById('level-description').textContent = config.description;
+      const dropdownContainer = document.getElementById('dropdown-container');
+      const dropdown = document.getElementById('type-dropdown');
+      dropdownContainer.classList.add('visible');
+      if(level === 1){
+        dropdown.innerHTML = `<option value="select">Select Sequence Type</option><option value="arithmetic_next">Arithmetic: Find Next Terms</option><option value="geometric_next">Geometric: Find Next Terms</option>`;
+      } else {
+        dropdown.innerHTML = `<option value="select">Select Problem Type</option><option value="arithmetic_formula">Find nth Term Formula (Linear)</option><option value="linear_from_terms">Formula from Given Terms (Linear)</option><option value="arithmetic_specific">Use Formula to Find Term</option><option value="simple_quadratic">Simple Quadratic Sequences</option><option value="quadratic_next">Quadratic: Find Next Terms</option><option value="complex_quadratic">Complex Quadratic nth Terms</option>`;
+      }
+      dropdown.value = 'select';
+      updateProblemSetHeader();
+      showBlankPage();
+    }
+
+    function typeChanged(){
+      currentType = document.getElementById('type-dropdown').value;
+      updateProblemSetHeader();
+      if(currentType === 'select') showBlankPage();
+      else generateNewSet();
+    }
+
+    function showBlankPage(){
+      document.getElementById('problem-list').innerHTML = '<li style="text-align: center; padding: 35px; color: #7f8c8d; font-size: 1.1em;">Please select a sequence type to begin</li>';
+      document.getElementById('problem-set-header').classList.remove('visible');
+    }
+
+    function generateNewSet(){
+      if(currentType === 'select') { showBlankPage(); return; }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      for(let i = 0; i < 5; i++) problems.push(generateProblem());
+      updateProblemSetHeader();
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const container = document.getElementById('problem-list');
+      container.innerHTML = '';
+      problems.forEach((problem, index) => {
+        const li = document.createElement('li');
+        li.className = 'problem-item';
+        const stepsHTML = problem.steps.map(step => {
+          if(step.includes('=') && !step.includes(':') && !step.includes('(')) return `<div class="step-equation">${step}</div>`;
+          return `<div class="step">${step}</div>`;
+        }).join('');
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index + 1}</div>
+              <div class="sequence">${sup2(problem.sequence)}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${sup2(problem.answer)}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Solution Steps:</div>
+            <div class="solution-steps">${sup2(stepsHTML)}<div class="final-answer">${sup2(problem.answer)}</div></div>
+          </div>`;
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers(){
+      answersVisible = !answersVisible;
+      for(let i = 0; i < 5; i++){
+        const answer = document.getElementById(`quick-answer-${i}`);
+        if(answer) answer.classList.toggle('visible', answersVisible);
+      }
+    }
+
+    function showSteps(){
+      stepsVisible = !stepsVisible;
+      for(let i = 0; i < 5; i++){
+        const section = document.getElementById(`steps-${i}`);
+        if(section) section.classList.toggle('visible', stepsVisible);
+      }
+    }
+
+    function startTimer(minutes){
+      if(timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if(timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer(){
+      if(timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById('timer-display');
+      display.textContent = 'Ready';
+      display.className = 'timer-display';
+    }
+
+    function updateTimerDisplay(){
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById('timer-display');
+      display.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      if(timeRemaining <= 30) display.className = 'timer-display warning';
+      else if(timerActive) display.className = 'timer-display active';
+      else display.className = 'timer-display';
+    }
+
+    function timerFinished(){
+      stopTimer();
+      const display = document.getElementById('timer-display');
+      display.textContent = 'Time Up!';
+      display.className = 'timer-display warning';
+      document.getElementById('timer-modal').classList.remove('hidden');
+    }
+
+    function closeModal(){ document.getElementById('timer-modal').classList.add('hidden'); }
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

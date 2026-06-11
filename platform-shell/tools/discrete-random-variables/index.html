@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discrete Random Variables Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:white;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:white;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:white;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:white;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 50%,rgba(0,0,0,.05) 100%)}.header h1{font-size:2.2em;margin-bottom:5px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:18px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:white;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:25px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.3em}.level-info p{color:#718096;font-size:1em}.dropdown-container{margin-top:10px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:white;cursor:pointer;min-width:380px}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:2em;font-weight:bold;color:#1a365d;background:white;padding:10px 18px;border-radius:6px;border:2px solid #cbd5e0;min-width:120px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:12px 22px;border:none;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.9)}
+    .problems-section{padding:20px;min-height:500px}.problem-set-header{color:white;padding:15px 25px;margin-bottom:15px;border-radius:8px;font-size:1.3em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.basic{background:#38a169}.problem-set-header.expectation{background:#e53e3e}.problem-set-header.distributions{background:#d69e2e}.problem-set-header.variance{background:#3182ce}.problem-set-header.advanced{background:#805ad5}
+    .problem-list{list-style:none}.problem-item{background:#f7fafc;margin:10px 0;padding:15px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(2px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:8px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;margin-right:15px;font-size:1em;flex-shrink:0}.equation{font-size:1.28em;color:#1a365d;font-weight:500;line-height:1.4}.problem-answer{background:#38a169;color:white;padding:8px 15px;border-radius:20px;font-weight:bold;font-size:1.05em;display:none;text-align:center;flex-shrink:0}.problem-answer.visible{display:block;animation:slideIn .4s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{margin-top:12px;padding:12px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .4s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:600;color:#38a169;margin-bottom:8px;font-size:1em}.solution-steps{font-size:1.05em;line-height:1.45}.step{margin:6px 0;color:#1a365d}.step-equation{font-weight:600;color:#805ad5;text-align:center;margin:8px 0;font-size:1.15em}.final-answer{background:#38a169;color:white;padding:8px 15px;border-radius:6px;text-align:center;font-weight:bold;font-size:1.15em;margin-top:10px}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}.prob-table{border-collapse:collapse;margin:8px auto;background:white;border-radius:6px;overflow:hidden}.prob-table td,.prob-table th{padding:6px 10px;border:1px solid #cbd5e0;text-align:center;font-size:.95em}.prob-table th{background:#3182ce;color:white;font-weight:600}.highlight{background:#fef2e7;color:#d69e2e;padding:2px 6px;border-radius:4px;font-weight:bold}.step-arrow{font-size:1.5em;color:#3182ce;margin:0 10px}.step-indicator{background:#3182ce;color:white;padding:4px 8px;border-radius:4px;font-size:.9em;font-weight:bold;margin-right:10px;white-space:nowrap}
+    @media (max-width:768px){.controls{flex-direction:column;align-items:stretch;padding:15px}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%;padding:12px}.sidebar{width:320px;left:-320px}.type-dropdown{min-width:260px;width:100%}.equation{font-size:1.12em}.problem-header{align-items:flex-start;flex-direction:column}.problem-answer{align-self:stretch}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool helps students master discrete random variables, expectation, variance, and common standard distributions.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Probability distributions, missing probabilities, and validity checks.</li>
+        <li><strong>Level 2:</strong> Expected value, variance, standard deviation, and linear expectation properties.</li>
+        <li><strong>Level 3:</strong> Binomial, geometric, Poisson, and distribution-identification tasks.</li>
+      </ul>
+      <h3>Key Concepts</h3>
+      <ul>
+        <li><strong>Expected Value:</strong> E(X) = sum of x times P(X=x).</li>
+        <li><strong>Variance:</strong> Var(X) = E(X²) - [E(X)]².</li>
+        <li><strong>Standard Deviation:</strong> SD(X) = sqrt(Var(X)).</li>
+      </ul>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Forgetting probabilities must sum to 1.</li>
+        <li>Not weighting values by their probabilities.</li>
+        <li>Using E(X²) - E(X) instead of E(X²) - [E(X)]².</li>
+        <li>Thinking Var(X + b) changes when only a constant is added.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header"><h1>Discrete Random Variables & Expectation</h1></section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Fundamentals</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Expectation</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Distributions</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Fundamentals</h3>
+        <p id="level-description">Probability distributions and basic calculations</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="find_probability">Type 1: Find probability from distribution</option>
+            <option value="complete_distribution">Type 2: Complete probability distribution</option>
+            <option value="verify_distribution">Type 3: Verify valid distribution</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Fundamentals",
+        description: "Probability distributions and basic calculations",
+        options: [
+          ["find_probability", "Type 1: Find probability from distribution"],
+          ["complete_distribution", "Type 2: Complete probability distribution"],
+          ["verify_distribution", "Type 3: Verify valid distribution"]
+        ]
+      },
+      2: {
+        title: "Level 2: Expectation & Variance",
+        description: "Expected value, variance, standard deviation",
+        options: [
+          ["calc_expectation", "Type 1: Calculate expected value"],
+          ["calc_variance", "Type 2: Calculate variance"],
+          ["properties_expectation", "Type 3: Properties of expectation"],
+          ["combined_calculations", "Type 4: Combined E(X), Var(X), SD(X)"]
+        ]
+      },
+      3: {
+        title: "Level 3: Standard Distributions",
+        description: "Binomial, geometric, and Poisson distributions",
+        options: [
+          ["binomial_problems", "Type 1: Binomial distribution"],
+          ["geometric_problems", "Type 2: Geometric distribution"],
+          ["poisson_problems", "Type 3: Poisson distribution"],
+          ["identify_distribution", "Type 4: Identify distribution type"]
+        ]
+      }
+    };
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomElement(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function factorial(n) {
+      let result = 1;
+      for (let i = 2; i <= n; i++) result *= i;
+      return result;
+    }
+
+    function choose(n, k) {
+      return factorial(n) / (factorial(k) * factorial(n - k));
+    }
+
+    function table(values, probs) {
+      return '<table class="prob-table"><tr><th>x</th>' + values.map((value) => "<td>" + value + "</td>").join("") + "</tr><tr><th>P(X=x)</th>" + probs.map((prob) => "<td>" + prob + "</td>").join("") + "</tr></table>";
+    }
+
+    function sum(values) {
+      return values.reduce((total, value) => total + value, 0);
+    }
+
+    function fmt(value, dp = 2) {
+      return Number(value).toFixed(dp);
+    }
+
+    function generateProblem() {
+      switch (currentType) {
+        case "find_probability": return genFindProbability();
+        case "complete_distribution": return genCompleteDistribution();
+        case "verify_distribution": return genVerifyDistribution();
+        case "calc_expectation": return genExpectation();
+        case "calc_variance": return genVariance();
+        case "properties_expectation": return genExpectationProperty();
+        case "combined_calculations": return genCombined();
+        case "binomial_problems": return genBinomial();
+        case "geometric_problems": return genGeometric();
+        case "poisson_problems": return genPoisson();
+        case "identify_distribution": return genIdentifyDistribution();
+        default: return genFindProbability();
+      }
+    }
+
+    function genFindProbability() {
+      const values = [0, 1, 2, 3, 4];
+      const probs = [0.10, 0.15, 0.25, 0.30, 0.20];
+      const mode = randomElement(["single", "less_equal", "greater", "range"]);
+      let question;
+      let answer;
+      let included;
+
+      if (mode === "single") {
+        const x = randomElement(values);
+        included = [x];
+        question = "Find P(X = " + x + ")";
+      } else if (mode === "less_equal") {
+        const cutoff = random(1, 3);
+        included = values.filter((value) => value <= cutoff);
+        question = "Find P(X <= " + cutoff + ")";
+      } else if (mode === "greater") {
+        const cutoff = random(1, 3);
+        included = values.filter((value) => value > cutoff);
+        question = "Find P(X > " + cutoff + ")";
+      } else {
+        const lower = random(1, 2);
+        const upper = random(lower + 1, 4);
+        included = values.filter((value) => value >= lower && value <= upper);
+        question = "Find P(" + lower + " <= X <= " + upper + ")";
+      }
+
+      answer = sum(included.map((value) => probs[value]));
+      return {
+        badge: "basic",
+        equation: table(values, probs.map((p) => p.toFixed(2))) + "<br>" + question,
+        answer: answer.toFixed(2),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Identify the values included',
+          "Included values: " + included.map((value) => "X = " + value).join(", "),
+          '<span class="step-indicator">Step 2</span> Add the matching probabilities',
+          included.map((value) => "P(X=" + value + ")").join(" + ") + " = " + included.map((value) => probs[value].toFixed(2)).join(" + "),
+          '<span class="step-arrow">-></span> ' + answer.toFixed(2)
+        ]
+      };
+    }
+
+    function genCompleteDistribution() {
+      const templates = [
+        [0.15, 0.20, 0.25, 0.40],
+        [0.10, 0.30, 0.35, 0.25],
+        [0.05, 0.15, 0.30, 0.20, 0.30]
+      ];
+      const probs = randomElement(templates).slice();
+      const values = probs.map((_, index) => index + 1);
+      const missingIndex = random(0, probs.length - 1);
+      const variable = randomElement(["a", "b", "p", "q"]);
+      const knownSum = sum(probs.filter((_, index) => index !== missingIndex));
+      const display = probs.map((prob, index) => index === missingIndex ? variable : prob.toFixed(2));
+      return {
+        badge: "basic",
+        equation: table(values, display) + "<br>Find " + variable,
+        answer: variable + " = " + probs[missingIndex].toFixed(2),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Use the total probability rule',
+          "All probabilities must sum to 1.",
+          '<span class="step-indicator">Step 2</span> Add known probabilities',
+          "Known sum = " + knownSum.toFixed(2),
+          '<span class="step-indicator">Step 3</span> Subtract from 1',
+          variable + " = 1 - " + knownSum.toFixed(2) + " = " + probs[missingIndex].toFixed(2),
+          '<span class="step-arrow">-></span> ' + variable + " = " + probs[missingIndex].toFixed(2)
+        ]
+      };
+    }
+
+    function genVerifyDistribution() {
+      const valid = Math.random() < 0.5;
+      const probs = valid ? randomElement([[0.20, 0.30, 0.50], [0.10, 0.20, 0.30, 0.40], [0.10, 0.15, 0.20, 0.25, 0.30]]) : randomElement([[0.20, 0.40, 0.50], [0.20, 0.20, 0.30, 0.40], [0.15, 0.15, 0.20, 0.25, 0.30]]);
+      const values = probs.map((_, index) => index);
+      const total = sum(probs);
+      return {
+        badge: "basic",
+        equation: "Is this a valid probability distribution?<br>" + table(values, probs.map((p) => p.toFixed(2))),
+        answer: valid ? "Yes, valid" : "No, invalid",
+        steps: [
+          '<span class="step-indicator">Step 1</span> Check each probability',
+          "Each probability is between 0 and 1.",
+          '<span class="step-indicator">Step 2</span> Add all probabilities',
+          probs.map((p) => p.toFixed(2)).join(" + ") + " = " + total.toFixed(2),
+          '<span class="step-arrow">-></span> ' + (valid ? "Sum is 1.00, so valid." : "Sum is not 1.00, so invalid.")
+        ]
+      };
+    }
+
+    function genExpectation() {
+      const values = [0, 1, 2, 3];
+      const probs = [0.10, 0.30, 0.40, 0.20];
+      const ex = values.reduce((total, value, index) => total + value * probs[index], 0);
+      return {
+        badge: "expectation",
+        equation: "Calculate E(X) for:<br>" + table(values, probs.map((p) => p.toFixed(2))),
+        answer: ex.toFixed(1),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Use E(X) = sum xP(X=x)',
+          "E(X) = 0(0.10) + 1(0.30) + 2(0.40) + 3(0.20)",
+          "= 0 + 0.30 + 0.80 + 0.60",
+          '<span class="step-arrow">-></span> E(X) = ' + ex.toFixed(1)
+        ]
+      };
+    }
+
+    function genVariance() {
+      const values = [1, 2, 3];
+      const probs = [0.20, 0.50, 0.30];
+      const ex = values.reduce((total, value, index) => total + value * probs[index], 0);
+      const ex2 = values.reduce((total, value, index) => total + value * value * probs[index], 0);
+      const variance = ex2 - ex * ex;
+      return {
+        badge: "variance",
+        equation: "Calculate Var(X) for:<br>" + table(values, probs.map((p) => p.toFixed(2))),
+        answer: variance.toFixed(2),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Calculate E(X)',
+          "E(X) = 1(0.20) + 2(0.50) + 3(0.30) = " + ex.toFixed(1),
+          '<span class="step-indicator">Step 2</span> Calculate E(X²)',
+          "E(X²) = 1²(0.20) + 2²(0.50) + 3²(0.30) = " + ex2.toFixed(1),
+          '<span class="step-indicator">Step 3</span> Use Var(X) = E(X²) - [E(X)]²',
+          "Var(X) = " + ex2.toFixed(1) + " - (" + ex.toFixed(1) + ")² = " + variance.toFixed(2),
+          '<span class="step-arrow">-></span> ' + variance.toFixed(2)
+        ]
+      };
+    }
+
+    function genExpectationProperty() {
+      const a = random(2, 5);
+      const b = random(1, 4);
+      const ex = random(3, 6);
+      const form = randomElement(["aX+b", "aX-b", "b-aX"]);
+      let equation;
+      let result;
+      let working;
+      if (form === "aX+b") {
+        result = a * ex + b;
+        equation = "If E(X) = " + ex + ", find E(" + a + "X + " + b + ")";
+        working = a + "E(X) + " + b + " = " + a + "(" + ex + ") + " + b;
+      } else if (form === "aX-b") {
+        result = a * ex - b;
+        equation = "If E(X) = " + ex + ", find E(" + a + "X - " + b + ")";
+        working = a + "E(X) - " + b + " = " + a + "(" + ex + ") - " + b;
+      } else {
+        result = b - a * ex;
+        equation = "If E(X) = " + ex + ", find E(" + b + " - " + a + "X)";
+        working = b + " - " + a + "E(X) = " + b + " - " + a + "(" + ex + ")";
+      }
+      return {
+        badge: "expectation",
+        equation,
+        answer: String(result),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Use linearity of expectation',
+          "E(aX + b) = aE(X) + b",
+          '<span class="step-indicator">Step 2</span> Substitute',
+          working,
+          '<span class="step-arrow">-></span> ' + result
+        ]
+      };
+    }
+
+    function genCombined() {
+      const values = [0, 1, 2];
+      const probs = [0.25, 0.50, 0.25];
+      const ex = 1;
+      const ex2 = 1.5;
+      const variance = ex2 - ex * ex;
+      const sd = Math.sqrt(variance);
+      return {
+        badge: "variance",
+        equation: "Find E(X), Var(X), and SD(X):<br>" + table(values, probs.map((p) => p.toFixed(2))),
+        answer: "E(X)=1, Var(X)=0.50, SD=0.71",
+        steps: [
+          '<span class="step-indicator">Step 1</span> Calculate E(X)',
+          "E(X) = 0(0.25) + 1(0.50) + 2(0.25) = " + ex,
+          '<span class="step-indicator">Step 2</span> Calculate E(X²)',
+          "E(X²) = 0²(0.25) + 1²(0.50) + 2²(0.25) = " + ex2,
+          '<span class="step-indicator">Step 3</span> Calculate variance and SD',
+          "Var(X) = " + ex2 + " - " + ex + "² = " + variance.toFixed(2),
+          "SD(X) = sqrt(" + variance.toFixed(2) + ") = " + sd.toFixed(2),
+          '<span class="step-arrow">-></span> E(X)=1, Var(X)=0.50, SD=0.71'
+        ]
+      };
+    }
+
+    function genBinomial() {
+      const n = random(5, 8);
+      const p = randomElement([0.30, 0.40, 0.50, 0.60]);
+      const ex = n * p;
+      const variance = n * p * (1 - p);
+      const k = random(1, Math.min(3, n));
+      const pk = choose(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+      return {
+        badge: "distributions",
+        equation: "X ~ B(" + n + ", " + p.toFixed(2) + "). Find E(X), Var(X), and P(X=" + k + ").",
+        answer: "E(X)=" + ex.toFixed(1) + ", Var(X)=" + variance.toFixed(2) + ", P(X=" + k + ")=" + pk.toFixed(3),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Use binomial formulas',
+          "E(X) = np = " + n + "(" + p.toFixed(2) + ") = " + ex.toFixed(1),
+          "Var(X) = np(1-p) = " + variance.toFixed(2),
+          '<span class="step-indicator">Step 2</span> Use P(X=k) = nCk p^k(1-p)^(n-k)',
+          "P(X=" + k + ") = " + n + "C" + k + "(" + p.toFixed(2) + ")^" + k + "(" + (1 - p).toFixed(2) + ")^" + (n - k) + " = " + pk.toFixed(3),
+          '<span class="step-arrow">-></span> ' + pk.toFixed(3)
+        ]
+      };
+    }
+
+    function genGeometric() {
+      const p = randomElement([0.20, 0.25, 0.30, 0.40, 0.50]);
+      const ex = 1 / p;
+      const variance = (1 - p) / (p * p);
+      const k = random(2, 5);
+      const pk = Math.pow(1 - p, k - 1) * p;
+      return {
+        badge: "distributions",
+        equation: "X is geometric with p = " + p.toFixed(2) + ". Find E(X), Var(X), and P(X=" + k + ").",
+        answer: "E(X)=" + ex.toFixed(1) + ", Var(X)=" + variance.toFixed(2) + ", P(X=" + k + ")=" + pk.toFixed(3),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Use geometric formulas',
+          "E(X)=1/p=" + ex.toFixed(1),
+          "Var(X)=(1-p)/p²=" + variance.toFixed(2),
+          '<span class="step-indicator">Step 2</span> First success on trial k',
+          "P(X=" + k + ") = (1-p)^" + (k - 1) + "p = " + pk.toFixed(3),
+          '<span class="step-arrow">-></span> ' + pk.toFixed(3)
+        ]
+      };
+    }
+
+    function genPoisson() {
+      const lambda = random(2, 6);
+      const k = random(0, 4);
+      const pk = Math.exp(-lambda) * Math.pow(lambda, k) / factorial(k);
+      return {
+        badge: "distributions",
+        equation: "X ~ Poisson(" + lambda + "). Find E(X), Var(X), and P(X=" + k + ").",
+        answer: "E(X)=" + lambda + ", Var(X)=" + lambda + ", P(X=" + k + ")=" + pk.toFixed(3),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Use Poisson properties',
+          "E(X)=lambda=" + lambda + " and Var(X)=lambda=" + lambda,
+          '<span class="step-indicator">Step 2</span> Use P(X=k)=e^-lambda lambda^k/k!',
+          "P(X=" + k + ") = e^-" + lambda + " × " + lambda + "^" + k + " / " + k + "! = " + pk.toFixed(3),
+          '<span class="step-arrow">-></span> ' + pk.toFixed(3)
+        ]
+      };
+    }
+
+    function genIdentifyDistribution() {
+      const scenarios = [
+        { desc: "Roll a die until you get a 6", answer: "Geometric", reason: "counting trials until first success", param: "p = 1/6" },
+        { desc: "Flip a coin 10 times and count heads", answer: "Binomial", reason: "fixed number of trials and counting successes", param: "n = 10, p = 0.5" },
+        { desc: "Count cars passing a point in one hour", answer: "Poisson", reason: "counting events in a fixed interval", param: "lambda = rate per hour" },
+        { desc: "Draw cards until the first Ace", answer: "Geometric", reason: "counting trials until first success", param: "p = 4/52" }
+      ];
+      const scenario = randomElement(scenarios);
+      return {
+        badge: "advanced",
+        equation: 'Identify the distribution:<br>"' + scenario.desc + '"',
+        answer: scenario.answer + " (" + scenario.param + ")",
+        steps: [
+          '<span class="step-indicator">Step 1</span> Identify the structure',
+          scenario.reason,
+          '<span class="step-indicator">Step 2</span> Name the distribution and parameter',
+          scenario.answer + " distribution with " + scenario.param,
+          '<span class="step-arrow">-></span> ' + scenario.answer
+        ]
+      };
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index + 1 === level));
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + config.options.map(([value, label]) => '<option value="' + value + '">' + label + "</option>").join("");
+      dropdown.value = "select";
+      document.getElementById("dropdown-container").classList.add("visible");
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function showBlankPage() {
+      const header = document.getElementById("problem-set-header");
+      header.classList.remove("visible");
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center;padding:40px;color:#718096;font-size:1.1em;">Please select a question type to begin practicing discrete random variables</li>';
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      const numProblems = currentLevel === 1 || ["calc_expectation", "calc_variance", "combined_calculations"].includes(currentType) ? 3 : 5;
+      for (let i = 0; i < numProblems; i++) problems.push(generateProblem());
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const container = document.getElementById("problem-list");
+      const header = document.getElementById("problem-set-header");
+      container.innerHTML = "";
+      if (problems.length) {
+        header.textContent = problems[0].badge.toUpperCase() + " PROBLEMS";
+        header.className = "problem-set-header visible " + problems[0].badge;
+      } else {
+        header.classList.remove("visible");
+      }
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        const stepsHTML = problem.steps.map((step) => step.indexOf("->") !== -1 || (step.indexOf("=") !== -1 && step.indexOf("(") !== -1) ? '<div class="step-equation">' + step + "</div>" : '<div class="step">' + step + "</div>").join("");
+        li.innerHTML =
+          '<div class="problem-header"><div class="problem-left"><div class="problem-number">' + (index + 1) + '</div><div class="equation">' + problem.equation + '</div></div><div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div></div><div class="steps-section" id="steps-' + index + '"><div class="answer-label">Solution Steps:</div><div class="solution-steps">' + stepsHTML + '<div class="final-answer">' + problem.answer + "</div></div></div>";
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const answer = document.getElementById("quick-answer-" + i);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      }
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const section = document.getElementById("steps-" + i);
+        if (section) section.classList.toggle("visible", stepsVisible);
+      }
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerActive = false;
+      document.getElementById("timer-display").textContent = "Ready";
+      document.getElementById("timer-display").className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const element = document.getElementById("timer-display");
+      element.textContent = minutes + ":" + String(seconds).padStart(2, "0");
+      if (timeRemaining <= 30) element.className = "timer-display warning";
+      else if (timerActive) element.className = "timer-display active";
+      else element.className = "timer-display";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      document.getElementById("timer-display").textContent = "Time Up!";
+      document.getElementById("timer-display").className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

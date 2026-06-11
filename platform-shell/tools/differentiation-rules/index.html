@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Differentiation Rules Practice Tool</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:15px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:12px 6px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 6px 6px 0;font-weight:600;font-size:.85em;transition:.3s;box-shadow:2px 0 8px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 3px 15px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:25px 25px;background-position:0 0,12px 12px;color:#fff;padding:20px;text-align:center;position:relative;overflow:hidden}.header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}.header h1{font-size:2em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:12px;background:#e2e8f0;border:0;cursor:pointer;font-size:1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:15px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:3px;font-size:1.2em}.level-info p{color:#718096;font-size:.95em}.dropdown-container{margin-top:8px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:6px 10px;border:2px solid #cbd5e0;border-radius:5px;font-size:.95em;background:#fff;cursor:pointer;min-width:260px;max-width:100%}.type-dropdown:focus{border-color:#3182ce;outline:0}
+    .timer-section{display:flex;align-items:center;gap:12px}.timer-display{font-size:1.6em;font-weight:700;color:#1a365d;background:#fff;padding:8px 14px;border-radius:5px;border:2px solid #cbd5e0;min-width:100px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.action-buttons{display:flex;gap:8px}.btn{padding:8px 16px;border:0;border-radius:5px;font-size:.9em;font-weight:600;cursor:pointer;transition:.3s;min-width:70px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:15px 25px 25px;min-height:500px}.problem-set-header{background:#3182ce;color:#fff;padding:12px 20px;margin-bottom:15px;border-radius:6px;font-size:1.2em;font-weight:700;text-align:center;box-shadow:0 2px 8px rgba(49,130,206,.3);display:none}.problem-set-header.visible{display:block}.problem-set-header.type-1{background:#3182ce}.problem-set-header.type-2{background:#38a169}.problem-set-header.type-3{background:#d69e2e}.problem-list{list-style:none}.problem-item{background:#f7fafc;margin:12px 0;padding:15px 20px;border-radius:6px;border-left:4px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(2px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3182ce;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:15px;flex-shrink:0}.equation{font-size:1.2em;color:#1a365d;max-width:100%;overflow-x:auto}.problem-answer{background:#38a169;color:#fff;padding:8px 16px;border-radius:20px;font-weight:700;display:none;margin-left:15px;max-width:44%;white-space:nowrap;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}.steps-section{margin-top:12px;padding:12px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#3182ce;margin-bottom:12px}.solution-steps{font-size:1em;line-height:1.8}.step{margin:10px 0;color:#2d3748;overflow-x:auto}.final-answer{background:#38a169;color:#fff;padding:10px 16px;border-radius:5px;text-align:center;font-weight:700;margin-top:12px;overflow-x:auto}.rule-name{color:#805ad5;font-weight:700;background:#faf5ff;padding:2px 6px;border-radius:3px}.timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:30px;border-radius:10px;text-align:center;max-width:320px;box-shadow:0 8px 25px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:15px}.modal-content p{color:#718096;margin-bottom:20px}.hidden{display:none!important}
+    @media(max-width:768px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:320px;left:-320px}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{max-width:100%;margin-left:43px}.problems-section{padding:12px}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>What this tool is for</h3>
+      <p>Interactive practice for differentiating trigonometric functions using power, chain, product, and quotient rules. It scaffolds from core fluency to multi-step compositions and provides stepwise model solutions.</p>
+      <h3>Level Overview</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Core sin, cos, tan, sec, csc, cot derivatives with linear inners and trig powers.</li>
+        <li><strong>Level 2:</strong> Composite inners, products of trig, and quotients of trig only.</li>
+        <li><strong>Level 3:</strong> Nested chains, powers of trig with extra factors, and three-factor products.</li>
+        <li><strong>Level 4:</strong> Exam-style blends requiring rule selection and algebraic tidying.</li>
+      </ul>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Missing the inner derivative in the chain rule.</li>
+        <li>Incorrect signs for cos, csc, and cot derivatives.</li>
+        <li>Losing squared factors such as sec^2 u and csc^2 u.</li>
+        <li>Choosing product when quotient is required, or vice versa.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <div class="header"><h1>Differentiation Rules Teaching Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Core Trig</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Chain, Product, Quotient</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Advanced Compositions</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Mixed Challenges</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Core Trig Derivatives</h3>
+        <p id="level-description">Differentiate basic trig with linear inner functions, and powers of trig via chain and power rules.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="standard_polynomials">Type 1: Basic Trig (with linear inner)</option>
+            <option value="fractional_indices">Type 2: Powers of Trig (chain + power)</option>
+            <option value="negative_indices">Type 3: Sec, Csc, Cot (basics)</option>
+            <option value="mixed_powers">Type 4: Mixed Core Trig</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"><span id="problem-type-title">Select a question type to begin</span></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={
+      1:{title:'Level 1: Core Trig Derivatives',description:'Differentiate basic trig with linear inner functions, and powers of trig via chain and power rules.',types:['standard_polynomials','fractional_indices','negative_indices','mixed_powers']},
+      2:{title:'Level 2: Chain, Product, and Quotient (Trig Only)',description:'Composite trig inner functions; product of trig; quotient of trig.',types:['product_rule','chain_rule','quotient_rule','combination']},
+      3:{title:'Level 3: Advanced Trig Compositions',description:'Nested chains and multi-factor products of trig expressions.',types:['trig_functions','log_functions','mixed_advanced']},
+      4:{title:'Level 4: Mixed Trig Challenges',description:'Exam-style blends of chain, product, and quotient for trig functions.',types:['tangents_normals','turning_points']}
+    };
+    const names={standard_polynomials:'Type 1: Basic Trig (with linear inner)',fractional_indices:'Type 2: Powers of Trig (chain + power)',negative_indices:'Type 3: Sec, Csc, Cot (basics)',mixed_powers:'Type 4: Mixed Core Trig',product_rule:'Type 1: Product Rule (Trig x Trig)',chain_rule:'Type 2: Chain Rule (Trig of inner)',quotient_rule:'Type 3: Quotient Rule (Trig / Trig)',combination:'Type 4: Combination (multi-step)',trig_functions:'Type 1: Advanced Chains (nested)',log_functions:'Type 2: Trig Powers x Trig',mixed_advanced:'Type 3: Three-factor Products',tangents_normals:'Type 1: Mixed Set A',turning_points:'Type 2: Mixed Set B'};
+    window.typeDisplayNames={standard_polynomials:'Basic trig with linear inner',fractional_indices:'Powers of trig with chain and power rules',negative_indices:'Sec, csc, and cot basics',mixed_powers:'Mixed core trig derivatives',product_rule:'Product rule with trig functions',chain_rule:'Chain rule with trig inner functions',quotient_rule:'Quotient rule with trig functions',combination:'Combination of trig rules',trig_functions:'Advanced nested trig chains',log_functions:'Trig powers multiplied by trig functions',mixed_advanced:'Three-factor trig products',tangents_normals:'Mixed trig challenge set A',turning_points:'Mixed trig challenge set B'};
+    function random(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+    function choice(a){return a[random(0,a.length-1)]}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b!==0){const t=b;b=a%b;a=t}return a||1}
+    function chooseCoeff(){const pool=[];for(let k=2;k<=9;k++){pool.push(k,-k)}return choice(pool)}
+    function chooseNonzero(){return choice([-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9])}
+    function chooseLinear(){let A=chooseCoeff(),B=chooseNonzero();while(gcd(A,B)!==1){A=chooseCoeff();B=chooseNonzero()}return{A,B,u:`${A}x${B>=0?' + ':' - '}${Math.abs(B)}`}}
+    function chooseQuad(){let a=choice([2,3,4,-2,-3]),b=chooseCoeff(),c=chooseNonzero();while(gcd(gcd(a,b),c)!==1){a=choice([2,3,4,-2,-3]);b=chooseCoeff();c=chooseNonzero()}return{inner:`${a}x^{2}${b>=0?' + ':' - '}${Math.abs(b)}x${c>=0?' + ':' - '}${Math.abs(c)}`,prime:`${2*a}x${b>=0?' + ':' - '}${Math.abs(b)}`}}
+    const trig=['\\sin','\\cos','\\tan','\\sec','\\csc','\\cot'];
+    function trigPick(){return choice(trig)}
+    function outerPrime(sym,u){
+      if(sym==='\\sin')return{sign:1,base:`\\cos(${u})`,shown:`\\cos(${u})`};
+      if(sym==='\\cos')return{sign:-1,base:`\\sin(${u})`,shown:`-\\sin(${u})`};
+      if(sym==='\\tan')return{sign:1,base:`\\sec^{2}(${u})`,shown:`\\sec^{2}(${u})`};
+      if(sym==='\\sec')return{sign:1,base:`\\sec(${u})\\tan(${u})`,shown:`\\sec(${u})\\tan(${u})`};
+      if(sym==='\\csc')return{sign:-1,base:`\\csc(${u})\\cot(${u})`,shown:`-\\csc(${u})\\cot(${u})`};
+      return{sign:-1,base:`\\csc^{2}(${u})`,shown:`-\\csc^{2}(${u})`};
+    }
+    function times(c,expr){const a=Math.abs(c);return(c<0?'-':'')+(a===1?'':a+'\\,')+expr}
+    function addTerms(parts){return parts.map((p,i)=>i===0?p:p.startsWith('-')?' - '+p.slice(1):' + '+p).join('')}
+    function renderMath(){if(typeof renderMathInElement==='function')renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})}
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function header(){const h=document.getElementById('problem-set-header'),t=document.getElementById('problem-type-title');if(currentType==='select'){h.classList.remove('visible');return}h.className='problem-set-header visible type-'+(((Object.keys(names).indexOf(currentType)+3)%3)+1);t.textContent=names[currentType]||'Problem Set'}
+    function simpleTrig(){const sym=trigPick(),lin=chooseLinear(),k=choice([2,3,4]);const core=outerPrime(sym,lin.u);const ans=`$\\dfrac{dy}{dx} = ${times(k*lin.A*core.sign,core.base)}$`;return{equation:`$y = ${k}${sym}(${lin.u})$`,answer:ans,steps:[{text:`Let $u=${lin.u}$, so $u'=${lin.A}$.`},{text:`Use the chain rule: $y'=${k}\\left(${core.shown}\\right)(${lin.A})$.`},{text:`Simplify constants and signs: ${ans}`}]}}
+    function trigPower(){const sym=trigPick(),lin=chooseLinear(),n=choice([2,3,4]);const core=outerPrime(sym,lin.u);const ans=`$\\dfrac{dy}{dx} = ${times(n*lin.A*core.sign,`\\big(${sym}(${lin.u})\\big)^{${n-1}}`)}\\,${core.base}$`;return{equation:`$y = \\big(${sym}(${lin.u})\\big)^{${n}}$`,answer:ans,steps:[{text:`Let $v=${sym}(${lin.u})$. Differentiate the outer power first.`},{text:`$v'=${core.shown}\\,(${lin.A})$.`},{text:`Multiply constants and tidy signs: ${ans}`}]}}
+    function secCscCot(){const sym=choice(['\\sec','\\csc','\\cot']),lin=chooseLinear();const core=outerPrime(sym,lin.u);const ans=`$\\dfrac{dy}{dx} = ${times(lin.A*core.sign,core.base)}$`;return{equation:`$y = ${sym}(${lin.u})$`,answer:ans,steps:[{text:`Let $u=${lin.u}$, so $u'=${lin.A}$.`},{text:`Differentiate: $y'=\\left(${core.shown}\\right)(${lin.A})$.`},{text:`Therefore: ${ans}`}]}}
+    function mixedCore(){const first=simpleTrig(),second=trigPower();const ans=`$\\dfrac{dy}{dx} = ${first.answer.replace('$\\dfrac{dy}{dx} = ','').replace('$','')} + ${second.answer.replace('$\\dfrac{dy}{dx} = ','').replace('$','')}$`;return{equation:first.equation.replace('$','').replace('$','')+' $+$ '+second.equation.replace('$y = ','').replace('$',''),answer:ans,steps:[{text:'Differentiate the two trig terms separately.'},{text:`Combine the simplified derivatives: ${ans}`}]}}
+    function productRule(){const a=trigPick(),b=trigPick(),l1=chooseLinear(),l2=chooseLinear(),c1=outerPrime(a,l1.u),c2=outerPrime(b,l2.u);const t1=`${times(l1.A*c1.sign,c1.base)}\\,${b}(${l2.u})`;const t2=`${a}(${l1.u})\\,${times(l2.A*c2.sign,c2.base)}`;const ans=`$\\dfrac{dy}{dx} = ${addTerms([t1,t2])}$`;return{equation:`$y = ${a}(${l1.u})\\,${b}(${l2.u})$`,answer:ans,steps:[{text:'Use product rule: $(fg)\\prime=f\\prime g+fg\\prime$.'},{text:`Final simplified form: ${ans}`}]}}
+    function chainRule(){const sym=trigPick(),q=chooseQuad(),core=outerPrime(sym,q.inner);const ans=`$\\dfrac{dy}{dx} = ${core.shown}\\,\\big(${q.prime}\\big)$`;return{equation:`$y = ${sym}(${q.inner})$`,answer:ans,steps:[{text:`Let $u=${q.inner}$, so $u'=${q.prime}$.`},{text:`Apply chain rule: ${ans}`}]}}
+    function quotientRule(){const a=trigPick(),b=trigPick(),l1=chooseLinear(),l2=chooseLinear(),u=`${a}(${l1.u})`,v=`${b}(${l2.u})`,c1=outerPrime(a,l1.u),c2=outerPrime(b,l2.u);const up=times(l1.A*c1.sign,c1.base),vp=times(l2.A*c2.sign,c2.base);const ans=`$\\dfrac{dy}{dx} = \\dfrac{(${up})\\,${v} - ${u}\\,(${vp})}{\\big(${v}\\big)^{2}}$`;return{equation:`$y = \\dfrac{${u}}{${v}}$`,answer:ans,steps:[{text:'Use quotient rule: $(u/v)\\prime=(u\\prime v-uv\\prime)/v^2$.'},{text:`Simplify each derivative term: ${ans}`}]}}
+    function combination(){const a=trigPick(),b=trigPick(),l1=chooseLinear(),l2=chooseLinear(),n=choice([2,3]),c1=outerPrime(a,l1.u),c2=outerPrime(b,l2.u);const t1=`${times(n*l1.A*c1.sign,`\\big(${a}(${l1.u})\\big)^{${n-1}}`)}\\,${c1.base}\\,${b}(${l2.u})`;const t2=`\\big(${a}(${l1.u})\\big)^{${n}}\\,${times(l2.A*c2.sign,c2.base)}`;const ans=`$\\dfrac{dy}{dx} = ${addTerms([t1,t2])}$`;return{equation:`$y = \\big(${a}(${l1.u})\\big)^{${n}}\\,${b}(${l2.u})$`,answer:ans,steps:[{text:'Use product rule, with chain rule on the power-of-trig factor.'},{text:`Therefore: ${ans}`}]}}
+    function nestedChain(){const sym=trigPick(),q=chooseQuad(),n=choice([2,3,4]),core=outerPrime(sym,q.inner);const ans=`$\\dfrac{dy}{dx} = ${times(n*core.sign,`\\big(${sym}(${q.inner})\\big)^{${n-1}}`)}\\,${core.base}\\,\\big(${q.prime}\\big)$`;return{equation:`$y = \\big(${sym}(${q.inner})\\big)^{${n}}$`,answer:ans,steps:[{text:'Use nested chain rule: power, trig function, then polynomial inner.'},{text:`Final simplified line: ${ans}`}]}}
+    function threeProduct(){const s1=trigPick(),s2=trigPick(),s3=trigPick(),l1=chooseLinear(),l2=chooseLinear(),l3=chooseLinear(),c1=outerPrime(s1,l1.u),c2=outerPrime(s2,l2.u),c3=outerPrime(s3,l3.u);const t1=`${times(l1.A*c1.sign,c1.base)}\\,${s2}(${l2.u})\\,${s3}(${l3.u})`;const t2=`${s1}(${l1.u})\\,${times(l2.A*c2.sign,c2.base)}\\,${s3}(${l3.u})`;const t3=`${s1}(${l1.u})\\,${s2}(${l2.u})\\,${times(l3.A*c3.sign,c3.base)}`;const ans=`$\\dfrac{dy}{dx} = ${addTerms([t1,t2,t3])}$`;return{equation:`$y = ${s1}(${l1.u})\\,${s2}(${l2.u})\\,${s3}(${l3.u})$`,answer:ans,steps:[{text:'Differentiate one factor at a time and keep the other two fixed.'},{text:`Therefore: ${ans}`}]}}
+    function mixedChallenge(){return choice([productRule,quotientRule,combination,nestedChain,threeProduct])()}
+    function generateProblem(){const t=currentType==='select'?choice(levelConfigs[currentLevel].types):currentType;if(t==='standard_polynomials')return simpleTrig();if(t==='fractional_indices')return trigPower();if(t==='negative_indices')return secCscCot();if(t==='mixed_powers')return mixedCore();if(t==='product_rule')return productRule();if(t==='chain_rule')return chainRule();if(t==='quotient_rule')return quotientRule();if(t==='combination')return combination();if(t==='trig_functions')return nestedChain();if(t==='log_functions')return combination();if(t==='mixed_advanced')return threeProduct();if(t==='tangents_normals'||t==='turning_points')return mixedChallenge();return simpleTrig()}
+    function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));const cfg=levelConfigs[level];document.getElementById('level-title').textContent=cfg.title;document.getElementById('level-description').textContent=cfg.description;const opts={1:[['standard_polynomials','Type 1: Basic Trig (with linear inner)'],['fractional_indices','Type 2: Powers of Trig (chain + power)'],['negative_indices','Type 3: Sec, Csc, Cot (basics)'],['mixed_powers','Type 4: Mixed Core Trig']],2:[['product_rule','Type 1: Product Rule (Trig x Trig)'],['chain_rule','Type 2: Chain Rule (Trig of inner)'],['quotient_rule','Type 3: Quotient Rule (Trig / Trig)'],['combination','Type 4: Combination (multi-step)']],3:[['trig_functions','Type 1: Advanced Chains (nested)'],['log_functions','Type 2: Trig Powers x Trig'],['mixed_advanced','Type 3: Three-factor Products']],4:[['tangents_normals','Type 1: Mixed Set A'],['turning_points','Type 2: Mixed Set B']]};const dd=document.getElementById('type-dropdown');dd.innerHTML='<option value="select">Select Question Type</option>'+opts[level].map(([v,l])=>'<option value="'+v+'">'+l+'</option>').join('');dd.value='select';header();showBlankPage()}
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;header();currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:40px;color:#718096;font-size:1.1em">Please select a question type to begin.</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<5;i++)problems.push(generateProblem());renderProblems()}
+    function renderProblems(){const c=document.getElementById('problem-list');c.innerHTML='';problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const steps=p.steps.map(s=>'<div class="step">'+s.text+'</div>').join('');li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(i+1)+'</div><div class="equation">'+p.equation+'</div></div><div class="problem-answer" id="quick-answer-'+i+'">'+p.answer+'</div></div><div class="steps-section" id="steps-'+i+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+steps+'<div class="final-answer">'+p.answer+'</div></div></div>';c.appendChild(li)});renderMath()}
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>{const el=document.getElementById('quick-answer-'+i);if(el)el.classList.toggle('visible',answersVisible)})}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>{const el=document.getElementById('steps-'+i);if(el)el.classList.toggle('visible',stepsVisible)})}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const el=document.getElementById('timer-display');el.textContent='Ready';el.className='timer-display'}
+    function updateTimerDisplay(){const m=Math.floor(timeRemaining/60),s=timeRemaining%60,el=document.getElementById('timer-display');el.textContent=m+':'+String(s).padStart(2,'0');el.className=timeRemaining<=30&&timerActive?'timer-display warning':timerActive?'timer-display active':'timer-display'}
+    function timerFinished(){stopTimer();const el=document.getElementById('timer-display');el.textContent='Time Up!';el.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

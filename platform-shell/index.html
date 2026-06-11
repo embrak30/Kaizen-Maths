@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kaizen Maths Platform Shell</title>
+  <link rel="stylesheet" href="styles.css?v=site-guide-1">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary">
+      <a class="brand" href="#/">
+        <span class="brand-mark" aria-hidden="true">K</span>
+        <span>
+          <strong>Kaizen Maths</strong>
+          <small>Teaching tools</small>
+        </span>
+      </a>
+
+      <nav class="nav-list">
+        <a class="nav-primary" href="#/" data-route="home"><span class="nav-icon" aria-hidden="true">⌂</span><span>Dashboard</span></a>
+        <a class="nav-primary" href="#/tools" data-route="tools"><span class="nav-icon" aria-hidden="true">⌕</span><span>Tool Library</span></a>
+        <a class="nav-child" href="#/collections/algebra" data-route="algebra"><span class="nav-icon" aria-hidden="true">x</span><span>Algebra</span></a>
+        <a class="nav-child" href="#/collections/numbers" data-route="numbers"><span class="nav-icon" aria-hidden="true">#</span><span>Numbers</span></a>
+        <a class="nav-child" href="#/collections/geometry" data-route="geometry"><span class="nav-icon" aria-hidden="true">△</span><span>Geometry</span></a>
+        <a class="nav-child" href="#/collections/statistics" data-route="statistics"><span class="nav-icon" aria-hidden="true">%</span><span>Statistics</span></a>
+        <a class="nav-child" href="#/collections/classroom-tools" data-route="classroom-tools"><span class="nav-icon" aria-hidden="true">▣</span><span>Classroom Tools</span></a>
+        <a class="nav-primary" href="#/worksheet-generator" data-route="worksheet-generator"><span class="nav-icon" aria-hidden="true">▦</span><span>Worksheet Builder</span></a>
+        <a href="#/teacher" data-route="teacher"><span class="nav-icon" aria-hidden="true">i</span><span>Teacher Notes</span></a>
+        <a href="#/how-to-use-this-site" data-route="how-to-use-this-site"><span class="nav-icon" aria-hidden="true">?</span><span>How to Use This Site</span></a>
+      </nav>
+
+      <section class="sidebar-panel">
+        <span class="eyebrow">Live Library</span>
+        <p>Browse classroom-ready maths generators with worked steps, timers, teacher notes, and presentation controls.</p>
+      </section>
+    </aside>
+
+    <div class="main-wrap">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="menuButton" type="button" aria-label="Open navigation">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="topbar-search">
+          <label for="globalSearch">Search tools</label>
+          <input id="globalSearch" type="search" placeholder="Search topics, tools, or skills">
+        </div>
+        <div class="account-pill">
+          <span>Teacher</span>
+          <strong>Demo workspace</strong>
+        </div>
+      </header>
+
+      <main id="app" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <div class="mobile-nav" id="mobileNav" aria-hidden="true">
+    <button class="mobile-nav-backdrop" id="mobileNavBackdrop" type="button" aria-label="Close navigation"></button>
+    <aside class="mobile-nav-panel" aria-label="Mobile primary">
+      <a class="brand" href="#/">
+        <span class="brand-mark" aria-hidden="true">K</span>
+        <span>
+          <strong>Kaizen Maths</strong>
+          <small>Teaching tools</small>
+        </span>
+      </a>
+      <nav class="nav-list">
+        <a class="nav-primary" href="#/"><span class="nav-icon" aria-hidden="true">⌂</span><span>Dashboard</span></a>
+        <a class="nav-primary" href="#/tools"><span class="nav-icon" aria-hidden="true">⌕</span><span>Tool Library</span></a>
+        <a class="nav-child" href="#/collections/algebra"><span class="nav-icon" aria-hidden="true">x</span><span>Algebra</span></a>
+        <a class="nav-child" href="#/collections/numbers"><span class="nav-icon" aria-hidden="true">#</span><span>Numbers</span></a>
+        <a class="nav-child" href="#/collections/geometry"><span class="nav-icon" aria-hidden="true">△</span><span>Geometry</span></a>
+        <a class="nav-child" href="#/collections/statistics"><span class="nav-icon" aria-hidden="true">%</span><span>Statistics</span></a>
+        <a class="nav-child" href="#/collections/classroom-tools"><span class="nav-icon" aria-hidden="true">▣</span><span>Classroom Tools</span></a>
+        <a class="nav-primary" href="#/worksheet-generator"><span class="nav-icon" aria-hidden="true">▦</span><span>Worksheet Builder</span></a>
+        <a href="#/teacher"><span class="nav-icon" aria-hidden="true">i</span><span>Teacher Notes</span></a>
+        <a href="#/how-to-use-this-site"><span class="nav-icon" aria-hidden="true">?</span><span>How to Use This Site</span></a>
+      </nav>
+    </aside>
+  </div>
+
+  <script src="app.js?v=site-guide-1"></script>
+</body>
+</html>

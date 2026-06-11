@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Powers of 10 Teaching Tool</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}
+    .sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}
+    .header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}
+    .header::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}.header h1{font-size:2.2em;margin-bottom:5px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}.header p{font-size:1.1em;opacity:.9;position:relative;z-index:1}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:18px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.3em}.level-info p{color:#718096;font-size:1em}.dropdown-container{margin-top:10px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:380px}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section{display:flex;align-items:center;gap:15px}.timer-display{font-size:2em;font-weight:700;color:#1a365d;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #cbd5e0;min-width:120px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px}.btn{padding:12px 22px;border:none;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:20px;min-height:500px}.problem-set-header{background:#3182ce;color:#fff;padding:15px 25px;border-radius:8px;margin-bottom:20px;text-align:center;font-size:1.4em;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.1)}.problem-set-header.multiply{background:#38a169}.problem-set-header.divide{background:#e53e3e}.problem-set-header.standard-form{background:#805ad5}.problem-list{list-style:none}
+    .problem-item{background:#f7fafc;margin:12px 0;padding:18px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(2px)}.problem-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:15px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-answer{background:#38a169;color:#fff;padding:8px 16px;border-radius:20px;font-weight:700;font-size:1.2em;display:none;margin-left:15px;min-width:100px;text-align:center}.problem-answer.visible{display:block;animation:slideIn .4s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}.problem-number{background:#3182ce;color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:15px;font-size:1em;flex-shrink:0}
+    .calculation-container{flex:1}.calculation{font-size:1.8em;font-family:'Times New Roman',serif;color:#1a365d;font-weight:600;line-height:1.2;margin-bottom:5px;overflow-wrap:anywhere}.base-number{background:#c6f6d5;color:#22543d;padding:2px 6px;border-radius:4px;font-weight:700}.power-of-ten{background:#bee3f8;color:#2c5282;padding:2px 6px;border-radius:4px;font-weight:700}.result-highlight{background:#fef2e7;color:#d69e2e;padding:2px 6px;border-radius:4px;font-weight:700}
+    .steps-section{margin-top:10px;padding:15px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .4s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}.steps-label{font-weight:600;color:#3182ce;margin-bottom:10px;font-size:1.1em}.solution-steps{font-size:1.05em;line-height:1.4}.step{margin:8px 0;color:#1a365d}.step-equation{font-family:'Times New Roman',serif;font-weight:600;color:#805ad5;text-align:center;margin:10px 0;font-size:1.2em;background:#f7fafc;padding:8px;border-radius:4px}.final-answer{background:#38a169;color:#fff;padding:12px 16px;border-radius:6px;text-align:center;font-weight:700;font-size:1.2em;margin-top:10px;font-family:'Times New Roman',serif}.decimal-movement{background:#fef2e7;color:#d69e2e;padding:6px;border-radius:4px;margin:8px 0;font-family:monospace;text-align:center;font-size:1em}.arrow{color:#e53e3e;font-weight:700;font-size:1.2em}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
+    @media (max-width:768px){.controls{flex-direction:column;align-items:stretch;padding:15px}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 33.33%;padding:15px}.sidebar{width:320px;left:-320px}.type-dropdown{min-width:100%;width:100%}.calculation{font-size:1.45em}.problem-header{align-items:flex-start;flex-direction:column}.problem-answer{margin-left:0}.problem-set-header{font-size:1.2em;padding:12px 20px}}
+    @media (min-width:1200px){.calculation{font-size:2.2em}.problem-item{padding:22px;margin:15px 0}.problem-number{width:35px;height:35px;font-size:1.1em}.solution-steps{font-size:1.2em}.step-equation{font-size:1.4em}.problem-set-header{font-size:1.6em;padding:18px 30px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool builds understanding of powers of 10 through multiplication, division, and standard form operations.</p>
+      <h3>Level Structure</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Whole numbers and decimals multiplied by powers of 10.</li>
+        <li><strong>Level 2:</strong> Whole numbers and decimals divided by powers of 10.</li>
+        <li><strong>Level 3:</strong> Express, evaluate, and calculate with standard form numbers.</li>
+      </ul>
+      <h3>Key Ideas</h3>
+      <ul>
+        <li>Multiplying by powers of 10 moves the decimal point to the right.</li>
+        <li>Dividing by powers of 10 moves the decimal point to the left.</li>
+        <li>Standard form is A x 10^n where 1 <= A < 10.</li>
+        <li>Use index laws: 10^a x 10^b = 10^(a+b) and 10^a / 10^b = 10^(a-b).</li>
+      </ul>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Moving the decimal point in the wrong direction.</li>
+        <li>Miscounting the number of places.</li>
+        <li>Forgetting zero placeholders.</li>
+        <li>Leaving a standard form coefficient outside the range 1 to 10.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <h1>Powers of 10 Teaching Tool</h1>
+      <p>Multiplication, Division, and Standard Form Operations</p>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Multiplication by Powers of 10</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Division by Powers of 10</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Standard Form Operations</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Multiplication by Powers of 10</h3>
+        <p id="level-description">Whole numbers and decimals multiplied by powers of 10</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Problem Type</option>
+            <option value="whole_multiply">Type 1: Whole numbers x powers of 10</option>
+            <option value="decimal_multiply">Type 2: Decimals x powers of 10</option>
+            <option value="mixed_multiply">Type 3: Mixed whole numbers and decimals</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review the solutions?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={
+      1:{title:'Level 1: Multiplication by Powers of 10',description:'Whole numbers and decimals multiplied by powers of 10',types:['whole_multiply','decimal_multiply','mixed_multiply']},
+      2:{title:'Level 2: Division by Powers of 10',description:'Whole numbers and decimals divided by powers of 10',types:['whole_divide','decimal_divide','mixed_divide']},
+      3:{title:'Level 3: Standard Form Operations',description:'Express, evaluate, and calculate with standard form numbers',types:['express_standard','evaluate_standard','calculate_standard']}
+    };
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function randomDecimal(min,max,decimals=null){if(decimals===null)decimals=random(1,4);return Math.round((Math.random()*(max-min)+min)*10**decimals)/10**decimals}
+    function formatNumber(num){if(num%1===0)return String(num);return parseFloat(Number(num).toPrecision(12)).toString()}
+    function roundResult(num,decimals=6){return Math.round(num*10**decimals)/10**decimals}
+    function addCommas(num){return String(num).replace(/\B(?=(\d{3})+(?!\d))/g,',')}
+    function tenSup(n){return `10<sup>${n}</sup>`}
+    function movement(num,places,direction,result){return `<div class="decimal-movement">${num} <span class="arrow">-></span> move ${places} place${places>1?'s':''} ${direction} <span class="arrow">-></span> ${result}</div>`}
+
+    function generateProblem(){
+      const config=levelConfigs[currentLevel];let types=config.types;if(currentType!=='all'&&currentType!=='select')types=[currentType];const type=types[Math.floor(Math.random()*types.length)];
+      switch(type){
+        case 'whole_multiply':{
+          const n=random(2,999), p=random(1,6), pow=10**p, res=roundResult(n*pow);
+          return {badge:'multiply',calculation:`<span class="base-number">${addCommas(n)}</span> x <span class="power-of-ten">${addCommas(pow)}</span>`,answer:addCommas(res),steps:[
+            'Step 1: Identify the power of 10',`We are multiplying by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Apply the decimal movement rule',`Multiplying by ${tenSup(p)} moves the decimal point <span class="result-highlight">${p} place${p>1?'s':''} to the right</span>`,movement(`${n}.0`,p,'right',`${addCommas(res)}.0`),'Step 3: Write the final answer',`<div class="step-equation">${addCommas(n)} x ${addCommas(pow)} = ${addCommas(res)}</div>`]};
+        }
+        case 'decimal_multiply':{
+          const n=randomDecimal(1.2,9.99), p=random(1,4), pow=10**p, res=roundResult(n*pow);
+          return {badge:'multiply',calculation:`<span class="base-number">${n}</span> x <span class="power-of-ten">${addCommas(pow)}</span>`,answer:formatNumber(res),steps:[
+            'Step 1: Identify the power of 10',`We are multiplying by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Apply the decimal movement rule',`Multiplying by ${tenSup(p)} moves the decimal point <span class="result-highlight">${p} place${p>1?'s':''} to the right</span>`,movement(n,p,'right',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${n} x ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
+        }
+        case 'mixed_multiply':{
+          const n=Math.random()<.5?random(12,999):randomDecimal(2.1,99.9), p=random(1,4), pow=10**p, res=roundResult(n*pow);
+          return {badge:'multiply',calculation:`<span class="base-number">${formatNumber(n)}</span> x <span class="power-of-ten">${addCommas(pow)}</span>`,answer:formatNumber(res),steps:[
+            'Step 1: Identify the power of 10',`We are multiplying by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Apply the decimal movement rule',`Multiplying by ${tenSup(p)} moves the decimal point <span class="result-highlight">${p} place${p>1?'s':''} to the right</span>`,movement(formatNumber(n),p,'right',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${formatNumber(n)} x ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
+        }
+        case 'whole_divide':{
+          const n=random(1200,999000), p=random(1,4), pow=10**p, res=roundResult(n/pow);
+          return {badge:'divide',calculation:`<span class="base-number">${addCommas(n)}</span> / <span class="power-of-ten">${addCommas(pow)}</span>`,answer:formatNumber(res),steps:[
+            'Step 1: Identify the power of 10',`We are dividing by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Apply the decimal movement rule',`Dividing by ${tenSup(p)} moves the decimal point <span class="result-highlight">${p} place${p>1?'s':''} to the left</span>`,movement(`${addCommas(n)}.0`,p,'left',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${addCommas(n)} / ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
+        }
+        case 'decimal_divide':{
+          const n=randomDecimal(12.34,999.99), p=random(1,3), pow=10**p, res=roundResult(n/pow);
+          return {badge:'divide',calculation:`<span class="base-number">${n}</span> / <span class="power-of-ten">${addCommas(pow)}</span>`,answer:formatNumber(res),steps:[
+            'Step 1: Identify the power of 10',`We are dividing by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Apply the decimal movement rule',`Dividing by ${tenSup(p)} moves the decimal point <span class="result-highlight">${p} place${p>1?'s':''} to the left</span>`,movement(n,p,'left',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${n} / ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
+        }
+        case 'mixed_divide':{
+          const n=Math.random()<.5?random(1500,85000):randomDecimal(34.5,876.4), p=random(1,3), pow=10**p, res=roundResult(n/pow);
+          return {badge:'divide',calculation:`<span class="base-number">${formatNumber(n)}</span> / <span class="power-of-ten">${addCommas(pow)}</span>`,answer:formatNumber(res),steps:[
+            'Step 1: Identify the power of 10',`We are dividing by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Apply the decimal movement rule',`Dividing by ${tenSup(p)} moves the decimal point <span class="result-highlight">${p} place${p>1?'s':''} to the left</span>`,movement(formatNumber(n),p,'left',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${formatNumber(n)} / ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
+        }
+        case 'express_standard':{
+          const large=Math.random()<.5?random(12000,9850000):randomDecimal(.00012,.0987,5);let coeff, exp;
+          if(large>=1){const intPart=String(Math.floor(large));exp=intPart.length-1;coeff=roundResult(large/10**exp)}else{const s=formatNumber(large);const dec=s.indexOf('.');let first=-1;for(let i=dec+1;i<s.length;i++){if(s[i]!=='0'){first=i;break}}exp=-(first-dec);coeff=roundResult(large/10**exp)}
+          return {badge:'standard-form',calculation:`Express <span class="base-number">${formatNumber(large)}</span> in standard form`,answer:`${formatNumber(coeff)} x ${tenSup(exp)}`,steps:[
+            'Step 1: Standard form requires the coefficient to be between 1 and 10','Step 2: Count decimal place movements',movement(formatNumber(large),Math.abs(exp),exp>0?'left':'right',formatNumber(coeff)),'Step 3: Determine the power of 10',`Moved ${Math.abs(exp)} places ${exp>0?'left':'right'}, so exponent is ${exp}`,'Step 4: Write in standard form',`<div class="step-equation">${formatNumber(large)} = ${formatNumber(coeff)} x ${tenSup(exp)}</div>`]};
+        }
+        case 'evaluate_standard':{
+          const coeff=randomDecimal(1.2,9.8), exp=random(-4,6), res=roundResult(coeff*10**exp);
+          return {badge:'standard-form',calculation:`Evaluate <span class="base-number">${coeff}</span> x <span class="power-of-ten">${tenSup(exp)}</span>`,answer:formatNumber(res),steps:[
+            'Step 1: Identify the coefficient and exponent',`Coefficient: <span class="base-number">${coeff}</span>, Exponent: <span class="power-of-ten">${exp}</span>`,'Step 2: Apply decimal movement rule',`${tenSup(exp)} means move decimal point ${Math.abs(exp)} place${Math.abs(exp)>1?'s':''} ${exp>0?'right':'left'}`,movement(coeff,Math.abs(exp),exp>0?'right':'left',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${coeff} x ${tenSup(exp)} = ${formatNumber(res)}</div>`]};
+        }
+        case 'calculate_standard':{
+          const c1=randomDecimal(2.1,8.9), e1=random(2,5), c2=randomDecimal(1.5,6.8), e2=random(1,4), op=Math.random()<.5?'x':'/';let fc,fe,rawCoeff,rawExp;
+          if(op==='x'){rawCoeff=roundResult(c1*c2);rawExp=e1+e2}else{rawCoeff=roundResult(c1/c2);rawExp=e1-e2}fc=rawCoeff;fe=rawExp;if(fc>=10){fc=roundResult(fc/10);fe++}else if(fc<1){fc=roundResult(fc*10);fe--}
+          return {badge:'standard-form',calculation:`(<span class="base-number">${c1} x ${tenSup(e1)}</span>) ${op} (<span class="base-number">${c2} x ${tenSup(e2)}</span>)`,answer:`${formatNumber(fc)} x ${tenSup(fe)}`,steps:[
+            'Step 1: Separate coefficients and powers of 10',`(${c1} ${op} ${c2}) x (${tenSup(e1)} ${op} ${tenSup(e2)})`,'Step 2: Calculate the coefficients',`${c1} ${op} ${c2} = ${formatNumber(rawCoeff)}`,'Step 3: Apply index laws for powers of 10',`${tenSup(e1)} ${op} ${tenSup(e2)} = ${tenSup(rawExp)}`,'Step 4: Combine and adjust if needed',`<div class="step-equation">${formatNumber(rawCoeff)} x ${tenSup(rawExp)}</div>`,'Step 5: Ensure coefficient is between 1 and 10',`<div class="step-equation">Final answer: ${formatNumber(fc)} x ${tenSup(fe)}</div>`]};
+        }
+        default:return generateProblem();
+      }
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index+1===level));
+      const config=levelConfigs[level];document.getElementById('level-title').textContent=config.title;document.getElementById('level-description').textContent=config.description;
+      const dropdown=document.getElementById('type-dropdown');document.getElementById('dropdown-container').classList.add('visible');
+      if(level===1){dropdown.innerHTML='<option value="select">Select Problem Type</option><option value="whole_multiply">Type 1: Whole numbers x powers of 10</option><option value="decimal_multiply">Type 2: Decimals x powers of 10</option><option value="mixed_multiply">Type 3: Mixed whole numbers and decimals</option>'}
+      else if(level===2){dropdown.innerHTML='<option value="select">Select Problem Type</option><option value="whole_divide">Type 1: Whole numbers / powers of 10</option><option value="decimal_divide">Type 2: Decimals / powers of 10</option><option value="mixed_divide">Type 3: Mixed whole numbers and decimals</option>'}
+      else{dropdown.innerHTML='<option value="select">Select Problem Type</option><option value="express_standard">Type 1: Express numbers in standard form A x 10^n</option><option value="evaluate_standard">Type 2: Evaluate numbers written in standard form</option><option value="calculate_standard">Type 3: Products and quotients of standard form numbers</option>'}
+      dropdown.value='select';showBlankPage();
+    }
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;if(currentType==='select')showBlankPage();else generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:50px;color:#718096;font-size:1.2em;">Please select a problem type to begin exploring powers of 10 operations</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<5;i++)problems.push(generateProblem());renderProblems()}
+    function renderProblems(){
+      const container=document.getElementById('problem-list');container.innerHTML='';if(!problems.length)return;
+      const header=document.createElement('div');header.className=`problem-set-header ${problems[0].badge}`;header.textContent=problems[0].badge==='multiply'?'Multiplication by Powers of 10':problems[0].badge==='divide'?'Division by Powers of 10':'Standard Form Operations';container.appendChild(header);
+      problems.forEach((problem,index)=>{
+        const li=document.createElement('li');li.className='problem-item';
+        const stepsHTML=problem.steps.map(step=>step.includes('<div class="step-equation">')||step.includes('<div class="decimal-movement">')?step:`<div class="step">${step}</div>`).join('');
+        li.innerHTML=`<div class="problem-header"><div class="problem-left"><div class="problem-number">${index+1}</div><div class="calculation-container"><div class="calculation">${problem.calculation}</div></div></div><div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div></div><div class="steps-section" id="steps-${index}"><div class="steps-label">Solution Steps:</div><div class="solution-steps">${stepsHTML}<div class="final-answer">${problem.answer}</div></div></div>`;
+        container.appendChild(li);
+      });
+    }
+    function showAnswers(){answersVisible=!answersVisible;for(let i=0;i<problems.length;i++){const el=document.getElementById(`quick-answer-${i}`);if(el)el.classList.toggle('visible',answersVisible)}}
+    function showSteps(){stepsVisible=!stepsVisible;for(let i=0;i<problems.length;i++){const el=document.getElementById(`steps-${i}`);if(el)el.classList.toggle('visible',stepsVisible)}}
+    function startTimer(minutes){if(timerActive)stopTimer();timeRemaining=minutes*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const el=document.getElementById('timer-display');el.textContent='Ready';el.className='timer-display'}
+    function updateTimerDisplay(){const minutes=Math.floor(timeRemaining/60),seconds=timeRemaining%60,el=document.getElementById('timer-display');el.textContent=`${minutes}:${seconds.toString().padStart(2,'0')}`;if(timeRemaining<=30)el.className='timer-display warning';else if(timerActive)el.className='timer-display active';else el.className='timer-display'}
+    function timerFinished(){stopTimer();const el=document.getElementById('timer-display');el.textContent='Time Up!';el.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

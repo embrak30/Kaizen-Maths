@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-World Percentage Applications</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+      background: #f0f4f8;
+      color: #1a365d;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      z-index: 1001;
+      transform: translateY(-50%);
+      padding: 15px 8px;
+      border-radius: 0 8px 8px 0;
+      background: #1a365d;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700;
+      writing-mode: vertical-rl;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .teacher-tab:hover { background: #2d5a87; transform: translateY(-50%) translateX(5px); }
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      background: rgba(0,0,0,0.5);
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .sidebar-overlay.active { visibility: visible; opacity: 1; }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -400px;
+      z-index: 1000;
+      width: 400px;
+      height: 100vh;
+      overflow-y: auto;
+      background: #fff;
+      box-shadow: 2px 0 20px rgba(0,0,0,0.3);
+      transition: left 0.25s ease;
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-header {
+      padding: 20px;
+      background: #1a365d;
+      color: #fff;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .sidebar-content { padding: 25px; line-height: 1.6; }
+    .sidebar-content h3 {
+      margin: 20px 0 10px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #3182ce;
+      color: #1a365d;
+      font-size: 1.08rem;
+    }
+    .sidebar-content p, .sidebar-content li { margin-bottom: 8px; color: #555; }
+    .sidebar-content ul { margin-bottom: 15px; padding-left: 20px; }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .header {
+      position: relative;
+      overflow: hidden;
+      padding: 25px;
+      background: #2d5a87;
+      background-image:
+        linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce),
+        linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      color: #fff;
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.2);
+    }
+    .header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent 50%, rgba(0,0,0,0.05));
+    }
+    .header h1, .header p { position: relative; z-index: 1; }
+    .header h1 { margin-bottom: 5px; font-size: 2.15rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    .header p { opacity: 0.92; font-size: 1.05rem; }
+    .tabs { display: flex; background: #e2e8f0; }
+    .tab {
+      flex: 1;
+      min-height: 60px;
+      padding: 14px;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      background: #e2e8f0;
+      color: #1a365d;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .tab:hover { background: #cbd5e0; }
+    .tab.active { background: #fff; border-bottom-color: #3182ce; color: #3182ce; }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 24px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f7fafc;
+    }
+    .level-info h3 { margin-bottom: 5px; color: #1a365d; font-size: 1.3rem; }
+    .level-info p { color: #718096; }
+    .dropdown-container { display: none; margin-top: 10px; }
+    .dropdown-container.visible { display: block; }
+    .type-dropdown {
+      min-width: 330px;
+      max-width: 100%;
+      padding: 8px 12px;
+      border: 2px solid #cbd5e0;
+      border-radius: 6px;
+      background: #fff;
+      color: #1a365d;
+      font-size: 1rem;
+    }
+    .type-dropdown:focus { border-color: #3182ce; outline: none; }
+    .timer-section, .action-buttons { display: flex; align-items: center; gap: 10px; }
+    .timer-display {
+      min-width: 120px;
+      padding: 10px 18px;
+      border: 2px solid #cbd5e0;
+      border-radius: 6px;
+      background: #fff;
+      color: #1a365d;
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .timer-display.active { border-color: #3182ce; color: #3182ce; }
+    .timer-display.warning { border-color: #e53e3e; color: #e53e3e; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+    .btn {
+      min-width: 85px;
+      padding: 12px 22px;
+      border: 0;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: #3182ce; }
+    .btn-primary:hover { background: #2c5282; }
+    .btn-success { background: #38a169; }
+    .btn-success:hover { background: #2f855a; }
+    .btn-warning { background: #d69e2e; }
+    .btn-warning:hover { background: #b7791f; }
+    .btn-danger { background: #e53e3e; }
+    .btn-danger:hover { background: #c53030; }
+    .problems-section { min-height: 600px; padding: 30px 35px; }
+    .problem-set-header {
+      display: none;
+      margin-bottom: 20px;
+      padding: 15px 24px;
+      border-radius: 8px;
+      background: #3182ce;
+      color: #fff;
+      text-align: center;
+      font-size: 1.35rem;
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(49,130,206,0.28);
+    }
+    .problem-set-header.visible { display: block; }
+    .problem-list { list-style: none; }
+    .problem-item {
+      margin: 18px 0;
+      padding: 24px;
+      border-left: 5px solid #3182ce;
+      border-radius: 10px;
+      background: #f7fafc;
+      transition: transform 0.2s ease;
+    }
+    .problem-item:hover { transform: translateX(3px); }
+    .problem-header { display: flex; justify-content: space-between; align-items: center; gap: 18px; }
+    .problem-left { display: flex; align-items: center; flex: 1; min-width: 0; }
+    .problem-number {
+      display: flex;
+      flex: 0 0 35px;
+      align-items: center;
+      justify-content: center;
+      width: 35px;
+      height: 35px;
+      margin-right: 20px;
+      border-radius: 50%;
+      background: #3182ce;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+    .equation {
+      color: #1a365d;
+      font-family: "Times New Roman", serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .context-badge {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 4px 12px;
+      border-radius: 15px;
+      background: #805ad5;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+    .shopping { background: #e53e3e; }
+    .finance { background: #38a169; }
+    .tax { background: #d69e2e; }
+    .science { background: #3182ce; }
+    .business { background: #805ad5; }
+    .investment { background: #2d5a87; }
+    .problem-answer {
+      display: none;
+      margin-left: 14px;
+      padding: 10px 18px;
+      border-radius: 25px;
+      background: #38a169;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .problem-answer.visible { display: block; animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+    .steps-section {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      border-left: 4px solid #3182ce;
+      border-radius: 8px;
+      background: #ebf8ff;
+    }
+    .steps-section.visible { display: block; animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .answer-label { margin-bottom: 10px; color: #3182ce; font-size: 1.1rem; font-weight: 800; }
+    .solution-steps { font-size: 1.1rem; line-height: 1.5; }
+    .step { margin: 8px 0; color: #1a365d; }
+    .step-equation {
+      margin: 10px 0;
+      color: #805ad5;
+      font-family: "Times New Roman", serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    .final-answer {
+      margin-top: 12px;
+      padding: 10px 18px;
+      border-radius: 6px;
+      background: #38a169;
+      color: #fff;
+      font-size: 1.22rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .money { color: #2f855a; font-weight: 800; }
+    .percentage { color: #e53e3e; font-weight: 800; }
+    .highlight {
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #fef2e7;
+      color: #b7791f;
+      font-weight: 800;
+    }
+    .timer-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1002;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+      max-width: 350px;
+      padding: 35px;
+      border-radius: 12px;
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .modal-content h2 { margin-bottom: 18px; color: #e53e3e; font-size: 1.9rem; }
+    .modal-content p { margin-bottom: 25px; color: #718096; font-size: 1.05rem; }
+    .hidden { display: none; }
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .controls { flex-direction: column; align-items: stretch; }
+      .timer-section, .action-buttons { justify-content: center; flex-wrap: wrap; }
+      .tabs { flex-wrap: wrap; }
+      .tab { flex: 1 1 50%; }
+      .sidebar { left: -320px; width: 320px; }
+      .type-dropdown { min-width: 100%; }
+      .problems-section { padding: 18px; }
+      .problem-header { align-items: flex-start; flex-direction: column; }
+      .problem-answer { margin-left: 55px; white-space: normal; }
+      .equation { font-size: 1.35rem; }
+    }
+    @media (min-width: 1200px) {
+      .equation { font-size: 2rem; }
+      .problem-item { margin: 24px 0; padding: 28px; }
+      .problem-number { width: 40px; height: 40px; flex-basis: 40px; font-size: 1.2rem; }
+      .solution-steps { font-size: 1.22rem; }
+      .step-equation { font-size: 1.42rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Real-World Percentages</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool demonstrates percentage applications across everyday, financial, business, scientific, and statistical contexts.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Shopping discounts, tips, service charges, and basic taxes.</li>
+        <li><strong>Level 2:</strong> Sales commission, simple interest, business markup, and profit margin.</li>
+        <li><strong>Level 3:</strong> Compound interest, loans, investments, mortgages, and returns.</li>
+        <li><strong>Level 4:</strong> Concentration, statistical intervals, and measurement error.</li>
+      </ul>
+      <h3>Key Formulas</h3>
+      <ul>
+        <li><strong>Simple interest:</strong> I = PRT.</li>
+        <li><strong>Compound interest:</strong> A = P(1 + r)^t.</li>
+        <li><strong>Commission:</strong> commission = sales × rate.</li>
+        <li><strong>Percentage change:</strong> difference ÷ original × 100.</li>
+        <li><strong>Concentration:</strong> amount ÷ total × 100.</li>
+      </ul>
+      <h3>Teaching Strategies</h3>
+      <ul>
+        <li>Ask students to identify the base quantity before calculating.</li>
+        <li>Connect each context to decisions students may recognise, such as discounts and borrowing.</li>
+        <li>Discuss why rounding to two decimal places matters in money contexts.</li>
+        <li>Compare additive methods with multiplier methods where both are useful.</li>
+      </ul>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Applying tax before discount when the problem asks for discount first.</li>
+        <li>Using the original amount instead of the new amount in the second stage of a multi-step calculation.</li>
+        <li>Confusing markup with profit margin.</li>
+        <li>Forgetting to convert annual interest rates into monthly rates for loan calculations.</li>
+      </ul>
+      <h3>Using the Timer</h3>
+      <ul>
+        <li>Use 2 minutes for daily applications and simple interest.</li>
+        <li>Use 5 minutes for finance and scientific contexts with several steps.</li>
+        <li>Reveal steps after students have explained which quantities they used and why.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header">
+      <h1>Real-World Percentage Applications</h1>
+      <p>Shopping, tax, commission, interest, investments, loans, science, and statistics</p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Daily Applications</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Commission & Interest</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Advanced Finance</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Scientific & Complex</button>
+    </nav>
+
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Daily Applications</h3>
+        <p id="level-description">Shopping, dining, basic taxes, and everyday percentage calculations.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header">Select a question type to begin</div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up</h2>
+      <p>Ready to review the answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Daily Applications",
+        description: "Shopping, dining, basic taxes, and everyday percentage calculations.",
+        options: [
+          ["select", "Select Question Type"],
+          ["shopping_discounts", "Type 1: Shopping discounts and sales tax"],
+          ["dining_tips", "Type 2: Restaurant tips and service charges"],
+          ["basic_taxes", "Type 3: Basic tax calculations"]
+        ]
+      },
+      2: {
+        title: "Level 2: Commission & Interest",
+        description: "Sales commissions, simple interest, and business markup.",
+        options: [
+          ["select", "Select Question Type"],
+          ["sales_commission", "Type 1: Sales commissions"],
+          ["simple_interest", "Type 2: Simple interest calculations"],
+          ["business_markup", "Type 3: Business markup and profit margins"]
+        ]
+      },
+      3: {
+        title: "Level 3: Advanced Finance",
+        description: "Compound interest, loans, investments, and mortgages.",
+        options: [
+          ["select", "Select Question Type"],
+          ["compound_interest", "Type 1: Compound interest calculations"],
+          ["loan_calculations", "Type 2: Loan and mortgage payments"],
+          ["investment_returns", "Type 3: Investment returns and analysis"]
+        ]
+      },
+      4: {
+        title: "Level 4: Scientific & Complex",
+        description: "Concentrations, error analysis, and statistical applications.",
+        options: [
+          ["select", "Select Question Type"],
+          ["scientific_concentrations", "Type 1: Scientific concentrations"],
+          ["statistical_analysis", "Type 2: Statistical analysis and confidence intervals"],
+          ["error_calculations", "Type 3: Error analysis and accuracy calculations"]
+        ]
+      }
+    };
+
+    const typeNames = {
+      shopping_discounts: "Shopping Discounts and Sales Tax",
+      dining_tips: "Restaurant Tips and Service Charges",
+      basic_taxes: "Basic Tax Calculations",
+      sales_commission: "Sales Commissions",
+      simple_interest: "Simple Interest",
+      business_markup: "Business Markup and Profit Margins",
+      compound_interest: "Compound Interest",
+      loan_calculations: "Loan and Mortgage Payments",
+      investment_returns: "Investment Returns and Analysis",
+      scientific_concentrations: "Scientific Concentrations",
+      statistical_analysis: "Statistical Analysis and Confidence Intervals",
+      error_calculations: "Error Analysis and Accuracy"
+    };
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomDecimal(min, max, decimals = 2) {
+      const factor = 10 ** decimals;
+      return Math.round((Math.random() * (max - min) + min) * factor) / factor;
+    }
+
+    function round(value, decimals = 2) {
+      const factor = 10 ** decimals;
+      return Math.round(value * factor) / factor;
+    }
+
+    function money(amount) {
+      return `£${round(amount, 2).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function pct(value, decimals = 2) {
+      return `${round(value, decimals).toLocaleString("en-GB", { maximumFractionDigits: decimals })}%`;
+    }
+
+    function decimalFromPercent(value) {
+      return round(value / 100, 6);
+    }
+
+    function generateProblem() {
+      switch (currentType) {
+        case "shopping_discounts": {
+          const originalPrice = randomDecimal(15, 200);
+          const discount = random(10, 50);
+          const salesTax = randomDecimal(5, 12);
+          const discountAmount = round(originalPrice * decimalFromPercent(discount));
+          const discountedPrice = round(originalPrice - discountAmount);
+          const taxAmount = round(discountedPrice * decimalFromPercent(salesTax));
+          const finalPrice = round(discountedPrice + taxAmount);
+          return {
+            badge: "shopping",
+            equation: `An item costs <span class="money">${money(originalPrice)}</span>. There is a <span class="percentage">${discount}% discount</span>, then <span class="percentage">${salesTax}% sales tax</span> is added. Find the final price.`,
+            answer: money(finalPrice),
+            steps: [
+              `Discount = ${discount}% of ${money(originalPrice)}`,
+              `Discount = ${decimalFromPercent(discount)} × ${money(originalPrice)} = ${money(discountAmount)}`,
+              `Discounted price = ${money(originalPrice)} - ${money(discountAmount)} = ${money(discountedPrice)}`,
+              `Sales tax = ${salesTax}% of ${money(discountedPrice)}`,
+              `Sales tax = ${decimalFromPercent(salesTax)} × ${money(discountedPrice)} = ${money(taxAmount)}`,
+              `Final price = ${money(discountedPrice)} + ${money(taxAmount)} = ${money(finalPrice)}`
+            ]
+          };
+        }
+        case "dining_tips": {
+          const bill = randomDecimal(25, 120);
+          const tipRate = random(15, 25);
+          const serviceRate = randomDecimal(8, 12);
+          const tip = round(bill * decimalFromPercent(tipRate));
+          const service = round(bill * decimalFromPercent(serviceRate));
+          const total = round(bill + tip + service);
+          return {
+            badge: "shopping",
+            equation: `A restaurant bill is <span class="money">${money(bill)}</span>. Add a <span class="percentage">${tipRate}% tip</span> and a <span class="percentage">${serviceRate}% service charge</span>. Find the total amount to pay.`,
+            answer: money(total),
+            steps: [
+              `Tip = ${tipRate}% of ${money(bill)} = ${decimalFromPercent(tipRate)} × ${money(bill)} = ${money(tip)}`,
+              `Service charge = ${serviceRate}% of ${money(bill)} = ${decimalFromPercent(serviceRate)} × ${money(bill)} = ${money(service)}`,
+              `Total = ${money(bill)} + ${money(tip)} + ${money(service)} = ${money(total)}`
+            ]
+          };
+        }
+        case "basic_taxes": {
+          const grossIncome = random(25000, 55000);
+          const taxRate = randomDecimal(18, 25);
+          const taxAmount = round(grossIncome * decimalFromPercent(taxRate));
+          const netIncome = round(grossIncome - taxAmount);
+          return {
+            badge: "tax",
+            equation: `An employee earns <span class="money">${money(grossIncome)}</span> annually. The tax rate is <span class="percentage">${taxRate}%</span>. Calculate the net income after tax.`,
+            answer: money(netIncome),
+            steps: [
+              `Tax = ${taxRate}% of ${money(grossIncome)}`,
+              `Tax = ${decimalFromPercent(taxRate)} × ${money(grossIncome)} = ${money(taxAmount)}`,
+              `Net income = ${money(grossIncome)} - ${money(taxAmount)} = ${money(netIncome)}`
+            ]
+          };
+        }
+        case "sales_commission": {
+          const sales = random(15000, 85000);
+          const rate = randomDecimal(2.5, 8);
+          const baseSalary = random(18000, 35000);
+          const commission = round(sales * decimalFromPercent(rate));
+          const total = round(baseSalary + commission);
+          return {
+            badge: "business",
+            equation: `A salesperson has a base salary of <span class="money">${money(baseSalary)}</span> plus <span class="percentage">${rate}% commission</span> on sales. They sold <span class="money">${money(sales)}</span> worth of products. Find their total earnings.`,
+            answer: money(total),
+            steps: [
+              `Commission = ${rate}% of ${money(sales)}`,
+              `Commission = ${decimalFromPercent(rate)} × ${money(sales)} = ${money(commission)}`,
+              `Total earnings = ${money(baseSalary)} + ${money(commission)} = ${money(total)}`
+            ]
+          };
+        }
+        case "simple_interest": {
+          const principal = random(1000, 15000);
+          const rate = randomDecimal(3, 8);
+          const time = random(2, 8);
+          const interest = round(principal * decimalFromPercent(rate) * time);
+          const amount = round(principal + interest);
+          return {
+            badge: "finance",
+            equation: `Calculate simple interest on <span class="money">${money(principal)}</span> at <span class="percentage">${rate}% per year</span> for <span class="highlight">${time} years</span>. Find the total amount.`,
+            answer: money(amount),
+            steps: [
+              `Use I = PRT.`,
+              `P = ${money(principal)}, R = ${decimalFromPercent(rate)}, T = ${time}`,
+              `I = ${money(principal)} × ${decimalFromPercent(rate)} × ${time} = ${money(interest)}`,
+              `Amount = ${money(principal)} + ${money(interest)} = ${money(amount)}`
+            ]
+          };
+        }
+        case "business_markup": {
+          const cost = randomDecimal(15, 85);
+          const markupRate = random(25, 60);
+          const markup = round(cost * decimalFromPercent(markupRate));
+          const selling = round(cost + markup);
+          const margin = round((markup / selling) * 100);
+          return {
+            badge: "business",
+            equation: `A product costs <span class="money">${money(cost)}</span> to make. The business applies a <span class="percentage">${markupRate}% markup</span>. Find the selling price and profit margin.`,
+            answer: `Selling price: ${money(selling)}, profit margin: ${pct(margin)}`,
+            steps: [
+              `Markup = ${markupRate}% of ${money(cost)} = ${decimalFromPercent(markupRate)} × ${money(cost)} = ${money(markup)}`,
+              `Selling price = ${money(cost)} + ${money(markup)} = ${money(selling)}`,
+              `Profit margin = (${money(markup)} ÷ ${money(selling)}) × 100 = ${pct(margin)}`
+            ]
+          };
+        }
+        case "compound_interest": {
+          const principal = random(5000, 25000);
+          const rate = randomDecimal(4, 7);
+          const years = random(3, 10);
+          const multiplier = 1 + decimalFromPercent(rate);
+          const amount = round(principal * Math.pow(multiplier, years));
+          const interest = round(amount - principal);
+          return {
+            badge: "investment",
+            equation: `<span class="money">${money(principal)}</span> is invested at <span class="percentage">${rate}% compound interest</span> for <span class="highlight">${years} years</span>. Find the final amount and interest earned.`,
+            answer: `Final amount: ${money(amount)}, interest: ${money(interest)}`,
+            steps: [
+              `Use A = P(1 + r)^t.`,
+              `P = ${money(principal)}, r = ${decimalFromPercent(rate)}, t = ${years}`,
+              `A = ${money(principal)} × (${round(multiplier, 4)})^${years}`,
+              `A = ${money(amount)}`,
+              `Interest = ${money(amount)} - ${money(principal)} = ${money(interest)}`
+            ]
+          };
+        }
+        case "loan_calculations": {
+          const loan = random(120000, 350000);
+          const annualRate = randomDecimal(3.5, 6.5);
+          const monthlyRate = decimalFromPercent(annualRate) / 12;
+          const years = random(15, 30);
+          const months = years * 12;
+          const growth = Math.pow(1 + monthlyRate, months);
+          const monthlyPayment = round(loan * (monthlyRate * growth) / (growth - 1));
+          const totalPaid = round(monthlyPayment * months);
+          const totalInterest = round(totalPaid - loan);
+          return {
+            badge: "finance",
+            equation: `A mortgage of <span class="money">${money(loan)}</span> at <span class="percentage">${annualRate}% annually</span> for <span class="highlight">${years} years</span>. Calculate the monthly payment and total interest paid.`,
+            answer: `Monthly payment: ${money(monthlyPayment)}, total interest: ${money(totalInterest)}`,
+            steps: [
+              `Monthly rate = ${annualRate}% ÷ 12 = ${pct(annualRate / 12, 4)} = ${round(monthlyRate, 6)}`,
+              `Number of payments = ${years} × 12 = ${months}`,
+              `M = P × [r(1+r)^n] ÷ [(1+r)^n - 1]`,
+              `Monthly payment = ${money(monthlyPayment)}`,
+              `Total paid = ${money(monthlyPayment)} × ${months} = ${money(totalPaid)}`,
+              `Total interest = ${money(totalPaid)} - ${money(loan)} = ${money(totalInterest)}`
+            ]
+          };
+        }
+        case "investment_returns": {
+          const initial = random(10000, 50000);
+          const final = randomDecimal(initial * 1.1, initial * 2.5);
+          const years = random(3, 15);
+          const totalReturn = round(final - initial);
+          const percentageReturn = round((totalReturn / initial) * 100);
+          const annualReturn = round((Math.pow(final / initial, 1 / years) - 1) * 100);
+          return {
+            badge: "investment",
+            equation: `An investment of <span class="money">${money(initial)}</span> grew to <span class="money">${money(final)}</span> over <span class="highlight">${years} years</span>. Calculate the total return percentage and annual return rate.`,
+            answer: `Total return: ${pct(percentageReturn)}, annual return: ${pct(annualReturn)}`,
+            steps: [
+              `Total return = ${money(final)} - ${money(initial)} = ${money(totalReturn)}`,
+              `Total return % = (${money(totalReturn)} ÷ ${money(initial)}) × 100 = ${pct(percentageReturn)}`,
+              `Annual return = [(${money(final)} ÷ ${money(initial)})^(1 ÷ ${years}) - 1] × 100`,
+              `Annual return = ${pct(annualReturn)}`
+            ]
+          };
+        }
+        case "scientific_concentrations": {
+          const solute = randomDecimal(2.5, 25, 1);
+          const water = randomDecimal(150, 500, 1);
+          const total = round(solute + water, 1);
+          const concentration = round((solute / total) * 100);
+          const newSolution = randomDecimal(750, 1200, 1);
+          const newSolute = round(decimalFromPercent(concentration) * newSolution);
+          return {
+            badge: "science",
+            equation: `A solution contains <span class="highlight">${solute}g</span> of salt in <span class="highlight">${water}g</span> of water. What is the concentration? How much salt is needed for <span class="highlight">${newSolution}g</span> of the same solution?`,
+            answer: `Concentration: ${pct(concentration)}, salt needed: ${newSolute}g`,
+            steps: [
+              `Total solution = ${solute}g + ${water}g = ${total}g`,
+              `Concentration = (${solute} ÷ ${total}) × 100 = ${pct(concentration)}`,
+              `Salt needed = ${pct(concentration)} of ${newSolution}g`,
+              `Salt needed = ${decimalFromPercent(concentration)} × ${newSolution} = ${newSolute}g`
+            ]
+          };
+        }
+        case "statistical_analysis": {
+          const sample = random(250, 1500);
+          const positive = random(Math.floor(sample * 0.15), Math.floor(sample * 0.85));
+          const confidence = random(85, 98);
+          const successRate = round((positive / sample) * 100);
+          const margin = randomDecimal(2, 5, 1);
+          const lower = round(Math.max(0, successRate - margin));
+          const upper = round(Math.min(100, successRate + margin));
+          return {
+            badge: "science",
+            equation: `In a study of <span class="highlight">${sample} participants</span>, <span class="highlight">${positive} showed positive results</span>. Calculate the success rate and the <span class="percentage">${confidence}% confidence interval</span> with margin of error ±<span class="percentage">${margin}%</span>.`,
+            answer: `Success rate: ${pct(successRate)}, interval: ${pct(lower)} - ${pct(upper)}`,
+            steps: [
+              `Success rate = (${positive} ÷ ${sample}) × 100 = ${pct(successRate)}`,
+              `Lower bound = ${pct(successRate)} - ${margin}% = ${pct(lower)}`,
+              `Upper bound = ${pct(successRate)} + ${margin}% = ${pct(upper)}`,
+              `${confidence}% confidence interval: ${pct(lower)} - ${pct(upper)}`
+            ]
+          };
+        }
+        case "error_calculations": {
+          const measured = randomDecimal(45, 155);
+          const trueValue = randomDecimal(measured * 0.9, measured * 1.1);
+          const absoluteError = round(Math.abs(measured - trueValue));
+          const relativeError = round((absoluteError / trueValue) * 100);
+          const accuracy = round(100 - relativeError);
+          return {
+            badge: "science",
+            equation: `A measurement gives <span class="highlight">${measured.toFixed(2)} units</span>, but the true value is <span class="highlight">${trueValue.toFixed(2)} units</span>. Calculate the absolute error, relative error percentage, and accuracy percentage.`,
+            answer: `Absolute error: ${absoluteError.toFixed(2)}, relative error: ${pct(relativeError)}, accuracy: ${pct(accuracy)}`,
+            steps: [
+              `Absolute error = |${measured.toFixed(2)} - ${trueValue.toFixed(2)}| = ${absoluteError.toFixed(2)}`,
+              `Relative error % = (${absoluteError.toFixed(2)} ÷ ${trueValue.toFixed(2)}) × 100 = ${pct(relativeError)}`,
+              `Accuracy = 100% - ${pct(relativeError)} = ${pct(accuracy)}`
+            ]
+          };
+        }
+        default:
+          currentType = "shopping_discounts";
+          return generateProblem();
+      }
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => {
+        tab.classList.toggle("active", index + 1 === level);
+      });
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = config.options.map(([value, label]) => `<option value="${value}">${label}</option>`).join("");
+      dropdown.value = "select";
+      document.getElementById("dropdown-container").classList.add("visible");
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function showBlankPage() {
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      document.getElementById("problem-set-header").classList.remove("visible");
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center; padding:50px; color:#718096; font-size:1.15rem;">Please select a question type to begin exploring real-world percentage applications.</li>';
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      for (let i = 0; i < 5; i++) problems.push(generateProblem());
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const header = document.getElementById("problem-set-header");
+      header.textContent = typeNames[currentType] || "Real-World Percentage Problems";
+      header.classList.add("visible");
+      const container = document.getElementById("problem-list");
+      container.innerHTML = "";
+      problems.forEach((problem, index) => {
+        const stepsHTML = problem.steps.map(step => {
+          const className = (step.includes("=") || step.includes("×") || step.includes("÷") || step.includes("^")) ? "step-equation" : "step";
+          return `<div class="${className}">${step}</div>`;
+        }).join("");
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index + 1}</div>
+              <div>
+                <div class="context-badge ${problem.badge}">${problem.badge.toUpperCase()}</div>
+                <div class="equation">${problem.equation}</div>
+              </div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Solution Steps:</div>
+            <div class="solution-steps">
+              ${stepsHTML}
+              <div class="final-answer">${problem.answer}</div>
+            </div>
+          </div>
+        `;
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const answer = document.getElementById(`quick-answer-${i}`);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      }
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const steps = document.getElementById(`steps-${i}`);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      }
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById("timer-display");
+      display.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      if (timeRemaining <= 30) display.className = "timer-display warning";
+      else if (timerActive) display.className = "timer-display active";
+      else display.className = "timer-display";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      const display = document.getElementById("timer-display");
+      display.textContent = "Time Up";
+      display.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

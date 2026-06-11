@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Percentage Tasks</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      padding: 15px;
+      overflow-x: hidden;
+      background: #f0f4f8;
+      color: #1a365d;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      z-index: 1001;
+      transform: translateY(-50%);
+      padding: 12px 6px;
+      border-radius: 0 6px 6px 0;
+      background: #1a365d;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      writing-mode: vertical-rl;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .teacher-tab:hover { background: #2d5a87; transform: translateY(-50%) translateX(5px); }
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      background: rgba(0,0,0,0.5);
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .sidebar-overlay.active { visibility: visible; opacity: 1; }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -400px;
+      z-index: 1000;
+      width: 400px;
+      height: 100vh;
+      overflow-y: auto;
+      background: #fff;
+      box-shadow: 2px 0 20px rgba(0,0,0,0.3);
+      transition: left 0.25s ease;
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-header {
+      padding: 20px;
+      background: #1a365d;
+      color: #fff;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .sidebar-content { padding: 25px; line-height: 1.6; }
+    .sidebar-content h3 {
+      margin: 20px 0 10px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #3182ce;
+      color: #1a365d;
+      font-size: 1.08rem;
+    }
+    .sidebar-content p, .sidebar-content li { margin-bottom: 8px; color: #555; }
+    .sidebar-content ul { margin-bottom: 15px; padding-left: 20px; }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    }
+    .header {
+      position: relative;
+      overflow: hidden;
+      padding: 22px;
+      background: #2d5a87;
+      background-image:
+        linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce),
+        linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce);
+      background-size: 25px 25px;
+      background-position: 0 0, 12px 12px;
+      color: #fff;
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.2);
+    }
+    .header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent 50%, rgba(0,0,0,0.05));
+    }
+    .header h1, .header p { position: relative; z-index: 1; }
+    .header h1 { margin-bottom: 4px; font-size: 2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    .header p { opacity: 0.92; font-size: 1.02rem; }
+    .tabs { display: flex; background: #e2e8f0; }
+    .tab {
+      flex: 1;
+      min-height: 52px;
+      padding: 12px;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      background: #e2e8f0;
+      color: #1a365d;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .tab:hover { background: #cbd5e0; }
+    .tab.active { background: #fff; border-bottom-color: #3182ce; color: #3182ce; }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 16px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f7fafc;
+    }
+    .level-info h3 { margin-bottom: 3px; color: #1a365d; font-size: 1.2rem; }
+    .level-info p { color: #718096; font-size: 0.95rem; }
+    .dropdown-container { display: none; margin-top: 8px; }
+    .dropdown-container.visible { display: block; }
+    .type-dropdown {
+      min-width: 290px;
+      max-width: 100%;
+      padding: 7px 10px;
+      border: 2px solid #cbd5e0;
+      border-radius: 5px;
+      background: #fff;
+      color: #1a365d;
+      font-size: 0.95rem;
+    }
+    .type-dropdown:focus { border-color: #3182ce; outline: none; }
+    .timer-section, .action-buttons { display: flex; align-items: center; gap: 8px; }
+    .timer-display {
+      min-width: 100px;
+      padding: 8px 14px;
+      border: 2px solid #cbd5e0;
+      border-radius: 5px;
+      background: #fff;
+      color: #1a365d;
+      font-size: 1.6rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .timer-display.active { border-color: #3182ce; color: #3182ce; }
+    .timer-display.warning { border-color: #e53e3e; color: #e53e3e; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+    .btn {
+      min-width: 70px;
+      padding: 8px 16px;
+      border: 0;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: #3182ce; }
+    .btn-primary:hover { background: #2c5282; }
+    .btn-success { background: #38a169; }
+    .btn-success:hover { background: #2f855a; }
+    .btn-warning { background: #d69e2e; }
+    .btn-warning:hover { background: #b7791f; }
+    .btn-danger { background: #e53e3e; }
+    .btn-danger:hover { background: #c53030; }
+    .problems-section { min-height: 500px; padding: 15px 25px 25px; }
+    .problem-set-header {
+      display: none;
+      margin-bottom: 15px;
+      padding: 12px 20px;
+      border-radius: 6px;
+      background: #3182ce;
+      color: #fff;
+      font-size: 1.28rem;
+      font-weight: 800;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(49,130,206,0.3);
+    }
+    .problem-set-header.visible { display: block; }
+    .problem-set-header.type-2 { background: #38a169; box-shadow: 0 2px 8px rgba(56,161,105,0.3); }
+    .problem-set-header.type-3 { background: #d69e2e; box-shadow: 0 2px 8px rgba(214,158,46,0.3); }
+    .problem-list { list-style: none; }
+    .problem-item {
+      margin: 8px 0;
+      padding: 15px 20px;
+      border-left: 4px solid #3182ce;
+      border-radius: 6px;
+      background: #f7fafc;
+      transition: transform 0.2s ease;
+    }
+    .problem-item:hover { transform: translateX(2px); }
+    .problem-header { display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+    .problem-left { display: flex; align-items: center; flex: 1; min-width: 0; }
+    .problem-number {
+      display: flex;
+      flex: 0 0 28px;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      margin-right: 15px;
+      border-radius: 50%;
+      background: #3182ce;
+      color: #fff;
+      font-weight: 800;
+    }
+    .equation {
+      color: #1a365d;
+      font-family: "Times New Roman", serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .problem-answer {
+      display: none;
+      margin-left: 12px;
+      padding: 7px 12px;
+      border-radius: 20px;
+      background: #38a169;
+      color: #fff;
+      font-size: 1.08rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .problem-answer.visible { display: block; animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+    .steps-section {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border-left: 3px solid #3182ce;
+      border-radius: 6px;
+      background: #ebf8ff;
+    }
+    .steps-section.visible { display: block; animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .answer-label { margin-bottom: 8px; color: #3182ce; font-weight: 800; }
+    .solution-steps { font-size: 1.05rem; line-height: 1.45; }
+    .step { margin: 6px 0; color: #1a365d; }
+    .step-equation {
+      margin: 8px 0;
+      color: #805ad5;
+      font-family: "Times New Roman", serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    .final-answer {
+      margin-top: 10px;
+      padding: 8px 14px;
+      border-radius: 5px;
+      background: #38a169;
+      color: #fff;
+      font-size: 1.18rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .fraction {
+      display: inline-block;
+      min-width: 1.1em;
+      margin: 0 2px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .fraction .numerator {
+      display: block;
+      padding: 0 3px 2px;
+      border-bottom: 2px solid currentColor;
+      line-height: 1;
+    }
+    .fraction .denominator {
+      display: block;
+      padding: 2px 3px 0;
+      line-height: 1;
+    }
+    .percentage { color: #e53e3e; font-weight: 800; }
+    .target { color: #2f855a; font-weight: 800; }
+    .process {
+      padding: 1px 4px;
+      border-radius: 3px;
+      background: #fef2e7;
+      color: #b7791f;
+      font-weight: 800;
+    }
+    .timer-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1002;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+      max-width: 320px;
+      padding: 30px;
+      border-radius: 10px;
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    .modal-content h2 { margin-bottom: 15px; color: #e53e3e; font-size: 1.75rem; }
+    .modal-content p { margin-bottom: 20px; color: #718096; }
+    .hidden { display: none; }
+    @media (max-width: 768px) {
+      .controls { flex-direction: column; align-items: stretch; }
+      .timer-section, .action-buttons { justify-content: center; flex-wrap: wrap; }
+      .tabs { flex-wrap: wrap; }
+      .tab { flex: 1 1 50%; }
+      .sidebar { left: -320px; width: 320px; }
+      .type-dropdown { min-width: 100%; }
+      .problem-header { align-items: flex-start; flex-direction: column; }
+      .problem-answer { margin-left: 43px; }
+      .equation { font-size: 1.3rem; }
+    }
+    @media (min-width: 1200px) {
+      .equation { font-size: 1.8rem; }
+      .problem-item { margin: 10px 0; padding: 18px 25px; }
+      .problem-number { width: 32px; height: 32px; flex-basis: 32px; font-size: 1.1rem; }
+      .solution-steps { font-size: 1.15rem; }
+      .step-equation { font-size: 1.35rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Percentage Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool helps students practise percentage skills in a structured progression from conversions through applied percentage change.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Convert between percentages, decimals, and fractions.</li>
+        <li><strong>Level 2:</strong> Convert fractions and quantities into percentages, and find simple percentages of amounts.</li>
+        <li><strong>Level 3:</strong> Calculate percentages of quantities, increases, and decreases.</li>
+        <li><strong>Level 4:</strong> Solve multi-step, reverse percentage, and combined discount or VAT problems.</li>
+      </ul>
+      <h3>Key Concepts</h3>
+      <ul>
+        <li>Percentage means parts per hundred.</li>
+        <li>Percentage to decimal: divide by 100.</li>
+        <li>Decimal to percentage: multiply by 100.</li>
+        <li>Percentage of a quantity: convert to a decimal and multiply.</li>
+        <li>Percentage change: compare the difference with the original amount.</li>
+      </ul>
+      <h3>Teaching Strategies</h3>
+      <ul>
+        <li>Keep returning to the meaning of "out of 100".</li>
+        <li>Use familiar benchmarks such as 10%, 25%, 50%, and 75%.</li>
+        <li>Ask students to identify the original amount before percentage change questions.</li>
+        <li>Use multipliers to connect increase, decrease, and reverse percentage methods.</li>
+      </ul>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Moving the decimal point in the wrong direction.</li>
+        <li>Forgetting to multiply by 100 when converting to a percentage.</li>
+        <li>Using the final amount instead of the original amount in percentage change.</li>
+        <li>Treating a 20% decrease followed by a 20% increase as a return to the original value.</li>
+      </ul>
+      <h3>Using the Timer</h3>
+      <ul>
+        <li>Use 2 minutes for conversions and quick fluency.</li>
+        <li>Use 5 minutes for multi-step and reverse percentage tasks.</li>
+        <li>Reveal steps once students have explained their chosen method.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header">
+      <h1>Simple Percentage Tasks</h1>
+      <p>Conversions, percentage of quantities, percentage change, and reverse percentages</p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Basic Conversions</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Converting to %</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Calculations</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Advanced</button>
+    </nav>
+
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Basic Percentage Conversions</h3>
+        <p id="level-description">Convert between percentages, decimals, and fractions.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header">
+        <span id="problem-type-title">Select a question type to begin</span>
+      </div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up</h2>
+      <p>Ready to review the answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Basic Percentage Conversions",
+        description: "Convert between percentages, decimals, and fractions.",
+        options: [
+          ["select", "Select Question Type"],
+          ["percentage_to_decimal", "Type 1: Percentage to decimal"],
+          ["percentage_to_fraction", "Type 2: Percentage to fraction"],
+          ["decimal_to_percentage", "Type 3: Decimal to percentage"]
+        ]
+      },
+      2: {
+        title: "Level 2: Converting to Percentages",
+        description: "Express quantities as percentages.",
+        options: [
+          ["select", "Select Question Type"],
+          ["fraction_to_percentage", "Type 1: Fraction to percentage"],
+          ["quantity_as_percentage", "Type 2: Quantity as percentage"],
+          ["basic_percentage_of", "Type 3: Basic percentage of quantities"]
+        ]
+      },
+      3: {
+        title: "Level 3: Percentage Calculations",
+        description: "Calculate with percentages in practical contexts.",
+        options: [
+          ["select", "Select Question Type"],
+          ["percentage_of_quantities", "Type 1: Finding percentage of quantities"],
+          ["percentage_increase", "Type 2: Percentage increase"],
+          ["percentage_decrease", "Type 3: Percentage decrease"]
+        ]
+      },
+      4: {
+        title: "Level 4: Advanced Percentage Applications",
+        description: "Solve multi-step and reverse percentage problems.",
+        options: [
+          ["select", "Select Question Type"],
+          ["multistep_percentage", "Type 1: Multi-step percentage problems"],
+          ["reverse_percentage", "Type 2: Reverse percentage problems"],
+          ["combined_scenarios", "Type 3: Combined discount and VAT scenarios"]
+        ]
+      }
+    };
+
+    const typeDisplayNames = {
+      percentage_to_decimal: "Type 1: Percentage to Decimal",
+      percentage_to_fraction: "Type 2: Percentage to Fraction",
+      decimal_to_percentage: "Type 3: Decimal to Percentage",
+      fraction_to_percentage: "Type 1: Fraction to Percentage",
+      quantity_as_percentage: "Type 2: Express Quantity as Percentage",
+      basic_percentage_of: "Type 3: Basic Percentage Of",
+      percentage_of_quantities: "Type 1: Finding Percentage of Quantities",
+      percentage_increase: "Type 2: Percentage Increase",
+      percentage_decrease: "Type 3: Percentage Decrease",
+      multistep_percentage: "Type 1: Multi-step Percentage Problems",
+      reverse_percentage: "Type 2: Reverse Percentage Problems",
+      combined_scenarios: "Type 3: Combined Discount and VAT Scenarios"
+    };
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function gcd(a, b) {
+      a = Math.abs(a);
+      b = Math.abs(b);
+      while (b) {
+        const temp = b;
+        b = a % b;
+        a = temp;
+      }
+      return a || 1;
+    }
+
+    function round(value, places = 2) {
+      const factor = 10 ** places;
+      return Math.round(value * factor) / factor;
+    }
+
+    function formatNumber(value, places = 2) {
+      return round(value, places).toLocaleString("en-GB", { maximumFractionDigits: places });
+    }
+
+    function fraction(num, den) {
+      return `<span class="fraction"><span class="numerator">${num}</span><span class="denominator">${den}</span></span>`;
+    }
+
+    function simplifyFraction(num, den) {
+      if (den === 0) return "undefined";
+      if (num === 0) return "0";
+      const factor = gcd(num, den);
+      num /= factor;
+      den /= factor;
+      if (den === 1) return String(num);
+      return fraction(num, den);
+    }
+
+    function updateProblemSetHeader() {
+      const header = document.getElementById("problem-set-header");
+      const title = document.getElementById("problem-type-title");
+      if (currentType === "select") {
+        header.classList.remove("visible");
+        return;
+      }
+      title.textContent = typeDisplayNames[currentType] || "Problem Set";
+      header.className = "problem-set-header visible";
+      if (["percentage_to_fraction", "quantity_as_percentage", "percentage_increase", "reverse_percentage"].includes(currentType)) {
+        header.classList.add("type-2");
+      } else if (["decimal_to_percentage", "basic_percentage_of", "percentage_decrease", "combined_scenarios"].includes(currentType)) {
+        header.classList.add("type-3");
+      }
+    }
+
+    function generateProblem() {
+      const type = currentType;
+      switch (type) {
+        case "percentage_to_decimal": {
+          const percent = random(1, 99);
+          const decimal = percent / 100;
+          return {
+            equation: `Convert <span class="percentage">${percent}%</span> to a decimal`,
+            answer: String(decimal),
+            steps: [
+              `To convert a percentage to a decimal, <span class="process">divide by 100</span>.`,
+              `${percent}% = ${percent} ÷ 100`,
+              `${percent} ÷ 100 = ${decimal}`,
+              `Therefore, <span class="target">${percent}% = ${decimal}</span>.`
+            ]
+          };
+        }
+        case "percentage_to_fraction": {
+          const percent = [5, 10, 15, 20, 25, 30, 40, 50, 60, 75, 80, 90][random(0, 11)];
+          const factor = gcd(percent, 100);
+          const simplified = simplifyFraction(percent, 100);
+          return {
+            equation: `Convert <span class="percentage">${percent}%</span> to a fraction`,
+            answer: simplified,
+            steps: [
+              `Percentage means out of 100.`,
+              `${percent}% = ${fraction(percent, 100)}`,
+              `The highest common factor of ${percent} and 100 is ${factor}.`,
+              `${fraction(percent, 100)} = ${fraction(`${percent} ÷ ${factor}`, `100 ÷ ${factor}`)} = ${simplified}`,
+              `Therefore, <span class="target">${percent}% = ${simplified}</span>.`
+            ]
+          };
+        }
+        case "decimal_to_percentage": {
+          const decimals = [0.1, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.9];
+          const decimal = decimals[random(0, decimals.length - 1)];
+          const percent = decimal * 100;
+          return {
+            equation: `Convert <span class="target">${decimal}</span> to a percentage`,
+            answer: `${percent}%`,
+            steps: [
+              `To convert a decimal to a percentage, <span class="process">multiply by 100</span>.`,
+              `${decimal} × 100 = ${percent}`,
+              `Add the percentage symbol.`,
+              `Therefore, <span class="target">${decimal} = ${percent}%</span>.`
+            ]
+          };
+        }
+        case "fraction_to_percentage": {
+          const choices = [[1, 4], [1, 2], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5], [1, 8], [3, 8], [5, 8], [7, 8]];
+          const picked = choices[random(0, choices.length - 1)];
+          const decimal = picked[0] / picked[1];
+          const percent = decimal * 100;
+          return {
+            equation: `Convert ${fraction(picked[0], picked[1])} to a percentage`,
+            answer: `${percent}%`,
+            steps: [
+              `Convert the fraction to a decimal first.`,
+              `${fraction(picked[0], picked[1])} = ${picked[0]} ÷ ${picked[1]} = ${decimal}`,
+              `${decimal} × 100 = ${percent}%`,
+              `Therefore, <span class="target">${fraction(picked[0], picked[1])} = ${percent}%</span>.`
+            ]
+          };
+        }
+        case "quantity_as_percentage": {
+          const whole = random(40, 200);
+          const part = random(5, Math.min(whole - 5, 90));
+          const percent = round((part / whole) * 100, 1);
+          return {
+            equation: `Express ${part} as a percentage of ${whole}`,
+            answer: `${percent}%`,
+            steps: [
+              `<span class="process">Percentage = (part ÷ whole) × 100</span>`,
+              `Percentage = (${part} ÷ ${whole}) × 100`,
+              `= ${formatNumber(part / whole, 4)} × 100`,
+              `= ${percent}%`,
+              `Therefore, <span class="target">${part} is ${percent}% of ${whole}</span>.`
+            ]
+          };
+        }
+        case "basic_percentage_of": {
+          const percent = [10, 15, 20, 25, 30, 40, 50, 60, 75][random(0, 8)];
+          const amount = random(20, 400);
+          const result = round((percent / 100) * amount, 2);
+          return {
+            equation: `Find <span class="percentage">${percent}%</span> of ${amount}`,
+            answer: formatNumber(result),
+            steps: [
+              `Convert ${percent}% to a decimal.`,
+              `${percent}% = ${percent} ÷ 100 = ${percent / 100}`,
+              `${percent}% of ${amount} = ${percent / 100} × ${amount}`,
+              `= ${formatNumber(result)}`,
+              `Therefore, <span class="target">${percent}% of ${amount} = ${formatNumber(result)}</span>.`
+            ]
+          };
+        }
+        case "percentage_of_quantities": {
+          const percent = random(12, 88);
+          const amount = random(150, 850);
+          const result = round((percent / 100) * amount, 2);
+          return {
+            equation: `Calculate <span class="percentage">${percent}%</span> of ${amount}`,
+            answer: formatNumber(result),
+            steps: [
+              `${percent}% = ${percent} ÷ 100 = ${percent / 100}`,
+              `${percent / 100} × ${amount} = ${formatNumber(result)}`,
+              `Check: ${formatNumber(result)} ÷ ${amount} × 100 = ${percent}%`,
+              `Therefore, <span class="target">${percent}% of ${amount} = ${formatNumber(result)}</span>.`
+            ]
+          };
+        }
+        case "percentage_increase": {
+          const original = random(80, 400);
+          const percent = random(5, 50);
+          const increase = round((percent / 100) * original, 2);
+          const result = round(original + increase, 2);
+          const multiplier = (100 + percent) / 100;
+          return {
+            equation: `Increase ${original} by <span class="percentage">${percent}%</span>`,
+            answer: formatNumber(result),
+            steps: [
+              `Increase = ${percent}% of ${original}`,
+              `= ${percent / 100} × ${original} = ${formatNumber(increase)}`,
+              `New amount = ${original} + ${formatNumber(increase)} = ${formatNumber(result)}`,
+              `Multiplier method: ${original} × ${multiplier} = ${formatNumber(result)}`,
+              `Therefore, <span class="target">${original} increased by ${percent}% = ${formatNumber(result)}</span>.`
+            ]
+          };
+        }
+        case "percentage_decrease": {
+          const original = random(100, 500);
+          const percent = random(10, 40);
+          const decrease = round((percent / 100) * original, 2);
+          const result = round(original - decrease, 2);
+          const multiplier = (100 - percent) / 100;
+          return {
+            equation: `Decrease ${original} by <span class="percentage">${percent}%</span>`,
+            answer: formatNumber(result),
+            steps: [
+              `Decrease = ${percent}% of ${original}`,
+              `= ${percent / 100} × ${original} = ${formatNumber(decrease)}`,
+              `New amount = ${original} - ${formatNumber(decrease)} = ${formatNumber(result)}`,
+              `Multiplier method: ${original} × ${multiplier} = ${formatNumber(result)}`,
+              `Therefore, <span class="target">${original} decreased by ${percent}% = ${formatNumber(result)}</span>.`
+            ]
+          };
+        }
+        case "multistep_percentage": {
+          const start = random(100, 300);
+          const first = random(10, 25);
+          const second = random(5, 20);
+          const afterFirst = round(start * (100 + first) / 100, 2);
+          const final = round(afterFirst * (100 - second) / 100, 2);
+          return {
+            equation: `${start} is increased by ${first}%, then decreased by ${second}%. Find the final amount.`,
+            answer: formatNumber(final),
+            steps: [
+              `Apply the ${first}% increase: ${start} × ${(100 + first) / 100} = ${formatNumber(afterFirst)}`,
+              `Apply the ${second}% decrease to the new amount: ${formatNumber(afterFirst)} × ${(100 - second) / 100} = ${formatNumber(final)}`,
+              `Combined multiplier: ${start} × ${(100 + first) / 100} × ${(100 - second) / 100} = ${formatNumber(final)}`,
+              `Therefore, <span class="target">final amount = ${formatNumber(final)}</span>.`
+            ]
+          };
+        }
+        case "reverse_percentage": {
+          const finalAmount = random(80, 200);
+          const percentOfOriginal = random(60, 95);
+          const original = round(finalAmount * 100 / percentOfOriginal, 2);
+          return {
+            equation: `${finalAmount} is ${percentOfOriginal}% of the original amount. Find the original amount.`,
+            answer: formatNumber(original),
+            steps: [
+              `Let the original amount be x.`,
+              `${percentOfOriginal}% of x = ${finalAmount}`,
+              `${percentOfOriginal / 100} × x = ${finalAmount}`,
+              `x = ${finalAmount} ÷ ${percentOfOriginal / 100}`,
+              `x = ${formatNumber(original)}`,
+              `Therefore, <span class="target">original amount = ${formatNumber(original)}</span>.`
+            ]
+          };
+        }
+        case "combined_scenarios": {
+          const price = random(50, 150);
+          const discount = random(10, 30);
+          const vat = random(15, 25);
+          const afterDiscount = round(price * (100 - discount) / 100, 2);
+          const finalPrice = round(afterDiscount * (100 + vat) / 100, 2);
+          return {
+            equation: `An item costs £${price}. A ${discount}% discount is applied, then ${vat}% VAT is added. Find the final price.`,
+            answer: `£${formatNumber(finalPrice)}`,
+            steps: [
+              `Apply the ${discount}% discount: £${price} × ${(100 - discount) / 100} = £${formatNumber(afterDiscount)}`,
+              `Add ${vat}% VAT: £${formatNumber(afterDiscount)} × ${(100 + vat) / 100} = £${formatNumber(finalPrice)}`,
+              `Combined calculation: £${price} × ${(100 - discount) / 100} × ${(100 + vat) / 100} = £${formatNumber(finalPrice)}`,
+              `Therefore, <span class="target">final price = £${formatNumber(finalPrice)}</span>.`
+            ]
+          };
+        }
+        default:
+          currentType = "percentage_to_decimal";
+          return generateProblem();
+      }
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => {
+        tab.classList.toggle("active", index + 1 === level);
+      });
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = config.options.map(([value, label]) => `<option value="${value}">${label}</option>`).join("");
+      dropdown.value = "select";
+      document.getElementById("dropdown-container").classList.add("visible");
+      updateProblemSetHeader();
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      updateProblemSetHeader();
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function showBlankPage() {
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center; padding:40px; color:#718096; font-size:1.1rem;">Please select a question type to begin.</li>';
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      for (let i = 0; i < 5; i++) problems.push(generateProblem());
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const container = document.getElementById("problem-list");
+      container.innerHTML = "";
+      problems.forEach((problem, index) => {
+        const stepsHTML = problem.steps.map(step => {
+          const className = (step.includes("=") || step.includes("×") || step.includes("÷")) ? "step-equation" : "step";
+          return `<div class="${className}">${step}</div>`;
+        }).join("");
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index + 1}</div>
+              <div class="equation">${problem.equation}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Solution Steps:</div>
+            <div class="solution-steps">
+              ${stepsHTML}
+              <div class="final-answer">${problem.answer}</div>
+            </div>
+          </div>
+        `;
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const answer = document.getElementById(`quick-answer-${i}`);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      }
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const steps = document.getElementById(`steps-${i}`);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      }
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById("timer-display");
+      display.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      if (timeRemaining <= 30) display.className = "timer-display warning";
+      else if (timerActive) display.className = "timer-display active";
+      else display.className = "timer-display";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      const display = document.getElementById("timer-display");
+      display.textContent = "Time Up";
+      display.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Algebraic Simplification Practice</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous"/>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="reRenderMath()"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'KaTeX_Main','Latin Modern Roman','Computer Modern',serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-420px;top:0;width:420px;height:100vh;background:#fff;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}
+    .sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:700}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.05em;border-bottom:2px solid #3182ce;padding-bottom:6px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}
+    .header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}
+    .header::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 50%,rgba(0,0,0,.05) 100%)}.header h1{font-size:2.1em;margin-bottom:4px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:18px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:700;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom:3px solid #3182ce;color:#3182ce}
+    .controls{padding:22px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:4px;font-size:1.2em}.level-info p{color:#718096;font-size:1em}.dropdown-container{margin-top:10px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:380px;max-width:100%}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section{display:flex;align-items:center;gap:14px}.timer-display{font-size:1.85em;font-weight:700;color:#1a365d;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #cbd5e0;min-width:120px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px}.btn{padding:12px 22px;border:none;border-radius:6px;font-size:1em;font-weight:700;cursor:pointer;transition:.3s;min-width:85px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:32px;min-height:600px}.problem-list{list-style:none}.problem-item{background:#f7fafc;margin:18px 0;padding:24px;border-radius:10px;border-left:5px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(3px)}.problem-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:12px}.problem-left{display:flex;align-items:center;flex:1;gap:16px;min-width:0}.problem-number{background:#3182ce;color:#fff;width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05em;flex:0 0 auto}.expression{font-size:1.6em;color:#1a365d;font-weight:700;overflow-x:auto;max-width:100%}.problem-answer{background:#38a169;color:#fff;padding:10px 18px;border-radius:24px;font-weight:700;font-size:1.1em;display:none;white-space:nowrap}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{margin-top:14px;padding:16px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#38a169;margin-bottom:8px;font-size:1.05em}.solution-steps{font-size:1.08em;line-height:1.5;color:#1a365d}.step{margin:6px 0}.step-equation{text-align:center;margin:8px 0;font-size:1.15em;color:#805ad5;overflow-x:auto}.final-answer{background:#38a169;color:#fff;padding:10px 16px;border-radius:6px;text-align:center;font-weight:700;font-size:1.15em;margin-top:10px}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:34px;border-radius:12px;text-align:center;max-width:360px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:16px;font-size:1.9em}.modal-content p{color:#718096;margin-bottom:22px;font-size:1.05em}.hidden{display:none}
+    @media(max-width:768px){.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:320px;left:-320px}.type-dropdown{min-width:100%}.problem-header{align-items:flex-start}.expression{font-size:1.25em}.problem-answer{white-space:normal}}
+    @media(min-width:1200px){.expression{font-size:2em}.problem-item{padding:28px;margin:22px 0}.problem-number{width:40px;height:40px;font-size:1.15em}.solution-steps{font-size:1.18em}.step-equation{font-size:1.35em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">🧮 Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>Use this tool to build fluency from like terms to advanced multi-variable simplification.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1. Like Terms:</strong> One variable and constants.</li>
+        <li><strong>Level 2. Two Variables:</strong> Combine x and y terms with constants.</li>
+        <li><strong>Level 3. Advanced Simplification:</strong> Products and powers such as xy, x²y, a², b², ab.</li>
+      </ul>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Combining unlike terms.</li>
+        <li>Sign errors when regrouping before combining.</li>
+        <li>Dropping variable parts when adding coefficients.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <div class="header"><h1>Algebraic Simplification Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Like Terms</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Two Variables</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Advanced</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Like and Unlike Terms</h3>
+        <p id="level-description">Identify, group, and combine like terms.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons"><button class="btn btn-primary" onclick="startTimer(2)">2 Min</button><button class="btn btn-warning" onclick="startTimer(5)">5 Min</button><button class="btn btn-danger" onclick="stopTimer()">Stop</button></div>
+      </div>
+      <div class="action-buttons"><button class="btn btn-success" onclick="generateNewSet()">New</button><button class="btn btn-primary" onclick="showAnswers()">Answers</button><button class="btn btn-warning" onclick="showSteps()">Steps</button></div>
+    </div>
+    <div class="problems-section"><ol id="problem-list" class="problem-list"></ol></div>
+  </div>
+  <div id="timer-modal" class="timer-modal hidden"><div class="modal-content"><h2>⏰ Time's Up!</h2><p>Ready to review answers.</p><button class="btn btn-primary" onclick="closeModal()">OK</button></div></div>
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={1:{title:"Level 1: Like and Unlike Terms",description:"Identify, group, and combine like terms.",types:['collect_like_terms','identify_terms','simplify_coefficients','mixed_level1']},2:{title:"Level 2: Two Variables",description:"Group x and y terms, handle constants carefully.",types:['two_var_basic','two_var_mixed','two_var_constants','mixed_level2']},3:{title:"Level 3: Advanced Simplification",description:"Combine products and powers (xy, x^2y, x^3y^2, a^2, b^2, ab).",types:['adv_xy_like','adv_multi_groups','adv_a_b_vars','mixed_level3']}};
+    const typeOptions={1:[['collect_like_terms','Type 1: Collect like terms'],['identify_terms','Type 2: Identify and group types'],['simplify_coefficients','Type 3: Mix x terms and constants'],['mixed_level1','Mixed set: Level 1']],2:[['two_var_basic','Type 1: Two variables, no constants'],['two_var_mixed','Type 2: Two variables with constants'],['two_var_constants','Type 3: Two variables, several constants mixed'],['mixed_level2','Mixed set: Level 2']],3:[['adv_xy_like','Type 1: Combine like xy-type terms'],['adv_multi_groups','Type 2: Multiple advanced groups'],['adv_a_b_vars','Type 3: a^2, b^2, ab combinations'],['mixed_level3','Mixed set: Level 3']]};
+    const rnd=(min,max)=>Math.floor(Math.random()*(max-min+1))+min;function nz(min,max){let v;do{v=rnd(min,max)}while(v===0);return v}
+    const inl=s=>`\\(${s}\\)`;function texTerm(c,s="",p=1){if(c===0)return"";const sign=c<0?"-":"",a=Math.abs(c);if(!s)return`${sign}${a}`;return`${sign}${a===1?"":a}${s}${p===1?"":`^{${p}}`}`}
+    function symbolXY(px=1,py=1){const sx=px===0?"":`x${px===1?"":`^{${px}}`}`,sy=py===0?"":`y${py===1?"":`^{${py}}`}`;return sx&&sy?`${sx}\\,${sy}`:(sx||sy||"")}function symbolAB(pa=1,pb=1){const sa=pa===0?"":`a${pa===1?"":`^{${pa}}`}`,sb=pb===0?"":`b${pb===1?"":`^{${pb}}`}`;return sa&&sb?`${sa}\\,${sb}`:(sa||sb||"")}function texTermSymbol(c,s){if(c===0)return"";const sign=c<0?"-":"",a=Math.abs(c);return`${sign}${a===1?"":a}${s}`}
+    function texSum(terms){const f=terms.filter(Boolean);if(!f.length)return"0";let out=f[0].startsWith("-")?f[0]:`${f[0]}`;for(let i=1;i<f.length;i++){out+=f[i].startsWith("-")?" - "+f[i].slice(1):" + "+f[i]}return out}
+    function pack(e,a,steps){return{equation:inl(`\\text{Simplify: } ${e}`),answer:inl(a),steps}}
+    function gen_collect_like_terms(){const a=nz(-8,8),b=nz(-8,8),c=nz(-8,8),expr=texSum([texTerm(a,'x'),texTerm(b,'x'),texTerm(c,'x')]),sum=a+b+c,ans=sum===0?'0':texTerm(sum,'x');return pack(expr,ans,[`$$${expr}\\;=\\;(${a}+${b}+${c})x$$`,`$$=\\;${ans}$$`,`All like terms in \\(x\\) combined by adding coefficients.`])}
+    function gen_identify_terms(){const ax=nz(-5,5),ay=nz(-5,5),bx=nz(-5,5),k=nz(-8,8),expr=texSum([texTerm(ax,'x'),texTerm(ay,'y'),texTerm(bx,'x'),`${k}`]),xsum=ax+bx,ans=texSum([texTerm(xsum,'x'),texTerm(ay,'y'),`${k}`]);return pack(expr,ans,[`$$${expr}\\;=\\;(${ax}+${bx})x\\; +\\; ${ay}y\\; +\\; ${k}$$`,`$$=\\;${ans}$$`,`x terms combined; unlike terms remain separate.`])}
+    function gen_simplify_coefficients(){const a=nz(-6,6),b=nz(-6,6),k=nz(-10,10),expr=texSum([texTerm(a,'x'),`${k}`,texTerm(b,'x')]),ans=texSum([texTerm(a+b,'x'),`${k}`]);return pack(expr,ans,[`$$${expr}\\;=\\;(${a}+${b})x\\; +\\; ${k}$$`,`$$=\\;${ans}$$`,`Combined like \\(x\\) terms; constant remains.`])}
+    function gen_two_var_basic(){const ax=nz(-5,5),bx=nz(-5,5),ay=nz(-5,5),by=nz(-5,5),expr=texSum([texTerm(ax,'x'),texTerm(ay,'y'),texTerm(bx,'x'),texTerm(by,'y')]),ans=texSum([texTerm(ax+bx,'x'),texTerm(ay+by,'y')]);return pack(expr,ans,[`$$${expr}\\;=\\;(${ax}+${bx})x\\; +\\; (${ay}+${by})y$$`,`$$=\\;${ans}$$`,`Combined like terms for \\(x\\) and \\(y\\) separately.`])}
+    function gen_two_var_mixed(){const ax=nz(-4,4),bx=nz(-4,4),ay=nz(-4,4),k1=nz(-8,8),k2=nz(-8,8),expr=texSum([texTerm(ax,'x'),texTerm(ay,'y'),`${k1}`,texTerm(bx,'x'),`${k2}`]),ans=texSum([texTerm(ax+bx,'x'),texTerm(ay,'y'),`${k1+k2}`]);return pack(expr,ans,[`$$${expr}\\;=\\;(${ax}+${bx})x\\; +\\; ${ay}y\\; +\\; (${k1}+${k2})$$`,`$$=\\;${ans}$$`,`Grouped \\(x\\), \\(y\\), and constants before combining.`])}
+    function gen_two_var_constants(){return gen_two_var_mixed()}
+    function gen_adv_xy_like(){const p1=rnd(1,3),q1=rnd(1,2),p2=rnd(1,3),q2=rnd(1,2);if(p1===p2&&q1===q2)return gen_adv_xy_like();const a1=nz(-6,6),b1=nz(-6,6),a2=nz(-6,6),b2=nz(-6,6),s1=symbolXY(p1,q1),s2=symbolXY(p2,q2),expr=texSum([texTermSymbol(a1,s1),texTermSymbol(b1,s1),texTermSymbol(a2,s2),texTermSymbol(b2,s2)]),ans=texSum([texTermSymbol(a1+b1,s1),texTermSymbol(a2+b2,s2)]);return pack(expr,ans,[`$$${expr}\\;=\\;(${a1}+${b1})${s1}\\; +\\; (${a2}+${b2})${s2}$$`,`$$=\\;${ans}$$`,`Combined like products with identical variable patterns.`])}
+    function gen_adv_multi_groups(){const a=nz(-4,4),b=nz(-4,4),c=nz(-4,4),d=nz(-4,4),e=nz(-3,3),f=nz(-3,3),k=nz(-8,8),sA=symbolXY(2,1),sB=symbolXY(1,2),sC=symbolXY(3,2),expr=texSum([texTermSymbol(a,sA),texTermSymbol(b,sA),texTermSymbol(c,sB),texTermSymbol(d,sB),texTermSymbol(e,sC),texTermSymbol(f,sC),`${k}`]),ans=texSum([texTermSymbol(a+b,sA),texTermSymbol(c+d,sB),texTermSymbol(e+f,sC),`${k}`]);return pack(expr,ans,[`$$${expr}\\;=\\;(${a}+${b})${sA}\\; +\\; (${c}+${d})${sB}\\; +\\; (${e}+${f})${sC}\\; +\\; ${k}$$`,`$$=\\;${ans}$$`,`Grouped by identical variable products.`])}
+    function gen_adv_a_b_vars(){const a1=nz(-6,6),a2=nz(-6,6),b1=nz(-6,6),b2=nz(-6,6),ab1=nz(-6,6),ab2=nz(-6,6),sA2=symbolAB(2,0),sB2=symbolAB(0,2),sAB=symbolAB(1,1),expr=texSum([texTermSymbol(a1,sA2),texTermSymbol(a2,sA2),texTermSymbol(b1,sB2),texTermSymbol(b2,sB2),texTermSymbol(ab1,sAB),texTermSymbol(ab2,sAB)]),ans=texSum([texTermSymbol(a1+a2,sA2),texTermSymbol(b1+b2,sB2),texTermSymbol(ab1+ab2,sAB)]);return pack(expr,ans,[`$$${expr}\\;=\\;(${a1}+${a2})${sA2}\\; +\\; (${b1}+${b2})${sB2}\\; +\\; (${ab1}+${ab2})${sAB}$$`,`$$=\\;${ans}$$`,`Each group shares the same variable pattern.`])}
+    const pools={mixed_level1:[gen_collect_like_terms,gen_identify_terms,gen_simplify_coefficients],mixed_level2:[gen_two_var_basic,gen_two_var_mixed,gen_two_var_constants],mixed_level3:[gen_adv_xy_like,gen_adv_multi_groups,gen_adv_a_b_vars]};
+    function generateProblem(){let t=currentType;if(t==='select')t=levelConfigs[currentLevel].types[Math.floor(Math.random()*levelConfigs[currentLevel].types.length)];if(pools[t])return pools[t][Math.floor(Math.random()*pools[t].length)]();return({collect_like_terms:gen_collect_like_terms,identify_terms:gen_identify_terms,simplify_coefficients:gen_simplify_coefficients,two_var_basic:gen_two_var_basic,two_var_mixed:gen_two_var_mixed,two_var_constants:gen_two_var_constants,adv_xy_like:gen_adv_xy_like,adv_multi_groups:gen_adv_multi_groups,adv_a_b_vars:gen_adv_a_b_vars}[t]||gen_collect_like_terms)()}
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,idx)=>tab.classList.toggle('active',idx+1===level));const cfg=levelConfigs[level];document.getElementById('level-title').textContent=cfg.title;document.getElementById('level-description').textContent=cfg.description;const dd=document.getElementById('type-dropdown');document.getElementById('dropdown-container').classList.add('visible');dd.innerHTML='<option value="select">Select Question Type</option>'+typeOptions[level].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');dd.value='select';showBlankPage();reRenderMath()}
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;if(currentType==='select')showBlankPage();else generateNewSet();reRenderMath()}
+    function showBlankPage(){document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:48px;color:#718096;font-size:1.05em;">Please select a question type to begin</li>'}
+    function generateNewSet(){problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<5;i++)problems.push(generateProblem());renderProblems();reRenderMath()}
+    function renderProblems(){const c=document.getElementById('problem-list');c.innerHTML='';problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const stepsHTML=p.steps.map(s=>`<div class="${(s.startsWith('$$')||s.includes('=')||s.includes('\\;'))?'step-equation':'step'}">${s}</div>`).join('');li.innerHTML=`<div class="problem-header"><div class="problem-left"><div class="problem-number">${i+1}</div><div class="expression">${p.equation}</div></div><div class="problem-answer" id="quick-answer-${i}">${p.answer}</div></div><div class="steps-section" id="steps-${i}"><div class="answer-label">Solution Steps:</div><div class="solution-steps">${stepsHTML}<div class="final-answer">${p.answer}</div></div></div>`;c.appendChild(li)})}
+    function showAnswers(){answersVisible=!answersVisible;for(let i=0;i<5;i++){const el=document.getElementById(`quick-answer-${i}`);if(el)el.classList.toggle('visible',answersVisible)}reRenderMath()}
+    function showSteps(){stepsVisible=!stepsVisible;for(let i=0;i<5;i++){const el=document.getElementById(`steps-${i}`);if(el)el.classList.toggle('visible',stepsVisible)}reRenderMath()}
+    function startTimer(minutes){if(timerActive)stopTimer();timeRemaining=minutes*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const el=document.getElementById('timer-display');el.textContent='Ready';el.className='timer-display'}function updateTimerDisplay(){const m=Math.floor(timeRemaining/60),s=timeRemaining%60,el=document.getElementById('timer-display');el.textContent=`${m}:${s.toString().padStart(2,'0')}`;el.className=timeRemaining<=30?'timer-display warning':timerActive?'timer-display active':'timer-display'}function timerFinished(){stopTimer();const el=document.getElementById('timer-display');el.textContent='Time Up!';el.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    function reRenderMath(){if(typeof renderMathInElement!=='function')return;renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false})}
+    document.addEventListener('DOMContentLoaded',()=>{switchLevel(1);reRenderMath()});
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

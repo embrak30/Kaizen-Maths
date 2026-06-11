@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sequences & Series Teaching Tool</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:15px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:12px 6px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 6px 6px 0;font-weight:600;font-size:.85em;transition:.3s;box-shadow:2px 0 8px rgba(0,0,0,.2)}.teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-420px;top:0;width:420px;height:100vh;background:#fff;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:18px 0 8px;font-size:1.05em;border-bottom:2px solid #3182ce;padding-bottom:4px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#444}.sidebar-content ul{padding-left:20px;margin-bottom:14px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 3px 15px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:25px 25px;background-position:0 0,12px 12px;color:#fff;padding:20px;text-align:center;position:relative;overflow:hidden}.header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}.header h1{font-size:2em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:12px;background:#e2e8f0;border:0;cursor:pointer;font-size:1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:15px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:3px;font-size:1.2em}.level-info p{color:#718096;font-size:.95em}.dropdown-container{margin-top:8px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:6px 10px;border:2px solid #cbd5e0;border-radius:5px;font-size:.95em;background:#fff;cursor:pointer;min-width:300px;max-width:100%}.type-dropdown:focus{border-color:#3182ce;outline:0}
+    .timer-section{display:flex;align-items:center;gap:12px}.timer-display{font-size:1.6em;font-weight:700;color:#1a365d;background:#fff;padding:8px 14px;border-radius:5px;border:2px solid #cbd5e0;min-width:100px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.action-buttons{display:flex;gap:8px}.btn{padding:8px 16px;border:0;border-radius:5px;font-size:.9em;font-weight:600;cursor:pointer;transition:.3s;min-width:70px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:15px 25px 25px;min-height:500px}.problem-set-header{background:#3182ce;color:#fff;padding:12px 20px;margin-bottom:15px;border-radius:6px;font-size:1.2em;font-weight:700;text-align:center;box-shadow:0 2px 8px rgba(49,130,206,.3);display:none}.problem-set-header.visible{display:block}.problem-set-header.type-1{background:#3182ce}.problem-set-header.type-2{background:#38a169}.problem-set-header.type-3{background:#d69e2e}.problem-list{list-style:none}.problem-item{background:#f7fafc;margin:12px 0;padding:15px 20px;border-radius:6px;border-left:4px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(2px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3182ce;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:15px;flex-shrink:0}.equation{font-size:1.2em;color:#1a365d;max-width:100%;overflow-x:auto}.problem-answer{background:#38a169;color:#fff;padding:8px 16px;border-radius:20px;font-weight:700;display:none;margin-left:15px;max-width:44%;white-space:nowrap;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}.steps-section{margin-top:12px;padding:12px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#3182ce;margin-bottom:10px}.solution-steps{font-size:1em;line-height:1.8}.solution-steps .katex-display{margin:.35rem 0}.step{margin:4px 0;color:#2d3748;overflow-x:auto}.final-answer{background:#38a169;color:#fff;padding:10px 16px;border-radius:5px;text-align:center;font-weight:700;margin-top:12px;overflow-x:auto}.timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:30px;border-radius:10px;text-align:center;max-width:320px;box-shadow:0 8px 25px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:15px}.modal-content p{color:#718096;margin-bottom:20px}.hidden{display:none!important}
+    @media(max-width:768px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:340px;left:-340px}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{max-width:100%;margin-left:43px}.problems-section{padding:12px}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool focuses on Sequences and Series. It scaffolds from arithmetic sequences to geometric series with exact worked solutions.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Arithmetic nth terms, common difference, sums, inverse problems, and sigma notation.</li>
+        <li><strong>Level 2:</strong> Geometric nth terms, ratios, partial sums, sums to infinity, and geometric sigma notation.</li>
+      </ul>
+      <h3>Common Misconceptions</h3>
+      <ul>
+        <li>Confusing a sequence with a series.</li>
+        <li>Treating a geometric pattern as additive rather than multiplicative.</li>
+        <li>Using a sum to infinity when the ratio does not get smaller in size.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <div class="header"><h1>Sequences &amp; Series Teaching Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Arithmetic</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Geometric</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Arithmetic Sequences and Series</h3>
+        <p id="level-description">Build fluency with nth terms, sums, inverse problems, and Sigma notation.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="arith_nth_term">Type 1: Arithmetic nth Term</option>
+            <option value="arith_find_d_a">Type 2: Find a and d</option>
+            <option value="arith_sum_first_n">Type 3: Arithmetic Sum S_n</option>
+            <option value="arith_find_n_from_term">Type 4: Find n from a Term</option>
+            <option value="sigma_arith_linear">Type 5: Sigma of Linear Term</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"><span id="problem-type-title">Select a question type to begin</span></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={1:{title:'Level 1: Arithmetic Sequences and Series',description:'Build fluency with nth terms, sums, inverse problems, and Sigma notation.',types:['arith_nth_term','arith_find_d_a','arith_sum_first_n','arith_find_n_from_term','sigma_arith_linear']},2:{title:'Level 2: Geometric Sequences and Series',description:'Work with nth terms, partial sums, sums to infinity, and Sigma for geometric terms.',types:['geom_nth_term','geom_find_r_a','geom_sum_first_n','geom_sum_infinity','sigma_geom']}};
+    const typeDisplayNames={arith_nth_term:'Type 1: Arithmetic nth Term',arith_find_d_a:'Type 2: Find a and d',arith_sum_first_n:'Type 3: Arithmetic Sum S_n',arith_find_n_from_term:'Type 4: Find n from a Term',sigma_arith_linear:'Type 5: Sigma of Linear Term',geom_nth_term:'Type 1: Geometric nth Term',geom_find_r_a:'Type 2: Find a and r',geom_sum_first_n:'Type 3: Geometric Sum S_n',geom_sum_infinity:'Type 4: Sum to Infinity',sigma_geom:'Type 5: Sigma of Geometric Term'};
+    function random(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+    function choice(a){return a[random(0,a.length-1)]}
+    function gcd(a,b){a=Math.abs(Math.trunc(a));b=Math.abs(Math.trunc(b));while(b){const t=b;b=a%b;a=t}return a||1}
+    function Frac(n,d=1){if(d<0){n=-n;d=-d}const g=gcd(n,d);return{n:n/g,d:d/g}}
+    function fAdd(A,B){return Frac(A.n*B.d+B.n*A.d,A.d*B.d)}
+    function fSub(A,B){return Frac(A.n*B.d-B.n*A.d,A.d*B.d)}
+    function fMul(A,B){return Frac(A.n*B.n,A.d*B.d)}
+    function fDiv(A,B){return Frac(A.n*B.d,A.d*B.n)}
+    function fPow(A,k){if(k===0)return Frac(1,1);let f=Frac(Math.pow(A.n,Math.abs(k)),Math.pow(A.d,Math.abs(k)));return k<0?Frac(f.d,f.n):f}
+    function fInt(c,A){return Frac(c*A.n,A.d)}
+    function fTex(A){if(A.d===1)return String(A.n);return`\\dfrac{${A.n}}{${A.d}}`}
+    function dm(t){return`$$${t}$$`}
+    function nonZero(a,b,fallback){let t=random(a,b);return t===0?fallback:t}
+    function generateProblem(){const type=currentType==='select'?choice(levelConfigs[currentLevel].types):currentType;let p={};
+      if(type==='arith_nth_term'){const a=random(-8,8),d=nonZero(-6,6,3),n=random(5,12),u=a+(n-1)*d;p={equation:`For the arithmetic sequence with first term $a=${a}$ and common difference $d=${d}$, find $u_{${n}}$.`,answer:dm(`u_{${n}}=${u}`),steps:[dm('u_n=a+(n-1)d'),dm(`u_{${n}}=${a}+(${n}-1)\\cdot ${d}`),dm(`\\boxed{u_{${n}}=${u}}`)].map(text=>({text}))}}
+      else if(type==='arith_find_d_a'){const k=random(2,5),m=k+random(2,4),a=random(-6,8),d=nonZero(-5,6,2),uk=a+(k-1)*d,um=a+(m-1)*d,df=Frac(um-uk,m-k);p={equation:`In an arithmetic sequence, $u_${k}=${uk}$ and $u_${m}=${um}$. Find $d$ and $a$.`,answer:dm(`d=${fTex(df)},\\quad a=${a}`),steps:[dm('u_n=a+(n-1)d'),dm(`${um}-${uk}=(${m-k})d`),dm(`d=\\dfrac{${um}-${uk}}{${m-k}}=${fTex(df)}`),dm(`a=${uk}-(${k-1})\\cdot ${fTex(df)}=${a}`)].map(text=>({text}))}}
+      else if(type==='arith_sum_first_n'){const a=random(-6,8),d=nonZero(-5,6,3),n=random(5,12),S=n/2*(2*a+(n-1)*d);p={equation:`For an arithmetic sequence with $a=${a}$ and $d=${d}$, find $S_{${n}}$.`,answer:dm(`S_{${n}}=${S}`),steps:[dm('S_n=\\dfrac{n}{2}\\big(2a+(n-1)d\\big)'),dm(`S_{${n}}=\\dfrac{${n}}{2}\\Big(2\\cdot ${a}+(${n}-1)\\cdot ${d}\\Big)`),dm(`\\boxed{S_{${n}}=${S}}`)].map(text=>({text}))}}
+      else if(type==='arith_find_n_from_term'){const a=random(-6,8),d=nonZero(-5,6,2),n=random(5,12),target=a+(n-1)*d;p={equation:`In an arithmetic sequence with $a=${a}$ and $d=${d}$, for which $n$ is $u_n=${target}$?`,answer:dm(`n=${n}`),steps:[dm('u_n=a+(n-1)d'),dm(`${target}=${a}+(n-1)\\cdot ${d}`),dm(`n=\\dfrac{${target-a}}{${d}}+1=${n}`)].map(text=>({text}))}}
+      else if(type==='sigma_arith_linear'){const A=nonZero(-4,5,3),B=random(-6,8),start=random(1,3),end=start+random(3,6),count=end-start+1,sumk=(start+end)*count/2,S=A*sumk+B*count;p={equation:`Evaluate $\\displaystyle \\sum_{k=${start}}^{${end}} \\big(${A}k ${B>=0?'+':''} ${B}\\big)$.`,answer:dm(`= ${S}`),steps:[dm(`\\sum(${A}k+${B})=${A}\\sum k+${B}\\sum 1`),dm(`=${A}\\cdot \\dfrac{(${start}+${end})(${count})}{2}+${B}\\cdot ${count}`),dm(`\\boxed{= ${S}}`)].map(text=>({text}))}}
+      else if(type==='geom_nth_term'){const a=nonZero(-6,8,2),r=choice([Frac(2),Frac(-2),Frac(3),Frac(-3),Frac(1,2),Frac(2,3)]),n=random(4,9),u=fMul(Frac(a),fPow(r,n-1));p={equation:`For a geometric sequence with $a=${a}$ and $r=${fTex(r)}$, find $u_{${n}}$.`,answer:dm(`u_{${n}}=${fTex(u)}`),steps:[dm('u_n=ar^{n-1}'),dm(`u_{${n}}=${a}(${fTex(r)})^{${n-1}}`),dm(`\\boxed{u_{${n}}=${fTex(u)}}`)].map(text=>({text}))}}
+      else if(type==='geom_find_r_a'){const k=random(2,4),r=choice([Frac(2),Frac(3),Frac(-2),Frac(1,2)]),gap=(r.n<0?3:random(2,4)),m=k+gap,a=random(2,6),uk=fMul(Frac(a),fPow(r,k-1)),um=fMul(Frac(a),fPow(r,m-1));p={equation:`In a geometric sequence, $u_${k}=${fTex(uk)}$ and $u_${m}=${fTex(um)}$. Find $r$ and $a$.`,answer:dm(`r=${fTex(r)},\\quad a=${a}`),steps:[dm('u_n=ar^{n-1}'),dm(`\\dfrac{u_${m}}{u_${k}}=r^{${m-k}}`),dm(`r=${fTex(r)}`),dm(`a=\\dfrac{u_${k}}{r^{${k-1}}}=${a}`)].map(text=>({text}))}}
+      else if(type==='geom_sum_first_n'){const a=random(2,6),r=choice([Frac(2),Frac(-2),Frac(1,2),Frac(2,3)]),n=random(3,7),S=fMul(Frac(a),fDiv(fSub(Frac(1),fPow(r,n)),fSub(Frac(1),r)));p={equation:`For a geometric sequence with $a=${a}$ and $r=${fTex(r)}$, find $S_{${n}}$.`,answer:dm(`S_{${n}}=${fTex(S)}`),steps:[dm('S_n=\\dfrac{a(1-r^n)}{1-r}'),dm(`S_{${n}}=\\dfrac{${a}(1-(${fTex(r)})^{${n}})}{1-${fTex(r)}}`),dm(`\\boxed{S_{${n}}=${fTex(S)}}`)].map(text=>({text}))}}
+      else if(type==='geom_sum_infinity'){const a=random(2,8),r=choice([Frac(1,2),Frac(2,3),Frac(3,4),Frac(1,3),Frac(3,5)]),S=fDiv(Frac(a),fSub(Frac(1),r));p={equation:`For a geometric series with $a=${a}$ and $r=${fTex(r)}$, find $S_\\infty$.`,answer:dm(`S_\\infty=${fTex(S)}`),steps:[dm('|r|<1\\Rightarrow S_\\infty=\\dfrac{a}{1-r}'),dm(`S_\\infty=\\dfrac{${a}}{1-${fTex(r)}}`),dm(`\\boxed{S_\\infty=${fTex(S)}}`)].map(text=>({text}))}}
+      else if(type==='sigma_geom'){const start=random(0,2),end=start+random(3,6),A=random(1,5),r=choice([Frac(1,2),Frac(2,3),Frac(3,4),Frac(2),Frac(-2)]),front=fMul(Frac(A),fPow(r,start)),count=end-start+1,S=fMul(front,fDiv(fSub(Frac(1),fPow(r,count)),fSub(Frac(1),r)));p={equation:`Evaluate $\\displaystyle \\sum_{k=${start}}^{${end}} ${A}(${fTex(r)})^k$ as a fraction.`,answer:dm(`= ${fTex(S)}`),steps:[dm('\\sum_{k=p}^{q}Ar^k=Ar^p\\dfrac{1-r^{q-p+1}}{1-r}'),dm(`=${A}(${fTex(r)})^{${start}}\\dfrac{1-(${fTex(r)})^{${count}}}{1-${fTex(r)}}`),dm(`\\boxed{= ${fTex(S)}}`)].map(text=>({text}))}}
+      return p}
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function renderMath(){if(typeof renderMathInElement==='function')renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})}
+    function header(){const h=document.getElementById('problem-set-header'),t=document.getElementById('problem-type-title');if(currentType==='select'){h.classList.remove('visible');return}h.className='problem-set-header visible type-'+(((Object.keys(typeDisplayNames).indexOf(currentType)+3)%3)+1);t.textContent=typeDisplayNames[currentType]||'Problem Set'}
+    function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));const cfg=levelConfigs[level];document.getElementById('level-title').textContent=cfg.title;document.getElementById('level-description').textContent=cfg.description;const opts=level===1?[['arith_nth_term','Type 1: Arithmetic nth Term'],['arith_find_d_a','Type 2: Find a and d'],['arith_sum_first_n','Type 3: Arithmetic Sum S_n'],['arith_find_n_from_term','Type 4: Find n from a Term'],['sigma_arith_linear','Type 5: Sigma of Linear Term']]:[['geom_nth_term','Type 1: Geometric nth Term'],['geom_find_r_a','Type 2: Find a and r'],['geom_sum_first_n','Type 3: Geometric Sum S_n'],['geom_sum_infinity','Type 4: Sum to Infinity'],['sigma_geom','Type 5: Sigma of Geometric Term']];const dd=document.getElementById('type-dropdown');dd.innerHTML='<option value=\"select\">Select Question Type</option>'+opts.map(([v,l])=>'<option value=\"'+v+'\">'+l+'</option>').join('');dd.value='select';header();showBlankPage()}
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;header();currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-list').innerHTML='<li style=\"text-align:center;padding:40px;color:#718096;font-size:1.05em\">Please select a question type to begin</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<5;i++)problems.push(generateProblem());renderProblems()}
+    function renderProblems(){const c=document.getElementById('problem-list');c.innerHTML='';problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const steps=p.steps.map(s=>'<div class=\"step\">'+s.text+'</div>').join('');li.innerHTML='<div class=\"problem-header\"><div class=\"problem-left\"><div class=\"problem-number\">'+(i+1)+'</div><div class=\"equation\">'+p.equation+'</div></div><div class=\"problem-answer\" id=\"quick-answer-'+i+'\">'+p.answer+'</div></div><div class=\"steps-section\" id=\"steps-'+i+'\"><div class=\"answer-label\">Solution Steps:</div><div class=\"solution-steps\">'+steps+'<div class=\"final-answer\">'+p.answer+'</div></div></div>';c.appendChild(li)});renderMath()}
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById('quick-answer-'+i)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById('steps-'+i)?.classList.toggle('visible',stepsVisible))}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const el=document.getElementById('timer-display');el.textContent='Ready';el.className='timer-display'}
+    function updateTimerDisplay(){const m=Math.floor(timeRemaining/60),s=timeRemaining%60,el=document.getElementById('timer-display');el.textContent=m+':'+String(s).padStart(2,'0');el.className=timeRemaining<=30&&timerActive?'timer-display warning':timerActive?'timer-display active':'timer-display'}
+    function timerFinished(){stopTimer();const el=document.getElementById('timer-display');el.textContent='Time Up!';el.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

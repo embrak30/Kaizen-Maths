@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surds and Radicals</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #1a365d;
+      color: white;
+      padding: 15px 8px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      cursor: pointer;
+      z-index: 1001;
+      border-radius: 0 8px 8px 0;
+      font-weight: 600;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .teacher-tab:hover {
+      background: #2d5a87;
+      transform: translateY(-50%) translateX(5px);
+    }
+
+    .sidebar {
+      position: fixed;
+      left: -400px;
+      top: 0;
+      width: 400px;
+      height: 100vh;
+      background: white;
+      z-index: 1000;
+      transition: left 0.3s ease;
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+      overflow-y: auto;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-header {
+      background: #1a365d;
+      color: white;
+      padding: 20px;
+      font-size: 1.3em;
+      font-weight: 600;
+    }
+
+    .sidebar-content {
+      padding: 25px;
+      line-height: 1.6;
+    }
+
+    .sidebar-content h3 {
+      color: #1a365d;
+      margin: 20px 0 10px;
+      font-size: 1.1em;
+      border-bottom: 2px solid #3182ce;
+      padding-bottom: 5px;
+    }
+
+    .sidebar-content p,
+    .sidebar-content li {
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    .sidebar-content ul {
+      padding-left: 20px;
+      margin-bottom: 15px;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background: #2d5a87;
+      background-image:
+        linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce),
+        linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      color: white;
+      padding: 25px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%, rgba(0, 0, 0, 0.05) 100%);
+    }
+
+    .header h1 {
+      font-size: 2.2em;
+      margin-bottom: 5px;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .tabs {
+      display: flex;
+      background: #e2e8f0;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 18px;
+      background: #e2e8f0;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab:hover {
+      background: #cbd5e0;
+    }
+
+    .tab.active {
+      background: white;
+      border-bottom-color: #3182ce;
+      color: #3182ce;
+    }
+
+    .controls {
+      padding: 25px;
+      background: #f7fafc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .level-info h3 {
+      color: #1a365d;
+      margin-bottom: 5px;
+      font-size: 1.3em;
+    }
+
+    .level-info p {
+      color: #718096;
+      font-size: 1em;
+    }
+
+    .dropdown-container {
+      margin-top: 10px;
+      display: none;
+    }
+
+    .dropdown-container.visible {
+      display: block;
+    }
+
+    .type-dropdown {
+      padding: 8px 12px;
+      border: 2px solid #cbd5e0;
+      border-radius: 6px;
+      font-size: 1em;
+      background: white;
+      cursor: pointer;
+      min-width: 380px;
+    }
+
+    .type-dropdown:focus {
+      border-color: #3182ce;
+      outline: none;
+    }
+
+    .timer-section,
+    .action-buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .timer-section {
+      gap: 15px;
+    }
+
+    .timer-display {
+      font-size: 2em;
+      font-weight: bold;
+      color: #1a365d;
+      background: white;
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: 2px solid #cbd5e0;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .timer-display.active {
+      border-color: #3182ce;
+      color: #3182ce;
+    }
+
+    .timer-display.warning {
+      color: #e53e3e;
+      border-color: #e53e3e;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .btn {
+      padding: 12px 22px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 85px;
+    }
+
+    .btn-primary { background: #3182ce; color: white; }
+    .btn-success { background: #38a169; color: white; }
+    .btn-warning { background: #d69e2e; color: white; }
+    .btn-danger { background: #e53e3e; color: white; }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(0.9);
+    }
+
+    .problems-section {
+      padding: 20px;
+      min-height: 500px;
+    }
+
+    .problem-set-header {
+      color: white;
+      padding: 15px 25px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      font-size: 1.3em;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    .problem-set-header.visible {
+      display: block;
+    }
+
+    .problem-set-header.basic { background: #38a169; }
+    .problem-set-header.multiplication { background: #e53e3e; }
+    .problem-set-header.division { background: #d69e2e; }
+    .problem-set-header.rationalize { background: #3182ce; }
+    .problem-set-header.advanced { background: #805ad5; }
+    .problem-set-header.complex { background: #2d5a87; }
+
+    .problem-list {
+      list-style: none;
+    }
+
+    .problem-item {
+      background: #f7fafc;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #3182ce;
+      transition: all 0.3s ease;
+    }
+
+    .problem-item:hover {
+      transform: translateX(2px);
+    }
+
+    .problem-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 8px;
+    }
+
+    .problem-left {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .problem-answer {
+      background: #38a169;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 1.1em;
+      display: none;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .problem-answer.visible {
+      display: block;
+      animation: slideIn 0.4s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .problem-number {
+      background: #3182ce;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 15px;
+      font-size: 1em;
+      flex-shrink: 0;
+    }
+
+    .equation {
+      font-size: 1.6em;
+      font-family: "Times New Roman", serif;
+      color: #1a365d;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .steps-section {
+      margin-top: 12px;
+      padding: 12px;
+      background: #ebf8ff;
+      border-radius: 6px;
+      border-left: 3px solid #3182ce;
+      display: none;
+    }
+
+    .steps-section.visible {
+      display: block;
+      animation: slideDown 0.4s ease;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .answer-label {
+      font-weight: 600;
+      color: #38a169;
+      margin-bottom: 8px;
+      font-size: 1em;
+    }
+
+    .solution-steps {
+      font-size: 1.05em;
+      line-height: 1.4;
+    }
+
+    .step {
+      margin: 6px 0;
+      color: #1a365d;
+    }
+
+    .step-equation {
+      font-family: "Times New Roman", serif;
+      font-weight: 600;
+      color: #805ad5;
+      text-align: center;
+      margin: 8px 0;
+      font-size: 1.2em;
+    }
+
+    .final-answer {
+      background: #38a169;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+
+    .timer-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 35px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 350px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-content h2 {
+      color: #e53e3e;
+      margin-bottom: 18px;
+      font-size: 2em;
+    }
+
+    .modal-content p {
+      color: #718096;
+      margin-bottom: 25px;
+      font-size: 1.1em;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .base {
+      color: #3182ce;
+      font-weight: bold;
+      background: rgba(49, 130, 206, 0.1);
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    .index {
+      color: #38a169;
+      font-weight: bold;
+      background: rgba(56, 161, 105, 0.1);
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    .operation {
+      color: #d69e2e;
+      font-weight: bold;
+      background: rgba(214, 158, 46, 0.1);
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    .fraction {
+      display: inline-block;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 1.05;
+    }
+
+    .fraction .numerator {
+      display: block;
+      border-bottom: 1px solid #1a365d;
+      padding: 0 4px 2px;
+    }
+
+    .fraction .denominator {
+      display: block;
+      padding: 2px 4px 0;
+    }
+
+    .step-arrow {
+      font-size: 1.5em;
+      color: #3182ce;
+      margin: 0 10px;
+    }
+
+    .step-indicator {
+      background: #3182ce;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      font-weight: bold;
+      margin-right: 10px;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 12px;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 15px;
+      }
+
+      .timer-section {
+        justify-content: center;
+      }
+
+      .tabs {
+        flex-wrap: wrap;
+      }
+
+      .tab {
+        flex: 1 1 50%;
+        padding: 12px;
+      }
+
+      .sidebar {
+        width: 320px;
+        left: -320px;
+      }
+
+      .type-dropdown {
+        min-width: 260px;
+        width: 100%;
+      }
+
+      .equation {
+        font-size: 1.35em;
+      }
+
+      .problem-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .problem-answer {
+        align-self: stretch;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .equation {
+        font-size: 1.8em;
+      }
+
+      .problem-item {
+        padding: 18px;
+        margin: 12px 0;
+      }
+
+      .problem-number {
+        width: 35px;
+        height: 35px;
+        font-size: 1.1em;
+      }
+
+      .solution-steps {
+        font-size: 1.15em;
+      }
+
+      .step-equation {
+        font-size: 1.3em;
+      }
+
+      .problem-set-header {
+        font-size: 1.4em;
+        padding: 18px 30px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">√ Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool demonstrates operations with surds and irrational roots. Students simplify, multiply, divide, combine like surds, rationalise denominators, and expand brackets.</p>
+
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1 - Fundamentals:</strong> Simplifying surds, perfect square factors, and simplest surd form</li>
+        <li><strong>Level 2 - Operations:</strong> Multiplying, dividing, adding, subtracting, and combining multiple surd terms</li>
+        <li><strong>Level 3 - Advanced:</strong> Rationalising denominators, expanding brackets, and multi-step expressions</li>
+      </ul>
+
+      <h3>Key Surd Rules</h3>
+      <ul>
+        <li><strong>Simplification:</strong> √(ab) = √a × √b</li>
+        <li><strong>Multiplication:</strong> √a × √b = √(ab)</li>
+        <li><strong>Division:</strong> √a ÷ √b = √(a/b)</li>
+        <li><strong>Like surds:</strong> 2√3 + 5√3 = 7√3</li>
+        <li><strong>Rationalising:</strong> Use √b/√b or the conjugate to remove a surd from the denominator</li>
+      </ul>
+
+      <h3>Teaching Strategies</h3>
+      <ul>
+        <li>Emphasise identifying the largest perfect square factor.</li>
+        <li>Keep coefficients and surd parts separate while simplifying.</li>
+        <li>Check whether surds are like terms before adding or subtracting.</li>
+        <li>Use conjugates for denominators such as a + √b.</li>
+      </ul>
+
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Trying to combine unlike surds such as √2 + √3</li>
+        <li>Multiplying coefficients but forgetting to multiply the radicands</li>
+        <li>Leaving a denominator containing a surd after rationalising</li>
+        <li>Sign errors when expanding binomial brackets</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header">
+      <h1>Surds and Radicals</h1>
+    </section>
+
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Fundamentals</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Operations</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Advanced</button>
+    </nav>
+
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Fundamentals of Surds</h3>
+        <p id="level-description">Simplifying surds and identifying perfect square factors</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="simplify_basic">Type 1: Simplifying basic surds</option>
+            <option value="simplify_larger">Type 2: Simplifying larger surds</option>
+            <option value="surd_form">Type 3: Writing in simplest surd form</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Fundamentals of Surds",
+        description: "Simplifying surds and identifying perfect square factors",
+        options: [
+          ["simplify_basic", "Type 1: Simplifying basic surds"],
+          ["simplify_larger", "Type 2: Simplifying larger surds"],
+          ["surd_form", "Type 3: Writing in simplest surd form"]
+        ]
+      },
+      2: {
+        title: "Level 2: Surd Operations",
+        description: "Multiplying, dividing, adding and subtracting surds",
+        options: [
+          ["multiply_surds", "Type 1: Multiplying surds"],
+          ["divide_surds", "Type 2: Dividing surds"],
+          ["add_subtract_surds", "Type 3: Adding and subtracting surds"],
+          ["mixed_operations", "Type 4: Mixed surd operations"],
+          ["combine_multiple_surds", "Type 5: Combining multiple surd terms"]
+        ]
+      },
+      3: {
+        title: "Level 3: Advanced Surd Techniques",
+        description: "Rationalising denominators, expanding brackets, and complex expressions",
+        options: [
+          ["rationalize_simple", "Type 1: Rationalising simple denominators"],
+          ["rationalize_binomial", "Type 2: Rationalising binomial denominators"],
+          ["expand_surds", "Type 3: Expanding brackets with surds"],
+          ["complex_surds", "Type 4: Complex multi-step problems"]
+        ]
+      }
+    };
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomElement(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function gcd(a, b) {
+      a = Math.abs(a);
+      b = Math.abs(b);
+      while (b !== 0) {
+        const temp = b;
+        b = a % b;
+        a = temp;
+      }
+      return a;
+    }
+
+    function simplifyFraction(num, den) {
+      const divisor = gcd(num, den);
+      return [num / divisor, den / divisor];
+    }
+
+    function fraction(numerator, denominator) {
+      return '<span class="fraction"><span class="numerator">' + numerator + '</span><span class="denominator">' + denominator + "</span></span>";
+    }
+
+    function highlightBase(base) {
+      return '<span class="base">' + base + "</span>";
+    }
+
+    function highlightIndex(index) {
+      return '<span class="index">' + index + "</span>";
+    }
+
+    function highlightOperation(operation) {
+      return '<span class="operation">' + operation + "</span>";
+    }
+
+    function stepLabel(number) {
+      return '<span class="step-indicator">Step ' + number + "</span>";
+    }
+
+    function arrow(text) {
+      return '<span class="step-arrow">-></span> ' + text;
+    }
+
+    function simplifySurd(number) {
+      let coefficient = 1;
+      let radicand = number;
+      for (let square = Math.floor(Math.sqrt(number)); square >= 2; square--) {
+        const squareValue = square * square;
+        if (radicand % squareValue === 0) {
+          coefficient *= square;
+          radicand = radicand / squareValue;
+          break;
+        }
+      }
+      return { coefficient, radicand };
+    }
+
+    function formatSurd(coefficient, radicand) {
+      if (coefficient === 0) return "0";
+      if (radicand === 1) return String(coefficient);
+      if (coefficient === 1) return "√" + radicand;
+      if (coefficient === -1) return "-√" + radicand;
+      return coefficient + "√" + radicand;
+    }
+
+    function signedSurd(coefficient, radicand, isFirst) {
+      if (coefficient === 0) return "";
+      const absCoef = Math.abs(coefficient);
+      const term = formatSurd(absCoef, radicand);
+      if (isFirst) return coefficient < 0 ? "-" + term : term;
+      return coefficient < 0 ? " - " + term : " + " + term;
+    }
+
+    function combineSurdTerms(terms) {
+      const byRadicand = {};
+      let constant = 0;
+      terms.forEach((term) => {
+        const simplified = simplifySurd(term.radicand);
+        const coefficient = term.coefficient * simplified.coefficient;
+        if (simplified.radicand === 1) {
+          constant += coefficient;
+        } else {
+          byRadicand[simplified.radicand] = (byRadicand[simplified.radicand] || 0) + coefficient;
+        }
+      });
+
+      const pieces = [];
+      let first = true;
+      if (constant !== 0) {
+        pieces.push(String(constant));
+        first = false;
+      }
+      Object.keys(byRadicand).map(Number).sort((a, b) => a - b).forEach((radicand) => {
+        const piece = signedSurd(byRadicand[radicand], radicand, first);
+        if (piece) {
+          pieces.push(piece);
+          first = false;
+        }
+      });
+      return pieces.length ? pieces.join("") : "0";
+    }
+
+    function randomRadicand() {
+      return randomElement([2, 3, 5, 7, 11]);
+    }
+
+    function generateProblem(index = 0) {
+      let problem = {};
+
+      switch (currentType) {
+        case "simplify_basic": {
+          const square = randomElement([4, 9, 16, 25, 36, 49]);
+          const remaining = randomElement([2, 3, 5, 7]);
+          const number = square * remaining;
+          const coefficient = Math.sqrt(square);
+          problem = {
+            badge: "basic",
+            equation: "Simplify: √" + number,
+            answer: formatSurd(coefficient, remaining),
+            steps: [
+              stepLabel(1) + " Find a perfect square factor of " + number,
+              number + " = " + highlightBase(square) + " × " + remaining,
+              stepLabel(2) + " Split the surd",
+              "√" + number + " = √" + highlightBase(square) + " × √" + remaining,
+              stepLabel(3) + " Simplify the perfect square",
+              "√" + square + " = " + highlightIndex(coefficient),
+              arrow("√" + number + " = " + formatSurd(coefficient, remaining))
+            ]
+          };
+          break;
+        }
+
+        case "simplify_larger": {
+          const coefficient = randomElement([6, 8, 10, 12, 15]);
+          const remaining = randomElement([2, 3, 5, 7]);
+          const number = coefficient * coefficient * remaining;
+          problem = {
+            badge: "basic",
+            equation: "Simplify: √" + number,
+            answer: formatSurd(coefficient, remaining),
+            steps: [
+              stepLabel(1) + " Find the largest perfect square factor",
+              number + " = " + highlightBase(coefficient * coefficient) + " × " + remaining,
+              stepLabel(2) + " Split the surd",
+              "√" + number + " = √" + highlightBase(coefficient * coefficient) + " × √" + remaining,
+              stepLabel(3) + " Simplify",
+              "√" + (coefficient * coefficient) + " = " + coefficient,
+              arrow("√" + number + " = " + formatSurd(coefficient, remaining))
+            ]
+          };
+          break;
+        }
+
+        case "surd_form": {
+          const coefficient = random(2, 6);
+          const remaining = randomRadicand();
+          const expanded = coefficient * coefficient * remaining;
+          problem = {
+            badge: "basic",
+            equation: "Express √" + expanded + " in the form a√b",
+            answer: formatSurd(coefficient, remaining),
+            steps: [
+              stepLabel(1) + " Factor into a square and a remaining factor",
+              expanded + " = " + highlightBase(coefficient * coefficient) + " × " + remaining,
+              stepLabel(2) + " Write the square as a coefficient",
+              coefficient * coefficient + " = " + coefficient + "²",
+              stepLabel(3) + " Simplify",
+              "√" + expanded + " = √(" + coefficient + "² × " + remaining + ")",
+              arrow(formatSurd(coefficient, remaining))
+            ]
+          };
+          break;
+        }
+
+        case "multiply_surds": {
+          const coefA = random(2, 5);
+          const coefB = random(2, 5);
+          const radA = randomRadicand();
+          const radB = randomRadicand();
+          const productCoef = coefA * coefB;
+          const productRad = radA * radB;
+          const simplified = simplifySurd(productRad);
+          const answer = formatSurd(productCoef * simplified.coefficient, simplified.radicand);
+          problem = {
+            badge: "multiplication",
+            equation: "Simplify: " + formatSurd(coefA, radA) + " × " + formatSurd(coefB, radB),
+            answer,
+            steps: [
+              stepLabel(1) + " Multiply coefficients and surd parts separately",
+              coefA + " × " + coefB + " = " + highlightIndex(productCoef),
+              "√" + radA + " × √" + radB + " = √(" + radA + " × " + radB + ") = √" + productRad,
+              stepLabel(2) + " Combine",
+              productCoef + "√" + productRad,
+              stepLabel(3) + " Simplify the resulting surd",
+              "√" + productRad + " = " + formatSurd(simplified.coefficient, simplified.radicand),
+              arrow(answer)
+            ]
+          };
+          break;
+        }
+
+        case "divide_surds": {
+          const coefA = random(3, 9);
+          const coefB = random(2, 5);
+          const quotientRad = randomRadicand();
+          const commonRad = randomElement([2, 3, 5]);
+          const topRad = quotientRad * commonRad;
+          const bottomRad = commonRad;
+          const [simpleNum, simpleDen] = simplifyFraction(coefA, coefB);
+          const simplifiedRad = simplifySurd(quotientRad);
+          const finalNumCoef = simpleNum * simplifiedRad.coefficient;
+          const numerator = formatSurd(finalNumCoef, simplifiedRad.radicand);
+          const answer = simpleDen === 1 ? numerator : fraction(numerator, simpleDen);
+          problem = {
+            badge: "division",
+            equation: "Simplify: " + fraction(formatSurd(coefA, topRad), formatSurd(coefB, bottomRad)),
+            answer,
+            steps: [
+              stepLabel(1) + " Separate coefficients and surds",
+              fraction(coefA, coefB) + " × " + fraction("√" + topRad, "√" + bottomRad),
+              stepLabel(2) + " Simplify the coefficient fraction",
+              fraction(coefA, coefB) + " = " + (simpleDen === 1 ? simpleNum : fraction(simpleNum, simpleDen)),
+              stepLabel(3) + " Divide the surds",
+              fraction("√" + topRad, "√" + bottomRad) + " = √" + fraction(topRad, bottomRad) + " = √" + quotientRad,
+              stepLabel(4) + " Simplify if needed",
+              "√" + quotientRad + " = " + formatSurd(simplifiedRad.coefficient, simplifiedRad.radicand),
+              arrow(answer)
+            ]
+          };
+          break;
+        }
+
+        case "add_subtract_surds": {
+          const radicand = randomRadicand();
+          const coefA = random(4, 12);
+          const coefB = random(2, 8);
+          const operation = index % 2 === 0 ? "+" : "-";
+          const result = operation === "+" ? coefA + coefB : coefA - coefB;
+          const answer = formatSurd(result, radicand);
+          problem = {
+            badge: "advanced",
+            equation: "Simplify: " + formatSurd(coefA, radicand) + " " + operation + " " + formatSurd(coefB, radicand),
+            answer,
+            steps: [
+              stepLabel(1) + " Identify like surds",
+              "Both terms contain √" + highlightBase(radicand),
+              stepLabel(2) + " Combine the coefficients",
+              highlightIndex(coefA) + " " + operation + " " + highlightIndex(coefB) + " = " + highlightIndex(result),
+              stepLabel(3) + " Keep the surd part unchanged",
+              arrow(answer)
+            ]
+          };
+          break;
+        }
+
+        case "mixed_operations": {
+          const coefficient = random(2, 5);
+          const targetRad = randomRadicand();
+          const multiplier = randomElement([4, 9, 16]);
+          const unsimplified = targetRad * multiplier;
+          const simplified = simplifySurd(unsimplified);
+          const operation = randomElement(["+", "-"]);
+          const combinedCoef = operation === "+" ? simplified.coefficient + coefficient : simplified.coefficient - coefficient;
+          const answer = formatSurd(combinedCoef, targetRad);
+          problem = {
+            badge: "advanced",
+            equation: "Simplify: √" + unsimplified + " " + operation + " " + formatSurd(coefficient, targetRad),
+            answer,
+            steps: [
+              stepLabel(1) + " Simplify the first surd",
+              "√" + unsimplified + " = " + formatSurd(simplified.coefficient, simplified.radicand),
+              stepLabel(2) + " Check for like surds",
+              "Both terms contain √" + highlightBase(targetRad),
+              stepLabel(3) + " Combine coefficients",
+              simplified.coefficient + " " + operation + " " + coefficient + " = " + combinedCoef,
+              arrow(answer)
+            ]
+          };
+          break;
+        }
+
+        case "combine_multiple_surds": {
+          const radA = randomElement([2, 3]);
+          const radB = randomElement([5, 7]);
+          const terms = [
+            { coefficient: random(1, 4), radicand: radA * randomElement([1, 4, 9]) },
+            { coefficient: -random(1, 3), radicand: radA * randomElement([1, 4]) },
+            { coefficient: random(1, 4), radicand: radB * randomElement([1, 4]) },
+            { coefficient: index % 2 === 0 ? random(1, 3) : -random(1, 3), radicand: radB }
+          ];
+          const expression = terms.map((term, i) => {
+            const text = formatSurd(Math.abs(term.coefficient), term.radicand);
+            if (i === 0) return term.coefficient < 0 ? "-" + text : text;
+            return term.coefficient < 0 ? " - " + text : " + " + text;
+          }).join("");
+          const answer = combineSurdTerms(terms);
+          problem = {
+            badge: "advanced",
+            equation: "Simplify: " + expression,
+            answer,
+            steps: [
+              stepLabel(1) + " Simplify each surd term",
+              terms.map((term) => {
+                const simp = simplifySurd(term.radicand);
+                return formatSurd(term.coefficient, term.radicand) + " = " + formatSurd(term.coefficient * simp.coefficient, simp.radicand);
+              }).join("<br>"),
+              stepLabel(2) + " Group like surds",
+              "Terms with the same √ part can be combined.",
+              stepLabel(3) + " Combine coefficients",
+              arrow(answer)
+            ]
+          };
+          break;
+        }
+
+        case "rationalize_simple": {
+          const numerator = random(2, 12);
+          const radicand = randomRadicand();
+          const [simpleNum, simpleDen] = simplifyFraction(numerator, radicand);
+          const answer = simpleDen === 1 ? formatSurd(simpleNum, radicand) : fraction(formatSurd(simpleNum, radicand), simpleDen);
+          problem = {
+            badge: "rationalize",
+            equation: "Rationalise: " + fraction(numerator, "√" + radicand),
+            answer,
+            steps: [
+              stepLabel(1) + " Multiply by " + fraction("√" + radicand, "√" + radicand),
+              fraction(numerator, "√" + radicand) + " × " + fraction("√" + radicand, "√" + radicand),
+              stepLabel(2) + " Multiply numerator and denominator",
+              fraction(numerator + "√" + radicand, radicand),
+              stepLabel(3) + " Simplify the fraction if possible",
+              arrow(answer)
+            ]
+          };
+          break;
+        }
+
+        case "rationalize_binomial": {
+          const a = random(3, 6);
+          const radicand = randomElement([2, 3, 5]);
+          const numerator = random(2, 8);
+          const denominator = a * a - radicand;
+          const [simpleNum, simpleDen] = simplifyFraction(numerator, denominator);
+          const top = simpleNum === 1 ? a + " - √" + radicand : simpleNum + "(" + a + " - √" + radicand + ")";
+          const answer = simpleDen === 1 ? top : fraction(top, simpleDen);
+          problem = {
+            badge: "complex",
+            equation: "Rationalise: " + fraction(numerator, a + " + √" + radicand),
+            answer,
+            steps: [
+              stepLabel(1) + " Identify the conjugate",
+              "The conjugate of " + (a + " + √" + radicand) + " is " + highlightOperation(a + " - √" + radicand),
+              stepLabel(2) + " Multiply by the conjugate over itself",
+              fraction(numerator, a + " + √" + radicand) + " × " + fraction(a + " - √" + radicand, a + " - √" + radicand),
+              stepLabel(3) + " Use difference of squares in the denominator",
+              a + "² - (√" + radicand + ")² = " + (a * a) + " - " + radicand + " = " + denominator,
+              stepLabel(4) + " Simplify the fraction",
+              arrow(answer)
+            ]
+          };
+          break;
+        }
+
+        case "expand_surds": {
+          const radA = randomRadicand();
+          const radB = randomRadicand();
+          const a = random(2, 5);
+          const b = random(2, 5);
+          const signA = randomElement([1, -1]);
+          const signB = randomElement([1, -1]);
+          const signAText = signA > 0 ? "+" : "-";
+          const signBText = signB > 0 ? "+" : "-";
+          const terms = [
+            { coefficient: 1, radicand: radA * radB },
+            { coefficient: signB * b, radicand: radA },
+            { coefficient: signA * a, radicand: radB },
+            { coefficient: signA * signB * a * b, radicand: 1 }
+          ];
+          const answer = combineSurdTerms(terms);
+          problem = {
+            badge: "complex",
+            equation: "Expand and simplify: (√" + radA + " " + signAText + " " + a + ")(√" + radB + " " + signBText + " " + b + ")",
+            answer,
+            steps: [
+              stepLabel(1) + " Use FOIL",
+              "First: √" + radA + " × √" + radB + " = √" + (radA * radB),
+              "Outer: √" + radA + " × (" + signBText + b + ") = " + formatSurd(signB * b, radA),
+              "Inner: (" + signAText + a + ") × √" + radB + " = " + formatSurd(signA * a, radB),
+              "Last: (" + signAText + a + ") × (" + signBText + b + ") = " + (signA * signB * a * b),
+              stepLabel(2) + " Simplify and combine like terms",
+              arrow(answer)
+            ]
+          };
+          break;
+        }
+
+        case "complex_surds": {
+          const a = random(2, 4);
+          const b = random(2, 4);
+          const c = random(2, 5);
+          const rad = randomRadicand();
+          const otherRad = rad * randomElement([4, 9]);
+          const simplifiedOther = simplifySurd(otherRad);
+          const constantProduct = a * b * rad;
+          const combinedRadCoef = 1 - c * simplifiedOther.coefficient;
+          const answer = combineSurdTerms([
+            { coefficient: constantProduct, radicand: 1 },
+            { coefficient: combinedRadCoef, radicand: rad }
+          ]);
+          problem = {
+            badge: "complex",
+            equation: "Simplify: " + formatSurd(a, rad) + " × " + formatSurd(b, rad) + " - " + c + "√" + otherRad + " + √" + rad,
+            answer,
+            steps: [
+              stepLabel(1) + " Apply order of operations: multiply first",
+              formatSurd(a, rad) + " × " + formatSurd(b, rad) + " = " + (a * b) + " × (√" + rad + " × √" + rad + ") = " + (a * b) + " × " + rad + " = " + constantProduct,
+              stepLabel(2) + " Simplify the remaining larger surd",
+              "√" + otherRad + " = " + formatSurd(simplifiedOther.coefficient, simplifiedOther.radicand),
+              stepLabel(3) + " Rewrite the expression",
+              constantProduct + " - " + formatSurd(c * simplifiedOther.coefficient, rad) + " + √" + rad,
+              stepLabel(4) + " Combine like surds",
+              "-" + (c * simplifiedOther.coefficient) + "√" + rad + " + √" + rad + " = " + formatSurd(combinedRadCoef, rad),
+              arrow(answer)
+            ]
+          };
+          break;
+        }
+
+        default:
+          problem = {
+            badge: "basic",
+            equation: "Simplify: √8",
+            answer: "2√2",
+            steps: [stepLabel(1) + " Find a square factor", "8 = 4 × 2", arrow("√8 = 2√2")]
+          };
+      }
+
+      return problem;
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+
+      document.querySelectorAll(".tab").forEach((tab, index) => {
+        tab.classList.toggle("active", index + 1 === level);
+      });
+
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' +
+        config.options.map(([value, label]) => '<option value="' + value + '">' + label + "</option>").join("");
+      dropdown.value = "select";
+      document.getElementById("dropdown-container").classList.add("visible");
+
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      if (currentType === "select") {
+        showBlankPage();
+      } else {
+        generateNewSet();
+      }
+    }
+
+    function showBlankPage() {
+      document.getElementById("problem-set-header").classList.remove("visible");
+      document.getElementById("problem-list").innerHTML = '<li style="text-align: center; padding: 40px; color: #718096; font-size: 1.1em;">Please select a question type to begin exploring surds and radicals</li>';
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+
+      for (let i = 0; i < 5; i++) {
+        problems.push(generateProblem(i));
+      }
+
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const container = document.getElementById("problem-list");
+      const headerElement = document.getElementById("problem-set-header");
+      container.innerHTML = "";
+
+      if (problems.length > 0) {
+        const firstProblem = problems[0];
+        headerElement.textContent = firstProblem.badge.toUpperCase() + " PROBLEMS";
+        headerElement.className = "problem-set-header visible " + firstProblem.badge;
+      } else {
+        headerElement.classList.remove("visible");
+      }
+
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+
+        const stepsHTML = problem.steps.map((step) => {
+          if (step.indexOf("->") !== -1 || (step.indexOf("=") !== -1 && (step.indexOf("√") !== -1 || step.indexOf("×") !== -1 || step.indexOf("÷") !== -1))) {
+            return '<div class="step-equation">' + step + "</div>";
+          }
+          return '<div class="step">' + step + "</div>";
+        }).join("");
+
+        li.innerHTML =
+          '<div class="problem-header">' +
+            '<div class="problem-left">' +
+              '<div class="problem-number">' + (index + 1) + "</div>" +
+              '<div class="equation">' + problem.equation + "</div>" +
+            "</div>" +
+            '<div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + "</div>" +
+          "</div>" +
+          '<div class="steps-section" id="steps-' + index + '">' +
+            '<div class="answer-label">Solution Steps:</div>' +
+            '<div class="solution-steps">' +
+              stepsHTML +
+              '<div class="final-answer">' + problem.answer + "</div>" +
+            "</div>" +
+          "</div>";
+
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const quickAnswer = document.getElementById("quick-answer-" + i);
+        if (quickAnswer) {
+          quickAnswer.classList.toggle("visible", answersVisible);
+        }
+      }
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const stepsSection = document.getElementById("steps-" + i);
+        if (stepsSection) {
+          stepsSection.classList.toggle("visible", stepsVisible);
+        }
+      }
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) {
+        stopTimer();
+      }
+
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) {
+          timerFinished();
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerActive = false;
+      document.getElementById("timer-display").textContent = "Ready";
+      document.getElementById("timer-display").className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = minutes + ":" + String(seconds).padStart(2, "0");
+      const timerElement = document.getElementById("timer-display");
+      timerElement.textContent = display;
+
+      if (timeRemaining <= 30) {
+        timerElement.className = "timer-display warning";
+      } else if (timerActive) {
+        timerElement.className = "timer-display active";
+      } else {
+        timerElement.className = "timer-display";
+      }
+    }
+
+    function timerFinished() {
+      stopTimer();
+      document.getElementById("timer-display").textContent = "Time Up!";
+      document.getElementById("timer-display").className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

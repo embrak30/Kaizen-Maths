@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Use Kaizen Maths</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;color:#172033;line-height:1.55}
+    .guide-shell{max-width:1180px;margin:0 auto;padding:18px}
+    .hero{position:relative;overflow:hidden;border:1px solid rgba(111,76,195,.18);border-radius:10px;background:linear-gradient(135deg,rgba(111,76,195,.1),rgba(23,184,179,.1)),#fff;padding:28px;box-shadow:0 4px 18px rgba(23,32,51,.08)}
+    .hero::before{content:"";position:absolute;inset:0 auto 0 58%;width:44%;background-image:linear-gradient(rgba(111,76,195,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(23,184,179,.1) 1px,transparent 1px);background-size:28px 28px;opacity:.75;mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent)}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;color:#0d7f82;font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem}
+    h1{position:relative;max-width:760px;margin:8px 0 10px;color:#102a43;font-size:clamp(2rem,4vw,3.3rem);line-height:1.05;letter-spacing:0}
+    .hero p{position:relative;max-width:790px;margin:0;color:#4a5568;font-size:1.08rem}
+    .quick-start{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}
+    .quick-card,.section-card,.workflow-card{background:#fff;border:1px solid #dbe6f2;border-radius:9px;padding:16px;box-shadow:0 2px 10px rgba(23,32,51,.05)}
+    .quick-card span{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#6f4cc3,#17b8b3);color:#fff;font-weight:900;margin-bottom:9px}
+    .quick-card h2,.section-card h2,.workflow-card h2{margin:0 0 8px;color:#1a365d;font-size:1.1rem;line-height:1.25}
+    .quick-card p,.section-card p,.workflow-card p{margin:0;color:#4a5568}
+    .guide-section{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,440px);gap:18px;align-items:start;margin:18px 0}
+    .guide-section.reverse{grid-template-columns:minmax(300px,440px) minmax(0,1fr)}
+    .guide-section.reverse .section-card{order:2}
+    .screenshot{background:#fff;border:1px solid #d7e3f0;border-radius:10px;padding:8px;box-shadow:0 4px 16px rgba(23,32,51,.08)}
+    .screenshot img{display:block;width:100%;height:auto;border-radius:7px}
+    .caption{margin:8px 2px 0;color:#718096;font-size:.88rem}
+    .section-card ul,.workflow-card ol{margin:10px 0 0;padding-left:22px;color:#34495e}
+    .section-card li,.workflow-card li{margin:7px 0}
+    .tip{margin-top:12px;border-left:4px solid #17b8b3;background:#eefbfb;border-radius:6px;padding:10px 12px;color:#244763;font-weight:650}
+    .mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}
+    .mode-card{background:#fff;border:1px solid #dbe6f2;border-radius:9px;overflow:hidden;box-shadow:0 2px 10px rgba(23,32,51,.05)}
+    .mode-card img{display:block;width:100%;height:auto;border-bottom:1px solid #dbe6f2}
+    .mode-card div{padding:14px}.mode-card h2{margin:0 0 6px;color:#1a365d;font-size:1.05rem}.mode-card p{margin:0;color:#4a5568}
+    .workflow-card{margin:18px 0}.workflow-card ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px}
+    .footer-note{margin:22px 0 8px;padding:16px;border-radius:9px;background:linear-gradient(135deg,#6f4cc3,#0d7f82);color:#fff}.footer-note h2{margin:0 0 6px;font-size:1.2rem}.footer-note p{margin:0;max-width:850px}
+    code{font-family:"SFMono-Regular",Consolas,monospace;background:#eef2f7;border:1px solid #d7e3f0;border-radius:4px;padding:1px 4px}
+    @media (max-width:860px){.quick-start,.guide-section,.guide-section.reverse,.mode-grid,.workflow-card ol{grid-template-columns:1fr}.guide-section.reverse .section-card{order:0}.hero::before{display:none}}
+  </style>
+</head>
+<body>
+  <main class="guide-shell">
+    <section class="hero">
+      <span class="eyebrow">Teacher Guide</span>
+      <h1>How to use Kaizen Maths in the classroom</h1>
+      <p>Kaizen Maths is designed to feel like a virtual textbook with unlimited fresh practice. Choose a topic, select a level and question type, project a board-ready set, reveal answers or worked steps, and build worksheets from the same generators when you need printed practice.</p>
+    </section>
+
+    <section class="quick-start" aria-label="Quick start">
+      <article class="quick-card"><span>1</span><h2>Start at the dashboard</h2><p>Use the dashboard links for the Tool Library, Worksheet Builder, and this guide.</p></article>
+      <article class="quick-card"><span>2</span><h2>Find a topic</h2><p>Search like a textbook or browse by Algebra, Number, Geometry, Statistics, and Classroom Tools.</p></article>
+      <article class="quick-card"><span>3</span><h2>Project practice</h2><p>Open Classroom View, choose a level and question type, then generate a fresh set.</p></article>
+      <article class="quick-card"><span>4</span><h2>Model or print</h2><p>Use One Example for teaching, Practice Set for students, or the Worksheet Builder for handouts.</p></article>
+    </section>
+
+    <section class="guide-section">
+      <article class="section-card">
+        <span class="eyebrow">1. Dashboard</span>
+        <h2>Use the dashboard as the launch point</h2>
+        <p>The dashboard is the front door of the site. It gives teachers a quick route into the main workflows: building a worksheet, reading this guide, opening the full tool library, or jumping into a subject collection.</p>
+        <ul>
+          <li><strong>Create Worksheet</strong> opens the worksheet builder for printed or downloadable practice.</li>
+          <li><strong>How to Use This Site</strong> opens this illustrated guide.</li>
+          <li><strong>Open Tool Library</strong> shows every available topic generator.</li>
+          <li><strong>Subject collections</strong> help you browse topics like a textbook chapter list.</li>
+        </ul>
+        <div class="tip">For new users, start with the guide once, then use the Tool Library as your daily teaching route.</div>
+      </article>
+      <figure class="screenshot">
+        <img src="../../assets/guide-screenshots/dashboard.png" alt="Kaizen Maths dashboard with main navigation links">
+        <figcaption class="caption">The dashboard gives direct access to the guide, tool library, and worksheet builder.</figcaption>
+      </figure>
+    </section>
+
+    <section class="guide-section reverse">
+      <article class="section-card">
+        <span class="eyebrow">2. Tool Library</span>
+        <h2>Search and browse topics</h2>
+        <p>The Tool Library is the main index of the virtual textbook. Use the search bar when you know the exact topic, or use the collection links in the sidebar to browse by curriculum area.</p>
+        <ul>
+          <li>Search for terms such as <code>functions</code>, <code>circle</code>, <code>fractions</code>, or <code>trigonometry</code>.</li>
+          <li>Use category filters to narrow the library.</li>
+          <li>Open a topic card to see a short description and teacher guidance.</li>
+        </ul>
+        <div class="tip">The library is meant to be compact and searchable, so it can grow without becoming hard to navigate.</div>
+      </article>
+      <figure class="screenshot">
+        <img src="../../assets/guide-screenshots/tool-library.png" alt="Tool Library page showing compact topic cards">
+        <figcaption class="caption">Search or browse the tool cards to find the topic you need.</figcaption>
+      </figure>
+    </section>
+
+    <section class="guide-section">
+      <article class="section-card">
+        <span class="eyebrow">3. Topic Page</span>
+        <h2>Read the topic overview before projecting</h2>
+        <p>Each tool has a topic page before the classroom view. This page explains what the generator covers and provides teacher guidance without crowding the projected question screen.</p>
+        <ul>
+          <li><strong>Back to Library</strong> returns to the searchable index.</li>
+          <li><strong>Classroom View</strong> opens the generator for projection.</li>
+          <li><strong>Teacher Guidance</strong> summarises the topic coverage and standards alignment.</li>
+        </ul>
+        <div class="tip">Use the topic page when planning. Use Classroom View when teaching.</div>
+      </article>
+      <figure class="screenshot">
+        <img src="../../assets/guide-screenshots/tool-page.png" alt="Topic overview page with classroom view button and teacher guidance">
+        <figcaption class="caption">Topic pages separate planning information from the clean board display.</figcaption>
+      </figure>
+    </section>
+
+    <section class="guide-section reverse">
+      <article class="section-card">
+        <span class="eyebrow">4. Classroom View</span>
+        <h2>Generate board-ready question sets</h2>
+        <p>The classroom view is designed for projection. Choose a level, choose a question type, then generate questions. Most algebra tools show five questions. Diagram-heavy tools usually show four so the whole set remains visible on the board.</p>
+        <ul>
+          <li><strong>Level tabs</strong> move through the teaching sequence for the topic.</li>
+          <li><strong>Question type</strong> lets you focus on a specific skill inside the level.</li>
+          <li><strong>New</strong> creates another fresh set of the same type.</li>
+          <li><strong>Answers</strong> toggles quick answers.</li>
+          <li><strong>Steps</strong> toggles worked solutions. Steps may scroll, but the question set is designed to fit the board.</li>
+        </ul>
+      </article>
+      <figure class="screenshot">
+        <img src="../../assets/guide-screenshots/classroom-practice-set.png" alt="Classroom view showing generated questions and action buttons">
+        <figcaption class="caption">Practice Set mode is for students to attempt several questions at once.</figcaption>
+      </figure>
+    </section>
+
+    <section class="mode-grid" aria-label="Display modes">
+      <article class="mode-card">
+        <img src="../../assets/guide-screenshots/one-example-mode.png" alt="One Example mode showing one enlarged question">
+        <div>
+          <h2>Use One Example for modelling</h2>
+          <p>The display switch has two choices: <strong>Practice Set</strong> and <strong>One Example</strong>. One Example shows a single question so the teacher can model the method before students practise.</p>
+        </div>
+      </article>
+      <article class="mode-card">
+        <img src="../../assets/guide-screenshots/classroom-practice-set.png" alt="Practice Set mode showing multiple questions">
+        <div>
+          <h2>Return to Practice Set for student work</h2>
+          <p>Click <strong>Practice Set</strong> to return to the normal full set. The active choice is highlighted, so the current mode is always visible.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="guide-section">
+      <article class="section-card">
+        <span class="eyebrow">5. Worksheet Builder</span>
+        <h2>Create mixed worksheets from the generators</h2>
+        <p>The Worksheet Builder uses the same topic levels and question types as the classroom tools. Teachers can combine different topics into one worksheet and generate a separate answer key.</p>
+        <ul>
+          <li>Add questions from one topic or several topic areas.</li>
+          <li>Choose the level, question type, and number of questions for each section.</li>
+          <li>Use quick-add counts for common worksheet sizes.</li>
+          <li>Reset the worksheet selections if you want to start again.</li>
+          <li>Generate a student copy and a separate teacher answer key.</li>
+        </ul>
+        <div class="tip">The worksheet builder is best for consolidation, cover work, homework, or independent practice after a modelled example.</div>
+      </article>
+      <figure class="screenshot">
+        <img src="../../assets/guide-screenshots/worksheet-builder.png" alt="Worksheet Builder with topic, level, question type and quantity controls">
+        <figcaption class="caption">Build one worksheet from multiple topics, levels, and question types.</figcaption>
+      </figure>
+    </section>
+
+    <section class="workflow-card">
+      <span class="eyebrow">Suggested Lesson Rhythm</span>
+      <h2>A simple classroom workflow</h2>
+      <ol>
+        <li><strong>Choose the topic:</strong> Find the tool in the library or subject collection.</li>
+        <li><strong>Model one example:</strong> Use One Example mode to talk through the method.</li>
+        <li><strong>Generate a practice set:</strong> Switch to Practice Set and let students attempt the visible questions.</li>
+        <li><strong>Use the timer if helpful:</strong> Two minutes for quick fluency, five minutes for longer tasks.</li>
+        <li><strong>Reveal answers:</strong> Check responses quickly without showing the full method too early.</li>
+        <li><strong>Reveal steps:</strong> Discuss the worked solution once students have committed to an approach.</li>
+        <li><strong>Generate again:</strong> Use New for another set at the same level or change question type.</li>
+        <li><strong>Print follow-up:</strong> Use the Worksheet Builder to create independent practice from the same topics.</li>
+      </ol>
+    </section>
+
+    <section class="footer-note">
+      <h2>The key idea</h2>
+      <p>Kaizen Maths is built around teacher control: one example when you are modelling, a compact set when students are practising, worked steps when you are explaining, and fresh questions whenever the class needs another round.</p>
+    </section>
+  </main>
+</body>
+</html>

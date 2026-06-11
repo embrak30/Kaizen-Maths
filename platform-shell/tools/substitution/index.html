@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Algebraic Substitution Practice (KaTeX + Clean Coefficients)</title>
+
+  <!-- KaTeX CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    crossorigin="anonymous"
+  />
+  <!-- KaTeX Core -->
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+    crossorigin="anonymous"
+  ></script>
+  <!-- KaTeX Auto-render with consistent delimiters -->
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    crossorigin="anonymous"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });"
+  ></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa; min-height: 100vh; padding: 15px; overflow-x: hidden;
+    }
+    /* Teacher Instructions Sidebar */
+    .teacher-tab { position: fixed; left: 0; top: 50%; transform: translateY(-50%); background: #8e44ad; color: #fff; padding: 12px 6px; writing-mode: vertical-rl; text-orientation: mixed; cursor: pointer; z-index: 1001; border-radius: 0 8px 8px 0; font-weight: 600; font-size: .85em; transition: all .3s ease; box-shadow: 2px 0 10px rgba(0,0,0,.2); }
+    .teacher-tab:hover { background: #9b59b6; transform: translateY(-50%) translateX(5px); }
+    .sidebar { position: fixed; left: -400px; top: 0; width: 400px; height: 100vh; background: #fff; z-index: 1000; transition: left .3s ease; box-shadow: 2px 0 20px rgba(0,0,0,.3); overflow-y: auto; }
+    .sidebar.open { left: 0; }
+    .sidebar-header { background: #8e44ad; color: #fff; padding: 20px; font-size: 1.3em; font-weight: 600; }
+    .sidebar-content { padding: 25px; line-height: 1.6; }
+    .sidebar-content h3 { color: #8e44ad; margin: 20px 0 10px; font-size: 1.1em; border-bottom: 2px solid #e74c3c; padding-bottom: 5px; }
+    .sidebar-content p, .sidebar-content li { margin-bottom: 8px; color: #555; }
+    .sidebar-content ul { padding-left: 20px; margin-bottom: 15px; }
+    .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,.5); z-index: 999; opacity: 0; visibility: hidden; transition: all .3s ease; }
+    .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+    .container { max-width: 1200px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.1); overflow: hidden; }
+    .header { background: #6a4c93;
+      background-image: radial-gradient(circle at 25% 25%, #8e44ad 0%, transparent 50%), radial-gradient(circle at 75% 75%, #9b59b6 0%, transparent 50%);
+      color: #fff; padding: 20px; text-align: center; position: relative; overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.1), inset 0 -1px 0 rgba(0,0,0,.2); }
+    .header::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.05) 0%, transparent 50%, rgba(0,0,0,.05) 100%); }
+    .header h1 { font-size: 1.9em; margin-bottom: 3px; position: relative; z-index: 1; text-shadow: 0 2px 4px rgba(0,0,0,.3); }
+
+    .tabs { display: flex; background: #ecf0f1; }
+    .tab { flex: 1; padding: 14px; background: #ecf0f1; border: none; cursor: pointer; font-size: 1em; font-weight: 600; transition: all .3s ease; border-bottom: 3px solid transparent; }
+    .tab:hover { background: #d5dbdb; }
+    .tab.active { background: #fff; border-bottom: 3px solid #e74c3c; color: #e74c3c; }
+
+    .controls { padding: 18px; background: #f8f9fa; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid #e9ecef; }
+    .level-info h3 { color: #8e44ad; margin-bottom: 3px; font-size: 1.2em; }
+    .level-info p { color: #7f8c8d; font-size: .95em; }
+    .dropdown-container { margin-top: 8px; display: none; }
+    .dropdown-container.visible { display: block; }
+    .type-dropdown { padding: 6px 10px; border: 2px solid #bdc3c7; border-radius: 6px; font-size: .95em; background: #fff; cursor: pointer; min-width: 280px; }
+    .type-dropdown:focus { border-color: #e74c3c; outline: none; }
+
+    .timer-section { display: flex; align-items: center; gap: 12px; }
+    .timer-display { font-size: 1.7em; font-weight: bold; color: #8e44ad; background: #fff; padding: 8px 15px; border-radius: 6px; border: 2px solid #bdc3c7; min-width: 100px; text-align: center; }
+    .timer-display.active { border-color: #e74c3c; color: #e74c3c; }
+    .timer-display.warning { color: #e74c3c; border-color: #e74c3c; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
+
+    .action-buttons { display: flex; gap: 8px; }
+    .btn { padding: 10px 18px; border: none; border-radius: 6px; font-size: .95em; font-weight: 600; cursor: pointer; transition: all .3s ease; min-width: 75px; }
+    .btn-primary{ background:#e74c3c; color:#fff; } .btn-primary:hover{ background:#c0392b; transform:translateY(-1px);}
+    .btn-success{ background:#27ae60; color:#fff;} .btn-success:hover{ background:#229954; transform:translateY(-1px);}
+    .btn-warning{ background:#f39c12; color:#fff;} .btn-warning:hover{ background:#e67e22; transform:translateY(-1px);}
+    .btn-danger{ background:#e74c3c; color:#fff;} .btn-danger:hover{ background:#c0392b; transform:translateY(-1px);}
+
+    .problems-section { padding: 20px; min-height: 500px; }
+    .problem-set-header { background:#e74c3c;
+      background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(0,0,0,.1) 0%, transparent 50%);
+      color:#fff; padding:15px 20px; border-radius:8px; margin-bottom:15px; text-align:center; position:relative; overflow:hidden; box-shadow:0 3px 15px rgba(231,76,60,.3);}
+    .problem-set-header::before{ content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,255,255,.1) 0%, transparent 50%, rgba(0,0,0,.1) 100%);}
+    .problem-set-header h2 { font-size:1.4em; margin-bottom:3px; position:relative; z-index:1; text-shadow:0 1px 3px rgba(0,0,0,.3);}
+    .problem-set-header p { font-size:1em; position:relative; z-index:1; opacity:.9;}
+    .problem-list { list-style:none; }
+    .problem-item { background:#f8f9fa; margin:8px 0; padding:15px 20px; border-radius:8px; border-left:4px solid #e74c3c; transition:all .3s ease;}
+    .problem-item:hover{ transform: translateX(2px); }
+    .problem-header{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:8px;}
+    .problem-left{ display:flex; align-items:flex-start; flex:1;}
+    .problem-content{ display:flex; flex-direction:column; gap:5px;}
+    .problem-number{ background:#e74c3c; color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; margin-right:15px; font-size:1em; flex-shrink:0;}
+    .given-values{ font-size:1.05em; color:#8e44ad; font-weight:600; margin-bottom:5px;}
+    .expression{ font-size:1.2em; color:#2c3e50; font-weight:600;}
+    .problem-answer{ background:#27ae60; color:#fff; padding:8px 15px; border-radius:20px; font-weight:bold; font-size:1.1em; display:none; margin-left:15px; align-self:flex-start;}
+    .problem-answer.visible{ display:block; animation:slideIn .4s ease;}
+    @keyframes slideIn{ from{opacity:0; transform:translateX(20px);} to{opacity:1; transform:translateX(0);} }
+    .steps-section{ margin-top:12px; padding:12px; background:#fff5f5; border-radius:6px; border-left:3px solid #e74c3c; display:none;}
+    .steps-section.visible{ display:block; animation:slideDown .4s ease;}
+    @keyframes slideDown{ from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
+    .answer-label{ font-weight:600; color:#27ae60; margin-bottom:8px; font-size:1em;}
+    .solution-steps{ font-size:1.05em; line-height:1.4;}
+    .step{ margin:6px 0; color:#2c3e50;}
+    .step-equation{ text-align:center; margin:8px 0; font-size:1.05em;}
+    .final-answer{ background:#27ae60; color:#fff; padding:8px 15px; border-radius:6px; text-align:center; font-weight:bold; font-size:1.1em; margin-top:10px;}
+    .timer-modal{ position:fixed; inset:0; background:rgba(0,0,0,.7); display:flex; align-items:center; justify-content:center; z-index:1000;}
+    .modal-content{ background:#fff; padding:30px; border-radius:12px; text-align:center; max-width:320px; box-shadow:0 10px 30px rgba(0,0,0,.3);}
+    .modal-content h2{ color:#e74c3c; margin-bottom:15px; font-size:1.8em;}
+    .modal-content p{ color:#7f8c8d; margin-bottom:20px; font-size:1em;}
+    .hidden{ display:none;}
+    @media (max-width:768px){ .controls{flex-direction:column; align-items:stretch;} .timer-section{justify-content:center;} .tabs{flex-wrap:wrap;} .tab{flex:1 1 50%;} .sidebar{width:320px; left:-320px;} }
+    @media (min-width:1200px){ .expression{font-size:1.4em;} .given-values{font-size:1.2em;} .problem-item{padding:18px 25px; margin:10px 0;} .problem-number{width:32px; height:32px; font-size:1.1em;} .solution-steps{font-size:1.1em;} .step-equation{font-size:1.15em;} .problem-set-header h2{font-size:1.6em;} .problem-set-header p{font-size:1.1em;} }
+  </style>
+</head>
+<body>
+  <!-- Teacher Instructions Sidebar -->
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">📚 Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool helps students practise algebraic substitution in structured progression. Each level focuses on specific types of substitution problems.</p>
+
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1 - Single Variable:</strong> Basic substitution with one variable</li>
+        <li><strong>Level 2 - Multiple Variables:</strong> Substitution with two or more variables</li>
+        <li><strong>Level 3 - Expression Substitution:</strong> Substituting expressions for variables</li>
+        <li><strong>Level 4 - Complex Substitution:</strong> Multi-step substitution and fractions</li>
+      </ul>
+
+      <h3>Problem Format Guide</h3>
+      <ul>
+        <li><strong>Given values:</strong> Variable assignments, for example \(x=3,\,y=-2\)</li>
+        <li><strong>Find expression:</strong> The algebraic expression to evaluate</li>
+        <li><strong>Rational numbers:</strong> Include integers, fractions, and decimals</li>
+        <li><strong>Step-by-step:</strong> Shows substitution and simplification process</li>
+      </ul>
+
+      <h3>Level-Specific Skills</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Direct substitution with integers and simple expressions</li>
+        <li><strong>Level 2:</strong> Substitution with multiple variables and mixed operations</li>
+        <li><strong>Level 3:</strong> Substituting algebraic expressions for variables</li>
+        <li><strong>Level 4:</strong> Complex substitution with fractions and multi-step processes</li>
+      </ul>
+
+      <h3>Teaching Strategies</h3>
+      <ul>
+        <li>Emphasise careful substitution of values for variables</li>
+        <li>Practise order of operations after substitution</li>
+        <li>Show how to handle negative values and parentheses</li>
+        <li>Build from simple to complex substitution patterns</li>
+      </ul>
+
+      <h3>Assessment Focus</h3>
+      <ul>
+        <li><strong>Accuracy:</strong> Correct substitution of given values</li>
+        <li><strong>Order of Operations:</strong> Proper sequence of calculations</li>
+        <li><strong>Sign Handling:</strong> Correct treatment of negative numbers</li>
+        <li><strong>Simplification:</strong> Reducing expressions to final form</li>
+      </ul>
+
+      <h3>Standards & Alignment</h3>
+      <ul>
+        <li><strong>UK National Curriculum (KS3/KS4):</strong>
+          <ul>
+            <li>Substitute numerical values into formulae and expressions, including scientific formulae.</li>
+            <li>Use and interpret algebraic notation; simplify and manipulate expressions to maintain equivalence.</li>
+            <li>Apply and interpret the order of operations for calculations with algebraic terms.</li>
+          </ul>
+        </li>
+        <li><strong>Common Core State Standards (CCSS):</strong>
+          <ul>
+            <li><strong>6.EE.A.2c:</strong> Evaluate expressions at specific values of their variables.</li>
+            <li><strong>7.EE.A.1:</strong> Apply properties of operations to add, subtract, factor, and expand linear expressions with rational coefficients.</li>
+            <li><strong>8.EE, 8.F:</strong> Use substitution within simple function rules and linear models.</li>
+            <li><strong>A-SSE.A, A-CED.A:</strong> Interpret and manipulate expressions and create equations using given quantities.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Using the Timer</h3>
+      <ul>
+        <li>2 minutes for quick substitution practice</li>
+        <li>5 minutes for complete solution with steps</li>
+        <li>Focus on building speed and accuracy</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header"><h1>Algebraic Substitution Teaching Tool</h1></div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Single Variable</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Multiple Variables</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Expression Substitution</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Complex Substitution</button>
+    </div>
+
+    <div class="controls">
+      <div class="level-info">
+        <div class="level-controls">
+          <div>
+            <h3 id="level-title">Level 1: Single Variable Substitution</h3>
+            <p id="level-description">Basic substitution with one variable</p>
+            <div class="dropdown-container visible" id="dropdown-container">
+              <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+                <!-- Keep plain text in options (no LaTeX) -->
+                <option value="select">Select Question Type</option>
+                <option value="type1_single">Type 1: Linear expressions (2x+5)</option>
+                <option value="type2_single">Type 2: Quadratic expressions (x²+3x−4)</option>
+              </select>
+            </div>
+            <div id="type-preview" style="margin-top:8px;color:#7f8c8d;font-size:.95em;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+
+    <div class="problems-section">
+      <div id="problem-set-header" class="problem-set-header" style="display:none;">
+        <h2 id="set-header-title">Problem Set</h2>
+        <p id="set-header-description">Substitution Practice</p>
+      </div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>⏰ Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: { title: "Level 1: Single Variable Substitution", description: "Basic substitution with one variable", types: ["type1_single","type2_single"] },
+      2: { title: "Level 2: Multiple Variable Substitution", description: "Substitution with two or more variables", types: ["type1_multiple","type2_multiple","type3_multiple"] },
+      3: { title: "Level 3: Expression Substitution", description: "Substituting expressions for variables", types: ["type1_expression","type2_expression"] },
+      4: { title: "Level 4: Linear into Quadratic/Cubic Substitution", description: "Substitute linear functions into quadratic and cubic expressions", types: ["complex_substitution"] }
+    };
+
+    const typeDescriptions = {
+      type1_single: { title:'Linear Expressions', description:'Single variable linear expressions, for example \\(2x+5\\)', preview:'\\(2x+5\\)' },
+      type2_single: { title:'Quadratic Expressions', description:'Single variable quadratic expressions, for example \\(x^2+3x-4\\)', preview:'\\(x^2+3x-4\\)' },
+      type1_multiple:{ title:'Two Variables', description:'Multiple variable linear expressions, for example \\(3x+2y\\)', preview:'\\(3x+2y\\)' },
+      type2_multiple:{ title:'Three Variables', description:'Three variable expressions, for example \\(2a-3b+c\\)', preview:'\\(2a-3b+c\\)' },
+      type3_multiple:{ title:'Mixed Terms', description:'Expressions with mixed terms, for example \\(a^2-2ab+b^2\\)', preview:'\\(a^2-2ab+b^2\\)' },
+      type1_expression:{ title:'Simple Expression Substitution', description:'Substituting simple expressions, for example \\(x=2y+1\\)', preview:'\\(x=2y+1\\)' },
+      type2_expression:{ title:'Combined Terms', description:'Complex expression substitution, for example \\(2a+5b\\)', preview:'\\(2a+5b\\)' },
+      all:{ title:'Linear into Quadratic/Cubic Substitution', description:'Substitute linear functions into quadratic and cubic expressions', preview:'\\(y=mx+b\\Rightarrow ax^2+cy+d\\)' }
+    };
+    window.typeDisplayNames = Object.fromEntries(
+      Object.entries(typeDescriptions).map(([id, item]) => [id, item.title])
+    );
+
+    function rnd(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+    function rndExcluding(min, max, disallow = new Set()){
+      let val;
+      do { val = rnd(min, max); } while (disallow.has(val));
+      return val;
+    }
+
+    function coeff(min, max){
+      const ban = new Set([-1,0,1]);
+      return rndExcluding(min, max, ban);
+    }
+
+    function nonZeroInt(min, max){
+      return rndExcluding(min, max, new Set([0]));
+    }
+
+    const term = (c, sym) => {
+      if (c === 0) return '';
+      if (sym) {
+        if (c === 1) return `+${sym}`;
+        if (c === -1) return `-${sym}`;
+        return (c > 0 ? `+${c}` : `${c}`) + sym;
+      }
+      return (c > 0 ? `+${c}` : `${c}`);
+    };
+
+    const parenIfNeg = (n) => (n < 0 ? `(${n})` : `${n}`);
+
+    function ensureNonZeroConstant(constTerm, adjusterFn){
+      if (constTerm !== 0) return constTerm;
+      let ct = constTerm;
+      let guard = 0;
+      while (ct === 0 && guard < 20){
+        ct = adjusterFn();
+        guard++;
+      }
+      return ct;
+    }
+
+    function generateProblem(){
+      const config = levelConfigs[currentLevel];
+      let types = config.types;
+      if ((currentLevel===1 || currentLevel===2 || currentLevel===3) && currentType!=='all' && currentType!=='select'){
+        types = [currentType];
+      }
+      const type = types[Math.floor(Math.random()*types.length)];
+      let problem = {};
+
+      switch(type){
+        case 'type1_single':{
+          const c = coeff(2, 8);
+          const k = nonZeroInt(-10, 10);
+          const x = rnd(-5, 8);
+          const result = c*x + k;
+
+          problem = {
+            given: `\\(x=${x}\\)`,
+            expression: `\\(${c}x${term(k,'')}\\)`,
+            answer: `\\(${result}\\)`,
+            steps: [
+              `Substitute \\(x=${x}\\).`,
+              `$$${c}\\cdot ${parenIfNeg(x)} ${term(k,'')}$$`,
+              `$$${c*x} ${term(k,'')}$$`,
+              `$$${result}$$`
+            ]
+          };
+          break;
+        }
+        case 'type2_single':{
+          const xVal = rnd(-4, 5);
+          const b = coeff(2, 6);
+          const k = rnd(-8, 8);
+          const result = xVal*xVal + b*xVal + k;
+
+          problem = {
+            given: `\\(x=${xVal}\\)`,
+            expression: `\\(x^2${term(b,'x')}${term(k,'')}\\)`,
+            answer: `\\(${result}\\)`,
+            steps: [
+              `Substitute \\(x=${xVal}\\).`,
+              `$$(${xVal})^2 ${term(b,`\\cdot ${parenIfNeg(xVal)}`)} ${term(k,'')}$$`,
+              `$$${xVal*xVal} ${term(b*xVal,'')} ${term(k,'')}$$`,
+              `$$${result}$$`
+            ]
+          };
+          break;
+        }
+        case 'type1_multiple':{
+          const a = coeff(2, 8);
+          const b = coeff(2, 7);
+          const x = rnd(-4, 6);
+          const y = rnd(-5, 5);
+          const result = a*x + b*y;
+
+          problem = {
+            given: `\\(x=${x},\\;y=${y}\\)`,
+            expression: `\\(${a}x${term(b,'y')}\\)`,
+            answer: `\\(${result}\\)`,
+            steps: [
+              `Substitute \\(x=${x},\\;y=${y}\\).`,
+              `$$${a}\\cdot ${parenIfNeg(x)} ${term(b,`\\cdot ${parenIfNeg(y)}`)}$$`,
+              `$$${a*x} ${term(b*y,'')}$$`,
+              `$$${result}$$`
+            ]
+          };
+          break;
+        }
+        case 'type2_multiple':{
+          const p = coeff(2, 6);
+          const q = coeff(2, 6);
+          const r = coeff(2, 5);
+          const aVal = rnd(-3, 5);
+          const bVal = rnd(-4, 4);
+          const cVal = rnd(-5, 3);
+          const result = p*aVal - q*bVal + r*cVal;
+
+          problem = {
+            given: `\\(a=${aVal},\\;b=${bVal},\\;c=${cVal}\\)`,
+            expression: `\\(${p}a - ${q}b ${term(r,'c')}\\)`,
+            answer: `\\(${result}\\)`,
+            steps: [
+              `Substitute values.`,
+              `$$${p}\\cdot ${parenIfNeg(aVal)} - ${q}\\cdot ${parenIfNeg(bVal)} ${term(r,`\\cdot ${parenIfNeg(cVal)}`)}$$`,
+              `$$${p*aVal} ${term(-q*bVal,'')} ${term(r*cVal,'')}$$`,
+              `$$${result}$$`
+            ]
+          };
+          break;
+        }
+        case 'type3_multiple':{
+          const aVal = rnd(-3, 4);
+          const bVal = rnd(-3, 4);
+          const k = coeff(2, 6);
+          const result = aVal*aVal - k*aVal*bVal + bVal*bVal;
+
+          problem = {
+            given: `\\(a=${aVal},\\;b=${bVal}\\)`,
+            expression: `\\(a^2 - ${k}ab + b^2\\)`,
+            answer: `\\(${result}\\)`,
+            steps: [
+              `Substitute \\(a=${aVal},\\;b=${bVal}\\).`,
+              `$$(${aVal})^2 - ${k}(${aVal})(${bVal}) + (${bVal})^2$$`,
+              `$$${aVal*aVal} ${term(-k*aVal*bVal,'')} ${term(bVal*bVal,'')}$$`,
+              `$$${result}$$`
+            ]
+          };
+          break;
+        }
+        case 'type1_expression':{
+          const m = coeff(2, 6);
+          let c0 = rnd(-5, 5);
+          const A = coeff(2, 6);
+          let d = rnd(-8, 8);
+
+          let finalCoeff = A*m;
+          let finalConst = A*c0 + d;
+          if (finalConst === 0){
+            finalConst = ensureNonZeroConstant(finalConst, () => {
+              d = rnd(-8, 8);
+              return A*c0 + d;
+            });
+          }
+
+          problem = {
+            given: `\\(x=${m}y${term(c0,'')}\\)`,
+            expression: `\\(${A}x${term(d,'')}\\)`,
+            answer: `\\(${finalCoeff}y${term(finalConst,'')}\\)`,
+            steps: [
+              `Substitute \\(x=${m}y${term(c0,'')}\\).`,
+              `$$${A}\\big(${m}y${term(c0,'')}\\big) ${term(d,'')}$$`,
+              `$$${A*m}y ${term(A*c0,'')} ${term(d,'')}$$`,
+              `$$${finalCoeff}y${term(finalConst,'')}$$`
+            ]
+          };
+          break;
+        }
+        case 'type2_expression':{
+          const p2 = coeff(2, 6);
+          let c1 = nonZeroInt(-6, 6);
+          const s = coeff(2, 5);
+          const t = coeff(2, 6);
+
+          const finalCoeff = s*p2 + t;
+          let finalConst = s*c1;
+          if (finalConst === 0){
+            c1 = nonZeroInt(-6, 6);
+            finalConst = s*c1;
+          }
+
+          problem = {
+            given: `\\(a=${p2}b${term(c1,'')}\\)`,
+            expression: `\\(${s}a+${t}b\\)`,
+            answer: `\\(${finalCoeff}b${term(finalConst,'')}\\)`,
+            steps: [
+              `Substitute \\(a=${p2}b${term(c1,'')}\\).`,
+              `$$${s}\\big(${p2}b${term(c1,'')}\\big) + ${t}b$$`,
+              `$$${s*p2}b ${term(s*c1,'')} + ${t}b$$`,
+              `$$(${s*p2}+${t})b ${term(finalConst,'')} = ${finalCoeff}b${term(finalConst,'')}$$`
+            ]
+          };
+          break;
+        }
+        case 'complex_substitution':{
+          const subKind = ['quadratic_with_y', 'cubic_with_y', 'mixed_terms_xy'][Math.floor(Math.random()*3)];
+
+          if (subKind === 'quadratic_with_y'){
+            const m = coeff(2, 6);
+            let b = rnd(-4, 4);
+            const a = coeff(2, 6);
+            const c = coeff(2, 6);
+            let d = rnd(-8, 8);
+
+            const quadCoeff = a;
+            const linCoeff = c*m;
+            let constTerm = c*b + d;
+            if (constTerm === 0){
+              constTerm = ensureNonZeroConstant(constTerm, () => {
+                d = rnd(-8, 8);
+                return c*b + d;
+              });
+            }
+
+            problem = {
+              given: `\\(y=${m}x${term(b,'')}\\)`,
+              expression: `\\(${a}x^2 ${term(c,'y')} ${term(d,'')}\\)`,
+              answer: `\\(${quadCoeff}x^2${term(linCoeff,'x')}${term(constTerm,'')}\\)`,
+              steps: [
+                `Substitute \\(y=${m}x${term(b,'')}\\).`,
+                `$$${a}x^2 ${term(c,`\\big(${m}x${term(b,'')}\\big)`)} ${term(d,'')}$$`,
+                `$$${a}x^2 ${term(c*m,'x')} ${term(c*b,'')} ${term(d,'')}$$`,
+                `$$${quadCoeff}x^2${term(linCoeff,'x')}${term(constTerm,'')}$$`
+              ]
+            };
+          } else if (subKind === 'cubic_with_y'){
+            const m = coeff(2, 5);
+            let b1 = rnd(-3, 3);
+            const a = 2;
+            const b2 = (Math.random()<0.5) ? rnd(-4,-2) : rnd(2,4);
+            const c = coeff(2, 5);
+            let d = rnd(-6, 6);
+
+            const cubic = a;
+            const quad = b2;
+            const lin = c*m;
+            let constTerm = c*b1 + d;
+            if (constTerm === 0){
+              constTerm = ensureNonZeroConstant(constTerm, () => {
+                d = rnd(-6, 6);
+                return c*b1 + d;
+              });
+            }
+
+            problem = {
+              given: `\\(y=${m}x${term(b1,'')}\\)`,
+              expression: `\\(${a}x^3 ${term(b2,'x^2')} ${term(c,'y')} ${term(d,'')}\\)`,
+              answer: `\\(${cubic}x^3${term(quad,'x^2')}${term(lin,'x')}${term(constTerm,'')}\\)`,
+              steps: [
+                `Substitute \\(y=${m}x${term(b1,'')}\\).`,
+                `$$${a}x^3 ${term(b2,'x^2')} ${term(c,`\\big(${m}x${term(b1,'')}\\big)`)} ${term(d,'')}$$`,
+                `$$${a}x^3 ${term(b2,'x^2')} ${term(c*m,'x')} ${term(c*b1,'')} ${term(d,'')}$$`,
+                `$$${cubic}x^3${term(quad,'x^2')}${term(lin,'x')}${term(constTerm,'')}$$`
+              ]
+            };
+          } else {
+            const m = coeff(2, 5);
+            let b2v = rnd(-3, 3);
+            const a = coeff(2, 5);
+            const B = coeff(2, 5);
+            const c = coeff(2, 5);
+            let d = rnd(-6, 6);
+
+            const quad = a + B*m;
+            const linRaw = B*b2v + c*m;
+            let constTerm = c*b2v + d;
+            if (constTerm === 0){
+              constTerm = ensureNonZeroConstant(constTerm, () => {
+                d = rnd(-6, 6);
+                return c*b2v + d;
+              });
+            }
+
+            problem = {
+              given: `\\(y=${m}x${term(b2v,'')}\\)`,
+              expression: `\\(${a}x^2 + ${B}xy ${term(c,'y')} ${term(d,'')}\\)`,
+              answer: `\\(${quad}x^2${term(linRaw,'x')}${term(constTerm,'')}\\)`,
+              steps: [
+                `Substitute \\(y=${m}x${term(b2v,'')}\\).`,
+                `$$${a}x^2 + ${B}x\\big(${m}x${term(b2v,'')}\\big) ${term(c,`\\big(${m}x${term(b2v,'')}\\big)`)} ${term(d,'')}$$`,
+                `$$${a}x^2 + ${B*m}x^2 ${term(B*b2v,'x')} ${term(c*m,'x')} ${term(c*b2v,'')} ${term(d,'')}$$`,
+                `$$(${a}+${B*m})x^2 ${term(B*b2v + c*m,'x')} ${term(c*b2v + d,'')}$$`,
+                `$$${quad}x^2${term(linRaw,'x')}${term(constTerm,'')}$$`
+              ]
+            };
+          }
+          break;
+        }
+        default:
+          return generateProblem();
+      }
+
+      return problem;
+    }
+
+    function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.sidebar-overlay').classList.toggle('active'); }
+    function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.querySelector('.sidebar-overlay').classList.remove('active'); }
+
+    function switchLevel(level){
+      currentLevel = level; currentType = 'select';
+      document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active', i+1===level));
+      const cfg = levelConfigs[level];
+      document.getElementById('level-title').textContent = cfg.title;
+      document.getElementById('level-description').textContent = cfg.description;
+
+      const dropdown = document.getElementById('type-dropdown');
+      const preview = document.getElementById('type-preview');
+      const dc = document.getElementById('dropdown-container');
+
+      if(level===1){
+        dc.classList.add('visible');
+        dropdown.innerHTML = `
+          <option value="select">Select Question Type</option>
+          <option value="type1_single">Type 1: Linear expressions (2x+5)</option>
+          <option value="type2_single">Type 2: Quadratic expressions (x²+3x−4)</option>`;
+      }else if(level===2){
+        dc.classList.add('visible');
+        dropdown.innerHTML = `
+          <option value="select">Select Question Type</option>
+          <option value="type1_multiple">Type 1: Two variables (3x+2y)</option>
+          <option value="type2_multiple">Type 2: Three variables (2a−3b+c)</option>
+          <option value="type3_multiple">Type 3: Mixed terms (a²−2ab+b²)</option>`;
+      }else if(level===3){
+        dc.classList.add('visible');
+        dropdown.innerHTML = `
+          <option value="select">Select Question Type</option>
+          <option value="type1_expression">Type 1: Simple substitution (x=2y+1)</option>
+          <option value="type2_expression">Type 2: Combined terms (2a+5b)</option>`;
+      }else{
+        dc.classList.add('visible');
+        dropdown.innerHTML = `<option value="all">Linear into Quadratic/Cubic Substitution</option>`;
+        currentType = 'all';
+      }
+      dropdown.value = currentType === 'all' ? 'all' : 'select'; preview.innerHTML = '';
+      if(currentType==='select'){ showBlankPage(); } else { generateNewSet(); }
+      reRenderMath();
+    }
+
+    function typeChanged(){
+      const dropdown = document.getElementById('type-dropdown');
+      const preview = document.getElementById('type-preview');
+      currentType = dropdown.value;
+      if(currentType==='select'){ showBlankPage(); preview.innerHTML=''; }
+      else{ const info = typeDescriptions[currentType]; preview.innerHTML = info ? `Example: ${info.preview}` : ''; generateNewSet(); }
+      reRenderMath();
+    }
+
+    function showBlankPage(){
+      const container = document.getElementById('problem-list');
+      const header = document.getElementById('problem-set-header');
+      header.style.display='none';
+      container.innerHTML = '<li style="text-align:center; padding:40px; color:#7f8c8d; font-size:1.1em;">Please select a question type to begin</li>';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){ showBlankPage(); return; }
+      problems = []; answersVisible=false; stepsVisible=false;
+      for(let i=0;i<5;i++){ problems.push(generateProblem()); }
+      renderProblems();
+      reRenderMath();
+    }
+
+    function renderProblems(){
+      const container = document.getElementById('problem-list');
+      const header = document.getElementById('problem-set-header');
+      const setTitle = document.getElementById('set-header-title');
+      const setDescription = document.getElementById('set-header-description');
+
+      const info = typeDescriptions[currentType];
+      if(info){ setTitle.textContent = info.title; setDescription.innerHTML = info.description; header.style.display='block'; }
+
+      container.innerHTML='';
+      problems.forEach((p, i)=>{
+        const li = document.createElement('li'); li.className='problem-item';
+        const stepsHTML = p.steps.map(step=>{
+          if(step.trim().startsWith('$$') || step.includes('=') || step.trim().startsWith('\\[')){ return `<div class="step-equation">${step}</div>`; }
+          return `<div class="step">${step}</div>`;
+        }).join('');
+
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${i+1}</div>
+              <div class="problem-content">
+                <div class="given-values">Given: ${p.given}</div>
+                <div class="expression">Find: ${p.expression}</div>
+              </div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${i}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${i}">
+            <div class="answer-label">Solution Steps:</div>
+            <div class="solution-steps">
+              ${stepsHTML}
+              <div class="final-answer">${p.answer}</div>
+            </div>
+          </div>`;
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers(){
+      answersVisible = !answersVisible;
+      for(let i=0;i<5;i++){
+        const el = document.getElementById(`quick-answer-${i}`);
+        if(!el) continue;
+        el.classList.toggle('visible', answersVisible);
+      }
+      reRenderMath();
+    }
+
+    function showSteps(){
+      stepsVisible = !stepsVisible;
+      for(let i=0;i<5;i++){
+        const sec = document.getElementById(`steps-${i}`);
+        if(!sec) continue;
+        sec.classList.toggle('visible', stepsVisible);
+      }
+      reRenderMath();
+    }
+
+    function startTimer(minutes){
+      if(timerActive){ stopTimer(); }
+      timeRemaining = minutes*60; timerActive = true; updateTimerDisplay();
+      timerInterval = setInterval(()=>{ timeRemaining--; updateTimerDisplay(); if(timeRemaining<=0){ timerFinished(); } },1000);
+    }
+    function stopTimer(){
+      if(timerInterval){ clearInterval(timerInterval); timerInterval=null; }
+      timerActive=false; const el=document.getElementById('timer-display'); el.textContent='Ready'; el.className='timer-display';
+    }
+    function updateTimerDisplay(){
+      const m = Math.floor(timeRemaining/60), s = timeRemaining%60;
+      const el=document.getElementById('timer-display'); el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+      if(timeRemaining<=30){ el.className='timer-display warning'; } else if(timerActive){ el.className='timer-display active'; } else { el.className='timer-display'; }
+    }
+    function timerFinished(){ stopTimer(); const el=document.getElementById('timer-display'); el.textContent='Time Up!'; el.className='timer-display warning'; document.getElementById('timer-modal').classList.remove('hidden'); }
+    function closeModal(){ document.getElementById('timer-modal').classList.add('hidden'); }
+
+    function reRenderMath(){
+      if(typeof renderMathInElement!=='function') return;
+      renderMathInElement(document.body,{
+        delimiters:[
+          {left:'$$', right:'$$', display:true},
+          {left:'\\[', right:'\\]', display:true},
+          {left:'\\(', right:'\\)', display:false}
+        ],
+        throwOnError:false
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{ switchLevel(1); reRenderMath(); });
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

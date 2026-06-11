@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fractions Practice</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      padding: 18px;
+      overflow-x: hidden;
+      background: #f5f7fa;
+      color: #2c3e50;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      z-index: 1001;
+      transform: translateY(-50%);
+      padding: 14px 7px;
+      border-radius: 0 7px 7px 0;
+      background: #2c3e50;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.86rem;
+      font-weight: 700;
+      writing-mode: vertical-rl;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.22);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .teacher-tab:hover { background: #34495e; transform: translateY(-50%) translateX(5px); }
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      background: rgba(0,0,0,0.5);
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .sidebar-overlay.active { visibility: visible; opacity: 1; }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -400px;
+      z-index: 1000;
+      width: 400px;
+      height: 100vh;
+      overflow-y: auto;
+      background: #fff;
+      box-shadow: 2px 0 20px rgba(0,0,0,0.28);
+      transition: left 0.25s ease;
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-header {
+      padding: 20px;
+      background: #2c3e50;
+      color: #fff;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .sidebar-content { padding: 24px; line-height: 1.55; }
+    .sidebar-content h3 {
+      margin: 18px 0 9px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #9b59b6;
+      color: #2c3e50;
+      font-size: 1.05rem;
+    }
+    .sidebar-content p, .sidebar-content li { margin-bottom: 8px; color: #555; }
+    .sidebar-content ul { margin-bottom: 14px; padding-left: 20px; }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    }
+    .header {
+      padding: 24px;
+      background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      color: #fff;
+      text-align: center;
+    }
+    .header h1 { margin-bottom: 6px; font-size: 2.05rem; }
+    .header p { opacity: 0.92; font-size: 1.05rem; }
+    .tabs { display: flex; background: #ecf0f1; }
+    .tab {
+      flex: 1;
+      min-height: 56px;
+      padding: 12px;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      background: #ecf0f1;
+      color: #2c3e50;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .tab:hover { background: #dce2e4; }
+    .tab.active { background: #fff; border-bottom-color: #9b59b6; color: #8e44ad; }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 20px;
+      border-bottom: 1px solid #e9ecef;
+      background: #f8f9fa;
+    }
+    .level-info h3 { margin-bottom: 4px; color: #2c3e50; font-size: 1.22rem; }
+    .level-info p { color: #7f8c8d; }
+    .dropdown-container { display: none; margin-top: 10px; }
+    .dropdown-container.visible { display: block; }
+    .type-dropdown {
+      min-width: 360px;
+      max-width: 100%;
+      padding: 8px 12px;
+      border: 2px solid #bdc3c7;
+      border-radius: 6px;
+      background: #fff;
+      color: #2c3e50;
+      font-size: 1rem;
+    }
+    .type-dropdown:focus { border-color: #9b59b6; outline: none; }
+    .timer-section, .action-buttons { display: flex; align-items: center; gap: 9px; }
+    .timer-display {
+      min-width: 112px;
+      padding: 8px 16px;
+      border: 2px solid #bdc3c7;
+      border-radius: 6px;
+      background: #fff;
+      color: #2c3e50;
+      font-size: 1.8rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .timer-display.active { border-color: #9b59b6; color: #8e44ad; }
+    .timer-display.warning { border-color: #e74c3c; color: #e74c3c; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+    .btn {
+      min-width: 76px;
+      padding: 10px 17px;
+      border: 0;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.96rem;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: #3498db; }
+    .btn-primary:hover { background: #2980b9; }
+    .btn-success { background: #27ae60; }
+    .btn-success:hover { background: #229954; }
+    .btn-warning { background: #f39c12; }
+    .btn-warning:hover { background: #e67e22; }
+    .btn-danger { background: #e74c3c; }
+    .btn-danger:hover { background: #c0392b; }
+    .problem-set-header {
+      display: none;
+      padding: 15px 24px;
+      border-bottom: 3px solid #7f3c8b;
+      background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      color: #fff;
+      text-align: center;
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+    .problem-set-header.visible { display: block; }
+    .problem-set-header.level-2 { background: linear-gradient(135deg, #27ae60, #229954); border-bottom-color: #1e8449; }
+    .problem-set-header.level-3 { background: linear-gradient(135deg, #f39c12, #e67e22); border-bottom-color: #d35400; }
+    .problem-set-header.level-4 { background: linear-gradient(135deg, #e74c3c, #c0392b); border-bottom-color: #a93226; }
+    .problems-section { min-height: 420px; padding: 22px 25px; }
+    .problem-list { list-style: none; }
+    .problem-item {
+      margin: 12px 0;
+      padding: 18px 20px;
+      border-left: 4px solid #9b59b6;
+      border-radius: 8px;
+      background: #f8f9fa;
+      transition: transform 0.2s ease;
+    }
+    .problem-item:hover { transform: translateX(2px); }
+    .problem-header { display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+    .problem-left { display: flex; align-items: center; flex: 1; min-width: 0; }
+    .problem-number {
+      display: flex;
+      flex: 0 0 30px;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      margin-right: 15px;
+      border-radius: 50%;
+      background: #9b59b6;
+      color: #fff;
+      font-weight: 800;
+    }
+    .equation {
+      color: #2c3e50;
+      font-family: "Times New Roman", serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .problem-answer {
+      display: none;
+      margin-left: 12px;
+      padding: 8px 15px;
+      border-radius: 20px;
+      background: #27ae60;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .problem-answer.visible { display: block; animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+    .steps-section {
+      display: none;
+      margin-top: 12px;
+      padding: 15px;
+      border-left: 3px solid #9b59b6;
+      border-radius: 6px;
+      background: #fdf5ff;
+    }
+    .steps-section.visible { display: block; animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .answer-label { margin-bottom: 8px; color: #8e44ad; font-weight: 800; }
+    .solution-steps { font-size: 1.05rem; line-height: 1.45; }
+    .step { margin: 7px 0; color: #2c3e50; }
+    .step-equation {
+      margin: 8px 0;
+      color: #8e44ad;
+      font-family: "Times New Roman", serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    .final-answer {
+      margin-top: 10px;
+      padding: 9px 15px;
+      border-radius: 5px;
+      background: #27ae60;
+      color: #fff;
+      font-size: 1.18rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .fraction {
+      display: inline-block;
+      min-width: 1.1em;
+      margin: 0 3px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .fraction .numerator {
+      display: block;
+      padding: 0 3px 2px;
+      border-bottom: 2px solid currentColor;
+      line-height: 1;
+    }
+    .fraction .denominator {
+      display: block;
+      padding: 2px 3px 0;
+      line-height: 1;
+    }
+    .mixed-number { display: inline-flex; align-items: center; gap: 3px; margin: 0 4px; vertical-align: middle; }
+    .whole-part { font-size: 1.22em; font-weight: 800; }
+    .timer-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1002;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+      max-width: 320px;
+      padding: 30px;
+      border-radius: 10px;
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    .modal-content h2 { margin-bottom: 14px; color: #e74c3c; font-size: 1.75rem; }
+    .modal-content p { margin-bottom: 20px; color: #7f8c8d; }
+    .hidden { display: none; }
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .tabs { flex-wrap: wrap; }
+      .tab { flex: 1 1 50%; }
+      .controls { flex-direction: column; align-items: stretch; }
+      .timer-section, .action-buttons { justify-content: center; flex-wrap: wrap; }
+      .type-dropdown { min-width: 100%; }
+      .sidebar { left: -320px; width: 320px; }
+      .equation { font-size: 1.35rem; }
+      .problem-header { align-items: flex-start; flex-direction: column; }
+      .problem-answer { margin-left: 45px; }
+    }
+    @media (min-width: 1200px) {
+      .equation { font-size: 2rem; }
+      .problem-item { padding: 22px 25px; }
+      .solution-steps { font-size: 1.18rem; }
+      .step-equation { font-size: 1.35rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Fractions Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool builds fraction confidence from equivalent fractions and simplifying into operations with like denominators, unlike denominators, and mixed numbers.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Equivalent fractions using multiplication, division, and cross multiplication.</li>
+        <li><strong>Level 2:</strong> Simplifying fractions by finding common factors.</li>
+        <li><strong>Level 3:</strong> Adding and subtracting when denominators already match.</li>
+        <li><strong>Level 4:</strong> All four operations with proper fractions and mixed numbers.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Use diagrams or fraction bars before moving to symbolic methods.</li>
+        <li>Ask students to explain why denominators stay the same for like-denominator addition and subtraction.</li>
+        <li>Build the habit of simplifying final answers.</li>
+        <li>For mixed numbers, connect the conversion to improper fractions with the size of the whole.</li>
+      </ul>
+      <h3>Common Misconceptions</h3>
+      <ul>
+        <li>Adding denominators instead of finding a common denominator.</li>
+        <li>Forgetting to simplify after calculating.</li>
+        <li>Using the reciprocal of the first fraction in division rather than the second.</li>
+        <li>Losing the whole-number part when converting mixed numbers.</li>
+      </ul>
+      <h3>Using the Timer</h3>
+      <ul>
+        <li>Use 2 minutes for equivalent fractions and simplifying.</li>
+        <li>Use 5 minutes for mixed operations or full worked examples.</li>
+        <li>Reveal steps after students have explained their chosen method.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header">
+      <h1>Fractions Practice</h1>
+      <p>Equivalent fractions, simplifying, operations, and mixed numbers</p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Equivalent</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Simplify</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Same Denom</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: All Operations</button>
+    </nav>
+
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Equivalent Fractions</h3>
+        <p id="level-description">Find the missing number in equivalent fractions.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+
+    <div id="problem-set-header" class="problem-set-header"></div>
+    <section class="problems-section">
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up</h2>
+      <p>Ready to review the answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Equivalent Fractions",
+        description: "Find the missing number in equivalent fractions.",
+        options: [
+          ["select", "Select Problem Type"],
+          ["multiply_both", "Type 1: 2/3 = ?/6"],
+          ["divide_both", "Type 2: 6/8 = 3/?"],
+          ["cross_multiply", "Type 3: 2/5 = 4/?"],
+          ["mixed_equivalent", "Type 4: Mixed equivalent fractions"]
+        ]
+      },
+      2: {
+        title: "Level 2: Simplify Fractions",
+        description: "Reduce fractions to lowest terms.",
+        options: [
+          ["select", "Select Problem Type"],
+          ["basic_simplify", "Type 1: Basic simplifying"],
+          ["medium_simplify", "Type 2: Medium difficulty"],
+          ["large_numbers", "Type 3: Larger numbers under 100"]
+        ]
+      },
+      3: {
+        title: "Level 3: Same Denominator Operations",
+        description: "Add and subtract fractions with like denominators.",
+        options: [
+          ["select", "Select Operation"],
+          ["same_denom_add", "Addition with the same denominator"],
+          ["same_denom_subtract", "Subtraction with the same denominator"],
+          ["mixed_same_denom", "Mixed addition and subtraction"]
+        ]
+      },
+      4: {
+        title: "Level 4: All Operations",
+        description: "All four operations with proper fractions and mixed numbers.",
+        options: [
+          ["select", "Select Operation Type"],
+          ["add_proper", "Addition with proper fractions"],
+          ["subtract_proper", "Subtraction with proper fractions"],
+          ["multiply_proper", "Multiplication with proper fractions"],
+          ["divide_proper", "Division with proper fractions"],
+          ["add_mixed", "Addition with mixed numbers"],
+          ["subtract_mixed", "Subtraction with mixed numbers"],
+          ["multiply_mixed", "Multiplication with mixed numbers"],
+          ["divide_mixed", "Division with mixed numbers"],
+          ["mixed_operations", "Mixed operation set"]
+        ]
+      }
+    };
+
+    const typeDescriptions = {
+      multiply_both: "Equivalent Fractions: Multiplication Method",
+      divide_both: "Equivalent Fractions: Division Method",
+      cross_multiply: "Equivalent Fractions: Cross Multiplication",
+      mixed_equivalent: "Mixed Equivalent Fraction Problems",
+      basic_simplify: "Simplify Fractions: Basic Problems",
+      medium_simplify: "Simplify Fractions: Medium Difficulty",
+      large_numbers: "Simplify Fractions: Larger Numbers",
+      same_denom_add: "Adding Fractions with the Same Denominator",
+      same_denom_subtract: "Subtracting Fractions with the Same Denominator",
+      mixed_same_denom: "Mixed Same-Denominator Operations",
+      add_proper: "Adding Proper Fractions",
+      subtract_proper: "Subtracting Proper Fractions",
+      multiply_proper: "Multiplying Proper Fractions",
+      divide_proper: "Dividing Proper Fractions",
+      add_mixed: "Adding Mixed Numbers",
+      subtract_mixed: "Subtracting Mixed Numbers",
+      multiply_mixed: "Multiplying Mixed Numbers",
+      divide_mixed: "Dividing Mixed Numbers",
+      mixed_operations: "Mixed Fraction Operations"
+    };
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function gcd(a, b) {
+      a = Math.abs(a);
+      b = Math.abs(b);
+      while (b) {
+        const temp = b;
+        b = a % b;
+        a = temp;
+      }
+      return a || 1;
+    }
+
+    function lcm(a, b) {
+      return (a * b) / gcd(a, b);
+    }
+
+    function simplify(num, den) {
+      const factor = gcd(num, den);
+      return [num / factor, den / factor];
+    }
+
+    function fraction(num, den) {
+      return `<span class="fraction"><span class="numerator">${num}</span><span class="denominator">${den}</span></span>`;
+    }
+
+    function mixedNumber(whole, num, den) {
+      return `<span class="mixed-number"><span class="whole-part">${whole}</span>${fraction(num, den)}</span>`;
+    }
+
+    function formatFraction(num, den) {
+      const sign = num < 0 ? "-" : "";
+      num = Math.abs(num);
+      const reduced = simplify(num, den);
+      num = reduced[0];
+      den = reduced[1];
+      if (den === 1) return sign + num;
+      if (num > den) {
+        const whole = Math.floor(num / den);
+        const rest = num % den;
+        return sign + (rest === 0 ? whole : mixedNumber(whole, rest, den));
+      }
+      return sign + fraction(num, den);
+    }
+
+    function improperFromMixed(whole, num, den) {
+      return whole * den + num;
+    }
+
+    function randomProper(maxDen = 10) {
+      const den = random(4, maxDen);
+      const num = random(1, den - 1);
+      return [num, den];
+    }
+
+    function problemByType(type) {
+      const originalType = currentType;
+      currentType = type;
+      const problem = generateProblem();
+      currentType = originalType;
+      return problem;
+    }
+
+    function makeSimplifyProblem(minDen, maxDen, factorMin, factorMax) {
+      let baseNum = 1;
+      let baseDen = 2;
+      do {
+        baseDen = random(minDen, maxDen);
+        baseNum = random(1, baseDen - 1);
+      } while (gcd(baseNum, baseDen) !== 1);
+      const factor = random(factorMin, factorMax);
+      const origNum = baseNum * factor;
+      const origDen = baseDen * factor;
+      return {
+        equation: `Simplify: ${fraction(origNum, origDen)}`,
+        answer: fraction(baseNum, baseDen),
+        steps: [
+          `Find the greatest common divisor of ${origNum} and ${origDen}.`,
+          `The greatest common divisor is ${factor}.`,
+          `${fraction(origNum, origDen)} = ${fraction(`${origNum} ÷ ${factor}`, `${origDen} ÷ ${factor}`)} = ${fraction(baseNum, baseDen)}`
+        ]
+      };
+    }
+
+    function generateProblem() {
+      let type = currentType;
+      if (type === "select") return {};
+      if (type === "mixed_equivalent") type = Math.random() < 0.5 ? "multiply_both" : "divide_both";
+      if (type === "mixed_same_denom") type = Math.random() < 0.5 ? "same_denom_add" : "same_denom_subtract";
+      if (type === "mixed_operations") {
+        const allTypes = ["add_proper", "subtract_proper", "multiply_proper", "divide_proper", "add_mixed", "subtract_mixed", "multiply_mixed", "divide_mixed"];
+        type = allTypes[random(0, allTypes.length - 1)];
+      }
+
+      switch (type) {
+        case "multiply_both": {
+          const num = random(1, 5);
+          const den = random(num + 1, 9);
+          const multiplier = random(2, 5);
+          return {
+            equation: `${fraction(num, den)} = ${fraction("?", den * multiplier)}`,
+            answer: String(num * multiplier),
+            steps: [
+              `The denominator changes from ${den} to ${den * multiplier}.`,
+              `${den} x ${multiplier} = ${den * multiplier}, so multiply the numerator by ${multiplier} as well.`,
+              `${fraction(num, den)} = ${fraction(`${num} x ${multiplier}`, `${den} x ${multiplier}`)} = ${fraction(num * multiplier, den * multiplier)}`
+            ]
+          };
+        }
+        case "divide_both": {
+          const smallNum = random(1, 5);
+          const smallDen = random(smallNum + 1, 9);
+          const divisor = random(2, 5);
+          return {
+            equation: `${fraction(smallNum * divisor, smallDen * divisor)} = ${fraction(smallNum, "?")}`,
+            answer: String(smallDen),
+            steps: [
+              `The numerator changes from ${smallNum * divisor} to ${smallNum}.`,
+              `${smallNum * divisor} ÷ ${divisor} = ${smallNum}, so divide the denominator by ${divisor} as well.`,
+              `${fraction(smallNum * divisor, smallDen * divisor)} = ${fraction(`${smallNum * divisor} ÷ ${divisor}`, `${smallDen * divisor} ÷ ${divisor}`)} = ${fraction(smallNum, smallDen)}`
+            ]
+          };
+        }
+        case "cross_multiply": {
+          const num = random(1, 5);
+          const den = random(num + 2, 9);
+          const multiplier = random(2, 5);
+          const newNum = num * multiplier;
+          const missing = den * multiplier;
+          return {
+            equation: `${fraction(num, den)} = ${fraction(newNum, "?")}`,
+            answer: String(missing),
+            steps: [
+              "Use cross multiplication for equivalent fractions.",
+              `${num} x ? = ${den} x ${newNum}`,
+              `${num} x ? = ${den * newNum}`,
+              `? = ${den * newNum} ÷ ${num} = ${missing}`
+            ]
+          };
+        }
+        case "basic_simplify":
+          return makeSimplifyProblem(3, 8, 2, 4);
+        case "medium_simplify":
+          return makeSimplifyProblem(5, 12, 3, 6);
+        case "large_numbers":
+          return makeSimplifyProblem(8, 18, 4, 7);
+        case "same_denom_add": {
+          const den = random(5, 12);
+          const num1 = random(1, Math.floor((den - 1) / 2));
+          const num2 = random(1, den - num1 - 1);
+          const sum = num1 + num2;
+          return {
+            equation: `${fraction(num1, den)} + ${fraction(num2, den)}`,
+            answer: formatFraction(sum, den),
+            steps: [
+              "The denominators are the same, so add the numerators.",
+              `${fraction(num1, den)} + ${fraction(num2, den)} = ${fraction(`${num1} + ${num2}`, den)} = ${fraction(sum, den)}`,
+              `Simplified answer: ${formatFraction(sum, den)}`
+            ]
+          };
+        }
+        case "same_denom_subtract": {
+          const den = random(5, 12);
+          const num1 = random(3, den - 1);
+          const num2 = random(1, num1 - 1);
+          const difference = num1 - num2;
+          return {
+            equation: `${fraction(num1, den)} - ${fraction(num2, den)}`,
+            answer: formatFraction(difference, den),
+            steps: [
+              "The denominators are the same, so subtract the numerators.",
+              `${fraction(num1, den)} - ${fraction(num2, den)} = ${fraction(`${num1} - ${num2}`, den)} = ${fraction(difference, den)}`,
+              `Simplified answer: ${formatFraction(difference, den)}`
+            ]
+          };
+        }
+        case "add_proper": {
+          let first = randomProper(9);
+          let second = randomProper(9);
+          while (first[1] === second[1]) second = randomProper(9);
+          const common = lcm(first[1], second[1]);
+          const newFirst = first[0] * (common / first[1]);
+          const newSecond = second[0] * (common / second[1]);
+          const result = newFirst + newSecond;
+          return {
+            equation: `${fraction(first[0], first[1])} + ${fraction(second[0], second[1])}`,
+            answer: formatFraction(result, common),
+            steps: [
+              `Find the lowest common denominator of ${first[1]} and ${second[1]}: ${common}.`,
+              `${fraction(first[0], first[1])} = ${fraction(newFirst, common)} and ${fraction(second[0], second[1])} = ${fraction(newSecond, common)}`,
+              `${fraction(newFirst, common)} + ${fraction(newSecond, common)} = ${fraction(result, common)}`,
+              `Simplified answer: ${formatFraction(result, common)}`
+            ]
+          };
+        }
+        case "subtract_proper": {
+          let first = randomProper(9);
+          let second = randomProper(9);
+          let common = lcm(first[1], second[1]);
+          let newFirst = first[0] * (common / first[1]);
+          let newSecond = second[0] * (common / second[1]);
+          if (newFirst === newSecond) return problemByType("subtract_proper");
+          if (newFirst < newSecond) {
+            const temp = first;
+            first = second;
+            second = temp;
+            common = lcm(first[1], second[1]);
+            newFirst = first[0] * (common / first[1]);
+            newSecond = second[0] * (common / second[1]);
+          }
+          const result = newFirst - newSecond;
+          return {
+            equation: `${fraction(first[0], first[1])} - ${fraction(second[0], second[1])}`,
+            answer: formatFraction(result, common),
+            steps: [
+              `Find the lowest common denominator of ${first[1]} and ${second[1]}: ${common}.`,
+              `${fraction(first[0], first[1])} = ${fraction(newFirst, common)} and ${fraction(second[0], second[1])} = ${fraction(newSecond, common)}`,
+              `${fraction(newFirst, common)} - ${fraction(newSecond, common)} = ${fraction(result, common)}`,
+              `Simplified answer: ${formatFraction(result, common)}`
+            ]
+          };
+        }
+        case "multiply_proper": {
+          const first = randomProper(9);
+          const second = randomProper(9);
+          const num = first[0] * second[0];
+          const den = first[1] * second[1];
+          return {
+            equation: `${fraction(first[0], first[1])} x ${fraction(second[0], second[1])}`,
+            answer: formatFraction(num, den),
+            steps: [
+              "Multiply the numerators and multiply the denominators.",
+              `${fraction(first[0], first[1])} x ${fraction(second[0], second[1])} = ${fraction(`${first[0]} x ${second[0]}`, `${first[1]} x ${second[1]}`)} = ${fraction(num, den)}`,
+              `Simplified answer: ${formatFraction(num, den)}`
+            ]
+          };
+        }
+        case "divide_proper": {
+          const first = randomProper(9);
+          const second = randomProper(9);
+          const num = first[0] * second[1];
+          const den = first[1] * second[0];
+          return {
+            equation: `${fraction(first[0], first[1])} ÷ ${fraction(second[0], second[1])}`,
+            answer: formatFraction(num, den),
+            steps: [
+              "To divide fractions, multiply by the reciprocal of the second fraction.",
+              `${fraction(first[0], first[1])} ÷ ${fraction(second[0], second[1])} = ${fraction(first[0], first[1])} x ${fraction(second[1], second[0])}`,
+              `${fraction(`${first[0]} x ${second[1]}`, `${first[1]} x ${second[0]}`)} = ${fraction(num, den)}`,
+              `Simplified answer: ${formatFraction(num, den)}`
+            ]
+          };
+        }
+        case "add_mixed":
+        case "subtract_mixed":
+        case "multiply_mixed":
+        case "divide_mixed": {
+          const whole1 = random(1, type === "subtract_mixed" ? 5 : 3);
+          const whole2 = random(1, type === "subtract_mixed" ? Math.max(1, whole1 - 1) : 3);
+          const frac1 = randomProper(8);
+          const frac2 = randomProper(8);
+          const imp1 = improperFromMixed(whole1, frac1[0], frac1[1]);
+          const imp2 = improperFromMixed(whole2, frac2[0], frac2[1]);
+          let op = "+";
+          let num = 0;
+          let den = 1;
+
+          if (type === "add_mixed" || type === "subtract_mixed") {
+            const common = lcm(frac1[1], frac2[1]);
+            const left = imp1 * (common / frac1[1]);
+            const right = imp2 * (common / frac2[1]);
+            if (type === "add_mixed") {
+              op = "+";
+              num = left + right;
+            } else {
+              op = "-";
+              if (left <= right) return problemByType("subtract_mixed");
+              num = left - right;
+            }
+            den = common;
+          } else if (type === "multiply_mixed") {
+            op = "x";
+            num = imp1 * imp2;
+            den = frac1[1] * frac2[1];
+          } else {
+            op = "÷";
+            num = imp1 * frac2[1];
+            den = frac1[1] * imp2;
+          }
+
+          const firstMixed = mixedNumber(whole1, frac1[0], frac1[1]);
+          const secondMixed = mixedNumber(whole2, frac2[0], frac2[1]);
+          return {
+            equation: `${firstMixed} ${op} ${secondMixed}`,
+            answer: formatFraction(num, den),
+            steps: [
+              "Convert the mixed numbers to improper fractions.",
+              `${firstMixed} = ${fraction(imp1, frac1[1])} and ${secondMixed} = ${fraction(imp2, frac2[1])}`,
+              type === "divide_mixed" ? "For division, multiply by the reciprocal of the second fraction." : "Now apply the operation to the improper fractions.",
+              `${fraction(imp1, frac1[1])} ${op} ${fraction(imp2, frac2[1])} = ${formatFraction(num, den)}`,
+              `Final answer: ${formatFraction(num, den)}`
+            ]
+          };
+        }
+        default:
+          return problemByType("multiply_both");
+      }
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => {
+        tab.classList.toggle("active", index + 1 === level);
+      });
+
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = config.options.map(([value, label]) => `<option value="${value}">${label}</option>`).join("");
+      dropdown.value = "select";
+      document.getElementById("dropdown-container").classList.add("visible");
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function showBlankPage() {
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      document.getElementById("problem-set-header").classList.remove("visible");
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center; padding:42px; color:#7f8c8d; font-size:1.15rem;">Please select a problem type to begin.</li>';
+    }
+
+    function updateProblemSetHeader() {
+      const header = document.getElementById("problem-set-header");
+      header.textContent = typeDescriptions[currentType] || "Fractions Problem Set";
+      header.className = `problem-set-header visible level-${currentLevel}`;
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      for (let i = 0; i < 5; i++) {
+        problems.push(generateProblem());
+      }
+      updateProblemSetHeader();
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const container = document.getElementById("problem-list");
+      container.innerHTML = "";
+      problems.forEach((problem, index) => {
+        const steps = problem.steps.map(step => {
+          const className = step.includes("=") ? "step-equation" : "step";
+          return `<div class="${className}">${step}</div>`;
+        }).join("");
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index + 1}</div>
+              <div class="equation">${problem.equation}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Solution Steps:</div>
+            <div class="solution-steps">
+              ${steps}
+              <div class="final-answer">${problem.answer}</div>
+            </div>
+          </div>
+        `;
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const answer = document.getElementById(`quick-answer-${i}`);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      }
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const steps = document.getElementById(`steps-${i}`);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      }
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById("timer-display");
+      display.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      if (timeRemaining <= 30) display.className = "timer-display warning";
+      else if (timerActive) display.className = "timer-display active";
+      else display.className = "timer-display";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      const display = document.getElementById("timer-display");
+      display.textContent = "Time Up";
+      display.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

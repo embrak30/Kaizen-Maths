@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pythagoras Theorem Practice</title>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:14px;overflow-x:hidden;color:#1a202c}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:12px 6px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 6px 6px 0;font-weight:700;font-size:.82em;box-shadow:2px 0 8px rgba(0,0,0,.2)}
+    .sidebar{position:fixed;left:-410px;top:0;width:410px;height:100vh;background:#fff;z-index:1000;transition:left .25s;box-shadow:2px 0 20px rgba(0,0,0,.25);overflow-y:auto}
+    .sidebar.open{left:0}
+    .sidebar-header{background:#1a365d;color:#fff;padding:18px;font-size:1.25em;font-weight:700}
+    .sidebar-content{padding:22px;line-height:1.55}
+    .sidebar-content h3{color:#1a365d;margin:18px 0 8px;border-bottom:2px solid #17b8b3;padding-bottom:4px;font-size:1.02em}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4a5568}
+    .sidebar-content ul{padding-left:20px;margin-bottom:12px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;opacity:0;visibility:hidden;transition:.25s}
+    .sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 3px 15px rgba(0,0,0,.1);overflow:hidden}
+    .header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:26px 26px;color:#fff;padding:18px;text-align:center}
+    .header h1{font-size:2em;text-shadow:0 2px 4px rgba(0,0,0,.28)}
+    .tabs{display:flex;background:#e2e8f0}
+    .tab{flex:1;padding:12px;border:0;background:#e2e8f0;cursor:pointer;font-weight:750;font-size:1em;border-bottom:3px solid transparent}
+    .tab.active{background:#fff;color:#3182ce;border-bottom-color:#3182ce}
+    .controls{padding:14px 18px;background:#f7fafc;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0}
+    .level-info h3{color:#1a365d;font-size:1.14em;margin-bottom:3px}
+    .level-info p{color:#718096;font-size:.94em}
+    .dropdown-container{margin-top:7px}
+    .type-dropdown{padding:7px 10px;border:2px solid #cbd5e0;border-radius:5px;background:#fff;min-width:340px;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .timer-display{font-size:1.45em;font-weight:800;color:#1a365d;background:#fff;padding:7px 12px;border:2px solid #cbd5e0;border-radius:5px;min-width:96px;text-align:center}
+    .timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:8px 14px;border:0;border-radius:5px;font-weight:750;cursor:pointer;min-width:68px;color:#fff}
+    .btn-primary{background:#3182ce}.btn-success{background:#38a169}.btn-warning{background:#d69e2e}.btn-danger{background:#e53e3e}
+    .problems-section{padding:10px 18px 14px;min-height:450px}
+    .problem-set-header{display:none;margin-bottom:10px;padding:8px 16px;border-radius:6px;background:#3182ce;color:#fff;text-align:center;font-size:1.1em;font-weight:800}
+    .problem-set-header.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;list-style:none}
+    .problem-item{background:#f7fafc;border-left:4px solid var(--shape-stroke,#3182ce);border-radius:7px;padding:8px 10px;min-height:164px;display:flex;flex-direction:column;gap:8px}
+    .problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .problem-left{display:flex;gap:10px;align-items:flex-start;min-width:0}
+    .problem-number{background:#3182ce;color:#fff;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800}
+    .equation{font-size:1em;color:#1a365d;font-weight:650;line-height:1.32}
+    .shape-row{display:grid;grid-template-columns:180px minmax(0,1fr);gap:10px;align-items:center}
+    .shape-diagram{width:180px;height:126px;background:#fff;border:1px solid #d7e3f0;border-radius:6px;padding:4px}
+    .shape-diagram svg{width:100%;height:100%;display:block}
+    .triangle-fill{fill:var(--shape-fill,#e6fffa);stroke:var(--shape-stroke,#3182ce);stroke-width:3;stroke-linejoin:round}
+    .right-mark{fill:none;stroke:var(--shape-accent,#805ad5);stroke-width:3;stroke-linecap:square;stroke-linejoin:miter}
+    .shape-label{font-family:"Cambria Math","Times New Roman",serif;font-size:13px;fill:#1a365d;font-weight:750;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+    .unknown-label{font-size:16px;fill:var(--shape-accent,#805ad5);font-style:italic;font-weight:900}
+    .diagram-variant-0{--shape-fill:#e6fffa;--shape-stroke:#3182ce;--shape-accent:#805ad5}
+    .diagram-variant-1{--shape-fill:#f5edff;--shape-stroke:#6f4cc3;--shape-accent:#17b8b3}
+    .diagram-variant-2{--shape-fill:#fff7db;--shape-stroke:#d69e2e;--shape-accent:#3182ce}
+    .diagram-variant-3{--shape-fill:#e8f5ff;--shape-stroke:#0d7f82;--shape-accent:#6f4cc3}
+    .problem-answer{background:#38a169;color:#fff;padding:7px 11px;border-radius:999px;font-weight:800;display:none;white-space:nowrap;font-size:.94em}
+    .problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:auto;padding:10px;background:#ebf8ff;border-left:3px solid #3182ce;border-radius:6px}
+    .steps-section.visible{display:block}
+    .answer-label{font-weight:800;color:#3182ce;margin-bottom:6px}
+    .solution-steps{line-height:1.45;font-size:.96em}
+    .step{margin:4px 0;color:#1a365d}.step-equation{margin:5px 0;text-align:center;font-weight:750;color:#805ad5}
+    .final-answer{margin-top:8px;text-align:center;background:#38a169;color:#fff;border-radius:5px;padding:7px;font-weight:800}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}
+    .modal-content{background:#fff;padding:28px;border-radius:10px;text-align:center;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+    .modal-content h2{color:#e53e3e;margin-bottom:10px}.modal-content p{color:#718096;margin-bottom:18px}
+    .hidden{display:none}
+    @media (max-width:650px){.controls{align-items:stretch}.problem-list{grid-template-columns:1fr}.shape-row{grid-template-columns:160px minmax(0,1fr)}.shape-diagram{width:160px;height:112px}.type-dropdown{min-width:260px}.sidebar{width:330px;left:-330px}}
+    @media (min-width:1200px){.problem-item{min-height:176px}.shape-diagram{width:190px;height:134px}.shape-row{grid-template-columns:190px minmax(0,1fr)}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Pythagoras Theorem Guidance</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool builds Pythagoras theorem from identifying the hypotenuse through missing side calculations, exact surd answers, and area or perimeter applications.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Find the hypotenuse, find a shorter side, and mix basic integer triples.</li>
+        <li><strong>Level 2:</strong> Work with exact surd form, decimal approximations, and varied units.</li>
+        <li><strong>Level 3:</strong> Find perimeters and areas where Pythagoras is needed first.</li>
+      </ul>
+      <h3>Key Ideas</h3>
+      <ul>
+        <li><strong>Formula:</strong> a^2 + b^2 = c^2, where c is the hypotenuse.</li>
+        <li><strong>Hypotenuse:</strong> Add the squares of the two shorter sides.</li>
+        <li><strong>Shorter side:</strong> Subtract the square of the known shorter side from the hypotenuse square.</li>
+        <li><strong>Exact form:</strong> Leave non-square roots as simplified surds when requested.</li>
+      </ul>
+      <h3>Common Misconceptions</h3>
+      <ul>
+        <li>Using the longest drawn side instead of the side opposite the right angle.</li>
+        <li>Adding when finding a shorter side instead of subtracting.</li>
+        <li>Rounding too early before perimeter or area calculations.</li>
+        <li>Writing square-root answers without units.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Pythagoras Theorem</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Missing Sides</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Exact & Rounded</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Area & Perimeter</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Missing Sides</h3>
+        <p id="level-description">Find hypotenuses and shorter sides using basic right-triangle triples.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+    let orientationQueue = [];
+
+    const triples = [[3,4,5],[5,12,13],[6,8,10],[7,24,25],[8,15,17],[9,12,15],[10,24,26],[12,16,20]];
+    const levelConfigs = {
+      1: {
+        title: 'Level 1: Missing Sides',
+        description: 'Find hypotenuses and shorter sides using basic right-triangle triples.',
+        types: ['hypotenuse_basic','short_side_basic','mixed_basic']
+      },
+      2: {
+        title: 'Level 2: Exact & Rounded Answers',
+        description: 'Use Pythagoras with exact surd form, decimal approximations, and units.',
+        types: ['exact_surd_hypotenuse','exact_surd_short_side','decimal_units']
+      },
+      3: {
+        title: 'Level 3: Area & Perimeter Applications',
+        description: 'Find a missing side first, then use it for perimeter or area.',
+        types: ['perimeter_with_pythagoras','area_with_pythagoras','mixed_applications']
+      }
+    };
+    const typeDisplayNames = {
+      hypotenuse_basic: 'Type 1: Find the labelled side',
+      short_side_basic: 'Type 2: Find the labelled side',
+      mixed_basic: 'Type 3: Mixed missing sides',
+      exact_surd_hypotenuse: 'Type 1: Exact surd form',
+      exact_surd_short_side: 'Type 2: Exact surd form',
+      decimal_units: 'Type 3: Decimal answers with units',
+      perimeter_with_pythagoras: 'Type 1: Find the perimeter',
+      area_with_pythagoras: 'Type 2: Find the area',
+      mixed_applications: 'Type 3: Mixed area and perimeter'
+    };
+
+    function toggleSidebar(){
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('active');
+    }
+    function closeSidebar(){
+      document.getElementById('sidebar').classList.remove('open');
+      document.querySelector('.sidebar-overlay').classList.remove('active');
+    }
+    function random(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function choice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    function square(n){ return n*n; }
+    function unit(){ return choice(['cm','m','mm']); }
+    function fmt(value, suffix){ return value + ' ' + suffix; }
+    function decimal(value){ return (Math.round((value + Number.EPSILON)*100)/100).toFixed(2); }
+    function isSquare(n){ return Number.isInteger(Math.sqrt(n)); }
+    function simplifySqrt(n){
+      if(isSquare(n)) return { coef: Math.sqrt(n), rad: 1, text: String(Math.sqrt(n)) };
+      let coef = 1;
+      let rad = n;
+      for(let i=Math.floor(Math.sqrt(n)); i>=2; i--){
+        if(n % (i*i) === 0){ coef = i; rad = n/(i*i); break; }
+      }
+      return { coef, rad, text: coef === 1 ? '√' + rad : coef + '√' + rad };
+    }
+    function randomOrientation(){
+      if(!orientationQueue.length) return random(0,3);
+      return orientationQueue.shift();
+    }
+    function resetOrientationQueue(){
+      orientationQueue = [0,1,2,3].sort(()=>Math.random()-0.5);
+    }
+    function missingLetter(){ return choice(['x','y','a','b','h']); }
+    function showSide(value, missing, letter){ return missing ? letter : value; }
+
+    function triangleSvg(aLabel,bLabel,cLabel,orientation){
+      const data = [
+        { p:'45 120 160 120 45 35', a:[103,142], b:[24,80], c:[132,56], m:'M45 120 H63 V102 H45' },
+        { p:'175 120 60 120 175 35', a:[118,142], b:[196,80], c:[88,56], m:'M175 120 H157 V102 H175' },
+        { p:'45 30 160 30 45 115', a:[103,22], b:[24,76], c:[132,98], m:'M45 30 H63 V48 H45' },
+        { p:'175 30 60 30 175 115', a:[118,22], b:[196,76], c:[88,98], m:'M175 30 H157 V48 H175' }
+      ][orientation % 4];
+      function labelClass(label){ return /^[A-Za-z]$/.test(label) ? 'shape-label unknown-label' : 'shape-label'; }
+      return '<svg viewBox="0 0 220 150" role="img" aria-label="Right triangle diagram">' +
+        '<polygon class="triangle-fill" points="' + data.p + '"></polygon>' +
+        '<path class="right-mark" d="' + data.m + '"></path>' +
+        '<text class="' + labelClass(aLabel) + '" x="' + data.a[0] + '" y="' + data.a[1] + '" text-anchor="middle">' + aLabel + '</text>' +
+        '<text class="' + labelClass(bLabel) + '" x="' + data.b[0] + '" y="' + data.b[1] + '" text-anchor="middle">' + bLabel + '</text>' +
+        '<text class="' + labelClass(cLabel) + '" x="' + data.c[0] + '" y="' + data.c[1] + '" text-anchor="middle">' + cLabel + '</text>' +
+        '</svg>';
+    }
+
+    function problemShell(prompt, diagram, answer, steps, question){
+      return { equation: '<div class="shape-row"><div class="shape-diagram">' + diagram + '</div><div>' + prompt + '</div></div>', question: question || prompt.replace(/<[^>]+>/g,''), answer, steps };
+    }
+
+    function genHypotenuseBasic(){
+      const [a,b,c] = choice(triples);
+      const u = unit();
+      const letter = missingLetter();
+      return problemShell(
+        'Find ' + letter + '.',
+        triangleSvg(fmt(a,u), fmt(b,u), letter, randomOrientation()),
+        letter + ' = ' + fmt(c,u),
+        [
+          'Use a^2 + b^2 = c^2.',
+          letter + '^2 = ' + a + '^2 + ' + b + '^2',
+          letter + '^2 = ' + square(a) + ' + ' + square(b) + ' = ' + square(c),
+          letter + ' = √' + square(c) + ' = ' + c,
+          letter + ' = ' + fmt(c,u) + '.'
+        ],
+        'In the right triangle, the labelled side ' + letter + ' is opposite the right angle. The other two labelled sides are ' + fmt(a,u) + ' and ' + fmt(b,u) + '. Find ' + letter + '.'
+      );
+    }
+
+    function genShortSideBasic(){
+      const [a,b,c] = choice(triples);
+      const missingA = Math.random() < 0.5;
+      const known = missingA ? b : a;
+      const missing = missingA ? a : b;
+      const u = unit();
+      const letter = missingLetter();
+      return problemShell(
+        'Find ' + letter + '.',
+        triangleSvg(showSide(fmt(a,u), missingA, letter), showSide(fmt(b,u), !missingA, letter), fmt(c,u), randomOrientation()),
+        letter + ' = ' + fmt(missing,u),
+        [
+          'Use a^2 + b^2 = c^2.',
+          letter + '^2 = hypotenuse^2 - known side^2',
+          letter + '^2 = ' + c + '^2 - ' + known + '^2',
+          letter + '^2 = ' + square(c) + ' - ' + square(known) + ' = ' + square(missing),
+          letter + ' = √' + square(missing) + ' = ' + missing,
+          letter + ' = ' + fmt(missing,u) + '.'
+        ],
+        'In the right triangle, the side opposite the right angle is ' + fmt(c,u) + ', one other side is ' + fmt(known,u) + ', and the remaining side is labelled ' + letter + '. Find ' + letter + '.'
+      );
+    }
+
+    function genMixedBasic(){
+      return Math.random() < 0.5 ? genHypotenuseBasic() : genShortSideBasic();
+    }
+
+    function nonSquareLegs(){
+      const pairs = [[5,6],[4,7],[7,9],[8,11],[9,10],[6,13],[10,15],[12,14]];
+      return choice(pairs);
+    }
+
+    function genExactSurdHypotenuse(){
+      const [a,b] = nonSquareLegs();
+      const c2 = square(a)+square(b);
+      const exact = simplifySqrt(c2);
+      const u = unit();
+      const letter = missingLetter();
+      return problemShell(
+        'Find ' + letter + '. Leave your answer in exact form.',
+        triangleSvg(fmt(a,u), fmt(b,u), letter, randomOrientation()),
+        letter + ' = ' + exact.text + ' ' + u,
+        [
+          'Use a^2 + b^2 = c^2.',
+          letter + '^2 = ' + a + '^2 + ' + b + '^2',
+          letter + '^2 = ' + square(a) + ' + ' + square(b) + ' = ' + c2,
+          letter + ' = √' + c2,
+          'In simplified surd form, ' + letter + ' = ' + exact.text + '.'
+        ],
+        'In the right triangle, the labelled side ' + letter + ' is opposite the right angle. The other two labelled sides are ' + fmt(a,u) + ' and ' + fmt(b,u) + '. Find ' + letter + ' in exact surd form.'
+      );
+    }
+
+    function genExactSurdShortSide(){
+      const hyp = choice([10,11,13,14,15,17,20]);
+      let known = random(3,hyp-2);
+      let m2 = square(hyp)-square(known);
+      let guard = 0;
+      while(isSquare(m2) && guard < 30){ known = random(3,hyp-2); m2 = square(hyp)-square(known); guard++; }
+      const exact = simplifySqrt(m2);
+      const u = unit();
+      const letter = missingLetter();
+      return problemShell(
+        'Find ' + letter + '. Leave your answer in exact form.',
+        triangleSvg(fmt(known,u), letter, fmt(hyp,u), randomOrientation()),
+        letter + ' = ' + exact.text + ' ' + u,
+        [
+          letter + '^2 = hypotenuse^2 - known side^2.',
+          letter + '^2 = ' + hyp + '^2 - ' + known + '^2',
+          letter + '^2 = ' + square(hyp) + ' - ' + square(known) + ' = ' + m2,
+          letter + ' = √' + m2,
+          'In simplified surd form, ' + letter + ' = ' + exact.text + ' ' + u + '.'
+        ],
+        'In the right triangle, the side opposite the right angle is ' + fmt(hyp,u) + ', one other side is ' + fmt(known,u) + ', and the remaining side is labelled ' + letter + '. Find ' + letter + ' in exact surd form.'
+      );
+    }
+
+    function genDecimalUnits(){
+      const findHyp = Math.random() < 0.55;
+      if(findHyp){
+        const a = random(4,13), b = random(5,16);
+        const c = Math.sqrt(square(a)+square(b));
+        const u = unit();
+        const letter = missingLetter();
+        return problemShell(
+          'Find ' + letter + ' to 2 d.p.',
+          triangleSvg(fmt(a,u), fmt(b,u), letter, randomOrientation()),
+          letter + ' = ' + decimal(c) + ' ' + u,
+          [
+            letter + '^2 = ' + a + '^2 + ' + b + '^2 = ' + (square(a)+square(b)),
+            letter + ' = √' + (square(a)+square(b)),
+            letter + ' = ' + decimal(c) + ' to 2 d.p.',
+            letter + ' = ' + decimal(c) + ' ' + u + '.'
+          ],
+          'In the right triangle, the labelled side ' + letter + ' is opposite the right angle. The other two labelled sides are ' + fmt(a,u) + ' and ' + fmt(b,u) + '. Find ' + letter + ' to 2 d.p.'
+        );
+      }
+      const hyp = random(11,22);
+      const known = random(4,hyp-3);
+      const missing = Math.sqrt(square(hyp)-square(known));
+      const u = unit();
+      const letter = missingLetter();
+      return problemShell(
+        'Find ' + letter + ' to 2 d.p.',
+        triangleSvg(fmt(known,u), letter, fmt(hyp,u), randomOrientation()),
+        letter + ' = ' + decimal(missing) + ' ' + u,
+        [
+          letter + '^2 = ' + hyp + '^2 - ' + known + '^2',
+          letter + '^2 = ' + square(hyp) + ' - ' + square(known) + ' = ' + (square(hyp)-square(known)),
+          letter + ' = √' + (square(hyp)-square(known)),
+          letter + ' = ' + decimal(missing) + ' to 2 d.p.'
+        ],
+        'In the right triangle, the side opposite the right angle is ' + fmt(hyp,u) + ', one other side is ' + fmt(known,u) + ', and the remaining side is labelled ' + letter + '. Find ' + letter + ' to 2 d.p.'
+      );
+    }
+
+    function genPerimeterWithPythagoras(){
+      const [a,b,c] = choice(triples);
+      const missingHyp = Math.random() < 0.55;
+      const u = unit();
+      if(missingHyp){
+        const perimeter = a+b+c;
+        const letter = missingLetter();
+        return problemShell(
+          'Find ' + letter + ', then find the perimeter.',
+          triangleSvg(fmt(a,u), fmt(b,u), letter, randomOrientation()),
+          perimeter + ' ' + u,
+          [
+            'First find ' + letter + '.',
+            letter + '^2 = ' + a + '^2 + ' + b + '^2 = ' + square(c),
+            letter + ' = ' + c,
+            'Perimeter = ' + a + ' + ' + b + ' + ' + letter,
+            'Perimeter = ' + a + ' + ' + b + ' + ' + c,
+            'Perimeter = ' + perimeter + ' ' + u + '.'
+          ],
+          'In the right triangle, the labelled side ' + letter + ' is opposite the right angle. The other two labelled sides are ' + fmt(a,u) + ' and ' + fmt(b,u) + '. Find ' + letter + ', then find the perimeter.'
+        );
+      }
+      const perimeter = a+b+c;
+      const letter = missingLetter();
+      return problemShell(
+        'Find ' + letter + ', then find the perimeter.',
+        triangleSvg(fmt(a,u), letter, fmt(c,u), randomOrientation()),
+        perimeter + ' ' + u,
+        [
+          'First find ' + letter + '.',
+          letter + '^2 = ' + c + '^2 - ' + a + '^2',
+          letter + '^2 = ' + square(c) + ' - ' + square(a) + ' = ' + square(b),
+          letter + ' = ' + b,
+          'Perimeter = ' + a + ' + ' + b + ' + ' + c + ' = ' + perimeter + ' ' + u + '.'
+        ],
+        'In the right triangle, the side opposite the right angle is ' + fmt(c,u) + ', one other side is ' + fmt(a,u) + ', and the remaining side is labelled ' + letter + '. Find ' + letter + ', then find the perimeter.'
+      );
+    }
+
+    function genAreaWithPythagoras(){
+      const [a,b,c] = choice(triples);
+      const u = unit();
+      const area = a*b/2;
+      const letter = missingLetter();
+      return problemShell(
+        'Find ' + letter + ', then find the area.',
+        triangleSvg(fmt(a,u), letter, fmt(c,u), randomOrientation()),
+        area + ' ' + u + '^2',
+        [
+          'First find ' + letter + '.',
+          letter + '^2 = ' + c + '^2 - ' + a + '^2',
+          letter + '^2 = ' + square(c) + ' - ' + square(a) + ' = ' + square(b),
+          letter + ' = ' + b,
+          'Area = 1/2 × base × height',
+          'Area = 1/2 × ' + a + ' × ' + b + ' = ' + area + ' ' + u + '^2.'
+        ],
+        'In the right triangle, the side opposite the right angle is ' + fmt(c,u) + ', one perpendicular side is ' + fmt(a,u) + ', and the other perpendicular side is labelled ' + letter + '. Find ' + letter + ', then find the area.'
+      );
+    }
+
+    function genMixedApplications(){
+      return Math.random() < 0.5 ? genPerimeterWithPythagoras() : genAreaWithPythagoras();
+    }
+
+    function generateProblem(){
+      const type = currentType === 'select' ? choice(levelConfigs[currentLevel].types) : currentType;
+      if(type === 'hypotenuse_basic') return genHypotenuseBasic();
+      if(type === 'short_side_basic') return genShortSideBasic();
+      if(type === 'mixed_basic') return genMixedBasic();
+      if(type === 'exact_surd_hypotenuse') return genExactSurdHypotenuse();
+      if(type === 'exact_surd_short_side') return genExactSurdShortSide();
+      if(type === 'decimal_units') return genDecimalUnits();
+      if(type === 'perimeter_with_pythagoras') return genPerimeterWithPythagoras();
+      if(type === 'area_with_pythagoras') return genAreaWithPythagoras();
+      if(type === 'mixed_applications') return genMixedApplications();
+      return genHypotenuseBasic();
+    }
+
+    function switchLevel(level){
+      currentLevel = level;
+      currentType = 'select';
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active', index+1 === level));
+      const config = levelConfigs[level];
+      document.getElementById('level-title').textContent = config.title;
+      document.getElementById('level-description').textContent = config.description;
+      const dropdown = document.getElementById('type-dropdown');
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + config.types.map(type => '<option value="' + type + '">' + typeDisplayNames[type] + '</option>').join('');
+      dropdown.value = 'select';
+      showBlankPage();
+    }
+    function typeChanged(){
+      currentType = document.getElementById('type-dropdown').value;
+      currentType === 'select' ? showBlankPage() : generateNewSet();
+    }
+    function showBlankPage(){
+      document.getElementById('problem-set-header').classList.remove('visible');
+      document.getElementById('problem-list').innerHTML = '<li style="grid-column:1/-1;text-align:center;padding:36px;color:#718096;font-size:1.05em">Please select a question type to begin Pythagoras practice.</li>';
+    }
+    function generateNewSet(){
+      if(currentType === 'select'){ showBlankPage(); return; }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      resetOrientationQueue();
+      for(let i=0;i<4;i++) problems.push(generateProblem());
+      renderProblems();
+    }
+    function renderProblems(){
+      const container = document.getElementById('problem-list');
+      const header = document.getElementById('problem-set-header');
+      container.innerHTML = '';
+      header.textContent = typeDisplayNames[currentType] || 'Pythagoras Practice';
+      header.className = 'problem-set-header visible';
+      problems.forEach((problem,index)=>{
+        const li = document.createElement('li');
+        li.className = 'problem-item diagram-variant-' + (index % 4);
+        const stepsHTML = problem.steps.map(step => step.includes('=') ? '<div class="step-equation">' + step + '</div>' : '<div class="step">' + step + '</div>').join('');
+        li.innerHTML = '<div class="problem-header"><div class="problem-left"><div class="problem-number">' + (index+1) + '</div><div class="equation">' + problem.equation + '</div></div><div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div></div><div class="steps-section" id="steps-' + index + '"><div class="answer-label">Solution Steps:</div><div class="solution-steps">' + stepsHTML + '<div class="final-answer">' + problem.answer + '</div></div></div>';
+        container.appendChild(li);
+      });
+    }
+    function showAnswers(){
+      answersVisible = !answersVisible;
+      problems.forEach((_,i)=>{
+        const el = document.getElementById('quick-answer-' + i);
+        if(el) el.classList.toggle('visible', answersVisible);
+      });
+    }
+    function showSteps(){
+      stepsVisible = !stepsVisible;
+      problems.forEach((_,i)=>{
+        const el = document.getElementById('steps-' + i);
+        if(el) el.classList.toggle('visible', stepsVisible);
+      });
+    }
+    function startTimer(minutes){
+      if(timerActive) stopTimer();
+      timeRemaining = minutes*60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(()=>{
+        timeRemaining--;
+        updateTimerDisplay();
+        if(timeRemaining <= 0) timerFinished();
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+      timerActive = false;
+      const el = document.getElementById('timer-display');
+      el.textContent = 'Ready';
+      el.className = 'timer-display';
+    }
+    function updateTimerDisplay(){
+      const el = document.getElementById('timer-display');
+      const m = Math.floor(timeRemaining/60);
+      const s = timeRemaining%60;
+      el.textContent = m + ':' + String(s).padStart(2,'0');
+      if(timerActive && timeRemaining <= 30) el.className = 'timer-display warning';
+      else if(timerActive) el.className = 'timer-display active';
+      else el.className = 'timer-display';
+    }
+    function timerFinished(){
+      stopTimer();
+      const el = document.getElementById('timer-display');
+      el.textContent = 'Time Up!';
+      el.className = 'timer-display warning';
+      document.getElementById('timer-modal').classList.remove('hidden');
+    }
+    function closeModal(){ document.getElementById('timer-modal').classList.add('hidden'); }
+    switchLevel(1);
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-3"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

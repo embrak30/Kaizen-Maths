@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logarithms Practice</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #1a365d;
+      color: white;
+      padding: 15px 8px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      cursor: pointer;
+      z-index: 1001;
+      border-radius: 0 8px 8px 0;
+      font-weight: 600;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .teacher-tab:hover {
+      background: #2d5a87;
+      transform: translateY(-50%) translateX(5px);
+    }
+
+    .sidebar {
+      position: fixed;
+      left: -400px;
+      top: 0;
+      width: 400px;
+      height: 100vh;
+      background: white;
+      z-index: 1000;
+      transition: left 0.3s ease;
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+      overflow-y: auto;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-header {
+      background: #1a365d;
+      color: white;
+      padding: 20px;
+      font-size: 1.3em;
+      font-weight: 600;
+    }
+
+    .sidebar-content {
+      padding: 25px;
+      line-height: 1.6;
+    }
+
+    .sidebar-content h3 {
+      color: #1a365d;
+      margin: 20px 0 10px;
+      font-size: 1.1em;
+      border-bottom: 2px solid #3182ce;
+      padding-bottom: 5px;
+    }
+
+    .sidebar-content p,
+    .sidebar-content li {
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    .sidebar-content ul {
+      padding-left: 20px;
+      margin-bottom: 15px;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background: #2d5a87;
+      background-image:
+        linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce),
+        linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      color: white;
+      padding: 25px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%, rgba(0, 0, 0, 0.05) 100%);
+    }
+
+    .header h1 {
+      font-size: 2.2em;
+      margin-bottom: 5px;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .tabs {
+      display: flex;
+      background: #e2e8f0;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 18px;
+      background: #e2e8f0;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab:hover {
+      background: #cbd5e0;
+    }
+
+    .tab.active {
+      background: white;
+      border-bottom-color: #3182ce;
+      color: #3182ce;
+    }
+
+    .controls {
+      padding: 25px;
+      background: #f7fafc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .level-info h3 {
+      color: #1a365d;
+      margin-bottom: 5px;
+      font-size: 1.3em;
+    }
+
+    .level-info p {
+      color: #718096;
+      font-size: 1em;
+    }
+
+    .dropdown-container {
+      margin-top: 10px;
+      display: none;
+    }
+
+    .dropdown-container.visible {
+      display: block;
+    }
+
+    .type-dropdown {
+      padding: 8px 12px;
+      border: 2px solid #cbd5e0;
+      border-radius: 6px;
+      font-size: 1em;
+      background: white;
+      cursor: pointer;
+      min-width: 380px;
+    }
+
+    .type-dropdown:focus {
+      border-color: #3182ce;
+      outline: none;
+    }
+
+    .timer-section,
+    .action-buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .timer-section {
+      gap: 15px;
+    }
+
+    .timer-display {
+      font-size: 2em;
+      font-weight: bold;
+      color: #1a365d;
+      background: white;
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: 2px solid #cbd5e0;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .timer-display.active {
+      border-color: #3182ce;
+      color: #3182ce;
+    }
+
+    .timer-display.warning {
+      color: #e53e3e;
+      border-color: #e53e3e;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .btn {
+      padding: 12px 22px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 85px;
+    }
+
+    .btn-primary { background: #3182ce; color: white; }
+    .btn-success { background: #38a169; color: white; }
+    .btn-warning { background: #d69e2e; color: white; }
+    .btn-danger { background: #e53e3e; color: white; }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(0.9);
+    }
+
+    .problems-section {
+      padding: 20px;
+      min-height: 500px;
+    }
+
+    .problem-set-header {
+      color: white;
+      padding: 15px 25px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      font-size: 1.3em;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    .problem-set-header.visible {
+      display: block;
+    }
+
+    .problem-set-header.basic { background: #38a169; }
+    .problem-set-header.laws { background: #e53e3e; }
+    .problem-set-header.evaluate { background: #d69e2e; }
+    .problem-set-header.natural { background: #3182ce; }
+    .problem-set-header.equations { background: #805ad5; }
+    .problem-set-header.complex { background: #2d5a87; }
+
+    .problem-list {
+      list-style: none;
+    }
+
+    .problem-item {
+      background: #f7fafc;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #3182ce;
+      transition: all 0.3s ease;
+    }
+
+    .problem-item:hover {
+      transform: translateX(2px);
+    }
+
+    .problem-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 8px;
+    }
+
+    .problem-left {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .problem-number {
+      background: #3182ce;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 15px;
+      font-size: 1em;
+      flex-shrink: 0;
+    }
+
+    .equation {
+      font-size: 1.6em;
+      font-family: "Times New Roman", serif;
+      color: #1a365d;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .problem-answer {
+      background: #38a169;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 1.1em;
+      display: none;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .problem-answer.visible {
+      display: block;
+      animation: slideIn 0.4s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .steps-section {
+      margin-top: 12px;
+      padding: 12px;
+      background: #ebf8ff;
+      border-radius: 6px;
+      border-left: 3px solid #3182ce;
+      display: none;
+    }
+
+    .steps-section.visible {
+      display: block;
+      animation: slideDown 0.4s ease;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .answer-label {
+      font-weight: 600;
+      color: #38a169;
+      margin-bottom: 8px;
+      font-size: 1em;
+    }
+
+    .solution-steps {
+      font-size: 1.05em;
+      line-height: 1.4;
+    }
+
+    .step {
+      margin: 6px 0;
+      color: #1a365d;
+    }
+
+    .step-equation {
+      font-family: "Times New Roman", serif;
+      font-weight: 600;
+      color: #805ad5;
+      text-align: center;
+      margin: 8px 0;
+      font-size: 1.2em;
+    }
+
+    .final-answer {
+      background: #38a169;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+
+    .timer-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 35px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 350px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-content h2 {
+      color: #e53e3e;
+      margin-bottom: 18px;
+      font-size: 2em;
+    }
+
+    .modal-content p {
+      color: #718096;
+      margin-bottom: 25px;
+      font-size: 1.1em;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .base {
+      color: #3182ce;
+      font-weight: bold;
+      background: rgba(49, 130, 206, 0.1);
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    .index {
+      color: #38a169;
+      font-weight: bold;
+      background: rgba(56, 161, 105, 0.1);
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    .operation {
+      color: #d69e2e;
+      font-weight: bold;
+      background: rgba(214, 158, 46, 0.1);
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    .step-arrow {
+      font-size: 1.5em;
+      color: #3182ce;
+      margin: 0 10px;
+    }
+
+    .step-indicator {
+      background: #3182ce;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      font-weight: bold;
+      margin-right: 10px;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 12px;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 15px;
+      }
+
+      .timer-section {
+        justify-content: center;
+      }
+
+      .tabs {
+        flex-wrap: wrap;
+      }
+
+      .tab {
+        flex: 1 1 50%;
+        padding: 12px;
+      }
+
+      .sidebar {
+        width: 320px;
+        left: -320px;
+      }
+
+      .type-dropdown {
+        min-width: 260px;
+        width: 100%;
+      }
+
+      .equation {
+        font-size: 1.35em;
+      }
+
+      .problem-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .problem-answer {
+        align-self: stretch;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .equation {
+        font-size: 1.8em;
+      }
+
+      .problem-item {
+        padding: 18px;
+        margin: 12px 0;
+      }
+
+      .problem-number {
+        width: 35px;
+        height: 35px;
+        font-size: 1.1em;
+      }
+
+      .solution-steps {
+        font-size: 1.15em;
+      }
+
+      .step-equation {
+        font-size: 1.3em;
+      }
+
+      .problem-set-header {
+        font-size: 1.4em;
+        padding: 18px 30px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">log Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool helps students master logarithms systematically, from converting between logarithmic and index forms to solving exponential and logarithmic equations.</p>
+
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1 - Fundamentals:</strong> Log-index conversion and basic exact evaluation</li>
+        <li><strong>Level 2 - Laws:</strong> Product, quotient, power, and natural logarithm rules</li>
+        <li><strong>Level 3 - Equations:</strong> Exponential equations, logarithmic equations, change of base, and multi-step examples</li>
+      </ul>
+
+      <h3>Key Logarithm Laws</h3>
+      <ul>
+        <li><strong>Definition:</strong> log<sub>a</sub>(x) = n means a<sup>n</sup> = x</li>
+        <li><strong>Product Rule:</strong> log<sub>a</sub>(xy) = log<sub>a</sub>(x) + log<sub>a</sub>(y)</li>
+        <li><strong>Quotient Rule:</strong> log<sub>a</sub>(x/y) = log<sub>a</sub>(x) - log<sub>a</sub>(y)</li>
+        <li><strong>Power Rule:</strong> log<sub>a</sub>(x<sup>n</sup>) = n log<sub>a</sub>(x)</li>
+        <li><strong>Change of Base:</strong> log<sub>a</sub>(x) = log<sub>b</sub>(x) / log<sub>b</sub>(a)</li>
+      </ul>
+
+      <h3>Teaching Strategies</h3>
+      <ul>
+        <li>Keep asking: "What power of the base gives the argument?"</li>
+        <li>Connect each logarithm law to an exponent law students already know.</li>
+        <li>Check domains when solving logarithmic equations.</li>
+        <li>Use exact log form before decimal calculator approximations.</li>
+      </ul>
+
+      <h3>Common Student Mistakes</h3>
+      <ul>
+        <li>Writing log(x + y) as log(x) + log(y)</li>
+        <li>Mixing up the base and the argument</li>
+        <li>Forgetting to bring powers down as coefficients</li>
+        <li>Taking logarithms of zero or negative values</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header">
+      <h1>Logarithms Practice</h1>
+    </section>
+
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Fundamentals</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Laws</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Equations</button>
+    </nav>
+
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Fundamentals of Logarithms</h3>
+        <p id="level-description">Converting between log and index form, basic evaluation</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="log_to_index">Type 1: Convert log form to index form</option>
+            <option value="index_to_log">Type 2: Convert index form to log form</option>
+            <option value="evaluate_basic">Type 3: Evaluate basic logarithms</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Fundamentals of Logarithms",
+        description: "Converting between log and index form, basic evaluation",
+        options: [
+          ["log_to_index", "Type 1: Convert log form to index form"],
+          ["index_to_log", "Type 2: Convert index form to log form"],
+          ["evaluate_basic", "Type 3: Evaluate basic logarithms"]
+        ]
+      },
+      2: {
+        title: "Level 2: Logarithm Laws and Operations",
+        description: "Product, quotient, power rules, and natural logarithms",
+        options: [
+          ["product_rule", "Type 1: Product rule (log addition)"],
+          ["quotient_rule", "Type 2: Quotient rule (log subtraction)"],
+          ["power_rule", "Type 3: Power rule"],
+          ["natural_log", "Type 4: Natural logarithms (ln)"]
+        ]
+      },
+      3: {
+        title: "Level 3: Solving Equations",
+        description: "Exponential equations, logarithmic equations, and complex problems",
+        options: [
+          ["solve_exponential", "Type 1: Solving exponential equations"],
+          ["solve_logarithmic", "Type 2: Solving logarithmic equations"],
+          ["change_base", "Type 3: Change of base formula"],
+          ["complex_equations", "Type 4: Complex multi-step equations"]
+        ]
+      }
+    };
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomElement(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function sub(text) {
+      return "<sub>" + text + "</sub>";
+    }
+
+    function sup(text) {
+      return "<sup>" + text + "</sup>";
+    }
+
+    function logTerm(base, argument) {
+      return "log" + sub(base) + "(" + argument + ")";
+    }
+
+    function highlightBase(base) {
+      return '<span class="base">' + base + "</span>";
+    }
+
+    function highlightIndex(index) {
+      return '<span class="index">' + index + "</span>";
+    }
+
+    function highlightOperation(operation) {
+      return '<span class="operation">' + operation + "</span>";
+    }
+
+    function stepLabel(number) {
+      return '<span class="step-indicator">Step ' + number + "</span>";
+    }
+
+    function arrow(text) {
+      return '<span class="step-arrow">-></span> ' + text;
+    }
+
+    function formatLinear(coefficient, constant) {
+      return coefficient + "x " + (constant >= 0 ? "+ " + constant : "- " + Math.abs(constant));
+    }
+
+    function generateProblem() {
+      let problem = {};
+
+      switch (currentType) {
+        case "log_to_index": {
+          const base = randomElement([2, 3, 4, 5, 10]);
+          const power = random(2, 4);
+          const result = Math.pow(base, power);
+          problem = {
+            badge: "basic",
+            equation: "Write in index form: " + logTerm(base, result) + " = " + power,
+            answer: base + sup(power) + " = " + result,
+            steps: [
+              stepLabel(1) + " Identify the base, argument, and value",
+              "Base = " + highlightBase(base) + ", argument = " + result + ", value = " + highlightIndex(power),
+              stepLabel(2) + " Use the definition",
+              logTerm("a", "x") + " = n means a" + sup("n") + " = x",
+              stepLabel(3) + " Apply it",
+              logTerm(highlightBase(base), result) + " = " + highlightIndex(power) + " means " + highlightBase(base) + sup(highlightIndex(power)) + " = " + result,
+              arrow(base + sup(power) + " = " + result)
+            ]
+          };
+          break;
+        }
+
+        case "index_to_log": {
+          const base = randomElement([2, 3, 5, 10]);
+          const power = random(2, 4);
+          const result = Math.pow(base, power);
+          problem = {
+            badge: "basic",
+            equation: "Write in log form: " + base + sup(power) + " = " + result,
+            answer: logTerm(base, result) + " = " + power,
+            steps: [
+              stepLabel(1) + " Identify the base, power, and result",
+              "Base = " + highlightBase(base) + ", power = " + highlightIndex(power) + ", result = " + result,
+              stepLabel(2) + " Use the definition",
+              "a" + sup("n") + " = x means " + logTerm("a", "x") + " = n",
+              stepLabel(3) + " Apply it",
+              highlightBase(base) + sup(highlightIndex(power)) + " = " + result + " means " + logTerm(highlightBase(base), result) + " = " + highlightIndex(power),
+              arrow(logTerm(base, result) + " = " + power)
+            ]
+          };
+          break;
+        }
+
+        case "evaluate_basic": {
+          const base = randomElement([2, 3, 4, 5, 10]);
+          const power = random(2, 4);
+          const result = Math.pow(base, power);
+          problem = {
+            badge: "evaluate",
+            equation: "Evaluate: " + logTerm(base, result),
+            answer: String(power),
+            steps: [
+              stepLabel(1) + " Ask what the logarithm means",
+              logTerm(base, result) + " asks: " + highlightBase(base) + " to what power gives " + result + "?",
+              stepLabel(2) + " Write the matching index equation",
+              highlightBase(base) + sup(highlightIndex(power)) + " = " + result,
+              stepLabel(3) + " Read off the power",
+              arrow(logTerm(base, result) + " = " + highlightIndex(power))
+            ]
+          };
+          break;
+        }
+
+        case "product_rule": {
+          const base = randomElement([2, 3, 5, 10]);
+          const x = randomElement([2, 3, 4, 5, 8, 9]);
+          const y = randomElement([2, 3, 4, 5, 10]);
+          problem = {
+            badge: "laws",
+            equation: "Simplify: " + logTerm(base, x) + " + " + logTerm(base, y),
+            answer: logTerm(base, x * y),
+            steps: [
+              stepLabel(1) + " Identify the rule",
+              "Adding logs with the same base uses the " + highlightOperation("product rule"),
+              stepLabel(2) + " Apply the product rule",
+              logTerm("a", "x") + " + " + logTerm("a", "y") + " = " + logTerm("a", "xy"),
+              stepLabel(3) + " Multiply the arguments",
+              x + " x " + y + " = " + highlightIndex(x * y),
+              arrow(logTerm(base, x * y))
+            ]
+          };
+          break;
+        }
+
+        case "quotient_rule": {
+          const base = randomElement([2, 3, 5, 10]);
+          const denominator = randomElement([2, 3, 4, 5, 8]);
+          const quotient = randomElement([2, 3, 4, 5, 9]);
+          const numerator = denominator * quotient;
+          problem = {
+            badge: "laws",
+            equation: "Simplify: " + logTerm(base, numerator) + " - " + logTerm(base, denominator),
+            answer: logTerm(base, quotient),
+            steps: [
+              stepLabel(1) + " Identify the rule",
+              "Subtracting logs with the same base uses the " + highlightOperation("quotient rule"),
+              stepLabel(2) + " Apply the quotient rule",
+              logTerm("a", "x") + " - " + logTerm("a", "y") + " = " + logTerm("a", "x/y"),
+              stepLabel(3) + " Divide the arguments",
+              numerator + " / " + denominator + " = " + highlightIndex(quotient),
+              arrow(logTerm(base, quotient))
+            ]
+          };
+          break;
+        }
+
+        case "power_rule": {
+          const base = randomElement([2, 3, 5, 10]);
+          const value = randomElement([2, 3, 5, 7, 11]);
+          const power = random(2, 5);
+          problem = {
+            badge: "laws",
+            equation: "Simplify: " + logTerm(base, value + sup(power)),
+            answer: power + logTerm(base, value),
+            steps: [
+              stepLabel(1) + " Identify the exponent inside the logarithm",
+              "The argument is " + value + sup(highlightIndex(power)),
+              stepLabel(2) + " Apply the power rule",
+              logTerm("a", "x" + sup("n")) + " = n" + logTerm("a", "x"),
+              stepLabel(3) + " Bring the exponent down",
+              logTerm(base, value + sup(highlightIndex(power))) + " = " + highlightIndex(power) + logTerm(base, value),
+              arrow(power + logTerm(base, value))
+            ]
+          };
+          break;
+        }
+
+        case "natural_log": {
+          const choices = [
+            { expression: "e", answer: "1", exponent: "1" },
+            { expression: "e" + sup(2), answer: "2", exponent: "2" },
+            { expression: "e" + sup(3), answer: "3", exponent: "3" },
+            { expression: "1/e", answer: "-1", exponent: "-1" },
+            { expression: "e" + sup(4), answer: "4", exponent: "4" }
+          ];
+          const item = randomElement(choices);
+          problem = {
+            badge: "natural",
+            equation: "Evaluate: ln(" + item.expression + ")",
+            answer: item.answer,
+            steps: [
+              stepLabel(1) + " Recall the meaning of natural log",
+              "ln(x) = " + logTerm("e", "x"),
+              stepLabel(2) + " Rewrite the argument as a power of e",
+              item.expression + " = e" + sup(item.exponent),
+              stepLabel(3) + " Apply " + logTerm("e", "e" + sup("n")) + " = n",
+              "ln(" + item.expression + ") = " + highlightIndex(item.answer),
+              arrow(item.answer)
+            ]
+          };
+          break;
+        }
+
+        case "solve_exponential": {
+          const type = randomElement(["exact", "log_form", "coefficient", "same_base"]);
+          if (type === "exact") {
+            const base = randomElement([2, 3, 5]);
+            const power = random(2, 5);
+            const result = Math.pow(base, power);
+            problem = {
+              badge: "equations",
+              equation: "Solve: " + base + sup("x") + " = " + result,
+              answer: "x = " + power,
+              steps: [
+                stepLabel(1) + " Write the right side as a power of the same base",
+                result + " = " + base + sup(power),
+                stepLabel(2) + " Equate exponents",
+                base + sup("x") + " = " + base + sup(power) + " so x = " + power,
+                arrow("x = " + highlightIndex(power))
+              ]
+            };
+          } else if (type === "log_form") {
+            const base = randomElement([2, 3, 5]);
+            const result = randomElement([7, 10, 11, 13, 17, 19]);
+            problem = {
+              badge: "equations",
+              equation: "Solve: " + base + sup("x") + " = " + result,
+              answer: "x = " + logTerm(base, result),
+              steps: [
+                stepLabel(1) + " Take log base " + base + " of both sides",
+                logTerm(base, base + sup("x")) + " = " + logTerm(base, result),
+                stepLabel(2) + " Use inverse operations",
+                logTerm(base, base + sup("x")) + " = x",
+                stepLabel(3) + " Leave the answer in exact form",
+                arrow("x = " + logTerm(base, result))
+              ]
+            };
+          } else if (type === "coefficient") {
+            const coefficient = randomElement([2, 3, 4, 5]);
+            const base = randomElement([2, 3]);
+            const power = random(2, 4);
+            const result = coefficient * Math.pow(base, power);
+            problem = {
+              badge: "equations",
+              equation: "Solve: " + coefficient + " x " + base + sup("x") + " = " + result,
+              answer: "x = " + power,
+              steps: [
+                stepLabel(1) + " Isolate the exponential term",
+                base + sup("x") + " = " + result + " / " + coefficient + " = " + Math.pow(base, power),
+                stepLabel(2) + " Rewrite as a matching power",
+                Math.pow(base, power) + " = " + base + sup(power),
+                stepLabel(3) + " Equate exponents",
+                arrow("x = " + highlightIndex(power))
+              ]
+            };
+          } else {
+            const shift = random(1, 3);
+            problem = {
+              badge: "equations",
+              equation: "Solve: 2" + sup("x") + " = 4" + sup("x+" + shift),
+              answer: "x = -" + (2 * shift),
+              steps: [
+                stepLabel(1) + " Express both sides with base 2",
+                "4 = 2" + sup(2),
+                stepLabel(2) + " Rewrite the right side",
+                "4" + sup("x+" + shift) + " = (2" + sup(2) + ")" + sup("x+" + shift) + " = 2" + sup("2x+" + (2 * shift)),
+                stepLabel(3) + " Equate exponents",
+                "x = 2x + " + (2 * shift),
+                stepLabel(4) + " Solve",
+                arrow("x = -" + highlightIndex(2 * shift))
+              ]
+            };
+          }
+          break;
+        }
+
+        case "solve_logarithmic": {
+          const base = randomElement([2, 3, 5]);
+          const power = random(2, 4);
+          const result = Math.pow(base, power);
+          problem = {
+            badge: "equations",
+            equation: "Solve: " + logTerm(base, "x") + " = " + power,
+            answer: "x = " + result,
+            steps: [
+              stepLabel(1) + " Convert to index form",
+              logTerm(highlightBase(base), "x") + " = " + highlightIndex(power) + " means " + highlightBase(base) + sup(highlightIndex(power)) + " = x",
+              stepLabel(2) + " Calculate the power",
+              base + sup(power) + " = " + result,
+              arrow("x = " + result)
+            ]
+          };
+          break;
+        }
+
+        case "change_base": {
+          const convertToNatural = Math.random() < 0.5;
+          const base = randomElement([2, 3, 5, 7]);
+          const value = randomElement([11, 13, 17, 19, 25, 30]);
+          const answer = convertToNatural ? "ln(" + value + ") / ln(" + base + ")" : "log(" + value + ") / log(" + base + ")";
+          problem = {
+            badge: "complex",
+            equation: "Express using " + (convertToNatural ? "natural logarithms" : "common logarithms") + ": " + logTerm(base, value),
+            answer,
+            steps: [
+              stepLabel(1) + " Recall the change of base formula",
+              logTerm("a", "x") + " = " + logTerm("b", "x") + " / " + logTerm("b", "a"),
+              stepLabel(2) + " Choose the new base",
+              convertToNatural ? "Use base e, written as ln." : "Use base 10, written as log.",
+              stepLabel(3) + " Substitute the values",
+              arrow(answer)
+            ]
+          };
+          break;
+        }
+
+        case "complex_equations": {
+          const type = randomElement(["linear_exponent", "quadratic_form", "ln_equal"]);
+          if (type === "linear_exponent") {
+            const base = randomElement([2, 3, 5]);
+            const coefficient = random(2, 3);
+            const constant = random(1, 4);
+            const right = randomElement([7, 10, 11, 13]);
+            problem = {
+              badge: "complex",
+              equation: "Solve: " + base + sup(coefficient + "x+" + constant) + " = " + right,
+              answer: "x = [" + logTerm(base, right) + " - " + constant + "] / " + coefficient,
+              steps: [
+                stepLabel(1) + " Take log base " + base + " of both sides",
+                logTerm(base, base + sup(coefficient + "x+" + constant)) + " = " + logTerm(base, right),
+                stepLabel(2) + " Use inverse operations",
+                coefficient + "x + " + constant + " = " + logTerm(base, right),
+                stepLabel(3) + " Isolate x",
+                arrow("x = [" + logTerm(base, right) + " - " + constant + "] / " + coefficient)
+              ]
+            };
+          } else if (type === "quadratic_form") {
+            const base = randomElement([2, 3]);
+            const secondSolution = base === 2 ? "2" : logTerm(3, 4);
+            problem = {
+              badge: "complex",
+              equation: "Solve: " + base + sup("2x") + " - 5" + base + sup("x") + " + 4 = 0",
+              answer: "x = 0 or x = " + secondSolution,
+              steps: [
+                stepLabel(1) + " Substitute u = " + base + sup("x"),
+                base + sup("2x") + " = (" + base + sup("x") + ")" + sup(2) + " = u" + sup(2),
+                stepLabel(2) + " Solve the quadratic",
+                "u" + sup(2) + " - 5u + 4 = 0 = (u - 1)(u - 4)",
+                stepLabel(3) + " Substitute back",
+                base + sup("x") + " = 1 or " + base + sup("x") + " = 4",
+                stepLabel(4) + " Solve each equation",
+                arrow("x = 0 or x = " + secondSolution)
+              ]
+            };
+          } else {
+            const coefficient = randomElement([2, 3, 4]);
+            const constantA = random(1, 4);
+            const constantB = random(5, 9);
+            const numerator = constantB - constantA;
+            const denominator = coefficient - 1;
+            const answerValue = numerator / denominator;
+            problem = {
+              badge: "complex",
+              equation: "Solve: ln(" + formatLinear(coefficient, constantA) + ") = ln(x + " + constantB + ")",
+              answer: "x = " + (Number.isInteger(answerValue) ? answerValue : numerator + "/" + denominator),
+              steps: [
+                stepLabel(1) + " Use one-to-one property of ln",
+                "If ln(A) = ln(B), then A = B, provided both arguments are positive.",
+                stepLabel(2) + " Set arguments equal",
+                formatLinear(coefficient, constantA) + " = x + " + constantB,
+                stepLabel(3) + " Solve",
+                (coefficient - 1) + "x = " + numerator,
+                arrow("x = " + (Number.isInteger(answerValue) ? answerValue : numerator + "/" + denominator)),
+                stepLabel(4) + " Check the domain",
+                "Both logarithm arguments are positive for this generated solution."
+              ]
+            };
+          }
+          break;
+        }
+
+        default:
+          problem = {
+            badge: "basic",
+            equation: "Evaluate: " + logTerm(2, 8),
+            answer: "3",
+            steps: [stepLabel(1) + "Use the definition", "2" + sup(3) + " = 8", arrow(logTerm(2, 8) + " = 3")]
+          };
+      }
+
+      return problem;
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+
+      document.querySelectorAll(".tab").forEach((tab, index) => {
+        tab.classList.toggle("active", index + 1 === level);
+      });
+
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' +
+        config.options.map(([value, label]) => '<option value="' + value + '">' + label + "</option>").join("");
+      dropdown.value = "select";
+      document.getElementById("dropdown-container").classList.add("visible");
+
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      if (currentType === "select") {
+        showBlankPage();
+      } else {
+        generateNewSet();
+      }
+    }
+
+    function showBlankPage() {
+      document.getElementById("problem-set-header").classList.remove("visible");
+      document.getElementById("problem-list").innerHTML = '<li style="text-align: center; padding: 40px; color: #718096; font-size: 1.1em;">Please select a question type to begin mastering logarithms</li>';
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+
+      for (let i = 0; i < 5; i++) {
+        problems.push(generateProblem());
+      }
+
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const container = document.getElementById("problem-list");
+      const headerElement = document.getElementById("problem-set-header");
+      container.innerHTML = "";
+
+      if (problems.length > 0) {
+        const firstProblem = problems[0];
+        headerElement.textContent = firstProblem.badge.toUpperCase() + " PROBLEMS";
+        headerElement.className = "problem-set-header visible " + firstProblem.badge;
+      } else {
+        headerElement.classList.remove("visible");
+      }
+
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+
+        const stepsHTML = problem.steps.map((step) => {
+          if (step.indexOf("->") !== -1 || (step.indexOf("=") !== -1 && (step.indexOf("log") !== -1 || step.indexOf("ln") !== -1 || step.indexOf("x") !== -1))) {
+            return '<div class="step-equation">' + step + "</div>";
+          }
+          return '<div class="step">' + step + "</div>";
+        }).join("");
+
+        li.innerHTML =
+          '<div class="problem-header">' +
+            '<div class="problem-left">' +
+              '<div class="problem-number">' + (index + 1) + "</div>" +
+              '<div class="equation">' + problem.equation + "</div>" +
+            "</div>" +
+            '<div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + "</div>" +
+          "</div>" +
+          '<div class="steps-section" id="steps-' + index + '">' +
+            '<div class="answer-label">Solution Steps:</div>' +
+            '<div class="solution-steps">' +
+              stepsHTML +
+              '<div class="final-answer">' + problem.answer + "</div>" +
+            "</div>" +
+          "</div>";
+
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const quickAnswer = document.getElementById("quick-answer-" + i);
+        if (quickAnswer) {
+          quickAnswer.classList.toggle("visible", answersVisible);
+        }
+      }
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const stepsSection = document.getElementById("steps-" + i);
+        if (stepsSection) {
+          stepsSection.classList.toggle("visible", stepsVisible);
+        }
+      }
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) {
+        stopTimer();
+      }
+
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) {
+          timerFinished();
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerActive = false;
+      document.getElementById("timer-display").textContent = "Ready";
+      document.getElementById("timer-display").className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = minutes + ":" + String(seconds).padStart(2, "0");
+      const timerElement = document.getElementById("timer-display");
+      timerElement.textContent = display;
+
+      if (timeRemaining <= 30) {
+        timerElement.className = "timer-display warning";
+      } else if (timerActive) {
+        timerElement.className = "timer-display active";
+      } else {
+        timerElement.className = "timer-display";
+      }
+    }
+
+    function timerFinished() {
+      stopTimer();
+      document.getElementById("timer-display").textContent = "Time Up!";
+      document.getElementById("timer-display").className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

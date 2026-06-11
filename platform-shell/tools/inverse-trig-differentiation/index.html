@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inverse Trig Differentiation Tool</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:15px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:12px 6px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 6px 6px 0;font-weight:600;font-size:.85em;transition:.3s;box-shadow:2px 0 8px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 3px 15px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:25px 25px;background-position:0 0,12px 12px;color:#fff;padding:20px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}.header h1{font-size:2em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:12px;background:#e2e8f0;border:0;cursor:pointer;font-size:1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:15px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:3px;font-size:1.2em}.level-info p{color:#718096;font-size:.95em}.dropdown-container{margin-top:8px;display:block}.type-dropdown{padding:6px 10px;border:2px solid #cbd5e0;border-radius:5px;font-size:.95em;background:#fff;cursor:pointer;min-width:280px;max-width:100%}.type-dropdown:focus{border-color:#3182ce;outline:0}
+    .timer-section{display:flex;align-items:center;gap:12px}.timer-display{font-size:1.6em;font-weight:700;color:#1a365d;background:#fff;padding:8px 14px;border-radius:5px;border:2px solid #cbd5e0;min-width:100px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.action-buttons{display:flex;gap:8px}.btn{padding:8px 16px;border:0;border-radius:5px;font-size:.9em;font-weight:600;cursor:pointer;transition:.3s;min-width:70px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:15px 25px 25px;min-height:500px}.problem-set-header{background:#3182ce;color:#fff;padding:12px 20px;margin-bottom:15px;border-radius:6px;font-size:1.2em;font-weight:700;text-align:center;box-shadow:0 2px 8px rgba(49,130,206,.3);display:none}.problem-set-header.visible{display:block}.problem-set-header.type-1{background:#3182ce}.problem-set-header.type-2{background:#38a169}.problem-set-header.type-3{background:#d69e2e}.problem-list{list-style:none}.problem-item{background:#f7fafc;margin:12px 0;padding:15px 20px;border-radius:6px;border-left:4px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(2px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3182ce;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:15px;flex-shrink:0}.equation{font-size:1.2em;color:#1a365d;max-width:100%;overflow-x:auto}.problem-answer{background:#38a169;color:#fff;padding:8px 16px;border-radius:20px;font-weight:700;display:none;margin-left:15px;max-width:44%;white-space:nowrap;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}.steps-section{margin-top:12px;padding:12px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#3182ce;margin-bottom:12px}.solution-steps{font-size:1em;line-height:1.8}.step{margin:10px 0;color:#2d3748;overflow-x:auto}.final-answer{background:#38a169;color:#fff;padding:10px 16px;border-radius:5px;text-align:center;font-weight:700;margin-top:12px;overflow-x:auto}.timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:30px;border-radius:10px;text-align:center;max-width:320px;box-shadow:0 8px 25px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:15px}.modal-content p{color:#718096;margin-bottom:20px}.hidden{display:none!important}
+    @media(max-width:768px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:320px;left:-320px}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{max-width:100%;margin-left:43px}.problems-section{padding:12px}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>What this tool is for</h3>
+      <p>Interactive practice with derivatives of inverse trigonometric functions and their applications at points, including tangents and normals.</p>
+      <h3>Level Overview</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Core derivatives of inverse trig functions using chain and power rules, plus evaluating y' at a given x.</li>
+        <li><strong>Level 2:</strong> Tangent and normal lines at specified points for functions built from inverse trig expressions.</li>
+      </ul>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Omitting the inner derivative in the chain rule.</li>
+        <li>Dropping the negative sign for cos^-1, cot^-1, and csc^-1.</li>
+        <li>Forgetting absolute values in sec^-1 and csc^-1 derivatives.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <div class="header"><h1>Inverse Trig Differentiation</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Core + y' at a Point</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Tangents &amp; Normals</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Core Derivatives and Evaluation</h3>
+        <p id="level-description">Differentiate inverse trigonometric functions with chain and power rules, and evaluate gradients at given points.</p>
+        <div class="dropdown-container" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="inv_basic">Type 1: Basic Inverse Trig (Chain)</option>
+            <option value="inv_power">Type 2: Power of Inverse Trig</option>
+            <option value="inv_at_point">Type 3: Evaluate y' at a Point</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"><span id="problem-type-title">Please select a question type to begin</span></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={1:{title:'Level 1: Core Derivatives and Evaluation',description:'Differentiate inverse trigonometric functions with chain and power rules, then evaluate gradients at given values of x.',types:['inv_basic','inv_power','inv_at_point']},2:{title:'Level 2: Tangents and Normals',description:'Find tangents and normals for functions involving inverse trig at specified points.',types:['tan_line','norm_line','mixed_lines']}};
+    const typeDisplayNames={inv_basic:'Basic inverse trigonometric chain rule',inv_power:'Powers of inverse trigonometric functions',inv_at_point:"Evaluate y' at a point",tan_line:'Tangent at a point',norm_line:'Normal at a point',mixed_lines:'Mixed tangents and normals'};
+    function random(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+    function randomChoice(a){return a[random(0,a.length-1)]}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b!==0){const t=b;b=a%b;a=t}return a||1}
+    function chooseCoeff(){const p=[];for(let k=2;k<=9;k++){p.push(k,-k)}return randomChoice(p)}
+    function chooseNonzeroInt(){const p=[];for(let k=-9;k<=9;k++){if(k!==0)p.push(k)}return randomChoice(p)}
+    function chooseLinearCoprime(){let A=chooseCoeff(),B=chooseNonzeroInt();while(gcd(A,B)!==1){A=chooseCoeff();B=chooseNonzeroInt()}return{A,B}}
+    function formatLinear(A,B){return `${A}x${B>=0?' + ':' - '}${Math.abs(B)}`}
+    function formatXShift(x0){if(x0===0)return'x';return x0>0?`x - ${x0}`:`x + ${Math.abs(x0)}`}
+    function fracNumberOver(num,denomLatex){if(/^[-]?\\d+$/.test(denomLatex)){let d=parseInt(denomLatex,10);if(d<0){d=-d;num=-num}const g=gcd(num,d)||1;let n=num/g;d=d/g;if(d===1)return`${n}`;if(n===1)return`\\dfrac{1}{${d}}`;if(n===-1)return`-\\dfrac{1}{${d}}`;return n<0?`-\\dfrac{${Math.abs(n)}}{${d}}`:`\\dfrac{${n}}{${d}}`}if(num===1)return`\\dfrac{1}{${denomLatex}}`;if(num===-1)return`-\\dfrac{1}{${denomLatex}}`;return num<0?`-\\dfrac{${Math.abs(num)}}{${denomLatex}}`:`\\dfrac{${num}}{${denomLatex}}`}
+    function normalSlopeFrom(num,denomLatex){if(num===0)return'\\text{undefined}';if(/^[-]?\\d+$/.test(denomLatex)){let d=parseInt(denomLatex,10),n=-d,den=num;if(den<0){den=-den;n=-n}const g=gcd(n,den)||1;n/=g;den/=g;if(den===1)return`${n}`;if(n===1)return`\\dfrac{1}{${den}}`;if(n===-1)return`-\\dfrac{1}{${den}}`;return n<0?`-\\dfrac{${Math.abs(n)}}{${den}}`:`\\dfrac{${n}}{${den}}`}return num>0?`-\\dfrac{${denomLatex}}{${num}}`:`\\dfrac{${denomLatex}}{${Math.abs(num)}}`}
+    const invSyms=['\\sin^{-1}','\\cos^{-1}','\\tan^{-1}','\\cot^{-1}','\\sec^{-1}','\\csc^{-1}'];
+    function invPrimeData(sym,u){const numeric=/^-?\\d+$/.test(u);if(sym==='\\sin^{-1}'||sym==='\\cos^{-1}'){const sign=sym==='\\cos^{-1}'?-1:1;if(numeric){const v=parseInt(u,10);return{sign,denom:`\\sqrt{${1-v*v}}`,denomU:'\\sqrt{1-u^{2}}'}}return{sign,denom:`\\sqrt{1-(${u})^{2}}`,denomU:'\\sqrt{1-u^{2}}'}}if(sym==='\\tan^{-1}'||sym==='\\cot^{-1}'){const sign=sym==='\\cot^{-1}'?-1:1;if(numeric){const v=parseInt(u,10);return{sign,denom:`${1+v*v}`,denomU:'1+u^{2}'}}return{sign,denom:`1+(${u})^{2}`,denomU:'1+u^{2}'}}const sign=sym==='\\csc^{-1}'?-1:1;if(numeric){const v=parseInt(u,10);return{sign,denom:`${Math.abs(v)}\\sqrt{${v*v-1}}`,denomU:'|u|\\sqrt{u^{2}-1}'}}return{sign,denom:`\\big|${u}\\big|\\,\\sqrt{(${u})^{2}-1}`,denomU:'|u|\\sqrt{u^{2}-1}'}}
+    function makeNiceInner(sym){const xs=[-3,-2,-1,1,2,3],us=(sym==='\\tan^{-1}'||sym==='\\cot^{-1}')?[-3,-2,-1,1,2,3]:[-3,-2,2,3];for(let i=0;i<120;i++){const A=chooseCoeff(),x0=randomChoice(xs),u0=randomChoice(us),B=u0-A*x0;if(B!==0&&gcd(A,B)===1)return{A,B,x0,u0,u:formatLinear(A,B)}}const f=chooseLinearCoprime();return{...f,x0:1,u0:f.A+f.B,u:formatLinear(f.A,f.B)}}
+    function genInvBasic(){const sym=randomChoice(invSyms),inner=chooseLinearCoprime(),u=formatLinear(inner.A,inner.B),d=invPrimeData(sym,'u'),specific=invPrimeData(sym,u),ansCore=fracNumberOver(inner.A*specific.sign,specific.denom),ans=`$\\dfrac{dy}{dx} = ${ansCore}$`;return{equation:`$y = ${sym}\\big(${u}\\big)$`,answer:ans,steps:[{text:`Let $u=${u}$ so $u'=${inner.A}$.`},{text:`For $y=${sym}(u)$, $\\dfrac{dy}{du}= ${d.sign>0?'':'-'}\\dfrac{1}{${d.denomU}}$.`},{text:`Apply the chain rule and substitute $u=${u}$: ${ans}`}]}}
+    function genInvPower(){const sym=randomChoice(invSyms),n=randomChoice([2,3,4]),inner=chooseLinearCoprime(),u=formatLinear(inner.A,inner.B),d=invPrimeData(sym,u),core=`${fracNumberOver(n*inner.A*d.sign,d.denom)}\\,\\big(${sym}(${u})\\big)^{${n-1}}`,ans=`$\\dfrac{dy}{dx} = ${core}$`;return{equation:`$y = \\big(${sym}(${u})\\big)^{${n}}$`,answer:ans,steps:[{text:`Let $v=${sym}(${u})$ and use power plus chain rule.`},{text:`Multiply by the inner derivative ${inner.A} and simplify: ${ans}`}]}}
+    function genInvAtPoint(){const sym=randomChoice(['\\tan^{-1}','\\cot^{-1}','\\sec^{-1}','\\csc^{-1}']),data=makeNiceInner(sym),d=invPrimeData(sym,`${data.u0}`),grad=fracNumberOver(data.A*d.sign,d.denom),ans=`$y'(${data.x0}) = ${grad}$`;return{equation:`$y = ${sym}\\big(${data.u}\\big),\\quad x=${data.x0}$`,answer:ans,steps:[{text:`Let $u=${data.u}$, so $u'=${data.A}$.`},{text:`At $x=${data.x0}$, $u=${data.A}\\cdot${data.x0}${data.B>=0?'+':'-'}${Math.abs(data.B)}=${data.u0}$.`},{text:`Substitute into the derivative formula: ${ans}`}]}}
+    function genTangent(){const sym=randomChoice(['\\tan^{-1}','\\cot^{-1}','\\sec^{-1}','\\csc^{-1}']),data=makeNiceInner(sym),d=invPrimeData(sym,`${data.u0}`),m=fracNumberOver(data.A*d.sign,d.denom),y0=`${sym}\\big(${data.u0}\\big)`,line=`y - ${y0} = ${m}\\,(${formatXShift(data.x0)})`;return{equation:`Find the tangent to $y=${sym}\\big(${data.u}\\big)$ at $x=${data.x0}$.`,answer:`$${line}$`,steps:[{text:`At $x=${data.x0}$, $u=${data.u0}$ and the tangent gradient is $m=${m}$.`},{text:`The point is $(${data.x0},${y0})$.`},{text:`Point-gradient form gives $${line}$.`}]}}
+    function genNormal(){const sym=randomChoice(['\\tan^{-1}','\\cot^{-1}','\\sec^{-1}','\\csc^{-1}']),data=makeNiceInner(sym),d=invPrimeData(sym,`${data.u0}`),mTan=fracNumberOver(data.A*d.sign,d.denom),mNorm=normalSlopeFrom(data.A*d.sign,d.denom),y0=`${sym}\\big(${data.u0}\\big)`,line=mNorm==='\\text{undefined}'?`x = ${data.x0}`:`y - ${y0} = ${mNorm}\\,(${formatXShift(data.x0)})`;return{equation:`Find the normal to $y=${sym}\\big(${data.u}\\big)$ at $x=${data.x0}$.`,answer:`$${line}$`,steps:[{text:`The tangent gradient is $m_{\\mathrm{tan}}=${mTan}$.`},{text:`The normal gradient is $m_{\\mathrm{norm}}=-1/m_{\\mathrm{tan}}=${mNorm}$.`},{text:`Using the point $(${data.x0},${y0})$, the normal is $${line}$.`}]}}
+    function generateProblem(){const types=currentType==='select'?levelConfigs[currentLevel].types:[currentType],t=randomChoice(types);if(t==='inv_basic')return genInvBasic();if(t==='inv_power')return genInvPower();if(t==='inv_at_point')return genInvAtPoint();if(t==='tan_line')return genTangent();if(t==='norm_line')return genNormal();if(t==='mixed_lines')return Math.random()<.5?genTangent():genNormal();return genInvBasic()}
+    function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));const cfg=levelConfigs[level];document.getElementById('level-title').textContent=cfg.title;document.getElementById('level-description').textContent=cfg.description;const opts=level===1?[['inv_basic','Type 1: Basic Inverse Trig (Chain)'],['inv_power','Type 2: Power of Inverse Trig'],['inv_at_point',"Type 3: Evaluate y' at a Point"]]:[['tan_line','Type 1: Tangent at a Point'],['norm_line','Type 2: Normal at a Point'],['mixed_lines','Type 3: Mixed Tangents & Normals']];const dd=document.getElementById('type-dropdown');dd.innerHTML='<option value=\"select\">Select Question Type</option>'+opts.map(([v,l])=>'<option value=\"'+v+'\">'+l+'</option>').join('');dd.value='select';updateProblemSetHeader();showBlankPage()}
+    function updateProblemSetHeader(){const h=document.getElementById('problem-set-header'),t=document.getElementById('problem-type-title');if(currentType==='select'){h.classList.remove('visible');t.textContent='Please select a question type to begin';return}h.className='problem-set-header visible type-'+(((Object.keys(typeDisplayNames).indexOf(currentType)+3)%3)+1);t.textContent=typeDisplayNames[currentType]||'Problem Set'}
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;updateProblemSetHeader();currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-list').innerHTML='<li style=\"text-align:center;padding:40px;color:#718096;font-size:1.1em\">Please select a question type to begin</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<5;i++)problems.push(generateProblem());renderProblems()}
+    function renderProblems(){const c=document.getElementById('problem-list');c.innerHTML='';problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const steps=p.steps.map(s=>'<div class=\"step\">'+s.text+'</div>').join('');li.innerHTML='<div class=\"problem-header\"><div class=\"problem-left\"><div class=\"problem-number\">'+(i+1)+'</div><div class=\"equation\">'+p.equation+'</div></div><div class=\"problem-answer\" id=\"quick-answer-'+i+'\">'+p.answer+'</div></div><div class=\"steps-section\" id=\"steps-'+i+'\"><div class=\"answer-label\">Solution Steps:</div><div class=\"solution-steps\">'+steps+'<div class=\"final-answer\">'+p.answer+'</div></div></div>';c.appendChild(li)});renderMath()}
+    function renderMath(){if(typeof renderMathInElement==='function')renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})}
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById('quick-answer-'+i)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById('steps-'+i)?.classList.toggle('visible',stepsVisible))}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const el=document.getElementById('timer-display');el.textContent='Ready';el.className='timer-display'}
+    function updateTimerDisplay(){const m=Math.floor(timeRemaining/60),s=timeRemaining%60,el=document.getElementById('timer-display');el.textContent=m+':'+String(s).padStart(2,'0');el.className=timeRemaining<=30&&timerActive?'timer-display warning':timerActive?'timer-display active':'timer-display'}
+    function timerFinished(){stopTimer();const el=document.getElementById('timer-display');el.textContent='Time Up!';el.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

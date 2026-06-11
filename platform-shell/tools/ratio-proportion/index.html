@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ratio and Proportion</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+      background: #f0f4f8;
+      color: #1a365d;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      z-index: 1001;
+      transform: translateY(-50%);
+      padding: 15px 8px;
+      border-radius: 0 8px 8px 0;
+      background: #1a365d;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700;
+      writing-mode: vertical-rl;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .teacher-tab:hover { background: #2d5a87; transform: translateY(-50%) translateX(5px); }
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      background: rgba(0,0,0,0.5);
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .sidebar-overlay.active { visibility: visible; opacity: 1; }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -450px;
+      z-index: 1000;
+      width: 450px;
+      height: 100vh;
+      overflow-y: auto;
+      background: #fff;
+      box-shadow: 2px 0 20px rgba(0,0,0,0.3);
+      transition: left 0.25s ease;
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-header {
+      padding: 20px;
+      background: #1a365d;
+      color: #fff;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .sidebar-content { padding: 25px; line-height: 1.6; }
+    .sidebar-content h3 {
+      margin: 20px 0 10px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #3182ce;
+      color: #1a365d;
+      font-size: 1.08rem;
+    }
+    .sidebar-content p, .sidebar-content li { margin-bottom: 8px; color: #555; }
+    .sidebar-content ul, .sidebar-content ol { margin-bottom: 15px; padding-left: 22px; }
+    .formula {
+      margin: 8px 0;
+      padding: 10px 15px;
+      border-left: 3px solid #3182ce;
+      border-radius: 6px;
+      background: #f7fafc;
+      font-family: "Times New Roman", serif;
+      font-size: 1.08rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .header {
+      position: relative;
+      overflow: hidden;
+      padding: 25px;
+      background: #2d5a87;
+      background-image:
+        linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce),
+        linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      color: #fff;
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.2);
+    }
+    .header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent 50%, rgba(0,0,0,0.05));
+    }
+    .header h1, .header p { position: relative; z-index: 1; }
+    .header h1 { margin-bottom: 5px; font-size: 2.15rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    .header p { opacity: 0.92; font-size: 1.05rem; }
+    .tabs { display: flex; background: #e2e8f0; }
+    .tab {
+      flex: 1;
+      min-height: 58px;
+      padding: 14px;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      background: #e2e8f0;
+      color: #1a365d;
+      cursor: pointer;
+      font-size: 1.05rem;
+      font-weight: 700;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .tab:hover { background: #cbd5e0; }
+    .tab.active { background: #fff; border-bottom-color: #3182ce; color: #3182ce; }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 24px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f7fafc;
+    }
+    .level-info h3 { margin-bottom: 5px; color: #1a365d; font-size: 1.3rem; }
+    .level-info p { color: #718096; }
+    .dropdown-container { display: none; margin-top: 10px; }
+    .dropdown-container.visible { display: block; }
+    .type-dropdown {
+      min-width: 350px;
+      max-width: 100%;
+      padding: 8px 12px;
+      border: 2px solid #cbd5e0;
+      border-radius: 6px;
+      background: #fff;
+      color: #1a365d;
+      font-size: 1rem;
+    }
+    .type-dropdown:focus { border-color: #3182ce; outline: none; }
+    .timer-section, .action-buttons { display: flex; align-items: center; gap: 10px; }
+    .timer-display {
+      min-width: 120px;
+      padding: 10px 18px;
+      border: 2px solid #cbd5e0;
+      border-radius: 6px;
+      background: #fff;
+      color: #1a365d;
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .timer-display.active { border-color: #3182ce; color: #3182ce; }
+    .timer-display.warning { border-color: #e53e3e; color: #e53e3e; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+    .btn {
+      min-width: 85px;
+      padding: 12px 22px;
+      border: 0;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: #3182ce; }
+    .btn-primary:hover { background: #2c5282; }
+    .btn-success { background: #38a169; }
+    .btn-success:hover { background: #2f855a; }
+    .btn-warning { background: #d69e2e; }
+    .btn-warning:hover { background: #b7791f; }
+    .btn-danger { background: #e53e3e; }
+    .btn-danger:hover { background: #c53030; }
+    .problems-section { min-height: 600px; padding: 30px 35px; }
+    .problem-set-header {
+      display: none;
+      margin-bottom: 20px;
+      padding: 15px 24px;
+      border-radius: 8px;
+      background: #3182ce;
+      color: #fff;
+      text-align: center;
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+    .problem-set-header.visible { display: block; }
+    .problem-list { list-style: none; }
+    .problem-item {
+      margin: 18px 0;
+      padding: 24px;
+      border-left: 5px solid #3182ce;
+      border-radius: 10px;
+      background: #f7fafc;
+      transition: transform 0.2s ease;
+    }
+    .problem-item:hover { transform: translateX(3px); }
+    .problem-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; }
+    .problem-left { display: flex; align-items: flex-start; flex: 1; min-width: 0; }
+    .problem-number {
+      display: flex;
+      flex: 0 0 35px;
+      align-items: center;
+      justify-content: center;
+      width: 35px;
+      height: 35px;
+      margin-right: 20px;
+      border-radius: 50%;
+      background: #3182ce;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+    .problem-text {
+      color: #1a365d;
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+    .known-value {
+      padding: 2px 6px;
+      border: 1px solid #3b82f6;
+      border-radius: 4px;
+      background: #e6f3ff;
+      color: #1e40af;
+      font-weight: 800;
+    }
+    .unknown-value {
+      padding: 2px 6px;
+      border: 1px solid #22c55e;
+      border-radius: 4px;
+      background: #f0fdf4;
+      color: #16a34a;
+      font-weight: 800;
+    }
+    .proportion-setup {
+      padding: 4px 8px;
+      border: 1px solid #f59e0b;
+      border-radius: 4px;
+      background: #fef3c7;
+      color: #b7791f;
+      font-family: "Times New Roman", serif;
+      font-size: 1.08em;
+      font-weight: 800;
+    }
+    .problem-answer {
+      display: none;
+      margin-left: 14px;
+      padding: 10px 18px;
+      border-radius: 25px;
+      background: #38a169;
+      color: #fff;
+      font-size: 1.12rem;
+      font-weight: 800;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .problem-answer.visible { display: block; animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+    .steps-section {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      border-left: 4px solid #3182ce;
+      border-radius: 8px;
+      background: #ebf8ff;
+    }
+    .steps-section.visible { display: block; animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .steps-label { margin-bottom: 15px; color: #3182ce; font-size: 1.1rem; font-weight: 800; }
+    .solution-steps { font-size: 1.1rem; line-height: 1.5; }
+    .step { margin: 10px 0; color: #1a365d; }
+    .step-highlight {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-left: 3px solid #f59e0b;
+      border-radius: 6px;
+      background: #fef5e7;
+      font-weight: 600;
+    }
+    .step-calculation {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-left: 3px solid #22c55e;
+      border-radius: 6px;
+      background: #f0fdf4;
+      font-family: "Times New Roman", serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    .context-note {
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-left: 3px solid #6366f1;
+      border-radius: 4px;
+      background: #e0e7ff;
+      color: #3730a3;
+      font-style: italic;
+    }
+    .final-answer {
+      margin-top: 15px;
+      padding: 12px 20px;
+      border-radius: 6px;
+      background: #38a169;
+      color: #fff;
+      font-size: 1.25rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .timer-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1002;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+      max-width: 350px;
+      padding: 35px;
+      border-radius: 12px;
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .modal-content h2 { margin-bottom: 18px; color: #e53e3e; font-size: 1.9rem; }
+    .modal-content p { margin-bottom: 25px; color: #718096; font-size: 1.05rem; }
+    .hidden { display: none; }
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .controls { flex-direction: column; align-items: stretch; }
+      .timer-section, .action-buttons { justify-content: center; flex-wrap: wrap; }
+      .tabs { flex-wrap: wrap; }
+      .tab { flex: 1 1 50%; }
+      .sidebar { left: -350px; width: 350px; }
+      .type-dropdown { min-width: 100%; }
+      .problems-section { padding: 18px; }
+      .problem-header { flex-direction: column; }
+      .problem-answer { margin-left: 55px; white-space: normal; }
+      .problem-text { font-size: 1.15rem; }
+    }
+    @media (min-width: 1200px) {
+      .problem-text { font-size: 1.45rem; }
+      .problem-item { margin: 24px 0; padding: 28px; }
+      .problem-number { width: 40px; height: 40px; flex-basis: 40px; font-size: 1.2rem; }
+      .solution-steps { font-size: 1.2rem; }
+      .step-calculation { font-size: 1.35rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Ratio and Proportion</div>
+    <div class="sidebar-content">
+      <h3>Key Concepts</h3>
+      <p>Ratios compare relative quantities. Proportion describes situations where quantities scale together or one changes as another changes.</p>
+      <h3>Level Progression</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Simplifying ratios and sharing quantities in a given ratio.</li>
+        <li><strong>Level 2:</strong> Scale maps, recipes, mixtures, and currency exchange.</li>
+        <li><strong>Level 3:</strong> Direct and inverse proportional relationships.</li>
+      </ul>
+      <h3>Visual System</h3>
+      <div class="formula">Known values are highlighted in blue.</div>
+      <div class="formula">Unknown values are highlighted in green.</div>
+      <div class="formula">Proportion setups are highlighted in yellow.</div>
+      <h3>Core Principles</h3>
+      <ul>
+        <li><strong>Equivalent ratios:</strong> multiply or divide each part by the same number.</li>
+        <li><strong>Direct proportion:</strong> as one quantity increases, the other increases proportionally.</li>
+        <li><strong>Inverse proportion:</strong> as one quantity increases, the other decreases proportionally.</li>
+        <li><strong>Cross multiplication:</strong> a useful method for solving proportions.</li>
+      </ul>
+      <h3>Solution Framework</h3>
+      <ol>
+        <li>Identify the relationship.</li>
+        <li>Extract the known and unknown quantities.</li>
+        <li>Set up the ratio or proportion.</li>
+        <li>Calculate using unitary method, sharing, or cross multiplication.</li>
+        <li>Check the answer in context.</li>
+      </ol>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Changing the order of quantities in a ratio.</li>
+        <li>Forgetting to simplify to lowest terms.</li>
+        <li>Confusing direct and inverse proportion.</li>
+        <li>Not checking whether answers are reasonable in context.</li>
+      </ul>
+      <h3>Using the Timer</h3>
+      <ul>
+        <li>Use 3 minutes for basic ratios.</li>
+        <li>Use 5 minutes for applied proportion scenarios.</li>
+        <li>Focus on method and interpretation rather than speed alone.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header">
+      <h1>Ratio and Proportion</h1>
+      <p>Simplifying ratios, sharing, scale, mixtures, exchange rates, and proportion</p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Basic Ratios</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Applications</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Proportion</button>
+    </nav>
+
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Basic Ratios</h3>
+        <p id="level-description">Understanding and simplifying ratios.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(3)">3 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header">Select a question type to begin</div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up</h2>
+      <p>Ready to review the answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Basic Ratios",
+        description: "Understanding and simplifying ratios.",
+        options: [
+          ["select", "Select Question Type"],
+          ["ratio_simplification", "Type 1: Ratio simplification"],
+          ["share_in_ratio", "Type 2: Share in a ratio"]
+        ]
+      },
+      2: {
+        title: "Level 2: Ratio Applications",
+        description: "Using ratios in practical contexts.",
+        options: [
+          ["select", "Select Question Type"],
+          ["scale_maps", "Type 1: Scale and maps"],
+          ["recipe_mixtures", "Type 2: Recipes and mixtures"],
+          ["exchange_rates", "Type 3: Exchange rates"]
+        ]
+      },
+      3: {
+        title: "Level 3: Proportion",
+        description: "Direct and inverse proportional relationships.",
+        options: [
+          ["select", "Select Question Type"],
+          ["direct_proportion", "Type 1: Direct proportion"],
+          ["indirect_proportion", "Type 2: Inverse proportion"]
+        ]
+      }
+    };
+
+    const typeNames = {
+      ratio_simplification: "Ratio Simplification",
+      share_in_ratio: "Sharing in a Ratio",
+      scale_maps: "Scale and Maps",
+      recipe_mixtures: "Recipes and Mixtures",
+      exchange_rates: "Exchange Rates",
+      direct_proportion: "Direct Proportion",
+      indirect_proportion: "Inverse Proportion"
+    };
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function gcd(a, b) {
+      a = Math.abs(a);
+      b = Math.abs(b);
+      while (b) {
+        const temp = b;
+        b = a % b;
+        a = temp;
+      }
+      return a || 1;
+    }
+
+    function simplifyRatio(a, b) {
+      const divisor = gcd(a, b);
+      return [a / divisor, b / divisor, divisor];
+    }
+
+    function fmt(value, places = 2) {
+      const rounded = Math.round(value * (10 ** places)) / (10 ** places);
+      return rounded.toLocaleString("en-GB", { maximumFractionDigits: places });
+    }
+
+    function money(value) {
+      return `£${fmt(value, 2)}`;
+    }
+
+    function problemForType(type, retry = 0) {
+      if (retry > 30) return fallbackProblem();
+
+      switch (type) {
+        case "ratio_simplification": {
+          let a = random(4, 30);
+          let b = random(4, 30);
+          while (gcd(a, b) === 1) {
+            a = random(4, 30);
+            b = random(4, 30);
+          }
+          const reduced = simplifyRatio(a, b);
+          return {
+            text: `Simplify the ratio <span class="known-value">${a}:${b}</span> to its lowest terms.`,
+            answer: `${reduced[0]}:${reduced[1]}`,
+            steps: [
+              `<div class="step-highlight">Original ratio: <span class="known-value">${a}:${b}</span></div>`,
+              `Find the highest common factor of ${a} and ${b}.`,
+              `<div class="step-calculation">HCF(${a}, ${b}) = ${reduced[2]}</div>`,
+              `<div class="step-calculation">${a} ÷ ${reduced[2]} = ${reduced[0]}</div>`,
+              `<div class="step-calculation">${b} ÷ ${reduced[2]} = ${reduced[1]}</div>`,
+              `<div class="context-note">The simplified ratio keeps the same proportional relationship.</div>`
+            ]
+          };
+        }
+        case "share_in_ratio": {
+          const a = random(2, 6);
+          const b = random(2, 6);
+          const parts = a + b;
+          const partValue = random(8, 30);
+          const total = parts * partValue;
+          const shareA = a * partValue;
+          const shareB = b * partValue;
+          return {
+            text: `Divide <span class="known-value">${money(total)}</span> in the ratio <span class="known-value">${a}:${b}</span>. Find each share.`,
+            answer: `${money(shareA)} and ${money(shareB)}`,
+            steps: [
+              `Total ratio parts = ${a} + ${b} = ${parts}.`,
+              `<div class="step-calculation">Value of one part = ${money(total)} ÷ ${parts} = ${money(partValue)}</div>`,
+              `<div class="step-calculation">First share = ${a} × ${money(partValue)} = ${money(shareA)}</div>`,
+              `<div class="step-calculation">Second share = ${b} × ${money(partValue)} = ${money(shareB)}</div>`,
+              `<div class="step-highlight">Check: ${money(shareA)} + ${money(shareB)} = ${money(total)}</div>`
+            ]
+          };
+        }
+        case "scale_maps": {
+          const mapDistance = random(2, 9);
+          const scale = [1000, 2500, 5000, 10000, 25000][random(0, 4)];
+          const realCm = mapDistance * scale;
+          const realM = realCm / 100;
+          return {
+            text: `On a map with scale <span class="known-value">1:${scale}</span>, the distance between two towns is <span class="known-value">${mapDistance} cm</span>. Find the real distance.`,
+            answer: `${fmt(realM)} m`,
+            steps: [
+              `<span class="proportion-setup">1 cm : ${scale} cm = ${mapDistance} cm : ? cm</span>`,
+              `<div class="step-calculation">Real distance = ${mapDistance} × ${scale} = ${realCm} cm</div>`,
+              `<div class="step-calculation">${realCm} cm = ${fmt(realM)} m</div>`,
+              `<div class="context-note">A scale of 1:${scale} means 1 cm on the map represents ${scale} cm in reality.</div>`
+            ]
+          };
+        }
+        case "recipe_mixtures": {
+          const contexts = ["recipe", "paint", "concrete", "alloy", "cleaning"];
+          const context = contexts[random(0, contexts.length - 1)];
+          return mixtureProblem(context, retry);
+        }
+        case "exchange_rates": {
+          const rate = [1.22, 1.25, 1.28, 1.31, 1.35, 1.42][random(0, 5)];
+          if (Math.random() < 0.5) {
+            const gbp = random(80, 550);
+            const usd = gbp * rate;
+            return {
+              text: `The exchange rate is £1 = $<span class="known-value">${rate}</span>. Convert £<span class="known-value">${gbp}</span> to US dollars.`,
+              answer: `$${fmt(usd, 2)}`,
+              steps: [
+                `This is direct proportion: more pounds convert to more dollars.`,
+                `<span class="proportion-setup">£1 : $${rate} = £${gbp} : $?</span>`,
+                `<div class="step-calculation">${gbp} × ${rate} = ${fmt(usd, 2)}</div>`,
+                `<div class="context-note">Multiply by the exchange rate to convert pounds to dollars.</div>`
+              ]
+            };
+          }
+          const usd = random(120, 700);
+          const gbp = usd / rate;
+          return {
+            text: `The exchange rate is £1 = $<span class="known-value">${rate}</span>. Convert $<span class="known-value">${usd}</span> to British pounds.`,
+            answer: money(gbp),
+            steps: [
+              `This is the reverse direction, so divide by the exchange rate.`,
+              `<span class="proportion-setup">£1 : $${rate} = £? : $${usd}</span>`,
+              `<div class="step-calculation">${usd} ÷ ${rate} = ${fmt(gbp, 2)}</div>`,
+              `<div class="context-note">The same exchange rate can be used both ways when the direction is handled correctly.</div>`
+            ]
+          };
+        }
+        case "direct_proportion": {
+          const unit = random(3, 12);
+          const firstQty = random(3, 8);
+          const secondQty = random(9, 18);
+          const firstValue = unit * firstQty;
+          const secondValue = unit * secondQty;
+          const contexts = [
+            [`If <span class="known-value">${firstQty}</span> items cost <span class="known-value">${money(firstValue)}</span>, find the cost of <span class="known-value">${secondQty}</span> items.`, money(secondValue), "Shopping costs increase proportionally with quantity."],
+            [`A worker earns <span class="known-value">${money(firstValue)}</span> for <span class="known-value">${firstQty}</span> hours. How much for <span class="known-value">${secondQty}</span> hours?`, money(secondValue), "Wages are directly proportional to hours worked."],
+            [`A recipe for <span class="known-value">${firstQty}</span> people needs <span class="known-value">${firstValue}g</span> flour. How much flour for <span class="known-value">${secondQty}</span> people?`, `${secondValue}g`, "Recipe ingredients scale directly with servings."]
+          ];
+          const picked = contexts[random(0, contexts.length - 1)];
+          return {
+            text: picked[0],
+            answer: picked[1],
+            steps: [
+              `This is direct proportion.`,
+              `<div class="step-calculation">Unit value = ${firstValue} ÷ ${firstQty} = ${unit}</div>`,
+              `<div class="step-calculation">New value = ${unit} × ${secondQty} = ${secondValue}</div>`,
+              `<div class="context-note">${picked[2]}</div>`
+            ]
+          };
+        }
+        case "indirect_proportion": {
+          const workers = random(4, 8);
+          const days = random(6, 15);
+          const workUnits = workers * days;
+          const newWorkers = random(9, 14);
+          if (workUnits % newWorkers !== 0) return problemForType(type, retry + 1);
+          const newDays = workUnits / newWorkers;
+          return {
+            text: `<span class="known-value">${workers}</span> workers can complete a job in <span class="known-value">${days}</span> days. How long will it take <span class="known-value">${newWorkers}</span> workers?`,
+            answer: `${newDays} days`,
+            steps: [
+              `This is inverse proportion: more workers means fewer days for the same job.`,
+              `<div class="step-calculation">Total work units = ${workers} × ${days} = ${workUnits}</div>`,
+              `<div class="step-calculation">New time = ${workUnits} ÷ ${newWorkers} = ${newDays} days</div>`,
+              `<div class="context-note">For the same job, workers × days stays constant.</div>`
+            ]
+          };
+        }
+        default:
+          return fallbackProblem();
+      }
+    }
+
+    function mixtureProblem(context, retry) {
+      if (context === "recipe") {
+        const flour = random(200, 400);
+        const sugar = random(100, 200);
+        const multiplier = random(2, 4);
+        return {
+          text: `A recipe uses <span class="known-value">${flour}g</span> flour and <span class="known-value">${sugar}g</span> sugar. How much of each is needed to make <span class="known-value">${multiplier}</span> times the recipe?`,
+          answer: `${flour * multiplier}g flour, ${sugar * multiplier}g sugar`,
+          steps: [
+            `<div class="step-calculation">Flour = ${flour} × ${multiplier} = ${flour * multiplier}g</div>`,
+            `<div class="step-calculation">Sugar = ${sugar} × ${multiplier} = ${sugar * multiplier}g</div>`,
+            `<div class="context-note">Recipe scaling keeps all ingredient proportions the same.</div>`
+          ]
+        };
+      }
+      const ratioA = random(1, 7);
+      const ratioB = random(2, 12);
+      const totalParts = ratioA + ratioB;
+      const partValue = random(2, 12);
+      const total = totalParts * partValue;
+      const first = ratioA * partValue;
+      const second = ratioB * partValue;
+      const labels = {
+        paint: ["red paint", "white paint", "L", "Paint mixing requires exact proportions for consistent colour."],
+        concrete: ["cement", "aggregate", "tonnes", "Construction mixtures depend on proportional material quantities."],
+        alloy: ["copper", "tin", "kg", "Alloys require precise ratios for their desired properties."],
+        cleaning: ["concentrate", "water", "ml", "Cleaning solutions require accurate dilution for effectiveness."]
+      }[context] || ["part A", "part B", "units", "The mixture keeps the same ratio."];
+      return {
+        text: `A mixture uses ${labels[0]} and ${labels[1]} in the ratio <span class="known-value">${ratioA}:${ratioB}</span>. How much of each is needed for <span class="known-value">${total}${labels[2]}</span>?`,
+        answer: `${first}${labels[2]} ${labels[0]}, ${second}${labels[2]} ${labels[1]}`,
+        steps: [
+          `Total parts = ${ratioA} + ${ratioB} = ${totalParts}.`,
+          `<div class="step-calculation">One part = ${total}${labels[2]} ÷ ${totalParts} = ${partValue}${labels[2]}</div>`,
+          `<div class="step-calculation">${labels[0]} = ${ratioA} × ${partValue} = ${first}${labels[2]}</div>`,
+          `<div class="step-calculation">${labels[1]} = ${ratioB} × ${partValue} = ${second}${labels[2]}</div>`,
+          `<div class="context-note">${labels[3]}</div>`
+        ]
+      };
+    }
+
+    function fallbackProblem() {
+      return {
+        text: `Simplify the ratio <span class="known-value">6:9</span>.`,
+        answer: "2:3",
+        steps: [
+          `HCF(6, 9) = 3.`,
+          `<div class="step-calculation">6 ÷ 3 = 2 and 9 ÷ 3 = 3</div>`
+        ]
+      };
+    }
+
+    function generateProblem() {
+      return problemForType(currentType);
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => {
+        tab.classList.toggle("active", index + 1 === level);
+      });
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = config.options.map(([value, label]) => `<option value="${value}">${label}</option>`).join("");
+      dropdown.value = "select";
+      document.getElementById("dropdown-container").classList.add("visible");
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function showBlankPage() {
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      document.getElementById("problem-set-header").classList.remove("visible");
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center; padding:50px; color:#718096; font-size:1.15rem;">Please select a question type to begin.</li>';
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      for (let i = 0; i < 5; i++) problems.push(generateProblem());
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const header = document.getElementById("problem-set-header");
+      header.textContent = typeNames[currentType] || "Ratio and Proportion Problems";
+      header.classList.add("visible");
+      const container = document.getElementById("problem-list");
+      container.innerHTML = "";
+      problems.forEach((problem, index) => {
+        const stepsHTML = problem.steps.map(step => `<div class="step">${step}</div>`).join("");
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index + 1}</div>
+              <div class="problem-text">${problem.text}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="steps-label">Solution Method:</div>
+            <div class="solution-steps">
+              ${stepsHTML}
+              <div class="final-answer">${problem.answer}</div>
+            </div>
+          </div>
+        `;
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const answer = document.getElementById(`quick-answer-${i}`);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      }
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const steps = document.getElementById(`steps-${i}`);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      }
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById("timer-display");
+      display.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      if (timeRemaining <= 30) display.className = "timer-display warning";
+      else if (timerActive) display.className = "timer-display active";
+      else display.className = "timer-display";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      const display = document.getElementById("timer-display");
+      display.textContent = "Time Up";
+      display.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

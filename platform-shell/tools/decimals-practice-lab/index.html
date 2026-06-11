@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decimals Practice Lab</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}
+    .sidebar.open{left:0}
+    .sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}
+    .sidebar-content{padding:25px;line-height:1.6}
+    .sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}
+    .sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}
+    .sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}
+    .header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}
+    .header::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}
+    .header h1{font-size:2.2em;margin-bottom:5px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}
+    .tab{flex:1;padding:18px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}
+    .tab:hover{background:#cbd5e0}
+    .tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:25px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border-bottom:1px solid #e2e8f0}
+    .level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.3em}
+    .level-info p{color:#718096;font-size:1em}
+    .dropdown-container{margin-top:10px;display:none}
+    .dropdown-container.visible{display:block}
+    .type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:380px}
+    .type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section{display:flex;align-items:center;gap:15px}
+    .timer-display{font-size:2em;font-weight:700;color:#1a365d;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #cbd5e0;min-width:120px;text-align:center}
+    .timer-display.active{border-color:#3182ce;color:#3182ce}
+    .timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px}
+    .btn{padding:12px 22px;border:none;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}
+    .btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}
+    .btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}
+    .btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}
+    .btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:20px;min-height:500px}
+    .problem-set-header{background:#38a169;color:#fff;padding:15px 25px;margin-bottom:15px;border-radius:8px;font-size:1.3em;font-weight:700;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}
+    .problem-set-header.visible{display:block}
+    .problem-set-header.basic{background:#38a169}.problem-set-header.operations{background:#e53e3e}.problem-set-header.rounding{background:#d69e2e}.problem-set-header.placevalue{background:#3182ce}.problem-set-header.advanced{background:#805ad5}.problem-set-header.complex{background:#2d5a87}
+    .problem-list{list-style:none}
+    .problem-item{background:#f7fafc;margin:10px 0;padding:15px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s}
+    .problem-item:hover{transform:translateX(2px)}
+    .problem-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:15px}
+    .problem-left{display:flex;align-items:center;flex:1;min-width:0}
+    .problem-answer{background:#38a169;color:#fff;padding:8px 15px;border-radius:20px;font-weight:700;font-size:1.1em;display:none;margin-left:15px}
+    .problem-answer.visible{display:block;animation:slideIn .4s ease}
+    @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .problem-number{background:#3182ce;color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:15px;font-size:1em;flex-shrink:0}
+    .equation{font-size:1.6em;font-family:'Times New Roman',serif;color:#1a365d;font-weight:600;line-height:1.2;overflow-wrap:anywhere}
+    .steps-section{margin-top:12px;padding:12px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}
+    .steps-section.visible{display:block;animation:slideDown .4s ease}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+    .answer-label{font-weight:600;color:#38a169;margin-bottom:8px;font-size:1em}
+    .solution-steps{font-size:1.05em;line-height:1.4}
+    .step{margin:6px 0;color:#1a365d}
+    .step-equation{font-family:'Times New Roman',serif;font-weight:600;color:#805ad5;text-align:center;margin:8px 0;font-size:1.15em}
+    .final-answer{background:#38a169;color:#fff;padding:8px 15px;border-radius:6px;text-align:center;font-weight:700;font-size:1.2em;margin-top:10px}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}
+    .modal-content{background:#fff;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+    .modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}
+    .modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}
+    .hidden{display:none}
+    .base{color:#3182ce;font-weight:700;background:rgba(49,130,206,.1);padding:2px 4px;border-radius:3px}
+    .index{color:#38a169;font-weight:700;background:rgba(56,161,105,.1);padding:2px 4px;border-radius:3px}
+    .operation{color:#d69e2e;font-weight:700;background:rgba(214,158,46,.1);padding:2px 4px;border-radius:3px}
+    .highlight{background:#fef2e7;color:#d69e2e;padding:2px 6px;border-radius:4px;font-weight:700}
+    .fraction{display:inline-block;text-align:center;vertical-align:middle}
+    .fraction .numerator{display:block;border-bottom:1px solid #1a365d;padding-bottom:2px}
+    .fraction .denominator{display:block;padding-top:2px}
+    .step-indicator{background:#3182ce;color:#fff;padding:4px 8px;border-radius:4px;font-size:.9em;font-weight:700;margin-right:10px}
+    @media (max-width:768px){.controls{flex-direction:column;align-items:stretch;padding:15px}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%;padding:12px}.sidebar{width:320px;left:-320px}.type-dropdown{min-width:260px;width:100%}.equation{font-size:1.35em}.problem-header{align-items:flex-start;flex-direction:column}.problem-answer{margin-left:0}.problem-set-header{font-size:1.1em;padding:12px 20px}}
+    @media (min-width:1200px){.equation{font-size:1.8em}.problem-item{padding:18px;margin:12px 0}.problem-number{width:35px;height:35px;font-size:1.1em}.solution-steps{font-size:1.15em}.step-equation{font-size:1.25em}.problem-set-header{font-size:1.4em;padding:18px 30px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool builds fluency with decimals through structured practice. Students reason about place value, compare and round decimals, convert between fractions and decimals, and solve operations and multi-step problems.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1 - Foundations:</strong> Place value, comparing, ordering, rounding, fraction to decimal, expanded form.</li>
+        <li><strong>Level 2 - Operations:</strong> Addition, subtraction, powers of 10, multiplication, and division with decimals.</li>
+        <li><strong>Level 3 - Applications:</strong> Multi-step expressions, error spotting, and real-world contexts.</li>
+      </ul>
+      <h3>Teaching Moves</h3>
+      <ul>
+        <li>Insist on place value language: tenth, hundredth, thousandth.</li>
+        <li>Model vertical alignment for operations.</li>
+        <li>Use estimates to check reasonableness.</li>
+        <li>Promote stepwise solutions before calculating.</li>
+      </ul>
+      <h3>Common Misconceptions</h3>
+      <ul>
+        <li>Thinking 3.5 is less than 3.45 because 45 is larger than 5.</li>
+        <li>Applying rounding rules to the wrong digit.</li>
+        <li>Misaligning decimal points in addition and subtraction.</li>
+        <li>Moving the decimal point the wrong way for powers of 10.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header"><h1>Decimals Practice Lab</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Foundations</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Operations</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Applications</button>
+    </div>
+
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Decimal Foundations</h3>
+        <p id="level-description">Place value, compare and order, rounding, fraction to decimal, expanded form</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="place_value">Type 1: Place value and digit value</option>
+            <option value="compare_order">Type 2: Compare or order decimals</option>
+            <option value="rounding">Type 3: Rounding to tenths or hundredths</option>
+            <option value="frac_to_decimal">Type 4: Fraction to decimal (terminating)</option>
+            <option value="expanded_form">Type 5: Expanded decimal form</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+
+    <div class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={
+      1:{title:'Level 1: Decimal Foundations',description:'Place value, compare and order, rounding, fraction to decimal, expanded form',types:['place_value','compare_order','rounding','frac_to_decimal','expanded_form']},
+      2:{title:'Level 2: Decimal Operations',description:'Addition, subtraction, multiply or divide by powers of 10, multiplying and dividing with decimals',types:['add_sub','times_powers10','divide_powers10','multiply_decimals','divide_whole']},
+      3:{title:'Level 3: Applications and Multi-Step Problems',description:'Multi-step expressions, error spotting, and real-world contexts',types:['multi_step','real_world','spot_the_error']}
+    };
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function randomElement(array){return array[Math.floor(Math.random()*array.length)]}
+    function fraction(n,d){return `<span class="fraction"><span class="numerator">${n}</span><span class="denominator">${d}</span></span>`}
+    function highlightBase(v){return `<span class="base">${v}</span>`}
+    function highlightIndex(v){return `<span class="index">${v}</span>`}
+    function highlightOperation(v){return `<span class="operation">${v}</span>`}
+    function fixedTrim(num,dp){return Number(num).toFixed(dp).replace(/(\\.\\d*?[1-9])0+$/,'$1').replace(/\\.0+$/,'')}
+    function alignAddSub(a,b,op){
+      const len=Math.max(a.length,b.length+2), top=a.padStart(len,' '), bottom=(op+' '+b).padStart(len,' '), line='-'.repeat(len);
+      return `<pre style="font-family:Consolas,monospace;font-size:1.05em;color:#1a365d;background:#fff;padding:8px;border-radius:6px;">${top}\\n${bottom}\\n${line}</pre>`;
+    }
+
+    function makeDecimal(maxWhole=99,places=3){
+      const a=random(0,maxWhole), b=random(0,Math.pow(10,places)-1);
+      return `${a}.${String(b).padStart(places,'0')}`;
+    }
+
+    function generateProblem(){
+      const config=levelConfigs[currentLevel];
+      let types=config.types;
+      if(currentType!=='all'&&currentType!=='select') types=[currentType];
+      const type=randomElement(types);
+
+      switch(type){
+        case 'place_value':{
+          const intPart=random(1,999), dp=random(1,3), decPart=String(random(0,Math.pow(10,dp)-1)).padStart(dp,'0'), num=`${intPart}.${decPart}`;
+          const places=['tenth','hundredth','thousandth'], placeIndex=dp===1?0:dp===2?randomElement([0,1]):random(0,2), placeName=places[placeIndex];
+          const digit=decPart[placeIndex]||'0', placeValue=Math.pow(10,-(placeIndex+1)), placeValueText=['0.1','0.01','0.001'][placeIndex], value=Number(digit)*placeValue;
+          return {badge:'placevalue',equation:`What is the value of the digit in the ${placeName} place in ${highlightBase(num)}?`,answer:`${value}`,steps:[
+            `<span class="step-indicator">Step 1</span> Identify the ${highlightIndex(placeName)} place.`,
+            `The ${placeName} is the ${highlightIndex(placeIndex+1)}${placeIndex===0?'st':placeIndex===1?'nd':'rd'} place to the right of the decimal.`,
+            `<span class="step-indicator">Step 2</span> Locate the digit.`,
+            `Digit = ${highlightBase(digit)}.`,
+            `<span class="step-indicator">Step 3</span> Convert to value.`,
+            `${digit} × ${highlightOperation(placeValueText)} = ${value}`
+          ]};
+        }
+        case 'compare_order':{
+          const mode=randomElement(['compare','order']);
+          if(mode==='compare'){
+            const a=makeDecimal();let b=makeDecimal();if(Number(b)===Number(a)) b=(Number(a)+.01).toFixed(2);
+            const relation=Number(a)>Number(b)?'>':'<';
+            return {badge:'basic',equation:`Insert <span class="highlight">&lt;</span>, <span class="highlight">&gt;</span>, or <span class="highlight">=</span>: ${highlightBase(a)} __ ${highlightBase(b)}`,answer:relation,steps:[
+              `<span class="step-indicator">Step 1</span> Compare whole numbers: ${parseInt(a,10)} vs ${parseInt(b,10)}.`,
+              `${parseInt(a,10)} ${parseInt(a,10)===parseInt(b,10)?'=':(parseInt(a,10)>parseInt(b,10)?'>':'<')} ${parseInt(b,10)}.`,
+              `<span class="step-indicator">Step 2</span> If equal, compare tenths, hundredths, then thousandths.`,
+              `Result: ${a} ${relation} ${b}`
+            ]};
+          }
+          const list=[makeDecimal(),makeDecimal(),makeDecimal()], asc=[...list].sort((x,y)=>Number(x)-Number(y));
+          return {badge:'basic',equation:`Order from least to greatest: ${highlightBase(list.join(', '))}`,answer:asc.join(' < '),steps:[
+            `<span class="step-indicator">Step 1</span> Compare whole parts.`,
+            `<span class="step-indicator">Step 2</span> Use tenths, hundredths, and thousandths if needed.`,
+            `Ordered: ${asc.join(' < ')}`
+          ]};
+        }
+        case 'rounding':{
+          const dpRaw=random(1,3), base=Number((random(1,999)+Math.random()).toFixed(dpRaw)), place=randomElement(['tenth','hundredth']), dp=place==='tenth'?1:2, rounded=fixedTrim(base,dp);
+          return {badge:'rounding',equation:`Round ${highlightBase(base.toString())} to the nearest ${highlightIndex(place)}.`,answer:`${rounded}`,steps:[
+            `<span class="step-indicator">Step 1</span> Identify the ${place} digit.`,
+            `<span class="step-indicator">Step 2</span> Look at the next digit to decide: 5 or more rounds up.`,
+            `<span class="step-indicator">Step 3</span> Write the rounded number.`,
+            `${base} -> ${rounded}`
+          ]};
+        }
+        case 'frac_to_decimal':{
+          const d=randomElement([2,4,5,8,10,20,25,40,50,125]), n=random(1,d-1), value=n/d;
+          return {badge:'basic',equation:`Convert to decimal: ${fraction(n,d)}`,answer:value.toString(),steps:[
+            `<span class="step-indicator">Step 1</span> Recognise a terminating fraction: the denominator has only 2s and 5s.`,
+            `<span class="step-indicator">Step 2</span> Compute ${n} ÷ ${d}.`,
+            `${n} ÷ ${d} = ${value}`
+          ]};
+        }
+        case 'expanded_form':{
+          const ones=random(1,9), tenths=random(0,9), hundredths=random(0,9), thousandths=random(0,9), dp=randomElement([1,2,3]);
+          const parts=[tenths,hundredths,thousandths].slice(0,dp), num=`${ones}.${parts.join('')}`;
+          const expanded=[`${ones}`]; if(dp>=1&&tenths) expanded.push(`${tenths} × 0.1`); if(dp>=2&&hundredths) expanded.push(`${hundredths} × 0.01`); if(dp>=3&&thousandths) expanded.push(`${thousandths} × 0.001`); if(expanded.length===1) expanded.push('0 × 0.1');
+          return {badge:'basic',equation:`Write ${highlightBase(num)} in expanded form.`,answer:expanded.join(' + '),steps:[
+            `<span class="step-indicator">Step 1</span> Separate by place value.`,
+            `Ones: ${ones}, Tenths: ${tenths}, Hundredths: ${hundredths}, Thousandths: ${thousandths}`,
+            `<span class="step-indicator">Step 2</span> Multiply each digit by its place value.`,
+            `Expanded: ${expanded.join(' + ')}`
+          ]};
+        }
+        case 'add_sub':{
+          const a=Number((random(1,199)+Math.random()).toFixed(random(1,3))), b=Number((random(1,199)+Math.random()).toFixed(random(1,3))), op=randomElement(['+','-']), result=op==='+'?a+b:a-b;
+          return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} ${highlightOperation(op)} ${highlightBase(b.toString())}`,answer:fixedTrim(result,3),steps:[
+            `<span class="step-indicator">Step 1</span> Align decimal points vertically.`,
+            alignAddSub(a.toString(),b.toString(),op),
+            `<span class="step-indicator">Step 2</span> Add or subtract from right to left.`,
+            `<span class="step-indicator">Step 3</span> Place the decimal point in the answer.`,
+            `Result = ${fixedTrim(result,3)}`
+          ]};
+        }
+        case 'times_powers10':{
+          const a=Number((random(1,999)/100).toFixed(random(1,3))), p=randomElement([10,100,1000]), res=a*p;
+          return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} × ${highlightOperation(p)}`,answer:fixedTrim(res,3),steps:[
+            `<span class="step-indicator">Step 1</span> Multiplying by ${p} moves the decimal point ${Math.log10(p)} place(s) to the right.`,
+            `${a} -> ${res}`,
+            `Answer: ${fixedTrim(res,3)}`
+          ]};
+        }
+        case 'divide_powers10':{
+          const a=Number((random(1,999)/10).toFixed(random(1,3))), p=randomElement([10,100,1000]), res=a/p;
+          return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} ÷ ${highlightOperation(p)}`,answer:fixedTrim(res,6),steps:[
+            `<span class="step-indicator">Step 1</span> Dividing by ${p} moves the decimal point ${Math.log10(p)} place(s) to the left.`,
+            `${a} -> ${res}`,
+            `Answer: ${fixedTrim(res,6)}`
+          ]};
+        }
+        case 'multiply_decimals':{
+          const a=Number((random(1,99)/10).toFixed(1)), b=Number((random(1,99)/100).toFixed(2)), res=fixedTrim(a*b,3);
+          return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} × ${highlightBase(b.toString())}`,answer:res,steps:[
+            `<span class="step-indicator">Step 1</span> Ignore decimals and multiply ${a.toString().replace('.','')} × ${b.toString().replace('.','')}.`,
+            `<span class="step-indicator">Step 2</span> Total decimal places = ${highlightIndex('3')} (1 + 2).`,
+            `<span class="step-indicator">Step 3</span> Place the decimal point 3 places from the right.`,
+            `Answer: ${res}`
+          ]};
+        }
+        case 'divide_whole':{
+          const a=Number((random(100,999)/10).toFixed(1)), b=random(2,9), res=fixedTrim(a/b,4);
+          return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} ÷ ${highlightBase(b.toString())}`,answer:res,steps:[
+            `<span class="step-indicator">Step 1</span> Set up long division or use place value reasoning.`,
+            `<span class="step-indicator">Step 2</span> Divide and place the decimal point directly above.`,
+            `Answer: ${res}`
+          ]};
+        }
+        case 'multi_step':{
+          const a=Number((random(10,199)/10).toFixed(1)), b=Number((random(10,199)/100).toFixed(2)), c=Number((random(11,25)/10).toFixed(1)), sum=a+b, prod=sum*c, rounded=fixedTrim(prod,2);
+          return {badge:'complex',equation:`Evaluate ${highlightBase(`(${a} + ${b}) × ${c}`)} and round to the nearest hundredth.`,answer:`${rounded}`,steps:[
+            `<span class="step-indicator">Step 1</span> Add inside parentheses: ${a} + ${b} = ${fixedTrim(sum,3)}`,
+            `<span class="step-indicator">Step 2</span> Multiply: ${fixedTrim(sum,3)} × ${c} = ${fixedTrim(prod,4)}`,
+            `<span class="step-indicator">Step 3</span> Round to hundredth: ${fixedTrim(prod,4)} -> ${rounded}`
+          ]};
+        }
+        case 'real_world':{
+          const price=Number((random(120,299)/100).toFixed(2)), qty=random(2,9), subtotal=price*qty, taxRate=randomElement([0,.05,.075,.1]), total=subtotal*(1+taxRate), pay=Math.ceil(total+random(1,3)), change=fixedTrim(pay-total,2);
+          return {badge:'advanced',equation:`A snack costs £${highlightBase(price.toFixed(2))}. Buy ${highlightIndex(qty)}. Tax rate = ${highlightIndex((taxRate*100).toFixed(1))}%. You pay £${highlightBase(pay.toFixed(2))}. What is the change?`,answer:`£${change}`,steps:[
+            `<span class="step-indicator">Step 1</span> Subtotal = price × quantity = £${price.toFixed(2)} × ${qty} = £${fixedTrim(subtotal,2)}`,
+            `<span class="step-indicator">Step 2</span> Total with tax = subtotal × (1 + ${taxRate}) = £${fixedTrim(total,2)}`,
+            `<span class="step-indicator">Step 3</span> Change = £${pay.toFixed(2)} - £${fixedTrim(total,2)} = £${change}`
+          ]};
+        }
+        case 'spot_the_error':{
+          const a=Number((random(10,199)/10).toFixed(1)), b=Number((random(10,199)/100).toFixed(2)), wrong=(a+b).toFixed(0), correct=fixedTrim(a+b,3);
+          return {badge:'advanced',equation:`A student claims ${highlightBase(a.toString())} + ${highlightBase(b.toString())} = ${highlightBase(wrong)}.`,answer:`Error: decimals were not aligned. Correct sum = ${correct}`,steps:[
+            `<span class="step-indicator">Step 1</span> Align decimal points before adding.`,
+            alignAddSub(a.toString(),b.toString(),'+'),
+            `<span class="step-indicator">Step 2</span> Add digits in each place value.`,
+            `Correct answer = ${correct}`
+          ]};
+        }
+        default:return generateProblem();
+      }
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,idx)=>tab.classList.toggle('active',idx+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      const dropdown=document.getElementById('type-dropdown');
+      document.getElementById('dropdown-container').classList.add('visible');
+      if(level===1){
+        dropdown.innerHTML='<option value="select">Select Question Type</option><option value="place_value">Type 1: Place value and digit value</option><option value="compare_order">Type 2: Compare or order decimals</option><option value="rounding">Type 3: Rounding to tenths or hundredths</option><option value="frac_to_decimal">Type 4: Fraction to decimal (terminating)</option><option value="expanded_form">Type 5: Expanded decimal form</option>';
+      }else if(level===2){
+        dropdown.innerHTML='<option value="select">Select Question Type</option><option value="add_sub">Type 1: Addition and subtraction</option><option value="times_powers10">Type 2: Multiply by powers of 10</option><option value="divide_powers10">Type 3: Divide by powers of 10</option><option value="multiply_decimals">Type 4: Multiply decimals</option><option value="divide_whole">Type 5: Divide by a whole number</option>';
+      }else{
+        dropdown.innerHTML='<option value="select">Select Question Type</option><option value="multi_step">Type 1: Multi-step expression</option><option value="real_world">Type 2: Real-world problem</option><option value="spot_the_error">Type 3: Spot the error</option>';
+      }
+      dropdown.value='select';
+      showBlankPage();
+    }
+
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;if(currentType==='select')showBlankPage();else generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-set-header').classList.remove('visible');document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:40px;color:#718096;font-size:1.1em;">Please select a question type to begin exploring decimals</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<5;i++)problems.push(generateProblem());renderProblems()}
+    function renderProblems(){
+      const container=document.getElementById('problem-list'), header=document.getElementById('problem-set-header');container.innerHTML='';
+      if(problems.length){const map={placevalue:'PLACE VALUE',basic:'FOUNDATION',rounding:'ROUNDING',operations:'OPERATIONS',advanced:'APPLICATIONS',complex:'MULTI-STEP'};const key=problems[0].badge;header.textContent=`${map[key]||'PROBLEMS'} PROBLEMS`;header.className=`problem-set-header visible ${key}`}else header.classList.remove('visible');
+      problems.forEach((problem,index)=>{
+        const li=document.createElement('li');li.className='problem-item';
+        const stepsHTML=problem.steps.map(step=>{const isEq=step.includes('->')||step.includes(' = ')||step.includes('<')||step.includes('>')||step.includes('≤')||step.includes('≥');return isEq?`<div class="step-equation">${step}</div>`:`<div class="step">${step}</div>`}).join('');
+        li.innerHTML=`<div class="problem-header"><div class="problem-left"><div class="problem-number">${index+1}</div><div class="equation">${problem.equation}</div></div><div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div></div><div class="steps-section" id="steps-${index}"><div class="answer-label">Solution Steps:</div><div class="solution-steps">${stepsHTML}<div class="final-answer">${problem.answer}</div></div></div>`;
+        container.appendChild(li);
+      });
+    }
+    function showAnswers(){answersVisible=!answersVisible;for(let i=0;i<problems.length;i++){const el=document.getElementById(`quick-answer-${i}`);if(el)el.classList.toggle('visible',answersVisible)}}
+    function showSteps(){stepsVisible=!stepsVisible;for(let i=0;i<problems.length;i++){const el=document.getElementById(`steps-${i}`);if(el)el.classList.toggle('visible',stepsVisible)}}
+    function startTimer(minutes){if(timerActive)stopTimer();timeRemaining=minutes*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const el=document.getElementById('timer-display');el.textContent='Ready';el.className='timer-display'}
+    function updateTimerDisplay(){const minutes=Math.floor(timeRemaining/60),seconds=timeRemaining%60,el=document.getElementById('timer-display');el.textContent=`${minutes}:${seconds.toString().padStart(2,'0')}`;if(timeRemaining<=30)el.className='timer-display warning';else if(timerActive)el.className='timer-display active';else el.className='timer-display'}
+    function timerFinished(){stopTimer();const el=document.getElementById('timer-display');el.textContent='Time Up!';el.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

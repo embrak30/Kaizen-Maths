@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistical Averages Teaching Tool</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .teacher-tab {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1a365d;
+            color: white;
+            padding: 15px 8px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            cursor: pointer;
+            z-index: 1001;
+            border-radius: 0 8px 8px 0;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        }
+
+        .teacher-tab:hover { background: #2d5a87; transform: translateY(-50%) translateX(5px); }
+
+        .sidebar {
+            position: fixed;
+            left: -420px;
+            top: 0;
+            width: 420px;
+            height: 100vh;
+            background: white;
+            z-index: 1000;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.3);
+            overflow-y: auto;
+        }
+
+        .sidebar.open { left: 0; }
+        .sidebar-header { background: #1a365d; color: white; padding: 20px; font-size: 1.3em; font-weight: 600; }
+        .sidebar-content { padding: 25px; line-height: 1.6; }
+        .sidebar-content h3 { color: #1a365d; margin: 20px 0 10px 0; font-size: 1.1em; border-bottom: 2px solid #3182ce; padding-bottom: 5px; }
+        .sidebar-content p, .sidebar-content li { margin-bottom: 8px; color: #555; }
+        .sidebar-content ul { padding-left: 20px; margin-bottom: 15px; }
+        .sidebar-content .formula { background: #f7fafc; padding: 8px 12px; border-radius: 4px; font-family: 'Times New Roman', serif; margin: 5px 0; border-left: 3px solid #3182ce; }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2d5a87;
+            background-image:
+                linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce),
+                linear-gradient(45deg, #3182ce 25%, transparent 25%, transparent 75%, #3182ce 75%, #3182ce);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.2);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%, rgba(0,0,0,0.05) 100%);
+        }
+
+        .header h1 { font-size: 2.2em; margin-bottom: 5px; position: relative; z-index: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .tabs { display: flex; background: #e2e8f0; }
+        .tab { flex: 1; padding: 18px; background: #e2e8f0; border: none; cursor: pointer; font-size: 1.1em; font-weight: 600; transition: all 0.3s ease; border-bottom: 3px solid transparent; }
+        .tab:hover { background: #cbd5e0; }
+        .tab.active { background: white; border-bottom: 3px solid #3182ce; color: #3182ce; }
+
+        .controls {
+            padding: 25px;
+            background: #f7fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .level-info h3 { color: #1a365d; margin-bottom: 5px; font-size: 1.3em; }
+        .level-info p { color: #718096; font-size: 1em; }
+        .dropdown-container { margin-top: 10px; display: none; }
+        .dropdown-container.visible { display: block; }
+        .type-dropdown { padding: 8px 12px; border: 2px solid #cbd5e0; border-radius: 6px; font-size: 1em; background: white; cursor: pointer; min-width: 320px; }
+        .type-dropdown:focus { border-color: #3182ce; outline: none; }
+
+        .timer-section { display: flex; align-items: center; gap: 15px; }
+        .timer-display { font-size: 2em; font-weight: bold; color: #1a365d; background: white; padding: 10px 18px; border-radius: 6px; border: 2px solid #cbd5e0; min-width: 120px; text-align: center; }
+        .timer-display.active { border-color: #3182ce; color: #3182ce; }
+        .timer-display.warning { color: #e53e3e; border-color: #e53e3e; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+        .action-buttons { display: flex; gap: 10px; }
+        .btn { padding: 12px 22px; border: none; border-radius: 6px; font-size: 1em; font-weight: 600; cursor: pointer; transition: all 0.3s ease; min-width: 85px; }
+        .btn-primary { background: #3182ce; color: white; }
+        .btn-primary:hover { background: #2c5282; transform: translateY(-1px); }
+        .btn-success { background: #38a169; color: white; }
+        .btn-success:hover { background: #2f855a; transform: translateY(-1px); }
+        .btn-warning { background: #d69e2e; color: white; }
+        .btn-warning:hover { background: #b7791f; transform: translateY(-1px); }
+        .btn-danger { background: #e53e3e; color: white; }
+        .btn-danger:hover { background: #c53030; transform: translateY(-1px); }
+
+        .problems-section { padding: 35px; min-height: 600px; }
+        .problem-list { list-style: none; }
+        .problem-item { background: #f7fafc; margin: 20px 0; padding: 25px; border-radius: 10px; border-left: 5px solid #3182ce; transition: all 0.3s ease; }
+        .problem-item:hover { transform: translateX(3px); }
+        .problem-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .problem-left { display: flex; align-items: center; flex: 1; }
+        .problem-answer { background: #38a169; color: white; padding: 10px 18px; border-radius: 25px; font-weight: bold; font-size: 1.2em; display: none; margin-left: 20px; }
+        .problem-answer.visible { display: block; animation: slideIn 0.4s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        .problem-number { background: #3182ce; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 20px; font-size: 1.1em; flex-shrink: 0; }
+        .expression { font-size: 1.8em; font-family: 'Times New Roman', serif; color: #1a365d; font-weight: 600; }
+        .data-set, .missing-value, .ordered-data { padding: 8px 12px; border-radius: 6px; font-weight: bold; margin: 5px; display: inline-block; }
+        .data-set { background: #e6fffa; border: 2px solid #38a169; }
+        .missing-value { background: #fef5e7; border: 2px solid #d69e2e; }
+        .ordered-data { background: #ebf8ff; border: 2px solid #3182ce; }
+        .steps-section { margin-top: 18px; padding: 18px; background: #ebf8ff; border-radius: 8px; border-left: 4px solid #3182ce; display: none; }
+        .steps-section.visible { display: block; animation: slideDown 0.4s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .answer-label { font-weight: 600; color: #38a169; margin-bottom: 10px; font-size: 1.1em; }
+        .solution-steps { font-size: 1.15em; line-height: 1.5; }
+        .step { margin: 8px 0; color: #1a365d; }
+        .final-answer { background: #38a169; color: white; padding: 10px 18px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 1.3em; margin-top: 12px; }
+        .timer-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: white; padding: 35px; border-radius: 12px; text-align: center; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .modal-content h2 { color: #e53e3e; margin-bottom: 18px; font-size: 2em; }
+        .modal-content p { color: #718096; margin-bottom: 25px; font-size: 1.1em; }
+        .hidden { display: none; }
+        .calculation-box { background: #f7fafc; border: 2px solid #cbd5e0; border-radius: 8px; padding: 15px; margin: 10px 0; font-family: 'Times New Roman', serif; font-size: 1.2em; }
+        .fraction { display: inline-block; text-align: center; vertical-align: middle; }
+        .fraction .numerator { display: block; border-bottom: 1px solid #000; padding-bottom: 2px; }
+        .fraction .denominator { display: block; padding-top: 2px; }
+
+        @media (max-width: 768px) {
+            .controls { flex-direction: column; align-items: stretch; }
+            .timer-section { justify-content: center; }
+            .tabs { flex-wrap: wrap; }
+            .tab { flex: 1 1 50%; }
+            .sidebar { width: 320px; left: -320px; }
+            .type-dropdown { min-width: 280px; }
+        }
+
+        @media (min-width: 1200px) {
+            .expression { font-size: 2.2em; }
+            .problem-item { padding: 30px; margin: 25px 0; }
+            .problem-number { width: 40px; height: 40px; font-size: 1.2em; }
+            .solution-steps { font-size: 1.3em; }
+        }
+    </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+    <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">📊 Teacher Instructions</div>
+        <div class="sidebar-content">
+            <h3>Getting Started</h3>
+            <p>This tool helps students practice statistical measures of center and spread through structured progression.</p>
+            <h3>Level Guide</h3>
+            <ul>
+                <li><strong>Level 1 - Individual Measures:</strong> Calculate each measure separately</li>
+                <li><strong>Level 2 - Combined Measures:</strong> Find mean, median, and mode together</li>
+                <li><strong>Level 3 - Comparing Measures:</strong> Interpret and compare different measures</li>
+                <li><strong>Level 4 - Missing Values:</strong> Find missing numbers when mean is given</li>
+            </ul>
+            <h3>Key Formulas</h3>
+            <div class="formula">Mean = Sum of all values ÷ Number of values</div>
+            <div class="formula">Missing value = (Mean × Number of values) - Sum of known values</div>
+            <div class="formula">Median = Middle value when arranged in order</div>
+            <div class="formula">Mode = Most frequently occurring value</div>
+            <div class="formula">Range = Highest value - Lowest value</div>
+            <h3>Teaching Strategies</h3>
+            <ul>
+                <li>Use the calculation boxes to show step-by-step work clearly</li>
+                <li>Color-coded data helps students identify which values to work with</li>
+                <li>Emphasize the ordering process for finding median</li>
+                <li>Show the relationship: Sum = Mean × Count</li>
+            </ul>
+            <h3>Common Student Mistakes</h3>
+            <ul>
+                <li>Forgetting to order data before finding median</li>
+                <li>Confusing mean and median concepts</li>
+                <li>Not accounting for frequency in repeated values</li>
+                <li>Errors in algebra when finding missing values</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Statistical Averages Teaching Tool</h1>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchLevel(1)">Level 1: Individual Measures</button>
+            <button class="tab" onclick="switchLevel(2)">Level 2: Combined Measures</button>
+            <button class="tab" onclick="switchLevel(3)">Level 3: Comparing Measures</button>
+            <button class="tab" onclick="switchLevel(4)">Level 4: Missing Values</button>
+        </div>
+
+        <div class="controls">
+            <div class="level-info">
+                <div class="level-controls">
+                    <div>
+                        <h3 id="level-title">Level 1: Individual Measures</h3>
+                        <p id="level-description">Calculate each measure of center and spread</p>
+                        <div class="dropdown-container visible" id="dropdown-container">
+                            <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+                                <option value="select">Select Question Type</option>
+                                <option value="find_mean">Type 1: Find the mean</option>
+                                <option value="find_median">Type 2: Find the median</option>
+                                <option value="find_mode">Type 3: Find the mode</option>
+                                <option value="find_range">Type 4: Find the range</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timer-section">
+                <div id="timer-display" class="timer-display">Ready</div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+                    <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+                    <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-success" onclick="generateNewSet()">New</button>
+                <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+                <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+            </div>
+        </div>
+
+        <div class="problems-section">
+            <ol id="problem-list" class="problem-list"></ol>
+        </div>
+    </div>
+
+    <div id="timer-modal" class="timer-modal hidden">
+        <div class="modal-content">
+            <h2>⏰ Time's Up!</h2>
+            <p>Ready to review answers?</p>
+            <button class="btn btn-primary" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        let currentLevel = 1;
+        let currentType = 'select';
+        let timerInterval = null;
+        let timeRemaining = 0;
+        let timerActive = false;
+        let problems = [];
+        let answersVisible = false;
+        let stepsVisible = false;
+
+        const levelConfigs = {
+            1: { title: "Level 1: Individual Measures", description: "Calculate each measure of center and spread", types: ['find_mean', 'find_median', 'find_mode', 'find_range'] },
+            2: { title: "Level 2: Combined Measures", description: "Find mean, median, and mode for data sets", types: ['combined_odd', 'combined_even', 'combined_repeated'] },
+            3: { title: "Level 3: Comparing Measures", description: "Compare and interpret different measures of center", types: ['best_measure', 'outlier_effects', 'real_world_context'] },
+            4: { title: "Level 4: Missing Values", description: "Find missing numbers when the mean is given", types: ['find_missing_basic', 'find_missing_decimal', 'find_missing_complex'] }
+        };
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.querySelector('.sidebar-overlay').classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.querySelector('.sidebar-overlay').classList.remove('active');
+        }
+
+        function random(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+        function generateDataSet(size, min, max, allowRepeats = false) {
+            const data = [];
+            for (let i = 0; i < size; i++) {
+                if (allowRepeats && i > 0 && Math.random() < 0.3) {
+                    data.push(data[Math.floor(Math.random() * data.length)]);
+                } else {
+                    data.push(random(min, max));
+                }
+            }
+            return data;
+        }
+
+        function generateOddDataSet(minSize, maxSize, min, max, allowRepeats = false) {
+            const oddSizes = [];
+            for (let size = minSize; size <= maxSize; size++) {
+                if (size % 2 === 1) oddSizes.push(size);
+            }
+            return generateDataSet(oddSizes[random(0, oddSizes.length - 1)], min, max, allowRepeats);
+        }
+
+        function calculateMean(data) {
+            return data.reduce((a, b) => a + b, 0) / data.length;
+        }
+
+        function calculateMedian(data) {
+            const sorted = [...data].sort((a, b) => a - b);
+            const middle = Math.floor(sorted.length / 2);
+            return sorted.length % 2 === 0 ? (sorted[middle - 1] + sorted[middle]) / 2 : sorted[middle];
+        }
+
+        function calculateMode(data) {
+            const frequency = {};
+            data.forEach(value => { frequency[value] = (frequency[value] || 0) + 1; });
+            const maxFreq = Math.max(...Object.values(frequency));
+            if (maxFreq === 1) return "No mode";
+            return Object.keys(frequency).filter(key => frequency[key] === maxFreq).map(Number).sort((a, b) => a - b);
+        }
+
+        function calculateRange(data) {
+            return Math.max(...data) - Math.min(...data);
+        }
+
+        function formatDataSet(data, className = "data-set") {
+            return data.map(value => `<span class="${className}">${value}</span>`).join(" ");
+        }
+
+        function generateProblem(retryCount = 0) {
+            if (retryCount > 10) {
+                return { equation: 'Find the mean of: 12, 15, 18, 20, 25', answer: '18', steps: ['Step 1: Add all values: 12 + 15 + 18 + 20 + 25 = 90', 'Step 2: Divide by count: 90 ÷ 5 = 18'] };
+            }
+
+            const config = levelConfigs[currentLevel];
+            let types = config.types;
+            if (currentType !== 'all' && currentType !== 'select') types = [currentType];
+            const type = types[Math.floor(Math.random() * types.length)];
+            let problem = {};
+
+            switch(type) {
+                case 'find_mean': {
+                    const meanData = generateDataSet(random(4, 6), 1, 25);
+                    const mean = calculateMean(meanData);
+                    const sum = meanData.reduce((a, b) => a + b, 0);
+                    problem = {
+                        equation: `Find the mean of: ${formatDataSet(meanData)}`,
+                        answer: mean % 1 === 0 ? mean.toString() : mean.toFixed(1),
+                        steps: [
+                            `<strong>Step 1:</strong> Add all values in the data set`,
+                            `<div class="calculation-box">${meanData.join(' + ')} = ${sum}</div>`,
+                            `<strong>Step 2:</strong> Divide the sum by the number of values`,
+                            `<div class="calculation-box">Mean = <span class="fraction"><span class="numerator">${sum}</span><span class="denominator">${meanData.length}</span></span> = ${mean % 1 === 0 ? mean : mean.toFixed(1)}</div>`,
+                            `<strong>The calculation shows that:</strong> The mean represents the average value when all data points are distributed equally.`
+                        ]
+                    };
+                    break;
+                }
+
+                case 'find_median': {
+                    const medianData = generateDataSet(random(5, 7), 1, 30);
+                    const sorted = [...medianData].sort((a, b) => a - b);
+                    const median = calculateMedian(medianData);
+                    let medianSteps = [
+                        `<strong>Step 1:</strong> Arrange the data in ascending order`,
+                        `<div class="calculation-box">Original: ${formatDataSet(medianData)}</div>`,
+                        `<div class="calculation-box">Ordered: ${formatDataSet(sorted, "ordered-data")}</div>`
+                    ];
+                    if (sorted.length % 2 === 1) {
+                        const middleIndex = Math.floor(sorted.length / 2);
+                        medianSteps.push(`<strong>Step 2:</strong> The median is found by identifying the middle position`, `<div class="calculation-box">Position ${middleIndex + 1} of ${sorted.length} values: <span class="missing-value">${sorted[middleIndex]}</span></div>`);
+                    } else {
+                        const middle1 = sorted[sorted.length / 2 - 1];
+                        const middle2 = sorted[sorted.length / 2];
+                        medianSteps.push(`<strong>Step 2:</strong> With an even number of values, find the average of the two middle values`, `<div class="calculation-box">Middle values: <span class="missing-value">${middle1}</span> and <span class="missing-value">${middle2}</span></div>`, `<div class="calculation-box">Median = (${middle1} + ${middle2}) ÷ 2 = ${median}</div>`);
+                    }
+                    problem = { equation: `Find the median of: ${formatDataSet(medianData)}`, answer: median % 1 === 0 ? median.toString() : median.toFixed(1), steps: medianSteps };
+                    break;
+                }
+
+                case 'find_mode': {
+                    const modeData = generateDataSet(random(6, 8), 1, 15, true);
+                    const mode = calculateMode(modeData);
+                    const frequency = {};
+                    modeData.forEach(value => { frequency[value] = (frequency[value] || 0) + 1; });
+                    let modeSteps = [`<strong>Step 1:</strong> Count the frequency of each value`, `<div class="calculation-box">Data set: ${formatDataSet(modeData)}</div>`];
+                    Object.entries(frequency).sort((a, b) => parseInt(a[0]) - parseInt(b[0])).forEach(([value, freq]) => {
+                        modeSteps.push(`<div class="calculation-box">${value} appears ${freq} time${freq > 1 ? 's' : ''}</div>`);
+                    });
+                    modeSteps.push(`<strong>Step 2:</strong> Identify the most frequently occurring value(s)`, `<div class="calculation-box">Mode: ${Array.isArray(mode) ? mode.map(m => `<span class="missing-value">${m}</span>`).join(", ") : mode}</div>`);
+                    problem = { equation: `Find the mode of: ${formatDataSet(modeData)}`, answer: Array.isArray(mode) ? mode.join(", ") : mode.toString(), steps: modeSteps };
+                    break;
+                }
+
+                case 'find_range': {
+                    const rangeData = generateDataSet(random(5, 7), 5, 30);
+                    const range = calculateRange(rangeData);
+                    const min = Math.min(...rangeData);
+                    const max = Math.max(...rangeData);
+                    problem = {
+                        equation: `Find the range of: ${formatDataSet(rangeData)}`,
+                        answer: range.toString(),
+                        steps: [
+                            `<strong>Step 1:</strong> Identify the highest and lowest values`,
+                            `<div class="calculation-box">Data set: ${formatDataSet(rangeData)}</div>`,
+                            `<div class="calculation-box">Highest value: <span class="missing-value">${max}</span></div>`,
+                            `<div class="calculation-box">Lowest value: <span class="missing-value">${min}</span></div>`,
+                            `<strong>Step 2:</strong> Calculate the difference`,
+                            `<div class="calculation-box">Range = ${max} - ${min} = ${range}</div>`
+                        ]
+                    };
+                    break;
+                }
+
+                case 'combined_odd': {
+                    const oddData = generateOddDataSet(5, 7, 2, 20, true);
+                    const oddMean = calculateMean(oddData);
+                    const oddMedian = calculateMedian(oddData);
+                    const oddMode = calculateMode(oddData);
+                    const oddSorted = [...oddData].sort((a, b) => a - b);
+                    const oddSum = oddData.reduce((a, b) => a + b, 0);
+                    problem = {
+                        equation: `Find the mean, median, and mode for: ${formatDataSet(oddData)}`,
+                        answer: `Mean: ${oddMean % 1 === 0 ? oddMean : oddMean.toFixed(1)}, Median: ${oddMedian}, Mode: ${Array.isArray(oddMode) ? oddMode.join(", ") : oddMode}`,
+                        steps: [
+                            `<strong>Finding the Mean:</strong>`,
+                            `<div class="calculation-box">Sum: ${oddData.join(' + ')} = ${oddSum}</div>`,
+                            `<div class="calculation-box">Mean = ${oddSum} ÷ ${oddData.length} = ${oddMean % 1 === 0 ? oddMean : oddMean.toFixed(1)}</div>`,
+                            `<strong>Finding the Median:</strong>`,
+                            `<div class="calculation-box">Ordered: ${formatDataSet(oddSorted, "ordered-data")}</div>`,
+                            `<div class="calculation-box">Middle value: <span class="missing-value">${oddMedian}</span></div>`,
+                            `<strong>Finding the Mode:</strong>`,
+                            `<div class="calculation-box">Most frequent: ${Array.isArray(oddMode) ? oddMode.map(m => `<span class="missing-value">${m}</span>`).join(", ") : oddMode}</div>`
+                        ]
+                    };
+                    break;
+                }
+
+                case 'combined_even': {
+                    const evenData = generateDataSet(random(4, 6) * 2, 3, 25, true);
+                    const evenMean = calculateMean(evenData);
+                    const evenMedian = calculateMedian(evenData);
+                    const evenMode = calculateMode(evenData);
+                    const evenSorted = [...evenData].sort((a, b) => a - b);
+                    const evenSum = evenData.reduce((a, b) => a + b, 0);
+                    const middle1 = evenSorted[evenSorted.length / 2 - 1];
+                    const middle2 = evenSorted[evenSorted.length / 2];
+                    problem = {
+                        equation: `Find the mean, median, and mode for: ${formatDataSet(evenData)}`,
+                        answer: `Mean: ${evenMean % 1 === 0 ? evenMean : evenMean.toFixed(1)}, Median: ${evenMedian % 1 === 0 ? evenMedian : evenMedian.toFixed(1)}, Mode: ${Array.isArray(evenMode) ? evenMode.join(", ") : evenMode}`,
+                        steps: [
+                            `<strong>Finding the Mean:</strong>`,
+                            `<div class="calculation-box">Sum: ${evenData.join(' + ')} = ${evenSum}</div>`,
+                            `<div class="calculation-box">Mean = ${evenSum} ÷ ${evenData.length} = ${evenMean % 1 === 0 ? evenMean : evenMean.toFixed(1)}</div>`,
+                            `<strong>Finding the Median:</strong>`,
+                            `<div class="calculation-box">Ordered: ${formatDataSet(evenSorted, "ordered-data")}</div>`,
+                            `<div class="calculation-box">Middle values: ${middle1} and ${middle2}</div>`,
+                            `<div class="calculation-box">Median = (${middle1} + ${middle2}) ÷ 2 = ${evenMedian % 1 === 0 ? evenMedian : evenMedian.toFixed(1)}</div>`,
+                            `<strong>Finding the Mode:</strong>`,
+                            `<div class="calculation-box">Most frequent: ${Array.isArray(evenMode) ? evenMode.join(", ") : evenMode}</div>`
+                        ]
+                    };
+                    break;
+                }
+
+                case 'combined_repeated': {
+                    const repeatedData = [12, 15, 12, 18, 15, 12, 20, 15];
+                    const repMean = calculateMean(repeatedData);
+                    const repMedian = calculateMedian(repeatedData);
+                    const repMode = calculateMode(repeatedData);
+                    const repSorted = [...repeatedData].sort((a, b) => a - b);
+                    const repSum = repeatedData.reduce((a, b) => a + b, 0);
+                    problem = {
+                        equation: `Find the mean, median, and mode for: ${formatDataSet(repeatedData)}`,
+                        answer: `Mean: ${repMean.toFixed(1)}, Median: ${repMedian}, Mode: ${Array.isArray(repMode) ? repMode.join(", ") : repMode}`,
+                        steps: [
+                            `<strong>Analyzing data sets with repeated values:</strong>`,
+                            `<div class="calculation-box">Data: ${formatDataSet(repeatedData)}</div>`,
+                            `<div class="calculation-box">Mean = ${repSum} ÷ ${repeatedData.length} = ${repMean.toFixed(1)}</div>`,
+                            `<div class="calculation-box">Ordered: ${formatDataSet(repSorted, "ordered-data")}</div>`,
+                            `<div class="calculation-box">Median = ${repMedian}</div>`,
+                            `<div class="calculation-box">Multiple modes: ${Array.isArray(repMode) ? repMode.join(", ") : repMode}</div>`
+                        ]
+                    };
+                    break;
+                }
+
+                case 'best_measure':
+                case 'outlier_effects':
+                case 'real_world_context':
+                    return comparisonProblem(type);
+
+                case 'find_missing_basic':
+                case 'find_missing_decimal':
+                case 'find_missing_complex':
+                    return missingValueProblem(type);
+
+                default:
+                    return generateProblem(retryCount + 1);
+            }
+
+            return problem;
+        }
+
+        function comparisonProblem(type) {
+            if (type === 'best_measure') {
+                const skewedData = [15, 16, 17, 18, 45];
+                const skewMean = calculateMean(skewedData);
+                const skewMedian = calculateMedian(skewedData);
+                return {
+                    equation: `Which measure best represents this data? ${formatDataSet(skewedData)}`,
+                    answer: `Median (${skewMedian}) - less affected by the outlier`,
+                    steps: [
+                        `<div class="calculation-box">Mean = ${skewedData.join(' + ')} ÷ 5 = ${skewMean}</div>`,
+                        `<div class="calculation-box">Median = ${skewMedian}</div>`,
+                        `<strong>The median is better</strong> because 45 is an outlier and pulls the mean higher.`
+                    ]
+                };
+            }
+            if (type === 'outlier_effects') {
+                const normalData = [20, 22, 24, 26, 28];
+                const withOutlier = [20, 22, 24, 26, 65];
+                return {
+                    equation: `Compare outliers: ${formatDataSet(normalData)} vs. ${formatDataSet(withOutlier)}`,
+                    answer: `Mean changes more than median`,
+                    steps: [
+                        `<div class="calculation-box">Normal mean = ${calculateMean(normalData)}, median = ${calculateMedian(normalData)}</div>`,
+                        `<div class="calculation-box">With outlier mean = ${calculateMean(withOutlier)}, median = ${calculateMedian(withOutlier)}</div>`,
+                        `<strong>The calculation shows:</strong> The median is resistant to outliers.`
+                    ]
+                };
+            }
+            const salaries = [35000, 38000, 42000, 45000, 250000];
+            return {
+                equation: `Company salaries: ${formatDataSet(salaries.map(s => '$' + s.toLocaleString()))} - Which measure for typical salary?`,
+                answer: `Median ($${calculateMedian(salaries).toLocaleString()})`,
+                steps: [
+                    `<div class="calculation-box">Mean = $${calculateMean(salaries).toLocaleString()}</div>`,
+                    `<div class="calculation-box">Median = $${calculateMedian(salaries).toLocaleString()}</div>`,
+                    `<strong>The median better represents typical salary</strong> because the high salary skews the mean.`
+                ]
+            };
+        }
+
+        function missingValueProblem(type) {
+            if (type === 'find_missing_decimal') {
+                const decimalKnown = [78, 82, 74, 86];
+                const decimalMean = 79.2;
+                const decimalTotal = decimalKnown.length + 1;
+                const decimalRequired = decimalMean * decimalTotal;
+                const decimalKnownSum = decimalKnown.reduce((a, b) => a + b, 0);
+                const decimalMissing = decimalRequired - decimalKnownSum;
+                return {
+                    equation: `The mean of 5 quiz scores is 79.2. Four scores are ${formatDataSet(decimalKnown)}. Find the missing score.`,
+                    answer: decimalMissing.toString(),
+                    steps: [
+                        `<div class="calculation-box">Required sum = 79.2 × 5 = ${decimalRequired}</div>`,
+                        `<div class="calculation-box">Known sum = ${decimalKnown.join(' + ')} = ${decimalKnownSum}</div>`,
+                        `<div class="calculation-box">Missing score = ${decimalRequired} - ${decimalKnownSum} = ${decimalMissing}</div>`
+                    ]
+                };
+            }
+            if (type === 'find_missing_complex') {
+                const complexKnown = [85, 92, 78];
+                const complexMean = 84;
+                const complexTotal = 5;
+                const complexRequired = complexMean * complexTotal;
+                const complexKnownSum = complexKnown.reduce((a, b) => a + b, 0);
+                const twoMissingSum = complexRequired - complexKnownSum;
+                return {
+                    equation: `The mean of 5 test scores is 84. Three known scores are ${formatDataSet(complexKnown)}. If the two missing scores are equal, find each missing score.`,
+                    answer: (twoMissingSum / 2).toString(),
+                    steps: [
+                        `<div class="calculation-box">Required sum = 84 × 5 = ${complexRequired}</div>`,
+                        `<div class="calculation-box">Known sum = ${complexKnown.join(' + ')} = ${complexKnownSum}</div>`,
+                        `<div class="calculation-box">Two missing scores sum to ${twoMissingSum}</div>`,
+                        `<div class="calculation-box">Each score = ${twoMissingSum} ÷ 2 = ${twoMissingSum / 2}</div>`
+                    ]
+                };
+            }
+            const knownValues = generateDataSet(random(3, 4), 10, 30);
+            const targetMean = random(15, 35);
+            const totalValues = knownValues.length + 1;
+            const requiredSum = targetMean * totalValues;
+            const knownSum = knownValues.reduce((a, b) => a + b, 0);
+            const missingValue = requiredSum - knownSum;
+            return {
+                equation: `The mean of ${totalValues} test scores is ${targetMean}. If ${totalValues - 1} scores are ${formatDataSet(knownValues)}, find the missing score.`,
+                answer: missingValue.toString(),
+                steps: [
+                    `<div class="calculation-box">Required sum = ${targetMean} × ${totalValues} = ${requiredSum}</div>`,
+                    `<div class="calculation-box">Known sum = ${knownValues.join(' + ')} = ${knownSum}</div>`,
+                    `<div class="calculation-box">Missing value = ${requiredSum} - ${knownSum} = ${missingValue}</div>`
+                ]
+            };
+        }
+
+        function switchLevel(level) {
+            currentLevel = level;
+            currentType = 'select';
+            document.querySelectorAll('.tab').forEach((tab, index) => {
+                tab.classList.toggle('active', index + 1 === level);
+            });
+            const config = levelConfigs[level];
+            document.getElementById('level-title').textContent = config.title;
+            document.getElementById('level-description').textContent = config.description;
+            const dropdownContainer = document.getElementById('dropdown-container');
+            const dropdown = document.getElementById('type-dropdown');
+            dropdownContainer.classList.add('visible');
+            const labels = {
+                1: [['find_mean', 'Type 1: Find the mean'], ['find_median', 'Type 2: Find the median'], ['find_mode', 'Type 3: Find the mode'], ['find_range', 'Type 4: Find the range']],
+                2: [['combined_odd', 'Type 1: All measures (odd data sets)'], ['combined_even', 'Type 2: All measures (even data sets)'], ['combined_repeated', 'Type 3: Data with repeated values']],
+                3: [['best_measure', 'Type 1: Which measure best represents data'], ['outlier_effects', 'Type 2: Effect of outliers on measures'], ['real_world_context', 'Type 3: Real-world context applications']],
+                4: [['find_missing_basic', 'Type 1: Find one missing value'], ['find_missing_decimal', 'Type 2: Missing value with decimal mean'], ['find_missing_complex', 'Type 3: Complex missing value scenarios']]
+            };
+            dropdown.innerHTML = `<option value="select">Select Question Type</option>${labels[level].map(([value, text]) => `<option value="${value}">${text}</option>`).join('')}`;
+            dropdown.value = 'select';
+            showBlankPage();
+        }
+
+        function typeChanged() {
+            currentType = document.getElementById('type-dropdown').value;
+            if (currentType === 'select') showBlankPage();
+            else generateNewSet();
+        }
+
+        function showBlankPage() {
+            document.getElementById('problem-list').innerHTML = '<li style="text-align: center; padding: 50px; color: #718096; font-size: 1.2em;">Please select a question type to begin</li>';
+        }
+
+        function generateNewSet() {
+            if (currentType === 'select') { showBlankPage(); return; }
+            problems = [];
+            answersVisible = false;
+            stepsVisible = false;
+            for (let i = 0; i < 5; i++) problems.push(generateProblem(0));
+            renderProblems();
+        }
+
+        function renderProblems() {
+            const container = document.getElementById('problem-list');
+            container.innerHTML = '';
+            problems.forEach((problem, index) => {
+                const li = document.createElement('li');
+                li.className = 'problem-item';
+                const stepsHTML = problem.steps.map(step => `<div class="step">${step}</div>`).join('');
+                li.innerHTML = `
+                    <div class="problem-header">
+                        <div class="problem-left">
+                            <div class="problem-number">${index + 1}</div>
+                            <div class="expression">${problem.equation}</div>
+                        </div>
+                        <div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div>
+                    </div>
+                    <div class="steps-section" id="steps-${index}">
+                        <div class="answer-label">Solution Steps:</div>
+                        <div class="solution-steps">
+                            ${stepsHTML}
+                            <div class="final-answer">${problem.answer}</div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(li);
+            });
+        }
+
+        function showAnswers() {
+            answersVisible = !answersVisible;
+            for (let i = 0; i < 5; i++) {
+                const quickAnswer = document.getElementById(`quick-answer-${i}`);
+                if (quickAnswer) quickAnswer.classList.toggle('visible', answersVisible);
+            }
+        }
+
+        function showSteps() {
+            stepsVisible = !stepsVisible;
+            for (let i = 0; i < 5; i++) {
+                const stepsSection = document.getElementById(`steps-${i}`);
+                if (stepsSection) stepsSection.classList.toggle('visible', stepsVisible);
+            }
+        }
+
+        function startTimer(minutes) {
+            if (timerActive) stopTimer();
+            timeRemaining = minutes * 60;
+            timerActive = true;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                if (timeRemaining <= 0) timerFinished();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            timerActive = false;
+            document.getElementById('timer-display').textContent = 'Ready';
+            document.getElementById('timer-display').className = 'timer-display';
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const timerElement = document.getElementById('timer-display');
+            timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            if (timeRemaining <= 30) timerElement.className = 'timer-display warning';
+            else if (timerActive) timerElement.className = 'timer-display active';
+            else timerElement.className = 'timer-display';
+        }
+
+        function timerFinished() {
+            stopTimer();
+            document.getElementById('timer-display').textContent = 'Time Up!';
+            document.getElementById('timer-display').className = 'timer-display warning';
+            document.getElementById('timer-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('timer-modal').classList.add('hidden');
+        }
+
+        switchLevel(1);
+    </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

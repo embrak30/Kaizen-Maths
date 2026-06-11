@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Area of Rectangles Practice</title>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:14px;overflow-x:hidden;color:#1a202c}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:12px 6px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 6px 6px 0;font-weight:700;font-size:.82em;box-shadow:2px 0 8px rgba(0,0,0,.2)}
+    .sidebar{position:fixed;left:-410px;top:0;width:410px;height:100vh;background:#fff;z-index:1000;transition:left .25s;box-shadow:2px 0 20px rgba(0,0,0,.25);overflow-y:auto}
+    .sidebar.open{left:0}
+    .sidebar-header{background:#1a365d;color:#fff;padding:18px;font-size:1.25em;font-weight:700}
+    .sidebar-content{padding:22px;line-height:1.55}
+    .sidebar-content h3{color:#1a365d;margin:18px 0 8px;border-bottom:2px solid #17b8b3;padding-bottom:4px;font-size:1.02em}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4a5568}
+    .sidebar-content ul{padding-left:20px;margin-bottom:12px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;opacity:0;visibility:hidden;transition:.25s}
+    .sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 3px 15px rgba(0,0,0,.1);overflow:hidden}
+    .header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:26px 26px;color:#fff;padding:18px;text-align:center;position:relative}
+    .header h1{font-size:2em;text-shadow:0 2px 4px rgba(0,0,0,.28)}
+    .tabs{display:flex;background:#e2e8f0}
+    .tab{flex:1;padding:12px;border:0;background:#e2e8f0;cursor:pointer;font-weight:750;font-size:1em;border-bottom:3px solid transparent}
+    .tab.active{background:#fff;color:#3182ce;border-bottom-color:#3182ce}
+    .controls{padding:14px 18px;background:#f7fafc;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0}
+    .level-info h3{color:#1a365d;font-size:1.14em;margin-bottom:3px}
+    .level-info p{color:#718096;font-size:.94em}
+    .dropdown-container{margin-top:7px}
+    .type-dropdown{padding:7px 10px;border:2px solid #cbd5e0;border-radius:5px;background:#fff;min-width:330px;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .timer-display{font-size:1.45em;font-weight:800;color:#1a365d;background:#fff;padding:7px 12px;border:2px solid #cbd5e0;border-radius:5px;min-width:96px;text-align:center}
+    .timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:8px 14px;border:0;border-radius:5px;font-weight:750;cursor:pointer;min-width:68px;color:#fff}
+    .btn-primary{background:#3182ce}.btn-success{background:#38a169}.btn-warning{background:#d69e2e}.btn-danger{background:#e53e3e}
+    .problems-section{padding:12px 18px 16px;min-height:460px}
+    .problem-set-header{display:none;margin-bottom:12px;padding:10px 16px;border-radius:6px;background:#3182ce;color:#fff;text-align:center;font-size:1.12em;font-weight:800}
+    .problem-set-header.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;list-style:none}
+    .problem-item{background:#f7fafc;border-left:4px solid var(--shape-stroke,#3182ce);border-radius:7px;padding:10px;min-height:154px;display:flex;flex-direction:column;gap:8px}
+    .problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .problem-left{display:flex;gap:10px;align-items:flex-start;min-width:0}
+    .problem-number{background:#3182ce;color:#fff;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800}
+    .equation{font-size:1.03em;color:#1a365d;font-weight:650;line-height:1.35}
+    .shape-row{display:grid;grid-template-columns:142px minmax(0,1fr);gap:10px;align-items:center}
+    .shape-diagram{width:142px;height:104px;background:#fff;border:1px solid #d7e3f0;border-radius:6px;padding:4px}
+    .shape-diagram svg{width:100%;height:100%;display:block}
+    .shape-fill{fill:var(--shape-fill,#e6fffa);stroke:var(--shape-stroke,#3182ce);stroke-width:3}
+    .shape-split{stroke:var(--shape-accent,#805ad5);stroke-width:2;stroke-dasharray:5 4}
+    .shape-label{font-family:"Cambria Math","Times New Roman",serif;font-size:13px;fill:#1a365d;font-weight:700}
+    .diagram-variant-0{--shape-fill:#e6fffa;--shape-stroke:#3182ce;--shape-accent:#805ad5}
+    .diagram-variant-1{--shape-fill:#f5edff;--shape-stroke:#6f4cc3;--shape-accent:#17b8b3}
+    .diagram-variant-2{--shape-fill:#fff7db;--shape-stroke:#d69e2e;--shape-accent:#3182ce}
+    .diagram-variant-3{--shape-fill:#e8f5ff;--shape-stroke:#0d7f82;--shape-accent:#6f4cc3}
+    .problem-answer{background:#38a169;color:#fff;padding:7px 11px;border-radius:999px;font-weight:800;display:none;white-space:nowrap;font-size:.96em}
+    .problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:auto;padding:10px;background:#ebf8ff;border-left:3px solid #3182ce;border-radius:6px}
+    .steps-section.visible{display:block}
+    .answer-label{font-weight:800;color:#3182ce;margin-bottom:6px}
+    .solution-steps{line-height:1.45;font-size:.96em}
+    .step{margin:4px 0;color:#1a365d}.step-equation{margin:5px 0;text-align:center;font-weight:750;color:#805ad5}
+    .final-answer{margin-top:8px;text-align:center;background:#38a169;color:#fff;border-radius:5px;padding:7px;font-weight:800}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}
+    .modal-content{background:#fff;padding:28px;border-radius:10px;text-align:center;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+    .modal-content h2{color:#e53e3e;margin-bottom:10px}.modal-content p{color:#718096;margin-bottom:18px}
+    .hidden{display:none}
+    @media (max-width:650px){.controls{align-items:stretch}.problem-list{grid-template-columns:1fr}.shape-row{grid-template-columns:136px minmax(0,1fr)}.shape-diagram{width:136px;height:100px}.type-dropdown{min-width:260px}.sidebar{width:330px;left:-330px}}
+    @media (min-width:1200px){.problem-item{min-height:164px}.shape-diagram{width:156px;height:114px}.shape-row{grid-template-columns:156px minmax(0,1fr)}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Area of Rectangles Guidance</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool builds from basic rectangle area into compound rectilinear shapes and algebraic area problems. It is designed for board use, so each set shows four diagram-based questions.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Rectangle area, reverse area, and area-perimeter links.</li>
+        <li><strong>Level 2:</strong> Compound shapes made from rectangles, including missing dimensions.</li>
+        <li><strong>Level 3:</strong> Algebraic side lengths, expressions for area, and solving from a given area.</li>
+      </ul>
+      <h3>Key Ideas</h3>
+      <ul>
+        <li><strong>Rectangle area:</strong> Area = length × width.</li>
+        <li><strong>Reverse problems:</strong> Missing side = area ÷ known side.</li>
+        <li><strong>Compound area:</strong> Split the shape into rectangles, find each area, then add.</li>
+        <li><strong>Algebra:</strong> Form an equation from the area model before solving.</li>
+      </ul>
+      <h3>Common Misconceptions</h3>
+      <ul>
+        <li>Adding all side lengths when the question asks for area.</li>
+        <li>Using a missing total length instead of splitting the compound shape.</li>
+        <li>Forgetting square units for area.</li>
+        <li>Solving algebraic area problems before writing the rectangle equation.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Area of Rectangles</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Rectangle Area</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Compound Shapes</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Algebraic Area</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Rectangle Area</h3>
+        <p id="level-description">Find area, find a missing side, and connect area with perimeter.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: 'Level 1: Rectangle Area',
+        description: 'Find area, find a missing side, and connect area with perimeter.',
+        types: ['basic_area', 'reverse_side', 'area_perimeter']
+      },
+      2: {
+        title: 'Level 2: Compound Shapes',
+        description: 'Split rectilinear shapes into rectangles and solve missing dimensions.',
+        types: ['compound_area', 'compound_missing', 'compound_context']
+      },
+      3: {
+        title: 'Level 3: Algebraic Area',
+        description: 'Use algebraic side lengths to form expressions and solve equations.',
+        types: ['algebra_expression', 'algebra_missing', 'algebra_compound']
+      }
+    };
+
+    const typeDisplayNames = {
+      basic_area: 'Type 1: Find the area of a rectangle',
+      reverse_side: 'Type 2: Given area, find a missing side',
+      area_perimeter: 'Type 3: Link area and perimeter',
+      compound_area: 'Type 1: Find area of a compound shape',
+      compound_missing: 'Type 2: Missing dimension in compound shape',
+      compound_context: 'Type 3: Compound shape word problem',
+      algebra_expression: 'Type 1: Write an algebraic area expression',
+      algebra_missing: 'Type 2: Given area, solve for x',
+      algebra_compound: 'Type 3: Algebraic compound shapes'
+    };
+
+    function toggleSidebar(){
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('active');
+    }
+    function closeSidebar(){
+      document.getElementById('sidebar').classList.remove('open');
+      document.querySelector('.sidebar-overlay').classList.remove('active');
+    }
+    function random(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function choice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    function cm2(value){ return value + ' cm^2'; }
+    function cm(value){ return value + ' cm'; }
+    function areaFormula(){ return 'Area = length × width'; }
+
+    function rectSvg(lengthLabel, widthLabel){
+      return '<svg viewBox="0 0 180 130" role="img" aria-label="Rectangle diagram">' +
+        '<rect class="shape-fill" x="36" y="36" width="100" height="58" rx="2"></rect>' +
+        '<text class="shape-label" x="86" y="24" text-anchor="middle">' + lengthLabel + '</text>' +
+        '<text class="shape-label" x="164" y="69" text-anchor="middle">' + widthLabel + '</text>' +
+        '</svg>';
+    }
+
+    function compoundSvg(bottomLabel, leftLabel, rightHeightLabel, topWidthLabel){
+      return '<svg viewBox="0 0 190 138" role="img" aria-label="Compound rectilinear shape">' +
+        '<path class="shape-fill" d="M34 24 H88 V72 H154 V104 H34 Z"></path>' +
+        '<line class="shape-split" x1="88" y1="72" x2="88" y2="104"></line>' +
+        '<text class="shape-label" x="94" y="126" text-anchor="middle">' + bottomLabel + '</text>' +
+        '<text class="shape-label" x="15" y="66" text-anchor="middle">' + leftLabel + '</text>' +
+        '<text class="shape-label" x="174" y="92" text-anchor="middle">' + rightHeightLabel + '</text>' +
+        '<text class="shape-label" x="61" y="14" text-anchor="middle">' + topWidthLabel + '</text>' +
+        '</svg>';
+    }
+
+    function problemShell(prompt, diagram, answer, steps, question){
+      return { equation: '<div class="shape-row"><div class="shape-diagram">' + diagram + '</div><div>' + prompt + '</div></div>', question: question || prompt.replace(/<[^>]+>/g, ''), answer, steps };
+    }
+
+    function genBasicArea(){
+      const l = random(5,16);
+      const w = random(3,12);
+      const area = l*w;
+      return problemShell(
+        'Find the area of this rectangle.',
+        rectSvg(cm(l), cm(w)),
+        cm2(area),
+        [
+          areaFormula(),
+          'Area = ' + l + ' × ' + w,
+          'Area = ' + area,
+          'So the area is ' + cm2(area) + '.'
+        ],
+        'Find the area of a rectangle with length ' + cm(l) + ' and width ' + cm(w) + '.'
+      );
+    }
+
+    function genReverseSide(){
+      const known = random(4,12);
+      const missing = random(5,16);
+      const area = known*missing;
+      const askLength = Math.random() < 0.5;
+      return problemShell(
+        'The area is ' + cm2(area) + '. Find the missing side.',
+        rectSvg(askLength ? '?' : cm(known), askLength ? cm(known) : '?'),
+        cm(missing),
+        [
+          areaFormula(),
+          'Missing side = area ÷ known side',
+          'Missing side = ' + area + ' ÷ ' + known,
+          'Missing side = ' + missing,
+          'So the missing side is ' + cm(missing) + '.'
+        ],
+        'A rectangle has area ' + cm2(area) + ' and one side ' + cm(known) + '. Find the missing side.'
+      );
+    }
+
+    function genAreaPerimeter(){
+      const l = random(7,15);
+      const w = random(3,10);
+      const area = l*w;
+      const perimeter = 2*(l+w);
+      return problemShell(
+        'Find the area and perimeter of this rectangle.',
+        rectSvg(cm(l), cm(w)),
+        'Area = ' + cm2(area) + ', perimeter = ' + cm(perimeter),
+        [
+          'Area = length × width = ' + l + ' × ' + w + ' = ' + area,
+          'Perimeter = 2(length + width)',
+          'Perimeter = 2(' + l + ' + ' + w + ') = 2 × ' + (l+w),
+          'Perimeter = ' + perimeter,
+          'Area = ' + cm2(area) + ' and perimeter = ' + cm(perimeter) + '.'
+        ],
+        'Find the area and perimeter of a rectangle with length ' + cm(l) + ' and width ' + cm(w) + '.'
+      );
+    }
+
+    function compoundValues(){
+      const bottom = random(10,18);
+      const lowerHeight = random(3,7);
+      const topWidth = random(3,8);
+      const extraHeight = random(3,7);
+      const totalHeight = lowerHeight + extraHeight;
+      const area = bottom*lowerHeight + topWidth*extraHeight;
+      return { bottom, lowerHeight, topWidth, extraHeight, totalHeight, area };
+    }
+
+    function genCompoundArea(){
+      const v = compoundValues();
+      return problemShell(
+        'Find the area of this compound shape.',
+        compoundSvg(cm(v.bottom), cm(v.totalHeight), cm(v.lowerHeight), cm(v.topWidth)),
+        cm2(v.area),
+        [
+          'Split the shape into two rectangles.',
+          'Bottom rectangle area = ' + v.bottom + ' × ' + v.lowerHeight + ' = ' + (v.bottom*v.lowerHeight),
+          'Top-left rectangle height = ' + v.totalHeight + ' - ' + v.lowerHeight + ' = ' + v.extraHeight,
+          'Top-left rectangle area = ' + v.topWidth + ' × ' + v.extraHeight + ' = ' + (v.topWidth*v.extraHeight),
+          'Total area = ' + (v.bottom*v.lowerHeight) + ' + ' + (v.topWidth*v.extraHeight) + ' = ' + v.area,
+          'So the area is ' + cm2(v.area) + '.'
+        ],
+        'Find the area of an L-shaped compound rectangle with bottom length ' + cm(v.bottom) + ', total height ' + cm(v.totalHeight) + ', lower height ' + cm(v.lowerHeight) + ', and top width ' + cm(v.topWidth) + '.'
+      );
+    }
+
+    function genCompoundMissing(){
+      const v = compoundValues();
+      return problemShell(
+        'The total area is ' + cm2(v.area) + '. Find the total height.',
+        compoundSvg(cm(v.bottom), '?', cm(v.lowerHeight), cm(v.topWidth)),
+        cm(v.totalHeight),
+        [
+          'Bottom rectangle area = ' + v.bottom + ' × ' + v.lowerHeight + ' = ' + (v.bottom*v.lowerHeight),
+          'Remaining area = ' + v.area + ' - ' + (v.bottom*v.lowerHeight) + ' = ' + (v.topWidth*v.extraHeight),
+          'Extra height = remaining area ÷ top width',
+          'Extra height = ' + (v.topWidth*v.extraHeight) + ' ÷ ' + v.topWidth + ' = ' + v.extraHeight,
+          'Total height = ' + v.lowerHeight + ' + ' + v.extraHeight + ' = ' + v.totalHeight,
+          'So the total height is ' + cm(v.totalHeight) + '.'
+        ],
+        'An L-shaped compound rectangle has total area ' + cm2(v.area) + ', bottom length ' + cm(v.bottom) + ', lower height ' + cm(v.lowerHeight) + ', and top width ' + cm(v.topWidth) + '. Find the total height.'
+      );
+    }
+
+    function genCompoundContext(){
+      const v = compoundValues();
+      const context = choice(['garden path', 'classroom display board', 'kitchen tile pattern']);
+      return problemShell(
+        'A ' + context + ' has this shape. Find its area.',
+        compoundSvg(cm(v.bottom), cm(v.totalHeight), cm(v.lowerHeight), cm(v.topWidth)),
+        cm2(v.area),
+        [
+          'Split the ' + context + ' into two rectangles.',
+          'Bottom rectangle = ' + v.bottom + ' × ' + v.lowerHeight + ' = ' + (v.bottom*v.lowerHeight),
+          'Upper rectangle height = ' + v.totalHeight + ' - ' + v.lowerHeight + ' = ' + v.extraHeight,
+          'Upper rectangle = ' + v.topWidth + ' × ' + v.extraHeight + ' = ' + (v.topWidth*v.extraHeight),
+          'Total area = ' + (v.bottom*v.lowerHeight) + ' + ' + (v.topWidth*v.extraHeight) + ' = ' + v.area + ' cm^2'
+        ],
+        'A ' + context + ' is an L-shaped compound rectangle. Find its area from the given dimensions.'
+      );
+    }
+
+    function genAlgebraExpression(){
+      const a = random(2,6);
+      const b = random(2,8);
+      const c = random(2,7);
+      const constant = b*c;
+      return problemShell(
+        'Write and simplify an expression for the area.',
+        rectSvg('x + ' + b, c + ' cm'),
+        c + 'x + ' + constant + ' cm^2',
+        [
+          areaFormula(),
+          'Area = ' + c + '(x + ' + b + ')',
+          'Area = ' + c + 'x + ' + c + ' × ' + b,
+          'Area = ' + c + 'x + ' + constant,
+          'So the area is ' + c + 'x + ' + constant + ' cm^2.'
+        ],
+        'Write and simplify an expression for the area of a rectangle with sides x + ' + b + ' cm and ' + c + ' cm.'
+      );
+    }
+
+    function genAlgebraMissing(){
+      const width = random(3,8);
+      const x = random(4,11);
+      const add = random(2,7);
+      const area = width*(x+add);
+      return problemShell(
+        'The area is ' + cm2(area) + '. Find x.',
+        rectSvg('x + ' + add, cm(width)),
+        'x = ' + x,
+        [
+          areaFormula(),
+          width + '(x + ' + add + ') = ' + area,
+          'x + ' + add + ' = ' + area + ' ÷ ' + width,
+          'x + ' + add + ' = ' + (x+add),
+          'x = ' + (x+add) + ' - ' + add,
+          'x = ' + x
+        ],
+        'A rectangle has sides x + ' + add + ' cm and ' + cm(width) + '. Its area is ' + cm2(area) + '. Find x.'
+      );
+    }
+
+    function genAlgebraCompound(){
+      const x = random(4,10);
+      const add = random(5,9);
+      const lowerHeight = random(2,5);
+      const extraHeight = random(3,6);
+      const area = lowerHeight*(x+add) + extraHeight*x;
+      const coefficient = lowerHeight + extraHeight;
+      const constant = lowerHeight*add;
+      const solve = Math.random() < 0.5;
+      if(solve){
+        return problemShell(
+          'The total area is ' + cm2(area) + '. Find x.',
+          compoundSvg('x + ' + add, cm(lowerHeight + extraHeight), cm(lowerHeight), 'x'),
+          'x = ' + x,
+          [
+            'Split the shape into two rectangles.',
+            'Bottom area = ' + lowerHeight + '(x + ' + add + ') = ' + lowerHeight + 'x + ' + constant,
+            'Upper area = ' + extraHeight + 'x',
+            'Total area = ' + coefficient + 'x + ' + constant,
+            coefficient + 'x + ' + constant + ' = ' + area,
+            coefficient + 'x = ' + (area - constant),
+            'x = ' + x
+          ],
+          'An algebraic compound rectangle has area ' + cm2(area) + '. The bottom rectangle is x + ' + add + ' cm by ' + cm(lowerHeight) + ', and the upper rectangle is x cm by ' + cm(extraHeight) + '. Find x.'
+        );
+      }
+      return problemShell(
+        'Write and simplify an expression for the total area.',
+        compoundSvg('x + ' + add, cm(lowerHeight + extraHeight), cm(lowerHeight), 'x'),
+        coefficient + 'x + ' + constant + ' cm^2',
+        [
+          'Split the shape into two rectangles.',
+          'Bottom area = ' + lowerHeight + '(x + ' + add + ') = ' + lowerHeight + 'x + ' + constant,
+          'Upper area = ' + extraHeight + 'x',
+          'Total area = ' + lowerHeight + 'x + ' + constant + ' + ' + extraHeight + 'x',
+          'Total area = ' + coefficient + 'x + ' + constant,
+          'So the area is ' + coefficient + 'x + ' + constant + ' cm^2.'
+        ],
+        'Write and simplify an expression for an L-shaped compound rectangle made from a bottom rectangle x + ' + add + ' by ' + lowerHeight + ' and an upper rectangle x by ' + extraHeight + '.'
+      );
+    }
+
+    function generateProblem(){
+      const type = currentType === 'select' ? choice(levelConfigs[currentLevel].types) : currentType;
+      if(type === 'basic_area') return genBasicArea();
+      if(type === 'reverse_side') return genReverseSide();
+      if(type === 'area_perimeter') return genAreaPerimeter();
+      if(type === 'compound_area') return genCompoundArea();
+      if(type === 'compound_missing') return genCompoundMissing();
+      if(type === 'compound_context') return genCompoundContext();
+      if(type === 'algebra_expression') return genAlgebraExpression();
+      if(type === 'algebra_missing') return genAlgebraMissing();
+      if(type === 'algebra_compound') return genAlgebraCompound();
+      return genBasicArea();
+    }
+
+    function switchLevel(level){
+      currentLevel = level;
+      currentType = 'select';
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active', index+1 === level));
+      const config = levelConfigs[level];
+      document.getElementById('level-title').textContent = config.title;
+      document.getElementById('level-description').textContent = config.description;
+      const dropdown = document.getElementById('type-dropdown');
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + config.types.map(type => '<option value="' + type + '">' + typeDisplayNames[type] + '</option>').join('');
+      dropdown.value = 'select';
+      showBlankPage();
+    }
+
+    function typeChanged(){
+      currentType = document.getElementById('type-dropdown').value;
+      currentType === 'select' ? showBlankPage() : generateNewSet();
+    }
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').classList.remove('visible');
+      document.getElementById('problem-list').innerHTML = '<li style="grid-column:1/-1;text-align:center;padding:36px;color:#718096;font-size:1.05em">Please select a question type to begin area practice.</li>';
+    }
+
+    function generateNewSet(){
+      if(currentType === 'select'){ showBlankPage(); return; }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      for(let i=0;i<4;i++) problems.push(generateProblem());
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const container = document.getElementById('problem-list');
+      const header = document.getElementById('problem-set-header');
+      container.innerHTML = '';
+      header.textContent = typeDisplayNames[currentType] || 'Area Practice';
+      header.className = 'problem-set-header visible';
+      problems.forEach((problem,index)=>{
+        const li = document.createElement('li');
+        li.className = 'problem-item diagram-variant-' + (index % 4);
+        const stepsHTML = problem.steps.map(step => step.includes('=') ? '<div class="step-equation">' + step + '</div>' : '<div class="step">' + step + '</div>').join('');
+        li.innerHTML = '<div class="problem-header"><div class="problem-left"><div class="problem-number">' + (index+1) + '</div><div class="equation">' + problem.equation + '</div></div><div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div></div><div class="steps-section" id="steps-' + index + '"><div class="answer-label">Solution Steps:</div><div class="solution-steps">' + stepsHTML + '<div class="final-answer">' + problem.answer + '</div></div></div>';
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers(){
+      answersVisible = !answersVisible;
+      problems.forEach((_,i)=>{
+        const el = document.getElementById('quick-answer-' + i);
+        if(el) el.classList.toggle('visible', answersVisible);
+      });
+    }
+    function showSteps(){
+      stepsVisible = !stepsVisible;
+      problems.forEach((_,i)=>{
+        const el = document.getElementById('steps-' + i);
+        if(el) el.classList.toggle('visible', stepsVisible);
+      });
+    }
+
+    function startTimer(minutes){
+      if(timerActive) stopTimer();
+      timeRemaining = minutes*60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(()=>{
+        timeRemaining--;
+        updateTimerDisplay();
+        if(timeRemaining <= 0) timerFinished();
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+      timerActive = false;
+      const el = document.getElementById('timer-display');
+      el.textContent = 'Ready';
+      el.className = 'timer-display';
+    }
+    function updateTimerDisplay(){
+      const el = document.getElementById('timer-display');
+      const m = Math.floor(timeRemaining/60);
+      const s = timeRemaining%60;
+      el.textContent = m + ':' + String(s).padStart(2,'0');
+      if(timerActive && timeRemaining <= 30) el.className = 'timer-display warning';
+      else if(timerActive) el.className = 'timer-display active';
+      else el.className = 'timer-display';
+    }
+    function timerFinished(){
+      stopTimer();
+      const el = document.getElementById('timer-display');
+      el.textContent = 'Time Up!';
+      el.className = 'timer-display warning';
+      document.getElementById('timer-modal').classList.remove('hidden');
+    }
+    function closeModal(){ document.getElementById('timer-modal').classList.add('hidden'); }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-3"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

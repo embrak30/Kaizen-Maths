@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HCF & LCM Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f5f7fa;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#2c3e50;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#34495e;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}
+    .sidebar.open{left:0}
+    .sidebar-header{background:#2c3e50;color:#fff;padding:20px;font-size:1.3em;font-weight:600}
+    .sidebar-content{padding:25px;line-height:1.6}
+    .sidebar-content h3{color:#2c3e50;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3498db;padding-bottom:5px}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}
+    .sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}
+    .sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}
+    .header{background:#27ae60;background-image:linear-gradient(45deg,#2ecc71 25%,transparent 25%,transparent 75%,#2ecc71 75%,#2ecc71),linear-gradient(45deg,#2ecc71 25%,transparent 25%,transparent 75%,#2ecc71 75%,#2ecc71);background-size:30px 30px;background-position:0 0,15px 15px;color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}
+    .header::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}
+    .header h1{font-size:2.2em;margin-bottom:5px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#ecf0f1}
+    .tab{flex:1;padding:18px;background:#ecf0f1;border:none;cursor:pointer;font-size:1.1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}
+    .tab:hover{background:#d5dbdb}
+    .tab.active{background:#fff;border-bottom-color:#27ae60;color:#27ae60}
+    .controls{padding:25px;background:#f8f9fa;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border-bottom:1px solid #e9ecef}
+    .level-info h3{color:#2c3e50;margin-bottom:5px;font-size:1.3em}
+    .level-info p{color:#7f8c8d;font-size:1em}
+    .dropdown-container{margin-top:10px;display:none}
+    .dropdown-container.visible{display:block}
+    .type-dropdown{padding:8px 12px;border:2px solid #bdc3c7;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:250px}
+    .type-dropdown:focus{border-color:#27ae60;outline:none}
+    .timer-section{display:flex;align-items:center;gap:15px}
+    .timer-display{font-size:2em;font-weight:700;color:#2c3e50;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #bdc3c7;min-width:120px;text-align:center}
+    .timer-display.active{border-color:#27ae60;color:#27ae60}
+    .timer-display.warning{color:#e74c3c;border-color:#e74c3c;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px}
+    .btn{padding:12px 22px;border:none;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}
+    .btn-primary{background:#3498db;color:#fff}.btn-primary:hover{background:#2980b9;transform:translateY(-1px)}
+    .btn-success{background:#27ae60;color:#fff}.btn-success:hover{background:#229954;transform:translateY(-1px)}
+    .btn-warning{background:#f39c12;color:#fff}.btn-warning:hover{background:#e67e22;transform:translateY(-1px)}
+    .btn-danger{background:#e74c3c;color:#fff}.btn-danger:hover{background:#c0392b;transform:translateY(-1px)}
+    .problems-section{padding:35px;min-height:600px}
+    .problem-list{list-style:none}
+    .problem-item{background:#f8f9fa;margin:20px 0;padding:25px;border-radius:10px;border-left:5px solid #27ae60;transition:.3s}
+    .problem-item:hover{transform:translateX(3px)}
+    .problem-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:16px}
+    .problem-left{display:flex;align-items:center;flex:1;min-width:0}
+    .problem-answer{background:#27ae60;color:#fff;padding:10px 18px;border-radius:25px;font-weight:700;font-size:1.2em;display:none;margin-left:20px;white-space:nowrap}
+    .problem-answer.visible{display:block;animation:slideIn .4s ease}
+    @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .problem-number{background:#27ae60;color:#fff;width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:20px;font-size:1.1em;flex-shrink:0}
+    .problem-type{background:#3498db;color:#fff;padding:8px 15px;border-radius:20px;font-size:.9em;font-weight:600;margin-right:15px;flex-shrink:0}
+    .problem-numbers{font-size:1.8em;font-family:'Times New Roman',serif;color:#2c3e50;font-weight:600;overflow-wrap:anywhere}
+    .problem-numbers small{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:.55em;font-weight:500;color:#666}
+    .steps-section{margin-top:18px;padding:18px;background:#f0f8ff;border-radius:8px;border-left:4px solid #3498db;display:none}
+    .steps-section.visible{display:block;animation:slideDown .4s ease}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+    .answer-label{font-weight:600;color:#27ae60;margin-bottom:10px;font-size:1.1em}
+    .solution-steps{font-size:1.15em;line-height:1.5}
+    .step{margin:8px 0;color:#2c3e50}
+    .step-calculation{font-family:'Times New Roman',serif;font-weight:600;color:#8e44ad;text-align:center;margin:10px 0;font-size:1.2em;background:#f8f9fa;padding:8px;border-radius:5px}
+    .final-answer{background:#27ae60;color:#fff;padding:10px 18px;border-radius:6px;text-align:center;font-weight:700;font-size:1.3em;margin-top:12px}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}
+    .modal-content{background:#fff;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+    .modal-content h2{color:#e74c3c;margin-bottom:18px;font-size:2em}
+    .modal-content p{color:#7f8c8d;margin-bottom:25px;font-size:1.1em}
+    .hidden{display:none}
+    .algebra-expression{font-style:italic;color:#8e44ad}
+    @media (max-width:768px){.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:320px;left:-320px}.problem-header{align-items:flex-start;flex-direction:column}.problem-answer{margin-left:0}.problem-numbers{font-size:1.35em}}
+    @media (min-width:1200px){.problem-numbers{font-size:2.2em}.problem-item{padding:30px;margin:25px 0}.problem-number{width:40px;height:40px;font-size:1.2em}.solution-steps{font-size:1.3em}.step-calculation{font-size:1.4em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool helps students practise HCF and LCM in a structured progression from simple integers to algebra and word problems.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1 - Basic Numbers:</strong> Simple HCF and LCM with small integers.</li>
+        <li><strong>Level 2 - Algebra:</strong> HCF and LCM with algebraic expressions.</li>
+        <li><strong>Level 3 - Mixed Problems:</strong> A mixture of numerical and algebraic prompts.</li>
+        <li><strong>Level 4 - Word Problems:</strong> Real-world applications that require choosing HCF or LCM.</li>
+      </ul>
+      <h3>Teaching Strategies</h3>
+      <ul>
+        <li>Ask students to decide first whether a situation calls for a factor or a multiple.</li>
+        <li>Use prime factorisation to compare powers clearly.</li>
+        <li>For algebra, reinforce that HCF uses the lowest shared power and LCM uses the highest required power.</li>
+      </ul>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Confusing HCF with LCM.</li>
+        <li>Missing repeated prime factors.</li>
+        <li>Forgetting variables or using the wrong variable powers in algebraic expressions.</li>
+        <li>Not checking whether a word problem needs grouping or synchronising.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header"><h1>HCF &amp; LCM Teaching Tool</h1></div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Basic Numbers</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Algebra</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Mixed Problems</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Word Problems</button>
+    </div>
+
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Basic Numbers</h3>
+        <p id="level-description">Simple HCF and LCM with integers</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Problem Type</option>
+            <option value="hcf_basic">HCF: Two Numbers</option>
+            <option value="lcm_basic">LCM: Two Numbers</option>
+            <option value="mixed_basic">Mixed: HCF and LCM</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+
+    <div class="problems-section">
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1:{title:'Level 1: Basic Numbers',description:'Simple HCF and LCM with integers',types:['hcf_basic','lcm_basic','mixed_basic']},
+      2:{title:'Level 2: Algebra',description:'HCF and LCM with algebraic expressions',types:['hcf_algebra','lcm_algebra','mixed_algebra']},
+      3:{title:'Level 3: Mixed Problems',description:'Combination of numbers and algebra',types:['mixed_advanced']},
+      4:{title:'Level 4: Word Problems',description:'Real-world applications',types:['word_problems']}
+    };
+
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b!==0){const t=b;b=a%b;a=t}return a}
+    function lcm(a,b){return Math.abs(a*b)/gcd(a,b)}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function randomChoice(arr){return arr[random(0,arr.length-1)]}
+
+    function primeFactorization(n){
+      const factors=[];
+      let d=2;
+      while(d*d<=n){
+        while(n%d===0){factors.push(d);n/=d}
+        d++;
+      }
+      if(n>1) factors.push(n);
+      return factors;
+    }
+
+    function factorCounts(factors){
+      return factors.reduce((acc,f)=>{acc[f]=(acc[f]||0)+1;return acc},{});
+    }
+
+    function getSuperscript(num){
+      const map={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+      return String(num).split('').map(d=>map[d]||d).join('');
+    }
+
+    function formatFactors(factors){
+      const counts=factorCounts(factors);
+      return Object.entries(counts).map(([factor,count])=>count>1?`${factor}${getSuperscript(count)}`:factor).join(' × ');
+    }
+
+    function commonPrimeFactors(factorsA,factorsB){
+      const ca=factorCounts(factorsA), cb=factorCounts(factorsB), parts=[];
+      Object.keys(ca).forEach(p=>{
+        const count=Math.min(ca[p]||0,cb[p]||0);
+        if(count>0) parts.push(count>1?`${p}${getSuperscript(count)}`:p);
+      });
+      return parts.length?parts.join(' × '):'none';
+    }
+
+    function expr(coeff,xPower,yPower=0){
+      let out=`${coeff}x${getSuperscript(xPower)}`;
+      if(yPower>0) out+=`y${yPower>1?getSuperscript(yPower):''}`;
+      return out;
+    }
+
+    function toggleSidebar(){
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('active');
+    }
+
+    function closeSidebar(){
+      document.getElementById('sidebar').classList.remove('open');
+      document.querySelector('.sidebar-overlay').classList.remove('active');
+    }
+
+    function generateProblem(){
+      const config=levelConfigs[currentLevel];
+      let types=config.types.slice();
+      if(currentType!=='all'&&currentType!=='select'&&!['mixed_basic','mixed_algebra','mixed_advanced'].includes(currentType)) types=[currentType];
+      let type=randomChoice(types);
+      if(type==='mixed_basic') type=Math.random()<0.5?'hcf_basic':'lcm_basic';
+      if(type==='mixed_algebra') type=Math.random()<0.5?'hcf_algebra':'lcm_algebra';
+      if(type==='mixed_advanced') type=randomChoice(['hcf_basic','lcm_basic','hcf_algebra','lcm_algebra']);
+
+      if(type==='hcf_basic'){
+        const a=random(12,48), b=random(8,36), answer=gcd(a,b);
+        const fa=primeFactorization(a), fb=primeFactorization(b);
+        return {type:'HCF',expression:`HCF(${a}, ${b})`,answer,steps:[
+          `Find the HCF of ${a} and ${b}`,
+          `Prime factorisation of ${a}: ${formatFactors(fa)}`,
+          `Prime factorisation of ${b}: ${formatFactors(fb)}`,
+          `Common prime factors: ${commonPrimeFactors(fa,fb)}`,
+          `HCF = ${answer}`
+        ]};
+      }
+
+      if(type==='lcm_basic'){
+        const a=random(6,24), b=random(8,30), answer=lcm(a,b);
+        const fa=primeFactorization(a), fb=primeFactorization(b);
+        return {type:'LCM',expression:`LCM(${a}, ${b})`,answer,steps:[
+          `Find the LCM of ${a} and ${b}`,
+          `Prime factorisation of ${a}: ${formatFactors(fa)}`,
+          `Prime factorisation of ${b}: ${formatFactors(fb)}`,
+          'Use the highest power of every prime factor needed',
+          `LCM = ${answer}`
+        ]};
+      }
+
+      if(type==='hcf_algebra'){
+        const coeffs=[6,9,12,15,18], powers=[2,3,4];
+        const c1=randomChoice(coeffs), c2=randomChoice(coeffs), p1=randomChoice(powers), p2=randomChoice(powers);
+        const includeY=Math.random()<0.35, y1=includeY?random(1,3):0, y2=includeY?random(1,3):0;
+        const e1=expr(c1,p1,y1), e2=expr(c2,p2,y2);
+        const hc=gcd(c1,c2), hx=Math.min(p1,p2), hy=includeY?Math.min(y1,y2):0;
+        const answer=expr(hc,hx,hy);
+        return {type:'HCF',expression:`HCF(${e1}, ${e2})`,answer,expressions:[e1,e2],steps:[
+          `Find the HCF of ${e1} and ${e2}`,
+          `${e1} = ${c1} × x${getSuperscript(p1)}${includeY?` × y${y1>1?getSuperscript(y1):''}`:''}`,
+          `${e2} = ${c2} × x${getSuperscript(p2)}${includeY?` × y${y2>1?getSuperscript(y2):''}`:''}`,
+          `HCF of coefficients: HCF(${c1}, ${c2}) = ${hc}`,
+          `Use the lowest shared powers: x${getSuperscript(hx)}${includeY&&hy>0?`, y${hy>1?getSuperscript(hy):''}`:''}`,
+          `HCF = ${answer}`
+        ]};
+      }
+
+      if(type==='lcm_algebra'){
+        const coeffs=[4,6,8,10,12], powers=[2,3,4];
+        const c1=randomChoice(coeffs), c2=randomChoice(coeffs), p1=randomChoice(powers), p2=randomChoice(powers);
+        const includeY=Math.random()<0.35, y1=includeY?random(1,3):0, y2=includeY?random(1,3):0;
+        const e1=expr(c1,p1,y1), e2=expr(c2,p2,y2);
+        const lc=lcm(c1,c2), lx=Math.max(p1,p2), ly=includeY?Math.max(y1,y2):0;
+        const answer=expr(lc,lx,ly);
+        return {type:'LCM',expression:`LCM(${e1}, ${e2})`,answer,expressions:[e1,e2],steps:[
+          `Find the LCM of ${e1} and ${e2}`,
+          `${e1} = ${c1} × x${getSuperscript(p1)}${includeY?` × y${y1>1?getSuperscript(y1):''}`:''}`,
+          `${e2} = ${c2} × x${getSuperscript(p2)}${includeY?` × y${y2>1?getSuperscript(y2):''}`:''}`,
+          `LCM of coefficients: LCM(${c1}, ${c2}) = ${lc}`,
+          `Use the highest required powers: x${getSuperscript(lx)}${includeY&&ly>0?`, y${ly>1?getSuperscript(ly):''}`:''}`,
+          `LCM = ${answer}`
+        ]};
+      }
+
+      const scenarios=[
+        {context:'Two gears have {a} and {b} teeth.',question:'How many teeth pass before they align again?',type:'LCM',setup:'Find the LCM of the tooth counts.'},
+        {context:'Rectangular tiles measure {a} cm by {b} cm.',question:'What is the side length of the smallest square they can tile?',type:'LCM',setup:'Find the LCM of the two side lengths.'},
+        {context:'Two ropes are {a} m and {b} m long.',question:'What is the longest equal length that cuts both ropes exactly?',type:'HCF',setup:'Find the HCF of the two lengths.'}
+      ];
+      const scenario=randomChoice(scenarios), a=random(12,48), b=random(8,36);
+      const answer=scenario.type==='HCF'?gcd(a,b):lcm(a,b);
+      return {type:scenario.type,expression:scenario.context.replace('{a}',a).replace('{b}',b),question:scenario.question,answer,steps:[
+        `Problem: ${scenario.context.replace('{a}',a).replace('{b}',b)}`,
+        `Question: ${scenario.question}`,
+        `Solution approach: ${scenario.setup}`,
+        `Numbers: ${a} and ${b}`,
+        `${scenario.type}(${a}, ${b}) = ${answer}`,
+        `Answer: ${answer}`
+      ]};
+    }
+
+    function switchLevel(level){
+      currentLevel=level;
+      currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      const dropdown=document.getElementById('type-dropdown');
+      document.getElementById('dropdown-container').classList.add('visible');
+      if(level===1){
+        dropdown.innerHTML='<option value="select">Select Problem Type</option><option value="hcf_basic">HCF: Two Numbers</option><option value="lcm_basic">LCM: Two Numbers</option><option value="mixed_basic">Mixed: HCF and LCM</option>';
+      }else if(level===2){
+        dropdown.innerHTML='<option value="select">Select Problem Type</option><option value="hcf_algebra">HCF: Algebraic Expressions</option><option value="lcm_algebra">LCM: Algebraic Expressions</option><option value="mixed_algebra">Mixed: Algebra</option>';
+      }else if(level===3){
+        currentType='mixed_advanced';
+        dropdown.innerHTML='<option value="mixed_advanced">Mixed: All Types</option>';
+      }else{
+        currentType='word_problems';
+        dropdown.innerHTML='<option value="word_problems">Word Problems</option>';
+      }
+      dropdown.value=currentType;
+      if(currentType==='select') showBlankPage(); else generateNewSet();
+    }
+
+    function typeChanged(){
+      currentType=document.getElementById('type-dropdown').value;
+      if(currentType==='select') showBlankPage(); else generateNewSet();
+    }
+
+    function showBlankPage(){
+      document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:50px;color:#7f8c8d;font-size:1.2em;">Please select a problem type to begin</li>';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      problems=[];
+      answersVisible=false;
+      stepsVisible=false;
+      for(let i=0;i<5;i++) problems.push(generateProblem());
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const container=document.getElementById('problem-list');
+      container.innerHTML='';
+      problems.forEach((problem,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const stepsHTML=problem.steps.map(step=>step.includes('=')&&!step.includes(':')?`<div class="step-calculation">${step}</div>`:`<div class="step">${step}</div>`).join('');
+        const display=problem.question?`${problem.expression}<br><small>${problem.question}</small>`:problem.expression;
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div class="problem-type">${problem.type}</div>
+              <div class="problem-numbers ${problem.expressions?'algebra-expression':''}">${display}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Solution Steps:</div>
+            <div class="solution-steps">${stepsHTML}<div class="final-answer">${problem.answer}</div></div>
+          </div>`;
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers(){
+      answersVisible=!answersVisible;
+      for(let i=0;i<problems.length;i++){
+        const el=document.getElementById(`quick-answer-${i}`);
+        if(el) el.classList.toggle('visible',answersVisible);
+      }
+    }
+
+    function showSteps(){
+      stepsVisible=!stepsVisible;
+      for(let i=0;i<problems.length;i++){
+        const el=document.getElementById(`steps-${i}`);
+        if(el) el.classList.toggle('visible',stepsVisible);
+      }
+    }
+
+    function startTimer(minutes){
+      if(timerActive) stopTimer();
+      timeRemaining=minutes*60;
+      timerActive=true;
+      updateTimerDisplay();
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        updateTimerDisplay();
+        if(timeRemaining<=0) timerFinished();
+      },1000);
+    }
+
+    function stopTimer(){
+      if(timerInterval){clearInterval(timerInterval);timerInterval=null}
+      timerActive=false;
+      const el=document.getElementById('timer-display');
+      el.textContent='Ready';
+      el.className='timer-display';
+    }
+
+    function updateTimerDisplay(){
+      const minutes=Math.floor(timeRemaining/60), seconds=timeRemaining%60;
+      const el=document.getElementById('timer-display');
+      el.textContent=`${minutes}:${seconds.toString().padStart(2,'0')}`;
+      if(timeRemaining<=30) el.className='timer-display warning';
+      else if(timerActive) el.className='timer-display active';
+      else el.className='timer-display';
+    }
+
+    function timerFinished(){
+      stopTimer();
+      const el=document.getElementById('timer-display');
+      el.textContent='Time Up!';
+      el.className='timer-display warning';
+      document.getElementById('timer-modal').classList.remove('hidden');
+    }
+
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

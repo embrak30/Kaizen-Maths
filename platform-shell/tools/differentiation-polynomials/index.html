@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Differentiation of Polynomials</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-430px;top:0;width:430px;height:100vh;background:#fff;z-index:1000;transition:left .3s ease;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1400px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden}.header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}.header h1{font-size:2.3em;margin-bottom:6px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}.subtitle{font-size:1.05em;opacity:.92;position:relative;z-index:1}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:18px;background:#e2e8f0;border:0;cursor:pointer;font-size:1.05em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:25px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.3em}.level-info p{color:#718096;font-size:1em}.dropdown-container{margin-top:10px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:320px;max-width:100%}.type-dropdown:focus{border-color:#3182ce;outline:0}
+    .timer-section{display:flex;align-items:center;gap:15px}.timer-display{font-size:2em;font-weight:700;color:#1a365d;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #cbd5e0;min-width:120px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px}.btn{padding:12px 22px;border:0;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:24px;min-height:580px}.problem-set-header{background:#2d5a87;color:#fff;padding:14px 22px;border-radius:8px;margin-bottom:18px;text-align:center;font-weight:700;font-size:1.22em;display:none}.problem-set-header.visible{display:block}.basic-header{background:#38a169}.multi-header{background:#3182ce}.applications-header{background:#e53e3e}.problem-list{list-style:none}.problem-item{background:#f7fafc;margin:14px 0;padding:18px;border-radius:12px;border-left:6px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(3px);box-shadow:0 4px 15px rgba(0,0,0,.1)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3182ce;color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:18px;font-size:1.2em;flex-shrink:0}.function-display{font-size:2em;font-family:'Times New Roman',serif;color:#1a365d;font-weight:700;line-height:1.25;max-width:100%;overflow-x:auto;padding-bottom:2px}.derivative-result{background:#38a169;color:#fff;padding:10px 18px;border-radius:25px;font-weight:700;font-size:1.25em;display:none;margin-left:18px;font-family:'Times New Roman',serif;max-width:42%;white-space:nowrap;overflow-x:auto}.derivative-result.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{margin-top:12px;padding:16px;background:#ebf8ff;border-radius:10px;border-left:5px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.steps-label{font-weight:700;color:#3182ce;margin-bottom:10px;font-size:1.15em}.solution-steps{font-size:1.1em;line-height:1.45}.step{margin:8px 0;color:#1a365d}.step-equation{font-family:'Times New Roman',serif;font-weight:700;color:#2d5a87;text-align:center;margin:8px 0;font-size:1.35em;padding:8px;background:#fff;border-radius:8px;border:2px solid #cbd5e0;overflow-x:auto}.final-derivative{background:#38a169;color:#fff;padding:10px 18px;border-radius:8px;text-align:center;font-weight:700;font-size:1.35em;margin-top:10px;font-family:'Times New Roman',serif;overflow-x:auto}.current-term{background:#3182ce;color:#fff;padding:2px 8px;border-radius:4px;font-weight:700}.power-change{background:#38a169;color:#fff;padding:2px 8px;border-radius:4px;font-weight:700}.coefficient-process{background:#d69e2e;color:#fff;padding:2px 8px;border-radius:4px;font-weight:700}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none!important}
+    @media(max-width:768px){body{padding:15px}.controls{flex-direction:column;align-items:stretch;padding:14px}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%;padding:10px}.sidebar{width:350px;left:-350px}.problems-section{padding:12px}.problem-item{padding:12px;margin:9px 0}.problem-header{flex-direction:column;align-items:flex-start}.derivative-result{max-width:100%;margin-left:58px}.function-display{font-size:1.45em}.solution-steps{font-size:1em}.step-equation{font-size:1.1em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Key Principles</h3>
+      <ul>
+        <li><strong>Power rule:</strong> d/dx[x<sup>n</sup>] = nx<sup>n-1</sup>.</li>
+        <li><strong>Constant multiple rule:</strong> d/dx[cf(x)] = c f'(x).</li>
+        <li><strong>Sum and difference rule:</strong> Differentiate each term separately.</li>
+        <li><strong>Constant rule:</strong> d/dx[c] = 0.</li>
+      </ul>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Single terms, coefficients, constants, and linear terms.</li>
+        <li><strong>Level 2:</strong> Quadratic, cubic, and higher-degree polynomials.</li>
+        <li><strong>Level 3:</strong> Gradients at points, tangent equations, and normal equations.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Multiply by the original power, then reduce the power by one.</li>
+        <li>Differentiate term by term before simplifying.</li>
+        <li>Connect f'(a) to the gradient of the tangent at x = a.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <h1>Differentiation of Polynomials</h1>
+      <div class="subtitle">Power Rule to Tangent and Normal Lines</div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Basic Power Rule</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Multi-Term Polynomials</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Tangent Lines & Applications</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Basic Power Rule</h3>
+        <p id="level-description">Apply the power rule to simple polynomial terms</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="single_term">Type 1: Single term differentiation</option>
+            <option value="coefficients">Type 2: Coefficients with single terms</option>
+            <option value="constants_linear">Type 3: Constants and linear functions</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New Problems</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Show Derivatives</button>
+        <button class="btn btn-warning" onclick="showSteps()">Show Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review the differentiation steps?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: { title:'Level 1: Basic Power Rule', description:'Apply the power rule to simple polynomial terms', types:['single_term','coefficients','constants_linear'] },
+      2: { title:'Level 2: Multi-Term Polynomials', description:'Differentiate polynomials with multiple terms', types:['quadratic','cubic','higher_degree'] },
+      3: { title:'Level 3: Tangent Lines & Applications', description:'Find gradients, tangent line equations, and normal line equations', types:['gradient_at_point','tangent_equations','normal_equations'] }
+    };
+    window.typeDisplayNames = {
+      single_term: 'Single term differentiation',
+      coefficients: 'Coefficients with single terms',
+      constants_linear: 'Constants and linear functions',
+      quadratic: 'Quadratic functions',
+      cubic: 'Cubic functions',
+      higher_degree: 'Higher degree polynomials',
+      gradient_at_point: 'Find gradient at a point',
+      tangent_equations: 'Find tangent equation',
+      normal_equations: 'Find normal equation'
+    };
+
+    function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.sidebar-overlay').classList.toggle('active'); }
+    function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.querySelector('.sidebar-overlay').classList.remove('active'); }
+    function random(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function choice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    const supers = {0:'',1:'',2:'²',3:'³',4:'⁴',5:'⁵',6:'⁶',7:'⁷',8:'⁸',9:'⁹'};
+    function powText(p){ return p in supers ? supers[p] : '<sup>'+p+'</sup>'; }
+    function coeffText(c, variable, power){
+      if(c===0) return '0';
+      if(power===0 || !variable) return String(c);
+      if(c===1) return variable + powText(power);
+      if(c===-1) return '-' + variable + powText(power);
+      return c + variable + powText(power);
+    }
+    function signedTerm(c, variable, power, first=false){
+      if(c===0) return '';
+      const body = coeffText(Math.abs(c), variable, power);
+      if(first) return c<0 ? '-' + body : body;
+      return c<0 ? ' - ' + body : ' + ' + body;
+    }
+    function polynomial(terms){
+      let out = '';
+      terms.forEach(([c,p]) => {
+        if(c!==0){ out += signedTerm(c,'x',p,out===''); }
+      });
+      return out || '0';
+    }
+    function derivativeTerms(terms){
+      return terms.map(([c,p]) => [p===0 ? 0 : c*p, Math.max(0,p-1)]).filter(([c])=>c!==0);
+    }
+    function derivativeText(terms){ return polynomial(derivativeTerms(terms)); }
+    function problemFromTerms(terms,badge,extraSteps=[]){
+      const original = 'f(x) = ' + polynomial(terms);
+      const derivative = "f'(x) = " + derivativeText(terms);
+      const steps = ['Step 1: Differentiate each term using the power rule.'];
+      terms.forEach(([c,p]) => {
+        if(p===0){
+          steps.push('<span class=\"current-term\">' + coeffText(c,'',0) + '</span> is constant, so its derivative is <span class=\"coefficient-process\">0</span>.');
+        } else {
+          steps.push('For <span class=\"current-term\">' + coeffText(c,'x',p) + '</span>: multiply coefficient by power, <span class=\"coefficient-process\">' + c + ' × ' + p + ' = ' + (c*p) + '</span>, then reduce power <span class=\"power-change\">' + p + ' → ' + (p-1) + '</span>.');
+        }
+      });
+      steps.push(...extraSteps);
+      steps.push(derivative);
+      return { badge, original, derivative, steps };
+    }
+
+    function generateProblem(){
+      const types = currentType==='select' || currentType==='all' ? levelConfigs[currentLevel].types : [currentType];
+      const type = choice(types);
+      if(type==='single_term'){
+        const p=random(2,8);
+        return problemFromTerms([[1,p]], 'basic');
+      }
+      if(type==='coefficients'){
+        return problemFromTerms([[random(2,12),random(2,6)]], 'basic');
+      }
+      if(type==='constants_linear'){
+        const pick=choice(['constant','x','linear']);
+        if(pick==='constant') return problemFromTerms([[random(2,20),0]], 'basic', ['The derivative of a constant is always 0.']);
+        if(pick==='x') return problemFromTerms([[1,1]], 'basic', ['x is x¹, so the derivative is 1.']);
+        return problemFromTerms([[random(2,10),1]], 'basic');
+      }
+      if(type==='quadratic'){
+        return problemFromTerms([[random(2,8),2],[choice([-1,1])*random(2,12),1],[choice([-1,1])*random(2,15),0]], 'multi');
+      }
+      if(type==='cubic'){
+        return problemFromTerms([[random(2,5),3],[random(2,8),2],[-random(2,10),1],[random(2,12),0]], 'multi');
+      }
+      if(type==='higher_degree'){
+        const deg=random(4,6);
+        return problemFromTerms([[random(2,4),deg],[random(2,6),deg-1],[-random(2,8),2],[random(2,10),0]], 'multi');
+      }
+      if(type==='gradient_at_point') return gradientAtPoint();
+      if(type==='tangent_equations') return tangentEquation();
+      if(type==='normal_equations') return normalEquation();
+      return problemFromTerms([[1,2]], 'basic');
+    }
+
+    function gradientAtPoint(){
+      const a=random(2,6), b=random(2,8), c=random(2,12), x=random(2,6);
+      const m=2*a*x+b;
+      const terms=[[a,2],[b,1],[c,0]];
+      return problemFromTerms(terms,'applications',[
+        'Step 2: Evaluate the derivative at x = ' + x + '.',
+        "f'(" + x + ') = ' + (2*a) + '(' + x + ') + ' + b + ' = ' + m,
+        'The gradient at x = ' + x + ' is ' + m + '.'
+      ]);
+    }
+
+    function tangentEquation(){
+      const a=random(2,5), b=random(2,7), c=random(3,10), x=random(2,5);
+      const y=a*x*x+b*x+c;
+      const m=2*a*x+b;
+      const intercept=y-m*x;
+      const terms=[[a,2],[b,1],[c,0]];
+      const line='y = ' + (m===1?'x':m+'x') + (intercept===0?'':signedTerm(intercept,'',0));
+      return {
+        badge:'applications',
+        original:'f(x) = ' + polynomial(terms) + ', find tangent at x = ' + x,
+        derivative:'Tangent: ' + line,
+        steps:[
+          'Step 1: Differentiate the curve.',
+          "f'(x) = " + derivativeText(terms),
+          'Step 2: Find the point on the curve.',
+          'f(' + x + ') = ' + a + '(' + x + ')² + ' + b + '(' + x + ') + ' + c + ' = ' + y,
+          'Step 3: Find the gradient of the tangent.',
+          "f'(" + x + ') = ' + (2*a) + '(' + x + ') + ' + b + ' = ' + m,
+          'Step 4: Use y - y₁ = m(x - x₁).',
+          'y - ' + y + ' = ' + m + '(x - ' + x + ')',
+          line
+        ]
+      };
+    }
+
+    function normalEquation(){
+      const a=random(2,4), b=random(2,6), c=random(3,8), x=random(2,4);
+      const y=a*x*x+b*x+c;
+      const tangentM=2*a*x+b;
+      const normalNum=-1, normalDen=tangentM;
+      const intercept=(y*tangentM + x)/tangentM;
+      const interceptText = Number.isInteger(intercept) ? String(intercept) : intercept.toFixed(2);
+      const slopeText='-1/' + tangentM;
+      const line='y = ' + slopeText + 'x' + (Number(interceptText)>=0 ? ' + ' + interceptText : ' - ' + Math.abs(Number(interceptText)));
+      const terms=[[a,2],[b,1],[c,0]];
+      return {
+        badge:'applications',
+        original:'f(x) = ' + polynomial(terms) + ', find normal at x = ' + x,
+        derivative:'Normal: ' + line,
+        steps:[
+          'Step 1: Find the point on the curve.',
+          'f(' + x + ') = ' + y + ', so the point is (' + x + ', ' + y + ').',
+          'Step 2: Differentiate to find tangent gradient.',
+          "f'(x) = " + derivativeText(terms),
+          "f'(" + x + ') = ' + tangentM,
+          'Step 3: The normal gradient is the negative reciprocal.',
+          'm_normal = ' + slopeText,
+          'Step 4: Use y - y₁ = m(x - x₁).',
+          'y - ' + y + ' = ' + slopeText + '(x - ' + x + ')',
+          line
+        ]
+      };
+    }
+
+    function switchLevel(level){
+      currentLevel=level; currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      const options={
+        1:[['single_term','Type 1: Single term differentiation'],['coefficients','Type 2: Coefficients with single terms'],['constants_linear','Type 3: Constants and linear functions']],
+        2:[['quadratic','Type 1: Quadratic functions'],['cubic','Type 2: Cubic functions'],['higher_degree','Type 3: Higher degree polynomials']],
+        3:[['gradient_at_point','Type 1: Find gradient at a point'],['tangent_equations','Type 2: Find tangent equation'],['normal_equations','Type 3: Find normal equation']]
+      };
+      const dropdown=document.getElementById('type-dropdown');
+      dropdown.innerHTML='<option value=\"select\">Select Question Type</option>' + options[level].map(([v,l])=>'<option value=\"'+v+'\">'+l+'</option>').join('');
+      dropdown.value='select';
+      showBlankPage();
+    }
+    function typeChanged(){ currentType=document.getElementById('type-dropdown').value; currentType==='select' ? showBlankPage() : generateNewSet(); }
+    function showBlankPage(){ document.getElementById('problem-list').innerHTML='<div style=\"text-align:center;padding:50px;color:#718096;font-size:1.2em\">Please select a question type to begin polynomial differentiation practice.</div>'; }
+    function generateNewSet(){
+      if(currentType==='select'){ showBlankPage(); return; }
+      problems=[]; answersVisible=false; stepsVisible=false;
+      const seen=new Set(); let guard=0;
+      while(problems.length<5 && guard<80){ guard++; const p=generateProblem(); const key=p.original+'|'+p.derivative; if(!seen.has(key)){ seen.add(key); problems.push(p); } }
+      while(problems.length<5) problems.push(generateProblem());
+      renderProblems();
+    }
+    function renderProblems(){
+      const container=document.getElementById('problem-list'); container.innerHTML='';
+      if(problems.length){
+        const header=document.createElement('div');
+        header.className='problem-set-header visible ' + problems[0].badge + '-header';
+        header.textContent=problems[0].badge.toUpperCase() + ' PROBLEMS';
+        container.appendChild(header);
+      }
+      problems.forEach((problem,index)=>{
+        const li=document.createElement('li'); li.className='problem-item';
+        const stepsHTML=problem.steps.map(step=>step.includes('=') || step.includes("f'") || step.includes('Tangent') || step.includes('Normal') ? '<div class=\"step-equation\">'+step+'</div>' : '<div class=\"step\">'+step+'</div>').join('');
+        li.innerHTML='<div class=\"problem-header\"><div class=\"problem-left\"><div class=\"problem-number\">'+(index+1)+'</div><div><div class=\"function-display\">'+problem.original+'</div></div></div><div class=\"derivative-result\" id=\"quick-answer-'+index+'\">'+problem.derivative+'</div></div><div class=\"steps-section\" id=\"steps-'+index+'\"><div class=\"steps-label\">Differentiation Steps:</div><div class=\"solution-steps\">'+stepsHTML+'<div class=\"final-derivative\">'+problem.derivative+'</div></div></div>';
+        container.appendChild(li);
+      });
+    }
+    function showAnswers(){ answersVisible=!answersVisible; problems.forEach((_,i)=>{ const el=document.getElementById('quick-answer-'+i); if(el) el.classList.toggle('visible',answersVisible); }); }
+    function showSteps(){ stepsVisible=!stepsVisible; problems.forEach((_,i)=>{ const el=document.getElementById('steps-'+i); if(el) el.classList.toggle('visible',stepsVisible); }); }
+    function startTimer(minutes){ if(timerActive) stopTimer(); timeRemaining=minutes*60; timerActive=true; updateTimerDisplay(); timerInterval=setInterval(()=>{ timeRemaining--; updateTimerDisplay(); if(timeRemaining<=0) timerFinished(); },1000); }
+    function stopTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } timerActive=false; const el=document.getElementById('timer-display'); el.textContent='Ready'; el.className='timer-display'; }
+    function updateTimerDisplay(){ const m=Math.floor(timeRemaining/60), s=timeRemaining%60, el=document.getElementById('timer-display'); el.textContent=m+':'+String(s).padStart(2,'0'); if(timeRemaining<=30&&timerActive) el.className='timer-display warning'; else if(timerActive) el.className='timer-display active'; else el.className='timer-display'; }
+    function timerFinished(){ stopTimer(); const el=document.getElementById('timer-display'); el.textContent='Time Up!'; el.className='timer-display warning'; document.getElementById('timer-modal').classList.remove('hidden'); }
+    function closeModal(){ document.getElementById('timer-modal').classList.add('hidden'); }
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

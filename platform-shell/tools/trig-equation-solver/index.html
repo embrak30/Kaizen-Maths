@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trig Equation Solver Tool</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:15px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:12px 6px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 6px 6px 0;font-weight:600;font-size:.85em;transition:.3s;box-shadow:2px 0 8px rgba(0,0,0,.2)}.teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 3px 15px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:25px 25px;background-position:0 0,12px 12px;color:#fff;padding:20px;text-align:center;position:relative;overflow:hidden}.header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}.header h1{font-size:2em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:12px;background:#e2e8f0;border:0;cursor:pointer;font-size:1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:15px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:3px;font-size:1.2em}.level-info p{color:#718096;font-size:.95em}.dropdown-container{margin-top:8px;display:block}.type-dropdown{padding:6px 10px;border:2px solid #cbd5e0;border-radius:5px;font-size:.95em;background:#fff;cursor:pointer;min-width:280px;max-width:100%}.type-dropdown:focus{border-color:#3182ce;outline:0}
+    .timer-section{display:flex;align-items:center;gap:12px}.timer-display{font-size:1.6em;font-weight:700;color:#1a365d;background:#fff;padding:8px 14px;border-radius:5px;border:2px solid #cbd5e0;min-width:100px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.action-buttons{display:flex;gap:8px}.btn{padding:8px 16px;border:0;border-radius:5px;font-size:.9em;font-weight:600;cursor:pointer;transition:.3s;min-width:70px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:15px 25px 25px;min-height:500px}.problem-set-header{background:#3182ce;color:#fff;padding:12px 20px;margin-bottom:15px;border-radius:6px;font-size:1.2em;font-weight:700;text-align:center;box-shadow:0 2px 8px rgba(49,130,206,.3);display:none}.problem-set-header.visible{display:block}.problem-set-header.type-1{background:#3182ce}.problem-set-header.type-2{background:#38a169}.problem-set-header.type-3{background:#d69e2e}.problem-list{list-style:none}.problem-item{background:#f7fafc;margin:12px 0;padding:15px 20px;border-radius:6px;border-left:4px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(2px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3182ce;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:15px;flex-shrink:0}.equation{font-size:1.2em;color:#1a365d;max-width:100%;overflow-x:auto}.problem-answer{background:#38a169;color:#fff;padding:8px 16px;border-radius:20px;font-weight:700;display:none;margin-left:15px;max-width:44%;white-space:nowrap;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}.steps-section{margin-top:12px;padding:12px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#3182ce;margin-bottom:12px}.solution-steps{font-size:1em;line-height:1.8}.step{margin:10px 0;color:#2d3748;overflow-x:auto}.final-answer{background:#38a169;color:#fff;padding:10px 16px;border-radius:5px;text-align:center;font-weight:700;margin-top:12px;overflow-x:auto}.timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:30px;border-radius:10px;text-align:center;max-width:320px;box-shadow:0 8px 25px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:15px}.modal-content p{color:#718096;margin-bottom:20px}.hidden{display:none!important}
+    @media(max-width:768px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:320px;left:-320px}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{max-width:100%;margin-left:43px}.problems-section{padding:12px}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>What this tool is for</h3>
+      <p>This tool provides practice solving trigonometric equations in radians on the interval 0 <= x < 2pi, including equations that simplify to quadratics in sine or cosine.</p>
+      <h3>Level Overview</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Linear equations in sin(kx + phi), cos(kx + phi), and tan(kx + phi).</li>
+        <li><strong>Level 2:</strong> Quadratics in sin(kx + phi) or cos(kx + phi), factorised and fully solved.</li>
+      </ul>
+      <h3>Teaching Strategies</h3>
+      <ul>
+        <li>Isolate the trigonometric expression first, then substitute theta = kx + phi.</li>
+        <li>Use the unit circle, symmetry, and special angles to generate all solutions.</li>
+        <li>For quadratics, solve in a substitute variable before returning to the trig equation.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <div class="header"><h1>Trig Equation Solver</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Linear Trig Equations</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Quadratic Trig Equations</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Linear Trig Equations</h3>
+        <p id="level-description">Solve equations in sin(kx + phi), cos(kx + phi), and tan(kx + phi), giving all solutions in 0 <= x < 2pi.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="basic_trig">Type 1: Simple sin, cos, tan</option>
+            <option value="linear_trig">Type 2: Two-step equations</option>
+            <option value="shifted_trig">Type 3: Shifted angles kx + phi</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"><span id="problem-type-title">Please select a question type to begin</span></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review solutions?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const TWO_PI=2*Math.PI;
+    const levelConfigs={1:{title:'Level 1: Linear Trig Equations',description:'Solve equations in sin(kx + phi), cos(kx + phi), and tan(kx + phi), giving all solutions in 0 <= x < 2pi.',types:['basic_trig','linear_trig','shifted_trig']},2:{title:'Level 2: Quadratic Trig Equations',description:'Solve quadratic equations in sin(kx + phi) or cos(kx + phi) by factorising and finding all x in 0 <= x < 2pi.',types:['quad_sin','quad_cos','quad_mixed']}};
+    const typeDisplayNames={basic_trig:'Type 1: Simple sin, cos, tan',linear_trig:'Type 2: Two-step equations',shifted_trig:'Type 3: Shifted angles kx + phi',quad_sin:'Type 1: Quadratic in sin(kx + phi)',quad_cos:'Type 2: Quadratic in cos(kx + phi)',quad_mixed:'Type 3: Mixed quadratic trig equations'};
+    function random(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+    function choice(a){return a[random(0,a.length-1)]}
+    function gcd(a,b){a=Math.abs(Math.round(a));b=Math.abs(Math.round(b));while(b){const t=b;b=a%b;a=t}return a||1}
+    function piFrac(x){let t=x%TWO_PI;if(t<0)t+=TWO_PI;const r=t/Math.PI;for(const d of [1,2,3,4,6,12]){const m=Math.round(r*d);if(Math.abs(r-m/d)<1e-4){const g=gcd(m,d),n=m/g,den=d/g;if(n===0)return'0';if(den===1)return n===1?'\\pi':n+'\\pi';return n===1?'\\dfrac{\\pi}{'+den+'}':'\\dfrac{'+n+'\\pi}{'+den+'}'}}return t.toFixed(2)}
+    function list(xs){return xs.length?xs.map(piFrac).join(', '):'\\text{no solutions}'}
+    function norm(t){let v=t%TWO_PI;if(v<0)v+=TWO_PI;return v}
+    function uniquePush(arr,x){x=norm(x);if(!arr.some(v=>Math.abs(v-x)<1e-5))arr.push(x)}
+    function solveSin(v){if(v<-1-1e-6||v>1+1e-6)return[];v=Math.max(-1,Math.min(1,v));const a=Math.asin(v),s=[];for(let n=-2;n<=2;n++){uniquePush(s,a+2*n*Math.PI);uniquePush(s,Math.PI-a+2*n*Math.PI)}return s.sort((a,b)=>a-b)}
+    function solveCos(v){if(v<-1-1e-6||v>1+1e-6)return[];v=Math.max(-1,Math.min(1,v));const a=Math.acos(v),s=[];for(let n=-2;n<=2;n++){uniquePush(s,a+2*n*Math.PI);uniquePush(s,-a+2*n*Math.PI)}return s.sort((a,b)=>a-b)}
+    function solveTan(v){const a=Math.atan(v),s=[];for(let n=-3;n<=3;n++)uniquePush(s,a+n*Math.PI);return s.sort((a,b)=>a-b)}
+    function thetaToX(theta,k,phi){const xs=[],period=TWO_PI/k;theta.forEach(th=>{const base=(th-phi)/k;for(let n=-3;n<=4;n++){const x=norm(base+n*period);if(x<TWO_PI-1e-6&&!xs.some(v=>Math.abs(v-x)<1e-5))xs.push(x)}});return xs.sort((a,b)=>a-b)}
+    const sinTargets=[['0',0],['\\dfrac{1}{2}',.5],['-\\dfrac{1}{2}',-.5],['1',1],['-1',-1],['\\dfrac{\\sqrt{2}}{2}',Math.SQRT2/2],['-\\dfrac{\\sqrt{2}}{2}',-Math.SQRT2/2],['\\dfrac{\\sqrt{3}}{2}',Math.sqrt(3)/2],['-\\dfrac{\\sqrt{3}}{2}',-Math.sqrt(3)/2]];
+    const cosTargets=sinTargets;
+    const tanTargets=[['0',0],['1',1],['-1',-1],['\\sqrt{3}',Math.sqrt(3)],['-\\sqrt{3}',-Math.sqrt(3)],['\\dfrac{1}{\\sqrt{3}}',1/Math.sqrt(3)],['-\\dfrac{1}{\\sqrt{3}}',-1/Math.sqrt(3)]];
+    const shifts=[['0',0],['\\dfrac{\\pi}{6}',Math.PI/6],['-\\dfrac{\\pi}{6}',-Math.PI/6],['\\dfrac{\\pi}{4}',Math.PI/4],['-\\dfrac{\\pi}{4}',-Math.PI/4],['\\dfrac{\\pi}{3}',Math.PI/3],['-\\dfrac{\\pi}{3}',-Math.PI/3]];
+    function k(){return choice([2,3])}
+    function inner(kv,phi){return phi==='0'?kv+'x':kv+'x '+(phi[0]==='-'?phi:'+ '+phi)}
+    function solveByFunc(func,target){if(func==='sin')return solveSin(target);if(func==='cos')return solveCos(target);return solveTan(target)}
+    function genLinearCore(twoStep=false,shifted=false){const func=choice(['sin','cos','tan']),kv=k(),sh=shifted?choice(shifts):['0',0],pool=func==='tan'?tanTargets:func==='sin'?sinTargets:cosTargets,target=choice(pool),inn=inner(kv,sh[0]),theta=solveByFunc(func,target[1]),xs=thetaToX(theta,kv,sh[1]);const mult=twoStep?choice([2,3,4]):1;const left=twoStep?`${mult}\\,\\${func}(${inn})`:`\\${func}(${inn})`;const right=twoStep?`${mult}${target[0]}`:target[0];return{equation:`Solve $${left} = ${right}$ for $0 \\le x < 2\\pi$.`,answer:`$x = ${list(xs)}.$`,steps:[{text:`${twoStep?'Divide first, then ':''}Let $\\theta=${inn}$.`},{text:`Solve $\\${func}(\\theta)=${target[0]}$ to get $$\\theta=${list(theta)}.$$`},{text:`Now solve $${inn}=\\theta$ for each angle and keep $0 \\le x < 2\\pi$: $$x=${list(xs)}.$$`}]}}
+    function genBasic(){return genLinearCore(false,false)}
+    function genTwoStep(){return genLinearCore(true,false)}
+    function genShift(){return genLinearCore(false,true)}
+    function quad(func){const kv=k(),sh=choice(shifts),inn=inner(kv,sh[0]),isSin=func==='sin',theta=(isSin?[...solveSin(.5),...solveSin(-1)]:[...solveCos(.5),...solveCos(-1)]).filter((v,i,a)=>!a.slice(0,i).some(x=>Math.abs(x-v)<1e-5)).sort((a,b)=>a-b),xs=thetaToX(theta,kv,sh[1]),expr=isSin?`2\\sin^{2}(${inn}) - \\sin(${inn}) - 1`:`2\\cos^{2}(${inn}) + \\cos(${inn}) - 1`,fact=isSin?`(2\\sin(\\theta)-1)(\\sin(\\theta)+1)=0`:`(2\\cos(\\theta)-1)(\\cos(\\theta)+1)=0`;return{equation:`Solve $${expr}=0$ for $0 \\le x < 2\\pi$.`,answer:`$x = ${list(xs)}.$`,steps:[{text:`Let $\\theta=${inn}$.`},{text:`Factor the quadratic: $$${fact}.$$`},{text:`So ${isSin?'$\\sin(\\theta)=\\dfrac{1}{2}$ or $\\sin(\\theta)=-1$':'$\\cos(\\theta)=\\dfrac{1}{2}$ or $\\cos(\\theta)=-1$'}.`},{text:`This gives $$\\theta=${list(theta)}.$$`},{text:`Solve $${inn}=\\theta$ to get $$x=${list(xs)}.$$`}]}}
+    function generateProblem(){const t=currentType==='select'?choice(levelConfigs[currentLevel].types):currentType;if(t==='basic_trig')return genBasic();if(t==='linear_trig')return genTwoStep();if(t==='shifted_trig')return genShift();if(t==='quad_sin')return quad('sin');if(t==='quad_cos')return quad('cos');if(t==='quad_mixed')return Math.random()<.5?quad('sin'):quad('cos');return genBasic()}
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function renderMath(){if(typeof renderMathInElement==='function')renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})}
+    function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));const cfg=levelConfigs[level];document.getElementById('level-title').textContent=cfg.title;document.getElementById('level-description').textContent=cfg.description;const opts=level===1?[['basic_trig','Type 1: Simple sin, cos, tan'],['linear_trig','Type 2: Two-step equations'],['shifted_trig','Type 3: Shifted angles kx + phi']]:[['quad_sin','Type 1: Quadratic in sin(kx + phi)'],['quad_cos','Type 2: Quadratic in cos(kx + phi)'],['quad_mixed','Type 3: Mixed quadratic trig equations']];const dd=document.getElementById('type-dropdown');dd.innerHTML='<option value=\"select\">Select Question Type</option>'+opts.map(([v,l])=>'<option value=\"'+v+'\">'+l+'</option>').join('');dd.value='select';header();showBlankPage();renderMath()}
+    function header(){const h=document.getElementById('problem-set-header'),t=document.getElementById('problem-type-title');if(currentType==='select'){h.classList.remove('visible');t.textContent='Please select a question type to begin';return}h.className='problem-set-header visible type-'+(((Object.keys(typeDisplayNames).indexOf(currentType)+3)%3)+1);t.textContent=typeDisplayNames[currentType]||'Problem Set'}
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;header();currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-list').innerHTML='<li style=\"text-align:center;padding:40px;color:#718096;font-size:1.1em\">Please select a question type to begin</li>';renderMath()}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<5;i++)problems.push(generateProblem());renderProblems()}
+    function renderProblems(){const c=document.getElementById('problem-list');c.innerHTML='';problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const steps=p.steps.map(s=>'<div class=\"step\">'+s.text+'</div>').join('');li.innerHTML='<div class=\"problem-header\"><div class=\"problem-left\"><div class=\"problem-number\">'+(i+1)+'</div><div class=\"equation\">'+p.equation+'</div></div><div class=\"problem-answer\" id=\"quick-answer-'+i+'\">'+p.answer+'</div></div><div class=\"steps-section\" id=\"steps-'+i+'\"><div class=\"answer-label\">Solution Steps:</div><div class=\"solution-steps\">'+steps+'<div class=\"final-answer\">'+p.answer+'</div></div></div>';c.appendChild(li)});renderMath()}
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById('quick-answer-'+i)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById('steps-'+i)?.classList.toggle('visible',stepsVisible))}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const el=document.getElementById('timer-display');el.textContent='Ready';el.className='timer-display'}
+    function updateTimerDisplay(){const m=Math.floor(timeRemaining/60),s=timeRemaining%60,el=document.getElementById('timer-display');el.textContent=m+':'+String(s).padStart(2,'0');el.className=timeRemaining<=30&&timerActive?'timer-display warning':timerActive?'timer-display active':'timer-display'}
+    function timerFinished(){stopTimer();const el=document.getElementById('timer-display');el.textContent='Time Up!';el.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

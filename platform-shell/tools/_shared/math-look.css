@@ -1,0 +1,95 @@
+/*
+  Shared math presentation for tool pages that do not use a full KaTeX renderer.
+  It gives generated equations, worked steps, answers, and probability tables a
+  consistent mathematical face while leaving each tool's layout intact.
+*/
+
+.equation,
+.step-equation,
+.math,
+.formula,
+.expression,
+.problem-numbers,
+.problem-type,
+.step-calculation,
+.calculation,
+.problem-answer,
+.final-answer {
+  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Times New Roman", serif;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: 0;
+}
+
+.equation {
+  line-height: 1.35;
+}
+
+.step-equation,
+.step-calculation,
+.math,
+.problem-numbers,
+.expression {
+  color: #1a365d;
+  line-height: 1.5;
+}
+
+.step-equation,
+.step-calculation {
+  background: rgba(128, 90, 213, 0.08);
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+.step sub,
+.step sup,
+.equation sub,
+.equation sup,
+.system-line sub,
+.system-line sup,
+.solution-steps sub,
+.solution-steps sup,
+.step-equation sub,
+.step-equation sup,
+.problem-numbers sub,
+.problem-numbers sup,
+.expression sub,
+.expression sup,
+.problem-answer sub,
+.problem-answer sup,
+.final-answer sub,
+.final-answer sup {
+  font-family: inherit;
+  line-height: 0;
+}
+
+.fraction,
+.frac {
+  display: inline-grid;
+  grid-template-rows: auto auto;
+  align-items: center;
+  justify-items: center;
+  vertical-align: middle;
+  line-height: 1.05;
+  margin: 0 0.12em;
+}
+
+.fraction .numerator,
+.frac .numerator {
+  border-bottom: 1px solid currentColor;
+  padding: 0 0.25em 0.08em;
+}
+
+.fraction .denominator,
+.frac .denominator {
+  padding: 0.08em 0.25em 0;
+}
+
+.prob-table {
+  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Times New Roman", serif;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.prob-table th,
+.prob-table td {
+  letter-spacing: 0;
+}

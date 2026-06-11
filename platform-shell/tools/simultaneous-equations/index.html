@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simultaneous Equations Practice</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="reRenderMath()"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f5f7fa;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#8e44ad;color:#fff;padding:10px 6px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.8em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#9b59b6;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s ease;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}
+    .sidebar.open{left:0}
+    .sidebar-header{background:#8e44ad;color:#fff;padding:16px;font-size:1.1em;font-weight:600}
+    .sidebar-content{padding:18px;line-height:1.4;font-size:.9em}
+    .sidebar-content h3{color:#8e44ad;margin:14px 0 8px;font-size:1em;border-bottom:1px solid #e74c3c;padding-bottom:3px}
+    .sidebar-content p,.sidebar-content li{margin-bottom:6px;color:#555}
+    .sidebar-content ul{padding-left:18px;margin-bottom:10px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}
+    .sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}
+    .header{background:#2c3e50;background-image:radial-gradient(circle at 25% 25%,#8e44ad 0%,transparent 50%),radial-gradient(circle at 75% 75%,#e74c3c 0%,transparent 50%);color:#fff;padding:18px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}
+    .header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 50%,rgba(0,0,0,.05) 100%)}
+    .header h1{font-size:1.7em;margin-bottom:2px;position:relative;z-index:1;text-shadow:0 1px 3px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#ecf0f1}
+    .tab{flex:1;padding:10px;background:#ecf0f1;border:0;cursor:pointer;font-size:.95em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}
+    .tab:hover{background:#d5dbdb}
+    .tab.active{background:#fff;border-bottom-color:#e74c3c;color:#e74c3c}
+    .controls{padding:12px 18px;background:#f8f9fa;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid #e9ecef}
+    .level-info h3{color:#8e44ad;margin-bottom:3px;font-size:1.05em}
+    .level-info p{color:#7f8c8d;font-size:.9em}
+    .dropdown-container{margin-top:6px;display:none}
+    .dropdown-container.visible{display:block}
+    .type-dropdown{padding:6px 10px;border:1px solid #bdc3c7;border-radius:6px;font-size:.9em;background:#fff;cursor:pointer;min-width:300px;max-width:100%}
+    .type-dropdown:focus{border-color:#e74c3c;outline:0}
+    .timer-section{display:flex;align-items:center;gap:10px}
+    .timer-display{font-size:1.4em;font-weight:700;color:#8e44ad;background:#fff;padding:6px 10px;border-radius:6px;border:1px solid #bdc3c7;min-width:95px;text-align:center}
+    .timer-display.active{border-color:#e74c3c;color:#e74c3c}
+    .timer-display.warning{color:#e74c3c;border-color:#e74c3c;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:8px}
+    .btn{padding:8px 14px;border:0;border-radius:6px;font-size:.85em;font-weight:600;cursor:pointer;transition:.3s;min-width:70px}
+    .btn-primary{background:#e74c3c;color:#fff}.btn-primary:hover{background:#c0392b;transform:translateY(-1px)}
+    .btn-success{background:#27ae60;color:#fff}.btn-success:hover{background:#229954;transform:translateY(-1px)}
+    .btn-warning{background:#f39c12;color:#fff}.btn-warning:hover{background:#e67e22;transform:translateY(-1px)}
+    .btn-danger{background:#e74c3c;color:#fff}.btn-danger:hover{background:#c0392b;transform:translateY(-1px)}
+    .problems-section{padding:12px 18px;min-height:400px}
+    .problem-list{list-style:none}
+    .problem-item{background:#f8f9fa;margin:8px 0;padding:12px 14px;border-radius:8px;border-left:4px solid #e74c3c;transition:.3s}
+    .problem-item:hover{transform:translateX(2px)}
+    .problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
+    .problem-left{display:flex;align-items:flex-start;flex:1;min-width:0}
+    .problem-content{display:flex;flex-direction:column;gap:4px;min-width:0}
+    .problem-answer{background:#27ae60;color:#fff;padding:6px 12px;border-radius:20px;font-weight:600;font-size:.95em;display:none;margin-left:10px;align-self:flex-start;white-space:nowrap;max-width:42%;overflow-x:auto}
+    .problem-answer.visible{display:block;animation:slideIn .3s ease}
+    @keyframes slideIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+    .problem-number{background:#e74c3c;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:10px;font-size:.9em;flex-shrink:0}
+    .equation-system{font-size:1.2em;font-family:'Times New Roman',serif;color:#2c3e50;font-weight:600;display:flex;flex-direction:column;gap:2px;margin:2px 0;max-width:100%}
+    .equation{padding:0;max-width:100%;overflow-x:auto;line-height:1.35}
+    .instruction{font-size:.95em;color:#8e44ad;font-weight:600;margin-bottom:2px}
+    .steps-section{margin-top:8px;padding:10px 12px;background:#f0f8ff;border-radius:6px;border-left:3px solid #e74c3c;display:none}
+    .steps-section.visible{display:block;animation:slideDown .3s ease}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+    .answer-label{font-weight:600;color:#27ae60;margin-bottom:6px;font-size:.95em}
+    .solution-steps{font-size:.9em;line-height:1.4}
+    .step{margin:4px 0;color:#2c3e50}
+    .step-equation{font-family:'Times New Roman',serif;font-weight:600;color:#8e44ad;text-align:center;margin:4px 0;font-size:1.05em;overflow-x:auto;max-width:100%;padding-bottom:2px}
+    .final-answer{background:#27ae60;color:#fff;padding:6px 10px;border-radius:6px;text-align:center;font-weight:700;font-size:1.05em;margin-top:6px;overflow-x:auto}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}
+    .modal-content{background:#fff;padding:20px;border-radius:10px;text-align:center;max-width:320px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+    .modal-content h2{color:#e74c3c;margin-bottom:12px;font-size:1.5em}
+    .modal-content p{color:#7f8c8d;margin-bottom:16px;font-size:.95em}
+    .hidden{display:none!important}
+    @media (max-width:768px){body{padding:15px}.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:320px;left:-320px}.type-dropdown{min-width:260px}.problem-header{flex-direction:column}.problem-answer{max-width:100%;margin-left:38px}}
+    @media (min-width:1200px){.equation-system{font-size:1.25em}.instruction{font-size:1em}.problem-item{padding:10px 14px;margin:8px 0}.problem-number{width:30px;height:30px;font-size:.95em}.solution-steps{font-size:.95em}.step-equation{font-size:1.1em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool helps students practise solving simultaneous linear equations in two variables using substitution and elimination. Problems are presented in LaTeX so working is clear when projected.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1 - Substitution:</strong> Systems that are efficient to solve by substitution, including mixed practice.</li>
+        <li><strong>Level 2 - Elimination:</strong> Direct, scaled, and harder elimination sets.</li>
+      </ul>
+      <h3>Teaching Strategies</h3>
+      <ul>
+        <li>Ask students to choose the most efficient method before solving.</li>
+        <li>Encourage full written working: rearrange, substitute, expand, collect, solve, and check.</li>
+        <li>Use mixed types for starters, fluency, and spaced retrieval.</li>
+      </ul>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Sign errors when adding or subtracting equations.</li>
+        <li>Incorrect distribution of negative signs when rearranging.</li>
+        <li>Stopping after finding one variable.</li>
+        <li>Dropping or mis-simplifying fractional coefficients and answers.</li>
+      </ul>
+      <h3>Standards and Alignment</h3>
+      <ul>
+        <li><strong>UK KS3 / KS4:</strong> Simultaneous linear equations in two variables.</li>
+        <li><strong>CCSS 8.EE.C.8:</strong> Analyse and solve pairs of simultaneous linear equations.</li>
+        <li><strong>CCSS A.REI.C.6:</strong> Solve systems of linear equations exactly.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <div class="header"><h1>Simultaneous Equations Practice Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Substitution</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Elimination</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Substitution Method</h3>
+        <p id="level-description">Solve using substitution. Answers are exact fractions.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="easy_substitution">Type 1: Easy substitution (y = mx + c)</option>
+            <option value="harder_substitution">Type 2: Harder substitution (rearrange first)</option>
+            <option value="mixed_substitution">Mixed: Substitution (Types 1-2)</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section"><ol id="problem-list" class="problem-list"></ol></div>
+  </div>
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time Up!</h2>
+      <p>Ready to review solutions?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+  <script>
+    let currentLevel = 1, currentType = 'select';
+    let timerInterval = null, timeRemaining = 0, timerActive = false;
+    let problems = [], answersVisible = false, stepsVisible = false;
+    const levelConfigs = {
+      1:{title:'Level 1: Substitution Method',description:'Solve using substitution. Answers are exact fractions.',types:['easy_substitution','harder_substitution','mixed_substitution']},
+      2:{title:'Level 2: Elimination Method',description:'Solve using elimination. Answers are exact fractions.',types:['easy_elimination','elimination_with_scaling','elimination_harder','mixed_elimination']}
+    };
+    const typeDisplayNames = {
+      easy_substitution: 'Easy substitution',
+      harder_substitution: 'Harder substitution',
+      mixed_substitution: 'Mixed substitution',
+      easy_elimination: 'Easy elimination',
+      elimination_with_scaling: 'Elimination with scaling',
+      elimination_harder: 'Harder elimination',
+      mixed_elimination: 'Mixed elimination'
+    };
+    window.typeDisplayNames = typeDisplayNames;
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function randomNonZeroAvoid(min,max,avoidSet){let v;do{v=random(min,max)}while(v===0||avoidSet.has(v));return v}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b!==0){const t=b;b=a%b;a=t}return a||1}
+    function simplifyFraction(num,den){if(den<0){num=-num;den=-den}const g=gcd(num,den);return{n:num/g,d:den/g}}
+    function latexFraction(num,den){if(den===0)return'\\text{undefined}';if(num===0)return'0';const f=simplifyFraction(num,den);return f.d===1?`${f.n}`:`\\frac{${f.n}}{${f.d}}`}
+    function latexFirstCoeff(c,variable){if(c===0)return'0';const abs=Math.abs(c),sign=c<0?'-':'';if(variable){return abs===1?`${sign}${variable}`:`${sign}${abs}${variable}`}return `${sign}${abs}`}
+    function latexNextCoeff(c,variable){if(c===0)return'';const abs=Math.abs(c),sign=c<0?'-':'+';if(variable){return abs===1?` ${sign} ${variable}`:` ${sign} ${abs}${variable}`}return` ${sign} ${abs}`}
+    function latexEquationFromCoeffs(a,b,c,var1='x',var2='y'){let lhs=latexFirstCoeff(a,var1);if(b!==0)lhs+=latexNextCoeff(b,var2);return`${lhs} = ${c}`}
+    function reRenderMath(){if(typeof renderMathInElement!=='function')return;renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false})}
+    function signed(n){return n>=0?`+ ${n}`:`- ${Math.abs(n)}`}
+    function makeEasySubstitution(){
+      let m=randomNonZeroAvoid(-5,5,new Set([0,1,-1]));
+      let b=randomNonZeroAvoid(-6,6,new Set([0,1,-1]));
+      const a2=randomNonZeroAvoid(2,6,new Set([1,-1]));
+      const b2=randomNonZeroAvoid(2,5,new Set([1,-1]));
+      const x=random(1,4), y=m*x+b, c2=a2*x+b2*y;
+      const ex=a2+b2*m, ec=b2*b, rhs=c2-ec;
+      return{equationsLatex:[`y = ${latexFirstCoeff(m,'x')}${latexNextCoeff(b,'')}`,latexEquationFromCoeffs(a2,b2,c2)],answerLatex:`x = ${x},\\; y = ${y}`,steps:[
+        t('Step 1: Write the system.'),mth(`\\begin{cases}y = ${latexFirstCoeff(m,'x')}${latexNextCoeff(b,'')} \\\\ ${latexEquationFromCoeffs(a2,b2,c2)}\\end{cases}`),
+        t('Step 2: Substitute the expression for y into the second equation.'),mth(`${a2}x + ${b2}\\left(${latexFirstCoeff(m,'x')}${latexNextCoeff(b,'')}\\right) = ${c2}`),
+        t('Step 3: Expand and collect like terms.'),mth(`${a2}x + ${b2*m}x ${signed(ec)} = ${c2}`),mth(`${ex}x ${signed(ec)} = ${c2}`),
+        t('Step 4: Move the constant term and solve for x.'),mth(`${ex}x = ${c2} ${ec>=0?'-':'+'} ${Math.abs(ec)} = ${rhs}`),mth(`x = ${latexFraction(rhs,ex)} = ${x}`),
+        t('Step 5: Substitute x back into y = mx + b.'),mth(`y = ${m}\\times ${x} ${signed(b)} = ${y}`),
+        t('Step 6: Check in the second equation.'),mth(`${a2}\\times ${x} + ${b2}\\times ${y} = ${c2}\\quad \\checkmark`)
+      ]};
+    }
+    function makeHarderSubstitution(){
+      const x=random(1,4), y=random(1,4);
+      const a3=randomNonZeroAvoid(2,5,new Set([1,-1]));
+      let b3=randomNonZeroAvoid(2,6,new Set([1,-1])); if(Math.random()<.5)b3=-b3;
+      const c3=a3*x+b3*y;
+      const a4=randomNonZeroAvoid(2,6,new Set([1,-1]));
+      let b4=randomNonZeroAvoid(2,6,new Set([1,-1])); if(Math.random()<.5)b4=-b4;
+      const c4=a4*x+b4*y;
+      const numX=c4*b3-b4*c3, denX=a4*b3-b4*a3;
+      const numY=c3*a4-a3*c4, denY=b3*a4-a3*b4;
+      return{equationsLatex:[latexEquationFromCoeffs(a3,b3,c3),latexEquationFromCoeffs(a4,b4,c4)],answerLatex:`x = ${x},\\; y = ${y}`,steps:[
+        t('Step 1: Write the system.'),mth(`\\begin{cases}${latexEquationFromCoeffs(a3,b3,c3)} \\\\ ${latexEquationFromCoeffs(a4,b4,c4)}\\end{cases}`),
+        t('Step 2: Rearrange equation (1) to make y the subject.'),mth(`${latexFirstCoeff(b3,'y')} = ${c3}${latexNextCoeff(-a3,'x')}`),mth(`y = ${latexFraction(-a3,b3)}x + ${latexFraction(c3,b3)}`),
+        t('Step 3: Substitute into equation (2).'),mth(`${a4}x + ${b4}\\left(${latexFraction(-a3,b3)}x + ${latexFraction(c3,b3)}\\right) = ${c4}`),
+        t('Step 4: Expand, collect, and solve.'),mth(`${a4}x + ${latexFraction(-a3*b4,b3)}x + ${latexFraction(b4*c3,b3)} = ${c4}`),mth(`x = ${latexFraction(numX,denX)} = ${x}`),
+        t('Step 5: Substitute x back for y.'),mth(`y = ${latexFraction(-a3,b3)}\\times ${x} + ${latexFraction(c3,b3)} = ${latexFraction(numY,denY)} = ${y}`),
+        t('Step 6: Check both original equations.'),mth(`${a3}\\times ${x} + ${b3}\\times ${y} = ${c3}\\quad \\checkmark`),mth(`${a4}\\times ${x} + ${b4}\\times ${y} = ${c4}\\quad \\checkmark`)
+      ]};
+    }
+    function makeEasyElimination(){
+      const x=random(1,4), y=random(1,4);
+      const a=randomNonZeroAvoid(2,6,new Set([1,-1])), b1=randomNonZeroAvoid(2,6,new Set([1,-1]));
+      let b2=randomNonZeroAvoid(2,6,new Set([1,-1])); if(Math.random()<.5)b2=-b2;
+      const c1=a*x+b1*y, c2=a*x+b2*y, coeffY=b1-b2, constY=c1-c2, numX=c1-b1*y;
+      return{equationsLatex:[latexEquationFromCoeffs(a,b1,c1),latexEquationFromCoeffs(a,b2,c2)],answerLatex:`x = ${x},\\; y = ${y}`,steps:[
+        t('Step 1: Write the system.'),mth(`\\begin{cases}${latexEquationFromCoeffs(a,b1,c1)} \\\\ ${latexEquationFromCoeffs(a,b2,c2)}\\end{cases}`),
+        t('Step 2: Subtract equation (2) from equation (1) to eliminate x.'),mth(`${a}x + ${b1}y - (${a}x + ${b2}y) = ${c1} - ${c2}`),mth(`${coeffY}y = ${constY}`),
+        t('Step 3: Solve for y, then back-substitute.'),mth(`y = ${latexFraction(constY,coeffY)} = ${y}`),mth(`${a}x + ${b1}\\times ${y} = ${c1}`),mth(`x = ${latexFraction(numX,a)} = ${x}`),
+        t('Step 4: Check both equations.'),mth(`${a}\\times ${x} + ${b1}\\times ${y} = ${c1}\\quad \\checkmark`),mth(`${a}\\times ${x} + ${b2}\\times ${y} = ${c2}\\quad \\checkmark`)
+      ]};
+    }
+    function makeScalingElimination(){
+      const x=random(1,4), y=random(1,4);
+      const a1=randomNonZeroAvoid(2,5,new Set([1,-1])), b1=randomNonZeroAvoid(2,4,new Set([1,-1]));
+      const a2=randomNonZeroAvoid(2,5,new Set([1,-1,a1])), b2=randomNonZeroAvoid(2,5,new Set([1,-1]));
+      const c1=a1*x+b1*y, c2=a2*x+b2*y, lcm=(a1*a2)/gcd(a1,a2), s1=lcm/a1, s2=lcm/a2;
+      const nb1=s1*b1, nc1=s1*c1, nb2=s2*b2, nc2=s2*c2, coeffY=nb1-nb2, constY=nc1-nc2, numX=c1-b1*y;
+      return{equationsLatex:[latexEquationFromCoeffs(a1,b1,c1),latexEquationFromCoeffs(a2,b2,c2)],answerLatex:`x = ${x},\\; y = ${y}`,steps:[
+        t('Step 1: Write the system.'),mth(`\\begin{cases}${latexEquationFromCoeffs(a1,b1,c1)} \\\\ ${latexEquationFromCoeffs(a2,b2,c2)}\\end{cases}`),
+        t('Step 2: Make x-coefficients equal using the lowest common multiple.'),mth(`\\text{LCM}(${a1},${a2}) = ${lcm}`),mth(`${s1}\\times (${latexEquationFromCoeffs(a1,b1,c1)}) \\Rightarrow ${latexEquationFromCoeffs(lcm,nb1,nc1)}`),mth(`${s2}\\times (${latexEquationFromCoeffs(a2,b2,c2)}) \\Rightarrow ${latexEquationFromCoeffs(lcm,nb2,nc2)}`),
+        t('Step 3: Subtract the new equations to eliminate x.'),mth(`${coeffY}y = ${constY}`),mth(`y = ${latexFraction(constY,coeffY)} = ${y}`),
+        t('Step 4: Back-substitute for x.'),mth(`${a1}x + ${b1}\\times ${y} = ${c1}`),mth(`x = ${latexFraction(numX,a1)} = ${x}`)
+      ]};
+    }
+    function makeHarderElimination(){
+      const x=random(1,4), y=random(1,4);
+      const a1=randomNonZeroAvoid(3,7,new Set([1,-1])), b1=randomNonZeroAvoid(2,6,new Set([1,-1]));
+      const a2=randomNonZeroAvoid(2,6,new Set([1,-1])); let b2=randomNonZeroAvoid(2,6,new Set([1,-1])); if(Math.random()<.5)b2=-b2;
+      const c1=a1*x+b1*y, c2=a2*x+b2*y, lcm=(Math.abs(b1)*Math.abs(b2))/gcd(b1,b2);
+      const s1=lcm/Math.abs(b1), s2=lcm/Math.abs(b2);
+      const na1=s1*a1, nb1=s1*b1, nc1=s1*c1, na2=-s2*a2, nb2=-s2*b2, nc2=-s2*c2;
+      const coeffX=na1+na2, constX=nc1+nc2, numY=c1-a1*x;
+      return{equationsLatex:[latexEquationFromCoeffs(a1,b1,c1),latexEquationFromCoeffs(a2,b2,c2)],answerLatex:`x = ${x},\\; y = ${y}`,steps:[
+        t('Step 1: Write the system.'),mth(`\\begin{cases}${latexEquationFromCoeffs(a1,b1,c1)} \\\\ ${latexEquationFromCoeffs(a2,b2,c2)}\\end{cases}`),
+        t('Step 2: Make y-coefficients equal and opposite.'),mth(`\\text{LCM}(|${b1}|,|${b2}|) = ${lcm}`),mth(`${s1}\\times (${latexEquationFromCoeffs(a1,b1,c1)}) \\Rightarrow ${latexEquationFromCoeffs(na1,nb1,nc1)}`),mth(`${-s2}\\times (${latexEquationFromCoeffs(a2,b2,c2)}) \\Rightarrow ${latexEquationFromCoeffs(na2,nb2,nc2)}`),
+        t('Step 3: Add the new equations to eliminate y.'),mth(`${coeffX}x = ${constX}`),mth(`x = ${latexFraction(constX,coeffX)} = ${x}`),
+        t('Step 4: Back-substitute for y.'),mth(`${a1}\\times ${x} + ${b1}y = ${c1}`),mth(`y = ${latexFraction(numY,b1)} = ${y}`)
+      ]};
+    }
+    function t(text){return{type:'text',text}}
+    function mth(latex){return{type:'math',latex}}
+    function generateProblem(){
+      let pool=currentType==='mixed_substitution'?['easy_substitution','harder_substitution']:currentType==='mixed_elimination'?['easy_elimination','elimination_with_scaling','elimination_harder']:[currentType];
+      const type=pool[Math.floor(Math.random()*pool.length)];
+      if(type==='easy_substitution')return makeEasySubstitution();
+      if(type==='harder_substitution')return makeHarderSubstitution();
+      if(type==='easy_elimination')return makeEasyElimination();
+      if(type==='elimination_with_scaling')return makeScalingElimination();
+      if(type==='elimination_harder')return makeHarderElimination();
+      return null;
+    }
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      const dd=document.getElementById('type-dropdown');
+      if(level===1){dd.innerHTML='<option value="select">Select Question Type</option><option value="easy_substitution">Type 1: Easy substitution (y = mx + c)</option><option value="harder_substitution">Type 2: Harder substitution (rearrange first)</option><option value="mixed_substitution">Mixed: Substitution (Types 1-2)</option>'}
+      else{dd.innerHTML='<option value="select">Select Question Type</option><option value="easy_elimination">Type 1: Easy elimination (matching coefficients)</option><option value="elimination_with_scaling">Type 2: Elimination with scaling</option><option value="elimination_harder">Type 3: Harder elimination</option><option value="mixed_elimination">Mixed: Elimination (Types 1-3)</option>'}
+      dd.value='select';showBlankPage();reRenderMath();
+    }
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;if(currentType==='select')showBlankPage();else generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:30px;color:#7f8c8d;font-size:.95em;">Please select a question type to begin.</li>';reRenderMath()}
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      problems=[];answersVisible=false;stepsVisible=false;const seen=new Set();let guard=0;
+      while(problems.length<5&&guard<80){guard++;const prob=generateProblem();if(!prob)continue;const key=prob.equationsLatex.join('|')+'|'+prob.answerLatex;if(!seen.has(key)){seen.add(key);problems.push(prob)}}
+      renderProblems();
+    }
+    function renderProblems(){
+      const container=document.getElementById('problem-list');container.innerHTML='';
+      problems.forEach((problem,index)=>{
+        const li=document.createElement('li');li.className='problem-item';
+        const stepsHTML=problem.steps.map(step=>step.type==='math'?`<div class="step-equation">$$${step.latex}$$</div>`:`<div class="step">${step.text}</div>`).join('');
+        const equationsHTML=problem.equationsLatex.map(eq=>`<div class="equation">\\(${eq}\\)</div>`).join('');
+        li.innerHTML=`<div class="problem-header"><div class="problem-left"><div class="problem-number">${index+1}</div><div class="problem-content"><div class="instruction">Solve the system:</div><div class="equation-system">${equationsHTML}</div></div></div><div class="problem-answer" id="quick-answer-${index}">\\(${problem.answerLatex}\\)</div></div><div class="steps-section" id="steps-${index}"><div class="answer-label">Solution Steps:</div><div class="solution-steps">${stepsHTML}<div class="final-answer">\\(${problem.answerLatex}\\)</div></div></div>`;
+        container.appendChild(li);
+      });
+      reRenderMath();
+    }
+    function showAnswers(){answersVisible=!answersVisible;for(let i=0;i<problems.length;i++){const el=document.getElementById(`quick-answer-${i}`);if(el)el.classList.toggle('visible',answersVisible)}reRenderMath()}
+    function showSteps(){stepsVisible=!stepsVisible;for(let i=0;i<problems.length;i++){const el=document.getElementById(`steps-${i}`);if(el)el.classList.toggle('visible',stepsVisible)}reRenderMath()}
+    function startTimer(minutes){if(timerActive)stopTimer();timeRemaining=minutes*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const el=document.getElementById('timer-display');el.textContent='Ready';el.className='timer-display'}
+    function updateTimerDisplay(){const m=Math.floor(timeRemaining/60),s=timeRemaining%60,el=document.getElementById('timer-display');el.textContent=`${m}:${s.toString().padStart(2,'0')}`;if(timeRemaining<=30&&timerActive)el.className='timer-display warning';else if(timerActive)el.className='timer-display active';else el.className='timer-display'}
+    function timerFinished(){stopTimer();const el=document.getElementById('timer-display');el.textContent='Time Up!';el.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    document.addEventListener('DOMContentLoaded',()=>switchLevel(1));
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

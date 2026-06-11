@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Differentiation Rules Practice Tool</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,GeneVA,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:15px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:12px 6px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 6px 6px 0;font-weight:600;font-size:.85em;transition:.3s;box-shadow:2px 0 8px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 3px 15px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:25px 25px;background-position:0 0,12px 12px;color:#fff;padding:20px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}.header h1{font-size:2em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:12px;background:#e2e8f0;border:0;cursor:pointer;font-size:1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:15px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:3px;font-size:1.2em}.level-info p{color:#718096;font-size:.95em}.dropdown-container{margin-top:8px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:6px 10px;border:2px solid #cbd5e0;border-radius:5px;font-size:.95em;background:#fff;cursor:pointer;min-width:260px;max-width:100%}.type-dropdown:focus{border-color:#3182ce;outline:0}
+    .timer-section{display:flex;align-items:center;gap:12px}.timer-display{font-size:1.6em;font-weight:700;color:#1a365d;background:#fff;padding:8px 14px;border-radius:5px;border:2px solid #cbd5e0;min-width:100px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.action-buttons{display:flex;gap:8px}.btn{padding:8px 16px;border:0;border-radius:5px;font-size:.9em;font-weight:600;cursor:pointer;transition:.3s;min-width:70px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:15px 25px 25px;min-height:500px}.problem-set-header{background:#3182ce;color:#fff;padding:12px 20px;margin-bottom:15px;border-radius:6px;font-size:1.2em;font-weight:700;text-align:center;box-shadow:0 2px 8px rgba(49,130,206,.3);display:none}.problem-set-header.visible{display:block}.problem-set-header.type-1{background:#3182ce}.problem-set-header.type-2{background:#38a169}.problem-set-header.type-3{background:#d69e2e}.problem-list{list-style:none}.problem-item{background:#f7fafc;margin:12px 0;padding:15px 20px;border-radius:6px;border-left:4px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(2px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3182ce;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:15px;flex-shrink:0}.equation{font-size:1.2em;color:#1a365d;max-width:100%;overflow-x:auto}.problem-answer{background:#38a169;color:#fff;padding:8px 16px;border-radius:20px;font-weight:700;display:none;margin-left:15px;max-width:44%;white-space:nowrap;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}.steps-section{margin-top:12px;padding:12px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#3182ce;margin-bottom:12px}.solution-steps{font-size:1em;line-height:1.8}.step{margin:10px 0;color:#2d3748;overflow-x:auto}.final-answer{background:#38a169;color:#fff;padding:10px 16px;border-radius:5px;text-align:center;font-weight:700;margin-top:12px;overflow-x:auto}.rule-name{color:#805ad5;font-weight:700;background:#faf5ff;padding:2px 6px;border-radius:3px}.timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:30px;border-radius:10px;text-align:center;max-width:320px;box-shadow:0 8px 25px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:15px}.modal-content p{color:#718096;margin-bottom:20px}.hidden{display:none!important}
+    @media(max-width:768px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:320px;left:-320px}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{max-width:100%;margin-left:43px}.problems-section{padding:12px}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Polynomials with positive, fractional, negative, and mixed powers.</li>
+        <li><strong>Level 2:</strong> Product, quotient, chain, and combined rules.</li>
+        <li><strong>Level 3:</strong> Trigonometric, logarithmic, and mixed expressions.</li>
+        <li><strong>Level 4:</strong> Tangents, normals, parallel lines, and turning points.</li>
+      </ul>
+      <h3>Rules Summary</h3>
+      <ul>
+        <li>Power rule: d/dx[x^n] = nx^(n-1).</li>
+        <li>Product rule: (uv)' = u'v + uv'.</li>
+        <li>Quotient rule: (u/v)' = (u'v - uv')/v^2.</li>
+        <li>Chain rule: d/dx[f(g(x))] = f'(g(x))g'(x).</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <div class="header"><h1>Differentiation Rules Teaching Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Basic Rules</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Product, Quotient, Chain</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Trig &amp; Log</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Applications</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Basic Rules</h3>
+        <p id="level-description">Apply the power rule across different algebraic forms.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="standard_polynomials">Type 1: Standard Polynomials</option>
+            <option value="fractional_indices">Type 2: Fractional Indices</option>
+            <option value="negative_indices">Type 3: Negative Indices</option>
+            <option value="mixed_powers">Type 4: Mixed Powers</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"><span id="problem-type-title">Select a question type to begin</span></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={
+      1:{title:'Level 1: Basic Rules',description:'Apply the power rule across different algebraic forms.',types:['standard_polynomials','fractional_indices','negative_indices','mixed_powers']},
+      2:{title:'Level 2: Product, Quotient, and Chain Rules',description:'Differentiate composite and combined functions.',types:['product_rule','chain_rule','quotient_rule','combination']},
+      3:{title:'Level 3: Trig and Log Differentiation',description:'Extend rules into trigonometric and logarithmic functions.',types:['trig_functions','log_functions','mixed_advanced']},
+      4:{title:'Level 4: Applications',description:'Use derivatives to solve tangent, normal, and turning-point tasks.',types:['tangents_normals','turning_points']}
+    };
+    const names={standard_polynomials:'Type 1: Standard Polynomials',fractional_indices:'Type 2: Fractional Indices',negative_indices:'Type 3: Negative Indices',mixed_powers:'Type 4: Mixed Powers',product_rule:'Type 1: Product Rule',chain_rule:'Type 2: Chain Rule',quotient_rule:'Type 3: Quotient Rule',combination:'Type 4: Combination',trig_functions:'Type 1: Trigonometric Functions',log_functions:'Type 2: Logarithmic Functions',mixed_advanced:'Type 3: Mixed Advanced',tangents_normals:'Type 1: Tangents and Normals',turning_points:'Type 2: Turning Points'};
+    function random(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+    function choice(a){return a[random(0,a.length-1)]}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function frac(n,d){if(d<0){n=-n;d=-d}const g=gcd(n,d);return [n/g,d/g]}
+    function fracLatex(n,d){const f=frac(n,d);return f[1]===1?String(f[0]):'\\dfrac{'+f[0]+'}{'+f[1]+'}'}
+    function pow(p){if(p===0)return'1';if(p===1)return'x';return'x^{'+p+'}'}
+    function mono(c,p,first=false){if(c===0)return first?'0':'';const sign=c<0?(first?'-':' - '):(first?'':' + ');const a=Math.abs(c);if(p===0)return sign+a;if(p===1)return sign+(a===1?'x':a+'x');return sign+(a===1?'':a)+pow(p)}
+    function lin(A,B){return A+'x'+(B>=0?' + '+B:' - '+Math.abs(B))}
+    function renderMath(){if(typeof renderMathInElement==='function')renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})}
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function header(){const h=document.getElementById('problem-set-header'),t=document.getElementById('problem-type-title');if(currentType==='select'){h.classList.remove('visible');return}h.className='problem-set-header visible type-'+(((Object.keys(names).indexOf(currentType)+3)%3)+1);t.textContent=names[currentType]||'Problem Set'}
+    function basicPower(kind){
+      const steps=[{text:'Use the <span class="rule-name">Power Rule</span>: $\\dfrac{d}{dx}(x^n)=nx^{n-1}$.'}];let expr='',der='';
+      if(kind==='standard_polynomials'){const high=random(3,6),mid=random(1,2);const terms=[[choice([2,3,4,5,-2,-3]),high],[choice([2,3,4,-2]),mid],[choice([2,5,-3]),0]];expr=terms.map((t,i)=>mono(t[0],t[1],i===0)).join('');der=terms.map(([c,p],i)=>p===0?'':mono(c*p,p-1,i===0)).join('')||'0';steps.push({text:'Differentiate each term separately, then combine.'})}
+      if(kind==='fractional_indices'){const c=choice([2,3,4,6,-3]),n=choice([3,4,5]),d=choice([2,3]);expr=c+'x^{\\frac{'+n+'}{'+d+'}}';der=fracLatex(c*n,d)+'x^{\\frac{'+(n-d)+'}{'+d+'}}';steps.push({text:'Multiply by the fractional power, then subtract 1 from the exponent.'})}
+      if(kind==='negative_indices'){const c=choice([2,3,4,-2,-5]),p=-random(2,5);expr=mono(c,p,true);der=mono(c*p,p-1,true);steps.push({text:'Negative powers follow the same power rule.'})}
+      if(kind==='mixed_powers'){expr='3x^4 - 2x^{-3} + 6x^{\\frac{3}{2}}';der='12x^3 + 6x^{-4} + 9x^{\\frac{1}{2}}';steps.push({text:'Apply the same rule to each different type of power.'})}
+      const answer='$\\dfrac{dy}{dx} = '+der+'$';steps.push({text:'Therefore: '+answer});return{equation:'$y = '+expr+'$',answer,steps}
+    }
+    function productRule(){const a=random(2,4),b=random(2,5),p=random(2,4),q=random(2,3);const eq='$y=('+lin(a,b)+')^'+p+'(x - '+q+')^2$';const ans='$\\dfrac{dy}{dx} = '+p*a+'('+lin(a,b)+')^{'+(p-1)+'}(x-'+q+')^2 + 2('+lin(a,b)+')^'+p+'(x-'+q+')$';return{equation:eq,answer:ans,steps:[{text:'Let $u=('+lin(a,b)+')^'+p+'$ and $v=(x-'+q+')^2$.'},{text:'Use $y\\prime=u\\prime v+uv\\prime$.'},{text:'Therefore: '+ans}]}}
+    function chainRule(){const a=random(2,5),b=random(2,5),p=random(3,6);const eq='$y=('+lin(a,b)+')^'+p+'$';const ans='$\\dfrac{dy}{dx} = '+(p*a)+'('+lin(a,b)+')^{'+(p-1)+'}$';return{equation:eq,answer:ans,steps:[{text:'Let $u='+lin(a,b)+'$ so $y=u^'+p+'$.'},{text:'Use the chain rule: $dy/dx='+p+'u^{'+(p-1)+'}\\cdot '+a+'$.'},{text:'Therefore: '+ans}]}}
+    function quotientRule(){const a=random(2,5),p=random(2,4),b=random(2,5),c=random(1,4);const eq='$y=\\dfrac{'+a+'x^'+p+'}{'+lin(b,c)+'}$';const ans='$\\dfrac{dy}{dx}=\\dfrac{'+(a*p)+'x^{'+(p-1)+'}('+lin(b,c)+')-'+a+'x^'+p+'('+b+')}{('+lin(b,c)+')^2}$';return{equation:eq,answer:ans,steps:[{text:'Let $u='+a+'x^'+p+'$ and $v='+lin(b,c)+'$.'},{text:'Use $y\\prime=\\dfrac{u\\prime v-uv\\prime}{v^2}$.'},{text:'Therefore: '+ans}]}}
+    function comboRule(){const eq='$y=(x^2+3x)^3\\sin(2x)$';const ans='$\\dfrac{dy}{dx}=3(x^2+3x)^2(2x+3)\\sin(2x)+2(x^2+3x)^3\\cos(2x)$';return{equation:eq,answer:ans,steps:[{text:'This combines chain rule and product rule.'},{text:'Differentiate each factor, remembering the inner derivatives.'},{text:'Therefore: '+ans}]}}
+    function trigRule(){const k=random(2,5),a=random(2,4);const useSin=Math.random()<.5;const eq='$y='+k+'x^2'+(useSin?'\\sin':'\\cos')+'('+a+'x)$';const ans=useSin?'$\\dfrac{dy}{dx}='+2*k+'x\\sin('+a+'x)+'+(k*a)+'x^2\\cos('+a+'x)$':'$\\dfrac{dy}{dx}='+2*k+'x\\cos('+a+'x)-'+(k*a)+'x^2\\sin('+a+'x)$';return{equation:eq,answer:ans,steps:[{text:'Use product rule and the chain rule for the trig factor.'},{text:'Therefore: '+ans}]}}
+    function logRule(){const a=random(2,5),p=random(2,4);const eq='$y=('+a+'x^'+p+'+3)\\ln(x)$';const ans='$\\dfrac{dy}{dx}='+(a*p)+'x^{'+(p-1)+'}\\ln(x)+\\dfrac{'+a+'x^'+p+'+3}{x}$';return{equation:eq,answer:ans,steps:[{text:'Use product rule and $d(\\ln x)/dx=1/x$.'},{text:'Therefore: '+ans}]}}
+    function mixedAdv(){const eq='$y=x^3\\ln(x)\\cos(x)$';const ans='$\\dfrac{dy}{dx}=3x^2\\ln(x)\\cos(x)+x^2\\cos(x)-x^3\\ln(x)\\sin(x)$';return{equation:eq,answer:ans,steps:[{text:'Use the three-factor product rule.'},{text:'Differentiate $x^3$, $\\ln x$, and $\\cos x$ in turn.'},{text:'Therefore: '+ans}]}}
+    function tangentNormal(){const a=random(1,3),b=random(2,5),x=random(1,4),y=a*x*x+b*x+2,m=2*a*x+b,c=y-m*x;const eq='Find the tangent to $y='+a+'x^2+'+b+'x+2$ at $x='+x+'$.';const ans='$y='+m+'x'+(c>=0?'+'+c:c)+'$';return{equation:eq,answer:ans,steps:[{text:'Differentiate: $dy/dx='+(2*a)+'x+'+b+'$.'},{text:'At $x='+x+'$, gradient $m='+m+'$ and point is $('+x+','+y+')$.'},{text:'Use point-slope form. Therefore: '+ans}]}}
+    function turning(){const eq='Find turning points of $y=2x^3-9x^2+12x-4$.';const ans='Solve $6x^2-18x+12=0$, then classify using $12x-18$.';return{equation:eq,answer:ans,steps:[{text:'Differentiate: $dy/dx=6x^2-18x+12$.'},{text:'Set $dy/dx=0$: $6(x-1)(x-2)=0$.'},{text:'Use $d^2y/dx^2=12x-18$ to classify each point.'},{text:'Therefore: '+ans}]}}
+    function generateProblem(){const types=currentType==='select'?levelConfigs[currentLevel].types:[currentType];const t=choice(types);if(['standard_polynomials','fractional_indices','negative_indices','mixed_powers'].includes(t))return basicPower(t);if(t==='product_rule')return productRule();if(t==='chain_rule')return chainRule();if(t==='quotient_rule')return quotientRule();if(t==='combination')return comboRule();if(t==='trig_functions')return trigRule();if(t==='log_functions')return logRule();if(t==='mixed_advanced')return mixedAdv();if(t==='tangents_normals')return tangentNormal();if(t==='turning_points')return turning();return basicPower('standard_polynomials')}
+    function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));const cfg=levelConfigs[level];document.getElementById('level-title').textContent=cfg.title;document.getElementById('level-description').textContent=cfg.description;const opts={1:[['standard_polynomials','Type 1: Standard Polynomials'],['fractional_indices','Type 2: Fractional Indices'],['negative_indices','Type 3: Negative Indices'],['mixed_powers','Type 4: Mixed Powers']],2:[['product_rule','Type 1: Product Rule'],['chain_rule','Type 2: Chain Rule'],['quotient_rule','Type 3: Quotient Rule'],['combination','Type 4: Combination']],3:[['trig_functions','Type 1: Trigonometric Functions'],['log_functions','Type 2: Logarithmic Functions'],['mixed_advanced','Type 3: Mixed Advanced']],4:[['tangents_normals','Type 1: Tangents and Normals'],['turning_points','Type 2: Turning Points']]};const dd=document.getElementById('type-dropdown');dd.innerHTML='<option value="select">Select Question Type</option>'+opts[level].map(([v,l])=>'<option value="'+v+'">'+l+'</option>').join('');dd.value='select';header();showBlankPage()}
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;header();currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:40px;color:#718096;font-size:1.1em">Please select a question type to begin.</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<5;i++)problems.push(generateProblem());renderProblems()}
+    function renderProblems(){const c=document.getElementById('problem-list');c.innerHTML='';problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const steps=p.steps.map(s=>'<div class="step">'+s.text+'</div>').join('');li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(i+1)+'</div><div class="equation">'+p.equation+'</div></div><div class="problem-answer" id="quick-answer-'+i+'">'+p.answer+'</div></div><div class="steps-section" id="steps-'+i+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+steps+'<div class="final-answer">'+p.answer+'</div></div></div>';c.appendChild(li)});renderMath()}
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>{const el=document.getElementById('quick-answer-'+i);if(el)el.classList.toggle('visible',answersVisible)})}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>{const el=document.getElementById('steps-'+i);if(el)el.classList.toggle('visible',stepsVisible)})}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const el=document.getElementById('timer-display');el.textContent='Ready';el.className='timer-display'}
+    function updateTimerDisplay(){const m=Math.floor(timeRemaining/60),s=timeRemaining%60,el=document.getElementById('timer-display');el.textContent=m+':'+String(s).padStart(2,'0');el.className=timeRemaining<=30&&timerActive?'timer-display warning':timerActive?'timer-display active':'timer-display'}
+    function timerFinished(){stopTimer();const el=document.getElementById('timer-display');el.textContent='Time Up!';el.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

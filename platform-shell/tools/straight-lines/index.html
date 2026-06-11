@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Straight Lines Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s ease;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 50%,rgba(0,0,0,.05) 100%)}.header h1{font-size:2.2em;margin-bottom:5px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:18px;background:#e2e8f0;border:0;cursor:pointer;font-size:1.1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:25px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.3em}.level-info p{color:#718096;font-size:1em}.dropdown-container{margin-top:10px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:280px;max-width:100%}.type-dropdown:focus{border-color:#3182ce;outline:0}
+    .timer-section{display:flex;align-items:center;gap:15px}.timer-display{font-size:2em;font-weight:700;color:#1a365d;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #cbd5e0;min-width:120px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px}.btn{padding:12px 22px;border:0;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:28px;min-height:580px}.problem-list{list-style:none}.problem-item{background:#f7fafc;margin:14px 0;padding:18px;border-radius:10px;border-left:5px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(3px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3182ce;color:#fff;width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:20px;font-size:1.1em;flex-shrink:0}.equation{font-size:1.65em;font-family:'Times New Roman',serif;color:#1a365d;font-weight:600;max-width:100%;overflow-x:auto;line-height:1.35}.problem-answer{background:#38a169;color:#fff;padding:10px 18px;border-radius:25px;font-weight:700;font-size:1.12em;display:none;margin-left:18px;max-width:44%;white-space:nowrap;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .fraction{display:inline-block;vertical-align:middle;text-align:center;margin:0 3px;line-height:1}.fraction .numerator{display:block;border-bottom:2px solid currentColor;padding:0 4px 2px}.fraction .denominator{display:block;padding:2px 4px 0}.coordinate{font-family:'Times New Roman',serif;font-weight:700}
+    .steps-section{margin-top:18px;padding:18px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#38a169;margin-bottom:10px;font-size:1.1em}.solution-steps{font-size:1.12em;line-height:1.5}.step{margin:8px 0;color:#1a365d}.step-equation{font-family:'Times New Roman',serif;font-weight:700;color:#805ad5;text-align:center;margin:10px 0;font-size:1.25em;overflow-x:auto;max-width:100%;padding-bottom:3px}.final-answer{background:#38a169;color:#fff;padding:10px 18px;border-radius:6px;text-align:center;font-weight:700;font-size:1.2em;margin-top:12px;overflow-x:auto}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none!important}
+    @media(max-width:768px){body{padding:15px}.controls{flex-direction:column;align-items:stretch;padding:14px}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%;padding:10px}.sidebar{width:320px;left:-320px}.problems-section{padding:12px}.problem-item{padding:12px;margin:8px 0}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{max-width:100%;margin-left:55px}.equation{font-size:1.25em}.solution-steps{font-size:1em}.step-equation{font-size:1.05em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool helps students practise straight-line concepts in a structured progression from gradient to line relationships.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1 - Gradient:</strong> Find gradient from two points and from equations.</li>
+        <li><strong>Level 2 - Intercepts:</strong> Find x-intercepts, y-intercepts, or both.</li>
+        <li><strong>Level 3 - Equations:</strong> Find equations from points, gradients, and intercepts.</li>
+        <li><strong>Level 4 - Intersections:</strong> Find intersections and parallel or perpendicular lines.</li>
+      </ul>
+      <h3>Key Formulas</h3>
+      <ul>
+        <li><strong>Gradient:</strong> m = <span class="fraction"><span class="numerator">y2 - y1</span><span class="denominator">x2 - x1</span></span></li>
+        <li><strong>Equation forms:</strong> y = mx + c and ax + by + c = 0.</li>
+        <li><strong>Parallel lines:</strong> Same gradient.</li>
+        <li><strong>Perpendicular lines:</strong> Gradients multiply to -1.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header"><h1>Straight Lines Teaching Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Gradient</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Intercepts</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Equations</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Intersections</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Finding Gradient</h3>
+        <p id="level-description">Calculate gradient from two points and equations</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="gradient_two_points">Type 1: Gradient from two points</option>
+            <option value="gradient_from_equation">Type 2: Gradient from equation</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: { title: 'Level 1: Finding Gradient', description: 'Calculate gradient from two points and equations', types: ['gradient_two_points','gradient_from_equation'] },
+      2: { title: 'Level 2: Finding Intercepts', description: 'Find x-intercept, y-intercept, or both', types: ['find_y_intercept','find_x_intercept','find_both_intercepts'] },
+      3: { title: 'Level 3: Equation of Line', description: 'Find equation from different given information', types: ['equation_two_points','equation_point_gradient','equation_point_intercept'] },
+      4: { title: 'Level 4: Line Intersections', description: 'Intersection points and parallel/perpendicular lines', types: ['intersection_point','parallel_perpendicular'] }
+    };
+
+    function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.sidebar-overlay').classList.toggle('active'); }
+    function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.querySelector('.sidebar-overlay').classList.remove('active'); }
+    function random(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ const t=b; b=a%b; a=t; } return a || 1; }
+    function frac(num,den){ if(den===0) return {n:1,d:0}; if(num===0) return {n:0,d:1}; const g=gcd(num,den); num/=g; den/=g; if(den<0){num=-num;den=-den;} return {n:num,d:den}; }
+    function fracHTML(num,den){ const f=frac(num,den); if(f.d===0) return 'undefined'; if(f.d===1) return String(f.n); return '<span class="fraction"><span class="numerator">'+f.n+'</span><span class="denominator">'+f.d+'</span></span>'; }
+    function signedNumber(n){ return n >= 0 ? ' + ' + n : ' - ' + Math.abs(n); }
+    function coord(x,y){ return '<span class="coordinate">(' + x + ', ' + y + ')</span>'; }
+    function coeffX(num,den){
+      const f=frac(num,den);
+      if(f.n===0) return '';
+      if(f.d===1 && f.n===1) return 'x';
+      if(f.d===1 && f.n===-1) return '-x';
+      if(f.d===1) return f.n + 'x';
+      if(f.n<0) return '-' + fracHTML(Math.abs(f.n),f.d) + 'x';
+      return fracHTML(f.n,f.d) + 'x';
+    }
+    function lineEq(mNum,mDen,cNum,cDen){
+      const m=frac(mNum,mDen);
+      const c=frac(cNum,cDen);
+      let expr = coeffX(m.n,m.d);
+      if(c.n !== 0){
+        const absC = fracHTML(Math.abs(c.n),c.d);
+        expr += c.n > 0 ? (expr ? ' + ' + absC : absC) : (expr ? ' - ' + absC : '-' + absC);
+      }
+      return 'y = ' + (expr || '0');
+    }
+    function numericValue(num,den){ return num/den; }
+
+    function generateProblem(){
+      const types = currentType === 'select' || currentType === 'all' ? levelConfigs[currentLevel].types : [currentType];
+      const type = types[Math.floor(Math.random()*types.length)];
+      switch(type){
+        case 'gradient_two_points': return gradientTwoPoints();
+        case 'gradient_from_equation': return gradientFromEquation();
+        case 'find_y_intercept': return yIntercept();
+        case 'find_x_intercept': return xIntercept();
+        case 'find_both_intercepts': return bothIntercepts();
+        case 'equation_two_points': return equationTwoPoints();
+        case 'equation_point_gradient': return equationPointGradient();
+        case 'equation_point_intercept': return equationPointIntercept();
+        case 'intersection_point': return intersectionPoint();
+        case 'parallel_perpendicular': return parallelPerpendicular();
+        default: return gradientTwoPoints();
+      }
+    }
+
+    function gradientTwoPoints(){
+      let x1,y1,x2,y2;
+      do{ x1=random(-8,8); y1=random(-8,8); x2=random(-8,8); y2=random(-8,8); }while(x1===x2 || (x1===x2 && y1===y2));
+      const dy=y2-y1, dx=x2-x1, m=fracHTML(dy,dx);
+      return {
+        equation: 'Find the gradient of the line passing through ' + coord(x1,y1) + ' and ' + coord(x2,y2),
+        answer: 'm = ' + m,
+        steps: ['Use the gradient formula: m = <span class="fraction"><span class="numerator">y2 - y1</span><span class="denominator">x2 - x1</span></span>', 'Point 1: ('+x1+', '+y1+'), point 2: ('+x2+', '+y2+')', 'm = <span class="fraction"><span class="numerator">'+y2+' - ('+y1+')</span><span class="denominator">'+x2+' - ('+x1+')</span></span>', 'm = <span class="fraction"><span class="numerator">'+dy+'</span><span class="denominator">'+dx+'</span></span>', 'm = ' + m]
+      };
+    }
+
+    function gradientFromEquation(){
+      const mode=random(1,3);
+      if(mode===1){
+        let m; do{m=random(-5,5);}while(m===0);
+        const c=random(-10,10);
+        return { equation: 'Find the gradient of the line: ' + lineEq(m,1,c,1), answer: 'm = ' + m, steps: ['The equation is already in the form y = mx + c.', 'Compare with y = mx + c.', 'm = ' + m + ' and c = ' + c + '.', 'Therefore, gradient = ' + m] };
+      }
+      const a=random(2,6), b=random(2,6), c=random(-8,8);
+      const equation = a + 'x + ' + b + 'y' + signedNumber(c) + ' = 0';
+      const grad=fracHTML(-a,b);
+      return { equation: 'Find the gradient of the line: ' + equation, answer: 'm = ' + grad, steps: ['Rearrange to y = mx + c.', equation, b + 'y = -' + a + 'x' + signedNumber(-c), 'y = ' + coeffX(-a,b) + (c===0 ? '' : (c>0 ? ' - ' + fracHTML(c,b) : ' + ' + fracHTML(-c,b))), 'Therefore, gradient = ' + grad] };
+    }
+
+    function yIntercept(){
+      let m; do{m=random(-4,4);}while(m===0);
+      const c=random(-8,8), eq=lineEq(m,1,c,1);
+      return { equation:'Find the y-intercept of the line: ' + eq, answer:'y-intercept = ' + c, steps:['The y-intercept occurs when x = 0.', 'Substitute x = 0:', 'y = ' + m + '(0)' + signedNumber(c), 'y = ' + c, 'Therefore, y-intercept = ' + c] };
+    }
+
+    function xIntercept(){
+      let m,c; do{m=random(-4,4); c=random(-8,8);}while(m===0 || c===0);
+      const x=fracHTML(-c,m);
+      return { equation:'Find the x-intercept of the line: ' + lineEq(m,1,c,1), answer:'x-intercept = ' + x, steps:['The x-intercept occurs when y = 0.', '0 = ' + coeffX(m,1) + signedNumber(c), coeffX(m,1) + ' = ' + (-c), 'x = ' + x, 'Therefore, x-intercept = ' + x] };
+    }
+
+    function bothIntercepts(){
+      let m,c; do{m=random(-4,4); c=random(-8,8);}while(m===0 || c===0);
+      const x=fracHTML(-c,m);
+      return { equation:'Find both intercepts of the line: ' + lineEq(m,1,c,1), answer:'x-intercept = ' + x + ', y-intercept = ' + c, steps:['For the y-intercept, set x = 0: y = ' + c + '.', 'For the x-intercept, set y = 0.', '0 = ' + coeffX(m,1) + signedNumber(c), 'x = ' + x, 'So x-intercept = ' + x + ' and y-intercept = ' + c + '.'] };
+    }
+
+    function equationTwoPoints(){
+      let x1,y1,x2,y2; do{x1=random(-6,6);y1=random(-6,6);x2=random(-6,6);y2=random(-6,6);}while(x1===x2);
+      const dy=y2-y1, dx=x2-x1;
+      const cNum=y1*dx-dy*x1, cDen=dx;
+      const eq=lineEq(dy,dx,cNum,cDen);
+      return { equation:'Find the equation of the line passing through ' + coord(x1,y1) + ' and ' + coord(x2,y2), answer:eq, steps:['First find the gradient.', 'm = <span class="fraction"><span class="numerator">'+y2+' - '+y1+'</span><span class="denominator">'+x2+' - '+x1+'</span></span> = ' + fracHTML(dy,dx), 'Use y = mx + c with point ('+x1+', '+y1+').', y1 + ' = ' + fracHTML(dy,dx) + '(' + x1 + ') + c', 'c = ' + fracHTML(cNum,cDen), eq] };
+    }
+
+    function equationPointGradient(){
+      const x=random(-5,5), y=random(-5,5);
+      let m; do{m=random(-4,4);}while(m===0);
+      const c=y-m*x, eq=lineEq(m,1,c,1);
+      return { equation:'Find the equation of the line passing through ' + coord(x,y) + ' with gradient ' + m, answer:eq, steps:['Use y = mx + c.', 'Substitute m = ' + m + ' and point ('+x+', '+y+').', y + ' = ' + m + '(' + x + ') + c', 'c = ' + c, eq] };
+    }
+
+    function equationPointIntercept(){
+      let x,y,c; do{x=random(-5,5); y=random(-5,5); c=random(-8,8);}while(x===0 || y===c);
+      const mNum=y-c, mDen=x, eq=lineEq(mNum,mDen,c,1);
+      return { equation:'Find the equation of the line passing through ' + coord(x,y) + ' with y-intercept ' + c, answer:eq, steps:['The y-intercept gives the point (0, '+c+').', 'Find the gradient between ('+x+', '+y+') and (0, '+c+').', 'm = <span class="fraction"><span class="numerator">'+y+' - '+c+'</span><span class="denominator">'+x+' - 0</span></span> = ' + fracHTML(mNum,mDen), 'Use y = mx + c with c = ' + c + '.', eq] };
+    }
+
+    function intersectionPoint(){
+      let m1,m2,c1,c2; do{m1=random(-3,3);m2=random(-3,3);c1=random(-5,5);c2=random(-5,5);}while(m1===m2 || m1===0 || m2===0);
+      const xNum=c2-c1, xDen=m1-m2;
+      const yNum=m1*xNum + c1*xDen, yDen=xDen;
+      const x=fracHTML(xNum,xDen), y=fracHTML(yNum,yDen);
+      const eq1=lineEq(m1,1,c1,1), eq2=lineEq(m2,1,c2,1);
+      return { equation:'Find the intersection point of the lines:<br>' + eq1 + '<br>' + eq2, answer:'Intersection point: (' + x + ', ' + y + ')', steps:['Set the equations equal to each other.', coeffX(m1,1) + signedNumber(c1) + ' = ' + coeffX(m2,1) + signedNumber(c2), (m1-m2) + 'x = ' + (c2-c1), 'x = ' + x, 'Substitute back into the first equation.', 'y = ' + y, 'Intersection point: (' + x + ', ' + y + ')'] };
+    }
+
+    function parallelPerpendicular(){
+      let baseM; do{baseM=random(-4,4);}while(baseM===0);
+      const baseC=random(-5,5), x=random(-4,4), y=random(-4,4), isParallel=Math.random()<.5;
+      const mNum=isParallel ? baseM : -1, mDen=isParallel ? 1 : baseM;
+      const cNum=y*mDen-mNum*x, cDen=mDen;
+      const eq=lineEq(mNum,mDen,cNum,cDen);
+      const relationship=isParallel ? 'parallel' : 'perpendicular';
+      return { equation:'Find the equation of the line ' + relationship + ' to ' + lineEq(baseM,1,baseC,1) + ' passing through ' + coord(x,y), answer:eq, steps:['The gradient of the given line is ' + baseM + '.', isParallel ? 'Parallel lines have the same gradient.' : 'Perpendicular gradients multiply to -1, so the new gradient is ' + fracHTML(mNum,mDen) + '.', 'Use y = mx + c with point ('+x+', '+y+').', y + ' = ' + fracHTML(mNum,mDen) + '(' + x + ') + c', 'c = ' + fracHTML(cNum,cDen), eq] };
+    }
+
+    function switchLevel(level){
+      currentLevel=level; currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      const options={
+        1:[['gradient_two_points','Type 1: Gradient from two points'],['gradient_from_equation','Type 2: Gradient from equation']],
+        2:[['find_y_intercept','Type 1: Find y-intercept'],['find_x_intercept','Type 2: Find x-intercept'],['find_both_intercepts','Type 3: Find both intercepts']],
+        3:[['equation_two_points','Type 1: Equation from two points'],['equation_point_gradient','Type 2: Equation from point + gradient'],['equation_point_intercept','Type 3: Equation from point + y-intercept']],
+        4:[['intersection_point','Type 1: Intersection of two lines'],['parallel_perpendicular','Type 2: Parallel/perpendicular lines']]
+      };
+      const dropdown=document.getElementById('type-dropdown');
+      dropdown.innerHTML='<option value="select">Select Question Type</option>' + options[level].map(([v,l])=>'<option value="'+v+'">'+l+'</option>').join('');
+      dropdown.value='select';
+      showBlankPage();
+    }
+    function typeChanged(){ currentType=document.getElementById('type-dropdown').value; currentType==='select' ? showBlankPage() : generateNewSet(); }
+    function showBlankPage(){ document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:50px;color:#718096;font-size:1.2em">Please select a question type to begin.</li>'; }
+    function generateNewSet(){
+      if(currentType==='select'){ showBlankPage(); return; }
+      problems=[]; answersVisible=false; stepsVisible=false;
+      const seen=new Set(); let guard=0;
+      while(problems.length<5 && guard<80){ guard++; const p=generateProblem(); const key=p.equation+'|'+p.answer; if(!seen.has(key)){ seen.add(key); problems.push(p); } }
+      while(problems.length<5) problems.push(generateProblem());
+      renderProblems();
+    }
+    function renderProblems(){
+      const container=document.getElementById('problem-list'); container.innerHTML='';
+      problems.forEach((problem,index)=>{
+        const li=document.createElement('li'); li.className='problem-item';
+        const stepsHTML=problem.steps.map(step=>step.includes('=')&&!step.includes(':') ? '<div class="step-equation">'+step+'</div>' : '<div class="step">'+step+'</div>').join('');
+        li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(index+1)+'</div><div class="equation">'+problem.equation+'</div></div><div class="problem-answer" id="quick-answer-'+index+'">'+problem.answer+'</div></div><div class="steps-section" id="steps-'+index+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+stepsHTML+'<div class="final-answer">'+problem.answer+'</div></div></div>';
+        container.appendChild(li);
+      });
+    }
+    function showAnswers(){ answersVisible=!answersVisible; problems.forEach((_,i)=>{ const el=document.getElementById('quick-answer-'+i); if(el) el.classList.toggle('visible',answersVisible); }); }
+    function showSteps(){ stepsVisible=!stepsVisible; problems.forEach((_,i)=>{ const el=document.getElementById('steps-'+i); if(el) el.classList.toggle('visible',stepsVisible); }); }
+    function startTimer(minutes){ if(timerActive) stopTimer(); timeRemaining=minutes*60; timerActive=true; updateTimerDisplay(); timerInterval=setInterval(()=>{ timeRemaining--; updateTimerDisplay(); if(timeRemaining<=0) timerFinished(); },1000); }
+    function stopTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } timerActive=false; const el=document.getElementById('timer-display'); el.textContent='Ready'; el.className='timer-display'; }
+    function updateTimerDisplay(){ const m=Math.floor(timeRemaining/60), s=timeRemaining%60, el=document.getElementById('timer-display'); el.textContent=m+':'+String(s).padStart(2,'0'); if(timeRemaining<=30&&timerActive) el.className='timer-display warning'; else if(timerActive) el.className='timer-display active'; else el.className='timer-display'; }
+    function timerFinished(){ stopTimer(); const el=document.getElementById('timer-display'); el.textContent='Time Up!'; el.className='timer-display warning'; document.getElementById('timer-modal').classList.remove('hidden'); }
+    function closeModal(){ document.getElementById('timer-modal').classList.add('hidden'); }
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

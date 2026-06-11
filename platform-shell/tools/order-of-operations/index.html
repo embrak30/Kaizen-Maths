@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PEMDAS Practice (KaTeX)</title>
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+          onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});"></script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f5f7fa;min-height:100vh;padding:20px;overflow-x:hidden}
+
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#8e44ad;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#9b59b6;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-420px;top:0;width:420px;height:100vh;background:#fff;z-index:1000;transition:left .3s ease;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}
+    .sidebar.open{left:0}
+    .sidebar-header{background:#8e44ad;color:#fff;padding:20px;font-size:1.3em;font-weight:600}
+    .sidebar-content{padding:25px;line-height:1.6}
+    .sidebar-content h3{color:#8e44ad;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #e74c3c;padding-bottom:5px}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}
+    .sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}
+    .sidebar-overlay.active{opacity:1;visibility:visible}
+
+    .container{max-width:1100px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}
+    .header{background:#2c3e50;background-image:radial-gradient(circle at 25% 25%,#8e44ad 0%,transparent 50%),radial-gradient(circle at 75% 75%,#e74c3c 0%,transparent 50%);color:#fff;padding:24px;text-align:center;position:relative;overflow:hidden}
+    .header::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 50%,rgba(0,0,0,.05) 100%)}
+    .header h1{font-size:2.1em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+
+    .tabs{display:flex;background:#ecf0f1;flex-wrap:wrap}
+    .tab{flex:1;padding:16px;background:#ecf0f1;border:none;cursor:pointer;font-size:1.05em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}
+    .tab:hover{background:#d5dbdb}
+    .tab.active{background:#fff;border-bottom:3px solid #e74c3c;color:#e74c3c}
+
+    .controls{padding:18px;background:#f8f9fa;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border-bottom:1px solid #e9ecef}
+    .level-info h3{color:#8e44ad;margin-bottom:4px;font-size:1.2em}
+    .level-info p{color:#7f8c8d}
+    .dropdown-container{margin-top:8px}
+    .type-dropdown{padding:8px 12px;border:2px solid #bdc3c7;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:360px}
+    .type-dropdown:focus{border-color:#e74c3c;outline:none}
+
+    .timer-section{display:flex;align-items:center;gap:12px}
+    .timer-display{font-size:1.6em;font-weight:bold;color:#8e44ad;background:#fff;padding:8px 14px;border-radius:6px;border:2px solid #bdc3c7;min-width:100px;text-align:center}
+    .timer-display.active{border-color:#e74c3c;color:#e74c3c}
+    .timer-display.warning{color:#e74c3c;border-color:#e74c3c;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+
+    .action-buttons{display:flex;gap:10px}
+    .btn{padding:10px 18px;border:none;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}
+    .btn-primary{background:#e74c3c;color:#fff}.btn-primary:hover{background:#c0392b;transform:translateY(-1px)}
+    .btn-success{background:#27ae60;color:#fff}.btn-success:hover{background:#229954;transform:translateY(-1px)}
+    .btn-warning{background:#f39c12;color:#fff}.btn-warning:hover{background:#e67e22;transform:translateY(-1px)}
+    .btn-danger{background:#e74c3c;color:#fff}.btn-danger:hover{background:#c0392b;transform:translateY(-1px)}
+
+    .problems-section{padding:24px;min-height:520px}
+    .calculate-header{color:#e74c3c;font-size:1.1em;margin-bottom:10px;font-weight:600}
+    .problem-list{list-style:none}
+    .problem-item{background:#f8f9fa;margin:10px 0;padding:16px;border-radius:10px;border-left:5px solid #e74c3c;transition:.3s}
+    .problem-item:hover{transform:translateX(2px)}
+    .problem-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+    .problem-left{display:flex;align-items:flex-start;flex:1}
+    .problem-number{background:#e74c3c;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;margin-right:12px;font-size:.95em;flex-shrink:0}
+    .problem-content{display:flex;flex-direction:column;gap:6px}
+    .expression{font-size:1.15em;color:#2c3e50;font-weight:600;margin:4px 0;padding:10px;background:#fff;border:1px solid #ddd;border-radius:6px}
+    .problem-answer{background:#27ae60;color:#fff;padding:8px 14px;border-radius:20px;font-weight:bold;font-size:1.05em;display:none;margin-left:12px;align-self:flex-start}
+    .problem-answer.visible{display:block;animation:slideIn .4s ease}
+    @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+    .steps-section{margin-top:10px;padding:12px;background:#f0f8ff;border-radius:8px;border-left:4px solid #e74c3c;display:none}
+    .steps-section.visible{display:block;animation:slideDown .4s ease}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+    .answer-label{font-weight:600;color:#27ae60;margin-bottom:6px}
+    .solution-steps{font-size:1.06em;line-height:1.5}
+    .step{margin:6px 0;color:#2c3e50}
+    .step-equation{text-align:center;margin:6px 0;font-size:1.06em;background:#fff;padding:6px;border:1px solid #ddd;border-radius:5px}
+    .final-answer{background:#27ae60;color:#fff;padding:8px 12px;border-radius:6px;text-align:center;font-weight:bold;font-size:1.08em;margin-top:8px}
+
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}
+    .modal-content{background:#fff;padding:28px;border-radius:12px;text-align:center;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+    .modal-content h2{color:#e74c3c;margin-bottom:12px;font-size:1.6em}
+    .modal-content p{color:#7f8c8d;margin-bottom:18px}
+    .hidden{display:none}
+
+    @media(max-width:768px){
+      .controls{flex-direction:column;align-items:stretch}
+      .timer-section{justify-content:center}
+      .tabs{flex-wrap:wrap}
+      .tab{flex:1 1 50%}
+      .sidebar{width:320px;left:-320px}
+      .type-dropdown{min-width:280px}
+    }
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">📚 Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool focuses on PEMDAS only. There are three levels, all rendered with KaTeX for clear mathematical notation.</p>
+
+      <h3>Levels</h3>
+      <ul>
+        <li><strong>Level 1 — Basic Operations:</strong> Only positive numbers. Every problem has at least two operations. No brackets yet. Designed to stress test precedence.</li>
+        <li><strong>Level 2 — Brackets + Three Operations:</strong> Positive numbers with brackets. Each expression includes three operations and a Mixed type that may include four.</li>
+        <li><strong>Level 3 — Introduce Negatives:</strong> Three to four operations, brackets allowed, and negative numbers introduced.</li>
+      </ul>
+
+      <h3>How Steps Are Shown</h3>
+      <ul>
+        <li>Short sentences with one idea per step.</li>
+        <li>Steps follow PEMDAS: parentheses, exponents, multiplication and division left to right, addition and subtraction left to right.</li>
+        <li>Intermediate results appear on centered math lines.</li>
+      </ul>
+
+      <h3>Standards & Alignment</h3>
+      <ul>
+        <li><strong>UK National Curriculum (KS2–KS3):</strong>
+          <ul>
+            <li>Use order of operations including parentheses and exponents.</li>
+            <li>Evaluate numerical expressions; apply place value and arithmetic strategies.</li>
+          </ul>
+        </li>
+        <li><strong>Common Core (CCSS):</strong>
+          <ul>
+            <li><strong>5.OA.A.1–2:</strong> Use parentheses and evaluate numerical expressions.</li>
+            <li><strong>6.EE.A.1–2:</strong> Write and evaluate numerical expressions with whole-number exponents; apply order of operations.</li>
+            <li><strong>7.NS.A:</strong> Apply properties of operations to rational numbers.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Timer Suggestions</h3>
+      <ul>
+        <li>2 minutes for quick practice.</li>
+        <li>5 minutes for full worked solutions.</li>
+        <li>Encourage learners to state the rule used at each step.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header"><h1>PEMDAS Practice</h1></div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Basic Operations</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Brackets + 3 Ops</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Negatives</button>
+    </div>
+
+    <div class="controls">
+      <div class="level-info">
+        <div class="level-controls">
+          <div>
+            <h3 id="level-title">Level 1: Basic Operations</h3>
+            <p id="level-description">Positive numbers only. At least two operations per problem. No brackets.</p>
+            <div class="dropdown-container" id="dropdown-container">
+              <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+
+    <div class="problems-section">
+      <div class="calculate-header" id="calculate-header" style="display:none;">Calculate:</div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>⏰ Time is up!</h2>
+      <p>Ready to review solutions?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Basic Operations",
+        description: "Positive numbers only. At least two operations. No brackets.",
+        types: ['l1_core', 'l1_with_square', 'l1_with_division']
+      },
+      2: {
+        title: "Level 2: Brackets + 3 Ops",
+        description: "Positive numbers with brackets. Three operations (Mixed may use four).",
+        types: ['l2_brackets_times_minus', 'l2_plus_brackets_minus', 'l2_brackets_with_square', 'l2_mixed']
+      },
+      3: {
+        title: "Level 3: Negatives",
+        description: "Introduce negative numbers. Three to four operations. Brackets allowed.",
+        types: ['l3_neg_in_product', 'l3_neg_leading', 'l3_neg_with_square', 'l3_mixed']
+      }
+    };
+
+    const typeLabels = {
+      l1_core: "Type A: Core Precedence (2 ops, + and ×)",
+      l1_with_square: "Type B: Include Exponent (2 ops, ^ then + or −)",
+      l1_with_division: "Type C: Include Division (2 ops; exact ÷)",
+      l2_brackets_times_minus: "Type A: (a+b) × c − d",
+      l2_plus_brackets_minus: "Type B: a + (b × c) − d",
+      l2_brackets_with_square: "Type C: (a+b)² − c",
+      l2_mixed: "Type D: Mixed with brackets (3–4 ops)",
+      l3_neg_in_product: "Type A: (a − b) × (−c) + d",
+      l3_neg_leading: "Type B: −a + b × c − d",
+      l3_neg_with_square: "Type C: (−a) + b² − c × d",
+      l3_mixed: "Type D: Mixed with negatives (up to 4 ops)"
+    };
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function rnd(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function pos(min,max){return rnd(Math.max(1,min), Math.max(min,max))}
+    function choice(arr){return arr[rnd(0,arr.length-1)]}
+
+    function exactDivisionPair(maxA=60, maxB=9){
+      const b = pos(2, maxB);
+      const q = pos(2, Math.floor(maxA/ b));
+      const a = b*q;
+      return [a,b,q];
+    }
+
+    function reRender(){
+      if(typeof renderMathInElement!=='function')return;
+      renderMathInElement(document.body,{
+        delimiters:[
+          {left:'$$', right:'$$', display:true},
+          {left:'\\[', right:'\\]', display:true},
+          {left:'\\(', right:'\\)', display:false}
+        ],
+        throwOnError:false
+      });
+    }
+
+    function genLevel1(type){
+      if(type==='l1_core'){
+        const patterns = [
+          (a,b,c)=>({expr:`\\(${a}+${b}\\times ${c}\\)`, steps:["Step 1: Multiply first.",`$$${b}\\times ${c}=${b*c}$$`,"Step 2: Add.",`$$${a}+${b*c}=${a+b*c}$$`], ans:a+b*c}),
+          (a,b,c)=>({expr:`\\(${a}\\times ${b}+${c}\\)`, steps:["Step 1: Multiply first.",`$$${a}\\times ${b}=${a*b}$$`,"Step 2: Add.",`$$${a*b}+${c}=${a*b+c}$$`], ans:a*b+c}),
+          (a,b,c)=>({expr:`\\(${a}+${b}-${c}\\)`, steps:["Step 1: Do addition and subtraction left to right.",`$$${a}+${b}=${a+b}$$`,`$$${a+b}-${c}=${a+b-c}$$`], ans:a+b-c})
+        ];
+        const a=pos(2,12), b=pos(2,9), c=pos(2,9);
+        const out = choice(patterns)(a,b,c);
+        return {expression:out.expr, answer:`\\(${out.ans}\\)`, steps:out.steps};
+      }
+
+      if(type==='l1_with_square'){
+        const a=pos(2,12), b=pos(2,9);
+        if(Math.random()<0.5){
+          const pow=b*b, res=a+pow;
+          return {expression:`\\(${a}+${b}^{2}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Exponent first.",`$$${b}^{2}=${pow}$$`,"Step 2: Add.",`$$${a}+${pow}=${res}$$`]};
+        }
+        const pow=a*a, b2=pos(2,9), res=pow-b2;
+        return {expression:`\\(${a}^{2}-${b2}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Exponent first.",`$$${a}^{2}=${pow}$$`,"Step 2: Subtract.",`$$${pow}-${b2}=${res}$$`]};
+      }
+
+      if(type==='l1_with_division'){
+        const [b,c,q] = exactDivisionPair(72,9);
+        const a = pos(2,30);
+        if(Math.random()<0.5){
+          const res = a + q;
+          return {expression:`\\(${a}+${b}\\div ${c}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Division before addition.",`$$${b}\\div ${c}=${q}$$`,"Step 2: Add.",`$$${a}+${q}=${res}$$`]};
+        }
+        const res = q + a;
+        return {expression:`\\(${b}\\div ${c}+${a}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Division before addition.",`$$${b}\\div ${c}=${q}$$`,"Step 2: Add.",`$$${q}+${a}=${res}$$`]};
+      }
+
+      return fallbackProblem();
+    }
+
+    function genLevel2(type){
+      if(type==='l2_brackets_times_minus'){
+        const a=pos(2,20), b=pos(2,20), c=pos(2,9), d=pos(2,25);
+        const ab=a+b, prod=ab*c, res=prod-d;
+        return {expression:`\\((${a}+${b})\\times ${c}-${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses first.",`$$${a}+${b}=${ab}$$`,"Step 2: Multiply.",`$$${ab}\\times ${c}=${prod}$$`,"Step 3: Subtract.",`$$${prod}-${d}=${res}$$`]};
+      }
+
+      if(type==='l2_plus_brackets_minus'){
+        const a=pos(2,25), b=pos(2,12), c=pos(2,9), d=pos(2,25);
+        const bc=b*c, tmp=a+bc, res=tmp-d;
+        return {expression:`\\(${a}+(${b}\\times ${c})-${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses first.",`$$${b}\\times ${c}=${bc}$$`,"Step 2: Add.",`$$${a}+${bc}=${tmp}$$`,"Step 3: Subtract.",`$$${tmp}-${d}=${res}$$`]};
+      }
+
+      if(type==='l2_brackets_with_square'){
+        const a=pos(2,15), b=pos(2,15), c=pos(2,25);
+        const ab=a+b, sq=ab*ab, res=sq-c;
+        return {expression:`\\((${a}+${b})^{2}-${c}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses first.",`$$${a}+${b}=${ab}$$`,"Step 2: Exponent.",`$$${ab}^{2}=${ab}\\times ${ab}=${sq}$$`,"Step 3: Subtract.",`$$${sq}-${c}=${res}$$`]};
+      }
+
+      if(type==='l2_mixed'){
+        if(Math.random()<0.5){
+          const a=pos(2,15), b=pos(2,15), c=pos(2,9), d=pos(2,20), e=pos(2,20);
+          const ab=a+b, prod=ab*c, tmp=prod-d, res=tmp+e;
+          return {expression:`\\((${a}+${b})\\times ${c}-${d}+${e}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses.",`$$${a}+${b}=${ab}$$`,"Step 2: Multiply.",`$$${ab}\\times ${c}=${prod}$$`,"Step 3: Subtract.",`$$${prod}-${d}=${tmp}$$`,"Step 4: Add.",`$$${tmp}+${e}=${res}$$`]};
+        }
+        const b=pos(2,12), c=pos(2,9);
+        const bc = b*c;
+        const divisors = [2,3,4,6,8,9,12].filter(x=>bc%x===0);
+        const d = divisors.length? choice(divisors) : 2;
+        const a=pos(2,25);
+        const div = Math.floor(bc/d), res=a+div;
+        return {expression:`\\(${a}+(${b}\\times ${c})\\div ${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses.",`$$${b}\\times ${c}=${bc}$$`,"Step 2: Division.",`$$${bc}\\div ${d}=${div}$$`,"Step 3: Addition.",`$$${a}+${div}=${res}$$`]};
+      }
+
+      return fallbackProblem();
+    }
+
+    function genLevel3(type){
+      if(type==='l3_neg_in_product'){
+        const a=pos(6,20), b=pos(2,5), c=pos(2,9), d=pos(2,20);
+        const m = (a-b)*(-c), res = m + d;
+        return {expression:`\\((${a}-${b})\\times (-${c})+${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses.",`$$${a}-${b}=${a-b}$$`,"Step 2: Multiply with a negative.",`$$(${a-b})\\times (-${c})=${m}$$`,"Step 3: Add.",`$$${m}+${d}=${res}$$`]};
+      }
+
+      if(type==='l3_neg_leading'){
+        const a=pos(2,15), b=pos(2,12), c=pos(2,9), d=pos(2,15);
+        const bc=b*c, tmp = -a + bc, res = tmp - d;
+        return {expression:`\\(-${a}+${b}\\times ${c}-${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Multiply first.",`$$${b}\\times ${c}=${bc}$$`,"Step 2: Add the negative.",`$$-${a}+${bc}=${tmp}$$`,"Step 3: Subtract.",`$$${tmp}-${d}=${res}$$`]};
+      }
+
+      if(type==='l3_neg_with_square'){
+        const a=pos(2,12), b=pos(2,9), c=pos(2,9), d=pos(2,9);
+        const b2=b*b, cd=c*d, tmp=(-a)+b2, res = tmp - cd;
+        return {expression:`\\((-${a})+${b}^{2}-${c}\\times ${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Exponent first.",`$$${b}^{2}=${b2}$$`,"Step 2: Multiply.",`$$${c}\\times ${d}=${cd}$$`,"Step 3: Add the negative.",`$$-${a}+${b2}=${tmp}$$`,"Step 4: Subtract.",`$$${tmp}-${cd}=${res}$$`]};
+      }
+
+      if(type==='l3_mixed'){
+        const a=pos(2,12), b=pos(2,12), c=pos(2,9), d=pos(2,12), e=pos(2,15);
+        const ab=a+b, prod=ab*c, addNeg = prod - (-d), res = addNeg + e;
+        return {expression:`\\((${a}+${b})\\times ${c}-(-${d})+${e}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses.",`$$${a}+${b}=${ab}$$`,"Step 2: Multiply.",`$$${ab}\\times ${c}=${prod}$$`,"Step 3: Subtract a negative (that means add).",`$$${prod}-(-${d})=${prod}+${d}=${addNeg}$$`,"Step 4: Add.",`$$${addNeg}+${e}=${res}$$`]};
+      }
+
+      return fallbackProblem();
+    }
+
+    function fallbackProblem(){
+      return {expression:'\\(5+3\\times 4\\)', answer:'\\(17\\)', steps:["Step 1: Multiply first.","$$3\\times 4=12$$","Step 2: Add.","$$5+12=17$$"]};
+    }
+
+    function generateProblem(){
+      if(currentType==='select' || !currentType){ return fallbackProblem(); }
+      if(currentLevel===1) return genLevel1(currentType);
+      if(currentLevel===2) return genLevel2(currentType);
+      return genLevel3(currentType);
+    }
+
+    function switchLevel(level){
+      currentLevel = level;
+      document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active', i+1===level));
+      const cfg = levelConfigs[level];
+      document.getElementById('level-title').textContent = cfg.title;
+      document.getElementById('level-description').textContent = cfg.description;
+      const dd = document.getElementById('type-dropdown');
+      dd.innerHTML = `<option value="select">Select Question Type</option>` + cfg.types.map(t=>`<option value="${t}">${typeLabels[t]}</option>`).join('');
+      currentType = 'select';
+      showBlankPage();
+      reRender();
+    }
+
+    function typeChanged(){
+      currentType = document.getElementById('type-dropdown').value;
+      if(currentType==='select'){ showBlankPage(); return; }
+      document.getElementById('calculate-header').style.display='block';
+      generateNewSet();
+    }
+
+    function showBlankPage(){
+      const list = document.getElementById('problem-list');
+      document.getElementById('calculate-header').style.display='none';
+      list.innerHTML = '<li style="text-align:center;padding:40px;color:#7f8c8d;font-size:1.05em;">Please select a question type to begin</li>';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){ showBlankPage(); return; }
+      problems = []; answersVisible=false; stepsVisible=false;
+      for(let i=0;i<5;i++){ problems.push(generateProblem()); }
+      renderProblems();
+      reRender();
+    }
+
+    function renderProblems(){
+      const container = document.getElementById('problem-list');
+      container.innerHTML = '';
+      problems.forEach((p, idx)=>{
+        const li = document.createElement('li');
+        li.className = 'problem-item';
+        const stepsHTML = p.steps.map(st=>{
+          const isEq = st.trim().startsWith('$$') || (st.includes('=') && !st.startsWith('Step'));
+          return isEq ? `<div class="step-equation">${st}</div>` : `<div class="step">${st}</div>`;
+        }).join('');
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${idx+1}</div>
+              <div class="problem-content">
+                <div class="expression">${p.expression}</div>
+              </div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${idx}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${idx}">
+            <div class="answer-label">Solution Steps:</div>
+            <div class="solution-steps">
+              ${stepsHTML}
+              <div class="final-answer">${p.answer}</div>
+            </div>
+          </div>
+        `;
+        container.appendChild(li);
+      });
+    }
+
+    function showAnswers(){
+      answersVisible = !answersVisible;
+      for(let i=0;i<5;i++){
+        const qa = document.getElementById(`quick-answer-${i}`);
+        if(!qa) continue;
+        qa.classList.toggle('visible', answersVisible);
+      }
+      reRender();
+    }
+
+    function showSteps(){
+      stepsVisible = !stepsVisible;
+      for(let i=0;i<5;i++){
+        const sec = document.getElementById(`steps-${i}`);
+        if(!sec) continue;
+        sec.classList.toggle('visible', stepsVisible);
+      }
+      reRender();
+    }
+
+    function startTimer(minutes){
+      if(timerActive){ stopTimer(); }
+      timeRemaining = minutes*60; timerActive=true; updateTimerDisplay();
+      timerInterval = setInterval(()=>{
+        timeRemaining--; updateTimerDisplay();
+        if(timeRemaining<=0){ timerFinished(); }
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval){ clearInterval(timerInterval); timerInterval=null; }
+      timerActive=false; const el=document.getElementById('timer-display'); el.textContent='Ready'; el.className='timer-display';
+    }
+    function updateTimerDisplay(){
+      const m=Math.floor(timeRemaining/60), s=timeRemaining%60;
+      const el=document.getElementById('timer-display'); el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+      if(timeRemaining<=30){ el.className='timer-display warning'; }
+      else if(timerActive){ el.className='timer-display active'; }
+      else{ el.className='timer-display'; }
+    }
+    function timerFinished(){ stopTimer(); const el=document.getElementById('timer-display'); el.textContent='Time Up!'; el.className='timer-display warning'; document.getElementById('timer-modal').classList.remove('hidden'); }
+    function closeModal(){ document.getElementById('timer-modal').classList.add('hidden'); }
+
+    document.addEventListener('DOMContentLoaded', ()=>{ switchLevel(1); });
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

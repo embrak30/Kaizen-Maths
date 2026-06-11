@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quadratic Equations Practice</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f5f7fa;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#2c3e50;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#34495e;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s ease;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#2c3e50;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#2c3e50;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3498db;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#4a4a4a;background-image:linear-gradient(45deg,#565656 25%,transparent 25%,transparent 75%,#565656 75%,#565656),linear-gradient(45deg,#565656 25%,transparent 25%,transparent 75%,#565656 75%,#565656);background-size:30px 30px;background-position:0 0,15px 15px;color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 50%,rgba(0,0,0,.05) 100%)}.header h1{font-size:2.2em;margin-bottom:5px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#ecf0f1}.tab{flex:1;padding:18px;background:#ecf0f1;border:0;cursor:pointer;font-size:1.1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#d5dbdb}.tab.active{background:#fff;border-bottom-color:#3498db;color:#3498db}
+    .controls{padding:25px;background:#f8f9fa;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border-bottom:1px solid #e9ecef}.level-info h3{color:#2c3e50;margin-bottom:5px;font-size:1.3em}.level-info p{color:#7f8c8d;font-size:1em}.dropdown-container{margin-top:10px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:8px 12px;border:2px solid #bdc3c7;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:250px;max-width:100%}.type-dropdown:focus{border-color:#3498db;outline:0}
+    .timer-section{display:flex;align-items:center;gap:15px}.timer-display{font-size:2em;font-weight:700;color:#2c3e50;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #bdc3c7;min-width:120px;text-align:center}.timer-display.active{border-color:#3498db;color:#3498db}.timer-display.warning{color:#e74c3c;border-color:#e74c3c;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px}.btn{padding:12px 22px;border:0;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}.btn-primary{background:#3498db;color:#fff}.btn-primary:hover{background:#2980b9;transform:translateY(-1px)}.btn-success{background:#27ae60;color:#fff}.btn-success:hover{background:#229954;transform:translateY(-1px)}.btn-warning{background:#f39c12;color:#fff}.btn-warning:hover{background:#e67e22;transform:translateY(-1px)}.btn-danger{background:#e74c3c;color:#fff}.btn-danger:hover{background:#c0392b;transform:translateY(-1px)}
+    .problems-section{padding:28px;min-height:580px}.problem-list{list-style:none}.problem-set-header{font-size:1.35em;font-weight:700;margin-bottom:15px;color:#2c3e50}.problem-item{background:#f8f9fa;margin:14px 0;padding:18px;border-radius:10px;border-left:5px solid #3498db;transition:.3s}.problem-item:hover{transform:translateX(3px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3498db;color:#fff;width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:20px;font-size:1.1em;flex-shrink:0}.equation{font-size:1.75em;font-family:"KaTeX_Main","Times New Roman",serif;color:#2c3e50;font-weight:600;overflow-x:auto;max-width:100%;padding-bottom:2px}.problem-answer{background:#27ae60;color:#fff;padding:10px 18px;border-radius:25px;font-weight:700;font-size:1.15em;display:none;margin-left:18px;max-width:42%;white-space:nowrap;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{margin-top:18px;padding:18px;background:#f0f8ff;border-radius:8px;border-left:4px solid #3498db;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#27ae60;margin-bottom:10px;font-size:1.1em}.solution-steps{font-size:1.12em;line-height:1.5;font-family:"KaTeX_Main","Times New Roman",serif}.step{margin:8px 0;color:#2c3e50}.step-equation{font-weight:700;color:#8e44ad;text-align:center;margin:10px 0;font-size:1.28em;overflow-x:auto;max-width:100%;padding-bottom:2px}.final-answer{background:#27ae60;color:#fff;padding:10px 18px;border-radius:6px;text-align:center;font-weight:700;font-size:1.25em;margin-top:12px;overflow-x:auto}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e74c3c;margin-bottom:18px;font-size:2em}.modal-content p{color:#7f8c8d;margin-bottom:25px;font-size:1.1em}.hidden{display:none!important}
+    @media(max-width:768px){body{padding:15px}.controls{flex-direction:column;align-items:stretch;padding:14px}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%;padding:10px}.sidebar{width:300px;left:-300px}.problems-section{padding:12px}.problem-item{padding:12px;margin:8px 0}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{max-width:100%;margin-left:55px}.equation{font-size:1.3em}.solution-steps{font-size:1em}.step-equation{font-size:1.08em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool helps students practise quadratic equations with a structured progression. Each level focuses on a specific form and solution method, with mixed sets for fluency practice.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1 - Basic Squares:</strong> Equations of the form x^2 = k or equivalent rearrangements.</li>
+        <li><strong>Level 2 - Factorable:</strong> Quadratics solved by factoring and the zero product property.</li>
+        <li><strong>Level 3 - Non-Factorable:</strong> General quadratics requiring the quadratic formula.</li>
+        <li><strong>Level 4 - Non-Standard / Disguised:</strong> Rearrangement or substitution before solving.</li>
+      </ul>
+      <h3>Assessment Focus</h3>
+      <ul>
+        <li>Choosing square-root, factoring, or quadratic formula appropriately.</li>
+        <li>Recognising standard form and disguised quadratic structure.</li>
+        <li>Interpreting the discriminant and rounding formula answers to 2 decimal places.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header"><h1>Quadratic Equations Teaching Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Basic Squares</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Factorable</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Non-Factorable</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Non-Standard</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Basic Square Equations</h3>
+        <p id="level-description">Simple square equations with rational roots</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="type1_basic">Type 1: x^2 - 16 = 0</option>
+            <option value="type2_basic">Type 2: x^2 - 5 = 20</option>
+            <option value="mixed1">Mixed Level 1 Types</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: { title: 'Level 1: Basic Square Equations', description: 'Simple square equations with rational roots', types: ['type1_basic','type2_basic','mixed1'] },
+      2: { title: 'Level 2: Factorable Quadratics', description: 'Quadratics that can be solved by factoring', types: ['type1_standard','type2_standard','type3_standard','type4_standard','mixed2'] },
+      3: { title: 'Level 3: Non-Factorable Quadratics', description: 'Quadratics requiring the quadratic formula', types: ['type1_general','type2_general','mixed3'] },
+      4: { title: 'Level 4: Non-Standard / Disguised', description: 'Rearrange to standard form or use substitution', types: ['nonstandard_form','disguised_quad','mixed4'] }
+    };
+
+    function toggleSidebar(){
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('active');
+    }
+    function closeSidebar(){
+      document.getElementById('sidebar').classList.remove('open');
+      document.querySelector('.sidebar-overlay').classList.remove('active');
+    }
+    function random(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function randCoeff(min,max){ let n; do{ n=random(min,max); } while(n===0 || n===1 || n===-1); return n; }
+    function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ const t=b; b=a%b; a=t; } return a || 1; }
+    function simplifyFraction(num,den){
+      if(den===0) return 'undefined';
+      if(num===0) return '0';
+      const g=gcd(num,den); num/=g; den/=g;
+      if(den<0){ num=-num; den=-den; }
+      return den===1 ? String(num) : num + '/' + den;
+    }
+    function signed(n){ return (n >= 0 ? '+' : '') + n; }
+    function rootFactor(r){ return r >= 0 ? '(x - ' + r + ')' : '(x + ' + (-r) + ')'; }
+
+    function generateProblem(){
+      const config = levelConfigs[currentLevel];
+      const baseTypes = config.types.filter(t => !t.startsWith('mixed') && t !== 'all');
+      const activeTypes = currentType === 'select' || currentType.startsWith('mixed') || currentType === 'all' ? baseTypes : [currentType];
+      const type = activeTypes[Math.floor(Math.random() * activeTypes.length)];
+      let problem = {};
+
+      switch(type){
+        case 'type1_basic': {
+          const a = randCoeff(2,8);
+          const k = a*a;
+          problem = {
+            equation: 'x^2 - ' + k + ' = 0',
+            answer: 'x = +/-' + a,
+            steps: ['Add ' + k + ' to both sides:', 'x^2 = ' + k, 'Take the square root of both sides:', 'sqrt(x^2) = +/-sqrt(' + k + ')', 'x = +/-' + a]
+          };
+          break;
+        }
+        case 'type2_basic': {
+          const a = randCoeff(2,8);
+          const b = randCoeff(2,15);
+          const c = a*a - b;
+          problem = {
+            equation: 'x^2 - ' + b + ' = ' + c,
+            answer: 'x = +/-' + a,
+            steps: ['Add ' + b + ' to both sides:', 'x^2 = ' + (c+b), 'x^2 = ' + (a*a), 'Take the square root of both sides:', 'x = +/-' + a]
+          };
+          break;
+        }
+        case 'type1_standard': {
+          const r = (Math.random()<.5 ? 1 : -1) * randCoeff(2,8);
+          const B = -r;
+          problem = {
+            equation: 'x^2 ' + signed(B) + 'x = 0',
+            answer: 'x = 0, x = ' + r,
+            steps: ['Starting equation: x^2 ' + signed(B) + 'x = 0', 'Factor out x:', 'x(x ' + signed(B) + ') = 0', 'Apply the zero product property: x = 0 or x ' + signed(B) + ' = 0', 'Solve the second equation: x = ' + r, 'Solutions: x = 0 and x = ' + r]
+          };
+          break;
+        }
+        case 'type2_standard': {
+          const a = randCoeff(2,4);
+          const r = (Math.random()<.5 ? 1 : -1) * randCoeff(2,6);
+          const b = -a*r;
+          problem = {
+            equation: a + 'x^2 ' + signed(b) + 'x = 0',
+            answer: 'x = 0, x = ' + r,
+            steps: ['Starting equation: ' + a + 'x^2 ' + signed(b) + 'x = 0', 'Factor out x:', 'x(' + a + 'x ' + signed(b) + ') = 0', 'Apply the zero product property: x = 0 or ' + a + 'x ' + signed(b) + ' = 0', 'Solve ' + a + 'x ' + signed(b) + ' = 0:', a + 'x = ' + (-b), 'x = ' + (-b) + '/' + a + ' = ' + simplifyFraction(-b,a), 'Solutions: x = 0 and x = ' + r]
+          };
+          break;
+        }
+        case 'type3_standard': {
+          let r1,r2,b,c;
+          do{
+            r1=(Math.random()<.5 ? 1 : -1)*randCoeff(2,6);
+            r2=(Math.random()<.5 ? 1 : -1)*randCoeff(2,6);
+            b=-(r1+r2); c=r1*r2;
+          } while(r1===r2 || b===0 || Math.abs(b)===1 || c===0 || Math.abs(c)===1);
+          problem = {
+            equation: 'x^2 ' + signed(b) + 'x ' + signed(c) + ' = 0',
+            answer: 'x = ' + r1 + ', x = ' + r2,
+            steps: ['Starting equation: x^2 ' + signed(b) + 'x ' + signed(c) + ' = 0', 'We want two numbers that multiply to ' + c + ' and add to ' + b + '.', 'Those numbers are ' + (-r1) + ' and ' + (-r2) + '.', 'So the factorisation is ' + rootFactor(r1) + rootFactor(r2) + ' = 0.', rootFactor(r1) + ' = 0 or ' + rootFactor(r2) + ' = 0', 'Solutions: x = ' + r1 + ' and x = ' + r2]
+          };
+          break;
+        }
+        case 'type4_standard': {
+          let r1,r2,bp,cp;
+          do{
+            r1=(Math.random()<.5 ? 1 : -1)*randCoeff(2,5);
+            r2=(Math.random()<.5 ? 1 : -1)*randCoeff(2,5);
+            bp=-(r1+r2); cp=r1*r2;
+          } while(r1===r2 || bp===0 || Math.abs(bp)===1 || cp===0 || Math.abs(cp)===1);
+          const a = randCoeff(2,4);
+          const b = a*bp;
+          const c = a*cp;
+          problem = {
+            equation: a + 'x^2 ' + signed(b) + 'x ' + signed(c) + ' = 0',
+            answer: 'x = ' + r1 + ', x = ' + r2,
+            steps: ['Starting equation: ' + a + 'x^2 ' + signed(b) + 'x ' + signed(c) + ' = 0', 'Factor out the greatest common factor ' + a + ':', a + '(x^2 ' + signed(bp) + 'x ' + signed(cp) + ') = 0', 'Since ' + a + ' is not 0, divide both sides by ' + a + ':', 'x^2 ' + signed(bp) + 'x ' + signed(cp) + ' = 0', 'Now factor the quadratic:', rootFactor(r1) + rootFactor(r2) + ' = 0', 'Solutions: x = ' + r1 + ' and x = ' + r2]
+          };
+          break;
+        }
+        case 'type1_general': {
+          problem = formulaProblem(1);
+          break;
+        }
+        case 'type2_general': {
+          problem = formulaProblem(randCoeff(2,4));
+          break;
+        }
+        case 'nonstandard_form': {
+          problem = nonstandardProblem();
+          break;
+        }
+        case 'disguised_quad': {
+          problem = disguisedProblem();
+          break;
+        }
+        default:
+          return generateProblem();
+      }
+      return problem;
+    }
+
+    function formulaProblem(a){
+      let signB, signC, bAbs, cAbs, d, b, c, disc;
+      do {
+        signB = Math.random()<.5 ? 1 : -1;
+        signC = Math.random()<.5 ? 1 : -1;
+        bAbs = randCoeff(2,7);
+        cAbs = randCoeff(2,9);
+        d = randCoeff(2,12);
+        b = signB*bAbs;
+        c = signC*cAbs - d;
+        disc = b*b - 4*a*c;
+      } while(disc >= 0 && Number.isInteger(Math.sqrt(disc)));
+      let answer;
+      let finalStep;
+      if(disc < 0){
+        answer = 'No real solutions';
+        finalStep = 'The discriminant is less than 0, so there are no real solutions.';
+      } else {
+        const root = Math.sqrt(disc);
+        const x1 = (-b + root)/(2*a);
+        const x2 = (-b - root)/(2*a);
+        answer = disc === 0 ? 'x ≈ ' + x1.toFixed(2) : 'x ≈ ' + x1.toFixed(2) + ', x ≈ ' + x2.toFixed(2);
+        finalStep = disc === 0 ? 'x = (-' + b + ') / (2*' + a + ') ≈ ' + x1.toFixed(2) : 'x1 = (-' + b + ' + sqrt(' + disc + ')) / (2*' + a + ') ≈ ' + x1.toFixed(2) + ', x2 = (-' + b + ' - sqrt(' + disc + ')) / (2*' + a + ') ≈ ' + x2.toFixed(2);
+      }
+      return {
+        equation: (a === 1 ? 'x^2' : a + 'x^2') + ' ' + (b>=0 ? '+ ' + bAbs : '- ' + bAbs) + 'x ' + (signC>0 ? '+ ' + cAbs : '- ' + cAbs) + ' = ' + d,
+        answer,
+        steps: ['Rearrange to standard form:', (a === 1 ? 'x^2' : a + 'x^2') + ' ' + signed(b) + 'x ' + signed(c) + ' = 0', 'Use the quadratic formula: x = (-b +/- sqrt(b^2 - 4ac)) / (2a).', 'Here a = ' + a + ', b = ' + b + ', c = ' + c + '.', 'Discriminant: D = b^2 - 4ac = ' + b + '^2 - 4*' + a + '*' + c + ' = ' + disc + '.', finalStep]
+      };
+    }
+
+    function nonstandardProblem(){
+      const a = randCoeff(2,5);
+      const signB = Math.random()<.5 ? 1 : -1;
+      const bAbs = randCoeff(2,6);
+      const cRight = randCoeff(3,10);
+      const signQ = Math.random()<.5 ? 1 : -1;
+      const q = randCoeff(2,4);
+      const A = signQ === 1 ? -q : q;
+      const B = a;
+      const C = signB*bAbs - cRight;
+      const disc = B*B - 4*A*C;
+      let answer;
+      const steps = [
+        'Starting equation: ' + a + 'x ' + (signB>0 ? '+ ' : '- ') + bAbs + ' = ' + cRight + ' ' + (signQ>0 ? '+ ' : '- ') + q + 'x^2',
+        'Move all terms to one side to get standard form ax^2 + bx + c = 0.',
+        'Standard form: ' + A + 'x^2 ' + signed(B) + 'x ' + signed(C) + ' = 0',
+        'Here a = ' + A + ', b = ' + B + ', c = ' + C + '.',
+        'Discriminant D = ' + B + '^2 - 4*' + A + '*' + C + ' = ' + disc + '.'
+      ];
+      if(disc < 0){
+        answer = 'No real solutions';
+        steps.push('D < 0, so there are no real solutions.');
+      } else {
+        const root = Math.sqrt(disc);
+        const x1 = (-B + root)/(2*A);
+        const x2 = (-B - root)/(2*A);
+        answer = disc === 0 ? 'x ≈ ' + x1.toFixed(2) : 'x ≈ ' + x1.toFixed(2) + ', x ≈ ' + x2.toFixed(2);
+        steps.push(disc === 0 ? 'x = (-' + B + ') / (2*' + A + ') ≈ ' + x1.toFixed(2) : 'x1 = (-' + B + ' + sqrt(' + disc + ')) / (2*' + A + ') ≈ ' + x1.toFixed(2) + ', x2 = (-' + B + ' - sqrt(' + disc + ')) / (2*' + A + ') ≈ ' + x2.toFixed(2));
+      }
+      return { equation: a + 'x ' + (signB>0 ? '+ ' : '- ') + bAbs + ' = ' + cRight + ' ' + (signQ>0 ? '+ ' : '- ') + q + 'x^2', answer, steps };
+    }
+
+    function disguisedProblem(){
+      if(Math.random()<.5){
+        const bases = [2,3,4];
+        let m = bases[random(0,bases.length-1)];
+        let n = bases[random(0,bases.length-1)];
+        while(n===m){ n = bases[random(0,bases.length-1)]; }
+        const r1 = m*m;
+        const r2 = n*n;
+        const b = -(r1+r2);
+        const c = r1*r2;
+        return {
+          equation: 'x^4 ' + signed(b) + 'x^2 ' + signed(c) + ' = 0',
+          answer: 'x = +/-' + m + ', x = +/-' + n,
+          steps: ['Let y = x^2. Then the equation becomes:', 'y^2 ' + signed(b) + 'y ' + signed(c) + ' = 0', 'Factor in terms of y: (y - ' + r1 + ')(y - ' + r2 + ') = 0', 'So y = ' + r1 + ' or y = ' + r2 + '.', 'Substitute back y = x^2:', 'x^2 = ' + r1 + ' or x^2 = ' + r2 + '.', 'x = +/-' + m + ' or x = +/-' + n]
+        };
+      }
+      let r1,r2,b,c;
+      do{
+        r1=(Math.random()<.5 ? 1 : -1)*randCoeff(2,5);
+        r2=(Math.random()<.5 ? 1 : -1)*randCoeff(2,5);
+        b=-(r1+r2); c=r1*r2;
+      } while(r1===r2 || b===0 || Math.abs(b)===1 || c===0 || Math.abs(c)===1);
+      const k = randCoeff(2,6);
+      return {
+        equation: '(x - ' + k + ')^2 ' + signed(b) + '(x - ' + k + ') ' + signed(c) + ' = 0',
+        answer: 'x = ' + (k+r1) + ', x = ' + (k+r2),
+        steps: ['Let y = x - ' + k + '. Then the equation becomes:', 'y^2 ' + signed(b) + 'y ' + signed(c) + ' = 0', 'Factor in terms of y: ' + rootFactor(r1).replaceAll('x','y') + rootFactor(r2).replaceAll('x','y') + ' = 0', 'So y = ' + r1 + ' or y = ' + r2 + '.', 'Substitute back y = x - ' + k + ':', 'x - ' + k + ' = ' + r1 + ' or x - ' + k + ' = ' + r2 + '.', 'Solve: x = ' + (k+r1) + ' or x = ' + (k+r2) + '.']
+      };
+    }
+
+    function switchLevel(level){
+      currentLevel = level;
+      currentType = 'select';
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index+1===level));
+      const config = levelConfigs[level];
+      document.getElementById('level-title').textContent = config.title;
+      document.getElementById('level-description').textContent = config.description;
+      const dropdown = document.getElementById('type-dropdown');
+      const optionSets = {
+        1: [['type1_basic','Type 1: x^2 - 16 = 0'],['type2_basic','Type 2: x^2 - 5 = 20'],['mixed1','Mixed Level 1 Types']],
+        2: [['type1_standard','Type 1: x^2 +/- kx = 0'],['type2_standard','Type 2: ax^2 +/- bx = 0'],['type3_standard','Type 3: x^2 +/- bx +/- c = 0'],['type4_standard','Type 4: ax^2 +/- bx +/- c = 0 (GCF then factor)'],['mixed2','Mixed Factorable Types']],
+        3: [['type1_general','Type 1: x^2 +/- bx +/- c = 0 (formula)'],['type2_general','Type 2: ax^2 +/- bx +/- c = 0 (formula)'],['mixed3','Mixed Non-Factorable Types']],
+        4: [['nonstandard_form','Type 1: Non-standard equation (rearrange)'],['disguised_quad','Type 2: Quadratic in disguise (substitution)'],['mixed4','Mixed Level 4 Types']]
+      };
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + optionSets[level].map(([value,label]) => '<option value="' + value + '">' + label + '</option>').join('');
+      dropdown.value = 'select';
+      showBlankPage();
+    }
+
+    function typeChanged(){
+      currentType = document.getElementById('type-dropdown').value;
+      currentType === 'select' ? showBlankPage() : generateNewSet();
+    }
+
+    function showBlankPage(){
+      document.getElementById('problem-list').innerHTML = '<div class="problem-set-header">' + levelConfigs[currentLevel].title + ' - Please select a question type</div><li style="text-align:center;padding:30px;color:#7f8c8d;font-size:1.1em">Select a question type from the dropdown above to begin practising.</li>';
+    }
+
+    function generateNewSet(){
+      if(currentType === 'select'){ showBlankPage(); return; }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      const seen = new Set();
+      let guard = 0;
+      while(problems.length < 5 && guard < 80){
+        guard++;
+        const p = generateProblem();
+        if(!seen.has(p.equation)){
+          seen.add(p.equation);
+          problems.push(p);
+        }
+      }
+      while(problems.length < 5){ problems.push(generateProblem()); }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const container = document.getElementById('problem-list');
+      container.innerHTML = '';
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'problem-set-header';
+      headerDiv.textContent = levelConfigs[currentLevel].title + ' - ' + getTypeDescription();
+      container.appendChild(headerDiv);
+      problems.forEach((problem,index)=>{
+        const li = document.createElement('li');
+        li.className = 'problem-item';
+        const stepsHTML = problem.steps.map(step => step.includes('=') && !step.includes(':') ? '<div class="step-equation">' + step + '</div>' : '<div class="step">' + step + '</div>').join('');
+        li.innerHTML = '<div class="problem-header"><div class="problem-left"><div class="problem-number">' + (index+1) + '</div><div class="equation">' + problem.equation + '</div></div><div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div></div><div class="steps-section" id="steps-' + index + '"><div class="answer-label">Solution Steps:</div><div class="solution-steps">' + stepsHTML + '<div class="final-answer">' + problem.answer + '</div></div></div>';
+        container.appendChild(li);
+      });
+    }
+
+    function getTypeDescription(){
+      const map = {
+        type1_basic:'Type 1: x^2 - 16 = 0',
+        type2_basic:'Type 2: x^2 - 5 = 20',
+        mixed1:'Mixed Level 1 Types',
+        type1_standard:'Type 1: x^2 +/- kx = 0',
+        type2_standard:'Type 2: ax^2 +/- bx = 0',
+        type3_standard:'Type 3: x^2 +/- bx +/- c = 0',
+        type4_standard:'Type 4: ax^2 +/- bx +/- c = 0 (GCF)',
+        mixed2:'Mixed Factorable Types',
+        type1_general:'Type 1: x^2 +/- bx +/- c = 0 (formula)',
+        type2_general:'Type 2: ax^2 +/- bx +/- c = 0 (formula)',
+        mixed3:'Mixed Non-Factorable Types',
+        nonstandard_form:'Type 1: Non-standard equations',
+        disguised_quad:'Type 2: Quadratic in disguise',
+        mixed4:'Mixed Level 4 Types'
+      };
+      return map[currentType] || 'Practice Problems';
+    }
+    window.typeDisplayNames = {
+      type1_basic: 'Square equals a number',
+      type2_basic: 'Square equation with rearranging',
+      mixed1: 'Mixed basic square equations',
+      type1_standard: 'Quadratic with common factor',
+      type2_standard: 'Quadratic with leading coefficient and common factor',
+      type3_standard: 'Factorable quadratic with constant term',
+      type4_standard: 'Factorable quadratic with leading coefficient',
+      mixed2: 'Mixed factorable quadratics',
+      type1_general: 'Quadratic formula with leading coefficient one',
+      type2_general: 'Quadratic formula with leading coefficient',
+      mixed3: 'Mixed non-factorable quadratics',
+      nonstandard_form: 'Non-standard equations',
+      disguised_quad: 'Quadratic in disguise',
+      mixed4: 'Mixed advanced quadratics'
+    };
+
+    function showAnswers(){
+      answersVisible = !answersVisible;
+      problems.forEach((_,i)=>{
+        const el = document.getElementById('quick-answer-' + i);
+        if(el) el.classList.toggle('visible', answersVisible);
+      });
+    }
+    function showSteps(){
+      stepsVisible = !stepsVisible;
+      problems.forEach((_,i)=>{
+        const el = document.getElementById('steps-' + i);
+        if(el) el.classList.toggle('visible', stepsVisible);
+      });
+    }
+    function startTimer(minutes){
+      if(timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(()=>{
+        timeRemaining--;
+        updateTimerDisplay();
+        if(timeRemaining <= 0) timerFinished();
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+      timerActive = false;
+      const el = document.getElementById('timer-display');
+      el.textContent = 'Ready';
+      el.className = 'timer-display';
+    }
+    function updateTimerDisplay(){
+      const m = Math.floor(timeRemaining/60);
+      const s = timeRemaining % 60;
+      const el = document.getElementById('timer-display');
+      el.textContent = m + ':' + String(s).padStart(2,'0');
+      if(timeRemaining <= 30 && timerActive) el.className = 'timer-display warning';
+      else if(timerActive) el.className = 'timer-display active';
+      else el.className = 'timer-display';
+    }
+    function timerFinished(){
+      stopTimer();
+      const el = document.getElementById('timer-display');
+      el.textContent = 'Time Up!';
+      el.className = 'timer-display warning';
+      document.getElementById('timer-modal').classList.remove('hidden');
+    }
+    function closeModal(){ document.getElementById('timer-modal').classList.add('hidden'); }
+    switchLevel(1);
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-3"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>

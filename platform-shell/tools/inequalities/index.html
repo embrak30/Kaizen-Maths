@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inequalities Practice Tool</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="initMath()"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:15px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:12px 6px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 6px 6px 0;font-weight:600;font-size:.85em;transition:.3s;box-shadow:2px 0 8px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-420px;top:0;width:420px;height:100vh;background:#fff;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}
+    .sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.25em;font-weight:700}.sidebar-content{padding:24px;line-height:1.6}
+    .sidebar-content h3{color:#1a365d;margin:18px 0 10px;font-size:1.05em;border-bottom:2px solid #3182ce;padding-bottom:6px}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:14px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 3px 15px rgba(0,0,0,.1);overflow:hidden}
+    .header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:25px 25px;background-position:0 0,12px 12px;color:#fff;padding:20px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}
+    .header::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 50%,rgba(0,0,0,.05) 100%)}.header h1{font-size:2em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:12px;background:#e2e8f0;border:none;cursor:pointer;font-size:1em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom:3px solid #3182ce;color:#3182ce}
+    .controls{padding:15px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:3px;font-size:1.2em}.level-info p{color:#718096;font-size:.95em}
+    .dropdown-container{margin-top:8px;display:block}.type-dropdown{padding:6px 10px;border:2px solid #cbd5e0;border-radius:5px;font-size:.95em;background:#fff;cursor:pointer;min-width:320px}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section{display:flex;align-items:center;gap:12px}.timer-display{font-size:1.6em;font-weight:bold;color:#1a365d;background:#fff;padding:8px 14px;border-radius:5px;border:2px solid #cbd5e0;min-width:100px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:8px}.btn{padding:8px 16px;border:none;border-radius:5px;font-size:.9em;font-weight:600;cursor:pointer;transition:.2s;min-width:70px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:15px 25px 25px;min-height:500px}.problem-set-header{background:#3182ce;color:#fff;padding:12px 20px;margin-bottom:15px;border-radius:6px;font-size:1.2em;font-weight:700;text-align:center;box-shadow:0 2px 8px rgba(49,130,206,.3);display:none}.problem-set-header.visible{display:block}
+    .problem-list{list-style:none}.problem-item{background:#f7fafc;margin:8px 0;padding:15px 20px;border-radius:6px;border-left:4px solid #3182ce;transition:.2s}.problem-item:hover{transform:translateX(2px)}
+    .problem-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:12px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3182ce;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:15px;font-size:1em;flex:0 0 auto}.equation{font-size:1.4em;color:#1a365d;font-weight:600;overflow-wrap:anywhere}.problem-answer{background:#38a169;color:#fff;padding:6px 12px;border-radius:20px;font-weight:700;font-size:1.05em;display:none;margin-left:15px;white-space:nowrap}.problem-answer.visible{display:block;animation:slideIn .4s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{margin-top:12px;padding:12px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .4s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#38a169;margin-bottom:8px;font-size:1em}.solution-steps{font-size:1.05em;line-height:1.45;color:#1a365d}.step-math{text-align:center;margin:8px 0;font-size:1.15em;background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:8px;overflow-x:auto}.final-answer{background:#38a169;color:#fff;padding:8px 14px;border-radius:5px;text-align:center;font-weight:700;font-size:1.15em;margin-top:10px}.number-line-container{margin:12px 0;text-align:center}.number-line{max-width:100%;height:auto;margin:10px auto;border:1px solid #cbd5e0;border-radius:4px;background:#fff}.interval-pill{display:inline-block;background:#e6fffa;color:#0f766e;padding:4px 8px;border-radius:16px;font-weight:700;font-family:monospace;margin-top:8px}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:30px;border-radius:10px;text-align:center;max-width:320px;box-shadow:0 8px 25px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:15px;font-size:1.6em}.modal-content p{color:#718096;margin-bottom:18px}.hidden{display:none !important}
+    @media (max-width:768px){.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:340px;left:-340px}.type-dropdown{min-width:100%}.problem-header{align-items:flex-start}.equation{font-size:1.15em}}
+    @media (min-width:1200px){.equation{font-size:1.6em}.solution-steps{font-size:1.1em}.step-math{font-size:1.25em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">📊 Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool builds fluency solving linear inequalities with clear algebraic steps and visual number lines. All math is rendered in KaTeX for clarity.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1 — Basic Linear:</strong> One-step and two-step inequalities, including clean fractions and decimals.</li>
+        <li><strong>Level 2 — Advanced Linear:</strong> Variables on both sides, grouping symbols, and flip-the-inequality cases.</li>
+      </ul>
+      <h3>What Students Will Practice</h3>
+      <ul>
+        <li>Solving one-step and two-step linear inequalities.</li>
+        <li>Flipping the inequality when multiplying or dividing by a negative.</li>
+        <li>Graphing solutions on a number line.</li>
+        <li>Writing solutions as inequalities and intervals.</li>
+      </ul>
+      <h3>Common Student Mistakes</h3>
+      <ul>
+        <li>Forgetting to flip the sign when multiplying/dividing by a negative.</li>
+        <li>Using closed dots for strict inequalities or open dots for inclusive inequalities.</li>
+        <li>Dropping the variable when rearranging both sides.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <div class="header"><h1>Inequalities Practice Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Basic Linear</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Advanced Linear</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Basic Linear Inequalities</h3>
+        <p id="level-description">Solve one-step and two-step inequalities. Clean forms only.</p>
+        <div class="dropdown-container" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="one_step">Type 1: One-step inequalities</option>
+            <option value="two_step">Type 2: Two-step inequalities</option>
+            <option value="frac_dec">Type 3: With fractions/decimals</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <div id="problem-set-header" class="problem-set-header">Select a question type to begin</div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+  <div id="timer-modal" class="timer-modal hidden" aria-hidden="true">
+    <div class="modal-content"><h2>⏰ Time's Up!</h2><p>Ready to review answers?</p><button class="btn btn-primary" onclick="closeModal()">OK</button></div>
+  </div>
+  <script>
+    let currentLevel = 1, currentType = 'select';
+    let timerInterval = null, timeRemaining = 0, timerActive = false;
+    let problems = [], answersVisible = false, stepsVisible = false;
+    const levelConfigs = {
+      1: { title: "Level 1: Basic Linear Inequalities", description: "Solve one-step and two-step inequalities. Clean forms only.", types: ['one_step','two_step','frac_dec'] },
+      2: { title: "Level 2: Advanced Linear Inequalities", description: "Variables on both sides, grouping symbols, and flip-the-inequality cases.", types: ['both_sides','grouping','flip_cases'] }
+    };
+    const typeNames = { one_step:"Type 1: One-step inequalities", two_step:"Type 2: Two-step inequalities", frac_dec:"Type 3: With fractions/decimals", both_sides:"Type 1: Variables on both sides", grouping:"Type 2: With grouping symbols", flip_cases:"Type 3: Reverse required (e.g., 5 - 2x < 7)" };
+    const typeDisplayNames = { one_step:"One-step inequalities", two_step:"Two-step inequalities", frac_dec:"Inequalities with fractions and decimals", both_sides:"Variables on both sides", grouping:"Inequalities with grouping symbols", flip_cases:"Reverse inequality required" };
+    window.typeDisplayNames = typeDisplayNames;
+    function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.sidebar-overlay').classList.toggle('active'); }
+    function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.querySelector('.sidebar-overlay').classList.remove('active'); }
+    function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+    function nz(min,max){ let v; do{ v=randInt(min,max);}while([-1,0,1].includes(v)); return v; }
+    function latexOp(raw){ if(raw==='<'||raw==='\\lt')return'\\lt'; if(raw==='>'||raw==='\\gt')return'\\gt'; if(raw==='≤'||raw==='\\le')return'\\le'; if(raw==='≥'||raw==='\\ge')return'\\ge'; return raw; }
+    function flipIneq(op){ return {'\\lt':'\\gt','\\gt':'\\lt','\\le':'\\ge','\\ge':'\\le'}[op]||op; }
+    function fmtPlus(n){ return n>=0 ? ` + ${n}` : ` - ${Math.abs(n)}`; }
+    function fmtSigned(n){ return n>=0 ? `${n}` : `-${Math.abs(n)}`; }
+    function fmtLinear(b){ return b===0 ? '' : (b>0?` + ${b}`:` - ${Math.abs(b)}`); }
+    function gcd(a,b){ a=Math.trunc(Math.abs(a)); b=Math.trunc(Math.abs(b)); while(b){ const t=b; b=a%b; a=t; } return a||1; }
+    function simplifyFraction(n,d){ if(d===0) return {num:NaN,den:0,tex:'\\text{undefined}',isInt:false,intVal:NaN}; if(d<0){ n=-n; d=-d; } const g=gcd(n,d); n/=g; d/=g; if(d===1) return {num:n,den:1,tex:`${fmtSigned(n)}`,isInt:true,intVal:n}; return {num:n,den:d,tex:`\\dfrac{${fmtSigned(n)}}{${d}}`,isInt:false,intVal:n/d}; }
+    function asValue(n,d){ const s=simplifyFraction(n,d); return {tex:s.tex, isInt:s.isInt, num:s.num, den:s.den, value:s.intVal}; }
+    function decimalToFraction(k){ const map = { '0.5':[1,2], '1.5':[3,2], '2.5':[5,2], '0.25':[1,4], '0.75':[3,4] }; const key = String(k); return map[key] ? {p:map[key][0], q:map[key][1]} : {p:k, q:1}; }
+    function initMath(root=document.body){ if(window.renderMathInElement){ window.renderMathInElement(root,{ delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}], throwOnError:false }); } }
+    function numberLineSVG(solution,min=-10,max=10){ const width=420,height=70,margin=36,y=height/2; let svg=`<svg width="${width}" height="${height}" class="number-line" aria-label="number line">`; svg+=`<line x1="${margin}" y1="${y}" x2="${width-margin}" y2="${y}" stroke="#2d3748" stroke-width="2"/>`; for(let i=min;i<=max;i+=2){ const x=margin+((i-min)/(max-min))*(width-2*margin); svg+=`<line x1="${x}" y1="${y-5}" x2="${x}" y2="${y+5}" stroke="#2d3748" stroke-width="1"/>`; svg+=`<text x="${x}" y="${y+20}" text-anchor="middle" font-size="12" fill="#2d3748">${i}</text>`; } const arrowLeft=`<polygon points="${margin},${y} ${margin+8},${y-4} ${margin+8},${y+4}" fill="#e53e3e"/>`; const arrowRight=`<polygon points="${width-margin},${y} ${width-margin-8},${y-4} ${width-margin-8},${y+4}" fill="#e53e3e"/>`; if(solution.kind==='simple'){ const {valueNum,op}=solution; const x=margin+((valueNum-min)/(max-min))*(width-2*margin); const closed=(op==='\\le'||op==='\\ge'), left=(op==='\\lt'||op==='\\le'), right=(op==='\\gt'||op==='\\ge'); if(left){ svg+=`<line x1="${margin}" y1="${y}" x2="${Math.min(Math.max(x,margin),width-margin)}" y2="${y}" stroke="#e53e3e" stroke-width="3"/>${arrowLeft}`; } if(right){ svg+=`<line x1="${Math.min(Math.max(x,margin),width-margin)}" y1="${y}" x2="${width-margin}" y2="${y}" stroke="#e53e3e" stroke-width="3"/>${arrowRight}`; } if(valueNum>=min&&valueNum<=max){ svg+=`<circle cx="${x}" cy="${y}" r="4" fill="${closed?'#e53e3e':'white'}" stroke="#e53e3e" stroke-width="2"/>`; } } return svg+'</svg>'; }
+    function intervalNotation(solution){ if(solution.kind==='simple'){ const v=solution.valueTeX, op=solution.op; if(op==='\\lt') return `(-\\infty,\\ ${v})`; if(op==='\\le') return `(-\\infty,\\ ${v}]`; if(op==='\\gt') return `(${v},\\ \\infty)`; if(op==='\\ge') return `[${v},\\ \\infty)`; } return ''; }
+    function pack(eqTeX, stepsTeX, finalTex, solution){ return { equationTeX: eqTeX, stepsTeX, answerTeX: finalTex, solution }; }
+    function genOneStep(){ const ineq=latexOp(pick(['\\lt','\\gt','\\le','\\ge'])); const form=pick(['add','sub','mul']); if(form==='add'){ const b=nz(-12,12), c=nz(-12,12), rhs=c-b; return pack(`x${fmtLinear(b)}\\ ${ineq}\\ ${fmtSigned(c)}`,[`x${fmtLinear(b)}\\ ${ineq}\\ ${fmtSigned(c)}`,`x\\ ${ineq}\\ ${fmtSigned(c)}${fmtPlus(-b)}`,`x\\ ${ineq}\\ ${fmtSigned(rhs)}`],`x\\ ${ineq}\\ ${fmtSigned(rhs)}`,{kind:'simple',valueNum:rhs,valueTeX:fmtSigned(rhs),op:ineq}); } if(form==='sub'){ const k=randInt(2,12), c=nz(-12,12), rhs=c+k; return pack(`x - ${k}\\ ${ineq}\\ ${fmtSigned(c)}`,[`x - ${k}\\ ${ineq}\\ ${fmtSigned(c)}`,`x\\ ${ineq}\\ ${fmtSigned(c)}${fmtPlus(k)}`,`x\\ ${ineq}\\ ${fmtSigned(rhs)}`],`x\\ ${ineq}\\ ${fmtSigned(rhs)}`,{kind:'simple',valueNum:rhs,valueTeX:fmtSigned(rhs),op:ineq}); } const a=pick([2,3,4,5,6,7,8,9]), c=nz(-30,30), frac=asValue(c,a); return pack(`${a}x\\ ${ineq}\\ ${fmtSigned(c)}`,[`${a}x\\ ${ineq}\\ ${fmtSigned(c)}`,`x\\ ${ineq}\\ \\dfrac{${fmtSigned(c)}}{${a}}`,`x\\ ${ineq}\\ ${frac.tex}`],`x\\ ${ineq}\\ ${frac.tex}`,{kind:'simple',valueNum:frac.value,valueTeX:frac.tex,op:ineq}); }
+    function genTwoStep(){ const ineq=latexOp(pick(['\\lt','\\gt','\\le','\\ge'])); const a=pick([2,3,4,5,6,7,8,9]), b=nz(-12,12), c=nz(-30,30), rhs=c-b, frac=asValue(rhs,a); return pack(`${a}x${fmtLinear(b)}\\ ${ineq}\\ ${fmtSigned(c)}`,[`${a}x${fmtLinear(b)}\\ ${ineq}\\ ${fmtSigned(c)}`,`${a}x\\ ${ineq}\\ ${fmtSigned(rhs)}`,`x\\ ${ineq}\\ \\dfrac{${fmtSigned(rhs)}}{${a}}`,`x\\ ${ineq}\\ ${frac.tex}`],`x\\ ${ineq}\\ ${frac.tex}`,{kind:'simple',valueNum:frac.value,valueTeX:frac.tex,op:ineq}); }
+    function genFracDec(){ const ineq=latexOp(pick(['\\lt','\\gt','\\le','\\ge'])); const k=pick([1.5,2.5,0.5,0.25,0.75]); const {p,q}=decimalToFraction(k); const m=nz(-20,20); const final=asValue(m*q,p); return pack(`${k}\\,x\\ ${ineq}\\ ${fmtSigned(m)}`,[`${k}\\,x\\ ${ineq}\\ ${fmtSigned(m)}`,`x\\ ${ineq}\\ \\dfrac{${fmtSigned(m)}}{${k}}`,`x\\ ${ineq}\\ \\dfrac{${fmtSigned(m)}\\cdot ${q}}{${p}}`,`x\\ ${ineq}\\ ${final.tex}`],`x\\ ${ineq}\\ ${final.tex}`,{kind:'simple',valueNum:final.value,valueTeX:final.tex,op:ineq}); }
+    function genBothSides(){ const ineq=latexOp(pick(['\\lt','\\gt','\\le','\\ge'])); let a=pick([2,3,4,5,6,7,8,9,-2,-3,-4,-5,-6,-7,-8,-9]); let b=pick([2,3,4,5,6,7,8,9,-2,-3,-4,-5,-6,-7,-8,-9]); while(a===b) b=pick([2,3,4,5,6,7,8,9,-2,-3,-4,-5,-6,-7,-8,-9]); const c=nz(-12,12), d=nz(-12,12), coef=a-b, rhs=d-c, opF=coef<0?flipIneq(ineq):ineq, frac=asValue(rhs,coef); return pack(`${fmtSigned(a)}x${fmtLinear(c)}\\ ${ineq}\\ ${fmtSigned(b)}x${fmtLinear(d)}`,[`${fmtSigned(a)}x${fmtLinear(c)}\\ ${ineq}\\ ${fmtSigned(b)}x${fmtLinear(d)}`,`${fmtSigned(a-b)}x${fmtLinear(c)}\\ ${ineq}\\ ${fmtSigned(d)}`,`${fmtSigned(a-b)}x\\ ${ineq}\\ ${fmtSigned(rhs)}`,`x\\ ${opF}\\ \\dfrac{${fmtSigned(rhs)}}{${fmtSigned(coef)}}${coef<0?'\\ \\text{(flip)}':''}`,`x\\ ${opF}\\ ${frac.tex}`],`x\\ ${opF}\\ ${frac.tex}`,{kind:'simple',valueNum:frac.value,valueTeX:frac.tex,op:opF}); }
+    function genGrouping(){ const ineq=latexOp(pick(['\\lt','\\gt','\\le','\\ge'])); const a=pick([2,3,4,5,6,7,8,9,-2,-3,-4,-5,-6,-7,-8,-9]), b=nz(-9,9), c=nz(-30,30), op1=a<0?flipIneq(ineq):ineq, frac1=asValue(c,a), final=asValue(frac1.num-b*frac1.den,frac1.den); return pack(`${fmtSigned(a)}(x${fmtLinear(b)})\\ ${ineq}\\ ${fmtSigned(c)}`,[`${fmtSigned(a)}(x${fmtLinear(b)})\\ ${ineq}\\ ${fmtSigned(c)}`,`x${fmtLinear(b)}\\ ${op1}\\ \\dfrac{${fmtSigned(c)}}{${fmtSigned(a)}}${a<0?'\\ \\text{(flip)}':''}`,`x${fmtLinear(b)}\\ ${op1}\\ ${frac1.tex}`,`x\\ ${op1}\\ ${final.tex}`],`x\\ ${op1}\\ ${final.tex}`,{kind:'simple',valueNum:final.value,valueTeX:final.tex,op:op1}); }
+    function genFlipCases(){ const ineq=latexOp(pick(['\\lt','\\gt','\\le','\\ge'])); const pattern=pick(['c_minus_ax','minus_ax_plus_c','rhs_left','ax_minus_c_rhs']); if(pattern==='c_minus_ax'){ const a=pick([2,3,4,5,6,7,8,9]), c=randInt(2,20), d=nz(-20,20), rhs=d-c, opF=flipIneq(ineq), final=asValue(rhs,-a); return pack(`${c} - ${a}x\\ ${ineq}\\ ${fmtSigned(d)}`,[`${c} - ${a}x\\ ${ineq}\\ ${fmtSigned(d)}`,`-${a}x\\ ${ineq}\\ ${fmtSigned(rhs)}`,`x\\ ${opF}\\ \\dfrac{${fmtSigned(rhs)}}{-${a}}\\ \\text{(flip)}`,`x\\ ${opF}\\ ${final.tex}`],`x\\ ${opF}\\ ${final.tex}`,{kind:'simple',valueNum:final.value,valueTeX:final.tex,op:opF}); } if(pattern==='minus_ax_plus_c'){ const a=pick([2,3,4,5,6,7,8,9]), c=nz(-15,15), d=nz(-20,20), rhs=d-c, opF=flipIneq(ineq), final=asValue(rhs,-a); return pack(`-${a}x${fmtLinear(c)}\\ ${ineq}\\ ${fmtSigned(d)}`,[`-${a}x${fmtLinear(c)}\\ ${ineq}\\ ${fmtSigned(d)}`,`-${a}x\\ ${ineq}\\ ${fmtSigned(rhs)}`,`x\\ ${opF}\\ \\dfrac{${fmtSigned(rhs)}}{-${a}}\\ \\text{(flip)}`,`x\\ ${opF}\\ ${final.tex}`],`x\\ ${opF}\\ ${final.tex}`,{kind:'simple',valueNum:final.value,valueTeX:final.tex,op:opF}); } if(pattern==='rhs_left'){ const a=pick([2,3,4,5,6,7,8,9,-2,-3,-4,-5,-6,-7,-8,-9]), c=nz(-12,12), d=nz(-20,20), opMid=a<0?flipIneq(ineq):ineq, numer=d-c, final=asValue(numer,a), opForX=flipIneq(opMid); return pack(`${fmtSigned(d)}\\ ${ineq}\\ ${fmtSigned(a)}x${fmtLinear(c)}`,[`${fmtSigned(d)}\\ ${ineq}\\ ${fmtSigned(a)}x${fmtLinear(c)}`,`${fmtSigned(d)}${fmtPlus(-c)}\\ ${ineq}\\ ${fmtSigned(a)}x`,`\\dfrac{${fmtSigned(numer)}}{${fmtSigned(a)}}\\ ${opMid}\\ x${a<0?'\\ \\text{(flip)}':''}`,`x\\ ${opForX}\\ ${final.tex}`],`x\\ ${opForX}\\ ${final.tex}`,{kind:'simple',valueNum:final.value,valueTeX:final.tex,op:opForX}); } const a=pick([2,3,4,5,6,7,8,9,-2,-3,-4,-5,-6,-7,-8,-9]), c=randInt(2,12), d=nz(-20,20), opF=a<0?flipIneq(ineq):ineq, rhsNum=d+c, final=asValue(rhsNum,a); return pack(`${fmtSigned(a)}x - ${c}\\ ${ineq}\\ ${fmtSigned(d)}`,[`${fmtSigned(a)}x - ${c}\\ ${ineq}\\ ${fmtSigned(d)}`,`${fmtSigned(a)}x\\ ${ineq}\\ ${fmtSigned(d)}${fmtPlus(c)}`,`x\\ ${opF}\\ \\dfrac{${fmtSigned(d)} + ${c}}{${fmtSigned(a)}}${a<0?'\\ \\text{(flip)}':''}`,`x\\ ${opF}\\ ${final.tex}`],`x\\ ${opF}\\ ${final.tex}`,{kind:'simple',valueNum:final.value,valueTeX:final.tex,op:opF}); }
+    function updateHeader(){ const header=document.getElementById('problem-set-header'); header.textContent=typeNames[currentType]||'Problem Set'; header.classList.add('visible'); }
+    function renderProblems(){ const container=document.getElementById('problem-list'); updateHeader(); container.innerHTML=''; problems.forEach((p,idx)=>{ const li=document.createElement('li'); li.className='problem-item'; const stepsHTML=p.stepsTeX.map(s=>`<div class="step-math">\\(${s}\\)</div>`).join(''); const interval=intervalNotation(p.solution), svg=numberLineSVG(p.solution); li.innerHTML=`<div class="problem-header"><div class="problem-left"><div class="problem-number">${idx+1}</div><div class="equation">\\(${p.equationTeX}\\)</div></div><div class="problem-answer" id="ans-${idx}">\\(${p.answerTeX}\\)</div></div><div class="steps-section" id="steps-${idx}"><div class="answer-label">Solution Steps</div><div class="solution-steps">${stepsHTML}<div class="final-answer">\\(\\text{Final answer: }\\;${p.answerTeX}\\)</div><div class="number-line-container">${svg}<div class="interval-pill">\\(\\text{Interval: }\\;${interval}\\)</div></div></div></div>`; container.appendChild(li); }); initMath(document.getElementById('problem-list')); }
+    function generateProblem(){ const type=(currentType&&currentType!=='select')?currentType:pick(levelConfigs[currentLevel].types); return {one_step:genOneStep,two_step:genTwoStep,frac_dec:genFracDec,both_sides:genBothSides,grouping:genGrouping,flip_cases:genFlipCases}[type]?.()||genOneStep(); }
+    function generateNewSet(){ if(currentType==='select'){ showBlank(); return; } problems=[]; answersVisible=false; stepsVisible=false; for(let i=0;i<5;i++) problems.push(generateProblem()); renderProblems(); }
+    function showBlank(){ document.getElementById('problem-set-header').classList.add('visible'); document.getElementById('problem-set-header').textContent='Select a question type to begin'; document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:40px;color:#718096;font-size:1.05em;">Please select a question type to begin</li>'; }
+    function showAnswers(){ answersVisible=!answersVisible; for(let i=0;i<5;i++){ const el=document.getElementById(`ans-${i}`); if(el) el.classList.toggle('visible', answersVisible); } initMath(document.getElementById('problem-list')); }
+    function showSteps(){ stepsVisible=!stepsVisible; for(let i=0;i<5;i++){ const el=document.getElementById(`steps-${i}`); if(el) el.classList.toggle('visible', stepsVisible); } initMath(document.getElementById('problem-list')); }
+    function startTimer(minutes){ if(timerActive) stopTimer(); timeRemaining=minutes*60; timerActive=true; updateTimerDisplay(); timerInterval=setInterval(()=>{ timeRemaining--; updateTimerDisplay(); if(timeRemaining<=0) timerFinished(); },1000); }
+    function stopTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } timerActive=false; const t=document.getElementById('timer-display'); t.textContent='Ready'; t.className='timer-display'; const modal=document.getElementById('timer-modal'); modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true'); }
+    function updateTimerDisplay(){ const m=Math.floor(timeRemaining/60), s=timeRemaining%60, el=document.getElementById('timer-display'); el.textContent=`${m}:${s.toString().padStart(2,'0')}`; if(timeRemaining<=30) el.className='timer-display warning'; else if(timerActive) el.className='timer-display active'; else el.className='timer-display'; }
+    function timerFinished(){ stopTimer(); const modal=document.getElementById('timer-modal'); modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false'); }
+    function closeModal(){ const modal=document.getElementById('timer-modal'); modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true'); }
+    function switchLevel(level){ currentLevel=level; currentType='select'; document.querySelectorAll('.tab').forEach((t,idx)=>t.classList.toggle('active',idx+1===level)); const cfg=levelConfigs[level]; document.getElementById('level-title').textContent=cfg.title; document.getElementById('level-description').textContent=cfg.description; const dd=document.getElementById('type-dropdown'); if(level===1){ dd.innerHTML='<option value="select">Select Question Type</option><option value="one_step">Type 1: One-step inequalities</option><option value="two_step">Type 2: Two-step inequalities</option><option value="frac_dec">Type 3: With fractions/decimals</option>'; }else{ dd.innerHTML='<option value="select">Select Question Type</option><option value="both_sides">Type 1: Variables on both sides</option><option value="grouping">Type 2: With grouping symbols</option><option value="flip_cases">Type 3: Reverse required (e.g., 5−2x&lt;7)</option>'; } dd.value='select'; showBlank(); closeModal(); initMath(); }
+    function typeChanged(){ currentType=document.getElementById('type-dropdown').value; if(currentType==='select') showBlank(); else generateNewSet(); closeModal(); initMath(); }
+    window.initMath=initMath; switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+</body>
+</html>
