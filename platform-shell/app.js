@@ -1419,11 +1419,21 @@ function renderHome() {
         <span class="diagram-line line-b"></span>
       </div>
       <div class="home-hero-actions">
+        <a class="button primary" href="#/beta-feedback">Beta Testing Brief</a>
         <a class="button primary" href="#/worksheet-generator">Create Worksheet</a>
         <a class="button primary" href="#/how-to-use-this-site">How to Use This Site</a>
         <a class="button" href="#/tools">Open Tool Library</a>
         <a class="button" href="#/collections/statistics">Explore Statistics</a>
       </div>
+    </section>
+    <section class="beta-callout" aria-label="Beta testing feedback">
+      <div class="beta-callout-icon" aria-hidden="true">B</div>
+      <div>
+        <span class="eyebrow">Beta Testing</span>
+        <h2>Helping test Kaizen Maths?</h2>
+        <p>Start with the beta brief. It explains what to try, what kind of feedback is most useful, and gives testers a simple feedback form they can copy and send back privately.</p>
+      </div>
+      <a class="button primary" href="#/beta-feedback">Open Beta Brief</a>
     </section>
     <section class="guide-callout" aria-label="How to use this site">
       <div class="guide-callout-copy">
@@ -1537,6 +1547,120 @@ function renderSiteGuide() {
   `;
 }
 
+function renderBetaFeedback() {
+  app.innerHTML = `
+    ${pageHeader(
+      "Beta Testing Brief",
+      "Thank you for helping test Kaizen Maths. This page explains what to try and how to send useful feedback after using the site.",
+      `<a class="button" href="#/">Back to Dashboard</a><a class="button primary" href="#/tools">Start Testing</a>`
+    )}
+    <section class="beta-page">
+      <article class="panel beta-intro">
+        <span class="eyebrow">For Testers</span>
+        <h2>What we are testing</h2>
+        <p>Kaizen Maths is a beta version of a mathematics teaching platform. It is designed to help teachers quickly find a topic, project board-ready questions, reveal answers or worked steps, and build printable worksheets from the same generators.</p>
+        <p>Please use it as you naturally would in a lesson-planning, tutoring, or classroom setting. Short feedback is useful, but specific examples and screenshots are even better.</p>
+      </article>
+
+      <article class="panel beta-how-it-works">
+        <div>
+          <span class="eyebrow">Quick Walkthrough</span>
+          <h2>How the site works</h2>
+          <p>Start from the dashboard, open the Tool Library, then choose a topic. Each topic page lets you generate fresh questions, switch levels or question types, show answers, reveal worked steps, and use Classroom View when projecting to students.</p>
+        </div>
+        <div class="beta-steps">
+          <div><span>1</span><p><strong>Find a topic:</strong> use the Tool Library or search bar like a textbook index.</p></div>
+          <div><span>2</span><p><strong>Use a generator:</strong> choose the level and question type, then generate a fresh set.</p></div>
+          <div><span>3</span><p><strong>Teach from the board:</strong> reveal answers or steps only when you need them.</p></div>
+          <div><span>4</span><p><strong>Build worksheets:</strong> mix topics and print a student sheet with a separate answer key.</p></div>
+        </div>
+        <a class="button primary" href="#/how-to-use-this-site">Open the Illustrated Site Guide</a>
+      </article>
+
+      <section class="beta-grid">
+        <article class="panel">
+          <h2>Try These First</h2>
+          <ol class="beta-checklist">
+            <li>Open the <a href="#/tools">Tool Library</a> and search for a topic you teach.</li>
+            <li>Open at least two topic tools and generate a fresh question set.</li>
+            <li>Try answers, worked steps, timer controls, and Classroom View.</li>
+            <li>Open the <a href="#/worksheet-generator">Worksheet Builder</a> and make a short worksheet from more than one topic.</li>
+            <li>Try one Classroom Tool, such as Math in a Minute or the Exit Ticket Choice Board.</li>
+          </ol>
+        </article>
+
+        <article class="panel">
+          <h2>Feedback We Need</h2>
+          <ul class="beta-list">
+            <li>Is it clear how to find and open a topic?</li>
+            <li>Are questions readable when projected?</li>
+            <li>Are the answers and steps mathematically accurate?</li>
+            <li>Does the worksheet builder behave as expected?</li>
+            <li>What feels confusing, unfinished, or too slow?</li>
+            <li>Which topic should be added or improved next?</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="panel beta-survey" aria-label="Beta feedback survey">
+        <div>
+          <span class="eyebrow">Feedback Form</span>
+          <h2>Send Feedback Privately</h2>
+          <p>Fill this in after testing. Use the button to create a copyable message, then send it back by WhatsApp or private message.</p>
+        </div>
+        <form id="betaFeedbackForm" class="beta-feedback-form">
+          <label>
+            Your name
+            <input id="betaName" type="text" placeholder="Name">
+          </label>
+          <label>
+            Your role
+            <select id="betaRole">
+              <option>Teacher</option>
+              <option>Tutor</option>
+              <option>Department lead</option>
+              <option>Parent / student support</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label>
+            What did you test?
+            <textarea id="betaTested" rows="3" placeholder="Example: Algebra tools, worksheet builder, classroom games"></textarea>
+          </label>
+          <label>
+            What worked well?
+            <textarea id="betaUseful" rows="4" placeholder="Tell us what felt useful, clear, or classroom-ready"></textarea>
+          </label>
+          <label>
+            What needs fixing or improving?
+            <textarea id="betaIssues" rows="4" placeholder="Mention bugs, confusing parts, formatting issues, or missing features"></textarea>
+          </label>
+          <label>
+            What should be added next?
+            <textarea id="betaNext" rows="3" placeholder="Topics, tools, or features you would like to see"></textarea>
+          </label>
+          <button class="button primary" type="submit">Create Feedback Message</button>
+        </form>
+        <div class="beta-output" id="betaOutput" hidden>
+          <label for="betaFeedbackMessage">Copy this message and send it privately</label>
+          <textarea id="betaFeedbackMessage" rows="10" readonly></textarea>
+          <div class="button-row">
+            <button class="button primary" id="copyBetaFeedback" type="button">Copy Feedback</button>
+            <a class="button" href="#/tools">Continue Testing</a>
+          </div>
+          <p class="worksheet-status" id="betaCopyStatus"></p>
+        </div>
+      </section>
+
+      <section class="panel beta-thanks">
+        <h2>Thank You</h2>
+        <p>Everyone who helps with beta testing will receive one year of access when the full version goes live. Your feedback will directly shape what gets fixed, improved, and built next.</p>
+      </section>
+    </section>
+  `;
+  bindBetaFeedback();
+}
+
 function worksheetEligibleTools() {
   return tools.filter((tool) => tool.imported && tool.type === "Practice Generator" && tool.slug !== "interface-guide");
 }
@@ -1628,6 +1752,61 @@ function renderWorksheetGenerator() {
   `;
 
   bindWorksheetGenerator();
+}
+
+function bindBetaFeedback() {
+  const form = document.getElementById("betaFeedbackForm");
+  const output = document.getElementById("betaOutput");
+  const message = document.getElementById("betaFeedbackMessage");
+  const copyButton = document.getElementById("copyBetaFeedback");
+  const copyStatus = document.getElementById("betaCopyStatus");
+
+  if (!form || !output || !message) return;
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const name = document.getElementById("betaName")?.value.trim() || "Not provided";
+    const role = document.getElementById("betaRole")?.value || "Not provided";
+    const tested = document.getElementById("betaTested")?.value.trim() || "Not provided";
+    const useful = document.getElementById("betaUseful")?.value.trim() || "Not provided";
+    const issues = document.getElementById("betaIssues")?.value.trim() || "Not provided";
+    const next = document.getElementById("betaNext")?.value.trim() || "Not provided";
+
+    message.value = [
+      "Kaizen Maths beta feedback",
+      "",
+      `Name: ${name}`,
+      `Role: ${role}`,
+      "",
+      "What I tested:",
+      tested,
+      "",
+      "What worked well:",
+      useful,
+      "",
+      "What needs fixing or improving:",
+      issues,
+      "",
+      "What should be added next:",
+      next
+    ].join("\n");
+
+    output.hidden = false;
+    copyStatus.textContent = "Feedback message created. Copy it and send it privately.";
+    message.focus({ preventScroll: true });
+    message.select();
+  });
+
+  copyButton?.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(message.value);
+      copyStatus.textContent = "Copied. You can now paste it into WhatsApp or a private message.";
+    } catch (error) {
+      message.focus();
+      message.select();
+      copyStatus.textContent = "Select the message and copy it manually.";
+    }
+  });
 }
 
 function setWorksheetStatus(message, tone = "") {
@@ -2481,6 +2660,8 @@ function renderRoute() {
   const parts = routeParts();
   if (!parts[0]) {
     renderHome();
+  } else if (parts[0] === "beta-feedback") {
+    renderBetaFeedback();
   } else if (parts[0] === "how-to-use-this-site") {
     renderSiteGuide();
   } else if (parts[0] === "worksheet-generator") {
