@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math in a Minute</title>
+  <style>
+    :root {
+      --ink: #12314b;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+      --shadow2: 0 10px 20px rgba(0, 0, 0, 0.10);
+      --accent: #6a5cff;
+      --accent2: #ff6bd6;
+      --good: #2dbd6e;
+      --warn: #ffb020;
+      --bad: #ff5a5f;
+      --metal-red-1: rgba(170, 30, 45, 0.22);
+      --metal-red-2: rgba(255, 90, 95, 0.10);
+      --metal-blue-1: rgba(40, 140, 255, 0.16);
+      --metal-blue-2: rgba(106, 92, 255, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 600px at 20% 20%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.2) 55%, rgba(255, 255, 255, 0) 70%),
+        radial-gradient(900px 600px at 80% 80%, rgba(45, 189, 110, 0.22) 0%, rgba(45, 189, 110, 0) 60%),
+        radial-gradient(900px 600px at 80% 20%, rgba(255, 90, 95, 0.22) 0%, rgba(255, 90, 95, 0) 60%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(255, 90, 95, 0.10), rgba(45, 189, 110, 0.12));
+    }
+
+    .app {
+      width: min(1020px, 100%);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      background:
+        radial-gradient(900px 420px at 20% 20%, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0.60) 35%, rgba(255, 255, 255, 0.15) 70%),
+        radial-gradient(520px 320px at 80% 18%, var(--metal-blue-1) 0%, rgba(40, 140, 255, 0) 65%),
+        radial-gradient(520px 320px at 75% 85%, var(--metal-blue-2) 0%, rgba(106, 92, 255, 0) 68%),
+        linear-gradient(135deg, var(--metal-red-1), rgba(255, 255, 255, 0.76), var(--metal-red-2));
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px 6px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: var(--shadow2);
+      color: #fff;
+      font-weight: 950;
+      letter-spacing: 0.5px;
+      user-select: none;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.1;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      opacity: 0.86;
+      font-size: 12px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.84);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    label {
+      opacity: 0.85;
+      font-size: 12px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    select,
+    button { font: inherit; }
+
+    select {
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 800;
+      outline: none;
+    }
+
+    .stage { padding: 6px 14px 14px; }
+
+    .heroGrid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .targetSquare {
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: var(--shadow2);
+    }
+
+    .targetTitle {
+      text-align: center;
+      opacity: 0.9;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: 0.4px;
+    }
+
+    .targetValue {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      margin-top: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(255, 90, 95, 0.10), rgba(45, 189, 110, 0.10));
+      font-size: 104px;
+      font-weight: 1000;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .targetHidden {
+      filter: blur(2px);
+      opacity: 0.85;
+    }
+
+    .rightPanel {
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .stepsRow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid rgba(18, 49, 75, 0.12);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(18, 49, 75, 0.10);
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 900;
+      user-select: none;
+      transition: transform 0.08s ease, filter 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:active { transform: translateY(1px) scale(0.99); }
+
+    button.primary {
+      border: 1px solid rgba(106, 92, 255, 0.25);
+      background: linear-gradient(135deg, rgba(106, 92, 255, 1), rgba(255, 107, 214, 0.95));
+      color: #fff;
+      box-shadow: 0 12px 20px rgba(106, 92, 255, 0.25);
+    }
+
+    button.warn {
+      border: 1px solid rgba(255, 176, 32, 0.35);
+      background: var(--warn);
+      color: #2b1b00;
+      box-shadow: 0 12px 20px rgba(255, 176, 32, 0.18);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      filter: grayscale(0.15);
+    }
+
+    @keyframes glowPulse {
+      0% { box-shadow: 0 0 0 rgba(106, 92, 255, 0), 0 12px 20px rgba(106, 92, 255, 0.20); }
+      50% { box-shadow: 0 0 18px rgba(40, 140, 255, 0.42), 0 14px 24px rgba(106, 92, 255, 0.28); }
+      100% { box-shadow: 0 0 0 rgba(106, 92, 255, 0), 0 12px 20px rgba(106, 92, 255, 0.20); }
+    }
+
+    .glow { animation: glowPulse 1.2s infinite ease-in-out; }
+
+    .timerWrap {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .ring {
+      width: 120px;
+      height: 120px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 999px;
+      background: conic-gradient(var(--good) 0deg, var(--good) 360deg);
+      box-shadow: var(--shadow2);
+    }
+
+    .ringInner {
+      width: 92px;
+      height: 92px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.96);
+      font-size: 32px;
+      font-weight: 1000;
+      user-select: none;
+    }
+
+    .opsRow {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .opBtn {
+      width: 84px;
+      height: 70px;
+      border: 1px solid rgba(0, 0, 0, 0.10);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.65);
+      color: var(--ink);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+      font-size: 30px;
+      font-weight: 1000;
+      transition: transform 0.08s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+
+    .opBtn.active {
+      border: 1px solid rgba(40, 140, 255, 0.35);
+      background: linear-gradient(135deg, rgba(40, 140, 255, 0.35), rgba(106, 92, 255, 0.30));
+      box-shadow: 0 12px 20px rgba(40, 140, 255, 0.18);
+    }
+
+    .cardsArea {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .cards {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .card {
+      width: 128px;
+      height: 128px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 26px;
+      background:
+        radial-gradient(140px 90px at 30% 25%, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.70) 50%, rgba(255, 255, 255, 0.45) 78%),
+        linear-gradient(135deg, rgba(255, 90, 95, 0.10), rgba(255, 255, 255, 0.85), rgba(40, 140, 255, 0.10));
+      box-shadow: 0 14px 26px rgba(0, 0, 0, 0.10);
+      cursor: pointer;
+      font-size: 54px;
+      font-weight: 1000;
+      user-select: none;
+      transition: transform 0.10s ease, filter 0.15s ease, box-shadow 0.15s ease, outline 0.15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.13);
+    }
+
+    .card.used {
+      opacity: 0.34;
+      filter: grayscale(0.25);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .card.pick1 {
+      outline: 6px solid rgba(40, 140, 255, 0.30);
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    .card.made {
+      border: 2px solid rgba(255, 59, 59, 0.55);
+      background:
+        radial-gradient(140px 90px at 30% 25%, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.70) 50%, rgba(255, 255, 255, 0.45) 78%),
+        linear-gradient(135deg, rgba(255, 59, 59, 0.16), rgba(255, 255, 255, 0.82), rgba(40, 140, 255, 0.10));
+    }
+
+    .miniRow,
+    .actionRow {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .miniBar,
+    .actionBar {
+      width: min(900px, 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      font-size: 14px;
+      font-weight: 950;
+      user-select: none;
+    }
+
+    .chip small {
+      margin-left: 6px;
+      opacity: 0.75;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    button.smallBtn {
+      border: 1px solid rgba(0, 0, 0, 0.10);
+      border-radius: 14px;
+      padding: 9px 12px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.06);
+      font-weight: 950;
+    }
+
+    .message {
+      width: min(960px, 100%);
+      margin: 10px auto 0;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 22px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.90);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+      text-align: center;
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .message.good { border-color: rgba(45, 189, 110, 0.35); background: rgba(45, 189, 110, 0.12); }
+    .message.warn { border-color: rgba(255, 176, 32, 0.40); background: rgba(255, 176, 32, 0.14); }
+    .message.bad { border-color: rgba(255, 90, 95, 0.35); background: rgba(255, 90, 95, 0.12); }
+
+    .celebrate {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: none;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(2px);
+    }
+
+    .celebrate.show { display: grid; }
+
+    .celebrateCard {
+      width: min(720px, 92vw);
+      border: 1px solid rgba(0, 0, 0, 0.10);
+      border-radius: 28px;
+      padding: 26px 18px;
+      background: linear-gradient(135deg, rgba(255, 90, 95, 0.18), rgba(255, 255, 255, 0.92), rgba(45, 189, 110, 0.18));
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+      text-align: center;
+    }
+
+    .celebrateCard h2 {
+      margin: 0;
+      font-size: 64px;
+      font-weight: 1000;
+      letter-spacing: 0.5px;
+      line-height: 1;
+    }
+
+    .celebrateCard p {
+      margin: 10px 0 0;
+      opacity: 0.9;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .steps {
+      width: min(960px, 100%);
+      display: none;
+      margin: 10px auto 0;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 22px;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .steps.visible { display: block; }
+
+    .stepLine {
+      margin: 10px 0;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+      text-align: center;
+      font-family: "Comic Sans MS", "Comic Sans", "Bradley Hand", "Marker Felt", cursive;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+    }
+
+    @media (max-width: 900px) {
+      .heroGrid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      body { align-items: flex-start; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .pill { width: 100%; justify-content: space-between; }
+      .targetValue { font-size: 82px; }
+      .card { width: 106px; height: 106px; font-size: 46px; }
+      .opBtn { width: 72px; height: 58px; font-size: 25px; }
+      .ring { width: 104px; height: 104px; }
+      .ringInner { width: 82px; height: 82px; font-size: 28px; }
+    }
+
+    @media (max-height: 760px) {
+      .targetValue { font-size: 86px; }
+      .card { width: 118px; height: 118px; font-size: 50px; }
+      .opBtn { width: 78px; height: 64px; font-size: 28px; }
+      .ring { width: 108px; height: 108px; }
+      .ringInner { width: 84px; height: 84px; font-size: 30px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app" role="application" aria-label="Math in a Minute">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">60</div>
+        <div>
+          <h1>Math in a Minute</h1>
+          <p>Tap a number, tap an operation, tap a number</p>
+        </div>
+      </div>
+
+      <div class="pill">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty" aria-label="Difficulty">
+          <option value="starter">Starter (10-30)</option>
+          <option value="core" selected>Core (20-100)</option>
+          <option value="challenge">Challenge (50-250)</option>
+          <option value="stretch">Stretch (50-500)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="heroGrid">
+        <div class="targetSquare" aria-live="polite">
+          <div class="targetTitle">TARGET</div>
+          <div class="targetValue targetHidden" id="targetValue">?</div>
+        </div>
+
+        <div class="rightPanel">
+          <div class="stepsRow">
+            <button id="newRoundBtn" type="button">1. New round</button>
+            <button id="revealTargetBtn" class="warn" type="button" disabled>2. Reveal target</button>
+            <button id="startBtn" class="primary" type="button" disabled>3. Start</button>
+
+            <div class="timerWrap" aria-label="Timer">
+              <div class="ring" id="ring">
+                <div class="ringInner" id="timeLeft">60</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="message" id="messageBox">Press New round to get your five numbers.</div>
+        </div>
+      </div>
+
+      <div class="opsRow" aria-label="Operations">
+        <button class="opBtn" id="opPlus" type="button" aria-label="Add" disabled>+</button>
+        <button class="opBtn" id="opMinus" type="button" aria-label="Subtract" disabled>-</button>
+        <button class="opBtn" id="opTimes" type="button" aria-label="Multiply" disabled>x</button>
+        <button class="opBtn" id="opDivide" type="button" aria-label="Divide" disabled>÷</button>
+      </div>
+
+      <div class="cardsArea">
+        <div class="cards" id="cards" aria-label="Number cards"></div>
+      </div>
+
+      <div class="miniRow">
+        <div class="miniBar">
+          <div class="chip">Points: <span id="scoreNow">0</span></div>
+          <div class="chip">Closest: <span id="bestDistance">-</span> <small>away</small></div>
+        </div>
+      </div>
+
+      <div class="actionRow">
+        <div class="actionBar" aria-label="Actions">
+          <button id="undoBtn" class="smallBtn" type="button">Undo</button>
+          <button id="resetBoardBtn" class="smallBtn" type="button">Back to start</button>
+          <button id="hintBtn" class="smallBtn" type="button">Hint</button>
+          <button id="showSolutionBtn" class="smallBtn" type="button">Show</button>
+          <button id="endBtn" class="smallBtn" type="button">End</button>
+        </div>
+      </div>
+
+      <div class="steps" id="stepsPanel" aria-label="Solution steps"></div>
+    </div>
+  </div>
+
+  <div class="celebrate" id="celebrate">
+    <div class="celebrateCard">
+      <h2>Well done!</h2>
+      <p>You hit the target.</p>
+    </div>
+  </div>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+
+    const cardsEl = el("cards");
+    const targetEl = el("targetValue");
+    const timeLeftEl = el("timeLeft");
+    const ringEl = el("ring");
+    const scoreNowEl = el("scoreNow");
+    const bestDistanceEl = el("bestDistance");
+    const messageBox = el("messageBox");
+    const stepsPanel = el("stepsPanel");
+    const celebrateEl = el("celebrate");
+    const difficultyEl = el("difficulty");
+    const newRoundBtn = el("newRoundBtn");
+    const revealTargetBtn = el("revealTargetBtn");
+    const startBtn = el("startBtn");
+    const undoBtn = el("undoBtn");
+    const resetBoardBtn = el("resetBoardBtn");
+    const hintBtn = el("hintBtn");
+    const showSolutionBtn = el("showSolutionBtn");
+    const endBtn = el("endBtn");
+
+    const opBtns = {
+      "+": el("opPlus"),
+      "-": el("opMinus"),
+      "*": el("opTimes"),
+      "/": el("opDivide")
+    };
+
+    let timer = null;
+    let timeLeft = 60;
+    let running = false;
+    let target = null;
+    let targetRevealed = false;
+    let cards = [];
+    let firstPickId = null;
+    let activeOp = null;
+    let initialCardsSnapshot = null;
+    let history = [];
+    let bestSolution = null;
+    let hintIndex = 0;
+
+    function deepCopy(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function difficultyRange(key) {
+      switch (key) {
+        case "starter": return [10, 30];
+        case "core": return [20, 100];
+        case "challenge": return [50, 250];
+        case "stretch": return [50, 500];
+        default: return [20, 100];
+      }
+    }
+
+    function setMessage(kind, text) {
+      messageBox.classList.remove("good", "warn", "bad");
+      if (kind) messageBox.classList.add(kind);
+      messageBox.textContent = text;
+    }
+
+    function pointsFromDistance(distance) {
+      if (distance === 0) return 5;
+      if (distance === 1) return 4;
+      if (distance === 2) return 3;
+      if (distance === 3) return 2;
+      if (distance === 4) return 1;
+      return 0;
+    }
+
+    function showWellDone() {
+      celebrateEl.classList.add("show");
+      setTimeout(() => celebrateEl.classList.remove("show"), 1200);
+    }
+
+    celebrateEl.addEventListener("click", () => celebrateEl.classList.remove("show"));
+
+    function updateRing() {
+      const proportion = Math.max(0, Math.min(1, timeLeft / 60));
+      const deg = Math.round(proportion * 360);
+      let color = "var(--good)";
+      if (timeLeft <= 20) color = "var(--bad)";
+      else if (timeLeft <= 40) color = "var(--warn)";
+
+      ringEl.style.background = `conic-gradient(${color} 0deg, ${color} ${deg}deg, rgba(18,49,75,0.10) ${deg}deg, rgba(18,49,75,0.10) 360deg)`;
+      timeLeftEl.textContent = String(timeLeft);
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timer = null;
+      timeLeft = 60;
+      running = false;
+      updateRing();
+    }
+
+    function startTimer() {
+      if (running) return;
+      running = true;
+      timer = setInterval(() => {
+        timeLeft -= 1;
+        updateRing();
+        if (timeLeft <= 0) endRound(true);
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timer);
+      timer = null;
+      running = false;
+    }
+
+    function enableOps(enabled) {
+      for (const key of Object.keys(opBtns)) {
+        opBtns[key].disabled = !enabled;
+        if (!enabled) opBtns[key].classList.remove("active");
+      }
+      if (!enabled) activeOp = null;
+    }
+
+    function renderCards() {
+      cardsEl.innerHTML = "";
+      cards.forEach((card) => {
+        const div = document.createElement("div");
+        const classes = ["card"];
+        if (card.used) classes.push("used");
+        if (card.made) classes.push("made");
+        if (firstPickId === card.id) classes.push("pick1");
+        div.className = classes.join(" ");
+        div.setAttribute("role", "button");
+        div.setAttribute("tabindex", "0");
+        div.setAttribute("aria-label", `Card value ${card.value}${card.used ? ", used" : ""}`);
+        div.textContent = card.value;
+        div.addEventListener("click", () => onCardTap(card.id));
+        div.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onCardTap(card.id);
+          }
+        });
+        cardsEl.appendChild(div);
+      });
+    }
+
+    function setActiveOp(op) {
+      if (!running) {
+        setMessage("warn", "Press Start first.");
+        return;
+      }
+      if (!firstPickId) {
+        setMessage("warn", "First tap a number.");
+        return;
+      }
+      activeOp = op;
+      for (const key of Object.keys(opBtns)) {
+        opBtns[key].classList.toggle("active", key === op);
+      }
+      setMessage(null, "Now tap your second number.");
+    }
+
+    function onCardTap(id) {
+      const card = cards.find((item) => item.id === id);
+      if (!card || card.used) return;
+
+      if (!targetRevealed) {
+        setMessage("warn", "Press Reveal target first.");
+        return;
+      }
+      if (!running) {
+        setMessage("warn", "Press Start, then play.");
+        return;
+      }
+      if (!firstPickId) {
+        firstPickId = id;
+        renderCards();
+        enableOps(true);
+        setMessage(null, "Now tap an operation.");
+        return;
+      }
+      if (!activeOp) {
+        setMessage("warn", "Tap an operation first.");
+        return;
+      }
+      if (id === firstPickId) {
+        setMessage("warn", "Pick a different second number.");
+        return;
+      }
+
+      applyOperation(activeOp, firstPickId, id);
+      firstPickId = null;
+      activeOp = null;
+      enableOps(false);
+      renderCards();
+      if (running) setMessage(null, "Tap a number to start your next move.");
+    }
+
+    function applyOperation(op, idA, idB) {
+      const first = cards.find((card) => card.id === idA);
+      const second = cards.find((card) => card.id === idB);
+      if (!first || !second || first.used || second.used) return;
+
+      const a = first.value;
+      const b = second.value;
+      let result = null;
+
+      if (op === "+") result = a + b;
+      else if (op === "*") result = a * b;
+      else if (op === "-") result = Math.abs(a - b);
+      else if (op === "/") {
+        if (b !== 0 && a % b === 0) result = a / b;
+        else if (a !== 0 && b % a === 0) result = b / a;
+        else {
+          setMessage("warn", "That division does not work. Try a different move.");
+          return;
+        }
+      }
+
+      if (result === null || !Number.isInteger(result) || result < 0) {
+        setMessage("warn", "That move is not allowed. Try a different move.");
+        return;
+      }
+
+      first.used = true;
+      second.used = true;
+      cards.push({
+        id: `n_${Date.now()}_${Math.random().toString(16).slice(2)}`,
+        value: result,
+        used: false,
+        made: true
+      });
+
+      pushHistorySnapshot();
+      updateBestDistanceAndScore();
+
+      if (result === target) {
+        showWellDone();
+        setMessage("good", "Well done!");
+        endRound(false);
+      }
+    }
+
+    function getBestDistance() {
+      let bestDistance = Infinity;
+      for (const card of cards) {
+        if (!card.used) bestDistance = Math.min(bestDistance, Math.abs(target - card.value));
+      }
+      return bestDistance === Infinity ? null : bestDistance;
+    }
+
+    function updateBestDistanceAndScore() {
+      const distance = getBestDistance();
+      if (distance === null) {
+        bestDistanceEl.textContent = "-";
+        scoreNowEl.textContent = "0";
+        return;
+      }
+      bestDistanceEl.textContent = String(distance);
+      scoreNowEl.textContent = String(pointsFromDistance(distance));
+    }
+
+    function endRound(auto) {
+      stopTimer();
+      enableOps(false);
+
+      const distance = getBestDistance();
+      const points = distance === null ? 0 : pointsFromDistance(distance);
+      scoreNowEl.textContent = String(points);
+
+      if (distance === 0) setMessage("good", "Finished: Exact hit (5 points).");
+      else if (distance !== null && distance <= 4) setMessage("warn", `Finished: Closest was ${distance} away (${points} points).`);
+      else setMessage("bad", "Finished: Try again for a closer score.");
+
+      if (auto && bestSolution) {
+        stepsPanel.classList.add("visible");
+        renderStepsUpTo(hintIndex);
+      }
+      setStepButtonsState();
+    }
+
+    function renderStepsUpTo(count) {
+      if (!bestSolution) return;
+      stepsPanel.classList.add("visible");
+      stepsPanel.innerHTML = "";
+      const lines = bestSolution.steps.slice(0, count);
+
+      if (lines.length === 0) {
+        const div = document.createElement("div");
+        div.className = "stepLine";
+        div.textContent = "Press Hint to reveal a step.";
+        stepsPanel.appendChild(div);
+        return;
+      }
+
+      for (const line of lines) {
+        const div = document.createElement("div");
+        div.className = "stepLine";
+        div.textContent = line;
+        stepsPanel.appendChild(div);
+      }
+
+      const summary = document.createElement("div");
+      summary.className = "stepLine";
+      summary.textContent = `Target: ${target}`;
+      stepsPanel.appendChild(summary);
+    }
+
+    function showHint() {
+      if (!bestSolution) return;
+      hintIndex = Math.min(bestSolution.steps.length, hintIndex + 1);
+      renderStepsUpTo(hintIndex);
+      setMessage(null, "Hint shown.");
+    }
+
+    function showAll() {
+      if (!bestSolution) return;
+      hintIndex = bestSolution.steps.length;
+      renderStepsUpTo(hintIndex);
+      setMessage(null, "Solution shown.");
+    }
+
+    function pushHistorySnapshot() {
+      history.push({
+        cards: deepCopy(cards),
+        timeLeft,
+        running
+      });
+      if (history.length > 40) history.shift();
+    }
+
+    function applySnapshot(snapshot) {
+      cards = deepCopy(snapshot.cards);
+      firstPickId = null;
+      activeOp = null;
+      enableOps(false);
+      timeLeft = snapshot.timeLeft;
+      updateRing();
+      if (snapshot.running && !running) startTimer();
+      if (!snapshot.running && running) stopTimer();
+      renderCards();
+      updateBestDistanceAndScore();
+      setMessage(null, "Board restored. Tap a number to continue.");
+      setStepButtonsState();
+    }
+
+    function undo() {
+      if (history.length === 0) {
+        backToStart();
+        return;
+      }
+      history.pop();
+      if (history.length === 0) {
+        backToStart();
+        return;
+      }
+      applySnapshot(history[history.length - 1]);
+    }
+
+    function backToStart() {
+      if (!initialCardsSnapshot) return;
+      cards = deepCopy(initialCardsSnapshot);
+      firstPickId = null;
+      activeOp = null;
+      enableOps(false);
+      updateRing();
+      history = [];
+      renderCards();
+      updateBestDistanceAndScore();
+      stepsPanel.classList.remove("visible");
+      stepsPanel.innerHTML = "";
+      hintIndex = 0;
+      setMessage(null, "Back to start. Try a new strategy.");
+      setStepButtonsState();
+    }
+
+    function keyFromValues(values) {
+      return values.slice().sort((a, b) => a - b).join(",");
+    }
+
+    function makeStepsFromTree(node, output) {
+      if (!node || node.type === "num") return;
+      makeStepsFromTree(node.left, output);
+      makeStepsFromTree(node.right, output);
+      const opSymbol = node.op === "*" ? "x" : node.op === "/" ? "÷" : node.op;
+      output.push(`${node.left.v} ${opSymbol} ${node.right.v} = ${node.v}`);
+    }
+
+    function computeExactSolutionForTarget(startValues, targetValue) {
+      const startItems = startValues.map((value) => ({ v: value, node: { type: "num", v: value } }));
+      const memo = new Set();
+      let foundNode = null;
+
+      function dfs(items) {
+        const key = keyFromValues(items.map((item) => item.v));
+        if (memo.has(key)) return false;
+        memo.add(key);
+
+        for (const item of items) {
+          if (item.v === targetValue) {
+            foundNode = item.node;
+            return true;
+          }
+        }
+        if (items.length === 1) return false;
+
+        for (let i = 0; i < items.length; i += 1) {
+          for (let j = i + 1; j < items.length; j += 1) {
+            const first = items[i];
+            const second = items[j];
+            const rest = items.filter((_, index) => index !== i && index !== j);
+            const candidates = [];
+
+            candidates.push({ v: first.v + second.v, node: { type: "op", op: "+", v: first.v + second.v, left: first.node, right: second.node } });
+            candidates.push({ v: first.v * second.v, node: { type: "op", op: "*", v: first.v * second.v, left: first.node, right: second.node } });
+
+            const diffOne = first.v - second.v;
+            if (diffOne >= 0) candidates.push({ v: diffOne, node: { type: "op", op: "-", v: diffOne, left: first.node, right: second.node } });
+            const diffTwo = second.v - first.v;
+            if (diffTwo >= 0) candidates.push({ v: diffTwo, node: { type: "op", op: "-", v: diffTwo, left: second.node, right: first.node } });
+
+            if (second.v !== 0 && first.v % second.v === 0) {
+              const value = first.v / second.v;
+              candidates.push({ v: value, node: { type: "op", op: "/", v: value, left: first.node, right: second.node } });
+            }
+            if (first.v !== 0 && second.v % first.v === 0) {
+              const value = second.v / first.v;
+              candidates.push({ v: value, node: { type: "op", op: "/", v: value, left: second.node, right: first.node } });
+            }
+
+            for (const candidate of candidates) {
+              if (candidate.v < 0 || !Number.isInteger(candidate.v)) continue;
+              if (dfs(rest.concat([{ v: candidate.v, node: candidate.node }]))) return true;
+            }
+          }
+        }
+        return false;
+      }
+
+      const ok = dfs(startItems);
+      if (!ok || !foundNode) return null;
+      const steps = [];
+      makeStepsFromTree(foundNode, steps);
+      return { distance: 0, value: targetValue, steps };
+    }
+
+    function generateNumbersByDifficulty() {
+      const starterPool = [1, 2, 3, 4, 5, 6, 10];
+      const allPool = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+      const pool = difficultyEl.value === "starter" ? starterPool : allPool;
+      const counts = new Map();
+      const values = [];
+
+      while (values.length < 5) {
+        const value = pool[randInt(0, pool.length - 1)];
+        const count = counts.get(value) || 0;
+        if (count >= 2) continue;
+        counts.set(value, count + 1);
+        values.push(value);
+      }
+      return values;
+    }
+
+    function generateSolvableRound() {
+      const [minTarget, maxTarget] = difficultyRange(difficultyEl.value);
+      for (let attempt = 0; attempt < 120; attempt += 1) {
+        const numbers = generateNumbersByDifficulty();
+        for (let index = 0; index < 40; index += 1) {
+          const candidate = randInt(minTarget, maxTarget);
+          const solution = computeExactSolutionForTarget(numbers, candidate);
+          if (solution) return { numbers, target: candidate, solution };
+        }
+      }
+
+      const numbers = [1, 2, 3, 4, 5];
+      const fallbackTarget = 10;
+      const solution = computeExactSolutionForTarget(numbers, fallbackTarget) || { distance: 0, value: 10, steps: ["5 + 4 = 9", "9 + 1 = 10"] };
+      return { numbers, target: fallbackTarget, solution };
+    }
+
+    function setStepButtonsState() {
+      revealTargetBtn.disabled = cards.length === 0 || targetRevealed;
+      startBtn.disabled = !targetRevealed || running;
+      startBtn.classList.toggle("glow", !startBtn.disabled);
+    }
+
+    function newRound() {
+      const round = generateSolvableRound();
+      cards = round.numbers.map((value, index) => ({
+        id: `c_${Date.now()}_${index}_${Math.random().toString(16).slice(2)}`,
+        value,
+        used: false,
+        made: false
+      }));
+
+      initialCardsSnapshot = deepCopy(cards);
+      target = round.target;
+      bestSolution = round.solution;
+      targetRevealed = false;
+      targetEl.textContent = "?";
+      targetEl.classList.add("targetHidden");
+      resetTimer();
+      enableOps(false);
+      firstPickId = null;
+      activeOp = null;
+      stepsPanel.classList.remove("visible");
+      stepsPanel.innerHTML = "";
+      hintIndex = 0;
+      history = [];
+      pushHistorySnapshot();
+      bestDistanceEl.textContent = "-";
+      scoreNowEl.textContent = "0";
+      renderCards();
+      setMessage(null, "Step 1: numbers are ready. Press Reveal target.");
+      setStepButtonsState();
+    }
+
+    function revealTarget() {
+      if (targetRevealed) return;
+      targetRevealed = true;
+      targetEl.textContent = String(target);
+      targetEl.classList.remove("targetHidden");
+      updateBestDistanceAndScore();
+      setMessage(null, "Step 2: target revealed. Press Start.");
+      setStepButtonsState();
+    }
+
+    function startRound() {
+      if (!targetRevealed || running) return;
+      stepsPanel.classList.remove("visible");
+      stepsPanel.innerHTML = "";
+      hintIndex = 0;
+      startTimer();
+      setMessage(null, "Go. Tap a number to begin.");
+      setStepButtonsState();
+    }
+
+    newRoundBtn.addEventListener("click", newRound);
+    revealTargetBtn.addEventListener("click", revealTarget);
+    startBtn.addEventListener("click", startRound);
+    undoBtn.addEventListener("click", undo);
+    resetBoardBtn.addEventListener("click", backToStart);
+    hintBtn.addEventListener("click", showHint);
+    showSolutionBtn.addEventListener("click", showAll);
+    endBtn.addEventListener("click", () => endRound(false));
+    difficultyEl.addEventListener("change", () => newRound());
+    opBtns["+"].addEventListener("click", () => setActiveOp("+"));
+    opBtns["-"].addEventListener("click", () => setActiveOp("-"));
+    opBtns["*"].addEventListener("click", () => setActiveOp("*"));
+    opBtns["/"].addEventListener("click", () => setActiveOp("/"));
+
+    resetTimer();
+    enableOps(false);
+    setStepButtonsState();
+    setMessage(null, "Press New round to begin.");
+  </script>
+</body>
+</html>

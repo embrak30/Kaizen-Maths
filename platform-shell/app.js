@@ -982,6 +982,24 @@ const tools = [
     ]
   },
   {
+    slug: "math-in-a-minute",
+    title: "Math in a Minute",
+    category: "Classroom Tools",
+    level: "All",
+    type: "Number Game",
+    access: "Free",
+    status: "Imported",
+    description: "A one-minute target-number challenge where students combine five numbers using operations to hit or get close to a target.",
+    tags: ["classroom", "game", "number sense", "operations", "mental maths", "target number"],
+    toolPath: "tools/math-in-a-minute/index.html?v=math-in-a-minute-1",
+    imported: true,
+    teacherNotes: [
+      "Useful as a starter, plenary, or fast whole-class number fluency challenge.",
+      "Students combine five numbers with addition, subtraction, multiplication, and exact division to hit the target.",
+      "Built-in hints and solution steps help teachers model strategy after the attempt."
+    ]
+  },
+  {
     slug: "interface-guide",
     title: "How to Use This Site",
     category: "Site Guide",
