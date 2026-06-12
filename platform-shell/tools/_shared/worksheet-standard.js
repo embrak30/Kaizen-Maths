@@ -44,6 +44,83 @@
     return steps.map(normalizeStep).filter(Boolean);
   }
 
+  function installWorkedStepStructure() {
+    if (document.documentElement.dataset.kaizenStepStructureReady === 'true') return;
+    document.documentElement.dataset.kaizenStepStructureReady = 'true';
+
+    const style = document.createElement('style');
+    style.textContent = `
+      .solution-steps .kaizen-worked-step{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.55rem;align-items:start;margin:.42rem 0;padding:.45rem .55rem;border-radius:6px;background:rgba(255,255,255,.52);border:1px solid rgba(49,130,206,.08)}
+      .solution-steps .kaizen-worked-step.kaizen-math-step{background:rgba(255,255,255,.72)}
+      .solution-steps .kaizen-step-index{display:inline-flex;align-items:center;justify-content:center;min-width:4.1rem;padding:.18rem .45rem;border-radius:999px;background:#3182ce;color:#fff;font-size:.78em;font-weight:800;white-space:nowrap}
+      .solution-steps .kaizen-step-body{min-width:0;overflow-x:auto}
+      .solution-steps .kaizen-worked-step .step-indicator{margin-right:.4rem}
+      .solution-steps .kaizen-step-explicit{display:block}
+    `;
+    document.head.appendChild(style);
+
+    function hasExplicitStep(element) {
+      const text = element.textContent || '';
+      return /step\s*\d+/i.test(text) || Boolean(element.querySelector('.step-indicator'));
+    }
+
+    function isSkippableStep(element) {
+      return element.classList.contains('final-answer') ||
+        element.classList.contains('answer-label') ||
+        element.classList.contains('kaizen-worked-step') ||
+        element.closest('.final-answer');
+    }
+
+    function isMathLike(text, element) {
+      return element.classList.contains('step-equation') ||
+        element.classList.contains('step-math') ||
+        /(\$\$|\\\(|\\\[|=|→|->|⇒|\\frac|dfrac|sqrt|∫|∑|[+\-*/×÷]\s*)/.test(text);
+    }
+
+    function enhanceContainer(container) {
+      if (!container || container.dataset.kaizenStepStructured === 'true') return;
+      const children = [...container.children].filter((child) => child.nodeType === Node.ELEMENT_NODE && !isSkippableStep(child));
+      let stepNumber = 1;
+
+      children.forEach((child) => {
+        const text = (child.textContent || '').trim();
+        if (!text) return;
+        if (hasExplicitStep(child)) {
+          child.classList.add('kaizen-step-explicit');
+          return;
+        }
+
+        const body = document.createElement('span');
+        body.className = 'kaizen-step-body';
+        while (child.firstChild) body.appendChild(child.firstChild);
+
+        const label = document.createElement('span');
+        label.className = 'kaizen-step-index';
+        label.textContent = 'Step ' + stepNumber;
+
+        child.classList.add('kaizen-worked-step');
+        if (isMathLike(text, child)) child.classList.add('kaizen-math-step');
+        child.append(label, body);
+        stepNumber += 1;
+      });
+
+      container.dataset.kaizenStepStructured = 'true';
+    }
+
+    function enhance(root = document) {
+      if (root.nodeType === Node.ELEMENT_NODE && root.matches?.('.solution-steps')) enhanceContainer(root);
+      root.querySelectorAll?.('.solution-steps').forEach(enhanceContainer);
+    }
+
+    enhance();
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => enhance(node));
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
   function getToolTitle() {
     return (
       document.querySelector('.header h1')?.textContent?.trim() ||
@@ -255,6 +332,8 @@
     getState,
     normalizeProblem
   };
+
+  installWorkedStepStructure();
 
   function installTeacherExampleMode() {
     if (document.documentElement.dataset.teacherExampleReady === 'true') return;

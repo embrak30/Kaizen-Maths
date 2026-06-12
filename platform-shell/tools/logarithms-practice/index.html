@@ -794,6 +794,10 @@
       return coefficient + "x " + (constant >= 0 ? "+ " + constant : "- " + Math.abs(constant));
     }
 
+    function multiplyDot() {
+      return ' <span class="operation">·</span> ';
+    }
+
     function generateProblem() {
       let problem = {};
 
@@ -991,14 +995,16 @@
             const result = coefficient * Math.pow(base, power);
             problem = {
               badge: "equations",
-              equation: "Solve: " + coefficient + " x " + base + sup("x") + " = " + result,
+              equation: "Solve: " + coefficient + multiplyDot() + base + sup("x") + " = " + result,
               answer: "x = " + power,
               steps: [
-                stepLabel(1) + " Isolate the exponential term",
+                stepLabel(1) + " Identify the multiplier attached to the exponential term",
+                "The coefficient " + coefficient + " is multiplying " + base + sup("x") + ".",
+                stepLabel(2) + " Divide both sides by " + coefficient,
                 base + sup("x") + " = " + result + " / " + coefficient + " = " + Math.pow(base, power),
-                stepLabel(2) + " Rewrite as a matching power",
+                stepLabel(3) + " Rewrite as a matching power",
                 Math.pow(base, power) + " = " + base + sup(power),
-                stepLabel(3) + " Equate exponents",
+                stepLabel(4) + " Equate exponents",
                 arrow("x = " + highlightIndex(power))
               ]
             };
@@ -1313,6 +1319,6 @@
 
     switchLevel(1);
   </script>
-  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-13"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-14"></script>
 </body>
 </html>

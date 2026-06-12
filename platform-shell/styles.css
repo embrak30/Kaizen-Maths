@@ -1536,6 +1536,45 @@ sup .worksheet-fraction span:last-child {
   color: #3b236d;
 }
 
+.worksheet-step-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: start;
+  margin: 0.42rem 0;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid rgba(111, 76, 195, 0.12);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.worksheet-step-line.math {
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.worksheet-step-line.explicit {
+  display: block;
+}
+
+.worksheet-step-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.1rem;
+  padding: 0.18rem 0.45rem;
+  border-radius: 999px;
+  background: #6f4cc3;
+  color: #fff;
+  font-size: 0.78em;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.worksheet-step-body {
+  min-width: 0;
+  overflow-x: auto;
+}
+
 .worksheet-answer-key {
   break-before: page;
   page-break-before: always;

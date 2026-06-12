@@ -46,7 +46,7 @@ const tools = [
     status: "Imported",
     description: "Generate straight-line questions covering gradients, intercepts, equations, intersections, and parallel or perpendicular lines.",
     tags: ["algebra", "coordinate geometry", "straight lines", "gradient", "intercepts", "linear graphs"],
-    toolPath: "tools/straight-lines/index.html?v=straight-lines-fraction-1",
+    toolPath: "tools/straight-lines/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Four levels move from gradient and intercept fluency into equation finding and line relationships.",
@@ -64,7 +64,7 @@ const tools = [
     status: "Imported",
     description: "Generate two-problem challenge sets for intersections of lines with circles, parabolas, hyperbolas, and mixed conics.",
     tags: ["algebra", "coordinate geometry", "conics", "circles", "parabolas", "hyperbolas", "intersections"],
-    toolPath: "tools/conic-intersections/index.html?v=worksheet-standard-3",
+    toolPath: "tools/conic-intersections/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Uses substitution to reduce line-conic intersections to a quadratic equation.",
@@ -100,7 +100,7 @@ const tools = [
     status: "Imported",
     description: "Generate integration practice covering indefinite integrals, definite integrals, and the trapezium rule.",
     tags: ["algebra", "calculus", "integration", "integrals", "trapezium rule", "area under curve"],
-    toolPath: "tools/integration/index.html?v=worksheet-standard-3",
+    toolPath: "tools/integration/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Starts with integration as reverse differentiation and the constant of integration.",
@@ -118,7 +118,7 @@ const tools = [
     status: "Imported",
     description: "Generate differentiation practice for power, product, quotient, chain, trigonometric, logarithmic, tangent, normal, and turning-point problems.",
     tags: ["algebra", "calculus", "differentiation", "power rule", "product rule", "quotient rule", "chain rule", "trigonometry", "logarithms"],
-    toolPath: "tools/differentiation-rules-general/index.html?v=worksheet-standard-3",
+    toolPath: "tools/differentiation-rules-general/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Extends polynomial differentiation into product, quotient, chain, trigonometric, and logarithmic rules.",
@@ -172,7 +172,7 @@ const tools = [
     status: "Imported",
     description: "Generate trigonometric equation solving practice in radians on 0 <= x < 2pi, including linear and quadratic trig equations.",
     tags: ["algebra", "trigonometry", "equations", "radians", "quadratic trig", "unit circle"],
-    toolPath: "tools/trig-equation-solver/index.html?v=worksheet-standard-3",
+    toolPath: "tools/trig-equation-solver/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Covers sine, cosine, and tangent equations with multiple-angle and shifted-angle forms.",
@@ -208,7 +208,7 @@ const tools = [
     status: "Imported",
     description: "Generate implicit and parametric differentiation practice, including second derivatives, tangent and normal lines, related rates, and parameter slope analysis.",
     tags: ["algebra", "calculus", "differentiation", "implicit differentiation", "parametric differentiation", "tangents", "normals"],
-    toolPath: "tools/advanced-differentiation/index.html?v=worksheet-standard-3",
+    toolPath: "tools/advanced-differentiation/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers implicit dy/dx, slopes at points, second derivatives, tangent lines, and related rates.",
@@ -226,7 +226,7 @@ const tools = [
     status: "Imported",
     description: "Generate HCF and LCM practice for integers, algebraic expressions, mixed drills, and word problems with worked factorisation steps.",
     tags: ["numbers", "hcf", "lcm", "factors", "multiples", "prime factorisation", "algebra"],
-    toolPath: "tools/hcf-lcm/index.html?v=worksheet-standard-3",
+    toolPath: "tools/hcf-lcm/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Level 1 builds fluency with HCF and LCM of two integers.",
@@ -244,7 +244,7 @@ const tools = [
     status: "Imported",
     description: "Generate decimal fluency practice covering place value, comparing and ordering, rounding, terminating fractions, operations, multi-step contexts, and error spotting.",
     tags: ["numbers", "decimals", "place value", "rounding", "operations", "fractions", "word problems"],
-    toolPath: "tools/decimals-practice-lab/index.html?v=worksheet-standard-3",
+    toolPath: "tools/decimals-practice-lab/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers decimal foundations: place value, comparison, ordering, rounding, fraction conversion, and expanded form.",
@@ -262,7 +262,7 @@ const tools = [
     status: "Imported",
     description: "Generate practice for multiplying and dividing by powers of 10, expressing numbers in standard form, evaluating standard form, and using index laws.",
     tags: ["numbers", "powers of 10", "standard form", "scientific notation", "decimals", "indices"],
-    toolPath: "tools/powers-of-10/index.html?v=worksheet-standard-3",
+    toolPath: "tools/powers-of-10/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers multiplication by powers of 10 with whole numbers, decimals, and mixed values.",
@@ -318,7 +318,7 @@ const tools = [
     status: "Imported",
     description: "Generate percentage practice across conversions, expressing quantities as percentages, percentage of amounts, percentage change, and reverse percentage problems.",
     tags: ["numbers", "percentages", "conversions", "percentage change", "reverse percentages"],
-    toolPath: "tools/simple-percentage-tasks/index.html?v=worksheet-standard-3",
+    toolPath: "tools/simple-percentage-tasks/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Level 1 practises percentage, decimal, and fraction conversions.",
@@ -573,7 +573,7 @@ const tools = [
     status: "Imported",
     description: "Generate absolute value practice covering evaluation, distance, substitution, absolute value equations, applications, and inequalities.",
     tags: ["algebra", "absolute value", "modulus", "equations", "inequalities", "distance"],
-    toolPath: "tools/absolute-values/index.html?v=worksheet-standard-3",
+    toolPath: "tools/absolute-values/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Level 1 develops absolute value as magnitude and distance from zero.",
@@ -592,7 +592,7 @@ const tools = [
     status: "Imported",
     description: "Generate surd and radical practice covering simplification, operations, rationalising denominators, expanding brackets, and multi-step expressions.",
     tags: ["algebra", "surds", "radicals", "roots", "rationalising", "simplifying"],
-    toolPath: "tools/surds-radicals/index.html?v=worksheet-standard-3",
+    toolPath: "tools/surds-radicals/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Level 1 develops simplification by finding perfect square factors.",
@@ -611,7 +611,7 @@ const tools = [
     status: "Imported",
     description: "Generate logarithm practice covering log-index conversion, evaluation, logarithm laws, natural logs, change of base, and equation solving.",
     tags: ["algebra", "logarithms", "logs", "indices", "exponentials", "natural log", "change of base"],
-    toolPath: "tools/logarithms-practice/index.html?v=worksheet-standard-3",
+    toolPath: "tools/logarithms-practice/index.html?v=log-step-dot-1",
     imported: true,
     teacherNotes: [
       "Level 1 builds fluency converting between logarithmic and index form.",
@@ -630,7 +630,7 @@ const tools = [
     status: "Imported",
     description: "Generate non-right triangle trigonometry practice covering the Sine Rule, Cosine Rule, sine area formula, and mixed multi-step problems.",
     tags: ["algebra", "trigonometry", "sine rule", "cosine rule", "triangle area", "non-right triangles"],
-    toolPath: "tools/sine-cosine-rule/index.html?v=worksheet-standard-3",
+    toolPath: "tools/sine-cosine-rule/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers Sine Rule side and angle problems plus the sine area formula.",
@@ -668,7 +668,7 @@ const tools = [
     status: "Imported",
     description: "Generate statistics practice covering discrete probability distributions, expectation, variance, standard deviation, and binomial, geometric, and Poisson models.",
     tags: ["statistics", "probability", "random variables", "expectation", "variance", "binomial", "geometric", "poisson"],
-    toolPath: "tools/discrete-random-variables/index.html?v=worksheet-standard-3",
+    toolPath: "tools/discrete-random-variables/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Level 1 checks probability tables, missing probabilities, and validity of discrete distributions.",
@@ -687,7 +687,7 @@ const tools = [
     status: "Imported",
     description: "Generate probability tree practice covering independent events, without-replacement contexts, total probability, and reverse conditional probability.",
     tags: ["statistics", "probability", "tree diagrams", "conditional probability", "independent events", "without replacement", "bayes"],
-    toolPath: "tools/tree-diagrams-conditional-probability/index.html?v=worksheet-standard-3",
+    toolPath: "tools/tree-diagrams-conditional-probability/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Uses four-problem 2x2 sets so compact tree diagrams fit comfortably in front-of-class projection.",
@@ -779,7 +779,7 @@ const tools = [
     status: "Imported",
     description: "Generate simplification questions for like terms, two-variable expressions, and advanced products or powers.",
     tags: ["algebra", "simplification", "like terms", "collecting terms", "expressions", "KaTeX"],
-    toolPath: "tools/simplification/index.html?v=worksheet-standard-3",
+    toolPath: "tools/simplification/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Builds fluency from collecting like terms to advanced multi-variable simplification.",
@@ -869,7 +869,7 @@ const tools = [
     status: "Imported",
     description: "Generate contextual simultaneous-equation problems, from two-variable applications to three-variable and quadratic modelling.",
     tags: ["algebra", "simultaneous equations", "word problems", "applications", "modelling", "elimination", "quadratics", "KaTeX"],
-    toolPath: "tools/simultaneous-applications/index.html?v=worksheet-standard-3",
+    toolPath: "tools/simultaneous-applications/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Mixed sets focus on forming equations from context before solving.",
@@ -905,7 +905,7 @@ const tools = [
     status: "Legacy",
     description: "Build fluency with fraction arithmetic and equivalent forms.",
     tags: ["numbers", "fractions", "fluency"],
-    toolPath: "tools/fractions/index.html?v=worksheet-standard-3",
+    toolPath: "tools/fractions/index.html?v=step-structure-1",
     imported: false
   },
   {
@@ -918,7 +918,7 @@ const tools = [
     status: "Imported",
     description: "Generate PEMDAS questions with levels for precedence, brackets, exponents, division, and negatives.",
     tags: ["numbers", "PEMDAS", "BODMAS", "order of operations", "exponents", "negative numbers"],
-    toolPath: "tools/order-of-operations/index.html?v=worksheet-standard-3",
+    toolPath: "tools/order-of-operations/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Designed for repeated board practice on order of operations.",
@@ -936,7 +936,7 @@ const tools = [
     status: "Imported",
     description: "Generate contextual percentage problems for shopping, tax, commission, interest, investments, loans, science, statistics, and error analysis.",
     tags: ["numbers", "percentages", "applications", "finance", "tax", "science", "interest"],
-    toolPath: "tools/percentages-real-world/index.html?v=worksheet-standard-3",
+    toolPath: "tools/percentages-real-world/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers daily applications such as discounts, tips, service charges, and tax.",
@@ -955,7 +955,7 @@ const tools = [
     status: "Imported",
     description: "Generate statistics questions for mean, median, mode, range, comparing measures, and missing values.",
     tags: ["data", "averages", "statistics", "mean", "median", "mode", "range", "missing values"],
-    toolPath: "tools/averages-range/index.html?v=worksheet-standard-3",
+    toolPath: "tools/averages-range/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Covers individual measures, combined measures, comparing measures, and missing values.",
@@ -1028,7 +1028,7 @@ const tools = [
     status: "Imported",
     description: "An interactive classroom table for converting between fractions, decimals, and percentages with revealable answers.",
     tags: ["classroom", "fractions", "decimals", "percentages", "conversion", "equivalence"],
-    toolPath: "tools/fractions-table/index.html?v=fraction-table-1",
+    toolPath: "tools/fractions-table/index.html?v=step-structure-1",
     imported: true,
     teacherNotes: [
       "Students are given one representation and calculate the missing fraction, decimal, and percentage equivalents.",
@@ -1304,8 +1304,28 @@ function worksheetContentHtml(value) {
   return template.innerHTML;
 }
 
+function worksheetStepHasExplicitLabel(step) {
+  const text = String(step ?? "").replace(/<[^>]+>/g, " ");
+  return /step\s*\d+/i.test(text) || /class=["'][^"']*step-indicator/.test(String(step ?? ""));
+}
+
+function worksheetStepIsMathLike(step) {
+  const text = String(step ?? "");
+  return /(\$\$|\\\(|\\\[|=|→|->|⇒|\\frac|dfrac|sqrt|∫|∑|[+\-*/×÷]\s*)/.test(text);
+}
+
 function worksheetStepsHtml(steps = []) {
-  return steps.map((step) => `<div>${worksheetContentHtml(step)}</div>`).join("");
+  let stepNumber = 1;
+  return steps.map((step) => {
+    const content = worksheetContentHtml(step);
+    if (worksheetStepHasExplicitLabel(step)) {
+      return `<div class="worksheet-step-line explicit">${content}</div>`;
+    }
+    const className = worksheetStepIsMathLike(step) ? "worksheet-step-line math" : "worksheet-step-line";
+    const html = `<div class="${className}"><span class="worksheet-step-index">Step ${stepNumber}</span><span class="worksheet-step-body">${content}</span></div>`;
+    stepNumber += 1;
+    return html;
+  }).join("");
 }
 
 function renderWorksheetAnswerKey(worksheet) {
