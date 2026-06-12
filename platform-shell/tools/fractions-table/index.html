@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraction Decimal Percentage Conversion Table</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+      background: #f5f7fa;
+      color: #26384a;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      z-index: 1001;
+      transform: translateY(-50%);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      border-radius: 0 8px 8px 0;
+      padding: 15px 8px;
+      background: #6f4cc3;
+      color: white;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      font-size: 0.9em;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .teacher-tab:hover {
+      background: #17b8b3;
+      transform: translateY(-50%) translateX(5px);
+    }
+
+    .sidebar {
+      position: fixed;
+      left: -400px;
+      top: 0;
+      z-index: 1000;
+      width: 400px;
+      height: 100vh;
+      overflow-y: auto;
+      background: white;
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+      transition: left 0.3s ease;
+    }
+
+    .sidebar.open { left: 0; }
+
+    .sidebar-header {
+      padding: 20px;
+      background: #6f4cc3;
+      color: white;
+      font-size: 1.3em;
+      font-weight: 700;
+    }
+
+    .sidebar-content {
+      padding: 25px;
+      line-height: 1.6;
+    }
+
+    .sidebar-content h3 {
+      margin: 20px 0 10px;
+      border-bottom: 2px solid #17b8b3;
+      padding-bottom: 5px;
+      color: #6f4cc3;
+      font-size: 1.1em;
+    }
+
+    .sidebar-content p,
+    .sidebar-content li {
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    .sidebar-content ul {
+      margin-bottom: 15px;
+      padding-left: 20px;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      visibility: hidden;
+      background: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 10px;
+      background: white;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      position: relative;
+      overflow: hidden;
+      padding: 25px;
+      background:
+        radial-gradient(circle at 22% 22%, rgba(111, 76, 195, 0.75), transparent 42%),
+        radial-gradient(circle at 78% 72%, rgba(23, 184, 179, 0.72), transparent 42%),
+        #2c3e50;
+      color: white;
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 50%, rgba(0, 0, 0, 0.05));
+    }
+
+    .header h1 {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 5px;
+      font-size: clamp(1.8rem, 3vw, 2.35rem);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .tabs {
+      display: flex;
+      background: #ecf0f1;
+    }
+
+    .tab {
+      flex: 1;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 18px;
+      background: #ecf0f1;
+      cursor: pointer;
+      font-size: 1.05em;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .tab:hover { background: #d5dbdb; }
+
+    .tab.active {
+      border-bottom-color: #17b8b3;
+      background: white;
+      color: #6f4cc3;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-bottom: 1px solid #e9ecef;
+      padding: 22px;
+      background: #f8f9fa;
+    }
+
+    .level-info h3 {
+      margin-bottom: 5px;
+      color: #6f4cc3;
+      font-size: 1.25em;
+    }
+
+    .level-info p {
+      color: #718096;
+      font-size: 1em;
+    }
+
+    .timer-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .timer-display {
+      min-width: 118px;
+      border: 2px solid #bdc3c7;
+      border-radius: 6px;
+      padding: 10px 16px;
+      background: white;
+      color: #6f4cc3;
+      text-align: center;
+      font-size: 1.7em;
+      font-weight: 800;
+    }
+
+    .timer-display.active {
+      border-color: #17b8b3;
+      color: #0d7f82;
+    }
+
+    .timer-display.warning {
+      border-color: #e74c3c;
+      color: #e74c3c;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      min-width: 78px;
+      border: none;
+      border-radius: 6px;
+      padding: 11px 18px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.96em;
+      font-weight: 750;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: #6f4cc3; }
+    .btn-primary:hover { background: #5e41ad; }
+    .btn-success { background: #17a673; }
+    .btn-success:hover { background: #11815a; }
+    .btn-warning { background: #d69e2e; }
+    .btn-warning:hover { background: #b7791f; }
+    .btn-danger { background: #e74c3c; }
+    .btn-danger:hover { background: #c0392b; }
+
+    .problems-section {
+      min-height: 600px;
+      padding: 26px;
+    }
+
+    .description-text {
+      margin: 0 0 16px;
+      color: #718096;
+      text-align: center;
+      font-size: 1.05em;
+      font-style: italic;
+    }
+
+    .practice-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .practice-table th {
+      border-bottom: 3px solid #17b8b3;
+      padding: 18px 14px;
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      font-size: 1.18em;
+      font-weight: 750;
+    }
+
+    .practice-table td {
+      position: relative;
+      border-bottom: 1px solid #e9ecef;
+      padding: 15px 12px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 1.12em;
+      transition: all 0.3s ease;
+    }
+
+    .practice-table tr:nth-child(even) { background-color: #f8f9fa; }
+    .practice-table tr:hover { background-color: #e8f4f8; }
+
+    .row-number {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: #6f4cc3;
+      color: white;
+      font-weight: 800;
+    }
+
+    .given-value,
+    .calculate-cell {
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      padding: 12px;
+      font-weight: 750;
+    }
+
+    .given-value {
+      border: 2px solid #bdc3c7;
+      background: #ecf0f1;
+      color: #2c3e50;
+    }
+
+    .calculate-cell {
+      border: 2px dashed #d69e2e;
+      background: #fff8dc;
+      color: #856404;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .calculate-cell:hover {
+      border-color: #f59e0b;
+      background: #fff4bd;
+      transform: scale(1.03);
+    }
+
+    .calculate-cell.revealed {
+      border: 2px solid #28a745;
+      background: #d4edda;
+      color: #155724;
+      cursor: default;
+      animation: slideIn 0.35s ease;
+    }
+
+    .calculate-cell.revealed:hover { transform: none; }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: scale(0.94); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .calculate-cell::before {
+      content: "?";
+      opacity: 0.78;
+      font-size: 1.4em;
+      font-weight: 900;
+    }
+
+    .calculate-cell.revealed::before { content: ""; }
+
+    .fraction {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      font-family: "Cambria Math", "Times New Roman", serif;
+      font-size: 1.12em;
+      line-height: 1.15;
+    }
+
+    .fraction-numerator,
+    .fraction-denominator {
+      padding: 1px 4px;
+      font-weight: 700;
+    }
+
+    .fraction-line {
+      width: 100%;
+      min-width: 26px;
+      height: 2px;
+      background-color: currentColor;
+    }
+
+    .timer-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-content {
+      max-width: 350px;
+      border-radius: 12px;
+      padding: 35px;
+      background: white;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-content h2 {
+      margin-bottom: 18px;
+      color: #e74c3c;
+      font-size: 2em;
+    }
+
+    .modal-content p {
+      margin-bottom: 25px;
+      color: #718096;
+      font-size: 1.1em;
+    }
+
+    .hidden { display: none; }
+
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .controls { flex-direction: column; align-items: stretch; padding: 15px; }
+      .timer-section { justify-content: center; }
+      .tabs { flex-wrap: wrap; }
+      .tab { flex: 1 1 100%; padding: 12px; }
+      .practice-table th,
+      .practice-table td { padding: 10px 6px; font-size: 0.95em; }
+      .sidebar { width: 320px; left: -320px; }
+    }
+
+    @media (min-width: 1200px) {
+      .practice-table th { font-size: 1.35em; padding: 22px 18px; }
+      .practice-table td { font-size: 1.22em; padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool helps students practise converting between fractions, decimals, and percentages. Each row gives one representation and asks students to calculate the other two.</p>
+
+      <h3>How It Works</h3>
+      <ul>
+        <li><strong>Given values:</strong> one value is shown in each row.</li>
+        <li><strong>Calculate:</strong> students find the missing fraction, decimal, or percentage values.</li>
+        <li><strong>Interactive reveal:</strong> click a missing cell to show one answer, or reveal all answers at once.</li>
+      </ul>
+
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Basic:</strong> common equivalents such as halves, quarters, fifths, and tenths.</li>
+        <li><strong>Intermediate:</strong> thirds, sixths, eighths, ninths, and elevenths.</li>
+        <li><strong>Advanced:</strong> more challenging recurring decimals and less familiar fractions.</li>
+      </ul>
+
+      <h3>Key Conversion Methods</h3>
+      <ul>
+        <li>Fraction to decimal: divide numerator by denominator.</li>
+        <li>Decimal to percentage: multiply by 100.</li>
+        <li>Percentage to decimal: divide by 100.</li>
+        <li>Decimal to fraction: write over a power of 10, then simplify.</li>
+        <li>Percentage to fraction: write over 100, then simplify.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header">
+      <h1>Fraction Decimal Percentage Conversion Table</h1>
+    </header>
+
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" type="button" onclick="switchLevel('basic', this)">Basic Level</button>
+      <button class="tab" type="button" onclick="switchLevel('intermediate', this)">Intermediate Level</button>
+      <button class="tab" type="button" onclick="switchLevel('advanced', this)">Advanced Level</button>
+    </nav>
+
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Basic Level</h3>
+        <p id="level-description">Practice with simple fractions and common equivalents</p>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" type="button" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" type="button" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" type="button" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" type="button" onclick="generateNewTable()">New</button>
+        <button class="btn btn-primary" type="button" onclick="showAllAnswers()">Show All Answers</button>
+        <button class="btn btn-warning" type="button" onclick="hideAllAnswers()">Hide Answers</button>
+      </div>
+    </section>
+
+    <section class="problems-section">
+      <p class="description-text">Convert between fractions, decimals, and percentages. Click missing cells to reveal individual answers.</p>
+
+      <table class="practice-table" id="practice-table">
+        <thead>
+          <tr>
+            <th>Problem</th>
+            <th>Fraction</th>
+            <th>Decimal</th>
+            <th>Percentage</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review the conversions?</p>
+      <button class="btn btn-primary" type="button" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = "basic";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+
+    const levelConfigs = {
+      basic: {
+        title: "Basic Level",
+        description: "Practice with simple fractions and common equivalents",
+        fractions: [[1, 2], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5], [1, 10], [3, 10], [7, 10], [9, 10]]
+      },
+      intermediate: {
+        title: "Intermediate Level",
+        description: "More complex fractions and decimal calculations",
+        fractions: [[1, 3], [2, 3], [1, 6], [5, 6], [1, 8], [3, 8], [5, 8], [7, 8], [2, 9], [4, 9], [7, 9], [3, 11]]
+      },
+      advanced: {
+        title: "Advanced Level",
+        description: "Challenge problems with recurring decimals and complex fractions",
+        fractions: [[1, 7], [2, 7], [4, 7], [5, 7], [1, 9], [5, 9], [8, 9], [5, 11], [7, 11], [4, 13], [11, 12], [7, 15]]
+      }
+    };
+
+    function gcd(a, b) {
+      a = Math.abs(a);
+      b = Math.abs(b);
+      while (b) {
+        const next = a % b;
+        a = b;
+        b = next;
+      }
+      return a || 1;
+    }
+
+    function createFraction(num, den) {
+      if (den === 1) return String(num);
+      return `<span class="fraction"><span class="fraction-numerator">${num}</span><span class="fraction-line"></span><span class="fraction-denominator">${den}</span></span>`;
+    }
+
+    function formatDecimal(value) {
+      const rounded = Math.round(value * 10000) / 10000;
+      return Number.isInteger(rounded) ? String(rounded) : String(rounded).replace(/0+$/, "").replace(/\.$/, "");
+    }
+
+    function formatPercentage(value) {
+      return `${formatDecimal(value * 100)}%`;
+    }
+
+    function generateProblem(isChallenge = false, usedFractions = []) {
+      const config = levelConfigs[currentLevel];
+      const hardFractions = [[1, 7], [2, 7], [5, 7], [1, 9], [2, 9], [8, 9], [5, 11], [7, 11]];
+      const basePool = isChallenge && currentLevel === "advanced" ? hardFractions : config.fractions;
+      let availableFractions = basePool.filter((fraction) => !usedFractions.some((used) => used[0] === fraction[0] && used[1] === fraction[1]));
+      if (!availableFractions.length) availableFractions = basePool;
+
+      const [num, den] = availableFractions[Math.floor(Math.random() * availableFractions.length)];
+      const decimal = num / den;
+      const givenType = ["fraction", "decimal", "percentage"][Math.floor(Math.random() * 3)];
+
+      return {
+        fraction: createFraction(num, den),
+        decimal: formatDecimal(decimal),
+        percentage: formatPercentage(decimal),
+        fractionData: [num, den],
+        given: givenType
+      };
+    }
+
+    function generateNewTable() {
+      problems = [];
+      const usedFractions = [];
+
+      for (let i = 0; i < 4; i += 1) {
+        const problem = generateProblem(false, usedFractions);
+        problems.push(problem);
+        usedFractions.push(problem.fractionData);
+      }
+
+      const challengeProblem = generateProblem(true, usedFractions);
+      problems.push(challengeProblem);
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById("table-body");
+      tbody.innerHTML = "";
+
+      problems.forEach((problem, index) => {
+        const row = document.createElement("tr");
+        const numberCell = document.createElement("td");
+        numberCell.innerHTML = `<div class="row-number">${index + 1}</div>`;
+        row.appendChild(numberCell);
+
+        ["fraction", "decimal", "percentage"].forEach((type) => {
+          const cell = document.createElement("td");
+          if (problem.given === type) {
+            cell.innerHTML = `<div class="given-value">${problem[type]}</div>`;
+          } else {
+            cell.innerHTML = `<button class="calculate-cell" type="button" aria-label="Reveal ${type}" onclick="revealCell(${index}, '${type}')"></button>`;
+          }
+          row.appendChild(cell);
+        });
+
+        tbody.appendChild(row);
+      });
+    }
+
+    function revealCell(problemIndex, type) {
+      const row = document.getElementById("table-body").children[problemIndex];
+      const cellIndex = { fraction: 1, decimal: 2, percentage: 3 }[type];
+      const calculateButton = row.children[cellIndex].querySelector(".calculate-cell");
+      if (!calculateButton || calculateButton.classList.contains("revealed")) return;
+      calculateButton.innerHTML = problems[problemIndex][type];
+      calculateButton.classList.add("revealed");
+    }
+
+    function showAllAnswers() {
+      problems.forEach((problem, index) => {
+        if (problem.given !== "fraction") revealCell(index, "fraction");
+        if (problem.given !== "decimal") revealCell(index, "decimal");
+        if (problem.given !== "percentage") revealCell(index, "percentage");
+      });
+    }
+
+    function hideAllAnswers() {
+      renderTable();
+    }
+
+    function switchLevel(level, button) {
+      currentLevel = level;
+      document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
+      button.classList.add("active");
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      generateNewTable();
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining -= 1;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerActive = false;
+      const timerElement = document.getElementById("timer-display");
+      timerElement.textContent = "Ready";
+      timerElement.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const timerElement = document.getElementById("timer-display");
+      timerElement.textContent = `${minutes}:${String(seconds).padStart(2, "0")}`;
+      if (timeRemaining <= 30) timerElement.className = "timer-display warning";
+      else if (timerActive) timerElement.className = "timer-display active";
+      else timerElement.className = "timer-display";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      const timerElement = document.getElementById("timer-display");
+      timerElement.textContent = "Time Up";
+      timerElement.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    generateNewTable();
+  </script>
+</body>
+</html>

@@ -1020,16 +1020,21 @@ const tools = [
   },
   {
     slug: "fractions-table",
-    title: "Fractions Table",
+    title: "Fraction Decimal Percentage Table",
     category: "Classroom Tools",
     level: "KS2 / KS3",
-    type: "Reference Tool",
+    type: "Conversion Tool",
     access: "Free",
-    status: "Legacy",
-    description: "A visual table for fraction equivalence and conversion.",
-    tags: ["classroom", "fractions", "reference"],
-    toolPath: "tools/fractions-table/index.html?v=worksheet-standard-3",
-    imported: false
+    status: "Imported",
+    description: "An interactive classroom table for converting between fractions, decimals, and percentages with revealable answers.",
+    tags: ["classroom", "fractions", "decimals", "percentages", "conversion", "equivalence"],
+    toolPath: "tools/fractions-table/index.html?v=fraction-table-1",
+    imported: true,
+    teacherNotes: [
+      "Students are given one representation and calculate the missing fraction, decimal, and percentage equivalents.",
+      "Basic, intermediate, and advanced levels move from common equivalences to recurring decimals and less familiar fractions.",
+      "Reveal individual cells for questioning, or show all answers for quick checking."
+    ]
   },
   {
     slug: "twenty4",
