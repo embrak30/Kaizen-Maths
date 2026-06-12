@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kaizen Maths">
+  <defs>
+    <linearGradient id="kaizenGradient" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6f4cc3"/>
+      <stop offset="1" stop-color="#13b8b5"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="url(#kaizenGradient)"/>
+  <text x="32" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="800" fill="#ffffff" opacity="0.22">改善</text>
+  <text x="32" y="43" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="900" fill="#ffffff">K</text>
+</svg>

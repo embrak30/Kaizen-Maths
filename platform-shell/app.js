@@ -611,7 +611,7 @@ const tools = [
     status: "Imported",
     description: "Generate logarithm practice covering log-index conversion, evaluation, logarithm laws, natural logs, change of base, and equation solving.",
     tags: ["algebra", "logarithms", "logs", "indices", "exponentials", "natural log", "change of base"],
-    toolPath: "tools/logarithms-practice/index.html?v=log-step-dot-1",
+    toolPath: "tools/logarithms-practice/index.html?v=log-evaluate-1",
     imported: true,
     teacherNotes: [
       "Level 1 builds fluency converting between logarithmic and index form.",

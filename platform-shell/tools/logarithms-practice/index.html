@@ -798,6 +798,14 @@
       return ' <span class="operation">·</span> ';
     }
 
+    function formatApprox(value) {
+      return Number(value.toFixed(3)).toString();
+    }
+
+    function logValue(base, argument) {
+      return Math.log(argument) / Math.log(base);
+    }
+
     function generateProblem() {
       let problem = {};
 
@@ -1076,22 +1084,27 @@
             const coefficient = random(2, 3);
             const constant = random(1, 4);
             const right = randomElement([7, 10, 11, 13]);
+            const exactAnswer = "[" + logTerm(base, right) + " - " + constant + "] / " + coefficient;
+            const decimalAnswer = formatApprox((logValue(base, right) - constant) / coefficient);
             problem = {
               badge: "complex",
               equation: "Solve: " + base + sup(coefficient + "x+" + constant) + " = " + right,
-              answer: "x = [" + logTerm(base, right) + " - " + constant + "] / " + coefficient,
+              answer: "x = " + exactAnswer + " &asymp; " + decimalAnswer,
               steps: [
                 stepLabel(1) + " Take log base " + base + " of both sides",
                 logTerm(base, base + sup(coefficient + "x+" + constant)) + " = " + logTerm(base, right),
                 stepLabel(2) + " Use inverse operations",
                 coefficient + "x + " + constant + " = " + logTerm(base, right),
                 stepLabel(3) + " Isolate x",
-                arrow("x = [" + logTerm(base, right) + " - " + constant + "] / " + coefficient)
+                "x = " + exactAnswer,
+                stepLabel(4) + " Evaluate the answer",
+                arrow("x &asymp; " + highlightIndex(decimalAnswer))
               ]
             };
           } else if (type === "quadratic_form") {
             const base = randomElement([2, 3]);
-            const secondSolution = base === 2 ? "2" : logTerm(3, 4);
+            const exactSecondSolution = base === 2 ? "2" : logTerm(3, 4);
+            const secondSolution = base === 2 ? "2" : logTerm(3, 4) + " &asymp; " + formatApprox(logValue(3, 4));
             problem = {
               badge: "complex",
               equation: "Solve: " + base + sup("2x") + " - 5" + base + sup("x") + " + 4 = 0",
@@ -1104,7 +1117,13 @@
                 stepLabel(3) + " Substitute back",
                 base + sup("x") + " = 1 or " + base + sup("x") + " = 4",
                 stepLabel(4) + " Solve each equation",
-                arrow("x = 0 or x = " + secondSolution)
+                "x = 0 or x = " + exactSecondSolution,
+                ...(base === 2
+                  ? [arrow("x = 0 or x = " + highlightIndex("2"))]
+                  : [
+                    stepLabel(5) + " Evaluate the logarithmic answer",
+                    arrow("x = 0 or x &asymp; " + highlightIndex(formatApprox(logValue(3, 4))))
+                  ])
               ]
             };
           } else {
