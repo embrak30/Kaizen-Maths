@@ -41,7 +41,7 @@
       </ul>
       <h3>Key Formulas</h3>
       <ul>
-        <li><strong>Gradient:</strong> m = <span class="fraction"><span class="numerator">y2 - y1</span><span class="denominator">x2 - x1</span></span></li>
+        <li><strong>Gradient:</strong> m = <span class="fraction"><span class="numerator">y<sub>2</sub> - y<sub>1</sub></span><span class="denominator">x<sub>2</sub> - x<sub>1</sub></span></span></li>
         <li><strong>Equation forms:</strong> y = mx + c and ax + by + c = 0.</li>
         <li><strong>Parallel lines:</strong> Same gradient.</li>
         <li><strong>Perpendicular lines:</strong> Gradients multiply to -1.</li>
@@ -121,6 +121,7 @@
     function fracHTML(num,den){ const f=frac(num,den); if(f.d===0) return 'undefined'; if(f.d===1) return String(f.n); return '<span class="fraction"><span class="numerator">'+f.n+'</span><span class="denominator">'+f.d+'</span></span>'; }
     function signedNumber(n){ return n >= 0 ? ' + ' + n : ' - ' + Math.abs(n); }
     function coord(x,y){ return '<span class="coordinate">(' + x + ', ' + y + ')</span>'; }
+    function gradientFormulaHTML(){ return '<span class="fraction"><span class="numerator">y<sub>2</sub> - y<sub>1</sub></span><span class="denominator">x<sub>2</sub> - x<sub>1</sub></span></span>'; }
     function coeffX(num,den){
       const f=frac(num,den);
       if(f.n===0) return '';
@@ -167,7 +168,7 @@
       return {
         equation: 'Find the gradient of the line passing through ' + coord(x1,y1) + ' and ' + coord(x2,y2),
         answer: 'm = ' + m,
-        steps: ['Use the gradient formula: m = <span class="fraction"><span class="numerator">y2 - y1</span><span class="denominator">x2 - x1</span></span>', 'Point 1: ('+x1+', '+y1+'), point 2: ('+x2+', '+y2+')', 'm = <span class="fraction"><span class="numerator">'+y2+' - ('+y1+')</span><span class="denominator">'+x2+' - ('+x1+')</span></span>', 'm = <span class="fraction"><span class="numerator">'+dy+'</span><span class="denominator">'+dx+'</span></span>', 'm = ' + m]
+        steps: ['Use the gradient formula: m = ' + gradientFormulaHTML(), 'Point 1: ('+x1+', '+y1+'), point 2: ('+x2+', '+y2+')', 'm = <span class="fraction"><span class="numerator">'+y2+' - ('+y1+')</span><span class="denominator">'+x2+' - ('+x1+')</span></span>', 'm = <span class="fraction"><span class="numerator">'+dy+'</span><span class="denominator">'+dx+'</span></span>', 'm = ' + m]
       };
     }
 

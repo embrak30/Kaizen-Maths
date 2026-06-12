@@ -46,7 +46,7 @@ const tools = [
     status: "Imported",
     description: "Generate straight-line questions covering gradients, intercepts, equations, intersections, and parallel or perpendicular lines.",
     tags: ["algebra", "coordinate geometry", "straight lines", "gradient", "intercepts", "linear graphs"],
-    toolPath: "tools/straight-lines/index.html?v=worksheet-standard-3",
+    toolPath: "tools/straight-lines/index.html?v=straight-lines-fraction-1",
     imported: true,
     teacherNotes: [
       "Four levels move from gradient and intercept fluency into equation finding and line relationships.",
@@ -1260,10 +1260,18 @@ function worksheetContentHtml(value) {
     worksheetFraction.className = "worksheet-fraction";
 
     const worksheetNumerator = document.createElement("span");
-    worksheetNumerator.innerHTML = numerator.innerHTML;
+    if (numerator.querySelector("sub, sup")) {
+      worksheetNumerator.innerHTML = numerator.innerHTML;
+    } else {
+      worksheetNumerator.appendChild(worksheetMathFragment(numerator.textContent || numerator.innerHTML));
+    }
 
     const worksheetDenominator = document.createElement("span");
-    worksheetDenominator.innerHTML = denominator.innerHTML;
+    if (denominator.querySelector("sub, sup")) {
+      worksheetDenominator.innerHTML = denominator.innerHTML;
+    } else {
+      worksheetDenominator.appendChild(worksheetMathFragment(denominator.textContent || denominator.innerHTML));
+    }
 
     worksheetFraction.append(worksheetNumerator, worksheetDenominator);
     fraction.replaceWith(worksheetFraction);
