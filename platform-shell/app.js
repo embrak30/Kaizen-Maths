@@ -1033,16 +1033,21 @@ const tools = [
   },
   {
     slug: "twenty4",
-    title: "TWENTY4",
+    title: "Ninja Math Challenge",
     category: "Classroom Tools",
     level: "All",
-    type: "Game",
-    access: "Pro",
-    status: "Legacy",
-    description: "A number operations game for flexible arithmetic thinking.",
-    tags: ["classroom", "game", "number sense"],
-    toolPath: "tools/twenty4/index.html?v=worksheet-standard-3",
-    imported: false
+    type: "Number Game",
+    access: "Free",
+    status: "Imported",
+    description: "A 24-style number challenge where students combine four numbers with operations to make 24 before the timer runs out.",
+    tags: ["classroom", "game", "24 game", "number sense", "operations", "mental maths"],
+    toolPath: "tools/twenty4/index.html?v=ninja-math-1",
+    imported: true,
+    teacherNotes: [
+      "Students use each of the four numbers once and combine them with operations to make 24.",
+      "The generated number sets are checked for an integer-only solution before they appear.",
+      "Use it as a quick starter, plenary, or whole-class arithmetic reasoning challenge."
+    ]
   }
 ];
 
