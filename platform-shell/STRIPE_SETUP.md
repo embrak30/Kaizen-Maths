@@ -22,10 +22,12 @@ When Stripe confirms an active subscription, the webhook sets the user role to `
 
 Create two recurring prices in Stripe:
 
-- Teacher Monthly
-- Teacher Annual
+- Kaizen Maths Teacher Monthly: £7.99/month
+- Kaizen Maths Teacher Annual: £69/year
 
 Copy the two Stripe price IDs. They look like `price_...`.
+
+School pilot access is manual for now, suggested from £299/year. Set school users to `school` in Supabase/Admin after arranging access.
 
 ## 3. Vercel Environment Variables
 

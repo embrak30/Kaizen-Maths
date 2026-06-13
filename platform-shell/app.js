@@ -2606,22 +2606,22 @@ function renderUpgrade() {
         <article class="panel pricing-card">
           <span class="eyebrow">Individual Teacher</span>
           <h2>Monthly</h2>
-          <p class="pricing-price">Set in Stripe</p>
+          <p class="pricing-price">£7.99/month</p>
           <p>Flexible access for one teacher. Use the full topic library, board-ready generators, worked solutions, worksheet builder, and assessment practice.</p>
           <button class="button primary" type="button" data-checkout-plan="monthly">Start Monthly Plan</button>
         </article>
         <article class="panel pricing-card featured">
           <span class="eyebrow">Individual Teacher</span>
           <h2>Annual</h2>
-          <p class="pricing-price">Set in Stripe</p>
+          <p class="pricing-price">£69/year</p>
           <p>Best for teachers who want full access across the year for planning, classroom practice, homework, revision, intervention, and assessment.</p>
           <button class="button primary" type="button" data-checkout-plan="annual">Start Annual Plan</button>
         </article>
         <article class="panel pricing-card">
           <span class="eyebrow">School Licence</span>
-          <h2>School Access</h2>
-          <p class="pricing-price">Manual setup</p>
-          <p>For departments or whole-school access. Keep this as a manual conversation while the platform is still being tested with institutions.</p>
+          <h2>School Pilot</h2>
+          <p class="pricing-price">From £299/year</p>
+          <p>Manual setup for departments or whole-school access during the pilot stage. Best for schools that want several teachers to test the full virtual textbook.</p>
           <a class="button" href="#/teacher">View Teacher Notes</a>
         </article>
       </section>
