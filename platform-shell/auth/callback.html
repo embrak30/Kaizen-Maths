@@ -33,16 +33,27 @@
 <body>
   <main>
     <h1>Signing you in...</h1>
-    <p>You will be returned to Kaizen Maths in a moment.</p>
+    <p id="status">You will be returned to Kaizen Maths in a moment.</p>
   </main>
-  <script src="../auth-config.js?v=auth-foundation-5"></script>
+  <script src="../auth-config.js?v=auth-foundation-9"></script>
   <script type="module">
     const config = window.KAIZEN_AUTH_CONFIG || {};
     const homeUrl = new URL("/#/", window.location.origin).toString();
+    const status = document.getElementById("status");
+
+    function showError(message) {
+      document.querySelector("h1").textContent = "Sign-in needs one more check";
+      const diagnostic = [
+        `Current URL: ${window.location.href}`,
+        `Search: ${window.location.search || "(empty)"}`,
+        `Hash: ${window.location.hash || "(empty)"}`
+      ].join("<br>");
+      status.innerHTML = `${message}<br><br><code>${diagnostic}</code><br><br><strong>Copy this message and send it to Codex.</strong>`;
+    }
 
     async function finishSignIn() {
       if (!config.supabaseUrl || !config.supabaseAnonKey) {
-        window.location.replace(homeUrl);
+        showError("Supabase is not configured on this site.");
         return;
       }
 
@@ -58,7 +69,10 @@
       const params = new URLSearchParams(window.location.search);
       if (params.has("code")) {
         const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
-        if (error) console.warn("Kaizen sign-in callback:", error.message);
+        if (error) {
+          showError(`Callback exchange failed: ${error.message}`);
+          return;
+        }
       }
 
       const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
@@ -69,17 +83,28 @@
           access_token: accessToken,
           refresh_token: refreshToken
         });
-        if (error) console.warn("Kaizen sign-in session:", error.message);
+        if (error) {
+          showError(`Session save failed: ${error.message}`);
+          return;
+        }
       }
 
-      await supabase.auth.getSession();
+      const { data, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        showError(`Session check failed: ${sessionError.message}`);
+        return;
+      }
+
+      if (!data.session) {
+        showError("No Supabase session was created. Check that Google Provider is enabled and saved in Supabase.");
+        return;
+      }
 
       window.location.replace(homeUrl);
     }
 
     finishSignIn().catch((error) => {
-      console.warn("Kaizen sign-in callback:", error.message);
-      window.location.replace(homeUrl);
+      showError(`Unexpected callback error: ${error.message}`);
     });
   </script>
 </body>

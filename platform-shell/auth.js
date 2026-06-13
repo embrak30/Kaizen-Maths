@@ -81,8 +81,13 @@
     return new URL(path, window.location.origin).toString();
   }
 
-  function supabaseAuthUrl() {
-    return String(config.supabaseUrl || "").replace(/\/+$/, "");
+  function withTimeout(promise, timeoutMs, message) {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        window.setTimeout(() => reject(new Error(message)), timeoutMs);
+      })
+    ]);
   }
 
   async function loadSupabase() {
@@ -142,12 +147,15 @@
       return null;
     }
 
-    const client = await loadSupabase();
-    const { data } = await client.auth.getSession();
+    const client = await withTimeout(loadSupabase(), 6000, "Supabase client timed out");
+    const { data } = await withTimeout(client.auth.getSession(), 6000, "Supabase session check timed out");
     state.session = data.session;
 
     if (state.session?.user) {
-      state.profile = await ensureProfile(state.session.user);
+      state.profile = await withTimeout(ensureProfile(state.session.user), 6000, "Profile lookup timed out").catch((error) => {
+        console.warn("Kaizen profile check skipped:", error.message);
+        return null;
+      });
       setAccountUi("signed-in", state.session.user);
     } else {
       state.profile = null;
@@ -161,13 +169,17 @@
       setAccountUi("not-configured");
       return;
     }
-    const params = new URLSearchParams({
+    const client = await loadSupabase();
+    await client.auth.signInWithOAuth({
       provider: "google",
-      redirect_to: redirectUrl(),
-      access_type: "offline",
-      prompt: "consent"
+      options: {
+        redirectTo: redirectUrl(),
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent"
+        }
+      }
     });
-    window.location.assign(`${supabaseAuthUrl()}/auth/v1/authorize?${params.toString()}`);
   }
 
   async function signOut() {
@@ -180,24 +192,40 @@
 
   async function initAuth() {
     setAccountUi("loading");
+    window.setTimeout(() => {
+      const { pill } = accountElements();
+      if (pill?.dataset.authState === "loading") {
+        console.warn("Kaizen auth check timed out.");
+        setAccountUi(state.configured ? "signed-out" : "not-configured");
+      }
+    }, 8000);
+
     if (!state.configured) {
       setAccountUi("not-configured");
       return;
     }
 
-    const client = await loadSupabase();
-    client.auth.onAuthStateChange(async (_event, session) => {
-      state.session = session;
-      if (session?.user) {
-        state.profile = await ensureProfile(session.user);
-        setAccountUi("signed-in", session.user);
-      } else {
-        state.profile = null;
-        setAccountUi("signed-out");
-      }
-      window.dispatchEvent(new CustomEvent("kaizen-auth-change", { detail: { session, profile: state.profile } }));
-    });
-    await refreshSession();
+    try {
+      const client = await withTimeout(loadSupabase(), 6000, "Supabase client timed out");
+      client.auth.onAuthStateChange(async (_event, session) => {
+        state.session = session;
+        if (session?.user) {
+          state.profile = await withTimeout(ensureProfile(session.user), 6000, "Profile lookup timed out").catch((error) => {
+            console.warn("Kaizen profile check skipped:", error.message);
+            return null;
+          });
+          setAccountUi("signed-in", session.user);
+        } else {
+          state.profile = null;
+          setAccountUi("signed-out");
+        }
+        window.dispatchEvent(new CustomEvent("kaizen-auth-change", { detail: { session, profile: state.profile } }));
+      });
+      await refreshSession();
+    } catch (error) {
+      console.warn("Kaizen auth unavailable:", error.message);
+      setAccountUi("signed-out");
+    }
   }
 
   window.KaizenAuth = {
