@@ -17,8 +17,8 @@
     .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
     .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:700;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
     .problems-section{padding:18px 24px 24px;min-height:520px}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:650}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.standard{background:#38a169}.problem-set-header.general{background:#3182ce}.problem-set-header.inverse{background:#805ad5}
-    .problem-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px}.problem-item{background:#f7fafc;padding:13px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:205px}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.08em;color:#1a365d;font-weight:500;line-height:1.35;min-width:0}.math-line{display:block;margin:.18rem 0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.98em;display:none;text-align:center;max-width:220px}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
-    .curve-wrap{margin-top:8px;background:white;border:1px solid #d8e2ef;border-radius:7px;padding:6px;overflow:hidden}.curve-wrap svg{width:100%;height:auto;display:block}.axis-label{font-size:9px;fill:#1a365d;font-weight:700}.shade{fill:rgba(49,130,206,.28)}.curve{fill:none;stroke:#1a365d;stroke-width:2.2}.base-line{stroke:#64748b;stroke-width:1.2}.marker{stroke:#e53e3e;stroke-width:1.7}.mean-marker{stroke:#38a169;stroke-width:1.5;stroke-dasharray:4 3}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:10px}.problem-item{background:#f7fafc;padding:13px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.18em;color:#1a365d;font-weight:500;line-height:1.35;min-width:0}.math-line{display:block;margin:.18rem 0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.98em;display:none;text-align:center;max-width:220px}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .curve-wrap{margin-top:8px;background:white;border:1px solid #d8e2ef;border-radius:7px;padding:6px;overflow:hidden}.curve-wrap svg{width:100%;height:auto;display:block}.axis-label{font-size:9px;fill:#1a365d;font-weight:700}.shade{display:none}.curve{fill:none;stroke:#1a365d;stroke-width:2.2}.base-line{stroke:#64748b;stroke-width:1.2}.marker{stroke:#e53e3e;stroke-width:1.7}.mean-marker{stroke:#38a169;stroke-width:1.5;stroke-dasharray:4 3}
     .steps-section{grid-column:1/-1;margin-top:10px;padding:12px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#38a169;margin-bottom:8px;font-size:1em}.solution-steps{font-size:1em;line-height:1.45}.step{margin:6px 0;color:#1a365d}.step-equation{font-weight:650;color:#805ad5;text-align:center;margin:8px 0;font-size:1.08em}.final-answer{background:#38a169;color:white;padding:8px 15px;border-radius:6px;text-align:center;font-weight:bold;font-size:1.05em;margin-top:10px}.step-diagram{max-width:360px;margin:8px auto}
     .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}.step-indicator{background:#3182ce;color:white;padding:4px 8px;border-radius:4px;font-size:.88em;font-weight:bold;margin-right:8px;white-space:nowrap}.step-arrow{font-size:1.25em;color:#3182ce;margin:0 8px}.note{color:#718096;font-size:.9em}
     @media (max-width:900px){.problem-list{grid-template-columns:1fr}.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.type-dropdown{min-width:260px;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
@@ -43,7 +43,7 @@
       </ul>
       <h3>Teaching Notes</h3>
       <ul>
-        <li>Students should identify the shaded region before using tables or technology.</li>
+        <li>Students should identify the relevant tail, interval, or cut-off before using tables or technology.</li>
         <li>Worked steps deliberately show the standardisation and the table lookup separately.</li>
         <li>For inverse questions, encourage students to decide whether the probability is left-tail or right-tail before finding z.</li>
         <li>For parameter questions, set up x = μ + zσ and solve the resulting equation or pair of equations.</li>
@@ -259,42 +259,21 @@
 
     function curveSvg(options = {}) {
       const marks = options.marks || [];
-      const shade = options.shade || "left";
       const labelMode = options.labelMode || "z";
       const width = 330, height = 110, baseY = 88, topY = 18, left = 24, right = 306;
       const xOfZ = (z) => left + ((Math.max(-3, Math.min(3, z)) + 3) / 6) * (right - left);
       const curvePath = "M24 88 C55 88 66 86 86 74 C111 58 127 24 165 24 C203 24 219 58 244 74 C264 86 275 88 306 88";
-      function areaPath(type) {
-        if (type === "right") {
-          const z = marks[0]?.z ?? 0;
-          const x = xOfZ(z);
-          return "M" + x + " 88 C" + (x + 28) + " 72 " + (x + 54) + " 88 306 88 L306 88 L" + x + " 88 Z";
-        }
-        if (type === "between") {
-          const x1 = xOfZ(marks[0]?.z ?? -1);
-          const x2 = xOfZ(marks[1]?.z ?? 1);
-          return "M" + x1 + " 88 C" + ((x1+x2)/2 - 30) + " 22 " + ((x1+x2)/2 + 30) + " 22 " + x2 + " 88 Z";
-        }
-        if (type === "outside") {
-          const x1 = xOfZ(marks[0]?.z ?? -1);
-          const x2 = xOfZ(marks[1]?.z ?? 1);
-          return "M24 88 C55 88 68 86 " + x1 + " 88 Z M" + x2 + " 88 C270 86 286 88 306 88 Z";
-        }
-        const z = marks[0]?.z ?? 0;
-        const x = xOfZ(z);
-        return "M24 88 C62 88 84 78 " + x + " 88 L24 88 Z";
-      }
       const labels = marks.map((mark) => {
         const x = xOfZ(mark.z);
         const label = mark.label || (labelMode === "x" ? mark.x : zText(mark.z));
         return '<line class="marker" x1="' + x + '" y1="88" x2="' + x + '" y2="25"></line><text class="axis-label" x="' + x + '" y="104" text-anchor="middle">' + label + '</text>';
       }).join("");
       const meanX = xOfZ(0);
-      return '<div class="curve-wrap"><svg viewBox="0 0 330 112" role="img" aria-label="Normal distribution curve"><path class="shade" d="' + areaPath(shade) + '"></path><path class="curve" d="' + curvePath + '"></path><line class="base-line" x1="20" y1="88" x2="310" y2="88"></line><line class="mean-marker" x1="' + meanX + '" y1="88" x2="' + meanX + '" y2="28"></line><text class="axis-label" x="' + meanX + '" y="104" text-anchor="middle">mean</text>' + labels + '</svg></div>';
+      return '<div class="curve-wrap"><svg viewBox="0 0 330 112" role="img" aria-label="Normal distribution curve"><path class="curve" d="' + curvePath + '"></path><line class="base-line" x1="20" y1="88" x2="310" y2="88"></line><line class="mean-marker" x1="' + meanX + '" y1="88" x2="' + meanX + '" y2="28"></line><text class="axis-label" x="' + meanX + '" y="104" text-anchor="middle">mean</text>' + labels + '</svg></div>';
     }
 
     function stepCurve(options) {
-      return '<div class="step-diagram">' + curveSvg(options) + '</div>';
+      return '<div class="step-diagram kaizen-step-explicit"><span class="step-indicator">Diagram</span>' + curveSvg(options) + '</div>';
     }
 
     function generateProblem() {
@@ -318,13 +297,12 @@
     function genStandardLeft() {
       const z = randomElement(zPool);
       const probability = phi(z);
-      const diagram = curveSvg({ shade: "left", marks: [{ z, label: "z=" + zText(z) }] });
       return {
         badge: "standard",
-        equation: '<span class="math-line">For Z ~ N(0, 1), find P(Z < ' + zText(z) + ').</span>' + diagram,
+        equation: '<span class="math-line">For Z ~ N(0, 1), find P(Z < ' + zText(z) + ').</span>',
         answer: fmt(probability),
         steps: [
-          '<span class="step-indicator">Step 1</span> Recognise this as a left-tail standard normal probability.',
+          '<span class="step-indicator">Guide</span> Recognise this as a left-tail standard normal probability.',
           stepCurve({ shade: "left", marks: [{ z, label: "z=" + zText(z) }] }),
           "P(Z < " + zText(z) + ") = Φ(" + zText(z) + ").",
           "Look up Φ(" + zText(z) + ") using a standard normal table or calculator.",
@@ -337,13 +315,12 @@
     function genStandardRight() {
       const z = randomElement(positiveZ);
       const probability = 1 - phi(z);
-      const diagram = curveSvg({ shade: "right", marks: [{ z, label: "z=" + zText(z) }] });
       return {
         badge: "standard",
-        equation: '<span class="math-line">For Z ~ N(0, 1), find P(Z > ' + zText(z) + ').</span>' + diagram,
+        equation: '<span class="math-line">For Z ~ N(0, 1), find P(Z > ' + zText(z) + ').</span>',
         answer: fmt(probability),
         steps: [
-          '<span class="step-indicator">Step 1</span> Draw or imagine the right tail.',
+          '<span class="step-indicator">Guide</span> Draw or imagine the right tail.',
           stepCurve({ shade: "right", marks: [{ z, label: "z=" + zText(z) }] }),
           "P(Z > " + zText(z) + ") = 1 - P(Z < " + zText(z) + ").",
           "P(Z > " + zText(z) + ") = 1 - Φ(" + zText(z) + ").",
@@ -358,13 +335,12 @@
       const z1 = randomElement([-1.96,-1.64,-1.28,-1.10,-0.84,-0.67]);
       const z2 = randomElement([0.67,0.84,1.10,1.28,1.64,1.96]);
       const probability = phi(z2) - phi(z1);
-      const diagram = curveSvg({ shade: "between", marks: [{ z: z1, label: zText(z1) }, { z: z2, label: zText(z2) }] });
       return {
         badge: "standard",
-        equation: '<span class="math-line">For Z ~ N(0, 1), find P(' + zText(z1) + ' < Z < ' + zText(z2) + ').</span>' + diagram,
+        equation: '<span class="math-line">For Z ~ N(0, 1), find P(' + zText(z1) + ' < Z < ' + zText(z2) + ').</span>',
         answer: fmt(probability),
         steps: [
-          '<span class="step-indicator">Step 1</span> The required region is between two z-values.',
+          '<span class="step-indicator">Guide</span> The required region is between two z-values.',
           stepCurve({ shade: "between", marks: [{ z: z1, label: zText(z1) }, { z: z2, label: zText(z2) }] }),
           "P(" + zText(z1) + " < Z < " + zText(z2) + ") = Φ(" + zText(z2) + ") - Φ(" + zText(z1) + ").",
           "From tables/calculator: Φ(" + zText(z2) + ") ≈ " + fmt(phi(z2)) + ", and Φ(" + zText(z1) + ") ≈ " + fmt(phi(z1)) + ".",
@@ -377,13 +353,12 @@
     function genInverseZ() {
       const p = randomElement([0.0228,0.0668,0.1056,0.1587,0.2005,0.3085,0.6915,0.7995,0.8413,0.8944,0.9332,0.9772]);
       const z = invNorm(p);
-      const diagram = curveSvg({ shade: "left", marks: [{ z, label: "z" }] });
       return {
         badge: "standard",
-        equation: '<span class="math-line">For Z ~ N(0, 1), find z such that P(Z < z) = ' + fmt(p) + '.</span>' + diagram,
+        equation: '<span class="math-line">For Z ~ N(0, 1), find z such that P(Z < z) = ' + fmt(p) + '.</span>',
         answer: "z = " + zText(z),
         steps: [
-          '<span class="step-indicator">Step 1</span> This is an inverse standard normal question.',
+          '<span class="step-indicator">Guide</span> This is an inverse standard normal question.',
           stepCurve({ shade: "left", marks: [{ z, label: "z" }] }),
           "We need Φ(z) = " + fmt(p) + ".",
           "Use inverse normal tables or a calculator: z = Φ⁻¹(" + fmt(p) + ").",
@@ -402,15 +377,14 @@
       const probability = right ? 1 - phi(z) : phi(z);
       const sign = right ? ">" : "<";
       const shade = right ? "right" : "left";
-      const diagram = curveSvg({ shade, labelMode: "x", marks: [{ z, label: fmt1(x) }] });
       return {
         badge: "general",
-        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find P(X ' + sign + ' ' + fmt1(x) + ').</span>' + diagram,
+        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find P(X ' + sign + ' ' + fmt1(x) + ').</span>',
         answer: fmt(probability),
         steps: [
-          '<span class="step-indicator">Step 1</span> Identify the mean and standard deviation.',
+          '<span class="step-indicator">Guide</span> Identify the mean and standard deviation.',
           "μ = " + mu + ", σ² = " + (sigma * sigma) + ", so σ = " + sigma + ".",
-          '<span class="step-indicator">Step 2</span> Standardise the boundary value.',
+          '<span class="step-indicator">Guide</span> Standardise the boundary value.',
           "Z = (X - μ) / σ = (" + fmt1(x) + " - " + mu + ") / " + sigma + " = " + zText(z) + ".",
           stepCurve({ shade, labelMode: "x", marks: [{ z, label: "x=" + fmt1(x) }] }),
           right ? "P(X > " + fmt1(x) + ") = P(Z > " + zText(z) + ")." : "P(X < " + fmt1(x) + ") = P(Z < " + zText(z) + ").",
@@ -429,13 +403,12 @@
       const a = xFromZ(mu, sigma, z1);
       const b = xFromZ(mu, sigma, z2);
       const probability = phi(z2) - phi(z1);
-      const diagram = curveSvg({ shade: "between", labelMode: "x", marks: [{ z: z1, label: fmt1(a) }, { z: z2, label: fmt1(b) }] });
       return {
         badge: "general",
-        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find P(' + fmt1(a) + ' < X < ' + fmt1(b) + ').</span>' + diagram,
+        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find P(' + fmt1(a) + ' < X < ' + fmt1(b) + ').</span>',
         answer: fmt(probability),
         steps: [
-          '<span class="step-indicator">Step 1</span> Standardise both boundary values.',
+          '<span class="step-indicator">Guide</span> Standardise both boundary values.',
           "z₁ = (" + fmt1(a) + " - " + mu + ") / " + sigma + " = " + zText(z1) + ".",
           "z₂ = (" + fmt1(b) + " - " + mu + ") / " + sigma + " = " + zText(z2) + ".",
           stepCurve({ shade: "between", labelMode: "x", marks: [{ z: z1, label: "a" }, { z: z2, label: "b" }] }),
@@ -453,17 +426,16 @@
       const p = randomElement([0.10,0.15,0.20,0.25,0.75,0.80,0.85,0.90]);
       const z = invNorm(p);
       const x = xFromZ(mu, sigma, z);
-      const diagram = curveSvg({ shade: "left", labelMode: "x", marks: [{ z, label: "a" }] });
       return {
         badge: "general",
-        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find a such that P(X < a) = ' + fmt(p) + '.</span>' + diagram,
+        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find a such that P(X < a) = ' + fmt(p) + '.</span>',
         answer: "a = " + fmt1(x),
         steps: [
-          '<span class="step-indicator">Step 1</span> Convert the left-tail probability into a z-value.',
+          '<span class="step-indicator">Guide</span> Convert the left-tail probability into a z-value.',
           "P(X < a) = " + fmt(p) + " means P(Z < z) = " + fmt(p) + ".",
           "z = Φ⁻¹(" + fmt(p) + ") ≈ " + zText(z) + ".",
           stepCurve({ shade: "left", labelMode: "x", marks: [{ z, label: "a" }] }),
-          '<span class="step-indicator">Step 2</span> Convert back from z to x.',
+          '<span class="step-indicator">Guide</span> Convert back from z to x.',
           "x = μ + zσ.",
           "a = " + mu + " + (" + zText(z) + ")(" + sigma + ") = " + fmt1(x) + ".",
           '<span class="step-arrow">-></span> a = ' + fmt1(x)
@@ -479,16 +451,15 @@
       const leftX = mu - d;
       const rightX = mu + d;
       const probability = 2 * (1 - phi(c));
-      const diagram = curveSvg({ shade: "outside", labelMode: "x", marks: [{ z: -c, label: fmt1(leftX) }, { z: c, label: fmt1(rightX) }] });
       return {
         badge: "general",
-        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find P(|X - ' + mu + '| > ' + fmt1(d) + ').</span>' + diagram,
+        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find P(|X - ' + mu + '| > ' + fmt1(d) + ').</span>',
         answer: fmt(probability),
         steps: [
-          '<span class="step-indicator">Step 1</span> Split the absolute-value statement into two tails.',
+          '<span class="step-indicator">Guide</span> Split the absolute-value statement into two tails.',
           "|X - " + mu + "| > " + fmt1(d) + " means X < " + fmt1(leftX) + " or X > " + fmt1(rightX) + ".",
           stepCurve({ shade: "outside", labelMode: "x", marks: [{ z: -c, label: "left" }, { z: c, label: "right" }] }),
-          '<span class="step-indicator">Step 2</span> Standardise both boundaries.',
+          '<span class="step-indicator">Guide</span> Standardise both boundaries.',
           "z₁ = (" + fmt1(leftX) + " - " + mu + ") / " + sigma + " = -" + c.toFixed(2) + ", and z₂ = (" + fmt1(rightX) + " - " + mu + ") / " + sigma + " = " + c.toFixed(2) + ".",
           "P(|X - " + mu + "| > " + fmt1(d) + ") = P(Z < -" + c.toFixed(2) + ") + P(Z > " + c.toFixed(2) + ").",
           "= 2(1 - Φ(" + c.toFixed(2) + ")) = " + fmt(probability) + ".",
@@ -507,15 +478,14 @@
       const z = randomElement([-1.64,-1.28,-0.84,0.84,1.28,1.64]);
       const x = xFromZ(mu, sigma, z);
       const p = phi(z);
-      const diagram = curveSvg({ shade: "left", labelMode: "x", marks: [{ z, label: fmt1(x) }] });
       return {
         badge: "inverse",
-        equation: '<span class="math-line">' + unknownNormalNotation(sigma * sigma) + ' and P(X < ' + fmt1(x) + ') = ' + fmt(p) + '. Find μ.</span>' + diagram,
+        equation: '<span class="math-line">' + unknownNormalNotation(sigma * sigma) + ' and P(X < ' + fmt1(x) + ') = ' + fmt(p) + '. Find μ.</span>',
         answer: "μ = " + fmt1(mu),
         steps: [
-          '<span class="step-indicator">Step 1</span> Convert the probability to a z-value.',
+          '<span class="step-indicator">Guide</span> Convert the probability to a z-value.',
           "P(X < " + fmt1(x) + ") = " + fmt(p) + ", so z = Φ⁻¹(" + fmt(p) + ") ≈ " + zText(z) + ".",
-          '<span class="step-indicator">Step 2</span> Use the standardisation equation.',
+          '<span class="step-indicator">Guide</span> Use the standardisation equation.',
           "z = (x - μ) / σ.",
           zText(z) + " = (" + fmt1(x) + " - μ) / " + sigma + ".",
           fmt1(x) + " - μ = (" + zText(z) + ")(" + sigma + ").",
@@ -531,16 +501,15 @@
       const z = randomElement([0.84,1.10,1.28,1.64,1.96]);
       const x = xFromZ(mu, sigma, z);
       const pRight = 1 - phi(z);
-      const diagram = curveSvg({ shade: "right", labelMode: "x", marks: [{ z, label: fmt1(x) }] });
       return {
         badge: "inverse",
-        equation: '<span class="math-line">' + varianceUnknownNotation(mu) + ' and P(X > ' + fmt1(x) + ') = ' + fmt(pRight) + '. Find σ.</span>' + diagram,
+        equation: '<span class="math-line">' + varianceUnknownNotation(mu) + ' and P(X > ' + fmt1(x) + ') = ' + fmt(pRight) + '. Find σ.</span>',
         answer: "σ = " + fmt1(sigma),
         steps: [
-          '<span class="step-indicator">Step 1</span> Change the right-tail probability into a left-tail probability.',
+          '<span class="step-indicator">Guide</span> Change the right-tail probability into a left-tail probability.',
           "P(X > " + fmt1(x) + ") = " + fmt(pRight) + ", so P(X < " + fmt1(x) + ") = 1 - " + fmt(pRight) + " = " + fmt(phi(z)) + ".",
           "z = Φ⁻¹(" + fmt(phi(z)) + ") ≈ " + zText(z) + ".",
-          '<span class="step-indicator">Step 2</span> Use the standardisation equation.',
+          '<span class="step-indicator">Guide</span> Use the standardisation equation.',
           zText(z) + " = (" + fmt1(x) + " - " + mu + ") / σ.",
           zText(z) + "σ = " + fmt1(x - mu) + ".",
           "σ = " + fmt1(x - mu) + " / " + zText(z) + " = " + fmt1(sigma) + ".",
@@ -558,22 +527,21 @@
       const b = xFromZ(mu, sigma, z2);
       const p1 = phi(z1);
       const pRight = 1 - phi(z2);
-      const diagram = curveSvg({ shade: "between", labelMode: "x", marks: [{ z: z1, label: fmt1(a) }, { z: z2, label: fmt1(b) }] });
       return {
         badge: "inverse",
-        equation: '<span class="math-line">' + unknownBothNotation() + ', P(X < ' + fmt1(a) + ') = ' + fmt(p1) + ', and P(X > ' + fmt1(b) + ') = ' + fmt(pRight) + '. Find μ and σ.</span>' + diagram,
+        equation: '<span class="math-line">' + unknownBothNotation() + ', P(X < ' + fmt1(a) + ') = ' + fmt(p1) + ', and P(X > ' + fmt1(b) + ') = ' + fmt(pRight) + '. Find μ and σ.</span>',
         answer: "μ = " + fmt1(mu) + ", σ = " + fmt1(sigma),
         steps: [
-          '<span class="step-indicator">Step 1</span> Convert each probability into a z-value.',
+          '<span class="step-indicator">Guide</span> Convert each probability into a z-value.',
           "P(X < " + fmt1(a) + ") = " + fmt(p1) + ", so z₁ = Φ⁻¹(" + fmt(p1) + ") ≈ " + zText(z1) + ".",
           "P(X > " + fmt1(b) + ") = " + fmt(pRight) + ", so P(X < " + fmt1(b) + ") = " + fmt(phi(z2)) + " and z₂ ≈ " + zText(z2) + ".",
-          '<span class="step-indicator">Step 2</span> Write two equations using x = μ + zσ.',
+          '<span class="step-indicator">Guide</span> Write two equations using x = μ + zσ.',
           fmt1(a) + " = μ + (" + zText(z1) + ")σ.",
           fmt1(b) + " = μ + (" + zText(z2) + ")σ.",
-          '<span class="step-indicator">Step 3</span> Subtract the equations to find σ.',
+          '<span class="step-indicator">Guide</span> Subtract the equations to find σ.',
           fmt1(b) + " - " + fmt1(a) + " = (" + zText(z2) + " - (" + zText(z1) + "))σ.",
           "σ = " + fmt1(b - a) + " / " + (z2 - z1).toFixed(2) + " = " + fmt1(sigma) + ".",
-          '<span class="step-indicator">Step 4</span> Substitute back to find μ.',
+          '<span class="step-indicator">Guide</span> Substitute back to find μ.',
           "μ = " + fmt1(a) + " - (" + zText(z1) + ")(" + fmt1(sigma) + ") = " + fmt1(mu) + ".",
           '<span class="step-arrow">-></span> μ = ' + fmt1(mu) + ", σ = " + fmt1(sigma)
         ]
@@ -615,7 +583,7 @@
       problems = [];
       answersVisible = false;
       stepsVisible = false;
-      const numProblems = currentLevel === 3 || currentType === "absolute_value" ? 3 : 4;
+      const numProblems = 5;
       for (let i = 0; i < numProblems; i++) problems.push(generateProblem());
       renderProblems();
     }
@@ -635,7 +603,7 @@
         li.className = "problem-item";
         const stepsHTML = problem.steps.map((step) => step.indexOf("->") !== -1 || step.indexOf("\\(") !== -1 || step.indexOf("=") !== -1 || step.indexOf("curve-wrap") !== -1 ? '<div class="step-equation">' + step + "</div>" : '<div class="step">' + step + "</div>").join("");
         li.innerHTML =
-          '<div class="problem-header"><div class="problem-left"><div class="problem-number">' + (index + 1) + '</div><div class="equation">' + problem.equation + '</div></div><div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div></div><div class="steps-section" id="steps-' + index + '"><div class="answer-label">Solution Steps:</div><div class="solution-steps">' + stepsHTML + '<div class="final-answer">' + problem.answer + "</div></div></div>";
+          '<div class="problem-header"><div class="problem-left"><div class="problem-number">' + (index + 1) + '</div><div class="equation">' + problem.equation + '</div></div><div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div></div><div class="steps-section" id="steps-' + index + '"><div class="answer-label">Worked Solution:</div><div class="solution-steps" data-kaizen-step-structured="true">' + stepsHTML + '<div class="final-answer">' + problem.answer + "</div></div></div>";
         container.appendChild(li);
       });
       if (window.renderMathInElement) window.renderMathInElement(container);

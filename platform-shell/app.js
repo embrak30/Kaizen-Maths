@@ -687,13 +687,13 @@ const tools = [
     status: "Imported",
     description: "Generate normal distribution practice covering standard normal probabilities, Phi notation, standardisation, inverse normal questions, and finding unknown means or standard deviations.",
     tags: ["statistics", "normal distribution", "standard normal", "z score", "phi", "inverse normal", "mean", "standard deviation", "probability"],
-    toolPath: "tools/normal-distribution/index.html?v=normal-distribution-2",
+    toolPath: "tools/normal-distribution/index.html?v=normal-distribution-3",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on standard normal probabilities, complements, intervals, and inverse z-values.",
       "Level 2 applies standardisation to any normal distribution, including reverse cut-offs and absolute-value statements.",
       "Level 3 uses probability statements to find cut-offs, means, standard deviations, or both parameters.",
-      "Worked steps show the shaded region, the standardisation, the table or calculator lookup, and the final interpretation."
+      "Worked steps show the relevant tail, interval, or cut-off, the standardisation, the table or calculator lookup, and the final interpretation."
     ]
   },
   {
