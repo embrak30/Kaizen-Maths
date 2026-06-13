@@ -8,9 +8,23 @@ create table if not exists public.profiles (
   role text not null default 'trial' check (role in ('free', 'trial', 'pro', 'school', 'admin')),
   school_id uuid,
   trial_ends_at timestamptz,
+  stripe_customer_id text,
+  stripe_subscription_id text,
+  subscription_status text,
+  plan_key text,
+  current_period_end timestamptz,
+  billing_updated_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.profiles add column if not exists stripe_customer_id text;
+alter table public.profiles add column if not exists stripe_subscription_id text;
+alter table public.profiles add column if not exists subscription_status text;
+alter table public.profiles add column if not exists plan_key text;
+alter table public.profiles add column if not exists current_period_end timestamptz;
+alter table public.profiles add column if not exists billing_updated_at timestamptz;
+create index if not exists profiles_stripe_customer_id_idx on public.profiles(stripe_customer_id);
 
 alter table public.profiles enable row level security;
 

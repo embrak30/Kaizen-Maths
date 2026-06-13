@@ -1117,6 +1117,70 @@ a {
   background: white;
 }
 
+.upgrade-page {
+  display: grid;
+  gap: 18px;
+}
+
+.upgrade-summary {
+  display: grid;
+  gap: 10px;
+}
+
+.upgrade-status {
+  min-height: 1.4em;
+  margin: 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.upgrade-status[data-tone="success"] {
+  color: var(--green);
+}
+
+.upgrade-status[data-tone="cancelled"],
+.upgrade-status[data-tone="error"] {
+  color: var(--red);
+}
+
+.upgrade-status[data-tone="loading"] {
+  color: var(--blue-dark);
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.pricing-card {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.pricing-card.featured {
+  border-color: rgba(91, 92, 226, 0.35);
+  box-shadow: 0 18px 44px rgba(91, 92, 226, 0.14);
+}
+
+.pricing-card h2,
+.upgrade-details h2 {
+  margin: 0;
+}
+
+.pricing-price {
+  margin: 0;
+  color: var(--blue-dark);
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.upgrade-details {
+  display: grid;
+  gap: 12px;
+}
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -2143,7 +2207,8 @@ sup .worksheet-fraction span:last-child {
 
   .beta-grid,
   .beta-feedback-form,
-  .beta-steps {
+  .beta-steps,
+  .pricing-grid {
     grid-template-columns: 1fr;
   }
 

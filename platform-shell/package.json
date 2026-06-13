@@ -1,0 +1,10 @@
+{
+  "name": "kaizen-maths-platform-shell",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.0",
+    "stripe": "^17.5.0"
+  }
+}

@@ -1194,12 +1194,13 @@ function canAccessTool(tool) {
 }
 
 function signInCallout(title = "Sign in to continue") {
+  const signedIn = isSignedIn();
   return `
     <section class="panel access-callout">
-      <span class="eyebrow">Account Required</span>
+      <span class="eyebrow">${signedIn ? "Upgrade Required" : "Account Required"}</span>
       <h2>${title}</h2>
-      <p>Free visitors can try a small sample from the virtual textbook. Sign in with Google to access the wider topic library, worksheet tools, and classroom question sets during the trial period.</p>
-      <button class="button primary" type="button" data-auth-action="signin">Sign in with Google</button>
+      <p>${signedIn ? "Your current account does not include this part of the virtual textbook. Upgrade for individual teacher access, or contact us for school access." : "Free visitors can try a small sample from the virtual textbook. Sign in with Google to access the wider topic library, worksheet tools, and classroom question sets during the trial period."}</p>
+      ${signedIn ? `<a class="button primary" href="#/upgrade">View Upgrade Options</a>` : `<button class="button primary" type="button" data-auth-action="signin">Sign in with Google</button>`}
       <a class="button" href="#/tools">Back to Free Tools</a>
     </section>
   `;
@@ -2573,6 +2574,138 @@ function renderTeacher() {
   `;
 }
 
+function renderUpgrade() {
+  const role = currentUserRole();
+  const profile = authState().profile || {};
+  const checkoutStatus = new URLSearchParams((location.hash.split("?")[1] || "").replace(/^\/?/, "")).get("checkout");
+  const statusCopy = checkoutStatus === "success"
+    ? "Payment complete. Your access will update as soon as Stripe confirms the subscription."
+    : checkoutStatus === "cancelled"
+      ? "Checkout was cancelled. You can restart whenever you are ready."
+      : "";
+
+  app.innerHTML = `
+    ${pageHeader(
+      "Upgrade Kaizen Maths",
+      "Choose individual teacher access when you are ready to unlock the full virtual mathematics textbook. School licences can be arranged separately.",
+      `<a class="button" href="#/tools">Browse Tools</a>`
+    )}
+    <section class="upgrade-page">
+      <article class="panel upgrade-summary">
+        <span class="eyebrow">Current Access</span>
+        <h2>${isSignedIn() ? titleCaseAccess(role) + " access" : "Not signed in"}</h2>
+        <p>${isSignedIn() ? `Signed in as ${escapeHtml(authState().session?.user?.email || "teacher")}.` : "Sign in with Google first, then choose a teacher plan."}</p>
+        ${profile.subscription_status ? `<p><strong>Subscription:</strong> ${escapeHtml(profile.subscription_status)}</p>` : ""}
+        ${statusCopy ? `<p class="upgrade-status" data-tone="${checkoutStatus}">${statusCopy}</p>` : `<p class="upgrade-status" id="upgradeStatus"></p>`}
+        <div class="button-row">
+          ${isSignedIn() ? `<button class="button" type="button" id="manageBilling">Manage Billing</button>` : `<button class="button primary" type="button" data-auth-action="signin">Sign in with Google</button>`}
+        </div>
+      </article>
+
+      <section class="pricing-grid" aria-label="Pricing options">
+        <article class="panel pricing-card">
+          <span class="eyebrow">Individual Teacher</span>
+          <h2>Monthly</h2>
+          <p class="pricing-price">Set in Stripe</p>
+          <p>Flexible access for one teacher. Use the full topic library, board-ready generators, worked solutions, worksheet builder, and assessment practice.</p>
+          <button class="button primary" type="button" data-checkout-plan="monthly">Start Monthly Plan</button>
+        </article>
+        <article class="panel pricing-card featured">
+          <span class="eyebrow">Individual Teacher</span>
+          <h2>Annual</h2>
+          <p class="pricing-price">Set in Stripe</p>
+          <p>Best for teachers who want full access across the year for planning, classroom practice, homework, revision, intervention, and assessment.</p>
+          <button class="button primary" type="button" data-checkout-plan="annual">Start Annual Plan</button>
+        </article>
+        <article class="panel pricing-card">
+          <span class="eyebrow">School Licence</span>
+          <h2>School Access</h2>
+          <p class="pricing-price">Manual setup</p>
+          <p>For departments or whole-school access. Keep this as a manual conversation while the platform is still being tested with institutions.</p>
+          <a class="button" href="#/teacher">View Teacher Notes</a>
+        </article>
+      </section>
+
+      <section class="panel upgrade-details">
+        <h2>What Paid Access Unlocks</h2>
+        <div class="badge-row">
+          <span class="badge">Full tool library</span>
+          <span class="badge">Unlimited questions</span>
+          <span class="badge">Worked solutions</span>
+          <span class="badge">Worksheet builder</span>
+          <span class="badge">Answer keys</span>
+          <span class="badge">Assessment practice</span>
+          <span class="badge">Teacher-controlled lessons</span>
+        </div>
+        <p>Kaizen Maths remains a teaching support tool. Teachers choose the topic, level, pace, and how the questions are used in the lesson.</p>
+      </section>
+    </section>
+  `;
+  bindAuthActions();
+  bindUpgradeActions();
+}
+
+async function currentAccessToken() {
+  const client = await window.KaizenAuth?.getClient?.();
+  const { data } = await client.auth.getSession();
+  return data.session?.access_token || "";
+}
+
+function setUpgradeStatus(message, tone = "") {
+  const status = document.getElementById("upgradeStatus") || document.querySelector(".upgrade-status");
+  if (!status) return;
+  status.textContent = message;
+  status.dataset.tone = tone;
+}
+
+async function postBillingEndpoint(path, body = {}) {
+  const token = await currentAccessToken();
+  const response = await fetch(path, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify(body)
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(payload.error || "Billing request failed.");
+  return payload;
+}
+
+function bindUpgradeActions() {
+  document.querySelectorAll("[data-checkout-plan]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!isSignedIn()) {
+        window.KaizenAuth?.signInWithGoogle?.();
+        return;
+      }
+      const plan = button.dataset.checkoutPlan;
+      button.disabled = true;
+      setUpgradeStatus("Opening secure Stripe checkout...", "loading");
+      try {
+        const { url } = await postBillingEndpoint("/api/create-checkout-session", { plan });
+        window.location.href = url;
+      } catch (error) {
+        button.disabled = false;
+        setUpgradeStatus(error.message.includes("Unexpected token") ? "Checkout is available after deployment to Vercel." : error.message, "error");
+      }
+    });
+  });
+
+  document.getElementById("manageBilling")?.addEventListener("click", async (event) => {
+    event.currentTarget.disabled = true;
+    setUpgradeStatus("Opening Stripe billing portal...", "loading");
+    try {
+      const { url } = await postBillingEndpoint("/api/create-billing-portal-session");
+      window.location.href = url;
+    } catch (error) {
+      event.currentTarget.disabled = false;
+      setUpgradeStatus(error.message, "error");
+    }
+  });
+}
+
 function renderAdmin() {
   if (!isSignedIn()) {
     app.innerHTML = `
@@ -2958,7 +3091,7 @@ function bindToolFrame(tool) {
 }
 
 function routeParts() {
-  return (location.hash || "#/").replace(/^#\/?/, "").split("/");
+  return (location.hash || "#/").split("?")[0].replace(/^#\/?/, "").split("/");
 }
 
 function renderRoute() {
@@ -2993,6 +3126,8 @@ function renderRoute() {
     renderToolLibrary(parts[1]);
   } else if (parts[0] === "teacher") {
     renderTeacher();
+  } else if (parts[0] === "upgrade") {
+    renderUpgrade();
   } else if (parts[0] === "admin") {
     if (!isAdmin()) {
       location.hash = "#/";
