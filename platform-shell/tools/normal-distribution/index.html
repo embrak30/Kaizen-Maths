@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Normal Distribution Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:white;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:white;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:white;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1240px;margin:0 auto;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:white;padding:24px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}.header h1{font-size:2.15em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:17px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:700;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:white;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px 24px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.25em}.level-info p{color:#718096;font-size:.98em}.dropdown-container{margin-top:9px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:white;cursor:pointer;min-width:400px}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:700;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
+    .problems-section{padding:18px 24px 24px;min-height:520px}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:650}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.standard{background:#38a169}.problem-set-header.general{background:#3182ce}.problem-set-header.inverse{background:#805ad5}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px}.problem-item{background:#f7fafc;padding:13px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:205px}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.08em;color:#1a365d;font-weight:500;line-height:1.35;min-width:0}.math-line{display:block;margin:.18rem 0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.98em;display:none;text-align:center;max-width:220px}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .curve-wrap{margin-top:8px;background:white;border:1px solid #d8e2ef;border-radius:7px;padding:6px;overflow:hidden}.curve-wrap svg{width:100%;height:auto;display:block}.axis-label{font-size:9px;fill:#1a365d;font-weight:700}.shade{fill:rgba(49,130,206,.28)}.curve{fill:none;stroke:#1a365d;stroke-width:2.2}.base-line{stroke:#64748b;stroke-width:1.2}.marker{stroke:#e53e3e;stroke-width:1.7}.mean-marker{stroke:#38a169;stroke-width:1.5;stroke-dasharray:4 3}
+    .steps-section{grid-column:1/-1;margin-top:10px;padding:12px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#38a169;margin-bottom:8px;font-size:1em}.solution-steps{font-size:1em;line-height:1.45}.step{margin:6px 0;color:#1a365d}.step-equation{font-weight:650;color:#805ad5;text-align:center;margin:8px 0;font-size:1.08em}.final-answer{background:#38a169;color:white;padding:8px 15px;border-radius:6px;text-align:center;font-weight:bold;font-size:1.05em;margin-top:10px}.step-diagram{max-width:360px;margin:8px auto}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}.step-indicator{background:#3182ce;color:white;padding:4px 8px;border-radius:4px;font-size:.88em;font-weight:bold;margin-right:8px;white-space:nowrap}.step-arrow{font-size:1.25em;color:#3182ce;margin:0 8px}.note{color:#718096;font-size:.9em}
+    @media (max-width:900px){.problem-list{grid-template-columns:1fr}.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.type-dropdown{min-width:260px;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool supports practice with the standard normal distribution, standardising any normal random variable, and using tables or a calculator to find probabilities and inverse values.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Standard normal probabilities, \(\Phi(z)\), complements, intervals, and inverse \(z\)-values.</li>
+        <li><strong>Level 2:</strong> General normal distributions, \(Z=\frac{X-\mu}{\sigma}\), reverse cut-offs, and absolute-value probability statements.</li>
+        <li><strong>Level 3:</strong> Finding unknown cut-offs, means, standard deviations, and pairs of parameters from probability statements.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Students should identify the shaded region before using tables or technology.</li>
+        <li>Worked steps deliberately show the standardisation and the table lookup separately.</li>
+        <li>For inverse questions, encourage students to decide whether the probability is left-tail or right-tail before finding \(z\).</li>
+        <li>For parameter questions, set up \(x=\mu+z\sigma\) and solve the resulting equation or pair of equations.</li>
+      </ul>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Using \(\sigma^2\) instead of \(\sigma\) when standardising.</li>
+        <li>Forgetting that \(P(Z>z)=1-\Phi(z)\).</li>
+        <li>Using the wrong sign of \(z\) for a lower-tail probability below 0.5.</li>
+        <li>Treating \(|X-a|>b\) as one inequality instead of two tails.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header"><h1>Normal Distribution</h1></section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Standard Normal</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Any Normal Distribution</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Inverse & Parameters</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Standard Normal</h3>
+        <p id="level-description">Use \(Z \sim N(0,1)\), \(\Phi(z)\), complements, intervals, and inverse values.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="standard_left">Left-tail probabilities</option>
+            <option value="standard_right">Right-tail probabilities</option>
+            <option value="standard_between">Between two z-values</option>
+            <option value="inverse_z">Find z from probability</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div class="set-instruction" id="set-instruction">Choose a question type. Assume students may use standard normal tables or a calculator for \(\Phi(z)\) and inverse normal values.</div>
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const typeDisplayNames = {
+      standard_left: "Left-tail probabilities",
+      standard_right: "Right-tail probabilities",
+      standard_between: "Between two z-values",
+      inverse_z: "Find z from probability",
+      general_left_right: "Probabilities from X values",
+      general_between: "Between two X values",
+      general_cutoff: "Find X from probability",
+      absolute_value: "Absolute-value probability statements",
+      find_cutoff: "Find a cut-off from probability",
+      find_mu: "Find the mean",
+      find_sigma: "Find the standard deviation",
+      find_mu_sigma: "Find mean and standard deviation"
+    };
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Standard Normal",
+        description: "Use Z ~ N(0,1), Phi(z), complements, intervals, and inverse values.",
+        options: [
+          ["standard_left", "Left-tail probabilities"],
+          ["standard_right", "Right-tail probabilities"],
+          ["standard_between", "Between two z-values"],
+          ["inverse_z", "Find z from probability"]
+        ]
+      },
+      2: {
+        title: "Level 2: Any Normal Distribution",
+        description: "Standardise X values using Z = (X - mu) / sigma, then use standard normal tables.",
+        options: [
+          ["general_left_right", "Probabilities from X values"],
+          ["general_between", "Between two X values"],
+          ["general_cutoff", "Find X from probability"],
+          ["absolute_value", "Absolute-value probability statements"]
+        ]
+      },
+      3: {
+        title: "Level 3: Inverse & Parameters",
+        description: "Use probability statements to find cut-offs, mu, sigma, or both parameters.",
+        options: [
+          ["find_cutoff", "Find a cut-off from probability"],
+          ["find_mu", "Find the mean"],
+          ["find_sigma", "Find the standard deviation"],
+          ["find_mu_sigma", "Find mean and standard deviation"]
+        ]
+      }
+    };
+
+    const zPool = [-2.05,-1.96,-1.75,-1.64,-1.50,-1.28,-1.10,-0.84,-0.67,-0.52,0.52,0.67,0.84,1.10,1.28,1.50,1.64,1.75,1.96,2.05];
+    const positiveZ = [0.52,0.67,0.84,1.10,1.28,1.50,1.64,1.75,1.96,2.05];
+    const sigmaPool = [3,4,5,6,8,10,12,15];
+    const muPool = [40,50,60,75,80,100,120,150,200,300];
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomElement(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function fmt(value, dp = 4) {
+      return Number(value).toFixed(dp);
+    }
+
+    function fmt1(value) {
+      return Math.abs(value - Math.round(value)) < 0.05 ? String(Math.round(value)) : Number(value).toFixed(1);
+    }
+
+    function erf(x) {
+      const sign = x < 0 ? -1 : 1;
+      const ax = Math.abs(x);
+      const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429;
+      const p = 0.3275911;
+      const t = 1 / (1 + p * ax);
+      const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-ax * ax);
+      return sign * y;
+    }
+
+    function phi(z) {
+      return 0.5 * (1 + erf(z / Math.sqrt(2)));
+    }
+
+    function invNorm(p) {
+      if (p <= 0 || p >= 1) throw new Error("Probability must be between 0 and 1");
+      const a = [-39.69683028665376,220.9460984245205,-275.9285104469687,138.3577518672690,-30.66479806614716,2.506628277459239];
+      const b = [-54.47609879822406,161.5858368580409,-155.6989798598866,66.80131188771972,-13.28068155288572];
+      const c = [-0.007784894002430293,-0.3223964580411365,-2.400758277161838,-2.549732539343734,4.374664141464968,2.938163982698783];
+      const d = [0.007784695709041462,0.3224671290700398,2.445134137142996,3.754408661907416];
+      const plow = 0.02425;
+      const phigh = 1 - plow;
+      let q, r;
+      if (p < plow) {
+        q = Math.sqrt(-2 * Math.log(p));
+        return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      }
+      if (p > phigh) {
+        q = Math.sqrt(-2 * Math.log(1 - p));
+        return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      }
+      q = p - 0.5;
+      r = q * q;
+      return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+    }
+
+    function normalNotation(mu, sigma) {
+      return "\\(X \\sim N(" + mu + ", " + (sigma * sigma) + ")\\)";
+    }
+
+    function zText(z) {
+      return (z < 0 ? "-" : "") + Math.abs(z).toFixed(2);
+    }
+
+    function xFromZ(mu, sigma, z) {
+      return mu + z * sigma;
+    }
+
+    function curveSvg(options = {}) {
+      const marks = options.marks || [];
+      const shade = options.shade || "left";
+      const labelMode = options.labelMode || "z";
+      const width = 330, height = 110, baseY = 88, topY = 18, left = 24, right = 306;
+      const xOfZ = (z) => left + ((Math.max(-3, Math.min(3, z)) + 3) / 6) * (right - left);
+      const curvePath = "M24 88 C55 88 66 86 86 74 C111 58 127 24 165 24 C203 24 219 58 244 74 C264 86 275 88 306 88";
+      function areaPath(type) {
+        if (type === "right") {
+          const z = marks[0]?.z ?? 0;
+          const x = xOfZ(z);
+          return "M" + x + " 88 C" + (x + 28) + " 72 " + (x + 54) + " 88 306 88 L306 88 L" + x + " 88 Z";
+        }
+        if (type === "between") {
+          const x1 = xOfZ(marks[0]?.z ?? -1);
+          const x2 = xOfZ(marks[1]?.z ?? 1);
+          return "M" + x1 + " 88 C" + ((x1+x2)/2 - 30) + " 22 " + ((x1+x2)/2 + 30) + " 22 " + x2 + " 88 Z";
+        }
+        if (type === "outside") {
+          const x1 = xOfZ(marks[0]?.z ?? -1);
+          const x2 = xOfZ(marks[1]?.z ?? 1);
+          return "M24 88 C55 88 68 86 " + x1 + " 88 Z M" + x2 + " 88 C270 86 286 88 306 88 Z";
+        }
+        const z = marks[0]?.z ?? 0;
+        const x = xOfZ(z);
+        return "M24 88 C62 88 84 78 " + x + " 88 L24 88 Z";
+      }
+      const labels = marks.map((mark) => {
+        const x = xOfZ(mark.z);
+        const label = mark.label || (labelMode === "x" ? mark.x : zText(mark.z));
+        return '<line class="marker" x1="' + x + '" y1="88" x2="' + x + '" y2="25"></line><text class="axis-label" x="' + x + '" y="104" text-anchor="middle">' + label + '</text>';
+      }).join("");
+      const meanX = xOfZ(0);
+      return '<div class="curve-wrap"><svg viewBox="0 0 330 112" role="img" aria-label="Normal distribution curve"><path class="shade" d="' + areaPath(shade) + '"></path><path class="curve" d="' + curvePath + '"></path><line class="base-line" x1="20" y1="88" x2="310" y2="88"></line><line class="mean-marker" x1="' + meanX + '" y1="88" x2="' + meanX + '" y2="28"></line><text class="axis-label" x="' + meanX + '" y="104" text-anchor="middle">mean</text>' + labels + '</svg></div>';
+    }
+
+    function stepCurve(options) {
+      return '<div class="step-diagram">' + curveSvg(options) + '</div>';
+    }
+
+    function generateProblem() {
+      switch (currentType) {
+        case "standard_left": return genStandardLeft();
+        case "standard_right": return genStandardRight();
+        case "standard_between": return genStandardBetween();
+        case "inverse_z": return genInverseZ();
+        case "general_left_right": return genGeneralLeftRight();
+        case "general_between": return genGeneralBetween();
+        case "general_cutoff": return genGeneralCutoff();
+        case "absolute_value": return genAbsoluteValue();
+        case "find_cutoff": return genFindCutoff();
+        case "find_mu": return genFindMu();
+        case "find_sigma": return genFindSigma();
+        case "find_mu_sigma": return genFindMuSigma();
+        default: return genStandardLeft();
+      }
+    }
+
+    function genStandardLeft() {
+      const z = randomElement(zPool);
+      const probability = phi(z);
+      const diagram = curveSvg({ shade: "left", marks: [{ z, label: "z=" + zText(z) }] });
+      return {
+        badge: "standard",
+        equation: '<span class="math-line">For \\(Z \\sim N(0,1)\\), find \\(P(Z < ' + zText(z) + ')\\).</span>' + diagram,
+        answer: fmt(probability),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Recognise this as a left-tail standard normal probability.',
+          stepCurve({ shade: "left", marks: [{ z, label: "z=" + zText(z) }] }),
+          "\\(P(Z < " + zText(z) + ") = \\Phi(" + zText(z) + ")\\).",
+          "Use a standard normal table or calculator to find \\(\\Phi(" + zText(z) + ")\\).",
+          "\\(\\Phi(" + zText(z) + ") \\approx " + fmt(probability) + "\\).",
+          '<span class="step-arrow">-></span> ' + fmt(probability)
+        ]
+      };
+    }
+
+    function genStandardRight() {
+      const z = randomElement(positiveZ);
+      const probability = 1 - phi(z);
+      const diagram = curveSvg({ shade: "right", marks: [{ z, label: "z=" + zText(z) }] });
+      return {
+        badge: "standard",
+        equation: '<span class="math-line">For \\(Z \\sim N(0,1)\\), find \\(P(Z > ' + zText(z) + ')\\).</span>' + diagram,
+        answer: fmt(probability),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Draw or imagine the right tail.',
+          stepCurve({ shade: "right", marks: [{ z, label: "z=" + zText(z) }] }),
+          "\\(P(Z > " + zText(z) + ") = 1 - P(Z < " + zText(z) + ")\\).",
+          "\\(P(Z > " + zText(z) + ") = 1 - \\Phi(" + zText(z) + ")\\).",
+          "From tables/calculator, \\(\\Phi(" + zText(z) + ") \\approx " + fmt(phi(z)) + "\\).",
+          "\\(1 - " + fmt(phi(z)) + " = " + fmt(probability) + "\\).",
+          '<span class="step-arrow">-></span> ' + fmt(probability)
+        ]
+      };
+    }
+
+    function genStandardBetween() {
+      const z1 = randomElement([-1.96,-1.64,-1.28,-1.10,-0.84,-0.67]);
+      const z2 = randomElement([0.67,0.84,1.10,1.28,1.64,1.96]);
+      const probability = phi(z2) - phi(z1);
+      const diagram = curveSvg({ shade: "between", marks: [{ z: z1, label: zText(z1) }, { z: z2, label: zText(z2) }] });
+      return {
+        badge: "standard",
+        equation: '<span class="math-line">For \\(Z \\sim N(0,1)\\), find \\(P(' + zText(z1) + ' < Z < ' + zText(z2) + ')\\).</span>' + diagram,
+        answer: fmt(probability),
+        steps: [
+          '<span class="step-indicator">Step 1</span> The required region is between two z-values.',
+          stepCurve({ shade: "between", marks: [{ z: z1, label: zText(z1) }, { z: z2, label: zText(z2) }] }),
+          "\\(P(" + zText(z1) + " < Z < " + zText(z2) + ") = \\Phi(" + zText(z2) + ") - \\Phi(" + zText(z1) + ")\\).",
+          "From tables/calculator: \\(\\Phi(" + zText(z2) + ") \\approx " + fmt(phi(z2)) + "\\), and \\(\\Phi(" + zText(z1) + ") \\approx " + fmt(phi(z1)) + "\\).",
+          fmt(phi(z2)) + " - " + fmt(phi(z1)) + " = " + fmt(probability) + ".",
+          '<span class="step-arrow">-></span> ' + fmt(probability)
+        ]
+      };
+    }
+
+    function genInverseZ() {
+      const p = randomElement([0.0228,0.0668,0.1056,0.1587,0.2005,0.3085,0.6915,0.7995,0.8413,0.8944,0.9332,0.9772]);
+      const z = invNorm(p);
+      const diagram = curveSvg({ shade: "left", marks: [{ z, label: "z" }] });
+      return {
+        badge: "standard",
+        equation: '<span class="math-line">For \\(Z \\sim N(0,1)\\), find \\(z\\) such that \\(P(Z < z) = ' + fmt(p) + '\\).</span>' + diagram,
+        answer: "z = " + zText(z),
+        steps: [
+          '<span class="step-indicator">Step 1</span> This is an inverse standard normal question.',
+          stepCurve({ shade: "left", marks: [{ z, label: "z" }] }),
+          "We need \\(\\Phi(z) = " + fmt(p) + "\\).",
+          "Use inverse normal tables or a calculator: \\(z = \\Phi^{-1}(" + fmt(p) + ")\\).",
+          "\\(z \\approx " + zText(z) + "\\).",
+          '<span class="step-arrow">-></span> z = ' + zText(z)
+        ]
+      };
+    }
+
+    function genGeneralLeftRight() {
+      const mu = randomElement(muPool);
+      const sigma = randomElement(sigmaPool);
+      const z = randomElement([-1.28,-0.84,-0.52,0.52,0.84,1.28,1.64]);
+      const x = xFromZ(mu, sigma, z);
+      const right = Math.random() < 0.5;
+      const probability = right ? 1 - phi(z) : phi(z);
+      const sign = right ? ">" : "<";
+      const shade = right ? "right" : "left";
+      const diagram = curveSvg({ shade, labelMode: "x", marks: [{ z, label: fmt1(x) }] });
+      return {
+        badge: "general",
+        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find \\(P(X ' + sign + ' ' + fmt1(x) + ')\\).</span>' + diagram,
+        answer: fmt(probability),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Identify the mean and standard deviation.',
+          "\\(\\mu = " + mu + "\\), \\(\\sigma^2 = " + (sigma * sigma) + "\\), so \\(\\sigma = " + sigma + "\\).",
+          '<span class="step-indicator">Step 2</span> Standardise the boundary value.',
+          "\\(Z = \\frac{X-\\mu}{\\sigma} = \\frac{" + fmt1(x) + " - " + mu + "}{" + sigma + "} = " + zText(z) + "\\).",
+          stepCurve({ shade, labelMode: "x", marks: [{ z, label: "x=" + fmt1(x) }] }),
+          right ? "\\(P(X > " + fmt1(x) + ") = P(Z > " + zText(z) + ")\\)." : "\\(P(X < " + fmt1(x) + ") = P(Z < " + zText(z) + ")\\).",
+          right ? "\\(P(Z > " + zText(z) + ") = 1 - \\Phi(" + zText(z) + ")\\)." : "\\(P(Z < " + zText(z) + ") = \\Phi(" + zText(z) + ")\\).",
+          "Using tables/calculator gives " + fmt(probability) + ".",
+          '<span class="step-arrow">-></span> ' + fmt(probability)
+        ]
+      };
+    }
+
+    function genGeneralBetween() {
+      const mu = randomElement(muPool);
+      const sigma = randomElement(sigmaPool);
+      const z1 = randomElement([-1.64,-1.28,-0.84,-0.52]);
+      const z2 = randomElement([0.52,0.84,1.28,1.64]);
+      const a = xFromZ(mu, sigma, z1);
+      const b = xFromZ(mu, sigma, z2);
+      const probability = phi(z2) - phi(z1);
+      const diagram = curveSvg({ shade: "between", labelMode: "x", marks: [{ z: z1, label: fmt1(a) }, { z: z2, label: fmt1(b) }] });
+      return {
+        badge: "general",
+        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find \\(P(' + fmt1(a) + ' < X < ' + fmt1(b) + ')\\).</span>' + diagram,
+        answer: fmt(probability),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Standardise both boundary values.',
+          "\\(z_1 = \\frac{" + fmt1(a) + " - " + mu + "}{" + sigma + "} = " + zText(z1) + "\\).",
+          "\\(z_2 = \\frac{" + fmt1(b) + " - " + mu + "}{" + sigma + "} = " + zText(z2) + "\\).",
+          stepCurve({ shade: "between", labelMode: "x", marks: [{ z: z1, label: "a" }, { z: z2, label: "b" }] }),
+          "\\(P(" + fmt1(a) + " < X < " + fmt1(b) + ") = P(" + zText(z1) + " < Z < " + zText(z2) + ")\\).",
+          "\\(= \\Phi(" + zText(z2) + ") - \\Phi(" + zText(z1) + ")\\).",
+          "\\(= " + fmt(phi(z2)) + " - " + fmt(phi(z1)) + " = " + fmt(probability) + "\\).",
+          '<span class="step-arrow">-></span> ' + fmt(probability)
+        ]
+      };
+    }
+
+    function genGeneralCutoff() {
+      const mu = randomElement(muPool);
+      const sigma = randomElement(sigmaPool);
+      const p = randomElement([0.10,0.15,0.20,0.25,0.75,0.80,0.85,0.90]);
+      const z = invNorm(p);
+      const x = xFromZ(mu, sigma, z);
+      const diagram = curveSvg({ shade: "left", labelMode: "x", marks: [{ z, label: "a" }] });
+      return {
+        badge: "general",
+        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find \\(a\\) such that \\(P(X < a) = ' + fmt(p) + '\\).</span>' + diagram,
+        answer: "a = " + fmt1(x),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Convert the left-tail probability into a z-value.',
+          "\\(P(X<a)=" + fmt(p) + "\\) means \\(P(Z<z)=" + fmt(p) + "\\).",
+          "\\(z = \\Phi^{-1}(" + fmt(p) + ") \\approx " + zText(z) + "\\).",
+          stepCurve({ shade: "left", labelMode: "x", marks: [{ z, label: "a" }] }),
+          '<span class="step-indicator">Step 2</span> Convert back from z to x.',
+          "\\(x = \\mu + z\\sigma\\).",
+          "\\(a = " + mu + " + (" + zText(z) + ")(" + sigma + ") = " + fmt1(x) + "\\).",
+          '<span class="step-arrow">-></span> a = ' + fmt1(x)
+        ]
+      };
+    }
+
+    function genAbsoluteValue() {
+      const mu = randomElement([50,60,80,100,120]);
+      const sigma = randomElement([5,8,10,12]);
+      const c = randomElement([1,1.28,1.64]);
+      const d = c * sigma;
+      const leftX = mu - d;
+      const rightX = mu + d;
+      const probability = 2 * (1 - phi(c));
+      const diagram = curveSvg({ shade: "outside", labelMode: "x", marks: [{ z: -c, label: fmt1(leftX) }, { z: c, label: fmt1(rightX) }] });
+      return {
+        badge: "general",
+        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find \\(P(|X - ' + mu + '| > ' + fmt1(d) + ')\\).</span>' + diagram,
+        answer: fmt(probability),
+        steps: [
+          '<span class="step-indicator">Step 1</span> Split the absolute-value statement into two tails.',
+          "\\(|X-" + mu + "|>" + fmt1(d) + "\\) means \\(X<" + fmt1(leftX) + "\\) or \\(X>" + fmt1(rightX) + "\\).",
+          stepCurve({ shade: "outside", labelMode: "x", marks: [{ z: -c, label: "left" }, { z: c, label: "right" }] }),
+          '<span class="step-indicator">Step 2</span> Standardise both boundaries.',
+          "\\(z_1 = \\frac{" + fmt1(leftX) + "-" + mu + "}{" + sigma + "} = -" + c.toFixed(2) + "\\), and \\(z_2 = \\frac{" + fmt1(rightX) + "-" + mu + "}{" + sigma + "} = " + c.toFixed(2) + "\\).",
+          "\\(P(|X-" + mu + "|>" + fmt1(d) + ")\\) = \\(P(Z<-" + c.toFixed(2) + ") + P(Z>" + c.toFixed(2) + ")\\).",
+          "\\(= 2(1-\\Phi(" + c.toFixed(2) + ")) = " + fmt(probability) + "\\).",
+          '<span class="step-arrow">-></span> ' + fmt(probability)
+        ]
+      };
+    }
+
+    function genFindCutoff() {
+      return genGeneralCutoff();
+    }
+
+    function genFindMu() {
+      const sigma = randomElement(sigmaPool);
+      const mu = randomElement(muPool);
+      const z = randomElement([-1.64,-1.28,-0.84,0.84,1.28,1.64]);
+      const x = xFromZ(mu, sigma, z);
+      const p = phi(z);
+      const diagram = curveSvg({ shade: "left", labelMode: "x", marks: [{ z, label: fmt1(x) }] });
+      return {
+        badge: "inverse",
+        equation: '<span class="math-line">\\(X \\sim N(\\mu, ' + (sigma * sigma) + ')\\) and \\(P(X < ' + fmt1(x) + ') = ' + fmt(p) + '\\). Find \\(\\mu\\).</span>' + diagram,
+        answer: "\\(\\mu = " + fmt1(mu) + "\\)",
+        steps: [
+          '<span class="step-indicator">Step 1</span> Convert the probability to a z-value.',
+          "\\(P(X<" + fmt1(x) + ")=" + fmt(p) + "\\), so \\(z=\\Phi^{-1}(" + fmt(p) + ")\\approx " + zText(z) + "\\).",
+          '<span class="step-indicator">Step 2</span> Use the standardisation equation.',
+          "\\(z = \\frac{x-\\mu}{\\sigma}\\).",
+          "\\(" + zText(z) + " = \\frac{" + fmt1(x) + "-\\mu}{" + sigma + "}\\).",
+          "\\(" + fmt1(x) + "-\\mu = (" + zText(z) + ")(" + sigma + ")\\).",
+          "\\(\\mu = " + fmt1(x) + " - (" + zText(z) + ")(" + sigma + ") = " + fmt1(mu) + "\\).",
+          '<span class="step-arrow">-></span> \\(\\mu = ' + fmt1(mu) + "\\)"
+        ]
+      };
+    }
+
+    function genFindSigma() {
+      const sigma = randomElement(sigmaPool);
+      const mu = randomElement(muPool);
+      const z = randomElement([0.84,1.10,1.28,1.64,1.96]);
+      const x = xFromZ(mu, sigma, z);
+      const pRight = 1 - phi(z);
+      const diagram = curveSvg({ shade: "right", labelMode: "x", marks: [{ z, label: fmt1(x) }] });
+      return {
+        badge: "inverse",
+        equation: '<span class="math-line">\\(X \\sim N(' + mu + ', \\sigma^2)\\) and \\(P(X > ' + fmt1(x) + ') = ' + fmt(pRight) + '\\). Find \\(\\sigma\\).</span>' + diagram,
+        answer: "\\(\\sigma = " + fmt1(sigma) + "\\)",
+        steps: [
+          '<span class="step-indicator">Step 1</span> Change the right-tail probability into a left-tail probability.',
+          "\\(P(X>" + fmt1(x) + ")=" + fmt(pRight) + "\\), so \\(P(X<" + fmt1(x) + ")=1-" + fmt(pRight) + "=" + fmt(phi(z)) + "\\).",
+          "\\(z=\\Phi^{-1}(" + fmt(phi(z)) + ")\\approx " + zText(z) + "\\).",
+          '<span class="step-indicator">Step 2</span> Use the standardisation equation.',
+          "\\(" + zText(z) + " = \\frac{" + fmt1(x) + "-" + mu + "}{\\sigma}\\).",
+          "\\(" + zText(z) + "\\sigma = " + fmt1(x - mu) + "\\).",
+          "\\(\\sigma = \\frac{" + fmt1(x - mu) + "}{" + zText(z) + "} = " + fmt1(sigma) + "\\).",
+          '<span class="step-arrow">-></span> \\(\\sigma = ' + fmt1(sigma) + "\\)"
+        ]
+      };
+    }
+
+    function genFindMuSigma() {
+      const mu = randomElement(muPool);
+      const sigma = randomElement([4,5,6,8,10,12]);
+      const z1 = randomElement([-1.64,-1.28,-0.84]);
+      const z2 = randomElement([0.84,1.28,1.64]);
+      const a = xFromZ(mu, sigma, z1);
+      const b = xFromZ(mu, sigma, z2);
+      const p1 = phi(z1);
+      const pRight = 1 - phi(z2);
+      const diagram = curveSvg({ shade: "between", labelMode: "x", marks: [{ z: z1, label: fmt1(a) }, { z: z2, label: fmt1(b) }] });
+      return {
+        badge: "inverse",
+        equation: '<span class="math-line">\\(X \\sim N(\\mu, \\sigma^2)\\), \\(P(X < ' + fmt1(a) + ') = ' + fmt(p1) + '\\), and \\(P(X > ' + fmt1(b) + ') = ' + fmt(pRight) + '\\). Find \\(\\mu\\) and \\(\\sigma\\).</span>' + diagram,
+        answer: "\\(\\mu = " + fmt1(mu) + "\\), \\(\\sigma = " + fmt1(sigma) + "\\)",
+        steps: [
+          '<span class="step-indicator">Step 1</span> Convert each probability into a z-value.',
+          "\\(P(X<" + fmt1(a) + ")=" + fmt(p1) + "\\), so \\(z_1=\\Phi^{-1}(" + fmt(p1) + ")\\approx " + zText(z1) + "\\).",
+          "\\(P(X>" + fmt1(b) + ")=" + fmt(pRight) + "\\), so \\(P(X<" + fmt1(b) + ")=" + fmt(phi(z2)) + "\\) and \\(z_2\\approx " + zText(z2) + "\\).",
+          '<span class="step-indicator">Step 2</span> Write two equations using \\(x=\\mu+z\\sigma\\).',
+          "\\(" + fmt1(a) + " = \\mu + (" + zText(z1) + ")\\sigma\\).",
+          "\\(" + fmt1(b) + " = \\mu + (" + zText(z2) + ")\\sigma\\).",
+          '<span class="step-indicator">Step 3</span> Subtract the equations to find \\(\\sigma\\).',
+          "\\(" + fmt1(b) + " - " + fmt1(a) + " = (" + zText(z2) + " - (" + zText(z1) + "))\\sigma\\).",
+          "\\(\\sigma = \\frac{" + fmt1(b - a) + "}{" + (z2 - z1).toFixed(2) + "} = " + fmt1(sigma) + "\\).",
+          '<span class="step-indicator">Step 4</span> Substitute back to find \\(\\mu\\).',
+          "\\(\\mu = " + fmt1(a) + " - (" + zText(z1) + ")(" + fmt1(sigma) + ") = " + fmt1(mu) + "\\).",
+          '<span class="step-arrow">-></span> \\(\\mu = ' + fmt1(mu) + "\\), \\(\\sigma = " + fmt1(sigma) + "\\)"
+        ]
+      };
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index + 1 === level));
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + config.options.map(([value, label]) => '<option value="' + value + '">' + label + "</option>").join("");
+      dropdown.value = "select";
+      document.getElementById("dropdown-container").classList.add("visible");
+      showBlankPage();
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(document.body), 0);
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function showBlankPage() {
+      const header = document.getElementById("problem-set-header");
+      header.classList.remove("visible");
+      document.getElementById("problem-list").innerHTML = '<li style="grid-column:1/-1;text-align:center;padding:40px;color:#718096;font-size:1.1em;">Please select a question type to begin practising the normal distribution.</li>';
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      const numProblems = currentLevel === 3 || currentType === "absolute_value" ? 3 : 4;
+      for (let i = 0; i < numProblems; i++) problems.push(generateProblem());
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const container = document.getElementById("problem-list");
+      const header = document.getElementById("problem-set-header");
+      container.innerHTML = "";
+      if (problems.length) {
+        header.textContent = problems[0].badge === "standard" ? "STANDARD NORMAL PRACTICE" : problems[0].badge === "general" ? "GENERAL NORMAL PRACTICE" : "INVERSE & PARAMETER PRACTICE";
+        header.className = "problem-set-header visible " + problems[0].badge;
+      } else {
+        header.classList.remove("visible");
+      }
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        const stepsHTML = problem.steps.map((step) => step.indexOf("->") !== -1 || step.indexOf("\\(") !== -1 || step.indexOf("=") !== -1 || step.indexOf("curve-wrap") !== -1 ? '<div class="step-equation">' + step + "</div>" : '<div class="step">' + step + "</div>").join("");
+        li.innerHTML =
+          '<div class="problem-header"><div class="problem-left"><div class="problem-number">' + (index + 1) + '</div><div class="equation">' + problem.equation + '</div></div><div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div></div><div class="steps-section" id="steps-' + index + '"><div class="answer-label">Solution Steps:</div><div class="solution-steps">' + stepsHTML + '<div class="final-answer">' + problem.answer + "</div></div></div>";
+        container.appendChild(li);
+      });
+      if (window.renderMathInElement) window.renderMathInElement(container);
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const answer = document.getElementById("quick-answer-" + i);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      }
+      if (window.renderMathInElement) window.renderMathInElement(document.getElementById("problem-list"));
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const section = document.getElementById("steps-" + i);
+        if (section) section.classList.toggle("visible", stepsVisible);
+      }
+      if (window.renderMathInElement) window.renderMathInElement(document.getElementById("problem-list"));
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerActive = false;
+      document.getElementById("timer-display").textContent = "Ready";
+      document.getElementById("timer-display").className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const element = document.getElementById("timer-display");
+      element.textContent = minutes + ":" + String(seconds).padStart(2, "0");
+      if (timeRemaining <= 30) element.className = "timer-display warning";
+      else if (timerActive) element.className = "timer-display active";
+      else element.className = "timer-display";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      document.getElementById("timer-display").textContent = "Time Up!";
+      document.getElementById("timer-display").className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-14"></script>
+</body>
+</html>
