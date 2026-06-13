@@ -270,10 +270,16 @@ a {
 
 .account-pill {
   min-height: 42px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  row-gap: 2px;
+  align-items: center;
   padding: 7px 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: white;
+  min-width: 250px;
 }
 
 .account-pill span {
@@ -281,11 +287,48 @@ a {
   color: var(--muted);
   font-size: 0.72rem;
   font-weight: 750;
+  grid-column: 1;
 }
 
 .account-pill strong {
   display: block;
   font-size: 0.88rem;
+  grid-column: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-action {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  min-height: 32px;
+  padding: 7px 11px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--violet), var(--teal));
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 850;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 10px 20px rgba(44, 35, 91, 0.13);
+}
+
+.account-action:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.account-pill[data-auth-state="not-configured"] .account-action {
+  background: #f1efff;
+  color: var(--violet);
+  box-shadow: none;
+}
+
+.account-pill[data-auth-state="signed-in"] {
+  border-color: rgba(23, 184, 179, 0.3);
+  background: linear-gradient(135deg, rgba(23, 184, 179, 0.08), rgba(111, 76, 195, 0.06)), #fff;
 }
 
 .icon-button {
@@ -1946,7 +1989,10 @@ sup .worksheet-fraction span:last-child {
   }
 
   .account-pill {
-    display: none;
+    display: grid;
+    grid-column: 1 / -1;
+    min-width: 0;
+    width: 100%;
   }
 
   #app {

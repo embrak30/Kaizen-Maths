@@ -2386,6 +2386,25 @@ function renderTeacher() {
         <h2>Current Guidance Pattern</h2>
         <p>Tool pages already show teacher notes from the registry. This page can become the overview for curriculum maps, starter routines, retrieval sequences, and printable planning notes.</p>
       </div>
+      <div class="panel">
+        <h2>Access Setup</h2>
+        <p>The account foundation is now ready for Supabase Google sign-in. Add your Supabase project URL and anon key in <code>auth-config.js</code>, then enable Google as an auth provider in Supabase.</p>
+        <div class="badge-row">
+          <span class="badge">Google sign-in</span>
+          <span class="badge">Trial role</span>
+          <span class="badge">Profile table</span>
+          <span class="badge">Future access tiers</span>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Next Supabase Steps</h2>
+        <div class="migration-list">
+          <article class="migration-item"><span>1</span><div><h3>Create Supabase project</h3><p>Copy the project URL and anon public key into <code>auth-config.js</code>.</p></div></article>
+          <article class="migration-item"><span>2</span><div><h3>Run the starter schema</h3><p>Use <code>supabase-schema.sql</code> in the Supabase SQL editor to create profiles, schools, and tool access tables.</p></div></article>
+          <article class="migration-item"><span>3</span><div><h3>Enable Google provider</h3><p>Add the Google OAuth client in Supabase and set the redirect URL to <code>/auth/callback.html</code>.</p></div></article>
+          <article class="migration-item"><span>4</span><div><h3>Test one account</h3><p>Sign in with Google and confirm a trial profile appears in the Supabase profiles table.</p></div></article>
+        </div>
+      </div>
     </section>
   `;
 }

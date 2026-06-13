@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kaizen Maths Platform Shell</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=kaizen-k-1">
-  <link rel="stylesheet" href="styles.css?v=step-structure-1">
+  <link rel="stylesheet" href="styles.css?v=auth-foundation-2">
 </head>
 <body>
   <div class="app-shell">
@@ -46,9 +46,10 @@
           <label for="globalSearch">Search tools</label>
           <input id="globalSearch" type="search" placeholder="Search topics, tools, or skills">
         </div>
-        <div class="account-pill">
-          <span>Teacher</span>
-          <strong>Demo workspace</strong>
+        <div class="account-pill" id="accountPill" data-auth-state="loading">
+          <span id="accountEyebrow">Access</span>
+          <strong id="accountLabel">Checking sign-in...</strong>
+          <button class="account-action" id="accountAction" type="button">Sign in</button>
         </div>
       </header>
 
@@ -81,6 +82,8 @@
     </aside>
   </div>
 
-  <script src="app.js?v=step-structure-1"></script>
+  <script src="auth-config.js?v=auth-foundation-2"></script>
+  <script src="auth.js?v=auth-foundation-2"></script>
+  <script src="app.js?v=auth-foundation-2"></script>
 </body>
 </html>
