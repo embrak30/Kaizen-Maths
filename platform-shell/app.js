@@ -1971,6 +1971,7 @@ function renderWorksheetGenerator() {
         </div>
         <div class="button-row">
           <button class="button" id="addWorksheetSection" type="button">Add Question Block</button>
+          <button class="button" id="buildTopicAssessment" type="button">Build Topic Assessment</button>
           <button class="button primary" id="generateWorksheet" type="submit">Create Worksheet</button>
           <button class="button" id="printWorksheet" type="button" disabled>Print / Save PDF</button>
           <button class="button subtle" id="resetWorksheet" type="button">Reset Worksheet</button>
@@ -2075,6 +2076,17 @@ function worksheetAssessmentOptions() {
   const assessment = document.getElementById("worksheetAssessmentMode")?.checked || false;
   const marksPerQuestion = Math.max(1, Math.min(20, Number(document.getElementById("worksheetMarks")?.value || 1)));
   return { assessment, marksPerQuestion };
+}
+
+function setWorksheetAssessmentMode(active) {
+  const assessmentMode = document.getElementById("worksheetAssessmentMode");
+  const assessmentPanel = document.getElementById("worksheetAssessmentPanel");
+  if (assessmentMode) assessmentMode.checked = active;
+  if (assessmentPanel) assessmentPanel.hidden = !active;
+}
+
+function preferredWorksheetType(types = []) {
+  return types.find((type) => /mixed/i.test(type.label || "") || /mixed/i.test(type.id || "")) || types[0] || null;
 }
 
 function populateWorksheetControls(metadata) {
@@ -2230,6 +2242,7 @@ function currentWorksheetSection() {
 function renderWorksheetSections() {
   const list = document.getElementById("worksheetSectionList");
   if (!list) return;
+  const { assessment } = worksheetAssessmentOptions();
 
   if (!worksheetState.sections.length) {
     list.innerHTML = `<p class="worksheet-section-empty">No blocks added yet. Generate will use the current selection, or add blocks to mix topics.</p>`;
@@ -2240,9 +2253,19 @@ function renderWorksheetSections() {
     <h3>Worksheet Blocks</h3>
     ${worksheetState.sections.map((section, index) => `
       <article class="worksheet-section-item">
-        <div>
+        <div class="worksheet-section-summary">
           <strong>${index + 1}. ${escapeHtml(section.toolTitle)}</strong>
-          <span>${escapeHtml(section.levelLabel)} · ${escapeHtml(section.typeLabel)} · ${section.count} questions${section.marksPerQuestion ? ` · ${worksheetMarksText(section.marksPerQuestion)} each` : ""}</span>
+          <span>${escapeHtml(section.levelLabel)} · ${escapeHtml(section.typeLabel)}</span>
+        </div>
+        <div class="worksheet-section-editors">
+          <label>
+            Questions
+            <input class="worksheet-section-count" type="number" min="1" max="40" value="${section.count}" data-section-id="${escapeHtml(section.id)}">
+          </label>
+          <label ${assessment ? "" : "hidden"}>
+            Marks each
+            <input class="worksheet-section-marks" type="number" min="1" max="20" value="${section.marksPerQuestion || 1}" data-section-id="${escapeHtml(section.id)}">
+          </label>
         </div>
         <button class="button worksheet-section-remove" type="button" data-section-id="${escapeHtml(section.id)}">Remove</button>
       </article>
@@ -2253,6 +2276,24 @@ function renderWorksheetSections() {
     button.addEventListener("click", () => {
       worksheetState.sections = worksheetState.sections.filter((section) => section.id !== button.dataset.sectionId);
       renderWorksheetSections();
+    });
+  });
+
+  list.querySelectorAll(".worksheet-section-count").forEach((input) => {
+    input.addEventListener("change", () => {
+      const section = worksheetState.sections.find((item) => item.id === input.dataset.sectionId);
+      if (!section) return;
+      section.count = Math.max(1, Math.min(40, Number(input.value || 1)));
+      input.value = String(section.count);
+    });
+  });
+
+  list.querySelectorAll(".worksheet-section-marks").forEach((input) => {
+    input.addEventListener("change", () => {
+      const section = worksheetState.sections.find((item) => item.id === input.dataset.sectionId);
+      if (!section) return;
+      section.marksPerQuestion = Math.max(1, Math.min(20, Number(input.value || 1)));
+      input.value = String(section.marksPerQuestion);
     });
   });
 }
@@ -2266,6 +2307,46 @@ function addWorksheetSection() {
   worksheetState.sections.push(section);
   renderWorksheetSections();
   setWorksheetStatus(`Added ${section.count} ${section.toolTitle} questions to the worksheet.`, "success");
+}
+
+function buildTopicAssessment() {
+  const tool = selectedWorksheetTool();
+  const levels = worksheetState.metadata?.levels || [];
+  if (!tool || !levels.length) {
+    setWorksheetStatus("Wait for the selected topic to finish loading before building an assessment.", "error");
+    return;
+  }
+
+  setWorksheetAssessmentMode(true);
+  const marksPerQuestion = worksheetAssessmentOptions().marksPerQuestion;
+  const count = 2;
+  const sections = levels
+    .map((level) => {
+      const type = preferredWorksheetType(level.types || []);
+      if (!type) return null;
+      return {
+        id: `${tool.slug}-${level.id}-${type.id}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        toolSlug: tool.slug,
+        toolTitle: tool.title,
+        category: tool.category,
+        level: level.id,
+        levelLabel: level.title,
+        type: type.id,
+        typeLabel: type.label,
+        count,
+        marksPerQuestion
+      };
+    })
+    .filter(Boolean);
+
+  if (!sections.length) {
+    setWorksheetStatus("No worksheet-ready levels were found for this topic.", "error");
+    return;
+  }
+
+  worksheetState.sections = sections;
+  renderWorksheetSections();
+  setWorksheetStatus(`Built a draft ${tool.title} assessment with ${sections.length} block${sections.length === 1 ? "" : "s"}. Remove blocks or edit counts and marks before generating.`, "success");
 }
 
 async function generateWorksheetFromSections(sections, options = {}) {
@@ -2412,6 +2493,7 @@ function bindWorksheetGenerator() {
   const form = document.getElementById("worksheetForm");
   const printButton = document.getElementById("printWorksheet");
   const addSectionButton = document.getElementById("addWorksheetSection");
+  const buildAssessmentButton = document.getElementById("buildTopicAssessment");
   const resetButton = document.getElementById("resetWorksheet");
   const assessmentMode = document.getElementById("worksheetAssessmentMode");
   const assessmentPanel = document.getElementById("worksheetAssessmentPanel");
@@ -2426,9 +2508,17 @@ function bindWorksheetGenerator() {
   });
 
   addSectionButton?.addEventListener("click", addWorksheetSection);
+  buildAssessmentButton?.addEventListener("click", buildTopicAssessment);
   resetButton?.addEventListener("click", resetWorksheetBuilder);
   assessmentMode?.addEventListener("change", () => {
     if (assessmentPanel) assessmentPanel.hidden = !assessmentMode.checked;
+    if (assessmentMode.checked) {
+      const marksPerQuestion = worksheetAssessmentOptions().marksPerQuestion;
+      worksheetState.sections.forEach((section) => {
+        if (!section.marksPerQuestion) section.marksPerQuestion = marksPerQuestion;
+      });
+    }
+    renderWorksheetSections();
     setWorksheetStatus(assessmentMode.checked ? "Assessment mode on. Add blocks with the mark value you want for each question." : "Assessment mode off. Worksheets will generate without marks.", "success");
   });
 
