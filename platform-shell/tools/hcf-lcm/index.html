@@ -183,6 +183,16 @@
     function lcm(a,b){return Math.abs(a*b)/gcd(a,b)}
     function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
     function randomChoice(arr){return arr[random(0,arr.length-1)]}
+    function randomNumberPairWithSharedFactor(aMin,aMax,bMin,bMax){
+      for(let attempt=0;attempt<80;attempt++){
+        const a=random(aMin,aMax), b=random(bMin,bMax);
+        if(gcd(a,b)>1) return [a,b];
+      }
+      const factor=randomChoice([2,3,4,5,6]);
+      const a=factor*random(Math.ceil(aMin/factor),Math.floor(aMax/factor));
+      const b=factor*random(Math.ceil(bMin/factor),Math.floor(bMax/factor));
+      return [a,b];
+    }
 
     function primeFactorization(n){
       const factors=[];
@@ -244,7 +254,7 @@
       if(type==='mixed_advanced') type=randomChoice(['hcf_basic','lcm_basic','hcf_algebra','lcm_algebra']);
 
       if(type==='hcf_basic'){
-        const a=random(12,48), b=random(8,36), answer=gcd(a,b);
+        const [a,b]=randomNumberPairWithSharedFactor(12,48,8,36), answer=gcd(a,b);
         const fa=primeFactorization(a), fb=primeFactorization(b);
         return {type:'HCF',expression:`HCF(${a}, ${b})`,answer,steps:[
           `Find the HCF of ${a} and ${b}`,
@@ -256,7 +266,7 @@
       }
 
       if(type==='lcm_basic'){
-        const a=random(6,24), b=random(8,30), answer=lcm(a,b);
+        const [a,b]=randomNumberPairWithSharedFactor(6,24,8,30), answer=lcm(a,b);
         const fa=primeFactorization(a), fb=primeFactorization(b);
         return {type:'LCM',expression:`LCM(${a}, ${b})`,answer,steps:[
           `Find the LCM of ${a} and ${b}`,
@@ -306,7 +316,7 @@
         {context:'Rectangular tiles measure {a} cm by {b} cm.',question:'What is the side length of the smallest square they can tile?',type:'LCM',setup:'Find the LCM of the two side lengths.'},
         {context:'Two ropes are {a} m and {b} m long.',question:'What is the longest equal length that cuts both ropes exactly?',type:'HCF',setup:'Find the HCF of the two lengths.'}
       ];
-      const scenario=randomChoice(scenarios), a=random(12,48), b=random(8,36);
+      const scenario=randomChoice(scenarios), [a,b]=randomNumberPairWithSharedFactor(12,48,8,36);
       const answer=scenario.type==='HCF'?gcd(a,b):lcm(a,b);
       return {type:scenario.type,expression:scenario.context.replace('{a}',a).replace('{b}',b),question:scenario.question,answer,steps:[
         `Problem: ${scenario.context.replace('{a}',a).replace('{b}',b)}`,

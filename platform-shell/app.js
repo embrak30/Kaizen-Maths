@@ -226,7 +226,7 @@ const tools = [
     status: "Imported",
     description: "Generate HCF and LCM practice for integers, algebraic expressions, mixed drills, and word problems with worked factorisation steps.",
     tags: ["numbers", "hcf", "lcm", "factors", "multiples", "prime factorisation", "algebra"],
-    toolPath: "tools/hcf-lcm/index.html?v=step-structure-1",
+    toolPath: "tools/hcf-lcm/index.html?v=hcf-shared-factor-1",
     imported: true,
     teacherNotes: [
       "Level 1 builds fluency with HCF and LCM of two integers.",
