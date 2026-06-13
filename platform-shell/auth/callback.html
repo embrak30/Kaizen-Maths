@@ -35,7 +35,7 @@
     <h1>Signing you in...</h1>
     <p>You will be returned to Kaizen Maths in a moment.</p>
   </main>
-  <script src="../auth-config.js?v=auth-foundation-2"></script>
+  <script src="../auth-config.js?v=auth-foundation-5"></script>
   <script type="module">
     const config = window.KAIZEN_AUTH_CONFIG || {};
     const homeUrl = new URL("/#/", window.location.origin).toString();
@@ -60,6 +60,19 @@
         const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
         if (error) console.warn("Kaizen sign-in callback:", error.message);
       }
+
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      const accessToken = hashParams.get("access_token");
+      const refreshToken = hashParams.get("refresh_token");
+      if (accessToken && refreshToken) {
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken
+        });
+        if (error) console.warn("Kaizen sign-in session:", error.message);
+      }
+
+      await supabase.auth.getSession();
 
       window.location.replace(homeUrl);
     }

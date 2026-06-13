@@ -81,6 +81,10 @@
     return new URL(path, window.location.origin).toString();
   }
 
+  function supabaseAuthUrl() {
+    return String(config.supabaseUrl || "").replace(/\/+$/, "");
+  }
+
   async function loadSupabase() {
     if (!state.configured) return null;
     if (state.client) return state.client;
@@ -157,17 +161,13 @@
       setAccountUi("not-configured");
       return;
     }
-    const client = await loadSupabase();
-    await client.auth.signInWithOAuth({
+    const params = new URLSearchParams({
       provider: "google",
-      options: {
-        redirectTo: redirectUrl(),
-        queryParams: {
-          access_type: "offline",
-          prompt: "consent"
-        }
-      }
+      redirect_to: redirectUrl(),
+      access_type: "offline",
+      prompt: "consent"
     });
+    window.location.assign(`${supabaseAuthUrl()}/auth/v1/authorize?${params.toString()}`);
   }
 
   async function signOut() {
