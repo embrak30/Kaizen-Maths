@@ -76,6 +76,18 @@
     action.onclick = signInWithGoogle;
   }
 
+  function syncProfileInBackground(user) {
+    if (!user) return;
+    ensureProfile(user)
+      .then((profile) => {
+        state.profile = profile;
+        if (state.session?.user?.id === user.id) setAccountUi("signed-in", user);
+      })
+      .catch((error) => {
+        console.warn("Kaizen profile check skipped:", error.message);
+      });
+  }
+
   function redirectUrl() {
     const path = config.googleRedirectPath || "/auth/callback.html";
     return new URL(path, window.location.origin).toString();
@@ -152,11 +164,9 @@
     state.session = data.session;
 
     if (state.session?.user) {
-      state.profile = await withTimeout(ensureProfile(state.session.user), 6000, "Profile lookup timed out").catch((error) => {
-        console.warn("Kaizen profile check skipped:", error.message);
-        return null;
-      });
+      state.profile = null;
       setAccountUi("signed-in", state.session.user);
+      syncProfileInBackground(state.session.user);
     } else {
       state.profile = null;
       setAccountUi("signed-out");
@@ -208,13 +218,11 @@
     try {
       const client = await withTimeout(loadSupabase(), 6000, "Supabase client timed out");
       client.auth.onAuthStateChange(async (_event, session) => {
-        state.session = session;
-        if (session?.user) {
-          state.profile = await withTimeout(ensureProfile(session.user), 6000, "Profile lookup timed out").catch((error) => {
-            console.warn("Kaizen profile check skipped:", error.message);
-            return null;
-          });
+      state.session = session;
+      if (session?.user) {
+          state.profile = null;
           setAccountUi("signed-in", session.user);
+          syncProfileInBackground(session.user);
         } else {
           state.profile = null;
           setAccountUi("signed-out");
@@ -230,6 +238,7 @@
 
   window.KaizenAuth = {
     state,
+    getClient: loadSupabase,
     initAuth,
     refreshSession,
     signInWithGoogle,

@@ -14,6 +14,20 @@ create table if not exists public.profiles (
 
 alter table public.profiles enable row level security;
 
+create or replace function public.is_admin()
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.profiles
+    where id = auth.uid()
+      and role = 'admin'
+  );
+$$;
+
 create policy "Users can read their own profile"
 on public.profiles
 for select
@@ -23,6 +37,17 @@ create policy "Users can insert their own profile"
 on public.profiles
 for insert
 with check (auth.uid() = id and role in ('free', 'trial'));
+
+create policy "Admins can read all profiles"
+on public.profiles
+for select
+using (public.is_admin());
+
+create policy "Admins can update profiles"
+on public.profiles
+for update
+using (public.is_admin())
+with check (public.is_admin());
 
 create table if not exists public.schools (
   id uuid primary key default gen_random_uuid(),
@@ -37,3 +62,26 @@ create table if not exists public.tool_access (
   tool_slug text primary key,
   required_access text not null default 'free' check (required_access in ('free', 'trial', 'pro', 'school', 'admin'))
 );
+
+alter table public.tool_access enable row level security;
+
+create policy "Anyone can read tool access"
+on public.tool_access
+for select
+using (true);
+
+create policy "Admins can insert tool access"
+on public.tool_access
+for insert
+with check (public.is_admin());
+
+create policy "Admins can update tool access"
+on public.tool_access
+for update
+using (public.is_admin())
+with check (public.is_admin());
+
+create policy "Admins can delete tool access"
+on public.tool_access
+for delete
+using (public.is_admin());

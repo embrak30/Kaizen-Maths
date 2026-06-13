@@ -1060,8 +1060,23 @@ const state = {
   query: "",
   category: "All",
   level: "All",
-  access: "All"
+  access: "All",
+  toolAccess: {},
+  accessLoaded: false
 };
+
+const accessLevels = ["free", "trial", "pro", "school", "admin"];
+const freeSampleTools = new Set([
+  "substitution",
+  "fractions-practice",
+  "pythagoras-theorem",
+  "averages-range",
+  "discrete-random-variables",
+  "twenty4",
+  "fractions-table",
+  "math-in-a-minute",
+  "interface-guide"
+]);
 
 const worksheetState = {
   toolSlug: "",
@@ -1088,6 +1103,68 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function titleCaseAccess(value) {
+  const normalised = normalise(value || "trial");
+  if (normalised === "free") return "Free";
+  if (normalised === "trial") return "Trial";
+  if (normalised === "pro") return "Pro";
+  if (normalised === "school") return "School";
+  if (normalised === "admin") return "Admin";
+  return "Trial";
+}
+
+function authState() {
+  return window.KaizenAuth?.state || {};
+}
+
+function currentUserRole() {
+  const auth = authState();
+  if (!auth.session?.user) return "guest";
+  return normalise(auth.profile?.role || window.KAIZEN_AUTH_CONFIG?.defaultRole || "trial");
+}
+
+function isSignedIn() {
+  return Boolean(authState().session?.user);
+}
+
+function isAdmin() {
+  return currentUserRole() === "admin";
+}
+
+function defaultRequiredAccess(tool) {
+  return freeSampleTools.has(tool.slug) ? "free" : "trial";
+}
+
+function requiredAccess(tool) {
+  return normalise(state.toolAccess[tool.slug] || defaultRequiredAccess(tool));
+}
+
+function requiredAccessLabel(tool) {
+  return titleCaseAccess(requiredAccess(tool));
+}
+
+function canAccessTool(tool) {
+  const required = requiredAccess(tool);
+  if (required === "free") return true;
+  const role = currentUserRole();
+  if (role === "guest") return false;
+  if (role === "admin") return true;
+  if (role === "school") return ["free", "trial", "pro", "school"].includes(required);
+  return accessLevels.indexOf(role) >= accessLevels.indexOf(required);
+}
+
+function signInCallout(title = "Sign in to continue") {
+  return `
+    <section class="panel access-callout">
+      <span class="eyebrow">Account Required</span>
+      <h2>${title}</h2>
+      <p>Free visitors can try a small sample from the library. Sign in with Google to start trial access and use the full set while the site is being tested.</p>
+      <button class="button primary" type="button" data-auth-action="signin">Sign in with Google</button>
+      <a class="button" href="#/tools">Back to Free Tools</a>
+    </section>
+  `;
 }
 
 function worksheetMathFragment(value) {
@@ -1377,7 +1454,7 @@ function filteredTools(extraCategory) {
     const matchesQuery = !state.query || haystack.includes(normalise(state.query));
     const matchesCategory = (extraCategory && categorySlug(tool.category) === extraCategory) || (!extraCategory && (state.category === "All" || tool.category === state.category));
     const matchesLevel = state.level === "All" || tool.level.includes(state.level) || tool.level === "All";
-    const matchesAccess = state.access === "All" || tool.access === state.access;
+    const matchesAccess = state.access === "All" || requiredAccessLabel(tool) === state.access;
     return matchesQuery && matchesCategory && matchesLevel && matchesAccess;
   });
 }
@@ -1416,6 +1493,36 @@ function restorePendingFocus() {
   pendingFocusTarget = "";
   window.requestAnimationFrame(() => focusSearchInput(target));
   return true;
+}
+
+function bindAuthActions(root = document) {
+  root.querySelectorAll("[data-auth-action='signin']").forEach((button) => {
+    button.addEventListener("click", () => window.KaizenAuth?.signInWithGoogle?.());
+  });
+}
+
+async function loadToolAccessSettings({ rerender = false } = {}) {
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client) return;
+  try {
+    const { data, error } = await client.from("tool_access").select("tool_slug, required_access");
+    if (error) throw error;
+    state.toolAccess = Object.fromEntries((data || []).map((row) => [row.tool_slug, row.required_access]));
+    state.accessLoaded = true;
+    if (rerender) renderRoute();
+  } catch (error) {
+    console.warn("Kaizen access settings unavailable:", error.message);
+  }
+}
+
+async function saveToolAccess(slug, access) {
+  const client = await window.KaizenAuth?.getClient?.();
+  if (!client) throw new Error("Supabase is not available.");
+  const { error } = await client
+    .from("tool_access")
+    .upsert({ tool_slug: slug, required_access: access }, { onConflict: "tool_slug" });
+  if (error) throw error;
+  state.toolAccess[slug] = access;
 }
 
 function statusLabel(tool) {
@@ -1526,23 +1633,26 @@ function renderFilters() {
       <input id="librarySearch" type="search" value="${state.query}" placeholder="Search topics, tools, or skills">
       <select id="categoryFilter" aria-label="Category">${categories.map((category) => `<option ${state.category === category ? "selected" : ""}>${category}</option>`).join("")}</select>
       <select id="levelFilter" aria-label="Level">${[...new Set(levels)].map((level) => `<option ${state.level === level ? "selected" : ""}>${level}</option>`).join("")}</select>
-      <select id="accessFilter" aria-label="Access">${["All", "Free", "Pro"].map((access) => `<option ${state.access === access ? "selected" : ""}>${access}</option>`).join("")}</select>
+      <select id="accessFilter" aria-label="Access">${["All", "Free", "Trial", "Pro", "School", "Admin"].map((access) => `<option ${state.access === access ? "selected" : ""}>${access}</option>`).join("")}</select>
       <button class="button filter-reset" id="resetFilters" type="button">Reset</button>
     </section>
   `;
 }
 
 function toolCard(tool) {
+  const access = requiredAccessLabel(tool);
+  const locked = !canAccessTool(tool);
   return `
-    <a class="tool-card" href="#/tools/${tool.slug}">
+    <a class="tool-card ${locked ? "locked" : ""}" href="#/tools/${tool.slug}">
       <div class="tool-card-header">
-        <h2>${tool.title}</h2>
-        <span class="badge ${normalise(tool.access)}">${tool.access}</span>
+        <h2>${escapeHtml(tool.title)}</h2>
+        <span class="badge ${normalise(access)}">${access}</span>
       </div>
-      <p>${tool.description}</p>
+      <p>${escapeHtml(tool.description)}</p>
       <div class="badge-row">
-        <span class="badge">${tool.category}</span>
-        <span class="badge">${tool.level}</span>
+        <span class="badge">${escapeHtml(tool.category)}</span>
+        <span class="badge">${escapeHtml(tool.level)}</span>
+        ${locked ? `<span class="badge locked-badge">Sign in</span>` : ""}
       </div>
     </a>
   `;
@@ -2341,7 +2451,7 @@ function renderToolFrame(tool) {
             <span class="badge">${tool.category}</span>
             <span class="badge">${tool.level}</span>
             <span class="badge">${tool.type}</span>
-            <span class="badge ${normalise(tool.access)}">${tool.access}</span>
+            <span class="badge ${normalise(requiredAccessLabel(tool))}">${requiredAccessLabel(tool)}</span>
           </div>
           <div class="legacy-toolbar-actions">
             <span class="tool-path">${tool.toolPath}</span>
@@ -2366,6 +2476,14 @@ function renderToolDetail(slug) {
   const tool = tools.find((item) => item.slug === slug);
   if (!tool) {
     app.innerHTML = `${pageHeader("Tool not found", "This route does not match a registered tool.", `<a class="button" href="#/tools">Back to Library</a>`)}`;
+    return;
+  }
+  if (!canAccessTool(tool)) {
+    app.innerHTML = `
+      ${pageHeader(tool.title, tool.description, `<a class="button" href="#/tools">Back to Library</a>`)}
+      ${signInCallout(`${requiredAccessLabel(tool)} access required`)}
+    `;
+    bindAuthActions();
     return;
   }
   renderToolFrame(tool);
@@ -2407,6 +2525,92 @@ function renderTeacher() {
       </div>
     </section>
   `;
+}
+
+function renderAdmin() {
+  if (!isSignedIn()) {
+    app.innerHTML = `
+      ${pageHeader("Admin", "Manage access levels for tools and prepare the site for trial users, free samples, and future paid tiers.")}
+      ${signInCallout("Admin sign-in required")}
+    `;
+    bindAuthActions();
+    return;
+  }
+
+  if (!isAdmin()) {
+    app.innerHTML = `
+      ${pageHeader("Admin", "Your account is signed in, but it has not been marked as admin yet.")}
+      <section class="panel access-callout">
+        <span class="eyebrow">Admin Setup</span>
+        <h2>Make your account admin in Supabase</h2>
+        <p>In Supabase, open <strong>Table Editor → profiles</strong>, find your user row, and change <code>role</code> from <code>trial</code> to <code>admin</code>. Then refresh this page.</p>
+        <p>Current role: <strong>${escapeHtml(currentUserRole())}</strong></p>
+      </section>
+    `;
+    return;
+  }
+
+  const rows = tools.map((tool) => {
+    const current = requiredAccess(tool);
+    return `
+      <tr>
+        <td>
+          <strong>${escapeHtml(tool.title)}</strong>
+          <small>${escapeHtml(tool.category)} · ${escapeHtml(tool.level)}</small>
+        </td>
+        <td>${escapeHtml(tool.slug)}</td>
+        <td>
+          <select class="admin-access-select" data-tool-slug="${escapeHtml(tool.slug)}">
+            ${accessLevels.map((level) => `<option value="${level}" ${current === level ? "selected" : ""}>${titleCaseAccess(level)}</option>`).join("")}
+          </select>
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  app.innerHTML = `
+    ${pageHeader("Admin", "Choose which tools are free samples and which require trial, pro, school, or admin access.")}
+    <section class="panel admin-panel">
+      <div class="admin-toolbar">
+        <div>
+          <span class="eyebrow">Access Rules</span>
+          <h2>Tool Access</h2>
+          <p>Signed-out visitors can open Free tools. Signed-in trial users can open Trial tools. For now, keep most tools as Trial while testing.</p>
+        </div>
+        <button class="button primary" id="saveAccessRules" type="button">Save Access Rules</button>
+      </div>
+      <p class="admin-status" id="adminAccessStatus">${state.accessLoaded ? "Loaded from Supabase." : "Using default access levels until Supabase settings load."}</p>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr><th>Tool</th><th>Slug</th><th>Required Access</th></tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </section>
+  `;
+  bindAdmin();
+}
+
+function bindAdmin() {
+  const status = document.getElementById("adminAccessStatus");
+  document.getElementById("saveAccessRules")?.addEventListener("click", async () => {
+    const button = document.getElementById("saveAccessRules");
+    const selects = [...document.querySelectorAll(".admin-access-select")];
+    button.disabled = true;
+    status.textContent = "Saving access rules...";
+    try {
+      for (const select of selects) {
+        await saveToolAccess(select.dataset.toolSlug, select.value);
+      }
+      status.textContent = "Saved. Access rules are now stored in Supabase.";
+      renderRoute();
+    } catch (error) {
+      status.textContent = `Could not save: ${error.message}`;
+      button.disabled = false;
+    }
+  });
 }
 
 function bindFilters() {
@@ -2722,6 +2926,14 @@ function renderRoute() {
   } else if (parts[0] === "how-to-use-this-site") {
     renderSiteGuide();
   } else if (parts[0] === "worksheet-generator") {
+    if (!isSignedIn()) {
+      app.innerHTML = `
+        ${pageHeader("Worksheet Builder", "Mix tools, levels, and question types into printable worksheets with answer keys.")}
+        ${signInCallout("Trial access required")}
+      `;
+      bindAuthActions();
+      return;
+    }
     renderWorksheetGenerator();
   } else if (parts[0] === "tools" && parts[1] === "interface-guide") {
     location.hash = "#/how-to-use-this-site";
@@ -2734,6 +2946,8 @@ function renderRoute() {
     renderToolLibrary(parts[1]);
   } else if (parts[0] === "teacher") {
     renderTeacher();
+  } else if (parts[0] === "admin") {
+    renderAdmin();
   } else {
     renderHome();
   }
@@ -2766,4 +2980,13 @@ document.getElementById("menuButton").addEventListener("click", () => {
 document.getElementById("mobileNavBackdrop").addEventListener("click", closeMobileNav);
 
 window.addEventListener("hashchange", renderRoute);
+
+window.addEventListener("kaizen-auth-change", () => {
+  loadToolAccessSettings({ rerender: true });
+});
+
+window.setTimeout(() => {
+  loadToolAccessSettings({ rerender: true });
+}, 1200);
+
 renderRoute();
