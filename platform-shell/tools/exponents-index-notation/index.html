@@ -225,7 +225,7 @@
     }
     .equation {
       color: #1a365d;
-      font-family: "Times New Roman", serif;
+      font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);
       font-size: 1.6rem;
       font-weight: 700;
       line-height: 1.25;
@@ -259,7 +259,7 @@
     .step-equation {
       margin: 8px 0;
       color: #805ad5;
-      font-family: "Times New Roman", serif;
+      font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);
       font-size: 1.18rem;
       font-weight: 700;
       text-align: center;
@@ -328,7 +328,7 @@
       .step-equation { font-size: 1.3rem; }
     }
   </style>
-  <link rel="stylesheet" href="../_shared/math-look.css">
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
   <script src="../_shared/math-render.js" defer></script>
 </head>
 <body>

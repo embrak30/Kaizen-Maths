@@ -15,6 +15,7 @@
   --violet-soft: #f1efff;
   --teal-soft: #e7fbfa;
   --shadow: 0 16px 40px rgba(44, 35, 91, 0.11);
+  --math-font: "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
 }
 
 * {
@@ -1579,7 +1580,7 @@ a {
 }
 
 .worksheet-question-text {
-  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Times New Roman", serif;
+  font-family:var(--math-font);
   font-size: 1.08rem;
   line-height: 1.5;
 }
@@ -1615,7 +1616,7 @@ a {
   margin: 0 0.18em;
   vertical-align: middle;
   text-align: center;
-  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Times New Roman", serif;
+  font-family:var(--math-font);
   line-height: 1.05;
 }
 
@@ -1666,7 +1667,7 @@ sup .worksheet-fraction span:last-child {
   justify-items: center;
   margin: 0 0.18em;
   vertical-align: middle;
-  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Times New Roman", serif;
+  font-family:var(--math-font);
   line-height: 0.9;
 }
 
@@ -1690,7 +1691,7 @@ sup .worksheet-fraction span:last-child {
 .worksheet-math-table {
   border-collapse: collapse;
   margin: 8px 0;
-  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Times New Roman", serif;
+  font-family:var(--math-font);
 }
 
 .worksheet-math-table td {
@@ -1835,7 +1836,7 @@ sup .worksheet-fraction span:last-child {
   grid-template-columns: 32px minmax(0, 1fr);
   gap: 10px;
   align-items: start;
-  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Times New Roman", serif;
+  font-family:var(--math-font);
   line-height: 1.45;
 }
 

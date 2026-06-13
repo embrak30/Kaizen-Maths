@@ -4,6 +4,10 @@
   consistent mathematical face while leaving each tool's layout intact.
 */
 
+:root {
+  --math-font: "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+}
+
 .equation,
 .step-equation,
 .math,
@@ -14,8 +18,25 @@
 .step-calculation,
 .calculation,
 .problem-answer,
-.final-answer {
-  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Times New Roman", serif;
+.final-answer,
+.function-display,
+.derivative-result,
+.final-derivative,
+.equation-system,
+.system-line,
+.coordinate,
+.sequence,
+.calculation-box,
+.vector-term,
+.vector-symbol,
+.colvec,
+.shape-label,
+.angle-label,
+.tree-label,
+.tree-prob,
+.path-prod,
+.var {
+  font-family: var(--math-font);
   font-variant-numeric: lining-nums tabular-nums;
   letter-spacing: 0;
 }
@@ -85,7 +106,7 @@
 }
 
 .prob-table {
-  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Times New Roman", serif;
+  font-family: var(--math-font);
   font-variant-numeric: lining-nums tabular-nums;
 }
 

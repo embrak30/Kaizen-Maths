@@ -55,7 +55,7 @@
         .sidebar-content h3 { color: #1a365d; margin: 20px 0 10px 0; font-size: 1.1em; border-bottom: 2px solid #3182ce; padding-bottom: 5px; }
         .sidebar-content p, .sidebar-content li { margin-bottom: 8px; color: #555; }
         .sidebar-content ul { padding-left: 20px; margin-bottom: 15px; }
-        .sidebar-content .formula { background: #f7fafc; padding: 8px 12px; border-radius: 4px; font-family: 'Times New Roman', serif; margin: 5px 0; border-left: 3px solid #3182ce; }
+        .sidebar-content .formula { background: #f7fafc; padding: 8px 12px; border-radius: 4px; font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif); margin: 5px 0; border-left: 3px solid #3182ce; }
 
         .sidebar-overlay {
             position: fixed;
@@ -157,7 +157,7 @@
         .problem-answer.visible { display: block; animation: slideIn 0.4s ease; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         .problem-number { background: #3182ce; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 20px; font-size: 1.1em; flex-shrink: 0; }
-        .expression { font-size: 1.8em; font-family: 'Times New Roman', serif; color: #1a365d; font-weight: 600; }
+        .expression { font-size: 1.8em; font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif); color: #1a365d; font-weight: 600; }
         .data-set, .missing-value, .ordered-data { padding: 8px 12px; border-radius: 6px; font-weight: bold; margin: 5px; display: inline-block; }
         .data-set { background: #e6fffa; border: 2px solid #38a169; }
         .missing-value { background: #fef5e7; border: 2px solid #d69e2e; }
@@ -174,7 +174,7 @@
         .modal-content h2 { color: #e53e3e; margin-bottom: 18px; font-size: 2em; }
         .modal-content p { color: #718096; margin-bottom: 25px; font-size: 1.1em; }
         .hidden { display: none; }
-        .calculation-box { background: #f7fafc; border: 2px solid #cbd5e0; border-radius: 8px; padding: 15px; margin: 10px 0; font-family: 'Times New Roman', serif; font-size: 1.2em; }
+        .calculation-box { background: #f7fafc; border: 2px solid #cbd5e0; border-radius: 8px; padding: 15px; margin: 10px 0; font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif); font-size: 1.2em; }
         .fraction { display: inline-block; text-align: center; vertical-align: middle; }
         .fraction .numerator { display: block; border-bottom: 1px solid #000; padding-bottom: 2px; }
         .fraction .denominator { display: block; padding-top: 2px; }
@@ -195,7 +195,7 @@
             .solution-steps { font-size: 1.3em; }
         }
     </style>
-  <link rel="stylesheet" href="../_shared/math-look.css">
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
   <script src="../_shared/math-render.js" defer></script>
 </head>
 <body>
