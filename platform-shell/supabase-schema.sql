@@ -28,21 +28,27 @@ as $$
   );
 $$;
 
+grant execute on function public.is_admin() to anon, authenticated;
+
+drop policy if exists "Users can read their own profile" on public.profiles;
 create policy "Users can read their own profile"
 on public.profiles
 for select
 using (auth.uid() = id);
 
+drop policy if exists "Users can insert their own profile" on public.profiles;
 create policy "Users can insert their own profile"
 on public.profiles
 for insert
 with check (auth.uid() = id and role in ('free', 'trial'));
 
+drop policy if exists "Admins can read all profiles" on public.profiles;
 create policy "Admins can read all profiles"
 on public.profiles
 for select
 using (public.is_admin());
 
+drop policy if exists "Admins can update profiles" on public.profiles;
 create policy "Admins can update profiles"
 on public.profiles
 for update
@@ -65,22 +71,31 @@ create table if not exists public.tool_access (
 
 alter table public.tool_access enable row level security;
 
+grant select on public.profiles to authenticated;
+grant insert, update on public.profiles to authenticated;
+grant select on public.tool_access to anon, authenticated;
+grant insert, update, delete on public.tool_access to authenticated;
+
+drop policy if exists "Anyone can read tool access" on public.tool_access;
 create policy "Anyone can read tool access"
 on public.tool_access
 for select
 using (true);
 
+drop policy if exists "Admins can insert tool access" on public.tool_access;
 create policy "Admins can insert tool access"
 on public.tool_access
 for insert
 with check (public.is_admin());
 
+drop policy if exists "Admins can update tool access" on public.tool_access;
 create policy "Admins can update tool access"
 on public.tool_access
 for update
 using (public.is_admin())
 with check (public.is_admin());
 
+drop policy if exists "Admins can delete tool access" on public.tool_access;
 create policy "Admins can delete tool access"
 on public.tool_access
 for delete
