@@ -687,7 +687,7 @@ const tools = [
     status: "Imported",
     description: "Generate normal distribution practice covering standard normal probabilities, Phi notation, standardisation, inverse normal questions, and finding unknown means or standard deviations.",
     tags: ["statistics", "normal distribution", "standard normal", "z score", "phi", "inverse normal", "mean", "standard deviation", "probability"],
-    toolPath: "tools/normal-distribution/index.html?v=normal-distribution-1",
+    toolPath: "tools/normal-distribution/index.html?v=normal-distribution-2",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on standard normal probabilities, complements, intervals, and inverse z-values.",

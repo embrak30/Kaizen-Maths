@@ -37,23 +37,23 @@
       <p>This tool supports practice with the standard normal distribution, standardising any normal random variable, and using tables or a calculator to find probabilities and inverse values.</p>
       <h3>Level Guide</h3>
       <ul>
-        <li><strong>Level 1:</strong> Standard normal probabilities, \(\Phi(z)\), complements, intervals, and inverse \(z\)-values.</li>
-        <li><strong>Level 2:</strong> General normal distributions, \(Z=\frac{X-\mu}{\sigma}\), reverse cut-offs, and absolute-value probability statements.</li>
+        <li><strong>Level 1:</strong> Standard normal probabilities, Φ(z), complements, intervals, and inverse z-values.</li>
+        <li><strong>Level 2:</strong> General normal distributions, Z = (X - μ) / σ, reverse cut-offs, and absolute-value probability statements.</li>
         <li><strong>Level 3:</strong> Finding unknown cut-offs, means, standard deviations, and pairs of parameters from probability statements.</li>
       </ul>
       <h3>Teaching Notes</h3>
       <ul>
         <li>Students should identify the shaded region before using tables or technology.</li>
         <li>Worked steps deliberately show the standardisation and the table lookup separately.</li>
-        <li>For inverse questions, encourage students to decide whether the probability is left-tail or right-tail before finding \(z\).</li>
-        <li>For parameter questions, set up \(x=\mu+z\sigma\) and solve the resulting equation or pair of equations.</li>
+        <li>For inverse questions, encourage students to decide whether the probability is left-tail or right-tail before finding z.</li>
+        <li>For parameter questions, set up x = μ + zσ and solve the resulting equation or pair of equations.</li>
       </ul>
       <h3>Common Mistakes</h3>
       <ul>
-        <li>Using \(\sigma^2\) instead of \(\sigma\) when standardising.</li>
-        <li>Forgetting that \(P(Z>z)=1-\Phi(z)\).</li>
-        <li>Using the wrong sign of \(z\) for a lower-tail probability below 0.5.</li>
-        <li>Treating \(|X-a|>b\) as one inequality instead of two tails.</li>
+        <li>Using σ² instead of σ when standardising.</li>
+        <li>Forgetting that P(Z > z) = 1 - Φ(z).</li>
+        <li>Using the wrong sign of z for a lower-tail probability below 0.5.</li>
+        <li>Treating |X - a| > b as one inequality instead of two tails.</li>
       </ul>
     </div>
   </aside>
@@ -68,7 +68,7 @@
     <section class="controls">
       <div class="level-info">
         <h3 id="level-title">Level 1: Standard Normal</h3>
-        <p id="level-description">Use \(Z \sim N(0,1)\), \(\Phi(z)\), complements, intervals, and inverse values.</p>
+        <p id="level-description">Use Z ~ N(0, 1), Φ(z), complements, intervals, and inverse values.</p>
         <div class="dropdown-container visible" id="dropdown-container">
           <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
             <option value="select">Select Question Type</option>
@@ -94,7 +94,7 @@
       </div>
     </section>
     <section class="problems-section">
-      <div class="set-instruction" id="set-instruction">Choose a question type. Assume students may use standard normal tables or a calculator for \(\Phi(z)\) and inverse normal values.</div>
+      <div class="set-instruction" id="set-instruction">Choose a question type to practise normal distribution questions.</div>
       <div id="problem-set-header" class="problem-set-header"></div>
       <ol id="problem-list" class="problem-list"></ol>
     </section>
@@ -234,7 +234,19 @@
     }
 
     function normalNotation(mu, sigma) {
-      return "\\(X \\sim N(" + mu + ", " + (sigma * sigma) + ")\\)";
+      return "X ~ N(" + mu + ", " + (sigma * sigma) + ")";
+    }
+
+    function varianceUnknownNotation(mu) {
+      return "X ~ N(" + mu + ", σ²)";
+    }
+
+    function unknownNormalNotation(variance) {
+      return "X ~ N(μ, " + variance + ")";
+    }
+
+    function unknownBothNotation() {
+      return "X ~ N(μ, σ²)";
     }
 
     function zText(z) {
@@ -309,14 +321,14 @@
       const diagram = curveSvg({ shade: "left", marks: [{ z, label: "z=" + zText(z) }] });
       return {
         badge: "standard",
-        equation: '<span class="math-line">For \\(Z \\sim N(0,1)\\), find \\(P(Z < ' + zText(z) + ')\\).</span>' + diagram,
+        equation: '<span class="math-line">For Z ~ N(0, 1), find P(Z < ' + zText(z) + ').</span>' + diagram,
         answer: fmt(probability),
         steps: [
           '<span class="step-indicator">Step 1</span> Recognise this as a left-tail standard normal probability.',
           stepCurve({ shade: "left", marks: [{ z, label: "z=" + zText(z) }] }),
-          "\\(P(Z < " + zText(z) + ") = \\Phi(" + zText(z) + ")\\).",
-          "Use a standard normal table or calculator to find \\(\\Phi(" + zText(z) + ")\\).",
-          "\\(\\Phi(" + zText(z) + ") \\approx " + fmt(probability) + "\\).",
+          "P(Z < " + zText(z) + ") = Φ(" + zText(z) + ").",
+          "Look up Φ(" + zText(z) + ") using a standard normal table or calculator.",
+          "Φ(" + zText(z) + ") ≈ " + fmt(probability) + ".",
           '<span class="step-arrow">-></span> ' + fmt(probability)
         ]
       };
@@ -328,15 +340,15 @@
       const diagram = curveSvg({ shade: "right", marks: [{ z, label: "z=" + zText(z) }] });
       return {
         badge: "standard",
-        equation: '<span class="math-line">For \\(Z \\sim N(0,1)\\), find \\(P(Z > ' + zText(z) + ')\\).</span>' + diagram,
+        equation: '<span class="math-line">For Z ~ N(0, 1), find P(Z > ' + zText(z) + ').</span>' + diagram,
         answer: fmt(probability),
         steps: [
           '<span class="step-indicator">Step 1</span> Draw or imagine the right tail.',
           stepCurve({ shade: "right", marks: [{ z, label: "z=" + zText(z) }] }),
-          "\\(P(Z > " + zText(z) + ") = 1 - P(Z < " + zText(z) + ")\\).",
-          "\\(P(Z > " + zText(z) + ") = 1 - \\Phi(" + zText(z) + ")\\).",
-          "From tables/calculator, \\(\\Phi(" + zText(z) + ") \\approx " + fmt(phi(z)) + "\\).",
-          "\\(1 - " + fmt(phi(z)) + " = " + fmt(probability) + "\\).",
+          "P(Z > " + zText(z) + ") = 1 - P(Z < " + zText(z) + ").",
+          "P(Z > " + zText(z) + ") = 1 - Φ(" + zText(z) + ").",
+          "From tables/calculator, Φ(" + zText(z) + ") ≈ " + fmt(phi(z)) + ".",
+          "1 - " + fmt(phi(z)) + " = " + fmt(probability) + ".",
           '<span class="step-arrow">-></span> ' + fmt(probability)
         ]
       };
@@ -349,13 +361,13 @@
       const diagram = curveSvg({ shade: "between", marks: [{ z: z1, label: zText(z1) }, { z: z2, label: zText(z2) }] });
       return {
         badge: "standard",
-        equation: '<span class="math-line">For \\(Z \\sim N(0,1)\\), find \\(P(' + zText(z1) + ' < Z < ' + zText(z2) + ')\\).</span>' + diagram,
+        equation: '<span class="math-line">For Z ~ N(0, 1), find P(' + zText(z1) + ' < Z < ' + zText(z2) + ').</span>' + diagram,
         answer: fmt(probability),
         steps: [
           '<span class="step-indicator">Step 1</span> The required region is between two z-values.',
           stepCurve({ shade: "between", marks: [{ z: z1, label: zText(z1) }, { z: z2, label: zText(z2) }] }),
-          "\\(P(" + zText(z1) + " < Z < " + zText(z2) + ") = \\Phi(" + zText(z2) + ") - \\Phi(" + zText(z1) + ")\\).",
-          "From tables/calculator: \\(\\Phi(" + zText(z2) + ") \\approx " + fmt(phi(z2)) + "\\), and \\(\\Phi(" + zText(z1) + ") \\approx " + fmt(phi(z1)) + "\\).",
+          "P(" + zText(z1) + " < Z < " + zText(z2) + ") = Φ(" + zText(z2) + ") - Φ(" + zText(z1) + ").",
+          "From tables/calculator: Φ(" + zText(z2) + ") ≈ " + fmt(phi(z2)) + ", and Φ(" + zText(z1) + ") ≈ " + fmt(phi(z1)) + ".",
           fmt(phi(z2)) + " - " + fmt(phi(z1)) + " = " + fmt(probability) + ".",
           '<span class="step-arrow">-></span> ' + fmt(probability)
         ]
@@ -368,14 +380,14 @@
       const diagram = curveSvg({ shade: "left", marks: [{ z, label: "z" }] });
       return {
         badge: "standard",
-        equation: '<span class="math-line">For \\(Z \\sim N(0,1)\\), find \\(z\\) such that \\(P(Z < z) = ' + fmt(p) + '\\).</span>' + diagram,
+        equation: '<span class="math-line">For Z ~ N(0, 1), find z such that P(Z < z) = ' + fmt(p) + '.</span>' + diagram,
         answer: "z = " + zText(z),
         steps: [
           '<span class="step-indicator">Step 1</span> This is an inverse standard normal question.',
           stepCurve({ shade: "left", marks: [{ z, label: "z" }] }),
-          "We need \\(\\Phi(z) = " + fmt(p) + "\\).",
-          "Use inverse normal tables or a calculator: \\(z = \\Phi^{-1}(" + fmt(p) + ")\\).",
-          "\\(z \\approx " + zText(z) + "\\).",
+          "We need Φ(z) = " + fmt(p) + ".",
+          "Use inverse normal tables or a calculator: z = Φ⁻¹(" + fmt(p) + ").",
+          "z ≈ " + zText(z) + ".",
           '<span class="step-arrow">-></span> z = ' + zText(z)
         ]
       };
@@ -393,16 +405,16 @@
       const diagram = curveSvg({ shade, labelMode: "x", marks: [{ z, label: fmt1(x) }] });
       return {
         badge: "general",
-        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find \\(P(X ' + sign + ' ' + fmt1(x) + ')\\).</span>' + diagram,
+        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find P(X ' + sign + ' ' + fmt1(x) + ').</span>' + diagram,
         answer: fmt(probability),
         steps: [
           '<span class="step-indicator">Step 1</span> Identify the mean and standard deviation.',
-          "\\(\\mu = " + mu + "\\), \\(\\sigma^2 = " + (sigma * sigma) + "\\), so \\(\\sigma = " + sigma + "\\).",
+          "μ = " + mu + ", σ² = " + (sigma * sigma) + ", so σ = " + sigma + ".",
           '<span class="step-indicator">Step 2</span> Standardise the boundary value.',
-          "\\(Z = \\frac{X-\\mu}{\\sigma} = \\frac{" + fmt1(x) + " - " + mu + "}{" + sigma + "} = " + zText(z) + "\\).",
+          "Z = (X - μ) / σ = (" + fmt1(x) + " - " + mu + ") / " + sigma + " = " + zText(z) + ".",
           stepCurve({ shade, labelMode: "x", marks: [{ z, label: "x=" + fmt1(x) }] }),
-          right ? "\\(P(X > " + fmt1(x) + ") = P(Z > " + zText(z) + ")\\)." : "\\(P(X < " + fmt1(x) + ") = P(Z < " + zText(z) + ")\\).",
-          right ? "\\(P(Z > " + zText(z) + ") = 1 - \\Phi(" + zText(z) + ")\\)." : "\\(P(Z < " + zText(z) + ") = \\Phi(" + zText(z) + ")\\).",
+          right ? "P(X > " + fmt1(x) + ") = P(Z > " + zText(z) + ")." : "P(X < " + fmt1(x) + ") = P(Z < " + zText(z) + ").",
+          right ? "P(Z > " + zText(z) + ") = 1 - Φ(" + zText(z) + ")." : "P(Z < " + zText(z) + ") = Φ(" + zText(z) + ").",
           "Using tables/calculator gives " + fmt(probability) + ".",
           '<span class="step-arrow">-></span> ' + fmt(probability)
         ]
@@ -420,16 +432,16 @@
       const diagram = curveSvg({ shade: "between", labelMode: "x", marks: [{ z: z1, label: fmt1(a) }, { z: z2, label: fmt1(b) }] });
       return {
         badge: "general",
-        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find \\(P(' + fmt1(a) + ' < X < ' + fmt1(b) + ')\\).</span>' + diagram,
+        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find P(' + fmt1(a) + ' < X < ' + fmt1(b) + ').</span>' + diagram,
         answer: fmt(probability),
         steps: [
           '<span class="step-indicator">Step 1</span> Standardise both boundary values.',
-          "\\(z_1 = \\frac{" + fmt1(a) + " - " + mu + "}{" + sigma + "} = " + zText(z1) + "\\).",
-          "\\(z_2 = \\frac{" + fmt1(b) + " - " + mu + "}{" + sigma + "} = " + zText(z2) + "\\).",
+          "z₁ = (" + fmt1(a) + " - " + mu + ") / " + sigma + " = " + zText(z1) + ".",
+          "z₂ = (" + fmt1(b) + " - " + mu + ") / " + sigma + " = " + zText(z2) + ".",
           stepCurve({ shade: "between", labelMode: "x", marks: [{ z: z1, label: "a" }, { z: z2, label: "b" }] }),
-          "\\(P(" + fmt1(a) + " < X < " + fmt1(b) + ") = P(" + zText(z1) + " < Z < " + zText(z2) + ")\\).",
-          "\\(= \\Phi(" + zText(z2) + ") - \\Phi(" + zText(z1) + ")\\).",
-          "\\(= " + fmt(phi(z2)) + " - " + fmt(phi(z1)) + " = " + fmt(probability) + "\\).",
+          "P(" + fmt1(a) + " < X < " + fmt1(b) + ") = P(" + zText(z1) + " < Z < " + zText(z2) + ").",
+          "= Φ(" + zText(z2) + ") - Φ(" + zText(z1) + ").",
+          "= " + fmt(phi(z2)) + " - " + fmt(phi(z1)) + " = " + fmt(probability) + ".",
           '<span class="step-arrow">-></span> ' + fmt(probability)
         ]
       };
@@ -444,16 +456,16 @@
       const diagram = curveSvg({ shade: "left", labelMode: "x", marks: [{ z, label: "a" }] });
       return {
         badge: "general",
-        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find \\(a\\) such that \\(P(X < a) = ' + fmt(p) + '\\).</span>' + diagram,
+        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find a such that P(X < a) = ' + fmt(p) + '.</span>' + diagram,
         answer: "a = " + fmt1(x),
         steps: [
           '<span class="step-indicator">Step 1</span> Convert the left-tail probability into a z-value.',
-          "\\(P(X<a)=" + fmt(p) + "\\) means \\(P(Z<z)=" + fmt(p) + "\\).",
-          "\\(z = \\Phi^{-1}(" + fmt(p) + ") \\approx " + zText(z) + "\\).",
+          "P(X < a) = " + fmt(p) + " means P(Z < z) = " + fmt(p) + ".",
+          "z = Φ⁻¹(" + fmt(p) + ") ≈ " + zText(z) + ".",
           stepCurve({ shade: "left", labelMode: "x", marks: [{ z, label: "a" }] }),
           '<span class="step-indicator">Step 2</span> Convert back from z to x.',
-          "\\(x = \\mu + z\\sigma\\).",
-          "\\(a = " + mu + " + (" + zText(z) + ")(" + sigma + ") = " + fmt1(x) + "\\).",
+          "x = μ + zσ.",
+          "a = " + mu + " + (" + zText(z) + ")(" + sigma + ") = " + fmt1(x) + ".",
           '<span class="step-arrow">-></span> a = ' + fmt1(x)
         ]
       };
@@ -470,16 +482,16 @@
       const diagram = curveSvg({ shade: "outside", labelMode: "x", marks: [{ z: -c, label: fmt1(leftX) }, { z: c, label: fmt1(rightX) }] });
       return {
         badge: "general",
-        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find \\(P(|X - ' + mu + '| > ' + fmt1(d) + ')\\).</span>' + diagram,
+        equation: '<span class="math-line">' + normalNotation(mu, sigma) + '. Find P(|X - ' + mu + '| > ' + fmt1(d) + ').</span>' + diagram,
         answer: fmt(probability),
         steps: [
           '<span class="step-indicator">Step 1</span> Split the absolute-value statement into two tails.',
-          "\\(|X-" + mu + "|>" + fmt1(d) + "\\) means \\(X<" + fmt1(leftX) + "\\) or \\(X>" + fmt1(rightX) + "\\).",
+          "|X - " + mu + "| > " + fmt1(d) + " means X < " + fmt1(leftX) + " or X > " + fmt1(rightX) + ".",
           stepCurve({ shade: "outside", labelMode: "x", marks: [{ z: -c, label: "left" }, { z: c, label: "right" }] }),
           '<span class="step-indicator">Step 2</span> Standardise both boundaries.',
-          "\\(z_1 = \\frac{" + fmt1(leftX) + "-" + mu + "}{" + sigma + "} = -" + c.toFixed(2) + "\\), and \\(z_2 = \\frac{" + fmt1(rightX) + "-" + mu + "}{" + sigma + "} = " + c.toFixed(2) + "\\).",
-          "\\(P(|X-" + mu + "|>" + fmt1(d) + ")\\) = \\(P(Z<-" + c.toFixed(2) + ") + P(Z>" + c.toFixed(2) + ")\\).",
-          "\\(= 2(1-\\Phi(" + c.toFixed(2) + ")) = " + fmt(probability) + "\\).",
+          "z₁ = (" + fmt1(leftX) + " - " + mu + ") / " + sigma + " = -" + c.toFixed(2) + ", and z₂ = (" + fmt1(rightX) + " - " + mu + ") / " + sigma + " = " + c.toFixed(2) + ".",
+          "P(|X - " + mu + "| > " + fmt1(d) + ") = P(Z < -" + c.toFixed(2) + ") + P(Z > " + c.toFixed(2) + ").",
+          "= 2(1 - Φ(" + c.toFixed(2) + ")) = " + fmt(probability) + ".",
           '<span class="step-arrow">-></span> ' + fmt(probability)
         ]
       };
@@ -498,17 +510,17 @@
       const diagram = curveSvg({ shade: "left", labelMode: "x", marks: [{ z, label: fmt1(x) }] });
       return {
         badge: "inverse",
-        equation: '<span class="math-line">\\(X \\sim N(\\mu, ' + (sigma * sigma) + ')\\) and \\(P(X < ' + fmt1(x) + ') = ' + fmt(p) + '\\). Find \\(\\mu\\).</span>' + diagram,
-        answer: "\\(\\mu = " + fmt1(mu) + "\\)",
+        equation: '<span class="math-line">' + unknownNormalNotation(sigma * sigma) + ' and P(X < ' + fmt1(x) + ') = ' + fmt(p) + '. Find μ.</span>' + diagram,
+        answer: "μ = " + fmt1(mu),
         steps: [
           '<span class="step-indicator">Step 1</span> Convert the probability to a z-value.',
-          "\\(P(X<" + fmt1(x) + ")=" + fmt(p) + "\\), so \\(z=\\Phi^{-1}(" + fmt(p) + ")\\approx " + zText(z) + "\\).",
+          "P(X < " + fmt1(x) + ") = " + fmt(p) + ", so z = Φ⁻¹(" + fmt(p) + ") ≈ " + zText(z) + ".",
           '<span class="step-indicator">Step 2</span> Use the standardisation equation.',
-          "\\(z = \\frac{x-\\mu}{\\sigma}\\).",
-          "\\(" + zText(z) + " = \\frac{" + fmt1(x) + "-\\mu}{" + sigma + "}\\).",
-          "\\(" + fmt1(x) + "-\\mu = (" + zText(z) + ")(" + sigma + ")\\).",
-          "\\(\\mu = " + fmt1(x) + " - (" + zText(z) + ")(" + sigma + ") = " + fmt1(mu) + "\\).",
-          '<span class="step-arrow">-></span> \\(\\mu = ' + fmt1(mu) + "\\)"
+          "z = (x - μ) / σ.",
+          zText(z) + " = (" + fmt1(x) + " - μ) / " + sigma + ".",
+          fmt1(x) + " - μ = (" + zText(z) + ")(" + sigma + ").",
+          "μ = " + fmt1(x) + " - (" + zText(z) + ")(" + sigma + ") = " + fmt1(mu) + ".",
+          '<span class="step-arrow">-></span> μ = ' + fmt1(mu)
         ]
       };
     }
@@ -522,17 +534,17 @@
       const diagram = curveSvg({ shade: "right", labelMode: "x", marks: [{ z, label: fmt1(x) }] });
       return {
         badge: "inverse",
-        equation: '<span class="math-line">\\(X \\sim N(' + mu + ', \\sigma^2)\\) and \\(P(X > ' + fmt1(x) + ') = ' + fmt(pRight) + '\\). Find \\(\\sigma\\).</span>' + diagram,
-        answer: "\\(\\sigma = " + fmt1(sigma) + "\\)",
+        equation: '<span class="math-line">' + varianceUnknownNotation(mu) + ' and P(X > ' + fmt1(x) + ') = ' + fmt(pRight) + '. Find σ.</span>' + diagram,
+        answer: "σ = " + fmt1(sigma),
         steps: [
           '<span class="step-indicator">Step 1</span> Change the right-tail probability into a left-tail probability.',
-          "\\(P(X>" + fmt1(x) + ")=" + fmt(pRight) + "\\), so \\(P(X<" + fmt1(x) + ")=1-" + fmt(pRight) + "=" + fmt(phi(z)) + "\\).",
-          "\\(z=\\Phi^{-1}(" + fmt(phi(z)) + ")\\approx " + zText(z) + "\\).",
+          "P(X > " + fmt1(x) + ") = " + fmt(pRight) + ", so P(X < " + fmt1(x) + ") = 1 - " + fmt(pRight) + " = " + fmt(phi(z)) + ".",
+          "z = Φ⁻¹(" + fmt(phi(z)) + ") ≈ " + zText(z) + ".",
           '<span class="step-indicator">Step 2</span> Use the standardisation equation.',
-          "\\(" + zText(z) + " = \\frac{" + fmt1(x) + "-" + mu + "}{\\sigma}\\).",
-          "\\(" + zText(z) + "\\sigma = " + fmt1(x - mu) + "\\).",
-          "\\(\\sigma = \\frac{" + fmt1(x - mu) + "}{" + zText(z) + "} = " + fmt1(sigma) + "\\).",
-          '<span class="step-arrow">-></span> \\(\\sigma = ' + fmt1(sigma) + "\\)"
+          zText(z) + " = (" + fmt1(x) + " - " + mu + ") / σ.",
+          zText(z) + "σ = " + fmt1(x - mu) + ".",
+          "σ = " + fmt1(x - mu) + " / " + zText(z) + " = " + fmt1(sigma) + ".",
+          '<span class="step-arrow">-></span> σ = ' + fmt1(sigma)
         ]
       };
     }
@@ -549,21 +561,21 @@
       const diagram = curveSvg({ shade: "between", labelMode: "x", marks: [{ z: z1, label: fmt1(a) }, { z: z2, label: fmt1(b) }] });
       return {
         badge: "inverse",
-        equation: '<span class="math-line">\\(X \\sim N(\\mu, \\sigma^2)\\), \\(P(X < ' + fmt1(a) + ') = ' + fmt(p1) + '\\), and \\(P(X > ' + fmt1(b) + ') = ' + fmt(pRight) + '\\). Find \\(\\mu\\) and \\(\\sigma\\).</span>' + diagram,
-        answer: "\\(\\mu = " + fmt1(mu) + "\\), \\(\\sigma = " + fmt1(sigma) + "\\)",
+        equation: '<span class="math-line">' + unknownBothNotation() + ', P(X < ' + fmt1(a) + ') = ' + fmt(p1) + ', and P(X > ' + fmt1(b) + ') = ' + fmt(pRight) + '. Find μ and σ.</span>' + diagram,
+        answer: "μ = " + fmt1(mu) + ", σ = " + fmt1(sigma),
         steps: [
           '<span class="step-indicator">Step 1</span> Convert each probability into a z-value.',
-          "\\(P(X<" + fmt1(a) + ")=" + fmt(p1) + "\\), so \\(z_1=\\Phi^{-1}(" + fmt(p1) + ")\\approx " + zText(z1) + "\\).",
-          "\\(P(X>" + fmt1(b) + ")=" + fmt(pRight) + "\\), so \\(P(X<" + fmt1(b) + ")=" + fmt(phi(z2)) + "\\) and \\(z_2\\approx " + zText(z2) + "\\).",
-          '<span class="step-indicator">Step 2</span> Write two equations using \\(x=\\mu+z\\sigma\\).',
-          "\\(" + fmt1(a) + " = \\mu + (" + zText(z1) + ")\\sigma\\).",
-          "\\(" + fmt1(b) + " = \\mu + (" + zText(z2) + ")\\sigma\\).",
-          '<span class="step-indicator">Step 3</span> Subtract the equations to find \\(\\sigma\\).',
-          "\\(" + fmt1(b) + " - " + fmt1(a) + " = (" + zText(z2) + " - (" + zText(z1) + "))\\sigma\\).",
-          "\\(\\sigma = \\frac{" + fmt1(b - a) + "}{" + (z2 - z1).toFixed(2) + "} = " + fmt1(sigma) + "\\).",
-          '<span class="step-indicator">Step 4</span> Substitute back to find \\(\\mu\\).',
-          "\\(\\mu = " + fmt1(a) + " - (" + zText(z1) + ")(" + fmt1(sigma) + ") = " + fmt1(mu) + "\\).",
-          '<span class="step-arrow">-></span> \\(\\mu = ' + fmt1(mu) + "\\), \\(\\sigma = " + fmt1(sigma) + "\\)"
+          "P(X < " + fmt1(a) + ") = " + fmt(p1) + ", so z₁ = Φ⁻¹(" + fmt(p1) + ") ≈ " + zText(z1) + ".",
+          "P(X > " + fmt1(b) + ") = " + fmt(pRight) + ", so P(X < " + fmt1(b) + ") = " + fmt(phi(z2)) + " and z₂ ≈ " + zText(z2) + ".",
+          '<span class="step-indicator">Step 2</span> Write two equations using x = μ + zσ.',
+          fmt1(a) + " = μ + (" + zText(z1) + ")σ.",
+          fmt1(b) + " = μ + (" + zText(z2) + ")σ.",
+          '<span class="step-indicator">Step 3</span> Subtract the equations to find σ.',
+          fmt1(b) + " - " + fmt1(a) + " = (" + zText(z2) + " - (" + zText(z1) + "))σ.",
+          "σ = " + fmt1(b - a) + " / " + (z2 - z1).toFixed(2) + " = " + fmt1(sigma) + ".",
+          '<span class="step-indicator">Step 4</span> Substitute back to find μ.',
+          "μ = " + fmt1(a) + " - (" + zText(z1) + ")(" + fmt1(sigma) + ") = " + fmt1(mu) + ".",
+          '<span class="step-arrow">-></span> μ = ' + fmt1(mu) + ", σ = " + fmt1(sigma)
         ]
       };
     }
