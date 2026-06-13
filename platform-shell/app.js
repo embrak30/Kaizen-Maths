@@ -1444,23 +1444,46 @@ function worksheetStepsHtml(steps = []) {
   }).join("");
 }
 
-function renderWorksheetAnswerKey(worksheet) {
+function worksheetMarksText(marks) {
+  const value = Number(marks);
+  if (!Number.isFinite(value) || value <= 0) return "";
+  return `${value} mark${value === 1 ? "" : "s"}`;
+}
+
+function worksheetTotalMarks(worksheet) {
+  return (worksheet?.problems || []).reduce((total, problem) => total + (Number(problem.marks) || 0), 0);
+}
+
+function worksheetQuestionMarksHtml(problem, options = {}) {
+  if (!options.assessment) return "";
+  const label = worksheetMarksText(problem.marks || options.marksPerQuestion);
+  return label ? `<span class="worksheet-question-marks">[${label}]</span>` : "";
+}
+
+function renderWorksheetAnswerKey(worksheet, options = {}) {
   let answerNumber = 0;
   const renderAnswer = (problem) => {
     answerNumber += 1;
     return `
       <li class="worksheet-key-item">
         <span>${answerNumber}</span>
-        <div>${worksheetContentHtml(problem.answer || problem.answerText || "Answer not available")}</div>
+        <div>
+          ${options.assessment ? `<div class="worksheet-key-marks">${worksheetMarksText(problem.marks || options.marksPerQuestion)}</div>` : ""}
+          ${worksheetContentHtml(problem.answer || problem.answerText || "Answer not available")}
+        </div>
       </li>
     `;
   };
 
+  const totalMarks = worksheetTotalMarks(worksheet);
   return `
     <section class="worksheet-answer-key" aria-label="Answer key">
       <header class="worksheet-answer-key-header">
-        <span class="eyebrow">Teacher Copy</span>
-        <h2>Answer Key</h2>
+        <div>
+          <span class="eyebrow">Teacher Copy</span>
+          <h2>Answer Key</h2>
+        </div>
+        ${options.assessment ? `<strong class="worksheet-total-marks">Total: ${totalMarks} mark${totalMarks === 1 ? "" : "s"}</strong>` : ""}
       </header>
       ${worksheet.sections?.length ? worksheet.sections.map((section) => {
         const sectionProblems = worksheet.problems.filter((problem) => problem.sectionId === section.id);
@@ -1928,6 +1951,23 @@ function renderWorksheetGenerator() {
         <div class="worksheet-options" aria-label="Worksheet options">
           <label><input id="worksheetAnswers" type="checkbox" checked> Include separate answer key</label>
           <label><input id="worksheetSteps" type="checkbox"> Include worked steps</label>
+          <label><input id="worksheetAssessmentMode" type="checkbox"> Assessment mode</label>
+          <div class="worksheet-assessment-panel" id="worksheetAssessmentPanel" hidden>
+            <div class="worksheet-assessment-heading">
+              <strong>Marks</strong>
+              <span>Add mark values to questions and show a total on the paper.</span>
+            </div>
+            <div class="worksheet-mark-control">
+              <label for="worksheetMarks">Marks per question</label>
+              <input id="worksheetMarks" type="number" min="1" max="20" value="1">
+              <div class="worksheet-mark-presets" aria-label="Quick mark values">
+                <button class="worksheet-mark-preset" type="button" data-marks="1">1</button>
+                <button class="worksheet-mark-preset" type="button" data-marks="2">2</button>
+                <button class="worksheet-mark-preset" type="button" data-marks="3">3</button>
+                <button class="worksheet-mark-preset" type="button" data-marks="4">4</button>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="button-row">
           <button class="button" id="addWorksheetSection" type="button">Add Question Block</button>
@@ -2029,6 +2069,12 @@ function selectedWorksheetTypeMeta() {
   const typeValue = document.getElementById("worksheetType")?.value;
   const level = selectedWorksheetLevelMeta();
   return level?.types?.find((type) => type.id === typeValue) || level?.types?.[0] || null;
+}
+
+function worksheetAssessmentOptions() {
+  const assessment = document.getElementById("worksheetAssessmentMode")?.checked || false;
+  const marksPerQuestion = Math.max(1, Math.min(20, Number(document.getElementById("worksheetMarks")?.value || 1)));
+  return { assessment, marksPerQuestion };
 }
 
 function populateWorksheetControls(metadata) {
@@ -2165,6 +2211,7 @@ function currentWorksheetSection() {
   const level = selectedWorksheetLevelMeta();
   const type = selectedWorksheetTypeMeta();
   const count = Math.max(1, Math.min(40, Number(document.getElementById("worksheetCount")?.value || 10)));
+  const { assessment, marksPerQuestion } = worksheetAssessmentOptions();
   if (!tool || !level || !type) return null;
   return {
     id: `${tool.slug}-${level.id}-${type.id}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -2175,7 +2222,8 @@ function currentWorksheetSection() {
     levelLabel: level.title,
     type: type.id,
     typeLabel: type.label,
-    count
+    count,
+    marksPerQuestion: assessment ? marksPerQuestion : 0
   };
 }
 
@@ -2194,7 +2242,7 @@ function renderWorksheetSections() {
       <article class="worksheet-section-item">
         <div>
           <strong>${index + 1}. ${escapeHtml(section.toolTitle)}</strong>
-          <span>${escapeHtml(section.levelLabel)} · ${escapeHtml(section.typeLabel)} · ${section.count} questions</span>
+          <span>${escapeHtml(section.levelLabel)} · ${escapeHtml(section.typeLabel)} · ${section.count} questions${section.marksPerQuestion ? ` · ${worksheetMarksText(section.marksPerQuestion)} each` : ""}</span>
         </div>
         <button class="button worksheet-section-remove" type="button" data-section-id="${escapeHtml(section.id)}">Remove</button>
       </article>
@@ -2238,15 +2286,17 @@ async function generateWorksheetFromSections(sections, options = {}) {
     const typeLabel = metadata.levels
       ?.find((level) => String(level.id) === String(section.level))
       ?.types?.find((type) => type.id === section.type)?.label || section.typeLabel;
+    const resolvedMarks = options.assessment ? (Number(section.marksPerQuestion) || Number(options.marksPerQuestion) || 1) : 0;
     const sectionProblems = (result.problems || []).map((problem) => ({
       ...problem,
       sectionId: section.id,
       sectionTitle: tool.title,
       sectionLevel: levelLabel,
-      sectionType: typeLabel
+      sectionType: typeLabel,
+      marks: resolvedMarks
     }));
     problems.push(...sectionProblems);
-    generatedSections.push({ ...section, toolTitle: tool.title, levelLabel, typeLabel, count: sectionProblems.length });
+    generatedSections.push({ ...section, toolTitle: tool.title, levelLabel, typeLabel, count: sectionProblems.length, marksPerQuestion: resolvedMarks });
   }
 
   return { ok: problems.length > 0, count: problems.length, sections: generatedSections, problems, options };
@@ -2266,15 +2316,18 @@ function renderWorksheetPreview(worksheet, options = {}) {
   const sectionSummary = worksheet.sections?.length
     ? worksheet.sections.map((section) => `${section.toolTitle}: ${section.count}`).join(" · ")
     : `${worksheet.problems.length} questions`;
+  const totalMarks = worksheetTotalMarks(worksheet);
+  const paperTitle = options.assessment ? "Mixed Assessment Paper" : "Mixed Practice Worksheet";
+  const paperEyebrow = options.assessment ? "Kaizen Maths Assessment" : "Kaizen Maths Worksheet";
   let questionNumber = 0;
 
   preview.innerHTML = `
     <article class="worksheet-sheet" id="worksheetSheet">
       <header class="worksheet-sheet-header">
         <div>
-          <span class="eyebrow">Kaizen Maths Worksheet</span>
-          <h2>Mixed Practice Worksheet</h2>
-          <p>${escapeHtml(sectionSummary)} · ${worksheet.problems.length} total questions</p>
+          <span class="eyebrow">${paperEyebrow}</span>
+          <h2>${paperTitle}</h2>
+          <p>${escapeHtml(sectionSummary)} · ${worksheet.problems.length} total questions${options.assessment ? ` · ${totalMarks} total marks` : ""}</p>
         </div>
         <div class="worksheet-student-fields">
           <span>Name:</span>
@@ -2282,12 +2335,13 @@ function renderWorksheetPreview(worksheet, options = {}) {
           <span>Class:</span>
         </div>
       </header>
+      ${options.assessment ? `<div class="worksheet-assessment-summary"><strong>Total marks: ${totalMarks}</strong><span>Show working where appropriate.</span></div>` : ""}
       ${worksheet.sections?.length ? worksheet.sections.map((section) => {
         const sectionProblems = worksheet.problems.filter((problem) => problem.sectionId === section.id);
         return `
           <section class="worksheet-section">
             <h3>${escapeHtml(section.toolTitle)}</h3>
-            <p>${escapeHtml(section.levelLabel)} · ${escapeHtml(section.typeLabel)} · ${sectionProblems.length} questions</p>
+            <p>${escapeHtml(section.levelLabel)} · ${escapeHtml(section.typeLabel)} · ${sectionProblems.length} questions${options.assessment && section.marksPerQuestion ? ` · ${worksheetMarksText(section.marksPerQuestion)} each` : ""}</p>
             <ol class="worksheet-question-list">
               ${sectionProblems.map((problem) => {
                 questionNumber += 1;
@@ -2295,7 +2349,10 @@ function renderWorksheetPreview(worksheet, options = {}) {
                   <li class="worksheet-question">
                     <div class="worksheet-question-number">${questionNumber}</div>
                     <div class="worksheet-question-body">
-                      <div class="worksheet-question-text">${worksheetContentHtml(problem.question || problem.questionText)}</div>
+                      <div class="worksheet-question-row">
+                        <div class="worksheet-question-text">${worksheetContentHtml(problem.question || problem.questionText)}</div>
+                        ${worksheetQuestionMarksHtml(problem, options)}
+                      </div>
                       <div class="worksheet-working-lines" aria-hidden="true">
                         <span></span><span></span><span></span>
                       </div>
@@ -2313,7 +2370,10 @@ function renderWorksheetPreview(worksheet, options = {}) {
           <li class="worksheet-question">
             <div class="worksheet-question-number">${questionNumber}</div>
             <div class="worksheet-question-body">
-              <div class="worksheet-question-text">${worksheetContentHtml(problem.question || problem.questionText)}</div>
+              <div class="worksheet-question-row">
+                <div class="worksheet-question-text">${worksheetContentHtml(problem.question || problem.questionText)}</div>
+                ${worksheetQuestionMarksHtml(problem, options)}
+              </div>
               <div class="worksheet-working-lines" aria-hidden="true">
                 <span></span><span></span><span></span>
               </div>
@@ -2322,7 +2382,7 @@ function renderWorksheetPreview(worksheet, options = {}) {
           </li>
         `;
       }).join("")}</ol>`}
-      ${options.answers ? renderWorksheetAnswerKey(worksheet) : ""}
+      ${options.answers ? renderWorksheetAnswerKey(worksheet, options) : ""}
     </article>
   `;
   if (printButton) printButton.disabled = false;
@@ -2331,8 +2391,14 @@ function renderWorksheetPreview(worksheet, options = {}) {
 function resetWorksheetBuilder() {
   const preview = document.getElementById("worksheetPreview");
   const printButton = document.getElementById("printWorksheet");
+  const assessmentMode = document.getElementById("worksheetAssessmentMode");
+  const assessmentPanel = document.getElementById("worksheetAssessmentPanel");
+  const marksInput = document.getElementById("worksheetMarks");
   worksheetState.sections = [];
   worksheetState.worksheet = null;
+  if (assessmentMode) assessmentMode.checked = false;
+  if (assessmentPanel) assessmentPanel.hidden = true;
+  if (marksInput) marksInput.value = "1";
   renderWorksheetSections();
   if (preview) {
     preview.innerHTML = `<div class="empty-state">Choose the worksheet options, then generate a printable question set.</div>`;
@@ -2347,6 +2413,8 @@ function bindWorksheetGenerator() {
   const printButton = document.getElementById("printWorksheet");
   const addSectionButton = document.getElementById("addWorksheetSection");
   const resetButton = document.getElementById("resetWorksheet");
+  const assessmentMode = document.getElementById("worksheetAssessmentMode");
+  const assessmentPanel = document.getElementById("worksheetAssessmentPanel");
   if (!toolSelect || !form) return;
 
   toolSelect.value = worksheetState.toolSlug;
@@ -2359,6 +2427,10 @@ function bindWorksheetGenerator() {
 
   addSectionButton?.addEventListener("click", addWorksheetSection);
   resetButton?.addEventListener("click", resetWorksheetBuilder);
+  assessmentMode?.addEventListener("change", () => {
+    if (assessmentPanel) assessmentPanel.hidden = !assessmentMode.checked;
+    setWorksheetStatus(assessmentMode.checked ? "Assessment mode on. Add blocks with the mark value you want for each question." : "Assessment mode off. Worksheets will generate without marks.", "success");
+  });
 
   document.querySelectorAll(".worksheet-count-preset").forEach((button) => {
     button.addEventListener("click", () => {
@@ -2369,10 +2441,20 @@ function bindWorksheetGenerator() {
     });
   });
 
+  document.querySelectorAll(".worksheet-mark-preset").forEach((button) => {
+    button.addEventListener("click", () => {
+      const marksInput = document.getElementById("worksheetMarks");
+      if (!marksInput) return;
+      marksInput.value = button.dataset.marks || "1";
+      marksInput.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  });
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const answers = document.getElementById("worksheetAnswers")?.checked || false;
     const steps = document.getElementById("worksheetSteps")?.checked || false;
+    const assessmentOptions = worksheetAssessmentOptions();
     const sections = worksheetState.sections.length ? [...worksheetState.sections] : [currentWorksheetSection()].filter(Boolean);
 
     if (!sections.length) {
@@ -2381,10 +2463,11 @@ function bindWorksheetGenerator() {
     }
 
     try {
-      const worksheet = await generateWorksheetFromSections(sections, { answers, steps });
+      const worksheet = await generateWorksheetFromSections(sections, { answers, steps, ...assessmentOptions });
       worksheetState.worksheet = worksheet;
-      renderWorksheetPreview(worksheet, { answers, steps });
-      setWorksheetStatus(`Generated ${worksheet.count || 0} questions across ${sections.length} block${sections.length === 1 ? "" : "s"}. Use Print / Save PDF to download it.`, "success");
+      renderWorksheetPreview(worksheet, { answers, steps, ...assessmentOptions });
+      const marksMessage = assessmentOptions.assessment ? ` Total: ${worksheetTotalMarks(worksheet)} marks.` : "";
+      setWorksheetStatus(`Generated ${worksheet.count || 0} questions across ${sections.length} block${sections.length === 1 ? "" : "s"}.${marksMessage} Use Print / Save PDF to download it.`, "success");
     } catch (error) {
       setWorksheetStatus(error.message, "error");
     }
