@@ -1467,6 +1467,12 @@ function setActiveNav() {
   });
 }
 
+function updateAdminNavVisibility() {
+  document.querySelectorAll("[data-admin-link]").forEach((link) => {
+    link.hidden = !isAdmin();
+  });
+}
+
 function pageHeader(title, description, actions = "") {
   return `
     <section class="page-header">
@@ -2494,34 +2500,35 @@ function renderTeacher() {
   app.innerHTML = `
     ${pageHeader(
       "Teacher Notes",
-      "A central view of the guidance that supports the topic tools: what each topic covers, how it can be used in class, and what misconceptions to watch for."
+      "Guidance for using Kaizen Maths as a virtual mathematics textbook: choose suitable questions, project them clearly, reveal worked steps at the right moment, and adapt the pace of practice to your class."
     )}
     <section class="split-grid">
       <div class="panel">
-        <h2>What Teachers Need Here</h2>
-        <p>Each topic should help teachers choose suitable questions quickly: prerequisites, learning objectives, common mistakes, suggested timings, and a short note on when to use answers or worked steps.</p>
+        <h2>Use It Alongside Your Teaching</h2>
+        <p>Kaizen Maths does not replace teacher planning or explanation. It supports the lesson by giving you instant access to topic-based questions, examples, answers, and worked solutions while you stay in control of what students see and when they see it.</p>
       </div>
       <div class="panel">
-        <h2>Current Guidance Pattern</h2>
-        <p>Topic pages already show teacher guidance from the library. This page can become the overview for topic coverage, starter routines, retrieval sequences, differentiation, homework, and assessment use.</p>
+        <h2>Classroom Workflow</h2>
+        <p>Start by selecting a topic, level, and question type. Project a practice set, give students thinking time, then reveal answers or worked steps when you want to check understanding, discuss misconceptions, or model a method.</p>
       </div>
       <div class="panel">
-        <h2>Access Setup</h2>
-        <p>The account foundation is now ready for Supabase Google sign-in. Add your Supabase project URL and anon key in <code>auth-config.js</code>, then enable Google as an auth provider in Supabase.</p>
+        <h2>Differentiation And Intervention</h2>
+        <p>Use the levels and question types to adjust challenge quickly. You can stay with one skill for fluency, move to a harder level for extension, or return to a prerequisite topic when students need more support.</p>
         <div class="badge-row">
-          <span class="badge">Google sign-in</span>
-          <span class="badge">Trial role</span>
-          <span class="badge">Profile table</span>
-          <span class="badge">Future access tiers</span>
+          <span class="badge">Retrieval practice</span>
+          <span class="badge">Fluency</span>
+          <span class="badge">Misconceptions</span>
+          <span class="badge">Extension</span>
+          <span class="badge">Intervention</span>
         </div>
       </div>
       <div class="panel">
-        <h2>Next Supabase Steps</h2>
+        <h2>Worksheets And Assessment</h2>
         <div class="migration-list">
-          <article class="migration-item"><span>1</span><div><h3>Create Supabase project</h3><p>Copy the project URL and anon public key into <code>auth-config.js</code>.</p></div></article>
-          <article class="migration-item"><span>2</span><div><h3>Run the starter schema</h3><p>Use <code>supabase-schema.sql</code> in the Supabase SQL editor to create profiles, schools, and tool access tables.</p></div></article>
-          <article class="migration-item"><span>3</span><div><h3>Enable Google provider</h3><p>Add the Google OAuth client in Supabase and set the redirect URL to <code>/auth/callback.html</code>.</p></div></article>
-          <article class="migration-item"><span>4</span><div><h3>Test one account</h3><p>Sign in with Google and confirm a trial profile appears in the Supabase profiles table.</p></div></article>
+          <article class="migration-item"><span>1</span><div><h3>Homework</h3><p>Create printable practice from one topic or combine several topics into a mixed worksheet.</p></div></article>
+          <article class="migration-item"><span>2</span><div><h3>Quizzes</h3><p>Select a focused question type and generate a short set for a starter, exit check, or low-stakes test.</p></div></article>
+          <article class="migration-item"><span>3</span><div><h3>Assessments</h3><p>Build longer question sets with a separate answer key for marking, review, or revision lessons.</p></div></article>
+          <article class="migration-item"><span>4</span><div><h3>Less Confident Topics</h3><p>Use the examples, answers, and worked steps as a structure when teaching a topic that needs extra support.</p></div></article>
         </div>
       </div>
     </section>
@@ -2918,6 +2925,7 @@ function routeParts() {
 
 function renderRoute() {
   closeMobileNav();
+  updateAdminNavVisibility();
   setActiveNav();
   const parts = routeParts();
   if (!parts[0]) {
@@ -2948,6 +2956,10 @@ function renderRoute() {
   } else if (parts[0] === "teacher") {
     renderTeacher();
   } else if (parts[0] === "admin") {
+    if (!isAdmin()) {
+      location.hash = "#/";
+      return;
+    }
     renderAdmin();
   } else {
     renderHome();
@@ -2983,10 +2995,12 @@ document.getElementById("mobileNavBackdrop").addEventListener("click", closeMobi
 window.addEventListener("hashchange", renderRoute);
 
 window.addEventListener("kaizen-auth-change", () => {
+  updateAdminNavVisibility();
   loadToolAccessSettings({ rerender: true });
 });
 
 window.setTimeout(() => {
+  updateAdminNavVisibility();
   loadToolAccessSettings({ rerender: true });
 }, 1200);
 
