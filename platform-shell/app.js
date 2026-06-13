@@ -9,7 +9,7 @@ const tools = [
     status: "Pilot",
     description: "Generate substitution questions with answers, worked steps, a timer, and teacher notes.",
     tags: ["algebra", "substitution", "expressions", "worked steps"],
-    toolPath: "tools/substitution/index.html?v=question-type-labels-1",
+    toolPath: "tools/substitution/index.html?v=substitution-worksheet-given-1",
     imported: true,
     legacyUrl: "https://www.kaizen-maths.com/substitution",
     teacherNotes: [
