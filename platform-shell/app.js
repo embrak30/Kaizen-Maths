@@ -14,7 +14,7 @@ const tools = [
     legacyUrl: "https://www.kaizen-maths.com/substitution",
     teacherNotes: [
       "Designed for board-led infinite practice with levels and instant regeneration.",
-      "Keep the original generator code intact; the platform only wraps and organises it.",
+      "Keep the original question tool intact; the shell only organises access, guidance, and navigation.",
       "Good candidate for saved seeds and printable problem sets later."
     ]
   },
@@ -711,7 +711,7 @@ const tools = [
     imported: true,
     teacherNotes: [
       "Builds from common factor extraction into special products and trinomial factorisation.",
-      "Advanced generators return complete factorised answers rather than placeholders.",
+      "Advanced question sets return complete factorised answers rather than placeholders.",
       "Step-by-step highlighting supports board modelling and Classroom View projection."
     ]
   },
@@ -1160,7 +1160,7 @@ function signInCallout(title = "Sign in to continue") {
     <section class="panel access-callout">
       <span class="eyebrow">Account Required</span>
       <h2>${title}</h2>
-      <p>Free visitors can try a small sample from the library. Sign in with Google to start trial access and use the full set while the site is being tested.</p>
+      <p>Free visitors can try a small sample from the virtual textbook. Sign in with Google to access the wider topic library, worksheet tools, and classroom question sets during the trial period.</p>
       <button class="button primary" type="button" data-auth-action="signin">Sign in with Google</button>
       <a class="button" href="#/tools">Back to Free Tools</a>
     </section>
@@ -1537,10 +1537,10 @@ function metricGrid() {
   const worksheetReady = worksheetEligibleTools().length;
   return `
     <section class="metric-grid" aria-label="Platform metrics">
-      <div class="metric"><span>Topic generators</span><strong>${topicGenerators}</strong></div>
+      <div class="metric"><span>Topic tools</span><strong>${topicGenerators}</strong></div>
       <div class="metric"><span>Subject collections</span><strong>${categories.size}</strong></div>
-      <div class="metric"><span>Worksheet-ready tools</span><strong>${worksheetReady}</strong></div>
-      <div class="metric"><span>Fresh question sets</span><strong>∞</strong></div>
+      <div class="metric"><span>Worksheet-ready topics</span><strong>${worksheetReady}</strong></div>
+      <div class="metric"><span>Question supply</span><strong>∞</strong></div>
     </section>
   `;
 }
@@ -1549,9 +1549,10 @@ function renderHome() {
   app.innerHTML = `
     <section class="home-hero">
       <div class="hero-copy">
-        <span class="eyebrow">Classroom-Ready Maths Tools</span>
-        <h1>A virtual textbook with infinite problems.</h1>
-        <p>Kaizen Maths brings together topic pages, teachers&apos; guidance, and an unlimited supply of mathematics problems covering a wide range of topics, ready to use in your classroom. Search the Tool Library like a textbook, open a topic generator, project fresh questions, or build a worksheet from the same practice set.</p>
+        <span class="eyebrow">For Maths Teachers</span>
+        <h1>Your Virtual Mathematics Textbook</h1>
+        <p>Unlimited maths questions, examples, worksheets, and assessments for every topic you teach.</p>
+        <p>Kaizen Maths helps teachers generate the right questions at the right level, whenever they need them, while keeping teachers fully in control of the lesson.</p>
       </div>
       <div class="hero-diagram" aria-hidden="true">
         <span class="diagram-card diagram-card-a">y = mx + c</span>
@@ -1565,7 +1566,7 @@ function renderHome() {
       </div>
       <div class="home-hero-actions">
         <a class="button primary" href="#/beta-feedback">Beta Testing Brief</a>
-        <a class="button primary" href="#/worksheet-generator">Create Worksheet</a>
+        <a class="button primary" href="#/worksheet-generator">Create a Worksheet</a>
         <a class="button primary" href="#/how-to-use-this-site">How to Use This Site</a>
         <a class="button" href="#/tools">Open Tool Library</a>
         <a class="button" href="#/collections/statistics">Explore Statistics</a>
@@ -1576,7 +1577,7 @@ function renderHome() {
       <div>
         <span class="eyebrow">Beta Testing</span>
         <h2>Helping test Kaizen Maths?</h2>
-        <p>Start with the beta brief. It explains what to try, what kind of feedback is most useful, and gives testers a simple feedback form they can copy and send back privately.</p>
+        <p>Start with the beta brief. It explains which teacher workflows to try, what kind of feedback is most useful, and gives testers a simple feedback form they can copy and send back privately.</p>
       </div>
       <a class="button primary" href="#/beta-feedback">Open Beta Brief</a>
     </section>
@@ -1584,36 +1585,36 @@ function renderHome() {
       <div class="guide-callout-copy">
         <span class="eyebrow">New Here?</span>
         <h2>Start with the illustrated site guide</h2>
-        <p>See how to move from dashboard to library, open a classroom generator, switch between Practice Set and One Example mode, reveal answers and steps, and build worksheets from the same question types.</p>
+        <p>See how to move from dashboard to library, choose a topic, switch between Practice Set and One Example mode, reveal answers and steps, and build worksheets from the same question types.</p>
         <a class="button primary" href="#/how-to-use-this-site">Read How to Use This Site</a>
       </div>
       <img src="assets/guide-screenshots/classroom-practice-set.png" alt="Classroom practice set screenshot">
     </section>
-    <section class="worksheet-callout" aria-label="Worksheet generator">
+    <section class="worksheet-callout" aria-label="Worksheet builder">
       <div class="worksheet-callout-icon" aria-hidden="true">▦</div>
       <div>
         <h2>Need a worksheet from today&apos;s lesson?</h2>
-        <p>Use the worksheet builder to mix topics, levels, and question types from across the virtual textbook, then print a clean student sheet with a separate answer key.</p>
+        <p>Use the worksheet builder to select topics, levels, and question types from across the virtual textbook, then print a clean student sheet with a separate answer key.</p>
       </div>
-      <a class="button primary" href="#/worksheet-generator">Build Worksheet</a>
+      <a class="button primary" href="#/worksheet-generator">Create Worksheet</a>
     </section>
     ${metricGrid()}
     <section class="split-grid">
       <div class="panel">
-        <h2>Start From The Lesson You Need</h2>
+        <h2>Start From The Topic You Teach</h2>
         <div class="migration-list">
           <article class="migration-item"><span>1</span><div><h3>New here?</h3><p>Open the site guide for a quick walkthrough of navigation, levels, question types, timers, answers, and worked steps.</p></div></article>
-          <article class="migration-item"><span>2</span><div><h3>Need a starter?</h3><p>Open the Tool Library, choose a topic, and generate a compact question set for retrieval practice or a quick confidence check.</p></div></article>
-          <article class="migration-item"><span>3</span><div><h3>Modelling a method?</h3><p>Reveal worked steps after students have had a go, so the explanation lands at the right moment.</p></div></article>
-          <article class="migration-item"><span>4</span><div><h3>Building a sequence?</h3><p>Move through related tools and collections to connect fluency, reasoning, and extension tasks.</p></div></article>
+          <article class="migration-item"><span>2</span><div><h3>Need practice now?</h3><p>Open the Tool Library, choose a topic, select a level, and generate a compact question set for retrieval practice or a quick confidence check.</p></div></article>
+          <article class="migration-item"><span>3</span><div><h3>Modelling a method?</h3><p>Use One Example mode or reveal worked steps when you want to discuss the method, check misconceptions, or adjust the pace.</p></div></article>
+          <article class="migration-item"><span>4</span><div><h3>Setting independent work?</h3><p>Create worksheets, homework, quizzes, assessments, and intervention practice from the same topic library.</p></div></article>
         </div>
       </div>
       <div class="panel">
         <h2>Built For The Front Of The Room</h2>
-        <p>Each tool is designed around a simple rhythm: choose the level, generate a board-friendly set, let students think, then reveal answers or the method. The aim is less setup time and more useful mathematical talk.</p>
+        <p>Each topic tool follows a simple teaching rhythm: choose the level, project a board-friendly set, let students think, then reveal answers or the method. Teachers decide the pace, the questions, and when the class is ready to move on.</p>
         <div class="badge-row">
           <span class="badge">Board-ready sets</span>
-          <span class="badge">Fresh questions</span>
+          <span class="badge">Unlimited questions</span>
           <span class="badge">Worked steps</span>
           <span class="badge">Answer reveal</span>
           <span class="badge">Search</span>
@@ -1662,17 +1663,17 @@ function renderToolLibrary(extraCategory = "") {
   const visible = filteredTools(extraCategory);
   const collectionTitle = extraCategory ? tools.find((tool) => categorySlug(tool.category) === extraCategory)?.category || "Collection" : "Tool Library";
   const collectionDescriptions = {
-    algebra: "Algebra tools cover substitution, equations, factorisation, graphs, sequences, calculus, and trigonometry. Use them for live modelling, retrieval practice, and extension work.",
-    numbers: "Number tools build fluency with fractions, decimals, percentages, HCF and LCM, order of operations, averages, and powers of 10.",
-    geometry: "Geometry tools cover shape, measure, diagrams, area, perimeter, and later volume. Use them for visual modelling, board practice, and method-focused discussion.",
-    statistics: "Statistics tools cover data summaries, probability distributions, expectation, variance, and model selection. Use them to connect calculation fluency with interpretation and exam-style reasoning.",
-    "site-guide": "Site guides help teachers understand how to navigate the platform and use the shared controls across the interactive tools.",
-    "classroom-tools": "Classroom tools support quick routines, reference displays, games, and retrieval moments around the main lesson content."
+    algebra: "Algebra topics cover substitution, equations, factorisation, graphs, sequences, calculus, and trigonometry. Use them for exposition, retrieval practice, differentiation, homework, and assessment.",
+    numbers: "Number topics build fluency with fractions, decimals, percentages, HCF and LCM, order of operations, averages, and powers of 10.",
+    geometry: "Geometry topics cover shape, measure, diagrams, area, perimeter, volume, and trigonometry. Use them for visual modelling, board practice, and method-focused discussion.",
+    statistics: "Statistics topics cover data summaries, probability distributions, expectation, variance, and model selection. Use them to connect calculation fluency with interpretation and exam-style reasoning.",
+    "site-guide": "Site guides help teachers navigate the virtual textbook and use the shared controls across the topic tools.",
+    "classroom-tools": "Classroom tools support quick routines, reference displays, games, exit tickets, and retrieval moments around the main lesson content."
   };
   app.innerHTML = `
     ${pageHeader(
       collectionTitle,
-      extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths tools for classroom practice and projection." : "Search the complete tool library. Open a generator to create fresh questions, show answers or worked steps, use the timer, and project it in Classroom View."
+      extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Search the virtual textbook by topic. Choose a level, generate fresh questions, show answers or worked steps, use the timer, and project the set in Classroom View."
     )}
     ${renderFilters()}
     <section class="tool-grid" aria-label="Tools">
@@ -1699,15 +1700,15 @@ function renderBetaFeedback() {
   app.innerHTML = `
     ${pageHeader(
       "Beta Testing Brief",
-      "Thank you for helping test Kaizen Maths. This page explains what to try and how to send useful feedback after using the site.",
+      "Thank you for helping test Kaizen Maths. This page explains which teacher workflows to try and how to send useful feedback after using the site.",
       `<a class="button" href="#/">Back to Dashboard</a><a class="button primary" href="#/tools">Start Testing</a>`
     )}
     <section class="beta-page">
       <article class="panel beta-intro">
         <span class="eyebrow">For Testers</span>
         <h2>What we are testing</h2>
-        <p>Kaizen Maths is a beta version of a mathematics teaching platform. It is designed to help teachers quickly find a topic, project board-ready questions, reveal answers or worked steps, and build printable worksheets from the same generators.</p>
-        <p>Please use it as you naturally would in a lesson-planning, tutoring, or classroom setting. Short feedback is useful, but specific examples and screenshots are even better.</p>
+        <p>Kaizen Maths is a virtual mathematics textbook for teachers. It is designed to help teachers quickly find a topic, choose a level, project board-ready questions, reveal answers or worked steps, and build printable worksheets from the same question bank.</p>
+        <p>Please use it as you naturally would when teaching, tutoring, setting homework, checking misconceptions, or preparing assessment practice. Short feedback is useful, but specific examples and screenshots are even better.</p>
       </article>
 
       <article class="panel beta-how-it-works">
@@ -1718,9 +1719,9 @@ function renderBetaFeedback() {
         </div>
         <div class="beta-steps">
           <div><span>1</span><p><strong>Find a topic:</strong> use the Tool Library or search bar like a textbook index.</p></div>
-          <div><span>2</span><p><strong>Use a generator:</strong> choose the level and question type, then generate a fresh set.</p></div>
-          <div><span>3</span><p><strong>Teach from the board:</strong> reveal answers or steps only when you need them.</p></div>
-          <div><span>4</span><p><strong>Build worksheets:</strong> mix topics and print a student sheet with a separate answer key.</p></div>
+          <div><span>2</span><p><strong>Choose the level:</strong> select the question type that matches the stage of learning.</p></div>
+          <div><span>3</span><p><strong>Teach from the board:</strong> project questions, reveal answers or steps when you need them, and repeat practice until students are ready.</p></div>
+          <div><span>4</span><p><strong>Create worksheets:</strong> mix topics and print a student sheet with a separate answer key.</p></div>
         </div>
         <a class="button primary" href="#/how-to-use-this-site">Open the Illustrated Site Guide</a>
       </article>
@@ -1732,7 +1733,7 @@ function renderBetaFeedback() {
             <li>Open the <a href="#/tools">Tool Library</a> and search for a topic you teach.</li>
             <li>Open at least two topic tools and generate a fresh question set.</li>
             <li>Try answers, worked steps, timer controls, and Classroom View.</li>
-            <li>Open the <a href="#/worksheet-generator">Worksheet Builder</a> and make a short worksheet from more than one topic.</li>
+            <li>Open the <a href="#/worksheet-generator">Worksheet Builder</a> and create a short worksheet from more than one topic.</li>
             <li>Try one Classroom Tool, such as Math in a Minute or the Exit Ticket Choice Board.</li>
           </ol>
         </article>
@@ -1773,7 +1774,7 @@ function renderBetaFeedback() {
           </label>
           <label>
             What did you test?
-            <textarea id="betaTested" rows="3" placeholder="Example: Algebra tools, worksheet builder, classroom games"></textarea>
+            <textarea id="betaTested" rows="3" placeholder="Example: Algebra topics, worksheet builder, classroom routines"></textarea>
           </label>
           <label>
             What worked well?
@@ -1785,7 +1786,7 @@ function renderBetaFeedback() {
           </label>
           <label>
             What should be added next?
-            <textarea id="betaNext" rows="3" placeholder="Topics, tools, or features you would like to see"></textarea>
+            <textarea id="betaNext" rows="3" placeholder="Topics, question types, assessments, or worksheet options you would like to see"></textarea>
           </label>
           <button class="button primary" type="submit">Create Feedback Message</button>
         </form>
@@ -1802,7 +1803,7 @@ function renderBetaFeedback() {
 
       <section class="panel beta-thanks">
         <h2>Thank You</h2>
-        <p>Everyone who helps with beta testing will receive one year of access when the full version goes live. Your feedback will directly shape what gets fixed, improved, and built next.</p>
+        <p>Everyone who helps with beta testing will receive one year of access when the full version goes live. Your feedback will directly shape the topic coverage, worksheet tools, assessment options, and classroom routines that get improved next.</p>
       </section>
     </section>
   `;
@@ -1833,13 +1834,13 @@ function renderWorksheetGenerator() {
     app.innerHTML = `
       ${pageHeader(
         "Worksheet Generator",
-        "The worksheet generator needs the site to be opened through the local web server so it can safely read question data from the tool pages.",
+        "The worksheet builder needs the site to be opened through the local web server so it can safely read question data from the topic pages.",
         `<a class="button primary" href="http://127.0.0.1:4173/#/worksheet-generator">Open Local Server Version</a><a class="button" href="#/">Back to Dashboard</a>`
       )}
       <section class="panel">
         <span class="eyebrow">Local Server Needed</span>
         <h2>Open this page through localhost</h2>
-        <p>You are currently viewing the site as a file on your computer. That is fine for simple pages, but the worksheet generator uses hidden tool frames, and browsers restrict that when opened with <code>file://</code>.</p>
+        <p>You are currently viewing the site as a file on your computer. That is fine for simple pages, but the worksheet builder uses hidden topic pages to collect question data, and browsers restrict that when opened with <code>file://</code>.</p>
         <p>This does not require the internet. It just needs the local development server URL:</p>
         <p><code>http://127.0.0.1:4173/#/worksheet-generator</code></p>
       </section>
@@ -1854,7 +1855,7 @@ function renderWorksheetGenerator() {
   app.innerHTML = `
     ${pageHeader(
       "Worksheet Builder",
-      "Build one worksheet from several topic areas. Add question blocks from different tools, levels, and question types, then generate a print-ready student sheet with a separate answer key.",
+      "Create homework, quizzes, assessments, and intervention sheets from several topic areas. Add question blocks from different topics, levels, and question types, then generate a print-ready student sheet with a separate answer key.",
       `<a class="button" href="#/tools">Browse Tools</a>`
     )}
     <section class="worksheet-builder">
@@ -1885,7 +1886,7 @@ function renderWorksheetGenerator() {
         </div>
         <div class="button-row">
           <button class="button" id="addWorksheetSection" type="button">Add Question Block</button>
-          <button class="button primary" id="generateWorksheet" type="submit">Generate Worksheet</button>
+          <button class="button primary" id="generateWorksheet" type="submit">Create Worksheet</button>
           <button class="button" id="printWorksheet" type="button" disabled>Print / Save PDF</button>
           <button class="button subtle" id="resetWorksheet" type="button">Reset Worksheet</button>
         </div>
@@ -2433,8 +2434,8 @@ function renderToolFrame(tool) {
       <div class="missing-tool">
         <span class="eyebrow">Coming Soon</span>
         <h2>This tool is on the roadmap</h2>
-        <p>The library already knows where this tool belongs, but the interactive generator has not been connected yet.</p>
-        <p>Use the related tools and collections to find nearby practice while this one is being prepared.</p>
+        <p>The virtual textbook already knows where this topic belongs, but the classroom question set has not been connected yet.</p>
+        <p>Use the related topics and collections to find nearby practice while this one is being prepared.</p>
       </div>
     `;
 
@@ -2493,16 +2494,16 @@ function renderTeacher() {
   app.innerHTML = `
     ${pageHeader(
       "Teacher Notes",
-      "A central view of the guidance that supports the generators: what each tool is for, how to use it in class, and what misconceptions to watch for."
+      "A central view of the guidance that supports the topic tools: what each topic covers, how it can be used in class, and what misconceptions to watch for."
     )}
     <section class="split-grid">
       <div class="panel">
         <h2>What Teachers Need Here</h2>
-        <p>Each tool should make the lesson move faster: prerequisites, learning objectives, common mistakes, suggested timings, and a short note on when to use Answers or Steps.</p>
+        <p>Each topic should help teachers choose suitable questions quickly: prerequisites, learning objectives, common mistakes, suggested timings, and a short note on when to use answers or worked steps.</p>
       </div>
       <div class="panel">
         <h2>Current Guidance Pattern</h2>
-        <p>Tool pages already show teacher notes from the registry. This page can become the overview for curriculum maps, starter routines, retrieval sequences, and printable planning notes.</p>
+        <p>Topic pages already show teacher guidance from the library. This page can become the overview for topic coverage, starter routines, retrieval sequences, differentiation, homework, and assessment use.</p>
       </div>
       <div class="panel">
         <h2>Access Setup</h2>
@@ -2530,7 +2531,7 @@ function renderTeacher() {
 function renderAdmin() {
   if (!isSignedIn()) {
     app.innerHTML = `
-      ${pageHeader("Admin", "Manage access levels for tools and prepare the site for trial users, free samples, and future paid tiers.")}
+      ${pageHeader("Admin", "Manage access levels for the virtual textbook and prepare the site for trial users, free samples, individual teachers, and school licences.")}
       ${signInCallout("Admin sign-in required")}
     `;
     bindAuthActions();
@@ -2569,13 +2570,13 @@ function renderAdmin() {
   }).join("");
 
   app.innerHTML = `
-    ${pageHeader("Admin", "Choose which tools are free samples and which require trial, pro, school, or admin access.")}
+    ${pageHeader("Admin", "Choose which topics are free samples and which require trial, pro, school, or admin access.")}
     <section class="panel admin-panel">
       <div class="admin-toolbar">
         <div>
           <span class="eyebrow">Access Rules</span>
           <h2>Tool Access</h2>
-          <p>Signed-out visitors can open Free tools. Signed-in trial users can open Trial tools. For now, keep most tools as Trial while testing.</p>
+          <p>Signed-out visitors can open Free topics. Signed-in trial users can open Trial topics. For now, keep most topic tools as Trial while testing.</p>
         </div>
         <button class="button primary" id="saveAccessRules" type="button">Save Access Rules</button>
       </div>
@@ -2928,7 +2929,7 @@ function renderRoute() {
   } else if (parts[0] === "worksheet-generator") {
     if (!isSignedIn()) {
       app.innerHTML = `
-        ${pageHeader("Worksheet Builder", "Mix tools, levels, and question types into printable worksheets with answer keys.")}
+        ${pageHeader("Worksheet Builder", "Create printable homework, quizzes, assessments, and intervention sheets from topic levels and question types.")}
         ${signInCallout("Trial access required")}
       `;
       bindAuthActions();
