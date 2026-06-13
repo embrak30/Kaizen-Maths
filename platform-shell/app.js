@@ -697,6 +697,25 @@ const tools = [
     ]
   },
   {
+    slug: "binomial-geometric-distribution",
+    title: "Binomial & Geometric Distribution",
+    category: "Statistics",
+    level: "A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate binomial and geometric distribution practice covering exact probabilities, cumulative probabilities, complements, expected values, mixed modelling questions, and simple parameter work.",
+    tags: ["statistics", "probability", "binomial distribution", "geometric distribution", "discrete distributions", "cumulative probability", "expectation", "variance"],
+    toolPath: "tools/binomial-geometric-distribution/index.html?v=binomial-geometric-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on binomial exact probabilities, cumulative probabilities, complements, expectation, variance, and mixed binomial practice.",
+      "Level 2 focuses on geometric first-success probabilities, cumulative probabilities, complements, expectation, variance, and mixed geometric practice.",
+      "Level 3 mixes binomial and geometric modelling so students must choose the correct distribution before calculating.",
+      "Worked steps show formula selection, substitution, and final interpretation without relying on diagrams."
+    ]
+  },
+  {
     slug: "tree-diagrams-conditional-probability",
     title: "Tree Diagrams & Conditional Probability",
     category: "Statistics",
