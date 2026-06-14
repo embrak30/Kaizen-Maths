@@ -510,6 +510,9 @@
       } catch (_) {
         originalGenerateNewSet();
       }
+      if (typeof window.kaizenRenderMath === 'function') {
+        setTimeout(() => window.kaizenRenderMath(), 0);
+      }
       document.documentElement.classList.add('teacher-example-mode');
     }
 

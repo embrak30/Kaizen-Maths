@@ -323,6 +323,7 @@
     };
 
     const parenIfNeg = (n) => (n < 0 ? `(${n})` : `${n}`);
+    const stripMathDelimiters = (value) => String(value || '').replace(/\\\(|\\\)/g, '').replace(/\$\$/g, '').trim();
 
     function ensureNonZeroConstant(constTerm, adjusterFn){
       if (constTerm !== 0) return constTerm;
@@ -596,7 +597,7 @@
           return generateProblem();
       }
 
-      problem.question = `Given: ${problem.given}<br>Find: ${problem.expression}`;
+      problem.question = `Given: ${stripMathDelimiters(problem.given)}<br>Find: ${stripMathDelimiters(problem.expression)}`;
       return problem;
     }
 
@@ -754,9 +755,10 @@
         throwOnError:false
       });
     }
+    window.kaizenRenderMath = reRenderMath;
 
     document.addEventListener('DOMContentLoaded', ()=>{ switchLevel(1); reRenderMath(); });
   </script>
-  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-15"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-16"></script>
 </body>
 </html>
