@@ -2549,6 +2549,8 @@ function resetWorksheetBuilder() {
 function bindWorksheetGenerator() {
   const toolSelect = document.getElementById("worksheetTool");
   const form = document.getElementById("worksheetForm");
+  const controlsPane = document.getElementById("worksheetForm");
+  const previewPane = document.getElementById("worksheetPreview");
   const printButton = document.getElementById("printWorksheet");
   const addSectionButton = document.getElementById("addWorksheetSection");
   const buildAssessmentButton = document.getElementById("buildTopicAssessment");
@@ -2556,6 +2558,18 @@ function bindWorksheetGenerator() {
   const assessmentMode = document.getElementById("worksheetAssessmentMode");
   const assessmentPanel = document.getElementById("worksheetAssessmentPanel");
   if (!toolSelect || !form) return;
+
+  if (controlsPane && previewPane) {
+    previewPane.addEventListener("wheel", (event) => {
+      const delta = event.deltaY;
+      const canScrollControlsDown = delta > 0 && controlsPane.scrollTop + controlsPane.clientHeight < controlsPane.scrollHeight - 2;
+      const canScrollControlsUp = delta < 0 && controlsPane.scrollTop > 0;
+      if (canScrollControlsDown || canScrollControlsUp) {
+        controlsPane.scrollTop += delta;
+        event.preventDefault();
+      }
+    }, { passive: false });
+  }
 
   toolSelect.value = worksheetState.toolSlug;
   loadWorksheetTool(selectedWorksheetTool());

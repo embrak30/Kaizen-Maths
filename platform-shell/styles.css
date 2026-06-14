@@ -1345,6 +1345,10 @@ a {
   top: 92px;
   display: grid;
   gap: 14px;
+  max-height: calc(100vh - 112px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 .worksheet-control {
@@ -1575,7 +1579,9 @@ a {
 
 .worksheet-preview {
   min-height: 640px;
+  max-height: calc(100vh - 112px);
   overflow: auto;
+  overscroll-behavior: contain;
   background:
     linear-gradient(135deg, rgba(111,76,195,0.05), rgba(23,184,179,0.05)),
     #f8fbff;
@@ -2283,6 +2289,12 @@ sup .worksheet-fraction span:last-child {
   .teacher-panel,
   .worksheet-controls {
     position: static;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .worksheet-preview {
+    max-height: none;
   }
 
   .legacy-frame {
