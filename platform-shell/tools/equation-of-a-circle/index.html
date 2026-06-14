@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equation of a Circle Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s ease;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 50%,rgba(0,0,0,.05) 100%)}.header h1{font-size:2.2em;margin-bottom:5px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:18px;background:#e2e8f0;border:0;cursor:pointer;font-size:1.05em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:25px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.3em}.level-info p{color:#718096;font-size:1em}.dropdown-container{margin-top:10px}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:300px;max-width:100%}.type-dropdown:focus{border-color:#3182ce;outline:0}
+    .timer-section{display:flex;align-items:center;gap:15px}.timer-display{font-size:2em;font-weight:700;color:#1a365d;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #cbd5e0;min-width:120px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px;flex-wrap:wrap}.btn{padding:12px 22px;border:0;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:28px;min-height:580px}.problem-list{list-style:none}.problem-item{background:#f7fafc;margin:14px 0;padding:18px;border-radius:10px;border-left:5px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(3px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3182ce;color:#fff;width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:20px;font-size:1.1em;flex-shrink:0}.equation{font-size:1.55em;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);color:#1a365d;font-weight:600;max-width:100%;overflow-x:auto;line-height:1.38}.problem-answer{background:#38a169;color:#fff;padding:10px 18px;border-radius:25px;font-weight:700;font-size:1.05em;display:none;margin-left:18px;max-width:45%;white-space:nowrap;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{margin-top:18px;padding:18px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#38a169;margin-bottom:10px;font-size:1.1em}.solution-steps{font-size:1.12em;line-height:1.5}.step{margin:8px 0;color:#1a365d}.step-equation{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:700;color:#805ad5;text-align:center;margin:10px 0;font-size:1.22em;overflow-x:auto;max-width:100%;padding-bottom:3px}.final-answer{background:#38a169;color:#fff;padding:10px 18px;border-radius:6px;text-align:center;font-weight:700;font-size:1.15em;margin-top:12px;overflow-x:auto}.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1;margin:0 2px}.frac .num{border-bottom:1.8px solid currentColor;padding:0 4px 2px}.frac .den{padding:2px 4px 0}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none!important}
+    @media(max-width:768px){body{padding:15px}.controls{flex-direction:column;align-items:stretch;padding:14px}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%;padding:10px}.sidebar{width:320px;left:-320px}.problems-section{padding:12px}.problem-item{padding:12px;margin:8px 0}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{max-width:100%;margin-left:55px}.equation{font-size:1.2em}.solution-steps{font-size:1em}.step-equation{font-size:1.04em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Topics Covered</h3>
+      <ul>
+        <li>Finding the centre and radius from a circle equation.</li>
+        <li>Writing the equation of a circle from a centre and radius.</li>
+        <li>Converting expanded circle equations into standard form.</li>
+        <li>Finding intersections of a circle with a line or another circle.</li>
+        <li>Finding tangent equations and tangent lengths.</li>
+      </ul>
+      <h3>Core Formula</h3>
+      <p>The standard form is (x - a)<sup>2</sup> + (y - b)<sup>2</sup> = r<sup>2</sup>, where (a, b) is the centre and r is the radius.</p>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Encourage students to identify the centre by reading the signs carefully.</li>
+        <li>For expanded equations, complete the square separately for x and y.</li>
+        <li>For two circles, subtract the equations first to create a linear equation.</li>
+        <li>For tangents, connect radius and tangent as perpendicular lines.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header"><h1>Equation of a Circle Teaching Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Centre and Radius</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Equation Forms</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Intersections</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Tangents</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Centre and Radius</h3>
+        <p id="level-description">Read centre and radius from standard circle equations</p>
+        <div class="dropdown-container" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const typeDisplayNames = {
+      centre_radius_standard: 'Find centre and radius',
+      centre_radius_expanded: 'Find centre and radius from expanded form',
+      write_from_centre_radius: 'Write equation from centre and radius',
+      write_from_diameter: 'Write equation from endpoints of a diameter',
+      line_circle_intersection: 'Intersection of a line and circle',
+      circle_circle_intersection: 'Intersection of two circles',
+      tangent_at_point: 'Tangent at a point on the circle',
+      tangent_length: 'Length of a tangent from an external point'
+    };
+
+    const levelConfigs = {
+      1: { title: 'Level 1: Centre and Radius', description: 'Read centre and radius from standard circle equations', types: ['centre_radius_standard','centre_radius_expanded'] },
+      2: { title: 'Level 2: Equation Forms', description: 'Form circle equations from given information', types: ['write_from_centre_radius','write_from_diameter'] },
+      3: { title: 'Level 3: Intersections', description: 'Find intersections involving circles, lines, and other circles', types: ['line_circle_intersection','circle_circle_intersection'] },
+      4: { title: 'Level 4: Tangents', description: 'Use radius-tangent facts to find tangent equations and lengths', types: ['tangent_at_point','tangent_length'] }
+    };
+
+    const typeOptions = {
+      1: [['centre_radius_standard','Find centre and radius'],['centre_radius_expanded','Find centre and radius from expanded form']],
+      2: [['write_from_centre_radius','Write equation from centre and radius'],['write_from_diameter','Write equation from endpoints of a diameter']],
+      3: [['line_circle_intersection','Intersection of a line and circle'],['circle_circle_intersection','Intersection of two circles']],
+      4: [['tangent_at_point','Tangent at a point on the circle'],['tangent_length','Length of a tangent from an external point']]
+    };
+
+    function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.sidebar-overlay').classList.toggle('active'); }
+    function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.querySelector('.sidebar-overlay').classList.remove('active'); }
+    function random(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function choice(items){ return items[Math.floor(Math.random()*items.length)]; }
+    function nonZero(min,max){ let n; do{ n=random(min,max); }while(n===0); return n; }
+    function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ const t=b; b=a%b; a=t; } return a || 1; }
+    function frac(num,den){ if(num===0) return {n:0,d:1}; const g=gcd(num,den); num/=g; den/=g; if(den<0){num=-num; den=-den;} return {n:num,d:den}; }
+    function fracHTML(num,den){ const f=frac(num,den); if(f.d===1) return String(f.n); return '<span class="frac"><span class="num">'+f.n+'</span><span class="den">'+f.d+'</span></span>'; }
+    function rootHTML(n){ const r=Math.sqrt(n); return Number.isInteger(r) ? String(r) : '&radic;' + n; }
+    function signed(n){ return n >= 0 ? ' + ' + n : ' - ' + Math.abs(n); }
+    function coord(x,y){ return '(' + x + ', ' + y + ')'; }
+    function sqTerm(variable, h){
+      if(h === 0) return variable + '<sup>2</sup>';
+      return '(' + variable + (h > 0 ? ' - ' + h : ' + ' + Math.abs(h)) + ')<sup>2</sup>';
+    }
+    function circleStandard(h,k,r2){ return sqTerm('x', h) + ' + ' + sqTerm('y', k) + ' = ' + r2; }
+    function circleExpanded(h,k,r2){
+      const c = h*h + k*k - r2;
+      return 'x<sup>2</sup> + y<sup>2</sup>' + signed(-2*h) + 'x' + signed(-2*k) + 'y' + signed(c) + ' = 0';
+    }
+    function lineFromPoints(x1,y1,x2,y2){
+      const A = y1-y2, B = x2-x1, C = x1*y2-x2*y1;
+      return {A,B,C};
+    }
+    function lineText(A,B,C){
+      let text = '';
+      if(A !== 0) text += (A === 1 ? '' : A === -1 ? '-' : A) + 'x';
+      if(B !== 0) text += (text ? (B > 0 ? ' + ' : ' - ') : (B < 0 ? '-' : '')) + (Math.abs(B) === 1 ? '' : Math.abs(B)) + 'y';
+      if(C !== 0) text += (text ? signed(C) : String(C));
+      return text + ' = 0';
+    }
+    function lineSlopeText(mNum,mDen,cNum,cDen){
+      const m = frac(mNum,mDen), c = frac(cNum,cDen);
+      let text = 'y = ';
+      if(m.n === 0) text += '0';
+      else if(m.d === 1 && m.n === 1) text += 'x';
+      else if(m.d === 1 && m.n === -1) text += '-x';
+      else if(m.d === 1) text += m.n + 'x';
+      else text += fracHTML(m.n,m.d) + 'x';
+      if(c.n !== 0) text += c.n > 0 ? ' + ' + fracHTML(c.n,c.d) : ' - ' + fracHTML(Math.abs(c.n),c.d);
+      return text;
+    }
+    function asProblem(equation, answer, steps){
+      return { question: equation, equation, answer, steps };
+    }
+
+    function generateProblem(){
+      const types = currentType === 'select' || currentType === 'all' ? levelConfigs[currentLevel].types : [currentType];
+      const type = choice(types);
+      switch(type){
+        case 'centre_radius_standard': return centreRadiusStandard();
+        case 'centre_radius_expanded': return centreRadiusExpanded();
+        case 'write_from_centre_radius': return writeFromCentreRadius();
+        case 'write_from_diameter': return writeFromDiameter();
+        case 'line_circle_intersection': return lineCircleIntersection();
+        case 'circle_circle_intersection': return circleCircleIntersection();
+        case 'tangent_at_point': return tangentAtPoint();
+        case 'tangent_length': return tangentLength();
+        default: return centreRadiusStandard();
+      }
+    }
+
+    function centreRadiusStandard(){
+      const h=random(-6,6), k=random(-6,6), r=choice([2,3,4,5,6,7,8,9]);
+      const eq = circleStandard(h,k,r*r);
+      return asProblem('Find the centre and radius of the circle:<br>' + eq, 'Centre ' + coord(h,k) + ', radius ' + r, [
+        'Compare the equation with (x - a)<sup>2</sup> + (y - b)<sup>2</sup> = r<sup>2</sup>.',
+        'The x bracket gives a = ' + h + ' and the y bracket gives b = ' + k + '.',
+        'The centre is ' + coord(h,k) + '.',
+        'r<sup>2</sup> = ' + (r*r) + ', so r = ' + r + '.'
+      ]);
+    }
+
+    function centreRadiusExpanded(){
+      const h=nonZero(-5,5), k=nonZero(-5,5), r=choice([3,4,5,6,7,8]);
+      const eq = circleExpanded(h,k,r*r);
+      const leftX = h*h, leftY = k*k;
+      return asProblem('Find the centre and radius of the circle:<br>' + eq, 'Centre ' + coord(h,k) + ', radius ' + r, [
+        'Group the x terms and y terms, then move the constant to the other side.',
+        'x<sup>2</sup>' + signed(-2*h) + 'x + y<sup>2</sup>' + signed(-2*k) + 'y = ' + (r*r - h*h - k*k),
+        'Complete the square for x: x<sup>2</sup>' + signed(-2*h) + 'x = ' + sqTerm('x',h) + ' - ' + leftX + '.',
+        'Complete the square for y: y<sup>2</sup>' + signed(-2*k) + 'y = ' + sqTerm('y',k) + ' - ' + leftY + '.',
+        sqTerm('x',h) + ' + ' + sqTerm('y',k) + ' = ' + (r*r),
+        'Centre ' + coord(h,k) + ', radius ' + r + '.'
+      ]);
+    }
+
+    function writeFromCentreRadius(){
+      const h=random(-6,6), k=random(-6,6), r=choice([2,3,4,5,6,7,8,9]);
+      const eq = circleStandard(h,k,r*r);
+      return asProblem('Write the equation of the circle with centre ' + coord(h,k) + ' and radius ' + r + '.', eq, [
+        'Use (x - a)<sup>2</sup> + (y - b)<sup>2</sup> = r<sup>2</sup>.',
+        'Here a = ' + h + ', b = ' + k + ', and r = ' + r + '.',
+        'Substitute the centre and radius.',
+        eq
+      ]);
+    }
+
+    function writeFromDiameter(){
+      const h=random(-4,4), k=random(-4,4);
+      const dx=choice([2,3,4,5]), dy=choice([0,2,3,4]);
+      const x1=h-dx, y1=k-dy, x2=h+dx, y2=k+dy;
+      const r2=dx*dx+dy*dy;
+      const eq = circleStandard(h,k,r2);
+      return asProblem('A circle has diameter endpoints ' + coord(x1,y1) + ' and ' + coord(x2,y2) + '. Write its equation.', eq, [
+        'The centre is the midpoint of the diameter.',
+        'Centre = (' + fracHTML(x1+x2,2) + ', ' + fracHTML(y1+y2,2) + ') = ' + coord(h,k) + '.',
+        'Find r<sup>2</sup> using one endpoint and the centre.',
+        'r<sup>2</sup> = (' + x2 + ' - ' + h + ')<sup>2</sup> + (' + y2 + ' - ' + k + ')<sup>2</sup> = ' + r2 + '.',
+        'Substitute into (x - a)<sup>2</sup> + (y - b)<sup>2</sup> = r<sup>2</sup>.',
+        eq
+      ]);
+    }
+
+    function lineCircleIntersection(){
+      const h=random(-3,3), k=random(-3,3), r=5;
+      const yLine = k + choice([-4,-3,0,3,4]);
+      const d = Math.abs(yLine-k);
+      const root = Math.sqrt(r*r-d*d);
+      const xA=h-root, xB=h+root;
+      const eq = circleStandard(h,k,r*r);
+      return asProblem('Find the intersection points of the circle and line:<br>' + eq + '<br>y = ' + yLine, coord(xA,yLine) + ' and ' + coord(xB,yLine), [
+        'Substitute y = ' + yLine + ' into the circle equation.',
+        sqTerm('x',h) + ' + (' + yLine + (k > 0 ? ' - ' + k : ' + ' + Math.abs(k)) + ')<sup>2</sup> = ' + (r*r),
+        sqTerm('x',h) + ' + ' + (d*d) + ' = ' + (r*r),
+        sqTerm('x',h) + ' = ' + (r*r-d*d),
+        'x = ' + xA + ' or x = ' + xB + '.',
+        'The intersection points are ' + coord(xA,yLine) + ' and ' + coord(xB,yLine) + '.'
+      ]);
+    }
+
+    function circleCircleIntersection(){
+      const y = choice([-4,-3,3,4]), h1=random(-5,-1), h2=random(1,5), r1=5;
+      const d1 = Math.abs(y), root1 = Math.sqrt(r1*r1-d1*d1);
+      const x = h1 + root1;
+      const shift = x - h2;
+      const secondR2 = shift*shift + y*y;
+      const c1 = circleStandard(h1,0,r1*r1);
+      const c2 = circleStandard(h2,0,secondR2);
+      const answer = coord(x,y) + ' and ' + coord(x,-y);
+      return asProblem('Find the intersection points of the two circles:<br>' + c1 + '<br>' + c2, answer, [
+        'Expand or subtract the equations to eliminate y<sup>2</sup>.',
+        '(' + c2 + ') - (' + c1 + ') gives a linear equation in x.',
+        'Solving the linear equation gives x = ' + x + '.',
+        'Substitute x = ' + x + ' into the first circle.',
+        '(' + x + (h1 > 0 ? ' - ' + h1 : ' + ' + Math.abs(h1)) + ')<sup>2</sup> + y<sup>2</sup> = ' + (r1*r1),
+        'y<sup>2</sup> = ' + (y*y) + ', so y = ' + y + ' or y = ' + (-y) + '.',
+        'The intersection points are ' + answer + '.'
+      ]);
+    }
+
+    function tangentAtPoint(){
+      const h=random(-3,3), k=random(-3,3);
+      const dx=choice([3,4]), dy=choice([3,4]);
+      const px=h+dx, py=k+dy, r2=dx*dx+dy*dy;
+      const circle = circleStandard(h,k,r2);
+      const mRadius = frac(dy,dx);
+      const mTangent = frac(-dx,dy);
+      const cNum = py*mTangent.d - mTangent.n*px;
+      const cDen = mTangent.d;
+      const tangent = lineSlopeText(mTangent.n,mTangent.d,cNum,cDen);
+      return asProblem('Find the equation of the tangent to the circle at ' + coord(px,py) + ':<br>' + circle, tangent, [
+        'The centre of the circle is ' + coord(h,k) + '.',
+        'Find the gradient of the radius from ' + coord(h,k) + ' to ' + coord(px,py) + '.',
+        'm<sub>radius</sub> = (' + py + ' - ' + k + ') / (' + px + ' - ' + h + ') = ' + fracHTML(mRadius.n,mRadius.d) + '.',
+        'The tangent is perpendicular to the radius.',
+        'm<sub>tangent</sub> = ' + fracHTML(mTangent.n,mTangent.d) + '.',
+        'Use y = mx + c with point ' + coord(px,py) + '.',
+        'The tangent equation is ' + tangent + '.'
+      ]);
+    }
+
+    function tangentLength(){
+      const h=random(-3,3), k=random(-3,3), r=choice([3,4,5,6]);
+      const dx=choice([8,9,10,12]), dy=0;
+      const px=h+dx, py=k+dy;
+      const cp2=dx*dx+dy*dy, tangent2=cp2-r*r;
+      const length = rootHTML(tangent2);
+      const circle = circleStandard(h,k,r*r);
+      return asProblem('Point P is ' + coord(px,py) + '. Find the length of a tangent from P to the circle:<br>' + circle, length, [
+        'The centre of the circle is C = ' + coord(h,k) + ' and the radius is ' + r + '.',
+        'The radius to the tangent point meets the tangent at 90 degrees.',
+        'Use right triangle CPT, where PT is the tangent length.',
+        'CP<sup>2</sup> = (' + px + ' - ' + h + ')<sup>2</sup> + (' + py + ' - ' + k + ')<sup>2</sup> = ' + cp2 + '.',
+        'PT<sup>2</sup> = CP<sup>2</sup> - r<sup>2</sup> = ' + cp2 + ' - ' + (r*r) + ' = ' + tangent2 + '.',
+        'PT = ' + length + '.'
+      ]);
+    }
+
+    function switchLevel(level){
+      currentLevel=level; currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      const dropdown=document.getElementById('type-dropdown');
+      dropdown.innerHTML='<option value="select">Select Question Type</option>' + typeOptions[level].map(([v,l])=>'<option value="'+v+'">'+l+'</option>').join('');
+      dropdown.value='select';
+      showBlankPage();
+    }
+    function typeChanged(){ currentType=document.getElementById('type-dropdown').value; currentType==='select' ? showBlankPage() : generateNewSet(); }
+    function showBlankPage(){ document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:50px;color:#718096;font-size:1.2em">Please select a question type to begin.</li>'; }
+    function generateNewSet(){
+      if(currentType==='select'){ showBlankPage(); return; }
+      problems=[]; answersVisible=false; stepsVisible=false;
+      const seen=new Set(); let guard=0;
+      while(problems.length<5 && guard<90){ guard++; const p=generateProblem(); const key=p.equation+'|'+p.answer; if(!seen.has(key)){ seen.add(key); problems.push(p); } }
+      while(problems.length<5) problems.push(generateProblem());
+      renderProblems();
+    }
+    function renderProblems(){
+      const container=document.getElementById('problem-list'); container.innerHTML='';
+      problems.forEach((problem,index)=>{
+        const li=document.createElement('li'); li.className='problem-item';
+        const stepsHTML=problem.steps.map(step=>step.includes('=')&&!step.includes(':') ? '<div class="step-equation">'+step+'</div>' : '<div class="step">'+step+'</div>').join('');
+        li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(index+1)+'</div><div class="equation">'+problem.equation+'</div></div><div class="problem-answer" id="quick-answer-'+index+'">'+problem.answer+'</div></div><div class="steps-section" id="steps-'+index+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+stepsHTML+'<div class="final-answer">'+problem.answer+'</div></div></div>';
+        container.appendChild(li);
+      });
+    }
+    function showAnswers(){ answersVisible=!answersVisible; problems.forEach((_,i)=>{ const el=document.getElementById('quick-answer-'+i); if(el) el.classList.toggle('visible',answersVisible); }); }
+    function showSteps(){ stepsVisible=!stepsVisible; problems.forEach((_,i)=>{ const el=document.getElementById('steps-'+i); if(el) el.classList.toggle('visible',stepsVisible); }); }
+    function startTimer(minutes){ if(timerActive) stopTimer(); timeRemaining=minutes*60; timerActive=true; updateTimerDisplay(); timerInterval=setInterval(()=>{ timeRemaining--; updateTimerDisplay(); if(timeRemaining<=0) timerFinished(); },1000); }
+    function stopTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } timerActive=false; const el=document.getElementById('timer-display'); el.textContent='Ready'; el.className='timer-display'; }
+    function updateTimerDisplay(){ const m=Math.floor(timeRemaining/60), s=timeRemaining%60, el=document.getElementById('timer-display'); el.textContent=m+':'+String(s).padStart(2,'0'); if(timeRemaining<=30&&timerActive) el.className='timer-display warning'; else if(timerActive) el.className='timer-display active'; else el.className='timer-display'; }
+    function timerFinished(){ stopTimer(); const el=document.getElementById('timer-display'); el.textContent='Time Up!'; el.className='timer-display warning'; document.getElementById('timer-modal').classList.remove('hidden'); }
+    function closeModal(){ document.getElementById('timer-modal').classList.add('hidden'); }
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-14"></script>
+</body>
+</html>

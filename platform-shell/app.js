@@ -419,6 +419,24 @@ const tools = [
     ]
   },
   {
+    slug: "equation-of-a-circle",
+    title: "Equation of a Circle",
+    category: "Geometry",
+    level: "GCSE / A-Level",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate coordinate-geometry practice for circle equations, centres, radii, intersections, and tangents.",
+    tags: ["geometry", "coordinate geometry", "circles", "equation of a circle", "intersections", "tangents"],
+    toolPath: "tools/equation-of-a-circle/index.html?v=equation-circle-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on identifying the centre and radius from standard and expanded forms.",
+      "Level 2 forms equations from centres, radii, and diameter endpoints.",
+      "Level 3 covers intersections with lines and other circles, while Level 4 introduces tangents."
+    ]
+  },
+  {
     slug: "sectors-arc-length",
     title: "Sectors and Arc Length",
     category: "Geometry",
