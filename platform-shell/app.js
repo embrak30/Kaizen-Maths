@@ -37,6 +37,25 @@ const tools = [
     ]
   },
   {
+    slug: "algebraic-fractions",
+    title: "Algebraic Fractions",
+    category: "Algebra",
+    level: "GCSE",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate GCSE algebraic-fraction practice for simplifying, multiplying, dividing, adding, subtracting, and solving equations.",
+    tags: ["algebra", "algebraic fractions", "simplifying fractions", "factorising", "common denominator", "equations"],
+    toolPath: "tools/algebraic-fractions/index.html?v=algebraic-fractions-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on factorising and cancelling common factors.",
+      "Level 2 covers multiplying and dividing algebraic fractions.",
+      "Level 3 combines fractions using common denominators.",
+      "Level 4 solves equations involving algebraic fractions and checks excluded values."
+    ]
+  },
+  {
     slug: "straight-lines",
     title: "Straight Lines",
     category: "Algebra",

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebraic Fractions Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s ease;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 50%,rgba(0,0,0,.05) 100%)}.header h1{font-size:2.2em;margin-bottom:5px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:18px;background:#e2e8f0;border:0;cursor:pointer;font-size:1.05em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:25px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.3em}.level-info p{color:#718096;font-size:1em}.dropdown-container{margin-top:10px}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:320px;max-width:100%}.type-dropdown:focus{border-color:#3182ce;outline:0}
+    .timer-section{display:flex;align-items:center;gap:15px}.timer-display{font-size:2em;font-weight:700;color:#1a365d;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #cbd5e0;min-width:120px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px;flex-wrap:wrap}.btn{padding:12px 22px;border:0;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:28px;min-height:580px}.problem-list{list-style:none}.problem-item{background:#f7fafc;margin:14px 0;padding:18px;border-radius:10px;border-left:5px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(3px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3182ce;color:#fff;width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:20px;font-size:1.1em;flex-shrink:0}.equation{font-size:1.5em;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);color:#1a365d;font-weight:600;max-width:100%;overflow-x:auto;line-height:1.45}.problem-answer{background:#38a169;color:#fff;padding:10px 18px;border-radius:25px;font-weight:700;font-size:1em;display:none;margin-left:18px;max-width:45%;white-space:nowrap;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{margin-top:18px;padding:18px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#38a169;margin-bottom:10px;font-size:1.1em}.solution-steps{font-size:1.12em;line-height:1.5}.step{margin:8px 0;color:#1a365d}.step-equation{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:700;color:#805ad5;text-align:center;margin:10px 0;font-size:1.18em;overflow-x:auto;max-width:100%;padding-bottom:3px}.final-answer{background:#38a169;color:#fff;padding:10px 18px;border-radius:6px;text-align:center;font-weight:700;font-size:1.08em;margin-top:12px;overflow-x:auto}.frac{display:inline-grid;grid-template-rows:auto auto;align-items:stretch;justify-items:stretch;vertical-align:middle;line-height:1;margin:0 3px}.frac .num,.frac .den{text-align:center;min-width:100%;padding-left:5px;padding-right:5px}.frac .num{border-bottom:1.8px solid currentColor;padding-top:0;padding-bottom:2px}.frac .den{padding-top:2px;padding-bottom:0}.set-instruction{display:none;margin-bottom:18px;padding:12px 16px;background:#eefaf9;border:1px solid #9de4df;border-left:4px solid #17b8b3;border-radius:8px;color:#1a365d;font-weight:700}.set-instruction.visible{display:block}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none!important}
+    @media(max-width:768px){body{padding:15px}.controls{flex-direction:column;align-items:stretch;padding:14px}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%;padding:10px}.sidebar{width:320px;left:-320px}.problems-section{padding:12px}.problem-item{padding:12px;margin:8px 0}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{max-width:100%;margin-left:55px}.equation{font-size:1.14em}.solution-steps{font-size:1em}.step-equation{font-size:1.02em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Topics Covered</h3>
+      <ul>
+        <li>Simplifying algebraic fractions by factorising and cancelling common factors.</li>
+        <li>Multiplying and dividing algebraic fractions.</li>
+        <li>Adding and subtracting algebraic fractions using common denominators.</li>
+        <li>Solving equations involving algebraic fractions.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Students should factorise first, then cancel whole factors only.</li>
+        <li>Emphasise that terms cannot be cancelled unless they are part of a common factor.</li>
+        <li>For equations, multiply by the lowest common denominator and check excluded values.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header"><h1>Algebraic Fractions Teaching Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Simplify</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Multiply and Divide</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Add and Subtract</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Equations</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Simplifying Algebraic Fractions</h3>
+        <p id="level-description">Factorise and cancel common factors</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const typeDisplayNames = {
+      simplify_common_factor: 'Simplify by cancelling a common factor',
+      simplify_factorise: 'Simplify after factorising',
+      multiply_fractions: 'Multiply algebraic fractions',
+      divide_fractions: 'Divide algebraic fractions',
+      add_same_denominator: 'Add or subtract with the same denominator',
+      add_different_denominators: 'Add or subtract with different denominators',
+      solve_linear_fraction: 'Solve a linear algebraic fraction equation',
+      solve_two_fractions: 'Solve equations with fractions on both sides'
+    };
+
+    const levelConfigs = {
+      1: { title: 'Level 1: Simplifying Algebraic Fractions', description: 'Factorise and cancel common factors', types: ['simplify_common_factor','simplify_factorise'] },
+      2: { title: 'Level 2: Multiplying and Dividing', description: 'Multiply, divide, factorise, and cancel common factors', types: ['multiply_fractions','divide_fractions'] },
+      3: { title: 'Level 3: Adding and Subtracting', description: 'Use common denominators to combine algebraic fractions', types: ['add_same_denominator','add_different_denominators'] },
+      4: { title: 'Level 4: Solving Equations', description: 'Clear denominators and solve algebraic fraction equations', types: ['solve_linear_fraction','solve_two_fractions'] }
+    };
+
+    const typeOptions = {
+      1: [['simplify_common_factor','Simplify by cancelling a common factor'],['simplify_factorise','Simplify after factorising']],
+      2: [['multiply_fractions','Multiply algebraic fractions'],['divide_fractions','Divide algebraic fractions']],
+      3: [['add_same_denominator','Add or subtract with the same denominator'],['add_different_denominators','Add or subtract with different denominators']],
+      4: [['solve_linear_fraction','Solve a linear algebraic fraction equation'],['solve_two_fractions','Solve equations with fractions on both sides']]
+    };
+
+    function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.sidebar-overlay').classList.toggle('active'); }
+    function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.querySelector('.sidebar-overlay').classList.remove('active'); }
+    function random(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function choice(items){ return items[Math.floor(Math.random()*items.length)]; }
+    function nonZero(min,max){ let n; do{ n=random(min,max); }while(n===0); return n; }
+    function signed(n){ return n >= 0 ? ' + ' + n : ' - ' + Math.abs(n); }
+    function factor(root){ return root === 0 ? 'x' : '(x' + (root > 0 ? ' - ' + root : ' + ' + Math.abs(root)) + ')'; }
+    function linear(a,b){
+      if(a === 0) return String(b);
+      let out = a === 1 ? 'x' : a === -1 ? '-x' : a + 'x';
+      if(b) out += signed(b);
+      return out;
+    }
+    function quadFromRoots(r1,r2){
+      const b=-(r1+r2), c=r1*r2;
+      return 'x<sup>2</sup>' + (b ? signed(b) + 'x' : '') + (c ? signed(c) : '');
+    }
+    function frac(num, den){ return '<span class="frac"><span class="num">' + num + '</span><span class="den">' + den + '</span></span>'; }
+    function asProblem(question, answer, steps){ return { question, equation: question, answer, steps }; }
+
+    function generateProblem(){
+      const type = currentType === 'select' || currentType === 'all' ? choice(levelConfigs[currentLevel].types) : currentType;
+      if(type === 'simplify_common_factor') return simplifyCommonFactor();
+      if(type === 'simplify_factorise') return simplifyFactorise();
+      if(type === 'multiply_fractions') return multiplyFractions();
+      if(type === 'divide_fractions') return divideFractions();
+      if(type === 'add_same_denominator') return addSameDenominator();
+      if(type === 'add_different_denominators') return addDifferentDenominators();
+      if(type === 'solve_linear_fraction') return solveLinearFraction();
+      if(type === 'solve_two_fractions') return solveTwoFractions();
+      return simplifyCommonFactor();
+    }
+
+    function simplifyCommonFactor(){
+      const a=choice([2,3,4,5,6]), b=nonZero(-7,7), c=choice([2,3,4,5]);
+      const denFactor=linear(c,b);
+      const question='Simplify:<br>' + frac(a + 'x(' + denFactor + ')', a + 'x');
+      const answer=denFactor;
+      return asProblem(question, answer, [
+        'Look for a common factor in the numerator and denominator.',
+        frac(a + 'x(' + denFactor + ')', a + 'x'),
+        'The common factor is ' + a + 'x.',
+        'Cancel the common factor from the numerator and denominator.',
+        frac('<s>' + a + 'x</s>(' + denFactor + ')','<s>' + a + 'x</s>') + ' = ' + answer + '.',
+        'So the simplified expression is ' + answer + '.'
+      ]);
+    }
+
+    function simplifyFactorise(){
+      let r1,r2; do{ r1=random(-6,6); r2=random(-6,6); }while(r1===r2);
+      const keep=factor(r1), cancel=factor(r2);
+      const numerator=quadFromRoots(r1,r2);
+      const denominator=cancel;
+      const question='Simplify:<br>' + frac(numerator, denominator);
+      const answer=keep;
+      return asProblem(question, answer, [
+        'Factorise the quadratic numerator first.',
+        numerator + ' = ' + keep + cancel,
+        frac(numerator, denominator) + ' = ' + frac(keep + cancel, cancel),
+        'Cancel the common factor ' + cancel + '.',
+        frac(keep + '<s>' + cancel + '</s>','<s>' + cancel + '</s>') + ' = ' + answer + '.',
+        'So the simplified expression is ' + answer + ', with x not equal to ' + r2 + '.'
+      ]);
+    }
+
+    function multiplyFractions(){
+      let r1,r2; do{ r1=random(-5,5); r2=random(-5,5); }while(r1===r2);
+      const a=choice([2,3,4]), b=choice([2,3,5]);
+      const question='Simplify:<br>' + frac(a + factor(r1), b + factor(r2)) + ' &times; ' + frac(b + factor(r2), factor(r1));
+      const answer=String(a);
+      return asProblem(question, answer, [
+        'Factorised forms are already visible, so look for common factors before multiplying out.',
+        frac(a + factor(r1), b + factor(r2)) + ' &times; ' + frac(b + factor(r2), factor(r1)),
+        'Cancel the common factor ' + factor(r2) + '.',
+        'Cancel the common factor ' + factor(r1) + '.',
+        'The remaining factors give ' + a + '.',
+        'So the simplified answer is ' + answer + '.'
+      ]);
+    }
+
+    function divideFractions(){
+      let r1,r2; do{ r1=random(-5,5); r2=random(-5,5); }while(r1===r2);
+      const a=choice([2,3,4,5]);
+      const question='Simplify:<br>' + frac(a + factor(r1), factor(r2)) + ' &divide; ' + frac(factor(r1), factor(r2));
+      const answer=String(a);
+      return asProblem(question, answer, [
+        'Dividing by a fraction means multiplying by its reciprocal.',
+        frac(a + factor(r1), factor(r2)) + ' &divide; ' + frac(factor(r1), factor(r2)) + ' = ' + frac(a + factor(r1), factor(r2)) + ' &times; ' + frac(factor(r2), factor(r1)),
+        'Cancel the common factor ' + factor(r2) + '.',
+        'Cancel the common factor ' + factor(r1) + '.',
+        'The remaining factor is ' + a + '.',
+        'So the simplified answer is ' + answer + '.'
+      ]);
+    }
+
+    function addSameDenominator(){
+      const r=random(-6,6), a=nonZero(1,5), b=nonZero(-6,6), c=nonZero(1,5), d=nonZero(-6,6);
+      const den=factor(r);
+      const question='Simplify:<br>' + frac(linear(a,b), den) + ' + ' + frac(linear(c,d), den);
+      const answer=frac(linear(a+c,b+d), den);
+      return asProblem(question, answer, [
+        'The denominators are the same, so add the numerators.',
+        frac(linear(a,b), den) + ' + ' + frac(linear(c,d), den) + ' = ' + frac('(' + linear(a,b) + ') + (' + linear(c,d) + ')', den),
+        'Collect like terms in the numerator.',
+        '(' + linear(a,b) + ') + (' + linear(c,d) + ') = ' + linear(a+c,b+d),
+        'So the simplified fraction is ' + answer + '.',
+        'Restriction: x is not equal to ' + r + '.'
+      ]);
+    }
+
+    function addDifferentDenominators(){
+      let r1,r2; do{ r1=random(-5,5); r2=random(-5,5); }while(r1===r2);
+      const A=nonZero(1,5), B=nonZero(1,5);
+      const den1=factor(r1), den2=factor(r2), common=den1+den2;
+      const nX=A+B, nC=-(A*r2+B*r1);
+      const question='Simplify:<br>' + frac(A, den1) + ' + ' + frac(B, den2);
+      const answer=frac(linear(nX,nC), common);
+      return asProblem(question, answer, [
+        'Use the lowest common denominator ' + common + '.',
+        frac(A, den1) + ' = ' + frac(A + den2, common),
+        frac(B, den2) + ' = ' + frac(B + den1, common),
+        'Add the numerators.',
+        frac(A + den2 + ' + ' + B + den1, common),
+        'Expand and collect the numerator to get ' + linear(nX,nC) + '.',
+        'So the simplified fraction is ' + answer + '.'
+      ]);
+    }
+
+    function solveLinearFraction(){
+      const r=random(-5,5), x=choice([-4,-3,-2,-1,1,2,3,4,5].filter(v=>v!==r));
+      const k=choice([2,3,4,5]);
+      const den=factor(r);
+      const question='Solve:<br>' + frac(linear(1,0), den) + ' = ' + k;
+      return asProblem(question, 'x = ' + x, [
+        'The denominator cannot be zero, so x is not equal to ' + r + '.',
+        'Multiply both sides by ' + den + '.',
+        'x = ' + k + den,
+        'Expand the right hand side.',
+        'x = ' + k + 'x' + signed(-k*r),
+        (1-k) + 'x = ' + (-k*r),
+        'x = ' + x + '.',
+        'Check: x = ' + x + ' does not make the denominator zero.'
+      ]);
+    }
+
+    function solveTwoFractions(){
+      let r1,r2; do{ r1=random(-5,5); r2=random(-5,5); }while(r1===r2);
+      const x=choice([-4,-3,-2,-1,1,2,3,4,5].filter(v=>v!==r1 && v!==r2));
+      const A=choice([2,3,4,5]);
+      const B=A*(x-r2)/(x-r1);
+      if(!Number.isInteger(B) || B===0 || Math.abs(B)>8) return solveTwoFractions();
+      const den1=factor(r1), den2=factor(r2);
+      const question='Solve:<br>' + frac(A, den1) + ' = ' + frac(B, den2);
+      return asProblem(question, 'x = ' + x, [
+        'The excluded values are x = ' + r1 + ' and x = ' + r2 + '.',
+        'Multiply both sides by the common denominator ' + den1 + den2 + '.',
+        A + den2 + ' = ' + B + den1,
+        'Expand both sides.',
+        linear(A,-A*r2) + ' = ' + linear(B,-B*r1),
+        linear(A-B, 0) + ' = ' + (A*r2-B*r1),
+        'x = ' + x + '.',
+        'Check: x = ' + x + ' is not an excluded value.'
+      ]);
+    }
+
+    function switchLevel(level){
+      currentLevel=level; currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      const dropdown=document.getElementById('type-dropdown');
+      dropdown.innerHTML='<option value="select">Select Question Type</option>' + typeOptions[level].map(([v,l])=>'<option value="'+v+'">'+l+'</option>').join('');
+      dropdown.value='select';
+      setInstructionForType();
+      showBlankPage();
+    }
+    function setInstructionForType(){
+      const text={
+        simplify_common_factor:'Cancel common factors only. Do not cancel separate terms.',
+        simplify_factorise:'Factorise first, then cancel the common factor.',
+        multiply_fractions:'Factorise and cancel before multiplying where possible.',
+        divide_fractions:'Turn division into multiplication by the reciprocal.',
+        add_same_denominator:'Keep the denominator and combine the numerators.',
+        add_different_denominators:'Find a common denominator, then combine the numerators.',
+        solve_linear_fraction:'Clear the denominator, solve, and check excluded values.',
+        solve_two_fractions:'Multiply through by the common denominator and check excluded values.'
+      }[currentType] || '';
+      const el=document.getElementById('set-instruction');
+      el.textContent=text;
+      el.classList.toggle('visible',Boolean(text));
+    }
+    function typeChanged(){ currentType=document.getElementById('type-dropdown').value; setInstructionForType(); currentType==='select' ? showBlankPage() : generateNewSet(); }
+    function showBlankPage(){ document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:50px;color:#718096;font-size:1.2em">Please select a question type to begin.</li>'; }
+    function generateNewSet(){
+      if(currentType==='select'){ showBlankPage(); return; }
+      problems=[]; answersVisible=false; stepsVisible=false;
+      const seen=new Set(); let guard=0;
+      while(problems.length<5 && guard<100){ guard++; const p=generateProblem(); const key=p.question+'|'+p.answer; if(!seen.has(key)){ seen.add(key); problems.push(p); } }
+      while(problems.length<5) problems.push(generateProblem());
+      renderProblems();
+    }
+    function renderProblems(){
+      const container=document.getElementById('problem-list'); container.innerHTML='';
+      problems.forEach((problem,index)=>{
+        const li=document.createElement('li'); li.className='problem-item';
+        const stepsHTML=problem.steps.map(step=>step.includes('=')&&!step.includes('Restriction')&&!step.includes('Check')&&!step.includes('The ')&&!step.includes('Use ')&&!step.includes('Look ')&&!step.includes('Cancel ')&&!step.includes('Expand ')&&!step.includes('Collect ')&&!step.includes('So ') ? '<div class="step-equation">'+step+'</div>' : '<div class="step">'+step+'</div>').join('');
+        li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(index+1)+'</div><div class="equation">'+problem.question+'</div></div><div class="problem-answer" id="quick-answer-'+index+'">'+problem.answer+'</div></div><div class="steps-section" id="steps-'+index+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+stepsHTML+'<div class="final-answer">'+problem.answer+'</div></div></div>';
+        container.appendChild(li);
+      });
+    }
+    function showAnswers(){ answersVisible=!answersVisible; problems.forEach((_,i)=>{ const el=document.getElementById('quick-answer-'+i); if(el) el.classList.toggle('visible',answersVisible); }); }
+    function showSteps(){ stepsVisible=!stepsVisible; problems.forEach((_,i)=>{ const el=document.getElementById('steps-'+i); if(el) el.classList.toggle('visible',stepsVisible); }); }
+    function startTimer(minutes){ if(timerActive) stopTimer(); timeRemaining=minutes*60; timerActive=true; updateTimerDisplay(); timerInterval=setInterval(()=>{ timeRemaining--; updateTimerDisplay(); if(timeRemaining<=0) timerFinished(); },1000); }
+    function stopTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } timerActive=false; const el=document.getElementById('timer-display'); el.textContent='Ready'; el.className='timer-display'; }
+    function updateTimerDisplay(){ const m=Math.floor(timeRemaining/60), s=timeRemaining%60, el=document.getElementById('timer-display'); el.textContent=m+':'+String(s).padStart(2,'0'); if(timeRemaining<=30&&timerActive) el.className='timer-display warning'; else if(timerActive) el.className='timer-display active'; else el.className='timer-display'; }
+    function timerFinished(){ stopTimer(); const el=document.getElementById('timer-display'); el.textContent='Time Up!'; el.className='timer-display warning'; document.getElementById('timer-modal').classList.remove('hidden'); }
+    function closeModal(){ document.getElementById('timer-modal').classList.add('hidden'); }
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-14"></script>
+</body>
+</html>
