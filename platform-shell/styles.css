@@ -1674,6 +1674,16 @@ a {
   color: #4b5563;
 }
 
+.worksheet-section > .worksheet-section-instruction {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border-left: 3px solid #17b8b3;
+  border-radius: 5px;
+  background: #eefbfb;
+  color: #12314b;
+  font-weight: 750;
+}
+
 .worksheet-question {
   display: grid;
   grid-template-columns: 32px minmax(0, 1fr);

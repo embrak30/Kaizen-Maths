@@ -2433,7 +2433,8 @@ async function generateWorksheetFromSections(sections, options = {}) {
       marks: resolvedMarks
     }));
     problems.push(...sectionProblems);
-    generatedSections.push({ ...section, toolTitle: tool.title, levelLabel, typeLabel, count: sectionProblems.length, marksPerQuestion: resolvedMarks });
+    const instruction = result.instruction || sectionProblems.find((problem) => problem.instructionText || problem.instruction)?.instructionText || sectionProblems.find((problem) => problem.instructionText || problem.instruction)?.instruction || "";
+    generatedSections.push({ ...section, toolTitle: tool.title, levelLabel, typeLabel, count: sectionProblems.length, marksPerQuestion: resolvedMarks, instruction });
   }
 
   return { ok: problems.length > 0, count: problems.length, sections: generatedSections, problems, options };
@@ -2479,6 +2480,7 @@ function renderWorksheetPreview(worksheet, options = {}) {
           <section class="worksheet-section">
             <h3>${escapeHtml(section.toolTitle)}</h3>
             <p>${escapeHtml(section.levelLabel)} · ${escapeHtml(section.typeLabel)} · ${sectionProblems.length} questions${options.assessment && section.marksPerQuestion ? ` · ${worksheetMarksText(section.marksPerQuestion)} each` : ""}</p>
+            ${section.instruction ? `<p class="worksheet-section-instruction">${escapeHtml(section.instruction)}</p>` : ""}
             <ol class="worksheet-question-list">
               ${sectionProblems.map((problem) => {
                 questionNumber += 1;

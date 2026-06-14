@@ -28,6 +28,25 @@
     return template.content.textContent.replace(/\s+/g, ' ').trim();
   }
 
+  function looksLikeSharedInstruction(text) {
+    const clean = String(text || '').replace(/\s+/g, ' ').trim();
+    if (!clean || clean.length > 110) return false;
+    return /^(simplify|solve|express|evaluate|calculate|find|write|expand|factorise|factorize|differentiate|integrate|convert|complete|state|show|prove|sketch|draw)\b/i.test(clean);
+  }
+
+  function splitQuestionInstruction(question) {
+    const html = String(question || '').trim();
+    if (!html) return null;
+    const parts = html.split(/<br\s*\/?>/i);
+    if (parts.length < 2) return null;
+    const instructionHtml = parts.shift().trim();
+    const instructionText = textFromHtml(instructionHtml).replace(/:$/, '').trim();
+    if (!looksLikeSharedInstruction(instructionText)) return null;
+    const remainder = parts.join('<br>').trim();
+    if (!remainder) return null;
+    return { instruction: instructionText, question: remainder };
+  }
+
   function normalizeStep(step) {
     if (step == null) return '';
     if (typeof step === 'string' || typeof step === 'number') return String(step);
@@ -258,6 +277,7 @@
     const question = raw.question ?? raw.text ?? raw.equation ?? raw.sequence ?? raw.wordProblem ?? raw.equationTeX ?? raw.calculation ?? raw.eq ?? raw.prompt ?? raw.expression ?? raw.original ?? systemQuestion ?? '';
     const answer = raw.answer ?? raw.answerTeX ?? raw.answerLatex ?? raw.finalAnswer ?? raw.solution ?? raw.derivative ?? '';
     const steps = raw.steps ?? raw.stepsTeX;
+    const rawInstruction = raw.instruction ?? raw.setInstruction ?? raw.command ?? '';
 
     return {
       toolTitle: overrides.toolTitle ?? state.toolTitle,
@@ -265,6 +285,8 @@
       type: overrides.type ?? state.type,
       question,
       questionText: textFromHtml(question),
+      instruction: rawInstruction,
+      instructionText: textFromHtml(rawInstruction),
       answer,
       answerText: textFromHtml(answer),
       steps: normalizeSteps(steps),
@@ -311,6 +333,29 @@
       }));
     }
 
+    const explicitInstruction = problems
+      .map((problem) => problem.instructionText || problem.instruction)
+      .filter(Boolean);
+    let sharedInstruction = explicitInstruction.length === problems.length && new Set(explicitInstruction).size === 1
+      ? explicitInstruction[0]
+      : '';
+
+    if (!sharedInstruction && problems.length > 1) {
+      const split = problems.map((problem) => splitQuestionInstruction(problem.question));
+      if (split.every(Boolean)) {
+        const uniqueInstructions = new Set(split.map((item) => item.instruction));
+        if (uniqueInstructions.size === 1) {
+          sharedInstruction = split[0].instruction;
+          problems.forEach((problem, index) => {
+            problem.question = split[index].question;
+            problem.questionText = textFromHtml(problem.question);
+            problem.instruction = sharedInstruction;
+            problem.instructionText = sharedInstruction;
+          });
+        }
+      }
+    }
+
     if (options.level !== undefined && oldLevel !== null) writeBinding('currentLevel', oldLevel);
     if (options.type !== undefined && oldType !== null) writeBinding('currentType', oldType);
 
@@ -320,9 +365,66 @@
       ...getState(),
       level: requestedLevel,
       type: requestedType,
+      instruction: sharedInstruction,
       count: problems.length,
       problems
     };
+  }
+
+  function installSharedInstructionLift() {
+    if (document.documentElement.dataset.kaizenSharedInstructionLift === 'true') return;
+    document.documentElement.dataset.kaizenSharedInstructionLift = 'true';
+
+    const style = document.createElement('style');
+    style.textContent = `
+      .kaizen-shared-instruction{margin:0 0 14px;padding:11px 15px;border-radius:8px;background:#eefbfb;border:1px solid #bceeed;border-left:4px solid #17b8b3;color:#1a365d;font-weight:800;text-align:center}
+    `;
+    document.head.appendChild(style);
+
+    function lift(root = document) {
+      const list = root.querySelector?.('#problem-list') || document.getElementById('problem-list');
+      if (!list || list.dataset.kaizenInstructionLifted === 'true') return;
+      const equations = [...list.querySelectorAll('.equation')];
+      if (equations.length < 2) return;
+
+      const split = equations.map((equation) => splitQuestionInstruction(equation.innerHTML));
+      const createdInstruction = list.parentElement?.querySelector('.kaizen-shared-instruction[data-kaizen-created="true"]');
+      if (!split.every(Boolean)) {
+        createdInstruction?.remove();
+        return;
+      }
+      const uniqueInstructions = new Set(split.map((item) => item.instruction));
+      if (uniqueInstructions.size !== 1) {
+        createdInstruction?.remove();
+        return;
+      }
+
+      const instruction = split[0].instruction;
+      let instructionEl = document.getElementById('set-instruction') || list.parentElement?.querySelector('.kaizen-shared-instruction');
+      if (!instructionEl) {
+        instructionEl = document.createElement('div');
+        instructionEl.className = 'kaizen-shared-instruction';
+        instructionEl.dataset.kaizenCreated = 'true';
+        list.parentElement?.insertBefore(instructionEl, list);
+      }
+      instructionEl.textContent = instruction;
+      instructionEl.classList.add('visible');
+
+      equations.forEach((equation, index) => {
+        equation.innerHTML = split[index].question;
+      });
+      list.dataset.kaizenInstructionLifted = 'true';
+    }
+
+    const observer = new MutationObserver(() => {
+      const list = document.getElementById('problem-list');
+      if (list) {
+        delete list.dataset.kaizenInstructionLifted;
+        lift(document);
+      }
+    });
+    if (document.body) observer.observe(document.body, { childList: true, subtree: true });
+    lift(document);
   }
 
   window.KaizenWorksheet = {
@@ -334,6 +436,7 @@
   };
 
   installWorkedStepStructure();
+  installSharedInstructionLift();
 
   function installTeacherExampleMode() {
     if (document.documentElement.dataset.teacherExampleReady === 'true') return;
