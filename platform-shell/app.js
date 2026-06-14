@@ -109,6 +109,25 @@ const tools = [
     ]
   },
   {
+    slug: "partial-fractions",
+    title: "Partial Fractions",
+    category: "Algebra",
+    level: "A-Level",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate partial-fractions practice with clear worked steps for linear factors, repeated factors, improper fractions, and quadratic factors.",
+    tags: ["algebra", "partial fractions", "rational functions", "improper fractions", "quadratic factors", "A-Level"],
+    toolPath: "tools/partial-fractions/index.html?v=partial-fractions-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers distinct linear factors using substitution values.",
+      "Level 2 covers repeated linear factors and coefficient comparison.",
+      "Level 3 includes improper fractions where division is required first.",
+      "Level 4 introduces an irreducible quadratic factor with a linear numerator."
+    ]
+  },
+  {
     slug: "differentiation-rules",
     title: "Differentiation Rules",
     category: "Algebra",

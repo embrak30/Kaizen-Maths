@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partial Fractions Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s ease;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 50%,rgba(0,0,0,.05) 100%)}.header h1{font-size:2.2em;margin-bottom:5px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:18px;background:#e2e8f0;border:0;cursor:pointer;font-size:1.02em;font-weight:600;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:25px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.3em}.level-info p{color:#718096;font-size:1em}.dropdown-container{margin-top:10px}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:320px;max-width:100%}.type-dropdown:focus{border-color:#3182ce;outline:0}
+    .timer-section{display:flex;align-items:center;gap:15px}.timer-display{font-size:2em;font-weight:700;color:#1a365d;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #cbd5e0;min-width:120px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px;flex-wrap:wrap}.btn{padding:12px 22px;border:0;border-radius:6px;font-size:1em;font-weight:600;cursor:pointer;transition:.3s;min-width:85px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:28px;min-height:580px}.problem-list{list-style:none}.problem-item{background:#f7fafc;margin:14px 0;padding:18px;border-radius:10px;border-left:5px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(3px)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-number{background:#3182ce;color:#fff;width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:20px;font-size:1.1em;flex-shrink:0}.equation{font-size:1.5em;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);color:#1a365d;font-weight:600;max-width:100%;overflow-x:auto;line-height:1.45}.problem-answer{background:#38a169;color:#fff;padding:10px 18px;border-radius:25px;font-weight:700;font-size:1em;display:none;margin-left:18px;max-width:45%;white-space:nowrap;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{margin-top:18px;padding:18px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#38a169;margin-bottom:10px;font-size:1.1em}.solution-steps{font-size:1.12em;line-height:1.5}.step{margin:8px 0;color:#1a365d}.step-equation{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:700;color:#805ad5;text-align:center;margin:10px 0;font-size:1.18em;overflow-x:auto;max-width:100%;padding-bottom:3px}.final-answer{background:#38a169;color:#fff;padding:10px 18px;border-radius:6px;text-align:center;font-weight:700;font-size:1.08em;margin-top:12px;overflow-x:auto}.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1;margin:0 3px}.frac .num{border-bottom:1.8px solid currentColor;padding:0 5px 2px}.frac .den{padding:2px 5px 0}.set-instruction{display:none;margin-bottom:18px;padding:12px 16px;background:#eefaf9;border:1px solid #9de4df;border-left:4px solid #17b8b3;border-radius:8px;color:#1a365d;font-weight:700}.set-instruction.visible{display:block}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none!important}
+    @media(max-width:768px){body{padding:15px}.controls{flex-direction:column;align-items:stretch;padding:14px}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%;padding:10px}.sidebar{width:320px;left:-320px}.problems-section{padding:12px}.problem-item{padding:12px;margin:8px 0}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{max-width:100%;margin-left:55px}.equation{font-size:1.14em}.solution-steps{font-size:1em}.step-equation{font-size:1.02em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Topics Covered</h3>
+      <ul>
+        <li>Partial fractions with distinct linear factors.</li>
+        <li>Partial fractions with a repeated linear factor.</li>
+        <li>Improper rational expressions requiring division first.</li>
+        <li>Partial fractions with a linear factor and an irreducible quadratic factor.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Start by writing the correct form of the decomposition before solving for constants.</li>
+        <li>Substitute convenient x-values when linear factors are distinct.</li>
+        <li>Use equating coefficients when substitution alone is not enough.</li>
+        <li>For improper fractions, divide first, then decompose the remainder fraction.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header"><h1>Partial Fractions Teaching Tool</h1></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Distinct Linear</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Repeated Linear</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Improper Fractions</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Quadratic Factor</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Distinct Linear Factors</h3>
+        <p id="level-description">Decompose rational expressions with two distinct linear factors</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const typeDisplayNames = {
+      distinct_linear: 'Distinct linear factors',
+      distinct_linear_coverup: 'Distinct linear factors with substitution',
+      repeated_linear: 'Repeated linear factor',
+      repeated_linear_coefficients: 'Repeated linear factor by coefficients',
+      improper_distinct: 'Improper fraction then distinct linear factors',
+      improper_repeated: 'Improper fraction then repeated linear factor',
+      linear_quadratic: 'Linear and irreducible quadratic factor',
+      mixed_exam: 'Mixed partial fractions'
+    };
+
+    const levelConfigs = {
+      1: { title: 'Level 1: Distinct Linear Factors', description: 'Decompose rational expressions with two distinct linear factors', types: ['distinct_linear','distinct_linear_coverup'] },
+      2: { title: 'Level 2: Repeated Linear Factors', description: 'Use the correct form for repeated factors', types: ['repeated_linear','repeated_linear_coefficients'] },
+      3: { title: 'Level 3: Improper Fractions', description: 'Divide first, then decompose the proper fraction', types: ['improper_distinct','improper_repeated'] },
+      4: { title: 'Level 4: Quadratic Factors', description: 'Use a linear numerator over an irreducible quadratic factor', types: ['linear_quadratic','mixed_exam'] }
+    };
+
+    const typeOptions = {
+      1: [['distinct_linear','Distinct linear factors'],['distinct_linear_coverup','Distinct linear factors with substitution']],
+      2: [['repeated_linear','Repeated linear factor'],['repeated_linear_coefficients','Repeated linear factor by coefficients']],
+      3: [['improper_distinct','Improper fraction then distinct linear factors'],['improper_repeated','Improper fraction then repeated linear factor']],
+      4: [['linear_quadratic','Linear and irreducible quadratic factor'],['mixed_exam','Mixed partial fractions']]
+    };
+
+    function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.sidebar-overlay').classList.toggle('active'); }
+    function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.querySelector('.sidebar-overlay').classList.remove('active'); }
+    function random(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function choice(items){ return items[Math.floor(Math.random()*items.length)]; }
+    function nonZero(min,max){ let n; do{ n=random(min,max); }while(n===0); return n; }
+    function signed(n){ return n >= 0 ? ' + ' + n : ' - ' + Math.abs(n); }
+    function factor(root){ return root === 0 ? 'x' : '(x' + (root > 0 ? ' - ' + root : ' + ' + Math.abs(root)) + ')'; }
+    function coeff(n, variable){
+      if(n === 0) return '';
+      if(n === 1) return variable;
+      if(n === -1) return '-' + variable;
+      return n + variable;
+    }
+    function poly2(a,b,c){
+      let out = '';
+      if(a) out += coeff(a,'x<sup>2</sup>');
+      if(b) out += (out ? (b > 0 ? ' + ' : ' - ') : (b < 0 ? '-' : '')) + (Math.abs(b) === 1 ? 'x' : Math.abs(b) + 'x');
+      if(c) out += (out ? signed(c) : String(c));
+      return out || '0';
+    }
+    function poly1(a,b){
+      let out = '';
+      if(a) out += coeff(a,'x');
+      if(b) out += (out ? signed(b) : String(b));
+      return out || '0';
+    }
+    function constTerm(n){ return n < 0 ? '(' + n + ')' : String(n); }
+    function subtractRootTerm(root, symbol){ return root >= 0 ? ' - ' + root + symbol : ' + ' + Math.abs(root) + symbol; }
+    function term(num, den){ return '<span class="frac"><span class="num">' + num + '</span><span class="den">' + den + '</span></span>'; }
+    function rational(num, den){ return term(num, den); }
+    function asProblem(question, answer, steps){ return { question, equation: question, answer, steps }; }
+
+    function generateProblem(){
+      let type = currentType === 'select' || currentType === 'all' ? choice(levelConfigs[currentLevel].types) : currentType;
+      if(type === 'mixed_exam') type = choice(['distinct_linear','repeated_linear','improper_distinct','linear_quadratic']);
+      if(type === 'distinct_linear' || type === 'distinct_linear_coverup') return distinctLinear();
+      if(type === 'repeated_linear' || type === 'repeated_linear_coefficients') return repeatedLinear();
+      if(type === 'improper_distinct') return improperDistinct();
+      if(type === 'improper_repeated') return improperRepeated();
+      if(type === 'linear_quadratic') return linearQuadratic();
+      return distinctLinear();
+    }
+
+    function distinctLinear(){
+      let r1, r2; do{ r1=random(-5,5); r2=random(-5,5); }while(r1===r2);
+      const A=nonZero(-6,6), B=nonZero(-6,6);
+      const n1=A+B, n0=-(A*r2 + B*r1);
+      const den=factor(r1)+factor(r2);
+      const question='Express in partial fractions:<br>' + rational(poly1(n1,n0), den);
+      const answer=term(A, factor(r1)) + (B >= 0 ? ' + ' : ' - ') + term(Math.abs(B), factor(r2));
+      return asProblem(question, answer, [
+        'Start with the correct form for two distinct linear factors.',
+        rational(poly1(n1,n0), den) + ' = ' + term('A', factor(r1)) + ' + ' + term('B', factor(r2)),
+        'Multiply through by ' + den + '.',
+        poly1(n1,n0) + ' = A' + factor(r2) + ' + B' + factor(r1),
+        'Substitute x = ' + r1 + ' to eliminate B.',
+        (n1*r1+n0) + ' = A(' + (r1-r2) + '), so A = ' + A + '.',
+        'Substitute x = ' + r2 + ' to eliminate A.',
+        (n1*r2+n0) + ' = B(' + (r2-r1) + '), so B = ' + B + '.',
+        'Therefore ' + rational(poly1(n1,n0), den) + ' = ' + answer + '.'
+      ]);
+    }
+
+    function repeatedLinear(){
+      const r=random(-5,5), A=nonZero(-6,6), B=nonZero(-8,8);
+      const n1=A, n0=B-A*r, den=factor(r)+'<sup>2</sup>';
+      const question='Express in partial fractions:<br>' + rational(poly1(n1,n0), den);
+      const answer=term(A, factor(r)) + (B >= 0 ? ' + ' : ' - ') + term(Math.abs(B), factor(r)+'<sup>2</sup>');
+      return asProblem(question, answer, [
+        'For a repeated linear factor, include both powers of the factor.',
+        rational(poly1(n1,n0), den) + ' = ' + term('A', factor(r)) + ' + ' + term('B', factor(r)+'<sup>2</sup>'),
+        'Multiply through by ' + den + '.',
+        poly1(n1,n0) + ' = A' + factor(r) + ' + B',
+        'Expand the right hand side.',
+        poly1(n1,n0) + ' = Ax ' + signed(-A*r) + ' + B',
+        'Compare coefficients of x: A = ' + A + '.',
+        'Compare constants: ' + n0 + ' = ' + (-A*r) + ' + B, so B = ' + B + '.',
+        'Therefore ' + rational(poly1(n1,n0), den) + ' = ' + answer + '.'
+      ]);
+    }
+
+    function improperDistinct(){
+      let r1, r2; do{ r1=random(-4,4); r2=random(-4,4); }while(r1===r2);
+      const Q=nonZero(-4,4), A=nonZero(-5,5), B=nonZero(-5,5);
+      const denA=1, denB=-(r1+r2), denC=r1*r2;
+      const properX=A+B, properC=-(A*r2+B*r1);
+      const num2=Q*denA, num1=Q*denB+properX, num0=Q*denC+properC;
+      const den=factor(r1)+factor(r2);
+      const question='Express in partial fractions:<br>' + rational(poly2(num2,num1,num0), den);
+      const proper=rational(poly1(properX,properC), den);
+      const answer=constTerm(Q) + ' + ' + term(A, factor(r1)) + (B >= 0 ? ' + ' : ' - ') + term(Math.abs(B), factor(r2));
+      return asProblem(question, answer, [
+        'The numerator has the same degree as the denominator, so divide first.',
+        poly2(num2,num1,num0) + ' = ' + Q + '(' + den + ') + (' + poly1(properX,properC) + ')',
+        rational(poly2(num2,num1,num0), den) + ' = ' + Q + ' + ' + proper,
+        'Now decompose the proper fraction.',
+        proper + ' = ' + term('A', factor(r1)) + ' + ' + term('B', factor(r2)),
+        poly1(properX,properC) + ' = A' + factor(r2) + ' + B' + factor(r1),
+        'Using x = ' + r1 + ' gives A = ' + A + '.',
+        'Using x = ' + r2 + ' gives B = ' + B + '.',
+        'Therefore ' + rational(poly2(num2,num1,num0), den) + ' = ' + answer + '.'
+      ]);
+    }
+
+    function improperRepeated(){
+      const r=random(-4,4), Q=nonZero(-4,4), A=nonZero(-5,5), B=nonZero(-7,7);
+      const denB=-2*r, denC=r*r;
+      const properX=A, properC=B-A*r;
+      const num2=Q, num1=Q*denB+properX, num0=Q*denC+properC;
+      const den=factor(r)+'<sup>2</sup>';
+      const question='Express in partial fractions:<br>' + rational(poly2(num2,num1,num0), den);
+      const proper=rational(poly1(properX,properC), den);
+      const answer=constTerm(Q) + ' + ' + term(A, factor(r)) + (B >= 0 ? ' + ' : ' - ') + term(Math.abs(B), factor(r)+'<sup>2</sup>');
+      return asProblem(question, answer, [
+        'The fraction is improper, so divide first.',
+        poly2(num2,num1,num0) + ' = ' + Q + '(' + den + ') + (' + poly1(properX,properC) + ')',
+        rational(poly2(num2,num1,num0), den) + ' = ' + Q + ' + ' + proper,
+        'Use the repeated-factor form for the proper fraction.',
+        proper + ' = ' + term('A', factor(r)) + ' + ' + term('B', factor(r)+'<sup>2</sup>'),
+        poly1(properX,properC) + ' = A' + factor(r) + ' + B',
+        'Comparing x-coefficients gives A = ' + A + '.',
+        'Comparing constants gives B = ' + B + '.',
+        'Therefore ' + rational(poly2(num2,num1,num0), den) + ' = ' + answer + '.'
+      ]);
+    }
+
+    function linearQuadratic(){
+      const r=random(-4,4), s=choice([2,3,5,7,10]), A=nonZero(-4,4), B=nonZero(-3,3), C=nonZero(-5,5);
+      const n2=A+B, n1=C-B*r, n0=A*s-C*r;
+      const quad='x<sup>2</sup> + ' + s;
+      const den=factor(r)+'(' + quad + ')';
+      const question='Express in partial fractions:<br>' + rational(poly2(n2,n1,n0), den);
+      const bxC=poly1(B,C);
+      const answer=term(A, factor(r)) + ' + ' + term(bxC, quad);
+      return asProblem(question, answer, [
+        'Use a constant over the linear factor and a linear numerator over the quadratic factor.',
+        rational(poly2(n2,n1,n0), den) + ' = ' + term('A', factor(r)) + ' + ' + term('Bx + C', quad),
+        'Multiply through by ' + den + '.',
+        poly2(n2,n1,n0) + ' = A(' + quad + ') + (Bx + C)' + factor(r),
+        'Expand the right hand side.',
+        poly2(n2,n1,n0) + ' = (A + B)x<sup>2</sup> + (C' + subtractRootTerm(r,'B') + ')x + (' + s + 'A' + subtractRootTerm(r,'C') + ')',
+        'Compare coefficients: A + B = ' + n2 + ', C' + subtractRootTerm(r,'B') + ' = ' + n1 + ', and ' + s + 'A' + subtractRootTerm(r,'C') + ' = ' + n0 + '.',
+        'Solving these gives A = ' + A + ', B = ' + B + ', and C = ' + C + '.',
+        'Therefore ' + rational(poly2(n2,n1,n0), den) + ' = ' + answer + '.'
+      ]);
+    }
+
+    function switchLevel(level){
+      currentLevel=level; currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      const dropdown=document.getElementById('type-dropdown');
+      dropdown.innerHTML='<option value="select">Select Question Type</option>' + typeOptions[level].map(([v,l])=>'<option value="'+v+'">'+l+'</option>').join('');
+      dropdown.value='select';
+      setInstructionForType();
+      showBlankPage();
+    }
+    function setInstructionForType(){
+      const text={
+        distinct_linear:'Express each rational expression as a sum of partial fractions.',
+        distinct_linear_coverup:'Use substitution values that make one factor zero.',
+        repeated_linear:'Use both powers of the repeated factor.',
+        repeated_linear_coefficients:'Set up the repeated-factor form and compare coefficients.',
+        improper_distinct:'Divide first, then decompose the proper fraction.',
+        improper_repeated:'Divide first, then use the repeated-factor form.',
+        linear_quadratic:'Use a linear numerator over the irreducible quadratic factor.',
+        mixed_exam:'Choose the correct partial fraction form before solving.'
+      }[currentType] || '';
+      const el=document.getElementById('set-instruction');
+      el.textContent=text;
+      el.classList.toggle('visible',Boolean(text));
+    }
+    function typeChanged(){ currentType=document.getElementById('type-dropdown').value; setInstructionForType(); currentType==='select' ? showBlankPage() : generateNewSet(); }
+    function showBlankPage(){ document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:50px;color:#718096;font-size:1.2em">Please select a question type to begin.</li>'; }
+    function generateNewSet(){
+      if(currentType==='select'){ showBlankPage(); return; }
+      problems=[]; answersVisible=false; stepsVisible=false;
+      const seen=new Set(); let guard=0;
+      while(problems.length<5 && guard<90){ guard++; const p=generateProblem(); const key=p.question+'|'+p.answer; if(!seen.has(key)){ seen.add(key); problems.push(p); } }
+      while(problems.length<5) problems.push(generateProblem());
+      renderProblems();
+    }
+    function renderProblems(){
+      const container=document.getElementById('problem-list'); container.innerHTML='';
+      problems.forEach((problem,index)=>{
+        const li=document.createElement('li'); li.className='problem-item';
+        const stepsHTML=problem.steps.map(step=>step.includes('=')&&!step.includes('Start')&&!step.includes('Use')&&!step.includes('Now')&&!step.includes('Therefore')&&!step.includes('Compare')&&!step.includes('Solving') ? '<div class="step-equation">'+step+'</div>' : '<div class="step">'+step+'</div>').join('');
+        li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(index+1)+'</div><div class="equation">'+problem.question+'</div></div><div class="problem-answer" id="quick-answer-'+index+'">'+problem.answer+'</div></div><div class="steps-section" id="steps-'+index+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+stepsHTML+'<div class="final-answer">'+problem.answer+'</div></div></div>';
+        container.appendChild(li);
+      });
+    }
+    function showAnswers(){ answersVisible=!answersVisible; problems.forEach((_,i)=>{ const el=document.getElementById('quick-answer-'+i); if(el) el.classList.toggle('visible',answersVisible); }); }
+    function showSteps(){ stepsVisible=!stepsVisible; problems.forEach((_,i)=>{ const el=document.getElementById('steps-'+i); if(el) el.classList.toggle('visible',stepsVisible); }); }
+    function startTimer(minutes){ if(timerActive) stopTimer(); timeRemaining=minutes*60; timerActive=true; updateTimerDisplay(); timerInterval=setInterval(()=>{ timeRemaining--; updateTimerDisplay(); if(timeRemaining<=0) timerFinished(); },1000); }
+    function stopTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } timerActive=false; const el=document.getElementById('timer-display'); el.textContent='Ready'; el.className='timer-display'; }
+    function updateTimerDisplay(){ const m=Math.floor(timeRemaining/60), s=timeRemaining%60, el=document.getElementById('timer-display'); el.textContent=m+':'+String(s).padStart(2,'0'); if(timeRemaining<=30&&timerActive) el.className='timer-display warning'; else if(timerActive) el.className='timer-display active'; else el.className='timer-display'; }
+    function timerFinished(){ stopTimer(); const el=document.getElementById('timer-display'); el.textContent='Time Up!'; el.className='timer-display warning'; document.getElementById('timer-modal').classList.remove('hidden'); }
+    function closeModal(){ document.getElementById('timer-modal').classList.add('hidden'); }
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-14"></script>
+</body>
+</html>
