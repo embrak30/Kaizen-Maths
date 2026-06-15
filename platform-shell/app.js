@@ -1753,28 +1753,57 @@ async function loadUniversityVideos({ rerender = false } = {}) {
   const client = await window.KaizenAuth?.getClient?.().catch(() => null);
   if (!client) return;
   try {
-    const { data, error } = await client.from("university_videos").select("slot_id, youtube_url");
+    const { data, error } = await client.from("university_videos").select("slot_id, youtube_url, title, description, duration_label");
     if (error) throw error;
-    state.universityVideos = Object.fromEntries((data || []).map((row) => [row.slot_id, row.youtube_url || ""]));
+    state.universityVideos = Object.fromEntries((data || []).map((row) => [row.slot_id, {
+      youtube_url: row.youtube_url || "",
+      title: row.title || "",
+      description: row.description || "",
+      duration_label: row.duration_label || ""
+    }]));
     if (rerender && routeParts()[0] === "kaizen-university") renderRoute();
   } catch (error) {
     console.warn("Kaizen University video settings unavailable:", error.message);
   }
 }
 
-async function saveUniversityVideo(slotId, youtubeUrl) {
+async function saveUniversityVideo(slotId, values) {
   const client = await window.KaizenAuth?.getClient?.();
   if (!client) throw new Error("Supabase is not available.");
+  const next = {
+    youtube_url: values.youtube_url.trim(),
+    title: values.title.trim(),
+    description: values.description.trim(),
+    duration_label: values.duration_label.trim()
+  };
   const payload = {
     slot_id: slotId,
-    youtube_url: youtubeUrl.trim(),
+    ...next,
     updated_at: new Date().toISOString()
   };
   const { error } = await client
     .from("university_videos")
     .upsert(payload, { onConflict: "slot_id" });
   if (error) throw error;
-  state.universityVideos[slotId] = payload.youtube_url;
+  state.universityVideos[slotId] = next;
+}
+
+function universityVideoOverrides(video) {
+  const saved = state.universityVideos[video.id] || {};
+  if (typeof saved === "string") {
+    return {
+      youtube_url: saved,
+      title: video.title,
+      description: video.description,
+      duration_label: "Video guide"
+    };
+  }
+  return {
+    youtube_url: saved.youtube_url || "",
+    title: saved.title || video.title,
+    description: saved.description || video.description,
+    duration_label: saved.duration_label || "Video guide"
+  };
 }
 
 function statusLabel(tool) {
@@ -1958,18 +1987,19 @@ function renderSiteGuide() {
   `;
 }
 
-function videoCard(video, duration = "Video guide") {
-  const url = state.universityVideos[video.id] || "";
+function videoCard(video) {
+  const display = universityVideoOverrides(video);
+  const url = display.youtube_url || "";
   const youtubeId = youtubeIdFromUrl(url);
   return `
     <article class="video-card">
       ${youtubeId
-        ? `<div class="video-embed"><iframe src="https://www.youtube.com/embed/${escapeHtml(youtubeId)}" title="${escapeHtml(video.title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`
+        ? `<div class="video-embed"><iframe src="https://www.youtube.com/embed/${escapeHtml(youtubeId)}" title="${escapeHtml(display.title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`
         : `<div class="video-placeholder"><span>▶</span><small>YouTube embed</small></div>`}
       <div class="video-card-copy">
-        <span class="eyebrow">${duration}</span>
-        <h3>${escapeHtml(video.title)}</h3>
-        <p>${escapeHtml(video.description)}</p>
+        <span class="eyebrow">${escapeHtml(display.duration_label)}</span>
+        <h3>${escapeHtml(display.title)}</h3>
+        <p>${escapeHtml(display.description)}</p>
       </div>
     </article>
   `;
@@ -3262,14 +3292,35 @@ function renderAdmin() {
     <section class="admin-video-section">
       <h3>${escapeHtml(section.title)}</h3>
       ${section.videos.map((video) => {
-        const url = state.universityVideos[video.id] || "";
+        const saved = state.universityVideos[video.id] || {};
+        const url = typeof saved === "string" ? saved : saved.youtube_url || "";
+        const title = typeof saved === "string" ? "" : saved.title || "";
+        const description = typeof saved === "string" ? "" : saved.description || "";
+        const duration = typeof saved === "string" ? "" : saved.duration_label || "";
         return `
           <div class="admin-video-row">
-            <div>
+            <div class="admin-video-default">
               <strong>${escapeHtml(video.title)}</strong>
               <small>${escapeHtml(video.description)}</small>
             </div>
-            <input type="url" class="admin-video-input" data-video-slot="${escapeHtml(video.id)}" value="${escapeHtml(url)}" placeholder="Paste YouTube link or video ID">
+            <div class="admin-video-fields" data-video-slot="${escapeHtml(video.id)}">
+              <label>
+                YouTube link
+                <input type="url" class="admin-video-input" data-video-field="youtube_url" value="${escapeHtml(url)}" placeholder="Paste YouTube link or video ID">
+              </label>
+              <label>
+                Title override
+                <input type="text" class="admin-video-input" data-video-field="title" value="${escapeHtml(title)}" placeholder="${escapeHtml(video.title)}">
+              </label>
+              <label>
+                Description override
+                <textarea class="admin-video-input admin-video-textarea" data-video-field="description" rows="3" placeholder="${escapeHtml(video.description)}">${escapeHtml(description)}</textarea>
+              </label>
+              <label>
+                Label override
+                <input type="text" class="admin-video-input" data-video-field="duration_label" value="${escapeHtml(duration)}" placeholder="Video guide">
+              </label>
+            </div>
           </div>
         `;
       }).join("")}
@@ -3302,11 +3353,11 @@ function renderAdmin() {
         <div>
           <span class="eyebrow">Kaizen University</span>
           <h2>Video Embeds</h2>
-          <p>Paste the correct YouTube link beside each training video slot. The public Kaizen University page will embed the saved video automatically.</p>
+          <p>Paste the correct YouTube link beside each training video slot. You can also override the public title, description, and label when a video changes.</p>
         </div>
-        <button class="button primary" id="saveUniversityVideos" type="button">Save Video Links</button>
+        <button class="button primary" id="saveUniversityVideos" type="button">Save Video Content</button>
       </div>
-      <p class="admin-status" id="adminVideoStatus">Paste full YouTube links, unlisted links, embed links, or video IDs.</p>
+      <p class="admin-status" id="adminVideoStatus">Empty copy fields use the default Kaizen University text. Paste full YouTube links, unlisted links, embed links, or video IDs.</p>
       <div class="admin-video-list">
         ${videoRows}
       </div>
@@ -3337,18 +3388,24 @@ function bindAdmin() {
   const videoStatus = document.getElementById("adminVideoStatus");
   document.getElementById("saveUniversityVideos")?.addEventListener("click", async () => {
     const button = document.getElementById("saveUniversityVideos");
-    const inputs = [...document.querySelectorAll(".admin-video-input")];
+    const rows = [...document.querySelectorAll(".admin-video-fields")];
     button.disabled = true;
-    videoStatus.textContent = "Saving video links...";
+    videoStatus.textContent = "Saving video content...";
     try {
-      for (const input of inputs) {
-        const url = input.value.trim();
+      for (const row of rows) {
+        const fields = Object.fromEntries([...row.querySelectorAll("[data-video-field]")].map((input) => [input.dataset.videoField, input.value.trim()]));
+        const url = fields.youtube_url || "";
         if (url && !youtubeIdFromUrl(url)) {
-          throw new Error(`"${input.closest(".admin-video-row")?.querySelector("strong")?.textContent || input.dataset.videoSlot}" does not look like a valid YouTube link or ID.`);
+          throw new Error(`"${row.closest(".admin-video-row")?.querySelector("strong")?.textContent || row.dataset.videoSlot}" does not look like a valid YouTube link or ID.`);
         }
-        await saveUniversityVideo(input.dataset.videoSlot, url);
+        await saveUniversityVideo(row.dataset.videoSlot, {
+          youtube_url: url,
+          title: fields.title || "",
+          description: fields.description || "",
+          duration_label: fields.duration_label || ""
+        });
       }
-      videoStatus.textContent = "Saved. Kaizen University video links are now live.";
+      videoStatus.textContent = "Saved. Kaizen University video content is now live.";
       button.disabled = false;
     } catch (error) {
       videoStatus.textContent = `Could not save: ${error.message}`;

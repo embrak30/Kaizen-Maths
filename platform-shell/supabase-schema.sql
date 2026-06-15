@@ -118,8 +118,15 @@ using (public.is_admin());
 create table if not exists public.university_videos (
   slot_id text primary key,
   youtube_url text,
+  title text,
+  description text,
+  duration_label text,
   updated_at timestamptz not null default now()
 );
+
+alter table public.university_videos add column if not exists title text;
+alter table public.university_videos add column if not exists description text;
+alter table public.university_videos add column if not exists duration_label text;
 
 alter table public.university_videos enable row level security;
 
