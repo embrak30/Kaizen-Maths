@@ -147,6 +147,24 @@ const tools = [
     ]
   },
   {
+    slug: "matrices",
+    title: "Matrices",
+    category: "Algebra",
+    level: "GCSE / A-Level",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate matrix questions covering addition, subtraction, scalar multiplication, multiplication, determinants, inverses, and algebraic matrix problems.",
+    tags: ["algebra", "matrices", "determinants", "inverse matrices", "matrix multiplication", "singular matrices", "A-Level"],
+    toolPath: "tools/matrices/index.html?v=matrices-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on matrix operations: addition, subtraction, and scalar multiplication.",
+      "Level 2 develops determinant, inverse, and multiplication fluency for 2 by 2 and 3 by 3 matrices.",
+      "Level 3 uses unknown entries and singular matrices to form equations involving x."
+    ]
+  },
+  {
     slug: "differentiation-rules",
     title: "Differentiation Rules",
     category: "Algebra",
