@@ -781,7 +781,7 @@ const tools = [
     status: "Imported",
     description: "Generate large-data-set practice using a Kaizen-owned training dataset for variables, units, summaries, comparisons, graphs, correlation, regression, and exam-style interpretation.",
     tags: ["statistics", "large data set", "A-Level", "summary statistics", "correlation", "regression", "graphs", "interpretation"],
-    toolPath: "tools/kaizen-large-data-set/index.html?v=large-data-set-2",
+    toolPath: "tools/kaizen-large-data-set/index.html?v=large-data-set-3",
     imported: true,
     teacherNotes: [
       "Uses an original Kaizen training dataset rather than copying any exam-board large data set.",
