@@ -2831,19 +2831,22 @@ function renderSchools() {
         <span class="eyebrow">Testing Phase</span>
         <h2>Schools can explore the full site until 30 June 2026</h2>
         <p>During the testing phase, teachers can use the full library without payment. This gives departments time to check coverage, try the classroom tools, build worksheets, and decide whether Kaizen Maths would support regular teaching across the school.</p>
+        <p>School prices shown below are early-adopter rates for the first schools that help shape the platform. Standard pricing is expected to be higher after the launch period.</p>
       </article>
 
       <section class="pricing-grid" aria-label="School licence options">
         <article class="panel pricing-card">
-          <span class="eyebrow">Small Department</span>
+          <span class="eyebrow">Early Adopter</span>
           <h2>Up to 5 Teachers</h2>
           <p class="pricing-price">£299/year</p>
+          <p class="pricing-note">Expected standard price: £499/year</p>
           <p>Designed for a small maths department or pilot group. Each teacher can sign in, access the full tool library, generate classroom questions, and create worksheets from the same shared platform.</p>
         </article>
         <article class="panel pricing-card featured">
-          <span class="eyebrow">Department Licence</span>
+          <span class="eyebrow">Early Adopter</span>
           <h2>6-15 Teachers</h2>
           <p class="pricing-price">From £499/year</p>
+          <p class="pricing-note">Expected standard price: from £899/year</p>
           <p>Suitable for larger departments that want consistent access across year groups, intervention groups, revision lessons, homework, and assessment preparation.</p>
         </article>
         <article class="panel pricing-card">
@@ -2897,7 +2900,7 @@ function renderUpgrade() {
         <span class="eyebrow">Testing Phase</span>
         <h2>All tools are available until 30 June 2026</h2>
         <p>There is no need to upgrade while Kaizen Maths is being tested. Teachers can use the full tool library, classroom generators, worked solutions, worksheet builder, and assessment tools during this trial period.</p>
-        <p>Paid teacher and school access will be introduced after the trial period. For now, please explore the site and share feedback on how well it supports classroom teaching, practice, differentiation, homework, and assessment.</p>
+        <p>Paid teacher and school access will be introduced after the trial period. The prices shown below are early-adopter rates for the first teachers and schools who help shape the platform. Standard pricing is expected to be higher after launch.</p>
         <div class="button-row">
           <a class="button primary" href="#/tools">Explore the Tool Library</a>
           <a class="button" href="#/worksheet-generator">Open Worksheet Builder</a>
@@ -2917,23 +2920,26 @@ function renderUpgrade() {
 
       <section class="pricing-grid" aria-label="Pricing options">
         <article class="panel pricing-card">
-          <span class="eyebrow">Individual Teacher</span>
+          <span class="eyebrow">Early Adopter</span>
           <h2>Monthly</h2>
           <p class="pricing-price">£7.99/month</p>
+          <p class="pricing-note">Expected standard price: £12.99/month</p>
           <p>Flexible access for one teacher. Use the full topic library, board-ready generators, worked solutions, worksheet builder, and assessment practice.</p>
           <button class="button primary" type="button" disabled>Available after trial</button>
         </article>
         <article class="panel pricing-card featured">
-          <span class="eyebrow">Individual Teacher</span>
+          <span class="eyebrow">Early Adopter</span>
           <h2>Annual</h2>
           <p class="pricing-price">£69/year</p>
+          <p class="pricing-note">Expected standard price: £119/year</p>
           <p>Best for teachers who want full access across the year for planning, classroom practice, homework, revision, intervention, and assessment.</p>
           <button class="button primary" type="button" disabled>Available after trial</button>
         </article>
         <article class="panel pricing-card">
-          <span class="eyebrow">School Licence</span>
+          <span class="eyebrow">Early Adopter</span>
           <h2>Department Access</h2>
           <p class="pricing-price">From £299/year</p>
+          <p class="pricing-note">Expected standard price: from £499/year</p>
           <p>For schools that want several teachers to use the full virtual mathematics textbook across lessons, homework, intervention, revision, and assessment.</p>
           <a class="button" href="#/schools">Notes For Schools</a>
         </article>
