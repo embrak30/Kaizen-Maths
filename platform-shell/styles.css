@@ -1128,6 +1128,24 @@ a {
   gap: 10px;
 }
 
+.trial-notice {
+  display: grid;
+  gap: 12px;
+  border-color: rgba(23, 179, 176, 0.35);
+  background:
+    linear-gradient(135deg, rgba(23, 179, 176, 0.12), rgba(115, 88, 242, 0.10)),
+    var(--panel);
+}
+
+.trial-notice h2 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.trial-notice p {
+  max-width: 860px;
+}
+
 .upgrade-status {
   min-height: 1.4em;
   margin: 0;

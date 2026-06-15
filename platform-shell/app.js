@@ -2832,14 +2832,25 @@ function renderUpgrade() {
   app.innerHTML = `
     ${pageHeader(
       "Upgrade Kaizen Maths",
-      "Choose individual teacher access when you are ready to unlock the full virtual mathematics textbook. School licences can be arranged separately.",
+      "Kaizen Maths is currently in its testing phase. Full access is available during the trial period, so teachers can explore the virtual mathematics textbook before paid plans begin.",
       `<a class="button" href="#/tools">Browse Tools</a>`
     )}
     <section class="upgrade-page">
+      <article class="panel trial-notice">
+        <span class="eyebrow">Testing Phase</span>
+        <h2>All tools are available until 30 June 2026</h2>
+        <p>There is no need to upgrade while Kaizen Maths is being tested. Teachers can use the full tool library, classroom generators, worked solutions, worksheet builder, and assessment tools during this trial period.</p>
+        <p>Paid teacher and school access will be introduced after the trial period. For now, please explore the site and share feedback on how well it supports classroom teaching, practice, differentiation, homework, and assessment.</p>
+        <div class="button-row">
+          <a class="button primary" href="#/tools">Explore the Tool Library</a>
+          <a class="button" href="#/worksheet-generator">Open Worksheet Builder</a>
+        </div>
+      </article>
+
       <article class="panel upgrade-summary">
         <span class="eyebrow">Current Access</span>
         <h2>${isSignedIn() ? titleCaseAccess(role) + " access" : "Not signed in"}</h2>
-        <p>${isSignedIn() ? `Signed in as ${escapeHtml(authState().session?.user?.email || "teacher")}.` : "Sign in with Google first, then choose a teacher plan."}</p>
+        <p>${isSignedIn() ? `Signed in as ${escapeHtml(authState().session?.user?.email || "teacher")}.` : "Sign in with Google to help test the full site during the trial period."}</p>
         ${profile.subscription_status ? `<p><strong>Subscription:</strong> ${escapeHtml(profile.subscription_status)}</p>` : ""}
         ${statusCopy ? `<p class="upgrade-status" data-tone="${checkoutStatus}">${statusCopy}</p>` : `<p class="upgrade-status" id="upgradeStatus"></p>`}
         <div class="button-row">
@@ -2853,14 +2864,14 @@ function renderUpgrade() {
           <h2>Monthly</h2>
           <p class="pricing-price">£7.99/month</p>
           <p>Flexible access for one teacher. Use the full topic library, board-ready generators, worked solutions, worksheet builder, and assessment practice.</p>
-          <button class="button primary" type="button" data-checkout-plan="monthly">Start Monthly Plan</button>
+          <button class="button primary" type="button" disabled>Available after trial</button>
         </article>
         <article class="panel pricing-card featured">
           <span class="eyebrow">Individual Teacher</span>
           <h2>Annual</h2>
           <p class="pricing-price">£69/year</p>
           <p>Best for teachers who want full access across the year for planning, classroom practice, homework, revision, intervention, and assessment.</p>
-          <button class="button primary" type="button" data-checkout-plan="annual">Start Annual Plan</button>
+          <button class="button primary" type="button" disabled>Available after trial</button>
         </article>
         <article class="panel pricing-card">
           <span class="eyebrow">School Licence</span>
