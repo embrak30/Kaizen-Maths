@@ -1729,6 +1729,7 @@ function renderHome() {
       </div>
       <div class="home-hero-actions">
         <a class="button primary" href="#/beta-feedback">Beta Testing Brief</a>
+        <a class="button primary" href="#/kaizen-university">Kaizen University</a>
         <a class="button primary" href="#/worksheet-generator">Create a Worksheet</a>
         <a class="button primary" href="#/how-to-use-this-site">How to Use This Site</a>
         <a class="button" href="#/tools">Open Tool Library</a>
@@ -1743,6 +1744,15 @@ function renderHome() {
         <p>Start with the beta brief. It explains which teacher workflows to try, what kind of feedback is most useful, and gives testers a simple feedback form they can copy and send back privately.</p>
       </div>
       <a class="button primary" href="#/beta-feedback">Open Beta Brief</a>
+    </section>
+    <section class="university-callout" aria-label="Kaizen University">
+      <div class="beta-callout-icon" aria-hidden="true">KU</div>
+      <div>
+        <span class="eyebrow">Teacher Training</span>
+        <h2>Kaizen University</h2>
+        <p>Short practical video guides for teachers: learn how to navigate the site, use generators on the board, build worksheets, and make Kaizen Maths part of normal classroom practice.</p>
+      </div>
+      <a class="button primary" href="#/kaizen-university">Open Training Hub</a>
     </section>
     <section class="guide-callout" aria-label="How to use this site">
       <div class="guide-callout-copy">
@@ -1856,6 +1866,83 @@ function renderSiteGuide() {
       </div>
       <iframe class="site-guide-frame" src="tools/interface-guide/index.html?v=how-to-use-site-4" title="How to Use This Site" loading="eager"></iframe>
     </section>
+  `;
+}
+
+function videoPlaceholder(title, description, duration = "Video guide") {
+  return `
+    <article class="video-card">
+      <div class="video-placeholder">
+        <span>▶</span>
+        <small>YouTube embed</small>
+      </div>
+      <div class="video-card-copy">
+        <span class="eyebrow">${duration}</span>
+        <h3>${title}</h3>
+        <p>${description}</p>
+      </div>
+    </article>
+  `;
+}
+
+function renderKaizenUniversity() {
+  const gettingStarted = [
+    ["What Kaizen Maths Is", "A short introduction to Kaizen Maths as a virtual mathematics textbook for teachers."],
+    ["Finding A Topic", "How to use the dashboard, Tool Library, search, and subject collections."],
+    ["Using A Topic Tool", "How to choose levels, question types, generate new sets, show answers, and reveal worked steps."]
+  ];
+  const classroomWorkflow = [
+    ["Practice Set Mode", "How to project a compact set of questions and use it for retrieval, fluency, and checking misconceptions."],
+    ["One Example Mode", "How to put one question on the board for teacher modelling and class discussion."],
+    ["Classroom Displays", "How to use graph grids, shapes, solids, probability templates, and statistics displays during live explanation."]
+  ];
+  const worksheets = [
+    ["Building A Worksheet", "How to choose topics, levels, and question types from across the site."],
+    ["Assessment Mode And Marks", "How to add marks and shape a worksheet into a quiz or test-style paper."],
+    ["Using The Answer Key", "How the separate teacher copy can support marking, feedback, and review."]
+  ];
+  const school = [
+    ["Using Kaizen In A Department", "How a department can use shared routines across lessons, homework, intervention, and revision."],
+    ["Supporting Less Confident Topics", "How worked examples, answers, and structured practice can support teacher confidence."],
+    ["Giving Useful Feedback", "What to test during the trial period and how to report issues or suggestions clearly."]
+  ];
+
+  const section = (title, intro, videos) => `
+    <section class="university-section">
+      <div class="university-section-head">
+        <h2>${title}</h2>
+        <p>${intro}</p>
+      </div>
+      <div class="video-grid">
+        ${videos.map(([videoTitle, description]) => videoPlaceholder(videoTitle, description)).join("")}
+      </div>
+    </section>
+  `;
+
+  app.innerHTML = `
+    ${pageHeader(
+      "Kaizen University",
+      "Short practical video guides for teachers using Kaizen Maths in the classroom. Learn the site, the workflow, and the routines that make the question generators useful on the board and in worksheets.",
+      `<a class="button" href="#/">Back to Dashboard</a><a class="button primary" href="#/how-to-use-this-site">Open Site Guide</a>`
+    )}
+    <section class="university-hero panel">
+      <div>
+        <span class="eyebrow">How To Kaizen</span>
+        <h2>Teacher training that stays practical</h2>
+        <p>Kaizen University is a home for short videos showing teachers how to use Kaizen Maths without changing the role of the teacher. The focus is simple: choose the right topic, generate the right questions, teach from the board, reveal support when needed, and repeat practice until students are ready to move forward.</p>
+      </div>
+      <div class="university-steps">
+        <span>Find</span>
+        <span>Project</span>
+        <span>Discuss</span>
+        <span>Practise</span>
+        <span>Assess</span>
+      </div>
+    </section>
+    ${section("Getting Started", "For teachers opening Kaizen Maths for the first time.", gettingStarted)}
+    ${section("Classroom Workflow", "How to use Kaizen Maths during live teaching, modelling, checking, and practice.", classroomWorkflow)}
+    ${section("Worksheets And Assessment", "How to turn topic generators into homework, quizzes, assessments, and intervention sheets.", worksheets)}
+    ${section("School And Department Use", "How a school or department can use Kaizen Maths consistently during the trial period.", school)}
   `;
 }
 
@@ -3484,6 +3571,8 @@ function renderRoute() {
     renderToolLibrary(parts[1]);
   } else if (parts[0] === "schools") {
     renderSchools();
+  } else if (parts[0] === "kaizen-university") {
+    renderKaizenUniversity();
   } else if (parts[0] === "teacher") {
     renderTeacher();
   } else if (parts[0] === "upgrade") {

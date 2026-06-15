@@ -709,9 +709,140 @@ a {
   line-height: 1.5;
 }
 
+.university-callout {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  margin: -6px 0 22px;
+  padding: 18px;
+  border: 1px solid rgba(23, 184, 179, 0.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(23, 184, 179, 0.12), rgba(111, 76, 195, 0.1)),
+    #ffffff;
+  box-shadow: 0 10px 28px rgba(44, 35, 91, 0.08);
+}
+
+.university-callout h2 {
+  margin: 4px 0 5px;
+  font-size: 1.12rem;
+}
+
+.university-callout p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .beta-page {
   display: grid;
   gap: 16px;
+}
+
+.university-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 340px);
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 18px;
+  border-color: rgba(23, 184, 179, 0.3);
+  background:
+    linear-gradient(135deg, rgba(111, 76, 195, 0.12), rgba(23, 184, 179, 0.12)),
+    #ffffff;
+}
+
+.university-hero h2 {
+  margin: 4px 0 8px;
+}
+
+.university-steps {
+  display: grid;
+  gap: 8px;
+}
+
+.university-steps span {
+  display: block;
+  border: 1px solid rgba(111, 76, 195, 0.18);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #282450;
+  font-weight: 850;
+  text-align: center;
+}
+
+.university-section {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.university-section-head h2 {
+  margin: 0 0 5px;
+  color: var(--ink);
+}
+
+.university-section-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.video-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: 0 1px 2px rgba(23, 32, 51, 0.04);
+}
+
+.video-placeholder {
+  min-height: 156px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 24% 24%, rgba(23, 184, 179, 0.18), transparent 42%),
+    radial-gradient(circle at 78% 74%, rgba(111, 76, 195, 0.18), transparent 42%),
+    #172f4a;
+  color: white;
+}
+
+.video-placeholder span {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 1.45rem;
+  font-weight: 900;
+}
+
+.video-placeholder small {
+  align-self: start;
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 750;
+}
+
+.video-card-copy {
+  padding: 14px;
+}
+
+.video-card-copy h3 {
+  margin: 4px 0 6px;
+  color: #282450;
+}
+
+.video-card-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 .beta-intro p,
@@ -2379,7 +2510,9 @@ sup .worksheet-fraction span:last-child {
 
   .guide-callout,
   .worksheet-callout,
-  .beta-callout {
+  .beta-callout,
+  .university-callout,
+  .university-hero {
     grid-template-columns: 1fr;
     align-items: start;
   }
@@ -2390,14 +2523,16 @@ sup .worksheet-fraction span:last-child {
 
   .guide-callout .button,
   .worksheet-callout .button,
-  .beta-callout .button {
+  .beta-callout .button,
+  .university-callout .button {
     justify-self: start;
   }
 
   .beta-grid,
   .beta-feedback-form,
   .beta-steps,
-  .pricing-grid {
+  .pricing-grid,
+  .video-grid {
     grid-template-columns: 1fr;
   }
 
