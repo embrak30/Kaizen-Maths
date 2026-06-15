@@ -1087,7 +1087,7 @@ const tools = [
     status: "Imported",
     description: "Open board-ready graph grids, coordinate axes, 2D shapes, and 3D solids for live classroom explanation.",
     tags: ["classroom", "display", "graph grid", "coordinate axes", "geometry", "shapes", "solids", "board"],
-    toolPath: "tools/classroom-displays/index.html?v=classroom-displays-1",
+    toolPath: "tools/classroom-displays/index.html?v=classroom-displays-2",
     imported: true,
     teacherNotes: [
       "Designed as a static board companion rather than a question generator.",

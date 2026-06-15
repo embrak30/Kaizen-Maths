@@ -42,6 +42,7 @@
           <option value="grids">Graph Grids</option>
           <option value="shapes">2D Shapes</option>
           <option value="solids">3D Solids</option>
+          <option value="stats">Probability & Statistics</option>
         </select>
         <select id="themeSelect" aria-label="Board background">
           <option value="white">White Board</option>
@@ -107,6 +108,19 @@
           { id:"cone", label:"Cone", render: renderCone },
           { id:"sphere", label:"Sphere", render: renderSphere },
           { id:"square-pyramid", label:"Square-Based Pyramid", render: renderPyramid }
+        ]
+      },
+      stats: {
+        label: "Probability & Statistics",
+        displays: [
+          { id:"venn-two", label:"Two-Set Venn Diagram", render: renderTwoSetVenn },
+          { id:"venn-three", label:"Three-Set Venn Diagram", render: renderThreeSetVenn },
+          { id:"tree-diagram", label:"Blank Tree Diagram", render: renderTreeDiagram },
+          { id:"two-way-table", label:"Two-Way Table", render: renderTwoWayTable },
+          { id:"frequency-table", label:"Frequency Table", render: renderFrequencyTable },
+          { id:"histogram-axes", label:"Histogram Axes", render: renderHistogramAxes },
+          { id:"box-plot-axis", label:"Box Plot Axis", render: renderBoxPlotAxis },
+          { id:"normal-curve", label:"Normal Curve Outline", render: renderNormalCurve }
         ]
       }
     };
@@ -195,7 +209,46 @@
     }
 
     function renderPyramid() {
-      stage.innerHTML = svg('<path class="solid-top" d="M520 120 L250 520 H790 Z"/><path class="solid-side" d="M520 120 L790 520 L610 610 Z"/><path class="solid-face" d="M520 120 L250 520 L430 610 Z"/><path class="shape-line" d="M520 120 L250 520 L430 610 H610 L790 520 Z M520 120 L430 610 M520 120 L610 610"/><path class="shape-line dash" d="M250 520 H790"/>' + label("Square-Based Pyramid", 520, 665));
+      stage.innerHTML = svg(
+        '<path d="M520 130 L250 470 L520 610 Z" fill="#e9fbfb" stroke="#157f82" stroke-width="4"/>' +
+        '<path d="M520 130 L790 470 L520 610 Z" fill="#d8ebff" stroke="#2d6cdf" stroke-width="4"/>' +
+        '<path d="M250 470 L520 350 L790 470 L520 610 Z" fill="rgba(241,238,254,.62)" stroke="#6554c0" stroke-width="4"/>' +
+        '<path class="shape-line" d="M520 130 L250 470 L520 610 L790 470 Z M520 130 L520 610 M250 470 L520 350 L790 470"/>' +
+        '<path class="shape-line dash" d="M520 130 L520 350 M250 470 L790 470"/>' +
+        '<circle cx="520" cy="130" r="6" fill="#1a365d"/>' +
+        label("Square-Based Pyramid", 520, 665));
+    }
+
+    function renderTwoSetVenn() {
+      stage.innerHTML = svg('<rect x="140" y="120" width="760" height="480" rx="18" fill="white" stroke="#1a365d" stroke-width="5"/><circle cx="430" cy="360" r="190" fill="rgba(23,179,176,.20)" stroke="#157f82" stroke-width="5"/><circle cx="610" cy="360" r="190" fill="rgba(101,84,192,.20)" stroke="#6554c0" stroke-width="5"/>' + label("Venn Diagram", 520, 665));
+    }
+
+    function renderThreeSetVenn() {
+      stage.innerHTML = svg('<rect x="140" y="115" width="760" height="490" rx="18" fill="white" stroke="#1a365d" stroke-width="5"/><circle cx="445" cy="330" r="170" fill="rgba(23,179,176,.20)" stroke="#157f82" stroke-width="5"/><circle cx="595" cy="330" r="170" fill="rgba(101,84,192,.20)" stroke="#6554c0" stroke-width="5"/><circle cx="520" cy="455" r="170" fill="rgba(245,158,11,.18)" stroke="#b7791f" stroke-width="5"/>' + label("Three-Set Venn Diagram", 520, 665));
+    }
+
+    function renderTreeDiagram() {
+      stage.innerHTML = svg('<path class="shape-line" d="M180 360 L430 210 M180 360 L430 510 M430 210 L720 130 M430 210 L720 290 M430 510 L720 430 M430 510 L720 590"/><circle cx="180" cy="360" r="10" fill="#1a365d"/><circle cx="430" cy="210" r="8" fill="#1a365d"/><circle cx="430" cy="510" r="8" fill="#1a365d"/><circle cx="720" cy="130" r="7" fill="#1a365d"/><circle cx="720" cy="290" r="7" fill="#1a365d"/><circle cx="720" cy="430" r="7" fill="#1a365d"/><circle cx="720" cy="590" r="7" fill="#1a365d"/>' + label("Blank Tree Diagram", 520, 665));
+    }
+
+    function renderTwoWayTable() {
+      stage.innerHTML = svg('<rect x="210" y="150" width="620" height="420" fill="white" stroke="#1a365d" stroke-width="5"/><path class="shape-line" d="M210 255 H830 M210 360 H830 M210 465 H830 M365 150 V570 M520 150 V570 M675 150 V570"/>' + label("Two-Way Table", 520, 665));
+    }
+
+    function renderFrequencyTable() {
+      stage.innerHTML = svg('<rect x="260" y="135" width="520" height="450" fill="white" stroke="#1a365d" stroke-width="5"/><path class="shape-line" d="M260 225 H780 M260 315 H780 M260 405 H780 M260 495 H780 M520 135 V585"/>' + label("Frequency Table", 520, 665));
+    }
+
+    function renderHistogramAxes() {
+      stage.innerHTML = svg('<rect width="1040" height="720" fill="white"/><line class="axis" x1="150" y1="570" x2="900" y2="570"/><polygon class="axis-arrow" points="900,570 876,559 876,581"/><line class="axis" x1="150" y1="570" x2="150" y2="120"/><polygon class="axis-arrow" points="150,120 139,144 161,144"/><rect x="230" y="390" width="100" height="180" fill="rgba(23,179,176,.25)" stroke="#157f82" stroke-width="4"/><rect x="330" y="260" width="120" height="310" fill="rgba(101,84,192,.22)" stroke="#6554c0" stroke-width="4"/><rect x="450" y="190" width="150" height="380" fill="rgba(245,158,11,.20)" stroke="#b7791f" stroke-width="4"/><rect x="600" y="330" width="110" height="240" fill="rgba(23,179,176,.25)" stroke="#157f82" stroke-width="4"/>' + label("Histogram Axes", 520, 665));
+    }
+
+    function renderBoxPlotAxis() {
+      stage.innerHTML = svg('<line class="axis" x1="130" y1="470" x2="910" y2="470"/><polygon class="axis-arrow" points="910,470 886,459 886,481"/><path class="shape-line" d="M260 360 H410 M410 300 V420 H640 V300 H410 M520 300 V420 M640 360 H800"/><line class="shape-line" x1="260" y1="330" x2="260" y2="390"/><line class="shape-line" x1="800" y1="330" x2="800" y2="390"/>' + label("Box Plot Axis", 520, 665));
+    }
+
+    function renderNormalCurve() {
+      stage.innerHTML = svg('<line class="axis" x1="120" y1="560" x2="920" y2="560"/><polygon class="axis-arrow" points="920,560 896,549 896,571"/><path class="curve" d="M130 560 C210 560 250 548 300 510 C355 468 380 350 430 240 C470 150 570 150 610 240 C660 350 685 468 740 510 C790 548 830 560 910 560"/><line class="mean-marker" x1="520" y1="175" x2="520" y2="560"/>' + label("Normal Curve", 520, 665));
     }
 
     function currentDisplayObject() {
