@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classroom Displays</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;background:#eef3f8;color:#14263a;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;overflow:hidden}
+    .app{height:100vh;display:grid;grid-template-rows:auto 1fr;background:#f7fafc}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 16px;background:#172f4a;color:white;box-shadow:0 4px 16px rgba(0,0,0,.16);z-index:5}
+    .brand h1{font-size:1.25rem;line-height:1.1}.brand p{margin-top:3px;color:#d5e7f8;font-size:.85rem;font-weight:650}
+    .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    select,.btn{border:1px solid rgba(255,255,255,.28);border-radius:7px;padding:9px 11px;background:white;color:#172f4a;font:inherit;font-weight:750;cursor:pointer}
+    .btn{background:#17b3b0;color:white;border-color:#17b3b0}.btn.secondary{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.32);color:white}.btn:hover,select:hover{filter:brightness(.96)}
+    .workspace{display:grid;grid-template-columns:250px 1fr;min-height:0}
+    .palette{background:white;border-right:1px solid #d8e2ef;padding:14px;overflow-y:auto}
+    .palette h2{font-size:.78rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin:10px 0 8px}
+    .display-list{display:grid;gap:8px}.display-choice{border:1px solid #d8e2ef;border-radius:8px;background:#f8fafc;color:#1a365d;padding:10px;text-align:left;font-weight:750;cursor:pointer}.display-choice.active{background:#e9fbfb;border-color:#17b3b0;color:#0b6264;box-shadow:0 0 0 2px rgba(23,179,176,.12)}.display-choice:hover{border-color:#17b3b0}
+    .board-shell{min-height:0;padding:18px;display:grid;background:#dce8f3}
+    .board{position:relative;overflow:hidden;border-radius:8px;background:#fff;box-shadow:0 16px 42px rgba(20,38,58,.18);border:1px solid #bfd0df;display:grid;place-items:center}
+    .board.fullscreen{position:fixed;inset:0;z-index:20;border-radius:0;border:none;box-shadow:none}
+    .display-title{position:absolute;top:14px;left:16px;z-index:2;background:rgba(255,255,255,.86);border:1px solid #d8e2ef;border-radius:999px;padding:7px 11px;color:#1a365d;font-size:.86rem;font-weight:850}
+    .display-stage{width:min(96%,1100px);height:min(92%,760px);display:grid;place-items:center}
+    .display-stage svg{width:100%;height:100%;display:block}
+    .grid-bg{background-color:#fff;background-image:linear-gradient(#d8e2ef 1px,transparent 1px),linear-gradient(90deg,#d8e2ef 1px,transparent 1px);background-size:32px 32px}
+    .grid-bg.major{background-image:linear-gradient(#c6d5e2 2px,transparent 2px),linear-gradient(90deg,#c6d5e2 2px,transparent 2px),linear-gradient(#e7eef5 1px,transparent 1px),linear-gradient(90deg,#e7eef5 1px,transparent 1px);background-size:160px 160px,160px 160px,32px 32px,32px 32px}
+    .shape-svg text{font-family:"Segoe UI",Tahoma,sans-serif;font-weight:800;fill:#1a365d}.shape-fill-a{fill:#dff7f6;stroke:#157f82;stroke-width:5}.shape-fill-b{fill:#f1eefe;stroke:#6554c0;stroke-width:5}.shape-fill-c{fill:#fff2d9;stroke:#b7791f;stroke-width:5}.shape-line{stroke:#1a365d;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}.dash{stroke-dasharray:12 10}.solid-face{fill:#e9fbfb;stroke:#157f82;stroke-width:4}.solid-top{fill:#f1eefe;stroke:#6554c0;stroke-width:4}.solid-side{fill:#d8ebff;stroke:#2d6cdf;stroke-width:4}
+    .axis{stroke:#172f4a;stroke-width:3}.axis-light{stroke:#64748b;stroke-width:2}.axis-arrow{fill:#172f4a}.origin-dot{fill:#172f4a}
+    @media(max-width:850px){body{overflow:auto}.app{height:auto;min-height:100vh}.workspace{grid-template-columns:1fr}.palette{max-height:none;border-right:none;border-bottom:1px solid #d8e2ef}.board-shell{min-height:70vh}.topbar{align-items:flex-start;flex-direction:column}.controls{justify-content:flex-start}.display-stage{height:68vh}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Classroom Displays</h1>
+        <p>Board-ready grids, shapes, and solids for live teaching</p>
+      </div>
+      <div class="controls">
+        <select id="categorySelect" aria-label="Display category">
+          <option value="grids">Graph Grids</option>
+          <option value="shapes">2D Shapes</option>
+          <option value="solids">3D Solids</option>
+        </select>
+        <select id="themeSelect" aria-label="Board background">
+          <option value="white">White Board</option>
+          <option value="grid">Light Grid</option>
+          <option value="major">Major Grid</option>
+        </select>
+        <button class="btn secondary" id="clearLabelsBtn" type="button">Labels Off</button>
+        <button class="btn" id="fullscreenBtn" type="button">Full Screen</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <aside class="palette">
+        <h2 id="paletteTitle">Graph Grids</h2>
+        <div class="display-list" id="displayList"></div>
+      </aside>
+      <section class="board-shell">
+        <div class="board" id="board">
+          <div class="display-title" id="displayTitle">Blank Grid</div>
+          <div class="display-stage" id="displayStage"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const categories = {
+      grids: {
+        label: "Graph Grids",
+        displays: [
+          { id:"blank-grid", label:"Blank Square Grid", render: renderBlankGrid },
+          { id:"four-quadrant", label:"Four Quadrants Axes", render: () => renderAxes({four:true, labels:false}) },
+          { id:"four-quadrant-labelled", label:"Four Quadrants Labelled", render: () => renderAxes({four:true, labels:true}) },
+          { id:"positive-axes", label:"Positive Axes", render: () => renderAxes({four:false, labels:false}) },
+          { id:"positive-axes-labelled", label:"Positive Axes Labelled", render: () => renderAxes({four:false, labels:true}) },
+          { id:"dotted-grid", label:"Dotted Grid", render: renderDottedGrid }
+        ]
+      },
+      shapes: {
+        label: "2D Shapes",
+        displays: [
+          { id:"rectangle", label:"Rectangle", render: () => renderPolygon("Rectangle", "M220 180 H820 V520 H220 Z", "shape-fill-a") },
+          { id:"square", label:"Square", render: () => renderPolygon("Square", "M300 150 H700 V550 H300 Z", "shape-fill-b") },
+          { id:"parallelogram", label:"Parallelogram", render: () => renderPolygon("Parallelogram", "M280 210 H780 L700 520 H200 Z", "shape-fill-a") },
+          { id:"trapezium", label:"Trapezium", render: () => renderPolygon("Trapezium", "M340 200 H700 L820 520 H220 Z", "shape-fill-c") },
+          { id:"kite", label:"Kite", render: () => renderPolygon("Kite", "M520 120 L760 360 L520 610 L300 360 Z", "shape-fill-b") },
+          { id:"rhombus", label:"Rhombus", render: () => renderPolygon("Rhombus", "M520 140 L790 360 L520 580 L250 360 Z", "shape-fill-a") },
+          { id:"right-triangle", label:"Right-Angled Triangle", render: renderRightTriangle },
+          { id:"isosceles-triangle", label:"Isosceles Triangle", render: () => renderPolygon("Isosceles Triangle", "M520 130 L800 560 H240 Z", "shape-fill-c") },
+          { id:"equilateral-triangle", label:"Equilateral Triangle", render: () => renderPolygon("Equilateral Triangle", "M520 130 L820 650 H220 Z", "shape-fill-a") },
+          { id:"scalene-triangle", label:"Scalene Triangle", render: () => renderPolygon("Scalene Triangle", "M250 560 L760 500 L610 150 Z", "shape-fill-b") },
+          { id:"circle", label:"Circle", render: renderCircle },
+          { id:"sector", label:"Sector", render: renderSector }
+        ]
+      },
+      solids: {
+        label: "3D Solids",
+        displays: [
+          { id:"cube", label:"Cube", render: () => renderCuboid("Cube", true) },
+          { id:"cuboid", label:"Cuboid", render: () => renderCuboid("Cuboid", false) },
+          { id:"triangular-prism", label:"Triangular Prism", render: renderTriangularPrism },
+          { id:"cylinder", label:"Cylinder", render: renderCylinder },
+          { id:"cone", label:"Cone", render: renderCone },
+          { id:"sphere", label:"Sphere", render: renderSphere },
+          { id:"square-pyramid", label:"Square-Based Pyramid", render: renderPyramid }
+        ]
+      }
+    };
+
+    let currentCategory = "grids";
+    let currentDisplay = "blank-grid";
+    let labelsVisible = false;
+
+    const board = document.getElementById("board");
+    const stage = document.getElementById("displayStage");
+    const displayList = document.getElementById("displayList");
+    const displayTitle = document.getElementById("displayTitle");
+
+    function svg(content, viewBox = "0 0 1040 720") {
+      return '<svg class="shape-svg" viewBox="' + viewBox + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' + content + "</svg>";
+    }
+
+    function label(text, x, y) {
+      return labelsVisible ? '<text x="' + x + '" y="' + y + '" text-anchor="middle" font-size="38">' + text + "</text>" : "";
+    }
+
+    function renderBlankGrid() {
+      stage.innerHTML = '<div style="width:100%;height:100%;" class="grid-bg major"></div>';
+    }
+
+    function renderDottedGrid() {
+      stage.innerHTML = '<svg viewBox="0 0 1040 720" preserveAspectRatio="none">' + Array.from({length:33},(_,i)=>Array.from({length:23},(_,j)=>'<circle cx="'+(i*32+8)+'" cy="'+(j*32+8)+'" r="2.1" fill="#a9bbca"/>').join("")).join("") + "</svg>";
+    }
+
+    function renderAxes({four, labels}) {
+      const grid = '<rect width="1040" height="720" fill="white"/>' +
+        Array.from({length:33},(_,i)=>'<line x1="'+(i*32)+'" y1="0" x2="'+(i*32)+'" y2="720" stroke="#e5edf5" stroke-width="1"/>').join("") +
+        Array.from({length:23},(_,i)=>'<line x1="0" y1="'+(i*32)+'" x2="1040" y2="'+(i*32)+'" stroke="#e5edf5" stroke-width="1"/>').join("");
+      const ox = four ? 520 : 120;
+      const oy = four ? 360 : 610;
+      const axisLabels = labels ? '<text x="990" y="'+(oy-18)+'" font-size="34" text-anchor="middle">x</text><text x="'+(ox+25)+'" y="45" font-size="34" text-anchor="middle">y</text>' : "";
+      stage.innerHTML = svg(grid +
+        '<line class="axis" x1="60" y1="'+oy+'" x2="980" y2="'+oy+'"/><polygon class="axis-arrow" points="980,'+oy+' 956,'+(oy-11)+' 956,'+(oy+11)+'"/>' +
+        '<line class="axis" x1="'+ox+'" y1="660" x2="'+ox+'" y2="55"/><polygon class="axis-arrow" points="'+ox+',55 '+(ox-11)+',79 '+(ox+11)+',79"/>' +
+        '<circle class="origin-dot" cx="'+ox+'" cy="'+oy+'" r="5"/>' + axisLabels);
+    }
+
+    function renderPolygon(name, points, cls) {
+      stage.innerHTML = svg('<path class="' + cls + '" d="' + points + '"/>' + label(name, 520, 665));
+    }
+
+    function renderRightTriangle() {
+      stage.innerHTML = svg('<path class="shape-fill-a" d="M260 560 H790 V170 Z"/><path class="shape-line" d="M710 560 V480 H790"/>' + label("Right-Angled Triangle", 520, 665));
+    }
+
+    function renderCircle() {
+      stage.innerHTML = svg('<circle class="shape-fill-b" cx="520" cy="360" r="230"/><line class="shape-line" x1="520" y1="360" x2="750" y2="360"/><circle cx="520" cy="360" r="7" fill="#1a365d"/>' + label("Circle", 520, 665));
+    }
+
+    function renderSector() {
+      stage.innerHTML = svg('<path class="shape-fill-c" d="M520 360 L760 190 A300 300 0 0 1 810 510 Z"/><path class="shape-line" d="M520 360 L760 190 M520 360 L810 510"/>' + label("Sector", 520, 665));
+    }
+
+    function renderCuboid(name, cube) {
+      const front = cube ? "M360 230 H650 V520 H360 Z" : "M290 260 H720 V520 H290 Z";
+      const dx = cube ? 120 : 150;
+      const dy = cube ? -100 : -95;
+      const x1 = cube ? 360 : 290, x2 = cube ? 650 : 720, y1 = cube ? 230 : 260, y2 = 520;
+      stage.innerHTML = svg(
+        '<path class="solid-face" d="'+front+'"/>' +
+        '<path class="solid-top" d="M'+x1+' '+y1+' L'+(x1+dx)+' '+(y1+dy)+' H'+(x2+dx)+' L'+x2+' '+y1+' Z"/>' +
+        '<path class="solid-side" d="M'+x2+' '+y1+' L'+(x2+dx)+' '+(y1+dy)+' V'+(y2+dy)+' L'+x2+' '+y2+' Z"/>' +
+        '<path class="shape-line" d="M'+x1+' '+y1+' H'+x2+' V'+y2+' H'+x1+' Z M'+x1+' '+y1+' L'+(x1+dx)+' '+(y1+dy)+' H'+(x2+dx)+' L'+x2+' '+y1+' M'+(x2+dx)+' '+(y1+dy)+' V'+(y2+dy)+' L'+x2+' '+y2+'"/>' +
+        label(name, 520, 665));
+    }
+
+    function renderTriangularPrism() {
+      stage.innerHTML = svg('<path class="solid-face" d="M250 530 L420 220 L590 530 Z"/><path class="solid-side" d="M420 220 L740 170 L890 480 L590 530 Z"/><path class="solid-top" d="M250 530 L560 480 L890 480 L590 530 Z"/><path class="shape-line" d="M250 530 L420 220 L590 530 Z M420 220 L740 170 L890 480 L590 530 M250 530 L560 480 L890 480 M560 480 L740 170"/>' + label("Triangular Prism", 520, 665));
+    }
+
+    function renderCylinder() {
+      stage.innerHTML = svg('<ellipse class="solid-top" cx="520" cy="200" rx="210" ry="70"/><path class="solid-face" d="M310 200 V520 A210 70 0 0 0 730 520 V200 A210 70 0 0 1 310 200"/><ellipse class="shape-line" cx="520" cy="520" rx="210" ry="70"/><ellipse class="shape-line" cx="520" cy="200" rx="210" ry="70"/><line class="shape-line" x1="310" y1="200" x2="310" y2="520"/><line class="shape-line" x1="730" y1="200" x2="730" y2="520"/>' + label("Cylinder", 520, 665));
+    }
+
+    function renderCone() {
+      stage.innerHTML = svg('<path class="solid-face" d="M520 110 L300 540 A220 72 0 0 0 740 540 Z"/><ellipse class="shape-line" cx="520" cy="540" rx="220" ry="72"/><path class="shape-line" d="M520 110 L300 540 M520 110 L740 540"/>' + label("Cone", 520, 665));
+    }
+
+    function renderSphere() {
+      stage.innerHTML = svg('<circle class="shape-fill-b" cx="520" cy="350" r="230"/><ellipse class="shape-line" cx="520" cy="350" rx="230" ry="70"/><ellipse class="shape-line dash" cx="520" cy="350" rx="70" ry="230"/>' + label("Sphere", 520, 665));
+    }
+
+    function renderPyramid() {
+      stage.innerHTML = svg('<path class="solid-top" d="M520 120 L250 520 H790 Z"/><path class="solid-side" d="M520 120 L790 520 L610 610 Z"/><path class="solid-face" d="M520 120 L250 520 L430 610 Z"/><path class="shape-line" d="M520 120 L250 520 L430 610 H610 L790 520 Z M520 120 L430 610 M520 120 L610 610"/><path class="shape-line dash" d="M250 520 H790"/>' + label("Square-Based Pyramid", 520, 665));
+    }
+
+    function currentDisplayObject() {
+      return categories[currentCategory].displays.find((display) => display.id === currentDisplay) || categories[currentCategory].displays[0];
+    }
+
+    function renderDisplayList() {
+      const category = categories[currentCategory];
+      document.getElementById("paletteTitle").textContent = category.label;
+      displayList.innerHTML = "";
+      category.displays.forEach((display) => {
+        const button = document.createElement("button");
+        button.className = "display-choice" + (display.id === currentDisplay ? " active" : "");
+        button.type = "button";
+        button.textContent = display.label;
+        button.addEventListener("click", () => {
+          currentDisplay = display.id;
+          render();
+        });
+        displayList.appendChild(button);
+      });
+    }
+
+    function applyTheme() {
+      board.classList.remove("grid-bg","major");
+      const theme = document.getElementById("themeSelect").value;
+      if (theme === "grid") board.classList.add("grid-bg");
+      if (theme === "major") board.classList.add("grid-bg","major");
+    }
+
+    function render() {
+      const display = currentDisplayObject();
+      displayTitle.textContent = display.label;
+      renderDisplayList();
+      applyTheme();
+      display.render();
+    }
+
+    document.getElementById("categorySelect").addEventListener("change", (event) => {
+      currentCategory = event.target.value;
+      currentDisplay = categories[currentCategory].displays[0].id;
+      render();
+    });
+    document.getElementById("themeSelect").addEventListener("change", render);
+    document.getElementById("clearLabelsBtn").addEventListener("click", (event) => {
+      labelsVisible = !labelsVisible;
+      event.currentTarget.textContent = labelsVisible ? "Labels On" : "Labels Off";
+      render();
+    });
+    document.getElementById("fullscreenBtn").addEventListener("click", async () => {
+      if (!document.fullscreenElement) {
+        await board.requestFullscreen?.();
+        board.classList.add("fullscreen");
+      } else {
+        await document.exitFullscreen?.();
+      }
+    });
+    document.addEventListener("fullscreenchange", () => {
+      board.classList.toggle("fullscreen", Boolean(document.fullscreenElement));
+      document.getElementById("fullscreenBtn").textContent = document.fullscreenElement ? "Exit Full Screen" : "Full Screen";
+    });
+
+    render();
+  </script>
+</body>
+</html>

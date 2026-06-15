@@ -1078,6 +1078,24 @@ const tools = [
     ]
   },
   {
+    slug: "classroom-displays",
+    title: "Classroom Displays",
+    category: "Classroom Tools",
+    level: "All",
+    type: "Board Display",
+    access: "Free",
+    status: "Imported",
+    description: "Open board-ready graph grids, coordinate axes, 2D shapes, and 3D solids for live classroom explanation.",
+    tags: ["classroom", "display", "graph grid", "coordinate axes", "geometry", "shapes", "solids", "board"],
+    toolPath: "tools/classroom-displays/index.html?v=classroom-displays-1",
+    imported: true,
+    teacherNotes: [
+      "Designed as a static board companion rather than a question generator.",
+      "Teachers can quickly show blank grids, coordinate axes, common 2D shapes, and 3D solids.",
+      "Use full-screen mode when projecting to the board for live explanation or annotation."
+    ]
+  },
+  {
     slug: "exit-ticket-game",
     title: "Math Exit Ticket Choice Board",
     category: "Classroom Tools",
@@ -1187,6 +1205,7 @@ const freeSampleTools = new Set([
   "averages-range",
   "discrete-random-variables",
   "twenty4",
+  "classroom-displays",
   "fractions-table",
   "math-in-a-minute",
   "interface-guide"
