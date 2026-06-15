@@ -1194,6 +1194,7 @@ const state = {
   level: "All",
   access: "All",
   toolAccess: {},
+  universityVideos: {},
   accessLoaded: false
 };
 
@@ -1658,6 +1659,66 @@ function restorePendingFocus() {
   return true;
 }
 
+const universitySections = [
+  {
+    title: "Getting Started",
+    intro: "For teachers opening Kaizen Maths for the first time.",
+    videos: [
+      { id: "what-kaizen-maths-is", title: "What Kaizen Maths Is", description: "A short introduction to Kaizen Maths as a virtual mathematics textbook for teachers." },
+      { id: "finding-a-topic", title: "Finding A Topic", description: "How to use the dashboard, Tool Library, search, and subject collections." },
+      { id: "using-a-topic-tool", title: "Using A Topic Tool", description: "How to choose levels, question types, generate new sets, show answers, and reveal worked steps." }
+    ]
+  },
+  {
+    title: "Classroom Workflow",
+    intro: "How to use Kaizen Maths during live teaching, modelling, checking, and practice.",
+    videos: [
+      { id: "practice-set-mode", title: "Practice Set Mode", description: "How to project a compact set of questions and use it for retrieval, fluency, and checking misconceptions." },
+      { id: "one-example-mode", title: "One Example Mode", description: "How to put one question on the board for teacher modelling and class discussion." },
+      { id: "classroom-displays", title: "Classroom Displays", description: "How to use graph grids, shapes, solids, probability templates, and statistics displays during live explanation." }
+    ]
+  },
+  {
+    title: "Worksheets And Assessment",
+    intro: "How to turn topic generators into homework, quizzes, assessments, and intervention sheets.",
+    videos: [
+      { id: "building-a-worksheet", title: "Building A Worksheet", description: "How to choose topics, levels, and question types from across the site." },
+      { id: "assessment-mode-and-marks", title: "Assessment Mode And Marks", description: "How to add marks and shape a worksheet into a quiz or test-style paper." },
+      { id: "using-the-answer-key", title: "Using The Answer Key", description: "How the separate teacher copy can support marking, feedback, and review." }
+    ]
+  },
+  {
+    title: "School And Department Use",
+    intro: "How a school or department can use Kaizen Maths consistently during the trial period.",
+    videos: [
+      { id: "using-kaizen-in-a-department", title: "Using Kaizen In A Department", description: "How a department can use shared routines across lessons, homework, intervention, and revision." },
+      { id: "supporting-less-confident-topics", title: "Supporting Less Confident Topics", description: "How worked examples, answers, and structured practice can support teacher confidence." },
+      { id: "giving-useful-feedback", title: "Giving Useful Feedback", description: "What to test during the trial period and how to report issues or suggestions clearly." }
+    ]
+  }
+];
+
+function allUniversityVideos() {
+  return universitySections.flatMap((section) => section.videos.map((video) => ({ ...video, section: section.title })));
+}
+
+function youtubeIdFromUrl(url) {
+  const value = String(url || "").trim();
+  if (!value) return "";
+  try {
+    const parsed = new URL(value);
+    if (parsed.hostname.includes("youtu.be")) return parsed.pathname.slice(1).split("/")[0];
+    if (parsed.searchParams.get("v")) return parsed.searchParams.get("v");
+    const embedMatch = parsed.pathname.match(/\/embed\/([^/?#]+)/);
+    if (embedMatch) return embedMatch[1];
+    const shortsMatch = parsed.pathname.match(/\/shorts\/([^/?#]+)/);
+    if (shortsMatch) return shortsMatch[1];
+  } catch (error) {
+    if (/^[a-zA-Z0-9_-]{8,}$/.test(value)) return value;
+  }
+  return "";
+}
+
 function bindAuthActions(root = document) {
   root.querySelectorAll("[data-auth-action='signin']").forEach((button) => {
     button.addEventListener("click", () => window.KaizenAuth?.signInWithGoogle?.());
@@ -1686,6 +1747,34 @@ async function saveToolAccess(slug, access) {
     .upsert({ tool_slug: slug, required_access: access }, { onConflict: "tool_slug" });
   if (error) throw error;
   state.toolAccess[slug] = access;
+}
+
+async function loadUniversityVideos({ rerender = false } = {}) {
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client) return;
+  try {
+    const { data, error } = await client.from("university_videos").select("slot_id, youtube_url");
+    if (error) throw error;
+    state.universityVideos = Object.fromEntries((data || []).map((row) => [row.slot_id, row.youtube_url || ""]));
+    if (rerender && routeParts()[0] === "kaizen-university") renderRoute();
+  } catch (error) {
+    console.warn("Kaizen University video settings unavailable:", error.message);
+  }
+}
+
+async function saveUniversityVideo(slotId, youtubeUrl) {
+  const client = await window.KaizenAuth?.getClient?.();
+  if (!client) throw new Error("Supabase is not available.");
+  const payload = {
+    slot_id: slotId,
+    youtube_url: youtubeUrl.trim(),
+    updated_at: new Date().toISOString()
+  };
+  const { error } = await client
+    .from("university_videos")
+    .upsert(payload, { onConflict: "slot_id" });
+  if (error) throw error;
+  state.universityVideos[slotId] = payload.youtube_url;
 }
 
 function statusLabel(tool) {
@@ -1869,52 +1958,32 @@ function renderSiteGuide() {
   `;
 }
 
-function videoPlaceholder(title, description, duration = "Video guide") {
+function videoCard(video, duration = "Video guide") {
+  const url = state.universityVideos[video.id] || "";
+  const youtubeId = youtubeIdFromUrl(url);
   return `
     <article class="video-card">
-      <div class="video-placeholder">
-        <span>▶</span>
-        <small>YouTube embed</small>
-      </div>
+      ${youtubeId
+        ? `<div class="video-embed"><iframe src="https://www.youtube.com/embed/${escapeHtml(youtubeId)}" title="${escapeHtml(video.title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`
+        : `<div class="video-placeholder"><span>▶</span><small>YouTube embed</small></div>`}
       <div class="video-card-copy">
         <span class="eyebrow">${duration}</span>
-        <h3>${title}</h3>
-        <p>${description}</p>
+        <h3>${escapeHtml(video.title)}</h3>
+        <p>${escapeHtml(video.description)}</p>
       </div>
     </article>
   `;
 }
 
 function renderKaizenUniversity() {
-  const gettingStarted = [
-    ["What Kaizen Maths Is", "A short introduction to Kaizen Maths as a virtual mathematics textbook for teachers."],
-    ["Finding A Topic", "How to use the dashboard, Tool Library, search, and subject collections."],
-    ["Using A Topic Tool", "How to choose levels, question types, generate new sets, show answers, and reveal worked steps."]
-  ];
-  const classroomWorkflow = [
-    ["Practice Set Mode", "How to project a compact set of questions and use it for retrieval, fluency, and checking misconceptions."],
-    ["One Example Mode", "How to put one question on the board for teacher modelling and class discussion."],
-    ["Classroom Displays", "How to use graph grids, shapes, solids, probability templates, and statistics displays during live explanation."]
-  ];
-  const worksheets = [
-    ["Building A Worksheet", "How to choose topics, levels, and question types from across the site."],
-    ["Assessment Mode And Marks", "How to add marks and shape a worksheet into a quiz or test-style paper."],
-    ["Using The Answer Key", "How the separate teacher copy can support marking, feedback, and review."]
-  ];
-  const school = [
-    ["Using Kaizen In A Department", "How a department can use shared routines across lessons, homework, intervention, and revision."],
-    ["Supporting Less Confident Topics", "How worked examples, answers, and structured practice can support teacher confidence."],
-    ["Giving Useful Feedback", "What to test during the trial period and how to report issues or suggestions clearly."]
-  ];
-
-  const section = (title, intro, videos) => `
+  const section = ({ title, intro, videos }) => `
     <section class="university-section">
       <div class="university-section-head">
         <h2>${title}</h2>
         <p>${intro}</p>
       </div>
       <div class="video-grid">
-        ${videos.map(([videoTitle, description]) => videoPlaceholder(videoTitle, description)).join("")}
+        ${videos.map((video) => videoCard(video)).join("")}
       </div>
     </section>
   `;
@@ -1939,10 +2008,7 @@ function renderKaizenUniversity() {
         <span>Assess</span>
       </div>
     </section>
-    ${section("Getting Started", "For teachers opening Kaizen Maths for the first time.", gettingStarted)}
-    ${section("Classroom Workflow", "How to use Kaizen Maths during live teaching, modelling, checking, and practice.", classroomWorkflow)}
-    ${section("Worksheets And Assessment", "How to turn topic generators into homework, quizzes, assessments, and intervention sheets.", worksheets)}
-    ${section("School And Department Use", "How a school or department can use Kaizen Maths consistently during the trial period.", school)}
+    ${universitySections.map(section).join("")}
   `;
 }
 
@@ -3192,6 +3258,24 @@ function renderAdmin() {
     `;
   }).join("");
 
+  const videoRows = universitySections.map((section) => `
+    <section class="admin-video-section">
+      <h3>${escapeHtml(section.title)}</h3>
+      ${section.videos.map((video) => {
+        const url = state.universityVideos[video.id] || "";
+        return `
+          <div class="admin-video-row">
+            <div>
+              <strong>${escapeHtml(video.title)}</strong>
+              <small>${escapeHtml(video.description)}</small>
+            </div>
+            <input type="url" class="admin-video-input" data-video-slot="${escapeHtml(video.id)}" value="${escapeHtml(url)}" placeholder="Paste YouTube link or video ID">
+          </div>
+        `;
+      }).join("")}
+    </section>
+  `).join("");
+
   app.innerHTML = `
     ${pageHeader("Admin", "Choose which topics are free samples and which require trial, pro, school, or admin access.")}
     <section class="panel admin-panel">
@@ -3213,6 +3297,20 @@ function renderAdmin() {
         </table>
       </div>
     </section>
+    <section class="panel admin-panel">
+      <div class="admin-toolbar">
+        <div>
+          <span class="eyebrow">Kaizen University</span>
+          <h2>Video Embeds</h2>
+          <p>Paste the correct YouTube link beside each training video slot. The public Kaizen University page will embed the saved video automatically.</p>
+        </div>
+        <button class="button primary" id="saveUniversityVideos" type="button">Save Video Links</button>
+      </div>
+      <p class="admin-status" id="adminVideoStatus">Paste full YouTube links, unlisted links, embed links, or video IDs.</p>
+      <div class="admin-video-list">
+        ${videoRows}
+      </div>
+    </section>
   `;
   bindAdmin();
 }
@@ -3232,6 +3330,28 @@ function bindAdmin() {
       renderRoute();
     } catch (error) {
       status.textContent = `Could not save: ${error.message}`;
+      button.disabled = false;
+    }
+  });
+
+  const videoStatus = document.getElementById("adminVideoStatus");
+  document.getElementById("saveUniversityVideos")?.addEventListener("click", async () => {
+    const button = document.getElementById("saveUniversityVideos");
+    const inputs = [...document.querySelectorAll(".admin-video-input")];
+    button.disabled = true;
+    videoStatus.textContent = "Saving video links...";
+    try {
+      for (const input of inputs) {
+        const url = input.value.trim();
+        if (url && !youtubeIdFromUrl(url)) {
+          throw new Error(`"${input.closest(".admin-video-row")?.querySelector("strong")?.textContent || input.dataset.videoSlot}" does not look like a valid YouTube link or ID.`);
+        }
+        await saveUniversityVideo(input.dataset.videoSlot, url);
+      }
+      videoStatus.textContent = "Saved. Kaizen University video links are now live.";
+      button.disabled = false;
+    } catch (error) {
+      videoStatus.textContent = `Could not save: ${error.message}`;
       button.disabled = false;
     }
   });
@@ -3619,11 +3739,13 @@ window.addEventListener("hashchange", renderRoute);
 window.addEventListener("kaizen-auth-change", () => {
   updateAdminNavVisibility();
   loadToolAccessSettings({ rerender: true });
+  loadUniversityVideos({ rerender: true });
 });
 
 window.setTimeout(() => {
   updateAdminNavVisibility();
   loadToolAccessSettings({ rerender: true });
+  loadUniversityVideos({ rerender: true });
 }, 1200);
 
 renderRoute();

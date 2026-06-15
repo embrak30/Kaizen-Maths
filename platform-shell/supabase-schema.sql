@@ -114,3 +114,39 @@ create policy "Admins can delete tool access"
 on public.tool_access
 for delete
 using (public.is_admin());
+
+create table if not exists public.university_videos (
+  slot_id text primary key,
+  youtube_url text,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.university_videos enable row level security;
+
+grant select on public.university_videos to anon, authenticated;
+grant insert, update, delete on public.university_videos to authenticated;
+
+drop policy if exists "Anyone can read university videos" on public.university_videos;
+create policy "Anyone can read university videos"
+on public.university_videos
+for select
+using (true);
+
+drop policy if exists "Admins can insert university videos" on public.university_videos;
+create policy "Admins can insert university videos"
+on public.university_videos
+for insert
+with check (public.is_admin());
+
+drop policy if exists "Admins can update university videos" on public.university_videos;
+create policy "Admins can update university videos"
+on public.university_videos
+for update
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Admins can delete university videos" on public.university_videos;
+create policy "Admins can delete university videos"
+on public.university_videos
+for delete
+using (public.is_admin());

@@ -830,6 +830,18 @@ a {
   font-weight: 750;
 }
 
+.video-embed {
+  aspect-ratio: 16 / 9;
+  background: #172f4a;
+}
+
+.video-embed iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+}
+
 .video-card-copy {
   padding: 14px;
 }
@@ -1247,6 +1259,51 @@ a {
   border-radius: 6px;
   padding: 8px 10px;
   background: white;
+}
+
+.admin-video-list {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-video-section {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.admin-video-section h3 {
+  margin: 0;
+  color: #282450;
+}
+
+.admin-video-row {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.85fr) minmax(260px, 1.15fr);
+  gap: 12px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #e6edf5;
+  border-radius: 7px;
+  background: white;
+}
+
+.admin-video-row small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.admin-video-input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 11px;
+  font: inherit;
 }
 
 .upgrade-page {
@@ -2562,6 +2619,10 @@ sup .worksheet-fraction span:last-child {
 
   .worksheet-section-editors input {
     width: 100%;
+  }
+
+  .admin-video-row {
+    grid-template-columns: 1fr;
   }
 
   .worksheet-question-marks {
