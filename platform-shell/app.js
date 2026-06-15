@@ -2819,6 +2819,63 @@ function renderTeacher() {
   `;
 }
 
+function renderSchools() {
+  app.innerHTML = `
+    ${pageHeader(
+      "School Access",
+      "School licences give maths departments shared access to Kaizen Maths as a virtual mathematics textbook: unlimited topic questions, board-ready generators, worked solutions, worksheets, and assessment practice for classroom use.",
+      `<a class="button" href="#/upgrade">Back to Upgrade</a>`
+    )}
+    <section class="upgrade-page">
+      <article class="panel trial-notice">
+        <span class="eyebrow">Testing Phase</span>
+        <h2>Schools can explore the full site until 30 June 2026</h2>
+        <p>During the testing phase, teachers can use the full library without payment. This gives departments time to check coverage, try the classroom tools, build worksheets, and decide whether Kaizen Maths would support regular teaching across the school.</p>
+      </article>
+
+      <section class="pricing-grid" aria-label="School licence options">
+        <article class="panel pricing-card">
+          <span class="eyebrow">Small Department</span>
+          <h2>Up to 5 Teachers</h2>
+          <p class="pricing-price">£299/year</p>
+          <p>Designed for a small maths department or pilot group. Each teacher can sign in, access the full tool library, generate classroom questions, and create worksheets from the same shared platform.</p>
+        </article>
+        <article class="panel pricing-card featured">
+          <span class="eyebrow">Department Licence</span>
+          <h2>6-15 Teachers</h2>
+          <p class="pricing-price">From £499/year</p>
+          <p>Suitable for larger departments that want consistent access across year groups, intervention groups, revision lessons, homework, and assessment preparation.</p>
+        </article>
+        <article class="panel pricing-card">
+          <span class="eyebrow">Whole-School Access</span>
+          <h2>16+ Teachers</h2>
+          <p class="pricing-price">By quote</p>
+          <p>For larger schools, trusts, or multi-site access. Pricing can be agreed around the number of teacher accounts, rollout needs, and whether the school wants a longer pilot period.</p>
+        </article>
+      </section>
+
+      <section class="split-grid">
+        <div class="panel">
+          <h2>What A School Licence Provides</h2>
+          <p>A school licence allows multiple teachers in the same school to use Kaizen Maths for classroom instruction, practice, differentiation, homework, assessment, intervention, and revision. Teachers remain in control of the lesson and choose the topics, levels, timing, and worked examples they want students to see.</p>
+        </div>
+        <div class="panel">
+          <h2>Useful For Departments</h2>
+          <div class="badge-row">
+            <span class="badge">Shared topic library</span>
+            <span class="badge">Board-ready practice</span>
+            <span class="badge">Worked solutions</span>
+            <span class="badge">Homework worksheets</span>
+            <span class="badge">Assessment practice</span>
+            <span class="badge">Intervention</span>
+          </div>
+          <p>Kaizen Maths can support experienced teachers who want quick question access, and less confident teachers who benefit from structured examples, answers, and step-by-step working.</p>
+        </div>
+      </section>
+    </section>
+  `;
+}
+
 function renderUpgrade() {
   const role = currentUserRole();
   const profile = authState().profile || {};
@@ -2875,10 +2932,10 @@ function renderUpgrade() {
         </article>
         <article class="panel pricing-card">
           <span class="eyebrow">School Licence</span>
-          <h2>School Pilot</h2>
+          <h2>Department Access</h2>
           <p class="pricing-price">From £299/year</p>
-          <p>Manual setup for departments or whole-school access during the pilot stage. Best for schools that want several teachers to test the full virtual textbook.</p>
-          <a class="button" href="#/teacher">View Teacher Notes</a>
+          <p>For schools that want several teachers to use the full virtual mathematics textbook across lessons, homework, intervention, revision, and assessment.</p>
+          <a class="button" href="#/schools">Notes For Schools</a>
         </article>
       </section>
 
@@ -3380,6 +3437,8 @@ function renderRoute() {
     renderToolLibrary();
   } else if (parts[0] === "collections" && parts[1]) {
     renderToolLibrary(parts[1]);
+  } else if (parts[0] === "schools") {
+    renderSchools();
   } else if (parts[0] === "teacher") {
     renderTeacher();
   } else if (parts[0] === "upgrade") {
