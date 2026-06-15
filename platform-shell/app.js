@@ -772,6 +772,26 @@ const tools = [
     ]
   },
   {
+    slug: "kaizen-large-data-set",
+    title: "Kaizen Large Data Set",
+    category: "Statistics",
+    level: "A-Level",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate large-data-set practice using a Kaizen-owned training dataset for variables, units, summaries, comparisons, graphs, correlation, regression, and exam-style interpretation.",
+    tags: ["statistics", "large data set", "A-Level", "summary statistics", "correlation", "regression", "graphs", "interpretation"],
+    toolPath: "tools/kaizen-large-data-set/index.html?v=large-data-set-2",
+    imported: true,
+    teacherNotes: [
+      "Uses an original Kaizen training dataset rather than copying any exam-board large data set.",
+      "Level 1 focuses on context, variables, units, rows, missing values, and outliers.",
+      "Level 2 uses summary statistics to compare groups and interpret spread.",
+      "Level 3 covers graph choice, correlation, regression, prediction, and reliability.",
+      "Level 4 asks for exam-style written interpretation, limitations, and contextual conclusions."
+    ]
+  },
+  {
     slug: "tree-diagrams-conditional-probability",
     title: "Tree Diagrams & Conditional Probability",
     category: "Statistics",

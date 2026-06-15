@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kaizen Large Data Set Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:white;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:white;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:white;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1240px;margin:0 auto;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:white;padding:24px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}.header h1{font-size:2.15em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:17px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:700;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:white;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px 24px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.25em}.level-info p{color:#718096;font-size:.98em}.dropdown-container{margin-top:9px;display:flex;flex-wrap:wrap;gap:10px}.dropdown-container.visible{display:flex}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:white;cursor:pointer;min-width:300px}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:700;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
+    .problems-section{padding:18px 24px 24px;min-height:520px}.dataset-card{background:#eef9fb;border-left:4px solid #17b3b0;border-radius:7px;padding:12px 14px;margin-bottom:12px;color:#1a365d}.dataset-card strong{color:#0f3f62}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:650}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.context{background:#38a169}.problem-set-header.summary{background:#3182ce}.problem-set-header.modelling{background:#805ad5}.problem-set-header.interpretation{background:#d69e2e}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:10px}.problem-item{background:#f7fafc;padding:13px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.13em;color:#1a365d;font-weight:500;line-height:1.38;min-width:0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.96em;display:none;text-align:center;max-width:260px}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .data-table{border-collapse:collapse;margin:8px 0;background:white;border-radius:6px;overflow:hidden;max-width:100%;font-size:.9em}.data-table th,.data-table td{padding:6px 9px;border:1px solid #cbd5e0;text-align:center}.data-table th{background:#1a365d;color:white;font-weight:700}.table-wrap{overflow-x:auto;margin-top:8px}.steps-section{grid-column:1/-1;margin-top:10px;padding:12px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#38a169;margin-bottom:8px;font-size:1em}.solution-steps{font-size:1em;line-height:1.45}.step{margin:6px 0;color:#1a365d}.step-equation{font-weight:650;color:#805ad5;text-align:center;margin:8px 0;font-size:1.05em}.final-answer{background:#38a169;color:white;padding:8px 15px;border-radius:6px;text-align:center;font-weight:bold;font-size:1.02em;margin-top:10px}.note{color:#718096;font-size:.9em}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
+    @media (max-width:900px){.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.type-dropdown{min-width:260px;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool uses a Kaizen-owned training data set so teachers can practise large-data-set skills without copying an exam-board data file.</p>
+      <h3>Dataset Context</h3>
+      <p>Teachers can choose from four Kaizen-owned training data sets: weather and climate, school attendance, transport and travel, and health and fitness. Each context has variables, rows, summaries, relationships, and interpretation prompts.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Understand variables, units, rows, filters, missing values, and outliers.</li>
+        <li><strong>Level 2:</strong> Use summary statistics to compare groups and interpret averages and spread.</li>
+        <li><strong>Level 3:</strong> Interpret graph choices, correlation, regression, and predictions.</li>
+        <li><strong>Level 4:</strong> Mixed exam-style interpretation with limitations and conclusions in context.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Students should refer to the context in every written conclusion.</li>
+        <li>Emphasise units and whether a variable is continuous, discrete, categorical, or derived.</li>
+        <li>For comparison questions, students should quote evidence and comment on both centre and spread when relevant.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header"><h1>Kaizen Large Data Set</h1></section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Context</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Summaries</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Graphs & Models</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Exam Interpretation</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Context</h3>
+        <p id="level-description">Understand variables, units, rows, filters, missing values, and outliers.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="dataset-dropdown" onchange="datasetChanged()">
+            <option value="weather">Weather & Climate Data</option>
+            <option value="school">School & Attendance Data</option>
+            <option value="transport">Transport & Travel Data</option>
+            <option value="health">Health & Fitness Data</option>
+          </select>
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="variables_units">Variables and units</option>
+            <option value="row_context">Reading rows in context</option>
+            <option value="cleaning">Missing values and outliers</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div class="dataset-card" id="dataset-card"></div>
+      <div class="set-instruction" id="set-instruction">Choose a question type to practise large-data-set statistics.</div>
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+    let currentDatasetKey = "weather";
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Context",
+        description: "Understand variables, units, rows, filters, missing values, and outliers.",
+        options: [["variables_units","Variables and units"],["row_context","Reading rows in context"],["cleaning","Missing values and outliers"]]
+      },
+      2: {
+        title: "Level 2: Summary Statistics",
+        description: "Compare groups using averages, spread, quartiles, and standard deviation.",
+        options: [["summary_compare","Compare summary statistics"],["quartiles_iqr","Quartiles and IQR"],["standard_deviation","Standard deviation in context"]]
+      },
+      3: {
+        title: "Level 3: Graphs & Models",
+        description: "Choose graphs, interpret correlation, use regression, and judge predictions.",
+        options: [["graph_choice","Choosing suitable graphs"],["correlation","Correlation and regression"],["prediction","Prediction and extrapolation"]]
+      },
+      4: {
+        title: "Level 4: Exam Interpretation",
+        description: "Mixed large-data-set questions requiring written conclusions and limitations.",
+        options: [["mixed_interpretation","Mixed interpretation"],["limitations","Limitations and sampling"],["exam_set","Exam-style mixed set"]]
+      }
+    };
+
+    const datasetBank = {
+      weather: {
+        title: "Weather & Climate Data",
+        description: "monthly weather observations for five fictional UK towns from 2022-2025",
+        rowPrompt: "Write one sentence interpreting the rainfall and sunshine values in context.",
+        tableHeaders: ["Town","Month","Year","Mean temp","Rainfall","Sunshine","Wind","Humidity"],
+        rowCells: (row) => [row.place,row.month,row.year,row.temp + " C",row.rain + " mm",row.sun + " h",row.wind + " km/h",row.humidity + "%"],
+        rowSteps: (row) => [
+          "The row is for " + row.place + " in " + row.month + " " + row.year + ".",
+          "Rainfall is " + row.rain + " mm, so the town recorded " + row.rain + " mm of rain that month.",
+          "Sunshine is " + row.sun + " hours, so there were " + row.sun + " recorded sunshine hours.",
+          "Final sentence: In " + row.month + " " + row.year + ", " + row.place + " recorded " + row.rain + " mm of rainfall and " + row.sun + " hours of sunshine."
+        ],
+        rowAnswer: (row) => row.rain + " mm rainfall; " + row.sun + " hours sunshine",
+        variables: [
+          {label:"mean temperature", unit:"degrees Celsius", type:"continuous"},
+          {label:"rainfall", unit:"millimetres", type:"continuous"},
+          {label:"hours of sunshine", unit:"hours", type:"continuous"},
+          {label:"wind speed", unit:"kilometres per hour", type:"continuous"},
+          {label:"relative humidity", unit:"percentage", type:"continuous percentage"}
+        ],
+        rows: [
+          {place:"Asterford", month:"March", year:2024, temp:9.8, rain:52, sun:118, wind:21, humidity:78},
+          {place:"Brimley", month:"June", year:2024, temp:17.9, rain:31, sun:196, wind:14, humidity:63},
+          {place:"Cairnport", month:"November", year:2023, temp:7.2, rain:89, sun:64, wind:29, humidity:86},
+          {place:"Dunmere", month:"January", year:2025, temp:4.1, rain:74, sun:49, wind:18, humidity:82},
+          {place:"Eastwick", month:"September", year:2022, temp:15.3, rain:44, sun:151, wind:16, humidity:70}
+        ],
+        summaries: [
+          {group:"Coastal towns", variable:"rainfall", mean:76.4, median:73, sd:21.6, q1:59, q3:91, n:96, context:"coastal monthly rainfall"},
+          {group:"Inland towns", variable:"rainfall", mean:54.8, median:51, sd:18.1, q1:42, q3:67, n:144, context:"inland monthly rainfall"},
+          {group:"Winter months", variable:"mean temperature", mean:5.8, median:5.5, sd:2.3, q1:4.1, q3:7.2, n:80, context:"winter monthly temperature"},
+          {group:"Summer months", variable:"mean temperature", mean:17.6, median:17.9, sd:2.0, q1:16.2, q3:18.8, n:80, context:"summer monthly temperature"}
+        ],
+        regressions: [
+          {x:"rainfall (mm)", y:"sunshine hours", r:-0.78, equation:"sunshine = 210 - 1.55(rainfall)", xvalue:80, pred:86.0, meaning:"Higher rainfall is associated with fewer sunshine hours."},
+          {x:"wind speed (km/h)", y:"rainfall (mm)", r:0.52, equation:"rainfall = 18.6 + 2.15(wind speed)", xvalue:24, pred:70.2, meaning:"Higher wind speed is associated with higher rainfall in this sample."}
+        ],
+        cleaningIssues: [
+          {q:"A rainfall value is recorded as -12 mm.", a:"This is impossible; rainfall cannot be negative.", fix:"Check the original source or mark the value as an error before analysis."},
+          {q:"A month has no recorded value for hours of sunshine.", a:"This is a missing value.", fix:"Do not treat it as zero; decide whether to omit the row or use a justified imputation method."},
+          {q:"One wind speed is recorded as 410 km/h when nearby months are around 10-35 km/h.", a:"This is a possible outlier or data-entry error.", fix:"Investigate before removing it; it may be a misplaced digit."}
+        ],
+        graphPrompts: [
+          {q:"Compare rainfall for coastal and inland towns.", graph:"side-by-side box plots", why:"they show median, spread, skew, and outliers for two groups"},
+          {q:"Show the distribution of rainfall for all monthly observations.", graph:"histogram", why:"rainfall is continuous and grouped intervals show the shape of the distribution"},
+          {q:"Investigate the relationship between rainfall and sunshine hours.", graph:"scatter diagram", why:"there are two numerical variables and the relationship is the focus"}
+        ],
+        limitations: [
+          "The data only cover five fictional towns, so conclusions may not apply to all UK towns.",
+          "Monthly averages hide day-to-day variation and extreme weather.",
+          "Correlation between weather variables does not prove that one causes the other."
+        ]
+      },
+      school: {
+        title: "School & Attendance Data",
+        description: "termly school data for fictional year groups, classes, attendance, revision uptake, and assessment outcomes",
+        rowPrompt: "Write one sentence interpreting the attendance and revision uptake values in context.",
+        tableHeaders: ["School","Term","Year group","Attendance","Revision uptake","Homework","Assessment"],
+        rowCells: (row) => [row.place,row.month,row.year,row.attendance + "%",row.revision + "%",row.homework + "%",row.score + "%"],
+        rowSteps: (row) => [
+          "The row is for " + row.place + ", " + row.year + ", in " + row.month + ".",
+          "Attendance is " + row.attendance + "%, so that percentage of sessions were attended.",
+          "Revision uptake is " + row.revision + "%, so that percentage of students attended revision sessions.",
+          "Final sentence: In " + row.month + ", " + row.place + " " + row.year + " had " + row.attendance + "% attendance and " + row.revision + "% revision uptake."
+        ],
+        rowAnswer: (row) => row.attendance + "% attendance; " + row.revision + "% revision uptake",
+        variables: [
+          {label:"attendance", unit:"percentage", type:"continuous percentage"},
+          {label:"revision-session uptake", unit:"percentage of students", type:"continuous percentage"},
+          {label:"homework completion", unit:"percentage", type:"continuous percentage"},
+          {label:"assessment score", unit:"percentage", type:"continuous percentage"},
+          {label:"year group", unit:"category", type:"categorical"}
+        ],
+        rows: [
+          {place:"Northgate", month:"Autumn", year:"Year 9", attendance:93.8, revision:31, homework:78, score:64},
+          {place:"Brookfield", month:"Spring", year:"Year 11", attendance:91.4, revision:58, homework:84, score:72},
+          {place:"Lakeside", month:"Summer", year:"Year 10", attendance:95.2, revision:42, homework:81, score:69},
+          {place:"Hillcrest", month:"Autumn", year:"Year 8", attendance:94.6, revision:24, homework:76, score:61},
+          {place:"Redmoor", month:"Spring", year:"Year 11", attendance:92.1, revision:63, homework:87, score:76}
+        ],
+        summaries: [
+          {group:"Year 11", variable:"assessment score", mean:73.2, median:74, sd:8.4, q1:68, q3:79, n:72, context:"Year 11 assessment scores"},
+          {group:"Year 10", variable:"assessment score", mean:66.8, median:67, sd:9.1, q1:60, q3:73, n:78, context:"Year 10 assessment scores"},
+          {group:"High revision uptake", variable:"assessment score", mean:76.5, median:77, sd:7.2, q1:72, q3:82, n:54, context:"scores when revision uptake was high"},
+          {group:"Low revision uptake", variable:"assessment score", mean:62.4, median:63, sd:10.5, q1:55, q3:70, n:58, context:"scores when revision uptake was low"}
+        ],
+        regressions: [
+          {x:"revision uptake (%)", y:"assessment score (%)", r:0.68, equation:"score = 52.4 + 0.74(revision uptake)", xvalue:45, pred:85.7, meaning:"Higher revision-session uptake is associated with higher assessment scores."},
+          {x:"homework completion (%)", y:"assessment score (%)", r:0.61, equation:"score = 18.5 + 0.62(homework completion)", xvalue:80, pred:68.1, meaning:"Higher homework completion is associated with higher assessment scores."}
+        ],
+        cleaningIssues: [
+          {q:"A class has attendance recorded as 106%.", a:"This is impossible because attendance percentages cannot exceed 100%.", fix:"Check the original register or correct the entry before analysis."},
+          {q:"One assessment score is missing for a class.", a:"This is a missing value.", fix:"Do not include it in mean calculations unless a justified method is used."},
+          {q:"Year 10 is entered as Y10 in some rows and Year 10 in others.", a:"This is an inconsistent category label.", fix:"Standardise the label before filtering or grouping."}
+        ],
+        graphPrompts: [
+          {q:"Compare assessment scores for Year 10 and Year 11.", graph:"side-by-side box plots", why:"they compare centre and spread for two groups"},
+          {q:"Show the distribution of assessment scores.", graph:"histogram", why:"scores are numerical and grouped intervals show the distribution"},
+          {q:"Investigate the relationship between revision uptake and assessment score.", graph:"scatter diagram", why:"both variables are numerical and the relationship is being investigated"}
+        ],
+        limitations: [
+          "The data are from fictional schools and may not represent all schools.",
+          "Termly summaries hide differences between individual students.",
+          "Correlation between revision uptake and scores does not prove revision sessions caused the higher scores."
+        ]
+      },
+      transport: {
+        title: "Transport & Travel Data",
+        description: "monthly transport data for fictional routes, journey times, passenger numbers, punctuality, distance, and delays",
+        rowPrompt: "Write one sentence interpreting the journey time and punctuality values in context.",
+        tableHeaders: ["Route","Month","Year","Distance","Journey time","Passengers","Punctuality","Delay"],
+        rowCells: (row) => [row.place,row.month,row.year,row.distance + " km",row.time + " min",row.passengers + "k",row.punctuality + "%",row.delay + " min"],
+        rowSteps: (row) => [
+          "The row is for route " + row.place + " in " + row.month + " " + row.year + ".",
+          "Journey time is " + row.time + " minutes.",
+          "Punctuality is " + row.punctuality + "%, so that percentage of services arrived on time.",
+          "Final sentence: In " + row.month + " " + row.year + ", route " + row.place + " had an average journey time of " + row.time + " minutes and punctuality of " + row.punctuality + "%."
+        ],
+        rowAnswer: (row) => row.time + " minutes; " + row.punctuality + "% punctuality",
+        variables: [
+          {label:"journey time", unit:"minutes", type:"continuous"},
+          {label:"punctuality", unit:"percentage of services on time", type:"continuous percentage"},
+          {label:"passenger numbers", unit:"thousands of passengers", type:"discrete after rounding"},
+          {label:"route distance", unit:"kilometres", type:"continuous"},
+          {label:"average delay", unit:"minutes", type:"continuous"}
+        ],
+        rows: [
+          {place:"T12", month:"March", year:2024, distance:14, time:38, passengers:126, punctuality:84, delay:6},
+          {place:"R7", month:"June", year:2024, distance:8, time:24, passengers:98, punctuality:91, delay:3},
+          {place:"C3", month:"November", year:2023, distance:22, time:57, passengers:151, punctuality:76, delay:11},
+          {place:"M5", month:"January", year:2025, distance:18, time:49, passengers:132, punctuality:80, delay:9},
+          {place:"A2", month:"September", year:2022, distance:11, time:31, passengers:109, punctuality:88, delay:4}
+        ],
+        summaries: [
+          {group:"Urban routes", variable:"journey time", mean:42.6, median:41, sd:9.4, q1:35, q3:49, n:96, context:"urban route journey times"},
+          {group:"Suburban routes", variable:"journey time", mean:31.8, median:31, sd:7.1, q1:27, q3:36, n:84, context:"suburban route journey times"},
+          {group:"Peak services", variable:"average delay", mean:8.7, median:8, sd:4.2, q1:6, q3:11, n:72, context:"peak-service delays"},
+          {group:"Off-peak services", variable:"average delay", mean:4.1, median:4, sd:2.3, q1:2, q3:6, n:76, context:"off-peak service delays"}
+        ],
+        regressions: [
+          {x:"route distance (km)", y:"journey time (min)", r:0.81, equation:"journey time = 9.5 + 2.1(distance)", xvalue:16, pred:43.1, meaning:"Longer route distance is associated with longer journey time."},
+          {x:"average delay (min)", y:"punctuality (%)", r:-0.74, equation:"punctuality = 95.8 - 1.72(delay)", xvalue:8, pred:82.0, meaning:"Higher average delay is associated with lower punctuality."}
+        ],
+        cleaningIssues: [
+          {q:"A journey time is recorded as -18 minutes.", a:"This is impossible because journey time cannot be negative.", fix:"Check the original source or mark the value as an error."},
+          {q:"One route has passenger numbers missing for April.", a:"This is a missing value.", fix:"Do not treat it as zero unless the service did not operate and that is confirmed."},
+          {q:"A route code is entered as R7 in some rows and Route 7 in others.", a:"This is an inconsistent category label.", fix:"Standardise the route code before grouping."}
+        ],
+        graphPrompts: [
+          {q:"Compare journey times for urban and suburban routes.", graph:"side-by-side box plots", why:"they compare centre and spread for two groups"},
+          {q:"Show the distribution of average delays.", graph:"histogram", why:"delay is numerical and grouped intervals show the distribution"},
+          {q:"Investigate the relationship between route distance and journey time.", graph:"scatter diagram", why:"both variables are numerical and the relationship is being investigated"}
+        ],
+        limitations: [
+          "The data only cover selected fictional routes, so conclusions may not apply to all transport routes.",
+          "Monthly averages can hide daily disruptions or special events.",
+          "Correlation between distance and journey time does not capture all causes, such as traffic or roadworks."
+        ]
+      },
+      health: {
+        title: "Health & Fitness Data",
+        description: "weekly fitness observations for fictional participant groups, including steps, sleep, heart rate, exercise time, and recovery",
+        rowPrompt: "Write one sentence interpreting the steps and resting heart rate values in context.",
+        tableHeaders: ["Group","Week","Age band","Steps","Sleep","Exercise","Heart rate","Recovery"],
+        rowCells: (row) => [row.place,row.month,row.year,row.steps,row.sleep + " h",row.exercise + " min",row.heart + " bpm",row.recovery + " min"],
+        rowSteps: (row) => [
+          "The row is for " + row.place + " in week " + row.month + ", age band " + row.year + ".",
+          "Daily steps are recorded as " + row.steps + ".",
+          "Resting heart rate is " + row.heart + " bpm.",
+          "Final sentence: In week " + row.month + ", the " + row.place + " group recorded " + row.steps + " daily steps and a resting heart rate of " + row.heart + " bpm."
+        ],
+        rowAnswer: (row) => row.steps + " steps; " + row.heart + " bpm",
+        variables: [
+          {label:"daily steps", unit:"steps per day", type:"discrete"},
+          {label:"sleep duration", unit:"hours", type:"continuous"},
+          {label:"exercise time", unit:"minutes per week", type:"continuous"},
+          {label:"resting heart rate", unit:"beats per minute", type:"discrete after rounding"},
+          {label:"recovery time", unit:"minutes", type:"continuous"}
+        ],
+        rows: [
+          {place:"Group A", month:"12", year:"16-18", steps:8400, sleep:7.2, exercise:145, heart:68, recovery:12},
+          {place:"Group B", month:"12", year:"19-25", steps:9200, sleep:6.8, exercise:180, heart:64, recovery:10},
+          {place:"Group C", month:"13", year:"26-35", steps:7600, sleep:7.0, exercise:122, heart:72, recovery:15},
+          {place:"Group D", month:"13", year:"36-45", steps:6900, sleep:6.5, exercise:98, heart:75, recovery:18},
+          {place:"Group E", month:"14", year:"46-55", steps:7100, sleep:6.9, exercise:110, heart:73, recovery:17}
+        ],
+        summaries: [
+          {group:"High exercise group", variable:"resting heart rate", mean:64.2, median:64, sd:5.1, q1:61, q3:67, n:58, context:"resting heart rate for high exercise participants"},
+          {group:"Low exercise group", variable:"resting heart rate", mean:73.6, median:74, sd:6.8, q1:69, q3:78, n:62, context:"resting heart rate for low exercise participants"},
+          {group:"Under 25", variable:"daily steps", mean:9100, median:8950, sd:1650, q1:7800, q3:10300, n:48, context:"daily steps for participants under 25"},
+          {group:"Over 35", variable:"daily steps", mean:7200, median:7100, sd:1420, q1:6100, q3:8200, n:52, context:"daily steps for participants over 35"}
+        ],
+        regressions: [
+          {x:"exercise time (minutes)", y:"resting heart rate (bpm)", r:-0.63, equation:"heart rate = 82.1 - 0.092(exercise time)", xvalue:150, pred:68.3, meaning:"Higher exercise time is associated with lower resting heart rate."},
+          {x:"sleep duration (hours)", y:"recovery time (min)", r:-0.51, equation:"recovery time = 33.4 - 2.45(sleep duration)", xvalue:7, pred:16.3, meaning:"Longer sleep duration is associated with shorter recovery time."}
+        ],
+        cleaningIssues: [
+          {q:"A participant has sleep duration recorded as 27 hours.", a:"This is impossible for one day and is likely a data-entry error.", fix:"Check the source before analysis."},
+          {q:"A resting heart rate value is missing for one group.", a:"This is a missing value.", fix:"Do not include it in calculations unless a justified method is used."},
+          {q:"Age band 16-18 is entered as 16 to 18 in some rows.", a:"This is an inconsistent category label.", fix:"Standardise the category before grouping."}
+        ],
+        graphPrompts: [
+          {q:"Compare resting heart rate for high and low exercise groups.", graph:"side-by-side box plots", why:"they compare centre and spread for two groups"},
+          {q:"Show the distribution of daily steps.", graph:"histogram", why:"steps are numerical and grouped intervals show the distribution"},
+          {q:"Investigate the relationship between exercise time and resting heart rate.", graph:"scatter diagram", why:"both variables are numerical and the relationship is being investigated"}
+        ],
+        limitations: [
+          "The data are from fictional participant groups and may not represent the general population.",
+          "Weekly summaries hide day-to-day changes.",
+          "Correlation between exercise and heart rate does not prove causation."
+        ]
+      }
+    };
+
+    function toggleSidebar(){document.getElementById("sidebar").classList.toggle("open");document.querySelector(".sidebar-overlay").classList.toggle("active")}
+    function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.querySelector(".sidebar-overlay").classList.remove("active")}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function randomElement(array){return array[Math.floor(Math.random()*array.length)]}
+    function fmt(value, dp=1){return Number(value).toFixed(dp)}
+    function currentDataset(){return datasetBank[currentDatasetKey] || datasetBank.weather}
+
+    function updateDatasetCard() {
+      const dataset = currentDataset();
+      const card = document.getElementById("dataset-card");
+      if (card) {
+        card.innerHTML = "<strong>" + dataset.title + ":</strong> " + dataset.description + ". This is a Kaizen-owned training data set, not an exam-board file.";
+      }
+    }
+
+    function dataTable(headers, bodyRows) {
+      return '<div class="table-wrap"><table class="data-table"><tr>' + headers.map((h) => "<th>" + h + "</th>").join("") + "</tr>" + bodyRows.map((row) => "<tr>" + row.map((cell) => "<td>" + cell + "</td>").join("") + "</tr>").join("") + "</table></div>";
+    }
+
+    function summaryTable(a, b) {
+      return dataTable(["Group", "n", "Mean", "Median", "SD", "Q1", "Q3"], [
+        [a.group, a.n, a.mean, a.median, a.sd, a.q1, a.q3],
+        [b.group, b.n, b.mean, b.median, b.sd, b.q1, b.q3]
+      ]);
+    }
+
+    function generateProblem() {
+      switch(currentType) {
+        case "variables_units": return genVariableUnit();
+        case "row_context": return genRowContext();
+        case "cleaning": return genCleaning();
+        case "summary_compare": return genSummaryCompare();
+        case "quartiles_iqr": return genQuartiles();
+        case "standard_deviation": return genStandardDeviation();
+        case "graph_choice": return genGraphChoice();
+        case "correlation": return genCorrelation();
+        case "prediction": return genPrediction();
+        case "mixed_interpretation": return genMixedInterpretation();
+        case "limitations": return genLimitations();
+        case "exam_set": return genExamSet();
+        default: return genVariableUnit();
+      }
+    }
+
+    function genVariableUnit() {
+      const variable = randomElement(currentDataset().variables);
+      return {
+        badge:"context",
+        equation:"The data set contains a variable called <strong>" + variable.label + "</strong>. State a suitable unit and say whether the variable is categorical, discrete, or continuous.",
+        answer:variable.unit + "; " + variable.type,
+        steps:[
+          "Identify what is being measured: " + variable.label + ".",
+          "Use the data dictionary to state the unit: " + variable.unit + ".",
+          "Classify the variable from how it is measured: " + variable.type + "."
+        ]
+      };
+    }
+
+    function genRowContext() {
+      const dataset = currentDataset();
+      const row = randomElement(dataset.rows);
+      const table = dataTable(dataset.tableHeaders, [dataset.rowCells(row)]);
+      return {
+        badge:"context",
+        equation:"Use the row from the " + dataset.title + ". " + dataset.rowPrompt + table,
+        answer:dataset.rowAnswer(row),
+        steps:dataset.rowSteps(row)
+      };
+    }
+
+    function genCleaning() {
+      const issue = randomElement(currentDataset().cleaningIssues);
+      return {
+        badge:"context",
+        equation:issue.q + " Explain the problem and suggest a sensible action before analysis.",
+        answer:issue.a,
+        steps:["Identify the type of data issue.", issue.a, issue.fix, "A clear cleaning decision should be recorded so later conclusions are transparent."]
+      };
+    }
+
+    function genSummaryCompare() {
+      const summaries = currentDataset().summaries;
+      const pair = randomElement([[summaries[0],summaries[1]],[summaries[2],summaries[3]]]);
+      const a = pair[0], b = pair[1];
+      const higher = a.mean > b.mean ? a : b;
+      const diff = Math.abs(a.mean - b.mean).toFixed(1);
+      return {
+        badge:"summary",
+        equation:"Compare the two groups using the summary table. Refer to centre and spread where relevant." + summaryTable(a,b),
+        answer:higher.group + " has the higher mean by " + diff,
+        steps:[
+          "Compare the means: " + a.group + " has mean " + a.mean + " and " + b.group + " has mean " + b.mean + ".",
+          "The difference in means is " + diff + ".",
+          "Compare spread using SD or IQR. " + a.group + " has SD " + a.sd + "; " + b.group + " has SD " + b.sd + ".",
+          "Conclusion in context: " + higher.group + " has the higher typical value for " + a.variable + ", but the spread should also be considered."
+        ]
+      };
+    }
+
+    function genQuartiles() {
+      const s = randomElement(currentDataset().summaries);
+      const iqr = fmt(s.q3 - s.q1, 1);
+      return {
+        badge:"summary",
+        equation:"For " + s.context + ", Q1 = " + s.q1 + " and Q3 = " + s.q3 + ". Find the IQR and interpret it in context.",
+        answer:"IQR = " + iqr,
+        steps:[
+          "Use IQR = Q3 - Q1.",
+          "IQR = " + s.q3 + " - " + s.q1 + " = " + iqr + ".",
+          "Interpretation: the middle 50% of values for " + s.context + " are spread across about " + iqr + " units."
+        ]
+      };
+    }
+
+    function genStandardDeviation() {
+      const summaries = currentDataset().summaries;
+      const pair = randomElement([[summaries[0],summaries[1]],[summaries[2],summaries[3]]]);
+      const wider = pair[0].sd > pair[1].sd ? pair[0] : pair[1];
+      return {
+        badge:"summary",
+        equation:"Which group has more variation? Use the standard deviations to justify your answer." + summaryTable(pair[0],pair[1]),
+        answer:wider.group,
+        steps:[
+          "Standard deviation measures spread around the mean.",
+          pair[0].group + " has SD " + pair[0].sd + ".",
+          pair[1].group + " has SD " + pair[1].sd + ".",
+          "The larger standard deviation is " + wider.sd + ", so " + wider.group + " has more variation."
+        ]
+      };
+    }
+
+    function genGraphChoice() {
+      const item = randomElement(currentDataset().graphPrompts);
+      return {
+        badge:"modelling",
+        equation:item.q + " State a suitable graph and explain why it is suitable.",
+        answer:item.graph,
+        steps:["Identify the variable type and the purpose of the graph.", "A suitable graph is: " + item.graph + ".", "Reason: " + item.why + "."]
+      };
+    }
+
+    function genCorrelation() {
+      const r = randomElement(currentDataset().regressions);
+      const strength = Math.abs(r.r) > 0.65 ? "fairly strong" : "moderate";
+      const direction = r.r > 0 ? "positive" : "negative";
+      return {
+        badge:"modelling",
+        equation:"For " + r.x + " and " + r.y + ", the product moment correlation coefficient is r = " + r.r + ". Interpret this value in context.",
+        answer:strength + " " + direction + " correlation",
+        steps:[
+          "The sign of r gives the direction. Since r = " + r.r + ", the correlation is " + direction + ".",
+          "The size of |r| gives strength. |r| = " + Math.abs(r.r).toFixed(2) + ", so the relationship is " + strength + ".",
+          "Context: " + r.meaning,
+          "Remember that correlation alone does not prove causation."
+        ]
+      };
+    }
+
+    function genPrediction() {
+      const r = randomElement(currentDataset().regressions);
+      return {
+        badge:"modelling",
+        equation:"Use the regression model " + r.equation + " to predict " + r.y + " when " + r.x + " is " + r.xvalue + ". Comment on whether the prediction is reliable.",
+        answer:"Prediction = " + r.pred,
+        steps:[
+          "Substitute " + r.xvalue + " into the regression equation.",
+          r.equation.replace(/([a-zA-Z ]+)=/, "$1 =") + ".",
+          "Prediction = " + r.pred + ".",
+          "Reliability depends on whether " + r.xvalue + " is within the range of observed data and whether the correlation is strong enough for prediction."
+        ]
+      };
+    }
+
+    function genMixedInterpretation() {
+      const summaries = currentDataset().summaries;
+      const pair = randomElement([[summaries[0],summaries[1]],[summaries[2],summaries[3]]]);
+      return {
+        badge:"interpretation",
+        equation:"A student writes: \"The group with the higher mean is definitely better.\" Use the table to improve this conclusion." + summaryTable(pair[0],pair[1]),
+        answer:"Quote centre and spread; avoid overclaiming",
+        steps:[
+          "A better conclusion should quote evidence from the table.",
+          "Compare centre using mean or median.",
+          "Compare spread using SD or IQR.",
+          "Avoid the word definitely because the data are sample summaries and may have variation, outliers, or context limits.",
+          "Improved conclusion: one group has the higher typical value, but the strength of the conclusion depends on the spread and context."
+        ]
+      };
+    }
+
+    function genLimitations() {
+      const item = randomElement(currentDataset().limitations);
+      return {
+        badge:"interpretation",
+        equation:"State one limitation of the Kaizen Large Data Set and explain how it might affect a conclusion.",
+        answer:item,
+        steps:["Choose a limitation linked to the context.", item, "Explain the effect: the conclusion may be less reliable, less precise, or not generalisable."]
+      };
+    }
+
+    function genExamSet() {
+      const dataset = currentDataset();
+      const r = randomElement(dataset.regressions);
+      return {
+        badge:"interpretation",
+        equation:"Exam-style: A student uses the model " + r.equation + " from the " + dataset.title + " and claims it can be used for every similar situation. Give two reasons why this claim may be unreasonable.",
+        answer:"Limited data and extrapolation/causation risk",
+        steps:[
+          "Reason 1: the data set is a limited training dataset, so it may not represent every possible situation.",
+          "Reason 2: the model should only be used within the range of observed data; outside that range would be extrapolation.",
+          "Reason 3: even with correlation, the model does not prove a causal relationship.",
+          "A strong answer links each reason to the context of the data."
+        ]
+      };
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      const config = levelConfigs[level];
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index + 1 === level));
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      updateDatasetCard();
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + config.options.map(([value,label]) => '<option value="' + value + '">' + label + "</option>").join("");
+      dropdown.value = "select";
+      currentType = "select";
+      showBlankPage();
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(document.body), 0);
+    }
+
+    function datasetChanged(){
+      currentDatasetKey = document.getElementById("dataset-dropdown").value;
+      updateDatasetCard();
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function typeChanged(){currentType=document.getElementById("type-dropdown").value;if(currentType==="select")showBlankPage();else generateNewSet()}
+    function showBlankPage(){document.getElementById("problem-set-header").classList.remove("visible");document.getElementById("problem-list").innerHTML='<li style="text-align:center;padding:40px;color:#718096;font-size:1.1em;">Please select a question type to begin practising large-data-set statistics.</li>'}
+
+    function generateNewSet() {
+      if (currentType === "select") { showBlankPage(); return; }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      for (let i = 0; i < 5; i++) problems.push(generateProblem());
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const container = document.getElementById("problem-list");
+      const header = document.getElementById("problem-set-header");
+      container.innerHTML = "";
+      if (problems.length) {
+        const label = problems[0].badge === "context" ? "DATASET CONTEXT" : problems[0].badge === "summary" ? "SUMMARY STATISTICS" : problems[0].badge === "modelling" ? "GRAPHS & MODELS" : "EXAM INTERPRETATION";
+        header.textContent = label;
+        header.className = "problem-set-header visible " + problems[0].badge;
+      }
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        const stepsHTML = problem.steps.map((step) => step.indexOf("=") !== -1 ? '<div class="step-equation">' + step + "</div>" : '<div class="step">' + step + "</div>").join("");
+        li.innerHTML = '<div class="problem-header"><div class="problem-left"><div class="problem-number">' + (index + 1) + '</div><div class="equation">' + problem.equation + '</div></div><div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div></div><div class="steps-section" id="steps-' + index + '"><div class="answer-label">Worked Solution:</div><div class="solution-steps" data-kaizen-step-structured="true">' + stepsHTML + '<div class="final-answer">' + problem.answer + "</div></div></div>";
+        container.appendChild(li);
+      });
+      if (window.renderMathInElement) window.renderMathInElement(container);
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;for(let i=0;i<problems.length;i++){const answer=document.getElementById("quick-answer-"+i);if(answer)answer.classList.toggle("visible",answersVisible)}}
+    function showSteps(){stepsVisible=!stepsVisible;for(let i=0;i<problems.length;i++){const section=document.getElementById("steps-"+i);if(section)section.classList.toggle("visible",stepsVisible)}}
+
+    function startTimer(minutes){if(timerActive)stopTimer();timeRemaining=minutes*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;document.getElementById("timer-display").textContent="Ready";document.getElementById("timer-display").className="timer-display"}
+    function updateTimerDisplay(){const minutes=Math.floor(timeRemaining/60);const seconds=timeRemaining%60;const element=document.getElementById("timer-display");element.textContent=minutes+":"+String(seconds).padStart(2,"0");if(timeRemaining<=30)element.className="timer-display warning";else if(timerActive)element.className="timer-display active";else element.className="timer-display"}
+    function timerFinished(){stopTimer();document.getElementById("timer-display").textContent="Time Up!";document.getElementById("timer-display").className="timer-display warning";document.getElementById("timer-modal").classList.remove("hidden")}
+    function closeModal(){document.getElementById("timer-modal").classList.add("hidden")}
+
+    updateDatasetCard();
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-16"></script>
+</body>
+</html>
