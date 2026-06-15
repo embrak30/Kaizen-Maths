@@ -1194,6 +1194,9 @@ const state = {
   level: "All",
   access: "All",
   toolAccess: {},
+  toolMetadata: {},
+  userProfiles: [],
+  usersLoaded: false,
   universityVideos: {},
   accessLoaded: false
 };
@@ -1249,6 +1252,20 @@ function titleCaseAccess(value) {
   return "Trial";
 }
 
+function formatDateForInput(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
+}
+
+function formatDisplayDate(value) {
+  if (!value) return "Not set";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Not set";
+  return date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
 function authState() {
   return window.KaizenAuth?.state || {};
 }
@@ -1256,7 +1273,12 @@ function authState() {
 function currentUserRole() {
   const auth = authState();
   if (!auth.session?.user) return "guest";
-  return normalise(auth.profile?.role || window.KAIZEN_AUTH_CONFIG?.defaultRole || "trial");
+  const role = normalise(auth.profile?.role || window.KAIZEN_AUTH_CONFIG?.defaultRole || "trial");
+  if (role === "trial" && auth.profile?.trial_ends_at) {
+    const trialEnds = new Date(auth.profile.trial_ends_at);
+    if (!Number.isNaN(trialEnds.getTime()) && trialEnds < new Date()) return "free";
+  }
+  return role;
 }
 
 function isSignedIn() {
@@ -1277,6 +1299,25 @@ function requiredAccess(tool) {
 
 function requiredAccessLabel(tool) {
   return titleCaseAccess(requiredAccess(tool));
+}
+
+function toolMetadata(tool) {
+  return state.toolMetadata[tool.slug] || {};
+}
+
+function parseTagList(value) {
+  return String(value || "")
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+}
+
+function editableToolTags(tool) {
+  return parseTagList(toolMetadata(tool).curriculum_tags);
+}
+
+function allToolTags(tool) {
+  return [...new Set([...(tool.tags || []), ...editableToolTags(tool)])];
 }
 
 function canAccessTool(tool) {
@@ -1608,7 +1649,7 @@ function categorySlug(category) {
 
 function filteredTools(extraCategory) {
   return tools.filter((tool) => {
-    const haystack = normalise([tool.title, tool.category, tool.level, tool.type, tool.description, tool.tags.join(" ")].join(" "));
+    const haystack = normalise([tool.title, tool.category, tool.level, tool.type, tool.description, allToolTags(tool).join(" ")].join(" "));
     const matchesQuery = !state.query || haystack.includes(normalise(state.query));
     const matchesCategory = (extraCategory && categorySlug(tool.category) === extraCategory) || (!extraCategory && (state.category === "All" || tool.category === state.category));
     const matchesLevel = state.level === "All" || tool.level.includes(state.level) || tool.level === "All";
@@ -1747,6 +1788,78 @@ async function saveToolAccess(slug, access) {
     .upsert({ tool_slug: slug, required_access: access }, { onConflict: "tool_slug" });
   if (error) throw error;
   state.toolAccess[slug] = access;
+}
+
+async function loadToolMetadata({ rerender = false } = {}) {
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client) return;
+  try {
+    const { data, error } = await client.from("tool_metadata").select("tool_slug, curriculum_tags, admin_notes");
+    if (error) throw error;
+    state.toolMetadata = Object.fromEntries((data || []).map((row) => [row.tool_slug, {
+      curriculum_tags: row.curriculum_tags || "",
+      admin_notes: row.admin_notes || ""
+    }]));
+    if (rerender) renderRoute();
+  } catch (error) {
+    console.warn("Kaizen tool metadata unavailable:", error.message);
+  }
+}
+
+async function saveToolMetadata(slug, values) {
+  const client = await window.KaizenAuth?.getClient?.();
+  if (!client) throw new Error("Supabase is not available.");
+  const next = {
+    curriculum_tags: values.curriculum_tags.trim(),
+    admin_notes: values.admin_notes.trim()
+  };
+  const { error } = await client
+    .from("tool_metadata")
+    .upsert({
+      tool_slug: slug,
+      ...next,
+      updated_at: new Date().toISOString()
+    }, { onConflict: "tool_slug" });
+  if (error) throw error;
+  state.toolMetadata[slug] = next;
+}
+
+async function loadUserProfiles({ rerender = false } = {}) {
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client || !isAdmin()) return;
+  try {
+    const { data, error } = await client
+      .from("profiles")
+      .select("id, email, full_name, role, school_id, trial_ends_at, subscription_status, plan_key, current_period_end, created_at")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    state.userProfiles = data || [];
+    state.usersLoaded = true;
+    if (rerender && routeParts()[0] === "admin") renderRoute();
+  } catch (error) {
+    console.warn("Kaizen user profiles unavailable:", error.message);
+  }
+}
+
+async function saveUserProfileAccess(userId, values) {
+  const client = await window.KaizenAuth?.getClient?.();
+  if (!client) throw new Error("Supabase is not available.");
+  const trialEnd = values.trial_ends_at
+    ? new Date(`${values.trial_ends_at}T23:59:59.000Z`).toISOString()
+    : null;
+  const payload = {
+    role: values.role,
+    trial_ends_at: trialEnd,
+    updated_at: new Date().toISOString()
+  };
+  const { error } = await client
+    .from("profiles")
+    .update(payload)
+    .eq("id", userId);
+  if (error) throw error;
+  state.userProfiles = state.userProfiles.map((profile) => (
+    profile.id === userId ? { ...profile, ...payload } : profile
+  ));
 }
 
 async function loadUniversityVideos({ rerender = false } = {}) {
@@ -1934,6 +2047,7 @@ function renderFilters() {
 function toolCard(tool) {
   const access = requiredAccessLabel(tool);
   const locked = !canAccessTool(tool);
+  const extraTags = editableToolTags(tool).slice(0, 4);
   return `
     <a class="tool-card ${locked ? "locked" : ""}" href="#/tools/${tool.slug}">
       <div class="tool-card-header">
@@ -1944,6 +2058,7 @@ function toolCard(tool) {
       <div class="badge-row">
         <span class="badge">${escapeHtml(tool.category)}</span>
         <span class="badge">${escapeHtml(tool.level)}</span>
+        ${extraTags.map((tag) => `<span class="badge">${escapeHtml(tag)}</span>`).join("")}
         ${locked ? `<span class="badge locked-badge">Sign in</span>` : ""}
       </div>
     </a>
@@ -2869,7 +2984,7 @@ function relatedTools(tool) {
 }
 
 function standardsForTool(tool) {
-  const haystack = normalise([tool.title, tool.category, tool.level, tool.tags.join(" "), tool.description].join(" "));
+  const haystack = normalise([tool.title, tool.category, tool.level, allToolTags(tool).join(" "), tool.description].join(" "));
   const standards = [];
 
   if (haystack.includes("statistics") || haystack.includes("probability") || haystack.includes("tree diagram")) {
@@ -2907,7 +3022,7 @@ function standardsForTool(tool) {
 
 function fallbackTopicMap(tool) {
   const concepts = [...new Set([
-    ...tool.tags.filter((tag) => !["KaTeX", "worked steps"].includes(tag)),
+    ...allToolTags(tool).filter((tag) => !["KaTeX", "worked steps"].includes(tag)),
     tool.category,
     tool.level
   ].filter(Boolean))];
@@ -3270,6 +3385,10 @@ function renderAdmin() {
     return;
   }
 
+  if (!state.usersLoaded) {
+    loadUserProfiles({ rerender: true });
+  }
+
   const rows = tools.map((tool) => {
     const current = requiredAccess(tool);
     return `
@@ -3283,6 +3402,24 @@ function renderAdmin() {
           <select class="admin-access-select" data-tool-slug="${escapeHtml(tool.slug)}">
             ${accessLevels.map((level) => `<option value="${level}" ${current === level ? "selected" : ""}>${titleCaseAccess(level)}</option>`).join("")}
           </select>
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  const metadataRows = tools.map((tool) => {
+    const metadata = toolMetadata(tool);
+    return `
+      <tr>
+        <td>
+          <strong>${escapeHtml(tool.title)}</strong>
+          <small>${escapeHtml(tool.category)} · ${escapeHtml(tool.level)}</small>
+        </td>
+        <td>
+          <textarea class="admin-metadata-input" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="curriculum_tags" rows="2" placeholder="Common Core, IGCSE, IB, AP">${escapeHtml(metadata.curriculum_tags || "")}</textarea>
+        </td>
+        <td>
+          <textarea class="admin-metadata-input" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="admin_notes" rows="2" placeholder="Internal note, exam-board fit, future edits">${escapeHtml(metadata.admin_notes || "")}</textarea>
         </td>
       </tr>
     `;
@@ -3327,9 +3464,66 @@ function renderAdmin() {
     </section>
   `).join("");
 
+  const userRows = state.userProfiles.length ? state.userProfiles.map((profile) => `
+    <tr>
+      <td>
+        <strong>${escapeHtml(profile.full_name || profile.email || "Teacher")}</strong>
+        <small>${escapeHtml(profile.email || "No email")} · Joined ${escapeHtml(formatDisplayDate(profile.created_at))}</small>
+      </td>
+      <td>
+        <select class="admin-user-role" data-user-id="${escapeHtml(profile.id)}">
+          ${accessLevels.map((level) => `<option value="${level}" ${normalise(profile.role) === level ? "selected" : ""}>${titleCaseAccess(level)}</option>`).join("")}
+        </select>
+      </td>
+      <td>
+        <input class="admin-user-trial-date" type="date" data-user-id="${escapeHtml(profile.id)}" value="${escapeHtml(formatDateForInput(profile.trial_ends_at))}">
+        <small>Current: ${escapeHtml(formatDisplayDate(profile.trial_ends_at))}</small>
+      </td>
+      <td>
+        <small>${escapeHtml(profile.subscription_status || "No Stripe status")}</small>
+        <small>${escapeHtml(profile.plan_key || "No plan")}</small>
+      </td>
+      <td>
+        <button class="button subtle admin-save-user" type="button" data-user-id="${escapeHtml(profile.id)}">Save</button>
+      </td>
+    </tr>
+  `).join("") : `
+    <tr>
+      <td colspan="5">
+        <strong>No signed-up users loaded yet.</strong>
+        <small>${state.usersLoaded ? "No profile rows were found." : "Open this tab after Supabase has loaded, or refresh while signed in as admin."}</small>
+      </td>
+    </tr>
+  `;
+
   app.innerHTML = `
-    ${pageHeader("Admin", "Choose which topics are free samples and which require trial, pro, school, or admin access.")}
-    <section class="panel admin-panel">
+    ${pageHeader("Admin", "Manage simple site updates without editing code: access rules, curriculum tags, and Kaizen University video content.")}
+    <section class="admin-tabs" aria-label="Admin sections">
+      <button class="admin-tab active" type="button" data-admin-tab="users">Users</button>
+      <button class="admin-tab" type="button" data-admin-tab="access">Tool Access</button>
+      <button class="admin-tab" type="button" data-admin-tab="metadata">Tool Tags</button>
+      <button class="admin-tab" type="button" data-admin-tab="university">Kaizen University</button>
+    </section>
+    <section class="panel admin-panel admin-tab-panel active" data-admin-panel="users">
+      <div class="admin-toolbar">
+        <div>
+          <span class="eyebrow">Accounts</span>
+          <h2>Signed-Up Users</h2>
+          <p>View teacher accounts, update roles, and set individual trial end dates. Pro and school roles can also be assigned manually while payment and school licences are being set up.</p>
+        </div>
+        <button class="button" id="refreshAdminUsers" type="button">Refresh Users</button>
+      </div>
+      <p class="admin-status" id="adminUsersStatus">${state.usersLoaded ? `Loaded ${state.userProfiles.length} user${state.userProfiles.length === 1 ? "" : "s"}.` : "Loading users from Supabase..."}</p>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr><th>User</th><th>Role</th><th>Trial Until</th><th>Billing</th><th>Action</th></tr>
+          </thead>
+          <tbody>${userRows}</tbody>
+        </table>
+      </div>
+    </section>
+    <section class="panel admin-panel admin-tab-panel" data-admin-panel="access">
       <div class="admin-toolbar">
         <div>
           <span class="eyebrow">Access Rules</span>
@@ -3348,7 +3542,26 @@ function renderAdmin() {
         </table>
       </div>
     </section>
-    <section class="panel admin-panel">
+    <section class="panel admin-panel admin-tab-panel" data-admin-panel="metadata">
+      <div class="admin-toolbar">
+        <div>
+          <span class="eyebrow">Search And Alignment</span>
+          <h2>Tool Tags</h2>
+          <p>Add curriculum, exam-board, country, or route labels manually. Use commas between tags, for example: Common Core, IGCSE, IB, AP.</p>
+        </div>
+        <button class="button primary" id="saveToolMetadata" type="button">Save Tool Tags</button>
+      </div>
+      <p class="admin-status" id="adminMetadataStatus">Typed tags appear in library search and on tool cards. Notes are internal search/admin context.</p>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr><th>Tool</th><th>Curriculum / Exam Tags</th><th>Admin Notes</th></tr>
+          </thead>
+          <tbody>${metadataRows}</tbody>
+        </table>
+      </div>
+    </section>
+    <section class="panel admin-panel admin-tab-panel" data-admin-panel="university">
       <div class="admin-toolbar">
         <div>
           <span class="eyebrow">Kaizen University</span>
@@ -3367,7 +3580,46 @@ function renderAdmin() {
 }
 
 function bindAdmin() {
+  document.querySelectorAll(".admin-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.dataset.adminTab;
+      document.querySelectorAll(".admin-tab").forEach((item) => item.classList.toggle("active", item === tab));
+      document.querySelectorAll(".admin-tab-panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.adminPanel === target);
+      });
+    });
+  });
+
   const status = document.getElementById("adminAccessStatus");
+  const usersStatus = document.getElementById("adminUsersStatus");
+  document.getElementById("refreshAdminUsers")?.addEventListener("click", async () => {
+    const button = document.getElementById("refreshAdminUsers");
+    button.disabled = true;
+    usersStatus.textContent = "Refreshing users...";
+    await loadUserProfiles({ rerender: true });
+  });
+
+  document.querySelectorAll(".admin-save-user").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const userId = button.dataset.userId;
+      const role = document.querySelector(`.admin-user-role[data-user-id="${CSS.escape(userId)}"]`)?.value || "trial";
+      const trialDate = document.querySelector(`.admin-user-trial-date[data-user-id="${CSS.escape(userId)}"]`)?.value || "";
+      button.disabled = true;
+      usersStatus.textContent = "Saving user access...";
+      try {
+        await saveUserProfileAccess(userId, {
+          role,
+          trial_ends_at: trialDate
+        });
+        usersStatus.textContent = "Saved. User access has been updated.";
+        button.disabled = false;
+      } catch (error) {
+        usersStatus.textContent = `Could not save: ${error.message}`;
+        button.disabled = false;
+      }
+    });
+  });
+
   document.getElementById("saveAccessRules")?.addEventListener("click", async () => {
     const button = document.getElementById("saveAccessRules");
     const selects = [...document.querySelectorAll(".admin-access-select")];
@@ -3381,6 +3633,31 @@ function bindAdmin() {
       renderRoute();
     } catch (error) {
       status.textContent = `Could not save: ${error.message}`;
+      button.disabled = false;
+    }
+  });
+
+  const metadataStatus = document.getElementById("adminMetadataStatus");
+  document.getElementById("saveToolMetadata")?.addEventListener("click", async () => {
+    const button = document.getElementById("saveToolMetadata");
+    const grouped = new Map();
+    document.querySelectorAll(".admin-metadata-input").forEach((input) => {
+      if (!grouped.has(input.dataset.toolSlug)) grouped.set(input.dataset.toolSlug, {});
+      grouped.get(input.dataset.toolSlug)[input.dataset.metadataField] = input.value;
+    });
+    button.disabled = true;
+    metadataStatus.textContent = "Saving tool tags...";
+    try {
+      for (const [slug, values] of grouped.entries()) {
+        await saveToolMetadata(slug, {
+          curriculum_tags: values.curriculum_tags || "",
+          admin_notes: values.admin_notes || ""
+        });
+      }
+      metadataStatus.textContent = "Saved. Tool tags are now searchable and visible in the library.";
+      button.disabled = false;
+    } catch (error) {
+      metadataStatus.textContent = `Could not save: ${error.message}`;
       button.disabled = false;
     }
   });
@@ -3796,12 +4073,16 @@ window.addEventListener("hashchange", renderRoute);
 window.addEventListener("kaizen-auth-change", () => {
   updateAdminNavVisibility();
   loadToolAccessSettings({ rerender: true });
+  loadToolMetadata({ rerender: true });
+  loadUserProfiles({ rerender: true });
   loadUniversityVideos({ rerender: true });
 });
 
 window.setTimeout(() => {
   updateAdminNavVisibility();
   loadToolAccessSettings({ rerender: true });
+  loadToolMetadata({ rerender: true });
+  loadUserProfiles({ rerender: true });
   loadUniversityVideos({ rerender: true });
 }, 1200);
 

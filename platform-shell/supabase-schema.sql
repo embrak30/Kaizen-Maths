@@ -157,3 +157,40 @@ create policy "Admins can delete university videos"
 on public.university_videos
 for delete
 using (public.is_admin());
+
+create table if not exists public.tool_metadata (
+  tool_slug text primary key,
+  curriculum_tags text,
+  admin_notes text,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.tool_metadata enable row level security;
+
+grant select on public.tool_metadata to anon, authenticated;
+grant insert, update, delete on public.tool_metadata to authenticated;
+
+drop policy if exists "Anyone can read tool metadata" on public.tool_metadata;
+create policy "Anyone can read tool metadata"
+on public.tool_metadata
+for select
+using (true);
+
+drop policy if exists "Admins can insert tool metadata" on public.tool_metadata;
+create policy "Admins can insert tool metadata"
+on public.tool_metadata
+for insert
+with check (public.is_admin());
+
+drop policy if exists "Admins can update tool metadata" on public.tool_metadata;
+create policy "Admins can update tool metadata"
+on public.tool_metadata
+for update
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Admins can delete tool metadata" on public.tool_metadata;
+create policy "Admins can delete tool metadata"
+on public.tool_metadata
+for delete
+using (public.is_admin());
