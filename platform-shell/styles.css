@@ -1310,6 +1310,16 @@ a {
   padding: 8px 10px;
   font: inherit;
   resize: vertical;
+  background: white;
+  color: var(--ink);
+  pointer-events: auto;
+  user-select: text;
+}
+
+.admin-metadata-input:focus {
+  border-color: rgba(124, 58, 237, 0.55);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+  outline: none;
 }
 
 .admin-video-list {

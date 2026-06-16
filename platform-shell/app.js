@@ -3434,7 +3434,7 @@ function renderAdmin() {
           <small>${escapeHtml(tool.category)} · ${escapeHtml(tool.level)}</small>
         </td>
         <td>
-          <textarea class="admin-metadata-input" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="curriculum_tags" rows="2" placeholder="Common Core, IGCSE, IB, AP">${escapeHtml(metadata.curriculum_tags || "")}</textarea>
+          <input class="admin-metadata-input" type="text" autocomplete="off" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="curriculum_tags" value="${escapeHtml(metadata.curriculum_tags || "")}" placeholder="Common Core, IGCSE, IB, AP">
         </td>
         <td>
           <textarea class="admin-metadata-input" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="admin_notes" rows="2" placeholder="Internal note, exam-board fit, future edits">${escapeHtml(metadata.admin_notes || "")}</textarea>
@@ -3656,6 +3656,12 @@ function bindAdmin() {
   });
 
   const metadataStatus = document.getElementById("adminMetadataStatus");
+  document.querySelectorAll(".admin-metadata-input").forEach((input) => {
+    input.removeAttribute("disabled");
+    input.removeAttribute("readonly");
+    input.addEventListener("click", (event) => event.stopPropagation());
+    input.addEventListener("keydown", (event) => event.stopPropagation());
+  });
   document.getElementById("saveToolMetadata")?.addEventListener("click", async () => {
     const button = document.getElementById("saveToolMetadata");
     const grouped = new Map();
