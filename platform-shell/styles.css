@@ -1302,9 +1302,45 @@ a {
   font: inherit;
 }
 
+.admin-metadata-list {
+  display: grid;
+  gap: 12px;
+  max-height: 72vh;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.admin-metadata-card {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.65fr) minmax(260px, 1fr) minmax(260px, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+}
+
+.admin-metadata-card-head {
+  display: grid;
+  gap: 3px;
+}
+
+.admin-metadata-card-head small {
+  color: var(--muted);
+}
+
+.admin-metadata-field {
+  display: grid;
+  gap: 5px;
+  color: #4a5570;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
 .admin-metadata-input {
-  width: min(420px, 100%);
-  min-width: 220px;
+  width: 100%;
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 8px 10px;
@@ -2704,6 +2740,10 @@ sup .worksheet-fraction span:last-child {
 
   .worksheet-section-editors input {
     width: 100%;
+  }
+
+  .admin-metadata-card {
+    grid-template-columns: 1fr;
   }
 
   .admin-video-row {

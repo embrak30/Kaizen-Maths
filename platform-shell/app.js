@@ -3425,21 +3425,23 @@ function renderAdmin() {
     `;
   }).join("");
 
-  const metadataRows = tools.map((tool) => {
+  const metadataCards = tools.map((tool) => {
     const metadata = toolMetadata(tool);
     return `
-      <tr>
-        <td>
+      <article class="admin-metadata-card">
+        <div class="admin-metadata-card-head">
           <strong>${escapeHtml(tool.title)}</strong>
           <small>${escapeHtml(tool.category)} · ${escapeHtml(tool.level)}</small>
-        </td>
-        <td>
-          <input class="admin-metadata-input" type="text" autocomplete="off" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="curriculum_tags" value="${escapeHtml(metadata.curriculum_tags || "")}" placeholder="Common Core, IGCSE, IB, AP">
-        </td>
-        <td>
+        </div>
+        <label class="admin-metadata-field">
+          Curriculum / exam tags
+          <input class="admin-metadata-input" type="text" autocomplete="off" spellcheck="false" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="curriculum_tags" value="${escapeHtml(metadata.curriculum_tags || "")}" placeholder="Common Core, IGCSE, IB, AP">
+        </label>
+        <label class="admin-metadata-field">
+          Admin notes
           <textarea class="admin-metadata-input" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="admin_notes" rows="2" placeholder="Internal note, exam-board fit, future edits">${escapeHtml(metadata.admin_notes || "")}</textarea>
-        </td>
-      </tr>
+        </label>
+      </article>
     `;
   }).join("");
 
@@ -3570,13 +3572,8 @@ function renderAdmin() {
         <button class="button primary" id="saveToolMetadata" type="button">Save Tool Tags</button>
       </div>
       <p class="admin-status" id="adminMetadataStatus">Typed tags appear in library search and on tool cards. Notes are internal search/admin context.</p>
-      <div class="admin-table-wrap">
-        <table class="admin-table">
-          <thead>
-            <tr><th>Tool</th><th>Curriculum / Exam Tags</th><th>Admin Notes</th></tr>
-          </thead>
-          <tbody>${metadataRows}</tbody>
-        </table>
+      <div class="admin-metadata-list">
+        ${metadataCards}
       </div>
     </section>
     <section class="panel admin-panel admin-tab-panel" data-admin-panel="university">
