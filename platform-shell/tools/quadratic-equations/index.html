@@ -107,10 +107,10 @@
     let stepsVisible = false;
 
     const levelConfigs = {
-      1: { title: 'Level 1: Basic Square Equations', description: 'Simple square equations with rational roots', types: ['type1_basic','type2_basic','mixed1'] },
-      2: { title: 'Level 2: Factorable Quadratics', description: 'Quadratics that can be solved by factoring', types: ['type1_standard','type2_standard','type3_standard','type4_standard','mixed2'] },
-      3: { title: 'Level 3: Non-Factorable Quadratics', description: 'Quadratics requiring the quadratic formula', types: ['type1_general','type2_general','mixed3'] },
-      4: { title: 'Level 4: Non-Standard / Disguised', description: 'Rearrange to standard form or use substitution', types: ['nonstandard_form','disguised_quad','mixed4'] }
+      1: { title: 'Level 1: Square-Root Method', description: 'Isolate x^2 first, then take both the positive and negative square roots.', types: ['type1_basic','type2_basic','mixed1'] },
+      2: { title: 'Level 2: Factorable Quadratics', description: 'Put the equation equal to zero, factorise, and use the zero product property.', types: ['type1_standard','type2_standard','type3_standard','type4_standard','mixed2'] },
+      3: { title: 'Level 3: Quadratic Formula', description: 'Use the discriminant and quadratic formula when factorising is not suitable.', types: ['type1_general','type2_general','mixed3'] },
+      4: { title: 'Level 4: Non-Standard and Disguised Quadratics', description: 'Rearrange to standard form or substitute to reveal a quadratic structure.', types: ['nonstandard_form','disguised_quad','mixed4'] }
     };
 
     function toggleSidebar(){
@@ -234,6 +234,30 @@
         default:
           return generateProblem();
       }
+      return enhanceQuadraticProblem(problem,type);
+    }
+    function enhanceQuadraticProblem(problem,type){
+      const method={
+        type1_basic:'Use the square-root method: isolate x^2, then take both roots.',
+        type2_basic:'Use inverse operations to isolate x^2 before taking square roots.',
+        type1_standard:'Factor out the common x, then use the zero product property.',
+        type2_standard:'Factor out x first, then solve the remaining linear factor.',
+        type3_standard:'Find two numbers that multiply to c and add to b, then factorise.',
+        type4_standard:'Remove the common numerical factor first, then factorise the simpler quadratic.',
+        type1_general:'Rearrange to ax^2+bx+c=0 and use the quadratic formula.',
+        type2_general:'Use the quadratic formula with a coefficient of x^2 greater than 1.',
+        nonstandard_form:'Move all terms to one side before applying the quadratic formula.',
+        disguised_quad:'Use substitution to turn the disguised equation into an ordinary quadratic.'
+      }[type] || 'Choose a solving method, show the algebra, and state all valid solutions.';
+      let n=1;
+      const enhanced=['Step '+(n++)+': '+method];
+      problem.steps.forEach(step=>{
+        if(step.startsWith('Step ')){ enhanced.push(step); return; }
+        if(step.includes('=') && !step.includes(':')) enhanced.push(step);
+        else enhanced.push('Step '+(n++)+': '+step);
+      });
+      enhanced.push('Step '+(n++)+': Final answer: '+problem.answer);
+      problem.steps=enhanced;
       return problem;
     }
 

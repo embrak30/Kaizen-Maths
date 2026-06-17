@@ -112,9 +112,9 @@
     let stepsVisible = false;
 
     const levelConfigs = {
-      1: { title:'Level 1: Basic Power Rule', description:'Apply the power rule to simple polynomial terms', types:['single_term','coefficients','constants_linear'] },
-      2: { title:'Level 2: Multi-Term Polynomials', description:'Differentiate polynomials with multiple terms', types:['quadratic','cubic','higher_degree'] },
-      3: { title:'Level 3: Tangent Lines & Applications', description:'Find gradients, tangent line equations, and normal line equations', types:['gradient_at_point','tangent_equations','normal_equations'] }
+      1: { title:'Level 1: Basic Power Rule', description:'Differentiate constants, linear terms, and single powers before combining ideas.', types:['single_term','coefficients','constants_linear'] },
+      2: { title:'Level 2: Multi-Term Polynomials', description:'Apply the power rule term by term, then write the derivative as a simplified polynomial.', types:['quadratic','cubic','higher_degree'] },
+      3: { title:'Level 3: Gradients, Tangents and Normals', description:'Use derivatives to find gradients, tangent equations, and normal equations at a point.', types:['gradient_at_point','tangent_equations','normal_equations'] }
     };
     window.typeDisplayNames = {
       single_term: 'Single term differentiation',
@@ -161,7 +161,7 @@
     function problemFromTerms(terms,badge,extraSteps=[]){
       const original = 'f(x) = ' + polynomial(terms);
       const derivative = "f'(x) = " + derivativeText(terms);
-      const steps = ['Step 1: Differentiate each term using the power rule.'];
+      const steps = ['Step 1: Use the power rule, d/dx(ax^n) = anx^(n-1), on each term separately.'];
       terms.forEach(([c,p]) => {
         if(p===0){
           steps.push('<span class=\"current-term\">' + coeffText(c,'',0) + '</span> is constant, so its derivative is <span class=\"coefficient-process\">0</span>.');
@@ -170,6 +170,7 @@
         }
       });
       steps.push(...extraSteps);
+      steps.push('Step 2: Combine the differentiated terms and omit any zero terms.');
       steps.push(derivative);
       return { badge, original, derivative, steps };
     }

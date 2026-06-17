@@ -28,7 +28,7 @@ const tools = [
     status: "Imported",
     description: "Generate quadratic-equation practice across square-root, factorable, formula, non-standard, and disguised forms.",
     tags: ["algebra", "quadratics", "factorising", "quadratic formula", "discriminant", "disguised quadratics"],
-    toolPath: "tools/quadratic-equations/index.html?v=question-type-labels-1",
+    toolPath: "tools/quadratic-equations/index.html?v=batch3-steps-1",
     imported: true,
     teacherNotes: [
       "Builds from square-root equations into factorisation, the quadratic formula, and non-standard forms.",
@@ -101,7 +101,7 @@ const tools = [
     status: "Imported",
     description: "Generate polynomial differentiation questions from the power rule through gradients, tangent lines, and normal lines.",
     tags: ["algebra", "calculus", "differentiation", "derivatives", "polynomials", "tangents", "normals"],
-    toolPath: "tools/differentiation-polynomials/index.html?v=diff-poly-worksheet-2",
+    toolPath: "tools/differentiation-polynomials/index.html?v=batch3-steps-1",
     imported: true,
     teacherNotes: [
       "Builds from single-term power rule fluency into multi-term polynomials.",
@@ -119,7 +119,7 @@ const tools = [
     status: "Imported",
     description: "Generate integration practice covering indefinite integrals, definite integrals, and the trapezium rule.",
     tags: ["algebra", "calculus", "integration", "integrals", "trapezium rule", "area under curve"],
-    toolPath: "tools/integration/index.html?v=step-structure-1",
+    toolPath: "tools/integration/index.html?v=batch3-steps-1",
     imported: true,
     teacherNotes: [
       "Starts with integration as reverse differentiation and the constant of integration.",
@@ -685,7 +685,7 @@ const tools = [
     status: "Imported",
     description: "Generate logarithm practice covering log-index conversion, evaluation, logarithm laws, natural logs, change of base, and equation solving.",
     tags: ["algebra", "logarithms", "logs", "indices", "exponentials", "natural log", "change of base"],
-    toolPath: "tools/logarithms-practice/index.html?v=log-evaluate-1",
+    toolPath: "tools/logarithms-practice/index.html?v=batch3-steps-1",
     imported: true,
     teacherNotes: [
       "Level 1 builds fluency converting between logarithmic and index form.",
@@ -839,7 +839,7 @@ const tools = [
     status: "Imported",
     description: "Generate factorisation questions for common factors, special quadratic forms, trinomials, grouping, and mixed expressions.",
     tags: ["algebra", "quadratics", "factorisation", "factorising", "difference of squares", "trinomials", "common factor"],
-    toolPath: "tools/quadratic-factorisation/index.html?v=factorisation-worksheet-powers-1",
+    toolPath: "tools/quadratic-factorisation/index.html?v=batch3-steps-1",
     imported: true,
     teacherNotes: [
       "Builds from common factor extraction into special products and trinomial factorisation.",
@@ -857,7 +857,7 @@ const tools = [
     status: "Imported",
     description: "Generate binomial expansion questions covering Pascal coefficients, specific coefficients, terms, constant terms, and approximations.",
     tags: ["algebra", "binomial theorem", "binomial expansion", "combinations", "Pascal triangle", "coefficients", "KaTeX"],
-    toolPath: "tools/binomial-expansion/index.html?v=binomial-equal-coefficients-1",
+    toolPath: "tools/binomial-expansion/index.html?v=batch3-steps-1",
     imported: true,
     teacherNotes: [
       "Moves from full expansions into coefficient and term-finding questions.",

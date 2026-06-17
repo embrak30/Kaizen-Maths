@@ -104,9 +104,9 @@
     let stepsVisible = false;
 
     const levelConfigs = {
-      1:{title:'Level 1: Indefinite Integrals',description:'Integrate power functions and include + C.',types:['indef_basic_poly','indef_fractional','indef_negative','indef_mixed']},
-      2:{title:'Level 2: Definite Integrals',description:'Evaluate definite integrals using antiderivatives and bounds.',types:['def_basic_poly','def_fractional','def_mixed']},
-      3:{title:'Level 3: Trapezium Rule',description:'Approximate area under a curve using equal strips.',types:['trap_from_function','trap_from_table']}
+      1:{title:'Level 1: Indefinite Integrals',description:'Build fluency with the reverse power rule, including fractional and negative powers, and always include + C.',types:['indef_basic_poly','indef_fractional','indef_negative','indef_mixed']},
+      2:{title:'Level 2: Definite Integrals',description:'Find an antiderivative, substitute upper and lower bounds, and subtract F(b)-F(a).',types:['def_basic_poly','def_fractional','def_mixed']},
+      3:{title:'Level 3: Trapezium Rule',description:'Approximate area with equal strips by finding h, tabulating y-values, and applying the trapezium formula.',types:['trap_from_function','trap_from_table']}
     };
     const typeDisplayNames = {
       indef_basic_poly:'Type 1: Basic Polynomials',
@@ -255,11 +255,27 @@
       const steps=[{text:'Confirm $h=('+hi+'-'+lo+')/'+n+'='+h.toFixed(3)+'$.'},{text:trapTableHTML(xs,ys)},{text:'Use $T=\\dfrac{h}{2}(y_0+2\\sum y_i+y_n)$.'},{text:'$T\\approx '+T.toFixed(2)+'$.'}];
       return {equation:'Use the table and the trapezium rule to approximate $\\displaystyle \\int_{'+lo+'}^{'+hi+'} y\\,dx$ with $n='+n+'$ strips.',answer:'$\\approx '+T.toFixed(2)+'$',steps};
     }
+    function enrichIntegrationProblem(problem,type){
+      const method={
+        indef_basic_poly:'Step 1: Use the reverse power rule on each term: add 1 to the power and divide by the new power.',
+        indef_fractional:'Step 1: Treat fractional powers exactly like powers: add 1 to the exponent, then divide by the new exponent.',
+        indef_negative:'Step 1: Use the reverse power rule for powers other than x^{-1}; remember that x^{-1} integrates to ln|x|.',
+        indef_mixed:'Step 1: Decide which integration rule each term needs before simplifying the final answer.',
+        def_basic_poly:'Step 1: First find an antiderivative F(x), then evaluate F(upper limit) - F(lower limit).',
+        def_fractional:'Step 1: Integrate the fractional or negative powers first, then substitute the bounds.',
+        def_mixed:'Step 1: Build the antiderivative term by term before substituting the limits.',
+        trap_from_function:'Step 1: Split the interval into equal widths and calculate the y-values from the function.',
+        trap_from_table:'Step 1: Read the equal spacing and y-values from the table, then substitute into the trapezium formula.'
+      }[type] || 'Step 1: Choose the correct integration method and show each algebraic move.';
+      problem.steps=[{text:method},...problem.steps];
+      problem.steps.push({text:'Final answer: '+problem.answer});
+      return problem;
+    }
     function generateProblem(){
       const types=currentType==='select'||currentType==='all'?levelConfigs[currentLevel].types:[currentType];
       const type=choice(types);
       const map={indef_basic_poly:genIndefBasic,indef_fractional:genIndefFractional,indef_negative:genIndefNegative,indef_mixed:genIndefMixed,def_basic_poly:genDefiniteBasic,def_fractional:genDefiniteFractional,def_mixed:genDefiniteMixed,trap_from_function:genTrapFromFunction,trap_from_table:genTrapFromTable};
-      return map[type]();
+      return enrichIntegrationProblem(map[type](),type);
     }
     function switchLevel(level){
       currentLevel=level; currentType='select';

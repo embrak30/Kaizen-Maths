@@ -711,7 +711,7 @@
     const levelConfigs = {
       1: {
         title: "Level 1: Fundamentals of Logarithms",
-        description: "Converting between log and index form, basic evaluation",
+        description: "Convert between logarithmic and index form, then evaluate simple logarithms from their meaning.",
         options: [
           ["log_to_index", "Type 1: Convert log form to index form"],
           ["index_to_log", "Type 2: Convert index form to log form"],
@@ -720,7 +720,7 @@
       },
       2: {
         title: "Level 2: Logarithm Laws and Operations",
-        description: "Product, quotient, power rules, and natural logarithms",
+        description: "Use product, quotient, and power rules only when the logarithms have a matching base.",
         options: [
           ["product_rule", "Type 1: Product rule (log addition)"],
           ["quotient_rule", "Type 2: Quotient rule (log subtraction)"],
@@ -730,7 +730,7 @@
       },
       3: {
         title: "Level 3: Solving Equations",
-        description: "Exponential equations, logarithmic equations, and complex problems",
+        description: "Solve exponential and logarithmic equations, then evaluate or check answers where needed.",
         options: [
           ["solve_exponential", "Type 1: Solving exponential equations"],
           ["solve_logarithmic", "Type 2: Solving logarithmic equations"],
@@ -806,6 +806,22 @@
       return Math.log(argument) / Math.log(base);
     }
 
+    function enhanceLogProblem(problem) {
+      const method = {
+        basic: "Method focus: A logarithm is another way of writing an index equation.",
+        evaluate: "Method focus: Ask which power of the base gives the argument.",
+        laws: "Method focus: Combine logarithms only when the bases match and the arguments are valid.",
+        natural: "Method focus: Natural logarithms use base e.",
+        equations: "Method focus: Use inverse operations to move between exponential and logarithmic form.",
+        complex: "Method focus: Transform the equation into a simpler algebraic equation, then evaluate or check the result."
+      }[problem.badge] || "Method focus: Choose the logarithm rule that matches the structure of the question.";
+      problem.steps = [method, ...problem.steps];
+      if (problem.badge === "equations" || problem.badge === "complex") {
+        problem.steps.push("Check: any logarithm argument must be positive, and exponential outputs must be positive.");
+      }
+      problem.steps.push("Final answer: " + problem.answer);
+      return problem;
+    }
     function generateProblem() {
       let problem = {};
 
@@ -1162,7 +1178,7 @@
           };
       }
 
-      return problem;
+      return enhanceLogProblem(problem);
     }
 
     function switchLevel(level) {
