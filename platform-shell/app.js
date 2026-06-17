@@ -857,7 +857,7 @@ const tools = [
     status: "Imported",
     description: "Generate binomial expansion questions covering Pascal coefficients, specific coefficients, terms, constant terms, and approximations.",
     tags: ["algebra", "binomial theorem", "binomial expansion", "combinations", "Pascal triangle", "coefficients", "KaTeX"],
-    toolPath: "tools/binomial-expansion/index.html?v=binomial-unique-coprime-2",
+    toolPath: "tools/binomial-expansion/index.html?v=binomial-equal-coefficients-1",
     imported: true,
     teacherNotes: [
       "Moves from full expansions into coefficient and term-finding questions.",
