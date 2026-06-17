@@ -46,7 +46,7 @@ const tools = [
     status: "Imported",
     description: "Generate GCSE algebraic-fraction practice for simplifying, multiplying, dividing, adding, subtracting, and solving equations.",
     tags: ["algebra", "algebraic fractions", "simplifying fractions", "factorising", "common denominator", "equations"],
-    toolPath: "tools/algebraic-fractions/index.html?v=algebraic-fractions-1",
+    toolPath: "tools/algebraic-fractions/index.html?v=batch2-steps-1",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on factorising and cancelling common factors.",
@@ -893,7 +893,7 @@ const tools = [
     status: "Imported",
     description: "Generate linear inequality questions with worked algebraic steps, solution intervals, and number lines.",
     tags: ["algebra", "inequalities", "linear inequalities", "number lines", "interval notation", "KaTeX"],
-    toolPath: "tools/inequalities/index.html?v=inequality-spacing-1",
+    toolPath: "tools/inequalities/index.html?v=batch2-steps-1",
     imported: true,
     teacherNotes: [
       "Designed for modelling inequality solving and sign-flip cases on the board.",
@@ -911,7 +911,7 @@ const tools = [
     status: "Imported",
     description: "Generate simplification questions for like terms, two-variable expressions, and advanced products or powers.",
     tags: ["algebra", "simplification", "like terms", "collecting terms", "expressions", "KaTeX"],
-    toolPath: "tools/simplification/index.html?v=step-structure-1",
+    toolPath: "tools/simplification/index.html?v=batch2-steps-1",
     imported: true,
     teacherNotes: [
       "Builds fluency from collecting like terms to advanced multi-variable simplification.",
@@ -929,7 +929,7 @@ const tools = [
     status: "Imported",
     description: "Generate function notation practice for evaluating functions, substituting expression inputs, composite functions, and inverse linear functions.",
     tags: ["algebra", "functions", "function notation", "composite functions", "inverse functions", "linear functions", "quadratics"],
-    toolPath: "tools/functions/index.html?v=functions-3",
+    toolPath: "tools/functions/index.html?v=batch2-steps-1",
     imported: true,
     teacherNotes: [
       "Level 1 builds fluency with evaluating linear and quadratic functions at numerical inputs.",
@@ -947,7 +947,7 @@ const tools = [
     status: "Imported",
     description: "Generate bracket expansion questions for single brackets, double brackets, special products, and advanced expressions.",
     tags: ["algebra", "brackets", "expansion", "expand and simplify", "double brackets", "FOIL", "KaTeX"],
-    toolPath: "tools/bracket-expansion/index.html?v=question-type-labels-1",
+    toolPath: "tools/bracket-expansion/index.html?v=batch2-steps-1",
     imported: true,
     teacherNotes: [
       "Builds from distributive law to double brackets and special products.",
@@ -965,7 +965,7 @@ const tools = [
     status: "Imported",
     description: "Generate linear equation questions across one-step, two-step, distribution, both-sides, and nested-parentheses forms.",
     tags: ["algebra", "linear equations", "solving equations", "one-step equations", "two-step equations", "both sides", "KaTeX"],
-    toolPath: "tools/linear-equations/index.html?v=worksheet-standard-4",
+    toolPath: "tools/linear-equations/index.html?v=batch2-steps-1",
     imported: true,
     teacherNotes: [
       "Covers one-step, two-step, and challenging linear equation forms.",

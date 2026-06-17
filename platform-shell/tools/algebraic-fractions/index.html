@@ -111,10 +111,10 @@
     };
 
     const levelConfigs = {
-      1: { title: 'Level 1: Simplifying Algebraic Fractions', description: 'Factorise and cancel common factors', types: ['simplify_common_factor','simplify_factorise'] },
-      2: { title: 'Level 2: Multiplying and Dividing', description: 'Multiply, divide, factorise, and cancel common factors', types: ['multiply_fractions','divide_fractions'] },
-      3: { title: 'Level 3: Adding and Subtracting', description: 'Use common denominators to combine algebraic fractions', types: ['add_same_denominator','add_different_denominators'] },
-      4: { title: 'Level 4: Solving Equations', description: 'Clear denominators and solve algebraic fraction equations', types: ['solve_linear_fraction','solve_two_fractions'] }
+      1: { title: 'Level 1: Simplifying Algebraic Fractions', description: 'Start with common-factor cancellation, then factorise before cancelling.', types: ['simplify_common_factor','simplify_factorise'] },
+      2: { title: 'Level 2: Multiplying and Dividing', description: 'Use factorising, reciprocals, and cancellation before multiplying.', types: ['multiply_fractions','divide_fractions'] },
+      3: { title: 'Level 3: Adding and Subtracting', description: 'Move from shared denominators to forming a common denominator.', types: ['add_same_denominator','add_different_denominators'] },
+      4: { title: 'Level 4: Solving Equations', description: 'Clear denominators, solve the resulting linear equation, and check excluded values.', types: ['solve_linear_fraction','solve_two_fractions'] }
     };
 
     const typeOptions = {
@@ -163,12 +163,12 @@
       const question='Simplify:<br>' + frac(a + 'x(' + denFactor + ')', a + 'x');
       const answer=denFactor;
       return asProblem(question, answer, [
-        'Look for a common factor in the numerator and denominator.',
+        'Step 1: Look for a factor that multiplies the whole numerator and the whole denominator.',
         frac(a + 'x(' + denFactor + ')', a + 'x'),
-        'The common factor is ' + a + 'x.',
-        'Cancel the common factor from the numerator and denominator.',
+        'Step 2: The common factor is ' + a + 'x. It is safe to cancel because it is a factor, not a separate term.',
+        'Step 3: Cancel the common factor from the numerator and denominator.',
         frac('<s>' + a + 'x</s>(' + denFactor + ')','<s>' + a + 'x</s>') + ' = ' + answer + '.',
-        'So the simplified expression is ' + answer + '.'
+        'Step 4: The simplified expression is ' + answer + '.'
       ]);
     }
 
@@ -180,12 +180,13 @@
       const question='Simplify:<br>' + frac(numerator, denominator);
       const answer=keep;
       return asProblem(question, answer, [
-        'Factorise the quadratic numerator first.',
+        'Step 1: Factorise the quadratic numerator before trying to cancel.',
         numerator + ' = ' + keep + cancel,
+        'Step 2: Rewrite the fraction using the factorised numerator.',
         frac(numerator, denominator) + ' = ' + frac(keep + cancel, cancel),
-        'Cancel the common factor ' + cancel + '.',
+        'Step 3: Cancel the common factor ' + cancel + '.',
         frac(keep + '<s>' + cancel + '</s>','<s>' + cancel + '</s>') + ' = ' + answer + '.',
-        'So the simplified expression is ' + answer + ', with x not equal to ' + r2 + '.'
+        'Step 4: The simplified expression is ' + answer + ', with x not equal to ' + r2 + ' because the original denominator cannot be zero.'
       ]);
     }
 
@@ -195,12 +196,12 @@
       const question='Simplify:<br>' + frac(a + factor(r1), b + factor(r2)) + ' &times; ' + frac(b + factor(r2), factor(r1));
       const answer=String(a);
       return asProblem(question, answer, [
-        'Factorised forms are already visible, so look for common factors before multiplying out.',
+        'Step 1: Keep the expressions factorised so common factors can be seen.',
         frac(a + factor(r1), b + factor(r2)) + ' &times; ' + frac(b + factor(r2), factor(r1)),
-        'Cancel the common factor ' + factor(r2) + '.',
-        'Cancel the common factor ' + factor(r1) + '.',
-        'The remaining factors give ' + a + '.',
-        'So the simplified answer is ' + answer + '.'
+        'Step 2: Cancel the common factor ' + factor(r2) + ' from denominator and numerator.',
+        'Step 3: Cancel the common factor ' + factor(r1) + ' from numerator and denominator.',
+        'Step 4: The only remaining factor is ' + a + '.',
+        'Step 5: The simplified answer is ' + answer + '.'
       ]);
     }
 
@@ -210,12 +211,12 @@
       const question='Simplify:<br>' + frac(a + factor(r1), factor(r2)) + ' &divide; ' + frac(factor(r1), factor(r2));
       const answer=String(a);
       return asProblem(question, answer, [
-        'Dividing by a fraction means multiplying by its reciprocal.',
+        'Step 1: Dividing by a fraction means multiplying by its reciprocal.',
         frac(a + factor(r1), factor(r2)) + ' &divide; ' + frac(factor(r1), factor(r2)) + ' = ' + frac(a + factor(r1), factor(r2)) + ' &times; ' + frac(factor(r2), factor(r1)),
-        'Cancel the common factor ' + factor(r2) + '.',
-        'Cancel the common factor ' + factor(r1) + '.',
-        'The remaining factor is ' + a + '.',
-        'So the simplified answer is ' + answer + '.'
+        'Step 2: Cancel the common factor ' + factor(r2) + '.',
+        'Step 3: Cancel the common factor ' + factor(r1) + '.',
+        'Step 4: The remaining factor is ' + a + '.',
+        'Step 5: The simplified answer is ' + answer + '.'
       ]);
     }
 
@@ -225,12 +226,13 @@
       const question='Simplify:<br>' + frac(linear(a,b), den) + ' + ' + frac(linear(c,d), den);
       const answer=frac(linear(a+c,b+d), den);
       return asProblem(question, answer, [
-        'The denominators are the same, so add the numerators.',
+        'Step 1: The denominators are the same, so keep the denominator and add the numerators.',
         frac(linear(a,b), den) + ' + ' + frac(linear(c,d), den) + ' = ' + frac('(' + linear(a,b) + ') + (' + linear(c,d) + ')', den),
-        'Collect like terms in the numerator.',
+        'Step 2: Collect like terms in the numerator.',
         '(' + linear(a,b) + ') + (' + linear(c,d) + ') = ' + linear(a+c,b+d),
-        'So the simplified fraction is ' + answer + '.',
-        'Restriction: x is not equal to ' + r + '.'
+        'Step 3: Write the combined numerator over the original denominator.',
+        answer,
+        'Restriction: x is not equal to ' + r + ' because the denominator cannot be zero.'
       ]);
     }
 
@@ -242,28 +244,37 @@
       const question='Simplify:<br>' + frac(A, den1) + ' + ' + frac(B, den2);
       const answer=frac(linear(nX,nC), common);
       return asProblem(question, answer, [
-        'Use the lowest common denominator ' + common + '.',
+        'Step 1: The denominators are different, so use the common denominator ' + common + '.',
+        'Step 2: Multiply the first fraction by the missing factor ' + den2 + '.',
         frac(A, den1) + ' = ' + frac(A + den2, common),
+        'Step 3: Multiply the second fraction by the missing factor ' + den1 + '.',
         frac(B, den2) + ' = ' + frac(B + den1, common),
-        'Add the numerators.',
+        'Step 4: Add the numerators over the common denominator.',
         frac(A + den2 + ' + ' + B + den1, common),
-        'Expand and collect the numerator to get ' + linear(nX,nC) + '.',
-        'So the simplified fraction is ' + answer + '.'
+        'Step 5: Expand and collect the numerator to get ' + linear(nX,nC) + '.',
+        'Step 6: The simplified fraction is ' + answer + '.'
       ]);
     }
 
     function solveLinearFraction(){
-      const r=random(-5,5), x=choice([-4,-3,-2,-1,1,2,3,4,5].filter(v=>v!==r));
-      const k=choice([2,3,4,5]);
+      let r,k,x,guard=0;
+      do{
+        r=random(-5,5);
+        k=choice([2,3,4,5]);
+        x=(k*r)/(k-1);
+        guard++;
+      }while((!Number.isInteger(x)||x===r||x===0||Math.abs(x)>12)&&guard<80);
       const den=factor(r);
       const question='Solve:<br>' + frac(linear(1,0), den) + ' = ' + k;
       return asProblem(question, 'x = ' + x, [
-        'The denominator cannot be zero, so x is not equal to ' + r + '.',
-        'Multiply both sides by ' + den + '.',
+        'Step 1: State the restriction. The denominator cannot be zero, so x is not equal to ' + r + '.',
+        'Step 2: Multiply both sides by ' + den + ' to clear the denominator.',
         'x = ' + k + den,
-        'Expand the right hand side.',
+        'Step 3: Expand the right hand side.',
         'x = ' + k + 'x' + signed(-k*r),
+        'Step 4: Collect the x terms on one side.',
         (1-k) + 'x = ' + (-k*r),
+        'Step 5: Divide by ' + (1-k) + ' to isolate x.',
         'x = ' + x + '.',
         'Check: x = ' + x + ' does not make the denominator zero.'
       ]);
@@ -278,12 +289,14 @@
       const den1=factor(r1), den2=factor(r2);
       const question='Solve:<br>' + frac(A, den1) + ' = ' + frac(B, den2);
       return asProblem(question, 'x = ' + x, [
-        'The excluded values are x = ' + r1 + ' and x = ' + r2 + '.',
-        'Multiply both sides by the common denominator ' + den1 + den2 + '.',
+        'Step 1: State the excluded values. x cannot be ' + r1 + ' or ' + r2 + '.',
+        'Step 2: Multiply both sides by the common denominator ' + den1 + den2 + '.',
         A + den2 + ' = ' + B + den1,
-        'Expand both sides.',
+        'Step 3: Expand both sides.',
         linear(A,-A*r2) + ' = ' + linear(B,-B*r1),
+        'Step 4: Collect the x terms and constants.',
         linear(A-B, 0) + ' = ' + (A*r2-B*r1),
+        'Step 5: Divide by ' + (A-B) + ' to isolate x.',
         'x = ' + x + '.',
         'Check: x = ' + x + ' is not an excluded value.'
       ]);
