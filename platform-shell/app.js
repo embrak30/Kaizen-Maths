@@ -137,7 +137,7 @@ const tools = [
     status: "Imported",
     description: "Generate partial-fractions practice with clear worked steps for linear factors, repeated factors, improper fractions, and quadratic factors.",
     tags: ["algebra", "partial fractions", "rational functions", "improper fractions", "quadratic factors", "A-Level"],
-    toolPath: "tools/partial-fractions/index.html?v=partial-fractions-1",
+    toolPath: "tools/partial-fractions/index.html?v=batch1-steps-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers distinct linear factors using substitution values.",
@@ -156,7 +156,7 @@ const tools = [
     status: "Imported",
     description: "Generate matrix questions covering addition, subtraction, scalar multiplication, multiplication, determinants, inverses, and algebraic matrix problems.",
     tags: ["algebra", "matrices", "determinants", "inverse matrices", "matrix multiplication", "singular matrices", "A-Level"],
-    toolPath: "tools/matrices/index.html?v=matrices-1",
+    toolPath: "tools/matrices/index.html?v=batch1-steps-1",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on matrix operations: addition, subtraction, and scalar multiplication.",
@@ -174,7 +174,7 @@ const tools = [
     status: "Imported",
     description: "Generate differentiation practice for power, product, quotient, chain, trigonometric, logarithmic, tangent, normal, and turning-point problems.",
     tags: ["algebra", "calculus", "differentiation", "power rule", "product rule", "quotient rule", "chain rule", "trigonometry", "logarithms"],
-    toolPath: "tools/differentiation-rules-general/index.html?v=step-structure-1",
+    toolPath: "tools/differentiation-rules-general/index.html?v=batch1-steps-1",
     imported: true,
     teacherNotes: [
       "Extends polynomial differentiation into product, quotient, chain, trigonometric, and logarithmic rules.",
@@ -192,7 +192,7 @@ const tools = [
     status: "Imported",
     description: "Generate trigonometric differentiation practice with chain, product, quotient, and mixed-rule challenges.",
     tags: ["algebra", "calculus", "differentiation", "trigonometry", "chain rule", "product rule", "quotient rule"],
-    toolPath: "tools/differentiation-rules/index.html?v=trig-diff-worksheet-1",
+    toolPath: "tools/differentiation-rules/index.html?v=batch1-steps-1",
     imported: true,
     teacherNotes: [
       "Focuses on trigonometric differentiation from core derivatives through composite, product, and quotient rule tasks.",
@@ -210,7 +210,7 @@ const tools = [
     status: "Imported",
     description: "Practise derivatives of inverse trigonometric functions, including chain rule, evaluated gradients, tangents, and normals.",
     tags: ["algebra", "calculus", "differentiation", "inverse trigonometry", "chain rule", "tangents", "normals"],
-    toolPath: "tools/inverse-trig-differentiation/index.html?v=inv-trig-worksheet-2",
+    toolPath: "tools/inverse-trig-differentiation/index.html?v=batch1-steps-1",
     imported: true,
     teacherNotes: [
       "Covers sin^-1, cos^-1, tan^-1, cot^-1, sec^-1, and csc^-1 derivative forms.",
@@ -264,7 +264,7 @@ const tools = [
     status: "Imported",
     description: "Generate implicit and parametric differentiation practice, including second derivatives, tangent and normal lines, related rates, and parameter slope analysis.",
     tags: ["algebra", "calculus", "differentiation", "implicit differentiation", "parametric differentiation", "tangents", "normals"],
-    toolPath: "tools/advanced-differentiation/index.html?v=step-structure-1",
+    toolPath: "tools/advanced-differentiation/index.html?v=batch1-steps-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers implicit dy/dx, slopes at points, second derivatives, tangent lines, and related rates.",
@@ -1019,7 +1019,7 @@ const tools = [
     status: "Imported",
     description: "Generate synthetic division, remainder theorem, and factor theorem questions with worked steps.",
     tags: ["algebra", "polynomials", "remainder theorem", "factor theorem", "synthetic division", "division", "KaTeX"],
-    toolPath: "tools/remainder-theorem/index.html?v=remainder-worksheet-1",
+    toolPath: "tools/remainder-theorem/index.html?v=batch1-steps-1",
     imported: true,
     teacherNotes: [
       "Covers synthetic division, remainders, factors, and unknown-coefficient problems.",
