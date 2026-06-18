@@ -529,6 +529,24 @@ const tools = [
     ]
   },
   {
+    slug: "bearings",
+    title: "Bearings",
+    category: "Geometry",
+    level: "KS3 / GCSE",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate diagram-based bearings practice for three-figure bearings, reverse bearings, hidden compass-angle descriptions, and simple trigonometry in navigation contexts.",
+    tags: ["geometry", "bearings", "navigation", "angles", "trigonometry", "clockwise from north", "three-figure bearings"],
+    toolPath: "tools/bearings/index.html?v=bearings-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers reading bearings from diagrams and finding reverse bearings.",
+      "Level 2 converts hidden compass-angle descriptions into three-figure bearings.",
+      "Level 3 links bearings with right-triangle trigonometry, distances, and components."
+    ]
+  },
+  {
     slug: "free-vectors",
     title: "Free Vectors",
     category: "Geometry",
