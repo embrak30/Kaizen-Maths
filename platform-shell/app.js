@@ -1429,15 +1429,8 @@ function worksheetMathFragment(value) {
   let lastIndex = 0;
   let match;
 
-  function formatMathText(text) {
-    return String(text)
-      .replace(/(?<=[A-Za-z0-9)\]])\s*([=<>≤≥])\s*(?=[A-Za-z0-9(+-])/g, " $1 ")
-      .replace(/(?<=[A-Za-z0-9)\]])\s*([+-])\s*(?=[A-Za-z0-9(])/g, " $1 ")
-      .replace(/\s{2,}/g, " ");
-  }
-
   function appendText(text) {
-    if (text) fragment.appendChild(document.createTextNode(formatMathText(text)));
+    if (text) fragment.appendChild(document.createTextNode(formatWorksheetMathText(text)));
   }
 
   function createFraction(numeratorText, denominatorText) {
@@ -1512,6 +1505,22 @@ function worksheetMathFragment(value) {
   return fragment;
 }
 
+function textLooksWorksheetMathLike(text) {
+  const source = String(text ?? "");
+  return /(\$\$|\\\(|\\\[|[_^]|[A-Za-z][2-9]\b|\\d?frac|\\sqrt|\\displaystyle|\\boxed|\\text|\\left|\\right|\\big|\\quad|\\;|\\,|\\times|\\cdot|\\pm|\+\/-|\\approx|\\neq|\\Rightarrow|\\rightarrow|\\leq?|\\geq?|\\lt|\\gt|\\infty|\\theta|\\alpha|\\beta|\\gamma|\\Delta|\\pi|\\sin|\\cos|\\tan|\\sec|\\csc|\\cot|\\ln|[A-Za-z0-9)\]°]\s*[=<>≤≥]\s*-?[A-Za-z0-9(]|[A-Za-z]\s*[+\-]\s*\d|\d\s*[+\-×÷*/]\s*-?\d|\d+[A-Za-z]\s*[+\-]\s*\d|\d\s*[×÷*/]\s*\d)/.test(source);
+}
+
+function formatWorksheetMathText(text) {
+  return String(text ?? "")
+    .replace(/(?<=[A-Za-z0-9)\]°])\s*(=|≤|≥|<|>|≈|≠)\s*(?=-?[A-Za-z0-9(]|[πθ])/g, " $1 ")
+    .replace(/(?<=[A-Za-z0-9)\]°])\s*(×|÷|·)\s*(?=-?[A-Za-z0-9(]|[πθ])/g, " $1 ")
+    .replace(/(?<=[A-Za-z0-9)\]°])\s*([+−])\s*(?=-?[A-Za-z0-9(]|[πθ])/g, " $1 ")
+    .replace(/(?<=[A-Za-z0-9)\]°])\s*-\s*(?=[A-Za-z0-9(]|[πθ])/g, " - ")
+    .replace(/(?<=[A-Za-z])\s-\s(?=[A-Za-z]{2,})/g, "-")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 function worksheetLatexArrayHtml(value) {
   return String(value ?? "").replace(/\$\$\s*\\begin\{array\}\{[^{}]*\}([\s\S]*?)\\end\{array\}\s*\$\$/g, (_, body) => {
     const rows = body
@@ -1582,7 +1591,7 @@ function worksheetContentHtml(value) {
       if (parent && ["SCRIPT", "STYLE", "TEXTAREA", "SELECT", "OPTION", "SUP", "SUB"].includes(parent.tagName)) {
         return NodeFilter.FILTER_REJECT;
       }
-      return /(∫_|\\int|[_^]|[A-Za-z][2-9]\b|\\d?frac|\\sqrt|\\displaystyle|\\boxed|\\text|\\left|\\right|\\big|\\quad|\\;|\\,|\\times|\\cdot|\\pm|\+\/-|\\approx|\\neq|\\Rightarrow|\\rightarrow|\\leq?|\\geq?|\\lt|\\gt|\\infty|\\theta|\\alpha|\\beta|\\gamma|\\Delta|\\pi|\\sin|\\cos|\\tan|\\sec|\\csc|\\cot|\\ln|\\\(|\\\[|\$)/.test(node.nodeValue)
+      return textLooksWorksheetMathLike(node.nodeValue)
         ? NodeFilter.FILTER_ACCEPT
         : NodeFilter.FILTER_REJECT;
     }
@@ -1664,7 +1673,7 @@ function renderWorksheetAnswerKey(worksheet, options = {}) {
         return `
           <section class="worksheet-key-section">
             <h3>${escapeHtml(section.toolTitle)}</h3>
-            <p>${escapeHtml(section.levelLabel)} · ${escapeHtml(section.typeLabel)}</p>
+            <p>${escapeHtml(section.typeLabel)}</p>
             <ol class="worksheet-key-list">
               ${sectionProblems.map(renderAnswer).join("")}
             </ol>
@@ -2358,6 +2367,14 @@ function renderWorksheetGenerator() {
     <section class="worksheet-builder">
       <form class="worksheet-controls panel" id="worksheetForm">
         <div class="worksheet-control">
+          <label for="worksheetPaperTitle">Worksheet title</label>
+          <input id="worksheetPaperTitle" type="text" value="Mixed Practice Worksheet" placeholder="Example: Trigonometry Practice">
+        </div>
+        <div class="worksheet-control">
+          <label for="worksheetPaperInstruction">Student instruction</label>
+          <textarea id="worksheetPaperInstruction" rows="3" placeholder="Complete the following questions. Show working where appropriate.">Complete the following questions. Show working where appropriate.</textarea>
+        </div>
+        <div class="worksheet-control">
           <label for="worksheetTool">Topic tool</label>
           <select id="worksheetTool">${worksheetToolOptions()}</select>
         </div>
@@ -2505,6 +2522,13 @@ function worksheetAssessmentOptions() {
   const assessment = document.getElementById("worksheetAssessmentMode")?.checked || false;
   const marksPerQuestion = Math.max(1, Math.min(20, Number(document.getElementById("worksheetMarks")?.value || 1)));
   return { assessment, marksPerQuestion };
+}
+
+function worksheetPresentationOptions(assessment = false) {
+  const defaultTitle = assessment ? "Assessment Paper" : "Mixed Practice Worksheet";
+  const title = document.getElementById("worksheetPaperTitle")?.value.trim() || defaultTitle;
+  const instruction = document.getElementById("worksheetPaperInstruction")?.value.trim() || "Complete the following questions. Show working where appropriate.";
+  return { title, instruction };
 }
 
 function setWorksheetAssessmentMode(active) {
@@ -2824,11 +2848,8 @@ function renderWorksheetPreview(worksheet, options = {}) {
     return;
   }
 
-  const sectionSummary = worksheet.sections?.length
-    ? worksheet.sections.map((section) => `${section.toolTitle}: ${section.count}`).join(" · ")
-    : `${worksheet.problems.length} questions`;
   const totalMarks = worksheetTotalMarks(worksheet);
-  const paperTitle = options.assessment ? "Mixed Assessment Paper" : "Mixed Practice Worksheet";
+  const presentation = worksheetPresentationOptions(options.assessment);
   const paperEyebrow = options.assessment ? "Kaizen Maths Assessment" : "Kaizen Maths Worksheet";
   let questionNumber = 0;
 
@@ -2837,8 +2858,8 @@ function renderWorksheetPreview(worksheet, options = {}) {
       <header class="worksheet-sheet-header">
         <div>
           <span class="eyebrow">${paperEyebrow}</span>
-          <h2>${paperTitle}</h2>
-          <p>${escapeHtml(sectionSummary)} · ${worksheet.problems.length} total questions${options.assessment ? ` · ${totalMarks} total marks` : ""}</p>
+          <h2>${escapeHtml(presentation.title)}</h2>
+          <p>${escapeHtml(presentation.instruction)}</p>
         </div>
         <div class="worksheet-student-fields">
           <span>Name:</span>
@@ -2852,7 +2873,7 @@ function renderWorksheetPreview(worksheet, options = {}) {
         return `
           <section class="worksheet-section">
             <h3>${escapeHtml(section.toolTitle)}</h3>
-            <p>${escapeHtml(section.levelLabel)} · ${escapeHtml(section.typeLabel)} · ${sectionProblems.length} questions${options.assessment && section.marksPerQuestion ? ` · ${worksheetMarksText(section.marksPerQuestion)} each` : ""}</p>
+            <p>${escapeHtml(section.typeLabel)}${options.assessment && section.marksPerQuestion ? ` · ${worksheetMarksText(section.marksPerQuestion)} each` : ""}</p>
             ${section.instruction ? `<p class="worksheet-section-instruction">${escapeHtml(section.instruction)}</p>` : ""}
             <ol class="worksheet-question-list">
               ${sectionProblems.map((problem) => {
@@ -2906,11 +2927,15 @@ function resetWorksheetBuilder() {
   const assessmentMode = document.getElementById("worksheetAssessmentMode");
   const assessmentPanel = document.getElementById("worksheetAssessmentPanel");
   const marksInput = document.getElementById("worksheetMarks");
+  const paperTitleInput = document.getElementById("worksheetPaperTitle");
+  const paperInstructionInput = document.getElementById("worksheetPaperInstruction");
   worksheetState.sections = [];
   worksheetState.worksheet = null;
   if (assessmentMode) assessmentMode.checked = false;
   if (assessmentPanel) assessmentPanel.hidden = true;
   if (marksInput) marksInput.value = "1";
+  if (paperTitleInput) paperTitleInput.value = "Mixed Practice Worksheet";
+  if (paperInstructionInput) paperInstructionInput.value = "Complete the following questions. Show working where appropriate.";
   renderWorksheetSections();
   if (preview) {
     preview.innerHTML = `<div class="empty-state">Choose the worksheet options, then generate a printable question set.</div>`;
@@ -2930,6 +2955,8 @@ function bindWorksheetGenerator() {
   const resetButton = document.getElementById("resetWorksheet");
   const assessmentMode = document.getElementById("worksheetAssessmentMode");
   const assessmentPanel = document.getElementById("worksheetAssessmentPanel");
+  const paperTitleInput = document.getElementById("worksheetPaperTitle");
+  const paperInstructionInput = document.getElementById("worksheetPaperInstruction");
   if (!toolSelect || !form) return;
 
   if (controlsPane && previewPane) {
@@ -2955,7 +2982,18 @@ function bindWorksheetGenerator() {
   addSectionButton?.addEventListener("click", addWorksheetSection);
   buildAssessmentButton?.addEventListener("click", buildTopicAssessment);
   resetButton?.addEventListener("click", resetWorksheetBuilder);
+  [paperTitleInput, paperInstructionInput].forEach((input) => {
+    input?.addEventListener("input", () => {
+      if (!worksheetState.worksheet?.ok) return;
+      const answers = document.getElementById("worksheetAnswers")?.checked || false;
+      const steps = document.getElementById("worksheetSteps")?.checked || false;
+      renderWorksheetPreview(worksheetState.worksheet, { answers, steps, ...worksheetAssessmentOptions() });
+    });
+  });
   assessmentMode?.addEventListener("change", () => {
+    if (paperTitleInput && ["Mixed Practice Worksheet", "Assessment Paper"].includes(paperTitleInput.value.trim())) {
+      paperTitleInput.value = assessmentMode.checked ? "Assessment Paper" : "Mixed Practice Worksheet";
+    }
     if (assessmentPanel) assessmentPanel.hidden = !assessmentMode.checked;
     if (assessmentMode.checked) {
       const marksPerQuestion = worksheetAssessmentOptions().marksPerQuestion;
