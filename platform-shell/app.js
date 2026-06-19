@@ -2043,13 +2043,13 @@ const gcsePaperModes = [
   },
   {
     id: "mock",
-    label: "One-click OCR-style 100-mark mock paper",
+    label: "One-click 100-mark mock paper",
     count: null,
     targetMarks: 100,
     targetQuestions: 28,
-    title: "GCSE OCR-Style Mock Practice Paper",
+    title: "GCSE Mock Practice Paper",
     time: "1 hour 30 minutes",
-    description: "Create a 100-mark practice paper with OCR-style pacing, short fluency questions, and multi-step problem solving."
+    description: "Create a full 100-mark GCSE-style paper with short fluency questions and multi-step problem solving."
   }
 ];
 
@@ -3175,7 +3175,7 @@ function bindGcseExamStyle() {
     }
     if (modeHint) {
       const sizeText = mode.id === "mock" ? "Target: 100 marks across about 25-28 questions." : mode.count ? `Questions: ${mode.count}.` : "Questions: choose your own count.";
-      const mockNote = mode.id === "mock" ? " Topic, difficulty, and mark filters are cleared so the paper follows an OCR-style mark spread; the paper type filter can still be used." : "";
+      const mockNote = mode.id === "mock" ? " Topic, difficulty, and mark filters are cleared so the paper follows a balanced GCSE-style mark spread; the paper type filter can still be used." : "";
       modeHint.innerHTML = `<strong>${escapeHtml(mode.label)}</strong><span> ${escapeHtml(mode.description)} ${escapeHtml(sizeText)} Suggested time: ${escapeHtml(mode.time)}.${escapeHtml(mockNote)}</span>`;
     }
   }
@@ -3253,75 +3253,83 @@ function bindGcseExamStyle() {
 
 function renderGcseExamStyle() {
   app.innerHTML = `
-    ${pageHeader(
-      "GCSE Exam Paper Builder",
-      "Create one GCSE-style question, a short class set, a longer revision paper, or a one-click OCR-style 100-mark mock paper with worked solutions and mark-scheme-style guidance.",
-      `<a class="button" href="#/worksheet-generator">Open Worksheet Builder</a><button class="button" id="printGcseExamSet" type="button">Print / Save PDF</button>`
-    )}
     <section class="exam-style-page">
-      <form class="panel exam-controls" id="gcseExamForm">
-        <div class="worksheet-control">
-          <label for="gcseMode">Paper mode</label>
-          <select id="gcseMode">${gcseOptionList(gcsePaperModes, "class")}</select>
+      <section class="exam-builder-compact panel">
+        <div class="exam-builder-heading">
+          <div>
+            <span class="eyebrow">Assessment Practice</span>
+            <h1>GCSE Exam Paper Builder</h1>
+            <p>Create one question, a class set, a revision paper, or a one-click 100-mark mock.</p>
+          </div>
+          <div class="exam-builder-links">
+            <a class="button" href="#/worksheet-generator">Worksheet Builder</a>
+            <button class="button" id="printGcseExamSet" type="button">Print / PDF</button>
+          </div>
         </div>
-        <div class="exam-mode-summary" id="gcseModeHint" aria-live="polite"></div>
-        <div class="worksheet-control">
-          <label for="gcseBoard">Exam style</label>
-          <select id="gcseBoard">${gcseOptionList(gcseExamStyles, "general")}</select>
-        </div>
-        <div class="worksheet-control">
-          <label for="gcseTopic">Topic area</label>
-          <select id="gcseTopic">${gcseOptionList(gcseExamTopics, "any")}</select>
-        </div>
-        <div class="worksheet-control">
-          <label for="gcseDifficulty">Difficulty</label>
-          <select id="gcseDifficulty">${gcseOptionList(gcseGradeBands, "any")}</select>
-        </div>
-        <div class="worksheet-control">
-          <label for="gcseMarks">Marks</label>
-          <select id="gcseMarks">
-            <option value="any">Any mark value</option>
-            <option value="2">2 marks</option>
-            <option value="3">3 marks</option>
-            <option value="4">4 marks</option>
-            <option value="5">5 marks</option>
-          </select>
-        </div>
-        <div class="worksheet-control">
-          <label for="gcseCalculator">Paper type</label>
-          <select id="gcseCalculator">
-            <option value="any">Calculator or non-calculator</option>
-            <option value="calculator">Calculator</option>
-            <option value="non-calculator">Non-calculator</option>
-          </select>
-        </div>
-        <div class="worksheet-control" id="gcseCountControl" hidden>
-          <label for="gcseCount">Custom question count</label>
-          <input id="gcseCount" type="number" min="1" max="30" value="4">
-          <small>Only used when Paper mode is set to Custom paper.</small>
-        </div>
-        <div class="worksheet-control exam-wide-control">
-          <label for="gcsePaperTitle">Paper title</label>
-          <input id="gcsePaperTitle" type="text" value="GCSE Class Practice Set">
-        </div>
-        <div class="worksheet-control exam-wide-control">
-          <label for="gcseInstructions">Student instruction</label>
-          <textarea id="gcseInstructions" rows="2">Answer all questions. Show clear working where required.</textarea>
-        </div>
-        <label class="exam-checkbox">
-          <input id="gcseTeacherCopy" type="checkbox" checked>
-          <span>Include teacher copy, worked solutions, and mark scheme</span>
-        </label>
-        <div class="exam-form-actions">
-          <button class="button primary" type="submit">Generate Paper</button>
-          <button class="button" id="gcseMockPaperButton" type="button">Generate 100-Mark OCR-Style Mock</button>
-        </div>
-      </form>
-      <article class="panel exam-style-note">
-        <span class="eyebrow">Exam Practice</span>
-        <h2>Original questions, paper-style structure</h2>
-        <p>This builder creates original Kaizen Maths GCSE-style practice papers with marks, command words, topic metadata, worked solutions, and mark-scheme-style credit. It does not copy past-paper questions or claim official endorsement from any exam board.</p>
-      </article>
+        <form class="exam-controls" id="gcseExamForm">
+          <div class="worksheet-control">
+            <label for="gcseMode">Mode</label>
+            <select id="gcseMode">${gcseOptionList(gcsePaperModes, "class")}</select>
+          </div>
+          <div class="worksheet-control">
+            <label for="gcseBoard">Style</label>
+            <select id="gcseBoard">${gcseOptionList(gcseExamStyles, "general")}</select>
+          </div>
+          <div class="worksheet-control">
+            <label for="gcseTopic">Topic</label>
+            <select id="gcseTopic">${gcseOptionList(gcseExamTopics, "any")}</select>
+          </div>
+          <div class="worksheet-control">
+            <label for="gcseDifficulty">Difficulty</label>
+            <select id="gcseDifficulty">${gcseOptionList(gcseGradeBands, "any")}</select>
+          </div>
+          <div class="worksheet-control">
+            <label for="gcseMarks">Marks</label>
+            <select id="gcseMarks">
+              <option value="any">Any marks</option>
+              <option value="2">2 marks</option>
+              <option value="3">3 marks</option>
+              <option value="4">4 marks</option>
+              <option value="5">5 marks</option>
+            </select>
+          </div>
+          <div class="worksheet-control">
+            <label for="gcseCalculator">Paper</label>
+            <select id="gcseCalculator">
+              <option value="any">Any</option>
+              <option value="calculator">Calculator</option>
+              <option value="non-calculator">Non-calculator</option>
+            </select>
+          </div>
+          <div class="worksheet-control" id="gcseCountControl" hidden>
+            <label for="gcseCount">Questions</label>
+            <input id="gcseCount" type="number" min="1" max="30" value="4">
+          </div>
+          <div class="exam-form-actions">
+            <button class="button primary" type="submit">Generate</button>
+            <button class="button" id="gcseMockPaperButton" type="button">One-click 100-mark mock</button>
+          </div>
+          <div class="exam-mode-summary" id="gcseModeHint" aria-live="polite"></div>
+          <details class="exam-advanced-options">
+            <summary>Paper options</summary>
+            <div class="exam-advanced-grid">
+              <div class="worksheet-control">
+                <label for="gcsePaperTitle">Paper title</label>
+                <input id="gcsePaperTitle" type="text" value="GCSE Class Practice Set">
+              </div>
+              <div class="worksheet-control">
+                <label for="gcseInstructions">Student instruction</label>
+                <textarea id="gcseInstructions" rows="2">Answer all questions. Show clear working where required.</textarea>
+              </div>
+              <label class="exam-checkbox">
+                <input id="gcseTeacherCopy" type="checkbox" checked>
+                <span>Include teacher copy, worked solutions, and mark scheme</span>
+              </label>
+            </div>
+          </details>
+        </form>
+        <p class="exam-builder-note">Original Kaizen Maths GCSE-style practice. Questions are generated for teacher-created practice and assessment.</p>
+      </section>
       <section id="gcseExamOutput" class="exam-output" aria-live="polite"></section>
     </section>
   `;
@@ -3396,7 +3404,7 @@ function renderHome() {
       <div>
         <span class="eyebrow">Assessment Practice</span>
         <h2>Build GCSE practice papers</h2>
-        <p>Create one question, a short class set, a longer revision paper, or a one-click OCR-style 100-mark mock paper with worked solutions and mark-scheme-style guidance.</p>
+        <p>Create one question, a short class set, a longer revision paper, or a one-click 100-mark mock paper with worked solutions and mark-scheme-style guidance.</p>
       </div>
       <a class="button primary" href="#/gcse-exam-style">Open Exam Builder</a>
     </section>
