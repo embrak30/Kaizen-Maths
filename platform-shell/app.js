@@ -2043,11 +2043,12 @@ const gcsePaperModes = [
   },
   {
     id: "mock",
-    label: "One-click mock paper",
-    count: 12,
+    label: "One-click 90-mark mock paper",
+    count: null,
+    targetMarks: 90,
     title: "GCSE Mock Practice Paper",
-    time: "55-65 minutes",
-    description: "Create a balanced paper across number, algebra, ratio, geometry, and statistics."
+    time: "1 hour 45 minutes",
+    description: "Create a fuller 90-mark practice paper balanced across number, algebra, ratio, geometry, and statistics."
   }
 ];
 
@@ -2491,29 +2492,47 @@ function gcseBuildQuestionSet(filters, count = 4) {
 function gcseBuildMockPaper(filters) {
   const set = [];
   const usedKeys = new Set();
-  gcseMockBlueprint.forEach((criteria, index) => {
-    if (filters.calculator !== "any" && criteria.calculator !== filters.calculator) return;
-    const pool = gcseExamGenerators.filter((item) => (
+  const targetMarks = gcsePaperModeById("mock").targetMarks || 90;
+  let totalMarks = 0;
+  let blueprintIndex = 0;
+  let safety = 0;
+
+  while (totalMarks < targetMarks && set.length < 32 && safety < 120) {
+    const criteria = gcseMockBlueprint[blueprintIndex % gcseMockBlueprint.length];
+    blueprintIndex += 1;
+    safety += 1;
+
+    if (filters.calculator !== "any" && criteria.calculator !== filters.calculator) continue;
+    let pool = gcseExamGenerators.filter((item) => (
       item.topic === criteria.topic &&
       item.difficulty === criteria.difficulty &&
       item.calculator === criteria.calculator
     ));
-    if (!pool.length) return;
-    const question = gcseCreateUniqueQuestion(pool, filters, usedKeys, index);
-    if (question) set.push(question);
-  });
+    const remaining = targetMarks - totalMarks;
+    pool = pool.filter((item) => item.marks <= remaining && remaining - item.marks !== 1);
+    if (!pool.length) continue;
 
-  const targetCount = filters.calculator === "any" ? 12 : 8;
+    const question = gcseCreateUniqueQuestion(pool, filters, usedKeys, blueprintIndex);
+    if (question) {
+      set.push(question);
+      totalMarks += question.marks;
+    }
+  }
+
   const fillPool = gcseFilteredGenerators({
     ...filters,
     topic: "any",
     difficulty: "any",
     marks: "any"
   });
-  while (set.length < targetCount && fillPool.length) {
-    const question = gcseCreateUniqueQuestion(fillPool, filters, usedKeys, set.length);
+  while (totalMarks < targetMarks && fillPool.length && set.length < 36) {
+    const remaining = targetMarks - totalMarks;
+    const adjustedPool = fillPool.filter((item) => item.marks <= remaining && remaining - item.marks !== 1);
+    if (!adjustedPool.length) break;
+    const question = gcseCreateUniqueQuestion(adjustedPool, filters, usedKeys, set.length);
     if (!question) break;
     set.push(question);
+    totalMarks += question.marks;
   }
   return set;
 }
@@ -2591,6 +2610,7 @@ function bindGcseExamStyle() {
   const printButton = document.getElementById("printGcseExamSet");
   const modeSelect = document.getElementById("gcseMode");
   const countInput = document.getElementById("gcseCount");
+  const countControl = document.getElementById("gcseCountControl");
   const titleInput = document.getElementById("gcsePaperTitle");
   const modeHint = document.getElementById("gcseModeHint");
   const mockButton = document.getElementById("gcseMockPaperButton");
@@ -2600,14 +2620,22 @@ function bindGcseExamStyle() {
     const mode = gcsePaperModeById(modeSelect?.value || "class");
     if (countInput) {
       countInput.disabled = mode.id !== "custom";
-      countInput.value = String(mode.id === "custom" ? gcseClampQuestionCount(countInput.value || 6) : mode.count);
+      if (mode.id === "custom") {
+        countInput.value = String(gcseClampQuestionCount(countInput.value || 6));
+      } else if (mode.count) {
+        countInput.value = String(mode.count);
+      }
+    }
+    if (countControl) {
+      countControl.hidden = mode.id !== "custom";
     }
     if (titleInput && (overwriteTitle || !titleInput.value.trim())) {
       titleInput.value = mode.title;
     }
     if (modeHint) {
-      const mockNote = mode.id === "mock" ? " Mock mode balances the paper across the available GCSE topic areas; only the paper type filter is applied." : "";
-      modeHint.textContent = `${mode.description} Suggested time: ${mode.time}.${mockNote}`;
+      const sizeText = mode.id === "mock" ? "Target: 90 marks." : mode.count ? `Questions: ${mode.count}.` : "Questions: choose your own count.";
+      const mockNote = mode.id === "mock" ? " Topic, difficulty, and mark filters are cleared so the paper stays balanced; the paper type filter can still be used." : "";
+      modeHint.innerHTML = `<strong>${escapeHtml(mode.label)}</strong><span> ${escapeHtml(mode.description)} ${escapeHtml(sizeText)} Suggested time: ${escapeHtml(mode.time)}.${escapeHtml(mockNote)}</span>`;
     }
   }
 
@@ -2686,8 +2714,8 @@ function renderGcseExamStyle() {
   app.innerHTML = `
     ${pageHeader(
       "GCSE Exam Paper Builder",
-      "Create one GCSE-style question, a short class set, a longer revision paper, or a one-click mock paper with marks, worked solutions, and mark-scheme-style guidance.",
-      `<a class="button" href="#/worksheet-generator">Open Worksheet Builder</a><button class="button primary" id="gcseMockPaperButton" type="button">One-Click Mock Paper</button><button class="button" id="printGcseExamSet" type="button">Print / Save PDF</button>`
+      "Create one GCSE-style question, a short class set, a longer revision paper, or a one-click 90-mark mock paper with worked solutions and mark-scheme-style guidance.",
+      `<a class="button" href="#/worksheet-generator">Open Worksheet Builder</a><button class="button" id="printGcseExamSet" type="button">Print / Save PDF</button>`
     )}
     <section class="exam-style-page">
       <form class="panel exam-controls" id="gcseExamForm">
@@ -2695,6 +2723,7 @@ function renderGcseExamStyle() {
           <label for="gcseMode">Paper mode</label>
           <select id="gcseMode">${gcseOptionList(gcsePaperModes, "class")}</select>
         </div>
+        <div class="exam-mode-summary" id="gcseModeHint" aria-live="polite"></div>
         <div class="worksheet-control">
           <label for="gcseBoard">Exam style</label>
           <select id="gcseBoard">${gcseOptionList(gcseExamStyles, "general")}</select>
@@ -2725,9 +2754,10 @@ function renderGcseExamStyle() {
             <option value="non-calculator">Non-calculator</option>
           </select>
         </div>
-        <div class="worksheet-control">
-          <label for="gcseCount">Question count</label>
+        <div class="worksheet-control" id="gcseCountControl" hidden>
+          <label for="gcseCount">Custom question count</label>
           <input id="gcseCount" type="number" min="1" max="30" value="4">
+          <small>Only used when Paper mode is set to Custom paper.</small>
         </div>
         <div class="worksheet-control exam-wide-control">
           <label for="gcsePaperTitle">Paper title</label>
@@ -2741,8 +2771,10 @@ function renderGcseExamStyle() {
           <input id="gcseTeacherCopy" type="checkbox" checked>
           <span>Include teacher copy, worked solutions, and mark scheme</span>
         </label>
-        <p class="exam-mode-hint" id="gcseModeHint"></p>
-        <button class="button primary" type="submit">Generate Paper</button>
+        <div class="exam-form-actions">
+          <button class="button primary" type="submit">Generate Paper</button>
+          <button class="button" id="gcseMockPaperButton" type="button">Generate 90-Mark Mock</button>
+        </div>
       </form>
       <article class="panel exam-style-note">
         <span class="eyebrow">Exam Practice</span>
@@ -2823,7 +2855,7 @@ function renderHome() {
       <div>
         <span class="eyebrow">Assessment Practice</span>
         <h2>Build GCSE practice papers</h2>
-        <p>Create one question, a short class set, a longer revision paper, or a one-click mock paper with marks, worked solutions, and mark-scheme-style guidance.</p>
+        <p>Create one question, a short class set, a longer revision paper, or a one-click 90-mark mock paper with worked solutions and mark-scheme-style guidance.</p>
       </div>
       <a class="button primary" href="#/gcse-exam-style">Open Exam Builder</a>
     </section>

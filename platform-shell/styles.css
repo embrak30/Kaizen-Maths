@@ -2415,12 +2415,47 @@ sup .worksheet-fraction span:last-child {
   accent-color: var(--teal);
 }
 
-.exam-mode-hint {
-  grid-column: span 3;
-  margin: 0;
+.worksheet-control small {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.exam-mode-summary {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(160px, 0.22fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  min-height: 48px;
+  margin: -2px 0 2px;
+  padding: 11px 13px;
+  border: 1px solid rgba(111, 76, 195, 0.2);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(111, 76, 195, 0.08), rgba(23, 184, 179, 0.07)),
+    #ffffff;
   color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.45;
+}
+
+.exam-mode-summary strong {
+  color: var(--ink);
+  font-size: 0.94rem;
+}
+
+.exam-mode-summary span {
+  min-width: 0;
+}
+
+.exam-form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 2px;
 }
 
 .exam-style-note {
@@ -2924,7 +2959,7 @@ sup .worksheet-fraction span:last-child {
   }
 
   .exam-wide-control,
-  .exam-mode-hint {
+  .exam-mode-summary {
     grid-column: 1 / -1;
   }
 
@@ -2975,6 +3010,10 @@ sup .worksheet-fraction span:last-child {
 
   .exam-controls,
   .exam-paper-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .exam-mode-summary {
     grid-template-columns: 1fr;
   }
 
