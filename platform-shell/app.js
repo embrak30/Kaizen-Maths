@@ -1984,6 +1984,553 @@ function metricGrid() {
   `;
 }
 
+const gcseExamStyles = [
+  { id: "general", label: "GCSE exam-style", note: "Balanced GCSE-style layout with marks and structured working." },
+  { id: "aqa", label: "AQA-style", note: "Concise prompts with clear command words and mark allocation." },
+  { id: "edexcel", label: "Edexcel-style", note: "Structured multi-part questions with clear progression." },
+  { id: "ocr", label: "OCR-style", note: "Context-led questions with method and interpretation marks." }
+];
+
+const gcseExamTopics = [
+  { id: "any", label: "Any topic" },
+  { id: "number", label: "Number" },
+  { id: "algebra", label: "Algebra" },
+  { id: "ratio", label: "Ratio and proportion" },
+  { id: "geometry", label: "Geometry and measures" },
+  { id: "statistics", label: "Probability and statistics" }
+];
+
+const gcseGradeBands = [
+  { id: "any", label: "Any grade band" },
+  { id: "foundation", label: "Foundation grades 1-3" },
+  { id: "crossover", label: "Crossover grades 4-5" },
+  { id: "higher", label: "Higher grades 6-7" },
+  { id: "stretch", label: "Higher grades 8-9" }
+];
+
+function gcseOptionList(options, selected = "") {
+  return options.map((option) => `<option value="${escapeHtml(option.id)}" ${option.id === selected ? "selected" : ""}>${escapeHtml(option.label)}</option>`).join("");
+}
+
+function gcseChoice(items) {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function gcseRand(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function gcseMoney(value) {
+  return `£${Number(value).toLocaleString("en-GB", { maximumFractionDigits: 2 })}`;
+}
+
+function gcseLinearExpression(coefficient, constant, variable = "x") {
+  const first = coefficient === 1 ? variable : coefficient === -1 ? `-${variable}` : `${coefficient}${variable}`;
+  if (!constant) return first;
+  return `${first} ${constant > 0 ? "+" : "-"} ${Math.abs(constant)}`;
+}
+
+function gcseBoardNote(boardId) {
+  return gcseExamStyles.find((style) => style.id === boardId)?.note || gcseExamStyles[0].note;
+}
+
+function gcseGenerateQuadratic(filters) {
+  const r1 = gcseChoice([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6]);
+  let r2 = gcseChoice([-7, -5, -3, -1, 2, 4, 6, 8]);
+  if (r2 === r1) r2 += 1;
+  const b = -(r1 + r2);
+  const c = r1 * r2;
+  const expr = `x² ${b >= 0 ? "+" : "-"} ${Math.abs(b)}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)}`;
+  return {
+    topic: "Algebra",
+    subtopic: "Quadratic equations",
+    difficulty: filters.difficulty === "stretch" ? "Higher grades 8-9" : "Crossover grades 4-5",
+    marks: 3,
+    calculator: "Non-calculator",
+    commandWords: ["solve"],
+    questionHtml: `<p>Solve ${expr} = 0.</p>`,
+    answer: `x = ${r1} or x = ${r2}`,
+    worked: [
+      `Look for two numbers that multiply to ${c} and add to ${-b}.`,
+      `${expr} = (x ${r1 < 0 ? "+" : "-"} ${Math.abs(r1)})(x ${r2 < 0 ? "+" : "-"} ${Math.abs(r2)})`,
+      `Set each bracket equal to zero.`,
+      `x = ${r1} or x = ${r2}`
+    ],
+    markScheme: [
+      "1 mark for correct factorisation.",
+      "1 mark for setting the factors equal to zero or using an equivalent method.",
+      "1 mark for both correct solutions."
+    ]
+  };
+}
+
+function gcseGenerateLinearModel(filters) {
+  const m = gcseRand(3, 8);
+  const c = gcseRand(12, 35);
+  const input = gcseRand(4, 12);
+  const output = m * input + c;
+  return {
+    topic: "Algebra",
+    subtopic: "Forming and solving equations",
+    difficulty: "Crossover grades 4-5",
+    marks: 4,
+    calculator: "Non-calculator",
+    commandWords: ["form", "solve"],
+    questionHtml: `<p>A taxi company charges a fixed booking fee and then a cost per mile.</p><p>The cost for ${input} miles is £${output}. The cost per mile is £${m}.</p><p>Form an equation and find the booking fee.</p>`,
+    answer: `£${c}`,
+    worked: [
+      "Let the booking fee be b.",
+      `${m} × ${input} + b = ${output}`,
+      `${m * input} + b = ${output}`,
+      `b = ${output} - ${m * input}`,
+      `b = ${c}`
+    ],
+    markScheme: [
+      "1 mark for defining a variable or clear unknown.",
+      "1 mark for a correct equation.",
+      "1 mark for correct rearrangement.",
+      "1 mark for the booking fee with units."
+    ]
+  };
+}
+
+function gcseGenerateLinearEquation(filters) {
+  const a = gcseRand(3, 9);
+  const x = gcseRand(2, 8);
+  const b = gcseRand(4, 15);
+  const rhs = a * x + b;
+  return {
+    topic: "Algebra",
+    subtopic: "Solving linear equations",
+    difficulty: "Foundation grades 1-3",
+    marks: 3,
+    calculator: "Non-calculator",
+    commandWords: ["solve"],
+    questionHtml: `<p>Solve ${a}x + ${b} = ${rhs}.</p>`,
+    answer: `x = ${x}`,
+    worked: [
+      `Subtract ${b} from both sides.`,
+      `${a}x = ${rhs - b}`,
+      `Divide both sides by ${a}.`,
+      `x = ${x}`
+    ],
+    markScheme: [
+      "1 mark for subtracting the constant term.",
+      "1 mark for dividing by the coefficient of x.",
+      "1 mark for the correct final value."
+    ]
+  };
+}
+
+function gcseGenerateFractionAmount(filters) {
+  const denominator = gcseChoice([4, 5, 8, 10]);
+  const numerator = gcseChoice([2, 3, 4, 7].filter((value) => value < denominator));
+  const onePart = gcseChoice([6, 8, 9, 12]);
+  const amount = denominator * onePart;
+  const answer = numerator * onePart;
+  return {
+    topic: "Number",
+    subtopic: "Fractions of amounts",
+    difficulty: "Foundation grades 1-3",
+    marks: 2,
+    calculator: "Non-calculator",
+    commandWords: ["work out"],
+    questionHtml: `<p>Work out ${numerator}/${denominator} of ${amount}.</p>`,
+    answer: `${answer}`,
+    worked: [
+      `${amount} ÷ ${denominator} = ${onePart}.`,
+      `${onePart} × ${numerator} = ${answer}.`
+    ],
+    markScheme: [
+      "1 mark for finding one denominator part of the amount.",
+      "1 mark for multiplying by the numerator."
+    ]
+  };
+}
+
+function gcseGenerateRatio(filters) {
+  const a = gcseChoice([2, 3, 4, 5]);
+  const b = gcseChoice([3, 5, 7, 8]);
+  const scale = gcseChoice([6, 8, 10, 12]);
+  const total = (a + b) * scale;
+  const first = a * scale;
+  const increase = gcseChoice([10, 15, 20, 25]);
+  const increased = first * (1 + increase / 100);
+  return {
+    topic: "Ratio and proportion",
+    subtopic: "Sharing in a ratio and percentage change",
+    difficulty: "Crossover grades 4-5",
+    marks: 5,
+    calculator: "Calculator",
+    commandWords: ["work out"],
+    questionHtml: `<p>${total} counters are shared between A and B in the ratio ${a}:${b}.</p><p>A then increases their share by ${increase}%.</p><p>Work out A's new amount.</p>`,
+    answer: `${increased} counters`,
+    worked: [
+      `Total ratio parts = ${a} + ${b} = ${a + b}.`,
+      `One part = ${total} ÷ ${a + b} = ${scale}.`,
+      `A's original share = ${a} × ${scale} = ${first}.`,
+      `${increase}% of ${first} = ${first * increase / 100}.`,
+      `New amount = ${first} + ${first * increase / 100} = ${increased}.`
+    ],
+    markScheme: [
+      "1 mark for total ratio parts.",
+      "1 mark for the value of one part.",
+      "1 mark for A's original share.",
+      "1 mark for calculating the percentage increase.",
+      "1 mark for the final new amount."
+    ]
+  };
+}
+
+function gcseGenerateCompoundInterest(filters) {
+  const principal = gcseChoice([1200, 1800, 2400, 3500, 5000]);
+  const rate = gcseChoice([3, 4, 5, 6]);
+  const years = gcseChoice([2, 3, 4]);
+  const value = principal * Math.pow(1 + rate / 100, years);
+  return {
+    topic: "Number",
+    subtopic: "Compound percentage change",
+    difficulty: "Higher grades 6-7",
+    marks: 4,
+    calculator: "Calculator",
+    commandWords: ["calculate"],
+    questionHtml: `<p>${gcseMoney(principal)} is invested for ${years} years at ${rate}% compound interest per year.</p><p>Calculate the value of the investment at the end of ${years} years.</p>`,
+    answer: gcseMoney(value.toFixed(2)),
+    worked: [
+      `Multiplier = 1 + ${rate} ÷ 100 = ${(1 + rate / 100).toFixed(2)}.`,
+      `Value = ${principal} × ${(1 + rate / 100).toFixed(2)}^${years}.`,
+      `Value = ${value.toFixed(2)}.`,
+      `The investment is worth ${gcseMoney(value.toFixed(2))}.`
+    ],
+    markScheme: [
+      "1 mark for the correct multiplier.",
+      "1 mark for raising the multiplier to the correct power.",
+      "1 mark for a correct calculation.",
+      "1 mark for final answer to 2 decimal places with money units."
+    ]
+  };
+}
+
+function gcseGenerateTrig(filters) {
+  const angle = gcseChoice([28, 34, 41, 52, 63]);
+  const hyp = gcseChoice([8, 10, 12, 15, 18]);
+  const height = hyp * Math.sin(angle * Math.PI / 180);
+  return {
+    topic: "Geometry and measures",
+    subtopic: "Right-angled trigonometry",
+    difficulty: "Higher grades 6-7",
+    marks: 4,
+    calculator: "Calculator",
+    commandWords: ["calculate"],
+    questionHtml: `<p>A ladder of length ${hyp} m rests against a vertical wall.</p><p>The ladder makes an angle of ${angle}° with the ground.</p><p>Calculate the height reached by the ladder on the wall. Give your answer to 1 decimal place.</p>`,
+    answer: `${height.toFixed(1)} m`,
+    worked: [
+      "The height is opposite the given angle and the ladder is the hypotenuse.",
+      `sin(${angle}°) = height ÷ ${hyp}.`,
+      `height = ${hyp} × sin(${angle}°).`,
+      `height = ${height.toFixed(1)} m.`
+    ],
+    markScheme: [
+      "1 mark for identifying sine or a correct trigonometric ratio.",
+      "1 mark for substituting the correct values.",
+      "1 mark for rearranging/calculating.",
+      "1 mark for the final answer to 1 decimal place."
+    ]
+  };
+}
+
+function gcseGenerateCircleArea(filters) {
+  const radius = gcseChoice([4, 5, 6, 8, 10, 12]);
+  const area = Math.PI * radius * radius;
+  return {
+    topic: "Geometry and measures",
+    subtopic: "Area of a circle",
+    difficulty: "Crossover grades 4-5",
+    marks: 3,
+    calculator: "Calculator",
+    commandWords: ["calculate"],
+    questionHtml: `<p>A circle has radius ${radius} cm.</p><p>Calculate the area of the circle. Give your answer to 1 decimal place.</p>`,
+    answer: `${area.toFixed(1)} cm²`,
+    worked: [
+      "Use A = πr².",
+      `A = π × ${radius}².`,
+      `A = ${area.toFixed(1)} cm².`
+    ],
+    markScheme: [
+      "1 mark for using the area formula.",
+      "1 mark for substituting the radius correctly.",
+      "1 mark for the final rounded answer with square units."
+    ]
+  };
+}
+
+function gcseGenerateProbability(filters) {
+  const red = gcseChoice([3, 4, 5, 6]);
+  const blue = gcseChoice([5, 6, 7, 8]);
+  const total = red + blue;
+  const probability = (red / total) * ((red - 1) / (total - 1));
+  return {
+    topic: "Probability and statistics",
+    subtopic: "Probability without replacement",
+    difficulty: "Higher grades 6-7",
+    marks: 4,
+    calculator: "Calculator",
+    commandWords: ["find"],
+    questionHtml: `<p>A bag contains ${red} red counters and ${blue} blue counters.</p><p>Two counters are taken at random without replacement.</p><p>Find the probability that both counters are red.</p>`,
+    answer: `${red}/${total} × ${red - 1}/${total - 1} = ${probability.toFixed(3)}`,
+    worked: [
+      `P(first red) = ${red}/${total}.`,
+      `After one red is taken, there are ${red - 1} red counters out of ${total - 1} counters.`,
+      `P(second red) = ${red - 1}/${total - 1}.`,
+      `P(both red) = ${red}/${total} × ${red - 1}/${total - 1} = ${probability.toFixed(3)}.`
+    ],
+    markScheme: [
+      "1 mark for the first red probability.",
+      "1 mark for adjusting the counters after the first draw.",
+      "1 mark for multiplying the probabilities.",
+      "1 mark for a correct final probability."
+    ]
+  };
+}
+
+function gcseGenerateFrequencyMean(filters) {
+  const intervals = ["0 < x ≤ 10", "10 < x ≤ 20", "20 < x ≤ 30", "30 < x ≤ 40"];
+  const frequencies = [gcseRand(4, 9), gcseRand(8, 14), gcseRand(6, 12), gcseRand(3, 8)];
+  const midpoints = [5, 15, 25, 35];
+  const fx = frequencies.map((f, i) => f * midpoints[i]);
+  const totalF = frequencies.reduce((sum, value) => sum + value, 0);
+  const totalFx = fx.reduce((sum, value) => sum + value, 0);
+  const mean = totalFx / totalF;
+  const rows = intervals.map((interval, index) => `<tr><td>${interval}</td><td>${frequencies[index]}</td></tr>`).join("");
+  return {
+    topic: "Probability and statistics",
+    subtopic: "Estimated mean from grouped data",
+    difficulty: "Higher grades 6-7",
+    marks: 5,
+    calculator: "Calculator",
+    commandWords: ["estimate"],
+    questionHtml: `<p>The table shows grouped data for the times, x minutes, taken by students to complete a task.</p><table class="exam-mini-table"><thead><tr><th>Time, x</th><th>Frequency</th></tr></thead><tbody>${rows}</tbody></table><p>Estimate the mean time.</p>`,
+    answer: `${mean.toFixed(1)} minutes`,
+    worked: [
+      "Use the midpoint of each class interval.",
+      `Midpoints: ${midpoints.join(", ")}.`,
+      `Multiply each midpoint by its frequency: ${fx.join(", ")}.`,
+      `Σfx = ${totalFx} and Σf = ${totalF}.`,
+      `Estimated mean = ${totalFx} ÷ ${totalF} = ${mean.toFixed(1)} minutes.`
+    ],
+    markScheme: [
+      "1 mark for using class midpoints.",
+      "1 mark for multiplying midpoint by frequency.",
+      "1 mark for correct totals.",
+      "1 mark for dividing Σfx by Σf.",
+      "1 mark for the final estimated mean."
+    ]
+  };
+}
+
+function gcseGenerateCompletingSquare(filters) {
+  const p = gcseChoice([2, 3, 4, 5]);
+  const q = gcseChoice([1, 2, 3, 5]);
+  const constant = p * p - q;
+  const middle = 2 * p;
+  const constantText = constant >= 0 ? `+ ${constant}` : `- ${Math.abs(constant)}`;
+  return {
+    topic: "Algebra",
+    subtopic: "Completing the square",
+    difficulty: "Higher grades 8-9",
+    marks: 5,
+    calculator: "Non-calculator",
+    commandWords: ["solve"],
+    questionHtml: `<p>Solve x² + ${middle}x ${constantText} = 0, giving your answers in exact form.</p>`,
+    answer: `x = -${p} ± √${q}`,
+    worked: [
+      `x² + ${middle}x ${constantText} = (x + ${p})² - ${q}.`,
+      `(x + ${p})² - ${q} = 0`,
+      `(x + ${p})² = ${q}`,
+      `x + ${p} = ±√${q}`,
+      `x = -${p} ± √${q}`
+    ],
+    markScheme: [
+      "1 mark for starting the completing-square form.",
+      "1 mark for the correct constant adjustment.",
+      "1 mark for isolating the squared bracket.",
+      "1 mark for taking both square roots.",
+      "1 mark for the exact final solutions."
+    ]
+  };
+}
+
+const gcseExamGenerators = [
+  { topic: "number", difficulty: "foundation", marks: 2, calculator: "non-calculator", create: gcseGenerateFractionAmount },
+  { topic: "algebra", difficulty: "foundation", marks: 3, calculator: "non-calculator", create: gcseGenerateLinearEquation },
+  { topic: "algebra", difficulty: "crossover", marks: 3, calculator: "non-calculator", create: gcseGenerateQuadratic },
+  { topic: "algebra", difficulty: "crossover", marks: 4, calculator: "non-calculator", create: gcseGenerateLinearModel },
+  { topic: "ratio", difficulty: "crossover", marks: 5, calculator: "calculator", create: gcseGenerateRatio },
+  { topic: "number", difficulty: "higher", marks: 4, calculator: "calculator", create: gcseGenerateCompoundInterest },
+  { topic: "geometry", difficulty: "higher", marks: 4, calculator: "calculator", create: gcseGenerateTrig },
+  { topic: "geometry", difficulty: "crossover", marks: 3, calculator: "calculator", create: gcseGenerateCircleArea },
+  { topic: "statistics", difficulty: "higher", marks: 4, calculator: "calculator", create: gcseGenerateProbability },
+  { topic: "statistics", difficulty: "higher", marks: 5, calculator: "calculator", create: gcseGenerateFrequencyMean },
+  { topic: "algebra", difficulty: "stretch", marks: 5, calculator: "non-calculator", create: gcseGenerateCompletingSquare }
+];
+
+function gcseFilteredGenerators(filters) {
+  const exact = gcseExamGenerators.filter((item) => (
+    (filters.topic === "any" || item.topic === filters.topic) &&
+    (filters.difficulty === "any" || item.difficulty === filters.difficulty) &&
+    (filters.marks === "any" || String(item.marks) === String(filters.marks)) &&
+    (filters.calculator === "any" || item.calculator === filters.calculator)
+  ));
+  if (exact.length) return exact;
+  const relaxedTopic = gcseExamGenerators.filter((item) => (
+    (filters.topic === "any" || item.topic === filters.topic) &&
+    (filters.calculator === "any" || item.calculator === filters.calculator)
+  ));
+  return relaxedTopic.length ? relaxedTopic : gcseExamGenerators;
+}
+
+function gcseBuildQuestionSet(filters, count = 4) {
+  const pool = gcseFilteredGenerators(filters);
+  const set = [];
+  for (let index = 0; index < count; index += 1) {
+    const template = pool[index % pool.length] || gcseChoice(pool);
+    const question = template.create(filters);
+    set.push({
+      ...question,
+      examBoard: gcseExamStyles.find((style) => style.id === filters.board)?.label || gcseExamStyles[0].label,
+      styleNote: gcseBoardNote(filters.board),
+      paperType: question.calculator,
+      marks: template.marks || question.marks
+    });
+  }
+  return set;
+}
+
+function gcseReadFilters() {
+  return {
+    board: document.getElementById("gcseBoard")?.value || "general",
+    topic: document.getElementById("gcseTopic")?.value || "any",
+    difficulty: document.getElementById("gcseDifficulty")?.value || "any",
+    marks: document.getElementById("gcseMarks")?.value || "any",
+    calculator: document.getElementById("gcseCalculator")?.value || "any"
+  };
+}
+
+function renderGcseQuestionCard(question, index) {
+  return `
+    <article class="exam-question-card">
+      <header>
+        <div>
+          <span class="eyebrow">Question ${index + 1}</span>
+          <h2>${escapeHtml(question.topic)}</h2>
+        </div>
+        <strong>${question.marks} mark${question.marks === 1 ? "" : "s"}</strong>
+      </header>
+      <div class="badge-row">
+        <span class="badge">${escapeHtml(question.examBoard)}</span>
+        <span class="badge">${escapeHtml(question.subtopic)}</span>
+        <span class="badge">${escapeHtml(question.difficulty)}</span>
+        <span class="badge">${escapeHtml(question.paperType)}</span>
+      </div>
+      <div class="exam-question-stem">${question.questionHtml}</div>
+      <details class="exam-solution" open>
+        <summary>Worked solution</summary>
+        <ol>${question.worked.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
+        <p><strong>Answer:</strong> ${escapeHtml(question.answer)}</p>
+      </details>
+      <details class="exam-mark-scheme" open>
+        <summary>Mark scheme</summary>
+        <ol>${question.markScheme.map((mark) => `<li>${escapeHtml(mark)}</li>`).join("")}</ol>
+      </details>
+    </article>
+  `;
+}
+
+function bindGcseExamStyle() {
+  const form = document.getElementById("gcseExamForm");
+  const output = document.getElementById("gcseExamOutput");
+  const printButton = document.getElementById("printGcseExamSet");
+  if (!form || !output) return;
+
+  function generate() {
+    const filters = gcseReadFilters();
+    const questions = gcseBuildQuestionSet(filters, 4);
+    output.innerHTML = `
+      <section class="exam-set-header">
+        <div>
+          <span class="eyebrow">Original GCSE-style practice</span>
+          <h2>${escapeHtml(gcseExamStyles.find((style) => style.id === filters.board)?.label || "GCSE exam-style")} question set</h2>
+          <p>${escapeHtml(gcseBoardNote(filters.board))} These questions are generated as original practice and are not official exam-board questions.</p>
+        </div>
+        <strong>${questions.reduce((sum, question) => sum + question.marks, 0)} marks</strong>
+      </section>
+      <div class="exam-question-grid">
+        ${questions.map(renderGcseQuestionCard).join("")}
+      </div>
+    `;
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    generate();
+  });
+
+  printButton?.addEventListener("click", () => window.print());
+  generate();
+}
+
+function renderGcseExamStyle() {
+  app.innerHTML = `
+    ${pageHeader(
+      "GCSE Exam-Style Questions",
+      "Generate original GCSE-style maths questions with marks, topic metadata, worked solutions, and mark-scheme-style guidance.",
+      `<a class="button" href="#/worksheet-generator">Open Worksheet Builder</a><button class="button" id="printGcseExamSet" type="button">Print / Save PDF</button>`
+    )}
+    <section class="exam-style-page">
+      <form class="panel exam-controls" id="gcseExamForm">
+        <div class="worksheet-control">
+          <label for="gcseBoard">Exam style</label>
+          <select id="gcseBoard">${gcseOptionList(gcseExamStyles, "general")}</select>
+        </div>
+        <div class="worksheet-control">
+          <label for="gcseTopic">Topic area</label>
+          <select id="gcseTopic">${gcseOptionList(gcseExamTopics, "any")}</select>
+        </div>
+        <div class="worksheet-control">
+          <label for="gcseDifficulty">Difficulty</label>
+          <select id="gcseDifficulty">${gcseOptionList(gcseGradeBands, "any")}</select>
+        </div>
+        <div class="worksheet-control">
+          <label for="gcseMarks">Marks</label>
+          <select id="gcseMarks">
+            <option value="any">Any mark value</option>
+            <option value="2">2 marks</option>
+            <option value="3">3 marks</option>
+            <option value="4">4 marks</option>
+            <option value="5">5 marks</option>
+          </select>
+        </div>
+        <div class="worksheet-control">
+          <label for="gcseCalculator">Paper type</label>
+          <select id="gcseCalculator">
+            <option value="any">Calculator or non-calculator</option>
+            <option value="calculator">Calculator</option>
+            <option value="non-calculator">Non-calculator</option>
+          </select>
+        </div>
+        <button class="button primary" type="submit">Generate GCSE Set</button>
+      </form>
+      <article class="panel exam-style-note">
+        <span class="eyebrow">Exam Practice</span>
+        <h2>Original questions, exam-style structure</h2>
+        <p>This module creates original Kaizen Maths questions that follow GCSE-style assessment patterns: marks, command words, topic metadata, worked solutions, and mark-scheme-style credit. It does not copy past-paper questions or claim official endorsement from any exam board.</p>
+      </article>
+      <section id="gcseExamOutput" class="exam-output" aria-live="polite"></section>
+    </section>
+  `;
+  bindGcseExamStyle();
+}
+
 function renderHome() {
   app.innerHTML = `
     <section class="home-hero">
@@ -2046,6 +2593,15 @@ function renderHome() {
         <p>Use the worksheet builder to select topics, levels, and question types from across the virtual textbook, then print a clean student sheet with a separate answer key.</p>
       </div>
       <a class="button primary" href="#/worksheet-generator">Create Worksheet</a>
+    </section>
+    <section class="exam-callout" aria-label="GCSE exam-style questions">
+      <div class="worksheet-callout-icon" aria-hidden="true">✓</div>
+      <div>
+        <span class="eyebrow">Assessment Practice</span>
+        <h2>Build original GCSE-style questions</h2>
+        <p>Choose a GCSE style, topic area, grade band, paper type, and mark value. Generate original exam-style questions with worked solutions and mark-scheme-style guidance.</p>
+      </div>
+      <a class="button primary" href="#/gcse-exam-style">Open GCSE Module</a>
     </section>
     ${metricGrid()}
     <section class="split-grid">
@@ -4091,6 +4647,8 @@ function renderRoute() {
       return;
     }
     renderWorksheetGenerator();
+  } else if (parts[0] === "gcse-exam-style") {
+    renderGcseExamStyle();
   } else if (parts[0] === "tools" && parts[1] === "interface-guide") {
     location.hash = "#/how-to-use-this-site";
     return;
