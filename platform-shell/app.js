@@ -2043,12 +2043,13 @@ const gcsePaperModes = [
   },
   {
     id: "mock",
-    label: "One-click 90-mark mock paper",
+    label: "One-click OCR-style 100-mark mock paper",
     count: null,
-    targetMarks: 90,
-    title: "GCSE Mock Practice Paper",
-    time: "1 hour 45 minutes",
-    description: "Create a fuller 90-mark practice paper balanced across number, algebra, ratio, geometry, and statistics."
+    targetMarks: 100,
+    targetQuestions: 28,
+    title: "GCSE OCR-Style Mock Practice Paper",
+    time: "1 hour 30 minutes",
+    description: "Create a 100-mark practice paper with OCR-style pacing, short fluency questions, and multi-step problem solving."
   }
 ];
 
@@ -2066,6 +2067,10 @@ function gcseChoice(items) {
 
 function gcseRand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function gcseGcd(a, b) {
+  return b === 0 ? Math.abs(a) : gcseGcd(b, a % b);
 }
 
 function gcseMoney(value) {
@@ -2408,33 +2413,565 @@ function gcseGenerateCompletingSquare(filters) {
   };
 }
 
+function gcseGenerateNumberFacts(filters) {
+  const even = gcseChoice([14, 26, 38, 52, 74]);
+  const multiple = gcseChoice([21, 35, 49, 56, 63]);
+  const square = gcseChoice([25, 36, 49, 64, 81]);
+  const prime = gcseChoice([2, 3, 5, 7]);
+  return {
+    topic: "Number",
+    subtopic: "Number properties",
+    difficulty: "Foundation grades 1-3",
+    marks: 4,
+    calculator: "Non-calculator",
+    commandWords: ["write down"],
+    questionHtml: `<p>Write down an example of each of the following.</p><p>(a) An even number between 10 and 80.</p><p>(b) A multiple of 7.</p><p>(c) A square number between 20 and 100.</p><p>(d) A prime number less than 10.</p>`,
+    answer: `(a) ${even}, (b) ${multiple}, (c) ${square}, (d) ${prime}`,
+    worked: [
+      "An even number is divisible by 2.",
+      "A multiple of 7 appears in the 7 times table.",
+      "A square number is made by multiplying an integer by itself.",
+      "A prime number has exactly two factors."
+    ],
+    markScheme: [
+      "1 mark for a valid even number.",
+      "1 mark for a valid multiple of 7.",
+      "1 mark for a valid square number in the range.",
+      "1 mark for a valid prime number less than 10."
+    ]
+  };
+}
+
+function gcseGenerateMedianRange(filters) {
+  const numbers = gcseChoice([
+    [10, 12, 4, 3, 6],
+    [7, 11, 5, 14, 9],
+    [18, 6, 12, 15, 9],
+    [21, 13, 17, 25, 19]
+  ]);
+  const ordered = numbers.slice().sort((a, b) => a - b);
+  const median = ordered[2];
+  const targetRange = gcseChoice([15, 18, 20, 24]);
+  const possible = ordered[0] + targetRange;
+  return {
+    topic: "Probability and statistics",
+    subtopic: "Median and range",
+    difficulty: "Foundation grades 1-3",
+    marks: 3,
+    calculator: "Non-calculator",
+    commandWords: ["write down", "work out"],
+    questionHtml: `<p>Here is a list of five numbers.</p><p>${numbers.join("  ")}</p><p>(a) Write down the median.</p><p>(b) A sixth number is added to the list. The range of the six numbers is ${targetRange}. Work out a possible value for the sixth number.</p>`,
+    answer: `(a) ${median}, (b) ${possible}`,
+    worked: [
+      `Put the numbers in order: ${ordered.join(", ")}.`,
+      `The middle value is ${median}, so the median is ${median}.`,
+      `For a range of ${targetRange}, use largest value - smallest value = ${targetRange}.`,
+      `${possible} - ${ordered[0]} = ${targetRange}, so ${possible} is one possible sixth number.`
+    ],
+    markScheme: [
+      "1 mark for ordering or identifying the median.",
+      "1 mark for using the range relationship.",
+      "1 mark for a possible sixth number that gives the required range."
+    ]
+  };
+}
+
+function gcseGenerateFormulaSubstitution(filters) {
+  const b = gcseChoice([3, 4, 5]);
+  const c = gcseChoice([6, 7, 8]);
+  const d = gcseChoice([2, 4, 5]);
+  const a = b * (c + d);
+  const b2 = gcseChoice([4, 5, 6]);
+  const d2 = gcseChoice([3, 4, 7]);
+  const c2 = gcseChoice([5, 8, 9]);
+  const a2 = b2 * (c2 + d2);
+  return {
+    topic: "Algebra",
+    subtopic: "Formulae and substitution",
+    difficulty: "Foundation grades 1-3",
+    marks: 4,
+    calculator: "Non-calculator",
+    commandWords: ["find"],
+    questionHtml: `<p>Here is a formula.</p><p>a = b(c + d)</p><p>(a) Find the value of a when b = ${b}, c = ${c} and d = ${d}.</p><p>(b) Find the value of c when a = ${a2}, b = ${b2} and d = ${d2}.</p>`,
+    answer: `(a) ${a}, (b) ${c2}`,
+    worked: [
+      `For part (a), substitute: a = ${b}(${c} + ${d}).`,
+      `${c} + ${d} = ${c + d}, so a = ${b} × ${c + d} = ${a}.`,
+      `For part (b), substitute: ${a2} = ${b2}(c + ${d2}).`,
+      `Divide by ${b2}: c + ${d2} = ${a2 / b2}.`,
+      `Subtract ${d2}: c = ${c2}.`
+    ],
+    markScheme: [
+      "1 mark for correct substitution in part (a).",
+      "1 mark for the correct value of a.",
+      "1 mark for dividing by b in part (b).",
+      "1 mark for the correct value of c."
+    ]
+  };
+}
+
+function gcseGenerateScaleMap(filters) {
+  const scale = gcseChoice([25000, 50000, 100000]);
+  const mapCm = gcseChoice([8, 12, 15, 18]);
+  const groundKm = mapCm * scale / 100000;
+  return {
+    topic: "Ratio and proportion",
+    subtopic: "Map scales",
+    difficulty: "Foundation grades 1-3",
+    marks: 3,
+    calculator: "Calculator",
+    commandWords: ["work out"],
+    questionHtml: `<p>The scale of a map is 1 : ${scale.toLocaleString("en-GB")}.</p><p>Two places are ${groundKm} km apart on the ground.</p><p>Work out how far apart the two places are on the map. Give your answer in centimetres.</p>`,
+    answer: `${mapCm} cm`,
+    worked: [
+      `${groundKm} km = ${groundKm * 100000} cm.`,
+      `Map distance = real distance ÷ scale.`,
+      `${groundKm * 100000} ÷ ${scale} = ${mapCm}.`,
+      `The map distance is ${mapCm} cm.`
+    ],
+    markScheme: [
+      "1 mark for converting kilometres to centimetres.",
+      "1 mark for using the scale correctly.",
+      "1 mark for the correct map distance."
+    ]
+  };
+}
+
+function gcseGeneratePercentagePack(filters) {
+  const originalPack = gcseChoice([500, 600, 800]);
+  const percent = gcseChoice([20, 25, 30]);
+  const newPack = gcseChoice([300, 400, 500]);
+  const days = gcseChoice([6, 7, 8]);
+  const daily = originalPack * percent / 100;
+  const total = daily * days;
+  const packs = Math.ceil(total / newPack);
+  return {
+    topic: "Ratio and proportion",
+    subtopic: "Percentage problem solving",
+    difficulty: "Crossover grades 4-5",
+    marks: 5,
+    calculator: "Calculator",
+    commandWords: ["work out"],
+    questionHtml: `<p>Sam eats ${percent}% of a ${originalPack} g pack of cereal every day.</p><p>The cereal is now sold in ${newPack} g packs.</p><p>Work out the minimum number of ${newPack} g packs Sam must buy to have enough for ${days} days.</p><p>You must show your working.</p>`,
+    answer: `${packs} packs`,
+    worked: [
+      `${percent}% of ${originalPack} g = ${daily} g.`,
+      `For ${days} days, Sam needs ${daily} × ${days} = ${total} g.`,
+      `Each new pack contains ${newPack} g.`,
+      `${total} ÷ ${newPack} = ${(total / newPack).toFixed(2)}.`,
+      `Sam must buy whole packs, so the minimum is ${packs} packs.`
+    ],
+    markScheme: [
+      "1 mark for finding the daily amount.",
+      "1 mark for multiplying by the number of days.",
+      "1 mark for dividing by the new pack size.",
+      "1 mark for rounding up to whole packs.",
+      "1 mark for a clear final answer."
+    ]
+  };
+}
+
+function gcseGenerateDirectRate(filters) {
+  const made = gcseChoice([12, 15, 18, 24]);
+  const minutes = gcseChoice([8, 12, 15]);
+  const hours = gcseChoice([5, 6, 7]);
+  const perMinute = made / minutes;
+  const total = perMinute * hours * 60;
+  return {
+    topic: "Ratio and proportion",
+    subtopic: "Direct proportion and rates",
+    difficulty: "Crossover grades 4-5",
+    marks: 4,
+    calculator: "Calculator",
+    commandWords: ["work out"],
+    questionHtml: `<p>A machine makes ${made} boxes in ${minutes} minutes.</p><p>The machine works continuously at the same rate.</p><p>Work out how many boxes are made in ${hours} hours.</p>`,
+    answer: `${total} boxes`,
+    worked: [
+      `${hours} hours = ${hours * 60} minutes.`,
+      `Rate = ${made} ÷ ${minutes} = ${perMinute} boxes per minute.`,
+      `Boxes made = ${perMinute} × ${hours * 60}.`,
+      `Boxes made = ${total}.`
+    ],
+    markScheme: [
+      "1 mark for converting hours to minutes.",
+      "1 mark for finding the rate per minute or an equivalent scale factor.",
+      "1 mark for scaling to the required time.",
+      "1 mark for the correct number of boxes."
+    ]
+  };
+}
+
+function gcseGenerateDensity(filters) {
+  const area = gcseChoice([400, 560, 750, 900]);
+  const density = gcseChoice([75, 84, 120, 135]);
+  const population = area * density;
+  return {
+    topic: "Number",
+    subtopic: "Compound measures",
+    difficulty: "Crossover grades 4-5",
+    marks: 2,
+    calculator: "Calculator",
+    commandWords: ["calculate"],
+    questionHtml: `<p>The population of an island is ${population.toLocaleString("en-GB")} people.</p><p>The area of the island is ${area} km².</p><p>Calculate the population density of the island in people per km².</p>`,
+    answer: `${density} people per km²`,
+    worked: [
+      "Population density = population ÷ area.",
+      `${population} ÷ ${area} = ${density}.`
+    ],
+    markScheme: [
+      "1 mark for using population ÷ area.",
+      "1 mark for the correct density with units."
+    ]
+  };
+}
+
+function gcseGenerateBestValue(filters) {
+  const packs = gcseChoice([
+    [
+      { label: "700 g", grams: 700, price: 7.70 },
+      { label: "3 kg", grams: 3000, price: 32.40 },
+      { label: "5 kg", grams: 5000, price: 53.90 }
+    ],
+    [
+      { label: "500 g", grams: 500, price: 4.60 },
+      { label: "2 kg", grams: 2000, price: 17.40 },
+      { label: "4 kg", grams: 4000, price: 35.60 }
+    ],
+    [
+      { label: "750 g", grams: 750, price: 6.60 },
+      { label: "2.5 kg", grams: 2500, price: 20.50 },
+      { label: "6 kg", grams: 6000, price: 50.40 }
+    ]
+  ]);
+  const unitCosts = packs.map((pack) => pack.price / pack.grams * 100);
+  const bestIndex = unitCosts.indexOf(Math.min(...unitCosts));
+  const rows = packs.map((pack) => `<tr><td>${pack.label}</td><td>${gcseMoney(pack.price)}</td></tr>`).join("");
+  return {
+    topic: "Ratio and proportion",
+    subtopic: "Best value",
+    difficulty: "Crossover grades 4-5",
+    marks: 3,
+    calculator: "Calculator",
+    commandWords: ["decide"],
+    questionHtml: `<p>The same product is sold in three different pack sizes.</p><table class="exam-mini-table"><thead><tr><th>Pack</th><th>Price</th></tr></thead><tbody>${rows}</tbody></table><p>Which pack is the best value for money? Show how you decide.</p>`,
+    answer: `${packs[bestIndex].label} pack`,
+    worked: [
+      "Compare the cost per 100 g for each pack.",
+      ...packs.map((pack) => `${pack.label}: ${gcseMoney(pack.price)} ÷ ${pack.grams} × 100 = ${gcseMoney(pack.price / pack.grams * 100)} per 100 g.`),
+      `The lowest cost per 100 g is the ${packs[bestIndex].label} pack.`
+    ],
+    markScheme: [
+      "1 mark for comparing equivalent unit costs.",
+      "1 mark for correct calculations for at least two packs.",
+      "1 mark for the correct decision with a reason."
+    ]
+  };
+}
+
+function gcseGenerateInequality(filters) {
+  const a = gcseChoice([2, 3, 4, 5]);
+  const x = gcseChoice([-2, -1, 2, 3, 4]);
+  const b = gcseChoice([5, 7, 9]);
+  const rhs = a * x + b;
+  return {
+    topic: "Algebra",
+    subtopic: "Linear inequalities",
+    difficulty: "Crossover grades 4-5",
+    marks: 4,
+    calculator: "Non-calculator",
+    commandWords: ["solve"],
+    questionHtml: `<p>Solve ${a}x + ${b} < ${rhs}.</p><p>Show your solution using inequality notation.</p>`,
+    answer: `x < ${x}`,
+    worked: [
+      `Subtract ${b} from both sides: ${a}x < ${rhs - b}.`,
+      `Divide both sides by ${a}.`,
+      `x < ${x}.`,
+      "The inequality sign stays the same because we divided by a positive number."
+    ],
+    markScheme: [
+      "1 mark for subtracting the constant term.",
+      "1 mark for isolating the term in x.",
+      "1 mark for dividing by the coefficient of x.",
+      "1 mark for correct inequality notation."
+    ]
+  };
+}
+
+function gcseGenerateAreaComparison(filters) {
+  const triangleBase = gcseChoice([12, 15, 18]);
+  const triangleHeight = gcseChoice([8, 10, 12]);
+  const area = triangleBase * triangleHeight / 2;
+  const trapHeight = gcseChoice([6, 8, 10]);
+  const sumParallel = area * 2 / trapHeight;
+  const shortSide = Math.floor(sumParallel / 2) - 2;
+  const longSide = sumParallel - shortSide;
+  return {
+    topic: "Geometry and measures",
+    subtopic: "Area reasoning",
+    difficulty: "Crossover grades 4-5",
+    marks: 3,
+    calculator: "Calculator",
+    commandWords: ["show"],
+    questionHtml: `<p>A triangle has base ${triangleBase} cm and height ${triangleHeight} cm.</p><p>A trapezium has parallel sides ${shortSide} cm and ${longSide} cm, and height ${trapHeight} cm.</p><p>Show that the triangle and the trapezium have the same area.</p>`,
+    answer: `Both areas are ${area} cm²`,
+    worked: [
+      `Triangle area = 1/2 × ${triangleBase} × ${triangleHeight} = ${area} cm².`,
+      `Trapezium area = 1/2 × (${shortSide} + ${longSide}) × ${trapHeight}.`,
+      `Trapezium area = 1/2 × ${shortSide + longSide} × ${trapHeight} = ${area} cm².`,
+      "The areas are equal."
+    ],
+    markScheme: [
+      "1 mark for correct triangle area.",
+      "1 mark for correct trapezium area method.",
+      "1 mark for showing the two areas are equal."
+    ]
+  };
+}
+
+function gcseGeneratePieChartReasoning(filters) {
+  const angleA = gcseChoice([48, 52, 60, 72]);
+  const votesA = gcseChoice([24, 26, 30, 39]);
+  const remaining = 360 - angleA;
+  const ratioParts = 1 + 2 + 3;
+  const angleB = remaining / ratioParts;
+  const totalStudents = Math.round(votesA * 360 / angleA);
+  return {
+    topic: "Probability and statistics",
+    subtopic: "Pie charts and proportion",
+    difficulty: "Crossover grades 4-5",
+    marks: 5,
+    calculator: "Calculator",
+    commandWords: ["show", "calculate"],
+    questionHtml: `<p>A school asks students to vote for one of four charities, A, B, C or D.</p><p>The sector for charity A is ${angleA}°.</p><p>Charity C has twice as many votes as charity B. Charity D has three times as many votes as charity B.</p><p>(a) Show that the sector for charity B is ${angleB}°.</p><p>(b) ${votesA} students voted for charity A. Calculate the total number of students who voted.</p>`,
+    answer: `(a) ${angleB}°, (b) ${totalStudents} students`,
+    worked: [
+      `Angle left after charity A = 360° - ${angleA}° = ${remaining}°.`,
+      "The ratio B : C : D is 1 : 2 : 3, so there are 6 parts.",
+      `Angle for B = ${remaining} ÷ 6 = ${angleB}°.`,
+      `${angleA}° represents ${votesA} students.`,
+      `Total students = ${votesA} × 360 ÷ ${angleA} = ${totalStudents}.`
+    ],
+    markScheme: [
+      "1 mark for finding the remaining angle.",
+      "1 mark for using the ratio parts correctly.",
+      "1 mark for showing the sector for B.",
+      "1 mark for setting up the proportion for total students.",
+      "1 mark for the correct total."
+    ]
+  };
+}
+
+function gcseGenerateBoundsFit(filters) {
+  const garage = gcseChoice([5, 6, 7]);
+  const car = garage - 0.5;
+  const garageLower = garage - 0.5;
+  const carUpper = car + 0.05;
+  return {
+    topic: "Number",
+    subtopic: "Bounds and accuracy",
+    difficulty: "Higher grades 6-7",
+    marks: 3,
+    calculator: "Calculator",
+    commandWords: ["show"],
+    questionHtml: `<p>A garage is ${garage} metres long, correct to the nearest metre.</p><p>A car is ${car.toFixed(1)} metres long, correct to 1 decimal place.</p><p>Show that the car may not fit in the garage.</p>`,
+    answer: `The garage could be ${garageLower} m and the car could be up to ${carUpper.toFixed(2)} m, so the car may not fit.`,
+    worked: [
+      `The shortest possible garage length is ${garageLower} m.`,
+      `The longest possible car length is less than ${carUpper.toFixed(2)} m.`,
+      `${carUpper.toFixed(2)} m is greater than ${garageLower} m.`,
+      "Therefore there is a possible case where the car does not fit."
+    ],
+    markScheme: [
+      "1 mark for the lower bound of the garage length.",
+      "1 mark for the upper bound of the car length.",
+      "1 mark for comparing the bounds and making the correct conclusion."
+    ]
+  };
+}
+
+function gcseGenerateAnglesAlgebra(filters) {
+  const x = gcseChoice([18, 20, 22, 24]);
+  const a = 3 * x + 20;
+  const b = 180 - a;
+  const constant = b - 5 * x;
+  return {
+    topic: "Geometry and measures",
+    subtopic: "Angles with algebra",
+    difficulty: "Higher grades 6-7",
+    marks: 5,
+    calculator: "Non-calculator",
+    commandWords: ["find"],
+    questionHtml: `<p>Two angles on a straight line are (3x + 20)° and (5x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)})°.</p><p>An angle y is vertically opposite to the angle (5x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)})°.</p><p>Find the value of y. You must show your working.</p>`,
+    answer: `y = ${b}°`,
+    worked: [
+      "Angles on a straight line add to 180°.",
+      `(3x + 20) + (5x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)}) = 180.`,
+      `8x ${20 + constant >= 0 ? "+" : "-"} ${Math.abs(20 + constant)} = 180.`,
+      `x = ${x}.`,
+      `y = 5 × ${x} ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)} = ${b}°.`
+    ],
+    markScheme: [
+      "1 mark for using angles on a straight line.",
+      "1 mark for forming a correct equation.",
+      "1 mark for solving for x.",
+      "1 mark for using vertically opposite angles or substituting into the correct expression.",
+      "1 mark for the correct value of y."
+    ]
+  };
+}
+
+function gcseGenerateSimultaneousEquations(filters) {
+  const x = gcseChoice([2, 3, 4, 5]);
+  const y = gcseChoice([3, 4, 6, 7]);
+  const a = gcseChoice([2, 3, 4]);
+  const b = gcseChoice([2, 3, 5]);
+  const c = gcseChoice([1, 2, 3]);
+  const d = gcseChoice([4, 5, 6]);
+  const rhs1 = a * x + b * y;
+  const rhs2 = c * x + d * y;
+  return {
+    topic: "Algebra",
+    subtopic: "Simultaneous equations",
+    difficulty: "Higher grades 6-7",
+    marks: 3,
+    calculator: "Non-calculator",
+    commandWords: ["solve"],
+    questionHtml: `<p>Solve the simultaneous equations.</p><p>${a}x + ${b}y = ${rhs1}</p><p>${c}x + ${d}y = ${rhs2}</p>`,
+    answer: `x = ${x}, y = ${y}`,
+    worked: [
+      "Eliminate one variable by making the coefficients match.",
+      `Solving the two equations gives y = ${y}.`,
+      `Substitute y = ${y} into one equation.`,
+      `${a}x + ${b} × ${y} = ${rhs1}, so x = ${x}.`
+    ],
+    markScheme: [
+      "1 mark for a valid elimination or substitution step.",
+      "1 mark for finding one variable.",
+      "1 mark for finding both variables."
+    ]
+  };
+}
+
+function gcseGenerateOrderingNumbers(filters) {
+  const fraction = gcseChoice([[1, 4], [2, 5], [3, 8], [5, 8]]);
+  const decimal = gcseChoice([0.2, 0.35, 0.45, 0.7]);
+  const percent = gcseChoice([30, 55, 65, 80]);
+  const values = [
+    { label: `${fraction[0]}/${fraction[1]}`, value: fraction[0] / fraction[1] },
+    { label: `${decimal}`, value: decimal },
+    { label: `${percent}%`, value: percent / 100 }
+  ];
+  const ordered = values.slice().sort((a, b) => a.value - b.value);
+  return {
+    topic: "Number",
+    subtopic: "Ordering decimals, fractions and percentages",
+    difficulty: "Crossover grades 4-5",
+    marks: 3,
+    calculator: "Calculator",
+    commandWords: ["write"],
+    questionHtml: `<p>Write these values in order of size, smallest first.</p><p>${values.map((item) => item.label).join(" &nbsp;&nbsp; ")}</p><p>Show how you decide.</p>`,
+    answer: ordered.map((item) => item.label).join(", "),
+    worked: [
+      "Convert each value to a decimal.",
+      `${fraction[0]}/${fraction[1]} = ${(fraction[0] / fraction[1]).toFixed(3)}, ${percent}% = ${(percent / 100).toFixed(2)}.`,
+      `In ascending order: ${ordered.map((item) => item.label).join(", ")}.`
+    ],
+    markScheme: [
+      "1 mark for converting at least two values to a common form.",
+      "1 mark for comparing the values correctly.",
+      "1 mark for the correct order."
+    ]
+  };
+}
+
+function gcseGenerateFunctionMachine(filters) {
+  const multiply = gcseChoice([2, 3, 4, 5]);
+  const add = gcseChoice([2, 3, 6, 8]);
+  const input = gcseChoice([4, 5, 7, 9]);
+  const output = input * multiply + add;
+  return {
+    topic: "Algebra",
+    subtopic: "Function machines",
+    difficulty: "Crossover grades 4-5",
+    marks: 4,
+    calculator: "Non-calculator",
+    commandWords: ["complete", "write"],
+    questionHtml: `<p>Function A multiplies the input by ${multiply} and then adds ${add}.</p><p>(a) Find the output when the input is ${input}.</p><p>(b) Write an expression for the output when the input is x.</p><p>(c) Write the inverse operation needed to recover x from the output y.</p>`,
+    answer: `(a) ${output}, (b) ${multiply}x + ${add}, (c) x = (y - ${add})/${multiply}`,
+    worked: [
+      `For input ${input}: ${input} × ${multiply} + ${add} = ${output}.`,
+      `For input x: output = ${multiply}x + ${add}.`,
+      "To reverse the function, undo the operations in reverse order.",
+      `Subtract ${add}, then divide by ${multiply}: x = (y - ${add})/${multiply}.`
+    ],
+    markScheme: [
+      "1 mark for the numerical output.",
+      "1 mark for the algebraic expression.",
+      "1 mark for reversing the addition.",
+      "1 mark for reversing the multiplication."
+    ]
+  };
+}
+
 const gcseExamGenerators = [
+  { topic: "number", difficulty: "foundation", marks: 4, calculator: "non-calculator", create: gcseGenerateNumberFacts },
+  { topic: "statistics", difficulty: "foundation", marks: 3, calculator: "non-calculator", create: gcseGenerateMedianRange },
+  { topic: "algebra", difficulty: "foundation", marks: 4, calculator: "non-calculator", create: gcseGenerateFormulaSubstitution },
   { topic: "number", difficulty: "foundation", marks: 2, calculator: "non-calculator", create: gcseGenerateFractionAmount },
   { topic: "algebra", difficulty: "foundation", marks: 3, calculator: "non-calculator", create: gcseGenerateLinearEquation },
+  { topic: "ratio", difficulty: "foundation", marks: 3, calculator: "calculator", create: gcseGenerateScaleMap },
   { topic: "algebra", difficulty: "crossover", marks: 3, calculator: "non-calculator", create: gcseGenerateQuadratic },
   { topic: "algebra", difficulty: "crossover", marks: 4, calculator: "non-calculator", create: gcseGenerateLinearModel },
+  { topic: "algebra", difficulty: "crossover", marks: 4, calculator: "non-calculator", create: gcseGenerateFunctionMachine },
+  { topic: "algebra", difficulty: "crossover", marks: 4, calculator: "non-calculator", create: gcseGenerateInequality },
   { topic: "ratio", difficulty: "crossover", marks: 5, calculator: "calculator", create: gcseGenerateRatio },
+  { topic: "ratio", difficulty: "crossover", marks: 5, calculator: "calculator", create: gcseGeneratePercentagePack },
+  { topic: "ratio", difficulty: "crossover", marks: 4, calculator: "calculator", create: gcseGenerateDirectRate },
+  { topic: "ratio", difficulty: "crossover", marks: 3, calculator: "calculator", create: gcseGenerateBestValue },
+  { topic: "number", difficulty: "crossover", marks: 2, calculator: "calculator", create: gcseGenerateDensity },
+  { topic: "number", difficulty: "crossover", marks: 3, calculator: "calculator", create: gcseGenerateOrderingNumbers },
   { topic: "number", difficulty: "higher", marks: 4, calculator: "calculator", create: gcseGenerateCompoundInterest },
+  { topic: "number", difficulty: "higher", marks: 3, calculator: "calculator", create: gcseGenerateBoundsFit },
   { topic: "geometry", difficulty: "higher", marks: 4, calculator: "calculator", create: gcseGenerateTrig },
   { topic: "geometry", difficulty: "crossover", marks: 3, calculator: "calculator", create: gcseGenerateCircleArea },
+  { topic: "geometry", difficulty: "crossover", marks: 3, calculator: "calculator", create: gcseGenerateAreaComparison },
+  { topic: "geometry", difficulty: "higher", marks: 5, calculator: "non-calculator", create: gcseGenerateAnglesAlgebra },
   { topic: "statistics", difficulty: "higher", marks: 4, calculator: "calculator", create: gcseGenerateProbability },
   { topic: "statistics", difficulty: "higher", marks: 5, calculator: "calculator", create: gcseGenerateFrequencyMean },
+  { topic: "statistics", difficulty: "crossover", marks: 5, calculator: "calculator", create: gcseGeneratePieChartReasoning },
+  { topic: "algebra", difficulty: "higher", marks: 3, calculator: "non-calculator", create: gcseGenerateSimultaneousEquations },
   { topic: "algebra", difficulty: "stretch", marks: 5, calculator: "non-calculator", create: gcseGenerateCompletingSquare }
 ];
 
 const gcseMockBlueprint = [
-  { topic: "number", difficulty: "foundation", calculator: "non-calculator" },
-  { topic: "algebra", difficulty: "foundation", calculator: "non-calculator" },
-  { topic: "algebra", difficulty: "crossover", calculator: "non-calculator" },
-  { topic: "geometry", difficulty: "crossover", calculator: "calculator" },
-  { topic: "ratio", difficulty: "crossover", calculator: "calculator" },
-  { topic: "algebra", difficulty: "crossover", calculator: "non-calculator" },
-  { topic: "number", difficulty: "higher", calculator: "calculator" },
-  { topic: "geometry", difficulty: "higher", calculator: "calculator" },
-  { topic: "statistics", difficulty: "higher", calculator: "calculator" },
-  { topic: "statistics", difficulty: "higher", calculator: "calculator" },
-  { topic: "algebra", difficulty: "stretch", calculator: "non-calculator" },
-  { topic: "ratio", difficulty: "crossover", calculator: "calculator" }
+  { topic: "number", difficulty: "foundation", marks: 4 },
+  { topic: "statistics", difficulty: "foundation", marks: 3 },
+  { topic: "geometry", difficulty: "crossover", marks: 3 },
+  { topic: "algebra", difficulty: "foundation", marks: 4 },
+  { topic: "ratio", difficulty: "foundation", marks: 3 },
+  { topic: "algebra", difficulty: "foundation", marks: 3 },
+  { topic: "algebra", difficulty: "crossover", marks: 4 },
+  { topic: "number", difficulty: "crossover", marks: 3 },
+  { topic: "ratio", difficulty: "crossover", marks: 5 },
+  { topic: "statistics", difficulty: "crossover", marks: 3 },
+  { topic: "geometry", difficulty: "crossover", marks: 3 },
+  { topic: "algebra", difficulty: "crossover", marks: 4 },
+  { topic: "number", difficulty: "crossover", marks: 2 },
+  { topic: "ratio", difficulty: "crossover", marks: 5 },
+  { topic: "number", difficulty: "higher", marks: 3 },
+  { topic: "ratio", difficulty: "crossover", marks: 4 },
+  { topic: "statistics", difficulty: "higher", marks: 3 },
+  { topic: "geometry", difficulty: "crossover", marks: 3 },
+  { topic: "number", difficulty: "crossover", marks: 3 },
+  { topic: "algebra", difficulty: "higher", marks: 3 },
+  { topic: "geometry", difficulty: "higher", marks: 5 },
+  { topic: "number", difficulty: "higher", marks: 4 },
+  { topic: "ratio", difficulty: "crossover", marks: 3 },
+  { topic: "algebra", difficulty: "crossover", marks: 3 },
+  { topic: "statistics", difficulty: "crossover", marks: 5 },
+  { topic: "geometry", difficulty: "higher", marks: 5 },
+  { topic: "algebra", difficulty: "stretch", marks: 5 },
+  { topic: "number", difficulty: "foundation", marks: 2 }
 ];
 
 function gcseQuestionWithMetadata(template, question, filters) {
@@ -2489,35 +3026,39 @@ function gcseBuildQuestionSet(filters, count = 4) {
   return set;
 }
 
+function gcseMockPool(criteria, filters) {
+  const matchesPaper = (item) => filters.calculator === "any" || item.calculator === filters.calculator;
+  const matchStages = [
+    (item) => item.topic === criteria.topic && item.difficulty === criteria.difficulty && item.marks === criteria.marks,
+    (item) => item.topic === criteria.topic && item.marks === criteria.marks,
+    (item) => item.difficulty === criteria.difficulty && item.marks === criteria.marks,
+    (item) => item.marks === criteria.marks,
+    (item) => item.topic === criteria.topic,
+    () => true
+  ];
+
+  for (const stage of matchStages) {
+    const pool = gcseExamGenerators.filter((item) => matchesPaper(item) && stage(item));
+    if (pool.length) return pool;
+  }
+  return [];
+}
+
 function gcseBuildMockPaper(filters) {
   const set = [];
   const usedKeys = new Set();
-  const targetMarks = gcsePaperModeById("mock").targetMarks || 90;
+  const targetMarks = gcsePaperModeById("mock").targetMarks || 100;
   let totalMarks = 0;
-  let blueprintIndex = 0;
-  let safety = 0;
 
-  while (totalMarks < targetMarks && set.length < 32 && safety < 120) {
-    const criteria = gcseMockBlueprint[blueprintIndex % gcseMockBlueprint.length];
-    blueprintIndex += 1;
-    safety += 1;
-
-    if (filters.calculator !== "any" && criteria.calculator !== filters.calculator) continue;
-    let pool = gcseExamGenerators.filter((item) => (
-      item.topic === criteria.topic &&
-      item.difficulty === criteria.difficulty &&
-      item.calculator === criteria.calculator
-    ));
-    const remaining = targetMarks - totalMarks;
-    pool = pool.filter((item) => item.marks <= remaining && remaining - item.marks !== 1);
-    if (!pool.length) continue;
-
-    const question = gcseCreateUniqueQuestion(pool, filters, usedKeys, blueprintIndex);
+  gcseMockBlueprint.forEach((criteria, index) => {
+    const pool = gcseMockPool(criteria, filters);
+    if (!pool.length) return;
+    const question = gcseCreateUniqueQuestion(pool, filters, usedKeys, index);
     if (question) {
       set.push(question);
       totalMarks += question.marks;
     }
-  }
+  });
 
   const fillPool = gcseFilteredGenerators({
     ...filters,
@@ -2633,8 +3174,8 @@ function bindGcseExamStyle() {
       titleInput.value = mode.title;
     }
     if (modeHint) {
-      const sizeText = mode.id === "mock" ? "Target: 90 marks." : mode.count ? `Questions: ${mode.count}.` : "Questions: choose your own count.";
-      const mockNote = mode.id === "mock" ? " Topic, difficulty, and mark filters are cleared so the paper stays balanced; the paper type filter can still be used." : "";
+      const sizeText = mode.id === "mock" ? "Target: 100 marks across about 25-28 questions." : mode.count ? `Questions: ${mode.count}.` : "Questions: choose your own count.";
+      const mockNote = mode.id === "mock" ? " Topic, difficulty, and mark filters are cleared so the paper follows an OCR-style mark spread; the paper type filter can still be used." : "";
       modeHint.innerHTML = `<strong>${escapeHtml(mode.label)}</strong><span> ${escapeHtml(mode.description)} ${escapeHtml(sizeText)} Suggested time: ${escapeHtml(mode.time)}.${escapeHtml(mockNote)}</span>`;
     }
   }
@@ -2714,7 +3255,7 @@ function renderGcseExamStyle() {
   app.innerHTML = `
     ${pageHeader(
       "GCSE Exam Paper Builder",
-      "Create one GCSE-style question, a short class set, a longer revision paper, or a one-click 90-mark mock paper with worked solutions and mark-scheme-style guidance.",
+      "Create one GCSE-style question, a short class set, a longer revision paper, or a one-click OCR-style 100-mark mock paper with worked solutions and mark-scheme-style guidance.",
       `<a class="button" href="#/worksheet-generator">Open Worksheet Builder</a><button class="button" id="printGcseExamSet" type="button">Print / Save PDF</button>`
     )}
     <section class="exam-style-page">
@@ -2773,7 +3314,7 @@ function renderGcseExamStyle() {
         </label>
         <div class="exam-form-actions">
           <button class="button primary" type="submit">Generate Paper</button>
-          <button class="button" id="gcseMockPaperButton" type="button">Generate 90-Mark Mock</button>
+          <button class="button" id="gcseMockPaperButton" type="button">Generate 100-Mark OCR-Style Mock</button>
         </div>
       </form>
       <article class="panel exam-style-note">
@@ -2855,7 +3396,7 @@ function renderHome() {
       <div>
         <span class="eyebrow">Assessment Practice</span>
         <h2>Build GCSE practice papers</h2>
-        <p>Create one question, a short class set, a longer revision paper, or a one-click 90-mark mock paper with worked solutions and mark-scheme-style guidance.</p>
+        <p>Create one question, a short class set, a longer revision paper, or a one-click OCR-style 100-mark mock paper with worked solutions and mark-scheme-style guidance.</p>
       </div>
       <a class="button primary" href="#/gcse-exam-style">Open Exam Builder</a>
     </section>
