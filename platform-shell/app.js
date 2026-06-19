@@ -2008,6 +2008,53 @@ const gcseGradeBands = [
   { id: "stretch", label: "Higher grades 8-9" }
 ];
 
+const gcsePaperModes = [
+  {
+    id: "one",
+    label: "One question",
+    count: 1,
+    title: "GCSE Modelling Question",
+    time: "5-8 minutes",
+    description: "Use one focused question for modelling, discussion, or a quick check for understanding."
+  },
+  {
+    id: "class",
+    label: "Short class set",
+    count: 4,
+    title: "GCSE Class Practice Set",
+    time: "15-20 minutes",
+    description: "A compact set for board practice, pair work, or a short independent task."
+  },
+  {
+    id: "revision",
+    label: "Revision/homework set",
+    count: 10,
+    title: "GCSE Revision Practice Paper",
+    time: "35-45 minutes",
+    description: "A longer set for homework, revision, intervention, or a lesson-end assessment."
+  },
+  {
+    id: "custom",
+    label: "Custom paper",
+    count: null,
+    title: "GCSE Custom Practice Paper",
+    time: "Teacher selected",
+    description: "Choose the number of questions and use the filters to shape the paper."
+  },
+  {
+    id: "mock",
+    label: "One-click mock paper",
+    count: 12,
+    title: "GCSE Mock Practice Paper",
+    time: "55-65 minutes",
+    description: "Create a balanced paper across number, algebra, ratio, geometry, and statistics."
+  }
+];
+
+function gcsePaperModeById(modeId) {
+  return gcsePaperModes.find((mode) => mode.id === modeId) || gcsePaperModes[1];
+}
+
 function gcseOptionList(options, selected = "") {
   return options.map((option) => `<option value="${escapeHtml(option.id)}" ${option.id === selected ? "selected" : ""}>${escapeHtml(option.label)}</option>`).join("");
 }
@@ -2374,6 +2421,47 @@ const gcseExamGenerators = [
   { topic: "algebra", difficulty: "stretch", marks: 5, calculator: "non-calculator", create: gcseGenerateCompletingSquare }
 ];
 
+const gcseMockBlueprint = [
+  { topic: "number", difficulty: "foundation", calculator: "non-calculator" },
+  { topic: "algebra", difficulty: "foundation", calculator: "non-calculator" },
+  { topic: "algebra", difficulty: "crossover", calculator: "non-calculator" },
+  { topic: "geometry", difficulty: "crossover", calculator: "calculator" },
+  { topic: "ratio", difficulty: "crossover", calculator: "calculator" },
+  { topic: "algebra", difficulty: "crossover", calculator: "non-calculator" },
+  { topic: "number", difficulty: "higher", calculator: "calculator" },
+  { topic: "geometry", difficulty: "higher", calculator: "calculator" },
+  { topic: "statistics", difficulty: "higher", calculator: "calculator" },
+  { topic: "statistics", difficulty: "higher", calculator: "calculator" },
+  { topic: "algebra", difficulty: "stretch", calculator: "non-calculator" },
+  { topic: "ratio", difficulty: "crossover", calculator: "calculator" }
+];
+
+function gcseQuestionWithMetadata(template, question, filters) {
+  return {
+    ...question,
+    examBoard: gcseExamStyles.find((style) => style.id === filters.board)?.label || gcseExamStyles[0].label,
+    styleNote: gcseBoardNote(filters.board),
+    paperType: question.calculator,
+    marks: template.marks || question.marks
+  };
+}
+
+function gcseCreateUniqueQuestion(pool, filters, usedKeys, index = 0) {
+  let fallback = null;
+  for (let attempt = 0; attempt < 24; attempt += 1) {
+    const template = pool[(index + attempt) % pool.length] || gcseChoice(pool);
+    const question = template.create(filters);
+    const questionWithMetadata = gcseQuestionWithMetadata(template, question, filters);
+    const key = `${questionWithMetadata.subtopic}|${questionWithMetadata.questionHtml}|${questionWithMetadata.answer}`;
+    fallback = questionWithMetadata;
+    if (!usedKeys.has(key)) {
+      usedKeys.add(key);
+      return questionWithMetadata;
+    }
+  }
+  return fallback;
+}
+
 function gcseFilteredGenerators(filters) {
   const exact = gcseExamGenerators.filter((item) => (
     (filters.topic === "any" || item.topic === filters.topic) &&
@@ -2392,48 +2480,99 @@ function gcseFilteredGenerators(filters) {
 function gcseBuildQuestionSet(filters, count = 4) {
   const pool = gcseFilteredGenerators(filters);
   const set = [];
+  const usedKeys = new Set();
   for (let index = 0; index < count; index += 1) {
-    const template = pool[index % pool.length] || gcseChoice(pool);
-    const question = template.create(filters);
-    set.push({
-      ...question,
-      examBoard: gcseExamStyles.find((style) => style.id === filters.board)?.label || gcseExamStyles[0].label,
-      styleNote: gcseBoardNote(filters.board),
-      paperType: question.calculator,
-      marks: template.marks || question.marks
-    });
+    const question = gcseCreateUniqueQuestion(pool, filters, usedKeys, index);
+    if (question) set.push(question);
   }
   return set;
 }
 
+function gcseBuildMockPaper(filters) {
+  const set = [];
+  const usedKeys = new Set();
+  gcseMockBlueprint.forEach((criteria, index) => {
+    if (filters.calculator !== "any" && criteria.calculator !== filters.calculator) return;
+    const pool = gcseExamGenerators.filter((item) => (
+      item.topic === criteria.topic &&
+      item.difficulty === criteria.difficulty &&
+      item.calculator === criteria.calculator
+    ));
+    if (!pool.length) return;
+    const question = gcseCreateUniqueQuestion(pool, filters, usedKeys, index);
+    if (question) set.push(question);
+  });
+
+  const targetCount = filters.calculator === "any" ? 12 : 8;
+  const fillPool = gcseFilteredGenerators({
+    ...filters,
+    topic: "any",
+    difficulty: "any",
+    marks: "any"
+  });
+  while (set.length < targetCount && fillPool.length) {
+    const question = gcseCreateUniqueQuestion(fillPool, filters, usedKeys, set.length);
+    if (!question) break;
+    set.push(question);
+  }
+  return set;
+}
+
+function gcseClampQuestionCount(value) {
+  const count = Number.parseInt(value, 10);
+  if (!Number.isFinite(count)) return 4;
+  return Math.max(1, Math.min(30, count));
+}
+
+function gcseBuildPaper(filters) {
+  const mode = gcsePaperModeById(filters.mode);
+  const count = mode.id === "custom" ? gcseClampQuestionCount(filters.count) : mode.count;
+  const questions = mode.id === "mock" ? gcseBuildMockPaper(filters) : gcseBuildQuestionSet(filters, count || 4);
+  const totalMarks = questions.reduce((sum, question) => sum + question.marks, 0);
+  return {
+    mode,
+    questions,
+    totalMarks,
+    title: filters.paperTitle.trim() || mode.title,
+    instructions: filters.instructions.trim() || "Answer all questions. Show clear working where required.",
+    includeTeacherCopy: filters.includeTeacherCopy
+  };
+}
+
 function gcseReadFilters() {
   return {
+    mode: document.getElementById("gcseMode")?.value || "class",
     board: document.getElementById("gcseBoard")?.value || "general",
     topic: document.getElementById("gcseTopic")?.value || "any",
     difficulty: document.getElementById("gcseDifficulty")?.value || "any",
     marks: document.getElementById("gcseMarks")?.value || "any",
-    calculator: document.getElementById("gcseCalculator")?.value || "any"
+    calculator: document.getElementById("gcseCalculator")?.value || "any",
+    count: gcseClampQuestionCount(document.getElementById("gcseCount")?.value || 4),
+    paperTitle: document.getElementById("gcsePaperTitle")?.value || "",
+    instructions: document.getElementById("gcseInstructions")?.value || "",
+    includeTeacherCopy: Boolean(document.getElementById("gcseTeacherCopy")?.checked)
   };
 }
 
-function renderGcseQuestionCard(question, index) {
+function renderGcseQuestionCard(question, index, options = {}) {
+  const includeTeacherCopy = options.includeTeacherCopy !== false;
   return `
     <article class="exam-question-card">
       <header>
         <div>
           <span class="eyebrow">Question ${index + 1}</span>
-          <h2>${escapeHtml(question.topic)}</h2>
+          ${includeTeacherCopy ? `<h2>${escapeHtml(question.topic)}</h2>` : ""}
         </div>
         <strong>${question.marks} mark${question.marks === 1 ? "" : "s"}</strong>
       </header>
-      <div class="badge-row">
+      ${includeTeacherCopy ? `<div class="badge-row">
         <span class="badge">${escapeHtml(question.examBoard)}</span>
         <span class="badge">${escapeHtml(question.subtopic)}</span>
         <span class="badge">${escapeHtml(question.difficulty)}</span>
         <span class="badge">${escapeHtml(question.paperType)}</span>
-      </div>
+      </div>` : ""}
       <div class="exam-question-stem">${question.questionHtml}</div>
-      <details class="exam-solution" open>
+      ${includeTeacherCopy ? `<details class="exam-solution" open>
         <summary>Worked solution</summary>
         <ol>${question.worked.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
         <p><strong>Answer:</strong> ${escapeHtml(question.answer)}</p>
@@ -2441,7 +2580,7 @@ function renderGcseQuestionCard(question, index) {
       <details class="exam-mark-scheme" open>
         <summary>Mark scheme</summary>
         <ol>${question.markScheme.map((mark) => `<li>${escapeHtml(mark)}</li>`).join("")}</ol>
-      </details>
+      </details>` : ""}
     </article>
   `;
 }
@@ -2450,23 +2589,70 @@ function bindGcseExamStyle() {
   const form = document.getElementById("gcseExamForm");
   const output = document.getElementById("gcseExamOutput");
   const printButton = document.getElementById("printGcseExamSet");
+  const modeSelect = document.getElementById("gcseMode");
+  const countInput = document.getElementById("gcseCount");
+  const titleInput = document.getElementById("gcsePaperTitle");
+  const modeHint = document.getElementById("gcseModeHint");
+  const mockButton = document.getElementById("gcseMockPaperButton");
   if (!form || !output) return;
+
+  function syncModeControls(overwriteTitle = false) {
+    const mode = gcsePaperModeById(modeSelect?.value || "class");
+    if (countInput) {
+      countInput.disabled = mode.id !== "custom";
+      countInput.value = String(mode.id === "custom" ? gcseClampQuestionCount(countInput.value || 6) : mode.count);
+    }
+    if (titleInput && (overwriteTitle || !titleInput.value.trim())) {
+      titleInput.value = mode.title;
+    }
+    if (modeHint) {
+      const mockNote = mode.id === "mock" ? " Mock mode balances the paper across the available GCSE topic areas; only the paper type filter is applied." : "";
+      modeHint.textContent = `${mode.description} Suggested time: ${mode.time}.${mockNote}`;
+    }
+  }
 
   function generate() {
     const filters = gcseReadFilters();
-    const questions = gcseBuildQuestionSet(filters, 4);
+    const paper = gcseBuildPaper(filters);
+    const { mode, questions } = paper;
+    const boardLabel = gcseExamStyles.find((style) => style.id === filters.board)?.label || "GCSE exam-style";
+    const questionLabel = questions.length === 1 ? "question" : "questions";
     output.innerHTML = `
-      <section class="exam-set-header">
-        <div>
-          <span class="eyebrow">Original GCSE-style practice</span>
-          <h2>${escapeHtml(gcseExamStyles.find((style) => style.id === filters.board)?.label || "GCSE exam-style")} question set</h2>
-          <p>${escapeHtml(gcseBoardNote(filters.board))} These questions are generated as original practice and are not official exam-board questions.</p>
+      <section class="exam-paper">
+        <section class="exam-set-header">
+          <div>
+            <span class="eyebrow">Original GCSE-style practice</span>
+            <h2>${escapeHtml(paper.title)}</h2>
+            <p>${escapeHtml(boardLabel)} · ${escapeHtml(mode.label)}. ${escapeHtml(gcseBoardNote(filters.board))}</p>
+          </div>
+          <strong>${paper.totalMarks} marks</strong>
+        </section>
+        <section class="exam-paper-meta" aria-label="Paper information">
+          <div><span>Name</span></div>
+          <div><span>Class</span></div>
+          <div><span>Date</span></div>
+          <div><span>Time</span><strong>${escapeHtml(mode.time)}</strong></div>
+        </section>
+        <section class="exam-paper-instructions">
+          <h3>Instructions</h3>
+          <p>${escapeHtml(paper.instructions)}</p>
+          <p>Show your working clearly. Calculators should only be used where the paper type allows it.</p>
+        </section>
+        <div class="exam-question-grid">
+          ${questions.map((question, index) => renderGcseQuestionCard(question, index, { includeTeacherCopy: paper.includeTeacherCopy })).join("")}
         </div>
-        <strong>${questions.reduce((sum, question) => sum + question.marks, 0)} marks</strong>
+        <footer class="exam-paper-footer">
+          Developed in Kaizen Maths · Original practice questions for teacher-created assessment.
+        </footer>
       </section>
-      <div class="exam-question-grid">
-        ${questions.map(renderGcseQuestionCard).join("")}
-      </div>
+      <section class="exam-set-header exam-paper-summary">
+        <div>
+          <span class="eyebrow">Paper summary</span>
+          <h2>${questions.length} ${questionLabel} · ${paper.totalMarks} marks</h2>
+          <p>${paper.includeTeacherCopy ? "Teacher copy is included below each question." : "Student paper only. Switch on Teacher copy to include worked solutions and mark-scheme guidance."}</p>
+        </div>
+        <strong>${escapeHtml(mode.label)}</strong>
+      </section>
     `;
   }
 
@@ -2475,19 +2661,40 @@ function bindGcseExamStyle() {
     generate();
   });
 
+  modeSelect?.addEventListener("change", () => {
+    syncModeControls(true);
+  });
+
+  mockButton?.addEventListener("click", () => {
+    if (modeSelect) modeSelect.value = "mock";
+    const topicSelect = document.getElementById("gcseTopic");
+    const difficultySelect = document.getElementById("gcseDifficulty");
+    const marksSelect = document.getElementById("gcseMarks");
+    if (topicSelect) topicSelect.value = "any";
+    if (difficultySelect) difficultySelect.value = "any";
+    if (marksSelect) marksSelect.value = "any";
+    syncModeControls(true);
+    generate();
+  });
+
   printButton?.addEventListener("click", () => window.print());
+  syncModeControls(true);
   generate();
 }
 
 function renderGcseExamStyle() {
   app.innerHTML = `
     ${pageHeader(
-      "GCSE Exam-Style Questions",
-      "Generate original GCSE-style maths questions with marks, topic metadata, worked solutions, and mark-scheme-style guidance.",
-      `<a class="button" href="#/worksheet-generator">Open Worksheet Builder</a><button class="button" id="printGcseExamSet" type="button">Print / Save PDF</button>`
+      "GCSE Exam Paper Builder",
+      "Create one GCSE-style question, a short class set, a longer revision paper, or a one-click mock paper with marks, worked solutions, and mark-scheme-style guidance.",
+      `<a class="button" href="#/worksheet-generator">Open Worksheet Builder</a><button class="button primary" id="gcseMockPaperButton" type="button">One-Click Mock Paper</button><button class="button" id="printGcseExamSet" type="button">Print / Save PDF</button>`
     )}
     <section class="exam-style-page">
       <form class="panel exam-controls" id="gcseExamForm">
+        <div class="worksheet-control">
+          <label for="gcseMode">Paper mode</label>
+          <select id="gcseMode">${gcseOptionList(gcsePaperModes, "class")}</select>
+        </div>
         <div class="worksheet-control">
           <label for="gcseBoard">Exam style</label>
           <select id="gcseBoard">${gcseOptionList(gcseExamStyles, "general")}</select>
@@ -2518,12 +2725,29 @@ function renderGcseExamStyle() {
             <option value="non-calculator">Non-calculator</option>
           </select>
         </div>
-        <button class="button primary" type="submit">Generate GCSE Set</button>
+        <div class="worksheet-control">
+          <label for="gcseCount">Question count</label>
+          <input id="gcseCount" type="number" min="1" max="30" value="4">
+        </div>
+        <div class="worksheet-control exam-wide-control">
+          <label for="gcsePaperTitle">Paper title</label>
+          <input id="gcsePaperTitle" type="text" value="GCSE Class Practice Set">
+        </div>
+        <div class="worksheet-control exam-wide-control">
+          <label for="gcseInstructions">Student instruction</label>
+          <textarea id="gcseInstructions" rows="2">Answer all questions. Show clear working where required.</textarea>
+        </div>
+        <label class="exam-checkbox">
+          <input id="gcseTeacherCopy" type="checkbox" checked>
+          <span>Include teacher copy, worked solutions, and mark scheme</span>
+        </label>
+        <p class="exam-mode-hint" id="gcseModeHint"></p>
+        <button class="button primary" type="submit">Generate Paper</button>
       </form>
       <article class="panel exam-style-note">
         <span class="eyebrow">Exam Practice</span>
-        <h2>Original questions, exam-style structure</h2>
-        <p>This module creates original Kaizen Maths questions that follow GCSE-style assessment patterns: marks, command words, topic metadata, worked solutions, and mark-scheme-style credit. It does not copy past-paper questions or claim official endorsement from any exam board.</p>
+        <h2>Original questions, paper-style structure</h2>
+        <p>This builder creates original Kaizen Maths GCSE-style practice papers with marks, command words, topic metadata, worked solutions, and mark-scheme-style credit. It does not copy past-paper questions or claim official endorsement from any exam board.</p>
       </article>
       <section id="gcseExamOutput" class="exam-output" aria-live="polite"></section>
     </section>
@@ -2598,10 +2822,10 @@ function renderHome() {
       <div class="worksheet-callout-icon" aria-hidden="true">✓</div>
       <div>
         <span class="eyebrow">Assessment Practice</span>
-        <h2>Build original GCSE-style questions</h2>
-        <p>Choose a GCSE style, topic area, grade band, paper type, and mark value. Generate original exam-style questions with worked solutions and mark-scheme-style guidance.</p>
+        <h2>Build GCSE practice papers</h2>
+        <p>Create one question, a short class set, a longer revision paper, or a one-click mock paper with marks, worked solutions, and mark-scheme-style guidance.</p>
       </div>
-      <a class="button primary" href="#/gcse-exam-style">Open GCSE Module</a>
+      <a class="button primary" href="#/gcse-exam-style">Open Exam Builder</a>
     </section>
     ${metricGrid()}
     <section class="split-grid">
