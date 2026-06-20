@@ -2844,6 +2844,12 @@ sup .worksheet-fraction span:last-child {
   font-weight: 700;
 }
 
+.gcse-diagram .probability-label-bg {
+  fill: rgba(255, 255, 255, 0.94);
+  stroke: rgba(23, 32, 51, 0.12);
+  stroke-width: 1;
+}
+
 .exam-mini-table {
   width: min(420px, 100%);
   margin: 10px 0;

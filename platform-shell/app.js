@@ -2074,8 +2074,26 @@ function gcseGcd(a, b) {
   return b === 0 ? Math.abs(a) : gcseGcd(b, a % b);
 }
 
+function gcseGcdMany(values) {
+  const usable = values.map((value) => Math.abs(Number(value))).filter((value) => Number.isFinite(value) && value > 0);
+  if (!usable.length) return 1;
+  return usable.reduce((highestCommonFactor, value) => gcseGcd(highestCommonFactor, value));
+}
+
+function gcseAreCoprime(values) {
+  return gcseGcdMany(values) === 1;
+}
+
 function gcseMoney(value) {
-  return `£${Number(value).toLocaleString("en-GB", { maximumFractionDigits: 2 })}`;
+  const amount = Number(value);
+  return `£${amount.toLocaleString("en-GB", {
+    minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+    maximumFractionDigits: 2
+  })}`;
+}
+
+function gcseFormatDecimal(value, maximumFractionDigits = 2) {
+  return Number(Number(value).toFixed(maximumFractionDigits)).toString();
 }
 
 function gcseLinearExpression(coefficient, constant, variable = "x") {
@@ -2084,8 +2102,45 @@ function gcseLinearExpression(coefficient, constant, variable = "x") {
   return `${first} ${constant > 0 ? "+" : "-"} ${Math.abs(constant)}`;
 }
 
+function gcseSignedVariableTerm(coefficient, variable = "x") {
+  const absoluteCoefficient = Math.abs(coefficient);
+  if (absoluteCoefficient === 1) return variable;
+  return `${absoluteCoefficient}${variable}`;
+}
+
+function gcseFormatQuadraticExpression(linearCoefficient, constant) {
+  let expression = "x²";
+  if (linearCoefficient) {
+    expression += ` ${linearCoefficient > 0 ? "+" : "-"} ${gcseSignedVariableTerm(linearCoefficient)}`;
+  }
+  if (constant) {
+    expression += ` ${constant > 0 ? "+" : "-"} ${Math.abs(constant)}`;
+  }
+  return expression;
+}
+
+function gcseFormatTwoVariableExpression(xCoefficient, yCoefficient) {
+  const first = gcseLinearExpression(xCoefficient, 0, "x");
+  const second = gcseSignedVariableTerm(yCoefficient, "y");
+  return `${first} ${yCoefficient >= 0 ? "+" : "-"} ${second}`;
+}
+
 function gcseSvgLabel(label) {
   return escapeHtml(String(label));
+}
+
+function gcseTreeProbabilityLabel(numerator, denominator, format = "fraction") {
+  if (format === "decimal") {
+    return (numerator / denominator).toFixed(2);
+  }
+  return `${numerator}/${denominator}`;
+}
+
+function gcseSvgBackedText(x, y, label, width = 86) {
+  return `
+      <rect class="probability-label-bg" x="${x - 6}" y="${y - 17}" width="${width}" height="23" rx="5" />
+      <text x="${x}" y="${y}">${gcseSvgLabel(label)}</text>
+  `;
 }
 
 function gcseDiagramFrame(title, svg) {
@@ -2097,13 +2152,11 @@ function gcseDiagramFrame(title, svg) {
   `;
 }
 
-function gcseRightTriangleDiagram({ baseLabel, heightLabel, hypLabel, angleLabel }) {
+function gcseRightTriangleDiagram({ baseLabel, heightLabel, hypLabel }) {
   return gcseDiagramFrame("Diagram not drawn accurately", `
     <svg viewBox="0 0 300 190" role="img" aria-label="Right-angled triangle diagram">
       <polygon points="54,142 246,142 246,42" fill="#eefbfb" stroke="#172033" stroke-width="3" />
       <path d="M226 142 L226 122 L246 122" fill="none" stroke="#172033" stroke-width="2.4" />
-      <path d="M86 142 A32 32 0 0 1 101 116" fill="none" stroke="#6f4cc3" stroke-width="3" />
-      <text x="88" y="128">${gcseSvgLabel(angleLabel)}</text>
       <text x="138" y="166">${gcseSvgLabel(baseLabel)}</text>
       <text x="254" y="94">${gcseSvgLabel(heightLabel)}</text>
       <text x="130" y="78" transform="rotate(-28 130 78)">${gcseSvgLabel(hypLabel)}</text>
@@ -2135,7 +2188,7 @@ function gcseScaleDiagram(mapLabel) {
   `);
 }
 
-function gcseTreeDiagram({ red, blue, total }) {
+function gcseTreeDiagram({ red, blue, total, format = "fraction" }) {
   return gcseDiagramFrame("Probability tree", `
     <svg viewBox="0 0 360 190" role="img" aria-label="Two-stage probability tree">
       <circle cx="34" cy="94" r="4" fill="#172033" />
@@ -2145,12 +2198,12 @@ function gcseTreeDiagram({ red, blue, total }) {
       <line x1="154" y1="42" x2="310" y2="72" stroke="#172033" stroke-width="2.4" />
       <line x1="154" y1="146" x2="310" y2="118" stroke="#172033" stroke-width="2.4" />
       <line x1="154" y1="146" x2="310" y2="168" stroke="#172033" stroke-width="2.4" />
-      <text x="86" y="55">R ${gcseSvgLabel(`${red}/${total}`)}</text>
-      <text x="86" y="140">B ${gcseSvgLabel(`${blue}/${total}`)}</text>
-      <text x="210" y="31">R ${gcseSvgLabel(`${red - 1}/${total - 1}`)}</text>
-      <text x="210" y="70">B ${gcseSvgLabel(`${blue}/${total - 1}`)}</text>
-      <text x="210" y="120">R ${gcseSvgLabel(`${red}/${total - 1}`)}</text>
-      <text x="210" y="166">B ${gcseSvgLabel(`${blue - 1}/${total - 1}`)}</text>
+      ${gcseSvgBackedText(82, 55, `R ${gcseTreeProbabilityLabel(red, total, format)}`)}
+      ${gcseSvgBackedText(82, 140, `B ${gcseTreeProbabilityLabel(blue, total, format)}`)}
+      ${gcseSvgBackedText(207, 31, `R ${gcseTreeProbabilityLabel(red - 1, total - 1, format)}`)}
+      ${gcseSvgBackedText(207, 70, `B ${gcseTreeProbabilityLabel(blue, total - 1, format)}`)}
+      ${gcseSvgBackedText(207, 120, `R ${gcseTreeProbabilityLabel(red, total - 1, format)}`)}
+      ${gcseSvgBackedText(207, 166, `B ${gcseTreeProbabilityLabel(blue - 1, total - 1, format)}`)}
     </svg>
   `);
 }
@@ -2164,8 +2217,8 @@ function gcseAreaComparisonDiagram({ triangleBase, triangleHeight, shortSide, lo
       <text x="204" y="96">${gcseSvgLabel(`${triangleHeight} cm`)}</text>
       <polygon points="270,142 400,142 372,60 300,60" fill="#f5f3ff" stroke="#172033" stroke-width="3" />
       <line x1="300" y1="60" x2="300" y2="142" stroke="#17b8b3" stroke-width="2.5" stroke-dasharray="6 5" />
-      <text x="312" y="51">${gcseSvgLabel(`${shortSide} cm`)}</text>
-      <text x="312" y="166">${gcseSvgLabel(`${longSide} cm`)}</text>
+      <text x="312" y="51">${gcseSvgLabel(`${gcseFormatDecimal(shortSide)} cm`)}</text>
+      <text x="312" y="166">${gcseSvgLabel(`${gcseFormatDecimal(longSide)} cm`)}</text>
       <text x="246" y="105">${gcseSvgLabel(`${trapHeight} cm`)}</text>
     </svg>
   `);
@@ -2217,7 +2270,7 @@ function gcseGenerateQuadratic(filters) {
   if (r2 === r1) r2 += 1;
   const b = -(r1 + r2);
   const c = r1 * r2;
-  const expr = `x² ${b >= 0 ? "+" : "-"} ${Math.abs(b)}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)}`;
+  const expr = gcseFormatQuadraticExpression(b, c);
   return {
     topic: "Algebra",
     subtopic: "Quadratic equations",
@@ -2272,10 +2325,17 @@ function gcseGenerateLinearModel(filters) {
 }
 
 function gcseGenerateLinearEquation(filters) {
-  const a = gcseRand(3, 9);
-  const x = gcseRand(2, 8);
-  const b = gcseRand(4, 15);
-  const rhs = a * x + b;
+  let a;
+  let x;
+  let b;
+  let rhs;
+  do {
+    a = gcseRand(3, 9);
+    x = gcseRand(2, 8);
+    b = gcseRand(4, 15);
+    rhs = a * x + b;
+  } while (!gcseAreCoprime([a, b, rhs]));
+  const lhs = gcseLinearExpression(a, b);
   return {
     topic: "Algebra",
     subtopic: "Solving linear equations",
@@ -2283,7 +2343,7 @@ function gcseGenerateLinearEquation(filters) {
     marks: 3,
     calculator: "Non-calculator",
     commandWords: ["solve"],
-    questionHtml: `<p>Solve ${a}x + ${b} = ${rhs}.</p>`,
+    questionHtml: `<p>Solve ${lhs} = ${rhs}.</p>`,
     answer: `x = ${x}`,
     worked: [
       `Subtract ${b} from both sides.`,
@@ -2400,12 +2460,6 @@ function gcseGenerateTrig(filters) {
     calculator: "Calculator",
     commandWords: ["calculate"],
     questionHtml: `<p>A ladder of length ${hyp} m rests against a vertical wall.</p><p>The ladder makes an angle of ${angle}° with the ground.</p><p>Calculate the height reached by the ladder on the wall. Give your answer to 1 decimal place.</p>`,
-    diagramHtml: gcseRightTriangleDiagram({
-      baseLabel: "ground",
-      heightLabel: "height",
-      hypLabel: `${hyp} m`,
-      angleLabel: `${angle}°`
-    }),
     answer: `${height.toFixed(1)} m`,
     worked: [
       "The height is opposite the given angle and the ladder is the hypotenuse.",
@@ -2471,8 +2525,7 @@ function gcseGeneratePythagorasExam(filters) {
     diagramHtml: gcseRightTriangleDiagram({
       baseLabel: `${base} cm`,
       heightLabel: `${height} cm`,
-      hypLabel: "x",
-      angleLabel: "90°"
+      hypLabel: "x"
     }),
     answer: `${hyp} cm`,
     worked: [
@@ -2495,6 +2548,7 @@ function gcseGenerateProbability(filters) {
   const red = gcseChoice([3, 4, 5, 6]);
   const blue = gcseChoice([5, 6, 7, 8]);
   const total = red + blue;
+  const labelFormat = gcseChoice(["fraction", "decimal"]);
   const probability = (red / total) * ((red - 1) / (total - 1));
   return {
     topic: "Probability and statistics",
@@ -2504,7 +2558,7 @@ function gcseGenerateProbability(filters) {
     calculator: "Calculator",
     commandWords: ["find"],
     questionHtml: `<p>A bag contains ${red} red counters and ${blue} blue counters.</p><p>Two counters are taken at random without replacement.</p><p>Find the probability that both counters are red.</p>`,
-    diagramHtml: gcseTreeDiagram({ red, blue, total }),
+    diagramHtml: gcseTreeDiagram({ red, blue, total, format: labelFormat }),
     answer: `${red}/${total} × ${red - 1}/${total - 1} = ${probability.toFixed(3)}`,
     worked: [
       `P(first red) = ${red}/${total}.`,
@@ -2845,10 +2899,17 @@ function gcseGenerateBestValue(filters) {
 }
 
 function gcseGenerateInequality(filters) {
-  const a = gcseChoice([2, 3, 4, 5]);
-  const x = gcseChoice([-2, -1, 2, 3, 4]);
-  const b = gcseChoice([5, 7, 9]);
-  const rhs = a * x + b;
+  let a;
+  let x;
+  let b;
+  let rhs;
+  do {
+    a = gcseChoice([2, 3, 4, 5]);
+    x = gcseChoice([-2, -1, 2, 3, 4]);
+    b = gcseChoice([5, 7, 9]);
+    rhs = a * x + b;
+  } while (!gcseAreCoprime([a, b, rhs]));
+  const lhs = gcseLinearExpression(a, b);
   return {
     topic: "Algebra",
     subtopic: "Linear inequalities",
@@ -2856,7 +2917,7 @@ function gcseGenerateInequality(filters) {
     marks: 4,
     calculator: "Non-calculator",
     commandWords: ["solve"],
-    questionHtml: `<p>Solve ${a}x + ${b} < ${rhs}.</p><p>Show your solution using inequality notation.</p>`,
+    questionHtml: `<p>Solve ${lhs} &lt; ${rhs}.</p><p>Show your solution using inequality notation.</p>`,
     answer: `x < ${x}`,
     worked: [
       `Subtract ${b} from both sides: ${a}x < ${rhs - b}.`,
@@ -2881,6 +2942,8 @@ function gcseGenerateAreaComparison(filters) {
   const sumParallel = area * 2 / trapHeight;
   const shortSide = Math.floor(sumParallel / 2) - 2;
   const longSide = sumParallel - shortSide;
+  const shortSideText = gcseFormatDecimal(shortSide);
+  const longSideText = gcseFormatDecimal(longSide);
   return {
     topic: "Geometry and measures",
     subtopic: "Area reasoning",
@@ -2888,13 +2951,13 @@ function gcseGenerateAreaComparison(filters) {
     marks: 3,
     calculator: "Calculator",
     commandWords: ["show"],
-    questionHtml: `<p>A triangle has base ${triangleBase} cm and height ${triangleHeight} cm.</p><p>A trapezium has parallel sides ${shortSide} cm and ${longSide} cm, and height ${trapHeight} cm.</p><p>Show that the triangle and the trapezium have the same area.</p>`,
+    questionHtml: `<p>A triangle has base ${triangleBase} cm and height ${triangleHeight} cm.</p><p>A trapezium has parallel sides ${shortSideText} cm and ${longSideText} cm, and height ${trapHeight} cm.</p><p>Show that the triangle and the trapezium have the same area.</p>`,
     diagramHtml: gcseAreaComparisonDiagram({ triangleBase, triangleHeight, shortSide, longSide, trapHeight }),
     answer: `Both areas are ${area} cm²`,
     worked: [
       `Triangle area = 1/2 × ${triangleBase} × ${triangleHeight} = ${area} cm².`,
-      `Trapezium area = 1/2 × (${shortSide} + ${longSide}) × ${trapHeight}.`,
-      `Trapezium area = 1/2 × ${shortSide + longSide} × ${trapHeight} = ${area} cm².`,
+      `Trapezium area = 1/2 × (${shortSideText} + ${longSideText}) × ${trapHeight}.`,
+      `Trapezium area = 1/2 × ${gcseFormatDecimal(shortSide + longSide)} × ${trapHeight} = ${area} cm².`,
       "The areas are equal."
     ],
     markScheme: [
@@ -2920,7 +2983,6 @@ function gcseGeneratePieChartReasoning(filters) {
     calculator: "Calculator",
     commandWords: ["show", "calculate"],
     questionHtml: `<p>A school asks students to vote for one of four charities, A, B, C or D.</p><p>The sector for charity A is ${angleA}°.</p><p>Charity C has twice as many votes as charity B. Charity D has three times as many votes as charity B.</p><p>(a) Show that the sector for charity B is ${angleB}°.</p><p>(b) ${votesA} students voted for charity A. Calculate the total number of students who voted.</p>`,
-    diagramHtml: gcsePieChartDiagram(angleA),
     answer: `(a) ${angleB}°, (b) ${totalStudents} students`,
     worked: [
       `Angle left after charity A = 360° - ${angleA}° = ${remaining}°.`,
@@ -2968,10 +3030,29 @@ function gcseGenerateBoundsFit(filters) {
 }
 
 function gcseGenerateAnglesAlgebra(filters) {
-  const x = gcseChoice([18, 20, 22, 24]);
-  const a = 3 * x + 20;
-  const b = 180 - a;
-  const constant = b - 5 * x;
+  const template = gcseChoice([
+    { x: 12, firstCoefficient: 2, firstConstant: 31, secondCoefficient: 3, secondConstant: 13, thirdAngle: 76 },
+    { x: 14, firstCoefficient: 3, firstConstant: 8, secondCoefficient: 2, secondConstant: 19, thirdAngle: 83 },
+    { x: 15, firstCoefficient: 2, firstConstant: 27, secondCoefficient: 3, secondConstant: -2, thirdAngle: 80 },
+    { x: 18, firstCoefficient: 2, firstConstant: 24, secondCoefficient: 3, secondConstant: -14, thirdAngle: 80 },
+    { x: 20, firstCoefficient: 2, firstConstant: 18, secondCoefficient: 3, secondConstant: -8, thirdAngle: 70 }
+  ]);
+  const {
+    x,
+    firstCoefficient,
+    firstConstant,
+    secondCoefficient,
+    secondConstant,
+    thirdAngle
+  } = template;
+  const firstExpression = gcseLinearExpression(firstCoefficient, firstConstant);
+  const secondExpression = gcseLinearExpression(secondCoefficient, secondConstant);
+  const firstAngle = firstCoefficient * x + firstConstant;
+  const secondAngle = secondCoefficient * x + secondConstant;
+  const largestAngle = Math.max(firstAngle, secondAngle, thirdAngle);
+  const totalCoefficient = firstCoefficient + secondCoefficient;
+  const totalConstant = firstConstant + secondConstant + thirdAngle;
+  const constantText = totalConstant >= 0 ? `+ ${totalConstant}` : `- ${Math.abs(totalConstant)}`;
   return {
     topic: "Geometry and measures",
     subtopic: "Angles with algebra",
@@ -2979,22 +3060,23 @@ function gcseGenerateAnglesAlgebra(filters) {
     marks: 5,
     calculator: "Non-calculator",
     commandWords: ["find"],
-    questionHtml: `<p>Two angles on a straight line are (3x + 20)° and (5x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)})°.</p><p>An angle y is vertically opposite to the angle (5x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)})°.</p><p>Find the value of y. You must show your working.</p>`,
-    diagramHtml: gcseAnglesDiagram("(3x + 20)°", `(5x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)})°`),
-    answer: `y = ${b}°`,
+    questionHtml: `<p>The angles in a triangle are (${firstExpression})°, (${secondExpression})° and ${thirdAngle}°.</p><p>Find the value of x and the size of the largest angle.</p>`,
+    answer: `x = ${x}, largest angle = ${largestAngle}°`,
     worked: [
-      "Angles on a straight line add to 180°.",
-      `(3x + 20) + (5x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)}) = 180.`,
-      `8x ${20 + constant >= 0 ? "+" : "-"} ${Math.abs(20 + constant)} = 180.`,
+      "Angles in a triangle add to 180°.",
+      `(${firstExpression}) + (${secondExpression}) + ${thirdAngle} = 180.`,
+      `${totalCoefficient}x ${constantText} = 180.`,
+      `${totalCoefficient}x = ${180 - totalConstant}.`,
       `x = ${x}.`,
-      `y = 5 × ${x} ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)} = ${b}°.`
+      `The angles are ${firstAngle}°, ${secondAngle}° and ${thirdAngle}°.`,
+      `The largest angle is ${largestAngle}°.`
     ],
     markScheme: [
-      "1 mark for using angles on a straight line.",
+      "1 mark for using the angle sum of a triangle.",
       "1 mark for forming a correct equation.",
       "1 mark for solving for x.",
-      "1 mark for using vertically opposite angles or substituting into the correct expression.",
-      "1 mark for the correct value of y."
+      "1 mark for substituting x back into the angle expressions.",
+      "1 mark for identifying the largest angle."
     ]
   };
 }
@@ -3002,12 +3084,26 @@ function gcseGenerateAnglesAlgebra(filters) {
 function gcseGenerateSimultaneousEquations(filters) {
   const x = gcseChoice([2, 3, 4, 5]);
   const y = gcseChoice([3, 4, 6, 7]);
-  const a = gcseChoice([2, 3, 4]);
-  const b = gcseChoice([2, 3, 5]);
-  const c = gcseChoice([1, 2, 3]);
-  const d = gcseChoice([4, 5, 6]);
-  const rhs1 = a * x + b * y;
-  const rhs2 = c * x + d * y;
+  let a;
+  let b;
+  let c;
+  let d;
+  let rhs1;
+  let rhs2;
+  do {
+    a = gcseChoice([2, 3, 4, 5]);
+    b = gcseChoice([2, 3, 5, 7]);
+    c = gcseChoice([1, 2, 3, 4]);
+    d = gcseChoice([4, 5, 6, 7]);
+    rhs1 = a * x + b * y;
+    rhs2 = c * x + d * y;
+  } while (
+    a * d - b * c === 0 ||
+    !gcseAreCoprime([a, b, rhs1]) ||
+    !gcseAreCoprime([c, d, rhs2])
+  );
+  const equation1 = gcseFormatTwoVariableExpression(a, b);
+  const equation2 = gcseFormatTwoVariableExpression(c, d);
   return {
     topic: "Algebra",
     subtopic: "Simultaneous equations",
@@ -3015,13 +3111,14 @@ function gcseGenerateSimultaneousEquations(filters) {
     marks: 3,
     calculator: "Non-calculator",
     commandWords: ["solve"],
-    questionHtml: `<p>Solve the simultaneous equations.</p><p>${a}x + ${b}y = ${rhs1}</p><p>${c}x + ${d}y = ${rhs2}</p>`,
+    questionHtml: `<p>Solve the simultaneous equations.</p><p>${equation1} = ${rhs1}</p><p>${equation2} = ${rhs2}</p>`,
     answer: `x = ${x}, y = ${y}`,
     worked: [
       "Eliminate one variable by making the coefficients match.",
       `Solving the two equations gives y = ${y}.`,
       `Substitute y = ${y} into one equation.`,
-      `${a}x + ${b} × ${y} = ${rhs1}, so x = ${x}.`
+      `${a}x + ${b} × ${y} = ${rhs1}, so ${a}x + ${b * y} = ${rhs1}.`,
+      `Therefore x = ${x}.`
     ],
     markScheme: [
       "1 mark for a valid elimination or substitution step.",
