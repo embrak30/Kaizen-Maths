@@ -2381,77 +2381,74 @@ sup .worksheet-fraction span:last-child {
 
 .exam-style-page {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .exam-builder-compact {
+  position: relative;
+  z-index: 5;
   display: grid;
-  gap: 8px;
-  padding: 12px;
+  gap: 0;
+  padding: 8px;
 }
 
-.exam-builder-heading {
+.exam-builder-title {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: start;
+  gap: 1px;
+  min-width: 0;
 }
 
-.exam-builder-heading h1 {
-  margin: 2px 0 2px;
-  color: var(--ink);
-  font-size: clamp(1.28rem, 1.7vw, 1.72rem);
-  line-height: 1.12;
-}
-
-.exam-builder-heading p {
+.exam-builder-title h1 {
   margin: 0;
-  max-width: 760px;
-  color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.35;
+  color: var(--ink);
+  font-size: clamp(1rem, 1.35vw, 1.32rem);
+  line-height: 1.12;
+  white-space: nowrap;
 }
 
-.exam-builder-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-.exam-builder-links .button,
 .exam-form-actions .button {
-  min-height: 34px;
-  padding: 7px 10px;
-  font-size: 0.9rem;
+  min-height: 30px;
+  padding: 5px 8px;
+  font-size: 0.8rem;
 }
 
 .exam-controls {
   display: grid;
   grid-template-columns:
-    minmax(132px, 1.08fr)
-    minmax(100px, 0.7fr)
-    minmax(116px, 0.9fr)
-    minmax(130px, 0.95fr)
-    minmax(78px, 0.5fr)
-    minmax(88px, 0.56fr)
-    minmax(230px, auto);
-  gap: 7px;
-  align-items: end;
+    minmax(170px, 1.45fr)
+    minmax(138px, 1fr)
+    minmax(104px, 0.78fr)
+    minmax(124px, 0.9fr)
+    minmax(132px, 0.92fr)
+    minmax(82px, 0.56fr)
+    minmax(92px, 0.58fr)
+    minmax(255px, auto)
+    minmax(94px, auto);
+  gap: 5px;
+  align-items: center;
 }
 
 .exam-controls .worksheet-control {
-  gap: 4px;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .exam-controls .worksheet-control label {
-  font-size: 0.71rem;
+  flex: 0 0 auto;
+  color: #5b6372;
+  font-size: 0.68rem;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .exam-controls .worksheet-control select,
 .exam-controls .worksheet-control input {
-  min-height: 34px;
-  padding: 7px 9px;
+  min-width: 0;
+  min-height: 30px;
+  padding: 5px 7px;
+  font-size: 0.8rem;
 }
 
 .exam-wide-control {
@@ -2486,7 +2483,7 @@ sup .worksheet-fraction span:last-child {
 
 .exam-mode-summary {
   grid-column: 1 / -1;
-  display: grid;
+  display: none;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 8px;
   align-items: center;
@@ -2516,36 +2513,47 @@ sup .worksheet-fraction span:last-child {
 .exam-form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 5px;
   flex-wrap: wrap;
-  align-items: end;
+  align-items: center;
   padding-top: 0;
 }
 
 .exam-advanced-options {
-  grid-column: 1 / -1;
+  position: relative;
+  min-width: 0;
   border: 1px solid rgba(23, 184, 179, 0.16);
   border-radius: 6px;
   background: #fbffff;
 }
 
 .exam-advanced-options summary {
-  min-height: 32px;
+  min-height: 30px;
   display: flex;
   align-items: center;
-  padding: 6px 10px;
+  padding: 5px 8px;
   color: var(--ink);
-  font-size: 0.84rem;
+  font-size: 0.8rem;
   font-weight: 850;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .exam-advanced-grid {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  width: min(720px, calc(100vw - 32px));
   display: grid;
   grid-template-columns: minmax(190px, 0.8fr) minmax(260px, 1.45fr) minmax(240px, 1fr);
   gap: 10px;
   align-items: end;
-  padding: 0 10px 10px;
+  padding: 12px;
+  border: 1px solid #dfe6ef;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
 }
 
 .exam-advanced-grid textarea {
@@ -2587,6 +2595,7 @@ sup .worksheet-fraction span:last-child {
 }
 
 .exam-paper > .exam-set-header {
+  display: none;
   order: 1;
 }
 
@@ -2742,6 +2751,43 @@ sup .worksheet-fraction span:last-child {
 
 .exam-question-stem p {
   margin: 0 0 8px;
+}
+
+.exam-question-figure {
+  margin: 2px 0 4px;
+}
+
+.gcse-diagram {
+  width: min(460px, 100%);
+  display: grid;
+  gap: 5px;
+  padding: 10px;
+  border: 1px solid #dfe6ef;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.gcse-diagram > span {
+  color: var(--muted);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.gcse-diagram svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.gcse-diagram text {
+  fill: #172033;
+  font-family: var(--math-font);
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .exam-mini-table {
@@ -3079,12 +3125,17 @@ sup .worksheet-fraction span:last-child {
   }
 
   .exam-controls {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns:
+      minmax(148px, 1.3fr)
+      repeat(3, minmax(92px, 1fr))
+      minmax(78px, 0.62fr)
+      minmax(88px, 0.66fr)
+      minmax(250px, 1.8fr)
+      minmax(94px, 0.72fr);
   }
 
   .exam-form-actions {
-    grid-column: 1 / -1;
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 
   .exam-advanced-grid {
@@ -3141,16 +3192,43 @@ sup .worksheet-fraction span:last-child {
     width: 100%;
   }
 
-  .exam-builder-heading {
-    grid-template-columns: minmax(0, 1fr) auto;
+  .exam-controls {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
-  .exam-builder-links {
+  .exam-builder-title {
+    grid-column: span 2;
+  }
+
+  .exam-controls .worksheet-control {
+    gap: 4px;
+  }
+
+  .exam-controls .worksheet-control label {
+    font-size: 0.62rem;
+  }
+
+  .exam-controls .worksheet-control select,
+  .exam-controls .worksheet-control input {
+    min-height: 28px;
+    padding: 4px 5px;
+    font-size: 0.75rem;
+  }
+
+  .exam-form-actions {
+    grid-column: span 4;
     justify-content: flex-start;
   }
 
-  .exam-controls {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .exam-form-actions .button,
+  .exam-advanced-options summary {
+    min-height: 28px;
+    padding: 4px 6px;
+    font-size: 0.73rem;
+  }
+
+  .exam-advanced-options {
+    grid-column: span 2;
   }
 
   .exam-paper-meta {
@@ -3304,15 +3382,16 @@ sup .worksheet-fraction span:last-child {
 }
 
 @media (max-width: 620px) {
-  .exam-builder-heading {
-    grid-template-columns: 1fr;
+  .exam-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .exam-builder-links {
-    justify-content: flex-start;
+  .exam-builder-title,
+  .exam-form-actions,
+  .exam-advanced-options {
+    grid-column: 1 / -1;
   }
 
-  .exam-controls,
   .exam-paper-meta {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -3337,6 +3416,7 @@ sup .worksheet-fraction span:last-child {
   .topbar,
   .page-header,
   .worksheet-controls,
+  .exam-builder-compact,
   .exam-controls,
   .exam-style-note,
   .exam-paper-summary,
@@ -3374,6 +3454,7 @@ sup .worksheet-fraction span:last-child {
   }
 
   .exam-paper > .exam-set-header {
+    display: flex;
     order: 1;
   }
 

@@ -2083,6 +2083,129 @@ function gcseLinearExpression(coefficient, constant, variable = "x") {
   return `${first} ${constant > 0 ? "+" : "-"} ${Math.abs(constant)}`;
 }
 
+function gcseSvgLabel(label) {
+  return escapeHtml(String(label));
+}
+
+function gcseDiagramFrame(title, svg) {
+  return `
+    <div class="gcse-diagram">
+      <span>${escapeHtml(title)}</span>
+      ${svg}
+    </div>
+  `;
+}
+
+function gcseRightTriangleDiagram({ baseLabel, heightLabel, hypLabel, angleLabel }) {
+  return gcseDiagramFrame("Diagram not drawn accurately", `
+    <svg viewBox="0 0 300 190" role="img" aria-label="Right-angled triangle diagram">
+      <polygon points="54,142 246,142 246,42" fill="#eefbfb" stroke="#172033" stroke-width="3" />
+      <path d="M226 142 L226 122 L246 122" fill="none" stroke="#172033" stroke-width="2.4" />
+      <path d="M86 142 A32 32 0 0 1 101 116" fill="none" stroke="#6f4cc3" stroke-width="3" />
+      <text x="88" y="128">${gcseSvgLabel(angleLabel)}</text>
+      <text x="138" y="166">${gcseSvgLabel(baseLabel)}</text>
+      <text x="254" y="94">${gcseSvgLabel(heightLabel)}</text>
+      <text x="130" y="78" transform="rotate(-28 130 78)">${gcseSvgLabel(hypLabel)}</text>
+    </svg>
+  `);
+}
+
+function gcseCircleDiagram(radiusLabel) {
+  return gcseDiagramFrame("Circle diagram", `
+    <svg viewBox="0 0 260 170" role="img" aria-label="Circle with radius">
+      <circle cx="130" cy="84" r="58" fill="#f5f3ff" stroke="#172033" stroke-width="3" />
+      <circle cx="130" cy="84" r="3.5" fill="#172033" />
+      <line x1="130" y1="84" x2="188" y2="84" stroke="#17b8b3" stroke-width="3" />
+      <text x="146" y="75">${gcseSvgLabel(radiusLabel)}</text>
+    </svg>
+  `);
+}
+
+function gcseScaleDiagram(mapLabel) {
+  return gcseDiagramFrame("Map sketch", `
+    <svg viewBox="0 0 320 130" role="img" aria-label="Map scale line diagram">
+      <circle cx="54" cy="68" r="8" fill="#6f4cc3" />
+      <circle cx="266" cy="68" r="8" fill="#6f4cc3" />
+      <line x1="62" y1="68" x2="258" y2="68" stroke="#172033" stroke-width="3" stroke-dasharray="8 6" />
+      <text x="42" y="42">A</text>
+      <text x="256" y="42">B</text>
+      <text x="126" y="99">${gcseSvgLabel(mapLabel)}</text>
+    </svg>
+  `);
+}
+
+function gcseTreeDiagram({ red, blue, total }) {
+  return gcseDiagramFrame("Probability tree", `
+    <svg viewBox="0 0 360 190" role="img" aria-label="Two-stage probability tree">
+      <circle cx="34" cy="94" r="4" fill="#172033" />
+      <line x1="38" y1="94" x2="150" y2="42" stroke="#172033" stroke-width="2.4" />
+      <line x1="38" y1="94" x2="150" y2="146" stroke="#172033" stroke-width="2.4" />
+      <line x1="154" y1="42" x2="310" y2="22" stroke="#172033" stroke-width="2.4" />
+      <line x1="154" y1="42" x2="310" y2="72" stroke="#172033" stroke-width="2.4" />
+      <line x1="154" y1="146" x2="310" y2="118" stroke="#172033" stroke-width="2.4" />
+      <line x1="154" y1="146" x2="310" y2="168" stroke="#172033" stroke-width="2.4" />
+      <text x="86" y="55">R ${gcseSvgLabel(`${red}/${total}`)}</text>
+      <text x="86" y="140">B ${gcseSvgLabel(`${blue}/${total}`)}</text>
+      <text x="210" y="31">R ${gcseSvgLabel(`${red - 1}/${total - 1}`)}</text>
+      <text x="210" y="70">B ${gcseSvgLabel(`${blue}/${total - 1}`)}</text>
+      <text x="210" y="120">R ${gcseSvgLabel(`${red}/${total - 1}`)}</text>
+      <text x="210" y="166">B ${gcseSvgLabel(`${blue - 1}/${total - 1}`)}</text>
+    </svg>
+  `);
+}
+
+function gcseAreaComparisonDiagram({ triangleBase, triangleHeight, shortSide, longSide, trapHeight }) {
+  return gcseDiagramFrame("Shapes not drawn accurately", `
+    <svg viewBox="0 0 440 190" role="img" aria-label="Triangle and trapezium area diagram">
+      <polygon points="48,142 196,142 196,48" fill="#eefbfb" stroke="#172033" stroke-width="3" />
+      <line x1="196" y1="48" x2="196" y2="142" stroke="#17b8b3" stroke-width="2.5" stroke-dasharray="6 5" />
+      <text x="96" y="166">${gcseSvgLabel(`${triangleBase} cm`)}</text>
+      <text x="204" y="96">${gcseSvgLabel(`${triangleHeight} cm`)}</text>
+      <polygon points="270,142 400,142 372,60 300,60" fill="#f5f3ff" stroke="#172033" stroke-width="3" />
+      <line x1="300" y1="60" x2="300" y2="142" stroke="#17b8b3" stroke-width="2.5" stroke-dasharray="6 5" />
+      <text x="312" y="51">${gcseSvgLabel(`${shortSide} cm`)}</text>
+      <text x="312" y="166">${gcseSvgLabel(`${longSide} cm`)}</text>
+      <text x="246" y="105">${gcseSvgLabel(`${trapHeight} cm`)}</text>
+    </svg>
+  `);
+}
+
+function gcsePieChartDiagram(angleA) {
+  return gcseDiagramFrame("Pie chart information", `
+    <svg viewBox="0 0 260 180" role="img" aria-label="Pie chart diagram">
+      <circle cx="130" cy="90" r="62" fill="#ffffff" stroke="#172033" stroke-width="3" />
+      <line x1="130" y1="90" x2="130" y2="28" stroke="#172033" stroke-width="2.5" />
+      <line x1="130" y1="90" x2="190" y2="105" stroke="#172033" stroke-width="2.5" />
+      <path d="M130 52 A38 38 0 0 1 167 100" fill="none" stroke="#6f4cc3" stroke-width="3" />
+      <text x="151" y="77">A</text>
+      <text x="164" y="95">${gcseSvgLabel(`${angleA}°`)}</text>
+      <text x="95" y="94">B, C and D</text>
+    </svg>
+  `);
+}
+
+function gcseAnglesDiagram(labelA, labelB) {
+  return gcseDiagramFrame("Angle diagram", `
+    <svg viewBox="0 0 360 170" role="img" aria-label="Angles on a straight line">
+      <line x1="36" y1="118" x2="324" y2="118" stroke="#172033" stroke-width="3" />
+      <line x1="180" y1="118" x2="104" y2="42" stroke="#172033" stroke-width="3" />
+      <line x1="180" y1="118" x2="256" y2="42" stroke="#172033" stroke-width="3" />
+      <text x="88" y="108">${gcseSvgLabel(labelA)}</text>
+      <text x="216" y="108">${gcseSvgLabel(labelB)}</text>
+      <text x="182" y="148">y</text>
+    </svg>
+  `);
+}
+
+function gcseShuffle(items) {
+  const copy = items.slice();
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = gcseRand(0, index);
+    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+  }
+  return copy;
+}
+
 function gcseBoardNote(boardId) {
   return gcseExamStyles.find((style) => style.id === boardId)?.note || gcseExamStyles[0].note;
 }
@@ -2276,6 +2399,12 @@ function gcseGenerateTrig(filters) {
     calculator: "Calculator",
     commandWords: ["calculate"],
     questionHtml: `<p>A ladder of length ${hyp} m rests against a vertical wall.</p><p>The ladder makes an angle of ${angle}° with the ground.</p><p>Calculate the height reached by the ladder on the wall. Give your answer to 1 decimal place.</p>`,
+    diagramHtml: gcseRightTriangleDiagram({
+      baseLabel: "ground",
+      heightLabel: "height",
+      hypLabel: `${hyp} m`,
+      angleLabel: `${angle}°`
+    }),
     answer: `${height.toFixed(1)} m`,
     worked: [
       "The height is opposite the given angle and the ladder is the hypotenuse.",
@@ -2303,6 +2432,7 @@ function gcseGenerateCircleArea(filters) {
     calculator: "Calculator",
     commandWords: ["calculate"],
     questionHtml: `<p>A circle has radius ${radius} cm.</p><p>Calculate the area of the circle. Give your answer to 1 decimal place.</p>`,
+    diagramHtml: gcseCircleDiagram(`${radius} cm`),
     answer: `${area.toFixed(1)} cm²`,
     worked: [
       "Use A = πr².",
@@ -2313,6 +2443,49 @@ function gcseGenerateCircleArea(filters) {
       "1 mark for using the area formula.",
       "1 mark for substituting the radius correctly.",
       "1 mark for the final rounded answer with square units."
+    ]
+  };
+}
+
+function gcseGeneratePythagorasExam(filters) {
+  const triple = gcseChoice([
+    [6, 8, 10],
+    [5, 12, 13],
+    [9, 12, 15],
+    [8, 15, 17],
+    [7, 24, 25]
+  ]);
+  const scale = gcseChoice([1, 2]);
+  const base = triple[0] * scale;
+  const height = triple[1] * scale;
+  const hyp = triple[2] * scale;
+  return {
+    topic: "Geometry and measures",
+    subtopic: "Pythagoras' theorem",
+    difficulty: "Crossover grades 4-5",
+    marks: 4,
+    calculator: "Calculator",
+    commandWords: ["calculate"],
+    questionHtml: `<p>A right-angled triangle is shown.</p><p>Calculate the length x. Give your answer in centimetres.</p>`,
+    diagramHtml: gcseRightTriangleDiagram({
+      baseLabel: `${base} cm`,
+      heightLabel: `${height} cm`,
+      hypLabel: "x",
+      angleLabel: "90°"
+    }),
+    answer: `${hyp} cm`,
+    worked: [
+      "Use Pythagoras' theorem because the triangle is right-angled.",
+      `x² = ${base}² + ${height}².`,
+      `x² = ${base * base} + ${height * height} = ${hyp * hyp}.`,
+      `x = √${hyp * hyp} = ${hyp}.`,
+      `The length x is ${hyp} cm.`
+    ],
+    markScheme: [
+      "1 mark for choosing Pythagoras' theorem.",
+      "1 mark for substituting the two shorter sides correctly.",
+      "1 mark for finding x².",
+      "1 mark for the correct length with units."
     ]
   };
 }
@@ -2330,6 +2503,7 @@ function gcseGenerateProbability(filters) {
     calculator: "Calculator",
     commandWords: ["find"],
     questionHtml: `<p>A bag contains ${red} red counters and ${blue} blue counters.</p><p>Two counters are taken at random without replacement.</p><p>Find the probability that both counters are red.</p>`,
+    diagramHtml: gcseTreeDiagram({ red, blue, total }),
     answer: `${red}/${total} × ${red - 1}/${total - 1} = ${probability.toFixed(3)}`,
     worked: [
       `P(first red) = ${red}/${total}.`,
@@ -2522,6 +2696,7 @@ function gcseGenerateScaleMap(filters) {
     calculator: "Calculator",
     commandWords: ["work out"],
     questionHtml: `<p>The scale of a map is 1 : ${scale.toLocaleString("en-GB")}.</p><p>Two places are ${groundKm} km apart on the ground.</p><p>Work out how far apart the two places are on the map. Give your answer in centimetres.</p>`,
+    diagramHtml: gcseScaleDiagram(`${groundKm} km`),
     answer: `${mapCm} cm`,
     worked: [
       `${groundKm} km = ${groundKm * 100000} cm.`,
@@ -2713,6 +2888,7 @@ function gcseGenerateAreaComparison(filters) {
     calculator: "Calculator",
     commandWords: ["show"],
     questionHtml: `<p>A triangle has base ${triangleBase} cm and height ${triangleHeight} cm.</p><p>A trapezium has parallel sides ${shortSide} cm and ${longSide} cm, and height ${trapHeight} cm.</p><p>Show that the triangle and the trapezium have the same area.</p>`,
+    diagramHtml: gcseAreaComparisonDiagram({ triangleBase, triangleHeight, shortSide, longSide, trapHeight }),
     answer: `Both areas are ${area} cm²`,
     worked: [
       `Triangle area = 1/2 × ${triangleBase} × ${triangleHeight} = ${area} cm².`,
@@ -2743,6 +2919,7 @@ function gcseGeneratePieChartReasoning(filters) {
     calculator: "Calculator",
     commandWords: ["show", "calculate"],
     questionHtml: `<p>A school asks students to vote for one of four charities, A, B, C or D.</p><p>The sector for charity A is ${angleA}°.</p><p>Charity C has twice as many votes as charity B. Charity D has three times as many votes as charity B.</p><p>(a) Show that the sector for charity B is ${angleB}°.</p><p>(b) ${votesA} students voted for charity A. Calculate the total number of students who voted.</p>`,
+    diagramHtml: gcsePieChartDiagram(angleA),
     answer: `(a) ${angleB}°, (b) ${totalStudents} students`,
     worked: [
       `Angle left after charity A = 360° - ${angleA}° = ${remaining}°.`,
@@ -2802,6 +2979,7 @@ function gcseGenerateAnglesAlgebra(filters) {
     calculator: "Non-calculator",
     commandWords: ["find"],
     questionHtml: `<p>Two angles on a straight line are (3x + 20)° and (5x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)})°.</p><p>An angle y is vertically opposite to the angle (5x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)})°.</p><p>Find the value of y. You must show your working.</p>`,
+    diagramHtml: gcseAnglesDiagram("(3x + 20)°", `(5x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)})°`),
     answer: `y = ${b}°`,
     worked: [
       "Angles on a straight line add to 180°.",
@@ -2913,14 +3091,162 @@ function gcseGenerateFunctionMachine(filters) {
   };
 }
 
+function gcseGenerateStandardForm(filters) {
+  const mantissaTenths = gcseChoice([23, 34, 47, 56, 68, 72, 85, 91]);
+  const power = gcseChoice([4, 5, 6, 7]);
+  const mantissa = mantissaTenths / 10;
+  const number = mantissa * Math.pow(10, power);
+  return {
+    topic: "Number",
+    subtopic: "Standard form",
+    difficulty: "Crossover grades 4-5",
+    marks: 3,
+    calculator: "Non-calculator",
+    commandWords: ["write"],
+    questionHtml: `<p>Write ${number.toLocaleString("en-GB")} in standard form.</p>`,
+    answer: `${mantissa} × 10^${power}`,
+    worked: [
+      "Standard form is written as a × 10^n where 1 ≤ a < 10.",
+      `Move the decimal point until the first number is ${mantissa}.`,
+      `The decimal point moves ${power} places, so ${number.toLocaleString("en-GB")} = ${mantissa} × 10^${power}.`
+    ],
+    markScheme: [
+      "1 mark for a number between 1 and 10.",
+      "1 mark for the correct power of 10.",
+      "1 mark for the complete standard form answer."
+    ]
+  };
+}
+
+function gcseGenerateNthTerm(filters) {
+  const difference = gcseChoice([3, 4, 5, 6, 7]);
+  const constant = gcseChoice([-4, -2, 1, 3, 5]);
+  const terms = [1, 2, 3, 4, 5].map((n) => difference * n + constant);
+  const nthTerm = gcseLinearExpression(difference, constant, "n");
+  return {
+    topic: "Algebra",
+    subtopic: "Nth term of a linear sequence",
+    difficulty: "Crossover grades 4-5",
+    marks: 3,
+    calculator: "Non-calculator",
+    commandWords: ["find"],
+    questionHtml: `<p>Here are the first five terms of a sequence.</p><p>${terms.join(", ")}</p><p>Find an expression for the nth term.</p>`,
+    answer: nthTerm,
+    worked: [
+      `The common difference is ${difference}.`,
+      `Start with ${difference}n.`,
+      `When n = 1, ${difference}n = ${difference}. The first term is ${terms[0]}, so adjust by ${constant}.`,
+      `The nth term is ${nthTerm}.`
+    ],
+    markScheme: [
+      "1 mark for identifying the common difference.",
+      "1 mark for using the coefficient of n correctly.",
+      "1 mark for the correct nth term."
+    ]
+  };
+}
+
+function gcseGenerateGradientLine(filters) {
+  const x1 = gcseChoice([-4, -3, -2, 1]);
+  const y1 = gcseChoice([-3, -1, 2, 4]);
+  const dx = gcseChoice([2, 3, 4, 5]);
+  const dy = gcseChoice([-6, -4, 3, 6, 8]);
+  const x2 = x1 + dx;
+  const y2 = y1 + dy;
+  const divisor = gcseGcd(Math.abs(dy), Math.abs(dx));
+  const numerator = dy / divisor;
+  const denominator = dx / divisor;
+  const gradient = denominator === 1 ? `${numerator}` : `${numerator}/${denominator}`;
+  return {
+    topic: "Algebra",
+    subtopic: "Gradient between two points",
+    difficulty: "Crossover grades 4-5",
+    marks: 3,
+    calculator: "Non-calculator",
+    commandWords: ["find"],
+    questionHtml: `<p>Find the gradient of the line joining the points (${x1}, ${y1}) and (${x2}, ${y2}).</p>`,
+    answer: gradient,
+    worked: [
+      "Use gradient = change in y ÷ change in x.",
+      `Change in y = ${y2} - (${y1}) = ${dy}.`,
+      `Change in x = ${x2} - (${x1}) = ${dx}.`,
+      `Gradient = ${dy}/${dx} = ${gradient}.`
+    ],
+    markScheme: [
+      "1 mark for using change in y over change in x.",
+      "1 mark for the correct differences.",
+      "1 mark for the correct simplified gradient."
+    ]
+  };
+}
+
+function gcseGenerateVolumeCuboid(filters) {
+  const length = gcseChoice([6, 8, 10, 12]);
+  const width = gcseChoice([3, 4, 5, 7]);
+  const height = gcseChoice([2, 3, 4, 5]);
+  const volume = length * width * height;
+  return {
+    topic: "Geometry and measures",
+    subtopic: "Volume of a cuboid",
+    difficulty: "Foundation grades 1-3",
+    marks: 3,
+    calculator: "Calculator",
+    commandWords: ["calculate"],
+    questionHtml: `<p>A cuboid has length ${length} cm, width ${width} cm and height ${height} cm.</p><p>Calculate the volume of the cuboid.</p>`,
+    answer: `${volume} cm³`,
+    worked: [
+      "Volume of a cuboid = length × width × height.",
+      `Volume = ${length} × ${width} × ${height}.`,
+      `Volume = ${volume} cm³.`
+    ],
+    markScheme: [
+      "1 mark for the correct volume formula.",
+      "1 mark for substituting the three dimensions.",
+      "1 mark for the correct volume with cubic units."
+    ]
+  };
+}
+
+function gcseGenerateProbabilitySingleEvent(filters) {
+  const red = gcseChoice([4, 5, 6, 7]);
+  const blue = gcseChoice([3, 4, 5]);
+  const green = gcseChoice([2, 3, 4]);
+  const total = red + blue + green;
+  const favourable = red + green;
+  return {
+    topic: "Probability and statistics",
+    subtopic: "Single-event probability",
+    difficulty: "Foundation grades 1-3",
+    marks: 3,
+    calculator: "Non-calculator",
+    commandWords: ["find"],
+    questionHtml: `<p>A bag contains ${red} red counters, ${blue} blue counters and ${green} green counters.</p><p>One counter is chosen at random.</p><p>Find the probability that the counter is not blue.</p>`,
+    answer: `${favourable}/${total}`,
+    worked: [
+      `Total number of counters = ${red} + ${blue} + ${green} = ${total}.`,
+      `Not blue means red or green, so favourable counters = ${red} + ${green} = ${favourable}.`,
+      `P(not blue) = ${favourable}/${total}.`
+    ],
+    markScheme: [
+      "1 mark for the total number of counters.",
+      "1 mark for finding the number that are not blue.",
+      "1 mark for the correct probability."
+    ]
+  };
+}
+
 const gcseExamGenerators = [
   { topic: "number", difficulty: "foundation", marks: 4, calculator: "non-calculator", create: gcseGenerateNumberFacts },
   { topic: "statistics", difficulty: "foundation", marks: 3, calculator: "non-calculator", create: gcseGenerateMedianRange },
+  { topic: "statistics", difficulty: "foundation", marks: 3, calculator: "non-calculator", create: gcseGenerateProbabilitySingleEvent },
   { topic: "algebra", difficulty: "foundation", marks: 4, calculator: "non-calculator", create: gcseGenerateFormulaSubstitution },
   { topic: "number", difficulty: "foundation", marks: 2, calculator: "non-calculator", create: gcseGenerateFractionAmount },
   { topic: "algebra", difficulty: "foundation", marks: 3, calculator: "non-calculator", create: gcseGenerateLinearEquation },
+  { topic: "geometry", difficulty: "foundation", marks: 3, calculator: "calculator", create: gcseGenerateVolumeCuboid },
   { topic: "ratio", difficulty: "foundation", marks: 3, calculator: "calculator", create: gcseGenerateScaleMap },
   { topic: "algebra", difficulty: "crossover", marks: 3, calculator: "non-calculator", create: gcseGenerateQuadratic },
+  { topic: "algebra", difficulty: "crossover", marks: 3, calculator: "non-calculator", create: gcseGenerateNthTerm },
+  { topic: "algebra", difficulty: "crossover", marks: 3, calculator: "non-calculator", create: gcseGenerateGradientLine },
   { topic: "algebra", difficulty: "crossover", marks: 4, calculator: "non-calculator", create: gcseGenerateLinearModel },
   { topic: "algebra", difficulty: "crossover", marks: 4, calculator: "non-calculator", create: gcseGenerateFunctionMachine },
   { topic: "algebra", difficulty: "crossover", marks: 4, calculator: "non-calculator", create: gcseGenerateInequality },
@@ -2930,10 +3256,12 @@ const gcseExamGenerators = [
   { topic: "ratio", difficulty: "crossover", marks: 3, calculator: "calculator", create: gcseGenerateBestValue },
   { topic: "number", difficulty: "crossover", marks: 2, calculator: "calculator", create: gcseGenerateDensity },
   { topic: "number", difficulty: "crossover", marks: 3, calculator: "calculator", create: gcseGenerateOrderingNumbers },
+  { topic: "number", difficulty: "crossover", marks: 3, calculator: "non-calculator", create: gcseGenerateStandardForm },
   { topic: "number", difficulty: "higher", marks: 4, calculator: "calculator", create: gcseGenerateCompoundInterest },
   { topic: "number", difficulty: "higher", marks: 3, calculator: "calculator", create: gcseGenerateBoundsFit },
   { topic: "geometry", difficulty: "higher", marks: 4, calculator: "calculator", create: gcseGenerateTrig },
   { topic: "geometry", difficulty: "crossover", marks: 3, calculator: "calculator", create: gcseGenerateCircleArea },
+  { topic: "geometry", difficulty: "crossover", marks: 4, calculator: "calculator", create: gcseGeneratePythagorasExam },
   { topic: "geometry", difficulty: "crossover", marks: 3, calculator: "calculator", create: gcseGenerateAreaComparison },
   { topic: "geometry", difficulty: "higher", marks: 5, calculator: "non-calculator", create: gcseGenerateAnglesAlgebra },
   { topic: "statistics", difficulty: "higher", marks: 4, calculator: "calculator", create: gcseGenerateProbability },
@@ -2943,36 +3271,55 @@ const gcseExamGenerators = [
   { topic: "algebra", difficulty: "stretch", marks: 5, calculator: "non-calculator", create: gcseGenerateCompletingSquare }
 ];
 
-const gcseMockBlueprint = [
-  { topic: "number", difficulty: "foundation", marks: 4 },
-  { topic: "statistics", difficulty: "foundation", marks: 3 },
-  { topic: "geometry", difficulty: "crossover", marks: 3 },
-  { topic: "algebra", difficulty: "foundation", marks: 4 },
-  { topic: "ratio", difficulty: "foundation", marks: 3 },
-  { topic: "algebra", difficulty: "foundation", marks: 3 },
-  { topic: "algebra", difficulty: "crossover", marks: 4 },
-  { topic: "number", difficulty: "crossover", marks: 3 },
-  { topic: "ratio", difficulty: "crossover", marks: 5 },
-  { topic: "statistics", difficulty: "crossover", marks: 3 },
-  { topic: "geometry", difficulty: "crossover", marks: 3 },
-  { topic: "algebra", difficulty: "crossover", marks: 4 },
-  { topic: "number", difficulty: "crossover", marks: 2 },
-  { topic: "ratio", difficulty: "crossover", marks: 5 },
-  { topic: "number", difficulty: "higher", marks: 3 },
-  { topic: "ratio", difficulty: "crossover", marks: 4 },
-  { topic: "statistics", difficulty: "higher", marks: 3 },
-  { topic: "geometry", difficulty: "crossover", marks: 3 },
-  { topic: "number", difficulty: "crossover", marks: 3 },
-  { topic: "algebra", difficulty: "higher", marks: 3 },
-  { topic: "geometry", difficulty: "higher", marks: 5 },
-  { topic: "number", difficulty: "higher", marks: 4 },
-  { topic: "ratio", difficulty: "crossover", marks: 3 },
-  { topic: "algebra", difficulty: "crossover", marks: 3 },
-  { topic: "statistics", difficulty: "crossover", marks: 5 },
-  { topic: "geometry", difficulty: "higher", marks: 5 },
-  { topic: "algebra", difficulty: "stretch", marks: 5 },
-  { topic: "number", difficulty: "foundation", marks: 2 }
-];
+const gcseMockMarkPlan = [4, 3, 3, 4, 3, 3, 4, 3, 5, 3, 3, 4, 2, 5, 3, 4, 3, 3, 3, 3, 5, 4, 3, 3, 5, 5, 5, 2];
+
+const gcseMockSlotBanks = {
+  early: [
+    { topic: "number", difficulty: "foundation" },
+    { topic: "algebra", difficulty: "foundation" },
+    { topic: "ratio", difficulty: "foundation" },
+    { topic: "statistics", difficulty: "foundation" },
+    { topic: "geometry", difficulty: "crossover" },
+    { topic: "number", difficulty: "crossover" },
+    { topic: "algebra", difficulty: "crossover" }
+  ],
+  middle: [
+    { topic: "ratio", difficulty: "crossover" },
+    { topic: "algebra", difficulty: "crossover" },
+    { topic: "geometry", difficulty: "crossover" },
+    { topic: "statistics", difficulty: "crossover" },
+    { topic: "number", difficulty: "crossover" },
+    { topic: "number", difficulty: "higher" },
+    { topic: "algebra", difficulty: "higher" },
+    { topic: "geometry", difficulty: "higher" },
+    { topic: "statistics", difficulty: "higher" }
+  ],
+  late: [
+    { topic: "geometry", difficulty: "higher" },
+    { topic: "algebra", difficulty: "higher" },
+    { topic: "statistics", difficulty: "higher" },
+    { topic: "number", difficulty: "higher" },
+    { topic: "ratio", difficulty: "crossover" },
+    { topic: "algebra", difficulty: "stretch" },
+    { topic: "geometry", difficulty: "crossover" }
+  ]
+};
+
+function gcseMockSlotBank(index) {
+  if (index < 8) return gcseMockSlotBanks.early;
+  if (index < 20) return gcseMockSlotBanks.middle;
+  return gcseMockSlotBanks.late;
+}
+
+function gcseBuildMockBlueprint() {
+  let previousTopic = "";
+  return gcseMockMarkPlan.map((marks, index) => {
+    const options = gcseShuffle(gcseMockSlotBank(index));
+    const choice = options.find((option) => option.topic !== previousTopic) || options[0];
+    previousTopic = choice.topic;
+    return { ...choice, marks };
+  });
+}
 
 function gcseQuestionWithMetadata(template, question, filters) {
   return {
@@ -2984,18 +3331,31 @@ function gcseQuestionWithMetadata(template, question, filters) {
   };
 }
 
-function gcseCreateUniqueQuestion(pool, filters, usedKeys, index = 0) {
+function gcseCreateUniqueQuestion(pool, filters, usedKeys, usedSubtopics = null) {
   let fallback = null;
-  for (let attempt = 0; attempt < 24; attempt += 1) {
-    const template = pool[(index + attempt) % pool.length] || gcseChoice(pool);
+  const templates = gcseShuffle(pool);
+  const attempts = Math.max(24, templates.length * 3);
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    const template = templates[attempt % templates.length] || gcseChoice(pool);
     const question = template.create(filters);
     const questionWithMetadata = gcseQuestionWithMetadata(template, question, filters);
     const key = `${questionWithMetadata.subtopic}|${questionWithMetadata.questionHtml}|${questionWithMetadata.answer}`;
-    fallback = questionWithMetadata;
+    if (!fallback) fallback = questionWithMetadata;
+    if (usedKeys.has(key)) continue;
+    if (usedSubtopics?.has(questionWithMetadata.subtopic)) {
+      fallback = questionWithMetadata;
+      continue;
+    }
+    usedKeys.add(key);
+    usedSubtopics?.add(questionWithMetadata.subtopic);
+    return questionWithMetadata;
+  }
+  if (fallback) {
+    const key = `${fallback.subtopic}|${fallback.questionHtml}|${fallback.answer}`;
     if (!usedKeys.has(key)) {
       usedKeys.add(key);
-      return questionWithMetadata;
     }
+    usedSubtopics?.add(fallback.subtopic);
   }
   return fallback;
 }
@@ -3019,8 +3379,9 @@ function gcseBuildQuestionSet(filters, count = 4) {
   const pool = gcseFilteredGenerators(filters);
   const set = [];
   const usedKeys = new Set();
+  const usedSubtopics = new Set();
   for (let index = 0; index < count; index += 1) {
-    const question = gcseCreateUniqueQuestion(pool, filters, usedKeys, index);
+    const question = gcseCreateUniqueQuestion(pool, filters, usedKeys, usedSubtopics);
     if (question) set.push(question);
   }
   return set;
@@ -3028,32 +3389,25 @@ function gcseBuildQuestionSet(filters, count = 4) {
 
 function gcseMockPool(criteria, filters) {
   const matchesPaper = (item) => filters.calculator === "any" || item.calculator === filters.calculator;
-  const matchStages = [
-    (item) => item.topic === criteria.topic && item.difficulty === criteria.difficulty && item.marks === criteria.marks,
-    (item) => item.topic === criteria.topic && item.marks === criteria.marks,
-    (item) => item.difficulty === criteria.difficulty && item.marks === criteria.marks,
-    (item) => item.marks === criteria.marks,
-    (item) => item.topic === criteria.topic,
-    () => true
-  ];
-
-  for (const stage of matchStages) {
-    const pool = gcseExamGenerators.filter((item) => matchesPaper(item) && stage(item));
-    if (pool.length) return pool;
-  }
-  return [];
+  const markPool = gcseExamGenerators.filter((item) => matchesPaper(item) && item.marks === criteria.marks);
+  const exact = markPool.filter((item) => item.topic === criteria.topic && item.difficulty === criteria.difficulty);
+  const nearby = markPool.filter((item) => item.topic === criteria.topic || item.difficulty === criteria.difficulty);
+  const merged = [...exact, ...nearby, ...markPool].filter((item, index, list) => list.indexOf(item) === index);
+  if (merged.length) return merged;
+  return gcseExamGenerators.filter((item) => matchesPaper(item));
 }
 
 function gcseBuildMockPaper(filters) {
   const set = [];
   const usedKeys = new Set();
+  const usedSubtopics = new Set();
   const targetMarks = gcsePaperModeById("mock").targetMarks || 100;
   let totalMarks = 0;
 
-  gcseMockBlueprint.forEach((criteria, index) => {
+  gcseBuildMockBlueprint().forEach((criteria, index) => {
     const pool = gcseMockPool(criteria, filters);
     if (!pool.length) return;
-    const question = gcseCreateUniqueQuestion(pool, filters, usedKeys, index);
+    const question = gcseCreateUniqueQuestion(pool, filters, usedKeys, usedSubtopics);
     if (question) {
       set.push(question);
       totalMarks += question.marks;
@@ -3070,7 +3424,7 @@ function gcseBuildMockPaper(filters) {
     const remaining = targetMarks - totalMarks;
     const adjustedPool = fillPool.filter((item) => item.marks <= remaining && remaining - item.marks !== 1);
     if (!adjustedPool.length) break;
-    const question = gcseCreateUniqueQuestion(adjustedPool, filters, usedKeys, set.length);
+    const question = gcseCreateUniqueQuestion(adjustedPool, filters, usedKeys, usedSubtopics);
     if (!question) break;
     set.push(question);
     totalMarks += question.marks;
@@ -3132,6 +3486,7 @@ function renderGcseQuestionCard(question, index, options = {}) {
         <span class="badge">${escapeHtml(question.paperType)}</span>
       </div>` : ""}
       <div class="exam-question-stem">${question.questionHtml}</div>
+      ${question.diagramHtml ? `<figure class="exam-question-figure">${question.diagramHtml}</figure>` : ""}
       ${includeTeacherCopy ? `<details class="exam-solution" open>
         <summary>Worked solution</summary>
         <ol>${question.worked.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
@@ -3255,18 +3610,11 @@ function renderGcseExamStyle() {
   app.innerHTML = `
     <section class="exam-style-page">
       <section class="exam-builder-compact panel">
-        <div class="exam-builder-heading">
-          <div>
+        <form class="exam-controls" id="gcseExamForm">
+          <div class="exam-builder-title">
             <span class="eyebrow">Assessment Practice</span>
             <h1>GCSE Exam Paper Builder</h1>
-            <p>Create one question, a class set, a revision paper, or a one-click 100-mark mock.</p>
           </div>
-          <div class="exam-builder-links">
-            <a class="button" href="#/worksheet-generator">Worksheet Builder</a>
-            <button class="button" id="printGcseExamSet" type="button">Print / PDF</button>
-          </div>
-        </div>
-        <form class="exam-controls" id="gcseExamForm">
           <div class="worksheet-control">
             <label for="gcseMode">Mode</label>
             <select id="gcseMode">${gcseOptionList(gcsePaperModes, "class")}</select>
@@ -3308,6 +3656,8 @@ function renderGcseExamStyle() {
           <div class="exam-form-actions">
             <button class="button primary" type="submit">Generate</button>
             <button class="button" id="gcseMockPaperButton" type="button">One-click 100-mark mock</button>
+            <button class="button" id="printGcseExamSet" type="button">Print / PDF</button>
+            <a class="button" href="#/worksheet-generator">Worksheet</a>
           </div>
           <div class="exam-mode-summary" id="gcseModeHint" aria-live="polite"></div>
           <details class="exam-advanced-options">
@@ -3328,7 +3678,6 @@ function renderGcseExamStyle() {
             </div>
           </details>
         </form>
-        <p class="exam-builder-note">Original Kaizen Maths GCSE-style practice. Questions are generated for teacher-created practice and assessment.</p>
       </section>
       <section id="gcseExamOutput" class="exam-output" aria-live="polite"></section>
     </section>
