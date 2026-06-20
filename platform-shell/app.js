@@ -1770,6 +1770,7 @@ const universitySections = [
     videos: [
       { id: "building-a-worksheet", title: "Building A Worksheet", description: "How to choose topics, levels, and question types from across the site." },
       { id: "assessment-mode-and-marks", title: "Assessment Mode And Marks", description: "How to add marks and shape a worksheet into a quiz or test-style paper." },
+      { id: "using-the-exam-paper-builder", title: "Using The Exam Paper Builder", description: "How to choose a GCSE-style format, generate a short set or 100-mark mock, add teacher copy when needed, and print the paper." },
       { id: "using-the-answer-key", title: "Using The Answer Key", description: "How the separate teacher copy can support marking, feedback, and review." }
     ]
   },
@@ -3510,6 +3511,7 @@ function bindGcseExamStyle() {
   const titleInput = document.getElementById("gcsePaperTitle");
   const modeHint = document.getElementById("gcseModeHint");
   const mockButton = document.getElementById("gcseMockPaperButton");
+  const teacherCopyToggle = document.getElementById("gcseTeacherCopy");
   if (!form || !output) return;
 
   function syncModeControls(overwriteTitle = false) {
@@ -3601,6 +3603,7 @@ function bindGcseExamStyle() {
     generate();
   });
 
+  teacherCopyToggle?.addEventListener("change", generate);
   printButton?.addEventListener("click", () => window.print());
   syncModeControls(true);
   generate();
@@ -3615,68 +3618,72 @@ function renderGcseExamStyle() {
             <span class="eyebrow">Assessment Practice</span>
             <h1>GCSE Exam Paper Builder</h1>
           </div>
-          <div class="worksheet-control">
-            <label for="gcseMode">Mode</label>
-            <select id="gcseMode">${gcseOptionList(gcsePaperModes, "class")}</select>
+          <div class="exam-filter-bank">
+            <div class="worksheet-control">
+              <label for="gcseMode">Mode</label>
+              <select id="gcseMode">${gcseOptionList(gcsePaperModes, "class")}</select>
+            </div>
+            <div class="worksheet-control">
+              <label for="gcseBoard">Style</label>
+              <select id="gcseBoard">${gcseOptionList(gcseExamStyles, "general")}</select>
+            </div>
+            <div class="worksheet-control">
+              <label for="gcseTopic">Topic</label>
+              <select id="gcseTopic">${gcseOptionList(gcseExamTopics, "any")}</select>
+            </div>
+            <div class="worksheet-control">
+              <label for="gcseDifficulty">Difficulty</label>
+              <select id="gcseDifficulty">${gcseOptionList(gcseGradeBands, "any")}</select>
+            </div>
+            <div class="worksheet-control">
+              <label for="gcseMarks">Marks</label>
+              <select id="gcseMarks">
+                <option value="any">Any marks</option>
+                <option value="2">2 marks</option>
+                <option value="3">3 marks</option>
+                <option value="4">4 marks</option>
+                <option value="5">5 marks</option>
+              </select>
+            </div>
+            <div class="worksheet-control">
+              <label for="gcseCalculator">Paper</label>
+              <select id="gcseCalculator">
+                <option value="any">Any</option>
+                <option value="calculator">Calculator</option>
+                <option value="non-calculator">Non-calculator</option>
+              </select>
+            </div>
+            <div class="worksheet-control" id="gcseCountControl" hidden>
+              <label for="gcseCount">Questions</label>
+              <input id="gcseCount" type="number" min="1" max="30" value="4">
+            </div>
           </div>
-          <div class="worksheet-control">
-            <label for="gcseBoard">Style</label>
-            <select id="gcseBoard">${gcseOptionList(gcseExamStyles, "general")}</select>
-          </div>
-          <div class="worksheet-control">
-            <label for="gcseTopic">Topic</label>
-            <select id="gcseTopic">${gcseOptionList(gcseExamTopics, "any")}</select>
-          </div>
-          <div class="worksheet-control">
-            <label for="gcseDifficulty">Difficulty</label>
-            <select id="gcseDifficulty">${gcseOptionList(gcseGradeBands, "any")}</select>
-          </div>
-          <div class="worksheet-control">
-            <label for="gcseMarks">Marks</label>
-            <select id="gcseMarks">
-              <option value="any">Any marks</option>
-              <option value="2">2 marks</option>
-              <option value="3">3 marks</option>
-              <option value="4">4 marks</option>
-              <option value="5">5 marks</option>
-            </select>
-          </div>
-          <div class="worksheet-control">
-            <label for="gcseCalculator">Paper</label>
-            <select id="gcseCalculator">
-              <option value="any">Any</option>
-              <option value="calculator">Calculator</option>
-              <option value="non-calculator">Non-calculator</option>
-            </select>
-          </div>
-          <div class="worksheet-control" id="gcseCountControl" hidden>
-            <label for="gcseCount">Questions</label>
-            <input id="gcseCount" type="number" min="1" max="30" value="4">
-          </div>
-          <div class="exam-form-actions">
-            <button class="button primary" type="submit">Generate</button>
-            <button class="button" id="gcseMockPaperButton" type="button">One-click 100-mark mock</button>
-            <button class="button" id="printGcseExamSet" type="button">Print / PDF</button>
-            <a class="button" href="#/worksheet-generator">Worksheet</a>
+          <div class="exam-functions-box">
+            <div class="exam-form-actions">
+              <button class="button primary" type="submit">Generate</button>
+              <button class="button" id="gcseMockPaperButton" type="button">100-mark mock</button>
+              <button class="button" id="printGcseExamSet" type="button">Print / PDF</button>
+              <a class="button" href="#/worksheet-generator">Worksheet</a>
+            </div>
+            <label class="exam-copy-toggle">
+              <input id="gcseTeacherCopy" type="checkbox">
+              <span>Teacher copy</span>
+            </label>
+            <details class="exam-advanced-options">
+              <summary>Paper options</summary>
+              <div class="exam-advanced-grid">
+                <div class="worksheet-control">
+                  <label for="gcsePaperTitle">Paper title</label>
+                  <input id="gcsePaperTitle" type="text" value="GCSE Class Practice Set">
+                </div>
+                <div class="worksheet-control">
+                  <label for="gcseInstructions">Student instruction</label>
+                  <textarea id="gcseInstructions" rows="2">Answer all questions. Show clear working where required.</textarea>
+                </div>
+              </div>
+            </details>
           </div>
           <div class="exam-mode-summary" id="gcseModeHint" aria-live="polite"></div>
-          <details class="exam-advanced-options">
-            <summary>Paper options</summary>
-            <div class="exam-advanced-grid">
-              <div class="worksheet-control">
-                <label for="gcsePaperTitle">Paper title</label>
-                <input id="gcsePaperTitle" type="text" value="GCSE Class Practice Set">
-              </div>
-              <div class="worksheet-control">
-                <label for="gcseInstructions">Student instruction</label>
-                <textarea id="gcseInstructions" rows="2">Answer all questions. Show clear working where required.</textarea>
-              </div>
-              <label class="exam-checkbox">
-                <input id="gcseTeacherCopy" type="checkbox" checked>
-                <span>Include teacher copy, worked solutions, and mark scheme</span>
-              </label>
-            </div>
-          </details>
         </form>
       </section>
       <section id="gcseExamOutput" class="exam-output" aria-live="polite"></section>
@@ -5785,6 +5792,7 @@ function renderRoute() {
   updateAdminNavVisibility();
   setActiveNav();
   const parts = routeParts();
+  document.body.dataset.route = parts[0] || "home";
   if (!parts[0]) {
     renderHome();
   } else if (parts[0] === "beta-feedback") {
