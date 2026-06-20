@@ -2138,8 +2138,7 @@ function gcseTreeProbabilityLabel(numerator, denominator, format = "fraction") {
 
 function gcseSvgBackedText(x, y, label, width = 86) {
   return `
-      <rect class="probability-label-bg" x="${x - 6}" y="${y - 17}" width="${width}" height="23" rx="5" />
-      <text x="${x}" y="${y}">${gcseSvgLabel(label)}</text>
+      <text class="probability-label" x="${x}" y="${y}">${gcseSvgLabel(label)}</text>
   `;
 }
 
@@ -2155,8 +2154,8 @@ function gcseDiagramFrame(title, svg) {
 function gcseRightTriangleDiagram({ baseLabel, heightLabel, hypLabel }) {
   return gcseDiagramFrame("Diagram not drawn accurately", `
     <svg viewBox="0 0 300 190" role="img" aria-label="Right-angled triangle diagram">
-      <polygon points="54,142 246,142 246,42" fill="#eefbfb" stroke="#172033" stroke-width="3" />
-      <path d="M226 142 L226 122 L246 122" fill="none" stroke="#172033" stroke-width="2.4" />
+      <polygon points="54,142 246,142 246,42" fill="#ffffff" stroke="#111111" stroke-width="3" />
+      <path d="M226 142 L226 122 L246 122" fill="none" stroke="#111111" stroke-width="2.4" />
       <text x="138" y="166">${gcseSvgLabel(baseLabel)}</text>
       <text x="254" y="94">${gcseSvgLabel(heightLabel)}</text>
       <text x="130" y="78" transform="rotate(-28 130 78)">${gcseSvgLabel(hypLabel)}</text>
@@ -2167,9 +2166,9 @@ function gcseRightTriangleDiagram({ baseLabel, heightLabel, hypLabel }) {
 function gcseCircleDiagram(radiusLabel) {
   return gcseDiagramFrame("Circle diagram", `
     <svg viewBox="0 0 260 170" role="img" aria-label="Circle with radius">
-      <circle cx="130" cy="84" r="58" fill="#f5f3ff" stroke="#172033" stroke-width="3" />
-      <circle cx="130" cy="84" r="3.5" fill="#172033" />
-      <line x1="130" y1="84" x2="188" y2="84" stroke="#17b8b3" stroke-width="3" />
+      <circle cx="130" cy="84" r="58" fill="#ffffff" stroke="#111111" stroke-width="3" />
+      <circle cx="130" cy="84" r="3.5" fill="#111111" />
+      <line x1="130" y1="84" x2="188" y2="84" stroke="#111111" stroke-width="3" />
       <text x="146" y="75">${gcseSvgLabel(radiusLabel)}</text>
     </svg>
   `);
@@ -2178,9 +2177,9 @@ function gcseCircleDiagram(radiusLabel) {
 function gcseScaleDiagram(mapLabel) {
   return gcseDiagramFrame("Map sketch", `
     <svg viewBox="0 0 320 130" role="img" aria-label="Map scale line diagram">
-      <circle cx="54" cy="68" r="8" fill="#6f4cc3" />
-      <circle cx="266" cy="68" r="8" fill="#6f4cc3" />
-      <line x1="62" y1="68" x2="258" y2="68" stroke="#172033" stroke-width="3" stroke-dasharray="8 6" />
+      <circle cx="54" cy="68" r="8" fill="#ffffff" stroke="#111111" stroke-width="3" />
+      <circle cx="266" cy="68" r="8" fill="#ffffff" stroke="#111111" stroke-width="3" />
+      <line x1="62" y1="68" x2="258" y2="68" stroke="#111111" stroke-width="3" stroke-dasharray="8 6" />
       <text x="42" y="42">A</text>
       <text x="256" y="42">B</text>
       <text x="126" y="99">${gcseSvgLabel(mapLabel)}</text>
@@ -2191,19 +2190,22 @@ function gcseScaleDiagram(mapLabel) {
 function gcseTreeDiagram({ red, blue, total, format = "fraction" }) {
   return gcseDiagramFrame("Probability tree", `
     <svg viewBox="0 0 360 190" role="img" aria-label="Two-stage probability tree">
-      <circle cx="34" cy="94" r="4" fill="#172033" />
-      <line x1="38" y1="94" x2="150" y2="42" stroke="#172033" stroke-width="2.4" />
-      <line x1="38" y1="94" x2="150" y2="146" stroke="#172033" stroke-width="2.4" />
-      <line x1="154" y1="42" x2="310" y2="22" stroke="#172033" stroke-width="2.4" />
-      <line x1="154" y1="42" x2="310" y2="72" stroke="#172033" stroke-width="2.4" />
-      <line x1="154" y1="146" x2="310" y2="118" stroke="#172033" stroke-width="2.4" />
-      <line x1="154" y1="146" x2="310" y2="168" stroke="#172033" stroke-width="2.4" />
-      ${gcseSvgBackedText(82, 55, `R ${gcseTreeProbabilityLabel(red, total, format)}`)}
-      ${gcseSvgBackedText(82, 140, `B ${gcseTreeProbabilityLabel(blue, total, format)}`)}
-      ${gcseSvgBackedText(207, 31, `R ${gcseTreeProbabilityLabel(red - 1, total - 1, format)}`)}
-      ${gcseSvgBackedText(207, 70, `B ${gcseTreeProbabilityLabel(blue, total - 1, format)}`)}
-      ${gcseSvgBackedText(207, 120, `R ${gcseTreeProbabilityLabel(red, total - 1, format)}`)}
-      ${gcseSvgBackedText(207, 166, `B ${gcseTreeProbabilityLabel(blue - 1, total - 1, format)}`)}
+      <circle cx="34" cy="94" r="4" fill="#111111" />
+      <line x1="38" y1="94" x2="150" y2="42" stroke="#111111" stroke-width="2.4" />
+      <line x1="38" y1="94" x2="150" y2="146" stroke="#111111" stroke-width="2.4" />
+      <line x1="154" y1="42" x2="310" y2="22" stroke="#111111" stroke-width="2.4" />
+      <line x1="154" y1="42" x2="310" y2="72" stroke="#111111" stroke-width="2.4" />
+      <line x1="154" y1="146" x2="310" y2="118" stroke="#111111" stroke-width="2.4" />
+      <line x1="154" y1="146" x2="310" y2="168" stroke="#111111" stroke-width="2.4" />
+      <text class="branch-label" x="154" y="39">R</text>
+      <text class="branch-label" x="154" y="151">B</text>
+      <text class="branch-label" x="314" y="25">R</text>
+      <text class="branch-label" x="314" y="76">B</text>
+      <text class="branch-label" x="314" y="121">R</text>
+      <text class="branch-label" x="314" y="173">B</text>
+      ${gcseSvgBackedText(79, 60, gcseTreeProbabilityLabel(red, total, format))}
+      ${gcseSvgBackedText(217, 34, gcseTreeProbabilityLabel(red - 1, total - 1, format))}
+      ${gcseSvgBackedText(217, 126, gcseTreeProbabilityLabel(red, total - 1, format))}
     </svg>
   `);
 }
@@ -2211,12 +2213,12 @@ function gcseTreeDiagram({ red, blue, total, format = "fraction" }) {
 function gcseAreaComparisonDiagram({ triangleBase, triangleHeight, shortSide, longSide, trapHeight }) {
   return gcseDiagramFrame("Shapes not drawn accurately", `
     <svg viewBox="0 0 440 190" role="img" aria-label="Triangle and trapezium area diagram">
-      <polygon points="48,142 196,142 196,48" fill="#eefbfb" stroke="#172033" stroke-width="3" />
-      <line x1="196" y1="48" x2="196" y2="142" stroke="#17b8b3" stroke-width="2.5" stroke-dasharray="6 5" />
+      <polygon points="48,142 196,142 196,48" fill="#ffffff" stroke="#111111" stroke-width="3" />
+      <line x1="196" y1="48" x2="196" y2="142" stroke="#111111" stroke-width="2.5" stroke-dasharray="6 5" />
       <text x="96" y="166">${gcseSvgLabel(`${triangleBase} cm`)}</text>
       <text x="204" y="96">${gcseSvgLabel(`${triangleHeight} cm`)}</text>
-      <polygon points="270,142 400,142 372,60 300,60" fill="#f5f3ff" stroke="#172033" stroke-width="3" />
-      <line x1="300" y1="60" x2="300" y2="142" stroke="#17b8b3" stroke-width="2.5" stroke-dasharray="6 5" />
+      <polygon points="270,142 400,142 372,60 300,60" fill="#ffffff" stroke="#111111" stroke-width="3" />
+      <line x1="300" y1="60" x2="300" y2="142" stroke="#111111" stroke-width="2.5" stroke-dasharray="6 5" />
       <text x="312" y="51">${gcseSvgLabel(`${gcseFormatDecimal(shortSide)} cm`)}</text>
       <text x="312" y="166">${gcseSvgLabel(`${gcseFormatDecimal(longSide)} cm`)}</text>
       <text x="246" y="105">${gcseSvgLabel(`${trapHeight} cm`)}</text>
@@ -2227,10 +2229,10 @@ function gcseAreaComparisonDiagram({ triangleBase, triangleHeight, shortSide, lo
 function gcsePieChartDiagram(angleA) {
   return gcseDiagramFrame("Pie chart information", `
     <svg viewBox="0 0 260 180" role="img" aria-label="Pie chart diagram">
-      <circle cx="130" cy="90" r="62" fill="#ffffff" stroke="#172033" stroke-width="3" />
-      <line x1="130" y1="90" x2="130" y2="28" stroke="#172033" stroke-width="2.5" />
-      <line x1="130" y1="90" x2="190" y2="105" stroke="#172033" stroke-width="2.5" />
-      <path d="M130 52 A38 38 0 0 1 167 100" fill="none" stroke="#6f4cc3" stroke-width="3" />
+      <circle cx="130" cy="90" r="62" fill="#ffffff" stroke="#111111" stroke-width="3" />
+      <line x1="130" y1="90" x2="130" y2="28" stroke="#111111" stroke-width="2.5" />
+      <line x1="130" y1="90" x2="190" y2="105" stroke="#111111" stroke-width="2.5" />
+      <path d="M130 52 A38 38 0 0 1 167 100" fill="none" stroke="#111111" stroke-width="3" />
       <text x="151" y="77">A</text>
       <text x="164" y="95">${gcseSvgLabel(`${angleA}°`)}</text>
       <text x="95" y="94">B, C and D</text>
@@ -2241,9 +2243,9 @@ function gcsePieChartDiagram(angleA) {
 function gcseAnglesDiagram(labelA, labelB) {
   return gcseDiagramFrame("Angle diagram", `
     <svg viewBox="0 0 360 170" role="img" aria-label="Angles on a straight line">
-      <line x1="36" y1="118" x2="324" y2="118" stroke="#172033" stroke-width="3" />
-      <line x1="180" y1="118" x2="104" y2="42" stroke="#172033" stroke-width="3" />
-      <line x1="180" y1="118" x2="256" y2="42" stroke="#172033" stroke-width="3" />
+      <line x1="36" y1="118" x2="324" y2="118" stroke="#111111" stroke-width="3" />
+      <line x1="180" y1="118" x2="104" y2="42" stroke="#111111" stroke-width="3" />
+      <line x1="180" y1="118" x2="256" y2="42" stroke="#111111" stroke-width="3" />
       <text x="88" y="108">${gcseSvgLabel(labelA)}</text>
       <text x="216" y="108">${gcseSvgLabel(labelB)}</text>
       <text x="182" y="148">y</text>
@@ -2557,7 +2559,7 @@ function gcseGenerateProbability(filters) {
     marks: 4,
     calculator: "Calculator",
     commandWords: ["find"],
-    questionHtml: `<p>A bag contains ${red} red counters and ${blue} blue counters.</p><p>Two counters are taken at random without replacement.</p><p>Find the probability that both counters are red.</p>`,
+    questionHtml: `<p>A bag contains ${red} red counters and ${blue} blue counters.</p><p>Two counters are taken at random without replacement.</p><p>Complete the probability tree diagram and find the probability that both counters are red.</p>`,
     diagramHtml: gcseTreeDiagram({ red, blue, total, format: labelFormat }),
     answer: `${red}/${total} × ${red - 1}/${total - 1} = ${probability.toFixed(3)}`,
     worked: [
