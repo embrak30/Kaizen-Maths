@@ -684,7 +684,7 @@ const tools = [
     status: "Imported",
     description: "Generate surd and radical practice covering simplification, operations, rationalising denominators, expanding brackets, and multi-step expressions.",
     tags: ["algebra", "surds", "radicals", "roots", "rationalising", "simplifying"],
-    toolPath: "tools/surds-radicals/index.html?v=step-structure-1",
+    toolPath: "tools/surds-radicals/index.html?v=surds-pair-simplify-1",
     imported: true,
     teacherNotes: [
       "Level 1 develops simplification by finding perfect square factors.",

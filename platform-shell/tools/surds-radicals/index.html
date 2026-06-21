@@ -631,7 +631,7 @@
       <ul>
         <li><strong>Level 1 - Fundamentals:</strong> Simplifying surds, perfect square factors, and simplest surd form</li>
         <li><strong>Level 2 - Operations:</strong> Multiplying, dividing, adding, subtracting, and combining multiple surd terms</li>
-        <li><strong>Level 3 - Advanced:</strong> Rationalising denominators, expanding brackets, and multi-step expressions</li>
+        <li><strong>Level 3 - Advanced:</strong> Rationalising denominators, expanding brackets, conjugates, difference of two squares, and multi-step expressions</li>
       </ul>
 
       <h3>Key Surd Rules</h3>
@@ -749,12 +749,13 @@
       },
       3: {
         title: "Level 3: Advanced Surd Techniques",
-        description: "Rationalising denominators, expanding brackets, and complex expressions",
+        description: "Rationalising denominators, expanding brackets, difference of two squares, and complex expressions",
         options: [
           ["rationalize_simple", "Type 1: Rationalising simple denominators"],
           ["rationalize_binomial", "Type 2: Rationalising binomial denominators"],
           ["expand_surds", "Type 3: Expanding brackets with surds"],
-          ["complex_surds", "Type 4: Complex multi-step problems"]
+          ["difference_squares", "Type 4: Difference of two squares with conjugates"],
+          ["complex_surds", "Type 5: Complex multi-step problems"]
         ]
       }
     };
@@ -845,6 +846,12 @@
       const term = formatSurd(absCoef, radicand);
       if (isFirst) return coefficient < 0 ? "-" + term : term;
       return coefficient < 0 ? " - " + term : " + " + term;
+    }
+
+    function signedConstant(value, isFirst = false) {
+      if (value === 0) return isFirst ? "0" : "";
+      if (isFirst) return String(value);
+      return value < 0 ? " - " + Math.abs(value) : " + " + value;
     }
 
     function combineSurdTerms(terms) {
@@ -1137,33 +1144,77 @@
         }
 
         case "expand_surds": {
-          const radA = randomRadicand();
-          const radB = randomRadicand();
+          const radicand = randomRadicand();
           const a = random(2, 5);
-          const b = random(2, 5);
-          const signA = randomElement([1, -1]);
-          const signB = randomElement([1, -1]);
+          let b = random(2, 5);
+          let signA = randomElement([1, -1]);
+          let signB = randomElement([1, -1]);
+          if (signA !== signB && a === b) b += 1;
           const signAText = signA > 0 ? "+" : "-";
           const signBText = signB > 0 ? "+" : "-";
+          const constantTerm = signA * signB * a * b;
+          const constantSum = radicand + constantTerm;
+          const outerCoef = signB * b;
+          const innerCoef = signA * a;
+          const surdCoef = outerCoef + innerCoef;
           const terms = [
-            { coefficient: 1, radicand: radA * radB },
-            { coefficient: signB * b, radicand: radA },
-            { coefficient: signA * a, radicand: radB },
-            { coefficient: signA * signB * a * b, radicand: 1 }
+            { coefficient: radicand, radicand: 1 },
+            { coefficient: outerCoef, radicand },
+            { coefficient: innerCoef, radicand },
+            { coefficient: constantTerm, radicand: 1 }
           ];
           const answer = combineSurdTerms(terms);
           problem = {
             badge: "complex",
-            equation: "Expand and simplify: (√" + radA + " " + signAText + " " + a + ")(√" + radB + " " + signBText + " " + b + ")",
+            equation: "Expand and simplify: (√" + radicand + " " + signAText + " " + a + ")(√" + radicand + " " + signBText + " " + b + ")",
             answer,
             steps: [
               stepLabel(1) + " Use FOIL",
-              "First: √" + radA + " × √" + radB + " = √" + (radA * radB),
-              "Outer: √" + radA + " × (" + signBText + b + ") = " + formatSurd(signB * b, radA),
-              "Inner: (" + signAText + a + ") × √" + radB + " = " + formatSurd(signA * a, radB),
-              "Last: (" + signAText + a + ") × (" + signBText + b + ") = " + (signA * signB * a * b),
-              stepLabel(2) + " Simplify and combine like terms",
+              "First: √" + radicand + " × √" + radicand + " = " + radicand,
+              "Outer: √" + radicand + " × (" + signBText + b + ") = " + formatSurd(outerCoef, radicand),
+              "Inner: (" + signAText + a + ") × √" + radicand + " = " + formatSurd(innerCoef, radicand),
+              "Last: (" + signAText + a + ") × (" + signBText + b + ") = " + constantTerm,
+              stepLabel(2) + " Find the pairs that can be simplified",
+              "Constant pair: " + radicand + signedConstant(constantTerm) + " = " + constantSum,
+              "Like-surd pair: " + formatSurd(outerCoef, radicand) + signedSurd(innerCoef, radicand, false) + " = " + formatSurd(surdCoef, radicand),
+              stepLabel(3) + " Write the simplified expression",
               arrow(answer)
+            ]
+          };
+          break;
+        }
+
+        case "difference_squares": {
+          const radicand = randomRadicand();
+          const coefficient = randomElement([1, 2, 3]);
+          const constant = random(2, 8);
+          const surdTerm = formatSurd(coefficient, radicand);
+          const surdSquare = coefficient * coefficient * radicand;
+          const constantSquare = constant * constant;
+          const surdFirst = index % 2 === 0;
+          const firstTerm = surdFirst ? surdTerm : String(constant);
+          const secondTerm = surdFirst ? String(constant) : surdTerm;
+          const answer = surdFirst ? surdSquare - constantSquare : constantSquare - surdSquare;
+          problem = {
+            badge: "complex",
+            equation: "Simplify using difference of two squares: (" + firstTerm + " + " + secondTerm + ")(" + firstTerm + " - " + secondTerm + ")",
+            answer: String(answer),
+            steps: [
+              stepLabel(1) + " Recognise the conjugate pair",
+              "The brackets have the form (A + B)(A - B).",
+              stepLabel(2) + " Use the difference of two squares identity",
+              "(A + B)(A - B) = A² - B².",
+              stepLabel(3) + " Identify A and B",
+              "A = " + firstTerm + " and B = " + secondTerm + ".",
+              stepLabel(4) + " Square each term",
+              surdFirst
+                ? "(" + surdTerm + ")² = " + coefficient + "² × " + radicand + " = " + surdSquare + ", and " + constant + "² = " + constantSquare
+                : constant + "² = " + constantSquare + ", and (" + surdTerm + ")² = " + coefficient + "² × " + radicand + " = " + surdSquare,
+              stepLabel(5) + " Subtract the squares",
+              surdFirst
+                ? surdSquare + " - " + constantSquare + " = " + answer
+                : constantSquare + " - " + surdSquare + " = " + answer,
+              arrow(String(answer))
             ]
           };
           break;
