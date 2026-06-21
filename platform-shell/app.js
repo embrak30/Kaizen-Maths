@@ -826,6 +826,25 @@ const tools = [
     ]
   },
   {
+    slug: "projectiles",
+    title: "Projectiles",
+    category: "Mechanics",
+    level: "A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate projectile motion practice covering resolving velocity, time of flight, maximum height, range, position, speed, and applied modelling questions.",
+    tags: ["mechanics", "projectiles", "projectile motion", "kinematics", "components", "range", "maximum height", "modelling", "gravity"],
+    toolPath: "tools/projectiles/index.html?v=projectiles-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on resolving the initial velocity and using vertical motion for time and height.",
+      "Level 2 combines horizontal and vertical motion to find range, position, height at a distance, and speed.",
+      "Level 3 introduces modelling problems, including clearing a wall, finding launch speed, finding possible launch angles, and horizontal projection from a height.",
+      "Worked steps emphasise separating horizontal and vertical motion before substituting."
+    ]
+  },
+  {
     slug: "continuous-random-variables",
     title: "Continuous Random Variables",
     category: "Statistics",
@@ -3911,6 +3930,7 @@ function renderHome() {
         <a class="button primary" href="#/how-to-use-this-site">How to Use This Site</a>
         <a class="button" href="#/tools">Open Tool Library</a>
         <a class="button" href="#/collections/statistics">Explore Statistics</a>
+        <a class="button" href="#/collections/mechanics">Explore Mechanics</a>
       </div>
     </section>
     <section class="beta-callout" aria-label="Beta testing feedback">
@@ -4028,6 +4048,7 @@ function renderToolLibrary(extraCategory = "") {
     numbers: "Number topics build fluency with fractions, decimals, percentages, HCF and LCM, order of operations, averages, and powers of 10.",
     geometry: "Geometry topics cover shape, measure, diagrams, area, perimeter, volume, and trigonometry. Use them for visual modelling, board practice, and method-focused discussion.",
     statistics: "Statistics topics cover data summaries, probability distributions, expectation, variance, and model selection. Use them to connect calculation fluency with interpretation and exam-style reasoning.",
+    mechanics: "Mechanics topics cover motion, forces, moments, projectiles, and modelling with physical quantities. Use them for A-Level and IB practice with clear diagrams, equations, and worked steps.",
     "site-guide": "Site guides help teachers navigate the virtual textbook and use the shared controls across the topic tools.",
     "classroom-tools": "Classroom tools support quick routines, reference displays, games, exit tickets, and retrieval moments around the main lesson content."
   };
@@ -4971,9 +4992,9 @@ function standardsForTool(tool) {
   const haystack = normalise([tool.title, tool.category, tool.level, allToolTags(tool).join(" "), tool.description].join(" "));
   const standards = [];
 
-  if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion")) {
-    standards.push("England: A-Level Mathematics mechanics, including constant acceleration, SUVAT equations, modelling with units, and motion under gravity.");
-    standards.push("IB / international: Applications and interpretation links to kinematics, mathematical modelling, rates of change, and interpreting physical quantities.");
+  if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion") || haystack.includes("moments") || haystack.includes("projectiles")) {
+    standards.push("England: A-Level Mathematics mechanics, including constant acceleration, SUVAT equations, moments, forces, projectiles, modelling with units, and motion under gravity.");
+    standards.push("IB / international: Applications and interpretation links to kinematics, mechanics modelling, rates of change, forces, and interpreting physical quantities.");
   } else if (haystack.includes("statistics") || haystack.includes("probability") || haystack.includes("tree diagram")) {
     standards.push("Common Core: 7.SP, S-ID, S-CP probability, distributions, and interpreting data.");
     standards.push("England: KS3 probability and data; GCSE Statistics and probability, including expected outcomes where relevant.");

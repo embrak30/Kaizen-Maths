@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projectiles Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden;color:#1a365d}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:white;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:700;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:white;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:white;padding:20px;font-size:1.3em;font-weight:700}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1260px;margin:0 auto;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;color:white;padding:24px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header h1{font-size:2.15em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:17px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:800;transition:.3s;border-bottom:3px solid transparent;color:#1a365d}.tab:hover{background:#cbd5e0}.tab.active{background:white;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px 24px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:1px solid #e2e8f0}.level-info{min-width:320px;flex:1}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.25em}.level-info p{color:#718096;font-size:.98em}.dropdown-container{margin-top:9px;display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:white;cursor:pointer;min-width:390px;max-width:100%;color:#1a365d}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:800;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
+    .problems-section{padding:18px 24px 24px;min-height:520px}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:700}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.components{background:#3182ce}.problem-set-header.range{background:#38a169}.problem-set-header.modelling{background:#805ad5}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:10px}.problem-item{background:#f7fafc;padding:13px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.1em;color:#1a365d;font-weight:500;line-height:1.42;min-width:0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.96em;display:none;text-align:center;max-width:340px;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .diagram-wrap{margin:8px 0 6px;overflow-x:auto}.projectile-diagram{width:min(560px,100%);height:auto;display:block;background:#fff;border:1px solid #d8e2ee;border-radius:8px}.projectile-diagram text{font-family:"Segoe UI",Tahoma,Verdana,sans-serif;fill:#1a365d;font-size:13px;font-weight:700}.projectile-diagram .line{stroke:#1a365d;stroke-width:2;fill:none}.projectile-diagram .axis{stroke:#1a365d;stroke-width:1.6;fill:none}.projectile-diagram .path{stroke:#1a365d;stroke-width:2.4;fill:none;stroke-dasharray:5 4}.projectile-diagram .force{stroke:#1a365d;stroke-width:2.2;fill:none}.projectile-diagram .wall{stroke:#1a365d;stroke-width:3;fill:none}.projectile-diagram .point{fill:#1a365d}
+    .steps-section{grid-column:1/-1;margin-top:12px;padding:14px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:800;color:#38a169;margin-bottom:10px;font-size:1.08em}.solution-steps{font-size:1.07em;line-height:1.6}.step{margin:8px 0;color:#1a365d}.step-equation{font-weight:700;color:#805ad5;text-align:center;margin:10px 0;font-size:1.11em;overflow-x:auto}.final-answer{background:#38a169;color:white;padding:9px 15px;border-radius:7px;text-align:center;font-weight:bold;font-size:1.08em;margin-top:12px;overflow-x:auto}.step-indicator{background:#3182ce;color:white;padding:5px 9px;border-radius:5px;font-size:.86em;font-weight:bold;margin-right:8px;white-space:nowrap}
+    .formula-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.formula-pill{background:#edf2f7;border:1px solid #cbd5e0;border-radius:999px;padding:6px 10px;font-weight:800;color:#1a365d}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
+    @media (max-width:900px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section,.action-buttons{justify-content:center;flex-wrap:wrap}.type-dropdown{min-width:0;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool generates projectile motion practice for resolving velocity, horizontal and vertical modelling, range, maximum height, and simple projectile applications.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Resolve launch velocity and calculate basic time, height, and range values.</li>
+        <li><strong>Level 2:</strong> Use horizontal and vertical equations together to find position, speed, and height at a distance.</li>
+        <li><strong>Level 3:</strong> Model applied projectile questions such as clearing a wall, finding launch speed, or finding possible launch angles.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Horizontal velocity is constant when air resistance is ignored.</li>
+        <li>Vertical acceleration is -9.8 m/s² when upward is positive.</li>
+        <li>Split every problem into horizontal and vertical components before substituting.</li>
+      </ul>
+      <div class="formula-strip">
+        <span class="formula-pill">uₓ = u cos θ</span>
+        <span class="formula-pill">uᵧ = u sin θ</span>
+        <span class="formula-pill">x = uₓt</span>
+        <span class="formula-pill">y = uᵧt - 4.9t²</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header"><h1>Projectiles</h1></section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Components & Basics</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Position & Range</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Modelling Problems</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Components & Basics</h3>
+        <p id="level-description">Resolve velocity and calculate basic projectile quantities.</p>
+        <div class="dropdown-container" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div class="set-instruction" id="set-instruction">Choose a question type to practise projectiles.</div>
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+    let diagramCounter = 0;
+    const g = 9.8;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Components & Basics",
+        description: "Resolve velocity and calculate basic projectile quantities.",
+        instruction: "Resolve the initial velocity into horizontal and vertical components before using equations of motion.",
+        className: "components",
+        options: [
+          ["resolve_velocity", "Resolve the launch velocity"],
+          ["time_to_top", "Time to maximum height"],
+          ["time_of_flight", "Time of flight on level ground"],
+          ["maximum_height", "Maximum height"],
+          ["mixed_basics", "Mixed projectile basics"]
+        ]
+      },
+      2: {
+        title: "Level 2: Position & Range",
+        description: "Use horizontal and vertical equations together to find position, range, and speed.",
+        instruction: "Use x = uₓt horizontally and y = uᵧt - 4.9t² vertically.",
+        className: "range",
+        options: [
+          ["range_level_ground", "Range on level ground"],
+          ["position_after_time", "Position after a given time"],
+          ["height_at_distance", "Height at a horizontal distance"],
+          ["speed_after_time", "Speed after a given time"],
+          ["mixed_range", "Mixed range and position"]
+        ]
+      },
+      3: {
+        title: "Level 3: Modelling Problems",
+        description: "Solve applied projectile modelling questions.",
+        instruction: "Model the situation by separating horizontal motion from vertical motion.",
+        className: "modelling",
+        options: [
+          ["clear_wall", "Does the projectile clear a wall?"],
+          ["speed_for_range", "Find launch speed for a range"],
+          ["angle_for_range", "Find possible launch angles"],
+          ["projected_from_height", "Projected from a height"],
+          ["mixed_modelling", "Mixed projectile modelling"]
+        ]
+      }
+    };
+
+    const typeDisplayNames = {
+      resolve_velocity: "Resolve the launch velocity",
+      time_to_top: "Time to maximum height",
+      time_of_flight: "Time of flight on level ground",
+      maximum_height: "Maximum height",
+      mixed_basics: "Mixed projectile basics",
+      range_level_ground: "Range on level ground",
+      position_after_time: "Position after a given time",
+      height_at_distance: "Height at a horizontal distance",
+      speed_after_time: "Speed after a given time",
+      mixed_range: "Mixed range and position",
+      clear_wall: "Does the projectile clear a wall?",
+      speed_for_range: "Find launch speed for a range",
+      angle_for_range: "Find possible launch angles",
+      projected_from_height: "Projected from a height",
+      mixed_modelling: "Mixed projectile modelling"
+    };
+
+    const speeds = [14, 16, 18, 20, 22, 24, 25, 28, 30, 32, 35, 40];
+    const angles = [20, 25, 30, 35, 40, 45, 50, 55, 60];
+
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function choice(items) { return items[rand(0, items.length - 1)]; }
+    function degToRad(deg) { return deg * Math.PI / 180; }
+    function sin(deg) { return Math.sin(degToRad(deg)); }
+    function cos(deg) { return Math.cos(degToRad(deg)); }
+    function fmt(value, dp = 2) {
+      const n = Number(value);
+      if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+      return n.toFixed(dp).replace(/\.?0+$/, "");
+    }
+    function step(text) { return { type: "text", text }; }
+    function calc(text) { return { type: "calc", text }; }
+    function answerLine(text) { return { type: "calc", text: '<span class="step-indicator">Answer</span> ' + text }; }
+
+    function projectileData() {
+      const u = choice(speeds);
+      const angle = choice(angles);
+      const ux = u * cos(angle);
+      const uy = u * sin(angle);
+      const timeTop = uy / g;
+      const flight = 2 * uy / g;
+      const range = ux * flight;
+      const maxHeight = (uy * uy) / (2 * g);
+      return { u, angle, ux, uy, timeTop, flight, range, maxHeight };
+    }
+
+    function projectileDiagram({ u, angle, wallDistance = null, wallHeight = null, distanceLabel = null, heightLabel = null }) {
+      const arrowId = "projectile-arrow-" + (++diagramCounter);
+      const wallX = wallDistance == null ? "" : 350;
+      const wallSvg = wallDistance == null ? "" : '<line class="wall" x1="' + wallX + '" y1="128" x2="' + wallX + '" y2="66"></line><text x="' + wallX + '" y="58" text-anchor="middle">' + fmt(wallHeight) + " m wall" + '</text><line class="axis" x1="90" y1="143" x2="' + wallX + '" y2="143"></line><text x="' + ((90 + wallX) / 2) + '" y="157" text-anchor="middle">' + fmt(wallDistance) + " m" + '</text>';
+      const distanceSvg = distanceLabel ? '<line class="axis" x1="90" y1="143" x2="470" y2="143"></line><text x="280" y="157" text-anchor="middle">' + distanceLabel + '</text>' : "";
+      const heightSvg = heightLabel ? '<line class="axis" x1="475" y1="128" x2="475" y2="55"></line><text x="495" y="92" text-anchor="middle">' + heightLabel + '</text>' : "";
+      return '<div class="diagram-wrap"><svg class="projectile-diagram" viewBox="0 0 560 170" role="img" aria-label="Projectile diagram"><defs><marker id="' + arrowId + '" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#1a365d"></path></marker></defs><line class="axis" x1="55" y1="128" x2="510" y2="128"></line><line class="axis" x1="90" y1="145" x2="90" y2="35"></line><path class="path" d="M90 128 C170 58, 320 35, 470 128"></path><line class="force" marker-end="url(#' + arrowId + ')" x1="90" y1="128" x2="153" y2="80"></line><path class="line" d="M118 128 A28 28 0 0 0 112 111"></path><text x="130" y="111" text-anchor="middle">' + angle + '°</text><text x="160" y="76" text-anchor="start">' + u + ' m/s</text><circle class="point" cx="90" cy="128" r="3"></circle>' + wallSvg + distanceSvg + heightSvg + '</svg></div>';
+    }
+
+    function cleanQuestionText(problem) {
+      return problem.equation.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, 240);
+    }
+
+    function signatureFor(problem) {
+      return currentType + "|" + cleanQuestionText(problem);
+    }
+
+    function generateUniqueProblem(used) {
+      for (let attempt = 0; attempt < 80; attempt++) {
+        const problem = generateProblem();
+        const signature = signatureFor(problem);
+        if (!used.has(signature)) {
+          used.add(signature);
+          return problem;
+        }
+      }
+      return generateProblem();
+    }
+
+    function genResolveVelocity() {
+      const d = projectileData();
+      return {
+        badge: "components",
+        equation: projectileDiagram(d) + "A projectile is launched at " + d.u + " m/s at an angle of " + d.angle + "° above the horizontal. Find its horizontal and vertical components of velocity.",
+        answer: "uₓ = " + fmt(d.ux) + " m/s, uᵧ = " + fmt(d.uy) + " m/s",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Resolve the initial velocity horizontally and vertically.'),
+          calc("uₓ = u cos θ and uᵧ = u sin θ"),
+          step('<span class="step-indicator">Step 2</span> Substitute u = ' + d.u + ' and θ = ' + d.angle + '°.'),
+          calc("uₓ = " + d.u + " cos " + d.angle + "° = " + fmt(d.ux) + " m/s"),
+          calc("uᵧ = " + d.u + " sin " + d.angle + "° = " + fmt(d.uy) + " m/s"),
+          answerLine("The components are uₓ = " + fmt(d.ux) + " m/s and uᵧ = " + fmt(d.uy) + " m/s.")
+        ]
+      };
+    }
+
+    function genTimeToTop() {
+      const d = projectileData();
+      return {
+        badge: "components",
+        equation: projectileDiagram(d) + "A projectile is launched at " + d.u + " m/s at " + d.angle + "° above the horizontal. Find the time taken to reach maximum height.",
+        answer: "t = " + fmt(d.timeTop) + " s",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Find the initial vertical component.'),
+          calc("uᵧ = " + d.u + " sin " + d.angle + "° = " + fmt(d.uy) + " m/s"),
+          step('<span class="step-indicator">Step 2</span> At maximum height, the vertical velocity is 0. Use vᵧ = uᵧ - 9.8t.'),
+          calc("0 = " + fmt(d.uy) + " - 9.8t"),
+          calc("t = " + fmt(d.uy) + " ÷ 9.8 = " + fmt(d.timeTop) + " s"),
+          answerLine("The time to maximum height is " + fmt(d.timeTop) + " s.")
+        ]
+      };
+    }
+
+    function genTimeOfFlight() {
+      const d = projectileData();
+      return {
+        badge: "components",
+        equation: projectileDiagram(d) + "A projectile is launched from level ground at " + d.u + " m/s at " + d.angle + "°. Find the total time of flight. Take g = 9.8 m/s².",
+        answer: "T = " + fmt(d.flight) + " s",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Resolve the initial vertical velocity.'),
+          calc("uᵧ = " + d.u + " sin " + d.angle + "° = " + fmt(d.uy) + " m/s"),
+          step('<span class="step-indicator">Step 2</span> On level ground, the projectile returns to y = 0. Use y = uᵧt - 4.9t².'),
+          calc("0 = " + fmt(d.uy) + "t - 4.9t²"),
+          calc("t(" + fmt(d.uy) + " - 4.9t) = 0"),
+          calc("t = 0 or t = " + fmt(d.uy) + " ÷ 4.9 = " + fmt(d.flight)),
+          answerLine("Ignoring the launch time t = 0, the total time of flight is " + fmt(d.flight) + " s.")
+        ]
+      };
+    }
+
+    function genMaximumHeight() {
+      const d = projectileData();
+      return {
+        badge: "components",
+        equation: projectileDiagram({ ...d, heightLabel: "H" }) + "A projectile is launched from level ground at " + d.u + " m/s at " + d.angle + "°. Find the maximum height reached.",
+        answer: "H = " + fmt(d.maxHeight) + " m",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Resolve the initial vertical velocity.'),
+          calc("uᵧ = " + d.u + " sin " + d.angle + "° = " + fmt(d.uy) + " m/s"),
+          step('<span class="step-indicator">Step 2</span> At maximum height, vᵧ = 0. Use vᵧ² = uᵧ² + 2as.'),
+          calc("0² = " + fmt(d.uy) + "² + 2 × (-9.8) × H"),
+          calc("19.6H = " + fmt(d.uy * d.uy)),
+          calc("H = " + fmt(d.uy * d.uy) + " ÷ 19.6 = " + fmt(d.maxHeight) + " m"),
+          answerLine("The maximum height is " + fmt(d.maxHeight) + " m.")
+        ]
+      };
+    }
+
+    function genRangeLevelGround() {
+      const d = projectileData();
+      return {
+        badge: "range",
+        equation: projectileDiagram({ ...d, distanceLabel: "range" }) + "A projectile is launched from level ground at " + d.u + " m/s at " + d.angle + "°. Find its horizontal range.",
+        answer: "range = " + fmt(d.range) + " m",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Resolve the velocity into components.'),
+          calc("uₓ = " + d.u + " cos " + d.angle + "° = " + fmt(d.ux) + " m/s"),
+          calc("uᵧ = " + d.u + " sin " + d.angle + "° = " + fmt(d.uy) + " m/s"),
+          step('<span class="step-indicator">Step 2</span> Find the time of flight from the vertical motion.'),
+          calc("0 = " + fmt(d.uy) + "t - 4.9t²"),
+          calc("t = " + fmt(d.flight) + " s"),
+          step('<span class="step-indicator">Step 3</span> Use horizontal distance = horizontal speed × time.'),
+          calc("range = " + fmt(d.ux) + " × " + fmt(d.flight) + " = " + fmt(d.range) + " m"),
+          answerLine("The horizontal range is " + fmt(d.range) + " m.")
+        ]
+      };
+    }
+
+    function genPositionAfterTime() {
+      const d = projectileData();
+      const t = Math.max(1, Math.min(Math.floor(d.flight - 0.3), rand(1, 4)));
+      const x = d.ux * t;
+      const y = d.uy * t - 4.9 * t * t;
+      return {
+        badge: "range",
+        equation: projectileDiagram(d) + "A projectile is launched at " + d.u + " m/s at " + d.angle + "°. Find its horizontal distance and height after " + t + " s.",
+        answer: "x = " + fmt(x) + " m, y = " + fmt(y) + " m",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Resolve the initial velocity.'),
+          calc("uₓ = " + fmt(d.ux) + " m/s, uᵧ = " + fmt(d.uy) + " m/s"),
+          step('<span class="step-indicator">Step 2</span> Use horizontal motion.'),
+          calc("x = uₓt = " + fmt(d.ux) + " × " + t + " = " + fmt(x) + " m"),
+          step('<span class="step-indicator">Step 3</span> Use vertical motion.'),
+          calc("y = uᵧt - 4.9t²"),
+          calc("y = " + fmt(d.uy) + " × " + t + " - 4.9 × " + t + "² = " + fmt(y) + " m"),
+          answerLine("After " + t + " s, the projectile is " + fmt(x) + " m horizontally and " + fmt(y) + " m above the launch point.")
+        ]
+      };
+    }
+
+    function genHeightAtDistance() {
+      const d = projectileData();
+      const x = Math.max(8, Math.floor(d.range * choice([0.25, 0.35, 0.45, 0.55])));
+      const t = x / d.ux;
+      const y = d.uy * t - 4.9 * t * t;
+      return {
+        badge: "range",
+        equation: projectileDiagram({ ...d, distanceLabel: fmt(x) + " m" }) + "A projectile is launched at " + d.u + " m/s at " + d.angle + "°. Find its height when it has travelled " + x + " m horizontally.",
+        answer: "height = " + fmt(y) + " m",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Resolve the velocity.'),
+          calc("uₓ = " + fmt(d.ux) + " m/s, uᵧ = " + fmt(d.uy) + " m/s"),
+          step('<span class="step-indicator">Step 2</span> Use horizontal motion to find the time.'),
+          calc("x = uₓt, so t = x ÷ uₓ"),
+          calc("t = " + x + " ÷ " + fmt(d.ux) + " = " + fmt(t) + " s"),
+          step('<span class="step-indicator">Step 3</span> Substitute this time into the vertical equation.'),
+          calc("y = " + fmt(d.uy) + " × " + fmt(t) + " - 4.9 × " + fmt(t) + "² = " + fmt(y) + " m"),
+          answerLine("The height is " + fmt(y) + " m.")
+        ]
+      };
+    }
+
+    function genSpeedAfterTime() {
+      const d = projectileData();
+      const t = Math.max(1, Math.min(Math.floor(d.flight - 0.2), rand(1, 4)));
+      const vy = d.uy - g * t;
+      const speed = Math.sqrt(d.ux * d.ux + vy * vy);
+      return {
+        badge: "range",
+        equation: projectileDiagram(d) + "A projectile is launched at " + d.u + " m/s at " + d.angle + "°. Find its speed after " + t + " s.",
+        answer: "speed = " + fmt(speed) + " m/s",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Resolve the initial velocity.'),
+          calc("uₓ = " + fmt(d.ux) + " m/s, uᵧ = " + fmt(d.uy) + " m/s"),
+          step('<span class="step-indicator">Step 2</span> Horizontal velocity is constant.'),
+          calc("vₓ = " + fmt(d.ux) + " m/s"),
+          step('<span class="step-indicator">Step 3</span> Use vertical velocity after ' + t + ' s.'),
+          calc("vᵧ = uᵧ - 9.8t = " + fmt(d.uy) + " - 9.8 × " + t + " = " + fmt(vy) + " m/s"),
+          step('<span class="step-indicator">Step 4</span> Use Pythagoras on the velocity components.'),
+          calc("speed = √(" + fmt(d.ux) + "² + " + fmt(vy) + "²) = " + fmt(speed) + " m/s"),
+          answerLine("The speed after " + t + " s is " + fmt(speed) + " m/s.")
+        ]
+      };
+    }
+
+    function genClearWall() {
+      const d = projectileData();
+      const wallDistance = Math.max(8, Math.floor(d.range * choice([0.25, 0.35, 0.45])));
+      const t = wallDistance / d.ux;
+      const height = d.uy * t - 4.9 * t * t;
+      const wallHeight = Math.max(2, Math.floor(height - choice([0.5, 1, 1.5])));
+      const clears = height > wallHeight;
+      return {
+        badge: "modelling",
+        equation: projectileDiagram({ ...d, wallDistance, wallHeight }) + "A projectile is launched at " + d.u + " m/s at " + d.angle + "°. A wall of height " + wallHeight + " m is " + wallDistance + " m from the launch point. Determine whether the projectile clears the wall.",
+        answer: clears ? "clears the wall" : "does not clear the wall",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Resolve the velocity.'),
+          calc("uₓ = " + fmt(d.ux) + " m/s, uᵧ = " + fmt(d.uy) + " m/s"),
+          step('<span class="step-indicator">Step 2</span> Use horizontal motion to find the time taken to reach the wall.'),
+          calc("t = " + wallDistance + " ÷ " + fmt(d.ux) + " = " + fmt(t) + " s"),
+          step('<span class="step-indicator">Step 3</span> Find the projectile height at that time.'),
+          calc("y = " + fmt(d.uy) + " × " + fmt(t) + " - 4.9 × " + fmt(t) + "² = " + fmt(height) + " m"),
+          step('<span class="step-indicator">Step 4</span> Compare the projectile height with the wall height.'),
+          calc(fmt(height) + " m " + (clears ? ">" : "≤") + " " + wallHeight + " m"),
+          answerLine("The projectile " + (clears ? "clears" : "does not clear") + " the wall.")
+        ]
+      };
+    }
+
+    function genSpeedForRange() {
+      const angle = choice([30, 35, 40, 45, 50, 55, 60]);
+      const speed = choice([16, 18, 20, 22, 24, 25, 28, 30]);
+      const range = speed * speed * sin(2 * angle) / g;
+      return {
+        badge: "modelling",
+        equation: projectileDiagram({ u: speed, angle, distanceLabel: fmt(range) + " m" }) + "A projectile is launched from level ground at an angle of " + angle + "°. It lands " + fmt(range) + " m away. Find its initial speed.",
+        answer: "u = " + fmt(speed) + " m/s",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Use the range formula for launch and landing at the same height.'),
+          calc("R = u² sin(2θ) ÷ g"),
+          step('<span class="step-indicator">Step 2</span> Rearrange for u².'),
+          calc("u² = Rg ÷ sin(2θ)"),
+          step('<span class="step-indicator">Step 3</span> Substitute R = ' + fmt(range) + ', θ = ' + angle + '° and g = 9.8.'),
+          calc("u² = " + fmt(range) + " × 9.8 ÷ sin(" + (2 * angle) + "°) = " + fmt(speed * speed)),
+          calc("u = √" + fmt(speed * speed) + " = " + fmt(speed)),
+          answerLine("The initial speed is " + fmt(speed) + " m/s.")
+        ]
+      };
+    }
+
+    function genAngleForRange() {
+      const speed = choice([20, 24, 25, 28, 30, 32]);
+      const angle = choice([25, 30, 35, 40]);
+      const range = speed * speed * sin(2 * angle) / g;
+      const secondAngle = 90 - angle;
+      return {
+        badge: "modelling",
+        equation: projectileDiagram({ u: speed, angle, distanceLabel: fmt(range) + " m" }) + "A projectile is launched from level ground with speed " + speed + " m/s and lands " + fmt(range) + " m away. Find the possible angles of projection.",
+        answer: "θ = " + angle + "° or " + secondAngle + "°",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Use the range formula for level ground.'),
+          calc("R = u² sin(2θ) ÷ g"),
+          step('<span class="step-indicator">Step 2</span> Rearrange to find sin(2θ).'),
+          calc("sin(2θ) = Rg ÷ u²"),
+          step('<span class="step-indicator">Step 3</span> Substitute the values.'),
+          calc("sin(2θ) = " + fmt(range) + " × 9.8 ÷ " + speed + "² = " + fmt(sin(2 * angle), 3)),
+          step('<span class="step-indicator">Step 4</span> Find the two possible values of 2θ between 0° and 180°.'),
+          calc("2θ = " + (2 * angle) + "° or " + (180 - 2 * angle) + "°"),
+          calc("θ = " + angle + "° or " + secondAngle + "°"),
+          answerLine("The possible projection angles are " + angle + "° and " + secondAngle + "°.")
+        ]
+      };
+    }
+
+    function genProjectedFromHeight() {
+      const speed = choice([8, 10, 12, 14, 16]);
+      const height = choice([8, 10, 12, 15, 18, 20]);
+      const time = Math.sqrt(height / 4.9);
+      const range = speed * time;
+      return {
+        badge: "modelling",
+        equation: projectileDiagram({ u: speed, angle: 0, heightLabel: height + " m", distanceLabel: "range" }) + "A ball is projected horizontally from the top of a cliff " + height + " m high with speed " + speed + " m/s. Find the time taken to hit the ground and the horizontal distance travelled.",
+        answer: "t = " + fmt(time) + " s, distance = " + fmt(range) + " m",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Vertical motion starts with vertical velocity 0 and displacement -' + height + ' m if upward is positive.'),
+          calc("-" + height + " = 0 × t - 4.9t²"),
+          calc("4.9t² = " + height),
+          calc("t² = " + height + " ÷ 4.9 = " + fmt(height / 4.9)),
+          calc("t = " + fmt(time) + " s"),
+          step('<span class="step-indicator">Step 2</span> Horizontal velocity is constant.'),
+          calc("horizontal distance = " + speed + " × " + fmt(time) + " = " + fmt(range) + " m"),
+          answerLine("The time is " + fmt(time) + " s and the horizontal distance is " + fmt(range) + " m.")
+        ]
+      };
+    }
+
+    function generateProblem() {
+      let type = currentType;
+      if (type === "mixed_basics") type = choice(["resolve_velocity", "time_to_top", "time_of_flight", "maximum_height"]);
+      if (type === "mixed_range") type = choice(["range_level_ground", "position_after_time", "height_at_distance", "speed_after_time"]);
+      if (type === "mixed_modelling") type = choice(["clear_wall", "speed_for_range", "angle_for_range", "projected_from_height"]);
+      switch (type) {
+        case "resolve_velocity": return genResolveVelocity();
+        case "time_to_top": return genTimeToTop();
+        case "time_of_flight": return genTimeOfFlight();
+        case "maximum_height": return genMaximumHeight();
+        case "range_level_ground": return genRangeLevelGround();
+        case "position_after_time": return genPositionAfterTime();
+        case "height_at_distance": return genHeightAtDistance();
+        case "speed_after_time": return genSpeedAfterTime();
+        case "clear_wall": return genClearWall();
+        case "speed_for_range": return genSpeedForRange();
+        case "angle_for_range": return genAngleForRange();
+        case "projected_from_height": return genProjectedFromHeight();
+        default: return genResolveVelocity();
+      }
+    }
+
+    function problemCountForType() {
+      return 4;
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index + 1 === level));
+      const cfg = levelConfigs[level];
+      document.getElementById("level-title").textContent = cfg.title;
+      document.getElementById("level-description").textContent = cfg.description;
+      document.getElementById("set-instruction").textContent = cfg.instruction;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + cfg.options.map(([value, label]) => '<option value="' + value + '">' + label + '</option>').join("");
+      document.getElementById("problem-set-header").className = "problem-set-header " + cfg.className;
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      document.getElementById("set-instruction").textContent = levelConfigs[currentLevel].instruction;
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function showBlankPage() {
+      document.getElementById("problem-set-header").className = "problem-set-header " + levelConfigs[currentLevel].className;
+      document.getElementById("problem-set-header").classList.remove("visible");
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center;padding:40px;color:#718096;font-size:1.08em">Please select a question type to begin projectiles practice.</li>';
+      renderMath();
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") { showBlankPage(); return; }
+      answersVisible = false;
+      stepsVisible = false;
+      problems = [];
+      const usedSignatures = new Set();
+      const count = problemCountForType();
+      for (let i = 0; i < count; i++) problems.push(generateUniqueProblem(usedSignatures));
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const header = document.getElementById("problem-set-header");
+      header.className = "problem-set-header visible " + levelConfigs[currentLevel].className;
+      header.textContent = typeDisplayNames[currentType] || "Practice Set";
+      const container = document.getElementById("problem-list");
+      container.innerHTML = "";
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        const steps = problem.steps.map((s) => {
+          const cls = s.type === "calc" ? "step-equation" : "step";
+          return '<div class="' + cls + '">' + s.text + "</div>";
+        }).join("");
+        li.innerHTML =
+          '<div class="problem-header">' +
+            '<div class="problem-left">' +
+              '<div class="problem-number">' + (index + 1) + '</div>' +
+              '<div class="equation">' + problem.equation + '</div>' +
+            '</div>' +
+            '<div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div>' +
+          '</div>' +
+          '<div class="steps-section" id="steps-' + index + '">' +
+            '<div class="answer-label">Worked solution:</div>' +
+            '<div class="solution-steps" data-kaizen-step-structured="true">' + steps + '<div class="final-answer">' + problem.answer + '</div></div>' +
+          '</div>';
+        container.appendChild(li);
+      });
+      renderMath();
+    }
+
+    function renderMath() {
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(document.getElementById("problem-list")), 0);
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      problems.forEach((_, index) => {
+        const answer = document.getElementById("quick-answer-" + index);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      });
+      renderMath();
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const steps = document.getElementById("steps-" + index);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      });
+      renderMath();
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById("timer-display");
+      display.textContent = minutes + ":" + String(seconds).padStart(2, "0");
+      display.className = timeRemaining <= 30 ? "timer-display warning" : "timer-display active";
+    }
+
+    function timerFinished() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Time Up!";
+      display.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-16"></script>
+</body>
+</html>
