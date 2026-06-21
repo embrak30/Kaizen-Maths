@@ -835,7 +835,7 @@ const tools = [
     status: "Imported",
     description: "Generate correlation and regression practice using bivariate data tables, PMCC, least-squares regression lines, interpolation, extrapolation, and residuals.",
     tags: ["statistics", "correlation", "regression", "linear regression", "PMCC", "interpolation", "extrapolation", "residuals", "data tables"],
-    toolPath: "tools/correlation-regression/index.html?v=correlation-regression-2",
+    toolPath: "tools/correlation-regression/index.html?v=correlation-regression-3",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on interpreting and calculating product moment correlation coefficient from bivariate data.",

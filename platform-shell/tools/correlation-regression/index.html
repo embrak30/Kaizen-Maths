@@ -482,6 +482,21 @@
       return fallback || generateProblem();
     }
 
+    function problemCountForType() {
+      const tableTypes = new Set([
+        "calculate_r_raw",
+        "correlation_context",
+        "mixed_correlation",
+        "regression_raw",
+        "regression_summary",
+        "mixed_regression",
+        "interpolation_prediction",
+        "residuals",
+        "mixed_prediction"
+      ]);
+      return tableTypes.has(currentType) ? 2 : 5;
+    }
+
     function switchLevel(level) {
       currentLevel = level;
       currentType = "select";
@@ -526,7 +541,8 @@
       stepsVisible = false;
       problems = [];
       const usedSignatures = new Set();
-      for (let i = 0; i < 5; i++) problems.push(generateUniqueProblem(usedSignatures));
+      const count = problemCountForType();
+      for (let i = 0; i < count; i++) problems.push(generateUniqueProblem(usedSignatures));
       renderProblems();
     }
 
