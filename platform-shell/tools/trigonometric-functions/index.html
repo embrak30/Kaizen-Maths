@@ -138,7 +138,10 @@
         options: [
           ["basic_identity_proofs", "Core identity proofs"],
           ["compound_identity_proofs", "Compound identity proofs"],
+          ["reciprocal_identity_proofs", "Reciprocal quotient proofs"],
+          ["factorised_identity_proofs", "Factorised identity proofs"],
           ["hence_solve", "Prove then hence solve"],
+          ["exam_hence_solve", "Exam-style hence solve"],
           ["no_real_solutions", "Show no real solutions"],
           ["mixed_proofs", "Mixed proof set"]
         ]
@@ -156,7 +159,10 @@
       mixed_equations: "Mixed equation set",
       basic_identity_proofs: "Core identity proofs",
       compound_identity_proofs: "Compound identity proofs",
+      reciprocal_identity_proofs: "Reciprocal quotient proofs",
+      factorised_identity_proofs: "Factorised identity proofs",
       hence_solve: "Prove then hence solve",
+      exam_hence_solve: "Exam-style hence solve",
       no_real_solutions: "Show no real solutions",
       mixed_proofs: "Mixed proof set"
     };
@@ -475,6 +481,7 @@
 
     const proofTemplates = [
       {
+        group: "core",
         q: "Use $\\cos^{2}\\theta+\\sin^{2}\\theta=1$ to prove that $\\tan^{2}\\theta=\\sec^{2}\\theta-1$.",
         answer: "$\\tan^{2}\\theta\\equiv\\sec^{2}\\theta-1$",
         steps: [
@@ -485,6 +492,7 @@
         ]
       },
       {
+        group: "core",
         q: "Use $\\cos^{2}\\theta+\\sin^{2}\\theta=1$ to prove that $\\operatorname{cosec}^{2}\\theta=1+\\cot^{2}\\theta$.",
         answer: "$\\operatorname{cosec}^{2}\\theta\\equiv1+\\cot^{2}\\theta$",
         steps: [
@@ -495,6 +503,135 @@
         ]
       },
       {
+        group: "core",
+        q: "Prove that $\\sec^{2}x-\\tan^{2}x\\equiv1$.",
+        answer: "Identity proven",
+        steps: [
+          "Start with $1+\\tan^{2}x=\\sec^{2}x$.",
+          "Subtract $\\tan^{2}x$ from both sides.",
+          "$\\sec^{2}x-\\tan^{2}x=1$."
+        ]
+      },
+      {
+        group: "core",
+        q: "Prove that $\\operatorname{cosec}^{2}x-\\cot^{2}x\\equiv1$.",
+        answer: "Identity proven",
+        steps: [
+          "Start with $1+\\cot^{2}x=\\operatorname{cosec}^{2}x$.",
+          "Subtract $\\cot^{2}x$ from both sides.",
+          "$\\operatorname{cosec}^{2}x-\\cot^{2}x=1$."
+        ]
+      },
+      {
+        group: "core",
+        q: "Prove that $\\sin^{2}x\\sec^{2}x\\equiv\\tan^{2}x$.",
+        answer: "Identity proven",
+        steps: [
+          "Start with the left hand side.",
+          "$\\sin^{2}x\\sec^{2}x=\\sin^{2}x\\left(\\dfrac{1}{\\cos^{2}x}\\right)$.",
+          "$=\\dfrac{\\sin^{2}x}{\\cos^{2}x}$.",
+          "$=\\tan^{2}x$."
+        ]
+      },
+      {
+        group: "core",
+        q: "Prove that $\\cos^{2}x\\operatorname{cosec}^{2}x\\equiv\\cot^{2}x$.",
+        answer: "Identity proven",
+        steps: [
+          "Start with the left hand side.",
+          "$\\cos^{2}x\\operatorname{cosec}^{2}x=\\cos^{2}x\\left(\\dfrac{1}{\\sin^{2}x}\\right)$.",
+          "$=\\dfrac{\\cos^{2}x}{\\sin^{2}x}$.",
+          "$=\\cot^{2}x$."
+        ]
+      },
+      {
+        group: "core",
+        q: "Prove that $\\dfrac{1}{1+\\tan^{2}x}\\equiv\\cos^{2}x$.",
+        answer: "Identity proven",
+        steps: [
+          "Use $1+\\tan^{2}x=\\sec^{2}x$.",
+          "$\\dfrac{1}{1+\\tan^{2}x}=\\dfrac{1}{\\sec^{2}x}$.",
+          "Since $\\sec x=\\dfrac{1}{\\cos x}$, $\\dfrac{1}{\\sec^{2}x}=\\cos^{2}x$."
+        ]
+      },
+      {
+        group: "core",
+        q: "Prove that $\\dfrac{1}{1+\\cot^{2}x}\\equiv\\sin^{2}x$.",
+        answer: "Identity proven",
+        steps: [
+          "Use $1+\\cot^{2}x=\\operatorname{cosec}^{2}x$.",
+          "$\\dfrac{1}{1+\\cot^{2}x}=\\dfrac{1}{\\operatorname{cosec}^{2}x}$.",
+          "Since $\\operatorname{cosec}x=\\dfrac{1}{\\sin x}$, $\\dfrac{1}{\\operatorname{cosec}^{2}x}=\\sin^{2}x$."
+        ]
+      },
+      {
+        group: "reciprocal",
+        q: "Prove that $\\dfrac{\\tan x}{\\sec x}\\equiv\\sin x$.",
+        answer: "Identity proven",
+        steps: [
+          "Rewrite both functions using sine and cosine.",
+          "$\\dfrac{\\tan x}{\\sec x}=\\dfrac{\\sin x/\\cos x}{1/\\cos x}$.",
+          "Dividing by $\\dfrac{1}{\\cos x}$ is the same as multiplying by $\\cos x$.",
+          "$\\dfrac{\\sin x}{\\cos x}\\times\\cos x=\\sin x$."
+        ]
+      },
+      {
+        group: "reciprocal",
+        q: "Prove that $\\dfrac{\\cot x}{\\operatorname{cosec}x}\\equiv\\cos x$.",
+        answer: "Identity proven",
+        steps: [
+          "Rewrite both functions using sine and cosine.",
+          "$\\dfrac{\\cot x}{\\operatorname{cosec}x}=\\dfrac{\\cos x/\\sin x}{1/\\sin x}$.",
+          "Dividing by $\\dfrac{1}{\\sin x}$ is the same as multiplying by $\\sin x$.",
+          "$\\dfrac{\\cos x}{\\sin x}\\times\\sin x=\\cos x$."
+        ]
+      },
+      {
+        group: "reciprocal",
+        q: "Prove that $\\dfrac{\\sec x+\\tan x}{1+\\sin x}\\equiv\\sec x$.",
+        answer: "Identity proven",
+        steps: [
+          "Start with the numerator and write each term over $\\cos x$.",
+          "$\\sec x+\\tan x=\\dfrac{1}{\\cos x}+\\dfrac{\\sin x}{\\cos x}$.",
+          "$=\\dfrac{1+\\sin x}{\\cos x}$.",
+          "$\\dfrac{\\sec x+\\tan x}{1+\\sin x}=\\dfrac{(1+\\sin x)/\\cos x}{1+\\sin x}=\\dfrac{1}{\\cos x}=\\sec x$."
+        ]
+      },
+      {
+        group: "reciprocal",
+        q: "Prove that $\\dfrac{\\operatorname{cosec}x+\\cot x}{1+\\cos x}\\equiv\\operatorname{cosec}x$.",
+        answer: "Identity proven",
+        steps: [
+          "Start with the numerator and write each term over $\\sin x$.",
+          "$\\operatorname{cosec}x+\\cot x=\\dfrac{1}{\\sin x}+\\dfrac{\\cos x}{\\sin x}$.",
+          "$=\\dfrac{1+\\cos x}{\\sin x}$.",
+          "$\\dfrac{\\operatorname{cosec}x+\\cot x}{1+\\cos x}=\\dfrac{(1+\\cos x)/\\sin x}{1+\\cos x}=\\dfrac{1}{\\sin x}=\\operatorname{cosec}x$."
+        ]
+      },
+      {
+        group: "reciprocal",
+        q: "Prove that $\\dfrac{1-\\sin x}{\\cos x}\\equiv\\sec x-\\tan x$.",
+        answer: "Identity proven",
+        steps: [
+          "Start with the right hand side.",
+          "$\\sec x-\\tan x=\\dfrac{1}{\\cos x}-\\dfrac{\\sin x}{\\cos x}$.",
+          "$=\\dfrac{1-\\sin x}{\\cos x}$.",
+          "This matches the left hand side."
+        ]
+      },
+      {
+        group: "reciprocal",
+        q: "Prove that $\\dfrac{1-\\cos x}{\\sin x}\\equiv\\operatorname{cosec}x-\\cot x$.",
+        answer: "Identity proven",
+        steps: [
+          "Start with the right hand side.",
+          "$\\operatorname{cosec}x-\\cot x=\\dfrac{1}{\\sin x}-\\dfrac{\\cos x}{\\sin x}$.",
+          "$=\\dfrac{1-\\cos x}{\\sin x}$.",
+          "This matches the left hand side."
+        ]
+      },
+      {
+        group: "compound",
         q: "Prove that $\\sec^{2}x-\\operatorname{cosec}^{2}x\\equiv\\tan^{2}x-\\cot^{2}x$.",
         answer: "Identity proven",
         steps: [
@@ -505,6 +642,7 @@
         ]
       },
       {
+        group: "compound",
         q: "Prove that $(\\sec x-\\cos x)^{2}\\equiv\\tan^{2}x-\\sin^{2}x$.",
         answer: "Identity proven",
         steps: [
@@ -516,6 +654,7 @@
         ]
       },
       {
+        group: "factorised",
         q: "Prove that $\\sec^{4}x-\\tan^{4}x\\equiv1+2\\tan^{2}x$.",
         answer: "Identity proven",
         steps: [
@@ -527,6 +666,62 @@
         ]
       },
       {
+        group: "factorised",
+        q: "Prove that $(\\sec x+\\tan x)(\\sec x-\\tan x)\\equiv1$.",
+        answer: "Identity proven",
+        steps: [
+          "Recognise the expression as a difference of two squares.",
+          "$(\\sec x+\\tan x)(\\sec x-\\tan x)=\\sec^{2}x-\\tan^{2}x$.",
+          "Use $\\sec^{2}x-\\tan^{2}x=1$.",
+          "Therefore $(\\sec x+\\tan x)(\\sec x-\\tan x)=1$."
+        ]
+      },
+      {
+        group: "factorised",
+        q: "Prove that $(\\operatorname{cosec}x+\\cot x)(\\operatorname{cosec}x-\\cot x)\\equiv1$.",
+        answer: "Identity proven",
+        steps: [
+          "Recognise the expression as a difference of two squares.",
+          "$(\\operatorname{cosec}x+\\cot x)(\\operatorname{cosec}x-\\cot x)=\\operatorname{cosec}^{2}x-\\cot^{2}x$.",
+          "Use $\\operatorname{cosec}^{2}x-\\cot^{2}x=1$.",
+          "Therefore $(\\operatorname{cosec}x+\\cot x)(\\operatorname{cosec}x-\\cot x)=1$."
+        ]
+      },
+      {
+        group: "factorised",
+        q: "Prove that $\\dfrac{1+\\tan^{2}x}{1+\\cot^{2}x}\\equiv\\tan^{2}x$.",
+        answer: "Identity proven",
+        steps: [
+          "Use $1+\\tan^{2}x=\\sec^{2}x$ and $1+\\cot^{2}x=\\operatorname{cosec}^{2}x$.",
+          "$\\dfrac{1+\\tan^{2}x}{1+\\cot^{2}x}=\\dfrac{\\sec^{2}x}{\\operatorname{cosec}^{2}x}$.",
+          "$=\\dfrac{1/\\cos^{2}x}{1/\\sin^{2}x}$.",
+          "$=\\dfrac{\\sin^{2}x}{\\cos^{2}x}=\\tan^{2}x$."
+        ]
+      },
+      {
+        group: "factorised",
+        q: "Prove that $\\sec^{4}x-1\\equiv\\tan^{2}x(\\sec^{2}x+1)$.",
+        answer: "Identity proven",
+        steps: [
+          "Use difference of two squares.",
+          "$\\sec^{4}x-1=(\\sec^{2}x-1)(\\sec^{2}x+1)$.",
+          "Use $\\sec^{2}x-1=\\tan^{2}x$.",
+          "$\\sec^{4}x-1=\\tan^{2}x(\\sec^{2}x+1)$."
+        ]
+      },
+      {
+        group: "factorised",
+        q: "Prove that $\\operatorname{cosec}^{4}x-1\\equiv\\cot^{2}x(\\operatorname{cosec}^{2}x+1)$.",
+        answer: "Identity proven",
+        steps: [
+          "Use difference of two squares.",
+          "$\\operatorname{cosec}^{4}x-1=(\\operatorname{cosec}^{2}x-1)(\\operatorname{cosec}^{2}x+1)$.",
+          "Use $\\operatorname{cosec}^{2}x-1=\\cot^{2}x$.",
+          "$\\operatorname{cosec}^{4}x-1=\\cot^{2}x(\\operatorname{cosec}^{2}x+1)$."
+        ]
+      },
+      {
+        group: "compound",
         q: "Prove that $\\cos\\theta+\\sin\\theta\\tan\\theta\\equiv\\sec\\theta$.",
         answer: "Identity proven",
         steps: [
@@ -538,6 +733,7 @@
         ]
       },
       {
+        group: "compound",
         q: "Prove that $\\dfrac{\\operatorname{cosec}\\theta}{\\operatorname{cosec}\\theta-\\sin\\theta}\\equiv\\sec^{2}\\theta$.",
         answer: "Identity proven",
         steps: [
@@ -546,6 +742,28 @@
           "$=\\dfrac{1-\\sin^{2}\\theta}{\\sin\\theta}=\\dfrac{\\cos^{2}\\theta}{\\sin\\theta}$.",
           "$\\dfrac{\\operatorname{cosec}\\theta}{\\operatorname{cosec}\\theta-\\sin\\theta}=\\dfrac{1/\\sin\\theta}{\\cos^{2}\\theta/\\sin\\theta}$.",
           "$=\\dfrac{1}{\\cos^{2}\\theta}=\\sec^{2}\\theta$."
+        ]
+      },
+      {
+        group: "compound",
+        q: "Prove that $\\dfrac{\\sec^{2}x-1}{\\sec^{2}x}\\equiv\\sin^{2}x$.",
+        answer: "Identity proven",
+        steps: [
+          "Use $\\sec^{2}x-1=\\tan^{2}x$.",
+          "$\\dfrac{\\sec^{2}x-1}{\\sec^{2}x}=\\dfrac{\\tan^{2}x}{\\sec^{2}x}$.",
+          "$=\\dfrac{\\sin^{2}x/\\cos^{2}x}{1/\\cos^{2}x}$.",
+          "$=\\sin^{2}x$."
+        ]
+      },
+      {
+        group: "compound",
+        q: "Prove that $\\dfrac{\\operatorname{cosec}^{2}x-1}{\\operatorname{cosec}^{2}x}\\equiv\\cos^{2}x$.",
+        answer: "Identity proven",
+        steps: [
+          "Use $\\operatorname{cosec}^{2}x-1=\\cot^{2}x$.",
+          "$\\dfrac{\\operatorname{cosec}^{2}x-1}{\\operatorname{cosec}^{2}x}=\\dfrac{\\cot^{2}x}{\\operatorname{cosec}^{2}x}$.",
+          "$=\\dfrac{\\cos^{2}x/\\sin^{2}x}{1/\\sin^{2}x}$.",
+          "$=\\cos^{2}x$."
         ]
       }
     ];
@@ -558,15 +776,27 @@
         steps: template.steps.map((line, index) => index === 0 ? step('<span class="step-indicator">Step 1</span> ' + line) : (line.indexOf("$") >= 0 ? calc(line) : step('<span class="step-indicator">Step ' + (index + 1) + '</span> ' + line))).concat([answerLine(template.answer)])
       };
     }
+    function proofFromGroups(groups) {
+      const groupList = Array.isArray(groups) ? groups : [groups];
+      return proofProblem(choice(proofTemplates.filter((template) => groupList.includes(template.group))));
+    }
     function genBasicProof() {
-      return proofProblem(choice(proofTemplates.slice(0, 2)));
+      return proofFromGroups("core");
     }
     function genCompoundProof() {
-      return proofProblem(choice(proofTemplates.slice(2)));
+      return proofFromGroups(["compound", "reciprocal", "factorised"]);
+    }
+    function genReciprocalIdentityProof() {
+      return proofFromGroups("reciprocal");
+    }
+    function genFactorisedIdentityProof() {
+      return proofFromGroups("factorised");
     }
 
-    function genHenceSolve() {
-      const type = choice(["sec4_tan4", "cos_sin_tan", "cosec_fraction"]);
+    function genHenceSolve(mode = "core") {
+      const coreTypes = ["sec4_tan4", "cos_sin_tan", "cosec_fraction"];
+      const examTypes = ["tan_over_sec", "quotient_to_sec", "ratio_to_tan_square", "cosec_cot_quadratic", "sec_tan_product"];
+      const type = choice(mode === "exam" ? examTypes : coreTypes);
       if (type === "sec4_tan4") {
         return {
           badge: "proof",
@@ -600,39 +830,171 @@
           ]
         };
       }
+      if (type === "cosec_fraction") {
+        return {
+          badge: "proof",
+          equation: '<span class="question-text">(a) Prove that $\\dfrac{\\operatorname{cosec}\\theta}{\\operatorname{cosec}\\theta-\\sin\\theta}\\equiv\\sec^{2}\\theta$.</span><span class="question-text">(b) Hence solve, for $0\\lt\\theta\\lt2\\pi$, $\\dfrac{\\operatorname{cosec}\\theta}{\\operatorname{cosec}\\theta-\\sin\\theta}=2\\tan\\theta$.</span>',
+          answer: "$\\theta=\\dfrac{\\pi}{4},\\dfrac{5\\pi}{4}$",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> From the proof, the left hand side is $\\sec^{2}\\theta$.'),
+            calc("$\\sec^{2}\\theta=2\\tan\\theta$"),
+            calc("$\\dfrac{1}{\\cos^{2}\\theta}=2\\dfrac{\\sin\\theta}{\\cos\\theta}$"),
+            calc("$1=2\\sin\\theta\\cos\\theta$"),
+            calc("$\\sin 2\\theta=1$"),
+            calc("$2\\theta=\\dfrac{\\pi}{2},\\dfrac{5\\pi}{2}$ in $0\\lt2\\theta\\lt4\\pi$"),
+            answerLine("$\\theta=\\dfrac{\\pi}{4},\\dfrac{5\\pi}{4}$")
+          ]
+        };
+      }
+      if (type === "tan_over_sec") {
+        return {
+          badge: "proof",
+          equation: '<span class="question-text">(a) Prove that $\\dfrac{\\tan x}{\\sec x}\\equiv\\sin x$.</span><span class="question-text">(b) Hence solve, for $0\\le x\\le2\\pi$, $\\dfrac{\\tan x}{\\sec x}=\\dfrac{\\sqrt{3}}{2}$.</span>',
+          answer: "$x=\\dfrac{\\pi}{3},\\dfrac{2\\pi}{3}$",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> Rewrite the expression in part (a).'),
+            calc("$\\dfrac{\\tan x}{\\sec x}=\\dfrac{\\sin x/\\cos x}{1/\\cos x}=\\sin x$"),
+            step('<span class="step-indicator">Step 2</span> Use the proven identity in the equation.'),
+            calc("$\\sin x=\\dfrac{\\sqrt{3}}{2}$"),
+            answerLine("$x=\\dfrac{\\pi}{3},\\dfrac{2\\pi}{3}$")
+          ]
+        };
+      }
+      if (type === "quotient_to_sec") {
+        return {
+          badge: "proof",
+          equation: '<span class="question-text">(a) Prove that $\\dfrac{\\sec x+\\tan x}{1+\\sin x}\\equiv\\sec x$.</span><span class="question-text">(b) Hence solve, for $0\\le x\\le360^\\circ$, $\\dfrac{\\sec x+\\tan x}{1+\\sin x}=2$.</span>',
+          answer: "$x=60^\\circ,300^\\circ$",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> Write the numerator in terms of sine and cosine.'),
+            calc("$\\sec x+\\tan x=\\dfrac{1+\\sin x}{\\cos x}$"),
+            calc("$\\dfrac{\\sec x+\\tan x}{1+\\sin x}=\\dfrac{(1+\\sin x)/\\cos x}{1+\\sin x}=\\sec x$"),
+            step('<span class="step-indicator">Step 2</span> Use the identity in the equation.'),
+            calc("$\\sec x=2$"),
+            calc("$\\cos x=\\dfrac{1}{2}$"),
+            answerLine("$x=60^\\circ,300^\\circ$")
+          ]
+        };
+      }
+      if (type === "ratio_to_tan_square") {
+        return {
+          badge: "proof",
+          equation: '<span class="question-text">(a) Prove that $\\dfrac{1+\\tan^{2}x}{1+\\cot^{2}x}\\equiv\\tan^{2}x$.</span><span class="question-text">(b) Hence solve, for $0\\le x\\le360^\\circ$, $\\dfrac{1+\\tan^{2}x}{1+\\cot^{2}x}=3$.</span>',
+          answer: "$x=60^\\circ,120^\\circ,240^\\circ,300^\\circ$",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> Replace the numerator and denominator using identities.'),
+            calc("$\\dfrac{1+\\tan^{2}x}{1+\\cot^{2}x}=\\dfrac{\\sec^{2}x}{\\operatorname{cosec}^{2}x}$"),
+            calc("$=\\dfrac{1/\\cos^{2}x}{1/\\sin^{2}x}=\\dfrac{\\sin^{2}x}{\\cos^{2}x}=\\tan^{2}x$"),
+            step('<span class="step-indicator">Step 2</span> Use the identity in the equation.'),
+            calc("$\\tan^{2}x=3$"),
+            calc("$\\tan x=\\pm\\sqrt{3}$"),
+            answerLine("$x=60^\\circ,120^\\circ,240^\\circ,300^\\circ$")
+          ]
+        };
+      }
+      if (type === "cosec_cot_quadratic") {
+        return {
+          badge: "proof",
+          equation: '<span class="question-text">(a) Prove that $\\operatorname{cosec}^{2}x-\\cot^{2}x\\equiv1$.</span><span class="question-text">(b) Hence solve, for $0\\le x\\le360^\\circ$, $\\operatorname{cosec}^{2}x=1+2\\cot x$. Give answers to 1 decimal place.</span>',
+          answer: "$x=26.6^\\circ,90.0^\\circ,206.6^\\circ,270.0^\\circ$",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> From $1+\\cot^{2}x=\\operatorname{cosec}^{2}x$, subtract $\\cot^{2}x$.'),
+            calc("$\\operatorname{cosec}^{2}x-\\cot^{2}x=1$"),
+            step('<span class="step-indicator">Step 2</span> Replace $\\operatorname{cosec}^{2}x$ with $1+\\cot^{2}x$.'),
+            calc("$1+\\cot^{2}x=1+2\\cot x$"),
+            calc("$\\cot^{2}x=2\\cot x$"),
+            calc("$\\cot x(\\cot x-2)=0$"),
+            step('<span class="step-indicator">Step 3</span> Solve each case.'),
+            calc("$\\cot x=0$ or $\\cot x=2$, so $\\tan x$ is undefined or $\\tan x=\\dfrac{1}{2}$."),
+            answerLine("$x=26.6^\\circ,90.0^\\circ,206.6^\\circ,270.0^\\circ$")
+          ]
+        };
+      }
       return {
         badge: "proof",
-        equation: '<span class="question-text">(a) Prove that $\\dfrac{\\operatorname{cosec}\\theta}{\\operatorname{cosec}\\theta-\\sin\\theta}\\equiv\\sec^{2}\\theta$.</span><span class="question-text">(b) Hence solve, for $0<\\theta<2\\pi$, $\\dfrac{\\operatorname{cosec}\\theta}{\\operatorname{cosec}\\theta-\\sin\\theta}=2\\tan\\theta$.</span>',
-        answer: "$\\theta=\\dfrac{\\pi}{4},\\dfrac{5\\pi}{4}$",
+        equation: '<span class="question-text">(a) Prove that $(\\sec x+\\tan x)(\\sec x-\\tan x)\\equiv1$.</span><span class="question-text">(b) Given that $0^\\circ\\lt x\\lt90^\\circ$ and $\\sec x+\\tan x=3$, find the exact values of $\\sec x$, $\\cos x$, and $\\tan x$.</span>',
+        answer: "$\\sec x=\\dfrac{5}{3}$, $\\cos x=\\dfrac{3}{5}$, $\\tan x=\\dfrac{4}{3}$",
         steps: [
-          step('<span class="step-indicator">Step 1</span> From the proof, the left hand side is $\\sec^{2}\\theta$.'),
-          calc("$\\sec^{2}\\theta=2\\tan\\theta$"),
-          calc("$\\dfrac{1}{\\cos^{2}\\theta}=2\\dfrac{\\sin\\theta}{\\cos\\theta}$"),
-          calc("$1=2\\sin\\theta\\cos\\theta$"),
-          calc("$\\sin 2\\theta=1$"),
-          calc("$2\\theta=\\dfrac{\\pi}{2},\\dfrac{5\\pi}{2}$ in $0<2\\theta<4\\pi$"),
-          answerLine("$\\theta=\\dfrac{\\pi}{4},\\dfrac{5\\pi}{4}$")
+          step('<span class="step-indicator">Step 1</span> Use difference of two squares.'),
+          calc("$(\\sec x+\\tan x)(\\sec x-\\tan x)=\\sec^{2}x-\\tan^{2}x=1$"),
+          step('<span class="step-indicator">Step 2</span> Since $\\sec x+\\tan x=3$, find the other factor.'),
+          calc("$3(\\sec x-\\tan x)=1$"),
+          calc("$\\sec x-\\tan x=\\dfrac{1}{3}$"),
+          step('<span class="step-indicator">Step 3</span> Add the two equations.'),
+          calc("$(\\sec x+\\tan x)+(\\sec x-\\tan x)=3+\\dfrac{1}{3}$"),
+          calc("$2\\sec x=\\dfrac{10}{3}$, so $\\sec x=\\dfrac{5}{3}$"),
+          calc("$\\cos x=\\dfrac{3}{5}$"),
+          step('<span class="step-indicator">Step 4</span> Substitute back into $\\sec x+\\tan x=3$.'),
+          answerLine("$\\tan x=3-\\dfrac{5}{3}=\\dfrac{4}{3}$")
         ]
       };
     }
+    function genExamHenceSolve() {
+      return genHenceSolve("exam");
+    }
 
     function genNoRealSolutions() {
+      const type = choice(["polynomial_factor", "sec_discriminant", "cosec_discriminant", "range_restriction"]);
+      if (type === "polynomial_factor") {
+        return {
+          badge: "proof",
+          equation: '<span class="question-text">Let $f(x)=3x^{3}+4x^{2}+13x+4$.</span><span class="question-text">(a) Show that $(3x+1)$ is a factor of $f(x)$.</span><span class="question-text">(b) Factorise $f(x)$ completely.</span><span class="question-text">(c) Prove that there are no real solutions to $3\\sec^{2}\\theta+4\\sec\\theta+13+4\\cos\\theta=0$.</span>',
+          answer: "No real solutions",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> For the factor theorem, $(3x+1)=0$ gives $x=-\\dfrac{1}{3}$.'),
+            calc("$f\\left(-\\dfrac{1}{3}\\right)=0$, so $(3x+1)$ is a factor."),
+            step('<span class="step-indicator">Step 2</span> Divide or compare coefficients.'),
+            calc("$f(x)=(3x+1)(x^{2}+x+4)$"),
+            step('<span class="step-indicator">Step 3</span> In the trig equation let $x=\\sec\\theta$, so $\\cos\\theta=\\dfrac{1}{x}$.'),
+            calc("$3x^{2}+4x+13+\\dfrac{4}{x}=0$"),
+            calc("$3x^{3}+4x^{2}+13x+4=0$"),
+            calc("$(3x+1)(x^{2}+x+4)=0$"),
+            step('<span class="step-indicator">Step 4</span> The root $x=-\\dfrac{1}{3}$ is impossible because $|\\sec\\theta|\\ge1$.'),
+            step('<span class="step-indicator">Step 5</span> The quadratic has discriminant $1-16=-15<0$, so it has no real roots.'),
+            answerLine("Therefore the original trigonometric equation has no real solutions.")
+          ]
+        };
+      }
+      if (type === "sec_discriminant") {
+        return {
+          badge: "proof",
+          equation: "Prove that $2\\sec^{2}x-3\\sec x+5=0$ has no real solutions.",
+          answer: "No real solutions",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> Let $u=\\sec x$.'),
+            calc("$2u^{2}-3u+5=0$"),
+            step('<span class="step-indicator">Step 2</span> Calculate the discriminant.'),
+            calc("$b^{2}-4ac=(-3)^{2}-4(2)(5)=9-40=-31$"),
+            step('<span class="step-indicator">Step 3</span> Since the discriminant is negative, the quadratic has no real values of $u$.'),
+            answerLine("Therefore there are no real values of $x$ that satisfy the original equation.")
+          ]
+        };
+      }
+      if (type === "cosec_discriminant") {
+        return {
+          badge: "proof",
+          equation: "Prove that $\\operatorname{cosec}^{2}\\theta+4\\operatorname{cosec}\\theta+8=0$ has no real solutions.",
+          answer: "No real solutions",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> Let $u=\\operatorname{cosec}\\theta$.'),
+            calc("$u^{2}+4u+8=0$"),
+            step('<span class="step-indicator">Step 2</span> Calculate the discriminant.'),
+            calc("$b^{2}-4ac=4^{2}-4(1)(8)=16-32=-16$"),
+            step('<span class="step-indicator">Step 3</span> A negative discriminant means there are no real values of $u$.'),
+            answerLine("Therefore there are no real values of $\\theta$ that satisfy the original equation.")
+          ]
+        };
+      }
       return {
         badge: "proof",
-        equation: '<span class="question-text">Let $f(x)=3x^{3}+4x^{2}+13x+4$.</span><span class="question-text">(a) Show that $(3x+1)$ is a factor of $f(x)$.</span><span class="question-text">(b) Factorise $f(x)$ completely.</span><span class="question-text">(c) Prove that there are no real solutions to $3\\sec^{2}\\theta+4\\sec\\theta+13+4\\cos\\theta=0$.</span>',
+        equation: "Prove that $\\sec x=\\dfrac{1}{3}$ has no real solutions.",
         answer: "No real solutions",
         steps: [
-          step('<span class="step-indicator">Step 1</span> For the factor theorem, $(3x+1)=0$ gives $x=-\\dfrac{1}{3}$.'),
-          calc("$f\\left(-\\dfrac{1}{3}\\right)=0$, so $(3x+1)$ is a factor."),
-          step('<span class="step-indicator">Step 2</span> Divide or compare coefficients.'),
-          calc("$f(x)=(3x+1)(x^{2}+x+4)$"),
-          step('<span class="step-indicator">Step 3</span> In the trig equation let $x=\\sec\\theta$, so $\\cos\\theta=\\dfrac{1}{x}$.'),
-          calc("$3x^{2}+4x+13+\\dfrac{4}{x}=0$"),
-          calc("$3x^{3}+4x^{2}+13x+4=0$"),
-          calc("$(3x+1)(x^{2}+x+4)=0$"),
-          step('<span class="step-indicator">Step 4</span> The root $x=-\\dfrac{1}{3}$ is impossible because $|\\sec\\theta|\\ge1$.'),
-          step('<span class="step-indicator">Step 5</span> The quadratic has discriminant $1-16=-15<0$, so it has no real roots.'),
-          answerLine("Therefore the original trigonometric equation has no real solutions.")
+          step('<span class="step-indicator">Step 1</span> Use $\\sec x=\\dfrac{1}{\\cos x}$.'),
+          calc("$\\dfrac{1}{\\cos x}=\\dfrac{1}{3}$"),
+          calc("$\\cos x=3$"),
+          step('<span class="step-indicator">Step 2</span> For real $x$, $-1\\le\\cos x\\le1$.'),
+          answerLine("Since $\\cos x=3$ is impossible, the equation has no real solutions.")
         ]
       };
     }
@@ -640,7 +1002,7 @@
     function generateProblem() {
       let type = currentType;
       if (type === "mixed_equations") type = choice(["reciprocal_linear", "identity_equations", "quadratic_reciprocal", "transformed_angles"]);
-      if (type === "mixed_proofs") type = choice(["basic_identity_proofs", "compound_identity_proofs", "hence_solve", "no_real_solutions"]);
+      if (type === "mixed_proofs") type = choice(["basic_identity_proofs", "compound_identity_proofs", "reciprocal_identity_proofs", "factorised_identity_proofs", "hence_solve", "exam_hence_solve", "no_real_solutions"]);
       switch (type) {
         case "graph_pairs": return genGraphPair();
         case "reciprocal_definitions": return genDefinition();
@@ -651,7 +1013,10 @@
         case "transformed_angles": return genTransformedAngle();
         case "basic_identity_proofs": return genBasicProof();
         case "compound_identity_proofs": return genCompoundProof();
+        case "reciprocal_identity_proofs": return genReciprocalIdentityProof();
+        case "factorised_identity_proofs": return genFactorisedIdentityProof();
         case "hence_solve": return genHenceSolve();
+        case "exam_hence_solve": return genExamHenceSolve();
         case "no_real_solutions": return genNoRealSolutions();
         default: return genDefinition();
       }
@@ -659,8 +1024,27 @@
 
     function problemCountForType() {
       if (currentType === "graph_pairs") return 3;
-      if (currentType === "no_real_solutions") return 1;
+      if (currentType === "hence_solve") return 3;
+      if (currentType === "no_real_solutions") return 3;
       return 5;
+    }
+
+    function problemSignature(problem) {
+      return problem.equation.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+    }
+
+    function generateUniqueProblem(usedSignatures) {
+      let fallback = null;
+      for (let attempt = 0; attempt < 40; attempt++) {
+        const problem = generateProblem();
+        const signature = problemSignature(problem);
+        if (!fallback) fallback = problem;
+        if (!usedSignatures.has(signature)) {
+          usedSignatures.add(signature);
+          return problem;
+        }
+      }
+      return fallback || generateProblem();
     }
 
     function switchLevel(level) {
@@ -715,7 +1099,8 @@
           { a: "\\tan x", b: "\\cot x", zero: "\\dfrac{\\pi}{2}, \\dfrac{3\\pi}{2} \\text{ for tan}; 0, \\pi, 2\\pi \\text{ for cot}", anchor: "$\\tan x$ passes through $(0,0)$, $(\\pi,0)$, $(2\\pi,0)$" }
         ].forEach((pair) => problems.push(genGraphPair(pair)));
       } else {
-        for (let i = 0; i < count; i++) problems.push(generateProblem());
+        const usedSignatures = new Set();
+        for (let i = 0; i < count; i++) problems.push(generateUniqueProblem(usedSignatures));
       }
       renderProblems();
     }

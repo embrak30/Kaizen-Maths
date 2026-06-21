@@ -246,12 +246,12 @@ const tools = [
     status: "Imported",
     description: "Generate A-level trigonometric functions practice covering reciprocal graphs, sec, cosec, cot equations, identities, proofs, and hence-solve questions.",
     tags: ["algebra", "trigonometry", "trigonometric functions", "sec", "cosec", "cot", "identities", "proof", "A-Level"],
-    toolPath: "tools/trigonometric-functions/index.html?v=trig-functions-1",
+    toolPath: "tools/trigonometric-functions/index.html?v=trig-functions-2",
     imported: true,
     teacherNotes: [
       "Level 1 covers reciprocal graph sketching, definitions, and simple reciprocal equations.",
       "Level 2 develops equations involving sec, cosec, cot, identities, quadratics, and transformed angles.",
-      "Level 3 focuses on identity proof and linked proof-then-solve questions similar to A-level exam practice."
+      "Level 3 includes reciprocal quotient proofs, factorised identity proofs, linked hence-solve problems, and no-real-solution arguments."
     ]
   },
   {
