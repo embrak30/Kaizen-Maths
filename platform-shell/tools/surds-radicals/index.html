@@ -431,6 +431,34 @@
       font-size: 1.2em;
     }
 
+    .surd-multiplication-table {
+      width: min(680px, 100%);
+      margin: 10px auto;
+      border-collapse: collapse;
+      color: #1a365d;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(26, 54, 93, 0.08);
+    }
+
+    .surd-multiplication-table th,
+    .surd-multiplication-table td {
+      border: 1px solid #cbd5e0;
+      padding: 10px 12px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .surd-multiplication-table th {
+      background: #edf2f7;
+      color: #1a365d;
+      font-weight: 800;
+    }
+
+    .surd-multiplication-table td {
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
     .final-answer {
       background: #38a169;
       color: white;
@@ -854,6 +882,25 @@
       return value < 0 ? " - " + Math.abs(value) : " + " + value;
     }
 
+    function signedNumberTerm(value) {
+      return value < 0 ? "- " + Math.abs(value) : "+ " + value;
+    }
+
+    function bracketNumber(value) {
+      return value < 0 ? "(" + value + ")" : "(+" + value + ")";
+    }
+
+    function buildSurdMultiplicationTable(radicand, aValue, bValue, outerCoef, innerCoef, constantTerm) {
+      return [
+        '<table class="surd-multiplication-table">',
+        "<thead><tr><th>×</th><th>√" + radicand + "</th><th>" + signedNumberTerm(bValue) + "</th></tr></thead>",
+        "<tbody>",
+        "<tr><th>√" + radicand + "</th><td>√" + radicand + " × √" + radicand + "<br>= " + radicand + "</td><td>√" + radicand + " × " + bracketNumber(bValue) + "<br>= " + formatSurd(outerCoef, radicand) + "</td></tr>",
+        "<tr><th>" + signedNumberTerm(aValue) + "</th><td>" + bracketNumber(aValue) + " × √" + radicand + "<br>= " + formatSurd(innerCoef, radicand) + "</td><td>" + bracketNumber(aValue) + " × " + bracketNumber(bValue) + "<br>= " + constantTerm + "</td></tr>",
+        "</tbody></table>"
+      ].join("");
+    }
+
     function combineSurdTerms(terms) {
       const byRadicand = {};
       let constant = 0;
@@ -1157,6 +1204,9 @@
           const outerCoef = signB * b;
           const innerCoef = signA * a;
           const surdCoef = outerCoef + innerCoef;
+          const aTerm = signA * a;
+          const bTerm = signB * b;
+          const tableHtml = buildSurdMultiplicationTable(radicand, aTerm, bTerm, outerCoef, innerCoef, constantTerm);
           const terms = [
             { coefficient: radicand, radicand: 1 },
             { coefficient: outerCoef, radicand },
@@ -1169,11 +1219,8 @@
             equation: "Expand and simplify: (√" + radicand + " " + signAText + " " + a + ")(√" + radicand + " " + signBText + " " + b + ")",
             answer,
             steps: [
-              stepLabel(1) + " Use FOIL",
-              "First: √" + radicand + " × √" + radicand + " = " + radicand,
-              "Outer: √" + radicand + " × (" + signBText + b + ") = " + formatSurd(outerCoef, radicand),
-              "Inner: (" + signAText + a + ") × √" + radicand + " = " + formatSurd(innerCoef, radicand),
-              "Last: (" + signAText + a + ") × (" + signBText + b + ") = " + constantTerm,
+              stepLabel(1) + " Complete the multiplication table",
+              tableHtml,
               stepLabel(2) + " Find the pairs that can be simplified",
               "Constant pair: " + radicand + signedConstant(constantTerm) + " = " + constantSum,
               "Like-surd pair: " + formatSurd(outerCoef, radicand) + signedSurd(innerCoef, radicand, false) + " = " + formatSurd(surdCoef, radicand),
