@@ -3977,6 +3977,20 @@ function renderHome() {
       </div>
       <a class="button primary" href="#/gcse-exam-style">Open Exam Builder</a>
     </section>
+    <section class="exam-callout" aria-label="Mechanics collection">
+      <div class="worksheet-callout-icon" aria-hidden="true">M</div>
+      <div>
+        <span class="eyebrow">A-Level Mechanics</span>
+        <h2>Mechanics practice generators</h2>
+        <p>Open mechanics topics for equations of motion, moments, and projectiles. Each tool includes diagrams, question levels, answers, and worked steps for classroom modelling and practice.</p>
+        <div class="badge-row">
+          <span class="badge">Equations of Motion</span>
+          <span class="badge">Moments</span>
+          <span class="badge">Projectiles</span>
+        </div>
+      </div>
+      <a class="button primary" href="#/collections/mechanics">Open Mechanics</a>
+    </section>
     ${metricGrid()}
     <section class="split-grid">
       <div class="panel">
