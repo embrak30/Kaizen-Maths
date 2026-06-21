@@ -826,6 +826,25 @@ const tools = [
     ]
   },
   {
+    slug: "correlation-regression",
+    title: "Correlation and Regression",
+    category: "Statistics",
+    level: "A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate correlation and regression practice using bivariate data tables, PMCC, least-squares regression lines, interpolation, extrapolation, and residuals.",
+    tags: ["statistics", "correlation", "regression", "linear regression", "PMCC", "interpolation", "extrapolation", "residuals", "data tables"],
+    toolPath: "tools/correlation-regression/index.html?v=correlation-regression-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on interpreting and calculating product moment correlation coefficient from bivariate data.",
+      "Level 2 finds the least-squares regression line of y on x from raw data or summary statistics.",
+      "Level 3 uses regression lines for prediction, interpolation, extrapolation, reliability comments, and residuals.",
+      "Worked steps show Sxx, Sxy, gradient, intercept, and context interpretation."
+    ]
+  },
+  {
     slug: "binomial-geometric-distribution",
     title: "Binomial & Geometric Distribution",
     category: "Statistics",
