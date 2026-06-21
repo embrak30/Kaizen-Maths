@@ -770,6 +770,25 @@ const tools = [
     ]
   },
   {
+    slug: "continuous-random-variables",
+    title: "Continuous Random Variables",
+    category: "Statistics",
+    level: "A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate continuous random variable practice covering probability density functions, cumulative distribution functions, expectation, variance, uniform distributions, exponential distributions, and parameter questions.",
+    tags: ["statistics", "probability", "continuous random variables", "density function", "cdf", "expectation", "variance", "uniform distribution", "exponential distribution"],
+    toolPath: "tools/continuous-random-variables/index.html?v=continuous-random-variables-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on valid density functions, normalising constants, interval probability, and cumulative distribution functions.",
+      "Level 2 practises expected value, E(X²), variance, standard deviation, median, and quartiles.",
+      "Level 3 introduces uniform and exponential models, including probability, summary measures, and parameter questions.",
+      "Worked steps emphasise probabilities as areas, integration over the support, and correct use of Var(X) = E(X²) - [E(X)]²."
+    ]
+  },
+  {
     slug: "normal-distribution",
     title: "Normal Distribution",
     category: "Statistics",

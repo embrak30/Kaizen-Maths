@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Continuous Random Variables Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:white;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:white;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:white;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1240px;margin:0 auto;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;color:white;padding:24px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header h1{font-size:2.12em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:17px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:700;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:white;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px 24px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.25em}.level-info p{color:#718096;font-size:.98em}.dropdown-container{margin-top:9px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:white;cursor:pointer;min-width:400px}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:700;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
+    .problems-section{padding:18px 24px 24px;min-height:520px}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:650}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.density{background:#3182ce}.problem-set-header.expectation{background:#38a169}.problem-set-header.models{background:#805ad5}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:10px}.problem-item{background:#f7fafc;padding:13px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.14em;color:#1a365d;font-weight:500;line-height:1.38;min-width:0}.math-line{display:block;margin:.18rem 0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.98em;display:none;text-align:center;max-width:260px}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{grid-column:1/-1;margin-top:10px;padding:12px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:700;color:#38a169;margin-bottom:8px;font-size:1em}.solution-steps{font-size:1em;line-height:1.45}.step{margin:6px 0;color:#1a365d}.step-equation{font-weight:650;color:#805ad5;text-align:center;margin:8px 0;font-size:1.08em}.final-answer{background:#38a169;color:white;padding:8px 15px;border-radius:6px;text-align:center;font-weight:bold;font-size:1.05em;margin-top:10px}.step-indicator{background:#3182ce;color:white;padding:4px 8px;border-radius:4px;font-size:.88em;font-weight:bold;margin-right:8px;white-space:nowrap}.step-arrow{font-size:1.25em;color:#3182ce;margin:0 8px}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
+    @media (max-width:900px){.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.type-dropdown{min-width:260px;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool supports practice with continuous random variables, probability density functions, cumulative distribution functions, expectation, variance, and common continuous models.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Valid density functions, normalising constants, interval probabilities, and cumulative distribution functions.</li>
+        <li><strong>Level 2:</strong> Expected value, E(X²), variance, standard deviation, median, and quartiles.</li>
+        <li><strong>Level 3:</strong> Uniform and exponential distributions, parameter questions, and model interpretation.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Students should remember that probabilities are areas under a density curve.</li>
+        <li>For any density function, the total area must equal 1.</li>
+        <li>Expectation uses E(X) = ∫ x f(x) dx and variance uses Var(X) = E(X²) - [E(X)]².</li>
+        <li>For exponential distributions, survival probabilities often make the calculation shorter.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header"><h1>Continuous Random Variables</h1></section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Density & CDF</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Expectation & Variance</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Standard Models</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Density & CDF</h3>
+        <p id="level-description">Use density functions, total area, interval probability, and cumulative distribution functions.</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+            <option value="normalise_linear">Normalise a linear density</option>
+            <option value="normalise_quadratic">Normalise a quadratic density</option>
+            <option value="cdf_from_density">Find a cumulative distribution function</option>
+            <option value="probability_from_cdf">Use a CDF to find a probability</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div class="set-instruction" id="set-instruction">Choose a question type to practise continuous random variables.</div>
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const typeDisplayNames = {
+      normalise_linear: "Normalise a linear density",
+      normalise_quadratic: "Normalise a quadratic density",
+      cdf_from_density: "Find a cumulative distribution function",
+      probability_from_cdf: "Use a CDF to find a probability",
+      expected_value_linear: "Expected value from a linear density",
+      variance_linear: "Variance from a linear density",
+      median_quartile: "Median and quartiles",
+      expected_value_quadratic: "Expected value and variance from a quadratic density",
+      uniform_probability: "Uniform distribution probabilities",
+      uniform_summary: "Uniform mean and variance",
+      exponential_probability: "Exponential distribution probabilities",
+      exponential_parameter: "Find an exponential parameter"
+    };
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Density & CDF",
+        description: "Use density functions, total area, interval probability, and cumulative distribution functions.",
+        options: [
+          ["normalise_linear", "Normalise a linear density"],
+          ["normalise_quadratic", "Normalise a quadratic density"],
+          ["cdf_from_density", "Find a cumulative distribution function"],
+          ["probability_from_cdf", "Use a CDF to find a probability"]
+        ]
+      },
+      2: {
+        title: "Level 2: Expectation & Variance",
+        description: "Calculate E(X), E(X²), Var(X), standard deviation, median, and quartiles.",
+        options: [
+          ["expected_value_linear", "Expected value from a linear density"],
+          ["variance_linear", "Variance from a linear density"],
+          ["median_quartile", "Median and quartiles"],
+          ["expected_value_quadratic", "Expected value and variance from a quadratic density"]
+        ]
+      },
+      3: {
+        title: "Level 3: Standard Models",
+        description: "Use uniform and exponential distributions, including parameter questions.",
+        options: [
+          ["uniform_probability", "Uniform distribution probabilities"],
+          ["uniform_summary", "Uniform mean and variance"],
+          ["exponential_probability", "Exponential distribution probabilities"],
+          ["exponential_parameter", "Find an exponential parameter"]
+        ]
+      }
+    };
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomElement(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function gcd(a, b) {
+      return b === 0 ? Math.abs(a) : gcd(b, a % b);
+    }
+
+    function frac(n, d) {
+      if (d < 0) {
+        n *= -1;
+        d *= -1;
+      }
+      const divisor = gcd(Math.round(Math.abs(n)), Math.round(Math.abs(d))) || 1;
+      const top = Math.round(n / divisor);
+      const bottom = Math.round(d / divisor);
+      if (bottom === 1) return String(top);
+      return top + "/" + bottom;
+    }
+
+    function fmt(value, dp = 3) {
+      return Number(value).toFixed(dp);
+    }
+
+    function fmtTrim(value, dp = 3) {
+      const rounded = Number(Number(value).toFixed(dp));
+      return String(rounded);
+    }
+
+    function sq(value) {
+      return value * value;
+    }
+
+    function cube(value) {
+      return value * value * value;
+    }
+
+    function supportLinear(a) {
+      return "f(x) = kx for 0 <= x <= " + a + ", and f(x) = 0 otherwise.";
+    }
+
+    function supportQuadratic(a) {
+      return "f(x) = kx² for 0 <= x <= " + a + ", and f(x) = 0 otherwise.";
+    }
+
+    function linearPdf(a) {
+      return "f(x) = " + frac(2, sq(a)) + "x for 0 <= x <= " + a;
+    }
+
+    function quadraticPdf(a) {
+      return "f(x) = " + frac(3, cube(a)) + "x² for 0 <= x <= " + a;
+    }
+
+    function interval(a) {
+      const c = random(0, Math.max(0, a - 2));
+      const d = random(c + 1, a);
+      return { c, d };
+    }
+
+    function generateProblem() {
+      switch (currentType) {
+        case "normalise_linear": return genNormaliseLinear();
+        case "normalise_quadratic": return genNormaliseQuadratic();
+        case "cdf_from_density": return genCdfFromDensity();
+        case "probability_from_cdf": return genProbabilityFromCdf();
+        case "expected_value_linear": return genExpectedValueLinear();
+        case "variance_linear": return genVarianceLinear();
+        case "median_quartile": return genMedianQuartile();
+        case "expected_value_quadratic": return genExpectedValueQuadratic();
+        case "uniform_probability": return genUniformProbability();
+        case "uniform_summary": return genUniformSummary();
+        case "exponential_probability": return genExponentialProbability();
+        case "exponential_parameter": return genExponentialParameter();
+        default: return genNormaliseLinear();
+      }
+    }
+
+    function genNormaliseLinear() {
+      const a = randomElement([2, 3, 4, 5, 6]);
+      const { c, d } = interval(a);
+      const probFraction = frac(sq(d) - sq(c), sq(a));
+      const prob = (sq(d) - sq(c)) / sq(a);
+      return {
+        badge: "density",
+        equation: '<span class="math-line">' + supportLinear(a) + '</span><span class="math-line">Find k, then find P(' + c + ' < X < ' + d + ').</span>',
+        answer: "k = " + frac(2, sq(a)) + ", P = " + probFraction,
+        steps: [
+          '<span class="step-indicator">Guide</span> A probability density function must have total area 1.',
+          "∫ from 0 to " + a + " of kx dx = 1.",
+          "k[x²/2] from 0 to " + a + " = k(" + sq(a) + ")/2 = 1.",
+          "k = 2/" + sq(a) + " = " + frac(2, sq(a)) + ".",
+          '<span class="step-indicator">Guide</span> Probability is area under the density between the limits.',
+          "P(" + c + " < X < " + d + ") = ∫ from " + c + " to " + d + " of (" + frac(2, sq(a)) + ")x dx.",
+          "P = [" + frac(1, sq(a)) + "x²] from " + c + " to " + d + " = (" + sq(d) + " - " + sq(c) + ")/" + sq(a) + ".",
+          '<span class="step-arrow">-></span> P = ' + probFraction + " ≈ " + fmt(prob)
+        ]
+      };
+    }
+
+    function genNormaliseQuadratic() {
+      const a = randomElement([2, 3, 4, 5]);
+      const { c, d } = interval(a);
+      const probFraction = frac(cube(d) - cube(c), cube(a));
+      const prob = (cube(d) - cube(c)) / cube(a);
+      return {
+        badge: "density",
+        equation: '<span class="math-line">' + supportQuadratic(a) + '</span><span class="math-line">Find k, then find P(' + c + ' < X < ' + d + ').</span>',
+        answer: "k = " + frac(3, cube(a)) + ", P = " + probFraction,
+        steps: [
+          '<span class="step-indicator">Guide</span> Make the total area under the density equal to 1.',
+          "∫ from 0 to " + a + " of kx² dx = 1.",
+          "k[x³/3] from 0 to " + a + " = k(" + cube(a) + ")/3 = 1.",
+          "k = 3/" + cube(a) + " = " + frac(3, cube(a)) + ".",
+          '<span class="step-indicator">Guide</span> Integrate the density across the requested interval.',
+          "P(" + c + " < X < " + d + ") = ∫ from " + c + " to " + d + " of (" + frac(3, cube(a)) + ")x² dx.",
+          "P = [" + frac(1, cube(a)) + "x³] from " + c + " to " + d + " = (" + cube(d) + " - " + cube(c) + ")/" + cube(a) + ".",
+          '<span class="step-arrow">-></span> P = ' + probFraction + " ≈ " + fmt(prob)
+        ]
+      };
+    }
+
+    function genCdfFromDensity() {
+      const a = randomElement([3, 4, 5, 6]);
+      const b = random(1, a - 1);
+      const probFraction = frac(sq(b), sq(a));
+      const prob = sq(b) / sq(a);
+      return {
+        badge: "density",
+        equation: '<span class="math-line">The density of X is ' + linearPdf(a) + ', and 0 otherwise.</span><span class="math-line">Find F(x), then find P(X <= ' + b + ').</span>',
+        answer: "F(x) = x²/" + sq(a) + " on 0 <= x <= " + a + ", P = " + probFraction,
+        steps: [
+          '<span class="step-indicator">Guide</span> The cumulative distribution function is F(x) = P(X <= x).',
+          "For 0 <= x <= " + a + ", F(x) = ∫ from 0 to x of (" + frac(2, sq(a)) + ")t dt.",
+          "F(x) = [" + frac(1, sq(a)) + "t²] from 0 to x = x²/" + sq(a) + ".",
+          "So F(x) = 0 for x < 0, F(x) = x²/" + sq(a) + " for 0 <= x <= " + a + ", and F(x) = 1 for x > " + a + ".",
+          "P(X <= " + b + ") = F(" + b + ") = " + sq(b) + "/" + sq(a) + ".",
+          '<span class="step-arrow">-></span> P = ' + probFraction + " ≈ " + fmt(prob)
+        ]
+      };
+    }
+
+    function genProbabilityFromCdf() {
+      const a = randomElement([4, 5, 6, 8]);
+      const { c, d } = interval(a);
+      const probFraction = frac(sq(d) - sq(c), sq(a));
+      const prob = (sq(d) - sq(c)) / sq(a);
+      return {
+        badge: "density",
+        equation: '<span class="math-line">For 0 <= x <= ' + a + ', F(x) = x²/' + sq(a) + '.</span><span class="math-line">Find P(' + c + ' < X < ' + d + ').</span>',
+        answer: probFraction,
+        steps: [
+          '<span class="step-indicator">Guide</span> Use P(a < X < b) = F(b) - F(a).',
+          "P(" + c + " < X < " + d + ") = F(" + d + ") - F(" + c + ").",
+          "F(" + d + ") = " + sq(d) + "/" + sq(a) + " and F(" + c + ") = " + sq(c) + "/" + sq(a) + ".",
+          "P = (" + sq(d) + " - " + sq(c) + ")/" + sq(a) + ".",
+          '<span class="step-arrow">-></span> P = ' + probFraction + " ≈ " + fmt(prob)
+        ]
+      };
+    }
+
+    function genExpectedValueLinear() {
+      const a = randomElement([3, 4, 6, 9, 12]);
+      const eFraction = frac(2 * a, 3);
+      const eValue = 2 * a / 3;
+      return {
+        badge: "expectation",
+        equation: '<span class="math-line">The density of X is ' + linearPdf(a) + ', and 0 otherwise.</span><span class="math-line">Find E(X).</span>',
+        answer: "E(X) = " + eFraction,
+        steps: [
+          '<span class="step-indicator">Guide</span> Use E(X) = ∫ x f(x) dx over the support.',
+          "E(X) = ∫ from 0 to " + a + " of x(" + frac(2, sq(a)) + "x) dx.",
+          "E(X) = " + frac(2, sq(a)) + "∫ from 0 to " + a + " of x² dx.",
+          "E(X) = " + frac(2, sq(a)) + "[x³/3] from 0 to " + a + ".",
+          "E(X) = 2(" + cube(a) + ")/(3 × " + sq(a) + ") = " + eFraction + ".",
+          '<span class="step-arrow">-></span> E(X) = ' + eFraction + " ≈ " + fmt(eValue)
+        ]
+      };
+    }
+
+    function genVarianceLinear() {
+      const a = randomElement([3, 4, 6, 9, 12]);
+      const e = 2 * a / 3;
+      const e2 = sq(a) / 2;
+      const variance = sq(a) / 18;
+      return {
+        badge: "expectation",
+        equation: '<span class="math-line">The density of X is ' + linearPdf(a) + ', and 0 otherwise.</span><span class="math-line">Find Var(X) and the standard deviation.</span>',
+        answer: "Var(X) = " + frac(sq(a), 18) + ", SD = " + fmt(Math.sqrt(variance)),
+        steps: [
+          '<span class="step-indicator">Guide</span> First find E(X) and E(X²).',
+          "E(X) = " + frac(2 * a, 3) + ".",
+          "E(X²) = ∫ from 0 to " + a + " of x²(" + frac(2, sq(a)) + "x) dx.",
+          "E(X²) = " + frac(2, sq(a)) + "[x⁴/4] from 0 to " + a + " = " + frac(sq(a), 2) + ".",
+          '<span class="step-indicator">Guide</span> Use Var(X) = E(X²) - [E(X)]².',
+          "Var(X) = " + frac(sq(a), 2) + " - (" + frac(2 * a, 3) + ")² = " + frac(sq(a), 18) + ".",
+          "SD(X) = sqrt(" + frac(sq(a), 18) + ") ≈ " + fmt(Math.sqrt(variance)) + ".",
+          '<span class="step-arrow">-></span> Var(X) = ' + frac(sq(a), 18)
+        ]
+      };
+    }
+
+    function genMedianQuartile() {
+      const a = randomElement([4, 6, 8, 10]);
+      const target = randomElement([0.25, 0.5, 0.75]);
+      const label = target === 0.5 ? "median" : target === 0.25 ? "lower quartile" : "upper quartile";
+      const value = a * Math.sqrt(target);
+      return {
+        badge: "expectation",
+        equation: '<span class="math-line">The density of X is ' + linearPdf(a) + ', and 0 otherwise.</span><span class="math-line">Find the ' + label + ' of X.</span>',
+        answer: fmt(value),
+        steps: [
+          '<span class="step-indicator">Guide</span> Use the CDF for this density.',
+          "F(x) = x²/" + sq(a) + " for 0 <= x <= " + a + ".",
+          "The " + label + " is the value q where F(q) = " + target + ".",
+          "q²/" + sq(a) + " = " + target + ".",
+          "q² = " + fmtTrim(target * sq(a)) + ".",
+          "q = sqrt(" + fmtTrim(target * sq(a)) + ") ≈ " + fmt(value) + ".",
+          '<span class="step-arrow">-></span> ' + label + ' ≈ ' + fmt(value)
+        ]
+      };
+    }
+
+    function genExpectedValueQuadratic() {
+      const a = randomElement([4, 5, 8, 10]);
+      const mean = 3 * a / 4;
+      const e2 = 3 * sq(a) / 5;
+      const variance = 3 * sq(a) / 80;
+      return {
+        badge: "expectation",
+        equation: '<span class="math-line">The density of X is ' + quadraticPdf(a) + ', and 0 otherwise.</span><span class="math-line">Find E(X) and Var(X).</span>',
+        answer: "E(X) = " + frac(3 * a, 4) + ", Var(X) = " + frac(3 * sq(a), 80),
+        steps: [
+          '<span class="step-indicator">Guide</span> Use E(X) = ∫ x f(x) dx.',
+          "E(X) = ∫ from 0 to " + a + " of x(" + frac(3, cube(a)) + "x²) dx.",
+          "E(X) = " + frac(3, cube(a)) + "[x⁴/4] from 0 to " + a + " = " + frac(3 * a, 4) + ".",
+          '<span class="step-indicator">Guide</span> Find E(X²) before variance.',
+          "E(X²) = ∫ from 0 to " + a + " of x²(" + frac(3, cube(a)) + "x²) dx.",
+          "E(X²) = " + frac(3, cube(a)) + "[x⁵/5] from 0 to " + a + " = " + frac(3 * sq(a), 5) + ".",
+          "Var(X) = E(X²) - [E(X)]² = " + frac(3 * sq(a), 5) + " - (" + frac(3 * a, 4) + ")².",
+          '<span class="step-arrow">-></span> Var(X) = ' + frac(3 * sq(a), 80) + " ≈ " + fmt(variance)
+        ]
+      };
+    }
+
+    function genUniformProbability() {
+      const a = randomElement([0, 2, 5, 10]);
+      const width = randomElement([8, 10, 12, 15]);
+      const b = a + width;
+      const c = a + random(1, width - 3);
+      const d = random(c + 1, b - 1);
+      const probability = (d - c) / width;
+      return {
+        badge: "models",
+        equation: '<span class="math-line">X ~ U(' + a + ', ' + b + ').</span><span class="math-line">Find P(' + c + ' < X < ' + d + ').</span>',
+        answer: frac(d - c, width),
+        steps: [
+          '<span class="step-indicator">Guide</span> For a uniform distribution, probability is interval length divided by total length.',
+          "Total length = " + b + " - " + a + " = " + width + ".",
+          "Required interval length = " + d + " - " + c + " = " + (d - c) + ".",
+          "P(" + c + " < X < " + d + ") = " + (d - c) + "/" + width + ".",
+          '<span class="step-arrow">-></span> P = ' + frac(d - c, width) + " ≈ " + fmt(probability)
+        ]
+      };
+    }
+
+    function genUniformSummary() {
+      const a = randomElement([0, 2, 5, 10]);
+      const width = randomElement([6, 8, 10, 12]);
+      const b = a + width;
+      const mean = (a + b) / 2;
+      const variance = sq(width) / 12;
+      return {
+        badge: "models",
+        equation: '<span class="math-line">X ~ U(' + a + ', ' + b + ').</span><span class="math-line">Find E(X), Var(X), and the standard deviation.</span>',
+        answer: "E(X) = " + fmtTrim(mean) + ", Var(X) = " + frac(sq(width), 12),
+        steps: [
+          '<span class="step-indicator">Guide</span> For X ~ U(a,b), E(X) = (a+b)/2.',
+          "E(X) = (" + a + " + " + b + ")/2 = " + fmtTrim(mean) + ".",
+          '<span class="step-indicator">Guide</span> For X ~ U(a,b), Var(X) = (b-a)²/12.',
+          "Var(X) = (" + b + " - " + a + ")²/12 = " + sq(width) + "/12 = " + frac(sq(width), 12) + ".",
+          "SD(X) = sqrt(" + frac(sq(width), 12) + ") ≈ " + fmt(Math.sqrt(variance)) + ".",
+          '<span class="step-arrow">-></span> E(X) = ' + fmtTrim(mean) + ", Var(X) = " + frac(sq(width), 12)
+        ]
+      };
+    }
+
+    function genExponentialProbability() {
+      const lambda = randomElement([0.1, 0.2, 0.25, 0.4, 0.5]);
+      const t = randomElement([2, 3, 4, 5, 6]);
+      const rightTail = Math.random() < 0.5;
+      const probability = rightTail ? Math.exp(-lambda * t) : 1 - Math.exp(-lambda * t);
+      const eventText = rightTail ? "P(X > " + t + ")" : "P(X < " + t + ")";
+      return {
+        badge: "models",
+        equation: '<span class="math-line">X has an exponential distribution with rate λ = ' + lambda + '.</span><span class="math-line">Find ' + eventText + '.</span>',
+        answer: fmt(probability),
+        steps: [
+          '<span class="step-indicator">Guide</span> For X ~ Exp(λ), P(X > t) = e^(-λt).',
+          "P(X > " + t + ") = e^(-" + lambda + " × " + t + ") = " + fmt(Math.exp(-lambda * t)) + ".",
+          rightTail ? "This is already the required probability." : "P(X < " + t + ") = 1 - P(X > " + t + ").",
+          rightTail ? '<span class="step-arrow">-></span> ' + fmt(probability) : "P(X < " + t + ") = 1 - " + fmt(Math.exp(-lambda * t)) + " = " + fmt(probability) + ".",
+          !rightTail ? '<span class="step-arrow">-></span> ' + fmt(probability) : ""
+        ].filter(Boolean)
+      };
+    }
+
+    function genExponentialParameter() {
+      const lambda = randomElement([0.1, 0.2, 0.25, 0.4, 0.5]);
+      const t = randomElement([2, 3, 4, 5, 6]);
+      const survival = Math.exp(-lambda * t);
+      return {
+        badge: "models",
+        equation: '<span class="math-line">X ~ Exp(λ) and P(X > ' + t + ') = ' + fmt(survival) + '.</span><span class="math-line">Find λ.</span>',
+        answer: "λ ≈ " + fmt(lambda),
+        steps: [
+          '<span class="step-indicator">Guide</span> Use the exponential survival function.',
+          "P(X > t) = e^(-λt).",
+          "e^(-" + t + "λ) = " + fmt(survival) + ".",
+          '<span class="step-indicator">Guide</span> Take natural logarithms.',
+          "-" + t + "λ = ln(" + fmt(survival) + ").",
+          "λ = -ln(" + fmt(survival) + ")/" + t + ".",
+          '<span class="step-arrow">-></span> λ ≈ ' + fmt(lambda)
+        ]
+      };
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index + 1 === level));
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + config.options.map(([value, label]) => '<option value="' + value + '">' + label + "</option>").join("");
+      dropdown.value = "select";
+      document.getElementById("dropdown-container").classList.add("visible");
+      showBlankPage();
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(document.body), 0);
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function showBlankPage() {
+      const header = document.getElementById("problem-set-header");
+      header.classList.remove("visible");
+      document.getElementById("problem-list").innerHTML = '<li style="grid-column:1/-1;text-align:center;padding:40px;color:#718096;font-size:1.1em;">Please select a question type to begin practising continuous random variables.</li>';
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      for (let i = 0; i < 5; i++) problems.push(generateProblem());
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const container = document.getElementById("problem-list");
+      const header = document.getElementById("problem-set-header");
+      container.innerHTML = "";
+      if (problems.length) {
+        header.textContent = problems[0].badge === "density" ? "DENSITY & CDF PRACTICE" : problems[0].badge === "expectation" ? "EXPECTATION & VARIANCE PRACTICE" : "CONTINUOUS MODEL PRACTICE";
+        header.className = "problem-set-header visible " + problems[0].badge;
+      } else {
+        header.classList.remove("visible");
+      }
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        const stepsHTML = problem.steps.map((step) => step.indexOf("->") !== -1 || step.indexOf("=") !== -1 || step.indexOf("∫") !== -1 ? '<div class="step-equation">' + step + "</div>" : '<div class="step">' + step + "</div>").join("");
+        li.innerHTML =
+          '<div class="problem-header"><div class="problem-left"><div class="problem-number">' + (index + 1) + '</div><div class="equation">' + problem.equation + '</div></div><div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div></div><div class="steps-section" id="steps-' + index + '"><div class="answer-label">Worked Solution:</div><div class="solution-steps" data-kaizen-step-structured="true">' + stepsHTML + '<div class="final-answer">' + problem.answer + "</div></div></div>";
+        container.appendChild(li);
+      });
+      if (window.renderMathInElement) window.renderMathInElement(container);
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const answer = document.getElementById("quick-answer-" + i);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      }
+      if (window.renderMathInElement) window.renderMathInElement(document.getElementById("problem-list"));
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      for (let i = 0; i < problems.length; i++) {
+        const section = document.getElementById("steps-" + i);
+        if (section) section.classList.toggle("visible", stepsVisible);
+      }
+      if (window.renderMathInElement) window.renderMathInElement(document.getElementById("problem-list"));
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerActive = false;
+      document.getElementById("timer-display").textContent = "Ready";
+      document.getElementById("timer-display").className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const element = document.getElementById("timer-display");
+      element.textContent = minutes + ":" + String(seconds).padStart(2, "0");
+      if (timeRemaining <= 30) element.className = "timer-display warning";
+      else if (timerActive) element.className = "timer-display active";
+      else element.className = "timer-display";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      document.getElementById("timer-display").textContent = "Time Up!";
+      document.getElementById("timer-display").className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-16"></script>
+</body>
+</html>
