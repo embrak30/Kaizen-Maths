@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equations of Motion Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden;color:#1a365d}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:white;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:700;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:white;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:white;padding:20px;font-size:1.3em;font-weight:700}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1260px;margin:0 auto;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;color:white;padding:24px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header h1{font-size:2.15em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:17px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:800;transition:.3s;border-bottom:3px solid transparent;color:#1a365d}.tab:hover{background:#cbd5e0}.tab.active{background:white;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px 24px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:1px solid #e2e8f0}.level-info{min-width:320px;flex:1}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.25em}.level-info p{color:#718096;font-size:.98em}.dropdown-container{margin-top:9px;display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:white;cursor:pointer;min-width:390px;max-width:100%;color:#1a365d}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:800;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
+    .problems-section{padding:18px 24px 24px;min-height:520px}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:700}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.basics{background:#3182ce}.problem-set-header.multistep{background:#38a169}.problem-set-header.vertical{background:#805ad5}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:10px}.problem-item{background:#f7fafc;padding:13px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.12em;color:#1a365d;font-weight:500;line-height:1.42;min-width:0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.96em;display:none;text-align:center;max-width:330px;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{grid-column:1/-1;margin-top:12px;padding:14px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:800;color:#38a169;margin-bottom:10px;font-size:1.08em}.solution-steps{font-size:1.07em;line-height:1.6}.step{margin:8px 0;color:#1a365d}.step-equation{font-weight:700;color:#805ad5;text-align:center;margin:10px 0;font-size:1.11em;overflow-x:auto}.final-answer{background:#38a169;color:white;padding:9px 15px;border-radius:7px;text-align:center;font-weight:bold;font-size:1.08em;margin-top:12px;overflow-x:auto}.step-indicator{background:#3182ce;color:white;padding:5px 9px;border-radius:5px;font-size:.86em;font-weight:bold;margin-right:8px;white-space:nowrap}.note{color:#718096;font-size:.92em}
+    .formula-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.formula-pill{background:#edf2f7;border:1px solid #cbd5e0;border-radius:999px;padding:6px 10px;font-weight:800;color:#1a365d}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
+    @media (max-width:900px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section,.action-buttons{justify-content:center;flex-wrap:wrap}.type-dropdown{min-width:0;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool generates practice on constant acceleration equations of motion, including direct SUVAT substitution, multi-step motion, and vertical motion under gravity.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Choose and use one equation of motion when four quantities are known.</li>
+        <li><strong>Level 2:</strong> Combine equations, interpret stopping problems, and handle two-stage journeys.</li>
+        <li><strong>Level 3:</strong> Use signs carefully for vertical motion under gravity, maximum height, time of flight, and speed at a height.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Encourage students to list the known SUVAT values before choosing an equation.</li>
+        <li>For vertical motion, state the positive direction before substituting values.</li>
+        <li>Distances are in metres, speeds in m/s, acceleration in m/s², and time in seconds unless stated otherwise.</li>
+      </ul>
+      <div class="formula-strip">
+        <span class="formula-pill">v = u + at</span>
+        <span class="formula-pill">s = ut + ½at²</span>
+        <span class="formula-pill">v² = u² + 2as</span>
+        <span class="formula-pill">s = ½(u + v)t</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header"><h1>Equations of Motion</h1></section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: SUVAT Basics</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Multi-Step Motion</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Vertical Motion</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: SUVAT Basics</h3>
+        <p id="level-description">Use one equation of motion when four quantities are known.</p>
+        <div class="dropdown-container" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div class="set-instruction" id="set-instruction">Choose a question type to practise equations of motion.</div>
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: SUVAT Basics",
+        description: "Use one equation of motion when four quantities are known.",
+        instruction: "List the known values, choose a suitable equation of motion, substitute, and solve.",
+        className: "basics",
+        options: [
+          ["find_v", "Find final velocity"],
+          ["find_s", "Find displacement"],
+          ["find_a", "Find acceleration"],
+          ["find_t", "Find time"],
+          ["mixed_basics", "Mixed SUVAT basics"]
+        ]
+      },
+      2: {
+        title: "Level 2: Multi-Step Motion",
+        description: "Use equations of motion in stopping, distance, and two-stage motion problems.",
+        instruction: "Decide which quantities are known, choose the equation that avoids unnecessary unknowns, and check units.",
+        className: "multistep",
+        options: [
+          ["stopping_distance", "Stopping distance"],
+          ["speed_from_distance", "Speed from distance"],
+          ["two_stage_motion", "Two-stage journey"],
+          ["average_velocity", "Using average velocity"],
+          ["mixed_multistep", "Mixed multi-step motion"]
+        ]
+      },
+      3: {
+        title: "Level 3: Vertical Motion",
+        description: "Use equations of motion for particles moving vertically under gravity.",
+        instruction: "Take upward as positive unless the question states otherwise, so acceleration is -9.8 m/s².",
+        className: "vertical",
+        options: [
+          ["time_to_top", "Time to maximum height"],
+          ["maximum_height", "Maximum height"],
+          ["height_after_time", "Height after a given time"],
+          ["speed_at_height", "Speed at a given height"],
+          ["mixed_vertical", "Mixed vertical motion"]
+        ]
+      }
+    };
+
+    const typeDisplayNames = {
+      find_v: "Find final velocity",
+      find_s: "Find displacement",
+      find_a: "Find acceleration",
+      find_t: "Find time",
+      mixed_basics: "Mixed SUVAT basics",
+      stopping_distance: "Stopping distance",
+      speed_from_distance: "Speed from distance",
+      two_stage_motion: "Two-stage journey",
+      average_velocity: "Using average velocity",
+      mixed_multistep: "Mixed multi-step motion",
+      time_to_top: "Time to maximum height",
+      maximum_height: "Maximum height",
+      height_after_time: "Height after a given time",
+      speed_at_height: "Speed at a given height",
+      mixed_vertical: "Mixed vertical motion"
+    };
+
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function choice(items) { return items[rand(0, items.length - 1)]; }
+    function fmt(value, dp = 2) {
+      const n = Number(value);
+      if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+      return n.toFixed(dp).replace(/\.?0+$/, "");
+    }
+    function signed(value, dp = 2) {
+      return value < 0 ? " - " + fmt(Math.abs(value), dp) : " + " + fmt(value, dp);
+    }
+    function step(text) { return { type: "text", text }; }
+    function calc(text) { return { type: "calc", text }; }
+    function answerLine(text) { return { type: "calc", text: '<span class="step-indicator">Answer</span> ' + text }; }
+    function square(value) { return fmt(value * value, 3); }
+
+    function cleanQuestionText(problem) {
+      return problem.equation.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, 220);
+    }
+
+    function signatureFor(problem) {
+      return currentType + "|" + cleanQuestionText(problem);
+    }
+
+    function generateUniqueProblem(used) {
+      for (let attempt = 0; attempt < 80; attempt++) {
+        const problem = generateProblem();
+        const signature = signatureFor(problem);
+        if (!used.has(signature)) {
+          used.add(signature);
+          return problem;
+        }
+      }
+      return generateProblem();
+    }
+
+    function dataBasic() {
+      const u = rand(2, 18);
+      const a = choice([2, 3, 4, 5, 6]);
+      const t = rand(3, 9);
+      const v = u + a * t;
+      const s = u * t + 0.5 * a * t * t;
+      return { u, a, t, v, s };
+    }
+
+    function genFindV() {
+      const d = dataBasic();
+      return {
+        badge: "basics",
+        equation: "A particle starts with speed " + d.u + " m/s and accelerates at " + d.a + " m/s² for " + d.t + " s. Find its final velocity.",
+        answer: "v = " + d.v + " m/s",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> List the known values.'),
+          calc("u = " + d.u + " m/s, a = " + d.a + " m/s², t = " + d.t + " s, v = ?"),
+          step('<span class="step-indicator">Step 2</span> Choose the equation containing u, a, t and v.'),
+          calc("v = u + at"),
+          step('<span class="step-indicator">Step 3</span> Substitute the values.'),
+          calc("v = " + d.u + " + " + d.a + " × " + d.t),
+          calc("v = " + d.u + " + " + (d.a * d.t) + " = " + d.v),
+          answerLine("The final velocity is " + d.v + " m/s.")
+        ]
+      };
+    }
+
+    function genFindS() {
+      const d = dataBasic();
+      return {
+        badge: "basics",
+        equation: "A particle has initial velocity " + d.u + " m/s and acceleration " + d.a + " m/s². Find the displacement after " + d.t + " s.",
+        answer: "s = " + fmt(d.s) + " m",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> List the known values.'),
+          calc("u = " + d.u + " m/s, a = " + d.a + " m/s², t = " + d.t + " s, s = ?"),
+          step('<span class="step-indicator">Step 2</span> Choose the equation containing s, u, a and t.'),
+          calc("s = ut + ½at²"),
+          step('<span class="step-indicator">Step 3</span> Substitute and calculate each part.'),
+          calc("s = " + d.u + " × " + d.t + " + ½ × " + d.a + " × " + d.t + "²"),
+          calc("s = " + (d.u * d.t) + " + " + fmt(0.5 * d.a * d.t * d.t) + " = " + fmt(d.s)),
+          answerLine("The displacement is " + fmt(d.s) + " m.")
+        ]
+      };
+    }
+
+    function genFindA() {
+      const u = rand(4, 15);
+      const a = choice([2, 3, 4, 5, 6]);
+      const t = rand(3, 8);
+      const v = u + a * t;
+      return {
+        badge: "basics",
+        equation: "A particle's velocity increases from " + u + " m/s to " + v + " m/s in " + t + " s. Find its acceleration.",
+        answer: "a = " + a + " m/s²",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> List the known values.'),
+          calc("u = " + u + " m/s, v = " + v + " m/s, t = " + t + " s, a = ?"),
+          step('<span class="step-indicator">Step 2</span> Start with v = u + at and rearrange.'),
+          calc("v - u = at"),
+          calc("a = (v - u) ÷ t"),
+          step('<span class="step-indicator">Step 3</span> Substitute the values.'),
+          calc("a = (" + v + " - " + u + ") ÷ " + t),
+          calc("a = " + (v - u) + " ÷ " + t + " = " + a),
+          answerLine("The acceleration is " + a + " m/s².")
+        ]
+      };
+    }
+
+    function genFindT() {
+      const u = rand(3, 14);
+      const a = choice([2, 3, 4, 5]);
+      const t = rand(4, 10);
+      const v = u + a * t;
+      return {
+        badge: "basics",
+        equation: "A particle accelerates uniformly from " + u + " m/s to " + v + " m/s at " + a + " m/s². Find the time taken.",
+        answer: "t = " + t + " s",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> List the known values.'),
+          calc("u = " + u + " m/s, v = " + v + " m/s, a = " + a + " m/s², t = ?"),
+          step('<span class="step-indicator">Step 2</span> Start with v = u + at and rearrange.'),
+          calc("v - u = at"),
+          calc("t = (v - u) ÷ a"),
+          step('<span class="step-indicator">Step 3</span> Substitute the values.'),
+          calc("t = (" + v + " - " + u + ") ÷ " + a),
+          calc("t = " + (v - u) + " ÷ " + a + " = " + t),
+          answerLine("The time taken is " + t + " s.")
+        ]
+      };
+    }
+
+    function genStoppingDistance() {
+      const u = choice([12, 14, 16, 18, 20, 24, 28, 30]);
+      const decel = choice([2, 3, 4, 5, 6]);
+      const s = (u * u) / (2 * decel);
+      return {
+        badge: "multistep",
+        equation: "A car moving at " + u + " m/s brakes with constant deceleration " + decel + " m/s² until it stops. Find the stopping distance.",
+        answer: "s = " + fmt(s) + " m",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Choose a positive direction and list the known values.'),
+          calc("u = " + u + " m/s, v = 0 m/s, a = -" + decel + " m/s², s = ?"),
+          step('<span class="step-indicator">Step 2</span> Choose the equation without time.'),
+          calc("v² = u² + 2as"),
+          step('<span class="step-indicator">Step 3</span> Substitute and solve for s.'),
+          calc("0² = " + u + "² + 2 × (-" + decel + ") × s"),
+          calc("0 = " + (u * u) + " - " + (2 * decel) + "s"),
+          calc((2 * decel) + "s = " + (u * u)),
+          calc("s = " + (u * u) + " ÷ " + (2 * decel) + " = " + fmt(s)),
+          answerLine("The stopping distance is " + fmt(s) + " m.")
+        ]
+      };
+    }
+
+    function genSpeedFromDistance() {
+      const u = rand(4, 12);
+      const a = choice([2, 3, 4, 5]);
+      const t = rand(4, 8);
+      const v = u + a * t;
+      const s = u * t + 0.5 * a * t * t;
+      return {
+        badge: "multistep",
+        equation: "A particle starts at " + u + " m/s and accelerates uniformly at " + a + " m/s² over a displacement of " + fmt(s) + " m. Find its final speed.",
+        answer: "v = " + v + " m/s",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> List the known values.'),
+          calc("u = " + u + " m/s, a = " + a + " m/s², s = " + fmt(s) + " m, v = ?"),
+          step('<span class="step-indicator">Step 2</span> Choose the equation without time.'),
+          calc("v² = u² + 2as"),
+          step('<span class="step-indicator">Step 3</span> Substitute the values.'),
+          calc("v² = " + u + "² + 2 × " + a + " × " + fmt(s)),
+          calc("v² = " + (u * u) + " + " + fmt(2 * a * s) + " = " + (v * v)),
+          calc("v = √" + (v * v) + " = " + v),
+          answerLine("The final speed is " + v + " m/s.")
+        ]
+      };
+    }
+
+    function genTwoStageMotion() {
+      const u = rand(3, 10);
+      const a = choice([2, 3, 4]);
+      const t1 = rand(3, 6);
+      const t2 = rand(4, 8);
+      const v = u + a * t1;
+      const s1 = u * t1 + 0.5 * a * t1 * t1;
+      const s2 = v * t2;
+      const total = s1 + s2;
+      return {
+        badge: "multistep",
+        equation: "A cyclist starts at " + u + " m/s and accelerates at " + a + " m/s² for " + t1 + " s. The cyclist then continues at the new constant speed for " + t2 + " s. Find the total distance travelled.",
+        answer: "total distance = " + fmt(total) + " m",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Find the speed after the acceleration stage.'),
+          calc("v = u + at = " + u + " + " + a + " × " + t1 + " = " + v + " m/s"),
+          step('<span class="step-indicator">Step 2</span> Find the distance during the acceleration stage.'),
+          calc("s₁ = ut + ½at²"),
+          calc("s₁ = " + u + " × " + t1 + " + ½ × " + a + " × " + t1 + "² = " + fmt(s1) + " m"),
+          step('<span class="step-indicator">Step 3</span> Find the distance during the constant speed stage.'),
+          calc("s₂ = vt = " + v + " × " + t2 + " = " + fmt(s2) + " m"),
+          step('<span class="step-indicator">Step 4</span> Add the two distances.'),
+          calc("total distance = " + fmt(s1) + " + " + fmt(s2) + " = " + fmt(total)),
+          answerLine("The total distance travelled is " + fmt(total) + " m.")
+        ]
+      };
+    }
+
+    function genAverageVelocity() {
+      const u = rand(4, 14);
+      const v = u + choice([8, 10, 12, 14, 16]);
+      const t = rand(5, 12);
+      const s = 0.5 * (u + v) * t;
+      return {
+        badge: "multistep",
+        equation: "A particle accelerates uniformly from " + u + " m/s to " + v + " m/s in " + t + " s. Use average velocity to find the displacement.",
+        answer: "s = " + fmt(s) + " m",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> For constant acceleration, average velocity is the mean of initial and final velocity.'),
+          calc("average velocity = ½(u + v)"),
+          calc("average velocity = ½(" + u + " + " + v + ") = " + fmt((u + v) / 2) + " m/s"),
+          step('<span class="step-indicator">Step 2</span> Multiply average velocity by time.'),
+          calc("s = average velocity × time"),
+          calc("s = " + fmt((u + v) / 2) + " × " + t + " = " + fmt(s)),
+          answerLine("The displacement is " + fmt(s) + " m.")
+        ]
+      };
+    }
+
+    function verticalData() {
+      const u = choice([14, 16, 18, 19.6, 21, 24.5, 28, 29.4]);
+      const g = 9.8;
+      return { u, g };
+    }
+
+    function genTimeToTop() {
+      const d = verticalData();
+      const t = d.u / d.g;
+      return {
+        badge: "vertical",
+        equation: "A particle is projected vertically upwards with initial speed " + fmt(d.u) + " m/s. Find the time taken to reach its greatest height. Take g = 9.8 m/s².",
+        answer: "t = " + fmt(t, 2) + " s",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Take upward as positive and list the known values.'),
+          calc("u = " + fmt(d.u) + " m/s, v = 0 m/s at the greatest height, a = -9.8 m/s², t = ?"),
+          step('<span class="step-indicator">Step 2</span> Use v = u + at.'),
+          calc("0 = " + fmt(d.u) + " - 9.8t"),
+          calc("9.8t = " + fmt(d.u)),
+          calc("t = " + fmt(d.u) + " ÷ 9.8 = " + fmt(t, 2)),
+          answerLine("The time to greatest height is " + fmt(t, 2) + " s.")
+        ]
+      };
+    }
+
+    function genMaximumHeight() {
+      const d = verticalData();
+      const h = (d.u * d.u) / (2 * d.g);
+      return {
+        badge: "vertical",
+        equation: "A ball is thrown vertically upwards with speed " + fmt(d.u) + " m/s. Find the greatest height above the point of projection. Take g = 9.8 m/s².",
+        answer: "height = " + fmt(h, 2) + " m",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Take upward as positive and list the known values.'),
+          calc("u = " + fmt(d.u) + " m/s, v = 0 m/s at the greatest height, a = -9.8 m/s², s = ?"),
+          step('<span class="step-indicator">Step 2</span> Choose the equation without time.'),
+          calc("v² = u² + 2as"),
+          step('<span class="step-indicator">Step 3</span> Substitute and solve for s.'),
+          calc("0² = " + fmt(d.u) + "² + 2 × (-9.8) × s"),
+          calc("0 = " + square(d.u) + " - 19.6s"),
+          calc("19.6s = " + square(d.u)),
+          calc("s = " + square(d.u) + " ÷ 19.6 = " + fmt(h, 2)),
+          answerLine("The greatest height is " + fmt(h, 2) + " m.")
+        ]
+      };
+    }
+
+    function genHeightAfterTime() {
+      const d = verticalData();
+      const maxT = Math.max(1, Math.floor((2 * d.u / d.g) - 1));
+      const t = rand(1, Math.min(4, maxT));
+      const h = d.u * t - 0.5 * d.g * t * t;
+      return {
+        badge: "vertical",
+        equation: "A particle is projected vertically upwards with speed " + fmt(d.u) + " m/s. Find its height above the point of projection after " + t + " s. Take g = 9.8 m/s².",
+        answer: "height = " + fmt(h, 2) + " m",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Take upward as positive and list the known values.'),
+          calc("u = " + fmt(d.u) + " m/s, a = -9.8 m/s², t = " + t + " s, s = ?"),
+          step('<span class="step-indicator">Step 2</span> Use s = ut + ½at².'),
+          calc("s = " + fmt(d.u) + " × " + t + " + ½ × (-9.8) × " + t + "²"),
+          calc("s = " + fmt(d.u * t) + " - " + fmt(4.9 * t * t) + " = " + fmt(h, 2)),
+          answerLine("The height is " + fmt(h, 2) + " m above the point of projection.")
+        ]
+      };
+    }
+
+    function genSpeedAtHeight() {
+      const d = verticalData();
+      const maxHeight = (d.u * d.u) / (2 * d.g);
+      const height = Math.max(2, Math.floor(maxHeight * choice([0.25, 0.35, 0.5, 0.6])));
+      const v2 = d.u * d.u - 2 * d.g * height;
+      const speed = Math.sqrt(v2);
+      return {
+        badge: "vertical",
+        equation: "A ball is projected vertically upwards with speed " + fmt(d.u) + " m/s. Find its speed when it is " + height + " m above the point of projection. Take g = 9.8 m/s².",
+        answer: "speed = " + fmt(speed, 2) + " m/s",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Take upward as positive and list the known values.'),
+          calc("u = " + fmt(d.u) + " m/s, a = -9.8 m/s², s = " + height + " m, v = ?"),
+          step('<span class="step-indicator">Step 2</span> Choose the equation without time.'),
+          calc("v² = u² + 2as"),
+          step('<span class="step-indicator">Step 3</span> Substitute the values.'),
+          calc("v² = " + fmt(d.u) + "² + 2 × (-9.8) × " + height),
+          calc("v² = " + square(d.u) + " - " + fmt(19.6 * height) + " = " + fmt(v2, 2)),
+          calc("|v| = √" + fmt(v2, 2) + " = " + fmt(speed, 2)),
+          answerLine("The speed is " + fmt(speed, 2) + " m/s. The velocity could be upward or downward at that height.")
+        ]
+      };
+    }
+
+    function generateProblem() {
+      let type = currentType;
+      if (type === "mixed_basics") type = choice(["find_v", "find_s", "find_a", "find_t"]);
+      if (type === "mixed_multistep") type = choice(["stopping_distance", "speed_from_distance", "two_stage_motion", "average_velocity"]);
+      if (type === "mixed_vertical") type = choice(["time_to_top", "maximum_height", "height_after_time", "speed_at_height"]);
+      switch (type) {
+        case "find_v": return genFindV();
+        case "find_s": return genFindS();
+        case "find_a": return genFindA();
+        case "find_t": return genFindT();
+        case "stopping_distance": return genStoppingDistance();
+        case "speed_from_distance": return genSpeedFromDistance();
+        case "two_stage_motion": return genTwoStageMotion();
+        case "average_velocity": return genAverageVelocity();
+        case "time_to_top": return genTimeToTop();
+        case "maximum_height": return genMaximumHeight();
+        case "height_after_time": return genHeightAfterTime();
+        case "speed_at_height": return genSpeedAtHeight();
+        default: return genFindV();
+      }
+    }
+
+    function problemCountForType() {
+      return 5;
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index + 1 === level));
+      const cfg = levelConfigs[level];
+      document.getElementById("level-title").textContent = cfg.title;
+      document.getElementById("level-description").textContent = cfg.description;
+      document.getElementById("set-instruction").textContent = cfg.instruction;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + cfg.options.map(([value, label]) => '<option value="' + value + '">' + label + '</option>').join("");
+      document.getElementById("problem-set-header").className = "problem-set-header " + cfg.className;
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      document.getElementById("set-instruction").textContent = levelConfigs[currentLevel].instruction;
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function showBlankPage() {
+      document.getElementById("problem-set-header").className = "problem-set-header " + levelConfigs[currentLevel].className;
+      document.getElementById("problem-set-header").classList.remove("visible");
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center;padding:40px;color:#718096;font-size:1.08em">Please select a question type to begin equations of motion practice.</li>';
+      renderMath();
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") { showBlankPage(); return; }
+      answersVisible = false;
+      stepsVisible = false;
+      problems = [];
+      const usedSignatures = new Set();
+      const count = problemCountForType();
+      for (let i = 0; i < count; i++) problems.push(generateUniqueProblem(usedSignatures));
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const header = document.getElementById("problem-set-header");
+      header.className = "problem-set-header visible " + levelConfigs[currentLevel].className;
+      header.textContent = typeDisplayNames[currentType] || "Practice Set";
+      const container = document.getElementById("problem-list");
+      container.innerHTML = "";
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        const steps = problem.steps.map((s) => {
+          const cls = s.type === "calc" ? "step-equation" : "step";
+          return '<div class="' + cls + '">' + s.text + "</div>";
+        }).join("");
+        li.innerHTML =
+          '<div class="problem-header">' +
+            '<div class="problem-left">' +
+              '<div class="problem-number">' + (index + 1) + '</div>' +
+              '<div class="equation">' + problem.equation + '</div>' +
+            '</div>' +
+            '<div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div>' +
+          '</div>' +
+          '<div class="steps-section" id="steps-' + index + '">' +
+            '<div class="answer-label">Worked solution:</div>' +
+            '<div class="solution-steps" data-kaizen-step-structured="true">' + steps + '<div class="final-answer">' + problem.answer + '</div></div>' +
+          '</div>';
+        container.appendChild(li);
+      });
+      renderMath();
+    }
+
+    function renderMath() {
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(document.getElementById("problem-list")), 0);
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      problems.forEach((_, index) => {
+        const answer = document.getElementById("quick-answer-" + index);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      });
+      renderMath();
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const steps = document.getElementById("steps-" + index);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      });
+      renderMath();
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById("timer-display");
+      display.textContent = minutes + ":" + String(seconds).padStart(2, "0");
+      display.className = timeRemaining <= 30 ? "timer-display warning" : "timer-display active";
+    }
+
+    function timerFinished() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Time Up!";
+      display.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-16"></script>
+</body>
+</html>

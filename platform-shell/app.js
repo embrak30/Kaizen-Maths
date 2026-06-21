@@ -788,6 +788,25 @@ const tools = [
     ]
   },
   {
+    slug: "equations-of-motion",
+    title: "Equations of Motion",
+    category: "Mechanics",
+    level: "A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate constant acceleration equations of motion practice covering SUVAT substitution, multi-step motion, stopping distance, and vertical motion under gravity.",
+    tags: ["mechanics", "kinematics", "equations of motion", "SUVAT", "constant acceleration", "vertical motion", "gravity", "stopping distance"],
+    toolPath: "tools/equations-of-motion/index.html?v=equations-of-motion-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on direct use of one equation of motion after listing the known SUVAT values.",
+      "Level 2 combines equations in stopping, distance, average velocity, and two-stage motion problems.",
+      "Level 3 covers vertical motion under gravity, including signs, greatest height, time to top, and speed at a height.",
+      "Worked steps emphasise choosing a positive direction, substituting values, and keeping units clear."
+    ]
+  },
+  {
     slug: "continuous-random-variables",
     title: "Continuous Random Variables",
     category: "Statistics",
@@ -4933,7 +4952,10 @@ function standardsForTool(tool) {
   const haystack = normalise([tool.title, tool.category, tool.level, allToolTags(tool).join(" "), tool.description].join(" "));
   const standards = [];
 
-  if (haystack.includes("statistics") || haystack.includes("probability") || haystack.includes("tree diagram")) {
+  if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion")) {
+    standards.push("England: A-Level Mathematics mechanics, including constant acceleration, SUVAT equations, modelling with units, and motion under gravity.");
+    standards.push("IB / international: Applications and interpretation links to kinematics, mathematical modelling, rates of change, and interpreting physical quantities.");
+  } else if (haystack.includes("statistics") || haystack.includes("probability") || haystack.includes("tree diagram")) {
     standards.push("Common Core: 7.SP, S-ID, S-CP probability, distributions, and interpreting data.");
     standards.push("England: KS3 probability and data; GCSE Statistics and probability, including expected outcomes where relevant.");
   } else if (haystack.includes("pythagoras") || haystack.includes("hypotenuse")) {
