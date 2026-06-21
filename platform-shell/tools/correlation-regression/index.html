@@ -226,7 +226,7 @@
 
     function rawTable(data, includeTotals = false, includeWorkingColumns = false) {
       const heads = includeWorkingColumns
-        ? ["Observation", "x", "y", "x^2", "xy"]
+        ? ["Observation", "x", "y", "x²", "xy"]
         : ["Observation", "x", "y"];
       let html = '<div class="data-table-wrap"><table class="data-table"><thead><tr>' + heads.map((h) => "<th>" + h + "</th>").join("") + "</tr></thead><tbody>";
       data.xValues.forEach((x, index) => {
@@ -248,9 +248,9 @@
         ["n", data.n],
         ["sum x", data.sumX],
         ["sum y", data.sumY],
-        ["sum x^2", data.sumXX],
+        ["sum x²", data.sumXX],
         ["sum xy", data.sumXY],
-        ["sum y^2", data.sumYY]
+        ["sum y²", data.sumYY]
       ];
       return '<div class="data-table-wrap"><table class="data-table"><tbody>' +
         rows.map((row) => "<tr><th>" + row[0] + "</th><td>" + row[1] + "</td></tr>").join("") +
@@ -267,33 +267,36 @@
       return strength + " " + direction;
     }
 
-    function lineText(data, dp = 3) {
-      return "\\hat{y} = " + fmt(data.a, dp) + signed(data.b, dp) + "x";
-    }
     function lineTextPlain(data, dp = 3) {
       const gradient = data.b < 0 ? " - " + fmt(Math.abs(data.b), dp) : " + " + fmt(data.b, dp);
       return "y-hat = " + fmt(data.a, dp) + gradient + "x";
+    }
+    function fracHtml(numerator, denominator) {
+      return '<span class="fraction"><span class="numerator">' + numerator + '</span><span class="denominator">' + denominator + '</span></span>';
+    }
+    function squareHtml(value) {
+      return value + "²";
     }
 
     function regressionSteps(data, includeR = false) {
       const steps = [
         step('<span class="step-indicator">Step 1</span> Find the summary values from the table.'),
-        calc("$\\sum x=" + data.sumX + "$, $\\sum y=" + data.sumY + "$, $\\sum x^2=" + data.sumXX + "$, $\\sum xy=" + data.sumXY + "$, $n=" + data.n + "$"),
+        calc("Σx = " + data.sumX + ", Σy = " + data.sumY + ", Σx² = " + data.sumXX + ", Σxy = " + data.sumXY + ", n = " + data.n),
         step('<span class="step-indicator">Step 2</span> Calculate x-bar, y-bar, Sxx and Sxy.'),
-        calc("$\\bar{x}=\\dfrac{" + data.sumX + "}{" + data.n + "}=" + fmt(data.xBar, 3) + "$"),
-        calc("$\\bar{y}=\\dfrac{" + data.sumY + "}{" + data.n + "}=" + fmt(data.yBar, 3) + "$"),
-        calc("$S_{xx}=\\sum x^2-\\dfrac{(\\sum x)^2}{n}=" + data.sumXX + "-\\dfrac{" + data.sumX + "^2}{" + data.n + "}=" + fmt(data.sxx, 3) + "$"),
-        calc("$S_{xy}=\\sum xy-\\dfrac{(\\sum x)(\\sum y)}{n}=" + data.sumXY + "-\\dfrac{" + data.sumX + "\\times" + data.sumY + "}{" + data.n + "}=" + fmt(data.sxy, 3) + "$"),
+        calc("x-bar = " + fracHtml(data.sumX, data.n) + " = " + fmt(data.xBar, 3)),
+        calc("y-bar = " + fracHtml(data.sumY, data.n) + " = " + fmt(data.yBar, 3)),
+        calc("Sxx = Σx² - " + fracHtml("(Σx)²", "n") + " = " + data.sumXX + " - " + fracHtml(squareHtml(data.sumX), data.n) + " = " + fmt(data.sxx, 3)),
+        calc("Sxy = Σxy - " + fracHtml("(Σx)(Σy)", "n") + " = " + data.sumXY + " - " + fracHtml(data.sumX + " × " + data.sumY, data.n) + " = " + fmt(data.sxy, 3)),
         step('<span class="step-indicator">Step 3</span> Find the gradient and intercept of the regression line of y on x.'),
-        calc("$b=\\dfrac{S_{xy}}{S_{xx}}=\\dfrac{" + fmt(data.sxy, 3) + "}{" + fmt(data.sxx, 3) + "}=" + fmt(data.b, 3) + "$"),
-        calc("$a=\\bar{y}-b\\bar{x}=" + fmt(data.yBar, 3) + "-" + fmt(data.b, 3) + "\\times" + fmt(data.xBar, 3) + "=" + fmt(data.a, 3) + "$")
+        calc("b = " + fracHtml("Sxy", "Sxx") + " = " + fracHtml(fmt(data.sxy, 3), fmt(data.sxx, 3)) + " = " + fmt(data.b, 3)),
+        calc("a = y-bar - (b × x-bar) = " + fmt(data.yBar, 3) + " - (" + fmt(data.b, 3) + " × " + fmt(data.xBar, 3) + ") = " + fmt(data.a, 3))
       ];
       if (includeR) {
         steps.push(step('<span class="step-indicator">Step 4</span> Calculate the correlation coefficient.'));
-        steps.push(calc("$S_{yy}=\\sum y^2-\\dfrac{(\\sum y)^2}{n}=" + data.sumYY + "-\\dfrac{" + data.sumY + "^2}{" + data.n + "}=" + fmt(data.syy, 3) + "$"));
-        steps.push(calc("$r=\\dfrac{S_{xy}}{\\sqrt{S_{xx}S_{yy}}}=\\dfrac{" + fmt(data.sxy, 3) + "}{\\sqrt{" + fmt(data.sxx, 3) + "\\times" + fmt(data.syy, 3) + "}}=" + fmt(data.r, 3) + "$"));
+        steps.push(calc("Syy = Σy² - " + fracHtml("(Σy)²", "n") + " = " + data.sumYY + " - " + fracHtml(squareHtml(data.sumY), data.n) + " = " + fmt(data.syy, 3)));
+        steps.push(calc("r = " + fracHtml("Sxy", "√(Sxx × Syy)") + " = " + fracHtml(fmt(data.sxy, 3), "√(" + fmt(data.sxx, 3) + " × " + fmt(data.syy, 3) + ")") + " = " + fmt(data.r, 3)));
       }
-      steps.push(answerLine("$" + lineText(data) + "$"));
+      steps.push(answerLine(lineTextPlain(data)));
       return steps;
     }
 
@@ -305,9 +308,9 @@
         answer: strengthText(r) + " correlation",
         steps: [
           step('<span class="step-indicator">Step 1</span> Use the sign of r to decide the direction.'),
-          calc("$r=" + r + "$, so the relationship is " + (r >= 0 ? "positive" : "negative") + "."),
+          calc("r = " + r + ", so the relationship is " + (r >= 0 ? "positive" : "negative") + "."),
           step('<span class="step-indicator">Step 2</span> Use the absolute value of r to judge the strength.'),
-          calc("$|r|=" + Math.abs(r).toFixed(2) + "$, so the relationship is " + strengthText(r) + "."),
+          calc("|r| = " + Math.abs(r).toFixed(2) + ", so the relationship is " + strengthText(r) + "."),
           step('<span class="step-indicator">Step 3</span> State a limitation.'),
           answerLine("Correlation describes association; it does not prove causation.")
         ]
@@ -319,16 +322,16 @@
       return {
         badge: "correlation",
         equation: contextSentence(data) + " Calculate the product moment correlation coefficient and interpret it." + rawTable(data, true, true),
-        answer: "$r=" + fmt(data.r, 3) + "$",
+        answer: "r = " + fmt(data.r, 3),
         steps: [
           step('<span class="step-indicator">Step 1</span> Use the totals from the completed table.'),
-          calc("$\\sum x=" + data.sumX + "$, $\\sum y=" + data.sumY + "$, $\\sum x^2=" + data.sumXX + "$, $\\sum y^2=" + data.sumYY + "$, $\\sum xy=" + data.sumXY + "$"),
+          calc("Σx = " + data.sumX + ", Σy = " + data.sumY + ", Σx² = " + data.sumXX + ", Σy² = " + data.sumYY + ", Σxy = " + data.sumXY),
           step('<span class="step-indicator">Step 2</span> Calculate Sxx, Syy and Sxy.'),
-          calc("$S_{xx}=" + data.sumXX + "-\\dfrac{" + data.sumX + "^2}{" + data.n + "}=" + fmt(data.sxx, 3) + "$"),
-          calc("$S_{yy}=" + data.sumYY + "-\\dfrac{" + data.sumY + "^2}{" + data.n + "}=" + fmt(data.syy, 3) + "$"),
-          calc("$S_{xy}=" + data.sumXY + "-\\dfrac{" + data.sumX + "\\times" + data.sumY + "}{" + data.n + "}=" + fmt(data.sxy, 3) + "$"),
+          calc("Sxx = " + data.sumXX + " - " + fracHtml(squareHtml(data.sumX), data.n) + " = " + fmt(data.sxx, 3)),
+          calc("Syy = " + data.sumYY + " - " + fracHtml(squareHtml(data.sumY), data.n) + " = " + fmt(data.syy, 3)),
+          calc("Sxy = " + data.sumXY + " - " + fracHtml(data.sumX + " × " + data.sumY, data.n) + " = " + fmt(data.sxy, 3)),
           step('<span class="step-indicator">Step 3</span> Substitute into the PMCC formula.'),
-          calc("$r=\\dfrac{S_{xy}}{\\sqrt{S_{xx}S_{yy}}}=\\dfrac{" + fmt(data.sxy, 3) + "}{\\sqrt{" + fmt(data.sxx, 3) + "\\times" + fmt(data.syy, 3) + "}}=" + fmt(data.r, 3) + "$"),
+          calc("r = " + fracHtml("Sxy", "√(Sxx × Syy)") + " = " + fracHtml(fmt(data.sxy, 3), "√(" + fmt(data.sxx, 3) + " × " + fmt(data.syy, 3) + ")") + " = " + fmt(data.r, 3)),
           answerLine("This is " + strengthText(data.r) + " correlation in context.")
         ]
       };
@@ -342,9 +345,9 @@
         answer: strengthText(data.r) + " correlation",
         steps: [
           step('<span class="step-indicator">Step 1</span> The sign tells the direction.'),
-          calc("$r=" + fmt(data.r, 3) + "$ is " + (data.r >= 0 ? "positive" : "negative") + "."),
+          calc("r = " + fmt(data.r, 3) + " is " + (data.r >= 0 ? "positive" : "negative") + "."),
           step('<span class="step-indicator">Step 2</span> The size tells the strength.'),
-          calc("$|r|=" + fmt(Math.abs(data.r), 3) + "$, so this is " + strengthText(data.r) + " correlation."),
+          calc("|r| = " + fmt(Math.abs(data.r), 3) + ", so this is " + strengthText(data.r) + " correlation."),
           step('<span class="step-indicator">Step 3</span> Put this into the context of the variables.'),
           answerLine("As " + data.x + " increases, " + data.y + " tends to " + (data.r >= 0 ? "increase" : "decrease") + ".")
         ]
@@ -356,7 +359,7 @@
       return {
         badge: "regression",
         equation: contextSentence(data) + " Find the least-squares regression line of y on x." + rawTable(data, true, true),
-        answer: "$" + lineText(data) + "$",
+        answer: lineTextPlain(data),
         steps: regressionSteps(data)
       };
     }
@@ -366,7 +369,7 @@
       return {
         badge: "regression",
         equation: "For a data set comparing " + data.x + " and " + data.y + ", the summary statistics are given below. Find the regression line of y on x." + summaryTable(data),
-        answer: "$" + lineText(data) + "$",
+        answer: lineTextPlain(data),
         steps: regressionSteps(data)
       };
     }
@@ -379,7 +382,7 @@
         answer: "Gradient: " + fmt(data.b, 3),
         steps: [
           step('<span class="step-indicator">Step 1</span> Identify the gradient and intercept.'),
-          calc("$a=" + fmt(data.a, 3) + "$ and $b=" + fmt(data.b, 3) + "$ in $\\hat{y}=a+bx$."),
+          calc("a = " + fmt(data.a, 3) + " and b = " + fmt(data.b, 3) + " in y-hat = a + bx."),
           step('<span class="step-indicator">Step 2</span> Interpret the gradient.'),
           calc("For each increase of 1 " + data.xUnit + " in " + data.x + ", the predicted " + data.y + " changes by about " + fmt(data.b, 3) + " " + data.yUnit + "."),
           step('<span class="step-indicator">Step 3</span> Interpret the intercept cautiously.'),
@@ -395,12 +398,12 @@
       return {
         badge: "prediction",
         equation: contextSentence(data) + " Find the regression line of y on x, then estimate " + data.y + " when " + data.x + " is " + x0 + " " + data.xUnit + ". State whether this is interpolation or extrapolation." + rawTable(data, true, true),
-        answer: "$\\hat{y}=" + fmt(pred, 2) + "$",
+        answer: "y-hat = " + fmt(pred, 2),
         steps: regressionSteps(data).concat([
           step('<span class="step-indicator">Prediction</span> Substitute the given x value into the regression line.'),
-          calc("$\\hat{y}=" + fmt(data.a, 3) + signed(data.b, 3) + "\\times" + x0 + "=" + fmt(pred, 2) + "$"),
+          calc("y-hat = " + fmt(data.a, 3) + signed(data.b, 3) + " × " + x0 + " = " + fmt(pred, 2)),
           step('<span class="step-indicator">Reliability</span> Compare the given x value with the observed range.'),
-          calc("Observed range: " + data.minX + " <= x <= " + data.maxX + ". Since " + x0 + " is inside this range, this is interpolation."),
+          calc("Observed range: " + data.minX + " ≤ x ≤ " + data.maxX + ". Since " + x0 + " is inside this range, this is interpolation."),
           answerLine("Estimated " + data.y + " is " + fmt(pred, 2) + " " + data.yUnit + ".")
         ])
       };
@@ -413,12 +416,12 @@
       return {
         badge: "prediction",
         equation: "For " + data.x + " and " + data.y + ", the regression line is " + lineTextPlain(data) + ". The observed x values were between " + data.minX + " and " + data.maxX + ". Estimate " + data.y + " when " + data.x + " is " + x0 + " " + data.xUnit + ", and comment on reliability.",
-        answer: "$\\hat{y}=" + fmt(pred, 2) + "$",
+        answer: "y-hat = " + fmt(pred, 2),
         steps: [
           step('<span class="step-indicator">Step 1</span> Substitute the given value into the regression line.'),
-          calc("$\\hat{y}=" + fmt(data.a, 3) + signed(data.b, 3) + "\\times" + x0 + "=" + fmt(pred, 2) + "$"),
+          calc("y-hat = " + fmt(data.a, 3) + signed(data.b, 3) + " × " + x0 + " = " + fmt(pred, 2)),
           step('<span class="step-indicator">Step 2</span> Check the observed range of x.'),
-          calc("Observed range: " + data.minX + " <= x <= " + data.maxX + ". The value " + x0 + " is outside this range."),
+          calc("Observed range: " + data.minX + " ≤ x ≤ " + data.maxX + ". The value " + x0 + " is outside this range."),
           answerLine("This is extrapolation, so the prediction may be unreliable.")
         ]
       };
@@ -437,9 +440,9 @@
         answer: "Residual = " + fmt(residual, 2),
         steps: [
           step('<span class="step-indicator">Step 1</span> Use the regression line to calculate the predicted value.'),
-          calc("$\\hat{y}=" + fmt(data.a, 3) + signed(data.b, 3) + "\\times" + x0 + "=" + fmt(predicted, 2) + "$"),
+          calc("y-hat = " + fmt(data.a, 3) + signed(data.b, 3) + " × " + x0 + " = " + fmt(predicted, 2)),
           step('<span class="step-indicator">Step 2</span> Use residual = observed value - predicted value.'),
-          calc("Observed $y=" + observed + "$, so residual $=" + observed + "-" + fmt(predicted, 2) + "=" + fmt(residual, 2) + "$"),
+          calc("Observed y = " + observed + ", so residual = " + observed + " - " + fmt(predicted, 2) + " = " + fmt(residual, 2)),
           answerLine("The residual is " + fmt(residual, 2) + " " + data.yUnit + ".")
         ]
       };
