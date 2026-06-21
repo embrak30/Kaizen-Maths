@@ -43,8 +43,8 @@
       </ul>
       <h3>Teaching Notes</h3>
       <ul>
-        <li>The regression line used here is the least-squares line of y on x: y = a + bx.</li>
-        <li>Use b = Sxy / Sxx and a = y-bar - b x-bar.</li>
+        <li>The regression line used here is the least-squares line of y on x: ŷ = a + bx.</li>
+        <li>Use b = Sxy / Sxx and a = ȳ - bx̄.</li>
         <li>Predictions inside the observed x-range are interpolation; predictions outside the observed x-range are extrapolation and should be treated with caution.</li>
         <li>Correlation measures association, not causation.</li>
       </ul>
@@ -120,8 +120,8 @@
       },
       2: {
         title: "Level 2: Regression Line",
-        description: "Find the least-squares regression line y = a + bx from raw data or summaries.",
-        instruction: "For the regression line of y on x, use b = Sxy / Sxx and a = y-bar - b x-bar.",
+        description: "Find the least-squares regression line ŷ = a + bx from raw data or summaries.",
+        instruction: "For the regression line of y on x, use b = Sxy / Sxx and a = ȳ - bx̄.",
         className: "regression",
         options: [
           ["regression_raw", "Find regression line from raw data"],
@@ -269,7 +269,7 @@
 
     function lineTextPlain(data, dp = 3) {
       const gradient = data.b < 0 ? " - " + fmt(Math.abs(data.b), dp) : " + " + fmt(data.b, dp);
-      return "y-hat = " + fmt(data.a, dp) + gradient + "x";
+      return "ŷ = " + fmt(data.a, dp) + gradient + "x";
     }
     function fracHtml(numerator, denominator) {
       return '<span class="fraction"><span class="numerator">' + numerator + '</span><span class="denominator">' + denominator + '</span></span>';
@@ -282,14 +282,14 @@
       const steps = [
         step('<span class="step-indicator">Step 1</span> Find the summary values from the table.'),
         calc("Σx = " + data.sumX + ", Σy = " + data.sumY + ", Σx² = " + data.sumXX + ", Σxy = " + data.sumXY + ", n = " + data.n),
-        step('<span class="step-indicator">Step 2</span> Calculate x-bar, y-bar, Sxx and Sxy.'),
-        calc("x-bar = " + fracHtml(data.sumX, data.n) + " = " + fmt(data.xBar, 3)),
-        calc("y-bar = " + fracHtml(data.sumY, data.n) + " = " + fmt(data.yBar, 3)),
+        step('<span class="step-indicator">Step 2</span> Calculate x̄, ȳ, Sxx and Sxy.'),
+        calc("x̄ = " + fracHtml(data.sumX, data.n) + " = " + fmt(data.xBar, 3)),
+        calc("ȳ = " + fracHtml(data.sumY, data.n) + " = " + fmt(data.yBar, 3)),
         calc("Sxx = Σx² - " + fracHtml("(Σx)²", "n") + " = " + data.sumXX + " - " + fracHtml(squareHtml(data.sumX), data.n) + " = " + fmt(data.sxx, 3)),
         calc("Sxy = Σxy - " + fracHtml("(Σx)(Σy)", "n") + " = " + data.sumXY + " - " + fracHtml(data.sumX + " × " + data.sumY, data.n) + " = " + fmt(data.sxy, 3)),
         step('<span class="step-indicator">Step 3</span> Find the gradient and intercept of the regression line of y on x.'),
         calc("b = " + fracHtml("Sxy", "Sxx") + " = " + fracHtml(fmt(data.sxy, 3), fmt(data.sxx, 3)) + " = " + fmt(data.b, 3)),
-        calc("a = y-bar - (b × x-bar) = " + fmt(data.yBar, 3) + " - (" + fmt(data.b, 3) + " × " + fmt(data.xBar, 3) + ") = " + fmt(data.a, 3))
+        calc("a = ȳ - (b × x̄) = " + fmt(data.yBar, 3) + " - (" + fmt(data.b, 3) + " × " + fmt(data.xBar, 3) + ") = " + fmt(data.a, 3))
       ];
       if (includeR) {
         steps.push(step('<span class="step-indicator">Step 4</span> Calculate the correlation coefficient.'));
@@ -382,7 +382,7 @@
         answer: "Gradient: " + fmt(data.b, 3),
         steps: [
           step('<span class="step-indicator">Step 1</span> Identify the gradient and intercept.'),
-          calc("a = " + fmt(data.a, 3) + " and b = " + fmt(data.b, 3) + " in y-hat = a + bx."),
+          calc("a = " + fmt(data.a, 3) + " and b = " + fmt(data.b, 3) + " in ŷ = a + bx."),
           step('<span class="step-indicator">Step 2</span> Interpret the gradient.'),
           calc("For each increase of 1 " + data.xUnit + " in " + data.x + ", the predicted " + data.y + " changes by about " + fmt(data.b, 3) + " " + data.yUnit + "."),
           step('<span class="step-indicator">Step 3</span> Interpret the intercept cautiously.'),
@@ -398,10 +398,10 @@
       return {
         badge: "prediction",
         equation: contextSentence(data) + " Find the regression line of y on x, then estimate " + data.y + " when " + data.x + " is " + x0 + " " + data.xUnit + ". State whether this is interpolation or extrapolation." + rawTable(data, true, true),
-        answer: "y-hat = " + fmt(pred, 2),
+        answer: "ŷ = " + fmt(pred, 2),
         steps: regressionSteps(data).concat([
           step('<span class="step-indicator">Prediction</span> Substitute the given x value into the regression line.'),
-          calc("y-hat = " + fmt(data.a, 3) + signed(data.b, 3) + " × " + x0 + " = " + fmt(pred, 2)),
+          calc("ŷ = " + fmt(data.a, 3) + signed(data.b, 3) + " × " + x0 + " = " + fmt(pred, 2)),
           step('<span class="step-indicator">Reliability</span> Compare the given x value with the observed range.'),
           calc("Observed range: " + data.minX + " ≤ x ≤ " + data.maxX + ". Since " + x0 + " is inside this range, this is interpolation."),
           answerLine("Estimated " + data.y + " is " + fmt(pred, 2) + " " + data.yUnit + ".")
@@ -416,10 +416,10 @@
       return {
         badge: "prediction",
         equation: "For " + data.x + " and " + data.y + ", the regression line is " + lineTextPlain(data) + ". The observed x values were between " + data.minX + " and " + data.maxX + ". Estimate " + data.y + " when " + data.x + " is " + x0 + " " + data.xUnit + ", and comment on reliability.",
-        answer: "y-hat = " + fmt(pred, 2),
+        answer: "ŷ = " + fmt(pred, 2),
         steps: [
           step('<span class="step-indicator">Step 1</span> Substitute the given value into the regression line.'),
-          calc("y-hat = " + fmt(data.a, 3) + signed(data.b, 3) + " × " + x0 + " = " + fmt(pred, 2)),
+          calc("ŷ = " + fmt(data.a, 3) + signed(data.b, 3) + " × " + x0 + " = " + fmt(pred, 2)),
           step('<span class="step-indicator">Step 2</span> Check the observed range of x.'),
           calc("Observed range: " + data.minX + " ≤ x ≤ " + data.maxX + ". The value " + x0 + " is outside this range."),
           answerLine("This is extrapolation, so the prediction may be unreliable.")
@@ -440,7 +440,7 @@
         answer: "Residual = " + fmt(residual, 2),
         steps: [
           step('<span class="step-indicator">Step 1</span> Use the regression line to calculate the predicted value.'),
-          calc("y-hat = " + fmt(data.a, 3) + signed(data.b, 3) + " × " + x0 + " = " + fmt(predicted, 2)),
+          calc("ŷ = " + fmt(data.a, 3) + signed(data.b, 3) + " × " + x0 + " = " + fmt(predicted, 2)),
           step('<span class="step-indicator">Step 2</span> Use residual = observed value - predicted value.'),
           calc("Observed y = " + observed + ", so residual = " + observed + " - " + fmt(predicted, 2) + " = " + fmt(residual, 2)),
           answerLine("The residual is " + fmt(residual, 2) + " " + data.yUnit + ".")
