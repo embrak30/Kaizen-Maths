@@ -807,6 +807,25 @@ const tools = [
     ]
   },
   {
+    slug: "moments",
+    title: "Moments",
+    category: "Mechanics",
+    level: "A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate mechanics practice on moments, turning effects, the principle of moments, balancing, and reaction forces on beams.",
+    tags: ["mechanics", "moments", "turning effect", "principle of moments", "equilibrium", "reaction forces", "beams", "pivot"],
+    toolPath: "tools/moments/index.html?v=moments-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on calculating moments and identifying clockwise or anticlockwise turning effects.",
+      "Level 2 uses the principle of moments to find unknown forces, distances, and masses.",
+      "Level 3 combines moments with vertical equilibrium to find support reactions on beams.",
+      "Worked steps emphasise choosing the pivot, setting clockwise moment equal to anticlockwise moment, and using force balance."
+    ]
+  },
+  {
     slug: "continuous-random-variables",
     title: "Continuous Random Variables",
     category: "Statistics",
