@@ -23,7 +23,7 @@
     @media (max-width:900px){.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.type-dropdown{min-width:260px;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
   </style>
   <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
-  <script src="../_shared/math-render.js?v=fraction-render-1" defer></script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
 </head>
 <body>
   <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
@@ -292,7 +292,7 @@
           "P(" + c + " < X < " + d + ") = ∫ from " + c + " to " + d + " of (" + frac(2, sq(a)) + ")x dx.",
           "The antiderivative of (" + frac(2, sq(a)) + ")x is " + frac(1, sq(a)) + "x².",
           "Substitute the limits: [" + frac(1, sq(a)) + "x²] from " + c + " to " + d + " = " + stackedFraction("(" + sq(d) + " - " + sq(c) + ")", sq(a)) + ".",
-          '<span class="step-arrow">-></span> P = ' + probFraction + " ≈ " + fmt(prob)
+          '<span class="step-arrow">&#8594;</span> P = ' + probFraction + " ≈ " + fmt(prob)
         ]
       };
     }
@@ -317,7 +317,7 @@
           "P(" + c + " < X < " + d + ") = ∫ from " + c + " to " + d + " of (" + frac(3, cube(a)) + ")x² dx.",
           "The antiderivative of (" + frac(3, cube(a)) + ")x² is " + frac(1, cube(a)) + "x³.",
           "Substitute the limits: [" + frac(1, cube(a)) + "x³] from " + c + " to " + d + " = " + stackedFraction("(" + cube(d) + " - " + cube(c) + ")", cube(a)) + ".",
-          '<span class="step-arrow">-></span> P = ' + probFraction + " ≈ " + fmt(prob)
+          '<span class="step-arrow">&#8594;</span> P = ' + probFraction + " ≈ " + fmt(prob)
         ]
       };
     }
@@ -339,7 +339,7 @@
           "Evaluate the limits: [" + frac(1, sq(a)) + "t²] from 0 to x = " + stackedFraction("x²", sq(a)) + " - " + stackedFraction("0²", sq(a)) + " = " + stackedFraction("x²", sq(a)) + ".",
           "So F(x) = 0 for x < 0, F(x) = " + stackedFraction("x²", sq(a)) + " for 0 ≤ x ≤ " + a + ", and F(x) = 1 for x > " + a + ".",
           "P(X ≤ " + b + ") = F(" + b + ") = " + frac(sq(b), sq(a)) + ".",
-          '<span class="step-arrow">-></span> P = ' + probFraction + " ≈ " + fmt(prob)
+          '<span class="step-arrow">&#8594;</span> P = ' + probFraction + " ≈ " + fmt(prob)
         ]
       };
     }
@@ -359,7 +359,7 @@
           "P(" + c + " < X < " + d + ") = F(" + d + ") - F(" + c + ").",
           "F(" + d + ") = " + frac(sq(d), sq(a)) + " and F(" + c + ") = " + frac(sq(c), sq(a)) + ".",
           "P = " + stackedFraction("(" + sq(d) + " - " + sq(c) + ")", sq(a)) + ".",
-          '<span class="step-arrow">-></span> P = ' + probFraction + " ≈ " + fmt(prob)
+          '<span class="step-arrow">&#8594;</span> P = ' + probFraction + " ≈ " + fmt(prob)
         ]
       };
     }
@@ -380,7 +380,7 @@
           "Integrate x². E(X) = " + frac(2, sq(a)) + "[" + stackedFraction("x³", 3) + "] from 0 to " + a + ".",
           "Substitute the limits: E(X) = " + frac(2, sq(a)) + "(" + stackedFraction(cube(a), 3) + " - " + stackedFraction("0³", 3) + ").",
           "Simplify: E(X) = " + stackedFraction("2(" + cube(a) + ")", "3 × " + sq(a)) + " = " + eFraction + ".",
-          '<span class="step-arrow">-></span> E(X) = ' + eFraction + " ≈ " + fmt(eValue)
+          '<span class="step-arrow">&#8594;</span> E(X) = ' + eFraction + " ≈ " + fmt(eValue)
         ]
       };
     }
@@ -405,7 +405,7 @@
           '<span class="step-indicator">Guide</span> Use Var(X) = E(X²) - [E(X)]².',
           "Var(X) = " + frac(sq(a), 2) + " - (" + frac(2 * a, 3) + ")² = " + frac(sq(a), 18) + ".",
           "SD(X) = sqrt(" + frac(sq(a), 18) + ") ≈ " + fmt(Math.sqrt(variance)) + ".",
-          '<span class="step-arrow">-></span> Var(X) = ' + frac(sq(a), 18)
+          '<span class="step-arrow">&#8594;</span> Var(X) = ' + frac(sq(a), 18)
         ]
       };
     }
@@ -426,7 +426,7 @@
           stackedFraction("q²", sq(a)) + " = " + target + ".",
           "q² = " + fmtTrim(target * sq(a)) + ".",
           "q = sqrt(" + fmtTrim(target * sq(a)) + ") ≈ " + fmt(value) + ".",
-          '<span class="step-arrow">-></span> ' + label + ' ≈ ' + fmt(value)
+          '<span class="step-arrow">&#8594;</span> ' + label + ' ≈ ' + fmt(value)
         ]
       };
     }
@@ -451,7 +451,7 @@
           "Substitute and multiply: E(X²) = ∫ from 0 to " + a + " of x²(" + frac(3, cube(a)) + "x²) dx = " + frac(3, cube(a)) + "∫ from 0 to " + a + " of x⁴ dx.",
           "Integrate x⁴: E(X²) = " + frac(3, cube(a)) + "[" + stackedFraction("x⁵", 5) + "] from 0 to " + a + " = " + frac(3 * sq(a), 5) + ".",
           "Var(X) = E(X²) - [E(X)]² = " + frac(3 * sq(a), 5) + " - (" + frac(3 * a, 4) + ")².",
-          '<span class="step-arrow">-></span> Var(X) = ' + frac(3 * sq(a), 80) + " ≈ " + fmt(variance)
+          '<span class="step-arrow">&#8594;</span> Var(X) = ' + frac(3 * sq(a), 80) + " ≈ " + fmt(variance)
         ]
       };
     }
@@ -473,7 +473,7 @@
           "Set up the probability as an area: P(" + c + " < X < " + d + ") = ∫ from " + c + " to " + d + " of " + stackedFraction(1, width) + " dx.",
           "Integrate the constant: ∫ " + stackedFraction(1, width) + " dx = " + stackedFraction("x", width) + ".",
           "Substitute the limits: [" + stackedFraction("x", width) + "] from " + c + " to " + d + " = " + stackedFraction("(" + d + " - " + c + ")", width) + ".",
-          '<span class="step-arrow">-></span> P = ' + frac(d - c, width) + " ≈ " + fmt(probability)
+          '<span class="step-arrow">&#8594;</span> P = ' + frac(d - c, width) + " ≈ " + fmt(probability)
         ]
       };
     }
@@ -496,7 +496,7 @@
           "Use Var(X) = " + stackedFraction("(b - a)²", 12) + ".",
           "Var(X) = " + stackedFraction("(" + b + " - " + a + ")²", 12) + " = " + frac(sq(width), 12) + ".",
           "SD(X) = sqrt(" + frac(sq(width), 12) + ") ≈ " + fmt(Math.sqrt(variance)) + ".",
-          '<span class="step-arrow">-></span> E(X) = ' + fmtTrim(mean) + ", Var(X) = " + frac(sq(width), 12)
+          '<span class="step-arrow">&#8594;</span> E(X) = ' + fmtTrim(mean) + ", Var(X) = " + frac(sq(width), 12)
         ]
       };
     }
@@ -516,8 +516,8 @@
           "Here λ = " + lambda + " and t = " + t + ".",
           "P(X > " + t + ") = e^(-" + lambda + " × " + t + ") = " + fmt(Math.exp(-lambda * t)) + ".",
           rightTail ? "This is already the required probability." : "P(X < " + t + ") = 1 - P(X > " + t + ").",
-          rightTail ? '<span class="step-arrow">-></span> ' + fmt(probability) : "P(X < " + t + ") = 1 - " + fmt(Math.exp(-lambda * t)) + " = " + fmt(probability) + ".",
-          !rightTail ? '<span class="step-arrow">-></span> ' + fmt(probability) : ""
+          rightTail ? '<span class="step-arrow">&#8594;</span> ' + fmt(probability) : "P(X < " + t + ") = 1 - " + fmt(Math.exp(-lambda * t)) + " = " + fmt(probability) + ".",
+          !rightTail ? '<span class="step-arrow">&#8594;</span> ' + fmt(probability) : ""
         ].filter(Boolean)
       };
     }
@@ -537,7 +537,7 @@
           '<span class="step-indicator">Guide</span> Take natural logarithms.',
           "-" + t + "λ = ln(" + fmt(survival) + ").",
           "λ = " + stackedFraction("-ln(" + fmt(survival) + ")", t) + ".",
-          '<span class="step-arrow">-></span> λ ≈ ' + fmt(lambda)
+          '<span class="step-arrow">&#8594;</span> λ ≈ ' + fmt(lambda)
         ]
       };
     }
@@ -596,7 +596,7 @@
         li.className = "problem-item";
         const stepsHTML = problem.steps.map((step) => {
           const isGuide = step.indexOf("step-indicator") !== -1;
-          const isCalculation = !isGuide && (step.indexOf("->") !== -1 || step.indexOf("=") !== -1 || step.indexOf("∫") !== -1);
+          const isCalculation = !isGuide && ((step.indexOf("→") !== -1 || step.indexOf("->") !== -1) || step.indexOf("=") !== -1 || step.indexOf("∫") !== -1);
           return isCalculation ? '<div class="step-equation">' + step + "</div>" : '<div class="step">' + step + "</div>";
         }).join("");
         li.innerHTML =

@@ -18,7 +18,7 @@
   ].join(',');
 
   const skipTags = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'SELECT', 'OPTION', 'SUP', 'SUB']);
-  const symbolPattern = /(^|[^A-Za-z0-9.\\/])(-?[A-Za-z0-9][A-Za-z0-9⁰¹²³⁴⁵⁶⁷⁸⁹]*)\/(-?\d+)(?!\/)|\+\/-|sqrt\(([^()]+)\)|\^\{([^{}]+)\}|\^\(([^()]+)\)|\^(-?[A-Za-z0-9]+)|([A-Za-z])([2-9])(?=\b)/g;
+  const symbolPattern = /(^|[^A-Za-z0-9.\\/])(-?[A-Za-z0-9][A-Za-z0-9⁰¹²³⁴⁵⁶⁷⁸⁹]*)\/(-?\d+)(?!\/)|->|\+\/-|sqrt\(([^()]+)\)|\^\{([^{}]+)\}|\^\(([^()]+)\)|\^(-?[A-Za-z0-9]+)|([A-Za-z])([2-9])(?=\b)/g;
 
   function superscript(text) {
     const sup = document.createElement('sup');
@@ -44,7 +44,7 @@
 
   function transformTextNode(node) {
     const text = node.nodeValue;
-    if (!text || !/(\^|[A-Za-z][2-9]\b|\+\/-|sqrt\(|\/)/i.test(text)) return;
+    if (!text || !/(\^|[A-Za-z][2-9]\b|->|\+\/-|sqrt\(|\/)/i.test(text)) return;
 
     let match;
     let lastIndex = 0;
@@ -60,6 +60,8 @@
       if (match[2] && match[3]) {
         if (match[1]) fragment.appendChild(document.createTextNode(match[1]));
         fragment.appendChild(fraction(match[2], match[3]));
+      } else if (match[0] === '->') {
+        fragment.appendChild(document.createTextNode('→'));
       } else if (match[0] === '+/-') {
         fragment.appendChild(document.createTextNode('±'));
       } else if (match[4]) {

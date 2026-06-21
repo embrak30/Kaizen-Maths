@@ -24,7 +24,7 @@
     @media (max-width:900px){.problem-list{grid-template-columns:1fr}.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.type-dropdown{min-width:260px;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
   </style>
   <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
-  <script src="../_shared/math-render.js?v=fraction-render-1" defer></script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
 </head>
 <body>
   <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
@@ -307,7 +307,7 @@
           "P(Z < " + zText(z) + ") = Φ(" + zText(z) + ").",
           "Look up Φ(" + zText(z) + ") using a standard normal table or calculator.",
           "Φ(" + zText(z) + ") ≈ " + fmt(probability) + ".",
-          '<span class="step-arrow">-></span> ' + fmt(probability)
+          '<span class="step-arrow">&#8594;</span> ' + fmt(probability)
         ]
       };
     }
@@ -326,7 +326,7 @@
           "P(Z > " + zText(z) + ") = 1 - Φ(" + zText(z) + ").",
           "From tables/calculator, Φ(" + zText(z) + ") ≈ " + fmt(phi(z)) + ".",
           "1 - " + fmt(phi(z)) + " = " + fmt(probability) + ".",
-          '<span class="step-arrow">-></span> ' + fmt(probability)
+          '<span class="step-arrow">&#8594;</span> ' + fmt(probability)
         ]
       };
     }
@@ -345,7 +345,7 @@
           "P(" + zText(z1) + " < Z < " + zText(z2) + ") = Φ(" + zText(z2) + ") - Φ(" + zText(z1) + ").",
           "From tables/calculator: Φ(" + zText(z2) + ") ≈ " + fmt(phi(z2)) + ", and Φ(" + zText(z1) + ") ≈ " + fmt(phi(z1)) + ".",
           fmt(phi(z2)) + " - " + fmt(phi(z1)) + " = " + fmt(probability) + ".",
-          '<span class="step-arrow">-></span> ' + fmt(probability)
+          '<span class="step-arrow">&#8594;</span> ' + fmt(probability)
         ]
       };
     }
@@ -363,7 +363,7 @@
           "We need Φ(z) = " + fmt(p) + ".",
           "Use inverse normal tables or a calculator: z = Φ⁻¹(" + fmt(p) + ").",
           "z ≈ " + zText(z) + ".",
-          '<span class="step-arrow">-></span> z = ' + zText(z)
+          '<span class="step-arrow">&#8594;</span> z = ' + zText(z)
         ]
       };
     }
@@ -390,7 +390,7 @@
           right ? "P(X > " + fmt1(x) + ") = P(Z > " + zText(z) + ")." : "P(X < " + fmt1(x) + ") = P(Z < " + zText(z) + ").",
           right ? "P(Z > " + zText(z) + ") = 1 - Φ(" + zText(z) + ")." : "P(Z < " + zText(z) + ") = Φ(" + zText(z) + ").",
           "Using tables/calculator gives " + fmt(probability) + ".",
-          '<span class="step-arrow">-></span> ' + fmt(probability)
+          '<span class="step-arrow">&#8594;</span> ' + fmt(probability)
         ]
       };
     }
@@ -415,7 +415,7 @@
           "P(" + fmt1(a) + " < X < " + fmt1(b) + ") = P(" + zText(z1) + " < Z < " + zText(z2) + ").",
           "= Φ(" + zText(z2) + ") - Φ(" + zText(z1) + ").",
           "= " + fmt(phi(z2)) + " - " + fmt(phi(z1)) + " = " + fmt(probability) + ".",
-          '<span class="step-arrow">-></span> ' + fmt(probability)
+          '<span class="step-arrow">&#8594;</span> ' + fmt(probability)
         ]
       };
     }
@@ -438,7 +438,7 @@
           '<span class="step-indicator">Guide</span> Convert back from z to x.',
           "x = μ + zσ.",
           "a = " + mu + " + (" + zText(z) + ")(" + sigma + ") = " + fmt1(x) + ".",
-          '<span class="step-arrow">-></span> a = ' + fmt1(x)
+          '<span class="step-arrow">&#8594;</span> a = ' + fmt1(x)
         ]
       };
     }
@@ -463,7 +463,7 @@
           "z₁ = (" + fmt1(leftX) + " - " + mu + ") / " + sigma + " = -" + c.toFixed(2) + ", and z₂ = (" + fmt1(rightX) + " - " + mu + ") / " + sigma + " = " + c.toFixed(2) + ".",
           "P(|X - " + mu + "| > " + fmt1(d) + ") = P(Z < -" + c.toFixed(2) + ") + P(Z > " + c.toFixed(2) + ").",
           "= 2(1 - Φ(" + c.toFixed(2) + ")) = " + fmt(probability) + ".",
-          '<span class="step-arrow">-></span> ' + fmt(probability)
+          '<span class="step-arrow">&#8594;</span> ' + fmt(probability)
         ]
       };
     }
@@ -490,7 +490,7 @@
           zText(z) + " = (" + fmt1(x) + " - μ) / " + sigma + ".",
           fmt1(x) + " - μ = (" + zText(z) + ")(" + sigma + ").",
           "μ = " + fmt1(x) + " - (" + zText(z) + ")(" + sigma + ") = " + fmt1(mu) + ".",
-          '<span class="step-arrow">-></span> μ = ' + fmt1(mu)
+          '<span class="step-arrow">&#8594;</span> μ = ' + fmt1(mu)
         ]
       };
     }
@@ -513,7 +513,7 @@
           zText(z) + " = (" + fmt1(x) + " - " + mu + ") / σ.",
           zText(z) + "σ = " + fmt1(x - mu) + ".",
           "σ = " + fmt1(x - mu) + " / " + zText(z) + " = " + fmt1(sigma) + ".",
-          '<span class="step-arrow">-></span> σ = ' + fmt1(sigma)
+          '<span class="step-arrow">&#8594;</span> σ = ' + fmt1(sigma)
         ]
       };
     }
@@ -543,7 +543,7 @@
           "σ = " + fmt1(b - a) + " / " + (z2 - z1).toFixed(2) + " = " + fmt1(sigma) + ".",
           '<span class="step-indicator">Guide</span> Substitute back to find μ.',
           "μ = " + fmt1(a) + " - (" + zText(z1) + ")(" + fmt1(sigma) + ") = " + fmt1(mu) + ".",
-          '<span class="step-arrow">-></span> μ = ' + fmt1(mu) + ", σ = " + fmt1(sigma)
+          '<span class="step-arrow">&#8594;</span> μ = ' + fmt1(mu) + ", σ = " + fmt1(sigma)
         ]
       };
     }
@@ -601,7 +601,7 @@
       problems.forEach((problem, index) => {
         const li = document.createElement("li");
         li.className = "problem-item";
-        const stepsHTML = problem.steps.map((step) => step.indexOf("->") !== -1 || step.indexOf("\\(") !== -1 || step.indexOf("=") !== -1 || step.indexOf("curve-wrap") !== -1 ? '<div class="step-equation">' + step + "</div>" : '<div class="step">' + step + "</div>").join("");
+        const stepsHTML = problem.steps.map((step) => (step.indexOf("→") !== -1 || step.indexOf("->") !== -1) || step.indexOf("\\(") !== -1 || step.indexOf("=") !== -1 || step.indexOf("curve-wrap") !== -1 ? '<div class="step-equation">' + step + "</div>" : '<div class="step">' + step + "</div>").join("");
         li.innerHTML =
           '<div class="problem-header"><div class="problem-left"><div class="problem-number">' + (index + 1) + '</div><div class="equation">' + problem.equation + '</div></div><div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div></div><div class="steps-section" id="steps-' + index + '"><div class="answer-label">Worked Solution:</div><div class="solution-steps" data-kaizen-step-structured="true">' + stepsHTML + '<div class="final-answer">' + problem.answer + "</div></div></div>";
         container.appendChild(li);

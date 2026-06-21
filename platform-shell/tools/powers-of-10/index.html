@@ -28,7 +28,7 @@
     @media (min-width:1200px){.calculation{font-size:2.2em}.problem-item{padding:22px;margin:15px 0}.problem-number{width:35px;height:35px;font-size:1.1em}.solution-steps{font-size:1.2em}.step-equation{font-size:1.4em}.problem-set-header{font-size:1.6em;padding:18px 30px}}
   </style>
   <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
-  <script src="../_shared/math-render.js?v=fraction-render-1" defer></script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
 </head>
 <body>
   <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
@@ -126,7 +126,7 @@
     function roundResult(num,decimals=6){return Math.round(num*10**decimals)/10**decimals}
     function addCommas(num){return String(num).replace(/\B(?=(\d{3})+(?!\d))/g,',')}
     function tenSup(n){return `10<sup>${n}</sup>`}
-    function movement(num,places,direction,result){return `<div class="decimal-movement">${num} <span class="arrow">-></span> move ${places} place${places>1?'s':''} ${direction} <span class="arrow">-></span> ${result}</div>`}
+    function movement(num,places,direction,result){return `<div class="decimal-movement">${num} <span class="arrow">→</span> move ${places} place${places>1?'s':''} ${direction} <span class="arrow">→</span> ${result}</div>`}
 
     function generateProblem(){
       const config=levelConfigs[currentLevel];let types=config.types;if(currentType!=='all'&&currentType!=='select')types=[currentType];const type=types[Math.floor(Math.random()*types.length)];

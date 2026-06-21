@@ -23,7 +23,7 @@
     @media (max-width:900px){.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.type-dropdown{min-width:260px;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
   </style>
   <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
-  <script src="../_shared/math-render.js?v=fraction-render-1" defer></script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
 </head>
 <body>
   <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
@@ -213,7 +213,7 @@
         "P(X = " + r + ") = " + n + "C" + r + pwr("(" + p + ")",r) + pwr("(" + fmtTrim(1-p) + ")",n-r) + ".",
         n + "C" + r + " = " + comb(n,r) + ".",
         "P(X = " + r + ") ≈ " + fmt(ans) + ".",
-        '<span class="step-arrow">-></span> ' + fmt(ans)
+        '<span class="step-arrow">&#8594;</span> ' + fmt(ans)
       ]};
     }
 
@@ -224,7 +224,7 @@
         "P(X ≤ " + r + ") = P(X = 0) + P(X = 1) + ... + P(X = " + r + ").",
         "Use P(X = k) = nCk " + pwr("p","k") + pwr("(1 - p)","n - k") + " for each term.",
         "P(X ≤ " + r + ") ≈ " + fmt(ans) + ".",
-        '<span class="step-arrow">-></span> ' + fmt(ans)
+        '<span class="step-arrow">&#8594;</span> ' + fmt(ans)
       ]};
     }
 
@@ -236,7 +236,7 @@
         "P(X ≥ " + r + ") = 1 - P(X ≤ " + (r-1) + ").",
         "P(X ≤ " + (r-1) + ") ≈ " + fmt(binomCdf(n,p,r-1)) + ".",
         "P(X ≥ " + r + ") ≈ 1 - " + fmt(binomCdf(n,p,r-1)) + " = " + fmt(ans) + ".",
-        '<span class="step-arrow">-></span> ' + fmt(ans)
+        '<span class="step-arrow">&#8594;</span> ' + fmt(ans)
       ]};
     }
 
@@ -246,7 +246,7 @@
         '<span class="step-indicator">Guide</span> For X ~ B(n, p), E(X) = np and Var(X) = np(1 - p).',
         "E(X) = " + n + " × " + p + " = " + fmtTrim(mean) + ".",
         "Var(X) = " + n + " × " + p + " × " + fmtTrim(1-p) + " = " + fmtTrim(variance) + ".",
-        '<span class="step-arrow">-></span> E(X) = ' + fmtTrim(mean) + ", Var(X) = " + fmtTrim(variance)
+        '<span class="step-arrow">&#8594;</span> E(X) = ' + fmtTrim(mean) + ", Var(X) = " + fmtTrim(variance)
       ]};
     }
 
@@ -257,7 +257,7 @@
         "Use P(X = r) = " + pwr("(1 - p)","r - 1") + "p.",
         "P(X = " + r + ") = " + pwr("(" + fmtTrim(1-p) + ")",r-1) + "(" + p + ").",
         "P(X = " + r + ") ≈ " + fmt(ans) + ".",
-        '<span class="step-arrow">-></span> ' + fmt(ans)
+        '<span class="step-arrow">&#8594;</span> ' + fmt(ans)
       ]};
     }
 
@@ -268,7 +268,7 @@
         "Use P(X ≤ r) = 1 - " + pwr("(1 - p)","r") + ".",
         "P(X ≤ " + r + ") = 1 - " + pwr("(" + fmtTrim(1-p) + ")",r) + ".",
         "P(X ≤ " + r + ") ≈ " + fmt(ans) + ".",
-        '<span class="step-arrow">-></span> ' + fmt(ans)
+        '<span class="step-arrow">&#8594;</span> ' + fmt(ans)
       ]};
     }
 
@@ -279,7 +279,7 @@
         '<span class="step-indicator">Guide</span> X ≥ ' + r + " means no success in the first " + (r-1) + " trials.",
         "P(X ≥ " + r + ") = " + pwr("(1 - p)",r-1) + ".",
         "P(X ≥ " + r + ") = " + pwr("(" + fmtTrim(1-p) + ")",r-1) + " ≈ " + fmt(ans) + ".",
-        '<span class="step-arrow">-></span> ' + fmt(ans)
+        '<span class="step-arrow">&#8594;</span> ' + fmt(ans)
       ]};
     }
 
@@ -289,7 +289,7 @@
         '<span class="step-indicator">Guide</span> For X ~ Geo(p), E(X) = 1 / p and Var(X) = (1 - p) / p².',
         "E(X) = 1 / " + p + " = " + fmtTrim(mean) + ".",
         "Var(X) = " + fmtTrim(1-p) + " / (" + p + ")² = " + fmtTrim(variance) + ".",
-        '<span class="step-arrow">-></span> E(X) = ' + fmtTrim(mean) + ", Var(X) = " + fmtTrim(variance)
+        '<span class="step-arrow">&#8594;</span> E(X) = ' + fmtTrim(mean) + ", Var(X) = " + fmtTrim(variance)
       ]};
     }
 
@@ -301,7 +301,7 @@
           '<span class="step-indicator">Guide</span> The number of trials is fixed and each trial has success/failure.',
           "Use a binomial distribution: X ~ B(" + n + ", " + p + ").",
           "Exactly " + r + " correct would be P(X = " + r + ") = " + n + "C" + r + pwr("(" + p + ")",r) + pwr("(" + fmtTrim(1-p) + ")",n-r) + ".",
-          '<span class="step-arrow">-></span> Binomial'
+          '<span class="step-arrow">&#8594;</span> Binomial'
         ]};
       }
       const p=randomElement(pPool), r=random(3,9);
@@ -309,7 +309,7 @@
         '<span class="step-indicator">Guide</span> The process continues until the first success.',
         "Use a geometric distribution: X ~ Geo(" + p + ").",
         "First win on trial " + r + " would be P(X = " + r + ") = " + pwr("(" + fmtTrim(1-p) + ")",r-1) + "(" + p + ").",
-        '<span class="step-arrow">-></span> Geometric'
+        '<span class="step-arrow">&#8594;</span> Geometric'
       ]};
     }
 
@@ -321,7 +321,7 @@
           "P(X ≥ " + r + ") = 1 - P(X ≤ " + (r-1) + ").",
           "With p = " + p + ", P(X ≤ " + (r-1) + ") ≈ " + fmt(binomCdf(n,p,r-1)) + ".",
           "P(X ≥ " + r + ") ≈ " + fmt(prob) + ".",
-          '<span class="step-arrow">-></span> ' + fmt(prob)
+          '<span class="step-arrow">&#8594;</span> ' + fmt(prob)
         ]};
       }
       const mean=randomElement([2,2.5,4,5]), p=1/mean;
@@ -329,7 +329,7 @@
         '<span class="step-indicator">Guide</span> For a geometric distribution, E(X) = 1 / p.',
         mean + " = 1 / p.",
         "p = 1 / " + mean + " = " + fmtTrim(p) + ".",
-        '<span class="step-arrow">-></span> p = ' + fmtTrim(p)
+        '<span class="step-arrow">&#8594;</span> p = ' + fmtTrim(p)
       ]};
     }
 
@@ -340,7 +340,7 @@
         "Let X be the number of faulty items. X ~ B(" + n + ", " + p + ").",
         "P(X = " + r + ") = " + n + "C" + r + pwr("(" + p + ")",r) + pwr("(" + fmtTrim(1-p) + ")",n-r) + ".",
         "P(X = " + r + ") ≈ " + fmt(ans) + ".",
-        '<span class="step-arrow">-></span> ' + fmt(ans)
+        '<span class="step-arrow">&#8594;</span> ' + fmt(ans)
       ]};
     }
 
@@ -351,7 +351,7 @@
         "Let X be the attempt number of the first correct answer. X ~ Geo(" + p + ").",
         "P(X = " + r + ") = " + pwr("(" + fmtTrim(1-p) + ")",r-1) + "(" + p + ").",
         "P(X = " + r + ") ≈ " + fmt(ans) + ".",
-        '<span class="step-arrow">-></span> ' + fmt(ans)
+        '<span class="step-arrow">&#8594;</span> ' + fmt(ans)
       ]};
     }
 
@@ -410,7 +410,7 @@
       problems.forEach((problem, index) => {
         const li = document.createElement("li");
         li.className = "problem-item";
-        const stepsHTML = problem.steps.map((step) => step.indexOf("->") !== -1 || step.indexOf("=") !== -1 || step.indexOf("≈") !== -1 ? '<div class="step-equation">' + step + "</div>" : '<div class="step">' + step + "</div>").join("");
+        const stepsHTML = problem.steps.map((step) => (step.indexOf("→") !== -1 || step.indexOf("->") !== -1) || step.indexOf("=") !== -1 || step.indexOf("≈") !== -1 ? '<div class="step-equation">' + step + "</div>" : '<div class="step">' + step + "</div>").join("");
         li.innerHTML =
           '<div class="problem-header"><div class="problem-left"><div class="problem-number">' + (index + 1) + '</div><div class="equation">' + problem.equation + '</div></div><div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div></div><div class="steps-section" id="steps-' + index + '"><div class="answer-label">Worked Solution:</div><div class="solution-steps" data-kaizen-step-structured="true">' + stepsHTML + '<div class="final-answer">' + problem.answer + "</div></div></div>";
         container.appendChild(li);

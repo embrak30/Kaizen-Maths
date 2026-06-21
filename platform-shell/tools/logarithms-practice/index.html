@@ -597,7 +597,7 @@
     }
   </style>
   <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
-  <script src="../_shared/math-render.js?v=fraction-render-1" defer></script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
 </head>
 <body>
   <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
@@ -787,7 +787,7 @@
     }
 
     function arrow(text) {
-      return '<span class="step-arrow">-></span> ' + text;
+      return '<span class="step-arrow">&#8594;</span> ' + text;
     }
 
     function formatLinear(coefficient, constant) {
@@ -1251,7 +1251,7 @@
         li.className = "problem-item";
 
         const stepsHTML = problem.steps.map((step) => {
-          if (step.indexOf("->") !== -1 || (step.indexOf("=") !== -1 && (step.indexOf("log") !== -1 || step.indexOf("ln") !== -1 || step.indexOf("x") !== -1))) {
+          if ((step.indexOf("→") !== -1 || step.indexOf("->") !== -1) || (step.indexOf("=") !== -1 && (step.indexOf("log") !== -1 || step.indexOf("ln") !== -1 || step.indexOf("x") !== -1))) {
             return '<div class="step-equation">' + step + "</div>";
           }
           return '<div class="step">' + step + "</div>";

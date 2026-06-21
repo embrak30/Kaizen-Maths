@@ -83,7 +83,7 @@
     @media (min-width:1200px){.equation{font-size:1.8em}.problem-item{padding:18px;margin:12px 0}.problem-number{width:35px;height:35px;font-size:1.1em}.solution-steps{font-size:1.15em}.step-equation{font-size:1.25em}.problem-set-header{font-size:1.4em;padding:18px 30px}}
   </style>
   <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
-  <script src="../_shared/math-render.js?v=fraction-render-1" defer></script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
 </head>
 <body>
   <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
@@ -243,7 +243,7 @@
             `<span class="step-indicator">Step 1</span> Identify the ${place} digit.`,
             `<span class="step-indicator">Step 2</span> Look at the next digit to decide: 5 or more rounds up.`,
             `<span class="step-indicator">Step 3</span> Write the rounded number.`,
-            `${base} -> ${rounded}`
+            `${base} → ${rounded}`
           ]};
         }
         case 'frac_to_decimal':{
@@ -279,7 +279,7 @@
           const a=Number((random(1,999)/100).toFixed(random(1,3))), p=randomElement([10,100,1000]), res=a*p;
           return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} × ${highlightOperation(p)}`,answer:fixedTrim(res,3),steps:[
             `<span class="step-indicator">Step 1</span> Multiplying by ${p} moves the decimal point ${Math.log10(p)} place(s) to the right.`,
-            `${a} -> ${res}`,
+            `${a} → ${res}`,
             `Answer: ${fixedTrim(res,3)}`
           ]};
         }
@@ -287,7 +287,7 @@
           const a=Number((random(1,999)/10).toFixed(random(1,3))), p=randomElement([10,100,1000]), res=a/p;
           return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} ÷ ${highlightOperation(p)}`,answer:fixedTrim(res,6),steps:[
             `<span class="step-indicator">Step 1</span> Dividing by ${p} moves the decimal point ${Math.log10(p)} place(s) to the left.`,
-            `${a} -> ${res}`,
+            `${a} → ${res}`,
             `Answer: ${fixedTrim(res,6)}`
           ]};
         }
@@ -313,7 +313,7 @@
           return {badge:'complex',equation:`Evaluate ${highlightBase(`(${a} + ${b}) × ${c}`)} and round to the nearest hundredth.`,answer:`${rounded}`,steps:[
             `<span class="step-indicator">Step 1</span> Add inside parentheses: ${a} + ${b} = ${fixedTrim(sum,3)}`,
             `<span class="step-indicator">Step 2</span> Multiply: ${fixedTrim(sum,3)} × ${c} = ${fixedTrim(prod,4)}`,
-            `<span class="step-indicator">Step 3</span> Round to hundredth: ${fixedTrim(prod,4)} -> ${rounded}`
+            `<span class="step-indicator">Step 3</span> Round to hundredth: ${fixedTrim(prod,4)} → ${rounded}`
           ]};
         }
         case 'real_world':{
@@ -364,7 +364,7 @@
       if(problems.length){const map={placevalue:'PLACE VALUE',basic:'FOUNDATION',rounding:'ROUNDING',operations:'OPERATIONS',advanced:'APPLICATIONS',complex:'MULTI-STEP'};const key=problems[0].badge;header.textContent=`${map[key]||'PROBLEMS'} PROBLEMS`;header.className=`problem-set-header visible ${key}`}else header.classList.remove('visible');
       problems.forEach((problem,index)=>{
         const li=document.createElement('li');li.className='problem-item';
-        const stepsHTML=problem.steps.map(step=>{const isEq=step.includes('->')||step.includes(' = ')||step.includes('<')||step.includes('>')||step.includes('≤')||step.includes('≥');return isEq?`<div class="step-equation">${step}</div>`:`<div class="step">${step}</div>`}).join('');
+        const stepsHTML=problem.steps.map(step=>{const isEq=step.includes('→')||step.includes('->')||step.includes(' = ')||step.includes('<')||step.includes('>')||step.includes('≤')||step.includes('≥');return isEq?`<div class="step-equation">${step}</div>`:`<div class="step">${step}</div>`}).join('');
         li.innerHTML=`<div class="problem-header"><div class="problem-left"><div class="problem-number">${index+1}</div><div class="equation">${problem.equation}</div></div><div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div></div><div class="steps-section" id="steps-${index}"><div class="answer-label">Solution Steps:</div><div class="solution-steps">${stepsHTML}<div class="final-answer">${problem.answer}</div></div></div>`;
         container.appendChild(li);
       });

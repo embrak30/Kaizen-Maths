@@ -237,6 +237,24 @@ const tools = [
     ]
   },
   {
+    slug: "trigonometric-functions",
+    title: "Trigonometric Functions",
+    category: "Algebra",
+    level: "A-Level",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate A-level trigonometric functions practice covering reciprocal graphs, sec, cosec, cot equations, identities, proofs, and hence-solve questions.",
+    tags: ["algebra", "trigonometry", "trigonometric functions", "sec", "cosec", "cot", "identities", "proof", "A-Level"],
+    toolPath: "tools/trigonometric-functions/index.html?v=trig-functions-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers reciprocal graph sketching, definitions, and simple reciprocal equations.",
+      "Level 2 develops equations involving sec, cosec, cot, identities, quadratics, and transformed angles.",
+      "Level 3 focuses on identity proof and linked proof-then-solve questions similar to A-level exam practice."
+    ]
+  },
+  {
     slug: "sequences-series",
     title: "Sequences & Series",
     category: "Algebra",
@@ -684,7 +702,7 @@ const tools = [
     status: "Imported",
     description: "Generate surd and radical practice covering simplification, operations, rationalising denominators, expanding brackets, and multi-step expressions.",
     tags: ["algebra", "surds", "radicals", "roots", "rationalising", "simplifying"],
-    toolPath: "tools/surds-radicals/index.html?v=surds-table-steps-1",
+    toolPath: "tools/surds-radicals/index.html?v=surds-arrow-1",
     imported: true,
     teacherNotes: [
       "Level 1 develops simplification by finding perfect square factors.",

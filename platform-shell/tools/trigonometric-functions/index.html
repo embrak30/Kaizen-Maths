@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trigonometric Functions Practice</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:18px;overflow-x:hidden;color:#1a365d}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:14px 7px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:700;font-size:.86em;box-shadow:2px 0 10px rgba(0,0,0,.2);transition:.25s}.teacher-tab:hover{transform:translateY(-50%) translateX(5px);background:#2d5a87}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.25s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .sidebar{position:fixed;left:-410px;top:0;width:410px;height:100vh;background:#fff;z-index:1000;transition:left .25s;box-shadow:2px 0 20px rgba(0,0,0,.28);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:800}.sidebar-content{padding:24px;line-height:1.55}.sidebar-content h3{color:#1a365d;margin:18px 0 8px;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{color:#4a5568;margin-bottom:8px}.sidebar-content ul{padding-left:20px;margin-bottom:12px}
+    .container{max-width:1260px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:white;padding:22px;text-align:center;position:relative}.header:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}.header h1{position:relative;z-index:1;font-size:2.1em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;border:0;background:#e2e8f0;padding:15px 10px;font-size:1.02em;font-weight:800;color:#1a365d;cursor:pointer;border-bottom:3px solid transparent;transition:.25s}.tab:hover{background:#cbd5e0}.tab.active{background:white;color:#3182ce;border-bottom-color:#3182ce}
+    .controls{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;background:#f7fafc;border-bottom:1px solid #e2e8f0;padding:18px 22px}.level-info{min-width:320px;flex:1}.level-info h3{font-size:1.25em;margin-bottom:4px}.level-info p{color:#718096;font-size:.96em}.dropdown-container{margin-top:9px}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;min-width:390px;max-width:100%;background:#fff;font-size:1em;color:#1a365d}.type-dropdown:focus{border-color:#3182ce;outline:0}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-display{font-size:1.72em;font-weight:900;color:#1a365d;background:#fff;padding:8px 15px;border-radius:6px;border:2px solid #cbd5e0;min-width:108px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{border-color:#e53e3e;color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+    .btn{border:0;border-radius:6px;padding:10px 17px;font-size:.96em;font-weight:800;cursor:pointer;min-width:76px;transition:.2s}.btn:hover{transform:translateY(-1px);filter:brightness(.94)}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}
+    .problems-section{padding:18px 24px 26px;min-height:540px}.set-instruction{display:none;background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:700}.set-instruction.visible{display:block}.problem-set-header{display:none;color:white;background:#3182ce;padding:12px 20px;margin-bottom:12px;border-radius:8px;font-size:1.16em;font-weight:900;text-align:center;box-shadow:0 2px 8px rgba(49,130,206,.22)}.problem-set-header.visible{display:block}.problem-set-header.graph{background:#2d5a87}.problem-set-header.equation{background:#805ad5}.problem-set-header.proof{background:#2f855a}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:11px}.problem-item{background:#f7fafc;border-left:4px solid #3182ce;border-radius:8px;padding:14px 15px;transition:.25s}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center}.problem-number{width:31px;height:31px;border-radius:50%;background:#3182ce;color:white;display:flex;align-items:center;justify-content:center;font-weight:900}.equation{font-size:1.2em;line-height:1.45;color:#1a365d;overflow-x:auto}.question-text{display:block;margin:.12rem 0}.problem-answer{display:none;background:#38a169;color:white;border-radius:20px;padding:7px 13px;font-weight:900;max-width:360px;text-align:center;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .3s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .graph-box{margin-top:10px;border:1px solid #cbd5e0;background:white;border-radius:6px;padding:8px;max-width:560px}.axis-svg{width:100%;height:auto;display:block}.axis-svg text{font-size:11px;fill:#1a365d}.axis-svg line,.axis-svg path{stroke:#1a365d;stroke-width:1.1;fill:none}.axis-svg .minor{stroke:#cbd5e0;stroke-width:.7}.axis-svg .dash{stroke-dasharray:5 4}
+    .steps-section{display:none;margin-top:12px;padding:13px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce}.steps-section.visible{display:block;animation:slideDown .3s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:900;color:#38a169;margin-bottom:8px}.solution-steps{font-size:1.04em;line-height:1.55}.step{margin:8px 0;color:#1a365d}.step-equation{font-weight:750;color:#553c9a;text-align:center;margin:9px 0;font-size:1.08em;overflow-x:auto}.final-answer{background:#38a169;color:white;border-radius:6px;padding:9px 14px;text-align:center;font-weight:900;margin-top:10px;overflow-x:auto}.step-indicator{display:inline-block;background:#3182ce;color:white;padding:3px 7px;border-radius:4px;font-size:.84em;font-weight:900;margin-right:7px}.timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:white;padding:34px;border-radius:12px;text-align:center;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:14px}.modal-content p{color:#718096;margin-bottom:20px}.hidden{display:none!important}
+    @media(max-width:900px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section,.action-buttons{justify-content:center;flex-wrap:wrap}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%}.type-dropdown{min-width:0;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:100%;justify-self:start;margin-left:43px}.sidebar{width:320px;left:-320px}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool generates A-level style practice on reciprocal trigonometric functions. It covers sketching, equations, identities, proof, and hence-solve tasks.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Graphs, reciprocal definitions, and simple equations involving sec, cosec, and cot.</li>
+        <li><strong>Level 2:</strong> Equations that require identities, rearrangement, quadratics, and transformed angles.</li>
+        <li><strong>Level 3:</strong> Identity proofs and linked proof-then-solve questions.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Students should connect sec, cosec, and cot to cosine, sine, and tangent before solving.</li>
+        <li>For equations, the worked steps show the identity or substitution before solving.</li>
+        <li>For proofs, the steps rewrite one side until it matches the other side.</li>
+        <li>Graph questions list key points and asymptotes rather than relying on a coloured diagram.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header"><h1>Trigonometric Functions</h1></section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Graphs & Reciprocals</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Equations</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Proofs & Hence Solve</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Graphs & Reciprocals</h3>
+        <p id="level-description">Sketch reciprocal trig graphs and solve simple equations using definitions.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div class="set-instruction" id="set-instruction"></div>
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review the solutions?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Graphs & Reciprocals",
+        description: "Sketch reciprocal trig graphs and solve simple equations using definitions.",
+        instruction: "Use reciprocal definitions: sec x = 1/cos x, cosec x = 1/sin x, and cot x = 1/tan x.",
+        className: "graph",
+        options: [
+          ["graph_pairs", "Sketch reciprocal graph pairs"],
+          ["reciprocal_definitions", "Use reciprocal definitions"],
+          ["simple_reciprocal_equations", "Simple reciprocal equations"]
+        ]
+      },
+      2: {
+        title: "Level 2: Equations",
+        description: "Solve equations involving sec, cosec, cot, quadratics, and transformed angles.",
+        instruction: "Convert reciprocal trig functions into sine, cosine, or tangent before solving.",
+        className: "equation",
+        options: [
+          ["reciprocal_linear", "Linear reciprocal equations"],
+          ["identity_equations", "Equations using identities"],
+          ["quadratic_reciprocal", "Quadratic reciprocal equations"],
+          ["transformed_angles", "Transformed angle equations"],
+          ["mixed_equations", "Mixed equation set"]
+        ]
+      },
+      3: {
+        title: "Level 3: Proofs & Hence Solve",
+        description: "Prove identities and use them to solve linked trigonometric equations.",
+        instruction: "For proofs, transform one side carefully and state the identity used at each step.",
+        className: "proof",
+        options: [
+          ["basic_identity_proofs", "Core identity proofs"],
+          ["compound_identity_proofs", "Compound identity proofs"],
+          ["hence_solve", "Prove then hence solve"],
+          ["no_real_solutions", "Show no real solutions"],
+          ["mixed_proofs", "Mixed proof set"]
+        ]
+      }
+    };
+
+    const typeDisplayNames = {
+      graph_pairs: "Sketch reciprocal graph pairs",
+      reciprocal_definitions: "Use reciprocal definitions",
+      simple_reciprocal_equations: "Simple reciprocal equations",
+      reciprocal_linear: "Linear reciprocal equations",
+      identity_equations: "Equations using identities",
+      quadratic_reciprocal: "Quadratic reciprocal equations",
+      transformed_angles: "Transformed angle equations",
+      mixed_equations: "Mixed equation set",
+      basic_identity_proofs: "Core identity proofs",
+      compound_identity_proofs: "Compound identity proofs",
+      hence_solve: "Prove then hence solve",
+      no_real_solutions: "Show no real solutions",
+      mixed_proofs: "Mixed proof set"
+    };
+
+    const pi = Math.PI;
+    const twoPi = 2 * Math.PI;
+    const deg = Math.PI / 180;
+
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function choice(items) { return items[rand(0, items.length - 1)]; }
+    function fmt(n, dp = 1) {
+      const rounded = Number(n.toFixed(dp));
+      return Object.is(rounded, -0) ? "0" : rounded.toFixed(dp);
+    }
+    function gcd(a, b) {
+      a = Math.abs(Math.round(a)); b = Math.abs(Math.round(b));
+      while (b) { const t = b; b = a % b; a = t; }
+      return a || 1;
+    }
+    function frac(n, d) {
+      const sign = n * d < 0 ? "-" : "";
+      n = Math.abs(n); d = Math.abs(d);
+      const g = gcd(n, d);
+      n /= g; d /= g;
+      if (d === 1) return sign + n;
+      return sign + "\\dfrac{" + n + "}{" + d + "}";
+    }
+    function sup2(name) { return name + "^{2}"; }
+    function trigTex(name, x = "x") {
+      if (name === "cosec") return "\\operatorname{cosec} " + x;
+      return "\\" + name + " " + x;
+    }
+    function trigTexArg(name, x) {
+      if (name === "cosec") return "\\operatorname{cosec}(" + x + ")";
+      return "\\" + name + "(" + x + ")";
+    }
+    function reciprocalTarget(name) {
+      if (name === "sec") return "cos";
+      if (name === "cosec") return "sin";
+      return "tan";
+    }
+    function valueTex(value) {
+      if (value.tex) return value.tex;
+      if (Number.isInteger(value)) return String(value);
+      return fmt(value, 3);
+    }
+    function step(text) { return { type: "text", text }; }
+    function calc(text) { return { type: "calc", text }; }
+    function answerLine(text) { return { type: "calc", text: '<span class="step-indicator">Answer</span> ' + text }; }
+
+    function degreeSolutionsForTrig(base, value, min, max) {
+      const candidates = [];
+      const push = (x) => {
+        for (let k = -4; k <= 4; k++) candidates.push(x + 360 * k);
+      };
+      if (base === "sin") {
+        if (value < -1 || value > 1) return [];
+        const a = Math.asin(value) / deg;
+        push(a); push(180 - a);
+      } else if (base === "cos") {
+        if (value < -1 || value > 1) return [];
+        const a = Math.acos(value) / deg;
+        push(a); push(-a);
+      } else {
+        const a = Math.atan(value) / deg;
+        push(a); push(a + 180);
+      }
+      return candidates
+        .map((x) => Math.abs(x) < 1e-9 ? 0 : x)
+        .filter((x) => x >= min - 1e-9 && x <= max + 1e-9)
+        .sort((a, b) => a - b)
+        .filter((x, i, arr) => i === 0 || Math.abs(x - arr[i - 1]) > 1e-7);
+    }
+    function degreeList(values, dp = 1) {
+      return values.length ? values.map((x) => fmt(x, dp) + "^\\circ").join(", ") : "\\text{no solutions}";
+    }
+    function radList(keys) { return keys.join(", "); }
+
+    const exactSin = [
+      { tex: "\\dfrac{1}{2}", value: 0.5, angles: ["\\dfrac{\\pi}{6}", "\\dfrac{5\\pi}{6}"] },
+      { tex: "-\\dfrac{1}{2}", value: -0.5, angles: ["\\dfrac{7\\pi}{6}", "\\dfrac{11\\pi}{6}"] },
+      { tex: "\\dfrac{\\sqrt{2}}{2}", value: Math.SQRT2 / 2, angles: ["\\dfrac{\\pi}{4}", "\\dfrac{3\\pi}{4}"] },
+      { tex: "-\\dfrac{\\sqrt{2}}{2}", value: -Math.SQRT2 / 2, angles: ["\\dfrac{5\\pi}{4}", "\\dfrac{7\\pi}{4}"] },
+      { tex: "\\dfrac{\\sqrt{3}}{2}", value: Math.sqrt(3) / 2, angles: ["\\dfrac{\\pi}{3}", "\\dfrac{2\\pi}{3}"] },
+      { tex: "-\\dfrac{\\sqrt{3}}{2}", value: -Math.sqrt(3) / 2, angles: ["\\dfrac{4\\pi}{3}", "\\dfrac{5\\pi}{3}"] }
+    ];
+    const exactCos = [
+      { tex: "\\dfrac{1}{2}", value: 0.5, angles: ["\\dfrac{\\pi}{3}", "\\dfrac{5\\pi}{3}"] },
+      { tex: "-\\dfrac{1}{2}", value: -0.5, angles: ["\\dfrac{2\\pi}{3}", "\\dfrac{4\\pi}{3}"] },
+      { tex: "\\dfrac{\\sqrt{2}}{2}", value: Math.SQRT2 / 2, angles: ["\\dfrac{\\pi}{4}", "\\dfrac{7\\pi}{4}"] },
+      { tex: "-\\dfrac{\\sqrt{2}}{2}", value: -Math.SQRT2 / 2, angles: ["\\dfrac{3\\pi}{4}", "\\dfrac{5\\pi}{4}"] },
+      { tex: "\\dfrac{\\sqrt{3}}{2}", value: Math.sqrt(3) / 2, angles: ["\\dfrac{\\pi}{6}", "\\dfrac{11\\pi}{6}"] },
+      { tex: "-\\dfrac{\\sqrt{3}}{2}", value: -Math.sqrt(3) / 2, angles: ["\\dfrac{5\\pi}{6}", "\\dfrac{7\\pi}{6}"] }
+    ];
+    const exactTan = [
+      { tex: "1", value: 1, angles: ["\\dfrac{\\pi}{4}", "\\dfrac{5\\pi}{4}"] },
+      { tex: "-1", value: -1, angles: ["\\dfrac{3\\pi}{4}", "\\dfrac{7\\pi}{4}"] },
+      { tex: "\\sqrt{3}", value: Math.sqrt(3), angles: ["\\dfrac{\\pi}{3}", "\\dfrac{4\\pi}{3}"] },
+      { tex: "-\\sqrt{3}", value: -Math.sqrt(3), angles: ["\\dfrac{2\\pi}{3}", "\\dfrac{5\\pi}{3}"] },
+      { tex: "\\dfrac{1}{\\sqrt{3}}", value: 1 / Math.sqrt(3), angles: ["\\dfrac{\\pi}{6}", "\\dfrac{7\\pi}{6}"] },
+      { tex: "-\\dfrac{1}{\\sqrt{3}}", value: -1 / Math.sqrt(3), angles: ["\\dfrac{5\\pi}{6}", "\\dfrac{11\\pi}{6}"] }
+    ];
+
+    function blankAxes() {
+      return '<div class="graph-box"><svg class="axis-svg" viewBox="0 0 520 190" role="img" aria-label="Blank trig axes from 0 to 2 pi">' +
+        '<line x1="38" y1="20" x2="38" y2="165"></line><line x1="24" y1="92" x2="500" y2="92"></line>' +
+        '<line class="minor" x1="150" y1="20" x2="150" y2="165"></line><line class="minor" x1="262" y1="20" x2="262" y2="165"></line><line class="minor" x1="374" y1="20" x2="374" y2="165"></line><line class="minor" x1="486" y1="20" x2="486" y2="165"></line>' +
+        '<line class="minor" x1="24" y1="48" x2="500" y2="48"></line><line class="minor" x1="24" y1="136" x2="500" y2="136"></line>' +
+        '<text x="31" y="181">0</text><text x="135" y="181">π/2</text><text x="256" y="181">π</text><text x="354" y="181">3π/2</text><text x="478" y="181">2π</text>' +
+        '<text x="4" y="51">1</text><text x="0" y="140">-1</text><text x="45" y="18">y</text><text x="503" y="88">x</text></svg></div>';
+    }
+
+    function genGraphPair(forced) {
+      const pair = forced || choice([
+        { a: "\\cos x", b: "\\sec x", zero: "\\dfrac{\\pi}{2}, \\dfrac{3\\pi}{2}", anchor: "$(0,1)$, $(\\pi,-1)$, $(2\\pi,1)$" },
+        { a: "\\sin x", b: "\\operatorname{cosec} x", zero: "0, \\pi, 2\\pi", anchor: "$(\\dfrac{\\pi}{2},1)$, $(\\dfrac{3\\pi}{2},-1)$" },
+        { a: "\\tan x", b: "\\cot x", zero: "\\dfrac{\\pi}{2}, \\dfrac{3\\pi}{2} \\text{ for tan}; 0, \\pi, 2\\pi \\text{ for cot}", anchor: "$\\tan x$ passes through $(0,0)$, $(\\pi,0)$, $(2\\pi,0)$" }
+      ]);
+      return {
+        badge: "graph",
+        equation: '<span class="question-text">Sketch the graphs of $' + pair.a + '$ and $' + pair.b + '$ on the same set of axes for $0 \\le x \\le 2\\pi$.</span>' + blankAxes(),
+        answer: "Key features",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Sketch the base graph $' + pair.a + '$ first. Use the standard points ' + pair.anchor + "."),
+          step('<span class="step-indicator">Step 2</span> The reciprocal graph is not defined where the base graph is zero. Draw vertical asymptotes at $x = ' + pair.zero + '$.'),
+          step('<span class="step-indicator">Step 3</span> Where the base graph has value $1$ or $-1$, the reciprocal graph has the same value. Use those shared points to place the branches.'),
+          answerLine("The sketch should show the base graph, the reciprocal branches, and the correct vertical asymptotes.")
+        ]
+      };
+    }
+
+    function genDefinition() {
+      const items = [
+        { q: "\\sec x", a: "\\dfrac{1}{\\cos x}", note: "sec is the reciprocal of cos" },
+        { q: "\\operatorname{cosec} x", a: "\\dfrac{1}{\\sin x}", note: "cosec is the reciprocal of sin" },
+        { q: "\\cot x", a: "\\dfrac{1}{\\tan x}=\\dfrac{\\cos x}{\\sin x}", note: "cot is the reciprocal of tan" },
+        { q: "\\tan^{2}x", a: "\\sec^{2}x-1", note: "from $1+\\tan^{2}x=\\sec^{2}x$" },
+        { q: "\\cot^{2}x", a: "\\operatorname{cosec}^{2}x-1", note: "from $1+\\cot^{2}x=\\operatorname{cosec}^{2}x$" }
+      ];
+      const item = choice(items);
+      return {
+        badge: "graph",
+        equation: "Rewrite $" + item.q + "$ using sine, cosine, tangent, or a standard identity.",
+        answer: "$" + item.a + "$",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Identify the reciprocal or identity needed.'),
+          calc("Here, " + item.note + "."),
+          answerLine("$" + item.q + " = " + item.a + "$")
+        ]
+      };
+    }
+
+    function genSimpleReciprocalEquation() {
+      const type = choice(["sec", "cosec", "cot"]);
+      let coefficient, right, base, baseValue, solutions;
+      if (type === "sec") {
+        coefficient = choice([2, 3, 4]);
+        right = choice([5, -5, 6, -6, 8, -8]);
+        base = "cos";
+        baseValue = coefficient / right;
+        solutions = degreeSolutionsForTrig(base, baseValue, 0, 360);
+      } else if (type === "cosec") {
+        coefficient = choice([2, 3, 4]);
+        right = choice([5, -5, 7, -7, 8, -8]);
+        base = "sin";
+        baseValue = coefficient / right;
+        solutions = degreeSolutionsForTrig(base, baseValue, 0, 360);
+      } else {
+        coefficient = choice([2, 3, 4, 5]);
+        right = choice([3, -3, 5, -5, 7, -7]);
+        base = "tan";
+        baseValue = coefficient / right;
+        solutions = degreeSolutionsForTrig(base, baseValue, 0, 360);
+      }
+      return {
+        badge: "equation",
+        equation: "Solve $" + coefficient + trigTex(type, "\\theta") + " = " + right + "$ for $0 \\le \\theta \\le 360^\\circ$. Give answers to 1 decimal place.",
+        answer: "$\\theta = " + degreeList(solutions, 1) + "$",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Divide by the coefficient.'),
+          calc("$" + trigTex(type, "\\theta") + " = " + frac(right, coefficient) + "$"),
+          step('<span class="step-indicator">Step 2</span> Use the reciprocal definition.'),
+          calc("$" + base + "\\,\\theta = " + fmt(baseValue, 4) + "$"),
+          step('<span class="step-indicator">Step 3</span> Find every solution in the interval $0 \\le \\theta \\le 360^\\circ$.'),
+          answerLine("$\\theta = " + degreeList(solutions, 1) + "$")
+        ]
+      };
+    }
+
+    function genLinearReciprocal() {
+      return genSimpleReciprocalEquation();
+    }
+
+    function genIdentityEquation() {
+      const template = choice(["cot_sec", "cos_cot"]);
+      if (template === "cot_sec") {
+        return {
+          badge: "equation",
+          equation: "Solve, for $0 \\le x \\le 2\\pi$, the equation $2\\cot x = 3\\sec x$. Give your answers in terms of $\\pi$.",
+          answer: "$x = \\dfrac{\\pi}{6}, \\dfrac{5\\pi}{6}$",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> Rewrite using sine and cosine.'),
+            calc("$2\\dfrac{\\cos x}{\\sin x}=3\\dfrac{1}{\\cos x}$"),
+            step('<span class="step-indicator">Step 2</span> Multiply by $\\sin x\\cos x$.'),
+            calc("$2\\cos^{2}x=3\\sin x$"),
+            step('<span class="step-indicator">Step 3</span> Use $\\cos^{2}x=1-\\sin^{2}x$.'),
+            calc("$2(1-\\sin^{2}x)=3\\sin x$"),
+            calc("$2\\sin^{2}x+3\\sin x-2=0$"),
+            calc("$(2\\sin x-1)(\\sin x+2)=0$"),
+            step('<span class="step-indicator">Step 4</span> Reject $\\sin x=-2$ because sine cannot be less than $-1$.'),
+            answerLine("$\\sin x=\\dfrac{1}{2}$, so $x=\\dfrac{\\pi}{6}, \\dfrac{5\\pi}{6}$.")
+          ]
+        };
+      }
+      const k = choice([2, 3, 4, 5]);
+      const roots = degreeSolutionsForTrig("cos", 0, -180, 180).concat(degreeSolutionsForTrig("sin", -1 / k, -180, 180)).sort((a, b) => a - b);
+      return {
+        badge: "equation",
+        equation: "Solve, for $-180^\\circ \\le x \\le 180^\\circ$, the equation $" + k + "\\cos x + \\cot x = 0$. Give answers to 1 decimal place.",
+        answer: "$x = " + degreeList(roots, 1) + "$",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Replace $\\cot x$ with $\\dfrac{\\cos x}{\\sin x}$.'),
+          calc("$" + k + "\\cos x + \\dfrac{\\cos x}{\\sin x}=0$"),
+          step('<span class="step-indicator">Step 2</span> Multiply by $\\sin x$.'),
+          calc("$" + k + "\\sin x\\cos x + \\cos x=0$"),
+          step('<span class="step-indicator">Step 3</span> Factorise.'),
+          calc("$\\cos x(" + k + "\\sin x+1)=0$"),
+          calc("$\\cos x=0$ or $\\sin x=-\\dfrac{1}{" + k + "}$"),
+          answerLine("$x = " + degreeList(roots, 1) + "$")
+        ]
+      };
+    }
+
+    function genQuadraticReciprocal() {
+      const template = choice(["sec_quad", "cot_square", "cosec_cot"]);
+      if (template === "sec_quad") {
+        const r1 = choice([-2, -3, 2, 3]);
+        const r2 = r1 < 0 ? choice([-4, -5]) : choice([4, 5]);
+        const b = -(r1 + r2);
+        const c = r1 * r2;
+        const angles = degreeSolutionsForTrig("cos", 1 / r1, 0, 360).concat(degreeSolutionsForTrig("cos", 1 / r2, 0, 360)).sort((a, b) => a - b);
+        return {
+          badge: "equation",
+          equation: "Solve, for $0 \\le x \\le 360^\\circ$, $" + sup2("\\sec") + "x " + signedTex(b) + "\\sec x " + signedTex(c) + " = 0$. Give answers to 1 decimal place.",
+          answer: "$x = " + degreeList(angles, 1) + "$",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> Treat $\\sec x$ as the variable.'),
+            calc("Let $u=\\sec x$, so $u^{2} " + signedTex(b) + "u " + signedTex(c) + "=0$."),
+            step('<span class="step-indicator">Step 2</span> Factorise the quadratic.'),
+            calc("$(u " + signedTex(-r1) + ")(u " + signedTex(-r2) + ")=0$"),
+            calc("$\\sec x=" + r1 + "$ or $\\sec x=" + r2 + "$"),
+            step('<span class="step-indicator">Step 3</span> Convert to cosine using $\\sec x=\\dfrac{1}{\\cos x}$.'),
+            calc("$\\cos x=" + frac(1, r1) + "$ or $\\cos x=" + frac(1, r2) + "$"),
+            answerLine("$x = " + degreeList(angles, 1) + "$")
+          ]
+        };
+      }
+      if (template === "cot_square") {
+        const n = choice([1, 3, 9]);
+        const root = Math.sqrt(n);
+        const angles = degreeSolutionsForTrig("tan", 1 / root, 0, 360).concat(degreeSolutionsForTrig("tan", -1 / root, 0, 360)).sort((a, b) => a - b);
+        return {
+          badge: "equation",
+          equation: "Solve, for $0 \\le x \\le 360^\\circ$, $\\cot^{2}x = " + n + "$. Give answers to 1 decimal place.",
+          answer: "$x = " + degreeList(angles, 1) + "$",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> Square root both sides.'),
+            calc("$\\cot x = \\pm " + (root === 1 ? "1" : fmt(root, 3)) + "$"),
+            step('<span class="step-indicator">Step 2</span> Use $\\cot x=\\dfrac{1}{\\tan x}$.'),
+            calc("$\\tan x = \\pm " + fmt(1 / root, 4) + "$"),
+            answerLine("$x = " + degreeList(angles, 1) + "$")
+          ]
+        };
+      }
+      return {
+        badge: "equation",
+        equation: "Solve, for $0 \\le x \\le 2\\pi$, $\\operatorname{cosec}^{2}x + \\cot^{2}x = 3$. Give answers in terms of $\\pi$.",
+        answer: "$x = \\dfrac{\\pi}{4}, \\dfrac{3\\pi}{4}, \\dfrac{5\\pi}{4}, \\dfrac{7\\pi}{4}$",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Use $\\operatorname{cosec}^{2}x=1+\\cot^{2}x$.'),
+          calc("$(1+\\cot^{2}x)+\\cot^{2}x=3$"),
+          calc("$2\\cot^{2}x=2$"),
+          calc("$\\cot^{2}x=1$"),
+          step('<span class="step-indicator">Step 2</span> Hence $\\tan^{2}x=1$.'),
+          answerLine("$x = \\dfrac{\\pi}{4}, \\dfrac{3\\pi}{4}, \\dfrac{5\\pi}{4}, \\dfrac{7\\pi}{4}$")
+        ]
+      };
+    }
+
+    function signedTex(n) {
+      return n < 0 ? "- " + Math.abs(n) : "+ " + n;
+    }
+
+    function genTransformedAngle() {
+      const q = choice([-1.2, -1.3, 1.4, 1.6]);
+      const base = degreeSolutionsForTrig("cos", 1 / q, -900, 900);
+      const answers = [];
+      base.forEach((a) => {
+        const x = (a - 10) / 2;
+        if (x >= -180 - 1e-9 && x <= 180 + 1e-9) answers.push(x);
+      });
+      return {
+        badge: "equation",
+        equation: "Solve, for $-180^\\circ \\le \\theta \\le 180^\\circ$, $\\sec(2\\theta+10^\\circ)=" + q + "$. Give answers to 1 decimal place.",
+        answer: "$\\theta = " + degreeList(answers, 1) + "$",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Convert from sec to cos.'),
+          calc("$\\cos(2\\theta+10^\\circ)=\\dfrac{1}{" + q + "}=" + fmt(1 / q, 4) + "$"),
+          step('<span class="step-indicator">Step 2</span> Find possible values of $2\\theta+10^\\circ$.'),
+          calc("$2\\theta+10^\\circ = " + degreeList(base.filter((a) => (a - 10) / 2 >= -180 && (a - 10) / 2 <= 180), 1) + "$"),
+          step('<span class="step-indicator">Step 3</span> Subtract $10^\\circ$ and divide by 2.'),
+          answerLine("$\\theta = " + degreeList(answers, 1) + "$")
+        ]
+      };
+    }
+
+    const proofTemplates = [
+      {
+        q: "Use $\\cos^{2}\\theta+\\sin^{2}\\theta=1$ to prove that $\\tan^{2}\\theta=\\sec^{2}\\theta-1$.",
+        answer: "$\\tan^{2}\\theta\\equiv\\sec^{2}\\theta-1$",
+        steps: [
+          "Start with $\\cos^{2}\\theta+\\sin^{2}\\theta=1$.",
+          "Divide every term by $\\cos^{2}\\theta$.",
+          "$1+\\tan^{2}\\theta=\\sec^{2}\\theta$.",
+          "Rearrange to get $\\tan^{2}\\theta=\\sec^{2}\\theta-1$."
+        ]
+      },
+      {
+        q: "Use $\\cos^{2}\\theta+\\sin^{2}\\theta=1$ to prove that $\\operatorname{cosec}^{2}\\theta=1+\\cot^{2}\\theta$.",
+        answer: "$\\operatorname{cosec}^{2}\\theta\\equiv1+\\cot^{2}\\theta$",
+        steps: [
+          "Start with $\\cos^{2}\\theta+\\sin^{2}\\theta=1$.",
+          "Divide every term by $\\sin^{2}\\theta$.",
+          "$\\cot^{2}\\theta+1=\\operatorname{cosec}^{2}\\theta$.",
+          "So $\\operatorname{cosec}^{2}\\theta=1+\\cot^{2}\\theta$."
+        ]
+      },
+      {
+        q: "Prove that $\\sec^{2}x-\\operatorname{cosec}^{2}x\\equiv\\tan^{2}x-\\cot^{2}x$.",
+        answer: "Identity proven",
+        steps: [
+          "Use $\\sec^{2}x=1+\\tan^{2}x$ and $\\operatorname{cosec}^{2}x=1+\\cot^{2}x$.",
+          "$\\sec^{2}x-\\operatorname{cosec}^{2}x=(1+\\tan^{2}x)-(1+\\cot^{2}x)$.",
+          "The constant terms cancel.",
+          "$\\sec^{2}x-\\operatorname{cosec}^{2}x=\\tan^{2}x-\\cot^{2}x$."
+        ]
+      },
+      {
+        q: "Prove that $(\\sec x-\\cos x)^{2}\\equiv\\tan^{2}x-\\sin^{2}x$.",
+        answer: "Identity proven",
+        steps: [
+          "Start with the left hand side.",
+          "$\\sec x-\\cos x=\\dfrac{1}{\\cos x}-\\cos x$.",
+          "$\\sec x-\\cos x=\\dfrac{1-\\cos^{2}x}{\\cos x}=\\dfrac{\\sin^{2}x}{\\cos x}$.",
+          "Squaring gives $(\\sec x-\\cos x)^{2}=\\dfrac{\\sin^{4}x}{\\cos^{2}x}$.",
+          "Now $\\tan^{2}x-\\sin^{2}x=\\dfrac{\\sin^{2}x}{\\cos^{2}x}-\\sin^{2}x=\\dfrac{\\sin^{4}x}{\\cos^{2}x}$."
+        ]
+      },
+      {
+        q: "Prove that $\\sec^{4}x-\\tan^{4}x\\equiv1+2\\tan^{2}x$.",
+        answer: "Identity proven",
+        steps: [
+          "Use difference of two squares.",
+          "$\\sec^{4}x-\\tan^{4}x=(\\sec^{2}x-\\tan^{2}x)(\\sec^{2}x+\\tan^{2}x)$.",
+          "Since $\\sec^{2}x=1+\\tan^{2}x$, we have $\\sec^{2}x-\\tan^{2}x=1$.",
+          "Also $\\sec^{2}x+\\tan^{2}x=1+2\\tan^{2}x$.",
+          "Therefore $\\sec^{4}x-\\tan^{4}x=1+2\\tan^{2}x$."
+        ]
+      },
+      {
+        q: "Prove that $\\cos\\theta+\\sin\\theta\\tan\\theta\\equiv\\sec\\theta$.",
+        answer: "Identity proven",
+        steps: [
+          "Start with the left hand side.",
+          "$\\cos\\theta+\\sin\\theta\\tan\\theta=\\cos\\theta+\\sin\\theta\\left(\\dfrac{\\sin\\theta}{\\cos\\theta}\\right)$.",
+          "$=\\dfrac{\\cos^{2}\\theta}{\\cos\\theta}+\\dfrac{\\sin^{2}\\theta}{\\cos\\theta}$.",
+          "$=\\dfrac{\\cos^{2}\\theta+\\sin^{2}\\theta}{\\cos\\theta}$.",
+          "$=\\dfrac{1}{\\cos\\theta}=\\sec\\theta$."
+        ]
+      },
+      {
+        q: "Prove that $\\dfrac{\\operatorname{cosec}\\theta}{\\operatorname{cosec}\\theta-\\sin\\theta}\\equiv\\sec^{2}\\theta$.",
+        answer: "Identity proven",
+        steps: [
+          "Rewrite $\\operatorname{cosec}\\theta$ as $\\dfrac{1}{\\sin\\theta}$.",
+          "$\\operatorname{cosec}\\theta-\\sin\\theta=\\dfrac{1}{\\sin\\theta}-\\sin\\theta$.",
+          "$=\\dfrac{1-\\sin^{2}\\theta}{\\sin\\theta}=\\dfrac{\\cos^{2}\\theta}{\\sin\\theta}$.",
+          "$\\dfrac{\\operatorname{cosec}\\theta}{\\operatorname{cosec}\\theta-\\sin\\theta}=\\dfrac{1/\\sin\\theta}{\\cos^{2}\\theta/\\sin\\theta}$.",
+          "$=\\dfrac{1}{\\cos^{2}\\theta}=\\sec^{2}\\theta$."
+        ]
+      }
+    ];
+
+    function proofProblem(template) {
+      return {
+        badge: "proof",
+        equation: template.q,
+        answer: template.answer,
+        steps: template.steps.map((line, index) => index === 0 ? step('<span class="step-indicator">Step 1</span> ' + line) : (line.indexOf("$") >= 0 ? calc(line) : step('<span class="step-indicator">Step ' + (index + 1) + '</span> ' + line))).concat([answerLine(template.answer)])
+      };
+    }
+    function genBasicProof() {
+      return proofProblem(choice(proofTemplates.slice(0, 2)));
+    }
+    function genCompoundProof() {
+      return proofProblem(choice(proofTemplates.slice(2)));
+    }
+
+    function genHenceSolve() {
+      const type = choice(["sec4_tan4", "cos_sin_tan", "cosec_fraction"]);
+      if (type === "sec4_tan4") {
+        return {
+          badge: "proof",
+          equation: '<span class="question-text">(a) Prove that $\\sec^{4}x-\\tan^{4}x\\equiv1+2\\tan^{2}x$.</span><span class="question-text">(b) Hence solve, for $0\\le x\\le360^\\circ$, $\\sec^{4}x-\\tan^{4}x=3$.</span>',
+          answer: "$x=45^\\circ,135^\\circ,225^\\circ,315^\\circ$",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> Factor the left hand side as a difference of two squares.'),
+            calc("$\\sec^{4}x-\\tan^{4}x=(\\sec^{2}x-\\tan^{2}x)(\\sec^{2}x+\\tan^{2}x)$"),
+            calc("$=1(1+2\\tan^{2}x)=1+2\\tan^{2}x$"),
+            step('<span class="step-indicator">Step 2</span> Use the proven identity in the equation.'),
+            calc("$1+2\\tan^{2}x=3$"),
+            calc("$\\tan^{2}x=1$"),
+            calc("$\\tan x=\\pm1$"),
+            answerLine("$x=45^\\circ,135^\\circ,225^\\circ,315^\\circ$")
+          ]
+        };
+      }
+      if (type === "cos_sin_tan") {
+        return {
+          badge: "proof",
+          equation: '<span class="question-text">(a) Prove that $\\cos\\theta+\\sin\\theta\\tan\\theta\\equiv\\sec\\theta$.</span><span class="question-text">(b) Hence find the exact roots of $\\cos\\theta+\\sin\\theta\\tan\\theta=4\\cos\\theta$, for $0\\le\\theta\\le2\\pi$.</span>',
+          answer: "$\\theta=\\dfrac{\\pi}{3},\\dfrac{2\\pi}{3},\\dfrac{4\\pi}{3},\\dfrac{5\\pi}{3}$",
+          steps: [
+            step('<span class="step-indicator">Step 1</span> From the proof, replace $\\cos\\theta+\\sin\\theta\\tan\\theta$ with $\\sec\\theta$.'),
+            calc("$\\sec\\theta=4\\cos\\theta$"),
+            calc("$\\dfrac{1}{\\cos\\theta}=4\\cos\\theta$"),
+            calc("$1=4\\cos^{2}\\theta$"),
+            calc("$\\cos^{2}\\theta=\\dfrac{1}{4}$"),
+            calc("$\\cos\\theta=\\pm\\dfrac{1}{2}$"),
+            answerLine("$\\theta=\\dfrac{\\pi}{3},\\dfrac{2\\pi}{3},\\dfrac{4\\pi}{3},\\dfrac{5\\pi}{3}$")
+          ]
+        };
+      }
+      return {
+        badge: "proof",
+        equation: '<span class="question-text">(a) Prove that $\\dfrac{\\operatorname{cosec}\\theta}{\\operatorname{cosec}\\theta-\\sin\\theta}\\equiv\\sec^{2}\\theta$.</span><span class="question-text">(b) Hence solve, for $0<\\theta<2\\pi$, $\\dfrac{\\operatorname{cosec}\\theta}{\\operatorname{cosec}\\theta-\\sin\\theta}=2\\tan\\theta$.</span>',
+        answer: "$\\theta=\\dfrac{\\pi}{4},\\dfrac{5\\pi}{4}$",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> From the proof, the left hand side is $\\sec^{2}\\theta$.'),
+          calc("$\\sec^{2}\\theta=2\\tan\\theta$"),
+          calc("$\\dfrac{1}{\\cos^{2}\\theta}=2\\dfrac{\\sin\\theta}{\\cos\\theta}$"),
+          calc("$1=2\\sin\\theta\\cos\\theta$"),
+          calc("$\\sin 2\\theta=1$"),
+          calc("$2\\theta=\\dfrac{\\pi}{2},\\dfrac{5\\pi}{2}$ in $0<2\\theta<4\\pi$"),
+          answerLine("$\\theta=\\dfrac{\\pi}{4},\\dfrac{5\\pi}{4}$")
+        ]
+      };
+    }
+
+    function genNoRealSolutions() {
+      return {
+        badge: "proof",
+        equation: '<span class="question-text">Let $f(x)=3x^{3}+4x^{2}+13x+4$.</span><span class="question-text">(a) Show that $(3x+1)$ is a factor of $f(x)$.</span><span class="question-text">(b) Factorise $f(x)$ completely.</span><span class="question-text">(c) Prove that there are no real solutions to $3\\sec^{2}\\theta+4\\sec\\theta+13+4\\cos\\theta=0$.</span>',
+        answer: "No real solutions",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> For the factor theorem, $(3x+1)=0$ gives $x=-\\dfrac{1}{3}$.'),
+          calc("$f\\left(-\\dfrac{1}{3}\\right)=0$, so $(3x+1)$ is a factor."),
+          step('<span class="step-indicator">Step 2</span> Divide or compare coefficients.'),
+          calc("$f(x)=(3x+1)(x^{2}+x+4)$"),
+          step('<span class="step-indicator">Step 3</span> In the trig equation let $x=\\sec\\theta$, so $\\cos\\theta=\\dfrac{1}{x}$.'),
+          calc("$3x^{2}+4x+13+\\dfrac{4}{x}=0$"),
+          calc("$3x^{3}+4x^{2}+13x+4=0$"),
+          calc("$(3x+1)(x^{2}+x+4)=0$"),
+          step('<span class="step-indicator">Step 4</span> The root $x=-\\dfrac{1}{3}$ is impossible because $|\\sec\\theta|\\ge1$.'),
+          step('<span class="step-indicator">Step 5</span> The quadratic has discriminant $1-16=-15<0$, so it has no real roots.'),
+          answerLine("Therefore the original trigonometric equation has no real solutions.")
+        ]
+      };
+    }
+
+    function generateProblem() {
+      let type = currentType;
+      if (type === "mixed_equations") type = choice(["reciprocal_linear", "identity_equations", "quadratic_reciprocal", "transformed_angles"]);
+      if (type === "mixed_proofs") type = choice(["basic_identity_proofs", "compound_identity_proofs", "hence_solve", "no_real_solutions"]);
+      switch (type) {
+        case "graph_pairs": return genGraphPair();
+        case "reciprocal_definitions": return genDefinition();
+        case "simple_reciprocal_equations": return genSimpleReciprocalEquation();
+        case "reciprocal_linear": return genLinearReciprocal();
+        case "identity_equations": return genIdentityEquation();
+        case "quadratic_reciprocal": return genQuadraticReciprocal();
+        case "transformed_angles": return genTransformedAngle();
+        case "basic_identity_proofs": return genBasicProof();
+        case "compound_identity_proofs": return genCompoundProof();
+        case "hence_solve": return genHenceSolve();
+        case "no_real_solutions": return genNoRealSolutions();
+        default: return genDefinition();
+      }
+    }
+
+    function problemCountForType() {
+      if (currentType === "graph_pairs") return 3;
+      if (currentType === "no_real_solutions") return 1;
+      return 5;
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index + 1 === level));
+      const cfg = levelConfigs[level];
+      document.getElementById("level-title").textContent = cfg.title;
+      document.getElementById("level-description").textContent = cfg.description;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + cfg.options.map(([value, label]) => '<option value="' + value + '">' + label + '</option>').join("");
+      document.getElementById("set-instruction").textContent = cfg.instruction;
+      document.getElementById("set-instruction").classList.add("visible");
+      updateHeader();
+      showBlankPage();
+      renderMath();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      updateHeader();
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function updateHeader() {
+      const header = document.getElementById("problem-set-header");
+      if (currentType === "select") {
+        header.className = "problem-set-header";
+        header.textContent = "";
+        return;
+      }
+      header.className = "problem-set-header visible " + levelConfigs[currentLevel].className;
+      header.textContent = typeDisplayNames[currentType] || "Practice Set";
+    }
+
+    function showBlankPage() {
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center;padding:40px;color:#718096;font-size:1.08em">Please select a question type to begin trigonometric functions practice.</li>';
+      renderMath();
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") { showBlankPage(); return; }
+      answersVisible = false;
+      stepsVisible = false;
+      problems = [];
+      const count = problemCountForType();
+      if (currentType === "graph_pairs") {
+        [
+          { a: "\\cos x", b: "\\sec x", zero: "\\dfrac{\\pi}{2}, \\dfrac{3\\pi}{2}", anchor: "$(0,1)$, $(\\pi,-1)$, $(2\\pi,1)$" },
+          { a: "\\sin x", b: "\\operatorname{cosec} x", zero: "0, \\pi, 2\\pi", anchor: "$(\\dfrac{\\pi}{2},1)$, $(\\dfrac{3\\pi}{2},-1)$" },
+          { a: "\\tan x", b: "\\cot x", zero: "\\dfrac{\\pi}{2}, \\dfrac{3\\pi}{2} \\text{ for tan}; 0, \\pi, 2\\pi \\text{ for cot}", anchor: "$\\tan x$ passes through $(0,0)$, $(\\pi,0)$, $(2\\pi,0)$" }
+        ].forEach((pair) => problems.push(genGraphPair(pair)));
+      } else {
+        for (let i = 0; i < count; i++) problems.push(generateProblem());
+      }
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const container = document.getElementById("problem-list");
+      container.innerHTML = "";
+      problems.forEach((problem, index) => {
+        const item = document.createElement("li");
+        item.className = "problem-item";
+        const steps = problem.steps.map((s) => {
+          const cls = s.type === "calc" ? "step-equation" : "step";
+          return '<div class="' + cls + '">' + s.text + "</div>";
+        }).join("");
+        item.innerHTML =
+          '<div class="problem-header">' +
+            '<div class="problem-left">' +
+              '<div class="problem-number">' + (index + 1) + '</div>' +
+              '<div class="equation">' + problem.equation + '</div>' +
+            '</div>' +
+            '<div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div>' +
+          '</div>' +
+          '<div class="steps-section" id="steps-' + index + '">' +
+            '<div class="answer-label">Worked solution:</div>' +
+            '<div class="solution-steps">' + steps + '<div class="final-answer">' + problem.answer + '</div></div>' +
+          '</div>';
+        container.appendChild(item);
+      });
+      renderMath();
+    }
+
+    function renderMath() {
+      if (typeof renderMathInElement !== "function") return;
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false }
+        ],
+        throwOnError: false
+      });
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      problems.forEach((_, index) => {
+        const answer = document.getElementById("quick-answer-" + index);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      });
+    }
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const steps = document.getElementById("steps-" + index);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      });
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const el = document.getElementById("timer-display");
+      el.textContent = "Ready";
+      el.className = "timer-display";
+    }
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const el = document.getElementById("timer-display");
+      el.textContent = minutes + ":" + String(seconds).padStart(2, "0");
+      el.className = timeRemaining <= 30 && timerActive ? "timer-display warning" : timerActive ? "timer-display active" : "timer-display";
+    }
+    function timerFinished() {
+      stopTimer();
+      const el = document.getElementById("timer-display");
+      el.textContent = "Time Up!";
+      el.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-16"></script>
+</body>
+</html>
