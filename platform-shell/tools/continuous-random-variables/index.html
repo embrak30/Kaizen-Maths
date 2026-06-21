@@ -23,7 +23,7 @@
     @media (max-width:900px){.controls{flex-direction:column;align-items:stretch}.timer-section{justify-content:center}.type-dropdown{min-width:260px;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
   </style>
   <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
-  <script src="../_shared/math-render.js" defer></script>
+  <script src="../_shared/math-render.js?v=fraction-render-1" defer></script>
 </head>
 <body>
   <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
@@ -180,7 +180,11 @@
       return b === 0 ? Math.abs(a) : gcd(b, a % b);
     }
 
-    function frac(n, d) {
+    function stackedFraction(numerator, denominator) {
+      return '<span class="fraction"><span class="numerator">' + numerator + '</span><span class="denominator">' + denominator + '</span></span>';
+    }
+
+    function reducedFractionParts(n, d) {
       if (d < 0) {
         n *= -1;
         d *= -1;
@@ -188,14 +192,27 @@
       const divisor = gcd(Math.round(Math.abs(n)), Math.round(Math.abs(d))) || 1;
       const top = Math.round(n / divisor);
       const bottom = Math.round(d / divisor);
-      if (bottom === 1) return String(top);
-      return top + "/" + bottom;
+      return { top, bottom };
+    }
+
+    function frac(n, d) {
+      const reduced = reducedFractionParts(n, d);
+      if (reduced.bottom === 1) return String(reduced.top);
+      return stackedFraction(reduced.top, reduced.bottom);
+    }
+
+    function plainFrac(n, d) {
+      const reduced = reducedFractionParts(n, d);
+      if (reduced.bottom === 1) return String(reduced.top);
+      return reduced.top + "/" + reduced.bottom;
     }
 
     function fractionWork(n, d) {
-      const raw = n + "/" + d;
+      const rawText = n + "/" + d;
+      const raw = stackedFraction(n, d);
+      const simplifiedText = plainFrac(n, d);
       const simplified = frac(n, d);
-      return raw === simplified ? simplified : raw + " = " + simplified;
+      return rawText === simplifiedText ? simplified : raw + " = " + simplified;
     }
 
     function fmt(value, dp = 3) {
@@ -268,13 +285,13 @@
           '<span class="step-indicator">Guide</span> For a probability density function, the total area under the curve must be 1.',
           "The support is 0 ≤ x ≤ " + a + ", so set up ∫ from 0 to " + a + " of f(x) dx = 1.",
           "Substitute f(x) = kx: ∫ from 0 to " + a + " of kx dx = 1.",
-          "Integrate kx. Since k is constant and ∫ x dx = x²/2, the antiderivative is kx²/2.",
-          "Evaluate the limits: [kx²/2] from 0 to " + a + " = k(" + sq(a) + ")/2 - k(0²)/2 = k(" + sq(a) + ")/2.",
-          "Solve k(" + sq(a) + ")/2 = 1, so k = " + fractionWork(2, sq(a)) + ".",
+          "Integrate kx. Since k is constant and ∫ x dx = " + stackedFraction("x²", 2) + ", the antiderivative is k" + stackedFraction("x²", 2) + ".",
+          "Evaluate the limits: [k" + stackedFraction("x²", 2) + "] from 0 to " + a + " = k" + stackedFraction(sq(a), 2) + " - k" + stackedFraction("0²", 2) + " = k" + stackedFraction(sq(a), 2) + ".",
+          "Solve k × " + stackedFraction(sq(a), 2) + " = 1, so k = " + fractionWork(2, sq(a)) + ".",
           '<span class="step-indicator">Guide</span> To find a probability, integrate the density between the two values.',
           "P(" + c + " < X < " + d + ") = ∫ from " + c + " to " + d + " of (" + frac(2, sq(a)) + ")x dx.",
           "The antiderivative of (" + frac(2, sq(a)) + ")x is " + frac(1, sq(a)) + "x².",
-          "Substitute the limits: [" + frac(1, sq(a)) + "x²] from " + c + " to " + d + " = (" + sq(d) + " - " + sq(c) + ")/" + sq(a) + ".",
+          "Substitute the limits: [" + frac(1, sq(a)) + "x²] from " + c + " to " + d + " = " + stackedFraction("(" + sq(d) + " - " + sq(c) + ")", sq(a)) + ".",
           '<span class="step-arrow">-></span> P = ' + probFraction + " ≈ " + fmt(prob)
         ]
       };
@@ -293,13 +310,13 @@
           '<span class="step-indicator">Guide</span> Make the total area under the density equal to 1.',
           "The support is 0 ≤ x ≤ " + a + ", so ∫ from 0 to " + a + " of f(x) dx = 1.",
           "Substitute f(x) = kx²: ∫ from 0 to " + a + " of kx² dx = 1.",
-          "Integrate kx². Since k is constant and ∫ x² dx = x³/3, the antiderivative is kx³/3.",
-          "Evaluate the limits: [kx³/3] from 0 to " + a + " = k(" + cube(a) + ")/3 - k(0³)/3 = k(" + cube(a) + ")/3.",
-          "Solve k(" + cube(a) + ")/3 = 1, so k = " + fractionWork(3, cube(a)) + ".",
+          "Integrate kx². Since k is constant and ∫ x² dx = " + stackedFraction("x³", 3) + ", the antiderivative is k" + stackedFraction("x³", 3) + ".",
+          "Evaluate the limits: [k" + stackedFraction("x³", 3) + "] from 0 to " + a + " = k" + stackedFraction(cube(a), 3) + " - k" + stackedFraction("0³", 3) + " = k" + stackedFraction(cube(a), 3) + ".",
+          "Solve k × " + stackedFraction(cube(a), 3) + " = 1, so k = " + fractionWork(3, cube(a)) + ".",
           '<span class="step-indicator">Guide</span> Now integrate the density across the requested interval.',
           "P(" + c + " < X < " + d + ") = ∫ from " + c + " to " + d + " of (" + frac(3, cube(a)) + ")x² dx.",
           "The antiderivative of (" + frac(3, cube(a)) + ")x² is " + frac(1, cube(a)) + "x³.",
-          "Substitute the limits: [" + frac(1, cube(a)) + "x³] from " + c + " to " + d + " = (" + cube(d) + " - " + cube(c) + ")/" + cube(a) + ".",
+          "Substitute the limits: [" + frac(1, cube(a)) + "x³] from " + c + " to " + d + " = " + stackedFraction("(" + cube(d) + " - " + cube(c) + ")", cube(a)) + ".",
           '<span class="step-arrow">-></span> P = ' + probFraction + " ≈ " + fmt(prob)
         ]
       };
@@ -313,15 +330,15 @@
       return {
         badge: "density",
         equation: '<span class="math-line">The density of X is ' + linearPdf(a) + ', and 0 otherwise.</span><span class="math-line">Find F(x), then find P(X ≤ ' + b + ').</span>',
-        answer: "F(x) = x²/" + sq(a) + " on 0 ≤ x ≤ " + a + ", P = " + probFraction,
+        answer: "F(x) = " + stackedFraction("x²", sq(a)) + " on 0 ≤ x ≤ " + a + ", P = " + probFraction,
         steps: [
           '<span class="step-indicator">Guide</span> The cumulative distribution function is F(x) = P(X ≤ x).',
           "For 0 ≤ x ≤ " + a + ", add up the density from the start of the support to x.",
           "Use a dummy variable t so the upper limit can be x: F(x) = ∫ from 0 to x of (" + frac(2, sq(a)) + ")t dt.",
           "Integrate (" + frac(2, sq(a)) + ")t. The antiderivative is " + frac(1, sq(a)) + "t².",
-          "Evaluate the limits: [" + frac(1, sq(a)) + "t²] from 0 to x = x²/" + sq(a) + " - 0²/" + sq(a) + " = x²/" + sq(a) + ".",
-          "So F(x) = 0 for x < 0, F(x) = x²/" + sq(a) + " for 0 ≤ x ≤ " + a + ", and F(x) = 1 for x > " + a + ".",
-          "P(X ≤ " + b + ") = F(" + b + ") = " + sq(b) + "/" + sq(a) + ".",
+          "Evaluate the limits: [" + frac(1, sq(a)) + "t²] from 0 to x = " + stackedFraction("x²", sq(a)) + " - " + stackedFraction("0²", sq(a)) + " = " + stackedFraction("x²", sq(a)) + ".",
+          "So F(x) = 0 for x < 0, F(x) = " + stackedFraction("x²", sq(a)) + " for 0 ≤ x ≤ " + a + ", and F(x) = 1 for x > " + a + ".",
+          "P(X ≤ " + b + ") = F(" + b + ") = " + frac(sq(b), sq(a)) + ".",
           '<span class="step-arrow">-></span> P = ' + probFraction + " ≈ " + fmt(prob)
         ]
       };
@@ -334,14 +351,14 @@
       const prob = (sq(d) - sq(c)) / sq(a);
       return {
         badge: "density",
-        equation: '<span class="math-line">For 0 ≤ x ≤ ' + a + ', F(x) = x²/' + sq(a) + '.</span><span class="math-line">Find P(' + c + ' < X < ' + d + ').</span>',
+        equation: '<span class="math-line">For 0 ≤ x ≤ ' + a + ', F(x) = ' + stackedFraction("x²", sq(a)) + '.</span><span class="math-line">Find P(' + c + ' < X < ' + d + ').</span>',
         answer: probFraction,
         steps: [
           '<span class="step-indicator">Guide</span> A CDF is already the integrated density, so use differences of F values.',
           "For any continuous random variable, P(a < X < b) = F(b) - F(a).",
           "P(" + c + " < X < " + d + ") = F(" + d + ") - F(" + c + ").",
-          "F(" + d + ") = " + sq(d) + "/" + sq(a) + " and F(" + c + ") = " + sq(c) + "/" + sq(a) + ".",
-          "P = (" + sq(d) + " - " + sq(c) + ")/" + sq(a) + ".",
+          "F(" + d + ") = " + frac(sq(d), sq(a)) + " and F(" + c + ") = " + frac(sq(c), sq(a)) + ".",
+          "P = " + stackedFraction("(" + sq(d) + " - " + sq(c) + ")", sq(a)) + ".",
           '<span class="step-arrow">-></span> P = ' + probFraction + " ≈ " + fmt(prob)
         ]
       };
@@ -360,9 +377,9 @@
           "Use E(X) = ∫ from 0 to " + a + " of x f(x) dx.",
           "Substitute f(x): E(X) = ∫ from 0 to " + a + " of x(" + frac(2, sq(a)) + "x) dx.",
           "Multiply inside the integral: x(" + frac(2, sq(a)) + "x) = " + frac(2, sq(a)) + "x².",
-          "Integrate x². E(X) = " + frac(2, sq(a)) + "[x³/3] from 0 to " + a + ".",
-          "Substitute the limits: E(X) = " + frac(2, sq(a)) + "((" + cube(a) + ")/3 - 0³/3).",
-          "Simplify: E(X) = 2(" + cube(a) + ")/(3 × " + sq(a) + ") = " + eFraction + ".",
+          "Integrate x². E(X) = " + frac(2, sq(a)) + "[" + stackedFraction("x³", 3) + "] from 0 to " + a + ".",
+          "Substitute the limits: E(X) = " + frac(2, sq(a)) + "(" + stackedFraction(cube(a), 3) + " - " + stackedFraction("0³", 3) + ").",
+          "Simplify: E(X) = " + stackedFraction("2(" + cube(a) + ")", "3 × " + sq(a)) + " = " + eFraction + ".",
           '<span class="step-arrow">-></span> E(X) = ' + eFraction + " ≈ " + fmt(eValue)
         ]
       };
@@ -383,8 +400,8 @@
           "Now use E(X²) = ∫ from 0 to " + a + " of x² f(x) dx.",
           "Substitute f(x): E(X²) = ∫ from 0 to " + a + " of x²(" + frac(2, sq(a)) + "x) dx.",
           "Multiply inside the integral: x²(" + frac(2, sq(a)) + "x) = " + frac(2, sq(a)) + "x³.",
-          "Integrate x³. E(X²) = " + frac(2, sq(a)) + "[x⁴/4] from 0 to " + a + ".",
-          "Substitute the limits: E(X²) = " + frac(2, sq(a)) + "((" + (sq(sq(a))) + ")/4 - 0⁴/4) = " + frac(sq(a), 2) + ".",
+          "Integrate x³. E(X²) = " + frac(2, sq(a)) + "[" + stackedFraction("x⁴", 4) + "] from 0 to " + a + ".",
+          "Substitute the limits: E(X²) = " + frac(2, sq(a)) + "(" + stackedFraction(sq(sq(a)), 4) + " - " + stackedFraction("0⁴", 4) + ") = " + frac(sq(a), 2) + ".",
           '<span class="step-indicator">Guide</span> Use Var(X) = E(X²) - [E(X)]².',
           "Var(X) = " + frac(sq(a), 2) + " - (" + frac(2 * a, 3) + ")² = " + frac(sq(a), 18) + ".",
           "SD(X) = sqrt(" + frac(sq(a), 18) + ") ≈ " + fmt(Math.sqrt(variance)) + ".",
@@ -404,9 +421,9 @@
         answer: fmt(value),
         steps: [
           '<span class="step-indicator">Guide</span> Use the CDF, because quartiles are found from cumulative probability.',
-          "The density integrates to F(x) = ∫ from 0 to x of (" + frac(2, sq(a)) + ")t dt = x²/" + sq(a) + " for 0 ≤ x ≤ " + a + ".",
+          "The density integrates to F(x) = ∫ from 0 to x of (" + frac(2, sq(a)) + ")t dt = " + stackedFraction("x²", sq(a)) + " for 0 ≤ x ≤ " + a + ".",
           "The " + label + " is the value q where F(q) = " + target + ".",
-          "q²/" + sq(a) + " = " + target + ".",
+          stackedFraction("q²", sq(a)) + " = " + target + ".",
           "q² = " + fmtTrim(target * sq(a)) + ".",
           "q = sqrt(" + fmtTrim(target * sq(a)) + ") ≈ " + fmt(value) + ".",
           '<span class="step-arrow">-></span> ' + label + ' ≈ ' + fmt(value)
@@ -427,12 +444,12 @@
           '<span class="step-indicator">Guide</span> Use E(X) = ∫ x f(x) dx over the support.',
           "Substitute f(x): E(X) = ∫ from 0 to " + a + " of x(" + frac(3, cube(a)) + "x²) dx.",
           "Multiply inside the integral: x(" + frac(3, cube(a)) + "x²) = " + frac(3, cube(a)) + "x³.",
-          "Integrate x³: E(X) = " + frac(3, cube(a)) + "[x⁴/4] from 0 to " + a + ".",
-          "Substitute the limits: E(X) = " + frac(3, cube(a)) + "((" + sq(sq(a)) + ")/4 - 0⁴/4) = " + frac(3 * a, 4) + ".",
+          "Integrate x³: E(X) = " + frac(3, cube(a)) + "[" + stackedFraction("x⁴", 4) + "] from 0 to " + a + ".",
+          "Substitute the limits: E(X) = " + frac(3, cube(a)) + "(" + stackedFraction(sq(sq(a)), 4) + " - " + stackedFraction("0⁴", 4) + ") = " + frac(3 * a, 4) + ".",
           '<span class="step-indicator">Guide</span> Find E(X²) before variance.',
           "Use E(X²) = ∫ from 0 to " + a + " of x² f(x) dx.",
           "Substitute and multiply: E(X²) = ∫ from 0 to " + a + " of x²(" + frac(3, cube(a)) + "x²) dx = " + frac(3, cube(a)) + "∫ from 0 to " + a + " of x⁴ dx.",
-          "Integrate x⁴: E(X²) = " + frac(3, cube(a)) + "[x⁵/5] from 0 to " + a + " = " + frac(3 * sq(a), 5) + ".",
+          "Integrate x⁴: E(X²) = " + frac(3, cube(a)) + "[" + stackedFraction("x⁵", 5) + "] from 0 to " + a + " = " + frac(3 * sq(a), 5) + ".",
           "Var(X) = E(X²) - [E(X)]² = " + frac(3 * sq(a), 5) + " - (" + frac(3 * a, 4) + ")².",
           '<span class="step-arrow">-></span> Var(X) = ' + frac(3 * sq(a), 80) + " ≈ " + fmt(variance)
         ]
@@ -452,10 +469,10 @@
         answer: frac(d - c, width),
         steps: [
           '<span class="step-indicator">Guide</span> For a uniform distribution, the density is constant.',
-          "Total length = " + b + " - " + a + " = " + width + ", so f(x) = 1/" + width + " on " + a + " ≤ x ≤ " + b + ".",
-          "Set up the probability as an area: P(" + c + " < X < " + d + ") = ∫ from " + c + " to " + d + " of 1/" + width + " dx.",
-          "Integrate the constant: ∫ 1/" + width + " dx = x/" + width + ".",
-          "Substitute the limits: [x/" + width + "] from " + c + " to " + d + " = (" + d + " - " + c + ")/" + width + ".",
+          "Total length = " + b + " - " + a + " = " + width + ", so f(x) = " + stackedFraction(1, width) + " on " + a + " ≤ x ≤ " + b + ".",
+          "Set up the probability as an area: P(" + c + " < X < " + d + ") = ∫ from " + c + " to " + d + " of " + stackedFraction(1, width) + " dx.",
+          "Integrate the constant: ∫ " + stackedFraction(1, width) + " dx = " + stackedFraction("x", width) + ".",
+          "Substitute the limits: [" + stackedFraction("x", width) + "] from " + c + " to " + d + " = " + stackedFraction("(" + d + " - " + c + ")", width) + ".",
           '<span class="step-arrow">-></span> P = ' + frac(d - c, width) + " ≈ " + fmt(probability)
         ]
       };
@@ -473,11 +490,11 @@
         answer: "E(X) = " + fmtTrim(mean) + ", Var(X) = " + frac(sq(width), 12),
         steps: [
           '<span class="step-indicator">Guide</span> For X ~ U(a,b), the mean is the midpoint of the interval.',
-          "E(X) = (a + b)/2.",
-          "Substitute a = " + a + " and b = " + b + ": E(X) = (" + a + " + " + b + ")/2 = " + fmtTrim(mean) + ".",
+          "E(X) = " + stackedFraction("(a + b)", 2) + ".",
+          "Substitute a = " + a + " and b = " + b + ": E(X) = " + stackedFraction("(" + a + " + " + b + ")", 2) + " = " + fmtTrim(mean) + ".",
           '<span class="step-indicator">Guide</span> The variance of a uniform distribution depends on the width of the interval.',
-          "Use Var(X) = (b - a)²/12.",
-          "Var(X) = (" + b + " - " + a + ")²/12 = " + sq(width) + "/12 = " + frac(sq(width), 12) + ".",
+          "Use Var(X) = " + stackedFraction("(b - a)²", 12) + ".",
+          "Var(X) = " + stackedFraction("(" + b + " - " + a + ")²", 12) + " = " + frac(sq(width), 12) + ".",
           "SD(X) = sqrt(" + frac(sq(width), 12) + ") ≈ " + fmt(Math.sqrt(variance)) + ".",
           '<span class="step-arrow">-></span> E(X) = ' + fmtTrim(mean) + ", Var(X) = " + frac(sq(width), 12)
         ]
@@ -519,7 +536,7 @@
           "e^(-" + t + "λ) = " + fmt(survival) + ".",
           '<span class="step-indicator">Guide</span> Take natural logarithms.',
           "-" + t + "λ = ln(" + fmt(survival) + ").",
-          "λ = -ln(" + fmt(survival) + ")/" + t + ".",
+          "λ = " + stackedFraction("-ln(" + fmt(survival) + ")", t) + ".",
           '<span class="step-arrow">-></span> λ ≈ ' + fmt(lambda)
         ]
       };

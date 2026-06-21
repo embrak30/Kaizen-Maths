@@ -779,7 +779,7 @@ const tools = [
     status: "Imported",
     description: "Generate continuous random variable practice covering probability density functions, cumulative distribution functions, expectation, variance, uniform distributions, exponential distributions, and parameter questions.",
     tags: ["statistics", "probability", "continuous random variables", "density function", "cdf", "expectation", "variance", "uniform distribution", "exponential distribution"],
-    toolPath: "tools/continuous-random-variables/index.html?v=continuous-random-variables-3",
+    toolPath: "tools/continuous-random-variables/index.html?v=continuous-random-variables-5",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on valid density functions, normalising constants, interval probability, and cumulative distribution functions.",
