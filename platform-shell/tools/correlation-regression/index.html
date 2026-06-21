@@ -279,12 +279,12 @@
       const steps = [
         step('<span class="step-indicator">Step 1</span> Find the summary values from the table.'),
         calc("$\\sum x=" + data.sumX + "$, $\\sum y=" + data.sumY + "$, $\\sum x^2=" + data.sumXX + "$, $\\sum xy=" + data.sumXY + "$, $n=" + data.n + "$"),
-        step('<span class="step-indicator">Step 2</span> Calculate $\\bar{x}$, $\\bar{y}$, $S_{xx}$ and $S_{xy}$.'),
+        step('<span class="step-indicator">Step 2</span> Calculate x-bar, y-bar, Sxx and Sxy.'),
         calc("$\\bar{x}=\\dfrac{" + data.sumX + "}{" + data.n + "}=" + fmt(data.xBar, 3) + "$"),
         calc("$\\bar{y}=\\dfrac{" + data.sumY + "}{" + data.n + "}=" + fmt(data.yBar, 3) + "$"),
         calc("$S_{xx}=\\sum x^2-\\dfrac{(\\sum x)^2}{n}=" + data.sumXX + "-\\dfrac{" + data.sumX + "^2}{" + data.n + "}=" + fmt(data.sxx, 3) + "$"),
         calc("$S_{xy}=\\sum xy-\\dfrac{(\\sum x)(\\sum y)}{n}=" + data.sumXY + "-\\dfrac{" + data.sumX + "\\times" + data.sumY + "}{" + data.n + "}=" + fmt(data.sxy, 3) + "$"),
-        step('<span class="step-indicator">Step 3</span> Find the gradient and intercept of the regression line of $y$ on $x$.'),
+        step('<span class="step-indicator">Step 3</span> Find the gradient and intercept of the regression line of y on x.'),
         calc("$b=\\dfrac{S_{xy}}{S_{xx}}=\\dfrac{" + fmt(data.sxy, 3) + "}{" + fmt(data.sxx, 3) + "}=" + fmt(data.b, 3) + "$"),
         calc("$a=\\bar{y}-b\\bar{x}=" + fmt(data.yBar, 3) + "-" + fmt(data.b, 3) + "\\times" + fmt(data.xBar, 3) + "=" + fmt(data.a, 3) + "$")
       ];
@@ -304,9 +304,9 @@
         equation: "For a bivariate data set, the product moment correlation coefficient is r = " + r + ". Describe the correlation and state one limitation of this conclusion.",
         answer: strengthText(r) + " correlation",
         steps: [
-          step('<span class="step-indicator">Step 1</span> Use the sign of $r$ to decide the direction.'),
+          step('<span class="step-indicator">Step 1</span> Use the sign of r to decide the direction.'),
           calc("$r=" + r + "$, so the relationship is " + (r >= 0 ? "positive" : "negative") + "."),
-          step('<span class="step-indicator">Step 2</span> Use the size of $|r|$ to judge the strength.'),
+          step('<span class="step-indicator">Step 2</span> Use the absolute value of r to judge the strength.'),
           calc("$|r|=" + Math.abs(r).toFixed(2) + "$, so the relationship is " + strengthText(r) + "."),
           step('<span class="step-indicator">Step 3</span> State a limitation.'),
           answerLine("Correlation describes association; it does not prove causation.")
@@ -323,7 +323,7 @@
         steps: [
           step('<span class="step-indicator">Step 1</span> Use the totals from the completed table.'),
           calc("$\\sum x=" + data.sumX + "$, $\\sum y=" + data.sumY + "$, $\\sum x^2=" + data.sumXX + "$, $\\sum y^2=" + data.sumYY + "$, $\\sum xy=" + data.sumXY + "$"),
-          step('<span class="step-indicator">Step 2</span> Calculate $S_{xx}$, $S_{yy}$ and $S_{xy}$.'),
+          step('<span class="step-indicator">Step 2</span> Calculate Sxx, Syy and Sxy.'),
           calc("$S_{xx}=" + data.sumXX + "-\\dfrac{" + data.sumX + "^2}{" + data.n + "}=" + fmt(data.sxx, 3) + "$"),
           calc("$S_{yy}=" + data.sumYY + "-\\dfrac{" + data.sumY + "^2}{" + data.n + "}=" + fmt(data.syy, 3) + "$"),
           calc("$S_{xy}=" + data.sumXY + "-\\dfrac{" + data.sumX + "\\times" + data.sumY + "}{" + data.n + "}=" + fmt(data.sxy, 3) + "$"),
@@ -397,9 +397,9 @@
         equation: contextSentence(data) + " Find the regression line of y on x, then estimate " + data.y + " when " + data.x + " is " + x0 + " " + data.xUnit + ". State whether this is interpolation or extrapolation." + rawTable(data, true, true),
         answer: "$\\hat{y}=" + fmt(pred, 2) + "$",
         steps: regressionSteps(data).concat([
-          step('<span class="step-indicator">Prediction</span> Substitute the given $x$ value into the regression line.'),
+          step('<span class="step-indicator">Prediction</span> Substitute the given x value into the regression line.'),
           calc("$\\hat{y}=" + fmt(data.a, 3) + signed(data.b, 3) + "\\times" + x0 + "=" + fmt(pred, 2) + "$"),
-          step('<span class="step-indicator">Reliability</span> Compare the given $x$ value with the observed range.'),
+          step('<span class="step-indicator">Reliability</span> Compare the given x value with the observed range.'),
           calc("Observed range: " + data.minX + " <= x <= " + data.maxX + ". Since " + x0 + " is inside this range, this is interpolation."),
           answerLine("Estimated " + data.y + " is " + fmt(pred, 2) + " " + data.yUnit + ".")
         ])
@@ -417,7 +417,7 @@
         steps: [
           step('<span class="step-indicator">Step 1</span> Substitute the given value into the regression line.'),
           calc("$\\hat{y}=" + fmt(data.a, 3) + signed(data.b, 3) + "\\times" + x0 + "=" + fmt(pred, 2) + "$"),
-          step('<span class="step-indicator">Step 2</span> Check the observed range of $x$.'),
+          step('<span class="step-indicator">Step 2</span> Check the observed range of x.'),
           calc("Observed range: " + data.minX + " <= x <= " + data.maxX + ". The value " + x0 + " is outside this range."),
           answerLine("This is extrapolation, so the prediction may be unreliable.")
         ]
