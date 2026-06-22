@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motion Graphs and Constant Acceleration</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden;color:#1a365d}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:white;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:700;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:white;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:white;padding:20px;font-size:1.3em;font-weight:700}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1260px;margin:0 auto;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;color:white;padding:24px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header h1{font-size:2.15em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:17px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:800;transition:.3s;border-bottom:3px solid transparent;color:#1a365d}.tab:hover{background:#cbd5e0}.tab.active{background:white;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px 24px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:1px solid #e2e8f0}.level-info{min-width:320px;flex:1}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.25em}.level-info p{color:#718096;font-size:.98em}.dropdown-container{margin-top:9px;display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:white;cursor:pointer;min-width:390px;max-width:100%;color:#1a365d}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:800;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
+    .problems-section{padding:18px 24px 24px;min-height:520px}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:700}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.basics{background:#3182ce}.problem-set-header.graphs{background:#38a169}.problem-set-header.applications{background:#805ad5}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:10px}.problem-item{background:#f7fafc;padding:13px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.08em;color:#1a365d;font-weight:500;line-height:1.42;min-width:0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.96em;display:none;text-align:center;max-width:340px;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .motion-row{display:grid;grid-template-columns:320px minmax(0,1fr);gap:13px;align-items:center}.motion-diagram{width:320px;background:#fff;border:1px solid #d8e2ee;border-radius:8px;padding:5px;overflow:hidden}.motion-diagram svg{width:100%;height:auto;display:block}.card-prompt{font-weight:750;color:#244763}.graph-axis{stroke:#111827;stroke-width:1.8;fill:none}.graph-line{stroke:#111827;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}.graph-line.dashed{stroke-dasharray:6 5}.graph-grid{stroke:#cbd5e0;stroke-width:.75}.graph-guide{stroke:#4a5568;stroke-width:1.2;stroke-dasharray:4 4}.graph-dot{fill:#111827}.graph-label{font-family:"Segoe UI",Tahoma,Verdana,sans-serif;fill:#111827;font-size:10.5px;font-weight:700}.graph-small{font-size:9.5px}.formula-box{background:white;border:1px solid #d8e2ee;border-radius:8px;padding:12px 14px;font-weight:800;color:#1a365d}
+    .steps-section{grid-column:1/-1;margin-top:12px;padding:14px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:800;color:#38a169;margin-bottom:10px;font-size:1.08em}.solution-steps{font-size:1.07em;line-height:1.6}.step{margin:8px 0;color:#1a365d}.step-equation{font-weight:700;color:#805ad5;text-align:center;margin:10px 0;font-size:1.11em;overflow-x:auto}.final-answer{background:#38a169;color:white;padding:9px 15px;border-radius:7px;text-align:center;font-weight:bold;font-size:1.08em;margin-top:12px;overflow-x:auto}.step-indicator{background:#3182ce;color:white;padding:5px 9px;border-radius:5px;font-size:.86em;font-weight:bold;margin-right:8px;white-space:nowrap}.note{color:#718096;font-size:.92em}
+    .formula-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.formula-pill{background:#edf2f7;border:1px solid #cbd5e0;border-radius:999px;padding:6px 10px;font-weight:800;color:#1a365d}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
+    @media (max-width:900px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section,.action-buttons{justify-content:center;flex-wrap:wrap}.type-dropdown{min-width:0;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}.motion-row{grid-template-columns:1fr}.motion-diagram{width:100%}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool supports motion graphs and constant acceleration. It builds from average speed and acceleration into interpreting distance-time and velocity-time graphs.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Use speed, distance, time, acceleration, and simple graph facts.</li>
+        <li><strong>Level 2:</strong> Interpret distance-time and velocity-time graphs using gradients and areas.</li>
+        <li><strong>Level 3:</strong> Use constant acceleration formulae and mixed graph applications with missing values.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>On a distance-time graph, gradient gives speed.</li>
+        <li>On a velocity-time graph, gradient gives acceleration and area gives distance travelled.</li>
+        <li>Deceleration can be shown as a negative acceleration or as a positive rate of decrease in speed.</li>
+      </ul>
+      <div class="formula-strip">
+        <span class="formula-pill">speed = distance ÷ time</span>
+        <span class="formula-pill">a = (v - u) ÷ t</span>
+        <span class="formula-pill">distance = area under v-t graph</span>
+        <span class="formula-pill">v = u + at</span>
+        <span class="formula-pill">s = ut + ½at²</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header"><h1>Motion Graphs and Constant Acceleration</h1></section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Speed and Acceleration</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Motion Graphs</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Constant Acceleration</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Speed and Acceleration</h3>
+        <p id="level-description">Use the core formulae for average speed, acceleration, and distance travelled.</p>
+        <div class="dropdown-container" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div class="set-instruction" id="set-instruction">Choose a question type to practise motion graphs and constant acceleration.</div>
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Speed and Acceleration",
+        description: "Use the core formulae for average speed, acceleration, and distance travelled.",
+        instruction: "Use the correct formula and include the correct units in the final answer.",
+        className: "basics",
+        options: [
+          ["average_speed", "Average speed"],
+          ["acceleration_deceleration", "Acceleration and deceleration"],
+          ["distance_time_gradient", "Speed from a distance-time graph"],
+          ["velocity_time_rectangle", "Distance from a constant velocity graph"],
+          ["mixed_basics", "Mixed speed and acceleration"]
+        ]
+      },
+      2: {
+        title: "Level 2: Motion Graphs",
+        description: "Use gradients and areas to interpret distance-time and velocity-time graphs.",
+        instruction: "For distance-time graphs, use gradient for speed. For velocity-time graphs, use gradient for acceleration and area for distance.",
+        className: "graphs",
+        options: [
+          ["velocity_time_triangle", "Distance from a triangular velocity-time graph"],
+          ["velocity_time_piecewise", "Distance and average speed from a velocity-time graph"],
+          ["distance_time_segments", "Interpret a distance-time graph"],
+          ["deceleration_from_graph", "Deceleration from a velocity-time graph"],
+          ["mixed_graphs", "Mixed motion graph interpretation"]
+        ]
+      },
+      3: {
+        title: "Level 3: Constant Acceleration",
+        description: "Combine graph facts with constant acceleration formulae and missing values.",
+        instruction: "Choose whether the graph method or a constant acceleration formula is the most direct route.",
+        className: "applications",
+        options: [
+          ["constant_acceleration_formula", "Use constant acceleration formulae"],
+          ["missing_time_from_area", "Missing time from area under a graph"],
+          ["missing_velocity_from_area", "Missing velocity from graph area"],
+          ["compare_journeys", "Compare journeys from graphs"],
+          ["mixed_applications", "Mixed applications"]
+        ]
+      }
+    };
+
+    const typeDisplayNames = {
+      average_speed: "Average speed",
+      acceleration_deceleration: "Acceleration and deceleration",
+      distance_time_gradient: "Speed from a distance-time graph",
+      velocity_time_rectangle: "Distance from a constant velocity graph",
+      mixed_basics: "Mixed speed and acceleration",
+      velocity_time_triangle: "Distance from a triangular velocity-time graph",
+      velocity_time_piecewise: "Distance and average speed from a velocity-time graph",
+      distance_time_segments: "Interpret a distance-time graph",
+      deceleration_from_graph: "Deceleration from a velocity-time graph",
+      mixed_graphs: "Mixed motion graph interpretation",
+      constant_acceleration_formula: "Use constant acceleration formulae",
+      missing_time_from_area: "Missing time from area under a graph",
+      missing_velocity_from_area: "Missing velocity from graph area",
+      compare_journeys: "Compare journeys from graphs",
+      mixed_applications: "Mixed applications"
+    };
+
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function choice(items) { return items[rand(0, items.length - 1)]; }
+    function fmt(value, dp = 2) {
+      const n = Number(value);
+      if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+      return n.toFixed(dp).replace(/\.?0+$/, "");
+    }
+    function step(text) { return { type: "text", text }; }
+    function calc(text) { return { type: "calc", text }; }
+    function answerLine(text) { return { type: "calc", text: '<span class="step-indicator">Answer</span> ' + text }; }
+    function cleanQuestionText(problem) {
+      return (problem.question || problem.equation || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 260);
+    }
+    function signatureFor(problem) {
+      return currentType + "|" + cleanQuestionText(problem);
+    }
+
+    function axisTicks(max, count = 4) {
+      const ticks = [0];
+      for (let i = 1; i < count; i++) ticks.push(max * i / count);
+      ticks.push(max);
+      return ticks;
+    }
+
+    function graphSvg({ title, xLabel, yLabel, points, xMax, yMax, labels = [], dashedPoints = null, unknownX = "", unknownY = "", pointLabels = true }) {
+      const w = 320, h = 196, left = 48, right = 18, top = 18, bottom = 42;
+      const plotW = w - left - right;
+      const plotH = h - top - bottom;
+      const sx = (x) => left + (x / xMax) * plotW;
+      const sy = (y) => top + plotH - (y / yMax) * plotH;
+      const xTicks = axisTicks(xMax, 4);
+      const yTicks = axisTicks(yMax, 4);
+      const grid = [
+        ...xTicks.map((x) => '<line class="graph-grid" x1="' + sx(x).toFixed(1) + '" y1="' + top + '" x2="' + sx(x).toFixed(1) + '" y2="' + (top + plotH) + '"></line>'),
+        ...yTicks.map((y) => '<line class="graph-grid" x1="' + left + '" y1="' + sy(y).toFixed(1) + '" x2="' + (left + plotW) + '" y2="' + sy(y).toFixed(1) + '"></line>')
+      ].join("");
+      const tickLabels = [
+        ...xTicks.map((x) => '<text class="graph-label graph-small" x="' + sx(x).toFixed(1) + '" y="' + (top + plotH + 17) + '" text-anchor="middle">' + (unknownX && x === xMax ? unknownX : fmt(x, 1)) + '</text>'),
+        ...yTicks.map((y) => '<text class="graph-label graph-small" x="' + (left - 8) + '" y="' + (sy(y) + 3).toFixed(1) + '" text-anchor="end">' + (unknownY && y === yMax ? unknownY : fmt(y, 1)) + '</text>')
+      ].join("");
+      const polyline = points.map((p) => sx(p.x).toFixed(1) + "," + sy(p.y).toFixed(1)).join(" ");
+      const dashed = dashedPoints ? '<polyline class="graph-line dashed" points="' + dashedPoints.map((p) => sx(p.x).toFixed(1) + "," + sy(p.y).toFixed(1)).join(" ") + '"></polyline>' : "";
+      const dots = pointLabels ? points.map((p) => '<circle class="graph-dot" cx="' + sx(p.x).toFixed(1) + '" cy="' + sy(p.y).toFixed(1) + '" r="3"></circle>').join("") : "";
+      const extraLabels = labels.map((item) => '<text class="graph-label" x="' + sx(item.x).toFixed(1) + '" y="' + sy(item.y).toFixed(1) + '" text-anchor="' + (item.anchor || "middle") + '">' + item.text + '</text>').join("");
+      return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="' + title + '">' +
+        grid +
+        '<line class="graph-axis" x1="' + left + '" y1="' + (top + plotH) + '" x2="' + (left + plotW + 8) + '" y2="' + (top + plotH) + '"></line>' +
+        '<line class="graph-axis" x1="' + left + '" y1="' + (top + plotH) + '" x2="' + left + '" y2="' + (top - 8) + '"></line>' +
+        tickLabels +
+        '<polyline class="graph-line" points="' + polyline + '"></polyline>' + dashed + dots + extraLabels +
+        '<text class="graph-label" x="' + (left + plotW - 4) + '" y="' + (h - 8) + '" text-anchor="end">' + xLabel + '</text>' +
+        '<text class="graph-label" x="' + (left + 2) + '" y="12" text-anchor="start">' + yLabel + '</text>' +
+        '</svg>';
+    }
+
+    function diagramWrap(svg, prompt) {
+      return '<div class="motion-row"><div class="motion-diagram">' + svg + '</div><div class="card-prompt">' + prompt + '</div></div>';
+    }
+
+    function formulaWrap(prompt) {
+      return '<div class="formula-box">' + prompt + '</div>';
+    }
+
+    function problemShell(prompt, answer, steps, question, diagram = "") {
+      return {
+        equation: diagram ? diagramWrap(diagram, prompt) : formulaWrap(prompt),
+        question: question || prompt,
+        answer,
+        steps
+      };
+    }
+
+    function genAverageSpeed() {
+      const speed = rand(4, 18);
+      const time = choice([12, 15, 20, 25, 30, 40]);
+      const distance = speed * time;
+      const q = "A runner travels " + distance + " m in " + time + " s. Find the average speed.";
+      return problemShell(q, fmt(speed) + " m/s", [
+        step('<span class="step-indicator">Step 1</span> Write the formula for average speed.'),
+        calc("average speed = distance ÷ time"),
+        step('<span class="step-indicator">Step 2</span> Substitute the distance and time.'),
+        calc("average speed = " + distance + " ÷ " + time),
+        calc("average speed = " + fmt(speed)),
+        answerLine("The average speed is " + fmt(speed) + " m/s.")
+      ], q);
+    }
+
+    function genAccelerationDeceleration() {
+      const decel = Math.random() < 0.5;
+      const t = choice([4, 5, 6, 8, 10]);
+      const aMag = choice([1.5, 2, 2.5, 3, 4]);
+      const vFinal = decel ? rand(2, 12) : null;
+      const u = decel ? vFinal + aMag * t : rand(2, 12);
+      const v = decel ? vFinal : u + aMag * t;
+      const a = (v - u) / t;
+      const q = "A vehicle changes speed from " + fmt(u) + " m/s to " + fmt(v) + " m/s in " + t + " s. Find the acceleration and state whether the vehicle is accelerating or decelerating.";
+      return problemShell(q, fmt(a, 2) + " m/s²", [
+        step('<span class="step-indicator">Step 1</span> Write the acceleration formula.'),
+        calc("a = (v - u) ÷ t"),
+        step('<span class="step-indicator">Step 2</span> Substitute the initial speed, final speed, and time.'),
+        calc("a = (" + fmt(v) + " - " + fmt(u) + ") ÷ " + t),
+        calc("a = " + fmt(v - u) + " ÷ " + t + " = " + fmt(a, 2)),
+        step('<span class="step-indicator">Step 3</span> Interpret the sign of the acceleration.'),
+        answerLine(a < 0 ? "The acceleration is " + fmt(a, 2) + " m/s², so the vehicle is decelerating." : "The acceleration is " + fmt(a, 2) + " m/s², so the vehicle is accelerating.")
+      ], q);
+    }
+
+    function genDistanceTimeGradient() {
+      const speed = choice([2, 3, 4, 5, 6, 8, 10, 12]);
+      const time = choice([10, 12, 15, 20]);
+      const distance = speed * time;
+      const svg = graphSvg({
+        title: "distance-time graph",
+        xLabel: "time (s)",
+        yLabel: "distance (m)",
+        points: [{ x: 0, y: 0 }, { x: time, y: distance }],
+        xMax: time,
+        yMax: distance,
+        labels: [{ x: time, y: distance, text: "(" + time + ", " + distance + ")", anchor: "end" }]
+      });
+      const q = "Use the distance-time graph to find the speed.";
+      return problemShell(q, fmt(speed) + " m/s", [
+        step('<span class="step-indicator">Step 1</span> On a distance-time graph, speed is the gradient.'),
+        calc("speed = change in distance ÷ change in time"),
+        step('<span class="step-indicator">Step 2</span> Read two points from the graph.'),
+        calc("from (0, 0) to (" + time + ", " + distance + ")"),
+        calc("speed = " + distance + " ÷ " + time + " = " + fmt(speed)),
+        answerLine("The speed is " + fmt(speed) + " m/s.")
+      ], q, svg);
+    }
+
+    function genVelocityTimeRectangle() {
+      const v = choice([4, 5, 6, 8, 10, 12, 15]);
+      const t = choice([8, 10, 12, 15, 20]);
+      const s = v * t;
+      const svg = graphSvg({
+        title: "constant velocity-time graph",
+        xLabel: "time (s)",
+        yLabel: "velocity (m/s)",
+        points: [{ x: 0, y: v }, { x: t, y: v }],
+        xMax: t,
+        yMax: v,
+        labels: [{ x: t / 2, y: v, text: v + " m/s" }]
+      });
+      const q = "Use the velocity-time graph to find the distance travelled.";
+      return problemShell(q, fmt(s) + " m", [
+        step('<span class="step-indicator">Step 1</span> On a velocity-time graph, distance travelled is the area under the graph.'),
+        step('<span class="step-indicator">Step 2</span> The area is a rectangle.'),
+        calc("area = base × height"),
+        calc("distance = " + t + " × " + v + " = " + s),
+        answerLine("The distance travelled is " + s + " m.")
+      ], q, svg);
+    }
+
+    function genVelocityTimeTriangle() {
+      const v = choice([10, 12, 14, 16, 18, 20, 24]);
+      const t = choice([5, 6, 8, 10, 12]);
+      const s = 0.5 * t * v;
+      const svg = graphSvg({
+        title: "triangular velocity-time graph",
+        xLabel: "time (s)",
+        yLabel: "velocity (m/s)",
+        points: [{ x: 0, y: 0 }, { x: t, y: v }],
+        xMax: t,
+        yMax: v,
+        labels: [{ x: t, y: v, text: "(" + t + ", " + v + ")", anchor: "end" }]
+      });
+      const q = "The velocity-time graph shows an object accelerating from rest. Find the distance travelled.";
+      return problemShell(q, fmt(s) + " m", [
+        step('<span class="step-indicator">Step 1</span> Distance travelled is the area under the velocity-time graph.'),
+        step('<span class="step-indicator">Step 2</span> The area under this graph is a triangle.'),
+        calc("area = ½ × base × height"),
+        calc("distance = ½ × " + t + " × " + v),
+        calc("distance = " + fmt(s)),
+        answerLine("The distance travelled is " + fmt(s) + " m.")
+      ], q, svg);
+    }
+
+    function genVelocityTimePiecewise() {
+      const t1 = choice([4, 5, 6]);
+      const t2 = t1 + choice([5, 6, 8]);
+      const t3 = t2 + choice([4, 5, 6]);
+      const v = choice([8, 10, 12, 14, 16]);
+      const s1 = 0.5 * t1 * v;
+      const s2 = (t2 - t1) * v;
+      const s3 = 0.5 * (t3 - t2) * v;
+      const total = s1 + s2 + s3;
+      const avg = total / t3;
+      const svg = graphSvg({
+        title: "piecewise velocity-time graph",
+        xLabel: "time (s)",
+        yLabel: "velocity (m/s)",
+        points: [{ x: 0, y: 0 }, { x: t1, y: v }, { x: t2, y: v }, { x: t3, y: 0 }],
+        xMax: t3,
+        yMax: v,
+        labels: [{ x: t1, y: v, text: t1 + " s" }, { x: t2, y: v, text: t2 + " s" }]
+      });
+      const q = "Use the velocity-time graph to find the total distance travelled and the average speed for the whole journey.";
+      return problemShell(q, fmt(total) + " m, average speed " + fmt(avg, 2) + " m/s", [
+        step('<span class="step-indicator">Step 1</span> Split the area under the graph into two triangles and one rectangle.'),
+        calc("first triangle = ½ × " + t1 + " × " + v + " = " + fmt(s1)),
+        calc("rectangle = (" + t2 + " - " + t1 + ") × " + v + " = " + fmt(s2)),
+        calc("second triangle = ½ × (" + t3 + " - " + t2 + ") × " + v + " = " + fmt(s3)),
+        step('<span class="step-indicator">Step 2</span> Add the areas to find the distance.'),
+        calc("total distance = " + fmt(s1) + " + " + fmt(s2) + " + " + fmt(s3) + " = " + fmt(total)),
+        step('<span class="step-indicator">Step 3</span> Use average speed = total distance ÷ total time.'),
+        calc("average speed = " + fmt(total) + " ÷ " + t3 + " = " + fmt(avg, 2)),
+        answerLine("Distance = " + fmt(total) + " m and average speed = " + fmt(avg, 2) + " m/s.")
+      ], q, svg);
+    }
+
+    function genDistanceTimeSegments() {
+      const t1 = choice([4, 5, 6]);
+      const rest = choice([3, 4, 5]);
+      const t2 = t1 + rest;
+      const t3 = t2 + choice([4, 5, 6]);
+      const d1 = choice([20, 24, 30, 36]);
+      const d3 = d1 + choice([24, 30, 36, 40]);
+      const finalSpeed = (d3 - d1) / (t3 - t2);
+      const svg = graphSvg({
+        title: "distance-time graph with a rest period",
+        xLabel: "time (s)",
+        yLabel: "distance (m)",
+        points: [{ x: 0, y: 0 }, { x: t1, y: d1 }, { x: t2, y: d1 }, { x: t3, y: d3 }],
+        xMax: t3,
+        yMax: d3,
+        labels: [{ x: (t1 + t2) / 2, y: d1, text: "rest" }]
+      });
+      const q = "Use the distance-time graph to state when the object is stationary and find the speed on the final section.";
+      return problemShell(q, "stationary from " + t1 + " s to " + t2 + " s; final speed " + fmt(finalSpeed, 2) + " m/s", [
+        step('<span class="step-indicator">Step 1</span> A horizontal section on a distance-time graph means the distance is not changing.'),
+        calc("stationary interval: " + t1 + " s to " + t2 + " s"),
+        step('<span class="step-indicator">Step 2</span> The speed on a distance-time graph is the gradient.'),
+        calc("final section speed = change in distance ÷ change in time"),
+        calc("speed = (" + d3 + " - " + d1 + ") ÷ (" + t3 + " - " + t2 + ")"),
+        calc("speed = " + (d3 - d1) + " ÷ " + (t3 - t2) + " = " + fmt(finalSpeed, 2)),
+        answerLine("The object is stationary from " + t1 + " s to " + t2 + " s, and the final speed is " + fmt(finalSpeed, 2) + " m/s.")
+      ], q, svg);
+    }
+
+    function genDecelerationFromGraph() {
+      const v = choice([12, 15, 18, 20, 24, 30]);
+      const t = choice([4, 5, 6, 8, 10]);
+      const a = -v / t;
+      const svg = graphSvg({
+        title: "decelerating velocity-time graph",
+        xLabel: "time (s)",
+        yLabel: "velocity (m/s)",
+        points: [{ x: 0, y: v }, { x: t, y: 0 }],
+        xMax: t,
+        yMax: v,
+        labels: [{ x: 0.7, y: v, text: v + " m/s", anchor: "start" }]
+      });
+      const q = "Use the velocity-time graph to find the acceleration. State the deceleration as a positive value.";
+      return problemShell(q, "acceleration " + fmt(a, 2) + " m/s²; deceleration " + fmt(Math.abs(a), 2) + " m/s²", [
+        step('<span class="step-indicator">Step 1</span> On a velocity-time graph, acceleration is the gradient.'),
+        calc("acceleration = change in velocity ÷ change in time"),
+        calc("a = (0 - " + v + ") ÷ " + t),
+        calc("a = " + fmt(a, 2) + " m/s²"),
+        step('<span class="step-indicator">Step 2</span> Deceleration is the positive size of the negative acceleration.'),
+        answerLine("Acceleration = " + fmt(a, 2) + " m/s², so deceleration = " + fmt(Math.abs(a), 2) + " m/s².")
+      ], q, svg);
+    }
+
+    function genConstantAccelerationFormula() {
+      const u = choice([3, 4, 5, 6, 8, 10]);
+      const a = choice([1.5, 2, 2.5, 3, 4]);
+      const t = choice([4, 5, 6, 8]);
+      const v = u + a * t;
+      const s = u * t + 0.5 * a * t * t;
+      const q = "An object has initial velocity " + fmt(u) + " m/s and accelerates uniformly at " + fmt(a) + " m/s² for " + t + " s. Find its final velocity and distance travelled.";
+      return problemShell(q, "v = " + fmt(v, 2) + " m/s, s = " + fmt(s, 2) + " m", [
+        step('<span class="step-indicator">Step 1</span> List the known values.'),
+        calc("u = " + fmt(u) + " m/s, a = " + fmt(a) + " m/s², t = " + t + " s"),
+        step('<span class="step-indicator">Step 2</span> Use v = u + at to find final velocity.'),
+        calc("v = " + fmt(u) + " + " + fmt(a) + " × " + t + " = " + fmt(v, 2)),
+        step('<span class="step-indicator">Step 3</span> Use s = ut + ½at² to find distance.'),
+        calc("s = " + fmt(u) + " × " + t + " + ½ × " + fmt(a) + " × " + t + "²"),
+        calc("s = " + fmt(u * t) + " + " + fmt(0.5 * a * t * t) + " = " + fmt(s, 2)),
+        answerLine("Final velocity = " + fmt(v, 2) + " m/s and distance = " + fmt(s, 2) + " m.")
+      ], q);
+    }
+
+    function genMissingTimeFromArea() {
+      const v = choice([12, 16, 18, 20, 24]);
+      const t = choice([8, 10, 12, 15]);
+      const s = 0.5 * v * t;
+      const svg = graphSvg({
+        title: "velocity-time graph with unknown time",
+        xLabel: "time (s)",
+        yLabel: "velocity (m/s)",
+        points: [{ x: 0, y: 0 }, { x: t, y: v }],
+        xMax: t,
+        yMax: v,
+        labels: [{ x: t, y: v, text: v + " m/s", anchor: "end" }],
+        unknownX: "T"
+      });
+      const q = "The triangular velocity-time graph has maximum velocity " + v + " m/s. The distance travelled is " + fmt(s) + " m. Find the value of T.";
+      return problemShell(q, "T = " + t + " s", [
+        step('<span class="step-indicator">Step 1</span> Distance travelled is the area under the velocity-time graph.'),
+        step('<span class="step-indicator">Step 2</span> The area is a triangle.'),
+        calc("area = ½ × base × height"),
+        calc(fmt(s) + " = ½ × T × " + v),
+        step('<span class="step-indicator">Step 3</span> Rearrange to find T.'),
+        calc("T = (" + fmt(s) + " × 2) ÷ " + v),
+        calc("T = " + t),
+        answerLine("T = " + t + " s.")
+      ], q, svg);
+    }
+
+    function genMissingVelocityFromArea() {
+      const t1 = choice([3, 4, 5]);
+      const t2 = t1 + choice([4, 5, 6]);
+      const t3 = t2 + choice([3, 4, 5]);
+      const v = choice([8, 10, 12, 14, 16]);
+      const areaFactor = 0.5 * t1 + (t2 - t1) + 0.5 * (t3 - t2);
+      const s = areaFactor * v;
+      const svg = graphSvg({
+        title: "velocity-time graph with unknown velocity",
+        xLabel: "time (s)",
+        yLabel: "velocity (m/s)",
+        points: [{ x: 0, y: 0 }, { x: t1, y: v }, { x: t2, y: v }, { x: t3, y: 0 }],
+        xMax: t3,
+        yMax: v,
+        labels: [{ x: (t1 + t2) / 2, y: v, text: "V" }],
+        unknownY: "V"
+      });
+      const q = "The velocity-time graph shows a journey lasting " + t3 + " s. The total distance travelled is " + fmt(s) + " m. Find the value of V.";
+      return problemShell(q, "V = " + v + " m/s", [
+        step('<span class="step-indicator">Step 1</span> Distance travelled is the area under the graph.'),
+        step('<span class="step-indicator">Step 2</span> Split the graph into a triangle, a rectangle, and a triangle.'),
+        calc("area = ½ × " + t1 + " × V + (" + t2 + " - " + t1 + ") × V + ½ × (" + t3 + " - " + t2 + ") × V"),
+        calc("area = " + fmt(0.5 * t1) + "V + " + fmt(t2 - t1) + "V + " + fmt(0.5 * (t3 - t2)) + "V"),
+        calc(fmt(s) + " = " + fmt(areaFactor) + "V"),
+        step('<span class="step-indicator">Step 3</span> Divide by the coefficient of V.'),
+        calc("V = " + fmt(s) + " ÷ " + fmt(areaFactor) + " = " + v),
+        answerLine("V = " + v + " m/s.")
+      ], q, svg);
+    }
+
+    function genCompareJourneys() {
+      const t = choice([10, 12, 15, 20]);
+      const speedA = choice([4, 5, 6, 8]);
+      const speedB = speedA + choice([1, 2, 3]);
+      const dA = speedA * t;
+      const dB = speedB * t;
+      const svg = graphSvg({
+        title: "two distance-time graphs",
+        xLabel: "time (s)",
+        yLabel: "distance (m)",
+        points: [{ x: 0, y: 0 }, { x: t, y: dA }],
+        dashedPoints: [{ x: 0, y: 0 }, { x: t, y: dB }],
+        xMax: t,
+        yMax: dB,
+        labels: [{ x: t, y: dA, text: "A", anchor: "end" }, { x: t, y: dB, text: "B", anchor: "end" }]
+      });
+      const q = "The solid line shows journey A and the dashed line shows journey B. Find the average speed of each journey and state which is faster.";
+      return problemShell(q, "A = " + fmt(speedA) + " m/s, B = " + fmt(speedB) + " m/s; B is faster", [
+        step('<span class="step-indicator">Step 1</span> On a distance-time graph, average speed is gradient from start to finish.'),
+        calc("journey A speed = " + dA + " ÷ " + t + " = " + speedA + " m/s"),
+        calc("journey B speed = " + dB + " ÷ " + t + " = " + speedB + " m/s"),
+        step('<span class="step-indicator">Step 2</span> Compare the gradients.'),
+        answerLine("Journey B is faster because its gradient is greater.")
+      ], q, svg);
+    }
+
+    function generateProblem() {
+      let type = currentType;
+      if (type === "mixed_basics") type = choice(["average_speed", "acceleration_deceleration", "distance_time_gradient", "velocity_time_rectangle"]);
+      if (type === "mixed_graphs") type = choice(["velocity_time_triangle", "velocity_time_piecewise", "distance_time_segments", "deceleration_from_graph"]);
+      if (type === "mixed_applications") type = choice(["constant_acceleration_formula", "missing_time_from_area", "missing_velocity_from_area", "compare_journeys"]);
+      switch (type) {
+        case "average_speed": return genAverageSpeed();
+        case "acceleration_deceleration": return genAccelerationDeceleration();
+        case "distance_time_gradient": return genDistanceTimeGradient();
+        case "velocity_time_rectangle": return genVelocityTimeRectangle();
+        case "velocity_time_triangle": return genVelocityTimeTriangle();
+        case "velocity_time_piecewise": return genVelocityTimePiecewise();
+        case "distance_time_segments": return genDistanceTimeSegments();
+        case "deceleration_from_graph": return genDecelerationFromGraph();
+        case "constant_acceleration_formula": return genConstantAccelerationFormula();
+        case "missing_time_from_area": return genMissingTimeFromArea();
+        case "missing_velocity_from_area": return genMissingVelocityFromArea();
+        case "compare_journeys": return genCompareJourneys();
+        default: return genAverageSpeed();
+      }
+    }
+
+    function problemCountForType() {
+      return currentType.includes("graph") || currentType.includes("velocity_time") || currentType.includes("distance_time") || currentType.includes("missing") || currentType === "compare_journeys" ? 4 : 5;
+    }
+
+    function generateUniqueProblem(used) {
+      for (let attempt = 0; attempt < 80; attempt++) {
+        const problem = generateProblem();
+        const signature = signatureFor(problem);
+        if (!used.has(signature)) {
+          used.add(signature);
+          return problem;
+        }
+      }
+      return generateProblem();
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index + 1 === level));
+      const cfg = levelConfigs[level];
+      document.getElementById("level-title").textContent = cfg.title;
+      document.getElementById("level-description").textContent = cfg.description;
+      document.getElementById("set-instruction").textContent = cfg.instruction;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + cfg.options.map(([value, label]) => '<option value="' + value + '">' + label + '</option>').join("");
+      document.getElementById("problem-set-header").className = "problem-set-header " + cfg.className;
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      document.getElementById("set-instruction").textContent = levelConfigs[currentLevel].instruction;
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function showBlankPage() {
+      document.getElementById("problem-set-header").className = "problem-set-header " + levelConfigs[currentLevel].className;
+      document.getElementById("problem-set-header").classList.remove("visible");
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center;padding:40px;color:#718096;font-size:1.08em">Please select a question type to begin motion practice.</li>';
+      renderMath();
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") { showBlankPage(); return; }
+      answersVisible = false;
+      stepsVisible = false;
+      problems = [];
+      const usedSignatures = new Set();
+      const count = problemCountForType();
+      for (let i = 0; i < count; i++) problems.push(generateUniqueProblem(usedSignatures));
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const header = document.getElementById("problem-set-header");
+      header.className = "problem-set-header visible " + levelConfigs[currentLevel].className;
+      header.textContent = typeDisplayNames[currentType] || "Practice Set";
+      const container = document.getElementById("problem-list");
+      container.innerHTML = "";
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        const steps = problem.steps.map((s) => {
+          const cls = s.type === "calc" ? "step-equation" : "step";
+          return '<div class="' + cls + '">' + s.text + "</div>";
+        }).join("");
+        li.innerHTML =
+          '<div class="problem-header">' +
+            '<div class="problem-left">' +
+              '<div class="problem-number">' + (index + 1) + '</div>' +
+              '<div class="equation">' + problem.equation + '</div>' +
+            '</div>' +
+            '<div class="problem-answer" id="quick-answer-' + index + '">' + problem.answer + '</div>' +
+          '</div>' +
+          '<div class="steps-section" id="steps-' + index + '">' +
+            '<div class="answer-label">Worked solution:</div>' +
+            '<div class="solution-steps" data-kaizen-step-structured="true">' + steps + '<div class="final-answer">' + problem.answer + '</div></div>' +
+          '</div>';
+        container.appendChild(li);
+      });
+      renderMath();
+    }
+
+    function renderMath() {
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(document.getElementById("problem-list")), 0);
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      problems.forEach((_, index) => {
+        const answer = document.getElementById("quick-answer-" + index);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      });
+      renderMath();
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const steps = document.getElementById("steps-" + index);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      });
+      renderMath();
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById("timer-display");
+      display.textContent = minutes + ":" + String(seconds).padStart(2, "0");
+      display.className = timeRemaining <= 30 ? "timer-display warning" : "timer-display active";
+    }
+
+    function timerFinished() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Time Up!";
+      display.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-16"></script>
+</body>
+</html>

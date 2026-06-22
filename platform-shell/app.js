@@ -788,6 +788,25 @@ const tools = [
     ]
   },
   {
+    slug: "motion-graphs-constant-acceleration",
+    title: "Motion Graphs and Constant Acceleration",
+    category: "Mechanics",
+    level: "GCSE / A-Level Foundation",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate mechanics practice on average speed, acceleration, deceleration, distance-time graphs, velocity-time graphs, distance travelled, and constant acceleration formulae.",
+    tags: ["mechanics", "motion graphs", "constant acceleration", "distance-time graphs", "velocity-time graphs", "average speed", "acceleration", "deceleration", "distance travelled", "kinematics"],
+    toolPath: "tools/motion-graphs-constant-acceleration/index.html?v=motion-graphs-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on average speed, acceleration, deceleration, and basic distance-time or velocity-time graph facts.",
+      "Level 2 interprets motion graphs using gradient for speed or acceleration and area under velocity-time graphs for distance.",
+      "Level 3 combines constant acceleration formulae with missing graph values and journey comparisons.",
+      "Worked steps emphasise choosing between formula, gradient, and area methods before substituting values."
+    ]
+  },
+  {
     slug: "equations-of-motion",
     title: "Equations of Motion",
     category: "Mechanics",
@@ -3982,8 +4001,9 @@ function renderHome() {
       <div>
         <span class="eyebrow">A-Level Mechanics</span>
         <h2>Mechanics practice generators</h2>
-        <p>Open mechanics topics for equations of motion, moments, and projectiles. Each tool includes diagrams, question levels, answers, and worked steps for classroom modelling and practice.</p>
+        <p>Open mechanics topics for motion graphs, equations of motion, moments, and projectiles. Each tool includes diagrams, question levels, answers, and worked steps for classroom modelling and practice.</p>
         <div class="badge-row">
+          <span class="badge">Motion Graphs</span>
           <span class="badge">Equations of Motion</span>
           <span class="badge">Moments</span>
           <span class="badge">Projectiles</span>
@@ -4062,7 +4082,7 @@ function renderToolLibrary(extraCategory = "") {
     numbers: "Number topics build fluency with fractions, decimals, percentages, HCF and LCM, order of operations, averages, and powers of 10.",
     geometry: "Geometry topics cover shape, measure, diagrams, area, perimeter, volume, and trigonometry. Use them for visual modelling, board practice, and method-focused discussion.",
     statistics: "Statistics topics cover data summaries, probability distributions, expectation, variance, and model selection. Use them to connect calculation fluency with interpretation and exam-style reasoning.",
-    mechanics: "Mechanics topics cover motion, forces, moments, projectiles, and modelling with physical quantities. Use them for A-Level and IB practice with clear diagrams, equations, and worked steps.",
+    mechanics: "Mechanics topics cover motion graphs, constant acceleration, forces, moments, projectiles, and modelling with physical quantities. Use them for GCSE bridge, A-Level, and IB practice with clear diagrams, equations, and worked steps.",
     "site-guide": "Site guides help teachers navigate the virtual textbook and use the shared controls across the topic tools.",
     "classroom-tools": "Classroom tools support quick routines, reference displays, games, exit tickets, and retrieval moments around the main lesson content."
   };
@@ -5006,7 +5026,7 @@ function standardsForTool(tool) {
   const haystack = normalise([tool.title, tool.category, tool.level, allToolTags(tool).join(" "), tool.description].join(" "));
   const standards = [];
 
-  if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion") || haystack.includes("moments") || haystack.includes("projectiles")) {
+  if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion") || haystack.includes("motion graphs") || haystack.includes("constant acceleration") || haystack.includes("velocity-time") || haystack.includes("distance-time") || haystack.includes("moments") || haystack.includes("projectiles")) {
     standards.push("England: A-Level Mathematics mechanics, including constant acceleration, SUVAT equations, moments, forces, projectiles, modelling with units, and motion under gravity.");
     standards.push("IB / international: Applications and interpretation links to kinematics, mechanics modelling, rates of change, forces, and interpreting physical quantities.");
   } else if (haystack.includes("statistics") || haystack.includes("probability") || haystack.includes("tree diagram")) {
