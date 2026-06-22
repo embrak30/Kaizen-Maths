@@ -3023,6 +3023,40 @@ sup .worksheet-fraction span:last-child {
   line-height: 1.35;
 }
 
+.topic-map-compact {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 18px;
+}
+
+.topic-map-summary {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.topic-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.topic-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  border: 1px solid rgba(23, 184, 179, 0.22);
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: rgba(231, 251, 250, 0.62);
+  color: #24505c;
+  font-size: 0.72rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
 .standards-list {
   margin: 0;
   padding-left: 16px;

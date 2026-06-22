@@ -5069,25 +5069,33 @@ function fallbackTopicMap(tool) {
     tool.level
   ].filter(Boolean))];
   return `
-    <div class="topic-map-grid">
-      <article class="topic-map-card">
-        <h4>Topic Focus</h4>
-        <ul>${concepts.slice(0, 8).map((topic) => `<li>${escapeHtml(topic)}</li>`).join("")}</ul>
-      </article>
+    <div class="topic-map-compact">
+      <p class="topic-map-summary">This tool covers these topic areas.</p>
+      <div class="topic-chip-list">
+        ${concepts.slice(0, 12).map((topic) => `<span class="topic-chip">${escapeHtml(topic)}</span>`).join("")}
+      </div>
     </div>
   `;
 }
 
 function renderTopicMap(levels, tool) {
   if (!levels?.length) return fallbackTopicMap(tool);
+  const topics = [];
+  levels.forEach((level) => {
+    (level.types || []).forEach((type) => {
+      const label = String(type.label || type.id || "").trim();
+      if (label && !topics.some((topic) => topic.toLowerCase() === label.toLowerCase())) {
+        topics.push(label);
+      }
+    });
+  });
+  if (!topics.length) return fallbackTopicMap(tool);
   return `
-    <div class="topic-map-grid">
-      ${levels.map((level) => `
-        <article class="topic-map-card">
-          <h4>${escapeHtml(level.title || `Level ${level.id}`)}</h4>
-          <p>${escapeHtml(level.description || "Generated practice for this topic area.")}</p>
-        </article>
-      `).join("")}
+    <div class="topic-map-compact">
+      <p class="topic-map-summary">${topics.length} question type${topics.length === 1 ? "" : "s"} available in this tool.</p>
+      <div class="topic-chip-list">
+        ${topics.map((topic) => `<span class="topic-chip">${escapeHtml(topic)}</span>`).join("")}
+      </div>
     </div>
   `;
 }
