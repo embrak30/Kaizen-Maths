@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.1.0';
+  const VERSION = '0.2.0';
 
   function readBinding(name, fallback = undefined) {
     try {
@@ -513,15 +513,17 @@
       if (typeof window.kaizenRenderMath === 'function') {
         setTimeout(() => window.kaizenRenderMath(), 0);
       }
+      window.KaizenQuestionPersistence?.saveSoon?.();
       document.documentElement.classList.add('teacher-example-mode');
     }
 
     window.KaizenTeacherExample = {
       isActive: () => exampleMode,
       generate: () => (exampleMode ? generateExample() : originalGenerateNewSet()),
-      setActive(value) {
+      setActive(value, options = {}) {
         exampleMode = Boolean(value);
         setButtonState();
+        if (options.regenerate === false) return;
         if (exampleMode) generateExample();
         else originalGenerateNewSet();
       }
@@ -544,10 +546,287 @@
     document.documentElement.dataset.teacherExampleReady = 'true';
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', installTeacherExampleMode);
-  } else {
+  function toolStateKey() {
+    const cleanPath = location.pathname.replace(/\/index\.html$/i, '').replace(/\/$/, '') || location.pathname;
+    return `kaizen:tool-board:${cleanPath}`;
+  }
+
+  function readStoredBoard() {
+    try {
+      return JSON.parse(localStorage.getItem(toolStateKey()) || 'null');
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function serialiseProblems(problems) {
+    try {
+      return JSON.parse(JSON.stringify(problems || []));
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function visibleState() {
+    const answerCount = document.querySelectorAll('.problem-answer.visible, .answer-section.visible').length;
+    const stepCount = document.querySelectorAll('.steps-section.visible, .solution-section.visible').length;
+    return {
+      answersVisible: Boolean(answerCount || readBinding('answersVisible', false)),
+      stepsVisible: Boolean(stepCount || readBinding('stepsVisible', false))
+    };
+  }
+
+  function currentBoardSnapshot() {
+    const problems = serialiseProblems(readBinding('problems', []));
+    const currentType = readBinding('currentType', 'select');
+    if (!Array.isArray(problems) || !problems.length || !currentType || currentType === 'select') return null;
+    const visibility = visibleState();
+    return {
+      version: VERSION,
+      savedAt: new Date().toISOString(),
+      path: location.pathname,
+      title: getToolTitle(),
+      level: readBinding('currentLevel', null),
+      type: currentType,
+      problems,
+      answersVisible: visibility.answersVisible,
+      stepsVisible: visibility.stepsVisible,
+      teacherExampleMode: Boolean(window.KaizenTeacherExample?.isActive?.())
+    };
+  }
+
+  function installQuestionPersistence() {
+    if (document.documentElement.dataset.kaizenQuestionPersistence === 'true') return;
+    if (typeof readBinding('renderProblems', null) !== 'function') return;
+    document.documentElement.dataset.kaizenQuestionPersistence = 'true';
+
+    let saveTimer = null;
+
+    function saveNow() {
+      const snapshot = currentBoardSnapshot();
+      if (!snapshot) return false;
+      try {
+        localStorage.setItem(toolStateKey(), JSON.stringify(snapshot));
+        sessionStorage.setItem(toolStateKey(), JSON.stringify(snapshot));
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function saveSoon() {
+      window.clearTimeout(saveTimer);
+      saveTimer = window.setTimeout(saveNow, 80);
+    }
+
+    function restoreBoard() {
+      const saved = readStoredBoard();
+      if (!saved || !Array.isArray(saved.problems) || !saved.problems.length || !saved.type || saved.type === 'select') return false;
+      const renderProblems = readBinding('renderProblems', null);
+      if (typeof renderProblems !== 'function') return false;
+
+      const switchLevel = readBinding('switchLevel', null);
+      if (saved.level !== null && saved.level !== undefined && typeof switchLevel === 'function') {
+        try {
+          switchLevel(saved.level);
+        } catch (_) {
+          writeBinding('currentLevel', saved.level);
+        }
+      } else if (saved.level !== null && saved.level !== undefined) {
+        writeBinding('currentLevel', saved.level);
+      }
+
+      writeBinding('currentType', saved.type);
+      const dropdown = document.getElementById('type-dropdown');
+      if (dropdown) dropdown.value = saved.type;
+      writeBinding('problems', saved.problems);
+      writeBinding('answersVisible', false);
+      writeBinding('stepsVisible', false);
+
+      try {
+        renderProblems();
+      } catch (_) {
+        return false;
+      }
+
+      if (saved.teacherExampleMode && window.KaizenTeacherExample) {
+        window.KaizenTeacherExample.setActive(true, { regenerate: false });
+      }
+
+      const showAnswers = readBinding('showAnswers', null);
+      const showSteps = readBinding('showSteps', null);
+      if (saved.answersVisible && typeof showAnswers === 'function') {
+        try { showAnswers(); } catch (_) {}
+      }
+      if (saved.stepsVisible && typeof showSteps === 'function') {
+        try { showSteps(); } catch (_) {}
+      }
+
+      const instruction = document.getElementById('set-instruction');
+      if (instruction && !instruction.dataset.kaizenRestoredNote) {
+        instruction.dataset.kaizenRestoredNote = 'true';
+        instruction.title = 'This exact question set has been restored. Press New to replace it.';
+      }
+      saveSoon();
+      return true;
+    }
+
+    const originalRenderProblems = readBinding('renderProblems', null);
+    window.KaizenQuestionPersistence = {
+      originalRenderProblems,
+      saveNow,
+      saveSoon,
+      restoreBoard,
+      key: toolStateKey()
+    };
+
+    try {
+      window.eval(`
+        renderProblems = function(){
+          const result = window.KaizenQuestionPersistence.originalRenderProblems.apply(this, arguments);
+          window.KaizenQuestionPersistence.saveSoon();
+          return result;
+        }
+      `);
+    } catch (_) {
+      // The page still gets passive save/restore from the event listeners below.
+    }
+
+    document.addEventListener('click', (event) => {
+      const target = event.target;
+      if (target?.closest?.('button, .tab, .calculate-cell, .card, .color-choice')) saveSoon();
+    }, true);
+    document.addEventListener('change', saveSoon, true);
+    window.addEventListener('beforeunload', saveNow);
+
+    window.setTimeout(restoreBoard, 120);
+  }
+
+  function safeFileName(value) {
+    return String(value || 'kaizen-board')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60) || 'kaizen-board';
+  }
+
+  function collectPageCss() {
+    return Array.from(document.styleSheets).map((sheet) => {
+      try {
+        return Array.from(sheet.cssRules || []).map((rule) => rule.cssText).join('\n');
+      } catch (_) {
+        return '';
+      }
+    }).join('\n');
+  }
+
+  function openPrintableSnapshot(target, css) {
+    const snapshot = window.open('', '_blank');
+    if (!snapshot) {
+      window.alert('The browser blocked the snapshot window. Allow pop-ups for this site or use your browser screenshot tool.');
+      return;
+    }
+    const clone = target.cloneNode(true);
+    snapshot.document.write(`<!doctype html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>${textFromHtml(getToolTitle())} snapshot</title>
+        <style>${css}</style>
+        <style>
+          body{margin:0;background:#fff;padding:18px}
+          .teacher-tab,.sidebar,.sidebar-overlay,.timer-modal{display:none!important}
+          .container{max-width:none!important;box-shadow:none!important}
+          .problem-answer,.steps-section{break-inside:avoid}
+        </style>
+      </head>
+      <body>${clone.outerHTML}</body>
+      </html>`);
+    snapshot.document.close();
+    snapshot.focus();
+  }
+
+  async function downloadBoardImage() {
+    window.KaizenQuestionPersistence?.saveNow?.();
+    const target = document.querySelector('.container') || document.querySelector('.problems-section') || document.body;
+    const css = collectPageCss() + `
+      body{margin:0;background:#fff}
+      .teacher-tab,.sidebar,.sidebar-overlay,.timer-modal{display:none!important}
+      .container{box-shadow:none!important}
+    `;
+
+    const width = Math.ceil(Math.max(target.scrollWidth, target.getBoundingClientRect().width, 900));
+    const height = Math.ceil(Math.max(target.scrollHeight, target.getBoundingClientRect().height, 500));
+    const clone = target.cloneNode(true);
+    const xhtml = `<div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px;background:#fff">${clone.outerHTML}</div>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+      <foreignObject width="100%" height="100%">
+        <html xmlns="http://www.w3.org/1999/xhtml">
+          <head><style>${css}</style></head>
+          <body>${xhtml}</body>
+        </html>
+      </foreignObject>
+    </svg>`;
+
+    try {
+      const svgBlob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+      const image = new Image();
+      image.decoding = 'sync';
+      await new Promise((resolve, reject) => {
+        image.onload = resolve;
+        image.onerror = reject;
+        image.src = url;
+      });
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const context = canvas.getContext('2d');
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, width, height);
+      context.drawImage(image, 0, 0);
+      URL.revokeObjectURL(url);
+      const pngBlob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png', 0.95));
+      if (!pngBlob) throw new Error('Could not create image.');
+      const downloadUrl = URL.createObjectURL(pngBlob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `${safeFileName(getToolTitle())}-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    } catch (_) {
+      openPrintableSnapshot(target, css);
+    }
+  }
+
+  function installBoardCapture() {
+    if (document.documentElement.dataset.kaizenBoardCapture === 'true') return;
+    const actionGroups = Array.from(document.querySelectorAll('.action-buttons'));
+    const targetGroup = actionGroups.find((group) => group.querySelector('[onclick*="generateNewSet"]')) || actionGroups[actionGroups.length - 1];
+    if (!targetGroup) return;
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn btn-primary kaizen-capture-board';
+    button.textContent = 'Capture';
+    button.title = 'Download this exact board as an image. If image capture is blocked, a printable snapshot opens instead.';
+    button.addEventListener('click', downloadBoardImage);
+    targetGroup.appendChild(button);
+    document.documentElement.dataset.kaizenBoardCapture = 'true';
+  }
+
+  function installToolEnhancements() {
     installTeacherExampleMode();
+    installQuestionPersistence();
+    installBoardCapture();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', installToolEnhancements);
+  } else {
+    installToolEnhancements();
   }
 
   document.documentElement.dataset.worksheetStandard = 'ready';

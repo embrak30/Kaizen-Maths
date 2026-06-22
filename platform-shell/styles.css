@@ -1677,7 +1677,17 @@ body[data-route="gcse-exam-style"] .account-action {
   padding: 5px 10px;
 }
 
+.classroom-fullscreen {
+  display: none;
+  min-height: 30px;
+  padding: 5px 10px;
+}
+
 .legacy-stage.classroom .classroom-exit {
+  display: inline-flex;
+}
+
+.legacy-stage.classroom .classroom-fullscreen {
   display: inline-flex;
 }
 

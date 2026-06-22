@@ -5125,6 +5125,7 @@ function renderToolFrame(tool) {
           </div>
           <div class="legacy-toolbar-actions">
             <span class="tool-path">${tool.toolPath}</span>
+            <button class="button classroom-fullscreen" id="classroomFullscreen" type="button">Full Screen</button>
             <button class="button classroom-exit" id="exitClassroom" type="button">Exit</button>
           </div>
         </div>
@@ -5775,9 +5776,31 @@ function bindFilters() {
 function bindToolFrame(tool) {
   const button = document.getElementById("focusTool");
   const exitButton = document.getElementById("exitClassroom");
+  const fullscreenButton = document.getElementById("classroomFullscreen");
   const stage = document.querySelector(".legacy-stage");
   const frame = stage?.querySelector(".legacy-frame");
   if (!button || !stage) return;
+  const classroomStateKey = "kaizen:classroom-view";
+
+  function savedClassroomState() {
+    try {
+      return JSON.parse(localStorage.getItem(classroomStateKey) || "{}");
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function saveClassroomState(active) {
+    try {
+      if (active) {
+        localStorage.setItem(classroomStateKey, JSON.stringify({ active: true, slug: tool.slug, path: tool.toolPath }));
+      } else {
+        localStorage.removeItem(classroomStateKey);
+      }
+    } catch (error) {
+      // Classroom mode still works if local storage is unavailable.
+    }
+  }
 
   function withFrameDocument(callback) {
     if (!frame?.contentDocument) return;
@@ -5983,30 +6006,52 @@ function bindToolFrame(tool) {
     }
   }
 
-  function setClassroomMode(active) {
+  function updateFullscreenButton() {
+    if (!fullscreenButton) return;
+    fullscreenButton.textContent = document.fullscreenElement === stage ? "Full Screen Active" : "Full Screen";
+    fullscreenButton.disabled = document.fullscreenElement === stage;
+  }
+
+  function requestClassroomFullscreen() {
+    if (stage.requestFullscreen && document.fullscreenElement !== stage) {
+      stage.requestFullscreen().catch(() => {});
+    }
+  }
+
+  function setClassroomMode(active, options = {}) {
     stage.classList.toggle("classroom", active);
     document.body.classList.toggle("classroom-active", active);
     button.textContent = active ? "Exit Classroom View" : "Classroom View";
     button.setAttribute("aria-pressed", String(active));
+    if (options.persist !== false) saveClassroomState(active);
     if (active) {
       scheduleClassroomFit();
     } else {
       resetFrameFit();
     }
 
-    if (active && stage.requestFullscreen) {
-      stage.requestFullscreen().catch(() => {});
-    } else if (!active && document.fullscreenElement) {
+    if (active) {
+      requestClassroomFullscreen();
+    } else if (!active && document.fullscreenElement === stage) {
       document.exitFullscreen().catch(() => {});
     }
+    updateFullscreenButton();
   }
 
   button.addEventListener("click", () => {
-    setClassroomMode(!stage.classList.contains("classroom"));
+    if (stage.classList.contains("classroom")) {
+      requestClassroomFullscreen();
+      return;
+    }
+    setClassroomMode(true);
   });
 
   if (exitButton) {
     exitButton.addEventListener("click", () => setClassroomMode(false));
+  }
+
+  if (fullscreenButton) {
+    fullscreenButton.addEventListener("click", requestClassroomFullscreen);
   }
 
   if (frame) {
@@ -6023,15 +6068,20 @@ function bindToolFrame(tool) {
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && stage.classList.contains("classroom")) {
-      setClassroomMode(false);
+      scheduleClassroomFit();
     }
   });
 
   document.addEventListener("fullscreenchange", () => {
-    if (!document.fullscreenElement && stage.classList.contains("classroom")) {
-      setClassroomMode(false);
+    updateFullscreenButton();
+    if (stage.classList.contains("classroom")) {
+      scheduleClassroomFit();
     }
   });
+
+  if (savedClassroomState().active && savedClassroomState().slug === tool.slug) {
+    window.requestAnimationFrame(() => setClassroomMode(true, { persist: false }));
+  }
 }
 
 function routeParts() {
