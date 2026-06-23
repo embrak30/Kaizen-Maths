@@ -156,7 +156,7 @@ const tools = [
     status: "Imported",
     description: "Generate matrix questions covering addition, subtraction, scalar multiplication, multiplication, determinants, inverses, and algebraic matrix problems.",
     tags: ["algebra", "matrices", "determinants", "inverse matrices", "matrix multiplication", "singular matrices", "A-Level"],
-    toolPath: "tools/matrices/index.html?v=batch1-steps-1",
+    toolPath: "tools/matrices/index.html?v=matrix-layout-1",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on matrix operations: addition, subtraction, and scalar multiplication.",

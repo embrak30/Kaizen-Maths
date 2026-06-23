@@ -2241,6 +2241,84 @@ sup .worksheet-fraction span:last-child {
   margin-top: 8px;
 }
 
+.worksheet-question-text .matrix-expression,
+.worksheet-answer .matrix-expression,
+.worksheet-steps .matrix-expression,
+.worksheet-key-item .matrix-expression {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  vertical-align: middle;
+}
+
+.worksheet-question-text .matrix-wrap,
+.worksheet-answer .matrix-wrap,
+.worksheet-steps .matrix-wrap,
+.worksheet-key-item .matrix-wrap {
+  display: inline-grid;
+  grid-auto-flow: row;
+  gap: 0;
+  position: relative;
+  margin: 0 0.12rem;
+  padding: 0.34rem 0.62rem;
+  vertical-align: middle;
+  font-family: var(--math-font);
+  line-height: 1.12;
+}
+
+.worksheet-question-text .matrix-wrap::before,
+.worksheet-question-text .matrix-wrap::after,
+.worksheet-answer .matrix-wrap::before,
+.worksheet-answer .matrix-wrap::after,
+.worksheet-steps .matrix-wrap::before,
+.worksheet-steps .matrix-wrap::after,
+.worksheet-key-item .matrix-wrap::before,
+.worksheet-key-item .matrix-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0.42rem;
+  border-top: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+}
+
+.worksheet-question-text .matrix-wrap::before,
+.worksheet-answer .matrix-wrap::before,
+.worksheet-steps .matrix-wrap::before,
+.worksheet-key-item .matrix-wrap::before {
+  left: 0;
+  border-left: 1.5px solid currentColor;
+}
+
+.worksheet-question-text .matrix-wrap::after,
+.worksheet-answer .matrix-wrap::after,
+.worksheet-steps .matrix-wrap::after,
+.worksheet-key-item .matrix-wrap::after {
+  right: 0;
+  border-right: 1.5px solid currentColor;
+}
+
+.worksheet-question-text .matrix-row,
+.worksheet-answer .matrix-row,
+.worksheet-steps .matrix-row,
+.worksheet-key-item .matrix-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(1.55rem, auto);
+  gap: 0.55rem;
+  justify-content: center;
+}
+
+.worksheet-question-text .matrix-cell,
+.worksheet-answer .matrix-cell,
+.worksheet-steps .matrix-cell,
+.worksheet-key-item .matrix-cell {
+  min-width: 1.25rem;
+  text-align: center;
+}
+
 .worksheet-math-table {
   border-collapse: collapse;
   margin: 8px 0;
