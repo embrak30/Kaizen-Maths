@@ -2062,6 +2062,7 @@ body[data-route="gcse-exam-style"] .account-action {
   max-height: calc(100vh - 112px);
   overflow: auto;
   overscroll-behavior: contain;
+  padding-bottom: 96px;
   background:
     linear-gradient(135deg, rgba(111,76,195,0.05), rgba(23,184,179,0.05)),
     #f8fbff;
@@ -2495,8 +2496,6 @@ sup .worksheet-fraction span:last-child {
 }
 
 .worksheet-answer-key {
-  break-before: page;
-  page-break-before: always;
   margin-top: 42px;
   padding-top: 22px;
   border-top: 2px solid #111827;
@@ -3731,6 +3730,11 @@ sup .worksheet-fraction span:last-child {
     border: 0;
     border-radius: 0;
     box-shadow: none;
+  }
+
+  .worksheet-answer-key {
+    break-before: page;
+    page-break-before: always;
   }
 
   .worksheet-question-marks,
