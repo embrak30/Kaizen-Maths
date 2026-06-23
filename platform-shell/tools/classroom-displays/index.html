@@ -147,19 +147,27 @@
     }
 
     function renderDottedGrid() {
-      stage.innerHTML = '<svg viewBox="0 0 1040 720" preserveAspectRatio="none">' + Array.from({length:33},(_,i)=>Array.from({length:23},(_,j)=>'<circle cx="'+(i*32+8)+'" cy="'+(j*32+8)+'" r="2.1" fill="#a9bbca"/>').join("")).join("") + "</svg>";
+      stage.innerHTML = '<svg viewBox="0 0 1040 720" preserveAspectRatio="none">' + Array.from({length:33},(_,i)=>Array.from({length:23},(_,j)=>'<circle cx="'+(i*32)+'" cy="'+(j*32)+'" r="2.1" fill="#a9bbca"/>').join("")).join("") + "</svg>";
+    }
+
+    function gridLines() {
+      return '<rect width="1040" height="720" fill="white"/>' +
+        Array.from({length:33},(_,i)=>'<line x1="'+(i*32)+'" y1="0" x2="'+(i*32)+'" y2="720" stroke="#e5edf5" stroke-width="1"/>').join("") +
+        Array.from({length:23},(_,i)=>'<line x1="0" y1="'+(i*32)+'" x2="1040" y2="'+(i*32)+'" stroke="#e5edf5" stroke-width="1"/>').join("");
     }
 
     function renderAxes({four, labels}) {
-      const grid = '<rect width="1040" height="720" fill="white"/>' +
-        Array.from({length:33},(_,i)=>'<line x1="'+(i*32)+'" y1="0" x2="'+(i*32)+'" y2="720" stroke="#e5edf5" stroke-width="1"/>').join("") +
-        Array.from({length:23},(_,i)=>'<line x1="0" y1="'+(i*32)+'" x2="1040" y2="'+(i*32)+'" stroke="#e5edf5" stroke-width="1"/>').join("");
-      const ox = four ? 520 : 120;
-      const oy = four ? 360 : 610;
-      const axisLabels = labels ? '<text x="990" y="'+(oy-18)+'" font-size="34" text-anchor="middle">x</text><text x="'+(ox+25)+'" y="45" font-size="34" text-anchor="middle">y</text>' : "";
+      const grid = gridLines();
+      const ox = four ? 512 : 128;
+      const oy = four ? 352 : 608;
+      const xStart = four ? 64 : ox;
+      const xEnd = 992;
+      const yStart = 672;
+      const yEnd = 32;
+      const axisLabels = labels ? '<text x="'+(xEnd-2)+'" y="'+(oy-18)+'" font-size="34" text-anchor="middle">x</text><text x="'+(ox+25)+'" y="'+(yEnd+13)+'" font-size="34" text-anchor="middle">y</text>' : "";
       stage.innerHTML = svg(grid +
-        '<line class="axis" x1="60" y1="'+oy+'" x2="980" y2="'+oy+'"/><polygon class="axis-arrow" points="980,'+oy+' 956,'+(oy-11)+' 956,'+(oy+11)+'"/>' +
-        '<line class="axis" x1="'+ox+'" y1="660" x2="'+ox+'" y2="55"/><polygon class="axis-arrow" points="'+ox+',55 '+(ox-11)+',79 '+(ox+11)+',79"/>' +
+        '<line class="axis" x1="'+xStart+'" y1="'+oy+'" x2="'+xEnd+'" y2="'+oy+'"/><polygon class="axis-arrow" points="'+xEnd+','+oy+' '+(xEnd-24)+','+(oy-11)+' '+(xEnd-24)+','+(oy+11)+'"/>' +
+        '<line class="axis" x1="'+ox+'" y1="'+yStart+'" x2="'+ox+'" y2="'+yEnd+'"/><polygon class="axis-arrow" points="'+ox+','+yEnd+' '+(ox-11)+','+(yEnd+24)+' '+(ox+11)+','+(yEnd+24)+'"/>' +
         '<circle class="origin-dot" cx="'+ox+'" cy="'+oy+'" r="5"/>' + axisLabels);
     }
 

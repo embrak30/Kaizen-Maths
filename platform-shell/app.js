@@ -246,7 +246,7 @@ const tools = [
     status: "Imported",
     description: "Generate A-level trigonometric functions practice covering reciprocal graphs, sec, cosec, cot equations, identities, proofs, and hence-solve questions.",
     tags: ["algebra", "trigonometry", "trigonometric functions", "sec", "cosec", "cot", "identities", "proof", "A-Level"],
-    toolPath: "tools/trigonometric-functions/index.html?v=trig-functions-2",
+    toolPath: "tools/trigonometric-functions/index.html?v=graph-axis-grid-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers reciprocal graph sketching, definitions, and simple reciprocal equations.",
@@ -1255,7 +1255,7 @@ const tools = [
     status: "Imported",
     description: "Open board-ready graph grids, coordinate axes, 2D shapes, and 3D solids for live classroom explanation.",
     tags: ["classroom", "display", "graph grid", "coordinate axes", "geometry", "shapes", "solids", "board"],
-    toolPath: "tools/classroom-displays/index.html?v=classroom-displays-2",
+    toolPath: "tools/classroom-displays/index.html?v=graph-axis-grid-1",
     imported: true,
     teacherNotes: [
       "Designed as a static board companion rather than a question generator.",
