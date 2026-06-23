@@ -25,7 +25,7 @@
     .display-stage svg{width:100%;height:100%;display:block}
     .grid-bg{background-color:#fff;background-image:linear-gradient(#d8e2ef 1px,transparent 1px),linear-gradient(90deg,#d8e2ef 1px,transparent 1px);background-size:32px 32px}
     .grid-bg.major{background-image:linear-gradient(#c6d5e2 2px,transparent 2px),linear-gradient(90deg,#c6d5e2 2px,transparent 2px),linear-gradient(#e7eef5 1px,transparent 1px),linear-gradient(90deg,#e7eef5 1px,transparent 1px);background-size:160px 160px,160px 160px,32px 32px,32px 32px}
-    .shape-svg text{font-family:"Segoe UI",Tahoma,sans-serif;font-weight:800;fill:#1a365d}.shape-fill-a{fill:#dff7f6;stroke:#157f82;stroke-width:5}.shape-fill-b{fill:#f1eefe;stroke:#6554c0;stroke-width:5}.shape-fill-c{fill:#fff2d9;stroke:#b7791f;stroke-width:5}.shape-line{stroke:#1a365d;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}.dash{stroke-dasharray:12 10}.solid-face{fill:#e9fbfb;stroke:#157f82;stroke-width:4}.solid-top{fill:#f1eefe;stroke:#6554c0;stroke-width:4}.solid-side{fill:#d8ebff;stroke:#2d6cdf;stroke-width:4}
+    .shape-svg text{font-family:"Segoe UI",Tahoma,sans-serif;font-weight:800;fill:#1a365d}.shape-fill-a{fill:#dff7f6;stroke:#157f82;stroke-width:5}.shape-fill-b{fill:#f1eefe;stroke:#6554c0;stroke-width:5}.shape-fill-c{fill:#fff2d9;stroke:#b7791f;stroke-width:5}.shape-line{stroke:#1a365d;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}.dash{stroke-dasharray:12 10}.solid-face{fill:#e9fbfb;stroke:#157f82;stroke-width:4}.solid-top{fill:#f1eefe;stroke:#6554c0;stroke-width:4}.solid-side{fill:#d8ebff;stroke:#2d6cdf;stroke-width:4}.curve{stroke:#1a365d;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}
     .axis{stroke:#172f4a;stroke-width:3}.axis-light{stroke:#64748b;stroke-width:2}.axis-arrow{fill:#172f4a}.origin-dot{fill:#172f4a}
     @media(max-width:850px){body{overflow:auto}.app{height:auto;min-height:100vh}.workspace{grid-template-columns:1fr}.palette{max-height:none;border-right:none;border-bottom:1px solid #d8e2ef}.board-shell{min-height:70vh}.topbar{align-items:flex-start;flex-direction:column}.controls{justify-content:flex-start}.display-stage{height:68vh}}
   </style>
@@ -35,7 +35,7 @@
     <header class="topbar">
       <div class="brand">
         <h1>Classroom Displays</h1>
-        <p>Board-ready grids, shapes, and solids for live teaching</p>
+        <p>Board-ready grids, shapes, statistics, and mechanics templates for live teaching</p>
       </div>
       <div class="controls">
         <select id="categorySelect" aria-label="Display category">
@@ -43,6 +43,7 @@
           <option value="shapes">2D Shapes</option>
           <option value="solids">3D Solids</option>
           <option value="stats">Probability & Statistics</option>
+          <option value="mechanics">Mechanics</option>
         </select>
         <select id="themeSelect" aria-label="Board background">
           <option value="white">White Board</option>
@@ -121,6 +122,16 @@
           { id:"histogram-axes", label:"Histogram Axes", render: renderHistogramAxes },
           { id:"box-plot-axis", label:"Box Plot Axis", render: renderBoxPlotAxis },
           { id:"normal-curve", label:"Normal Curve Outline", render: renderNormalCurve }
+        ]
+      },
+      mechanics: {
+        label: "Mechanics",
+        displays: [
+          { id:"inclined-plane", label:"Inclined Plane", render: renderInclinedPlane },
+          { id:"projectile-template", label:"Projectile Template", render: renderProjectileTemplate },
+          { id:"pulley-system", label:"Pulley System", render: renderPulleySystem },
+          { id:"pulley-table", label:"Pulley on Table", render: renderPulleyTable },
+          { id:"vertical-pulley", label:"Vertical Hanging Pulley", render: renderVerticalPulley }
         ]
       }
     };
@@ -232,7 +243,7 @@
     }
 
     function renderThreeSetVenn() {
-      stage.innerHTML = svg('<rect x="140" y="115" width="760" height="490" rx="18" fill="white" stroke="#1a365d" stroke-width="5"/><circle cx="445" cy="330" r="170" fill="rgba(23,179,176,.20)" stroke="#157f82" stroke-width="5"/><circle cx="595" cy="330" r="170" fill="rgba(101,84,192,.20)" stroke="#6554c0" stroke-width="5"/><circle cx="520" cy="455" r="170" fill="rgba(245,158,11,.18)" stroke="#b7791f" stroke-width="5"/>' + label("Three-Set Venn Diagram", 520, 665));
+      stage.innerHTML = svg('<rect x="160" y="100" width="720" height="520" rx="18" fill="white" stroke="#1a365d" stroke-width="5"/><circle cx="455" cy="335" r="155" fill="rgba(23,179,176,.20)" stroke="#157f82" stroke-width="5"/><circle cx="585" cy="335" r="155" fill="rgba(101,84,192,.20)" stroke="#6554c0" stroke-width="5"/><circle cx="520" cy="455" r="155" fill="rgba(245,158,11,.18)" stroke="#b7791f" stroke-width="5"/>' + label("Three-Set Venn Diagram", 520, 665));
     }
 
     function renderTreeDiagram() {
@@ -256,7 +267,61 @@
     }
 
     function renderNormalCurve() {
-      stage.innerHTML = svg('<line class="axis" x1="120" y1="560" x2="920" y2="560"/><polygon class="axis-arrow" points="920,560 896,549 896,571"/><path class="curve" d="M130 560 C210 560 250 548 300 510 C355 468 380 350 430 240 C470 150 570 150 610 240 C660 350 685 468 740 510 C790 548 830 560 910 560"/><line class="mean-marker" x1="520" y1="175" x2="520" y2="560"/>' + label("Normal Curve", 520, 665));
+      stage.innerHTML = svg('<line class="axis" x1="120" y1="560" x2="920" y2="560"/><polygon class="axis-arrow" points="920,560 896,549 896,571"/><path class="curve" d="M130 560 C210 560 250 548 300 510 C355 468 380 350 430 240 C470 150 570 150 610 240 C660 350 685 468 740 510 C790 548 830 560 910 560"/>' + label("Normal Curve", 520, 665));
+    }
+
+    function renderInclinedPlane() {
+      stage.innerHTML = svg(
+        '<path class="shape-line" d="M160 570 H900 L330 230 Z"/>' +
+        '<rect x="485" y="315" width="135" height="92" rx="6" fill="white" stroke="#1a365d" stroke-width="5" transform="rotate(-31 552.5 361)"/>' +
+        '<path class="shape-line" d="M330 230 L900 570"/>'
+      );
+    }
+
+    function renderProjectileTemplate() {
+      stage.innerHTML = svg(
+        '<line class="shape-line" x1="140" y1="570" x2="900" y2="570"/>' +
+        '<line class="shape-line" x1="190" y1="570" x2="190" y2="245"/>' +
+        '<path class="shape-line dash" d="M190 245 C325 90 555 90 735 570"/>' +
+        '<path class="shape-line" d="M190 245 L275 210"/>' +
+        '<polygon class="axis-arrow" points="275,210 247,207 260,232"/>'
+      );
+    }
+
+    function renderPulleySystem() {
+      stage.innerHTML = svg(
+        '<path class="shape-line" d="M250 110 H790 M520 110 V185"/>' +
+        '<circle cx="520" cy="225" r="50" fill="white" stroke="#1a365d" stroke-width="5"/>' +
+        '<circle cx="520" cy="225" r="8" fill="#1a365d"/>' +
+        '<circle cx="520" cy="410" r="50" fill="white" stroke="#1a365d" stroke-width="5"/>' +
+        '<circle cx="520" cy="410" r="8" fill="#1a365d"/>' +
+        '<path class="shape-line" d="M470 225 V410 M570 225 V410 M570 225 H700 V520"/>' +
+        '<rect x="650" y="520" width="100" height="100" fill="white" stroke="#1a365d" stroke-width="5"/>' +
+        '<path class="shape-line" d="M520 460 V555"/>' +
+        '<rect x="470" y="555" width="100" height="90" fill="white" stroke="#1a365d" stroke-width="5"/>'
+      );
+    }
+
+    function renderPulleyTable() {
+      stage.innerHTML = svg(
+        '<path class="shape-line" d="M170 360 H760 M170 360 V585 M760 360 V585"/>' +
+        '<rect x="285" y="255" width="150" height="95" fill="white" stroke="#1a365d" stroke-width="5"/>' +
+        '<circle cx="760" cy="300" r="55" fill="white" stroke="#1a365d" stroke-width="5"/>' +
+        '<circle cx="760" cy="300" r="8" fill="#1a365d"/>' +
+        '<path class="shape-line" d="M435 302 H760 M815 300 V505"/>' +
+        '<rect x="765" y="505" width="100" height="100" fill="white" stroke="#1a365d" stroke-width="5"/>'
+      );
+    }
+
+    function renderVerticalPulley() {
+      stage.innerHTML = svg(
+        '<path class="shape-line" d="M290 115 H750 M520 115 V190"/>' +
+        '<circle cx="520" cy="245" r="58" fill="white" stroke="#1a365d" stroke-width="5"/>' +
+        '<circle cx="520" cy="245" r="8" fill="#1a365d"/>' +
+        '<path class="shape-line" d="M462 245 V520 M578 245 V520"/>' +
+        '<rect x="412" y="520" width="100" height="100" fill="white" stroke="#1a365d" stroke-width="5"/>' +
+        '<rect x="528" y="520" width="100" height="100" fill="white" stroke="#1a365d" stroke-width="5"/>'
+      );
     }
 
     function currentDisplayObject() {

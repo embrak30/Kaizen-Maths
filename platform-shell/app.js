@@ -1253,13 +1253,13 @@ const tools = [
     type: "Board Display",
     access: "Free",
     status: "Imported",
-    description: "Open board-ready graph grids, coordinate axes, 2D shapes, and 3D solids for live classroom explanation.",
-    tags: ["classroom", "display", "graph grid", "coordinate axes", "geometry", "shapes", "solids", "board"],
-    toolPath: "tools/classroom-displays/index.html?v=graph-axis-grid-1",
+    description: "Open board-ready graph grids, coordinate axes, 2D shapes, 3D solids, probability templates, statistics diagrams, and mechanics setups for live classroom explanation.",
+    tags: ["classroom", "display", "graph grid", "coordinate axes", "geometry", "shapes", "solids", "statistics", "mechanics", "board"],
+    toolPath: "tools/classroom-displays/index.html?v=classroom-displays-mechanics-1",
     imported: true,
     teacherNotes: [
       "Designed as a static board companion rather than a question generator.",
-      "Teachers can quickly show blank grids, coordinate axes, common 2D shapes, and 3D solids.",
+      "Teachers can quickly show blank grids, coordinate axes, common 2D shapes, 3D solids, statistics templates, and mechanics setups.",
       "Use full-screen mode when projecting to the board for live explanation or annotation."
     ]
   },
@@ -1893,7 +1893,7 @@ const universitySections = [
     videos: [
       { id: "practice-set-mode", title: "Practice Set Mode", description: "How to project a compact set of questions and use it for retrieval, fluency, and checking misconceptions." },
       { id: "one-example-mode", title: "One Example Mode", description: "How to put one question on the board for teacher modelling and class discussion." },
-      { id: "classroom-displays", title: "Classroom Displays", description: "How to use graph grids, shapes, solids, probability templates, and statistics displays during live explanation." }
+      { id: "classroom-displays", title: "Classroom Displays", description: "How to use graph grids, shapes, solids, probability templates, statistics displays, and mechanics setups during live explanation." }
     ]
   },
   {
