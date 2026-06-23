@@ -156,12 +156,12 @@ const tools = [
     status: "Imported",
     description: "Generate matrix questions covering addition, subtraction, scalar multiplication, multiplication, determinants, inverses, and algebraic matrix problems.",
     tags: ["algebra", "matrices", "determinants", "inverse matrices", "matrix multiplication", "singular matrices", "A-Level"],
-    toolPath: "tools/matrices/index.html?v=matrix-layout-1",
+    toolPath: "tools/matrices/index.html?v=matrix-multi-1",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on matrix operations: addition, subtraction, and scalar multiplication.",
       "Level 2 develops determinant, inverse, and multiplication fluency for 2 by 2 and 3 by 3 matrices.",
-      "Level 3 uses unknown entries and singular matrices to form equations involving x."
+      "Level 3 uses unknown entries, singular matrices, and matrix equalities with several variables."
     ]
   },
   {
@@ -4381,9 +4381,10 @@ function renderWorksheetGenerator() {
           </div>
         </div>
         <div class="button-row">
-          <button class="button" id="addWorksheetSection" type="button">Add Question Block</button>
+          <div class="worksheet-workflow-cue" id="worksheetWorkflowCue" aria-live="polite"></div>
+          <button class="button" id="addWorksheetSection" type="button">Add selected questions</button>
           <button class="button" id="buildTopicAssessment" type="button">Build Topic Assessment</button>
-          <button class="button primary" id="generateWorksheet" type="submit">Create Worksheet</button>
+          <button class="button" id="generateWorksheet" type="submit">Create Worksheet</button>
           <button class="button" id="printWorksheet" type="button" disabled>Print / Save PDF</button>
           <button class="button subtle" id="resetWorksheet" type="button">Reset Worksheet</button>
         </div>
@@ -4391,7 +4392,7 @@ function renderWorksheetGenerator() {
         <p class="worksheet-status" id="worksheetStatus">Loading the selected tool...</p>
       </form>
       <section class="worksheet-preview panel" id="worksheetPreview">
-        <div class="empty-state">Choose the worksheet options, then generate a printable question set.</div>
+        <div class="empty-state">Choose the questions, add the selected block, then create a printable worksheet.</div>
       </section>
       <iframe class="worksheet-loader" id="worksheetLoader" title="Worksheet tool loader" aria-hidden="true"></iframe>
     </section>
@@ -4525,10 +4526,12 @@ function populateWorksheetControls(metadata) {
     typeSelect.innerHTML = types.length
       ? types.map((type) => `<option value="${escapeHtml(type.id)}">${escapeHtml(type.label)}</option>`).join("")
       : `<option value="">No question types found</option>`;
+    updateWorksheetFlow();
   }
 
   if (levels.length) levelSelect.value = String(levels[0].id);
   levelSelect.onchange = populateTypes;
+  typeSelect.onchange = updateWorksheetFlow;
   populateTypes();
 }
 
@@ -4613,6 +4616,7 @@ function loadWorksheetTool(tool) {
     typeSelect.disabled = true;
     typeSelect.innerHTML = `<option>Loading question types...</option>`;
   }
+  updateWorksheetFlow();
   setWorksheetStatus(`Loading ${tool.title}...`);
 
   loadWorksheetToolForApi(tool)
@@ -4620,7 +4624,8 @@ function loadWorksheetTool(tool) {
       if (loadToken !== worksheetState.loadToken) return;
       worksheetState.metadata = metadata;
       populateWorksheetControls(metadata);
-      setWorksheetStatus(`${tool.title} is ready. Add this block or choose another topic.`);
+      updateWorksheetFlow();
+      setWorksheetStatus(`${tool.title} is ready. Add selected questions when you are happy with this block.`);
     })
     .catch((error) => {
       if (loadToken !== worksheetState.loadToken) return;
@@ -4632,6 +4637,7 @@ function loadWorksheetTool(tool) {
         typeSelect.disabled = true;
         typeSelect.innerHTML = `<option value="">Not available for worksheets yet</option>`;
       }
+      updateWorksheetFlow();
       setWorksheetStatus(error.message, "error");
     });
 }
@@ -4657,13 +4663,73 @@ function currentWorksheetSection() {
   };
 }
 
+function worksheetCurrentSelectionReady() {
+  const levelSelect = document.getElementById("worksheetLevel");
+  const typeSelect = document.getElementById("worksheetType");
+  return Boolean(
+    worksheetState.metadata &&
+    !levelSelect?.disabled &&
+    !typeSelect?.disabled &&
+    currentWorksheetSection()
+  );
+}
+
+function updateWorksheetFlow() {
+  const cue = document.getElementById("worksheetWorkflowCue");
+  const addButton = document.getElementById("addWorksheetSection");
+  const generateButton = document.getElementById("generateWorksheet");
+  const hasSections = worksheetState.sections.length > 0;
+  const selectionReady = worksheetCurrentSelectionReady();
+  const loading = !worksheetState.metadata;
+
+  if (addButton) {
+    addButton.disabled = !selectionReady;
+    addButton.classList.toggle("primary", selectionReady && !hasSections);
+    addButton.classList.toggle("worksheet-action-muted", !selectionReady || hasSections);
+  }
+
+  if (generateButton) {
+    generateButton.disabled = !hasSections;
+    generateButton.classList.toggle("primary", hasSections);
+    generateButton.classList.toggle("worksheet-action-muted", !hasSections);
+  }
+
+  if (!cue) return;
+
+  const steps = [
+    {
+      label: "1 Choose questions",
+      detail: loading ? "Loading topic options..." : selectionReady ? "Topic, level and type selected" : "Select a topic, level and type",
+      state: selectionReady ? "done" : "active"
+    },
+    {
+      label: "2 Add selected questions",
+      detail: hasSections ? `${worksheetState.sections.length} block${worksheetState.sections.length === 1 ? "" : "s"} added` : "Click this before creating the worksheet",
+      state: hasSections ? "done" : selectionReady ? "active" : "waiting"
+    },
+    {
+      label: "3 Create worksheet",
+      detail: hasSections ? "Ready to generate" : "Available after a block is added",
+      state: hasSections ? "active" : "waiting"
+    }
+  ];
+
+  cue.innerHTML = steps.map((step) => `
+    <span class="worksheet-flow-step" data-state="${step.state}">
+      <strong>${step.label}</strong>
+      <small>${step.detail}</small>
+    </span>
+  `).join("");
+}
+
 function renderWorksheetSections() {
   const list = document.getElementById("worksheetSectionList");
   if (!list) return;
   const { assessment } = worksheetAssessmentOptions();
 
   if (!worksheetState.sections.length) {
-    list.innerHTML = `<p class="worksheet-section-empty">No blocks added yet. Generate will use the current selection, or add blocks to mix topics.</p>`;
+    list.innerHTML = `<p class="worksheet-section-empty">No blocks added yet. Select the questions you want, then click <strong>Add selected questions</strong>.</p>`;
+    updateWorksheetFlow();
     return;
   }
 
@@ -4694,6 +4760,7 @@ function renderWorksheetSections() {
     button.addEventListener("click", () => {
       worksheetState.sections = worksheetState.sections.filter((section) => section.id !== button.dataset.sectionId);
       renderWorksheetSections();
+      updateWorksheetFlow();
     });
   });
 
@@ -4703,6 +4770,7 @@ function renderWorksheetSections() {
       if (!section) return;
       section.count = Math.max(1, Math.min(40, Number(input.value || 1)));
       input.value = String(section.count);
+      updateWorksheetFlow();
     });
   });
 
@@ -4712,8 +4780,11 @@ function renderWorksheetSections() {
       if (!section) return;
       section.marksPerQuestion = Math.max(1, Math.min(20, Number(input.value || 1)));
       input.value = String(section.marksPerQuestion);
+      updateWorksheetFlow();
     });
   });
+
+  updateWorksheetFlow();
 }
 
 function addWorksheetSection() {
@@ -4724,7 +4795,8 @@ function addWorksheetSection() {
   }
   worksheetState.sections.push(section);
   renderWorksheetSections();
-  setWorksheetStatus(`Added ${section.count} ${section.toolTitle} questions to the worksheet.`, "success");
+  updateWorksheetFlow();
+  setWorksheetStatus(`Added ${section.count} ${section.toolTitle} questions. You can edit the block, add another block, or create the worksheet.`, "success");
 }
 
 function buildTopicAssessment() {
@@ -4764,6 +4836,7 @@ function buildTopicAssessment() {
 
   worksheetState.sections = sections;
   renderWorksheetSections();
+  updateWorksheetFlow();
   setWorksheetStatus(`Built a draft ${tool.title} assessment with ${sections.length} block${sections.length === 1 ? "" : "s"}. Remove blocks or edit counts and marks before generating.`, "success");
 }
 
@@ -4903,9 +4976,10 @@ function resetWorksheetBuilder() {
   if (paperInstructionInput) paperInstructionInput.value = "Complete the following questions. Show working where appropriate.";
   renderWorksheetSections();
   if (preview) {
-    preview.innerHTML = `<div class="empty-state">Choose the worksheet options, then generate a printable question set.</div>`;
+    preview.innerHTML = `<div class="empty-state">Choose the questions, add the selected block, then create a printable worksheet.</div>`;
   }
   if (printButton) printButton.disabled = true;
+  updateWorksheetFlow();
   setWorksheetStatus("Worksheet selections cleared. Choose options to start again.", "success");
 }
 
@@ -4993,10 +5067,11 @@ function bindWorksheetGenerator() {
     const answers = document.getElementById("worksheetAnswers")?.checked || false;
     const steps = document.getElementById("worksheetSteps")?.checked || false;
     const assessmentOptions = worksheetAssessmentOptions();
-    const sections = worksheetState.sections.length ? [...worksheetState.sections] : [currentWorksheetSection()].filter(Boolean);
+    const sections = [...worksheetState.sections];
 
     if (!sections.length) {
-      setWorksheetStatus("Add at least one valid question block before generating.", "error");
+      setWorksheetStatus("First click Add selected questions. That adds the current topic, level, type, and question count to the worksheet.", "error");
+      updateWorksheetFlow();
       return;
     }
 
