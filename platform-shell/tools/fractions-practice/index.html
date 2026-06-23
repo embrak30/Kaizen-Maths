@@ -463,6 +463,7 @@
           ["subtract_mixed", "Subtraction with mixed numbers"],
           ["multiply_mixed", "Multiplication with mixed numbers"],
           ["divide_mixed", "Division with mixed numbers"],
+          ["complex_fraction_expression", "Complex BIDMAS fraction expressions"],
           ["mixed_operations", "Mixed operation set"]
         ]
       }
@@ -487,6 +488,7 @@
       subtract_mixed: "Subtracting Mixed Numbers",
       multiply_mixed: "Multiplying Mixed Numbers",
       divide_mixed: "Dividing Mixed Numbers",
+      complex_fraction_expression: "Complex BIDMAS Fraction Expressions",
       mixed_operations: "Mixed Fraction Operations"
     };
 
@@ -557,6 +559,134 @@
       return [num, den];
     }
 
+    function makeFraction(num, den) {
+      if (den < 0) {
+        return { num: -num, den: -den };
+      }
+      return { num, den };
+    }
+
+    function reduceFraction(frac) {
+      const reduced = simplify(frac.num, frac.den);
+      return makeFraction(reduced[0], reduced[1]);
+    }
+
+    function addFractions(left, right) {
+      return reduceFraction(makeFraction((left.num * right.den) + (right.num * left.den), left.den * right.den));
+    }
+
+    function subtractFractions(left, right) {
+      return reduceFraction(makeFraction((left.num * right.den) - (right.num * left.den), left.den * right.den));
+    }
+
+    function multiplyFractions(left, right) {
+      return reduceFraction(makeFraction(left.num * right.num, left.den * right.den));
+    }
+
+    function divideFractions(left, right) {
+      return reduceFraction(makeFraction(left.num * right.den, left.den * right.num));
+    }
+
+    function simplificationSteps(num, den) {
+      const factor = gcd(num, den);
+      if (factor === 1) {
+        return [`${fraction(num, den)} is already in simplest form.`];
+      }
+      return [
+        `The highest common factor of ${num} and ${den} is ${factor}.`,
+        `${fraction(num, den)} = ${fraction(`${num} ÷ ${factor}`, `${den} ÷ ${factor}`)} = ${formatFraction(num, den)}`
+      ];
+    }
+
+    function crossAddSubtractSteps(left, right, op) {
+      const crossLeft = left.num * right.den;
+      const crossRight = right.num * left.den;
+      const productDen = left.den * right.den;
+      const result = op === "+" ? crossLeft + crossRight : crossLeft - crossRight;
+      return [
+        "Use the cross-multiplication denominator method.",
+        `${fraction(left.num, left.den)} ${op} ${fraction(right.num, right.den)} = ${fraction(`(${left.num} × ${right.den}) ${op} (${right.num} × ${left.den})`, `${left.den} × ${right.den}`)}`,
+        `${fraction(`(${crossLeft}) ${op} (${crossRight})`, productDen)} = ${fraction(result, productDen)}`,
+        ...simplificationSteps(result, productDen)
+      ];
+    }
+
+    function multiplyFractionSteps(left, right) {
+      const rawNum = left.num * right.num;
+      const rawDen = left.den * right.den;
+      return [
+        "Multiply the numerators and multiply the denominators.",
+        `${fraction(left.num, left.den)} × ${fraction(right.num, right.den)} = ${fraction(`${left.num} × ${right.num}`, `${left.den} × ${right.den}`)}`,
+        `${fraction(`${left.num} × ${right.num}`, `${left.den} × ${right.den}`)} = ${fraction(rawNum, rawDen)}`,
+        ...simplificationSteps(rawNum, rawDen)
+      ];
+    }
+
+    function divideFractionSteps(left, right) {
+      const reciprocal = makeFraction(right.den, right.num);
+      const rawNum = left.num * reciprocal.num;
+      const rawDen = left.den * reciprocal.den;
+      return [
+        "Keep the first fraction and multiply by the reciprocal of the second fraction.",
+        `${fraction(left.num, left.den)} ÷ ${fraction(right.num, right.den)} = ${fraction(left.num, left.den)} × ${fraction(reciprocal.num, reciprocal.den)}`,
+        `${fraction(left.num, left.den)} × ${fraction(reciprocal.num, reciprocal.den)} = ${fraction(`${left.num} × ${reciprocal.num}`, `${left.den} × ${reciprocal.den}`)}`,
+        `${fraction(`${left.num} × ${reciprocal.num}`, `${left.den} × ${reciprocal.den}`)} = ${fraction(rawNum, rawDen)}`,
+        ...simplificationSteps(rawNum, rawDen)
+      ];
+    }
+
+    function mixedConversionStep(whole, num, den) {
+      const mixed = mixedNumber(whole, num, den);
+      const improper = improperFromMixed(whole, num, den);
+      return `${mixed} = ${fraction(`${whole} × ${den} + ${num}`, den)} = ${fraction(improper, den)}`;
+    }
+
+    function makeComplexFractionProblem() {
+      const templates = [
+        { multiplier: [3, 5], bracket: [4, 7], mixed: [1, 3, 5], divisor: [8, 9], add: [3, 5], subtract: [1, 5] },
+        { multiplier: [2, 3], bracket: [5, 8], mixed: [1, 1, 4], divisor: [3, 7], add: [1, 6], subtract: [1, 9] },
+        { multiplier: [4, 9], bracket: [3, 5], mixed: [2, 1, 3], divisor: [5, 6], add: [2, 7], subtract: [1, 14] },
+        { multiplier: [5, 6], bracket: [2, 9], mixed: [1, 2, 3], divisor: [7, 8], add: [1, 4], subtract: [1, 12] }
+      ];
+      const selected = templates[random(0, templates.length - 1)];
+      const multiplier = makeFraction(selected.multiplier[0], selected.multiplier[1]);
+      const bracketFraction = makeFraction(selected.bracket[0], selected.bracket[1]);
+      const mixed = selected.mixed;
+      const mixedImproper = makeFraction(improperFromMixed(mixed[0], mixed[1], mixed[2]), mixed[2]);
+      const divisor = makeFraction(selected.divisor[0], selected.divisor[1]);
+      const addOn = makeFraction(selected.add[0], selected.add[1]);
+      const subtractOff = makeFraction(selected.subtract[0], selected.subtract[1]);
+
+      const bracketResult = addFractions(bracketFraction, mixedImproper);
+      const afterMultiply = multiplyFractions(multiplier, bracketResult);
+      const afterDivide = divideFractions(afterMultiply, divisor);
+      const afterAdd = addFractions(afterDivide, addOn);
+      const final = subtractFractions(afterAdd, subtractOff);
+
+      return {
+        equation: `${fraction(multiplier.num, multiplier.den)} × (${fraction(bracketFraction.num, bracketFraction.den)} + ${mixedNumber(mixed[0], mixed[1], mixed[2])}) ÷ ${fraction(divisor.num, divisor.den)} + ${fraction(addOn.num, addOn.den)} − ${fraction(subtractOff.num, subtractOff.den)}`,
+        answer: formatFraction(final.num, final.den),
+        steps: [
+          "Work inside the brackets first.",
+          mixedConversionStep(mixed[0], mixed[1], mixed[2]),
+          ...crossAddSubtractSteps(bracketFraction, mixedImproper, "+"),
+          `The bracket is ${formatFraction(bracketResult.num, bracketResult.den)}.`,
+          "Now multiply by the fraction before the bracket.",
+          ...multiplyFractionSteps(multiplier, bracketResult),
+          `After multiplication, the expression is ${formatFraction(afterMultiply.num, afterMultiply.den)} ÷ ${fraction(divisor.num, divisor.den)} + ${fraction(addOn.num, addOn.den)} − ${fraction(subtractOff.num, subtractOff.den)}.`,
+          "Now divide by the next fraction.",
+          ...divideFractionSteps(afterMultiply, divisor),
+          `After division, the expression is ${formatFraction(afterDivide.num, afterDivide.den)} + ${fraction(addOn.num, addOn.den)} − ${fraction(subtractOff.num, subtractOff.den)}.`,
+          "Now add the next fraction.",
+          ...crossAddSubtractSteps(afterDivide, addOn, "+"),
+          `After addition, the expression is ${formatFraction(afterAdd.num, afterAdd.den)} − ${fraction(subtractOff.num, subtractOff.den)}.`,
+          "Now subtract the final fraction.",
+          ...crossAddSubtractSteps(afterAdd, subtractOff, "−"),
+          `Final answer: ${formatFraction(final.num, final.den)}`
+        ]
+      };
+    }
+
     function problemByType(type) {
       const originalType = currentType;
       currentType = type;
@@ -606,8 +736,8 @@
             answer: String(num * multiplier),
             steps: [
               `The denominator changes from ${den} to ${den * multiplier}.`,
-              `${den} x ${multiplier} = ${den * multiplier}, so multiply the numerator by ${multiplier} as well.`,
-              `${fraction(num, den)} = ${fraction(`${num} x ${multiplier}`, `${den} x ${multiplier}`)} = ${fraction(num * multiplier, den * multiplier)}`
+              `${den} × ${multiplier} = ${den * multiplier}, so multiply the numerator by ${multiplier} as well.`,
+              `${fraction(num, den)} = ${fraction(`${num} × ${multiplier}`, `${den} × ${multiplier}`)} = ${fraction(num * multiplier, den * multiplier)}`
             ]
           };
         }
@@ -636,8 +766,8 @@
             answer: String(missing),
             steps: [
               "Use cross multiplication for equivalent fractions.",
-              `${num} x ? = ${den} x ${newNum}`,
-              `${num} x ? = ${den * newNum}`,
+              `${num} × ? = ${den} × ${newNum}`,
+              `${num} × ? = ${den * newNum}`,
               `? = ${den * newNum} ÷ ${num} = ${missing}`
             ]
           };
@@ -659,7 +789,8 @@
             steps: [
               "The denominators are the same, so add the numerators.",
               `${fraction(num1, den)} + ${fraction(num2, den)} = ${fraction(`${num1} + ${num2}`, den)} = ${fraction(sum, den)}`,
-              `Simplified answer: ${formatFraction(sum, den)}`
+              ...simplificationSteps(sum, den),
+              `Final answer: ${formatFraction(sum, den)}`
             ]
           };
         }
@@ -674,7 +805,8 @@
             steps: [
               "The denominators are the same, so subtract the numerators.",
               `${fraction(num1, den)} - ${fraction(num2, den)} = ${fraction(`${num1} - ${num2}`, den)} = ${fraction(difference, den)}`,
-              `Simplified answer: ${formatFraction(difference, den)}`
+              ...simplificationSteps(difference, den),
+              `Final answer: ${formatFraction(difference, den)}`
             ]
           };
         }
@@ -682,76 +814,68 @@
           let first = randomProper(9);
           let second = randomProper(9);
           while (first[1] === second[1]) second = randomProper(9);
-          const common = lcm(first[1], second[1]);
-          const newFirst = first[0] * (common / first[1]);
-          const newSecond = second[0] * (common / second[1]);
-          const result = newFirst + newSecond;
+          const left = makeFraction(first[0], first[1]);
+          const right = makeFraction(second[0], second[1]);
+          const result = addFractions(left, right);
           return {
             equation: `${fraction(first[0], first[1])} + ${fraction(second[0], second[1])}`,
-            answer: formatFraction(result, common),
+            answer: formatFraction(result.num, result.den),
             steps: [
-              `Find the lowest common denominator of ${first[1]} and ${second[1]}: ${common}.`,
-              `${fraction(first[0], first[1])} = ${fraction(newFirst, common)} and ${fraction(second[0], second[1])} = ${fraction(newSecond, common)}`,
-              `${fraction(newFirst, common)} + ${fraction(newSecond, common)} = ${fraction(result, common)}`,
-              `Simplified answer: ${formatFraction(result, common)}`
+              ...crossAddSubtractSteps(left, right, "+"),
+              `Final answer: ${formatFraction(result.num, result.den)}`
             ]
           };
         }
         case "subtract_proper": {
           let first = randomProper(9);
           let second = randomProper(9);
-          let common = lcm(first[1], second[1]);
-          let newFirst = first[0] * (common / first[1]);
-          let newSecond = second[0] * (common / second[1]);
-          if (newFirst === newSecond) return problemByType("subtract_proper");
-          if (newFirst < newSecond) {
+          let left = makeFraction(first[0], first[1]);
+          let right = makeFraction(second[0], second[1]);
+          if ((left.num * right.den) === (right.num * left.den)) return problemByType("subtract_proper");
+          if ((left.num * right.den) < (right.num * left.den)) {
             const temp = first;
             first = second;
             second = temp;
-            common = lcm(first[1], second[1]);
-            newFirst = first[0] * (common / first[1]);
-            newSecond = second[0] * (common / second[1]);
+            left = makeFraction(first[0], first[1]);
+            right = makeFraction(second[0], second[1]);
           }
-          const result = newFirst - newSecond;
+          const result = subtractFractions(left, right);
           return {
             equation: `${fraction(first[0], first[1])} - ${fraction(second[0], second[1])}`,
-            answer: formatFraction(result, common),
+            answer: formatFraction(result.num, result.den),
             steps: [
-              `Find the lowest common denominator of ${first[1]} and ${second[1]}: ${common}.`,
-              `${fraction(first[0], first[1])} = ${fraction(newFirst, common)} and ${fraction(second[0], second[1])} = ${fraction(newSecond, common)}`,
-              `${fraction(newFirst, common)} - ${fraction(newSecond, common)} = ${fraction(result, common)}`,
-              `Simplified answer: ${formatFraction(result, common)}`
+              ...crossAddSubtractSteps(left, right, "−"),
+              `Final answer: ${formatFraction(result.num, result.den)}`
             ]
           };
         }
         case "multiply_proper": {
           const first = randomProper(9);
           const second = randomProper(9);
-          const num = first[0] * second[0];
-          const den = first[1] * second[1];
+          const left = makeFraction(first[0], first[1]);
+          const right = makeFraction(second[0], second[1]);
+          const result = multiplyFractions(left, right);
           return {
-            equation: `${fraction(first[0], first[1])} x ${fraction(second[0], second[1])}`,
-            answer: formatFraction(num, den),
+            equation: `${fraction(first[0], first[1])} × ${fraction(second[0], second[1])}`,
+            answer: formatFraction(result.num, result.den),
             steps: [
-              "Multiply the numerators and multiply the denominators.",
-              `${fraction(first[0], first[1])} x ${fraction(second[0], second[1])} = ${fraction(`${first[0]} x ${second[0]}`, `${first[1]} x ${second[1]}`)} = ${fraction(num, den)}`,
-              `Simplified answer: ${formatFraction(num, den)}`
+              ...multiplyFractionSteps(left, right),
+              `Final answer: ${formatFraction(result.num, result.den)}`
             ]
           };
         }
         case "divide_proper": {
           const first = randomProper(9);
           const second = randomProper(9);
-          const num = first[0] * second[1];
-          const den = first[1] * second[0];
+          const left = makeFraction(first[0], first[1]);
+          const right = makeFraction(second[0], second[1]);
+          const result = divideFractions(left, right);
           return {
             equation: `${fraction(first[0], first[1])} ÷ ${fraction(second[0], second[1])}`,
-            answer: formatFraction(num, den),
+            answer: formatFraction(result.num, result.den),
             steps: [
-              "To divide fractions, multiply by the reciprocal of the second fraction.",
-              `${fraction(first[0], first[1])} ÷ ${fraction(second[0], second[1])} = ${fraction(first[0], first[1])} x ${fraction(second[1], second[0])}`,
-              `${fraction(`${first[0]} x ${second[1]}`, `${first[1]} x ${second[0]}`)} = ${fraction(num, den)}`,
-              `Simplified answer: ${formatFraction(num, den)}`
+              ...divideFractionSteps(left, right),
+              `Final answer: ${formatFraction(result.num, result.den)}`
             ]
           };
         }
@@ -766,46 +890,49 @@
           const imp1 = improperFromMixed(whole1, frac1[0], frac1[1]);
           const imp2 = improperFromMixed(whole2, frac2[0], frac2[1]);
           let op = "+";
-          let num = 0;
-          let den = 1;
+          let result = makeFraction(0, 1);
+          const left = makeFraction(imp1, frac1[1]);
+          const right = makeFraction(imp2, frac2[1]);
 
           if (type === "add_mixed" || type === "subtract_mixed") {
-            const common = lcm(frac1[1], frac2[1]);
-            const left = imp1 * (common / frac1[1]);
-            const right = imp2 * (common / frac2[1]);
             if (type === "add_mixed") {
               op = "+";
-              num = left + right;
+              result = addFractions(left, right);
             } else {
-              op = "-";
-              if (left <= right) return problemByType("subtract_mixed");
-              num = left - right;
+              op = "−";
+              if ((left.num * right.den) <= (right.num * left.den)) return problemByType("subtract_mixed");
+              result = subtractFractions(left, right);
             }
-            den = common;
           } else if (type === "multiply_mixed") {
-            op = "x";
-            num = imp1 * imp2;
-            den = frac1[1] * frac2[1];
+            op = "×";
+            result = multiplyFractions(left, right);
           } else {
             op = "÷";
-            num = imp1 * frac2[1];
-            den = frac1[1] * imp2;
+            result = divideFractions(left, right);
           }
 
           const firstMixed = mixedNumber(whole1, frac1[0], frac1[1]);
           const secondMixed = mixedNumber(whole2, frac2[0], frac2[1]);
+          let operationSteps = [];
+          if (type === "add_mixed") operationSteps = crossAddSubtractSteps(left, right, "+");
+          else if (type === "subtract_mixed") operationSteps = crossAddSubtractSteps(left, right, "−");
+          else if (type === "multiply_mixed") operationSteps = multiplyFractionSteps(left, right);
+          else operationSteps = divideFractionSteps(left, right);
           return {
             equation: `${firstMixed} ${op} ${secondMixed}`,
-            answer: formatFraction(num, den),
+            answer: formatFraction(result.num, result.den),
             steps: [
               "Convert the mixed numbers to improper fractions.",
-              `${firstMixed} = ${fraction(imp1, frac1[1])} and ${secondMixed} = ${fraction(imp2, frac2[1])}`,
-              type === "divide_mixed" ? "For division, multiply by the reciprocal of the second fraction." : "Now apply the operation to the improper fractions.",
-              `${fraction(imp1, frac1[1])} ${op} ${fraction(imp2, frac2[1])} = ${formatFraction(num, den)}`,
-              `Final answer: ${formatFraction(num, den)}`
+              mixedConversionStep(whole1, frac1[0], frac1[1]),
+              mixedConversionStep(whole2, frac2[0], frac2[1]),
+              "Now apply the operation to the improper fractions.",
+              ...operationSteps,
+              `Final answer: ${formatFraction(result.num, result.den)}`
             ]
           };
         }
+        case "complex_fraction_expression":
+          return makeComplexFractionProblem();
         default:
           return problemByType("multiply_both");
       }

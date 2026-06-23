@@ -373,13 +373,13 @@ const tools = [
     status: "Imported",
     description: "Generate fraction practice from equivalent fractions and simplifying through same-denominator operations, different-denominator operations, and mixed numbers.",
     tags: ["numbers", "fractions", "equivalent fractions", "simplifying", "mixed numbers", "operations"],
-    toolPath: "tools/fractions-practice/index.html?v=fractions-worksheet-bars-1",
+    toolPath: "tools/fractions-practice/index.html?v=fractions-complex-1",
     imported: true,
     teacherNotes: [
       "Level 1 develops equivalent fraction reasoning using multiplication, division, and cross multiplication.",
       "Level 2 focuses on simplifying fractions by identifying common factors.",
       "Level 3 practises adding and subtracting fractions with the same denominator.",
-      "Level 4 brings together all four operations with proper fractions and mixed numbers."
+      "Level 4 brings together all four operations with proper fractions, mixed numbers, and complex BIDMAS fraction expressions."
     ]
   },
   {
