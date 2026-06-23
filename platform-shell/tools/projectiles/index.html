@@ -204,6 +204,13 @@
 
     function projectileDiagram({ u, angle, wallDistance = null, wallHeight = null, distanceLabel = null, heightLabel = null }) {
       const arrowId = "projectile-arrow-" + (++diagramCounter);
+      if (angle === 0) {
+        const cliffHeight = heightLabel || "";
+        const rangeLabel = distanceLabel || "";
+        const heightSvg = cliffHeight ? '<line class="axis" x1="500" y1="55" x2="500" y2="128"></line><text x="515" y="94" text-anchor="middle">' + cliffHeight + '</text>' : "";
+        const distanceSvg = rangeLabel ? '<line class="axis" x1="95" y1="143" x2="470" y2="143"></line><text x="282" y="157" text-anchor="middle">' + rangeLabel + '</text>' : "";
+        return '<div class="diagram-wrap"><svg class="projectile-diagram" viewBox="0 0 560 170" role="img" aria-label="Horizontal projection from a height diagram"><defs><marker id="' + arrowId + '" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#1a365d"></path></marker></defs><line class="axis" x1="55" y1="128" x2="510" y2="128"></line><line class="axis" x1="95" y1="55" x2="95" y2="128"></line><path class="path" d="M95 55 C190 56, 360 78, 470 128"></path><line class="force" marker-end="url(#' + arrowId + ')" x1="95" y1="55" x2="168" y2="55"></line><text x="178" y="51" text-anchor="start">' + u + ' m/s</text><circle class="point" cx="95" cy="55" r="3"></circle><circle class="point" cx="470" cy="128" r="3"></circle>' + heightSvg + distanceSvg + '</svg></div>';
+      }
       const wallX = wallDistance == null ? "" : 350;
       const wallSvg = wallDistance == null ? "" : '<line class="wall" x1="' + wallX + '" y1="128" x2="' + wallX + '" y2="66"></line><text x="' + wallX + '" y="58" text-anchor="middle">' + fmt(wallHeight) + " m wall" + '</text><line class="axis" x1="90" y1="143" x2="' + wallX + '" y2="143"></line><text x="' + ((90 + wallX) / 2) + '" y="157" text-anchor="middle">' + fmt(wallDistance) + " m" + '</text>';
       const distanceSvg = distanceLabel ? '<line class="axis" x1="90" y1="143" x2="470" y2="143"></line><text x="280" y="157" text-anchor="middle">' + distanceLabel + '</text>' : "";

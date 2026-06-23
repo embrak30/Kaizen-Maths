@@ -854,7 +854,7 @@ const tools = [
     status: "Imported",
     description: "Generate projectile motion practice covering resolving velocity, time of flight, maximum height, range, position, speed, and applied modelling questions.",
     tags: ["mechanics", "projectiles", "projectile motion", "kinematics", "components", "range", "maximum height", "modelling", "gravity"],
-    toolPath: "tools/projectiles/index.html?v=projectiles-1",
+    toolPath: "tools/projectiles/index.html?v=projectiles-horizontal-1",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on resolving the initial velocity and using vertical motion for time and height.",
