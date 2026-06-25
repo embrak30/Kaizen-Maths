@@ -463,8 +463,10 @@
           problem = {
             given: `\\(x=${m}y${term(c0,'')}\\)`,
             expression: `\\(${A}x${term(d,'')}\\)`,
+            task: `Write in terms of \\(y\\) and simplify`,
             answer: `\\(${finalCoeff}y${term(finalConst,'')}\\)`,
             steps: [
+              `No numerical value for \\(y\\) is given, so the answer should be an expression in terms of \\(y\\).`,
               `Substitute \\(x=${m}y${term(c0,'')}\\).`,
               `$$${A}\\big(${m}y${term(c0,'')}\\big) ${term(d,'')}$$`,
               `$$${A*m}y ${term(A*c0,'')} ${term(d,'')}$$`,
@@ -489,8 +491,10 @@
           problem = {
             given: `\\(a=${p2}b${term(c1,'')}\\)`,
             expression: `\\(${s}a+${t}b\\)`,
+            task: `Write in terms of \\(b\\) and simplify`,
             answer: `\\(${finalCoeff}b${term(finalConst,'')}\\)`,
             steps: [
+              `No numerical value for \\(b\\) is given, so the answer should be an expression in terms of \\(b\\).`,
               `Substitute \\(a=${p2}b${term(c1,'')}\\).`,
               `$$${s}\\big(${p2}b${term(c1,'')}\\big) + ${t}b$$`,
               `$$${s*p2}b ${term(s*c1,'')} + ${t}b$$`,
@@ -522,8 +526,10 @@
             problem = {
               given: `\\(y=${m}x${term(b,'')}\\)`,
               expression: `\\(${a}x^2 ${term(c,'y')} ${term(d,'')}\\)`,
+              task: `Write in terms of \\(x\\) and simplify`,
               answer: `\\(${quadCoeff}x^2${term(linCoeff,'x')}${term(constTerm,'')}\\)`,
               steps: [
+                `No numerical value for \\(x\\) is given, so the answer should be an expression in terms of \\(x\\).`,
                 `Substitute \\(y=${m}x${term(b,'')}\\).`,
                 `$$${a}x^2 ${term(c,`\\big(${m}x${term(b,'')}\\big)`)} ${term(d,'')}$$`,
                 `$$${a}x^2 ${term(c*m,'x')} ${term(c*b,'')} ${term(d,'')}$$`,
@@ -552,8 +558,10 @@
             problem = {
               given: `\\(y=${m}x${term(b1,'')}\\)`,
               expression: `\\(${a}x^3 ${term(b2,'x^2')} ${term(c,'y')} ${term(d,'')}\\)`,
+              task: `Write in terms of \\(x\\) and simplify`,
               answer: `\\(${cubic}x^3${term(quad,'x^2')}${term(lin,'x')}${term(constTerm,'')}\\)`,
               steps: [
+                `No numerical value for \\(x\\) is given, so the answer should be an expression in terms of \\(x\\).`,
                 `Substitute \\(y=${m}x${term(b1,'')}\\).`,
                 `$$${a}x^3 ${term(b2,'x^2')} ${term(c,`\\big(${m}x${term(b1,'')}\\big)`)} ${term(d,'')}$$`,
                 `$$${a}x^3 ${term(b2,'x^2')} ${term(c*m,'x')} ${term(c*b1,'')} ${term(d,'')}$$`,
@@ -581,8 +589,10 @@
             problem = {
               given: `\\(y=${m}x${term(b2v,'')}\\)`,
               expression: `\\(${a}x^2 + ${B}xy ${term(c,'y')} ${term(d,'')}\\)`,
+              task: `Write in terms of \\(x\\) and simplify`,
               answer: `\\(${quad}x^2${term(linRaw,'x')}${term(constTerm,'')}\\)`,
               steps: [
+                `No numerical value for \\(x\\) is given, so the answer should be an expression in terms of \\(x\\).`,
                 `Substitute \\(y=${m}x${term(b2v,'')}\\).`,
                 `$$${a}x^2 + ${B}x\\big(${m}x${term(b2v,'')}\\big) ${term(c,`\\big(${m}x${term(b2v,'')}\\big)`)} ${term(d,'')}$$`,
                 `$$${a}x^2 + ${B*m}x^2 ${term(B*b2v,'x')} ${term(c*m,'x')} ${term(c*b2v,'')} ${term(d,'')}$$`,
@@ -597,7 +607,8 @@
           return generateProblem();
       }
 
-      problem.question = `Given: ${stripMathDelimiters(problem.given)}<br>Find: ${stripMathDelimiters(problem.expression)}`;
+      const taskText = stripMathDelimiters(problem.task || 'Find');
+      problem.question = `Given: ${stripMathDelimiters(problem.given)}<br>${taskText}: ${stripMathDelimiters(problem.expression)}`;
       return problem;
     }
 
@@ -691,7 +702,7 @@
               <div class="problem-number">${i+1}</div>
               <div class="problem-content">
                 <div class="given-values">Given: ${p.given}</div>
-                <div class="expression">Find: ${p.expression}</div>
+                <div class="expression">${p.task || 'Find'}: ${p.expression}</div>
               </div>
             </div>
             <div class="problem-answer" id="quick-answer-${i}">${p.answer}</div>

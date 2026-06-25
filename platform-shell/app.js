@@ -31,7 +31,7 @@ const tools = [
     status: "Pilot",
     description: "Generate substitution questions with answers, worked steps, a timer, and teacher notes.",
     tags: ["algebra", "substitution", "expressions", "worked steps"],
-    toolPath: "tools/substitution/index.html?v=substitution-one-example-render-1",
+    toolPath: "tools/substitution/index.html?v=substitution-expression-wording-1",
     imported: true,
     legacyUrl: "https://www.kaizen-maths.com/substitution",
     teacherNotes: [
