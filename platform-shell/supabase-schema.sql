@@ -73,10 +73,242 @@ create table if not exists public.schools (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   licence_type text default 'school',
+  allowed_domains text,
+  seat_limit integer,
+  join_code text unique,
+  join_code_expires_at timestamptz,
+  is_active boolean not null default true,
+  notes text,
   licence_starts_at timestamptz,
   licence_ends_at timestamptz,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
+
+alter table public.schools add column if not exists allowed_domains text;
+alter table public.schools add column if not exists seat_limit integer;
+alter table public.schools add column if not exists join_code text;
+alter table public.schools add column if not exists join_code_expires_at timestamptz;
+alter table public.schools add column if not exists is_active boolean not null default true;
+alter table public.schools add column if not exists notes text;
+alter table public.schools add column if not exists updated_at timestamptz not null default now();
+alter table public.profiles add column if not exists school_id uuid references public.schools(id) on delete set null;
+create index if not exists profiles_school_id_idx on public.profiles(school_id);
+create index if not exists schools_join_code_idx on public.schools(join_code);
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'profiles_school_id_fkey'
+      and conrelid = 'public.profiles'::regclass
+  ) then
+    alter table public.profiles
+      add constraint profiles_school_id_fkey
+      foreign key (school_id) references public.schools(id) on delete set null
+      not valid;
+  end if;
+end;
+$$;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'schools_join_code_key'
+      and conrelid = 'public.schools'::regclass
+  ) then
+    alter table public.schools add constraint schools_join_code_key unique (join_code);
+  end if;
+end;
+$$;
+
+create table if not exists public.school_teacher_access (
+  id uuid primary key default gen_random_uuid(),
+  school_id uuid not null references public.schools(id) on delete cascade,
+  email text not null,
+  created_at timestamptz not null default now(),
+  unique (school_id, email)
+);
+
+alter table public.school_teacher_access enable row level security;
+alter table public.schools enable row level security;
+
+grant select on public.schools to anon, authenticated;
+grant insert, update, delete on public.schools to authenticated;
+grant select on public.school_teacher_access to authenticated;
+grant insert, update, delete on public.school_teacher_access to authenticated;
+
+drop policy if exists "Admins can read all schools" on public.schools;
+create policy "Admins can read all schools"
+on public.schools
+for select
+using (public.is_admin());
+
+drop policy if exists "School users can read their school" on public.schools;
+create policy "School users can read their school"
+on public.schools
+for select
+using (
+  exists (
+    select 1
+    from public.profiles
+    where profiles.id = auth.uid()
+      and profiles.school_id = schools.id
+  )
+);
+
+drop policy if exists "Admins can insert schools" on public.schools;
+create policy "Admins can insert schools"
+on public.schools
+for insert
+with check (public.is_admin());
+
+drop policy if exists "Admins can update schools" on public.schools;
+create policy "Admins can update schools"
+on public.schools
+for update
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Admins can delete schools" on public.schools;
+create policy "Admins can delete schools"
+on public.schools
+for delete
+using (public.is_admin());
+
+drop policy if exists "Admins can read teacher access" on public.school_teacher_access;
+create policy "Admins can read teacher access"
+on public.school_teacher_access
+for select
+using (public.is_admin());
+
+drop policy if exists "Admins can insert teacher access" on public.school_teacher_access;
+create policy "Admins can insert teacher access"
+on public.school_teacher_access
+for insert
+with check (public.is_admin());
+
+drop policy if exists "Admins can update teacher access" on public.school_teacher_access;
+create policy "Admins can update teacher access"
+on public.school_teacher_access
+for update
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Admins can delete teacher access" on public.school_teacher_access;
+create policy "Admins can delete teacher access"
+on public.school_teacher_access
+for delete
+using (public.is_admin());
+
+create or replace function public.claim_school_access(claim_code text)
+returns table(ok boolean, message text, school_id uuid, school_name text)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  current_profile public.profiles%rowtype;
+  matched_school public.schools%rowtype;
+  teacher_email text;
+  teacher_domain text;
+  domain_count integer;
+  approved_count integer;
+  current_seats integer;
+  domain_allowed boolean;
+  email_allowed boolean;
+begin
+  if auth.uid() is null then
+    return query select false, 'Sign in before joining a school.', null::uuid, null::text;
+    return;
+  end if;
+
+  select *
+  into current_profile
+  from public.profiles
+  where id = auth.uid();
+
+  if current_profile.id is null then
+    return query select false, 'No teacher profile was found. Sign out and sign in again.', null::uuid, null::text;
+    return;
+  end if;
+
+  teacher_email := lower(trim(current_profile.email));
+  teacher_domain := split_part(teacher_email, '@', 2);
+
+  select *
+  into matched_school
+  from public.schools
+  where lower(join_code) = lower(trim(claim_code))
+    and is_active = true
+    and (join_code_expires_at is null or join_code_expires_at >= now())
+    and (licence_starts_at is null or licence_starts_at <= now())
+    and (licence_ends_at is null or licence_ends_at >= now())
+  limit 1;
+
+  if matched_school.id is null then
+    return query select false, 'This school code is not valid or has expired.', null::uuid, null::text;
+    return;
+  end if;
+
+  select count(*)
+  into domain_count
+  from regexp_split_to_table(coalesce(matched_school.allowed_domains, ''), ',') as d(domain)
+  where trim(d.domain) <> '';
+
+  select count(*)
+  into approved_count
+  from public.school_teacher_access
+  where school_teacher_access.school_id = matched_school.id;
+
+  select count(*)
+  into current_seats
+  from public.profiles
+  where profiles.school_id = matched_school.id
+    and profiles.role = 'school'
+    and profiles.id <> auth.uid();
+
+  if matched_school.seat_limit is not null and matched_school.seat_limit > 0 and current_seats >= matched_school.seat_limit then
+    return query select false, 'This school licence has reached its teacher seat limit.', matched_school.id, matched_school.name;
+    return;
+  end if;
+
+  select exists (
+    select 1
+    from regexp_split_to_table(coalesce(matched_school.allowed_domains, ''), ',') as d(domain)
+    where lower(trim(both ' @' from d.domain)) = teacher_domain
+  )
+  into domain_allowed;
+
+  select exists (
+    select 1
+    from public.school_teacher_access
+    where school_teacher_access.school_id = matched_school.id
+      and lower(trim(school_teacher_access.email)) = teacher_email
+  )
+  into email_allowed;
+
+  if domain_count > 0 or approved_count > 0 then
+    if not domain_allowed and not email_allowed then
+      return query select false, 'Your email is not approved for this school licence.', matched_school.id, matched_school.name;
+      return;
+    end if;
+  end if;
+
+  update public.profiles
+  set role = 'school',
+      school_id = matched_school.id,
+      updated_at = now()
+  where id = auth.uid();
+
+  return query select true, 'School access added.', matched_school.id, matched_school.name;
+end;
+$$;
+
+grant execute on function public.claim_school_access(text) to authenticated;
 
 create table if not exists public.tool_access (
   tool_slug text primary key,

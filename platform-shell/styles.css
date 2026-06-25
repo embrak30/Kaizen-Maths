@@ -1875,6 +1875,7 @@ body[data-route="gcse-exam-style"] .account-action {
 }
 
 .admin-user-role,
+.admin-user-school,
 .admin-user-trial-date {
   min-width: 140px;
   border: 1px solid var(--line);
@@ -1882,6 +1883,154 @@ body[data-route="gcse-exam-style"] .account-action {
   padding: 8px 10px;
   background: white;
   font: inherit;
+}
+
+.school-space-page {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  align-items: start;
+}
+
+.school-status-card,
+.school-join-card,
+.school-help-card {
+  display: grid;
+  gap: 12px;
+}
+
+.school-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.school-detail-grid div {
+  display: grid;
+  gap: 3px;
+  padding: 11px 12px;
+  border: 1px solid #e6edf5;
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.school-detail-grid span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.school-code-field {
+  display: grid;
+  gap: 6px;
+  color: #4a5570;
+  font-size: 0.85rem;
+  font-weight: 850;
+}
+
+.school-code-field input {
+  max-width: 360px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 13px;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.school-join-status {
+  min-height: 1.4em;
+  margin: 0;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.school-join-status[data-tone="success"] {
+  color: #15803d;
+}
+
+.school-join-status[data-tone="error"] {
+  color: #b42318;
+}
+
+.admin-school-list {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-school-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.45fr) minmax(360px, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 12px;
+  border: 1px solid #e1e8f2;
+  border-radius: 8px;
+  background: white;
+}
+
+.admin-school-default {
+  position: sticky;
+  top: 12px;
+  display: grid;
+  gap: 5px;
+}
+
+.admin-school-default small {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.admin-school-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.admin-school-fields label {
+  display: grid;
+  gap: 5px;
+  color: #4a5570;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.admin-school-fields label:has(textarea) {
+  grid-column: span 3;
+}
+
+.admin-school-fields input,
+.admin-school-fields textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 11px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+}
+
+.admin-school-fields textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.admin-school-fields input:focus,
+.admin-school-fields textarea:focus,
+.school-code-field input:focus {
+  border-color: rgba(23, 184, 179, 0.72);
+  box-shadow: 0 0 0 3px rgba(23, 184, 179, 0.12);
+  outline: none;
+}
+
+.admin-code-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
 }
 
 .admin-metadata-list {
@@ -4032,11 +4181,14 @@ sup .worksheet-fraction span:last-child {
     overflow: visible;
   }
 
-  .admin-testimonial-row {
+  .admin-testimonial-row,
+  .admin-school-row,
+  .school-space-page {
     grid-template-columns: 1fr;
   }
 
-  .admin-testimonial-default {
+  .admin-testimonial-default,
+  .admin-school-default {
     position: static;
   }
 
@@ -4284,8 +4436,14 @@ sup .worksheet-fraction span:last-child {
     grid-template-columns: 1fr;
   }
 
-  .admin-testimonial-fields {
+  .admin-testimonial-fields,
+  .admin-school-fields,
+  .school-detail-grid {
     grid-template-columns: 1fr;
+  }
+
+  .admin-school-fields label:has(textarea) {
+    grid-column: 1;
   }
 
   .worksheet-question-marks {

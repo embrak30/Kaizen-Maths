@@ -1386,6 +1386,9 @@ const state = {
   toolAccess: {},
   toolMetadata: {},
   userProfiles: [],
+  schools: [],
+  schoolTeacherAccess: [],
+  schoolsLoaded: false,
   usersLoaded: false,
   universityVideos: {},
   siteTestimonials: [],
@@ -1490,6 +1493,58 @@ function formatDisplayDate(value) {
   return date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
+function dateInputToIso(value, endOfDay = false) {
+  if (!value) return null;
+  const time = endOfDay ? "23:59:59.000Z" : "00:00:00.000Z";
+  const date = new Date(`${value}T${time}`);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
+
+function normaliseEmailList(value) {
+  return [...new Set(String(value || "")
+    .split(/[\s,;]+/)
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean))];
+}
+
+function normaliseDomainList(value) {
+  return [...new Set(String(value || "")
+    .split(/[\s,;]+/)
+    .map((item) => item.trim().toLowerCase().replace(/^@+/, ""))
+    .filter(Boolean))];
+}
+
+function generateSchoolCode(length = 10) {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const values = new Uint32Array(length);
+  if (window.crypto?.getRandomValues) {
+    window.crypto.getRandomValues(values);
+  } else {
+    for (let index = 0; index < length; index += 1) values[index] = Math.floor(Math.random() * 100000);
+  }
+  return Array.from(values, (value) => alphabet[value % alphabet.length]).join("");
+}
+
+function schoolById(id) {
+  return state.schools.find((school) => school.id === id) || null;
+}
+
+function currentSchoolName() {
+  const profile = authState().profile || {};
+  return profile.school_name || schoolById(profile.school_id)?.name || "";
+}
+
+function schoolTeacherEmails(schoolId) {
+  return state.schoolTeacherAccess
+    .filter((row) => row.school_id === schoolId)
+    .map((row) => row.email)
+    .sort((a, b) => a.localeCompare(b));
+}
+
+function schoolSeatCount(schoolId) {
+  return state.userProfiles.filter((profile) => profile.school_id === schoolId && normalise(profile.role) === "school").length;
+}
+
 function authState() {
   return window.KaizenAuth?.state || {};
 }
@@ -1501,6 +1556,13 @@ function currentUserRole() {
   if (role === "trial" && auth.profile?.trial_ends_at) {
     const trialEnds = new Date(auth.profile.trial_ends_at);
     if (!Number.isNaN(trialEnds.getTime()) && trialEnds < new Date()) return "free";
+  }
+  if (role === "school") {
+    if (auth.profile?.school_is_active === false) return "free";
+    if (auth.profile?.school_licence_ends_at) {
+      const licenceEnds = new Date(auth.profile.school_licence_ends_at);
+      if (!Number.isNaN(licenceEnds.getTime()) && licenceEnds < new Date()) return "free";
+    }
   }
   return role;
 }
@@ -2083,6 +2145,7 @@ async function saveUserProfileAccess(userId, values) {
     : null;
   const payload = {
     role: values.role,
+    school_id: values.school_id || null,
     trial_ends_at: trialEnd,
     updated_at: new Date().toISOString()
   };
@@ -2094,6 +2157,85 @@ async function saveUserProfileAccess(userId, values) {
   state.userProfiles = state.userProfiles.map((profile) => (
     profile.id === userId ? { ...profile, ...payload } : profile
   ));
+}
+
+async function loadSchools({ rerender = false } = {}) {
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client || !isAdmin()) return;
+  try {
+    const [{ data: schools, error: schoolsError }, { data: teacherAccess, error: teacherAccessError }] = await Promise.all([
+      client
+        .from("schools")
+        .select("id, name, licence_type, allowed_domains, seat_limit, join_code, join_code_expires_at, is_active, notes, licence_starts_at, licence_ends_at, created_at, updated_at")
+        .order("name", { ascending: true }),
+      client
+        .from("school_teacher_access")
+        .select("id, school_id, email, created_at")
+        .order("email", { ascending: true })
+    ]);
+    if (schoolsError) throw schoolsError;
+    if (teacherAccessError) throw teacherAccessError;
+    state.schools = schools || [];
+    state.schoolTeacherAccess = teacherAccess || [];
+    state.schoolsLoaded = true;
+    if (rerender && routeParts()[0] === "admin") renderRoute();
+  } catch (error) {
+    console.warn("Kaizen school settings unavailable:", error.message);
+  }
+}
+
+async function saveSchool(values) {
+  const client = await window.KaizenAuth?.getClient?.();
+  if (!client) throw new Error("Supabase is not available.");
+  const payload = {
+    name: values.name.trim(),
+    licence_type: values.licence_type.trim() || "school",
+    allowed_domains: normaliseDomainList(values.allowed_domains).join(", "),
+    seat_limit: values.seat_limit ? Number(values.seat_limit) : null,
+    join_code: values.join_code.trim().toUpperCase() || null,
+    join_code_expires_at: dateInputToIso(values.join_code_expires_at, true),
+    licence_starts_at: dateInputToIso(values.licence_starts_at),
+    licence_ends_at: dateInputToIso(values.licence_ends_at, true),
+    is_active: Boolean(values.is_active),
+    notes: values.notes.trim(),
+    updated_at: new Date().toISOString()
+  };
+  if (!payload.name) throw new Error("Every school needs a name.");
+  if (payload.seat_limit !== null && payload.seat_limit < 1) payload.seat_limit = null;
+
+  const request = values.id
+    ? client.from("schools").update(payload).eq("id", values.id).select("id").single()
+    : client.from("schools").insert(payload).select("id").single();
+  const { data, error } = await request;
+  if (error) throw error;
+  return data.id;
+}
+
+async function saveSchoolTeacherAccess(schoolId, emails) {
+  const client = await window.KaizenAuth?.getClient?.();
+  if (!client) throw new Error("Supabase is not available.");
+  const normalizedEmails = normaliseEmailList(emails);
+  const { error: deleteError } = await client
+    .from("school_teacher_access")
+    .delete()
+    .eq("school_id", schoolId);
+  if (deleteError) throw deleteError;
+  if (!normalizedEmails.length) return;
+  const { error: insertError } = await client
+    .from("school_teacher_access")
+    .insert(normalizedEmails.map((email) => ({ school_id: schoolId, email })));
+  if (insertError) throw insertError;
+}
+
+async function claimSchoolAccess(code) {
+  const client = await window.KaizenAuth?.getClient?.();
+  if (!client) throw new Error("Supabase is not available.");
+  const { data, error } = await client.rpc("claim_school_access", { claim_code: code.trim() });
+  if (error) throw error;
+  const result = Array.isArray(data) ? data[0] : data;
+  if (!result?.ok) throw new Error(result?.message || "School access could not be added.");
+  await window.KaizenAuth?.refreshProfile?.();
+  return result;
 }
 
 async function loadUniversityVideos({ rerender = false } = {}) {
@@ -5769,12 +5911,123 @@ function renderTeacher() {
   `;
 }
 
+function renderSchoolSpace() {
+  const profile = authState().profile || {};
+  const role = currentUserRole();
+  const schoolName = currentSchoolName();
+  const isSchoolUser = role === "school" && schoolName;
+  const licenceEnds = profile.school_licence_ends_at || schoolById(profile.school_id)?.licence_ends_at || "";
+
+  if (!isSignedIn()) {
+    app.innerHTML = `
+      ${pageHeader(
+        "School Space",
+        "Join or view a Kaizen Maths school licence for your department.",
+        `<a class="button" href="#/schools">School Licence Notes</a>`
+      )}
+      ${signInCallout("Sign in to join a school licence")}
+    `;
+    bindAuthActions();
+    return;
+  }
+
+  app.innerHTML = `
+    ${pageHeader(
+      "School Space",
+      isSchoolUser
+        ? "Your account is linked to your school licence."
+        : "Use the school code from your department to join a school licence.",
+      `<a class="button" href="#/schools">School Licence Notes</a>`
+    )}
+    <section class="school-space-page">
+      ${isSchoolUser ? `
+        <article class="panel school-status-card">
+          <span class="eyebrow">School Licence</span>
+          <h2>${escapeHtml(schoolName)}</h2>
+          <p>Your account has school access. You can use the full Kaizen Maths teaching workspace while this licence is active.</p>
+          <div class="school-detail-grid">
+            <div>
+              <span>Email</span>
+              <strong>${escapeHtml(authState().session?.user?.email || "Signed-in teacher")}</strong>
+            </div>
+            <div>
+              <span>Access</span>
+              <strong>School</strong>
+            </div>
+            <div>
+              <span>Licence Ends</span>
+              <strong>${escapeHtml(formatDisplayDate(licenceEnds))}</strong>
+            </div>
+          </div>
+          <div class="button-row">
+            <a class="button primary" href="#/tools">Open Tool Library</a>
+            <a class="button" href="#/worksheet-generator">Open Worksheet Builder</a>
+          </div>
+        </article>
+      ` : `
+        <article class="panel school-join-card">
+          <span class="eyebrow">Join Your School</span>
+          <h2>Enter your school access code</h2>
+          <p>Use the code shared by your school or department lead. If the licence is restricted, your signed-in email must match an approved school domain or an approved teacher email.</p>
+          <label class="school-code-field">
+            School code
+            <input id="schoolJoinCode" type="text" autocomplete="off" spellcheck="false" placeholder="Example: KAIZEN2026">
+          </label>
+          <div class="button-row">
+            <button class="button primary" id="joinSchoolButton" type="button">Join School Licence</button>
+            <a class="button" href="#/schools">Read School Licence Notes</a>
+          </div>
+          <p class="school-join-status" id="schoolJoinStatus"></p>
+        </article>
+      `}
+      <article class="panel school-help-card">
+        <span class="eyebrow">How School Access Works</span>
+        <h2>Admin controlled, teacher simple</h2>
+        <p>A Kaizen Maths admin creates the school licence, sets the approved domains or teacher emails, chooses the seat limit, and shares a join code with the school.</p>
+        <p>Teachers sign in with Google, enter the code once, and their account becomes part of the school licence.</p>
+      </article>
+    </section>
+  `;
+  bindAuthActions();
+  bindSchoolSpace();
+}
+
+function bindSchoolSpace() {
+  const button = document.getElementById("joinSchoolButton");
+  const input = document.getElementById("schoolJoinCode");
+  const status = document.getElementById("schoolJoinStatus");
+  if (!button || !input || !status) return;
+
+  button.addEventListener("click", async () => {
+    const code = input.value.trim();
+    if (!code) {
+      status.textContent = "Enter the school code first.";
+      status.dataset.tone = "error";
+      input.focus();
+      return;
+    }
+    button.disabled = true;
+    status.textContent = "Checking school access...";
+    status.dataset.tone = "loading";
+    try {
+      const result = await claimSchoolAccess(code);
+      status.textContent = `${result.school_name} has been added to your account.`;
+      status.dataset.tone = "success";
+      window.setTimeout(renderRoute, 650);
+    } catch (error) {
+      status.textContent = error.message;
+      status.dataset.tone = "error";
+      button.disabled = false;
+    }
+  });
+}
+
 function renderSchools() {
   app.innerHTML = `
     ${pageHeader(
       "School Access",
       "School licences give maths departments shared access to Kaizen Maths as a virtual mathematics textbook: unlimited topic questions, board-ready generators, worked solutions, worksheets, and assessment practice for classroom use.",
-      `<a class="button" href="#/upgrade">Back to Upgrade</a>`
+      `<a class="button" href="#/school-space">Join School Licence</a><a class="button" href="#/upgrade">Back to Upgrade</a>`
     )}
     <section class="upgrade-page">
       <article class="panel trial-notice">
@@ -6013,6 +6266,74 @@ function adminTestimonialRowHtml(testimonial, index) {
   `;
 }
 
+function adminSchoolRowHtml(school = {}, index = 0) {
+  const id = school.id || "";
+  const teacherEmails = id ? schoolTeacherEmails(id).join("\n") : "";
+  const currentSeats = id ? schoolSeatCount(id) : 0;
+  const seatLimit = school.seat_limit || "";
+  const seatCopy = id
+    ? `${currentSeats} of ${seatLimit || "unlimited"} teacher seats in use`
+    : "New school licence";
+  return `
+    <article class="admin-school-row" data-school-row data-school-id="${escapeHtml(id)}">
+      <div class="admin-school-default">
+        <strong>${escapeHtml(school.name || `School ${index + 1}`)}</strong>
+        <small>${escapeHtml(seatCopy)}</small>
+        <small>${school.is_active === false ? "Inactive" : "Active"} · Code: ${escapeHtml(school.join_code || "Not set")}</small>
+      </div>
+      <div class="admin-school-fields">
+        <label>
+          School name
+          <input data-school-field="name" type="text" value="${escapeHtml(school.name || "")}" placeholder="School or trust name">
+        </label>
+        <label>
+          Licence type
+          <input data-school-field="licence_type" type="text" value="${escapeHtml(school.licence_type || "school")}" placeholder="school, trust, pilot">
+        </label>
+        <label>
+          Seat limit
+          <input data-school-field="seat_limit" type="number" min="1" value="${escapeHtml(seatLimit)}" placeholder="Optional">
+        </label>
+        <label>
+          Join code
+          <span class="admin-code-row">
+            <input data-school-field="join_code" type="text" value="${escapeHtml(school.join_code || "")}" placeholder="Generate or type a code">
+            <button class="button subtle admin-generate-code" type="button">Generate</button>
+          </span>
+        </label>
+        <label>
+          Approved domains
+          <input data-school-field="allowed_domains" type="text" value="${escapeHtml(school.allowed_domains || "")}" placeholder="school.org, trust.org">
+        </label>
+        <label>
+          Code expires
+          <input data-school-field="join_code_expires_at" type="date" value="${escapeHtml(formatDateForInput(school.join_code_expires_at))}">
+        </label>
+        <label>
+          Licence starts
+          <input data-school-field="licence_starts_at" type="date" value="${escapeHtml(formatDateForInput(school.licence_starts_at))}">
+        </label>
+        <label>
+          Licence ends
+          <input data-school-field="licence_ends_at" type="date" value="${escapeHtml(formatDateForInput(school.licence_ends_at))}">
+        </label>
+        <label class="admin-check-row">
+          <input data-school-field="is_active" type="checkbox" ${school.is_active === false ? "" : "checked"}>
+          Active school licence
+        </label>
+        <label>
+          Approved teacher emails
+          <textarea data-school-field="teacher_emails" rows="4" placeholder="One email per line, or separate with commas">${escapeHtml(teacherEmails)}</textarea>
+        </label>
+        <label>
+          Admin notes
+          <textarea data-school-field="notes" rows="4" placeholder="Internal notes only">${escapeHtml(school.notes || "")}</textarea>
+        </label>
+      </div>
+    </article>
+  `;
+}
+
 function renderAdmin() {
   if (!isSignedIn()) {
     app.innerHTML = `
@@ -6038,6 +6359,10 @@ function renderAdmin() {
 
   if (!state.usersLoaded) {
     loadUserProfiles({ rerender: true });
+  }
+
+  if (!state.schoolsLoaded) {
+    loadSchools({ rerender: true });
   }
 
   const rows = tools.map((tool) => {
@@ -6121,6 +6446,15 @@ function renderAdmin() {
     .map((testimonial, index) => adminTestimonialRowHtml(testimonial, index))
     .join("");
 
+  const schoolRows = state.schools.length
+    ? state.schools.map((school, index) => adminSchoolRowHtml(school, index)).join("")
+    : adminSchoolRowHtml({}, 0);
+
+  const schoolOptions = [
+    `<option value="">No school</option>`,
+    ...state.schools.map((school) => `<option value="${escapeHtml(school.id)}">${escapeHtml(school.name)}</option>`)
+  ].join("");
+
   const userRows = state.userProfiles.length ? state.userProfiles.map((profile) => `
     <tr>
       <td>
@@ -6131,6 +6465,12 @@ function renderAdmin() {
         <select class="admin-user-role" data-user-id="${escapeHtml(profile.id)}">
           ${accessLevels.map((level) => `<option value="${level}" ${normalise(profile.role) === level ? "selected" : ""}>${titleCaseAccess(level)}</option>`).join("")}
         </select>
+      </td>
+      <td>
+        <select class="admin-user-school" data-user-id="${escapeHtml(profile.id)}">
+          ${schoolOptions.replace(`value="${escapeHtml(profile.school_id || "")}"`, `value="${escapeHtml(profile.school_id || "")}" selected`)}
+        </select>
+        <small>${escapeHtml(schoolById(profile.school_id)?.name || "No linked school")}</small>
       </td>
       <td>
         <input class="admin-user-trial-date" type="date" data-user-id="${escapeHtml(profile.id)}" value="${escapeHtml(formatDateForInput(profile.trial_ends_at))}">
@@ -6146,7 +6486,7 @@ function renderAdmin() {
     </tr>
   `).join("") : `
     <tr>
-      <td colspan="5">
+      <td colspan="6">
         <strong>No signed-up users loaded yet.</strong>
         <small>${state.usersLoaded ? "No profile rows were found." : "Open this tab after Supabase has loaded, or refresh while signed in as admin."}</small>
       </td>
@@ -6157,6 +6497,7 @@ function renderAdmin() {
     ${pageHeader("Admin", "Manage simple site updates without editing code: access rules, curriculum tags, and Kaizen University video content.")}
     <section class="admin-tabs" aria-label="Admin sections">
       <button class="admin-tab active" type="button" data-admin-tab="users">Users</button>
+      <button class="admin-tab" type="button" data-admin-tab="schools">Schools</button>
       <button class="admin-tab" type="button" data-admin-tab="access">Tool Access</button>
       <button class="admin-tab" type="button" data-admin-tab="metadata">Tool Tags</button>
       <button class="admin-tab" type="button" data-admin-tab="university">Kaizen University</button>
@@ -6175,10 +6516,27 @@ function renderAdmin() {
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
-            <tr><th>User</th><th>Role</th><th>Trial Until</th><th>Billing</th><th>Action</th></tr>
+            <tr><th>User</th><th>Role</th><th>School</th><th>Trial Until</th><th>Billing</th><th>Action</th></tr>
           </thead>
           <tbody>${userRows}</tbody>
         </table>
+      </div>
+    </section>
+    <section class="panel admin-panel admin-tab-panel" data-admin-panel="schools">
+      <div class="admin-toolbar">
+        <div>
+          <span class="eyebrow">School Licences</span>
+          <h2>Schools</h2>
+          <p>Create school spaces, approve domains or teacher emails, set seat limits, and share join codes with departments.</p>
+        </div>
+        <div class="button-row">
+          <button class="button" id="addSchoolRow" type="button">Add School</button>
+          <button class="button primary" id="saveSchools" type="button">Save Schools</button>
+        </div>
+      </div>
+      <p class="admin-status" id="adminSchoolsStatus">${state.schoolsLoaded ? `Loaded ${state.schools.length} school${state.schools.length === 1 ? "" : "s"}.` : "Loading schools from Supabase..."}</p>
+      <div class="admin-school-list" id="adminSchoolList">
+        ${schoolRows}
       </div>
     </section>
     <section class="panel admin-panel admin-tab-panel" data-admin-panel="access">
@@ -6273,12 +6631,14 @@ function bindAdmin() {
     button.addEventListener("click", async () => {
       const userId = button.dataset.userId;
       const role = document.querySelector(`.admin-user-role[data-user-id="${CSS.escape(userId)}"]`)?.value || "trial";
+      const schoolId = document.querySelector(`.admin-user-school[data-user-id="${CSS.escape(userId)}"]`)?.value || "";
       const trialDate = document.querySelector(`.admin-user-trial-date[data-user-id="${CSS.escape(userId)}"]`)?.value || "";
       button.disabled = true;
       usersStatus.textContent = "Saving user access...";
       try {
         await saveUserProfileAccess(userId, {
           role,
+          school_id: schoolId,
           trial_ends_at: trialDate
         });
         usersStatus.textContent = "Saved. User access has been updated.";
@@ -6288,6 +6648,68 @@ function bindAdmin() {
         button.disabled = false;
       }
     });
+  });
+
+  const schoolsStatus = document.getElementById("adminSchoolsStatus");
+  const schoolList = document.getElementById("adminSchoolList");
+
+  function bindSchoolCodeButtons(scope = document) {
+    scope.querySelectorAll(".admin-generate-code").forEach((button) => {
+      button.addEventListener("click", () => {
+        const input = button.closest(".admin-code-row")?.querySelector('[data-school-field="join_code"]');
+        if (input) input.value = generateSchoolCode();
+      });
+    });
+  }
+
+  bindSchoolCodeButtons();
+
+  document.getElementById("addSchoolRow")?.addEventListener("click", () => {
+    const rows = schoolList?.querySelectorAll("[data-school-row]").length || 0;
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = adminSchoolRowHtml({ is_active: true, licence_type: "school" }, rows);
+    const row = wrapper.firstElementChild;
+    if (!row) return;
+    schoolList?.appendChild(row);
+    bindSchoolCodeButtons(row);
+    row.querySelector('[data-school-field="name"]')?.focus();
+  });
+
+  document.getElementById("saveSchools")?.addEventListener("click", async () => {
+    const button = document.getElementById("saveSchools");
+    const rows = [...document.querySelectorAll("[data-school-row]")];
+    button.disabled = true;
+    schoolsStatus.textContent = "Saving school licences...";
+    try {
+      let savedCount = 0;
+      for (const row of rows) {
+        const field = (name) => row.querySelector(`[data-school-field="${name}"]`);
+        const name = field("name")?.value.trim() || "";
+        if (!row.dataset.schoolId && !name) continue;
+        const schoolId = await saveSchool({
+          id: row.dataset.schoolId || "",
+          name,
+          licence_type: field("licence_type")?.value || "school",
+          allowed_domains: field("allowed_domains")?.value || "",
+          seat_limit: field("seat_limit")?.value || "",
+          join_code: field("join_code")?.value || "",
+          join_code_expires_at: field("join_code_expires_at")?.value || "",
+          licence_starts_at: field("licence_starts_at")?.value || "",
+          licence_ends_at: field("licence_ends_at")?.value || "",
+          is_active: Boolean(field("is_active")?.checked),
+          notes: field("notes")?.value || ""
+        });
+        await saveSchoolTeacherAccess(schoolId, field("teacher_emails")?.value || "");
+        savedCount += 1;
+      }
+      await loadSchools();
+      await loadUserProfiles();
+      schoolsStatus.textContent = `Saved ${savedCount} school licence${savedCount === 1 ? "" : "s"}.`;
+      renderRoute();
+    } catch (error) {
+      schoolsStatus.textContent = `Could not save schools: ${error.message}`;
+      button.disabled = false;
+    }
   });
 
   document.getElementById("saveAccessRules")?.addEventListener("click", async () => {
@@ -6816,6 +7238,10 @@ function updateRouteSeo(parts) {
       title: routeTitle("School Access"),
       description: "Learn how school licences give maths departments shared access to Kaizen Maths questions, worksheets, worked examples, and assessments."
     },
+    "school-space": {
+      title: routeTitle("School Space"),
+      description: "Join or view a Kaizen Maths school licence for your department."
+    },
     "trust": {
       title: routeTitle(trustPage?.title || "Trust & Privacy"),
       description: trustPage?.description || "School-ready information about Kaizen Maths privacy, teacher-only use, data protection, security, and terms."
@@ -6886,6 +7312,8 @@ function renderRoute() {
     renderToolLibrary(parts[1]);
   } else if (parts[0] === "schools") {
     renderSchools();
+  } else if (parts[0] === "school-space") {
+    renderSchoolSpace();
   } else if (parts[0] === "trust") {
     renderTrustPage(parts[1] || "");
   } else if (parts[0] === "kaizen-university") {
@@ -6938,6 +7366,7 @@ window.addEventListener("kaizen-auth-change", () => {
   loadToolAccessSettings({ rerender: true });
   loadToolMetadata({ rerender: true });
   loadUserProfiles({ rerender: true });
+  loadSchools({ rerender: true });
   loadUniversityVideos({ rerender: true });
   loadSiteTestimonials({ rerender: true });
 });
@@ -6947,6 +7376,7 @@ window.setTimeout(() => {
   loadToolAccessSettings({ rerender: true });
   loadToolMetadata({ rerender: true });
   loadUserProfiles({ rerender: true });
+  loadSchools({ rerender: true });
   loadUniversityVideos({ rerender: true });
   loadSiteTestimonials({ rerender: true });
 }, 1200);

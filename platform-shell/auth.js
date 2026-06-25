@@ -41,8 +41,15 @@
     action.onclick = null;
 
     if (mode === "signed-in") {
-      eyebrow.textContent = state.profile?.role ? state.profile.role.toUpperCase() : "SIGNED IN";
-      label.textContent = displayName(user);
+      const role = state.profile?.role || "";
+      const schoolName = state.profile?.school_name || "";
+      const schoolEnds = state.profile?.school_licence_ends_at ? new Date(state.profile.school_licence_ends_at) : null;
+      const schoolActive = role === "school"
+        && schoolName
+        && state.profile?.school_is_active !== false
+        && (!schoolEnds || Number.isNaN(schoolEnds.getTime()) || schoolEnds >= new Date());
+      eyebrow.textContent = schoolActive ? "SCHOOL ACCESS" : role ? role.toUpperCase() : "SIGNED IN";
+      label.textContent = schoolActive ? schoolName : displayName(user);
       action.textContent = "Sign out";
       action.disabled = false;
       action.onclick = signOut;
@@ -76,12 +83,36 @@
     action.onclick = signInWithGoogle;
   }
 
+  async function hydrateProfile(profile) {
+    if (!profile?.school_id || !state.client) return profile;
+    try {
+      const { data, error } = await state.client
+        .from("schools")
+        .select("id, name, licence_ends_at, is_active")
+        .eq("id", profile.school_id)
+        .maybeSingle();
+      if (error || !data) return profile;
+      return {
+        ...profile,
+        school_name: data.name,
+        school_licence_ends_at: data.licence_ends_at,
+        school_is_active: data.is_active
+      };
+    } catch (error) {
+      console.warn("Kaizen school lookup skipped:", error.message);
+      return profile;
+    }
+  }
+
   function syncProfileInBackground(user) {
     if (!user) return;
     ensureProfile(user)
       .then((profile) => {
         state.profile = profile;
-        if (state.session?.user?.id === user.id) setAccountUi("signed-in", user);
+        if (state.session?.user?.id === user.id) {
+          setAccountUi("signed-in", user);
+          window.dispatchEvent(new CustomEvent("kaizen-auth-change", { detail: { session: state.session, profile: state.profile } }));
+        }
       })
       .catch((error) => {
         console.warn("Kaizen profile check skipped:", error.message);
@@ -124,7 +155,7 @@
       .eq("id", user.id)
       .maybeSingle();
 
-    if (existing) return existing;
+    if (existing) return hydrateProfile(existing);
     if (selectError) {
       console.warn("Kaizen profile lookup skipped:", selectError.message);
       return null;
@@ -150,7 +181,15 @@
       console.warn("Kaizen profile sync skipped:", error.message);
       return null;
     }
-    return data;
+    return hydrateProfile(data);
+  }
+
+  async function refreshProfile() {
+    if (!state.session?.user) return null;
+    state.profile = await ensureProfile(state.session.user);
+    setAccountUi("signed-in", state.session.user);
+    window.dispatchEvent(new CustomEvent("kaizen-auth-change", { detail: { session: state.session, profile: state.profile } }));
+    return state.profile;
   }
 
   async function refreshSession() {
@@ -240,6 +279,7 @@
     state,
     getClient: loadSupabase,
     initAuth,
+    refreshProfile,
     refreshSession,
     signInWithGoogle,
     signOut
