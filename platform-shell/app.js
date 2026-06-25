@@ -5429,28 +5429,28 @@ function renderToolDetail(slug) {
 const trustPages = [
   {
     slug: "",
-    title: "Trust Hub",
-    description: "A school-facing overview of privacy, security, teacher-only use, and licence expectations."
+    title: "Overview",
+    description: "The basic things schools need to know before using Kaizen Maths."
   },
   {
     slug: "privacy",
-    title: "Privacy Notice",
-    description: "What account, billing, support, and usage information Kaizen Maths may collect and why."
+    title: "Privacy Basics",
+    description: "What teacher account information is used and what is not collected."
   },
   {
     slug: "data-protection",
-    title: "Data Protection & Security",
-    description: "How Kaizen Maths approaches access control, secure services, payment data, and school questions."
+    title: "Data Protection",
+    description: "How access, payments, and security are handled."
   },
   {
     slug: "teacher-only-use",
     title: "Teacher-Only Use",
-    description: "A clear statement that Kaizen Maths is designed for adult teacher accounts, not student accounts."
+    description: "Kaizen Maths is for adult teacher accounts, not student accounts."
   },
   {
     slug: "terms",
-    title: "Terms of Use",
-    description: "Practical conditions for using Kaizen Maths during trials, paid access, and school licences."
+    title: "Use Terms",
+    description: "Simple use expectations for teachers and schools."
   }
 ];
 
@@ -5464,19 +5464,9 @@ function trustNavHtml(activeSlug = "") {
       ${trustPages.map((page) => `
         <a class="${page.slug === activeSlug ? "active" : ""}" href="${trustLink(page.slug)}">
           <strong>${escapeHtml(page.title)}</strong>
-          <span>${escapeHtml(page.description)}</span>
         </a>
       `).join("")}
     </nav>
-  `;
-}
-
-function trustReviewNote() {
-  return `
-    <section class="panel trust-review-note">
-      <span class="eyebrow">Important Note</span>
-      <p>These pages are written to explain the current Kaizen Maths approach clearly to teachers, tutors, and school leaders. They should be reviewed before being used as formal legal terms, a data processing agreement, or a procurement document.</p>
-    </section>
   `;
 }
 
@@ -5488,15 +5478,15 @@ function renderTrustHub() {
   app.innerHTML = `
     ${pageHeader(
       "Trust & Privacy",
-      "School-ready information about how Kaizen Maths handles teacher accounts, data protection, payments, security, and teacher-only use.",
+      "The basic things schools need to know before using Kaizen Maths.",
       `<a class="button" href="#/schools">School Access</a><a class="button" href="#/upgrade">Pricing</a>`
     )}
     <section class="trust-page">
-      ${trustReviewNote()}
+      ${trustNavHtml("")}
       <section class="trust-hero panel">
-        <span class="eyebrow">School Ready Trust Pages</span>
-        <h2>Built for adult teachers, not student accounts</h2>
-        <p>Kaizen Maths is a virtual mathematics textbook and teaching workspace. Teachers use it to generate maths questions, worked examples, worksheets, assessments, and classroom resources. The site does not require students to sign in, and teachers should not enter student personal data into the platform.</p>
+        <span class="eyebrow">What Schools Can Expect</span>
+        <h2>Teacher accounts only. No student accounts required.</h2>
+        <p>Kaizen Maths is a teaching workspace for adult teachers, tutors, and school staff. Teachers use it to generate maths questions, worked examples, worksheets, assessments, and classroom resources. Students do not need accounts, and teachers should not enter student personal data into the site.</p>
         <div class="badge-row">
           <span class="badge">Teacher accounts</span>
           <span class="badge">No student accounts</span>
@@ -5505,25 +5495,25 @@ function renderTrustHub() {
           <span class="badge">Supabase access control</span>
         </div>
       </section>
-      ${trustNavHtml("")}
       <section class="trust-card-grid">
         <article class="panel trust-card">
-          <h2>What Schools Can Expect</h2>
+          <h2>The Basics</h2>
           ${trustList([
-            "Clear teacher-only access and acceptable-use expectations.",
-            "No student login journey and no requirement to upload student names, marks, classes, or identifiers.",
-            "Payments handled through Stripe rather than storing card details on Kaizen Maths.",
-            "Admin controls for access roles, trial dates, tool tags, school content, videos, and testimonials.",
-            "A clear route for schools to ask data protection, security, or licence questions before purchase."
+            "Kaizen Maths is for adult teacher use.",
+            "Students do not need to sign in.",
+            "Teachers should not upload student names, marks, class lists, or identifiers.",
+            "Payments are handled by Stripe.",
+            "Google sign-in is used for teacher accounts.",
+            "Access can be managed by role: free, trial, pro, school, or admin."
           ])}
         </article>
         <article class="panel trust-card">
-          <h2>What Still Needs Formal Review</h2>
+          <h2>For Schools</h2>
           ${trustList([
-            "Final legal review of privacy and terms wording before larger school contracts.",
-            "A formal Data Processing Agreement if a school requires one for procurement.",
-            "Named contact details for data protection and school licence enquiries.",
-            "A live incident response and retention policy once schools are paying at scale."
+            "School licences are for authorised staff at the school.",
+            "Kaizen Maths supports planning, teaching, practice, homework, assessment, intervention, and revision.",
+            "Teachers remain in control of the lesson and the resources they use.",
+            "Schools can ask for more detail before buying a licence."
           ])}
         </article>
       </section>
@@ -5534,55 +5524,50 @@ function renderTrustHub() {
 function renderPrivacyNotice() {
   app.innerHTML = `
     ${pageHeader(
-      "Privacy Notice",
-      "How Kaizen Maths handles account, access, billing, support, and usage information for adult teacher users.",
-      `<a class="button" href="#/trust">Trust Hub</a>`
+      "Privacy Basics",
+      "Simple privacy information for teachers and schools.",
+      `<a class="button" href="#/trust">Trust Overview</a>`
     )}
     <section class="trust-page">
-      ${trustReviewNote()}
       ${trustNavHtml("privacy")}
       <section class="trust-section-grid">
         <article class="panel">
-          <h2>Who This Notice Is For</h2>
-          <p>This notice is for adult teachers, tutors, school leaders, and administrators who use Kaizen Maths. Kaizen Maths is not designed for student accounts and does not ask students to sign in.</p>
+          <h2>Who This Is For</h2>
+          <p>This is for adult teachers, tutors, school leaders, and administrators. Kaizen Maths is not designed for student accounts.</p>
         </article>
         <article class="panel">
-          <h2>Information We May Collect</h2>
+          <h2>Teacher Information Used</h2>
           ${trustList([
-            "Account information such as email address, name, Google account sign-in identity, role, school or organisation if provided.",
-            "Access information such as account role, trial end date, subscription status, school licence status, and admin changes.",
-            "Billing information passed back from Stripe, such as customer ID, subscription status, plan, and billing period. Kaizen Maths does not store card numbers.",
-            "Support or feedback information that a teacher voluntarily sends, including survey responses, testimonials, or issue reports.",
-            "Basic technical information needed to operate, protect, and improve the website."
+            "Email address and Google sign-in identity.",
+            "Name, school, or organisation if provided.",
+            "Account role, trial end date, and subscription status.",
+            "Support messages, feedback, or testimonials if a teacher sends them.",
+            "Basic technical information needed to run and protect the website."
           ])}
         </article>
         <article class="panel">
-          <h2>Information We Do Not Need</h2>
+          <h2>Student Information</h2>
           ${trustList([
-            "Student accounts.",
-            "Student names, marks, class lists, identifiers, behaviour notes, or pupil records.",
-            "Payment card numbers stored directly by Kaizen Maths.",
-            "Sensitive student information."
-          ])}
-          <p>Teachers should not paste student personal data into worksheet titles, feedback forms, admin notes, testimonials, or any other free-text area.</p>
-        </article>
-        <article class="panel">
-          <h2>Why We Use Information</h2>
-          ${trustList([
-            "To create and maintain teacher accounts.",
-            "To manage free, trial, pro, school, and admin access.",
-            "To support payments, invoices, subscriptions, and licence management.",
-            "To respond to support requests and improve the service.",
-            "To protect the website, prevent misuse, and maintain reliable access."
+            "Students do not need accounts.",
+            "Kaizen Maths does not ask for student names, marks, class lists, or identifiers.",
+            "Teachers should not enter student personal data into worksheets, notes, feedback, or admin fields."
           ])}
         </article>
         <article class="panel">
-          <h2>Services Involved</h2>
-          <p>Kaizen Maths uses third-party services to operate the site. These may include Google sign-in, Supabase for authentication and database services, Stripe for payments, Vercel for hosting, and video platforms such as YouTube where training videos are embedded.</p>
+          <h2>Payments</h2>
+          ${trustList([
+            "Payments are handled by Stripe.",
+            "Kaizen Maths does not store payment card numbers.",
+            "Stripe may send Kaizen Maths subscription status and billing period information so teacher access can be updated."
+          ])}
         </article>
         <article class="panel">
-          <h2>Your Choices And Rights</h2>
-          <p>Teacher users and schools can ask for account information to be corrected, exported, or deleted where applicable. Schools can also ask questions about retention, security, and processing before buying a licence.</p>
+          <h2>Services Used</h2>
+          <p>Kaizen Maths may use Google sign-in, Supabase, Stripe, Vercel, and YouTube embeds to operate the service.</p>
+        </article>
+        <article class="panel">
+          <h2>Questions</h2>
+          <p>Teachers and schools can ask for account information to be corrected or deleted where appropriate. Schools can also ask for more detail before buying a licence.</p>
         </article>
       </section>
     </section>
@@ -5592,49 +5577,42 @@ function renderPrivacyNotice() {
 function renderDataProtectionPage() {
   app.innerHTML = `
     ${pageHeader(
-      "Data Protection & Security",
-      "A practical overview of the safeguards and data protection position behind Kaizen Maths.",
-      `<a class="button" href="#/trust">Trust Hub</a>`
+      "Data Protection",
+      "Simple data protection and security basics for schools.",
+      `<a class="button" href="#/trust">Trust Overview</a>`
     )}
     <section class="trust-page">
-      ${trustReviewNote()}
       ${trustNavHtml("data-protection")}
       <section class="trust-section-grid">
         <article class="panel">
-          <h2>Data Protection Position</h2>
-          <p>Kaizen Maths is designed around adult teacher use. The product supports teaching resource generation, not student record keeping. This keeps the data footprint smaller and reduces the need to process student personal information.</p>
+          <h2>Main Position</h2>
+          <p>Kaizen Maths is a teacher workspace, not a student record system. It is designed to avoid the need for student personal data.</p>
         </article>
         <article class="panel">
-          <h2>Security Measures</h2>
+          <h2>Security Basics</h2>
           ${trustList([
             "Google sign-in for teacher authentication.",
             "Role-based access inside the app for free, trial, pro, school, and admin accounts.",
             "Supabase row-level security policies for access-controlled tables.",
             "Stripe Checkout for payments so card details are handled by Stripe, not stored by Kaizen Maths.",
-            "Sensitive server keys held in Vercel environment variables rather than exposed in the browser.",
             "HTTPS delivery on the live site."
           ])}
         </article>
         <article class="panel">
           <h2>Admin Access</h2>
-          <p>Admin functions are intended for authorised Kaizen Maths administrators only. Admins can manage user roles, trial dates, tool access, tool tags, Kaizen University videos, and homepage testimonials.</p>
-        </article>
-        <article class="panel">
-          <h2>School Data Questions</h2>
-          <p>Schools may ask for further details about data retention, sub-processors, account deletion, incident response, or a Data Processing Agreement. Those documents should be prepared and reviewed before larger school or trust rollouts.</p>
+          <p>Admin functions are intended for authorised Kaizen Maths administrators only. Admins can manage access roles, trial dates, school access, tags, videos, and homepage content.</p>
         </article>
         <article class="panel">
           <h2>Teacher Responsibilities</h2>
           ${trustList([
             "Use Kaizen Maths with adult teacher accounts only.",
             "Do not upload student personal data.",
-            "Do not add student names or identifiers to worksheets, feedback, notes, or testimonials.",
-            "Use school-approved procedures when sharing printed or downloaded resources."
+            "Do not add student names or identifiers to worksheets, feedback, notes, or testimonials."
           ])}
         </article>
         <article class="panel">
-          <h2>Future Procurement Readiness</h2>
-          <p>Before selling at larger school or trust level, Kaizen Maths should maintain a current list of sub-processors, a retention schedule, incident response process, and formal contact route for data protection enquiries.</p>
+          <h2>School Questions</h2>
+          <p>Schools can ask for more information about retention, security, sub-processors, account deletion, or procurement documents before purchasing.</p>
         </article>
       </section>
     </section>
@@ -5645,16 +5623,15 @@ function renderTeacherOnlyUsePage() {
   app.innerHTML = `
     ${pageHeader(
       "Teacher-Only Use",
-      "Kaizen Maths is intended for adult teachers, tutors, and school staff. It is not a student account platform.",
-      `<a class="button" href="#/trust">Trust Hub</a>`
+      "Kaizen Maths is for adult teachers, tutors, and school staff.",
+      `<a class="button" href="#/trust">Trust Overview</a>`
     )}
     <section class="trust-page">
-      ${trustReviewNote()}
       ${trustNavHtml("teacher-only-use")}
       <section class="trust-hero panel">
-        <span class="eyebrow">Adult Teacher Accounts</span>
+        <span class="eyebrow">Teacher Accounts</span>
         <h2>No student accounts are required</h2>
-        <p>Kaizen Maths supports teachers by providing instant maths questions, examples, worked solutions, worksheets, assessment practice, and classroom displays. Students can use printed resources or projected questions in class, but they do not need individual accounts.</p>
+        <p>Students can use printed resources or projected questions in class, but they do not need to sign in. Kaizen Maths accounts are for teachers and authorised school staff.</p>
       </section>
       <section class="trust-section-grid">
         <article class="panel">
@@ -5668,7 +5645,7 @@ function renderTeacherOnlyUsePage() {
           ])}
         </article>
         <article class="panel">
-          <h2>Teachers Should Not Use It To</h2>
+          <h2>Do Not Use It To</h2>
           ${trustList([
             "Create student accounts.",
             "Store student names, marks, classes, or identifiers.",
@@ -5692,21 +5669,20 @@ function renderTeacherOnlyUsePage() {
 function renderTermsPage() {
   app.innerHTML = `
     ${pageHeader(
-      "Terms of Use",
-      "Practical conditions for teachers, tutors, and schools using Kaizen Maths.",
-      `<a class="button" href="#/trust">Trust Hub</a>`
+      "Use Terms",
+      "Simple use expectations for teachers and schools.",
+      `<a class="button" href="#/trust">Trust Overview</a>`
     )}
     <section class="trust-page">
-      ${trustReviewNote()}
       ${trustNavHtml("terms")}
       <section class="trust-section-grid">
         <article class="panel">
-          <h2>Use Of The Site</h2>
+          <h2>Use Of Kaizen Maths</h2>
           <p>Kaizen Maths provides maths teaching resources for adult teacher use. Teachers may generate questions, worked examples, worksheets, assessments, and classroom displays for teaching, homework, intervention, assessment, and revision.</p>
         </article>
         <article class="panel">
-          <h2>Trial And Paid Access</h2>
-          <p>During the testing phase, access may be broader than the eventual paid service. Paid teacher and school access may be introduced after the trial period. Access levels, pricing, and features may change as the product develops.</p>
+          <h2>Access</h2>
+          <p>Access may be free, trial, pro, school, or admin. School licences are for authorised staff at the named school or organisation.</p>
         </article>
         <article class="panel">
           <h2>Acceptable Use</h2>
@@ -5714,21 +5690,16 @@ function renderTermsPage() {
             "Use Kaizen Maths for legitimate teaching, tutoring, school, or department work.",
             "Do not attempt to bypass access controls or share admin access.",
             "Do not upload student personal data.",
-            "Do not use generated resources in a way that misrepresents Kaizen Maths or removes required attribution where it appears.",
             "Do not interfere with the security, reliability, or operation of the site."
           ])}
         </article>
         <article class="panel">
-          <h2>Resources And Accuracy</h2>
-          <p>Kaizen Maths aims to provide accurate, curriculum-aligned maths questions and worked solutions. Teachers should use professional judgement and check resources before using them in high-stakes contexts, especially while the site is still being tested.</p>
+          <h2>Resource Checking</h2>
+          <p>Kaizen Maths aims to provide accurate maths questions and worked solutions. Teachers should check resources before using them in high-stakes contexts.</p>
         </article>
         <article class="panel">
           <h2>School Licences</h2>
-          <p>School licences are intended for authorised staff at the named school or organisation. The exact teacher count, access period, pricing, and support arrangements should be confirmed in writing before purchase.</p>
-        </article>
-        <article class="panel">
-          <h2>Changes And Availability</h2>
-          <p>Kaizen Maths may update tools, pricing, access rules, content, and site structure. The service may occasionally be unavailable for maintenance, updates, or issues outside reasonable control.</p>
+          <p>The teacher count, access period, price, and support arrangements should be confirmed before purchase.</p>
         </article>
       </section>
     </section>

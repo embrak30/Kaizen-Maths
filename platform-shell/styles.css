@@ -1287,19 +1287,18 @@ body[data-route="gcse-exam-style"] .account-action {
 }
 
 .trust-nav {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .trust-nav a {
-  min-height: 116px;
-  display: grid;
-  align-content: start;
-  gap: 7px;
-  padding: 13px;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
   border: 1px solid #dfe6ef;
-  border-radius: 8px;
+  border-radius: 999px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 253, 255, 0.92)),
     #ffffff;
@@ -1322,13 +1321,7 @@ body[data-route="gcse-exam-style"] .account-action {
 
 .trust-nav strong {
   color: #282450;
-  font-size: 0.98rem;
-}
-
-.trust-nav span {
-  color: var(--muted);
-  font-size: 0.84rem;
-  line-height: 1.4;
+  font-size: 0.9rem;
 }
 
 .trust-card-grid,
