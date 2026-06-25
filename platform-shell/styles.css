@@ -546,6 +546,15 @@ body[data-route="gcse-exam-style"] .account-action {
   max-width: 780px;
 }
 
+.home-hero-side {
+  position: relative;
+  z-index: 1;
+  align-self: start;
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
 .home-hero h1 {
   margin: 8px 0 0;
   font-size: clamp(2.25rem, 4.8vw, 4.65rem);
@@ -724,6 +733,14 @@ body[data-route="gcse-exam-style"] .account-action {
   box-shadow: 0 12px 24px rgba(44, 35, 91, 0.08);
 }
 
+.home-hero-side .home-feature-video {
+  grid-template-columns: minmax(118px, 0.74fr) minmax(0, 1fr);
+  gap: 11px;
+  align-items: stretch;
+  margin: 0;
+  padding: 12px;
+}
+
 .home-feature-video-media {
   position: relative;
   overflow: hidden;
@@ -774,11 +791,39 @@ body[data-route="gcse-exam-style"] .account-action {
   font-size: clamp(1.35rem, 2.2vw, 2rem);
 }
 
+.home-hero-side .home-feature-video-copy {
+  gap: 7px;
+}
+
+.home-hero-side .home-feature-video-copy h2 {
+  font-size: 1.08rem;
+  line-height: 1.12;
+}
+
 .home-feature-video-copy p {
   max-width: 780px;
   margin: 0;
   color: var(--muted);
   line-height: 1.55;
+}
+
+.home-hero-side .home-feature-video-copy p {
+  font-size: 0.84rem;
+  line-height: 1.42;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.home-hero-side .home-feature-video .button-row {
+  gap: 7px;
+}
+
+.home-hero-side .home-feature-video .button {
+  min-height: 34px;
+  padding: 7px 10px;
+  font-size: 0.82rem;
 }
 
 .hero-diagram {

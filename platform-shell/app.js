@@ -4346,30 +4346,31 @@ function renderHome() {
           <a class="button" href="#/kaizen-university">See How It Works</a>
         </div>
       </div>
-      <aside class="home-testimonial-panel" aria-label="What teachers are saying">
-        <div class="home-testimonial-head">
-          <span class="eyebrow">What Teachers Are Saying</span>
-          <span class="testimonial-count">${testimonials.length} quote${testimonials.length === 1 ? "" : "s"}</span>
-        </div>
-        <!-- Editable from the Admin testimonials tab once live testimonials are available. -->
-        <div class="home-testimonial-carousel" id="homeTestimonialCarousel">
-          ${testimonials.map((item, index) => `
-            <article class="home-testimonial-slide ${index === 0 ? "active" : ""}" data-testimonial-slide>
-              <p>&ldquo;${escapeHtml(item.quote)}&rdquo;</p>
-              <footer>
-                <strong>${escapeHtml(item.person_name || "Maths teacher")}</strong>
-                <span>${escapeHtml([item.role_label, item.organisation].filter(Boolean).join(" · ") || "Teacher feedback")}</span>
-              </footer>
-            </article>
-          `).join("")}
-        </div>
-        <div class="testimonial-dots" aria-hidden="true">
-          ${testimonials.map((_, index) => `<span class="${index === 0 ? "active" : ""}" data-testimonial-dot></span>`).join("")}
-        </div>
-      </aside>
+      <div class="home-hero-side">
+        <aside class="home-testimonial-panel" aria-label="What teachers are saying">
+          <div class="home-testimonial-head">
+            <span class="eyebrow">What Teachers Are Saying</span>
+            <span class="testimonial-count">${testimonials.length} quote${testimonials.length === 1 ? "" : "s"}</span>
+          </div>
+          <!-- Editable from the Admin testimonials tab once live testimonials are available. -->
+          <div class="home-testimonial-carousel" id="homeTestimonialCarousel">
+            ${testimonials.map((item, index) => `
+              <article class="home-testimonial-slide ${index === 0 ? "active" : ""}" data-testimonial-slide>
+                <p>&ldquo;${escapeHtml(item.quote)}&rdquo;</p>
+                <footer>
+                  <strong>${escapeHtml(item.person_name || "Maths teacher")}</strong>
+                  <span>${escapeHtml([item.role_label, item.organisation].filter(Boolean).join(" · ") || "Teacher feedback")}</span>
+                </footer>
+              </article>
+            `).join("")}
+          </div>
+          <div class="testimonial-dots" aria-hidden="true">
+            ${testimonials.map((_, index) => `<span class="${index === 0 ? "active" : ""}" data-testimonial-dot></span>`).join("")}
+          </div>
+        </aside>
+        ${homepageVideoPanelHtml()}
+      </div>
     </section>
-
-    ${homepageVideoPanelHtml()}
 
     <section class="home-workflow section-block" aria-labelledby="workflowTitle">
       <div class="section-heading">
@@ -6903,11 +6904,11 @@ function renderAdmin() {
         <div>
           <span class="eyebrow">Kaizen University</span>
           <h2>Video Embeds</h2>
-          <p>Paste the correct YouTube link beside each training video slot. You can also override the public title, description, and label when a video changes.</p>
+          <p>Paste the correct YouTube link beside each training video slot. The first section controls the homepage video shown underneath the testimonials in the hero area.</p>
         </div>
         <button class="button primary" id="saveUniversityVideos" type="button">Save Video Content</button>
       </div>
-      <p class="admin-status" id="adminVideoStatus">Empty copy fields use the default Kaizen University text. Paste full YouTube links, unlisted links, embed links, or video IDs.</p>
+      <p class="admin-status" id="adminVideoStatus">Use the Homepage Feature row to change the video on the landing page. Empty copy fields use the default text. Paste full YouTube links, unlisted links, embed links, or video IDs.</p>
       <div class="admin-video-list">
         ${videoRows}
       </div>
