@@ -340,7 +340,7 @@ const tools = [
     status: "Imported",
     description: "Generate decimal fluency practice covering place value, comparing and ordering, rounding, terminating fractions, operations, multi-step contexts, and error spotting.",
     tags: ["numbers", "decimals", "place value", "rounding", "operations", "fractions", "word problems"],
-    toolPath: "tools/decimals-practice-lab/index.html?v=step-structure-1",
+    toolPath: "tools/decimals-practice-lab/index.html?v=decimal-column-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers decimal foundations: place value, comparison, ordering, rounding, fraction conversion, and expanded form.",

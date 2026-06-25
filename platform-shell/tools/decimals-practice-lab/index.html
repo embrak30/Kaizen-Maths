@@ -188,9 +188,23 @@
     function highlightIndex(v){return `<span class="index">${v}</span>`}
     function highlightOperation(v){return `<span class="operation">${v}</span>`}
     function fixedTrim(num,dp){return Number(num).toFixed(dp).replace(/(\.\d*?[1-9])0+$/,'$1').replace(/\.0+$/,'')}
-    function alignAddSub(a,b,op){
-      const len=Math.max(a.length,b.length+2), top=a.padStart(len,' '), bottom=(op+' '+b).padStart(len,' '), line='-'.repeat(len);
-      return `<pre style="font-family:Consolas,monospace;font-size:1.05em;color:#1a365d;background:#fff;padding:8px;border-radius:6px;">${top}\\n${bottom}\\n${line}</pre>`;
+    function alignAddSub(a,b,op,result){
+      const parts=[a,b,result].map(value=>String(value));
+      const decimalPlaces=Math.max(...parts.map(value=>(value.split('.')[1]||'').length));
+      const normalise=value=>{
+        const [whole,decimal='']=String(value).split('.');
+        return decimalPlaces?`${whole}.${decimal.padEnd(decimalPlaces,'0')}`:whole;
+      };
+      const topValue=normalise(a), bottomValue=normalise(b), resultValue=normalise(result);
+      const len=Math.max(topValue.length,bottomValue.length+2,resultValue.length);
+      const top=topValue.padStart(len,' ');
+      const bottom=(op+' '+bottomValue).padStart(len,' ');
+      const line='-'.repeat(len);
+      const answer=resultValue.padStart(len,' ');
+      return `<pre style="font-family:Consolas,monospace;font-size:1.05em;color:#1a365d;background:#fff;padding:8px;border-radius:6px;">${top}
+${bottom}
+${line}
+${answer}</pre>`;
     }
 
     function makeDecimal(maxWhole=99,places=3){
@@ -266,10 +280,13 @@
           ]};
         }
         case 'add_sub':{
-          const a=Number((random(1,199)+Math.random()).toFixed(random(1,3))), b=Number((random(1,199)+Math.random()).toFixed(random(1,3))), op=randomElement(['+','-']), result=op==='+'?a+b:a-b;
+          let a=Number((random(1,199)+Math.random()).toFixed(random(1,3))), b=Number((random(1,199)+Math.random()).toFixed(random(1,3)));
+          const op=randomElement(['+','-']);
+          if(op==='-'&&a<b){const temp=a;a=b;b=temp}
+          const result=op==='+'?a+b:a-b;
           return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} ${highlightOperation(op)} ${highlightBase(b.toString())}`,answer:fixedTrim(result,3),steps:[
             `<span class="step-indicator">Step 1</span> Align decimal points vertically.`,
-            alignAddSub(a.toString(),b.toString(),op),
+            alignAddSub(a.toString(),b.toString(),op,fixedTrim(result,3)),
             `<span class="step-indicator">Step 2</span> Add or subtract from right to left.`,
             `<span class="step-indicator">Step 3</span> Place the decimal point in the answer.`,
             `Result = ${fixedTrim(result,3)}`
@@ -343,7 +360,7 @@
           const a=Number((random(10,199)/10).toFixed(1)), b=Number((random(10,199)/100).toFixed(2)), wrong=(a+b).toFixed(0), correct=fixedTrim(a+b,3);
           return {badge:'advanced',equation:`A student claims ${highlightBase(a.toString())} + ${highlightBase(b.toString())} = ${highlightBase(wrong)}.`,answer:`Error: decimals were not aligned. Correct sum = ${correct}`,steps:[
             `<span class="step-indicator">Step 1</span> Align decimal points before adding.`,
-            alignAddSub(a.toString(),b.toString(),'+'),
+            alignAddSub(a.toString(),b.toString(),'+',correct),
             `<span class="step-indicator">Step 2</span> Add digits in each place value.`,
             `Correct answer = ${correct}`
           ]};
