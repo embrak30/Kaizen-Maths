@@ -1426,6 +1426,102 @@ const defaultTestimonials = [
   }
 ];
 
+const launchReadinessSections = [
+  {
+    title: "Product And Content",
+    items: [
+      ["home-copy", "Homepage explains the value clearly", "Headline, workflow, teacher audiences, and calls to action are clear for teachers and schools."],
+      ["tool-samples", "Core tool categories have been checked", "Algebra, number, geometry, statistics, mechanics, classroom tools, worksheet builder, and exam builder open correctly."],
+      ["worked-steps", "Worked solutions are good enough for public testing", "High-priority tools show clear working and avoid obvious formatting issues."],
+      ["worksheet-builder", "Worksheet builder flow is understandable", "Teachers can load question blocks, edit marks, generate the worksheet, and view the answer key."],
+      ["kaizen-university", "Kaizen University has starter guidance", "At least one short walkthrough or placeholder explains how teachers should begin."]
+    ]
+  },
+  {
+    title: "Access And Accounts",
+    items: [
+      ["google-signin", "Google sign-in works on live site", "A new teacher can sign in, return to the site, and see their account state change."],
+      ["admin-role", "Admin account is protected", "Only admin users can see and use the Admin area."],
+      ["free-trial-rules", "Free, trial, pro, school, and admin roles behave correctly", "Free visitors see limited access, signed-in trial users can test the wider site, and admin can update roles."],
+      ["school-space", "School Space join flow is ready", "A school code, allowed domain, approved email, seat limit, and licence end date can be tested."],
+      ["supabase-schema", "Supabase schema is current", "The latest schema has been run after any auth, school, Stripe, or admin changes."]
+    ]
+  },
+  {
+    title: "Payments And School Sales",
+    items: [
+      ["stripe-test", "Stripe test checkout has been checked", "Teacher monthly and annual price IDs exist and test mode works before live payments are enabled."],
+      ["stripe-webhook", "Stripe webhook is configured", "Webhook endpoint and secret are saved in Vercel and subscription updates reach Supabase."],
+      ["trial-message", "Trial/upgrade message is accurate", "Upgrade page states the current testing period and what happens after trial access ends."],
+      ["school-pricing", "School licence pricing/process is clear", "School enquiries, custom pricing, invoices, and admin-created school spaces are handled consistently."],
+      ["support-process", "Support route is clear", "Teachers and schools know how to contact you for payment, school access, or account problems."]
+    ]
+  },
+  {
+    title: "Trust, Launch, And Operations",
+    items: [
+      ["domain-ssl", "Domain and SSL are working", "kaizenmaths.com and www.kaizenmaths.com resolve correctly without browser or antivirus warnings."],
+      ["seo-branding", "SEO and branding basics are clean", "Titles, descriptions, favicon, site name, and Platform Shell references have been checked."],
+      ["trust-pages", "Trust pages are simple and school-friendly", "Privacy and trust copy clearly states teacher-only accounts and no student personal data requirement."],
+      ["backup-plan", "Backup and rollback plan is understood", "GitHub, Vercel deployments, and Supabase changes can be reviewed or reverted if needed."],
+      ["launch-comms", "Launch message is ready", "WhatsApp/email copy, beta feedback instructions, and school demo message are ready to send."]
+    ]
+  }
+];
+
+const curriculumMapAreas = [
+  {
+    id: "gcse",
+    title: "GCSE",
+    subtitle: "Core secondary mathematics coverage",
+    description: "Topic generators and exam-style practice for GCSE, including KS3 bridge material where it supports GCSE readiness.",
+    match: (tool) => {
+      const level = normalise(tool.level);
+      return ["Algebra", "Numbers", "Geometry", "Statistics"].includes(tool.category)
+        && (level.includes("gcse") || level.includes("ks3") || level.includes("ks2"));
+    }
+  },
+  {
+    id: "alevel-pure",
+    title: "A-Level Pure",
+    subtitle: "Algebra, functions, calculus, coordinate geometry, and proof",
+    description: "Pure mathematics generators covering algebraic manipulation, calculus, functions, matrices, trigonometry, and related higher-level topics.",
+    match: (tool) => {
+      const level = normalise(tool.level);
+      return ["Algebra", "Geometry"].includes(tool.category) && level.includes("a-level");
+    }
+  },
+  {
+    id: "alevel-statistics",
+    title: "A-Level Statistics",
+    subtitle: "Probability, distributions, data, and regression",
+    description: "Statistics tools for probability models, random variables, normal, binomial and geometric distributions, large data set work, and regression.",
+    match: (tool) => tool.category === "Statistics" && normalise(tool.level).includes("a-level")
+  },
+  {
+    id: "alevel-mechanics",
+    title: "A-Level Mechanics",
+    subtitle: "Motion, forces, moments, and projectiles",
+    description: "Mechanics tools covering motion graphs, constant acceleration, equations of motion, moments, projectiles, and modelling with units.",
+    match: (tool) => tool.category === "Mechanics"
+  }
+];
+
+const futureCurriculumTags = [
+  {
+    label: "IGCSE",
+    description: "Use Admin Tool Tags to mark tools that align closely with Cambridge, Edexcel International, or other IGCSE routes."
+  },
+  {
+    label: "IB",
+    description: "IB tags can identify tools useful for Analysis and Approaches, Applications and Interpretation, statistics, and mechanics-style modelling."
+  },
+  {
+    label: "Common Core",
+    description: "Common Core tags can be added as the US alignment becomes clearer, without changing the underlying tools."
+  }
+];
+
 let homeTestimonialTimer = null;
 
 const accessLevels = ["free", "trial", "pro", "school", "admin"];
@@ -4273,6 +4369,18 @@ function renderHome() {
       </div>
     </section>
 
+    <section class="coverage-home-band" aria-labelledby="homeCoverageTitle">
+      <div>
+        <span class="eyebrow">Curriculum Coverage</span>
+        <h2 id="homeCoverageTitle">Mapped across GCSE and A-Level mathematics</h2>
+        <p>See current coverage for GCSE, A-Level Pure, A-Level Statistics, and A-Level Mechanics, with future tagging routes for IGCSE, IB, and Common Core.</p>
+      </div>
+      <div class="coverage-home-counts" aria-label="Coverage counts">
+        ${curriculumMapAreas.map((area) => `<span><strong>${coverageToolsFor(area).length}</strong>${escapeHtml(area.title)}</span>`).join("")}
+      </div>
+      <a class="button primary" href="#/coverage-map">View Coverage Map</a>
+    </section>
+
     <section class="home-benefits section-block" aria-labelledby="benefitsTitle">
       <div class="section-heading">
         <span class="eyebrow">Teacher Benefits</span>
@@ -4362,6 +4470,119 @@ function bindHomeTestimonials() {
     dots.forEach((dot, index) => dot.classList.toggle("active", index === activeIndex));
   };
   homeTestimonialTimer = window.setInterval(() => showSlide(activeIndex + 1), 5200);
+}
+
+function curriculumTagMatches(tool, tag) {
+  const target = normalise(tag);
+  const haystack = normalise([tool.level, ...(tool.tags || []), ...editableToolTags(tool)].join(" "));
+  return haystack.includes(target);
+}
+
+function coverageToolsFor(area) {
+  return tools
+    .filter((tool) => area.match(tool))
+    .filter((tool) => !["Classroom Tools", "Site Guide"].includes(tool.category))
+    .sort((a, b) => a.category.localeCompare(b.category) || a.title.localeCompare(b.title));
+}
+
+function coverageGroups(areaTools) {
+  return areaTools.reduce((groups, tool) => {
+    const label = tool.category === "Numbers" ? "Number" : tool.category;
+    if (!groups[label]) groups[label] = [];
+    groups[label].push(tool);
+    return groups;
+  }, {});
+}
+
+function renderCoverageMap() {
+  const areaData = curriculumMapAreas.map((area) => ({
+    ...area,
+    tools: coverageToolsFor(area)
+  }));
+  const totalMappedTools = new Set(areaData.flatMap((area) => area.tools.map((tool) => tool.slug))).size;
+  app.innerHTML = `
+    ${pageHeader(
+      "Curriculum Coverage Map",
+      "A visible overview of where Kaizen Maths currently has tool coverage across GCSE and A-Level mathematics, with tagging routes for IGCSE, IB, and Common Core alignment.",
+      `<a class="button" href="#/tools">Browse Tool Library</a>${isAdmin() ? `<a class="button" href="#/admin">Edit Tags In Admin</a>` : ""}`
+    )}
+    <section class="coverage-page">
+      <section class="coverage-summary-grid" aria-label="Coverage summary">
+        ${areaData.map((area) => `
+          <article class="coverage-summary-card">
+            <span class="eyebrow">${escapeHtml(area.subtitle)}</span>
+            <strong>${area.tools.length}</strong>
+            <h2>${escapeHtml(area.title)}</h2>
+            <p>${escapeHtml(area.description)}</p>
+          </article>
+        `).join("")}
+      </section>
+
+      <section class="coverage-map-panel panel">
+        <div class="coverage-panel-head">
+          <div>
+            <span class="eyebrow">Current Coverage</span>
+            <h2>${totalMappedTools} mapped topic tool${totalMappedTools === 1 ? "" : "s"}</h2>
+            <p>Each tool can still be searched by topic, category, level, and admin tags. This map is a quick curriculum-facing view for teachers, tutors, departments, and school leaders.</p>
+          </div>
+          <a class="button" href="#/worksheet-generator">Build From Coverage</a>
+        </div>
+        <div class="coverage-area-grid">
+          ${areaData.map((area) => {
+            const groups = coverageGroups(area.tools);
+            return `
+              <article class="coverage-area-card" id="coverage-${escapeHtml(area.id)}">
+                <header>
+                  <span class="eyebrow">${escapeHtml(area.subtitle)}</span>
+                  <h2>${escapeHtml(area.title)}</h2>
+                  <p>${escapeHtml(area.description)}</p>
+                </header>
+                <div class="coverage-group-list">
+                  ${Object.entries(groups).map(([group, groupTools]) => `
+                    <section class="coverage-group">
+                      <h3>${escapeHtml(group)} <span>${groupTools.length}</span></h3>
+                      <div class="coverage-tool-list">
+                        ${groupTools.map((tool) => `
+                          <a href="#/tools/${escapeHtml(tool.slug)}">
+                            <strong>${escapeHtml(tool.title)}</strong>
+                            <small>${escapeHtml(tool.level)}</small>
+                          </a>
+                        `).join("")}
+                      </div>
+                    </section>
+                  `).join("")}
+                </div>
+              </article>
+            `;
+          }).join("")}
+        </div>
+      </section>
+
+      <section class="coverage-future-panel panel">
+        <div class="coverage-panel-head">
+          <div>
+            <span class="eyebrow">Future Tagging Layer</span>
+            <h2>IGCSE, IB, and Common Core can sit on top of the same tool library</h2>
+            <p>Rather than duplicating tools, Kaizen Maths can tag existing resources against different curriculum routes as alignment becomes clearer.</p>
+          </div>
+          ${isAdmin() ? `<a class="button primary" href="#/admin">Open Tool Tags</a>` : `<a class="button" href="#/tools">Explore Tools</a>`}
+        </div>
+        <div class="future-tag-grid">
+          ${futureCurriculumTags.map((tag) => {
+            const matchingTools = tools.filter((tool) => curriculumTagMatches(tool, tag.label));
+            return `
+              <article class="future-tag-card">
+                <span class="eyebrow">Tag Route</span>
+                <h3>${escapeHtml(tag.label)}</h3>
+                <p>${escapeHtml(tag.description)}</p>
+                <strong>${matchingTools.length} currently tagged or level-matched</strong>
+              </article>
+            `;
+          }).join("")}
+        </div>
+      </section>
+    </section>
+  `;
 }
 
 function renderFilters() {
@@ -6334,6 +6555,66 @@ function adminSchoolRowHtml(school = {}, index = 0) {
   `;
 }
 
+const launchReadinessStorageKey = "kaizen:launch-readiness-checks";
+
+function launchReadinessState() {
+  try {
+    return JSON.parse(localStorage.getItem(launchReadinessStorageKey) || "{}");
+  } catch (error) {
+    return {};
+  }
+}
+
+function saveLaunchReadinessState(values) {
+  try {
+    localStorage.setItem(launchReadinessStorageKey, JSON.stringify(values));
+  } catch (error) {
+    // The checklist still works as a visual note if local storage is unavailable.
+  }
+}
+
+function launchReadinessChecklistHtml() {
+  const saved = launchReadinessState();
+  const allItems = launchReadinessSections.flatMap((section) => section.items);
+  const completeCount = allItems.filter(([id]) => saved[id]).length;
+  const totalCount = allItems.length;
+  const percent = totalCount ? Math.round((completeCount / totalCount) * 100) : 0;
+  return `
+    <section class="launch-readiness">
+      <article class="launch-readiness-summary">
+        <div>
+          <span class="eyebrow">Private Admin Note</span>
+          <h3>Launch Readiness Checklist</h3>
+          <p>Use this as a lightweight pre-launch board. It is stored locally in this browser, so it is for your working notes rather than a shared school-facing record.</p>
+        </div>
+        <div class="launch-progress" aria-label="${completeCount} of ${totalCount} launch checks complete">
+          <strong id="launchProgressCount">${completeCount}/${totalCount}</strong>
+          <span>complete</span>
+          <div class="launch-progress-bar" aria-hidden="true">
+            <span id="launchProgressFill" style="width: ${percent}%"></span>
+          </div>
+        </div>
+      </article>
+      <div class="launch-check-grid">
+        ${launchReadinessSections.map((section) => `
+          <article class="launch-check-section">
+            <h3>${escapeHtml(section.title)}</h3>
+            ${section.items.map(([id, label, note]) => `
+              <label class="launch-check-item">
+                <input type="checkbox" data-launch-check="${escapeHtml(id)}" ${saved[id] ? "checked" : ""}>
+                <span>
+                  <strong>${escapeHtml(label)}</strong>
+                  <small>${escapeHtml(note)}</small>
+                </span>
+              </label>
+            `).join("")}
+          </article>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
 function renderAdmin() {
   if (!isSignedIn()) {
     app.innerHTML = `
@@ -6497,6 +6778,7 @@ function renderAdmin() {
     ${pageHeader("Admin", "Manage simple site updates without editing code: access rules, curriculum tags, and Kaizen University video content.")}
     <section class="admin-tabs" aria-label="Admin sections">
       <button class="admin-tab active" type="button" data-admin-tab="users">Users</button>
+      <button class="admin-tab" type="button" data-admin-tab="launch">Launch Checklist</button>
       <button class="admin-tab" type="button" data-admin-tab="schools">Schools</button>
       <button class="admin-tab" type="button" data-admin-tab="access">Tool Access</button>
       <button class="admin-tab" type="button" data-admin-tab="metadata">Tool Tags</button>
@@ -6521,6 +6803,9 @@ function renderAdmin() {
           <tbody>${userRows}</tbody>
         </table>
       </div>
+    </section>
+    <section class="panel admin-panel admin-tab-panel" data-admin-panel="launch">
+      ${launchReadinessChecklistHtml()}
     </section>
     <section class="panel admin-panel admin-tab-panel" data-admin-panel="schools">
       <div class="admin-toolbar">
@@ -6652,6 +6937,22 @@ function bindAdmin() {
 
   const schoolsStatus = document.getElementById("adminSchoolsStatus");
   const schoolList = document.getElementById("adminSchoolList");
+
+  function updateLaunchProgress() {
+    const checkboxes = [...document.querySelectorAll("[data-launch-check]")];
+    const total = checkboxes.length;
+    const checked = checkboxes.filter((checkbox) => checkbox.checked).length;
+    const values = Object.fromEntries(checkboxes.map((checkbox) => [checkbox.dataset.launchCheck, checkbox.checked]));
+    saveLaunchReadinessState(values);
+    const count = document.getElementById("launchProgressCount");
+    const fill = document.getElementById("launchProgressFill");
+    if (count) count.textContent = `${checked}/${total}`;
+    if (fill) fill.style.width = `${total ? Math.round((checked / total) * 100) : 0}%`;
+  }
+
+  document.querySelectorAll("[data-launch-check]").forEach((checkbox) => {
+    checkbox.addEventListener("change", updateLaunchProgress);
+  });
 
   function bindSchoolCodeButtons(scope = document) {
     scope.querySelectorAll(".admin-generate-code").forEach((button) => {
@@ -7216,6 +7517,10 @@ function updateRouteSeo(parts) {
       title: routeTitle("Maths Tool Library"),
       description: "Browse Kaizen Maths topic generators, classroom display tools, worksheets, and assessment resources for maths teachers."
     },
+    "coverage-map": {
+      title: routeTitle("Curriculum Coverage Map"),
+      description: "View Kaizen Maths coverage across GCSE, A-Level Pure, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
+    },
     "collections": {
       title: routeTitle(collectionName ? `${collectionName} Tools` : "Maths Collections"),
       description: collectionName
@@ -7308,6 +7613,8 @@ function renderRoute() {
     renderToolDetail(parts[1]);
   } else if (parts[0] === "tools") {
     renderToolLibrary();
+  } else if (parts[0] === "coverage-map") {
+    renderCoverageMap();
   } else if (parts[0] === "collections" && parts[1]) {
     renderToolLibrary(parts[1]);
   } else if (parts[0] === "schools") {
