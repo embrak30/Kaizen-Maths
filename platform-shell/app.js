@@ -1,3 +1,25 @@
+const SITE_NAME = "Kaizen Maths";
+const SITE_TITLE = "Kaizen Maths | Complete Mathematics Teaching Workspace";
+const SITE_DESCRIPTION = "Kaizen Maths helps teachers create high-quality maths worksheets, assessments, worked examples, and classroom resources in minutes.";
+
+function updateMetaTag(selector, attribute, value) {
+  const tag = document.head.querySelector(selector);
+  if (tag) tag.setAttribute(attribute, value);
+}
+
+function setPageSeo(title = SITE_TITLE, description = SITE_DESCRIPTION) {
+  document.title = title;
+  updateMetaTag('meta[name="description"]', "content", description);
+  updateMetaTag('meta[property="og:title"]', "content", title);
+  updateMetaTag('meta[property="og:description"]', "content", description);
+  updateMetaTag('meta[name="twitter:title"]', "content", title);
+  updateMetaTag('meta[name="twitter:description"]', "content", description);
+}
+
+function titleWithSite(pageTitle) {
+  return pageTitle ? `${pageTitle} | ${SITE_NAME}` : SITE_TITLE;
+}
+
 const tools = [
   {
     slug: "substitution",
@@ -14,7 +36,7 @@ const tools = [
     legacyUrl: "https://www.kaizen-maths.com/substitution",
     teacherNotes: [
       "Designed for board-led infinite practice with levels and instant regeneration.",
-      "Keep the original question tool intact; the shell only organises access, guidance, and navigation.",
+      "Keep the original question tool intact; the main site organises access, guidance, and navigation.",
       "Good candidate for saved seeds and printable problem sets later."
     ]
   },
@@ -2108,7 +2130,7 @@ function metricGrid() {
   const topicGenerators = tools.filter((tool) => tool.imported && tool.type === "Practice Generator").length;
   const worksheetReady = worksheetEligibleTools().length;
   return `
-    <section class="metric-grid" aria-label="Platform metrics">
+    <section class="metric-grid" aria-label="Site metrics">
       <div class="metric"><span>Topic tools</span><strong>${topicGenerators}</strong></div>
       <div class="metric"><span>Subject collections</span><strong>${categories.size}</strong></div>
       <div class="metric"><span>Worksheet-ready topics</span><strong>${worksheetReady}</strong></div>
@@ -3924,117 +3946,156 @@ function renderGcseExamStyle() {
 }
 
 function renderHome() {
+  const workflowSteps = [
+    ["1", "Choose a topic", "Search the virtual textbook and open the exact maths topic you need."],
+    ["2", "Select questions", "Choose a level, question type, and the number of questions."],
+    ["3", "Generate a worksheet or assessment", "Create focused practice, mixed worksheets, quizzes, or exam-style sets."],
+    ["4", "Download, print, or share", "Use the resource in lessons, homework, intervention, or revision."]
+  ];
+  const benefitCards = [
+    ["Save planning time", "Move from topic choice to classroom-ready questions without rebuilding resources from scratch."],
+    ["Improve curriculum consistency", "Use structured levels and question types so practice is easier to align across classes."],
+    ["Create differentiated resources", "Select easier, core, or more challenging questions for different learners."],
+    ["Support assessment and intervention", "Build quizzes, assessments, homework, and targeted follow-up practice."],
+    ["Reduce reliance on scattered websites", "Keep questions, worked examples, worksheets, and classroom tools in one place."],
+    ["Keep everything in one place", "Use one professional workspace for teaching, practice, assessment, and revision."]
+  ];
+  const audienceCards = [
+    ["For Teachers", "Plan faster and teach with confidence.", "Generate board practice, examples, worksheets, and answer keys whenever you need them."],
+    ["For Heads of Department", "Build consistency across your maths department.", "Support shared routines for homework, intervention, assessment, and curriculum coverage."],
+    ["For Tutors", "Create targeted practice for every learner.", "Select exactly the topic and level a learner needs, then regenerate fresh practice instantly."],
+    ["For Schools", "A scalable resource platform for mathematics teaching.", "Give teachers shared access to a structured workspace for maths teaching and assessment."]
+  ];
+  const comparisonRows = [
+    ["Searching multiple free websites", "One structured workspace with searchable topic generators and printable outputs."],
+    ["Manually building worksheets", "Generate clean worksheets and assessments from selected topics in minutes."],
+    ["Generic AI-generated questions", "Teacher-focused, structured, curriculum-aligned practice with predictable classroom workflows."],
+    ["Static textbook resources", "Unlimited fresh questions, answers, worked examples, and classroom display tools."]
+  ];
+  const testimonialPlaceholders = [
+    "Kaizen Maths has reduced the time I spend preparing worksheets.",
+    "This is exactly the kind of tool a maths department needs.",
+    "The worksheet builder makes planning much more efficient."
+  ];
+
   app.innerHTML = `
     <section class="home-hero">
       <div class="hero-copy">
-        <span class="eyebrow">For Maths Teachers</span>
-        <h1>Your Virtual Mathematics Textbook</h1>
-        <p>Unlimited maths questions, examples, worksheets, and assessments for every topic you teach.</p>
-        <p>Kaizen Maths helps teachers generate the right questions at the right level, whenever they need them, while keeping teachers fully in control of the lesson.</p>
+        <span class="eyebrow">The Complete Mathematics Teaching Workspace</span>
+        <h1>Create high-quality maths worksheets, assessments, and teaching resources in minutes.</h1>
+        <p>Kaizen Maths gives teachers instant access to unlimited questions, worked examples, assessments, and classroom tools, all in one professional teaching workspace.</p>
+        <div class="home-hero-actions">
+          <a class="button primary" href="#/upgrade">Start Free Trial</a>
+          <a class="button" href="#/kaizen-university">See How It Works</a>
+        </div>
       </div>
       <div class="hero-diagram" aria-hidden="true">
-        <span class="diagram-card diagram-card-a">y = mx + c</span>
-        <span class="diagram-card diagram-card-b">Σ</span>
-        <span class="diagram-card diagram-card-c">x²</span>
-        <span class="diagram-node node-a"></span>
-        <span class="diagram-node node-b"></span>
-        <span class="diagram-node node-c"></span>
-        <span class="diagram-line line-a"></span>
-        <span class="diagram-line line-b"></span>
-      </div>
-      <div class="home-hero-actions">
-        <a class="button primary" href="#/beta-feedback">Beta Testing Brief</a>
-        <a class="button primary" href="#/kaizen-university">Kaizen University</a>
-        <a class="button primary" href="#/worksheet-generator">Create a Worksheet</a>
-        <a class="button primary" href="#/how-to-use-this-site">How to Use This Site</a>
-        <a class="button" href="#/tools">Open Tool Library</a>
-        <a class="button" href="#/collections/statistics">Explore Statistics</a>
-        <a class="button" href="#/collections/mechanics">Explore Mechanics</a>
+        <span class="diagram-card diagram-card-a">Worksheet</span>
+        <span class="diagram-card diagram-card-b">Assessment</span>
+        <span class="diagram-card diagram-card-c">Worked Steps</span>
+        <span class="diagram-card diagram-card-d">Classroom Tools</span>
       </div>
     </section>
-    <section class="beta-callout" aria-label="Beta testing feedback">
-      <div class="beta-callout-icon" aria-hidden="true">B</div>
-      <div>
-        <span class="eyebrow">Beta Testing</span>
-        <h2>Helping test Kaizen Maths?</h2>
-        <p>Start with the beta brief. It explains which teacher workflows to try, what kind of feedback is most useful, and gives testers a simple feedback form they can copy and send back privately.</p>
+
+    <section class="home-workflow section-block" aria-labelledby="workflowTitle">
+      <div class="section-heading">
+        <span class="eyebrow">Simple Workflow</span>
+        <h2 id="workflowTitle">From topic to teaching resource in minutes</h2>
       </div>
-      <a class="button primary" href="#/beta-feedback">Open Beta Brief</a>
-    </section>
-    <section class="university-callout" aria-label="Kaizen University">
-      <div class="beta-callout-icon" aria-hidden="true">KU</div>
-      <div>
-        <span class="eyebrow">Teacher Training</span>
-        <h2>Kaizen University</h2>
-        <p>Short practical video guides for teachers: learn how to navigate the site, use generators on the board, build worksheets, and make Kaizen Maths part of normal classroom practice.</p>
+      <div class="workflow-grid">
+        ${workflowSteps.map(([number, title, copy]) => `
+          <article class="workflow-step">
+            <span>${number}</span>
+            <h3>${title}</h3>
+            <p>${copy}</p>
+          </article>
+        `).join("")}
       </div>
-      <a class="button primary" href="#/kaizen-university">Open Training Hub</a>
     </section>
-    <section class="guide-callout" aria-label="How to use this site">
-      <div class="guide-callout-copy">
-        <span class="eyebrow">New Here?</span>
-        <h2>Start with the illustrated site guide</h2>
-        <p>See how to move from dashboard to library, choose a topic, switch between Practice Set and One Example mode, reveal answers and steps, and build worksheets from the same question types.</p>
-        <a class="button primary" href="#/how-to-use-this-site">Read How to Use This Site</a>
+
+    <section class="home-benefits section-block" aria-labelledby="benefitsTitle">
+      <div class="section-heading">
+        <span class="eyebrow">Teacher Benefits</span>
+        <h2 id="benefitsTitle">Built for busy maths teachers</h2>
       </div>
-      <img src="assets/guide-screenshots/classroom-practice-set.png" alt="Classroom practice set screenshot">
-    </section>
-    <section class="worksheet-callout" aria-label="Worksheet builder">
-      <div class="worksheet-callout-icon" aria-hidden="true">▦</div>
-      <div>
-        <h2>Need a worksheet from today&apos;s lesson?</h2>
-        <p>Use the worksheet builder to select topics, levels, and question types from across the virtual textbook, then print a clean student sheet with a separate answer key.</p>
+      <div class="home-card-grid">
+        ${benefitCards.map(([title, copy]) => `
+          <article class="home-card">
+            <h3>${title}</h3>
+            <p>${copy}</p>
+          </article>
+        `).join("")}
       </div>
-      <a class="button primary" href="#/worksheet-generator">Create Worksheet</a>
     </section>
-    <section class="exam-callout" aria-label="GCSE exam-style questions">
-      <div class="worksheet-callout-icon" aria-hidden="true">✓</div>
-      <div>
-        <span class="eyebrow">Assessment Practice</span>
-        <h2>Build GCSE practice papers</h2>
-        <p>Create one question, a short class set, a longer revision paper, or a one-click 100-mark mock paper with worked solutions and mark-scheme-style guidance.</p>
+
+    <section class="home-audiences section-block" aria-labelledby="audienceTitle">
+      <div class="section-heading">
+        <span class="eyebrow">Who It Supports</span>
+        <h2 id="audienceTitle">Built for different mathematics teaching roles</h2>
       </div>
-      <a class="button primary" href="#/gcse-exam-style">Open Exam Builder</a>
+      <div class="audience-grid">
+        ${audienceCards.map(([label, title, copy]) => `
+          <article class="audience-card">
+            <span class="eyebrow">${label}</span>
+            <h3>${title}</h3>
+            <p>${copy}</p>
+          </article>
+        `).join("")}
+      </div>
     </section>
-    <section class="exam-callout" aria-label="Mechanics collection">
-      <div class="worksheet-callout-icon" aria-hidden="true">M</div>
-      <div>
-        <span class="eyebrow">A-Level Mechanics</span>
-        <h2>Mechanics practice generators</h2>
-        <p>Open mechanics topics for motion graphs, equations of motion, moments, and projectiles. Each tool includes diagrams, question levels, answers, and worked steps for classroom modelling and practice.</p>
-        <div class="badge-row">
-          <span class="badge">Motion Graphs</span>
-          <span class="badge">Equations of Motion</span>
-          <span class="badge">Moments</span>
-          <span class="badge">Projectiles</span>
+
+    <section class="comparison-section section-block" aria-labelledby="comparisonTitle">
+      <div class="section-heading">
+        <span class="eyebrow">Why Kaizen Maths?</span>
+        <h2 id="comparisonTitle">A structured alternative to scattered resources</h2>
+      </div>
+      <div class="comparison-table" role="table" aria-label="Why Kaizen Maths comparison">
+        <div class="comparison-row comparison-head" role="row">
+          <div role="columnheader">Instead of...</div>
+          <div role="columnheader">Kaizen Maths gives you...</div>
         </div>
+        ${comparisonRows.map(([problem, solution]) => `
+          <div class="comparison-row" role="row">
+            <div role="cell">${problem}</div>
+            <div role="cell">${solution}</div>
+          </div>
+        `).join("")}
       </div>
-      <a class="button primary" href="#/collections/mechanics">Open Mechanics</a>
     </section>
-    ${metricGrid()}
-    <section class="split-grid">
-      <div class="panel">
-        <h2>Start From The Topic You Teach</h2>
-        <div class="migration-list">
-          <article class="migration-item"><span>1</span><div><h3>New here?</h3><p>Open the site guide for a quick walkthrough of navigation, levels, question types, timers, answers, and worked steps.</p></div></article>
-          <article class="migration-item"><span>2</span><div><h3>Need practice now?</h3><p>Open the Tool Library, choose a topic, select a level, and generate a compact question set for retrieval practice or a quick confidence check.</p></div></article>
-          <article class="migration-item"><span>3</span><div><h3>Modelling a method?</h3><p>Use One Example mode or reveal worked steps when you want to discuss the method, check misconceptions, or adjust the pace.</p></div></article>
-          <article class="migration-item"><span>4</span><div><h3>Setting independent work?</h3><p>Create worksheets, homework, quizzes, assessments, and intervention practice from the same topic library.</p></div></article>
-        </div>
+
+    <section class="school-licence-band" aria-labelledby="schoolLicenceTitle">
+      <div>
+        <span class="eyebrow">School Licence</span>
+        <h2 id="schoolLicenceTitle">Designed for departments and schools</h2>
+        <p>Give every maths teacher access to a shared resource workspace that supports planning, assessment, intervention, and curriculum consistency.</p>
       </div>
-      <div class="panel">
-        <h2>Built For The Front Of The Room</h2>
-        <p>Each topic tool follows a simple teaching rhythm: choose the level, project a board-friendly set, let students think, then reveal answers or the method. Teachers decide the pace, the questions, and when the class is ready to move on.</p>
-        <div class="badge-row">
-          <span class="badge">Board-ready sets</span>
-          <span class="badge">Unlimited questions</span>
-          <span class="badge">Worked steps</span>
-          <span class="badge">Answer reveal</span>
-          <span class="badge">Search</span>
-          <span class="badge">Teacher notes</span>
-          <span class="badge">Topic collections</span>
-        </div>
+      <!-- Future pricing table or school licence enquiry form can be inserted here. -->
+      <a class="button primary" href="#/schools">Request a School Licence</a>
+    </section>
+
+    <section class="testimonial-section section-block" aria-labelledby="testimonialTitle">
+      <div class="section-heading">
+        <span class="eyebrow">Teacher Feedback</span>
+        <h2 id="testimonialTitle">What teachers are saying</h2>
       </div>
+      <!-- Replace these placeholder testimonials with named school or teacher quotes after permission is granted. -->
+      <div class="testimonial-grid">
+        ${testimonialPlaceholders.map((quote) => `
+          <article class="testimonial-card">
+            <p>&ldquo;${quote}&rdquo;</p>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+
+    <section class="final-cta" aria-labelledby="finalCtaTitle">
+      <span class="eyebrow">Ready To Try It?</span>
+      <h2 id="finalCtaTitle">Spend less time searching. Spend more time teaching.</h2>
+      <div class="button-row">
+        <a class="button primary" href="#/upgrade">Start Free Trial</a>
+        <a class="button" href="#/tools">Browse Tool Library</a>
+      </div>
+      <!-- Future demo video link can be added beside the trial button. -->
     </section>
   `;
 }
@@ -5294,7 +5355,7 @@ function renderSchools() {
         <span class="eyebrow">Testing Phase</span>
         <h2>Schools can explore the full site until 30 June 2026</h2>
         <p>During the testing phase, teachers can use the full library without payment. This gives departments time to check coverage, try the classroom tools, build worksheets, and decide whether Kaizen Maths would support regular teaching across the school.</p>
-        <p>School prices shown below are early-adopter rates for the first schools that help shape the platform. Standard pricing is expected to be higher after the launch period.</p>
+        <p>School prices shown below are early-adopter rates for the first schools that help shape Kaizen Maths. Standard pricing is expected to be higher after the launch period.</p>
       </article>
 
       <section class="pricing-grid" aria-label="School licence options">
@@ -5303,7 +5364,7 @@ function renderSchools() {
           <h2>Up to 5 Teachers</h2>
           <p class="pricing-price">£299/year</p>
           <p class="pricing-note">Expected standard price: £499/year</p>
-          <p>Designed for a small maths department or pilot group. Each teacher can sign in, access the full tool library, generate classroom questions, and create worksheets from the same shared platform.</p>
+          <p>Designed for a small maths department or pilot group. Each teacher can sign in, access the full tool library, generate classroom questions, and create worksheets from the same shared virtual textbook.</p>
         </article>
         <article class="panel pricing-card featured">
           <span class="eyebrow">Early Adopter</span>
@@ -5363,7 +5424,7 @@ function renderUpgrade() {
         <span class="eyebrow">Testing Phase</span>
         <h2>All tools are available until 30 June 2026</h2>
         <p>There is no need to upgrade while Kaizen Maths is being tested. Teachers can use the full tool library, classroom generators, worked solutions, worksheet builder, and assessment tools during this trial period.</p>
-        <p>Paid teacher and school access will be introduced after the trial period. The prices shown below are early-adopter rates for the first teachers and schools who help shape the platform. Standard pricing is expected to be higher after launch.</p>
+        <p>Paid teacher and school access will be introduced after the trial period. The prices shown below are early-adopter rates for the first teachers and schools who help shape Kaizen Maths. Standard pricing is expected to be higher after launch.</p>
         <div class="button-row">
           <a class="button primary" href="#/tools">Explore the Tool Library</a>
           <a class="button" href="#/worksheet-generator">Open Worksheet Builder</a>
@@ -6171,11 +6232,88 @@ function routeParts() {
   return (location.hash || "#/").split("?")[0].replace(/^#\/?/, "").split("/");
 }
 
+function routeTitle(text) {
+  return titleWithSite(text);
+}
+
+function updateRouteSeo(parts) {
+  const route = parts[0] || "home";
+  const collectionName = parts[1]
+    ? parts[1].split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ")
+    : "";
+  const tool = route === "tools" && parts[1] ? tools.find((item) => item.slug === parts[1]) : null;
+
+  if (tool) {
+    setPageSeo(
+      routeTitle(`${tool.title} Practice Tool`),
+      `${tool.description} Use Kaizen Maths to project questions, reveal answers, show worked steps, and build worksheets for this topic.`
+    );
+    return;
+  }
+
+  const routeSeo = {
+    home: {
+      title: SITE_TITLE,
+      description: SITE_DESCRIPTION
+    },
+    "tools": {
+      title: routeTitle("Maths Tool Library"),
+      description: "Browse Kaizen Maths topic generators, classroom display tools, worksheets, and assessment resources for maths teachers."
+    },
+    "collections": {
+      title: routeTitle(collectionName ? `${collectionName} Tools` : "Maths Collections"),
+      description: collectionName
+        ? `Browse ${collectionName.toLowerCase()} question generators, worked examples, and classroom practice tools in Kaizen Maths.`
+        : "Browse curriculum collections inside Kaizen Maths."
+    },
+    "worksheet-generator": {
+      title: routeTitle("Worksheet Builder"),
+      description: "Create printable maths worksheets, homework, quizzes, assessments, and intervention sheets from Kaizen Maths topic question generators."
+    },
+    "gcse-exam-style": {
+      title: routeTitle("GCSE Exam Paper Builder"),
+      description: "Generate GCSE-style maths practice sets and mock papers with marks, teacher copy options, and print-ready layout."
+    },
+    "upgrade": {
+      title: routeTitle("Teacher Access and Pricing"),
+      description: "View Kaizen Maths teacher access, early-adopter pricing, and trial information for individual teachers and schools."
+    },
+    "schools": {
+      title: routeTitle("School Access"),
+      description: "Learn how school licences give maths departments shared access to Kaizen Maths questions, worksheets, worked examples, and assessments."
+    },
+    "kaizen-university": {
+      title: routeTitle("Kaizen University"),
+      description: "Watch practical guides showing teachers how to use Kaizen Maths for classroom practice, worksheets, assessment, and live modelling."
+    },
+    "how-to-use-this-site": {
+      title: routeTitle("How to Use Kaizen Maths"),
+      description: "A teacher guide to using Kaizen Maths: choose topics, project practice questions, reveal solutions, and build worksheets."
+    },
+    "beta-feedback": {
+      title: routeTitle("Beta Feedback"),
+      description: "Share feedback on the Kaizen Maths beta site and help improve the teacher workflow, topic coverage, worksheets, and assessment tools."
+    },
+    "teacher": {
+      title: routeTitle("Teacher Notes"),
+      description: "Teacher-facing notes for using Kaizen Maths tools, examples, worksheets, and classroom routines."
+    },
+    "admin": {
+      title: routeTitle("Admin"),
+      description: "Kaizen Maths admin area for managing access, tags, users, and site content."
+    }
+  };
+
+  const seo = routeSeo[route] || routeSeo.home;
+  setPageSeo(seo.title, seo.description);
+}
+
 function renderRoute() {
   closeMobileNav();
   updateAdminNavVisibility();
   setActiveNav();
   const parts = routeParts();
+  updateRouteSeo(parts);
   document.body.dataset.route = parts[0] || "home";
   if (!parts[0]) {
     renderHome();

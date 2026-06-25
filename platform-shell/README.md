@@ -1,8 +1,8 @@
-# Kaizen Maths Platform Shell
+# Kaizen Maths Site
 
-This is a dependency-free prototype of the future Kaizen Maths web application shell.
+This is the Kaizen Maths web application for teacher-facing maths tools, worksheets, classroom displays, and assessment practice.
 
-It is deliberately small, but it models the important platform ideas:
+It is deliberately lightweight, but it models the important site ideas:
 
 - one shared app layout
 - one central tool registry
@@ -11,7 +11,7 @@ It is deliberately small, but it models the important platform ideas:
 - per-tool pages
 - legacy HTML tool hosting through iframes
 - shared teacher notes area
-- responsive mobile shell
+- responsive mobile layout
 
 ## Open Locally
 
@@ -85,7 +85,7 @@ Then update the registry entry in `app.js`:
 }
 ```
 
-The route `#/tools/fractions` will then embed that file inside the platform shell.
+The route `#/tools/fractions` will then embed that file inside the Kaizen Maths site.
 
 In a full Next.js/Vercel app, this would become something like:
 
