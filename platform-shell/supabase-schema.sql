@@ -158,6 +158,53 @@ on public.university_videos
 for delete
 using (public.is_admin());
 
+create table if not exists public.site_testimonials (
+  slot_id text primary key,
+  quote text not null default '',
+  person_name text,
+  role_label text,
+  organisation text,
+  is_active boolean not null default true,
+  sort_order integer not null default 1,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.site_testimonials add column if not exists person_name text;
+alter table public.site_testimonials add column if not exists role_label text;
+alter table public.site_testimonials add column if not exists organisation text;
+alter table public.site_testimonials add column if not exists is_active boolean not null default true;
+alter table public.site_testimonials add column if not exists sort_order integer not null default 1;
+
+alter table public.site_testimonials enable row level security;
+
+grant select on public.site_testimonials to anon, authenticated;
+grant insert, update, delete on public.site_testimonials to authenticated;
+
+drop policy if exists "Anyone can read active testimonials" on public.site_testimonials;
+create policy "Anyone can read active testimonials"
+on public.site_testimonials
+for select
+using (is_active or public.is_admin());
+
+drop policy if exists "Admins can insert testimonials" on public.site_testimonials;
+create policy "Admins can insert testimonials"
+on public.site_testimonials
+for insert
+with check (public.is_admin());
+
+drop policy if exists "Admins can update testimonials" on public.site_testimonials;
+create policy "Admins can update testimonials"
+on public.site_testimonials
+for update
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Admins can delete testimonials" on public.site_testimonials;
+create policy "Admins can delete testimonials"
+on public.site_testimonials
+for delete
+using (public.is_admin());
+
 create table if not exists public.tool_metadata (
   tool_slug text primary key,
   curriculum_tags text,

@@ -1388,8 +1388,42 @@ const state = {
   userProfiles: [],
   usersLoaded: false,
   universityVideos: {},
+  siteTestimonials: [],
+  testimonialsLoaded: false,
   accessLoaded: false
 };
+
+const defaultTestimonials = [
+  {
+    slot_id: "testimonial-1",
+    quote: "Kaizen Maths has reduced the time I spend preparing worksheets.",
+    person_name: "Maths teacher",
+    role_label: "Beta tester",
+    organisation: "",
+    is_active: true,
+    sort_order: 1
+  },
+  {
+    slot_id: "testimonial-2",
+    quote: "This is exactly the kind of tool a maths department needs.",
+    person_name: "Head of Mathematics",
+    role_label: "Department lead",
+    organisation: "",
+    is_active: true,
+    sort_order: 2
+  },
+  {
+    slot_id: "testimonial-3",
+    quote: "The worksheet builder makes planning much more efficient.",
+    person_name: "GCSE maths teacher",
+    role_label: "Classroom user",
+    organisation: "",
+    is_active: true,
+    sort_order: 3
+  }
+];
+
+let homeTestimonialTimer = null;
 
 const accessLevels = ["free", "trial", "pro", "school", "admin"];
 const freeSampleTools = new Set([
@@ -2117,6 +2151,79 @@ function universityVideoOverrides(video) {
     description: saved.description || video.description,
     duration_label: saved.duration_label || "Video guide"
   };
+}
+
+function normaliseTestimonial(row, index = 0) {
+  return {
+    slot_id: row.slot_id || `testimonial-${index + 1}`,
+    quote: String(row.quote || "").trim(),
+    person_name: String(row.person_name || "").trim(),
+    role_label: String(row.role_label || "").trim(),
+    organisation: String(row.organisation || "").trim(),
+    is_active: row.is_active !== false,
+    sort_order: Number.isFinite(Number(row.sort_order)) ? Number(row.sort_order) : index + 1
+  };
+}
+
+function testimonialDisplayList() {
+  const source = state.siteTestimonials.length ? state.siteTestimonials : defaultTestimonials;
+  const visible = source
+    .map(normaliseTestimonial)
+    .filter((item) => item.is_active && item.quote)
+    .sort((a, b) => a.sort_order - b.sort_order);
+  return visible.length ? visible : defaultTestimonials;
+}
+
+function testimonialAdminList() {
+  const loaded = state.siteTestimonials.length ? state.siteTestimonials : defaultTestimonials;
+  const rows = loaded.map(normaliseTestimonial).sort((a, b) => a.sort_order - b.sort_order);
+  rows.push({
+    slot_id: `testimonial-${Date.now()}`,
+    quote: "",
+    person_name: "",
+    role_label: "",
+    organisation: "",
+    is_active: false,
+    sort_order: rows.length + 1
+  });
+  return rows;
+}
+
+async function loadSiteTestimonials({ rerender = false } = {}) {
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client) return;
+  try {
+    const { data, error } = await client
+      .from("site_testimonials")
+      .select("slot_id, quote, person_name, role_label, organisation, is_active, sort_order")
+      .order("sort_order", { ascending: true });
+    if (error) throw error;
+    state.siteTestimonials = (data || []).map(normaliseTestimonial);
+    state.testimonialsLoaded = true;
+    if (rerender && (routeParts()[0] === "admin" || !routeParts()[0])) renderRoute();
+  } catch (error) {
+    state.testimonialsLoaded = false;
+    console.warn("Kaizen testimonials unavailable:", error.message);
+  }
+}
+
+async function saveSiteTestimonial(values) {
+  const client = await window.KaizenAuth?.getClient?.();
+  if (!client) throw new Error("Supabase is not available.");
+  const next = normaliseTestimonial(values);
+  const payload = {
+    ...next,
+    updated_at: new Date().toISOString()
+  };
+  const { error } = await client
+    .from("site_testimonials")
+    .upsert(payload, { onConflict: "slot_id" });
+  if (error) throw error;
+  state.siteTestimonials = [
+    ...state.siteTestimonials.filter((item) => item.slot_id !== next.slot_id),
+    next
+  ].sort((a, b) => a.sort_order - b.sort_order);
+  state.testimonialsLoaded = true;
 }
 
 function statusLabel(tool) {
@@ -3972,11 +4079,7 @@ function renderHome() {
     ["Generic AI-generated questions", "Teacher-focused, structured, curriculum-aligned practice with predictable classroom workflows."],
     ["Static textbook resources", "Unlimited fresh questions, answers, worked examples, and classroom display tools."]
   ];
-  const testimonialPlaceholders = [
-    "Kaizen Maths has reduced the time I spend preparing worksheets.",
-    "This is exactly the kind of tool a maths department needs.",
-    "The worksheet builder makes planning much more efficient."
-  ];
+  const testimonials = testimonialDisplayList();
 
   app.innerHTML = `
     <section class="home-hero">
@@ -3989,12 +4092,27 @@ function renderHome() {
           <a class="button" href="#/kaizen-university">See How It Works</a>
         </div>
       </div>
-      <div class="hero-diagram" aria-hidden="true">
-        <span class="diagram-card diagram-card-a">Worksheet</span>
-        <span class="diagram-card diagram-card-b">Assessment</span>
-        <span class="diagram-card diagram-card-c">Worked Steps</span>
-        <span class="diagram-card diagram-card-d">Classroom Tools</span>
-      </div>
+      <aside class="home-testimonial-panel" aria-label="What teachers are saying">
+        <div class="home-testimonial-head">
+          <span class="eyebrow">What Teachers Are Saying</span>
+          <span class="testimonial-count">${testimonials.length} quote${testimonials.length === 1 ? "" : "s"}</span>
+        </div>
+        <!-- Editable from the Admin testimonials tab once live testimonials are available. -->
+        <div class="home-testimonial-carousel" id="homeTestimonialCarousel">
+          ${testimonials.map((item, index) => `
+            <article class="home-testimonial-slide ${index === 0 ? "active" : ""}" data-testimonial-slide>
+              <p>&ldquo;${escapeHtml(item.quote)}&rdquo;</p>
+              <footer>
+                <strong>${escapeHtml(item.person_name || "Maths teacher")}</strong>
+                <span>${escapeHtml([item.role_label, item.organisation].filter(Boolean).join(" · ") || "Teacher feedback")}</span>
+              </footer>
+            </article>
+          `).join("")}
+        </div>
+        <div class="testimonial-dots" aria-hidden="true">
+          ${testimonials.map((_, index) => `<span class="${index === 0 ? "active" : ""}" data-testimonial-dot></span>`).join("")}
+        </div>
+      </aside>
     </section>
 
     <section class="home-workflow section-block" aria-labelledby="workflowTitle">
@@ -4072,22 +4190,6 @@ function renderHome() {
       <!-- Future pricing table or school licence enquiry form can be inserted here. -->
       <a class="button primary" href="#/schools">Request a School Licence</a>
     </section>
-
-    <section class="testimonial-section section-block" aria-labelledby="testimonialTitle">
-      <div class="section-heading">
-        <span class="eyebrow">Teacher Feedback</span>
-        <h2 id="testimonialTitle">What teachers are saying</h2>
-      </div>
-      <!-- Replace these placeholder testimonials with named school or teacher quotes after permission is granted. -->
-      <div class="testimonial-grid">
-        ${testimonialPlaceholders.map((quote) => `
-          <article class="testimonial-card">
-            <p>&ldquo;${quote}&rdquo;</p>
-          </article>
-        `).join("")}
-      </div>
-    </section>
-
     <section class="final-cta" aria-labelledby="finalCtaTitle">
       <span class="eyebrow">Ready To Try It?</span>
       <h2 id="finalCtaTitle">Spend less time searching. Spend more time teaching.</h2>
@@ -4098,6 +4200,26 @@ function renderHome() {
       <!-- Future demo video link can be added beside the trial button. -->
     </section>
   `;
+  bindHomeTestimonials();
+}
+
+function bindHomeTestimonials() {
+  if (homeTestimonialTimer) {
+    window.clearInterval(homeTestimonialTimer);
+    homeTestimonialTimer = null;
+  }
+  const carousel = document.getElementById("homeTestimonialCarousel");
+  if (!carousel) return;
+  const slides = [...carousel.querySelectorAll("[data-testimonial-slide]")];
+  const dots = [...document.querySelectorAll("[data-testimonial-dot]")];
+  if (slides.length <= 1) return;
+  let activeIndex = 0;
+  const showSlide = (nextIndex) => {
+    activeIndex = nextIndex % slides.length;
+    slides.forEach((slide, index) => slide.classList.toggle("active", index === activeIndex));
+    dots.forEach((dot, index) => dot.classList.toggle("active", index === activeIndex));
+  };
+  homeTestimonialTimer = window.setInterval(() => showSlide(activeIndex + 1), 5200);
 }
 
 function renderFilters() {
@@ -5549,6 +5671,44 @@ function bindUpgradeActions() {
   });
 }
 
+function adminTestimonialRowHtml(testimonial, index) {
+  const row = normaliseTestimonial(testimonial, index);
+  return `
+    <article class="admin-testimonial-row" data-testimonial-row data-slot-id="${escapeHtml(row.slot_id)}">
+      <div class="admin-testimonial-default">
+        <strong>Quote ${index + 1}</strong>
+        <small>${row.quote ? escapeHtml(row.quote) : "Empty quote slot"}</small>
+      </div>
+      <div class="admin-testimonial-fields">
+        <label>
+          Quote
+          <textarea data-testimonial-field="quote" rows="3" placeholder="Paste the teacher quote">${escapeHtml(row.quote)}</textarea>
+        </label>
+        <label>
+          Person
+          <input data-testimonial-field="person_name" type="text" value="${escapeHtml(row.person_name)}" placeholder="Name or role">
+        </label>
+        <label>
+          Role / title
+          <input data-testimonial-field="role_label" type="text" value="${escapeHtml(row.role_label)}" placeholder="Maths teacher, Head of Department, Tutor">
+        </label>
+        <label>
+          School / organisation
+          <input data-testimonial-field="organisation" type="text" value="${escapeHtml(row.organisation)}" placeholder="Optional">
+        </label>
+        <label>
+          Display order
+          <input data-testimonial-field="sort_order" type="number" min="1" max="99" value="${escapeHtml(row.sort_order)}">
+        </label>
+        <label class="admin-check-row">
+          <input data-testimonial-field="is_active" type="checkbox" ${row.is_active ? "checked" : ""}>
+          Show in homepage carousel
+        </label>
+      </div>
+    </article>
+  `;
+}
+
 function renderAdmin() {
   if (!isSignedIn()) {
     app.innerHTML = `
@@ -5653,6 +5813,10 @@ function renderAdmin() {
     </section>
   `).join("");
 
+  const testimonialRows = testimonialAdminList()
+    .map((testimonial, index) => adminTestimonialRowHtml(testimonial, index))
+    .join("");
+
   const userRows = state.userProfiles.length ? state.userProfiles.map((profile) => `
     <tr>
       <td>
@@ -5692,6 +5856,7 @@ function renderAdmin() {
       <button class="admin-tab" type="button" data-admin-tab="access">Tool Access</button>
       <button class="admin-tab" type="button" data-admin-tab="metadata">Tool Tags</button>
       <button class="admin-tab" type="button" data-admin-tab="university">Kaizen University</button>
+      <button class="admin-tab" type="button" data-admin-tab="testimonials">Testimonials</button>
     </section>
     <section class="panel admin-panel admin-tab-panel active" data-admin-panel="users">
       <div class="admin-toolbar">
@@ -5757,6 +5922,23 @@ function renderAdmin() {
       <p class="admin-status" id="adminVideoStatus">Empty copy fields use the default Kaizen University text. Paste full YouTube links, unlisted links, embed links, or video IDs.</p>
       <div class="admin-video-list">
         ${videoRows}
+      </div>
+    </section>
+    <section class="panel admin-panel admin-tab-panel" data-admin-panel="testimonials">
+      <div class="admin-toolbar">
+        <div>
+          <span class="eyebrow">Homepage Quotes</span>
+          <h2>Testimonials Carousel</h2>
+          <p>Edit the quotes that rotate inside the first view of the homepage. Use active quotes only when you have permission to publish the person&apos;s name, role, or school.</p>
+        </div>
+        <div class="button-row">
+          <button class="button" id="addTestimonialRow" type="button">Add Quote</button>
+          <button class="button primary" id="saveTestimonials" type="button">Save Testimonials</button>
+        </div>
+      </div>
+      <p class="admin-status" id="adminTestimonialsStatus">${state.testimonialsLoaded ? "Loaded testimonials from Supabase." : "Showing default quote slots. Create the site_testimonials table in Supabase for live editing."}</p>
+      <div class="admin-testimonial-list" id="adminTestimonialList">
+        ${testimonialRows}
       </div>
     </section>
   `;
@@ -5876,6 +6058,53 @@ function bindAdmin() {
       button.disabled = false;
     } catch (error) {
       videoStatus.textContent = `Could not save: ${error.message}`;
+      button.disabled = false;
+    }
+  });
+
+  const testimonialStatus = document.getElementById("adminTestimonialsStatus");
+  const testimonialList = document.getElementById("adminTestimonialList");
+  document.getElementById("addTestimonialRow")?.addEventListener("click", () => {
+    const rows = testimonialList?.querySelectorAll("[data-testimonial-row]").length || 0;
+    testimonialList?.insertAdjacentHTML("beforeend", adminTestimonialRowHtml({
+      slot_id: `testimonial-${Date.now()}`,
+      quote: "",
+      person_name: "",
+      role_label: "",
+      organisation: "",
+      is_active: false,
+      sort_order: rows + 1
+    }, rows));
+  });
+
+  document.getElementById("saveTestimonials")?.addEventListener("click", async () => {
+    const button = document.getElementById("saveTestimonials");
+    const rows = [...document.querySelectorAll("[data-testimonial-row]")];
+    button.disabled = true;
+    testimonialStatus.textContent = "Saving testimonials...";
+    try {
+      let savedCount = 0;
+      for (const row of rows) {
+        const field = (name) => row.querySelector(`[data-testimonial-field="${name}"]`);
+        const values = {
+          slot_id: row.dataset.slotId,
+          quote: field("quote")?.value.trim() || "",
+          person_name: field("person_name")?.value.trim() || "",
+          role_label: field("role_label")?.value.trim() || "",
+          organisation: field("organisation")?.value.trim() || "",
+          is_active: Boolean(field("is_active")?.checked),
+          sort_order: Number(field("sort_order")?.value || savedCount + 1)
+        };
+        const hasContent = values.quote || values.person_name || values.role_label || values.organisation;
+        if (!hasContent && !values.is_active) continue;
+        if (values.is_active && !values.quote) throw new Error("Every active testimonial needs a quote.");
+        await saveSiteTestimonial(values);
+        savedCount += 1;
+      }
+      testimonialStatus.textContent = `Saved ${savedCount} testimonial${savedCount === 1 ? "" : "s"}. Homepage carousel will update on refresh.`;
+      button.disabled = false;
+    } catch (error) {
+      testimonialStatus.textContent = `Could not save: ${error.message}`;
       button.disabled = false;
     }
   });
@@ -6313,6 +6542,10 @@ function renderRoute() {
   updateAdminNavVisibility();
   setActiveNav();
   const parts = routeParts();
+  if (parts[0] && homeTestimonialTimer) {
+    window.clearInterval(homeTestimonialTimer);
+    homeTestimonialTimer = null;
+  }
   updateRouteSeo(parts);
   document.body.dataset.route = parts[0] || "home";
   if (!parts[0]) {
@@ -6395,6 +6628,7 @@ window.addEventListener("kaizen-auth-change", () => {
   loadToolMetadata({ rerender: true });
   loadUserProfiles({ rerender: true });
   loadUniversityVideos({ rerender: true });
+  loadSiteTestimonials({ rerender: true });
 });
 
 window.setTimeout(() => {
@@ -6403,6 +6637,7 @@ window.setTimeout(() => {
   loadToolMetadata({ rerender: true });
   loadUserProfiles({ rerender: true });
   loadUniversityVideos({ rerender: true });
+  loadSiteTestimonials({ rerender: true });
 }, 1200);
 
 renderRoute();

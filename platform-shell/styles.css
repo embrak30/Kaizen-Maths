@@ -24,7 +24,10 @@
 
 html {
   min-width: 320px;
-  background: #eef4f7;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(239, 246, 249, 0.94)),
+    repeating-linear-gradient(135deg, rgba(23, 184, 179, 0.035) 0 1px, transparent 1px 24px),
+    #eef4f7;
 }
 
 body {
@@ -32,6 +35,10 @@ body {
   color: var(--ink);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: 0;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.72), rgba(240, 248, 249, 0.88) 54%, rgba(245, 241, 255, 0.64)),
+    repeating-linear-gradient(90deg, rgba(23, 184, 179, 0.026) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(0deg, rgba(111, 76, 195, 0.02) 0 1px, transparent 1px 42px);
 }
 
 body.classroom-active {
@@ -40,7 +47,8 @@ body.classroom-active {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -220,6 +228,9 @@ a {
   min-width: 0;
   display: flex;
   flex-direction: column;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(247, 250, 252, 0.88)),
+    repeating-linear-gradient(135deg, rgba(23, 184, 179, 0.025) 0 1px, transparent 1px 32px);
 }
 
 .site-trust-note {
@@ -399,6 +410,9 @@ body[data-route="gcse-exam-style"] .account-action {
 #app {
   min-width: 0;
   padding: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(244, 248, 252, 0.42)),
+    repeating-linear-gradient(135deg, rgba(111, 76, 195, 0.018) 0 1px, transparent 1px 36px);
 }
 
 .page-header {
@@ -536,6 +550,128 @@ body[data-route="gcse-exam-style"] .account-action {
   line-height: 1.58;
 }
 
+.home-testimonial-panel {
+  position: relative;
+  z-index: 1;
+  align-self: stretch;
+  min-height: 320px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: clamp(18px, 2.4vw, 24px);
+  border: 1px solid rgba(23, 184, 179, 0.24);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.93), rgba(255, 255, 255, 0.82)),
+    linear-gradient(90deg, rgba(111, 76, 195, 0.08) 0 1px, transparent 1px 100%),
+    linear-gradient(0deg, rgba(23, 184, 179, 0.055) 0 1px, transparent 1px 100%),
+    #ffffff;
+  background-size: auto, 34px 34px, 34px 34px, auto;
+  box-shadow: 0 16px 36px rgba(44, 35, 91, 0.11);
+  overflow: hidden;
+}
+
+.home-testimonial-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-top: 3px solid rgba(23, 184, 179, 0.68);
+  pointer-events: none;
+}
+
+.home-testimonial-head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.testimonial-count {
+  padding: 5px 9px;
+  border: 1px solid rgba(111, 76, 195, 0.16);
+  border-radius: 999px;
+  background: rgba(241, 239, 255, 0.76);
+  color: #4b3f86;
+  font-size: 0.78rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.home-testimonial-carousel {
+  position: relative;
+  z-index: 1;
+  min-height: 210px;
+}
+
+.home-testimonial-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 420ms ease, transform 420ms ease;
+  pointer-events: none;
+}
+
+.home-testimonial-slide.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.home-testimonial-slide p {
+  max-width: none;
+  margin: 0;
+  color: #252243;
+  font-family: var(--math-font);
+  font-size: clamp(1.3rem, 2.1vw, 1.78rem);
+  font-weight: 700;
+  line-height: 1.28;
+}
+
+.home-testimonial-slide footer {
+  display: grid;
+  gap: 3px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(23, 184, 179, 0.18);
+}
+
+.home-testimonial-slide footer strong {
+  color: var(--ink);
+  font-size: 0.98rem;
+}
+
+.home-testimonial-slide footer span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.testimonial-dots {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 7px;
+}
+
+.testimonial-dots span {
+  width: 28px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(111, 76, 195, 0.18);
+  transition: width 220ms ease, background 220ms ease;
+}
+
+.testimonial-dots span.active {
+  width: 42px;
+  background: linear-gradient(90deg, var(--violet), var(--teal));
+}
+
 .hero-diagram {
   position: relative;
   top: auto;
@@ -651,7 +787,10 @@ body[data-route="gcse-exam-style"] .account-action {
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(252, 254, 255, 0.92)),
+    repeating-linear-gradient(135deg, rgba(23, 184, 179, 0.018) 0 1px, transparent 1px 30px),
+    #fff;
   box-shadow: 0 1px 2px rgba(23, 32, 51, 0.04);
 }
 
@@ -797,6 +936,7 @@ body[data-route="gcse-exam-style"] .account-action {
   border-radius: 8px;
   border: 1px solid rgba(23, 184, 179, 0.28);
   background:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.34) 0 1px, transparent 1px 28px),
     linear-gradient(135deg, rgba(23, 184, 179, 0.13), rgba(111, 76, 195, 0.09)),
     #fff;
   box-shadow: 0 10px 28px rgba(44, 35, 91, 0.07);
@@ -832,8 +972,9 @@ body[data-route="gcse-exam-style"] .account-action {
   justify-items: start;
   padding: clamp(24px, 4vw, 42px);
   background:
-    linear-gradient(135deg, rgba(21, 20, 42, 0.92), rgba(40, 36, 80, 0.92)),
-    #15142a;
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 22px),
+    linear-gradient(135deg, rgba(21, 20, 42, 0.88), rgba(40, 36, 80, 0.86)),
+    #17162f;
 }
 
 .final-cta .eyebrow {
@@ -1704,6 +1845,98 @@ body[data-route="gcse-exam-style"] .account-action {
 .admin-video-textarea {
   min-height: 82px;
   resize: vertical;
+}
+
+.admin-testimonial-list {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-testimonial-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.48fr) minmax(320px, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 12px;
+  border: 1px solid #e1e8f2;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(251, 253, 255, 0.96)),
+    #ffffff;
+}
+
+.admin-testimonial-default {
+  position: sticky;
+  top: 12px;
+  display: grid;
+  gap: 5px;
+}
+
+.admin-testimonial-default small {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.admin-testimonial-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.admin-testimonial-fields label {
+  display: grid;
+  gap: 5px;
+  color: #4a5570;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.admin-testimonial-fields label:first-child {
+  grid-column: 1 / -1;
+}
+
+.admin-testimonial-fields input,
+.admin-testimonial-fields textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 11px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+}
+
+.admin-testimonial-fields textarea {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.admin-testimonial-fields input:focus,
+.admin-testimonial-fields textarea:focus {
+  border-color: rgba(23, 184, 179, 0.72);
+  box-shadow: 0 0 0 3px rgba(23, 184, 179, 0.12);
+  outline: none;
+}
+
+.admin-check-row {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  align-self: end;
+  gap: 8px !important;
+  min-height: 42px;
+  padding: 9px 10px;
+  border: 1px solid rgba(23, 184, 179, 0.2);
+  border-radius: 6px;
+  background: rgba(231, 251, 250, 0.5);
+  color: #0d6970 !important;
+}
+
+.admin-check-row input {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  accent-color: var(--teal-dark);
 }
 
 .upgrade-page {
@@ -3636,6 +3869,14 @@ sup .worksheet-fraction span:last-child {
     overflow: visible;
   }
 
+  .admin-testimonial-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-testimonial-default {
+    position: static;
+  }
+
   .worksheet-preview {
     max-height: none;
   }
@@ -3769,6 +4010,14 @@ sup .worksheet-fraction span:last-child {
     display: none;
   }
 
+  .home-testimonial-panel {
+    min-height: 280px;
+  }
+
+  .home-testimonial-carousel {
+    min-height: 190px;
+  }
+
   .home-hero-actions {
     justify-content: flex-start;
     max-width: none;
@@ -3859,6 +4108,10 @@ sup .worksheet-fraction span:last-child {
   }
 
   .admin-video-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-testimonial-fields {
     grid-template-columns: 1fr;
   }
 
