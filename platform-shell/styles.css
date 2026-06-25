@@ -483,12 +483,12 @@ body[data-route="gcse-exam-style"] .account-action {
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.62fr);
+  grid-template-columns: minmax(0, 1fr) minmax(270px, 0.48fr);
   gap: 22px;
   align-items: center;
   margin-bottom: 18px;
   padding: clamp(24px, 4vw, 46px);
-  min-height: 420px;
+  min-height: 365px;
   border: 1px solid rgba(111, 76, 195, 0.18);
   border-radius: 8px;
   background:
@@ -553,21 +553,23 @@ body[data-route="gcse-exam-style"] .account-action {
 .home-testimonial-panel {
   position: relative;
   z-index: 1;
-  align-self: stretch;
-  min-height: 320px;
+  align-self: start;
+  justify-self: stretch;
+  min-height: 168px;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: 16px;
-  padding: clamp(18px, 2.4vw, 24px);
+  grid-template-rows: auto minmax(78px, 1fr) auto;
+  gap: 9px;
+  margin-top: 10px;
+  padding: 15px 16px 13px;
   border: 1px solid rgba(23, 184, 179, 0.24);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.93), rgba(255, 255, 255, 0.82)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.86)),
     linear-gradient(90deg, rgba(111, 76, 195, 0.08) 0 1px, transparent 1px 100%),
     linear-gradient(0deg, rgba(23, 184, 179, 0.055) 0 1px, transparent 1px 100%),
     #ffffff;
-  background-size: auto, 34px 34px, 34px 34px, auto;
-  box-shadow: 0 16px 36px rgba(44, 35, 91, 0.11);
+  background-size: auto, 28px 28px, 28px 28px, auto;
+  box-shadow: 0 14px 26px rgba(44, 35, 91, 0.1);
   overflow: hidden;
 }
 
@@ -579,9 +581,29 @@ body[data-route="gcse-exam-style"] .account-action {
   pointer-events: none;
 }
 
+.home-testimonial-panel::after {
+  content: "";
+  position: absolute;
+  right: 15px;
+  bottom: 12px;
+  width: 112px;
+  height: 54px;
+  border: 1px solid rgba(111, 76, 195, 0.16);
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(231, 251, 250, 0.38)),
+    repeating-linear-gradient(0deg, rgba(23, 184, 179, 0.16) 0 1px, transparent 1px 10px);
+  box-shadow:
+    -12px -10px 0 rgba(241, 239, 255, 0.62),
+    -24px -20px 0 rgba(255, 255, 255, 0.56);
+  transform: perspective(220px) rotateX(10deg) rotateZ(-3deg);
+  opacity: 0.42;
+  pointer-events: none;
+}
+
 .home-testimonial-head {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -589,20 +611,20 @@ body[data-route="gcse-exam-style"] .account-action {
 }
 
 .testimonial-count {
-  padding: 5px 9px;
+  padding: 4px 8px;
   border: 1px solid rgba(111, 76, 195, 0.16);
   border-radius: 999px;
   background: rgba(241, 239, 255, 0.76);
   color: #4b3f86;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 850;
   white-space: nowrap;
 }
 
 .home-testimonial-carousel {
   position: relative;
-  z-index: 1;
-  min-height: 210px;
+  z-index: 2;
+  min-height: 78px;
 }
 
 .home-testimonial-slide {
@@ -610,10 +632,10 @@ body[data-route="gcse-exam-style"] .account-action {
   inset: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 18px;
+  justify-content: start;
+  gap: 8px;
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(6px);
   transition: opacity 420ms ease, transform 420ms ease;
   pointer-events: none;
 }
@@ -629,46 +651,49 @@ body[data-route="gcse-exam-style"] .account-action {
   margin: 0;
   color: #252243;
   font-family: var(--math-font);
-  font-size: clamp(1.3rem, 2.1vw, 1.78rem);
+  font-size: clamp(0.98rem, 1.18vw, 1.15rem);
   font-weight: 700;
-  line-height: 1.28;
+  line-height: 1.34;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .home-testimonial-slide footer {
   display: grid;
   gap: 3px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(23, 184, 179, 0.18);
+  padding-top: 6px;
 }
 
 .home-testimonial-slide footer strong {
   color: var(--ink);
-  font-size: 0.98rem;
+  font-size: 0.84rem;
 }
 
 .home-testimonial-slide footer span {
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   font-weight: 650;
 }
 
 .testimonial-dots {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
-  gap: 7px;
+  gap: 6px;
 }
 
 .testimonial-dots span {
-  width: 28px;
-  height: 4px;
+  width: 16px;
+  height: 3px;
   border-radius: 999px;
   background: rgba(111, 76, 195, 0.18);
   transition: width 220ms ease, background 220ms ease;
 }
 
 .testimonial-dots span.active {
-  width: 42px;
+  width: 28px;
   background: linear-gradient(90deg, var(--violet), var(--teal));
 }
 
@@ -4011,11 +4036,18 @@ sup .worksheet-fraction span:last-child {
   }
 
   .home-testimonial-panel {
-    min-height: 280px;
+    min-height: 142px;
+    margin-top: 4px;
+    padding: 13px 14px 12px;
   }
 
   .home-testimonial-carousel {
-    min-height: 190px;
+    min-height: 70px;
+  }
+
+  .home-testimonial-slide p {
+    font-size: 0.98rem;
+    -webkit-line-clamp: 2;
   }
 
   .home-hero-actions {
