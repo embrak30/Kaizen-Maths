@@ -2131,6 +2131,22 @@ const universitySections = [
   }
 ];
 
+const homepageFeaturedVideo = {
+  id: "homepage-featured-video",
+  title: "How To Use Kaizen Maths",
+  description: "A short walkthrough showing teachers how to find a topic, generate questions, use classroom tools, and build resources.",
+  duration_label: "Start here"
+};
+
+const adminUniversitySections = [
+  {
+    title: "Homepage Feature",
+    intro: "The video shown near the top of the homepage, just below the first hero area.",
+    videos: [homepageFeaturedVideo]
+  },
+  ...universitySections
+];
+
 function allUniversityVideos() {
   return universitySections.flatMap((section) => section.videos.map((video) => ({ ...video, section: section.title })));
 }
@@ -2380,14 +2396,14 @@ function universityVideoOverrides(video) {
       youtube_url: saved,
       title: video.title,
       description: video.description,
-      duration_label: "Video guide"
+      duration_label: video.duration_label || "Video guide"
     };
   }
   return {
     youtube_url: saved.youtube_url || "",
     title: saved.title || video.title,
     description: saved.description || video.description,
-    duration_label: saved.duration_label || "Video guide"
+    duration_label: saved.duration_label || video.duration_label || "Video guide"
   };
 }
 
@@ -4353,6 +4369,8 @@ function renderHome() {
       </aside>
     </section>
 
+    ${homepageVideoPanelHtml()}
+
     <section class="home-workflow section-block" aria-labelledby="workflowTitle">
       <div class="section-heading">
         <span class="eyebrow">Simple Workflow</span>
@@ -4470,6 +4488,29 @@ function bindHomeTestimonials() {
     dots.forEach((dot, index) => dot.classList.toggle("active", index === activeIndex));
   };
   homeTestimonialTimer = window.setInterval(() => showSlide(activeIndex + 1), 5200);
+}
+
+function homepageVideoPanelHtml() {
+  const display = universityVideoOverrides(homepageFeaturedVideo);
+  const youtubeId = youtubeIdFromUrl(display.youtube_url);
+  return `
+    <section class="home-feature-video" aria-labelledby="homeFeatureVideoTitle">
+      <div class="home-feature-video-media">
+        ${youtubeId
+          ? `<iframe src="https://www.youtube.com/embed/${escapeHtml(youtubeId)}" title="${escapeHtml(display.title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`
+          : `<div class="home-feature-video-placeholder"><span>▶</span><strong>Video guide</strong></div>`}
+      </div>
+      <div class="home-feature-video-copy">
+        <span class="eyebrow">${escapeHtml(display.duration_label || "Start here")}</span>
+        <h2 id="homeFeatureVideoTitle">${escapeHtml(display.title)}</h2>
+        <p>${escapeHtml(display.description)}</p>
+        <div class="button-row">
+          <a class="button primary" href="#/kaizen-university">More Videos</a>
+          <a class="button" href="#/how-to-use-this-site">Open Site Guide</a>
+        </div>
+      </div>
+    </section>
+  `;
 }
 
 function curriculumTagMatches(tool, tag) {
@@ -6684,7 +6725,7 @@ function renderAdmin() {
     `;
   }).join("");
 
-  const videoRows = universitySections.map((section) => `
+  const videoRows = adminUniversitySections.map((section) => `
     <section class="admin-video-section">
       <h3>${escapeHtml(section.title)}</h3>
       ${section.videos.map((video) => {
