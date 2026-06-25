@@ -145,11 +145,11 @@
       }
       if(type==='multiply_single'){
         const a=random(2,9),b=random(2,9),res=a*b;
-        return {badge:'multiplication',calculation:`${numWrap(a)} ${opWrap('x')} ${numWrap(b)}`,answer:String(res),steps:['Step 1: Recall the times table fact',`${a} x ${b} is from the ${a} times table`,'Step 2: Calculate the product',`${a} groups of ${b} = ${res}`,equation(`${a} x ${b} = ${res}`)]};
+        return {badge:'multiplication',calculation:`${numWrap(a)} ${opWrap('×')} ${numWrap(b)}`,answer:String(res),steps:['Step 1: Recall the times table fact',`${a} × ${b} is from the ${a} times table`,'Step 2: Calculate the product',`${a} groups of ${b} = ${res}`,equation(`${a} × ${b} = ${res}`)]};
       }
       if(type==='divide_single'){
         const divisor=random(2,9),quotient=random(2,12),dividend=divisor*quotient;
-        return {badge:'division',calculation:`${numWrap(dividend)} ${opWrap('/')} ${numWrap(divisor)}`,answer:String(quotient),steps:['Step 1: Think about the related multiplication',`What number times ${divisor} gives ${dividend}?`,'Step 2: Recall the division fact',`${divisor} x ${quotient} = ${dividend}, so ${dividend} / ${divisor} = ${quotient}`,equation(`${dividend} / ${divisor} = ${quotient}`)]};
+        return {badge:'division',calculation:`${numWrap(dividend)} ${opWrap('÷')} ${numWrap(divisor)}`,answer:String(quotient),steps:['Step 1: Think about the related multiplication',`What number multiplied by ${divisor} gives ${dividend}?`,'Step 2: Recall the multiplication fact',`${divisor} × ${quotient} = ${dividend}`,'Step 3: Use the inverse operation',`${dividend} ÷ ${divisor} = ${quotient}`,equation(`${dividend} ÷ ${divisor} = ${quotient}`)]};
       }
       if(type==='add_subtract_double'){
         const op=Math.random()<.5?'+':'-';let a,b,res;if(op==='+'){a=random(12,89);b=random(11,89);res=a+b}else{a=random(25,99);b=random(11,a-1);res=a-b}
@@ -157,45 +157,45 @@
       }
       if(type==='multiply_double_single'){
         const a=random(12,99),b=random(2,9),tens=Math.floor(a/10)*10,ones=a%10,res=a*b;
-        return {badge:'multiplication',calculation:`${numWrap(a)} ${opWrap('x')} ${numWrap(b)}`,answer:String(res),steps:['Step 1: Break down the two-digit number',`${a} = ${tens} + ${ones}`,'Step 2: Multiply each part',`${tens} x ${b} = ${tens*b}`,`${ones} x ${b} = ${ones*b}`,'Step 3: Add the parts',equation(`${tens*b} + ${ones*b} = ${res}`)]};
+        return {badge:'multiplication',calculation:`${numWrap(a)} ${opWrap('×')} ${numWrap(b)}`,answer:String(res),steps:['Step 1: Break down the two-digit number',`${a} = ${tens} + ${ones}`,'Step 2: Multiply each part',`${tens} × ${b} = ${tens*b}`,`${ones} × ${b} = ${ones*b}`,'Step 3: Add the partial products',`${tens*b} + ${ones*b} = ${res}`,equation(`${a} × ${b} = ${res}`)]};
       }
       if(type==='divide_double_single'){
         const divisor=random(3,9),quotient=random(11,99),dividend=divisor*quotient;
-        return {badge:'division',calculation:`${numWrap(dividend)} ${opWrap('/')} ${numWrap(divisor)}`,answer:String(quotient),steps:['Step 1: Set up the division',`${dividend} / ${divisor}`,'Step 2: Use the related multiplication fact',`${quotient} x ${divisor} = ${dividend}`,'Step 3: Write the quotient',equation(`${dividend} / ${divisor} = ${quotient}`)]};
+        return {badge:'division',calculation:`${numWrap(dividend)} ${opWrap('÷')} ${numWrap(divisor)}`,answer:String(quotient),steps:['Step 1: Set up the division',`${dividend} ÷ ${divisor}`,'Step 2: Use the related multiplication fact',`${quotient} × ${divisor} = ${dividend}`,'Step 3: Therefore the quotient is',equation(`${dividend} ÷ ${divisor} = ${quotient}`)]};
       }
       if(type==='multiply_large'){
         const a=random(1234,99999),b=random(12,99),ones=b%10,tens=Math.floor(b/10)*10,res=a*b;
-        return {badge:'multiplication',calculation:`${numWrap(a)} ${opWrap('x')} ${numWrap(b)}`,answer:addCommas(res),steps:['Step 1: Break down the two-digit multiplier',`${b} = ${tens} + ${ones}`,'Step 2: Multiply by each part',`${addCommas(a)} x ${ones} = ${addCommas(a*ones)}`,`${addCommas(a)} x ${tens} = ${addCommas(a*tens)}`,'Step 3: Add the partial products',equation(`${addCommas(a*ones)} + ${addCommas(a*tens)} = ${addCommas(res)}`)]};
+        return {badge:'multiplication',calculation:`${numWrap(a)} ${opWrap('×')} ${numWrap(b)}`,answer:addCommas(res),steps:['Step 1: Break down the two-digit multiplier',`${b} = ${tens} + ${ones}`,'Step 2: Multiply by each part',`${addCommas(a)} × ${ones} = ${addCommas(a*ones)}`,`${addCommas(a)} × ${tens} = ${addCommas(a*tens)}`,'Step 3: Add the partial products',`${addCommas(a*ones)} + ${addCommas(a*tens)} = ${addCommas(res)}`,equation(`${addCommas(a)} × ${b} = ${addCommas(res)}`)]};
       }
       if(type==='divide_large'){
         const divisor=random(12,98),quotient=random(123,9999),dividend=divisor*quotient;
-        return {badge:'division',calculation:`${numWrap(dividend)} ${opWrap('/')} ${numWrap(divisor)}`,answer:addCommas(quotient),steps:['Step 1: Set up long division',`${addCommas(dividend)} / ${divisor}`,'Step 2: Estimate the quotient',`The answer should be close to ${addCommas(Math.round(dividend/divisor/100)*100)}.`,'Step 3: Complete the calculation',equation(`${addCommas(dividend)} / ${divisor} = ${addCommas(quotient)}`),'Step 4: Check by multiplication',`${addCommas(quotient)} x ${divisor} = ${addCommas(dividend)}`]};
+        return {badge:'division',calculation:`${numWrap(dividend)} ${opWrap('÷')} ${numWrap(divisor)}`,answer:addCommas(quotient),steps:['Step 1: Set up the division',`${addCommas(dividend)} ÷ ${divisor}`,'Step 2: Estimate the quotient',`The answer should be close to ${addCommas(Math.round(dividend/divisor/100)*100)}.`,'Step 3: Use the inverse multiplication check',`${addCommas(quotient)} × ${divisor} = ${addCommas(dividend)}`,'Step 4: Therefore the exact quotient is',equation(`${addCommas(dividend)} ÷ ${divisor} = ${addCommas(quotient)}`)]};
       }
-      const isMult=Math.random()<.5;if(isMult){const a=random(234,9999),b=random(23,87),res=a*b;return {badge:'multiplication',calculation:`${numWrap(a)} ${opWrap('x')} ${numWrap(b)}`,answer:addCommas(res),steps:['Step 1: Identify the operation','This is a multiplication problem.','Step 2: Estimate first',`Roughly ${Math.round(a/100)*100} x ${Math.round(b/10)*10}`,'Step 3: Calculate',equation(`${addCommas(a)} x ${b} = ${addCommas(res)}`)]}}else{const b=random(15,89),res=random(345,8765),a=b*res;return {badge:'division',calculation:`${numWrap(a)} ${opWrap('/')} ${numWrap(b)}`,answer:addCommas(res),steps:['Step 1: Identify the operation','This is a division problem.','Step 2: Estimate first',`Roughly ${Math.round(a/1000)*1000} / ${Math.round(b/10)*10}`,'Step 3: Calculate',equation(`${addCommas(a)} / ${b} = ${addCommas(res)}`)]}}
+      const isMult=Math.random()<.5;if(isMult){const a=random(234,9999),b=random(23,87),res=a*b,ones=b%10,tens=Math.floor(b/10)*10;return {badge:'multiplication',calculation:`${numWrap(a)} ${opWrap('×')} ${numWrap(b)}`,answer:addCommas(res),steps:['Step 1: Identify the operation','This is a multiplication problem.','Step 2: Estimate first',`Roughly ${Math.round(a/100)*100} × ${Math.round(b/10)*10}`,'Step 3: Break down the multiplier',`${b} = ${tens} + ${ones}`,'Step 4: Multiply by each part',`${addCommas(a)} × ${tens} = ${addCommas(a*tens)}`,`${addCommas(a)} × ${ones} = ${addCommas(a*ones)}`,'Step 5: Add the partial products',`${addCommas(a*tens)} + ${addCommas(a*ones)} = ${addCommas(res)}`,equation(`${addCommas(a)} × ${b} = ${addCommas(res)}`)]}}else{const b=random(15,89),res=random(345,8765),a=b*res;return {badge:'division',calculation:`${numWrap(a)} ${opWrap('÷')} ${numWrap(b)}`,answer:addCommas(res),steps:['Step 1: Identify the operation','This is a division problem.','Step 2: Estimate first',`Roughly ${Math.round(a/1000)*1000} ÷ ${Math.round(b/10)*10}`,'Step 3: Check the inverse multiplication',`${addCommas(res)} × ${b} = ${addCommas(a)}`,'Step 4: Write the quotient',equation(`${addCommas(a)} ÷ ${b} = ${addCommas(res)}`)]}}
     }
 
     function makeWordProblem(type){
       const names=['Emma','Jake','Lily','Ben','Maya','Alex','Sophie','Ryan','Zoe','Oliver'], name=names[random(0,names.length-1)];
       if(type==='shopping_problems'){
         const kind=random(1,3);
-        if(kind===1){const price=random(3,15),qty=random(4,12),ans=price*qty;return {badge:'shopping',wordProblem:`A shop sells apples for £${price} per bag. If you buy ${qty} bags, how much will it cost?`,answer:`£${ans}`,steps:['Step 1: Identify the operation','Cost per bag x number of bags = total cost','Step 2: Calculate',equation(`£${price} x ${qty} = £${ans}`)]}}
-        if(kind===2){const price=random(4,18),items=random(5,25),total=price*items;return {badge:'shopping',wordProblem:`${name} has £${total} to spend. If each item costs £${price}, how many items can be bought?`,answer:`${items} items`,steps:['Step 1: Identify the operation','Total money / cost per item = number of items','Step 2: Calculate',equation(`£${total} / £${price} = ${items} items`)]}}
+        if(kind===1){const price=random(3,15),qty=random(4,12),ans=price*qty;return {badge:'shopping',wordProblem:`A shop sells apples for £${price} per bag. If you buy ${qty} bags, how much will it cost?`,answer:`£${ans}`,steps:['Step 1: Identify the operation','Cost per bag × number of bags = total cost','Step 2: Substitute the values',`£${price} × ${qty}`,'Step 3: Calculate',equation(`£${price} × ${qty} = £${ans}`)]}}
+        if(kind===2){const price=random(4,18),items=random(5,25),total=price*items;return {badge:'shopping',wordProblem:`${name} has £${total} to spend. If each item costs £${price}, how many items can be bought?`,answer:`${items} items`,steps:['Step 1: Identify the operation','Total money ÷ cost per item = number of items','Step 2: Substitute the values',`£${total} ÷ £${price}`,'Step 3: Calculate',equation(`£${total} ÷ £${price} = ${items} items`)]}}
         const a=random(25,85),b=random(15,65),ans=a+b;return {badge:'shopping',wordProblem:`A family spends £${a} on groceries and £${b} on clothes. What is their total spending?`,answer:`£${ans}`,steps:['Step 1: Identify the operation','Groceries + clothes = total spending','Step 2: Calculate',equation(`£${a} + £${b} = £${ans}`)]};
       }
       if(type==='measurement_problems'){
         const kind=random(1,3);
-        if(kind===1){const l=random(8,25),w=random(6,18),ans=l*w;return {badge:'measurement',wordProblem:`A rectangular garden is ${l}m long and ${w}m wide. What is the area?`,answer:`${ans}m²`,steps:['Step 1: Choose the formula','Rectangle area = length x width','Step 2: Calculate',equation(`${l} x ${w} = ${ans}m²`)]}}
-        if(kind===2){const h=random(3,8),speed=random(45,85),dist=h*speed;return {badge:'measurement',wordProblem:`A journey takes ${h} hours and covers ${dist}km. What is the average speed per hour?`,answer:`${speed}km/h`,steps:['Step 1: Choose the operation','Average speed = distance / time','Step 2: Calculate',equation(`${dist} / ${h} = ${speed}km/h`)]}}
-        const people=random(4,8),per=random(25,75),flour=people*per,newPeople=random(6,16),ans=per*newPeople;return {badge:'measurement',wordProblem:`A recipe serves ${people} people and needs ${flour}g of flour. How much flour for ${newPeople} people?`,answer:`${ans}g`,steps:['Step 1: Find flour per person',`${flour}g / ${people} = ${per}g per person`,'Step 2: Scale up',equation(`${per} x ${newPeople} = ${ans}g`)]};
+        if(kind===1){const l=random(8,25),w=random(6,18),ans=l*w;return {badge:'measurement',wordProblem:`A rectangular garden is ${l}m long and ${w}m wide. What is the area?`,answer:`${ans}m²`,steps:['Step 1: Choose the formula','Rectangle area = length × width','Step 2: Substitute the values',`${l} × ${w}`,'Step 3: Calculate',equation(`${l} × ${w} = ${ans}m²`)]}}
+        if(kind===2){const h=random(3,8),speed=random(45,85),dist=h*speed;return {badge:'measurement',wordProblem:`A journey takes ${h} hours and covers ${dist}km. What is the average speed per hour?`,answer:`${speed}km/h`,steps:['Step 1: Choose the operation','Average speed = distance ÷ time','Step 2: Substitute the values',`${dist} ÷ ${h}`,'Step 3: Calculate',equation(`${dist} ÷ ${h} = ${speed}km/h`)]}}
+        const people=random(4,8),per=random(25,75),flour=people*per,newPeople=random(6,16),ans=per*newPeople;return {badge:'measurement',wordProblem:`A recipe serves ${people} people and needs ${flour}g of flour. How much flour for ${newPeople} people?`,answer:`${ans}g`,steps:['Step 1: Find flour per person',`${flour}g ÷ ${people} = ${per}g per person`,'Step 2: Scale up to the new number of people',`${per}g × ${newPeople}`,equation(`${per} × ${newPeople} = ${ans}g`)]};
       }
       const scenarios=[
-        () => {const c=random(4,12),s=random(18,32),ans=c*s;return {q:`A school has ${c} classes with ${s} students each. How many students in total?`,a:`${ans} students`,work:`${c} x ${s} = ${ans} students`,op:'multiplication'}},
+        () => {const c=random(4,12),s=random(18,32),ans=c*s;return {q:`A school has ${c} classes with ${s} students each. How many students in total?`,a:`${ans} students`,work:`${c} × ${s} = ${ans} students`,op:'multiplication'}},
         () => {const rows=random(6,14),per=random(12,28),occ=random(20,80),total=rows*per,ans=total-occ;return {q:`A car park has ${rows} rows with ${per} spaces per row. If ${occ} spaces are occupied, how many are free?`,a:`${ans} spaces`,work:`${total} - ${occ} = ${ans} spaces`,op:'subtraction'}},
-        () => {const packs=random(6,15),need=packs*random(8,30),ans=need/packs;return {q:`A builder needs ${need} bricks. They come in packs of ${packs}. How many packs are needed?`,a:`${ans} packs`,work:`${need} / ${packs} = ${ans} packs`,op:'division'}},
-        () => {const daily=random(2,9),days=random(7,30),ans=daily*days;return {q:`${name} completes ${daily} puzzles each day for ${days} days. How many puzzles is that?`,a:`${ans} puzzles`,work:`${daily} x ${days} = ${ans} puzzles`,op:'multiplication'}}
+        () => {const packs=random(6,15),need=packs*random(8,30),ans=need/packs;return {q:`A builder needs ${need} bricks. They come in packs of ${packs}. How many packs are needed?`,a:`${ans} packs`,work:`${need} ÷ ${packs} = ${ans} packs`,op:'division'}},
+        () => {const daily=random(2,9),days=random(7,30),ans=daily*days;return {q:`${name} completes ${daily} puzzles each day for ${days} days. How many puzzles is that?`,a:`${ans} puzzles`,work:`${daily} × ${days} = ${ans} puzzles`,op:'multiplication'}}
       ];
       const s=scenarios[random(0,scenarios.length-1)]();
-      return {badge:'real-world',wordProblem:s.q,answer:s.a,steps:['Step 1: Identify the operation needed',`This is a ${s.op} problem.`,'Step 2: Calculate',equation(s.work)]};
+      return {badge:'real-world',wordProblem:s.q,answer:s.a,steps:['Step 1: Identify the operation needed',`This is a ${s.op} problem.`,'Step 2: Set up the calculation',s.work.split('=')[0].trim(),'Step 3: Evaluate',equation(s.work)]};
     }
 
     function generateProblem(){
@@ -239,6 +239,6 @@
     function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
     switchLevel(1);
   </script>
-  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-17"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
 </body>
 </html>

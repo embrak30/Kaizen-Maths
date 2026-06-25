@@ -222,14 +222,14 @@
         return {
           equation: "Convert " + value + " " + family.from + " to " + family.to + ".",
           answer: fmt(result) + " " + family.to,
-          steps: [math("1 " + family.from + " = " + family.factor + " " + family.to), math(value + " × " + family.factor + " = " + fmt(result)), math(fmt(result) + " " + family.to)]
+          steps: [math("1 " + family.from + " = " + family.factor + " " + family.to), math("Use multiplication because we are converting to the smaller unit."), math(value + " × " + family.factor + " = " + fmt(result)), math(fmt(result) + " " + family.to)]
         };
       }
       const result = value / family.factor;
       return {
         equation: "Convert " + value + " " + family.to + " to " + family.from + ".",
         answer: fmt(result) + " " + family.from,
-        steps: [math(family.factor + " " + family.to + " = 1 " + family.from), math(value + " ÷ " + family.factor + " = " + fmt(result)), math(fmt(result) + " " + family.from)]
+        steps: [math(family.factor + " " + family.to + " = 1 " + family.from), math("Use division because we are converting back to the larger unit."), math(value + " ÷ " + family.factor + " = " + fmt(result)), math(fmt(result) + " " + family.from)]
       };
     }
 
@@ -247,6 +247,7 @@
         answer: fmt(result) + " " + (forward ? family.to : family.from),
         steps: [
           math("1 " + family.from + " = " + family.factor + " " + family.to),
+          forward ? math("Use multiplication because we are converting to the smaller unit.") : math("Use division because we are converting back to the larger unit."),
           math(value + (forward ? " × " : " ÷ ") + family.factor + " = " + fmt(result)),
           math(fmt(result) + " " + (forward ? family.to : family.from))
         ]
@@ -267,6 +268,7 @@
         answer: fmt(result) + " " + (forward ? family.to : family.from),
         steps: [
           math("1 " + family.from + " = " + family.factor + " " + family.to),
+          forward ? math("Use multiplication because we are converting to the smaller unit.") : math("Use division because we are converting back to the larger unit."),
           math(value + (forward ? " × " : " ÷ ") + family.factor + " = " + fmt(result)),
           math(fmt(result) + " " + (forward ? family.to : family.from))
         ]
@@ -301,7 +303,7 @@
         return {
           equation: "Convert " + deg + "° to radians.",
           answer: frac.n + "π/" + frac.d + " rad or " + fmt(radians) + " rad",
-          steps: [math("radians = degrees × π / 180"), math(deg + " × π / 180 = " + frac.n + "π/" + frac.d), math("≈ " + fmt(radians) + " rad")]
+          steps: [math("radians = degrees × π / 180"), math("Substitute degrees = " + deg), math(deg + " × π / 180 = " + frac.n + "π/" + frac.d), math("≈ " + fmt(radians) + " rad")]
         };
       }
       const num = choice([1, 2, 3, 5]);
@@ -310,7 +312,7 @@
       return {
         equation: "Convert " + num + "π/" + den + " radians to degrees.",
         answer: fmt(deg, 1) + "°",
-        steps: [math("degrees = radians × 180 / π"), math(num + "π/" + den + " × 180 / π = " + fmt(deg, 1) + "°")]
+        steps: [math("degrees = radians × 180 / π"), math("Substitute radians = " + num + "π/" + den), math(num + "π/" + den + " × 180 / π = " + fmt(deg, 1) + "°")]
       };
     }
 
@@ -319,12 +321,12 @@
       if (type === "C2F") {
         const C = choice([-10, 0, 12, 23, 37]);
         const F = C * 9 / 5 + 32;
-        return { equation: "Convert " + C + "°C to °F.", answer: fmt(F) + "°F", steps: [math("F = 9C/5 + 32"), math("F = 9(" + C + ")/5 + 32 = " + fmt(F) + "°F")] };
+        return { equation: "Convert " + C + "°C to °F.", answer: fmt(F) + "°F", steps: [math("F = 9C/5 + 32"), math("Substitute C = " + C), math("F = 9(" + C + ")/5 + 32"), math("F = " + fmt(F) + "°F")] };
       }
       if (type === "F2C") {
         const F = choice([14, 32, 68, 77, 95]);
         const C = (F - 32) * 5 / 9;
-        return { equation: "Convert " + F + "°F to °C.", answer: fmt(C) + "°C", steps: [math("C = 5(F - 32)/9"), math("C = 5(" + F + " - 32)/9 = " + fmt(C) + "°C")] };
+        return { equation: "Convert " + F + "°F to °C.", answer: fmt(C) + "°C", steps: [math("C = 5(F - 32)/9"), math("Substitute F = " + F), math("C = 5(" + F + " - 32)/9"), math("C = " + fmt(C) + "°C")] };
       }
       if (type === "C2K") {
         const C = choice([-15, 0, 20, 27, 100]);
@@ -346,7 +348,7 @@
       if (type === "kmh2mph") {
         const kmh = choice([40, 50, 80, 100, 120]);
         const mph = kmh / 1.609;
-        return { equation: "Convert " + kmh + " km/h to mph.", answer: fmt(mph) + " mph", steps: [math(kmh + " ÷ 1.609 = " + fmt(mph) + " mph")] };
+        return { equation: "Convert " + kmh + " km/h to mph.", answer: fmt(mph) + " mph", steps: [math("1 mile = 1.609 km"), math("Convert back by dividing by 1.609."), math(kmh + " ÷ 1.609 = " + fmt(mph) + " mph")] };
       }
       if (type === "ms2kmh") {
         const ms = choice([2.5, 5, 7.2, 10, 12.5]);
@@ -380,12 +382,12 @@
         const deg = choice([15, 20, 75, 110, 155]);
         const radians = deg * Math.PI / 180;
         const frac = simplifyFraction(deg, 180);
-        return { equation: "Convert " + deg + "° to radians, exact and decimal.", answer: frac.n + "π/" + frac.d + " rad or " + fmt(radians) + " rad", steps: [math(deg + "° × π/180 = " + frac.n + "π/" + frac.d + " rad"), math("≈ " + fmt(radians) + " rad")] };
+        return { equation: "Convert " + deg + "° to radians, exact and decimal.", answer: frac.n + "π/" + frac.d + " rad or " + fmt(radians) + " rad", steps: [math("radians = degrees × π/180"), math("Substitute degrees = " + deg), math(deg + "° × π/180 = " + frac.n + "π/" + frac.d + " rad"), math("≈ " + fmt(radians) + " rad")] };
       }
       const den = choice([12, 10, 8, 5, 3, 2]);
       const num = choice([1, 2, 3, 4, 5, 7, 9]);
       const deg = 180 * num / den;
-      return { equation: "Convert " + num + "π/" + den + " radians to degrees.", answer: fmt(deg) + "°", steps: [math(num + "π/" + den + " × 180/π = " + fmt(deg) + "°")] };
+      return { equation: "Convert " + num + "π/" + den + " radians to degrees.", answer: fmt(deg) + "°", steps: [math("degrees = radians × 180/π"), math("Substitute radians = " + num + "π/" + den), math(num + "π/" + den + " × 180/π = " + fmt(deg) + "°")] };
     }
 
     function genChainPuzzle() {
@@ -396,11 +398,11 @@
       if (Math.random() < 0.5) {
         const B = p * A;
         const C = q * B + r;
-        return { equation: "Given A = " + A + ", B = " + p + "A, and C = " + q + "B + " + r + ". Find C.", answer: "C = " + C, steps: [math("B = " + p + " × " + A + " = " + B), math("C = " + q + " × " + B + " + " + r + " = " + C)] };
+        return { equation: "Given A = " + A + ", B = " + p + "A, and C = " + q + "B + " + r + ". Find C.", answer: "C = " + C, steps: [math("First find B."), math("B = " + p + " × " + A + " = " + B), math("Now substitute B into the expression for C."), math("C = " + q + " × " + B + " + " + r + " = " + C)] };
       }
       const C = choice([400, 550, 700]);
       const Ares = (C - r) / (q * p);
-      return { equation: "Given B = " + p + "A, C = " + q + "B + " + r + ", and C = " + C + ". Find A.", answer: "A = " + fmt(Ares), steps: [math("C = " + q + "(" + p + "A) + " + r), math("A = (" + C + " - " + r + ") / (" + q + " × " + p + ") = " + fmt(Ares))] };
+      return { equation: "Given B = " + p + "A, C = " + q + "B + " + r + ", and C = " + C + ". Find A.", answer: "A = " + fmt(Ares), steps: [math("Substitute B = " + p + "A into C = " + q + "B + " + r), math("C = " + q + "(" + p + "A) + " + r), math(C + " = " + (q * p) + "A + " + r), math(C + " - " + r + " = " + (q * p) + "A"), math("A = (" + C + " - " + r + ") / (" + q + " × " + p + ") = " + fmt(Ares))] };
     }
 
     function generateProblem() {
@@ -559,6 +561,6 @@
 
     switchLevel(1);
   </script>
-  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-17"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
 </body>
 </html>

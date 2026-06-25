@@ -228,6 +228,14 @@
       return parts.length?parts.join(' × '):'none';
     }
 
+    function lcmPrimeFactors(factorsA,factorsB){
+      const ca=factorCounts(factorsA), cb=factorCounts(factorsB), primes=[...new Set([...Object.keys(ca),...Object.keys(cb)])].sort((a,b)=>Number(a)-Number(b));
+      return primes.map(p=>{
+        const count=Math.max(ca[p]||0,cb[p]||0);
+        return count>1?`${p}${getSuperscript(count)}`:p;
+      }).join(' × ');
+    }
+
     function expr(coeff,xPower,yPower=0){
       let out=`${coeff}x${getSuperscript(xPower)}`;
       if(yPower>0) out+=`y${yPower>1?getSuperscript(yPower):''}`;
@@ -261,6 +269,7 @@
           `Prime factorisation of ${a}: ${formatFactors(fa)}`,
           `Prime factorisation of ${b}: ${formatFactors(fb)}`,
           `Common prime factors: ${commonPrimeFactors(fa,fb)}`,
+          `Multiply the common prime factors: ${commonPrimeFactors(fa,fb)} = ${answer}`,
           `HCF = ${answer}`
         ]};
       }
@@ -273,6 +282,8 @@
           `Prime factorisation of ${a}: ${formatFactors(fa)}`,
           `Prime factorisation of ${b}: ${formatFactors(fb)}`,
           'Use the highest power of every prime factor needed',
+          `Prime factors used for the LCM: ${lcmPrimeFactors(fa,fb)}`,
+          `Multiply these factors: ${lcmPrimeFactors(fa,fb)} = ${answer}`,
           `LCM = ${answer}`
         ]};
       }
@@ -290,6 +301,7 @@
           `${e2} = ${c2} × x${getSuperscript(p2)}${includeY?` × y${y2>1?getSuperscript(y2):''}`:''}`,
           `HCF of coefficients: HCF(${c1}, ${c2}) = ${hc}`,
           `Use the lowest shared powers: x${getSuperscript(hx)}${includeY&&hy>0?`, y${hy>1?getSuperscript(hy):''}`:''}`,
+          `Combine the coefficient HCF with the lowest shared variable powers: ${hc} × x${getSuperscript(hx)}${includeY&&hy>0?` × y${hy>1?getSuperscript(hy):''}`:''}`,
           `HCF = ${answer}`
         ]};
       }
@@ -307,6 +319,7 @@
           `${e2} = ${c2} × x${getSuperscript(p2)}${includeY?` × y${y2>1?getSuperscript(y2):''}`:''}`,
           `LCM of coefficients: LCM(${c1}, ${c2}) = ${lc}`,
           `Use the highest required powers: x${getSuperscript(lx)}${includeY&&ly>0?`, y${ly>1?getSuperscript(ly):''}`:''}`,
+          `Combine the coefficient LCM with the highest required variable powers: ${lc} × x${getSuperscript(lx)}${includeY&&ly>0?` × y${ly>1?getSuperscript(ly):''}`:''}`,
           `LCM = ${answer}`
         ]};
       }
@@ -318,11 +331,15 @@
       ];
       const scenario=randomChoice(scenarios), [a,b]=randomNumberPairWithSharedFactor(12,48,8,36);
       const answer=scenario.type==='HCF'?gcd(a,b):lcm(a,b);
+      const fa=primeFactorization(a), fb=primeFactorization(b);
       return {type:scenario.type,expression:scenario.context.replace('{a}',a).replace('{b}',b),question:scenario.question,answer,steps:[
         `Problem: ${scenario.context.replace('{a}',a).replace('{b}',b)}`,
         `Question: ${scenario.question}`,
         `Solution approach: ${scenario.setup}`,
         `Numbers: ${a} and ${b}`,
+        `Prime factorisation of ${a}: ${formatFactors(fa)}`,
+        `Prime factorisation of ${b}: ${formatFactors(fb)}`,
+        scenario.type==='HCF'?`Use the common prime factors: ${commonPrimeFactors(fa,fb)}`:`Use the highest power of every prime factor: ${lcmPrimeFactors(fa,fb)}`,
         `${scenario.type}(${a}, ${b}) = ${answer}`,
         `Answer: ${answer}`
       ]};
@@ -452,6 +469,6 @@
 
     switchLevel(1);
   </script>
-  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-17"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
 </body>
 </html>

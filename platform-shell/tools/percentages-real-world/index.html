@@ -579,7 +579,9 @@
             equation: `A restaurant bill is <span class="money">${money(bill)}</span>. Add a <span class="percentage">${tipRate}% tip</span> and a <span class="percentage">${serviceRate}% service charge</span>. Find the total amount to pay.`,
             answer: money(total),
             steps: [
+              `Convert the tip percentage to a decimal: ${tipRate}% = ${tipRate} ÷ 100 = ${decimalFromPercent(tipRate)}`,
               `Tip = ${tipRate}% of ${money(bill)} = ${decimalFromPercent(tipRate)} × ${money(bill)} = ${money(tip)}`,
+              `Convert the service charge percentage to a decimal: ${serviceRate}% = ${serviceRate} ÷ 100 = ${decimalFromPercent(serviceRate)}`,
               `Service charge = ${serviceRate}% of ${money(bill)} = ${decimalFromPercent(serviceRate)} × ${money(bill)} = ${money(service)}`,
               `Total = ${money(bill)} + ${money(tip)} + ${money(service)} = ${money(total)}`
             ]
@@ -595,6 +597,7 @@
             equation: `An employee earns <span class="money">${money(grossIncome)}</span> annually. The tax rate is <span class="percentage">${taxRate}%</span>. Calculate the net income after tax.`,
             answer: money(netIncome),
             steps: [
+              `Convert the tax rate to a decimal: ${taxRate}% = ${taxRate} ÷ 100 = ${decimalFromPercent(taxRate)}`,
               `Tax = ${taxRate}% of ${money(grossIncome)}`,
               `Tax = ${decimalFromPercent(taxRate)} × ${money(grossIncome)} = ${money(taxAmount)}`,
               `Net income = ${money(grossIncome)} - ${money(taxAmount)} = ${money(netIncome)}`
@@ -612,6 +615,7 @@
             equation: `A salesperson has a base salary of <span class="money">${money(baseSalary)}</span> plus <span class="percentage">${rate}% commission</span> on sales. They sold <span class="money">${money(sales)}</span> worth of products. Find their total earnings.`,
             answer: money(total),
             steps: [
+              `Convert the commission rate to a decimal: ${rate}% = ${rate} ÷ 100 = ${decimalFromPercent(rate)}`,
               `Commission = ${rate}% of ${money(sales)}`,
               `Commission = ${decimalFromPercent(rate)} × ${money(sales)} = ${money(commission)}`,
               `Total earnings = ${money(baseSalary)} + ${money(commission)} = ${money(total)}`
@@ -632,6 +636,7 @@
               `Use I = PRT.`,
               `P = ${money(principal)}, R = ${decimalFromPercent(rate)}, T = ${time}`,
               `I = ${money(principal)} × ${decimalFromPercent(rate)} × ${time} = ${money(interest)}`,
+              `This interest is added to the principal.`,
               `Amount = ${money(principal)} + ${money(interest)} = ${money(amount)}`
             ]
           };
@@ -667,8 +672,9 @@
             steps: [
               `Use A = P(1 + r)^t.`,
               `P = ${money(principal)}, r = ${decimalFromPercent(rate)}, t = ${years}`,
+              `Growth multiplier = 1 + ${decimalFromPercent(rate)} = ${round(multiplier, 4)}`,
               `A = ${money(principal)} × (${round(multiplier, 4)})^${years}`,
-              `A = ${money(amount)}`,
+              `A = ${money(principal)} × ${round(Math.pow(multiplier, years), 4)} = ${money(amount)}`,
               `Interest = ${money(amount)} - ${money(principal)} = ${money(interest)}`
             ]
           };
@@ -690,7 +696,9 @@
             steps: [
               `Monthly rate = ${annualRate}% ÷ 12 = ${pct(annualRate / 12, 4)} = ${round(monthlyRate, 6)}`,
               `Number of payments = ${years} × 12 = ${months}`,
+              `(1 + r)^n = (1 + ${round(monthlyRate, 6)})^${months} = ${round(growth, 4)}`,
               `M = P × [r(1+r)^n] ÷ [(1+r)^n - 1]`,
+              `M = ${money(loan)} × [${round(monthlyRate, 6)} × ${round(growth, 4)}] ÷ [${round(growth, 4)} − 1]`,
               `Monthly payment = ${money(monthlyPayment)}`,
               `Total paid = ${money(monthlyPayment)} × ${months} = ${money(totalPaid)}`,
               `Total interest = ${money(totalPaid)} - ${money(loan)} = ${money(totalInterest)}`
@@ -729,6 +737,7 @@
             answer: `Concentration: ${pct(concentration)}, salt needed: ${newSolute}g`,
             steps: [
               `Total solution = ${solute}g + ${water}g = ${total}g`,
+              `Concentration means solute ÷ total solution × 100.`,
               `Concentration = (${solute} ÷ ${total}) × 100 = ${pct(concentration)}`,
               `Salt needed = ${pct(concentration)} of ${newSolution}g`,
               `Salt needed = ${decimalFromPercent(concentration)} × ${newSolution} = ${newSolute}g`
@@ -917,6 +926,6 @@
 
     switchLevel(1);
   </script>
-  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-17"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
 </body>
 </html>

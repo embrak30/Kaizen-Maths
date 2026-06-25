@@ -673,12 +673,15 @@
           const percent = random(12, 88);
           const amount = random(150, 850);
           const result = round((percent / 100) * amount, 2);
+          const decimal = percent / 100;
           return {
             equation: `Calculate <span class="percentage">${percent}%</span> of ${amount}`,
             answer: formatNumber(result),
             steps: [
-              `${percent}% = ${percent} ÷ 100 = ${percent / 100}`,
-              `${percent / 100} × ${amount} = ${formatNumber(result)}`,
+              `Convert the percentage to a decimal.`,
+              `${percent}% = ${percent} ÷ 100 = ${decimal}`,
+              `Multiply the decimal by the amount.`,
+              `${decimal} × ${amount} = ${formatNumber(result)}`,
               `Check: ${formatNumber(result)} ÷ ${amount} × 100 = ${percent}%`,
               `Therefore, <span class="target">${percent}% of ${amount} = ${formatNumber(result)}</span>.`
             ]
@@ -730,9 +733,11 @@
             equation: `${start} is increased by ${first}%, then decreased by ${second}%. Find the final amount.`,
             answer: formatNumber(final),
             steps: [
+              `First multiplier = 1 + ${first} ÷ 100 = ${(100 + first) / 100}`,
               `Apply the ${first}% increase: ${start} × ${(100 + first) / 100} = ${formatNumber(afterFirst)}`,
+              `Second multiplier = 1 − ${second} ÷ 100 = ${(100 - second) / 100}`,
               `Apply the ${second}% decrease to the new amount: ${formatNumber(afterFirst)} × ${(100 - second) / 100} = ${formatNumber(final)}`,
-              `Combined multiplier: ${start} × ${(100 + first) / 100} × ${(100 - second) / 100} = ${formatNumber(final)}`,
+              `Combined calculation: ${start} × ${(100 + first) / 100} × ${(100 - second) / 100} = ${formatNumber(final)}`,
               `Therefore, <span class="target">final amount = ${formatNumber(final)}</span>.`
             ]
           };
@@ -764,8 +769,10 @@
             equation: `An item costs £${price}. A ${discount}% discount is applied, then ${vat}% VAT is added. Find the final price.`,
             answer: `£${formatNumber(finalPrice)}`,
             steps: [
-              `Apply the ${discount}% discount: £${price} × ${(100 - discount) / 100} = £${formatNumber(afterDiscount)}`,
-              `Add ${vat}% VAT: £${formatNumber(afterDiscount)} × ${(100 + vat) / 100} = £${formatNumber(finalPrice)}`,
+              `Discount multiplier = 1 − ${discount} ÷ 100 = ${(100 - discount) / 100}`,
+              `Price after discount = £${price} × ${(100 - discount) / 100} = £${formatNumber(afterDiscount)}`,
+              `VAT multiplier = 1 + ${vat} ÷ 100 = ${(100 + vat) / 100}`,
+              `Final price = £${formatNumber(afterDiscount)} × ${(100 + vat) / 100} = £${formatNumber(finalPrice)}`,
               `Combined calculation: £${price} × ${(100 - discount) / 100} × ${(100 + vat) / 100} = £${formatNumber(finalPrice)}`,
               `Therefore, <span class="target">final price = £${formatNumber(finalPrice)}</span>.`
             ]
@@ -911,6 +918,6 @@
 
     switchLevel(1);
   </script>
-  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-17"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
 </body>
 </html>

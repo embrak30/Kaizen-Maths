@@ -270,9 +270,9 @@
     function genLevel1(type){
       if(type==='l1_core'){
         const patterns = [
-          (a,b,c)=>({expr:`\\(${a}+${b}\\times ${c}\\)`, steps:["Step 1: Multiply first.",`$$${b}\\times ${c}=${b*c}$$`,"Step 2: Add.",`$$${a}+${b*c}=${a+b*c}$$`], ans:a+b*c}),
-          (a,b,c)=>({expr:`\\(${a}\\times ${b}+${c}\\)`, steps:["Step 1: Multiply first.",`$$${a}\\times ${b}=${a*b}$$`,"Step 2: Add.",`$$${a*b}+${c}=${a*b+c}$$`], ans:a*b+c}),
-          (a,b,c)=>({expr:`\\(${a}+${b}-${c}\\)`, steps:["Step 1: Do addition and subtraction left to right.",`$$${a}+${b}=${a+b}$$`,`$$${a+b}-${c}=${a+b-c}$$`], ans:a+b-c})
+          (a,b,c)=>({expr:`\\(${a}+${b}\\times ${c}\\)`, steps:["Step 1: Multiplication has priority before addition.",`$$${b}\\times ${c}=${b*c}$$`,"Step 2: Add the remaining number.",`$$${a}+${b*c}=${a+b*c}$$`], ans:a+b*c}),
+          (a,b,c)=>({expr:`\\(${a}\\times ${b}+${c}\\)`, steps:["Step 1: Multiplication has priority before addition.",`$$${a}\\times ${b}=${a*b}$$`,"Step 2: Add the remaining number.",`$$${a*b}+${c}=${a*b+c}$$`], ans:a*b+c}),
+          (a,b,c)=>({expr:`\\(${a}+${b}-${c}\\)`, steps:["Step 1: Addition and subtraction have the same priority, so work left to right.",`$$${a}+${b}=${a+b}$$`,"Step 2: Subtract the final number.",`$$${a+b}-${c}=${a+b-c}$$`], ans:a+b-c})
         ];
         const a=pos(2,12), b=pos(2,9), c=pos(2,9);
         const out = choice(patterns)(a,b,c);
@@ -283,10 +283,10 @@
         const a=pos(2,12), b=pos(2,9);
         if(Math.random()<0.5){
           const pow=b*b, res=a+pow;
-          return {expression:`\\(${a}+${b}^{2}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Exponent first.",`$$${b}^{2}=${pow}$$`,"Step 2: Add.",`$$${a}+${pow}=${res}$$`]};
+          return {expression:`\\(${a}+${b}^{2}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Evaluate the exponent before addition.",`$$${b}^{2}=${pow}$$`,"Step 2: Add the remaining number.",`$$${a}+${pow}=${res}$$`]};
         }
         const pow=a*a, b2=pos(2,9), res=pow-b2;
-        return {expression:`\\(${a}^{2}-${b2}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Exponent first.",`$$${a}^{2}=${pow}$$`,"Step 2: Subtract.",`$$${pow}-${b2}=${res}$$`]};
+        return {expression:`\\(${a}^{2}-${b2}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Evaluate the exponent before subtraction.",`$$${a}^{2}=${pow}$$`,"Step 2: Subtract the remaining number.",`$$${pow}-${b2}=${res}$$`]};
       }
 
       if(type==='l1_with_division'){
@@ -294,10 +294,10 @@
         const a = pos(2,30);
         if(Math.random()<0.5){
           const res = a + q;
-          return {expression:`\\(${a}+${b}\\div ${c}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Division before addition.",`$$${b}\\div ${c}=${q}$$`,"Step 2: Add.",`$$${a}+${q}=${res}$$`]};
+          return {expression:`\\(${a}+${b}\\div ${c}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Division has priority before addition.",`$$${b}\\div ${c}=${q}$$`,"Step 2: Add the remaining number.",`$$${a}+${q}=${res}$$`]};
         }
         const res = q + a;
-        return {expression:`\\(${b}\\div ${c}+${a}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Division before addition.",`$$${b}\\div ${c}=${q}$$`,"Step 2: Add.",`$$${q}+${a}=${res}$$`]};
+        return {expression:`\\(${b}\\div ${c}+${a}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Division has priority before addition.",`$$${b}\\div ${c}=${q}$$`,"Step 2: Add the remaining number.",`$$${q}+${a}=${res}$$`]};
       }
 
       return fallbackProblem();
@@ -307,26 +307,26 @@
       if(type==='l2_brackets_times_minus'){
         const a=pos(2,20), b=pos(2,20), c=pos(2,9), d=pos(2,25);
         const ab=a+b, prod=ab*c, res=prod-d;
-        return {expression:`\\((${a}+${b})\\times ${c}-${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses first.",`$$${a}+${b}=${ab}$$`,"Step 2: Multiply.",`$$${ab}\\times ${c}=${prod}$$`,"Step 3: Subtract.",`$$${prod}-${d}=${res}$$`]};
+        return {expression:`\\((${a}+${b})\\times ${c}-${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Work inside the parentheses first.",`$$${a}+${b}=${ab}$$`,"Step 2: Multiply the result by the outside factor.",`$$${ab}\\times ${c}=${prod}$$`,"Step 3: Subtract the final number.",`$$${prod}-${d}=${res}$$`]};
       }
 
       if(type==='l2_plus_brackets_minus'){
         const a=pos(2,25), b=pos(2,12), c=pos(2,9), d=pos(2,25);
         const bc=b*c, tmp=a+bc, res=tmp-d;
-        return {expression:`\\(${a}+(${b}\\times ${c})-${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses first.",`$$${b}\\times ${c}=${bc}$$`,"Step 2: Add.",`$$${a}+${bc}=${tmp}$$`,"Step 3: Subtract.",`$$${tmp}-${d}=${res}$$`]};
+        return {expression:`\\(${a}+(${b}\\times ${c})-${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Work inside the parentheses first.",`$$${b}\\times ${c}=${bc}$$`,"Step 2: Add the value outside the parentheses.",`$$${a}+${bc}=${tmp}$$`,"Step 3: Subtract the final number.",`$$${tmp}-${d}=${res}$$`]};
       }
 
       if(type==='l2_brackets_with_square'){
         const a=pos(2,15), b=pos(2,15), c=pos(2,25);
         const ab=a+b, sq=ab*ab, res=sq-c;
-        return {expression:`\\((${a}+${b})^{2}-${c}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses first.",`$$${a}+${b}=${ab}$$`,"Step 2: Exponent.",`$$${ab}^{2}=${ab}\\times ${ab}=${sq}$$`,"Step 3: Subtract.",`$$${sq}-${c}=${res}$$`]};
+        return {expression:`\\((${a}+${b})^{2}-${c}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Work inside the parentheses first.",`$$${a}+${b}=${ab}$$`,"Step 2: Square the result of the parentheses.",`$$${ab}^{2}=${ab}\\times ${ab}=${sq}$$`,"Step 3: Subtract the final number.",`$$${sq}-${c}=${res}$$`]};
       }
 
       if(type==='l2_mixed'){
         if(Math.random()<0.5){
           const a=pos(2,15), b=pos(2,15), c=pos(2,9), d=pos(2,20), e=pos(2,20);
           const ab=a+b, prod=ab*c, tmp=prod-d, res=tmp+e;
-          return {expression:`\\((${a}+${b})\\times ${c}-${d}+${e}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses.",`$$${a}+${b}=${ab}$$`,"Step 2: Multiply.",`$$${ab}\\times ${c}=${prod}$$`,"Step 3: Subtract.",`$$${prod}-${d}=${tmp}$$`,"Step 4: Add.",`$$${tmp}+${e}=${res}$$`]};
+          return {expression:`\\((${a}+${b})\\times ${c}-${d}+${e}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Work inside the parentheses first.",`$$${a}+${b}=${ab}$$`,"Step 2: Multiply the result by the outside factor.",`$$${ab}\\times ${c}=${prod}$$`,"Step 3: Subtract next because addition and subtraction are worked left to right.",`$$${prod}-${d}=${tmp}$$`,"Step 4: Add the final number.",`$$${tmp}+${e}=${res}$$`]};
         }
         const b=pos(2,12), c=pos(2,9);
         const bc = b*c;
@@ -334,7 +334,7 @@
         const d = divisors.length? choice(divisors) : 2;
         const a=pos(2,25);
         const div = Math.floor(bc/d), res=a+div;
-        return {expression:`\\(${a}+(${b}\\times ${c})\\div ${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses.",`$$${b}\\times ${c}=${bc}$$`,"Step 2: Division.",`$$${bc}\\div ${d}=${div}$$`,"Step 3: Addition.",`$$${a}+${div}=${res}$$`]};
+        return {expression:`\\(${a}+(${b}\\times ${c})\\div ${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Work inside the parentheses first.",`$$${b}\\times ${c}=${bc}$$`,"Step 2: Divide before adding.",`$$${bc}\\div ${d}=${div}$$`,"Step 3: Add the remaining number.",`$$${a}+${div}=${res}$$`]};
       }
 
       return fallbackProblem();
@@ -344,32 +344,32 @@
       if(type==='l3_neg_in_product'){
         const a=pos(6,20), b=pos(2,5), c=pos(2,9), d=pos(2,20);
         const m = (a-b)*(-c), res = m + d;
-        return {expression:`\\((${a}-${b})\\times (-${c})+${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses.",`$$${a}-${b}=${a-b}$$`,"Step 2: Multiply with a negative.",`$$(${a-b})\\times (-${c})=${m}$$`,"Step 3: Add.",`$$${m}+${d}=${res}$$`]};
+        return {expression:`\\((${a}-${b})\\times (-${c})+${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Work inside the parentheses first.",`$$${a}-${b}=${a-b}$$`,"Step 2: Multiply by the negative number.",`$$(${a-b})\\times (-${c})=${m}$$`,"Step 3: Add the remaining number.",`$$${m}+${d}=${res}$$`]};
       }
 
       if(type==='l3_neg_leading'){
         const a=pos(2,15), b=pos(2,12), c=pos(2,9), d=pos(2,15);
         const bc=b*c, tmp = -a + bc, res = tmp - d;
-        return {expression:`\\(-${a}+${b}\\times ${c}-${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Multiply first.",`$$${b}\\times ${c}=${bc}$$`,"Step 2: Add the negative.",`$$-${a}+${bc}=${tmp}$$`,"Step 3: Subtract.",`$$${tmp}-${d}=${res}$$`]};
+        return {expression:`\\(-${a}+${b}\\times ${c}-${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Multiplication has priority before addition and subtraction.",`$$${b}\\times ${c}=${bc}$$`,"Step 2: Add the negative number.",`$$-${a}+${bc}=${tmp}$$`,"Step 3: Subtract the final number.",`$$${tmp}-${d}=${res}$$`]};
       }
 
       if(type==='l3_neg_with_square'){
         const a=pos(2,12), b=pos(2,9), c=pos(2,9), d=pos(2,9);
         const b2=b*b, cd=c*d, tmp=(-a)+b2, res = tmp - cd;
-        return {expression:`\\((-${a})+${b}^{2}-${c}\\times ${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Exponent first.",`$$${b}^{2}=${b2}$$`,"Step 2: Multiply.",`$$${c}\\times ${d}=${cd}$$`,"Step 3: Add the negative.",`$$-${a}+${b2}=${tmp}$$`,"Step 4: Subtract.",`$$${tmp}-${cd}=${res}$$`]};
+        return {expression:`\\((-${a})+${b}^{2}-${c}\\times ${d}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Evaluate the exponent.",`$$${b}^{2}=${b2}$$`,"Step 2: Complete the multiplication.",`$$${c}\\times ${d}=${cd}$$`,"Step 3: Add the negative number to the squared value.",`$$-${a}+${b2}=${tmp}$$`,"Step 4: Subtract the product.",`$$${tmp}-${cd}=${res}$$`]};
       }
 
       if(type==='l3_mixed'){
         const a=pos(2,12), b=pos(2,12), c=pos(2,9), d=pos(2,12), e=pos(2,15);
         const ab=a+b, prod=ab*c, addNeg = prod - (-d), res = addNeg + e;
-        return {expression:`\\((${a}+${b})\\times ${c}-(-${d})+${e}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Parentheses.",`$$${a}+${b}=${ab}$$`,"Step 2: Multiply.",`$$${ab}\\times ${c}=${prod}$$`,"Step 3: Subtract a negative (that means add).",`$$${prod}-(-${d})=${prod}+${d}=${addNeg}$$`,"Step 4: Add.",`$$${addNeg}+${e}=${res}$$`]};
+        return {expression:`\\((${a}+${b})\\times ${c}-(-${d})+${e}\\)`, answer:`\\(${res}\\)`, steps:["Step 1: Work inside the parentheses first.",`$$${a}+${b}=${ab}$$`,"Step 2: Multiply the result by the outside factor.",`$$${ab}\\times ${c}=${prod}$$`,"Step 3: Subtracting a negative means adding.",`$$${prod}-(-${d})=${prod}+${d}=${addNeg}$$`,"Step 4: Add the final number.",`$$${addNeg}+${e}=${res}$$`]};
       }
 
       return fallbackProblem();
     }
 
     function fallbackProblem(){
-      return {expression:'\\(5+3\\times 4\\)', answer:'\\(17\\)', steps:["Step 1: Multiply first.","$$3\\times 4=12$$","Step 2: Add.","$$5+12=17$$"]};
+      return {expression:'\\(5+3\\times 4\\)', answer:'\\(17\\)', steps:["Step 1: Multiplication has priority before addition.","$$3\\times 4=12$$","Step 2: Add the remaining number.","$$5+12=17$$"]};
     }
 
     function generateProblem(){
@@ -489,6 +489,6 @@
 
     document.addEventListener('DOMContentLoaded', ()=>{ switchLevel(1); });
   </script>
-  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-17"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
 </body>
 </html>

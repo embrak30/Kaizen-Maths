@@ -187,7 +187,7 @@
     function highlightBase(v){return `<span class="base">${v}</span>`}
     function highlightIndex(v){return `<span class="index">${v}</span>`}
     function highlightOperation(v){return `<span class="operation">${v}</span>`}
-    function fixedTrim(num,dp){return Number(num).toFixed(dp).replace(/(\\.\\d*?[1-9])0+$/,'$1').replace(/\\.0+$/,'')}
+    function fixedTrim(num,dp){return Number(num).toFixed(dp).replace(/(\.\d*?[1-9])0+$/,'$1').replace(/\.0+$/,'')}
     function alignAddSub(a,b,op){
       const len=Math.max(a.length,b.length+2), top=a.padStart(len,' '), bottom=(op+' '+b).padStart(len,' '), line='-'.repeat(len);
       return `<pre style="font-family:Consolas,monospace;font-size:1.05em;color:#1a365d;background:#fff;padding:8px;border-radius:6px;">${top}\\n${bottom}\\n${line}</pre>`;
@@ -208,7 +208,7 @@
         case 'place_value':{
           const intPart=random(1,999), dp=random(1,3), decPart=String(random(0,Math.pow(10,dp)-1)).padStart(dp,'0'), num=`${intPart}.${decPart}`;
           const places=['tenth','hundredth','thousandth'], placeIndex=dp===1?0:dp===2?randomElement([0,1]):random(0,2), placeName=places[placeIndex];
-          const digit=decPart[placeIndex]||'0', placeValue=Math.pow(10,-(placeIndex+1)), placeValueText=['0.1','0.01','0.001'][placeIndex], value=Number(digit)*placeValue;
+          const digit=decPart[placeIndex]||'0', placeValueText=['0.1','0.01','0.001'][placeIndex], value=String(Number(digit) / Math.pow(10, placeIndex + 1));
           return {badge:'placevalue',equation:`What is the value of the digit in the ${placeName} place in ${highlightBase(num)}?`,answer:`${value}`,steps:[
             `<span class="step-indicator">Step 1</span> Identify the ${highlightIndex(placeName)} place.`,
             `The ${placeName} is the ${highlightIndex(placeIndex+1)}${placeIndex===0?'st':placeIndex===1?'nd':'rd'} place to the right of the decimal.`,
@@ -278,34 +278,47 @@
         case 'times_powers10':{
           const a=Number((random(1,999)/100).toFixed(random(1,3))), p=randomElement([10,100,1000]), res=a*p;
           return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} × ${highlightOperation(p)}`,answer:fixedTrim(res,3),steps:[
-            `<span class="step-indicator">Step 1</span> Multiplying by ${p} moves the decimal point ${Math.log10(p)} place(s) to the right.`,
-            `${a} → ${res}`,
-            `Answer: ${fixedTrim(res,3)}`
+            `<span class="step-indicator">Step 1</span> Identify the power of 10.`,
+            `${p} = 10${Math.log10(p) === 1 ? '' : `<sup>${Math.log10(p)}</sup>`}`,
+            `<span class="step-indicator">Step 2</span> Move the decimal point ${Math.log10(p)} place(s) to the right.`,
+            `${a} → ${fixedTrim(res,3)}`,
+            `<span class="step-indicator">Step 3</span> Write the calculation.`,
+            `${a} × ${p} = ${fixedTrim(res,3)}`
           ]};
         }
         case 'divide_powers10':{
           const a=Number((random(1,999)/10).toFixed(random(1,3))), p=randomElement([10,100,1000]), res=a/p;
           return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} ÷ ${highlightOperation(p)}`,answer:fixedTrim(res,6),steps:[
-            `<span class="step-indicator">Step 1</span> Dividing by ${p} moves the decimal point ${Math.log10(p)} place(s) to the left.`,
-            `${a} → ${res}`,
-            `Answer: ${fixedTrim(res,6)}`
+            `<span class="step-indicator">Step 1</span> Identify the power of 10.`,
+            `${p} = 10${Math.log10(p) === 1 ? '' : `<sup>${Math.log10(p)}</sup>`}`,
+            `<span class="step-indicator">Step 2</span> Move the decimal point ${Math.log10(p)} place(s) to the left.`,
+            `${a} → ${fixedTrim(res,6)}`,
+            `<span class="step-indicator">Step 3</span> Write the calculation.`,
+            `${a} ÷ ${p} = ${fixedTrim(res,6)}`
           ]};
         }
         case 'multiply_decimals':{
           const a=Number((random(1,99)/10).toFixed(1)), b=Number((random(1,99)/100).toFixed(2)), res=fixedTrim(a*b,3);
+          const intA=a.toString().replace('.',''), intB=b.toString().replace('.',''), rawProduct=Number(intA)*Number(intB);
           return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} × ${highlightBase(b.toString())}`,answer:res,steps:[
-            `<span class="step-indicator">Step 1</span> Ignore decimals and multiply ${a.toString().replace('.','')} × ${b.toString().replace('.','')}.`,
+            `<span class="step-indicator">Step 1</span> Ignore decimals and multiply the integers.`,
+            `${intA} × ${intB} = ${rawProduct}`,
             `<span class="step-indicator">Step 2</span> Total decimal places = ${highlightIndex('3')} (1 + 2).`,
             `<span class="step-indicator">Step 3</span> Place the decimal point 3 places from the right.`,
-            `Answer: ${res}`
+            `${rawProduct} → ${res}`,
+            `<span class="step-indicator">Step 4</span> Write the calculation.`,
+            `${a} × ${b} = ${res}`
           ]};
         }
         case 'divide_whole':{
           const a=Number((random(100,999)/10).toFixed(1)), b=random(2,9), res=fixedTrim(a/b,4);
           return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} ÷ ${highlightBase(b.toString())}`,answer:res,steps:[
-            `<span class="step-indicator">Step 1</span> Set up long division or use place value reasoning.`,
-            `<span class="step-indicator">Step 2</span> Divide and place the decimal point directly above.`,
-            `Answer: ${res}`
+            `<span class="step-indicator">Step 1</span> Set up the division.`,
+            `${a} ÷ ${b}`,
+            `<span class="step-indicator">Step 2</span> Divide using decimal place value.`,
+            `${a} ÷ ${b} = ${res}`,
+            `<span class="step-indicator">Step 3</span> Check the size of the answer.`,
+            `${res} is close to ${Math.round(a/b)}, which is reasonable because ${a} ÷ ${b} is about ${Math.round(a)} ÷ ${b}.`
           ]};
         }
         case 'multi_step':{
@@ -320,8 +333,10 @@
           const price=Number((random(120,299)/100).toFixed(2)), qty=random(2,9), subtotal=price*qty, taxRate=randomElement([0,.05,.075,.1]), total=subtotal*(1+taxRate), pay=Math.ceil(total+random(1,3)), change=fixedTrim(pay-total,2);
           return {badge:'advanced',equation:`A snack costs £${highlightBase(price.toFixed(2))}. Buy ${highlightIndex(qty)}. Tax rate = ${highlightIndex((taxRate*100).toFixed(1))}%. You pay £${highlightBase(pay.toFixed(2))}. What is the change?`,answer:`£${change}`,steps:[
             `<span class="step-indicator">Step 1</span> Subtotal = price × quantity = £${price.toFixed(2)} × ${qty} = £${fixedTrim(subtotal,2)}`,
-            `<span class="step-indicator">Step 2</span> Total with tax = subtotal × (1 + ${taxRate}) = £${fixedTrim(total,2)}`,
-            `<span class="step-indicator">Step 3</span> Change = £${pay.toFixed(2)} - £${fixedTrim(total,2)} = £${change}`
+            `<span class="step-indicator">Step 2</span> Convert the tax rate to a multiplier.`,
+            `Multiplier = 1 + ${taxRate} = ${fixedTrim(1 + taxRate,3)}`,
+            `<span class="step-indicator">Step 3</span> Total with tax = subtotal × multiplier = £${fixedTrim(subtotal,2)} × ${fixedTrim(1 + taxRate,3)} = £${fixedTrim(total,2)}`,
+            `<span class="step-indicator">Step 4</span> Change = £${pay.toFixed(2)} − £${fixedTrim(total,2)} = £${change}`
           ]};
         }
         case 'spot_the_error':{
@@ -378,6 +393,6 @@
     function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
     switchLevel(1);
   </script>
-  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-17"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.2.0';
+  const VERSION = '0.2.1';
 
   function readBinding(name, fallback = undefined) {
     try {
@@ -100,10 +100,15 @@
       if (!container || container.dataset.kaizenStepStructured === 'true') return;
       const children = [...container.children].filter((child) => child.nodeType === Node.ELEMENT_NODE && !isSkippableStep(child));
       let stepNumber = 1;
+      const containerHasExplicitSteps = children.some(hasExplicitStep);
 
       children.forEach((child) => {
         const text = (child.textContent || '').trim();
         if (!text) return;
+        if (containerHasExplicitSteps) {
+          if (hasExplicitStep(child)) child.classList.add('kaizen-step-explicit');
+          return;
+        }
         if (hasExplicitStep(child)) {
           child.classList.add('kaizen-step-explicit');
           return;
