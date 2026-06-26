@@ -117,6 +117,7 @@
       mixed_dots: 'Mixed difference of two squares',
       quadratic_monic: 'Monic quadratic factorisation',
       quadratic_nonmonic: 'Non-monic quadratic factorisation',
+      factor_by_grouping: 'Factorisation by grouping',
       common_then_quadratic: 'Common factor then quadratic',
       cubic_complete: 'Complete cubic factorisation',
       mixed_complete: 'Mixed complete factorisation'
@@ -127,14 +128,14 @@
       1: { title: 'Level 1: Basic Common Factors', description: 'Extract numerical, variable, and combined common factors.', types: ['number_common','variable_common','number_variable_common','mixed_basic'] },
       2: { title: 'Level 2: HCF with Powers and Variables', description: 'Use the highest common factor across coefficients, powers, and multiple variables.', types: ['two_term_hcf','three_term_hcf','mixed_hcf'] },
       3: { title: 'Level 3: Difference of Two Squares', description: 'Recognise A² - B², including hidden, bracketed, and repeated forms.', types: ['dots_basic','dots_hidden','dots_bracketed','dots_repeated','mixed_dots'] },
-      4: { title: 'Level 4: Complete Factorisation', description: 'Factorise trinomials, expressions with common factors, and cubics completely.', types: ['quadratic_monic','quadratic_nonmonic','common_then_quadratic','cubic_complete','mixed_complete'] }
+      4: { title: 'Level 4: Complete Factorisation', description: 'Factorise trinomials, expressions with common factors, grouping, and cubics completely.', types: ['quadratic_monic','quadratic_nonmonic','factor_by_grouping','common_then_quadratic','cubic_complete','mixed_complete'] }
     };
 
     const typeOptions = {
       1: [['number_common','Numerical common factor'],['variable_common','Variable common factor'],['number_variable_common','Number and variable common factor'],['mixed_basic','Mixed Level 1 set']],
       2: [['two_term_hcf','Two-term HCF with powers'],['three_term_hcf','Three-term HCF with powers'],['mixed_hcf','Mixed Level 2 set']],
       3: [['dots_basic','Basic difference of two squares'],['dots_hidden','Hidden difference of two squares'],['dots_bracketed','Bracketed forms'],['dots_repeated','Repeated difference of squares'],['mixed_dots','Mixed Level 3 set']],
-      4: [['quadratic_monic','Monic quadratic factorisation'],['quadratic_nonmonic','Non-monic quadratic factorisation'],['common_then_quadratic','Common factor then quadratic'],['cubic_complete','Complete cubic factorisation'],['mixed_complete','Mixed Level 4 set']]
+      4: [['quadratic_monic','Monic quadratic factorisation'],['quadratic_nonmonic','Non-monic quadratic factorisation'],['factor_by_grouping','Factorisation by grouping'],['common_then_quadratic','Common factor then quadratic'],['cubic_complete','Complete cubic factorisation'],['mixed_complete','Mixed Level 4 set']]
     };
 
     function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.sidebar-overlay').classList.toggle('active'); }
@@ -166,11 +167,37 @@
     function linearText(a,b,variable='x',first=true){
       return polyText([{coeff:a,powers:{[variable]:1}},{coeff:b,powers:{}}]);
     }
+    function linearFactorText(a,b,variable='x'){
+      if(a < 0 && b > 0) return polyText([{coeff:b,powers:{}},{coeff:a,powers:{[variable]:1}}]);
+      return linearText(a,b,variable);
+    }
+    function isPrimitiveLinear(a,b){
+      return b === 0 || gcd(a,b) === 1;
+    }
     function factorFromRoot(root,variable='x'){
       if(root === 0) return variable;
       return '(' + variable + (root > 0 ? ' - ' + root : ' + ' + Math.abs(root)) + ')';
     }
     function bracket(text){ return '(' + text + ')'; }
+    function hasInternalSign(text){
+      return /\s[+-]\s/.test(String(text).replace(/^-/, ''));
+    }
+    function factorText(text){
+      return hasInternalSign(text) ? bracket(text) : text;
+    }
+    function factorProduct(...factors){
+      const simple = [];
+      const compound = [];
+      factors.filter(Boolean).forEach(factor => {
+        const text = String(factor);
+        (hasInternalSign(text) ? compound : simple).push(text);
+      });
+      return [...simple, ...compound].map(factorText).join('');
+    }
+    function signedFactorTerm(coeff,factor){
+      const abs = Math.abs(coeff);
+      return (coeff >= 0 ? ' + ' : ' - ') + (abs === 1 ? '' : abs) + factorText(factor);
+    }
     function powerExpr(base,power){ return power === 1 ? base : base + '<sup>' + power + '</sup>'; }
     function highlight(text,cls){ return '<span class="' + cls + '">' + text + '</span>'; }
     function mathStep(text){ return '<span class="math-line">' + text + '</span>'; }
@@ -190,10 +217,11 @@
         dots_repeated: 'Apply A² - B² more than once where possible.',
         quadratic_monic: 'Method focus: find two numbers that multiply to c and add to b.',
         quadratic_nonmonic: 'Method focus: split the middle term, then factorise by grouping.',
+        factor_by_grouping: 'Method focus: group terms in pairs, factor each pair, then factor out the shared bracket.',
         common_then_quadratic: 'Method focus: take out the common factor before factorising the quadratic inside.',
         cubic_complete: 'Method focus: find one linear factor, then factorise the quadratic quotient.'
       }[type] || 'Method focus: factorise completely and check that no factor can be factorised further.';
-      if(String(type || '').startsWith('dots_')) return steps;
+      if(String(type || '').startsWith('dots_') || type === 'factor_by_grouping') return steps;
       return [focus, ...steps];
     }
 
@@ -371,35 +399,44 @@
     function dotsBracketedProblem(){
       const template = choice(['bracketSquare','linearSquares','twoVariableSquares']);
       if(template === 'bracketSquare'){
-        const expr = '9 - (m + n)<sup>2</sup>';
-        const answer = '(3 - (m + n))(3 + (m + n))';
+        const sign = choice([1,-1]);
+        const inner = sign > 0 ? 'm + n' : 'm - n';
+        const first = sign > 0 ? '3 - m - n' : '3 - m + n';
+        const second = sign > 0 ? '3 + m + n' : '3 + m - n';
+        const expr = '9 - (' + inner + ')<sup>2</sup>';
+        const answer = factorProduct(first, second);
         return makeProblem(expr, answer, [
-          mathStep(expr + ' = 3<sup>2</sup> - (m + n)<sup>2</sup>'),
+          mathStep(expr + ' = 3<sup>2</sup> - (' + inner + ')<sup>2</sup>'),
           mathStep('= ' + answer)
         ], 'dots_bracketed');
       }
       if(template === 'twoVariableSquares'){
         const expr = '(2x + y)<sup>2</sup> - (x - 3y)<sup>2</sup>';
-        const answer = '(x + 4y)(3x - 2y)';
+        const first = 'x + 4y';
+        const second = '3x - 2y';
+        const answer = factorProduct(first, second);
         return makeProblem(expr, answer, [
           mathStep('A = 2x + y, B = x - 3y'),
-          mathStep('(2x + y - (x - 3y))(2x + y + x - 3y)'),
+          mathStep('A - B = ' + first + ', A + B = ' + second),
           mathStep('= ' + answer)
         ], 'dots_bracketed');
       }
-      const a = choice([2,3,4]);
-      const b = choice([1,3,5]);
-      const c = choice([5,6,7]);
-      const d = choice([-2,-1,2]);
+      let a,b,c,d;
+      do {
+        a = choice([2,3,4]);
+        b = choice([1,3,5]);
+        c = choice([5,6,7]);
+        d = choice([-2,-1,2]);
+      } while(!isPrimitiveLinear(a - c,b - d) || !isPrimitiveLinear(a + c,b + d));
       const A = linearText(a,b);
       const B = linearText(c,d);
-      const first = combineLinear(a,b,c,d,'subtract');
-      const second = combineLinear(a,b,c,d,'add');
+      const first = linearFactorText(a - c,b - d);
+      const second = linearFactorText(a + c,b + d);
       const expr = bracket(A) + '<sup>2</sup> - ' + bracket(B) + '<sup>2</sup>';
-      const answer = bracket(first) + bracket(second);
+      const answer = factorProduct(first, second);
       return makeProblem(expr, answer, [
         mathStep('A = ' + A + ', B = ' + B),
-        mathStep(expr + ' = (' + A + ' - (' + B + '))(' + A + ' + ' + B + ')'),
+        mathStep('A - B = ' + first + ', A + B = ' + second),
         mathStep('= ' + answer)
       ], 'dots_bracketed');
     }
@@ -486,6 +523,34 @@
       ], 'quadratic_nonmonic');
     }
 
+    function factorByGroupingProblem(){
+      let a,b,c,d,A,B,C;
+      do {
+        a = choice([2,3,4,5]);
+        b = choice([-7,-5,-3,-2,2,3,5,7]);
+        c = choice([2,3,4,5]);
+        d = choice([-7,-5,-3,-2,2,3,5,7]);
+        A = a*c;
+        B = a*d;
+        C = b*c;
+      } while(gcd(a,b)!==1 || gcd(c,d)!==1 || B + C === 0);
+      const D = b*d;
+      const expr = polyText([
+        {coeff:A,powers:{x:2}},
+        {coeff:B,powers:{x:1}},
+        {coeff:C,powers:{x:1}},
+        {coeff:D,powers:{}}
+      ]);
+      const sharedFactor = linearFactorText(c,d);
+      const remainingFactor = linearFactorText(a,b);
+      const groupedLine = a + 'x' + factorText(sharedFactor) + signedFactorTerm(b,sharedFactor);
+      const answer = factorProduct(remainingFactor, sharedFactor);
+      return makeProblem(expr, answer, [
+        mathStep(expr + ' = ' + groupedLine),
+        mathStep('= ' + answer)
+      ], 'factor_by_grouping');
+    }
+
     function commonThenQuadraticProblem(){
       const h = choice([2,3,4,5]);
       const r1 = choice([2,3,4,5]);
@@ -534,7 +599,7 @@
       if(type === 'mixed_basic') type = choice(['number_common','variable_common','number_variable_common']);
       if(type === 'mixed_hcf') type = choice(['two_term_hcf','three_term_hcf']);
       if(type === 'mixed_dots') type = choice(['dots_basic','dots_hidden','dots_bracketed','dots_repeated']);
-      if(type === 'mixed_complete') type = choice(['quadratic_monic','quadratic_nonmonic','common_then_quadratic','cubic_complete']);
+      if(type === 'mixed_complete') type = choice(['quadratic_monic','quadratic_nonmonic','factor_by_grouping','common_then_quadratic','cubic_complete']);
       if(type === 'number_common') return numberCommonProblem();
       if(type === 'variable_common') return variableCommonProblem();
       if(type === 'number_variable_common') return numberVariableCommonProblem();
@@ -546,6 +611,7 @@
       if(type === 'dots_repeated') return dotsRepeatedProblem();
       if(type === 'quadratic_monic') return quadraticMonicProblem();
       if(type === 'quadratic_nonmonic') return quadraticNonmonicProblem();
+      if(type === 'factor_by_grouping') return factorByGroupingProblem();
       if(type === 'common_then_quadratic') return commonThenQuadraticProblem();
       if(type === 'cubic_complete') return cubicCompleteProblem();
       return numberCommonProblem();

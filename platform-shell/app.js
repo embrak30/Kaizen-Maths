@@ -1027,9 +1027,9 @@ const tools = [
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate graduated factorisation practice covering common factors, multivariable HCF, difference of two squares, quadratics, and complete cubic factorisation.",
-    tags: ["algebra", "factorisation", "factorising", "highest common factor", "difference of squares", "quadratics", "cubics", "complete factorisation"],
-    toolPath: "tools/advanced-factorisation/index.html?v=advanced-factorisation-2",
+    description: "Generate graduated factorisation practice covering common factors, multivariable HCF, difference of two squares, grouping, quadratics, and complete cubic factorisation.",
+    tags: ["algebra", "factorisation", "factorising", "highest common factor", "difference of squares", "grouping", "quadratics", "cubics", "complete factorisation"],
+    toolPath: "tools/advanced-factorisation/index.html?v=advanced-factorisation-3",
     imported: true,
     teacherNotes: [
       "Extends beyond basic quadratic factorisation into multivariable HCF, hidden difference of squares, and complete factorisation.",
