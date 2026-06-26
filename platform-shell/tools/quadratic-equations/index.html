@@ -137,6 +137,12 @@
     function formulaDenominator(aCoeff){
       return aCoeff < 0 ? '2 × (' + aCoeff + ')' : '2 × ' + aCoeff;
     }
+    function rootLabel(index){
+      return 'x<sub>' + index + '</sub>';
+    }
+    function twoRootAnswer(x1,x2){
+      return rootLabel(1) + ' ≈ ' + x1.toFixed(2) + ', ' + rootLabel(2) + ' ≈ ' + x2.toFixed(2);
+    }
     function formulaSolutionSteps(aCoeff,bCoeff,disc,x1,x2){
       if(disc < 0) return ['The discriminant is less than 0, so there are no real solutions.'];
       const denominator = formulaDenominator(aCoeff);
@@ -149,8 +155,8 @@
       }
       return [
         'Substitute into the quadratic formula:',
-        'x1 = ' + verticalFraction(negativeB + ' + √(' + disc + ')', denominator) + ' ≈ ' + x1.toFixed(2),
-        'x2 = ' + verticalFraction(negativeB + ' - √(' + disc + ')', denominator) + ' ≈ ' + x2.toFixed(2)
+        rootLabel(1) + ' = ' + verticalFraction(negativeB + ' + √(' + disc + ')', denominator) + ' ≈ ' + x1.toFixed(2),
+        rootLabel(2) + ' = ' + verticalFraction(negativeB + ' - √(' + disc + ')', denominator) + ' ≈ ' + x2.toFixed(2)
       ];
     }
     function signed(n){ return (n >= 0 ? '+' : '') + n; }
@@ -304,7 +310,7 @@
         const root = Math.sqrt(disc);
         const x1 = (-b + root)/(2*a);
         const x2 = (-b - root)/(2*a);
-        answer = disc === 0 ? 'x ≈ ' + x1.toFixed(2) : 'x ≈ ' + x1.toFixed(2) + ', x ≈ ' + x2.toFixed(2);
+        answer = disc === 0 ? 'x ≈ ' + x1.toFixed(2) : twoRootAnswer(x1,x2);
         formulaSteps = formulaSolutionSteps(a,b,disc,x1,x2);
       }
       return {
@@ -348,7 +354,7 @@
         const root = Math.sqrt(disc);
         const x1 = (-B + root)/(2*A);
         const x2 = (-B - root)/(2*A);
-        answer = disc === 0 ? 'x ≈ ' + x1.toFixed(2) : 'x ≈ ' + x1.toFixed(2) + ', x ≈ ' + x2.toFixed(2);
+        answer = disc === 0 ? 'x ≈ ' + x1.toFixed(2) : twoRootAnswer(x1,x2);
         steps.push(...formulaSolutionSteps(A,B,disc,x1,x2));
       }
       return { equation: a + 'x ' + (signB>0 ? '+ ' : '- ') + bAbs + ' = ' + cRight + ' ' + (signQ>0 ? '+ ' : '- ') + q + 'x^2', answer, steps };

@@ -50,7 +50,7 @@ const tools = [
     status: "Imported",
     description: "Generate quadratic-equation practice across square-root, factorable, formula, non-standard, and disguised forms.",
     tags: ["algebra", "quadratics", "factorising", "quadratic formula", "discriminant", "disguised quadratics"],
-    toolPath: "tools/quadratic-equations/index.html?v=quadratic-formula-fractions-1",
+    toolPath: "tools/quadratic-equations/index.html?v=quadratic-formula-subscripts-1",
     imported: true,
     teacherNotes: [
       "Builds from square-root equations into factorisation, the quadratic formula, and non-standard forms.",
