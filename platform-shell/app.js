@@ -1029,7 +1029,7 @@ const tools = [
     status: "Imported",
     description: "Generate graduated factorisation practice covering common factors, multivariable HCF, difference of two squares, quadratics, and complete cubic factorisation.",
     tags: ["algebra", "factorisation", "factorising", "highest common factor", "difference of squares", "quadratics", "cubics", "complete factorisation"],
-    toolPath: "tools/advanced-factorisation/index.html?v=advanced-factorisation-1",
+    toolPath: "tools/advanced-factorisation/index.html?v=advanced-factorisation-2",
     imported: true,
     teacherNotes: [
       "Extends beyond basic quadratic factorisation into multivariable HCF, hidden difference of squares, and complete factorisation.",

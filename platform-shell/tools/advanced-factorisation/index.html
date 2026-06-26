@@ -112,7 +112,8 @@
       mixed_hcf: 'Mixed HCF with powers',
       dots_basic: 'Basic difference of two squares',
       dots_hidden: 'Hidden difference of two squares',
-      dots_bracketed: 'Bracketed and repeated difference of squares',
+      dots_bracketed: 'Bracketed difference of two squares',
+      dots_repeated: 'Repeated difference of two squares',
       mixed_dots: 'Mixed difference of two squares',
       quadratic_monic: 'Monic quadratic factorisation',
       quadratic_nonmonic: 'Non-monic quadratic factorisation',
@@ -125,14 +126,14 @@
     const levelConfigs = {
       1: { title: 'Level 1: Basic Common Factors', description: 'Extract numerical, variable, and combined common factors.', types: ['number_common','variable_common','number_variable_common','mixed_basic'] },
       2: { title: 'Level 2: HCF with Powers and Variables', description: 'Use the highest common factor across coefficients, powers, and multiple variables.', types: ['two_term_hcf','three_term_hcf','mixed_hcf'] },
-      3: { title: 'Level 3: Difference of Two Squares', description: 'Recognise A² - B², including hidden and bracketed forms.', types: ['dots_basic','dots_hidden','dots_bracketed','mixed_dots'] },
+      3: { title: 'Level 3: Difference of Two Squares', description: 'Recognise A² - B², including hidden, bracketed, and repeated forms.', types: ['dots_basic','dots_hidden','dots_bracketed','dots_repeated','mixed_dots'] },
       4: { title: 'Level 4: Complete Factorisation', description: 'Factorise trinomials, expressions with common factors, and cubics completely.', types: ['quadratic_monic','quadratic_nonmonic','common_then_quadratic','cubic_complete','mixed_complete'] }
     };
 
     const typeOptions = {
       1: [['number_common','Numerical common factor'],['variable_common','Variable common factor'],['number_variable_common','Number and variable common factor'],['mixed_basic','Mixed Level 1 set']],
       2: [['two_term_hcf','Two-term HCF with powers'],['three_term_hcf','Three-term HCF with powers'],['mixed_hcf','Mixed Level 2 set']],
-      3: [['dots_basic','Basic difference of two squares'],['dots_hidden','Hidden difference of two squares'],['dots_bracketed','Bracketed and repeated forms'],['mixed_dots','Mixed Level 3 set']],
+      3: [['dots_basic','Basic difference of two squares'],['dots_hidden','Hidden difference of two squares'],['dots_bracketed','Bracketed forms'],['dots_repeated','Repeated difference of squares'],['mixed_dots','Mixed Level 3 set']],
       4: [['quadratic_monic','Monic quadratic factorisation'],['quadratic_nonmonic','Non-monic quadratic factorisation'],['common_then_quadratic','Common factor then quadratic'],['cubic_complete','Complete cubic factorisation'],['mixed_complete','Mixed Level 4 set']]
     };
 
@@ -183,14 +184,16 @@
         number_variable_common: 'Method focus: take out both the numerical HCF and the shared variable factor.',
         two_term_hcf: 'Method focus: compare coefficients and powers carefully before writing the bracket.',
         three_term_hcf: 'Method focus: the HCF must divide all three terms.',
-        dots_basic: 'Method focus: recognise A² - B² = (A - B)(A + B).',
-        dots_hidden: 'Method focus: take out the common factor first, then look for difference of squares.',
-        dots_bracketed: 'Method focus: treat each bracket or power as a whole square.',
+        dots_basic: 'A² - B² = (A - B)(A + B).',
+        dots_hidden: 'Take out the common factor, then use A² - B².',
+        dots_bracketed: 'Treat each bracket as A or B.',
+        dots_repeated: 'Apply A² - B² more than once where possible.',
         quadratic_monic: 'Method focus: find two numbers that multiply to c and add to b.',
         quadratic_nonmonic: 'Method focus: split the middle term, then factorise by grouping.',
         common_then_quadratic: 'Method focus: take out the common factor before factorising the quadratic inside.',
         cubic_complete: 'Method focus: find one linear factor, then factorise the quadratic quotient.'
       }[type] || 'Method focus: factorise completely and check that no factor can be factorised further.';
+      if(String(type || '').startsWith('dots_')) return steps;
       return [focus, ...steps];
     }
 
@@ -322,10 +325,9 @@
         answer = bracket(a + ' - ' + b) + bracket(a + ' + ' + b);
       }
       return makeProblem(expr, answer, [
-        'Step 1: Recognise the pattern ' + highlight('A² - B²','pattern') + '.',
-        'Step 2: Here A = ' + a + ' and B = ' + b + '.',
-        mathStep(expr + ' = ' + bracket(a + ' - ' + b) + bracket(a + ' + ' + b)),
-        'Step 3: The two brackets are conjugates.'
+        mathStep('A<sup>2</sup> - B<sup>2</sup> = (A - B)(A + B)'),
+        mathStep('A = ' + a + ', B = ' + b),
+        mathStep(expr + ' = ' + bracket(a + ' - ' + b) + bracket(a + ' + ' + b))
       ], 'dots_basic');
     }
 
@@ -335,22 +337,18 @@
         const expr = 'f<sup>3</sup> - f';
         const answer = 'f(f - 1)(f + 1)';
         return makeProblem(expr, answer, [
-          'Step 1: Take out the common factor f.',
           mathStep(expr + ' = f(f<sup>2</sup> - 1)'),
-          'Step 2: The bracket is now a difference of two squares.',
-          mathStep('f(f<sup>2</sup> - 1) = ' + answer),
-          'Step 3: The expression is now factorised completely.'
+          mathStep('= f(f<sup>2</sup> - 1<sup>2</sup>)'),
+          mathStep('= ' + answer)
         ], 'dots_hidden');
       }
       if(template === 'fm'){
         const expr = 'fm<sup>2</sup> - f';
         const answer = 'f(m - 1)(m + 1)';
         return makeProblem(expr, answer, [
-          'Step 1: Take out the common factor f.',
           mathStep(expr + ' = f(m<sup>2</sup> - 1)'),
-          'Step 2: Factorise m<sup>2</sup> - 1 as a difference of two squares.',
-          mathStep('f(m<sup>2</sup> - 1) = ' + answer),
-          'Step 3: The expression is now factorised completely.'
+          mathStep('= f(m<sup>2</sup> - 1<sup>2</sup>)'),
+          mathStep('= ' + answer)
         ], 'dots_hidden');
       }
       const h = choice([2,3,5]);
@@ -358,11 +356,9 @@
       const expr = h + 'x<sup>2</sup> - ' + (h*n*n);
       const answer = h + '(x - ' + n + ')(x + ' + n + ')';
       return makeProblem(expr, answer, [
-        'Step 1: Take out the common numerical factor ' + h + '.',
         mathStep(expr + ' = ' + h + '(x<sup>2</sup> - ' + n*n + ')'),
-        'Step 2: Factorise the bracket using difference of two squares.',
-        mathStep(h + '(x<sup>2</sup> - ' + n*n + ') = ' + answer),
-        'Step 3: The factorisation is complete.'
+        mathStep('= ' + h + '(x<sup>2</sup> - ' + n + '<sup>2</sup>)'),
+        mathStep('= ' + answer)
       ], 'dots_hidden');
     }
 
@@ -373,37 +369,22 @@
     }
 
     function dotsBracketedProblem(){
-      const template = choice(['bracketSquare','xFourth','linearSquares','twoVariableSquares']);
+      const template = choice(['bracketSquare','linearSquares','twoVariableSquares']);
       if(template === 'bracketSquare'){
         const expr = '9 - (m + n)<sup>2</sup>';
         const answer = '(3 - (m + n))(3 + (m + n))';
         return makeProblem(expr, answer, [
-          'Step 1: Treat (m + n) as one whole expression.',
-          'Step 2: This is 3<sup>2</sup> - (m + n)<sup>2</sup>.',
-          mathStep(expr + ' = ' + answer),
-          'Step 3: You may leave the answer in conjugate bracket form.'
-        ], 'dots_bracketed');
-      }
-      if(template === 'xFourth'){
-        const expr = 'x<sup>4</sup> - 1';
-        const answer = '(x - 1)(x + 1)(x<sup>2</sup> + 1)';
-        return makeProblem(expr, answer, [
-          'Step 1: Write x<sup>4</sup> as (x<sup>2</sup>)<sup>2</sup>.',
-          mathStep('x<sup>4</sup> - 1 = (x<sup>2</sup> - 1)(x<sup>2</sup> + 1)'),
-          'Step 2: Factorise x<sup>2</sup> - 1 again.',
-          mathStep('(x<sup>2</sup> - 1)(x<sup>2</sup> + 1) = ' + answer),
-          'Step 3: Over the real numbers, x<sup>2</sup> + 1 cannot be factorised further.'
+          mathStep(expr + ' = 3<sup>2</sup> - (m + n)<sup>2</sup>'),
+          mathStep('= ' + answer)
         ], 'dots_bracketed');
       }
       if(template === 'twoVariableSquares'){
         const expr = '(2x + y)<sup>2</sup> - (x - 3y)<sup>2</sup>';
         const answer = '(x + 4y)(3x - 2y)';
         return makeProblem(expr, answer, [
-          'Step 1: Let A = 2x + y and B = x - 3y.',
-          'Step 2: Use A<sup>2</sup> - B<sup>2</sup> = (A - B)(A + B).',
+          mathStep('A = 2x + y, B = x - 3y'),
           mathStep('(2x + y - (x - 3y))(2x + y + x - 3y)'),
-          mathStep('= ' + answer),
-          'Step 3: The bracketed linear expressions have been simplified.'
+          mathStep('= ' + answer)
         ], 'dots_bracketed');
       }
       const a = choice([2,3,4]);
@@ -417,12 +398,49 @@
       const expr = bracket(A) + '<sup>2</sup> - ' + bracket(B) + '<sup>2</sup>';
       const answer = bracket(first) + bracket(second);
       return makeProblem(expr, answer, [
-        'Step 1: Let A = ' + A + ' and B = ' + B + '.',
-        'Step 2: Use A<sup>2</sup> - B<sup>2</sup> = (A - B)(A + B).',
+        mathStep('A = ' + A + ', B = ' + B),
         mathStep(expr + ' = (' + A + ' - (' + B + '))(' + A + ' + ' + B + ')'),
-        'Step 3: Simplify each bracket.',
         mathStep('= ' + answer)
       ], 'dots_bracketed');
+    }
+
+    function dotsRepeatedProblem(){
+      const template = choice(['xFourthOne','xFourthConstant','twoVariableFourth','scaledFourth']);
+      if(template === 'xFourthOne'){
+        const expr = 'x<sup>4</sup> - 1';
+        const answer = '(x - 1)(x + 1)(x<sup>2</sup> + 1)';
+        return makeProblem(expr, answer, [
+          mathStep(expr + ' = (x<sup>2</sup>)<sup>2</sup> - 1<sup>2</sup>'),
+          mathStep('= (x<sup>2</sup> - 1)(x<sup>2</sup> + 1)'),
+          mathStep('= ' + answer)
+        ], 'dots_repeated');
+      }
+      if(template === 'xFourthConstant'){
+        const n = choice([2,3,4,5]);
+        const expr = 'x<sup>4</sup> - ' + (n*n*n*n);
+        const answer = '(x - ' + n + ')(x + ' + n + ')(x<sup>2</sup> + ' + (n*n) + ')';
+        return makeProblem(expr, answer, [
+          mathStep(expr + ' = (x<sup>2</sup>)<sup>2</sup> - ' + (n*n) + '<sup>2</sup>'),
+          mathStep('= (x<sup>2</sup> - ' + (n*n) + ')(x<sup>2</sup> + ' + (n*n) + ')'),
+          mathStep('= ' + answer)
+        ], 'dots_repeated');
+      }
+      if(template === 'twoVariableFourth'){
+        const expr = 'x<sup>4</sup> - y<sup>4</sup>';
+        const answer = '(x - y)(x + y)(x<sup>2</sup> + y<sup>2</sup>)';
+        return makeProblem(expr, answer, [
+          mathStep(expr + ' = (x<sup>2</sup>)<sup>2</sup> - (y<sup>2</sup>)<sup>2</sup>'),
+          mathStep('= (x<sup>2</sup> - y<sup>2</sup>)(x<sup>2</sup> + y<sup>2</sup>)'),
+          mathStep('= ' + answer)
+        ], 'dots_repeated');
+      }
+      const expr = '16x<sup>4</sup> - 81';
+      const answer = '(2x - 3)(2x + 3)(4x<sup>2</sup> + 9)';
+      return makeProblem(expr, answer, [
+        mathStep(expr + ' = (4x<sup>2</sup>)<sup>2</sup> - 9<sup>2</sup>'),
+        mathStep('= (4x<sup>2</sup> - 9)(4x<sup>2</sup> + 9)'),
+        mathStep('= ' + answer)
+      ], 'dots_repeated');
     }
 
     function quadraticMonicProblem(){
@@ -515,7 +533,7 @@
       if(type === 'select') type = choice(levelConfigs[currentLevel].types.filter(t => !t.startsWith('mixed')));
       if(type === 'mixed_basic') type = choice(['number_common','variable_common','number_variable_common']);
       if(type === 'mixed_hcf') type = choice(['two_term_hcf','three_term_hcf']);
-      if(type === 'mixed_dots') type = choice(['dots_basic','dots_hidden','dots_bracketed']);
+      if(type === 'mixed_dots') type = choice(['dots_basic','dots_hidden','dots_bracketed','dots_repeated']);
       if(type === 'mixed_complete') type = choice(['quadratic_monic','quadratic_nonmonic','common_then_quadratic','cubic_complete']);
       if(type === 'number_common') return numberCommonProblem();
       if(type === 'variable_common') return variableCommonProblem();
@@ -525,6 +543,7 @@
       if(type === 'dots_basic') return dotsBasicProblem();
       if(type === 'dots_hidden') return dotsHiddenProblem();
       if(type === 'dots_bracketed') return dotsBracketedProblem();
+      if(type === 'dots_repeated') return dotsRepeatedProblem();
       if(type === 'quadratic_monic') return quadraticMonicProblem();
       if(type === 'quadratic_nonmonic') return quadraticNonmonicProblem();
       if(type === 'common_then_quadratic') return commonThenQuadraticProblem();
