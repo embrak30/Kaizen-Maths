@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Bases & Number Sets</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f3f7fb;min-height:100vh;padding:14px;color:#172033;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#274c77;color:#fff;padding:12px 7px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 7px 7px 0;font-weight:750;font-size:.82em;box-shadow:2px 0 10px rgba(0,0,0,.18)}
+    .sidebar{position:fixed;left:-410px;top:0;width:410px;height:100vh;background:#fff;z-index:1000;transition:left .25s;box-shadow:2px 0 20px rgba(0,0,0,.24);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#274c77;color:#fff;padding:18px;font-size:1.25em;font-weight:800}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{color:#274c77;margin:18px 0 8px;border-bottom:2px solid #5ea8d9;padding-bottom:4px;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{padding-left:20px;margin-bottom:12px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;opacity:0;visibility:hidden;transition:.25s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1220px;margin:0 auto;background:#fff;border-radius:9px;box-shadow:0 4px 18px rgba(15,23,42,.1);overflow:hidden}.header{background:#274c77;background-image:linear-gradient(135deg,rgba(255,255,255,.11),transparent 48%,rgba(0,0,0,.11)),repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 2px,transparent 2px 22px);color:#fff;padding:20px;text-align:center}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e7eef7}.tab{flex:1;padding:13px 10px;border:0;background:#e7eef7;cursor:pointer;font-weight:800;font-size:.98em;border-bottom:3px solid transparent;color:#243b53}.tab.active{background:#fff;color:#1f6fa5;border-bottom-color:#1f6fa5}
+    .controls{padding:15px 18px;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #dce6f2}.level-info h3{color:#274c77;font-size:1.16em;margin-bottom:3px}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{padding:8px 10px;border:2px solid #c8d4e3;border-radius:6px;background:#fff;min-width:345px;font-size:.94em}.timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{font-size:1.45em;font-weight:850;color:#274c77;background:#fff;padding:7px 12px;border:2px solid #c8d4e3;border-radius:6px;min-width:96px;text-align:center}.timer-display.active{border-color:#1f6fa5;color:#1f6fa5}.timer-display.warning{color:#d92d20;border-color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{padding:8px 14px;border:0;border-radius:6px;font-weight:800;cursor:pointer;min-width:68px;color:#fff}.btn-primary{background:#1f6fa5}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{padding:14px 18px 18px;min-height:510px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#274c77;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border-radius:6px;background:#eef8ff;border:1px solid #bae6fd;color:#274c77;text-align:center;font-weight:800}.set-instruction.visible{display:block}.problem-list{display:grid;grid-template-columns:1fr;gap:10px;list-style:none}
+    .problem-item{background:#f8fafc;border-left:4px solid #1f6fa5;border-radius:7px;padding:12px;display:flex;flex-direction:column;gap:8px}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;gap:10px;align-items:flex-start;min-width:0}.problem-number{background:#1f6fa5;color:#fff;min-width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:850}.problem-type{background:#dbeafe;color:#1e3a8a;border-radius:999px;padding:5px 9px;font-size:.78em;font-weight:850;white-space:nowrap}.question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.2em;color:#172033;font-weight:650;line-height:1.38;overflow-wrap:anywhere}.question-text .word{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;font-size:.88em;font-weight:700;color:#334155}.base-number{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);white-space:nowrap}.base-number sub{font-size:.62em;vertical-align:sub}.set-symbol{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:850}.vfrac{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;vertical-align:middle;line-height:1.05;margin:0 2px}.vfrac span:first-child{border-bottom:1.7px solid currentColor;padding:0 4px 2px}.vfrac span:last-child{padding:2px 4px 0}.problem-answer{background:#2f855a;color:#fff;padding:7px 11px;border-radius:999px;font-weight:850;display:none;white-space:nowrap;font-size:.95em}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:2px;padding:10px;background:#eef8ff;border-left:3px solid #1f6fa5;border-radius:6px}.steps-section.visible{display:block}.answer-label{font-weight:850;color:#1f6fa5;margin-bottom:6px}.solution-steps{line-height:1.45;font-size:.98em}.step{margin:5px 0;color:#274c77}.step-equation{margin:6px 0;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:750;color:#6d28d9;background:#fff;border:1px solid #dbeafe;border-radius:5px;padding:7px}.division-table{width:100%;max-width:420px;margin:8px auto;border-collapse:collapse;background:#fff}.division-table th,.division-table td{border:1px solid #c8d4e3;padding:6px 8px;text-align:center}.division-table th{background:#e7eef7;color:#274c77}.final-answer{margin-top:8px;text-align:center;background:#2f855a;color:#fff;border-radius:6px;padding:8px;font-weight:850}.timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:#fff;padding:28px;border-radius:10px;text-align:center;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{color:#d92d20;margin-bottom:10px}.modal-content p{color:#667085;margin-bottom:18px}.hidden{display:none}
+    @media (min-width:950px){.problem-list.compact{grid-template-columns:repeat(2,minmax(0,1fr))}.problem-list.compact .question-text{font-size:1.08em}.problem-list.compact .problem-item{min-height:205px}}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.problem-answer{white-space:normal}.question-text{font-size:1.05em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Number Bases & Number Sets</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool supports number-set classification and number bases. It is useful for CSEC, GCSE, IGCSE, and early secondary number work.</p>
+      <h3>Set Convention Used</h3>
+      <ul>
+        <li><strong>Natural numbers, N:</strong> positive counting numbers, 1, 2, 3, ...</li>
+        <li><strong>Whole numbers, W:</strong> 0, 1, 2, 3, ...</li>
+        <li><strong>Integers, Z:</strong> negative and positive whole numbers, including 0.</li>
+        <li><strong>Rational numbers, Q:</strong> numbers that can be written as a fraction of integers.</li>
+        <li><strong>Real numbers, R:</strong> rational and irrational numbers.</li>
+      </ul>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> classify numbers and reason about number sets.</li>
+        <li><strong>Level 2:</strong> convert between denary and other bases.</li>
+        <li><strong>Level 3:</strong> add, subtract, multiply, and solve simple unknowns in bases.</li>
+        <li><strong>Level 4:</strong> mixed exam-style questions.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>For bases, expand using place value: digits multiply powers of the base.</li>
+        <li>For denary to another base, use repeated division and read remainders upwards.</li>
+        <li>For number sets, ask for the smallest set first, then list any larger sets it belongs to.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Number Bases & Number Sets</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Number Sets</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Base Conversion</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Base Operations</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Mixed Exam Practice</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Number Sets</h3>
+        <p id="level-description">Classify numbers using common number sets.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Number Sets',description:'Classify numbers using common number sets.',types:['classify_sets','smallest_set','set_statements']},
+      2:{title:'Level 2: Base Conversion',description:'Convert between denary and other number bases.',types:['base_to_ten','ten_to_base','place_value']},
+      3:{title:'Level 3: Base Operations',description:'Operate in bases and solve simple base unknowns.',types:['base_addition','base_subtraction','base_multiplication','unknown_base','missing_digit']},
+      4:{title:'Level 4: Mixed Exam Practice',description:'Mixed questions combining number sets, bases, operations, and unknowns.',types:['mixed_exam']}
+    };
+
+    const typeDisplayNames={
+      classify_sets:'Type 1: Classify numbers',
+      smallest_set:'Type 2: Smallest number set',
+      set_statements:'Type 3: True or false set statements',
+      base_to_ten:'Type 1: Convert to denary',
+      ten_to_base:'Type 2: Convert denary to another base',
+      place_value:'Type 3: Place value in a base',
+      base_addition:'Type 1: Add in a base',
+      base_subtraction:'Type 2: Subtract in a base',
+      base_multiplication:'Type 3: Multiply in a base',
+      unknown_base:'Type 4: Find the base',
+      missing_digit:'Type 5: Find the missing digit',
+      mixed_exam:'Mixed exam-style practice'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const setNames={N:'natural number',W:'whole number',Z:'integer',Q:'rational number',I:'irrational number',R:'real number'};
+    const setSymbols={N:'ℕ',W:'W',Z:'ℤ',Q:'ℚ',I:'irrational',R:'ℝ'};
+    const bases=[2,3,4,5,6,8];
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function stripTags(html){return String(html).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function baseHtml(digits,base){return `<span class="base-number">${digits}<sub>${base}</sub></span>`}
+    function tenHtml(n){return baseHtml(n,10)}
+    function setSym(s){return `<span class="set-symbol">${setSymbols[s]||s}</span>`}
+    function termDigit(digit,power,base){return `${digit} × ${base}<sup>${power}</sup>`}
+    function formatSetList(keys){return keys.map(setSym).join(', ')}
+    function digitValue(digits,base){return String(digits).split('').reduce((sum,d)=>sum*base+Number(d),0)}
+    function toBaseDigits(n,base){let value=n,digits=[];if(value===0)return '0';while(value>0){digits.push(value%base);value=Math.floor(value/base)}return digits.reverse().join('')}
+    function digitsForBase(base,len){let digits=String(random(1,base-1));for(let i=1;i<len;i++)digits+=String(random(0,base-1));return digits}
+    function divisionRows(n,base){const rows=[];let value=n;while(value>0){rows.push({value,quotient:Math.floor(value/base),remainder:value%base});value=Math.floor(value/base)}return rows}
+    function divisionTable(rows,base){return `<table class="division-table"><thead><tr><th>Divide by ${base}</th><th>Quotient</th><th>Remainder</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.value} ÷ ${base}</td><td>${r.quotient}</td><td>${r.remainder}</td></tr>`).join('')}</tbody></table>`}
+
+    const numberExamples=[
+      {display:'7',sets:['N','W','Z','Q','R'],smallest:'N',reason:'7 is a positive counting number.'},
+      {display:'0',sets:['W','Z','Q','R'],smallest:'W',reason:'0 is a whole number but not a positive counting number under this convention.'},
+      {display:'-6',sets:['Z','Q','R'],smallest:'Z',reason:'-6 is an integer, so it is also rational and real.'},
+      {display:'<span class="vfrac"><span>3</span><span>5</span></span>',sets:['Q','R'],smallest:'Q',reason:'3 over 5 is a ratio of two integers.'},
+      {display:'-2.75',sets:['Q','R'],smallest:'Q',reason:'-2.75 is a terminating decimal, so it can be written as a fraction.'},
+      {display:'0.333...',sets:['Q','R'],smallest:'Q',reason:'0.333... is a recurring decimal, so it is rational.'},
+      {display:'√49',sets:['N','W','Z','Q','R'],smallest:'N',reason:'√49 = 7, which is a positive counting number.'},
+      {display:'√2',sets:['I','R'],smallest:'I',reason:'√2 cannot be written as a fraction of integers.'},
+      {display:'π',sets:['I','R'],smallest:'I',reason:'π is irrational, so it is real but not rational.'},
+      {display:'-√16',sets:['Z','Q','R'],smallest:'Z',reason:'-√16 = -4, which is an integer.'}
+    ];
+
+    const statementBank=[
+      {text:'Every natural number is an integer.',truth:true,reason:'Natural numbers are positive counting numbers, and all positive counting numbers are integers.'},
+      {text:'Every integer is a whole number.',truth:false,reason:'Negative integers such as -3 are not whole numbers.'},
+      {text:'Every integer is rational.',truth:true,reason:'An integer can be written over 1, for example -5 = -5/1.'},
+      {text:'Every rational number is an integer.',truth:false,reason:'3/4 is rational but is not an integer.'},
+      {text:'Every irrational number is real.',truth:true,reason:'The real numbers contain both rational and irrational numbers.'},
+      {text:'Every real number is rational.',truth:false,reason:'√2 and π are real but irrational.'},
+      {text:'0 is an integer.',truth:true,reason:'The integers include ..., -2, -1, 0, 1, 2, ...'},
+      {text:'A terminating decimal is rational.',truth:true,reason:'A terminating decimal can be written as a fraction with a power of 10 as the denominator.'}
+    ];
+
+    function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question'){
+      return {prompt,answer,steps,typeLabel,question:stripTags(prompt)};
+    }
+
+    function genClassifySets(){
+      const ex=choice(numberExamples);
+      return problem(`Classify ${ex.display}. List all the number sets it belongs to.`,formatSetList(ex.sets),[
+        `Check what kind of number ${ex.display} is.`,
+        ex.reason,
+        `Therefore ${ex.display} belongs to: ${formatSetList(ex.sets)}.`
+      ]);
+    }
+
+    function genSmallestSet(){
+      const ex=choice(numberExamples);
+      return problem(`State the smallest number set that contains ${ex.display}.`,setSym(ex.smallest),[
+        `Start with the most specific description of ${ex.display}.`,
+        ex.reason,
+        `The smallest suitable set is ${setSym(ex.smallest)}: ${setNames[ex.smallest]}.`
+      ]);
+    }
+
+    function genSetStatement(){
+      const s=choice(statementBank);
+      return problem(`True or false: ${s.text}`,s.truth?'True':'False',[
+        `Read the statement carefully.`,
+        s.reason,
+        `Therefore the statement is ${s.truth?'true':'false'}.`
+      ]);
+    }
+
+    function genBaseToTen(){
+      const base=choice(bases),len=base===2?random(4,5):random(3,4),digits=digitsForBase(base,len),decimal=digitValue(digits,base);
+      const expanded=String(digits).split('').map((d,i)=>termDigit(d,len-1-i,base)).join(' + ');
+      const evaluated=String(digits).split('').map((d,i)=>`${d} × ${Math.pow(base,len-1-i)}`).join(' + ');
+      return problem(`Convert ${baseHtml(digits,base)} to denary.`,tenHtml(decimal),[
+        `Use powers of the base as place values.`,
+        `${baseHtml(digits,base)} = ${expanded}`,
+        `${expanded} = ${evaluated}`,
+        `${evaluated} = ${decimal}`,
+        `So ${baseHtml(digits,base)} = ${tenHtml(decimal)}.`
+      ]);
+    }
+
+    function genTenToBase(){
+      const base=choice(bases),decimal=random(base*base+3,base*base*base-1),digits=toBaseDigits(decimal,base),rows=divisionRows(decimal,base);
+      return problem(`Convert ${tenHtml(decimal)} to base ${base}.`,baseHtml(digits,base),[
+        `Divide repeatedly by ${base} and record the remainders.`,
+        divisionTable(rows,base),
+        `Read the remainders from bottom to top.`,
+        `Therefore ${tenHtml(decimal)} = ${baseHtml(digits,base)}.`
+      ]);
+    }
+
+    function genPlaceValue(){
+      const base=choice([3,4,5,6,8]),digits=digitsForBase(base,4),available=[...digits].map((d,i)=>Number(d)>0?i:null).filter(i=>i!==null),index=choice(available),digit=Number(digits[index]),power=3-index,value=digit*Math.pow(base,power);
+      return problem(`In ${baseHtml(digits,base)}, find the value of the digit ${digit} in its position.`,tenHtml(value),[
+        `The digit ${digit} is in the ${base}<sup>${power}</sup> place.`,
+        `Value = ${digit} × ${base}<sup>${power}</sup>`,
+        `Value = ${digit} × ${Math.pow(base,power)} = ${value}.`
+      ]);
+    }
+
+    function baseOperationValues(base,operation){
+      const max=Math.min(base*base*2,95);
+      let a=random(base+2,max),b=random(2,Math.floor(max/2));
+      if(operation==='subtraction'&&b>a){const t=a;a=b;b=t}
+      if(operation==='multiplication'){b=random(2,Math.min(base-1,7));a=random(base+1,Math.floor(max/2))}
+      return {a,b};
+    }
+
+    function genBaseAddition(){
+      const base=choice([3,4,5,6,8]),{a,b}=baseOperationValues(base,'addition'),sum=a+b;
+      return problem(`Calculate ${baseHtml(toBaseDigits(a,base),base)} + ${baseHtml(toBaseDigits(b,base),base)}. Give your answer in base ${base}.`,baseHtml(toBaseDigits(sum,base),base),[
+        `Convert each number to denary first.`,
+        `${baseHtml(toBaseDigits(a,base),base)} = ${tenHtml(a)}`,
+        `${baseHtml(toBaseDigits(b,base),base)} = ${tenHtml(b)}`,
+        `${a} + ${b} = ${sum}`,
+        `Convert ${tenHtml(sum)} back to base ${base}: ${baseHtml(toBaseDigits(sum,base),base)}.`
+      ]);
+    }
+
+    function genBaseSubtraction(){
+      const base=choice([3,4,5,6,8]);let {a,b}=baseOperationValues(base,'subtraction');if(a===b)a+=base;const diff=a-b;
+      return problem(`Calculate ${baseHtml(toBaseDigits(a,base),base)} - ${baseHtml(toBaseDigits(b,base),base)}. Give your answer in base ${base}.`,baseHtml(toBaseDigits(diff,base),base),[
+        `Convert each number to denary first.`,
+        `${baseHtml(toBaseDigits(a,base),base)} = ${tenHtml(a)}`,
+        `${baseHtml(toBaseDigits(b,base),base)} = ${tenHtml(b)}`,
+        `${a} - ${b} = ${diff}`,
+        `Convert ${tenHtml(diff)} back to base ${base}: ${baseHtml(toBaseDigits(diff,base),base)}.`
+      ]);
+    }
+
+    function genBaseMultiplication(){
+      const base=choice([3,4,5,6,8]),{a,b}=baseOperationValues(base,'multiplication'),product=a*b;
+      return problem(`Calculate ${baseHtml(toBaseDigits(a,base),base)} × ${baseHtml(toBaseDigits(b,base),base)}. Give your answer in base ${base}.`,baseHtml(toBaseDigits(product,base),base),[
+        `Convert each number to denary first.`,
+        `${baseHtml(toBaseDigits(a,base),base)} = ${tenHtml(a)}`,
+        `${baseHtml(toBaseDigits(b,base),base)} = ${tenHtml(b)}`,
+        `${a} × ${b} = ${product}`,
+        `Convert ${tenHtml(product)} back to base ${base}: ${baseHtml(toBaseDigits(product,base),base)}.`
+      ]);
+    }
+
+    function genUnknownBase(){
+      const base=random(4,9),a=random(2,base-1),c=random(0,Math.min(base-1,5)),decimal=a*base+c,digits=`${a}${c}`;
+      return problem(`Find the base k if ${baseHtml(digits,'k')} = ${tenHtml(decimal)}.`,String(base),[
+        `Expand using place value in base k.`,
+        `${baseHtml(digits,'k')} = ${a}k + ${c}`,
+        `${a}k + ${c} = ${decimal}`,
+        `${a}k = ${decimal-c}`,
+        `k = ${base}`,
+        `Check: every digit must be less than the base. The largest digit is ${Math.max(a,c)}, and ${Math.max(a,c)} < ${base}.`
+      ]);
+    }
+
+    function genMissingDigit(){
+      const base=choice([4,5,6,7,8]),x=random(1,base-1),last=random(0,base-1),decimal=x*base+last;
+      return problem(`Find the digit x if ${baseHtml(`x${last}`,base)} = ${tenHtml(decimal)}.`,String(x),[
+        `Expand using place value in base ${base}.`,
+        `${baseHtml(`x${last}`,base)} = ${base}x + ${last}`,
+        `${base}x + ${last} = ${decimal}`,
+        `${base}x = ${decimal-last}`,
+        `x = ${x}`,
+        `Check: ${x} is a valid base-${base} digit because ${x} < ${base}.`
+      ]);
+    }
+
+    function genMixedExam(){
+      return choice([genClassifySets,genSmallestSet,genSetStatement,genBaseToTen,genTenToBase,genPlaceValue,genBaseAddition,genBaseSubtraction,genBaseMultiplication,genUnknownBase,genMissingDigit])();
+    }
+
+    function generateProblem(){
+      const t=currentType==='select'?choice(levelConfigs[currentLevel].types):currentType;
+      if(t==='classify_sets')return genClassifySets();
+      if(t==='smallest_set')return genSmallestSet();
+      if(t==='set_statements')return genSetStatement();
+      if(t==='base_to_ten')return genBaseToTen();
+      if(t==='ten_to_base')return genTenToBase();
+      if(t==='place_value')return genPlaceValue();
+      if(t==='base_addition')return genBaseAddition();
+      if(t==='base_subtraction')return genBaseSubtraction();
+      if(t==='base_multiplication')return genBaseMultiplication();
+      if(t==='unknown_base')return genUnknownBase();
+      if(t==='missing_digit')return genMissingDigit();
+      if(t==='mixed_exam')return genMixedExam();
+      return genClassifySets();
+    }
+
+    function setInstructionForType(){
+      const text={
+        classify_sets:'Use all suitable sets, not only the smallest set.',
+        smallest_set:'State the most specific set that contains the number.',
+        set_statements:'Decide whether the statement is always true or give a counterexample.',
+        base_to_ten:'Expand using powers of the base.',
+        ten_to_base:'Use repeated division and read the remainders upwards.',
+        place_value:'Use digit × base power.',
+        base_addition:'Convert, add, then convert back to the required base.',
+        base_subtraction:'Convert, subtract, then convert back to the required base.',
+        base_multiplication:'Convert, multiply, then convert back to the required base.',
+        unknown_base:'Treat the base as an unknown and solve the equation.',
+        missing_digit:'Expand using place value, then solve for the digit.',
+        mixed_exam:'Mixed number sets and number bases practice.'
+      }[currentType]||'';
+      const el=document.getElementById('set-instruction');
+      el.textContent=text;
+      el.classList.toggle('visible',Boolean(text));
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));
+      const cfg=levelConfigs[level];
+      document.getElementById('level-title').textContent=cfg.title;
+      document.getElementById('level-description').textContent=cfg.description;
+      const dd=document.getElementById('type-dropdown');
+      dd.innerHTML='<option value="select">Select Question Type</option>'+cfg.types.map(t=>`<option value="${t}">${typeDisplayNames[t]}</option>`).join('');
+      dd.value='select';
+      showBlankPage();
+    }
+
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-set-header').classList.remove('visible');document.getElementById('set-instruction').classList.remove('visible');document.getElementById('problem-list').className='problem-list';document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:38px;color:#667085;font-size:1.05em">Please select a question type to begin.</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;const seen=new Set();let guard=0;while(problems.length<5&&guard<80){guard++;const p=generateProblem(),key=p.question+'|'+stripTags(p.answer);if(seen.has(key))continue;seen.add(key);problems.push(p)}while(problems.length<5)problems.push(generateProblem());renderProblems()}
+
+    function renderProblems(){
+      const c=document.getElementById('problem-list'),h=document.getElementById('problem-set-header');
+      c.innerHTML='';
+      c.className='problem-list compact';
+      h.textContent=typeDisplayNames[currentType]||'Number Bases & Number Sets';
+      h.className='problem-set-header visible';
+      setInstructionForType();
+      problems.forEach((p,i)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(s=>String(s).includes('<table')?s:(String(s).includes('=')||String(s).includes('×')||String(s).includes('÷')?`<div class="step-equation">${s}</div>`:`<div class="step">${s}</div>`)).join('');
+        li.innerHTML=`<div class="problem-header"><div class="problem-left"><div class="problem-number">${i+1}</div><div><div class="problem-type">${p.typeLabel}</div><div class="question-text">${p.prompt}</div></div></div><div class="problem-answer" id="quick-answer-${i}">${p.answer}</div></div><div class="steps-section" id="steps-${i}"><div class="answer-label">Solution Steps:</div><div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div></div>`;
+        c.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>{const e=document.getElementById(`quick-answer-${i}`);if(e)e.classList.toggle('visible',answersVisible)})}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>{const e=document.getElementById(`steps-${i}`);if(e)e.classList.toggle('visible',stepsVisible)})}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const e=document.getElementById('timer-display');e.textContent='Ready';e.className='timer-display'}
+    function updateTimerDisplay(){const e=document.getElementById('timer-display'),m=Math.floor(timeRemaining/60),s=timeRemaining%60;e.textContent=m+':'+String(s).padStart(2,'0');if(timerActive&&timeRemaining<=30)e.className='timer-display warning';else if(timerActive)e.className='timer-display active';else e.className='timer-display'}
+    function timerFinished(){stopTimer();const e=document.getElementById('timer-display');e.textContent='Time Up!';e.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
+</body>
+</html>

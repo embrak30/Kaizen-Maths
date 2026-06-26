@@ -367,6 +367,25 @@ const tools = [
     ]
   },
   {
+    slug: "number-bases-number-sets",
+    title: "Number Bases & Number Sets",
+    category: "Numbers",
+    level: "CSEC / GCSE / IGCSE",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate practice for number-set classification, base conversion, place value in bases, base operations, and simple unknowns involving bases.",
+    tags: ["numbers", "number bases", "number systems", "number sets", "natural numbers", "integers", "rational numbers", "irrational numbers", "real numbers", "CSEC", "GCSE", "IGCSE"],
+    toolPath: "tools/number-bases-number-sets/index.html?v=number-bases-sets-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers classifying numbers into natural, whole, integer, rational, irrational, and real sets.",
+      "Level 2 covers converting to and from denary using place-value expansion and repeated division.",
+      "Level 3 covers base addition, subtraction, multiplication, finding an unknown base, and finding a missing digit.",
+      "Level 4 mixes number-set reasoning with base conversion and operations in exam-style practice."
+    ]
+  },
+  {
     slug: "four-operations",
     title: "Four Operations",
     category: "Numbers",
