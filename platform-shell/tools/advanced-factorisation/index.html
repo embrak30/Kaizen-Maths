@@ -179,6 +179,15 @@
       return '(' + variable + (root > 0 ? ' - ' + root : ' + ' + Math.abs(root)) + ')';
     }
     function bracket(text){ return '(' + text + ')'; }
+    function groupedPairText(firstTerms,secondTerms){
+      const first = polyText(firstTerms);
+      const second = polyText(secondTerms);
+      if(second.startsWith('-')){
+        const positiveSecond = polyText(secondTerms.map(term => ({ coeff: -term.coeff, powers: term.powers || {} })));
+        return bracket(first) + ' - ' + bracket(positiveSecond);
+      }
+      return bracket(first) + ' + ' + bracket(second);
+    }
     function hasInternalSign(text){
       return /\s[+-]\s/.test(String(text).replace(/^-/, ''));
     }
@@ -407,6 +416,9 @@
         const answer = factorProduct(first, second);
         return makeProblem(expr, answer, [
           mathStep(expr + ' = 3<sup>2</sup> - (' + inner + ')<sup>2</sup>'),
+          mathStep('A = 3, B = ' + bracket(inner)),
+          mathStep('A - B = 3 - ' + bracket(inner) + ' = ' + first),
+          mathStep('A + B = 3 + ' + bracket(inner) + ' = ' + second),
           mathStep('= ' + answer)
         ], 'dots_bracketed');
       }
@@ -417,7 +429,8 @@
         const answer = factorProduct(first, second);
         return makeProblem(expr, answer, [
           mathStep('A = 2x + y, B = x - 3y'),
-          mathStep('A - B = ' + first + ', A + B = ' + second),
+          mathStep('A - B = (2x + y) - (x - 3y) = ' + first),
+          mathStep('A + B = (2x + y) + (x - 3y) = ' + second),
           mathStep('= ' + answer)
         ], 'dots_bracketed');
       }
@@ -436,7 +449,8 @@
       const answer = factorProduct(first, second);
       return makeProblem(expr, answer, [
         mathStep('A = ' + A + ', B = ' + B),
-        mathStep('A - B = ' + first + ', A + B = ' + second),
+        mathStep('A - B = ' + bracket(A) + ' - ' + bracket(B) + ' = ' + first),
+        mathStep('A + B = ' + bracket(A) + ' + ' + bracket(B) + ' = ' + second),
         mathStep('= ' + answer)
       ], 'dots_bracketed');
     }
@@ -535,18 +549,30 @@
         C = b*c;
       } while(gcd(a,b)!==1 || gcd(c,d)!==1 || B + C === 0);
       const D = b*d;
+      const variable = choice(['x','m','p','t']);
+      const firstPairTerms = [
+        {coeff:A,powers:{[variable]:2}},
+        {coeff:B,powers:{[variable]:1}}
+      ];
+      const secondPairTerms = [
+        {coeff:C,powers:{[variable]:1}},
+        {coeff:D,powers:{}}
+      ];
       const expr = polyText([
-        {coeff:A,powers:{x:2}},
-        {coeff:B,powers:{x:1}},
-        {coeff:C,powers:{x:1}},
+        {coeff:A,powers:{[variable]:2}},
+        {coeff:B,powers:{[variable]:1}},
+        {coeff:C,powers:{[variable]:1}},
         {coeff:D,powers:{}}
       ]);
-      const sharedFactor = linearFactorText(c,d);
-      const remainingFactor = linearFactorText(a,b);
-      const groupedLine = a + 'x' + factorText(sharedFactor) + signedFactorTerm(b,sharedFactor);
+      const sharedFactor = linearFactorText(c,d,variable);
+      const remainingFactor = linearFactorText(a,b,variable);
+      const firstGrouped = a + variable + factorText(sharedFactor);
+      const groupedLine = firstGrouped + signedFactorTerm(b,sharedFactor);
       const answer = factorProduct(remainingFactor, sharedFactor);
       return makeProblem(expr, answer, [
-        mathStep(expr + ' = ' + groupedLine),
+        mathStep(expr),
+        mathStep('= ' + groupedPairText(firstPairTerms, secondPairTerms)),
+        mathStep('= ' + groupedLine),
         mathStep('= ' + answer)
       ], 'factor_by_grouping');
     }
