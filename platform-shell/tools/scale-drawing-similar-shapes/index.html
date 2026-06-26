@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scale Drawing & Similar Shapes</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f2f6fb;min-height:100vh;padding:14px;color:#14213d;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#14213d;color:#fff;padding:12px 7px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 7px 7px 0;font-weight:800;font-size:.82em;box-shadow:2px 0 10px rgba(0,0,0,.18)}
+    .sidebar{position:fixed;left:-410px;top:0;width:410px;height:100vh;background:#fff;z-index:1000;transition:left .25s;box-shadow:2px 0 20px rgba(0,0,0,.25);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#14213d;color:#fff;padding:18px;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{color:#14213d;margin:18px 0 8px;border-bottom:2px solid #2563eb;padding-bottom:4px;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{padding-left:20px;margin-bottom:12px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;opacity:0;visibility:hidden;transition:.25s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1220px;margin:0 auto;background:#fff;border-radius:9px;box-shadow:0 4px 18px rgba(15,23,42,.1);overflow:hidden}.header{background:#14213d;background-image:linear-gradient(135deg,rgba(255,255,255,.10),transparent 48%,rgba(0,0,0,.12)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px);color:#fff;padding:20px;text-align:center}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e5edf7}.tab{flex:1;padding:13px 9px;border:0;background:#e5edf7;cursor:pointer;font-weight:850;font-size:.96em;border-bottom:3px solid transparent;color:#1f2937}.tab.active{background:#fff;color:#1d4ed8;border-bottom-color:#1d4ed8}
+    .controls{padding:15px 18px;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #d8e2f0}.level-info h3{color:#14213d;font-size:1.16em;margin-bottom:3px}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{padding:8px 10px;border:2px solid #c7d2e2;border-radius:6px;background:#fff;min-width:355px;font-size:.94em}.timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{font-size:1.45em;font-weight:850;color:#14213d;background:#fff;padding:7px 12px;border:2px solid #c7d2e2;border-radius:6px;min-width:96px;text-align:center}.timer-display.active{border-color:#1d4ed8;color:#1d4ed8}.timer-display.warning{color:#d92d20;border-color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{padding:8px 14px;border:0;border-radius:6px;font-weight:850;cursor:pointer;min-width:68px;color:#fff}.btn-primary{background:#1d4ed8}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{padding:14px 18px 18px;min-height:520px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#1d4ed8;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border-radius:6px;background:#eff6ff;border:1px solid #bfdbfe;color:#14213d;text-align:center;font-weight:800}.set-instruction.visible{display:block}.problem-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;list-style:none}
+    .problem-item{background:#f8fafc;border-left:4px solid #1d4ed8;border-radius:7px;padding:10px 11px;display:flex;flex-direction:column;gap:8px;min-height:250px}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;gap:10px;align-items:flex-start;min-width:0}.problem-number{background:#1d4ed8;color:#fff;min-width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:850}.problem-type{background:#dbeafe;color:#1e3a8a;border-radius:999px;padding:5px 9px;font-size:.76em;font-weight:850;display:inline-flex;margin-bottom:5px}.question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.08em;color:#14213d;font-weight:650;line-height:1.35;overflow-wrap:anywhere}.question-text .word{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;font-size:.88em;font-weight:700;color:#334155}.diagram-row{display:grid;grid-template-columns:220px minmax(0,1fr);gap:10px;align-items:center}.shape-diagram{width:220px;height:142px;background:#fff;border:1px solid #d7e3f0;border-radius:6px;padding:4px}.shape-diagram svg{width:100%;height:100%;display:block}.shape-outline{fill:none;stroke:#111827;stroke-width:2.4;stroke-linejoin:round}.shape-line{stroke:#111827;stroke-width:2.2;stroke-linecap:round}.dash-line{stroke:#111827;stroke-width:2;stroke-dasharray:5 4}.shape-label{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:13px;fill:#111827;font-weight:800;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}.shape-title{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;font-size:11px;fill:#334155;font-weight:800}.unknown-label{fill:#6d28d9;font-style:italic;font-weight:900}.problem-answer{background:#2f855a;color:#fff;padding:7px 11px;border-radius:999px;font-weight:850;display:none;white-space:nowrap;font-size:.92em}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:auto;padding:10px;background:#eff6ff;border-left:3px solid #1d4ed8;border-radius:6px}.steps-section.visible{display:block}.answer-label{font-weight:850;color:#1d4ed8;margin-bottom:6px}.solution-steps{line-height:1.45;font-size:.96em}.step{margin:5px 0;color:#14213d}.step-equation{margin:6px 0;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800;color:#6d28d9;background:#fff;border:1px solid #dbeafe;border-radius:5px;padding:7px}.final-answer{margin-top:8px;text-align:center;background:#2f855a;color:#fff;border-radius:6px;padding:8px;font-weight:850}.timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:#fff;padding:28px;border-radius:10px;text-align:center;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{color:#d92d20;margin-bottom:10px}.modal-content p{color:#667085;margin-bottom:18px}.hidden{display:none}
+    @media (max-width:900px){.problem-list{grid-template-columns:1fr}.diagram-row{grid-template-columns:210px minmax(0,1fr)}.shape-diagram{width:210px;height:136px}}
+    @media (max-width:650px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.diagram-row{grid-template-columns:1fr}.shape-diagram{width:100%;height:150px}.problem-answer{white-space:normal}.question-text{font-size:1.02em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Scale & Similarity Guidance</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool supports scale drawing, map scale, similar shapes, similar triangles, and area or volume ratio problems.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> scale drawings, map scales, actual length, and drawing length.</li>
+        <li><strong>Level 2:</strong> similar shapes, scale factors, and perimeter ratios.</li>
+        <li><strong>Level 3:</strong> similar triangles and missing sides using corresponding lengths.</li>
+        <li><strong>Level 4:</strong> area and volume ratios for similar shapes and solids.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Keep units consistent before using a scale.</li>
+        <li>Identify corresponding sides before forming a ratio.</li>
+        <li>Length scale factor affects lengths and perimeters.</li>
+        <li>Area scale factor is the square of the length scale factor.</li>
+        <li>Volume scale factor is the cube of the length scale factor.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Scale Drawing & Similar Shapes</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Scale Drawings</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Similar Shapes</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Similar Triangles</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Area & Volume Ratios</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Scale Drawings</h3>
+        <p id="level-description">Use scale ratios and map scales to find drawing or actual lengths.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={
+      1:{title:'Level 1: Scale Drawings',description:'Use scale ratios and map scales to find drawing or actual lengths.',types:['drawing_from_actual','actual_from_drawing','map_scale']},
+      2:{title:'Level 2: Similar Shapes',description:'Use scale factors to find missing lengths and perimeters.',types:['similar_shapes_length','scale_factor_find','perimeter_ratio']},
+      3:{title:'Level 3: Similar Triangles',description:'Use corresponding sides in similar triangles to find missing lengths.',types:['similar_triangles_missing','similar_triangles_nested','similar_triangles_perimeter']},
+      4:{title:'Level 4: Area & Volume Ratios',description:'Use squared and cubed scale factors for area and volume problems.',types:['area_ratio_find_area','area_ratio_find_length','volume_ratio']}
+    };
+    const typeDisplayNames={
+      drawing_from_actual:'Type 1: Drawing length from actual length',
+      actual_from_drawing:'Type 2: Actual length from drawing length',
+      map_scale:'Type 3: Map scale problems',
+      similar_shapes_length:'Type 1: Missing lengths in similar shapes',
+      scale_factor_find:'Type 2: Find the scale factor',
+      perimeter_ratio:'Type 3: Perimeter ratio',
+      similar_triangles_missing:'Type 1: Missing side in similar triangles',
+      similar_triangles_nested:'Type 2: Nested similar triangles',
+      similar_triangles_perimeter:'Type 3: Triangle perimeter using similarity',
+      area_ratio_find_area:'Type 1: Area from length ratio',
+      area_ratio_find_length:'Type 2: Length ratio from area ratio',
+      volume_ratio:'Type 3: Volume ratio'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function simplifyRatio(a,b){const g=gcd(a,b);return [a/g,b/g]}
+    function ratioText(a,b){const [x,y]=simplifyRatio(a,b);return `${x}:${y}`}
+    function round1(n){return Number.isInteger(n)?String(n):String(Math.round(n*10)/10)}
+    function round2(n){return Number.isInteger(n)?String(n):String(Math.round(n*100)/100)}
+    function stripTags(html){return String(html).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function problem(prompt,diagram,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question'){return {prompt,diagram,answer,steps,typeLabel,question:stripTags(prompt)}}
+
+    function lineDiagram(label1,value1,label2,value2){
+      return `<div class="shape-diagram"><svg viewBox="0 0 220 142" role="img" aria-label="Scale line diagram">
+        <line class="shape-line" x1="24" y1="52" x2="196" y2="52"/>
+        <line class="shape-line" x1="24" y1="46" x2="24" y2="58"/><line class="shape-line" x1="196" y1="46" x2="196" y2="58"/>
+        <text class="shape-title" x="110" y="25" text-anchor="middle">${label1}</text><text class="shape-label" x="110" y="44" text-anchor="middle">${value1}</text>
+        <line class="dash-line" x1="44" y1="96" x2="176" y2="96"/>
+        <line class="shape-line" x1="44" y1="90" x2="44" y2="102"/><line class="shape-line" x1="176" y1="90" x2="176" y2="102"/>
+        <text class="shape-title" x="110" y="123" text-anchor="middle">${label2}</text><text class="shape-label unknown-label" x="110" y="88" text-anchor="middle">${value2}</text>
+      </svg></div>`;
+    }
+
+    function rectanglesDiagram(aW,aH,bW,bH,unknown=''){
+      const bw=64,bh=46,cw=92,ch=66;
+      return `<div class="shape-diagram"><svg viewBox="0 0 220 142" role="img" aria-label="Similar rectangles">
+        <text class="shape-title" x="55" y="17" text-anchor="middle">Shape A</text>
+        <rect class="shape-outline" x="24" y="37" width="${bw}" height="${bh}"/>
+        <text class="shape-label" x="${24+bw/2}" y="101" text-anchor="middle">${aW}</text>
+        <text class="shape-label" x="16" y="${37+bh/2}" text-anchor="middle">${aH}</text>
+        <text class="shape-title" x="162" y="17" text-anchor="middle">Shape B</text>
+        <rect class="shape-outline" x="126" y="28" width="${cw}" height="${ch}"/>
+        <text class="shape-label ${unknown==='width'?'unknown-label':''}" x="${126+cw/2}" y="113" text-anchor="middle">${bW}</text>
+        <text class="shape-label ${unknown==='height'?'unknown-label':''}" x="206" y="${28+ch/2}" text-anchor="middle">${bH}</text>
+      </svg></div>`;
+    }
+
+    function trianglesDiagram(a1,a2,b1,b2,unknown=''){
+      return `<div class="shape-diagram"><svg viewBox="0 0 220 142" role="img" aria-label="Similar triangles">
+        <text class="shape-title" x="56" y="16" text-anchor="middle">Triangle A</text>
+        <polygon class="shape-outline" points="20,104 96,104 38,36"/>
+        <text class="shape-label" x="58" y="121" text-anchor="middle">${a1}</text>
+        <text class="shape-label" x="28" y="68" text-anchor="middle">${a2}</text>
+        <text class="shape-title" x="162" y="16" text-anchor="middle">Triangle B</text>
+        <polygon class="shape-outline" points="122,108 212,108 144,26"/>
+        <text class="shape-label ${unknown==='base'?'unknown-label':''}" x="167" y="126" text-anchor="middle">${b1}</text>
+        <text class="shape-label ${unknown==='side'?'unknown-label':''}" x="132" y="67" text-anchor="middle">${b2}</text>
+      </svg></div>`;
+    }
+
+    function nestedTriangleDiagram(wholeBase,smallBase,wholeSide,smallSide){
+      return `<div class="shape-diagram"><svg viewBox="0 0 220 142" role="img" aria-label="Nested similar triangles">
+        <polygon class="shape-outline" points="24,112 198,112 64,26"/>
+        <line class="shape-line" x1="64" y1="74" x2="138" y2="74"/>
+        <text class="shape-label" x="111" y="131" text-anchor="middle">${wholeBase}</text>
+        <text class="shape-label" x="41" y="70" text-anchor="middle">${wholeSide}</text>
+        <text class="shape-label" x="101" y="68" text-anchor="middle">${smallBase}</text>
+        <text class="shape-label unknown-label" x="77" y="50" text-anchor="middle">${smallSide}</text>
+      </svg></div>`;
+    }
+
+    function genDrawingFromActual(){
+      const scale=choice([50,100,200,250,500]),drawing=choice([2,3,4,5,6,8,10,12]),actualM=drawing*scale/100;
+      return problem(`A scale drawing uses scale 1:${scale}. An actual length is ${round2(actualM)} m. Find the length on the drawing.`,lineDiagram('Actual length',`${round2(actualM)} m`,'Drawing length','x cm'),`${drawing} cm`,[
+        `Scale 1:${scale} means 1 cm on the drawing represents ${scale} cm in real life.`,
+        `Convert the actual length to centimetres: ${round2(actualM)} m = ${round2(actualM*100)} cm.`,
+        `Drawing length = actual length ÷ scale factor.`,
+        `Drawing length = ${round2(actualM*100)} ÷ ${scale} = ${drawing} cm.`
+      ]);
+    }
+
+    function genActualFromDrawing(){
+      const scale=choice([50,100,200,250,500]),drawing=choice([2,3,4,5,6,8,10,12]),actualCm=drawing*scale,actualM=actualCm/100;
+      return problem(`A scale drawing uses scale 1:${scale}. A line on the drawing is ${drawing} cm. Find the actual length.`,lineDiagram('Drawing length',`${drawing} cm`,'Actual length','x m'),`${round2(actualM)} m`,[
+        `Scale 1:${scale} means 1 cm on the drawing represents ${scale} cm in real life.`,
+        `Actual length in cm = drawing length × scale factor.`,
+        `Actual length = ${drawing} × ${scale} = ${actualCm} cm.`,
+        `Convert to metres: ${actualCm} cm = ${round2(actualM)} m.`
+      ]);
+    }
+
+    function genMapScale(){
+      const kmPerCm=choice([2,5,10,20]),mapCm=choice([3,4,5,6,7,8,9,10,12]),actual=mapCm*kmPerCm;
+      const askDrawing=Math.random()<0.5;
+      if(askDrawing){
+        return problem(`On a map, 1 cm represents ${kmPerCm} km. Two towns are ${actual} km apart. Find their distance on the map.`,lineDiagram('Actual distance',`${actual} km`,'Map distance','x cm'),`${mapCm} cm`,[
+          `1 cm represents ${kmPerCm} km.`,
+          `Map distance = actual distance ÷ kilometres per centimetre.`,
+          `Map distance = ${actual} ÷ ${kmPerCm} = ${mapCm} cm.`
+        ]);
+      }
+      return problem(`On a map, 1 cm represents ${kmPerCm} km. The map distance is ${mapCm} cm. Find the actual distance.`,lineDiagram('Map distance',`${mapCm} cm`,'Actual distance','x km'),`${actual} km`,[
+        `1 cm represents ${kmPerCm} km.`,
+        `Actual distance = map distance × kilometres per centimetre.`,
+        `Actual distance = ${mapCm} × ${kmPerCm} = ${actual} km.`
+      ]);
+    }
+
+    function similarShapeData(){
+      const q=choice([1,2,3]),p=q+choice([1,2,3]);
+      const aW=q*choice([3,4,5,6]),aH=q*choice([4,5,7,8]);
+      return {q,p,aW,aH,bW:aW*p/q,bH:aH*p/q};
+    }
+
+    function genSimilarShapesLength(){
+      const d=similarShapeData(),findHeight=Math.random()<0.5;
+      const diagram=rectanglesDiagram(`${d.aW} cm`,`${d.aH} cm`,findHeight?`${d.bW} cm`:'x cm',findHeight?'x cm':`${d.bH} cm`,findHeight?'height':'width');
+      const answer=findHeight?d.bH:d.bW;
+      const knownA=findHeight?d.aW:d.aH,knownB=findHeight?d.bW:d.bH,unknownA=findHeight?d.aH:d.aW;
+      return problem(`The two rectangles are similar. Find the missing length x.`,diagram,`${round2(answer)} cm`,[
+        `Find the length scale factor using a pair of corresponding sides.`,
+        `Scale factor = ${knownB} ÷ ${knownA} = ${round2(knownB/knownA)}.`,
+        `Missing length = corresponding length × scale factor.`,
+        `x = ${unknownA} × ${round2(knownB/knownA)} = ${round2(answer)} cm.`
+      ]);
+    }
+
+    function genScaleFactorFind(){
+      const d=similarShapeData();
+      return problem(`The two rectangles are similar. Find the scale factor from Shape A to Shape B.`,rectanglesDiagram(`${d.aW} cm`,`${d.aH} cm`,`${d.bW} cm`,`${d.bH} cm`),`${ratioText(d.p,d.q)} or ${round2(d.p/d.q)}`,[
+        `Use any pair of corresponding sides.`,
+        `Scale factor from A to B = B side ÷ A side.`,
+        `Scale factor = ${d.bW} ÷ ${d.aW} = ${d.p}/${d.q}.`,
+        `So the scale factor is ${ratioText(d.p,d.q)}, which is ${round2(d.p/d.q)}.`
+      ]);
+    }
+
+    function genPerimeterRatio(){
+      const rawM=choice([2,3,4,5]),rawN=rawM+choice([1,2,3,4]),[m,n]=simplifyRatio(rawM,rawN),perimA=m*choice([8,10,12,15]),perimB=perimA*n/m;
+      return problem(`Two similar shapes have length ratio ${m}:${n}. The smaller shape has perimeter ${perimA} cm. Find the perimeter of the larger shape.`,rectanglesDiagram(`${m} units`,'',`${n} units`,'',''),`${perimB} cm`,[
+        `For similar shapes, perimeter ratio is the same as length ratio.`,
+        `Length ratio = ${m}:${n}, so perimeter ratio = ${m}:${n}.`,
+        `Scale factor from smaller to larger = ${n} ÷ ${m}.`,
+        `Larger perimeter = ${perimA} × ${n} ÷ ${m} = ${perimB} cm.`
+      ]);
+    }
+
+    function triangleData(){
+      const q=choice([1,2,3]),p=q+choice([1,2,3]);
+      const base=q*choice([4,5,6]),side=q*choice([5,7,8]);
+      return {q,p,base,side,bigBase:base*p/q,bigSide:side*p/q};
+    }
+
+    function genSimilarTrianglesMissing(){
+      const d=triangleData(),findSide=Math.random()<0.5;
+      const diagram=trianglesDiagram(`${d.base} cm`,`${d.side} cm`,findSide?`${d.bigBase} cm`:'x cm',findSide?'x cm':`${d.bigSide} cm`,findSide?'side':'base');
+      const answer=findSide?d.bigSide:d.bigBase;
+      const knownA=findSide?d.base:d.side,knownB=findSide?d.bigBase:d.bigSide,unknownA=findSide?d.side:d.base;
+      return problem(`The triangles are similar. Find x.`,diagram,`${round2(answer)} cm`,[
+        `Identify corresponding sides before forming the ratio.`,
+        `Scale factor from Triangle A to Triangle B = ${knownB} ÷ ${knownA} = ${round2(knownB/knownA)}.`,
+        `x = corresponding side in Triangle A × scale factor.`,
+        `x = ${unknownA} × ${round2(knownB/knownA)} = ${round2(answer)} cm.`
+      ]);
+    }
+
+    function genSimilarTrianglesNested(){
+      const factor=choice([2,3,4]),smallBase=choice([4,5,6]),smallSide=choice([5,7,8]),wholeBase=smallBase*factor,wholeSide=smallSide*factor;
+      return problem(`The line inside the triangle is parallel to the base, so the small triangle is similar to the whole triangle. Find x.`,nestedTriangleDiagram(`${wholeBase} cm`,`${smallBase} cm`,`${wholeSide} cm`,'x cm'),`${smallSide} cm`,[
+        `The parallel line creates two similar triangles.`,
+        `Scale factor from the small triangle to the whole triangle = whole base ÷ small base.`,
+        `Scale factor = ${wholeBase} ÷ ${smallBase} = ${factor}.`,
+        `Small side x = whole corresponding side ÷ ${factor}.`,
+        `x = ${wholeSide} ÷ ${factor} = ${smallSide} cm.`
+      ]);
+    }
+
+    function genSimilarTrianglesPerimeter(){
+      const d=triangleData(),smallPerimeter=d.base+d.side+choice([6,9,12]),scale=d.p/d.q,bigPerimeter=smallPerimeter*scale;
+      return problem(`Two similar triangles have scale factor ${ratioText(d.p,d.q)} from Triangle A to Triangle B. Triangle A has perimeter ${smallPerimeter} cm. Find the perimeter of Triangle B.`,trianglesDiagram('','','',''),`${round2(bigPerimeter)} cm`,[
+        `Perimeter uses the same scale factor as length.`,
+        `Scale factor from A to B = ${d.p} ÷ ${d.q} = ${round2(scale)}.`,
+        `Perimeter of B = perimeter of A × scale factor.`,
+        `Perimeter of B = ${smallPerimeter} × ${d.p} ÷ ${d.q} = ${round2(bigPerimeter)} cm.`
+      ]);
+    }
+
+    function genAreaRatioFindArea(){
+      const m=choice([2,3,4,5]),n=m+choice([1,2,3,4]),[a,b]=simplifyRatio(m,n),areaA=a*a*choice([3,4,5,6]),areaB=areaA*b*b/(a*a);
+      return problem(`Two similar shapes have length ratio ${a}:${b}. The area of the smaller shape is ${areaA} cm². Find the area of the larger shape.`,rectanglesDiagram(`${a} units`,'',`${b} units`,'',''),`${areaB} cm²`,[
+        `Area ratio is the square of the length ratio.`,
+        `Length ratio = ${a}:${b}.`,
+        `Area ratio = ${a}²:${b}² = ${a*a}:${b*b}.`,
+        `Larger area = ${areaA} × ${b*b} ÷ ${a*a} = ${areaB} cm².`
+      ]);
+    }
+
+    function genAreaRatioFindLength(){
+      const m=choice([2,3,4,5]),n=m+choice([1,2,3,4]),[a,b]=simplifyRatio(m,n);
+      return problem(`Two similar shapes have area ratio ${a*a}:${b*b}. Find their length ratio.`,rectanglesDiagram(`${a*a} cm²`,'',`${b*b} cm²`,'',''),`${a}:${b}`,[
+        `Area ratio is the square of the length ratio.`,
+        `Take the square root of each part of the area ratio.`,
+        `√${a*a}:√${b*b} = ${a}:${b}.`,
+        `So the length ratio is ${a}:${b}.`
+      ]);
+    }
+
+    function genVolumeRatio(){
+      const m=choice([2,3,4]),n=m+choice([1,2,3]),[a,b]=simplifyRatio(m,n),volumeA=a*a*a*choice([2,3,4]),volumeB=volumeA*b*b*b/(a*a*a);
+      return problem(`Two similar solids have length ratio ${a}:${b}. The smaller solid has volume ${volumeA} cm³. Find the volume of the larger solid.`,lineDiagram('Length ratio',`${a}:${b}`,'Volume ratio','?'),`${volumeB} cm³`,[
+        `Volume ratio is the cube of the length ratio.`,
+        `Length ratio = ${a}:${b}.`,
+        `Volume ratio = ${a}³:${b}³ = ${a*a*a}:${b*b*b}.`,
+        `Larger volume = ${volumeA} × ${b*b*b} ÷ ${a*a*a} = ${volumeB} cm³.`
+      ]);
+    }
+
+    function generateProblem(){
+      const t=currentType==='select'?choice(levelConfigs[currentLevel].types):currentType;
+      if(t==='drawing_from_actual')return genDrawingFromActual();
+      if(t==='actual_from_drawing')return genActualFromDrawing();
+      if(t==='map_scale')return genMapScale();
+      if(t==='similar_shapes_length')return genSimilarShapesLength();
+      if(t==='scale_factor_find')return genScaleFactorFind();
+      if(t==='perimeter_ratio')return genPerimeterRatio();
+      if(t==='similar_triangles_missing')return genSimilarTrianglesMissing();
+      if(t==='similar_triangles_nested')return genSimilarTrianglesNested();
+      if(t==='similar_triangles_perimeter')return genSimilarTrianglesPerimeter();
+      if(t==='area_ratio_find_area')return genAreaRatioFindArea();
+      if(t==='area_ratio_find_length')return genAreaRatioFindLength();
+      if(t==='volume_ratio')return genVolumeRatio();
+      return genDrawingFromActual();
+    }
+
+    function setInstructionForType(){
+      const text={
+        drawing_from_actual:'Convert units first, then divide by the scale factor.',
+        actual_from_drawing:'Multiply the drawing length by the scale factor, then convert units if needed.',
+        map_scale:'Use the map scale as a multiplier or divisor.',
+        similar_shapes_length:'Use corresponding sides to find the scale factor.',
+        scale_factor_find:'Compare matching sides in the same order.',
+        perimeter_ratio:'Perimeters scale by the length scale factor.',
+        similar_triangles_missing:'Match corresponding sides before writing the proportion.',
+        similar_triangles_nested:'Parallel lines create similar triangles.',
+        similar_triangles_perimeter:'Perimeters of similar triangles use the same ratio as lengths.',
+        area_ratio_find_area:'Square the length scale factor for area.',
+        area_ratio_find_length:'Take square roots of the area ratio to get the length ratio.',
+        volume_ratio:'Cube the length scale factor for volume.'
+      }[currentType]||'';
+      const el=document.getElementById('set-instruction');el.textContent=text;el.classList.toggle('visible',Boolean(text));
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));
+      const cfg=levelConfigs[level];
+      document.getElementById('level-title').textContent=cfg.title;
+      document.getElementById('level-description').textContent=cfg.description;
+      const dd=document.getElementById('type-dropdown');
+      dd.innerHTML='<option value="select">Select Question Type</option>'+cfg.types.map(t=>`<option value="${t}">${typeDisplayNames[t]}</option>`).join('');
+      dd.value='select';
+      showBlankPage();
+    }
+
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-set-header').classList.remove('visible');document.getElementById('set-instruction').classList.remove('visible');document.getElementById('problem-list').innerHTML='<li style="grid-column:1/-1;text-align:center;padding:38px;color:#667085;font-size:1.05em">Please select a question type to begin scale and similarity practice.</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;const seen=new Set();let guard=0;while(problems.length<4&&guard<80){guard++;const p=generateProblem(),key=p.question+'|'+stripTags(p.answer);if(seen.has(key))continue;seen.add(key);problems.push(p)}while(problems.length<4)problems.push(generateProblem());renderProblems()}
+    function renderProblems(){
+      const c=document.getElementById('problem-list'),h=document.getElementById('problem-set-header');
+      c.innerHTML='';h.textContent=typeDisplayNames[currentType]||'Scale Drawing & Similar Shapes';h.className='problem-set-header visible';setInstructionForType();
+      problems.forEach((p,i)=>{
+        const li=document.createElement('li');li.className='problem-item';
+        const steps=p.steps.map(s=>String(s).includes('=')||String(s).includes('×')||String(s).includes('÷')||String(s).includes('²')||String(s).includes('³')?`<div class="step-equation">${s}</div>`:`<div class="step">${s}</div>`).join('');
+        li.innerHTML=`<div class="problem-header"><div class="problem-left"><div class="problem-number">${i+1}</div><div><div class="problem-type">${p.typeLabel}</div><div class="diagram-row">${p.diagram}<div class="question-text">${p.prompt}</div></div></div></div><div class="problem-answer" id="quick-answer-${i}">${p.answer}</div></div><div class="steps-section" id="steps-${i}"><div class="answer-label">Solution Steps:</div><div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div></div>`;
+        c.appendChild(li);
+      });
+    }
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>{const e=document.getElementById(`quick-answer-${i}`);if(e)e.classList.toggle('visible',answersVisible)})}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>{const e=document.getElementById(`steps-${i}`);if(e)e.classList.toggle('visible',stepsVisible)})}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const e=document.getElementById('timer-display');e.textContent='Ready';e.className='timer-display'}
+    function updateTimerDisplay(){const e=document.getElementById('timer-display'),m=Math.floor(timeRemaining/60),s=timeRemaining%60;e.textContent=m+':'+String(s).padStart(2,'0');if(timerActive&&timeRemaining<=30)e.className='timer-display warning';else if(timerActive)e.className='timer-display active';else e.className='timer-display'}
+    function timerFinished(){stopTimer();const e=document.getElementById('timer-display');e.textContent='Time Up!';e.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
+</body>
+</html>

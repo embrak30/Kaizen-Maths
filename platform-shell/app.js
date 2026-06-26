@@ -498,6 +498,25 @@ const tools = [
     ]
   },
   {
+    slug: "scale-drawing-similar-shapes",
+    title: "Scale Drawing & Similar Shapes",
+    category: "Geometry",
+    level: "KS3 / GCSE / IGCSE",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate scale drawing and similarity practice covering map scales, similar shapes, similar triangles, perimeter ratios, area ratios, and volume ratios.",
+    tags: ["geometry", "scale drawing", "map scale", "similar shapes", "similar triangles", "scale factor", "area ratio", "volume ratio", "perimeter ratio"],
+    toolPath: "tools/scale-drawing-similar-shapes/index.html?v=scale-similar-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers scale drawings and map scale problems with unit conversion.",
+      "Level 2 covers missing lengths, scale factors, and perimeter ratios in similar shapes.",
+      "Level 3 covers similar triangles, including nested triangle problems formed by parallel lines.",
+      "Level 4 covers area and volume ratio problems using squared and cubed length scale factors."
+    ]
+  },
+  {
     slug: "area-triangles",
     title: "Area of Triangles",
     category: "Geometry",
