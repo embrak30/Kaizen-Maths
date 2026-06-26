@@ -131,6 +131,28 @@
       if(den<0){ num=-num; den=-den; }
       return den===1 ? String(num) : num + '/' + den;
     }
+    function verticalFraction(numerator,denominator){
+      return '<span class="fraction"><span class="numerator">' + numerator + '</span><span class="denominator">' + denominator + '</span></span>';
+    }
+    function formulaDenominator(aCoeff){
+      return aCoeff < 0 ? '2 × (' + aCoeff + ')' : '2 × ' + aCoeff;
+    }
+    function formulaSolutionSteps(aCoeff,bCoeff,disc,x1,x2){
+      if(disc < 0) return ['The discriminant is less than 0, so there are no real solutions.'];
+      const denominator = formulaDenominator(aCoeff);
+      const negativeB = -bCoeff;
+      if(disc === 0){
+        return [
+          'Substitute into the quadratic formula:',
+          'x = ' + verticalFraction(String(negativeB), denominator) + ' ≈ ' + x1.toFixed(2)
+        ];
+      }
+      return [
+        'Substitute into the quadratic formula:',
+        'x1 = ' + verticalFraction(negativeB + ' + √(' + disc + ')', denominator) + ' ≈ ' + x1.toFixed(2),
+        'x2 = ' + verticalFraction(negativeB + ' - √(' + disc + ')', denominator) + ' ≈ ' + x2.toFixed(2)
+      ];
+    }
     function signed(n){ return (n >= 0 ? '+' : '') + n; }
     function rootFactor(r){ return r >= 0 ? '(x - ' + r + ')' : '(x + ' + (-r) + ')'; }
 
@@ -274,21 +296,28 @@
         disc = b*b - 4*a*c;
       } while(disc >= 0 && Number.isInteger(Math.sqrt(disc)));
       let answer;
-      let finalStep;
+      let formulaSteps;
       if(disc < 0){
         answer = 'No real solutions';
-        finalStep = 'The discriminant is less than 0, so there are no real solutions.';
+        formulaSteps = formulaSolutionSteps(a,b,disc,0,0);
       } else {
         const root = Math.sqrt(disc);
         const x1 = (-b + root)/(2*a);
         const x2 = (-b - root)/(2*a);
         answer = disc === 0 ? 'x ≈ ' + x1.toFixed(2) : 'x ≈ ' + x1.toFixed(2) + ', x ≈ ' + x2.toFixed(2);
-        finalStep = disc === 0 ? 'x = (-' + b + ') / (2*' + a + ') ≈ ' + x1.toFixed(2) : 'x1 = (-' + b + ' + sqrt(' + disc + ')) / (2*' + a + ') ≈ ' + x1.toFixed(2) + ', x2 = (-' + b + ' - sqrt(' + disc + ')) / (2*' + a + ') ≈ ' + x2.toFixed(2);
+        formulaSteps = formulaSolutionSteps(a,b,disc,x1,x2);
       }
       return {
         equation: (a === 1 ? 'x^2' : a + 'x^2') + ' ' + (b>=0 ? '+ ' + bAbs : '- ' + bAbs) + 'x ' + (signC>0 ? '+ ' + cAbs : '- ' + cAbs) + ' = ' + d,
         answer,
-        steps: ['Rearrange to standard form:', (a === 1 ? 'x^2' : a + 'x^2') + ' ' + signed(b) + 'x ' + signed(c) + ' = 0', 'Use the quadratic formula: x = (-b +/- sqrt(b^2 - 4ac)) / (2a).', 'Here a = ' + a + ', b = ' + b + ', c = ' + c + '.', 'Discriminant: D = b^2 - 4ac = ' + b + '^2 - 4*' + a + '*' + c + ' = ' + disc + '.', finalStep]
+        steps: [
+          'Rearrange to standard form:',
+          (a === 1 ? 'x^2' : a + 'x^2') + ' ' + signed(b) + 'x ' + signed(c) + ' = 0',
+          'Use the quadratic formula: x = ' + verticalFraction('-b ± √(b^2 - 4ac)', '2a') + '.',
+          'Here a = ' + a + ', b = ' + b + ', c = ' + c + '.',
+          'Discriminant: D = b^2 - 4ac = ' + b + '^2 - 4 × ' + a + ' × ' + c + ' = ' + disc + '.',
+          ...formulaSteps
+        ]
       };
     }
 
@@ -309,17 +338,18 @@
         'Move all terms to one side to get standard form ax^2 + bx + c = 0.',
         'Standard form: ' + A + 'x^2 ' + signed(B) + 'x ' + signed(C) + ' = 0',
         'Here a = ' + A + ', b = ' + B + ', c = ' + C + '.',
-        'Discriminant D = ' + B + '^2 - 4*' + A + '*' + C + ' = ' + disc + '.'
+        'Use the quadratic formula: x = ' + verticalFraction('-b ± √(b^2 - 4ac)', '2a') + '.',
+        'Discriminant D = ' + B + '^2 - 4 × ' + A + ' × ' + C + ' = ' + disc + '.'
       ];
       if(disc < 0){
         answer = 'No real solutions';
-        steps.push('D < 0, so there are no real solutions.');
+        steps.push(...formulaSolutionSteps(A,B,disc,0,0));
       } else {
         const root = Math.sqrt(disc);
         const x1 = (-B + root)/(2*A);
         const x2 = (-B - root)/(2*A);
         answer = disc === 0 ? 'x ≈ ' + x1.toFixed(2) : 'x ≈ ' + x1.toFixed(2) + ', x ≈ ' + x2.toFixed(2);
-        steps.push(disc === 0 ? 'x = (-' + B + ') / (2*' + A + ') ≈ ' + x1.toFixed(2) : 'x1 = (-' + B + ' + sqrt(' + disc + ')) / (2*' + A + ') ≈ ' + x1.toFixed(2) + ', x2 = (-' + B + ' - sqrt(' + disc + ')) / (2*' + A + ') ≈ ' + x2.toFixed(2));
+        steps.push(...formulaSolutionSteps(A,B,disc,x1,x2));
       }
       return { equation: a + 'x ' + (signB>0 ? '+ ' : '- ') + bAbs + ' = ' + cRight + ' ' + (signQ>0 ? '+ ' : '- ') + q + 'x^2', answer, steps };
     }
