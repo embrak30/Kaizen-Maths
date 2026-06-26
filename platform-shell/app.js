@@ -1009,13 +1009,14 @@ const tools = [
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate Venn diagram practice for set notation, two-set regions, word problems, probability, and three-set CSEC-style diagrams.",
-    tags: ["statistics", "sets", "venn diagrams", "set notation", "union", "intersection", "complement", "probability", "CSEC", "GCSE"],
-    toolPath: "tools/venn-diagrams/index.html?v=venn-diagrams-1",
+    description: "Generate Venn diagram practice for set notation, two-set regions, word problems, probability, probability with algebra, and three-set CSEC-style diagrams.",
+    tags: ["statistics", "sets", "venn diagrams", "set notation", "union", "intersection", "complement", "probability", "probability algebra", "CSEC", "GCSE"],
+    toolPath: "tools/venn-diagrams/index.html?v=venn-diagrams-3",
     imported: true,
     teacherNotes: [
       "Builds from reading two-set diagrams to CSEC-style word problems and three-set diagrams.",
       "Worked steps emphasise starting with the overlap, then working outwards region by region.",
+      "Completed diagram questions place the calculated values back into the Venn diagram when steps are shown.",
       "Probability questions use counts from the diagram with simplified fractional answers."
     ]
   },
