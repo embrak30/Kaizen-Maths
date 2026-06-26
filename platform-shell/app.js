@@ -1002,6 +1002,24 @@ const tools = [
     ]
   },
   {
+    slug: "venn-diagrams",
+    title: "Venn Diagrams",
+    category: "Statistics",
+    level: "CSEC / GCSE",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate Venn diagram practice for set notation, two-set regions, word problems, probability, and three-set CSEC-style diagrams.",
+    tags: ["statistics", "sets", "venn diagrams", "set notation", "union", "intersection", "complement", "probability", "CSEC", "GCSE"],
+    toolPath: "tools/venn-diagrams/index.html?v=venn-diagrams-1",
+    imported: true,
+    teacherNotes: [
+      "Builds from reading two-set diagrams to CSEC-style word problems and three-set diagrams.",
+      "Worked steps emphasise starting with the overlap, then working outwards region by region.",
+      "Probability questions use counts from the diagram with simplified fractional answers."
+    ]
+  },
+  {
     slug: "quadratic-factorisation",
     title: "Quadratic Factorisation",
     category: "Algebra",
