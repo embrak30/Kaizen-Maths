@@ -364,6 +364,8 @@
       return makeProblem(expr, answer, [
         mathStep('A<sup>2</sup> - B<sup>2</sup> = (A - B)(A + B)'),
         mathStep('A = ' + a + ', B = ' + b),
+        mathStep('A - B = ' + a + ' - ' + b),
+        mathStep('A + B = ' + a + ' + ' + b),
         mathStep(expr + ' = ' + bracket(a + ' - ' + b) + bracket(a + ' + ' + b))
       ], 'dots_basic');
     }
@@ -376,6 +378,9 @@
         return makeProblem(expr, answer, [
           mathStep(expr + ' = f(f<sup>2</sup> - 1)'),
           mathStep('= f(f<sup>2</sup> - 1<sup>2</sup>)'),
+          mathStep('Inside the bracket: A = f, B = 1'),
+          mathStep('A - B = f - 1'),
+          mathStep('A + B = f + 1'),
           mathStep('= ' + answer)
         ], 'dots_hidden');
       }
@@ -385,6 +390,9 @@
         return makeProblem(expr, answer, [
           mathStep(expr + ' = f(m<sup>2</sup> - 1)'),
           mathStep('= f(m<sup>2</sup> - 1<sup>2</sup>)'),
+          mathStep('Inside the bracket: A = m, B = 1'),
+          mathStep('A - B = m - 1'),
+          mathStep('A + B = m + 1'),
           mathStep('= ' + answer)
         ], 'dots_hidden');
       }
@@ -395,6 +403,9 @@
       return makeProblem(expr, answer, [
         mathStep(expr + ' = ' + h + '(x<sup>2</sup> - ' + n*n + ')'),
         mathStep('= ' + h + '(x<sup>2</sup> - ' + n + '<sup>2</sup>)'),
+        mathStep('Inside the bracket: A = x, B = ' + n),
+        mathStep('A - B = x - ' + n),
+        mathStep('A + B = x + ' + n),
         mathStep('= ' + answer)
       ], 'dots_hidden');
     }
@@ -462,7 +473,13 @@
         const answer = '(x - 1)(x + 1)(x<sup>2</sup> + 1)';
         return makeProblem(expr, answer, [
           mathStep(expr + ' = (x<sup>2</sup>)<sup>2</sup> - 1<sup>2</sup>'),
+          mathStep('First use: A = x<sup>2</sup>, B = 1'),
+          mathStep('A - B = x<sup>2</sup> - 1'),
+          mathStep('A + B = x<sup>2</sup> + 1'),
           mathStep('= (x<sup>2</sup> - 1)(x<sup>2</sup> + 1)'),
+          mathStep('Now factor x<sup>2</sup> - 1: A = x, B = 1'),
+          mathStep('A - B = x - 1'),
+          mathStep('A + B = x + 1'),
           mathStep('= ' + answer)
         ], 'dots_repeated');
       }
@@ -472,7 +489,13 @@
         const answer = '(x - ' + n + ')(x + ' + n + ')(x<sup>2</sup> + ' + (n*n) + ')';
         return makeProblem(expr, answer, [
           mathStep(expr + ' = (x<sup>2</sup>)<sup>2</sup> - ' + (n*n) + '<sup>2</sup>'),
+          mathStep('First use: A = x<sup>2</sup>, B = ' + (n*n)),
+          mathStep('A - B = x<sup>2</sup> - ' + (n*n)),
+          mathStep('A + B = x<sup>2</sup> + ' + (n*n)),
           mathStep('= (x<sup>2</sup> - ' + (n*n) + ')(x<sup>2</sup> + ' + (n*n) + ')'),
+          mathStep('Now factor x<sup>2</sup> - ' + (n*n) + ': A = x, B = ' + n),
+          mathStep('A - B = x - ' + n),
+          mathStep('A + B = x + ' + n),
           mathStep('= ' + answer)
         ], 'dots_repeated');
       }
@@ -481,7 +504,13 @@
         const answer = '(x - y)(x + y)(x<sup>2</sup> + y<sup>2</sup>)';
         return makeProblem(expr, answer, [
           mathStep(expr + ' = (x<sup>2</sup>)<sup>2</sup> - (y<sup>2</sup>)<sup>2</sup>'),
+          mathStep('First use: A = x<sup>2</sup>, B = y<sup>2</sup>'),
+          mathStep('A - B = x<sup>2</sup> - y<sup>2</sup>'),
+          mathStep('A + B = x<sup>2</sup> + y<sup>2</sup>'),
           mathStep('= (x<sup>2</sup> - y<sup>2</sup>)(x<sup>2</sup> + y<sup>2</sup>)'),
+          mathStep('Now factor x<sup>2</sup> - y<sup>2</sup>: A = x, B = y'),
+          mathStep('A - B = x - y'),
+          mathStep('A + B = x + y'),
           mathStep('= ' + answer)
         ], 'dots_repeated');
       }
@@ -489,7 +518,13 @@
       const answer = '(2x - 3)(2x + 3)(4x<sup>2</sup> + 9)';
       return makeProblem(expr, answer, [
         mathStep(expr + ' = (4x<sup>2</sup>)<sup>2</sup> - 9<sup>2</sup>'),
+        mathStep('First use: A = 4x<sup>2</sup>, B = 9'),
+        mathStep('A - B = 4x<sup>2</sup> - 9'),
+        mathStep('A + B = 4x<sup>2</sup> + 9'),
         mathStep('= (4x<sup>2</sup> - 9)(4x<sup>2</sup> + 9)'),
+        mathStep('Now factor 4x<sup>2</sup> - 9: A = 2x, B = 3'),
+        mathStep('A - B = 2x - 3'),
+        mathStep('A + B = 2x + 3'),
         mathStep('= ' + answer)
       ], 'dots_repeated');
     }
@@ -524,15 +559,19 @@
       const sharedFactor = linearText(c,d);
       const answer = bracket(firstFactor) + bracket(sharedFactor);
       const splitExpr = polyText([{coeff:A,powers:{x:2}},{coeff:a*d,powers:{x:1}},{coeff:b*c,powers:{x:1}},{coeff:C,powers:{}}]);
-      const groupedLine = a + 'x' + bracket(sharedFactor) + (b > 0 ? ' + ' + b : ' - ' + Math.abs(b)) + bracket(sharedFactor);
+      const firstPairTerms = [{coeff:A,powers:{x:2}},{coeff:a*d,powers:{x:1}}];
+      const secondPairTerms = [{coeff:b*c,powers:{x:1}},{coeff:C,powers:{}}];
+      const groupedLine = a + 'x' + factorText(sharedFactor) + signedFactorTerm(b,sharedFactor);
       return makeProblem(expr, answer, [
         'Step 1: Multiply a × c for the quadratic: ' + A + ' × ' + C + ' = ' + (A*C) + '.',
         'Step 2: Split the middle term using ' + (a*d) + 'x and ' + (b*c) + 'x, because they add to ' + B + 'x.',
-        mathStep(expr + ' = ' + splitExpr),
-        'Step 3: Factorise the first pair and the second pair.',
-        mathStep(splitExpr + ' = ' + groupedLine),
+        mathStep(expr),
+        mathStep('= ' + splitExpr),
+        'Step 3: Group the four terms in pairs and factor each pair.',
+        mathStep('= ' + groupedPairText(firstPairTerms, secondPairTerms)),
+        mathStep('= ' + groupedLine),
         'Step 4: Factor out the shared bracket.',
-        mathStep(groupedLine + ' = ' + answer),
+        mathStep('= ' + answer),
         'Step 5: Check by expanding.'
       ], 'quadratic_nonmonic');
     }

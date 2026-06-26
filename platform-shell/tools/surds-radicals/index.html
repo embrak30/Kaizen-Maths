@@ -1182,6 +1182,9 @@
               stepLabel(2) + " Multiply by the conjugate over itself",
               fraction(numerator, a + " + √" + radicand) + " × " + fraction(a + " - √" + radicand, a + " - √" + radicand),
               stepLabel(3) + " Use difference of squares in the denominator",
+              "A = " + a + " and B = √" + radicand + ".",
+              "A + B = " + a + " + √" + radicand + ".",
+              "A - B = " + a + " - √" + radicand + ".",
               a + "² - (√" + radicand + ")² = " + (a * a) + " - " + radicand + " = " + denominator,
               stepLabel(4) + " Simplify the fraction",
               arrow(answer)
@@ -1253,11 +1256,14 @@
               "(A + B)(A - B) = A² - B².",
               stepLabel(3) + " Identify A and B",
               "A = " + firstTerm + " and B = " + secondTerm + ".",
-              stepLabel(4) + " Square each term",
+              stepLabel(4) + " Show the two bracket factors",
+              "A + B = " + firstTerm + " + " + secondTerm + ".",
+              "A - B = " + firstTerm + " - " + secondTerm + ".",
+              stepLabel(5) + " Square each term",
               surdFirst
                 ? "(" + surdTerm + ")² = " + coefficient + "² × " + radicand + " = " + surdSquare + ", and " + constant + "² = " + constantSquare
                 : constant + "² = " + constantSquare + ", and (" + surdTerm + ")² = " + coefficient + "² × " + radicand + " = " + surdSquare,
-              stepLabel(5) + " Subtract the squares",
+              stepLabel(6) + " Subtract the squares",
               surdFirst
                 ? surdSquare + " - " + constantSquare + " = " + answer
                 : constantSquare + " - " + surdSquare + " = " + answer,

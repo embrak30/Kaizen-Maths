@@ -268,7 +268,7 @@ const tools = [
     status: "Imported",
     description: "Generate A-level trigonometric functions practice covering reciprocal graphs, sec, cosec, cot equations, identities, proofs, and hence-solve questions.",
     tags: ["algebra", "trigonometry", "trigonometric functions", "sec", "cosec", "cot", "identities", "proof", "A-Level"],
-    toolPath: "tools/trigonometric-functions/index.html?v=graph-axis-grid-1",
+    toolPath: "tools/trigonometric-functions/index.html?v=factorisation-steps-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers reciprocal graph sketching, definitions, and simple reciprocal equations.",
@@ -724,7 +724,7 @@ const tools = [
     status: "Imported",
     description: "Generate surd and radical practice covering simplification, operations, rationalising denominators, expanding brackets, and multi-step expressions.",
     tags: ["algebra", "surds", "radicals", "roots", "rationalising", "simplifying"],
-    toolPath: "tools/surds-radicals/index.html?v=surds-arrow-1",
+    toolPath: "tools/surds-radicals/index.html?v=factorisation-steps-1",
     imported: true,
     teacherNotes: [
       "Level 1 develops simplification by finding perfect square factors.",
@@ -1011,7 +1011,7 @@ const tools = [
     status: "Imported",
     description: "Generate factorisation questions for common factors, special quadratic forms, trinomials, grouping, and mixed expressions.",
     tags: ["algebra", "quadratics", "factorisation", "factorising", "difference of squares", "trinomials", "common factor"],
-    toolPath: "tools/quadratic-factorisation/index.html?v=batch3-steps-1",
+    toolPath: "tools/quadratic-factorisation/index.html?v=factorisation-steps-1",
     imported: true,
     teacherNotes: [
       "Builds from common factor extraction into special products and trinomial factorisation.",
@@ -1029,7 +1029,7 @@ const tools = [
     status: "Imported",
     description: "Generate graduated factorisation practice covering common factors, multivariable HCF, difference of two squares, grouping, quadratics, and complete cubic factorisation.",
     tags: ["algebra", "factorisation", "factorising", "highest common factor", "difference of squares", "grouping", "quadratics", "cubics", "complete factorisation"],
-    toolPath: "tools/advanced-factorisation/index.html?v=advanced-factorisation-4",
+    toolPath: "tools/advanced-factorisation/index.html?v=advanced-factorisation-5",
     imported: true,
     teacherNotes: [
       "Extends beyond basic quadratic factorisation into multivariable HCF, hidden difference of squares, and complete factorisation.",
@@ -1137,7 +1137,7 @@ const tools = [
     status: "Imported",
     description: "Generate bracket expansion questions for single brackets, double brackets, special products, and advanced expressions.",
     tags: ["algebra", "brackets", "expansion", "expand and simplify", "double brackets", "FOIL", "KaTeX"],
-    toolPath: "tools/bracket-expansion/index.html?v=batch2-steps-1",
+    toolPath: "tools/bracket-expansion/index.html?v=factorisation-steps-1",
     imported: true,
     teacherNotes: [
       "Builds from distributive law to double brackets and special products.",

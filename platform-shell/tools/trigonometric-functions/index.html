@@ -658,7 +658,8 @@
         q: "Prove that $\\sec^{4}x-\\tan^{4}x\\equiv1+2\\tan^{2}x$.",
         answer: "Identity proven",
         steps: [
-          "Use difference of two squares.",
+          "Use difference of two squares with $A=\\sec^{2}x$ and $B=\\tan^{2}x$.",
+          "$A-B=\\sec^{2}x-\\tan^{2}x$ and $A+B=\\sec^{2}x+\\tan^{2}x$.",
           "$\\sec^{4}x-\\tan^{4}x=(\\sec^{2}x-\\tan^{2}x)(\\sec^{2}x+\\tan^{2}x)$.",
           "Since $\\sec^{2}x=1+\\tan^{2}x$, we have $\\sec^{2}x-\\tan^{2}x=1$.",
           "Also $\\sec^{2}x+\\tan^{2}x=1+2\\tan^{2}x$.",
@@ -670,7 +671,8 @@
         q: "Prove that $(\\sec x+\\tan x)(\\sec x-\\tan x)\\equiv1$.",
         answer: "Identity proven",
         steps: [
-          "Recognise the expression as a difference of two squares.",
+          "Recognise the expression as $(A+B)(A-B)$ with $A=\\sec x$ and $B=\\tan x$.",
+          "$A+B=\\sec x+\\tan x$ and $A-B=\\sec x-\\tan x$.",
           "$(\\sec x+\\tan x)(\\sec x-\\tan x)=\\sec^{2}x-\\tan^{2}x$.",
           "Use $\\sec^{2}x-\\tan^{2}x=1$.",
           "Therefore $(\\sec x+\\tan x)(\\sec x-\\tan x)=1$."
@@ -681,7 +683,8 @@
         q: "Prove that $(\\operatorname{cosec}x+\\cot x)(\\operatorname{cosec}x-\\cot x)\\equiv1$.",
         answer: "Identity proven",
         steps: [
-          "Recognise the expression as a difference of two squares.",
+          "Recognise the expression as $(A+B)(A-B)$ with $A=\\operatorname{cosec}x$ and $B=\\cot x$.",
+          "$A+B=\\operatorname{cosec}x+\\cot x$ and $A-B=\\operatorname{cosec}x-\\cot x$.",
           "$(\\operatorname{cosec}x+\\cot x)(\\operatorname{cosec}x-\\cot x)=\\operatorname{cosec}^{2}x-\\cot^{2}x$.",
           "Use $\\operatorname{cosec}^{2}x-\\cot^{2}x=1$.",
           "Therefore $(\\operatorname{cosec}x+\\cot x)(\\operatorname{cosec}x-\\cot x)=1$."
@@ -703,7 +706,8 @@
         q: "Prove that $\\sec^{4}x-1\\equiv\\tan^{2}x(\\sec^{2}x+1)$.",
         answer: "Identity proven",
         steps: [
-          "Use difference of two squares.",
+          "Use difference of two squares with $A=\\sec^{2}x$ and $B=1$.",
+          "$A-B=\\sec^{2}x-1$ and $A+B=\\sec^{2}x+1$.",
           "$\\sec^{4}x-1=(\\sec^{2}x-1)(\\sec^{2}x+1)$.",
           "Use $\\sec^{2}x-1=\\tan^{2}x$.",
           "$\\sec^{4}x-1=\\tan^{2}x(\\sec^{2}x+1)$."
@@ -714,7 +718,8 @@
         q: "Prove that $\\operatorname{cosec}^{4}x-1\\equiv\\cot^{2}x(\\operatorname{cosec}^{2}x+1)$.",
         answer: "Identity proven",
         steps: [
-          "Use difference of two squares.",
+          "Use difference of two squares with $A=\\operatorname{cosec}^{2}x$ and $B=1$.",
+          "$A-B=\\operatorname{cosec}^{2}x-1$ and $A+B=\\operatorname{cosec}^{2}x+1$.",
           "$\\operatorname{cosec}^{4}x-1=(\\operatorname{cosec}^{2}x-1)(\\operatorname{cosec}^{2}x+1)$.",
           "Use $\\operatorname{cosec}^{2}x-1=\\cot^{2}x$.",
           "$\\operatorname{cosec}^{4}x-1=\\cot^{2}x(\\operatorname{cosec}^{2}x+1)$."
@@ -804,6 +809,7 @@
           answer: "$x=45^\\circ,135^\\circ,225^\\circ,315^\\circ$",
           steps: [
             step('<span class="step-indicator">Step 1</span> Factor the left hand side as a difference of two squares.'),
+            calc("$A=\\sec^{2}x$, $B=\\tan^{2}x$, so $A-B=\\sec^{2}x-\\tan^{2}x$ and $A+B=\\sec^{2}x+\\tan^{2}x$."),
             calc("$\\sec^{4}x-\\tan^{4}x=(\\sec^{2}x-\\tan^{2}x)(\\sec^{2}x+\\tan^{2}x)$"),
             calc("$=1(1+2\\tan^{2}x)=1+2\\tan^{2}x$"),
             step('<span class="step-indicator">Step 2</span> Use the proven identity in the equation.'),
@@ -916,6 +922,7 @@
         answer: "$\\sec x=\\dfrac{5}{3}$, $\\cos x=\\dfrac{3}{5}$, $\\tan x=\\dfrac{4}{3}$",
         steps: [
           step('<span class="step-indicator">Step 1</span> Use difference of two squares.'),
+          calc("$A=\\sec x$, $B=\\tan x$, so $A+B=\\sec x+\\tan x$ and $A-B=\\sec x-\\tan x$."),
           calc("$(\\sec x+\\tan x)(\\sec x-\\tan x)=\\sec^{2}x-\\tan^{2}x=1$"),
           step('<span class="step-indicator">Step 2</span> Since $\\sec x+\\tan x=3$, find the other factor.'),
           calc("$3(\\sec x-\\tan x)=1$"),
