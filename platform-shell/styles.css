@@ -434,9 +434,30 @@ body[data-route="gcse-exam-style"] .account-action {
   margin-bottom: 22px;
 }
 
+.page-header.tool-sticky-header {
+  position: sticky;
+  top: 72px;
+  z-index: 18;
+  align-items: center;
+  margin: -8px 0 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(201, 213, 225, 0.92);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.94)),
+    white;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px);
+}
+
 .page-header h1 {
   margin: 0;
   font-size: 2rem;
+}
+
+.page-header.tool-sticky-header h1 {
+  font-size: 1.35rem;
+  line-height: 1.15;
 }
 
 .page-header p {
@@ -446,10 +467,22 @@ body[data-route="gcse-exam-style"] .account-action {
   line-height: 1.55;
 }
 
+.page-header.tool-sticky-header p {
+  max-width: 920px;
+  margin-top: 4px;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
 .button-row {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+.page-header.tool-sticky-header .button-row {
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .button {
@@ -4752,6 +4785,25 @@ sup .worksheet-fraction span:last-child {
 
   .page-header {
     grid-template-columns: 1fr;
+  }
+
+  .page-header.tool-sticky-header {
+    top: 108px;
+    gap: 10px;
+    margin-top: -4px;
+    padding: 10px;
+  }
+
+  .page-header.tool-sticky-header h1 {
+    font-size: 1.12rem;
+  }
+
+  .page-header.tool-sticky-header p {
+    font-size: 0.82rem;
+  }
+
+  .page-header.tool-sticky-header .button-row {
+    justify-content: flex-start;
   }
 
   .home-hero {

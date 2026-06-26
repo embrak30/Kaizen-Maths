@@ -2100,9 +2100,9 @@ function updateAdminNavVisibility() {
   });
 }
 
-function pageHeader(title, description, actions = "") {
+function pageHeader(title, description, actions = "", className = "") {
   return `
-    <section class="page-header">
+    <section class="page-header${className ? ` ${className}` : ""}">
       <div>
         <h1>${title}</h1>
         <p>${description}</p>
@@ -5820,7 +5820,8 @@ function renderToolFrame(tool) {
     ${pageHeader(
       tool.title,
       tool.description,
-      `<a class="button" href="#/tools">Back to Library</a>${tool.legacyUrl ? `<a class="button" href="${tool.legacyUrl}" target="_blank" rel="noopener noreferrer">Original Page</a>` : ""}<button class="button primary" id="focusTool" type="button">Classroom View</button>`
+      `<a class="button" href="#/tools">Back to Library</a>${tool.legacyUrl ? `<a class="button" href="${tool.legacyUrl}" target="_blank" rel="noopener noreferrer">Original Page</a>` : ""}<button class="button primary" id="focusTool" type="button">Classroom View</button>`,
+      "tool-sticky-header"
     )}
     <section class="legacy-layout">
       <div class="legacy-stage">
