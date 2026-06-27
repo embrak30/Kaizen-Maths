@@ -4993,8 +4993,9 @@ function renderWorksheetGenerator() {
   app.innerHTML = `
     ${pageHeader(
       "Worksheet Builder",
-      "Create homework, quizzes, assessments, and intervention sheets from several topic areas. Add question blocks from different topics, levels, and question types, then generate a print-ready student sheet with a separate answer key.",
-      `<a class="button" href="#/tools">Browse Tools</a>`
+      "Build printable worksheets and assessments from topic blocks. Choose the questions, add the block, then create the sheet.",
+      "",
+      "worksheet-page-header"
     )}
     <section class="worksheet-builder">
       <form class="worksheet-controls panel" id="worksheetForm">
