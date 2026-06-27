@@ -2126,7 +2126,7 @@ function filteredTools(extraCategory) {
 
 function setActiveNav() {
   const path = location.hash || "#/";
-  document.querySelectorAll(".nav-list a").forEach((link) => {
+  document.querySelectorAll(".nav-list a, .sidebar-utility a").forEach((link) => {
     const href = link.getAttribute("href");
     link.classList.toggle("active", href === path || (href !== "#/" && path.startsWith(href)));
   });

@@ -30,25 +30,40 @@
         </span>
       </a>
 
-      <nav class="nav-list">
-        <a class="nav-primary" href="#/" data-route="home"><span class="nav-icon" aria-hidden="true">⌂</span><span>Dashboard</span></a>
-        <a class="nav-primary" href="#/tools" data-route="tools"><span class="nav-icon" aria-hidden="true">⌕</span><span>Tool Library</span></a>
-        <a class="nav-primary" href="#/coverage-map" data-route="coverage-map"><span class="nav-icon" aria-hidden="true">◇</span><span>Coverage Map</span></a>
-        <a class="nav-child" href="#/collections/algebra" data-route="algebra"><span class="nav-icon" aria-hidden="true">x</span><span>Algebra</span></a>
-        <a class="nav-child" href="#/collections/numbers" data-route="numbers"><span class="nav-icon" aria-hidden="true">#</span><span>Numbers</span></a>
-        <a class="nav-child" href="#/collections/geometry" data-route="geometry"><span class="nav-icon" aria-hidden="true">△</span><span>Geometry</span></a>
-        <a class="nav-child" href="#/collections/statistics" data-route="statistics"><span class="nav-icon" aria-hidden="true">%</span><span>Statistics</span></a>
-        <a class="nav-child" href="#/collections/mechanics" data-route="mechanics"><span class="nav-icon" aria-hidden="true">M</span><span>Mechanics</span></a>
-        <a class="nav-child" href="#/collections/classroom-tools" data-route="classroom-tools"><span class="nav-icon" aria-hidden="true">▣</span><span>Classroom Tools</span></a>
-        <a class="nav-primary" href="#/worksheet-generator" data-route="worksheet-generator"><span class="nav-icon" aria-hidden="true">▦</span><span>Worksheet Builder</span></a>
-        <a class="nav-primary" href="#/gcse-exam-style" data-route="gcse-exam-style"><span class="nav-icon" aria-hidden="true">✓</span><span>Exam Paper Builder</span></a>
-        <a class="nav-primary" href="#/upgrade" data-route="upgrade"><span class="nav-icon" aria-hidden="true">↑</span><span>Upgrade</span></a>
-        <a href="#/schools" data-route="schools"><span class="nav-icon" aria-hidden="true">i</span><span>School Access</span></a>
-        <a href="#/school-space" data-route="school-space"><span class="nav-icon" aria-hidden="true">S</span><span>School Space</span></a>
-        <a href="#/trust" data-route="trust"><span class="nav-icon" aria-hidden="true">§</span><span>Trust & Privacy</span></a>
-        <a href="#/kaizen-university" data-route="kaizen-university"><span class="nav-icon" aria-hidden="true">▶</span><span>Kaizen University</span></a>
+      <nav class="nav-list" aria-label="Main navigation">
+        <section class="nav-group" aria-label="Start">
+          <span class="nav-heading">Start</span>
+          <a class="nav-primary" href="#/" data-route="home"><span class="nav-icon" aria-hidden="true">⌂</span><span>Dashboard</span></a>
+          <a class="nav-primary" href="#/tools" data-route="tools"><span class="nav-icon" aria-hidden="true">⌕</span><span>Tool Library</span></a>
+          <a class="nav-primary" href="#/coverage-map" data-route="coverage-map"><span class="nav-icon" aria-hidden="true">◇</span><span>Coverage Map</span></a>
+        </section>
+        <section class="nav-group" aria-label="Curriculum">
+          <span class="nav-heading">Curriculum</span>
+          <a class="nav-child" href="#/collections/algebra" data-route="algebra"><span class="nav-icon" aria-hidden="true">x</span><span>Algebra</span></a>
+          <a class="nav-child" href="#/collections/numbers" data-route="numbers"><span class="nav-icon" aria-hidden="true">#</span><span>Numbers</span></a>
+          <a class="nav-child" href="#/collections/geometry" data-route="geometry"><span class="nav-icon" aria-hidden="true">△</span><span>Geometry</span></a>
+          <a class="nav-child" href="#/collections/statistics" data-route="statistics"><span class="nav-icon" aria-hidden="true">%</span><span>Statistics</span></a>
+          <a class="nav-child" href="#/collections/mechanics" data-route="mechanics"><span class="nav-icon" aria-hidden="true">M</span><span>Mechanics</span></a>
+          <a class="nav-child" href="#/collections/classroom-tools" data-route="classroom-tools"><span class="nav-icon" aria-hidden="true">▣</span><span>Classroom Tools</span></a>
+        </section>
+        <section class="nav-group" aria-label="Build">
+          <span class="nav-heading">Build</span>
+          <a class="nav-primary" href="#/worksheet-generator" data-route="worksheet-generator"><span class="nav-icon" aria-hidden="true">▦</span><span>Worksheet Builder</span></a>
+          <a class="nav-primary" href="#/gcse-exam-style" data-route="gcse-exam-style"><span class="nav-icon" aria-hidden="true">✓</span><span>Exam Paper Builder</span></a>
+        </section>
+        <section class="nav-group" aria-label="School and support">
+          <span class="nav-heading">School</span>
+          <a class="nav-primary" href="#/upgrade" data-route="upgrade"><span class="nav-icon" aria-hidden="true">↑</span><span>Upgrade</span></a>
+          <a href="#/schools" data-route="schools"><span class="nav-icon" aria-hidden="true">i</span><span>School Access</span></a>
+          <a href="#/school-space" data-route="school-space"><span class="nav-icon" aria-hidden="true">S</span><span>School Space</span></a>
+          <a href="#/trust" data-route="trust"><span class="nav-icon" aria-hidden="true">§</span><span>Trust & Privacy</span></a>
+          <a href="#/kaizen-university" data-route="kaizen-university"><span class="nav-icon" aria-hidden="true">▶</span><span>Kaizen University</span></a>
+        </section>
+      </nav>
+
+      <nav class="sidebar-utility" aria-label="Admin and help">
         <a href="#/admin" data-route="admin" data-admin-link hidden><span class="nav-icon" aria-hidden="true">⚙</span><span>Admin</span></a>
-        <a href="#/how-to-use-this-site" data-route="how-to-use-this-site"><span class="nav-icon" aria-hidden="true">?</span><span>How to Use This Site</span></a>
+        <a href="#/how-to-use-this-site" data-route="how-to-use-this-site"><span class="nav-icon" aria-hidden="true">?</span><span>How to Use</span></a>
       </nav>
 
       <section class="sidebar-panel">
@@ -92,25 +107,40 @@
           <small>Teaching workspace</small>
         </span>
       </a>
-      <nav class="nav-list">
-        <a class="nav-primary" href="#/"><span class="nav-icon" aria-hidden="true">⌂</span><span>Dashboard</span></a>
-        <a class="nav-primary" href="#/tools"><span class="nav-icon" aria-hidden="true">⌕</span><span>Tool Library</span></a>
-        <a class="nav-primary" href="#/coverage-map"><span class="nav-icon" aria-hidden="true">◇</span><span>Coverage Map</span></a>
-        <a class="nav-child" href="#/collections/algebra"><span class="nav-icon" aria-hidden="true">x</span><span>Algebra</span></a>
-        <a class="nav-child" href="#/collections/numbers"><span class="nav-icon" aria-hidden="true">#</span><span>Numbers</span></a>
-        <a class="nav-child" href="#/collections/geometry"><span class="nav-icon" aria-hidden="true">△</span><span>Geometry</span></a>
-        <a class="nav-child" href="#/collections/statistics"><span class="nav-icon" aria-hidden="true">%</span><span>Statistics</span></a>
-        <a class="nav-child" href="#/collections/mechanics"><span class="nav-icon" aria-hidden="true">M</span><span>Mechanics</span></a>
-        <a class="nav-child" href="#/collections/classroom-tools"><span class="nav-icon" aria-hidden="true">▣</span><span>Classroom Tools</span></a>
-        <a class="nav-primary" href="#/worksheet-generator"><span class="nav-icon" aria-hidden="true">▦</span><span>Worksheet Builder</span></a>
-        <a class="nav-primary" href="#/gcse-exam-style"><span class="nav-icon" aria-hidden="true">✓</span><span>Exam Paper Builder</span></a>
-        <a class="nav-primary" href="#/upgrade"><span class="nav-icon" aria-hidden="true">↑</span><span>Upgrade</span></a>
-        <a href="#/schools"><span class="nav-icon" aria-hidden="true">i</span><span>School Access</span></a>
-        <a href="#/school-space"><span class="nav-icon" aria-hidden="true">S</span><span>School Space</span></a>
-        <a href="#/trust"><span class="nav-icon" aria-hidden="true">§</span><span>Trust & Privacy</span></a>
-        <a href="#/kaizen-university"><span class="nav-icon" aria-hidden="true">▶</span><span>Kaizen University</span></a>
-        <a href="#/admin" data-admin-link hidden><span class="nav-icon" aria-hidden="true">⚙</span><span>Admin</span></a>
-        <a href="#/how-to-use-this-site"><span class="nav-icon" aria-hidden="true">?</span><span>How to Use This Site</span></a>
+      <nav class="nav-list" aria-label="Mobile navigation">
+        <section class="nav-group" aria-label="Start">
+          <span class="nav-heading">Start</span>
+          <a class="nav-primary" href="#/"><span class="nav-icon" aria-hidden="true">⌂</span><span>Dashboard</span></a>
+          <a class="nav-primary" href="#/tools"><span class="nav-icon" aria-hidden="true">⌕</span><span>Tool Library</span></a>
+          <a class="nav-primary" href="#/coverage-map"><span class="nav-icon" aria-hidden="true">◇</span><span>Coverage Map</span></a>
+        </section>
+        <section class="nav-group" aria-label="Curriculum">
+          <span class="nav-heading">Curriculum</span>
+          <a class="nav-child" href="#/collections/algebra"><span class="nav-icon" aria-hidden="true">x</span><span>Algebra</span></a>
+          <a class="nav-child" href="#/collections/numbers"><span class="nav-icon" aria-hidden="true">#</span><span>Numbers</span></a>
+          <a class="nav-child" href="#/collections/geometry"><span class="nav-icon" aria-hidden="true">△</span><span>Geometry</span></a>
+          <a class="nav-child" href="#/collections/statistics"><span class="nav-icon" aria-hidden="true">%</span><span>Statistics</span></a>
+          <a class="nav-child" href="#/collections/mechanics"><span class="nav-icon" aria-hidden="true">M</span><span>Mechanics</span></a>
+          <a class="nav-child" href="#/collections/classroom-tools"><span class="nav-icon" aria-hidden="true">▣</span><span>Classroom Tools</span></a>
+        </section>
+        <section class="nav-group" aria-label="Build">
+          <span class="nav-heading">Build</span>
+          <a class="nav-primary" href="#/worksheet-generator"><span class="nav-icon" aria-hidden="true">▦</span><span>Worksheet Builder</span></a>
+          <a class="nav-primary" href="#/gcse-exam-style"><span class="nav-icon" aria-hidden="true">✓</span><span>Exam Paper Builder</span></a>
+        </section>
+        <section class="nav-group" aria-label="School and support">
+          <span class="nav-heading">School</span>
+          <a class="nav-primary" href="#/upgrade"><span class="nav-icon" aria-hidden="true">↑</span><span>Upgrade</span></a>
+          <a href="#/schools"><span class="nav-icon" aria-hidden="true">i</span><span>School Access</span></a>
+          <a href="#/school-space"><span class="nav-icon" aria-hidden="true">S</span><span>School Space</span></a>
+          <a href="#/trust"><span class="nav-icon" aria-hidden="true">§</span><span>Trust & Privacy</span></a>
+          <a href="#/kaizen-university"><span class="nav-icon" aria-hidden="true">▶</span><span>Kaizen University</span></a>
+        </section>
+        <section class="nav-group" aria-label="Admin and help">
+          <span class="nav-heading">Help</span>
+          <a href="#/admin" data-admin-link hidden><span class="nav-icon" aria-hidden="true">⚙</span><span>Admin</span></a>
+          <a href="#/how-to-use-this-site"><span class="nav-icon" aria-hidden="true">?</span><span>How to Use</span></a>
+        </section>
       </nav>
     </aside>
   </div>
