@@ -137,6 +137,12 @@
     function formulaDenominator(aCoeff){
       return aCoeff < 0 ? '2 × (' + aCoeff + ')' : '2 × ' + aCoeff;
     }
+    function squaredText(value){
+      return (Number(value) < 0 ? '(' + value + ')' : String(value)) + '<sup>2</sup>';
+    }
+    function discriminantText(){
+      return 'b<sup>2</sup> - 4ac';
+    }
     function rootLabel(index){
       return 'x<sub>' + index + '</sub>';
     }
@@ -319,9 +325,9 @@
         steps: [
           'Rearrange to standard form:',
           (a === 1 ? 'x^2' : a + 'x^2') + ' ' + signed(b) + 'x ' + signed(c) + ' = 0',
-          'Use the quadratic formula: x = ' + verticalFraction('-b ± √(b^2 - 4ac)', '2a') + '.',
+          'Use the quadratic formula: x = ' + verticalFraction('-b ± √(' + discriminantText() + ')', '2a') + '.',
           'Here a = ' + a + ', b = ' + b + ', c = ' + c + '.',
-          'Discriminant: D = b^2 - 4ac = ' + b + '^2 - 4 × ' + a + ' × ' + c + ' = ' + disc + '.',
+          'Discriminant: D = ' + discriminantText() + ' = ' + squaredText(b) + ' - 4 × ' + a + ' × ' + c + ' = ' + disc + '.',
           ...formulaSteps
         ]
       };
@@ -344,8 +350,8 @@
         'Move all terms to one side to get standard form ax^2 + bx + c = 0.',
         'Standard form: ' + A + 'x^2 ' + signed(B) + 'x ' + signed(C) + ' = 0',
         'Here a = ' + A + ', b = ' + B + ', c = ' + C + '.',
-        'Use the quadratic formula: x = ' + verticalFraction('-b ± √(b^2 - 4ac)', '2a') + '.',
-        'Discriminant D = ' + B + '^2 - 4 × ' + A + ' × ' + C + ' = ' + disc + '.'
+        'Use the quadratic formula: x = ' + verticalFraction('-b ± √(' + discriminantText() + ')', '2a') + '.',
+        'Discriminant D = ' + squaredText(B) + ' - 4 × ' + A + ' × ' + C + ' = ' + disc + '.'
       ];
       if(disc < 0){
         answer = 'No real solutions';

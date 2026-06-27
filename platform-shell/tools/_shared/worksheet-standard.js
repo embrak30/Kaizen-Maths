@@ -22,10 +22,14 @@
   function textFromHtml(value) {
     if (value == null) return '';
     const text = String(value);
-    if (!/[<&]/.test(text)) return text;
+    if (!/[<&]/.test(text)) return normaliseAlgebraUnitCoefficients(text);
     const template = document.createElement('template');
     template.innerHTML = text;
-    return template.content.textContent.replace(/\s+/g, ' ').trim();
+    return normaliseAlgebraUnitCoefficients(template.content.textContent.replace(/\s+/g, ' ').trim());
+  }
+
+  function normaliseAlgebraUnitCoefficients(value) {
+    return String(value ?? '').replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, '$1$2$3');
   }
 
   function looksLikeSharedInstruction(text) {
@@ -49,12 +53,12 @@
 
   function normalizeStep(step) {
     if (step == null) return '';
-    if (typeof step === 'string' || typeof step === 'number') return String(step);
-    if (typeof step.text === 'string') return step.text;
-    if (typeof step.latex === 'string') return step.latex;
-    if (typeof step.html === 'string') return step.html;
-    if (typeof step.equation === 'string') return step.equation;
-    return String(step);
+    if (typeof step === 'string' || typeof step === 'number') return normaliseAlgebraUnitCoefficients(step);
+    if (typeof step.text === 'string') return normaliseAlgebraUnitCoefficients(step.text);
+    if (typeof step.latex === 'string') return normaliseAlgebraUnitCoefficients(step.latex);
+    if (typeof step.html === 'string') return normaliseAlgebraUnitCoefficients(step.html);
+    if (typeof step.equation === 'string') return normaliseAlgebraUnitCoefficients(step.equation);
+    return normaliseAlgebraUnitCoefficients(step);
   }
 
   function normalizeSteps(steps) {

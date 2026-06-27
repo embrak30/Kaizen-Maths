@@ -42,9 +42,20 @@
     return span;
   }
 
+  function normaliseUnitCoefficients(text) {
+    return String(text).replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, '$1$2$3');
+  }
+
   function transformTextNode(node) {
-    const text = node.nodeValue;
-    if (!text || !/(\^|[A-Za-z][2-9]\b|->|\+\/-|sqrt\(|\/)/i.test(text)) return;
+    const originalText = node.nodeValue;
+    if (!originalText) return;
+
+    const text = normaliseUnitCoefficients(originalText);
+    const coefficientChanged = text !== originalText;
+    if (!/(\^|[A-Za-z][2-9]\b|->|\+\/-|sqrt\(|\/)/i.test(text)) {
+      if (coefficientChanged) node.nodeValue = text;
+      return;
+    }
 
     let match;
     let lastIndex = 0;
