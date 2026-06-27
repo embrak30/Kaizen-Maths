@@ -7720,7 +7720,12 @@ function renderRoute() {
   } else if (parts[0] === "worksheet-generator") {
     if (!isSignedIn()) {
       app.innerHTML = `
-        ${pageHeader("Worksheet Builder", "Create printable homework, quizzes, assessments, and intervention sheets from topic levels and question types.")}
+        ${pageHeader(
+          "Worksheet Builder",
+          "Build printable worksheets and assessments from topic blocks. Choose the questions, add the block, then create the sheet.",
+          "",
+          "worksheet-page-header"
+        )}
         ${signInCallout("Trial access required")}
       `;
       bindAuthActions();
