@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upper and Lower Bounds</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f3f7fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#174058;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}
+    .sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}
+    .sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#174058;color:#fff;font-size:1.25em;font-weight:850}
+    .sidebar-content{padding:22px;line-height:1.55}
+    .sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #17b8b3;color:#174058;font-size:1.02em}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}
+    .sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1220px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#174058;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 2px,transparent 2px 24px)}
+    .header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e2edf3}
+    .tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e2edf3;color:#213547;cursor:pointer;font-size:.95em;font-weight:850}
+    .tab.active{background:#fff;color:#0f766e;border-bottom-color:#0f766e}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d6e3ec;background:#f8fafc}
+    .level-info h3{margin-bottom:3px;color:#174058;font-size:1.16em}
+    .level-info p{color:#667085;font-size:.94em}
+    .dropdown-container{margin-top:8px}
+    .type-dropdown{min-width:365px;padding:8px 10px;border:2px solid #c8d7e0;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .timer-display{min-width:96px;padding:7px 12px;border:2px solid #c8d7e0;border-radius:6px;background:#fff;color:#174058;text-align:center;font-size:1.45em;font-weight:850}
+    .timer-display.active{border-color:#0f766e;color:#0f766e}
+    .timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}
+    .btn-primary{background:#0f766e}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}
+    .problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#0f766e;color:#fff;text-align:center;font-size:1.08em;font-weight:850}
+    .problem-set-header.visible{display:block}
+    .set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #bceeed;border-radius:6px;background:#eefbfb;color:#174058;text-align:center;font-weight:850}
+    .set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:10px;list-style:none}
+    .problem-item{display:flex;flex-direction:column;gap:8px;padding:12px;border-left:4px solid #0f766e;border-radius:7px;background:#f8fafc}
+    .problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}
+    .problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#0f766e;color:#fff;font-weight:850}
+    .problem-type{display:inline-flex;margin-bottom:5px;padding:5px 9px;border-radius:999px;background:#ccfbf1;color:#115e59;font-size:.76em;font-weight:850}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.25em;font-weight:650;line-height:1.38;color:#172033;overflow-wrap:anywhere}
+    .question-text .word{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;font-size:.88em;font-weight:750;color:#334155}
+    .problem-answer{display:none;white-space:nowrap;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}
+    .problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #0f766e;border-radius:6px;background:#ecfeff}
+    .steps-section.visible{display:block}
+    .answer-label{margin-bottom:6px;color:#0f766e;font-weight:850}
+    .solution-steps{font-size:.98em;line-height:1.45}
+    .step{margin:5px 0;color:#174058}
+    .step-equation{margin:6px 0;padding:7px;border:1px solid #c7f0ef;border-radius:5px;background:#fff;color:#6d28d9;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}
+    .final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .interval{white-space:nowrap}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}
+    .vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}
+    .vfrac span:last-child{padding:2px 5px 0}
+    .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}
+    .modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+    .modal-content h2{margin-bottom:10px;color:#d92d20}
+    .modal-content p{margin-bottom:18px;color:#667085}
+    .hidden{display:none}
+    @media (min-width:960px){.problem-list.compact{grid-template-columns:repeat(2,minmax(0,1fr))}.problem-list.compact .question-text{font-size:1.12em}.problem-list.compact .problem-item{min-height:205px}}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.problem-answer{white-space:normal}.question-text{font-size:1.08em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Upper and Lower Bounds</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool practises error intervals and calculations with upper and lower bounds. It is designed for GCSE, IGCSE, and CSEC-style number work.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> find lower bounds, upper bounds, and error intervals from rounded values.</li>
+        <li><strong>Level 2:</strong> combine bounds in sums, differences, products, and quotients.</li>
+        <li><strong>Level 3:</strong> apply bounds to perimeter, area, speed, density, and other formulae.</li>
+        <li><strong>Level 4:</strong> percentage error, reverse bounds, and mixed exam-style questions.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Always start by writing the error interval for each rounded quantity.</li>
+        <li>For a maximum, choose the upper bound of quantities that increase the result.</li>
+        <li>For a minimum, choose the lower bound of quantities that increase the result.</li>
+        <li>For subtraction and division, think carefully about which value makes the result larger or smaller.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Upper and Lower Bounds</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Error Intervals</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Calculations</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Formulae</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Exam Style</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Error Intervals</h3>
+        <p id="level-description">Find lower bounds, upper bounds, and error intervals from rounded values.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Error Intervals',description:'Find lower bounds, upper bounds, and error intervals from rounded values.',types:['bounds_from_rounding','error_interval','nearest_accuracy']},
+      2:{title:'Level 2: Calculations With Bounds',description:'Use error intervals to find bounds for sums, differences, products, and quotients.',types:['sum_difference','product_quotient','mixed_calculation']},
+      3:{title:'Level 3: Bounds in Formulae',description:'Apply bounds to perimeter, area, speed, density, and formula-based contexts.',types:['area_perimeter','speed_density','formula_substitution']},
+      4:{title:'Level 4: Exam-Style Bounds',description:'Use bounds in percentage error, reverse intervals, and mixed exam-style contexts.',types:['percentage_error','reverse_bounds','exam_mixed']}
+    };
+
+    const typeDisplayNames={
+      bounds_from_rounding:'Type 1: Lower and upper bounds from rounding',
+      error_interval:'Type 2: Write an error interval',
+      nearest_accuracy:'Type 3: Identify the rounding accuracy',
+      sum_difference:'Type 1: Addition and subtraction with bounds',
+      product_quotient:'Type 2: Multiplication and division with bounds',
+      mixed_calculation:'Type 3: Mixed calculations with bounds',
+      area_perimeter:'Type 1: Area and perimeter bounds',
+      speed_density:'Type 2: Speed and density bounds',
+      formula_substitution:'Type 3: Formula substitution with bounds',
+      percentage_error:'Type 1: Maximum percentage error',
+      reverse_bounds:'Type 2: Reverse bounds from an interval',
+      exam_mixed:'Type 3: Mixed exam-style bounds'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      bounds_from_rounding:'Find the requested bound for each rounded quantity.',
+      error_interval:'Write the full error interval for each rounded quantity.',
+      nearest_accuracy:'Use the error interval to identify the rounded value and accuracy.',
+      sum_difference:'Find the required bound for each calculation.',
+      product_quotient:'Find the required bound for each calculation.',
+      mixed_calculation:'Find the required bound for each expression.',
+      area_perimeter:'Find the required bound for each geometrical quantity.',
+      speed_density:'Find the required bound for each compound measure.',
+      formula_substitution:'Use the given formula and rounded values to find the required bound.',
+      percentage_error:'Find the maximum percentage error for each rounded value.',
+      reverse_bounds:'State the rounded value and the accuracy represented by each interval.',
+      exam_mixed:'Answer each mixed bounds question.'
+    };
+
+    const accuracies=[
+      {step:10,label:'nearest 10',dp:0,boundDp:0},
+      {step:1,label:'nearest whole number',dp:0,boundDp:1},
+      {step:0.1,label:'nearest 0.1',dp:1,boundDp:2},
+      {step:0.01,label:'nearest 0.01',dp:2,boundDp:3}
+    ];
+
+    const units=['cm','m','kg','g','s','km'];
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function stripTags(html){return String(html).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+    function decimals(step){const text=String(step);return text.includes('.')?text.split('.')[1].length:0}
+    function trimNumber(value,places=3){const rounded=Number(value).toFixed(places);return rounded.replace(/(\.\d*?[1-9])0+$/,'$1').replace(/\.0+$/,'')}
+    function fmt(value,places=3){return trimNumber(Number(value),places)}
+    function fmtMeasure(value,unit,places=3){return `${fmt(value,places)} ${unit}`}
+    function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function intervalHtml(symbol,lower,upper,unit,places){return `<span class="interval">${fmtMeasure(lower,unit,places)} &le; ${symbol} &lt; ${fmtMeasure(upper,unit,places)}</span>`}
+    function plainInterval(symbol,lower,upper,unit,places){return `${fmtMeasure(lower,unit,places)} <= ${symbol} < ${fmtMeasure(upper,unit,places)}`}
+    function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question',instruction=typeInstructions[currentType]||'Answer each question.'){
+      return {prompt,question:stripTags(prompt),answer,steps,typeLabel,instruction,instructionText:instruction};
+    }
+    function makeMeasure(options={}){
+      const acc=options.acc||choice(accuracies);
+      const unit=options.unit||choice(units);
+      const min=options.min||6;
+      const max=options.max||90;
+      const scale=1/acc.step;
+      const value=random(Math.ceil(min*scale),Math.floor(max*scale))/scale;
+      const half=acc.step/2;
+      return {value,lower:value-half,upper:value+half,step:acc.step,label:acc.label,unit,dp:acc.dp,boundDp:acc.boundDp,name:options.name||'x'};
+    }
+    function roundedValueForAcc(acc,min=8,max=80){
+      return random(Math.ceil(min/acc.step),Math.floor(max/acc.step))*acc.step;
+    }
+    function measurementText(m){return `${fmtMeasure(m.value,m.unit,m.dp)} to the ${m.label}`}
+    function intervalStep(m,symbol=m.name){return `${intervalHtml(symbol,m.lower,m.upper,m.unit,m.boundDp)}`}
+    function midpoint(lower,upper){return (lower+upper)/2}
+    function accuracyFromInterval(lower,upper){const step=upper-lower;return accuracies.find(a=>Math.abs(a.step-step)<1e-9)||{step,label:`nearest ${fmt(step,3)}`,dp:decimals(step),boundDp:decimals(step)+1}}
+
+    function generateBoundsFromRounding(){
+      const m=makeMeasure({unit:choice(['cm','m','kg','g'])});
+      const askUpper=Math.random()<0.5;
+      const ans=askUpper?m.upper:m.lower;
+      return problem(`A measurement is ${measurementText(m)}. Find the ${askUpper?'upper':'lower'} bound.`,fmtMeasure(ans,m.unit,m.boundDp),[
+        `The rounding unit is ${fmtMeasure(m.step,m.unit,m.dp)}.`,
+        `Half of the rounding unit is ${fmtMeasure(m.step/2,m.unit,m.boundDp)}.`,
+        `Lower bound = ${fmt(m.value,m.dp)} - ${fmt(m.step/2,m.boundDp)} = ${fmt(m.lower,m.boundDp)}.`,
+        `Upper bound = ${fmt(m.value,m.dp)} + ${fmt(m.step/2,m.boundDp)} = ${fmt(m.upper,m.boundDp)}.`,
+        `${askUpper?'Upper':'Lower'} bound = ${fmtMeasure(ans,m.unit,m.boundDp)}.`
+      ]);
+    }
+
+    function generateErrorInterval(){
+      const m=makeMeasure({unit:choice(['cm','m','kg','s'])});
+      return problem(`A value x is ${measurementText(m)}. Write the error interval for x.`,intervalHtml('x',m.lower,m.upper,m.unit,m.boundDp),[
+        `The rounded value is ${fmtMeasure(m.value,m.unit,m.dp)}.`,
+        `The rounding unit is ${fmtMeasure(m.step,m.unit,m.dp)}, so half the rounding unit is ${fmtMeasure(m.step/2,m.unit,m.boundDp)}.`,
+        `Lower bound = ${fmt(m.value,m.dp)} - ${fmt(m.step/2,m.boundDp)} = ${fmt(m.lower,m.boundDp)}.`,
+        `Upper bound = ${fmt(m.value,m.dp)} + ${fmt(m.step/2,m.boundDp)} = ${fmt(m.upper,m.boundDp)}.`,
+        `The upper bound is not included because values reaching it would round to the next value.`,
+        `Therefore ${intervalHtml('x',m.lower,m.upper,m.unit,m.boundDp)}.`
+      ]);
+    }
+
+    function generateNearestAccuracy(){
+      const acc=choice(accuracies);
+      const unit=choice(['cm','m','kg','s']);
+      const value=roundedValueForAcc(acc);
+      const lower=value-acc.step/2, upper=value+acc.step/2;
+      return problem(`A value x has error interval ${intervalHtml('x',lower,upper,unit,acc.boundDp)}. State the rounded value and the accuracy.`,`${fmtMeasure(value,unit,acc.dp)}, to the ${acc.label}`,[
+        `Find the midpoint of the interval.`,
+        `Midpoint = ${frac(`${fmt(lower,acc.boundDp)} + ${fmt(upper,acc.boundDp)}`,'2')} = ${fmt(value,acc.dp)}.`,
+        `Interval width = ${fmt(upper,acc.boundDp)} - ${fmt(lower,acc.boundDp)} = ${fmt(acc.step,acc.dp)}.`,
+        `The interval width is the rounding unit.`,
+        `So x was rounded to ${fmtMeasure(value,unit,acc.dp)}, to the ${acc.label}.`
+      ]);
+    }
+
+    function operationMeasures(unit='m'){
+      const a=makeMeasure({unit,acc:choice([{step:1,label:'nearest whole number',dp:0,boundDp:1},{step:0.1,label:'nearest 0.1',dp:1,boundDp:2}]),min:8,max:60,name:'a'});
+      const b=makeMeasure({unit,acc:choice([{step:1,label:'nearest whole number',dp:0,boundDp:1},{step:0.1,label:'nearest 0.1',dp:1,boundDp:2}]),min:3,max:35,name:'b'});
+      return {a,b,places:Math.max(a.boundDp,b.boundDp,2)};
+    }
+
+    function generateSumDifference(){
+      const {a,b,places}=operationMeasures('m');
+      const useSum=Math.random()<0.5;
+      const askUpper=Math.random()<0.5;
+      let value,expression,rule;
+      if(useSum){
+        value=askUpper?a.upper+b.upper:a.lower+b.lower;
+        expression=`a + b`;
+        rule=askUpper?'Use the upper bound of both values.':'Use the lower bound of both values.';
+      }else{
+        value=askUpper?a.upper-b.lower:a.lower-b.upper;
+        expression=`a - b`;
+        rule=askUpper?'Use the upper bound of a and the lower bound of b.':'Use the lower bound of a and the upper bound of b.';
+      }
+      return problem(`a = ${measurementText(a)} and b = ${measurementText(b)}. Find the ${askUpper?'upper':'lower'} bound of ${expression}.`,fmtMeasure(value,a.unit,places),[
+        `Write the error interval for a: ${intervalStep(a,'a')}.`,
+        `Write the error interval for b: ${intervalStep(b,'b')}.`,
+        rule,
+        `${askUpper?'Upper':'Lower'} bound of ${expression} = ${useSum?`${fmt(askUpper?a.upper:a.lower,a.boundDp)} + ${fmt(askUpper?b.upper:b.lower,b.boundDp)}`:`${fmt(askUpper?a.upper:a.lower,a.boundDp)} - ${fmt(askUpper?b.lower:b.upper,b.boundDp)}`} = ${fmt(value,places)}.`,
+        `Therefore the required bound is ${fmtMeasure(value,a.unit,places)}.`
+      ]);
+    }
+
+    function generateProductQuotient(){
+      const useProduct=Math.random()<0.5;
+      if(useProduct){
+        const l=makeMeasure({unit:'cm',acc:choice([{step:1,label:'nearest whole number',dp:0,boundDp:1},{step:0.1,label:'nearest 0.1',dp:1,boundDp:2}]),min:8,max:30,name:'l'});
+        const w=makeMeasure({unit:'cm',acc:choice([{step:1,label:'nearest whole number',dp:0,boundDp:1},{step:0.1,label:'nearest 0.1',dp:1,boundDp:2}]),min:3,max:20,name:'w'});
+        const askUpper=Math.random()<0.5;
+        const value=askUpper?l.upper*w.upper:l.lower*w.lower;
+        return problem(`l = ${measurementText(l)} and w = ${measurementText(w)}. Find the ${askUpper?'upper':'lower'} bound of lw.`,`${fmt(value,3)} cm^2`,[
+          `Write the error interval for l: ${intervalStep(l,'l')}.`,
+          `Write the error interval for w: ${intervalStep(w,'w')}.`,
+          `${askUpper?'For the upper bound of a product of positive values, use both upper bounds.':'For the lower bound of a product of positive values, use both lower bounds.'}`,
+          `${askUpper?'Upper':'Lower'} bound of lw = ${fmt(askUpper?l.upper:l.lower,l.boundDp)} × ${fmt(askUpper?w.upper:w.lower,w.boundDp)} = ${fmt(value,3)}.`,
+          `Therefore the required bound is ${fmt(value,3)} cm^2.`
+        ]);
+      }
+      const d=makeMeasure({unit:'m',acc:{step:1,label:'nearest whole number',dp:0,boundDp:1},min:80,max:300,name:'d'});
+      const t=makeMeasure({unit:'s',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:8,max:60,name:'t'});
+      const askUpper=Math.random()<0.5;
+      const value=askUpper?d.upper/t.lower:d.lower/t.upper;
+      return problem(`d = ${measurementText(d)} and t = ${measurementText(t)}. Find the ${askUpper?'upper':'lower'} bound of ${frac('d','t')}.`,`${fmt(value,3)} m/s`,[
+        `Write the error interval for d: ${intervalStep(d,'d')}.`,
+        `Write the error interval for t: ${intervalStep(t,'t')}.`,
+        `${askUpper?'To make d/t as large as possible, use the upper bound of d and the lower bound of t.':'To make d/t as small as possible, use the lower bound of d and the upper bound of t.'}`,
+        `${askUpper?'Upper':'Lower'} bound = ${frac(fmt(askUpper?d.upper:d.lower,d.boundDp),fmt(askUpper?t.lower:t.upper,t.boundDp))} = ${fmt(value,3)}.`,
+        `Therefore the required bound is ${fmt(value,3)} m/s.`
+      ]);
+    }
+
+    function generateMixedCalculation(){
+      const {a,b}=operationMeasures('kg');
+      const c=makeMeasure({unit:'kg',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:4,max:20,name:'c'});
+      const askUpper=Math.random()<0.5;
+      const value=askUpper?(a.upper+b.upper)/c.lower:(a.lower+b.lower)/c.upper;
+      return problem(`a = ${measurementText(a)}, b = ${measurementText(b)} and c = ${measurementText(c)}. Find the ${askUpper?'upper':'lower'} bound of ${frac('a + b','c')}.`,`${fmt(value,3)}`,[
+        `Write the error interval for a: ${intervalStep(a,'a')}.`,
+        `Write the error interval for b: ${intervalStep(b,'b')}.`,
+        `Write the error interval for c: ${intervalStep(c,'c')}.`,
+        `${askUpper?'To make the fraction as large as possible, make the numerator large and the denominator small.':'To make the fraction as small as possible, make the numerator small and the denominator large.'}`,
+        `${askUpper?'Upper':'Lower'} bound = ${frac(`${fmt(askUpper?a.upper:a.lower,a.boundDp)} + ${fmt(askUpper?b.upper:b.lower,b.boundDp)}`,fmt(askUpper?c.lower:c.upper,c.boundDp))} = ${fmt(value,3)}.`
+      ]);
+    }
+
+    function generateAreaPerimeter(){
+      const l=makeMeasure({unit:'cm',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:8,max:30,name:'l'});
+      const w=makeMeasure({unit:'cm',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:3,max:18,name:'w'});
+      const area=Math.random()<0.55;
+      const askUpper=Math.random()<0.5;
+      const value=area?(askUpper?l.upper*w.upper:l.lower*w.lower):2*((askUpper?l.upper:l.lower)+(askUpper?w.upper:w.lower));
+      return problem(`A rectangle has length ${measurementText(l)} and width ${measurementText(w)}. Find the ${askUpper?'upper':'lower'} bound for its ${area?'area':'perimeter'}.`,`${fmt(value,3)} ${area?'cm^2':'cm'}`,[
+        `Write the error interval for l: ${intervalStep(l,'l')}.`,
+        `Write the error interval for w: ${intervalStep(w,'w')}.`,
+        area?`Area = l × w.`:`Perimeter = 2(l + w).`,
+        `${askUpper?'Use upper bounds because the result must be as large as possible.':'Use lower bounds because the result must be as small as possible.'}`,
+        `${askUpper?'Upper':'Lower'} bound = ${area?`${fmt(askUpper?l.upper:l.lower,l.boundDp)} × ${fmt(askUpper?w.upper:w.lower,w.boundDp)}`:`2(${fmt(askUpper?l.upper:l.lower,l.boundDp)} + ${fmt(askUpper?w.upper:w.lower,w.boundDp)})`} = ${fmt(value,3)}.`
+      ]);
+    }
+
+    function generateSpeedDensity(){
+      const speed=Math.random()<0.5;
+      if(speed){
+        const d=makeMeasure({unit:'m',acc:{step:1,label:'nearest whole number',dp:0,boundDp:1},min:100,max:500,name:'d'});
+        const t=makeMeasure({unit:'s',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:15,max:80,name:'t'});
+        const askUpper=Math.random()<0.5;
+        const value=askUpper?d.upper/t.lower:d.lower/t.upper;
+        return problem(`A journey distance is ${measurementText(d)} and the time is ${measurementText(t)}. Find the ${askUpper?'upper':'lower'} bound for the speed.`,`${fmt(value,3)} m/s`,[
+          `Speed = ${frac('distance','time')}.`,
+          `Distance interval: ${intervalStep(d,'d')}.`,
+          `Time interval: ${intervalStep(t,'t')}.`,
+          `${askUpper?'For maximum speed, use the upper bound of distance and the lower bound of time.':'For minimum speed, use the lower bound of distance and the upper bound of time.'}`,
+          `${askUpper?'Upper':'Lower'} bound = ${frac(fmt(askUpper?d.upper:d.lower,d.boundDp),fmt(askUpper?t.lower:t.upper,t.boundDp))} = ${fmt(value,3)} m/s.`
+        ]);
+      }
+      const mass=makeMeasure({unit:'g',acc:{step:1,label:'nearest whole number',dp:0,boundDp:1},min:80,max:400,name:'m'});
+      const volume=makeMeasure({unit:'cm^3',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:20,max:90,name:'V'});
+      const askUpper=Math.random()<0.5;
+      const value=askUpper?mass.upper/volume.lower:mass.lower/volume.upper;
+      return problem(`A solid has mass ${measurementText(mass)} and volume ${measurementText(volume)}. Find the ${askUpper?'upper':'lower'} bound for its density.`,`${fmt(value,3)} g/cm^3`,[
+        `Density = ${frac('mass','volume')}.`,
+        `Mass interval: ${intervalStep(mass,'m')}.`,
+        `Volume interval: ${intervalStep(volume,'V')}.`,
+        `${askUpper?'For maximum density, use the upper bound of mass and the lower bound of volume.':'For minimum density, use the lower bound of mass and the upper bound of volume.'}`,
+        `${askUpper?'Upper':'Lower'} bound = ${frac(fmt(askUpper?mass.upper:mass.lower,mass.boundDp),fmt(askUpper?volume.lower:volume.upper,volume.boundDp))} = ${fmt(value,3)} g/cm^3.`
+      ]);
+    }
+
+    function generateFormulaSubstitution(){
+      const r=makeMeasure({unit:'cm',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:3,max:12,name:'r'});
+      const h=makeMeasure({unit:'cm',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:8,max:30,name:'h'});
+      const askUpper=Math.random()<0.5;
+      const rr=askUpper?r.upper:r.lower;
+      const hh=askUpper?h.upper:h.lower;
+      const value=3.142*rr*rr*hh;
+      return problem(`A cylinder has radius ${measurementText(r)} and height ${measurementText(h)}. Using V = 3.142r^2h, find the ${askUpper?'upper':'lower'} bound for V.`,`${fmt(value,2)} cm^3`,[
+        `Radius interval: ${intervalStep(r,'r')}.`,
+        `Height interval: ${intervalStep(h,'h')}.`,
+        `V = 3.142r^2h. Since r and h are positive, ${askUpper?'use upper bounds for the upper bound of V.':'use lower bounds for the lower bound of V.'}`,
+        `${askUpper?'Upper':'Lower'} bound = 3.142 × ${fmt(rr,r.boundDp)}^2 × ${fmt(hh,h.boundDp)}.`,
+        `${askUpper?'Upper':'Lower'} bound = ${fmt(value,2)} cm^3.`
+      ]);
+    }
+
+    function generatePercentageError(){
+      const m=makeMeasure({unit:choice(['cm','m','kg','g']),acc:choice(accuracies.filter(a=>a.step!==10)),min:8,max:80,name:'x'});
+      const half=m.step/2;
+      const percent=half/m.value*100;
+      return problem(`A measurement is ${measurementText(m)}. Find the maximum percentage error.`,`${fmt(percent,3)}%`,[
+        `Maximum absolute error = half the rounding unit.`,
+        `Maximum absolute error = ${fmtMeasure(half,m.unit,m.boundDp)}.`,
+        `Percentage error = ${frac('maximum absolute error','measured value')} × 100%.`,
+        `Percentage error = ${frac(fmt(half,m.boundDp),fmt(m.value,m.dp))} × 100% = ${fmt(percent,3)}%.`
+      ]);
+    }
+
+    function generateReverseBounds(){
+      const acc=choice(accuracies);
+      const unit=choice(['cm','m','kg','s']);
+      const value=roundedValueForAcc(acc);
+      const lower=value-acc.step/2,upper=value+acc.step/2;
+      const found=accuracyFromInterval(lower,upper);
+      return problem(`The error interval for x is ${intervalHtml('x',lower,upper,unit,acc.boundDp)}. State the rounded value and the accuracy.`,`${fmtMeasure(value,unit,found.dp)}, to the ${found.label}`,[
+        `The rounded value is the midpoint of the interval.`,
+        `Midpoint = ${frac(`${fmt(lower,acc.boundDp)} + ${fmt(upper,acc.boundDp)}`,'2')} = ${fmt(value,found.dp)}.`,
+        `The interval width is ${fmt(upper-lower,found.dp)} ${unit}.`,
+        `So the value was rounded to the ${found.label}.`,
+        `Rounded value = ${fmtMeasure(value,unit,found.dp)}.`
+      ]);
+    }
+
+    function generateExamMixed(){
+      const scenario=choice(['car','paint','tiles']);
+      if(scenario==='car'){
+        const d=makeMeasure({unit:'km',acc:{step:1,label:'nearest whole number',dp:0,boundDp:1},min:120,max:360,name:'d'});
+        const fuel=makeMeasure({unit:'L',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:12,max:48,name:'f'});
+        const value=d.upper/fuel.lower;
+        return problem(`A car travels ${measurementText(d)} using ${measurementText(fuel)} of fuel. Find the upper bound for the fuel economy in km/L.`,`${fmt(value,3)} km/L`,[
+          `Fuel economy = ${frac('distance','fuel used')}.`,
+          `Distance interval: ${intervalStep(d,'d')}.`,
+          `Fuel interval: ${intervalStep(fuel,'f')}.`,
+          `For the upper bound, use the upper bound of distance and the lower bound of fuel.`,
+          `Upper bound = ${frac(fmt(d.upper,d.boundDp),fmt(fuel.lower,fuel.boundDp))} = ${fmt(value,3)} km/L.`
+        ]);
+      }
+      if(scenario==='paint'){
+        const length=makeMeasure({unit:'m',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:3,max:15,name:'l'});
+        const width=makeMeasure({unit:'m',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:2,max:10,name:'w'});
+        const rate=makeMeasure({unit:'m^2/L',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:6,max:14,name:'r'});
+        const value=(length.upper*width.upper)/rate.lower;
+        return problem(`A rectangular wall has length ${measurementText(length)} and width ${measurementText(width)}. Paint covers ${measurementText(rate)}. Find the upper bound for litres of paint needed.`,`${fmt(value,3)} L`,[
+          `Area = length × width.`,
+          `For the maximum paint needed, use the upper bounds for area and the lower bound for coverage rate.`,
+          `Upper bound for area = ${fmt(length.upper,length.boundDp)} × ${fmt(width.upper,width.boundDp)} = ${fmt(length.upper*width.upper,3)} m^2.`,
+          `Litres needed = ${frac('area','coverage rate')}.`,
+          `Upper bound = ${frac(fmt(length.upper*width.upper,3),fmt(rate.lower,rate.boundDp))} = ${fmt(value,3)} L.`
+        ]);
+      }
+      const side=makeMeasure({unit:'cm',acc:{step:0.1,label:'nearest 0.1',dp:1,boundDp:2},min:8,max:30,name:'s'});
+      const area=side.lower*side.lower;
+      return problem(`A square tile has side length ${measurementText(side)}. Find the lower bound for the area of one tile.`,`${fmt(area,3)} cm^2`,[
+        `Side length interval: ${intervalStep(side,'s')}.`,
+        `Area of a square = s^2.`,
+        `For the lower bound of area, use the lower bound of the side length.`,
+        `Lower bound = ${fmt(side.lower,side.boundDp)}^2 = ${fmt(area,3)} cm^2.`
+      ]);
+    }
+
+    function generateProblem(){
+      const config=levelConfigs[currentLevel];
+      let types=config.types;
+      if(currentType!=='select'&&currentType!=='all')types=[currentType];
+      const type=choice(types);
+      const generators={
+        bounds_from_rounding:generateBoundsFromRounding,
+        error_interval:generateErrorInterval,
+        nearest_accuracy:generateNearestAccuracy,
+        sum_difference:generateSumDifference,
+        product_quotient:generateProductQuotient,
+        mixed_calculation:generateMixedCalculation,
+        area_perimeter:generateAreaPerimeter,
+        speed_density:generateSpeedDensity,
+        formula_substitution:generateFormulaSubstitution,
+        percentage_error:generatePercentageError,
+        reverse_bounds:generateReverseBounds,
+        exam_mixed:generateExamMixed
+      };
+      const oldType=currentType;
+      currentType=type;
+      const generated=(generators[type]||generateErrorInterval)();
+      currentType=oldType;
+      generated.typeLabel=typeDisplayNames[type]||generated.typeLabel;
+      generated.instruction=typeInstructions[type]||generated.instruction;
+      generated.instructionText=generated.instruction;
+      return generated;
+    }
+
+    function populateTypes(){
+      const config=levelConfigs[currentLevel];
+      const dropdown=document.getElementById('type-dropdown');
+      dropdown.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+config.types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      dropdown.value=currentType='select';
+      showBlankPage();
+    }
+
+    function switchLevel(level){
+      currentLevel=level;
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index===level-1));
+      document.getElementById('level-title').textContent=levelConfigs[level].title;
+      document.getElementById('level-description').textContent=levelConfigs[level].description;
+      populateTypes();
+    }
+
+    function typeChanged(){
+      currentType=document.getElementById('type-dropdown').value;
+      currentType==='select'?showBlankPage():generateNewSet();
+    }
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').classList.remove('visible');
+      document.getElementById('set-instruction').classList.remove('visible');
+      document.getElementById('problem-list').classList.remove('compact');
+      document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:38px;color:#667085;font-size:1.05em">Select a question type to begin bounds practice.</li>';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      problems=[];answersVisible=false;stepsVisible=false;
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<80){
+        const p=generateProblem();
+        const key=p.question;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      list.classList.toggle('compact',currentLevel===1);
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed bounds question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|&le;|&lt;|<span class="vfrac"|<span class="interval"|×|\^/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div>
+                <span class="problem-type">${escapeHtml(p.typeLabel)}</span>
+                <div class="question-text">${p.prompt}</div>
+              </div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){
+      answersVisible=!answersVisible;
+      problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible));
+    }
+
+    function showSteps(){
+      stepsVisible=!stepsVisible;
+      problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible));
+    }
+
+    function startTimer(minutes){
+      if(timerActive)stopTimer();
+      timeRemaining=minutes*60;timerActive=true;updateTimerDisplay();
+      timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000);
+    }
+
+    function stopTimer(){
+      if(timerInterval){clearInterval(timerInterval);timerInterval=null}
+      timerActive=false;
+      const el=document.getElementById('timer-display');
+      el.textContent='Ready';
+      el.className='timer-display';
+    }
+
+    function updateTimerDisplay(){
+      const el=document.getElementById('timer-display');
+      const m=Math.floor(timeRemaining/60),s=timeRemaining%60;
+      el.textContent=`${m}:${String(s).padStart(2,'0')}`;
+      if(timerActive&&timeRemaining<=30)el.className='timer-display warning';
+      else if(timerActive)el.className='timer-display active';
+      else el.className='timer-display';
+    }
+
+    function timerFinished(){
+      stopTimer();
+      const el=document.getElementById('timer-display');
+      el.textContent='Time Up!';
+      el.className='timer-display warning';
+      document.getElementById('timer-modal').classList.remove('hidden');
+    }
+
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
+</body>
+</html>

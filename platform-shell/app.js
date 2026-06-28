@@ -386,6 +386,25 @@ const tools = [
     ]
   },
   {
+    slug: "upper-lower-bounds",
+    title: "Upper and Lower Bounds",
+    category: "Numbers",
+    level: "GCSE / IGCSE / CSEC",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate upper and lower bounds practice covering error intervals, bounds in calculations, formulae, compound measures, percentage error, and exam-style contexts.",
+    tags: ["numbers", "upper bounds", "lower bounds", "error intervals", "rounding", "compound measures", "percentage error", "GCSE", "IGCSE", "CSEC"],
+    toolPath: "tools/upper-lower-bounds/index.html?v=upper-lower-bounds-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 builds error interval fluency from rounded values and reverse intervals.",
+      "Level 2 focuses on choosing the correct lower or upper values for sums, differences, products, quotients, and mixed expressions.",
+      "Level 3 applies bounds to area, perimeter, speed, density, and formula substitution.",
+      "Level 4 includes maximum percentage error, reverse bounds, and mixed exam-style contexts."
+    ]
+  },
+  {
     slug: "four-operations",
     title: "Four Operations",
     category: "Numbers",
