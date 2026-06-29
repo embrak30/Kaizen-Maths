@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Matrices</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f3f6fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#223b63;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#223b63;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #17b8b3;color:#223b63;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1240px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#223b63;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e8eef8}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e8eef8;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}.tab.active{background:#fff;color:#223b63;border-bottom-color:#223b63}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d9deef;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#223b63;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:390px;padding:8px 10px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#223b63;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#223b63;color:#223b63}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#223b63}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#223b63;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #c8d2ff;border-radius:6px;background:#f0f4ff;color:#223b63;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-left:4px solid #223b63;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:center;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#223b63;color:#fff;font-weight:850}.problem-type{display:inline-flex;margin-bottom:5px;padding:5px 9px;border-radius:999px;background:#e0e7ff;color:#223b63;font-size:.76em;font-weight:850}
+    .equation{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.18em;font-weight:700;line-height:1.4;color:#172033;overflow-x:auto;max-width:100%}.matrix-expression{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.matrix-wrap{display:inline-grid;grid-auto-flow:row;gap:0;position:relative;padding:7px 11px;margin:0 2px;vertical-align:middle}.matrix-wrap:before,.matrix-wrap:after{content:"";position:absolute;top:0;bottom:0;width:7px;border-top:2px solid currentColor;border-bottom:2px solid currentColor}.matrix-wrap:before{left:0;border-left:2px solid currentColor}.matrix-wrap:after{right:0;border-right:2px solid currentColor}.matrix-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(30px,auto);gap:11px;justify-content:center}.matrix-cell{text-align:center;min-width:24px}.math-chip{display:inline-block;padding:2px 6px;border-radius:5px;background:#eef2ff;color:#223b63;font-weight:850}
+    .problem-answer{display:none;white-space:nowrap;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #223b63;border-radius:6px;background:#f1f5ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#223b63;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#223b63}.step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#6d28d9;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column;align-items:flex-start}.problem-answer{white-space:normal}.equation{font-size:1.02em}.matrix-row{grid-auto-columns:minmax(24px,auto);gap:8px}.matrix-wrap{padding:6px 9px}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Advanced Matrices</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This Further Maths tool extends matrix work into transformations, eigenvalues, diagonalisation, Cayley-Hamilton applications, powers, and systems of equations.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Matrix transformations, composite transformations, and fixed lines.</li>
+        <li><strong>Level 2:</strong> Characteristic equations, eigenvalues, eigenvectors, and diagonalisation.</li>
+        <li><strong>Level 3:</strong> Cayley-Hamilton, inverse matrices from the characteristic equation, and powers of matrices.</li>
+        <li><strong>Level 4:</strong> Matrix equations and systems, including 3 by 3 triangular systems.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>For transformations, order matters: applying A then B gives the combined matrix BA.</li>
+        <li>For eigenvectors, solve (A - &lambda;I)v = 0.</li>
+        <li>For Cayley-Hamilton, replace &lambda; by A in the characteristic equation.</li>
+        <li>For systems, each column can be solved as a matrix equation.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Advanced Matrices</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Transformations</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Eigenvalues</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Powers</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Systems</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Matrix Transformations</h3>
+        <p id="level-description">Use matrices to transform points, combine transformations, and find fixed lines.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Matrix Transformations',description:'Use matrices to transform points, combine transformations, and find fixed lines.',types:['image_of_point','composite_transformations','fixed_line','transformation_mixed']},
+      2:{title:'Level 2: Eigenvalues and Eigenvectors',description:'Find characteristic equations, eigenvalues, eigenvectors, and diagonalising matrices.',types:['characteristic_equation','eigenvalues_2x2','eigenvector_given','diagonalise_2x2','eigen_mixed']},
+      3:{title:'Level 3: Cayley-Hamilton and Powers',description:'Use characteristic equations to simplify powers, inverses, and powers of diagonalised matrices.',types:['cayley_hamilton','inverse_from_ch','matrix_power','power_mixed']},
+      4:{title:'Level 4: Matrix Equations and Systems',description:'Solve matrix equations and systems using inverse operations and back substitution.',types:['solve_matrix_vector','solve_3x3_triangular','matrix_equation_AXB','systems_mixed']}
+    };
+
+    const typeDisplayNames={
+      image_of_point:'Type 1: Image of a point',
+      composite_transformations:'Type 2: Composite transformations',
+      fixed_line:'Type 3: Fixed line of a transformation',
+      transformation_mixed:'Type 4: Mixed transformations',
+      characteristic_equation:'Type 1: Characteristic equation',
+      eigenvalues_2x2:'Type 2: Eigenvalues of a 2 by 2 matrix',
+      eigenvector_given:'Type 3: Eigenvector for a given eigenvalue',
+      diagonalise_2x2:'Type 4: Diagonalise a 2 by 2 matrix',
+      eigen_mixed:'Type 5: Mixed eigenvalue practice',
+      cayley_hamilton:'Type 1: Cayley-Hamilton relation',
+      inverse_from_ch:'Type 2: Inverse from Cayley-Hamilton',
+      matrix_power:'Type 3: Powers using diagonalisation',
+      power_mixed:'Type 4: Mixed Cayley-Hamilton and powers',
+      solve_matrix_vector:'Type 1: Solve AX = b',
+      solve_3x3_triangular:'Type 2: Solve a 3 by 3 triangular system',
+      matrix_equation_AXB:'Type 3: Solve AX = B',
+      systems_mixed:'Type 4: Mixed systems and matrix equations'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      image_of_point:'Find the image of each point under the matrix transformation.',
+      composite_transformations:'Find the combined matrix for each pair of transformations.',
+      fixed_line:'Find the fixed line for each transformation.',
+      transformation_mixed:'Answer each mixed matrix transformation question.',
+      characteristic_equation:'Find the characteristic equation of each matrix.',
+      eigenvalues_2x2:'Find the eigenvalues of each matrix.',
+      eigenvector_given:'Find an eigenvector for the stated eigenvalue.',
+      diagonalise_2x2:'Write each matrix in diagonalised form.',
+      eigen_mixed:'Answer each mixed eigenvalue question.',
+      cayley_hamilton:'Use the characteristic equation to write a Cayley-Hamilton relation for each matrix.',
+      inverse_from_ch:'Use Cayley-Hamilton to find the inverse of each matrix.',
+      matrix_power:'Find the stated power of each matrix using its diagonalised form.',
+      power_mixed:'Answer each mixed Cayley-Hamilton and powers question.',
+      solve_matrix_vector:'Solve each matrix equation AX = b.',
+      solve_3x3_triangular:'Solve each triangular system by back substitution.',
+      matrix_equation_AXB:'Solve each matrix equation AX = B.',
+      systems_mixed:'Answer each mixed systems question.'
+    };
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function nonZero(min,max){let n=0;while(n===0)n=random(min,max);return n}
+    function sup(v){return `<sup>${v}</sup>`}
+    function power(base,exp){return `${base}${sup(exp)}`}
+    function frac(n,d){if(d<0){n=-n;d=-d}const g=gcd(n,d);n/=g;d/=g;return d===1?String(n):`<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function plain(v){return String(v).replace(/<[^>]*>/g,'').replace(/&lambda;/g,'lambda').replace(/\s+/g,' ').trim()}
+    function matrixHtml(A){return '<span class="matrix-wrap">'+A.map(row=>'<span class="matrix-row">'+row.map(v=>'<span class="matrix-cell">'+v+'</span>').join('')+'</span>').join('')+'</span>'}
+    function matrixText(A){return '['+A.map(row=>'['+row.map(plain).join(', ')+']').join(', ')+']'}
+    function expr(parts){return '<div class="matrix-expression">'+parts.join('')+'</div>'}
+    function col(a,b){return matrixHtml([[a],[b]])}
+    function col3(a,b,c){return matrixHtml([[a],[b],[c]])}
+    function coeffTerm(coeff,variable){
+      if(variable==='')return String(coeff);
+      if(coeff===1)return variable;
+      if(coeff===-1)return '-' + variable;
+      return String(coeff) + variable;
+    }
+    function signedTerm(coeff,variable){
+      if(coeff===0)return '';
+      const term=coeffTerm(Math.abs(coeff),variable);
+      return coeff>0?' + ' + term:' - ' + term;
+    }
+    function signedProduct(coeff,value){
+      return coeff>=0?' + ' + coeff + '(' + value + ')':' - ' + Math.abs(coeff) + '(' + value + ')';
+    }
+    function productSum(a,x,b,y){
+      return `${a}(${x})${signedProduct(b,y)}`;
+    }
+    function add(A,B){return A.map((row,i)=>row.map((v,j)=>v+B[i][j]))}
+    function sub(A,B){return A.map((row,i)=>row.map((v,j)=>v-B[i][j]))}
+    function mul(A,B){return A.map(row=>B[0].map((_,j)=>row.reduce((sum,v,k)=>sum+v*B[k][j],0)))}
+    function mv(A,v){return A.map(row=>row.reduce((sum,a,i)=>sum+a*v[i],0))}
+    function det2(A){return A[0][0]*A[1][1]-A[0][1]*A[1][0]}
+    function trace(A){return A[0][0]+A[1][1]}
+    function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question',instruction=typeInstructions[currentType]||'Answer each question.'){
+      return {prompt,question:plain(prompt),answer,steps,typeLabel,instruction,instructionText:instruction};
+    }
+
+    function genTriangularEigenMatrix(){
+      const l1=choice([1,2,3,4,5]);
+      let l2=choice([2,3,4,5,6,7]);
+      if(l2===l1)l2+=2;
+      const k=choice([1,2,3,4,-2,-3]);
+      return {A:[[l1,k],[0,l2]],l1,l2,k};
+    }
+
+    function genImageOfPoint(){
+      const A=[[random(-3,4),random(-3,4)],[random(-3,4),random(-3,4)]];
+      const p=[nonZero(-4,5),nonZero(-4,5)];
+      const image=mv(A,p);
+      return problem(expr(['A = ',matrixHtml(A),', P = ',col(p[0],p[1])]),col(image[0],image[1]),[
+        `Write the point as a column vector.`,
+        `Multiply the transformation matrix by the point vector.`,
+        `AP = ${matrixHtml(A)}${col(p[0],p[1])}.`,
+        `Top entry = ${productSum(A[0][0],p[0],A[0][1],p[1])} = ${image[0]}.`,
+        `Bottom entry = ${productSum(A[1][0],p[0],A[1][1],p[1])} = ${image[1]}.`,
+        `The image is ${col(image[0],image[1])}.`
+      ]);
+    }
+
+    function genCompositeTransformations(){
+      const A=[[random(-2,4),random(-2,4)],[random(-2,4),random(-2,4)]];
+      const B=[[random(-2,4),random(-2,4)],[random(-2,4),random(-2,4)]];
+      const combined=mul(B,A);
+      return problem(expr(['A = ',matrixHtml(A),', B = ',matrixHtml(B),', apply A then B']),matrixHtml(combined),[
+        `If A is applied first and B is applied second, the combined matrix is BA.`,
+        `BA = ${matrixHtml(B)}${matrixHtml(A)}.`,
+        `Top-left = ${productSum(B[0][0],A[0][0],B[0][1],A[1][0])} = ${combined[0][0]}.`,
+        `Top-right = ${productSum(B[0][0],A[0][1],B[0][1],A[1][1])} = ${combined[0][1]}.`,
+        `Bottom-left = ${productSum(B[1][0],A[0][0],B[1][1],A[1][0])} = ${combined[1][0]}.`,
+        `Bottom-right = ${productSum(B[1][0],A[0][1],B[1][1],A[1][1])} = ${combined[1][1]}.`,
+        `Combined matrix = ${matrixHtml(combined)}.`
+      ]);
+    }
+
+    function genFixedLine(){
+      const a=choice([2,3,4,-2,-3]);
+      const b=choice([2,3,4,5]);
+      const A=[[1,a],[0,b]];
+      return problem(expr(['A = ',matrixHtml(A)]),'y = 0',[
+        `A fixed point satisfies AX = X.`,
+        `Let X = ${col('x','y')}.`,
+        `${matrixHtml(A)}${col('x','y')} = ${col(`x${signedTerm(a,'y')}`,`${b}y`)}.`,
+        `Set corresponding entries equal: x${signedTerm(a,'y')} = x and ${b}y = y.`,
+        `From x${signedTerm(a,'y')} = x, subtract x from both sides: ${coeffTerm(a,'y')} = 0.`,
+        `So y = 0.`,
+        `The fixed points lie on the line y = 0.`
+      ]);
+    }
+
+    function genCharacteristicEquation(){
+      const {A}=genTriangularEigenMatrix();
+      const tr=trace(A),det=det2(A);
+      return problem(expr(['A = ',matrixHtml(A)]),`${power('&lambda;',2)} - ${tr}&lambda; + ${det} = 0`,[
+        `For a 2 by 2 matrix, the characteristic equation is det(A - &lambda;I) = 0.`,
+        `For A = ${matrixHtml(A)}, trace(A) = ${tr} and det(A) = ${det}.`,
+        `So the characteristic equation is ${power('&lambda;',2)} - (trace A)&lambda; + det(A) = 0.`,
+        `Therefore ${power('&lambda;',2)} - ${tr}&lambda; + ${det} = 0.`
+      ]);
+    }
+
+    function genEigenvalues(){
+      const {A,l1,l2}=genTriangularEigenMatrix();
+      const tr=trace(A),det=det2(A);
+      return problem(expr(['A = ',matrixHtml(A)]),`&lambda; = ${l1}, ${l2}`,[
+        `Find the characteristic equation.`,
+        `trace(A) = ${tr} and det(A) = ${det}.`,
+        `${power('&lambda;',2)} - ${tr}&lambda; + ${det} = 0.`,
+        `Factorise: (&lambda; - ${l1})(&lambda; - ${l2}) = 0.`,
+        `Therefore the eigenvalues are &lambda; = ${l1} and &lambda; = ${l2}.`
+      ]);
+    }
+
+    function genEigenvectorGiven(){
+      const {A,l1,l2,k}=genTriangularEigenMatrix();
+      const lambda=l2;
+      const x=k, y=l2-l1;
+      return problem(expr(['A = ',matrixHtml(A),', &lambda; = ',`<span class="math-chip">${lambda}</span>`]),col(x,y),[
+        `An eigenvector v satisfies (A - &lambda;I)v = 0.`,
+        `A - ${lambda}I = ${matrixHtml([[l1-lambda,k],[0,0]])}.`,
+        `Let v = ${col('x','y')}.`,
+        `The first row gives ${coeffTerm(l1-lambda,'x')}${signedTerm(k,'y')} = 0.`,
+        `Choose y = ${y}.`,
+        `Then ${coeffTerm(l1-lambda,'x')}${signedTerm(k*y,'')} = 0, so x = ${x}.`,
+        `One eigenvector is ${col(x,y)}.`
+      ]);
+    }
+
+    function genDiagonalise(){
+      const {A,l1,l2,k}=genTriangularEigenMatrix();
+      const P=[[1,k],[0,l2-l1]],D=[[l1,0],[0,l2]];
+      return problem(expr(['A = ',matrixHtml(A)]),expr(['P = ',matrixHtml(P),', D = ',matrixHtml(D)]),[
+        `Use eigenvectors as columns of P.`,
+        `For &lambda; = ${l1}, an eigenvector is ${col(1,0)}.`,
+        `For &lambda; = ${l2}, an eigenvector is ${col(k,l2-l1)}.`,
+        `So P = ${matrixHtml(P)}.`,
+        `The diagonal matrix D contains the eigenvalues in the same order as the eigenvectors.`,
+        `D = ${matrixHtml(D)}.`,
+        `Therefore A = PDP${sup('-1')}.`
+      ]);
+    }
+
+    function genCayleyHamilton(){
+      const {A}=genTriangularEigenMatrix();
+      const tr=trace(A),det=det2(A);
+      return problem(expr(['A = ',matrixHtml(A)]),`${power('A',2)} - ${tr}A + ${det}I = 0`,[
+        `The characteristic equation is ${power('&lambda;',2)} - ${tr}&lambda; + ${det} = 0.`,
+        `By the Cayley-Hamilton theorem, the matrix A satisfies its own characteristic equation.`,
+        `Replace &lambda; by A.`,
+        `${power('A',2)} - ${tr}A + ${det}I = 0.`
+      ]);
+    }
+
+    function genInverseFromCH(){
+      const {A}=genTriangularEigenMatrix();
+      const tr=trace(A),det=det2(A);
+      const numerator=[[tr-A[0][0],-A[0][1]],[-A[1][0],tr-A[1][1]]];
+      const inv=numerator.map(row=>row.map(v=>frac(v,det)));
+      return problem(expr(['A = ',matrixHtml(A)]),matrixHtml(inv),[
+        `The characteristic equation is ${power('&lambda;',2)} - ${tr}&lambda; + ${det} = 0.`,
+        `By Cayley-Hamilton: ${power('A',2)} - ${tr}A + ${det}I = 0.`,
+        `Multiply by A${sup('-1')}: A - ${tr}I + ${det}A${sup('-1')} = 0.`,
+        `Rearrange: ${det}A${sup('-1')} = ${tr}I - A.`,
+        `So A${sup('-1')} = ${frac(1,det)}(${tr}I - A).`,
+        `${tr}I - A = ${matrixHtml(numerator)}.`,
+        `Therefore A${sup('-1')} = ${matrixHtml(inv)}.`
+      ]);
+    }
+
+    function genMatrixPower(){
+      const l1=choice([2,3,4]),l2=choice([5,6,7]),n=choice([2,3,4]);
+      const A=[[l1,l2-l1],[0,l2]];
+      const P=[[1,1],[0,1]],D=[[l1,0],[0,l2]];
+      const answer=[[power(l1,n),`${power(l2,n)} - ${power(l1,n)}`],[0,power(l2,n)]];
+      return problem(expr(['A = ',matrixHtml(A),', n = ',`<span class="math-chip">${n}</span>`]),matrixHtml(answer),[
+        `This matrix can be written as A = PDP${sup('-1')}.`,
+        `Use P = ${matrixHtml(P)} and D = ${matrixHtml(D)}.`,
+        `Then ${power('A',n)} = P${power('D',n)}P${sup('-1')}.`,
+        `${power('D',n)} = ${matrixHtml([[power(l1,n),0],[0,power(l2,n)]])}.`,
+        `For this form, ${power('A',n)} = ${matrixHtml(answer)}.`
+      ]);
+    }
+
+    function genSolveMatrixVector(){
+      const A=[[2,1],[1,3]];
+      const x=random(-5,6),y=random(-5,6);
+      const b=mv(A,[x,y]);
+      return problem(expr(['A = ',matrixHtml(A),', b = ',col(b[0],b[1])]),col(x,y),[
+        `Solve AX = b.`,
+        `Let X = ${col('x','y')}.`,
+        `${matrixHtml(A)}${col('x','y')} = ${col(b[0],b[1])}.`,
+        `This gives the equations 2x + y = ${b[0]} and x + 3y = ${b[1]}.`,
+        `From 2x + y = ${b[0]}, y = ${b[0]} - 2x.`,
+        `Substitute into x + 3y = ${b[1]}.`,
+        `x + 3(${b[0]} - 2x) = ${b[1]}.`,
+        `Solving gives x = ${x}.`,
+        `Then y = ${y}.`,
+        `So X = ${col(x,y)}.`
+      ]);
+    }
+
+    function genSolve3x3Triangular(){
+      const A=[[2,1,-1],[0,3,2],[0,0,4]];
+      const x=random(-4,5),y=random(-4,5),z=random(-4,5);
+      const b=mv(A,[x,y,z]);
+      return problem(expr(['A = ',matrixHtml(A),', b = ',col3(b[0],b[1],b[2])]),col3(x,y,z),[
+        `Solve AX = b by back substitution.`,
+        `Let X = ${col3('x','y','z')}.`,
+        `The third row gives 4z = ${b[2]}.`,
+        `So z = ${z}.`,
+        `The second row gives 3y + 2z = ${b[1]}.`,
+        `Substitute z = ${z}: 3y${signedTerm(2*z,'')} = ${b[1]}.`,
+        `So y = ${y}.`,
+        `The first row gives 2x + y - z = ${b[0]}.`,
+        `Substitute y = ${y} and z = ${z}: 2x${signedTerm(y,'')}${signedTerm(-z,'')} = ${b[0]}.`,
+        `So x = ${x}.`,
+        `Therefore X = ${col3(x,y,z)}.`
+      ]);
+    }
+
+    function genMatrixEquationAXB(){
+      const A=[[2,1],[1,2]];
+      const X=[[random(-3,5),random(-3,5)],[random(-3,5),random(-3,5)]];
+      const B=mul(A,X);
+      return problem(expr(['A = ',matrixHtml(A),', B = ',matrixHtml(B)]),matrixHtml(X),[
+        `Solve AX = B.`,
+        `This means solve a separate system for each column of X.`,
+        `Let X = ${matrixHtml([['p','q'],['r','s']])}.`,
+        `Then AX = ${matrixHtml(A)}${matrixHtml([['p','q'],['r','s']])}.`,
+        `Equating the first column gives ${matrixHtml(A)}${col('p','r')} = ${col(B[0][0],B[1][0])}.`,
+        `Solving gives p = ${X[0][0]} and r = ${X[1][0]}.`,
+        `Equating the second column gives ${matrixHtml(A)}${col('q','s')} = ${col(B[0][1],B[1][1])}.`,
+        `Solving gives q = ${X[0][1]} and s = ${X[1][1]}.`,
+        `Therefore X = ${matrixHtml(X)}.`
+      ]);
+    }
+
+    function generateProblem(){
+      const maps={
+        image_of_point:genImageOfPoint,
+        composite_transformations:genCompositeTransformations,
+        fixed_line:genFixedLine,
+        transformation_mixed:()=>choice([genImageOfPoint,genCompositeTransformations,genFixedLine])(),
+        characteristic_equation:genCharacteristicEquation,
+        eigenvalues_2x2:genEigenvalues,
+        eigenvector_given:genEigenvectorGiven,
+        diagonalise_2x2:genDiagonalise,
+        eigen_mixed:()=>choice([genCharacteristicEquation,genEigenvalues,genEigenvectorGiven,genDiagonalise])(),
+        cayley_hamilton:genCayleyHamilton,
+        inverse_from_ch:genInverseFromCH,
+        matrix_power:genMatrixPower,
+        power_mixed:()=>choice([genCayleyHamilton,genInverseFromCH,genMatrixPower])(),
+        solve_matrix_vector:genSolveMatrixVector,
+        solve_3x3_triangular:genSolve3x3Triangular,
+        matrix_equation_AXB:genMatrixEquationAXB,
+        systems_mixed:()=>choice([genSolveMatrixVector,genSolve3x3Triangular,genMatrixEquationAXB])()
+      };
+      return (maps[currentType]||genImageOfPoint)();
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      populateDropdown();
+      showBlankPage();
+    }
+
+    function populateDropdown(){
+      const select=document.getElementById('type-dropdown');
+      const types=levelConfigs[currentLevel].types;
+      select.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      select.value=currentType;
+    }
+
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;generateNewSet()}
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').className='problem-set-header';
+      document.getElementById('set-instruction').className='set-instruction';
+      document.getElementById('problem-list').innerHTML='<li class="problem-item"><div class="problem-left"><div class="problem-number">1</div><div class="equation">Select a question type to begin advanced matrices practice.</div></div></li>';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      answersVisible=false;stepsVisible=false;problems=[];
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<160){
+        const oldType=currentType;
+        if(currentType==='all')currentType=choice(levelConfigs[currentLevel].types);
+        const p=generateProblem();
+        currentType=oldType;
+        const key=p.question;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed advanced matrices question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|det|&lambda;|<span class="matrix-wrap"|<sup>|<span class="vfrac"|AX|PDP/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div>
+                <span class="problem-type">${p.typeLabel}</span>
+                <div class="equation">${p.prompt}</div>
+              </div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;timerActive=true;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      display.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        display.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)display.className='timer-display warning';
+        if(timeRemaining<=0){stopTimer();display.textContent='Time Up';display.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;timerActive=false;
+      const display=document.getElementById('timer-display');
+      if(display){display.textContent='Ready';display.className='timer-display'}
+    }
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
+</body>
+</html>

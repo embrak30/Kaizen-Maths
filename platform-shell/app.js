@@ -187,6 +187,25 @@ const tools = [
     ]
   },
   {
+    slug: "advanced-matrices",
+    title: "Advanced Matrices",
+    category: "Algebra",
+    level: "A-Level Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate advanced matrix practice covering transformations, eigenvalues, eigenvectors, diagonalisation, Cayley-Hamilton, powers, and matrix systems.",
+    tags: ["algebra", "further maths", "advanced matrices", "eigenvalues", "eigenvectors", "diagonalisation", "Cayley-Hamilton", "matrix transformations", "systems"],
+    toolPath: "tools/advanced-matrices/index.html?v=advanced-matrices-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers matrix transformations, composite transformations, and fixed lines.",
+      "Level 2 develops characteristic equations, eigenvalues, eigenvectors, and diagonalisation.",
+      "Level 3 uses Cayley-Hamilton to form relations, find inverses, and calculate powers.",
+      "Level 4 solves matrix equations and systems, including triangular 3 by 3 systems."
+    ]
+  },
+  {
     slug: "complex-numbers",
     title: "Complex Numbers",
     category: "Algebra",
