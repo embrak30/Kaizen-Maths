@@ -49,6 +49,14 @@
     .problem-type{display:inline-flex;margin-bottom:5px;padding:5px 9px;border-radius:999px;background:#e0e7ff;color:#24356f;font-size:.76em;font-weight:850}
     .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.23em;font-weight:650;line-height:1.4;color:#172033;overflow-wrap:anywhere}
     .question-text .word{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;font-size:.88em;font-weight:750;color:#334155}
+    .polar-card{display:grid;grid-template-columns:250px minmax(0,1fr);gap:12px;align-items:center;width:100%}
+    .polar-diagram{width:250px;max-width:100%;padding:5px;border:1px solid #d7dfef;border-radius:7px;background:#fff}
+    .polar-diagram svg{display:block;width:100%;height:auto}
+    .polar-diagram .axis,.polar-diagram .curve,.polar-diagram .ray,.polar-diagram .guide,.polar-diagram .arc{fill:none;stroke:#172033;stroke-linecap:round;stroke-linejoin:round}
+    .polar-diagram .axis{stroke-width:1.8}.polar-diagram .curve{stroke-width:2.3}.polar-diagram .ray{stroke-width:2}.polar-diagram .guide{stroke-width:1.35;stroke-dasharray:5 5}.polar-diagram .arc{stroke-width:1.6}
+    .polar-diagram .point{fill:#172033}.polar-diagram .blank{fill:none;stroke:#172033;stroke-width:1.8}
+    .polar-diagram text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:11px;fill:#172033;font-weight:800;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+    .polar-prompt{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1em;font-weight:650;line-height:1.42;color:#172033}
     .problem-answer{display:none;white-space:nowrap;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}
     .problem-answer.visible{display:block}
     .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #24356f;border-radius:6px;background:#f1f5ff}
@@ -66,8 +74,8 @@
     .modal-content h2{margin-bottom:10px;color:#d92d20}
     .modal-content p{margin-bottom:18px;color:#667085}
     .hidden{display:none}
-    @media (min-width:960px){.problem-list.compact{grid-template-columns:repeat(2,minmax(0,1fr))}.problem-list.compact .question-text{font-size:1.07em}.problem-list.compact .problem-item{min-height:198px}}
-    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.problem-answer{white-space:normal}.question-text{font-size:1.08em}}
+    @media (min-width:960px){.problem-list.compact{grid-template-columns:1fr}.problem-list.compact .question-text{font-size:1.07em}.problem-list.compact .problem-item{min-height:188px}}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.problem-answer{white-space:normal}.question-text{font-size:1.08em}.polar-card{grid-template-columns:1fr}.polar-diagram{width:100%}}
   </style>
 </head>
 <body>
@@ -223,6 +231,44 @@
     function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
     function stripTags(html){return String(html).replace(/<sup>(.*?)<\/sup>/gi,'^$1').replace(/<sub>(.*?)<\/sub>/gi,'_$1').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
     function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+    function diagramWrap(svg,prompt){return `<div class="polar-card"><div class="polar-diagram">${svg}</div><div class="polar-prompt">${prompt}</div></div>`}
+    function svgBase(content,label='Polar diagram'){
+      return `<svg viewBox="0 0 250 170" role="img" aria-label="${label}">${content}</svg>`;
+    }
+    function axes(cx=120,cy=92){
+      return `<line class="axis" x1="22" y1="${cy}" x2="226" y2="${cy}"></line><line class="axis" x1="${cx}" y1="148" x2="${cx}" y2="22"></line><text x="228" y="${cy-6}">x</text><text x="${cx+7}" y="26">y</text><circle class="point" cx="${cx}" cy="${cy}" r="3"></circle><text x="${cx+7}" y="${cy+14}">O</text>`;
+    }
+    function pointFromPolar(cx,cy,r,theta){return{x:cx+r*Math.cos(theta),y:cy-r*Math.sin(theta)}}
+    function angleArc(cx,cy,r,theta){
+      const end=pointFromPolar(cx,cy,r,theta);
+      const large=Math.abs(theta)>Math.PI?1:0;
+      const sweep=theta>=0?0:1;
+      return `<path class="arc" d="M ${cx+r} ${cy} A ${r} ${r} 0 ${large} ${sweep} ${end.x.toFixed(1)} ${end.y.toFixed(1)}"></path>`;
+    }
+    function polarPointDiagram(theta,label,rLabel='r'){
+      const cx=120,cy=92,end=pointFromPolar(cx,cy,70,theta),mid=pointFromPolar(cx,cy,31,theta/2);
+      return svgBase(`${axes(cx,cy)}<line class="ray" x1="${cx}" y1="${cy}" x2="${end.x.toFixed(1)}" y2="${end.y.toFixed(1)}"></line>${angleArc(cx,cy,26,theta)}<circle class="point" cx="${end.x.toFixed(1)}" cy="${end.y.toFixed(1)}" r="4"></circle><text x="${end.x+7}" y="${end.y-5}">${label}</text><text x="${mid.x}" y="${mid.y}">θ</text><text x="${(cx+end.x)/2+3}" y="${(cy+end.y)/2-5}">${rLabel}</text>`,'Polar point diagram');
+    }
+    function cartesianPointDiagram(x,y){
+      const cx=120,cy=92,scale=4,px=cx+x*scale,py=cy-y*scale;
+      return svgBase(`${axes(cx,cy)}<line class="guide" x1="${px}" y1="${cy}" x2="${px}" y2="${py}"></line><line class="guide" x1="${cx}" y1="${py}" x2="${px}" y2="${py}"></line><line class="ray" x1="${cx}" y1="${cy}" x2="${px}" y2="${py}"></line><circle class="point" cx="${px}" cy="${py}" r="4"></circle><text x="${px+7}" y="${py-5}">(${x}, ${y})</text><text x="${(cx+px)/2+4}" y="${(cy+py)/2-4}">r</text>`,'Cartesian point diagram');
+    }
+    function curveDiagram(kind,theta=0){
+      const cx=120,cy=92;
+      if(kind==='ray'){
+        const end=pointFromPolar(cx,cy,84,theta),mid=pointFromPolar(cx,cy,32,theta/2);
+        return svgBase(`${axes(cx,cy)}<line class="ray" x1="${cx}" y1="${cy}" x2="${end.x.toFixed(1)}" y2="${end.y.toFixed(1)}"></line>${angleArc(cx,cy,27,theta)}<text x="${mid.x}" y="${mid.y}">θ</text>`,'Polar ray diagram');
+      }
+      if(kind==='pole-circle')return svgBase(`${axes(cx,cy)}<circle class="curve" cx="${cx}" cy="${cy}" r="52"></circle><text x="${cx+37}" y="${cy-37}">r = a</text>`,'Circle centred at pole');
+      if(kind==='line')return svgBase(`${axes(cx,cy)}<line class="curve" x1="174" y1="32" x2="174" y2="145"></line><text x="180" y="42">x = a</text>`,'Vertical line diagram');
+      if(kind==='cos-circle')return svgBase(`${axes(cx,cy)}<circle class="curve" cx="152" cy="${cy}" r="32"></circle><text x="150" y="${cy-38}">r = a cos θ</text>`,'Polar circle on x-axis');
+      if(kind==='sin-circle')return svgBase(`${axes(cx,cy)}<circle class="curve" cx="${cx}" cy="60" r="32"></circle><text x="132" y="50">r = a sin θ</text>`,'Polar circle on y-axis');
+      if(kind==='limacon')return svgBase(`${axes(cx,cy)}<path class="curve" d="M120 92 C145 50, 210 66, 206 92 C210 120, 145 135, 120 92 C103 106, 103 78, 120 92"></path><line class="ray" x1="${cx}" y1="${cy}" x2="190" y2="60"></line><circle class="point" cx="190" cy="60" r="4"></circle><text x="168" y="52">θ</text>`,'Polar curve with point');
+      if(kind==='intersections')return svgBase(`${axes(cx,cy)}<circle class="curve" cx="${cx}" cy="${cy}" r="40"></circle><circle class="curve" cx="150" cy="${cy}" r="60"></circle><circle class="point" cx="140" cy="55" r="4"></circle><circle class="point" cx="140" cy="129" r="4"></circle><text x="146" y="52">P</text><text x="146" y="138">Q</text>`,'Polar curve intersections');
+      if(kind==='gradient')return svgBase(`${axes(cx,cy)}<circle class="curve" cx="152" cy="${cy}" r="34"></circle><circle class="point" cx="174" cy="66" r="4"></circle><line class="guide" x1="146" y1="96" x2="208" y2="42"></line><text x="190" y="46">tangent</text>`,'Polar gradient diagram');
+      if(kind==='sector')return svgBase(`${axes(cx,cy)}<path class="curve" d="M 184 92 A 64 64 0 0 0 152 37"></path><line class="ray" x1="${cx}" y1="${cy}" x2="184" y2="${cy}"></line><line class="ray" x1="${cx}" y1="${cy}" x2="152" y2="37"></line><text x="160" y="67">θ</text><text x="150" y="98">r</text>`,'Polar sector diagram');
+      return svgBase(`${axes(cx,cy)}<path class="curve" d="M120 92 C129 86, 142 77, 156 62 C168 49, 180 45, 190 48"></path><line class="ray" x1="${cx}" y1="${cy}" x2="190" y2="48"></line><line class="ray" x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy}"></line><text x="166" y="54">r = aθ</text>`,'Polar spiral diagram');
+    }
     function simplifyFraction(n,d){
       if(d<0){n=-n;d=-d}
       const g=gcd(n,d);n/=g;d/=g;
@@ -260,8 +306,8 @@
       if(den===1)return sign+core;
       return sign+frac(core,den);
     }
-    function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question',instruction=typeInstructions[currentType]||'Answer each question.'){
-      return {prompt,question:stripTags(prompt),answer,steps,typeLabel,instruction,instructionText:instruction};
+    function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question',instruction=typeInstructions[currentType]||'Answer each question.',diagram=''){
+      return {prompt:diagram?diagramWrap(diagram,prompt):prompt,question:stripTags(prompt),answer,steps,typeLabel,instruction,instructionText:instruction};
     }
 
     function generatePolarToCartesian(){
@@ -275,7 +321,7 @@
         `x = ${r} cos(${angle.label}) = ${r} × ${angle.cos[0]==='0'?'0':frac(angle.cos[0],angle.cos[1])} = ${x}.`,
         `y = ${r} sin(${angle.label}) = ${r} × ${angle.sin[0]==='0'?'0':frac(angle.sin[0],angle.sin[1])} = ${y}.`,
         `Therefore the Cartesian coordinate is (${x}, ${y}).`
-      ]);
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',polarPointDiagram(angle.value,`(${r}, ${angle.label})`,String(r)));
     }
 
     function generateCartesianToPolar(){
@@ -287,7 +333,7 @@
         `Choose the quadrant of the point (${p.x}, ${p.y}).`,
         `Therefore θ = ${p.theta}.`,
         `The polar coordinate is (${p.r}, ${p.theta}).`
-      ]);
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',cartesianPointDiagram(p.x,p.y));
     }
 
     function generateEquivalentCoordinates(){
@@ -300,7 +346,7 @@
         `So (${r}, ${angle.label}) is equivalent to (${r}, ${plusAngle}).`,
         `Changing r to -r moves to the opposite ray, so add π to the angle.`,
         `So (${r}, ${angle.label}) is also equivalent to (${-r}, ${negAngle}).`
-      ]);
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',polarPointDiagram(angle.value,`(${r}, ${angle.label})`,String(r)));
     }
 
     function generateStandardCurves(){
@@ -308,10 +354,10 @@
       if(type==='ray'){
         const angle=choice(angleTable.slice(1,8));
         return problem(`Describe the polar curve θ = ${angle.label}.`,`A ray from the pole making angle ${angle.label} with the initial line`,[
-          `In polar coordinates, θ is the angle from the initial line.`,
-          `The equation θ = ${angle.label} fixes the direction but allows r to vary.`,
-          `Therefore the curve is a ray from the pole at angle ${angle.label}.`
-        ]);
+        `In polar coordinates, θ is the angle from the initial line.`,
+        `The equation θ = ${angle.label} fixes the direction but allows r to vary.`,
+        `Therefore the curve is a ray from the pole at angle ${angle.label}.`
+        ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',curveDiagram('ray',angle.value));
       }
       if(type==='circle'){
         const a=random(2,8);
@@ -319,14 +365,14 @@
           `The value of r is the distance from the pole.`,
           `The equation r = ${a} means every point is ${a} units from the pole.`,
           `Therefore the curve is a circle centred at the pole with radius ${a}.`
-        ]);
+        ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',curveDiagram('pole-circle'));
       }
       const a=random(2,7);
       return problem(`Describe the polar curve r cos θ = ${a}.`,`The vertical line x = ${a}`,[
         `Use x = r cos θ.`,
         `So r cos θ = ${a} becomes x = ${a}.`,
         `Therefore the curve is the vertical line x = ${a}.`
-      ]);
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',curveDiagram('line'));
     }
 
     function generateCircleCurves(){
@@ -344,7 +390,7 @@
         useCos?`${power('x',2)} - ${a}x + ${power('y',2)} = 0.`:`${power('x',2)} + ${power('y',2)} - ${a}y = 0.`,
         useCos?`${power(`(x - ${a/2})`,2)} + ${power('y',2)} = ${power(a/2,2)}.`:`${power('x',2)} + ${power(`(y - ${a/2})`,2)} = ${power(a/2,2)}.`,
         `Centre ${centre}, radius ${a/2}.`
-      ]);
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',curveDiagram(useCos?'cos-circle':'sin-circle'));
     }
 
     function generatePointOnCurve(){
@@ -358,7 +404,7 @@
         `r = ${a} + ${a} cos(${angle.label}).`,
         `cos(${angle.label}) = ${angle.cos[0]==='0'?'0':frac(angle.cos[0],angle.cos[1])}.`,
         `Therefore r = ${rValue}.`
-      ]);
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',curveDiagram('limacon'));
     }
 
     function generateIntersections(){
@@ -370,7 +416,7 @@
         `cos θ = ${frac(a,b)} = ${frac(1,2)}.`,
         `For 0 ≤ θ < 2π, θ = π/3 or 5π/3.`,
         `At both intersections, r = ${a}.`
-      ]);
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',curveDiagram('intersections'));
     }
 
     function generateLineCurveIntersection(){
@@ -383,7 +429,7 @@
         `cos(${angle.label}) = ${angle.cos[0]==='0'?'0':frac(angle.cos[0],angle.cos[1])}.`,
         `So r = ${r}.`,
         `The polar point is (${r}, ${angle.label}).`
-      ]);
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',curveDiagram('cos-circle'));
     }
 
     function generatePolarGradient(){
@@ -402,7 +448,7 @@
         `${frac('dy','dx')} = ${frac(`${a}(cos${sup(2)} θ - sin${sup(2)} θ)`,`-${2*a} sin θ cos θ`)} = -cot(2θ).`,
         `At θ = ${at.label}, ${at.reason}.`,
         at.answer==='undefined'?`So the tangent is vertical and the gradient is undefined.`:`Therefore dy/dx = ${at.answer}.`
-      ]);
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',curveDiagram('gradient'));
     }
 
     function generateSectorArea(){
@@ -418,7 +464,7 @@
         `A = ${frac(1,2)}∫<sub>0</sub><sup>${angle}</sup> ${r*r} dθ.`,
         `A = ${frac(1,2)} × ${r*r} × ${angle}.`,
         `Therefore A = ${exactArea}.`
-      ]);
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',curveDiagram('sector'));
     }
 
     function generateCircleArea(){
@@ -432,7 +478,7 @@
         `A = ${frac(a*a,2)}∫ ${useCos?`cos${sup(2)} θ`:`sin${sup(2)} θ`} dθ over the full circle.`,
         `The integral of ${useCos?`cos${sup(2)} θ from -π/2 to π/2`:`sin${sup(2)} θ from 0 to π`} is π/2.`,
         `So A = ${frac(a*a,2)} × ${frac('π',2)} = ${exactArea}.`
-      ]);
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',curveDiagram(useCos?'cos-circle':'sin-circle'));
     }
 
     function generateSimpleIntegralArea(){
@@ -446,7 +492,7 @@
         `A = ${frac(a*a,2)} × [${frac(power('θ',3),3)}]<sub>0</sub><sup>${upper.label}</sup>.`,
         `A = ${frac(a*a,6)} × ${power(`(${upper.label})`,3)}.`,
         `Therefore A = ${exactArea}.`
-      ]);
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',curveDiagram('spiral'));
     }
 
     function generateProblem(){
