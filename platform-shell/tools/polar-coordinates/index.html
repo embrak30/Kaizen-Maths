@@ -74,7 +74,7 @@
     .modal-content h2{margin-bottom:10px;color:#d92d20}
     .modal-content p{margin-bottom:18px;color:#667085}
     .hidden{display:none}
-    @media (min-width:960px){.problem-list.compact{grid-template-columns:1fr}.problem-list.compact .question-text{font-size:1.07em}.problem-list.compact .problem-item{min-height:188px}}
+    @media (min-width:960px){.problem-list.compact{grid-template-columns:repeat(2,minmax(0,1fr))}.problem-list.compact .question-text{font-size:1.07em}.problem-list.compact .problem-item{min-height:188px}}
     @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.problem-answer{white-space:normal}.question-text{font-size:1.08em}.polar-card{grid-template-columns:1fr}.polar-diagram{width:100%}}
   </style>
 </head>
@@ -542,6 +542,7 @@
     function showBlankPage(){
       document.getElementById('problem-set-header').className='problem-set-header';
       document.getElementById('set-instruction').className='set-instruction';
+      document.getElementById('problem-list').classList.remove('compact');
       document.getElementById('problem-list').innerHTML='<li class="problem-item"><div class="problem-left"><div class="problem-number">1</div><div class="question-text">Select a question type to begin polar coordinates practice.</div></div></li>';
     }
 
@@ -550,7 +551,7 @@
       answersVisible=false;stepsVisible=false;problems=[];
       const seen=new Set();
       let guard=0;
-      while(problems.length<5&&guard<120){
+      while(problems.length<4&&guard<120){
         const oldType=currentType;
         if(currentType==='all')currentType=choice(levelConfigs[currentLevel].types);
         const p=generateProblem();
@@ -568,7 +569,7 @@
       const instruction=document.getElementById('set-instruction');
       const config=levelConfigs[currentLevel];
       list.innerHTML='';
-      list.classList.toggle('compact',currentLevel===1||currentLevel===2);
+      list.classList.add('compact');
       header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
       header.className='problem-set-header visible';
       const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];

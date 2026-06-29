@@ -215,7 +215,7 @@ const tools = [
     status: "Imported",
     description: "Generate Further Maths polar coordinates practice covering coordinate conversion, equivalent points, polar curves, intersections, gradients, and area using the polar area formula.",
     tags: ["algebra", "further maths", "polar coordinates", "polar curves", "area", "intersections", "gradients", "calculus"],
-    toolPath: "tools/polar-coordinates/index.html?v=polar-coordinates-1",
+    toolPath: "tools/polar-coordinates/index.html?v=polar-coordinates-2",
     imported: true,
     teacherNotes: [
       "Level 1 covers polar plotting, equivalent coordinates, and conversion between polar and Cartesian form.",
