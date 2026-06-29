@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Further Maths Vectors</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f4f7fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#24356f;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#24356f;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #18a999;color:#24356f;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1240px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#24356f;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e8eef8}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e8eef8;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}.tab.active{background:#fff;color:#24356f;border-bottom-color:#24356f}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d9deef;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#24356f;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:390px;padding:8px 10px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#24356f;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#24356f;color:#24356f}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#24356f}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#24356f;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #c8d2ff;border-radius:6px;background:#f0f4ff;color:#24356f;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-left:4px solid #24356f;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#24356f;color:#fff;font-weight:850}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.2em;font-weight:700;line-height:1.42;color:#172033;overflow-wrap:anywhere}.question-text .word{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;font-size:.88em;font-weight:750;color:#334155}.problem-answer{display:none;white-space:normal;max-width:460px;padding:7px 11px;border-radius:10px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #24356f;border-radius:6px;background:#f1f5ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#24356f;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#24356f}.step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#5b21b6;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vec{font-weight:850}.vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.question-text{font-size:1.05em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Further Maths Vectors</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This Further Maths tool extends vector work into 3D vector operations, scalar products, vector equations of lines, planes, cross products, and line-plane intersections.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> 3D position vectors, displacement vectors, magnitude, and unit vectors.</li>
+        <li><strong>Level 2:</strong> Scalar product, angles, perpendicular vectors, and projections.</li>
+        <li><strong>Level 3:</strong> Vector equations of lines, intersections, and shortest distance from a point to a line.</li>
+        <li><strong>Level 4:</strong> Cross product, equations of planes, distance from a point to a plane, and line-plane intersections.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Use component notation consistently in 3D.</li>
+        <li>Use a · b = |a||b| cos θ for angles.</li>
+        <li>For a line, use r = a + λd, where a is a point and d is a direction vector.</li>
+        <li>For a plane, use n · r = n · a, where n is a normal vector and a is a point on the plane.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Further Maths Vectors</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: 3D Vectors</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Scalar Product</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Lines</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Planes</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: 3D Vectors</h3>
+        <p id="level-description">Use position vectors, displacement vectors, magnitudes, and unit vectors.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: 3D Vectors',description:'Use position vectors, displacement vectors, magnitudes, and unit vectors.',types:['position_displacement','magnitude_3d','unit_vector','ratio_section','vectors3d_mixed']},
+      2:{title:'Level 2: Scalar Product',description:'Use dot products to find angles, test perpendicularity, and calculate projections.',types:['dot_product_angle','perpendicular_parameter','projection_vector','scalar_product_mixed']},
+      3:{title:'Level 3: Vector Lines',description:'Work with vector equations of lines, intersections, and distances.',types:['line_through_points','point_on_line','line_intersection','point_to_line_distance','line_mixed']},
+      4:{title:'Level 4: Planes and Cross Products',description:'Use cross products, normals, plane equations, and line-plane intersections.',types:['cross_product','plane_from_point_normal','plane_from_three_points','line_plane_intersection','planes_mixed']}
+    };
+
+    const typeDisplayNames={
+      position_displacement:'Type 1: Position and displacement vectors',
+      magnitude_3d:'Type 2: Magnitude of a 3D vector',
+      unit_vector:'Type 3: Unit vectors',
+      ratio_section:'Type 4: Ratio and section formula',
+      vectors3d_mixed:'Type 5: Mixed 3D vectors',
+      dot_product_angle:'Type 1: Angle using scalar product',
+      perpendicular_parameter:'Type 2: Perpendicular vectors with a parameter',
+      projection_vector:'Type 3: Projection of one vector onto another',
+      scalar_product_mixed:'Type 4: Mixed scalar product',
+      line_through_points:'Type 1: Vector equation of a line',
+      point_on_line:'Type 2: Check whether a point lies on a line',
+      line_intersection:'Type 3: Intersection of two vector lines',
+      point_to_line_distance:'Type 4: Distance from a point to a line',
+      line_mixed:'Type 5: Mixed vector lines',
+      cross_product:'Type 1: Cross product',
+      plane_from_point_normal:'Type 2: Plane from point and normal',
+      plane_from_three_points:'Type 3: Plane through three points',
+      line_plane_intersection:'Type 4: Line-plane intersection',
+      planes_mixed:'Type 5: Mixed planes and cross products'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      position_displacement:'Find each requested displacement or position vector.',
+      magnitude_3d:'Find the magnitude of each 3D vector.',
+      unit_vector:'Find a unit vector in the direction of each vector.',
+      ratio_section:'Find the point that divides each line segment in the stated ratio.',
+      vectors3d_mixed:'Answer each mixed 3D vectors question.',
+      dot_product_angle:'Use the scalar product to find each angle.',
+      perpendicular_parameter:'Use the scalar product to find each parameter.',
+      projection_vector:'Find the vector projection requested.',
+      scalar_product_mixed:'Answer each mixed scalar product question.',
+      line_through_points:'Find the vector equation of each line.',
+      point_on_line:'Determine whether each point lies on the given line.',
+      line_intersection:'Find the point of intersection of each pair of vector lines.',
+      point_to_line_distance:'Find the shortest distance from each point to the given line.',
+      line_mixed:'Answer each mixed vector lines question.',
+      cross_product:'Find each cross product.',
+      plane_from_point_normal:'Find the Cartesian equation of each plane.',
+      plane_from_three_points:'Find the equation of the plane through each set of three points.',
+      line_plane_intersection:'Find the point where each line meets the plane.',
+      planes_mixed:'Answer each mixed planes and cross products question.'
+    };
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function nonZero(min,max){let n;do{n=random(min,max)}while(n===0);return n}
+    function sup(v){return `<sup>${v}</sup>`}
+    function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function simpleFrac(n,d){if(d<0){n=-n;d=-d}const g=gcd(n,d);n/=g;d/=g;if(d===1)return String(n);return frac(n,d)}
+    function vec(x,y,z){return `(${x}, ${y}, ${z})`}
+    function vLetter(name){return `<span class="vec">${name}</span>`}
+    function stripTags(html){return String(html).replace(/<sup>(.*?)<\/sup>/gi,'^$1').replace(/<sub>(.*?)<\/sub>/gi,'_$1').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+    function v(){return {x:nonZero(-6,6),y:nonZero(-6,6),z:nonZero(-6,6)}}
+    function add(a,b){return {x:a.x+b.x,y:a.y+b.y,z:a.z+b.z}}
+    function sub(a,b){return {x:a.x-b.x,y:a.y-b.y,z:a.z-b.z}}
+    function scale(k,a){return {x:k*a.x,y:k*a.y,z:k*a.z}}
+    function dot(a,b){return a.x*b.x+a.y*b.y+a.z*b.z}
+    function cross(a,b){return {x:a.y*b.z-a.z*b.y,y:a.z*b.x-a.x*b.z,z:a.x*b.y-a.y*b.x}}
+    function magSq(a){return dot(a,a)}
+    function magText(a){const sq=magSq(a),root=Math.sqrt(sq);return Number.isInteger(root)?String(root):`√${sq}`}
+    function vectorText(a){return vec(a.x,a.y,a.z)}
+    function signed(n){return n<0?`− ${Math.abs(n)}`:`+ ${n}`}
+    function signedParam(n,param='λ'){
+      if(n===0)return '';
+      const abs=Math.abs(n);
+      const coeff=abs===1?param:`${abs}${param}`;
+      return n<0?` − ${coeff}`:` + ${coeff}`;
+    }
+    function componentParam(base,coeff,param='λ'){return `${base}${signedParam(coeff,param)}`}
+    function formatLinearTerm(value,variable,isFirst){
+      if(value===0)return '';
+      const abs=Math.abs(value);
+      const term=`${abs===1?'':abs}${variable}`;
+      if(isFirst)return value<0?`−${term}`:term;
+      return value<0?` − ${term}`:` + ${term}`;
+    }
+    function lineEquation(point,dir,param='λ'){return `r = ${vectorText(point)} + ${param}${vectorText(dir)}`}
+    function planeEquation(n,c){
+      const terms=[
+        formatLinearTerm(n.x,'x',true),
+        formatLinearTerm(n.y,'y',n.x===0),
+        formatLinearTerm(n.z,'z',n.x===0&&n.y===0)
+      ].filter(Boolean).join('');
+      return `${terms || '0'} = ${c}`;
+    }
+    function decimal(n,places=3){return Number(n).toFixed(places)}
+    function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question',instruction=typeInstructions[currentType]||'Answer each question.'){
+      return {prompt,question:stripTags(prompt),answer,steps,typeLabel,instruction,instructionText:instruction};
+    }
+
+    function genPositionDisplacement(){
+      const A=v(), d=v(), B=add(A,d);
+      const prompt=`A has position vector ${vectorText(A)} and B has position vector ${vectorText(B)}. Find AB.`;
+      const answer=`AB = ${vectorText(d)}`;
+      return problem(prompt,answer,[
+        `Use AB = position vector of B − position vector of A.`,
+        `AB = ${vectorText(B)} − ${vectorText(A)}`,
+        `AB = (${B.x} − ${A.x}, ${B.y} − ${A.y}, ${B.z} − ${A.z})`,
+        answer
+      ]);
+    }
+
+    function genMagnitude(){
+      const a=v(), sq=magSq(a), root=Math.sqrt(sq);
+      const answer=`|a| = ${Number.isInteger(root)?root:`√${sq}`} ${Number.isInteger(root)?'':`≈ ${decimal(root)}`}`;
+      return problem(`a = ${vectorText(a)}. Find |a|.`,answer,[
+        `Use |a| = √(x${sup(2)} + y${sup(2)} + z${sup(2)}).`,
+        `|a| = √(${a.x}${sup(2)} + ${a.y}${sup(2)} + ${a.z}${sup(2)})`,
+        `|a| = √(${a.x*a.x} + ${a.y*a.y} + ${a.z*a.z})`,
+        `|a| = √${sq}`,
+        answer
+      ]);
+    }
+
+    function genUnitVector(){
+      const base=choice([{x:3,y:4,z:0},{x:2,y:3,z:6},{x:1,y:2,z:2},{x:4,y:4,z:2},{x:6,y:2,z:3}]);
+      const len=Math.sqrt(magSq(base));
+      const answer=`unit vector = ${frac(1,magText(base))}${vectorText(base)}`;
+      return problem(`Find a unit vector in the direction of ${vectorText(base)}.`,answer,[
+        `Find the magnitude of the vector.`,
+        `|a| = √(${base.x}${sup(2)} + ${base.y}${sup(2)} + ${base.z}${sup(2)}) = ${magText(base)}`,
+        `A unit vector is found by dividing the vector by its magnitude.`,
+        `unit vector = ${frac(1,magText(base))}${vectorText(base)}`,
+        Number.isInteger(len)?`unit vector = ${vectorText({x:base.x/len,y:base.y/len,z:base.z/len})}`:answer
+      ]);
+    }
+
+    function genRatioSection(){
+      const A=v(), B=add(A,scale(choice([2,3,4]),v()));
+      const m=choice([1,2,3]), n=choice([1,2,3]);
+      const numerator=add(scale(n,A),scale(m,B));
+      const den=m+n;
+      const prompt=`P divides AB internally in the ratio ${m}:${n}. A = ${vectorText(A)} and B = ${vectorText(B)}. Find P.`;
+      const answer=`P = ${vectorText({x:`${simpleFrac(numerator.x,den)}`,y:`${simpleFrac(numerator.y,den)}`,z:`${simpleFrac(numerator.z,den)}`})}`;
+      return problem(prompt,answer,[
+        `For AP:PB = ${m}:${n}, use P = ${frac(`${n}A + ${m}B`,`${m+n}`)}.`,
+        `P = ${frac(`${n}${vectorText(A)} + ${m}${vectorText(B)}`,den)}`,
+        `P = ${frac(vectorText(numerator),den)}`,
+        answer
+      ]);
+    }
+
+    function genDotAngle(){
+      const a=choice([{x:1,y:2,z:2},{x:2,y:1,z:2},{x:3,y:0,z:4},{x:2,y:3,z:6}]);
+      const b=choice([{x:2,y:2,z:1},{x:4,y:1,z:0},{x:1,y:4,z:2},{x:3,y:2,z:1}]);
+      const dp=dot(a,b), ma=Math.sqrt(magSq(a)), mb=Math.sqrt(magSq(b)), cos=dp/(ma*mb), angle=Math.acos(Math.max(-1,Math.min(1,cos)))*180/Math.PI;
+      const answer=`θ ≈ ${decimal(angle,1)}°`;
+      return problem(`Find the angle between a = ${vectorText(a)} and b = ${vectorText(b)}.`,answer,[
+        `Use a · b = |a||b| cos θ.`,
+        `a · b = (${a.x})(${b.x}) + (${a.y})(${b.y}) + (${a.z})(${b.z}) = ${dp}`,
+        `|a| = ${magText(a)} and |b| = ${magText(b)}`,
+        `cos θ = ${frac(dp,`${magText(a)} × ${magText(b)}`)}`,
+        answer
+      ]);
+    }
+
+    function genPerpendicularParameter(){
+      const a={x:choice([1,2,3]),y:choice([-2,-1,1,2]),z:choice([1,2,3])};
+      const p=choice([-3,-2,-1,1,2,3]);
+      const bFixed={x:choice([1,2,3]),y:p,z:choice([-3,-2,1,3])};
+      const k=-(a.x*bFixed.x+a.y*bFixed.y+a.z*bFixed.z);
+      const prompt=`a = ${vectorText(a)} and b = (${bFixed.x}, ${p}, ${bFixed.z}) + t(0, 1, 0). Find t if a is perpendicular to b.`;
+      const answer=`t = ${simpleFrac(k,a.y)}`;
+      return problem(prompt,answer,[
+        `If two vectors are perpendicular, their scalar product is 0.`,
+        `b = (${bFixed.x}, ${p} + t, ${bFixed.z})`,
+        `a · b = ${a.x}(${bFixed.x}) + ${a.y}(${p} + t) + ${a.z}(${bFixed.z})`,
+        `${a.x*bFixed.x + a.y*p + a.z*bFixed.z}${signedParam(a.y,'t')} = 0`,
+        `${a.y}t = ${k}`,
+        answer
+      ]);
+    }
+
+    function genProjection(){
+      const a=choice([{x:3,y:4,z:0},{x:2,y:3,z:6},{x:4,y:0,z:3}]);
+      const b=choice([{x:1,y:2,z:2},{x:2,y:1,z:2},{x:3,y:0,z:4}]);
+      const dp=dot(a,b), bs=magSq(b);
+      const answer=`proj<sub>b</sub>a = ${simpleFrac(dp,bs)}${vectorText(b)}`;
+      return problem(`Find the vector projection of a = ${vectorText(a)} onto b = ${vectorText(b)}.`,answer,[
+        `Use proj<sub>b</sub>a = ${frac('a · b','b · b')}b.`,
+        `a · b = ${dp}`,
+        `b · b = ${bs}`,
+        `proj<sub>b</sub>a = ${frac(dp,bs)}${vectorText(b)}`,
+        answer
+      ]);
+    }
+
+    function genLineThroughPoints(){
+      const A=v(), d=v(), B=add(A,d);
+      const answer=lineEquation(A,d);
+      return problem(`Find a vector equation of the line through A = ${vectorText(A)} and B = ${vectorText(B)}.`,answer,[
+        `A point on the line is ${vectorText(A)}.`,
+        `Direction vector AB = ${vectorText(B)} − ${vectorText(A)}`,
+        `AB = ${vectorText(d)}`,
+        `Use r = a + λd.`,
+        answer
+      ]);
+    }
+
+    function genPointOnLine(){
+      const A=v(), d=v(), lambda=choice([-2,-1,2,3]), P=add(A,scale(lambda,d));
+      const usePoint=Math.random()<0.75;
+      const Q=usePoint?P:add(P,{x:1,y:0,z:0});
+      const answer=usePoint?'Yes, the point lies on the line.':'No, the point does not lie on the line.';
+      return problem(`Line L has equation ${lineEquation(A,d)}. Determine whether P = ${vectorText(Q)} lies on L.`,answer,[
+        `Compare components with ${vectorText(Q)} = ${vectorText(A)} + λ${vectorText(d)}.`,
+        `x-component: ${Q.x} = ${A.x} + ${d.x}λ`,
+        `This gives λ = ${simpleFrac(Q.x-A.x,d.x)}.`,
+        `Check the y and z components with this value of λ.`,
+        usePoint?`The same λ works in all three components.`:`At least one component gives a different value of λ.`,
+        answer
+      ]);
+    }
+
+    function genLineIntersection(){
+      const P=v(), d=v(), e=v(), lam=choice([1,2,-1]), mu=choice([1,-2,2]);
+      const X=add(P,scale(lam,d));
+      const Q=sub(X,scale(mu,e));
+      const answer=`Intersection = ${vectorText(X)}`;
+      return problem(`Find the intersection of L<sub>1</sub>: ${lineEquation(P,d,'λ')} and L<sub>2</sub>: ${lineEquation(Q,e,'μ')}.`,answer,[
+        `At the intersection, the position vectors are equal.`,
+        `${vectorText(P)} + λ${vectorText(d)} = ${vectorText(Q)} + μ${vectorText(e)}`,
+        `Equate components and solve for the two parameters.`,
+        `A solution is λ = ${lam}, μ = ${mu}.`,
+        `Substitute λ = ${lam} into L<sub>1</sub>.`,
+        `${vectorText(P)} + ${lam}${vectorText(d)} = ${vectorText(X)}`,
+        answer
+      ]);
+    }
+
+    function genPointToLineDistance(){
+      const A={x:0,y:0,z:0}, d=choice([{x:1,y:2,z:2},{x:2,y:1,z:2},{x:2,y:2,z:1}]), P=v();
+      const crossVec=cross(P,d), distance=Math.sqrt(magSq(crossVec)/magSq(d));
+      const answer=`distance = ${frac(`√${magSq(crossVec)}`,`√${magSq(d)}`)} ≈ ${decimal(distance)}`;
+      return problem(`Find the shortest distance from P = ${vectorText(P)} to the line r = λ${vectorText(d)}.`,answer,[
+        `Use distance = ${frac('|AP × d|','|d|')}. Here A is the origin, so AP = ${vectorText(P)}.`,
+        `AP × d = ${vectorText(crossVec)}`,
+        `|AP × d| = √${magSq(crossVec)}`,
+        `|d| = √${magSq(d)}`,
+        answer
+      ]);
+    }
+
+    function genCrossProduct(){
+      const a=v(), b=v(), c=cross(a,b);
+      const answer=`a × b = ${vectorText(c)}`;
+      return problem(`Find a × b for a = ${vectorText(a)} and b = ${vectorText(b)}.`,answer,[
+        `Use a × b = (a<sub>2</sub>b<sub>3</sub> − a<sub>3</sub>b<sub>2</sub>, a<sub>3</sub>b<sub>1</sub> − a<sub>1</sub>b<sub>3</sub>, a<sub>1</sub>b<sub>2</sub> − a<sub>2</sub>b<sub>1</sub>).`,
+        `a × b = (${a.y}(${b.z}) − ${a.z}(${b.y}), ${a.z}(${b.x}) − ${a.x}(${b.z}), ${a.x}(${b.y}) − ${a.y}(${b.x}))`,
+        answer
+      ]);
+    }
+
+    function genPlanePointNormal(){
+      const n=v(), P=v(), c=dot(n,P), answer=planeEquation(n,c);
+      return problem(`A plane has normal vector n = ${vectorText(n)} and passes through P = ${vectorText(P)}. Find its Cartesian equation.`,answer,[
+        `Use n · r = n · P.`,
+        `${vectorText(n)} · (x, y, z) = ${vectorText(n)} · ${vectorText(P)}`,
+        `${n.x}x ${signed(n.y)}y ${signed(n.z)}z = ${c}`,
+        answer
+      ]);
+    }
+
+    function genPlaneThreePoints(){
+      const A=v(), u=v(), w=v();
+      let n=cross(u,w), guard=0;
+      while(magSq(n)===0&&guard<20){w.x+=1;n=cross(u,w);guard++}
+      const B=add(A,u), C=add(A,w), constant=dot(n,A), answer=planeEquation(n,constant);
+      return problem(`Find the equation of the plane through A = ${vectorText(A)}, B = ${vectorText(B)}, and C = ${vectorText(C)}.`,answer,[
+        `Find two direction vectors in the plane.`,
+        `AB = ${vectorText(B)} − ${vectorText(A)} = ${vectorText(u)}`,
+        `AC = ${vectorText(C)} − ${vectorText(A)} = ${vectorText(w)}`,
+        `A normal vector is AB × AC.`,
+        `n = ${vectorText(u)} × ${vectorText(w)} = ${vectorText(n)}`,
+        `Use n · r = n · A.`,
+        answer
+      ]);
+    }
+
+    function genLinePlaneIntersection(){
+      const n=v(), point=v(), d=v(), lambda=choice([-2,-1,1,2,3]);
+      const X=add(point,scale(lambda,d));
+      const c=dot(n,X);
+      const answer=`Intersection = ${vectorText(X)}`;
+      return problem(`Find where the line r = ${vectorText(point)} + λ${vectorText(d)} meets the plane ${planeEquation(n,c)}.`,answer,[
+        `Substitute the line into the plane equation.`,
+        `r = ${vectorText(point)} + λ${vectorText(d)} = ${vectorText({x:componentParam(point.x,d.x),y:componentParam(point.y,d.y),z:componentParam(point.z,d.z)})}`,
+        `${n.x}(${componentParam(point.x,d.x)}) ${signed(n.y)}(${componentParam(point.y,d.y)}) ${signed(n.z)}(${componentParam(point.z,d.z)}) = ${c}`,
+        `Solving gives λ = ${lambda}.`,
+        `Substitute λ = ${lambda} into the line.`,
+        answer
+      ]);
+    }
+
+    function generateProblem(){
+      const maps={
+        position_displacement:genPositionDisplacement,
+        magnitude_3d:genMagnitude,
+        unit_vector:genUnitVector,
+        ratio_section:genRatioSection,
+        vectors3d_mixed:()=>choice([genPositionDisplacement,genMagnitude,genUnitVector,genRatioSection])(),
+        dot_product_angle:genDotAngle,
+        perpendicular_parameter:genPerpendicularParameter,
+        projection_vector:genProjection,
+        scalar_product_mixed:()=>choice([genDotAngle,genPerpendicularParameter,genProjection])(),
+        line_through_points:genLineThroughPoints,
+        point_on_line:genPointOnLine,
+        line_intersection:genLineIntersection,
+        point_to_line_distance:genPointToLineDistance,
+        line_mixed:()=>choice([genLineThroughPoints,genPointOnLine,genLineIntersection,genPointToLineDistance])(),
+        cross_product:genCrossProduct,
+        plane_from_point_normal:genPlanePointNormal,
+        plane_from_three_points:genPlaneThreePoints,
+        line_plane_intersection:genLinePlaneIntersection,
+        planes_mixed:()=>choice([genCrossProduct,genPlanePointNormal,genPlaneThreePoints,genLinePlaneIntersection])()
+      };
+      return (maps[currentType]||genPositionDisplacement)();
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      populateDropdown();
+      showBlankPage();
+    }
+
+    function populateDropdown(){
+      const select=document.getElementById('type-dropdown');
+      const types=levelConfigs[currentLevel].types;
+      select.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      select.value=currentType;
+    }
+
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;generateNewSet()}
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').className='problem-set-header';
+      document.getElementById('set-instruction').className='set-instruction';
+      document.getElementById('problem-list').innerHTML='<li class="problem-item"><div class="problem-left"><div class="problem-number">1</div><div class="question-text">Select a question type to begin Further Maths vectors practice.</div></div></li>';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      answersVisible=false;stepsVisible=false;problems=[];
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<180){
+        const oldType=currentType;
+        if(currentType==='all')currentType=choice(levelConfigs[currentLevel].types);
+        const p=generateProblem();
+        currentType=oldType;
+        const key=p.question;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed Further Maths vectors question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|√|λ|μ|θ|·|×|<span class="vfrac"|<sup>|<sub>|proj|plane|line|vector/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div class="question-text">${p.prompt}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;timerActive=true;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      display.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        display.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)display.className='timer-display warning';
+        if(timeRemaining<=0){stopTimer();display.textContent='Time Up';display.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;timerActive=false;
+      const display=document.getElementById('timer-display');
+      if(display){display.textContent='Ready';display.className='timer-display'}
+    }
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-20"></script>
+</body>
+</html>

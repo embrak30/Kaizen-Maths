@@ -206,6 +206,25 @@ const tools = [
     ]
   },
   {
+    slug: "further-vectors",
+    title: "Further Maths Vectors",
+    category: "Algebra",
+    level: "A-Level Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate Further Maths vector practice covering 3D vectors, scalar products, vector equations of lines, planes, cross products, projections, and intersections.",
+    tags: ["algebra", "further maths", "vectors", "3D vectors", "scalar product", "dot product", "cross product", "planes", "vector lines", "projections"],
+    toolPath: "tools/further-vectors/index.html?v=further-vectors-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers 3D position vectors, displacement vectors, magnitudes, unit vectors, and ratio points.",
+      "Level 2 develops scalar product, angles between vectors, perpendicularity, and vector projections.",
+      "Level 3 covers vector equations of lines, line intersections, point-on-line tests, and distances from points to lines.",
+      "Level 4 covers cross products, planes, normals, and line-plane intersections."
+    ]
+  },
+  {
     slug: "complex-numbers",
     title: "Complex Numbers",
     category: "Algebra",
