@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hyperbolic Functions</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f4f7fb;color:#182033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#1f3763;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#1f3763;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #15a6a1;color:#1f3763;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1220px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#1f3763;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e8eef8}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e8eef8;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}.tab.active{background:#fff;color:#1f3763;border-bottom-color:#1f3763}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d9deef;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#1f3763;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:385px;padding:8px 10px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#1f3763;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#1f3763;color:#1f3763}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#1f3763}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#1f3763;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #c8d2ff;border-radius:6px;background:#f0f4ff;color:#1f3763;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px;border-left:4px solid #1f3763;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#1f3763;color:#fff;font-weight:850}.problem-type{display:inline-flex;margin-bottom:5px;padding:5px 9px;border-radius:999px;background:#e0e7ff;color:#1f3763;font-size:.76em;font-weight:850}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.22em;font-weight:650;line-height:1.42;color:#172033;overflow-wrap:anywhere}.problem-answer{display:none;white-space:nowrap;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #1f3763;border-radius:6px;background:#f1f5ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#1f3763;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#1f3763}.step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#6d28d9;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}
+    .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.problem-answer{white-space:normal}.question-text{font-size:1.08em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Hyperbolic Functions</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This Further Maths tool covers hyperbolic definitions, identities, equations, calculus, and inverse hyperbolic functions.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Definitions, exact values, and identities.</li>
+        <li><strong>Level 2:</strong> Hyperbolic equations using exponential form and inverse functions.</li>
+        <li><strong>Level 3:</strong> Differentiation, integration, product rule, and second derivatives.</li>
+        <li><strong>Level 4:</strong> Inverse hyperbolic functions, logarithmic forms, and derivatives.</li>
+      </ul>
+      <h3>Key Facts</h3>
+      <ul>
+        <li>sinh x = (e<sup>x</sup> - e<sup>-x</sup>) / 2.</li>
+        <li>cosh x = (e<sup>x</sup> + e<sup>-x</sup>) / 2.</li>
+        <li>cosh<sup>2</sup>x - sinh<sup>2</sup>x = 1.</li>
+        <li>tanh x = sinh x / cosh x.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Hyperbolic Functions</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Definitions</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Equations</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Calculus</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Inverse Functions</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Definitions and Identities</h3>
+        <p id="level-description">Use exponential definitions, exact values, and basic identities.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Definitions and Identities',description:'Use exponential definitions, exact values, and basic identities.',types:['definitions','exact_values','identity_proofs','simplify_expressions','definition_mixed']},
+      2:{title:'Level 2: Hyperbolic Equations',description:'Solve equations using exponential definitions and inverse hyperbolic functions.',types:['solve_sinh','solve_cosh','solve_tanh','exponential_shortcuts','equation_mixed']},
+      3:{title:'Level 3: Hyperbolic Calculus',description:'Differentiate and integrate hyperbolic functions.',types:['differentiate_basic','integrate_basic','product_rule','second_derivatives','calculus_mixed']},
+      4:{title:'Level 4: Inverse Hyperbolic Functions',description:'Use logarithmic forms, derivatives, and equations involving inverse hyperbolic functions.',types:['log_forms','differentiate_inverse','solve_inverse','inverse_mixed']}
+    };
+
+    const typeDisplayNames={
+      definitions:'Type 1: Exponential definitions',
+      exact_values:'Type 2: Exact values at ln a',
+      identity_proofs:'Type 3: Hyperbolic identities',
+      simplify_expressions:'Type 4: Simplify using cosh x ± sinh x',
+      definition_mixed:'Type 5: Mixed definitions and identities',
+      solve_sinh:'Type 1: Solve sinh x = a',
+      solve_cosh:'Type 2: Solve cosh x = a',
+      solve_tanh:'Type 3: Solve tanh x = k',
+      exponential_shortcuts:'Type 4: Equations using cosh x ± sinh x',
+      equation_mixed:'Type 5: Mixed hyperbolic equations',
+      differentiate_basic:'Type 1: Differentiate hyperbolic functions',
+      integrate_basic:'Type 2: Integrate hyperbolic functions',
+      product_rule:'Type 3: Product rule with hyperbolic functions',
+      second_derivatives:'Type 4: Second derivatives',
+      calculus_mixed:'Type 5: Mixed hyperbolic calculus',
+      log_forms:'Type 1: Logarithmic forms',
+      differentiate_inverse:'Type 2: Differentiate inverse hyperbolic functions',
+      solve_inverse:'Type 3: Solve inverse hyperbolic equations',
+      inverse_mixed:'Type 4: Mixed inverse hyperbolic functions'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      definitions:'Write each hyperbolic function in exponential form.',
+      exact_values:'Find each exact value using the exponential definitions.',
+      identity_proofs:'Prove each identity from definitions or known identities.',
+      simplify_expressions:'Simplify each expression using the cosh x + sinh x and cosh x - sinh x exponential identities.',
+      definition_mixed:'Answer each mixed definitions and identities question.',
+      solve_sinh:'Solve each equation exactly.',
+      solve_cosh:'Solve each equation exactly, giving both real solutions where appropriate.',
+      solve_tanh:'Solve each equation exactly.',
+      exponential_shortcuts:'Use the cosh x + sinh x and cosh x - sinh x exponential identities.',
+      equation_mixed:'Solve each mixed hyperbolic equation exactly.',
+      differentiate_basic:'Differentiate each function with respect to x.',
+      integrate_basic:'Integrate each function with respect to x.',
+      product_rule:'Differentiate each product using the product rule.',
+      second_derivatives:'Find the second derivative.',
+      calculus_mixed:'Answer each mixed hyperbolic calculus question.',
+      log_forms:'Write each inverse hyperbolic value in logarithmic form.',
+      differentiate_inverse:'Differentiate each inverse hyperbolic function.',
+      solve_inverse:'Solve each inverse hyperbolic equation exactly.',
+      inverse_mixed:'Answer each mixed inverse hyperbolic question.'
+    };
+
+    const lnValues=[2,3,4,5,6,8];
+    const tanhFractions=[[1,2],[2,3],[3,5],[1,3],[3,4],[4,5]];
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function sup(v){return `<sup>${v}</sup>`}
+    function power(base,exp){return `${base}${sup(exp)}`}
+    function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function stripTags(html){return String(html).replace(/<sup>(.*?)<\/sup>/gi,'^$1').replace(/<sub>(.*?)<\/sub>/gi,'_$1').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function simpleFrac(n,d){const g=gcd(n,d);n/=g;d/=g;return d===1?String(n):frac(n,d)}
+    function ePow(exp){return `e${sup(exp)}`}
+    function sqrt(value){return `√${value}`}
+    function bracket(value){return `(${value})`}
+    function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question',instruction=typeInstructions[currentType]||'Answer each question.'){
+      return {prompt,question:stripTags(prompt),answer,steps,typeLabel,instruction,instructionText:instruction};
+    }
+
+    function exactSinhLn(n){return simpleFrac(n*n-1,2*n)}
+    function exactCoshLn(n){return simpleFrac(n*n+1,2*n)}
+    function exactTanhLn(n){return simpleFrac(n*n-1,n*n+1)}
+
+    function genDefinition(){
+      const k=choice(['x','2x','3x','x + 1','2x - 1']);
+      const f=choice(['sinh','cosh','tanh']);
+      if(f==='sinh')return problem(`Write sinh(${k}) in exponential form.`,`${frac(`${ePow(k)} - ${ePow('-' + bracket(k))}`,2)}`,[
+        `Use the definition sinh u = ${frac(`${ePow('u')} - ${ePow('-u')}`,2)}.`,
+        `Here u = ${k}.`,
+        `sinh(${k}) = ${frac(`${ePow(k)} - ${ePow('-' + bracket(k))}`,2)}.`
+      ]);
+      if(f==='cosh')return problem(`Write cosh(${k}) in exponential form.`,`${frac(`${ePow(k)} + ${ePow('-' + bracket(k))}`,2)}`,[
+        `Use the definition cosh u = ${frac(`${ePow('u')} + ${ePow('-u')}`,2)}.`,
+        `Here u = ${k}.`,
+        `cosh(${k}) = ${frac(`${ePow(k)} + ${ePow('-' + bracket(k))}`,2)}.`
+      ]);
+      return problem(`Write tanh(${k}) in exponential form.`,`${frac(`${ePow(k)} - ${ePow('-' + bracket(k))}`,`${ePow(k)} + ${ePow('-' + bracket(k))}`)}`,[
+        `Use tanh u = ${frac('sinh u','cosh u')}.`,
+        `Substitute the exponential definitions for sinh u and cosh u.`,
+        `tanh u = ${frac(`${ePow('u')} - ${ePow('-u')}`,`${ePow('u')} + ${ePow('-u')}`)}.`,
+        `Therefore tanh(${k}) = ${frac(`${ePow(k)} - ${ePow('-' + bracket(k))}`,`${ePow(k)} + ${ePow('-' + bracket(k))}`)}.`
+      ]);
+    }
+
+    function genExactValue(){
+      const n=choice(lnValues);
+      const f=choice(['sinh','cosh','tanh']);
+      const answer=f==='sinh'?exactSinhLn(n):f==='cosh'?exactCoshLn(n):exactTanhLn(n);
+      const formula=f==='sinh'?frac(`${n} - ${frac(1,n)}`,2):f==='cosh'?frac(`${n} + ${frac(1,n)}`,2):frac(`${n} - ${frac(1,n)}`,`${n} + ${frac(1,n)}`);
+      return problem(`Find the exact value of ${f}(ln ${n}).`,answer,[
+        `Use ${ePow(`ln ${n}`)} = ${n}.`,
+        `Also ${ePow(`-ln ${n}`)} = ${frac(1,n)}.`,
+        f==='sinh'?`sinh(ln ${n}) = ${frac(`${ePow(`ln ${n}`)} - ${ePow(`-ln ${n}`)}`,2)} = ${formula}.`:f==='cosh'?`cosh(ln ${n}) = ${frac(`${ePow(`ln ${n}`)} + ${ePow(`-ln ${n}`)}`,2)} = ${formula}.`:`tanh(ln ${n}) = ${frac(`${ePow(`ln ${n}`)} - ${ePow(`-ln ${n}`)}`,`${ePow(`ln ${n}`)} + ${ePow(`-ln ${n}`)}`)} = ${formula}.`,
+        `Simplify to get ${answer}.`
+      ]);
+    }
+
+    function genIdentityProof(){
+      const variants=[
+        {
+          q:`Prove that ${power('cosh x',2)} - ${power('sinh x',2)} = 1.`,
+          a:`${power('cosh x',2)} - ${power('sinh x',2)} = 1`,
+          s:[
+            `Use cosh x = ${frac(`${ePow('x')} + ${ePow('-x')}`,2)} and sinh x = ${frac(`${ePow('x')} - ${ePow('-x')}`,2)}.`,
+            `${power('cosh x',2)} - ${power('sinh x',2)} = ${frac(`${power(`(${ePow('x')} + ${ePow('-x')})`,2)} - ${power(`(${ePow('x')} - ${ePow('-x')})`,2)}`,4)}.`,
+            `Use ${power('(A + B)',2)} - ${power('(A - B)',2)} = 4AB.`,
+            `Here A = ${ePow('x')} and B = ${ePow('-x')}, so 4AB = 4${ePow('x')}${ePow('-x')} = 4.`,
+            `Therefore ${power('cosh x',2)} - ${power('sinh x',2)} = ${frac(4,4)} = 1.`
+          ]
+        },
+        {
+          q:`Prove that cosh x + sinh x = ${ePow('x')}.`,
+          a:`cosh x + sinh x = ${ePow('x')}`,
+          s:[
+            `Substitute the exponential definitions.`,
+            `cosh x + sinh x = ${frac(`${ePow('x')} + ${ePow('-x')}`,2)} + ${frac(`${ePow('x')} - ${ePow('-x')}`,2)}.`,
+            `The ${ePow('-x')} terms cancel.`,
+            `cosh x + sinh x = ${frac(`2${ePow('x')}`,2)} = ${ePow('x')}.`
+          ]
+        },
+        {
+          q:`Prove that cosh x - sinh x = ${ePow('-x')}.`,
+          a:`cosh x - sinh x = ${ePow('-x')}`,
+          s:[
+            `Substitute the exponential definitions.`,
+            `cosh x - sinh x = ${frac(`${ePow('x')} + ${ePow('-x')}`,2)} - ${frac(`${ePow('x')} - ${ePow('-x')}`,2)}.`,
+            `The ${ePow('x')} terms cancel.`,
+            `cosh x - sinh x = ${frac(`2${ePow('-x')}`,2)} = ${ePow('-x')}.`
+          ]
+        },
+        {
+          q:`Prove that 1 - ${power('tanh x',2)} = ${frac(1,power('cosh x',2))}.`,
+          a:`1 - ${power('tanh x',2)} = ${frac(1,power('cosh x',2))}`,
+          s:[
+            `Use tanh x = ${frac('sinh x','cosh x')}.`,
+            `1 - ${power('tanh x',2)} = 1 - ${frac(power('sinh x',2),power('cosh x',2))}.`,
+            `Write 1 as ${frac(power('cosh x',2),power('cosh x',2))}.`,
+            `1 - ${power('tanh x',2)} = ${frac(`${power('cosh x',2)} - ${power('sinh x',2)}`,power('cosh x',2))}.`,
+            `Since ${power('cosh x',2)} - ${power('sinh x',2)} = 1, the result is ${frac(1,power('cosh x',2))}.`
+          ]
+        },
+        {
+          q:`Prove that sinh(2x) = 2sinh x cosh x.`,
+          a:`sinh(2x) = 2sinh x cosh x`,
+          s:[
+            `Start with 2sinh x cosh x.`,
+            `2sinh x cosh x = 2 × ${frac(`${ePow('x')} - ${ePow('-x')}`,2)} × ${frac(`${ePow('x')} + ${ePow('-x')}`,2)}.`,
+            `2sinh x cosh x = ${frac(`${bracket(ePow('x'))}${sup(2)} - ${bracket(ePow('-x'))}${sup(2)}`,2)}.`,
+            `${bracket(ePow('x'))}${sup(2)} = ${ePow('2x')} and ${bracket(ePow('-x'))}${sup(2)} = ${ePow('-2x')}.`,
+            `So 2sinh x cosh x = ${frac(`${ePow('2x')} - ${ePow('-2x')}`,2)} = sinh(2x).`
+          ]
+        }
+      ];
+      const v=choice(variants);
+      return problem(v.q,v.a,v.s);
+    }
+
+    function genSimplify(){
+      const c=choice([2,3,4,5,6,8]);
+      const sign=choice(['plus','minus']);
+      const prompt=sign==='plus'?`Simplify ${c}cosh x + ${c}sinh x.`:`Simplify ${c}cosh x - ${c}sinh x.`;
+      const answer=sign==='plus'?`${c}${ePow('x')}`:`${c}${ePow('-x')}`;
+      return problem(prompt,answer,[
+        sign==='plus'?`Use cosh x + sinh x = ${ePow('x')}.`:`Use cosh x - sinh x = ${ePow('-x')}.`,
+        sign==='plus'?`${c}cosh x + ${c}sinh x = ${c}(cosh x + sinh x).`:`${c}cosh x - ${c}sinh x = ${c}(cosh x - sinh x).`,
+        `Therefore the expression simplifies to ${answer}.`
+      ]);
+    }
+
+    function genSolveSinh(){
+      const a=choice([1,2,3,4,5]);
+      const root=sqrt(a*a+1);
+      return problem(`Solve sinh x = ${a}.`,`x = ln(${a} + ${root})`,[
+        `Use sinh x = ${frac(`${ePow('x')} - ${ePow('-x')}`,2)}.`,
+        `${frac(`${ePow('x')} - ${ePow('-x')}`,2)} = ${a}.`,
+        `Multiply by 2: ${ePow('x')} - ${ePow('-x')} = ${2*a}.`,
+        `Let y = ${ePow('x')}. Then ${ePow('-x')} = ${frac(1,'y')}.`,
+        `y - ${frac(1,'y')} = ${2*a}.`,
+        `Multiply by y: ${power('y',2)} - ${2*a}y - 1 = 0.`,
+        `Solve the quadratic: y = ${a} + ${root}, since y = ${ePow('x')} must be positive.`,
+        `Therefore x = ln(${a} + ${root}).`
+      ]);
+    }
+
+    function genSolveCosh(){
+      const a=choice([2,3,4,5,6]);
+      const root=sqrt(a*a-1);
+      return problem(`Solve cosh x = ${a}.`,`x = ±ln(${a} + ${root})`,[
+        `For a > 1, cosh x = ${a} has two real solutions.`,
+        `Use arcosh a = ln(a + √(${power('a',2)} - 1)).`,
+        `Here a = ${a}.`,
+        `arcosh(${a}) = ln(${a} + √(${a*a} - 1)) = ln(${a} + ${root}).`,
+        `Because cosh x is even, the solutions are x = ±ln(${a} + ${root}).`
+      ]);
+    }
+
+    function genSolveTanh(){
+      const [p,q]=choice(tanhFractions);
+      return problem(`Solve tanh x = ${frac(p,q)}.`,`x = ${frac(1,2)}ln${bracket(simpleFrac(q+p,q-p))}`,[
+        `Use artanh k = ${frac(1,2)}ln${bracket(frac('1 + k','1 - k'))}.`,
+        `Here k = ${frac(p,q)}.`,
+        `x = ${frac(1,2)}ln${bracket(frac(`1 + ${frac(p,q)}`,`1 - ${frac(p,q)}`))}.`,
+        `Simplify inside the logarithm: ${frac(`1 + ${frac(p,q)}`,`1 - ${frac(p,q)}`)} = ${frac(q+p,q-p)}.`,
+        `Therefore x = ${frac(1,2)}ln${bracket(simpleFrac(q+p,q-p))}.`
+      ]);
+    }
+
+    function genExponentialShortcut(){
+      const c=choice([2,3,4,5]);
+      const k=choice([3,4,5,6,7,8]);
+      const plus=Math.random()<0.5;
+      const prompt=plus?`Solve ${c}cosh x + ${c}sinh x = ${c*k}.`:`Solve ${c}cosh x - ${c}sinh x = ${c}/${k}.`;
+      const answer=plus?`x = ln ${k}`:`x = ln ${k}`;
+      return problem(prompt,answer,[
+        plus?`Factor the left-hand side: ${c}cosh x + ${c}sinh x = ${c}(cosh x + sinh x).`:`Factor the left-hand side: ${c}cosh x - ${c}sinh x = ${c}(cosh x - sinh x).`,
+        plus?`Use cosh x + sinh x = ${ePow('x')}.`:`Use cosh x - sinh x = ${ePow('-x')}.`,
+        plus?`${c}${ePow('x')} = ${c*k}.`:`${c}${ePow('-x')} = ${frac(c,k)}.`,
+        plus?`${ePow('x')} = ${k}.`:`${ePow('-x')} = ${frac(1,k)}.`,
+        plus?`Take natural logarithms: x = ln ${k}.`:`Take natural logarithms: -x = ln${bracket(frac(1,k))} = -ln ${k}.`,
+        `Therefore x = ln ${k}.`
+      ]);
+    }
+
+    function genDifferentiate(){
+      const f=choice(['sinh','cosh','tanh']);
+      const a=choice([2,3,4,5]);
+      const b=choice([0,1,-1,2]);
+      const inner=b===0?`${a}x`:b>0?`${a}x + ${b}`:`${a}x - ${Math.abs(b)}`;
+      let answer;
+      if(f==='sinh')answer=`${a}cosh(${inner})`;
+      else if(f==='cosh')answer=`${a}sinh(${inner})`;
+      else answer=`${frac(a,power(`cosh(${inner})`,2))}`;
+      return problem(`Differentiate y = ${f}(${inner}).`,`${frac('dy','dx')} = ${answer}`,[
+        `Let u = ${inner}. Then ${frac('du','dx')} = ${a}.`,
+        f==='sinh'?`The derivative of sinh u is cosh u.`:f==='cosh'?`The derivative of cosh u is sinh u.`:`The derivative of tanh u is ${frac(1,power('cosh u',2))}.`,
+        `Use the chain rule.`,
+        `${frac('dy','dx')} = ${answer}.`
+      ]);
+    }
+
+    function genIntegrate(){
+      const f=choice(['sinh','cosh','tanh']);
+      const a=choice([2,3,4,5]);
+      const inner=`${a}x`;
+      let answer;
+      if(f==='sinh')answer=`${frac(1,a)}cosh(${inner}) + C`;
+      else if(f==='cosh')answer=`${frac(1,a)}sinh(${inner}) + C`;
+      else answer=`${frac(1,a)}ln(cosh(${inner})) + C`;
+      return problem(`Find ∫ ${f}(${inner}) dx.`,answer,[
+        `Let u = ${inner}. Then ${frac('du','dx')} = ${a}.`,
+        `So dx = ${frac('du',a)}.`,
+        f==='sinh'?`∫ sinh(${inner}) dx = ${frac(1,a)}∫ sinh u du.`:f==='cosh'?`∫ cosh(${inner}) dx = ${frac(1,a)}∫ cosh u du.`:`∫ tanh(${inner}) dx = ${frac(1,a)}∫ tanh u du.`,
+        f==='sinh'?`The integral of sinh u is cosh u.`:f==='cosh'?`The integral of cosh u is sinh u.`:`The integral of tanh u is ln(cosh u).`,
+        `Therefore the integral is ${answer}.`
+      ]);
+    }
+
+    function genProductRule(){
+      const f=choice(['sinh','cosh']);
+      const a=choice([2,3,4]);
+      const inner=`${a}x`;
+      const d=f==='sinh'?`${a}cosh(${inner})`:`${a}sinh(${inner})`;
+      const answer=f==='sinh'?`sinh(${inner}) + ${a}x cosh(${inner})`:`cosh(${inner}) + ${a}x sinh(${inner})`;
+      return problem(`Differentiate y = x ${f}(${inner}).`,`${frac('dy','dx')} = ${answer}`,[
+        `Use the product rule: ${frac('d','dx')}(uv) = u${frac('dv','dx')} + v${frac('du','dx')}.`,
+        `Let u = x and v = ${f}(${inner}).`,
+        `${frac('du','dx')} = 1.`,
+        `${frac('dv','dx')} = ${d}.`,
+        `${frac('dy','dx')} = x(${d}) + ${f}(${inner})(1).`,
+        `Therefore ${frac('dy','dx')} = ${answer}.`
+      ]);
+    }
+
+    function genSecondDerivative(){
+      const f=choice(['sinh','cosh']);
+      const a=choice([2,3,4,5]);
+      const inner=`${a}x`;
+      const first=f==='sinh'?`${a}cosh(${inner})`:`${a}sinh(${inner})`;
+      const second=`${a*a}${f}(${inner})`;
+      return problem(`For y = ${f}(${inner}), find ${frac(power('d',2)+'y',power('dx',2))}.`,`${frac(power('d',2)+'y',power('dx',2))} = ${second}`,[
+        `Differentiate once.`,
+        `${frac('dy','dx')} = ${first}.`,
+        `Differentiate again, remembering the chain rule.`,
+        `${frac(power('d',2)+'y',power('dx',2))} = ${second}.`
+      ]);
+    }
+
+    function genLogForm(){
+      const type=choice(['asinh','acosh','atanh']);
+      if(type==='asinh'){
+        const n=choice([2,3,4,5]);
+        return problem(`Write arsinh ${n} in logarithmic form.`,`ln(${n} + ${sqrt(n*n+1)})`,[
+          `Use arsinh x = ln(x + √(${power('x',2)} + 1)).`,
+          `Substitute x = ${n}.`,
+          `arsinh ${n} = ln(${n} + √(${n*n} + 1)) = ln(${n} + ${sqrt(n*n+1)}).`
+        ]);
+      }
+      if(type==='acosh'){
+        const n=choice([2,3,4,5,6]);
+        return problem(`Write arcosh ${n} in logarithmic form.`,`ln(${n} + ${sqrt(n*n-1)})`,[
+          `Use arcosh x = ln(x + √(${power('x',2)} - 1)), for x ≥ 1.`,
+          `Substitute x = ${n}.`,
+          `arcosh ${n} = ln(${n} + √(${n*n} - 1)) = ln(${n} + ${sqrt(n*n-1)}).`
+        ]);
+      }
+      const [p,q]=choice(tanhFractions);
+      return problem(`Write artanh ${frac(p,q)} in logarithmic form.`,`${frac(1,2)}ln${bracket(simpleFrac(q+p,q-p))}`,[
+        `Use artanh x = ${frac(1,2)}ln${bracket(frac('1 + x','1 - x'))}, for |x| < 1.`,
+        `Substitute x = ${frac(p,q)}.`,
+        `artanh ${frac(p,q)} = ${frac(1,2)}ln${bracket(frac(`1 + ${frac(p,q)}`,`1 - ${frac(p,q)}`))}.`,
+        `Simplify to get ${frac(1,2)}ln${bracket(simpleFrac(q+p,q-p))}.`
+      ]);
+    }
+
+    function genDifferentiateInverse(){
+      const type=choice(['asinh','acosh','atanh']);
+      const a=choice([2,3,4]);
+      if(type==='asinh')return problem(`Differentiate y = arsinh(${a}x).`,`${frac('dy','dx')} = ${frac(a,`√(1 + ${a*a}${power('x',2)})`)}`,[
+        `Use ${frac('d','dx')}arsinh u = ${frac(`u'`,`√(1 + ${power('u',2)})`)}.`,
+        `Here u = ${a}x, so u' = ${a}.`,
+        `${frac('dy','dx')} = ${frac(a,`√(1 + ${power(`${a}x`,2)})`)} = ${frac(a,`√(1 + ${a*a}${power('x',2)})`)}.`
+      ]);
+      if(type==='acosh')return problem(`Differentiate y = arcosh(${a}x).`,`${frac('dy','dx')} = ${frac(a,`√(${a}x - 1)√(${a}x + 1)`)}`,[
+        `Use ${frac('d','dx')}arcosh u = ${frac(`u'`,`√(u - 1)√(u + 1)`)}.`,
+        `Here u = ${a}x, so u' = ${a}.`,
+        `${frac('dy','dx')} = ${frac(a,`√(${a}x - 1)√(${a}x + 1)`)}.`
+      ]);
+      return problem(`Differentiate y = artanh(${a}x).`,`${frac('dy','dx')} = ${frac(a,`1 - ${a*a}${power('x',2)}`)}`,[
+        `Use ${frac('d','dx')}artanh u = ${frac(`u'`,`1 - ${power('u',2)}`)}.`,
+        `Here u = ${a}x, so u' = ${a}.`,
+        `${frac('dy','dx')} = ${frac(a,`1 - ${power(`${a}x`,2)}`)} = ${frac(a,`1 - ${a*a}${power('x',2)}`)}.`
+      ]);
+    }
+
+    function genSolveInverse(){
+      const n=choice([2,3,4,5]);
+      const type=choice(['asinh','acosh','atanh']);
+      if(type==='asinh')return problem(`Solve arsinh x = ln ${n}.`,`x = ${exactSinhLn(n)}`,[
+        `Apply sinh to both sides.`,
+        `x = sinh(ln ${n}).`,
+        `Use ${ePow(`ln ${n}`)} = ${n} and ${ePow(`-ln ${n}`)} = ${frac(1,n)}.`,
+        `x = ${frac(`${n} - ${frac(1,n)}`,2)} = ${exactSinhLn(n)}.`
+      ]);
+      if(type==='acosh')return problem(`Solve arcosh x = ln ${n}.`,`x = ${exactCoshLn(n)}`,[
+        `Apply cosh to both sides.`,
+        `x = cosh(ln ${n}).`,
+        `Use ${ePow(`ln ${n}`)} = ${n} and ${ePow(`-ln ${n}`)} = ${frac(1,n)}.`,
+        `x = ${frac(`${n} + ${frac(1,n)}`,2)} = ${exactCoshLn(n)}.`
+      ]);
+      return problem(`Solve artanh x = ln ${n}.`,`x = ${exactTanhLn(n)}`,[
+        `Apply tanh to both sides.`,
+        `x = tanh(ln ${n}).`,
+        `Use ${ePow(`ln ${n}`)} = ${n} and ${ePow(`-ln ${n}`)} = ${frac(1,n)}.`,
+        `x = ${frac(`${n} - ${frac(1,n)}`,`${n} + ${frac(1,n)}`)} = ${exactTanhLn(n)}.`
+      ]);
+    }
+
+    function generateProblem(){
+      const maps={
+        definitions:genDefinition,
+        exact_values:genExactValue,
+        identity_proofs:genIdentityProof,
+        simplify_expressions:genSimplify,
+        definition_mixed:()=>choice([genDefinition,genExactValue,genIdentityProof,genSimplify])(),
+        solve_sinh:genSolveSinh,
+        solve_cosh:genSolveCosh,
+        solve_tanh:genSolveTanh,
+        exponential_shortcuts:genExponentialShortcut,
+        equation_mixed:()=>choice([genSolveSinh,genSolveCosh,genSolveTanh,genExponentialShortcut])(),
+        differentiate_basic:genDifferentiate,
+        integrate_basic:genIntegrate,
+        product_rule:genProductRule,
+        second_derivatives:genSecondDerivative,
+        calculus_mixed:()=>choice([genDifferentiate,genIntegrate,genProductRule,genSecondDerivative])(),
+        log_forms:genLogForm,
+        differentiate_inverse:genDifferentiateInverse,
+        solve_inverse:genSolveInverse,
+        inverse_mixed:()=>choice([genLogForm,genDifferentiateInverse,genSolveInverse])()
+      };
+      return (maps[currentType]||genDefinition)();
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      populateDropdown();
+      showBlankPage();
+    }
+
+    function populateDropdown(){
+      const select=document.getElementById('type-dropdown');
+      const types=levelConfigs[currentLevel].types;
+      select.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      select.value=currentType;
+    }
+
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;generateNewSet()}
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').className='problem-set-header';
+      document.getElementById('set-instruction').className='set-instruction';
+      document.getElementById('problem-list').innerHTML='<li class="problem-item"><div class="problem-left"><div class="problem-number">1</div><div class="question-text">Select a question type to begin hyperbolic functions practice.</div></div></li>';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      answersVisible=false;stepsVisible=false;problems=[];
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<160){
+        const oldType=currentType;
+        if(currentType==='all')currentType=choice(levelConfigs[currentLevel].types);
+        const p=generateProblem();
+        currentType=oldType;
+        const key=p.question;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed hyperbolic functions question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|√|∫|ln|sinh|cosh|tanh|arsinh|arcosh|artanh|<span class="vfrac"|<sup>|<sub>|\|/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div>
+                <span class="problem-type">${escapeHtml(p.typeLabel)}</span>
+                <div class="question-text">${p.prompt}</div>
+              </div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;timerActive=true;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      display.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        display.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)display.className='timer-display warning';
+        if(timeRemaining<=0){stopTimer();display.textContent='Time Up';display.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;timerActive=false;
+      const display=document.getElementById('timer-display');
+      if(display){display.textContent='Ready';display.className='timer-display'}
+    }
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
+</body>
+</html>

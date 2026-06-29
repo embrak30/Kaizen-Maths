@@ -225,6 +225,25 @@ const tools = [
     ]
   },
   {
+    slug: "hyperbolic-functions",
+    title: "Hyperbolic Functions",
+    category: "Algebra",
+    level: "A-Level Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate Further Maths hyperbolic functions practice covering definitions, identities, equations, calculus, and inverse hyperbolic functions.",
+    tags: ["algebra", "further maths", "hyperbolic functions", "sinh", "cosh", "tanh", "inverse hyperbolic functions", "calculus", "identities"],
+    toolPath: "tools/hyperbolic-functions/index.html?v=hyperbolic-functions-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers exponential definitions, exact values at logarithms, and core hyperbolic identities.",
+      "Level 2 solves hyperbolic equations using exponential form, inverse functions, and cosh x plus or minus sinh x shortcuts.",
+      "Level 3 covers differentiation, integration, product rule, and second derivatives.",
+      "Level 4 covers logarithmic forms and derivatives of inverse hyperbolic functions."
+    ]
+  },
+  {
     slug: "differentiation-rules",
     title: "Differentiation Rules",
     category: "Algebra",
