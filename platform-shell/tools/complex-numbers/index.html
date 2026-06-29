@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complex Numbers</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f3f6fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#28306f;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}
+    .sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}
+    .sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#28306f;color:#fff;font-size:1.25em;font-weight:850}
+    .sidebar-content{padding:22px;line-height:1.55}
+    .sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #17b8b3;color:#28306f;font-size:1.02em}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}
+    .sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1220px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#28306f;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 2px,transparent 2px 24px)}
+    .header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e8ebf8}
+    .tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e8ebf8;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}
+    .tab.active{background:#fff;color:#28306f;border-bottom-color:#28306f}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d9deef;background:#f8fafc}
+    .level-info h3{margin-bottom:3px;color:#28306f;font-size:1.16em}
+    .level-info p{color:#667085;font-size:.94em}
+    .dropdown-container{margin-top:8px}
+    .type-dropdown{min-width:370px;padding:8px 10px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .timer-display{min-width:96px;padding:7px 12px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#28306f;text-align:center;font-size:1.45em;font-weight:850}
+    .timer-display.active{border-color:#28306f;color:#28306f}
+    .timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}
+    .btn-primary{background:#28306f}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}
+    .problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#28306f;color:#fff;text-align:center;font-size:1.08em;font-weight:850}
+    .problem-set-header.visible{display:block}
+    .set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #c8d2ff;border-radius:6px;background:#f0f3ff;color:#28306f;text-align:center;font-weight:850}
+    .set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:10px;list-style:none}
+    .problem-item{display:flex;flex-direction:column;gap:8px;padding:12px;border-left:4px solid #28306f;border-radius:7px;background:#f8fafc}
+    .problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}
+    .problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#28306f;color:#fff;font-weight:850}
+    .problem-type{display:inline-flex;margin-bottom:5px;padding:5px 9px;border-radius:999px;background:#e0e7ff;color:#28306f;font-size:.76em;font-weight:850}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.24em;font-weight:650;line-height:1.38;color:#172033;overflow-wrap:anywhere}
+    .question-text .word{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;font-size:.88em;font-weight:750;color:#334155}
+    .problem-answer{display:none;white-space:nowrap;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}
+    .problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #28306f;border-radius:6px;background:#f1f5ff}
+    .steps-section.visible{display:block}
+    .answer-label{margin-bottom:6px;color:#28306f;font-weight:850}
+    .solution-steps{font-size:.98em;line-height:1.45}
+    .step{margin:5px 0;color:#28306f}
+    .step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#6d28d9;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}
+    .final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}
+    .vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}
+    .vfrac span:last-child{padding:2px 5px 0}
+    .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}
+    .modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+    .modal-content h2{margin-bottom:10px;color:#d92d20}
+    .modal-content p{margin-bottom:18px;color:#667085}
+    .hidden{display:none}
+    @media (min-width:960px){.problem-list.compact{grid-template-columns:repeat(2,minmax(0,1fr))}.problem-list.compact .question-text{font-size:1.08em}.problem-list.compact .problem-item{min-height:205px}}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.problem-answer{white-space:normal}.question-text{font-size:1.08em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Complex Numbers</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This Further Maths tool builds fluency with complex numbers in Cartesian form, polar form, De Moivre's theorem, roots, equations, and loci on the Argand diagram.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> arithmetic, conjugates, division, modulus, and basic algebra with i.</li>
+        <li><strong>Level 2:</strong> modulus, argument, Cartesian-polar conversion, and polar multiplication or division.</li>
+        <li><strong>Level 3:</strong> De Moivre's theorem, powers, roots, and quadratics with complex roots.</li>
+        <li><strong>Level 4:</strong> Argand loci, perpendicular bisectors, half-planes, argument rays, and mixed exam-style questions.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Keep real and imaginary parts separate when simplifying.</li>
+        <li>Use i^2 = -1 every time it appears in expansion.</li>
+        <li>For division, multiply numerator and denominator by the conjugate of the denominator.</li>
+        <li>For polar form, multiplication adds arguments and division subtracts arguments.</li>
+        <li>For loci, translate the complex statement into coordinates on the Argand diagram.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Complex Numbers</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Cartesian Form</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Polar Form</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Powers & Roots</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Loci & Exam Style</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Cartesian Form</h3>
+        <p id="level-description">Add, subtract, multiply, divide, and use conjugates in Cartesian form.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Cartesian Form',description:'Add, subtract, multiply, divide, and use conjugates in Cartesian form.',types:['add_subtract','multiply_cartesian','divide_cartesian','conjugate_modulus']},
+      2:{title:'Level 2: Modulus, Argument and Polar Form',description:'Find modulus and argument, convert forms, and operate in polar form.',types:['modulus_argument','cartesian_to_polar','polar_to_cartesian','polar_operations']},
+      3:{title:'Level 3: Powers, Roots and Equations',description:'Use De Moivre, find roots, and solve equations with complex roots.',types:['de_moivre_powers','nth_roots','complex_quadratics','simple_complex_equations']},
+      4:{title:'Level 4: Loci and Exam-Style Problems',description:'Interpret complex loci and solve mixed Further Maths style questions.',types:['circle_locus','perpendicular_bisector','argument_locus','exam_mixed']}
+    };
+
+    const typeDisplayNames={
+      add_subtract:'Type 1: Add and subtract complex numbers',
+      multiply_cartesian:'Type 2: Multiply in Cartesian form',
+      divide_cartesian:'Type 3: Divide using a conjugate',
+      conjugate_modulus:'Type 4: Conjugate and modulus',
+      modulus_argument:'Type 1: Modulus and argument',
+      cartesian_to_polar:'Type 2: Cartesian to polar form',
+      polar_to_cartesian:'Type 3: Polar to Cartesian form',
+      polar_operations:'Type 4: Multiply and divide in polar form',
+      de_moivre_powers:'Type 1: Powers using De Moivre',
+      nth_roots:'Type 2: Roots of complex numbers',
+      complex_quadratics:'Type 3: Quadratics with complex roots',
+      simple_complex_equations:'Type 4: Simple complex equations',
+      circle_locus:'Type 1: Circle loci',
+      perpendicular_bisector:'Type 2: Perpendicular bisector loci',
+      argument_locus:'Type 3: Argument loci',
+      exam_mixed:'Type 4: Mixed exam-style questions'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      add_subtract:'Simplify each expression into the form a + bi.',
+      multiply_cartesian:'Expand and simplify each product into the form a + bi.',
+      divide_cartesian:'Write each quotient in the form a + bi.',
+      conjugate_modulus:'Find the requested conjugate and modulus.',
+      modulus_argument:'Find the modulus and principal argument.',
+      cartesian_to_polar:'Write each complex number in polar form.',
+      polar_to_cartesian:'Write each complex number in Cartesian form.',
+      polar_operations:'Use polar form rules to simplify each expression.',
+      de_moivre_powers:'Use De Moivre theorem to find the power.',
+      nth_roots:'Find all roots in polar form.',
+      complex_quadratics:'Solve each quadratic equation over the complex numbers.',
+      simple_complex_equations:'Solve each equation for z.',
+      circle_locus:'Describe each locus on the Argand diagram.',
+      perpendicular_bisector:'Find the Cartesian equation of each locus.',
+      argument_locus:'Describe each argument locus.',
+      exam_mixed:'Answer each mixed complex number question.'
+    };
+
+    const angleOptions=[
+      {label:'0',value:0},
+      {label:'π/6',value:Math.PI/6},
+      {label:'π/4',value:Math.PI/4},
+      {label:'π/3',value:Math.PI/3},
+      {label:'π/2',value:Math.PI/2},
+      {label:'2π/3',value:2*Math.PI/3},
+      {label:'3π/4',value:3*Math.PI/4},
+      {label:'5π/6',value:5*Math.PI/6},
+      {label:'π',value:Math.PI}
+    ];
+
+    const polarToCartesianOptions=[
+      {r:10,cos:'3/5',sin:'4/5',a:6,b:8,theta:'θ where cos θ = 3/5 and sin θ = 4/5'},
+      {r:13,cos:'5/13',sin:'12/13',a:5,b:12,theta:'θ where cos θ = 5/13 and sin θ = 12/13'},
+      {r:15,cos:'4/5',sin:'-3/5',a:12,b:-9,theta:'θ where cos θ = 4/5 and sin θ = -3/5'},
+      {r:17,cos:'-8/17',sin:'15/17',a:-8,b:15,theta:'θ where cos θ = -8/17 and sin θ = 15/17'},
+      {r:20,cos:'-3/5',sin:'-4/5',a:-12,b:-16,theta:'θ where cos θ = -3/5 and sin θ = -4/5'}
+    ];
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function stripTags(html){return String(html).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+    function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function plainFrac(n,d){return `(${n}) / (${d})`}
+    function signed(n){return n>=0?`+ ${n}`:`- ${Math.abs(n)}`}
+    function signedTerm(n,term){
+      const abs=Math.abs(n);
+      const body=term&&abs===1?term:`${abs}${term}`;
+      return n>=0?`+ ${body}`:`- ${body}`;
+    }
+    function imagCoeff(b){
+      if(b===1)return 'i';
+      if(b===-1)return '-i';
+      return `${b}i`;
+    }
+    function formatComplex(a,b){
+      if(b===0)return String(a);
+      if(a===0)return imagCoeff(b);
+      return `${a} ${b>0?'+':'-'} ${Math.abs(b)===1?'i':Math.abs(b)+'i'}`;
+    }
+    function formatComplexParens(a,b){return `(${formatComplex(a,b)})`}
+    function formatTerm(value,variable=''){
+      if(value===0)return '';
+      const abs=Math.abs(value);
+      const coeff=variable?(abs===1?variable:`${abs}${variable}`):String(abs);
+      return value>0?`+ ${coeff}`:`- ${coeff}`;
+    }
+    function formatComplexParts(real,imag){
+      const realText=String(real);
+      const imagText=String(imag);
+      if(imagText==='0')return realText;
+      if(realText==='0')return `${imagText}i`;
+      const sign=String(imag).trim().startsWith('-')?' - ':' + ';
+      const cleanImag=String(imag).replace(/^-/, '');
+      return `${realText}${sign}${cleanImag}i`;
+    }
+    function simplifyFraction(n,d){
+      if(d<0){n=-n;d=-d}
+      const g=gcd(n,d);
+      n/=g;d/=g;
+      return d===1?String(n):frac(n,d);
+    }
+    function rationalParts(n,d){
+      if(d<0){n=-n;d=-d}
+      const g=gcd(n,d);
+      return {num:n/g,den:d/g};
+    }
+    function rationalAbsText(part){
+      const n=Math.abs(part.num);
+      if(part.den===1)return String(n);
+      return frac(n,part.den);
+    }
+    function rationalText(part){
+      const abs=rationalAbsText(part);
+      return part.num<0?`-${abs}`:abs;
+    }
+    function formatComplexRational(realNum,imagNum,den){
+      const real=rationalParts(realNum,den);
+      const imag=rationalParts(imagNum,den);
+      if(imag.num===0)return rationalText(real);
+      const imagAbs=imag.den===1&&Math.abs(imag.num)===1?'':rationalAbsText(imag);
+      if(real.num===0)return imag.num<0?`-${imagAbs}i`:`${imagAbs}i`;
+      return `${rationalText(real)} ${imag.num<0?'-':'+'} ${imagAbs}i`;
+    }
+    function sqrtText(n){
+      const r=Math.sqrt(n);
+      return Number.isInteger(r)?String(r):`√${n}`;
+    }
+    function angleText(value){
+      const n=value<0?-1:1;
+      const abs=Math.abs(value);
+      const known=[
+        [0,'0'],[Math.PI/6,'π/6'],[Math.PI/4,'π/4'],[Math.PI/3,'π/3'],[Math.PI/2,'π/2'],
+        [2*Math.PI/3,'2π/3'],[3*Math.PI/4,'3π/4'],[5*Math.PI/6,'5π/6'],[Math.PI,'π'],
+        [4*Math.PI/3,'4π/3'],[3*Math.PI/2,'3π/2'],[5*Math.PI/3,'5π/3'],[2*Math.PI,'2π']
+      ];
+      const match=known.find(([v])=>Math.abs(abs-v)<1e-9);
+      if(match)return n<0?`-${match[1]}`:match[1];
+      return `${value.toFixed(3)} rad`;
+    }
+    function principalAngle(a,b){return Math.atan2(b,a)}
+    function cis(r,theta){return `${r}cis(${theta})`}
+    function cisFull(r,theta){return `${r}(cos ${theta} + i sin ${theta})`}
+    function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question',instruction=typeInstructions[currentType]||'Answer each question.',plainQuestion=''){
+      return {prompt,question:plainQuestion||stripTags(prompt),answer,steps,typeLabel,instruction,instructionText:instruction};
+    }
+    function randomComplex(range=7){
+      let a=0,b=0;
+      while(a===0&&b===0){a=random(-range,range);b=random(-range,range)}
+      if(b===0)b=choice([-3,-2,2,3]);
+      return {a,b};
+    }
+
+    function generateAddSubtract(){
+      const z=randomComplex(8),w=randomComplex(8);
+      const add=Math.random()<0.5;
+      const real=add?z.a+w.a:z.a-w.a;
+      const imag=add?z.b+w.b:z.b-w.b;
+      return problem(`${add?'Find':'Calculate'} ${formatComplexParens(z.a,z.b)} ${add?'+':'-'} ${formatComplexParens(w.a,w.b)}.`,formatComplex(real,imag),[
+        `Group the real parts and imaginary parts separately.`,
+        `${formatComplexParens(z.a,z.b)} ${add?'+':'-'} ${formatComplexParens(w.a,w.b)} = (${z.a} ${add?'+':'-'} ${w.a}) + (${z.b} ${add?'+':'-'} ${w.b})i.`,
+        `Real part = ${real}.`,
+        `Imaginary part = ${imag}.`,
+        `Therefore the answer is ${formatComplex(real,imag)}.`
+      ]);
+    }
+
+    function generateMultiplyCartesian(){
+      const z=randomComplex(6),w=randomComplex(6);
+      const real=z.a*w.a-z.b*w.b;
+      const imag=z.a*w.b+z.b*w.a;
+      return problem(`Expand and simplify ${formatComplexParens(z.a,z.b)}${formatComplexParens(w.a,w.b)}.`,formatComplex(real,imag),[
+        `Multiply every term in the first bracket by every term in the second bracket.`,
+        `${formatComplexParens(z.a,z.b)}${formatComplexParens(w.a,w.b)} = ${z.a*w.a} ${signedTerm(z.a*w.b,'i')} ${signedTerm(z.b*w.a,'i')} ${signedTerm(z.b*w.b,'i^2')}.`,
+        `Use i^2 = -1, so ${z.b*w.b}i^2 = ${-z.b*w.b}.`,
+        `Real part = ${z.a*w.a} ${signed(-z.b*w.b)} = ${real}.`,
+        `Imaginary part = ${z.a*w.b} ${signed(z.b*w.a)} = ${imag}.`,
+        `Therefore ${formatComplexParens(z.a,z.b)}${formatComplexParens(w.a,w.b)} = ${formatComplex(real,imag)}.`
+      ]);
+    }
+
+    function generateDivideCartesian(){
+      const z=randomComplex(8);
+      let w=randomComplex(5);
+      if(w.a===0&&w.b===0)w={a:3,b:2};
+      const den=w.a*w.a+w.b*w.b;
+      const real=z.a*w.a+z.b*w.b;
+      const imag=z.b*w.a-z.a*w.b;
+      const answer=formatComplexRational(real,imag,den);
+      return problem(`Write ${frac(formatComplex(z.a,z.b),formatComplex(w.a,w.b))} in the form a + bi.`,answer,[
+        `Multiply numerator and denominator by the conjugate of the denominator.`,
+        `The conjugate of ${formatComplex(w.a,w.b)} is ${formatComplex(w.a,-w.b)}.`,
+        `${frac(formatComplex(z.a,z.b),formatComplex(w.a,w.b))} = ${frac(`${formatComplexParens(z.a,z.b)}${formatComplexParens(w.a,-w.b)}`,`${formatComplexParens(w.a,w.b)}${formatComplexParens(w.a,-w.b)}`)}.`,
+        `Denominator = ${w.a}^2 + ${w.b}^2 = ${den}.`,
+        `Numerator = ${formatComplex(real,imag)}.`,
+        `So the quotient is ${frac(formatComplex(real,imag),den)} = ${answer}.`
+      ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',`Write ${plainFrac(formatComplex(z.a,z.b),formatComplex(w.a,w.b))} in the form a + bi.`);
+    }
+
+    function generateConjugateModulus(){
+      const z=randomComplex(9);
+      const modSq=z.a*z.a+z.b*z.b;
+      const mod=sqrtText(modSq);
+      return problem(`For z = ${formatComplex(z.a,z.b)}, find z* and |z|.`, `z* = ${formatComplex(z.a,-z.b)}, |z| = ${mod}`, [
+        `The conjugate changes the sign of the imaginary part.`,
+        `z* = ${formatComplex(z.a,-z.b)}.`,
+        `Use |z| = √(a^2 + b^2).`,
+        `|z| = √(${z.a}^2 + ${z.b}^2) = √${modSq}.`,
+        `Therefore |z| = ${mod}.`
+      ]);
+    }
+
+    function generateModulusArgument(){
+      const options=[{a:3,b:4},{a:5,b:12},{a:-3,b:4},{a:-5,b:-12},{a:8,b:-15},{a:-7,b:24}];
+      const z=choice(options);
+      const mod=sqrtText(z.a*z.a+z.b*z.b);
+      const theta=principalAngle(z.a,z.b);
+      return problem(`For z = ${formatComplex(z.a,z.b)}, find |z| and arg(z) to 3 decimal places.`,`|z| = ${mod}, arg(z) = ${theta.toFixed(3)} rad`,[
+        `Use |z| = √(a^2 + b^2).`,
+        `|z| = √(${z.a}^2 + ${z.b}^2) = ${mod}.`,
+        `Use tan θ = ${frac(z.b,z.a)} and choose the correct quadrant for (${z.a}, ${z.b}).`,
+        `The point is in ${z.a>=0&&z.b>=0?'quadrant I':z.a<0&&z.b>=0?'quadrant II':z.a<0&&z.b<0?'quadrant III':'quadrant IV'}.`,
+        `Principal argument θ = atan2(${z.b}, ${z.a}) = ${theta.toFixed(3)} rad.`
+      ]);
+    }
+
+    function generateCartesianToPolar(){
+      const options=[{a:3,b:4},{a:5,b:12},{a:-3,b:4},{a:-8,b:15},{a:7,b:-24},{a:-5,b:-12}];
+      const z=choice(options);
+      const r=sqrtText(z.a*z.a+z.b*z.b);
+      const theta=principalAngle(z.a,z.b);
+      return problem(`Write z = ${formatComplex(z.a,z.b)} in polar form r(cos θ + i sin θ), with θ to 3 decimal places.`,`${r}(cos ${theta.toFixed(3)} + i sin ${theta.toFixed(3)})`,[
+        `Find the modulus first.`,
+        `r = |z| = √(${z.a}^2 + ${z.b}^2) = ${r}.`,
+        `Find the principal argument using the point (${z.a}, ${z.b}) on the Argand diagram.`,
+        `θ = atan2(${z.b}, ${z.a}) = ${theta.toFixed(3)} rad.`,
+        `Therefore z = ${r}(cos ${theta.toFixed(3)} + i sin ${theta.toFixed(3)}).`
+      ]);
+    }
+
+    function generatePolarToCartesian(){
+      const p=choice(polarToCartesianOptions);
+      return problem(`Write z = ${p.r}(cos θ + i sin θ) in Cartesian form, where ${p.theta}.`,formatComplex(p.a,p.b),[
+        `Use z = r(cos θ + i sin θ).`,
+        `Real part = r cos θ = ${p.r} × ${p.cos} = ${p.a}.`,
+        `Imaginary part = r sin θ = ${p.r} × ${p.sin} = ${p.b}.`,
+        `Therefore z = ${formatComplex(p.a,p.b)}.`
+      ]);
+    }
+
+    function generatePolarOperations(){
+      const multiply=Math.random()<0.55;
+      const r1=random(2,8),r2=random(2,7);
+      const t1=choice(angleOptions.slice(1,7));
+      const t2=choice(angleOptions.slice(1,6));
+      const r=multiply?r1*r2:simplifyFraction(r1,r2);
+      const thetaValue=multiply?t1.value+t2.value:t1.value-t2.value;
+      const theta=angleText(thetaValue);
+      return problem(`Simplify ${cis(r1,t1.label)} ${multiply?'×':'÷'} ${cis(r2,t2.label)}.`,`${r}cis(${theta})`,[
+        `In polar form, ${multiply?'multiply moduli and add arguments.':'divide moduli and subtract arguments.'}`,
+        `Modulus = ${multiply?`${r1} × ${r2}`:`${r1} ÷ ${r2}`} = ${r}.`,
+        `Argument = ${t1.label} ${multiply?'+':'-'} ${t2.label} = ${theta}.`,
+        `Therefore the result is ${r}cis(${theta}).`
+      ]);
+    }
+
+    function generateDeMoivrePowers(){
+      const r=choice([2,3,4]);
+      const theta=choice(angleOptions.slice(1,5));
+      const n=random(3,6);
+      const newR=Math.pow(r,n);
+      const newTheta=angleText(theta.value*n);
+      return problem(`Use De Moivre's theorem to find [${cisFull(r,theta.label)}]^${n}.`,`${newR}(cos ${newTheta} + i sin ${newTheta})`,[
+        `De Moivre's theorem: [r(cos θ + i sin θ)]^n = r^n(cos nθ + i sin nθ).`,
+        `Here r = ${r}, θ = ${theta.label}, and n = ${n}.`,
+        `r^n = ${r}^${n} = ${newR}.`,
+        `nθ = ${n} × ${theta.label} = ${newTheta}.`,
+        `Therefore the value is ${newR}(cos ${newTheta} + i sin ${newTheta}).`
+      ]);
+    }
+
+    function generateNthRoots(){
+      const n=choice([3,4,5]);
+      const rootR=choice([2,3]);
+      const R=Math.pow(rootR,n);
+      const theta=choice([{label:'0',value:0},{label:'π/2',value:Math.PI/2},{label:'π',value:Math.PI}]);
+      const roots=[];
+      for(let k=0;k<n;k++){
+        roots.push(`${rootR}cis(${angleText((theta.value+2*k*Math.PI)/n)})`);
+      }
+      return problem(`Find all solutions of z^${n} = ${cis(R,theta.label)}.`,roots.join(', '),[
+        `Write z = rcis(α). Then z^${n} = r^${n}cis(${n}α).`,
+        `Compare moduli: r^${n} = ${R}, so r = ${rootR}.`,
+        `Compare arguments: ${n}α = ${theta.label} + 2kπ.`,
+        `So α = (${theta.label} + 2kπ)/${n}, for k = 0, 1, ..., ${n-1}.`,
+        `The roots are ${roots.join(', ')}.`
+      ]);
+    }
+
+    function generateComplexQuadratic(){
+      const p=random(-5,5),q=random(1,6);
+      const b=-2*p,c=p*p+q*q;
+      const disc=b*b-4*c;
+      return problem(`Solve z^2 ${formatTerm(b,'z')} ${formatTerm(c)} = 0.`, `z = ${formatComplex(p,q)} or z = ${formatComplex(p,-q)}`, [
+        `Use the quadratic formula z = ${frac('-b ± √(b^2 - 4ac)','2a')}.`,
+        `Here a = 1, b = ${b}, and c = ${c}.`,
+        `Discriminant = b^2 - 4ac = ${b}^2 - 4(1)(${c}) = ${disc}.`,
+        `√${disc} = ${q*2}i because ${disc} = -${4*q*q}.`,
+        `z = ${frac(`${-b} ± ${2*q}i`,'2')} = ${formatComplex(p,q)} or ${formatComplex(p,-q)}.`
+      ]);
+    }
+
+    function generateSimpleComplexEquation(){
+      const root=randomComplex(5);
+      const multiplier=randomComplex(4);
+      const constant={
+        a:multiplier.a*root.a-multiplier.b*root.b,
+        b:multiplier.a*root.b+multiplier.b*root.a
+      };
+      return problem(`Solve (${formatComplex(multiplier.a,multiplier.b)})z = ${formatComplex(constant.a,constant.b)}.`, `z = ${formatComplex(root.a,root.b)}`, [
+        `Divide both sides by ${formatComplex(multiplier.a,multiplier.b)}.`,
+        `z = ${frac(formatComplex(constant.a,constant.b),formatComplex(multiplier.a,multiplier.b))}.`,
+        `Multiply numerator and denominator by the conjugate ${formatComplex(multiplier.a,-multiplier.b)}.`,
+        `Denominator = ${multiplier.a}^2 + ${multiplier.b}^2 = ${multiplier.a*multiplier.a+multiplier.b*multiplier.b}.`,
+        `This simplifies to z = ${formatComplex(root.a,root.b)}.`
+      ]);
+    }
+
+    function generateCircleLocus(){
+      const a=random(-5,5),b=random(-5,5),r=random(2,8);
+      return problem(`Describe the locus |z - (${formatComplex(a,b)})| = ${r} on the Argand diagram.`,`Circle with centre (${a}, ${b}) and radius ${r}`,[
+        `Let z = x + iy.`,
+        `The expression |z - (${formatComplex(a,b)})| measures the distance from z to ${formatComplex(a,b)}.`,
+        `The fixed point ${formatComplex(a,b)} has coordinates (${a}, ${b}) on the Argand diagram.`,
+        `All points a distance ${r} from (${a}, ${b}) form a circle.`,
+        `Therefore the locus is a circle with centre (${a}, ${b}) and radius ${r}.`
+      ]);
+    }
+
+    function generatePerpendicularBisector(){
+      const horizontal=Math.random()<0.5;
+      const fixed=horizontal?random(-4,4):random(-4,4);
+      const a=random(-8,-1),c=random(1,8);
+      const z1=horizontal?{a,b:fixed}:{a:fixed,b:a};
+      const z2=horizontal?{a:c,b:fixed}:{a:fixed,b:c};
+      const mid=(a+c)/2;
+      const equation=horizontal?`x = ${mid}`:`y = ${mid}`;
+      return problem(`Let z = x + iy. Find the Cartesian equation of the locus |z - (${formatComplex(z1.a,z1.b)})| = |z - (${formatComplex(z2.a,z2.b)})|.`,equation,[
+        `The point z is the same distance from ${formatComplex(z1.a,z1.b)} and ${formatComplex(z2.a,z2.b)}.`,
+        `So the locus is the perpendicular bisector of the line segment joining the two fixed points.`,
+        `The fixed points are (${z1.a}, ${z1.b}) and (${z2.a}, ${z2.b}).`,
+        horizontal?`They have the same y-coordinate, so the perpendicular bisector is vertical.`:`They have the same x-coordinate, so the perpendicular bisector is horizontal.`,
+        `${horizontal?'x':'y'} = ${frac(`${a} + ${c}`,'2')} = ${mid}.`
+      ]);
+    }
+
+    function generateArgumentLocus(){
+      const a=random(-4,4),b=random(-4,4);
+      const angle=choice([{label:'π/6',grad:'1/√3'},{label:'π/4',grad:'1'},{label:'π/3',grad:'√3'},{label:'-π/4',grad:'-1'}]);
+      return problem(`Describe the locus arg(z - (${formatComplex(a,b)})) = ${angle.label}.`,`A ray from (${a}, ${b}) making angle ${angle.label} with the positive real direction`,[
+        `z - (${formatComplex(a,b)}) translates the origin to the point (${a}, ${b}).`,
+        `arg(z - (${formatComplex(a,b)})) is the angle made from that point.`,
+        `The argument is fixed at ${angle.label}.`,
+        `Therefore the locus is a ray starting at (${a}, ${b}) and making angle ${angle.label} with the positive real direction.`,
+        `The endpoint (${a}, ${b}) is not included because the argument is undefined there.`
+      ]);
+    }
+
+    function generateExamMixed(){
+      const pick=choice(['quadratic','roots','locus','polar']);
+      if(pick==='quadratic')return generateComplexQuadratic();
+      if(pick==='roots')return generateNthRoots();
+      if(pick==='locus')return generatePerpendicularBisector();
+      return generatePolarOperations();
+    }
+
+    function generateProblem(){
+      const config=levelConfigs[currentLevel];
+      let types=config.types;
+      if(currentType!=='select'&&currentType!=='all')types=[currentType];
+      const type=choice(types);
+      const generators={
+        add_subtract:generateAddSubtract,
+        multiply_cartesian:generateMultiplyCartesian,
+        divide_cartesian:generateDivideCartesian,
+        conjugate_modulus:generateConjugateModulus,
+        modulus_argument:generateModulusArgument,
+        cartesian_to_polar:generateCartesianToPolar,
+        polar_to_cartesian:generatePolarToCartesian,
+        polar_operations:generatePolarOperations,
+        de_moivre_powers:generateDeMoivrePowers,
+        nth_roots:generateNthRoots,
+        complex_quadratics:generateComplexQuadratic,
+        simple_complex_equations:generateSimpleComplexEquation,
+        circle_locus:generateCircleLocus,
+        perpendicular_bisector:generatePerpendicularBisector,
+        argument_locus:generateArgumentLocus,
+        exam_mixed:generateExamMixed
+      };
+      const oldType=currentType;
+      currentType=type;
+      const generated=(generators[type]||generateAddSubtract)();
+      currentType=oldType;
+      generated.typeLabel=typeDisplayNames[type]||generated.typeLabel;
+      generated.instruction=typeInstructions[type]||generated.instruction;
+      generated.instructionText=generated.instruction;
+      return generated;
+    }
+
+    function populateTypes(){
+      const config=levelConfigs[currentLevel];
+      const dropdown=document.getElementById('type-dropdown');
+      dropdown.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+config.types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      dropdown.value=currentType='select';
+      showBlankPage();
+    }
+
+    function switchLevel(level){
+      currentLevel=level;
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index===level-1));
+      document.getElementById('level-title').textContent=levelConfigs[level].title;
+      document.getElementById('level-description').textContent=levelConfigs[level].description;
+      populateTypes();
+    }
+
+    function typeChanged(){
+      currentType=document.getElementById('type-dropdown').value;
+      currentType==='select'?showBlankPage():generateNewSet();
+    }
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').classList.remove('visible');
+      document.getElementById('set-instruction').classList.remove('visible');
+      document.getElementById('problem-list').classList.remove('compact');
+      document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:38px;color:#667085;font-size:1.05em">Select a question type to begin complex number practice.</li>';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      problems=[];answersVisible=false;stepsVisible=false;
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<100){
+        const p=generateProblem();
+        const key=p.question;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      list.classList.toggle('compact',currentLevel===1||currentLevel===2);
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed complex number question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|i\^2|√|cis|arg|θ|<span class="vfrac"|±|\||\^/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div>
+                <span class="problem-type">${escapeHtml(p.typeLabel)}</span>
+                <div class="question-text">${p.prompt}</div>
+              </div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){
+      answersVisible=!answersVisible;
+      problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible));
+    }
+
+    function showSteps(){
+      stepsVisible=!stepsVisible;
+      problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible));
+    }
+
+    function startTimer(minutes){
+      if(timerActive)stopTimer();
+      timeRemaining=minutes*60;timerActive=true;updateTimerDisplay();
+      timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000);
+    }
+
+    function stopTimer(){
+      if(timerInterval){clearInterval(timerInterval);timerInterval=null}
+      timerActive=false;
+      const el=document.getElementById('timer-display');
+      el.textContent='Ready';
+      el.className='timer-display';
+    }
+
+    function updateTimerDisplay(){
+      const el=document.getElementById('timer-display');
+      const m=Math.floor(timeRemaining/60),s=timeRemaining%60;
+      el.textContent=`${m}:${String(s).padStart(2,'0')}`;
+      if(timerActive&&timeRemaining<=30)el.className='timer-display warning';
+      else if(timerActive)el.className='timer-display active';
+      else el.className='timer-display';
+    }
+
+    function timerFinished(){
+      stopTimer();
+      const el=document.getElementById('timer-display');
+      el.textContent='Time Up!';
+      el.className='timer-display warning';
+      document.getElementById('timer-modal').classList.remove('hidden');
+    }
+
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
+</body>
+</html>

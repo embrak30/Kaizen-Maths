@@ -187,6 +187,25 @@ const tools = [
     ]
   },
   {
+    slug: "complex-numbers",
+    title: "Complex Numbers",
+    category: "Algebra",
+    level: "A-Level Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate Further Maths complex number practice covering Cartesian arithmetic, conjugates, modulus, argument, polar form, De Moivre's theorem, roots, equations, and Argand loci.",
+    tags: ["algebra", "further maths", "complex numbers", "imaginary numbers", "Argand diagram", "modulus", "argument", "polar form", "De Moivre", "roots"],
+    toolPath: "tools/complex-numbers/index.html?v=complex-numbers-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers Cartesian arithmetic, multiplication, division by conjugates, conjugates, and modulus.",
+      "Level 2 covers modulus, principal argument, Cartesian-polar conversion, and polar multiplication or division.",
+      "Level 3 covers De Moivre's theorem, nth roots, complex quadratics, and simple complex equations.",
+      "Level 4 covers circle loci, perpendicular bisectors, argument loci, and mixed exam-style questions."
+    ]
+  },
+  {
     slug: "differentiation-rules",
     title: "Differentiation Rules",
     category: "Algebra",
