@@ -1964,13 +1964,20 @@ function worksheetMathFragment(value) {
   return fragment;
 }
 
+function normalisePowerAtSymbols(value) {
+  return String(value ?? "")
+    .replace(/([A-Za-z0-9)\]}])\s*@\s*\{([^{}]+)\}/g, "$1^{$2}")
+    .replace(/([A-Za-z0-9)\]}])\s*@\s*\(([^()]+)\)/g, "$1^($2)")
+    .replace(/([A-Za-z0-9)\]}])\s*@\s*(-?\d+)/g, "$1^$2");
+}
+
 function normaliseAlgebraUnitCoefficients(value) {
-  return String(value ?? "").replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, "$1$2$3");
+  return normalisePowerAtSymbols(value).replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, "$1$2$3");
 }
 
 function textLooksWorksheetMathLike(text) {
   const source = String(text ?? "");
-  return /(\$\$|\\\(|\\\[|[_^]|[A-Za-z][2-9]\b|\\d?frac|\\sqrt|\\displaystyle|\\boxed|\\text|\\left|\\right|\\big|\\quad|\\;|\\,|\\times|\\cdot|\\pm|\+\/-|\\approx|\\neq|\\Rightarrow|\\rightarrow|\\leq?|\\geq?|\\lt|\\gt|\\infty|\\theta|\\alpha|\\beta|\\gamma|\\Delta|\\pi|\\sin|\\cos|\\tan|\\sec|\\csc|\\cot|\\ln|[A-Za-z0-9)\]°]\s*[=<>≤≥]\s*-?[A-Za-z0-9(]|[A-Za-z]\s*[+\-]\s*\d|\d\s*[+\-×÷*/]\s*-?\d|\d+[A-Za-z]\s*[+\-]\s*\d|\d\s*[×÷*/]\s*\d)/.test(source);
+  return /(\$\$|\\\(|\\\[|[_^]|[A-Za-z0-9)\]}]\s*@\s*(?:\{[^{}]+\}|\([^()]+\)|-?\d+)|[A-Za-z][2-9]\b|\\d?frac|\\sqrt|\\displaystyle|\\boxed|\\text|\\left|\\right|\\big|\\quad|\\;|\\,|\\times|\\cdot|\\pm|\+\/-|\\approx|\\neq|\\Rightarrow|\\rightarrow|\\leq?|\\geq?|\\lt|\\gt|\\infty|\\theta|\\alpha|\\beta|\\gamma|\\Delta|\\pi|\\sin|\\cos|\\tan|\\sec|\\csc|\\cot|\\ln|[A-Za-z0-9)\]°]\s*[=<>≤≥]\s*-?[A-Za-z0-9(]|[A-Za-z]\s*[+\-]\s*\d|\d\s*[+\-×÷*/]\s*-?\d|\d+[A-Za-z]\s*[+\-]\s*\d|\d\s*[×÷*/]\s*\d)/.test(source);
 }
 
 function formatWorksheetMathText(text) {
@@ -2072,7 +2079,7 @@ function worksheetStepHasExplicitLabel(step) {
 
 function worksheetStepIsMathLike(step) {
   const text = String(step ?? "");
-  return /(\$\$|\\\(|\\\[|=|→|->|⇒|\\frac|dfrac|sqrt|∫|∑|[+\-*/×÷]\s*)/.test(text);
+  return /(\$\$|\\\(|\\\[|=|→|->|⇒|\\frac|dfrac|sqrt|∫|∑|[A-Za-z0-9)\]}]\s*@\s*(?:\{[^{}]+\}|\([^()]+\)|-?\d+)|[+\-*/×÷]\s*)/.test(text);
 }
 
 function worksheetStepsHtml(steps = []) {

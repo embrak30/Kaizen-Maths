@@ -28,8 +28,15 @@
     return normaliseAlgebraUnitCoefficients(template.content.textContent.replace(/\s+/g, ' ').trim());
   }
 
+  function normalisePowerAtSymbols(value) {
+    return String(value ?? '')
+      .replace(/([A-Za-z0-9)\]}])\s*@\s*\{([^{}]+)\}/g, '$1^{$2}')
+      .replace(/([A-Za-z0-9)\]}])\s*@\s*\(([^()]+)\)/g, '$1^($2)')
+      .replace(/([A-Za-z0-9)\]}])\s*@\s*(-?\d+)/g, '$1^$2');
+  }
+
   function normaliseAlgebraUnitCoefficients(value) {
-    return String(value ?? '').replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, '$1$2$3');
+    return normalisePowerAtSymbols(value).replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, '$1$2$3');
   }
 
   function looksLikeSharedInstruction(text) {

@@ -42,8 +42,15 @@
     return span;
   }
 
+  function normalisePowerAtSymbols(text) {
+    return String(text)
+      .replace(/([A-Za-z0-9)\]}])\s*@\s*\{([^{}]+)\}/g, '$1^{$2}')
+      .replace(/([A-Za-z0-9)\]}])\s*@\s*\(([^()]+)\)/g, '$1^($2)')
+      .replace(/([A-Za-z0-9)\]}])\s*@\s*(-?\d+)/g, '$1^$2');
+  }
+
   function normaliseUnitCoefficients(text) {
-    return String(text).replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, '$1$2$3');
+    return normalisePowerAtSymbols(text).replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, '$1$2$3');
   }
 
   function transformTextNode(node) {
