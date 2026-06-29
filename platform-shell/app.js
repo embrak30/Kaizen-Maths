@@ -206,6 +206,25 @@ const tools = [
     ]
   },
   {
+    slug: "polar-coordinates",
+    title: "Polar Coordinates",
+    category: "Algebra",
+    level: "A-Level Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate Further Maths polar coordinates practice covering coordinate conversion, equivalent points, polar curves, intersections, gradients, and area using the polar area formula.",
+    tags: ["algebra", "further maths", "polar coordinates", "polar curves", "area", "intersections", "gradients", "calculus"],
+    toolPath: "tools/polar-coordinates/index.html?v=polar-coordinates-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers polar plotting, equivalent coordinates, and conversion between polar and Cartesian form.",
+      "Level 2 covers standard polar curves, circles, and substitution into polar equations.",
+      "Level 3 covers intersections of polar curves and gradients using dy/dx in polar form.",
+      "Level 4 covers areas using one half integral r squared d theta."
+    ]
+  },
+  {
     slug: "differentiation-rules",
     title: "Differentiation Rules",
     category: "Algebra",

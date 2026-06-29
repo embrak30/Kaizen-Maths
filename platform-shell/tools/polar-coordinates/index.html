@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polar Coordinates</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f3f6fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#24356f;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}
+    .sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}
+    .sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#24356f;color:#fff;font-size:1.25em;font-weight:850}
+    .sidebar-content{padding:22px;line-height:1.55}
+    .sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #17b8b3;color:#24356f;font-size:1.02em}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}
+    .sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1220px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#24356f;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 2px,transparent 2px 24px)}
+    .header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e8ebf8}
+    .tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e8ebf8;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}
+    .tab.active{background:#fff;color:#24356f;border-bottom-color:#24356f}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d9deef;background:#f8fafc}
+    .level-info h3{margin-bottom:3px;color:#24356f;font-size:1.16em}
+    .level-info p{color:#667085;font-size:.94em}
+    .dropdown-container{margin-top:8px}
+    .type-dropdown{min-width:385px;padding:8px 10px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .timer-display{min-width:96px;padding:7px 12px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#24356f;text-align:center;font-size:1.45em;font-weight:850}
+    .timer-display.active{border-color:#24356f;color:#24356f}
+    .timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}
+    .btn-primary{background:#24356f}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}
+    .problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#24356f;color:#fff;text-align:center;font-size:1.08em;font-weight:850}
+    .problem-set-header.visible{display:block}
+    .set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #c8d2ff;border-radius:6px;background:#f0f3ff;color:#24356f;text-align:center;font-weight:850}
+    .set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:10px;list-style:none}
+    .problem-item{display:flex;flex-direction:column;gap:8px;padding:12px;border-left:4px solid #24356f;border-radius:7px;background:#f8fafc}
+    .problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}
+    .problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#24356f;color:#fff;font-weight:850}
+    .problem-type{display:inline-flex;margin-bottom:5px;padding:5px 9px;border-radius:999px;background:#e0e7ff;color:#24356f;font-size:.76em;font-weight:850}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.23em;font-weight:650;line-height:1.4;color:#172033;overflow-wrap:anywhere}
+    .question-text .word{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;font-size:.88em;font-weight:750;color:#334155}
+    .problem-answer{display:none;white-space:nowrap;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}
+    .problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #24356f;border-radius:6px;background:#f1f5ff}
+    .steps-section.visible{display:block}
+    .answer-label{margin-bottom:6px;color:#24356f;font-weight:850}
+    .solution-steps{font-size:.98em;line-height:1.45}
+    .step{margin:5px 0;color:#24356f}
+    .step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#6d28d9;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}
+    .final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}
+    .vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}
+    .vfrac span:last-child{padding:2px 5px 0}
+    .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}
+    .modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+    .modal-content h2{margin-bottom:10px;color:#d92d20}
+    .modal-content p{margin-bottom:18px;color:#667085}
+    .hidden{display:none}
+    @media (min-width:960px){.problem-list.compact{grid-template-columns:repeat(2,minmax(0,1fr))}.problem-list.compact .question-text{font-size:1.07em}.problem-list.compact .problem-item{min-height:198px}}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.problem-answer{white-space:normal}.question-text{font-size:1.08em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Polar Coordinates</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This Further Maths tool supports practice with polar coordinates, polar curves, intersections, tangents, and area enclosed by polar curves.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> plotting, equivalent polar coordinates, and conversion between polar and Cartesian form.</li>
+        <li><strong>Level 2:</strong> recognising and interpreting standard polar curves.</li>
+        <li><strong>Level 3:</strong> intersections and gradients of polar curves.</li>
+        <li><strong>Level 4:</strong> polar area using the formula <span class="vfrac"><span>1</span><span>2</span></span>∫r<sup>2</sup> dθ.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Use x = r cos θ and y = r sin θ for conversion.</li>
+        <li>Use r<sup>2</sup> = x<sup>2</sup> + y<sup>2</sup> and tan θ = y/x when converting to polar form.</li>
+        <li>Remember that polar coordinates are not unique.</li>
+        <li>For area, square the whole expression for r before integrating.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Polar Coordinates</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Coordinates</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Curves</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Intersections</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Area</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Polar Coordinates</h3>
+        <p id="level-description">Plot, convert, and identify equivalent polar coordinates.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Polar Coordinates',description:'Plot, convert, and identify equivalent polar coordinates.',types:['polar_to_cartesian','cartesian_to_polar','equivalent_coordinates','coordinate_mixed']},
+      2:{title:'Level 2: Polar Curves',description:'Recognise and interpret standard polar equations.',types:['standard_curves','circle_curves','point_on_curve','curve_mixed']},
+      3:{title:'Level 3: Intersections and Gradients',description:'Solve polar intersections and find gradients of polar curves.',types:['intersections','line_curve_intersections','polar_gradients','intersection_mixed']},
+      4:{title:'Level 4: Area in Polar Coordinates',description:'Use the polar area formula with exact limits.',types:['sector_area','circle_area','simple_integral_area','area_mixed']}
+    };
+
+    const typeDisplayNames={
+      polar_to_cartesian:'Type 1: Polar to Cartesian coordinates',
+      cartesian_to_polar:'Type 2: Cartesian to polar coordinates',
+      equivalent_coordinates:'Type 3: Equivalent polar coordinates',
+      coordinate_mixed:'Type 4: Mixed coordinate practice',
+      standard_curves:'Type 1: Standard polar curves',
+      circle_curves:'Type 2: Circles from polar equations',
+      point_on_curve:'Type 3: Points on polar curves',
+      curve_mixed:'Type 4: Mixed curve practice',
+      intersections:'Type 1: Intersections of polar curves',
+      line_curve_intersections:'Type 2: Intersections with θ = α',
+      polar_gradients:'Type 3: Gradients of polar curves',
+      intersection_mixed:'Type 4: Mixed intersections and gradients',
+      sector_area:'Type 1: Area of polar sectors',
+      circle_area:'Type 2: Area enclosed by r = a cos θ or r = a sin θ',
+      simple_integral_area:'Type 3: Area by direct integration',
+      area_mixed:'Type 4: Mixed polar area'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      polar_to_cartesian:'Convert each polar coordinate into Cartesian form.',
+      cartesian_to_polar:'Convert each Cartesian coordinate into polar form.',
+      equivalent_coordinates:'Give equivalent polar coordinates for each point.',
+      coordinate_mixed:'Answer each mixed coordinate question.',
+      standard_curves:'Describe each polar curve.',
+      circle_curves:'Convert each polar circle into Cartesian form and identify its centre and radius.',
+      point_on_curve:'Substitute the given angle into the polar equation.',
+      curve_mixed:'Answer each mixed polar curve question.',
+      intersections:'Find the intersections of the polar curves.',
+      line_curve_intersections:'Find where the curve meets the given ray.',
+      polar_gradients:'Find dy/dx at the given value of θ.',
+      intersection_mixed:'Answer each mixed intersections and gradients question.',
+      sector_area:'Find the area of each polar sector.',
+      circle_area:'Find the area enclosed by each polar circle.',
+      simple_integral_area:'Use the polar area formula to find the area.',
+      area_mixed:'Answer each mixed polar area question.'
+    };
+
+    const angleTable=[
+      {label:'0',value:0,cos:['1',1],sin:['0',1]},
+      {label:'π/6',value:Math.PI/6,cos:['√3',2],sin:['1',2]},
+      {label:'π/4',value:Math.PI/4,cos:['√2',2],sin:['√2',2]},
+      {label:'π/3',value:Math.PI/3,cos:['1',2],sin:['√3',2]},
+      {label:'π/2',value:Math.PI/2,cos:['0',1],sin:['1',1]},
+      {label:'2π/3',value:2*Math.PI/3,cos:['-1',2],sin:['√3',2]},
+      {label:'3π/4',value:3*Math.PI/4,cos:['-√2',2],sin:['√2',2]},
+      {label:'5π/6',value:5*Math.PI/6,cos:['-√3',2],sin:['1',2]},
+      {label:'π',value:Math.PI,cos:['-1',1],sin:['0',1]},
+      {label:'4π/3',value:4*Math.PI/3,cos:['-1',2],sin:['-√3',2]},
+      {label:'3π/2',value:3*Math.PI/2,cos:['0',1],sin:['-1',1]},
+      {label:'5π/3',value:5*Math.PI/3,cos:['1',2],sin:['-√3',2]}
+    ];
+
+    const cartesianOptions=[
+      {x:3,y:4,r:5,theta:'tan<sup>-1</sup>(4/3)'},
+      {x:5,y:12,r:13,theta:'tan<sup>-1</sup>(12/5)'},
+      {x:-3,y:4,r:5,theta:'π - tan<sup>-1</sup>(4/3)'},
+      {x:-5,y:12,r:13,theta:'π - tan<sup>-1</sup>(12/5)'},
+      {x:-8,y:-15,r:17,theta:'π + tan<sup>-1</sup>(15/8)'},
+      {x:7,y:-24,r:25,theta:'2π - tan<sup>-1</sup>(24/7)'}
+    ];
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function sup(value){return `<sup>${value}</sup>`}
+    function power(base,exponent){return `${base}${sup(exponent)}`}
+    function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function stripTags(html){return String(html).replace(/<sup>(.*?)<\/sup>/gi,'^$1').replace(/<sub>(.*?)<\/sub>/gi,'_$1').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+    function simplifyFraction(n,d){
+      if(d<0){n=-n;d=-d}
+      const g=gcd(n,d);n/=g;d/=g;
+      return d===1?String(n):frac(n,d);
+    }
+    function simplifyPi(num,den=1){
+      if(num===0)return '0';
+      if(den<0){num=-num;den=-den}
+      const g=gcd(num,den);num/=g;den/=g;
+      const sign=num<0?'-':'';
+      const abs=Math.abs(num);
+      if(den===1)return `${sign}${abs===1?'π':abs+'π'}`;
+      return `${sign}${abs===1?'π':abs+'π'}/${den}`;
+    }
+    function piCoefficient(num,den=1,powerText='π'){
+      if(num===0)return '0';
+      if(den<0){num=-num;den=-den}
+      const g=gcd(num,den);num/=g;den/=g;
+      const sign=num<0?'-':'';
+      const abs=Math.abs(num);
+      if(den===1)return `${sign}${abs===1?'':abs}${powerText}`;
+      const coefficient=abs===1?frac(1,den):frac(abs,den);
+      return `${sign}${coefficient}${powerText}`;
+    }
+    function productExact(multiplier,part){
+      let [num,den]=part;
+      if(num==='0')return '0';
+      let sign='';
+      if(String(num).startsWith('-')){sign='-';num=String(num).slice(1)}
+      const radical=String(num).includes('√')?num:'';
+      const numeric=radical?1:Number(num);
+      let top=multiplier*numeric;
+      const g=gcd(top,den);top/=g;den/=g;
+      const core=radical?(top===1?radical:`${top}${radical}`):String(top);
+      if(den===1)return sign+core;
+      return sign+frac(core,den);
+    }
+    function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question',instruction=typeInstructions[currentType]||'Answer each question.'){
+      return {prompt,question:stripTags(prompt),answer,steps,typeLabel,instruction,instructionText:instruction};
+    }
+
+    function generatePolarToCartesian(){
+      const r=choice([2,4,6,8,10,12]);
+      const angle=choice(angleTable.slice(1));
+      const x=productExact(r,angle.cos);
+      const y=productExact(r,angle.sin);
+      return problem(`Convert the polar coordinate (${r}, ${angle.label}) into Cartesian form.`,`(${x}, ${y})`,[
+        `Use x = r cos θ and y = r sin θ.`,
+        `Here r = ${r} and θ = ${angle.label}.`,
+        `x = ${r} cos(${angle.label}) = ${r} × ${angle.cos[0]==='0'?'0':frac(angle.cos[0],angle.cos[1])} = ${x}.`,
+        `y = ${r} sin(${angle.label}) = ${r} × ${angle.sin[0]==='0'?'0':frac(angle.sin[0],angle.sin[1])} = ${y}.`,
+        `Therefore the Cartesian coordinate is (${x}, ${y}).`
+      ]);
+    }
+
+    function generateCartesianToPolar(){
+      const p=choice(cartesianOptions);
+      return problem(`Convert (${p.x}, ${p.y}) into polar form, using r > 0 and 0 ≤ θ < 2π.`,`(${p.r}, ${p.theta})`,[
+        `Use ${power('r',2)} = ${power('x',2)} + ${power('y',2)}.`,
+        `${power('r',2)} = ${power(p.x,2)} + ${power(p.y,2)} = ${p.x*p.x+p.y*p.y}, so r = ${p.r}.`,
+        `Use tan θ = ${frac('y','x')} = ${frac(p.y,p.x)}.`,
+        `Choose the quadrant of the point (${p.x}, ${p.y}).`,
+        `Therefore θ = ${p.theta}.`,
+        `The polar coordinate is (${p.r}, ${p.theta}).`
+      ]);
+    }
+
+    function generateEquivalentCoordinates(){
+      const r=random(2,8);
+      const angle=choice(angleTable.slice(1,9));
+      const negAngle=simplifyPi(Math.round(angle.value/Math.PI*12)+12,12);
+      const plusAngle=simplifyPi(Math.round(angle.value/Math.PI*12)+24,12);
+      return problem(`Give two different polar coordinates that represent the same point as (${r}, ${angle.label}).`, `(${r}, ${plusAngle}) and (${-r}, ${negAngle})`, [
+        `Adding 2π to the angle gives the same ray.`,
+        `So (${r}, ${angle.label}) is equivalent to (${r}, ${plusAngle}).`,
+        `Changing r to -r moves to the opposite ray, so add π to the angle.`,
+        `So (${r}, ${angle.label}) is also equivalent to (${-r}, ${negAngle}).`
+      ]);
+    }
+
+    function generateStandardCurves(){
+      const type=choice(['ray','circle','line']);
+      if(type==='ray'){
+        const angle=choice(angleTable.slice(1,8));
+        return problem(`Describe the polar curve θ = ${angle.label}.`,`A ray from the pole making angle ${angle.label} with the initial line`,[
+          `In polar coordinates, θ is the angle from the initial line.`,
+          `The equation θ = ${angle.label} fixes the direction but allows r to vary.`,
+          `Therefore the curve is a ray from the pole at angle ${angle.label}.`
+        ]);
+      }
+      if(type==='circle'){
+        const a=random(2,8);
+        return problem(`Describe the polar curve r = ${a}.`,`A circle centred at the pole with radius ${a}`,[
+          `The value of r is the distance from the pole.`,
+          `The equation r = ${a} means every point is ${a} units from the pole.`,
+          `Therefore the curve is a circle centred at the pole with radius ${a}.`
+        ]);
+      }
+      const a=random(2,7);
+      return problem(`Describe the polar curve r cos θ = ${a}.`,`The vertical line x = ${a}`,[
+        `Use x = r cos θ.`,
+        `So r cos θ = ${a} becomes x = ${a}.`,
+        `Therefore the curve is the vertical line x = ${a}.`
+      ]);
+    }
+
+    function generateCircleCurves(){
+      const a=choice([4,6,8,10,12]);
+      const useCos=Math.random()<0.5;
+      const equation=`r = ${a}${useCos?' cos θ':' sin θ'}`;
+      const cartesian=useCos?`${power('x',2)} + ${power('y',2)} = ${a}x`:`${power('x',2)} + ${power('y',2)} = ${a}y`;
+      const centre=useCos?`(${a/2}, 0)`:`(0, ${a/2})`;
+      return problem(`Convert ${equation} into Cartesian form and identify the circle.`,`${cartesian}; centre ${centre}, radius ${a/2}`,[
+        `Start with ${equation}.`,
+        `Multiply both sides by r.`,
+        useCos?`${power('r',2)} = ${a}r cos θ.`:`${power('r',2)} = ${a}r sin θ.`,
+        `Use ${power('r',2)} = ${power('x',2)} + ${power('y',2)}, x = r cos θ, and y = r sin θ.`,
+        `So ${cartesian}.`,
+        useCos?`${power('x',2)} - ${a}x + ${power('y',2)} = 0.`:`${power('x',2)} + ${power('y',2)} - ${a}y = 0.`,
+        useCos?`${power(`(x - ${a/2})`,2)} + ${power('y',2)} = ${power(a/2,2)}.`:`${power('x',2)} + ${power(`(y - ${a/2})`,2)} = ${power(a/2,2)}.`,
+        `Centre ${centre}, radius ${a/2}.`
+      ]);
+    }
+
+    function generatePointOnCurve(){
+      const a=choice([2,3,4,5]);
+      const angle=choice(angleTable.slice(1,5));
+      const cos=productExact(a,angle.cos);
+      const rExpr=`${a} + ${a} cos θ`;
+      const rValue=cos==='0'?String(a):`${a} + ${cos}`;
+      return problem(`For the curve r = ${rExpr}, find r when θ = ${angle.label}.`, rValue, [
+        `Substitute θ = ${angle.label} into r = ${rExpr}.`,
+        `r = ${a} + ${a} cos(${angle.label}).`,
+        `cos(${angle.label}) = ${angle.cos[0]==='0'?'0':frac(angle.cos[0],angle.cos[1])}.`,
+        `Therefore r = ${rValue}.`
+      ]);
+    }
+
+    function generateIntersections(){
+      const a=choice([2,3,4,5]);
+      const b=2*a;
+      return problem(`Find the intersections of r = ${a} and r = ${b} cos θ.`,`θ = π/3 or 5π/3, with r = ${a}`,[
+        `Set the two expressions for r equal.`,
+        `${a} = ${b} cos θ.`,
+        `cos θ = ${frac(a,b)} = ${frac(1,2)}.`,
+        `For 0 ≤ θ < 2π, θ = π/3 or 5π/3.`,
+        `At both intersections, r = ${a}.`
+      ]);
+    }
+
+    function generateLineCurveIntersection(){
+      const a=choice([3,4,5,6]);
+      const angle=choice([{label:'π/6',cos:['√3',2]},{label:'π/3',cos:['1',2]},{label:'π/2',cos:['0',1]}]);
+      const r=angle.cos[0]==='0'?'0':productExact(a,angle.cos);
+      return problem(`The curve is r = ${a} cos θ. Find the point where it meets the ray θ = ${angle.label}.`,`r = ${r}, so the polar point is (${r}, ${angle.label})`,[
+        `Substitute θ = ${angle.label} into r = ${a} cos θ.`,
+        `r = ${a} cos(${angle.label}).`,
+        `cos(${angle.label}) = ${angle.cos[0]==='0'?'0':frac(angle.cos[0],angle.cos[1])}.`,
+        `So r = ${r}.`,
+        `The polar point is (${r}, ${angle.label}).`
+      ]);
+    }
+
+    function generatePolarGradient(){
+      const a=choice([2,3,4,5]);
+      const at=choice([
+        {label:'π/6',answer:'-√3/3',reason:'-cot(π/3) = -√3/3'},
+        {label:'π/4',answer:'0',reason:'-cot(π/2) = 0'},
+        {label:'π/3',answer:'√3/3',reason:'-cot(2π/3) = √3/3'},
+        {label:'0',answer:'undefined',reason:'the denominator is 0'}
+      ]);
+      return problem(`For the polar curve r = ${a} cos θ, find dy/dx at θ = ${at.label}.`, at.answer==='undefined'?'Gradient undefined':`dy/dx = ${at.answer}`, [
+        `Use ${frac('dy','dx')} = ${frac(`r' sin θ + r cos θ`,`r' cos θ - r sin θ`)}.`,
+        `For r = ${a} cos θ, r' = -${a} sin θ.`,
+        `Substitute r and r' into the formula.`,
+        `${frac('dy','dx')} = ${frac(`(-${a} sin θ)sin θ + (${a} cos θ)cos θ`,`(-${a} sin θ)cos θ - (${a} cos θ)sin θ`)}.`,
+        `${frac('dy','dx')} = ${frac(`${a}(cos${sup(2)} θ - sin${sup(2)} θ)`,`-${2*a} sin θ cos θ`)} = -cot(2θ).`,
+        `At θ = ${at.label}, ${at.reason}.`,
+        at.answer==='undefined'?`So the tangent is vertical and the gradient is undefined.`:`Therefore dy/dx = ${at.answer}.`
+      ]);
+    }
+
+    function generateSectorArea(){
+      const r=choice([2,3,4,5,6]);
+      const num=choice([1,2,3]);
+      const den=choice([6,4,3]);
+      const angle=simplifyPi(num,den);
+      const coefficient=r*r*num;
+      const exactArea=piCoefficient(coefficient,2*den);
+      return problem(`Find the area of the sector bounded by r = ${r}, θ = 0, and θ = ${angle}.`,exactArea,[
+        `Use A = ${frac(1,2)}∫${power('r',2)} dθ.`,
+        `Here r = ${r}, so ${power('r',2)} = ${r*r}.`,
+        `A = ${frac(1,2)}∫<sub>0</sub><sup>${angle}</sup> ${r*r} dθ.`,
+        `A = ${frac(1,2)} × ${r*r} × ${angle}.`,
+        `Therefore A = ${exactArea}.`
+      ]);
+    }
+
+    function generateCircleArea(){
+      const a=choice([4,6,8,10]);
+      const useCos=Math.random()<0.5;
+      const exactArea=piCoefficient(a*a,4);
+      return problem(`Find the area enclosed by r = ${a}${useCos?' cos θ':' sin θ'}.`,exactArea,[
+        `Use A = ${frac(1,2)}∫${power('r',2)} dθ.`,
+        useCos?`For r = ${a} cos θ, use limits -π/2 to π/2.`:`For r = ${a} sin θ, use limits 0 to π.`,
+        `A = ${frac(1,2)}∫ ${power(`(${a}${useCos?' cos θ':' sin θ'})`,2)} dθ.`,
+        `A = ${frac(a*a,2)}∫ ${useCos?`cos${sup(2)} θ`:`sin${sup(2)} θ`} dθ over the full circle.`,
+        `The integral of ${useCos?`cos${sup(2)} θ from -π/2 to π/2`:`sin${sup(2)} θ from 0 to π`} is π/2.`,
+        `So A = ${frac(a*a,2)} × ${frac('π',2)} = ${exactArea}.`
+      ]);
+    }
+
+    function generateSimpleIntegralArea(){
+      const a=choice([1,2,3]);
+      const upper=choice([{label:'π/2',value:'π/2',den:2},{label:'π',value:'π',den:1}]);
+      const exactArea=piCoefficient(a*a,6*Math.pow(upper.den,3),'π<sup>3</sup>');
+      return problem(`Find the area bounded by r = ${a}θ, θ = 0, and θ = ${upper.label}.`,exactArea,[
+        `Use A = ${frac(1,2)}∫${power('r',2)} dθ.`,
+        `Here r = ${a}θ, so ${power('r',2)} = ${a*a}${power('θ',2)}.`,
+        `A = ${frac(1,2)}∫<sub>0</sub><sup>${upper.label}</sup> ${a*a}${power('θ',2)} dθ.`,
+        `A = ${frac(a*a,2)} × [${frac(power('θ',3),3)}]<sub>0</sub><sup>${upper.label}</sup>.`,
+        `A = ${frac(a*a,6)} × ${power(`(${upper.label})`,3)}.`,
+        `Therefore A = ${exactArea}.`
+      ]);
+    }
+
+    function generateProblem(){
+      const maps={
+        polar_to_cartesian:generatePolarToCartesian,
+        cartesian_to_polar:generateCartesianToPolar,
+        equivalent_coordinates:generateEquivalentCoordinates,
+        coordinate_mixed:()=>choice([generatePolarToCartesian,generateCartesianToPolar,generateEquivalentCoordinates])(),
+        standard_curves:generateStandardCurves,
+        circle_curves:generateCircleCurves,
+        point_on_curve:generatePointOnCurve,
+        curve_mixed:()=>choice([generateStandardCurves,generateCircleCurves,generatePointOnCurve])(),
+        intersections:generateIntersections,
+        line_curve_intersections:generateLineCurveIntersection,
+        polar_gradients:generatePolarGradient,
+        intersection_mixed:()=>choice([generateIntersections,generateLineCurveIntersection,generatePolarGradient])(),
+        sector_area:generateSectorArea,
+        circle_area:generateCircleArea,
+        simple_integral_area:generateSimpleIntegralArea,
+        area_mixed:()=>choice([generateSectorArea,generateCircleArea,generateSimpleIntegralArea])()
+      };
+      return (maps[currentType]||generatePolarToCartesian)();
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      populateDropdown();
+      showBlankPage();
+    }
+
+    function populateDropdown(){
+      const select=document.getElementById('type-dropdown');
+      const types=levelConfigs[currentLevel].types;
+      select.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      select.value=currentType;
+    }
+
+    function typeChanged(){
+      currentType=document.getElementById('type-dropdown').value;
+      generateNewSet();
+    }
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').className='problem-set-header';
+      document.getElementById('set-instruction').className='set-instruction';
+      document.getElementById('problem-list').innerHTML='<li class="problem-item"><div class="problem-left"><div class="problem-number">1</div><div class="question-text">Select a question type to begin polar coordinates practice.</div></div></li>';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      answersVisible=false;stepsVisible=false;problems=[];
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<120){
+        const oldType=currentType;
+        if(currentType==='all')currentType=choice(levelConfigs[currentLevel].types);
+        const p=generateProblem();
+        currentType=oldType;
+        const key=p.question;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      list.classList.toggle('compact',currentLevel===1||currentLevel===2);
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed polar coordinates question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|√|∫|θ|π|<span class="vfrac"|<sup>|<sub>|\||tan|cos|sin/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div>
+                <span class="problem-type">${escapeHtml(p.typeLabel)}</span>
+                <div class="question-text">${p.prompt}</div>
+              </div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){
+      answersVisible=!answersVisible;
+      problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible));
+    }
+
+    function showSteps(){
+      stepsVisible=!stepsVisible;
+      problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible));
+    }
+
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;timerActive=true;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      display.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        display.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)display.className='timer-display warning';
+        if(timeRemaining<=0){stopTimer();display.textContent='Time Up';display.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;timerActive=false;
+      const display=document.getElementById('timer-display');
+      if(display){display.textContent='Ready';display.className='timer-display'}
+    }
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
+</body>
+</html>
