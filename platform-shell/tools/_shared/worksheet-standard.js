@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.2.1';
+  const VERSION = '0.2.2';
 
   function readBinding(name, fallback = undefined) {
     try {
@@ -45,17 +45,86 @@
     return /^(simplify|solve|express|evaluate|calculate|find|write|expand|factorise|factorize|differentiate|integrate|convert|complete|state|show|prove|sketch|draw)\b/i.test(clean);
   }
 
+  function instructionForVerb(verb) {
+    const cleanVerb = String(verb || '').toLowerCase();
+    const map = {
+      simplify: 'Simplify each expression.',
+      solve: 'Solve each equation.',
+      express: 'Express each answer in the requested form.',
+      evaluate: 'Evaluate each expression.',
+      calculate: 'Calculate each value.',
+      find: 'Find each requested value.',
+      write: 'Write each answer in the requested form.',
+      expand: 'Expand each expression.',
+      factorise: 'Factorise each expression.',
+      factorize: 'Factorise each expression.',
+      differentiate: 'Differentiate each function.',
+      integrate: 'Integrate each function.',
+      convert: 'Convert each value.',
+      complete: 'Complete each question.',
+      state: 'State each requested value.',
+      show: 'Show the required result.',
+      prove: 'Prove each statement.',
+      sketch: 'Sketch each graph or diagram.',
+      draw: 'Draw each required diagram.'
+    };
+    return map[cleanVerb] || `${cleanVerb.charAt(0).toUpperCase()}${cleanVerb.slice(1)} each question.`;
+  }
+
+  function splitLeadingInstruction(question) {
+    const html = String(question || '').trim();
+    if (!html) return null;
+    const text = textFromHtml(html);
+    if (!text) return null;
+
+    const specialPatterns = [
+      { pattern: /^Find\s+the\s+mean\s+of\s*:?\s*(.+)$/i, remove: /^\s*Find\s+the\s+mean\s+of\s*:?\s*/i, instruction: 'Find the mean of each data set.' },
+      { pattern: /^Find\s+the\s+median\s+of\s*:?\s*(.+)$/i, remove: /^\s*Find\s+the\s+median\s+of\s*:?\s*/i, instruction: 'Find the median of each data set.' },
+      { pattern: /^Find\s+the\s+mode\s+of\s*:?\s*(.+)$/i, remove: /^\s*Find\s+the\s+mode\s+of\s*:?\s*/i, instruction: 'Find the mode of each data set.' },
+      { pattern: /^Find\s+the\s+range\s+of\s*:?\s*(.+)$/i, remove: /^\s*Find\s+the\s+range\s+of\s*:?\s*/i, instruction: 'Find the range of each data set.' },
+      { pattern: /^Find\s+the\s+mean,\s*median,\s+and\s+mode\s+for\s*:?\s*(.+)$/i, remove: /^\s*Find\s+the\s+mean,\s*median,\s+and\s+mode\s+for\s*:?\s*/i, instruction: 'Find the mean, median, and mode for each data set.' },
+      { pattern: /^Find\s+the\s+area\s+and\s+perimeter\s+of\s+(.+)$/i, remove: /^\s*Find\s+the\s+area\s+and\s+perimeter\s+of\s+/i, instruction: 'Find the area and perimeter of each shape.' },
+      { pattern: /^Find\s+the\s+area\s+of\s+(.+)$/i, remove: /^\s*Find\s+the\s+area\s+of\s+/i, instruction: 'Find the area of each shape.' },
+      { pattern: /^Find\s+the\s+volume\s+of\s+(.+)$/i, remove: /^\s*Find\s+the\s+volume\s+of\s+/i, instruction: 'Find the volume of each solid.' },
+      { pattern: /^Find\s+the\s+surface\s+area\s+of\s+(.+)$/i, remove: /^\s*Find\s+the\s+surface\s+area\s+of\s+/i, instruction: 'Find the surface area of each solid.' }
+    ];
+
+    for (const item of specialPatterns) {
+      if (!item.pattern.test(text)) continue;
+      const remainder = html.replace(item.remove, '').trim();
+      if (!remainder) continue;
+      return { instruction: item.instruction, question: remainder };
+    }
+
+    const generic = text.match(/^(simplify|solve|express|evaluate|calculate|find|write|expand|factorise|factorize|differentiate|integrate|convert|complete|state|show|prove|sketch|draw)\s*:?\s+(.+)$/i);
+    if (!generic) return null;
+
+    const verb = generic[1];
+    const remove = new RegExp(`^\\s*${verb}\\s*:?\\s*`, 'i');
+    const remainder = html.replace(remove, '').trim();
+    if (!remainder || textFromHtml(remainder).length < 2) return null;
+
+    return {
+      instruction: instructionForVerb(verb),
+      question: remainder
+    };
+  }
+
   function splitQuestionInstruction(question) {
     const html = String(question || '').trim();
     if (!html) return null;
     const parts = html.split(/<br\s*\/?>/i);
-    if (parts.length < 2) return null;
-    const instructionHtml = parts.shift().trim();
-    const instructionText = textFromHtml(instructionHtml).replace(/:$/, '').trim();
-    if (!looksLikeSharedInstruction(instructionText)) return null;
-    const remainder = parts.join('<br>').trim();
-    if (!remainder) return null;
-    return { instruction: instructionText, question: remainder };
+    if (parts.length >= 2) {
+      const instructionHtml = parts.shift().trim();
+      let instructionText = textFromHtml(instructionHtml).replace(/:$/, '').trim();
+      if (looksLikeSharedInstruction(instructionText)) {
+        const verbOnly = instructionText.match(/^(simplify|solve|express|evaluate|calculate|find|write|expand|factorise|factorize|differentiate|integrate|convert|complete|state|show|prove|sketch|draw)$/i);
+        if (verbOnly) instructionText = instructionForVerb(verbOnly[1]);
+        const remainder = parts.join('<br>').trim();
+        if (remainder) return { instruction: instructionText, question: remainder };
+      }
+    }
+    return splitLeadingInstruction(html);
   }
 
   function normalizeStep(step) {
@@ -400,10 +469,12 @@
     function lift(root = document) {
       const list = root.querySelector?.('#problem-list') || document.getElementById('problem-list');
       if (!list || list.dataset.kaizenInstructionLifted === 'true') return;
-      const equations = [...list.querySelectorAll('.equation')];
-      if (equations.length < 2) return;
+      const questionNodes = [...list.children]
+        .map((item) => item.querySelector?.('.question-text, .equation, .expression, .calculation, .sequence'))
+        .filter(Boolean);
+      if (questionNodes.length < 2) return;
 
-      const split = equations.map((equation) => splitQuestionInstruction(equation.innerHTML));
+      const split = questionNodes.map((node) => splitQuestionInstruction(node.innerHTML));
       const createdInstruction = list.parentElement?.querySelector('.kaizen-shared-instruction[data-kaizen-created="true"]');
       if (!split.every(Boolean)) {
         createdInstruction?.remove();
@@ -426,8 +497,8 @@
       instructionEl.textContent = instruction;
       instructionEl.classList.add('visible');
 
-      equations.forEach((equation, index) => {
-        equation.innerHTML = split[index].question;
+      questionNodes.forEach((node, index) => {
+        node.innerHTML = split[index].question;
       });
       list.dataset.kaizenInstructionLifted = 'true';
     }
