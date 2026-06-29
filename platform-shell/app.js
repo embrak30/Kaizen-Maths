@@ -931,13 +931,13 @@ const tools = [
     type: "Practice Generator",
     access: "Trial",
     status: "Imported",
-    description: "Generate constant acceleration equations of motion practice covering SUVAT substitution, multi-step motion, stopping distance, and vertical motion under gravity.",
-    tags: ["mechanics", "kinematics", "equations of motion", "SUVAT", "constant acceleration", "vertical motion", "gravity", "stopping distance"],
-    toolPath: "tools/equations-of-motion/index.html?v=equations-of-motion-1",
+    description: "Generate constant acceleration equations of motion practice covering SUVAT substitution, multi-step motion, braking distance, and vertical motion under gravity.",
+    tags: ["mechanics", "kinematics", "equations of motion", "SUVAT", "constant acceleration", "vertical motion", "gravity", "braking distance", "stopping distance"],
+    toolPath: "tools/equations-of-motion/index.html?v=equations-of-motion-2",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on direct use of one equation of motion after listing the known SUVAT values.",
-      "Level 2 combines equations in stopping, distance, average velocity, and two-stage motion problems.",
+      "Level 2 combines equations in braking distance, distance, average velocity, and two-stage motion problems.",
       "Level 3 covers vertical motion under gravity, including signs, greatest height, time to top, and speed at a height.",
       "Worked steps emphasise choosing a positive direction, substituting values, and keeping units clear."
     ]

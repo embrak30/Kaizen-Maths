@@ -34,16 +34,18 @@
     <div class="sidebar-header">Teacher Instructions</div>
     <div class="sidebar-content">
       <h3>Purpose</h3>
-      <p>This tool generates practice on constant acceleration equations of motion, including direct SUVAT substitution, multi-step motion, and vertical motion under gravity.</p>
+      <p>This tool generates practice on constant acceleration equations of motion, including direct SUVAT substitution, braking distance, multi-step motion, and vertical motion under gravity.</p>
       <h3>Level Guide</h3>
       <ul>
         <li><strong>Level 1:</strong> Choose and use one equation of motion when four quantities are known.</li>
-        <li><strong>Level 2:</strong> Combine equations, interpret stopping problems, and handle two-stage journeys.</li>
+        <li><strong>Level 2:</strong> Combine equations, interpret braking problems, and handle two-stage journeys.</li>
         <li><strong>Level 3:</strong> Use signs carefully for vertical motion under gravity, maximum height, time of flight, and speed at a height.</li>
       </ul>
       <h3>Teaching Notes</h3>
       <ul>
         <li>Encourage students to list the known SUVAT values before choosing an equation.</li>
+        <li>Braking distance is the distance travelled while the vehicle is slowing down after the brakes are applied.</li>
+        <li>Stopping distance is the total distance needed to stop: thinking distance + braking distance.</li>
         <li>For vertical motion, state the positive direction before substituting values.</li>
         <li>Distances are in metres, speeds in m/s, acceleration in m/s², and time in seconds unless stated otherwise.</li>
       </ul>
@@ -126,11 +128,11 @@
       },
       2: {
         title: "Level 2: Multi-Step Motion",
-        description: "Use equations of motion in stopping, distance, and two-stage motion problems.",
+        description: "Use equations of motion in braking, distance, and two-stage motion problems.",
         instruction: "Decide which quantities are known, choose the equation that avoids unnecessary unknowns, and check units.",
         className: "multistep",
         options: [
-          ["stopping_distance", "Stopping distance"],
+          ["stopping_distance", "Braking distance"],
           ["speed_from_distance", "Speed from distance"],
           ["two_stage_motion", "Two-stage journey"],
           ["average_velocity", "Using average velocity"],
@@ -158,7 +160,7 @@
       find_a: "Find acceleration",
       find_t: "Find time",
       mixed_basics: "Mixed SUVAT basics",
-      stopping_distance: "Stopping distance",
+      stopping_distance: "Braking distance",
       speed_from_distance: "Speed from distance",
       two_stage_motion: "Two-stage journey",
       average_velocity: "Using average velocity",
@@ -304,7 +306,7 @@
       const s = (u * u) / (2 * decel);
       return {
         badge: "multistep",
-        equation: "A car moving at " + u + " m/s brakes with constant deceleration " + decel + " m/s² until it stops. Find the stopping distance.",
+        equation: "A car moving at " + u + " m/s brakes with constant deceleration " + decel + " m/s² until it stops. Find the braking distance.",
         answer: "s = " + fmt(s) + " m",
         steps: [
           step('<span class="step-indicator">Step 1</span> Choose a positive direction and list the known values.'),
@@ -316,7 +318,8 @@
           calc("0 = " + (u * u) + " - " + (2 * decel) + "s"),
           calc((2 * decel) + "s = " + (u * u)),
           calc("s = " + (u * u) + " ÷ " + (2 * decel) + " = " + fmt(s)),
-          answerLine("The stopping distance is " + fmt(s) + " m.")
+          step('<span class="step-indicator">Note</span> This is the braking distance. Stopping distance would also include the thinking distance.'),
+          answerLine("The braking distance is " + fmt(s) + " m.")
         ]
       };
     }
