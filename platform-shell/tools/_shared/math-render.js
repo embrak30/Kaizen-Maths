@@ -14,6 +14,7 @@
     '.problem-set-header',
     '.solution-steps',
     '.system-line',
+    '.question-text',
     '.step'
   ].join(',');
 

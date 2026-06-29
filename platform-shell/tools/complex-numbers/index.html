@@ -88,7 +88,7 @@
       <h3>Teaching Focus</h3>
       <ul>
         <li>Keep real and imaginary parts separate when simplifying.</li>
-        <li>Use i^2 = -1 every time it appears in expansion.</li>
+        <li>Use i<sup>2</sup> = -1 every time it appears in expansion.</li>
         <li>For division, multiply numerator and denominator by the conjugate of the denominator.</li>
         <li>For polar form, multiplication adds arguments and division subtracts arguments.</li>
         <li>For loci, translate the complex statement into coordinates on the Argand diagram.</li>
@@ -215,7 +215,14 @@
     function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
     function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
     function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
-    function stripTags(html){return String(html).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function stripTags(html){
+      return String(html)
+        .replace(/<sup>(.*?)<\/sup>/gi,'^$1')
+        .replace(/<sub>(.*?)<\/sub>/gi,'_$1')
+        .replace(/<[^>]*>/g,' ')
+        .replace(/\s+/g,' ')
+        .trim();
+    }
     function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
     function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
     function plainFrac(n,d){return `(${n}) / (${d})`}
@@ -296,8 +303,13 @@
       return `${value.toFixed(3)} rad`;
     }
     function principalAngle(a,b){return Math.atan2(b,a)}
-    function cis(r,theta){return `${r}cis(${theta})`}
+    function cis(r,theta){return `${r} cis(${theta})`}
     function cisFull(r,theta){return `${r}(cos ${theta} + i sin ${theta})`}
+    function power(base,exponent){
+      const text=String(base);
+      const formatted=/^-/.test(text)&&!text.startsWith('(')?`(${text})`:text;
+      return `${formatted}<sup>${exponent}</sup>`;
+    }
     function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question',instruction=typeInstructions[currentType]||'Answer each question.',plainQuestion=''){
       return {prompt,question:plainQuestion||stripTags(prompt),answer,steps,typeLabel,instruction,instructionText:instruction};
     }
@@ -328,8 +340,8 @@
       const imag=z.a*w.b+z.b*w.a;
       return problem(`Expand and simplify ${formatComplexParens(z.a,z.b)}${formatComplexParens(w.a,w.b)}.`,formatComplex(real,imag),[
         `Multiply every term in the first bracket by every term in the second bracket.`,
-        `${formatComplexParens(z.a,z.b)}${formatComplexParens(w.a,w.b)} = ${z.a*w.a} ${signedTerm(z.a*w.b,'i')} ${signedTerm(z.b*w.a,'i')} ${signedTerm(z.b*w.b,'i^2')}.`,
-        `Use i^2 = -1, so ${z.b*w.b}i^2 = ${-z.b*w.b}.`,
+        `${formatComplexParens(z.a,z.b)}${formatComplexParens(w.a,w.b)} = ${z.a*w.a} ${signedTerm(z.a*w.b,'i')} ${signedTerm(z.b*w.a,'i')} ${signedTerm(z.b*w.b,power('i',2))}.`,
+        `Use ${power('i',2)} = -1, so ${z.b*w.b}${power('i',2)} = ${-z.b*w.b}.`,
         `Real part = ${z.a*w.a} ${signed(-z.b*w.b)} = ${real}.`,
         `Imaginary part = ${z.a*w.b} ${signed(z.b*w.a)} = ${imag}.`,
         `Therefore ${formatComplexParens(z.a,z.b)}${formatComplexParens(w.a,w.b)} = ${formatComplex(real,imag)}.`
@@ -348,7 +360,7 @@
         `Multiply numerator and denominator by the conjugate of the denominator.`,
         `The conjugate of ${formatComplex(w.a,w.b)} is ${formatComplex(w.a,-w.b)}.`,
         `${frac(formatComplex(z.a,z.b),formatComplex(w.a,w.b))} = ${frac(`${formatComplexParens(z.a,z.b)}${formatComplexParens(w.a,-w.b)}`,`${formatComplexParens(w.a,w.b)}${formatComplexParens(w.a,-w.b)}`)}.`,
-        `Denominator = ${w.a}^2 + ${w.b}^2 = ${den}.`,
+        `Denominator = ${power(w.a,2)} + ${power(w.b,2)} = ${den}.`,
         `Numerator = ${formatComplex(real,imag)}.`,
         `So the quotient is ${frac(formatComplex(real,imag),den)} = ${answer}.`
       ],typeDisplayNames[currentType]||'Question',typeInstructions[currentType]||'Answer each question.',`Write ${plainFrac(formatComplex(z.a,z.b),formatComplex(w.a,w.b))} in the form a + bi.`);
@@ -361,8 +373,8 @@
       return problem(`For z = ${formatComplex(z.a,z.b)}, find z* and |z|.`, `z* = ${formatComplex(z.a,-z.b)}, |z| = ${mod}`, [
         `The conjugate changes the sign of the imaginary part.`,
         `z* = ${formatComplex(z.a,-z.b)}.`,
-        `Use |z| = √(a^2 + b^2).`,
-        `|z| = √(${z.a}^2 + ${z.b}^2) = √${modSq}.`,
+        `Use |z| = √(${power('a',2)} + ${power('b',2)}).`,
+        `|z| = √(${power(z.a,2)} + ${power(z.b,2)}) = √${modSq}.`,
         `Therefore |z| = ${mod}.`
       ]);
     }
@@ -373,8 +385,8 @@
       const mod=sqrtText(z.a*z.a+z.b*z.b);
       const theta=principalAngle(z.a,z.b);
       return problem(`For z = ${formatComplex(z.a,z.b)}, find |z| and arg(z) to 3 decimal places.`,`|z| = ${mod}, arg(z) = ${theta.toFixed(3)} rad`,[
-        `Use |z| = √(a^2 + b^2).`,
-        `|z| = √(${z.a}^2 + ${z.b}^2) = ${mod}.`,
+        `Use |z| = √(${power('a',2)} + ${power('b',2)}).`,
+        `|z| = √(${power(z.a,2)} + ${power(z.b,2)}) = ${mod}.`,
         `Use tan θ = ${frac(z.b,z.a)} and choose the correct quadrant for (${z.a}, ${z.b}).`,
         `The point is in ${z.a>=0&&z.b>=0?'quadrant I':z.a<0&&z.b>=0?'quadrant II':z.a<0&&z.b<0?'quadrant III':'quadrant IV'}.`,
         `Principal argument θ = atan2(${z.b}, ${z.a}) = ${theta.toFixed(3)} rad.`
@@ -388,7 +400,7 @@
       const theta=principalAngle(z.a,z.b);
       return problem(`Write z = ${formatComplex(z.a,z.b)} in polar form r(cos θ + i sin θ), with θ to 3 decimal places.`,`${r}(cos ${theta.toFixed(3)} + i sin ${theta.toFixed(3)})`,[
         `Find the modulus first.`,
-        `r = |z| = √(${z.a}^2 + ${z.b}^2) = ${r}.`,
+        `r = |z| = √(${power(z.a,2)} + ${power(z.b,2)}) = ${r}.`,
         `Find the principal argument using the point (${z.a}, ${z.b}) on the Argand diagram.`,
         `θ = atan2(${z.b}, ${z.a}) = ${theta.toFixed(3)} rad.`,
         `Therefore z = ${r}(cos ${theta.toFixed(3)} + i sin ${theta.toFixed(3)}).`
@@ -413,11 +425,11 @@
       const r=multiply?r1*r2:simplifyFraction(r1,r2);
       const thetaValue=multiply?t1.value+t2.value:t1.value-t2.value;
       const theta=angleText(thetaValue);
-      return problem(`Simplify ${cis(r1,t1.label)} ${multiply?'×':'÷'} ${cis(r2,t2.label)}.`,`${r}cis(${theta})`,[
+      return problem(`Simplify ${cis(r1,t1.label)} ${multiply?'×':'÷'} ${cis(r2,t2.label)}.`,`${r} cis(${theta})`,[
         `In polar form, ${multiply?'multiply moduli and add arguments.':'divide moduli and subtract arguments.'}`,
         `Modulus = ${multiply?`${r1} × ${r2}`:`${r1} ÷ ${r2}`} = ${r}.`,
         `Argument = ${t1.label} ${multiply?'+':'-'} ${t2.label} = ${theta}.`,
-        `Therefore the result is ${r}cis(${theta}).`
+        `Therefore the result is ${r} cis(${theta}).`
       ]);
     }
 
@@ -427,10 +439,10 @@
       const n=random(3,6);
       const newR=Math.pow(r,n);
       const newTheta=angleText(theta.value*n);
-      return problem(`Use De Moivre's theorem to find [${cisFull(r,theta.label)}]^${n}.`,`${newR}(cos ${newTheta} + i sin ${newTheta})`,[
-        `De Moivre's theorem: [r(cos θ + i sin θ)]^n = r^n(cos nθ + i sin nθ).`,
+      return problem(`Use De Moivre's theorem to find [${cisFull(r,theta.label)}]<sup>${n}</sup>.`,`${newR}(cos ${newTheta} + i sin ${newTheta})`,[
+        `De Moivre's theorem: [r(cos θ + i sin θ)]<sup>n</sup> = ${power('r','n')}(cos nθ + i sin nθ).`,
         `Here r = ${r}, θ = ${theta.label}, and n = ${n}.`,
-        `r^n = ${r}^${n} = ${newR}.`,
+        `${power('r','n')} = ${power(r,n)} = ${newR}.`,
         `nθ = ${n} × ${theta.label} = ${newTheta}.`,
         `Therefore the value is ${newR}(cos ${newTheta} + i sin ${newTheta}).`
       ]);
@@ -443,13 +455,14 @@
       const theta=choice([{label:'0',value:0},{label:'π/2',value:Math.PI/2},{label:'π',value:Math.PI}]);
       const roots=[];
       for(let k=0;k<n;k++){
-        roots.push(`${rootR}cis(${angleText((theta.value+2*k*Math.PI)/n)})`);
+        roots.push(`${rootR} cis(${angleText((theta.value+2*k*Math.PI)/n)})`);
       }
-      return problem(`Find all solutions of z^${n} = ${cis(R,theta.label)}.`,roots.join(', '),[
-        `Write z = rcis(α). Then z^${n} = r^${n}cis(${n}α).`,
-        `Compare moduli: r^${n} = ${R}, so r = ${rootR}.`,
+      return problem(`Find all solutions of ${power('z',n)} = ${cis(R,theta.label)}.`,roots.join(', '),[
+        `Write z = r cis(α). Then ${power('z',n)} = ${power('r',n)} cis(${n}α).`,
+        `Compare moduli: ${power('r',n)} = ${R}, so r = ${rootR}.`,
         `Compare arguments: ${n}α = ${theta.label} + 2kπ.`,
         `So α = (${theta.label} + 2kπ)/${n}, for k = 0, 1, ..., ${n-1}.`,
+        `Substitute each value of k into α = (${theta.label} + 2kπ)/${n}.`,
         `The roots are ${roots.join(', ')}.`
       ]);
     }
@@ -458,10 +471,10 @@
       const p=random(-5,5),q=random(1,6);
       const b=-2*p,c=p*p+q*q;
       const disc=b*b-4*c;
-      return problem(`Solve z^2 ${formatTerm(b,'z')} ${formatTerm(c)} = 0.`, `z = ${formatComplex(p,q)} or z = ${formatComplex(p,-q)}`, [
-        `Use the quadratic formula z = ${frac('-b ± √(b^2 - 4ac)','2a')}.`,
+      return problem(`Solve ${power('z',2)} ${formatTerm(b,'z')} ${formatTerm(c)} = 0.`, `z = ${formatComplex(p,q)} or z = ${formatComplex(p,-q)}`, [
+        `Use the quadratic formula z = ${frac(`-b ± √(${power('b',2)} - 4ac)`,'2a')}.`,
         `Here a = 1, b = ${b}, and c = ${c}.`,
-        `Discriminant = b^2 - 4ac = ${b}^2 - 4(1)(${c}) = ${disc}.`,
+        `Discriminant = ${power('b',2)} - 4ac = ${power(b,2)} - 4(1)(${c}) = ${disc}.`,
         `√${disc} = ${q*2}i because ${disc} = -${4*q*q}.`,
         `z = ${frac(`${-b} ± ${2*q}i`,'2')} = ${formatComplex(p,q)} or ${formatComplex(p,-q)}.`
       ]);
@@ -478,7 +491,7 @@
         `Divide both sides by ${formatComplex(multiplier.a,multiplier.b)}.`,
         `z = ${frac(formatComplex(constant.a,constant.b),formatComplex(multiplier.a,multiplier.b))}.`,
         `Multiply numerator and denominator by the conjugate ${formatComplex(multiplier.a,-multiplier.b)}.`,
-        `Denominator = ${multiplier.a}^2 + ${multiplier.b}^2 = ${multiplier.a*multiplier.a+multiplier.b*multiplier.b}.`,
+        `Denominator = ${power(multiplier.a,2)} + ${power(multiplier.b,2)} = ${multiplier.a*multiplier.a+multiplier.b*multiplier.b}.`,
         `This simplifies to z = ${formatComplex(root.a,root.b)}.`
       ]);
     }
