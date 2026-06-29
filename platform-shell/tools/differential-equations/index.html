@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Differential Equations</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f4f7fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#23416f;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#23416f;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #1aa37a;color:#23416f;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1220px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#23416f;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e8eef8}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e8eef8;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}.tab.active{background:#fff;color:#23416f;border-bottom-color:#23416f}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d9deef;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#23416f;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:390px;padding:8px 10px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#23416f;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#23416f;color:#23416f}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#23416f}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#23416f;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #c8d2ff;border-radius:6px;background:#f0f4ff;color:#23416f;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px;border-left:4px solid #23416f;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#23416f;color:#fff;font-weight:850}.problem-type{display:inline-flex;margin-bottom:5px;padding:5px 9px;border-radius:999px;background:#dff3ea;color:#1d6f55;font-size:.76em;font-weight:850}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.22em;font-weight:650;line-height:1.42;color:#172033;overflow-wrap:anywhere}.problem-answer{display:none;white-space:normal;max-width:440px;padding:7px 11px;border-radius:10px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #23416f;border-radius:6px;background:#f1f5ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#23416f;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#23416f}.step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#5b21b6;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}
+    .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.question-text{font-size:1.08em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Differential Equations</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool generates structured practice for separable differential equations, first-order linear differential equations, second-order constant coefficient equations, and modelling problems.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> First-order separable equations, including initial conditions.</li>
+        <li><strong>Level 2:</strong> First-order linear equations using integrating factors.</li>
+        <li><strong>Level 3:</strong> Second-order constant coefficient equations using the auxiliary equation.</li>
+        <li><strong>Level 4:</strong> Modelling with growth, decay, cooling, and mixing equations.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Separate variables before integrating.</li>
+        <li>Use an integrating factor for equations in the form y′ + P(x)y = Q(x).</li>
+        <li>Form the auxiliary equation for second-order linear equations.</li>
+        <li>Apply initial or boundary conditions only after the general solution has been found.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Differential Equations</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Separable</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: First-Order Linear</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Second-Order</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Modelling</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: First-Order Separable</h3>
+        <p id="level-description">Separate variables, integrate both sides, and apply initial conditions.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: First-Order Separable',description:'Separate variables, integrate both sides, and apply initial conditions.',types:['separable_power','separable_initial','separable_exponential','separable_mixed']},
+      2:{title:'Level 2: First-Order Linear',description:'Solve first-order linear equations using integrating factors.',types:['linear_constant','linear_initial','linear_polynomial_rhs','linear_exponential_rhs','linear_mixed']},
+      3:{title:'Level 3: Second-Order Constant Coefficient',description:'Use the auxiliary equation to solve homogeneous and simple non-homogeneous equations.',types:['second_distinct','second_repeated','second_complex','second_forced','second_mixed']},
+      4:{title:'Level 4: Modelling Problems',description:'Form and solve differential equations from contextual information.',types:['model_growth_decay','model_cooling','model_mixing','model_condition','model_mixed']}
+    };
+
+    const typeDisplayNames={
+      separable_power:'Type 1: Separable equations with powers of x',
+      separable_initial:'Type 2: Separable equations with initial conditions',
+      separable_exponential:'Type 3: Exponential growth or decay equations',
+      separable_mixed:'Type 4: Mixed separable equations',
+      linear_constant:'Type 1: First-order linear with constant terms',
+      linear_initial:'Type 2: First-order linear with initial conditions',
+      linear_polynomial_rhs:'Type 3: First-order linear with polynomial right side',
+      linear_exponential_rhs:'Type 4: First-order linear with exponential right side',
+      linear_mixed:'Type 5: Mixed first-order linear equations',
+      second_distinct:'Type 1: Distinct real auxiliary roots',
+      second_repeated:'Type 2: Repeated auxiliary roots',
+      second_complex:'Type 3: Complex auxiliary roots',
+      second_forced:'Type 4: Simple non-homogeneous equations',
+      second_mixed:'Type 5: Mixed second-order equations',
+      model_growth_decay:'Type 1: Growth and decay models',
+      model_cooling:'Type 2: Newton cooling models',
+      model_mixing:'Type 3: Mixing models',
+      model_condition:'Type 4: Models with a second condition',
+      model_mixed:'Type 5: Mixed modelling problems'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      separable_power:'Solve each separable differential equation.',
+      separable_initial:'Solve each separable differential equation and use the initial condition.',
+      separable_exponential:'Solve each exponential growth or decay differential equation.',
+      separable_mixed:'Answer each mixed separable differential equations question.',
+      linear_constant:'Solve each first-order linear differential equation using an integrating factor.',
+      linear_initial:'Solve each first-order linear differential equation and use the initial condition.',
+      linear_polynomial_rhs:'Solve each first-order linear differential equation using an integrating factor.',
+      linear_exponential_rhs:'Solve each first-order linear differential equation using an integrating factor.',
+      linear_mixed:'Answer each mixed first-order linear differential equations question.',
+      second_distinct:'Solve each second-order differential equation with distinct real auxiliary roots.',
+      second_repeated:'Solve each second-order differential equation with repeated auxiliary roots.',
+      second_complex:'Solve each second-order differential equation with complex auxiliary roots.',
+      second_forced:'Solve each non-homogeneous second-order differential equation.',
+      second_mixed:'Answer each mixed second-order constant coefficient question.',
+      model_growth_decay:'Form and solve each growth or decay model.',
+      model_cooling:'Form and solve each Newton cooling model.',
+      model_mixing:'Form and solve each mixing model.',
+      model_condition:'Use the extra condition to find the model parameter.',
+      model_mixed:'Answer each mixed differential equations modelling question.'
+    };
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function sup(v){return `<sup>${v}</sup>`}
+    function sub(v){return `<sub>${v}</sub>`}
+    function power(base,exp){return `${base}${sup(exp)}`}
+    function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function dydx(){return frac('dy','dx')}
+    function stripTags(html){return String(html).replace(/<sup>(.*?)<\/sup>/gi,'^$1').replace(/<sub>(.*?)<\/sub>/gi,'_$1').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function simpleFrac(n,d){if(d<0){n=-n;d=-d}const g=gcd(n,d);n/=g;d/=g;if(d===1)return String(n);return frac(n,d)}
+    function signedNumber(n){return n<0?`− ${Math.abs(n)}`:`+ ${n}`}
+    function ePow(exp){return `e${sup(exp)}`}
+    function ln(value){return `ln ${value}`}
+    function decimal(value,places=2){return Number(value).toFixed(places)}
+    function coeffBody(coef,body){
+      if(coef===0)return '';
+      const abs=Math.abs(coef);
+      const prefix=abs===1?body:`${abs}${body}`;
+      return coef<0?`−${prefix}`:prefix;
+    }
+    function joinTerms(terms){
+      const filtered=terms.filter(t=>t.coef!==0);
+      if(filtered.length===0)return '0';
+      return filtered.map((t,index)=>{
+        const abs=Math.abs(t.coef);
+        const value=t.constant?String(abs):(abs===1?t.body:`${abs}${t.body}`);
+        if(index===0)return t.coef<0?`−${value}`:value;
+        return `${t.coef<0?'−':'+'} ${value}`;
+      }).join(' ');
+    }
+    function monomial(coef,body){
+      if(coef===0)return '0';
+      if(body==='')return String(coef);
+      if(coef===1)return body;
+      if(coef===-1)return `−${body}`;
+      return `${coef}${body}`;
+    }
+    function xExp(coef){
+      if(coef===1)return 'x';
+      if(coef===-1)return '−x';
+      return `${coef}x`;
+    }
+    function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question',instruction=typeInstructions[currentType]||'Answer each question.'){
+      return {prompt,question:stripTags(prompt),answer,steps,typeLabel,instruction,instructionText:instruction};
+    }
+
+    function genSeparablePower(){
+      const a=choice([2,3,4,5,6]);
+      const n=choice([1,2,3,4]);
+      const xPower=n===1?'x':power('x',n);
+      const nextPower=power('x',n+1);
+      const coefficient=simpleFrac(2*a,n+1);
+      const coefficientText=stripTags(coefficient)==='1'?'':coefficient;
+      const prompt=`${dydx()} = ${frac(`${a}${xPower}`,'y')}`;
+      const answer=`y${sup(2)} = ${coefficientText}${nextPower} + C`;
+      const steps=[
+        `Multiply both sides by y and by dx.`,
+        `y dy = ${a}${xPower} dx`,
+        `Integrate both sides.`,
+        `∫ y dy = ∫ ${a}${xPower} dx`,
+        `${frac(`y${sup(2)}`,'2')} = ${frac(`${a}${nextPower}`,n+1)} + C`,
+        `Multiply through by 2.`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genSeparableInitial(){
+      const k=choice([1,2,3,4,5,6]);
+      const y0=choice([2,3,4,5]);
+      const c=y0*y0;
+      const prompt=`${dydx()} = ${frac(`${k===1?'':k}x`,'y')}, with y = ${y0} when x = 0`;
+      const answer=`y${sup(2)} = ${k===1?'':k}x${sup(2)} + ${c}`;
+      const steps=[
+        `Multiply both sides by y and by dx.`,
+        `y dy = ${k===1?'':k}x dx`,
+        `Integrate both sides.`,
+        `${frac(`y${sup(2)}`,'2')} = ${frac(`${k===1?'':k}x${sup(2)}`,'2')} + C`,
+        `Multiply through by 2.`,
+        `y${sup(2)} = ${k===1?'':k}x${sup(2)} + C`,
+        `Use y = ${y0} when x = 0.`,
+        `${y0}${sup(2)} = ${k===1?'':k}(0)${sup(2)} + C`,
+        `C = ${c}`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genSeparableExponential(){
+      const k=choice([-4,-3,-2,2,3,4]);
+      const y0=choice([5,8,10,12,20]);
+      const prompt=`${dydx()} = ${k}y, with y = ${y0} when x = 0`;
+      const answer=`y = ${y0}${ePow(`${k}x`)}`;
+      const steps=[
+        `Separate the variables.`,
+        `${frac('1','y')} dy = ${k} dx`,
+        `Integrate both sides.`,
+        `∫ ${frac('1','y')} dy = ∫ ${k} dx`,
+        `ln |y| = ${k}x + C`,
+        `Write the solution in exponential form.`,
+        `y = A${ePow(`${k}x`)}`,
+        `Use y = ${y0} when x = 0.`,
+        `${y0} = A${ePow('0')}`,
+        `A = ${y0}`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genLinearConstant(){
+      const a=choice([2,3,4,5]);
+      const equilibrium=choice([2,3,4,5,6]);
+      const b=a*equilibrium;
+      const prompt=`${dydx()} + ${a}y = ${b}`;
+      const answer=`y = ${equilibrium} + C${ePow(`−${a}x`)}`;
+      const steps=[
+        `This is in the form y′ + P(x)y = Q(x), where P(x) = ${a}.`,
+        `Integrating factor = ${ePow(`∫ ${a} dx`)} = ${ePow(`${a}x`)}`,
+        `Multiply the whole equation by ${ePow(`${a}x`)}.`,
+        `${ePow(`${a}x`)}${dydx()} + ${a}${ePow(`${a}x`)}y = ${b}${ePow(`${a}x`)}`,
+        `The left side is the derivative of y${ePow(`${a}x`)}.`,
+        `${frac('d','dx')}(y${ePow(`${a}x`)}) = ${b}${ePow(`${a}x`)}`,
+        `Integrate both sides.`,
+        `y${ePow(`${a}x`)} = ${equilibrium}${ePow(`${a}x`)} + C`,
+        `Divide by ${ePow(`${a}x`)}.`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genLinearInitial(){
+      const a=choice([2,3,4]);
+      const equilibrium=choice([2,4,5,6]);
+      const b=a*equilibrium;
+      const y0=choice([1,3,7,9]);
+      const c=y0-equilibrium;
+      const cPart=c===1?ePow(`−${a}x`):c===-1?`−${ePow(`−${a}x`)}`:`${c}${ePow(`−${a}x`)}`;
+      const prompt=`${dydx()} + ${a}y = ${b}, with y = ${y0} when x = 0`;
+      const answer=`y = ${equilibrium} ${c<0?'−':'+'} ${Math.abs(c)===1?ePow(`−${a}x`):`${Math.abs(c)}${ePow(`−${a}x`)}`}`;
+      const steps=[
+        `Integrating factor = ${ePow(`∫ ${a} dx`)} = ${ePow(`${a}x`)}`,
+        `Multiply by ${ePow(`${a}x`)} and combine the left side.`,
+        `${frac('d','dx')}(y${ePow(`${a}x`)}) = ${b}${ePow(`${a}x`)}`,
+        `Integrate both sides.`,
+        `y${ePow(`${a}x`)} = ${equilibrium}${ePow(`${a}x`)} + C`,
+        `Divide by ${ePow(`${a}x`)}.`,
+        `y = ${equilibrium} + C${ePow(`−${a}x`)}`,
+        `Use y = ${y0} when x = 0.`,
+        `${y0} = ${equilibrium} + C${ePow('0')}`,
+        `C = ${c}`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genLinearPolynomial(){
+      const m=choice([2,3,4,5]);
+      const c=choice([1,2,3,4,6].filter(value=>value!==m));
+      const constant=c-m;
+      const prompt=`${dydx()} + y = ${m}x + ${c}`;
+      const answer=`y = ${m}x ${constant<0?'−':'+'} ${Math.abs(constant)} + C${ePow('−x')}`;
+      const steps=[
+        `Integrating factor = ${ePow('∫ 1 dx')} = ${ePow('x')}`,
+        `Multiply by ${ePow('x')}.`,
+        `${ePow('x')}${dydx()} + ${ePow('x')}y = (${m}x + ${c})${ePow('x')}`,
+        `The left side is the derivative of y${ePow('x')}.`,
+        `${frac('d','dx')}(y${ePow('x')}) = (${m}x + ${c})${ePow('x')}`,
+        `Integrate the right side.`,
+        `∫ (${m}x + ${c})${ePow('x')} dx = ${ePow('x')}(${m}x ${constant<0?'−':'+'} ${Math.abs(constant)}) + C`,
+        `y${ePow('x')} = ${ePow('x')}(${m}x ${constant<0?'−':'+'} ${Math.abs(constant)}) + C`,
+        `Divide by ${ePow('x')}.`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genLinearExponential(){
+      const a=choice([1,2,3]);
+      const k=choice([4,5,6]);
+      const denom=k-a;
+      const aTerm=a===1?'y':`${a}y`;
+      const particularCoefficient=simpleFrac(1,denom);
+      const particular=stripTags(particularCoefficient)==='1'?ePow(xExp(k)):`${particularCoefficient}${ePow(xExp(k))}`;
+      const prompt=`${dydx()} − ${aTerm} = ${ePow(xExp(k))}`;
+      const answer=`y = ${particular} + C${ePow(xExp(a))}`;
+      const steps=[
+        `Write the equation as y′ + P(x)y = Q(x), so P(x) = −${a}.`,
+        `Integrating factor = ${ePow(`∫ −${a} dx`)} = ${ePow(xExp(-a))}`,
+        `Multiply by ${ePow(xExp(-a))}.`,
+        `${frac('d','dx')}(y${ePow(xExp(-a))}) = ${ePow(xExp(k))}${ePow(xExp(-a))}`,
+        `Simplify the right side.`,
+        `${frac('d','dx')}(y${ePow(xExp(-a))}) = ${ePow(xExp(denom))}`,
+        `Integrate both sides.`,
+        `y${ePow(xExp(-a))} = ${stripTags(particularCoefficient)==='1'?ePow(xExp(denom)):`${particularCoefficient}${ePow(xExp(denom))}`} + C`,
+        `Multiply by ${ePow(xExp(a))}.`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function secondOrderEquation(b,c){
+      return `${joinTerms([{coef:1,body:'y″'},{coef:b,body:'y′'},{coef:c,body:'y'}])} = 0`;
+    }
+
+    function genSecondDistinct(){
+      const [r1,r2]=choice([[1,2],[2,3],[-1,2],[-2,3],[1,4],[-3,-1]]);
+      const b=-(r1+r2), c=r1*r2;
+      const prompt=secondOrderEquation(b,c);
+      const answer=`y = A${ePow(xExp(r1))} + B${ePow(xExp(r2))}`;
+      const steps=[
+        `Form the auxiliary equation by replacing y″ with m${sup(2)}, y′ with m, and y with 1.`,
+        `${joinTerms([{coef:1,body:`m${sup(2)}`},{coef:b,body:'m'},{coef:c,constant:true}])} = 0`,
+        `Factorise the auxiliary equation.`,
+        `(m ${r1<0?'+':'−'} ${Math.abs(r1)})(m ${r2<0?'+':'−'} ${Math.abs(r2)}) = 0`,
+        `m = ${r1} or m = ${r2}`,
+        `For distinct real roots, use y = A${ePow('m₁x')} + B${ePow('m₂x')}.`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genSecondRepeated(){
+      const r=choice([-3,-2,-1,1,2,3]);
+      const b=-2*r, c=r*r;
+      const prompt=secondOrderEquation(b,c);
+      const answer=`y = (A + Bx)${ePow(xExp(r))}`;
+      const steps=[
+        `Form the auxiliary equation.`,
+        `${joinTerms([{coef:1,body:`m${sup(2)}`},{coef:b,body:'m'},{coef:c,constant:true}])} = 0`,
+        `Factorise the auxiliary equation.`,
+        `(m ${r<0?'+':'−'} ${Math.abs(r)})${sup(2)} = 0`,
+        `m = ${r}, repeated root`,
+        `For a repeated root, use y = (A + Bx)${ePow('mx')}.`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genSecondComplex(){
+      const alpha=choice([-1,0,1,2]);
+      const beta=choice([2,3,4]);
+      const b=-2*alpha, c=alpha*alpha+beta*beta;
+      const prompt=secondOrderEquation(b,c);
+      const expPart=alpha===0?'':`${ePow(xExp(alpha))}`;
+      const answer=`y = ${expPart}${alpha===0?'':'('}A cos ${beta}x + B sin ${beta}x${alpha===0?'':')'}`;
+      const steps=[
+        `Form the auxiliary equation.`,
+        `${joinTerms([{coef:1,body:`m${sup(2)}`},{coef:b,body:'m'},{coef:c,constant:true}])} = 0`,
+        `Solve the auxiliary equation.`,
+        `m = ${alpha} ± ${beta}i`,
+        `For roots α ± βi, use y = ${ePow('αx')}(A cos βx + B sin βx).`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genSecondForced(){
+      const beta=choice([2,3,4]);
+      const eq=choice([2,3,5]);
+      const c=beta*beta;
+      const forcing=c*eq;
+      const prompt=`y″ + ${c}y = ${forcing}`;
+      const answer=`y = A cos ${beta}x + B sin ${beta}x + ${eq}`;
+      const steps=[
+        `First solve the complementary equation y″ + ${c}y = 0.`,
+        `Auxiliary equation: m${sup(2)} + ${c} = 0`,
+        `m = ±${beta}i`,
+        `Complementary function: y${sub('c')} = A cos ${beta}x + B sin ${beta}x`,
+        `Because the right side is constant, try a constant particular solution y${sub('p')} = k.`,
+        `0 + ${c}k = ${forcing}`,
+        `k = ${eq}`,
+        `Add the complementary function and particular integral.`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genModelGrowthDecay(){
+      const p0=choice([200,300,500,800]);
+      const rate=choice([0.03,0.04,0.05,0.08]);
+      const t=choice([5,8,10,12]);
+      const value=p0*Math.exp(rate*t);
+      const prompt=`A population P changes at a rate proportional to P. P(0) = ${p0} and ${frac('dP','dt')} = ${rate}P. Find P(t), then find P(${t}).`;
+      const answer=`P(t) = ${p0}${ePow(`${rate}t`)}, so P(${t}) ≈ ${decimal(value,1)}`;
+      const steps=[
+        `Separate the variables.`,
+        `${frac('1','P')} dP = ${rate} dt`,
+        `Integrate both sides.`,
+        `ln P = ${rate}t + C`,
+        `Write in exponential form.`,
+        `P = A${ePow(`${rate}t`)}`,
+        `Use P(0) = ${p0}.`,
+        `${p0} = A${ePow('0')}`,
+        `A = ${p0}`,
+        `Substitute t = ${t}.`,
+        `P(${t}) = ${p0}${ePow(`${decimal(rate*t,2)}`)} ≈ ${decimal(value,1)}`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genModelCooling(){
+      const ambient=choice([18,20,22]);
+      const initial=choice([80,90,100]);
+      const k=choice([0.05,0.08,0.1]);
+      const t=choice([10,15,20]);
+      const temp=ambient+(initial-ambient)*Math.exp(-k*t);
+      const prompt=`An object cools in a room at ${ambient}°C. Its temperature T satisfies ${frac('dT','dt')} = −${k}(T − ${ambient}) and T(0) = ${initial}. Find T(t), then find T(${t}).`;
+      const answer=`T(t) = ${ambient} + ${initial-ambient}${ePow(`−${k}t`)}, so T(${t}) ≈ ${decimal(temp,1)}°C`;
+      const steps=[
+        `Separate the variables.`,
+        `${frac('1',`T − ${ambient}`)} dT = −${k} dt`,
+        `Integrate both sides.`,
+        `ln |T − ${ambient}| = −${k}t + C`,
+        `Write in exponential form.`,
+        `T − ${ambient} = A${ePow(`−${k}t`)}`,
+        `Use T(0) = ${initial}.`,
+        `${initial} − ${ambient} = A${ePow('0')}`,
+        `A = ${initial-ambient}`,
+        `T(t) = ${ambient} + ${initial-ambient}${ePow(`−${k}t`)}`,
+        `T(${t}) = ${ambient} + ${initial-ambient}${ePow(`−${decimal(k*t,2)}`)} ≈ ${decimal(temp,1)}°C`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genModelMixing(){
+      const volume=choice([80,100,120]);
+      const rate=choice([4,5,6]);
+      const concentration=choice([2,3]);
+      const initial=choice([0,20,40]);
+      const equilibrium=volume*concentration;
+      const ratio=simpleFrac(rate,volume);
+      const exponent=stripTags(ratio)==='1'?`−t`:`−${ratio}t`;
+      const prompt=`A tank contains ${volume} litres of liquid. Brine containing ${concentration} g/L of salt enters and leaves at ${rate} L/min. If S(0) = ${initial}, form and solve the model for S grams of salt.`;
+      const answer=`S = ${equilibrium} ${initial-equilibrium<0?'−':'+'} ${Math.abs(initial-equilibrium)}${ePow(exponent)}`;
+      const steps=[
+        `Rate in = ${rate} × ${concentration} = ${rate*concentration} g/min.`,
+        `Rate out = ${rate} × ${frac('S',volume)} = ${frac(`${rate}S`,volume)} g/min.`,
+        `Model the rate of change.`,
+        `${frac('dS','dt')} = ${rate*concentration} − ${frac(`${rate}S`,volume)}`,
+        `Rewrite in linear form.`,
+        `${frac('dS','dt')} + ${ratio}S = ${rate*concentration}`,
+        `The equilibrium value is ${equilibrium}, so the solution has the form S = ${equilibrium} + C${ePow(exponent)}.`,
+        `Use S(0) = ${initial}.`,
+        `${initial} = ${equilibrium} + C`,
+        `C = ${initial-equilibrium}`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function genModelCondition(){
+      const m0=choice([60,80,100]);
+      const m1=choice([30,40,50]);
+      const t=choice([4,5,8]);
+      const prompt=`A substance decays according to ${frac('dM','dt')} = −kM. M(0) = ${m0} and M(${t}) = ${m1}. Find k and hence M(t).`;
+      const answer=`k = ${frac('1',t)}ln${frac(m0,m1)}, so M(t) = ${m0}${ePow(`−${frac('1',t)}ln${frac(m0,m1)}t`)}`;
+      const steps=[
+        `Separate the variables.`,
+        `${frac('1','M')} dM = −k dt`,
+        `Integrate both sides.`,
+        `ln M = −kt + C`,
+        `Write in exponential form.`,
+        `M = A${ePow('−kt')}`,
+        `Use M(0) = ${m0}.`,
+        `M = ${m0}${ePow('−kt')}`,
+        `Use M(${t}) = ${m1}.`,
+        `${m1} = ${m0}${ePow(`−${t}k`)}`,
+        `${frac(m1,m0)} = ${ePow(`−${t}k`)}`,
+        `ln${frac(m1,m0)} = −${t}k`,
+        `k = ${frac('1',t)}ln${frac(m0,m1)}`,
+        answer
+      ];
+      return problem(prompt,answer,steps);
+    }
+
+    function generateProblem(){
+      const maps={
+        separable_power:genSeparablePower,
+        separable_initial:genSeparableInitial,
+        separable_exponential:genSeparableExponential,
+        separable_mixed:()=>choice([genSeparablePower,genSeparableInitial,genSeparableExponential])(),
+        linear_constant:genLinearConstant,
+        linear_initial:genLinearInitial,
+        linear_polynomial_rhs:genLinearPolynomial,
+        linear_exponential_rhs:genLinearExponential,
+        linear_mixed:()=>choice([genLinearConstant,genLinearInitial,genLinearPolynomial,genLinearExponential])(),
+        second_distinct:genSecondDistinct,
+        second_repeated:genSecondRepeated,
+        second_complex:genSecondComplex,
+        second_forced:genSecondForced,
+        second_mixed:()=>choice([genSecondDistinct,genSecondRepeated,genSecondComplex,genSecondForced])(),
+        model_growth_decay:genModelGrowthDecay,
+        model_cooling:genModelCooling,
+        model_mixing:genModelMixing,
+        model_condition:genModelCondition,
+        model_mixed:()=>choice([genModelGrowthDecay,genModelCooling,genModelMixing,genModelCondition])()
+      };
+      return (maps[currentType]||genSeparablePower)();
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      populateDropdown();
+      showBlankPage();
+    }
+
+    function populateDropdown(){
+      const select=document.getElementById('type-dropdown');
+      const types=levelConfigs[currentLevel].types;
+      select.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      select.value=currentType;
+    }
+
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;generateNewSet()}
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').className='problem-set-header';
+      document.getElementById('set-instruction').className='set-instruction';
+      document.getElementById('problem-list').innerHTML='<li class="problem-item"><div class="problem-left"><div class="problem-number">1</div><div class="question-text">Select a question type to begin differential equations practice.</div></div></li>';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      answersVisible=false;stepsVisible=false;problems=[];
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<180){
+        const oldType=currentType;
+        if(currentType==='all')currentType=choice(levelConfigs[currentLevel].types);
+        const p=generateProblem();
+        currentType=oldType;
+        const key=p.question;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed differential equations question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|∫|ln|dy|dx|dt|dP|dT|dS|dM|y′|y″|m|<span class="vfrac"|<sup>|<sub>|e<sup>|cos|sin/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div>
+                <span class="problem-type">${escapeHtml(p.typeLabel)}</span>
+                <div class="question-text">${p.prompt}</div>
+              </div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;timerActive=true;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      display.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        display.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)display.className='timer-display warning';
+        if(timeRemaining<=0){stopTimer();display.textContent='Time Up';display.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;timerActive=false;
+      const display=document.getElementById('timer-display');
+      if(display){display.textContent='Ready';display.className='timer-display'}
+    }
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-18"></script>
+</body>
+</html>

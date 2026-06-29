@@ -263,6 +263,25 @@ const tools = [
     ]
   },
   {
+    slug: "differential-equations",
+    title: "Differential Equations",
+    category: "Algebra",
+    level: "A-Level / Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate differential equations practice covering first-order separable equations, first-order linear equations, second-order constant coefficient equations, and modelling problems.",
+    tags: ["algebra", "calculus", "differential equations", "separable equations", "first-order linear", "second-order differential equations", "modelling", "A-Level", "Further Maths"],
+    toolPath: "tools/differential-equations/index.html?v=differential-equations-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers first-order separable equations, including initial conditions.",
+      "Level 2 covers first-order linear equations using integrating factors.",
+      "Level 3 covers second-order constant coefficient equations with real, repeated, complex, and simple forced cases.",
+      "Level 4 covers modelling problems such as growth, decay, cooling, and mixing."
+    ]
+  },
+  {
     slug: "differentiation-rules",
     title: "Differentiation Rules",
     category: "Algebra",
