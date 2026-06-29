@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.2.2';
+  const VERSION = '0.2.3';
 
   function readBinding(name, fallback = undefined) {
     try {
@@ -514,6 +514,32 @@
     lift(document);
   }
 
+  function installRepeatedTypeBadgeCleanup() {
+    if (document.documentElement.dataset.kaizenTypeBadgeCleanup === 'true') return;
+    document.documentElement.dataset.kaizenTypeBadgeCleanup = 'true';
+
+    const style = document.createElement('style');
+    style.textContent = `
+      #problem-list .problem-type,
+      .problem-item .problem-type{display:none!important}
+    `;
+    document.head.appendChild(style);
+
+    function clean(root = document) {
+      root.querySelectorAll?.('#problem-list .problem-type, .problem-item .problem-type').forEach((badge) => {
+        badge.remove();
+      });
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => clean(node.nodeType === Node.ELEMENT_NODE ? node : document));
+      });
+    });
+    if (document.body) observer.observe(document.body, { childList: true, subtree: true });
+    clean(document);
+  }
+
   window.KaizenWorksheet = {
     version: VERSION,
     canGenerate,
@@ -524,6 +550,7 @@
 
   installWorkedStepStructure();
   installSharedInstructionLift();
+  installRepeatedTypeBadgeCleanup();
 
   function installTeacherExampleMode() {
     if (document.documentElement.dataset.teacherExampleReady === 'true') return;

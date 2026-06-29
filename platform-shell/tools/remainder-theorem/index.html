@@ -76,6 +76,6 @@
     function startTimer(minutes){if(timerActive)stopTimer();timeRemaining=minutes*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const el=document.getElementById('timer-display');el.textContent='Ready';el.className='timer-display'}function updateTimerDisplay(){const m=Math.floor(timeRemaining/60),s=timeRemaining%60,el=document.getElementById('timer-display');el.textContent=m+":"+s.toString().padStart(2,'0');el.className=timeRemaining<=30?'timer-display warning':timerActive?'timer-display active':'timer-display'}function timerFinished(){stopTimer();const el=document.getElementById('timer-display');el.textContent='Time Up!';el.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
     document.addEventListener('DOMContentLoaded',()=>switchLevel(1));
   </script>
-  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-19"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-20"></script>
 </body>
 </html>
