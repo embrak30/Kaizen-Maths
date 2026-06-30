@@ -263,6 +263,25 @@ const tools = [
     ]
   },
   {
+    slug: "series-expansions",
+    title: "Series Expansions",
+    category: "Algebra",
+    level: "A-Level Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate Further Maths series practice covering Maclaurin series, Taylor series, substitution, products of series, approximations, limits, coefficients, and simple power-series solutions.",
+    tags: ["algebra", "calculus", "further maths", "series", "Maclaurin series", "Taylor series", "power series", "approximations", "limits"],
+    toolPath: "tools/series-expansions/index.html?v=series-expansions-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers standard Maclaurin series, derivative values at zero, simple expansions, and conditions of validity.",
+      "Level 2 covers substitution into standard series, products, reciprocal or quotient expansions, and numerical approximations.",
+      "Level 3 covers Taylor polynomials, Taylor expansions about a point, approximations near the expansion point, and reading derivative values from a series.",
+      "Level 4 covers limits using series, coefficients in products of series, and simple power-series solutions to differential equations."
+    ]
+  },
+  {
     slug: "complex-numbers",
     title: "Complex Numbers",
     category: "Algebra",
@@ -1688,7 +1707,7 @@ const launchReadinessSections = [
     items: [
       ["google-signin", "Google sign-in works on live site", "A new teacher can sign in, return to the site, and see their account state change."],
       ["admin-role", "Admin account is protected", "Only admin users can see and use the Admin area."],
-      ["free-trial-rules", "Free, trial, pro, school, and admin roles behave correctly", "Free visitors see limited access, signed-in trial users can test the wider site, and admin can update roles."],
+      ["free-trial-rules", "Free, trial, pro, school, and admin roles behave correctly", "Free visitors see limited sample access, signed-in trial users can use the wider site for 30 days, and admin can update roles."],
       ["school-space", "School Space join flow is ready", "A school code, allowed domain, approved email, seat limit, and licence end date can be tested."],
       ["supabase-schema", "Supabase schema is current", "The latest schema has been run after any auth, school, Stripe, or admin changes."]
     ]
@@ -1698,7 +1717,7 @@ const launchReadinessSections = [
     items: [
       ["stripe-test", "Stripe test checkout has been checked", "Teacher monthly and annual price IDs exist and test mode works before live payments are enabled."],
       ["stripe-webhook", "Stripe webhook is configured", "Webhook endpoint and secret are saved in Vercel and subscription updates reach Supabase."],
-      ["trial-message", "Trial/upgrade message is accurate", "Upgrade page states the current testing period and what happens after trial access ends."],
+      ["trial-message", "Trial/upgrade message is accurate", "Upgrade page explains the 30-day trial, early-adopter pricing, and what happens after trial access ends."],
       ["school-pricing", "School licence pricing/process is clear", "School enquiries, custom pricing, invoices, and admin-created school spaces are handled consistently."],
       ["support-process", "Support route is clear", "Teachers and schools know how to contact you for payment, school access, or account problems."]
     ]
@@ -1783,11 +1802,7 @@ const freeSampleTools = new Set([
   "fractions-practice",
   "pythagoras-theorem",
   "averages-range",
-  "discrete-random-variables",
-  "twenty4",
   "classroom-displays",
-  "fractions-table",
-  "math-in-a-minute",
   "interface-guide"
 ]);
 
@@ -1925,6 +1940,10 @@ function isSignedIn() {
   return Boolean(authState().session?.user);
 }
 
+function hasWorkspaceAccess() {
+  return ["trial", "pro", "school", "admin"].includes(currentUserRole());
+}
+
 function isAdmin() {
   return currentUserRole() === "admin";
 }
@@ -1934,7 +1953,9 @@ function defaultRequiredAccess(tool) {
 }
 
 function requiredAccess(tool) {
-  return normalise(state.toolAccess[tool.slug] || defaultRequiredAccess(tool));
+  const configured = normalise(state.toolAccess[tool.slug] || defaultRequiredAccess(tool));
+  if (configured === "free" && !freeSampleTools.has(tool.slug)) return "trial";
+  return configured;
 }
 
 function requiredAccessLabel(tool) {
@@ -1976,7 +1997,7 @@ function signInCallout(title = "Sign in to continue") {
     <section class="panel access-callout">
       <span class="eyebrow">${signedIn ? "Upgrade Required" : "Account Required"}</span>
       <h2>${title}</h2>
-      <p>${signedIn ? "Your current account does not include this part of the virtual textbook. Upgrade for individual teacher access, or contact us for school access." : "Free visitors can try a small sample from the virtual textbook. Sign in with Google to access the wider topic library, worksheet tools, and classroom question sets during the trial period."}</p>
+      <p>${signedIn ? "Your current account does not include this part of the virtual textbook. Upgrade for individual teacher access, or contact us for school access." : "Free visitors can try a small sample from the virtual textbook. Sign in with Google to start a 30-day trial and access the wider topic library, worksheet tools, and classroom question sets."}</p>
       ${signedIn ? `<a class="button primary" href="#/upgrade">View Upgrade Options</a>` : `<button class="button primary" type="button" data-auth-action="signin">Sign in with Google</button>`}
       <a class="button" href="#/tools">Back to Free Tools</a>
     </section>
@@ -2392,11 +2413,11 @@ const universitySections = [
   },
   {
     title: "School And Department Use",
-    intro: "How a school or department can use Kaizen Maths consistently during the trial period.",
+    intro: "How a school or department can use Kaizen Maths consistently during a trial or school licence.",
     videos: [
       { id: "using-kaizen-in-a-department", title: "Using Kaizen In A Department", description: "How a department can use shared routines across lessons, homework, intervention, and revision." },
       { id: "supporting-less-confident-topics", title: "Supporting Less Confident Topics", description: "How worked examples, answers, and structured practice can support teacher confidence." },
-      { id: "giving-useful-feedback", title: "Giving Useful Feedback", description: "What to test during the trial period and how to report issues or suggestions clearly." }
+      { id: "giving-useful-feedback", title: "Giving Useful Feedback", description: "What to test during a trial and how to report issues or suggestions clearly." }
     ]
   }
 ];
@@ -6590,10 +6611,10 @@ function renderSchools() {
     )}
     <section class="upgrade-page">
       <article class="panel trial-notice">
-        <span class="eyebrow">Testing Phase</span>
-        <h2>Schools can explore the full site until 30 June 2026</h2>
-        <p>During the testing phase, teachers can use the full library without payment. This gives departments time to check coverage, try the classroom tools, build worksheets, and decide whether Kaizen Maths would support regular teaching across the school.</p>
-        <p>School prices shown below are early-adopter rates for the first schools that help shape Kaizen Maths. Standard pricing is expected to be higher after the launch period.</p>
+        <span class="eyebrow">School Licences</span>
+        <h2>Shared access for mathematics departments</h2>
+        <p>Schools can give named teachers access to the full Kaizen Maths workspace for classroom instruction, practice, homework, intervention, assessment, and revision.</p>
+        <p>School prices shown below are early-adopter rates for the first schools that adopt Kaizen Maths. Standard pricing is expected to be higher after the launch period.</p>
       </article>
 
       <section class="pricing-grid" aria-label="School licence options">
@@ -6644,6 +6665,8 @@ function renderSchools() {
 function renderUpgrade() {
   const role = currentUserRole();
   const profile = authState().profile || {};
+  const trialEnds = profile.trial_ends_at ? formatDisplayDate(profile.trial_ends_at) : "";
+  const trialEnded = isSignedIn() && normalise(profile.role) === "trial" && role === "free";
   const checkoutStatus = new URLSearchParams((location.hash.split("?")[1] || "").replace(/^\/?/, "")).get("checkout");
   const statusCopy = checkoutStatus === "success"
     ? "Payment complete. Your access will update as soon as Stripe confirms the subscription."
@@ -6654,25 +6677,26 @@ function renderUpgrade() {
   app.innerHTML = `
     ${pageHeader(
       "Upgrade Kaizen Maths",
-      "Kaizen Maths is currently in its testing phase. Full access is available during the trial period, so teachers can explore the virtual mathematics textbook before paid plans begin.",
+      "Start a 30-day teacher trial or upgrade to keep full access to the Kaizen Maths teaching workspace.",
       `<a class="button" href="#/tools">Browse Tools</a>`
     )}
     <section class="upgrade-page">
       <article class="panel trial-notice">
-        <span class="eyebrow">Testing Phase</span>
-        <h2>All tools are available until 30 June 2026</h2>
-        <p>There is no need to upgrade while Kaizen Maths is being tested. Teachers can use the full tool library, classroom generators, worked solutions, worksheet builder, and assessment tools during this trial period.</p>
-        <p>Paid teacher and school access will be introduced after the trial period. The prices shown below are early-adopter rates for the first teachers and schools who help shape Kaizen Maths. Standard pricing is expected to be higher after launch.</p>
+        <span class="eyebrow">Teacher Trial</span>
+        <h2>Try the full workspace for 30 days</h2>
+        <p>Free visitors can open a small sample of tools. Sign in with Google to start a 30-day teacher trial with access to the wider topic library, classroom generators, worked solutions, worksheet builder, and assessment tools.</p>
+        <p>After the trial ends, continued access requires an individual teacher subscription or a school licence. The prices below are early-adopter rates; standard pricing is expected to be higher after launch.</p>
         <div class="button-row">
-          <a class="button primary" href="#/tools">Explore the Tool Library</a>
-          <a class="button" href="#/worksheet-generator">Open Worksheet Builder</a>
+          ${hasWorkspaceAccess() ? `<a class="button primary" href="#/tools">Open Full Tool Library</a>` : isSignedIn() ? `<a class="button primary" href="#/upgrade">Choose A Plan</a>` : `<button class="button primary" type="button" data-auth-action="signin">Start Free Trial</button>`}
+          ${hasWorkspaceAccess() ? `<a class="button" href="#/worksheet-generator">Open Worksheet Builder</a>` : `<a class="button" href="#/tools">Browse Free Samples</a>`}
         </div>
       </article>
 
       <article class="panel upgrade-summary">
         <span class="eyebrow">Current Access</span>
         <h2>${isSignedIn() ? titleCaseAccess(role) + " access" : "Not signed in"}</h2>
-        <p>${isSignedIn() ? `Signed in as ${escapeHtml(authState().session?.user?.email || "teacher")}.` : "Sign in with Google to help test the full site during the trial period."}</p>
+        <p>${isSignedIn() ? `Signed in as ${escapeHtml(authState().session?.user?.email || "teacher")}.` : "Sign in with Google to start a 30-day teacher trial."}</p>
+        ${trialEnds ? `<p><strong>${trialEnded ? "Trial ended:" : "Trial until:"}</strong> ${escapeHtml(trialEnds)}</p>` : ""}
         ${profile.subscription_status ? `<p><strong>Subscription:</strong> ${escapeHtml(profile.subscription_status)}</p>` : ""}
         ${statusCopy ? `<p class="upgrade-status" data-tone="${checkoutStatus}">${statusCopy}</p>` : `<p class="upgrade-status" id="upgradeStatus"></p>`}
         <div class="button-row">
@@ -6684,18 +6708,18 @@ function renderUpgrade() {
         <article class="panel pricing-card">
           <span class="eyebrow">Early Adopter</span>
           <h2>Monthly</h2>
-          <p class="pricing-price">£7.99/month</p>
-          <p class="pricing-note">Expected standard price: £12.99/month</p>
+          <p class="pricing-price">£9.99/month</p>
+          <p class="pricing-note">Expected standard price: £14.99/month</p>
           <p>Flexible access for one teacher. Use the full topic library, board-ready generators, worked solutions, worksheet builder, and assessment practice.</p>
-          <button class="button primary" type="button" disabled>Available after trial</button>
+          <button class="button primary" type="button" data-checkout-plan="monthly">${isSignedIn() ? "Upgrade Monthly" : "Sign In To Upgrade"}</button>
         </article>
         <article class="panel pricing-card featured">
           <span class="eyebrow">Early Adopter</span>
           <h2>Annual</h2>
-          <p class="pricing-price">£69/year</p>
-          <p class="pricing-note">Expected standard price: £119/year</p>
+          <p class="pricing-price">£89/year</p>
+          <p class="pricing-note">Expected standard price: £149/year</p>
           <p>Best for teachers who want full access across the year for planning, classroom practice, homework, revision, intervention, and assessment.</p>
-          <button class="button primary" type="button" disabled>Available after trial</button>
+          <button class="button primary" type="button" data-checkout-plan="annual">${isSignedIn() ? "Upgrade Annual" : "Sign In To Upgrade"}</button>
         </article>
         <article class="panel pricing-card">
           <span class="eyebrow">Early Adopter</span>
@@ -6956,7 +6980,7 @@ function launchReadinessChecklistHtml() {
 function renderAdmin() {
   if (!isSignedIn()) {
     app.innerHTML = `
-      ${pageHeader("Admin", "Manage access levels for the virtual textbook and prepare the site for trial users, free samples, individual teachers, and school licences.")}
+      ${pageHeader("Admin", "Manage access levels for the virtual textbook: free samples, 30-day trials, individual teachers, and school licences.")}
       ${signInCallout("Admin sign-in required")}
     `;
     bindAuthActions();
@@ -7167,7 +7191,7 @@ function renderAdmin() {
         <div>
           <span class="eyebrow">Access Rules</span>
           <h2>Tool Access</h2>
-          <p>Signed-out visitors can open Free topics. Signed-in trial users can open Trial topics. For now, keep most topic tools as Trial while testing.</p>
+          <p>Signed-out visitors can open the approved Free sample topics only. Signed-in trial users can open Trial topics for 30 days. Keep most topic tools as Trial or Pro once paid access is live.</p>
         </div>
         <button class="button primary" id="saveAccessRules" type="button">Save Access Rules</button>
       </div>
@@ -8062,7 +8086,7 @@ function updateRouteSeo(parts) {
     },
     "upgrade": {
       title: routeTitle("Teacher Access and Pricing"),
-      description: "View Kaizen Maths teacher access, early-adopter pricing, and trial information for individual teachers and schools."
+      description: "Start a 30-day Kaizen Maths teacher trial or upgrade with early-adopter monthly, annual, and school access options."
     },
     "schools": {
       title: routeTitle("School Access"),
@@ -8120,7 +8144,7 @@ function renderRoute() {
   } else if (parts[0] === "how-to-use-this-site") {
     renderSiteGuide();
   } else if (parts[0] === "worksheet-generator") {
-    if (!isSignedIn()) {
+    if (!hasWorkspaceAccess()) {
       app.innerHTML = `
         ${pageHeader(
           "Worksheet Builder",
@@ -8135,6 +8159,19 @@ function renderRoute() {
     }
     renderWorksheetGenerator();
   } else if (parts[0] === "gcse-exam-style") {
+    if (!hasWorkspaceAccess()) {
+      app.innerHTML = `
+        ${pageHeader(
+          "GCSE Exam Paper Builder",
+          "Generate GCSE-style maths practice sets and mock papers with marks, teacher copy options, and print-ready layout.",
+          "",
+          "worksheet-page-header"
+        )}
+        ${signInCallout("Trial access required")}
+      `;
+      bindAuthActions();
+      return;
+    }
     renderGcseExamStyle();
   } else if (parts[0] === "tools" && parts[1] === "interface-guide") {
     location.hash = "#/how-to-use-this-site";

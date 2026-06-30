@@ -77,7 +77,7 @@
     }
 
     eyebrow.textContent = "Access";
-    label.textContent = "Trial access";
+    label.textContent = "Teacher trial";
     action.textContent = "Sign in with Google";
     action.disabled = false;
     action.onclick = signInWithGoogle;

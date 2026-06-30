@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Series Expansions</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f4f7fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#223762;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:850;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#223762;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #17b8b3;color:#223762;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1220px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#223762;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e8eef8}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e8eef8;color:#283044;cursor:pointer;font-size:.92em;font-weight:850}.tab.active{background:#fff;color:#223762;border-bottom-color:#223762}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d9deef;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#223762;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:420px;padding:8px 10px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#223762;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#223762;color:#223762}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#223762}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#223762;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #c8d2ff;border-radius:6px;background:#f0f4ff;color:#223762;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px;border-left:4px solid #223762;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#223762;color:#fff;font-weight:850}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.24em;font-weight:650;line-height:1.42;color:#172033;overflow-wrap:anywhere}.problem-answer{display:none;max-width:42%;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:.95em;font-weight:850;text-align:center}.problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #223762;border-radius:6px;background:#f1f5ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#223762;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#223762}.step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#5e3fa3;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.series-o{white-space:nowrap}
+    .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.problem-answer{max-width:none}.question-text{font-size:1.08em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Series Expansions</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This Further Maths tool develops Maclaurin series, Taylor series, substitution into standard expansions, products of series, limits, approximations, and simple series solutions.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Standard Maclaurin series and building a series from derivatives at zero.</li>
+        <li><strong>Level 2:</strong> Substitution, products, quotients, and approximations using Maclaurin series.</li>
+        <li><strong>Level 3:</strong> Taylor series about a point and approximations near the expansion point.</li>
+        <li><strong>Level 4:</strong> Further Maths applications including limits, coefficients, and series solutions to simple differential equations.</li>
+      </ul>
+      <h3>Core Formulas</h3>
+      <ul>
+        <li>Maclaurin: f(x) = f(0) + f'(0)x + f''(0)x²/2! + f'''(0)x³/3! + ...</li>
+        <li>Taylor about a: f(x) = f(a) + f'(a)(x-a) + f''(a)(x-a)²/2! + ...</li>
+        <li>When substituting into a known expansion, keep terms only up to the order requested.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Series Expansions</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Maclaurin Basics</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Combining Series</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Taylor Series</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Applications</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Maclaurin Basics</h3>
+        <p id="level-description">Use standard Maclaurin series and derivative values at zero.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Maclaurin Basics',description:'Use standard Maclaurin series and derivative values at zero.',types:['standard_maclaurin','derivatives_at_zero','simple_expansions','validity','level1_mixed']},
+      2:{title:'Level 2: Combining Series',description:'Substitute into standard expansions, multiply or divide series, and use them for approximations.',types:['substitution','product_series','reciprocal_quotient','approximation','level2_mixed']},
+      3:{title:'Level 3: Taylor Series',description:'Expand functions about a point and use the expansion near that point.',types:['taylor_formula','taylor_standard','taylor_approximation','taylor_derivatives','level3_mixed']},
+      4:{title:'Level 4: Applications',description:'Use series for limits, coefficients, and simple differential-equation series solutions.',types:['limits','coefficients','differential_equations','advanced_mixed']}
+    };
+
+    const typeDisplayNames={
+      standard_maclaurin:'Standard Maclaurin series',
+      derivatives_at_zero:'Maclaurin series from derivatives',
+      simple_expansions:'Expand to a given order',
+      validity:'Interval or condition of validity',
+      level1_mixed:'Mixed Maclaurin basics',
+      substitution:'Substitute into a standard series',
+      product_series:'Products of series',
+      reciprocal_quotient:'Reciprocal and quotient series',
+      approximation:'Approximation using a series',
+      level2_mixed:'Mixed combining series',
+      taylor_formula:'Taylor polynomial from derivatives',
+      taylor_standard:'Taylor series about a point',
+      taylor_approximation:'Taylor approximation near a point',
+      taylor_derivatives:'Find derivative values from a Taylor series',
+      level3_mixed:'Mixed Taylor series',
+      limits:'Limits using series',
+      coefficients:'Coefficients in products of series',
+      differential_equations:'Series solutions to differential equations',
+      advanced_mixed:'Mixed series applications'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      standard_maclaurin:'Write each standard Maclaurin expansion up to the requested term.',
+      derivatives_at_zero:'Use the Maclaurin formula to form each polynomial from the derivative values.',
+      simple_expansions:'Expand each function as a Maclaurin series up to the requested power of x.',
+      validity:'State the interval or condition of validity for each expansion.',
+      level1_mixed:'Answer each Maclaurin basics question.',
+      substitution:'Substitute carefully into the standard Maclaurin expansion.',
+      product_series:'Multiply the relevant series and keep terms only up to the requested power of x.',
+      reciprocal_quotient:'Use a standard reciprocal series or divide series to the requested order.',
+      approximation:'Use the given series expansion to estimate the value.',
+      level2_mixed:'Answer each combining series question.',
+      taylor_formula:'Use Taylor’s formula about the given value of a.',
+      taylor_standard:'Find each Taylor expansion about the stated point.',
+      taylor_approximation:'Use a Taylor expansion about the stated point to approximate the value.',
+      taylor_derivatives:'Compare coefficients with Taylor’s formula to find derivative values.',
+      level3_mixed:'Answer each Taylor series question.',
+      limits:'Use series expansions to evaluate each limit.',
+      coefficients:'Find the requested coefficient by multiplying the relevant series terms.',
+      differential_equations:'Substitute a power series and compare coefficients.',
+      advanced_mixed:'Answer each mixed series applications question.'
+    };
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function rat(n,d=1){if(d<0){n=-n;d=-d}const g=gcd(n,d);return {n:n/g,d:d/g}}
+    function add(a,b){return rat(a.n*b.d+b.n*a.d,a.d*b.d)}
+    function sub(a,b){return rat(a.n*b.d-b.n*a.d,a.d*b.d)}
+    function mul(a,b){return rat(a.n*b.n,a.d*b.d)}
+    function divr(a,b){return rat(a.n*b.d,a.d*b.n)}
+    function powr(a,k){let out=rat(1);for(let i=0;i<k;i++)out=mul(out,a);return out}
+    function factorial(n){let out=1;for(let i=2;i<=n;i++)out*=i;return out}
+    function sup(v){return `<sup>${v}</sup>`}
+    function subscript(v){return `<sub>${v}</sub>`}
+    function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function absFracHtml(r,omitOne=false){r=rat(r.n,r.d);const n=Math.abs(r.n);if(omitOne&&n===r.d)return '';return r.d===1?String(n):frac(n,r.d)}
+    function signedTerm(r,body,first=false){
+      if(r.n===0)return '';
+      const sign=r.n<0?' - ':' + ';
+      const coeff=absFracHtml(r,Boolean(body));
+      const text=`${coeff}${body}`;
+      return first?(r.n<0?`-${text}`:text):`${sign}${text}`;
+    }
+    function xp(k,variable='x'){if(k===0)return '';if(k===1)return variable;return `${variable}${sup(k)}`}
+    function hp(k,a='a'){if(k===0)return '';const h=`(x - ${a})`;if(k===1)return h;return `${h}${sup(k)}`}
+    function bigO(power,variable='x'){return `<span class="series-o">O(${variable}${sup(power)})</span>`}
+    function polyHtml(coeffs,variable='x',order=null){
+      const parts=[];
+      coeffs.forEach((c,k)=>{if(!c||c.n===0)return;parts.push(signedTerm(c,xp(k,variable),parts.length===0))});
+      const base=parts.length?parts.join(''):'0';
+      return order?`${base} + ${bigO(order,variable)}`:base;
+    }
+    function hPolyHtml(coeffs,a,order=null){
+      const parts=[];
+      coeffs.forEach((c,k)=>{if(!c||c.n===0)return;parts.push(signedTerm(c,hp(k,a),parts.length===0))});
+      const base=parts.length?parts.join(''):'0';
+      return order?`${base} + ${bigO(order,`(x - ${a})` )}`:base;
+    }
+    function stripTags(html){return String(html).replace(/<sup>(.*?)<\/sup>/gi,'^$1').replace(/<sub>(.*?)<\/sub>/gi,'_$1').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+    function cleanTitle(type){return typeDisplayNames[type]||'Series question'}
+    function problem(prompt,answer,steps,instruction=typeInstructions[currentType]||'Answer each question.'){
+      return {prompt,question:stripTags(prompt),answer,steps,instruction,instructionText:instruction,typeLabel:cleanTitle(currentType)};
+    }
+    function expPoly(k,max){return Array.from({length:max+1},(_,i)=>rat(k**i,factorial(i)))}
+    function sinPoly(k,max){return Array.from({length:max+1},(_,i)=>i%2?rat(((-1)**((i-1)/2))*k**i,factorial(i)):rat(0))}
+    function cosPoly(k,max){return Array.from({length:max+1},(_,i)=>i%2?rat(0):rat(((-1)**(i/2))*k**i,factorial(i)))}
+    function lnPoly(k,max){return Array.from({length:max+1},(_,i)=>i===0?rat(0):rat(((-1)**(i+1))*k**i,i))}
+    function recipPoly(k,max){return Array.from({length:max+1},(_,i)=>rat((-k)**i))}
+    function binomPoly(alpha,k,max){
+      const out=[rat(1)];
+      let coeff=rat(1);
+      for(let i=1;i<=max;i++){
+        coeff=mul(coeff,divr(sub(alpha,rat(i-1)),rat(i)));
+        out[i]=mul(coeff,rat(k**i));
+      }
+      return out;
+    }
+    function multiplyPoly(a,b,max){
+      const out=Array.from({length:max+1},()=>rat(0));
+      for(let i=0;i<a.length;i++)for(let j=0;j<b.length;j++)if(i+j<=max)out[i+j]=add(out[i+j],mul(a[i],b[j]));
+      return out;
+    }
+
+    const standardSeries=[
+      {name:'e<sup>x</sup>', answer:`1 + x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(4),'4!')} + ...`, validity:'all real x', steps:['Start from the known Maclaurin series for e<sup>x</sup>.','The nth derivative of e<sup>x</sup> is e<sup>x</sup>, so every derivative at 0 is 1.','Therefore e<sup>x</sup> = 1 + x + x<sup>2</sup>/2! + x<sup>3</sup>/3! + ... .']},
+      {name:'sin x', answer:`x - ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(5),'5!')} - ${frac('x'+sup(7),'7!')} + ...`, validity:'all real x', steps:['Use the standard Maclaurin series for sin x.','Only odd powers appear.','The signs alternate: +, -, +, - .']},
+      {name:'cos x', answer:`1 - ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(4),'4!')} - ${frac('x'+sup(6),'6!')} + ...`, validity:'all real x', steps:['Use the standard Maclaurin series for cos x.','Only even powers appear.','The signs alternate: +, -, +, - .']},
+      {name:'ln(1 + x)', answer:`x - ${frac('x'+sup(2),'2')} + ${frac('x'+sup(3),'3')} - ${frac('x'+sup(4),'4')} + ...`, validity:'-1 < x ≤ 1', steps:['Use the standard Maclaurin series for ln(1 + x).','The coefficient of x<sup>n</sup> is (-1)<sup>n+1</sup>/n.','This expansion is valid for -1 < x ≤ 1.']},
+      {name:'(1 + x)<sup>α</sup>', answer:`1 + αx + ${frac('α(α - 1)','2!')}x${sup(2)} + ${frac('α(α - 1)(α - 2)','3!')}x${sup(3)} + ...`, validity:'|x| < 1 for non-integer α', steps:['Use the binomial series.','Each new numerator factor reduces by 1.','For non-integer α, the usual condition is |x| < 1.']}
+    ];
+
+    function genStandardMaclaurin(){
+      const item=choice(standardSeries);
+      return problem(`Write the Maclaurin series for ${item.name}.`,item.answer,[...item.steps,`Answer: ${item.answer}`]);
+    }
+
+    function genDerivativesAtZero(){
+      const values=[
+        [2,-3,8,12],
+        [1,4,-6,18],
+        [-2,5,10,-24],
+        [3,-2,-8,30],
+        [0,6,-12,24]
+      ];
+      const v=choice(values);
+      const coeffs=[rat(v[0]),rat(v[1]),rat(v[2],2),rat(v[3],6)];
+      const answer=polyHtml(coeffs);
+      return problem(`Given f(0) = ${v[0]}, f'(0) = ${v[1]}, f''(0) = ${v[2]} and f'''(0) = ${v[3]}, find the Maclaurin polynomial up to x${sup(3)}.`,answer,[
+        `Use f(x) = f(0) + f'(0)x + ${frac(`f''(0)x${sup(2)}`,'2!')} + ${frac(`f'''(0)x${sup(3)}`,'3!')}.`,
+        `Substitute the derivative values: f(x) = ${v[0]} + ${v[1]}x + ${frac(`${v[2]}x${sup(2)}`,'2')} + ${frac(`${v[3]}x${sup(3)}`,'6')}.`,
+        `Simplify each coefficient.`,
+        `f(x) = ${answer}.`
+      ]);
+    }
+
+    function genSimpleExpansion(){
+      const max=choice([3,4]);
+      const options=[
+        {q:'e<sup>2x</sup>', poly:expPoly(2,max), base:'e<sup>u</sup>', u:'2x', validity:'all real x'},
+        {q:'e<sup>-x</sup>', poly:expPoly(-1,max), base:'e<sup>u</sup>', u:'-x', validity:'all real x'},
+        {q:'sin(2x)', poly:sinPoly(2,max), base:'sin u', u:'2x', validity:'all real x'},
+        {q:'cos(3x)', poly:cosPoly(3,max), base:'cos u', u:'3x', validity:'all real x'},
+        {q:'ln(1 + 2x)', poly:lnPoly(2,max), base:'ln(1 + u)', u:'2x', validity:'|2x| < 1'}
+      ];
+      const item=choice(options);
+      const answer=polyHtml(item.poly,'x',max+1);
+      return problem(`Expand ${item.q} as a Maclaurin series up to and including the term in x${sup(max)}.`,answer,[
+        `Start with the standard expansion for ${item.base}.`,
+        `Substitute u = ${item.u}.`,
+        `Keep terms only up to x${sup(max)}.`,
+        `${item.q} = ${answer}.`
+      ]);
+    }
+
+    function genValidity(){
+      const item=choice([
+        {q:'ln(1 + 3x)', condition:'|3x| < 1 with endpoint x = 1/3 included only if using ln(1+x)', answer:`-${frac(1,3)} < x ≤ ${frac(1,3)}`, steps:[`For ln(1 + u), the Maclaurin series is valid for -1 < u ≤ 1.`,`Here u = 3x.`,`So -1 < 3x ≤ 1.`,`Divide by 3: -1/3 < x ≤ 1/3.`]},
+        {q:'(1 - 4x)<sup>-1</sup>', condition:'|-4x| < 1', answer:`|x| < ${frac(1,4)}`, steps:[`For (1 + u)<sup>α</sup> with non-integer or negative α, use |u| < 1.`,`Here u = -4x.`,`|-4x| < 1.`,`Therefore |x| < 1/4.`]},
+        {q:'(1 + 2x)<sup>1/2</sup>', condition:'|2x| < 1', answer:`|x| < ${frac(1,2)}`, steps:[`For the binomial expansion of (1 + u)<sup>α</sup>, use |u| < 1.`,`Here u = 2x.`,`|2x| < 1.`,`Therefore |x| < 1/2.`]},
+        {q:'e<sup>5x</sup>', condition:'all real x', answer:'all real x', steps:[`The Maclaurin series for e<sup>u</sup> is valid for all real u.`,`Here u = 5x.`,`Therefore the expansion is valid for all real x.`]}
+      ]);
+      return problem(`State the condition of validity for the Maclaurin expansion of ${item.q}.`,item.answer,item.steps);
+    }
+
+    function genSubstitution(){
+      const max=choice([3,4]);
+      return genSimpleExpansion();
+    }
+
+    function genProductSeries(){
+      const max=choice([3,4]);
+      const options=[
+        {q:'e<sup>x</sup> sin x', a:'e<sup>x</sup>', b:'sin x', pa:expPoly(1,max), pb:sinPoly(1,max)},
+        {q:'e<sup>x</sup> cos x', a:'e<sup>x</sup>', b:'cos x', pa:expPoly(1,max), pb:cosPoly(1,max)},
+        {q:'e<sup>2x</sup> sin x', a:'e<sup>2x</sup>', b:'sin x', pa:expPoly(2,max), pb:sinPoly(1,max)},
+        {q:'(1 + x)<sup>-1</sup>e<sup>x</sup>', a:'(1 + x)<sup>-1</sup>', b:'e<sup>x</sup>', pa:recipPoly(1,max), pb:expPoly(1,max)}
+      ];
+      const item=choice(options);
+      const product=multiplyPoly(item.pa,item.pb,max);
+      const answer=polyHtml(product,'x',max+1);
+      return problem(`Expand ${item.q} up to and including the term in x${sup(max)}.`,answer,[
+        `Write each factor as a series up to the order needed.`,
+        `${item.a} = ${polyHtml(item.pa,'x',max+1)}.`,
+        `${item.b} = ${polyHtml(item.pb,'x',max+1)}.`,
+        `Multiply the series and collect like powers of x.`,
+        `${item.q} = ${answer}.`
+      ]);
+    }
+
+    function genReciprocalQuotient(){
+      const max=choice([3,4]);
+      const options=[
+        {q:`${frac(1,'1 - 2x')}`, poly:recipPoly(-2,max), base:'1/(1 - 2x)', steps:[`Use ${frac(1,'1 - u')} = 1 + u + u${sup(2)} + u${sup(3)} + ... .`,`Here u = 2x.`]},
+        {q:`${frac(1,'1 + 3x')}`, poly:recipPoly(3,max), base:'1/(1 + 3x)', steps:[`Use ${frac(1,'1 + u')} = 1 - u + u${sup(2)} - u${sup(3)} + ... .`,`Here u = 3x.`]},
+        {q:`${frac('e'+sup('x'),'1 + x')}`, poly:multiplyPoly(expPoly(1,max),recipPoly(1,max),max), base:`${frac('e'+sup('x'),'1 + x')}`, steps:[`Use e<sup>x</sup> = ${polyHtml(expPoly(1,max),'x',max+1)}.`,`Use ${frac(1,'1 + x')} = ${polyHtml(recipPoly(1,max),'x',max+1)}.`,`Multiply the two series and collect terms.`]}
+      ];
+      const item=choice(options);
+      const answer=polyHtml(item.poly,'x',max+1);
+      return problem(`Find the Maclaurin series for ${item.q} up to and including the term in x${sup(max)}.`,answer,[...item.steps,`${item.base} = ${answer}.`]);
+    }
+
+    function genApproximation(){
+      const items=[
+        {q:'e<sup>0.2</sup>', base:'e<sup>x</sup>', x:'0.2', poly:expPoly(1,4), value:(1+.2+.2**2/2+.2**3/6+.2**4/24).toFixed(5)},
+        {q:'ln(1.1)', base:'ln(1 + x)', x:'0.1', poly:lnPoly(1,4), value:(.1-.1**2/2+.1**3/3-.1**4/4).toFixed(5)},
+        {q:'sin(0.3)', base:'sin x', x:'0.3', poly:sinPoly(1,5), value:(.3-.3**3/6+.3**5/120).toFixed(5)},
+        {q:'cos(0.2)', base:'cos x', x:'0.2', poly:cosPoly(1,4), value:(1-.2**2/2+.2**4/24).toFixed(5)}
+      ];
+      const item=choice(items);
+      return problem(`Use a Maclaurin series to approximate ${item.q}.`,item.value,[
+        `Use the expansion for ${item.base}.`,
+        `${item.base} ≈ ${polyHtml(item.poly,'x')}.`,
+        `Substitute x = ${item.x}.`,
+        `Approximation = ${item.value}.`
+      ]);
+    }
+
+    function genTaylorFormula(){
+      const sets=[
+        {a:2, vals:[3,-4,10,-18]},
+        {a:1, vals:[0,5,-8,12]},
+        {a:-1, vals:[2,6,6,-24]},
+        {a:3, vals:[1,-2,8,30]}
+      ];
+      const item=choice(sets);
+      const coeffs=[rat(item.vals[0]),rat(item.vals[1]),rat(item.vals[2],2),rat(item.vals[3],6)];
+      const answer=hPolyHtml(coeffs,item.a);
+      return problem(`Given f(${item.a}) = ${item.vals[0]}, f'(${item.a}) = ${item.vals[1]}, f''(${item.a}) = ${item.vals[2]} and f'''(${item.a}) = ${item.vals[3]}, find the Taylor polynomial about x = ${item.a} up to (x - ${item.a})${sup(3)}.`,answer,[
+        `Use f(x) = f(a) + f'(a)(x - a) + ${frac(`f''(a)(x - a)${sup(2)}`,'2!')} + ${frac(`f'''(a)(x - a)${sup(3)}`,'3!')}.`,
+        `Here a = ${item.a}.`,
+        `Substitute the derivative values.`,
+        `f(x) = ${answer}.`
+      ]);
+    }
+
+    function genTaylorStandard(){
+      const options=[
+        {q:'e<sup>x</sup>', a:1, answer:`e[1 + (x - 1) + ${frac('(x - 1)'+sup(2),'2!')} + ${frac('(x - 1)'+sup(3),'3!')}]`, steps:[`For f(x)=e<sup>x</sup>, every derivative is e<sup>x</sup>.`,`At x = 1, f(1)=f'(1)=f''(1)=f'''(1)=e.`,`Substitute into Taylor’s formula about x = 1.`]},
+        {q:'ln x', a:1, answer:`(x - 1) - ${frac('(x - 1)'+sup(2),2)} + ${frac('(x - 1)'+sup(3),3)}`, steps:[`Let h = x - 1, so x = 1 + h.`,`ln x = ln(1 + h).`,`Use ln(1+h)=h - h<sup>2</sup>/2 + h<sup>3</sup>/3 - ... .`,`Replace h by x - 1.`]},
+        {q:`${frac(1,'x')}`, a:2, answer:`${frac(1,2)} - ${frac('(x - 2)',4)} + ${frac('(x - 2)'+sup(2),8)} - ${frac('(x - 2)'+sup(3),16)}`, steps:[`Write x = 2 + h.`,`Then ${frac(1,'x')} = ${frac(1,'2 + h')} = ${frac(1,2)}${frac(1,`1 + ${frac('h',2)}`)}.`,`Use ${frac(1,'1+u')} = 1 - u + u<sup>2</sup> - u<sup>3</sup> + ... .`,`Replace h by x - 2.`]}
+      ];
+      const item=choice(options);
+      return problem(`Find the Taylor expansion of ${item.q} about x = ${item.a} up to the cubic term.`,item.answer,[...item.steps,`Answer: ${item.answer}.`]);
+    }
+
+    function genTaylorApproximation(){
+      const item=choice([
+        {q:'ln(1.05)', base:'ln x about x = 1', h:'0.05', value:(.05-.05**2/2+.05**3/3).toFixed(6), expansion:`h - ${frac('h'+sup(2),2)} + ${frac('h'+sup(3),3)}`},
+        {q:`${frac(1,'2.1')}`, base:'1/x about x = 2', h:'0.1', value:(.5-.1/4+.1**2/8-.1**3/16).toFixed(6), expansion:`${frac(1,2)} - ${frac('h',4)} + ${frac('h'+sup(2),8)} - ${frac('h'+sup(3),16)}`},
+        {q:'e<sup>1.1</sup>', base:'e<sup>x</sup> about x = 1', h:'0.1', value:(Math.E*(1+.1+.1**2/2+.1**3/6)).toFixed(6), expansion:`e(1 + h + ${frac('h'+sup(2),'2!')} + ${frac('h'+sup(3),'3!')})`}
+      ]);
+      return problem(`Use a Taylor expansion to approximate ${item.q}.`,item.value,[
+        `Use the Taylor expansion for ${item.base}.`,
+        `Let h be the distance from the expansion point. Here h = ${item.h}.`,
+        `Use ${item.expansion}.`,
+        `Substitute h = ${item.h}.`,
+        `Approximation = ${item.value}.`
+      ]);
+    }
+
+    function genTaylorDerivatives(){
+      const a=choice([1,2,-1]);
+      const coeffs=choice([[3,4,-2,5],[1,-6,3,-2],[0,5,4,-1]]);
+      return problem(`A Taylor expansion about x = ${a} is f(x) = ${coeffs[0]} ${coeffs[1]>=0?'+':'-'} ${Math.abs(coeffs[1])}(x - ${a}) ${coeffs[2]>=0?'+':'-'} ${Math.abs(coeffs[2])}(x - ${a})${sup(2)} ${coeffs[3]>=0?'+':'-'} ${Math.abs(coeffs[3])}(x - ${a})${sup(3)} + ... . Find f(${a}), f'(${a}), f''(${a}) and f'''(${a}).`,`${coeffs[0]}, ${coeffs[1]}, ${2*coeffs[2]}, ${6*coeffs[3]}`,[
+        `Compare with f(x) = f(a) + f'(a)(x-a) + ${frac(`f''(a)(x-a)${sup(2)}`,'2!')} + ${frac(`f'''(a)(x-a)${sup(3)}`,'3!')} + ... .`,
+        `The constant term is f(${a}) = ${coeffs[0]}.`,
+        `The coefficient of (x - ${a}) is f'(${a}) = ${coeffs[1]}.`,
+        `The coefficient of (x - ${a})<sup>2</sup> is f''(${a})/2!, so f''(${a}) = 2 × ${coeffs[2]} = ${2*coeffs[2]}.`,
+        `The coefficient of (x - ${a})<sup>3</sup> is f'''(${a})/3!, so f'''(${a}) = 6 × ${coeffs[3]} = ${6*coeffs[3]}.`
+      ]);
+    }
+
+    function genLimit(){
+      const item=choice([
+        {q:`lim${subscript('x→0')} ${frac('e'+sup('x')+' - 1 - x','x'+sup(2))}`, a:frac(1,2), steps:[`Use e<sup>x</sup> = 1 + x + ${frac('x'+sup(2),'2')} + ${frac('x'+sup(3),'6')} + ... .`,`Then e<sup>x</sup> - 1 - x = ${frac('x'+sup(2),'2')} + ${frac('x'+sup(3),'6')} + ... .`,`Divide by x<sup>2</sup>.`,`The limit is 1/2.`]},
+        {q:`lim${subscript('x→0')} ${frac('sin x - x','x'+sup(3))}`, a:`-${frac(1,6)}`, steps:[`Use sin x = x - ${frac('x'+sup(3),'6')} + ${frac('x'+sup(5),'120')} - ... .`,`Then sin x - x = -${frac('x'+sup(3),'6')} + ... .`,`Divide by x<sup>3</sup>.`,`The limit is -1/6.`]},
+        {q:`lim${subscript('x→0')} ${frac('1 - cos x','x'+sup(2))}`, a:frac(1,2), steps:[`Use cos x = 1 - ${frac('x'+sup(2),'2')} + ${frac('x'+sup(4),'24')} - ... .`,`Then 1 - cos x = ${frac('x'+sup(2),'2')} - ${frac('x'+sup(4),'24')} + ... .`,`Divide by x<sup>2</sup>.`,`The limit is 1/2.`]},
+        {q:`lim${subscript('x→0')} ${frac('ln(1 + x) - x','x'+sup(2))}`, a:`-${frac(1,2)}`, steps:[`Use ln(1+x) = x - ${frac('x'+sup(2),2)} + ${frac('x'+sup(3),3)} - ... .`,`Then ln(1+x) - x = -${frac('x'+sup(2),2)} + ... .`,`Divide by x<sup>2</sup>.`,`The limit is -1/2.`]}
+      ]);
+      return problem(`Evaluate ${item.q}.`,item.a,item.steps);
+    }
+
+    function genCoefficient(){
+      const max=5;
+      const item=choice([
+        {q:'coefficient of x<sup>4</sup> in e<sup>x</sup>cos x', poly:multiplyPoly(expPoly(1,max),cosPoly(1,max),max), index:4, steps:['Write e<sup>x</sup> and cos x up to x<sup>4</sup>.','Multiply only term pairs whose powers add to 4.']},
+        {q:'coefficient of x<sup>3</sup> in e<sup>x</sup>sin x', poly:multiplyPoly(expPoly(1,max),sinPoly(1,max),max), index:3, steps:['Write e<sup>x</sup> and sin x up to x<sup>3</sup>.','Multiply only term pairs whose powers add to 3.']},
+        {q:'coefficient of x<sup>4</sup> in (1 + x)<sup>-1</sup>e<sup>x</sup>', poly:multiplyPoly(recipPoly(1,max),expPoly(1,max),max), index:4, steps:['Write (1+x)<sup>-1</sup> and e<sup>x</sup> up to x<sup>4</sup>.','Multiply the series and collect the x<sup>4</sup> terms.']}
+      ]);
+      const answer=absFracHtml(item.poly[item.index]);
+      const signed=item.poly[item.index].n<0?`-${answer}`:answer;
+      return problem(`Find the ${item.q}.`,signed,[...item.steps,`The product series is ${polyHtml(item.poly,'x',item.index+2)}.`,`The coefficient of x<sup>${item.index}</sup> is ${signed}.`]);
+    }
+
+    function genDifferentialEquation(){
+      const item=choice([
+        {q:`y' = y, y(0)=1`, ans:`y = 1 + x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(4),'4!')} + ...`, steps:[`Let y = a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup> + a<sub>3</sub>x<sup>3</sup> + ... .`,`Then y' = a<sub>1</sub> + 2a<sub>2</sub>x + 3a<sub>3</sub>x<sup>2</sup> + 4a<sub>4</sub>x<sup>3</sup> + ... .`,`Compare y' = y: a<sub>1</sub>=a<sub>0</sub>, 2a<sub>2</sub>=a<sub>1</sub>, 3a<sub>3</sub>=a<sub>2</sub>, 4a<sub>4</sub>=a<sub>3</sub>.`,`Since y(0)=1, a<sub>0</sub>=1.`,`So a<sub>1</sub>=1, a<sub>2</sub>=1/2!, a<sub>3</sub>=1/3!, a<sub>4</sub>=1/4!.`]},
+        {q:`y'' + y = 0, y(0)=0, y'(0)=1`, ans:`y = x - ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(5),'5!')} - ...`, steps:[`Let y = a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup> + a<sub>3</sub>x<sup>3</sup> + ... .`,`From y(0)=0, a<sub>0</sub>=0. From y'(0)=1, a<sub>1</sub>=1.`,`Substitute into y'' + y = 0 and compare coefficients.`,`This gives the sine-pattern coefficients: a<sub>3</sub>=-1/3!, a<sub>5</sub>=1/5!, and even coefficients are 0.`]},
+        {q:`y' = 1 + y, y(0)=0`, ans:`y = x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(4),'4!')} + ...`, steps:[`Let y = a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup> + ... .`,`From y(0)=0, a<sub>0</sub>=0.`,`Substitute y' = 1 + y and compare coefficients.`,`a<sub>1</sub>=1, 2a<sub>2</sub>=a<sub>1</sub>, 3a<sub>3</sub>=a<sub>2</sub>, and so on.`]}
+      ]);
+      return problem(`Find the first non-zero terms of the power series solution for ${item.q}.`,item.ans,[...item.steps,`Therefore ${item.ans}.`]);
+    }
+
+    const generatorMap={
+      standard_maclaurin:genStandardMaclaurin,
+      derivatives_at_zero:genDerivativesAtZero,
+      simple_expansions:genSimpleExpansion,
+      validity:genValidity,
+      substitution:genSubstitution,
+      product_series:genProductSeries,
+      reciprocal_quotient:genReciprocalQuotient,
+      approximation:genApproximation,
+      taylor_formula:genTaylorFormula,
+      taylor_standard:genTaylorStandard,
+      taylor_approximation:genTaylorApproximation,
+      taylor_derivatives:genTaylorDerivatives,
+      limits:genLimit,
+      coefficients:genCoefficient,
+      differential_equations:genDifferentialEquation
+    };
+
+    function generateProblem(){
+      const type=currentType==='select'||currentType==='all'?choice(levelConfigs[currentLevel].types.filter(t=>!t.includes('mixed'))):currentType;
+      if(type==='level1_mixed')return choice([genStandardMaclaurin,genDerivativesAtZero,genSimpleExpansion,genValidity])();
+      if(type==='level2_mixed')return choice([genSubstitution,genProductSeries,genReciprocalQuotient,genApproximation])();
+      if(type==='level3_mixed')return choice([genTaylorFormula,genTaylorStandard,genTaylorApproximation,genTaylorDerivatives])();
+      if(type==='advanced_mixed')return choice([genLimit,genCoefficient,genDifferentialEquation])();
+      return (generatorMap[type]||genStandardMaclaurin)();
+    }
+
+    function switchLevel(level){
+      currentLevel=level;
+      currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index===level-1));
+      document.getElementById('level-title').textContent=levelConfigs[level].title;
+      document.getElementById('level-description').textContent=levelConfigs[level].description;
+      populateDropdown();
+      showBlankPage();
+    }
+    function populateDropdown(){
+      const dropdown=document.getElementById('type-dropdown');
+      dropdown.innerHTML='<option value="select">Select Question Type</option>';
+      levelConfigs[currentLevel].types.forEach(type=>{
+        const option=document.createElement('option');
+        option.value=type;
+        option.textContent=typeDisplayNames[type];
+        dropdown.appendChild(option);
+      });
+      const all=document.createElement('option');
+      all.value='all';
+      all.textContent='Mixed set from this level';
+      dropdown.appendChild(all);
+      dropdown.value='select';
+    }
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;generateNewSet()}
+    function showBlankPage(){
+      problems=[];answersVisible=false;stepsVisible=false;
+      document.getElementById('problem-set-header').className='problem-set-header';
+      document.getElementById('set-instruction').className='set-instruction';
+      document.getElementById('problem-list').innerHTML='';
+    }
+    function generateNewSet(){
+      if(currentType==='select'){
+        document.getElementById('problem-set-header').textContent='Select a question type to begin';
+        document.getElementById('problem-set-header').className='problem-set-header visible';
+        document.getElementById('set-instruction').className='set-instruction';
+        document.getElementById('problem-list').innerHTML='';
+        return;
+      }
+      problems=[];answersVisible=false;stepsVisible=false;
+      const seen=new Set();
+      let attempts=0;
+      while(problems.length<5&&attempts<80){
+        attempts++;
+        const p=generateProblem();
+        if(seen.has(p.question))continue;
+        seen.add(p.question);
+        problems.push(p);
+      }
+      renderProblems();
+    }
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instructionText||p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:`Answer each ${config.title.toLowerCase()} question.`;
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|≈|lim|∑|O\(|<span class="vfrac"|<sup>|<sub>|Taylor|Maclaurin|series|coefficient|polynomial/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div class="question-text">${p.prompt}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      display.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        display.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)display.className='timer-display warning';
+        if(timeRemaining<=0){stopTimer();display.textContent='Time Up';display.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;
+      const display=document.getElementById('timer-display');
+      if(display){display.textContent='Ready';display.className='timer-display'}
+    }
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-20"></script>
+</body>
+</html>
