@@ -654,6 +654,12 @@ body[data-route="worksheet-generator"] .account-action {
   background: linear-gradient(135deg, #5e41ad, #0d7f82);
 }
 
+.button.subtle {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(111, 76, 195, 0.18);
+  color: #342e62;
+}
+
 .button:disabled {
   opacity: 0.48;
   cursor: not-allowed;
@@ -744,6 +750,14 @@ body[data-route="worksheet-generator"] .account-action {
   color: var(--muted);
   font-size: clamp(1.02rem, 1.55vw, 1.22rem);
   line-height: 1.58;
+}
+
+.home-hero .hero-supporting-copy {
+  max-width: 680px;
+  margin-top: 10px;
+  color: #3d4965;
+  font-size: clamp(0.96rem, 1.2vw, 1.08rem);
+  font-weight: 650;
 }
 
 .home-testimonial-panel {
@@ -1244,6 +1258,43 @@ body[data-route="worksheet-generator"] .account-action {
   color: #282450;
   font-size: 1.15rem;
   line-height: 1;
+}
+
+.classroom-feature-band {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  margin: 0 0 18px;
+  padding: 20px;
+  border: 1px solid rgba(111, 76, 195, 0.2);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 12% 22%, rgba(23, 184, 179, 0.13), transparent 28%),
+    linear-gradient(135deg, rgba(241, 239, 255, 0.82), rgba(255, 255, 255, 0.96)),
+    #fff;
+  box-shadow: 0 10px 24px rgba(44, 35, 91, 0.06);
+}
+
+.classroom-feature-band h2 {
+  margin: 4px 0 7px;
+  color: #282450;
+  font-size: clamp(1.25rem, 2vw, 1.85rem);
+  line-height: 1.1;
+}
+
+.classroom-feature-band p {
+  max-width: 900px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.classroom-feature-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .home-card {
@@ -4910,6 +4961,7 @@ sup .worksheet-fraction span:last-child {
   }
 
   .coverage-home-band,
+  .classroom-feature-band,
   .coverage-panel-head,
   .launch-readiness-summary,
   .admin-testimonial-row,
@@ -5175,13 +5227,19 @@ sup .worksheet-fraction span:last-child {
   }
 
   .section-block,
+  .classroom-feature-band,
   .school-licence-band,
   .final-cta {
     padding: 18px;
   }
 
-  .school-licence-band {
+  .school-licence-band,
+  .classroom-feature-band {
     grid-template-columns: 1fr;
+  }
+
+  .classroom-feature-actions {
+    justify-content: flex-start;
   }
 
   .comparison-row {

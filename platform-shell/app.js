@@ -1,6 +1,6 @@
 const SITE_NAME = "Kaizen Maths";
 const SITE_TITLE = "Kaizen Maths | Complete Mathematics Teaching Workspace";
-const SITE_DESCRIPTION = "Kaizen Maths helps teachers create high-quality maths worksheets, assessments, worked examples, and classroom resources in minutes.";
+const SITE_DESCRIPTION = "Kaizen Maths helps teachers create maths worksheets, assessments, worked examples, classroom displays, and topic practice for GCSE, A-level, and Further Maths.";
 
 function updateMetaTag(selector, attribute, value) {
   const tag = document.head.querySelector(selector);
@@ -2376,6 +2376,7 @@ const universitySections = [
     videos: [
       { id: "practice-set-mode", title: "Practice Set Mode", description: "How to project a compact set of questions and use it for retrieval, fluency, and checking misconceptions." },
       { id: "one-example-mode", title: "One Example Mode", description: "How to put one question on the board for teacher modelling and class discussion." },
+      { id: "write-mode", title: "Writing On Classroom View", description: "How to use pen, highlighter, eraser, undo, and clear controls while modelling solutions live." },
       { id: "classroom-displays", title: "Classroom Displays", description: "How to use graph grids, shapes, solids, probability templates, statistics displays, and mechanics setups during live explanation." }
     ]
   },
@@ -2403,7 +2404,7 @@ const universitySections = [
 const homepageFeaturedVideo = {
   id: "homepage-featured-video",
   title: "How To Use Kaizen Maths",
-  description: "A short walkthrough showing teachers how to find a topic, generate questions, use classroom tools, and build resources.",
+  description: "A short walkthrough showing teachers how to choose topics, project questions, use Classroom View, and build teaching resources.",
   duration_label: "Start here"
 };
 
@@ -4577,30 +4578,30 @@ function renderGcseExamStyle() {
 
 function renderHome() {
   const workflowSteps = [
-    ["1", "Choose a topic", "Search the virtual textbook and open the exact maths topic you need."],
-    ["2", "Select questions", "Choose a level, question type, and the number of questions."],
-    ["3", "Generate a worksheet or assessment", "Create focused practice, mixed worksheets, quizzes, or exam-style sets."],
-    ["4", "Download, print, or share", "Use the resource in lessons, homework, intervention, or revision."]
+    ["1", "Choose a topic", "Open the exact GCSE, A-level, Further Maths, Statistics, or Mechanics topic you need."],
+    ["2", "Select questions", "Choose the level, question type, and amount of practice for the class in front of you."],
+    ["3", "Generate a resource", "Create board practice, worked examples, worksheets, quizzes, or assessment-style sets."],
+    ["4", "Teach, print, or share", "Project it, write over it, download it, print it, or use it for homework and intervention."]
   ];
   const benefitCards = [
-    ["Save planning time", "Move from topic choice to classroom-ready questions without rebuilding resources from scratch."],
-    ["Improve curriculum consistency", "Use structured levels and question types so practice is easier to align across classes."],
-    ["Create differentiated resources", "Select easier, core, or more challenging questions for different learners."],
-    ["Support assessment and intervention", "Build quizzes, assessments, homework, and targeted follow-up practice."],
-    ["Reduce reliance on scattered websites", "Keep questions, worked examples, worksheets, and classroom tools in one place."],
-    ["Keep everything in one place", "Use one professional workspace for teaching, practice, assessment, and revision."]
+    ["Teach from the board", "Project focused questions, reveal answers, show worked steps, and keep the pace of practice under teacher control."],
+    ["Write over Classroom View", "Use pen, highlighter, eraser, undo, and clear tools while modelling solutions or marking up diagrams live."],
+    ["Create resources quickly", "Move from topic choice to printable worksheets, quizzes, homework, and assessments in minutes."],
+    ["Cover more curriculum", "Use one workspace across GCSE, A-level Pure, Further Maths, Statistics, Mechanics, and classroom display resources."],
+    ["Support departments", "Give teams a shared structure for practice, intervention, assessment, and curriculum consistency."],
+    ["Keep teachers in control", "Kaizen Maths supplies the questions and worked support; teachers decide what to use, when to reveal it, and how to teach it."]
   ];
   const audienceCards = [
-    ["For Teachers", "Plan faster and teach with confidence.", "Generate board practice, examples, worksheets, and answer keys whenever you need them."],
+    ["For Teachers", "Teach from a stronger question bank.", "Generate board practice, examples, worksheets, answer keys, and worked solutions whenever you need them."],
     ["For Heads of Department", "Build consistency across your maths department.", "Support shared routines for homework, intervention, assessment, and curriculum coverage."],
     ["For Tutors", "Create targeted practice for every learner.", "Select exactly the topic and level a learner needs, then regenerate fresh practice instantly."],
-    ["For Schools", "A scalable resource platform for mathematics teaching.", "Give teachers shared access to a structured workspace for maths teaching and assessment."]
+    ["For Schools", "A scalable workspace for mathematics teaching.", "Give teachers shared access to structured questions, worked examples, assessments, and classroom tools."]
   ];
   const comparisonRows = [
-    ["Searching multiple free websites", "One structured workspace with searchable topic generators and printable outputs."],
+    ["Searching multiple free websites", "One structured workspace with searchable topic generators, classroom display tools, and printable outputs."],
     ["Manually building worksheets", "Generate clean worksheets and assessments from selected topics in minutes."],
-    ["Generic AI-generated questions", "Teacher-focused, structured, curriculum-aligned practice with predictable classroom workflows."],
-    ["Static textbook resources", "Unlimited fresh questions, answers, worked examples, and classroom display tools."]
+    ["Unstructured question lists", "Teacher-focused, curriculum-aligned practice with clear levels, answers, and worked steps."],
+    ["Static textbook resources", "Unlimited fresh questions, worked examples, board projection, annotation, and assessment support."]
   ];
   const testimonials = testimonialDisplayList();
 
@@ -4608,11 +4609,13 @@ function renderHome() {
     <section class="home-hero">
       <div class="hero-copy">
         <span class="eyebrow">The Complete Mathematics Teaching Workspace</span>
-        <h1>Create high-quality maths worksheets, assessments, and teaching resources in minutes.</h1>
-        <p>Kaizen Maths gives teachers instant access to unlimited questions, worked examples, assessments, and classroom tools, all in one professional teaching workspace.</p>
+        <h1>The complete mathematics teaching workspace</h1>
+        <p>Create classroom questions, worked examples, worksheets, assessments, and board-ready resources for GCSE, A-level, Further Maths, Statistics, and Mechanics in minutes.</p>
+        <p class="hero-supporting-copy">Kaizen Maths gives teachers a structured virtual mathematics textbook with unlimited practice, clear worked solutions, classroom projection, annotation tools, and assessment support.</p>
         <div class="home-hero-actions">
           <a class="button primary" href="#/upgrade">Start Free Trial</a>
-          <a class="button" href="#/kaizen-university">See How It Works</a>
+          <a class="button" href="#/coverage-map">Explore Topics</a>
+          <a class="button subtle" href="#/kaizen-university">See How It Works</a>
         </div>
       </div>
       <div class="home-hero-side">
@@ -4669,6 +4672,18 @@ function renderHome() {
       <a class="button primary" href="#/coverage-map">View Coverage Map</a>
     </section>
 
+    <section class="classroom-feature-band" aria-labelledby="classroomFeatureTitle">
+      <div>
+        <span class="eyebrow">Classroom View</span>
+        <h2 id="classroomFeatureTitle">Project questions and write directly over them</h2>
+        <p>Use Classroom View for live modelling, worked examples, checking misconceptions, and guided practice. Teachers can now annotate with pen, highlighter, eraser, undo, and clear controls while keeping the same question set on screen.</p>
+      </div>
+      <div class="classroom-feature-actions">
+        <a class="button primary" href="#/collections/classroom-tools">Explore Classroom Tools</a>
+        <a class="button" href="#/kaizen-university">Watch Guides</a>
+      </div>
+    </section>
+
     <section class="home-benefits section-block" aria-labelledby="benefitsTitle">
       <div class="section-heading">
         <span class="eyebrow">Teacher Benefits</span>
@@ -4723,7 +4738,7 @@ function renderHome() {
       <div>
         <span class="eyebrow">School Licence</span>
         <h2 id="schoolLicenceTitle">Designed for departments and schools</h2>
-        <p>Give every maths teacher access to a shared resource workspace that supports planning, assessment, intervention, and curriculum consistency.</p>
+        <p>Give every maths teacher access to a shared resource workspace that supports classroom instruction, practice, homework, assessment, intervention, and curriculum consistency.</p>
       </div>
       <!-- Future pricing table or school licence enquiry form can be inserted here. -->
       <a class="button primary" href="#/schools">Request a School Licence</a>
