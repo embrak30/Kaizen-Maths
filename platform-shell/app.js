@@ -225,6 +225,25 @@ const tools = [
     ]
   },
   {
+    slug: "proof-by-induction",
+    title: "Proof by Induction",
+    category: "Algebra",
+    level: "A-Level Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate Further Maths proof by induction practice covering sums, divisibility, inequalities, recurrence relations, and matrix powers.",
+    tags: ["algebra", "further maths", "proof", "proof by induction", "mathematical induction", "sums", "divisibility", "inequalities", "recurrence relations", "matrix powers"],
+    toolPath: "tools/proof-by-induction/index.html?v=proof-by-induction-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers induction proofs for arithmetic, odd-number, square, and geometric sums.",
+      "Level 2 covers divisibility proofs using powers, differences of powers, and polynomial expressions.",
+      "Level 3 covers inequalities and closed forms for recurrence relations.",
+      "Level 4 covers induction proofs for powers of 2 by 2 matrices."
+    ]
+  },
+  {
     slug: "complex-numbers",
     title: "Complex Numbers",
     category: "Algebra",

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proof by Induction</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f4f7fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#263b74;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#263b74;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #16a08c;color:#263b74;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1220px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#263b74;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e8eef8}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e8eef8;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}.tab.active{background:#fff;color:#263b74;border-bottom-color:#263b74}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d9deef;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#263b74;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:390px;padding:8px 10px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#263b74;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#263b74;color:#263b74}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#263b74}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#263b74;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #c8d2ff;border-radius:6px;background:#f0f4ff;color:#263b74;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px;border-left:4px solid #263b74;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#263b74;color:#fff;font-weight:850}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.18em;font-weight:700;line-height:1.42;color:#172033;overflow-wrap:anywhere}.problem-answer{display:none;white-space:normal;max-width:460px;padding:7px 11px;border-radius:10px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #263b74;border-radius:6px;background:#f1f5ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#263b74;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#263b74}.step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#5b21b6;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.matrix{display:inline-grid;grid-template-columns:auto auto auto;align-items:stretch;vertical-align:middle;margin:0 4px}.matrix .br{display:block;width:7px;border-top:1.8px solid currentColor;border-bottom:1.8px solid currentColor}.matrix .br.l{border-left:1.8px solid currentColor}.matrix .br.r{border-right:1.8px solid currentColor}.matrix .entries{display:grid;grid-template-columns:repeat(2,auto);gap:2px 12px;padding:0 6px;text-align:center;line-height:1.15}
+    .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.question-text{font-size:1.06em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Proof by Induction</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This Further Maths tool gives structured practice in mathematical induction for sums, divisibility, inequalities, recurrence relations, and matrix powers.</p>
+      <h3>Induction Structure</h3>
+      <ul>
+        <li><strong>Base case:</strong> show the statement is true for the first value.</li>
+        <li><strong>Assumption:</strong> assume the statement is true for n = k.</li>
+        <li><strong>Induction step:</strong> prove the statement for n = k + 1.</li>
+        <li><strong>Conclusion:</strong> state clearly that the result follows by induction.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>The induction step must use the assumption.</li>
+        <li>A proof should show the algebra, not simply say that the next case follows.</li>
+        <li>Students should finish with a complete conclusion.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Proof by Induction</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Sums</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Divisibility</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Inequalities</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Matrices</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Induction with Sums</h3>
+        <p id="level-description">Prove formulae for arithmetic, odd, square, and geometric sums.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Induction with Sums',description:'Prove formulae for arithmetic, odd, square, and geometric sums.',types:['arithmetic_sum','odd_sum','square_sum','geometric_sum','sums_mixed']},
+      2:{title:'Level 2: Divisibility by Induction',description:'Prove that expressions are divisible by a stated integer.',types:['power_minus_one','power_difference','polynomial_divisibility','divisibility_mixed']},
+      3:{title:'Level 3: Inequalities and Recurrences',description:'Prove inequalities and closed forms for recurrence relations.',types:['exponential_inequality','factorial_inequality','arithmetic_recurrence','geometric_recurrence','recurrence_mixed']},
+      4:{title:'Level 4: Matrix Powers',description:'Prove formulae for powers of 2 by 2 matrices.',types:['shear_matrix_power','diagonal_matrix_power','triangular_matrix_power','matrix_mixed']}
+    };
+
+    const typeDisplayNames={
+      arithmetic_sum:'Type 1: Arithmetic sums',
+      odd_sum:'Type 2: Sum of odd numbers',
+      square_sum:'Type 3: Sum of squares',
+      geometric_sum:'Type 4: Geometric sums',
+      sums_mixed:'Type 5: Mixed sums',
+      power_minus_one:'Type 1: a^n − 1 divisibility',
+      power_difference:'Type 2: a^n − b^n divisibility',
+      polynomial_divisibility:'Type 3: Polynomial divisibility',
+      divisibility_mixed:'Type 4: Mixed divisibility',
+      exponential_inequality:'Type 1: Exponential inequalities',
+      factorial_inequality:'Type 2: Factorial inequalities',
+      arithmetic_recurrence:'Type 3: Arithmetic recurrence formulae',
+      geometric_recurrence:'Type 4: Geometric recurrence formulae',
+      recurrence_mixed:'Type 5: Mixed inequalities and recurrences',
+      shear_matrix_power:'Type 1: Shear matrix powers',
+      diagonal_matrix_power:'Type 2: Diagonal matrix powers',
+      triangular_matrix_power:'Type 3: Triangular matrix powers',
+      matrix_mixed:'Type 4: Mixed matrix powers'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      arithmetic_sum:'Prove each sum formula by mathematical induction.',
+      odd_sum:'Prove each odd-number sum formula by mathematical induction.',
+      square_sum:'Prove the square-number sum formula by mathematical induction.',
+      geometric_sum:'Prove each geometric sum formula by mathematical induction.',
+      sums_mixed:'Answer each mixed induction-with-sums question.',
+      power_minus_one:'Prove each divisibility result by mathematical induction.',
+      power_difference:'Prove each divisibility result by mathematical induction.',
+      polynomial_divisibility:'Prove each polynomial divisibility result by mathematical induction.',
+      divisibility_mixed:'Answer each mixed divisibility induction question.',
+      exponential_inequality:'Prove each inequality by mathematical induction.',
+      factorial_inequality:'Prove each factorial inequality by mathematical induction.',
+      arithmetic_recurrence:'Prove each recurrence formula by mathematical induction.',
+      geometric_recurrence:'Prove each recurrence formula by mathematical induction.',
+      recurrence_mixed:'Answer each mixed inequality or recurrence induction question.',
+      shear_matrix_power:'Prove each matrix power formula by mathematical induction.',
+      diagonal_matrix_power:'Prove each matrix power formula by mathematical induction.',
+      triangular_matrix_power:'Prove each matrix power formula by mathematical induction.',
+      matrix_mixed:'Answer each mixed matrix induction question.'
+    };
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function sup(v){return `<sup>${v}</sup>`}
+    function sub(v){return `<sub>${v}</sub>`}
+    function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function sumText(top,term){return `Σ<sub>r=1</sub><sup>${top}</sup> ${term}`}
+    function stripTags(html){return String(html).replace(/<sup>(.*?)<\/sup>/gi,'^$1').replace(/<sub>(.*?)<\/sub>/gi,'_$1').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function matrix(a,b,c,d){return `<span class="matrix"><span class="br l"></span><span class="entries"><span>${a}</span><span>${b}</span><span>${c}</span><span>${d}</span></span><span class="br r"></span></span>`}
+    function signed(n){return n<0?`− ${Math.abs(n)}`:`+ ${n}`}
+    function factorial(n){let out=1;for(let i=2;i<=n;i++)out*=i;return out}
+    function linearTerm(a,b,letter='r'){
+      if(b===0)return `${a}${letter}`;
+      return `${a}${letter} ${signed(b)}`;
+    }
+    function power(base,exponent){return `${base}${sup(exponent)}`}
+    function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question',instruction=typeInstructions[currentType]||'Prove each result by induction.'){
+      return {prompt,question:stripTags(prompt),answer,steps,typeLabel,instruction,instructionText:instruction};
+    }
+
+    function arithmeticSum(){
+      const a=choice([2,3,4,5,6]), b=choice([-3,-2,-1,1,2,3]);
+      const term=linearTerm(a,b);
+      const rhs=`${frac(`n(${a}(n + 1) ${signed(2*b)})`,2)}`;
+      const prompt=`Prove by induction that ${sumText('n',term)} = ${rhs} for n ≥ 1.`;
+      const answer='Proved by induction.';
+      return problem(prompt,answer,[
+        `Base case n = 1: LHS = ${a} ${signed(b)} = ${a+b}.`,
+        `RHS = ${frac(`1(${a}(2) ${signed(2*b)})`,2)} = ${frac(`${2*a + 2*b}`,2)} = ${a+b}.`,
+        `Assume true for n = k: ${sumText('k',term)} = ${frac(`k(${a}(k + 1) ${signed(2*b)})`,2)}.`,
+        `For n = k + 1, add the next term ${a}(k + 1) ${signed(b)}.`,
+        `${sumText('k+1',term)} = ${frac(`k(${a}(k + 1) ${signed(2*b)})`,2)} + ${a}(k + 1) ${signed(b)}`,
+        `= ${frac(`k(${a}(k + 1) ${signed(2*b)}) + 2(${a}(k + 1) ${signed(b)})`,2)}`,
+        `= ${frac(`(k + 1)(${a}(k + 2) ${signed(2*b)})`,2)}.`,
+        `This is the required formula with n = k + 1, so the result follows by induction.`
+      ]);
+    }
+
+    function oddSum(){
+      const start=choice([1,2,3,4,5,6]);
+      const term=`2r ${signed(2*start-3)}`;
+      const rhs=`n(n ${signed(start-1)})`;
+      const prompt=`Prove by induction that ${sumText('n',term)} = ${rhs} for n ≥ 1.`;
+      const first=2+2*start-3;
+      return problem(prompt,'Proved by induction.',[
+        `Base case n = 1: LHS = ${first}.`,
+        `RHS = 1(1 ${signed(start-1)}) = ${first}.`,
+        `Assume true for n = k: ${sumText('k',term)} = k(k ${signed(start-1)}).`,
+        `For n = k + 1, add the next term 2(k + 1) ${signed(2*start-3)}.`,
+        `${sumText('k+1',term)} = k(k ${signed(start-1)}) + 2(k + 1) ${signed(2*start-3)}`,
+        `= k${sup(2)} ${signed((start-1))}k + 2k ${signed(2*start-1)}`,
+        `= k${sup(2)} ${signed(start+1)}k ${signed(2*start-1)}`,
+        `= (k + 1)(k ${signed(start)}).`,
+        `This is the required formula with n = k + 1, so the result follows by induction.`
+      ]);
+    }
+
+    function squareSum(){
+      const c=choice([1,2,3,4,5]);
+      const term=c===1 ? `r${sup(2)}` : `${c}r${sup(2)}`;
+      const rhs=c===1 ? frac('n(n + 1)(2n + 1)',6) : frac(`${c}n(n + 1)(2n + 1)`,6);
+      return problem(`Prove by induction that ${sumText('n',term)} = ${rhs} for n ≥ 1.`,'Proved by induction.',[
+        `Base case n = 1: LHS = ${c} × 1${sup(2)} = ${c}.`,
+        `RHS = ${frac(`${c} × 1 × 2 × 3`,6)} = ${c}.`,
+        `Assume true for n = k: ${sumText('k',term)} = ${frac(`${c}k(k + 1)(2k + 1)`,6)}.`,
+        `For n = k + 1, add the next term ${c}(k + 1)${sup(2)}.`,
+        `${sumText('k+1',term)} = ${frac(`${c}k(k + 1)(2k + 1)`,6)} + ${c}(k + 1)${sup(2)}`,
+        `= ${frac(`${c}(k + 1)[k(2k + 1) + 6(k + 1)]`,6)}`,
+        `= ${frac(`${c}(k + 1)(2k² + 7k + 6)`,6)}`,
+        `= ${frac(`${c}(k + 1)(k + 2)(2k + 3)`,6)}.`,
+        `This is ${frac(`${c}(k + 1)((k + 1) + 1)(2(k + 1) + 1)`,6)}, so the result follows by induction.`
+      ]);
+    }
+
+    function geometricSum(){
+      const a=choice([2,3,4,5,6,7]);
+      return problem(`Prove by induction that ${sumText('n',`${a}${sup('r−1')}`)} = ${frac(`${a}${sup('n')} − 1`,a-1)} for n ≥ 1.`,`Proved by induction.`,[
+        `Base case n = 1: LHS = ${a}${sup(0)} = 1.`,
+        `RHS = ${frac(`${a}${sup(1)} − 1`,a-1)} = ${frac(`${a-1}`,a-1)} = 1.`,
+        `Assume true for n = k: ${sumText('k',`${a}${sup('r−1')}`)} = ${frac(`${a}${sup('k')} − 1`,a-1)}.`,
+        `For n = k + 1, add the next term ${a}${sup('k')}.`,
+        `${sumText('k+1',`${a}${sup('r−1')}`)} = ${frac(`${a}${sup('k')} − 1`,a-1)} + ${a}${sup('k')}`,
+        `= ${frac(`${a}${sup('k')} − 1 + ${a}${sup('k')}(${a-1})`,a-1)}`,
+        `= ${frac(`${a}${sup('k+1')} − 1`,a-1)}.`,
+        `This is the required formula with n = k + 1, so the result follows by induction.`
+      ]);
+    }
+
+    function powerMinusOne(){
+      const a=choice([3,4,5,6,7,8]);
+      return problem(`Prove by induction that ${a}${sup('n')} − 1 is divisible by ${a-1} for n ≥ 1.`,'Proved by induction.',[
+        `Base case n = 1: ${a}${sup(1)} − 1 = ${a-1}, which is divisible by ${a-1}.`,
+        `Assume true for n = k: ${a}${sup('k')} − 1 = ${a-1}m for some integer m.`,
+        `For n = k + 1: ${a}${sup('k+1')} − 1 = ${a}(${a}${sup('k')}) − 1.`,
+        `= ${a}(${a}${sup('k')} − 1) + (${a} − 1)`,
+        `= ${a}(${a-1}m) + (${a-1})`,
+        `= (${a-1})(${a}m + 1).`,
+        `Since ${a}m + 1 is an integer, ${a}${sup('k+1')} − 1 is divisible by ${a-1}.`,
+        `Therefore the result follows by induction.`
+      ]);
+    }
+
+    function powerDifference(){
+      const pairs=[[5,2],[7,3],[8,5],[9,4],[11,6]];
+      const [a,b]=choice(pairs), divisor=a-b;
+      return problem(`Prove by induction that ${a}${sup('n')} − ${b}${sup('n')} is divisible by ${divisor} for n ≥ 1.`,'Proved by induction.',[
+        `Base case n = 1: ${a} − ${b} = ${divisor}, which is divisible by ${divisor}.`,
+        `Assume true for n = k: ${a}${sup('k')} − ${b}${sup('k')} = ${divisor}m for some integer m.`,
+        `For n = k + 1: ${a}${sup('k+1')} − ${b}${sup('k+1')} = ${a}(${a}${sup('k')}) − ${b}(${b}${sup('k')}).`,
+        `= ${a}(${a}${sup('k')} − ${b}${sup('k')}) + (${a} − ${b})${b}${sup('k')}`,
+        `= ${a}(${divisor}m) + ${divisor}${b}${sup('k')}`,
+        `= ${divisor}(${a}m + ${b}${sup('k')}).`,
+        `Since ${a}m + ${b}${sup('k')} is an integer, the expression is divisible by ${divisor}.`,
+        `Therefore the result follows by induction.`
+      ]);
+    }
+
+    function polynomialDivisibility(){
+      const variants=[
+        {
+          prompt:`Prove by induction that n${sup(3)} + 2n is divisible by 3 for n ≥ 1.`,
+          base:`1${sup(3)} + 2(1) = 3`,
+          assume:`k${sup(3)} + 2k = 3m`,
+          next:`(k + 1)${sup(3)} + 2(k + 1)`,
+          expand:`k${sup(3)} + 3k${sup(2)} + 3k + 1 + 2k + 2`,
+          group:`(k${sup(3)} + 2k) + 3k${sup(2)} + 3k + 3`,
+          final:`3m + 3(k${sup(2)} + k + 1) = 3(m + k${sup(2)} + k + 1)`,
+          divisor:3
+        },
+        {
+          prompt:`Prove by induction that n${sup(3)} − n is divisible by 3 for n ≥ 1.`,
+          base:`1${sup(3)} − 1 = 0`,
+          assume:`k${sup(3)} − k = 3m`,
+          next:`(k + 1)${sup(3)} − (k + 1)`,
+          expand:`k${sup(3)} + 3k${sup(2)} + 3k + 1 − k − 1`,
+          group:`(k${sup(3)} − k) + 3k${sup(2)} + 3k`,
+          final:`3m + 3(k${sup(2)} + k) = 3(m + k${sup(2)} + k)`,
+          divisor:3
+        },
+        {
+          prompt:`Prove by induction that n${sup(2)} + n is divisible by 2 for n ≥ 1.`,
+          base:`1${sup(2)} + 1 = 2`,
+          assume:`k${sup(2)} + k = 2m`,
+          next:`(k + 1)${sup(2)} + (k + 1)`,
+          expand:`k${sup(2)} + 2k + 1 + k + 1`,
+          group:`(k${sup(2)} + k) + 2k + 2`,
+          final:`2m + 2(k + 1) = 2(m + k + 1)`,
+          divisor:2
+        },
+        {
+          prompt:`Prove by induction that n${sup(2)} + 3n is divisible by 2 for n ≥ 1.`,
+          base:`1${sup(2)} + 3(1) = 4`,
+          assume:`k${sup(2)} + 3k = 2m`,
+          next:`(k + 1)${sup(2)} + 3(k + 1)`,
+          expand:`k${sup(2)} + 2k + 1 + 3k + 3`,
+          group:`(k${sup(2)} + 3k) + 2k + 4`,
+          final:`2m + 2(k + 2) = 2(m + k + 2)`,
+          divisor:2
+        },
+        {
+          prompt:`Prove by induction that n${sup(2)} + 5n is divisible by 2 for n ≥ 1.`,
+          base:`1${sup(2)} + 5(1) = 6`,
+          assume:`k${sup(2)} + 5k = 2m`,
+          next:`(k + 1)${sup(2)} + 5(k + 1)`,
+          expand:`k${sup(2)} + 2k + 1 + 5k + 5`,
+          group:`(k${sup(2)} + 5k) + 2k + 6`,
+          final:`2m + 2(k + 3) = 2(m + k + 3)`,
+          divisor:2
+        }
+      ];
+      const v=choice(variants);
+      return problem(v.prompt,'Proved by induction.',[
+        `Base case n = 1: ${v.base}, so the result is true.`,
+        `Assume true for n = k: ${v.assume} for some integer m.`,
+        `For n = k + 1: ${v.next}`,
+        `= ${v.expand}`,
+        `= ${v.group}`,
+        `= ${v.final}.`,
+        `This is divisible by ${v.divisor}, so the result follows by induction.`
+      ]);
+    }
+
+    function exponentialInequality(){
+      const a=choice([2,3,4,5,6]), c=a-1;
+      return problem(`Prove by induction that ${a}${sup('n')} ≥ ${c}n + 1 for n ≥ 1.`,'Proved by induction.',[
+        `Base case n = 1: LHS = ${a}, RHS = ${c}(1) + 1 = ${a}.`,
+        `Assume true for n = k: ${a}${sup('k')} ≥ ${c}k + 1.`,
+        `For n = k + 1: ${a}${sup('k+1')} = ${a} × ${a}${sup('k')}.`,
+        `Using the assumption: ${a}${sup('k+1')} ≥ ${a}(${c}k + 1) = ${a*c}k + ${a}.`,
+        `Compare this with ${c}(k + 1) + 1 = ${c}k + ${a}.`,
+        `${a*c}k + ${a} − (${c}k + ${a}) = ${c*c}k ≥ 0.`,
+        `So ${a}${sup('k+1')} ≥ ${c}(k + 1) + 1.`,
+        `Therefore the result follows by induction.`
+      ]);
+    }
+
+    function factorialInequality(){
+      const variants=[
+        {a:2,start:1,shift:1},
+        {a:3,start:3,shift:2},
+        {a:4,start:4,shift:3},
+        {a:5,start:5,shift:4},
+        {a:6,start:6,shift:5}
+      ];
+      const v=choice(variants);
+      const exponent=`n−${v.shift}`;
+      const nextExponent=`k−${v.shift}`;
+      return problem(`Prove by induction that n! ≥ ${v.a}${sup(exponent)} for n ≥ ${v.start}.`,'Proved by induction.',[
+        `Base case n = ${v.start}: ${v.start}! = ${factorial(v.start)} and ${v.a}${sup(v.start-v.shift)} = ${Math.pow(v.a,v.start-v.shift)}.`,
+        `So ${v.start}! ≥ ${v.a}${sup(v.start-v.shift)}.`,
+        `Assume true for n = k: k! ≥ ${v.a}${sup(`k−${v.shift}`)}.`,
+        `For n = k + 1: (k + 1)! = (k + 1)k!.`,
+        `Using the assumption: (k + 1)! ≥ (k + 1)${v.a}${sup(nextExponent)}.`,
+        `Since k ≥ ${v.start}, k + 1 ≥ ${v.start+1} ≥ ${v.a}.`,
+        `(k + 1)${v.a}${sup(nextExponent)} ≥ ${v.a} × ${v.a}${sup(nextExponent)} = ${v.a}${sup(`k+1−${v.shift}`)}.`,
+        `So (k + 1)! ≥ ${v.a}${sup(`k+1−${v.shift}`)}, which is the required result for n = k + 1.`,
+        `Therefore the result follows by induction.`
+      ]);
+    }
+
+    function arithmeticRecurrence(){
+      const u1=choice([2,3,5,7]), d=choice([3,4,6,8]);
+      return problem(`A sequence is defined by u${sub(1)} = ${u1} and u${sub('n+1')} = u${sub('n')} + ${d}. Prove that u${sub('n')} = ${u1} + ${d}(n − 1) for n ≥ 1.`,'Proved by induction.',[
+        `Base case n = 1: RHS = ${u1} + ${d}(0) = ${u1} = u${sub(1)}.`,
+        `Assume true for n = k: u${sub('k')} = ${u1} + ${d}(k − 1).`,
+        `Using the recurrence, u${sub('k+1')} = u${sub('k')} + ${d}.`,
+        `Substitute the assumption: u${sub('k+1')} = ${u1} + ${d}(k − 1) + ${d}.`,
+        `= ${u1} + ${d}k.`,
+        `= ${u1} + ${d}((k + 1) − 1).`,
+        `This is the required formula for n = k + 1, so the result follows by induction.`
+      ]);
+    }
+
+    function geometricRecurrence(){
+      const u1=choice([2,3,4,5]), r=choice([2,3,4]);
+      return problem(`A sequence is defined by u${sub(1)} = ${u1} and u${sub('n+1')} = ${r}u${sub('n')}. Prove that u${sub('n')} = ${u1} × ${r}${sup('n−1')} for n ≥ 1.`,'Proved by induction.',[
+        `Base case n = 1: RHS = ${u1} × ${r}${sup(0)} = ${u1} = u${sub(1)}.`,
+        `Assume true for n = k: u${sub('k')} = ${u1} × ${r}${sup('k−1')}.`,
+        `Using the recurrence, u${sub('k+1')} = ${r}u${sub('k')}.`,
+        `Substitute the assumption: u${sub('k+1')} = ${r}(${u1} × ${r}${sup('k−1')}).`,
+        `= ${u1} × ${r}${sup('k')}.`,
+        `= ${u1} × ${r}${sup('(k+1)−1')}.`,
+        `This is the required formula for n = k + 1, so the result follows by induction.`
+      ]);
+    }
+
+    function shearMatrixPower(){
+      const c=choice([1,2,3,4,5]);
+      return problem(`Let A = ${matrix(1,c,0,1)}. Prove by induction that A${sup('n')} = ${matrix(1,`${c}n`,0,1)} for n ≥ 1.`,'Proved by induction.',[
+        `Base case n = 1: A${sup(1)} = ${matrix(1,c,0,1)}, which matches ${matrix(1,`${c}(1)`,0,1)}.`,
+        `Assume true for n = k: A${sup('k')} = ${matrix(1,`${c}k`,0,1)}.`,
+        `Then A${sup('k+1')} = A${sup('k')}A.`,
+        `A${sup('k+1')} = ${matrix(1,`${c}k`,0,1)}${matrix(1,c,0,1)}`,
+        `= ${matrix(1,`${c} + ${c}k`,0,1)}`,
+        `= ${matrix(1,`${c}(k + 1)`,0,1)}.`,
+        `This is the required formula for n = k + 1, so the result follows by induction.`
+      ]);
+    }
+
+    function diagonalMatrixPower(){
+      const a=choice([2,3,4]), b=choice([5,6,7]);
+      return problem(`Let D = ${matrix(a,0,0,b)}. Prove by induction that D${sup('n')} = ${matrix(`${a}${sup('n')}`,0,0,`${b}${sup('n')}`)} for n ≥ 1.`,'Proved by induction.',[
+        `Base case n = 1: D${sup(1)} = ${matrix(a,0,0,b)}, which matches ${matrix(`${a}${sup(1)}`,0,0,`${b}${sup(1)}`)}.`,
+        `Assume true for n = k: D${sup('k')} = ${matrix(`${a}${sup('k')}`,0,0,`${b}${sup('k')}`)}.`,
+        `Then D${sup('k+1')} = D${sup('k')}D.`,
+        `D${sup('k+1')} = ${matrix(`${a}${sup('k')}`,0,0,`${b}${sup('k')}`)}${matrix(a,0,0,b)}`,
+        `= ${matrix(`${a}${sup('k')} × ${a}`,0,0,`${b}${sup('k')} × ${b}`)}`,
+        `= ${matrix(`${a}${sup('k+1')}`,0,0,`${b}${sup('k+1')}`)}.`,
+        `This is the required formula for n = k + 1, so the result follows by induction.`
+      ]);
+    }
+
+    function triangularMatrixPower(){
+      const r=choice([2,3,4]), c=choice([1,2,3,5]);
+      return problem(`Let A = ${matrix(r,c,0,r)}. Prove by induction that A${sup('n')} = ${matrix(`${r}${sup('n')}`,`${c}n${r === 1 ? '' : `(${r}${sup('n−1')})`}`,0,`${r}${sup('n')}`)} for n ≥ 1.`,'Proved by induction.',[
+        `Base case n = 1: A${sup(1)} = ${matrix(r,c,0,r)}.`,
+        `The formula gives ${matrix(`${r}${sup(1)}`,`${c}(1)${r === 1 ? '' : `(${r}${sup(0)})`}`,0,`${r}${sup(1)}`)}, which is the same matrix.`,
+        `Assume true for n = k: A${sup('k')} = ${matrix(`${r}${sup('k')}`,`${c}k${r === 1 ? '' : `(${r}${sup('k−1')})`}`,0,`${r}${sup('k')}`)}.`,
+        `Then A${sup('k+1')} = A${sup('k')}A.`,
+        `A${sup('k+1')} = ${matrix(`${r}${sup('k')}`,`${c}k${r === 1 ? '' : `(${r}${sup('k−1')})`}`,0,`${r}${sup('k')}`)}${matrix(r,c,0,r)}`,
+        `Top-right entry = ${r}${sup('k')}(${c}) + ${c}k${r === 1 ? '' : `(${r}${sup('k−1')})`}(${r})`,
+        `= ${c}${r}${sup('k')} + ${c}k${r}${sup('k')} = ${c}(k + 1)${r}${sup('k')}.`,
+        `So A${sup('k+1')} = ${matrix(`${r}${sup('k+1')}`,`${c}(k + 1)${r}${sup('k')}`,0,`${r}${sup('k+1')}`)}.`,
+        `This is the required formula for n = k + 1, so the result follows by induction.`
+      ]);
+    }
+
+    function generateProblem(){
+      const maps={
+        arithmetic_sum:arithmeticSum,
+        odd_sum:oddSum,
+        square_sum:squareSum,
+        geometric_sum:geometricSum,
+        sums_mixed:()=>choice([arithmeticSum,oddSum,squareSum,geometricSum])(),
+        power_minus_one:powerMinusOne,
+        power_difference:powerDifference,
+        polynomial_divisibility:polynomialDivisibility,
+        divisibility_mixed:()=>choice([powerMinusOne,powerDifference,polynomialDivisibility])(),
+        exponential_inequality:exponentialInequality,
+        factorial_inequality:factorialInequality,
+        arithmetic_recurrence:arithmeticRecurrence,
+        geometric_recurrence:geometricRecurrence,
+        recurrence_mixed:()=>choice([exponentialInequality,factorialInequality,arithmeticRecurrence,geometricRecurrence])(),
+        shear_matrix_power:shearMatrixPower,
+        diagonal_matrix_power:diagonalMatrixPower,
+        triangular_matrix_power:triangularMatrixPower,
+        matrix_mixed:()=>choice([shearMatrixPower,diagonalMatrixPower,triangularMatrixPower])()
+      };
+      return (maps[currentType]||arithmeticSum)();
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      populateDropdown();
+      showBlankPage();
+    }
+
+    function populateDropdown(){
+      const select=document.getElementById('type-dropdown');
+      const types=levelConfigs[currentLevel].types;
+      select.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      select.value=currentType;
+    }
+
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;generateNewSet()}
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').className='problem-set-header';
+      document.getElementById('set-instruction').className='set-instruction';
+      document.getElementById('problem-list').innerHTML='<li class="problem-item"><div class="problem-left"><div class="problem-number">1</div><div class="question-text">Select a question type to begin proof by induction practice.</div></div></li>';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      answersVisible=false;stepsVisible=false;problems=[];
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<220){
+        const oldType=currentType;
+        if(currentType==='all')currentType=choice(levelConfigs[currentLevel].types);
+        const p=generateProblem();
+        currentType=oldType;
+        const key=p.question;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed proof by induction question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|≥|≤|Σ|divisible|A<sup>|D<sup>|<span class="matrix"|<span class="vfrac"|<sup>|<sub>/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div class="question-text">${p.prompt}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;timerActive=true;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      display.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        display.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)display.className='timer-display warning';
+        if(timeRemaining<=0){stopTimer();display.textContent='Time Up';display.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;timerActive=false;
+      const display=document.getElementById('timer-display');
+      if(display){display.textContent='Ready';display.className='timer-display'}
+    }
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-20"></script>
+</body>
+</html>
