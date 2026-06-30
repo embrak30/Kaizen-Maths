@@ -39,7 +39,7 @@
         <li><strong>Base case:</strong> show the statement is true for the first value.</li>
         <li><strong>Assumption:</strong> assume the statement is true for n = k.</li>
         <li><strong>Induction step:</strong> prove the statement for n = k + 1.</li>
-        <li><strong>Conclusion:</strong> state clearly that the result follows by induction.</li>
+        <li><strong>Conclusion:</strong> state that the base case is true and that P(k) implies P(k + 1), so the statement is true for every integer in the stated range.</li>
       </ul>
       <h3>Teaching Focus</h3>
       <ul>
@@ -160,6 +160,9 @@
     function matrix(a,b,c,d){return `<span class="matrix"><span class="br l"></span><span class="entries"><span>${a}</span><span>${b}</span><span>${c}</span><span>${d}</span></span><span class="br r"></span></span>`}
     function signed(n){return n<0?`− ${Math.abs(n)}`:`+ ${n}`}
     function factorial(n){let out=1;for(let i=2;i<=n;i++)out*=i;return out}
+    function inductionConclusion(start=1){
+      return `The base case has been shown to be true. The induction step has shown that if the statement is true for n = k, then it is true for n = k + 1. Therefore, by mathematical induction, the statement is true for all integers n ≥ ${start}.`;
+    }
     function linearTerm(a,b,letter='r'){
       if(b===0)return `${a}${letter}`;
       return `${a}${letter} ${signed(b)}`;
@@ -183,7 +186,8 @@
         `${sumText('k+1',term)} = ${frac(`k(${a}(k + 1) ${signed(2*b)})`,2)} + ${a}(k + 1) ${signed(b)}`,
         `= ${frac(`k(${a}(k + 1) ${signed(2*b)}) + 2(${a}(k + 1) ${signed(b)})`,2)}`,
         `= ${frac(`(k + 1)(${a}(k + 2) ${signed(2*b)})`,2)}.`,
-        `This is the required formula with n = k + 1, so the result follows by induction.`
+        `This is the required formula with n = k + 1.`,
+        inductionConclusion()
       ]);
     }
 
@@ -202,7 +206,8 @@
         `= k${sup(2)} ${signed((start-1))}k + 2k ${signed(2*start-1)}`,
         `= k${sup(2)} ${signed(start+1)}k ${signed(2*start-1)}`,
         `= (k + 1)(k ${signed(start)}).`,
-        `This is the required formula with n = k + 1, so the result follows by induction.`
+        `This is the required formula with n = k + 1.`,
+        inductionConclusion()
       ]);
     }
 
@@ -219,7 +224,8 @@
         `= ${frac(`${c}(k + 1)[k(2k + 1) + 6(k + 1)]`,6)}`,
         `= ${frac(`${c}(k + 1)(2k² + 7k + 6)`,6)}`,
         `= ${frac(`${c}(k + 1)(k + 2)(2k + 3)`,6)}.`,
-        `This is ${frac(`${c}(k + 1)((k + 1) + 1)(2(k + 1) + 1)`,6)}, so the result follows by induction.`
+        `This is ${frac(`${c}(k + 1)((k + 1) + 1)(2(k + 1) + 1)`,6)}, which is the required formula with n = k + 1.`,
+        inductionConclusion()
       ]);
     }
 
@@ -233,7 +239,8 @@
         `${sumText('k+1',`${a}${sup('r−1')}`)} = ${frac(`${a}${sup('k')} − 1`,a-1)} + ${a}${sup('k')}`,
         `= ${frac(`${a}${sup('k')} − 1 + ${a}${sup('k')}(${a-1})`,a-1)}`,
         `= ${frac(`${a}${sup('k+1')} − 1`,a-1)}.`,
-        `This is the required formula with n = k + 1, so the result follows by induction.`
+        `This is the required formula with n = k + 1.`,
+        inductionConclusion()
       ]);
     }
 
@@ -247,7 +254,7 @@
         `= ${a}(${a-1}m) + (${a-1})`,
         `= (${a-1})(${a}m + 1).`,
         `Since ${a}m + 1 is an integer, ${a}${sup('k+1')} − 1 is divisible by ${a-1}.`,
-        `Therefore the result follows by induction.`
+        inductionConclusion()
       ]);
     }
 
@@ -262,7 +269,7 @@
         `= ${a}(${divisor}m) + ${divisor}${b}${sup('k')}`,
         `= ${divisor}(${a}m + ${b}${sup('k')}).`,
         `Since ${a}m + ${b}${sup('k')} is an integer, the expression is divisible by ${divisor}.`,
-        `Therefore the result follows by induction.`
+        inductionConclusion()
       ]);
     }
 
@@ -327,7 +334,8 @@
         `= ${v.expand}`,
         `= ${v.group}`,
         `= ${v.final}.`,
-        `This is divisible by ${v.divisor}, so the result follows by induction.`
+        `This is divisible by ${v.divisor}.`,
+        inductionConclusion()
       ]);
     }
 
@@ -341,7 +349,7 @@
         `Compare this with ${c}(k + 1) + 1 = ${c}k + ${a}.`,
         `${a*c}k + ${a} − (${c}k + ${a}) = ${c*c}k ≥ 0.`,
         `So ${a}${sup('k+1')} ≥ ${c}(k + 1) + 1.`,
-        `Therefore the result follows by induction.`
+        inductionConclusion()
       ]);
     }
 
@@ -365,7 +373,7 @@
         `Since k ≥ ${v.start}, k + 1 ≥ ${v.start+1} ≥ ${v.a}.`,
         `(k + 1)${v.a}${sup(nextExponent)} ≥ ${v.a} × ${v.a}${sup(nextExponent)} = ${v.a}${sup(`k+1−${v.shift}`)}.`,
         `So (k + 1)! ≥ ${v.a}${sup(`k+1−${v.shift}`)}, which is the required result for n = k + 1.`,
-        `Therefore the result follows by induction.`
+        inductionConclusion(v.start)
       ]);
     }
 
@@ -378,7 +386,8 @@
         `Substitute the assumption: u${sub('k+1')} = ${u1} + ${d}(k − 1) + ${d}.`,
         `= ${u1} + ${d}k.`,
         `= ${u1} + ${d}((k + 1) − 1).`,
-        `This is the required formula for n = k + 1, so the result follows by induction.`
+        `This is the required formula for n = k + 1.`,
+        inductionConclusion()
       ]);
     }
 
@@ -391,7 +400,8 @@
         `Substitute the assumption: u${sub('k+1')} = ${r}(${u1} × ${r}${sup('k−1')}).`,
         `= ${u1} × ${r}${sup('k')}.`,
         `= ${u1} × ${r}${sup('(k+1)−1')}.`,
-        `This is the required formula for n = k + 1, so the result follows by induction.`
+        `This is the required formula for n = k + 1.`,
+        inductionConclusion()
       ]);
     }
 
@@ -404,7 +414,8 @@
         `A${sup('k+1')} = ${matrix(1,`${c}k`,0,1)}${matrix(1,c,0,1)}`,
         `= ${matrix(1,`${c} + ${c}k`,0,1)}`,
         `= ${matrix(1,`${c}(k + 1)`,0,1)}.`,
-        `This is the required formula for n = k + 1, so the result follows by induction.`
+        `This is the required formula for n = k + 1.`,
+        inductionConclusion()
       ]);
     }
 
@@ -417,7 +428,8 @@
         `D${sup('k+1')} = ${matrix(`${a}${sup('k')}`,0,0,`${b}${sup('k')}`)}${matrix(a,0,0,b)}`,
         `= ${matrix(`${a}${sup('k')} × ${a}`,0,0,`${b}${sup('k')} × ${b}`)}`,
         `= ${matrix(`${a}${sup('k+1')}`,0,0,`${b}${sup('k+1')}`)}.`,
-        `This is the required formula for n = k + 1, so the result follows by induction.`
+        `This is the required formula for n = k + 1.`,
+        inductionConclusion()
       ]);
     }
 
@@ -432,7 +444,8 @@
         `Top-right entry = ${r}${sup('k')}(${c}) + ${c}k${r === 1 ? '' : `(${r}${sup('k−1')})`}(${r})`,
         `= ${c}${r}${sup('k')} + ${c}k${r}${sup('k')} = ${c}(k + 1)${r}${sup('k')}.`,
         `So A${sup('k+1')} = ${matrix(`${r}${sup('k+1')}`,`${c}(k + 1)${r}${sup('k')}`,0,`${r}${sup('k+1')}`)}.`,
-        `This is the required formula for n = k + 1, so the result follows by induction.`
+        `This is the required formula for n = k + 1.`,
+        inductionConclusion()
       ]);
     }
 
