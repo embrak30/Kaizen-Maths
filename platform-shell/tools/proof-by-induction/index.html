@@ -20,7 +20,7 @@
     .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#263b74;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #c8d2ff;border-radius:6px;background:#f0f4ff;color:#263b74;text-align:center;font-weight:850}.set-instruction.visible{display:block}
     .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px;border-left:4px solid #263b74;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#263b74;color:#fff;font-weight:850}
     .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.18em;font-weight:700;line-height:1.42;color:#172033;overflow-wrap:anywhere}.problem-answer{display:none;white-space:normal;max-width:460px;padding:7px 11px;border-radius:10px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}
-    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #263b74;border-radius:6px;background:#f1f5ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#263b74;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#263b74}.step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#5b21b6;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #263b74;border-radius:6px;background:#f1f5ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#263b74;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#263b74}.step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#5b21b6;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}.guided-step{margin:8px 0;border:1px solid #c8d2ff;border-radius:7px;background:#fff;overflow:hidden}.guided-toggle{width:100%;padding:8px 10px;border:0;background:#e8eef8;color:#263b74;text-align:left;font-weight:850;cursor:pointer}.guided-toggle::after{content:"Reveal";float:right;padding-left:10px;color:#2f855a}.guided-step.open .guided-toggle::after{content:"Hide";color:#c77700}.guided-content{display:none;padding:9px 10px;border-top:1px solid #dbe3ff}.guided-step.open .guided-content{display:block}.guided-note{margin-top:7px;padding:8px;border-left:3px solid #16a08c;border-radius:5px;background:#f0fdfa;color:#175e50;font-size:.94em;font-weight:650}.guided-note strong{color:#0f766e}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
     .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.matrix{display:inline-grid;grid-template-columns:auto auto auto;align-items:stretch;vertical-align:middle;margin:0 4px}.matrix .br{display:block;width:7px;border-top:1.8px solid currentColor;border-bottom:1.8px solid currentColor}.matrix .br.l{border-left:1.8px solid currentColor}.matrix .br.r{border-right:1.8px solid currentColor}.matrix .entries{display:grid;grid-template-columns:repeat(2,auto);gap:2px 12px;padding:0 6px;text-align:center;line-height:1.15}
     .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
     @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.question-text{font-size:1.06em}}
@@ -163,6 +163,28 @@
     function inductionConclusion(start=1){
       return `The base case has been shown to be true. The induction step has shown that if the statement is true for n = k, then it is true for n = k + 1. Therefore, by mathematical induction, the statement is true for all integers n ≥ ${start}.`;
     }
+    function guided(text,note,label='Reveal algebra step'){
+      return {guided:true,text,note,label};
+    }
+    function isEquationStep(text){
+      return /=|≥|≤|Σ|divisible|A<sup>|D<sup>|<span class="matrix"|<span class="vfrac"|<sup>|<sub>/.test(String(text));
+    }
+    function renderStep(step,problemIndex,stepIndex){
+      if(step&&step.guided){
+        const text=String(step.text);
+        const className=isEquationStep(text)?'step-equation':'step';
+        return `<div class="guided-step" id="guided-${problemIndex}-${stepIndex}">
+          <button type="button" class="guided-toggle" onclick="toggleGuidedStep(${problemIndex},${stepIndex})">${step.label}</button>
+          <div class="guided-content">
+            <div class="${className}">${text}</div>
+            <div class="guided-note"><strong>Why this step works:</strong> ${step.note}</div>
+          </div>
+        </div>`;
+      }
+      const text=String(step);
+      const className=isEquationStep(text)?'step-equation':'step';
+      return `<div class="${className}">${text}</div>`;
+    }
     function linearTerm(a,b,letter='r'){
       if(b===0)return `${a}${letter}`;
       return `${a}${letter} ${signed(b)}`;
@@ -183,9 +205,9 @@
         `RHS = ${frac(`1(${a}(2) ${signed(2*b)})`,2)} = ${frac(`${2*a + 2*b}`,2)} = ${a+b}.`,
         `Assume true for n = k: ${sumText('k',term)} = ${frac(`k(${a}(k + 1) ${signed(2*b)})`,2)}.`,
         `For n = k + 1, add the next term ${a}(k + 1) ${signed(b)}.`,
-        `${sumText('k+1',term)} = ${frac(`k(${a}(k + 1) ${signed(2*b)})`,2)} + ${a}(k + 1) ${signed(b)}`,
-        `= ${frac(`k(${a}(k + 1) ${signed(2*b)}) + 2(${a}(k + 1) ${signed(b)})`,2)}`,
-        `= ${frac(`(k + 1)(${a}(k + 2) ${signed(2*b)})`,2)}.`,
+        guided(`${sumText('k+1',term)} = ${frac(`k(${a}(k + 1) ${signed(2*b)})`,2)} + ${a}(k + 1) ${signed(b)}`,'The sum up to k + 1 is the sum up to k plus the next term. The sum up to k is exactly the expression we are allowed to replace using the induction assumption.','Reveal step: use the assumption'),
+        guided(`= ${frac(`k(${a}(k + 1) ${signed(2*b)}) + 2(${a}(k + 1) ${signed(b)})`,2)}`,'The next term is written over the same denominator so both parts can be combined into a single fraction.','Reveal step: use a common denominator'),
+        guided(`= ${frac(`(k + 1)(${a}(k + 2) ${signed(2*b)})`,2)}.`,'We factor and simplify with the target form in mind: the formula for n = k + 1 must contain (k + 1) and then k + 2 where the original formula had n and n + 1.','Reveal step: reach the target form'),
         `This is the required formula with n = k + 1.`,
         inductionConclusion()
       ]);
@@ -202,10 +224,10 @@
         `RHS = 1(1 ${signed(start-1)}) = ${first}.`,
         `Assume true for n = k: ${sumText('k',term)} = k(k ${signed(start-1)}).`,
         `For n = k + 1, add the next term 2(k + 1) ${signed(2*start-3)}.`,
-        `${sumText('k+1',term)} = k(k ${signed(start-1)}) + 2(k + 1) ${signed(2*start-3)}`,
-        `= k${sup(2)} ${signed((start-1))}k + 2k ${signed(2*start-1)}`,
-        `= k${sup(2)} ${signed(start+1)}k ${signed(2*start-1)}`,
-        `= (k + 1)(k ${signed(start)}).`,
+        guided(`${sumText('k+1',term)} = k(k ${signed(start-1)}) + 2(k + 1) ${signed(2*start-3)}`,'The k + 1 sum is built from the k sum. This is where the induction assumption enters the proof.','Reveal step: use the assumption'),
+        guided(`= k${sup(2)} ${signed((start-1))}k + 2k ${signed(2*start-1)}`,'Expand both parts so that like terms in k can be collected clearly.','Reveal step: expand'),
+        guided(`= k${sup(2)} ${signed(start+1)}k ${signed(2*start-1)}`,'Collect the k terms to prepare the expression for factorising.','Reveal step: collect like terms'),
+        guided(`= (k + 1)(k ${signed(start)}).`,'The aim is to match the original formula with n replaced by k + 1, so the expression must factor with a first factor of k + 1.','Reveal step: factor the target form'),
         `This is the required formula with n = k + 1.`,
         inductionConclusion()
       ]);
@@ -220,10 +242,10 @@
         `RHS = ${frac(`${c} × 1 × 2 × 3`,6)} = ${c}.`,
         `Assume true for n = k: ${sumText('k',term)} = ${frac(`${c}k(k + 1)(2k + 1)`,6)}.`,
         `For n = k + 1, add the next term ${c}(k + 1)${sup(2)}.`,
-        `${sumText('k+1',term)} = ${frac(`${c}k(k + 1)(2k + 1)`,6)} + ${c}(k + 1)${sup(2)}`,
-        `= ${frac(`${c}(k + 1)[k(2k + 1) + 6(k + 1)]`,6)}`,
-        `= ${frac(`${c}(k + 1)(2k² + 7k + 6)`,6)}`,
-        `= ${frac(`${c}(k + 1)(k + 2)(2k + 3)`,6)}.`,
+        guided(`${sumText('k+1',term)} = ${frac(`${c}k(k + 1)(2k + 1)`,6)} + ${c}(k + 1)${sup(2)}`,'The k + 1 case is the k case plus the new final square term. We replace the k case using the induction assumption.','Reveal step: use the assumption'),
+        guided(`= ${frac(`${c}(k + 1)[k(2k + 1) + 6(k + 1)]`,6)}`,'Factor out the common parts c and k + 1. This is useful because the target formula for k + 1 must also contain k + 1.','Reveal step: factor common terms'),
+        guided(`= ${frac(`${c}(k + 1)(2k² + 7k + 6)`,6)}`,'Expand inside the square brackets so that the quadratic can be factorised.','Reveal step: simplify inside the bracket'),
+        guided(`= ${frac(`${c}(k + 1)(k + 2)(2k + 3)`,6)}.`,'The quadratic is factorised because the target form requires (k + 2) and 2k + 3, which are (k + 1) + 1 and 2(k + 1) + 1.','Reveal step: match the target form'),
         `This is ${frac(`${c}(k + 1)((k + 1) + 1)(2(k + 1) + 1)`,6)}, which is the required formula with n = k + 1.`,
         inductionConclusion()
       ]);
@@ -236,9 +258,9 @@
         `RHS = ${frac(`${a}${sup(1)} − 1`,a-1)} = ${frac(`${a-1}`,a-1)} = 1.`,
         `Assume true for n = k: ${sumText('k',`${a}${sup('r−1')}`)} = ${frac(`${a}${sup('k')} − 1`,a-1)}.`,
         `For n = k + 1, add the next term ${a}${sup('k')}.`,
-        `${sumText('k+1',`${a}${sup('r−1')}`)} = ${frac(`${a}${sup('k')} − 1`,a-1)} + ${a}${sup('k')}`,
-        `= ${frac(`${a}${sup('k')} − 1 + ${a}${sup('k')}(${a-1})`,a-1)}`,
-        `= ${frac(`${a}${sup('k+1')} − 1`,a-1)}.`,
+        guided(`${sumText('k+1',`${a}${sup('r−1')}`)} = ${frac(`${a}${sup('k')} − 1`,a-1)} + ${a}${sup('k')}`,'The sum to k + 1 equals the sum to k plus the next geometric term. The induction assumption gives the formula for the sum to k.','Reveal step: use the assumption'),
+        guided(`= ${frac(`${a}${sup('k')} − 1 + ${a}${sup('k')}(${a-1})`,a-1)}`,'The added term is placed over the same denominator so the two parts can be combined.','Reveal step: use a common denominator'),
+        guided(`= ${frac(`${a}${sup('k+1')} − 1`,a-1)}.`,'Combining the powers gives the same formula with k replaced by k + 1.','Reveal step: simplify to the target form'),
         `This is the required formula with n = k + 1.`,
         inductionConclusion()
       ]);
@@ -250,9 +272,9 @@
         `Base case n = 1: ${a}${sup(1)} − 1 = ${a-1}, which is divisible by ${a-1}.`,
         `Assume true for n = k: ${a}${sup('k')} − 1 = ${a-1}m for some integer m.`,
         `For n = k + 1: ${a}${sup('k+1')} − 1 = ${a}(${a}${sup('k')}) − 1.`,
-        `= ${a}(${a}${sup('k')} − 1) + (${a} − 1)`,
-        `= ${a}(${a-1}m) + (${a-1})`,
-        `= (${a-1})(${a}m + 1).`,
+        guided(`= ${a}(${a}${sup('k')} − 1) + (${a} − 1)`,'We rewrite the expression so that the bracket contains the exact expression from the induction assumption: a^k − 1.','Reveal step: create the assumption bracket'),
+        guided(`= ${a}(${a-1}m) + (${a-1})`,'Now substitute the induction assumption, because a^k − 1 is known to be a multiple of the divisor.','Reveal step: substitute the assumption'),
+        guided(`= (${a-1})(${a}m + 1).`,'Factor out the divisor. This shows the whole expression is the divisor multiplied by an integer.','Reveal step: factor the divisor'),
         `Since ${a}m + 1 is an integer, ${a}${sup('k+1')} − 1 is divisible by ${a-1}.`,
         inductionConclusion()
       ]);
@@ -265,9 +287,9 @@
         `Base case n = 1: ${a} − ${b} = ${divisor}, which is divisible by ${divisor}.`,
         `Assume true for n = k: ${a}${sup('k')} − ${b}${sup('k')} = ${divisor}m for some integer m.`,
         `For n = k + 1: ${a}${sup('k+1')} − ${b}${sup('k+1')} = ${a}(${a}${sup('k')}) − ${b}(${b}${sup('k')}).`,
-        `= ${a}(${a}${sup('k')} − ${b}${sup('k')}) + (${a} − ${b})${b}${sup('k')}`,
-        `= ${a}(${divisor}m) + ${divisor}${b}${sup('k')}`,
-        `= ${divisor}(${a}m + ${b}${sup('k')}).`,
+        guided(`= ${a}(${a}${sup('k')} − ${b}${sup('k')}) + (${a} − ${b})${b}${sup('k')}`,'This rearrangement is chosen because it creates the exact expression a^k − b^k, which is the expression in the induction assumption.','Reveal step: create the assumption bracket'),
+        guided(`= ${a}(${divisor}m) + ${divisor}${b}${sup('k')}`,'Substitute the induction assumption, and also replace a − b by the stated divisor.','Reveal step: substitute known multiples'),
+        guided(`= ${divisor}(${a}m + ${b}${sup('k')}).`,'Factor out the divisor. The bracket is an integer, so the whole expression is divisible by the divisor.','Reveal step: factor the divisor'),
         `Since ${a}m + ${b}${sup('k')} is an integer, the expression is divisible by ${divisor}.`,
         inductionConclusion()
       ]);
@@ -331,9 +353,9 @@
         `Base case n = 1: ${v.base}, so the result is true.`,
         `Assume true for n = k: ${v.assume} for some integer m.`,
         `For n = k + 1: ${v.next}`,
-        `= ${v.expand}`,
-        `= ${v.group}`,
-        `= ${v.final}.`,
+        guided(`= ${v.expand}`,'Expand the expression for k + 1 first so the old k-expression can be identified.','Reveal step: expand the k + 1 case'),
+        guided(`= ${v.group}`,'Group the terms so that the expression from the induction assumption appears as one bracket.','Reveal step: group the assumption'),
+        guided(`= ${v.final}.`,'Substitute the induction assumption and factor out the divisor. This proves the k + 1 expression is also a multiple of the divisor.','Reveal step: factor the divisor'),
         `This is divisible by ${v.divisor}.`,
         inductionConclusion()
       ]);
@@ -345,9 +367,9 @@
         `Base case n = 1: LHS = ${a}, RHS = ${c}(1) + 1 = ${a}.`,
         `Assume true for n = k: ${a}${sup('k')} ≥ ${c}k + 1.`,
         `For n = k + 1: ${a}${sup('k+1')} = ${a} × ${a}${sup('k')}.`,
-        `Using the assumption: ${a}${sup('k+1')} ≥ ${a}(${c}k + 1) = ${a*c}k + ${a}.`,
-        `Compare this with ${c}(k + 1) + 1 = ${c}k + ${a}.`,
-        `${a*c}k + ${a} − (${c}k + ${a}) = ${c*c}k ≥ 0.`,
+        guided(`Using the assumption: ${a}${sup('k+1')} ≥ ${a}(${c}k + 1) = ${a*c}k + ${a}.`,'Because the induction assumption gives a lower bound for a^k, multiplying both sides by the positive number a keeps the inequality direction the same.','Reveal step: use the inequality assumption'),
+        guided(`Compare this with ${c}(k + 1) + 1 = ${c}k + ${a}.`,'The target for n = k + 1 is written out so we can check that our lower bound is large enough.','Reveal step: write the target bound'),
+        guided(`${a*c}k + ${a} − (${c}k + ${a}) = ${c*c}k ≥ 0.`,'The difference is non-negative, so the lower bound we found is at least as large as the target expression.','Reveal step: compare the two expressions'),
         `So ${a}${sup('k+1')} ≥ ${c}(k + 1) + 1.`,
         inductionConclusion()
       ]);
@@ -369,9 +391,9 @@
         `So ${v.start}! ≥ ${v.a}${sup(v.start-v.shift)}.`,
         `Assume true for n = k: k! ≥ ${v.a}${sup(`k−${v.shift}`)}.`,
         `For n = k + 1: (k + 1)! = (k + 1)k!.`,
-        `Using the assumption: (k + 1)! ≥ (k + 1)${v.a}${sup(nextExponent)}.`,
-        `Since k ≥ ${v.start}, k + 1 ≥ ${v.start+1} ≥ ${v.a}.`,
-        `(k + 1)${v.a}${sup(nextExponent)} ≥ ${v.a} × ${v.a}${sup(nextExponent)} = ${v.a}${sup(`k+1−${v.shift}`)}.`,
+        guided(`Using the assumption: (k + 1)! ≥ (k + 1)${v.a}${sup(nextExponent)}.`,'Replace k! using the induction assumption. Multiplication by k + 1 is positive, so the inequality direction is unchanged.','Reveal step: use the assumption'),
+        guided(`Since k ≥ ${v.start}, k + 1 ≥ ${v.start+1} ≥ ${v.a}.`,'This tells us that the extra factor k + 1 is large enough to create one more factor of the base.','Reveal step: justify the extra factor'),
+        guided(`(k + 1)${v.a}${sup(nextExponent)} ≥ ${v.a} × ${v.a}${sup(nextExponent)} = ${v.a}${sup(`k+1−${v.shift}`)}.`,'Replace k + 1 by a smaller positive value that still proves the required lower bound.','Reveal step: form the target power'),
         `So (k + 1)! ≥ ${v.a}${sup(`k+1−${v.shift}`)}, which is the required result for n = k + 1.`,
         inductionConclusion(v.start)
       ]);
@@ -383,9 +405,9 @@
         `Base case n = 1: RHS = ${u1} + ${d}(0) = ${u1} = u${sub(1)}.`,
         `Assume true for n = k: u${sub('k')} = ${u1} + ${d}(k − 1).`,
         `Using the recurrence, u${sub('k+1')} = u${sub('k')} + ${d}.`,
-        `Substitute the assumption: u${sub('k+1')} = ${u1} + ${d}(k − 1) + ${d}.`,
-        `= ${u1} + ${d}k.`,
-        `= ${u1} + ${d}((k + 1) − 1).`,
+        guided(`Substitute the assumption: u${sub('k+1')} = ${u1} + ${d}(k − 1) + ${d}.`,'The recurrence links the next term to the kth term. The induction assumption gives the formula for that kth term.','Reveal step: substitute the assumption'),
+        guided(`= ${u1} + ${d}k.`,'Simplify the repeated difference: d(k − 1) + d = dk.','Reveal step: simplify'),
+        guided(`= ${u1} + ${d}((k + 1) − 1).`,'Rewrite dk as d((k + 1) − 1) so the expression has the same form as the original formula with n replaced by k + 1.','Reveal step: match the target form'),
         `This is the required formula for n = k + 1.`,
         inductionConclusion()
       ]);
@@ -397,9 +419,9 @@
         `Base case n = 1: RHS = ${u1} × ${r}${sup(0)} = ${u1} = u${sub(1)}.`,
         `Assume true for n = k: u${sub('k')} = ${u1} × ${r}${sup('k−1')}.`,
         `Using the recurrence, u${sub('k+1')} = ${r}u${sub('k')}.`,
-        `Substitute the assumption: u${sub('k+1')} = ${r}(${u1} × ${r}${sup('k−1')}).`,
-        `= ${u1} × ${r}${sup('k')}.`,
-        `= ${u1} × ${r}${sup('(k+1)−1')}.`,
+        guided(`Substitute the assumption: u${sub('k+1')} = ${r}(${u1} × ${r}${sup('k−1')}).`,'The recurrence gives u_(k+1) in terms of u_k, and the assumption gives the closed form for u_k.','Reveal step: substitute the assumption'),
+        guided(`= ${u1} × ${r}${sup('k')}.`,'Multiplying by r increases the exponent by 1: r × r^(k−1) = r^k.','Reveal step: simplify powers'),
+        guided(`= ${u1} × ${r}${sup('(k+1)−1')}.`,'Rewrite k as (k + 1) − 1 so the expression matches the original formula with n replaced by k + 1.','Reveal step: match the target form'),
         `This is the required formula for n = k + 1.`,
         inductionConclusion()
       ]);
@@ -411,9 +433,9 @@
         `Base case n = 1: A${sup(1)} = ${matrix(1,c,0,1)}, which matches ${matrix(1,`${c}(1)`,0,1)}.`,
         `Assume true for n = k: A${sup('k')} = ${matrix(1,`${c}k`,0,1)}.`,
         `Then A${sup('k+1')} = A${sup('k')}A.`,
-        `A${sup('k+1')} = ${matrix(1,`${c}k`,0,1)}${matrix(1,c,0,1)}`,
-        `= ${matrix(1,`${c} + ${c}k`,0,1)}`,
-        `= ${matrix(1,`${c}(k + 1)`,0,1)}.`,
+        guided(`A${sup('k+1')} = ${matrix(1,`${c}k`,0,1)}${matrix(1,c,0,1)}`,'Since A^(k+1) = A^kA, we can replace A^k using the induction assumption before multiplying by A.','Reveal step: substitute the assumption'),
+        guided(`= ${matrix(1,`${c} + ${c}k`,0,1)}`,'Multiply the matrices entry by entry. The only entry that changes is the top-right entry.','Reveal step: multiply matrices'),
+        guided(`= ${matrix(1,`${c}(k + 1)`,0,1)}.`,'Factor the top-right entry so it matches the formula with n replaced by k + 1.','Reveal step: match the target form'),
         `This is the required formula for n = k + 1.`,
         inductionConclusion()
       ]);
@@ -425,9 +447,9 @@
         `Base case n = 1: D${sup(1)} = ${matrix(a,0,0,b)}, which matches ${matrix(`${a}${sup(1)}`,0,0,`${b}${sup(1)}`)}.`,
         `Assume true for n = k: D${sup('k')} = ${matrix(`${a}${sup('k')}`,0,0,`${b}${sup('k')}`)}.`,
         `Then D${sup('k+1')} = D${sup('k')}D.`,
-        `D${sup('k+1')} = ${matrix(`${a}${sup('k')}`,0,0,`${b}${sup('k')}`)}${matrix(a,0,0,b)}`,
-        `= ${matrix(`${a}${sup('k')} × ${a}`,0,0,`${b}${sup('k')} × ${b}`)}`,
-        `= ${matrix(`${a}${sup('k+1')}`,0,0,`${b}${sup('k+1')}`)}.`,
+        guided(`D${sup('k+1')} = ${matrix(`${a}${sup('k')}`,0,0,`${b}${sup('k')}`)}${matrix(a,0,0,b)}`,'Use D^(k+1) = D^kD and replace D^k with the matrix from the induction assumption.','Reveal step: substitute the assumption'),
+        guided(`= ${matrix(`${a}${sup('k')} × ${a}`,0,0,`${b}${sup('k')} × ${b}`)}`,'Diagonal matrices multiply by multiplying the matching diagonal entries.','Reveal step: multiply diagonal entries'),
+        guided(`= ${matrix(`${a}${sup('k+1')}`,0,0,`${b}${sup('k+1')}`)}.`,'Use a^k × a = a^(k+1) and b^k × b = b^(k+1).','Reveal step: simplify powers'),
         `This is the required formula for n = k + 1.`,
         inductionConclusion()
       ]);
@@ -440,10 +462,10 @@
         `The formula gives ${matrix(`${r}${sup(1)}`,`${c}(1)${r === 1 ? '' : `(${r}${sup(0)})`}`,0,`${r}${sup(1)}`)}, which is the same matrix.`,
         `Assume true for n = k: A${sup('k')} = ${matrix(`${r}${sup('k')}`,`${c}k${r === 1 ? '' : `(${r}${sup('k−1')})`}`,0,`${r}${sup('k')}`)}.`,
         `Then A${sup('k+1')} = A${sup('k')}A.`,
-        `A${sup('k+1')} = ${matrix(`${r}${sup('k')}`,`${c}k${r === 1 ? '' : `(${r}${sup('k−1')})`}`,0,`${r}${sup('k')}`)}${matrix(r,c,0,r)}`,
-        `Top-right entry = ${r}${sup('k')}(${c}) + ${c}k${r === 1 ? '' : `(${r}${sup('k−1')})`}(${r})`,
-        `= ${c}${r}${sup('k')} + ${c}k${r}${sup('k')} = ${c}(k + 1)${r}${sup('k')}.`,
-        `So A${sup('k+1')} = ${matrix(`${r}${sup('k+1')}`,`${c}(k + 1)${r}${sup('k')}`,0,`${r}${sup('k+1')}`)}.`,
+        guided(`A${sup('k+1')} = ${matrix(`${r}${sup('k')}`,`${c}k${r === 1 ? '' : `(${r}${sup('k−1')})`}`,0,`${r}${sup('k')}`)}${matrix(r,c,0,r)}`,'Use A^(k+1) = A^kA, then substitute the assumed formula for A^k.','Reveal step: substitute the assumption'),
+        guided(`Top-right entry = ${r}${sup('k')}(${c}) + ${c}k${r === 1 ? '' : `(${r}${sup('k−1')})`}(${r})`,'The top-right entry is the key entry. It is found by multiplying row 1 of the first matrix by column 2 of the second matrix.','Reveal step: calculate the key entry'),
+        guided(`= ${c}${r}${sup('k')} + ${c}k${r}${sup('k')} = ${c}(k + 1)${r}${sup('k')}.`,'Both terms have c r^k as a common factor, so factor it out to create the required k + 1 factor.','Reveal step: factor the key entry'),
+        guided(`So A${sup('k+1')} = ${matrix(`${r}${sup('k+1')}`,`${c}(k + 1)${r}${sup('k')}`,0,`${r}${sup('k+1')}`)}.`,'This writes the whole matrix in the same pattern as the original formula with n replaced by k + 1.','Reveal step: write the target matrix'),
         `This is the required formula for n = k + 1.`,
         inductionConclusion()
       ]);
@@ -529,11 +551,7 @@
       problems.forEach((p,index)=>{
         const li=document.createElement('li');
         li.className='problem-item';
-        const steps=p.steps.map(step=>{
-          const text=String(step);
-          const className=/=|≥|≤|Σ|divisible|A<sup>|D<sup>|<span class="matrix"|<span class="vfrac"|<sup>|<sub>/.test(text)?'step-equation':'step';
-          return `<div class="${className}">${text}</div>`;
-        }).join('');
+        const steps=p.steps.map((step,stepIndex)=>renderStep(step,index,stepIndex)).join('');
         li.innerHTML=`
           <div class="problem-header">
             <div class="problem-left">
@@ -552,6 +570,7 @@
 
     function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
     function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function toggleGuidedStep(problemIndex,stepIndex){document.getElementById(`guided-${problemIndex}-${stepIndex}`)?.classList.toggle('open')}
     function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
     function startTimer(minutes){
       stopTimer();
