@@ -244,6 +244,25 @@ const tools = [
     ]
   },
   {
+    slug: "roots-of-equations",
+    title: "Roots of Equations",
+    category: "Algebra",
+    level: "A-Level Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate Further Maths roots of equations practice covering quadratic roots, cubic roots, transformed roots, repeated roots, parameters, and complex conjugate roots.",
+    tags: ["algebra", "further maths", "roots of equations", "polynomial roots", "Vieta", "quadratic roots", "cubic roots", "transformed roots", "complex roots"],
+    toolPath: "tools/roots-of-equations/index.html?v=roots-of-equations-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers roots and coefficients for quadratics, forming equations, unknown coefficients, and symmetric expressions.",
+      "Level 2 covers cubic Vieta relationships, forming cubics, unknown coefficients, and cubic symmetric expressions.",
+      "Level 3 covers shifted, scaled, reciprocal, and squared roots.",
+      "Level 4 covers repeated roots, parameter questions, complex conjugate roots, and exam-style mixed root relationships."
+    ]
+  },
+  {
     slug: "complex-numbers",
     title: "Complex Numbers",
     category: "Algebra",

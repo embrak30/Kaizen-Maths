@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roots of Equations</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f4f7fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#263b74;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#263b74;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #16a08c;color:#263b74;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1220px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#263b74;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e8eef8}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e8eef8;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}.tab.active{background:#fff;color:#263b74;border-bottom-color:#263b74}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d9deef;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#263b74;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:400px;padding:8px 10px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #c7cde4;border-radius:6px;background:#fff;color:#263b74;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#263b74;color:#263b74}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#263b74}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#263b74;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #c8d2ff;border-radius:6px;background:#f0f4ff;color:#263b74;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px;border-left:4px solid #263b74;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#263b74;color:#fff;font-weight:850}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.2em;font-weight:650;line-height:1.42;color:#172033;overflow-wrap:anywhere}.problem-answer{display:none;white-space:normal;max-width:460px;padding:7px 11px;border-radius:10px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #263b74;border-radius:6px;background:#f1f5ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#263b74;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#263b74}.step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#5b21b6;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}
+    .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.question-text{font-size:1.08em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Roots of Equations</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool builds practice with roots of polynomial equations, including the relationships between roots and coefficients, transformed roots, and forming equations from given roots.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Quadratic roots, sums, products, and simple symmetric expressions.</li>
+        <li><strong>Level 2:</strong> Cubic roots and Vieta relationships.</li>
+        <li><strong>Level 3:</strong> Equations whose roots are shifted, scaled, reciprocal, or squared versions of the original roots.</li>
+        <li><strong>Level 4:</strong> Repeated roots, parameter questions, complex conjugate roots, and exam-style mixed problems.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>For ax² + bx + c = 0, use α + β = −b/a and αβ = c/a.</li>
+        <li>For ax³ + bx² + cx + d = 0, use α + β + γ = −b/a, αβ + αγ + βγ = c/a, and αβγ = −d/a.</li>
+        <li>When roots are transformed, find the new sum and product before writing the new equation.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Roots of Equations</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Quadratics</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Cubics</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Transformed Roots</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Exam Style</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Quadratic Roots</h3>
+        <p id="level-description">Use relationships between roots and coefficients for quadratic equations.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Quadratic Roots',description:'Use relationships between roots and coefficients for quadratic equations.',types:['quadratic_sum_product','form_quadratic','quadratic_unknowns','quadratic_symmetric','quadratic_mixed']},
+      2:{title:'Level 2: Cubic Roots',description:'Use Vieta relationships for cubic equations.',types:['cubic_sum_product','form_cubic','cubic_unknowns','cubic_symmetric','cubic_mixed']},
+      3:{title:'Level 3: Transformed Roots',description:'Form equations after roots are shifted, scaled, reciprocated, or squared.',types:['shifted_roots','scaled_roots','reciprocal_roots','squared_roots','transformed_mixed']},
+      4:{title:'Level 4: Exam-Style Roots',description:'Use repeated roots, parameters, complex roots, and mixed root relationships.',types:['repeated_roots','parameter_difference','complex_conjugate_roots','advanced_symmetric','exam_mixed']}
+    };
+
+    const typeDisplayNames={
+      quadratic_sum_product:'Type 1: Sum and product of quadratic roots',
+      form_quadratic:'Type 2: Form a quadratic from its roots',
+      quadratic_unknowns:'Type 3: Unknown coefficients in a quadratic',
+      quadratic_symmetric:'Type 4: Symmetric expressions in quadratic roots',
+      quadratic_mixed:'Type 5: Mixed quadratic roots',
+      cubic_sum_product:'Type 1: Sum and product of cubic roots',
+      form_cubic:'Type 2: Form a cubic from its roots',
+      cubic_unknowns:'Type 3: Unknown coefficients in a cubic',
+      cubic_symmetric:'Type 4: Symmetric expressions in cubic roots',
+      cubic_mixed:'Type 5: Mixed cubic roots',
+      shifted_roots:'Type 1: Shifted roots',
+      scaled_roots:'Type 2: Scaled roots',
+      reciprocal_roots:'Type 3: Reciprocal roots',
+      squared_roots:'Type 4: Squared roots',
+      transformed_mixed:'Type 5: Mixed transformed roots',
+      repeated_roots:'Type 1: Repeated roots',
+      parameter_difference:'Type 2: Parameter from root difference',
+      complex_conjugate_roots:'Type 3: Complex conjugate roots',
+      advanced_symmetric:'Type 4: Advanced symmetric expressions',
+      exam_mixed:'Type 5: Mixed exam-style roots'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      quadratic_sum_product:'Use the relationships between coefficients and roots.',
+      form_quadratic:'Form each quadratic equation from the given roots.',
+      quadratic_unknowns:'Use the given root information to find the unknown coefficients.',
+      quadratic_symmetric:'Use α + β and αβ to evaluate each expression.',
+      quadratic_mixed:'Answer each mixed quadratic roots question.',
+      cubic_sum_product:'Use the cubic relationships between coefficients and roots.',
+      form_cubic:'Form each cubic equation from the given roots.',
+      cubic_unknowns:'Use the given root information to find the unknown cubic coefficients.',
+      cubic_symmetric:'Use α + β + γ and αβ + αγ + βγ to evaluate each expression.',
+      cubic_mixed:'Answer each mixed cubic roots question.',
+      shifted_roots:'Find the new sum and product before forming the new equation.',
+      scaled_roots:'Find the new sum and product after scaling the roots.',
+      reciprocal_roots:'Use the reciprocal root relationships.',
+      squared_roots:'Use the sum and product of the squared roots.',
+      transformed_mixed:'Answer each mixed transformed roots question.',
+      repeated_roots:'Use repeated roots to form the equation.',
+      parameter_difference:'Use the difference between roots to find the parameter.',
+      complex_conjugate_roots:'Use conjugate roots to form real polynomial equations.',
+      advanced_symmetric:'Use root relationships to evaluate advanced symmetric expressions.',
+      exam_mixed:'Answer each mixed exam-style roots question.'
+    };
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function sup(v){return `<sup>${v}</sup>`}
+    function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function stripTags(html){return String(html).replace(/<sup>(.*?)<\/sup>/gi,'^$1').replace(/<sub>(.*?)<\/sub>/gi,'_$1').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function signedNumber(n){return n<0?`− ${Math.abs(n)}`:`+ ${n}`}
+    function alphaList(n=2){return n===2?'α and β':'α, β and γ'}
+    function term(coef,body='',first=false){
+      if(coef===0)return '';
+      const sign=coef<0?'−':'+';
+      const abs=Math.abs(coef);
+      const core=body?(abs===1?body:`${abs}${body}`):String(abs);
+      if(first)return coef<0?`−${core}`:core;
+      return ` ${sign} ${core}`;
+    }
+    function quadratic(a,b,c){
+      return `${term(a,`x${sup(2)}`,true)}${term(b,'x')}${term(c)} = 0`;
+    }
+    function cubic(a,b,c,d){
+      return `${term(a,`x${sup(3)}`,true)}${term(b,`x${sup(2)}`)}${term(c,'x')}${term(d)} = 0`;
+    }
+    function monicQuadraticFromSP(S,P){return quadratic(1,-S,P)}
+    function monicCubicFromData(S1,S2,S3){return cubic(1,-S1,S2,-S3)}
+    function problem(prompt,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question',instruction=typeInstructions[currentType]||'Use relationships between roots and coefficients.'){
+      return {prompt,question:stripTags(prompt),answer,steps,typeLabel,instruction,instructionText:instruction};
+    }
+
+    function makeQuadraticRoots(){
+      let p=choice([-7,-5,-4,-3,-2,2,3,4,5,6,7]);
+      let q=choice([-6,-4,-3,-2,2,3,4,5,8]);
+      if(q===p)q+=1;
+      const S=p+q,P=p*q;
+      return {p,q,S,P,eq:monicQuadraticFromSP(S,P)};
+    }
+
+    function quadraticSumProduct(){
+      const a=choice([1,2,3,4]), S=random(-7,8), P=choice([-18,-12,-8,-6,6,8,10,12,15,18]);
+      const b=-a*S,c=a*P;
+      const eq=quadratic(a,b,c);
+      return problem(`The roots of ${eq} are α and β. Find α + β and αβ.`,`α + β = ${S}, αβ = ${P}`,[
+        `For ax${sup(2)} + bx + c = 0, α + β = ${frac('−b','a')} and αβ = ${frac('c','a')}.`,
+        `Here a = ${a}, b = ${b}, c = ${c}.`,
+        `α + β = ${frac(`−(${b})`,a)} = ${S}.`,
+        `αβ = ${frac(c,a)} = ${P}.`
+      ]);
+    }
+
+    function formQuadratic(){
+      const {p,q,S,P}=makeQuadraticRoots();
+      const eq=monicQuadraticFromSP(S,P);
+      return problem(`Form a quadratic equation with roots ${p} and ${q}.`,eq,[
+        `If the roots are α and β, then the equation is x${sup(2)} − (α + β)x + αβ = 0.`,
+        `α + β = ${p} + ${q} = ${S}.`,
+        `αβ = ${p} × ${q} = ${P}.`,
+        `So the equation is x${sup(2)} − (${S})x + (${P}) = 0.`,
+        `Therefore ${eq}.`
+      ]);
+    }
+
+    function quadraticUnknowns(){
+      const a=choice([2,3,4,5]), S=random(-6,7), P=choice([-10,-6,-4,4,6,8,10,12]);
+      const p=-a*S,q=a*P;
+      const eq=`${term(a,`x${sup(2)}`,true)} + px + q = 0`;
+      return problem(`The equation ${eq} has roots α and β with α + β = ${S} and αβ = ${P}. Find p and q.`,`p = ${p}, q = ${q}`,[
+        `Compare with ax${sup(2)} + bx + c = 0.`,
+        `Here a = ${a}, b = p and c = q.`,
+        `α + β = ${frac('−p',a)} = ${S}.`,
+        `So −p = ${a*S}, giving p = ${p}.`,
+        `αβ = ${frac('q',a)} = ${P}.`,
+        `So q = ${a} × ${P} = ${q}.`
+      ]);
+    }
+
+    function quadraticSymmetric(){
+      const {p,q,S,P,eq}=makeQuadraticRoots();
+      const value=S*S-2*P;
+      return problem(`The roots of ${eq} are α and β. Find α${sup(2)} + β${sup(2)}.`,String(value),[
+        `First use the root relationships.`,
+        `α + β = ${S} and αβ = ${P}.`,
+        `Use α${sup(2)} + β${sup(2)} = (α + β)${sup(2)} − 2αβ.`,
+        `α${sup(2)} + β${sup(2)} = (${S})${sup(2)} − 2(${P}).`,
+        `= ${S*S} ${signedNumber(-2*P)} = ${value}.`
+      ]);
+    }
+
+    function cubicData(){
+      let p=choice([-4,-3,-2,1,2,3,4,5]);
+      let q=choice([-5,-2,1,2,3,4]);
+      let r=choice([-3,-1,2,3,5]);
+      if(q===p)q+=2;if(r===p||r===q)r-=1;
+      const S1=p+q+r,S2=p*q+p*r+q*r,S3=p*q*r;
+      return {p,q,r,S1,S2,S3,eq:monicCubicFromData(S1,S2,S3)};
+    }
+
+    function cubicSumProduct(){
+      const {S1,S2,S3,eq}=cubicData();
+      return problem(`The roots of ${eq} are α, β and γ. Find α + β + γ, αβ + αγ + βγ, and αβγ.`,`α + β + γ = ${S1}, αβ + αγ + βγ = ${S2}, αβγ = ${S3}`,[
+        `For ax${sup(3)} + bx${sup(2)} + cx + d = 0:`,
+        `α + β + γ = ${frac('−b','a')}, αβ + αγ + βγ = ${frac('c','a')}, and αβγ = ${frac('−d','a')}.`,
+        `For ${eq}, a = 1.`,
+        `So α + β + γ = ${S1}.`,
+        `αβ + αγ + βγ = ${S2}.`,
+        `αβγ = ${S3}.`
+      ]);
+    }
+
+    function formCubic(){
+      const {p,q,r,S1,S2,S3,eq}=cubicData();
+      return problem(`Form a cubic equation with roots ${p}, ${q} and ${r}.`,eq,[
+        `For roots α, β and γ, the monic cubic is x${sup(3)} − (α + β + γ)x${sup(2)} + (αβ + αγ + βγ)x − αβγ = 0.`,
+        `α + β + γ = ${p} + ${q} + ${r} = ${S1}.`,
+        `αβ + αγ + βγ = (${p})(${q}) + (${p})(${r}) + (${q})(${r}) = ${S2}.`,
+        `αβγ = (${p})(${q})(${r}) = ${S3}.`,
+        `Therefore ${eq}.`
+      ]);
+    }
+
+    function cubicUnknowns(){
+      const {S1,S2,S3}=cubicData();
+      const p=-S1,q=S2,r=-S3;
+      return problem(`The equation x${sup(3)} + px${sup(2)} + qx + r = 0 has roots α, β and γ with α + β + γ = ${S1}, αβ + αγ + βγ = ${S2}, and αβγ = ${S3}. Find p, q and r.`,`p = ${p}, q = ${q}, r = ${r}`,[
+        `For x${sup(3)} + px${sup(2)} + qx + r = 0:`,
+        `α + β + γ = −p, αβ + αγ + βγ = q, and αβγ = −r.`,
+        `−p = ${S1}, so p = ${p}.`,
+        `q = ${S2}.`,
+        `−r = ${S3}, so r = ${r}.`
+      ]);
+    }
+
+    function cubicSymmetric(){
+      const {S1,S2,eq}=cubicData();
+      const value=S1*S1-2*S2;
+      return problem(`The roots of ${eq} are α, β and γ. Find α${sup(2)} + β${sup(2)} + γ${sup(2)}.`,String(value),[
+        `Use α${sup(2)} + β${sup(2)} + γ${sup(2)} = (α + β + γ)${sup(2)} − 2(αβ + αγ + βγ).`,
+        `From the equation, α + β + γ = ${S1}.`,
+        `Also αβ + αγ + βγ = ${S2}.`,
+        `So α${sup(2)} + β${sup(2)} + γ${sup(2)} = (${S1})${sup(2)} − 2(${S2}).`,
+        `= ${S1*S1} ${signedNumber(-2*S2)} = ${value}.`
+      ]);
+    }
+
+    function shiftedRoots(){
+      const {S,P,eq}=makeQuadraticRoots();
+      const h=choice([-3,-2,-1,1,2,3,4]);
+      const newS=S+2*h,newP=P+h*S+h*h,newEq=monicQuadraticFromSP(newS,newP);
+      return problem(`The roots of ${eq} are α and β. Form an equation whose roots are α ${signedNumber(h)} and β ${signedNumber(h)}.`,newEq,[
+        `Let the new roots be α ${signedNumber(h)} and β ${signedNumber(h)}.`,
+        `New sum = (α ${signedNumber(h)}) + (β ${signedNumber(h)}) = α + β ${signedNumber(2*h)} = ${S} ${signedNumber(2*h)} = ${newS}.`,
+        `New product = (α ${signedNumber(h)})(β ${signedNumber(h)}) = αβ ${signedNumber(h)}(α + β) + ${h*h}.`,
+        `= ${P} ${signedNumber(h)}(${S}) + ${h*h} = ${newP}.`,
+        `Therefore the new equation is ${newEq}.`
+      ]);
+    }
+
+    function scaledRoots(){
+      const {S,P,eq}=makeQuadraticRoots();
+      const m=choice([2,3,4,-2,-3]);
+      const newS=m*S,newP=m*m*P,newEq=monicQuadraticFromSP(newS,newP);
+      return problem(`The roots of ${eq} are α and β. Form an equation whose roots are ${m}α and ${m}β.`,newEq,[
+        `New sum = ${m}α + ${m}β = ${m}(α + β) = ${m}(${S}) = ${newS}.`,
+        `New product = (${m}α)(${m}β) = ${m*m}αβ = ${m*m}(${P}) = ${newP}.`,
+        `Use x${sup(2)} − (sum)x + product = 0.`,
+        `Therefore ${newEq}.`
+      ]);
+    }
+
+    function reciprocalRoots(){
+      const {S,P,eq}=makeQuadraticRoots();
+      if(P===0)return reciprocalRoots();
+      const answer=`${term(P,`x${sup(2)}`,true)}${term(-S,'x')}${term(1)} = 0`;
+      return problem(`The non-zero roots of ${eq} are α and β. Form an equation whose roots are ${frac(1,'α')} and ${frac(1,'β')}.`,answer,[
+        `New sum = ${frac(1,'α')} + ${frac(1,'β')} = ${frac('α + β','αβ')} = ${frac(S,P)}.`,
+        `New product = ${frac(1,'αβ')} = ${frac(1,P)}.`,
+        `The monic equation is x${sup(2)} − ${frac(S,P)}x + ${frac(1,P)} = 0.`,
+        `Multiply every term by ${P} to clear fractions.`,
+        `Therefore ${answer}.`
+      ]);
+    }
+
+    function squaredRoots(){
+      const {S,P,eq}=makeQuadraticRoots();
+      const newS=S*S-2*P,newP=P*P,newEq=monicQuadraticFromSP(newS,newP);
+      return problem(`The roots of ${eq} are α and β. Form an equation whose roots are α${sup(2)} and β${sup(2)}.`,newEq,[
+        `New sum = α${sup(2)} + β${sup(2)} = (α + β)${sup(2)} − 2αβ.`,
+        `= (${S})${sup(2)} − 2(${P}) = ${newS}.`,
+        `New product = α${sup(2)}β${sup(2)} = (αβ)${sup(2)} = (${P})${sup(2)} = ${newP}.`,
+        `Therefore the new equation is ${newEq}.`
+      ]);
+    }
+
+    function repeatedRoots(){
+      const r=choice([-3,-2,2,3,4]), s=choice([-5,-1,1,5,6]);
+      const S1=2*r+s,S2=r*r+2*r*s,S3=r*r*s,eq=monicCubicFromData(S1,S2,S3);
+      return problem(`A cubic equation has roots ${r}, ${r} and ${s}. Form the equation.`,eq,[
+        `The root ${r} is repeated, so the roots are α = ${r}, β = ${r}, γ = ${s}.`,
+        `α + β + γ = ${r} + ${r} + ${s} = ${S1}.`,
+        `αβ + αγ + βγ = (${r})(${r}) + (${r})(${s}) + (${r})(${s}) = ${S2}.`,
+        `αβγ = (${r})(${r})(${s}) = ${S3}.`,
+        `Therefore ${eq}.`
+      ]);
+    }
+
+    function parameterDifference(){
+      const p=choice([2,3,4,5,6]), q=choice([7,8,9,10,11]);
+      const S=p+q,P=p*q,diff=Math.abs(q-p),k=-S;
+      const eq=`x${sup(2)} + kx${term(P)} = 0`;
+      return problem(`The equation ${eq} has two positive roots that differ by ${diff}. Find k.`,`k = ${k}`,[
+        `Let the roots be α and β, with α > β.`,
+        `αβ = ${P} and α − β = ${diff}.`,
+        `(α + β)${sup(2)} = (α − β)${sup(2)} + 4αβ.`,
+        `(α + β)${sup(2)} = ${diff}${sup(2)} + 4(${P}) = ${diff*diff+4*P}.`,
+        `Since both roots are positive, α + β = ${S}.`,
+        `For ${eq}, α + β = −k.`,
+        `So −k = ${S}, giving k = ${k}.`
+      ]);
+    }
+
+    function complexConjugateRoots(){
+      const p=choice([-3,-2,-1,1,2,3]), q=choice([2,3,4]), r=choice([-4,-2,2,5]);
+      const quadS=2*p,quadP=p*p+q*q;
+      const S1=quadS+r,S2=quadP+quadS*r,S3=quadP*r;
+      const eq=monicCubicFromData(S1,S2,S3);
+      return problem(`A cubic equation with real coefficients has roots ${p} + ${q}i, ${p} − ${q}i and ${r}. Form the equation.`,eq,[
+        `Complex roots of a polynomial with real coefficients occur in conjugate pairs.`,
+        `The conjugate pair gives x${sup(2)} − (${quadS})x + ${quadP}.`,
+        `The remaining root ${r} gives the factor (x ${signedNumber(-r)}).`,
+        `Multiply: (x${sup(2)} ${signedNumber(-quadS)}x + ${quadP})(x ${signedNumber(-r)}).`,
+        `Therefore ${eq}.`
+      ]);
+    }
+
+    function advancedSymmetric(){
+      const {S1,S2,S3,eq}=cubicData();
+      const pairSum=S2*S2-2*S1*S3;
+      return problem(`The roots of ${eq} are α, β and γ. Find α${sup(2)}β${sup(2)} + α${sup(2)}γ${sup(2)} + β${sup(2)}γ${sup(2)}.`,String(pairSum),[
+        `Notice that α${sup(2)}β${sup(2)} + α${sup(2)}γ${sup(2)} + β${sup(2)}γ${sup(2)} = (αβ + αγ + βγ)${sup(2)} − 2αβγ(α + β + γ).`,
+        `From the equation, α + β + γ = ${S1}.`,
+        `αβ + αγ + βγ = ${S2}.`,
+        `αβγ = ${S3}.`,
+        `So the expression is (${S2})${sup(2)} − 2(${S3})(${S1}) = ${pairSum}.`
+      ]);
+    }
+
+    function generateProblem(){
+      const maps={
+        quadratic_sum_product:quadraticSumProduct,
+        form_quadratic:formQuadratic,
+        quadratic_unknowns:quadraticUnknowns,
+        quadratic_symmetric:quadraticSymmetric,
+        quadratic_mixed:()=>choice([quadraticSumProduct,formQuadratic,quadraticUnknowns,quadraticSymmetric])(),
+        cubic_sum_product:cubicSumProduct,
+        form_cubic:formCubic,
+        cubic_unknowns:cubicUnknowns,
+        cubic_symmetric:cubicSymmetric,
+        cubic_mixed:()=>choice([cubicSumProduct,formCubic,cubicUnknowns,cubicSymmetric])(),
+        shifted_roots:shiftedRoots,
+        scaled_roots:scaledRoots,
+        reciprocal_roots:reciprocalRoots,
+        squared_roots:squaredRoots,
+        transformed_mixed:()=>choice([shiftedRoots,scaledRoots,reciprocalRoots,squaredRoots])(),
+        repeated_roots:repeatedRoots,
+        parameter_difference:parameterDifference,
+        complex_conjugate_roots:complexConjugateRoots,
+        advanced_symmetric:advancedSymmetric,
+        exam_mixed:()=>choice([repeatedRoots,parameterDifference,complexConjugateRoots,advancedSymmetric,shiftedRoots,reciprocalRoots])()
+      };
+      return (maps[currentType]||quadraticSumProduct)();
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));
+      const config=levelConfigs[level];
+      document.getElementById('level-title').textContent=config.title;
+      document.getElementById('level-description').textContent=config.description;
+      populateDropdown();
+      showBlankPage();
+    }
+
+    function populateDropdown(){
+      const select=document.getElementById('type-dropdown');
+      const types=levelConfigs[currentLevel].types;
+      select.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      select.value=currentType;
+    }
+
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;generateNewSet()}
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').className='problem-set-header';
+      document.getElementById('set-instruction').className='set-instruction';
+      document.getElementById('problem-list').innerHTML='<li class="problem-item"><div class="problem-left"><div class="problem-number">1</div><div class="question-text">Select a question type to begin roots of equations practice.</div></div></li>';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      answersVisible=false;stepsVisible=false;problems=[];
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<260){
+        const oldType=currentType;
+        if(currentType==='all')currentType=choice(levelConfigs[currentLevel].types);
+        const p=generateProblem();
+        currentType=oldType;
+        const key=p.question;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed roots of equations question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|α|β|γ|x|<span class="vfrac"|<sup>|<sub>|root|equation/i.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div class="question-text">${p.prompt}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;timerActive=true;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      updateTimerDisplay();
+      timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000);
+    }
+    function stopTimer(){
+      if(timerInterval){clearInterval(timerInterval);timerInterval=null}
+      timerActive=false;
+      const display=document.getElementById('timer-display');
+      display.textContent='Ready';display.className='timer-display';
+    }
+    function updateTimerDisplay(){
+      const display=document.getElementById('timer-display');
+      display.textContent=formatTime(timeRemaining);
+      if(timerActive&&timeRemaining<=30)display.className='timer-display warning';
+    }
+    function timerFinished(){stopTimer();document.getElementById('timer-display').textContent='Time Up';document.getElementById('timer-display').className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-1"></script>
+</body>
+</html>
