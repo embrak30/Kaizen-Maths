@@ -21,7 +21,7 @@
     .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-left:4px solid #24356f;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#24356f;color:#fff;font-weight:850}
     .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.2em;font-weight:700;line-height:1.42;color:#172033;overflow-wrap:anywhere}.question-text .word{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;font-size:.88em;font-weight:750;color:#334155}.problem-answer{display:none;white-space:normal;max-width:460px;padding:7px 11px;border-radius:10px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}
     .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #24356f;border-radius:6px;background:#f1f5ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#24356f;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#24356f}.step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#5b21b6;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
-    .vec{font-weight:850}.vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.cvec{display:inline-grid;grid-template-columns:auto auto auto;align-items:stretch;vertical-align:middle;margin:0 4px;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:850}.cvec .bracket{display:flex;align-items:center;font-size:2.7em;line-height:.76;font-weight:400}.cvec .entries{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:24px;padding:0 3px;text-align:center;line-height:1.05}.timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    .vec{font-weight:850}.vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.cvec{display:inline-grid;grid-template-columns:auto auto auto;align-items:stretch;vertical-align:middle;margin:0 4px;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:850}.cvec .bracket{display:block;width:7px;min-height:3.2em;border-top:1.8px solid currentColor;border-bottom:1.8px solid currentColor}.cvec .bracket.left{border-left:1.8px solid currentColor}.cvec .bracket.right{border-right:1.8px solid currentColor}.cvec .entries{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:24px;padding:0 5px;text-align:center;line-height:1.05}.timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
     @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.question-text{font-size:1.05em}}
   </style>
 </head>
@@ -160,7 +160,7 @@
     function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
     function simpleFrac(n,d){if(d<0){n=-n;d=-d}const g=gcd(n,d);n/=g;d/=g;if(d===1)return String(n);return frac(n,d)}
     function pointText(a){return `(${a.x}, ${a.y}, ${a.z})`}
-    function columnVector(x,y,z){return `<span class="cvec" aria-label="column vector ${stripTags(x)}, ${stripTags(y)}, ${stripTags(z)}"><span class="bracket">(</span><span class="entries"><span>${x}</span><span>${y}</span><span>${z}</span></span><span class="bracket">)</span></span>`}
+    function columnVector(x,y,z){return `<span class="cvec" aria-label="column vector ${stripTags(x)}, ${stripTags(y)}, ${stripTags(z)}"><span class="bracket left"></span><span class="entries"><span>${x}</span><span>${y}</span><span>${z}</span></span><span class="bracket right"></span></span>`}
     function vLetter(name){return `<span class="vec">${name}</span>`}
     function stripTags(html){return String(html).replace(/<sup>(.*?)<\/sup>/gi,'^$1').replace(/<sub>(.*?)<\/sub>/gi,'_$1').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
     function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
@@ -315,13 +315,17 @@
       const A=v(), d=v(), lambda=choice([-2,-1,2,3]), P=add(A,scale(lambda,d));
       const usePoint=Math.random()<0.75;
       const Q=usePoint?P:add(P,{x:1,y:0,z:0});
+      const lambdaX=simpleFrac(Q.x-A.x,d.x), lambdaY=simpleFrac(Q.y-A.y,d.y), lambdaZ=simpleFrac(Q.z-A.z,d.z);
       const answer=usePoint?'Yes, the point lies on the line.':'No, the point does not lie on the line.';
       return problem(`Line L has equation ${lineEquation(A,d)}. Determine whether P = ${pointText(Q)} lies on L.`,answer,[
         `Compare components with ${vectorText(Q)} = ${vectorText(A)} + λ${vectorText(d)}.`,
         `x-component: ${Q.x} = ${A.x} + ${d.x}λ`,
-        `This gives λ = ${simpleFrac(Q.x-A.x,d.x)}.`,
-        `Check the y and z components with this value of λ.`,
-        usePoint?`The same λ works in all three components.`:`At least one component gives a different value of λ.`,
+        `λ = ${lambdaX}`,
+        `y-component: ${Q.y} = ${A.y} + ${d.y}λ`,
+        `λ = ${lambdaY}`,
+        `z-component: ${Q.z} = ${A.z} + ${d.z}λ`,
+        `λ = ${lambdaZ}`,
+        usePoint?`The x, y, and z components all give λ = ${lambdaX}.`:`The component values of λ are not all the same, so the point is not on the line.`,
         answer
       ]);
     }
