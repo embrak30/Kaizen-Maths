@@ -1696,22 +1696,29 @@ const curriculumMapAreas = [
     description: "Pure mathematics generators covering algebraic manipulation, calculus, functions, matrices, trigonometry, and related higher-level topics.",
     match: (tool) => {
       const level = normalise(tool.level);
-      return ["Algebra", "Geometry"].includes(tool.category) && level.includes("a-level");
+      return ["Algebra", "Geometry"].includes(tool.category) && level.includes("a-level") && !isFurtherMathsTool(tool);
     }
+  },
+  {
+    id: "further-maths",
+    title: "Further Maths",
+    subtitle: "Complex numbers, matrices, vectors, polar coordinates, hyperbolic functions, and differential equations",
+    description: "Further Maths generators for advanced algebra, matrices, vectors, complex numbers, polar coordinates, hyperbolic functions, and differential equations.",
+    match: (tool) => isFurtherMathsTool(tool)
   },
   {
     id: "alevel-statistics",
     title: "A-Level Statistics",
     subtitle: "Probability, distributions, data, and regression",
     description: "Statistics tools for probability models, random variables, normal, binomial and geometric distributions, large data set work, and regression.",
-    match: (tool) => tool.category === "Statistics" && normalise(tool.level).includes("a-level")
+    match: (tool) => tool.category === "Statistics" && normalise(tool.level).includes("a-level") && !isFurtherMathsTool(tool)
   },
   {
     id: "alevel-mechanics",
     title: "A-Level Mechanics",
     subtitle: "Motion, forces, moments, and projectiles",
     description: "Mechanics tools covering motion graphs, constant acceleration, equations of motion, moments, projectiles, and modelling with units.",
-    match: (tool) => tool.category === "Mechanics"
+    match: (tool) => tool.category === "Mechanics" && !isFurtherMathsTool(tool)
   }
 ];
 
@@ -1762,6 +1769,11 @@ let pendingFocusTarget = "";
 
 function normalise(value) {
   return String(value || "").toLowerCase();
+}
+
+function isFurtherMathsTool(tool) {
+  const text = normalise([tool.level, tool.title, ...(tool.tags || []), ...editableToolTags(tool)].join(" "));
+  return text.includes("further maths") || text.includes("further math");
 }
 
 function escapeHtml(value) {
@@ -4610,8 +4622,8 @@ function renderHome() {
     <section class="coverage-home-band" aria-labelledby="homeCoverageTitle">
       <div>
         <span class="eyebrow">Curriculum Coverage</span>
-        <h2 id="homeCoverageTitle">Mapped across GCSE and A-Level mathematics</h2>
-        <p>See current coverage for GCSE, A-Level Pure, A-Level Statistics, and A-Level Mechanics, with future tagging routes for IGCSE, IB, and Common Core.</p>
+        <h2 id="homeCoverageTitle">Mapped across GCSE, A-Level, and Further Maths</h2>
+        <p>See current coverage for GCSE, A-Level Pure, Further Maths, A-Level Statistics, and A-Level Mechanics, with future tagging routes for IGCSE, IB, and Common Core.</p>
       </div>
       <div class="coverage-home-counts" aria-label="Coverage counts">
         ${curriculumMapAreas.map((area) => `<span><strong>${coverageToolsFor(area).length}</strong>${escapeHtml(area.title)}</span>`).join("")}
@@ -4764,27 +4776,26 @@ function renderCoverageMap() {
   app.innerHTML = `
     ${pageHeader(
       "Curriculum Coverage Map",
-      "A visible overview of where Kaizen Maths currently has tool coverage across GCSE and A-Level mathematics, with tagging routes for IGCSE, IB, and Common Core alignment.",
+      "A compact live view of the Kaizen Maths tool library across GCSE, A-Level Pure, Further Maths, Statistics, and Mechanics.",
       `<a class="button" href="#/tools">Browse Tool Library</a>${isAdmin() ? `<a class="button" href="#/admin">Edit Tags In Admin</a>` : ""}`
     )}
     <section class="coverage-page">
-      <section class="coverage-summary-grid" aria-label="Coverage summary">
+      <nav class="coverage-summary-grid" aria-label="Coverage sections">
         ${areaData.map((area) => `
-          <article class="coverage-summary-card">
-            <span class="eyebrow">${escapeHtml(area.subtitle)}</span>
+          <a class="coverage-summary-card" href="#coverage-${escapeHtml(area.id)}">
             <strong>${area.tools.length}</strong>
-            <h2>${escapeHtml(area.title)}</h2>
-            <p>${escapeHtml(area.description)}</p>
-          </article>
+            <span>${escapeHtml(area.title)}</span>
+            <small>${escapeHtml(area.subtitle)}</small>
+          </a>
         `).join("")}
-      </section>
+      </nav>
 
       <section class="coverage-map-panel panel">
         <div class="coverage-panel-head">
           <div>
-            <span class="eyebrow">Current Coverage</span>
+            <span class="eyebrow">Live Coverage Directory</span>
             <h2>${totalMappedTools} mapped topic tool${totalMappedTools === 1 ? "" : "s"}</h2>
-            <p>Each tool can still be searched by topic, category, level, and admin tags. This map is a quick curriculum-facing view for teachers, tutors, departments, and school leaders.</p>
+            <p>This page is generated from the current tool library, so new tools and admin tag updates feed into the coverage view without rebuilding the page by hand.</p>
           </div>
           <a class="button" href="#/worksheet-generator">Build From Coverage</a>
         </div>
@@ -4792,10 +4803,9 @@ function renderCoverageMap() {
           ${areaData.map((area) => {
             const groups = coverageGroups(area.tools);
             return `
-              <article class="coverage-area-card" id="coverage-${escapeHtml(area.id)}">
+              <section class="coverage-area-card" id="coverage-${escapeHtml(area.id)}">
                 <header>
-                  <span class="eyebrow">${escapeHtml(area.subtitle)}</span>
-                  <h2>${escapeHtml(area.title)}</h2>
+                  <h2>${escapeHtml(area.title)} <span>${area.tools.length}</span></h2>
                   <p>${escapeHtml(area.description)}</p>
                 </header>
                 <div class="coverage-group-list">
@@ -4813,7 +4823,7 @@ function renderCoverageMap() {
                     </section>
                   `).join("")}
                 </div>
-              </article>
+              </section>
             `;
           }).join("")}
         </div>
@@ -4822,9 +4832,9 @@ function renderCoverageMap() {
       <section class="coverage-future-panel panel">
         <div class="coverage-panel-head">
           <div>
-            <span class="eyebrow">Future Tagging Layer</span>
-            <h2>IGCSE, IB, and Common Core can sit on top of the same tool library</h2>
-            <p>Rather than duplicating tools, Kaizen Maths can tag existing resources against different curriculum routes as alignment becomes clearer.</p>
+            <span class="eyebrow">Additional Curriculum Tags</span>
+            <h2>IGCSE, IB, and Common Core can sit on top of the same live library</h2>
+            <p>Use admin tags to add extra curriculum routes as alignment becomes clearer.</p>
           </div>
           ${isAdmin() ? `<a class="button primary" href="#/admin">Open Tool Tags</a>` : `<a class="button" href="#/tools">Explore Tools</a>`}
         </div>
@@ -4833,10 +4843,9 @@ function renderCoverageMap() {
             const matchingTools = tools.filter((tool) => curriculumTagMatches(tool, tag.label));
             return `
               <article class="future-tag-card">
-                <span class="eyebrow">Tag Route</span>
                 <h3>${escapeHtml(tag.label)}</h3>
                 <p>${escapeHtml(tag.description)}</p>
-                <strong>${matchingTools.length} currently tagged or level-matched</strong>
+                <strong>${matchingTools.length} tagged</strong>
               </article>
             `;
           }).join("")}
@@ -7782,7 +7791,7 @@ function updateRouteSeo(parts) {
     },
     "coverage-map": {
       title: routeTitle("Curriculum Coverage Map"),
-      description: "View Kaizen Maths coverage across GCSE, A-Level Pure, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
+      description: "View Kaizen Maths coverage across GCSE, A-Level Pure, Further Maths, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
     },
     "collections": {
       title: routeTitle(collectionName ? `${collectionName} Tools` : "Maths Collections"),
