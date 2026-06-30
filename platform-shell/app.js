@@ -6071,10 +6071,17 @@ function renderToolFrame(tool) {
           <div class="legacy-toolbar-actions">
             <span class="tool-path">${tool.toolPath}</span>
             <button class="button classroom-fullscreen" id="classroomFullscreen" type="button">Full Screen</button>
+            <button class="button classroom-draw-toggle" id="classroomDrawToggle" type="button" aria-pressed="false">Write</button>
+            <button class="button classroom-annotation-control active" id="annotationPen" type="button" aria-pressed="true">Pen</button>
+            <button class="button classroom-annotation-control" id="annotationHighlighter" type="button" aria-pressed="false">Highlighter</button>
+            <button class="button classroom-annotation-control" id="annotationEraser" type="button" aria-pressed="false">Eraser</button>
+            <button class="button classroom-annotation-control" id="annotationUndo" type="button">Undo</button>
+            <button class="button classroom-annotation-control danger" id="annotationClear" type="button">Clear</button>
             <button class="button classroom-exit" id="exitClassroom" type="button">Exit</button>
           </div>
         </div>
         ${frame}
+        <canvas class="classroom-annotation-layer" id="classroomAnnotationCanvas" aria-label="Classroom writing layer"></canvas>
       </div>
       <aside class="panel teacher-panel">
         <span class="eyebrow">Teacher Guidance</span>
@@ -7493,10 +7500,27 @@ function bindToolFrame(tool) {
   const button = document.getElementById("focusTool");
   const exitButton = document.getElementById("exitClassroom");
   const fullscreenButton = document.getElementById("classroomFullscreen");
+  const drawToggle = document.getElementById("classroomDrawToggle");
+  const annotationCanvas = document.getElementById("classroomAnnotationCanvas");
+  const annotationPen = document.getElementById("annotationPen");
+  const annotationHighlighter = document.getElementById("annotationHighlighter");
+  const annotationEraser = document.getElementById("annotationEraser");
+  const annotationUndo = document.getElementById("annotationUndo");
+  const annotationClear = document.getElementById("annotationClear");
   const stage = document.querySelector(".legacy-stage");
   const frame = stage?.querySelector(".legacy-frame");
   if (!button || !stage) return;
   const classroomStateKey = "kaizen:classroom-view";
+  const annotationState = {
+    active: false,
+    tool: "pen",
+    drawing: false,
+    strokes: [],
+    currentStroke: null,
+    dpr: 1,
+    width: 0,
+    height: 0
+  };
 
   function savedClassroomState() {
     try {
@@ -7734,6 +7758,169 @@ function bindToolFrame(tool) {
     }
   }
 
+  function annotationContext() {
+    if (!annotationCanvas) return null;
+    const context = annotationCanvas.getContext("2d");
+    if (!context) return null;
+    context.setTransform(annotationState.dpr, 0, 0, annotationState.dpr, 0, 0);
+    return context;
+  }
+
+  function annotationSettings(tool = annotationState.tool) {
+    if (tool === "highlighter") {
+      return { color: "#facc15", width: 18, alpha: 0.32, composite: "source-over" };
+    }
+    if (tool === "eraser") {
+      return { color: "rgba(0,0,0,1)", width: 28, alpha: 1, composite: "destination-out" };
+    }
+    return { color: "#1f2937", width: 3.2, alpha: 1, composite: "source-over" };
+  }
+
+  function drawAnnotationStroke(stroke, context = annotationContext()) {
+    if (!context || !stroke?.points?.length) return;
+    const settings = annotationSettings(stroke.tool);
+    context.save();
+    context.globalAlpha = settings.alpha;
+    context.globalCompositeOperation = settings.composite;
+    context.strokeStyle = settings.color;
+    context.fillStyle = settings.color;
+    context.lineWidth = settings.width;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    context.beginPath();
+    context.moveTo(stroke.points[0].x, stroke.points[0].y);
+    stroke.points.slice(1).forEach((point) => context.lineTo(point.x, point.y));
+    context.stroke();
+    if (stroke.points.length === 1) {
+      context.beginPath();
+      context.arc(stroke.points[0].x, stroke.points[0].y, settings.width / 2, 0, Math.PI * 2);
+      context.fill();
+    }
+    context.restore();
+  }
+
+  function renderAnnotations() {
+    const context = annotationContext();
+    if (!context || !annotationCanvas) return;
+    context.clearRect(0, 0, annotationState.width, annotationState.height);
+    annotationState.strokes.forEach((stroke) => drawAnnotationStroke(stroke, context));
+    if (annotationState.currentStroke) drawAnnotationStroke(annotationState.currentStroke, context);
+  }
+
+  function resizeAnnotationCanvas() {
+    if (!annotationCanvas || !stage.classList.contains("classroom")) return;
+    const rect = annotationCanvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+    const width = Math.round(rect.width);
+    const height = Math.round(rect.height);
+    const pixelWidth = Math.round(width * dpr);
+    const pixelHeight = Math.round(height * dpr);
+    const changed = annotationCanvas.width !== pixelWidth || annotationCanvas.height !== pixelHeight || annotationState.dpr !== dpr;
+    annotationState.dpr = dpr;
+    annotationState.width = width;
+    annotationState.height = height;
+    if (changed) {
+      annotationCanvas.width = pixelWidth;
+      annotationCanvas.height = pixelHeight;
+      renderAnnotations();
+    }
+  }
+
+  function scheduleAnnotationResize() {
+    window.requestAnimationFrame(() => {
+      resizeAnnotationCanvas();
+      window.requestAnimationFrame(resizeAnnotationCanvas);
+    });
+  }
+
+  function setAnnotationTool(tool) {
+    annotationState.tool = tool;
+    [
+      [annotationPen, "pen"],
+      [annotationHighlighter, "highlighter"],
+      [annotationEraser, "eraser"]
+    ].forEach(([control, value]) => {
+      control?.classList.toggle("active", tool === value);
+      control?.setAttribute("aria-pressed", String(tool === value));
+    });
+  }
+
+  function setAnnotationActive(active) {
+    annotationState.active = active;
+    annotationState.drawing = false;
+    annotationState.currentStroke = null;
+    stage.classList.toggle("annotation-active", active);
+    drawToggle?.classList.toggle("active", active);
+    drawToggle?.setAttribute("aria-pressed", String(active));
+    if (drawToggle) drawToggle.textContent = active ? "Writing On" : "Write";
+    if (active) {
+      setAnnotationTool(annotationState.tool || "pen");
+      scheduleAnnotationResize();
+    }
+    scheduleClassroomFit();
+  }
+
+  function annotationPoint(event) {
+    const rect = annotationCanvas.getBoundingClientRect();
+    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+  }
+
+  function startAnnotationStroke(event) {
+    if (!annotationCanvas || !annotationState.active) return;
+    event.preventDefault();
+    resizeAnnotationCanvas();
+    annotationCanvas.setPointerCapture?.(event.pointerId);
+    annotationState.drawing = true;
+    annotationState.currentStroke = {
+      tool: annotationState.tool,
+      points: [annotationPoint(event)]
+    };
+    renderAnnotations();
+  }
+
+  function continueAnnotationStroke(event) {
+    if (!annotationCanvas || !annotationState.active || !annotationState.drawing || !annotationState.currentStroke) return;
+    event.preventDefault();
+    annotationState.currentStroke.points.push(annotationPoint(event));
+    renderAnnotations();
+  }
+
+  function finishAnnotationStroke(event) {
+    if (!annotationCanvas || !annotationState.drawing || !annotationState.currentStroke) return;
+    event.preventDefault();
+    annotationCanvas.releasePointerCapture?.(event.pointerId);
+    annotationState.strokes.push(annotationState.currentStroke);
+    annotationState.currentStroke = null;
+    annotationState.drawing = false;
+    renderAnnotations();
+  }
+
+  function clearAnnotations() {
+    annotationState.strokes = [];
+    annotationState.currentStroke = null;
+    renderAnnotations();
+  }
+
+  function undoAnnotation() {
+    annotationState.strokes.pop();
+    annotationState.currentStroke = null;
+    renderAnnotations();
+  }
+
+  if (annotationCanvas) {
+    annotationCanvas.addEventListener("pointerdown", startAnnotationStroke);
+    annotationCanvas.addEventListener("pointermove", continueAnnotationStroke);
+    annotationCanvas.addEventListener("pointerup", finishAnnotationStroke);
+    annotationCanvas.addEventListener("pointercancel", finishAnnotationStroke);
+  }
+  drawToggle?.addEventListener("click", () => setAnnotationActive(!annotationState.active));
+  annotationPen?.addEventListener("click", () => setAnnotationTool("pen"));
+  annotationHighlighter?.addEventListener("click", () => setAnnotationTool("highlighter"));
+  annotationEraser?.addEventListener("click", () => setAnnotationTool("eraser"));
+  annotationUndo?.addEventListener("click", undoAnnotation);
+  annotationClear?.addEventListener("click", clearAnnotations);
+
   function setClassroomMode(active, options = {}) {
     stage.classList.toggle("classroom", active);
     document.body.classList.toggle("classroom-active", active);
@@ -7742,7 +7929,9 @@ function bindToolFrame(tool) {
     if (options.persist !== false) saveClassroomState(active);
     if (active) {
       scheduleClassroomFit();
+      scheduleAnnotationResize();
     } else {
+      setAnnotationActive(false);
       resetFrameFit();
     }
 
@@ -7775,12 +7964,16 @@ function bindToolFrame(tool) {
       bindFrameFitRefreshers();
       refreshTeacherTopicMap();
       scheduleClassroomFit();
+      scheduleAnnotationResize();
     });
     bindFrameFitRefreshers();
     refreshTeacherTopicMap();
   }
 
-  window.addEventListener("resize", scheduleClassroomFit);
+  window.addEventListener("resize", () => {
+    scheduleClassroomFit();
+    scheduleAnnotationResize();
+  });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && stage.classList.contains("classroom")) {
@@ -7792,6 +7985,7 @@ function bindToolFrame(tool) {
     updateFullscreenButton();
     if (stage.classList.contains("classroom")) {
       scheduleClassroomFit();
+      scheduleAnnotationResize();
     }
   });
 
