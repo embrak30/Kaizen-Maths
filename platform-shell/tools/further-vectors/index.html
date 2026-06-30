@@ -21,7 +21,7 @@
     .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-left:4px solid #24356f;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#24356f;color:#fff;font-weight:850}
     .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.2em;font-weight:700;line-height:1.42;color:#172033;overflow-wrap:anywhere}.question-text .word{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;font-size:.88em;font-weight:750;color:#334155}.problem-answer{display:none;white-space:normal;max-width:460px;padding:7px 11px;border-radius:10px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}
     .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #24356f;border-radius:6px;background:#f1f5ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#24356f;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#24356f}.step-equation{margin:6px 0;padding:7px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#5b21b6;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:800}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
-    .vec{font-weight:850}.vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    .vec{font-weight:850}.vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.cvec{display:inline-grid;grid-template-columns:auto auto auto;align-items:stretch;vertical-align:middle;margin:0 4px;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:850}.cvec .bracket{display:flex;align-items:center;font-size:2.7em;line-height:.76;font-weight:400}.cvec .entries{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:24px;padding:0 3px;text-align:center;line-height:1.05}.timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
     @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.question-text{font-size:1.05em}}
   </style>
 </head>
@@ -159,7 +159,8 @@
     function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
     function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
     function simpleFrac(n,d){if(d<0){n=-n;d=-d}const g=gcd(n,d);n/=g;d/=g;if(d===1)return String(n);return frac(n,d)}
-    function vec(x,y,z){return `(${x}, ${y}, ${z})`}
+    function pointText(a){return `(${a.x}, ${a.y}, ${a.z})`}
+    function columnVector(x,y,z){return `<span class="cvec" aria-label="column vector ${stripTags(x)}, ${stripTags(y)}, ${stripTags(z)}"><span class="bracket">(</span><span class="entries"><span>${x}</span><span>${y}</span><span>${z}</span></span><span class="bracket">)</span></span>`}
     function vLetter(name){return `<span class="vec">${name}</span>`}
     function stripTags(html){return String(html).replace(/<sup>(.*?)<\/sup>/gi,'^$1').replace(/<sub>(.*?)<\/sub>/gi,'_$1').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
     function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
@@ -171,7 +172,7 @@
     function cross(a,b){return {x:a.y*b.z-a.z*b.y,y:a.z*b.x-a.x*b.z,z:a.x*b.y-a.y*b.x}}
     function magSq(a){return dot(a,a)}
     function magText(a){const sq=magSq(a),root=Math.sqrt(sq);return Number.isInteger(root)?String(root):`√${sq}`}
-    function vectorText(a){return vec(a.x,a.y,a.z)}
+    function vectorText(a){return columnVector(a.x,a.y,a.z)}
     function signed(n){return n<0?`− ${Math.abs(n)}`:`+ ${n}`}
     function signedParam(n,param='λ'){
       if(n===0)return '';
@@ -208,7 +209,7 @@
       return problem(prompt,answer,[
         `Use AB = position vector of B − position vector of A.`,
         `AB = ${vectorText(B)} − ${vectorText(A)}`,
-        `AB = (${B.x} − ${A.x}, ${B.y} − ${A.y}, ${B.z} − ${A.z})`,
+        `AB = ${vectorText({x:`${B.x} − ${A.x}`,y:`${B.y} − ${A.y}`,z:`${B.z} − ${A.z}`})}`,
         answer
       ]);
     }
@@ -243,8 +244,8 @@
       const m=choice([1,2,3]), n=choice([1,2,3]);
       const numerator=add(scale(n,A),scale(m,B));
       const den=m+n;
-      const prompt=`P divides AB internally in the ratio ${m}:${n}. A = ${vectorText(A)} and B = ${vectorText(B)}. Find P.`;
-      const answer=`P = ${vectorText({x:`${simpleFrac(numerator.x,den)}`,y:`${simpleFrac(numerator.y,den)}`,z:`${simpleFrac(numerator.z,den)}`})}`;
+      const prompt=`P divides AB internally in the ratio ${m}:${n}. A = ${pointText(A)} and B = ${pointText(B)}. Find P.`;
+      const answer=`P = ${pointText({x:`${simpleFrac(numerator.x,den)}`,y:`${simpleFrac(numerator.y,den)}`,z:`${simpleFrac(numerator.z,den)}`})}`;
       return problem(prompt,answer,[
         `For AP:PB = ${m}:${n}, use P = ${frac(`${n}A + ${m}B`,`${m+n}`)}.`,
         `P = ${frac(`${n}${vectorText(A)} + ${m}${vectorText(B)}`,den)}`,
@@ -272,11 +273,11 @@
       const p=choice([-3,-2,-1,1,2,3]);
       const bFixed={x:choice([1,2,3]),y:p,z:choice([-3,-2,1,3])};
       const k=-(a.x*bFixed.x+a.y*bFixed.y+a.z*bFixed.z);
-      const prompt=`a = ${vectorText(a)} and b = (${bFixed.x}, ${p}, ${bFixed.z}) + t(0, 1, 0). Find t if a is perpendicular to b.`;
+      const prompt=`a = ${vectorText(a)} and b = ${vectorText(bFixed)} + t${vectorText({x:0,y:1,z:0})}. Find t if a is perpendicular to b.`;
       const answer=`t = ${simpleFrac(k,a.y)}`;
       return problem(prompt,answer,[
         `If two vectors are perpendicular, their scalar product is 0.`,
-        `b = (${bFixed.x}, ${p} + t, ${bFixed.z})`,
+        `b = ${vectorText({x:bFixed.x,y:`${p} + t`,z:bFixed.z})}`,
         `a · b = ${a.x}(${bFixed.x}) + ${a.y}(${p} + t) + ${a.z}(${bFixed.z})`,
         `${a.x*bFixed.x + a.y*p + a.z*bFixed.z}${signedParam(a.y,'t')} = 0`,
         `${a.y}t = ${k}`,
@@ -301,8 +302,8 @@
     function genLineThroughPoints(){
       const A=v(), d=v(), B=add(A,d);
       const answer=lineEquation(A,d);
-      return problem(`Find a vector equation of the line through A = ${vectorText(A)} and B = ${vectorText(B)}.`,answer,[
-        `A point on the line is ${vectorText(A)}.`,
+      return problem(`Find a vector equation of the line through A = ${pointText(A)} and B = ${pointText(B)}.`,answer,[
+        `A point on the line is ${pointText(A)}.`,
         `Direction vector AB = ${vectorText(B)} − ${vectorText(A)}`,
         `AB = ${vectorText(d)}`,
         `Use r = a + λd.`,
@@ -315,7 +316,7 @@
       const usePoint=Math.random()<0.75;
       const Q=usePoint?P:add(P,{x:1,y:0,z:0});
       const answer=usePoint?'Yes, the point lies on the line.':'No, the point does not lie on the line.';
-      return problem(`Line L has equation ${lineEquation(A,d)}. Determine whether P = ${vectorText(Q)} lies on L.`,answer,[
+      return problem(`Line L has equation ${lineEquation(A,d)}. Determine whether P = ${pointText(Q)} lies on L.`,answer,[
         `Compare components with ${vectorText(Q)} = ${vectorText(A)} + λ${vectorText(d)}.`,
         `x-component: ${Q.x} = ${A.x} + ${d.x}λ`,
         `This gives λ = ${simpleFrac(Q.x-A.x,d.x)}.`,
@@ -329,7 +330,7 @@
       const P=v(), d=v(), e=v(), lam=choice([1,2,-1]), mu=choice([1,-2,2]);
       const X=add(P,scale(lam,d));
       const Q=sub(X,scale(mu,e));
-      const answer=`Intersection = ${vectorText(X)}`;
+      const answer=`Intersection = ${pointText(X)}`;
       return problem(`Find the intersection of L<sub>1</sub>: ${lineEquation(P,d,'λ')} and L<sub>2</sub>: ${lineEquation(Q,e,'μ')}.`,answer,[
         `At the intersection, the position vectors are equal.`,
         `${vectorText(P)} + λ${vectorText(d)} = ${vectorText(Q)} + μ${vectorText(e)}`,
@@ -345,7 +346,7 @@
       const A={x:0,y:0,z:0}, d=choice([{x:1,y:2,z:2},{x:2,y:1,z:2},{x:2,y:2,z:1}]), P=v();
       const crossVec=cross(P,d), distance=Math.sqrt(magSq(crossVec)/magSq(d));
       const answer=`distance = ${frac(`√${magSq(crossVec)}`,`√${magSq(d)}`)} ≈ ${decimal(distance)}`;
-      return problem(`Find the shortest distance from P = ${vectorText(P)} to the line r = λ${vectorText(d)}.`,answer,[
+      return problem(`Find the shortest distance from P = ${pointText(P)} to the line r = λ${vectorText(d)}.`,answer,[
         `Use distance = ${frac('|AP × d|','|d|')}. Here A is the origin, so AP = ${vectorText(P)}.`,
         `AP × d = ${vectorText(crossVec)}`,
         `|AP × d| = √${magSq(crossVec)}`,
@@ -358,18 +359,18 @@
       const a=v(), b=v(), c=cross(a,b);
       const answer=`a × b = ${vectorText(c)}`;
       return problem(`Find a × b for a = ${vectorText(a)} and b = ${vectorText(b)}.`,answer,[
-        `Use a × b = (a<sub>2</sub>b<sub>3</sub> − a<sub>3</sub>b<sub>2</sub>, a<sub>3</sub>b<sub>1</sub> − a<sub>1</sub>b<sub>3</sub>, a<sub>1</sub>b<sub>2</sub> − a<sub>2</sub>b<sub>1</sub>).`,
-        `a × b = (${a.y}(${b.z}) − ${a.z}(${b.y}), ${a.z}(${b.x}) − ${a.x}(${b.z}), ${a.x}(${b.y}) − ${a.y}(${b.x}))`,
+        `Use a × b = ${vectorText({x:'a<sub>2</sub>b<sub>3</sub> − a<sub>3</sub>b<sub>2</sub>',y:'a<sub>3</sub>b<sub>1</sub> − a<sub>1</sub>b<sub>3</sub>',z:'a<sub>1</sub>b<sub>2</sub> − a<sub>2</sub>b<sub>1</sub>'})}.`,
+        `a × b = ${vectorText({x:`${a.y}(${b.z}) − ${a.z}(${b.y})`,y:`${a.z}(${b.x}) − ${a.x}(${b.z})`,z:`${a.x}(${b.y}) − ${a.y}(${b.x})`})}`,
         answer
       ]);
     }
 
     function genPlanePointNormal(){
       const n=v(), P=v(), c=dot(n,P), answer=planeEquation(n,c);
-      return problem(`A plane has normal vector n = ${vectorText(n)} and passes through P = ${vectorText(P)}. Find its Cartesian equation.`,answer,[
+      return problem(`A plane has normal vector n = ${vectorText(n)} and passes through P = ${pointText(P)}. Find its Cartesian equation.`,answer,[
         `Use n · r = n · P.`,
-        `${vectorText(n)} · (x, y, z) = ${vectorText(n)} · ${vectorText(P)}`,
-        `${n.x}x ${signed(n.y)}y ${signed(n.z)}z = ${c}`,
+        `${vectorText(n)} · ${vectorText({x:'x',y:'y',z:'z'})} = ${vectorText(n)} · ${vectorText(P)}`,
+        `n · P = ${c}`,
         answer
       ]);
     }
@@ -379,7 +380,7 @@
       let n=cross(u,w), guard=0;
       while(magSq(n)===0&&guard<20){w.x+=1;n=cross(u,w);guard++}
       const B=add(A,u), C=add(A,w), constant=dot(n,A), answer=planeEquation(n,constant);
-      return problem(`Find the equation of the plane through A = ${vectorText(A)}, B = ${vectorText(B)}, and C = ${vectorText(C)}.`,answer,[
+      return problem(`Find the equation of the plane through A = ${pointText(A)}, B = ${pointText(B)}, and C = ${pointText(C)}.`,answer,[
         `Find two direction vectors in the plane.`,
         `AB = ${vectorText(B)} − ${vectorText(A)} = ${vectorText(u)}`,
         `AC = ${vectorText(C)} − ${vectorText(A)} = ${vectorText(w)}`,
@@ -394,7 +395,7 @@
       const n=v(), point=v(), d=v(), lambda=choice([-2,-1,1,2,3]);
       const X=add(point,scale(lambda,d));
       const c=dot(n,X);
-      const answer=`Intersection = ${vectorText(X)}`;
+      const answer=`Intersection = ${pointText(X)}`;
       return problem(`Find where the line r = ${vectorText(point)} + λ${vectorText(d)} meets the plane ${planeEquation(n,c)}.`,answer,[
         `Substitute the line into the plane equation.`,
         `r = ${vectorText(point)} + λ${vectorText(d)} = ${vectorText({x:componentParam(point.x,d.x),y:componentParam(point.y,d.y),z:componentParam(point.z,d.z)})}`,
