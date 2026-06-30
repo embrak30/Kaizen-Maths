@@ -4780,17 +4780,16 @@ function renderCoverageMap() {
       `<a class="button" href="#/tools">Browse Tool Library</a>${isAdmin() ? `<a class="button" href="#/admin">Edit Tags In Admin</a>` : ""}`
     )}
     <section class="coverage-page">
-      <nav class="coverage-summary-grid" aria-label="Coverage sections">
+      <nav class="coverage-jump-list" aria-label="Coverage sections">
+        <span>Jump to:</span>
+        <ul>
         ${areaData.map((area) => `
-          <a class="coverage-summary-card" href="#coverage-${escapeHtml(area.id)}">
-            <strong>${area.tools.length}</strong>
-            <span>${escapeHtml(area.title)}</span>
-            <small>${escapeHtml(area.subtitle)}</small>
-          </a>
+          <li><a href="#coverage-${escapeHtml(area.id)}">${escapeHtml(area.title)}</a> <small>(${area.tools.length})</small></li>
         `).join("")}
+        </ul>
       </nav>
 
-      <section class="coverage-map-panel panel">
+      <section class="coverage-map-panel">
         <div class="coverage-panel-head">
           <div>
             <span class="eyebrow">Live Coverage Directory</span>
@@ -4803,33 +4802,40 @@ function renderCoverageMap() {
           ${areaData.map((area) => {
             const groups = coverageGroups(area.tools);
             return `
-              <section class="coverage-area-card" id="coverage-${escapeHtml(area.id)}">
-                <header>
+              <section class="coverage-area-section" id="coverage-${escapeHtml(area.id)}">
+                <header class="coverage-area-heading">
                   <h2>${escapeHtml(area.title)} <span>${area.tools.length}</span></h2>
                   <p>${escapeHtml(area.description)}</p>
                 </header>
-                <div class="coverage-group-list">
+                <table class="coverage-topic-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Strand</th>
+                      <th scope="col">Topics</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                   ${Object.entries(groups).map(([group, groupTools]) => `
-                    <section class="coverage-group">
-                      <h3>${escapeHtml(group)} <span>${groupTools.length}</span></h3>
-                      <div class="coverage-tool-list">
+                    <tr>
+                      <th scope="row">${escapeHtml(group)} <span>${groupTools.length}</span></th>
+                      <td>
+                        <ul class="coverage-link-list">
                         ${groupTools.map((tool) => `
-                          <a href="#/tools/${escapeHtml(tool.slug)}">
-                            <strong>${escapeHtml(tool.title)}</strong>
-                            <small>${escapeHtml(tool.level)}</small>
-                          </a>
+                          <li><a href="#/tools/${escapeHtml(tool.slug)}">${escapeHtml(tool.title)}</a></li>
                         `).join("")}
-                      </div>
-                    </section>
+                        </ul>
+                      </td>
+                    </tr>
                   `).join("")}
-                </div>
+                  </tbody>
+                </table>
               </section>
             `;
           }).join("")}
         </div>
       </section>
 
-      <section class="coverage-future-panel panel">
+      <section class="coverage-future-panel">
         <div class="coverage-panel-head">
           <div>
             <span class="eyebrow">Additional Curriculum Tags</span>
@@ -4838,18 +4844,18 @@ function renderCoverageMap() {
           </div>
           ${isAdmin() ? `<a class="button primary" href="#/admin">Open Tool Tags</a>` : `<a class="button" href="#/tools">Explore Tools</a>`}
         </div>
-        <div class="future-tag-grid">
+        <ul class="coverage-tag-list">
           ${futureCurriculumTags.map((tag) => {
             const matchingTools = tools.filter((tool) => curriculumTagMatches(tool, tag.label));
             return `
-              <article class="future-tag-card">
-                <h3>${escapeHtml(tag.label)}</h3>
-                <p>${escapeHtml(tag.description)}</p>
-                <strong>${matchingTools.length} tagged</strong>
-              </article>
+              <li>
+                <strong>${escapeHtml(tag.label)}</strong>
+                <span>${escapeHtml(tag.description)}</span>
+                <small>${matchingTools.length} tagged</small>
+              </li>
             `;
           }).join("")}
-        </div>
+        </ul>
       </section>
     </section>
   `;
