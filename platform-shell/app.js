@@ -272,7 +272,7 @@ const tools = [
     status: "Imported",
     description: "Generate Further Maths series practice covering Maclaurin series, Taylor series, substitution, products of series, approximations, limits, coefficients, and simple power-series solutions.",
     tags: ["algebra", "calculus", "further maths", "series", "Maclaurin series", "Taylor series", "power series", "approximations", "limits"],
-    toolPath: "tools/series-expansions/index.html?v=series-expansions-1",
+    toolPath: "tools/series-expansions/index.html?v=series-expansions-2",
     imported: true,
     teacherNotes: [
       "Level 1 covers standard Maclaurin series, derivative values at zero, simple expansions, and conditions of validity.",

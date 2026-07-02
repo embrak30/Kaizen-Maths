@@ -43,8 +43,8 @@
       </ul>
       <h3>Core Formulas</h3>
       <ul>
-        <li>Maclaurin: f(x) = f(0) + f'(0)x + f''(0)x²/2! + f'''(0)x³/3! + ...</li>
-        <li>Taylor about a: f(x) = f(a) + f'(a)(x-a) + f''(a)(x-a)²/2! + ...</li>
+        <li>Maclaurin: f(x) = f(0) + f'(0)x + f''(0)x² divided by 2! + f'''(0)x³ divided by 3! + ...</li>
+        <li>Taylor about a: f(x) = f(a) + f'(a)(x-a) + f''(a)(x-a)² divided by 2! + ...</li>
         <li>When substituting into a known expansion, keep terms only up to the order requested.</li>
       </ul>
     </div>
@@ -213,9 +213,53 @@
       for(let i=0;i<a.length;i++)for(let j=0;j<b.length;j++)if(i+j<=max)out[i+j]=add(out[i+j],mul(a[i],b[j]));
       return out;
     }
+    function signedJoin(items){
+      return items.map((item,index)=>{
+        const sign=item.sign<0?' - ':' + ';
+        return index===0?(item.sign<0?`-${item.body}`:item.body):`${sign}${item.body}`;
+      }).join('');
+    }
+    function explicitPower(value,power){
+      if(power===1)return value;
+      return `(${value})${sup(power)}`;
+    }
+    function explicitSeriesLine(lhs,type,value,max){
+      const terms=[];
+      if(type==='exp'){
+        for(let k=0;k<=max;k++){
+          terms.push({sign:1,body:k===0?'1':k===1?value:frac(explicitPower(value,k),`${k}!`)});
+        }
+      }
+      if(type==='sin'){
+        for(let k=1;k<=max;k+=2){
+          terms.push({sign:((k-1)/2)%2===0?1:-1,body:k===1?value:frac(explicitPower(value,k),`${k}!`)});
+        }
+      }
+      if(type==='cos'){
+        for(let k=0;k<=max;k+=2){
+          terms.push({sign:(k/2)%2===0?1:-1,body:k===0?'1':frac(explicitPower(value,k),`${k}!`)});
+        }
+      }
+      if(type==='ln'){
+        for(let k=1;k<=max;k++){
+          terms.push({sign:k%2?1:-1,body:k===1?value:frac(explicitPower(value,k),k)});
+        }
+      }
+      if(type==='recipMinus'){
+        for(let k=0;k<=max;k++){
+          terms.push({sign:1,body:k===0?'1':explicitPower(value,k)});
+        }
+      }
+      if(type==='recipPlus'){
+        for(let k=0;k<=max;k++){
+          terms.push({sign:k%2===0?1:-1,body:k===0?'1':explicitPower(value,k)});
+        }
+      }
+      return `${lhs} = ${signedJoin(terms)} + ...`;
+    }
 
     const standardSeries=[
-      {name:'e<sup>x</sup>', answer:`1 + x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(4),'4!')} + ...`, validity:'all real x', steps:['Start from the known Maclaurin series for e<sup>x</sup>.','The nth derivative of e<sup>x</sup> is e<sup>x</sup>, so every derivative at 0 is 1.','Therefore e<sup>x</sup> = 1 + x + x<sup>2</sup>/2! + x<sup>3</sup>/3! + ... .']},
+      {name:'e<sup>x</sup>', answer:`1 + x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(4),'4!')} + ...`, validity:'all real x', steps:['Start from the known Maclaurin series for e<sup>x</sup>.','The nth derivative of e<sup>x</sup> is e<sup>x</sup>, so every derivative at 0 is 1.',`Therefore e<sup>x</sup> = 1 + x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ... .`]},
       {name:'sin x', answer:`x - ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(5),'5!')} - ${frac('x'+sup(7),'7!')} + ...`, validity:'all real x', steps:['Use the standard Maclaurin series for sin x.','Only odd powers appear.','The signs alternate: +, -, +, - .']},
       {name:'cos x', answer:`1 - ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(4),'4!')} - ${frac('x'+sup(6),'6!')} + ...`, validity:'all real x', steps:['Use the standard Maclaurin series for cos x.','Only even powers appear.','The signs alternate: +, -, +, - .']},
       {name:'ln(1 + x)', answer:`x - ${frac('x'+sup(2),'2')} + ${frac('x'+sup(3),'3')} - ${frac('x'+sup(4),'4')} + ...`, validity:'-1 < x ≤ 1', steps:['Use the standard Maclaurin series for ln(1 + x).','The coefficient of x<sup>n</sup> is (-1)<sup>n+1</sup>/n.','This expansion is valid for -1 < x ≤ 1.']},
@@ -249,27 +293,28 @@
     function genSimpleExpansion(){
       const max=choice([3,4]);
       const options=[
-        {q:'e<sup>2x</sup>', poly:expPoly(2,max), base:'e<sup>u</sup>', u:'2x', validity:'all real x'},
-        {q:'e<sup>-x</sup>', poly:expPoly(-1,max), base:'e<sup>u</sup>', u:'-x', validity:'all real x'},
-        {q:'sin(2x)', poly:sinPoly(2,max), base:'sin u', u:'2x', validity:'all real x'},
-        {q:'cos(3x)', poly:cosPoly(3,max), base:'cos u', u:'3x', validity:'all real x'},
-        {q:'ln(1 + 2x)', poly:lnPoly(2,max), base:'ln(1 + u)', u:'2x', validity:'|2x| < 1'}
+        {q:'e<sup>2x</sup>', poly:expPoly(2,max), type:'exp', base:'e<sup>u</sup>', substituted:'e<sup>2x</sup>', u:'2x', validity:'all real x'},
+        {q:'e<sup>-x</sup>', poly:expPoly(-1,max), type:'exp', base:'e<sup>u</sup>', substituted:'e<sup>-x</sup>', u:'-x', validity:'all real x'},
+        {q:'sin(2x)', poly:sinPoly(2,max), type:'sin', base:'sin u', substituted:'sin(2x)', u:'2x', validity:'all real x'},
+        {q:'cos(3x)', poly:cosPoly(3,max), type:'cos', base:'cos u', substituted:'cos(3x)', u:'3x', validity:'all real x'},
+        {q:'ln(1 + 2x)', poly:lnPoly(2,max), type:'ln', base:'ln(1 + u)', substituted:'ln(1 + 2x)', u:'2x', validity:'|2x| < 1'}
       ];
       const item=choice(options);
       const answer=polyHtml(item.poly,'x',max+1);
       return problem(`Expand ${item.q} as a Maclaurin series up to and including the term in x${sup(max)}.`,answer,[
-        `Start with the standard expansion for ${item.base}.`,
+        `Start with the standard expansion: ${explicitSeriesLine(item.base,item.type,'u',max)}.`,
         `Substitute u = ${item.u}.`,
-        `Keep terms only up to x${sup(max)}.`,
+        `After substitution: ${explicitSeriesLine(item.substituted,item.type,item.u,max)}.`,
+        `Simplify each substituted power and keep terms only up to x${sup(max)}.`,
         `${item.q} = ${answer}.`
       ]);
     }
 
     function genValidity(){
       const item=choice([
-        {q:'ln(1 + 3x)', condition:'|3x| < 1 with endpoint x = 1/3 included only if using ln(1+x)', answer:`-${frac(1,3)} < x ≤ ${frac(1,3)}`, steps:[`For ln(1 + u), the Maclaurin series is valid for -1 < u ≤ 1.`,`Here u = 3x.`,`So -1 < 3x ≤ 1.`,`Divide by 3: -1/3 < x ≤ 1/3.`]},
-        {q:'(1 - 4x)<sup>-1</sup>', condition:'|-4x| < 1', answer:`|x| < ${frac(1,4)}`, steps:[`For (1 + u)<sup>α</sup> with non-integer or negative α, use |u| < 1.`,`Here u = -4x.`,`|-4x| < 1.`,`Therefore |x| < 1/4.`]},
-        {q:'(1 + 2x)<sup>1/2</sup>', condition:'|2x| < 1', answer:`|x| < ${frac(1,2)}`, steps:[`For the binomial expansion of (1 + u)<sup>α</sup>, use |u| < 1.`,`Here u = 2x.`,`|2x| < 1.`,`Therefore |x| < 1/2.`]},
+        {q:'ln(1 + 3x)', condition:`|3x| < 1 with endpoint x = ${frac(1,3)} included only if using ln(1+x)`, answer:`-${frac(1,3)} < x ≤ ${frac(1,3)}`, steps:[`For ln(1 + u), the Maclaurin series is valid for -1 < u ≤ 1.`,`Here u = 3x.`,`So -1 < 3x ≤ 1.`,`Divide by 3: -${frac(1,3)} < x ≤ ${frac(1,3)}.`]},
+        {q:'(1 - 4x)<sup>-1</sup>', condition:'|-4x| < 1', answer:`|x| < ${frac(1,4)}`, steps:[`For (1 + u)<sup>α</sup> with non-integer or negative α, use |u| < 1.`,`Here u = -4x.`,`|-4x| < 1.`,`Therefore |x| < ${frac(1,4)}.`]},
+        {q:`(1 + 2x)<sup>${frac(1,2)}</sup>`, condition:`|2x| < 1`, answer:`|x| < ${frac(1,2)}`, steps:[`For the binomial expansion of (1 + u)<sup>α</sup>, use |u| < 1.`,`Here u = 2x.`,`|2x| < 1.`,`Therefore |x| < ${frac(1,2)}.`]},
         {q:'e<sup>5x</sup>', condition:'all real x', answer:'all real x', steps:[`The Maclaurin series for e<sup>u</sup> is valid for all real u.`,`Here u = 5x.`,`Therefore the expansion is valid for all real x.`]}
       ]);
       return problem(`State the condition of validity for the Maclaurin expansion of ${item.q}.`,item.answer,item.steps);
@@ -289,13 +334,16 @@
         {q:'(1 + x)<sup>-1</sup>e<sup>x</sup>', a:'(1 + x)<sup>-1</sup>', b:'e<sup>x</sup>', pa:recipPoly(1,max), pb:expPoly(1,max)}
       ];
       const item=choice(options);
+      const first=polyHtml(item.pa,'x',max+1);
+      const second=polyHtml(item.pb,'x',max+1);
       const product=multiplyPoly(item.pa,item.pb,max);
       const answer=polyHtml(product,'x',max+1);
       return problem(`Expand ${item.q} up to and including the term in x${sup(max)}.`,answer,[
         `Write each factor as a series up to the order needed.`,
-        `${item.a} = ${polyHtml(item.pa,'x',max+1)}.`,
-        `${item.b} = ${polyHtml(item.pb,'x',max+1)}.`,
-        `Multiply the series and collect like powers of x.`,
+        `${item.a} = ${first}.`,
+        `${item.b} = ${second}.`,
+        `Substitute these into the product: ${item.q} = (${first})(${second}).`,
+        `Multiply term by term, collect like powers of x, and ignore terms above x${sup(max)}.`,
         `${item.q} = ${answer}.`
       ]);
     }
@@ -303,28 +351,29 @@
     function genReciprocalQuotient(){
       const max=choice([3,4]);
       const options=[
-        {q:`${frac(1,'1 - 2x')}`, poly:recipPoly(-2,max), base:'1/(1 - 2x)', steps:[`Use ${frac(1,'1 - u')} = 1 + u + u${sup(2)} + u${sup(3)} + ... .`,`Here u = 2x.`]},
-        {q:`${frac(1,'1 + 3x')}`, poly:recipPoly(3,max), base:'1/(1 + 3x)', steps:[`Use ${frac(1,'1 + u')} = 1 - u + u${sup(2)} - u${sup(3)} + ... .`,`Here u = 3x.`]},
-        {q:`${frac('e'+sup('x'),'1 + x')}`, poly:multiplyPoly(expPoly(1,max),recipPoly(1,max),max), base:`${frac('e'+sup('x'),'1 + x')}`, steps:[`Use e<sup>x</sup> = ${polyHtml(expPoly(1,max),'x',max+1)}.`,`Use ${frac(1,'1 + x')} = ${polyHtml(recipPoly(1,max),'x',max+1)}.`,`Multiply the two series and collect terms.`]}
+        {q:`${frac(1,'1 - 2x')}`, poly:recipPoly(-2,max), base:`${frac(1,'1 - 2x')}`, steps:[`Use ${explicitSeriesLine(frac(1,'1 - u'),'recipMinus','u',max)}.`,`Here u = 2x.`,`After substitution: ${explicitSeriesLine(frac(1,'1 - 2x'),'recipMinus','2x',max)}.`]},
+        {q:`${frac(1,'1 + 3x')}`, poly:recipPoly(3,max), base:`${frac(1,'1 + 3x')}`, steps:[`Use ${explicitSeriesLine(frac(1,'1 + u'),'recipPlus','u',max)}.`,`Here u = 3x.`,`After substitution: ${explicitSeriesLine(frac(1,'1 + 3x'),'recipPlus','3x',max)}.`]},
+        {q:`${frac('e'+sup('x'),'1 + x')}`, poly:multiplyPoly(expPoly(1,max),recipPoly(1,max),max), base:`${frac('e'+sup('x'),'1 + x')}`, steps:[`Use e<sup>x</sup> = ${polyHtml(expPoly(1,max),'x',max+1)}.`,`Use ${frac(1,'1 + x')} = ${polyHtml(recipPoly(1,max),'x',max+1)}.`,`Substitute into the quotient: ${frac('e'+sup('x'),'1 + x')} = (${polyHtml(expPoly(1,max),'x',max+1)})(${polyHtml(recipPoly(1,max),'x',max+1)}).`,`Multiply term by term and collect terms up to x${sup(max)}.`]}
       ];
       const item=choice(options);
       const answer=polyHtml(item.poly,'x',max+1);
-      return problem(`Find the Maclaurin series for ${item.q} up to and including the term in x${sup(max)}.`,answer,[...item.steps,`${item.base} = ${answer}.`]);
+      return problem(`Find the Maclaurin series for ${item.q} up to and including the term in x${sup(max)}.`,answer,[...item.steps,`Simplify to get ${item.base} = ${answer}.`]);
     }
 
     function genApproximation(){
       const items=[
-        {q:'e<sup>0.2</sup>', base:'e<sup>x</sup>', x:'0.2', poly:expPoly(1,4), value:(1+.2+.2**2/2+.2**3/6+.2**4/24).toFixed(5)},
-        {q:'ln(1.1)', base:'ln(1 + x)', x:'0.1', poly:lnPoly(1,4), value:(.1-.1**2/2+.1**3/3-.1**4/4).toFixed(5)},
-        {q:'sin(0.3)', base:'sin x', x:'0.3', poly:sinPoly(1,5), value:(.3-.3**3/6+.3**5/120).toFixed(5)},
-        {q:'cos(0.2)', base:'cos x', x:'0.2', poly:cosPoly(1,4), value:(1-.2**2/2+.2**4/24).toFixed(5)}
+        {q:'e<sup>0.2</sup>', base:'e<sup>x</sup>', x:'0.2', poly:expPoly(1,4), substitution:`e<sup>0.2</sup> ≈ 1 + 0.2 + ${frac('(0.2)'+sup(2),'2!')} + ${frac('(0.2)'+sup(3),'3!')} + ${frac('(0.2)'+sup(4),'4!')}`, value:(1+.2+.2**2/2+.2**3/6+.2**4/24).toFixed(5)},
+        {q:'ln(1.1)', base:'ln(1 + x)', x:'0.1', poly:lnPoly(1,4), substitution:`ln(1.1) = ln(1 + 0.1) ≈ 0.1 - ${frac('(0.1)'+sup(2),2)} + ${frac('(0.1)'+sup(3),3)} - ${frac('(0.1)'+sup(4),4)}`, value:(.1-.1**2/2+.1**3/3-.1**4/4).toFixed(5)},
+        {q:'sin(0.3)', base:'sin x', x:'0.3', poly:sinPoly(1,5), substitution:`sin(0.3) ≈ 0.3 - ${frac('(0.3)'+sup(3),'3!')} + ${frac('(0.3)'+sup(5),'5!')}`, value:(.3-.3**3/6+.3**5/120).toFixed(5)},
+        {q:'cos(0.2)', base:'cos x', x:'0.2', poly:cosPoly(1,4), substitution:`cos(0.2) ≈ 1 - ${frac('(0.2)'+sup(2),'2!')} + ${frac('(0.2)'+sup(4),'4!')}`, value:(1-.2**2/2+.2**4/24).toFixed(5)}
       ];
       const item=choice(items);
       return problem(`Use a Maclaurin series to approximate ${item.q}.`,item.value,[
         `Use the expansion for ${item.base}.`,
         `${item.base} ≈ ${polyHtml(item.poly,'x')}.`,
         `Substitute x = ${item.x}.`,
-        `Approximation = ${item.value}.`
+        `${item.substitution}.`,
+        `Calculate this numerical expression to get ${item.q} ≈ ${item.value}.`
       ]);
     }
 
@@ -341,16 +390,17 @@
       return problem(`Given f(${item.a}) = ${item.vals[0]}, f'(${item.a}) = ${item.vals[1]}, f''(${item.a}) = ${item.vals[2]} and f'''(${item.a}) = ${item.vals[3]}, find the Taylor polynomial about x = ${item.a} up to (x - ${item.a})${sup(3)}.`,answer,[
         `Use f(x) = f(a) + f'(a)(x - a) + ${frac(`f''(a)(x - a)${sup(2)}`,'2!')} + ${frac(`f'''(a)(x - a)${sup(3)}`,'3!')}.`,
         `Here a = ${item.a}.`,
-        `Substitute the derivative values.`,
+        `Substitute the derivative values: f(x) = ${item.vals[0]} + ${item.vals[1]}(x - ${item.a}) + ${frac(`${item.vals[2]}(x - ${item.a})${sup(2)}`,'2!')} + ${frac(`${item.vals[3]}(x - ${item.a})${sup(3)}`,'3!')}.`,
+        `Simplify each coefficient.`,
         `f(x) = ${answer}.`
       ]);
     }
 
     function genTaylorStandard(){
       const options=[
-        {q:'e<sup>x</sup>', a:1, answer:`e[1 + (x - 1) + ${frac('(x - 1)'+sup(2),'2!')} + ${frac('(x - 1)'+sup(3),'3!')}]`, steps:[`For f(x)=e<sup>x</sup>, every derivative is e<sup>x</sup>.`,`At x = 1, f(1)=f'(1)=f''(1)=f'''(1)=e.`,`Substitute into Taylor’s formula about x = 1.`]},
-        {q:'ln x', a:1, answer:`(x - 1) - ${frac('(x - 1)'+sup(2),2)} + ${frac('(x - 1)'+sup(3),3)}`, steps:[`Let h = x - 1, so x = 1 + h.`,`ln x = ln(1 + h).`,`Use ln(1+h)=h - h<sup>2</sup>/2 + h<sup>3</sup>/3 - ... .`,`Replace h by x - 1.`]},
-        {q:`${frac(1,'x')}`, a:2, answer:`${frac(1,2)} - ${frac('(x - 2)',4)} + ${frac('(x - 2)'+sup(2),8)} - ${frac('(x - 2)'+sup(3),16)}`, steps:[`Write x = 2 + h.`,`Then ${frac(1,'x')} = ${frac(1,'2 + h')} = ${frac(1,2)}${frac(1,`1 + ${frac('h',2)}`)}.`,`Use ${frac(1,'1+u')} = 1 - u + u<sup>2</sup> - u<sup>3</sup> + ... .`,`Replace h by x - 2.`]}
+        {q:'e<sup>x</sup>', a:1, answer:`e[1 + (x - 1) + ${frac('(x - 1)'+sup(2),'2!')} + ${frac('(x - 1)'+sup(3),'3!')}]`, steps:[`Use Taylor’s formula about x = 1: f(x) = f(1) + f'(1)(x - 1) + ${frac(`f''(1)(x - 1)${sup(2)}`,'2!')} + ${frac(`f'''(1)(x - 1)${sup(3)}`,'3!')} + ... .`,`For f(x)=e<sup>x</sup>, every derivative is e<sup>x</sup>.`,`At x = 1, f(1)=f'(1)=f''(1)=f'''(1)=e.`,`Substitute: e<sup>x</sup> = e + e(x - 1) + ${frac(`e(x - 1)${sup(2)}`,'2!')} + ${frac(`e(x - 1)${sup(3)}`,'3!')} + ... .`,`Factor e from the terms.`]},
+        {q:'ln x', a:1, answer:`(x - 1) - ${frac('(x - 1)'+sup(2),2)} + ${frac('(x - 1)'+sup(3),3)}`, steps:[`Let h = x - 1, so x = 1 + h.`,`Rewrite the function: ln x = ln(1 + h).`,`Use ln(1+h)=h - ${frac('h'+sup(2),2)} + ${frac('h'+sup(3),3)} - ... .`,`Substitute h = x - 1: ln x = (x - 1) - ${frac('(x - 1)'+sup(2),2)} + ${frac('(x - 1)'+sup(3),3)} - ... .`]},
+        {q:`${frac(1,'x')}`, a:2, answer:`${frac(1,2)} - ${frac('(x - 2)',4)} + ${frac('(x - 2)'+sup(2),8)} - ${frac('(x - 2)'+sup(3),16)}`, steps:[`Write x = 2 + h, so h = x - 2.`,`Then ${frac(1,'x')} = ${frac(1,'2 + h')} = ${frac(1,2)}${frac(1,`1 + ${frac('h',2)}`)}.`,`Use ${frac(1,'1+u')} = 1 - u + u${sup(2)} - u${sup(3)} + ... with u = ${frac('h',2)}.`,`So ${frac(1,`1 + ${frac('h',2)}`)} = 1 - ${frac('h',2)} + ${frac('h'+sup(2),4)} - ${frac('h'+sup(3),8)} + ... .`,`Multiply by ${frac(1,2)} and then replace h by x - 2.`]}
       ];
       const item=choice(options);
       return problem(`Find the Taylor expansion of ${item.q} about x = ${item.a} up to the cubic term.`,item.answer,[...item.steps,`Answer: ${item.answer}.`]);
@@ -358,16 +408,17 @@
 
     function genTaylorApproximation(){
       const item=choice([
-        {q:'ln(1.05)', base:'ln x about x = 1', h:'0.05', value:(.05-.05**2/2+.05**3/3).toFixed(6), expansion:`h - ${frac('h'+sup(2),2)} + ${frac('h'+sup(3),3)}`},
-        {q:`${frac(1,'2.1')}`, base:'1/x about x = 2', h:'0.1', value:(.5-.1/4+.1**2/8-.1**3/16).toFixed(6), expansion:`${frac(1,2)} - ${frac('h',4)} + ${frac('h'+sup(2),8)} - ${frac('h'+sup(3),16)}`},
-        {q:'e<sup>1.1</sup>', base:'e<sup>x</sup> about x = 1', h:'0.1', value:(Math.E*(1+.1+.1**2/2+.1**3/6)).toFixed(6), expansion:`e(1 + h + ${frac('h'+sup(2),'2!')} + ${frac('h'+sup(3),'3!')})`}
+        {q:'ln(1.05)', base:'ln x about x = 1', h:'0.05', value:(.05-.05**2/2+.05**3/3).toFixed(6), expansion:`h - ${frac('h'+sup(2),2)} + ${frac('h'+sup(3),3)}`, substituted:`ln(1.05) ≈ 0.05 - ${frac('(0.05)'+sup(2),2)} + ${frac('(0.05)'+sup(3),3)}`},
+        {q:`${frac(1,'2.1')}`, base:'1/x about x = 2', h:'0.1', value:(.5-.1/4+.1**2/8-.1**3/16).toFixed(6), expansion:`${frac(1,2)} - ${frac('h',4)} + ${frac('h'+sup(2),8)} - ${frac('h'+sup(3),16)}`, substituted:`${frac(1,'2.1')} ≈ ${frac(1,2)} - ${frac('0.1',4)} + ${frac('(0.1)'+sup(2),8)} - ${frac('(0.1)'+sup(3),16)}`},
+        {q:'e<sup>1.1</sup>', base:'e<sup>x</sup> about x = 1', h:'0.1', value:(Math.E*(1+.1+.1**2/2+.1**3/6)).toFixed(6), expansion:`e(1 + h + ${frac('h'+sup(2),'2!')} + ${frac('h'+sup(3),'3!')})`, substituted:`e<sup>1.1</sup> ≈ e(1 + 0.1 + ${frac('(0.1)'+sup(2),'2!')} + ${frac('(0.1)'+sup(3),'3!')})`}
       ]);
       return problem(`Use a Taylor expansion to approximate ${item.q}.`,item.value,[
         `Use the Taylor expansion for ${item.base}.`,
         `Let h be the distance from the expansion point. Here h = ${item.h}.`,
         `Use ${item.expansion}.`,
         `Substitute h = ${item.h}.`,
-        `Approximation = ${item.value}.`
+        `${item.substituted}.`,
+        `Calculate this expression to get ${item.q} ≈ ${item.value}.`
       ]);
     }
 
@@ -378,17 +429,17 @@
         `Compare with f(x) = f(a) + f'(a)(x-a) + ${frac(`f''(a)(x-a)${sup(2)}`,'2!')} + ${frac(`f'''(a)(x-a)${sup(3)}`,'3!')} + ... .`,
         `The constant term is f(${a}) = ${coeffs[0]}.`,
         `The coefficient of (x - ${a}) is f'(${a}) = ${coeffs[1]}.`,
-        `The coefficient of (x - ${a})<sup>2</sup> is f''(${a})/2!, so f''(${a}) = 2 × ${coeffs[2]} = ${2*coeffs[2]}.`,
-        `The coefficient of (x - ${a})<sup>3</sup> is f'''(${a})/3!, so f'''(${a}) = 6 × ${coeffs[3]} = ${6*coeffs[3]}.`
+        `The coefficient of (x - ${a})<sup>2</sup> is ${frac(`f''(${a})`,'2!')}, so f''(${a}) = 2 × ${coeffs[2]} = ${2*coeffs[2]}.`,
+        `The coefficient of (x - ${a})<sup>3</sup> is ${frac(`f'''(${a})`,'3!')}, so f'''(${a}) = 6 × ${coeffs[3]} = ${6*coeffs[3]}.`
       ]);
     }
 
     function genLimit(){
       const item=choice([
-        {q:`lim${subscript('x→0')} ${frac('e'+sup('x')+' - 1 - x','x'+sup(2))}`, a:frac(1,2), steps:[`Use e<sup>x</sup> = 1 + x + ${frac('x'+sup(2),'2')} + ${frac('x'+sup(3),'6')} + ... .`,`Then e<sup>x</sup> - 1 - x = ${frac('x'+sup(2),'2')} + ${frac('x'+sup(3),'6')} + ... .`,`Divide by x<sup>2</sup>.`,`The limit is 1/2.`]},
-        {q:`lim${subscript('x→0')} ${frac('sin x - x','x'+sup(3))}`, a:`-${frac(1,6)}`, steps:[`Use sin x = x - ${frac('x'+sup(3),'6')} + ${frac('x'+sup(5),'120')} - ... .`,`Then sin x - x = -${frac('x'+sup(3),'6')} + ... .`,`Divide by x<sup>3</sup>.`,`The limit is -1/6.`]},
-        {q:`lim${subscript('x→0')} ${frac('1 - cos x','x'+sup(2))}`, a:frac(1,2), steps:[`Use cos x = 1 - ${frac('x'+sup(2),'2')} + ${frac('x'+sup(4),'24')} - ... .`,`Then 1 - cos x = ${frac('x'+sup(2),'2')} - ${frac('x'+sup(4),'24')} + ... .`,`Divide by x<sup>2</sup>.`,`The limit is 1/2.`]},
-        {q:`lim${subscript('x→0')} ${frac('ln(1 + x) - x','x'+sup(2))}`, a:`-${frac(1,2)}`, steps:[`Use ln(1+x) = x - ${frac('x'+sup(2),2)} + ${frac('x'+sup(3),3)} - ... .`,`Then ln(1+x) - x = -${frac('x'+sup(2),2)} + ... .`,`Divide by x<sup>2</sup>.`,`The limit is -1/2.`]}
+        {q:`lim${subscript('x→0')} ${frac('e'+sup('x')+' - 1 - x','x'+sup(2))}`, a:frac(1,2), steps:[`Use e<sup>x</sup> = 1 + x + ${frac('x'+sup(2),'2')} + ${frac('x'+sup(3),'6')} + ... .`,`Substitute into the numerator: e<sup>x</sup> - 1 - x = (1 + x + ${frac('x'+sup(2),'2')} + ${frac('x'+sup(3),'6')} + ...) - 1 - x.`,`Simplify the numerator: e<sup>x</sup> - 1 - x = ${frac('x'+sup(2),'2')} + ${frac('x'+sup(3),'6')} + ... .`,`Divide each term by x<sup>2</sup>: ${frac('e'+sup('x')+' - 1 - x','x'+sup(2))} = ${frac(1,2)} + ${frac('x',6)} + ... .`,`As x approaches 0, the terms containing x approach 0, so the limit is ${frac(1,2)}.`]},
+        {q:`lim${subscript('x→0')} ${frac('sin x - x','x'+sup(3))}`, a:`-${frac(1,6)}`, steps:[`Use sin x = x - ${frac('x'+sup(3),'6')} + ${frac('x'+sup(5),'120')} - ... .`,`Substitute into the numerator: sin x - x = (x - ${frac('x'+sup(3),'6')} + ${frac('x'+sup(5),'120')} - ...) - x.`,`Simplify the numerator: sin x - x = -${frac('x'+sup(3),'6')} + ${frac('x'+sup(5),'120')} - ... .`,`Divide each term by x<sup>3</sup>: ${frac('sin x - x','x'+sup(3))} = -${frac(1,6)} + ${frac('x'+sup(2),120)} - ... .`,`As x approaches 0, the terms containing x approach 0, so the limit is -${frac(1,6)}.`]},
+        {q:`lim${subscript('x→0')} ${frac('1 - cos x','x'+sup(2))}`, a:frac(1,2), steps:[`Use cos x = 1 - ${frac('x'+sup(2),'2')} + ${frac('x'+sup(4),'24')} - ... .`,`Substitute into the numerator: 1 - cos x = 1 - (1 - ${frac('x'+sup(2),'2')} + ${frac('x'+sup(4),'24')} - ...).`,`Simplify the numerator: 1 - cos x = ${frac('x'+sup(2),'2')} - ${frac('x'+sup(4),'24')} + ... .`,`Divide each term by x<sup>2</sup>: ${frac('1 - cos x','x'+sup(2))} = ${frac(1,2)} - ${frac('x'+sup(2),24)} + ... .`,`As x approaches 0, the terms containing x approach 0, so the limit is ${frac(1,2)}.`]},
+        {q:`lim${subscript('x→0')} ${frac('ln(1 + x) - x','x'+sup(2))}`, a:`-${frac(1,2)}`, steps:[`Use ln(1+x) = x - ${frac('x'+sup(2),2)} + ${frac('x'+sup(3),3)} - ... .`,`Substitute into the numerator: ln(1+x) - x = (x - ${frac('x'+sup(2),2)} + ${frac('x'+sup(3),3)} - ...) - x.`,`Simplify the numerator: ln(1+x) - x = -${frac('x'+sup(2),2)} + ${frac('x'+sup(3),3)} - ... .`,`Divide each term by x<sup>2</sup>: ${frac('ln(1 + x) - x','x'+sup(2))} = -${frac(1,2)} + ${frac('x',3)} - ... .`,`As x approaches 0, the terms containing x approach 0, so the limit is -${frac(1,2)}.`]}
       ]);
       return problem(`Evaluate ${item.q}.`,item.a,item.steps);
     }
@@ -396,20 +447,20 @@
     function genCoefficient(){
       const max=5;
       const item=choice([
-        {q:'coefficient of x<sup>4</sup> in e<sup>x</sup>cos x', poly:multiplyPoly(expPoly(1,max),cosPoly(1,max),max), index:4, steps:['Write e<sup>x</sup> and cos x up to x<sup>4</sup>.','Multiply only term pairs whose powers add to 4.']},
-        {q:'coefficient of x<sup>3</sup> in e<sup>x</sup>sin x', poly:multiplyPoly(expPoly(1,max),sinPoly(1,max),max), index:3, steps:['Write e<sup>x</sup> and sin x up to x<sup>3</sup>.','Multiply only term pairs whose powers add to 3.']},
-        {q:'coefficient of x<sup>4</sup> in (1 + x)<sup>-1</sup>e<sup>x</sup>', poly:multiplyPoly(recipPoly(1,max),expPoly(1,max),max), index:4, steps:['Write (1+x)<sup>-1</sup> and e<sup>x</sup> up to x<sup>4</sup>.','Multiply the series and collect the x<sup>4</sup> terms.']}
+        {q:'coefficient of x<sup>4</sup> in e<sup>x</sup>cos x', poly:multiplyPoly(expPoly(1,max),cosPoly(1,max),max), index:4, steps:[`Write e<sup>x</sup> = 1 + x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(4),'4!')} + ... .`,`Write cos x = 1 - ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(4),'4!')} + ... .`,`For x<sup>4</sup>, multiply only term pairs whose powers add to 4.`,`Coefficient = ${frac(1,'4!')} - ${frac(1,'2!2!')} + ${frac(1,'4!')}.`]},
+        {q:'coefficient of x<sup>3</sup> in e<sup>x</sup>sin x', poly:multiplyPoly(expPoly(1,max),sinPoly(1,max),max), index:3, steps:[`Write e<sup>x</sup> = 1 + x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ... .`,`Write sin x = x - ${frac('x'+sup(3),'3!')} + ... .`,`For x<sup>3</sup>, multiply only term pairs whose powers add to 3.`,`Coefficient = -${frac(1,'3!')} + ${frac(1,'2!')}.`]},
+        {q:'coefficient of x<sup>4</sup> in (1 + x)<sup>-1</sup>e<sup>x</sup>', poly:multiplyPoly(recipPoly(1,max),expPoly(1,max),max), index:4, steps:[`Write (1+x)<sup>-1</sup> = 1 - x + x<sup>2</sup> - x<sup>3</sup> + x<sup>4</sup> + ... .`,`Write e<sup>x</sup> = 1 + x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(4),'4!')} + ... .`,`For x<sup>4</sup>, multiply only term pairs whose powers add to 4.`,`Coefficient = ${frac(1,'4!')} - ${frac(1,'3!')} + ${frac(1,'2!')} - 1 + 1.`]}
       ]);
       const answer=absFracHtml(item.poly[item.index]);
       const signed=item.poly[item.index].n<0?`-${answer}`:answer;
-      return problem(`Find the ${item.q}.`,signed,[...item.steps,`The product series is ${polyHtml(item.poly,'x',item.index+2)}.`,`The coefficient of x<sup>${item.index}</sup> is ${signed}.`]);
+      return problem(`Find the ${item.q}.`,signed,[...item.steps,`Simplify the coefficient: ${signed}.`,`The product series begins ${polyHtml(item.poly,'x',item.index+2)}.`,`The coefficient of x<sup>${item.index}</sup> is ${signed}.`]);
     }
 
     function genDifferentialEquation(){
       const item=choice([
-        {q:`y' = y, y(0)=1`, ans:`y = 1 + x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(4),'4!')} + ...`, steps:[`Let y = a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup> + a<sub>3</sub>x<sup>3</sup> + ... .`,`Then y' = a<sub>1</sub> + 2a<sub>2</sub>x + 3a<sub>3</sub>x<sup>2</sup> + 4a<sub>4</sub>x<sup>3</sup> + ... .`,`Compare y' = y: a<sub>1</sub>=a<sub>0</sub>, 2a<sub>2</sub>=a<sub>1</sub>, 3a<sub>3</sub>=a<sub>2</sub>, 4a<sub>4</sub>=a<sub>3</sub>.`,`Since y(0)=1, a<sub>0</sub>=1.`,`So a<sub>1</sub>=1, a<sub>2</sub>=1/2!, a<sub>3</sub>=1/3!, a<sub>4</sub>=1/4!.`]},
-        {q:`y'' + y = 0, y(0)=0, y'(0)=1`, ans:`y = x - ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(5),'5!')} - ...`, steps:[`Let y = a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup> + a<sub>3</sub>x<sup>3</sup> + ... .`,`From y(0)=0, a<sub>0</sub>=0. From y'(0)=1, a<sub>1</sub>=1.`,`Substitute into y'' + y = 0 and compare coefficients.`,`This gives the sine-pattern coefficients: a<sub>3</sub>=-1/3!, a<sub>5</sub>=1/5!, and even coefficients are 0.`]},
-        {q:`y' = 1 + y, y(0)=0`, ans:`y = x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(4),'4!')} + ...`, steps:[`Let y = a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup> + ... .`,`From y(0)=0, a<sub>0</sub>=0.`,`Substitute y' = 1 + y and compare coefficients.`,`a<sub>1</sub>=1, 2a<sub>2</sub>=a<sub>1</sub>, 3a<sub>3</sub>=a<sub>2</sub>, and so on.`]}
+        {q:`y' = y, y(0)=1`, ans:`y = 1 + x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(4),'4!')} + ...`, steps:[`Let y = a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup> + a<sub>3</sub>x<sup>3</sup> + a<sub>4</sub>x<sup>4</sup> + ... .`,`Then y' = a<sub>1</sub> + 2a<sub>2</sub>x + 3a<sub>3</sub>x<sup>2</sup> + 4a<sub>4</sub>x<sup>3</sup> + ... .`,`Set y' equal to y and compare matching powers of x.`,`Constant terms: a<sub>1</sub> = a<sub>0</sub>.`,`x terms: 2a<sub>2</sub> = a<sub>1</sub>.`,`x<sup>2</sup> terms: 3a<sub>3</sub> = a<sub>2</sub>.`,`x<sup>3</sup> terms: 4a<sub>4</sub> = a<sub>3</sub>.`,`Since y(0)=1, a<sub>0</sub>=1.`,`So a<sub>1</sub>=1, a<sub>2</sub>=${frac(1,'2!')}, a<sub>3</sub>=${frac(1,'3!')}, a<sub>4</sub>=${frac(1,'4!')}.`]},
+        {q:`y'' + y = 0, y(0)=0, y'(0)=1`, ans:`y = x - ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(5),'5!')} - ...`, steps:[`Let y = a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup> + a<sub>3</sub>x<sup>3</sup> + a<sub>4</sub>x<sup>4</sup> + a<sub>5</sub>x<sup>5</sup> + ... .`,`Then y' = a<sub>1</sub> + 2a<sub>2</sub>x + 3a<sub>3</sub>x<sup>2</sup> + 4a<sub>4</sub>x<sup>3</sup> + 5a<sub>5</sub>x<sup>4</sup> + ... .`,`Then y'' = 2a<sub>2</sub> + 6a<sub>3</sub>x + 12a<sub>4</sub>x<sup>2</sup> + 20a<sub>5</sub>x<sup>3</sup> + ... .`,`From y(0)=0, a<sub>0</sub>=0. From y'(0)=1, a<sub>1</sub>=1.`,`Substitute into y'' + y = 0: (2a<sub>2</sub> + 6a<sub>3</sub>x + 12a<sub>4</sub>x<sup>2</sup> + 20a<sub>5</sub>x<sup>3</sup> + ...) + (a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup> + a<sub>3</sub>x<sup>3</sup> + ...) = 0.`,`Constant terms: 2a<sub>2</sub> + a<sub>0</sub> = 0, so a<sub>2</sub>=0.`,`x terms: 6a<sub>3</sub> + a<sub>1</sub> = 0, so a<sub>3</sub>=-${frac(1,'3!')}.`,`x<sup>2</sup> terms: 12a<sub>4</sub> + a<sub>2</sub> = 0, so a<sub>4</sub>=0.`,`x<sup>3</sup> terms: 20a<sub>5</sub> + a<sub>3</sub> = 0, so a<sub>5</sub>=${frac(1,'5!')}.`]},
+        {q:`y' = 1 + y, y(0)=0`, ans:`y = x + ${frac('x'+sup(2),'2!')} + ${frac('x'+sup(3),'3!')} + ${frac('x'+sup(4),'4!')} + ...`, steps:[`Let y = a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup> + a<sub>3</sub>x<sup>3</sup> + a<sub>4</sub>x<sup>4</sup> + ... .`,`Then y' = a<sub>1</sub> + 2a<sub>2</sub>x + 3a<sub>3</sub>x<sup>2</sup> + 4a<sub>4</sub>x<sup>3</sup> + ... .`,`From y(0)=0, a<sub>0</sub>=0.`,`Substitute into y' = 1 + y: a<sub>1</sub> + 2a<sub>2</sub>x + 3a<sub>3</sub>x<sup>2</sup> + 4a<sub>4</sub>x<sup>3</sup> + ... = 1 + a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup> + a<sub>3</sub>x<sup>3</sup> + ... .`,`Constant terms: a<sub>1</sub> = 1 + a<sub>0</sub> = 1.`,`x terms: 2a<sub>2</sub> = a<sub>1</sub>, so a<sub>2</sub>=${frac(1,'2!')}.`,`x<sup>2</sup> terms: 3a<sub>3</sub> = a<sub>2</sub>, so a<sub>3</sub>=${frac(1,'3!')}.`,`x<sup>3</sup> terms: 4a<sub>4</sub> = a<sub>3</sub>, so a<sub>4</sub>=${frac(1,'4!')}.`]}
       ]);
       return problem(`Find the first non-zero terms of the power series solution for ${item.q}.`,item.ans,[...item.steps,`Therefore ${item.ans}.`]);
     }
