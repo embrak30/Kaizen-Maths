@@ -60,6 +60,38 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 200, { url: session.url });
   } catch (error) {
     console.error("Checkout session error:", error);
-    return sendJson(res, 500, { error: "Could not start checkout." });
+    const message = String(error?.message || "");
+    const type = String(error?.type || "");
+    const code = String(error?.code || "");
+
+    if (message.startsWith("Missing ")) {
+      return sendJson(res, 500, { error: `Checkout is not fully configured. ${message}.` });
+    }
+
+    if (type === "StripeAuthenticationError") {
+      return sendJson(res, 500, {
+        error: "Stripe rejected the secret key. Check that STRIPE_SECRET_KEY is a valid live key in Vercel, then redeploy."
+      });
+    }
+
+    if (code === "resource_missing" || /No such price/i.test(message)) {
+      return sendJson(res, 500, {
+        error: "Stripe could not find this price. Check that the live price ID in Vercel matches the live Stripe secret key, then redeploy."
+      });
+    }
+
+    if (/testmode|live mode|livemode|sandbox/i.test(message)) {
+      return sendJson(res, 500, {
+        error: "Stripe mode mismatch. Check that all Stripe keys, price IDs, and webhook secrets are either all live or all sandbox."
+      });
+    }
+
+    if (type.startsWith("Stripe")) {
+      return sendJson(res, 500, {
+        error: `Stripe could not start checkout: ${message}`
+      });
+    }
+
+    return sendJson(res, 500, { error: "Could not start checkout. Check the Vercel Function log for the checkout error." });
   }
 };
