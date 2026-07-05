@@ -1066,7 +1066,7 @@ const tools = [
     status: "Imported",
     description: "Generate cumulative frequency practice covering running totals, plotting coordinates, reading curves, median, quartiles, interquartile range, percentiles, and estimates above, below, or between values.",
     tags: ["statistics", "cumulative frequency", "cumulative frequency curves", "grouped data", "median", "quartiles", "interquartile range", "percentiles", "box plots"],
-    toolPath: "tools/cumulative-frequency-curves/index.html?v=cumulative-frequency-1",
+    toolPath: "tools/cumulative-frequency-curves/index.html?v=cumulative-frequency-ogive-1",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on cumulative frequency tables and plotting coordinates.",
