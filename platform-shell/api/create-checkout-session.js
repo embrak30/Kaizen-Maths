@@ -26,15 +26,37 @@ module.exports = async function handler(req, res) {
 
     const { data: profile } = await supabase
       .from("profiles")
-      .select("stripe_customer_id")
+      .select("stripe_customer_id, stripe_subscription_id")
       .eq("id", user.id)
       .maybeSingle();
 
     const stripe = stripeClient();
+    let customerId = profile?.stripe_customer_id || "";
+    if (customerId) {
+      try {
+        const customer = await stripe.customers.retrieve(customerId);
+        if (customer?.deleted) customerId = "";
+      } catch (error) {
+        const message = String(error?.message || "");
+        if (error?.code === "resource_missing" || /No such customer/i.test(message)) {
+          customerId = "";
+          await supabase
+            .from("profiles")
+            .update({
+              stripe_customer_id: null,
+              stripe_subscription_id: null
+            })
+            .eq("id", user.id);
+        } else {
+          throw error;
+        }
+      }
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
-      customer: profile?.stripe_customer_id || undefined,
-      customer_email: profile?.stripe_customer_id ? undefined : user.email,
+      customer: customerId || undefined,
+      customer_email: customerId ? undefined : user.email,
       client_reference_id: user.id,
       success_url: `${siteUrl()}/#/upgrade?checkout=success`,
       cancel_url: `${siteUrl()}/#/upgrade?checkout=cancelled`,
@@ -74,7 +96,13 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    if (code === "resource_missing" || /No such price/i.test(message)) {
+    if (/No such customer/i.test(message)) {
+      return sendJson(res, 500, {
+        error: "Stripe could not find the saved customer for this account. Try checkout again; the saved customer record has likely come from sandbox testing."
+      });
+    }
+
+    if (/No such price/i.test(message) || (code === "resource_missing" && error?.param === "price")) {
       return sendJson(res, 500, {
         error: "Stripe could not find this price. Check that the live price ID in Vercel matches the live Stripe secret key, then redeploy."
       });

@@ -6765,21 +6765,25 @@ function setUpgradeStatus(message, tone = "") {
 }
 
 function formatBillingDiagnosticPrice(price) {
+  const planLabel = price.plan === "annual" ? "Annual" : "Monthly";
   const idLabel = price.value?.present
     ? `${price.value.prefix}...${price.value.suffix || ""}`
     : "missing";
   if (price.ok) {
-    return `${titleCaseAccess(price.plan)} price: found (${price.livemode ? "live" : "sandbox"}, ${price.currency || "currency unknown"}${price.interval ? `, ${price.interval}` : ""}, ${price.active ? "active" : "inactive"})`;
+    return `${planLabel} price: found (${price.livemode ? "live" : "sandbox"}, ${price.currency || "currency unknown"}${price.interval ? `, ${price.interval}` : ""}, ${price.active ? "active" : "inactive"})`;
   }
-  return `${titleCaseAccess(price.plan)} price: not found (${idLabel}). ${price.error || "Check this price ID."}`;
+  return `${planLabel} price: not found (${idLabel}). ${price.error || "Check this price ID."}`;
 }
 
 function formatBillingDiagnostics(report) {
   const keyMode = report.stripeSecretKey?.mode || "unknown";
   const webhook = report.webhookSecret?.value?.present ? "present" : "missing";
+  const customer = report.currentUserCustomer?.status
+    ? `Saved customer: ${report.currentUserCustomer.status}${report.currentUserCustomer.ok ? "" : ` (${report.currentUserCustomer.error || "not usable"})`}.`
+    : "Saved customer: not checked.";
   const prices = Array.isArray(report.prices) ? report.prices.map(formatBillingDiagnosticPrice).join(" | ") : "No price report returned.";
   const issue = report.likelyIssue ? ` | ${report.likelyIssue}` : "";
-  return `Stripe key mode: ${keyMode}. Webhook secret: ${webhook}. ${prices}${issue}`;
+  return `Stripe key mode: ${keyMode}. Webhook secret: ${webhook}. ${customer} ${prices}${issue}`;
 }
 
 async function postBillingEndpoint(path, body = {}) {

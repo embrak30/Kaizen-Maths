@@ -61,6 +61,33 @@ async function checkPrice(stripe, plan) {
   }
 }
 
+async function checkCustomer(stripe, customerId) {
+  const summary = {
+    value: valueState(customerId),
+    ok: false
+  };
+
+  if (!customerId) {
+    summary.ok = true;
+    summary.status = "none-saved";
+    return summary;
+  }
+
+  try {
+    const customer = await stripe.customers.retrieve(customerId);
+    summary.ok = !customer?.deleted;
+    summary.status = customer?.deleted ? "deleted" : "found";
+    summary.email = customer?.email || "";
+    return summary;
+  } catch (error) {
+    summary.status = "not-found";
+    summary.error = String(error?.message || "Stripe could not retrieve this customer.");
+    summary.type = String(error?.type || "");
+    summary.code = String(error?.code || "");
+    return summary;
+  }
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -74,7 +101,7 @@ module.exports = async function handler(req, res) {
 
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select("role")
+      .select("role, stripe_customer_id, stripe_subscription_id")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -85,10 +112,11 @@ module.exports = async function handler(req, res) {
     const stripe = stripeClient();
     const monthly = await checkPrice(stripe, "monthly");
     const annual = await checkPrice(stripe, "annual");
+    const customer = await checkCustomer(stripe, profile?.stripe_customer_id || "");
     const mode = keyMode(secretKey);
 
     return sendJson(res, 200, {
-      ok: monthly.ok && annual.ok,
+      ok: monthly.ok && annual.ok && customer.ok,
       stripeSecretKey: {
         mode,
         value: valueState(secretKey)
@@ -96,10 +124,11 @@ module.exports = async function handler(req, res) {
       webhookSecret: {
         value: valueState(process.env.STRIPE_WEBHOOK_SECRET || "")
       },
+      currentUserCustomer: customer,
       prices: [monthly, annual],
-      likelyIssue: monthly.ok && annual.ok
+      likelyIssue: monthly.ok && annual.ok && customer.ok
         ? ""
-        : "At least one price cannot be retrieved by the current STRIPE_SECRET_KEY. The price IDs and secret key must be from the same Stripe account and the same live/sandbox mode."
+        : "At least one Stripe record cannot be retrieved by the current STRIPE_SECRET_KEY. Price IDs and saved customer IDs must be from the same Stripe account and the same live/sandbox mode."
     });
   } catch (error) {
     console.error("Billing diagnostics error:", error);
