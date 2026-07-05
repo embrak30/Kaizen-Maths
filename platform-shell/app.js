@@ -1057,6 +1057,25 @@ const tools = [
     ]
   },
   {
+    slug: "cumulative-frequency-curves",
+    title: "Cumulative Frequency Curves",
+    category: "Statistics",
+    level: "GCSE / A-Level",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate cumulative frequency practice covering running totals, plotting coordinates, reading curves, median, quartiles, interquartile range, percentiles, and estimates above, below, or between values.",
+    tags: ["statistics", "cumulative frequency", "cumulative frequency curves", "grouped data", "median", "quartiles", "interquartile range", "percentiles", "box plots"],
+    toolPath: "tools/cumulative-frequency-curves/index.html?v=cumulative-frequency-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on cumulative frequency tables and plotting coordinates.",
+      "Level 2 separates curve interpretation into one-skill practice: median, quartiles, IQR, percentiles, and counts above, below, or between values.",
+      "Level 3 covers completing tables from curves, five-number summaries for box plots, reverse percentile questions, and mixed exam-style practice.",
+      "Worked steps emphasise running totals, upper class boundaries, and reading from the curve as an estimate."
+    ]
+  },
+  {
     slug: "motion-graphs-constant-acceleration",
     title: "Motion Graphs and Constant Acceleration",
     category: "Mechanics",

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cumulative Frequency Curves Practice</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;color:#1a365d;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:white;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:700;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:white;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:white;padding:20px;font-size:1.3em;font-weight:700}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1260px;margin:0 auto;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;color:white;padding:24px;text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header h1{font-size:2.1em;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:17px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:800;transition:.3s;border-bottom:3px solid transparent;color:#1a365d}.tab:hover{background:#cbd5e0}.tab.active{background:white;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px 24px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:1px solid #e2e8f0}.level-info{min-width:320px;flex:1}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.25em}.level-info p{color:#718096;font-size:.98em}.dropdown-container{margin-top:9px;display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:white;cursor:pointer;min-width:390px;max-width:100%;color:#1a365d}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:800;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
+    .problems-section{padding:18px 24px 24px;min-height:520px}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:700}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.tables{background:#3182ce}.problem-set-header.curves{background:#38a169}.problem-set-header.exam{background:#805ad5}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:12px}.problem-item{background:#f7fafc;padding:14px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr;gap:10px;align-items:start}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.08em;color:#1a365d;font-weight:500;line-height:1.45;min-width:0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.94em;display:none;text-align:center;max-width:min(760px,calc(100% - 42px));overflow-x:auto;justify-self:start;margin-left:42px}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+    .cf-wrap{background:white;border:1px solid #cbd5e0;border-radius:8px;padding:10px;margin:10px 0;overflow-x:auto}.cf-svg{width:100%;max-width:760px;min-width:540px;height:auto;display:block;margin:0 auto}.cf-axis{stroke:#111;stroke-width:1.4}.cf-grid{stroke:#d7dee8;stroke-width:.8}.cf-curve{fill:none;stroke:#111;stroke-width:2}.cf-point{fill:#111}.cf-guide{stroke:#555;stroke-width:1;stroke-dasharray:4 4}.cf-label{fill:#111;font-size:12px;font-weight:650}.cf-small{fill:#111;font-size:10.5px;font-weight:600}.cf-title{fill:#111;font-size:13px;font-weight:750}
+    .data-table-wrap{overflow-x:auto;margin:10px 0}.data-table{border-collapse:collapse;background:white;min-width:520px;box-shadow:0 1px 5px rgba(26,54,93,.08)}.data-table th,.data-table td{border:1px solid #cbd5e0;padding:8px 10px;text-align:center;white-space:nowrap}.data-table th{background:#e2e8f0;color:#1a365d;font-weight:800}.data-table .blank{font-weight:900;color:#1a365d;background:#fff}.table-reveal{min-width:42px;padding:5px 10px;border:1px solid #9fb4ce;border-radius:6px;background:#fff;color:#1a365d;font:inherit;font-weight:900;cursor:pointer}.table-reveal:hover{background:#edf2f7}.table-reveal.revealed{background:#e6fffa;border-color:#38a169;color:#155724;box-shadow:inset 0 0 0 1px rgba(56,161,105,.18)}.problem-answer.table-problem-answer{display:none!important}.steps-section{grid-column:1/-1;margin-top:12px;padding:14px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:800;color:#38a169;margin-bottom:10px;font-size:1.08em}.solution-steps{font-size:1.06em;line-height:1.58}.step{margin:8px 0;color:#1a365d}.step-equation{font-weight:700;color:#805ad5;text-align:center;margin:10px 0;font-size:1.09em;overflow-x:auto}.final-answer{background:#38a169;color:white;padding:9px 15px;border-radius:7px;text-align:center;font-weight:bold;font-size:1.05em;margin-top:12px;overflow-x:auto}.step-indicator{background:#3182ce;color:white;padding:5px 9px;border-radius:5px;font-size:.86em;font-weight:bold;margin-right:8px;white-space:nowrap}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
+    @media (max-width:900px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section,.action-buttons{justify-content:center;flex-wrap:wrap}.type-dropdown{min-width:0;width:100%}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool generates practice on cumulative frequency tables, cumulative frequency curves, medians, quartiles, percentiles, and estimates from curves.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Complete cumulative frequency tables and identify the plotting coordinates.</li>
+        <li><strong>Level 2:</strong> Interpret cumulative frequency curves one skill at a time.</li>
+        <li><strong>Level 3:</strong> Use curves for exam-style table completion, summaries, and reverse percentile questions.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Cumulative frequency means a running total.</li>
+        <li>Plot cumulative frequency against the upper class boundary.</li>
+        <li>The curve starts at the lower boundary of the first class with cumulative frequency 0.</li>
+        <li>For medians and quartiles, use positions based on the total frequency.</li>
+        <li>Reading from a curve gives an estimate.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header"><h1>Cumulative Frequency Curves</h1></section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Tables & Coordinates</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Reading Curves</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Exam-Style Curves</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Tables & Coordinates</h3>
+        <p id="level-description">Complete cumulative frequency tables and write plotting coordinates.</p>
+        <div class="dropdown-container" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div class="set-instruction" id="set-instruction">Choose a question type to practise cumulative frequency curves.</div>
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Tables & Coordinates",
+        description: "Complete cumulative frequency tables and write plotting coordinates.",
+        instruction: "Use running totals and upper class boundaries.",
+        className: "tables",
+        options: [
+          ["complete_cf_table", "Complete a cumulative frequency table"],
+          ["plotting_coordinates", "Write plotting coordinates"]
+        ]
+      },
+      2: {
+        title: "Level 2: Reading Curves",
+        description: "Read one value from a cumulative frequency curve at a time.",
+        instruction: "Use the cumulative frequency curve to answer each question.",
+        className: "curves",
+        options: [
+          ["estimate_median", "Estimate the median"],
+          ["estimate_quartile", "Estimate a quartile"],
+          ["estimate_iqr", "Estimate the interquartile range"],
+          ["estimate_percentile", "Estimate a percentile"],
+          ["number_below", "Estimate the number below a value"],
+          ["number_above", "Estimate the number above a value"],
+          ["number_between", "Estimate the number between two values"],
+          ["mixed_cf_interpretation", "Mixed interpretation set"]
+        ]
+      },
+      3: {
+        title: "Level 3: Exam-Style Curves",
+        description: "Complete tables from curves and use curves for exam-style summary estimates.",
+        instruction: "Use the curve and cumulative frequency table carefully.",
+        className: "exam",
+        options: [
+          ["table_from_curve", "Complete a table from a curve"],
+          ["box_plot_summary", "Find five-number summary values"],
+          ["reverse_percentile", "Find a value from a percentage statement"],
+          ["mixed_exam_cf", "Mixed exam-style set"]
+        ]
+      }
+    };
+
+    const typeDisplayNames = {
+      complete_cf_table: "Complete a cumulative frequency table",
+      plotting_coordinates: "Write plotting coordinates",
+      estimate_median: "Estimate the median",
+      estimate_quartile: "Estimate a quartile",
+      estimate_iqr: "Estimate the interquartile range",
+      estimate_percentile: "Estimate a percentile",
+      number_below: "Estimate the number below a value",
+      number_above: "Estimate the number above a value",
+      number_between: "Estimate the number between two values",
+      mixed_cf_interpretation: "Mixed interpretation set",
+      table_from_curve: "Complete a table from a curve",
+      box_plot_summary: "Find five-number summary values",
+      reverse_percentile: "Find a value from a percentage statement",
+      mixed_exam_cf: "Mixed exam-style set"
+    };
+
+    const contexts = [
+      { variable: "time taken", unit: "minutes", plural: "students" },
+      { variable: "journey length", unit: "km", plural: "journeys" },
+      { variable: "mass", unit: "kg", plural: "parcels" },
+      { variable: "height", unit: "cm", plural: "plants" },
+      { variable: "score", unit: "marks", plural: "candidates" },
+      { variable: "battery life", unit: "hours", plural: "devices" }
+    ];
+
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function choice(items) { return items[rand(0, items.length - 1)]; }
+    function esc(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
+    }
+    function fmt(value, dp = 1) {
+      const rounded = Number(Number(value).toFixed(dp));
+      if (Math.abs(rounded - Math.round(rounded)) < 1e-9) return String(Math.round(rounded));
+      return rounded.toFixed(dp);
+    }
+    function step(text) { return { type: "text", text }; }
+    function calc(text) { return { type: "calc", text }; }
+    function answerLine(text) { return { type: "calc", text: '<span class="step-indicator">Answer</span> ' + text }; }
+
+    function makeDataset() {
+      const ctx = choice(contexts);
+      const start = rand(0, 4) * 10;
+      const widths = Array.from({ length: 6 }, () => choice([5, 10, 10, 15]));
+      const frequencies = Array.from({ length: 6 }, () => choice([6, 8, 10, 12, 14, 16, 18, 20]));
+      let lower = start;
+      let cumulative = 0;
+      const rows = widths.map((width, index) => {
+        const upper = lower + width;
+        const frequency = frequencies[index];
+        const before = cumulative;
+        cumulative += frequency;
+        const row = { lower, upper, width, frequency, before, cumulative };
+        lower = upper;
+        return row;
+      });
+      return {
+        ...ctx,
+        rows,
+        total: cumulative,
+        min: rows[0].lower,
+        max: rows[rows.length - 1].upper
+      };
+    }
+
+    function intervalText(row) {
+      return `${row.lower} ≤ x < ${row.upper}`;
+    }
+
+    function revealButton(value) {
+      const answer = fmt(value);
+      return `<button type="button" class="table-reveal" data-answer="${esc(answer)}" aria-pressed="false" aria-label="Reveal missing table value" onclick="revealCumulativeCell(this)">?</button>`;
+    }
+
+    function setRevealCellState(button, visible) {
+      if (!button) return;
+      button.textContent = visible ? button.dataset.answer : "?";
+      button.classList.toggle("revealed", visible);
+      button.setAttribute("aria-pressed", String(visible));
+    }
+
+    function revealCumulativeCell(button) {
+      setRevealCellState(button, true);
+    }
+
+    function cfTableHtml(dataset, blankMap = {}) {
+      return `<div class="data-table-wrap"><table class="data-table">
+        <thead><tr><th>Class interval</th><th>Frequency</th><th>Cumulative frequency</th></tr></thead>
+        <tbody>${dataset.rows.map((row, index) => {
+          const blank = blankMap[index] || {};
+          return `<tr>
+            <td>${intervalText(row)}</td>
+            <td class="${blank.frequency ? "blank" : ""}">${blank.frequency ? revealButton(row.frequency) : fmt(row.frequency)}</td>
+            <td class="${blank.cumulative ? "blank" : ""}">${blank.cumulative ? revealButton(row.cumulative) : fmt(row.cumulative)}</td>
+          </tr>`;
+        }).join("")}</tbody>
+      </table></div>`;
+    }
+
+    function curvePoints(dataset) {
+      return [{ x: dataset.min, y: 0 }].concat(dataset.rows.map((row) => ({ x: row.upper, y: row.cumulative })));
+    }
+
+    function curveSvg(dataset, guides = []) {
+      const width = 720;
+      const height = 340;
+      const left = 64;
+      const right = 28;
+      const top = 24;
+      const bottom = 270;
+      const plotW = width - left - right;
+      const plotH = bottom - top;
+      const yMax = Math.ceil(dataset.total / 10) * 10;
+      const xMap = (x) => left + ((x - dataset.min) / (dataset.max - dataset.min)) * plotW;
+      const yMap = (y) => bottom - (y / yMax) * plotH;
+      const xLabels = [dataset.min].concat(dataset.rows.map((row) => row.upper));
+      const yStep = yMax <= 80 ? 10 : 20;
+      const yTicks = [];
+      for (let y = 0; y <= yMax; y += yStep) yTicks.push(y);
+      const points = curvePoints(dataset);
+      const polyline = points.map((point) => `${xMap(point.x)},${yMap(point.y)}`).join(" ");
+      const guideLines = guides.map((guide) => {
+        if (guide.type === "x") {
+          const x = xMap(guide.x);
+          const y = yMap(guide.y);
+          return `<line class="cf-guide" x1="${x}" y1="${bottom}" x2="${x}" y2="${y}"></line><line class="cf-guide" x1="${left}" y1="${y}" x2="${x}" y2="${y}"></line>`;
+        }
+        if (guide.type === "y") {
+          const x = xMap(guide.x);
+          const y = yMap(guide.y);
+          return `<line class="cf-guide" x1="${left}" y1="${y}" x2="${x}" y2="${y}"></line><line class="cf-guide" x1="${x}" y1="${bottom}" x2="${x}" y2="${y}"></line>`;
+        }
+        return "";
+      }).join("");
+      return `<div class="cf-wrap"><svg class="cf-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Cumulative frequency curve">
+        <text class="cf-title" x="${width / 2}" y="15" text-anchor="middle">${esc(dataset.variable)} (${esc(dataset.unit)})</text>
+        ${yTicks.map((tick) => `<line class="cf-grid" x1="${left}" y1="${yMap(tick)}" x2="${width - right}" y2="${yMap(tick)}"></line><text class="cf-small" x="${left - 10}" y="${yMap(tick) + 4}" text-anchor="end">${tick}</text>`).join("")}
+        ${xLabels.map((label) => `<line class="cf-grid" x1="${xMap(label)}" y1="${top}" x2="${xMap(label)}" y2="${bottom}"></line><text class="cf-small" x="${xMap(label)}" y="${bottom + 18}" text-anchor="middle">${label}</text>`).join("")}
+        <line class="cf-axis" x1="${left}" y1="${bottom}" x2="${width - right}" y2="${bottom}"></line>
+        <line class="cf-axis" x1="${left}" y1="${bottom}" x2="${left}" y2="${top}"></line>
+        <polyline class="cf-curve" points="${polyline}"></polyline>
+        ${points.map((point) => `<circle class="cf-point" cx="${xMap(point.x)}" cy="${yMap(point.y)}" r="3"></circle>`).join("")}
+        ${guideLines}
+        <text class="cf-label" x="${width / 2}" y="${height - 18}" text-anchor="middle">${esc(dataset.variable)} (${esc(dataset.unit)})</text>
+        <text class="cf-label" x="17" y="${height / 2}" transform="rotate(-90 17 ${height / 2})" text-anchor="middle">Cumulative frequency</text>
+      </svg></div>`;
+    }
+
+    function estimateCfAt(dataset, x) {
+      const row = dataset.rows.find((item) => x >= item.lower && x <= item.upper) || dataset.rows[dataset.rows.length - 1];
+      const fraction = (x - row.lower) / row.width;
+      return row.before + fraction * row.frequency;
+    }
+
+    function estimateXAtCf(dataset, cf) {
+      const row = dataset.rows.find((item) => cf <= item.cumulative) || dataset.rows[dataset.rows.length - 1];
+      const inside = cf - row.before;
+      const fraction = inside / row.frequency;
+      return row.lower + fraction * row.width;
+    }
+
+    function cfTableAnswer(dataset, blankMap) {
+      const parts = [];
+      dataset.rows.forEach((row, index) => {
+        const blank = blankMap[index] || {};
+        if (blank.frequency) parts.push(`${intervalText(row)} frequency ${fmt(row.frequency)}`);
+        if (blank.cumulative) parts.push(`${intervalText(row)} cumulative frequency ${fmt(row.cumulative)}`);
+      });
+      return parts.join("; ");
+    }
+
+    function makeCfTableProblem() {
+      const dataset = makeDataset();
+      const blankMap = {};
+      dataset.rows.forEach((_, index) => { blankMap[index] = { cumulative: true }; });
+      return {
+        question: `Complete the cumulative frequency column. ${cfTableHtml(dataset, blankMap)}`,
+        answer: cfTableAnswer(dataset, blankMap),
+        tableReveal: true,
+        steps: [
+          step("Cumulative frequency is a running total of the frequencies."),
+          ...dataset.rows.flatMap((row, index) => {
+            const previous = index === 0 ? 0 : dataset.rows[index - 1].cumulative;
+            return [
+              step(`For ${intervalText(row)}, add the frequency to the previous cumulative frequency.`),
+              calc(`${fmt(previous)} + ${fmt(row.frequency)} = ${fmt(row.cumulative)}`)
+            ];
+          }),
+          answerLine(cfTableAnswer(dataset, blankMap))
+        ]
+      };
+    }
+
+    function makeCoordinatesProblem() {
+      const dataset = makeDataset();
+      const coords = curvePoints(dataset).map((point) => `(${fmt(point.x)}, ${fmt(point.y)})`).join(", ");
+      return {
+        question: `Write the coordinates needed to draw the cumulative frequency curve. ${cfTableHtml(dataset)}`,
+        answer: coords,
+        steps: [
+          step("The first point is at the lower boundary of the first class with cumulative frequency 0."),
+          calc(`first point = (${fmt(dataset.min)}, 0)`),
+          step("Each other point uses the upper class boundary and the cumulative frequency."),
+          ...dataset.rows.map((row) => calc(`upper boundary ${fmt(row.upper)}, cumulative frequency ${fmt(row.cumulative)} gives (${fmt(row.upper)}, ${fmt(row.cumulative)})`)),
+          answerLine(coords)
+        ]
+      };
+    }
+
+    function makeValueFromPositionProblem(kind) {
+      const dataset = makeDataset();
+      const targets = {
+        median: { label: "median", position: dataset.total / 2, text: "Estimate the median." },
+        q1: { label: "lower quartile", position: dataset.total / 4, text: "Estimate the lower quartile." },
+        q3: { label: "upper quartile", position: 3 * dataset.total / 4, text: "Estimate the upper quartile." },
+        percentile: (() => {
+          const p = choice([10, 20, 30, 60, 70, 80, 90]);
+          return { label: `${p}th percentile`, position: p * dataset.total / 100, text: `Estimate the ${p}th percentile.` };
+        })()
+      };
+      const target = targets[kind] || targets.median;
+      const value = estimateXAtCf(dataset, target.position);
+      const answer = `${fmt(value)} ${dataset.unit}`;
+      return {
+        question: `${curveSvg(dataset, [{ type: "y", x: value, y: target.position }])}<p>${target.text}</p>`,
+        answer,
+        steps: [
+          step(`The total frequency is ${fmt(dataset.total)}.`),
+          step(`Find the cumulative frequency position for the ${target.label}.`),
+          calc(`${target.label} position = ${fmt(target.position)}`),
+          step("On the curve, go across from this cumulative frequency to the curve, then down to the horizontal axis."),
+          calc(`${target.label} ≈ ${answer}`),
+          answerLine(answer)
+        ]
+      };
+    }
+
+    function makeIqrProblem() {
+      const dataset = makeDataset();
+      const q1Position = dataset.total / 4;
+      const q3Position = 3 * dataset.total / 4;
+      const q1 = estimateXAtCf(dataset, q1Position);
+      const q3 = estimateXAtCf(dataset, q3Position);
+      const iqr = q3 - q1;
+      const answer = `${fmt(iqr)} ${dataset.unit}`;
+      return {
+        question: `${curveSvg(dataset, [{ type: "y", x: q1, y: q1Position }, { type: "y", x: q3, y: q3Position }])}<p>Estimate the interquartile range.</p>`,
+        answer,
+        steps: [
+          step(`The total frequency is ${fmt(dataset.total)}.`),
+          calc(`Q1 position = ${fmt(dataset.total)} ÷ 4 = ${fmt(q1Position)}`),
+          calc(`Q3 position = 3 × ${fmt(dataset.total)} ÷ 4 = ${fmt(q3Position)}`),
+          step("Read Q1 and Q3 from the cumulative frequency curve."),
+          calc(`Q1 ≈ ${fmt(q1)} ${dataset.unit}`),
+          calc(`Q3 ≈ ${fmt(q3)} ${dataset.unit}`),
+          calc(`IQR ≈ ${fmt(q3)} - ${fmt(q1)} = ${fmt(iqr)} ${dataset.unit}`),
+          answerLine(answer)
+        ]
+      };
+    }
+
+    function makeCountFromCurveProblem(kind) {
+      const dataset = makeDataset();
+      const firstIndex = rand(1, dataset.rows.length - 3);
+      const secondIndex = rand(firstIndex + 1, dataset.rows.length - 1);
+      const rowA = dataset.rows[firstIndex];
+      const rowB = dataset.rows[secondIndex];
+      const x1 = rowA.lower + rowA.width / 2;
+      const x2 = rowB.lower + rowB.width / 2;
+      const cf1 = estimateCfAt(dataset, x1);
+      const cf2 = estimateCfAt(dataset, x2);
+      if (kind === "above") {
+        const answerValue = dataset.total - cf1;
+        const answer = `${fmt(answerValue)} ${dataset.plural}`;
+        return {
+          question: `${curveSvg(dataset, [{ type: "x", x: x1, y: cf1 }])}<p>Estimate the number of ${dataset.plural} with ${dataset.variable} above ${fmt(x1)} ${dataset.unit}.</p>`,
+          answer,
+          steps: [
+            step(`Read the cumulative frequency at ${fmt(x1)} ${dataset.unit}.`),
+            calc(`number up to ${fmt(x1)} ≈ ${fmt(cf1)}`),
+            step("For the number above this value, subtract from the total frequency."),
+            calc(`${fmt(dataset.total)} - ${fmt(cf1)} = ${fmt(answerValue)}`),
+            answerLine(answer)
+          ]
+        };
+      }
+      if (kind === "between") {
+        const answerValue = cf2 - cf1;
+        const answer = `${fmt(answerValue)} ${dataset.plural}`;
+        return {
+          question: `${curveSvg(dataset, [{ type: "x", x: x1, y: cf1 }, { type: "x", x: x2, y: cf2 }])}<p>Estimate the number of ${dataset.plural} with ${dataset.variable} between ${fmt(x1)} and ${fmt(x2)} ${dataset.unit}.</p>`,
+          answer,
+          steps: [
+            step(`Read the cumulative frequency at ${fmt(x1)} ${dataset.unit} and ${fmt(x2)} ${dataset.unit}.`),
+            calc(`CF at ${fmt(x1)} ≈ ${fmt(cf1)}`),
+            calc(`CF at ${fmt(x2)} ≈ ${fmt(cf2)}`),
+            step("Subtract the lower cumulative frequency from the higher cumulative frequency."),
+            calc(`${fmt(cf2)} - ${fmt(cf1)} = ${fmt(answerValue)}`),
+            answerLine(answer)
+          ]
+        };
+      }
+      const answer = `${fmt(cf1)} ${dataset.plural}`;
+      return {
+        question: `${curveSvg(dataset, [{ type: "x", x: x1, y: cf1 }])}<p>Estimate the number of ${dataset.plural} with ${dataset.variable} below ${fmt(x1)} ${dataset.unit}.</p>`,
+        answer,
+        steps: [
+          step(`Read from ${fmt(x1)} ${dataset.unit} up to the curve, then across to the cumulative frequency axis.`),
+          calc(`number below ${fmt(x1)} ≈ ${fmt(cf1)}`),
+          answerLine(answer)
+        ]
+      };
+    }
+
+    function makeTableFromCurveProblem() {
+      const dataset = makeDataset();
+      const blankMap = {};
+      dataset.rows.forEach((_, index) => { blankMap[index] = { cumulative: true }; });
+      return {
+        question: `Use the cumulative frequency curve to complete the cumulative frequency column. ${curveSvg(dataset)}${cfTableHtml(dataset, blankMap)}`,
+        answer: cfTableAnswer(dataset, blankMap),
+        tableReveal: true,
+        steps: [
+          step("Read the cumulative frequency at each upper class boundary."),
+          ...dataset.rows.map((row) => calc(`At x = ${fmt(row.upper)}, cumulative frequency ≈ ${fmt(row.cumulative)}`)),
+          answerLine(cfTableAnswer(dataset, blankMap))
+        ]
+      };
+    }
+
+    function makeBoxSummaryProblem() {
+      const dataset = makeDataset();
+      const q1 = estimateXAtCf(dataset, dataset.total / 4);
+      const median = estimateXAtCf(dataset, dataset.total / 2);
+      const q3 = estimateXAtCf(dataset, 3 * dataset.total / 4);
+      const answer = `min ${fmt(dataset.min)}, Q1 ${fmt(q1)}, median ${fmt(median)}, Q3 ${fmt(q3)}, max ${fmt(dataset.max)}`;
+      return {
+        question: `${curveSvg(dataset, [{ type: "y", x: q1, y: dataset.total / 4 }, { type: "y", x: median, y: dataset.total / 2 }, { type: "y", x: q3, y: 3 * dataset.total / 4 }])}<p>Estimate the five-number summary for a box plot.</p>`,
+        answer,
+        steps: [
+          step("Use the minimum and maximum class boundaries for the endpoints."),
+          calc(`minimum = ${fmt(dataset.min)}, maximum = ${fmt(dataset.max)}`),
+          step("Use the curve to read Q1, median, and Q3."),
+          calc(`Q1 position = ${fmt(dataset.total / 4)}, so Q1 ≈ ${fmt(q1)}`),
+          calc(`median position = ${fmt(dataset.total / 2)}, so median ≈ ${fmt(median)}`),
+          calc(`Q3 position = ${fmt(3 * dataset.total / 4)}, so Q3 ≈ ${fmt(q3)}`),
+          answerLine(answer)
+        ]
+      };
+    }
+
+    function makeReversePercentileProblem() {
+      const dataset = makeDataset();
+      const abovePercent = choice([10, 20, 25, 30]);
+      const belowPercent = 100 - abovePercent;
+      const position = belowPercent * dataset.total / 100;
+      const value = estimateXAtCf(dataset, position);
+      const answer = `${fmt(value)} ${dataset.unit}`;
+      return {
+        question: `${curveSvg(dataset, [{ type: "y", x: value, y: position }])}<p>Estimate the value that is exceeded by ${abovePercent}% of the ${dataset.plural}.</p>`,
+        answer,
+        steps: [
+          step(`If ${abovePercent}% exceed the value, then ${belowPercent}% are below it.`),
+          calc(`${belowPercent}% of ${fmt(dataset.total)} = ${fmt(position)}`),
+          step("Read the value from the curve at this cumulative frequency."),
+          calc(`value ≈ ${answer}`),
+          answerLine(answer)
+        ]
+      };
+    }
+
+    function generateProblem() {
+      if (currentType === "complete_cf_table") return makeCfTableProblem();
+      if (currentType === "plotting_coordinates") return makeCoordinatesProblem();
+      if (currentType === "estimate_median") return makeValueFromPositionProblem("median");
+      if (currentType === "estimate_quartile") return makeValueFromPositionProblem(choice(["q1", "q3"]));
+      if (currentType === "estimate_iqr") return makeIqrProblem();
+      if (currentType === "estimate_percentile") return makeValueFromPositionProblem("percentile");
+      if (currentType === "number_below") return makeCountFromCurveProblem("below");
+      if (currentType === "number_above") return makeCountFromCurveProblem("above");
+      if (currentType === "number_between") return makeCountFromCurveProblem("between");
+      if (currentType === "mixed_cf_interpretation") return choice([
+        () => makeValueFromPositionProblem("median"),
+        () => makeValueFromPositionProblem(choice(["q1", "q3"])),
+        makeIqrProblem,
+        () => makeCountFromCurveProblem("below"),
+        () => makeCountFromCurveProblem("above"),
+        () => makeCountFromCurveProblem("between")
+      ])();
+      if (currentType === "table_from_curve") return makeTableFromCurveProblem();
+      if (currentType === "box_plot_summary") return makeBoxSummaryProblem();
+      if (currentType === "reverse_percentile") return makeReversePercentileProblem();
+      if (currentType === "mixed_exam_cf") return choice([makeTableFromCurveProblem, makeBoxSummaryProblem, makeReversePercentileProblem, () => makeCountFromCurveProblem("between")])();
+      return makeCfTableProblem();
+    }
+
+    function defaultCountForType(type = currentType) {
+      if (type === "complete_cf_table" || type === "table_from_curve") return 2;
+      if (type === "plotting_coordinates" || type === "box_plot_summary" || type === "mixed_exam_cf") return 2;
+      return 3;
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      const config = levelConfigs[level];
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index === level - 1));
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = `<option value="select">Select Question Type</option>${config.options.map(([value, label]) => `<option value="${value}">${label}</option>`).join("")}`;
+      currentType = "select";
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      currentType === "select" ? showBlankPage() : generateNewSet();
+    }
+
+    function showBlankPage() {
+      document.getElementById("problem-set-header").classList.remove("visible");
+      document.getElementById("set-instruction").textContent = "Choose a question type to practise cumulative frequency curves.";
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center;padding:40px;color:#718096;font-size:1.08em">Please select a question type to begin cumulative frequency practice.</li>';
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      for (let i = 0; i < defaultCountForType(); i += 1) problems.push(generateProblem());
+      renderProblems();
+    }
+
+    function renderStep(item) {
+      const text = typeof item === "string" ? item : item.text;
+      const className = item && item.type === "calc" ? "step-equation" : "step";
+      return `<div class="${className}">${text}</div>`;
+    }
+
+    function renderProblems() {
+      const container = document.getElementById("problem-list");
+      const header = document.getElementById("problem-set-header");
+      const config = levelConfigs[currentLevel];
+      container.innerHTML = "";
+      header.textContent = typeDisplayNames[currentType] || "Cumulative Frequency Practice";
+      header.className = `problem-set-header visible ${config.className}`;
+      document.getElementById("set-instruction").textContent = config.instruction;
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        const steps = problem.steps.map(renderStep).join("");
+        const answerClass = problem.tableReveal ? "problem-answer table-problem-answer" : "problem-answer";
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index + 1}</div>
+              <div class="equation">${problem.question}</div>
+            </div>
+            <div class="${answerClass}" id="quick-answer-${index}">${problem.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${problem.answer}</div></div>
+          </div>`;
+        container.appendChild(li);
+      });
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(container), 0);
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      document.querySelectorAll(".table-reveal").forEach((button) => setRevealCellState(button, answersVisible));
+      problems.forEach((_, index) => {
+        const answer = document.getElementById(`quick-answer-${index}`);
+        if (answer && !answer.classList.contains("table-problem-answer")) answer.classList.toggle("visible", answersVisible);
+      });
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const steps = document.getElementById(`steps-${index}`);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      });
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(document.getElementById("problem-list")), 0);
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining -= 1;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById("timer-display");
+      display.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      display.className = timeRemaining <= 30 ? "timer-display warning" : "timer-display active";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      const display = document.getElementById("timer-display");
+      display.textContent = "Time Up!";
+      display.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-20"></script>
+</body>
+</html>
