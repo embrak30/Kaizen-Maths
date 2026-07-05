@@ -473,3 +473,130 @@ create policy "Admins can delete tool metadata"
 on public.tool_metadata
 for delete
 using (public.is_admin());
+
+create table if not exists public.tutor_learners (
+  id uuid primary key default gen_random_uuid(),
+  tutor_id uuid not null references auth.users(id) on delete cascade,
+  alias text not null check (char_length(alias) <= 80),
+  level text,
+  exam_board text,
+  focus_notes text,
+  status text not null default 'active',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.tutor_learners add column if not exists level text;
+alter table public.tutor_learners add column if not exists exam_board text;
+alter table public.tutor_learners add column if not exists focus_notes text;
+alter table public.tutor_learners add column if not exists status text not null default 'active';
+alter table public.tutor_learners add column if not exists updated_at timestamptz not null default now();
+
+create index if not exists tutor_learners_tutor_id_idx on public.tutor_learners(tutor_id);
+
+alter table public.tutor_learners enable row level security;
+
+grant select, insert, update, delete on public.tutor_learners to authenticated;
+
+drop policy if exists "Tutors can read their own learners" on public.tutor_learners;
+create policy "Tutors can read their own learners"
+on public.tutor_learners
+for select
+using (auth.uid() = tutor_id or public.is_admin());
+
+drop policy if exists "Paid tutors can insert their own learners" on public.tutor_learners;
+create policy "Paid tutors can insert their own learners"
+on public.tutor_learners
+for insert
+with check (
+  auth.uid() = tutor_id
+  and exists (
+    select 1
+    from public.profiles
+    where profiles.id = auth.uid()
+      and profiles.role in ('pro', 'school', 'admin')
+  )
+);
+
+drop policy if exists "Tutors can update their own learners" on public.tutor_learners;
+create policy "Tutors can update their own learners"
+on public.tutor_learners
+for update
+using (auth.uid() = tutor_id or public.is_admin())
+with check (auth.uid() = tutor_id or public.is_admin());
+
+drop policy if exists "Tutors can delete their own learners" on public.tutor_learners;
+create policy "Tutors can delete their own learners"
+on public.tutor_learners
+for delete
+using (auth.uid() = tutor_id or public.is_admin());
+
+create table if not exists public.tutor_sessions (
+  id uuid primary key default gen_random_uuid(),
+  tutor_id uuid not null references auth.users(id) on delete cascade,
+  learner_id uuid not null references public.tutor_learners(id) on delete cascade,
+  session_date date not null default current_date,
+  topic text,
+  tool_slug text,
+  confidence text check (confidence is null or confidence in ('introduced', 'practising', 'secure', 'needs-revisit')),
+  session_notes text,
+  next_steps text,
+  homework text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.tutor_sessions add column if not exists topic text;
+alter table public.tutor_sessions add column if not exists tool_slug text;
+alter table public.tutor_sessions add column if not exists confidence text;
+alter table public.tutor_sessions add column if not exists session_notes text;
+alter table public.tutor_sessions add column if not exists next_steps text;
+alter table public.tutor_sessions add column if not exists homework text;
+alter table public.tutor_sessions add column if not exists updated_at timestamptz not null default now();
+
+create index if not exists tutor_sessions_tutor_id_idx on public.tutor_sessions(tutor_id);
+create index if not exists tutor_sessions_learner_id_idx on public.tutor_sessions(learner_id);
+create index if not exists tutor_sessions_session_date_idx on public.tutor_sessions(session_date);
+
+alter table public.tutor_sessions enable row level security;
+
+grant select, insert, update, delete on public.tutor_sessions to authenticated;
+
+drop policy if exists "Tutors can read their own sessions" on public.tutor_sessions;
+create policy "Tutors can read their own sessions"
+on public.tutor_sessions
+for select
+using (auth.uid() = tutor_id or public.is_admin());
+
+drop policy if exists "Paid tutors can insert their own sessions" on public.tutor_sessions;
+create policy "Paid tutors can insert their own sessions"
+on public.tutor_sessions
+for insert
+with check (
+  auth.uid() = tutor_id
+  and exists (
+    select 1
+    from public.profiles
+    where profiles.id = auth.uid()
+      and profiles.role in ('pro', 'school', 'admin')
+  )
+  and exists (
+    select 1
+    from public.tutor_learners
+    where tutor_learners.id = learner_id
+      and tutor_learners.tutor_id = auth.uid()
+  )
+);
+
+drop policy if exists "Tutors can update their own sessions" on public.tutor_sessions;
+create policy "Tutors can update their own sessions"
+on public.tutor_sessions
+for update
+using (auth.uid() = tutor_id or public.is_admin())
+with check (auth.uid() = tutor_id or public.is_admin());
+
+drop policy if exists "Tutors can delete their own sessions" on public.tutor_sessions;
+create policy "Tutors can delete their own sessions"
+on public.tutor_sessions
+for delete
+using (auth.uid() = tutor_id or public.is_admin());
