@@ -6701,6 +6701,7 @@ function renderUpgrade() {
         ${statusCopy ? `<p class="upgrade-status" data-tone="${checkoutStatus}">${statusCopy}</p>` : `<p class="upgrade-status" id="upgradeStatus"></p>`}
         <div class="button-row">
           ${isSignedIn() ? `<button class="button" type="button" id="manageBilling">Manage Billing</button>` : `<button class="button primary" type="button" data-auth-action="signin">Sign in with Google</button>`}
+          ${isAdmin() ? `<button class="button subtle" type="button" id="runBillingDiagnostics">Run Billing Diagnostics</button>` : ""}
         </div>
       </article>
 
@@ -6763,6 +6764,24 @@ function setUpgradeStatus(message, tone = "") {
   status.dataset.tone = tone;
 }
 
+function formatBillingDiagnosticPrice(price) {
+  const idLabel = price.value?.present
+    ? `${price.value.prefix}...${price.value.suffix || ""}`
+    : "missing";
+  if (price.ok) {
+    return `${titleCaseAccess(price.plan)} price: found (${price.livemode ? "live" : "sandbox"}, ${price.currency || "currency unknown"}${price.interval ? `, ${price.interval}` : ""}, ${price.active ? "active" : "inactive"})`;
+  }
+  return `${titleCaseAccess(price.plan)} price: not found (${idLabel}). ${price.error || "Check this price ID."}`;
+}
+
+function formatBillingDiagnostics(report) {
+  const keyMode = report.stripeSecretKey?.mode || "unknown";
+  const webhook = report.webhookSecret?.value?.present ? "present" : "missing";
+  const prices = Array.isArray(report.prices) ? report.prices.map(formatBillingDiagnosticPrice).join(" | ") : "No price report returned.";
+  const issue = report.likelyIssue ? ` | ${report.likelyIssue}` : "";
+  return `Stripe key mode: ${keyMode}. Webhook secret: ${webhook}. ${prices}${issue}`;
+}
+
 async function postBillingEndpoint(path, body = {}) {
   const token = await currentAccessToken();
   const response = await fetch(path, {
@@ -6807,6 +6826,19 @@ function bindUpgradeActions() {
     } catch (error) {
       event.currentTarget.disabled = false;
       setUpgradeStatus(error.message, "error");
+    }
+  });
+
+  document.getElementById("runBillingDiagnostics")?.addEventListener("click", async (event) => {
+    event.currentTarget.disabled = true;
+    setUpgradeStatus("Checking Stripe key and price IDs in Vercel...", "loading");
+    try {
+      const report = await postBillingEndpoint("/api/billing-diagnostics");
+      setUpgradeStatus(formatBillingDiagnostics(report), report.ok ? "success" : "error");
+    } catch (error) {
+      setUpgradeStatus(error.message, "error");
+    } finally {
+      event.currentTarget.disabled = false;
     }
   });
 }
