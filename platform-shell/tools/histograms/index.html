@@ -17,7 +17,7 @@
     .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
     .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:800;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
     .problems-section{padding:18px 24px 24px;min-height:520px}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:700}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.tables{background:#3182ce}.problem-set-header.interpret{background:#38a169}.problem-set-header.exam{background:#805ad5}
-    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:12px}.problem-item{background:#f7fafc;padding:14px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.08em;color:#1a365d;font-weight:500;line-height:1.45;min-width:0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.94em;display:none;text-align:center;max-width:360px;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:12px}.problem-item{background:#f7fafc;padding:14px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr;gap:10px;align-items:start}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.08em;color:#1a365d;font-weight:500;line-height:1.45;min-width:0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.94em;display:none;text-align:center;max-width:min(760px,calc(100% - 42px));overflow-x:auto;justify-self:start;margin-left:42px}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
     .histogram-wrap{background:white;border:1px solid #cbd5e0;border-radius:8px;padding:10px;margin:10px 0;overflow-x:auto}.histogram-svg{width:100%;max-width:760px;min-width:520px;height:auto;display:block;margin:0 auto}.histogram-axis{stroke:#111;stroke-width:1.4}.histogram-grid{stroke:#d7dee8;stroke-width:.8}.histogram-bar{fill:#fff;stroke:#111;stroke-width:1.35}.histogram-label{fill:#111;font-size:12px;font-weight:650}.histogram-small{fill:#111;font-size:10.5px;font-weight:600}.histogram-title{fill:#111;font-size:13px;font-weight:750}
     .data-table-wrap{overflow-x:auto;margin:10px 0}.data-table{border-collapse:collapse;background:white;min-width:520px;box-shadow:0 1px 5px rgba(26,54,93,.08)}.data-table th,.data-table td{border:1px solid #cbd5e0;padding:8px 10px;text-align:center;white-space:nowrap}.data-table th{background:#e2e8f0;color:#1a365d;font-weight:800}.data-table .blank{font-weight:900;color:#1a365d;background:#fff}.table-reveal{min-width:42px;padding:5px 10px;border:1px solid #9fb4ce;border-radius:6px;background:#fff;color:#1a365d;font:inherit;font-weight:900;cursor:pointer}.table-reveal:hover{background:#edf2f7}.table-reveal.revealed{background:#e6fffa;border-color:#38a169;color:#155724;box-shadow:inset 0 0 0 1px rgba(56,161,105,.18)}.problem-answer.table-problem-answer{display:none!important}.subparts{margin:10px 0 4px 1.1rem}.subparts li{margin:5px 0;padding-left:4px}.steps-section{grid-column:1/-1;margin-top:12px;padding:14px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:800;color:#38a169;margin-bottom:10px;font-size:1.08em}.solution-steps{font-size:1.06em;line-height:1.58}.step{margin:8px 0;color:#1a365d}.step-equation{font-weight:700;color:#805ad5;text-align:center;margin:10px 0;font-size:1.09em;overflow-x:auto}.final-answer{background:#38a169;color:white;padding:9px 15px;border-radius:7px;text-align:center;font-weight:bold;font-size:1.05em;margin-top:12px;overflow-x:auto}.step-indicator{background:#3182ce;color:white;padding:5px 9px;border-radius:5px;font-size:.86em;font-weight:bold;margin-right:8px;white-space:nowrap}.note{color:#718096;font-size:.92em}
     .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
@@ -113,10 +113,7 @@
         instruction: "Complete each grouped-frequency table using class width, frequency, and frequency density.",
         className: "tables",
         options: [
-          ["complete_density_table", "Complete a frequency-density table"],
-          ["missing_frequency", "Find missing frequencies"],
-          ["missing_density_or_width", "Find missing density or class width"],
-          ["mixed_table_set", "Mixed table completion"]
+          ["complete_density_table", "Complete a frequency-density table"]
         ]
       },
       2: {
@@ -125,9 +122,11 @@
         instruction: "Use the histogram to answer each question. Remember that bar area represents frequency.",
         className: "interpret",
         options: [
-          ["interpret_histogram", "Interpret a histogram"],
-          ["partial_interval", "Estimate frequencies in partial intervals"],
-          ["percentage_from_histogram", "Percentages from a histogram"],
+          ["modal_class", "State the modal class"],
+          ["frequency_class", "Find the frequency in a class"],
+          ["total_frequency_interval", "Find the total frequency over full classes"],
+          ["partial_interval", "Estimate frequency in a partial interval"],
+          ["percentage_from_histogram", "Find a percentage from a histogram"],
           ["mixed_interpretation", "Mixed interpretation set"]
         ]
       },
@@ -150,9 +149,11 @@
       missing_frequency: "Find missing frequencies",
       missing_density_or_width: "Find missing density or class width",
       mixed_table_set: "Mixed table completion",
-      interpret_histogram: "Interpret a histogram",
-      partial_interval: "Estimate frequencies in partial intervals",
-      percentage_from_histogram: "Percentages from a histogram",
+      modal_class: "State the modal class",
+      frequency_class: "Find the frequency in a class",
+      total_frequency_interval: "Find the total frequency over full classes",
+      partial_interval: "Estimate frequency in a partial interval",
+      percentage_from_histogram: "Find a percentage from a histogram",
       mixed_interpretation: "Mixed interpretation set",
       table_from_histogram: "Complete a table from a histogram",
       median_quartiles: "Estimate median and quartiles",
@@ -327,7 +328,7 @@
       };
     }
 
-    function makeInterpretProblem(kind = "mixed") {
+    function makeInterpretProblem(kind = "modal") {
       const dataset = makeDataset();
       const rows = dataset.rows;
       const row = rows[rand(1, rows.length - 2)];
@@ -337,49 +338,83 @@
       const selectedTotal = selectedRows.reduce((sum, item) => sum + item.frequency, 0);
       const modal = rows.reduce((best, item) => item.density > best.density ? item : best, rows[0]);
       const percent = selectedTotal / dataset.total * 100;
-      const questions = kind === "partial" ? [
-        `Estimate the number of ${dataset.plural} with ${dataset.variable} from ${row.lower} to ${row.lower + partialWidth} ${dataset.unit}.`,
-        `Explain why this is an estimate.`,
-        `Find the total frequency represented by the whole bar from ${row.lower} to ${row.upper} ${dataset.unit}.`
-      ] : kind === "percentage" ? [
-        `Find the total number of ${dataset.plural}.`,
-        `Find the percentage of ${dataset.plural} with ${dataset.variable} from ${selectedRows[0].lower} to ${selectedRows[selectedRows.length - 1].upper} ${dataset.unit}.`,
-        `State the modal class.`
-      ] : [
-        `State the modal class.`,
-        `Find the frequency in the class ${intervalText(row)}.`,
-        `Find the total frequency from ${selectedRows[0].lower} to ${selectedRows[selectedRows.length - 1].upper} ${dataset.unit}.`,
-        `Estimate the frequency from ${row.lower} to ${row.lower + partialWidth} ${dataset.unit}.`
-      ];
-      const answers = kind === "partial" ? [
-        `${fmt(partialFrequency)} ${dataset.plural}`,
-        `It is an estimate because it assumes the data are evenly spread within the class interval.`,
-        `${fmt(row.frequency)} ${dataset.plural}`
-      ] : kind === "percentage" ? [
-        `${fmt(dataset.total)} ${dataset.plural}`,
-        `${fmt(percent, 1)}%`,
-        `${intervalText(modal)}`
-      ] : [
-        `${intervalText(modal)}`,
-        `${fmt(row.frequency)} ${dataset.plural}`,
-        `${fmt(selectedTotal)} ${dataset.plural}`,
-        `${fmt(partialFrequency)} ${dataset.plural}`
-      ];
+
+      if (kind === "frequency") {
+        const answer = `${fmt(row.frequency)} ${dataset.plural}`;
+        return {
+          question: `${histogramSvg(dataset)}<p>Find the frequency in the class ${intervalText(row)}.</p>`,
+          answer,
+          steps: [
+            step("In a histogram, frequency is represented by area."),
+            calc("frequency = class width × frequency density"),
+            step(`For ${intervalText(row)}, class width = ${row.upper} - ${row.lower} = ${fmt(row.width)}.`),
+            step(`The height of the bar is the frequency density, ${fmt(row.density)}.`),
+            calc(`frequency = ${fmt(row.width)} × ${fmt(row.density)} = ${fmt(row.frequency)}`),
+            answerLine(answer)
+          ]
+        };
+      }
+
+      if (kind === "total") {
+        const answer = `${fmt(selectedTotal)} ${dataset.plural}`;
+        return {
+          question: `${histogramSvg(dataset)}<p>Find the total frequency from ${selectedRows[0].lower} to ${selectedRows[selectedRows.length - 1].upper} ${dataset.unit}.</p>`,
+          answer,
+          steps: [
+            step("Use the area of each full bar in the interval."),
+            calc("frequency = class width × frequency density"),
+            ...selectedRows.flatMap((item) => [
+              step(`For ${intervalText(item)}, class width = ${item.upper} - ${item.lower} = ${fmt(item.width)}.`),
+              calc(`frequency = ${fmt(item.width)} × ${fmt(item.density)} = ${fmt(item.frequency)}`)
+            ]),
+            calc(`total frequency = ${selectedRows.map((item) => fmt(item.frequency)).join(" + ")} = ${fmt(selectedTotal)}`),
+            answerLine(answer)
+          ]
+        };
+      }
+
+      if (kind === "partial") {
+        const answer = `${fmt(partialFrequency)} ${dataset.plural}`;
+        return {
+          question: `${histogramSvg(dataset)}<p>Estimate the number of ${dataset.plural} with ${dataset.variable} from ${row.lower} to ${row.lower + partialWidth} ${dataset.unit}.</p>`,
+          answer,
+          steps: [
+            step("This is a partial interval, so assume the data are evenly spread within the class interval."),
+            calc("estimated frequency = partial width × frequency density"),
+            step(`The partial width is ${row.lower + partialWidth} - ${row.lower} = ${fmt(partialWidth)}.`),
+            step(`The frequency density for the full class ${intervalText(row)} is ${fmt(row.density)}.`),
+            calc(`estimated frequency = ${fmt(partialWidth)} × ${fmt(row.density)} = ${fmt(partialFrequency)}`),
+            answerLine(answer)
+          ]
+        };
+      }
+
+      if (kind === "percentage") {
+        const answer = `${fmt(percent, 1)}%`;
+        return {
+          question: `${histogramSvg(dataset)}<p>Find the percentage of ${dataset.plural} with ${dataset.variable} from ${selectedRows[0].lower} to ${selectedRows[selectedRows.length - 1].upper} ${dataset.unit}.</p>`,
+          answer,
+          steps: [
+            step("First find the total frequency represented by all bars."),
+            calc(`total frequency = ${dataset.rows.map((item) => fmt(item.frequency)).join(" + ")} = ${fmt(dataset.total)}`),
+            step("Now find the frequency in the required interval by adding the relevant bar areas."),
+            calc(`${selectedRows.map((item) => `(${fmt(item.width)} × ${fmt(item.density)})`).join(" + ")} = ${fmt(selectedTotal)}`),
+            step("Convert the fraction of the total into a percentage."),
+            calc(`percentage = ${fmt(selectedTotal)} ÷ ${fmt(dataset.total)} × 100 = ${fmt(percent, 1)}%`),
+            answerLine(answer)
+          ]
+        };
+      }
+
+      const answer = intervalText(modal);
       return {
-        question: `${histogramSvg(dataset)}<ol class="subparts">${questions.map((q) => `<li>${esc(q)}</li>`).join("")}</ol>`,
-        answer: answers.join("; "),
+        question: `${histogramSvg(dataset)}<p>State the modal class.</p>`,
+        answer,
         steps: [
-          step("In a histogram, frequency is represented by area."),
-          calc("frequency = class width × frequency density"),
-          step(`The modal class is the class with the greatest frequency density, so it is ${intervalText(modal)}.`),
-          step(`For ${intervalText(row)}, the class width is ${row.upper} - ${row.lower} = ${fmt(row.width)}.`),
-          calc(`frequency = ${fmt(row.width)} × ${fmt(row.density)} = ${fmt(row.frequency)}`),
-          step(`For the selected full classes, add the bar areas.`),
-          calc(`${selectedRows.map((item) => `(${fmt(item.width)} × ${fmt(item.density)})`).join(" + ")} = ${fmt(selectedTotal)}`),
-          step(`For the partial interval, use the same frequency density and multiply by the partial width.`),
-          calc(`estimated frequency = ${fmt(partialWidth)} × ${fmt(row.density)} = ${fmt(partialFrequency)}`),
-          calc(`percentage = ${fmt(selectedTotal)} ÷ ${fmt(dataset.total)} × 100 = ${fmt(percent, 1)}%`),
-          answerLine(answers.join("; "))
+          step("The modal class is the class with the greatest frequency density."),
+          step("Look for the tallest bar on the histogram."),
+          calc(`The greatest frequency density is ${fmt(modal.density)}.`),
+          answerLine(`modal class = ${answer}`)
         ]
       };
     }
@@ -482,19 +517,27 @@
       if (currentType === "missing_frequency") return makeTableProblem("frequency");
       if (currentType === "missing_density_or_width") return makeTableProblem("density_width");
       if (currentType === "mixed_table_set") return choice([makeTableProblem, () => makeTableProblem("frequency"), () => makeTableProblem("density_width")])();
-      if (currentType === "interpret_histogram") return makeInterpretProblem("mixed");
+      if (currentType === "modal_class") return makeInterpretProblem("modal");
+      if (currentType === "frequency_class") return makeInterpretProblem("frequency");
+      if (currentType === "total_frequency_interval") return makeInterpretProblem("total");
       if (currentType === "partial_interval") return makeInterpretProblem("partial");
       if (currentType === "percentage_from_histogram") return makeInterpretProblem("percentage");
-      if (currentType === "mixed_interpretation") return choice([() => makeInterpretProblem("mixed"), () => makeInterpretProblem("partial"), () => makeInterpretProblem("percentage")])();
+      if (currentType === "mixed_interpretation") return choice([
+        () => makeInterpretProblem("modal"),
+        () => makeInterpretProblem("frequency"),
+        () => makeInterpretProblem("total"),
+        () => makeInterpretProblem("partial"),
+        () => makeInterpretProblem("percentage")
+      ])();
       if (currentType === "table_from_histogram") return makeTableFromHistogramProblem();
       if (currentType === "median_quartiles") return makeMedianQuartilesProblem();
       if (currentType === "reverse_histogram") return makeReverseProblem();
-      if (currentType === "mixed_exam_histograms") return choice([makeTableFromHistogramProblem, makeMedianQuartilesProblem, makeReverseProblem, () => makeInterpretProblem("mixed")])();
+      if (currentType === "mixed_exam_histograms") return choice([makeTableFromHistogramProblem, makeMedianQuartilesProblem, makeReverseProblem, () => makeInterpretProblem("total"), () => makeInterpretProblem("partial")])();
       return makeTableProblem("mixed");
     }
 
     function defaultCountForType(type = currentType) {
-      if (["interpret_histogram", "partial_interval", "percentage_from_histogram", "mixed_interpretation", "table_from_histogram", "median_quartiles", "mixed_exam_histograms"].includes(type)) return 2;
+      if (["modal_class", "frequency_class", "total_frequency_interval", "partial_interval", "percentage_from_histogram", "mixed_interpretation", "table_from_histogram", "median_quartiles", "mixed_exam_histograms"].includes(type)) return 2;
       if (type === "reverse_histogram") return 4;
       return 3;
     }
