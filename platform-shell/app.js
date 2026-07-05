@@ -1047,7 +1047,7 @@ const tools = [
     status: "Imported",
     description: "Generate histogram practice focused on frequency density, completing grouped-frequency tables, interpreting histograms, partial intervals, percentages, and exam-style reverse problems.",
     tags: ["statistics", "histograms", "frequency density", "grouped data", "class width", "interpreting histograms", "frequency tables", "median", "quartiles"],
-    toolPath: "tools/histograms/index.html?v=histograms-1",
+    toolPath: "tools/histograms/index.html?v=histograms-2",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on completing tables using class width, frequency, and frequency density.",
