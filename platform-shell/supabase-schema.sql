@@ -488,6 +488,11 @@ create table if not exists public.tutor_learners (
 
 alter table public.tutor_learners add column if not exists level text;
 alter table public.tutor_learners add column if not exists exam_board text;
+alter table public.tutor_learners add column if not exists year_group text;
+alter table public.tutor_learners add column if not exists target_grade text;
+alter table public.tutor_learners add column if not exists key_weaknesses text;
+alter table public.tutor_learners add column if not exists learner_goals text;
+alter table public.tutor_learners add column if not exists favourite_tools text;
 alter table public.tutor_learners add column if not exists focus_notes text;
 alter table public.tutor_learners add column if not exists status text not null default 'active';
 alter table public.tutor_learners add column if not exists updated_at timestamptz not null default now();
@@ -598,5 +603,185 @@ with check (auth.uid() = tutor_id or public.is_admin());
 drop policy if exists "Tutors can delete their own sessions" on public.tutor_sessions;
 create policy "Tutors can delete their own sessions"
 on public.tutor_sessions
+for delete
+using (auth.uid() = tutor_id or public.is_admin());
+
+create table if not exists public.tutor_topic_progress (
+  id uuid primary key default gen_random_uuid(),
+  tutor_id uuid not null references auth.users(id) on delete cascade,
+  learner_id uuid not null references public.tutor_learners(id) on delete cascade,
+  topic text not null,
+  status text not null default 'developing' check (status in ('secure', 'developing', 'needs-revisit')),
+  last_practised_at date,
+  tool_slug text,
+  notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists tutor_topic_progress_tutor_id_idx on public.tutor_topic_progress(tutor_id);
+create index if not exists tutor_topic_progress_learner_id_idx on public.tutor_topic_progress(learner_id);
+
+alter table public.tutor_topic_progress enable row level security;
+
+grant select, insert, update, delete on public.tutor_topic_progress to authenticated;
+
+drop policy if exists "Tutors can read their own topic progress" on public.tutor_topic_progress;
+create policy "Tutors can read their own topic progress"
+on public.tutor_topic_progress
+for select
+using (auth.uid() = tutor_id or public.is_admin());
+
+drop policy if exists "Paid tutors can insert their own topic progress" on public.tutor_topic_progress;
+create policy "Paid tutors can insert their own topic progress"
+on public.tutor_topic_progress
+for insert
+with check (
+  auth.uid() = tutor_id
+  and exists (
+    select 1
+    from public.profiles
+    where profiles.id = auth.uid()
+      and profiles.role in ('pro', 'school', 'admin')
+  )
+  and exists (
+    select 1
+    from public.tutor_learners
+    where tutor_learners.id = learner_id
+      and tutor_learners.tutor_id = auth.uid()
+  )
+);
+
+drop policy if exists "Tutors can update their own topic progress" on public.tutor_topic_progress;
+create policy "Tutors can update their own topic progress"
+on public.tutor_topic_progress
+for update
+using (auth.uid() = tutor_id or public.is_admin())
+with check (auth.uid() = tutor_id or public.is_admin());
+
+drop policy if exists "Tutors can delete their own topic progress" on public.tutor_topic_progress;
+create policy "Tutors can delete their own topic progress"
+on public.tutor_topic_progress
+for delete
+using (auth.uid() = tutor_id or public.is_admin());
+
+create table if not exists public.tutor_homework (
+  id uuid primary key default gen_random_uuid(),
+  tutor_id uuid not null references auth.users(id) on delete cascade,
+  learner_id uuid not null references public.tutor_learners(id) on delete cascade,
+  task text not null,
+  due_date date,
+  status text not null default 'set' check (status in ('set', 'completed', 'missed', 'reviewed')),
+  topic text,
+  notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists tutor_homework_tutor_id_idx on public.tutor_homework(tutor_id);
+create index if not exists tutor_homework_learner_id_idx on public.tutor_homework(learner_id);
+create index if not exists tutor_homework_due_date_idx on public.tutor_homework(due_date);
+
+alter table public.tutor_homework enable row level security;
+
+grant select, insert, update, delete on public.tutor_homework to authenticated;
+
+drop policy if exists "Tutors can read their own homework" on public.tutor_homework;
+create policy "Tutors can read their own homework"
+on public.tutor_homework
+for select
+using (auth.uid() = tutor_id or public.is_admin());
+
+drop policy if exists "Paid tutors can insert their own homework" on public.tutor_homework;
+create policy "Paid tutors can insert their own homework"
+on public.tutor_homework
+for insert
+with check (
+  auth.uid() = tutor_id
+  and exists (
+    select 1
+    from public.profiles
+    where profiles.id = auth.uid()
+      and profiles.role in ('pro', 'school', 'admin')
+  )
+  and exists (
+    select 1
+    from public.tutor_learners
+    where tutor_learners.id = learner_id
+      and tutor_learners.tutor_id = auth.uid()
+  )
+);
+
+drop policy if exists "Tutors can update their own homework" on public.tutor_homework;
+create policy "Tutors can update their own homework"
+on public.tutor_homework
+for update
+using (auth.uid() = tutor_id or public.is_admin())
+with check (auth.uid() = tutor_id or public.is_admin());
+
+drop policy if exists "Tutors can delete their own homework" on public.tutor_homework;
+create policy "Tutors can delete their own homework"
+on public.tutor_homework
+for delete
+using (auth.uid() = tutor_id or public.is_admin());
+
+create table if not exists public.tutor_assessments (
+  id uuid primary key default gen_random_uuid(),
+  tutor_id uuid not null references auth.users(id) on delete cascade,
+  learner_id uuid not null references public.tutor_learners(id) on delete cascade,
+  assessment_date date not null default current_date,
+  title text,
+  topic text,
+  score numeric,
+  max_score numeric,
+  notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists tutor_assessments_tutor_id_idx on public.tutor_assessments(tutor_id);
+create index if not exists tutor_assessments_learner_id_idx on public.tutor_assessments(learner_id);
+create index if not exists tutor_assessments_date_idx on public.tutor_assessments(assessment_date);
+
+alter table public.tutor_assessments enable row level security;
+
+grant select, insert, update, delete on public.tutor_assessments to authenticated;
+
+drop policy if exists "Tutors can read their own assessments" on public.tutor_assessments;
+create policy "Tutors can read their own assessments"
+on public.tutor_assessments
+for select
+using (auth.uid() = tutor_id or public.is_admin());
+
+drop policy if exists "Paid tutors can insert their own assessments" on public.tutor_assessments;
+create policy "Paid tutors can insert their own assessments"
+on public.tutor_assessments
+for insert
+with check (
+  auth.uid() = tutor_id
+  and exists (
+    select 1
+    from public.profiles
+    where profiles.id = auth.uid()
+      and profiles.role in ('pro', 'school', 'admin')
+  )
+  and exists (
+    select 1
+    from public.tutor_learners
+    where tutor_learners.id = learner_id
+      and tutor_learners.tutor_id = auth.uid()
+  )
+);
+
+drop policy if exists "Tutors can update their own assessments" on public.tutor_assessments;
+create policy "Tutors can update their own assessments"
+on public.tutor_assessments
+for update
+using (auth.uid() = tutor_id or public.is_admin())
+with check (auth.uid() = tutor_id or public.is_admin());
+
+drop policy if exists "Tutors can delete their own assessments" on public.tutor_assessments;
+create policy "Tutors can delete their own assessments"
+on public.tutor_assessments
 for delete
 using (auth.uid() = tutor_id or public.is_admin());

@@ -2549,6 +2549,18 @@ body[data-route="worksheet-generator"] .account-action {
   align-items: start;
 }
 
+.tutor-workflow-grid,
+.tutor-record-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.tutor-record-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .tutor-form-panel {
   display: grid;
   gap: 10px;
@@ -2651,6 +2663,24 @@ body[data-route="worksheet-generator"] .account-action {
   color: #8a95a8;
 }
 
+.tutor-progress-strip {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tutor-progress-strip span {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 3px 8px;
+  background: #f1efff;
+  color: #4c3a8a;
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
 .tutor-card-meta {
   display: grid;
   grid-template-columns: 76px minmax(0, 1fr);
@@ -2721,6 +2751,69 @@ body[data-route="worksheet-generator"] .account-action {
   font-weight: 850;
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+.tutor-output-panel {
+  grid-column: span 1;
+  display: grid;
+  gap: 10px;
+}
+
+.tutor-copy-box {
+  width: 100%;
+  min-height: 170px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: #fbfdff;
+  color: #1f2937;
+  font: inherit;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.tutor-workflow-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  padding: 11px;
+  border: 1px solid #e3ebf5;
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.tutor-workflow-item strong {
+  display: block;
+  color: #282450;
+}
+
+.tutor-workflow-item p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  line-height: 1.4;
+  font-size: 0.86rem;
+}
+
+.tutor-workflow-item a {
+  color: #1455a0;
+  font-weight: 850;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.tutor-profile-summary {
+  display: grid;
+  gap: 8px;
+}
+
+.tutor-profile-summary p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.tutor-profile-summary strong {
+  color: #282450;
 }
 
 .button.danger,
@@ -5132,7 +5225,9 @@ sup .worksheet-fraction span:last-child {
   .legacy-layout,
   .split-grid,
   .worksheet-builder,
-  .tutor-main-grid {
+  .tutor-main-grid,
+  .tutor-workflow-grid,
+  .tutor-record-grid {
     grid-template-columns: 1fr;
   }
 
@@ -5466,7 +5561,8 @@ sup .worksheet-fraction span:last-child {
   .tutor-form-row,
   .tutor-section-head,
   .tutor-card-head,
-  .tutor-session-topline {
+  .tutor-session-topline,
+  .tutor-workflow-item {
     grid-template-columns: 1fr;
   }
 

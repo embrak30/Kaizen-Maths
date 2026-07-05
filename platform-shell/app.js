@@ -1661,9 +1661,13 @@ const state = {
   accessLoaded: false,
   tutorLearners: [],
   tutorSessions: [],
+  tutorTopics: [],
+  tutorHomework: [],
+  tutorAssessments: [],
   tutorLoaded: false,
   tutorLoading: false,
-  tutorError: ""
+  tutorError: "",
+  tutorSelectedLearnerId: ""
 };
 
 const defaultTestimonials = [
@@ -2796,6 +2800,29 @@ function tutorSessionsForLearner(learnerId) {
   return state.tutorSessions.filter((session) => session.learner_id === learnerId);
 }
 
+function tutorTopicsForLearner(learnerId) {
+  return state.tutorTopics.filter((topic) => topic.learner_id === learnerId);
+}
+
+function tutorHomeworkForLearner(learnerId) {
+  return state.tutorHomework.filter((item) => item.learner_id === learnerId);
+}
+
+function tutorAssessmentsForLearner(learnerId) {
+  return state.tutorAssessments.filter((item) => item.learner_id === learnerId);
+}
+
+function tutorSelectedLearner() {
+  return tutorLearnerById(state.tutorSelectedLearnerId) || state.tutorLearners[0] || null;
+}
+
+function tutorLearnerOptions(selectedId = "") {
+  const selected = selectedId || tutorSelectedLearner()?.id || "";
+  return state.tutorLearners
+    .map((learner) => `<option value="${escapeHtml(learner.id)}"${learner.id === selected ? " selected" : ""}>${escapeHtml(learner.alias)}</option>`)
+    .join("");
+}
+
 function tutorLatestSession(learnerId) {
   return tutorSessionsForLearner(learnerId)
     .slice()
@@ -2816,6 +2843,105 @@ function tutorConfidenceLabel(value) {
   return labels[normalise(value)] || "Not set";
 }
 
+function tutorTopicStatusLabel(value) {
+  const labels = {
+    secure: "Secure",
+    developing: "Developing",
+    "needs-revisit": "Needs revisit"
+  };
+  return labels[normalise(value)] || "Developing";
+}
+
+function tutorHomeworkStatusLabel(value) {
+  const labels = {
+    set: "Set",
+    completed: "Completed",
+    missed: "Missed",
+    reviewed: "Reviewed"
+  };
+  return labels[normalise(value)] || "Set";
+}
+
+function tutorDueHomework() {
+  const today = tutorTodayDate();
+  return state.tutorHomework.filter((item) => {
+    const status = normalise(item.status || "set");
+    return item.due_date && item.due_date <= today && !["completed", "reviewed"].includes(status);
+  });
+}
+
+function tutorLatestAssessment(learnerId) {
+  return tutorAssessmentsForLearner(learnerId)
+    .slice()
+    .sort((a, b) => String(b.assessment_date || "").localeCompare(String(a.assessment_date || "")))[0] || null;
+}
+
+function tutorLearnerProgressStats(learnerId) {
+  const topics = tutorTopicsForLearner(learnerId);
+  return {
+    secure: topics.filter((topic) => normalise(topic.status) === "secure").length,
+    developing: topics.filter((topic) => normalise(topic.status || "developing") === "developing").length,
+    needsRevisit: topics.filter((topic) => normalise(topic.status) === "needs-revisit").length
+  };
+}
+
+function tutorSuggestedToolForLearner(learnerId) {
+  const topicTool = tutorTopicsForLearner(learnerId).find((topic) => topic.tool_slug)?.tool_slug;
+  const sessionTool = tutorSessionsForLearner(learnerId).find((session) => session.tool_slug)?.tool_slug;
+  const favouriteTool = String(tutorLearnerById(learnerId)?.favourite_tools || "").split(",").map((item) => item.trim()).filter(Boolean)[0];
+  const slug = topicTool || sessionTool || favouriteTool || "";
+  return tools.find((tool) => tool.slug === slug) || null;
+}
+
+function tutorWeakTopicNames(learnerId, limit = 3) {
+  return tutorTopicsForLearner(learnerId)
+    .filter((topic) => normalise(topic.status) === "needs-revisit" || normalise(topic.status) === "developing")
+    .sort((a, b) => {
+      const statusScore = (value) => normalise(value) === "needs-revisit" ? 0 : 1;
+      return statusScore(a.status) - statusScore(b.status) || String(a.last_practised_at || "").localeCompare(String(b.last_practised_at || ""));
+    })
+    .slice(0, limit)
+    .map((topic) => topic.topic)
+    .filter(Boolean);
+}
+
+function tutorNextSessionPlan(learnerId) {
+  const learner = tutorLearnerById(learnerId);
+  if (!learner) return "Choose a learner to generate a suggested next-session plan.";
+  const latest = tutorLatestSession(learnerId);
+  const weakTopics = tutorWeakTopicNames(learnerId);
+  const outstandingHomework = tutorHomeworkForLearner(learnerId).find((item) => !["completed", "reviewed"].includes(normalise(item.status || "set")));
+  const suggestedTool = tutorSuggestedToolForLearner(learnerId);
+  const focus = weakTopics[0] || latest?.next_steps || learner.key_weaknesses || learner.focus_notes || "the next priority topic";
+
+  return [
+    `Suggested next session for ${learner.alias}`,
+    `1. Start with retrieval practice on ${weakTopics.length ? weakTopics.join(", ") : focus}.`,
+    `2. Review ${outstandingHomework ? `homework: ${outstandingHomework.task}` : "the previous session notes and any questions from independent practice"}.`,
+    `3. Main focus: ${focus}.`,
+    `4. Use Kaizen Maths ${suggestedTool ? `${suggestedTool.title}` : "topic questions"} for guided practice, then move to independent questions.`,
+    `5. Finish by recording confidence and setting one clear homework task.`
+  ].join("\n");
+}
+
+function tutorParentUpdateText(learnerId) {
+  const learner = tutorLearnerById(learnerId);
+  if (!learner) return "Choose a learner to create a parent update.";
+  const latest = tutorLatestSession(learnerId);
+  const weakTopics = tutorWeakTopicNames(learnerId, 2);
+  const homework = tutorHomeworkForLearner(learnerId).find((item) => normalise(item.status || "set") === "set");
+  const assessment = tutorLatestAssessment(learnerId);
+  const assessmentText = assessment && Number.isFinite(Number(assessment.score)) && Number.isFinite(Number(assessment.max_score))
+    ? ` Recent assessment: ${assessment.score}/${assessment.max_score}.`
+    : "";
+  return [
+    `Today we worked on ${latest?.topic || weakTopics[0] || learner.focus_notes || "the agreed maths focus"}.`,
+    `Confidence is currently ${latest ? tutorConfidenceLabel(latest.confidence).toLowerCase() : "being developed"}.${assessmentText}`,
+    weakTopics.length ? `The next priority is to revisit ${weakTopics.join(" and ")}.` : `Next session we will build on today's work.`,
+    homework ? `Homework: ${homework.task}${homework.due_date ? `, due ${formatDisplayDate(homework.due_date)}` : ""}.` : "No homework has been set yet."
+  ].join(" ");
+}
+
 async function loadTutorWorkspace({ rerender = false } = {}) {
   if (!isSignedIn() || !hasTutorWorkspaceAccess()) return;
   if (state.tutorLoading) return;
@@ -2824,21 +2950,44 @@ async function loadTutorWorkspace({ rerender = false } = {}) {
   try {
     const client = await window.KaizenAuth?.getClient?.().catch(() => null);
     if (!client) throw new Error("Supabase is not available.");
-    const [learnersResult, sessionsResult] = await Promise.all([
+    const [learnersResult, sessionsResult, topicsResult, homeworkResult, assessmentsResult] = await Promise.all([
       client
         .from("tutor_learners")
-        .select("id, alias, level, exam_board, focus_notes, status, created_at, updated_at")
+        .select("id, alias, level, exam_board, year_group, target_grade, key_weaknesses, learner_goals, favourite_tools, focus_notes, status, created_at, updated_at")
         .order("created_at", { ascending: false }),
       client
         .from("tutor_sessions")
         .select("id, learner_id, session_date, topic, tool_slug, confidence, session_notes, next_steps, homework, created_at, updated_at")
         .order("session_date", { ascending: false })
+        .order("created_at", { ascending: false }),
+      client
+        .from("tutor_topic_progress")
+        .select("id, learner_id, topic, status, last_practised_at, tool_slug, notes, created_at, updated_at")
+        .order("updated_at", { ascending: false }),
+      client
+        .from("tutor_homework")
+        .select("id, learner_id, task, due_date, status, topic, notes, created_at, updated_at")
+        .order("due_date", { ascending: true })
+        .order("created_at", { ascending: false }),
+      client
+        .from("tutor_assessments")
+        .select("id, learner_id, assessment_date, title, topic, score, max_score, notes, created_at, updated_at")
+        .order("assessment_date", { ascending: false })
         .order("created_at", { ascending: false })
     ]);
     if (learnersResult.error) throw learnersResult.error;
     if (sessionsResult.error) throw sessionsResult.error;
+    if (topicsResult.error) throw topicsResult.error;
+    if (homeworkResult.error) throw homeworkResult.error;
+    if (assessmentsResult.error) throw assessmentsResult.error;
     state.tutorLearners = learnersResult.data || [];
     state.tutorSessions = sessionsResult.data || [];
+    state.tutorTopics = topicsResult.data || [];
+    state.tutorHomework = homeworkResult.data || [];
+    state.tutorAssessments = assessmentsResult.data || [];
+    if (!state.tutorSelectedLearnerId || !tutorLearnerById(state.tutorSelectedLearnerId)) {
+      state.tutorSelectedLearnerId = state.tutorLearners[0]?.id || "";
+    }
     state.tutorLoaded = true;
   } catch (error) {
     state.tutorError = error.message || "Tutor workspace could not load.";
@@ -2852,9 +3001,13 @@ async function loadTutorWorkspace({ rerender = false } = {}) {
 function resetTutorWorkspaceState() {
   state.tutorLearners = [];
   state.tutorSessions = [];
+  state.tutorTopics = [];
+  state.tutorHomework = [];
+  state.tutorAssessments = [];
   state.tutorLoaded = false;
   state.tutorLoading = false;
   state.tutorError = "";
+  state.tutorSelectedLearnerId = "";
 }
 
 async function saveTutorLearner(values) {
@@ -2871,6 +3024,11 @@ async function saveTutorLearner(values) {
     alias,
     level: String(values.level || "").trim(),
     exam_board: String(values.exam_board || "").trim(),
+    year_group: String(values.year_group || "").trim(),
+    target_grade: String(values.target_grade || "").trim(),
+    key_weaknesses: String(values.key_weaknesses || "").trim(),
+    learner_goals: String(values.learner_goals || "").trim(),
+    favourite_tools: String(values.favourite_tools || "").trim(),
     focus_notes: String(values.focus_notes || "").trim(),
     status: String(values.status || "active").trim() || "active",
     updated_at: new Date().toISOString()
@@ -2912,6 +3070,86 @@ async function saveTutorSession(values) {
   await loadTutorWorkspace({ rerender: true });
 }
 
+async function saveTutorTopic(values) {
+  const client = await window.KaizenAuth?.getClient?.();
+  const userId = authState().session?.user?.id;
+  if (!client || !userId) throw new Error("Sign in is required.");
+  if (!hasTutorWorkspaceAccess()) throw new Error("Tutor Workflow is available for Pro, School, and Admin accounts.");
+  const learnerId = String(values.learner_id || "").trim();
+  if (!learnerId || !tutorLearnerById(learnerId)) throw new Error("Choose a learner first.");
+  const topic = String(values.topic || "").trim();
+  if (!topic) throw new Error("Add a topic to track.");
+
+  const payload = {
+    tutor_id: userId,
+    learner_id: learnerId,
+    topic,
+    status: String(values.status || "developing").trim() || "developing",
+    last_practised_at: String(values.last_practised_at || tutorTodayDate()).trim(),
+    tool_slug: String(values.tool_slug || "").trim() || null,
+    notes: String(values.notes || "").trim(),
+    updated_at: new Date().toISOString()
+  };
+  const { error } = await client.from("tutor_topic_progress").insert(payload);
+  if (error) throw error;
+  state.tutorSelectedLearnerId = learnerId;
+  await loadTutorWorkspace({ rerender: true });
+}
+
+async function saveTutorHomework(values) {
+  const client = await window.KaizenAuth?.getClient?.();
+  const userId = authState().session?.user?.id;
+  if (!client || !userId) throw new Error("Sign in is required.");
+  if (!hasTutorWorkspaceAccess()) throw new Error("Tutor Workflow is available for Pro, School, and Admin accounts.");
+  const learnerId = String(values.learner_id || "").trim();
+  if (!learnerId || !tutorLearnerById(learnerId)) throw new Error("Choose a learner first.");
+  const task = String(values.task || "").trim();
+  if (!task) throw new Error("Add the homework task.");
+
+  const payload = {
+    tutor_id: userId,
+    learner_id: learnerId,
+    task,
+    due_date: String(values.due_date || "").trim() || null,
+    status: String(values.status || "set").trim() || "set",
+    topic: String(values.topic || "").trim(),
+    notes: String(values.notes || "").trim(),
+    updated_at: new Date().toISOString()
+  };
+  const { error } = await client.from("tutor_homework").insert(payload);
+  if (error) throw error;
+  state.tutorSelectedLearnerId = learnerId;
+  await loadTutorWorkspace({ rerender: true });
+}
+
+async function saveTutorAssessment(values) {
+  const client = await window.KaizenAuth?.getClient?.();
+  const userId = authState().session?.user?.id;
+  if (!client || !userId) throw new Error("Sign in is required.");
+  if (!hasTutorWorkspaceAccess()) throw new Error("Tutor Workflow is available for Pro, School, and Admin accounts.");
+  const learnerId = String(values.learner_id || "").trim();
+  if (!learnerId || !tutorLearnerById(learnerId)) throw new Error("Choose a learner first.");
+  const title = String(values.title || "").trim();
+  const topic = String(values.topic || "").trim();
+  if (!title && !topic) throw new Error("Add an assessment title or topic.");
+
+  const payload = {
+    tutor_id: userId,
+    learner_id: learnerId,
+    assessment_date: String(values.assessment_date || tutorTodayDate()).trim(),
+    title,
+    topic,
+    score: values.score === "" ? null : Number(values.score),
+    max_score: values.max_score === "" ? null : Number(values.max_score),
+    notes: String(values.notes || "").trim(),
+    updated_at: new Date().toISOString()
+  };
+  const { error } = await client.from("tutor_assessments").insert(payload);
+  if (error) throw error;
+  state.tutorSelectedLearnerId = learnerId;
+  await loadTutorWorkspace({ rerender: true });
+}
+
 async function deleteTutorLearner(id) {
   const client = await window.KaizenAuth?.getClient?.();
   const userId = authState().session?.user?.id;
@@ -2931,6 +3169,21 @@ async function deleteTutorSession(id) {
   if (!client || !userId) throw new Error("Sign in is required.");
   const { error } = await client
     .from("tutor_sessions")
+    .delete()
+    .eq("id", id)
+    .eq("tutor_id", userId);
+  if (error) throw error;
+  await loadTutorWorkspace({ rerender: true });
+}
+
+async function deleteTutorWorkflowRecord(table, id) {
+  const client = await window.KaizenAuth?.getClient?.();
+  const userId = authState().session?.user?.id;
+  const allowedTables = new Set(["tutor_topic_progress", "tutor_homework", "tutor_assessments"]);
+  if (!client || !userId) throw new Error("Sign in is required.");
+  if (!allowedTables.has(table)) throw new Error("This record type cannot be deleted here.");
+  const { error } = await client
+    .from(table)
     .delete()
     .eq("id", id)
     .eq("tutor_id", userId);
@@ -6772,16 +7025,19 @@ function bindSchoolSpace() {
 function tutorLearnerCardHtml(learner) {
   const latest = tutorLatestSession(learner.id);
   const sessionCount = tutorSessionsForLearner(learner.id).length;
+  const progress = tutorLearnerProgressStats(learner.id);
+  const latestAssessment = tutorLatestAssessment(learner.id);
   return `
     <article class="tutor-learner-card">
       <div class="tutor-card-head">
         <div>
           <h3>${escapeHtml(learner.alias)}</h3>
-          <p>${escapeHtml([learner.level, learner.exam_board].filter(Boolean).join(" • ") || "No level set")}</p>
+          <p>${escapeHtml([learner.level, learner.exam_board, learner.target_grade ? `Target ${learner.target_grade}` : ""].filter(Boolean).join(" • ") || "No level set")}</p>
         </div>
         <span class="badge">${sessionCount} session${sessionCount === 1 ? "" : "s"}</span>
       </div>
       ${learner.focus_notes ? `<p class="tutor-focus">${escapeHtml(learner.focus_notes)}</p>` : `<p class="tutor-focus muted">No focus notes yet.</p>`}
+      ${learner.learner_goals ? `<p class="tutor-focus"><strong>Goal:</strong> ${escapeHtml(learner.learner_goals)}</p>` : ""}
       <div class="tutor-card-meta">
         <span>Latest</span>
         <strong>${latest ? escapeHtml(formatDisplayDate(latest.session_date)) : "No sessions yet"}</strong>
@@ -6790,8 +7046,20 @@ function tutorLearnerCardHtml(learner) {
         <span>Confidence</span>
         <strong>${latest ? escapeHtml(tutorConfidenceLabel(latest.confidence)) : "Not set"}</strong>
       </div>
+      <div class="tutor-progress-strip" aria-label="Topic progress summary">
+        <span>${progress.secure} secure</span>
+        <span>${progress.developing} developing</span>
+        <span>${progress.needsRevisit} revisit</span>
+      </div>
+      ${latestAssessment ? `
+        <div class="tutor-card-meta">
+          <span>Last score</span>
+          <strong>${escapeHtml(latestAssessment.score ?? "—")}/${escapeHtml(latestAssessment.max_score ?? "—")}</strong>
+        </div>
+      ` : ""}
       <div class="button-row">
         <button class="button subtle" type="button" data-tutor-select-learner="${escapeHtml(learner.id)}">Log Session</button>
+        <button class="button subtle" type="button" data-tutor-plan-learner="${escapeHtml(learner.id)}">Plan Next</button>
         <button class="button subtle danger" type="button" data-tutor-delete-learner="${escapeHtml(learner.id)}">Delete</button>
       </div>
     </article>
@@ -6821,6 +7089,51 @@ function tutorSessionItemHtml(session) {
   `;
 }
 
+function tutorTopicItemHtml(topic) {
+  const tool = tools.find((item) => item.slug === topic.tool_slug);
+  return `
+    <article class="tutor-workflow-item">
+      <div>
+        <strong>${escapeHtml(topic.topic)}</strong>
+        <p>${escapeHtml(tutorTopicStatusLabel(topic.status))}${topic.last_practised_at ? ` • Last practised ${escapeHtml(formatDisplayDate(topic.last_practised_at))}` : ""}</p>
+        ${tool ? `<p><a href="#/tools/${escapeHtml(tool.slug)}">${escapeHtml(tool.title)}</a></p>` : ""}
+        ${topic.notes ? `<p>${escapeHtml(topic.notes)}</p>` : ""}
+      </div>
+      <button class="button subtle danger" type="button" data-tutor-delete-record="tutor_topic_progress" data-record-id="${escapeHtml(topic.id)}">Delete</button>
+    </article>
+  `;
+}
+
+function tutorHomeworkItemHtml(item) {
+  return `
+    <article class="tutor-workflow-item">
+      <div>
+        <strong>${escapeHtml(item.task)}</strong>
+        <p>${escapeHtml(tutorHomeworkStatusLabel(item.status))}${item.due_date ? ` • Due ${escapeHtml(formatDisplayDate(item.due_date))}` : ""}${item.topic ? ` • ${escapeHtml(item.topic)}` : ""}</p>
+        ${item.notes ? `<p>${escapeHtml(item.notes)}</p>` : ""}
+      </div>
+      <button class="button subtle danger" type="button" data-tutor-delete-record="tutor_homework" data-record-id="${escapeHtml(item.id)}">Delete</button>
+    </article>
+  `;
+}
+
+function tutorAssessmentItemHtml(item) {
+  const percent = Number.isFinite(Number(item.score)) && Number.isFinite(Number(item.max_score)) && Number(item.max_score) > 0
+    ? ` (${Math.round((Number(item.score) / Number(item.max_score)) * 100)}%)`
+    : "";
+  return `
+    <article class="tutor-workflow-item">
+      <div>
+        <strong>${escapeHtml(item.title || item.topic || "Assessment")}</strong>
+        <p>${escapeHtml(formatDisplayDate(item.assessment_date))}${item.topic ? ` • ${escapeHtml(item.topic)}` : ""}</p>
+        <p>Score: ${escapeHtml(item.score ?? "—")}/${escapeHtml(item.max_score ?? "—")}${percent}</p>
+        ${item.notes ? `<p>${escapeHtml(item.notes)}</p>` : ""}
+      </div>
+      <button class="button subtle danger" type="button" data-tutor-delete-record="tutor_assessments" data-record-id="${escapeHtml(item.id)}">Delete</button>
+    </article>
+  `;
+}
+
 function renderTutorWorkspace() {
   if (!isSignedIn()) {
     app.innerHTML = `
@@ -6846,7 +7159,7 @@ function renderTutorWorkspace() {
         <article class="panel access-callout">
           <span class="eyebrow">Pro Feature</span>
           <h2>Available for Pro, School, and Admin accounts</h2>
-          <p>The Tutor Workspace is designed for paid tutor workflows: learner aliases, session notes, Kaizen tools used, confidence, next steps, and homework follow-up.</p>
+          <p>The Tutor Workspace is designed for paid tutor workflows: learner profiles, topic progress, session notes, Kaizen tools used, homework, assessments, next-session planning, and parent update copy.</p>
           <p>Use aliases or initials only. Kaizen Maths does not require student accounts or student personal data.</p>
           <a class="button primary" href="#/upgrade">View Pro Access</a>
         </article>
@@ -6854,11 +7167,12 @@ function renderTutorWorkspace() {
           <h2>What Pro Tutors Will Be Able To Track</h2>
           <div class="badge-row">
             <span class="badge">Learner aliases</span>
-            <span class="badge">Session topics</span>
-            <span class="badge">Tools used</span>
-            <span class="badge">Confidence</span>
-            <span class="badge">Next steps</span>
-            <span class="badge">Homework notes</span>
+            <span class="badge">Topic tracker</span>
+            <span class="badge">Session notes</span>
+            <span class="badge">Homework</span>
+            <span class="badge">Assessments</span>
+            <span class="badge">Plan next session</span>
+            <span class="badge">Parent updates</span>
           </div>
         </article>
       </section>
@@ -6870,10 +7184,16 @@ function renderTutorWorkspace() {
     loadTutorWorkspace({ rerender: true });
   }
 
-  const learnerOptions = state.tutorLearners
-    .map((learner) => `<option value="${escapeHtml(learner.id)}">${escapeHtml(learner.alias)}</option>`)
-    .join("");
+  const selectedLearner = tutorSelectedLearner();
+  const selectedLearnerId = selectedLearner?.id || "";
+  const learnerOptions = state.tutorLearners.length ? tutorLearnerOptions(selectedLearnerId) : `<option value="">Add a learner first</option>`;
   const recentSessions = state.tutorSessions.slice(0, 12);
+  const selectedTopics = selectedLearnerId ? tutorTopicsForLearner(selectedLearnerId) : [];
+  const selectedHomework = selectedLearnerId ? tutorHomeworkForLearner(selectedLearnerId) : [];
+  const selectedAssessments = selectedLearnerId ? tutorAssessmentsForLearner(selectedLearnerId) : [];
+  const selectedProgress = selectedLearnerId ? tutorLearnerProgressStats(selectedLearnerId) : { secure: 0, developing: 0, needsRevisit: 0 };
+  const nextPlan = tutorNextSessionPlan(selectedLearnerId);
+  const parentUpdate = tutorParentUpdateText(selectedLearnerId);
 
   app.innerHTML = `
     ${pageHeader(
@@ -6885,8 +7205,8 @@ function renderTutorWorkspace() {
       <section class="metric-grid tutor-metrics" aria-label="Tutor workspace summary">
         <article class="metric"><span>Learners</span><strong>${state.tutorLearners.length}</strong></article>
         <article class="metric"><span>Logged Sessions</span><strong>${state.tutorSessions.length}</strong></article>
-        <article class="metric"><span>Needs Revisit</span><strong>${state.tutorSessions.filter((session) => normalise(session.confidence) === "needs-revisit").length}</strong></article>
-        <article class="metric"><span>Privacy</span><strong>Alias only</strong></article>
+        <article class="metric"><span>Topics To Revisit</span><strong>${state.tutorTopics.filter((topic) => normalise(topic.status) === "needs-revisit").length}</strong></article>
+        <article class="metric"><span>Homework Due</span><strong>${tutorDueHomework().length}</strong></article>
       </section>
 
       ${state.tutorError ? `
@@ -6910,6 +7230,15 @@ function renderTutorWorkspace() {
                 <input name="level" type="text" maxlength="80" placeholder="Level, e.g. GCSE Higher">
                 <input name="exam_board" type="text" maxlength="80" placeholder="Board or route, e.g. Edexcel">
               </div>
+              <div class="tutor-form-row">
+                <input name="year_group" type="text" maxlength="80" placeholder="Year group, e.g. Year 10">
+                <input name="target_grade" type="text" maxlength="80" placeholder="Target grade, e.g. Grade 7">
+              </div>
+              <select name="favourite_tools">
+                ${tutorToolOptions()}
+              </select>
+              <textarea name="learner_goals" rows="3" maxlength="800" placeholder="Learner or parent goal, e.g. confident Grade 5 by November"></textarea>
+              <textarea name="key_weaknesses" rows="3" maxlength="800" placeholder="Known weak areas, e.g. fractions, forming equations, graph interpretation"></textarea>
               <textarea name="focus_notes" rows="4" maxlength="800" placeholder="Focus notes, e.g. algebra fluency, ratio, exam technique"></textarea>
               <input name="status" type="hidden" value="active">
               <button class="button primary" type="submit">Save Learner</button>
@@ -6947,6 +7276,93 @@ function renderTutorWorkspace() {
           </article>
         </section>
 
+        <section class="tutor-workflow-grid" aria-label="Tutor workflow tools">
+          <article class="panel tutor-form-panel">
+            <span class="eyebrow">Topic Tracker</span>
+            <h2>Track progress by topic</h2>
+            <form id="tutorTopicForm" class="tutor-form">
+              <select name="learner_id" required ${state.tutorLearners.length ? "" : "disabled"}>${learnerOptions}</select>
+              <input name="topic" type="text" maxlength="140" placeholder="Topic, e.g. factorising quadratics" required>
+              <div class="tutor-form-row">
+                <select name="status">
+                  <option value="developing">Developing</option>
+                  <option value="needs-revisit">Needs revisit</option>
+                  <option value="secure">Secure</option>
+                </select>
+                <input name="last_practised_at" type="date" value="${tutorTodayDate()}">
+              </div>
+              <select name="tool_slug">${tutorToolOptions()}</select>
+              <textarea name="notes" rows="3" maxlength="700" placeholder="Notes about errors, misconceptions, or what to practise next"></textarea>
+              <button class="button primary" type="submit" ${state.tutorLearners.length ? "" : "disabled"}>Save Topic</button>
+              <p class="tutor-form-status" id="tutorTopicStatus"></p>
+            </form>
+          </article>
+
+          <article class="panel tutor-form-panel">
+            <span class="eyebrow">Homework</span>
+            <h2>Set and monitor homework</h2>
+            <form id="tutorHomeworkForm" class="tutor-form">
+              <select name="learner_id" required ${state.tutorLearners.length ? "" : "disabled"}>${learnerOptions}</select>
+              <input name="task" type="text" maxlength="220" placeholder="Homework task" required>
+              <div class="tutor-form-row">
+                <input name="topic" type="text" maxlength="120" placeholder="Linked topic">
+                <input name="due_date" type="date">
+              </div>
+              <select name="status">
+                <option value="set">Set</option>
+                <option value="completed">Completed</option>
+                <option value="missed">Missed</option>
+                <option value="reviewed">Reviewed</option>
+              </select>
+              <textarea name="notes" rows="3" maxlength="700" placeholder="Homework notes or follow-up"></textarea>
+              <button class="button primary" type="submit" ${state.tutorLearners.length ? "" : "disabled"}>Save Homework</button>
+              <p class="tutor-form-status" id="tutorHomeworkStatus"></p>
+            </form>
+          </article>
+
+          <article class="panel tutor-form-panel">
+            <span class="eyebrow">Assessment Log</span>
+            <h2>Record quiz and test scores</h2>
+            <form id="tutorAssessmentForm" class="tutor-form">
+              <select name="learner_id" required ${state.tutorLearners.length ? "" : "disabled"}>${learnerOptions}</select>
+              <div class="tutor-form-row">
+                <input name="title" type="text" maxlength="140" placeholder="Assessment title">
+                <input name="assessment_date" type="date" value="${tutorTodayDate()}">
+              </div>
+              <input name="topic" type="text" maxlength="140" placeholder="Topic or paper focus">
+              <div class="tutor-form-row">
+                <input name="score" type="number" min="0" step="0.5" placeholder="Score">
+                <input name="max_score" type="number" min="1" step="0.5" placeholder="Out of">
+              </div>
+              <textarea name="notes" rows="3" maxlength="700" placeholder="What does this score show?"></textarea>
+              <button class="button primary" type="submit" ${state.tutorLearners.length ? "" : "disabled"}>Save Assessment</button>
+              <p class="tutor-form-status" id="tutorAssessmentStatus"></p>
+            </form>
+          </article>
+
+          <article class="panel tutor-output-panel">
+            <span class="eyebrow">Plan Next Session</span>
+            <h2>${selectedLearner ? escapeHtml(selectedLearner.alias) : "Choose a learner"}</h2>
+            <div class="tutor-progress-strip">
+              <span>${selectedProgress.secure} secure</span>
+              <span>${selectedProgress.developing} developing</span>
+              <span>${selectedProgress.needsRevisit} revisit</span>
+            </div>
+            <textarea id="tutorNextPlanOutput" class="tutor-copy-box" readonly>${escapeHtml(nextPlan)}</textarea>
+            <div class="button-row">
+              <button class="button primary" type="button" id="copyTutorPlan" ${selectedLearner ? "" : "disabled"}>Copy Plan</button>
+              ${selectedLearner ? `<a class="button" href="#/tools">Open Tools</a>` : ""}
+            </div>
+          </article>
+
+          <article class="panel tutor-output-panel">
+            <span class="eyebrow">Parent Update</span>
+            <h2>Ready-to-send summary</h2>
+            <textarea id="tutorParentUpdateOutput" class="tutor-copy-box" readonly>${escapeHtml(parentUpdate)}</textarea>
+            <button class="button primary" type="button" id="copyTutorParentUpdate" ${selectedLearner ? "" : "disabled"}>Copy Parent Update</button>
+          </article>
+        </section>
+
         <section class="tutor-main-grid">
           <article class="panel">
             <div class="tutor-section-head">
@@ -6966,6 +7382,45 @@ function renderTutorWorkspace() {
             <h2>Session log</h2>
             <div class="tutor-session-list">
               ${recentSessions.length ? recentSessions.map(tutorSessionItemHtml).join("") : `<div class="empty-state">No sessions logged yet.</div>`}
+            </div>
+          </article>
+        </section>
+
+        <section class="tutor-record-grid" aria-label="Selected learner records">
+          <article class="panel">
+            <span class="eyebrow">Selected Learner</span>
+            <h2>${selectedLearner ? escapeHtml(selectedLearner.alias) : "No learner selected"}</h2>
+            ${selectedLearner ? `
+              <div class="tutor-profile-summary">
+                <p><strong>Level:</strong> ${escapeHtml(selectedLearner.level || "Not set")}</p>
+                <p><strong>Target:</strong> ${escapeHtml(selectedLearner.target_grade || "Not set")}</p>
+                <p><strong>Goal:</strong> ${escapeHtml(selectedLearner.learner_goals || "Not set")}</p>
+                <p><strong>Weak areas:</strong> ${escapeHtml(selectedLearner.key_weaknesses || "Not set")}</p>
+              </div>
+            ` : `<p>Add a learner to unlock the workflow view.</p>`}
+          </article>
+
+          <article class="panel">
+            <span class="eyebrow">Topics</span>
+            <h2>Progress tracker</h2>
+            <div class="tutor-session-list">
+              ${selectedTopics.length ? selectedTopics.map(tutorTopicItemHtml).join("") : `<div class="empty-state">No topics tracked for this learner yet.</div>`}
+            </div>
+          </article>
+
+          <article class="panel">
+            <span class="eyebrow">Homework</span>
+            <h2>Tasks and follow-up</h2>
+            <div class="tutor-session-list">
+              ${selectedHomework.length ? selectedHomework.map(tutorHomeworkItemHtml).join("") : `<div class="empty-state">No homework recorded for this learner yet.</div>`}
+            </div>
+          </article>
+
+          <article class="panel">
+            <span class="eyebrow">Assessment</span>
+            <h2>Scores over time</h2>
+            <div class="tutor-session-list">
+              ${selectedAssessments.length ? selectedAssessments.map(tutorAssessmentItemHtml).join("") : `<div class="empty-state">No assessment scores recorded yet.</div>`}
             </div>
           </article>
         </section>
@@ -7013,11 +7468,46 @@ function bindTutorWorkspaceActions() {
     }
   });
 
+  const bindWorkflowForm = (formId, statusId, saveFn, savingText, savedText) => {
+    const form = document.getElementById(formId);
+    const status = document.getElementById(statusId);
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = form.querySelector("button[type='submit']");
+      button.disabled = true;
+      status.textContent = savingText;
+      try {
+        await saveFn(Object.fromEntries(new FormData(form).entries()));
+        form.reset();
+        const dateInput = form.querySelector("input[type='date']");
+        if (dateInput && ["last_practised_at", "assessment_date"].includes(dateInput.name)) dateInput.value = tutorTodayDate();
+        status.textContent = savedText;
+      } catch (error) {
+        status.textContent = error.message;
+        button.disabled = false;
+      }
+    });
+  };
+
+  bindWorkflowForm("tutorTopicForm", "tutorTopicStatus", saveTutorTopic, "Saving topic...", "Topic saved.");
+  bindWorkflowForm("tutorHomeworkForm", "tutorHomeworkStatus", saveTutorHomework, "Saving homework...", "Homework saved.");
+  bindWorkflowForm("tutorAssessmentForm", "tutorAssessmentStatus", saveTutorAssessment, "Saving assessment...", "Assessment saved.");
+
   document.querySelectorAll("[data-tutor-select-learner]").forEach((button) => {
     button.addEventListener("click", () => {
-      const select = document.getElementById("tutorSessionLearner");
-      if (select) select.value = button.dataset.tutorSelectLearner;
+      state.tutorSelectedLearnerId = button.dataset.tutorSelectLearner;
+      document.querySelectorAll('.tutor-form select[name="learner_id"]').forEach((select) => {
+        select.value = button.dataset.tutorSelectLearner;
+      });
       document.getElementById("tutorSessionForm")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  });
+
+  document.querySelectorAll("[data-tutor-plan-learner]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.tutorSelectedLearnerId = button.dataset.tutorPlanLearner;
+      renderRoute();
+      window.requestAnimationFrame(() => document.getElementById("tutorNextPlanOutput")?.scrollIntoView({ behavior: "smooth", block: "center" }));
     });
   });
 
@@ -7047,6 +7537,36 @@ function bindTutorWorkspaceActions() {
       }
     });
   });
+
+  document.querySelectorAll("[data-tutor-delete-record]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!window.confirm("Delete this tutor workflow record?")) return;
+      button.disabled = true;
+      try {
+        await deleteTutorWorkflowRecord(button.dataset.tutorDeleteRecord, button.dataset.recordId);
+      } catch (error) {
+        window.alert(error.message);
+        button.disabled = false;
+      }
+    });
+  });
+
+  const copyTutorText = async (targetId, button) => {
+    const text = document.getElementById(targetId)?.value || "";
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      const original = button.textContent;
+      button.textContent = "Copied";
+      window.setTimeout(() => { button.textContent = original; }, 1200);
+    } catch {
+      document.getElementById(targetId)?.select();
+      button.textContent = "Select and copy";
+    }
+  };
+
+  document.getElementById("copyTutorPlan")?.addEventListener("click", (event) => copyTutorText("tutorNextPlanOutput", event.currentTarget));
+  document.getElementById("copyTutorParentUpdate")?.addEventListener("click", (event) => copyTutorText("tutorParentUpdateOutput", event.currentTarget));
 
   document.getElementById("refreshTutorWorkspace")?.addEventListener("click", async () => {
     state.tutorLoaded = false;
