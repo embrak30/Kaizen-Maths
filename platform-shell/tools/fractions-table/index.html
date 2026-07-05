@@ -3,18 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fraction Decimal Percentage Conversion Table</title>
+  <title>Classroom Starter Tables</title>
   <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
-
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #213447;
+      --muted: #667085;
+      --navy: #26384a;
+      --purple: #6f4cc3;
+      --teal: #17b8b3;
+      --green: #16a36b;
+      --amber: #d69e2e;
+      --red: #e74c3c;
+      --paper: #ffffff;
+      --soft: #f5f7fa;
+      --line: #d7dee8;
+      --math-font: "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+    }
 
     body {
       min-height: 100vh;
       padding: 20px;
       overflow-x: hidden;
       background: #f5f7fa;
-      color: #26384a;
+      color: var(--ink);
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
 
@@ -28,17 +42,17 @@
       text-orientation: mixed;
       border-radius: 0 8px 8px 0;
       padding: 15px 8px;
-      background: #6f4cc3;
+      background: var(--purple);
       color: white;
       box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
       cursor: pointer;
       font-size: 0.9em;
-      font-weight: 700;
+      font-weight: 750;
       transition: all 0.3s ease;
     }
 
     .teacher-tab:hover {
-      background: #17b8b3;
+      background: var(--teal);
       transform: translateY(-50%) translateX(5px);
     }
 
@@ -59,10 +73,10 @@
 
     .sidebar-header {
       padding: 20px;
-      background: #6f4cc3;
+      background: var(--purple);
       color: white;
       font-size: 1.3em;
-      font-weight: 700;
+      font-weight: 750;
     }
 
     .sidebar-content {
@@ -72,9 +86,9 @@
 
     .sidebar-content h3 {
       margin: 20px 0 10px;
-      border-bottom: 2px solid #17b8b3;
+      border-bottom: 2px solid var(--teal);
       padding-bottom: 5px;
-      color: #6f4cc3;
+      color: var(--purple);
       font-size: 1.1em;
     }
 
@@ -105,7 +119,7 @@
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
       overflow: hidden;
       border-radius: 10px;
@@ -116,104 +130,109 @@
     .header {
       position: relative;
       overflow: hidden;
-      padding: 25px;
+      padding: 24px;
       background:
-        radial-gradient(circle at 22% 22%, rgba(111, 76, 195, 0.75), transparent 42%),
-        radial-gradient(circle at 78% 72%, rgba(23, 184, 179, 0.72), transparent 42%),
+        radial-gradient(circle at 18% 22%, rgba(111, 76, 195, 0.78), transparent 42%),
+        radial-gradient(circle at 82% 70%, rgba(23, 184, 179, 0.72), transparent 42%),
         #2c3e50;
       color: white;
       text-align: center;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
     }
 
-    .header::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 50%, rgba(0, 0, 0, 0.05));
-    }
-
     .header h1 {
       position: relative;
       z-index: 1;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
       font-size: clamp(1.8rem, 3vw, 2.35rem);
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    .tabs {
-      display: flex;
-      background: #ecf0f1;
-    }
-
-    .tab {
-      flex: 1;
-      border: none;
-      border-bottom: 3px solid transparent;
-      padding: 18px;
-      background: #ecf0f1;
-      cursor: pointer;
-      font-size: 1.05em;
-      font-weight: 700;
-      transition: all 0.3s ease;
-    }
-
-    .tab:hover { background: #d5dbdb; }
-
-    .tab.active {
-      border-bottom-color: #17b8b3;
-      background: white;
-      color: #6f4cc3;
+    .header p {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 1.02em;
+      font-weight: 650;
     }
 
     .controls {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 15px;
+      display: grid;
+      grid-template-columns: minmax(300px, 1fr) auto auto;
+      align-items: end;
+      gap: 16px;
       border-bottom: 1px solid #e9ecef;
-      padding: 22px;
+      padding: 18px 22px;
       background: #f8f9fa;
     }
 
-    .level-info h3 {
-      margin-bottom: 5px;
-      color: #6f4cc3;
-      font-size: 1.25em;
+    .control-block label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--purple);
+      font-size: 0.9em;
+      font-weight: 800;
+      text-transform: uppercase;
     }
 
-    .level-info p {
-      color: #718096;
-      font-size: 1em;
+    .select-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    select {
+      min-width: min(420px, 100%);
+      border: 2px solid #cbd5e0;
+      border-radius: 7px;
+      padding: 10px 12px;
+      background: white;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    select:focus {
+      border-color: var(--teal);
+      outline: none;
+    }
+
+    .table-note {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 0.96em;
     }
 
     .timer-section {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .timer-display {
-      min-width: 118px;
+      min-width: 108px;
       border: 2px solid #bdc3c7;
       border-radius: 6px;
-      padding: 10px 16px;
+      padding: 9px 14px;
       background: white;
-      color: #6f4cc3;
+      color: var(--purple);
       text-align: center;
-      font-size: 1.7em;
-      font-weight: 800;
+      font-size: 1.55em;
+      font-weight: 850;
     }
 
     .timer-display.active {
-      border-color: #17b8b3;
+      border-color: var(--teal);
       color: #0d7f82;
     }
 
     .timer-display.warning {
-      border-color: #e74c3c;
-      color: #e74c3c;
+      border-color: var(--red);
+      color: var(--red);
       animation: pulse 1s infinite;
     }
 
@@ -224,98 +243,113 @@
 
     .action-buttons {
       display: flex;
-      gap: 9px;
+      gap: 8px;
       flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
     .btn {
-      min-width: 78px;
+      min-width: 74px;
       border: none;
       border-radius: 6px;
-      padding: 11px 18px;
+      padding: 10px 15px;
       color: white;
       cursor: pointer;
-      font-size: 0.96em;
-      font-weight: 750;
-      transition: all 0.3s ease;
+      font-size: 0.94em;
+      font-weight: 800;
+      transition: all 0.2s ease;
     }
 
-    .btn:hover { transform: translateY(-1px); }
-    .btn-primary { background: #6f4cc3; }
-    .btn-primary:hover { background: #5e41ad; }
-    .btn-success { background: #17a673; }
-    .btn-success:hover { background: #11815a; }
-    .btn-warning { background: #d69e2e; }
-    .btn-warning:hover { background: #b7791f; }
-    .btn-danger { background: #e74c3c; }
-    .btn-danger:hover { background: #c0392b; }
+    .btn:hover { transform: translateY(-1px); filter: brightness(0.95); }
+    .btn-primary { background: var(--purple); }
+    .btn-success { background: var(--green); }
+    .btn-warning { background: var(--amber); }
+    .btn-danger { background: var(--red); }
+    .btn-quiet { background: #526272; }
 
-    .problems-section {
+    .table-section {
       min-height: 600px;
-      padding: 26px;
+      padding: 22px 24px 28px;
     }
 
-    .description-text {
-      margin: 0 0 16px;
-      color: #718096;
-      text-align: center;
-      font-size: 1.05em;
-      font-style: italic;
+    .instruction-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      border-left: 4px solid var(--teal);
+      border-radius: 8px;
+      padding: 12px 14px;
+      background: #eefafa;
+      color: var(--ink);
+      font-weight: 750;
     }
 
-    .practice-table {
-      width: 100%;
-      border-collapse: collapse;
-      overflow: hidden;
+    .table-title {
+      color: var(--purple);
+      font-weight: 850;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
       border-radius: 10px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
+    .practice-table {
+      width: 100%;
+      min-width: 820px;
+      border-collapse: collapse;
+      overflow: hidden;
+      background: white;
+    }
+
     .practice-table th {
-      border-bottom: 3px solid #17b8b3;
-      padding: 18px 14px;
-      background: #2c3e50;
+      border-bottom: 3px solid var(--teal);
+      padding: 16px 12px;
+      background: var(--navy);
       color: white;
       text-align: center;
-      font-size: 1.18em;
-      font-weight: 750;
+      font-size: 1.04em;
+      font-weight: 800;
     }
 
     .practice-table td {
-      position: relative;
       border-bottom: 1px solid #e9ecef;
-      padding: 15px 12px;
+      padding: 13px 10px;
       text-align: center;
       vertical-align: middle;
-      font-size: 1.12em;
-      transition: all 0.3s ease;
+      font-size: 1.06em;
     }
 
     .practice-table tr:nth-child(even) { background-color: #f8f9fa; }
     .practice-table tr:hover { background-color: #e8f4f8; }
 
     .row-number {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto;
       border-radius: 50%;
-      background: #6f4cc3;
+      background: var(--purple);
       color: white;
-      font-weight: 800;
+      font-weight: 850;
     }
 
     .given-value,
     .calculate-cell {
-      min-height: 56px;
+      min-height: 52px;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 6px;
-      padding: 12px;
+      padding: 10px;
       font-weight: 750;
+      line-height: 1.28;
     }
 
     .given-value {
@@ -325,17 +359,19 @@
     }
 
     .calculate-cell {
-      border: 2px dashed #d69e2e;
+      border: 2px dashed var(--amber);
       background: #fff8dc;
       color: #856404;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
+      font: inherit;
+      font-weight: 850;
     }
 
     .calculate-cell:hover {
       border-color: #f59e0b;
       background: #fff4bd;
-      transform: scale(1.03);
+      transform: scale(1.02);
     }
 
     .calculate-cell.revealed {
@@ -343,24 +379,29 @@
       background: #d4edda;
       color: #155724;
       cursor: default;
-      animation: slideIn 0.35s ease;
+      animation: slideIn 0.25s ease;
     }
 
     .calculate-cell.revealed:hover { transform: none; }
 
     @keyframes slideIn {
-      from { opacity: 0; transform: scale(0.94); }
+      from { opacity: 0; transform: scale(0.96); }
       to { opacity: 1; transform: scale(1); }
     }
 
     .calculate-cell::before {
       content: "?";
       opacity: 0.78;
-      font-size: 1.4em;
+      font-size: 1.35em;
       font-weight: 900;
     }
 
     .calculate-cell.revealed::before { content: ""; }
+
+    .math {
+      font-family: var(--math-font);
+      font-size: 1.08em;
+    }
 
     .fraction {
       display: inline-flex;
@@ -368,15 +409,15 @@
       align-items: center;
       justify-content: center;
       vertical-align: middle;
-      font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);
-      font-size: 1.12em;
+      font-family: var(--math-font);
+      font-size: 1.08em;
       line-height: 1.15;
     }
 
     .fraction-numerator,
     .fraction-denominator {
       padding: 1px 4px;
-      font-weight: 700;
+      font-weight: 750;
     }
 
     .fraction-line {
@@ -407,32 +448,26 @@
 
     .modal-content h2 {
       margin-bottom: 18px;
-      color: #e74c3c;
+      color: var(--red);
       font-size: 2em;
     }
 
     .modal-content p {
       margin-bottom: 25px;
-      color: #718096;
+      color: var(--muted);
       font-size: 1.1em;
     }
 
     .hidden { display: none; }
 
-    @media (max-width: 768px) {
+    @media (max-width: 980px) {
       body { padding: 12px; }
-      .controls { flex-direction: column; align-items: stretch; padding: 15px; }
-      .timer-section { justify-content: center; }
-      .tabs { flex-wrap: wrap; }
-      .tab { flex: 1 1 100%; padding: 12px; }
-      .practice-table th,
-      .practice-table td { padding: 10px 6px; font-size: 0.95em; }
+      .controls { grid-template-columns: 1fr; align-items: stretch; padding: 15px; }
+      .timer-section,
+      .action-buttons { justify-content: flex-start; }
+      select { width: 100%; }
+      .instruction-strip { align-items: flex-start; flex-direction: column; }
       .sidebar { width: 320px; left: -320px; }
-    }
-
-    @media (min-width: 1200px) {
-      .practice-table th { font-size: 1.35em; padding: 22px 18px; }
-      .practice-table td { font-size: 1.22em; padding: 18px; }
     }
   </style>
 </head>
@@ -443,49 +478,42 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">Teacher Instructions</div>
     <div class="sidebar-content">
-      <h3>Getting Started</h3>
-      <p>This tool helps students practise converting between fractions, decimals, and percentages. Each row gives one representation and asks students to calculate the other two.</p>
+      <h3>Purpose</h3>
+      <p>Use this tool for quick starter tables, retrieval practice, mini-whiteboard checks, or short whole-class questioning.</p>
 
       <h3>How It Works</h3>
       <ul>
-        <li><strong>Given values:</strong> one value is shown in each row.</li>
-        <li><strong>Calculate:</strong> students find the missing fraction, decimal, or percentage values.</li>
-        <li><strong>Interactive reveal:</strong> click a missing cell to show one answer, or reveal all answers at once.</li>
+        <li>Choose a table type from the dropdown.</li>
+        <li>Some cells are already shown and some are hidden behind question marks.</li>
+        <li>Click a hidden cell to reveal one answer at a time.</li>
+        <li>Use Show All or Hide Answers when you want to check the full table quickly.</li>
       </ul>
 
-      <h3>Level Guide</h3>
+      <h3>Table Types</h3>
       <ul>
-        <li><strong>Basic:</strong> common equivalents such as halves, quarters, fifths, and tenths.</li>
-        <li><strong>Intermediate:</strong> thirds, sixths, eighths, ninths, and elevenths.</li>
-        <li><strong>Advanced:</strong> more challenging recurring decimals and less familiar fractions.</li>
-      </ul>
-
-      <h3>Key Conversion Methods</h3>
-      <ul>
-        <li>Fraction to decimal: divide numerator by denominator.</li>
-        <li>Decimal to percentage: multiply by 100.</li>
-        <li>Percentage to decimal: divide by 100.</li>
-        <li>Decimal to fraction: write over a power of 10, then simplify.</li>
-        <li>Percentage to fraction: write over 100, then simplify.</li>
+        <li>Fractions, decimals, percentages</li>
+        <li>Area and perimeter of rectangles</li>
+        <li>Area of 2D shapes</li>
+        <li>Volume and surface area</li>
+        <li>Algebraic expansion and factorising</li>
+        <li>Sequences, ratio, probability, standard form, and Pythagoras/trigonometry</li>
       </ul>
     </div>
   </aside>
 
   <main class="container">
     <header class="header">
-      <h1>Fraction Decimal Percentage Conversion Table</h1>
+      <h1>Classroom Starter Tables</h1>
+      <p>One flexible reveal table for quick starters, retrieval practice, and board checks.</p>
     </header>
 
-    <nav class="tabs" aria-label="Levels">
-      <button class="tab active" type="button" onclick="switchLevel('basic', this)">Basic Level</button>
-      <button class="tab" type="button" onclick="switchLevel('intermediate', this)">Intermediate Level</button>
-      <button class="tab" type="button" onclick="switchLevel('advanced', this)">Advanced Level</button>
-    </nav>
-
     <section class="controls">
-      <div class="level-info">
-        <h3 id="level-title">Basic Level</h3>
-        <p id="level-description">Practice with simple fractions and common equivalents</p>
+      <div class="control-block">
+        <label for="table-type">Table Type</label>
+        <div class="select-row">
+          <select id="table-type" onchange="changeTableType()"></select>
+        </div>
+        <p class="table-note" id="table-note">Choose a starter table type.</p>
       </div>
 
       <div class="timer-section">
@@ -499,60 +527,162 @@
 
       <div class="action-buttons">
         <button class="btn btn-success" type="button" onclick="generateNewTable()">New</button>
-        <button class="btn btn-primary" type="button" onclick="showAllAnswers()">Show All Answers</button>
+        <button class="btn btn-primary" type="button" onclick="showAllAnswers()">Show All</button>
         <button class="btn btn-warning" type="button" onclick="hideAllAnswers()">Hide Answers</button>
       </div>
     </section>
 
-    <section class="problems-section">
-      <p class="description-text">Convert between fractions, decimals, and percentages. Click missing cells to reveal individual answers.</p>
+    <section class="table-section">
+      <div class="instruction-strip">
+        <div>
+          <span class="table-title" id="table-title">Starter table</span>
+          <span id="table-instruction"> - click missing cells to reveal answers.</span>
+        </div>
+        <button class="btn btn-quiet" type="button" onclick="randomTableType()">Random Type</button>
+      </div>
 
-      <table class="practice-table" id="practice-table">
-        <thead>
-          <tr>
-            <th>Problem</th>
-            <th>Fraction</th>
-            <th>Decimal</th>
-            <th>Percentage</th>
-          </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-      </table>
+      <div class="table-wrap">
+        <table class="practice-table" id="practice-table">
+          <thead id="table-head"></thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
     </section>
   </main>
 
   <div id="timer-modal" class="timer-modal hidden">
     <div class="modal-content">
       <h2>Time is up</h2>
-      <p>Ready to review the conversions?</p>
+      <p>Ready to review the table?</p>
       <button class="btn btn-primary" type="button" onclick="closeModal()">OK</button>
     </div>
   </div>
 
   <script>
-    let currentLevel = "basic";
+    let currentType = "fdp";
+    let currentTable = null;
     let timerInterval = null;
     let timeRemaining = 0;
     let timerActive = false;
-    let problems = [];
 
-    const levelConfigs = {
-      basic: {
-        title: "Basic Level",
-        description: "Practice with simple fractions and common equivalents",
-        fractions: [[1, 2], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5], [1, 10], [3, 10], [7, 10], [9, 10]]
+    const tableTypeOrder = [
+      "fdp",
+      "rectangle",
+      "shapeArea",
+      "volume",
+      "surfaceArea",
+      "algebraExpansion",
+      "factorising",
+      "sequences",
+      "ratio",
+      "standardForm",
+      "probability",
+      "pythagorasTrig"
+    ];
+
+    const tableTypes = {
+      fdp: {
+        title: "Fractions, Decimals, Percentages",
+        note: "Convert between equivalent forms.",
+        instruction: "Convert between the three representations.",
+        columns: ["Fraction", "Decimal", "Percentage"],
+        generator: generateFdpRows
       },
-      intermediate: {
-        title: "Intermediate Level",
-        description: "More complex fractions and decimal calculations",
-        fractions: [[1, 3], [2, 3], [1, 6], [5, 6], [1, 8], [3, 8], [5, 8], [7, 8], [2, 9], [4, 9], [7, 9], [3, 11]]
+      rectangle: {
+        title: "Rectangle Area and Perimeter",
+        note: "Find missing length, width, area, or perimeter values.",
+        instruction: "Use rectangle formulae to complete the table.",
+        columns: ["Length", "Width", "Perimeter", "Area"],
+        generator: generateRectangleRows
       },
-      advanced: {
-        title: "Advanced Level",
-        description: "Challenge problems with recurring decimals and complex fractions",
-        fractions: [[1, 7], [2, 7], [4, 7], [5, 7], [1, 9], [5, 9], [8, 9], [5, 11], [7, 11], [4, 13], [11, 12], [7, 15]]
+      shapeArea: {
+        title: "Area of 2D Shapes",
+        note: "Recall formulae and calculate areas.",
+        instruction: "Use the correct area formula for each shape.",
+        columns: ["Shape", "Given Information", "Formula", "Area"],
+        generator: generateShapeAreaRows
+      },
+      volume: {
+        title: "Volume of Solids",
+        note: "Use dimensions and formulae to calculate volume.",
+        instruction: "Complete the volume table.",
+        columns: ["Solid", "Dimensions", "Formula", "Volume"],
+        generator: generateVolumeRows
+      },
+      surfaceArea: {
+        title: "Surface Area of Solids",
+        note: "Identify faces and calculate total surface area.",
+        instruction: "Complete the surface area table.",
+        columns: ["Solid", "Dimensions", "Key Calculation", "Surface Area"],
+        generator: generateSurfaceAreaRows
+      },
+      algebraExpansion: {
+        title: "Algebraic Expansion",
+        note: "Expand brackets and simplify.",
+        instruction: "Complete the expansion table.",
+        columns: ["Expression", "Method", "Expanded Form", "Simplified Form"],
+        generator: generateExpansionRows
+      },
+      factorising: {
+        title: "Factorising",
+        note: "Identify the method and write the factorised form.",
+        instruction: "Complete the factorising table.",
+        columns: ["Expression", "Method", "Factorised Form"],
+        generator: generateFactorisingRows
+      },
+      sequences: {
+        title: "Linear Sequences",
+        note: "Move between first term, difference, nth term, and a selected term.",
+        instruction: "Complete the sequence table.",
+        columns: ["First Term", "Difference", "nth Term", "Selected Term"],
+        generator: generateSequenceRows
+      },
+      ratio: {
+        title: "Ratio Sharing",
+        note: "Use a multiplier to share totals in a given ratio.",
+        instruction: "Complete the ratio table.",
+        columns: ["Ratio", "Total", "Multiplier", "Shares"],
+        generator: generateRatioRows
+      },
+      standardForm: {
+        title: "Standard Form",
+        note: "Convert numbers and complete simple standard form operations.",
+        instruction: "Complete the standard form table.",
+        columns: ["Ordinary Number", "Standard Form", "Operation", "Final Answer"],
+        generator: generateStandardFormRows
+      },
+      probability: {
+        title: "Probability",
+        note: "Find probabilities, complements, and expected frequencies.",
+        instruction: "Complete the probability table.",
+        columns: ["Event Information", "Probability", "Complement", "Expected Frequency"],
+        generator: generateProbabilityRows
+      },
+      pythagorasTrig: {
+        title: "Pythagoras and Trigonometry",
+        note: "Choose the method and calculate a missing side or angle.",
+        instruction: "Complete the right-triangle table.",
+        columns: ["Given Information", "Method", "Calculation", "Missing Value"],
+        generator: generatePythagorasTrigRows
       }
     };
+
+    function rand(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function choice(items) {
+      return items[rand(0, items.length - 1)];
+    }
+
+    function shuffle(items) {
+      const copy = items.slice();
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = rand(0, i);
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
 
     function gcd(a, b) {
       a = Math.abs(a);
@@ -565,108 +695,343 @@
       return a || 1;
     }
 
-    function createFraction(num, den) {
+    function fraction(num, den) {
       if (den === 1) return String(num);
       return `<span class="fraction"><span class="fraction-numerator">${num}</span><span class="fraction-line"></span><span class="fraction-denominator">${den}</span></span>`;
     }
 
-    function formatDecimal(value) {
-      const rounded = Math.round(value * 10000) / 10000;
-      return Number.isInteger(rounded) ? String(rounded) : String(rounded).replace(/0+$/, "").replace(/\.$/, "");
+    function fmt(value, places = 2) {
+      const rounded = Number(Number(value).toFixed(places));
+      if (Number.isInteger(rounded)) return String(rounded);
+      return String(rounded).replace(/0+$/, "").replace(/\.$/, "");
     }
 
-    function formatPercentage(value) {
-      return `${formatDecimal(value * 100)}%`;
+    function unitPower(unit, power) {
+      return `${unit}<sup>${power}</sup>`;
     }
 
-    function generateProblem(isChallenge = false, usedFractions = []) {
-      const config = levelConfigs[currentLevel];
-      const hardFractions = [[1, 7], [2, 7], [5, 7], [1, 9], [2, 9], [8, 9], [5, 11], [7, 11]];
-      const basePool = isChallenge && currentLevel === "advanced" ? hardFractions : config.fractions;
-      let availableFractions = basePool.filter((fraction) => !usedFractions.some((used) => used[0] === fraction[0] && used[1] === fraction[1]));
-      if (!availableFractions.length) availableFractions = basePool;
+    function math(value) {
+      return `<span class="math">${value}</span>`;
+    }
 
-      const [num, den] = availableFractions[Math.floor(Math.random() * availableFractions.length)];
-      const decimal = num / den;
-      const givenType = ["fraction", "decimal", "percentage"][Math.floor(Math.random() * 3)];
+    function xTerm(coefficient, variable = "x") {
+      if (coefficient === 1) return variable;
+      if (coefficient === -1) return `-${variable}`;
+      return `${coefficient}${variable}`;
+    }
 
+    function signedTerm(value, variable = "") {
+      const abs = Math.abs(value);
+      const core = variable ? xTerm(abs, variable) : String(abs);
+      return value < 0 ? ` - ${core}` : ` + ${core}`;
+    }
+
+    function expressionFromTerms(first, rest) {
+      return first + rest.map((term) => signedTerm(term.value, term.variable || "")).join("");
+    }
+
+    function row(cells, hiddenIndexes) {
       return {
-        fraction: createFraction(num, den),
-        decimal: formatDecimal(decimal),
-        percentage: formatPercentage(decimal),
-        fractionData: [num, den],
-        given: givenType
+        cells: cells.map((value, index) => ({
+          value,
+          hidden: hiddenIndexes.includes(index)
+        }))
       };
     }
 
-    function generateNewTable() {
-      problems = [];
-      const usedFractions = [];
-
-      for (let i = 0; i < 4; i += 1) {
-        const problem = generateProblem(false, usedFractions);
-        problems.push(problem);
-        usedFractions.push(problem.fractionData);
+    function hiddenIndexes(length, count, lockedVisible = []) {
+      const candidates = [];
+      for (let i = 0; i < length; i += 1) {
+        if (!lockedVisible.includes(i)) candidates.push(i);
       }
+      return shuffle(candidates).slice(0, count);
+    }
 
-      const challengeProblem = generateProblem(true, usedFractions);
-      problems.push(challengeProblem);
+    function generateFdpRows() {
+      const fractions = shuffle([[1, 2], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [1, 8], [3, 8], [5, 8], [1, 3], [2, 3], [7, 10]]);
+      return fractions.slice(0, 5).map(([num, den]) => {
+        const decimal = num / den;
+        return row([fraction(num, den), fmt(decimal, 4), `${fmt(decimal * 100, 2)}%`], hiddenIndexes(3, 2));
+      });
+    }
+
+    function generateRectangleRows() {
+      return Array.from({ length: 5 }, () => {
+        const l = rand(4, 18);
+        const w = rand(3, 14);
+        const p = 2 * (l + w);
+        const a = l * w;
+        return row([`${l} cm`, `${w} cm`, `${p} cm`, `${a} ${unitPower("cm", 2)}`], hiddenIndexes(4, 2));
+      });
+    }
+
+    function generateShapeAreaRows() {
+      const makers = [
+        () => {
+          const b = rand(6, 16);
+          const h = rand(4, 12);
+          return ["Triangle", `base = ${b} cm, height = ${h} cm`, math(`A = ${fraction(1, 2)} &times; b &times; h`), `${fmt(0.5 * b * h)} ${unitPower("cm", 2)}`];
+        },
+        () => {
+          const b = rand(5, 15);
+          const h = rand(4, 12);
+          return ["Parallelogram", `base = ${b} cm, height = ${h} cm`, math("A = b &times; h"), `${b * h} ${unitPower("cm", 2)}`];
+        },
+        () => {
+          const a = rand(4, 10);
+          const b = a + rand(3, 9);
+          const h = rand(4, 12);
+          return ["Trapezium", `parallel sides ${a} cm and ${b} cm, height = ${h} cm`, math(`A = ${fraction(1, 2)}(a + b)h`), `${fmt(0.5 * (a + b) * h)} ${unitPower("cm", 2)}`];
+        },
+        () => {
+          const r = rand(3, 9);
+          return ["Circle", `radius = ${r} cm`, math("A = &pi;r<sup>2</sup>"), `${r * r}&pi; ${unitPower("cm", 2)}`];
+        }
+      ];
+      return shuffle(makers).concat(shuffle(makers)).slice(0, 5).map((make) => row(make(), hiddenIndexes(4, 2, [0])));
+    }
+
+    function generateVolumeRows() {
+      const makers = [
+        () => {
+          const l = rand(4, 12), w = rand(3, 10), h = rand(3, 9);
+          return ["Cuboid", `${l} cm by ${w} cm by ${h} cm`, math("V = lwh"), `${l * w * h} ${unitPower("cm", 3)}`];
+        },
+        () => {
+          const r = rand(2, 7), h = rand(4, 12);
+          return ["Cylinder", `radius = ${r} cm, height = ${h} cm`, math("V = &pi;r<sup>2</sup>h"), `${r * r * h}&pi; ${unitPower("cm", 3)}`];
+        },
+        () => {
+          const b = rand(5, 12), h = rand(4, 10), length = rand(6, 15);
+          return ["Triangular prism", `triangle base = ${b} cm, triangle height = ${h} cm, prism length = ${length} cm`, math(`V = ${fraction(1, 2)}bh &times; length`), `${fmt(0.5 * b * h * length)} ${unitPower("cm", 3)}`];
+        },
+        () => {
+          const r = rand(2, 6), h = rand(4, 12);
+          return ["Cone", `radius = ${r} cm, height = ${h} cm`, math(`V = ${fraction(1, 3)}&pi;r<sup>2</sup>h`), `${fmt((r * r * h) / 3, 2)}&pi; ${unitPower("cm", 3)}`];
+        }
+      ];
+      return shuffle(makers).concat(shuffle(makers)).slice(0, 5).map((make) => row(make(), hiddenIndexes(4, 2, [0])));
+    }
+
+    function generateSurfaceAreaRows() {
+      const makers = [
+        () => {
+          const side = rand(3, 10);
+          return ["Cube", `side length = ${side} cm`, math(`6 &times; ${side}<sup>2</sup>`), `${6 * side * side} ${unitPower("cm", 2)}`];
+        },
+        () => {
+          const l = rand(4, 12), w = rand(3, 9), h = rand(3, 8);
+          const area = 2 * (l * w + l * h + w * h);
+          return ["Cuboid", `${l} cm by ${w} cm by ${h} cm`, math(`2(${l}&times;${w} + ${l}&times;${h} + ${w}&times;${h})`), `${area} ${unitPower("cm", 2)}`];
+        },
+        () => {
+          const r = rand(2, 7), h = rand(4, 12);
+          return ["Closed cylinder", `radius = ${r} cm, height = ${h} cm`, math("2&pi;r<sup>2</sup> + 2&pi;rh"), `${2 * r * r + 2 * r * h}&pi; ${unitPower("cm", 2)}`];
+        },
+        () => {
+          const r = rand(2, 8);
+          return ["Sphere", `radius = ${r} cm`, math("4&pi;r<sup>2</sup>"), `${4 * r * r}&pi; ${unitPower("cm", 2)}`];
+        }
+      ];
+      return shuffle(makers).concat(shuffle(makers)).slice(0, 5).map((make) => row(make(), hiddenIndexes(4, 2, [0])));
+    }
+
+    function generateExpansionRows() {
+      const rows = [];
+      for (let i = 0; i < 5; i += 1) {
+        if (i < 2) {
+          const a = rand(2, 8), b = rand(2, 7), c = choice([rand(1, 9), -rand(1, 9)]);
+          const expression = math(`${a}(${xTerm(b)}${signedTerm(c)})`);
+          const expanded = math(`${a} &times; ${xTerm(b)}${signedTerm(a)} &times; ${c < 0 ? `(${c})` : c}`);
+          const simplified = math(expressionFromTerms(xTerm(a * b), [{ value: a * c }]));
+          rows.push(row([expression, "Multiply each term inside the bracket", expanded, simplified], hiddenIndexes(4, 2, [0])));
+        } else {
+          const a = rand(1, 5), b = rand(1, 7), c = rand(1, 5), d = choice([rand(1, 7), -rand(1, 7)]);
+          const first = a === 1 ? "x" : `${a}x`;
+          const second = c === 1 ? "x" : `${c}x`;
+          const expression = math(`(${first}${signedTerm(b)})(${second}${signedTerm(d)})`);
+          const x2 = a * c;
+          const xCoeff = a * d + b * c;
+          const constant = b * d;
+          const expanded = math(`${xTerm(a)} &times; ${xTerm(c)} + ${xTerm(a)} &times; ${d < 0 ? `(${d})` : d} + ${b} &times; ${xTerm(c)} + ${b} &times; ${d < 0 ? `(${d})` : d}`);
+          const leading = x2 === 1 ? "x<sup>2</sup>" : `${x2}x<sup>2</sup>`;
+          const simplified = math(expressionFromTerms(leading, [{ value: xCoeff, variable: "x" }, { value: constant }]));
+          rows.push(row([expression, "Multiply each pair of terms, then collect like terms", expanded, simplified], hiddenIndexes(4, 2, [0])));
+        }
+      }
+      return rows;
+    }
+
+    function generateFactorisingRows() {
+      const rows = [];
+      for (let i = 0; i < 5; i += 1) {
+        if (i < 2) {
+          const factor = rand(2, 9);
+          const a = rand(2, 8), b = choice([rand(1, 9), -rand(1, 9)]);
+          const expression = math(expressionFromTerms(xTerm(factor * a), [{ value: factor * b }]));
+          rows.push(row([expression, "Highest common factor", math(`${factor}(${xTerm(a)}${signedTerm(b)})`)], hiddenIndexes(3, 1, [0])));
+        } else if (i < 4) {
+          const a = rand(2, 7), b = rand(1, 8);
+          const expression = math(`x<sup>2</sup>${signedTerm(a + b, "x")}${signedTerm(a * b)}`);
+          rows.push(row([expression, "Quadratic factorising", math(`(x + ${a})(x + ${b})`)], hiddenIndexes(3, 1, [0])));
+        } else {
+          const a = rand(2, 9);
+          const expression = math(`x<sup>2</sup> - ${a * a}`);
+          rows.push(row([expression, "Difference of two squares", math(`(x - ${a})(x + ${a})`)], hiddenIndexes(3, 2, [0])));
+        }
+      }
+      return rows;
+    }
+
+    function generateSequenceRows() {
+      return Array.from({ length: 5 }, () => {
+        const first = rand(-5, 12);
+        const diff = choice([-4, -3, -2, 2, 3, 4, 5, 6]);
+        const n = rand(5, 15);
+        const nthCoeff = diff;
+        const constant = first - diff;
+        const nthTerm = math(expressionFromTerms(xTerm(nthCoeff, "n"), [{ value: constant }]));
+        const value = first + (n - 1) * diff;
+        return row([String(first), String(diff), nthTerm, math(`T<sub>${n}</sub> = ${value}`)], hiddenIndexes(4, 2));
+      });
+    }
+
+    function generateRatioRows() {
+      return Array.from({ length: 5 }, () => {
+        const a = rand(2, 8);
+        const b = rand(2, 9);
+        const divisor = gcd(a, b);
+        const left = a / divisor;
+        const right = b / divisor;
+        const multiplier = rand(4, 15);
+        const total = (left + right) * multiplier;
+        return row([`${left}:${right}`, String(total), String(multiplier), `${left * multiplier} and ${right * multiplier}`], hiddenIndexes(4, 2));
+      });
+    }
+
+    function generateStandardFormRows() {
+      return Array.from({ length: 5 }, () => {
+        const coefficient = rand(12, 98) / 10;
+        const power = rand(2, 6);
+        const ordinary = coefficient * Math.pow(10, power);
+        const operationMultiplier = choice([2, 3, 4, 5]);
+        let finalCoefficient = coefficient * operationMultiplier;
+        let finalPower = power;
+        while (finalCoefficient >= 10) {
+          finalCoefficient /= 10;
+          finalPower += 1;
+        }
+        return row([
+          fmt(ordinary, 0),
+          math(`${fmt(coefficient, 1)} &times; 10<sup>${power}</sup>`),
+          math(`&times; ${operationMultiplier}`),
+          math(`${fmt(finalCoefficient, 2)} &times; 10<sup>${finalPower}</sup>`)
+        ], hiddenIndexes(4, 2));
+      });
+    }
+
+    function generateProbabilityRows() {
+      return Array.from({ length: 5 }, () => {
+        const total = choice([20, 24, 30, 36, 40, 50]);
+        const favourable = rand(3, total - 5);
+        const divisor = gcd(favourable, total);
+        const pNum = favourable / divisor;
+        const pDen = total / divisor;
+        const compNum = pDen - pNum;
+        const expectedTotal = choice([60, 80, 100, 120, 150]);
+        const expected = expectedTotal * pNum / pDen;
+        return row([
+          `${favourable} favourable outcomes out of ${total}`,
+          fraction(pNum, pDen),
+          fraction(compNum, pDen),
+          `${fmt(expected)} out of ${expectedTotal}`
+        ], hiddenIndexes(4, 2, [0]));
+      });
+    }
+
+    function generatePythagorasTrigRows() {
+      const triples = [[3, 4, 5], [5, 12, 13], [7, 24, 25], [8, 15, 17], [9, 12, 15]];
+      const rows = shuffle(triples).map(([a, b, c]) => {
+        const missingHypotenuse = Math.random() > 0.5;
+        if (missingHypotenuse) {
+          return row([`legs ${a} cm and ${b} cm`, "Pythagoras", math(`c<sup>2</sup> = ${a}<sup>2</sup> + ${b}<sup>2</sup>`), `${c} cm`], hiddenIndexes(4, 2, [0]));
+        }
+        return row([`hypotenuse ${c} cm, one leg ${a} cm`, "Pythagoras", math(`b<sup>2</sup> = ${c}<sup>2</sup> - ${a}<sup>2</sup>`), `${b} cm`], hiddenIndexes(4, 2, [0]));
+      });
+      rows.push(row(["opposite = 6 cm, adjacent = 8 cm", "Trigonometry", math(`tan &theta; = ${fraction(6, 8)}`), math(`&theta; = 36.9&deg;`)], hiddenIndexes(4, 2, [0])));
+      return rows.slice(0, 5);
+    }
+
+    function populateDropdown() {
+      const select = document.getElementById("table-type");
+      select.innerHTML = tableTypeOrder.map((key) => `<option value="${key}">${tableTypes[key].title}</option>`).join("");
+      select.value = currentType;
+    }
+
+    function changeTableType() {
+      currentType = document.getElementById("table-type").value;
+      generateNewTable();
+    }
+
+    function randomTableType() {
+      currentType = choice(tableTypeOrder);
+      document.getElementById("table-type").value = currentType;
+      generateNewTable();
+    }
+
+    function generateNewTable() {
+      const config = tableTypes[currentType];
+      currentTable = {
+        columns: config.columns,
+        rows: config.generator()
+      };
+      document.getElementById("table-note").textContent = config.note;
+      document.getElementById("table-title").textContent = config.title;
+      document.getElementById("table-instruction").textContent = ` - ${config.instruction} Click missing cells to reveal answers.`;
       renderTable();
     }
 
     function renderTable() {
+      const thead = document.getElementById("table-head");
       const tbody = document.getElementById("table-body");
+      thead.innerHTML = `<tr><th>Row</th>${currentTable.columns.map((heading) => `<th>${heading}</th>`).join("")}</tr>`;
       tbody.innerHTML = "";
 
-      problems.forEach((problem, index) => {
-        const row = document.createElement("tr");
-        const numberCell = document.createElement("td");
-        numberCell.innerHTML = `<div class="row-number">${index + 1}</div>`;
-        row.appendChild(numberCell);
-
-        ["fraction", "decimal", "percentage"].forEach((type) => {
-          const cell = document.createElement("td");
-          if (problem.given === type) {
-            cell.innerHTML = `<div class="given-value">${problem[type]}</div>`;
+      currentTable.rows.forEach((tableRow, rowIndex) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td><div class="row-number">${rowIndex + 1}</div></td>`;
+        tableRow.cells.forEach((cell, cellIndex) => {
+          const td = document.createElement("td");
+          if (cell.hidden) {
+            td.innerHTML = `<button class="calculate-cell" type="button" aria-label="Reveal table cell" onclick="revealCell(${rowIndex}, ${cellIndex})"></button>`;
           } else {
-            cell.innerHTML = `<button class="calculate-cell" type="button" aria-label="Reveal ${type}" onclick="revealCell(${index}, '${type}')"></button>`;
+            td.innerHTML = `<div class="given-value">${cell.value}</div>`;
           }
-          row.appendChild(cell);
+          tr.appendChild(td);
         });
-
-        tbody.appendChild(row);
+        tbody.appendChild(tr);
       });
     }
 
-    function revealCell(problemIndex, type) {
-      const row = document.getElementById("table-body").children[problemIndex];
-      const cellIndex = { fraction: 1, decimal: 2, percentage: 3 }[type];
-      const calculateButton = row.children[cellIndex].querySelector(".calculate-cell");
-      if (!calculateButton || calculateButton.classList.contains("revealed")) return;
-      calculateButton.innerHTML = problems[problemIndex][type];
-      calculateButton.classList.add("revealed");
+    function revealCell(rowIndex, cellIndex) {
+      const cell = currentTable.rows[rowIndex].cells[cellIndex];
+      if (!cell || !cell.hidden) return;
+      const button = document.querySelector(`#table-body tr:nth-child(${rowIndex + 1}) td:nth-child(${cellIndex + 2}) .calculate-cell`);
+      if (!button || button.classList.contains("revealed")) return;
+      button.innerHTML = cell.value;
+      button.classList.add("revealed");
     }
 
     function showAllAnswers() {
-      problems.forEach((problem, index) => {
-        if (problem.given !== "fraction") revealCell(index, "fraction");
-        if (problem.given !== "decimal") revealCell(index, "decimal");
-        if (problem.given !== "percentage") revealCell(index, "percentage");
+      currentTable.rows.forEach((tableRow, rowIndex) => {
+        tableRow.cells.forEach((cell, cellIndex) => {
+          if (cell.hidden) revealCell(rowIndex, cellIndex);
+        });
       });
     }
 
     function hideAllAnswers() {
       renderTable();
-    }
-
-    function switchLevel(level, button) {
-      currentLevel = level;
-      document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
-      button.classList.add("active");
-      const config = levelConfigs[level];
-      document.getElementById("level-title").textContent = config.title;
-      document.getElementById("level-description").textContent = config.description;
-      generateNewTable();
     }
 
     function toggleSidebar() {
@@ -724,6 +1089,7 @@
       document.getElementById("timer-modal").classList.add("hidden");
     }
 
+    populateDropdown();
     generateNewTable();
   </script>
 </body>

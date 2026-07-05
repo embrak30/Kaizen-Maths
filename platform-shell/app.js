@@ -1645,20 +1645,21 @@ const tools = [
   },
   {
     slug: "fractions-table",
-    title: "Fraction Decimal Percentage Table",
+    title: "Classroom Starter Tables",
     category: "Classroom Tools",
-    level: "KS2 / KS3",
-    type: "Conversion Tool",
+    level: "KS2 / KS3 / GCSE",
+    type: "Starter Table Generator",
     access: "Free",
     status: "Imported",
-    description: "An interactive classroom table for converting between fractions, decimals, and percentages with revealable answers.",
-    tags: ["classroom", "fractions", "decimals", "percentages", "conversion", "equivalence"],
-    toolPath: "tools/fractions-table/index.html?v=step-structure-1",
+    description: "A flexible classroom starter table with revealable cells for fractions, area, volume, surface area, algebra, sequences, ratio, standard form, probability, and right-triangle practice.",
+    tags: ["classroom", "starter", "tables", "fractions", "area", "volume", "surface area", "algebra", "sequences", "ratio", "probability", "standard form", "pythagoras", "trigonometry"],
+    toolPath: "tools/fractions-table/index.html?v=starter-tables-1",
     imported: true,
     teacherNotes: [
-      "Students are given one representation and calculate the missing fraction, decimal, and percentage equivalents.",
-      "Basic, intermediate, and advanced levels move from common equivalences to recurring decimals and less familiar fractions.",
-      "Reveal individual cells for questioning, or show all answers for quick checking."
+      "Use the table type dropdown to switch between starter tables for different topics.",
+      "Each table keeps the same classroom interaction pattern: some cells are shown and missing cells can be revealed one at a time.",
+      "Use New to refresh the current table type, Random Type for quick retrieval practice, or Show All for checking.",
+      "The tool is designed for starters, mini-whiteboard questioning, and short whole-class review."
     ]
   },
   {
