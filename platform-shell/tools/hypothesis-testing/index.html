@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hypothesis Testing Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden;color:#1a365d}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:white;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:700;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:white;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:white;padding:20px;font-size:1.3em;font-weight:700}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1260px;margin:0 auto;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;color:white;padding:24px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header h1{font-size:2.15em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}.header p{margin-top:5px;color:rgba(255,255,255,.9);font-weight:650}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:17px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:800;transition:.3s;border-bottom:3px solid transparent;color:#1a365d}.tab:hover{background:#cbd5e0}.tab.active{background:white;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px 24px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:1px solid #e2e8f0}.level-info{min-width:320px;flex:1}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.25em}.level-info p{color:#718096;font-size:.98em}.dropdown-container{margin-top:9px;display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:white;cursor:pointer;min-width:410px;max-width:100%;color:#1a365d}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:800;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
+    .problems-section{padding:18px 24px 24px;min-height:520px}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:700}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.binomial{background:#3182ce}.problem-set-header.normal{background:#38a169}.problem-set-header.proportion{background:#805ad5}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:12px}.problem-item{background:#f7fafc;padding:14px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.12em;color:#1a365d;font-weight:500;line-height:1.42;min-width:0}.math-line{display:block;margin:.2rem 0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.98em;display:none;text-align:center;max-width:300px}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{grid-column:1/-1;margin-top:12px;padding:16px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:800;color:#38a169;margin-bottom:10px;font-size:1.1em}.solution-steps{font-size:1.06em;line-height:1.62}.step{margin:9px 0;color:#1a365d}.step-equation{font-weight:750;color:#805ad5;text-align:center;margin:10px 0;font-size:1.12em;overflow-x:auto}.final-answer{background:#38a169;color:white;padding:10px 16px;border-radius:7px;text-align:center;font-weight:bold;font-size:1.08em;margin-top:12px}.step-indicator{background:#3182ce;color:white;padding:5px 9px;border-radius:5px;font-size:.86em;font-weight:bold;margin-right:8px;white-space:nowrap}.inference-box{border-left:4px solid #38a169;background:#f0fff4;border-radius:6px;padding:10px 12px;margin-top:10px;color:#1f5132;font-weight:750}.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-family:"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif;font-size:1.05em;line-height:1.1}.frac span:first-child{border-bottom:1.8px solid currentColor;padding:0 4px}.frac span:last-child{padding:0 4px}.symbol{font-family:"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
+    @media (max-width:900px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section,.action-buttons{justify-content:center;flex-wrap:wrap}.type-dropdown{min-width:0;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool generates hypothesis testing practice with detailed inference. It focuses on stating hypotheses clearly, choosing the correct tail, calculating a p-value or critical region, and making a contextual conclusion.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Exact binomial hypothesis tests, including one-tailed, two-tailed, and critical-region decisions.</li>
+        <li><strong>Level 2:</strong> Normal tests for a population mean where the standard deviation is known or a large-sample normal approximation is being used.</li>
+        <li><strong>Level 3:</strong> Proportion z-tests, model-choice questions, and mixed contextual tests.</li>
+      </ul>
+      <h3>Inference Structure</h3>
+      <ul>
+        <li>Define the parameter being tested.</li>
+        <li>State H<sub>0</sub> and H<sub>1</sub>.</li>
+        <li>Use the model assuming H<sub>0</sub> is true.</li>
+        <li>Calculate the p-value or critical region.</li>
+        <li>Compare with the significance level.</li>
+        <li>Write the final conclusion in the language of the question.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header">
+      <h1>Hypothesis Testing</h1>
+      <p>Detailed worked steps for test decisions and contextual inference.</p>
+    </section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Binomial Tests</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Normal Mean Tests</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Proportions & Mixed Tests</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Binomial Tests</h3>
+        <p id="level-description">Use exact binomial probabilities, p-values, and critical regions.</p>
+        <div class="dropdown-container" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div class="set-instruction" id="set-instruction">Choose a question type to practise hypothesis testing.</div>
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review the tests?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const typeDisplayNames = {
+      binomial_one_tail: "Binomial one-tailed tests",
+      binomial_two_tail: "Binomial two-tailed tests",
+      binomial_critical_region: "Binomial critical regions",
+      binomial_mixed: "Mixed binomial tests",
+      normal_mean_one_tail: "Normal mean one-tailed tests",
+      normal_mean_two_tail: "Normal mean two-tailed tests",
+      normal_critical_value: "Normal tests using critical values",
+      normal_mixed: "Mixed normal mean tests",
+      proportion_one_tail: "Proportion one-tailed tests",
+      proportion_two_tail: "Proportion two-tailed tests",
+      model_choice: "Choose the test model",
+      mixed_context: "Mixed contextual tests"
+    };
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Binomial Tests",
+        description: "Use exact binomial probabilities, p-values, and critical regions.",
+        instruction: "State the hypotheses, calculate the exact binomial p-value or critical region, then make the inference.",
+        className: "binomial",
+        options: [
+          ["binomial_one_tail", "Binomial one-tailed tests"],
+          ["binomial_two_tail", "Binomial two-tailed tests"],
+          ["binomial_critical_region", "Binomial critical regions"],
+          ["binomial_mixed", "Mixed binomial tests"]
+        ]
+      },
+      2: {
+        title: "Level 2: Normal Mean Tests",
+        description: "Use z-tests for a mean with known standard deviation or a large sample.",
+        instruction: "Standardise the sample mean, compare with the significance level, and write a conclusion in context.",
+        className: "normal",
+        options: [
+          ["normal_mean_one_tail", "Normal mean one-tailed tests"],
+          ["normal_mean_two_tail", "Normal mean two-tailed tests"],
+          ["normal_critical_value", "Normal tests using critical values"],
+          ["normal_mixed", "Mixed normal mean tests"]
+        ]
+      },
+      3: {
+        title: "Level 3: Proportions & Mixed Tests",
+        description: "Use proportion z-tests, choose the model, and complete mixed contextual tests.",
+        instruction: "Choose the correct test, justify the model, calculate the evidence, and explain the inference.",
+        className: "proportion",
+        options: [
+          ["proportion_one_tail", "Proportion one-tailed tests"],
+          ["proportion_two_tail", "Proportion two-tailed tests"],
+          ["model_choice", "Choose the test model"],
+          ["mixed_context", "Mixed contextual tests"]
+        ]
+      }
+    };
+
+    const alphaPool = [0.1, 0.05, 0.025, 0.01];
+    const pPool = [0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.6];
+    const zPool = [-2.35, -2.05, -1.82, -1.55, -1.2, -0.7, 0.7, 1.2, 1.55, 1.82, 2.05, 2.35];
+    const binomialContexts = [
+      { item: "students choosing the new revision platform", parameter: "the proportion of students who choose the new revision platform", success: "students choosing the new revision platform", claim: "the long-term proportion is" },
+      { item: "defective calculators", parameter: "the proportion of calculators that are defective", success: "defective calculators", claim: "the defect rate is" },
+      { item: "customers selecting express delivery", parameter: "the proportion of customers selecting express delivery", success: "customers selecting express delivery", claim: "the long-term proportion is" },
+      { item: "seeds that germinate", parameter: "the proportion of seeds that germinate", success: "seeds that germinate", claim: "the germination probability is" }
+    ];
+    const normalContexts = [
+      { variable: "battery life", unit: "hours", parameter: "the population mean battery life" },
+      { variable: "exam score", unit: "marks", parameter: "the population mean exam score" },
+      { variable: "delivery time", unit: "minutes", parameter: "the population mean delivery time" },
+      { variable: "mass of a packet", unit: "g", parameter: "the population mean packet mass" }
+    ];
+
+    function random(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function choice(items) { return items[random(0, items.length - 1)]; }
+    function fmt(value, dp = 4) { return Number(value).toFixed(dp); }
+    function fmtSmart(value, dp = 3) {
+      const rounded = Number(Number(value).toFixed(dp));
+      return Number.isInteger(rounded) ? String(rounded) : String(rounded).replace(/0+$/, "").replace(/\.$/, "");
+    }
+    function pct(value) { return `${fmtSmart(value * 100, 2)}%`; }
+    function step(text) { return { type: "text", text }; }
+    function calc(text) { return { type: "calc", text }; }
+    function finalStep(text) { return { type: "inference", text }; }
+    function frac(top, bottom) { return `<span class="frac"><span>${top}</span><span>${bottom}</span></span>`; }
+    function compareText(pValue, alpha) { return pValue <= alpha ? `${fmt(pValue)} ≤ ${alpha}` : `${fmt(pValue)} > ${alpha}`; }
+    function decisionText(pValue, alpha) { return pValue <= alpha ? "reject H₀" : "do not reject H₀"; }
+    function evidenceText(pValue, alpha) { return pValue <= alpha ? "There is sufficient evidence" : "There is insufficient evidence"; }
+    function tailSymbol(direction) { return direction === "greater" ? ">" : direction === "less" ? "<" : "≠"; }
+    function altPhrase(direction) { return direction === "greater" ? "has increased" : direction === "less" ? "has decreased" : "has changed"; }
+
+    function erf(x) {
+      const sign = x < 0 ? -1 : 1;
+      const ax = Math.abs(x);
+      const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429;
+      const p = 0.3275911;
+      const t = 1 / (1 + p * ax);
+      const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-ax * ax);
+      return sign * y;
+    }
+    function phi(z) { return 0.5 * (1 + erf(z / Math.sqrt(2))); }
+    function invNorm(p) {
+      if (p <= 0 || p >= 1) throw new Error("Probability must be between 0 and 1");
+      const a = [-39.69683028665376,220.9460984245205,-275.9285104469687,138.3577518672690,-30.66479806614716,2.506628277459239];
+      const b = [-54.47609879822406,161.5858368580409,-155.6989798598866,66.80131188771972,-13.28068155288572];
+      const c = [-0.007784894002430293,-0.3223964580411365,-2.400758277161838,-2.549732539343734,4.374664141464968,2.938163982698783];
+      const d = [0.007784695709041462,0.3224671290700398,2.445134137142996,3.754408661907416];
+      const plow = 0.02425;
+      const phigh = 1 - plow;
+      let q, r;
+      if (p < plow) {
+        q = Math.sqrt(-2 * Math.log(p));
+        return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      }
+      if (p > phigh) {
+        q = Math.sqrt(-2 * Math.log(1 - p));
+        return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      }
+      q = p - 0.5;
+      r = q * q;
+      return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+    }
+
+    function comb(n, r) {
+      if (r < 0 || r > n) return 0;
+      r = Math.min(r, n - r);
+      let out = 1;
+      for (let i = 1; i <= r; i += 1) out = out * (n - r + i) / i;
+      return Math.round(out);
+    }
+    function binomProb(n, p, r) { return comb(n, r) * Math.pow(p, r) * Math.pow(1 - p, n - r); }
+    function binomCdf(n, p, r) { let sum = 0; for (let k = 0; k <= r; k += 1) sum += binomProb(n, p, k); return sum; }
+    function binomUpper(n, p, r) { let sum = 0; for (let k = r; k <= n; k += 1) sum += binomProb(n, p, k); return sum; }
+
+    function generateProblem() {
+      let type = currentType;
+      if (type === "binomial_mixed") type = choice(["binomial_one_tail", "binomial_two_tail", "binomial_critical_region"]);
+      if (type === "normal_mixed") type = choice(["normal_mean_one_tail", "normal_mean_two_tail", "normal_critical_value"]);
+      if (type === "model_choice") return makeModelChoiceProblem();
+      if (type === "mixed_context") type = choice(["binomial_one_tail", "normal_mean_one_tail", "proportion_one_tail", "proportion_two_tail"]);
+      if (type === "binomial_one_tail") return makeBinomialOneTail();
+      if (type === "binomial_two_tail") return makeBinomialTwoTail();
+      if (type === "binomial_critical_region") return makeBinomialCriticalRegion();
+      if (type === "normal_mean_one_tail") return makeNormalMeanTest(false);
+      if (type === "normal_mean_two_tail") return makeNormalMeanTest(true);
+      if (type === "normal_critical_value") return makeNormalCriticalValue();
+      if (type === "proportion_one_tail") return makeProportionTest(false);
+      if (type === "proportion_two_tail") return makeProportionTest(true);
+      return makeBinomialOneTail();
+    }
+
+    function makeBinomialOneTail() {
+      const context = choice(binomialContexts);
+      const n = random(18, 36);
+      const p0 = choice(pPool);
+      const alpha = choice([0.1, 0.05, 0.01]);
+      const direction = choice(["greater", "less"]);
+      const expected = n * p0;
+      const shift = direction === "greater" ? choice([2.0, 2.4, 2.8, -1.2]) : choice([-2.0, -2.4, -2.8, 1.2]);
+      let x = Math.round(expected + shift * Math.sqrt(n * p0 * (1 - p0)));
+      x = Math.max(0, Math.min(n, x));
+      const pValue = direction === "greater" ? binomUpper(n, p0, x) : binomCdf(n, p0, x);
+      const parameter = "p";
+      const answer = decisionText(pValue, alpha);
+      const question = `A sample of ${n} gives ${x} ${context.success}. The original claim is that ${context.claim} ${p0}. Test at the ${pct(alpha)} significance level whether the proportion ${altPhrase(direction)}.`;
+      const inference = `${evidenceText(pValue, alpha)} at the ${pct(alpha)} level to conclude that ${context.parameter} ${altPhrase(direction)}.`;
+      return {
+        badge: "binomial",
+        question,
+        answer,
+        steps: [
+          step(`<span class="step-indicator">Parameter</span> Let ${parameter} be ${context.parameter}.`),
+          calc(`H₀: ${parameter} = ${p0}`),
+          calc(`H₁: ${parameter} ${tailSymbol(direction)} ${p0}`),
+          step(`<span class="step-indicator">Model</span> Under H₀, X ~ B(${n}, ${p0}). The observed value is x = ${x}.`),
+          step(`<span class="step-indicator">Tail</span> The alternative hypothesis tells us to use the ${direction === "greater" ? "upper" : "lower"} tail.`),
+          calc(`p-value = ${direction === "greater" ? `P(X ≥ ${x})` : `P(X ≤ ${x})`} = ${fmt(pValue)}`),
+          step(`<span class="step-indicator">Decision</span> Compare the p-value with α = ${alpha}.`),
+          calc(`${compareText(pValue, alpha)}, so ${answer}.`),
+          finalStep(`<span class="step-indicator">Inference</span> ${inference}`)
+        ]
+      };
+    }
+
+    function makeBinomialTwoTail() {
+      const context = choice(binomialContexts);
+      const n = random(20, 42);
+      const p0 = choice([0.25, 0.3, 0.4, 0.5, 0.6]);
+      const alpha = choice([0.1, 0.05, 0.01]);
+      const expected = n * p0;
+      const shift = choice([-2.5, -2.1, 2.1, 2.5, 1.0]);
+      let x = Math.round(expected + shift * Math.sqrt(n * p0 * (1 - p0)));
+      x = Math.max(0, Math.min(n, x));
+      const lower = binomCdf(n, p0, x);
+      const upper = binomUpper(n, p0, x);
+      const oneTail = Math.min(lower, upper);
+      const pValue = Math.min(1, 2 * oneTail);
+      const answer = decisionText(pValue, alpha);
+      const question = `In ${n} trials, ${x} ${context.success} are observed. Test at the ${pct(alpha)} significance level whether the proportion is different from ${p0}.`;
+      const inference = `${evidenceText(pValue, alpha)} at the ${pct(alpha)} level to conclude that ${context.parameter} is different from ${p0}.`;
+      return {
+        badge: "binomial",
+        question,
+        answer,
+        steps: [
+          step(`<span class="step-indicator">Parameter</span> Let p be ${context.parameter}.`),
+          calc(`H₀: p = ${p0}`),
+          calc(`H₁: p ≠ ${p0}`),
+          step(`<span class="step-indicator">Model</span> Under H₀, X ~ B(${n}, ${p0}). The observed value is x = ${x}.`),
+          step("Because H₁ uses ≠, this is a two-tailed test. We measure how extreme the result is in the observed tail and double that tail probability."),
+          calc(`P(X ≤ ${x}) = ${fmt(lower)}, P(X ≥ ${x}) = ${fmt(upper)}`),
+          calc(`p-value = 2 × min(${fmt(lower)}, ${fmt(upper)}) = ${fmt(pValue)}`),
+          step(`<span class="step-indicator">Decision</span> Compare the p-value with α = ${alpha}.`),
+          calc(`${compareText(pValue, alpha)}, so ${answer}.`),
+          finalStep(`<span class="step-indicator">Inference</span> ${inference}`)
+        ]
+      };
+    }
+
+    function criticalBoundary(n, p0, alpha, direction) {
+      if (direction === "greater") {
+        for (let c = 0; c <= n; c += 1) if (binomUpper(n, p0, c) <= alpha) return c;
+        return n;
+      }
+      for (let c = n; c >= 0; c -= 1) if (binomCdf(n, p0, c) <= alpha) return c;
+      return 0;
+    }
+
+    function makeBinomialCriticalRegion() {
+      const context = choice(binomialContexts);
+      const n = random(18, 32);
+      const p0 = choice([0.25, 0.3, 0.4, 0.5, 0.6]);
+      const alpha = choice([0.1, 0.05]);
+      const direction = choice(["greater", "less"]);
+      const c = criticalBoundary(n, p0, alpha, direction);
+      const x = direction === "greater" ? Math.max(0, Math.min(n, c + choice([-1, 0, 1]))) : Math.max(0, Math.min(n, c + choice([-1, 0, 1])));
+      const inRegion = direction === "greater" ? x >= c : x <= c;
+      const boundaryProbability = direction === "greater" ? binomUpper(n, p0, c) : binomCdf(n, p0, c);
+      const nextProbability = direction === "greater" ? binomUpper(n, p0, c - 1) : binomCdf(n, p0, c + 1);
+      const question = `For a test of H₀: p = ${p0} against H₁: p ${tailSymbol(direction)} ${p0}, use X ~ B(${n}, ${p0}) and a ${pct(alpha)} significance level. Find the critical region and decide what happens if x = ${x}.`;
+      const answer = inRegion ? "reject H₀" : "do not reject H₀";
+      const inference = inRegion
+        ? `The observed value lies in the critical region, so there is sufficient evidence that ${context.parameter} ${altPhrase(direction)}.`
+        : `The observed value does not lie in the critical region, so there is insufficient evidence that ${context.parameter} ${altPhrase(direction)}.`;
+      return {
+        badge: "binomial",
+        question,
+        answer,
+        steps: [
+          step(`<span class="step-indicator">Hypotheses</span> H₀ fixes the probability at ${p0}; H₁ tells us to use the ${direction === "greater" ? "upper" : "lower"} tail.`),
+          calc(`H₀: p = ${p0}`),
+          calc(`H₁: p ${tailSymbol(direction)} ${p0}`),
+          step(`<span class="step-indicator">Critical region</span> Choose the smallest region whose probability is at most α = ${alpha}.`),
+          calc(`${direction === "greater" ? `P(X ≥ ${c})` : `P(X ≤ ${c})`} = ${fmt(boundaryProbability)} ≤ ${alpha}`),
+          calc(`${direction === "greater" ? `P(X ≥ ${c - 1})` : `P(X ≤ ${c + 1})`} = ${fmt(nextProbability)} > ${alpha}`),
+          calc(`Critical region: ${direction === "greater" ? `X ≥ ${c}` : `X ≤ ${c}`}`),
+          step(`<span class="step-indicator">Decision</span> The observed value is x = ${x}.`),
+          calc(`${x} ${inRegion ? "is" : "is not"} in the critical region, so ${answer}.`),
+          finalStep(`<span class="step-indicator">Inference</span> ${inference}`)
+        ]
+      };
+    }
+
+    function makeNormalMeanTest(twoTail) {
+      const context = choice(normalContexts);
+      const mu0 = choice([50, 60, 75, 80, 100, 120, 200]);
+      const sigma = choice([6, 8, 10, 12, 15, 20]);
+      const n = choice([25, 36, 49, 64, 81, 100]);
+      const alpha = choice([0.1, 0.05, 0.01]);
+      const direction = twoTail ? "two" : choice(["greater", "less"]);
+      const zObserved = twoTail ? choice([-2.4, -2.05, -1.2, 1.2, 2.05, 2.4]) : (direction === "greater" ? choice([0.9, 1.5, 1.9, 2.4]) : choice([-0.9, -1.5, -1.9, -2.4]));
+      const se = sigma / Math.sqrt(n);
+      const xbar = mu0 + zObserved * se;
+      const pValue = twoTail ? 2 * Math.min(phi(zObserved), 1 - phi(zObserved)) : direction === "greater" ? 1 - phi(zObserved) : phi(zObserved);
+      const answer = decisionText(pValue, alpha);
+      const question = `A sample of size ${n} has mean ${fmtSmart(xbar, 2)} ${context.unit}. The population standard deviation is known to be ${sigma} ${context.unit}. Test at the ${pct(alpha)} level whether ${context.parameter} ${twoTail ? "has changed from" : altPhrase(direction) + " from"} ${mu0} ${context.unit}.`;
+      const inference = `${evidenceText(pValue, alpha)} at the ${pct(alpha)} level to conclude that ${context.parameter} ${twoTail ? `is different from ${mu0} ${context.unit}` : `${altPhrase(direction)} from ${mu0} ${context.unit}`}.`;
+      return {
+        badge: "normal",
+        question,
+        answer,
+        steps: [
+          step(`<span class="step-indicator">Parameter</span> Let μ be ${context.parameter}.`),
+          calc(`H₀: μ = ${mu0}`),
+          calc(`H₁: μ ${twoTail ? "≠" : tailSymbol(direction)} ${mu0}`),
+          step(`<span class="step-indicator">Model</span> Under H₀, the sampling distribution of the sample mean has mean ${mu0} and standard error ${frac("σ", "√n")}.`),
+          calc(`standard error = ${frac(sigma, `√${n}`)} = ${fmt(se)}`),
+          step(`<span class="step-indicator">Test statistic</span> Standardise the observed sample mean.`),
+          calc(`z = ${frac(`x̄ - μ₀`, `σ/√n`)} = ${frac(`${fmtSmart(xbar, 2)} - ${mu0}`, fmt(se))} = ${fmt(zObserved)}`),
+          step(twoTail ? "Because H₁ is two-sided, double the smaller tail probability." : `Because H₁ is ${direction === "greater" ? ">" : "<"}, use the ${direction === "greater" ? "upper" : "lower"} tail.`),
+          calc(`p-value = ${fmt(pValue)}`),
+          step(`<span class="step-indicator">Decision</span> Compare the p-value with α = ${alpha}.`),
+          calc(`${compareText(pValue, alpha)}, so ${answer}.`),
+          finalStep(`<span class="step-indicator">Inference</span> ${inference}`)
+        ]
+      };
+    }
+
+    function makeNormalCriticalValue() {
+      const context = choice(normalContexts);
+      const mu0 = choice([50, 60, 75, 80, 100, 120]);
+      const sigma = choice([6, 8, 10, 12, 15]);
+      const n = choice([36, 49, 64, 100]);
+      const alpha = choice([0.1, 0.05, 0.01]);
+      const direction = choice(["greater", "less"]);
+      const criticalZ = direction === "greater" ? invNorm(1 - alpha) : invNorm(alpha);
+      const observedZ = direction === "greater" ? choice([criticalZ - 0.35, criticalZ + 0.35]) : choice([criticalZ - 0.35, criticalZ + 0.35]);
+      const se = sigma / Math.sqrt(n);
+      const xbar = mu0 + observedZ * se;
+      const answer = direction === "greater" ? (observedZ >= criticalZ ? "reject H₀" : "do not reject H₀") : (observedZ <= criticalZ ? "reject H₀" : "do not reject H₀");
+      const question = `Use a critical-value approach to test whether ${context.parameter} ${altPhrase(direction)} from ${mu0} ${context.unit}. A sample of size ${n} has mean ${fmtSmart(xbar, 2)} ${context.unit}, with known σ = ${sigma} ${context.unit}. Use a ${pct(alpha)} significance level.`;
+      const reject = answer === "reject H₀";
+      return {
+        badge: "normal",
+        question,
+        answer,
+        steps: [
+          step(`<span class="step-indicator">Hypotheses</span> Let μ be ${context.parameter}.`),
+          calc(`H₀: μ = ${mu0}`),
+          calc(`H₁: μ ${tailSymbol(direction)} ${mu0}`),
+          step(`<span class="step-indicator">Critical value</span> For a ${direction === "greater" ? "right" : "left"}-tailed test at α = ${alpha}, the critical z-value is ${fmt(criticalZ)}.`),
+          calc(`critical region: z ${direction === "greater" ? "≥" : "≤"} ${fmt(criticalZ)}`),
+          step(`<span class="step-indicator">Test statistic</span> Standardise the sample mean.`),
+          calc(`z = ${frac(`${fmtSmart(xbar, 2)} - ${mu0}`, `${sigma}/√${n}`)} = ${fmt(observedZ)}`),
+          step(`<span class="step-indicator">Decision</span> Compare the test statistic with the critical region.`),
+          calc(`${fmt(observedZ)} ${reject ? "is" : "is not"} in the critical region, so ${answer}.`),
+          finalStep(`<span class="step-indicator">Inference</span> ${reject ? "There is sufficient evidence" : "There is insufficient evidence"} at the ${pct(alpha)} level to conclude that ${context.parameter} ${altPhrase(direction)}.`)
+        ]
+      };
+    }
+
+    function makeProportionTest(twoTail) {
+      const context = choice(binomialContexts);
+      const n = choice([80, 100, 120, 150, 200]);
+      const p0 = choice([0.25, 0.3, 0.4, 0.5, 0.6]);
+      const alpha = choice([0.1, 0.05, 0.01]);
+      const direction = twoTail ? "two" : choice(["greater", "less"]);
+      const zObserved = twoTail ? choice([-2.25, -1.9, -1.0, 1.0, 1.9, 2.25]) : (direction === "greater" ? choice([1.0, 1.7, 2.1]) : choice([-1.0, -1.7, -2.1]));
+      const se = Math.sqrt(p0 * (1 - p0) / n);
+      let x = Math.round(n * (p0 + zObserved * se));
+      x = Math.max(0, Math.min(n, x));
+      const phat = x / n;
+      const z = (phat - p0) / se;
+      const pValue = twoTail ? 2 * Math.min(phi(z), 1 - phi(z)) : direction === "greater" ? 1 - phi(z) : phi(z);
+      const answer = decisionText(pValue, alpha);
+      const question = `In a sample of ${n}, ${x} are ${context.success}. Test at the ${pct(alpha)} level whether ${context.parameter} ${twoTail ? "is different from" : altPhrase(direction) + " from"} ${p0}. Use a normal approximation for the sample proportion.`;
+      const inference = `${evidenceText(pValue, alpha)} at the ${pct(alpha)} level to conclude that ${context.parameter} ${twoTail ? `is different from ${p0}` : `${altPhrase(direction)} from ${p0}`}.`;
+      return {
+        badge: "proportion",
+        question,
+        answer,
+        steps: [
+          step(`<span class="step-indicator">Parameter</span> Let p be ${context.parameter}.`),
+          calc(`H₀: p = ${p0}`),
+          calc(`H₁: p ${twoTail ? "≠" : tailSymbol(direction)} ${p0}`),
+          step(`<span class="step-indicator">Sample proportion</span> Calculate the observed sample proportion.`),
+          calc(`p̂ = ${frac(x, n)} = ${fmt(phat)}`),
+          step(`<span class="step-indicator">Standard error</span> Under H₀, use p₀ = ${p0} in the standard error.`),
+          calc(`SE = √${frac("p₀(1 - p₀)", "n")} = √${frac(`${p0}(${fmtSmart(1 - p0)})`, n)} = ${fmt(se)}`),
+          calc(`z = ${frac("p̂ - p₀", "SE")} = ${frac(`${fmt(phat)} - ${p0}`, fmt(se))} = ${fmt(z)}`),
+          step(twoTail ? "Because H₁ is two-sided, double the smaller tail probability." : `Because H₁ is ${direction === "greater" ? ">" : "<"}, use the ${direction === "greater" ? "upper" : "lower"} tail.`),
+          calc(`p-value = ${fmt(pValue)}`),
+          step(`<span class="step-indicator">Decision</span> Compare the p-value with α = ${alpha}.`),
+          calc(`${compareText(pValue, alpha)}, so ${answer}.`),
+          finalStep(`<span class="step-indicator">Inference</span> ${inference}`)
+        ]
+      };
+    }
+
+    function makeModelChoiceProblem() {
+      const useBinomial = Math.random() < 0.5;
+      const base = useBinomial ? makeBinomialOneTail() : makeNormalMeanTest(false);
+      const extra = useBinomial
+        ? [
+            step(`<span class="step-indicator">Model choice</span> The number of trials is fixed and each trial is success/failure, so an exact binomial test is appropriate.`),
+            step("The probability p is tested directly, and the observed number of successes is compared with X ~ B(n, p₀).")
+          ]
+        : [
+            step(`<span class="step-indicator">Model choice</span> The question concerns a sample mean with known standard deviation, so a normal z-test for μ is appropriate.`),
+            step("The sample mean is standardised using its standard error, σ/√n.")
+          ];
+      return { ...base, steps: extra.concat(base.steps), question: `Choose a suitable hypothesis test and carry it out. ${base.question}` };
+    }
+
+    function defaultCountForType() {
+      return currentType.includes("mixed") || currentType === "model_choice" ? 3 : 3;
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      const config = levelConfigs[level];
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index === level - 1));
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = `<option value="select">Select Question Type</option>${config.options.map(([value, label]) => `<option value="${value}">${label}</option>`).join("")}`;
+      currentType = "select";
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      currentType === "select" ? showBlankPage() : generateNewSet();
+    }
+
+    function showBlankPage() {
+      document.getElementById("problem-set-header").classList.remove("visible");
+      document.getElementById("set-instruction").textContent = "Choose a question type to practise hypothesis testing.";
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center;padding:40px;color:#718096;font-size:1.08em">Please select a question type to begin hypothesis testing practice.</li>';
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      answersVisible = false;
+      stepsVisible = false;
+      problems = [];
+      for (let i = 0; i < defaultCountForType(); i += 1) problems.push(generateProblem());
+      renderProblems();
+    }
+
+    function renderStep(item) {
+      const className = item.type === "calc" ? "step-equation" : item.type === "inference" ? "inference-box" : "step";
+      return `<div class="${className}">${item.text}</div>`;
+    }
+
+    function renderProblems() {
+      const list = document.getElementById("problem-list");
+      const header = document.getElementById("problem-set-header");
+      const config = levelConfigs[currentLevel];
+      list.innerHTML = "";
+      header.textContent = typeDisplayNames[currentType] || "Hypothesis Testing";
+      header.className = `problem-set-header visible ${config.className}`;
+      document.getElementById("set-instruction").textContent = config.instruction;
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index + 1}</div>
+              <div class="equation">${problem.question}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">
+              ${problem.steps.map(renderStep).join("")}
+              <div class="final-answer">${problem.answer}</div>
+            </div>
+          </div>
+        `;
+        list.appendChild(li);
+      });
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(list), 0);
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      problems.forEach((_, index) => {
+        const answer = document.getElementById(`quick-answer-${index}`);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      });
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const steps = document.getElementById(`steps-${index}`);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      });
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(document.getElementById("problem-list")), 0);
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining -= 1;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById("timer-display");
+      display.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      display.className = timeRemaining <= 30 ? "timer-display warning" : "timer-display active";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      const display = document.getElementById("timer-display");
+      display.textContent = "Time Up!";
+      display.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-20"></script>
+</body>
+</html>

@@ -1190,6 +1190,25 @@ const tools = [
     ]
   },
   {
+    slug: "hypothesis-testing",
+    title: "Hypothesis Testing",
+    category: "Statistics",
+    level: "A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate hypothesis testing practice covering exact binomial tests, normal mean tests, critical regions, proportion z-tests, p-values, significance levels, and contextual inference.",
+    tags: ["statistics", "hypothesis testing", "inference", "p-value", "significance level", "critical region", "binomial test", "normal test", "proportion test"],
+    toolPath: "tools/hypothesis-testing/index.html?v=hypothesis-testing-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on exact binomial hypothesis tests, including one-tailed, two-tailed, and critical-region decisions.",
+      "Level 2 focuses on normal tests for a population mean using standard error and z-values.",
+      "Level 3 introduces proportion z-tests, model-choice questions, and mixed contextual tests.",
+      "Worked solutions are deliberately detailed: parameter, hypotheses, model under H0, p-value or critical region, comparison with alpha, decision, and final inference in context."
+    ]
+  },
+  {
     slug: "correlation-regression",
     title: "Correlation and Regression",
     category: "Statistics",
