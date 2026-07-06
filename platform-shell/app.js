@@ -1114,6 +1114,25 @@ const tools = [
     ]
   },
   {
+    slug: "newtons-second-law",
+    title: "Newton's Second Law",
+    category: "Mechanics",
+    level: "GCSE / A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate mechanics practice on F = ma, resultant force, acceleration, weight, friction, tension, connected particles, lifts, and inclined planes.",
+    tags: ["mechanics", "forces", "Newton's second law", "F = ma", "resultant force", "mass", "acceleration", "weight", "friction", "tension", "connected particles", "inclined planes"],
+    toolPath: "tools/newtons-second-law/index.html?v=newtons-second-law-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on direct use of F = ma, including resultant force, acceleration, mass, and weight.",
+      "Level 2 builds one-dimensional force equations with resistance, friction, driving force, and tension.",
+      "Level 3 covers connected particles, lifts, and inclined planes with and without friction.",
+      "Worked steps emphasise choosing a positive direction, writing the resultant force equation, substituting into F = ma, and keeping units clear."
+    ]
+  },
+  {
     slug: "moments",
     title: "Moments",
     category: "Mechanics",
@@ -6509,7 +6528,7 @@ function standardsForTool(tool) {
   const haystack = normalise([tool.title, tool.category, tool.level, allToolTags(tool).join(" "), tool.description].join(" "));
   const standards = [];
 
-  if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion") || haystack.includes("motion graphs") || haystack.includes("constant acceleration") || haystack.includes("velocity-time") || haystack.includes("distance-time") || haystack.includes("momentum") || haystack.includes("impulse") || haystack.includes("moments") || haystack.includes("projectiles")) {
+  if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion") || haystack.includes("motion graphs") || haystack.includes("constant acceleration") || haystack.includes("velocity-time") || haystack.includes("distance-time") || haystack.includes("momentum") || haystack.includes("impulse") || haystack.includes("moments") || haystack.includes("projectiles") || haystack.includes("newton") || haystack.includes("f = ma") || haystack.includes("resultant force") || haystack.includes("forces")) {
     standards.push("England: A-Level Mathematics mechanics, including constant acceleration, SUVAT equations, momentum, impulse, moments, forces, projectiles, modelling with units, and motion under gravity.");
     standards.push("IB / international: Applications and interpretation links to kinematics, mechanics modelling, rates of change, forces, and interpreting physical quantities.");
   } else if (haystack.includes("statistics") || haystack.includes("probability") || haystack.includes("tree diagram")) {

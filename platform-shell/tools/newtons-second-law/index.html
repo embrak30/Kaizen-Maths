@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newton's Second Law Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden;color:#1a365d}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:white;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:700;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:white;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:white;padding:20px;font-size:1.3em;font-weight:700}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1260px;margin:0 auto;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;color:white;padding:24px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header h1{font-size:2.15em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:17px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:800;transition:.3s;border-bottom:3px solid transparent;color:#1a365d}.tab:hover{background:#cbd5e0}.tab.active{background:white;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px 24px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:1px solid #e2e8f0}.level-info{min-width:320px;flex:1}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.25em}.level-info p{color:#718096;font-size:.98em}.dropdown-container{margin-top:9px;display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:white;cursor:pointer;min-width:390px;max-width:100%;color:#1a365d}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:800;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
+    .problems-section{padding:18px 24px 24px;min-height:520px}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:700}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.basics{background:#3182ce}.problem-set-header.forces{background:#38a169}.problem-set-header.systems{background:#805ad5}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:10px}.problem-item{background:#f7fafc;padding:13px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.11em;color:#1a365d;font-weight:500;line-height:1.42;min-width:0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.96em;display:none;text-align:center;max-width:360px;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{grid-column:1/-1;margin-top:12px;padding:14px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:800;color:#38a169;margin-bottom:10px;font-size:1.08em}.solution-steps{font-size:1.07em;line-height:1.6}.step{margin:8px 0;color:#1a365d}.step-equation{font-weight:700;color:#805ad5;text-align:center;margin:10px 0;font-size:1.11em;overflow-x:auto}.final-answer{background:#38a169;color:white;padding:9px 15px;border-radius:7px;text-align:center;font-weight:bold;font-size:1.08em;margin-top:12px;overflow-x:auto}.step-indicator{background:#3182ce;color:white;padding:5px 9px;border-radius:5px;font-size:.86em;font-weight:bold;margin-right:8px;white-space:nowrap}
+    .formula-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.formula-pill{background:#edf2f7;border:1px solid #cbd5e0;border-radius:999px;padding:6px 10px;font-weight:800;color:#1a365d}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
+    @media (max-width:900px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section,.action-buttons{justify-content:center;flex-wrap:wrap}.type-dropdown{min-width:0;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool generates practice on Newton's second law, resultant force, weight, friction, tension, connected particles, and inclined-plane problems.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Direct use of F = ma, including resultant force, acceleration, mass, and weight.</li>
+        <li><strong>Level 2:</strong> Forces in one dimension, including driving force, resistance, friction, and tension.</li>
+        <li><strong>Level 3:</strong> Connected particles, lifts, and inclined planes where the force equation needs careful modelling.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Always identify the direction of acceleration before writing the force equation.</li>
+        <li>Use resultant force = mass x acceleration, not just total force = ma.</li>
+        <li>For weight, use W = mg, with g = 9.8 m s<sup>-2</sup> unless another value is stated.</li>
+        <li>For friction, use F = &mu;R only when a coefficient of friction is given.</li>
+        <li>For connected particles, write one force equation for the whole system or one equation for each particle.</li>
+      </ul>
+      <div class="formula-strip">
+        <span class="formula-pill">F = ma</span>
+        <span class="formula-pill">W = mg</span>
+        <span class="formula-pill">Friction = &mu;R</span>
+        <span class="formula-pill">Resultant force = ma</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header"><h1>Newton's Second Law</h1></section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: F = ma Basics</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Forces in One Dimension</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Systems and Inclined Planes</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: F = ma Basics</h3>
+        <p id="level-description">Use resultant force = mass x acceleration in direct problems.</p>
+        <div class="dropdown-container" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div class="set-instruction" id="set-instruction">Choose a question type to practise Newton's second law.</div>
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+    const g = 9.8;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: F = ma Basics",
+        description: "Use resultant force = mass x acceleration in direct problems.",
+        instruction: "Write Newton's second law, substitute the known values, solve, and include units.",
+        className: "basics",
+        options: [
+          ["resultant_force", "Find resultant force"],
+          ["find_acceleration", "Find acceleration"],
+          ["find_mass", "Find mass"],
+          ["weight", "Weight using W = mg"],
+          ["mixed_basics", "Mixed F = ma basics"]
+        ]
+      },
+      2: {
+        title: "Level 2: Forces in One Dimension",
+        description: "Resolve the forces in the direction of motion before applying F = ma.",
+        instruction: "Choose the positive direction, form the resultant force, then set resultant force equal to ma.",
+        className: "forces",
+        options: [
+          ["driving_resistance", "Driving force and resistance"],
+          ["find_driving_force", "Find the driving force"],
+          ["friction_horizontal", "Horizontal motion with friction"],
+          ["tension_single_particle", "Tension on one particle"],
+          ["mixed_one_dimension", "Mixed one-dimensional force problems"]
+        ]
+      },
+      3: {
+        title: "Level 3: Systems and Inclined Planes",
+        description: "Model connected particles, lifts, and inclined-plane problems.",
+        instruction: "Draw or imagine the force diagram, choose the direction of motion, and write the force equation carefully.",
+        className: "systems",
+        options: [
+          ["connected_particles", "Connected particles"],
+          ["lift_problems", "Lift problems"],
+          ["inclined_plane_no_friction", "Inclined plane without friction"],
+          ["inclined_plane_friction", "Inclined plane with friction"],
+          ["mixed_systems", "Mixed systems and inclined planes"]
+        ]
+      }
+    };
+
+    const typeDisplayNames = {
+      resultant_force: "Find resultant force",
+      find_acceleration: "Find acceleration",
+      find_mass: "Find mass",
+      weight: "Weight using W = mg",
+      mixed_basics: "Mixed F = ma basics",
+      driving_resistance: "Driving force and resistance",
+      find_driving_force: "Find the driving force",
+      friction_horizontal: "Horizontal motion with friction",
+      tension_single_particle: "Tension on one particle",
+      mixed_one_dimension: "Mixed one-dimensional force problems",
+      connected_particles: "Connected particles",
+      lift_problems: "Lift problems",
+      inclined_plane_no_friction: "Inclined plane without friction",
+      inclined_plane_friction: "Inclined plane with friction",
+      mixed_systems: "Mixed systems and inclined planes"
+    };
+
+    const masses = [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50];
+    const accelerations = [0.4, 0.5, 0.8, 1, 1.2, 1.5, 2, 2.4, 2.5, 3, 4, 5];
+    const forces = [12, 15, 18, 20, 24, 30, 36, 40, 45, 50, 60, 72, 80, 90, 100, 120, 150, 180, 200, 240, 300];
+    const angles = [15, 20, 25, 30, 35, 40];
+    const frictions = [4, 6, 8, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 50];
+    const coefficients = [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4];
+
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function choice(items) { return items[rand(0, items.length - 1)]; }
+    function fmt(value, dp = 3) {
+      const n = Number(value);
+      if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+      return n.toFixed(dp).replace(/\.?0+$/, "");
+    }
+    function unitAcceleration() { return "m s<sup>-2</sup>"; }
+    function quantity(value, unit, dp = 3) { return fmt(value, dp) + " " + unit; }
+    function step(text) { return { type: "text", text }; }
+    function calc(text) { return { type: "calc", text }; }
+    function answerLine(text) { return { type: "calc", text: '<span class="step-indicator">Answer</span> ' + text }; }
+    function frac(top, bottom) { return '<span class="vfrac"><span>' + top + '</span><span>' + bottom + '</span></span>'; }
+    function deg(angle) { return angle + "&deg;"; }
+    function sin(angle) { return Math.sin(angle * Math.PI / 180); }
+    function cos(angle) { return Math.cos(angle * Math.PI / 180); }
+
+    function cleanQuestionText(problem) {
+      return problem.equation.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, 260);
+    }
+
+    function signatureFor(problem) {
+      return currentType + "|" + cleanQuestionText(problem);
+    }
+
+    function makeResultantForce() {
+      const m = choice(masses);
+      const a = choice(accelerations);
+      const F = m * a;
+      return {
+        equation: `A particle of mass ${m} kg accelerates at ${quantity(a, unitAcceleration())}. Find the resultant force acting on it.`,
+        answer: quantity(F, "N"),
+        steps: [
+          step('<span class="step-indicator">Formula</span> Newton\'s second law states that resultant force equals mass multiplied by acceleration.'),
+          calc("F = ma"),
+          calc(`m = ${m}, a = ${a}`),
+          calc(`F = ${m} &times; ${a}`),
+          calc(`F = ${fmt(F)} N`),
+          answerLine(`Resultant force = ${quantity(F, "N")}.`)
+        ]
+      };
+    }
+
+    function makeFindAcceleration() {
+      const m = choice(masses);
+      const a = choice(accelerations);
+      const F = m * a;
+      return {
+        equation: `A resultant force of ${fmt(F)} N acts on a body of mass ${m} kg. Find its acceleration.`,
+        answer: quantity(a, unitAcceleration()),
+        steps: [
+          step('<span class="step-indicator">Formula</span> Start with F = ma and rearrange to make acceleration the subject.'),
+          calc("F = ma"),
+          calc(`a = ${frac("F", "m")}`),
+          calc(`a = ${frac(fmt(F), m)}`),
+          calc(`a = ${fmt(a)} ${unitAcceleration()}`),
+          answerLine(`Acceleration = ${quantity(a, unitAcceleration())}.`)
+        ]
+      };
+    }
+
+    function makeFindMass() {
+      const m = choice(masses);
+      const a = choice(accelerations);
+      const F = m * a;
+      return {
+        equation: `A body accelerates at ${quantity(a, unitAcceleration())} when the resultant force is ${fmt(F)} N. Find its mass.`,
+        answer: quantity(m, "kg"),
+        steps: [
+          step('<span class="step-indicator">Formula</span> Start with F = ma and rearrange to make mass the subject.'),
+          calc("F = ma"),
+          calc(`m = ${frac("F", "a")}`),
+          calc(`m = ${frac(fmt(F), fmt(a))}`),
+          calc(`m = ${fmt(m)} kg`),
+          answerLine(`Mass = ${quantity(m, "kg")}.`)
+        ]
+      };
+    }
+
+    function makeWeight() {
+      const m = choice([2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25]);
+      const W = m * g;
+      return {
+        equation: `Find the weight of an object of mass ${m} kg. Take g = 9.8 m s<sup>-2</sup>.`,
+        answer: quantity(W, "N", 1),
+        steps: [
+          step('<span class="step-indicator">Formula</span> Weight is the gravitational force on a mass.'),
+          calc("W = mg"),
+          calc(`m = ${m}, g = 9.8`),
+          calc(`W = ${m} &times; 9.8`),
+          calc(`W = ${fmt(W, 1)} N`),
+          answerLine(`Weight = ${quantity(W, "N", 1)}.`)
+        ]
+      };
+    }
+
+    function makeDrivingResistance() {
+      const m = choice([800, 900, 1000, 1200, 1500]);
+      const a = choice([0.4, 0.5, 0.8, 1, 1.2]);
+      const R = choice([200, 300, 400, 500, 600]);
+      const P = m * a + R;
+      return {
+        equation: `A car of mass ${m} kg has driving force ${fmt(P)} N and resistance ${R} N. Find its acceleration.`,
+        answer: quantity(a, unitAcceleration()),
+        steps: [
+          step("Take the direction of motion as positive."),
+          calc("Resultant force = driving force - resistance"),
+          calc(`Resultant force = ${fmt(P)} - ${R}`),
+          calc(`Resultant force = ${fmt(P - R)} N`),
+          calc("F = ma"),
+          calc(`${fmt(P - R)} = ${m}a`),
+          calc(`a = ${frac(fmt(P - R), m)}`),
+          calc(`a = ${fmt(a)} ${unitAcceleration()}`),
+          answerLine(`Acceleration = ${quantity(a, unitAcceleration())}.`)
+        ]
+      };
+    }
+
+    function makeFindDrivingForce() {
+      const m = choice([20, 25, 30, 40, 50, 60, 80]);
+      const a = choice([0.5, 0.8, 1, 1.2, 1.5, 2]);
+      const R = choice(frictions);
+      const P = m * a + R;
+      return {
+        equation: `A trolley of mass ${m} kg accelerates at ${quantity(a, unitAcceleration())} against a resistance of ${R} N. Find the driving force.`,
+        answer: quantity(P, "N"),
+        steps: [
+          step("Take the direction of acceleration as positive."),
+          calc("Resultant force = driving force - resistance"),
+          calc("Resultant force = ma"),
+          calc(`Driving force - ${R} = ${m} &times; ${a}`),
+          calc(`Driving force - ${R} = ${fmt(m * a)}`),
+          calc(`Driving force = ${fmt(m * a)} + ${R}`),
+          calc(`Driving force = ${fmt(P)} N`),
+          answerLine(`Driving force = ${quantity(P, "N")}.`)
+        ]
+      };
+    }
+
+    function makeFrictionHorizontal() {
+      const m = choice([5, 8, 10, 12, 15, 20]);
+      const mu = choice(coefficients);
+      const a = choice([0.5, 0.8, 1, 1.2, 1.5, 2]);
+      const R = m * g;
+      const friction = mu * R;
+      const P = m * a + friction;
+      return {
+        equation: `A block of mass ${m} kg is pulled along a rough horizontal surface. The coefficient of friction is ${mu}. Find the pulling force needed to produce an acceleration of ${quantity(a, unitAcceleration())}.`,
+        answer: quantity(P, "N", 2),
+        steps: [
+          step("On a horizontal surface, the normal reaction is equal to the weight."),
+          calc(`R = mg = ${m} &times; 9.8 = ${fmt(R, 2)} N`),
+          calc(`Friction = &mu;R = ${mu} &times; ${fmt(R, 2)} = ${fmt(friction, 2)} N`),
+          step("Take the direction of motion as positive."),
+          calc("Pulling force - friction = ma"),
+          calc(`Pulling force - ${fmt(friction, 2)} = ${m} &times; ${a}`),
+          calc(`Pulling force = ${fmt(m * a)} + ${fmt(friction, 2)}`),
+          calc(`Pulling force = ${fmt(P, 2)} N`),
+          answerLine(`Pulling force = ${quantity(P, "N", 2)}.`)
+        ]
+      };
+    }
+
+    function makeTensionSingleParticle() {
+      const m = choice([1, 2, 3, 4, 5, 6, 8, 10]);
+      const a = choice([0.5, 0.8, 1, 1.2, 1.5, 2]);
+      const T = m * (g + a);
+      return {
+        equation: `A particle of mass ${m} kg is lifted vertically by a string with acceleration ${quantity(a, unitAcceleration())} upwards. Find the tension in the string. Take g = 9.8 m s<sup>-2</sup>.`,
+        answer: quantity(T, "N", 2),
+        steps: [
+          step("Take upward as positive because the acceleration is upward."),
+          calc("Forces upward: T"),
+          calc("Forces downward: mg"),
+          calc("Resultant force upward = T - mg"),
+          calc("T - mg = ma"),
+          calc(`T - (${m} &times; 9.8) = ${m} &times; ${a}`),
+          calc(`T - ${fmt(m * g, 2)} = ${fmt(m * a, 2)}`),
+          calc(`T = ${fmt(m * g, 2)} + ${fmt(m * a, 2)} = ${fmt(T, 2)} N`),
+          answerLine(`Tension = ${quantity(T, "N", 2)}.`)
+        ]
+      };
+    }
+
+    function makeConnectedParticles() {
+      const m1 = choice([2, 3, 4, 5, 6]);
+      const m2 = choice([2, 3, 4, 5, 6]);
+      const a = choice([0.5, 0.8, 1, 1.2, 1.5, 2]);
+      const P = (m1 + m2) * a;
+      const T = m2 * a;
+      return {
+        equation: `Two particles of masses ${m1} kg and ${m2} kg are connected by a light string on a smooth horizontal surface. A horizontal force of ${fmt(P)} N pulls the ${m1} kg particle. Find the acceleration and the tension in the string.`,
+        answer: `a = ${quantity(a, unitAcceleration())}, T = ${quantity(T, "N")}`,
+        steps: [
+          step("Treat both particles as one system to find the acceleration."),
+          calc(`Total mass = ${m1} + ${m2} = ${m1 + m2} kg`),
+          calc("Resultant external force = total mass x acceleration"),
+          calc(`${fmt(P)} = ${m1 + m2}a`),
+          calc(`a = ${frac(fmt(P), m1 + m2)} = ${fmt(a)} ${unitAcceleration()}`),
+          step("Use the second particle alone to find the tension."),
+          calc("T = m<sub>2</sub>a"),
+          calc(`T = ${m2} &times; ${fmt(a)}`),
+          calc(`T = ${fmt(T)} N`),
+          answerLine(`a = ${quantity(a, unitAcceleration())}, T = ${quantity(T, "N")}.`)
+        ]
+      };
+    }
+
+    function makeLiftProblem() {
+      const m = choice([50, 60, 70, 80, 90]);
+      const a = choice([0.4, 0.5, 0.8, 1, 1.2]);
+      const upward = Math.random() < 0.5;
+      const R = upward ? m * (g + a) : m * (g - a);
+      return {
+        equation: `A person of mass ${m} kg stands in a lift accelerating ${upward ? "upwards" : "downwards"} at ${quantity(a, unitAcceleration())}. Find the normal reaction from the floor. Take g = 9.8 m s<sup>-2</sup>.`,
+        answer: quantity(R, "N", 2),
+        steps: [
+          step(upward ? "Take upward as positive." : "Take downward as positive, because the acceleration is downward."),
+          calc(upward ? "R - mg = ma" : "mg - R = ma"),
+          calc(upward ? `R - (${m} &times; 9.8) = ${m} &times; ${a}` : `(${m} &times; 9.8) - R = ${m} &times; ${a}`),
+          calc(upward ? `R - ${fmt(m * g, 2)} = ${fmt(m * a, 2)}` : `${fmt(m * g, 2)} - R = ${fmt(m * a, 2)}`),
+          calc(upward ? `R = ${fmt(m * g, 2)} + ${fmt(m * a, 2)}` : `R = ${fmt(m * g, 2)} - ${fmt(m * a, 2)}`),
+          calc(`R = ${fmt(R, 2)} N`),
+          answerLine(`Normal reaction = ${quantity(R, "N", 2)}.`)
+        ]
+      };
+    }
+
+    function makeInclinedPlaneNoFriction() {
+      const m = choice([2, 3, 4, 5, 6, 8, 10]);
+      const angle = choice(angles);
+      const a = g * sin(angle);
+      return {
+        equation: `A particle of mass ${m} kg slides down a smooth plane inclined at ${deg(angle)} to the horizontal. Find its acceleration. Take g = 9.8 m s<sup>-2</sup>.`,
+        answer: quantity(a, unitAcceleration(), 2),
+        steps: [
+          step("Resolve the weight parallel to the plane."),
+          calc(`Component of weight down the plane = mg sin ${deg(angle)}`),
+          calc(`Component down the plane = ${m} &times; 9.8 &times; sin ${deg(angle)}`),
+          step("The plane is smooth, so there is no friction."),
+          calc("Resultant force down the plane = ma"),
+          calc(`mg sin ${deg(angle)} = ma`),
+          calc(`g sin ${deg(angle)} = a`),
+          calc(`a = 9.8 &times; sin ${deg(angle)} = ${fmt(a, 2)} ${unitAcceleration()}`),
+          answerLine(`Acceleration = ${quantity(a, unitAcceleration(), 2)}.`)
+        ]
+      };
+    }
+
+    function makeInclinedPlaneFriction() {
+      const m = choice([2, 3, 4, 5, 6, 8, 10]);
+      const angle = choice([20, 25, 30, 35]);
+      const mu = choice([0.1, 0.15, 0.2, 0.25]);
+      const downComponent = m * g * sin(angle);
+      const reaction = m * g * cos(angle);
+      const friction = mu * reaction;
+      const a = (downComponent - friction) / m;
+      return {
+        equation: `A particle of mass ${m} kg slides down a rough plane inclined at ${deg(angle)} to the horizontal. The coefficient of friction is ${mu}. Find its acceleration. Take g = 9.8 m s<sup>-2</sup>.`,
+        answer: quantity(a, unitAcceleration(), 2),
+        steps: [
+          step("Resolve the weight parallel and perpendicular to the plane."),
+          calc(`Component down the plane = mg sin ${deg(angle)} = ${m} &times; 9.8 &times; sin ${deg(angle)} = ${fmt(downComponent, 2)} N`),
+          calc(`Normal reaction = mg cos ${deg(angle)} = ${m} &times; 9.8 &times; cos ${deg(angle)} = ${fmt(reaction, 2)} N`),
+          calc(`Friction = &mu;R = ${mu} &times; ${fmt(reaction, 2)} = ${fmt(friction, 2)} N`),
+          step("Take down the plane as positive."),
+          calc("Resultant force down the plane = component of weight - friction"),
+          calc(`Resultant force = ${fmt(downComponent, 2)} - ${fmt(friction, 2)} = ${fmt(downComponent - friction, 2)} N`),
+          calc("F = ma"),
+          calc(`${fmt(downComponent - friction, 2)} = ${m}a`),
+          calc(`a = ${frac(fmt(downComponent - friction, 2), m)} = ${fmt(a, 2)} ${unitAcceleration()}`),
+          answerLine(`Acceleration = ${quantity(a, unitAcceleration(), 2)}.`)
+        ]
+      };
+    }
+
+    function generateProblem() {
+      if (currentType === "resultant_force") return makeResultantForce();
+      if (currentType === "find_acceleration") return makeFindAcceleration();
+      if (currentType === "find_mass") return makeFindMass();
+      if (currentType === "weight") return makeWeight();
+      if (currentType === "mixed_basics") return choice([makeResultantForce, makeFindAcceleration, makeFindMass, makeWeight])();
+      if (currentType === "driving_resistance") return makeDrivingResistance();
+      if (currentType === "find_driving_force") return makeFindDrivingForce();
+      if (currentType === "friction_horizontal") return makeFrictionHorizontal();
+      if (currentType === "tension_single_particle") return makeTensionSingleParticle();
+      if (currentType === "mixed_one_dimension") return choice([makeDrivingResistance, makeFindDrivingForce, makeFrictionHorizontal, makeTensionSingleParticle])();
+      if (currentType === "connected_particles") return makeConnectedParticles();
+      if (currentType === "lift_problems") return makeLiftProblem();
+      if (currentType === "inclined_plane_no_friction") return makeInclinedPlaneNoFriction();
+      if (currentType === "inclined_plane_friction") return makeInclinedPlaneFriction();
+      if (currentType === "mixed_systems") return choice([makeConnectedParticles, makeLiftProblem, makeInclinedPlaneNoFriction, makeInclinedPlaneFriction])();
+      return makeResultantForce();
+    }
+
+    function generateUniqueProblem(used) {
+      for (let attempt = 0; attempt < 90; attempt += 1) {
+        const problem = generateProblem();
+        const signature = signatureFor(problem);
+        if (!used.has(signature)) {
+          used.add(signature);
+          return problem;
+        }
+      }
+      return generateProblem();
+    }
+
+    function defaultCountForType() {
+      return 5;
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index === level - 1));
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = `<option value="select">Select Question Type</option>${config.options.map(([value, label]) => `<option value="${value}">${label}</option>`).join("")}`;
+      currentType = "select";
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      currentType === "select" ? showBlankPage() : generateNewSet();
+    }
+
+    function showBlankPage() {
+      document.getElementById("problem-list").innerHTML = "";
+      document.getElementById("problem-set-header").className = "problem-set-header";
+      document.getElementById("set-instruction").textContent = "Choose a question type to practise Newton's second law.";
+      answersVisible = false;
+      stepsVisible = false;
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      answersVisible = false;
+      stepsVisible = false;
+      const used = new Set();
+      problems = [];
+      for (let i = 0; i < defaultCountForType(); i += 1) problems.push(generateUniqueProblem(used));
+      renderProblems();
+    }
+
+    function renderStep(item) {
+      const className = item.type === "calc" ? "step-equation" : "step";
+      return `<div class="${className}">${item.text}</div>`;
+    }
+
+    function renderProblems() {
+      const list = document.getElementById("problem-list");
+      const header = document.getElementById("problem-set-header");
+      const config = levelConfigs[currentLevel];
+      list.innerHTML = "";
+      header.textContent = typeDisplayNames[currentType] || "Newton's Second Law";
+      header.className = `problem-set-header visible ${config.className}`;
+      document.getElementById("set-instruction").textContent = config.instruction;
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index + 1}</div>
+              <div class="equation">${problem.equation}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">
+              ${problem.steps.map(renderStep).join("")}
+              <div class="final-answer">${problem.answer}</div>
+            </div>
+          </div>
+        `;
+        list.appendChild(li);
+      });
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(list), 0);
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      problems.forEach((_, index) => {
+        const answer = document.getElementById(`quick-answer-${index}`);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      });
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const steps = document.getElementById(`steps-${index}`);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      });
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(document.getElementById("problem-list")), 0);
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining -= 1;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const display = document.getElementById("timer-display");
+      if (!timerActive) return;
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      display.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      display.className = timeRemaining <= 30 ? "timer-display warning" : "timer-display active";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      document.getElementById("timer-display").textContent = "Time Up!";
+      document.getElementById("timer-display").className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-1"></script>
+</body>
+</html>
