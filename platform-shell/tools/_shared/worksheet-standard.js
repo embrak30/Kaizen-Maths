@@ -777,109 +777,21 @@
 
   function installQuestionPersistence() {
     if (document.documentElement.dataset.kaizenQuestionPersistence === 'true') return;
-    if (typeof readBinding('renderProblems', null) !== 'function') return;
     document.documentElement.dataset.kaizenQuestionPersistence = 'true';
-
-    let saveTimer = null;
-
-    function saveNow() {
-      const snapshot = currentBoardSnapshot();
-      if (!snapshot) return false;
-      try {
-        localStorage.setItem(toolStateKey(), JSON.stringify(snapshot));
-        sessionStorage.setItem(toolStateKey(), JSON.stringify(snapshot));
-        return true;
-      } catch (_) {
-        return false;
-      }
-    }
-
-    function saveSoon() {
-      window.clearTimeout(saveTimer);
-      saveTimer = window.setTimeout(saveNow, 80);
-    }
-
-    function restoreBoard() {
-      const saved = readStoredBoard();
-      if (!saved || !Array.isArray(saved.problems) || !saved.problems.length || !saved.type || saved.type === 'select') return false;
-      const renderProblems = readBinding('renderProblems', null);
-      if (typeof renderProblems !== 'function') return false;
-
-      const switchLevel = readBinding('switchLevel', null);
-      if (saved.level !== null && saved.level !== undefined && typeof switchLevel === 'function') {
-        try {
-          switchLevel(saved.level);
-        } catch (_) {
-          writeBinding('currentLevel', saved.level);
-        }
-      } else if (saved.level !== null && saved.level !== undefined) {
-        writeBinding('currentLevel', saved.level);
-      }
-
-      writeBinding('currentType', saved.type);
-      const dropdown = document.getElementById('type-dropdown');
-      if (dropdown) dropdown.value = saved.type;
-      writeBinding('problems', saved.problems);
-      writeBinding('answersVisible', false);
-      writeBinding('stepsVisible', false);
-
-      try {
-        renderProblems();
-      } catch (_) {
-        return false;
-      }
-
-      if (saved.teacherExampleMode && window.KaizenTeacherExample) {
-        window.KaizenTeacherExample.setActive(true, { regenerate: false });
-      }
-
-      const showAnswers = readBinding('showAnswers', null);
-      const showSteps = readBinding('showSteps', null);
-      if (saved.answersVisible && typeof showAnswers === 'function') {
-        try { showAnswers(); } catch (_) {}
-      }
-      if (saved.stepsVisible && typeof showSteps === 'function') {
-        try { showSteps(); } catch (_) {}
-      }
-
-      const instruction = document.getElementById('set-instruction');
-      if (instruction && !instruction.dataset.kaizenRestoredNote) {
-        instruction.dataset.kaizenRestoredNote = 'true';
-        instruction.title = 'This exact question set has been restored. Press New to replace it.';
-      }
-      saveSoon();
-      return true;
-    }
-
-    const originalRenderProblems = readBinding('renderProblems', null);
-    window.KaizenQuestionPersistence = {
-      originalRenderProblems,
-      saveNow,
-      saveSoon,
-      restoreBoard,
-      key: toolStateKey()
-    };
-
     try {
-      window.eval(`
-        renderProblems = function(){
-          const result = window.KaizenQuestionPersistence.originalRenderProblems.apply(this, arguments);
-          window.KaizenQuestionPersistence.saveSoon();
-          return result;
-        }
-      `);
+      localStorage.removeItem(toolStateKey());
+      sessionStorage.removeItem(toolStateKey());
     } catch (_) {
-      // The page still gets passive save/restore from the event listeners below.
+      // Tools should still start fresh if storage is unavailable.
     }
 
-    document.addEventListener('click', (event) => {
-      const target = event.target;
-      if (target?.closest?.('button, .tab, .calculate-cell, .card, .color-choice')) saveSoon();
-    }, true);
-    document.addEventListener('change', saveSoon, true);
-    window.addEventListener('beforeunload', saveNow);
-
-    window.setTimeout(restoreBoard, 120);
+    window.KaizenQuestionPersistence = {
+      saveNow: () => false,
+      saveSoon: () => false,
+      restoreBoard: () => false,
+      key: toolStateKey(),
+      disabled: true
+    };
   }
 
   function safeFileName(value) {
@@ -927,7 +839,6 @@
   }
 
   async function downloadBoardImage() {
-    window.KaizenQuestionPersistence?.saveNow?.();
     const target = document.querySelector('.container') || document.querySelector('.problems-section') || document.body;
     const css = collectPageCss() + `
       body{margin:0;background:#fff}

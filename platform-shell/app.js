@@ -8680,20 +8680,12 @@ function bindToolFrame(tool) {
   };
 
   function savedClassroomState() {
-    try {
-      return JSON.parse(localStorage.getItem(classroomStateKey) || "{}");
-    } catch (error) {
-      return {};
-    }
+    return {};
   }
 
   function saveClassroomState(active) {
     try {
-      if (active) {
-        localStorage.setItem(classroomStateKey, JSON.stringify({ active: true, slug: tool.slug, path: tool.toolPath }));
-      } else {
-        localStorage.removeItem(classroomStateKey);
-      }
+      localStorage.removeItem(classroomStateKey);
     } catch (error) {
       // Classroom mode still works if local storage is unavailable.
     }
