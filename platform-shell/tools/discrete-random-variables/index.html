@@ -242,7 +242,7 @@
       } else if (mode === "less_equal") {
         const cutoff = values[random(1, values.length - 2)];
         included = values.filter((value) => value <= cutoff);
-        question = "Find P(X <= " + cutoff + ")";
+        question = "Find P(X ≤ " + cutoff + ")";
       } else if (mode === "greater") {
         const cutoff = values[random(1, values.length - 2)];
         included = values.filter((value) => value > cutoff);
@@ -253,7 +253,7 @@
         const lower = values[lowerIndex];
         const upper = values[upperIndex];
         included = values.filter((value) => value >= lower && value <= upper);
-        question = "Find P(" + lower + " <= X <= " + upper + ")";
+        question = "Find P(" + lower + " ≤ X ≤ " + upper + ")";
       }
 
       answer = sum(included.map((value) => probs[values.indexOf(value)]));
