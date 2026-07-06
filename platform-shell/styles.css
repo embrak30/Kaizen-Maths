@@ -15,7 +15,7 @@
   --violet-soft: #f1efff;
   --teal-soft: #e7fbfa;
   --shadow: 0 16px 40px rgba(44, 35, 91, 0.11);
-  --math-font: "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+  --math-font: "KaTeX_Math", "KaTeX_Main", "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
 }
 
 * {

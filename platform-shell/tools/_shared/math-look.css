@@ -4,8 +4,29 @@
   consistent mathematical face while leaving each tool's layout intact.
 */
 
+@import url("https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css");
+
 :root {
-  --math-font: "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+  --kaizen-tool-font: "KaTeX_Main", "Latin Modern Roman", "Latin Modern Math", "STIX Two Text", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+  --kaizen-ui-font: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --math-font: "KaTeX_Math", "KaTeX_Main", "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+}
+
+body {
+  font-family: var(--kaizen-tool-font) !important;
+  letter-spacing: 0;
+}
+
+button,
+input,
+select,
+textarea,
+.btn,
+.tab,
+.teacher-tab,
+.type-dropdown,
+.timer-display {
+  font-family: var(--kaizen-ui-font) !important;
 }
 
 .equation,
