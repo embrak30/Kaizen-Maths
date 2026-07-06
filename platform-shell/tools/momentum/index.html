@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Momentum Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden;color:#1a365d}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:white;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:700;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:white;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:white;padding:20px;font-size:1.3em;font-weight:700}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1260px;margin:0 auto;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;color:white;padding:24px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header h1{font-size:2.15em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:17px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:800;transition:.3s;border-bottom:3px solid transparent;color:#1a365d}.tab:hover{background:#cbd5e0}.tab.active{background:white;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px 24px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:1px solid #e2e8f0}.level-info{min-width:320px;flex:1}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.25em}.level-info p{color:#718096;font-size:.98em}.dropdown-container{margin-top:9px;display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:white;cursor:pointer;min-width:390px;max-width:100%;color:#1a365d}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:800;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
+    .problems-section{padding:18px 24px 24px;min-height:520px}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:700}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.basics{background:#3182ce}.problem-set-header.conservation{background:#38a169}.problem-set-header.collisions{background:#805ad5}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:10px}.problem-item{background:#f7fafc;padding:13px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.11em;color:#1a365d;font-weight:500;line-height:1.42;min-width:0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.96em;display:none;text-align:center;max-width:360px;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{grid-column:1/-1;margin-top:12px;padding:14px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:800;color:#38a169;margin-bottom:10px;font-size:1.08em}.solution-steps{font-size:1.07em;line-height:1.6}.step{margin:8px 0;color:#1a365d}.step-equation{font-weight:700;color:#805ad5;text-align:center;margin:10px 0;font-size:1.11em;overflow-x:auto}.final-answer{background:#38a169;color:white;padding:9px 15px;border-radius:7px;text-align:center;font-weight:bold;font-size:1.08em;margin-top:12px;overflow-x:auto}.step-indicator{background:#3182ce;color:white;padding:5px 9px;border-radius:5px;font-size:.86em;font-weight:bold;margin-right:8px;white-space:nowrap}.note{color:#718096;font-size:.92em}
+    .formula-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.formula-pill{background:#edf2f7;border:1px solid #cbd5e0;border-radius:999px;padding:6px 10px;font-weight:800;color:#1a365d}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
+    @media (max-width:900px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section,.action-buttons{justify-content:center;flex-wrap:wrap}.type-dropdown{min-width:0;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool generates mechanics practice on momentum, impulse, conservation of momentum, direct collisions, explosions, recoil, and coefficient of restitution.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Momentum and impulse basics using p = mv, impulse = Ft, and impulse = change in momentum.</li>
+        <li><strong>Level 2:</strong> Conservation of momentum in one-dimensional collisions, particles joining, explosions, and recoil.</li>
+        <li><strong>Level 3:</strong> Impulse in collisions and direct collisions involving coefficient of restitution.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Always choose a positive direction before using signs for velocity.</li>
+        <li>Momentum is a vector quantity, so direction matters.</li>
+        <li>Impulse equals change in momentum and has units N s or kg m s<sup>-1</sup>.</li>
+        <li>In a closed system, total momentum before equals total momentum after.</li>
+        <li>For direct impact, e = speed of separation ÷ speed of approach.</li>
+      </ul>
+      <div class="formula-strip">
+        <span class="formula-pill">p = mv</span>
+        <span class="formula-pill">Impulse = Ft</span>
+        <span class="formula-pill">Impulse = mv - mu</span>
+        <span class="formula-pill">momentum before = momentum after</span>
+        <span class="formula-pill">e = separation ÷ approach</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header"><h1>Momentum</h1></section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Momentum and Impulse</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Conservation of Momentum</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Collisions and Restitution</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Momentum and Impulse</h3>
+        <p id="level-description">Calculate momentum, impulse, change in momentum, and average force.</p>
+        <div class="dropdown-container" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div class="set-instruction" id="set-instruction">Choose a question type to practise momentum.</div>
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Momentum and Impulse",
+        description: "Calculate momentum, impulse, change in momentum, and average force.",
+        instruction: "Choose the correct momentum or impulse formula, substitute the values, and state the direction when needed.",
+        className: "basics",
+        options: [
+          ["momentum_basic", "Calculate momentum"],
+          ["impulse_force_time", "Impulse from force and time"],
+          ["impulse_change_momentum", "Impulse as change in momentum"],
+          ["average_force", "Average force from impulse"],
+          ["mixed_basics", "Mixed momentum basics"]
+        ]
+      },
+      2: {
+        title: "Level 2: Conservation of Momentum",
+        description: "Use total momentum before = total momentum after in one dimension.",
+        instruction: "Choose a positive direction, write the total momentum before and after, then solve the conservation equation.",
+        className: "conservation",
+        options: [
+          ["joined_collision", "Particles join after collision"],
+          ["separate_collision", "Particles separate after collision"],
+          ["explosion", "Explosion from rest"],
+          ["recoil", "Recoil problems"],
+          ["mixed_conservation", "Mixed conservation problems"]
+        ]
+      },
+      3: {
+        title: "Level 3: Collisions and Restitution",
+        description: "Use impulse, conservation of momentum, and coefficient of restitution in direct impact.",
+        instruction: "Use signs carefully. Momentum gives one equation and restitution gives the second equation when two final speeds are unknown.",
+        className: "collisions",
+        options: [
+          ["impulse_collision", "Impulse during a collision"],
+          ["coefficient_restitution", "Find coefficient of restitution"],
+          ["wall_rebound", "Rebound from a fixed wall"],
+          ["collision_restitution", "Collision with restitution"],
+          ["mixed_collisions", "Mixed collision problems"]
+        ]
+      }
+    };
+
+    const typeDisplayNames = {
+      momentum_basic: "Calculate momentum",
+      impulse_force_time: "Impulse from force and time",
+      impulse_change_momentum: "Impulse as change in momentum",
+      average_force: "Average force from impulse",
+      mixed_basics: "Mixed momentum basics",
+      joined_collision: "Particles join after collision",
+      separate_collision: "Particles separate after collision",
+      explosion: "Explosion from rest",
+      recoil: "Recoil problems",
+      mixed_conservation: "Mixed conservation problems",
+      impulse_collision: "Impulse during a collision",
+      coefficient_restitution: "Find coefficient of restitution",
+      wall_rebound: "Rebound from a fixed wall",
+      collision_restitution: "Collision with restitution",
+      mixed_collisions: "Mixed collision problems"
+    };
+
+    const masses = [0.2, 0.4, 0.5, 0.8, 1, 1.2, 1.5, 2, 3, 4, 5, 6, 8, 10, 12];
+    const speeds = [2, 3, 4, 5, 6, 8, 10, 12, 15, 18, 20, 24];
+    const forces = [6, 8, 10, 12, 15, 20, 24, 30, 36, 40, 50, 60, 80, 100];
+    const times = [0.1, 0.2, 0.25, 0.4, 0.5, 0.75, 1, 1.2, 1.5, 2, 2.5, 3];
+    const restitutionValues = [0.2, 0.25, 0.4, 0.5, 0.6, 0.75, 0.8];
+
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function choice(items) { return items[rand(0, items.length - 1)]; }
+    function fmt(value, dp = 3) {
+      const n = Number(value);
+      if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+      return n.toFixed(dp).replace(/\.?0+$/, "");
+    }
+    function step(text) { return { type: "text", text }; }
+    function calc(text) { return { type: "calc", text }; }
+    function answerLine(text) { return { type: "calc", text: '<span class="step-indicator">Answer</span> ' + text }; }
+    function unitMomentum() { return "kg m s<sup>-1</sup>"; }
+    function unitVelocity() { return "m s<sup>-1</sup>"; }
+    function quantity(value, unit) { return fmt(value) + " " + unit; }
+    function direction(value) { return value < 0 ? "to the left" : "to the right"; }
+    function signedValue(value, unit) { return (value < 0 ? "-" : "") + fmt(Math.abs(value)) + " " + unit; }
+    function directionalQuantity(value, unit) { return quantity(Math.abs(value), unit) + " " + direction(value); }
+    function velocityText(value) { return Math.abs(value) < 1e-9 ? quantity(0, unitVelocity()) : quantity(Math.abs(value), unitVelocity()) + " " + direction(value); }
+    function movingPhrase(value) { return Math.abs(value) < 1e-9 ? "initially at rest" : "moving " + direction(value) + " at " + quantity(Math.abs(value), unitVelocity()); }
+
+    function cleanQuestionText(problem) {
+      return problem.equation.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, 240);
+    }
+
+    function signatureFor(problem) {
+      return currentType + "|" + cleanQuestionText(problem);
+    }
+
+    function makeMomentumBasic() {
+      const m = choice(masses.filter(x => x >= 1));
+      const v = choice(speeds);
+      const side = choice(["right", "left"]);
+      const signedV = side === "right" ? v : -v;
+      const p = m * signedV;
+      return {
+        equation: `A particle of mass ${m} kg moves ${side} at ${quantity(v, unitVelocity())}. Find its momentum.`,
+        answer: directionalQuantity(p, unitMomentum()),
+        steps: [
+          step('<span class="step-indicator">Formula</span> Momentum is mass multiplied by velocity.'),
+          calc(`p = mv`),
+          step("Take right as positive. A velocity to the left is negative."),
+          calc(`m = ${m}, v = ${signedV}`),
+          calc(`p = ${m} × (${signedV})`),
+          calc(`p = ${fmt(p)} ${unitMomentum()}`),
+          answerLine(`Momentum = ${directionalQuantity(p, unitMomentum())}.`)
+        ]
+      };
+    }
+
+    function makeImpulseForceTime() {
+      const F = choice(forces);
+      const t = choice(times);
+      const side = choice(["right", "left"]);
+      const signedF = side === "right" ? F : -F;
+      const impulse = signedF * t;
+      return {
+        equation: `A constant force of ${F} N acts ${side} on a particle for ${t} s. Find the impulse.`,
+        answer: directionalQuantity(impulse, "N s"),
+        steps: [
+          step('<span class="step-indicator">Formula</span> Impulse from a constant force is force multiplied by time.'),
+          calc(`Impulse = Ft`),
+          step("Take right as positive. A force to the left is negative."),
+          calc(`F = ${signedF}, t = ${t}`),
+          calc(`Impulse = (${signedF}) × ${t}`),
+          calc(`Impulse = ${fmt(impulse)} N s`),
+          answerLine(`Impulse = ${directionalQuantity(impulse, "N s")}.`)
+        ]
+      };
+    }
+
+    function makeImpulseChangeMomentum() {
+      let u = choice([3, 4, 5, 6, 8, 10, 12]);
+      let v = choice([-8, -6, -4, -2, 0, 2, 5, 9, 14]);
+      if (v === u) v += 3;
+      const m = choice([1, 1.5, 2, 3, 4, 5, 6]);
+      const impulse = m * (v - u);
+      return {
+        equation: `A particle of mass ${m} kg is moving to the right at ${quantity(u, unitVelocity())}. After an impulse, its velocity is ${velocityText(v)}. Find the impulse on the particle.`,
+        answer: directionalQuantity(impulse, "N s"),
+        steps: [
+          step('<span class="step-indicator">Direction</span> Take right as positive.'),
+          calc(`u = ${u}, v = ${v}, m = ${m}`),
+          step('<span class="step-indicator">Formula</span> Impulse equals change in momentum.'),
+          calc(`Impulse = mv - mu`),
+          calc(`Impulse = m(v - u)`),
+          calc(`Impulse = ${m}(${v} - ${u})`),
+          calc(`Impulse = ${m} × ${fmt(v - u)}`),
+          calc(`Impulse = ${fmt(impulse)} N s`),
+          answerLine(`Impulse = ${directionalQuantity(impulse, "N s")}.`)
+        ]
+      };
+    }
+
+    function makeAverageForce() {
+      let u = choice([4, 6, 8, 10, 12, 15]);
+      let v = choice([-6, -3, 0, 3, 5, 9, 14, 18]);
+      if (v === u) v = 0;
+      const m = choice([1, 2, 3, 4, 5, 8]);
+      const t = choice([0.2, 0.25, 0.5, 0.75, 1, 1.5, 2]);
+      const impulse = m * (v - u);
+      const F = impulse / t;
+      return {
+        equation: `A particle of mass ${m} kg changes velocity from ${quantity(u, unitVelocity())} to the right to ${velocityText(v)} in ${t} s. Find the average force on the particle.`,
+        answer: directionalQuantity(F, "N"),
+        steps: [
+          step('<span class="step-indicator">Direction</span> Take right as positive.'),
+          calc(`u = ${u}, v = ${v}, m = ${m}, t = ${t}`),
+          step("First find the change in momentum."),
+          calc(`Impulse = m(v - u)`),
+          calc(`Impulse = ${m}(${v} - ${u}) = ${fmt(impulse)} N s`),
+          step("Average force is impulse divided by time."),
+          calc(`F = ${fmt(impulse)} ÷ ${t}`),
+          calc(`F = ${fmt(F)} N`),
+          answerLine(`Average force = ${directionalQuantity(F, "N")}.`)
+        ]
+      };
+    }
+
+    function makeJoinedCollision() {
+      const m1 = choice([2, 3, 4, 5, 6, 8]);
+      const m2 = choice([2, 3, 4, 5, 6, 8]);
+      const u1 = choice([4, 5, 6, 8, 10, 12]);
+      const u2 = choice([0, 1, 2]);
+      const v = (m1 * u1 + m2 * u2) / (m1 + m2);
+      return {
+        equation: `A particle of mass ${m1} kg moving to the right at ${quantity(u1, unitVelocity())} collides with a particle of mass ${m2} kg ${movingPhrase(u2)}. They stick together after the collision. Find their common speed.`,
+        answer: `${quantity(v, unitVelocity())} to the right`,
+        steps: [
+          step('<span class="step-indicator">Direction</span> Take right as positive.'),
+          step("Because the particles stick together, they have one common final velocity v."),
+          calc(`Momentum before = ${m1}(${u1}) + ${m2}(${u2})`),
+          calc(`Momentum after = (${m1} + ${m2})v`),
+          step("Use conservation of momentum."),
+          calc(`${m1}(${u1}) + ${m2}(${u2}) = (${m1} + ${m2})v`),
+          calc(`${fmt(m1 * u1 + m2 * u2)} = ${fmt(m1 + m2)}v`),
+          calc(`v = ${fmt(m1 * u1 + m2 * u2)} ÷ ${fmt(m1 + m2)} = ${fmt(v)} ${unitVelocity()}`),
+          answerLine(`The common speed is ${quantity(v, unitVelocity())} to the right.`)
+        ]
+      };
+    }
+
+    function makeSeparateCollision() {
+      for (let attempt = 0; attempt < 80; attempt += 1) {
+        const m1 = choice([2, 3, 4, 5, 6, 8]);
+        const m2 = choice([2, 3, 4, 5, 6, 8]);
+        const u1 = choice([5, 6, 8, 10, 12]);
+        const u2 = choice([-3, -2, 0, 2, 3]);
+        const v1 = choice([-2, 0, 2, 3, 4, 5, 6]);
+        const totalBefore = m1 * u1 + m2 * u2;
+        const v2 = (totalBefore - m1 * v1) / m2;
+        if (Math.abs(v2) <= 18 && Math.abs(v2 - u2) > 0.25) {
+          return {
+            equation: `Two particles of masses ${m1} kg and ${m2} kg move on the same line. Before collision their velocities are ${velocityText(u1)} and ${velocityText(u2)}. After collision, the ${m1} kg particle has velocity ${velocityText(v1)}. Find the velocity of the ${m2} kg particle after collision.`,
+            answer: velocityText(v2),
+            steps: [
+              step('<span class="step-indicator">Direction</span> Take right as positive.'),
+              calc(`Before: u₁ = ${u1}, u₂ = ${u2}`),
+              calc(`After: v₁ = ${v1}, v₂ is unknown`),
+              step("Write total momentum before and after."),
+              calc(`Momentum before = ${m1}(${u1}) + ${m2}(${u2}) = ${fmt(totalBefore)}`),
+              calc(`Momentum after = ${m1}(${v1}) + ${m2}v₂`),
+              step("Use conservation of momentum."),
+              calc(`${fmt(totalBefore)} = ${m1}(${v1}) + ${m2}v₂`),
+              calc(`${fmt(totalBefore)} = ${fmt(m1 * v1)} + ${m2}v₂`),
+              calc(`${m2}v₂ = ${fmt(totalBefore - m1 * v1)}`),
+              calc(`v₂ = ${fmt(v2)} ${unitVelocity()}`),
+              answerLine(`The velocity is ${velocityText(v2)}.`)
+            ]
+          };
+        }
+      }
+      return makeJoinedCollision();
+    }
+
+    function makeExplosion() {
+      const m1 = choice([1, 2, 3, 4, 5]);
+      const m2 = choice([2, 3, 4, 5, 6, 8]);
+      const v1 = choice([4, 5, 6, 8, 10, 12]);
+      const v2 = -(m1 * v1) / m2;
+      return {
+        equation: `A body at rest explodes into two parts of masses ${m1} kg and ${m2} kg. The ${m1} kg part moves to the right at ${quantity(v1, unitVelocity())}. Find the velocity of the ${m2} kg part.`,
+        answer: velocityText(v2),
+        steps: [
+          step('<span class="step-indicator">Direction</span> Take right as positive.'),
+          step("The body is initially at rest, so the total momentum before the explosion is 0."),
+          calc(`Momentum before = 0`),
+          calc(`Momentum after = ${m1}(${v1}) + ${m2}v`),
+          step("Use conservation of momentum."),
+          calc(`0 = ${m1}(${v1}) + ${m2}v`),
+          calc(`0 = ${fmt(m1 * v1)} + ${m2}v`),
+          calc(`${m2}v = -${fmt(m1 * v1)}`),
+          calc(`v = ${fmt(v2)} ${unitVelocity()}`),
+          answerLine(`The velocity is ${velocityText(v2)}.`)
+        ]
+      };
+    }
+
+    function makeRecoil() {
+      const mb = choice([0.02, 0.04, 0.05, 0.08]);
+      const vb = choice([100, 120, 150, 180, 200]);
+      const M = choice([2, 3, 4, 5, 8]);
+      const recoil = -(mb * vb) / M;
+      return {
+        equation: `A ${mb} kg pellet is fired horizontally to the right from a ${M} kg trolley initially at rest. The pellet leaves at ${quantity(vb, unitVelocity())}. Find the recoil velocity of the trolley.`,
+        answer: velocityText(recoil),
+        steps: [
+          step('<span class="step-indicator">Direction</span> Take right as positive.'),
+          step("Initially the pellet and trolley are at rest, so the total momentum before firing is 0."),
+          calc(`Momentum before = 0`),
+          calc(`Momentum after = (${mb})(${vb}) + ${M}v`),
+          step("Use conservation of momentum for the pellet-trolley system."),
+          calc(`0 = ${fmt(mb * vb)} + ${M}v`),
+          calc(`${M}v = -${fmt(mb * vb)}`),
+          calc(`v = ${fmt(recoil)} ${unitVelocity()}`),
+          answerLine(`The trolley recoils at ${quantity(Math.abs(recoil), unitVelocity())} to the left.`)
+        ]
+      };
+    }
+
+    function makeImpulseCollision() {
+      let u = choice([5, 6, 8, 10, 12]);
+      let v = choice([-8, -5, -2, 0, 3, 6, 9]);
+      if (v === u) v = -v;
+      const m = choice([0.2, 0.4, 0.5, 1, 1.5, 2, 3]);
+      const impulse = m * (v - u);
+      return {
+        equation: `A particle of mass ${m} kg has velocity ${quantity(u, unitVelocity())} to the right before a collision and ${velocityText(v)} after the collision. Find the impulse exerted on the particle.`,
+        answer: directionalQuantity(impulse, "N s"),
+        steps: [
+          step('<span class="step-indicator">Direction</span> Take right as positive.'),
+          calc(`u = ${u}, v = ${v}, m = ${m}`),
+          step("Impulse on a particle equals final momentum minus initial momentum."),
+          calc(`Impulse = mv - mu`),
+          calc(`Impulse = ${m}(${v}) - ${m}(${u})`),
+          calc(`Impulse = ${fmt(m * v)} - ${fmt(m * u)}`),
+          calc(`Impulse = ${fmt(impulse)} N s`),
+          answerLine(`Impulse = ${directionalQuantity(impulse, "N s")}.`)
+        ]
+      };
+    }
+
+    function makeCoefficientRestitution() {
+      const u1 = choice([6, 8, 10, 12, 15]);
+      const u2 = choice([1, 2, 3]);
+      const e = choice(restitutionValues);
+      const approach = u1 - u2;
+      const v1 = choice([-1, 0, 1, 2, 3]);
+      const v2 = v1 + e * approach;
+      return {
+        equation: `Particle A moves to the right at ${quantity(u1, unitVelocity())} and particle B moves to the right at ${quantity(u2, unitVelocity())}. After impact, A has velocity ${velocityText(v1)} and B has velocity ${velocityText(v2)}. Find the coefficient of restitution.`,
+        answer: `e = ${fmt(e)}`,
+        steps: [
+          step('<span class="step-indicator">Definition</span> Coefficient of restitution is speed of separation divided by speed of approach.'),
+          calc(`e = speed of separation ÷ speed of approach`),
+          step("Before impact, A is catching B, so the approach speed is u₁ - u₂."),
+          calc(`speed of approach = ${u1} - ${u2} = ${fmt(approach)} ${unitVelocity()}`),
+          step("After impact, B is moving away from A, so the separation speed is v₂ - v₁."),
+          calc(`speed of separation = ${fmt(v2)} - (${fmt(v1)}) = ${fmt(v2 - v1)} ${unitVelocity()}`),
+          calc(`e = ${fmt(v2 - v1)} ÷ ${fmt(approach)}`),
+          calc(`e = ${fmt(e)}`),
+          answerLine(`The coefficient of restitution is ${fmt(e)}.`)
+        ]
+      };
+    }
+
+    function makeWallRebound() {
+      const m = choice([0.1, 0.2, 0.25, 0.4, 0.5, 0.8, 1]);
+      const u = choice([5, 6, 8, 10, 12, 15, 20]);
+      const e = choice([0.4, 0.5, 0.6, 0.75, 0.8]);
+      const v = -e * u;
+      const impulse = m * (v - u);
+      return {
+        equation: `A ball of mass ${m} kg strikes a fixed vertical wall at ${quantity(u, unitVelocity())} perpendicular to the wall. The coefficient of restitution is ${e}. Find the impulse exerted on the ball.`,
+        answer: `${quantity(Math.abs(impulse), "N s")} away from the wall`,
+        steps: [
+          step('<span class="step-indicator">Direction</span> Take motion towards the wall as positive.'),
+          step("For a fixed wall, the rebound speed is e times the approach speed in the opposite direction."),
+          calc(`v = -eu = -${e}(${u}) = ${fmt(v)} ${unitVelocity()}`),
+          step("Impulse equals final momentum minus initial momentum."),
+          calc(`Impulse = m(v - u)`),
+          calc(`Impulse = ${m}(${fmt(v)} - ${u})`),
+          calc(`Impulse = ${fmt(impulse)} N s`),
+          step("The negative sign means the impulse acts away from the wall."),
+          answerLine(`Impulse = ${quantity(Math.abs(impulse), "N s")} away from the wall.`)
+        ]
+      };
+    }
+
+    function makeCollisionRestitution() {
+      const m1 = choice([2, 3, 4, 5]);
+      const m2 = choice([2, 3, 4, 5, 6]);
+      const u1 = choice([6, 8, 10, 12]);
+      const u2 = choice([1, 2, 3]);
+      const e = choice([0.25, 0.5, 0.75]);
+      const approach = u1 - u2;
+      const totalBefore = m1 * u1 + m2 * u2;
+      const v1 = (totalBefore - m2 * e * approach) / (m1 + m2);
+      const v2 = v1 + e * approach;
+      return {
+        equation: `Two particles A and B of masses ${m1} kg and ${m2} kg move in the same straight line. Before collision, their velocities are ${quantity(u1, unitVelocity())} and ${quantity(u2, unitVelocity())} to the right. The coefficient of restitution is ${e}. Find their velocities after collision.`,
+        answer: `A: ${velocityText(v1)}, B: ${velocityText(v2)}`,
+        steps: [
+          step('<span class="step-indicator">Direction</span> Take right as positive. Let the final velocities of A and B be v₁ and v₂.'),
+          step("Use conservation of momentum for the first equation."),
+          calc(`${m1}(${u1}) + ${m2}(${u2}) = ${m1}v₁ + ${m2}v₂`),
+          calc(`${fmt(totalBefore)} = ${m1}v₁ + ${m2}v₂`),
+          step("Use restitution for the second equation."),
+          calc(`e = speed of separation ÷ speed of approach`),
+          calc(`v₂ - v₁ = ${e}(${u1} - ${u2})`),
+          calc(`v₂ - v₁ = ${fmt(e * approach)}`),
+          step("Substitute v₂ = v₁ + " + fmt(e * approach) + " into the momentum equation."),
+          calc(`${fmt(totalBefore)} = ${m1}v₁ + ${m2}(v₁ + ${fmt(e * approach)})`),
+          calc(`${fmt(totalBefore)} = ${fmt(m1 + m2)}v₁ + ${fmt(m2 * e * approach)}`),
+          calc(`${fmt(m1 + m2)}v₁ = ${fmt(totalBefore - m2 * e * approach)}`),
+          calc(`v₁ = ${fmt(v1)} ${unitVelocity()}`),
+          calc(`v₂ = ${fmt(v1)} + ${fmt(e * approach)} = ${fmt(v2)} ${unitVelocity()}`),
+          answerLine(`A has velocity ${velocityText(v1)} and B has velocity ${velocityText(v2)}.`)
+        ]
+      };
+    }
+
+    function generateProblem() {
+      const type = currentType;
+      if (type === "momentum_basic") return makeMomentumBasic();
+      if (type === "impulse_force_time") return makeImpulseForceTime();
+      if (type === "impulse_change_momentum") return makeImpulseChangeMomentum();
+      if (type === "average_force") return makeAverageForce();
+      if (type === "mixed_basics") return choice([makeMomentumBasic, makeImpulseForceTime, makeImpulseChangeMomentum, makeAverageForce])();
+      if (type === "joined_collision") return makeJoinedCollision();
+      if (type === "separate_collision") return makeSeparateCollision();
+      if (type === "explosion") return makeExplosion();
+      if (type === "recoil") return makeRecoil();
+      if (type === "mixed_conservation") return choice([makeJoinedCollision, makeSeparateCollision, makeExplosion, makeRecoil])();
+      if (type === "impulse_collision") return makeImpulseCollision();
+      if (type === "coefficient_restitution") return makeCoefficientRestitution();
+      if (type === "wall_rebound") return makeWallRebound();
+      if (type === "collision_restitution") return makeCollisionRestitution();
+      if (type === "mixed_collisions") return choice([makeImpulseCollision, makeCoefficientRestitution, makeWallRebound, makeCollisionRestitution])();
+      return makeMomentumBasic();
+    }
+
+    function generateUniqueProblem(used) {
+      for (let attempt = 0; attempt < 80; attempt += 1) {
+        const problem = generateProblem();
+        const signature = signatureFor(problem);
+        if (!used.has(signature)) {
+          used.add(signature);
+          return problem;
+        }
+      }
+      return generateProblem();
+    }
+
+    function defaultCountForType() {
+      return 5;
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index === level - 1));
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = `<option value="select">Select Question Type</option>${config.options.map(([value, label]) => `<option value="${value}">${label}</option>`).join("")}`;
+      currentType = "select";
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      currentType === "select" ? showBlankPage() : generateNewSet();
+    }
+
+    function showBlankPage() {
+      document.getElementById("problem-list").innerHTML = "";
+      document.getElementById("problem-set-header").className = "problem-set-header";
+      document.getElementById("set-instruction").textContent = "Choose a question type to practise momentum.";
+      answersVisible = false;
+      stepsVisible = false;
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      answersVisible = false;
+      stepsVisible = false;
+      const used = new Set();
+      problems = [];
+      for (let i = 0; i < defaultCountForType(); i += 1) problems.push(generateUniqueProblem(used));
+      renderProblems();
+    }
+
+    function renderStep(item) {
+      const className = item.type === "calc" ? "step-equation" : "step";
+      return `<div class="${className}">${item.text}</div>`;
+    }
+
+    function renderProblems() {
+      const list = document.getElementById("problem-list");
+      const header = document.getElementById("problem-set-header");
+      const config = levelConfigs[currentLevel];
+      list.innerHTML = "";
+      header.textContent = typeDisplayNames[currentType] || "Momentum";
+      header.className = `problem-set-header visible ${config.className}`;
+      document.getElementById("set-instruction").textContent = config.instruction;
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index + 1}</div>
+              <div class="equation">${problem.equation}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">
+              ${problem.steps.map(renderStep).join("")}
+              <div class="final-answer">${problem.answer}</div>
+            </div>
+          </div>
+        `;
+        list.appendChild(li);
+      });
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(list), 0);
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      problems.forEach((_, index) => {
+        const answer = document.getElementById(`quick-answer-${index}`);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      });
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const steps = document.getElementById(`steps-${index}`);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      });
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(document.getElementById("problem-list")), 0);
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining -= 1;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById("timer-display");
+      display.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      display.className = timeRemaining <= 30 ? "timer-display warning" : "timer-display active";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      const display = document.getElementById("timer-display");
+      display.textContent = "Time Up!";
+      display.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-20"></script>
+</body>
+</html>

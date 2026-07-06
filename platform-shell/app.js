@@ -1152,6 +1152,25 @@ const tools = [
     ]
   },
   {
+    slug: "momentum",
+    title: "Momentum",
+    category: "Mechanics",
+    level: "A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate mechanics practice on momentum, impulse, conservation of momentum, collisions, explosions, recoil, and coefficient of restitution.",
+    tags: ["mechanics", "momentum", "impulse", "conservation of momentum", "collisions", "explosions", "recoil", "coefficient of restitution"],
+    toolPath: "tools/momentum/index.html?v=momentum-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on momentum p = mv, impulse from force-time, and impulse as change in momentum.",
+      "Level 2 uses conservation of momentum for particles that join, separate, explode, or recoil.",
+      "Level 3 combines momentum with impulse and coefficient of restitution in direct collisions.",
+      "Worked steps emphasise choosing a positive direction, writing momentum before and after, solving carefully, and interpreting negative velocity as direction."
+    ]
+  },
+  {
     slug: "continuous-random-variables",
     title: "Continuous Random Variables",
     category: "Statistics",
@@ -1855,8 +1874,8 @@ const curriculumMapAreas = [
   {
     id: "alevel-mechanics",
     title: "A-Level Mechanics",
-    subtitle: "Motion, forces, moments, and projectiles",
-    description: "Mechanics tools covering motion graphs, constant acceleration, equations of motion, moments, projectiles, and modelling with units.",
+    subtitle: "Motion, momentum, moments, and projectiles",
+    description: "Mechanics tools covering motion graphs, constant acceleration, equations of motion, momentum, moments, projectiles, and modelling with units.",
     match: (tool) => tool.category === "Mechanics" && !isFurtherMathsTool(tool)
   }
 ];
@@ -5467,7 +5486,7 @@ function renderToolLibrary(extraCategory = "") {
     numbers: "Number topics build fluency with fractions, decimals, percentages, HCF and LCM, order of operations, averages, and powers of 10.",
     geometry: "Geometry topics cover shape, measure, diagrams, area, perimeter, volume, and trigonometry. Use them for visual modelling, board practice, and method-focused discussion.",
     statistics: "Statistics topics cover data summaries, probability distributions, expectation, variance, and model selection. Use them to connect calculation fluency with interpretation and exam-style reasoning.",
-    mechanics: "Mechanics topics cover motion graphs, constant acceleration, forces, moments, projectiles, and modelling with physical quantities. Use them for GCSE bridge, A-Level, and IB practice with clear diagrams, equations, and worked steps.",
+    mechanics: "Mechanics topics cover motion graphs, constant acceleration, momentum, impulse, forces, moments, projectiles, and modelling with physical quantities. Use them for GCSE bridge, A-Level, and IB practice with clear diagrams, equations, and worked steps.",
     "site-guide": "Site guides help teachers navigate the virtual textbook and use the shared controls across the topic tools.",
     "classroom-tools": "Classroom tools support quick routines, reference displays, games, exit tickets, and retrieval moments around the main lesson content."
   };
@@ -6487,8 +6506,8 @@ function standardsForTool(tool) {
   const haystack = normalise([tool.title, tool.category, tool.level, allToolTags(tool).join(" "), tool.description].join(" "));
   const standards = [];
 
-  if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion") || haystack.includes("motion graphs") || haystack.includes("constant acceleration") || haystack.includes("velocity-time") || haystack.includes("distance-time") || haystack.includes("moments") || haystack.includes("projectiles")) {
-    standards.push("England: A-Level Mathematics mechanics, including constant acceleration, SUVAT equations, moments, forces, projectiles, modelling with units, and motion under gravity.");
+  if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion") || haystack.includes("motion graphs") || haystack.includes("constant acceleration") || haystack.includes("velocity-time") || haystack.includes("distance-time") || haystack.includes("momentum") || haystack.includes("impulse") || haystack.includes("moments") || haystack.includes("projectiles")) {
+    standards.push("England: A-Level Mathematics mechanics, including constant acceleration, SUVAT equations, momentum, impulse, moments, forces, projectiles, modelling with units, and motion under gravity.");
     standards.push("IB / international: Applications and interpretation links to kinematics, mechanics modelling, rates of change, forces, and interpreting physical quantities.");
   } else if (haystack.includes("statistics") || haystack.includes("probability") || haystack.includes("tree diagram")) {
     standards.push("Common Core: 7.SP, S-ID, S-CP probability, distributions, and interpreting data.");
