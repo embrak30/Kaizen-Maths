@@ -1782,6 +1782,14 @@ const launchReadinessSections = [
   }
 ];
 
+function isCommonCoreCoverageTool(tool) {
+  const level = normalise(tool.level);
+  const categoryMatch = ["Algebra", "Numbers", "Geometry", "Statistics"].includes(tool.category);
+  const schoolLevelMatch = level.includes("ks2") || level.includes("ks3") || level.includes("gcse") || level.includes("igcse") || level.includes("csec");
+  const taggedMatch = curriculumTagMatches(tool, "Common Core");
+  return !isFurtherMathsTool(tool) && (taggedMatch || (categoryMatch && schoolLevelMatch));
+}
+
 const curriculumMapAreas = [
   {
     id: "gcse",
@@ -1793,6 +1801,13 @@ const curriculumMapAreas = [
       return ["Algebra", "Numbers", "Geometry", "Statistics"].includes(tool.category)
         && (level.includes("gcse") || level.includes("ks3") || level.includes("ks2"));
     }
+  },
+  {
+    id: "common-core",
+    title: "Common Core",
+    subtitle: "US middle school and high school mathematics links",
+    description: "Tools that support Common Core-style number fluency, ratios, expressions, equations, functions, geometry, probability, statistics, and modelling. Admin-added Common Core tags are included automatically.",
+    match: (tool) => isCommonCoreCoverageTool(tool)
   },
   {
     id: "alevel-pure",
@@ -1835,10 +1850,6 @@ const futureCurriculumTags = [
   {
     label: "IB",
     description: "IB tags can identify tools useful for Analysis and Approaches, Applications and Interpretation, statistics, and mechanics-style modelling."
-  },
-  {
-    label: "Common Core",
-    description: "Common Core tags can be added as the US alignment becomes clearer, without changing the underlying tools."
   }
 ];
 
@@ -5143,8 +5154,8 @@ function renderHome() {
     <section class="coverage-home-band" aria-labelledby="homeCoverageTitle">
       <div>
         <span class="eyebrow">Curriculum Coverage</span>
-        <h2 id="homeCoverageTitle">Mapped across GCSE, A-Level, and Further Maths</h2>
-        <p>See current coverage for GCSE, A-Level Pure, Further Maths, A-Level Statistics, and A-Level Mechanics, with future tagging routes for IGCSE, IB, and Common Core.</p>
+        <h2 id="homeCoverageTitle">Mapped across GCSE, Common Core, A-Level, and Further Maths</h2>
+        <p>See current coverage for GCSE, Common Core, A-Level Pure, Further Maths, A-Level Statistics, and A-Level Mechanics, with future tagging routes for IGCSE and IB.</p>
       </div>
       <div class="coverage-home-counts" aria-label="Coverage counts">
         ${curriculumMapAreas.map((area) => `<span><strong>${coverageToolsFor(area).length}</strong>${escapeHtml(area.title)}</span>`).join("")}
@@ -5309,7 +5320,7 @@ function renderCoverageMap() {
   app.innerHTML = `
     ${pageHeader(
       "Curriculum Coverage Map",
-      "A compact live view of the Kaizen Maths tool library across GCSE, A-Level Pure, Further Maths, Statistics, and Mechanics.",
+      "A compact live view of the Kaizen Maths tool library across GCSE, Common Core, A-Level Pure, Further Maths, Statistics, and Mechanics.",
       `<a class="button" href="#/tools">Browse Tool Library</a>${isAdmin() ? `<a class="button" href="#/admin">Edit Tags In Admin</a>` : ""}`
     )}
     <section class="coverage-page">
@@ -5372,7 +5383,7 @@ function renderCoverageMap() {
         <div class="coverage-panel-head">
           <div>
             <span class="eyebrow">Additional Curriculum Tags</span>
-            <h2>IGCSE, IB, and Common Core can sit on top of the same live library</h2>
+            <h2>IGCSE and IB can sit on top of the same live library</h2>
             <p>Use admin tags to add extra curriculum routes as alignment becomes clearer.</p>
           </div>
           ${isAdmin() ? `<a class="button primary" href="#/admin">Open Tool Tags</a>` : `<a class="button" href="#/tools">Explore Tools</a>`}
@@ -9115,7 +9126,7 @@ function updateRouteSeo(parts) {
     },
     "coverage-map": {
       title: routeTitle("Curriculum Coverage Map"),
-      description: "View Kaizen Maths coverage across GCSE, A-Level Pure, Further Maths, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
+      description: "View Kaizen Maths coverage across GCSE, Common Core, A-Level Pure, Further Maths, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
     },
     "collections": {
       title: routeTitle(collectionName ? `${collectionName} Tools` : "Maths Collections"),
