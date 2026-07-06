@@ -353,13 +353,79 @@
     return [];
   }
 
+  function hasRichWorksheetHtml(value) {
+    const html = String(value ?? '');
+    if (!html) return false;
+
+    return /<(svg|table|figure)\b/i.test(html)
+      || /class=["'][^"']*(matrix-wrap|matrix-expression|shape-row|shape-diagram|diagram-row|bearing-row|bearing-diagram|motion-row|motion-diagram|venn-card|venn-wrap|tree-wrap|histogram-wrap|cf-wrap|diagram-wrap|projectile-diagram|moment-diagram|polar-card|polar-diagram|curve-wrap|data-table-wrap)[^"']*["']/i.test(html);
+  }
+
+  function containsEmbeddedDiagram(value) {
+    const html = String(value ?? '');
+    return /<svg\b/i.test(html)
+      || /class=["'][^"']*(shape-row|shape-diagram|diagram-row|bearing-row|bearing-diagram|motion-row|motion-diagram|venn-card|venn-wrap|tree-wrap|histogram-wrap|cf-wrap|diagram-wrap|projectile-diagram|moment-diagram|polar-card|polar-diagram|curve-wrap)[^"']*["']/i.test(html);
+  }
+
+  function firstRichQuestion(...values) {
+    return values.find((value) => hasRichWorksheetHtml(value));
+  }
+
+  function firstQuestionValue(...values) {
+    return values.find((value) => value != null && value !== '');
+  }
+
+  function combineDiagramWithQuestion(raw, questionValue) {
+    const diagram = raw.diagramHtml ?? raw.diagram ?? raw.svg ?? '';
+    if (!diagram || containsEmbeddedDiagram(questionValue)) return questionValue;
+
+    const prompt = firstQuestionValue(
+      raw.prompt,
+      raw.equation,
+      raw.question,
+      raw.text,
+      raw.wordProblem,
+      questionValue
+    );
+
+    return `<div class="worksheet-diagram-row"><div class="worksheet-embedded-diagram">${diagram}</div><div class="worksheet-diagram-prompt">${prompt ?? ''}</div></div>`;
+  }
+
   function normalizeProblem(problem, overrides = {}) {
     const state = getState();
     const raw = problem || {};
     const systemQuestion = Array.isArray(raw.equationsLatex) && raw.equationsLatex.length
       ? `Solve the system:<br>${raw.equationsLatex.map((equation) => `$${equation}$`).join('<br>')}`
       : '';
-    const question = raw.question ?? raw.text ?? raw.equation ?? raw.sequence ?? raw.wordProblem ?? raw.equationTeX ?? raw.calculation ?? raw.eq ?? raw.prompt ?? raw.expression ?? raw.original ?? systemQuestion ?? '';
+    const richQuestion = firstRichQuestion(
+      raw.equation,
+      raw.prompt,
+      raw.text,
+      raw.question,
+      raw.expression,
+      raw.wordProblem,
+      raw.equationTeX,
+      raw.calculation,
+      raw.eq,
+      raw.original,
+      systemQuestion
+    );
+    const baseQuestion = richQuestion ?? firstQuestionValue(
+      raw.question,
+      raw.text,
+      raw.equation,
+      raw.prompt,
+      raw.sequence,
+      raw.wordProblem,
+      raw.equationTeX,
+      raw.calculation,
+      raw.eq,
+      raw.expression,
+      raw.original,
+      systemQuestion,
+      ''
+    );
+    const question = combineDiagramWithQuestion(raw, baseQuestion);
     const answer = raw.answer ?? raw.answerTeX ?? raw.answerLatex ?? raw.finalAnswer ?? raw.solution ?? raw.derivative ?? '';
     const steps = raw.steps ?? raw.stepsTeX;
     const rawInstruction = raw.instruction ?? raw.setInstruction ?? raw.command ?? '';

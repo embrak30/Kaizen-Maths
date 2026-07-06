@@ -2328,6 +2328,9 @@ function worksheetContentHtml(value) {
       if (parent && ["SCRIPT", "STYLE", "TEXTAREA", "SELECT", "OPTION", "SUP", "SUB"].includes(parent.tagName)) {
         return NodeFilter.FILTER_REJECT;
       }
+      if (parent?.closest?.("svg")) {
+        return NodeFilter.FILTER_REJECT;
+      }
       return textLooksWorksheetMathLike(node.nodeValue)
         ? NodeFilter.FILTER_ACCEPT
         : NodeFilter.FILTER_REJECT;

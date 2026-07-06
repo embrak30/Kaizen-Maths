@@ -4030,6 +4030,86 @@ body[data-route="worksheet-generator"] .account-action {
   line-height: 1.5;
 }
 
+.worksheet-question-text .worksheet-diagram-row,
+.worksheet-question-text .shape-row,
+.worksheet-question-text .diagram-row,
+.worksheet-question-text .bearing-row,
+.worksheet-question-text .motion-row,
+.worksheet-question-text .polar-card,
+.worksheet-question-text .venn-card {
+  display: grid;
+  grid-template-columns: minmax(150px, 240px) minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  max-width: 100%;
+}
+
+.worksheet-question-text .worksheet-embedded-diagram,
+.worksheet-question-text .shape-diagram,
+.worksheet-question-text .bearing-diagram,
+.worksheet-question-text .motion-diagram,
+.worksheet-question-text .venn-wrap,
+.worksheet-question-text .tree-wrap,
+.worksheet-question-text .histogram-wrap,
+.worksheet-question-text .cf-wrap,
+.worksheet-question-text .polar-diagram,
+.worksheet-question-text .curve-wrap,
+.worksheet-question-text .data-table-wrap,
+.worksheet-question-text .diagram-wrap {
+  width: 100%;
+  max-width: 260px;
+  min-width: 0;
+  height: auto;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.worksheet-question-text .histogram-wrap,
+.worksheet-question-text .cf-wrap,
+.worksheet-question-text .tree-wrap,
+.worksheet-question-text .data-table-wrap {
+  max-width: 520px;
+  overflow-x: auto;
+}
+
+.worksheet-question-text svg,
+.worksheet-question-text .venn-svg,
+.worksheet-question-text .tree-svg,
+.worksheet-question-text .histogram-svg,
+.worksheet-question-text .cf-svg,
+.worksheet-question-text .projectile-diagram,
+.worksheet-question-text .moment-diagram,
+.worksheet-question-text .polar-diagram svg,
+.worksheet-question-text .curve-wrap svg {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  display: block;
+}
+
+.worksheet-question-text .card-prompt,
+.worksheet-question-text .worksheet-diagram-prompt,
+.worksheet-question-text .question-text,
+.worksheet-question-text .polar-prompt {
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .worksheet-question-text .worksheet-diagram-row,
+  .worksheet-question-text .shape-row,
+  .worksheet-question-text .diagram-row,
+  .worksheet-question-text .bearing-row,
+  .worksheet-question-text .motion-row,
+  .worksheet-question-text .polar-card,
+  .worksheet-question-text .venn-card {
+    grid-template-columns: 1fr;
+  }
+}
+
 .worksheet-question-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
