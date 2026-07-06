@@ -1123,7 +1123,7 @@ const tools = [
     status: "Imported",
     description: "Generate mechanics practice on F = ma, resultant force, acceleration, weight, friction, tension, connected particles, lifts, and inclined planes.",
     tags: ["mechanics", "forces", "Newton's second law", "F = ma", "resultant force", "mass", "acceleration", "weight", "friction", "tension", "connected particles", "inclined planes"],
-    toolPath: "tools/newtons-second-law/index.html?v=newtons-second-law-1",
+    toolPath: "tools/newtons-second-law/index.html?v=newtons-second-law-2",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on direct use of F = ma, including resultant force, acceleration, mass, and weight.",

@@ -192,7 +192,7 @@
     function step(text) { return { type: "text", text }; }
     function calc(text) { return { type: "calc", text }; }
     function answerLine(text) { return { type: "calc", text: '<span class="step-indicator">Answer</span> ' + text }; }
-    function frac(top, bottom) { return '<span class="vfrac"><span>' + top + '</span><span>' + bottom + '</span></span>'; }
+    function frac(top, bottom) { return '<span class="fraction"><span class="numerator">' + top + '</span><span class="denominator">' + bottom + '</span></span>'; }
     function deg(angle) { return angle + "&deg;"; }
     function sin(angle) { return Math.sin(angle * Math.PI / 180); }
     function cos(angle) { return Math.cos(angle * Math.PI / 180); }
@@ -233,6 +233,7 @@
         steps: [
           step('<span class="step-indicator">Formula</span> Start with F = ma and rearrange to make acceleration the subject.'),
           calc("F = ma"),
+          calc("Divide both sides by m."),
           calc(`a = ${frac("F", "m")}`),
           calc(`a = ${frac(fmt(F), m)}`),
           calc(`a = ${fmt(a)} ${unitAcceleration()}`),
@@ -251,6 +252,7 @@
         steps: [
           step('<span class="step-indicator">Formula</span> Start with F = ma and rearrange to make mass the subject.'),
           calc("F = ma"),
+          calc("Divide both sides by a."),
           calc(`m = ${frac("F", "a")}`),
           calc(`m = ${frac(fmt(F), fmt(a))}`),
           calc(`m = ${fmt(m)} kg`),
@@ -291,6 +293,7 @@
           calc(`Resultant force = ${fmt(P - R)} N`),
           calc("F = ma"),
           calc(`${fmt(P - R)} = ${m}a`),
+          calc("Divide both sides by the mass."),
           calc(`a = ${frac(fmt(P - R), m)}`),
           calc(`a = ${fmt(a)} ${unitAcceleration()}`),
           answerLine(`Acceleration = ${quantity(a, unitAcceleration())}.`)
@@ -378,6 +381,7 @@
           calc(`Total mass = ${m1} + ${m2} = ${m1 + m2} kg`),
           calc("Resultant external force = total mass x acceleration"),
           calc(`${fmt(P)} = ${m1 + m2}a`),
+          calc("Divide both sides by the total mass."),
           calc(`a = ${frac(fmt(P), m1 + m2)} = ${fmt(a)} ${unitAcceleration()}`),
           step("Use the second particle alone to find the tension."),
           calc("T = m<sub>2</sub>a"),
@@ -450,6 +454,7 @@
           calc(`Resultant force = ${fmt(downComponent, 2)} - ${fmt(friction, 2)} = ${fmt(downComponent - friction, 2)} N`),
           calc("F = ma"),
           calc(`${fmt(downComponent - friction, 2)} = ${m}a`),
+          calc("Divide both sides by the mass."),
           calc(`a = ${frac(fmt(downComponent - friction, 2), m)} = ${fmt(a, 2)} ${unitAcceleration()}`),
           answerLine(`Acceleration = ${quantity(a, unitAcceleration(), 2)}.`)
         ]
