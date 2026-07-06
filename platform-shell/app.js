@@ -1028,7 +1028,7 @@ const tools = [
     status: "Imported",
     description: "Generate statistics practice covering discrete probability distributions, expectation, variance, standard deviation, and binomial, geometric, and Poisson models.",
     tags: ["statistics", "probability", "random variables", "expectation", "variance", "binomial", "geometric", "poisson"],
-    toolPath: "tools/discrete-random-variables/index.html?v=step-structure-1",
+    toolPath: "tools/discrete-random-variables/index.html?v=discrete-new-refresh-1",
     imported: true,
     teacherNotes: [
       "Level 1 checks probability tables, missing probabilities, and validity of discrete distributions.",

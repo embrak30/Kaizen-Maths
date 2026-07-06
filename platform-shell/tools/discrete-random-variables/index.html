@@ -186,6 +186,28 @@
       return Number(value).toFixed(dp);
     }
 
+    function makeProbabilityDistribution(length, minWeight = 1, maxWeight = 8) {
+      const weights = Array.from({ length }, () => random(minWeight, maxWeight));
+      const total = sum(weights);
+      return weights.map((weight) => Number((weight / total).toFixed(2)));
+    }
+
+    function adjustProbabilitiesToOne(probs) {
+      const roundedTotal = sum(probs);
+      const diff = Number((1 - roundedTotal).toFixed(2));
+      const adjusted = probs.slice();
+      adjusted[adjusted.length - 1] = Number((adjusted[adjusted.length - 1] + diff).toFixed(2));
+      return adjusted;
+    }
+
+    function randomDistribution(length, minWeight = 1, maxWeight = 8) {
+      return adjustProbabilitiesToOne(makeProbabilityDistribution(length, minWeight, maxWeight));
+    }
+
+    function problemSignature(problem) {
+      return (problem.equation + "|" + problem.answer).replace(/\s+/g, " ");
+    }
+
     function generateProblem() {
       switch (currentType) {
         case "find_probability": return genFindProbability();
@@ -204,8 +226,10 @@
     }
 
     function genFindProbability() {
-      const values = [0, 1, 2, 3, 4];
-      const probs = [0.10, 0.15, 0.25, 0.30, 0.20];
+      const length = random(4, 6);
+      const start = randomElement([0, 1, 2]);
+      const values = Array.from({ length }, (_, index) => start + index);
+      const probs = randomDistribution(length, 1, 9);
       const mode = randomElement(["single", "less_equal", "greater", "range"]);
       let question;
       let answer;
@@ -216,21 +240,23 @@
         included = [x];
         question = "Find P(X = " + x + ")";
       } else if (mode === "less_equal") {
-        const cutoff = random(1, 3);
+        const cutoff = values[random(1, values.length - 2)];
         included = values.filter((value) => value <= cutoff);
         question = "Find P(X <= " + cutoff + ")";
       } else if (mode === "greater") {
-        const cutoff = random(1, 3);
+        const cutoff = values[random(1, values.length - 2)];
         included = values.filter((value) => value > cutoff);
         question = "Find P(X > " + cutoff + ")";
       } else {
-        const lower = random(1, 2);
-        const upper = random(lower + 1, 4);
+        const lowerIndex = random(0, values.length - 3);
+        const upperIndex = random(lowerIndex + 1, values.length - 1);
+        const lower = values[lowerIndex];
+        const upper = values[upperIndex];
         included = values.filter((value) => value >= lower && value <= upper);
         question = "Find P(" + lower + " <= X <= " + upper + ")";
       }
 
-      answer = sum(included.map((value) => probs[value]));
+      answer = sum(included.map((value) => probs[values.indexOf(value)]));
       return {
         badge: "basic",
         equation: table(values, probs.map((p) => p.toFixed(2))) + "<br>" + question,
@@ -239,19 +265,15 @@
           '<span class="step-indicator">Step 1</span> Identify the values included',
           "Included values: " + included.map((value) => "X = " + value).join(", "),
           '<span class="step-indicator">Step 2</span> Add the matching probabilities',
-          included.map((value) => "P(X=" + value + ")").join(" + ") + " = " + included.map((value) => probs[value].toFixed(2)).join(" + "),
+          included.map((value) => "P(X=" + value + ")").join(" + ") + " = " + included.map((value) => probs[values.indexOf(value)].toFixed(2)).join(" + "),
           '<span class="step-arrow">&#8594;</span> ' + answer.toFixed(2)
         ]
       };
     }
 
     function genCompleteDistribution() {
-      const templates = [
-        [0.15, 0.20, 0.25, 0.40],
-        [0.10, 0.30, 0.35, 0.25],
-        [0.05, 0.15, 0.30, 0.20, 0.30]
-      ];
-      const probs = randomElement(templates).slice();
+      const length = random(4, 6);
+      const probs = randomDistribution(length, 1, 10);
       const values = probs.map((_, index) => index + 1);
       const missingIndex = random(0, probs.length - 1);
       const variable = randomElement(["a", "b", "p", "q"]);
@@ -275,7 +297,14 @@
 
     function genVerifyDistribution() {
       const valid = Math.random() < 0.5;
-      const probs = valid ? randomElement([[0.20, 0.30, 0.50], [0.10, 0.20, 0.30, 0.40], [0.10, 0.15, 0.20, 0.25, 0.30]]) : randomElement([[0.20, 0.40, 0.50], [0.20, 0.20, 0.30, 0.40], [0.15, 0.15, 0.20, 0.25, 0.30]]);
+      const length = random(3, 5);
+      let probs = randomDistribution(length, 1, 9);
+      if (!valid) {
+        const adjustment = randomElement([-0.15, -0.10, 0.10, 0.15, 0.20]);
+        const index = random(0, probs.length - 1);
+        probs[index] = Number(Math.max(0.02, Math.min(0.98, probs[index] + adjustment)).toFixed(2));
+        if (Math.abs(sum(probs) - 1) < 0.01) probs[index] = Number((probs[index] + 0.10).toFixed(2));
+      }
       const values = probs.map((_, index) => index);
       const total = sum(probs);
       return {
@@ -293,27 +322,34 @@
     }
 
     function genExpectation() {
-      const values = [0, 1, 2, 3];
-      const probs = [0.10, 0.30, 0.40, 0.20];
-      const ex = values.reduce((total, value, index) => total + value * probs[index], 0);
+      const length = random(4, 5);
+      const start = randomElement([0, 1, 2]);
+      const values = Array.from({ length }, (_, index) => start + index);
+      const probs = randomDistribution(length, 1, 8);
+      const products = values.map((value, index) => Number((value * probs[index]).toFixed(2)));
+      const ex = sum(products);
       return {
         badge: "expectation",
         equation: "Calculate E(X) for:<br>" + table(values, probs.map((p) => p.toFixed(2))),
-        answer: ex.toFixed(1),
+        answer: ex.toFixed(2),
         steps: [
           '<span class="step-indicator">Step 1</span> Use E(X) = sum xP(X=x)',
-          "E(X) = 0(0.10) + 1(0.30) + 2(0.40) + 3(0.20)",
-          "= 0 + 0.30 + 0.80 + 0.60",
-          '<span class="step-arrow">&#8594;</span> E(X) = ' + ex.toFixed(1)
+          "E(X) = " + values.map((value, index) => value + "(" + probs[index].toFixed(2) + ")").join(" + "),
+          "= " + products.map((value) => value.toFixed(2)).join(" + "),
+          '<span class="step-arrow">&#8594;</span> E(X) = ' + ex.toFixed(2)
         ]
       };
     }
 
     function genVariance() {
-      const values = [1, 2, 3];
-      const probs = [0.20, 0.50, 0.30];
-      const ex = values.reduce((total, value, index) => total + value * probs[index], 0);
-      const ex2 = values.reduce((total, value, index) => total + value * value * probs[index], 0);
+      const length = random(3, 5);
+      const start = randomElement([0, 1]);
+      const values = Array.from({ length }, (_, index) => start + index + 1);
+      const probs = randomDistribution(length, 1, 8);
+      const exProducts = values.map((value, index) => Number((value * probs[index]).toFixed(2)));
+      const ex2Products = values.map((value, index) => Number((value * value * probs[index]).toFixed(2)));
+      const ex = sum(exProducts);
+      const ex2 = sum(ex2Products);
       const variance = ex2 - ex * ex;
       return {
         badge: "variance",
@@ -321,11 +357,11 @@
         answer: variance.toFixed(2),
         steps: [
           '<span class="step-indicator">Step 1</span> Calculate E(X)',
-          "E(X) = 1(0.20) + 2(0.50) + 3(0.30) = " + ex.toFixed(1),
+          "E(X) = " + values.map((value, index) => value + "(" + probs[index].toFixed(2) + ")").join(" + ") + " = " + ex.toFixed(2),
           '<span class="step-indicator">Step 2</span> Calculate E(X²)',
-          "E(X²) = 1²(0.20) + 2²(0.50) + 3²(0.30) = " + ex2.toFixed(1),
+          "E(X²) = " + values.map((value, index) => value + "²(" + probs[index].toFixed(2) + ")").join(" + ") + " = " + ex2.toFixed(2),
           '<span class="step-indicator">Step 3</span> Use Var(X) = E(X²) - [E(X)]²',
-          "Var(X) = " + ex2.toFixed(1) + " - (" + ex.toFixed(1) + ")² = " + variance.toFixed(2),
+          "Var(X) = " + ex2.toFixed(2) + " - (" + ex.toFixed(2) + ")² = " + variance.toFixed(2),
           '<span class="step-arrow">&#8594;</span> ' + variance.toFixed(2)
         ]
       };
@@ -367,25 +403,28 @@
     }
 
     function genCombined() {
-      const values = [0, 1, 2];
-      const probs = [0.25, 0.50, 0.25];
-      const ex = 1;
-      const ex2 = 1.5;
+      const length = random(3, 5);
+      const values = Array.from({ length }, (_, index) => index);
+      const probs = randomDistribution(length, 1, 8);
+      const exProducts = values.map((value, index) => Number((value * probs[index]).toFixed(2)));
+      const ex2Products = values.map((value, index) => Number((value * value * probs[index]).toFixed(2)));
+      const ex = sum(exProducts);
+      const ex2 = sum(ex2Products);
       const variance = ex2 - ex * ex;
       const sd = Math.sqrt(variance);
       return {
         badge: "variance",
         equation: "Find E(X), Var(X), and SD(X):<br>" + table(values, probs.map((p) => p.toFixed(2))),
-        answer: "E(X)=1, Var(X)=0.50, SD=0.71",
+        answer: "E(X)=" + ex.toFixed(2) + ", Var(X)=" + variance.toFixed(2) + ", SD=" + sd.toFixed(2),
         steps: [
           '<span class="step-indicator">Step 1</span> Calculate E(X)',
-          "E(X) = 0(0.25) + 1(0.50) + 2(0.25) = " + ex,
+          "E(X) = " + values.map((value, index) => value + "(" + probs[index].toFixed(2) + ")").join(" + ") + " = " + ex.toFixed(2),
           '<span class="step-indicator">Step 2</span> Calculate E(X²)',
-          "E(X²) = 0²(0.25) + 1²(0.50) + 2²(0.25) = " + ex2,
+          "E(X²) = " + values.map((value, index) => value + "²(" + probs[index].toFixed(2) + ")").join(" + ") + " = " + ex2.toFixed(2),
           '<span class="step-indicator">Step 3</span> Calculate variance and SD',
-          "Var(X) = " + ex2 + " - " + ex + "² = " + variance.toFixed(2),
+          "Var(X) = " + ex2.toFixed(2) + " - (" + ex.toFixed(2) + ")² = " + variance.toFixed(2),
           "SD(X) = sqrt(" + variance.toFixed(2) + ") = " + sd.toFixed(2),
-          '<span class="step-arrow">&#8594;</span> E(X)=1, Var(X)=0.50, SD=0.71'
+          '<span class="step-arrow">&#8594;</span> E(X)=' + ex.toFixed(2) + ', Var(X)=' + variance.toFixed(2) + ', SD=' + sd.toFixed(2)
         ]
       };
     }
@@ -456,7 +495,12 @@
         { desc: "Roll a die until you get a 6", answer: "Geometric", reason: "counting trials until first success", param: "p = 1/6" },
         { desc: "Flip a coin 10 times and count heads", answer: "Binomial", reason: "fixed number of trials and counting successes", param: "n = 10, p = 0.5" },
         { desc: "Count cars passing a point in one hour", answer: "Poisson", reason: "counting events in a fixed interval", param: "lambda = rate per hour" },
-        { desc: "Draw cards until the first Ace", answer: "Geometric", reason: "counting trials until first success", param: "p = 4/52" }
+        { desc: "Draw cards until the first Ace", answer: "Geometric", reason: "counting trials until first success", param: "p = 4/52" },
+        { desc: "Inspect 12 light bulbs and count how many are faulty", answer: "Binomial", reason: "fixed number of independent trials and counting successes", param: "n = 12, p = probability faulty" },
+        { desc: "Count emails arriving between 9:00 and 10:00", answer: "Poisson", reason: "counting events in a fixed time interval", param: "lambda = mean emails per hour" },
+        { desc: "Take free throws until the first successful shot", answer: "Geometric", reason: "counting trials until the first success", param: "p = probability of a successful shot" },
+        { desc: "Test 20 seeds and count how many germinate", answer: "Binomial", reason: "fixed number of trials with success or failure", param: "n = 20, p = probability a seed germinates" },
+        { desc: "Count misprints on a page of a textbook", answer: "Poisson", reason: "counting rare events in a fixed region", param: "lambda = mean misprints per page" }
       ];
       const scenario = randomElement(scenarios);
       return {
@@ -508,7 +552,18 @@
       answersVisible = false;
       stepsVisible = false;
       const numProblems = currentLevel === 1 || ["calc_expectation", "calc_variance", "combined_calculations"].includes(currentType) ? 3 : 5;
-      for (let i = 0; i < numProblems; i++) problems.push(generateProblem());
+      const used = new Set();
+      let attempts = 0;
+      while (problems.length < numProblems && attempts < numProblems * 20) {
+        const problem = generateProblem();
+        const signature = problemSignature(problem);
+        if (!used.has(signature)) {
+          used.add(signature);
+          problems.push(problem);
+        }
+        attempts++;
+      }
+      while (problems.length < numProblems) problems.push(generateProblem());
       renderProblems();
     }
 
