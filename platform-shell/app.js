@@ -1655,7 +1655,7 @@ const tools = [
     status: "Imported",
     description: "A board-ready manipulative tray for primary and elementary maths, including base-ten blocks, ten frames, counters, arrays, fraction bars, number lines, place value charts, and clock faces.",
     tags: ["classroom", "primary", "elementary", "manipulatives", "base ten", "ten frames", "counters", "arrays", "fractions", "number line", "place value", "clock"],
-    toolPath: "tools/elementary-manipulatives/index.html?v=elementary-manipulatives-1",
+    toolPath: "tools/elementary-manipulatives/index.html?v=elementary-manipulatives-2",
     imported: true,
     teacherNotes: [
       "Designed as a visual modelling tool for younger learners rather than a question generator.",

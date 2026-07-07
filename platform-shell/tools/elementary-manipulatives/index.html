@@ -255,7 +255,7 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 12px;
-      pointer-events: none;
+      pointer-events: auto;
     }
 
     .title-pill,
@@ -271,6 +271,17 @@
 
     .value-pill {
       color: #0d6869;
+      cursor: pointer;
+    }
+
+    .value-pill.answer-hidden {
+      color: var(--navy);
+      background: rgba(255,255,255,.96);
+      border-color: #c9d8e5;
+    }
+
+    .field label span {
+      display: none;
     }
 
     .stage {
@@ -605,6 +616,8 @@
           <option value="placeValue">Place Value Chart</option>
           <option value="clock">Clock Face</option>
         </select>
+        <button class="btn secondary" id="randomBtn" type="button">New Random</button>
+        <button class="btn" id="answerBtn" type="button">Reveal Answer</button>
         <button class="btn secondary" id="labelsBtn" type="button">Hide Labels</button>
         <button class="btn secondary" id="resetBtn" type="button">Reset</button>
         <button class="btn" id="fullscreenBtn" type="button">Full Screen</button>
@@ -733,7 +746,7 @@
           <div class="board-grid" aria-hidden="true"></div>
           <div class="board-header">
             <div class="title-pill" id="boardTitle">Base-Ten Blocks</div>
-            <div class="value-pill" id="boardValue">236</div>
+            <button class="value-pill answer-hidden" id="boardValue" type="button">Reveal Answer</button>
           </div>
           <div class="stage">
             <div class="visual" id="visual"></div>
@@ -757,7 +770,8 @@
 
     const state = {
       mode: "baseTen",
-      labels: true
+      labels: true,
+      answerRevealed: false
     };
 
     const visual = document.getElementById("visual");
@@ -766,6 +780,7 @@
     const board = document.getElementById("board");
     const boardTitle = document.getElementById("boardTitle");
     const boardValue = document.getElementById("boardValue");
+    const answerBtn = document.getElementById("answerBtn");
 
     const values = {
       baseValue: 236,
@@ -798,6 +813,7 @@
       const input = byId(id);
       const min = Number(input.min || 0);
       const max = Number(input.max || 999);
+      state.answerRevealed = false;
       values[id] = clamp(Number(value), min, max);
       input.value = values[id];
       syncDependentControls(id);
@@ -834,10 +850,17 @@
 
     function setMode(mode) {
       state.mode = mode;
+      state.answerRevealed = false;
       modeSelect.value = mode;
       document.querySelectorAll(".mode-btn").forEach((btn) => btn.classList.toggle("active", btn.dataset.mode === mode));
       document.querySelectorAll(".control-card").forEach((card) => card.classList.toggle("active", card.dataset.controls === mode));
       render();
+    }
+
+    function setBoardAnswer(answerText) {
+      boardValue.textContent = state.answerRevealed ? answerText : "Reveal Answer";
+      boardValue.classList.toggle("answer-hidden", !state.answerRevealed);
+      answerBtn.textContent = state.answerRevealed ? "Hide Answer" : "Reveal Answer";
     }
 
     function makeModeButtons() {
@@ -871,12 +894,12 @@
       const tens = Math.floor((value % 100) / 10);
       const ones = value % 10;
       boardTitle.textContent = "Base-Ten Blocks";
-      boardValue.textContent = state.labels ? value + " = " + hundreds + " hundreds, " + tens + " tens, " + ones + " ones" : value;
+      setBoardAnswer(value + " = " + hundreds + " hundreds, " + tens + " tens, " + ones + " ones");
       visual.innerHTML =
         '<div class="base-layout">' +
-        '<section class="base-column"><h3>Hundreds</h3><div class="hundreds-grid">' + repeated(hundreds, flat) + '</div></section>' +
-        '<section class="base-column"><h3>Tens</h3><div class="tens-grid">' + repeated(tens, rod) + '</div></section>' +
-        '<section class="base-column"><h3>Ones</h3><div class="ones-grid">' + repeated(ones, unit) + '</div></section>' +
+        '<section class="base-column"><h3>' + (state.labels ? "Hundreds" : "&nbsp;") + '</h3><div class="hundreds-grid">' + repeated(hundreds, flat) + '</div></section>' +
+        '<section class="base-column"><h3>' + (state.labels ? "Tens" : "&nbsp;") + '</h3><div class="tens-grid">' + repeated(tens, rod) + '</div></section>' +
+        '<section class="base-column"><h3>' + (state.labels ? "Ones" : "&nbsp;") + '</h3><div class="ones-grid">' + repeated(ones, unit) + '</div></section>' +
         '</div>';
     }
 
@@ -884,7 +907,7 @@
       const count = values.tenValue;
       const colour = values.tenColour;
       boardTitle.textContent = "Ten Frames";
-      boardValue.textContent = state.labels ? count + " shown in ten frames" : count;
+      setBoardAnswer(count + " shown in ten frames");
       const frame = (start) => '<div class="ten-frame">' + repeated(10, (i) => '<div class="ten-cell">' + (start + i < count ? counter(colour) : "") + '</div>') + '</div>';
       visual.innerHTML = '<div class="ten-frame-wrap">' + frame(0) + frame(10) + '</div>';
     }
@@ -893,7 +916,7 @@
       const count = values.counterValue;
       const colour = values.counterColour;
       boardTitle.textContent = "Counters";
-      boardValue.textContent = state.labels ? count + " counters" : count;
+      setBoardAnswer(count + " counters");
       visual.innerHTML = '<div class="loose-counter-board">' + repeated(count, () => counter(colour)) + '</div>';
     }
 
@@ -902,13 +925,13 @@
       const cols = values.arrayCols;
       const total = rows * cols;
       boardTitle.textContent = "Multiplication Array";
-      boardValue.textContent = state.labels ? rows + " × " + cols + " = " + total : total;
+      setBoardAnswer(rows + " × " + cols + " = " + total);
       visual.innerHTML =
         '<div class="array-board">' +
         '<div class="array-grid" style="grid-template-columns:repeat(' + cols + ', auto);grid-template-rows:repeat(' + rows + ', auto);">' +
         repeated(total, () => '<div class="array-dot"></div>') +
         '</div>' +
-        (state.labels ? '<div class="statement">' + rows + " × " + cols + " = " + total + '</div>' : "") +
+        (state.answerRevealed ? '<div class="statement">' + rows + " × " + cols + " = " + total + '</div>' : "") +
         '</div>';
     }
 
@@ -925,12 +948,15 @@
       const num = values.fractionNum;
       const compare = values.compareNum;
       boardTitle.textContent = "Fraction Bars";
-      boardValue.textContent = state.labels ? num + "/" + den + " and " + compare + "/" + den : "";
+      setBoardAnswer(num + "/" + den + " and " + compare + "/" + den);
+      const wholeLabel = state.labels ? "1 whole" : "";
+      const firstLabel = !state.labels ? "" : state.answerRevealed ? num + "/" + den : "?";
+      const secondLabel = !state.labels ? "" : state.answerRevealed ? compare + "/" + den : "?";
       visual.innerHTML =
         '<div class="fraction-board">' +
-        fractionBar(den, den, "1 whole", "#dceeff") +
-        fractionBar(num, den, num + "/" + den, "#159f9b") +
-        fractionBar(compare, den, compare + "/" + den, "#6b54c7") +
+        fractionBar(den, den, wholeLabel, "#dceeff") +
+        fractionBar(num, den, firstLabel, "#159f9b") +
+        fractionBar(compare, den, secondLabel, "#6b54c7") +
         '</div>';
     }
 
@@ -949,17 +975,17 @@
         const x = startX + i * scale;
         const major = max <= 25 || i % 5 === 0;
         return '<line x1="' + x + '" y1="' + (y - (major ? 18 : 10)) + '" x2="' + x + '" y2="' + (y + (major ? 18 : 10)) + '" stroke="#18324a" stroke-width="' + (major ? 3 : 2) + '"/>' +
-          (major ? '<text x="' + x + '" y="' + (y + 56) + '" text-anchor="middle" font-size="28" font-weight="800" fill="#18324a">' + i + '</text>' : "");
+          (major && state.labels ? '<text x="' + x + '" y="' + (y + 56) + '" text-anchor="middle" font-size="28" font-weight="800" fill="#18324a">' + i + '</text>' : "");
       });
       boardTitle.textContent = "Number Line";
-      boardValue.textContent = state.labels ? "Point " + point + ", jump +" + jump : point;
+      setBoardAnswer(point + " + " + jump + " = " + jumpEnd);
       visual.innerHTML = '<svg viewBox="0 0 1040 720" aria-hidden="true">' +
         '<line x1="' + startX + '" y1="' + y + '" x2="' + endX + '" y2="' + y + '" stroke="#18324a" stroke-width="5" stroke-linecap="round"/>' +
         ticks +
         '<circle cx="' + pointX + '" cy="' + y + '" r="18" fill="#d94b43"/>' +
         '<path d="M' + pointX + ' ' + (y - 45) + ' Q' + ((pointX + jumpX) / 2) + ' ' + (y - 150) + ' ' + jumpX + ' ' + (y - 45) + '" fill="none" stroke="#159f9b" stroke-width="6" stroke-linecap="round"/>' +
         '<polygon points="' + jumpX + ',' + (y - 45) + ' ' + (jumpX - 22) + ',' + (y - 50) + ' ' + (jumpX - 8) + ',' + (y - 70) + '" fill="#159f9b"/>' +
-        (state.labels ? '<text x="' + ((pointX + jumpX) / 2) + '" y="' + (y - 168) + '" text-anchor="middle" font-size="38" font-weight="900" fill="#0b6465">+' + jump + '</text>' : "") +
+        (state.answerRevealed ? '<text x="' + ((pointX + jumpX) / 2) + '" y="' + (y - 168) + '" text-anchor="middle" font-size="38" font-weight="900" fill="#0b6465">+' + jump + '</text>' : "") +
         '</svg>';
     }
 
@@ -969,12 +995,12 @@
       const tens = Math.floor((value % 100) / 10);
       const ones = value % 10;
       boardTitle.textContent = "Place Value Chart";
-      boardValue.textContent = String(value);
+      setBoardAnswer(value + " = " + hundreds + " hundreds, " + tens + " tens, " + ones + " ones");
       visual.innerHTML =
         '<div class="place-chart">' +
-        '<section class="place-cell"><div class="place-heading">Hundreds</div><div class="place-value">' + hundreds + '</div></section>' +
-        '<section class="place-cell"><div class="place-heading">Tens</div><div class="place-value">' + tens + '</div></section>' +
-        '<section class="place-cell"><div class="place-heading">Ones</div><div class="place-value">' + ones + '</div></section>' +
+        '<section class="place-cell"><div class="place-heading">' + (state.labels ? "Hundreds" : "&nbsp;") + '</div><div class="place-value">' + hundreds + '</div></section>' +
+        '<section class="place-cell"><div class="place-heading">' + (state.labels ? "Tens" : "&nbsp;") + '</div><div class="place-value">' + tens + '</div></section>' +
+        '<section class="place-cell"><div class="place-heading">' + (state.labels ? "Ones" : "&nbsp;") + '</div><div class="place-value">' + ones + '</div></section>' +
         '</div>';
     }
 
@@ -1010,7 +1036,7 @@
       });
       const minuteText = String(minute).padStart(2, "0");
       boardTitle.textContent = "Clock Face";
-      boardValue.textContent = state.labels ? hour + ":" + minuteText : "";
+      setBoardAnswer(hour + ":" + minuteText);
       visual.innerHTML = '<div class="clock-board"><svg viewBox="0 0 1040 720" aria-hidden="true">' +
         '<circle cx="520" cy="360" r="310" fill="#ffffff" stroke="#18324a" stroke-width="7"/>' +
         marks + numerals + hand(hourAngle, 150, 10, "#18324a") + hand(minuteAngle, 230, 7, "#d94b43") +
@@ -1045,12 +1071,72 @@
         placeValue: [["placeValue", 407]],
         clock: [["clockHour", 3], ["clockMinute", 20]]
       };
-      defaults[state.mode].forEach(([id, value]) => {
+      applyControlValues(defaults[state.mode]);
+    }
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function choose(items) {
+      return items[randInt(0, items.length - 1)];
+    }
+
+    function applyControlValues(entries) {
+      state.answerRevealed = false;
+      entries.forEach(([id, value]) => {
         values[id] = value;
-        byId(id).value = value;
+        const control = byId(id);
+        if (control) control.value = value;
       });
       syncDependentControls("fractionDen");
       syncDependentControls("lineMax");
+      render();
+    }
+
+    function randomCurrent() {
+      if (state.mode === "baseTen") {
+        applyControlValues([["baseValue", randInt(1, 999)]]);
+        return;
+      }
+      if (state.mode === "tenFrame") {
+        applyControlValues([["tenValue", randInt(0, 20)], ["tenColour", choose(["red", "blue", "green"])]]);
+        return;
+      }
+      if (state.mode === "counters") {
+        applyControlValues([["counterValue", randInt(5, 60)], ["counterColour", choose(["red", "blue", "green"])]]);
+        return;
+      }
+      if (state.mode === "arrays") {
+        applyControlValues([["arrayRows", randInt(2, 12)], ["arrayCols", randInt(2, 12)]]);
+        return;
+      }
+      if (state.mode === "fractions") {
+        const den = randInt(3, 12);
+        const first = randInt(1, den - 1);
+        let second = randInt(1, den - 1);
+        if (second === first) second = clamp(second + 1, 1, den);
+        applyControlValues([["fractionDen", den], ["fractionNum", first], ["compareNum", second]]);
+        return;
+      }
+      if (state.mode === "numberLine") {
+        const max = choose([10, 20, 30, 50, 100]);
+        const point = randInt(0, Math.max(0, max - 2));
+        const jump = randInt(1, Math.max(1, max - point));
+        applyControlValues([["lineMax", max], ["linePoint", point], ["lineJump", jump]]);
+        return;
+      }
+      if (state.mode === "placeValue") {
+        applyControlValues([["placeValue", randInt(10, 999)]]);
+        return;
+      }
+      if (state.mode === "clock") {
+        applyControlValues([["clockHour", randInt(1, 12)], ["clockMinute", randInt(0, 11) * 5]]);
+      }
+    }
+
+    function toggleAnswer() {
+      state.answerRevealed = !state.answerRevealed;
       render();
     }
 
@@ -1062,6 +1148,7 @@
       document.querySelectorAll("select").forEach((select) => {
         if (select.id === "modeSelect") return;
         select.addEventListener("change", () => {
+          state.answerRevealed = false;
           values[select.id] = select.value;
           render();
         });
@@ -1073,6 +1160,9 @@
         });
       });
       modeSelect.addEventListener("change", () => setMode(modeSelect.value));
+      answerBtn.addEventListener("click", toggleAnswer);
+      boardValue.addEventListener("click", toggleAnswer);
+      document.getElementById("randomBtn").addEventListener("click", randomCurrent);
       document.getElementById("labelsBtn").addEventListener("click", () => {
         state.labels = !state.labels;
         document.getElementById("labelsBtn").textContent = state.labels ? "Hide Labels" : "Show Labels";
