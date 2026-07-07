@@ -1664,6 +1664,24 @@ const tools = [
     ]
   },
   {
+    slug: "elementary-starter-board",
+    title: "Elementary Starter Board",
+    category: "Classroom Tools",
+    level: "Primary / Elementary",
+    type: "Classroom Routine",
+    access: "Free",
+    status: "Imported",
+    description: "Generate quick visual starter questions for counting, number bonds, place value, comparing numbers, missing numbers, arrays, fractions, time, money, and shapes.",
+    tags: ["classroom", "primary", "elementary", "starter", "bell work", "number sense", "place value", "fractions", "time", "money", "shapes"],
+    toolPath: "tools/elementary-starter-board/index.html?v=elementary-starter-board-1",
+    imported: true,
+    teacherNotes: [
+      "Designed for short start-of-lesson routines with answers hidden until the teacher is ready to reveal them.",
+      "Teachers can generate one large starter question or a four-question board across mixed or focused elementary topics.",
+      "Use the reveal buttons to support the ask, discuss, reveal classroom flow."
+    ]
+  },
+  {
     slug: "exit-ticket-game",
     title: "Math Exit Ticket Choice Board",
     category: "Classroom Tools",
@@ -1937,6 +1955,7 @@ const freeSampleTools = new Set([
   "pythagoras-theorem",
   "averages-range",
   "classroom-displays",
+  "elementary-starter-board",
   "interface-guide"
 ]);
 

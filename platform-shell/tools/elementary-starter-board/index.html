@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elementary Starter Board</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #18324a;
+      --muted: #5e6f80;
+      --line: #d5e2ec;
+      --paper: #ffffff;
+      --soft: #f2f7fb;
+      --navy: #173454;
+      --teal: #159f9b;
+      --blue: #2f6fab;
+      --green: #2f9b68;
+      --amber: #d48a1f;
+      --red: #d94b43;
+      --purple: #6b54c7;
+      --shadow: 0 18px 48px rgba(24, 50, 74, 0.16);
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(21,159,155,.15), transparent 28%),
+        radial-gradient(circle at 88% 74%, rgba(47,111,171,.13), transparent 32%),
+        linear-gradient(135deg, #edf6f8, #f8fbfd);
+      color: var(--ink);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-height: 0;
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: minmax(230px, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(47,111,171,.38), transparent 34%),
+        radial-gradient(circle at 88% 70%, rgba(21,159,155,.28), transparent 32%),
+        var(--navy);
+      color: white;
+      box-shadow: 0 7px 18px rgba(15, 39, 63, 0.18);
+    }
+
+    .brand h1 {
+      font-size: clamp(1.2rem, 2vw, 1.7rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin-top: 4px;
+      max-width: 760px;
+      color: rgba(255,255,255,.84);
+      font-size: .92rem;
+      font-weight: 650;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    select,
+    .btn {
+      min-height: 40px;
+      border: 1px solid rgba(255,255,255,.32);
+      border-radius: 8px;
+      padding: 8px 11px;
+      background: white;
+      color: var(--navy);
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .btn {
+      background: var(--teal);
+      color: white;
+      border-color: var(--teal);
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,.13);
+      color: white;
+      border-color: rgba(255,255,255,.34);
+    }
+
+    .btn:hover,
+    select:hover {
+      filter: brightness(.98);
+    }
+
+    .workspace {
+      min-height: 0;
+      padding: 16px;
+      display: grid;
+      background:
+        linear-gradient(rgba(24,50,74,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(24,50,74,.035) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    .board {
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+      border: 1px solid #b9c9d8;
+      border-radius: 12px;
+      background: rgba(255,255,255,.97);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .board.fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .board-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(21,159,155,.08), rgba(47,111,171,.08)),
+        #ffffff;
+    }
+
+    .board-title {
+      display: grid;
+      gap: 3px;
+    }
+
+    .board-title h2 {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      color: var(--navy);
+    }
+
+    .board-title p {
+      color: var(--muted);
+      font-weight: 750;
+      font-size: .9rem;
+    }
+
+    .board-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .board-actions .btn {
+      min-height: 38px;
+      color: white;
+    }
+
+    .board-actions .btn.light {
+      background: white;
+      color: var(--navy);
+      border-color: var(--line);
+    }
+
+    .starter-area {
+      min-height: 0;
+      overflow: auto;
+      padding: 12px 16px;
+      display: grid;
+    }
+
+    .starter-grid {
+      display: grid;
+      gap: 14px;
+      min-height: 0;
+    }
+
+    .starter-grid.layout-four {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: minmax(232px, 1fr);
+    }
+
+    .starter-grid.layout-one {
+      grid-template-columns: 1fr;
+      grid-auto-rows: minmax(520px, 1fr);
+    }
+
+    .task {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 88% 18%, rgba(21,159,155,.1), transparent 26%),
+        #ffffff;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    .task-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 11px 12px 8px;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .task-number {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #e8f8f7;
+      color: #0b6465;
+      border: 1px solid rgba(21,159,155,.22);
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .prompt {
+      padding: 0 18px 10px;
+      display: grid;
+      align-content: center;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .question {
+      font-family: "KaTeX_Main", "Latin Modern Math", "Times New Roman", serif;
+      font-size: clamp(1.55rem, 2.8vw, 3rem);
+      line-height: 1.12;
+      font-weight: 900;
+      color: var(--ink);
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .layout-one .question {
+      font-size: clamp(3rem, 6vw, 6.8rem);
+    }
+
+    .layout-four .task-head {
+      padding: 9px 12px 4px;
+    }
+
+    .layout-four .prompt {
+      padding: 0 14px 4px;
+      gap: 8px;
+      align-content: center;
+    }
+
+    .layout-four .visual {
+      min-height: 50px;
+      max-height: 122px;
+      overflow: hidden;
+    }
+
+    .visual {
+      min-height: 88px;
+      display: grid;
+      place-items: center;
+    }
+
+    .answer-row {
+      padding: 10px 12px 12px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .answer-btn {
+      max-width: 100%;
+      min-height: 40px;
+      border: 1px solid #c7d8e5;
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: #f7fbfd;
+      color: var(--navy);
+      font-weight: 950;
+      cursor: pointer;
+      box-shadow: 0 5px 14px rgba(24,50,74,.07);
+    }
+
+    .layout-four .answer-row {
+      padding: 6px 10px 8px;
+    }
+
+    .layout-four .answer-btn {
+      min-height: 36px;
+      padding: 7px 12px;
+    }
+
+    .answer-btn.revealed {
+      background: #e8fbfa;
+      border-color: rgba(21,159,155,.45);
+      color: #0b6465;
+    }
+
+    .dots,
+    .coins,
+    .shape-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      max-width: 640px;
+    }
+
+    .dot {
+      width: clamp(24px, 4vw, 44px);
+      height: clamp(24px, 4vw, 44px);
+      border-radius: 50%;
+      background: var(--blue);
+      box-shadow: inset 0 -5px 0 rgba(0,0,0,.12);
+    }
+
+    .coin {
+      width: clamp(44px, 6vw, 66px);
+      height: clamp(44px, 6vw, 66px);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #ffe9bf;
+      border: 3px solid var(--amber);
+      color: #51340d;
+      font-weight: 950;
+      font-size: clamp(.9rem, 1.6vw, 1.2rem);
+    }
+
+    .layout-four .coin {
+      width: clamp(38px, 4.5vw, 58px);
+      height: clamp(38px, 4.5vw, 58px);
+      font-size: clamp(.8rem, 1.3vw, 1rem);
+    }
+
+    .ten-frame {
+      display: grid;
+      grid-template-columns: repeat(5, 46px);
+      grid-template-rows: repeat(2, 44px);
+      border: 3px solid var(--navy);
+      background: white;
+    }
+
+    .ten-cell {
+      display: grid;
+      place-items: center;
+      border: 1.5px solid var(--navy);
+    }
+
+    .mini-counter {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+
+    .place-strip {
+      width: min(100%, 520px);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 3px solid var(--navy);
+      border-radius: 10px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .place-strip div {
+      min-height: 86px;
+      display: grid;
+      place-items: center;
+      border-right: 3px solid var(--navy);
+      font-family: "KaTeX_Main", "Latin Modern Math", "Times New Roman", serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 950;
+    }
+
+    .layout-four .place-strip div {
+      min-height: 62px;
+      font-size: clamp(2rem, 3.2vw, 3.1rem);
+    }
+
+    .place-strip div:last-child {
+      border-right: 0;
+    }
+
+    .fraction-bar {
+      width: min(100%, 560px);
+      min-height: 72px;
+      display: grid;
+      border: 3px solid var(--navy);
+      border-radius: 10px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .layout-four .fraction-bar {
+      min-height: 54px;
+    }
+
+    .fraction-piece {
+      border-right: 2px solid var(--navy);
+    }
+
+    .fraction-piece:last-child {
+      border-right: 0;
+    }
+
+    .fraction-piece.filled {
+      background: var(--teal);
+    }
+
+    .array {
+      display: grid;
+      gap: 8px;
+      padding: 16px;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      background: var(--soft);
+    }
+
+    .layout-four .array {
+      gap: 5px;
+      padding: 9px;
+    }
+
+    .array-dot {
+      width: clamp(18px, 3vw, 34px);
+      height: clamp(18px, 3vw, 34px);
+      border-radius: 50%;
+      background: var(--purple);
+    }
+
+    .layout-four .array-dot {
+      width: clamp(14px, 2vw, 24px);
+      height: clamp(14px, 2vw, 24px);
+    }
+
+    .clock {
+      width: min(100%, 240px);
+      height: auto;
+    }
+
+    .layout-four .clock {
+      width: min(100%, 174px);
+    }
+
+    .number-line {
+      width: min(100%, 600px);
+      height: auto;
+    }
+
+    .layout-four .number-line {
+      width: min(100%, 520px);
+      height: 102px;
+    }
+
+    .shape {
+      width: 92px;
+      height: 92px;
+      border: 4px solid var(--navy);
+      background: #f5fbff;
+    }
+
+    .layout-four .shape {
+      width: 70px;
+      height: 70px;
+    }
+
+    .shape.triangle {
+      width: 0;
+      height: 0;
+      border-left: 52px solid transparent;
+      border-right: 52px solid transparent;
+      border-bottom: 94px solid var(--navy);
+      background: transparent;
+      position: relative;
+    }
+
+    .layout-four .shape.triangle {
+      width: 0;
+      height: 0;
+      border-left-width: 39px;
+      border-right-width: 39px;
+      border-bottom-width: 70px;
+    }
+
+    .shape.triangle::after {
+      content: "";
+      position: absolute;
+      left: -43px;
+      top: 13px;
+      border-left: 43px solid transparent;
+      border-right: 43px solid transparent;
+      border-bottom: 75px solid #f5fbff;
+    }
+
+    .layout-four .shape.triangle::after {
+      left: -31px;
+      top: 11px;
+      border-left-width: 31px;
+      border-right-width: 31px;
+      border-bottom-width: 54px;
+    }
+
+    .shape.circle {
+      border-radius: 50%;
+    }
+
+    .shape.rectangle {
+      width: 132px;
+      height: 82px;
+    }
+
+    .layout-four .shape.rectangle {
+      width: 104px;
+      height: 62px;
+    }
+
+    @media (max-width: 900px) {
+      body { overflow: auto; }
+      .app { height: auto; min-height: 100vh; }
+      .topbar,
+      .board-head {
+        grid-template-columns: 1fr;
+      }
+      .toolbar,
+      .board-actions {
+        justify-content: flex-start;
+      }
+      .workspace {
+        min-height: 76vh;
+      }
+      .board {
+        min-height: 76vh;
+      }
+      .starter-grid.layout-four {
+        grid-template-columns: 1fr;
+        grid-auto-rows: minmax(260px, auto);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Elementary Starter Board</h1>
+        <p>Generate visual starter questions for counting, number sense, place value, fractions, time, money, arrays, and shapes.</p>
+      </div>
+      <div class="toolbar">
+        <select id="levelSelect" aria-label="Age band">
+          <option value="early">Early Primary</option>
+          <option value="middle" selected>Middle Primary</option>
+          <option value="upper">Upper Primary</option>
+        </select>
+        <select id="topicSelect" aria-label="Starter topic">
+          <option value="mixed" selected>Mixed Starter</option>
+          <option value="counting">Count Objects</option>
+          <option value="bonds">Number Bonds</option>
+          <option value="place">Place Value</option>
+          <option value="compare">Compare Numbers</option>
+          <option value="missing">Missing Number</option>
+          <option value="arrays">Arrays</option>
+          <option value="fractions">Fractions</option>
+          <option value="time">Time</option>
+          <option value="money">Money</option>
+          <option value="shapes">Shapes</option>
+        </select>
+        <select id="layoutSelect" aria-label="Board layout">
+          <option value="four" selected>Four Questions</option>
+          <option value="one">One Big Question</option>
+        </select>
+        <button class="btn" id="newBtn" type="button">New Starter</button>
+        <button class="btn secondary" id="fullscreenBtn" type="button">Full Screen</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <div class="board" id="board">
+        <div class="board-head">
+          <div class="board-title">
+            <h2 id="boardTitle">Mixed Starter</h2>
+            <p id="boardSubtitle">Show the task first. Reveal answers when pupils are ready to discuss.</p>
+          </div>
+          <div class="board-actions">
+            <button class="btn light" id="hideAnswersBtn" type="button">Hide Answers</button>
+            <button class="btn" id="revealAnswersBtn" type="button">Reveal All</button>
+          </div>
+        </div>
+        <div class="starter-area">
+          <div class="starter-grid layout-four" id="starterGrid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const state = {
+      level: "middle",
+      topic: "mixed",
+      layout: "four",
+      tasks: [],
+      revealed: {}
+    };
+
+    const topicNames = {
+      mixed: "Mixed Starter",
+      counting: "Count Objects",
+      bonds: "Number Bonds",
+      place: "Place Value",
+      compare: "Compare Numbers",
+      missing: "Missing Number",
+      arrays: "Arrays",
+      fractions: "Fractions",
+      time: "Time",
+      money: "Money",
+      shapes: "Shapes"
+    };
+
+    const topicPool = ["counting", "bonds", "place", "compare", "missing", "arrays", "fractions", "time", "money", "shapes"];
+
+    const starterGrid = document.getElementById("starterGrid");
+    const board = document.getElementById("board");
+    const boardTitle = document.getElementById("boardTitle");
+    const boardSubtitle = document.getElementById("boardSubtitle");
+    const levelSelect = document.getElementById("levelSelect");
+    const topicSelect = document.getElementById("topicSelect");
+    const layoutSelect = document.getElementById("layoutSelect");
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function choose(items) {
+      return items[randInt(0, items.length - 1)];
+    }
+
+    function shuffle(items) {
+      return items
+        .map((item) => ({ item, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map((entry) => entry.item);
+    }
+
+    function formatMoney(pence) {
+      if (pence < 100) return pence + "p";
+      const pounds = Math.floor(pence / 100);
+      const pennies = String(pence % 100).padStart(2, "0");
+      return "&pound;" + pounds + "." + pennies;
+    }
+
+    function dots(count) {
+      return '<div class="dots">' + Array.from({ length: count }, () => '<span class="dot"></span>').join("") + '</div>';
+    }
+
+    function tenFrame(count) {
+      return '<div class="ten-frame">' + Array.from({ length: 10 }, (_, index) => {
+        return '<span class="ten-cell">' + (index < count ? '<span class="mini-counter"></span>' : "") + '</span>';
+      }).join("") + '</div>';
+    }
+
+    function placeStrip(number, highlightIndex) {
+      const digits = String(number).padStart(3, "0").split("");
+      return '<div class="place-strip">' + digits.map((digit, index) => {
+        const style = index === highlightIndex ? ' style="background:#fff4dc;color:#8b5a12;"' : "";
+        return '<div' + style + '>' + digit + '</div>';
+      }).join("") + '</div>';
+    }
+
+    function fractionBar(num, den) {
+      return '<div class="fraction-bar" style="grid-template-columns:repeat(' + den + ',1fr)">' +
+        Array.from({ length: den }, (_, index) => '<span class="fraction-piece' + (index < num ? " filled" : "") + '"></span>').join("") +
+      '</div>';
+    }
+
+    function arrayVisual(rows, cols) {
+      return '<div class="array" style="grid-template-columns:repeat(' + cols + ',auto)">' +
+        Array.from({ length: rows * cols }, () => '<span class="array-dot"></span>').join("") +
+      '</div>';
+    }
+
+    function clockVisual(hour, minute) {
+      const minuteAngle = minute * 6 - 90;
+      const hourAngle = ((hour % 12) * 30 + minute * 0.5) - 90;
+      const hand = (angle, length, width, colour) => {
+        const rad = angle * Math.PI / 180;
+        const x = 140 + Math.cos(rad) * length;
+        const y = 140 + Math.sin(rad) * length;
+        return '<line x1="140" y1="140" x2="' + x + '" y2="' + y + '" stroke="' + colour + '" stroke-width="' + width + '" stroke-linecap="round"/>';
+      };
+      const marks = Array.from({ length: 60 }, (_, index) => {
+        const angle = index * 6 - 90;
+        const rad = angle * Math.PI / 180;
+        const outer = 118;
+        const inner = index % 5 === 0 ? 104 : 111;
+        const x1 = 140 + Math.cos(rad) * inner;
+        const y1 = 140 + Math.sin(rad) * inner;
+        const x2 = 140 + Math.cos(rad) * outer;
+        const y2 = 140 + Math.sin(rad) * outer;
+        return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="#18324a" stroke-width="' + (index % 5 === 0 ? 3 : 1.5) + '"/>';
+      }).join("");
+      const numerals = Array.from({ length: 12 }, (_, index) => {
+        const n = index + 1;
+        const angle = n * 30 - 90;
+        const rad = angle * Math.PI / 180;
+        const x = 140 + Math.cos(rad) * 88;
+        const y = 140 + Math.sin(rad) * 88 + 6;
+        return '<text x="' + x + '" y="' + y + '" text-anchor="middle" font-size="18" font-weight="900" fill="#18324a">' + n + '</text>';
+      }).join("");
+      return '<svg class="clock" viewBox="0 0 280 280" aria-hidden="true">' +
+        '<circle cx="140" cy="140" r="126" fill="#ffffff" stroke="#18324a" stroke-width="5"/>' +
+        marks + numerals + hand(hourAngle, 62, 7, "#18324a") + hand(minuteAngle, 96, 5, "#d94b43") +
+        '<circle cx="140" cy="140" r="7" fill="#18324a"/>' +
+      '</svg>';
+    }
+
+    function numberLine(a, b, symbol) {
+      const min = 0;
+      const max = Math.max(20, Math.ceil(Math.max(a, b) / 10) * 10);
+      const x = (value) => 54 + (value - min) * (492 / (max - min));
+      const ticks = Array.from({ length: 11 }, (_, index) => {
+        const value = Math.round(max * index / 10);
+        const tx = x(value);
+        return '<line x1="' + tx + '" y1="74" x2="' + tx + '" y2="98" stroke="#18324a" stroke-width="2"/>' +
+          '<text x="' + tx + '" y="130" text-anchor="middle" font-size="18" font-weight="850" fill="#18324a">' + value + '</text>';
+      }).join("");
+      return '<svg class="number-line" viewBox="0 0 600 150" aria-hidden="true">' +
+        '<line x1="54" y1="86" x2="546" y2="86" stroke="#18324a" stroke-width="4" stroke-linecap="round"/>' +
+        ticks +
+        '<circle cx="' + x(a) + '" cy="86" r="10" fill="#2f6fab"/>' +
+        '<circle cx="' + x(b) + '" cy="86" r="10" fill="#d94b43"/>' +
+        '</svg>';
+    }
+
+    function coins(values) {
+      return '<div class="coins">' + values.map((value) => '<span class="coin">' + value + 'p</span>').join("") + '</div>';
+    }
+
+    function shapesVisual(shape) {
+      if (shape === "triangle") return '<div class="shape-row"><span class="shape triangle"></span></div>';
+      return '<div class="shape-row"><span class="shape ' + shape + '"></span></div>';
+    }
+
+    function makeCounting(level) {
+      const max = level === "early" ? 12 : level === "middle" ? 24 : 40;
+      const count = randInt(3, max);
+      return {
+        type: "Counting",
+        question: "How many objects are shown?",
+        answer: String(count),
+        visual: count <= 28 ? dots(count) : tenFrame(count % 10) + '<div class="question">' + Math.floor(count / 10) + ' tens and ? ones</div>'
+      };
+    }
+
+    function makeBonds(level) {
+      const target = level === "early" ? choose([10, 20]) : level === "middle" ? choose([20, 50, 100]) : choose([100, 1000]);
+      const a = randInt(1, target - 1);
+      return {
+        type: "Number Bonds",
+        question: a + " + ? = " + target,
+        answer: String(target - a),
+        visual: ""
+      };
+    }
+
+    function makePlace(level) {
+      const number = level === "early" ? randInt(10, 99) : randInt(100, 999);
+      const padded = String(number).padStart(3, "0");
+      const possible = level === "early" ? [1, 2] : [0, 1, 2];
+      const index = choose(possible);
+      const names = ["hundreds", "tens", "ones"];
+      const placeValues = [100, 10, 1];
+      const digit = Number(padded[index]);
+      return {
+        type: "Place Value",
+        question: "What is the value of the highlighted digit?",
+        answer: String(digit * placeValues[index]),
+        visual: placeStrip(number, index),
+        note: names[index]
+      };
+    }
+
+    function makeCompare(level) {
+      const max = level === "early" ? 50 : level === "middle" ? 200 : 1000;
+      const a = randInt(1, max);
+      let b = randInt(1, max);
+      if (Math.random() < 0.2) b = a;
+      const symbol = a > b ? ">" : a < b ? "<" : "=";
+      return {
+        type: "Compare",
+        question: a + "  ?  " + b,
+        answer: symbol,
+        visual: numberLine(a, b, symbol)
+      };
+    }
+
+    function makeMissing(level) {
+      const max = level === "early" ? 20 : level === "middle" ? 100 : 500;
+      const answer = randInt(2, Math.floor(max / 2));
+      const add = randInt(2, Math.floor(max / 2));
+      const total = answer + add;
+      const forms = [
+        { q: "? + " + add + " = " + total, a: answer },
+        { q: total + " - ? = " + add, a: answer },
+        { q: answer + " + ? = " + total, a: add }
+      ];
+      const item = choose(forms);
+      return {
+        type: "Missing Number",
+        question: item.q,
+        answer: String(item.a),
+        visual: ""
+      };
+    }
+
+    function makeArrays(level) {
+      const rowMax = level === "early" ? 5 : level === "middle" ? 6 : 8;
+      const rows = randInt(2, rowMax);
+      const cols = randInt(2, rowMax);
+      return {
+        type: "Arrays",
+        question: "What multiplication fact is shown?",
+        answer: rows + " x " + cols + " = " + (rows * cols),
+        visual: arrayVisual(rows, cols)
+      };
+    }
+
+    function makeFractions(level) {
+      const dens = level === "early" ? [2, 4] : level === "middle" ? [3, 4, 5, 8] : [5, 6, 8, 10, 12];
+      const den = choose(dens);
+      const num = randInt(1, den - 1);
+      return {
+        type: "Fractions",
+        question: "What fraction is shaded?",
+        answer: num + "/" + den,
+        visual: fractionBar(num, den)
+      };
+    }
+
+    function makeTime(level) {
+      const hour = randInt(1, 12);
+      const minute = level === "early" ? choose([0, 30]) : level === "middle" ? choose([0, 15, 30, 45]) : randInt(0, 11) * 5;
+      const timeText = hour + ":" + String(minute).padStart(2, "0");
+      return {
+        type: "Time",
+        question: "What time is shown?",
+        answer: timeText,
+        visual: clockVisual(hour, minute)
+      };
+    }
+
+    function makeMoney(level) {
+      const pool = level === "early" ? [1, 2, 5, 10] : level === "middle" ? [1, 2, 5, 10, 20, 50] : [5, 10, 20, 50, 100, 200];
+      const count = level === "early" ? randInt(2, 4) : randInt(3, 6);
+      const picked = Array.from({ length: count }, () => choose(pool));
+      const total = picked.reduce((sum, value) => sum + value, 0);
+      return {
+        type: "Money",
+        question: "What is the total value?",
+        answer: formatMoney(total),
+        visual: coins(picked)
+      };
+    }
+
+    function makeShapes(level) {
+      const shapes = ["square", "rectangle", "triangle", "circle"];
+      const shape = choose(shapes);
+      const facts = {
+        square: ["4 sides", "4 corners", "all sides equal"],
+        rectangle: ["4 sides", "4 corners", "opposite sides equal"],
+        triangle: ["3 sides", "3 corners"],
+        circle: ["0 corners", "curved edge"]
+      };
+      const prompt = level === "early" ? "Name this shape." : "State one property of this shape.";
+      return {
+        type: "Shapes",
+        question: prompt,
+        answer: level === "early" ? shape : choose(facts[shape]),
+        visual: shapesVisual(shape)
+      };
+    }
+
+    const makers = {
+      counting: makeCounting,
+      bonds: makeBonds,
+      place: makePlace,
+      compare: makeCompare,
+      missing: makeMissing,
+      arrays: makeArrays,
+      fractions: makeFractions,
+      time: makeTime,
+      money: makeMoney,
+      shapes: makeShapes
+    };
+
+    function makeTask(topic) {
+      const selectedTopic = topic === "mixed" ? choose(topicPool) : topic;
+      return makers[selectedTopic](state.level);
+    }
+
+    function generateBoard() {
+      const count = state.layout === "one" ? 1 : 4;
+      let topics = [];
+      if (state.topic === "mixed") {
+        topics = shuffle(topicPool).slice(0, count);
+      } else {
+        topics = Array.from({ length: count }, () => state.topic);
+      }
+      state.tasks = topics.map((topic, index) => ({ id: "task-" + Date.now() + "-" + index, ...makeTask(topic) }));
+      state.revealed = {};
+      render();
+    }
+
+    function render() {
+      boardTitle.textContent = topicNames[state.topic];
+      boardSubtitle.textContent = state.layout === "one"
+        ? "One large starter for whole-class discussion."
+        : "Four quick questions for a short classroom starter.";
+      starterGrid.className = "starter-grid layout-" + state.layout;
+      starterGrid.innerHTML = state.tasks.map((task, index) => {
+        const revealed = !!state.revealed[task.id];
+        return '<article class="task">' +
+          '<div class="task-head"><span>' + task.type + '</span><span class="task-number">' + (index + 1) + '</span></div>' +
+          '<div class="prompt">' +
+            '<div class="question">' + task.question + '</div>' +
+            '<div class="visual">' + (task.visual || "") + '</div>' +
+          '</div>' +
+          '<div class="answer-row">' +
+            '<button class="answer-btn' + (revealed ? " revealed" : "") + '" type="button" data-answer="' + task.id + '">' +
+              (revealed ? "Answer: " + task.answer : "Reveal Answer") +
+            '</button>' +
+          '</div>' +
+        '</article>';
+      }).join("");
+      document.querySelectorAll("[data-answer]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const id = button.dataset.answer;
+          state.revealed[id] = !state.revealed[id];
+          render();
+        });
+      });
+    }
+
+    function revealAll() {
+      state.tasks.forEach((task) => {
+        state.revealed[task.id] = true;
+      });
+      render();
+    }
+
+    function hideAll() {
+      state.revealed = {};
+      render();
+    }
+
+    function initialise() {
+      levelSelect.addEventListener("change", () => {
+        state.level = levelSelect.value;
+        generateBoard();
+      });
+      topicSelect.addEventListener("change", () => {
+        state.topic = topicSelect.value;
+        generateBoard();
+      });
+      layoutSelect.addEventListener("change", () => {
+        state.layout = layoutSelect.value;
+        generateBoard();
+      });
+      document.getElementById("newBtn").addEventListener("click", generateBoard);
+      document.getElementById("revealAnswersBtn").addEventListener("click", revealAll);
+      document.getElementById("hideAnswersBtn").addEventListener("click", hideAll);
+      document.getElementById("fullscreenBtn").addEventListener("click", () => {
+        board.classList.toggle("fullscreen");
+        document.getElementById("fullscreenBtn").textContent = board.classList.contains("fullscreen") ? "Exit Full Screen" : "Full Screen";
+      });
+      generateBoard();
+    }
+
+    initialise();
+  </script>
+</body>
+</html>
