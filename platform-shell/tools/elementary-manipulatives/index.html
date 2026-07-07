@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elementary Maths Manipulatives</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #18324a;
+      --muted: #5d6d7e;
+      --line: #d4e0ea;
+      --paper: #ffffff;
+      --soft: #f3f7fb;
+      --navy: #173454;
+      --teal: #159f9b;
+      --green: #2f9b68;
+      --amber: #d48a1f;
+      --blue: #2f6fab;
+      --purple: #6b54c7;
+      --red: #d94b43;
+      --shadow: 0 18px 45px rgba(24, 50, 74, 0.16);
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.88), rgba(233,244,247,.92)),
+        repeating-linear-gradient(45deg, rgba(21,159,155,.045) 0 1px, transparent 1px 36px);
+      color: var(--ink);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-height: 0;
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      background:
+        radial-gradient(circle at 12% 20%, rgba(47,111,171,.38), transparent 34%),
+        radial-gradient(circle at 88% 74%, rgba(21,159,155,.3), transparent 32%),
+        var(--navy);
+      color: white;
+      box-shadow: 0 6px 18px rgba(15, 39, 63, 0.18);
+    }
+
+    .brand h1 {
+      font-size: clamp(1.15rem, 2vw, 1.55rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin-top: 4px;
+      color: rgba(255,255,255,.82);
+      font-size: .9rem;
+      font-weight: 650;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    select,
+    button,
+    input {
+      font: inherit;
+    }
+
+    select,
+    .btn {
+      min-height: 40px;
+      border: 1px solid rgba(255,255,255,.32);
+      border-radius: 8px;
+      padding: 8px 11px;
+      background: white;
+      color: var(--navy);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn {
+      background: var(--teal);
+      color: white;
+      border-color: var(--teal);
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,.12);
+      color: white;
+      border-color: rgba(255,255,255,.34);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      min-height: 0;
+    }
+
+    .panel {
+      min-height: 0;
+      overflow-y: auto;
+      border-right: 1px solid var(--line);
+      background: rgba(255,255,255,.94);
+      padding: 14px;
+    }
+
+    .mode-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .mode-btn {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 10px 12px;
+      background: #f8fbfd;
+      color: var(--ink);
+      text-align: left;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .mode-btn.active {
+      background: #e8fbfa;
+      border-color: var(--teal);
+      color: #0b6465;
+      box-shadow: 0 0 0 2px rgba(21,159,155,.13);
+    }
+
+    .control-card {
+      display: none;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      background: white;
+      box-shadow: 0 8px 18px rgba(24,50,74,.06);
+    }
+
+    .control-card.active {
+      display: block;
+    }
+
+    .control-card h2 {
+      margin-bottom: 8px;
+      color: var(--navy);
+      font-size: .92rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .field {
+      margin-top: 11px;
+    }
+
+    .field label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: .85rem;
+      font-weight: 850;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #f8fbfd;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .stepper {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .small-btn {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #eef6fb;
+      color: var(--ink);
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .small-btn:hover,
+    .mode-btn:hover,
+    .btn:hover {
+      filter: brightness(.97);
+    }
+
+    .board-shell {
+      min-height: 0;
+      padding: 16px;
+      display: grid;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(47,111,171,.08), transparent 34%),
+        radial-gradient(circle at 88% 72%, rgba(21,159,155,.08), transparent 32%),
+        #dfeaf2;
+    }
+
+    .board {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #b9c9d8;
+      border-radius: 10px;
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .board.fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .board-header {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      z-index: 5;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .title-pill,
+    .value-pill {
+      border: 1px solid #dbe6ef;
+      border-radius: 999px;
+      background: rgba(255,255,255,.92);
+      padding: 8px 12px;
+      color: var(--ink);
+      box-shadow: 0 4px 14px rgba(24,50,74,.08);
+      font-weight: 900;
+    }
+
+    .value-pill {
+      color: #0d6869;
+    }
+
+    .stage {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 78px 32px 28px;
+    }
+
+    .visual {
+      width: min(100%, 1120px);
+      height: min(100%, 720px);
+      display: grid;
+      place-items: center;
+    }
+
+    .visual svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .board-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(24,50,74,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(24,50,74,.045) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    .base-layout {
+      width: min(100%, 1080px);
+      display: grid;
+      grid-template-columns: 1.15fr .9fr .75fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .base-column {
+      min-height: 500px;
+      border: 2px solid #d7e5ef;
+      border-radius: 12px;
+      background: rgba(248,251,253,.92);
+      padding: 16px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 12px;
+    }
+
+    .base-column h3 {
+      text-align: center;
+      color: var(--navy);
+      font-size: clamp(1rem, 1.7vw, 1.3rem);
+    }
+
+    .hundreds-grid,
+    .tens-grid,
+    .ones-grid {
+      align-content: start;
+      justify-content: center;
+      display: grid;
+      gap: 10px;
+    }
+
+    .hundreds-grid {
+      grid-template-columns: repeat(auto-fit, minmax(86px, 86px));
+    }
+
+    .tens-grid {
+      grid-template-columns: repeat(auto-fit, minmax(34px, 34px));
+    }
+
+    .ones-grid {
+      grid-template-columns: repeat(auto-fit, minmax(34px, 34px));
+    }
+
+    .flat {
+      width: 86px;
+      height: 86px;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      border: 2px solid #2f6fab;
+      background: #d9ecff;
+    }
+
+    .flat span {
+      border-right: 1px solid rgba(47,111,171,.28);
+      border-bottom: 1px solid rgba(47,111,171,.28);
+    }
+
+    .rod {
+      width: 34px;
+      height: 150px;
+      display: grid;
+      grid-template-rows: repeat(10, 1fr);
+      border: 2px solid #d48a1f;
+      background: #ffe9bf;
+    }
+
+    .rod span {
+      border-bottom: 1px solid rgba(212,138,31,.35);
+    }
+
+    .unit {
+      width: 34px;
+      height: 34px;
+      border: 2px solid #2f9b68;
+      border-radius: 6px;
+      background: #dff7e8;
+    }
+
+    .ten-frame-wrap {
+      display: grid;
+      gap: 22px;
+      justify-items: center;
+    }
+
+    .ten-frame {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(70px, 1fr));
+      grid-template-rows: repeat(2, 86px);
+      gap: 0;
+      width: min(96vw, 760px);
+      border: 4px solid var(--navy);
+      background: white;
+    }
+
+    .ten-cell {
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--navy);
+    }
+
+    .counter {
+      width: min(60px, 8vw);
+      height: min(60px, 8vw);
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: inset 0 -8px 0 rgba(0,0,0,.12);
+    }
+
+    .counter.blue { background: var(--blue); }
+    .counter.green { background: var(--green); }
+
+    .loose-counter-board {
+      width: min(100%, 1000px);
+      min-height: 500px;
+      display: flex;
+      align-content: flex-start;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      border: 2px dashed #c8d8e5;
+      border-radius: 16px;
+      padding: 28px;
+      background: rgba(248,251,253,.85);
+    }
+
+    .loose-counter-board .counter {
+      width: clamp(44px, 6vw, 72px);
+      height: clamp(44px, 6vw, 72px);
+    }
+
+    .array-board {
+      width: min(100%, 1000px);
+      display: grid;
+      place-items: center;
+      gap: 24px;
+    }
+
+    .array-grid {
+      display: grid;
+      gap: 12px;
+      padding: 24px;
+      border: 2px solid #c8d8e5;
+      border-radius: 16px;
+      background: rgba(248,251,253,.9);
+    }
+
+    .array-dot {
+      width: clamp(22px, 4vw, 46px);
+      height: clamp(22px, 4vw, 46px);
+      border-radius: 50%;
+      background: var(--purple);
+      box-shadow: inset 0 -6px 0 rgba(0,0,0,.13);
+    }
+
+    .statement {
+      color: var(--ink);
+      font-family: "KaTeX_Main", "Latin Modern Math", "Times New Roman", serif;
+      font-size: clamp(2.2rem, 5vw, 4.6rem);
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .fraction-board {
+      width: min(100%, 940px);
+      display: grid;
+      gap: 26px;
+    }
+
+    .fraction-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .fraction-label {
+      color: var(--navy);
+      font-family: "KaTeX_Main", "Latin Modern Math", "Times New Roman", serif;
+      font-size: clamp(1.5rem, 3vw, 2.6rem);
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .fraction-bar {
+      display: grid;
+      min-height: 72px;
+      overflow: hidden;
+      border: 3px solid var(--navy);
+      border-radius: 10px;
+      background: white;
+    }
+
+    .fraction-piece {
+      border-right: 2px solid var(--navy);
+      background: white;
+    }
+
+    .fraction-piece:last-child {
+      border-right: 0;
+    }
+
+    .fraction-piece.filled {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.18), transparent),
+        var(--teal);
+    }
+
+    .number-line-board {
+      width: min(100%, 1040px);
+      display: grid;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .place-chart {
+      width: min(100%, 1000px);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 3px solid var(--navy);
+      border-radius: 14px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .place-cell {
+      min-height: 240px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      border-right: 3px solid var(--navy);
+    }
+
+    .place-cell:last-child {
+      border-right: 0;
+    }
+
+    .place-heading {
+      padding: 14px;
+      background: #eef6fb;
+      border-bottom: 3px solid var(--navy);
+      text-align: center;
+      color: var(--navy);
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      font-weight: 900;
+    }
+
+    .place-value {
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      font-family: "KaTeX_Main", "Latin Modern Math", "Times New Roman", serif;
+      font-size: clamp(5rem, 13vw, 9rem);
+      font-weight: 950;
+    }
+
+    .clock-board {
+      width: min(100%, 800px);
+      height: min(100%, 640px);
+      display: grid;
+      place-items: center;
+    }
+
+    @media (max-width: 900px) {
+      body { overflow: auto; }
+      .app { height: auto; min-height: 100vh; }
+      .topbar { grid-template-columns: 1fr; }
+      .toolbar { justify-content: flex-start; }
+      .workspace { grid-template-columns: 1fr; }
+      .panel { border-right: 0; border-bottom: 1px solid var(--line); }
+      .mode-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .board-shell { min-height: 72vh; }
+      .board { min-height: 72vh; }
+      .base-layout { grid-template-columns: 1fr; }
+      .base-column { min-height: 240px; }
+      .fraction-row { grid-template-columns: 1fr; }
+      .fraction-label { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Elementary Maths Manipulatives</h1>
+        <p>Board-ready concrete models for place value, counters, arrays, fractions, number lines, and time</p>
+      </div>
+      <div class="toolbar">
+        <select id="modeSelect" aria-label="Manipulative mode">
+          <option value="baseTen">Base-Ten Blocks</option>
+          <option value="tenFrame">Ten Frames</option>
+          <option value="counters">Counters</option>
+          <option value="arrays">Multiplication Arrays</option>
+          <option value="fractions">Fraction Bars</option>
+          <option value="numberLine">Number Line</option>
+          <option value="placeValue">Place Value Chart</option>
+          <option value="clock">Clock Face</option>
+        </select>
+        <button class="btn secondary" id="labelsBtn" type="button">Hide Labels</button>
+        <button class="btn secondary" id="resetBtn" type="button">Reset</button>
+        <button class="btn" id="fullscreenBtn" type="button">Full Screen</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <aside class="panel">
+        <nav class="mode-list" id="modeList" aria-label="Manipulatives"></nav>
+
+        <section class="control-card active" data-controls="baseTen">
+          <h2>Base-Ten Blocks</h2>
+          <div class="field">
+            <label for="baseValue">Number <span id="baseValueLabel">236</span></label>
+            <input id="baseValue" type="range" min="0" max="999" value="236">
+          </div>
+          <div class="stepper">
+            <button class="small-btn" data-adjust="baseValue:-100">-100</button>
+            <button class="small-btn" data-adjust="baseValue:-10">-10</button>
+            <button class="small-btn" data-adjust="baseValue:-1">-1</button>
+            <button class="small-btn" data-adjust="baseValue:100">+100</button>
+            <button class="small-btn" data-adjust="baseValue:10">+10</button>
+            <button class="small-btn" data-adjust="baseValue:1">+1</button>
+          </div>
+        </section>
+
+        <section class="control-card" data-controls="tenFrame">
+          <h2>Ten Frames</h2>
+          <div class="field">
+            <label for="tenValue">Counters <span id="tenValueLabel">13</span></label>
+            <input id="tenValue" type="range" min="0" max="20" value="13">
+          </div>
+          <div class="field">
+            <label for="tenColour">Counter Colour</label>
+            <select id="tenColour">
+              <option value="red">Red</option>
+              <option value="blue">Blue</option>
+              <option value="green">Green</option>
+            </select>
+          </div>
+        </section>
+
+        <section class="control-card" data-controls="counters">
+          <h2>Counters</h2>
+          <div class="field">
+            <label for="counterValue">Number of Counters <span id="counterValueLabel">24</span></label>
+            <input id="counterValue" type="range" min="0" max="60" value="24">
+          </div>
+          <div class="field">
+            <label for="counterColour">Counter Colour</label>
+            <select id="counterColour">
+              <option value="blue">Blue</option>
+              <option value="red">Red</option>
+              <option value="green">Green</option>
+            </select>
+          </div>
+        </section>
+
+        <section class="control-card" data-controls="arrays">
+          <h2>Multiplication Arrays</h2>
+          <div class="field">
+            <label for="arrayRows">Rows <span id="arrayRowsLabel">4</span></label>
+            <input id="arrayRows" type="range" min="1" max="12" value="4">
+          </div>
+          <div class="field">
+            <label for="arrayCols">Columns <span id="arrayColsLabel">6</span></label>
+            <input id="arrayCols" type="range" min="1" max="12" value="6">
+          </div>
+        </section>
+
+        <section class="control-card" data-controls="fractions">
+          <h2>Fraction Bars</h2>
+          <div class="field">
+            <label for="fractionDen">Denominator <span id="fractionDenLabel">8</span></label>
+            <input id="fractionDen" type="range" min="2" max="12" value="8">
+          </div>
+          <div class="field">
+            <label for="fractionNum">Numerator <span id="fractionNumLabel">3</span></label>
+            <input id="fractionNum" type="range" min="0" max="8" value="3">
+          </div>
+          <div class="field">
+            <label for="compareNum">Compare Numerator <span id="compareNumLabel">5</span></label>
+            <input id="compareNum" type="range" min="0" max="8" value="5">
+          </div>
+        </section>
+
+        <section class="control-card" data-controls="numberLine">
+          <h2>Number Line</h2>
+          <div class="field">
+            <label for="lineMax">Maximum <span id="lineMaxLabel">20</span></label>
+            <input id="lineMax" type="range" min="10" max="100" step="5" value="20">
+          </div>
+          <div class="field">
+            <label for="linePoint">Point <span id="linePointLabel">7</span></label>
+            <input id="linePoint" type="range" min="0" max="20" value="7">
+          </div>
+          <div class="field">
+            <label for="lineJump">Jump Size <span id="lineJumpLabel">4</span></label>
+            <input id="lineJump" type="range" min="1" max="20" value="4">
+          </div>
+        </section>
+
+        <section class="control-card" data-controls="placeValue">
+          <h2>Place Value Chart</h2>
+          <div class="field">
+            <label for="placeValue">Number <span id="placeValueLabel">407</span></label>
+            <input id="placeValue" type="range" min="0" max="999" value="407">
+          </div>
+        </section>
+
+        <section class="control-card" data-controls="clock">
+          <h2>Clock Face</h2>
+          <div class="field">
+            <label for="clockHour">Hour <span id="clockHourLabel">3</span></label>
+            <input id="clockHour" type="range" min="1" max="12" value="3">
+          </div>
+          <div class="field">
+            <label for="clockMinute">Minute <span id="clockMinuteLabel">20</span></label>
+            <input id="clockMinute" type="range" min="0" max="55" step="5" value="20">
+          </div>
+        </section>
+      </aside>
+
+      <section class="board-shell">
+        <div class="board" id="board">
+          <div class="board-grid" aria-hidden="true"></div>
+          <div class="board-header">
+            <div class="title-pill" id="boardTitle">Base-Ten Blocks</div>
+            <div class="value-pill" id="boardValue">236</div>
+          </div>
+          <div class="stage">
+            <div class="visual" id="visual"></div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const modes = [
+      ["baseTen", "Base-Ten Blocks"],
+      ["tenFrame", "Ten Frames"],
+      ["counters", "Counters"],
+      ["arrays", "Arrays"],
+      ["fractions", "Fraction Bars"],
+      ["numberLine", "Number Line"],
+      ["placeValue", "Place Value"],
+      ["clock", "Clock Face"]
+    ];
+
+    const state = {
+      mode: "baseTen",
+      labels: true
+    };
+
+    const visual = document.getElementById("visual");
+    const modeList = document.getElementById("modeList");
+    const modeSelect = document.getElementById("modeSelect");
+    const board = document.getElementById("board");
+    const boardTitle = document.getElementById("boardTitle");
+    const boardValue = document.getElementById("boardValue");
+
+    const values = {
+      baseValue: 236,
+      tenValue: 13,
+      tenColour: "red",
+      counterValue: 24,
+      counterColour: "blue",
+      arrayRows: 4,
+      arrayCols: 6,
+      fractionDen: 8,
+      fractionNum: 3,
+      compareNum: 5,
+      lineMax: 20,
+      linePoint: 7,
+      lineJump: 4,
+      placeValue: 407,
+      clockHour: 3,
+      clockMinute: 20
+    };
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function byId(id) {
+      return document.getElementById(id);
+    }
+
+    function setValue(id, value) {
+      const input = byId(id);
+      const min = Number(input.min || 0);
+      const max = Number(input.max || 999);
+      values[id] = clamp(Number(value), min, max);
+      input.value = values[id];
+      syncDependentControls(id);
+      render();
+    }
+
+    function syncDependentControls(id) {
+      if (id === "fractionDen") {
+        const den = values.fractionDen;
+        values.fractionNum = clamp(values.fractionNum, 0, den);
+        values.compareNum = clamp(values.compareNum, 0, den);
+        byId("fractionNum").max = den;
+        byId("compareNum").max = den;
+        byId("fractionNum").value = values.fractionNum;
+        byId("compareNum").value = values.compareNum;
+      }
+      if (id === "lineMax") {
+        const max = values.lineMax;
+        values.linePoint = clamp(values.linePoint, 0, max);
+        values.lineJump = clamp(values.lineJump, 1, max);
+        byId("linePoint").max = max;
+        byId("lineJump").max = max;
+        byId("linePoint").value = values.linePoint;
+        byId("lineJump").value = values.lineJump;
+      }
+    }
+
+    function updateLabels() {
+      Object.keys(values).forEach((key) => {
+        const label = byId(key + "Label");
+        if (label) label.textContent = values[key];
+      });
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      modeSelect.value = mode;
+      document.querySelectorAll(".mode-btn").forEach((btn) => btn.classList.toggle("active", btn.dataset.mode === mode));
+      document.querySelectorAll(".control-card").forEach((card) => card.classList.toggle("active", card.dataset.controls === mode));
+      render();
+    }
+
+    function makeModeButtons() {
+      modeList.innerHTML = modes.map(([id, label]) => '<button class="mode-btn' + (id === state.mode ? " active" : "") + '" type="button" data-mode="' + id + '">' + label + '</button>').join("");
+      modeList.querySelectorAll(".mode-btn").forEach((btn) => btn.addEventListener("click", () => setMode(btn.dataset.mode)));
+    }
+
+    function repeated(count, fn) {
+      return Array.from({ length: count }, (_, index) => fn(index)).join("");
+    }
+
+    function flat() {
+      return '<div class="flat">' + repeated(100, () => "<span></span>") + "</div>";
+    }
+
+    function rod() {
+      return '<div class="rod">' + repeated(10, () => "<span></span>") + "</div>";
+    }
+
+    function unit() {
+      return '<div class="unit"></div>';
+    }
+
+    function counter(colour) {
+      return '<div class="counter ' + colour + '"></div>';
+    }
+
+    function renderBaseTen() {
+      const value = values.baseValue;
+      const hundreds = Math.floor(value / 100);
+      const tens = Math.floor((value % 100) / 10);
+      const ones = value % 10;
+      boardTitle.textContent = "Base-Ten Blocks";
+      boardValue.textContent = state.labels ? value + " = " + hundreds + " hundreds, " + tens + " tens, " + ones + " ones" : value;
+      visual.innerHTML =
+        '<div class="base-layout">' +
+        '<section class="base-column"><h3>Hundreds</h3><div class="hundreds-grid">' + repeated(hundreds, flat) + '</div></section>' +
+        '<section class="base-column"><h3>Tens</h3><div class="tens-grid">' + repeated(tens, rod) + '</div></section>' +
+        '<section class="base-column"><h3>Ones</h3><div class="ones-grid">' + repeated(ones, unit) + '</div></section>' +
+        '</div>';
+    }
+
+    function renderTenFrame() {
+      const count = values.tenValue;
+      const colour = values.tenColour;
+      boardTitle.textContent = "Ten Frames";
+      boardValue.textContent = state.labels ? count + " shown in ten frames" : count;
+      const frame = (start) => '<div class="ten-frame">' + repeated(10, (i) => '<div class="ten-cell">' + (start + i < count ? counter(colour) : "") + '</div>') + '</div>';
+      visual.innerHTML = '<div class="ten-frame-wrap">' + frame(0) + frame(10) + '</div>';
+    }
+
+    function renderCounters() {
+      const count = values.counterValue;
+      const colour = values.counterColour;
+      boardTitle.textContent = "Counters";
+      boardValue.textContent = state.labels ? count + " counters" : count;
+      visual.innerHTML = '<div class="loose-counter-board">' + repeated(count, () => counter(colour)) + '</div>';
+    }
+
+    function renderArrays() {
+      const rows = values.arrayRows;
+      const cols = values.arrayCols;
+      const total = rows * cols;
+      boardTitle.textContent = "Multiplication Array";
+      boardValue.textContent = state.labels ? rows + " × " + cols + " = " + total : total;
+      visual.innerHTML =
+        '<div class="array-board">' +
+        '<div class="array-grid" style="grid-template-columns:repeat(' + cols + ', auto);grid-template-rows:repeat(' + rows + ', auto);">' +
+        repeated(total, () => '<div class="array-dot"></div>') +
+        '</div>' +
+        (state.labels ? '<div class="statement">' + rows + " × " + cols + " = " + total + '</div>' : "") +
+        '</div>';
+    }
+
+    function fractionBar(numerator, denominator, labelText, colour) {
+      return '<div class="fraction-row">' +
+        '<div class="fraction-label">' + labelText + '</div>' +
+        '<div class="fraction-bar" style="grid-template-columns:repeat(' + denominator + ',1fr)">' +
+        repeated(denominator, (i) => '<div class="fraction-piece' + (i < numerator ? " filled" : "") + '" style="' + (i < numerator ? "background:" + colour : "") + '"></div>') +
+        '</div></div>';
+    }
+
+    function renderFractions() {
+      const den = values.fractionDen;
+      const num = values.fractionNum;
+      const compare = values.compareNum;
+      boardTitle.textContent = "Fraction Bars";
+      boardValue.textContent = state.labels ? num + "/" + den + " and " + compare + "/" + den : "";
+      visual.innerHTML =
+        '<div class="fraction-board">' +
+        fractionBar(den, den, "1 whole", "#dceeff") +
+        fractionBar(num, den, num + "/" + den, "#159f9b") +
+        fractionBar(compare, den, compare + "/" + den, "#6b54c7") +
+        '</div>';
+    }
+
+    function renderNumberLine() {
+      const max = values.lineMax;
+      const point = values.linePoint;
+      const jump = values.lineJump;
+      const startX = 80;
+      const endX = 960;
+      const y = 360;
+      const scale = (endX - startX) / max;
+      const pointX = startX + point * scale;
+      const jumpEnd = clamp(point + jump, 0, max);
+      const jumpX = startX + jumpEnd * scale;
+      const ticks = repeated(max + 1, (i) => {
+        const x = startX + i * scale;
+        const major = max <= 25 || i % 5 === 0;
+        return '<line x1="' + x + '" y1="' + (y - (major ? 18 : 10)) + '" x2="' + x + '" y2="' + (y + (major ? 18 : 10)) + '" stroke="#18324a" stroke-width="' + (major ? 3 : 2) + '"/>' +
+          (major ? '<text x="' + x + '" y="' + (y + 56) + '" text-anchor="middle" font-size="28" font-weight="800" fill="#18324a">' + i + '</text>' : "");
+      });
+      boardTitle.textContent = "Number Line";
+      boardValue.textContent = state.labels ? "Point " + point + ", jump +" + jump : point;
+      visual.innerHTML = '<svg viewBox="0 0 1040 720" aria-hidden="true">' +
+        '<line x1="' + startX + '" y1="' + y + '" x2="' + endX + '" y2="' + y + '" stroke="#18324a" stroke-width="5" stroke-linecap="round"/>' +
+        ticks +
+        '<circle cx="' + pointX + '" cy="' + y + '" r="18" fill="#d94b43"/>' +
+        '<path d="M' + pointX + ' ' + (y - 45) + ' Q' + ((pointX + jumpX) / 2) + ' ' + (y - 150) + ' ' + jumpX + ' ' + (y - 45) + '" fill="none" stroke="#159f9b" stroke-width="6" stroke-linecap="round"/>' +
+        '<polygon points="' + jumpX + ',' + (y - 45) + ' ' + (jumpX - 22) + ',' + (y - 50) + ' ' + (jumpX - 8) + ',' + (y - 70) + '" fill="#159f9b"/>' +
+        (state.labels ? '<text x="' + ((pointX + jumpX) / 2) + '" y="' + (y - 168) + '" text-anchor="middle" font-size="38" font-weight="900" fill="#0b6465">+' + jump + '</text>' : "") +
+        '</svg>';
+    }
+
+    function renderPlaceValue() {
+      const value = values.placeValue;
+      const hundreds = Math.floor(value / 100);
+      const tens = Math.floor((value % 100) / 10);
+      const ones = value % 10;
+      boardTitle.textContent = "Place Value Chart";
+      boardValue.textContent = String(value);
+      visual.innerHTML =
+        '<div class="place-chart">' +
+        '<section class="place-cell"><div class="place-heading">Hundreds</div><div class="place-value">' + hundreds + '</div></section>' +
+        '<section class="place-cell"><div class="place-heading">Tens</div><div class="place-value">' + tens + '</div></section>' +
+        '<section class="place-cell"><div class="place-heading">Ones</div><div class="place-value">' + ones + '</div></section>' +
+        '</div>';
+    }
+
+    function renderClock() {
+      const hour = values.clockHour;
+      const minute = values.clockMinute;
+      const minuteAngle = minute * 6 - 90;
+      const hourAngle = ((hour % 12) * 30 + minute * 0.5) - 90;
+      const hand = (angle, length, width, colour) => {
+        const rad = angle * Math.PI / 180;
+        const x = 520 + Math.cos(rad) * length;
+        const y = 360 + Math.sin(rad) * length;
+        return '<line x1="520" y1="360" x2="' + x + '" y2="' + y + '" stroke="' + colour + '" stroke-width="' + width + '" stroke-linecap="round"/>';
+      };
+      const marks = repeated(60, (i) => {
+        const angle = i * 6 - 90;
+        const rad = angle * Math.PI / 180;
+        const outer = 290;
+        const inner = i % 5 === 0 ? 260 : 274;
+        const x1 = 520 + Math.cos(rad) * inner;
+        const y1 = 360 + Math.sin(rad) * inner;
+        const x2 = 520 + Math.cos(rad) * outer;
+        const y2 = 360 + Math.sin(rad) * outer;
+        return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="#18324a" stroke-width="' + (i % 5 === 0 ? 5 : 2) + '"/>';
+      });
+      const numerals = repeated(12, (i) => {
+        const n = i + 1;
+        const angle = n * 30 - 90;
+        const rad = angle * Math.PI / 180;
+        const x = 520 + Math.cos(rad) * 222;
+        const y = 360 + Math.sin(rad) * 222 + 12;
+        return '<text x="' + x + '" y="' + y + '" text-anchor="middle" font-size="40" font-weight="900" fill="#18324a">' + n + '</text>';
+      });
+      const minuteText = String(minute).padStart(2, "0");
+      boardTitle.textContent = "Clock Face";
+      boardValue.textContent = state.labels ? hour + ":" + minuteText : "";
+      visual.innerHTML = '<div class="clock-board"><svg viewBox="0 0 1040 720" aria-hidden="true">' +
+        '<circle cx="520" cy="360" r="310" fill="#ffffff" stroke="#18324a" stroke-width="7"/>' +
+        marks + numerals + hand(hourAngle, 150, 10, "#18324a") + hand(minuteAngle, 230, 7, "#d94b43") +
+        '<circle cx="520" cy="360" r="14" fill="#18324a"/>' +
+        '</svg></div>';
+    }
+
+    const renderers = {
+      baseTen: renderBaseTen,
+      tenFrame: renderTenFrame,
+      counters: renderCounters,
+      arrays: renderArrays,
+      fractions: renderFractions,
+      numberLine: renderNumberLine,
+      placeValue: renderPlaceValue,
+      clock: renderClock
+    };
+
+    function render() {
+      updateLabels();
+      renderers[state.mode]();
+    }
+
+    function resetCurrent() {
+      const defaults = {
+        baseTen: [["baseValue", 236]],
+        tenFrame: [["tenValue", 13], ["tenColour", "red"]],
+        counters: [["counterValue", 24], ["counterColour", "blue"]],
+        arrays: [["arrayRows", 4], ["arrayCols", 6]],
+        fractions: [["fractionDen", 8], ["fractionNum", 3], ["compareNum", 5]],
+        numberLine: [["lineMax", 20], ["linePoint", 7], ["lineJump", 4]],
+        placeValue: [["placeValue", 407]],
+        clock: [["clockHour", 3], ["clockMinute", 20]]
+      };
+      defaults[state.mode].forEach(([id, value]) => {
+        values[id] = value;
+        byId(id).value = value;
+      });
+      syncDependentControls("fractionDen");
+      syncDependentControls("lineMax");
+      render();
+    }
+
+    function initialise() {
+      makeModeButtons();
+      document.querySelectorAll("input").forEach((input) => {
+        input.addEventListener("input", () => setValue(input.id, input.value));
+      });
+      document.querySelectorAll("select").forEach((select) => {
+        if (select.id === "modeSelect") return;
+        select.addEventListener("change", () => {
+          values[select.id] = select.value;
+          render();
+        });
+      });
+      document.querySelectorAll("[data-adjust]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const [id, delta] = button.dataset.adjust.split(":");
+          setValue(id, Number(values[id]) + Number(delta));
+        });
+      });
+      modeSelect.addEventListener("change", () => setMode(modeSelect.value));
+      document.getElementById("labelsBtn").addEventListener("click", () => {
+        state.labels = !state.labels;
+        document.getElementById("labelsBtn").textContent = state.labels ? "Hide Labels" : "Show Labels";
+        render();
+      });
+      document.getElementById("resetBtn").addEventListener("click", resetCurrent);
+      document.getElementById("fullscreenBtn").addEventListener("click", () => {
+        board.classList.toggle("fullscreen");
+        document.getElementById("fullscreenBtn").textContent = board.classList.contains("fullscreen") ? "Exit Full Screen" : "Full Screen";
+      });
+      syncDependentControls("fractionDen");
+      syncDependentControls("lineMax");
+      render();
+    }
+
+    initialise();
+  </script>
+</body>
+</html>

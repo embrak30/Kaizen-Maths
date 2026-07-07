@@ -1646,6 +1646,24 @@ const tools = [
     ]
   },
   {
+    slug: "elementary-manipulatives",
+    title: "Elementary Maths Manipulatives",
+    category: "Classroom Tools",
+    level: "Primary / Elementary",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "A board-ready manipulative tray for primary and elementary maths, including base-ten blocks, ten frames, counters, arrays, fraction bars, number lines, place value charts, and clock faces.",
+    tags: ["classroom", "primary", "elementary", "manipulatives", "base ten", "ten frames", "counters", "arrays", "fractions", "number line", "place value", "clock"],
+    toolPath: "tools/elementary-manipulatives/index.html?v=elementary-manipulatives-1",
+    imported: true,
+    teacherNotes: [
+      "Designed as a visual modelling tool for younger learners rather than a question generator.",
+      "Use the mode selector to switch between concrete models such as base-ten blocks, ten frames, counters, arrays, fraction bars, number lines, place value charts, and clock faces.",
+      "Use full-screen mode when projecting so the manipulative takes over the board and leaves space for teacher explanation and annotation."
+    ]
+  },
+  {
     slug: "exit-ticket-game",
     title: "Math Exit Ticket Choice Board",
     category: "Classroom Tools",
