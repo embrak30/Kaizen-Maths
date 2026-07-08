@@ -6607,13 +6607,20 @@ function fallbackTopicMap(tool) {
     tool.category,
     tool.level
   ].filter(Boolean))];
+  const visibleConcepts = concepts.slice(0, 12);
   return `
     <div class="topic-map-compact">
       <p class="topic-map-summary">This tool covers these topic areas.</p>
-      <div class="topic-chip-list">
-        ${concepts.slice(0, 12).map((topic) => `<span class="topic-chip">${escapeHtml(topic)}</span>`).join("")}
-      </div>
+      ${renderTopicBulletList(visibleConcepts)}
     </div>
+  `;
+}
+
+function renderTopicBulletList(topics) {
+  return `
+    <ul class="topic-bullet-list">
+      ${topics.map((topic) => `<li>${escapeHtml(topic)}</li>`).join("")}
+    </ul>
   `;
 }
 
@@ -6632,9 +6639,7 @@ function renderTopicMap(levels, tool) {
   return `
     <div class="topic-map-compact">
       <p class="topic-map-summary">${topics.length} question type${topics.length === 1 ? "" : "s"} available in this tool.</p>
-      <div class="topic-chip-list">
-        ${topics.map((topic) => `<span class="topic-chip">${escapeHtml(topic)}</span>`).join("")}
-      </div>
+      ${renderTopicBulletList(topics)}
     </div>
   `;
 }

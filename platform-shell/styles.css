@@ -5104,25 +5104,20 @@ sup .worksheet-fraction span:last-child {
   font-weight: 800;
 }
 
-.topic-chip-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: flex-start;
+.topic-bullet-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 22px;
+  margin: 0;
+  padding: 2px 0 0 18px;
+  color: var(--ink);
+  font-size: 0.82rem;
+  line-height: 1.35;
 }
 
-.topic-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 24px;
-  border: 1px solid rgba(23, 184, 179, 0.22);
-  border-radius: 999px;
-  padding: 4px 8px;
-  background: rgba(231, 251, 250, 0.62);
-  color: #24505c;
-  font-size: 0.72rem;
-  font-weight: 850;
-  line-height: 1.2;
+.topic-bullet-list li {
+  break-inside: avoid;
+  padding-left: 1px;
 }
 
 .standards-list {
@@ -5566,6 +5561,10 @@ sup .worksheet-fraction span:last-child {
   }
 
   .topic-map-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .topic-bullet-list {
     grid-template-columns: 1fr;
   }
 
