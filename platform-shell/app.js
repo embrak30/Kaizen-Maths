@@ -68,7 +68,7 @@ const tools = [
     status: "Imported",
     description: "Generate GCSE algebraic-fraction practice for simplifying, multiplying, dividing, adding, subtracting, and solving equations.",
     tags: ["algebra", "algebraic fractions", "simplifying fractions", "factorising", "common denominator", "equations"],
-    toolPath: "tools/algebraic-fractions/index.html?v=batch2-steps-1",
+    toolPath: "tools/algebraic-fractions/index.html?v=algebraic-fractions-fractionbar-1",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on factorising and cancelling common factors.",
@@ -2352,9 +2352,9 @@ function worksheetContentHtml(value) {
     power.replaceWith(sup);
   });
 
-  template.content.querySelectorAll("span.fraction").forEach((fraction) => {
-    const numerator = fraction.querySelector(".numerator");
-    const denominator = fraction.querySelector(".denominator");
+  template.content.querySelectorAll("span.fraction, span.frac").forEach((fraction) => {
+    const numerator = fraction.querySelector(".numerator, .num");
+    const denominator = fraction.querySelector(".denominator, .den");
     if (!numerator || !denominator) return;
 
     const worksheetFraction = document.createElement("span");

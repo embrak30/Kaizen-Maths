@@ -25,6 +25,12 @@
     if (!/[<&]/.test(text)) return normaliseAlgebraUnitCoefficients(text);
     const template = document.createElement('template');
     template.innerHTML = text;
+    template.content.querySelectorAll('span.fraction, span.frac').forEach((fraction) => {
+      const numerator = fraction.querySelector('.numerator, .num')?.textContent?.replace(/\s+/g, ' ').trim();
+      const denominator = fraction.querySelector('.denominator, .den')?.textContent?.replace(/\s+/g, ' ').trim();
+      if (!numerator || !denominator) return;
+      fraction.replaceWith(document.createTextNode(`\\frac{${numerator}}{${denominator}}`));
+    });
     return normaliseAlgebraUnitCoefficients(template.content.textContent.replace(/\s+/g, ' ').trim());
   }
 
@@ -358,7 +364,7 @@
     if (!html) return false;
 
     return /<(svg|table|figure)\b/i.test(html)
-      || /class=["'][^"']*(matrix-wrap|matrix-expression|shape-row|shape-diagram|diagram-row|bearing-row|bearing-diagram|motion-row|motion-diagram|venn-card|venn-wrap|tree-wrap|histogram-wrap|cf-wrap|diagram-wrap|projectile-diagram|moment-diagram|polar-card|polar-diagram|curve-wrap|data-table-wrap)[^"']*["']/i.test(html);
+      || /class=["'][^"']*(matrix-wrap|matrix-expression|shape-row|shape-diagram|diagram-row|bearing-row|bearing-diagram|motion-row|motion-diagram|venn-card|venn-wrap|tree-wrap|histogram-wrap|cf-wrap|diagram-wrap|projectile-diagram|moment-diagram|polar-card|polar-diagram|curve-wrap|data-table-wrap|\bfrac\b|\bfraction\b)[^"']*["']/i.test(html);
   }
 
   function containsEmbeddedDiagram(value) {
