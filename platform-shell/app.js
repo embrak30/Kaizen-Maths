@@ -6916,8 +6916,172 @@ function renderStandardsList(tool) {
   return `<ul class="standards-list">${standardsForTool(tool).map((standard) => `<li>${escapeHtml(standard)}</li>`).join("")}</ul>`;
 }
 
-function renderToolFrame(tool) {
+function toolCurriculumLinks(tool) {
+  const haystack = normalise([tool.title, tool.category, toolSubjectGroup(tool), tool.level, tool.type, tool.description, allToolTags(tool).join(" ")].join(" "));
+  const links = [];
+  const add = (label) => {
+    if (!links.includes(label)) links.push(label);
+  };
+
+  if (haystack.includes("gcse") || ["Algebra", "Numbers", "Geometry", "Statistics"].includes(tool.category)) {
+    add("GCSE");
+    add("AQA");
+    add("Edexcel");
+    add("OCR");
+  }
+  if (haystack.includes("a-level") || haystack.includes("a level") || haystack.includes("calculus") || haystack.includes("mechanics") || haystack.includes("further maths") || haystack.includes("statistics")) {
+    add("A-Level");
+    add("AQA");
+    add("Edexcel");
+    add("OCR");
+  }
+  if (haystack.includes("further maths") || haystack.includes("complex") || haystack.includes("matrices") || haystack.includes("polar") || haystack.includes("hyperbolic") || haystack.includes("induction")) add("Further Maths");
+  if (haystack.includes("csec")) add("CSEC");
+  if (haystack.includes("cape")) add("CAPE");
+  if (haystack.includes("common core")) add("Common Core");
+  if (haystack.includes("ib") || haystack.includes("international")) add("IB");
+  if (haystack.includes("igcse")) add("IGCSE");
+  if (!links.length) add("Curriculum-aligned practice");
+  return links.slice(0, 10);
+}
+
+function toolMisconceptions(tool) {
+  const haystack = normalise([tool.title, tool.category, toolSubjectGroup(tool), tool.description, allToolTags(tool).join(" ")].join(" "));
+  if (haystack.includes("matrix") || haystack.includes("matrices")) {
+    return ["Multiplying matrices entry-by-entry instead of row by column.", "Assuming matrix multiplication is commutative.", "Forgetting determinant conditions for inverse or singular matrices."];
+  }
+  if (haystack.includes("fraction") || haystack.includes("decimal") || haystack.includes("percentage")) {
+    return ["Changing form without preserving value.", "Cancelling across addition or subtraction incorrectly.", "Losing place value when moving between decimals and percentages."];
+  }
+  if (haystack.includes("quadratic") || haystack.includes("factor")) {
+    return ["Missing a common factor before factorising.", "Sign errors when forming brackets.", "Treating every quadratic as if it factorises over integers."];
+  }
+  if (haystack.includes("trig") || haystack.includes("sine") || haystack.includes("cosine")) {
+    return ["Choosing the wrong ratio or rule for the information given.", "Forgetting ambiguous cases or quadrant restrictions.", "Rounding too early in multi-step calculations."];
+  }
+  if (haystack.includes("calculus") || haystack.includes("differentiat") || haystack.includes("integrat")) {
+    return ["Applying rules mechanically without checking the structure first.", "Missing the chain rule or constant multiplier.", "Forgetting constants of integration or the meaning of a derivative."];
+  }
+  if (haystack.includes("probability") || haystack.includes("distribution") || haystack.includes("statistics")) {
+    return ["Using the wrong model or probability region.", "Confusing cumulative probability with exact probability.", "Giving calculations without interpreting the result in context."];
+  }
+  if (haystack.includes("geometry") || haystack.includes("area") || haystack.includes("volume") || haystack.includes("angle")) {
+    return ["Using the wrong formula for the shape or measurement.", "Mixing length, area, and volume units.", "Assuming a diagram is exact without checking the information given."];
+  }
+  if (haystack.includes("mechanics") || haystack.includes("force") || haystack.includes("motion") || haystack.includes("momentum")) {
+    return ["Choosing a formula before defining the quantities.", "Mixing signs or directions in vector/force equations.", "Forgetting units or modelling assumptions."];
+  }
+  return ["Rushing to a method before identifying the structure.", "Skipping a line of working where the key decision happens.", "Giving an answer without checking whether it matches the question."];
+}
+
+function toolClassroomQuestions(tool) {
+  const group = toolSubjectGroup(tool) || tool.category;
+  return [
+    `What is the first decision students must make in this ${group.toLowerCase()} question?`,
+    "Which mistake would give a plausible but incorrect answer here?",
+    "What evidence in the question tells us which method to use?",
+    "How could we check whether the answer is reasonable?"
+  ];
+}
+
+function toolUseSuggestions(tool) {
+  return [
+    "Use one example for teacher modelling before moving to a short practice set.",
+    "Ask students to explain the first step before revealing the worked solution.",
+    "Use the answers to check fluency, then use the worked steps to discuss misconceptions.",
+    "Send a focused set to the worksheet builder when the class needs independent practice."
+  ];
+}
+
+function renderToolInfoList(items, className = "") {
+  return `<ul class="${className || "tool-info-list"}">${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
+}
+
+function renderToolInfoBadges(items) {
+  return `<div class="tool-info-badges">${items.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>`;
+}
+
+function renderRelatedTools(tool) {
+  const related = relatedTools(tool);
+  if (!related.length) return `<p class="tool-info-muted">Related tools will appear as the library grows.</p>`;
+  return `
+    <div class="tool-info-related">
+      ${related.map((item) => `<a href="#/tools/${escapeHtml(item.slug)}"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(toolSubjectGroup(item) || item.category)}</span></a>`).join("")}
+    </div>
+  `;
+}
+
+function renderToolInformationPage(tool) {
   const subjectGroup = toolSubjectGroup(tool);
+  const notes = tool.teacherNotes?.length ? tool.teacherNotes : toolUseSuggestions(tool);
+  const classroomHref = tool.imported ? `#/classroom/${tool.slug}` : "#/tools";
+  app.innerHTML = `
+    <section class="tool-info-page">
+      <header class="tool-info-hero">
+        <div class="tool-info-title">
+          <div class="badge-row">
+            <span class="badge">${escapeHtml(tool.category)}</span>
+            ${subjectGroup ? `<span class="badge subject-group">${escapeHtml(subjectGroup)}</span>` : ""}
+            <span class="badge">${escapeHtml(tool.level)}</span>
+            <span class="badge ${normalise(requiredAccessLabel(tool))}">${escapeHtml(requiredAccessLabel(tool))}</span>
+          </div>
+          <h1>${escapeHtml(tool.title)}</h1>
+          <p>${escapeHtml(tool.description)}</p>
+        </div>
+        <div class="tool-info-actions">
+          <a class="button" href="#/tools">Back to Library</a>
+          <a class="button primary tool-info-launch ${tool.imported ? "" : "disabled"}" href="${classroomHref}">Go to Classroom View</a>
+        </div>
+      </header>
+
+      <section class="tool-info-grid">
+        <article class="tool-info-card tool-info-card-large">
+          <span class="eyebrow">Topics Covered</span>
+          ${fallbackTopicMap(tool)}
+        </article>
+
+        <article class="tool-info-card">
+          <span class="eyebrow">Exam Boards & Curriculum Links</span>
+          ${renderToolInfoBadges(toolCurriculumLinks(tool))}
+        </article>
+
+        <article class="tool-info-card">
+          <span class="eyebrow">Teacher Guidance</span>
+          ${renderToolInfoList(notes.slice(0, 4))}
+        </article>
+
+        <article class="tool-info-card">
+          <span class="eyebrow">Common Misconceptions</span>
+          ${renderToolInfoList(toolMisconceptions(tool).slice(0, 3))}
+        </article>
+
+        <article class="tool-info-card">
+          <span class="eyebrow">Classroom Questions</span>
+          ${renderToolInfoList(toolClassroomQuestions(tool).slice(0, 4))}
+        </article>
+
+        <article class="tool-info-card">
+          <span class="eyebrow">Related Tools</span>
+          ${renderRelatedTools(tool)}
+        </article>
+
+        <details class="tool-info-card tool-info-details">
+          <summary><span>Mathematical Standards Covered</span><strong>Open</strong></summary>
+          ${renderStandardsList(tool)}
+        </details>
+
+        <details class="tool-info-card tool-info-details">
+          <summary><span>Suggested Use</span><strong>Open</strong></summary>
+          ${renderToolInfoList(toolUseSuggestions(tool))}
+        </details>
+      </section>
+    </section>
+  `;
+}
+
+function renderToolFrame(tool, options = {}) {
+  const subjectGroup = toolSubjectGroup(tool);
+  const startClassroom = Boolean(options.startClassroom);
   const frame = tool.imported
     ? `<iframe class="legacy-frame" src="${tool.toolPath}" title="${tool.title}" loading="eager"></iframe>`
     : `
@@ -6930,14 +7094,14 @@ function renderToolFrame(tool) {
     `;
 
   app.innerHTML = `
-    ${pageHeader(
+    ${startClassroom ? "" : pageHeader(
       tool.title,
       tool.description,
       `<a class="button" href="#/tools">Back to Library</a>${tool.legacyUrl ? `<a class="button" href="${tool.legacyUrl}" target="_blank" rel="noopener noreferrer">Original Page</a>` : ""}<button class="button primary" id="focusTool" type="button">Classroom View</button>`,
       "tool-sticky-header"
     )}
     <section class="legacy-layout">
-      <div class="legacy-stage">
+      <div class="legacy-stage ${startClassroom ? "classroom" : ""}">
         <div class="legacy-toolbar">
           <div class="badge-row">
             <span class="badge">${tool.category}</span>
@@ -6948,6 +7112,8 @@ function renderToolFrame(tool) {
           </div>
           <div class="legacy-toolbar-actions">
             <span class="tool-path">${tool.toolPath}</span>
+            ${startClassroom ? `<a class="button classroom-info-link" href="#/tools/${escapeHtml(tool.slug)}">Tool Info</a>` : ""}
+            <button class="button primary" id="focusTool" type="button" ${startClassroom ? "hidden" : ""}>Classroom View</button>
             <button class="button classroom-fullscreen" id="classroomFullscreen" type="button">Full Screen</button>
             <button class="button classroom-draw-toggle" id="classroomDrawToggle" type="button" aria-pressed="false">Write</button>
             <button class="button classroom-annotation-control active" id="annotationPen" type="button" aria-pressed="true">Pen</button>
@@ -6970,7 +7136,7 @@ function renderToolFrame(tool) {
       </aside>
     </section>
   `;
-  bindToolFrame(tool);
+  bindToolFrame(tool, options);
 }
 
 function renderToolDetail(slug) {
@@ -6979,15 +7145,24 @@ function renderToolDetail(slug) {
     app.innerHTML = `${pageHeader("Tool not found", "This route does not match a registered tool.", `<a class="button" href="#/tools">Back to Library</a>`)}`;
     return;
   }
+  renderToolInformationPage(tool);
+}
+
+function renderClassroomTool(slug) {
+  const tool = tools.find((item) => item.slug === slug);
+  if (!tool || !isVisibleTool(tool)) {
+    app.innerHTML = `${pageHeader("Tool not found", "This route does not match a registered tool.", `<a class="button" href="#/tools">Back to Library</a>`)}`;
+    return;
+  }
   if (!canAccessTool(tool)) {
     app.innerHTML = `
-      ${pageHeader(tool.title, tool.description, `<a class="button" href="#/tools">Back to Library</a>`)}
+      ${pageHeader(tool.title, tool.description, `<a class="button" href="#/tools/${escapeHtml(tool.slug)}">Tool Info</a>`)}
       ${signInCallout(`${requiredAccessLabel(tool)} access required`)}
     `;
     bindAuthActions();
     return;
   }
-  renderToolFrame(tool);
+  renderToolFrame(tool, { startClassroom: true, exitRoute: `#/tools/${tool.slug}` });
 }
 
 const trustPages = [
@@ -8930,7 +9105,7 @@ function bindAdmin() {
   });
 }
 
-function bindToolFrame(tool) {
+function bindToolFrame(tool, options = {}) {
   const button = document.getElementById("focusTool");
   const exitButton = document.getElementById("exitClassroom");
   const fullscreenButton = document.getElementById("classroomFullscreen");
@@ -8943,7 +9118,7 @@ function bindToolFrame(tool) {
   const annotationClear = document.getElementById("annotationClear");
   const stage = document.querySelector(".legacy-stage");
   const frame = stage?.querySelector(".legacy-frame");
-  if (!button || !stage) return;
+  if (!stage) return;
   const classroomStateKey = "kaizen:classroom-view";
   const annotationState = {
     active: false,
@@ -9350,8 +9525,10 @@ function bindToolFrame(tool) {
   function setClassroomMode(active, options = {}) {
     stage.classList.toggle("classroom", active);
     document.body.classList.toggle("classroom-active", active);
-    button.textContent = active ? "Exit Classroom View" : "Classroom View";
-    button.setAttribute("aria-pressed", String(active));
+    if (button) {
+      button.textContent = active ? "Exit Classroom View" : "Classroom View";
+      button.setAttribute("aria-pressed", String(active));
+    }
     if (options.persist !== false) saveClassroomState(active);
     if (active) {
       scheduleClassroomFit();
@@ -9361,7 +9538,7 @@ function bindToolFrame(tool) {
       resetFrameFit();
     }
 
-    if (active) {
+    if (active && options.requestFullscreen !== false) {
       requestClassroomFullscreen();
     } else if (!active && document.fullscreenElement === stage) {
       document.exitFullscreen().catch(() => {});
@@ -9369,7 +9546,7 @@ function bindToolFrame(tool) {
     updateFullscreenButton();
   }
 
-  button.addEventListener("click", () => {
+  button?.addEventListener("click", () => {
     if (stage.classList.contains("classroom")) {
       requestClassroomFullscreen();
       return;
@@ -9378,7 +9555,10 @@ function bindToolFrame(tool) {
   });
 
   if (exitButton) {
-    exitButton.addEventListener("click", () => setClassroomMode(false));
+    exitButton.addEventListener("click", () => {
+      setClassroomMode(false);
+      if (options.exitRoute) location.hash = options.exitRoute;
+    });
   }
 
   if (fullscreenButton) {
@@ -9415,7 +9595,9 @@ function bindToolFrame(tool) {
     }
   });
 
-  if (savedClassroomState().active && savedClassroomState().slug === tool.slug) {
+  if (options.startClassroom) {
+    window.requestAnimationFrame(() => setClassroomMode(true, { persist: false, requestFullscreen: false }));
+  } else if (savedClassroomState().active && savedClassroomState().slug === tool.slug) {
     window.requestAnimationFrame(() => setClassroomMode(true, { persist: false }));
   }
 }
@@ -9455,8 +9637,14 @@ function updateRouteSeo(parts) {
       description: SITE_DESCRIPTION
     },
     "tools": {
-      title: routeTitle("Maths Tool Library"),
-      description: "Browse Kaizen Maths topic generators, classroom display tools, worksheets, and assessment resources for maths teachers."
+      title: routeTitle(parts[1] ? "Tool Information" : "Maths Tool Library"),
+      description: parts[1]
+        ? "Read teacher guidance, topics covered, curriculum links, misconceptions, and related tools before launching Classroom View."
+        : "Browse Kaizen Maths topic generators, classroom display tools, worksheets, and assessment resources for maths teachers."
+    },
+    "classroom": {
+      title: routeTitle("Classroom View"),
+      description: "Project a Kaizen Maths tool for live teaching, modelling, questioning, annotation, and classroom practice."
     },
     "coverage-map": {
       title: routeTitle("Curriculum Coverage Map"),
@@ -9527,6 +9715,7 @@ function renderRoute() {
   updateAdminNavVisibility();
   setActiveNav();
   const parts = routeParts();
+  document.body.classList.toggle("classroom-active", parts[0] === "classroom");
   if (parts[0] && homeTestimonialTimer) {
     window.clearInterval(homeTestimonialTimer);
     homeTestimonialTimer = null;
@@ -9576,6 +9765,8 @@ function renderRoute() {
     return;
   } else if (parts[0] === "tools" && parts[1]) {
     renderToolDetail(parts[1]);
+  } else if (parts[0] === "classroom" && parts[1]) {
+    renderClassroomTool(parts[1]);
   } else if (parts[0] === "tools") {
     renderToolLibrary();
   } else if (parts[0] === "coverage-map") {
