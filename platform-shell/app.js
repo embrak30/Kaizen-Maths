@@ -2755,10 +2755,8 @@ function filteredTools(extraCategory) {
     if (!isVisibleTool(tool)) return false;
     const haystack = normalise([tool.title, tool.category, toolSubjectGroup(tool), tool.level, tool.type, tool.description, allToolTags(tool).join(" ")].join(" "));
     const matchesQuery = !state.query || haystack.includes(normalise(state.query));
-    const matchesCategory = (extraCategory && categorySlug(tool.category) === extraCategory) || (!extraCategory && (state.category === "All" || tool.category === state.category));
-    const matchesLevel = state.level === "All" || tool.level.includes(state.level) || tool.level === "All";
-    const matchesAccess = state.access === "All" || requiredAccessLabel(tool) === state.access;
-    return matchesQuery && matchesCategory && matchesLevel && matchesAccess;
+    const matchesCategory = extraCategory ? categorySlug(tool.category) === extraCategory : true;
+    return matchesQuery && matchesCategory;
   });
 }
 
@@ -5767,43 +5765,6 @@ function renderCoverageMap() {
   `;
 }
 
-function renderFilters(extraCategory = "") {
-  const categories = ["All", ...new Set(tools.filter(isVisibleTool).map((tool) => tool.category))];
-  const levels = ["All", "KS2", "KS3", "GCSE", "A-Level"];
-  const showCategoryFilter = !extraCategory;
-  return `
-    <section class="filter-row ${showCategoryFilter ? "" : "collection-filter-row"}" aria-label="Tool filters">
-      ${showCategoryFilter ? `<select id="categoryFilter" aria-label="Category">${categories.map((category) => `<option ${state.category === category ? "selected" : ""}>${category}</option>`).join("")}</select>` : ""}
-      <select id="levelFilter" aria-label="Level">${[...new Set(levels)].map((level) => `<option ${state.level === level ? "selected" : ""}>${level}</option>`).join("")}</select>
-      <select id="accessFilter" aria-label="Access">${["All", "Free", "Trial", "Pro", "School", "Admin"].map((access) => `<option ${state.access === access ? "selected" : ""}>${access}</option>`).join("")}</select>
-      <button class="button filter-reset" id="resetFilters" type="button">Reset</button>
-    </section>
-  `;
-}
-
-function toolCard(tool) {
-  const access = requiredAccessLabel(tool);
-  const locked = !canAccessTool(tool);
-  const extraTags = editableToolTags(tool).slice(0, 4);
-  const subjectGroup = toolSubjectGroup(tool);
-  return `
-    <a class="tool-card ${locked ? "locked" : ""}" href="#/tools/${tool.slug}">
-      <div class="tool-card-header">
-        <h2>${escapeHtml(tool.title)}</h2>
-        <span class="badge ${normalise(access)}">${access}</span>
-      </div>
-      <p>${escapeHtml(tool.description)}</p>
-      <div class="badge-row">
-        <span class="badge">${escapeHtml(tool.category)}</span>
-        ${subjectGroup ? `<span class="badge subject-group">${escapeHtml(subjectGroup)}</span>` : ""}
-        <span class="badge">${escapeHtml(tool.level)}</span>
-        ${extraTags.map((tag) => `<span class="badge">${escapeHtml(tag)}</span>`).join("")}
-        ${locked ? `<span class="badge locked-badge">Sign in</span>` : ""}
-      </div>
-    </a>
-  `;
-}
-
 function compactToolDescription(tool) {
   return String(tool.description || "")
     .replace(/^Generate\s+/i, "Generates ")
@@ -5830,33 +5791,40 @@ function toolIndexRow(tool) {
   `;
 }
 
-function renderGroupedToolIndex(visible, categoryName = "") {
+function renderGroupedToolIndex(visible, categoryName = "", options = {}) {
   const category = categoryName || visible[0]?.category || "";
+  const groupByCategory = options.groupByCategory || category === "Tool Library";
   const grouped = new Map();
   visible.forEach((tool) => {
-    const group = toolSubjectGroup(tool) || `${tool.category} Topics`;
+    const group = groupByCategory ? tool.category : toolSubjectGroup(tool) || `${tool.category} Topics`;
     if (!grouped.has(group)) grouped.set(group, []);
     grouped.get(group).push(tool);
   });
   grouped.forEach((groupTools) => groupTools.sort((a, b) => a.title.localeCompare(b.title)));
-  const preferredOrder = subjectGroupOrder[category] || [];
+  const preferredOrder = groupByCategory
+    ? ["Algebra", "Numbers", "Geometry", "Statistics", "Mechanics", "Classroom Tools", "Site Guide"]
+    : subjectGroupOrder[category] || [];
   const orderedGroups = [
     ...preferredOrder.filter((group) => grouped.has(group)),
     ...[...grouped.keys()].filter((group) => !preferredOrder.includes(group)).sort()
   ];
+  const openGroups = Boolean(state.query);
 
   return `
     <section class="tool-index-groups" aria-label="${escapeHtml(category || "Grouped")} tools">
       ${orderedGroups.map((group) => `
-        <section class="tool-index-group">
-          <div class="tool-index-group-heading">
-            <h2>${escapeHtml(group)} <span>${grouped.get(group).length}</span></h2>
-            <p>${escapeHtml(subjectGroupNotes[group] || "Related tools for classroom practice, worksheets, assessment, and projection.")}</p>
-          </div>
+        <details class="tool-index-group" ${openGroups ? "open" : ""}>
+          <summary class="tool-index-group-heading">
+            <span class="tool-index-heading-copy">
+              <strong>${escapeHtml(group)} <em>${grouped.get(group).length}</em></strong>
+              <small>${escapeHtml(subjectGroupNotes[group] || `Browse ${group.toLowerCase()} tools for classroom practice, worksheets, assessment, and projection.`)}</small>
+            </span>
+            <span class="tool-index-toggle" aria-hidden="true">Open</span>
+          </summary>
           <div class="tool-index-list">
             ${grouped.get(group).map(toolIndexRow).join("")}
           </div>
-        </section>
+        </details>
       `).join("")}
     </section>
   `;
@@ -5879,12 +5847,10 @@ function renderToolLibrary(extraCategory = "") {
       collectionTitle,
       extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Search the virtual textbook by topic. Choose a level, generate fresh questions, show answers or worked steps, use the timer, and project the set in Classroom View."
     )}
-    ${renderFilters(extraCategory)}
     ${visible.length
-      ? (extraCategory ? renderGroupedToolIndex(visible, collectionTitle) : `<section class="tool-grid" aria-label="Tools">${visible.map(toolCard).join("")}</section>`)
+      ? renderGroupedToolIndex(visible, collectionTitle, { groupByCategory: !extraCategory })
       : `<div class="panel empty-state">No tools match the current filters.</div>`}
   `;
-  bindFilters();
   restorePendingFocus();
 }
 
@@ -8948,33 +8914,6 @@ function bindAdmin() {
       testimonialStatus.textContent = `Could not save: ${error.message}`;
       button.disabled = false;
     }
-  });
-}
-
-function bindFilters() {
-  const categoryFilter = document.getElementById("categoryFilter");
-  const levelFilter = document.getElementById("levelFilter");
-  const accessFilter = document.getElementById("accessFilter");
-  const resetFilters = document.getElementById("resetFilters");
-  categoryFilter?.addEventListener("change", (event) => {
-    state.category = event.target.value;
-    renderToolLibrary();
-  });
-  levelFilter?.addEventListener("change", (event) => {
-    state.level = event.target.value;
-    renderToolLibrary(routeParts()[1] === "collections" ? routeParts()[2] : "");
-  });
-  accessFilter?.addEventListener("change", (event) => {
-    state.access = event.target.value;
-    renderToolLibrary(routeParts()[1] === "collections" ? routeParts()[2] : "");
-  });
-  resetFilters?.addEventListener("click", () => {
-    state.query = "";
-    state.category = "All";
-    state.level = "All";
-    state.access = "All";
-    globalSearch.value = "";
-    renderToolLibrary(routeParts()[1] === "collections" ? routeParts()[2] : "");
   });
 }
 
