@@ -7074,42 +7074,427 @@ function toolCurriculumLinks(tool) {
   return links.slice(0, 10);
 }
 
+function toolInfoText(tool) {
+  return normalise([tool.slug, tool.title, tool.category, toolSubjectGroup(tool), tool.level, tool.description, allToolTags(tool).join(" ")].join(" "));
+}
+
+function toolInsightProfile(tool) {
+  const haystack = toolInfoText(tool);
+  const has = (...needles) => needles.some((needle) => haystack.includes(needle));
+  const matches = (pattern) => pattern.test(haystack);
+  const profiles = [
+    {
+      match: () => has("algebraic fractions"),
+      misconceptions: [
+        "Cancelling a factor that is only part of a sum, for example cancelling x in x + 3 over x.",
+        "Finding a common denominator but failing to multiply every term in the numerator.",
+        "Solving an algebraic-fraction equation without excluding values that make a denominator zero."
+      ],
+      questions: [
+        "How can we decide whether a term is safe to cancel, or whether it must be factorised first?",
+        "What changes in the structure of the expression when we move from simplifying to solving an equation?",
+        "How would you convince someone that an excluded value cannot be accepted even if it satisfies the final line?"
+      ]
+    },
+    {
+      match: () => has("substitution") && !has("integration", "integral"),
+      misconceptions: [
+        "Substituting a negative value without brackets, so powers and signs are evaluated incorrectly.",
+        "Treating 3x as 3 + x instead of 3 multiplied by x.",
+        "Forgetting to substitute for every occurrence of the variable in an expression."
+      ],
+      questions: [
+        "Where would brackets change the value of this substitution, and why?",
+        "How can the structure of the expression tell us the correct order of calculation after substitution?",
+        "What substitution would make this expression easiest to evaluate, and what would make it most error-prone?"
+      ]
+    },
+    {
+      match: () => has("quadratic") && !has("binomial expansion"),
+      misconceptions: [
+        "Using the quadratic formula before first writing the equation equal to zero.",
+        "Losing the negative sign in -b or in the discriminant b squared minus 4ac.",
+        "Assuming a quadratic has integer factors when the discriminant is not a square number."
+      ],
+      questions: [
+        "What does the discriminant tell us before we attempt to solve the quadratic?",
+        "How would you choose between factorising, completing the square, and using the formula for this equation?",
+        "How can the graph of the quadratic help us evaluate whether the solutions are reasonable?"
+      ]
+    },
+    {
+      match: () => has("factorisation", "factorising", "factor theorem", "difference of squares", "grouping") && !has("binomial expansion"),
+      misconceptions: [
+        "Missing the highest common factor before trying a more advanced factorisation method.",
+        "Recognising a difference of squares but writing the two brackets with the same sign.",
+        "Factorising by grouping without checking that the repeated bracket is identical."
+      ],
+      questions: [
+        "What feature of the expression tells us which factorisation method should come first?",
+        "How can we verify a factorisation without relying on the answer key?",
+        "When an expression has several possible first moves, which route gives the most complete factorisation?"
+      ]
+    },
+    {
+      match: () => has("matrices", "matrix"),
+      misconceptions: [
+        "Multiplying matrices entry-by-entry instead of using row-by-column products.",
+        "Assuming AB and BA must be equal because ordinary multiplication is commutative.",
+        "Treating two matrices as equal without checking every corresponding entry."
+      ],
+      questions: [
+        "What information does the order of a matrix give us before we try to multiply it?",
+        "How can a single entry in a product matrix reveal the row-by-column structure of the whole calculation?",
+        "If two matrices are equal, how can we use corresponding entries to build a system of equations?"
+      ]
+    },
+    {
+      match: () => has("complex numbers", "polar form", "de moivre"),
+      misconceptions: [
+        "Mixing degrees and radians when working with arguments.",
+        "Choosing the wrong quadrant for the argument after finding an inverse tangent value.",
+        "Taking roots of a complex number but missing the full set of equally spaced arguments."
+      ],
+      questions: [
+        "How does the position of the complex number on the Argand diagram control the argument we choose?",
+        "Why do roots of a complex number form a regular pattern rather than a single answer?",
+        "Which form, Cartesian or polar, gives the clearest route for this operation, and why?"
+      ]
+    },
+    {
+      match: () => has("polar coordinates", "polar curves"),
+      misconceptions: [
+        "Treating r as if it must always be positive and ignoring equivalent polar representations.",
+        "Substituting theta values without considering symmetry or the interval being used.",
+        "Sketching a polar curve from Cartesian habits instead of analysing how r changes with theta."
+      ],
+      questions: [
+        "What does a negative value of r mean geometrically in this polar representation?",
+        "How can symmetry reduce the amount of calculation needed to understand the curve?",
+        "Which key theta values would best reveal the shape of the polar curve, and why?"
+      ]
+    },
+    {
+      match: () => has("proof by induction", "induction"),
+      misconceptions: [
+        "Checking the base case but not proving the inductive step from k to k + 1.",
+        "Assuming the result for k + 1 instead of using the assumption for k.",
+        "Writing a conclusion that does not explicitly connect the base case and inductive step."
+      ],
+      questions: [
+        "Where exactly is the inductive hypothesis used in the proof?",
+        "Why does proving the k to k + 1 step not prove the result unless the base case is also true?",
+        "How would the proof fail if the algebraic rearrangement in the inductive step were not justified?"
+      ]
+    },
+    {
+      match: () => has("series expansions", "taylor", "maclaurin"),
+      misconceptions: [
+        "Substituting into a known expansion without checking the required form and interval of validity.",
+        "Dropping powers or factorial denominators when building terms from derivatives.",
+        "Confusing the degree of approximation with the number of non-zero terms used."
+      ],
+      questions: [
+        "What substitution transforms this expression into a standard Taylor or Maclaurin expansion?",
+        "How does the required accuracy or power determine where the expansion should stop?",
+        "How can we evaluate whether the approximation is valid for the value being substituted?"
+      ]
+    },
+    {
+      match: () => has("differential equations"),
+      misconceptions: [
+        "Separating variables without moving all y terms to one side and all x terms to the other.",
+        "Forgetting the integrating factor in a first-order linear differential equation.",
+        "Solving the complementary equation but not adding the particular integral where one is required."
+      ],
+      questions: [
+        "What feature tells us whether this differential equation is separable, linear, or second order?",
+        "How does the arbitrary constant connect the family of solutions to a particular solution?",
+        "What does the solution mean in the modelling context, and how could we test its reasonableness?"
+      ]
+    },
+    {
+      match: () => has("vector", "vectors"),
+      misconceptions: [
+        "Writing a vector as a coordinate point and losing its direction-and-displacement meaning.",
+        "Using a scalar parameter inconsistently across the x, y, and z components.",
+        "Assuming two vectors are parallel because one component is proportional."
+      ],
+      questions: [
+        "What is the difference between a point, a position vector, and a direction vector in this question?",
+        "How can component equations help us test whether a point lies on a line or plane?",
+        "What evidence would prove that two vector descriptions represent the same geometric object?"
+      ]
+    },
+    {
+      match: () => has("logarithm", "exponential") && !has("integration", "integral"),
+      misconceptions: [
+        "Applying a log law across addition, for example treating log(a + b) as log a + log b.",
+        "Solving an exponential equation but leaving the answer as an unevaluated log expression when a numerical value is required.",
+        "Forgetting that logarithmic arguments must be positive."
+      ],
+      questions: [
+        "Which log law is justified by the structure of this expression, and which law would be invalid here?",
+        "How can we check whether a solution is allowed in the original logarithmic equation?",
+        "When is an exact logarithmic answer more useful, and when should it be evaluated?"
+      ]
+    },
+    {
+      match: () => has("function notation", "composite", "inverse function") || haystack.includes(" functions "),
+      misconceptions: [
+        "Reversing the order in a composite function, treating fg(x) as gf(x).",
+        "Finding an inverse function without first replacing f(x) with y and swapping x and y.",
+        "Ignoring domain restrictions that determine whether an inverse is valid."
+      ],
+      questions: [
+        "How does the notation tell us which function acts first in a composite?",
+        "What restriction would make this function one-to-one, and why does that matter?",
+        "How can a graph help us evaluate whether the inverse function makes sense?"
+      ]
+    },
+    {
+      match: () => has("binomial expansion"),
+      misconceptions: [
+        "Using the row of Pascal's triangle for n but forgetting the powers must descend and ascend.",
+        "Applying the binomial coefficient correctly but not raising the coefficient inside the bracket to the required power.",
+        "Treating a negative term in the bracket as positive in every term of the expansion."
+      ],
+      questions: [
+        "How does the structure of the bracket control the sign, coefficient, and power in each term?",
+        "Which term can be found directly without expanding the whole expression, and why?",
+        "How can we use symmetry or coefficient comparison to evaluate whether an expansion is plausible?"
+      ]
+    },
+    {
+      match: () => has("straight line", "gradient", "linear graph"),
+      misconceptions: [
+        "Using change in x over change in y instead of change in y over change in x for gradient.",
+        "Confusing the y-intercept with a point where the line crosses the x-axis.",
+        "Using the reciprocal rather than the negative reciprocal for perpendicular gradients."
+      ],
+      questions: [
+        "What does the sign of the gradient tell us about the direction of the line?",
+        "How can two different forms of the same line equation reveal different information?",
+        "How would you prove that two lines are parallel or perpendicular without drawing them?"
+      ]
+    },
+    {
+      match: () => has("differentiation", "derivative", "tangent", "normal") && !has("integration", "integral"),
+      misconceptions: [
+        "Reducing the power but forgetting to multiply by the original power.",
+        "Using the derivative value as a y-coordinate rather than as a gradient.",
+        "Finding a tangent gradient but not substituting the original x value into the original function."
+      ],
+      questions: [
+        "What does the derivative represent in this specific context?",
+        "How can we move from a derivative to the equation of a tangent or normal?",
+        "How would the graph behave at a point where the derivative is zero?"
+      ]
+    },
+    {
+      match: () => has("integration", "integral"),
+      misconceptions: [
+        "Increasing the power but forgetting to divide by the new power.",
+        "Dropping the constant of integration in an indefinite integral.",
+        "Evaluating a definite integral by substituting only the upper limit."
+      ],
+      questions: [
+        "What feature of the integrand suggests the integration method to use?",
+        "How does a definite integral connect symbolic working to an area or accumulated quantity?",
+        "How can differentiation be used to evaluate whether the integration result is correct?"
+      ]
+    },
+    {
+      match: () => has("partial fractions"),
+      misconceptions: [
+        "Starting decomposition before checking whether the fraction is improper.",
+        "Using a constant numerator over an irreducible quadratic factor when a linear numerator is needed.",
+        "Equating coefficients before multiplying through by the full denominator."
+      ],
+      questions: [
+        "What does the denominator structure tell us about the form of the decomposition?",
+        "Why must an improper rational fraction be divided before partial fractions are used?",
+        "How can substitution values and coefficient comparison support each other in the same solution?"
+      ]
+    },
+    {
+      match: () => has("trig", "sine", "cosine", "tangent"),
+      misconceptions: [
+        "Choosing a trigonometric ratio before identifying opposite, adjacent, and hypotenuse correctly.",
+        "Using the sine rule in a triangle where the cosine rule is required.",
+        "Solving a trigonometric equation but missing solutions in the required interval."
+      ],
+      questions: [
+        "What information in the diagram determines whether this is a right-triangle or non-right-triangle method?",
+        "How can symmetry in the trig graph help us find all valid solutions?",
+        "Which representation, diagram, graph, or equation, gives the strongest justification for the method?"
+      ]
+    },
+    {
+      match: () => has("normal distribution", "standardisation", "z value"),
+      misconceptions: [
+        "Standardising with sigma squared instead of sigma.",
+        "Using the wrong tail after converting from X to Z.",
+        "Reading a table value as a right-tail probability when the table gives Phi(z)."
+      ],
+      questions: [
+        "How does the inequality change, or stay the same, when we standardise X to Z?",
+        "What does the area under the curve represent in this context?",
+        "How can a sketch help us evaluate whether a probability should be less than or greater than 0.5?"
+      ]
+    },
+    {
+      match: () => has("binomial distribution", "geometric distribution"),
+      misconceptions: [
+        "Using a binomial model when the number of trials is not fixed.",
+        "Confusing P(X = x) with P(X less than or equal to x).",
+        "Forgetting that a geometric model counts trials up to and including the first success."
+      ],
+      questions: [
+        "What assumptions must be true before this distribution is a valid model?",
+        "How does the wording of the question determine whether we need exact or cumulative probability?",
+        "What would change in the calculation if the random variable were redefined?"
+      ]
+    },
+    {
+      match: () => has("hypothesis testing", "inference"),
+      misconceptions: [
+        "Choosing a one-tailed test when the alternative hypothesis is two-tailed.",
+        "Comparing a probability with the wrong significance level.",
+        "Writing a conclusion about the sample instead of the population claim."
+      ],
+      questions: [
+        "What wording in the context determines the alternative hypothesis?",
+        "How strong is the evidence against the null hypothesis, and what does the test not prove?",
+        "How would the conclusion change if the significance level were made more strict?"
+      ]
+    },
+    {
+      match: () => has("histogram", "frequency density"),
+      misconceptions: [
+        "Reading bar height as frequency when class widths are unequal.",
+        "Calculating frequency density using class midpoint instead of class width.",
+        "Comparing bars by height rather than by area when estimating frequency."
+      ],
+      questions: [
+        "Why does area, not height alone, represent frequency in a histogram?",
+        "How does changing class width affect the visual interpretation of the data?",
+        "What can and cannot be concluded from the modal class of this histogram?"
+      ]
+    },
+    {
+      match: () => has("correlation", "regression"),
+      misconceptions: [
+        "Interpreting correlation as proof that one variable causes the other.",
+        "Using the regression line outside the range of the data without considering extrapolation.",
+        "Mixing up y on x and x on y regression lines."
+      ],
+      questions: [
+        "What does the size and sign of r tell us, and what does it not tell us?",
+        "When is interpolation reasonable, and when does prediction become unreliable?",
+        "How would the interpretation change if the explanatory and response variables were swapped?"
+      ]
+    },
+    {
+      match: () => has("probability", "tree diagram", "venn", "set notation"),
+      misconceptions: [
+        "Adding probabilities for combined events when multiplication is required.",
+        "Treating events as independent without checking the wording or diagram.",
+        "Misreading union, intersection, and complement regions in a Venn diagram."
+      ],
+      questions: [
+        "What does the structure of the diagram tell us about whether events are independent or conditional?",
+        "How can we represent the same probability using words, notation, and a diagram?",
+        "Which region or branch is being counted twice, and how should we adjust for it?"
+      ]
+    },
+    {
+      match: () => has("suvat", "equations of motion", "motion graphs", "constant acceleration"),
+      misconceptions: [
+        "Using SUVAT when acceleration is not constant.",
+        "Confusing displacement with distance travelled.",
+        "Reading the gradient and area of velocity-time graphs the wrong way round."
+      ],
+      questions: [
+        "What modelling assumption allows us to use constant-acceleration formulae here?",
+        "How do the graph, equation, and physical context each represent the same motion?",
+        "How would the solution change if direction were treated explicitly with signs?"
+      ]
+    },
+    {
+      match: () => has("newton", "force", "f = ma", "moments", "momentum", "projectile"),
+      misconceptions: [
+        "Using mass as weight without multiplying by g where weight is needed.",
+        "Combining forces without assigning a consistent positive direction.",
+        "Resolving a force or velocity into components but using the wrong trigonometric component."
+      ],
+      questions: [
+        "Which forces or components are acting in the direction we have chosen as positive?",
+        "How does the model simplify the real situation, and what effect might that have on the answer?",
+        "What conservation law or equilibrium condition is being used, and why is it valid here?"
+      ]
+    },
+    {
+      match: () => has("circle", "area", "volume", "surface area", "similar shapes", "pythagoras", "bearing", "angle", "geometry"),
+      misconceptions: [
+        "Using a length scale factor directly for area or volume problems.",
+        "Selecting a formula that matches the shape name but not the measurement being asked for.",
+        "Assuming a diagram is drawn to scale when the given information says otherwise."
+      ],
+      questions: [
+        "Which measurements are lengths, areas, or volumes, and how does that affect the method?",
+        "What hidden right triangle, angle relationship, or similarity relationship is driving the solution?",
+        "How could we redraw or annotate the diagram to make the mathematical structure clearer?"
+      ]
+    },
+    {
+      match: () => has("fraction", "decimal", "percentage", "ratio", "hcf", "lcm", "bounds", "standard form", "number bases"),
+      misconceptions: [
+        "Changing the representation of a number without preserving its value.",
+        "Cancelling or simplifying before checking that the operation allows it.",
+        "Rounding during intermediate steps and carrying that inaccuracy into the final answer."
+      ],
+      questions: [
+        "Which representation makes the calculation most efficient, and why?",
+        "How can we estimate first so that we can evaluate whether the exact answer is sensible?",
+        "What structure in the numbers reveals the factor, multiple, place-value, or proportional relationship?"
+      ]
+    },
+    {
+      match: () => matches(/equation|inequalit|simultaneous|linear/),
+      misconceptions: [
+        "Performing an operation on one side of an equation but not the other.",
+        "Changing the direction of an inequality without recognising when multiplication or division by a negative has occurred.",
+        "Eliminating a variable in simultaneous equations without first matching coefficients correctly."
+      ],
+      questions: [
+        "What operation would undo the current structure while preserving equivalence?",
+        "How can we prove that each transformation keeps the solution set unchanged?",
+        "Which representation, symbolic, graphical, or contextual, gives the clearest meaning of the solution?"
+      ]
+    }
+  ];
+
+  return profiles.find((profile) => profile.match()) || {
+    misconceptions: [
+      "Using a familiar procedure before checking that the question has the same mathematical structure.",
+      "Skipping the line of working where the key transformation or decision must be justified.",
+      "Giving a numerical answer without checking it against the original conditions."
+    ],
+    questions: [
+      "What structure in the question determines the most efficient method?",
+      "How could we justify each transformation so that another student can audit the reasoning?",
+      "What alternative method would solve the same problem, and which method gives the clearest explanation?"
+    ]
+  };
+}
+
 function toolMisconceptions(tool) {
-  const haystack = normalise([tool.title, tool.category, toolSubjectGroup(tool), tool.description, allToolTags(tool).join(" ")].join(" "));
-  if (haystack.includes("matrix") || haystack.includes("matrices")) {
-    return ["Multiplying matrices entry-by-entry instead of row by column.", "Assuming matrix multiplication is commutative.", "Forgetting determinant conditions for inverse or singular matrices."];
-  }
-  if (haystack.includes("fraction") || haystack.includes("decimal") || haystack.includes("percentage")) {
-    return ["Changing form without preserving value.", "Cancelling across addition or subtraction incorrectly.", "Losing place value when moving between decimals and percentages."];
-  }
-  if (haystack.includes("quadratic") || haystack.includes("factor")) {
-    return ["Missing a common factor before factorising.", "Sign errors when forming brackets.", "Treating every quadratic as if it factorises over integers."];
-  }
-  if (haystack.includes("trig") || haystack.includes("sine") || haystack.includes("cosine")) {
-    return ["Choosing the wrong ratio or rule for the information given.", "Forgetting ambiguous cases or quadrant restrictions.", "Rounding too early in multi-step calculations."];
-  }
-  if (haystack.includes("calculus") || haystack.includes("differentiat") || haystack.includes("integrat")) {
-    return ["Applying rules mechanically without checking the structure first.", "Missing the chain rule or constant multiplier.", "Forgetting constants of integration or the meaning of a derivative."];
-  }
-  if (haystack.includes("probability") || haystack.includes("distribution") || haystack.includes("statistics")) {
-    return ["Using the wrong model or probability region.", "Confusing cumulative probability with exact probability.", "Giving calculations without interpreting the result in context."];
-  }
-  if (haystack.includes("geometry") || haystack.includes("area") || haystack.includes("volume") || haystack.includes("angle")) {
-    return ["Using the wrong formula for the shape or measurement.", "Mixing length, area, and volume units.", "Assuming a diagram is exact without checking the information given."];
-  }
-  if (haystack.includes("mechanics") || haystack.includes("force") || haystack.includes("motion") || haystack.includes("momentum")) {
-    return ["Choosing a formula before defining the quantities.", "Mixing signs or directions in vector/force equations.", "Forgetting units or modelling assumptions."];
-  }
-  return ["Rushing to a method before identifying the structure.", "Skipping a line of working where the key decision happens.", "Giving an answer without checking whether it matches the question."];
+  return toolInsightProfile(tool).misconceptions;
 }
 
 function toolClassroomQuestions(tool) {
-  return [
-    "What is the first decision students must make in this topic?",
-    "Which mistake would give a plausible but incorrect answer here?",
-    "What evidence in the question tells us which method to use?",
-    "How could we check whether the answer is reasonable?"
-  ];
+  return toolInsightProfile(tool).questions;
 }
 
 function toolUseSuggestions(tool) {
