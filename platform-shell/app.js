@@ -5970,13 +5970,16 @@ function renderWorksheetGenerator() {
             </div>
           </div>
         </div>
-        <div class="button-row">
-          <div class="worksheet-workflow-cue" id="worksheetWorkflowCue" aria-live="polite"></div>
-          <button class="button" id="addWorksheetSection" type="button">Add selected questions</button>
-          <button class="button" id="buildTopicAssessment" type="button">Build Topic Assessment</button>
-          <button class="button" id="generateWorksheet" type="submit">Create Worksheet</button>
-          <button class="button" id="printWorksheet" type="button" disabled>Print / Save PDF</button>
-          <button class="button subtle" id="resetWorksheet" type="button">Reset Worksheet</button>
+        <div class="button-row worksheet-action-panel">
+          <div class="worksheet-primary-actions">
+            <button class="button" id="addWorksheetSection" type="button">Add selected questions</button>
+            <button class="button" id="generateWorksheet" type="submit">Create Worksheet</button>
+          </div>
+          <div class="worksheet-output-actions">
+            <button class="button worksheet-print-button" id="printWorksheet" type="button" disabled>Print / Save PDF</button>
+            <small>Available after creating the worksheet.</small>
+          </div>
+          <button class="button subtle worksheet-reset-button" id="resetWorksheet" type="button">Reset Worksheet</button>
         </div>
         <div class="worksheet-section-list" id="worksheetSectionList"></div>
         <p class="worksheet-status" id="worksheetStatus">Loading the selected tool...</p>
@@ -6102,10 +6105,6 @@ function setWorksheetAssessmentMode(active) {
   const assessmentPanel = document.getElementById("worksheetAssessmentPanel");
   if (assessmentMode) assessmentMode.checked = active;
   if (assessmentPanel) assessmentPanel.hidden = !active;
-}
-
-function preferredWorksheetType(types = []) {
-  return types.find((type) => /mixed/i.test(type.label || "") || /mixed/i.test(type.id || "")) || types[0] || null;
 }
 
 function populateWorksheetControls(metadata) {
@@ -6275,7 +6274,6 @@ function worksheetCurrentSelectionReady() {
 }
 
 function updateWorksheetFlow() {
-  const cue = document.getElementById("worksheetWorkflowCue");
   const addButton = document.getElementById("addWorksheetSection");
   const generateButton = document.getElementById("generateWorksheet");
   const hasSections = worksheetState.sections.length > 0;
@@ -6297,29 +6295,6 @@ function updateWorksheetFlow() {
     generateButton.classList.toggle("primary", prioritiseGenerate);
     generateButton.classList.toggle("worksheet-action-muted", !prioritiseGenerate);
   }
-
-  if (!cue) return;
-
-  let nextLabel = "Select questions";
-  let nextDetail = loading ? "Loading topic options..." : "Choose a topic, level, question type, and count.";
-  let nextState = "waiting";
-  if (prioritiseAdd) {
-    nextLabel = "Next: Add selected questions";
-    nextDetail = hasSections ? "You changed the selection. Add it as another block before creating the worksheet." : "Add this first block before creating the worksheet.";
-    nextState = "active";
-  } else if (prioritiseGenerate) {
-    nextLabel = "Next: Create worksheet";
-    nextDetail = `${worksheetState.sections.length} block${worksheetState.sections.length === 1 ? "" : "s"} added. Generate the worksheet, then print or save.`;
-    nextState = "ready";
-  }
-
-  cue.dataset.state = nextState;
-  cue.innerHTML = `
-    <span class="worksheet-flow-next" data-state="${nextState}">
-      <strong>${nextLabel}</strong>
-      <small>${nextDetail}</small>
-    </span>
-  `;
 }
 
 function renderWorksheetSections() {
@@ -6398,48 +6373,6 @@ function addWorksheetSection() {
   renderWorksheetSections();
   updateWorksheetFlow();
   setWorksheetStatus(`Added ${section.count} ${section.toolTitle} questions. You can edit the block, add another block, or create the worksheet.`, "success");
-}
-
-function buildTopicAssessment() {
-  const tool = selectedWorksheetTool();
-  const levels = worksheetState.metadata?.levels || [];
-  if (!tool || !levels.length) {
-    setWorksheetStatus("Wait for the selected topic to finish loading before building an assessment.", "error");
-    return;
-  }
-
-  setWorksheetAssessmentMode(true);
-  const marksPerQuestion = worksheetAssessmentOptions().marksPerQuestion;
-  const count = 2;
-  const sections = levels
-    .map((level) => {
-      const type = preferredWorksheetType(level.types || []);
-      if (!type) return null;
-      return {
-        id: `${tool.slug}-${level.id}-${type.id}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
-        toolSlug: tool.slug,
-        toolTitle: tool.title,
-        category: tool.category,
-        level: level.id,
-        levelLabel: level.title,
-        type: type.id,
-        typeLabel: type.label,
-        count,
-        marksPerQuestion
-      };
-    })
-    .filter(Boolean);
-
-  if (!sections.length) {
-    setWorksheetStatus("No worksheet-ready levels were found for this topic.", "error");
-    return;
-  }
-
-  worksheetState.sections = sections;
-  worksheetState.lastAddedSignature = worksheetSelectionSignature();
-  renderWorksheetSections();
-  updateWorksheetFlow();
-  setWorksheetStatus(`Built a draft ${tool.title} assessment with ${sections.length} block${sections.length === 1 ? "" : "s"}. Remove blocks or edit counts and marks before generating.`, "success");
 }
 
 async function generateWorksheetFromSections(sections, options = {}) {
@@ -6593,7 +6526,6 @@ function bindWorksheetGenerator() {
   const previewPane = document.getElementById("worksheetPreview");
   const printButton = document.getElementById("printWorksheet");
   const addSectionButton = document.getElementById("addWorksheetSection");
-  const buildAssessmentButton = document.getElementById("buildTopicAssessment");
   const resetButton = document.getElementById("resetWorksheet");
   const assessmentMode = document.getElementById("worksheetAssessmentMode");
   const assessmentPanel = document.getElementById("worksheetAssessmentPanel");
@@ -6624,7 +6556,6 @@ function bindWorksheetGenerator() {
   });
 
   addSectionButton?.addEventListener("click", addWorksheetSection);
-  buildAssessmentButton?.addEventListener("click", buildTopicAssessment);
   resetButton?.addEventListener("click", resetWorksheetBuilder);
   [paperTitleInput, paperInstructionInput].forEach((input) => {
     input?.addEventListener("input", () => {
