@@ -2543,7 +2543,10 @@ function worksheetMathFragment(value) {
   }
 
   appendText(source.slice(lastIndex));
-  return fragment;
+  const wrapper = document.createElement("span");
+  wrapper.className = "worksheet-math-inline";
+  wrapper.appendChild(fragment);
+  return wrapper;
 }
 
 function normalisePowerAtSymbols(value) {
@@ -5764,13 +5767,13 @@ function renderCoverageMap() {
   `;
 }
 
-function renderFilters() {
+function renderFilters(extraCategory = "") {
   const categories = ["All", ...new Set(tools.filter(isVisibleTool).map((tool) => tool.category))];
   const levels = ["All", "KS2", "KS3", "GCSE", "A-Level"];
+  const showCategoryFilter = !extraCategory;
   return `
-    <section class="filter-row" aria-label="Tool filters">
-      <input id="librarySearch" type="search" value="${state.query}" placeholder="Search topics, tools, or skills">
-      <select id="categoryFilter" aria-label="Category">${categories.map((category) => `<option ${state.category === category ? "selected" : ""}>${category}</option>`).join("")}</select>
+    <section class="filter-row ${showCategoryFilter ? "" : "collection-filter-row"}" aria-label="Tool filters">
+      ${showCategoryFilter ? `<select id="categoryFilter" aria-label="Category">${categories.map((category) => `<option ${state.category === category ? "selected" : ""}>${category}</option>`).join("")}</select>` : ""}
       <select id="levelFilter" aria-label="Level">${[...new Set(levels)].map((level) => `<option ${state.level === level ? "selected" : ""}>${level}</option>`).join("")}</select>
       <select id="accessFilter" aria-label="Access">${["All", "Free", "Trial", "Pro", "School", "Admin"].map((access) => `<option ${state.access === access ? "selected" : ""}>${access}</option>`).join("")}</select>
       <button class="button filter-reset" id="resetFilters" type="button">Reset</button>
@@ -5876,7 +5879,7 @@ function renderToolLibrary(extraCategory = "") {
       collectionTitle,
       extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Search the virtual textbook by topic. Choose a level, generate fresh questions, show answers or worked steps, use the timer, and project the set in Classroom View."
     )}
-    ${renderFilters()}
+    ${renderFilters(extraCategory)}
     ${visible.length
       ? (extraCategory ? renderGroupedToolIndex(visible, collectionTitle) : `<section class="tool-grid" aria-label="Tools">${visible.map(toolCard).join("")}</section>`)
       : `<div class="panel empty-state">No tools match the current filters.</div>`}
@@ -8949,32 +8952,23 @@ function bindAdmin() {
 }
 
 function bindFilters() {
-  const librarySearch = document.getElementById("librarySearch");
   const categoryFilter = document.getElementById("categoryFilter");
   const levelFilter = document.getElementById("levelFilter");
   const accessFilter = document.getElementById("accessFilter");
   const resetFilters = document.getElementById("resetFilters");
-  if (!librarySearch) return;
-
-  librarySearch.addEventListener("input", (event) => {
-    state.query = event.target.value;
-    globalSearch.value = state.query;
-    pendingFocusTarget = "librarySearch";
-    renderToolLibrary(routeParts()[1] === "collections" ? routeParts()[2] : "");
-  });
-  categoryFilter.addEventListener("change", (event) => {
+  categoryFilter?.addEventListener("change", (event) => {
     state.category = event.target.value;
     renderToolLibrary();
   });
-  levelFilter.addEventListener("change", (event) => {
+  levelFilter?.addEventListener("change", (event) => {
     state.level = event.target.value;
     renderToolLibrary(routeParts()[1] === "collections" ? routeParts()[2] : "");
   });
-  accessFilter.addEventListener("change", (event) => {
+  accessFilter?.addEventListener("change", (event) => {
     state.access = event.target.value;
     renderToolLibrary(routeParts()[1] === "collections" ? routeParts()[2] : "");
   });
-  resetFilters.addEventListener("click", () => {
+  resetFilters?.addEventListener("click", () => {
     state.query = "";
     state.category = "All";
     state.level = "All";

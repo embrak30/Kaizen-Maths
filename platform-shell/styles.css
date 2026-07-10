@@ -914,9 +914,8 @@ body[data-route="worksheet-generator"] .account-action {
   max-width: none;
   margin: 0;
   color: #252243;
-  font-family: var(--math-font);
   font-size: clamp(0.98rem, 1.18vw, 1.15rem);
-  font-weight: 700;
+  font-weight: 560;
   line-height: 1.34;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -2131,10 +2130,16 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .filter-row {
-  display: grid;
-  grid-template-columns: minmax(240px, 1fr) 170px 170px 150px auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: flex-start;
   gap: 10px;
   margin-bottom: 16px;
+}
+
+.filter-row select {
+  min-width: 154px;
 }
 
 .filter-reset {
@@ -2150,7 +2155,7 @@ body[data-route="worksheet-generator"] .account-action {
 
 .tool-index-groups {
   display: grid;
-  gap: 16px;
+  gap: 18px;
 }
 
 .tool-index-group {
@@ -2163,13 +2168,18 @@ body[data-route="worksheet-generator"] .account-action {
   grid-template-columns: minmax(190px, 280px) minmax(0, 1fr);
   gap: 12px;
   align-items: baseline;
-  padding: 0 2px 6px;
-  border-bottom: 1px solid #dfe7f1;
+  padding: 9px 11px;
+  border: 1px solid rgba(23, 184, 179, 0.3);
+  border-left: 5px solid var(--teal);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(231, 251, 250, 0.96), rgba(255, 255, 255, 0.92)),
+    repeating-linear-gradient(135deg, rgba(23, 184, 179, 0.045) 0 1px, transparent 1px 18px);
 }
 
 .tool-index-group-heading h2 {
   margin: 0;
-  color: #282450;
+  color: #075f63;
   font-size: 1.02rem;
   line-height: 1.2;
 }
@@ -2182,8 +2192,8 @@ body[data-route="worksheet-generator"] .account-action {
   height: 1.45rem;
   margin-left: 6px;
   border-radius: 999px;
-  background: #eef7ff;
-  color: #24527a;
+  background: var(--teal);
+  color: white;
   font-size: 0.74rem;
   font-weight: 800;
   vertical-align: middle;
@@ -2198,10 +2208,11 @@ body[data-route="worksheet-generator"] .account-action {
 
 .tool-index-list {
   display: grid;
-  border: 1px solid #e4ebf4;
+  border: 1px solid rgba(23, 184, 179, 0.24);
   border-radius: var(--radius);
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 10px 26px rgba(15, 143, 145, 0.07);
 }
 
 .tool-index-row {
@@ -2212,8 +2223,8 @@ body[data-route="worksheet-generator"] .account-action {
   padding: 9px 11px;
   color: inherit;
   text-decoration: none;
-  border-top: 1px solid #eef3f8;
-  transition: background 0.16s ease, border-color 0.16s ease;
+  border-top: 1px solid rgba(23, 184, 179, 0.14);
+  transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
 }
 
 .tool-index-row:first-child {
@@ -2221,7 +2232,8 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .tool-index-row:hover {
-  background: linear-gradient(90deg, rgba(111, 76, 195, 0.07), rgba(23, 184, 179, 0.06));
+  background: linear-gradient(90deg, rgba(23, 184, 179, 0.18), rgba(111, 76, 195, 0.12));
+  box-shadow: inset 4px 0 0 var(--teal);
 }
 
 .tool-index-row.locked {
@@ -4194,9 +4206,15 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .worksheet-question-text {
-  font-family:var(--math-font);
   font-size: 1.08rem;
   line-height: 1.5;
+}
+
+.worksheet-question-text strong,
+.worksheet-question-text b,
+.exam-question-stem strong,
+.exam-question-stem b {
+  font-weight: 500;
 }
 
 .worksheet-question-text .worksheet-diagram-row,
@@ -4323,6 +4341,11 @@ body[data-route="worksheet-generator"] .account-action {
   margin-right: 0.35em;
 }
 
+.worksheet-math-inline {
+  font-family: var(--math-font);
+  font-weight: 400;
+}
+
 .worksheet-fraction {
   display: inline-grid;
   grid-template-rows: auto auto;
@@ -4330,7 +4353,8 @@ body[data-route="worksheet-generator"] .account-action {
   margin: 0 0.18em;
   vertical-align: middle;
   text-align: center;
-  font-family:var(--math-font);
+  font-family: var(--math-font);
+  font-weight: 400;
   line-height: 1.05;
 }
 
@@ -4381,7 +4405,8 @@ sup .worksheet-fraction span:last-child {
   justify-items: center;
   margin: 0 0.18em;
   vertical-align: middle;
-  font-family:var(--math-font);
+  font-family: var(--math-font);
+  font-weight: 400;
   line-height: 0.9;
 }
 
@@ -4425,6 +4450,7 @@ sup .worksheet-fraction span:last-child {
   padding: 0.34rem 0.62rem;
   vertical-align: middle;
   font-family: var(--math-font);
+  font-weight: 400;
   line-height: 1.12;
 }
 
@@ -4483,7 +4509,8 @@ sup .worksheet-fraction span:last-child {
 .worksheet-math-table {
   border-collapse: collapse;
   margin: 8px 0;
-  font-family:var(--math-font);
+  font-family: var(--math-font);
+  font-weight: 400;
 }
 
 .worksheet-math-table td {
@@ -4496,7 +4523,7 @@ sup .worksheet-fraction span:last-child {
 .worksheet-math-table td:first-child {
   border-right: 2px solid #6b7280;
   color: #4c1d95;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .worksheet-question-text .system-line {
@@ -4626,7 +4653,6 @@ sup .worksheet-fraction span:last-child {
   grid-template-columns: 32px minmax(0, 1fr);
   gap: 10px;
   align-items: start;
-  font-family:var(--math-font);
   line-height: 1.45;
 }
 
@@ -5045,7 +5071,6 @@ sup .worksheet-fraction span:last-child {
 }
 
 .exam-question-stem {
-  font-family: var(--math-font);
   font-size: 1.08rem;
   line-height: 1.58;
 }
@@ -5147,7 +5172,6 @@ sup .worksheet-fraction span:last-child {
 
 .exam-solution p {
   margin: 10px 0 0;
-  font-family: var(--math-font);
 }
 
 .exam-paper-footer {
