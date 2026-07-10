@@ -79,13 +79,13 @@ const tools = [
   },
   {
     slug: "straight-lines",
-    title: "Straight Lines",
+    title: "Straight Line Graphs and Gradients",
     category: "Algebra",
     level: "GCSE",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate straight-line questions covering gradients, intercepts, equations, intersections, and parallel or perpendicular lines.",
+    description: "Generate straight-line graph questions covering gradients, intercepts, line equations, intersections, and parallel or perpendicular lines.",
     tags: ["algebra", "coordinate geometry", "straight lines", "gradient", "intercepts", "linear graphs"],
     toolPath: "tools/straight-lines/index.html?v=step-structure-1",
     imported: true,
@@ -97,13 +97,13 @@ const tools = [
   },
   {
     slug: "conic-intersections",
-    title: "Conic Intersections",
+    title: "Line and Curve Intersections",
     category: "Algebra",
     level: "GCSE / A-Level",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate two-problem challenge sets for intersections of lines with circles, parabolas, hyperbolas, and mixed conics.",
+    description: "Generate two-problem challenge sets for intersections of lines with circles, parabolas, hyperbolas, and mixed curve problems.",
     tags: ["algebra", "coordinate geometry", "conics", "circles", "parabolas", "hyperbolas", "intersections"],
     toolPath: "tools/conic-intersections/index.html?v=step-structure-1",
     imported: true,
@@ -115,13 +115,13 @@ const tools = [
   },
   {
     slug: "differentiation-polynomials",
-    title: "Differentiation of Polynomials",
+    title: "Basic Differentiation of Polynomials",
     category: "Algebra",
     level: "GCSE / A-Level",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate polynomial differentiation questions from the power rule through gradients, tangent lines, and normal lines.",
+    description: "Generate polynomial differentiation questions using the power rule, gradients, tangent lines, and normal lines.",
     tags: ["algebra", "calculus", "differentiation", "derivatives", "polynomials", "tangents", "normals"],
     toolPath: "tools/differentiation-polynomials/index.html?v=batch3-steps-1",
     imported: true,
@@ -133,13 +133,13 @@ const tools = [
   },
   {
     slug: "integration",
-    title: "Integration",
+    title: "Basic Integration and Definite Integrals",
     category: "Algebra",
     level: "GCSE / A-Level",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate integration practice covering indefinite integrals, definite integrals, and the trapezium rule.",
+    description: "Generate foundation integration practice covering reverse differentiation, indefinite integrals, definite integrals, and the trapezium rule.",
     tags: ["algebra", "calculus", "integration", "integrals", "trapezium rule", "area under curve"],
     toolPath: "tools/integration/index.html?v=batch3-steps-1",
     imported: true,
@@ -151,13 +151,13 @@ const tools = [
   },
   {
     slug: "advanced-integration",
-    title: "Advanced Integration",
+    title: "Integration by Substitution and Parts",
     category: "Algebra",
     level: "A-Level",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate integration practice for substitution, definite substitution, logarithmic derivative forms, and integration by parts.",
+    description: "Generate advanced integration practice for substitution, definite substitution, logarithmic derivative forms, and integration by parts.",
     tags: ["algebra", "calculus", "integration", "substitution", "integration by parts", "A-Level Pure", "Further Maths"],
     toolPath: "tools/advanced-integration/index.html?v=advanced-integration-1",
     imported: true,
@@ -225,7 +225,7 @@ const tools = [
   },
   {
     slug: "further-vectors",
-    title: "Further Maths Vectors",
+    title: "Further Vectors: Lines, Planes and Products",
     category: "Algebra",
     level: "A-Level Further Maths",
     type: "Practice Generator",
@@ -282,13 +282,13 @@ const tools = [
   },
   {
     slug: "series-expansions",
-    title: "Series Expansions",
+    title: "Taylor and Maclaurin Series",
     category: "Algebra",
     level: "A-Level Further Maths",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate Further Maths series practice covering Maclaurin series, Taylor series, substitution, products of series, approximations, limits, coefficients, and simple power-series solutions.",
+    description: "Generate Further Maths series expansion practice covering Maclaurin series, Taylor series, substitution, products of series, approximations, limits, coefficients, and simple power-series solutions.",
     tags: ["algebra", "calculus", "further maths", "series", "Maclaurin series", "Taylor series", "power series", "approximations", "limits"],
     toolPath: "tools/series-expansions/index.html?v=series-expansions-2",
     imported: true,
@@ -377,13 +377,13 @@ const tools = [
   },
   {
     slug: "differentiation-rules",
-    title: "Differentiation Rules",
+    title: "Product, Quotient and Chain Rule",
     category: "Algebra",
     level: "A-Level",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate differentiation practice for power, product, quotient, chain, trigonometric, logarithmic, tangent, normal, and turning-point problems.",
+    description: "Generate general differentiation practice for product rule, quotient rule, chain rule, trigonometric, logarithmic, tangent, normal, and turning-point problems.",
     tags: ["algebra", "calculus", "differentiation", "power rule", "product rule", "quotient rule", "chain rule", "trigonometry", "logarithms"],
     toolPath: "tools/differentiation-rules-general/index.html?v=batch1-steps-1",
     imported: true,
@@ -395,13 +395,13 @@ const tools = [
   },
   {
     slug: "trig-differentiation-rules",
-    title: "Trig Differentiation Rules",
+    title: "Trigonometric Differentiation",
     category: "Algebra",
     level: "A-Level",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate trigonometric differentiation practice with chain, product, quotient, and mixed-rule challenges.",
+    description: "Generate trigonometric differentiation practice with chain rule, product rule, quotient rule, and mixed-rule challenges.",
     tags: ["algebra", "calculus", "differentiation", "trigonometry", "chain rule", "product rule", "quotient rule"],
     toolPath: "tools/differentiation-rules/index.html?v=batch1-steps-1",
     imported: true,
@@ -431,7 +431,7 @@ const tools = [
   },
   {
     slug: "trig-equation-solver",
-    title: "Trig Equation Solver",
+    title: "Trigonometric Equation Solver",
     category: "Algebra",
     level: "A-Level",
     type: "Practice Generator",
@@ -449,13 +449,13 @@ const tools = [
   },
   {
     slug: "trigonometric-functions",
-    title: "Trigonometric Functions",
+    title: "Trig Identities, Proofs and Equations",
     category: "Algebra",
     level: "A-Level",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate A-level trigonometric functions practice covering reciprocal graphs, sec, cosec, cot equations, identities, proofs, and hence-solve questions.",
+    description: "Generate A-level trigonometry practice covering reciprocal graphs, sec, cosec, cot equations, identities, proofs, and hence-solve questions.",
     tags: ["algebra", "trigonometry", "trigonometric functions", "sec", "cosec", "cot", "identities", "proof", "A-Level"],
     toolPath: "tools/trigonometric-functions/index.html?v=factorisation-steps-1",
     imported: true,
@@ -467,13 +467,13 @@ const tools = [
   },
   {
     slug: "sequences-series",
-    title: "Sequences & Series",
+    title: "Arithmetic and Geometric Sequences and Series",
     category: "Algebra",
     level: "GCSE / A-Level",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate arithmetic and geometric sequences and series practice, including nth terms, sums, inverse problems, sigma notation, and sums to infinity.",
+    description: "Generate arithmetic and geometric sequence and series practice, including nth terms, sums, inverse problems, sigma notation, and sums to infinity.",
     tags: ["algebra", "sequences", "series", "arithmetic", "geometric", "sigma notation", "sum to infinity"],
     toolPath: "tools/sequences-series/index.html?v=sigma-worksheet-limits-1",
     imported: true,
@@ -924,13 +924,13 @@ const tools = [
   },
   {
     slug: "exponents-index-notation",
-    title: "Exponents and Index Notation",
+    title: "Indices and Exponent Laws",
     category: "Algebra",
     level: "KS3 / GCSE",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate exponent and index notation practice covering repeated multiplication, evaluation, prime factorisation, zero and negative powers, index laws, and multi-step simplification.",
+    description: "Generate indices and exponent-law practice covering repeated multiplication, evaluation, prime factorisation, zero and negative powers, and multi-step simplification.",
     tags: ["algebra", "indices", "exponents", "powers", "index laws", "prime factorisation", "negative indices"],
     toolPath: "tools/exponents-index-notation/index.html?v=exponents-worksheet-1",
     imported: true,
@@ -943,13 +943,13 @@ const tools = [
   },
   {
     slug: "absolute-values",
-    title: "Absolute Values",
+    title: "Modulus and Absolute Value",
     category: "Algebra",
     level: "KS3 / GCSE",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate absolute value practice covering evaluation, distance, substitution, absolute value equations, applications, and inequalities.",
+    description: "Generate modulus and absolute value practice covering evaluation, distance, substitution, equations, applications, and inequalities.",
     tags: ["algebra", "absolute value", "modulus", "equations", "inequalities", "distance"],
     toolPath: "tools/absolute-values/index.html?v=step-structure-1",
     imported: true,
@@ -981,13 +981,13 @@ const tools = [
   },
   {
     slug: "logarithms-practice",
-    title: "Logarithms Practice",
+    title: "Logarithms and Exponential Equations",
     category: "Algebra",
     level: "GCSE / A-Level",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate logarithm practice covering log-index conversion, evaluation, logarithm laws, natural logs, change of base, and equation solving.",
+    description: "Generate logarithm practice covering log-index conversion, evaluation, logarithm laws, natural logs, change of base, and exponential or logarithmic equation solving.",
     tags: ["algebra", "logarithms", "logs", "indices", "exponentials", "natural log", "change of base"],
     toolPath: "tools/logarithms-practice/index.html?v=batch3-steps-1",
     imported: true,
@@ -1000,7 +1000,7 @@ const tools = [
   },
   {
     slug: "sine-cosine-rule",
-    title: "Sine & Cosine Rule",
+    title: "Sine Rule, Cosine Rule and Triangle Area",
     category: "Algebra",
     level: "GCSE / A-Level",
     type: "Practice Generator",
@@ -1363,13 +1363,13 @@ const tools = [
   },
   {
     slug: "quadratic-factorisation",
-    title: "Quadratic Factorisation",
+    title: "Quadratic Factorisation Basics",
     category: "Algebra",
     level: "KS3 / GCSE",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate factorisation questions for common factors, special quadratic forms, trinomials, grouping, and mixed expressions.",
+    description: "Generate foundation factorisation questions for common factors, special quadratic forms, trinomials, grouping, and mixed expressions.",
     tags: ["algebra", "quadratics", "factorisation", "factorising", "difference of squares", "trinomials", "common factor"],
     toolPath: "tools/quadratic-factorisation/index.html?v=factorisation-steps-1",
     imported: true,
@@ -1381,13 +1381,13 @@ const tools = [
   },
   {
     slug: "advanced-factorisation",
-    title: "Advanced Factorisation",
+    title: "Advanced Factorisation: Grouping, Difference of Squares and Cubics",
     category: "Algebra",
     level: "GCSE / A-Level",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate graduated factorisation practice covering common factors, multivariable HCF, difference of two squares, grouping, quadratics, and complete cubic factorisation.",
+    description: "Generate graduated factorisation practice covering multivariable HCF, difference of two squares, grouping, advanced quadratics, and complete cubic factorisation.",
     tags: ["algebra", "factorisation", "factorising", "highest common factor", "difference of squares", "grouping", "quadratics", "cubics", "complete factorisation"],
     toolPath: "tools/advanced-factorisation/index.html?v=advanced-factorisation-5",
     imported: true,
@@ -1471,7 +1471,7 @@ const tools = [
   },
   {
     slug: "functions",
-    title: "Functions",
+    title: "Function Notation, Composite and Inverse Functions",
     category: "Algebra",
     level: "GCSE / A-Level",
     type: "Practice Generator",
@@ -1561,7 +1561,7 @@ const tools = [
   },
   {
     slug: "remainder-theorem",
-    title: "Remainder Theorem",
+    title: "Remainder and Factor Theorem",
     category: "Algebra",
     level: "GCSE / A-Level",
     type: "Practice Generator",
@@ -1791,6 +1791,63 @@ const tools = [
       "Use it as a quick starter, plenary, or whole-class arithmetic reasoning challenge."
     ]
   }
+];
+
+const algebraToolGroups = {
+  "substitution": "Algebra Foundations",
+  "simplification": "Algebra Foundations",
+  "bracket-expansion": "Algebra Foundations",
+  "exponents-index-notation": "Algebra Foundations",
+  "surds-radicals": "Algebra Foundations",
+  "algebraic-fractions": "Algebra Foundations",
+  "absolute-values": "Algebra Foundations",
+  "linear-equations": "Equations and Inequalities",
+  "inequalities": "Equations and Inequalities",
+  "simultaneous-equations": "Equations and Inequalities",
+  "simultaneous-applications": "Equations and Inequalities",
+  "quadratic-equations": "Equations and Inequalities",
+  "quadratic-factorisation": "Quadratics and Factorisation",
+  "advanced-factorisation": "Quadratics and Factorisation",
+  "binomial-expansion": "Quadratics and Factorisation",
+  "functions": "Functions, Graphs and Coordinate Geometry",
+  "straight-lines": "Functions, Graphs and Coordinate Geometry",
+  "conic-intersections": "Functions, Graphs and Coordinate Geometry",
+  "logarithms-practice": "Functions, Graphs and Coordinate Geometry",
+  "sequences": "Sequences and Series",
+  "sequences-series": "Sequences and Series",
+  "series-expansions": "Sequences and Series",
+  "sine-cosine-rule": "Trigonometry",
+  "trig-equation-solver": "Trigonometry",
+  "trigonometric-functions": "Trigonometry",
+  "differentiation-polynomials": "Calculus",
+  "differentiation-rules": "Calculus",
+  "trig-differentiation-rules": "Calculus",
+  "inverse-trig-differentiation": "Calculus",
+  "advanced-differentiation": "Calculus",
+  "integration": "Calculus",
+  "advanced-integration": "Calculus",
+  "differential-equations": "Calculus",
+  "partial-fractions": "A-Level and Further Pure",
+  "matrices": "A-Level and Further Pure",
+  "advanced-matrices": "A-Level and Further Pure",
+  "further-vectors": "A-Level and Further Pure",
+  "proof-by-induction": "A-Level and Further Pure",
+  "roots-of-equations": "A-Level and Further Pure",
+  "complex-numbers": "A-Level and Further Pure",
+  "polar-coordinates": "A-Level and Further Pure",
+  "hyperbolic-functions": "A-Level and Further Pure",
+  "remainder-theorem": "A-Level and Further Pure"
+};
+
+const algebraGroupOrder = [
+  "Algebra Foundations",
+  "Equations and Inequalities",
+  "Quadratics and Factorisation",
+  "Functions, Graphs and Coordinate Geometry",
+  "Sequences and Series",
+  "Trigonometry",
+  "Calculus",
+  "A-Level and Further Pure"
 ];
 
 const state = {
@@ -2156,6 +2213,10 @@ function allToolTags(tool) {
   return [...new Set([...(tool.tags || []), ...editableToolTags(tool)])];
 }
 
+function toolAlgebraGroup(tool) {
+  return tool.category === "Algebra" ? algebraToolGroups[tool.slug] || "Other Algebra" : "";
+}
+
 function canAccessTool(tool) {
   const required = requiredAccess(tool);
   if (required === "free") return true;
@@ -2508,7 +2569,7 @@ function categorySlug(category) {
 
 function filteredTools(extraCategory) {
   return tools.filter((tool) => {
-    const haystack = normalise([tool.title, tool.category, tool.level, tool.type, tool.description, allToolTags(tool).join(" ")].join(" "));
+    const haystack = normalise([tool.title, tool.category, toolAlgebraGroup(tool), tool.level, tool.type, tool.description, allToolTags(tool).join(" ")].join(" "));
     const matchesQuery = !state.query || haystack.includes(normalise(state.query));
     const matchesCategory = (extraCategory && categorySlug(tool.category) === extraCategory) || (!extraCategory && (state.category === "All" || tool.category === state.category));
     const matchesLevel = state.level === "All" || tool.level.includes(state.level) || tool.level === "All";
@@ -5538,6 +5599,7 @@ function toolCard(tool) {
   const access = requiredAccessLabel(tool);
   const locked = !canAccessTool(tool);
   const extraTags = editableToolTags(tool).slice(0, 4);
+  const algebraGroup = toolAlgebraGroup(tool);
   return `
     <a class="tool-card ${locked ? "locked" : ""}" href="#/tools/${tool.slug}">
       <div class="tool-card-header">
@@ -5547,6 +5609,7 @@ function toolCard(tool) {
       <p>${escapeHtml(tool.description)}</p>
       <div class="badge-row">
         <span class="badge">${escapeHtml(tool.category)}</span>
+        ${algebraGroup ? `<span class="badge subject-group">${escapeHtml(algebraGroup)}</span>` : ""}
         <span class="badge">${escapeHtml(tool.level)}</span>
         ${extraTags.map((tag) => `<span class="badge">${escapeHtml(tag)}</span>`).join("")}
         ${locked ? `<span class="badge locked-badge">Sign in</span>` : ""}
@@ -5555,11 +5618,50 @@ function toolCard(tool) {
   `;
 }
 
+function renderGroupedAlgebraTools(visible) {
+  const grouped = new Map();
+  visible.forEach((tool) => {
+    const group = toolAlgebraGroup(tool) || "Other Algebra";
+    if (!grouped.has(group)) grouped.set(group, []);
+    grouped.get(group).push(tool);
+  });
+  const orderedGroups = [
+    ...algebraGroupOrder.filter((group) => grouped.has(group)),
+    ...[...grouped.keys()].filter((group) => !algebraGroupOrder.includes(group)).sort()
+  ];
+  const groupNotes = {
+    "Algebra Foundations": "Core manipulation, substitution, indices, surds, algebraic fractions, and modulus notation.",
+    "Equations and Inequalities": "Solving linear, simultaneous, quadratic, contextual, and inequality problems.",
+    "Quadratics and Factorisation": "Factorising expressions, quadratic forms, grouping, difference of squares, cubics, and binomial expansion.",
+    "Functions, Graphs and Coordinate Geometry": "Function notation, logarithms, straight lines, gradients, and line-curve intersections.",
+    "Sequences and Series": "Sequences, nth terms, arithmetic and geometric series, and Taylor or Maclaurin expansions.",
+    "Trigonometry": "Triangle rules, trigonometric equations, identities, reciprocal functions, and proofs.",
+    "Calculus": "Differentiation, integration, implicit and parametric methods, and differential equations.",
+    "A-Level and Further Pure": "Partial fractions, matrices, vectors, roots, complex numbers, polar coordinates, hyperbolic functions, and theorem work."
+  };
+
+  return `
+    <section class="algebra-tool-groups" aria-label="Grouped algebra tools">
+      ${orderedGroups.map((group) => `
+        <section class="algebra-tool-group">
+          <div class="algebra-tool-group-heading">
+            <h2>${escapeHtml(group)}</h2>
+            <p>${escapeHtml(groupNotes[group] || "Related Algebra tools for classroom practice, worksheets, and assessment.")}</p>
+          </div>
+          <div class="tool-grid">
+            ${grouped.get(group).map(toolCard).join("")}
+          </div>
+        </section>
+      `).join("")}
+    </section>
+  `;
+}
+
 function renderToolLibrary(extraCategory = "") {
   const visible = filteredTools(extraCategory);
   const collectionTitle = extraCategory ? tools.find((tool) => categorySlug(tool.category) === extraCategory)?.category || "Collection" : "Tool Library";
   const collectionDescriptions = {
-    algebra: "Algebra topics cover substitution, equations, factorisation, graphs, sequences, calculus, and trigonometry. Use them for exposition, retrieval practice, differentiation, homework, and assessment.",
+    algebra: "Algebra tools are grouped by teaching purpose: foundations, equations, factorisation, functions and graphs, sequences, trigonometry, calculus, and Further Pure. Use them for exposition, retrieval practice, differentiation, homework, and assessment.",
     numbers: "Number topics build fluency with fractions, decimals, percentages, HCF and LCM, order of operations, averages, and powers of 10.",
     geometry: "Geometry topics cover shape, measure, diagrams, area, perimeter, volume, and trigonometry. Use them for visual modelling, board practice, and method-focused discussion.",
     statistics: "Statistics topics cover data summaries, probability distributions, expectation, variance, and model selection. Use them to connect calculation fluency with interpretation and exam-style reasoning.",
@@ -5573,9 +5675,9 @@ function renderToolLibrary(extraCategory = "") {
       extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Search the virtual textbook by topic. Choose a level, generate fresh questions, show answers or worked steps, use the timer, and project the set in Classroom View."
     )}
     ${renderFilters()}
-    <section class="tool-grid" aria-label="Tools">
-      ${visible.length ? visible.map(toolCard).join("") : `<div class="panel empty-state">No tools match the current filters.</div>`}
-    </section>
+    ${visible.length
+      ? (extraCategory === "algebra" ? renderGroupedAlgebraTools(visible) : `<section class="tool-grid" aria-label="Tools">${visible.map(toolCard).join("")}</section>`)
+      : `<div class="panel empty-state">No tools match the current filters.</div>`}
   `;
   bindFilters();
   restorePendingFocus();
@@ -6574,13 +6676,21 @@ function bindWorksheetGenerator() {
 }
 
 function relatedTools(tool) {
+  const group = toolAlgebraGroup(tool);
   return tools
     .filter((candidate) => candidate.slug !== tool.slug && candidate.category === tool.category)
+    .sort((a, b) => {
+      if (!group) return 0;
+      const aSameGroup = toolAlgebraGroup(a) === group;
+      const bSameGroup = toolAlgebraGroup(b) === group;
+      if (aSameGroup === bSameGroup) return a.title.localeCompare(b.title);
+      return aSameGroup ? -1 : 1;
+    })
     .slice(0, 4);
 }
 
 function standardsForTool(tool) {
-  const haystack = normalise([tool.title, tool.category, tool.level, allToolTags(tool).join(" "), tool.description].join(" "));
+  const haystack = normalise([tool.title, tool.category, toolAlgebraGroup(tool), tool.level, allToolTags(tool).join(" "), tool.description].join(" "));
   const standards = [];
 
   if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion") || haystack.includes("motion graphs") || haystack.includes("constant acceleration") || haystack.includes("velocity-time") || haystack.includes("distance-time") || haystack.includes("momentum") || haystack.includes("impulse") || haystack.includes("moments") || haystack.includes("projectiles") || haystack.includes("newton") || haystack.includes("f = ma") || haystack.includes("resultant force") || haystack.includes("forces")) {
@@ -6667,6 +6777,7 @@ function renderStandardsList(tool) {
 }
 
 function renderToolFrame(tool) {
+  const algebraGroup = toolAlgebraGroup(tool);
   const frame = tool.imported
     ? `<iframe class="legacy-frame" src="${tool.toolPath}" title="${tool.title}" loading="eager"></iframe>`
     : `
@@ -6690,6 +6801,7 @@ function renderToolFrame(tool) {
         <div class="legacy-toolbar">
           <div class="badge-row">
             <span class="badge">${tool.category}</span>
+            ${algebraGroup ? `<span class="badge subject-group">${escapeHtml(algebraGroup)}</span>` : ""}
             <span class="badge">${tool.level}</span>
             <span class="badge">${tool.type}</span>
             <span class="badge ${normalise(requiredAccessLabel(tool))}">${requiredAccessLabel(tool)}</span>

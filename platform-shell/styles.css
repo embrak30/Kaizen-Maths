@@ -2094,6 +2094,39 @@ body[data-route="worksheet-generator"] .account-action {
   gap: 10px;
 }
 
+.algebra-tool-groups {
+  display: grid;
+  gap: 20px;
+}
+
+.algebra-tool-group {
+  display: grid;
+  gap: 10px;
+}
+
+.algebra-tool-group-heading {
+  display: grid;
+  grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+  padding: 0 2px 6px;
+  border-bottom: 1px solid #e3e9f2;
+}
+
+.algebra-tool-group-heading h2 {
+  margin: 0;
+  color: #282450;
+  font-size: 1.03rem;
+  line-height: 1.2;
+}
+
+.algebra-tool-group-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
 .tool-card {
   display: grid;
   gap: 9px;
@@ -2162,6 +2195,12 @@ body[data-route="worksheet-generator"] .account-action {
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
+}
+
+.badge.subject-group {
+  background: #eef7ff;
+  color: #24527a;
+  border-color: #cfe4f6;
 }
 
 .locked-badge {
@@ -5294,6 +5333,11 @@ sup .worksheet-fraction span:last-child {
 
   .filter-row {
     grid-template-columns: minmax(200px, 1fr) 1fr;
+  }
+
+  .algebra-tool-group-heading {
+    grid-template-columns: 1fr;
+    gap: 4px;
   }
 
   .tool-layout,
