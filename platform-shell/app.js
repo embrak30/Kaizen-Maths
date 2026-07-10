@@ -5676,6 +5676,7 @@ function renderCoverageMap() {
     ...area,
     tools: coverageToolsFor(area)
   }));
+  const requestedSection = routeParts()[1] || "";
   const totalMappedTools = new Set(areaData.flatMap((area) => area.tools.map((tool) => tool.slug))).size;
   app.innerHTML = `
     ${pageHeader(
@@ -5688,7 +5689,7 @@ function renderCoverageMap() {
         <span>Jump to:</span>
         <ul>
         ${areaData.map((area) => `
-          <li><a href="#coverage-${escapeHtml(area.id)}">${escapeHtml(area.title)}</a> <small>(${area.tools.length})</small></li>
+          <li><a href="#/coverage-map/${escapeHtml(area.id)}">${escapeHtml(area.title)}</a> <small>(${area.tools.length})</small></li>
         `).join("")}
         </ul>
       </nav>
@@ -5763,6 +5764,14 @@ function renderCoverageMap() {
       </section>
     </section>
   `;
+  scrollToCoverageSection(requestedSection, areaData);
+}
+
+function scrollToCoverageSection(sectionId, areaData = curriculumMapAreas) {
+  if (!sectionId || !areaData.some((area) => area.id === sectionId)) return;
+  window.requestAnimationFrame(() => {
+    document.getElementById(`coverage-${sectionId}`)?.scrollIntoView({ block: "start", behavior: "smooth" });
+  });
 }
 
 function compactToolDescription(tool) {
@@ -6878,6 +6887,7 @@ function fallbackTopicMap(tool) {
 
 function isCurriculumOrMetaTopic(label, tool) {
   const value = normalise(label);
+  const compact = value.replace(/[^a-z0-9]/g, "");
   const meta = new Set([
     "katex",
     "worked steps",
@@ -6907,6 +6917,8 @@ function isCurriculumOrMetaTopic(label, tool) {
     "a-level mechanics",
     "a level mechanics",
     "further maths",
+    "further pure",
+    "pure",
     "common core",
     "csec",
     "cape",
@@ -6916,8 +6928,31 @@ function isCurriculumOrMetaTopic(label, tool) {
     "edexcel",
     "ocr"
   ]);
-  if (meta.has(value)) return true;
-  return /\b(gcse|igcse|a-level|a level|aqa|edexcel|ocr|common core|csec|cape|ib|ap)\b/.test(value);
+  const compactMeta = new Set([
+    "ks2",
+    "ks3",
+    "ks4",
+    "ks5",
+    "gcse",
+    "igcse",
+    "alevel",
+    "alevelpure",
+    "alevelstatistics",
+    "alevelmechanics",
+    "furthermaths",
+    "furtherpure",
+    "pure",
+    "commoncore",
+    "csec",
+    "cape",
+    "ib",
+    "ap",
+    "aqa",
+    "edexcel",
+    "ocr"
+  ]);
+  if (meta.has(value) || compactMeta.has(compact)) return true;
+  return /\b(ks2|ks3|ks4|ks5|gcse|igcse|a[-\s]?level|aqa|edexcel|ocr|common\s*core|csec|cape|ib|ap)\b/.test(value);
 }
 
 function formatTopicLabel(label) {
@@ -6927,23 +6962,35 @@ function formatTopicLabel(label) {
     .trim();
   if (!clean) return "";
   if (/^[A-Z0-9\s/-]+$/.test(clean) && clean.length <= 8) return clean;
-  return clean.charAt(0).toUpperCase() + clean.slice(1);
+  return clean.replace(/[A-Za-z]/, (letter) => letter.toUpperCase());
+}
+
+function cleanTopicLabel(label) {
+  return String(label || "")
+    .replace(/\b(KS2|KS3|KS4|KS5|GCSE|IGCSE|A[-\s]?Level|AQA|Edexcel|OCR|Common\s*Core|CSEC|CAPE|IB|AP)\b/gi, "")
+    .replace(/^\s*\b(and|or)\b\s*/gi, "")
+    .replace(/\b(and|or)\b\s*$/gi, "")
+    .replace(/^[\s:;,\-/]+|[\s:;,\-/]+$/g, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
 }
 
 function toolTopicConcepts(tool) {
   const concepts = [];
   const add = (label) => {
-    const formatted = formatTopicLabel(label);
+    const formatted = formatTopicLabel(cleanTopicLabel(label));
     if (!formatted || isCurriculumOrMetaTopic(formatted, tool)) return;
     if (!concepts.some((topic) => normalise(topic) === normalise(formatted))) concepts.push(formatted);
   };
 
   allToolTags(tool).forEach(add);
-  const titleParts = String(tool.title || "")
-    .split(/:|,| and | with /i)
-    .map((part) => part.trim())
-    .filter((part) => part.length > 2);
-  titleParts.forEach(add);
+  if (concepts.length < 4) {
+    const titleParts = String(tool.title || "")
+      .split(/:|,| and | with /i)
+      .map((part) => part.trim())
+      .filter((part) => part.length > 2);
+    titleParts.forEach(add);
+  }
 
   return concepts.slice(0, 12);
 }
@@ -6961,7 +7008,7 @@ function renderToolTopics(tool) {
 function renderTopicBulletList(topics) {
   return `
     <ul class="topic-bullet-list">
-      ${topics.map((topic) => `<li>${escapeHtml(topic)}</li>`).join("")}
+      ${topics.map((topic) => formatTopicLabel(topic)).filter(Boolean).map((topic) => `<li>${escapeHtml(topic)}</li>`).join("")}
     </ul>
   `;
 }
@@ -6996,8 +7043,10 @@ function toolCurriculumLinks(tool) {
   const add = (label) => {
     if (!links.includes(label)) links.push(label);
   };
+  const schoolRoute = /\b(ks2|ks3|ks4|gcse|igcse|csec)\b/.test(haystack);
+  const advancedRoute = /\b(a[-\s]?level|cape|ib|ap)\b/.test(haystack) || haystack.includes("further maths") || haystack.includes("calculus") || haystack.includes("mechanics");
 
-  if (haystack.includes("gcse") || ["Algebra", "Numbers", "Geometry", "Statistics"].includes(tool.category)) {
+  if (schoolRoute) {
     add("GCSE");
     add("IGCSE");
     add("CSEC");
@@ -7006,7 +7055,7 @@ function toolCurriculumLinks(tool) {
     add("Edexcel");
     add("OCR");
   }
-  if (haystack.includes("a-level") || haystack.includes("a level") || haystack.includes("calculus") || haystack.includes("mechanics") || haystack.includes("further maths") || haystack.includes("statistics")) {
+  if (advancedRoute) {
     add("A-Level");
     add("CAPE");
     add("AP");
@@ -7094,6 +7143,7 @@ function renderToolInformationPage(tool) {
   const subjectGroup = toolSubjectGroup(tool);
   const notes = tool.teacherNotes?.length ? tool.teacherNotes : toolUseSuggestions(tool);
   const classroomHref = tool.imported ? `#/classroom/${tool.slug}` : "#/tools";
+  const curriculumLinks = toolCurriculumLinks(tool);
   app.innerHTML = `
     <section class="tool-info-page">
       <header class="tool-info-hero">
@@ -7106,6 +7156,10 @@ function renderToolInformationPage(tool) {
           </div>
           <h1>${escapeHtml(tool.title)}</h1>
           <p>${escapeHtml(tool.description)}</p>
+          <div class="tool-info-hero-curriculum">
+            <span>Exam boards / curriculum</span>
+            ${renderToolInfoBadges(curriculumLinks)}
+          </div>
         </div>
         <div class="tool-info-actions">
           <a class="button" href="#/tools">Back to Library</a>
@@ -7127,10 +7181,6 @@ function renderToolInformationPage(tool) {
         <article class="tool-info-card">
           <span class="eyebrow">Mathematical Standards Covered</span>
           ${renderStandardsList(tool)}
-          <div class="tool-info-curriculum">
-            <span>Linked to</span>
-            ${renderToolInfoBadges(toolCurriculumLinks(tool))}
-          </div>
         </article>
       </section>
 

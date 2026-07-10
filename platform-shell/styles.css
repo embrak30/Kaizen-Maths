@@ -5260,6 +5260,28 @@ sup .worksheet-fraction span:last-child {
   line-height: 1.42;
 }
 
+.tool-info-hero-curriculum {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.tool-info-hero-curriculum > span {
+  color: #31546b;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.tool-info-hero-curriculum .tool-info-badges span {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(23, 184, 179, 0.2);
+  color: #0f766e;
+}
+
 .tool-info-actions {
   display: grid;
   gap: 8px;
