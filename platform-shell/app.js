@@ -150,6 +150,24 @@ const tools = [
     ]
   },
   {
+    slug: "advanced-integration",
+    title: "Advanced Integration",
+    category: "Algebra",
+    level: "A-Level",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate integration practice for substitution, definite substitution, logarithmic derivative forms, and integration by parts.",
+    tags: ["algebra", "calculus", "integration", "substitution", "integration by parts", "A-Level Pure", "Further Maths"],
+    toolPath: "tools/advanced-integration/index.html?v=advanced-integration-1",
+    imported: true,
+    teacherNotes: [
+      "Substitution sets show the choice of u, calculation of du/dx, replacement of dx, integration in u, and return to x.",
+      "Definite substitution sets include changing limits before evaluating.",
+      "Integration by parts sets show the full setup of u, dv, du, and v before applying the formula."
+    ]
+  },
+  {
     slug: "partial-fractions",
     title: "Partial Fractions",
     category: "Algebra",
