@@ -1,6 +1,6 @@
 const SITE_NAME = "Kaizen Maths";
 const SITE_TITLE = "Kaizen Maths | Complete Mathematics Teaching Workspace";
-const SITE_DESCRIPTION = "Kaizen Maths helps teachers create maths worksheets, assessments, worked examples, classroom displays, and topic practice for GCSE, A-level, and Further Maths.";
+const SITE_DESCRIPTION = "Kaizen Maths helps teachers create maths worksheets, assessments, worked examples, classroom displays, and topic practice for GCSE, CSEC, CAPE, A-level, and Further Maths.";
 
 function updateMetaTag(selector, attribute, value) {
   const tag = document.head.querySelector(selector);
@@ -169,7 +169,7 @@ const tools = [
   },
   {
     slug: "partial-fractions",
-    title: "Partial Fractions",
+    title: "Partial Fractions: Decomposition",
     category: "Algebra",
     level: "A-Level",
     type: "Practice Generator",
@@ -188,7 +188,7 @@ const tools = [
   },
   {
     slug: "matrices",
-    title: "Matrices",
+    title: "Matrices: Operations, Determinants and Inverses",
     category: "Algebra",
     level: "GCSE / A-Level",
     type: "Practice Generator",
@@ -206,7 +206,7 @@ const tools = [
   },
   {
     slug: "advanced-matrices",
-    title: "Advanced Matrices",
+    title: "Advanced Matrices: Transformations and Eigenvalues",
     category: "Algebra",
     level: "A-Level Further Maths",
     type: "Practice Generator",
@@ -263,7 +263,7 @@ const tools = [
   },
   {
     slug: "roots-of-equations",
-    title: "Roots of Equations",
+    title: "Roots of Equations and Transformations of Roots",
     category: "Algebra",
     level: "A-Level Further Maths",
     type: "Practice Generator",
@@ -320,7 +320,7 @@ const tools = [
   },
   {
     slug: "polar-coordinates",
-    title: "Polar Coordinates",
+    title: "Polar Coordinates and Polar Curves",
     category: "Algebra",
     level: "A-Level Further Maths",
     type: "Practice Generator",
@@ -358,7 +358,7 @@ const tools = [
   },
   {
     slug: "differential-equations",
-    title: "Differential Equations",
+    title: "Differential Equations: First and Second Order",
     category: "Algebra",
     level: "A-Level / Further Maths",
     type: "Practice Generator",
@@ -503,7 +503,7 @@ const tools = [
   },
   {
     slug: "hcf-lcm",
-    title: "HCF & LCM",
+    title: "HCF, LCM and Prime Factorisation",
     category: "Numbers",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -521,7 +521,7 @@ const tools = [
   },
   {
     slug: "decimals-practice-lab",
-    title: "Decimals Practice Lab",
+    title: "Decimal Place Value and Operations",
     category: "Numbers",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -539,7 +539,7 @@ const tools = [
   },
   {
     slug: "powers-of-10",
-    title: "Powers of 10",
+    title: "Powers of 10 and Standard Form",
     category: "Numbers",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -557,7 +557,7 @@ const tools = [
   },
   {
     slug: "number-bases-number-sets",
-    title: "Number Bases & Number Sets",
+    title: "Number Bases and Number Sets",
     category: "Numbers",
     level: "CSEC / GCSE / IGCSE",
     type: "Practice Generator",
@@ -595,7 +595,7 @@ const tools = [
   },
   {
     slug: "four-operations",
-    title: "Four Operations",
+    title: "Addition, Subtraction, Multiplication and Division",
     category: "Numbers",
     level: "KS2 / KS3",
     type: "Practice Generator",
@@ -614,7 +614,7 @@ const tools = [
   },
   {
     slug: "fractions-practice",
-    title: "Fractions Practice",
+    title: "Fraction Arithmetic and Mixed Numbers",
     category: "Numbers",
     level: "KS2 / KS3",
     type: "Practice Generator",
@@ -633,7 +633,7 @@ const tools = [
   },
   {
     slug: "simple-percentage-tasks",
-    title: "Simple Percentage Tasks",
+    title: "Percentage Fluency",
     category: "Numbers",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -671,7 +671,7 @@ const tools = [
   },
   {
     slug: "area-rectangles",
-    title: "Area of Rectangles",
+    title: "Area and Perimeter of Rectangles",
     category: "Geometry",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -689,7 +689,7 @@ const tools = [
   },
   {
     slug: "pythagoras-theorem",
-    title: "Pythagoras Theorem",
+    title: "Pythagoras' Theorem",
     category: "Geometry",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -707,7 +707,7 @@ const tools = [
   },
   {
     slug: "scale-drawing-similar-shapes",
-    title: "Scale Drawing & Similar Shapes",
+    title: "Scale Drawings and Similar Shapes",
     category: "Geometry",
     level: "KS3 / GCSE / IGCSE",
     type: "Practice Generator",
@@ -726,7 +726,7 @@ const tools = [
   },
   {
     slug: "area-triangles",
-    title: "Area of Triangles",
+    title: "Area and Perimeter of Triangles",
     category: "Geometry",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -780,7 +780,7 @@ const tools = [
   },
   {
     slug: "sectors-arc-length",
-    title: "Sectors and Arc Length",
+    title: "Sectors, Arc Length and Area",
     category: "Geometry",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -798,7 +798,7 @@ const tools = [
   },
   {
     slug: "trigonometric-ratios",
-    title: "Trigonometric Ratios",
+    title: "Right-Angled Trigonometry",
     category: "Geometry",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -834,7 +834,7 @@ const tools = [
   },
   {
     slug: "free-vectors",
-    title: "Free Vectors",
+    title: "Column Vectors and Vector Geometry",
     category: "Geometry",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -852,7 +852,7 @@ const tools = [
   },
   {
     slug: "missing-angles",
-    title: "Missing Angles",
+    title: "Missing Angles in Lines and Shapes",
     category: "Geometry",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -870,7 +870,7 @@ const tools = [
   },
   {
     slug: "volume-surface-area-prisms",
-    title: "Volume and Surface Area of Prisms",
+    title: "Prisms: Volume and Surface Area",
     category: "Geometry",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -888,7 +888,7 @@ const tools = [
   },
   {
     slug: "cylinders-cones-volume-surface-area",
-    title: "Volume and Surface Area of Cylinders and Cones",
+    title: "Cylinders and Cones: Volume and Surface Area",
     category: "Geometry",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -906,7 +906,7 @@ const tools = [
   },
   {
     slug: "pyramids-spheres-volume-surface-area",
-    title: "Volume and Surface Area of Spheres",
+    title: "Spheres: Volume and Surface Area",
     category: "Geometry",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -1019,7 +1019,7 @@ const tools = [
   },
   {
     slug: "conversions-teaching",
-    title: "Conversions Teaching Tool",
+    title: "Unit Conversions and Compound Measures",
     category: "Numbers",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -1038,7 +1038,7 @@ const tools = [
   },
   {
     slug: "discrete-random-variables",
-    title: "Discrete Random Variables",
+    title: "Discrete Random Variables and Probability Distributions",
     category: "Statistics",
     level: "A-Level / IB",
     type: "Practice Generator",
@@ -1057,7 +1057,7 @@ const tools = [
   },
   {
     slug: "histograms",
-    title: "Histograms",
+    title: "Histograms and Frequency Density",
     category: "Statistics",
     level: "GCSE / A-Level",
     type: "Practice Generator",
@@ -1076,7 +1076,7 @@ const tools = [
   },
   {
     slug: "cumulative-frequency-curves",
-    title: "Cumulative Frequency Curves",
+    title: "Cumulative Frequency Curves and Ogives",
     category: "Statistics",
     level: "GCSE / A-Level",
     type: "Practice Generator",
@@ -1114,7 +1114,7 @@ const tools = [
   },
   {
     slug: "equations-of-motion",
-    title: "Equations of Motion",
+    title: "SUVAT and Equations of Motion",
     category: "Mechanics",
     level: "A-Level / IB",
     type: "Practice Generator",
@@ -1133,7 +1133,7 @@ const tools = [
   },
   {
     slug: "newtons-second-law",
-    title: "Newton's Second Law",
+    title: "Newton's Second Law: F = ma",
     category: "Mechanics",
     level: "GCSE / A-Level / IB",
     type: "Practice Generator",
@@ -1152,7 +1152,7 @@ const tools = [
   },
   {
     slug: "moments",
-    title: "Moments",
+    title: "Moments and Equilibrium",
     category: "Mechanics",
     level: "A-Level / IB",
     type: "Practice Generator",
@@ -1171,7 +1171,7 @@ const tools = [
   },
   {
     slug: "projectiles",
-    title: "Projectiles",
+    title: "Projectile Motion",
     category: "Mechanics",
     level: "A-Level / IB",
     type: "Practice Generator",
@@ -1190,7 +1190,7 @@ const tools = [
   },
   {
     slug: "momentum",
-    title: "Momentum",
+    title: "Momentum and Impulse",
     category: "Mechanics",
     level: "A-Level / IB",
     type: "Practice Generator",
@@ -1209,7 +1209,7 @@ const tools = [
   },
   {
     slug: "continuous-random-variables",
-    title: "Continuous Random Variables",
+    title: "Continuous Random Variables and Density Functions",
     category: "Statistics",
     level: "A-Level / IB",
     type: "Practice Generator",
@@ -1228,7 +1228,7 @@ const tools = [
   },
   {
     slug: "normal-distribution",
-    title: "Normal Distribution",
+    title: "Normal Distribution and Standardisation",
     category: "Statistics",
     level: "A-Level / IB",
     type: "Practice Generator",
@@ -1247,7 +1247,7 @@ const tools = [
   },
   {
     slug: "hypothesis-testing",
-    title: "Hypothesis Testing",
+    title: "Hypothesis Testing and Inference",
     category: "Statistics",
     level: "A-Level / IB",
     type: "Practice Generator",
@@ -1285,7 +1285,7 @@ const tools = [
   },
   {
     slug: "binomial-geometric-distribution",
-    title: "Binomial & Geometric Distribution",
+    title: "Binomial and Geometric Distributions",
     category: "Statistics",
     level: "A-Level / IB",
     type: "Practice Generator",
@@ -1304,7 +1304,7 @@ const tools = [
   },
   {
     slug: "kaizen-large-data-set",
-    title: "Kaizen Large Data Set",
+    title: "Large Data Set Practice",
     category: "Statistics",
     level: "A-Level",
     type: "Practice Generator",
@@ -1324,7 +1324,7 @@ const tools = [
   },
   {
     slug: "tree-diagrams-conditional-probability",
-    title: "Tree Diagrams & Conditional Probability",
+    title: "Tree Diagrams and Conditional Probability",
     category: "Statistics",
     level: "GCSE / A-Level",
     type: "Practice Generator",
@@ -1344,7 +1344,7 @@ const tools = [
   },
   {
     slug: "venn-diagrams",
-    title: "Venn Diagrams",
+    title: "Venn Diagrams and Set Probability",
     category: "Statistics",
     level: "CSEC / GCSE",
     type: "Practice Generator",
@@ -1579,7 +1579,7 @@ const tools = [
   },
   {
     slug: "fractions",
-    title: "Fractions",
+    title: "Fractions Basics",
     category: "Numbers",
     level: "KS2 / KS3",
     type: "Practice Generator",
@@ -1588,7 +1588,8 @@ const tools = [
     description: "Build fluency with fraction arithmetic and equivalent forms.",
     tags: ["numbers", "fractions", "fluency"],
     toolPath: "tools/fractions/index.html?v=step-structure-1",
-    imported: false
+    imported: false,
+    hidden: true
   },
   {
     slug: "order-of-operations",
@@ -1610,7 +1611,7 @@ const tools = [
   },
   {
     slug: "percentages-real-world",
-    title: "Real-World Percentage Applications",
+    title: "Percentage Applications: Finance and Contexts",
     category: "Numbers",
     level: "KS3 / GCSE",
     type: "Practice Generator",
@@ -1629,7 +1630,7 @@ const tools = [
   },
   {
     slug: "averages-range",
-    title: "Averages and Range",
+    title: "Averages, Range and Missing Values",
     category: "Statistics",
     level: "KS3",
     type: "Practice Generator",
@@ -1647,7 +1648,7 @@ const tools = [
   },
   {
     slug: "classroom-displays",
-    title: "Classroom Displays",
+    title: "Board Displays and Blank Diagrams",
     category: "Classroom Tools",
     level: "All",
     type: "Board Display",
@@ -1665,7 +1666,7 @@ const tools = [
   },
   {
     slug: "elementary-manipulatives",
-    title: "Elementary Maths Manipulatives",
+    title: "Primary and Elementary Maths Manipulatives",
     category: "Classroom Tools",
     level: "Primary / Elementary",
     type: "Interactive Display",
@@ -1683,7 +1684,7 @@ const tools = [
   },
   {
     slug: "elementary-starter-board",
-    title: "Elementary Starter Board",
+    title: "Primary and Elementary Starter Board",
     category: "Classroom Tools",
     level: "Primary / Elementary",
     type: "Classroom Routine",
@@ -1701,7 +1702,7 @@ const tools = [
   },
   {
     slug: "exit-ticket-game",
-    title: "Math Exit Ticket Choice Board",
+    title: "Maths Exit Ticket Choice Board",
     category: "Classroom Tools",
     level: "All",
     type: "Classroom Routine",
@@ -1719,7 +1720,7 @@ const tools = [
   },
   {
     slug: "math-in-a-minute",
-    title: "Math in a Minute",
+    title: "Maths in a Minute",
     category: "Classroom Tools",
     level: "All",
     type: "Number Game",
@@ -1775,7 +1776,7 @@ const tools = [
   },
   {
     slug: "twenty4",
-    title: "Ninja Math Challenge",
+    title: "Ninja Maths Challenge",
     category: "Classroom Tools",
     level: "All",
     type: "Number Game",
@@ -1849,6 +1850,145 @@ const algebraGroupOrder = [
   "Calculus",
   "A-Level and Further Pure"
 ];
+
+const subjectToolGroups = {
+  Numbers: {
+    "four-operations": "Number Fluency and Operations",
+    "order-of-operations": "Number Fluency and Operations",
+    "decimals-practice-lab": "Number Fluency and Operations",
+    "hcf-lcm": "Number Fluency and Operations",
+    "fractions-practice": "Fractions, Decimals and Percentages",
+    "simple-percentage-tasks": "Fractions, Decimals and Percentages",
+    "percentages-real-world": "Fractions, Decimals and Percentages",
+    "ratio-proportion": "Ratio, Proportion and Units",
+    "conversions-teaching": "Ratio, Proportion and Units",
+    "upper-lower-bounds": "Ratio, Proportion and Units",
+    "powers-of-10": "Powers, Standard Form and Bases",
+    "number-bases-number-sets": "Powers, Standard Form and Bases"
+  },
+  Geometry: {
+    "area-rectangles": "Area, Perimeter and Circles",
+    "area-triangles": "Area, Perimeter and Circles",
+    "circles-area-circumference": "Area, Perimeter and Circles",
+    "sectors-arc-length": "Area, Perimeter and Circles",
+    "volume-surface-area-prisms": "3D Measures",
+    "cylinders-cones-volume-surface-area": "3D Measures",
+    "pyramids-spheres-volume-surface-area": "3D Measures",
+    "pythagoras-theorem": "Trigonometry and Bearings",
+    "trigonometric-ratios": "Trigonometry and Bearings",
+    "sine-cosine-rule": "Trigonometry and Bearings",
+    "bearings": "Trigonometry and Bearings",
+    "equation-of-a-circle": "Coordinate Geometry",
+    "free-vectors": "Vectors and Similarity",
+    "scale-drawing-similar-shapes": "Vectors and Similarity",
+    "missing-angles": "Angles and Shape Geometry"
+  },
+  Statistics: {
+    "averages-range": "Data Summary and Representation",
+    "histograms": "Data Summary and Representation",
+    "cumulative-frequency-curves": "Data Summary and Representation",
+    "kaizen-large-data-set": "Data Summary and Representation",
+    "tree-diagrams-conditional-probability": "Probability and Set Diagrams",
+    "venn-diagrams": "Probability and Set Diagrams",
+    "discrete-random-variables": "Random Variables and Distributions",
+    "continuous-random-variables": "Random Variables and Distributions",
+    "normal-distribution": "Random Variables and Distributions",
+    "binomial-geometric-distribution": "Random Variables and Distributions",
+    "correlation-regression": "Regression and Large Data",
+    "hypothesis-testing": "Inference"
+  },
+  Mechanics: {
+    "motion-graphs-constant-acceleration": "Motion and Kinematics",
+    "equations-of-motion": "Motion and Kinematics",
+    "newtons-second-law": "Forces and Equilibrium",
+    "moments": "Forces and Equilibrium",
+    "momentum": "Momentum, Impulse and Projectiles",
+    "projectiles": "Momentum, Impulse and Projectiles"
+  },
+  "Classroom Tools": {
+    "classroom-displays": "Board Displays and Visuals",
+    "elementary-manipulatives": "Board Displays and Visuals",
+    "elementary-starter-board": "Starters and Retrieval",
+    "fractions-table": "Starters and Retrieval",
+    "exit-ticket-game": "Games and Routines",
+    "math-in-a-minute": "Games and Routines",
+    "twenty4": "Games and Routines"
+  },
+  "Site Guide": {
+    "interface-guide": "Site Guidance"
+  }
+};
+
+const subjectGroupOrder = {
+  Algebra: algebraGroupOrder,
+  Numbers: [
+    "Number Fluency and Operations",
+    "Fractions, Decimals and Percentages",
+    "Ratio, Proportion and Units",
+    "Powers, Standard Form and Bases"
+  ],
+  Geometry: [
+    "Area, Perimeter and Circles",
+    "3D Measures",
+    "Trigonometry and Bearings",
+    "Coordinate Geometry",
+    "Vectors and Similarity",
+    "Angles and Shape Geometry"
+  ],
+  Statistics: [
+    "Data Summary and Representation",
+    "Probability and Set Diagrams",
+    "Random Variables and Distributions",
+    "Regression and Large Data",
+    "Inference"
+  ],
+  Mechanics: [
+    "Motion and Kinematics",
+    "Forces and Equilibrium",
+    "Momentum, Impulse and Projectiles"
+  ],
+  "Classroom Tools": [
+    "Board Displays and Visuals",
+    "Starters and Retrieval",
+    "Games and Routines"
+  ],
+  "Site Guide": [
+    "Site Guidance"
+  ]
+};
+
+const subjectGroupNotes = {
+  "Algebra Foundations": "Core manipulation, substitution, indices, surds, algebraic fractions, and modulus notation.",
+  "Equations and Inequalities": "Solving linear, simultaneous, quadratic, contextual, and inequality problems.",
+  "Quadratics and Factorisation": "Factorising expressions, quadratic forms, grouping, difference of squares, cubics, and binomial expansion.",
+  "Functions, Graphs and Coordinate Geometry": "Function notation, logarithms, straight lines, gradients, and line-curve intersections.",
+  "Sequences and Series": "Sequences, nth terms, arithmetic and geometric series, and Taylor or Maclaurin expansions.",
+  "Trigonometry": "Triangle rules, trigonometric equations, identities, reciprocal functions, and proofs.",
+  "Calculus": "Differentiation, integration, implicit and parametric methods, and differential equations.",
+  "A-Level and Further Pure": "Partial fractions, matrices, vectors, roots, complex numbers, polar coordinates, hyperbolic functions, and theorem work.",
+  "Number Fluency and Operations": "Arithmetic, place value, decimal calculation, order of operations, HCF, LCM, and prime factorisation.",
+  "Fractions, Decimals and Percentages": "Fraction arithmetic, percentage fluency, finance contexts, and percentage applications.",
+  "Ratio, Proportion and Units": "Ratio, proportion, unit conversion, compound measures, and bounds.",
+  "Powers, Standard Form and Bases": "Powers of 10, standard form, number bases, and number sets.",
+  "Area, Perimeter and Circles": "2D measure topics for rectangles, triangles, circles, sectors, arcs, and compound contexts.",
+  "3D Measures": "Volume and surface area for prisms, cylinders, cones, and spheres.",
+  "Trigonometry and Bearings": "Pythagoras, right-angled trigonometry, non-right triangle rules, and bearings.",
+  "Coordinate Geometry": "Circle equations, coordinate geometry, and links to algebraic graph work.",
+  "Vectors and Similarity": "Column vectors, geometric vectors, scale drawings, and similar shapes.",
+  "Angles and Shape Geometry": "Missing angles in lines, triangles, quadrilaterals, and standard shape facts.",
+  "Data Summary and Representation": "Averages, range, grouped data, histograms, cumulative frequency, and large-data-set practice.",
+  "Probability and Set Diagrams": "Tree diagrams, conditional probability, Venn diagrams, and set notation.",
+  "Random Variables and Distributions": "Discrete, continuous, normal, binomial, and geometric distributions.",
+  "Regression and Large Data": "Correlation, regression, interpolation, extrapolation, and data interpretation.",
+  "Inference": "Hypothesis testing, significance, critical regions, p-values, and contextual conclusions.",
+  "Motion and Kinematics": "Average speed, acceleration, motion graphs, SUVAT, and constant acceleration modelling.",
+  "Forces and Equilibrium": "Newton's second law, resultant force, moments, beams, and equilibrium.",
+  "Momentum, Impulse and Projectiles": "Momentum, impulse, collisions, projectile motion, and physical modelling.",
+  "Board Displays and Visuals": "Blank diagrams, graph grids, manipulatives, and board-ready teaching visuals.",
+  "Starters and Retrieval": "Fast routines and revealable tables for lesson starters, retrieval, and mini-whiteboard work.",
+  "Games and Routines": "Short classroom games, exit tickets, target-number challenges, and plenary routines.",
+  "Site Guidance": "Guidance pages for learning the site and the shared tool workflow."
+};
 
 const state = {
   query: "",
@@ -1958,6 +2098,22 @@ function isCommonCoreCoverageTool(tool) {
   return !isFurtherMathsTool(tool) && (taggedMatch || (categoryMatch && schoolLevelMatch));
 }
 
+function isCsecCoverageTool(tool) {
+  const level = normalise(tool.level);
+  const taggedMatch = curriculumTagMatches(tool, "CSEC");
+  const categoryMatch = ["Algebra", "Numbers", "Geometry", "Statistics"].includes(tool.category);
+  const schoolLevelMatch = level.includes("csec") || level.includes("gcse") || level.includes("igcse") || level.includes("ks3");
+  return !isFurtherMathsTool(tool) && (taggedMatch || (categoryMatch && schoolLevelMatch));
+}
+
+function isCapeCoverageTool(tool) {
+  const level = normalise(tool.level);
+  const taggedMatch = curriculumTagMatches(tool, "CAPE");
+  const categoryMatch = ["Algebra", "Geometry", "Statistics", "Mechanics"].includes(tool.category);
+  const advancedLevelMatch = level.includes("cape") || level.includes("a-level") || level.includes("ib") || isFurtherMathsTool(tool);
+  return taggedMatch || (categoryMatch && advancedLevelMatch);
+}
+
 const curriculumMapAreas = [
   {
     id: "gcse",
@@ -1969,6 +2125,13 @@ const curriculumMapAreas = [
       return ["Algebra", "Numbers", "Geometry", "Statistics"].includes(tool.category)
         && (level.includes("gcse") || level.includes("ks3") || level.includes("ks2"));
     }
+  },
+  {
+    id: "csec",
+    title: "CSEC",
+    subtitle: "Caribbean secondary mathematics coverage",
+    description: "Topic generators aligned with the secondary mathematics skills commonly needed for CSEC: number, algebra, geometry, measures, probability, statistics, and problem solving.",
+    match: (tool) => isCsecCoverageTool(tool)
   },
   {
     id: "common-core",
@@ -1986,6 +2149,13 @@ const curriculumMapAreas = [
       const level = normalise(tool.level);
       return ["Algebra", "Geometry"].includes(tool.category) && level.includes("a-level") && !isFurtherMathsTool(tool);
     }
+  },
+  {
+    id: "cape",
+    title: "CAPE",
+    subtitle: "Caribbean advanced mathematics coverage",
+    description: "Advanced pure, statistics, and mechanics tools that support CAPE-style practice, including calculus, functions, proof, distributions, hypothesis testing, vectors, matrices, and mechanics.",
+    match: (tool) => isCapeCoverageTool(tool)
   },
   {
     id: "further-maths",
@@ -2214,8 +2384,17 @@ function allToolTags(tool) {
   return [...new Set([...(tool.tags || []), ...editableToolTags(tool)])];
 }
 
+function isVisibleTool(tool) {
+  return !tool.hidden && tool.imported !== false;
+}
+
 function toolAlgebraGroup(tool) {
   return tool.category === "Algebra" ? algebraToolGroups[tool.slug] || "Other Algebra" : "";
+}
+
+function toolSubjectGroup(tool) {
+  if (tool.category === "Algebra") return toolAlgebraGroup(tool);
+  return subjectToolGroups[tool.category]?.[tool.slug] || "";
 }
 
 function canAccessTool(tool) {
@@ -2570,7 +2749,8 @@ function categorySlug(category) {
 
 function filteredTools(extraCategory) {
   return tools.filter((tool) => {
-    const haystack = normalise([tool.title, tool.category, toolAlgebraGroup(tool), tool.level, tool.type, tool.description, allToolTags(tool).join(" ")].join(" "));
+    if (!isVisibleTool(tool)) return false;
+    const haystack = normalise([tool.title, tool.category, toolSubjectGroup(tool), tool.level, tool.type, tool.description, allToolTags(tool).join(" ")].join(" "));
     const matchesQuery = !state.query || haystack.includes(normalise(state.query));
     const matchesCategory = (extraCategory && categorySlug(tool.category) === extraCategory) || (!extraCategory && (state.category === "All" || tool.category === state.category));
     const matchesLevel = state.level === "All" || tool.level.includes(state.level) || tool.level === "All";
@@ -3425,8 +3605,9 @@ function statusLabel(tool) {
 }
 
 function metricGrid() {
-  const categories = new Set(tools.map((tool) => tool.category));
-  const topicGenerators = tools.filter((tool) => tool.imported && tool.type === "Practice Generator").length;
+  const visibleTools = tools.filter(isVisibleTool);
+  const categories = new Set(visibleTools.map((tool) => tool.category));
+  const topicGenerators = visibleTools.filter((tool) => tool.type === "Practice Generator").length;
   const worksheetReady = worksheetEligibleTools().length;
   return `
     <section class="metric-grid" aria-label="Site metrics">
@@ -5331,8 +5512,8 @@ function renderHome() {
     <section class="coverage-home-band" aria-labelledby="homeCoverageTitle">
       <div>
         <span class="eyebrow">Curriculum Coverage</span>
-        <h2 id="homeCoverageTitle">Mapped across GCSE, Common Core, A-Level, and Further Maths</h2>
-        <p>See current coverage for GCSE, Common Core, A-Level Pure, Further Maths, A-Level Statistics, and A-Level Mechanics, with future tagging routes for IGCSE and IB.</p>
+        <h2 id="homeCoverageTitle">Mapped across GCSE, CSEC, CAPE, Common Core, A-Level, and Further Maths</h2>
+        <p>See current coverage for GCSE, CSEC, CAPE, Common Core, A-Level Pure, Further Maths, A-Level Statistics, and A-Level Mechanics, with future tagging routes for IGCSE and IB.</p>
       </div>
       <div class="coverage-home-counts" aria-label="Coverage counts">
         ${curriculumMapAreas.map((area) => `<span><strong>${coverageToolsFor(area).length}</strong>${escapeHtml(area.title)}</span>`).join("")}
@@ -5474,6 +5655,7 @@ function curriculumTagMatches(tool, tag) {
 
 function coverageToolsFor(area) {
   return tools
+    .filter(isVisibleTool)
     .filter((tool) => area.match(tool))
     .filter((tool) => !["Classroom Tools", "Site Guide"].includes(tool.category))
     .sort((a, b) => a.category.localeCompare(b.category) || a.title.localeCompare(b.title));
@@ -5497,7 +5679,7 @@ function renderCoverageMap() {
   app.innerHTML = `
     ${pageHeader(
       "Curriculum Coverage Map",
-      "A compact live view of the Kaizen Maths tool library across GCSE, Common Core, A-Level Pure, Further Maths, Statistics, and Mechanics.",
+      "A compact live view of the Kaizen Maths tool library across GCSE, CSEC, CAPE, Common Core, A-Level Pure, Further Maths, Statistics, and Mechanics.",
       `<a class="button" href="#/tools">Browse Tool Library</a>${isAdmin() ? `<a class="button" href="#/admin">Edit Tags In Admin</a>` : ""}`
     )}
     <section class="coverage-page">
@@ -5567,7 +5749,7 @@ function renderCoverageMap() {
         </div>
         <ul class="coverage-tag-list">
           ${futureCurriculumTags.map((tag) => {
-            const matchingTools = tools.filter((tool) => curriculumTagMatches(tool, tag.label));
+            const matchingTools = tools.filter((tool) => isVisibleTool(tool) && curriculumTagMatches(tool, tag.label));
             return `
               <li>
                 <strong>${escapeHtml(tag.label)}</strong>
@@ -5583,7 +5765,7 @@ function renderCoverageMap() {
 }
 
 function renderFilters() {
-  const categories = ["All", ...new Set(tools.map((tool) => tool.category))];
+  const categories = ["All", ...new Set(tools.filter(isVisibleTool).map((tool) => tool.category))];
   const levels = ["All", "KS2", "KS3", "GCSE", "A-Level"];
   return `
     <section class="filter-row" aria-label="Tool filters">
@@ -5600,7 +5782,7 @@ function toolCard(tool) {
   const access = requiredAccessLabel(tool);
   const locked = !canAccessTool(tool);
   const extraTags = editableToolTags(tool).slice(0, 4);
-  const algebraGroup = toolAlgebraGroup(tool);
+  const subjectGroup = toolSubjectGroup(tool);
   return `
     <a class="tool-card ${locked ? "locked" : ""}" href="#/tools/${tool.slug}">
       <div class="tool-card-header">
@@ -5610,7 +5792,7 @@ function toolCard(tool) {
       <p>${escapeHtml(tool.description)}</p>
       <div class="badge-row">
         <span class="badge">${escapeHtml(tool.category)}</span>
-        ${algebraGroup ? `<span class="badge subject-group">${escapeHtml(algebraGroup)}</span>` : ""}
+        ${subjectGroup ? `<span class="badge subject-group">${escapeHtml(subjectGroup)}</span>` : ""}
         <span class="badge">${escapeHtml(tool.level)}</span>
         ${extraTags.map((tag) => `<span class="badge">${escapeHtml(tag)}</span>`).join("")}
         ${locked ? `<span class="badge locked-badge">Sign in</span>` : ""}
@@ -5619,38 +5801,57 @@ function toolCard(tool) {
   `;
 }
 
-function renderGroupedAlgebraTools(visible) {
+function compactToolDescription(tool) {
+  return String(tool.description || "")
+    .replace(/^Generate\s+/i, "Generates ")
+    .replace(/^A\s+/i, "A ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function toolIndexRow(tool) {
+  const access = requiredAccessLabel(tool);
+  const locked = !canAccessTool(tool);
+  return `
+    <a class="tool-index-row ${locked ? "locked" : ""}" href="#/tools/${escapeHtml(tool.slug)}">
+      <span class="tool-index-copy">
+        <strong>${escapeHtml(tool.title)}</strong>
+        <small>${escapeHtml(compactToolDescription(tool))}</small>
+      </span>
+      <span class="tool-index-meta">
+        <span class="badge">${escapeHtml(tool.level)}</span>
+        <span class="badge ${normalise(access)}">${access}</span>
+        ${locked ? `<span class="badge locked-badge">Sign in</span>` : ""}
+      </span>
+    </a>
+  `;
+}
+
+function renderGroupedToolIndex(visible, categoryName = "") {
+  const category = categoryName || visible[0]?.category || "";
   const grouped = new Map();
   visible.forEach((tool) => {
-    const group = toolAlgebraGroup(tool) || "Other Algebra";
+    const group = toolSubjectGroup(tool) || `${tool.category} Topics`;
     if (!grouped.has(group)) grouped.set(group, []);
     grouped.get(group).push(tool);
   });
+  grouped.forEach((groupTools) => groupTools.sort((a, b) => a.title.localeCompare(b.title)));
+  const preferredOrder = subjectGroupOrder[category] || [];
   const orderedGroups = [
-    ...algebraGroupOrder.filter((group) => grouped.has(group)),
-    ...[...grouped.keys()].filter((group) => !algebraGroupOrder.includes(group)).sort()
+    ...preferredOrder.filter((group) => grouped.has(group)),
+    ...[...grouped.keys()].filter((group) => !preferredOrder.includes(group)).sort()
   ];
-  const groupNotes = {
-    "Algebra Foundations": "Core manipulation, substitution, indices, surds, algebraic fractions, and modulus notation.",
-    "Equations and Inequalities": "Solving linear, simultaneous, quadratic, contextual, and inequality problems.",
-    "Quadratics and Factorisation": "Factorising expressions, quadratic forms, grouping, difference of squares, cubics, and binomial expansion.",
-    "Functions, Graphs and Coordinate Geometry": "Function notation, logarithms, straight lines, gradients, and line-curve intersections.",
-    "Sequences and Series": "Sequences, nth terms, arithmetic and geometric series, and Taylor or Maclaurin expansions.",
-    "Trigonometry": "Triangle rules, trigonometric equations, identities, reciprocal functions, and proofs.",
-    "Calculus": "Differentiation, integration, implicit and parametric methods, and differential equations.",
-    "A-Level and Further Pure": "Partial fractions, matrices, vectors, roots, complex numbers, polar coordinates, hyperbolic functions, and theorem work."
-  };
 
   return `
-    <section class="algebra-tool-groups" aria-label="Grouped algebra tools">
+    <section class="tool-index-groups" aria-label="${escapeHtml(category || "Grouped")} tools">
       ${orderedGroups.map((group) => `
-        <section class="algebra-tool-group">
-          <div class="algebra-tool-group-heading">
-            <h2>${escapeHtml(group)}</h2>
-            <p>${escapeHtml(groupNotes[group] || "Related Algebra tools for classroom practice, worksheets, and assessment.")}</p>
+        <section class="tool-index-group">
+          <div class="tool-index-group-heading">
+            <h2>${escapeHtml(group)} <span>${grouped.get(group).length}</span></h2>
+            <p>${escapeHtml(subjectGroupNotes[group] || "Related tools for classroom practice, worksheets, assessment, and projection.")}</p>
           </div>
-          <div class="tool-grid">
-            ${grouped.get(group).map(toolCard).join("")}
+          <div class="tool-index-list">
+            ${grouped.get(group).map(toolIndexRow).join("")}
           </div>
         </section>
       `).join("")}
@@ -5660,7 +5861,7 @@ function renderGroupedAlgebraTools(visible) {
 
 function renderToolLibrary(extraCategory = "") {
   const visible = filteredTools(extraCategory);
-  const collectionTitle = extraCategory ? tools.find((tool) => categorySlug(tool.category) === extraCategory)?.category || "Collection" : "Tool Library";
+  const collectionTitle = extraCategory ? tools.find((tool) => isVisibleTool(tool) && categorySlug(tool.category) === extraCategory)?.category || "Collection" : "Tool Library";
   const collectionDescriptions = {
     algebra: "Algebra tools are grouped by teaching purpose: foundations, equations, factorisation, functions and graphs, sequences, trigonometry, calculus, and Further Pure. Use them for exposition, retrieval practice, differentiation, homework, and assessment.",
     numbers: "Number topics build fluency with fractions, decimals, percentages, HCF and LCM, order of operations, averages, and powers of 10.",
@@ -5677,7 +5878,7 @@ function renderToolLibrary(extraCategory = "") {
     )}
     ${renderFilters()}
     ${visible.length
-      ? (extraCategory === "algebra" ? renderGroupedAlgebraTools(visible) : `<section class="tool-grid" aria-label="Tools">${visible.map(toolCard).join("")}</section>`)
+      ? (extraCategory ? renderGroupedToolIndex(visible, collectionTitle) : `<section class="tool-grid" aria-label="Tools">${visible.map(toolCard).join("")}</section>`)
       : `<div class="panel empty-state">No tools match the current filters.</div>`}
   `;
   bindFilters();
@@ -5866,7 +6067,7 @@ function renderBetaFeedback() {
 }
 
 function worksheetEligibleTools() {
-  return tools.filter((tool) => tool.imported && tool.type === "Practice Generator" && tool.slug !== "interface-guide");
+  return tools.filter((tool) => isVisibleTool(tool) && tool.type === "Practice Generator" && tool.slug !== "interface-guide");
 }
 
 function worksheetToolOptions() {
@@ -6633,13 +6834,13 @@ function bindWorksheetGenerator() {
 }
 
 function relatedTools(tool) {
-  const group = toolAlgebraGroup(tool);
+  const group = toolSubjectGroup(tool);
   return tools
-    .filter((candidate) => candidate.slug !== tool.slug && candidate.category === tool.category)
+    .filter((candidate) => isVisibleTool(candidate) && candidate.slug !== tool.slug && candidate.category === tool.category)
     .sort((a, b) => {
       if (!group) return 0;
-      const aSameGroup = toolAlgebraGroup(a) === group;
-      const bSameGroup = toolAlgebraGroup(b) === group;
+      const aSameGroup = toolSubjectGroup(a) === group;
+      const bSameGroup = toolSubjectGroup(b) === group;
       if (aSameGroup === bSameGroup) return a.title.localeCompare(b.title);
       return aSameGroup ? -1 : 1;
     })
@@ -6647,7 +6848,7 @@ function relatedTools(tool) {
 }
 
 function standardsForTool(tool) {
-  const haystack = normalise([tool.title, tool.category, toolAlgebraGroup(tool), tool.level, allToolTags(tool).join(" "), tool.description].join(" "));
+  const haystack = normalise([tool.title, tool.category, toolSubjectGroup(tool), tool.level, allToolTags(tool).join(" "), tool.description].join(" "));
   const standards = [];
 
   if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion") || haystack.includes("motion graphs") || haystack.includes("constant acceleration") || haystack.includes("velocity-time") || haystack.includes("distance-time") || haystack.includes("momentum") || haystack.includes("impulse") || haystack.includes("moments") || haystack.includes("projectiles") || haystack.includes("newton") || haystack.includes("f = ma") || haystack.includes("resultant force") || haystack.includes("forces")) {
@@ -6734,7 +6935,7 @@ function renderStandardsList(tool) {
 }
 
 function renderToolFrame(tool) {
-  const algebraGroup = toolAlgebraGroup(tool);
+  const subjectGroup = toolSubjectGroup(tool);
   const frame = tool.imported
     ? `<iframe class="legacy-frame" src="${tool.toolPath}" title="${tool.title}" loading="eager"></iframe>`
     : `
@@ -6758,7 +6959,7 @@ function renderToolFrame(tool) {
         <div class="legacy-toolbar">
           <div class="badge-row">
             <span class="badge">${tool.category}</span>
-            ${algebraGroup ? `<span class="badge subject-group">${escapeHtml(algebraGroup)}</span>` : ""}
+            ${subjectGroup ? `<span class="badge subject-group">${escapeHtml(subjectGroup)}</span>` : ""}
             <span class="badge">${tool.level}</span>
             <span class="badge">${tool.type}</span>
             <span class="badge ${normalise(requiredAccessLabel(tool))}">${requiredAccessLabel(tool)}</span>
@@ -6792,7 +6993,7 @@ function renderToolFrame(tool) {
 
 function renderToolDetail(slug) {
   const tool = tools.find((item) => item.slug === slug);
-  if (!tool) {
+  if (!tool || !isVisibleTool(tool)) {
     app.innerHTML = `${pageHeader("Tool not found", "This route does not match a registered tool.", `<a class="button" href="#/tools">Back to Library</a>`)}`;
     return;
   }
@@ -8255,7 +8456,8 @@ function renderAdmin() {
     loadSchools({ rerender: true });
   }
 
-  const rows = tools.map((tool) => {
+  const adminTools = tools.filter(isVisibleTool);
+  const rows = adminTools.map((tool) => {
     const current = requiredAccess(tool);
     return `
       <tr>
@@ -8273,7 +8475,7 @@ function renderAdmin() {
     `;
   }).join("");
 
-  const metadataCards = tools.map((tool) => {
+  const metadataCards = adminTools.map((tool) => {
     const metadata = toolMetadata(tool);
     return `
       <article class="admin-metadata-card">
@@ -8283,7 +8485,7 @@ function renderAdmin() {
         </div>
         <label class="admin-metadata-field">
           Curriculum / exam tags
-          <input class="admin-metadata-input" type="text" autocomplete="off" spellcheck="false" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="curriculum_tags" value="${escapeHtml(metadata.curriculum_tags || "")}" placeholder="Common Core, IGCSE, IB, AP">
+          <input class="admin-metadata-input" type="text" autocomplete="off" spellcheck="false" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="curriculum_tags" value="${escapeHtml(metadata.curriculum_tags || "")}" placeholder="CSEC, CAPE, Common Core, IGCSE, IB, AP">
         </label>
         <label class="admin-metadata-field">
           Admin notes
@@ -8457,7 +8659,7 @@ function renderAdmin() {
         <div>
           <span class="eyebrow">Search And Alignment</span>
           <h2>Tool Tags</h2>
-          <p>Add curriculum, exam-board, country, or route labels manually. Use commas between tags, for example: Common Core, IGCSE, IB, AP.</p>
+          <p>Add curriculum, exam-board, country, or route labels manually. Use commas between tags, for example: CSEC, CAPE, Common Core, IGCSE, IB, AP.</p>
         </div>
         <button class="button primary" id="saveToolMetadata" type="button">Save Tool Tags</button>
       </div>
@@ -9282,9 +9484,14 @@ function routeTitle(text) {
 
 function updateRouteSeo(parts) {
   const route = parts[0] || "home";
-  const collectionName = parts[1]
-    ? parts[1].split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ")
+  const collectionSlug = route === "collections" ? parts[1] || "" : "";
+  const collectionName = collectionSlug
+    ? tools.find((tool) => isVisibleTool(tool) && categorySlug(tool.category) === collectionSlug)?.category
+      || collectionSlug.split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ")
     : "";
+  const collectionPageTitle = collectionName
+    ? (normalise(collectionName).endsWith("tools") ? collectionName : `${collectionName} Tools`)
+    : "Maths Collections";
   const tool = route === "tools" && parts[1] ? tools.find((item) => item.slug === parts[1]) : null;
   const trustPage = route === "trust" ? trustPages.find((page) => page.slug === (parts[1] || "")) : null;
 
@@ -9307,10 +9514,10 @@ function updateRouteSeo(parts) {
     },
     "coverage-map": {
       title: routeTitle("Curriculum Coverage Map"),
-      description: "View Kaizen Maths coverage across GCSE, Common Core, A-Level Pure, Further Maths, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
+      description: "View Kaizen Maths coverage across GCSE, CSEC, CAPE, Common Core, A-Level Pure, Further Maths, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
     },
     "collections": {
-      title: routeTitle(collectionName ? `${collectionName} Tools` : "Maths Collections"),
+      title: routeTitle(collectionPageTitle),
       description: collectionName
         ? `Browse ${collectionName.toLowerCase()} question generators, worked examples, and classroom practice tools in Kaizen Maths.`
         : "Browse curriculum collections inside Kaizen Maths."
