@@ -575,12 +575,38 @@
       list.dataset.kaizenInstructionLifted = 'true';
     }
 
-    const observer = new MutationObserver(() => {
-      const list = document.getElementById('problem-list');
-      if (list) {
-        delete list.dataset.kaizenInstructionLifted;
-        lift(document);
-      }
+    let liftQueued = false;
+    let isLifting = false;
+
+    function isProblemListMutation(mutation) {
+      if (mutation.target?.id === 'problem-list') return true;
+      return [...mutation.addedNodes].some((node) => {
+        if (node.nodeType !== Node.ELEMENT_NODE) return false;
+        return node.id === 'problem-list' ||
+          node.classList?.contains('problem-item') ||
+          Boolean(node.querySelector?.('#problem-list, .problem-item'));
+      });
+    }
+
+    function queueLift() {
+      if (isLifting || liftQueued) return;
+      liftQueued = true;
+      window.requestAnimationFrame(() => {
+        liftQueued = false;
+        const list = document.getElementById('problem-list');
+        if (!list) return;
+        isLifting = true;
+        try {
+          delete list.dataset.kaizenInstructionLifted;
+          lift(document);
+        } finally {
+          isLifting = false;
+        }
+      });
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      if (mutations.some(isProblemListMutation)) queueLift();
     });
     if (document.body) observer.observe(document.body, { childList: true, subtree: true });
     lift(document);

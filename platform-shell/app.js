@@ -5808,12 +5808,10 @@ function renderGroupedToolIndex(visible, categoryName = "", options = {}) {
     ...preferredOrder.filter((group) => grouped.has(group)),
     ...[...grouped.keys()].filter((group) => !preferredOrder.includes(group)).sort()
   ];
-  const openGroups = Boolean(state.query);
-
   return `
     <section class="tool-index-groups" aria-label="${escapeHtml(category || "Grouped")} tools">
-      ${orderedGroups.map((group) => `
-        <details class="tool-index-group" ${openGroups ? "open" : ""}>
+      ${orderedGroups.map((group, index) => `
+        <details class="tool-index-group" ${state.query && index === 0 ? "open" : ""}>
           <summary class="tool-index-group-heading">
             <span class="tool-index-heading-copy">
               <strong>${escapeHtml(group)} <em>${grouped.get(group).length}</em></strong>
@@ -5828,6 +5826,20 @@ function renderGroupedToolIndex(visible, categoryName = "", options = {}) {
       `).join("")}
     </section>
   `;
+}
+
+function bindToolIndexAccordion() {
+  document.querySelectorAll(".tool-index-groups").forEach((container) => {
+    const groups = [...container.querySelectorAll("details.tool-index-group")];
+    groups.forEach((opened) => {
+      opened.addEventListener("toggle", () => {
+        if (!opened.open) return;
+        groups.forEach((group) => {
+          if (group !== opened) group.open = false;
+        });
+      });
+    });
+  });
 }
 
 function renderToolLibrary(extraCategory = "") {
@@ -5851,6 +5863,7 @@ function renderToolLibrary(extraCategory = "") {
       ? renderGroupedToolIndex(visible, collectionTitle, { groupByCategory: !extraCategory })
       : `<div class="panel empty-state">No tools match the current filters.</div>`}
   `;
+  bindToolIndexAccordion();
   restorePendingFocus();
 }
 
