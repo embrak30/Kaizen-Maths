@@ -130,7 +130,9 @@
     function choice(items){ return items[Math.floor(Math.random()*items.length)]; }
     function nonZero(min,max){ let n; do{ n=random(min,max); }while(n===0); return n; }
     function signed(n){ return n >= 0 ? ' + ' + n : ' - ' + Math.abs(n); }
+    function signedX(n){ return n === 0 ? '' : n === 1 ? ' + x' : n === -1 ? ' - x' : signed(n) + 'x'; }
     function factor(root){ return root === 0 ? 'x' : '(x' + (root > 0 ? ' - ' + root : ' + ' + Math.abs(root)) + ')'; }
+    function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ const t=b; b=a%b; a=t; } return a || 1; }
     function linear(a,b){
       if(a === 0) return String(b);
       let out = a === 1 ? 'x' : a === -1 ? '-x' : a + 'x';
@@ -139,9 +141,47 @@
     }
     function quadFromRoots(r1,r2){
       const b=-(r1+r2), c=r1*r2;
-      return 'x<sup>2</sup>' + (b ? signed(b) + 'x' : '') + (c ? signed(c) : '');
+      return 'x<sup>2</sup>' + signedX(b) + (c ? signed(c) : '');
+    }
+    function quadFromRootsScaled(scale,r1,r2){
+      const b=scale * (-(r1+r2)), c=scale * r1 * r2;
+      const first = scale === 1 ? 'x<sup>2</sup>' : scale + 'x<sup>2</sup>';
+      return first + signedX(b) + (c ? signed(c) : '');
     }
     function frac(num, den){ return '<span class="frac"><span class="num">' + num + '</span><span class="den">' + den + '</span></span>'; }
+    function coefficientFactor(coefficient, factorText){
+      if(coefficient === 1) return factorText;
+      return coefficient + factorText;
+    }
+    function xFactor(coefficient){
+      return coefficient === 1 ? 'x' : coefficient + 'x';
+    }
+    function fractionOrInteger(numerator, denominator){
+      const g=gcd(numerator, denominator);
+      const n=numerator/g, d=denominator/g;
+      return d === 1 ? String(n) : frac(n, d);
+    }
+    function expressionOverNumber(coefficient, expression, denominator){
+      const g=gcd(coefficient, denominator);
+      const n=coefficient/g, d=denominator/g;
+      const top = coefficientFactor(n, expression);
+      return d === 1 ? top : frac(top, d);
+    }
+    function chooseCoefficientPair(){
+      const [a,b]=choice([[1,2],[1,3],[1,4],[1,5],[2,3],[2,5],[3,2],[3,4],[3,5],[4,3],[4,5],[5,2],[5,3],[5,4],[5,6],[6,5]]);
+      return { a, b };
+    }
+    function chooseFourCoefficients(mode){
+      let a,b,c,d,guard=0;
+      do{
+        a=choice([2,3,4,5]);
+        b=choice([2,3,4,5,6]);
+        c=choice([2,3,5,7]);
+        d=choice([2,3,4,5]);
+        guard++;
+      }while((mode === 'divide' ? (a*d === b*c || (a===c && b===d)) : a*c === b*d) && guard<80);
+      return { a,b,c,d };
+    }
     function asProblem(question, answer, steps){ return { question, equation: question, answer, steps }; }
 
     function generateProblem(){
@@ -158,64 +198,76 @@
     }
 
     function simplifyCommonFactor(){
-      const a=choice([2,3,4,5,6]), b=nonZero(-7,7), c=choice([2,3,4,5]);
+      const common=choice([1,2,3,4,5]), c=choice([2,3,4,5]);
+      let b; do{ b=nonZero(-7,7); }while(gcd(c,b)>1);
+      const pair=chooseCoefficientPair();
       const denFactor=linear(c,b);
-      const question='Simplify:<br>' + frac(a + 'x(' + denFactor + ')', a + 'x');
-      const answer=denFactor;
+      const numerator=coefficientFactor(common * pair.a, 'x(' + denFactor + ')');
+      const denominator=xFactor(common * pair.b);
+      const commonFactor=xFactor(common);
+      const question='Simplify:<br>' + frac(numerator, denominator);
+      const answer=expressionOverNumber(pair.a, '(' + denFactor + ')', pair.b);
       return asProblem(question, answer, [
         'Step 1: Look for a factor that multiplies the whole numerator and the whole denominator.',
-        frac(a + 'x(' + denFactor + ')', a + 'x'),
-        'Step 2: The common factor is ' + a + 'x. It is safe to cancel because it is a factor, not a separate term.',
-        'Step 3: Cancel the common factor from the numerator and denominator.',
-        frac('<s>' + a + 'x</s>(' + denFactor + ')','<s>' + a + 'x</s>') + ' = ' + answer + '.',
+        frac(numerator, denominator),
+        'Step 2: The common factor is ' + commonFactor + '. The remaining numerical factors are ' + pair.a + ' and ' + pair.b + '.',
+        frac(commonFactor + '&times;' + coefficientFactor(pair.a, '(' + denFactor + ')'), commonFactor + '&times;' + pair.b),
+        'Step 3: Cancel the common factor ' + commonFactor + ' from the numerator and denominator.',
+        frac('<s>' + commonFactor + '</s>&times;' + coefficientFactor(pair.a, '(' + denFactor + ')'), '<s>' + commonFactor + '</s>&times;' + pair.b) + ' = ' + answer + '.',
         'Step 4: The simplified expression is ' + answer + '.'
       ]);
     }
 
     function simplifyFactorise(){
       let r1,r2; do{ r1=random(-6,6); r2=random(-6,6); }while(r1===r2);
+      const pair=chooseCoefficientPair();
       const keep=factor(r1), cancel=factor(r2);
-      const numerator=quadFromRoots(r1,r2);
-      const denominator=cancel;
+      const numerator=quadFromRootsScaled(pair.a,r1,r2);
+      const denominator=coefficientFactor(pair.b,cancel);
+      const factorisedNumerator=coefficientFactor(pair.a, keep + cancel);
       const question='Simplify:<br>' + frac(numerator, denominator);
-      const answer=keep;
+      const answer=expressionOverNumber(pair.a, keep, pair.b);
       return asProblem(question, answer, [
         'Step 1: Factorise the quadratic numerator before trying to cancel.',
-        numerator + ' = ' + keep + cancel,
+        numerator + ' = ' + factorisedNumerator,
         'Step 2: Rewrite the fraction using the factorised numerator.',
-        frac(numerator, denominator) + ' = ' + frac(keep + cancel, cancel),
+        frac(numerator, denominator) + ' = ' + frac(factorisedNumerator, coefficientFactor(pair.b,cancel)),
         'Step 3: Cancel the common factor ' + cancel + '.',
-        frac(keep + '<s>' + cancel + '</s>','<s>' + cancel + '</s>') + ' = ' + answer + '.',
+        frac(coefficientFactor(pair.a, keep + '<s>' + cancel + '</s>'), coefficientFactor(pair.b, '<s>' + cancel + '</s>')) + ' = ' + answer + '.',
         'Step 4: The simplified expression is ' + answer + ', with x not equal to ' + r2 + ' because the original denominator cannot be zero.'
       ]);
     }
 
     function multiplyFractions(){
       let r1,r2; do{ r1=random(-5,5); r2=random(-5,5); }while(r1===r2);
-      const a=choice([2,3,4]), b=choice([2,3,5]);
-      const question='Simplify:<br>' + frac(a + factor(r1), b + factor(r2)) + ' &times; ' + frac(b + factor(r2), factor(r1));
-      const answer=String(a);
+      const {a,b,c,d}=chooseFourCoefficients('multiply');
+      const firstFactor=factor(r1), secondFactor=factor(r2);
+      const question='Simplify:<br>' + frac(coefficientFactor(a, firstFactor), coefficientFactor(b, secondFactor)) + ' &times; ' + frac(coefficientFactor(c, secondFactor), coefficientFactor(d, firstFactor));
+      const answer=fractionOrInteger(a*c,b*d);
       return asProblem(question, answer, [
         'Step 1: Keep the expressions factorised so common factors can be seen.',
-        frac(a + factor(r1), b + factor(r2)) + ' &times; ' + frac(b + factor(r2), factor(r1)),
-        'Step 2: Cancel the common factor ' + factor(r2) + ' from denominator and numerator.',
-        'Step 3: Cancel the common factor ' + factor(r1) + ' from numerator and denominator.',
-        'Step 4: The only remaining factor is ' + a + '.',
+        frac(coefficientFactor(a, firstFactor), coefficientFactor(b, secondFactor)) + ' &times; ' + frac(coefficientFactor(c, secondFactor), coefficientFactor(d, firstFactor)),
+        'Step 2: Cancel the common factor ' + secondFactor + ' from denominator and numerator.',
+        'Step 3: Cancel the common factor ' + firstFactor + ' from numerator and denominator.',
+        'Step 4: Multiply the remaining numerical factors.',
+        frac(a + '&times;' + c, b + '&times;' + d) + ' = ' + answer + '.',
         'Step 5: The simplified answer is ' + answer + '.'
       ]);
     }
 
     function divideFractions(){
       let r1,r2; do{ r1=random(-5,5); r2=random(-5,5); }while(r1===r2);
-      const a=choice([2,3,4,5]);
-      const question='Simplify:<br>' + frac(a + factor(r1), factor(r2)) + ' &divide; ' + frac(factor(r1), factor(r2));
-      const answer=String(a);
+      const {a,b,c,d}=chooseFourCoefficients('divide');
+      const firstFactor=factor(r1), secondFactor=factor(r2);
+      const question='Simplify:<br>' + frac(coefficientFactor(a, firstFactor), coefficientFactor(b, secondFactor)) + ' &divide; ' + frac(coefficientFactor(c, firstFactor), coefficientFactor(d, secondFactor));
+      const answer=fractionOrInteger(a*d,b*c);
       return asProblem(question, answer, [
         'Step 1: Dividing by a fraction means multiplying by its reciprocal.',
-        frac(a + factor(r1), factor(r2)) + ' &divide; ' + frac(factor(r1), factor(r2)) + ' = ' + frac(a + factor(r1), factor(r2)) + ' &times; ' + frac(factor(r2), factor(r1)),
-        'Step 2: Cancel the common factor ' + factor(r2) + '.',
-        'Step 3: Cancel the common factor ' + factor(r1) + '.',
-        'Step 4: The remaining factor is ' + a + '.',
+        frac(coefficientFactor(a, firstFactor), coefficientFactor(b, secondFactor)) + ' &divide; ' + frac(coefficientFactor(c, firstFactor), coefficientFactor(d, secondFactor)) + ' = ' + frac(coefficientFactor(a, firstFactor), coefficientFactor(b, secondFactor)) + ' &times; ' + frac(coefficientFactor(d, secondFactor), coefficientFactor(c, firstFactor)),
+        'Step 2: Cancel the common factor ' + secondFactor + '.',
+        'Step 3: Cancel the common factor ' + firstFactor + '.',
+        'Step 4: Multiply the remaining numerical factors.',
+        frac(a + '&times;' + d, b + '&times;' + c) + ' = ' + answer + '.',
         'Step 5: The simplified answer is ' + answer + '.'
       ]);
     }

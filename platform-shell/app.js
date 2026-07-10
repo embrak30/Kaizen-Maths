@@ -68,7 +68,7 @@ const tools = [
     status: "Imported",
     description: "Generate GCSE algebraic-fraction practice for simplifying, multiplying, dividing, adding, subtracting, and solving equations.",
     tags: ["algebra", "algebraic fractions", "simplifying fractions", "factorising", "common denominator", "equations"],
-    toolPath: "tools/algebraic-fractions/index.html?v=algebraic-fractions-fractionbar-1",
+    toolPath: "tools/algebraic-fractions/index.html?v=algebraic-fractions-ingenuity-1",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on factorising and cancelling common factors.",
