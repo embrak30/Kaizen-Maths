@@ -628,6 +628,45 @@ body[data-route="worksheet-generator"] .account-action {
   line-height: 1.35;
 }
 
+.worksheet-page-header p {
+  display: grid;
+  gap: 8px;
+}
+
+.worksheet-header-summary {
+  display: block;
+}
+
+.worksheet-header-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  max-width: 980px;
+}
+
+.worksheet-header-steps > span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding: 7px 9px;
+  border: 1px solid rgba(23, 184, 179, 0.22);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.worksheet-header-steps strong {
+  color: #282450;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.worksheet-header-steps small {
+  color: #526071;
+  font-size: 0.72rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
 .button {
   min-height: 38px;
   display: inline-flex;
@@ -3707,64 +3746,79 @@ body[data-route="worksheet-generator"] .account-action {
 
 .worksheet-workflow-cue {
   flex: 1 0 100%;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 5px;
-  padding: 5px;
-  border: 1px solid rgba(148, 163, 184, 0.28);
+  display: block;
+  padding: 6px 8px;
+  border: 1px solid rgba(23, 184, 179, 0.24);
   border-radius: 8px;
-  background: #f8fafc;
+  background: #f8fbff;
 }
 
-.worksheet-flow-step {
-  display: grid;
-  gap: 2px;
+.worksheet-flow-next {
+  display: flex;
+  gap: 7px;
+  align-items: baseline;
   min-width: 0;
-  padding: 6px 7px;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  color: #64748b;
-  background: rgba(255, 255, 255, 0.7);
+  color: #526071;
 }
 
-.worksheet-flow-step strong,
-.worksheet-flow-step small {
+.worksheet-flow-next strong,
+.worksheet-flow-next small {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.worksheet-flow-step strong {
-  font-size: 0.7rem;
+.worksheet-flow-next strong {
+  flex: 0 0 auto;
+  font-size: 0.73rem;
   font-weight: 900;
 }
 
-.worksheet-flow-step small {
-  font-size: 0.62rem;
+.worksheet-flow-next small {
+  font-size: 0.7rem;
   font-weight: 750;
 }
 
-.worksheet-flow-step[data-state="active"] {
-  border-color: rgba(23, 184, 179, 0.44);
-  background: #eefbfb;
+.worksheet-flow-next[data-state="active"] {
   color: #106a6e;
-  box-shadow: 0 0 0 3px rgba(23, 184, 179, 0.08);
 }
 
-.worksheet-flow-step[data-state="done"] {
-  border-color: rgba(34, 197, 94, 0.32);
-  background: #f0fdf4;
+.worksheet-flow-next[data-state="ready"] {
   color: #166534;
 }
 
+.worksheet-flow-next[data-state="active"] strong {
+  color: #106a6e;
+}
+
+.worksheet-flow-next[data-state="ready"] strong {
+  color: #166534;
+}
+
+.worksheet-workflow-cue[data-state="active"] {
+  border-color: rgba(23, 184, 179, 0.42);
+  background: #eefbfb;
+  box-shadow: 0 0 0 3px rgba(23, 184, 179, 0.08);
+}
+
+.worksheet-workflow-cue[data-state="ready"] {
+  border-color: rgba(34, 197, 94, 0.32);
+  background: #f0fdf4;
+}
+
 @media (max-width: 760px) {
-  .worksheet-workflow-cue {
+  .worksheet-header-steps {
     grid-template-columns: 1fr;
   }
 
-  .worksheet-flow-step strong,
-  .worksheet-flow-step small {
+  .worksheet-flow-next {
+    display: grid;
+    gap: 2px;
+  }
+
+  .worksheet-flow-next strong,
+  .worksheet-flow-next small {
     white-space: normal;
   }
 }

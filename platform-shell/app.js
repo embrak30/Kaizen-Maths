@@ -2040,6 +2040,7 @@ const worksheetState = {
   metadata: null,
   worksheet: null,
   sections: [],
+  lastAddedSignature: "",
   loadToken: 0
 };
 
@@ -5909,7 +5910,12 @@ function renderWorksheetGenerator() {
   app.innerHTML = `
     ${pageHeader(
       "Worksheet Builder",
-      "Build printable worksheets and assessments from topic blocks. Choose the questions, add the block, then create the sheet.",
+      `<span class="worksheet-header-summary">Build printable worksheets and assessments from topic blocks.</span>
+       <span class="worksheet-header-steps" aria-label="Worksheet builder workflow">
+         <span><strong>1 Select questions</strong><small>Choose a topic, level, question type, and count.</small></span>
+         <span><strong>2 Add selected questions</strong><small>Load that block so you can edit questions and marks.</small></span>
+         <span><strong>3 Create worksheet</strong><small>Generate the sheet, then print or save as PDF.</small></span>
+       </span>`,
       "",
       "worksheet-page-header"
     )}
@@ -6072,6 +6078,16 @@ function worksheetAssessmentOptions() {
   const assessment = document.getElementById("worksheetAssessmentMode")?.checked || false;
   const marksPerQuestion = Math.max(1, Math.min(20, Number(document.getElementById("worksheetMarks")?.value || 1)));
   return { assessment, marksPerQuestion };
+}
+
+function worksheetSelectionSignature() {
+  const tool = selectedWorksheetTool();
+  const level = selectedWorksheetLevelMeta();
+  const type = selectedWorksheetTypeMeta();
+  if (!tool || !level || !type) return "";
+  const count = Math.max(1, Math.min(40, Number(document.getElementById("worksheetCount")?.value || 10)));
+  const { assessment, marksPerQuestion } = worksheetAssessmentOptions();
+  return [tool.slug, level.id, type.id, count, assessment ? marksPerQuestion : 0].join("|");
 }
 
 function worksheetPresentationOptions(assessment = false) {
@@ -6264,46 +6280,46 @@ function updateWorksheetFlow() {
   const generateButton = document.getElementById("generateWorksheet");
   const hasSections = worksheetState.sections.length > 0;
   const selectionReady = worksheetCurrentSelectionReady();
+  const currentSignature = selectionReady ? worksheetSelectionSignature() : "";
+  const hasUnaddedSelection = selectionReady && currentSignature !== worksheetState.lastAddedSignature;
+  const prioritiseAdd = selectionReady && (!hasSections || hasUnaddedSelection);
   const loading = !worksheetState.metadata;
+  const prioritiseGenerate = hasSections && !hasUnaddedSelection && !loading;
 
   if (addButton) {
     addButton.disabled = !selectionReady;
-    addButton.classList.toggle("primary", selectionReady && !hasSections);
-    addButton.classList.toggle("worksheet-action-muted", !selectionReady || hasSections);
+    addButton.classList.toggle("primary", prioritiseAdd);
+    addButton.classList.toggle("worksheet-action-muted", !prioritiseAdd);
   }
 
   if (generateButton) {
     generateButton.disabled = !hasSections;
-    generateButton.classList.toggle("primary", hasSections);
-    generateButton.classList.toggle("worksheet-action-muted", !hasSections);
+    generateButton.classList.toggle("primary", prioritiseGenerate);
+    generateButton.classList.toggle("worksheet-action-muted", !prioritiseGenerate);
   }
 
   if (!cue) return;
 
-  const steps = [
-    {
-      label: "1 Choose questions",
-      detail: loading ? "Loading topic options..." : selectionReady ? "Topic, level and type selected" : "Select a topic, level and type",
-      state: selectionReady ? "done" : "active"
-    },
-    {
-      label: "2 Add selected questions",
-      detail: hasSections ? `${worksheetState.sections.length} block${worksheetState.sections.length === 1 ? "" : "s"} added` : "Click this before creating the worksheet",
-      state: hasSections ? "done" : selectionReady ? "active" : "waiting"
-    },
-    {
-      label: "3 Create worksheet",
-      detail: hasSections ? "Ready to generate" : "Available after a block is added",
-      state: hasSections ? "active" : "waiting"
-    }
-  ];
+  let nextLabel = "Select questions";
+  let nextDetail = loading ? "Loading topic options..." : "Choose a topic, level, question type, and count.";
+  let nextState = "waiting";
+  if (prioritiseAdd) {
+    nextLabel = "Next: Add selected questions";
+    nextDetail = hasSections ? "You changed the selection. Add it as another block before creating the worksheet." : "Add this first block before creating the worksheet.";
+    nextState = "active";
+  } else if (prioritiseGenerate) {
+    nextLabel = "Next: Create worksheet";
+    nextDetail = `${worksheetState.sections.length} block${worksheetState.sections.length === 1 ? "" : "s"} added. Generate the worksheet, then print or save.`;
+    nextState = "ready";
+  }
 
-  cue.innerHTML = steps.map((step) => `
-    <span class="worksheet-flow-step" data-state="${step.state}">
-      <strong>${step.label}</strong>
-      <small>${step.detail}</small>
+  cue.dataset.state = nextState;
+  cue.innerHTML = `
+    <span class="worksheet-flow-next" data-state="${nextState}">
+      <strong>${nextLabel}</strong>
+      <small>${nextDetail}</small>
     </span>
-  `).join("");
+  `;
 }
 
 function renderWorksheetSections() {
@@ -6377,6 +6393,7 @@ function addWorksheetSection() {
     setWorksheetStatus("Choose a valid tool, level, and question type before adding a block.", "error");
     return;
   }
+  worksheetState.lastAddedSignature = worksheetSelectionSignature();
   worksheetState.sections.push(section);
   renderWorksheetSections();
   updateWorksheetFlow();
@@ -6419,6 +6436,7 @@ function buildTopicAssessment() {
   }
 
   worksheetState.sections = sections;
+  worksheetState.lastAddedSignature = worksheetSelectionSignature();
   renderWorksheetSections();
   updateWorksheetFlow();
   setWorksheetStatus(`Built a draft ${tool.title} assessment with ${sections.length} block${sections.length === 1 ? "" : "s"}. Remove blocks or edit counts and marks before generating.`, "success");
@@ -6553,6 +6571,7 @@ function resetWorksheetBuilder() {
   const paperInstructionInput = document.getElementById("worksheetPaperInstruction");
   worksheetState.sections = [];
   worksheetState.worksheet = null;
+  worksheetState.lastAddedSignature = "";
   if (assessmentMode) assessmentMode.checked = false;
   if (assessmentPanel) assessmentPanel.hidden = true;
   if (marksInput) marksInput.value = "1";
@@ -6580,6 +6599,8 @@ function bindWorksheetGenerator() {
   const assessmentPanel = document.getElementById("worksheetAssessmentPanel");
   const paperTitleInput = document.getElementById("worksheetPaperTitle");
   const paperInstructionInput = document.getElementById("worksheetPaperInstruction");
+  const countInput = document.getElementById("worksheetCount");
+  const marksInput = document.getElementById("worksheetMarks");
   if (!toolSelect || !form) return;
 
   if (controlsPane && previewPane) {
@@ -6613,6 +6634,10 @@ function bindWorksheetGenerator() {
       renderWorksheetPreview(worksheetState.worksheet, { answers, steps, ...worksheetAssessmentOptions() });
     });
   });
+  [countInput, marksInput].forEach((input) => {
+    input?.addEventListener("input", updateWorksheetFlow);
+    input?.addEventListener("change", updateWorksheetFlow);
+  });
   assessmentMode?.addEventListener("change", () => {
     if (paperTitleInput && ["Mixed Practice Worksheet", "Assessment Paper"].includes(paperTitleInput.value.trim())) {
       paperTitleInput.value = assessmentMode.checked ? "Assessment Paper" : "Mixed Practice Worksheet";
@@ -6625,6 +6650,7 @@ function bindWorksheetGenerator() {
       });
     }
     renderWorksheetSections();
+    updateWorksheetFlow();
     setWorksheetStatus(assessmentMode.checked ? "Assessment mode on. Add blocks with the mark value you want for each question." : "Assessment mode off. Worksheets will generate without marks.", "success");
   });
 
