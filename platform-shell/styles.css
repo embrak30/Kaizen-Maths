@@ -5280,14 +5280,21 @@ sup .worksheet-fraction span:last-child {
 
 .tool-info-grid {
   display: grid;
-  grid-template-columns: 1.22fr 0.9fr 0.9fr;
   gap: 10px;
   align-items: stretch;
 }
 
+.tool-info-primary-grid {
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr) minmax(0, 1.18fr);
+}
+
+.tool-info-secondary-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .tool-info-card {
   min-width: 0;
-  padding: 12px;
+  padding: 11px 12px;
   border: 1px solid rgba(221, 227, 238, 0.96);
   border-radius: 10px;
   background:
@@ -5319,14 +5326,15 @@ sup .worksheet-fraction span:last-child {
 
 .tool-info-card .topic-map-compact {
   margin: 0;
-  gap: 7px;
+  gap: 0;
 }
 
 .tool-info-card .topic-bullet-list {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 5px 16px;
-  font-size: 0.78rem;
-  line-height: 1.25;
+  gap: 4px 14px;
+  padding-left: 16px;
+  font-size: 0.76rem;
+  line-height: 1.22;
 }
 
 .tool-info-card .topic-map-summary,
@@ -5339,7 +5347,7 @@ sup .worksheet-fraction span:last-child {
 
 .tool-info-list {
   display: grid;
-  gap: 5px;
+  gap: 4px;
   margin: 0;
   padding-left: 16px;
   color: #28364d;
@@ -5354,7 +5362,7 @@ sup .worksheet-fraction span:last-child {
 }
 
 .tool-info-badges span {
-  padding: 6px 8px;
+  padding: 5px 8px;
   border-radius: 999px;
   background: #fff7ed;
   color: #9a3412;
@@ -5362,33 +5370,59 @@ sup .worksheet-fraction span:last-child {
   font-weight: 850;
 }
 
-.tool-info-related {
+.tool-info-curriculum {
   display: grid;
-  gap: 6px;
+  gap: 7px;
+  margin-top: 10px;
 }
 
-.tool-info-related a {
+.tool-info-curriculum > span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.tool-info-card .standards-list {
+  gap: 4px;
+  font-size: 0.76rem;
+  line-height: 1.28;
+}
+
+.tool-info-related-list {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tool-info-related-list li {
   display: grid;
   gap: 2px;
-  padding: 7px 9px;
-  border: 1px solid rgba(23, 184, 179, 0.22);
-  border-radius: 7px;
-  background: rgba(231, 251, 250, 0.5);
+  padding-left: 12px;
+  position: relative;
   color: var(--ink);
-  text-decoration: none;
 }
 
-.tool-info-related a:hover {
-  border-color: rgba(249, 115, 22, 0.58);
-  background: rgba(255, 237, 213, 0.88);
+.tool-info-related-list li::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--orange);
+  position: absolute;
+  left: 0;
+  top: 0.52em;
 }
 
-.tool-info-related strong {
+.tool-info-related-list strong {
   font-size: 0.78rem;
   line-height: 1.22;
 }
 
-.tool-info-related span {
+.tool-info-related-list span {
   color: var(--muted);
   font-size: 0.7rem;
   font-weight: 750;

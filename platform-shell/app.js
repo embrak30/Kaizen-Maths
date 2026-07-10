@@ -6833,7 +6833,10 @@ function standardsForTool(tool) {
   const haystack = normalise([tool.title, tool.category, toolSubjectGroup(tool), tool.level, allToolTags(tool).join(" "), tool.description].join(" "));
   const standards = [];
 
-  if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion") || haystack.includes("motion graphs") || haystack.includes("constant acceleration") || haystack.includes("velocity-time") || haystack.includes("distance-time") || haystack.includes("momentum") || haystack.includes("impulse") || haystack.includes("moments") || haystack.includes("projectiles") || haystack.includes("newton") || haystack.includes("f = ma") || haystack.includes("resultant force") || haystack.includes("forces")) {
+  if (haystack.includes("matrix") || haystack.includes("matrices") || haystack.includes("determinant") || haystack.includes("eigenvalue")) {
+    standards.push("England: GCSE and A-Level matrix work where specified, including operations, transformations, determinants, inverses, singular matrices, and algebraic matrix equations.");
+    standards.push("Further Mathematics / international routes: matrices, linear transformations, systems, eigenvalues, eigenvectors, and proof-based reasoning where relevant.");
+  } else if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion") || haystack.includes("motion graphs") || haystack.includes("constant acceleration") || haystack.includes("velocity-time") || haystack.includes("distance-time") || haystack.includes("momentum") || haystack.includes("impulse") || haystack.includes("moments") || haystack.includes("projectiles") || haystack.includes("newton") || haystack.includes("f = ma") || haystack.includes("resultant force") || haystack.includes("forces")) {
     standards.push("England: A-Level Mathematics mechanics, including constant acceleration, SUVAT equations, momentum, impulse, moments, forces, projectiles, modelling with units, and motion under gravity.");
     standards.push("IB / international: Applications and interpretation links to kinematics, mechanics modelling, rates of change, forces, and interpreting physical quantities.");
   } else if (haystack.includes("statistics") || haystack.includes("probability") || haystack.includes("tree diagram")) {
@@ -6857,7 +6860,7 @@ function standardsForTool(tool) {
   } else if (haystack.includes("calculus") || haystack.includes("differentiation") || haystack.includes("integration")) {
     standards.push("England: A-Level Mathematics calculus, including differentiation, integration, rates of change, and area under curves.");
     standards.push("IB / international: Analysis and approaches links to functions, calculus techniques, and graphical interpretation.");
-  } else if (haystack.includes("fraction") || haystack.includes("decimal") || haystack.includes("percentage") || haystack.includes("ratio") || haystack.includes("hcf") || haystack.includes("lcm") || haystack.includes("conversion")) {
+  } else if (/\b(fraction|decimal|percentage|ratio|hcf|lcm|conversion)\b/.test(haystack)) {
     standards.push("Common Core: 6.RP, 7.RP, 6.NS, 7.NS, and HSN-Q for ratio, number fluency, units, and quantitative reasoning.");
     standards.push("England: KS2/KS3 number fluency; GCSE Number, ratio, proportion, rates of change, and standard units.");
   } else {
@@ -6870,15 +6873,86 @@ function standardsForTool(tool) {
 }
 
 function fallbackTopicMap(tool) {
-  const concepts = [...new Set([
-    ...allToolTags(tool).filter((tag) => !["KaTeX", "worked steps"].includes(tag)),
-    tool.category,
-    tool.level
-  ].filter(Boolean))];
-  const visibleConcepts = concepts.slice(0, 12);
+  return renderToolTopics(tool);
+}
+
+function isCurriculumOrMetaTopic(label, tool) {
+  const value = normalise(label);
+  const meta = new Set([
+    "katex",
+    "worked steps",
+    "practice generator",
+    "imported",
+    "pilot",
+    "free",
+    "trial",
+    "pro",
+    "school",
+    "admin",
+    normalise(tool.category),
+    normalise(tool.level),
+    normalise(tool.type),
+    "ks2",
+    "ks3",
+    "ks4",
+    "ks5",
+    "gcse",
+    "igcse",
+    "a-level",
+    "a level",
+    "a-level pure",
+    "a level pure",
+    "a-level statistics",
+    "a level statistics",
+    "a-level mechanics",
+    "a level mechanics",
+    "further maths",
+    "common core",
+    "csec",
+    "cape",
+    "ib",
+    "ap",
+    "aqa",
+    "edexcel",
+    "ocr"
+  ]);
+  if (meta.has(value)) return true;
+  return /\b(gcse|igcse|a-level|a level|aqa|edexcel|ocr|common core|csec|cape|ib|ap)\b/.test(value);
+}
+
+function formatTopicLabel(label) {
+  const clean = String(label || "")
+    .replace(/\s+/g, " ")
+    .replace(/\s*\/\s*/g, " / ")
+    .trim();
+  if (!clean) return "";
+  if (/^[A-Z0-9\s/-]+$/.test(clean) && clean.length <= 8) return clean;
+  return clean.charAt(0).toUpperCase() + clean.slice(1);
+}
+
+function toolTopicConcepts(tool) {
+  const concepts = [];
+  const add = (label) => {
+    const formatted = formatTopicLabel(label);
+    if (!formatted || isCurriculumOrMetaTopic(formatted, tool)) return;
+    if (!concepts.some((topic) => normalise(topic) === normalise(formatted))) concepts.push(formatted);
+  };
+
+  allToolTags(tool).forEach(add);
+  const titleParts = String(tool.title || "")
+    .split(/:|,| and | with /i)
+    .map((part) => part.trim())
+    .filter((part) => part.length > 2);
+  titleParts.forEach(add);
+
+  return concepts.slice(0, 12);
+}
+
+function renderToolTopics(tool) {
+  const concepts = toolTopicConcepts(tool);
+  const visibleConcepts = concepts.length ? concepts.slice(0, 12) : [formatTopicLabel(tool.title)];
   return `
     <div class="topic-map-compact">
-      <p class="topic-map-summary">This tool covers these topic areas.</p>
       ${renderTopicBulletList(visibleConcepts)}
     </div>
   `;
@@ -6925,12 +6999,18 @@ function toolCurriculumLinks(tool) {
 
   if (haystack.includes("gcse") || ["Algebra", "Numbers", "Geometry", "Statistics"].includes(tool.category)) {
     add("GCSE");
+    add("IGCSE");
+    add("CSEC");
+    add("CAPE");
     add("AQA");
     add("Edexcel");
     add("OCR");
   }
   if (haystack.includes("a-level") || haystack.includes("a level") || haystack.includes("calculus") || haystack.includes("mechanics") || haystack.includes("further maths") || haystack.includes("statistics")) {
     add("A-Level");
+    add("CAPE");
+    add("AP");
+    add("IB");
     add("AQA");
     add("Edexcel");
     add("OCR");
@@ -6975,9 +7055,8 @@ function toolMisconceptions(tool) {
 }
 
 function toolClassroomQuestions(tool) {
-  const group = toolSubjectGroup(tool) || tool.category;
   return [
-    `What is the first decision students must make in this ${group.toLowerCase()} question?`,
+    "What is the first decision students must make in this topic?",
     "Which mistake would give a plausible but incorrect answer here?",
     "What evidence in the question tells us which method to use?",
     "How could we check whether the answer is reasonable?"
@@ -7005,9 +7084,9 @@ function renderRelatedTools(tool) {
   const related = relatedTools(tool);
   if (!related.length) return `<p class="tool-info-muted">Related tools will appear as the library grows.</p>`;
   return `
-    <div class="tool-info-related">
-      ${related.map((item) => `<a href="#/tools/${escapeHtml(item.slug)}"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(toolSubjectGroup(item) || item.category)}</span></a>`).join("")}
-    </div>
+    <ul class="tool-info-related-list">
+      ${related.map((item) => `<li><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(toolSubjectGroup(item) || item.category)}</span></li>`).join("")}
+    </ul>
   `;
 }
 
@@ -7034,15 +7113,10 @@ function renderToolInformationPage(tool) {
         </div>
       </header>
 
-      <section class="tool-info-grid">
-        <article class="tool-info-card tool-info-card-large">
-          <span class="eyebrow">Topics Covered</span>
-          ${fallbackTopicMap(tool)}
-        </article>
-
+      <section class="tool-info-grid tool-info-primary-grid">
         <article class="tool-info-card">
-          <span class="eyebrow">Exam Boards & Curriculum Links</span>
-          ${renderToolInfoBadges(toolCurriculumLinks(tool))}
+          <span class="eyebrow">Topics Covered</span>
+          ${renderToolTopics(tool)}
         </article>
 
         <article class="tool-info-card">
@@ -7050,6 +7124,17 @@ function renderToolInformationPage(tool) {
           ${renderToolInfoList(notes.slice(0, 4))}
         </article>
 
+        <article class="tool-info-card">
+          <span class="eyebrow">Mathematical Standards Covered</span>
+          ${renderStandardsList(tool)}
+          <div class="tool-info-curriculum">
+            <span>Linked to</span>
+            ${renderToolInfoBadges(toolCurriculumLinks(tool))}
+          </div>
+        </article>
+      </section>
+
+      <section class="tool-info-grid tool-info-secondary-grid">
         <article class="tool-info-card">
           <span class="eyebrow">Common Misconceptions</span>
           ${renderToolInfoList(toolMisconceptions(tool).slice(0, 3))}
@@ -7065,15 +7150,10 @@ function renderToolInformationPage(tool) {
           ${renderRelatedTools(tool)}
         </article>
 
-        <details class="tool-info-card tool-info-details">
-          <summary><span>Mathematical Standards Covered</span><strong>Open</strong></summary>
-          ${renderStandardsList(tool)}
-        </details>
-
-        <details class="tool-info-card tool-info-details">
-          <summary><span>Suggested Use</span><strong>Open</strong></summary>
+        <article class="tool-info-card">
+          <span class="eyebrow">Suggested Use</span>
           ${renderToolInfoList(toolUseSuggestions(tool))}
-        </details>
+        </article>
       </section>
     </section>
   `;
