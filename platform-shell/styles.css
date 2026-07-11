@@ -4241,7 +4241,8 @@ body[data-route="worksheet-generator"] .account-action {
 .worksheet-question-text .histogram-wrap,
 .worksheet-question-text .cf-wrap,
 .worksheet-question-text .tree-wrap,
-.worksheet-question-text .data-table-wrap {
+.worksheet-question-text .data-table-wrap,
+.worksheet-question-text .worksheet-embedded-diagram.worksheet-transform-diagram {
   max-width: 520px;
   overflow-x: auto;
 }

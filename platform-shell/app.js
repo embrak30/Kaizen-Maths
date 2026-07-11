@@ -788,7 +788,7 @@ const tools = [
     status: "Imported",
     description: "Generate coordinate-grid transformation practice for translations, reflections, rotations, enlargements, describing transformations, and combined transformations.",
     tags: ["geometry", "transformations", "translation", "reflection", "rotation", "enlargement", "coordinate grid", "vectors", "scale factor"],
-    toolPath: "tools/transformations/index.html?v=transformations-1",
+    toolPath: "tools/transformations/index.html?v=transformations-2",
     imported: true,
     teacherNotes: [
       "Level 1 covers translations and reflections using coordinate rules and mirror lines.",

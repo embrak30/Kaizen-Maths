@@ -364,13 +364,13 @@
     if (!html) return false;
 
     return /<(svg|table|figure)\b/i.test(html)
-      || /class=["'][^"']*(matrix-wrap|matrix-expression|shape-row|shape-diagram|diagram-row|bearing-row|bearing-diagram|motion-row|motion-diagram|venn-card|venn-wrap|tree-wrap|histogram-wrap|cf-wrap|diagram-wrap|projectile-diagram|moment-diagram|polar-card|polar-diagram|curve-wrap|data-table-wrap|\bfrac\b|\bfraction\b)[^"']*["']/i.test(html);
+      || /class=["'][^"']*(matrix-wrap|matrix-expression|shape-row|shape-diagram|diagram-row|transform-diagram|bearing-row|bearing-diagram|motion-row|motion-diagram|venn-card|venn-wrap|tree-wrap|histogram-wrap|cf-wrap|diagram-wrap|projectile-diagram|moment-diagram|polar-card|polar-diagram|curve-wrap|data-table-wrap|\bfrac\b|\bfraction\b)[^"']*["']/i.test(html);
   }
 
   function containsEmbeddedDiagram(value) {
     const html = String(value ?? '');
     return /<svg\b/i.test(html)
-      || /class=["'][^"']*(shape-row|shape-diagram|diagram-row|bearing-row|bearing-diagram|motion-row|motion-diagram|venn-card|venn-wrap|tree-wrap|histogram-wrap|cf-wrap|diagram-wrap|projectile-diagram|moment-diagram|polar-card|polar-diagram|curve-wrap)[^"']*["']/i.test(html);
+      || /class=["'][^"']*(shape-row|shape-diagram|diagram-row|transform-diagram|bearing-row|bearing-diagram|motion-row|motion-diagram|venn-card|venn-wrap|tree-wrap|histogram-wrap|cf-wrap|diagram-wrap|projectile-diagram|moment-diagram|polar-card|polar-diagram|curve-wrap)[^"']*["']/i.test(html);
   }
 
   function firstRichQuestion(...values) {
@@ -394,7 +394,8 @@
       questionValue
     );
 
-    return `<div class="worksheet-diagram-row"><div class="worksheet-embedded-diagram">${diagram}</div><div class="worksheet-diagram-prompt">${prompt ?? ''}</div></div>`;
+    const extraClass = /class=["'][^"']*transform-diagram[^"']*["']/i.test(String(diagram)) ? ' worksheet-transform-diagram' : '';
+    return `<div class="worksheet-diagram-row"><div class="worksheet-embedded-diagram${extraClass}">${diagram}</div><div class="worksheet-diagram-prompt">${prompt ?? ''}</div></div>`;
   }
 
   function normalizeProblem(problem, overrides = {}) {

@@ -47,15 +47,15 @@
     .problem-set-header.visible{display:block}
     .set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border-radius:6px;background:#ecfdf5;border:1px solid #a7f3d0;color:#14213d;text-align:center;font-weight:800}
     .set-instruction.visible{display:block}
-    .problem-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;list-style:none}
-    .problem-item{background:#f8fafc;border-left:4px solid #0f766e;border-radius:7px;padding:10px 11px;display:flex;flex-direction:column;gap:8px;min-height:345px}
-    .problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .problem-list{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;list-style:none}
+    .problem-item{background:#f8fafc;border-left:4px solid #0f766e;border-radius:7px;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:430px}
+    .problem-header{display:flex;flex-direction:column;align-items:stretch;gap:12px}
     .problem-left{display:flex;gap:10px;align-items:flex-start;min-width:0;width:100%}
     .problem-number{background:#0f766e;color:#fff;min-width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:850}
-    .diagram-row{display:grid;grid-template-columns:minmax(250px,320px) minmax(0,1fr);gap:12px;align-items:center;width:100%}
-    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.06em;color:#14213d;font-weight:500;line-height:1.4;overflow-wrap:anywhere}
+    .diagram-row{display:grid;grid-template-columns:minmax(360px,540px) minmax(260px,1fr);gap:18px;align-items:center;width:100%}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.2em;color:#14213d;font-weight:500;line-height:1.42;overflow-wrap:anywhere}
     .question-text strong{font-weight:650}
-    .transform-diagram{width:100%;max-width:320px;background:#fff;border:1px solid #d7e3f0;border-radius:6px;padding:5px}
+    .transform-diagram{width:100%;max-width:540px;background:#fff;border:1px solid #d7e3f0;border-radius:6px;padding:5px}
     .transform-diagram svg{width:100%;height:auto;display:block}
     .grid-line{stroke:#d6dee8;stroke-width:1;shape-rendering:crispEdges}
     .axis-line{stroke:#0f172a;stroke-width:1.35;shape-rendering:crispEdges}
@@ -69,7 +69,7 @@
     .line-label{font-size:12px;font-weight:800;fill:#9a3412;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
     .centre-dot{fill:#c2410c;stroke:#fff;stroke-width:2}
     .centre-label{font-size:12px;font-weight:850;fill:#9a3412;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
-    .problem-answer{background:#2f855a;color:#fff;padding:7px 11px;border-radius:999px;font-weight:850;display:none;font-size:.9em;line-height:1.35;max-width:260px}
+    .problem-answer{background:#2f855a;color:#fff;padding:7px 11px;border-radius:999px;font-weight:850;display:none;font-size:.98em;line-height:1.35;max-width:none;width:fit-content;margin-left:40px}
     .problem-answer.visible{display:block}
     .steps-section{display:none;margin-top:auto;padding:10px;background:#ecfdf5;border-left:3px solid #0f766e;border-radius:6px}
     .steps-section.visible{display:block}
@@ -80,7 +80,7 @@
     .step-table{width:100%;border-collapse:collapse;margin:8px 0;background:#fff;border:1px solid #ccfbf1;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif)}
     .step-table th,.step-table td{border:1px solid #ccfbf1;padding:6px 8px;text-align:center;vertical-align:middle}
     .step-table th{background:#e6fffb;color:#134e4a;font-weight:850}
-    .answer-diagram{margin:9px auto;max-width:320px}
+    .answer-diagram{margin:12px auto;max-width:620px}
     .final-answer{margin-top:8px;text-align:center;background:#2f855a;color:#fff;border-radius:6px;padding:8px;font-weight:850}
     .mini-vector{display:inline-grid;grid-template-columns:auto;align-items:center;margin:0 .15em;vertical-align:middle;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif)}
     .mini-vector span{display:block;text-align:center;line-height:1.05;padding:0 .28em;border-left:1.5px solid currentColor;border-right:1.5px solid currentColor}
@@ -92,8 +92,8 @@
     .modal-content h2{color:#d92d20;margin-bottom:10px}
     .modal-content p{color:#667085;margin-bottom:18px}
     .hidden{display:none}
-    @media (max-width:980px){.problem-list{grid-template-columns:1fr}.diagram-row{grid-template-columns:minmax(240px,320px) minmax(0,1fr)}}
-    @media (max-width:670px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:340px;left:-340px}.problem-header{flex-direction:column}.diagram-row{grid-template-columns:1fr}.transform-diagram{max-width:none}.problem-answer{max-width:none}.question-text{font-size:1.02em}}
+    @media (max-width:980px){.diagram-row{grid-template-columns:minmax(300px,420px) minmax(0,1fr)}}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:340px;left:-340px}.diagram-row{grid-template-columns:1fr}.transform-diagram{max-width:none}.problem-answer{max-width:none;margin-left:40px}.question-text{font-size:1.06em}}
   </style>
 </head>
 <body>
@@ -147,7 +147,7 @@
         <button class="btn btn-danger" type="button" onclick="stopTimer()">Stop</button>
       </div>
       <div class="action-buttons">
-        <button class="btn btn-success" type="button" onclick="generateNewSet()">New</button>
+        <button class="btn btn-success" type="button" onclick="generateNewSet()">New Example</button>
         <button class="btn btn-primary" type="button" onclick="showAnswers()">Answers</button>
         <button class="btn btn-warning" type="button" onclick="showSteps()">Steps</button>
       </div>
@@ -218,6 +218,7 @@
     function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a}
     function coord(v){return Number.isInteger(v)?String(v):String(Math.round(v*100)/100)}
     function pointText(p){return `(${coord(p.x)}, ${coord(p.y)})`}
+    function signedTerm(value){return value>=0?`+ ${coord(value)}`:`- ${coord(Math.abs(value))}`}
     function vectorHtml(dx,dy){return `<span class="mini-vector"><span>${coord(dx)}</span><span>${coord(dy)}</span></span>`}
     function fracHtml(n,d){return `<span class="frac"><span class="num">${n}</span><span class="den">${d}</span></span>`}
     function scaleHtml(k){return k===0.5?fracHtml(1,2):String(k)}
@@ -291,17 +292,17 @@
       const lines=[];
       for(let i=GRID_MIN;i<=GRID_MAX;i+=1){
         const x=toSvgX(i),y=toSvgY(i);
-        lines.push(`<line class="grid-line" x1="${x}" y1="${MARGIN}" x2="${x}" y2="${SVG_SIZE-MARGIN}"></line>`);
-        lines.push(`<line class="grid-line" x1="${MARGIN}" y1="${y}" x2="${SVG_SIZE-MARGIN}" y2="${y}"></line>`);
+        lines.push(`<line class="grid-line" x1="${x}" y1="${MARGIN}" x2="${x}" y2="${SVG_SIZE-MARGIN}" stroke="#d6dee8" stroke-width="1" shape-rendering="crispEdges"></line>`);
+        lines.push(`<line class="grid-line" x1="${MARGIN}" y1="${y}" x2="${SVG_SIZE-MARGIN}" y2="${y}" stroke="#d6dee8" stroke-width="1" shape-rendering="crispEdges"></line>`);
         if(i!==0&&i%2===0){
-          lines.push(`<text class="grid-number" x="${x}" y="${toSvgY(0)+13}" text-anchor="middle">${i}</text>`);
-          lines.push(`<text class="grid-number" x="${toSvgX(0)-8}" y="${y+3}" text-anchor="end">${i}</text>`);
+          lines.push(`<text class="grid-number" x="${x}" y="${toSvgY(0)+13}" text-anchor="middle" font-size="9" fill="#64748b">${i}</text>`);
+          lines.push(`<text class="grid-number" x="${toSvgX(0)-8}" y="${y+3}" text-anchor="end" font-size="9" fill="#64748b">${i}</text>`);
         }
       }
-      lines.push(`<line class="axis-line" x1="${toSvgX(0)}" y1="${MARGIN}" x2="${toSvgX(0)}" y2="${SVG_SIZE-MARGIN}"></line>`);
-      lines.push(`<line class="axis-line" x1="${MARGIN}" y1="${toSvgY(0)}" x2="${SVG_SIZE-MARGIN}" y2="${toSvgY(0)}"></line>`);
-      lines.push(`<text class="axis-label" x="${SVG_SIZE-MARGIN+8}" y="${toSvgY(0)+4}">x</text>`);
-      lines.push(`<text class="axis-label" x="${toSvgX(0)-4}" y="${MARGIN-8}" text-anchor="end">y</text>`);
+      lines.push(`<line class="axis-line" x1="${toSvgX(0)}" y1="${MARGIN}" x2="${toSvgX(0)}" y2="${SVG_SIZE-MARGIN}" stroke="#0f172a" stroke-width="1.35" shape-rendering="crispEdges"></line>`);
+      lines.push(`<line class="axis-line" x1="${MARGIN}" y1="${toSvgY(0)}" x2="${SVG_SIZE-MARGIN}" y2="${toSvgY(0)}" stroke="#0f172a" stroke-width="1.35" shape-rendering="crispEdges"></line>`);
+      lines.push(`<text class="axis-label" x="${SVG_SIZE-MARGIN+8}" y="${toSvgY(0)+4}" font-size="12" font-weight="700" fill="#0f172a">x</text>`);
+      lines.push(`<text class="axis-label" x="${toSvgX(0)-4}" y="${MARGIN-8}" text-anchor="end" font-size="12" font-weight="700" fill="#0f172a">y</text>`);
       if(options.line)lines.push(lineMarkerSvg(options.line));
       if(options.centre)lines.push(centreSvg(options.centre,options.centreLabel||'C'));
       if(original.length)lines.push(shapeSvg(original,'shape-original',false));
@@ -310,25 +311,28 @@
     }
     function shapeSvg(points,className,isImage){
       const polygon=points.map((p)=>`${toSvgX(p.x)},${toSvgY(p.y)}`).join(' ');
+      const fill=isImage?'rgba(20,184,166,.13)':'rgba(15,118,110,.10)';
+      const stroke=isImage?'#0f766e':'#0f172a';
+      const dash=isImage?' stroke-dasharray="7 4"':'';
       const pointLabels=points.map((p,i)=>{
         const label=isImage?`${labels[i]}'`:labels[i];
-        return `<text class="point-label" x="${toSvgX(p.x)+6}" y="${toSvgY(p.y)-6}">${label}</text>`;
+        return `<text class="point-label" x="${toSvgX(p.x)+6}" y="${toSvgY(p.y)-6}" font-size="13" font-weight="850" fill="#0f172a" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">${label}</text>`;
       }).join('');
-      return `<polygon class="${className}" points="${polygon}"></polygon>${pointLabels}`;
+      return `<polygon class="${className}" points="${polygon}" fill="${fill}" stroke="${stroke}" stroke-width="2.4" stroke-linejoin="round"${dash}></polygon>${pointLabels}`;
     }
     function lineMarkerSvg(line){
       if(line.type==='x'){
         const x=toSvgX(line.value);
-        return `<line class="line-marker" x1="${x}" y1="${MARGIN}" x2="${x}" y2="${SVG_SIZE-MARGIN}"></line><text class="line-label" x="${x+6}" y="${MARGIN+16}">${lineText(line)}</text>`;
+        return `<line class="line-marker" x1="${x}" y1="${MARGIN}" x2="${x}" y2="${SVG_SIZE-MARGIN}" stroke="#c2410c" stroke-width="2" stroke-dasharray="6 4"></line><text class="line-label" x="${x+6}" y="${MARGIN+16}" font-size="12" font-weight="800" fill="#9a3412" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">${lineText(line)}</text>`;
       }
       if(line.type==='y'){
         const y=toSvgY(line.value);
-        return `<line class="line-marker" x1="${MARGIN}" y1="${y}" x2="${SVG_SIZE-MARGIN}" y2="${y}"></line><text class="line-label" x="${SVG_SIZE-MARGIN-4}" y="${y-6}" text-anchor="end">${lineText(line)}</text>`;
+        return `<line class="line-marker" x1="${MARGIN}" y1="${y}" x2="${SVG_SIZE-MARGIN}" y2="${y}" stroke="#c2410c" stroke-width="2" stroke-dasharray="6 4"></line><text class="line-label" x="${SVG_SIZE-MARGIN-4}" y="${y-6}" text-anchor="end" font-size="12" font-weight="800" fill="#9a3412" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">${lineText(line)}</text>`;
       }
-      return `<line class="line-marker" x1="${toSvgX(GRID_MIN)}" y1="${toSvgY(GRID_MIN)}" x2="${toSvgX(GRID_MAX)}" y2="${toSvgY(GRID_MAX)}"></line><text class="line-label" x="${toSvgX(3.8)}" y="${toSvgY(3.25)}">${lineText(line)}</text>`;
+      return `<line class="line-marker" x1="${toSvgX(GRID_MIN)}" y1="${toSvgY(GRID_MIN)}" x2="${toSvgX(GRID_MAX)}" y2="${toSvgY(GRID_MAX)}" stroke="#c2410c" stroke-width="2" stroke-dasharray="6 4"></line><text class="line-label" x="${toSvgX(3.8)}" y="${toSvgY(3.25)}" font-size="12" font-weight="800" fill="#9a3412" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">${lineText(line)}</text>`;
     }
     function centreSvg(c,label){
-      return `<circle class="centre-dot" cx="${toSvgX(c.x)}" cy="${toSvgY(c.y)}" r="4"></circle><text class="centre-label" x="${toSvgX(c.x)+7}" y="${toSvgY(c.y)-7}">${label}${pointText(c)}</text>`;
+      return `<circle class="centre-dot" cx="${toSvgX(c.x)}" cy="${toSvgY(c.y)}" r="4" fill="#c2410c" stroke="#fff" stroke-width="2"></circle><text class="centre-label" x="${toSvgX(c.x)+7}" y="${toSvgY(c.y)-7}" font-size="12" font-weight="850" fill="#9a3412" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">${label}${pointText(c)}</text>`;
     }
 
     function coordsTable(original,image,ruleLabel){
@@ -351,7 +355,7 @@
       const prompt=`Translate shape ABC${original.length>3?'D':''} by the vector ${vectorHtml(dx,dy)}. Give the coordinates of the image.`;
       const diagram=gridSvg(original,[]);
       const answer=coordList(image);
-      const rule=`(x, y) -> (x + ${dx}, y + ${dy})`;
+      const rule=`(x, y) → (x ${signedTerm(dx)}, y ${signedTerm(dy)})`;
       const steps=[
         `A translation adds the same vector to every vertex.`,
         `Translation vector = ${vectorHtml(dx,dy)}, so the coordinate rule is ${rule}.`,
@@ -365,7 +369,7 @@
       const line=choice([{type:'x',value:choice([-2,-1,0,1,2])},{type:'y',value:choice([-2,-1,0,1,2])}]);
       const transform=reflectionTransform(line);
       const {original,image}=findValid(transform);
-      const rule=line.type==='x'?`(x, y) -> (${2*line.value} - x, y)`:`(x, y) -> (x, ${2*line.value} - y)`;
+      const rule=line.type==='x'?`(x, y) → (${2*line.value} - x, y)`:`(x, y) → (x, ${2*line.value} - y)`;
       const prompt=`Reflect shape ABC${original.length>3?'D':''} in the line ${lineText(line)}. Give the coordinates of the image.`;
       const diagram=gridSvg(original,[],{line});
       const answer=coordList(image);
@@ -383,7 +387,7 @@
       const line={type:'diag',value:0};
       const transform=reflectionTransform(line);
       const {original,image}=findValid(transform);
-      const rule='(x, y) -> (y, x)';
+      const rule='(x, y) → (y, x)';
       const prompt=`Reflect shape ABC${original.length>3?'D':''} in the line y = x. Give the coordinates of the image.`;
       const diagram=gridSvg(original,[],{line});
       const answer=coordList(image);
@@ -400,7 +404,7 @@
       const centre={x:0,y:0},angle=choice([90,-90,180]);
       const transform=(p)=>rotatePoint(p,centre,angle);
       const {original,image}=findValid(transform);
-      const rule=angle===90?'(x, y) -> (-y, x)':angle===-90?'(x, y) -> (y, -x)':'(x, y) -> (-x, -y)';
+      const rule=angle===90?'(x, y) → (-y, x)':angle===-90?'(x, y) → (y, -x)':'(x, y) → (-x, -y)';
       const prompt=`Rotate shape ABC${original.length>3?'D':''} ${rotationText(angle)} about the origin. Give the coordinates of the image.`;
       const diagram=gridSvg(original,[],{centre,centreLabel:'O'});
       const answer=coordList(image);
@@ -635,17 +639,7 @@
     function generateNewSet(){
       if(currentType==='select'){showBlankPage();return}
       problems=[];answersVisible=false;stepsVisible=false;
-      const seen=new Set();
-      let guard=0;
-      while(problems.length<4&&guard<100){
-        guard+=1;
-        const p=generateProblem();
-        const key=p.question+'|'+stripTags(p.answer);
-        if(seen.has(key))continue;
-        seen.add(key);
-        problems.push(p);
-      }
-      while(problems.length<4)problems.push(generateProblem());
+      problems.push(generateProblem());
       renderProblems();
     }
     function renderStep(step){
@@ -678,6 +672,9 @@
     function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
     switchLevel(1);
   </script>
-  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-21"></script>
+  <script>
+    document.documentElement.dataset.teacherExampleReady='true';
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-22"></script>
 </body>
 </html>
