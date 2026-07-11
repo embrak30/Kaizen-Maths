@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transformations</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f3f7fb;min-height:100vh;padding:14px;color:#14213d;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#164e63;color:#fff;padding:12px 7px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 7px 7px 0;font-weight:800;font-size:.82em;box-shadow:2px 0 10px rgba(0,0,0,.18)}
+    .teacher-tab:hover{background:#0f766e}
+    .sidebar{position:fixed;left:-420px;top:0;width:420px;height:100vh;background:#fff;z-index:1000;transition:left .25s;box-shadow:2px 0 22px rgba(0,0,0,.25);overflow-y:auto}
+    .sidebar.open{left:0}
+    .sidebar-header{background:#164e63;color:#fff;padding:18px;font-size:1.25em;font-weight:850}
+    .sidebar-content{padding:22px;line-height:1.55}
+    .sidebar-content h3{color:#164e63;margin:18px 0 8px;border-bottom:2px solid #14b8a6;padding-bottom:4px;font-size:1.02em}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}
+    .sidebar-content ul{padding-left:20px;margin-bottom:12px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;opacity:0;visibility:hidden;transition:.25s}
+    .sidebar-overlay.active{opacity:1;visibility:visible}
+
+    .container{max-width:1240px;margin:0 auto;background:#fff;border-radius:9px;box-shadow:0 4px 18px rgba(15,23,42,.1);overflow:hidden}
+    .header{background:#164e63;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 45%,rgba(0,0,0,.12)),repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 2px,transparent 2px 22px);color:#fff;padding:20px;text-align:center}
+    .header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.24)}
+    .tabs{display:flex;background:#dff5f1}
+    .tab{flex:1;padding:13px 9px;border:0;background:#dff5f1;cursor:pointer;font-weight:850;font-size:.95em;border-bottom:3px solid transparent;color:#134e4a}
+    .tab.active{background:#fff;color:#0f766e;border-bottom-color:#0f766e}
+    .controls{padding:15px 18px;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #d8e2f0}
+    .level-info h3{color:#14213d;font-size:1.16em;margin-bottom:3px}
+    .level-info p{color:#667085;font-size:.94em;max-width:600px}
+    .dropdown-container{margin-top:8px}
+    .type-dropdown{padding:8px 10px;border:2px solid #bfd4d6;border-radius:6px;background:#fff;min-width:350px;font-size:.94em;color:#14213d}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .timer-display{font-size:1.45em;font-weight:850;color:#14213d;background:#fff;padding:7px 12px;border:2px solid #bfd4d6;border-radius:6px;min-width:96px;text-align:center}
+    .timer-display.active{border-color:#0f766e;color:#0f766e}
+    .timer-display.warning{color:#d92d20;border-color:#d92d20;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:8px 14px;border:0;border-radius:6px;font-weight:850;cursor:pointer;min-width:68px;color:#fff}
+    .btn-primary{background:#0f766e}
+    .btn-success{background:#2f855a}
+    .btn-warning{background:#c77700}
+    .btn-danger{background:#d92d20}
+
+    .problems-section{padding:14px 18px 18px;min-height:540px}
+    .problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#0f766e;color:#fff;text-align:center;font-size:1.08em;font-weight:850}
+    .problem-set-header.visible{display:block}
+    .set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border-radius:6px;background:#ecfdf5;border:1px solid #a7f3d0;color:#14213d;text-align:center;font-weight:800}
+    .set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;list-style:none}
+    .problem-item{background:#f8fafc;border-left:4px solid #0f766e;border-radius:7px;padding:10px 11px;display:flex;flex-direction:column;gap:8px;min-height:345px}
+    .problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .problem-left{display:flex;gap:10px;align-items:flex-start;min-width:0;width:100%}
+    .problem-number{background:#0f766e;color:#fff;min-width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:850}
+    .diagram-row{display:grid;grid-template-columns:minmax(250px,320px) minmax(0,1fr);gap:12px;align-items:center;width:100%}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.06em;color:#14213d;font-weight:500;line-height:1.4;overflow-wrap:anywhere}
+    .question-text strong{font-weight:650}
+    .transform-diagram{width:100%;max-width:320px;background:#fff;border:1px solid #d7e3f0;border-radius:6px;padding:5px}
+    .transform-diagram svg{width:100%;height:auto;display:block}
+    .grid-line{stroke:#d6dee8;stroke-width:1;shape-rendering:crispEdges}
+    .axis-line{stroke:#0f172a;stroke-width:1.35;shape-rendering:crispEdges}
+    .axis-label,.grid-number,.point-label,.line-label,.centre-label{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);fill:#0f172a}
+    .grid-number{font-size:9px;fill:#64748b}
+    .axis-label{font-size:12px;font-weight:700}
+    .shape-original{fill:rgba(15,118,110,.10);stroke:#0f172a;stroke-width:2.4;stroke-linejoin:round}
+    .shape-image{fill:rgba(20,184,166,.13);stroke:#0f766e;stroke-width:2.4;stroke-linejoin:round;stroke-dasharray:7 4}
+    .point-label{font-size:13px;font-weight:850;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+    .line-marker{stroke:#c2410c;stroke-width:2;stroke-dasharray:6 4}
+    .line-label{font-size:12px;font-weight:800;fill:#9a3412;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+    .centre-dot{fill:#c2410c;stroke:#fff;stroke-width:2}
+    .centre-label{font-size:12px;font-weight:850;fill:#9a3412;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+    .problem-answer{background:#2f855a;color:#fff;padding:7px 11px;border-radius:999px;font-weight:850;display:none;font-size:.9em;line-height:1.35;max-width:260px}
+    .problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:auto;padding:10px;background:#ecfdf5;border-left:3px solid #0f766e;border-radius:6px}
+    .steps-section.visible{display:block}
+    .answer-label{font-weight:850;color:#0f766e;margin-bottom:6px}
+    .solution-steps{line-height:1.45;font-size:.96em}
+    .step{margin:7px 0;color:#14213d}
+    .step-equation{margin:7px 0;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:600;color:#134e4a;background:#fff;border:1px solid #ccfbf1;border-radius:5px;padding:7px}
+    .step-table{width:100%;border-collapse:collapse;margin:8px 0;background:#fff;border:1px solid #ccfbf1;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif)}
+    .step-table th,.step-table td{border:1px solid #ccfbf1;padding:6px 8px;text-align:center;vertical-align:middle}
+    .step-table th{background:#e6fffb;color:#134e4a;font-weight:850}
+    .answer-diagram{margin:9px auto;max-width:320px}
+    .final-answer{margin-top:8px;text-align:center;background:#2f855a;color:#fff;border-radius:6px;padding:8px;font-weight:850}
+    .mini-vector{display:inline-grid;grid-template-columns:auto;align-items:center;margin:0 .15em;vertical-align:middle;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif)}
+    .mini-vector span{display:block;text-align:center;line-height:1.05;padding:0 .28em;border-left:1.5px solid currentColor;border-right:1.5px solid currentColor}
+    .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.08;margin:0 .08em}
+    .frac .num{border-bottom:1.5px solid currentColor;padding:0 .18em}
+    .frac .den{padding:0 .18em}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}
+    .modal-content{background:#fff;padding:28px;border-radius:10px;text-align:center;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+    .modal-content h2{color:#d92d20;margin-bottom:10px}
+    .modal-content p{color:#667085;margin-bottom:18px}
+    .hidden{display:none}
+    @media (max-width:980px){.problem-list{grid-template-columns:1fr}.diagram-row{grid-template-columns:minmax(240px,320px) minmax(0,1fr)}}
+    @media (max-width:670px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:340px;left:-340px}.problem-header{flex-direction:column}.diagram-row{grid-template-columns:1fr}.transform-diagram{max-width:none}.problem-answer{max-width:none}.question-text{font-size:1.02em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Transformations Guidance</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool supports transformations on coordinate grids: translations, reflections, rotations, enlargements, describing transformations, and combined transformations.</p>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Use coordinates to make each transformation precise.</li>
+        <li>For rotations and enlargements, identify the centre before moving any point.</li>
+        <li>For reflections, every point and its image should be the same perpendicular distance from the mirror line.</li>
+        <li>For enlargement, use the vector from the centre to each vertex, then multiply it by the scale factor.</li>
+        <li>When describing a transformation, include every required detail: type, line or centre, angle, direction, scale factor, and vector where relevant.</li>
+      </ul>
+      <h3>Progression</h3>
+      <ul>
+        <li><strong>Level 1:</strong> translate and reflect shapes using coordinate rules.</li>
+        <li><strong>Level 2:</strong> rotate and enlarge shapes from a given centre.</li>
+        <li><strong>Level 3:</strong> describe transformations fully from a diagram.</li>
+        <li><strong>Level 4:</strong> use negative scale factors and combined transformations.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Transformations</h1></header>
+    <nav class="tabs">
+      <button class="tab active" type="button" onclick="switchLevel(1)">Level 1: Translate & Reflect</button>
+      <button class="tab" type="button" onclick="switchLevel(2)">Level 2: Rotate & Enlarge</button>
+      <button class="tab" type="button" onclick="switchLevel(3)">Level 3: Describe</button>
+      <button class="tab" type="button" onclick="switchLevel(4)">Level 4: Challenge</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Translate & Reflect</h3>
+        <p id="level-description">Use coordinate rules to move shapes by translation or reflection.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" type="button" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" type="button" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" type="button" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" type="button" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" type="button" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" type="button" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" type="button" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={
+      1:{title:'Level 1: Translate & Reflect',description:'Use coordinate rules to move shapes by translation or reflection.',types:['translation_vectors','reflection_axis_lines','reflection_diagonal_lines']},
+      2:{title:'Level 2: Rotate & Enlarge',description:'Use centres of rotation and enlargement to transform shapes accurately.',types:['rotation_origin','rotation_centre','enlargement_positive','enlargement_fractional']},
+      3:{title:'Level 3: Describe Transformations',description:'Describe transformations fully from the object and its image.',types:['describe_translation','describe_reflection','describe_rotation','describe_enlargement']},
+      4:{title:'Level 4: Challenge Transformations',description:'Work with negative scale factors and combined transformations.',types:['negative_enlargement','combined_transformations','mixed_transformations']}
+    };
+    const typeDisplayNames={
+      translation_vectors:'Translate Shapes by Vectors',
+      reflection_axis_lines:'Reflect in x = a or y = b',
+      reflection_diagonal_lines:'Reflect in y = x',
+      rotation_origin:'Rotate about the Origin',
+      rotation_centre:'Rotate about a Point',
+      enlargement_positive:'Enlarge with Positive Scale Factors',
+      enlargement_fractional:'Enlarge with Fractional Scale Factors',
+      describe_translation:'Describe a Translation',
+      describe_reflection:'Describe a Reflection',
+      describe_rotation:'Describe a Rotation',
+      describe_enlargement:'Describe an Enlargement',
+      negative_enlargement:'Negative Scale Factor Enlargement',
+      combined_transformations:'Combined Transformations',
+      mixed_transformations:'Mixed Transformations'
+    };
+    const setInstructions={
+      translation_vectors:'Apply the translation vector to every vertex of the shape.',
+      reflection_axis_lines:'Use the mirror line to find each image point the same perpendicular distance away.',
+      reflection_diagonal_lines:'Reflect in y = x by swapping the x-coordinate and y-coordinate.',
+      rotation_origin:'Rotate each vertex using the rotation rule about the origin.',
+      rotation_centre:'Move from the centre to each vertex, rotate that displacement, then move back from the centre.',
+      enlargement_positive:'From the centre of enlargement, multiply each displacement vector by the scale factor.',
+      enlargement_fractional:'From the centre of enlargement, multiply each displacement vector by the fractional scale factor.',
+      describe_translation:'Describe the transformation fully, including the translation vector.',
+      describe_reflection:'Describe the transformation fully, including the mirror line.',
+      describe_rotation:'Describe the transformation fully, including angle, direction, and centre.',
+      describe_enlargement:'Describe the transformation fully, including scale factor and centre.',
+      negative_enlargement:'Use the centre of enlargement and remember that a negative scale factor sends points through the centre.',
+      combined_transformations:'Apply the transformations in the order given.',
+      mixed_transformations:'Choose the correct transformation rule before calculating the image points.'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const GRID_MIN=-6,GRID_MAX=6,SVG_SIZE=360,MARGIN=24,UNIT=(SVG_SIZE-2*MARGIN)/(GRID_MAX-GRID_MIN);
+    const labels=['A','B','C','D'];
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+    function coord(v){return Number.isInteger(v)?String(v):String(Math.round(v*100)/100)}
+    function pointText(p){return `(${coord(p.x)}, ${coord(p.y)})`}
+    function vectorHtml(dx,dy){return `<span class="mini-vector"><span>${coord(dx)}</span><span>${coord(dy)}</span></span>`}
+    function fracHtml(n,d){return `<span class="frac"><span class="num">${n}</span><span class="den">${d}</span></span>`}
+    function scaleHtml(k){return k===0.5?fracHtml(1,2):String(k)}
+    function scaleText(k){return k===0.5?'1/2':String(k)}
+    function inGrid(p){return p.x>=GRID_MIN&&p.x<=GRID_MAX&&p.y>=GRID_MIN&&p.y<=GRID_MAX&&Number.isFinite(p.x)&&Number.isFinite(p.y)}
+    function allInGrid(points){return points.every(inGrid)}
+    function samePoint(a,b){return a.x===b.x&&a.y===b.y}
+    function toSvgX(x){return MARGIN+(x-GRID_MIN)*UNIT}
+    function toSvgY(y){return MARGIN+(GRID_MAX-y)*UNIT}
+    function escapeHtml(value){return String(value).replace(/[&<>"']/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+    function stripTags(value){const t=document.createElement('template');t.innerHTML=String(value||'');return t.content.textContent.replace(/\s+/g,' ').trim()}
+
+    const shapeTemplates=[
+      [{x:-1,y:-1},{x:2,y:-1},{x:0,y:2}],
+      [{x:-2,y:0},{x:1,y:-1},{x:2,y:2},{x:-1,y:3}],
+      [{x:-2,y:-1},{x:1,y:-1},{x:1,y:1},{x:-2,y:1}],
+      [{x:-1,y:-2},{x:2,y:-2},{x:1,y:1},{x:-2,y:0}],
+      [{x:-2,y:-2},{x:0,y:-1},{x:1,y:2}]
+    ];
+    const evenTemplates=[
+      [{x:-4,y:-2},{x:2,y:-2},{x:0,y:2}],
+      [{x:-4,y:0},{x:0,y:-2},{x:2,y:2}],
+      [{x:-2,y:-4},{x:2,y:-2},{x:0,y:2}]
+    ];
+
+    function shiftedShape(template, sx, sy){return template.map((p)=>({x:p.x+sx,y:p.y+sy}))}
+    function randomShape(){
+      for(let i=0;i<120;i+=1){
+        const shape=shiftedShape(choice(shapeTemplates),randInt(-2,2),randInt(-2,2));
+        if(allInGrid(shape))return shape;
+      }
+      return shiftedShape(shapeTemplates[0],0,0);
+    }
+    function randomEvenShape(center={x:0,y:0}){
+      for(let i=0;i<120;i+=1){
+        const sx=choice([-2,0,2]),sy=choice([-2,0,2]);
+        const shape=shiftedShape(choice(evenTemplates),sx,sy);
+        if(shape.every((p)=>(p.x-center.x)%2===0&&(p.y-center.y)%2===0)&&allInGrid(shape))return shape;
+      }
+      return shiftedShape(evenTemplates[0],0,0);
+    }
+    function findValid(transform, options={}){
+      for(let i=0;i<220;i+=1){
+        const original=options.even?randomEvenShape(options.center||{x:0,y:0}):randomShape();
+        const image=original.map(transform);
+        if(allInGrid(image)&&!image.every((p,idx)=>samePoint(p,original[idx])))return {original,image};
+      }
+      const original=options.even?randomEvenShape(options.center||{x:0,y:0}):randomShape();
+      return {original,image:original.map(transform)};
+    }
+
+    function translationTransform(dx,dy){return (p)=>({x:p.x+dx,y:p.y+dy})}
+    function reflectionTransform(line){
+      if(line.type==='x')return (p)=>({x:2*line.value-p.x,y:p.y});
+      if(line.type==='y')return (p)=>({x:p.x,y:2*line.value-p.y});
+      return (p)=>({x:p.y,y:p.x});
+    }
+    function rotatePoint(p,centre,angle){
+      const dx=p.x-centre.x,dy=p.y-centre.y;
+      let rx=dx,ry=dy;
+      if(angle===90){rx=-dy;ry=dx}
+      else if(angle===-90){rx=dy;ry=-dx}
+      else if(angle===180){rx=-dx;ry=-dy}
+      return {x:centre.x+rx,y:centre.y+ry};
+    }
+    function enlargementTransform(centre,k){return (p)=>({x:centre.x+k*(p.x-centre.x),y:centre.y+k*(p.y-centre.y)})}
+    function lineText(line){return line.type==='x'?`x = ${line.value}`:line.type==='y'?`y = ${line.value}`:'y = x'}
+    function rotationText(angle){return angle===90?'90 degrees anticlockwise':angle===-90?'90 degrees clockwise':'180 degrees'}
+
+    function gridSvg(original=[],image=[],options={}){
+      const lines=[];
+      for(let i=GRID_MIN;i<=GRID_MAX;i+=1){
+        const x=toSvgX(i),y=toSvgY(i);
+        lines.push(`<line class="grid-line" x1="${x}" y1="${MARGIN}" x2="${x}" y2="${SVG_SIZE-MARGIN}"></line>`);
+        lines.push(`<line class="grid-line" x1="${MARGIN}" y1="${y}" x2="${SVG_SIZE-MARGIN}" y2="${y}"></line>`);
+        if(i!==0&&i%2===0){
+          lines.push(`<text class="grid-number" x="${x}" y="${toSvgY(0)+13}" text-anchor="middle">${i}</text>`);
+          lines.push(`<text class="grid-number" x="${toSvgX(0)-8}" y="${y+3}" text-anchor="end">${i}</text>`);
+        }
+      }
+      lines.push(`<line class="axis-line" x1="${toSvgX(0)}" y1="${MARGIN}" x2="${toSvgX(0)}" y2="${SVG_SIZE-MARGIN}"></line>`);
+      lines.push(`<line class="axis-line" x1="${MARGIN}" y1="${toSvgY(0)}" x2="${SVG_SIZE-MARGIN}" y2="${toSvgY(0)}"></line>`);
+      lines.push(`<text class="axis-label" x="${SVG_SIZE-MARGIN+8}" y="${toSvgY(0)+4}">x</text>`);
+      lines.push(`<text class="axis-label" x="${toSvgX(0)-4}" y="${MARGIN-8}" text-anchor="end">y</text>`);
+      if(options.line)lines.push(lineMarkerSvg(options.line));
+      if(options.centre)lines.push(centreSvg(options.centre,options.centreLabel||'C'));
+      if(original.length)lines.push(shapeSvg(original,'shape-original',false));
+      if(image.length)lines.push(shapeSvg(image,'shape-image',true));
+      return `<div class="transform-diagram"><svg viewBox="0 0 ${SVG_SIZE} ${SVG_SIZE}" role="img" aria-label="Coordinate grid transformation diagram">${lines.join('')}</svg></div>`;
+    }
+    function shapeSvg(points,className,isImage){
+      const polygon=points.map((p)=>`${toSvgX(p.x)},${toSvgY(p.y)}`).join(' ');
+      const pointLabels=points.map((p,i)=>{
+        const label=isImage?`${labels[i]}'`:labels[i];
+        return `<text class="point-label" x="${toSvgX(p.x)+6}" y="${toSvgY(p.y)-6}">${label}</text>`;
+      }).join('');
+      return `<polygon class="${className}" points="${polygon}"></polygon>${pointLabels}`;
+    }
+    function lineMarkerSvg(line){
+      if(line.type==='x'){
+        const x=toSvgX(line.value);
+        return `<line class="line-marker" x1="${x}" y1="${MARGIN}" x2="${x}" y2="${SVG_SIZE-MARGIN}"></line><text class="line-label" x="${x+6}" y="${MARGIN+16}">${lineText(line)}</text>`;
+      }
+      if(line.type==='y'){
+        const y=toSvgY(line.value);
+        return `<line class="line-marker" x1="${MARGIN}" y1="${y}" x2="${SVG_SIZE-MARGIN}" y2="${y}"></line><text class="line-label" x="${SVG_SIZE-MARGIN-4}" y="${y-6}" text-anchor="end">${lineText(line)}</text>`;
+      }
+      return `<line class="line-marker" x1="${toSvgX(GRID_MIN)}" y1="${toSvgY(GRID_MIN)}" x2="${toSvgX(GRID_MAX)}" y2="${toSvgY(GRID_MAX)}"></line><text class="line-label" x="${toSvgX(3.8)}" y="${toSvgY(3.25)}">${lineText(line)}</text>`;
+    }
+    function centreSvg(c,label){
+      return `<circle class="centre-dot" cx="${toSvgX(c.x)}" cy="${toSvgY(c.y)}" r="4"></circle><text class="centre-label" x="${toSvgX(c.x)+7}" y="${toSvgY(c.y)-7}">${label}${pointText(c)}</text>`;
+    }
+
+    function coordsTable(original,image,ruleLabel){
+      const rows=original.map((p,i)=>`<tr><td>${labels[i]}</td><td>${pointText(p)}</td><td>${ruleLabel}</td><td>${labels[i]}' ${pointText(image[i])}</td></tr>`).join('');
+      return `<table class="step-table"><thead><tr><th>Vertex</th><th>Original point</th><th>Rule</th><th>Image point</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }
+    function twoStageTable(original,first,final,firstLabel,secondLabel){
+      const rows=original.map((p,i)=>`<tr><td>${labels[i]}</td><td>${pointText(p)}</td><td>${firstLabel}: ${pointText(first[i])}</td><td>${secondLabel}: ${labels[i]}' ${pointText(final[i])}</td></tr>`).join('');
+      return `<table class="step-table"><thead><tr><th>Vertex</th><th>Start</th><th>After step 1</th><th>Final image</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }
+    function coordList(points){return points.map((p,i)=>`${labels[i]}'${pointText(p)}`).join(', ')}
+    function problem(prompt,diagram,answer,steps,typeLabel,solutionDiagram=''){
+      return {prompt,diagram,answer,steps,typeLabel:typeLabel||typeDisplayNames[currentType]||'Question',question:stripTags(prompt),solutionDiagram};
+    }
+
+    function genTranslation(){
+      const dx=choice([-4,-3,-2,-1,1,2,3,4]),dy=choice([-4,-3,-2,-1,1,2,3,4]);
+      const transform=translationTransform(dx,dy);
+      const {original,image}=findValid(transform);
+      const prompt=`Translate shape ABC${original.length>3?'D':''} by the vector ${vectorHtml(dx,dy)}. Give the coordinates of the image.`;
+      const diagram=gridSvg(original,[]);
+      const answer=coordList(image);
+      const rule=`(x, y) -> (x + ${dx}, y + ${dy})`;
+      const steps=[
+        `A translation adds the same vector to every vertex.`,
+        `Translation vector = ${vectorHtml(dx,dy)}, so the coordinate rule is ${rule}.`,
+        coordsTable(original,image,rule),
+        `Final image coordinates: ${answer}.`
+      ];
+      return problem(prompt,diagram,answer,steps,'Translate Shapes by Vectors',gridSvg(original,image));
+    }
+
+    function genReflectionAxis(){
+      const line=choice([{type:'x',value:choice([-2,-1,0,1,2])},{type:'y',value:choice([-2,-1,0,1,2])}]);
+      const transform=reflectionTransform(line);
+      const {original,image}=findValid(transform);
+      const rule=line.type==='x'?`(x, y) -> (${2*line.value} - x, y)`:`(x, y) -> (x, ${2*line.value} - y)`;
+      const prompt=`Reflect shape ABC${original.length>3?'D':''} in the line ${lineText(line)}. Give the coordinates of the image.`;
+      const diagram=gridSvg(original,[],{line});
+      const answer=coordList(image);
+      const steps=[
+        `The mirror line is ${lineText(line)}.`,
+        `Each image point is the same perpendicular distance from the mirror line as the original point.`,
+        `Coordinate rule: ${rule}.`,
+        coordsTable(original,image,rule),
+        `Final image coordinates: ${answer}.`
+      ];
+      return problem(prompt,diagram,answer,steps,'Reflect in x = a or y = b',gridSvg(original,image,{line}));
+    }
+
+    function genReflectionDiagonal(){
+      const line={type:'diag',value:0};
+      const transform=reflectionTransform(line);
+      const {original,image}=findValid(transform);
+      const rule='(x, y) -> (y, x)';
+      const prompt=`Reflect shape ABC${original.length>3?'D':''} in the line y = x. Give the coordinates of the image.`;
+      const diagram=gridSvg(original,[],{line});
+      const answer=coordList(image);
+      const steps=[
+        `The mirror line is y = x.`,
+        `Reflection in y = x swaps the x-coordinate and y-coordinate.`,
+        coordsTable(original,image,rule),
+        `Final image coordinates: ${answer}.`
+      ];
+      return problem(prompt,diagram,answer,steps,'Reflect in y = x',gridSvg(original,image,{line}));
+    }
+
+    function genRotationOrigin(){
+      const centre={x:0,y:0},angle=choice([90,-90,180]);
+      const transform=(p)=>rotatePoint(p,centre,angle);
+      const {original,image}=findValid(transform);
+      const rule=angle===90?'(x, y) -> (-y, x)':angle===-90?'(x, y) -> (y, -x)':'(x, y) -> (-x, -y)';
+      const prompt=`Rotate shape ABC${original.length>3?'D':''} ${rotationText(angle)} about the origin. Give the coordinates of the image.`;
+      const diagram=gridSvg(original,[],{centre,centreLabel:'O'});
+      const answer=coordList(image);
+      const steps=[
+        `The centre of rotation is the origin (0, 0).`,
+        `For a ${rotationText(angle)} rotation about the origin, use the rule ${rule}.`,
+        coordsTable(original,image,rule),
+        `Final image coordinates: ${answer}.`
+      ];
+      return problem(prompt,diagram,answer,steps,'Rotate about the Origin',gridSvg(original,image,{centre,centreLabel:'O'}));
+    }
+
+    function genRotationCentre(){
+      const centre=choice([{x:1,y:1},{x:-1,y:2},{x:2,y:-1},{x:-2,y:-1}]),angle=choice([90,-90,180]);
+      const transform=(p)=>rotatePoint(p,centre,angle);
+      const {original,image}=findValid(transform);
+      const prompt=`Rotate shape ABC${original.length>3?'D':''} ${rotationText(angle)} about centre ${pointText(centre)}. Give the coordinates of the image.`;
+      const diagram=gridSvg(original,[],{centre});
+      const answer=coordList(image);
+      const rows=original.map((p,i)=>{
+        const dx=p.x-centre.x,dy=p.y-centre.y;
+        const imageDx=image[i].x-centre.x,imageDy=image[i].y-centre.y;
+        return `<tr><td>${labels[i]}</td><td>${pointText(p)}</td><td>(${coord(dx)}, ${coord(dy)})</td><td>(${coord(imageDx)}, ${coord(imageDy)})</td><td>${labels[i]}' ${pointText(image[i])}</td></tr>`;
+      }).join('');
+      const table=`<table class="step-table"><thead><tr><th>Vertex</th><th>Original</th><th>Vector from centre</th><th>Rotated vector</th><th>Image</th></tr></thead><tbody>${rows}</tbody></table>`;
+      const steps=[
+        `Use centre ${pointText(centre)}. Work with the displacement from the centre to each vertex.`,
+        `Rotate each displacement ${rotationText(angle)}, then add it back to the centre.`,
+        table,
+        `Final image coordinates: ${answer}.`
+      ];
+      return problem(prompt,diagram,answer,steps,'Rotate about a Point',gridSvg(original,image,{centre}));
+    }
+
+    function genEnlargementPositive(){
+      const centre=choice([{x:0,y:0},{x:1,y:-1},{x:-2,y:1}]),k=choice([2,3]);
+      const transform=enlargementTransform(centre,k);
+      const {original,image}=findValid(transform,{center:centre});
+      const prompt=`Enlarge shape ABC${original.length>3?'D':''} by scale factor ${k} from centre ${pointText(centre)}. Give the coordinates of the image.`;
+      const diagram=gridSvg(original,[],{centre});
+      const answer=coordList(image);
+      const rows=original.map((p,i)=>{
+        const dx=p.x-centre.x,dy=p.y-centre.y;
+        return `<tr><td>${labels[i]}</td><td>${pointText(p)}</td><td>(${coord(dx)}, ${coord(dy)})</td><td>${k}(${coord(dx)}, ${coord(dy)}) = (${coord(k*dx)}, ${coord(k*dy)})</td><td>${labels[i]}' ${pointText(image[i])}</td></tr>`;
+      }).join('');
+      const table=`<table class="step-table"><thead><tr><th>Vertex</th><th>Original</th><th>Vector from centre</th><th>Scaled vector</th><th>Image</th></tr></thead><tbody>${rows}</tbody></table>`;
+      const steps=[
+        `Start from centre ${pointText(centre)}.`,
+        `For each vertex, find the vector from the centre and multiply it by scale factor ${k}.`,
+        table,
+        `Final image coordinates: ${answer}.`
+      ];
+      return problem(prompt,diagram,answer,steps,'Enlarge with Positive Scale Factors',gridSvg(original,image,{centre}));
+    }
+
+    function genEnlargementFractional(){
+      const centre={x:0,y:0},k=0.5;
+      const transform=enlargementTransform(centre,k);
+      const {original,image}=findValid(transform,{even:true,center:centre});
+      const prompt=`Enlarge shape ABC by scale factor ${scaleHtml(k)} from centre ${pointText(centre)}. Give the coordinates of the image.`;
+      const diagram=gridSvg(original,[],{centre,centreLabel:'O'});
+      const answer=coordList(image);
+      const rows=original.map((p,i)=>{
+        const dx=p.x-centre.x,dy=p.y-centre.y;
+        return `<tr><td>${labels[i]}</td><td>${pointText(p)}</td><td>(${coord(dx)}, ${coord(dy)})</td><td>${scaleText(k)}(${coord(dx)}, ${coord(dy)}) = (${coord(image[i].x-centre.x)}, ${coord(image[i].y-centre.y)})</td><td>${labels[i]}' ${pointText(image[i])}</td></tr>`;
+      }).join('');
+      const table=`<table class="step-table"><thead><tr><th>Vertex</th><th>Original</th><th>Vector from centre</th><th>Scaled vector</th><th>Image</th></tr></thead><tbody>${rows}</tbody></table>`;
+      const steps=[
+        `The centre is the origin, so each position vector is multiplied by ${scaleHtml(k)}.`,
+        `The shape becomes smaller because the scale factor is between 0 and 1.`,
+        table,
+        `Final image coordinates: ${answer}.`
+      ];
+      return problem(prompt,diagram,answer,steps,'Enlarge with Fractional Scale Factors',gridSvg(original,image,{centre,centreLabel:'O'}));
+    }
+
+    function describeFromData(kind){
+      if(kind==='translation'){
+        const dx=choice([-4,-3,-2,2,3,4]),dy=choice([-4,-3,-2,2,3,4]);
+        const transform=translationTransform(dx,dy);
+        const {original,image}=findValid(transform);
+        return {
+          original,image,diagram: gridSvg(original,image),
+          answer:`Translation by vector ${vectorHtml(dx,dy)}`,
+          steps:[
+            `Compare matching vertices, for example A to A'.`,
+            `Horizontal change = ${dx} and vertical change = ${dy}.`,
+            `The same movement maps every vertex onto its image.`,
+            `Transformation: translation by vector ${vectorHtml(dx,dy)}.`
+          ]
+        };
+      }
+      if(kind==='reflection'){
+        const line=choice([{type:'x',value:choice([-2,-1,0,1,2])},{type:'y',value:choice([-2,-1,0,1,2])},{type:'diag',value:0}]);
+        const transform=reflectionTransform(line);
+        const {original,image}=findValid(transform);
+        return {
+          original,image,diagram:gridSvg(original,image,{line}),
+          answer:`Reflection in the line ${lineText(line)}`,
+          steps:[
+            `Join each vertex to its image and look for the perpendicular bisector.`,
+            `The same mirror line lies halfway between every matching pair of vertices.`,
+            `The mirror line is ${lineText(line)}.`,
+            `Transformation: reflection in the line ${lineText(line)}.`
+          ]
+        };
+      }
+      if(kind==='rotation'){
+        const centre={x:0,y:0},angle=choice([90,-90,180]);
+        const transform=(p)=>rotatePoint(p,centre,angle);
+        const {original,image}=findValid(transform);
+        return {
+          original,image,diagram:gridSvg(original,image,{centre,centreLabel:'O'}),
+          answer:`Rotation ${rotationText(angle)} about the origin`,
+          steps:[
+            `The object and image stay the same distance from the centre of rotation.`,
+            `The centre is the origin (0, 0).`,
+            `The direction and angle from each vertex to its image show a ${rotationText(angle)} turn.`,
+            `Transformation: rotation ${rotationText(angle)} about the origin.`
+          ]
+        };
+      }
+      const centre={x:0,y:0},k=choice([2,3]);
+      const transform=enlargementTransform(centre,k);
+      const {original,image}=findValid(transform,{center:centre});
+      return {
+        original,image,diagram:gridSvg(original,image,{centre,centreLabel:'O'}),
+        answer:`Enlargement with scale factor ${k} from centre (0, 0)`,
+        steps:[
+          `The object and image lie on rays from the centre of enlargement.`,
+          `The centre is the origin (0, 0).`,
+          `Compare a matching distance from the centre: image distance = ${k} times object distance.`,
+          `Transformation: enlargement with scale factor ${k} from centre (0, 0).`
+        ]
+      };
+    }
+
+    function genDescribe(kind){
+      const data=describeFromData(kind);
+      const prompt=`Describe fully the single transformation that maps shape ABC${data.original.length>3?'D':''} onto shape A'B'C'${data.original.length>3?"D'":''}.`;
+      return problem(prompt,data.diagram,data.answer,data.steps,typeDisplayNames[`describe_${kind}`]||'Describe Transformation');
+    }
+
+    function genNegativeEnlargement(){
+      const centre=choice([{x:0,y:0},{x:1,y:1},{x:-1,y:-1}]),k=choice([-1,-2]);
+      const transform=enlargementTransform(centre,k);
+      const {original,image}=findValid(transform,{center:centre});
+      const prompt=`Enlarge shape ABC${original.length>3?'D':''} by scale factor ${k} from centre ${pointText(centre)}. Give the coordinates of the image.`;
+      const diagram=gridSvg(original,[],{centre});
+      const answer=coordList(image);
+      const rows=original.map((p,i)=>{
+        const dx=p.x-centre.x,dy=p.y-centre.y;
+        return `<tr><td>${labels[i]}</td><td>${pointText(p)}</td><td>(${coord(dx)}, ${coord(dy)})</td><td>${k}(${coord(dx)}, ${coord(dy)}) = (${coord(k*dx)}, ${coord(k*dy)})</td><td>${labels[i]}' ${pointText(image[i])}</td></tr>`;
+      }).join('');
+      const table=`<table class="step-table"><thead><tr><th>Vertex</th><th>Original</th><th>Vector from centre</th><th>Scaled vector</th><th>Image</th></tr></thead><tbody>${rows}</tbody></table>`;
+      const steps=[
+        `A negative scale factor sends each point through the centre of enlargement.`,
+        `Use centre ${pointText(centre)} and multiply each centre-to-vertex vector by ${k}.`,
+        table,
+        `Final image coordinates: ${answer}.`
+      ];
+      return problem(prompt,diagram,answer,steps,'Negative Scale Factor Enlargement',gridSvg(original,image,{centre}));
+    }
+
+    function genCombined(){
+      const dx=choice([-3,-2,2,3]),dy=choice([-3,-2,2,3]);
+      const line=choice([{type:'x',value:0},{type:'y',value:0},{type:'diag',value:0}]);
+      const firstTransform=translationTransform(dx,dy);
+      const secondTransform=reflectionTransform(line);
+      const fullTransform=(p)=>secondTransform(firstTransform(p));
+      const {original,image}=findValid(fullTransform);
+      const first=original.map(firstTransform);
+      if(!allInGrid(first))return genCombined();
+      const prompt=`First translate shape ABC${original.length>3?'D':''} by ${vectorHtml(dx,dy)}, then reflect the result in the line ${lineText(line)}. Give the final image coordinates.`;
+      const diagram=gridSvg(original,[],{line});
+      const answer=coordList(image);
+      const firstLabel=`translate by (${dx}, ${dy})`;
+      const secondLabel=`reflect in ${lineText(line)}`;
+      const steps=[
+        `Apply the transformations in the order written.`,
+        `Step 1: translate every vertex by ${vectorHtml(dx,dy)}.`,
+        `Step 2: reflect the translated points in ${lineText(line)}.`,
+        twoStageTable(original,first,image,firstLabel,secondLabel),
+        `Final image coordinates: ${answer}.`
+      ];
+      return problem(prompt,diagram,answer,steps,'Combined Transformations',gridSvg(original,image,{line}));
+    }
+
+    function generateProblem(){
+      const levelTypes=levelConfigs[currentLevel]?.types||levelConfigs[1].types;
+      const t=currentType==='select'?choice(levelTypes):currentType;
+      if(t==='translation_vectors')return genTranslation();
+      if(t==='reflection_axis_lines')return genReflectionAxis();
+      if(t==='reflection_diagonal_lines')return genReflectionDiagonal();
+      if(t==='rotation_origin')return genRotationOrigin();
+      if(t==='rotation_centre')return genRotationCentre();
+      if(t==='enlargement_positive')return genEnlargementPositive();
+      if(t==='enlargement_fractional')return genEnlargementFractional();
+      if(t==='describe_translation')return genDescribe('translation');
+      if(t==='describe_reflection')return genDescribe('reflection');
+      if(t==='describe_rotation')return genDescribe('rotation');
+      if(t==='describe_enlargement')return genDescribe('enlargement');
+      if(t==='negative_enlargement')return genNegativeEnlargement();
+      if(t==='combined_transformations')return genCombined();
+      if(t==='mixed_transformations')return choice([genTranslation,genReflectionAxis,genReflectionDiagonal,genRotationOrigin,genRotationCentre,genEnlargementPositive,genEnlargementFractional,genNegativeEnlargement,genCombined])();
+      return genTranslation();
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));
+      const cfg=levelConfigs[level];
+      document.getElementById('level-title').textContent=cfg.title;
+      document.getElementById('level-description').textContent=cfg.description;
+      const dd=document.getElementById('type-dropdown');
+      dd.innerHTML='<option value="select">Select Question Type</option>'+cfg.types.map((t)=>`<option value="${t}">${typeDisplayNames[t]}</option>`).join('');
+      dd.value='select';
+      showBlankPage();
+    }
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){
+      document.getElementById('problem-set-header').classList.remove('visible');
+      document.getElementById('set-instruction').classList.remove('visible');
+      document.getElementById('problem-list').innerHTML='<li style="grid-column:1/-1;text-align:center;padding:38px;color:#667085;font-size:1.05em">Please select a question type to begin transformations practice.</li>';
+    }
+    function setInstructionForType(){
+      const el=document.getElementById('set-instruction');
+      const text=setInstructions[currentType]||'Transform each shape carefully using the correct coordinate rule.';
+      el.textContent=text;
+      el.classList.toggle('visible',Boolean(currentType&&currentType!=='select'));
+    }
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      problems=[];answersVisible=false;stepsVisible=false;
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<4&&guard<100){
+        guard+=1;
+        const p=generateProblem();
+        const key=p.question+'|'+stripTags(p.answer);
+        if(seen.has(key))continue;
+        seen.add(key);
+        problems.push(p);
+      }
+      while(problems.length<4)problems.push(generateProblem());
+      renderProblems();
+    }
+    function renderStep(step){
+      const raw=String(step);
+      if(/<table|<div|<span|<svg/.test(raw))return `<div class="step">${raw}</div>`;
+      if(/[=()]/.test(raw)&&raw.length<120)return `<div class="step-equation">${raw}</div>`;
+      return `<div class="step">${escapeHtml(raw)}</div>`;
+    }
+    function renderProblems(){
+      const c=document.getElementById('problem-list'),h=document.getElementById('problem-set-header');
+      c.innerHTML='';
+      h.textContent=typeDisplayNames[currentType]||'Transformations';
+      h.className='problem-set-header visible';
+      setInstructionForType();
+      problems.forEach((p,i)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const solutionDiagram=p.solutionDiagram?`<div class="answer-diagram">${p.solutionDiagram}</div>`:'';
+        const steps=p.steps.map(renderStep).join('');
+        li.innerHTML=`<div class="problem-header"><div class="problem-left"><div class="problem-number">${i+1}</div><div class="diagram-row">${p.diagram}<div class="question-text">${p.prompt}</div></div></div><div class="problem-answer" id="quick-answer-${i}">${p.answer}</div></div><div class="steps-section" id="steps-${i}"><div class="answer-label">Solution Steps:</div><div class="solution-steps">${steps}${solutionDiagram}<div class="final-answer">${p.answer}</div></div></div>`;
+        c.appendChild(li);
+      });
+    }
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>{const e=document.getElementById(`quick-answer-${i}`);if(e)e.classList.toggle('visible',answersVisible)})}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>{const e=document.getElementById(`steps-${i}`);if(e)e.classList.toggle('visible',stepsVisible)})}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining-=1;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const e=document.getElementById('timer-display');e.textContent='Ready';e.className='timer-display'}
+    function updateTimerDisplay(){const e=document.getElementById('timer-display'),m=Math.floor(timeRemaining/60),s=timeRemaining%60;e.textContent=m+':'+String(s).padStart(2,'0');if(timerActive&&timeRemaining<=30)e.className='timer-display warning';else if(timerActive)e.className='timer-display active';else e.className='timer-display'}
+    function timerFinished(){stopTimer();const e=document.getElementById('timer-display');e.textContent='Time Up!';e.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-21"></script>
+</body>
+</html>

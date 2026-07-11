@@ -779,6 +779,25 @@ const tools = [
     ]
   },
   {
+    slug: "transformations",
+    title: "Transformations",
+    category: "Geometry",
+    level: "KS3 / GCSE / IGCSE",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate coordinate-grid transformation practice for translations, reflections, rotations, enlargements, describing transformations, and combined transformations.",
+    tags: ["geometry", "transformations", "translation", "reflection", "rotation", "enlargement", "coordinate grid", "vectors", "scale factor"],
+    toolPath: "tools/transformations/index.html?v=transformations-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers translations and reflections using coordinate rules and mirror lines.",
+      "Level 2 covers rotations and enlargements from a centre, including fractional scale factors.",
+      "Level 3 asks students to describe transformations fully from object and image diagrams.",
+      "Level 4 introduces negative scale factors and combined transformations."
+    ]
+  },
+  {
     slug: "sectors-arc-length",
     title: "Sectors, Arc Length and Area",
     category: "Geometry",
@@ -1879,6 +1898,7 @@ const subjectToolGroups = {
     "sine-cosine-rule": "Trigonometry and Bearings",
     "bearings": "Trigonometry and Bearings",
     "equation-of-a-circle": "Coordinate Geometry",
+    "transformations": "Coordinate Geometry",
     "free-vectors": "Vectors and Similarity",
     "scale-drawing-similar-shapes": "Vectors and Similarity",
     "missing-angles": "Angles and Shape Geometry"
@@ -1973,7 +1993,7 @@ const subjectGroupNotes = {
   "Area, Perimeter and Circles": "2D measure topics for rectangles, triangles, circles, sectors, arcs, and compound contexts.",
   "3D Measures": "Volume and surface area for prisms, cylinders, cones, and spheres.",
   "Trigonometry and Bearings": "Pythagoras, right-angled trigonometry, non-right triangle rules, and bearings.",
-  "Coordinate Geometry": "Circle equations, coordinate geometry, and links to algebraic graph work.",
+  "Coordinate Geometry": "Circle equations, coordinate geometry, transformations, and links to algebraic graph work.",
   "Vectors and Similarity": "Column vectors, geometric vectors, scale drawings, and similar shapes.",
   "Angles and Shape Geometry": "Missing angles in lines, triangles, quadrilaterals, and standard shape facts.",
   "Data Summary and Representation": "Averages, range, grouped data, histograms, cumulative frequency, and large-data-set practice.",
@@ -7276,6 +7296,19 @@ function toolInsightProfile(tool) {
         "What does the sign of the gradient tell us about the direction of the line?",
         "How can two different forms of the same line equation reveal different information?",
         "How would you prove that two lines are parallel or perpendicular without drawing them?"
+      ]
+    },
+    {
+      match: () => has("transformation", "translation", "reflection", "rotation", "enlargement"),
+      misconceptions: [
+        "Describing a transformation without giving the full information, such as omitting the mirror line, centre, direction, or scale factor.",
+        "Rotating around the origin when the question gives a different centre of rotation.",
+        "Using the length scale factor directly for an enlargement but not applying it from the centre to every vertex."
+      ],
+      questions: [
+        "What information is required to describe this transformation so that another person could reproduce it exactly?",
+        "How can the coordinates of one vertex predict where every other vertex should go under this transformation?",
+        "What changes, and what stays invariant, when a shape is translated, reflected, rotated, or enlarged?"
       ]
     },
     {
