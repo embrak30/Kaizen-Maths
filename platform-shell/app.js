@@ -7651,15 +7651,15 @@ function renderToolFrame(tool, options = {}) {
     <section class="legacy-layout">
       <div class="legacy-stage ${startClassroom ? "classroom" : ""}">
         <div class="legacy-toolbar">
-          <div class="badge-row">
+          ${startClassroom ? `<div class="classroom-toolbar-title">Classroom View</div>` : `<div class="badge-row">
             <span class="badge">${tool.category}</span>
             ${subjectGroup ? `<span class="badge subject-group">${escapeHtml(subjectGroup)}</span>` : ""}
             <span class="badge">${tool.level}</span>
             <span class="badge">${tool.type}</span>
             <span class="badge ${normalise(requiredAccessLabel(tool))}">${requiredAccessLabel(tool)}</span>
-          </div>
+          </div>`}
           <div class="legacy-toolbar-actions">
-            <span class="tool-path">${tool.toolPath}</span>
+            ${startClassroom ? "" : `<span class="tool-path">${tool.toolPath}</span>`}
             ${startClassroom ? `<a class="button classroom-info-link" href="#/tools/${escapeHtml(tool.slug)}">Tool Info</a>` : ""}
             <button class="button primary" id="focusTool" type="button" ${startClassroom ? "hidden" : ""}>Classroom View</button>
             <button class="button classroom-fullscreen" id="classroomFullscreen" type="button">Full Screen</button>

@@ -3586,14 +3586,22 @@ body[data-route="worksheet-generator"] .account-action {
   padding: 7px 10px;
   align-items: center;
   flex-direction: row;
+  justify-content: flex-end;
   background: #111827;
   color: white;
 }
 
 .legacy-stage.classroom .badge-row {
-  min-width: 0;
-  flex-wrap: nowrap;
-  overflow: hidden;
+  display: none;
+}
+
+.classroom-toolbar-title {
+  margin-right: auto;
+  color: #e5e7eb;
+  font-size: 0.82rem;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .legacy-toolbar-actions {
@@ -3611,7 +3619,7 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .legacy-stage.classroom .tool-path {
-  color: #cbd5e1;
+  display: none;
 }
 
 .classroom-exit {
@@ -3659,6 +3667,18 @@ body[data-route="worksheet-generator"] .account-action {
 
 .legacy-stage.classroom.annotation-active .classroom-annotation-control {
   display: inline-flex;
+}
+
+.legacy-stage.classroom .legacy-toolbar-actions {
+  flex: 1;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.legacy-stage.classroom .legacy-toolbar-actions .button {
+  min-height: 30px;
+  padding: 5px 10px;
+  white-space: nowrap;
 }
 
 .classroom-annotation-layer {
