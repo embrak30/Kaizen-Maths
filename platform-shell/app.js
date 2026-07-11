@@ -493,7 +493,7 @@ const tools = [
     status: "Imported",
     description: "Generate implicit and parametric differentiation practice, including second derivatives, tangent and normal lines, related rates, and parameter slope analysis.",
     tags: ["algebra", "calculus", "differentiation", "implicit differentiation", "parametric differentiation", "tangents", "normals"],
-    toolPath: "tools/advanced-differentiation/index.html?v=batch1-steps-1",
+    toolPath: "tools/advanced-differentiation/index.html?v=advanced-diff-fraction-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers implicit dy/dx, slopes at points, second derivatives, tangent lines, and related rates.",
