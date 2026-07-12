@@ -437,6 +437,87 @@ on public.site_testimonials
 for delete
 using (public.is_admin());
 
+create table if not exists public.homepage_content (
+  content_key text primary key,
+  content_value jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.homepage_content enable row level security;
+
+grant select on public.homepage_content to anon, authenticated;
+grant insert, update, delete on public.homepage_content to authenticated;
+
+drop policy if exists "Anyone can read homepage content" on public.homepage_content;
+create policy "Anyone can read homepage content"
+on public.homepage_content
+for select
+using (true);
+
+drop policy if exists "Admins can insert homepage content" on public.homepage_content;
+create policy "Admins can insert homepage content"
+on public.homepage_content
+for insert
+with check (public.is_admin());
+
+drop policy if exists "Admins can update homepage content" on public.homepage_content;
+create policy "Admins can update homepage content"
+on public.homepage_content
+for update
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Admins can delete homepage content" on public.homepage_content;
+create policy "Admins can delete homepage content"
+on public.homepage_content
+for delete
+using (public.is_admin());
+
+create table if not exists public.homepage_screenshots (
+  screenshot_id text primary key,
+  title text not null default '',
+  description text,
+  image_url text not null default '',
+  is_active boolean not null default true,
+  sort_order integer not null default 1,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.homepage_screenshots add column if not exists description text;
+alter table public.homepage_screenshots add column if not exists image_url text not null default '';
+alter table public.homepage_screenshots add column if not exists is_active boolean not null default true;
+alter table public.homepage_screenshots add column if not exists sort_order integer not null default 1;
+
+alter table public.homepage_screenshots enable row level security;
+
+grant select on public.homepage_screenshots to anon, authenticated;
+grant insert, update, delete on public.homepage_screenshots to authenticated;
+
+drop policy if exists "Anyone can read active homepage screenshots" on public.homepage_screenshots;
+create policy "Anyone can read active homepage screenshots"
+on public.homepage_screenshots
+for select
+using (is_active or public.is_admin());
+
+drop policy if exists "Admins can insert homepage screenshots" on public.homepage_screenshots;
+create policy "Admins can insert homepage screenshots"
+on public.homepage_screenshots
+for insert
+with check (public.is_admin());
+
+drop policy if exists "Admins can update homepage screenshots" on public.homepage_screenshots;
+create policy "Admins can update homepage screenshots"
+on public.homepage_screenshots
+for update
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Admins can delete homepage screenshots" on public.homepage_screenshots;
+create policy "Admins can delete homepage screenshots"
+on public.homepage_screenshots
+for delete
+using (public.is_admin());
+
 create table if not exists public.tool_metadata (
   tool_slug text primary key,
   curriculum_tags text,

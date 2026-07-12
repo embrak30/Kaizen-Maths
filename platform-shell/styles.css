@@ -778,14 +778,14 @@ body[data-route="worksheet-generator"] .account-action {
 
 .hero-copy {
   grid-column: 1;
-  grid-row: 1;
+  grid-row: 2;
   align-self: start;
   max-width: 760px;
 }
 
 .home-hero-side {
   grid-column: 2;
-  grid-row: 1;
+  grid-row: 2;
   position: relative;
   z-index: 1;
   align-self: start;
@@ -1046,7 +1046,7 @@ body[data-route="worksheet-generator"] .account-action {
 
 .hero-gallery-stage {
   position: relative;
-  min-height: clamp(155px, 15vw, 190px);
+  min-height: clamp(320px, 32vw, 455px);
   border: 1px solid rgba(21, 39, 70, 0.12);
   border-radius: 8px;
   background: #f8fbff;
@@ -1174,7 +1174,7 @@ body[data-route="worksheet-generator"] .account-action {
 
 .home-testimonial-strip {
   grid-column: 1 / -1;
-  grid-row: 2;
+  grid-row: 3;
   align-self: stretch;
   min-height: 96px;
   grid-template-columns: minmax(170px, 0.24fr) minmax(0, 1fr) auto;
@@ -1346,6 +1346,50 @@ body[data-route="worksheet-generator"] .account-action {
 
 .home-hero-side .home-feature-video-media {
   min-height: clamp(230px, 23vw, 285px);
+}
+
+.hero-copy .home-feature-video {
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 10px;
+}
+
+.hero-copy .home-feature-video-media {
+  min-height: 0;
+}
+
+.hero-copy .home-feature-video-copy {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 12px;
+}
+
+.hero-copy .home-feature-video-copy .eyebrow {
+  grid-column: 1;
+}
+
+.hero-copy .home-feature-video-copy h2 {
+  grid-column: 1;
+  font-size: 1rem;
+  line-height: 1.15;
+}
+
+.hero-copy .home-feature-video-copy p {
+  display: none;
+}
+
+.hero-copy .home-feature-video-copy .button-row {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.hero-copy .home-feature-video-copy .button {
+  min-height: 32px;
+  padding: 6px 9px;
+  font-size: 0.78rem;
 }
 
 .home-feature-video-media {
@@ -1535,17 +1579,21 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .home-hero-actions {
+  position: relative;
+  z-index: 1;
+  grid-column: 1 / -1;
+  grid-row: 1;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 10px;
   flex-wrap: wrap;
   max-width: none;
-  margin-top: 24px;
+  margin: 0;
 }
 
 .home-hero-actions .button {
-  min-height: 46px;
-  padding: 11px 18px;
+  min-height: 38px;
+  padding: 8px 14px;
 }
 
 .section-block {
@@ -2837,6 +2885,73 @@ body[data-route="worksheet-generator"] .account-action {
   border-radius: 6px;
   padding: 8px 10px;
   background: white;
+}
+
+.admin-homepage-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.72fr) minmax(420px, 1.28fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.admin-homepage-copy,
+.admin-homepage-screenshots {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #e1e8f2;
+  border-radius: 8px;
+  background: white;
+}
+
+.admin-homepage-copy h3,
+.admin-homepage-screenshots h3 {
+  margin: 0;
+  color: #282450;
+}
+
+.admin-homepage-screenshots p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.admin-homepage-copy label,
+.admin-homepage-screenshots label {
+  display: grid;
+  gap: 5px;
+  color: #4a5570;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.admin-homepage-copy input,
+.admin-homepage-copy textarea,
+.admin-homepage-screenshots input,
+.admin-homepage-screenshots textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 11px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+}
+
+.admin-homepage-copy textarea,
+.admin-homepage-screenshots textarea {
+  resize: vertical;
+}
+
+.admin-homepage-copy input:focus,
+.admin-homepage-copy textarea:focus,
+.admin-homepage-screenshots input:focus,
+.admin-homepage-screenshots textarea:focus {
+  border-color: rgba(23, 184, 179, 0.72);
+  box-shadow: 0 0 0 3px rgba(23, 184, 179, 0.12);
+  outline: none;
 }
 
 .admin-user-role,
@@ -6170,6 +6285,10 @@ sup .worksheet-fraction span:last-child {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .admin-homepage-grid {
+    grid-template-columns: 1fr;
+  }
+
   .algebra-tool-group-heading {
     grid-template-columns: 1fr;
     gap: 4px;
@@ -6485,6 +6604,16 @@ sup .worksheet-fraction span:last-child {
 
   .home-testimonial-strip .testimonial-dots {
     justify-content: start;
+  }
+
+  .hero-copy .home-feature-video-copy {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-copy .home-feature-video-copy .button-row {
+    grid-column: 1;
+    grid-row: auto;
+    justify-content: flex-start;
   }
 
   .home-testimonial-carousel {
