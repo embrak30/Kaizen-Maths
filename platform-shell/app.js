@@ -2932,44 +2932,36 @@ const toolInfoOverrideStorageKey = "kaizen:tool-info-overrides";
 
 const defaultHomeInterfaceScreenshots = [
   {
-    screenshot_id: "classroom-practice-set",
-    title: "Classroom View",
-    description: "Generate fresh questions and project them for live teaching.",
-    image_url: "assets/guide-screenshots/classroom-practice-set.png",
+    screenshot_id: "tool-library-algebra",
+    title: "Organised Tool Library",
+    description: "Browse mathematics tools by topic area with clear tags for curriculum level and access.",
+    image_url: "assets/homepage-screenshots/tool-library-algebra.png",
     is_active: true,
     sort_order: 1
   },
   {
-    screenshot_id: "worksheet-builder",
-    title: "Worksheet Builder",
-    description: "Combine topics, levels, marks, answers, and worked steps.",
-    image_url: "assets/guide-screenshots/worksheet-builder.png",
+    screenshot_id: "classroom-linear-equations",
+    title: "Classroom Practice View",
+    description: "Project questions, reveal answers, show steps, use timers, and capture the board.",
+    image_url: "assets/homepage-screenshots/classroom-linear-equations.png",
     is_active: true,
     sort_order: 2
   },
   {
-    screenshot_id: "tool-library",
-    title: "Tool Library",
-    description: "Browse the virtual textbook by topic and curriculum area.",
-    image_url: "assets/guide-screenshots/tool-library.png",
+    screenshot_id: "transformation-worked-example",
+    title: "Worked Examples",
+    description: "Use visual worked solutions to support explanation and classroom discussion.",
+    image_url: "assets/homepage-screenshots/transformation-worked-example.png",
     is_active: true,
     sort_order: 3
   },
   {
-    screenshot_id: "tool-page",
-    title: "Teacher Guidance",
-    description: "See topics covered, misconceptions, and classroom prompts.",
-    image_url: "assets/guide-screenshots/tool-page.png",
+    screenshot_id: "worksheet-builder-transformations",
+    title: "Worksheet Builder",
+    description: "Create printable worksheets and assessments from selected topic blocks.",
+    image_url: "assets/homepage-screenshots/worksheet-builder-transformations.png",
     is_active: true,
     sort_order: 4
-  },
-  {
-    screenshot_id: "one-example-mode",
-    title: "One Example Mode",
-    description: "Model one question at a time before building independent practice.",
-    image_url: "assets/guide-screenshots/one-example-mode.png",
-    is_active: true,
-    sort_order: 5
   }
 ];
 
