@@ -1047,7 +1047,7 @@ body[data-route="worksheet-generator"] .account-action {
 
 .hero-gallery-stage {
   position: relative;
-  min-height: clamp(250px, 27vw, 360px);
+  min-height: clamp(330px, 35vw, 480px);
   border: 1px solid rgba(21, 39, 70, 0.12);
   border-radius: 8px;
   background: #f8fbff;
@@ -1074,8 +1074,9 @@ body[data-route="worksheet-generator"] .account-action {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
   object-position: top left;
+  background: #ffffff;
 }
 
 .hero-gallery-slide figcaption {
@@ -1352,7 +1353,7 @@ body[data-route="worksheet-generator"] .account-action {
 .hero-copy .home-feature-video {
   grid-template-columns: 1fr;
   gap: 6px;
-  margin: 10px 0 0;
+  margin: 9px 0 0;
   padding: 8px;
 }
 
@@ -5810,6 +5811,76 @@ sup .worksheet-fraction span:last-child {
   opacity: 0.58;
 }
 
+.tool-info-admin-editor {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(154, 52, 18, 0.22);
+  border-left: 5px solid var(--orange);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(255, 247, 237, 0.9), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+  box-shadow: 0 8px 20px rgba(154, 52, 18, 0.08);
+}
+
+.tool-info-admin-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.tool-info-admin-head h2 {
+  margin: 0;
+  color: #282450;
+  font-size: 1.05rem;
+}
+
+.tool-info-admin-head p,
+.tool-info-admin-status {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  font-weight: 750;
+}
+
+.tool-info-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tool-info-admin-grid label {
+  display: grid;
+  gap: 5px;
+  color: #4a5570;
+  font-size: 0.8rem;
+  font-weight: 850;
+}
+
+.tool-info-admin-grid textarea {
+  width: 100%;
+  min-height: 86px;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 9px 10px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.84rem;
+  line-height: 1.35;
+  resize: vertical;
+}
+
+.tool-info-admin-grid textarea:focus {
+  border-color: rgba(249, 115, 22, 0.66);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.13);
+  outline: none;
+}
+
 .tool-info-grid {
   display: grid;
   gap: 10px;
@@ -6285,6 +6356,10 @@ sup .worksheet-fraction span:last-child {
 
   .tool-info-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tool-info-admin-grid {
+    grid-template-columns: 1fr;
   }
 
   .admin-homepage-grid {

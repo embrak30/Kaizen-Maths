@@ -555,6 +555,42 @@ on public.tool_metadata
 for delete
 using (public.is_admin());
 
+create table if not exists public.tool_info_overrides (
+  tool_slug text primary key,
+  content jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.tool_info_overrides enable row level security;
+
+grant select on public.tool_info_overrides to anon, authenticated;
+grant insert, update, delete on public.tool_info_overrides to authenticated;
+
+drop policy if exists "Anyone can read tool information overrides" on public.tool_info_overrides;
+create policy "Anyone can read tool information overrides"
+on public.tool_info_overrides
+for select
+using (true);
+
+drop policy if exists "Admins can insert tool information overrides" on public.tool_info_overrides;
+create policy "Admins can insert tool information overrides"
+on public.tool_info_overrides
+for insert
+with check (public.is_admin());
+
+drop policy if exists "Admins can update tool information overrides" on public.tool_info_overrides;
+create policy "Admins can update tool information overrides"
+on public.tool_info_overrides
+for update
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Admins can delete tool information overrides" on public.tool_info_overrides;
+create policy "Admins can delete tool information overrides"
+on public.tool_info_overrides
+for delete
+using (public.is_admin());
+
 create table if not exists public.tutor_learners (
   id uuid primary key default gen_random_uuid(),
   tutor_id uuid not null references auth.users(id) on delete cascade,

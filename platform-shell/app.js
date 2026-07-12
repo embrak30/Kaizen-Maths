@@ -2064,6 +2064,8 @@ const state = {
   homepageScreenshots: [],
   homepageContentLoaded: false,
   homepageScreenshotsLoaded: false,
+  toolInfoOverrides: {},
+  toolInfoOverridesLoaded: false,
   universityVideos: {},
   siteTestimonials: [],
   testimonialsLoaded: false,
@@ -2926,6 +2928,7 @@ const defaultHomepageHeroContent = {
 
 const homepageContentStorageKey = "kaizen:homepage-content";
 const homepageScreenshotsStorageKey = "kaizen:homepage-screenshots";
+const toolInfoOverrideStorageKey = "kaizen:tool-info-overrides";
 
 const defaultHomeInterfaceScreenshots = [
   {
@@ -3398,6 +3401,107 @@ async function saveHomepageScreenshots(rows) {
   }
   state.homepageScreenshots = next;
   writeJsonStorage(homepageScreenshotsStorageKey, next);
+  return "local";
+}
+
+function toolInfoOverridesFromStorage() {
+  return readJsonStorage(toolInfoOverrideStorageKey, {});
+}
+
+function toolInfoOverride(tool) {
+  const local = toolInfoOverridesFromStorage();
+  return state.toolInfoOverrides[tool.slug] || local[tool.slug] || {};
+}
+
+function splitEditableLines(value) {
+  return String(value || "")
+    .split(/\n+/)
+    .map((line) => line.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+}
+
+function listOverride(tool, key, defaults) {
+  const override = toolInfoOverride(tool);
+  const values = Array.isArray(override[key])
+    ? override[key].map((item) => String(item || "").trim()).filter(Boolean)
+    : [];
+  return values.length ? values : defaults;
+}
+
+function toolInfoDefaultContent(tool) {
+  const notes = tool.teacherNotes?.length ? tool.teacherNotes : toolUseSuggestions(tool);
+  const concepts = toolTopicConcepts(tool);
+  const topics = concepts.length ? concepts.slice(0, 12) : [formatTopicLabel(tool.title)];
+  return {
+    topics,
+    teacher_guidance: notes,
+    standards: standardsForTool(tool),
+    misconceptions: toolMisconceptions(tool),
+    classroom_questions: toolClassroomQuestions(tool),
+    related_tools: relatedTools(tool).map((item) => `${item.title} — ${toolSubjectGroup(item) || item.category}`),
+    suggested_use: toolUseSuggestions(tool)
+  };
+}
+
+function toolInfoContent(tool) {
+  const defaults = toolInfoDefaultContent(tool);
+  return Object.fromEntries(Object.entries(defaults).map(([key, values]) => [key, listOverride(tool, key, values)]));
+}
+
+async function loadToolInfoOverrides({ rerender = false } = {}) {
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client) return;
+  try {
+    const { data, error } = await client
+      .from("tool_info_overrides")
+      .select("tool_slug, content");
+    if (error) throw error;
+    state.toolInfoOverrides = Object.fromEntries((data || []).map((row) => [row.tool_slug, row.content || {}]));
+    state.toolInfoOverridesLoaded = true;
+    if (rerender && routeParts()[0] === "tools" && routeParts()[1]) renderRoute();
+  } catch (error) {
+    state.toolInfoOverridesLoaded = false;
+    console.warn("Kaizen tool information overrides unavailable:", error.message);
+  }
+}
+
+async function saveToolInfoOverride(slug, content) {
+  const next = {
+    topics: content.topics || [],
+    teacher_guidance: content.teacher_guidance || [],
+    standards: content.standards || [],
+    misconceptions: content.misconceptions || [],
+    classroom_questions: content.classroom_questions || [],
+    related_tools: content.related_tools || [],
+    suggested_use: content.suggested_use || []
+  };
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (client) {
+    try {
+      const { error } = await client
+        .from("tool_info_overrides")
+        .upsert({
+          tool_slug: slug,
+          content: next,
+          updated_at: new Date().toISOString()
+        }, { onConflict: "tool_slug" });
+      if (error) throw error;
+      state.toolInfoOverrides[slug] = next;
+      writeJsonStorage(toolInfoOverrideStorageKey, {
+        ...toolInfoOverridesFromStorage(),
+        [slug]: next
+      });
+      state.toolInfoOverridesLoaded = true;
+      return "supabase";
+    } catch (error) {
+      console.warn("Saving tool information to Supabase failed:", error.message);
+    }
+  }
+  state.toolInfoOverrides[slug] = next;
+  writeJsonStorage(toolInfoOverrideStorageKey, {
+    ...toolInfoOverridesFromStorage(),
+    [slug]: next
+  });
   return "local";
 }
 
@@ -5710,7 +5814,6 @@ function renderGcseExamStyle() {
 
 function renderHome() {
   const heroContent = homepageHeroContent();
-  const heroHighlights = [heroContent.highlight_1, heroContent.highlight_2, heroContent.highlight_3].filter(Boolean);
   const heroScreenshots = homepageScreenshotList();
   const workflowSteps = [
     ["1", "Choose a topic", "Open the exact GCSE, A-level, Further Maths, Statistics, or Mechanics topic you need."],
@@ -5751,9 +5854,6 @@ function renderHome() {
         <span class="eyebrow">${escapeHtml(heroContent.eyebrow)}</span>
         <h1>${escapeHtml(heroContent.headline)}</h1>
         <p class="hero-lede">${escapeHtml(heroContent.subheading)}</p>
-        <div class="hero-win-list" aria-label="What teachers can create">
-          ${heroHighlights.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}
-        </div>
         ${homepageVideoPanelHtml()}
       </div>
       <div class="home-hero-side">
@@ -7876,11 +7976,95 @@ function renderRelatedTools(tool) {
   `;
 }
 
+function renderRelatedToolTextList(items) {
+  const values = (items || []).map((item) => String(item || "").trim()).filter(Boolean);
+  if (!values.length) return `<p class="tool-info-muted">Related tools will appear as the library grows.</p>`;
+  return `
+    <ul class="tool-info-related-list">
+      ${values.map((item) => {
+        const parts = item.split(/\s+—\s+|\s+-\s+/);
+        const title = parts[0] || item;
+        const label = parts.slice(1).join(" — ");
+        return `<li><strong>${escapeHtml(title)}</strong>${label ? `<span>${escapeHtml(label)}</span>` : ""}</li>`;
+      }).join("")}
+    </ul>
+  `;
+}
+
+function renderToolInfoAdminEditor(tool, info) {
+  if (!isAdmin()) return "";
+  const fields = [
+    ["topics", "Topics Covered"],
+    ["teacher_guidance", "Teacher Guidance"],
+    ["standards", "Mathematical Standards Covered"],
+    ["misconceptions", "Common Misconceptions"],
+    ["classroom_questions", "Classroom Questions"],
+    ["related_tools", "Related Tools"],
+    ["suggested_use", "Suggested Use"]
+  ];
+  return `
+    <section class="tool-info-admin-editor" aria-label="Admin edit tool information">
+      <div class="tool-info-admin-head">
+        <div>
+          <span class="eyebrow">Admin Edit</span>
+          <h2>Edit Tool Information Boxes</h2>
+          <p>Each line becomes one bullet point. Leave a box blank to fall back to the generated default for this tool.</p>
+        </div>
+        <div class="button-row">
+          <button class="button primary" type="button" id="saveToolInfoEdits">Save Tool Info</button>
+        </div>
+      </div>
+      <p class="tool-info-admin-status" id="toolInfoAdminStatus">Edits affect this tool information page after saving.</p>
+      <div class="tool-info-admin-grid">
+        ${fields.map(([key, label]) => `
+          <label>
+            ${escapeHtml(label)}
+            <textarea data-tool-info-field="${escapeHtml(key)}" rows="${key === "standards" ? 5 : 4}">${escapeHtml((info[key] || []).join("\n"))}</textarea>
+          </label>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function bindToolInfoAdminEditor(tool) {
+  const saveButton = document.getElementById("saveToolInfoEdits");
+  if (!saveButton) return;
+  const status = document.getElementById("toolInfoAdminStatus");
+  saveButton.addEventListener("click", async () => {
+    const fields = Object.fromEntries([...document.querySelectorAll("[data-tool-info-field]")]
+      .map((field) => [field.dataset.toolInfoField, splitEditableLines(field.value)]));
+    const blankFields = [...document.querySelectorAll("[data-tool-info-field]")]
+      .filter((field) => !field.value.trim())
+      .map((field) => field.closest("label")?.childNodes?.[0]?.textContent?.trim() || field.dataset.toolInfoField);
+    const warning = [
+      `Save public information edits for "${tool.title}"?`,
+      "These edits will override the generated information boxes for this tool.",
+      blankFields.length ? `Blank boxes will use generated defaults: ${blankFields.join(", ")}.` : "",
+      "Check carefully before saving."
+    ].filter(Boolean).join("\n\n");
+    if (!window.confirm(warning)) return;
+    saveButton.disabled = true;
+    status.textContent = "Saving tool information...";
+    try {
+      const source = await saveToolInfoOverride(tool.slug, fields);
+      status.textContent = source === "supabase"
+        ? "Saved. This tool information page now uses your admin edits."
+        : "Saved in this browser. Run the latest Supabase schema to make this live for everyone.";
+      saveButton.disabled = false;
+      renderRoute();
+    } catch (error) {
+      status.textContent = `Could not save: ${error.message}`;
+      saveButton.disabled = false;
+    }
+  });
+}
+
 function renderToolInformationPage(tool) {
   const subjectGroup = toolSubjectGroup(tool);
-  const notes = tool.teacherNotes?.length ? tool.teacherNotes : toolUseSuggestions(tool);
   const classroomHref = tool.imported ? `#/classroom/${tool.slug}` : "#/tools";
   const curriculumLinks = toolCurriculumLinks(tool);
+  const info = toolInfoContent(tool);
   app.innerHTML = `
     <section class="tool-info-page">
       <header class="tool-info-hero">
@@ -7904,46 +8088,51 @@ function renderToolInformationPage(tool) {
         </div>
       </header>
 
+      ${renderToolInfoAdminEditor(tool, info)}
+
       <section class="tool-info-grid tool-info-primary-grid">
         <article class="tool-info-card">
           <span class="eyebrow">Topics Covered</span>
-          ${renderToolTopics(tool)}
+          <div class="topic-map-compact">
+            ${renderTopicBulletList(info.topics)}
+          </div>
         </article>
 
         <article class="tool-info-card">
           <span class="eyebrow">Teacher Guidance</span>
-          ${renderToolInfoList(notes.slice(0, 4))}
+          ${renderToolInfoList(info.teacher_guidance)}
         </article>
 
         <article class="tool-info-card">
           <span class="eyebrow">Mathematical Standards Covered</span>
-          ${renderStandardsList(tool)}
+          ${renderToolInfoList(info.standards, "standards-list")}
         </article>
       </section>
 
       <section class="tool-info-grid tool-info-secondary-grid">
         <article class="tool-info-card">
           <span class="eyebrow">Common Misconceptions</span>
-          ${renderToolInfoList(toolMisconceptions(tool).slice(0, 3))}
+          ${renderToolInfoList(info.misconceptions)}
         </article>
 
         <article class="tool-info-card">
           <span class="eyebrow">Classroom Questions</span>
-          ${renderToolInfoList(toolClassroomQuestions(tool).slice(0, 4))}
+          ${renderToolInfoList(info.classroom_questions)}
         </article>
 
         <article class="tool-info-card">
           <span class="eyebrow">Related Tools</span>
-          ${renderRelatedTools(tool)}
+          ${renderRelatedToolTextList(info.related_tools)}
         </article>
 
         <article class="tool-info-card">
           <span class="eyebrow">Suggested Use</span>
-          ${renderToolInfoList(toolUseSuggestions(tool))}
+          ${renderToolInfoList(info.suggested_use)}
         </article>
       </section>
     </section>
   `;
+  bindToolInfoAdminEditor(tool);
 }
 
 function renderToolFrame(tool, options = {}) {
@@ -9687,7 +9876,7 @@ function renderAdmin() {
         <div>
           <span class="eyebrow">Landing Page</span>
           <h2>Homepage Hero</h2>
-          <p>Edit the first screen teachers see: the short copy, the three value points, and the screenshot carousel beside the video.</p>
+          <p>Edit the first screen teachers see: the short copy and the screenshot carousel beside the video.</p>
         </div>
         <div class="button-row">
           <button class="button" id="addHomepageScreenshot" type="button">Add Screenshot</button>
@@ -9709,18 +9898,6 @@ function renderAdmin() {
           <label>
             Supporting line
             <textarea data-homepage-field="subheading" rows="4">${escapeHtml(heroContent.subheading)}</textarea>
-          </label>
-          <label>
-            Highlight 1
-            <input data-homepage-field="highlight_1" type="text" value="${escapeHtml(heroContent.highlight_1)}">
-          </label>
-          <label>
-            Highlight 2
-            <input data-homepage-field="highlight_2" type="text" value="${escapeHtml(heroContent.highlight_2)}">
-          </label>
-          <label>
-            Highlight 3
-            <input data-homepage-field="highlight_3" type="text" value="${escapeHtml(heroContent.highlight_3)}">
           </label>
           <label>
             Screenshot label
@@ -10861,6 +11038,7 @@ window.addEventListener("kaizen-auth-change", () => {
   loadSchools({ rerender: true });
   loadHomepageContent({ rerender: true });
   loadHomepageScreenshots({ rerender: true });
+  loadToolInfoOverrides({ rerender: true });
   loadUniversityVideos({ rerender: true });
   loadSiteTestimonials({ rerender: true });
 });
@@ -10873,6 +11051,7 @@ window.setTimeout(() => {
   loadSchools({ rerender: true });
   loadHomepageContent({ rerender: true });
   loadHomepageScreenshots({ rerender: true });
+  loadToolInfoOverrides({ rerender: true });
   loadUniversityVideos({ rerender: true });
   loadSiteTestimonials({ rerender: true });
 }, 1200);
