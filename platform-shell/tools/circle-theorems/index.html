@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circle Theorems</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f3f6fa;min-height:100vh;padding:14px;color:#111827;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#172554;color:#fff;padding:12px 7px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 7px 7px 0;font-weight:800;font-size:.82em;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .sidebar{position:fixed;left:-420px;top:0;width:420px;height:100vh;background:#fff;z-index:1000;transition:left .25s;box-shadow:2px 0 22px rgba(0,0,0,.25);overflow-y:auto}.sidebar.open{left:0}
+    .sidebar-header{background:#172554;color:#fff;padding:18px;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{color:#172554;margin:18px 0 8px;border-bottom:2px solid #38bdf8;padding-bottom:4px;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{padding-left:20px;margin-bottom:12px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;opacity:0;visibility:hidden;transition:.25s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1220px;margin:0 auto;background:#fff;border-radius:9px;box-shadow:0 4px 18px rgba(15,23,42,.1);overflow:hidden}
+    .header{background:#172554;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(0,0,0,.16)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px);color:#fff;padding:20px;text-align:center}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.24)}
+    .tabs{display:flex;background:#dbeafe}.tab{flex:1;padding:13px 9px;border:0;background:#dbeafe;cursor:pointer;font-weight:850;font-size:.95em;border-bottom:3px solid transparent;color:#172554}.tab.active{background:#fff;color:#1d4ed8;border-bottom-color:#1d4ed8}
+    .controls{padding:15px 18px;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #d8e2f0}.level-info h3{color:#172554;font-size:1.16em;margin-bottom:3px}.level-info p{color:#667085;font-size:.94em;max-width:640px}.dropdown-container{margin-top:8px}.type-dropdown{padding:8px 10px;border:2px solid #bfcee2;border-radius:6px;background:#fff;min-width:360px;font-size:.94em;color:#111827}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{font-size:1.45em;font-weight:850;color:#172554;background:#fff;padding:7px 12px;border:2px solid #bfcee2;border-radius:6px;min-width:96px;text-align:center}.timer-display.active{border-color:#1d4ed8;color:#1d4ed8}.timer-display.warning{color:#b91c1c;border-color:#b91c1c;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:8px 14px;border:0;border-radius:6px;font-weight:850;cursor:pointer;min-width:68px;color:#fff}.btn-primary{background:#1d4ed8}.btn-success{background:#15803d}.btn-warning{background:#b45309}.btn-danger{background:#b91c1c}
+    .problems-section{padding:12px 18px 18px;min-height:520px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#1d4ed8;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border-radius:6px;background:#eff6ff;border:1px solid #bfdbfe;color:#172554;text-align:center;font-weight:800}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;list-style:none}.problem-item{background:#f8fafc;border-left:4px solid #1d4ed8;border-radius:7px;padding:10px;display:flex;flex-direction:column;gap:9px;min-height:270px}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.problem-left{display:flex;gap:10px;align-items:flex-start;min-width:0}.problem-number{background:#1d4ed8;color:#fff;min-width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:850}
+    .circle-theorem-row{display:grid;grid-template-columns:250px minmax(0,1fr);gap:12px;align-items:center}.diagram-wrap{width:250px;background:#fff;border:1px solid #d7e3f0;border-radius:6px;padding:4px}.diagram-wrap svg{width:100%;height:auto;display:block}.question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.12em;line-height:1.35;color:#111827;font-weight:500}.diagram-note{font-size:10px;fill:#6b7280;font-family:"Segoe UI",Tahoma,sans-serif}
+    .circle-outline,.theorem-line,.radius-line,.tangent-line{fill:none;stroke:#111827;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.circle-outline{stroke-width:2.2}.radius-line{stroke-width:1.7}.tangent-line{stroke-width:2.1}.angle-arc{fill:none;stroke:#111827;stroke-width:1.35;stroke-linecap:round}.point-dot{fill:#111827}.point-label,.angle-label,.centre-label{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);fill:#111827;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}.point-label{font-size:13px;font-weight:850}.centre-label{font-size:12px;font-weight:850}.angle-label{font-size:14px;font-weight:850}.angle-x{font-size:18px;font-style:italic}.right-angle{fill:none;stroke:#111827;stroke-width:1.4}
+    .problem-answer{background:#15803d;color:#fff;padding:7px 11px;border-radius:999px;font-weight:850;display:none;font-size:.94em;line-height:1.35;white-space:nowrap}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:auto;padding:10px;background:#eff6ff;border-left:3px solid #1d4ed8;border-radius:6px}.steps-section.visible{display:block}.answer-label{font-weight:850;color:#1d4ed8;margin-bottom:6px}.solution-steps{line-height:1.45;font-size:.96em}.step{margin:6px 0;color:#111827}.step-equation{margin:6px 0;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:650;color:#172554;background:#fff;border:1px solid #bfdbfe;border-radius:5px;padding:6px}.final-answer{margin-top:8px;text-align:center;background:#15803d;color:#fff;border-radius:6px;padding:8px;font-weight:850}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:#fff;padding:28px;border-radius:10px;text-align:center;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{color:#b91c1c;margin-bottom:10px}.modal-content p{color:#667085;margin-bottom:18px}.hidden{display:none}
+    @media (max-width:980px){.problem-list{grid-template-columns:1fr}.circle-theorem-row{grid-template-columns:250px minmax(0,1fr)}}
+    @media (max-width:650px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.circle-theorem-row{grid-template-columns:1fr}.diagram-wrap{width:min(280px,100%)}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Circle Theorems Guidance</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool practises standard circle theorems through clean diagrams, missing-angle calculations, algebraic angle problems, and short proof-style reasoning.</p>
+      <h3>Key Theorems</h3>
+      <ul>
+        <li>The angle at the centre is twice the angle at the circumference standing on the same arc.</li>
+        <li>The angle in a semicircle is 90 degrees.</li>
+        <li>Angles in the same segment are equal.</li>
+        <li>Opposite angles in a cyclic quadrilateral add to 180 degrees.</li>
+        <li>The tangent to a circle is perpendicular to the radius at the point of contact.</li>
+        <li>The angle between a tangent and a chord equals the angle in the alternate segment.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Ask students to name the theorem before calculating.</li>
+        <li>Insist that students identify the same arc or same chord when using angle theorems.</li>
+        <li>For multi-step problems, get students to mark every new angle found before moving on.</li>
+        <li>For proof questions, the reason matters as much as the final angle statement.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Circle Theorems</h1></header>
+    <nav class="tabs">
+      <button class="tab active" type="button" onclick="switchLevel(1)">Level 1: Core Theorems</button>
+      <button class="tab" type="button" onclick="switchLevel(2)">Level 2: Connected Angles</button>
+      <button class="tab" type="button" onclick="switchLevel(3)">Level 3: Algebra & Proof</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Core Theorems</h3>
+        <p id="level-description">Recognise and apply one circle theorem at a time.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" type="button" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" type="button" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" type="button" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" type="button" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" type="button" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" type="button" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" type="button" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={
+      1:{title:'Level 1: Core Theorems',description:'Recognise and apply one circle theorem at a time.',types:['centre_circumference','semicircle_angle','same_segment','cyclic_quadrilateral','tangent_radius','alternate_segment']},
+      2:{title:'Level 2: Connected Angles',description:'Use circle theorems with triangle facts and one extra step.',types:['centre_isosceles','tangent_chord_triangle','tangent_radius_triangle','mixed_connected']},
+      3:{title:'Level 3: Algebra & Proof',description:'Use circle theorems to form equations, link theorems, and justify statements.',types:['algebra_cyclic','algebra_same_segment','theorem_chain','proof_reasoning','mixed_challenge']}
+    };
+    const typeDisplayNames={
+      centre_circumference:'Angle at Centre and Circumference',
+      semicircle_angle:'Angle in a Semicircle',
+      same_segment:'Angles in the Same Segment',
+      cyclic_quadrilateral:'Cyclic Quadrilaterals',
+      tangent_radius:'Tangent and Radius',
+      alternate_segment:'Alternate Segment Theorem',
+      centre_isosceles:'Centre Angle with Isosceles Triangle',
+      tangent_chord_triangle:'Tangent-Chord with Triangle Sum',
+      tangent_radius_triangle:'Tangent-Radius with Triangle',
+      mixed_connected:'Mixed Connected Circle Theorems',
+      algebra_cyclic:'Algebra in Cyclic Quadrilaterals',
+      algebra_same_segment:'Algebra in Same Segment Angles',
+      theorem_chain:'Multi-Step Theorem Chain',
+      proof_reasoning:'Proof-Style Reasoning',
+      mixed_challenge:'Mixed Algebra and Proof Challenge'
+    };
+    const setInstructions={
+      centre_circumference:'Find the missing angle using the angle at the centre and angle at the circumference theorem.',
+      semicircle_angle:'Find the missing angle using the angle in a semicircle theorem.',
+      same_segment:'Find the missing angle using angles in the same segment.',
+      cyclic_quadrilateral:'Find the missing angle using opposite angles in a cyclic quadrilateral.',
+      tangent_radius:'Find the missing angle using the tangent-radius theorem.',
+      alternate_segment:'Find the missing angle using the alternate segment theorem.',
+      centre_isosceles:'Find the missing angle using the centre theorem and isosceles triangle facts.',
+      tangent_chord_triangle:'Find the missing angle using the alternate segment theorem and the triangle angle sum.',
+      tangent_radius_triangle:'Find the missing angle using radius facts and the tangent-radius theorem.',
+      mixed_connected:'Choose the circle theorem first, then complete the angle calculation.',
+      algebra_cyclic:'Form and solve an equation using opposite angles in a cyclic quadrilateral.',
+      algebra_same_segment:'Form and solve an equation using angles in the same segment.',
+      theorem_chain:'Work through the circle theorem chain one angle at a time.',
+      proof_reasoning:'Give a clear theorem-based reason for the conclusion.',
+      mixed_challenge:'Use the diagram to choose the correct theorem and justify each step.'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const CX=130,CY=110,R=76;
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function deg(n){return n+'°'}
+    function cleanText(html){const t=document.createElement('template');t.innerHTML=html;return t.content.textContent.replace(/\s+/g,' ').trim()}
+    function p(angle){const rad=angle*Math.PI/180;return{x:CX+R*Math.cos(rad),y:CY-R*Math.sin(rad)}}
+    function dot(name,pt,dx=0,dy=0){return `<circle class="point-dot" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="3"></circle><text class="point-label" x="${(pt.x+dx).toFixed(1)}" y="${(pt.y+dy).toFixed(1)}">${name}</text>`}
+    function line(a,b,cls='theorem-line'){return `<line class="${cls}" x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}"></line>`}
+    function label(text,x,y,extra=''){return `<text class="angle-label ${extra}" x="${x}" y="${y}" text-anchor="middle">${text}</text>`}
+    function arc(cx,cy,r,a1,a2){const s=pOn(cx,cy,r,a1),e=pOn(cx,cy,r,a2),large=Math.abs(a2-a1)>180?1:0,sweep=a2>a1?0:1;return `<path class="angle-arc" d="M ${s.x.toFixed(1)} ${s.y.toFixed(1)} A ${r} ${r} 0 ${large} ${sweep} ${e.x.toFixed(1)} ${e.y.toFixed(1)}"></path>`}
+    function pOn(cx,cy,r,angle){const rad=angle*Math.PI/180;return{x:cx+r*Math.cos(rad),y:cy-r*Math.sin(rad)}}
+    function tangentAt(pt,angle){const rad=angle*Math.PI/180,tx=Math.sin(rad),ty=Math.cos(rad),len=64;return{u:{x:pt.x-tx*len,y:pt.y-ty*len},v:{x:pt.x+tx*len,y:pt.y+ty*len}}}
+    function svg(inner){return `<svg viewBox="0 0 260 220" role="img" aria-label="Circle theorem diagram"><circle class="circle-outline" cx="${CX}" cy="${CY}" r="${R}"></circle>${inner}<text class="diagram-note" x="130" y="210" text-anchor="middle">Diagram not drawn accurately</text></svg>`}
+    function problemShell(prompt,diagram,answer,steps,badge){return{equation:`<div class="circle-theorem-row"><div class="diagram-wrap">${diagram}</div><div class="question-text">${prompt}</div></div>`,question:cleanText(prompt),answer,steps,badge}}
+    function valueOf(expr){return expr.replace(/°/g,'')}
+
+    function diagramCentre(circText,centreText){const A=p(215),B=p(325),C=p(90),O={x:CX,y:CY};return svg(line(O,A,'radius-line')+line(O,B,'radius-line')+line(A,C)+line(B,C)+arc(C.x,C.y,20,245,295)+arc(CX,CY,26,215,325)+label(circText,C.x,66,circText==='x'?'angle-x':'')+label(centreText,CX,137,centreText==='x'?'angle-x':'')+dot('A',A,-17,8)+dot('B',B,9,8)+dot('C',C,-4,-10)+dot('O',O,6,14))}
+    function genCentre(){const circ=randInt(24,58),centre=2*circ;if(Math.random()<.5){return problemShell(`In the circle, ∠ACB = ${deg(circ)}. Find ∠AOB.`,diagramCentre(deg(circ),'x'),deg(centre),['∠ACB and ∠AOB stand on the same arc AB.','The angle at the centre is twice the angle at the circumference.','∠AOB = 2 × '+deg(circ),'∠AOB = '+deg(centre)],'centre')}return problemShell(`In the circle, ∠AOB = ${deg(centre)}. Find ∠ACB.`,diagramCentre('x',deg(centre)),deg(circ),['∠ACB and ∠AOB stand on the same arc AB.','The angle at the circumference is half the angle at the centre.','∠ACB = '+deg(centre)+' ÷ 2','∠ACB = '+deg(circ)],'centre')}
+    function genSemicircle(){const A=p(180),B=p(0),C=p(randInt(55,125));const diagram=svg(line(A,B)+line(A,C)+line(B,C)+line({x:CX,y:CY},A,'radius-line')+line({x:CX,y:CY},B,'radius-line')+arc(C.x,C.y,18,220,315)+label('x',C.x,C.y+24,'angle-x')+dot('A',A,-17,5)+dot('B',B,10,5)+dot('C',C,-4,-10)+dot('O',{x:CX,y:CY},6,14));return problemShell('AB is a diameter. Find ∠ACB.',diagram,'90°',['AB is a diameter, so arc AB is a semicircle.','The angle in a semicircle is a right angle.','∠ACB = 90°'],'semicircle')}
+    function genSameSegment(){const A=p(215),B=p(325),C=p(80),D=p(40),a=randInt(36,78);const diagram=svg(line(A,C)+line(B,C)+line(A,D)+line(B,D)+line(A,B)+arc(C.x,C.y,19,235,300)+arc(D.x,D.y,18,215,275)+label(deg(a),C.x,C.y+28)+label('x',D.x+7,D.y+26,'angle-x')+dot('A',A,-17,8)+dot('B',B,9,8)+dot('C',C,-4,-10)+dot('D',D,8,-8));return problemShell(`Angles ∠ACB and ∠ADB stand on chord AB. If ∠ACB = ${deg(a)}, find ∠ADB.`,diagram,deg(a),['Both ∠ACB and ∠ADB stand on chord AB.','Angles in the same segment are equal.','∠ADB = ∠ACB','∠ADB = '+deg(a)],'same-segment')}
+    function genCyclic(){const A=p(140),B=p(45),C=p(330),D=p(225),a=randInt(68,122),x=180-a;const diagram=svg(line(A,B)+line(B,C)+line(C,D)+line(D,A)+arc(A.x,A.y,17,300,35)+arc(C.x,C.y,17,130,220)+label(deg(a),A.x+22,A.y+20)+label('x',C.x-18,C.y-14,'angle-x')+dot('A',A,-16,-8)+dot('B',B,8,-8)+dot('C',C,8,14)+dot('D',D,-20,11));return problemShell(`ABCD is a cyclic quadrilateral. If ∠DAB = ${deg(a)}, find ∠BCD.`,diagram,deg(x),['Opposite angles in a cyclic quadrilateral add to 180°.','∠DAB + ∠BCD = 180°',deg(a)+' + ∠BCD = 180°','∠BCD = 180° - '+deg(a),'∠BCD = '+deg(x)],'cyclic')}
+    function genTangentRadius(){const A=p(300),O={x:CX,y:CY},tan=tangentAt(A,300);const diagram=svg(line(O,A,'radius-line')+line(tan.u,tan.v,'tangent-line')+`<path class="right-angle" d="M ${(A.x-11).toFixed(1)} ${(A.y-8).toFixed(1)} L ${(A.x-3).toFixed(1)} ${(A.y-18).toFixed(1)} L ${(A.x+8).toFixed(1)} ${(A.y-10).toFixed(1)}"></path>`+label('x',A.x-20,A.y-18,'angle-x')+dot('A',A,8,14)+dot('O',O,6,14));return problemShell('The line through A is a tangent. Find the angle between the tangent and radius OA.',diagram,'90°',['A tangent is perpendicular to the radius at the point of contact.','The tangent touches the circle at A and OA is a radius.','Therefore the angle between the tangent and OA is 90°.'],'tangent-radius')}
+    function genAlternate(){const A=p(220),B=p(330),C=p(86),tan=tangentAt(A,220),a=randInt(35,76);const diagram=svg(line(A,B)+line(A,C)+line(B,C)+line(tan.u,tan.v,'tangent-line')+arc(A.x,A.y,20,250,310)+arc(C.x,C.y,19,238,300)+label('x',A.x+15,A.y-20,'angle-x')+label(deg(a),C.x,C.y+29)+dot('A',A,-18,9)+dot('B',B,8,9)+dot('C',C,-4,-10));return problemShell(`The line at A is a tangent and ∠ACB = ${deg(a)}. Find the angle between the tangent and chord AB.`,diagram,deg(a),['The angle between a tangent and a chord equals the angle in the alternate segment.','The angle in the alternate segment is ∠ACB.','So the tangent-chord angle equals ∠ACB.','x = '+deg(a)],'alternate-segment')}
+    function genCentreIsosceles(){const A=p(215),B=p(325),O={x:CX,y:CY},centre=choice([64,72,84,96,108,116]),base=(180-centre)/2;const diagram=svg(line(O,A,'radius-line')+line(O,B,'radius-line')+line(A,B)+arc(CX,CY,25,215,325)+label(deg(centre),CX,CY+30)+label('x',A.x+24,A.y-7,'angle-x')+dot('A',A,-17,8)+dot('B',B,9,8)+dot('O',O,6,14));return problemShell(`OA and OB are radii. If ∠AOB = ${deg(centre)}, find ∠OAB.`,diagram,deg(base),['OA and OB are both radii, so triangle AOB is isosceles.','Therefore ∠OAB = ∠OBA.','Angles in triangle AOB add to 180°.','∠OAB + ∠OBA = 180° - '+deg(centre),'2∠OAB = '+deg(180-centre),'∠OAB = '+deg(180-centre)+' ÷ 2 = '+deg(base)],'connected')}
+    function genTangentChordTriangle(){const A=p(220),B=p(330),C=p(86),tan=tangentAt(A,220),t=randInt(38,70),b=randInt(42,78),x=180-t-b;const diagram=svg(line(A,B)+line(A,C)+line(B,C)+line(tan.u,tan.v,'tangent-line')+arc(A.x,A.y,20,250,310)+arc(A.x,A.y,17,20,72)+arc(C.x,C.y,18,235,300)+arc(B.x,B.y,18,145,205)+label(deg(t),A.x+15,A.y-20)+label('x',A.x+35,A.y-2,'angle-x')+label(deg(b),B.x-21,B.y-5)+dot('A',A,-18,9)+dot('B',B,8,9)+dot('C',C,-4,-10));return problemShell(`The line at A is a tangent. The tangent-chord angle is ${deg(t)} and ∠ABC = ${deg(b)}. Find ∠CAB.`,diagram,deg(x),['By the alternate segment theorem, the tangent-chord angle equals the angle in the alternate segment.','Therefore ∠ACB = '+deg(t)+'.','Angles in triangle ABC add to 180°.','∠CAB + ∠ABC + ∠ACB = 180°','∠CAB + '+deg(b)+' + '+deg(t)+' = 180°','∠CAB = 180° - '+deg(b+t),'∠CAB = '+deg(x)],'connected')}
+    function genTangentRadiusTriangle(){const A=p(220),B=p(330),O={x:CX,y:CY},tan=tangentAt(A,220),base=randInt(34,66),x=90-base;const diagram=svg(line(O,A,'radius-line')+line(O,B,'radius-line')+line(A,B)+line(tan.u,tan.v,'tangent-line')+arc(A.x,A.y,18,250,310)+arc(B.x,B.y,18,145,205)+label('x',A.x+17,A.y-21,'angle-x')+label(deg(base),B.x-22,B.y-4)+dot('A',A,-18,9)+dot('B',B,8,9)+dot('O',O,6,14));return problemShell(`The line at A is a tangent and OA = OB. If ∠ABO = ${deg(base)}, find the angle between the tangent and chord AB.`,diagram,deg(x),['OA and OB are radii, so triangle AOB is isosceles.','Therefore ∠OAB = ∠ABO = '+deg(base)+'.','The tangent is perpendicular to radius OA, so the angle between the tangent and OA is 90°.','The angle between the tangent and chord AB is 90° - ∠OAB.','x = 90° - '+deg(base)+' = '+deg(x)],'connected')}
+    function genAlgebraCyclic(){const x=randInt(18,28),a=3,b=2,k1=randInt(8,24),k2=180-(a+b)*x-k1;const e1=`${a}x + ${k1}°`,e2=`${b}x + ${k2}°`;const A=p(140),B=p(45),C=p(330),D=p(225);const diagram=svg(line(A,B)+line(B,C)+line(C,D)+line(D,A)+label(e1,A.x+24,A.y+21)+label(e2,C.x-21,C.y-16)+dot('A',A,-16,-8)+dot('B',B,8,-8)+dot('C',C,8,14)+dot('D',D,-20,11));return problemShell(`ABCD is cyclic. Opposite angles are ${e1} and ${e2}. Find x.`,diagram,String(x),['Opposite angles in a cyclic quadrilateral add to 180°.','('+e1+') + ('+e2+') = 180°',(a+b)+'x + '+(k1+k2)+' = 180',(a+b)+'x = '+((a+b)*x),'x = '+x],'algebra')}
+    function genAlgebraSameSegment(){const x=randInt(22,38),a=3,b=2,k1=randInt(8,22),k2=(a-b)*x+k1;const e1=`${a}x + ${k1}°`,e2=`${b}x + ${k2}°`;const A=p(215),B=p(325),C=p(80),D=p(40);const diagram=svg(line(A,C)+line(B,C)+line(A,D)+line(B,D)+line(A,B)+label(e1,C.x,C.y+28)+label(e2,D.x+8,D.y+26)+dot('A',A,-17,8)+dot('B',B,9,8)+dot('C',C,-4,-10)+dot('D',D,8,-8));return problemShell(`Angles ∠ACB and ∠ADB stand on chord AB. If ∠ACB = ${e1} and ∠ADB = ${e2}, find x.`,diagram,String(x),['Angles in the same segment are equal.','∠ACB = ∠ADB',e1+' = '+e2,`${a}x + ${k1} = ${b}x + ${k2}`,`${a-b}x + ${k1} = ${k2}`,`${a-b}x = ${k2-k1}`,'x = '+x],'algebra')}
+    function genTheoremChain(){const A=p(220),B=p(330),O={x:CX,y:CY},tan=tangentAt(A,220),centre=choice([64,72,84,96,108,116]),base=(180-centre)/2,ans=90-base;const diagram=svg(line(O,A,'radius-line')+line(O,B,'radius-line')+line(A,B)+line(tan.u,tan.v,'tangent-line')+arc(CX,CY,25,220,330)+label(deg(centre),CX,CY+30)+label('x',A.x+18,A.y-22,'angle-x')+dot('A',A,-18,9)+dot('B',B,8,9)+dot('O',O,6,14));return problemShell(`OA and OB are radii. The line at A is a tangent and ∠AOB = ${deg(centre)}. Find the angle between the tangent and chord AB.`,diagram,deg(ans),['OA and OB are radii, so triangle AOB is isosceles.','∠OAB = ∠OBA.','The two base angles share 180° - '+deg(centre)+'.','∠OAB = (180° - '+deg(centre)+') ÷ 2 = '+deg(base)+'.','The tangent is perpendicular to radius OA.','x + ∠OAB = 90°','x = 90° - '+deg(base),'x = '+deg(ans)],'chain')}
+    function genProof(){const A=p(215),B=p(325),C=p(80),D=p(40);const diagram=svg(line(A,C)+line(B,C)+line(A,D)+line(B,D)+line(A,B)+label('x',C.x,C.y+28,'angle-x')+label('y',D.x+8,D.y+26,'angle-x')+dot('A',A,-17,8)+dot('B',B,9,8)+dot('C',C,-4,-10)+dot('D',D,8,-8));return problemShell('Explain why ∠ACB = ∠ADB.',diagram,'They are equal: angles in the same segment.',[
+      'Both ∠ACB and ∠ADB have their endpoints on A and B.',
+      'So both angles stand on the same chord AB.',
+      'Angles in the same segment are equal.',
+      'Therefore ∠ACB = ∠ADB.'
+    ],'proof')}
+    function generateProblem(){const type=currentType==='select'?choice(levelConfigs[currentLevel].types):currentType;if(type==='centre_circumference')return genCentre();if(type==='semicircle_angle')return genSemicircle();if(type==='same_segment')return genSameSegment();if(type==='cyclic_quadrilateral')return genCyclic();if(type==='tangent_radius')return genTangentRadius();if(type==='alternate_segment')return genAlternate();if(type==='centre_isosceles')return genCentreIsosceles();if(type==='tangent_chord_triangle')return genTangentChordTriangle();if(type==='tangent_radius_triangle')return genTangentRadiusTriangle();if(type==='mixed_connected')return choice([genCentreIsosceles,genTangentChordTriangle,genTangentRadiusTriangle,genCentre,genCyclic])();if(type==='algebra_cyclic')return genAlgebraCyclic();if(type==='algebra_same_segment')return genAlgebraSameSegment();if(type==='theorem_chain')return genTheoremChain();if(type==='proof_reasoning')return genProof();if(type==='mixed_challenge')return choice([genAlgebraCyclic,genAlgebraSameSegment,genTheoremChain,genProof])();return genCentre()}
+    function setInstructionForType(){const text=setInstructions[currentType]||'';const el=document.getElementById('set-instruction');el.textContent=text;el.classList.toggle('visible',Boolean(text))}
+    function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));const cfg=levelConfigs[level];document.getElementById('level-title').textContent=cfg.title;document.getElementById('level-description').textContent=cfg.description;const dd=document.getElementById('type-dropdown');dd.innerHTML='<option value="select">Select Question Type</option>'+cfg.types.map(t=>'<option value="'+t+'">'+typeDisplayNames[t]+'</option>').join('');dd.value='select';showBlankPage()}
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-set-header').classList.remove('visible');document.getElementById('set-instruction').classList.remove('visible');document.getElementById('problem-list').innerHTML='<li style="grid-column:1/-1;text-align:center;padding:36px;color:#667085;font-size:1.05em">Please select a circle theorem question type to begin.</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<4;i++)problems.push(generateProblem());renderProblems()}
+    function renderProblems(){const list=document.getElementById('problem-list'),header=document.getElementById('problem-set-header');list.innerHTML='';header.textContent=typeDisplayNames[currentType]||'Circle Theorems';header.className='problem-set-header visible';setInstructionForType();problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const steps=(p.steps||[]).map(s=>String(s).includes('=')||String(s).includes('×')||String(s).includes('÷')?'<div class="step-equation">'+s+'</div>':'<div class="step">'+s+'</div>').join('');li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(i+1)+'</div><div class="equation">'+p.equation+'</div></div><div class="problem-answer" id="quick-answer-'+i+'">'+p.answer+'</div></div><div class="steps-section" id="steps-'+i+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+steps+'<div class="final-answer">'+p.answer+'</div></div></div>';list.appendChild(li)})}
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById('quick-answer-'+i)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById('steps-'+i)?.classList.toggle('visible',stepsVisible))}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const e=document.getElementById('timer-display');e.textContent='Ready';e.className='timer-display'}
+    function updateTimerDisplay(){const e=document.getElementById('timer-display'),m=Math.floor(timeRemaining/60),s=timeRemaining%60;e.textContent=m+':'+String(s).padStart(2,'0');if(timerActive&&timeRemaining<=30)e.className='timer-display warning';else if(timerActive)e.className='timer-display active';else e.className='timer-display'}
+    function timerFinished(){stopTimer();const e=document.getElementById('timer-display');e.textContent='Time Up!';e.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-21"></script>
+</body>
+</html>

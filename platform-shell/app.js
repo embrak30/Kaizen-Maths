@@ -888,6 +888,24 @@ const tools = [
     ]
   },
   {
+    slug: "circle-theorems",
+    title: "Circle Theorems",
+    category: "Geometry",
+    level: "KS3 / GCSE / IGCSE / CSEC",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate diagram-based circle theorem practice for angles at the centre and circumference, semicircles, same-segment angles, cyclic quadrilaterals, tangents, alternate segments, algebra, and proof-style reasoning.",
+    tags: ["geometry", "circle theorems", "circles", "angles", "cyclic quadrilateral", "tangent", "alternate segment theorem", "semicircle", "same segment", "GCSE", "IGCSE", "CSEC"],
+    toolPath: "tools/circle-theorems/index.html?v=circle-theorems-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 isolates the core circle theorems one at a time.",
+      "Level 2 connects circle theorems with triangle angle facts, radii, and tangents.",
+      "Level 3 adds algebraic angle equations, theorem chains, and short proof-style reasoning."
+    ]
+  },
+  {
     slug: "volume-surface-area-prisms",
     title: "Prisms: Volume and Surface Area",
     category: "Geometry",
@@ -1901,7 +1919,8 @@ const subjectToolGroups = {
     "transformations": "Coordinate Geometry",
     "free-vectors": "Vectors and Similarity",
     "scale-drawing-similar-shapes": "Vectors and Similarity",
-    "missing-angles": "Angles and Shape Geometry"
+    "missing-angles": "Angles and Shape Geometry",
+    "circle-theorems": "Angles and Shape Geometry"
   },
   Statistics: {
     "averages-range": "Data Summary and Representation",
@@ -1995,7 +2014,7 @@ const subjectGroupNotes = {
   "Trigonometry and Bearings": "Pythagoras, right-angled trigonometry, non-right triangle rules, and bearings.",
   "Coordinate Geometry": "Circle equations, coordinate geometry, transformations, and links to algebraic graph work.",
   "Vectors and Similarity": "Column vectors, geometric vectors, scale drawings, and similar shapes.",
-  "Angles and Shape Geometry": "Missing angles in lines, triangles, quadrilaterals, and standard shape facts.",
+  "Angles and Shape Geometry": "Missing angles in lines, triangles, quadrilaterals, circle theorems, and standard shape facts.",
   "Data Summary and Representation": "Averages, range, grouped data, histograms, cumulative frequency, and large-data-set practice.",
   "Probability and Set Diagrams": "Tree diagrams, conditional probability, Venn diagrams, and set notation.",
   "Random Variables and Distributions": "Discrete, continuous, normal, binomial, and geometric distributions.",
