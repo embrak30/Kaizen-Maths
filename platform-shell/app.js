@@ -897,7 +897,7 @@ const tools = [
     status: "Imported",
     description: "Generate diagram-based circle theorem practice for angles at the centre and circumference, semicircles, same-segment angles, cyclic quadrilaterals, tangents, alternate segments, algebra, and proof-style reasoning.",
     tags: ["geometry", "circle theorems", "circles", "angles", "cyclic quadrilateral", "tangent", "alternate segment theorem", "semicircle", "same segment", "GCSE", "IGCSE", "CSEC"],
-    toolPath: "tools/circle-theorems/index.html?v=circle-theorems-1",
+    toolPath: "tools/circle-theorems/index.html?v=circle-theorems-2",
     imported: true,
     teacherNotes: [
       "Level 1 isolates the core circle theorems one at a time.",
