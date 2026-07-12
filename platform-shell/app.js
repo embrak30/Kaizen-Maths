@@ -1709,13 +1709,13 @@ const tools = [
     type: "Board Display",
     access: "Free",
     status: "Imported",
-    description: "Open board-ready graph grids, coordinate axes, 2D shapes, 3D solids, probability templates, statistics diagrams, and mechanics setups for live classroom explanation.",
-    tags: ["classroom", "display", "graph grid", "coordinate axes", "geometry", "shapes", "solids", "statistics", "mechanics", "board"],
-    toolPath: "tools/classroom-displays/index.html?v=classroom-displays-mechanics-1",
+    description: "Open board-ready graph grids, coordinate axes, 2D shapes, 3D solids, probability templates, statistics diagrams, mechanics setups, and Earth geometry diagrams for live classroom explanation.",
+    tags: ["classroom", "display", "graph grid", "coordinate axes", "geometry", "shapes", "solids", "statistics", "mechanics", "earth geometry", "latitude", "longitude", "board"],
+    toolPath: "tools/classroom-displays/index.html?v=classroom-displays-earth-1",
     imported: true,
     teacherNotes: [
       "Designed as a static board companion rather than a question generator.",
-      "Teachers can quickly show blank grids, coordinate axes, common 2D shapes, 3D solids, statistics templates, and mechanics setups.",
+      "Teachers can quickly show blank grids, coordinate axes, common 2D shapes, 3D solids, statistics templates, mechanics setups, and Earth geometry diagrams.",
       "Use full-screen mode when projecting to the board for live explanation or annotation."
     ]
   },

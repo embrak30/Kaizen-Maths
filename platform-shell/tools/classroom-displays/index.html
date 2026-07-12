@@ -35,7 +35,7 @@
     <header class="topbar">
       <div class="brand">
         <h1>Classroom Displays</h1>
-        <p>Board-ready grids, shapes, statistics, and mechanics templates for live teaching</p>
+        <p>Board-ready grids, shapes, statistics, mechanics, and Earth geometry templates for live teaching</p>
       </div>
       <div class="controls">
         <select id="categorySelect" aria-label="Display category">
@@ -44,6 +44,7 @@
           <option value="solids">3D Solids</option>
           <option value="stats">Probability & Statistics</option>
           <option value="mechanics">Mechanics</option>
+          <option value="earth">Earth Geometry</option>
         </select>
         <select id="themeSelect" aria-label="Board background">
           <option value="white">White Board</option>
@@ -132,6 +133,17 @@
           { id:"pulley-system", label:"Pulley System", render: renderPulleySystem },
           { id:"pulley-table", label:"Pulley on Table", render: renderPulleyTable },
           { id:"vertical-pulley", label:"Vertical Hanging Pulley", render: renderVerticalPulley }
+        ]
+      },
+      earth: {
+        label: "Earth Geometry",
+        displays: [
+          { id:"earth-equator", label:"Equator and Hemispheres", render: () => renderEarthDiagram("equator") },
+          { id:"earth-parallels", label:"Parallels of Latitude", render: () => renderEarthDiagram("parallels") },
+          { id:"earth-meridians", label:"Meridians of Longitude", render: () => renderEarthDiagram("meridians") },
+          { id:"earth-coordinate", label:"Latitude and Longitude Point", render: () => renderEarthDiagram("coordinate") },
+          { id:"earth-small-circle", label:"Great Circle and Small Circle", render: () => renderEarthDiagram("small-circle") },
+          { id:"earth-time-zones", label:"Longitude and Time Zones", render: () => renderEarthDiagram("time-zones") }
         ]
       }
     };
@@ -322,6 +334,81 @@
         '<rect x="412" y="520" width="100" height="100" fill="white" stroke="#1a365d" stroke-width="5"/>' +
         '<rect x="528" y="520" width="100" height="100" fill="white" stroke="#1a365d" stroke-width="5"/>'
       );
+    }
+
+    function earthLabel(text, x, y, anchor = "middle", size = 30) {
+      return labelsVisible ? '<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-size="'+size+'" font-weight="850" fill="#14263a" paint-order="stroke" stroke="white" stroke-width="7" stroke-linejoin="round">'+text+'</text>' : "";
+    }
+
+    function qPoint(a,b,c,t) {
+      const u = 1 - t;
+      return { x:u*u*a.x + 2*u*t*b.x + t*t*c.x, y:u*u*a.y + 2*u*t*b.y + t*t*c.y };
+    }
+
+    function qPath(a,b,c) {
+      return 'M '+a.x.toFixed(1)+' '+a.y.toFixed(1)+' Q '+b.x.toFixed(1)+' '+b.y.toFixed(1)+' '+c.x.toFixed(1)+' '+c.y.toFixed(1);
+    }
+
+    function renderEarthDiagram(mode) {
+      const cx = 520, cy = 350, r = 235;
+      const top = {x:cx,y:cy-r}, bottom = {x:cx,y:cy+r};
+      const yForLat = (value) => cy - r * Math.sin(value * Math.PI / 180);
+      const rxForLat = (value) => Math.max(34, r * Math.cos(Math.abs(value) * Math.PI / 180));
+      const parallelDef = (value) => {
+        const y = yForLat(value), rx = rxForLat(value), depth = Math.max(16, 50 * rx / r);
+        return { start:{x:cx-rx,y}, control:{x:cx,y:y+depth}, end:{x:cx+rx,y}, y, rx };
+      };
+      const parallelPath = (value, cls = "earth-red", width = 7) => {
+        const def = parallelDef(value);
+        return '<path d="'+qPath(def.start,def.control,def.end)+'" fill="none" stroke="'+cls+'" stroke-width="'+width+'" stroke-linecap="round" stroke-linejoin="round"/>';
+      };
+      const meridianPath = (controlX, cls = "#2563eb", width = 7) =>
+        '<path d="'+qPath(top,{x:controlX,y:cy},bottom)+'" fill="none" stroke="'+cls+'" stroke-width="'+width+'" stroke-linecap="round" stroke-linejoin="round"/>';
+      const pointOnParallel = (lat,t) => {
+        const def = parallelDef(lat);
+        return qPoint(def.start,def.control,def.end,t);
+      };
+      const pointOnMeridian = (lat,controlX) => qPoint(top,{x:controlX,y:cy},bottom,(yForLat(lat)-top.y)/(bottom.y-top.y));
+      const dot = (p, text, dx = 18, dy = -16) =>
+        '<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="10" fill="#14263a" stroke="white" stroke-width="4"/>' + earthLabel(text, (p.x+dx).toFixed(1), (p.y+dy).toFixed(1), "middle", 32);
+      const base =
+        '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="white" stroke="#14263a" stroke-width="8"/>' +
+        parallelPath(0, "#94a3b8", 4) +
+        meridianPath(cx + 74, "#94a3b8", 4);
+
+      let content = base;
+      if (mode === "equator") {
+        content += parallelPath(0, "#dc2626", 8) +
+          earthLabel("Equator", cx + r + 64, cy + 8, "middle", 34) +
+          earthLabel("Northern Hemisphere", cx, cy - 122, "middle", 32) +
+          earthLabel("Southern Hemisphere", cx, cy + 150, "middle", 32);
+      } else if (mode === "parallels") {
+        content += parallelPath(55, "#dc2626", 7) + parallelPath(25, "#dc2626", 7) + parallelPath(-35, "#dc2626", 7) +
+          earthLabel("55° N", cx + rxForLat(55) + 58, yForLat(55) + 8, "middle", 30) +
+          earthLabel("25° N", cx + rxForLat(25) + 58, yForLat(25) + 8, "middle", 30) +
+          earthLabel("35° S", cx + rxForLat(-35) + 58, yForLat(-35) + 8, "middle", 30);
+      } else if (mode === "meridians") {
+        content += meridianPath(cx - 120, "#2563eb", 7) + meridianPath(cx, "#2563eb", 7) + meridianPath(cx + 120, "#2563eb", 7) +
+          earthLabel("Meridians run", cx + 255, 205, "middle", 32) +
+          earthLabel("North Pole to South Pole", cx + 255, 242, "middle", 32);
+      } else if (mode === "coordinate") {
+        const lat = 35, controlX = cx + 110, pLat = pointOnParallel(lat,.69), pMer = pointOnMeridian(lat,controlX), p = {x:(pLat.x+pMer.x)/2,y:(pLat.y+pMer.y)/2};
+        content += parallelPath(lat, "#dc2626", 8) + meridianPath(controlX, "#2563eb", 8) + dot(p, "A") +
+          earthLabel("35° N", cx + rxForLat(lat) + 58, yForLat(lat) + 8, "middle", 30) +
+          earthLabel("longitude", controlX + 72, 602, "middle", 30);
+      } else if (mode === "small-circle") {
+        content += parallelPath(0, "#111827", 7) + parallelPath(45, "#dc2626", 8) +
+          earthLabel("Great circle", cx - 290, cy + 8, "middle", 34) +
+          earthLabel("Small circle", cx + 295, yForLat(45) + 8, "middle", 34);
+      } else if (mode === "time-zones") {
+        content += meridianPath(cx - 140, "#2563eb", 7) + meridianPath(cx, "#2563eb", 7) + meridianPath(cx + 140, "#2563eb", 7) +
+          parallelPath(0, "#dc2626", 7) +
+          earthLabel("15°", cx - 70, cy - 32, "middle", 34) +
+          earthLabel("15°", cx + 70, cy - 32, "middle", 34) +
+          earthLabel("1 hour per 15°", cx, 660, "middle", 36);
+      }
+
+      stage.innerHTML = svg(content, "0 0 1040 720");
     }
 
     function currentDisplayObject() {
