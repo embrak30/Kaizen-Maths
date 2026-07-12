@@ -861,7 +861,7 @@ const tools = [
     status: "Imported",
     description: "Generate Earth geometry practice for latitude, longitude, distances along meridians and parallels, small circles, route lengths, inverse problems, and time differences.",
     tags: ["geometry", "earth geometry", "latitude", "longitude", "great circles", "small circles", "meridians", "parallels", "time zones", "GCSE", "IGCSE", "CSEC"],
-    toolPath: "tools/earth-geometry/index.html?v=earth-geometry-1",
+    toolPath: "tools/earth-geometry/index.html?v=earth-geometry-2",
     imported: true,
     teacherNotes: [
       "Level 1 covers coordinates, latitude differences, meridian distances, and equator distances.",
