@@ -729,7 +729,7 @@ body[data-route="worksheet-generator"] .account-action {
   display: grid;
   grid-template-columns: minmax(360px, 0.9fr) minmax(430px, 0.86fr);
   gap: clamp(18px, 3vw, 34px);
-  align-items: center;
+  align-items: start;
   margin-bottom: 18px;
   padding: clamp(22px, 3.6vw, 42px);
   min-height: 420px;
@@ -777,10 +777,15 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .hero-copy {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
   max-width: 760px;
 }
 
 .home-hero-side {
+  grid-column: 2;
+  grid-row: 1;
   position: relative;
   z-index: 1;
   align-self: start;
@@ -995,6 +1000,127 @@ body[data-route="worksheet-generator"] .account-action {
   align-items: stretch;
 }
 
+.hero-media-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.hero-interface-gallery {
+  position: relative;
+  display: grid;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid rgba(111, 76, 195, 0.16);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 253, 253, 0.9)),
+    repeating-linear-gradient(135deg, rgba(111, 76, 195, 0.035) 0 1px, transparent 1px 20px),
+    #ffffff;
+  box-shadow: 0 14px 28px rgba(44, 35, 91, 0.1);
+  overflow: hidden;
+}
+
+.hero-gallery-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.hero-gallery-head h2 {
+  margin: 3px 0 0;
+  color: #242048;
+  font-size: 1.02rem;
+  line-height: 1.18;
+}
+
+.hero-gallery-count {
+  flex: 0 0 auto;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(23, 184, 179, 0.12);
+  color: #087a7c;
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.hero-gallery-stage {
+  position: relative;
+  min-height: clamp(155px, 15vw, 190px);
+  border: 1px solid rgba(21, 39, 70, 0.12);
+  border-radius: 8px;
+  background: #f8fbff;
+  overflow: hidden;
+}
+
+.hero-gallery-slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  transform: translateX(10px) scale(0.99);
+  transition: opacity 520ms ease, transform 520ms ease;
+  pointer-events: none;
+}
+
+.hero-gallery-slide.active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  pointer-events: auto;
+}
+
+.hero-gallery-slide img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: top left;
+}
+
+.hero-gallery-slide figcaption {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  gap: 2px;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.64);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 22px rgba(21, 39, 70, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.hero-gallery-slide figcaption strong {
+  color: #1c2640;
+  font-size: 0.88rem;
+}
+
+.hero-gallery-slide figcaption span {
+  color: #536079;
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.hero-gallery-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.hero-gallery-dots span {
+  width: 18px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(111, 76, 195, 0.16);
+  transition: width 220ms ease, background 220ms ease;
+}
+
+.hero-gallery-dots span.active {
+  width: 30px;
+  background: linear-gradient(90deg, var(--violet), var(--teal));
+}
+
 .home-testimonial-panel {
   position: relative;
   z-index: 1;
@@ -1044,6 +1170,58 @@ body[data-route="worksheet-generator"] .account-action {
   transform: perspective(220px) rotateX(10deg) rotateZ(-3deg);
   opacity: 0.42;
   pointer-events: none;
+}
+
+.home-testimonial-strip {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  align-self: stretch;
+  min-height: 96px;
+  grid-template-columns: minmax(170px, 0.24fr) minmax(0, 1fr) auto;
+  grid-template-rows: 1fr;
+  align-items: center;
+  gap: 18px;
+  padding: 13px 16px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.9), rgba(241, 239, 255, 0.72), rgba(231, 251, 250, 0.75)),
+    repeating-linear-gradient(90deg, rgba(111, 76, 195, 0.04) 0 1px, transparent 1px 32px),
+    #ffffff;
+}
+
+.home-testimonial-strip::after {
+  display: none;
+}
+
+.home-testimonial-strip .home-testimonial-head {
+  display: grid;
+  justify-content: start;
+  gap: 6px;
+}
+
+.home-testimonial-strip .home-testimonial-carousel {
+  min-height: 58px;
+}
+
+.home-testimonial-strip .home-testimonial-slide {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(145px, auto);
+  align-items: center;
+  gap: 18px;
+}
+
+.home-testimonial-strip .home-testimonial-slide p {
+  -webkit-line-clamp: 2;
+  font-size: clamp(0.9rem, 1.05vw, 1.04rem);
+}
+
+.home-testimonial-strip .home-testimonial-slide footer {
+  padding-top: 0;
+  border-left: 1px solid rgba(111, 76, 195, 0.14);
+  padding-left: 14px;
+}
+
+.home-testimonial-strip .testimonial-dots {
+  justify-content: end;
 }
 
 .home-testimonial-head {
@@ -1158,15 +1336,16 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .home-hero-side .home-feature-video {
+  position: relative;
   grid-template-columns: 1fr;
-  gap: 9px;
+  gap: 10px;
   align-items: stretch;
   margin: 0;
-  padding: 12px;
+  padding: 13px;
 }
 
 .home-hero-side .home-feature-video-media {
-  min-height: 86px;
+  min-height: clamp(230px, 23vw, 285px);
 }
 
 .home-feature-video-media {
@@ -1220,11 +1399,21 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .home-hero-side .home-feature-video-copy {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
   gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 24px rgba(21, 39, 70, 0.12);
+  backdrop-filter: blur(8px);
 }
 
 .home-hero-side .home-feature-video-copy h2 {
-  font-size: 0.98rem;
+  font-size: 1.08rem;
   line-height: 1.12;
 }
 
@@ -1236,12 +1425,7 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .home-hero-side .home-feature-video-copy p {
-  font-size: 0.8rem;
-  line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  display: none;
 }
 
 .home-hero-side .home-feature-video .button-row {
@@ -5967,6 +6151,13 @@ sup .worksheet-fraction span:last-child {
     min-height: 0;
   }
 
+  .hero-copy,
+  .home-hero-side,
+  .home-testimonial-strip {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
   .home-hero-side {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -6272,6 +6463,28 @@ sup .worksheet-fraction span:last-child {
     min-height: 142px;
     margin-top: 4px;
     padding: 13px 14px 12px;
+  }
+
+  .home-testimonial-strip {
+    min-height: 0;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .home-testimonial-strip .home-testimonial-slide {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .home-testimonial-strip .home-testimonial-slide footer {
+    padding-left: 0;
+    padding-top: 8px;
+    border-left: 0;
+    border-top: 1px solid rgba(111, 76, 195, 0.14);
+  }
+
+  .home-testimonial-strip .testimonial-dots {
+    justify-content: start;
   }
 
   .home-testimonial-carousel {

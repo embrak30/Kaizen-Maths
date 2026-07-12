@@ -1,6 +1,6 @@
 const SITE_NAME = "Kaizen Maths";
-const SITE_TITLE = "Kaizen Maths | Maths Worksheets, Assessments and Classroom Tools for Teachers";
-const SITE_DESCRIPTION = "Create high-quality maths worksheets, assessments, worked examples, and classroom practice questions in minutes. Kaizen Maths is a complete mathematics teaching workspace for teachers, tutors, and schools.";
+const SITE_TITLE = "Kaizen Maths | Virtual Maths Textbook, Worksheets and Assessments";
+const SITE_DESCRIPTION = "Kaizen Maths is a virtual mathematics textbook for teachers. Generate unlimited curriculum-aligned questions, worked examples, bespoke worksheets, assessments, and classroom practice in minutes.";
 
 function updateMetaTag(selector, attribute, value) {
   const tag = document.head.querySelector(selector);
@@ -2250,6 +2250,7 @@ const futureCurriculumTags = [
 ];
 
 let homeTestimonialTimer = null;
+let homeScreenshotTimer = null;
 
 const accessLevels = ["free", "trial", "pro", "school", "admin"];
 const freeSampleTools = new Set([
@@ -2908,10 +2909,38 @@ const homepageFeaturedVideo = {
   duration_label: "Start here"
 };
 
+const homeInterfaceScreenshots = [
+  {
+    title: "Classroom View",
+    description: "Generate fresh questions and project them for live teaching.",
+    image: "assets/guide-screenshots/classroom-practice-set.png"
+  },
+  {
+    title: "Worksheet Builder",
+    description: "Combine topics, levels, marks, answers, and worked steps.",
+    image: "assets/guide-screenshots/worksheet-builder.png"
+  },
+  {
+    title: "Tool Library",
+    description: "Browse the virtual textbook by topic and curriculum area.",
+    image: "assets/guide-screenshots/tool-library.png"
+  },
+  {
+    title: "Teacher Guidance",
+    description: "See topics covered, misconceptions, and classroom prompts.",
+    image: "assets/guide-screenshots/tool-page.png"
+  },
+  {
+    title: "One Example Mode",
+    description: "Model one question at a time before building independent practice.",
+    image: "assets/guide-screenshots/one-example-mode.png"
+  }
+];
+
 const adminUniversitySections = [
   {
     title: "Homepage Feature",
-    intro: "The video shown near the top of the homepage, just below the first hero area.",
+    intro: "The video shown in the homepage hero area.",
     videos: [homepageFeaturedVideo]
   },
   ...universitySections
@@ -5516,13 +5545,13 @@ function renderHome() {
   app.innerHTML = `
     <section class="home-hero">
       <div class="hero-copy">
-        <span class="eyebrow">The Complete Mathematics Teaching Workspace</span>
-        <h1>Create high-quality maths worksheets, assessments, and teaching resources in minutes.</h1>
-        <p class="hero-lede">Choose a topic, select the level, generate classroom practice, reveal worked solutions, or turn questions into a printable resource.</p>
+        <span class="eyebrow">Your Virtual Mathematics Textbook</span>
+        <h1>Your Virtual Mathematics Textbook</h1>
+        <p class="hero-lede">Unlimited curriculum-aligned questions, worked examples, worksheets, assessments, and classroom tools for every topic you teach.</p>
         <div class="hero-win-list" aria-label="What teachers can create">
-          <span>Unlimited curriculum-aligned questions</span>
-          <span>Worked examples and answer keys</span>
-          <span>Classroom View, worksheets, and assessments</span>
+          <span>Generate fresh practice from an infinite topic library</span>
+          <span>Create bespoke and differentiated worksheets</span>
+          <span>Project questions, reveal steps, and build assessments</span>
         </div>
         <div class="home-hero-actions">
           <a class="button primary" href="#/upgrade">Start Free Trial</a>
@@ -5531,56 +5560,32 @@ function renderHome() {
         </div>
       </div>
       <div class="home-hero-side">
-        <div class="hero-product-visual" aria-label="Kaizen Maths product workflow preview">
-          <div class="hero-product-top">
-            <span>Kaizen Maths Workspace</span>
-            <strong>Ready for today's lesson</strong>
-          </div>
-          <div class="hero-product-board">
-            <div>
-              <small>Classroom View</small>
-              <strong>Solve: 3x + 5 = 20</strong>
-            </div>
-            <ol>
-              <li>3x + 5 = 20</li>
-              <li>3x = 15</li>
-              <li>x = 5</li>
-            </ol>
-          </div>
-          <div class="hero-resource-row" aria-hidden="true">
-            <span>Worksheet</span>
-            <span>Assessment</span>
-            <span>Worked steps</span>
-          </div>
-          <div class="hero-flow-row" aria-hidden="true">
-            <span>Topic</span><i></i><span>Level</span><i></i><span>Generate</span><i></i><span>Teach</span>
-          </div>
-        </div>
-        <div class="hero-proof-strip">
-          <aside class="home-testimonial-panel" aria-label="What teachers are saying">
-            <div class="home-testimonial-head">
-              <span class="eyebrow">What Teachers Are Saying</span>
-              <span class="testimonial-count">${testimonials.length} quote${testimonials.length === 1 ? "" : "s"}</span>
-            </div>
-            <!-- Editable from the Admin testimonials tab once live testimonials are available. -->
-            <div class="home-testimonial-carousel" id="homeTestimonialCarousel">
-              ${testimonials.map((item, index) => `
-                <article class="home-testimonial-slide ${index === 0 ? "active" : ""}" data-testimonial-slide>
-                  <p>&ldquo;${escapeHtml(item.quote)}&rdquo;</p>
-                  <footer>
-                    <strong>${escapeHtml(item.person_name || "Maths teacher")}</strong>
-                    <span>${escapeHtml([item.role_label, item.organisation].filter(Boolean).join(" · ") || "Teacher feedback")}</span>
-                  </footer>
-                </article>
-              `).join("")}
-            </div>
-            <div class="testimonial-dots" aria-hidden="true">
-              ${testimonials.map((_, index) => `<span class="${index === 0 ? "active" : ""}" data-testimonial-dot></span>`).join("")}
-            </div>
-          </aside>
+        <div class="hero-media-stack">
           ${homepageVideoPanelHtml()}
+          ${homeInterfaceGalleryHtml()}
         </div>
       </div>
+      <aside class="home-testimonial-panel home-testimonial-strip" aria-label="What teachers are saying">
+        <div class="home-testimonial-head">
+          <span class="eyebrow">What Teachers Are Saying</span>
+          <span class="testimonial-count">${testimonials.length} quote${testimonials.length === 1 ? "" : "s"}</span>
+        </div>
+        <!-- Editable from the Admin testimonials tab once live testimonials are available. -->
+        <div class="home-testimonial-carousel" id="homeTestimonialCarousel">
+          ${testimonials.map((item, index) => `
+            <article class="home-testimonial-slide ${index === 0 ? "active" : ""}" data-testimonial-slide>
+              <p>&ldquo;${escapeHtml(item.quote)}&rdquo;</p>
+              <footer>
+                <strong>${escapeHtml(item.person_name || "Maths teacher")}</strong>
+                <span>${escapeHtml([item.role_label, item.organisation].filter(Boolean).join(" · ") || "Teacher feedback")}</span>
+              </footer>
+            </article>
+          `).join("")}
+        </div>
+        <div class="testimonial-dots" aria-hidden="true">
+          ${testimonials.map((_, index) => `<span class="${index === 0 ? "active" : ""}" data-testimonial-dot></span>`).join("")}
+        </div>
+      </aside>
     </section>
 
     <section class="home-workflow section-block" aria-labelledby="workflowTitle">
@@ -5693,6 +5698,35 @@ function renderHome() {
     </section>
   `;
   bindHomeTestimonials();
+  bindHomeScreenshotGallery();
+}
+
+function homeInterfaceGalleryHtml() {
+  return `
+    <section class="hero-interface-gallery" aria-labelledby="heroGalleryTitle">
+      <div class="hero-gallery-head">
+        <div>
+          <span class="eyebrow">Inside Kaizen Maths</span>
+          <h2 id="heroGalleryTitle">A virtual textbook that becomes the resource you need</h2>
+        </div>
+        <span class="hero-gallery-count">${homeInterfaceScreenshots.length} views</span>
+      </div>
+      <div class="hero-gallery-stage" id="homeScreenshotCarousel">
+        ${homeInterfaceScreenshots.map((item, index) => `
+          <figure class="hero-gallery-slide ${index === 0 ? "active" : ""}" data-screenshot-slide>
+            <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)} interface screenshot" loading="${index === 0 ? "eager" : "lazy"}">
+            <figcaption>
+              <strong>${escapeHtml(item.title)}</strong>
+              <span>${escapeHtml(item.description)}</span>
+            </figcaption>
+          </figure>
+        `).join("")}
+      </div>
+      <div class="hero-gallery-dots" aria-hidden="true">
+        ${homeInterfaceScreenshots.map((_, index) => `<span class="${index === 0 ? "active" : ""}" data-screenshot-dot></span>`).join("")}
+      </div>
+    </section>
+  `;
 }
 
 function bindHomeTestimonials() {
@@ -5712,6 +5746,26 @@ function bindHomeTestimonials() {
     dots.forEach((dot, index) => dot.classList.toggle("active", index === activeIndex));
   };
   homeTestimonialTimer = window.setInterval(() => showSlide(activeIndex + 1), 5200);
+}
+
+function bindHomeScreenshotGallery() {
+  if (homeScreenshotTimer) {
+    window.clearInterval(homeScreenshotTimer);
+    homeScreenshotTimer = null;
+  }
+  const carousel = document.getElementById("homeScreenshotCarousel");
+  if (!carousel) return;
+  const slides = [...carousel.querySelectorAll("[data-screenshot-slide]")];
+  const dots = [...document.querySelectorAll("[data-screenshot-dot]")];
+  if (!slides.length) return;
+  let activeIndex = Math.floor(Math.random() * slides.length);
+  const showSlide = (index) => {
+    activeIndex = (index + slides.length) % slides.length;
+    slides.forEach((slide, slideIndex) => slide.classList.toggle("active", slideIndex === activeIndex));
+    dots.forEach((dot, dotIndex) => dot.classList.toggle("active", dotIndex === activeIndex));
+  };
+  showSlide(activeIndex);
+  if (slides.length > 1) homeScreenshotTimer = window.setInterval(() => showSlide(activeIndex + 1), 6200);
 }
 
 function homepageVideoPanelHtml() {
@@ -10341,6 +10395,10 @@ function renderRoute() {
   if (parts[0] && homeTestimonialTimer) {
     window.clearInterval(homeTestimonialTimer);
     homeTestimonialTimer = null;
+  }
+  if (parts[0] && homeScreenshotTimer) {
+    window.clearInterval(homeScreenshotTimer);
+    homeScreenshotTimer = null;
   }
   updateRouteSeo(parts);
   document.body.dataset.route = parts[0] || "home";
