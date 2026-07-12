@@ -764,9 +764,25 @@
     return `kaizen:tool-board:${cleanPath}`;
   }
 
+  function isClassroomSession() {
+    try {
+      if (window.self !== window.top) {
+        const parentHash = window.parent?.location?.hash || '';
+        return parentHash.replace(/^#\/?/, '').startsWith('classroom/');
+      }
+    } catch (_) {
+      // If the frame cannot read the parent, keep the tool in normal fresh-start mode.
+    }
+    try {
+      return new URLSearchParams(location.search).get('kaizenClassroom') === '1';
+    } catch (_) {
+      return false;
+    }
+  }
+
   function readStoredBoard() {
     try {
-      return JSON.parse(localStorage.getItem(toolStateKey()) || 'null');
+      return JSON.parse(sessionStorage.getItem(toolStateKey()) || 'null');
     } catch (_) {
       return null;
     }
@@ -808,23 +824,171 @@
     };
   }
 
+  let boardPersistenceSuppressed = false;
+
+  function writeStoredBoard(snapshot) {
+    if (boardPersistenceSuppressed) return false;
+    try {
+      if (!snapshot) {
+        sessionStorage.removeItem(toolStateKey());
+        return false;
+      }
+      sessionStorage.setItem(toolStateKey(), JSON.stringify(snapshot));
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function clearStoredBoard() {
+    boardPersistenceSuppressed = true;
+    try {
+      sessionStorage.removeItem(toolStateKey());
+      localStorage.removeItem(toolStateKey());
+    } catch (_) {
+      // Storage is optional; clearing should never block the tool.
+    }
+  }
+
+  function syncLevelDisplay(level) {
+    if (level == null) return;
+    const levelConfigs = readBinding('levelConfigs', {});
+    const config = levelConfigs?.[level];
+    document.querySelectorAll('.tab').forEach((tab, index) => {
+      const action = tab.getAttribute('onclick') || '';
+      const matchesAction = action.includes(`switchLevel(${JSON.stringify(level)}`) || action.includes(`switchLevel(${level}`);
+      tab.classList.toggle('active', matchesAction || index + 1 === Number(level));
+    });
+    const title = document.getElementById('level-title');
+    const description = document.getElementById('level-description');
+    if (title && config?.title) title.textContent = config.title;
+    if (description && config?.description) description.textContent = config.description;
+  }
+
+  function syncTypeDropdown(type, level) {
+    const dropdown = document.getElementById('type-dropdown');
+    if (!dropdown || !type) return;
+    const levelConfigs = readBinding('levelConfigs', {});
+    const typeDisplayNames = readBinding('typeDisplayNames', {});
+    const typeNames = readBinding('typeNames', {});
+    const typeMeta = readBinding('typeMeta', {});
+    const config = levelConfigs?.[level];
+    const types = normalizeTypes(config, typeDisplayNames, typeMeta);
+    if (types.length) {
+      dropdown.innerHTML = '';
+      const placeholder = document.createElement('option');
+      placeholder.value = 'select';
+      placeholder.textContent = 'Select Question Type';
+      dropdown.appendChild(placeholder);
+      types.forEach((item) => {
+        const label = typeNames?.[item.id] || item.label || prettifyType(item.id);
+        const option = document.createElement('option');
+        option.value = String(item.id);
+        option.textContent = label;
+        dropdown.appendChild(option);
+      });
+    }
+    if (type && !Array.from(dropdown.options).some((option) => option.value === type)) {
+      const option = document.createElement('option');
+      option.value = type;
+      option.textContent = typeNames?.[type] || typeDisplayNames?.[type] || prettifyType(type);
+      dropdown.appendChild(option);
+    }
+    if (Array.from(dropdown.options).some((option) => option.value === type)) {
+      dropdown.value = type;
+    }
+  }
+
+  function syncVisiblePanels(snapshot) {
+    writeBinding('answersVisible', Boolean(snapshot.answersVisible));
+    writeBinding('stepsVisible', Boolean(snapshot.stepsVisible));
+    const answerSelectors = '.problem-answer, .answer-section';
+    const stepSelectors = '.steps-section, .solution-section';
+    document.querySelectorAll(answerSelectors).forEach((element) => {
+      element.classList.toggle('visible', Boolean(snapshot.answersVisible));
+    });
+    document.querySelectorAll(stepSelectors).forEach((element) => {
+      element.classList.toggle('visible', Boolean(snapshot.stepsVisible));
+    });
+  }
+
+  function restoreStoredBoard() {
+    if (!isClassroomSession()) return false;
+    const snapshot = readStoredBoard();
+    if (!snapshot || snapshot.path !== location.pathname || !Array.isArray(snapshot.problems) || !snapshot.problems.length) return false;
+
+    writeBinding('currentLevel', snapshot.level);
+    writeBinding('currentType', snapshot.type);
+    writeBinding('problems', serialiseProblems(snapshot.problems));
+    writeBinding('answersVisible', false);
+    writeBinding('stepsVisible', false);
+
+    syncLevelDisplay(snapshot.level);
+    syncTypeDropdown(snapshot.type, snapshot.level);
+
+    try {
+      window.eval('if (typeof renderProblems === "function") renderProblems();');
+    } catch (_) {
+      return false;
+    }
+
+    syncVisiblePanels(snapshot);
+    if (snapshot.teacherExampleMode && window.KaizenTeacherExample?.setActive) {
+      window.KaizenTeacherExample.setActive(true, { regenerate: false });
+    }
+    if (typeof window.kaizenRenderMath === 'function') {
+      window.setTimeout(() => window.kaizenRenderMath(), 0);
+    }
+    document.dispatchEvent(new CustomEvent('kaizen:classroom-board-restored', { detail: snapshot }));
+    return true;
+  }
+
   function installQuestionPersistence() {
     if (document.documentElement.dataset.kaizenQuestionPersistence === 'true') return;
     document.documentElement.dataset.kaizenQuestionPersistence = 'true';
-    try {
-      localStorage.removeItem(toolStateKey());
-      sessionStorage.removeItem(toolStateKey());
-    } catch (_) {
-      // Tools should still start fresh if storage is unavailable.
+
+    if (!isClassroomSession()) {
+      clearStoredBoard();
+      window.KaizenQuestionPersistence = {
+        saveNow: () => false,
+        saveSoon: () => false,
+        restoreBoard: () => false,
+        clear: clearStoredBoard,
+        key: toolStateKey(),
+        disabled: true
+      };
+      return;
     }
 
-    window.KaizenQuestionPersistence = {
-      saveNow: () => false,
-      saveSoon: () => false,
-      restoreBoard: () => false,
-      key: toolStateKey(),
-      disabled: true
+    let saveTimer = null;
+    const saveNow = () => writeStoredBoard(currentBoardSnapshot());
+    const saveSoon = () => {
+      window.clearTimeout(saveTimer);
+      saveTimer = window.setTimeout(saveNow, 120);
+      return true;
     };
+
+    window.KaizenQuestionPersistence = {
+      saveNow,
+      saveSoon,
+      restoreBoard: restoreStoredBoard,
+      clear: clearStoredBoard,
+      key: toolStateKey(),
+      disabled: false
+    };
+
+    restoreStoredBoard();
+    ['click', 'change', 'input'].forEach((eventName) => {
+      document.addEventListener(eventName, saveSoon, true);
+    });
+    const observer = new MutationObserver(saveSoon);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') saveNow();
+    });
+    window.addEventListener('pagehide', saveNow);
+    window.addEventListener('beforeunload', saveNow);
+    window.setTimeout(saveNow, 250);
   }
 
   function safeFileName(value) {

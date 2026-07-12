@@ -10142,6 +10142,11 @@ function bindToolFrame(tool, options = {}) {
 
   if (exitButton) {
     exitButton.addEventListener("click", () => {
+      try {
+        frame?.contentWindow?.KaizenQuestionPersistence?.clear?.();
+      } catch (error) {
+        // Older or cross-origin tools simply start fresh when they reload.
+      }
       setClassroomMode(false);
       if (options.exitRoute) location.hash = options.exitRoute;
     });
