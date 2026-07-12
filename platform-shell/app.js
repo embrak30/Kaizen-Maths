@@ -1,6 +1,6 @@
 const SITE_NAME = "Kaizen Maths";
-const SITE_TITLE = "Kaizen Maths | Complete Mathematics Teaching Workspace";
-const SITE_DESCRIPTION = "Kaizen Maths helps teachers create maths worksheets, assessments, worked examples, classroom displays, and topic practice for GCSE, CSEC, CAPE, A-level, and Further Maths.";
+const SITE_TITLE = "Kaizen Maths | Maths Worksheets, Assessments and Classroom Tools for Teachers";
+const SITE_DESCRIPTION = "Create high-quality maths worksheets, assessments, worked examples, and classroom practice questions in minutes. Kaizen Maths is a complete mathematics teaching workspace for teachers, tutors, and schools.";
 
 function updateMetaTag(selector, attribute, value) {
   const tag = document.head.querySelector(selector);
@@ -5517,38 +5517,69 @@ function renderHome() {
     <section class="home-hero">
       <div class="hero-copy">
         <span class="eyebrow">The Complete Mathematics Teaching Workspace</span>
-        <h1>The complete mathematics teaching workspace</h1>
-        <p>Create classroom questions, worked examples, worksheets, assessments, and board-ready resources for GCSE, A-level, Further Maths, Statistics, and Mechanics in minutes.</p>
-        <p class="hero-supporting-copy">Kaizen Maths gives teachers a structured virtual mathematics textbook with unlimited practice, clear worked solutions, classroom projection, annotation tools, and assessment support.</p>
+        <h1>Create high-quality maths worksheets, assessments, and teaching resources in minutes.</h1>
+        <p class="hero-lede">Choose a topic, select the level, generate classroom practice, reveal worked solutions, or turn questions into a printable resource.</p>
+        <div class="hero-win-list" aria-label="What teachers can create">
+          <span>Unlimited curriculum-aligned questions</span>
+          <span>Worked examples and answer keys</span>
+          <span>Classroom View, worksheets, and assessments</span>
+        </div>
         <div class="home-hero-actions">
           <a class="button primary" href="#/upgrade">Start Free Trial</a>
-          <a class="button" href="#/coverage-map">Explore Topics</a>
           <a class="button subtle" href="#/kaizen-university">See How It Works</a>
+          <a class="button" href="#/coverage-map">Explore Topics</a>
         </div>
       </div>
       <div class="home-hero-side">
-        <aside class="home-testimonial-panel" aria-label="What teachers are saying">
-          <div class="home-testimonial-head">
-            <span class="eyebrow">What Teachers Are Saying</span>
-            <span class="testimonial-count">${testimonials.length} quote${testimonials.length === 1 ? "" : "s"}</span>
+        <div class="hero-product-visual" aria-label="Kaizen Maths product workflow preview">
+          <div class="hero-product-top">
+            <span>Kaizen Maths Workspace</span>
+            <strong>Ready for today's lesson</strong>
           </div>
-          <!-- Editable from the Admin testimonials tab once live testimonials are available. -->
-          <div class="home-testimonial-carousel" id="homeTestimonialCarousel">
-            ${testimonials.map((item, index) => `
-              <article class="home-testimonial-slide ${index === 0 ? "active" : ""}" data-testimonial-slide>
-                <p>&ldquo;${escapeHtml(item.quote)}&rdquo;</p>
-                <footer>
-                  <strong>${escapeHtml(item.person_name || "Maths teacher")}</strong>
-                  <span>${escapeHtml([item.role_label, item.organisation].filter(Boolean).join(" · ") || "Teacher feedback")}</span>
-                </footer>
-              </article>
-            `).join("")}
+          <div class="hero-product-board">
+            <div>
+              <small>Classroom View</small>
+              <strong>Solve: 3x + 5 = 20</strong>
+            </div>
+            <ol>
+              <li>3x + 5 = 20</li>
+              <li>3x = 15</li>
+              <li>x = 5</li>
+            </ol>
           </div>
-          <div class="testimonial-dots" aria-hidden="true">
-            ${testimonials.map((_, index) => `<span class="${index === 0 ? "active" : ""}" data-testimonial-dot></span>`).join("")}
+          <div class="hero-resource-row" aria-hidden="true">
+            <span>Worksheet</span>
+            <span>Assessment</span>
+            <span>Worked steps</span>
           </div>
-        </aside>
-        ${homepageVideoPanelHtml()}
+          <div class="hero-flow-row" aria-hidden="true">
+            <span>Topic</span><i></i><span>Level</span><i></i><span>Generate</span><i></i><span>Teach</span>
+          </div>
+        </div>
+        <div class="hero-proof-strip">
+          <aside class="home-testimonial-panel" aria-label="What teachers are saying">
+            <div class="home-testimonial-head">
+              <span class="eyebrow">What Teachers Are Saying</span>
+              <span class="testimonial-count">${testimonials.length} quote${testimonials.length === 1 ? "" : "s"}</span>
+            </div>
+            <!-- Editable from the Admin testimonials tab once live testimonials are available. -->
+            <div class="home-testimonial-carousel" id="homeTestimonialCarousel">
+              ${testimonials.map((item, index) => `
+                <article class="home-testimonial-slide ${index === 0 ? "active" : ""}" data-testimonial-slide>
+                  <p>&ldquo;${escapeHtml(item.quote)}&rdquo;</p>
+                  <footer>
+                    <strong>${escapeHtml(item.person_name || "Maths teacher")}</strong>
+                    <span>${escapeHtml([item.role_label, item.organisation].filter(Boolean).join(" · ") || "Teacher feedback")}</span>
+                  </footer>
+                </article>
+              `).join("")}
+            </div>
+            <div class="testimonial-dots" aria-hidden="true">
+              ${testimonials.map((_, index) => `<span class="${index === 0 ? "active" : ""}" data-testimonial-dot></span>`).join("")}
+            </div>
+          </aside>
+          ${homepageVideoPanelHtml()}
+        </div>
       </div>
     </section>
 
