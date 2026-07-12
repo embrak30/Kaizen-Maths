@@ -852,6 +852,24 @@ const tools = [
     ]
   },
   {
+    slug: "earth-geometry",
+    title: "Earth Geometry",
+    category: "Geometry",
+    level: "GCSE / IGCSE / CSEC",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate Earth geometry practice for latitude, longitude, distances along meridians and parallels, small circles, route lengths, inverse problems, and time differences.",
+    tags: ["geometry", "earth geometry", "latitude", "longitude", "great circles", "small circles", "meridians", "parallels", "time zones", "GCSE", "IGCSE", "CSEC"],
+    toolPath: "tools/earth-geometry/index.html?v=earth-geometry-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers coordinates, latitude differences, meridian distances, and equator distances.",
+      "Level 2 uses small-circle radii, distances along parallels, and combined meridian-parallel routes.",
+      "Level 3 covers time differences, longitude differences, inverse distance problems, and mixed Earth geometry."
+    ]
+  },
+  {
     slug: "free-vectors",
     title: "Column Vectors and Vector Geometry",
     category: "Geometry",
@@ -1915,6 +1933,7 @@ const subjectToolGroups = {
     "trigonometric-ratios": "Trigonometry and Bearings",
     "sine-cosine-rule": "Trigonometry and Bearings",
     "bearings": "Trigonometry and Bearings",
+    "earth-geometry": "Trigonometry and Bearings",
     "equation-of-a-circle": "Coordinate Geometry",
     "transformations": "Coordinate Geometry",
     "free-vectors": "Vectors and Similarity",
@@ -2011,7 +2030,7 @@ const subjectGroupNotes = {
   "Powers, Standard Form and Bases": "Powers of 10, standard form, number bases, and number sets.",
   "Area, Perimeter and Circles": "2D measure topics for rectangles, triangles, circles, sectors, arcs, and compound contexts.",
   "3D Measures": "Volume and surface area for prisms, cylinders, cones, and spheres.",
-  "Trigonometry and Bearings": "Pythagoras, right-angled trigonometry, non-right triangle rules, and bearings.",
+  "Trigonometry and Bearings": "Pythagoras, right-angled trigonometry, non-right triangle rules, bearings, and Earth geometry.",
   "Coordinate Geometry": "Circle equations, coordinate geometry, transformations, and links to algebraic graph work.",
   "Vectors and Similarity": "Column vectors, geometric vectors, scale drawings, and similar shapes.",
   "Angles and Shape Geometry": "Missing angles in lines, triangles, quadrilaterals, circle theorems, and standard shape facts.",

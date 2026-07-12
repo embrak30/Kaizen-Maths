@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Earth Geometry</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f2f7fb;min-height:100vh;padding:14px;color:#102033;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#0f3d4c;color:#fff;padding:12px 7px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 7px 7px 0;font-weight:800;font-size:.82em;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .sidebar{position:fixed;left:-420px;top:0;width:420px;height:100vh;background:#fff;z-index:1000;transition:left .25s;box-shadow:2px 0 22px rgba(0,0,0,.25);overflow-y:auto}.sidebar.open{left:0}
+    .sidebar-header{background:#0f3d4c;color:#fff;padding:18px;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{color:#0f3d4c;margin:18px 0 8px;border-bottom:2px solid #14b8a6;padding-bottom:4px;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#475569}.sidebar-content ul{padding-left:20px;margin-bottom:12px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;opacity:0;visibility:hidden;transition:.25s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1220px;margin:0 auto;background:#fff;border-radius:9px;box-shadow:0 4px 18px rgba(15,23,42,.1);overflow:hidden}
+    .header{background:#0f3d4c;background-image:linear-gradient(135deg,rgba(255,255,255,.13),transparent 48%,rgba(0,0,0,.18)),repeating-linear-gradient(135deg,rgba(255,255,255,.07) 0 2px,transparent 2px 23px);color:#fff;padding:20px;text-align:center}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.24)}
+    .tabs{display:flex;background:#d9f7f4}.tab{flex:1;padding:13px 9px;border:0;background:#d9f7f4;cursor:pointer;font-weight:850;font-size:.95em;border-bottom:3px solid transparent;color:#0f3d4c}.tab.active{background:#fff;color:#0f766e;border-bottom-color:#0f766e}
+    .controls{padding:15px 18px;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #d8e2f0}.level-info h3{color:#0f3d4c;font-size:1.16em;margin-bottom:3px}.level-info p{color:#64748b;font-size:.94em;max-width:650px}.dropdown-container{margin-top:8px}.type-dropdown{padding:8px 10px;border:2px solid #bfd8dc;border-radius:6px;background:#fff;min-width:370px;font-size:.94em;color:#102033}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{font-size:1.45em;font-weight:850;color:#0f3d4c;background:#fff;padding:7px 12px;border:2px solid #bfd8dc;border-radius:6px;min-width:96px;text-align:center}.timer-display.active{border-color:#0f766e;color:#0f766e}.timer-display.warning{color:#b91c1c;border-color:#b91c1c;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:8px 14px;border:0;border-radius:6px;font-weight:850;cursor:pointer;min-width:68px;color:#fff}.btn-primary{background:#0f766e}.btn-success{background:#15803d}.btn-warning{background:#b45309}.btn-danger{background:#b91c1c}
+    .problems-section{padding:12px 18px 18px;min-height:520px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#0f766e;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border-radius:6px;background:#ecfeff;border:1px solid #a5f3fc;color:#164e63;text-align:center;font-weight:800}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;list-style:none}.problem-item{background:#f8fafc;border-left:4px solid #0f766e;border-radius:7px;padding:10px;display:flex;flex-direction:column;gap:9px;min-height:282px}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.problem-left{display:flex;gap:10px;align-items:flex-start;min-width:0}.problem-number{background:#0f766e;color:#fff;min-width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:850}
+    .earth-row{display:grid;grid-template-columns:250px minmax(0,1fr);gap:12px;align-items:center}.diagram-wrap{width:250px;background:#fff;border:1px solid #d7e3f0;border-radius:6px;padding:4px}.diagram-wrap svg{width:100%;height:auto;display:block}.question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.12em;line-height:1.35;color:#102033;font-weight:500}
+    .earth-outline,.earth-line,.earth-dash,.earth-route{fill:none;stroke:#102033;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.earth-line{stroke-width:1.4}.earth-dash{stroke-width:1.4;stroke-dasharray:5 5}.earth-route{stroke-width:2.8}.point-dot{fill:#102033}.earth-label,.angle-label{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);fill:#102033;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}.earth-label{font-size:12px;font-weight:850}.angle-label{font-size:13px;font-weight:850}.diagram-note{font-size:10px;fill:#64748b;font-family:"Segoe UI",Tahoma,sans-serif}
+    .problem-answer{background:#15803d;color:#fff;padding:7px 11px;border-radius:999px;font-weight:850;display:none;font-size:.94em;line-height:1.35;white-space:nowrap}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:auto;padding:10px;background:#ecfeff;border-left:3px solid #0f766e;border-radius:6px}.steps-section.visible{display:block}.answer-label{font-weight:850;color:#0f766e;margin-bottom:6px}.solution-steps{line-height:1.45;font-size:.96em}.step{margin:6px 0;color:#102033}.step-equation{margin:6px 0;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:650;color:#0f3d4c;background:#fff;border:1px solid #bae6fd;border-radius:5px;padding:6px}.final-answer{margin-top:8px;text-align:center;background:#15803d;color:#fff;border-radius:6px;padding:8px;font-weight:850}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:#fff;padding:28px;border-radius:10px;text-align:center;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{color:#b91c1c;margin-bottom:10px}.modal-content p{color:#64748b;margin-bottom:18px}.hidden{display:none}
+    @media (max-width:980px){.problem-list{grid-template-columns:1fr}.earth-row{grid-template-columns:250px minmax(0,1fr)}}
+    @media (max-width:650px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.earth-row{grid-template-columns:1fr}.diagram-wrap{width:min(280px,100%)}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Earth Geometry Guidance</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool practises geometry on the surface of the Earth using latitude, longitude, meridians, parallels, great circles, small circles, and time-zone links.</p>
+      <h3>Key Ideas</h3>
+      <ul>
+        <li>Distances along a meridian use the full Earth radius because meridians are great circles.</li>
+        <li>Distances along the equator also use the full Earth radius.</li>
+        <li>Distances along a parallel of latitude use the smaller radius R cos(latitude).</li>
+        <li>Longitude differences can be linked to time because Earth turns 360 degrees in 24 hours.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Ask students to decide first whether the route is along a meridian, the equator, or a parallel.</li>
+        <li>Make students write the angular difference before substituting into an arc-length formula.</li>
+        <li>For parallel questions, check that students use R cos(latitude), not R.</li>
+        <li>For time questions, connect 15 degrees of longitude with 1 hour.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Earth Geometry</h1></header>
+    <nav class="tabs">
+      <button class="tab active" type="button" onclick="switchLevel(1)">Level 1: Latitude and Longitude</button>
+      <button class="tab" type="button" onclick="switchLevel(2)">Level 2: Parallels and Routes</button>
+      <button class="tab" type="button" onclick="switchLevel(3)">Level 3: Inverse and Time Problems</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Latitude and Longitude</h3>
+        <p id="level-description">Use angular differences to find distances along meridians and the equator.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" type="button" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" type="button" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" type="button" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" type="button" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" type="button" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" type="button" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" type="button" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const EARTH_RADIUS=6400;
+    const levelConfigs={
+      1:{title:'Level 1: Latitude and Longitude',description:'Use angular differences to find distances along meridians and the equator.',types:['read_coordinates','same_meridian_distance','equator_distance','mixed_level_1']},
+      2:{title:'Level 2: Parallels and Routes',description:'Use the radius of a small circle and combine meridian and parallel journeys.',types:['small_circle_radius','parallel_distance','combined_meridian_parallel','mixed_level_2']},
+      3:{title:'Level 3: Inverse and Time Problems',description:'Work backwards from distances or time differences to find angles, longitude, or route details.',types:['time_difference','find_longitude_difference','inverse_parallel_distance','mixed_level_3']}
+    };
+    const typeDisplayNames={
+      read_coordinates:'Read latitude and longitude',
+      same_meridian_distance:'Distance along a meridian',
+      equator_distance:'Distance along the equator',
+      mixed_level_1:'Mixed latitude and longitude basics',
+      small_circle_radius:'Radius of a parallel of latitude',
+      parallel_distance:'Distance along a parallel',
+      combined_meridian_parallel:'Combined meridian and parallel route',
+      mixed_level_2:'Mixed parallel and route problems',
+      time_difference:'Time difference from longitude',
+      find_longitude_difference:'Longitude difference from time',
+      inverse_parallel_distance:'Find longitude difference from distance',
+      mixed_level_3:'Mixed inverse Earth geometry'
+    };
+    const setInstructions={
+      read_coordinates:'Read the latitude and longitude carefully, including N, S, E, and W.',
+      same_meridian_distance:'Find the angular difference in latitude, then use arc length on a great circle.',
+      equator_distance:'Find the angular difference in longitude, then use arc length on the equator.',
+      mixed_level_1:'Decide whether the calculation uses latitude, longitude, or coordinate reading.',
+      small_circle_radius:'Find the radius of the parallel using R cos(latitude).',
+      parallel_distance:'Use the smaller radius R cos(latitude), then calculate the arc length along the parallel.',
+      combined_meridian_parallel:'Split the journey into a north-south meridian section and an east-west parallel section.',
+      mixed_level_2:'Choose whether the route is along a meridian, a parallel, or a combination.',
+      time_difference:'Use 15 degrees of longitude for each hour of time difference.',
+      find_longitude_difference:'Convert hours into degrees of longitude using 15 degrees per hour.',
+      inverse_parallel_distance:'Work backwards from arc length to find the longitude difference.',
+      mixed_level_3:'Use the context to decide whether to work with time, angle, or distance.'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function rad(deg){return deg*Math.PI/180}
+    function round(n,dp=1){return Number(n).toFixed(dp)}
+    function km(n){return Math.round(n).toLocaleString()+' km'}
+    function deg(n){return n+'°'}
+    function latText(v){return Math.abs(v)+'° '+(v>=0?'N':'S')}
+    function lonText(v){return Math.abs(v)+'° '+(v>=0?'E':'W')}
+    function coordText(lat,lon){return latText(lat)+', '+lonText(lon)}
+    function cleanText(html){return String(html).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function arcDistance(radius,angle){return angle/360*2*Math.PI*radius}
+    function longitudeDiff(a,b){const d=Math.abs(a-b);return Math.min(d,360-d)}
+    function plural(value,label){return value+' '+label+(value===1?'':'s')}
+    function wholeHours(value){const h=Math.floor(value),m=Math.round((value-h)*60);if(m===0)return plural(h,'hour');if(h===0)return plural(m,'minute');return plural(h,'hour')+' '+plural(m,'minute')}
+
+    function earthSvg(opts={}){
+      const lat=opts.lat||0,lat2=opts.lat2,lonDiff=opts.lonDiff||0,lon=opts.lon||0,mode=opts.mode||'parallel';
+      const cy=104,cx=150,r=76;
+      const yForLat=(value)=>cy-(value/90)*66;
+      const rxForLat=(value)=>Math.max(18,r*Math.cos(rad(Math.abs(value))));
+      const parallelY=yForLat(lat),parallelRx=rxForLat(lat);
+      const secondParallel=lat2==null?'':`<ellipse class="earth-dash" cx="${cx}" cy="${yForLat(lat2).toFixed(1)}" rx="${rxForLat(lat2).toFixed(1)}" ry="12"></ellipse><text class="earth-label" x="216" y="${(yForLat(lat2)+4).toFixed(1)}">${latText(lat2)}</text>`;
+      let points='',route='',extra='';
+      if(mode==='coordinate'){
+        const x=cx+Math.sign(lon)*Math.min(58,Math.abs(lon)/180*70),y=parallelY;
+        route=`<line class="earth-dash" x1="${x.toFixed(1)}" y1="${(cy-r+5).toFixed(1)}" x2="${x.toFixed(1)}" y2="${(cy+r-5).toFixed(1)}"></line>`;
+        points=dot(x,y,'A',9,-7);
+        extra=`<text class="earth-label" x="${(x+8).toFixed(1)}" y="188">${lonText(lon)}</text>`;
+      }else if(mode==='meridian'){
+        const y1=yForLat(opts.pointLat1),y2=yForLat(opts.pointLat2);
+        route=`<line class="earth-route" x1="${cx}" y1="${y1.toFixed(1)}" x2="${cx}" y2="${y2.toFixed(1)}"></line>`;
+        points=`${dot(cx,y1,'A',-20,3)}${dot(cx,y2,'B',10,3)}`;
+        extra=`<text class="earth-label" x="${cx+12}" y="37">same meridian</text>`;
+      }else if(mode==='equator'){
+        const x1=cx-parallelRx*.42,x2=cx+parallelRx*.42;
+        route=`<line class="earth-route" x1="${x1.toFixed(1)}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${cy}"></line>`;
+        points=`${dot(x1,cy,'A',-20,-8)}${dot(x2,cy,'B',9,-8)}`;
+        extra=`<text class="angle-label" x="${cx}" y="${cy+25}">${deg(lonDiff)}</text>`;
+      }else if(mode==='combined'){
+        const y1=yForLat(opts.pointLat1),y2=yForLat(opts.pointLat2),rx2=rxForLat(opts.pointLat2),x1=cx-rx2*.42,x2=cx+rx2*.42;
+        route=`<path class="earth-route" d="M ${x1.toFixed(1)} ${y1.toFixed(1)} L ${x1.toFixed(1)} ${y2.toFixed(1)} L ${x2.toFixed(1)} ${y2.toFixed(1)}"></path>`;
+        points=`${dot(x1,y1,'A',-20,3)}${dot(x2,y2,'B',9,3)}`;
+        extra=`<text class="angle-label" x="${cx}" y="${(y2-15).toFixed(1)}">${deg(lonDiff)}</text>`;
+      }else{
+        const x1=cx-parallelRx*.42,x2=cx+parallelRx*.42;
+        route=`<line class="earth-route" x1="${x1.toFixed(1)}" y1="${parallelY.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${parallelY.toFixed(1)}"></line>`;
+        points=`${dot(x1,parallelY,'A',-20,3)}${dot(x2,parallelY,'B',9,3)}`;
+        extra=`<text class="angle-label" x="${cx}" y="${(parallelY-16).toFixed(1)}">${deg(lonDiff)}</text>`;
+      }
+      return `<svg viewBox="0 0 300 220" role="img" aria-label="Earth geometry diagram">
+        <circle class="earth-outline" cx="${cx}" cy="${cy}" r="${r}"></circle>
+        <ellipse class="earth-line" cx="${cx}" cy="${cy}" rx="${r}" ry="18"></ellipse>
+        <ellipse class="earth-line" cx="${cx}" cy="${cy}" rx="24" ry="${r}"></ellipse>
+        <line class="earth-dash" x1="${cx-r}" y1="${cy}" x2="${cx+r}" y2="${cy}"></line>
+        <text class="earth-label" x="222" y="${cy+5}">Equator</text>
+        ${lat!==0?`<ellipse class="earth-dash" cx="${cx}" cy="${parallelY.toFixed(1)}" rx="${parallelRx.toFixed(1)}" ry="12"></ellipse><text class="earth-label" x="216" y="${(parallelY+4).toFixed(1)}">${latText(lat)}</text>`:''}
+        ${secondParallel}
+        ${route}${points}${extra}
+        <text class="diagram-note" x="150" y="208" text-anchor="middle">Simple globe sketch, not drawn to scale</text>
+      </svg>`;
+    }
+    function dot(x,y,label,dx,dy){return `<circle class="point-dot" cx="${Number(x).toFixed(1)}" cy="${Number(y).toFixed(1)}" r="3.5"></circle><text class="earth-label" x="${(x+dx).toFixed(1)}" y="${(y+dy).toFixed(1)}">${label}</text>`}
+    function problemShell(prompt,diagram,answer,steps){return{equation:`<div class="earth-row"><div class="diagram-wrap">${diagram}</div><div class="question-text">${prompt}</div></div>`,question:cleanText(prompt),answer,steps}}
+    function stepsWithFinal(steps,answer){return steps.concat(['Final answer: '+answer])}
+
+    function genReadCoordinates(){
+      const lat=choice([-60,-45,-30,-20,15,25,40,55]),lon=choice([-120,-90,-60,-30,30,75,105,135]);
+      const diagram=earthSvg({lat,lon,mode:'coordinate'});
+      const prompt=`Point A is shown on the parallel ${latText(lat)} and the longitude ${lonText(lon)}. Write the coordinates of A.`;
+      const answer=coordText(lat,lon);
+      return problemShell(prompt,diagram,answer,stepsWithFinal([
+        'Step 1: Latitude is written first.',
+        'Step 2: The latitude is '+latText(lat)+'.',
+        'Step 3: Longitude is written second.',
+        'Step 4: The longitude is '+lonText(lon)+'.',
+        'Coordinates of A = ('+answer+').'
+      ],answer));
+    }
+    function genSameMeridianDistance(){
+      const lat1=choice([-50,-40,-30,-20,-10,10,20,30,40]),diff=choice([15,20,25,30,35,40]),lat2=lat1+diff<=70?lat1+diff:lat1-diff;
+      const angle=Math.abs(lat2-lat1),distance=arcDistance(EARTH_RADIUS,angle),diagram=earthSvg({mode:'meridian',pointLat1:lat1,pointLat2:lat2});
+      const prompt=`A and B lie on the same meridian. A is at ${latText(lat1)} and B is at ${latText(lat2)}. Taking the Earth radius as ${EARTH_RADIUS} km, find the distance from A to B along the meridian.`;
+      const answer=km(distance);
+      return problemShell(prompt,diagram,answer,stepsWithFinal([
+        'Step 1: The points are on the same meridian, so the path is part of a great circle.',
+        'Step 2: Find the latitude difference.',
+        '|'+lat2+' - '+lat1+'| = '+angle+'°',
+        'Step 3: Use arc length: distance = (angle ÷ 360) × 2πR.',
+        'distance = ('+angle+' ÷ 360) × 2π × '+EARTH_RADIUS,
+        'distance ≈ '+round(distance,1)+' km'
+      ],answer));
+    }
+    function genEquatorDistance(){
+      const angle=choice([30,45,60,75,90,105,120,135]),distance=arcDistance(EARTH_RADIUS,angle),diagram=earthSvg({mode:'equator',lat:0,lonDiff:angle});
+      const prompt=`A and B lie on the equator and their longitudes differ by ${deg(angle)}. Taking the Earth radius as ${EARTH_RADIUS} km, find the shorter distance from A to B along the equator.`;
+      const answer=km(distance);
+      return problemShell(prompt,diagram,answer,stepsWithFinal([
+        'Step 1: The equator is a great circle, so use radius R = '+EARTH_RADIUS+' km.',
+        'Step 2: The longitude difference is '+deg(angle)+'.',
+        'Step 3: Use arc length: distance = (angle ÷ 360) × 2πR.',
+        'distance = ('+angle+' ÷ 360) × 2π × '+EARTH_RADIUS,
+        'distance ≈ '+round(distance,1)+' km'
+      ],answer));
+    }
+    function genSmallCircleRadius(){
+      const lat=choice([20,25,30,35,40,45,50,60]),radius=EARTH_RADIUS*Math.cos(rad(lat)),diagram=earthSvg({mode:'parallel',lat,lonDiff:90});
+      const prompt=`A parallel of latitude is ${latText(lat)}. Taking the Earth radius as ${EARTH_RADIUS} km, find the radius of this small circle.`;
+      const answer=km(radius);
+      return problemShell(prompt,diagram,answer,stepsWithFinal([
+        'Step 1: A parallel of latitude is a small circle.',
+        'Step 2: Its radius is R cos(latitude).',
+        'radius = '+EARTH_RADIUS+' cos('+lat+'°)',
+        'radius ≈ '+round(radius,1)+' km'
+      ],answer));
+    }
+    function genParallelDistance(){
+      const lat=choice([20,25,30,35,40,45,50,60]),angle=choice([30,45,60,75,90,120]),smallR=EARTH_RADIUS*Math.cos(rad(lat)),distance=arcDistance(smallR,angle),diagram=earthSvg({mode:'parallel',lat,lonDiff:angle});
+      const prompt=`A and B lie on latitude ${latText(lat)} and their longitudes differ by ${deg(angle)}. Taking the Earth radius as ${EARTH_RADIUS} km, find the distance from A to B along this parallel.`;
+      const answer=km(distance);
+      return problemShell(prompt,diagram,answer,stepsWithFinal([
+        'Step 1: The path is along a parallel, not a great circle.',
+        'Step 2: Find the radius of the parallel.',
+        'small-circle radius = R cos('+lat+'°)',
+        'small-circle radius = '+EARTH_RADIUS+' cos('+lat+'°) ≈ '+round(smallR,1)+' km',
+        'Step 3: Use arc length with the small-circle radius.',
+        'distance = ('+angle+' ÷ 360) × 2π × '+round(smallR,1),
+        'distance ≈ '+round(distance,1)+' km'
+      ],answer));
+    }
+    function genCombinedRoute(){
+      const lat1=choice([-20,-10,10,20]),lat2=choice([30,35,40,45]),angle=choice([30,45,60,75]),meridianAngle=Math.abs(lat2-lat1),meridian=arcDistance(EARTH_RADIUS,meridianAngle),parallelR=EARTH_RADIUS*Math.cos(rad(lat2)),parallel=arcDistance(parallelR,angle),total=meridian+parallel,diagram=earthSvg({mode:'combined',pointLat1:lat1,pointLat2:lat2,lat:lat2,lat2:lat1,lonDiff:angle});
+      const prompt=`A ship travels from A at ${latText(lat1)} to B at ${latText(lat2)} by first travelling north-south along a meridian, then travelling ${deg(angle)} of longitude along latitude ${latText(lat2)}. Taking R = ${EARTH_RADIUS} km, find the total distance travelled.`;
+      const answer=km(total);
+      return problemShell(prompt,diagram,answer,stepsWithFinal([
+        'Step 1: Split the journey into two sections.',
+        'Section 1 is along a meridian, so use the full Earth radius.',
+        'latitude difference = |'+lat2+' - '+lat1+'| = '+meridianAngle+'°',
+        'meridian distance = ('+meridianAngle+' ÷ 360) × 2π × '+EARTH_RADIUS+' ≈ '+round(meridian,1)+' km',
+        'Step 2: Section 2 is along a parallel at '+latText(lat2)+'.',
+        'parallel radius = '+EARTH_RADIUS+' cos('+Math.abs(lat2)+'°) ≈ '+round(parallelR,1)+' km',
+        'parallel distance = ('+angle+' ÷ 360) × 2π × '+round(parallelR,1)+' ≈ '+round(parallel,1)+' km',
+        'Step 3: Add the two distances.',
+        'total distance ≈ '+round(meridian,1)+' + '+round(parallel,1)+' = '+round(total,1)+' km'
+      ],answer));
+    }
+    function genTimeDifference(){
+      const angle=choice([30,45,60,75,90,120,150]),time=angle/15,diagram=earthSvg({mode:'equator',lat:0,lonDiff:angle});
+      const prompt=`Two places have longitudes that differ by ${deg(angle)}. Earth turns through 360° in 24 hours. Find the time difference between the two places.`;
+      const answer=wholeHours(time);
+      return problemShell(prompt,diagram,answer,stepsWithFinal([
+        'Step 1: Earth turns 360° in 24 hours.',
+        'Step 2: 360° ÷ 24 = 15° per hour.',
+        'Step 3: Divide the longitude difference by 15.',
+        'time difference = '+angle+' ÷ 15',
+        'time difference = '+round(time,2)+' hours'
+      ],answer));
+    }
+    function genFindLongitudeDifference(){
+      const time=choice([1.5,2,2.5,3,4,5,6,8]),angle=time*15,diagram=earthSvg({mode:'equator',lat:0,lonDiff:angle});
+      const prompt=`The local time difference between two places is ${wholeHours(time)}. Earth turns 15° of longitude each hour. Find the longitude difference between the two places.`;
+      const answer=deg(angle);
+      return problemShell(prompt,diagram,answer,stepsWithFinal([
+        'Step 1: 1 hour corresponds to 15° of longitude.',
+        'Step 2: Multiply the time difference by 15.',
+        'longitude difference = '+round(time,2)+' × 15',
+        'longitude difference = '+angle+'°'
+      ],answer));
+    }
+    function genInverseParallelDistance(){
+      const lat=choice([20,30,40,50,60]),angle=choice([30,45,60,75,90]),smallR=EARTH_RADIUS*Math.cos(rad(lat)),distance=arcDistance(smallR,angle),diagram=earthSvg({mode:'parallel',lat,lonDiff:angle});
+      const prompt=`A and B lie on latitude ${latText(lat)}. The distance from A to B along the parallel is approximately ${km(distance)}. Taking R = ${EARTH_RADIUS} km, find the longitude difference between A and B.`;
+      const answer='about '+deg(angle);
+      return problemShell(prompt,diagram,answer,stepsWithFinal([
+        'Step 1: The route is along a parallel, so first find the small-circle radius.',
+        'small-circle radius = '+EARTH_RADIUS+' cos('+lat+'°) ≈ '+round(smallR,1)+' km',
+        'Step 2: Rearrange arc length: angle = (distance ÷ circumference) × 360.',
+        'angle ≈ ('+Math.round(distance)+' ÷ (2π × '+round(smallR,1)+')) × 360',
+        'angle ≈ '+round((Math.round(distance)/(2*Math.PI*smallR))*360,1)+'°',
+        'Step 3: Round to the nearest sensible longitude difference.'
+      ],answer));
+    }
+    function generateProblem(){
+      const t=currentType==='select'?choice(levelConfigs[currentLevel].types):currentType;
+      if(t==='read_coordinates')return genReadCoordinates();
+      if(t==='same_meridian_distance')return genSameMeridianDistance();
+      if(t==='equator_distance')return genEquatorDistance();
+      if(t==='mixed_level_1')return choice([genReadCoordinates,genSameMeridianDistance,genEquatorDistance])();
+      if(t==='small_circle_radius')return genSmallCircleRadius();
+      if(t==='parallel_distance')return genParallelDistance();
+      if(t==='combined_meridian_parallel')return genCombinedRoute();
+      if(t==='mixed_level_2')return choice([genSmallCircleRadius,genParallelDistance,genCombinedRoute])();
+      if(t==='time_difference')return genTimeDifference();
+      if(t==='find_longitude_difference')return genFindLongitudeDifference();
+      if(t==='inverse_parallel_distance')return genInverseParallelDistance();
+      if(t==='mixed_level_3')return choice([genTimeDifference,genFindLongitudeDifference,genInverseParallelDistance,genParallelDistance])();
+      return genSameMeridianDistance();
+    }
+    function setInstructionForType(){const text=setInstructions[currentType]||'';const el=document.getElementById('set-instruction');el.textContent=text;el.classList.toggle('visible',Boolean(text))}
+    function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));const cfg=levelConfigs[level];document.getElementById('level-title').textContent=cfg.title;document.getElementById('level-description').textContent=cfg.description;const dd=document.getElementById('type-dropdown');dd.innerHTML='<option value="select">Select Question Type</option>'+cfg.types.map(t=>'<option value="'+t+'">'+typeDisplayNames[t]+'</option>').join('');dd.value='select';showBlankPage()}
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-set-header').classList.remove('visible');document.getElementById('set-instruction').classList.remove('visible');document.getElementById('problem-list').innerHTML='<li style="grid-column:1/-1;text-align:center;padding:36px;color:#64748b;font-size:1.05em">Please select an Earth geometry question type to begin.</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;const seen=new Set();for(let i=0;i<4;i++){let p=generateProblem(),attempts=0;while(seen.has(p.question)&&attempts<35){p=generateProblem();attempts++}seen.add(p.question);problems.push(p)}renderProblems()}
+    function renderProblems(){const list=document.getElementById('problem-list'),header=document.getElementById('problem-set-header');list.innerHTML='';header.textContent=typeDisplayNames[currentType]||'Earth Geometry';header.className='problem-set-header visible';setInstructionForType();problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const steps=(p.steps||[]).map(s=>String(s).includes('=')||String(s).includes('×')||String(s).includes('÷')||String(s).includes('≈')?'<div class="step-equation">'+s+'</div>':'<div class="step">'+s+'</div>').join('');li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(i+1)+'</div><div class="equation">'+p.equation+'</div></div><div class="problem-answer" id="quick-answer-'+i+'">'+p.answer+'</div></div><div class="steps-section" id="steps-'+i+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+steps+'<div class="final-answer">'+p.answer+'</div></div></div>';list.appendChild(li)})}
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById('quick-answer-'+i)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById('steps-'+i)?.classList.toggle('visible',stepsVisible))}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const e=document.getElementById('timer-display');e.textContent='Ready';e.className='timer-display'}
+    function updateTimerDisplay(){const e=document.getElementById('timer-display'),m=Math.floor(timeRemaining/60),s=timeRemaining%60;e.textContent=m+':'+String(s).padStart(2,'0');if(timerActive&&timeRemaining<=30)e.className='timer-display warning';else if(timerActive)e.className='timer-display active';else e.className='timer-display'}
+    function timerFinished(){stopTimer();const e=document.getElementById('timer-display');e.textContent='Time Up!';e.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-21"></script>
+</body>
+</html>
