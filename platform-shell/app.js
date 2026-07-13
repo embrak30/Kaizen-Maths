@@ -110,6 +110,25 @@ const tools = [
     ]
   },
   {
+    slug: "linear-programming",
+    title: "Linear Programming",
+    category: "Algebra",
+    level: "GCSE / A-Level / IB / CSEC",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate linear programming practice covering constraints, feasible regions, vertices, objective functions, optimisation, contextual profit and cost problems, and integer solutions.",
+    tags: ["algebra", "linear programming", "inequalities", "feasible region", "objective function", "optimisation", "optimization", "vertices", "constraints", "coordinate geometry", "GCSE", "A-Level", "IB", "CSEC", "CAPE"],
+    toolPath: "tools/linear-programming/index.html?v=linear-programming-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on reading constraints, identifying feasible regions, listing vertices, and testing points.",
+      "Level 2 maximises or minimises linear objective functions by testing every feasible vertex.",
+      "Level 3 applies linear programming to contextual profit, cost, and whole-number solution problems.",
+      "Worked steps emphasise that the optimum of a linear objective over a polygonal feasible region occurs at a vertex."
+    ]
+  },
+  {
     slug: "conic-intersections",
     title: "Line and Curve Intersections",
     category: "Algebra",
@@ -1488,6 +1507,25 @@ const tools = [
     ]
   },
   {
+    slug: "permutations-combinations",
+    title: "Permutations and Combinations",
+    category: "Statistics",
+    level: "GCSE / A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate counting practice covering factorial notation, product rule counting, permutations, combinations, restrictions, repeated letters, circular arrangements, committees, binomial coefficients, and probability applications.",
+    tags: ["statistics", "probability", "counting", "permutations", "combinations", "factorials", "product rule", "nPr", "nCr", "arrangements", "selections", "committees", "binomial coefficients", "GCSE", "A-Level", "IB", "CAPE"],
+    toolPath: "tools/permutations-combinations/index.html?v=permutations-combinations-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 builds factorial notation, product rule counting, basic arrangements, and simple selections.",
+      "Level 2 focuses on permutations where order matters, including restrictions, repeated letters, and circular arrangements.",
+      "Level 3 focuses on combinations where order does not matter, including committees, probability applications, and binomial coefficients.",
+      "Worked steps deliberately begin by deciding whether order matters before selecting the formula or counting method."
+    ]
+  },
+  {
     slug: "quadratic-factorisation",
     title: "Quadratic Factorisation Basics",
     category: "Algebra",
@@ -1978,6 +2016,7 @@ const algebraToolGroups = {
   "functions": "Functions, Graphs and Coordinate Geometry",
   "graph-transformations-curve-sketching": "Functions, Graphs and Coordinate Geometry",
   "straight-lines": "Functions, Graphs and Coordinate Geometry",
+  "linear-programming": "Functions, Graphs and Coordinate Geometry",
   "conic-intersections": "Functions, Graphs and Coordinate Geometry",
   "logarithms-practice": "Functions, Graphs and Coordinate Geometry",
   "sequences": "Sequences and Series",
@@ -2062,6 +2101,7 @@ const subjectToolGroups = {
     "sampling-methods-bias": "Data Collection and Sampling",
     "tree-diagrams-conditional-probability": "Probability and Set Diagrams",
     "venn-diagrams": "Probability and Set Diagrams",
+    "permutations-combinations": "Probability and Set Diagrams",
     "discrete-random-variables": "Random Variables and Distributions",
     "continuous-random-variables": "Random Variables and Distributions",
     "normal-distribution": "Random Variables and Distributions",
@@ -7401,8 +7441,9 @@ const curatedRelatedToolSlugs = {
   "sampling-methods-bias": ["kaizen-large-data-set", "averages-range", "histograms", "cumulative-frequency-curves"],
   "histograms": ["cumulative-frequency-curves", "averages-range", "kaizen-large-data-set", "sampling-methods-bias"],
   "cumulative-frequency-curves": ["histograms", "averages-range", "kaizen-large-data-set", "sampling-methods-bias"],
-  "venn-diagrams": ["tree-diagrams-conditional-probability", "binomial-geometric-distribution", "discrete-random-variables", "histograms"],
-  "tree-diagrams-conditional-probability": ["venn-diagrams", "binomial-geometric-distribution", "discrete-random-variables", "sampling-methods-bias"],
+  "venn-diagrams": ["tree-diagrams-conditional-probability", "permutations-combinations", "binomial-geometric-distribution", "discrete-random-variables"],
+  "tree-diagrams-conditional-probability": ["venn-diagrams", "permutations-combinations", "binomial-geometric-distribution", "discrete-random-variables"],
+  "permutations-combinations": ["tree-diagrams-conditional-probability", "venn-diagrams", "binomial-geometric-distribution", "discrete-random-variables"],
   "continuous-random-variables": ["normal-distribution", "discrete-random-variables", "integration", "hypothesis-testing"],
   "projectiles": ["equations-of-motion", "motion-graphs-constant-acceleration", "newtons-second-law", "momentum"],
   "momentum": ["projectiles", "equations-of-motion", "newtons-second-law", "motion-graphs-constant-acceleration"],
@@ -7415,6 +7456,7 @@ const curatedRelatedToolSlugs = {
   "fractions-practice": ["fractions", "decimals-practice-lab", "simple-percentage-tasks", "ratio-proportion"],
   "algebraic-fractions": ["factorisation", "advanced-factorisation", "quadratic-factorisation", "linear-equations"],
   "transposition-formulae": ["linear-equations", "substitution", "functions", "algebraic-fractions"],
+  "linear-programming": ["inequalities", "straight-lines", "graph-transformations-curve-sketching", "simultaneous-equations"],
   "graph-transformations-curve-sketching": ["functions", "straight-lines", "transformations", "quadratic-equations"],
   "matrices": ["advanced-matrices", "further-vectors", "simultaneous-equations", "transformations"],
   "advanced-matrices": ["matrices", "further-vectors", "complex-numbers", "transformations"],
