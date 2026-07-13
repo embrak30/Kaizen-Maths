@@ -1711,7 +1711,7 @@ const tools = [
     status: "Imported",
     description: "Open board-ready graph grids, coordinate axes, 2D shapes, 3D solids, probability templates, statistics diagrams, mechanics setups, and Earth geometry diagrams for live classroom explanation.",
     tags: ["classroom", "display", "graph grid", "coordinate axes", "geometry", "shapes", "solids", "statistics", "mechanics", "earth geometry", "latitude", "longitude", "board"],
-    toolPath: "tools/classroom-displays/index.html?v=classroom-displays-earth-1",
+    toolPath: "tools/classroom-displays/index.html?v=classroom-displays-fit-1",
     imported: true,
     teacherNotes: [
       "Designed as a static board companion rather than a question generator.",
