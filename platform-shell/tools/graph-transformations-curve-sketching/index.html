@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graph Transformations and Curve Sketching</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Cambria, "Times New Roman", serif;
+      color: #162033;
+      background:
+        radial-gradient(circle at 18% 16%, rgba(20, 184, 166, 0.14), transparent 32%),
+        radial-gradient(circle at 82% 8%, rgba(249, 115, 22, 0.13), transparent 28%),
+        linear-gradient(135deg, #f8fbff 0%, #eefaf7 100%);
+      min-height: 100vh;
+    }
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1001;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      background: #0f766e;
+      color: white;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 8px;
+      font: 800 0.84rem system-ui, sans-serif;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.24);
+    }
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.38);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.2s ease;
+    }
+    .sidebar-overlay.active { opacity: 1; visibility: visible; }
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 -400px;
+      z-index: 1000;
+      width: min(400px, 86vw);
+      background: #ffffff;
+      box-shadow: 12px 0 30px rgba(15, 23, 42, 0.18);
+      transition: left 0.25s ease;
+      overflow-y: auto;
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-header {
+      background: linear-gradient(135deg, #0f766e, #2563eb);
+      color: #ffffff;
+      padding: 18px 22px;
+      font: 900 1.2rem system-ui, sans-serif;
+    }
+    .sidebar-content { padding: 20px 24px 28px; line-height: 1.55; }
+    .sidebar-content h3 {
+      margin: 18px 0 8px;
+      color: #0f766e;
+      font: 900 1rem system-ui, sans-serif;
+    }
+    .sidebar-content p, .sidebar-content li { color: #475569; font-size: 0.96rem; }
+    .sidebar-content ul { margin: 0 0 12px; padding-left: 20px; }
+    .container {
+      width: min(1240px, calc(100% - 28px));
+      margin: 14px auto;
+      background: rgba(255, 255, 255, 0.93);
+      border: 1px solid rgba(20, 184, 166, 0.18);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.13);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #0f766e 55%, #f97316 130%);
+      color: white;
+      padding: 22px 24px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.65rem, 3.5vw, 2.65rem);
+      letter-spacing: 0;
+    }
+    .header p {
+      margin: 0 auto;
+      max-width: 840px;
+      color: rgba(255, 255, 255, 0.88);
+      font: 650 1rem/1.45 system-ui, sans-serif;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: #e9f7f4;
+      border-bottom: 1px solid rgba(15, 118, 110, 0.14);
+    }
+    .tab {
+      border: 0;
+      background: transparent;
+      padding: 15px 10px;
+      color: #244154;
+      font: 900 0.96rem system-ui, sans-serif;
+      cursor: pointer;
+      border-bottom: 4px solid transparent;
+    }
+    .tab.active {
+      color: #0f766e;
+      background: white;
+      border-bottom-color: #f97316;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) auto auto;
+      gap: 16px;
+      align-items: center;
+      padding: 16px 20px;
+      background: #f8fafc;
+      border-bottom: 1px solid #dbe8ea;
+    }
+    .level-info h2 {
+      margin: 0 0 4px;
+      color: #0f766e;
+      font-size: 1.25rem;
+    }
+    .level-info p {
+      margin: 0;
+      color: #64748b;
+      font: 650 0.95rem/1.35 system-ui, sans-serif;
+    }
+    .type-control {
+      display: grid;
+      gap: 6px;
+      min-width: min(360px, 100%);
+    }
+    .type-control label {
+      color: #475569;
+      font: 900 0.78rem system-ui, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    select {
+      width: 100%;
+      border: 2px solid #99f6e4;
+      border-radius: 10px;
+      background: white;
+      color: #162033;
+      padding: 11px 12px;
+      font: 800 1rem system-ui, sans-serif;
+      outline: none;
+    }
+    .timer-section, .button-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .timer-display {
+      min-width: 88px;
+      text-align: center;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      background: white;
+      color: #0f766e;
+      padding: 10px 12px;
+      font: 900 1.05rem system-ui, sans-serif;
+    }
+    .timer-display.active { color: #2563eb; border-color: #93c5fd; }
+    .timer-display.warning { color: #dc2626; border-color: #fca5a5; }
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: white;
+      background: #0f766e;
+      font: 900 0.95rem system-ui, sans-serif;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(15, 118, 110, 0.14);
+    }
+    button.secondary { background: #2563eb; }
+    button.warn { background: #f59e0b; color: #2d1600; }
+    button.danger { background: #ef4444; }
+    button.mode {
+      background: white;
+      color: #1e293b;
+      border: 2px solid #cbd5e1;
+      box-shadow: none;
+    }
+    button.mode.active {
+      border-color: #14b8a6;
+      background: #ccfbf1;
+      color: #115e59;
+    }
+    .workspace { padding: 18px 20px 26px; }
+    .problem-set-header {
+      display: none;
+      margin: 0 0 10px;
+      padding: 11px 16px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0f766e, #14b8a6);
+      color: white;
+      text-align: center;
+      font: 900 1.18rem system-ui, sans-serif;
+    }
+    .problem-set-header.visible { display: block; }
+    .set-instruction {
+      display: none;
+      margin: 0 0 14px;
+      padding: 11px 14px;
+      border-left: 5px solid #f97316;
+      border-radius: 10px;
+      background: #fff7ed;
+      color: #7c2d12;
+      font: 800 1rem/1.35 system-ui, sans-serif;
+    }
+    .set-instruction.visible { display: block; }
+    .problem-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 16px;
+    }
+    .problem-item {
+      border: 1px solid #d8e4eb;
+      border-radius: 14px;
+      background: white;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    }
+    .problem-main {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 14px;
+      padding: 16px;
+      align-items: start;
+    }
+    .problem-number {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: #f97316;
+      color: white;
+      font: 900 1.1rem system-ui, sans-serif;
+    }
+    .diagram-row {
+      display: grid;
+      grid-template-columns: minmax(240px, 430px) minmax(230px, 1fr);
+      gap: 18px;
+      align-items: center;
+    }
+    .diagram-wrap, .answer-diagram {
+      background: #ffffff;
+      border: 1px solid #d7e3ec;
+      border-radius: 12px;
+      padding: 8px;
+      overflow: hidden;
+    }
+    .graph-svg {
+      width: 100%;
+      max-height: 440px;
+      display: block;
+    }
+    .question-text {
+      font-size: clamp(1.14rem, 2.1vw, 1.62rem);
+      line-height: 1.45;
+      color: #172033;
+    }
+    .question-text .math, .step .math, .final-answer .math {
+      font-style: italic;
+      white-space: nowrap;
+    }
+    .quick-answer {
+      display: none;
+      margin: 0 16px 16px 72px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #ecfdf5;
+      color: #14532d;
+      border: 1px solid #bbf7d0;
+      font: 850 1.02rem/1.35 system-ui, sans-serif;
+    }
+    .quick-answer.visible { display: block; }
+    .steps-section {
+      display: none;
+      padding: 0 16px 16px 72px;
+    }
+    .steps-section.visible { display: block; }
+    .answer-label {
+      color: #0f766e;
+      margin: 0 0 8px;
+      font: 900 0.9rem system-ui, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .solution-steps {
+      display: grid;
+      gap: 9px;
+    }
+    .step, .step-equation {
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      padding: 10px 12px;
+      color: #334155;
+      font: 650 0.98rem/1.45 system-ui, sans-serif;
+    }
+    .step-equation {
+      background: #ffffff;
+      color: #111827;
+      font: 1.08rem/1.45 Cambria, "Times New Roman", serif;
+    }
+    .point-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      font: 700 0.95rem system-ui, sans-serif;
+    }
+    .point-table th, .point-table td {
+      border: 1px solid #dbe4ea;
+      padding: 7px 8px;
+      text-align: center;
+    }
+    .point-table th { background: #ecfeff; color: #115e59; }
+    .final-answer {
+      border-radius: 10px;
+      background: #14532d;
+      color: white;
+      padding: 11px 12px;
+      font: 900 1rem/1.35 system-ui, sans-serif;
+    }
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      line-height: 1.05;
+      font-family: Cambria, "Times New Roman", serif;
+    }
+    .frac .num { border-bottom: 1.8px solid currentColor; padding: 0 0.22em 0.08em; }
+    .frac .den { padding-top: 0.08em; }
+    .legend {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      color: #475569;
+      font: 800 0.84rem system-ui, sans-serif;
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .legend i { width: 18px; height: 3px; display: inline-block; border-radius: 999px; }
+    .hidden { display: none !important; }
+    .timer-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1002;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.52);
+    }
+    .modal-content {
+      width: min(340px, 92vw);
+      border-radius: 16px;
+      background: white;
+      padding: 26px;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+    }
+    .modal-content h2 { margin: 0 0 10px; color: #ef4444; }
+    .modal-content p { margin: 0 0 18px; color: #64748b; }
+    @media (max-width: 900px) {
+      .tabs { grid-template-columns: repeat(2, 1fr); }
+      .controls { grid-template-columns: 1fr; }
+      .timer-section, .button-row { justify-content: flex-start; }
+      .diagram-row { grid-template-columns: 1fr; }
+      .quick-answer, .steps-section { margin-left: 0; padding-left: 16px; }
+    }
+    @media print {
+      body { background: white; }
+      .teacher-tab, .sidebar, .sidebar-overlay, .controls, .tabs { display: none !important; }
+      .container { width: 100%; margin: 0; box-shadow: none; border: 0; }
+      .problem-item { break-inside: avoid; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER NOTES</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Graph Transformations and Curve Sketching</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool supports classroom modelling of parent graphs, transformations of functions, and curve sketching from key features.</p>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Use key points and invariant points before sketching.</li>
+        <li>Separate horizontal changes from vertical changes.</li>
+        <li>State intercepts, asymptotes, turning points, domain, and range where relevant.</li>
+        <li>Compare the equation with the visible change in the graph.</li>
+      </ul>
+      <h3>Common Misconceptions</h3>
+      <ul>
+        <li>Thinking <span class="math">f(x - a)</span> moves the graph left instead of right.</li>
+        <li>Using a vertical stretch rule for a horizontal stretch.</li>
+        <li>Sketching a curve without first finding intercepts or asymptotes.</li>
+        <li>Applying combined transformations in the wrong order.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header">
+      <h1>Graph Transformations and Curve Sketching</h1>
+      <p>Generate diagram-led practice for parent graphs, translations, stretches, reflections, combined transformations, and curve sketches from key features.</p>
+    </header>
+
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" type="button" onclick="switchLevel(1)">Level 1: Parent Graphs</button>
+      <button class="tab" type="button" onclick="switchLevel(2)">Level 2: Single Transformations</button>
+      <button class="tab" type="button" onclick="switchLevel(3)">Level 3: Combined Transformations</button>
+      <button class="tab" type="button" onclick="switchLevel(4)">Level 4: Curve Sketching</button>
+    </nav>
+
+    <section class="controls">
+      <div class="level-info">
+        <h2 id="level-title">Level 1: Parent Graphs</h2>
+        <p id="level-description">Recognise standard graphs and connect their shape to key features.</p>
+      </div>
+      <div class="type-control">
+        <label for="type-dropdown">Question type</label>
+        <select id="type-dropdown" onchange="typeChanged()"></select>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button type="button" class="secondary" onclick="startTimer(2)">2 Min</button>
+        <button type="button" class="warn" onclick="startTimer(5)">5 Min</button>
+        <button type="button" class="danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="button-row">
+        <button type="button" onclick="generateNewSet()">New</button>
+        <button type="button" class="secondary" onclick="showAnswers()">Answers</button>
+        <button type="button" class="warn" onclick="showSteps()">Steps</button>
+        <button type="button" id="practiceModeBtn" class="mode active" onclick="setMode(false)">Practice Set</button>
+        <button type="button" id="exampleModeBtn" class="mode" onclick="setMode(true)">One Example</button>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up</h2>
+      <p>Ready to discuss the graph features?</p>
+      <button type="button" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+    let oneExampleMode = false;
+
+    const levelConfigs = {
+      1: {
+        title: 'Level 1: Parent Graphs',
+        description: 'Recognise standard graphs and connect their shape to key features.',
+        types: ['identify_parent', 'features_parent', 'match_graph_equation']
+      },
+      2: {
+        title: 'Level 2: Single Transformations',
+        description: 'Sketch and describe one transformation of a parent graph.',
+        types: ['vertical_translation', 'horizontal_translation', 'reflection', 'stretch']
+      },
+      3: {
+        title: 'Level 3: Combined Transformations',
+        description: 'Combine transformations, map key points, and describe the image graph.',
+        types: ['combined_from_equation', 'describe_transformation', 'transform_key_points']
+      },
+      4: {
+        title: 'Level 4: Curve Sketching',
+        description: 'Sketch curves from roots, intercepts, turning points, asymptotes, and end behaviour.',
+        types: ['quadratic_features', 'reciprocal_asymptotes', 'cubic_roots', 'exponential_transform']
+      }
+    };
+
+    const typeDisplayNames = {
+      identify_parent: 'Identify Parent Graphs',
+      features_parent: 'State Key Features',
+      match_graph_equation: 'Match Graph to Equation',
+      vertical_translation: 'Vertical Translations',
+      horizontal_translation: 'Horizontal Translations',
+      reflection: 'Reflections',
+      stretch: 'Stretches',
+      combined_from_equation: 'Combined Transformations from Equation',
+      describe_transformation: 'Describe a Transformation',
+      transform_key_points: 'Transform Key Points',
+      quadratic_features: 'Quadratic Curve Sketching',
+      reciprocal_asymptotes: 'Reciprocal Graphs and Asymptotes',
+      cubic_roots: 'Cubic Curves from Roots',
+      exponential_transform: 'Exponential Transformations'
+    };
+
+    const setInstructions = {
+      identify_parent: 'Identify each parent graph and state one key feature.',
+      features_parent: 'Use the graph to state the requested key features.',
+      match_graph_equation: 'Match each graph to the correct equation.',
+      vertical_translation: 'Sketch the image graph after the vertical translation.',
+      horizontal_translation: 'Sketch the image graph after the horizontal translation.',
+      reflection: 'Sketch the image graph after the reflection.',
+      stretch: 'Sketch the image graph after the stretch.',
+      combined_from_equation: 'Describe the combined transformation and sketch the image graph.',
+      describe_transformation: 'Compare the original graph and image graph, then describe the transformation fully.',
+      transform_key_points: 'Transform the key points and use them to sketch the image graph.',
+      quadratic_features: 'Sketch each quadratic curve from its roots and turning point.',
+      reciprocal_asymptotes: 'Sketch each reciprocal graph and state the asymptotes.',
+      cubic_roots: 'Sketch each cubic curve using its roots and end behaviour.',
+      exponential_transform: 'Sketch each exponential curve and state the horizontal asymptote.'
+    };
+
+    const graphBox = { minX: -6, maxX: 6, minY: -6, maxY: 6, size: 500, pad: 34, scale: 36 };
+
+    const parentModels = [
+      {
+        id: 'linear',
+        name: 'linear',
+        formula: '<span class="math">f(x) = x</span>',
+        plain: 'f(x) = x',
+        fn: (x) => x,
+        points: [[-3, -3], [0, 0], [3, 3]],
+        features: 'It is a straight line through the origin with gradient 1.',
+        domain: 'all real values',
+        range: 'all real values'
+      },
+      {
+        id: 'quadratic',
+        name: 'quadratic',
+        formula: '<span class="math">f(x) = x<sup>2</sup></span>',
+        plain: 'f(x) = x²',
+        fn: (x) => x * x,
+        points: [[-2, 4], [-1, 1], [0, 0], [1, 1], [2, 4]],
+        features: 'It has a minimum turning point at (0, 0) and line of symmetry x = 0.',
+        domain: 'all real values',
+        range: 'y ≥ 0'
+      },
+      {
+        id: 'cubic',
+        name: 'cubic',
+        formula: '<span class="math">f(x) = x<sup>3</sup></span>',
+        plain: 'f(x) = x³',
+        fn: (x) => x * x * x,
+        points: [[-1, -1], [0, 0], [1, 1]],
+        features: 'It passes through the origin and is increasing for all x.',
+        domain: 'all real values',
+        range: 'all real values'
+      },
+      {
+        id: 'reciprocal',
+        name: 'reciprocal',
+        formula: '<span class="math">f(x) = <span class="frac"><span class="num">1</span><span class="den">x</span></span></span>',
+        plain: 'f(x) = 1/x',
+        fn: (x) => Math.abs(x) < 0.08 ? NaN : 1 / x,
+        points: [[-2, -0.5], [-1, -1], [1, 1], [2, 0.5]],
+        features: 'It has asymptotes x = 0 and y = 0.',
+        domain: 'x ≠ 0',
+        range: 'y ≠ 0'
+      },
+      {
+        id: 'absolute',
+        name: 'modulus',
+        formula: '<span class="math">f(x) = |x|</span>',
+        plain: 'f(x) = |x|',
+        fn: (x) => Math.abs(x),
+        points: [[-2, 2], [0, 0], [2, 2]],
+        features: 'It has a sharp minimum point at (0, 0).',
+        domain: 'all real values',
+        range: 'y ≥ 0'
+      },
+      {
+        id: 'exponential',
+        name: 'exponential',
+        formula: '<span class="math">f(x) = 2<sup>x</sup></span>',
+        plain: 'f(x) = 2ˣ',
+        fn: (x) => Math.pow(2, x),
+        points: [[-2, 0.25], [-1, 0.5], [0, 1], [1, 2], [2, 4]],
+        features: 'It has horizontal asymptote y = 0 and y-intercept 1.',
+        domain: 'all real values',
+        range: 'y > 0'
+      }
+    ];
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function choice(items) {
+      return items[randInt(0, items.length - 1)];
+    }
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+    }
+    function formatNumber(value) {
+      if (Math.abs(value) < 1e-9) return '0';
+      if (Number.isInteger(value)) return String(value);
+      return String(Math.round(value * 100) / 100);
+    }
+    function signed(value) {
+      if (value === 0) return '';
+      return value > 0 ? ` + ${value}` : ` - ${Math.abs(value)}`;
+    }
+    function pointText(point) {
+      return `(${formatNumber(point[0])}, ${formatNumber(point[1])})`;
+    }
+    function pointList(points) {
+      return points.map(pointText).join(', ');
+    }
+    function xCoord(x) {
+      return graphBox.pad + (x - graphBox.minX) * graphBox.scale;
+    }
+    function yCoord(y) {
+      return graphBox.size - graphBox.pad - (y - graphBox.minY) * graphBox.scale;
+    }
+    function validY(y) {
+      return Number.isFinite(y) && y >= graphBox.minY - 0.2 && y <= graphBox.maxY + 0.2;
+    }
+    function pathFor(fn, xMin = graphBox.minX, xMax = graphBox.maxX) {
+      const parts = [];
+      let drawing = false;
+      for (let x = xMin; x <= xMax + 1e-9; x += 0.045) {
+        const y = fn(x);
+        if (!validY(y)) {
+          drawing = false;
+          continue;
+        }
+        const px = xCoord(x).toFixed(2);
+        const py = yCoord(y).toFixed(2);
+        parts.push(`${drawing ? 'L' : 'M'} ${px} ${py}`);
+        drawing = true;
+      }
+      return parts.join(' ');
+    }
+    function gridSvg(inner, options = {}) {
+      const labels = options.labels !== false;
+      const grid = [];
+      for (let n = graphBox.minX; n <= graphBox.maxX; n += 1) {
+        const p = xCoord(n);
+        grid.push(`<line x1="${p}" y1="${graphBox.pad}" x2="${p}" y2="${graphBox.size - graphBox.pad}" stroke="#d8e1ea" stroke-width="1"/>`);
+      }
+      for (let n = graphBox.minY; n <= graphBox.maxY; n += 1) {
+        const p = yCoord(n);
+        grid.push(`<line x1="${graphBox.pad}" y1="${p}" x2="${graphBox.size - graphBox.pad}" y2="${p}" stroke="#d8e1ea" stroke-width="1"/>`);
+      }
+      const tickLabels = [];
+      if (labels) {
+        [-6, -4, -2, 2, 4, 6].forEach((n) => {
+          tickLabels.push(`<text x="${xCoord(n)}" y="${yCoord(0) + 18}" text-anchor="middle" fill="#64748b" font-size="13">${n}</text>`);
+          tickLabels.push(`<text x="${xCoord(0) - 10}" y="${yCoord(n) + 5}" text-anchor="end" fill="#64748b" font-size="13">${n}</text>`);
+        });
+      }
+      return `<svg class="graph-svg" viewBox="0 0 ${graphBox.size} ${graphBox.size}" role="img" aria-label="Coordinate graph">
+        <rect x="0" y="0" width="${graphBox.size}" height="${graphBox.size}" fill="#ffffff"/>
+        ${grid.join('')}
+        <line x1="${graphBox.pad}" y1="${yCoord(0)}" x2="${graphBox.size - graphBox.pad}" y2="${yCoord(0)}" stroke="#0f172a" stroke-width="2.4"/>
+        <line x1="${xCoord(0)}" y1="${graphBox.size - graphBox.pad}" x2="${xCoord(0)}" y2="${graphBox.pad}" stroke="#0f172a" stroke-width="2.4"/>
+        <text x="${graphBox.size - graphBox.pad + 15}" y="${yCoord(0) + 4}" fill="#0f172a" font-size="18" font-style="italic" font-weight="800">x</text>
+        <text x="${xCoord(0) - 8}" y="${graphBox.pad - 11}" fill="#0f172a" font-size="18" font-style="italic" font-weight="800">y</text>
+        ${tickLabels.join('')}
+        ${inner}
+      </svg>`;
+    }
+    function curve(fn, colour, dashed = false, width = 3.3) {
+      const d = pathFor(fn);
+      return `<path d="${d}" fill="none" stroke="${colour}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"${dashed ? ' stroke-dasharray="8 7"' : ''}/>`;
+    }
+    function asymptoteX(x) {
+      return `<line x1="${xCoord(x)}" y1="${graphBox.pad}" x2="${xCoord(x)}" y2="${graphBox.size - graphBox.pad}" stroke="#475569" stroke-width="2" stroke-dasharray="7 7"/>`;
+    }
+    function asymptoteY(y) {
+      return `<line x1="${graphBox.pad}" y1="${yCoord(y)}" x2="${graphBox.size - graphBox.pad}" y2="${yCoord(y)}" stroke="#475569" stroke-width="2" stroke-dasharray="7 7"/>`;
+    }
+    function pointMarker(point, label, colour = '#0f766e') {
+      return `<circle cx="${xCoord(point[0])}" cy="${yCoord(point[1])}" r="4.5" fill="${colour}"/>
+        <text x="${xCoord(point[0]) + 7}" y="${yCoord(point[1]) - 7}" fill="${colour}" font-size="15" font-weight="800">${label || ''}</text>`;
+    }
+    function graphDiagram(items, options = {}) {
+      return gridSvg(items.join(''), options);
+    }
+    function wrapDiagram(diagram, legend = '') {
+      return `<div class="diagram-wrap">${diagram}${legend}</div>`;
+    }
+    function legend(originalText = 'original graph', imageText = 'image graph') {
+      return `<div class="legend"><span><i style="background:#64748b"></i>${originalText}</span><span><i style="background:#0f766e"></i>${imageText}</span></div>`;
+    }
+    function pointTable(original, image) {
+      const rows = original.map((point, index) => `<tr><td>${pointText(point)}</td><td>${pointText(image[index])}</td></tr>`).join('');
+      return `<table class="point-table"><thead><tr><th>Original point</th><th>Image point</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }
+    function cleanPoints(points) {
+      return points.filter((point) => validY(point[1]) && point[0] >= graphBox.minX && point[0] <= graphBox.maxX);
+    }
+    function baseForTransform() {
+      return choice(parentModels.filter((model) => model.id !== 'exponential'));
+    }
+    function transformationFor(kind, base) {
+      if (kind === 'vertical_translation') {
+        const a = choice([-3, -2, 2, 3]);
+        return {
+          equation: `y = f(x)${signed(a)}`,
+          description: `translation ${Math.abs(a)} unit${Math.abs(a) === 1 ? '' : 's'} ${a > 0 ? 'up' : 'down'}`,
+          rule: `(x, y) → (x, y ${a > 0 ? '+' : '-'} ${Math.abs(a)})`,
+          map: ([x, y]) => [x, y + a],
+          fn: (x) => base.fn(x) + a
+        };
+      }
+      if (kind === 'horizontal_translation') {
+        const h = choice([-3, -2, 2, 3]);
+        return {
+          equation: `y = f(x ${h > 0 ? '-' : '+'} ${Math.abs(h)})`,
+          description: `translation ${Math.abs(h)} unit${Math.abs(h) === 1 ? '' : 's'} ${h > 0 ? 'right' : 'left'}`,
+          rule: `(x, y) → (x ${h > 0 ? '+' : '-'} ${Math.abs(h)}, y)`,
+          map: ([x, y]) => [x + h, y],
+          fn: (x) => base.fn(x - h)
+        };
+      }
+      if (kind === 'reflection') {
+        const inXAxis = Math.random() < 0.5;
+        return inXAxis ? {
+          equation: 'y = -f(x)',
+          description: 'reflection in the x-axis',
+          rule: '(x, y) → (x, -y)',
+          map: ([x, y]) => [x, -y],
+          fn: (x) => -base.fn(x)
+        } : {
+          equation: 'y = f(-x)',
+          description: 'reflection in the y-axis',
+          rule: '(x, y) → (-x, y)',
+          map: ([x, y]) => [-x, y],
+          fn: (x) => base.fn(-x)
+        };
+      }
+      const vertical = Math.random() < 0.55;
+      const factor = choice([2, 3]);
+      return vertical ? {
+        equation: `y = ${factor}f(x)`,
+        description: `vertical stretch by scale factor ${factor}`,
+        rule: `(x, y) → (x, ${factor}y)`,
+        map: ([x, y]) => [x, factor * y],
+        fn: (x) => factor * base.fn(x)
+      } : {
+        equation: `y = f(${factor}x)`,
+        description: `horizontal stretch by scale factor ${formatNumber(1 / factor)}`,
+        rule: `(x, y) → (${formatNumber(1 / factor)}x, y)`,
+        map: ([x, y]) => [x / factor, y],
+        fn: (x) => base.fn(factor * x)
+      };
+    }
+    function singleTransformProblem(kind) {
+      const base = baseForTransform();
+      const t = transformationFor(kind, base);
+      const originalPoints = cleanPoints(base.points);
+      const imagePoints = cleanPoints(originalPoints.map(t.map));
+      const prompt = `The dashed graph is ${base.formula}. Sketch <span class="math">${escapeHtml(t.equation)}</span> and describe the transformation.`;
+      const questionDiagram = wrapDiagram(graphDiagram([curve(base.fn, '#64748b', true)]), legend('y = f(x)', 'to be sketched'));
+      const solutionDiagram = wrapDiagram(graphDiagram([
+        curve(base.fn, '#64748b', true),
+        curve(t.fn, '#0f766e', false),
+        ...imagePoints.map((point, index) => pointMarker(point, `P${index + 1}`, '#0f766e'))
+      ]), legend('y = f(x)', t.equation));
+      const answer = `${t.description.charAt(0).toUpperCase()}${t.description.slice(1)}.`;
+      return makeProblem(kind, questionDiagram, prompt, answer, [
+        `Start with the parent graph ${base.formula}.`,
+        `The equation <span class="math">${escapeHtml(t.equation)}</span> gives the point mapping <span class="math">${escapeHtml(t.rule)}</span>.`,
+        `Map useful points on the original graph.${pointTable(originalPoints, originalPoints.map(t.map))}`,
+        `Draw a smooth image curve through the image points, keeping the shape of the parent graph consistent.`,
+        `<div>${solutionDiagram}</div>`
+      ], solutionDiagram);
+    }
+    function makeProblem(type, diagramHtml, prompt, answer, steps, solutionDiagram) {
+      const equation = `<div class="diagram-row"><div>${diagramHtml}</div><div class="question-text">${prompt}</div></div>`;
+      return {
+        instruction: setInstructions[type],
+        diagram: diagramHtml,
+        prompt,
+        question: prompt,
+        equation,
+        answer,
+        steps,
+        solutionDiagram
+      };
+    }
+    function genIdentifyParent() {
+      const base = choice(parentModels);
+      const diagram = wrapDiagram(graphDiagram([curve(base.fn, '#0f766e')]));
+      const prompt = 'Identify the parent graph shown and state one key feature.';
+      const answer = `${base.plain}; ${base.features}`;
+      return makeProblem('identify_parent', diagram, prompt, answer, [
+        'Look at the overall shape of the graph before choosing an equation.',
+        `This shape matches the ${base.name} parent graph: ${base.formula}.`,
+        `A key feature is: ${escapeHtml(base.features)}`
+      ], diagram);
+    }
+    function genFeaturesParent() {
+      const base = choice(parentModels);
+      const diagram = wrapDiagram(graphDiagram([curve(base.fn, '#0f766e')]));
+      const prompt = `For the graph shown, state the domain and range of ${base.formula}.`;
+      const answer = `Domain: ${base.domain}. Range: ${base.range}.`;
+      return makeProblem('features_parent', diagram, prompt, answer, [
+        'The domain is the set of possible input values on the x-axis.',
+        `For ${base.formula}, the domain is ${base.domain}.`,
+        'The range is the set of possible output values on the y-axis.',
+        `For this graph, the range is ${base.range}.`
+      ], diagram);
+    }
+    function genMatchGraphEquation() {
+      const base = choice(parentModels);
+      const otherOptions = parentModels
+        .filter((model) => model.id !== base.id)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 2);
+      const options = [base, ...otherOptions].sort(() => Math.random() - 0.5);
+      const letters = ['A', 'B', 'C'];
+      const optionText = options.map((model, index) => `${letters[index]}: ${model.formula}`).join('<br>');
+      const diagram = wrapDiagram(graphDiagram([curve(base.fn, '#0f766e')]));
+      const prompt = `Match the graph to the correct equation.<br>${optionText}`;
+      const answer = `${letters[options.findIndex((model) => model.id === base.id)]}: ${base.plain}`;
+      return makeProblem('match_graph_equation', diagram, prompt, answer, [
+        'Compare the visible graph shape with each option.',
+        `The graph has the shape of ${base.formula}.`,
+        `Therefore the correct match is ${answer}.`
+      ], diagram);
+    }
+    function combinedTransform() {
+      const base = choice(parentModels.filter((model) => ['quadratic', 'absolute', 'cubic'].includes(model.id)));
+      const h = choice([-3, -2, 2, 3]);
+      const a = choice([2, -1, -2]);
+      const k = choice([-3, -2, 2, 3]);
+      const equation = `y = ${a === -1 ? '-' : a === 1 ? '' : a}f(x ${h > 0 ? '-' : '+'} ${Math.abs(h)})${signed(k)}`;
+      return {
+        base,
+        equation,
+        description: `${h > 0 ? 'Translate right' : 'Translate left'} ${Math.abs(h)}, ${Math.abs(a) === 1 ? '' : `stretch vertically by scale factor ${Math.abs(a)}, `}${a < 0 ? 'reflect in the x-axis, ' : ''}${k > 0 ? 'then translate up' : 'then translate down'} ${Math.abs(k)}.`,
+        rule: `(x, y) → (x ${h > 0 ? '+' : '-'} ${Math.abs(h)}, ${a === -1 ? '-y' : `${a}y`} ${k > 0 ? '+' : '-'} ${Math.abs(k)})`,
+        map: ([x, y]) => [x + h, a * y + k],
+        fn: (x) => a * base.fn(x - h) + k
+      };
+    }
+    function genCombinedFromEquation() {
+      const t = combinedTransform();
+      const originalPoints = cleanPoints(t.base.points);
+      const imagePoints = cleanPoints(originalPoints.map(t.map));
+      const questionDiagram = wrapDiagram(graphDiagram([curve(t.base.fn, '#64748b', true)]), legend('y = f(x)', 'image to be sketched'));
+      const solutionDiagram = wrapDiagram(graphDiagram([
+        curve(t.base.fn, '#64748b', true),
+        curve(t.fn, '#0f766e'),
+        ...imagePoints.map((point, index) => pointMarker(point, `P${index + 1}`, '#0f766e'))
+      ]), legend('y = f(x)', t.equation));
+      const prompt = `The dashed graph is ${t.base.formula}. Sketch <span class="math">${escapeHtml(t.equation)}</span> and describe the transformations.`;
+      return makeProblem('combined_from_equation', questionDiagram, prompt, t.description, [
+        `Identify the parent graph: ${t.base.formula}.`,
+        `The equation <span class="math">${escapeHtml(t.equation)}</span> uses the point mapping <span class="math">${escapeHtml(t.rule)}</span>.`,
+        `Map key points from the parent graph.${pointTable(originalPoints, originalPoints.map(t.map))}`,
+        'Sketch the transformed curve through the image points.',
+        `<div>${solutionDiagram}</div>`
+      ], solutionDiagram);
+    }
+    function genDescribeTransformation() {
+      const base = baseForTransform();
+      const t = transformationFor(choice(['vertical_translation', 'horizontal_translation', 'reflection', 'stretch']), base);
+      const diagram = wrapDiagram(graphDiagram([
+        curve(base.fn, '#64748b', true),
+        curve(t.fn, '#0f766e')
+      ]), legend('dashed original', 'solid image'));
+      const prompt = `The dashed graph is <span class="math">y = f(x)</span> and the solid graph is the image. Describe the transformation fully.`;
+      const answer = `${t.description.charAt(0).toUpperCase()}${t.description.slice(1)}.`;
+      return makeProblem('describe_transformation', diagram, prompt, answer, [
+        'Compare a clear point on the dashed graph with the corresponding point on the solid graph.',
+        `The points follow the rule <span class="math">${escapeHtml(t.rule)}</span>.`,
+        `This means the transformation is: ${answer}`
+      ], diagram);
+    }
+    function genTransformKeyPoints() {
+      const base = baseForTransform();
+      const t = transformationFor(choice(['vertical_translation', 'horizontal_translation', 'reflection', 'stretch']), base);
+      const originalPoints = cleanPoints(base.points).slice(0, 4);
+      const imagePoints = originalPoints.map(t.map);
+      const diagram = wrapDiagram(graphDiagram([
+        curve(base.fn, '#64748b', true),
+        ...originalPoints.map((point, index) => pointMarker(point, `P${index + 1}`, '#64748b'))
+      ]), legend('given graph', 'image to be sketched'));
+      const prompt = `The key points on <span class="math">y = f(x)</span> are ${pointList(originalPoints)}. Use <span class="math">${escapeHtml(t.equation)}</span> to find the image points.`;
+      const answer = `Image points: ${pointList(imagePoints)}.`;
+      return makeProblem('transform_key_points', diagram, prompt, answer, [
+        `Use the mapping rule for <span class="math">${escapeHtml(t.equation)}</span>: <span class="math">${escapeHtml(t.rule)}</span>.`,
+        `Apply the rule to each original point.${pointTable(originalPoints, imagePoints)}`,
+        `The image points are ${pointList(imagePoints)}.`
+      ], wrapDiagram(graphDiagram([curve(base.fn, '#64748b', true), curve(t.fn, '#0f766e')])));
+    }
+    function factor(root) {
+      return root >= 0 ? `(x - ${root})` : `(x + ${Math.abs(root)})`;
+    }
+    function genQuadraticFeatures() {
+      const rootPair = choice([[-3, 1], [-2, 2], [-1, 3], [-4, 0], [0, 4]]);
+      const r1 = rootPair[0];
+      const r2 = rootPair[1];
+      const a = choice([1, -1]);
+      const fn = (x) => a * (x - r1) * (x - r2);
+      const mid = (r1 + r2) / 2;
+      const turn = [mid, fn(mid)];
+      const aText = a === 1 ? '' : a === -1 ? '-' : String(a);
+      const eq = `y = ${aText}${factor(r1)}${factor(r2)}`;
+      const solutionDiagram = wrapDiagram(graphDiagram([
+        curve(fn, '#0f766e'),
+        pointMarker([r1, 0], 'root', '#ea580c'),
+        pointMarker([r2, 0], 'root', '#ea580c'),
+        validY(turn[1]) ? pointMarker(turn, 'T', '#0f766e') : ''
+      ]));
+      const prompt = `Sketch <span class="math">${escapeHtml(eq)}</span>. State the roots and the turning point.`;
+      const answer = `Roots: x = ${r1}, x = ${r2}. Turning point: ${pointText(turn)}.`;
+      return makeProblem('quadratic_features', wrapDiagram(graphDiagram([])), prompt, answer, [
+        `In factorised form, each bracket gives a root: <span class="math">x = ${r1}</span> and <span class="math">x = ${r2}</span>.`,
+        `The axis of symmetry is halfway between the roots: <span class="math">x = (${r1} + ${r2}) ÷ 2 = ${formatNumber(mid)}</span>.`,
+        `Substitute <span class="math">x = ${formatNumber(mid)}</span> into the equation to find the turning point: <span class="math">y = ${formatNumber(turn[1])}</span>.`,
+        `<div>${solutionDiagram}</div>`
+      ], solutionDiagram);
+    }
+    function fracHtml(num, den) {
+      return `<span class="frac"><span class="num">${num}</span><span class="den">${den}</span></span>`;
+    }
+    function genReciprocalAsymptotes() {
+      const a = choice([1, 2, -2, 3]);
+      const h = choice([-3, -2, 2, 3]);
+      const k = choice([-2, -1, 1, 2]);
+      const den = `x ${h > 0 ? '-' : '+'} ${Math.abs(h)}`;
+      const eq = `y = ${fracHtml(a, den)}${signed(k)}`;
+      const fn = (x) => Math.abs(x - h) < 0.08 ? NaN : a / (x - h) + k;
+      const solutionDiagram = wrapDiagram(graphDiagram([
+        asymptoteX(h),
+        asymptoteY(k),
+        curve(fn, '#0f766e')
+      ]));
+      const prompt = `Sketch <span class="math">${eq}</span>. State the vertical and horizontal asymptotes.`;
+      const answer = `Vertical asymptote: x = ${h}. Horizontal asymptote: y = ${k}.`;
+      return makeProblem('reciprocal_asymptotes', wrapDiagram(graphDiagram([asymptoteX(h), asymptoteY(k)])), prompt, answer, [
+        `The denominator is zero when <span class="math">${escapeHtml(den)} = 0</span>, so the vertical asymptote is <span class="math">x = ${h}</span>.`,
+        `The graph is translated vertically by ${k}, so the horizontal asymptote is <span class="math">y = ${k}</span>.`,
+        `The sign and size of the numerator, ${a}, decide the branch direction and steepness.`,
+        `<div>${solutionDiagram}</div>`
+      ], solutionDiagram);
+    }
+    function genCubicRoots() {
+      const rootSets = [[-3, 0, 2], [-2, 0, 3], [-3, -1, 2], [-2, 1, 3], [-1, 1, 4]];
+      const roots = choice(rootSets).slice().sort((a, b) => a - b);
+      const a = choice([1, -1]);
+      const fn = (x) => a * roots.reduce((product, root) => product * (x - root), 1);
+      const eq = `y = ${a === -1 ? '-' : ''}${roots.map(factor).join('')}`;
+      const solutionDiagram = wrapDiagram(graphDiagram([
+        curve(fn, '#0f766e'),
+        ...roots.map((root) => pointMarker([root, 0], 'root', '#ea580c'))
+      ]));
+      const prompt = `Sketch the cubic curve <span class="math">${escapeHtml(eq)}</span>. State the roots and end behaviour.`;
+      const answer = `Roots: ${roots.map((root) => `x = ${root}`).join(', ')}. ${a > 0 ? 'Falls left and rises right.' : 'Rises left and falls right.'}`;
+      return makeProblem('cubic_roots', wrapDiagram(graphDiagram([])), prompt, answer, [
+        `Each factor gives a root: ${roots.map((root) => `<span class="math">x = ${root}</span>`).join(', ')}.`,
+        `The coefficient is ${a > 0 ? 'positive' : 'negative'}, so the curve ${a > 0 ? 'falls on the left and rises on the right' : 'rises on the left and falls on the right'}.`,
+        'Sketch the curve crossing the x-axis at each root.',
+        `<div>${solutionDiagram}</div>`
+      ], solutionDiagram);
+    }
+    function genExponentialTransform() {
+      const h = choice([-2, -1, 1, 2]);
+      const k = choice([-2, -1, 1, 2]);
+      const eq = `y = 2<sup>x ${h > 0 ? '-' : '+'} ${Math.abs(h)}</sup>${signed(k)}`;
+      const fn = (x) => Math.pow(2, x - h) + k;
+      const key = [[h, 1 + k], [h + 1, 2 + k], [h + 2, 4 + k]].filter((point) => validY(point[1]));
+      const solutionDiagram = wrapDiagram(graphDiagram([
+        asymptoteY(k),
+        curve(fn, '#0f766e'),
+        ...key.map((point, index) => pointMarker(point, `P${index + 1}`, '#0f766e'))
+      ]));
+      const prompt = `Sketch <span class="math">${eq}</span>. State the horizontal asymptote and three useful points.`;
+      const answer = `Horizontal asymptote: y = ${k}. Useful points include ${pointList(key)}.`;
+      return makeProblem('exponential_transform', wrapDiagram(graphDiagram([asymptoteY(k)])), prompt, answer, [
+        `The parent graph <span class="math">y = 2<sup>x</sup></span> has horizontal asymptote <span class="math">y = 0</span>.`,
+        `The ${signed(k).trim()} outside the power moves the asymptote to <span class="math">y = ${k}</span>.`,
+        `The expression in the power shifts the graph ${h > 0 ? 'right' : 'left'} by ${Math.abs(h)}.`,
+        `Map parent points to get useful image points: ${pointList(key)}.`,
+        `<div>${solutionDiagram}</div>`
+      ], solutionDiagram);
+    }
+    function generateProblem() {
+      const type = currentType === 'select' ? choice(levelConfigs[currentLevel].types) : currentType;
+      if (type === 'identify_parent') return genIdentifyParent();
+      if (type === 'features_parent') return genFeaturesParent();
+      if (type === 'match_graph_equation') return genMatchGraphEquation();
+      if (['vertical_translation', 'horizontal_translation', 'reflection', 'stretch'].includes(type)) return singleTransformProblem(type);
+      if (type === 'combined_from_equation') return genCombinedFromEquation();
+      if (type === 'describe_transformation') return genDescribeTransformation();
+      if (type === 'transform_key_points') return genTransformKeyPoints();
+      if (type === 'quadratic_features') return genQuadraticFeatures();
+      if (type === 'reciprocal_asymptotes') return genReciprocalAsymptotes();
+      if (type === 'cubic_roots') return genCubicRoots();
+      if (type === 'exponential_transform') return genExponentialTransform();
+      return genIdentifyParent();
+    }
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = 'select';
+      document.querySelectorAll('.tab').forEach((tab, index) => tab.classList.toggle('active', index + 1 === level));
+      const config = levelConfigs[level];
+      document.getElementById('level-title').textContent = config.title;
+      document.getElementById('level-description').textContent = config.description;
+      const dropdown = document.getElementById('type-dropdown');
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + config.types.map((type) => `<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      dropdown.value = 'select';
+      showBlankPage();
+    }
+    function typeChanged() {
+      currentType = document.getElementById('type-dropdown').value;
+      currentType === 'select' ? showBlankPage() : generateNewSet();
+    }
+    function showBlankPage() {
+      document.getElementById('problem-set-header').classList.remove('visible');
+      document.getElementById('set-instruction').classList.remove('visible');
+      document.getElementById('problem-list').innerHTML = '<li style="text-align:center;padding:42px;color:#64748b;font:750 1.05rem system-ui,sans-serif">Select a question type to generate graph transformation and curve sketching practice.</li>';
+    }
+    function setInstructionForType() {
+      const instruction = document.getElementById('set-instruction');
+      instruction.textContent = setInstructions[currentType] || 'Complete each graph question.';
+      instruction.classList.toggle('visible', Boolean(currentType && currentType !== 'select'));
+    }
+    function generateNewSet() {
+      if (currentType === 'select') {
+        showBlankPage();
+        return;
+      }
+      answersVisible = false;
+      stepsVisible = false;
+      const count = oneExampleMode ? 1 : 2;
+      problems = Array.from({ length: count }, () => generateProblem());
+      renderProblems();
+    }
+    function renderStep(step) {
+      const raw = String(step);
+      if (/<table|<div|<span|<svg/i.test(raw)) return `<div class="step">${raw}</div>`;
+      if (/[=()→]/.test(raw) && raw.length < 150) return `<div class="step-equation">${raw}</div>`;
+      return `<div class="step">${escapeHtml(raw)}</div>`;
+    }
+    function renderProblems() {
+      const list = document.getElementById('problem-list');
+      const header = document.getElementById('problem-set-header');
+      list.innerHTML = '';
+      header.textContent = typeDisplayNames[currentType] || 'Graph Transformations';
+      header.className = 'problem-set-header visible';
+      setInstructionForType();
+      problems.forEach((problem, index) => {
+        const item = document.createElement('li');
+        item.className = 'problem-item';
+        const steps = problem.steps.map(renderStep).join('');
+        item.innerHTML = `
+          <div class="problem-main">
+            <div class="problem-number">${index + 1}</div>
+            <div class="diagram-row">
+              <div>${problem.diagram}</div>
+              <div class="question-text">${problem.prompt}</div>
+            </div>
+          </div>
+          <div class="quick-answer" id="quick-answer-${index}">${problem.answer}</div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution</div>
+            <div class="solution-steps">
+              ${steps}
+              <div class="final-answer">${problem.answer}</div>
+            </div>
+          </div>`;
+        list.appendChild(item);
+      });
+    }
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      problems.forEach((_, index) => {
+        const element = document.getElementById(`quick-answer-${index}`);
+        if (element) element.classList.toggle('visible', answersVisible);
+      });
+    }
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const element = document.getElementById(`steps-${index}`);
+        if (element) element.classList.toggle('visible', stepsVisible);
+      });
+    }
+    function setMode(example) {
+      oneExampleMode = example;
+      document.getElementById('practiceModeBtn').classList.toggle('active', !example);
+      document.getElementById('exampleModeBtn').classList.toggle('active', example);
+      if (currentType !== 'select') generateNewSet();
+    }
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining -= 1;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerActive = false;
+      const timer = document.getElementById('timer-display');
+      timer.textContent = 'Ready';
+      timer.className = 'timer-display';
+    }
+    function updateTimerDisplay() {
+      const timer = document.getElementById('timer-display');
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      timer.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+      if (timerActive && timeRemaining <= 30) timer.className = 'timer-display warning';
+      else if (timerActive) timer.className = 'timer-display active';
+      else timer.className = 'timer-display';
+    }
+    function timerFinished() {
+      stopTimer();
+      const timer = document.getElementById('timer-display');
+      timer.textContent = 'Time Up!';
+      timer.className = 'timer-display warning';
+      document.getElementById('timer-modal').classList.remove('hidden');
+    }
+    function closeModal() {
+      document.getElementById('timer-modal').classList.add('hidden');
+    }
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('active');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.querySelector('.sidebar-overlay').classList.remove('active');
+    }
+    switchLevel(1);
+  </script>
+  <script>
+    document.documentElement.dataset.teacherExampleReady = 'true';
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
+</body>
+</html>

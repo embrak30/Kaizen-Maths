@@ -1581,6 +1581,25 @@ const tools = [
     ]
   },
   {
+    slug: "graph-transformations-curve-sketching",
+    title: "Graph Transformations and Curve Sketching",
+    category: "Algebra",
+    level: "GCSE / A-Level / IB / CAPE",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate diagram-led graph transformation and curve sketching practice covering parent graphs, translations, stretches, reflections, combined transformations, intercepts, asymptotes, turning points, domain, and range.",
+    tags: ["algebra", "graphs", "functions", "graph transformations", "curve sketching", "translations", "stretches", "reflections", "domain", "range", "asymptotes", "intercepts", "turning points", "GCSE", "A-Level", "IB", "CAPE"],
+    toolPath: "tools/graph-transformations-curve-sketching/index.html?v=graph-transformations-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers parent graph recognition, matching graphs to equations, and stating domain, range, and key features.",
+      "Level 2 covers single transformations including vertical and horizontal translations, reflections, and stretches.",
+      "Level 3 covers combined transformations, point mappings, and describing transformations from original and image graphs.",
+      "Level 4 covers curve sketching from roots, turning points, asymptotes, end behaviour, and transformed exponential graphs."
+    ]
+  },
+  {
     slug: "bracket-expansion",
     title: "Bracket Expansion",
     category: "Algebra",
@@ -1904,6 +1923,7 @@ const algebraToolGroups = {
   "advanced-factorisation": "Quadratics and Factorisation",
   "binomial-expansion": "Quadratics and Factorisation",
   "functions": "Functions, Graphs and Coordinate Geometry",
+  "graph-transformations-curve-sketching": "Functions, Graphs and Coordinate Geometry",
   "straight-lines": "Functions, Graphs and Coordinate Geometry",
   "conic-intersections": "Functions, Graphs and Coordinate Geometry",
   "logarithms-practice": "Functions, Graphs and Coordinate Geometry",
@@ -7340,10 +7360,11 @@ const curatedRelatedToolSlugs = {
   "bearings": ["trigonometric-ratios", "earth-geometry", "missing-angles", "sine-cosine-rule"],
   "fractions-practice": ["fractions", "decimals-practice-lab", "simple-percentage-tasks", "ratio-proportion"],
   "algebraic-fractions": ["factorisation", "advanced-factorisation", "quadratic-factorisation", "linear-equations"],
+  "graph-transformations-curve-sketching": ["functions", "straight-lines", "transformations", "quadratic-equations"],
   "matrices": ["advanced-matrices", "further-vectors", "simultaneous-equations", "transformations"],
   "advanced-matrices": ["matrices", "further-vectors", "complex-numbers", "transformations"],
   "complex-numbers": ["polar-coordinates", "roots-of-equations", "trigonometric-functions", "advanced-matrices"],
-  "polar-coordinates": ["complex-numbers", "trigonometric-functions", "curve-sketching", "hyperbolic-functions"],
+  "polar-coordinates": ["complex-numbers", "trigonometric-functions", "graph-transformations-curve-sketching", "hyperbolic-functions"],
   "series-expansions": ["differentiation-polynomials", "integration", "advanced-integration", "functions"],
   "differential-equations": ["advanced-integration", "differentiation-rules", "trig-differentiation-rules", "functions"]
 };
@@ -8436,6 +8457,19 @@ function toolInsightProfile(tool) {
         "Which representation makes the calculation most efficient, and why?",
         "How can we estimate first so that we can evaluate whether the exact answer is sensible?",
         "What structure in the numbers reveals the factor, multiple, place-value, or proportional relationship?"
+      ]
+    },
+    {
+      match: () => tool.slug === "graph-transformations-curve-sketching" || has("graph transformations", "curve sketching", "parent graphs"),
+      misconceptions: [
+        "Interpreting f(x - a) as a movement left instead of recognising that the graph moves right by a units.",
+        "Using a vertical stretch rule for f(ax) instead of applying the reciprocal horizontal scale factor to x-coordinates.",
+        "Sketching curves from memory without first locating intercepts, asymptotes, turning points, or invariant points."
+      ],
+      questions: [
+        "Which key points on the original graph are easiest to transform, and why are they enough to guide the sketch?",
+        "What stays fixed under this transformation, and what changes in the equation, coordinates, and graph?",
+        "Which features must be shown for this curve sketch to communicate the function accurately?"
       ]
     },
     {
