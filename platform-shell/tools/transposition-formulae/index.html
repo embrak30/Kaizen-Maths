@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transposition of Formulae</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Cambria, "Times New Roman", serif;
+      color: #172033;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(20, 184, 166, 0.15), transparent 34%),
+        radial-gradient(circle at 88% 12%, rgba(245, 158, 11, 0.16), transparent 30%),
+        linear-gradient(135deg, #f8fbff 0%, #edfdf8 100%);
+    }
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1001;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      background: #0f766e;
+      color: white;
+      padding: 14px 8px;
+      border-radius: 0 10px 10px 0;
+      cursor: pointer;
+      font: 800 0.84rem system-ui, sans-serif;
+      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.22);
+    }
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(15, 23, 42, 0.38);
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.2s ease;
+    }
+    .sidebar-overlay.active { opacity: 1; visibility: visible; }
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 -400px;
+      z-index: 1000;
+      width: min(400px, 86vw);
+      background: white;
+      overflow-y: auto;
+      transition: left 0.25s ease;
+      box-shadow: 12px 0 30px rgba(15, 23, 42, 0.18);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-header {
+      padding: 18px 22px;
+      background: linear-gradient(135deg, #0f766e, #2563eb);
+      color: white;
+      font: 900 1.2rem system-ui, sans-serif;
+    }
+    .sidebar-content { padding: 20px 24px 28px; line-height: 1.55; }
+    .sidebar-content h3 {
+      margin: 18px 0 8px;
+      color: #0f766e;
+      font: 900 1rem system-ui, sans-serif;
+    }
+    .sidebar-content p, .sidebar-content li {
+      color: #475569;
+      font-size: 0.96rem;
+    }
+    .sidebar-content ul { margin: 0 0 12px; padding-left: 20px; }
+    .container {
+      width: min(1220px, calc(100% - 28px));
+      margin: 14px auto;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(20, 184, 166, 0.18);
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.13);
+    }
+    .header {
+      padding: 22px 24px;
+      background: linear-gradient(135deg, #0f172a 0%, #0f766e 62%, #f97316 135%);
+      color: white;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.65rem, 3.5vw, 2.6rem);
+      letter-spacing: 0;
+    }
+    .header p {
+      max-width: 850px;
+      margin: 0 auto;
+      color: rgba(255, 255, 255, 0.88);
+      font: 650 1rem/1.45 system-ui, sans-serif;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: #e9f7f4;
+      border-bottom: 1px solid rgba(15, 118, 110, 0.14);
+    }
+    .tab {
+      border: 0;
+      border-bottom: 4px solid transparent;
+      background: transparent;
+      color: #244154;
+      padding: 15px 10px;
+      cursor: pointer;
+      font: 900 0.95rem system-ui, sans-serif;
+    }
+    .tab.active {
+      background: white;
+      color: #0f766e;
+      border-bottom-color: #f97316;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) minmax(260px, 380px) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 16px 20px;
+      background: #f8fafc;
+      border-bottom: 1px solid #dbe8ea;
+    }
+    .level-info h2 {
+      margin: 0 0 4px;
+      color: #0f766e;
+      font-size: 1.25rem;
+    }
+    .level-info p {
+      margin: 0;
+      color: #64748b;
+      font: 650 0.95rem/1.35 system-ui, sans-serif;
+    }
+    .type-control {
+      display: grid;
+      gap: 6px;
+    }
+    .type-control label {
+      color: #475569;
+      font: 900 0.78rem system-ui, sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    select {
+      width: 100%;
+      border: 2px solid #99f6e4;
+      border-radius: 10px;
+      background: white;
+      color: #162033;
+      padding: 11px 12px;
+      font: 800 1rem system-ui, sans-serif;
+      outline: none;
+    }
+    .timer-section, .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .timer-display {
+      min-width: 88px;
+      padding: 10px 12px;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      background: white;
+      color: #0f766e;
+      text-align: center;
+      font: 900 1.05rem system-ui, sans-serif;
+    }
+    .timer-display.active { color: #2563eb; border-color: #93c5fd; }
+    .timer-display.warning { color: #dc2626; border-color: #fca5a5; }
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: white;
+      background: #0f766e;
+      cursor: pointer;
+      font: 900 0.95rem system-ui, sans-serif;
+      box-shadow: 0 8px 16px rgba(15, 118, 110, 0.14);
+    }
+    button.secondary { background: #2563eb; }
+    button.warn { background: #f59e0b; color: #2d1600; }
+    button.danger { background: #ef4444; }
+    button.mode {
+      border: 2px solid #cbd5e1;
+      background: white;
+      color: #1e293b;
+      box-shadow: none;
+    }
+    button.mode.active {
+      border-color: #14b8a6;
+      background: #ccfbf1;
+      color: #115e59;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 12px 20px;
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .workspace { padding: 18px 20px 26px; }
+    .problem-set-header {
+      display: none;
+      margin: 0 0 10px;
+      padding: 11px 16px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0f766e, #14b8a6);
+      color: white;
+      text-align: center;
+      font: 900 1.18rem system-ui, sans-serif;
+    }
+    .problem-set-header.visible { display: block; }
+    .set-instruction {
+      display: none;
+      margin: 0 0 14px;
+      padding: 11px 14px;
+      border-left: 5px solid #f97316;
+      border-radius: 10px;
+      background: #fff7ed;
+      color: #7c2d12;
+      font: 800 1rem/1.35 system-ui, sans-serif;
+    }
+    .set-instruction.visible { display: block; }
+    .problem-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 14px;
+    }
+    .problem-item {
+      border: 1px solid #d8e4eb;
+      border-radius: 14px;
+      background: white;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    }
+    .problem-main {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+    }
+    .problem-number {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: #f97316;
+      color: white;
+      font: 900 1.1rem system-ui, sans-serif;
+    }
+    .formula-card {
+      display: grid;
+      gap: 8px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid #dbeafe;
+      background: linear-gradient(135deg, #ffffff, #f8fafc);
+    }
+    .target {
+      color: #475569;
+      font: 850 0.95rem system-ui, sans-serif;
+    }
+    .formula-display {
+      font-size: clamp(1.35rem, 2.7vw, 2.15rem);
+      line-height: 1.55;
+      color: #111827;
+    }
+    .math {
+      font-family: Cambria, "Times New Roman", serif;
+      font-style: italic;
+      white-space: nowrap;
+    }
+    .quick-answer {
+      display: none;
+      margin: 0 16px 16px 72px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #ecfdf5;
+      color: #14532d;
+      border: 1px solid #bbf7d0;
+      font: 850 1.02rem/1.35 system-ui, sans-serif;
+    }
+    .quick-answer.visible { display: block; }
+    .steps-section {
+      display: none;
+      padding: 0 16px 16px 72px;
+    }
+    .steps-section.visible { display: block; }
+    .answer-label {
+      color: #0f766e;
+      margin: 0 0 8px;
+      font: 900 0.9rem system-ui, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .solution-steps {
+      display: grid;
+      gap: 9px;
+    }
+    .step, .step-equation {
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      padding: 10px 12px;
+      color: #334155;
+      font: 650 0.98rem/1.45 system-ui, sans-serif;
+    }
+    .step-equation {
+      background: #ffffff;
+      color: #111827;
+      font: 1.14rem/1.45 Cambria, "Times New Roman", serif;
+    }
+    .final-answer {
+      border-radius: 10px;
+      background: #14532d;
+      color: white;
+      padding: 11px 12px;
+      font: 900 1rem/1.35 system-ui, sans-serif;
+    }
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      line-height: 1.05;
+      font-family: Cambria, "Times New Roman", serif;
+    }
+    .frac .num {
+      border-bottom: 1.9px solid currentColor;
+      padding: 0 0.24em 0.08em;
+    }
+    .frac .den { padding-top: 0.08em; }
+    .root {
+      display: inline-flex;
+      align-items: stretch;
+      font-family: Cambria, "Times New Roman", serif;
+    }
+    .root::before {
+      content: "√";
+      font-size: 1.16em;
+      line-height: 1;
+      margin-right: 0.02em;
+    }
+    .root .radicand {
+      border-top: 1.8px solid currentColor;
+      padding: 0.05em 0.12em 0;
+    }
+    .hidden { display: none !important; }
+    .timer-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1002;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.52);
+    }
+    .modal-content {
+      width: min(340px, 92vw);
+      border-radius: 16px;
+      background: white;
+      padding: 26px;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+    }
+    .modal-content h2 { margin: 0 0 10px; color: #ef4444; }
+    .modal-content p { margin: 0 0 18px; color: #64748b; }
+    @media (max-width: 920px) {
+      .tabs { grid-template-columns: repeat(2, 1fr); }
+      .controls { grid-template-columns: 1fr; }
+      .timer-section, .button-row { justify-content: flex-start; }
+      .quick-answer, .steps-section { margin-left: 0; padding-left: 16px; }
+    }
+    @media print {
+      body { background: white; }
+      .teacher-tab, .sidebar, .sidebar-overlay, .controls, .tabs, .toolbar { display: none !important; }
+      .container { width: 100%; margin: 0; border: 0; box-shadow: none; }
+      .problem-item { break-inside: avoid; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER NOTES</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Transposition of Formulae</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool helps teachers model how to change the subject of a formula through clear inverse operations.</p>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Identify the variable that must become the subject.</li>
+        <li>Undo operations in a logical order, doing the same operation to both sides.</li>
+        <li>Collect terms containing the subject before factorising.</li>
+        <li>Use squaring and square rooting carefully, including the plus or minus case where needed.</li>
+      </ul>
+      <h3>Common Misconceptions</h3>
+      <ul>
+        <li>Dividing only one term instead of the whole side of an equation.</li>
+        <li>Moving a term across the equals sign without showing the inverse operation.</li>
+        <li>Forgetting to square both sides when removing a square root.</li>
+        <li>Dropping the plus or minus when taking a square root of a squared variable.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header">
+      <h1>Transposition of Formulae</h1>
+      <p>Generate practice for changing the subject of a formula, from simple inverse operations to brackets, fractions, repeated subjects, powers, and square roots.</p>
+    </header>
+
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" type="button" onclick="switchLevel(1)">Level 1: Foundations</button>
+      <button class="tab" type="button" onclick="switchLevel(2)">Level 2: Brackets and Fractions</button>
+      <button class="tab" type="button" onclick="switchLevel(3)">Level 3: Subject Repeated</button>
+      <button class="tab" type="button" onclick="switchLevel(4)">Level 4: Powers and Roots</button>
+    </nav>
+
+    <section class="controls">
+      <div class="level-info">
+        <h2 id="level-title">Level 1: Foundations</h2>
+        <p id="level-description">Undo one-step and two-step formulae to make a variable the subject.</p>
+      </div>
+      <div class="type-control">
+        <label for="type-dropdown">Question type</label>
+        <select id="type-dropdown" onchange="typeChanged()"></select>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button type="button" class="secondary" onclick="startTimer(2)">2 Min</button>
+        <button type="button" class="warn" onclick="startTimer(5)">5 Min</button>
+        <button type="button" class="danger" onclick="stopTimer()">Stop</button>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <div class="button-row">
+        <button type="button" onclick="generateNewSet()">New</button>
+        <button type="button" class="secondary" onclick="showAnswers()">Answers</button>
+        <button type="button" class="warn" onclick="showSteps()">Steps</button>
+      </div>
+      <div class="button-row">
+        <button type="button" id="practiceModeBtn" class="mode active" onclick="setMode(false)">Practice Set</button>
+        <button type="button" id="exampleModeBtn" class="mode" onclick="setMode(true)">One Example</button>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up</h2>
+      <p>Ready to compare rearrangement methods?</p>
+      <button type="button" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+    let oneExampleMode = false;
+
+    const levelConfigs = {
+      1: {
+        title: 'Level 1: Foundations',
+        description: 'Undo one-step and two-step formulae to make a variable the subject.',
+        types: ['add_subtract', 'multiply_divide', 'two_step_linear', 'mixed_foundations']
+      },
+      2: {
+        title: 'Level 2: Brackets and Fractions',
+        description: 'Rearrange formulae involving brackets, numerator terms, and simple fractions.',
+        types: ['brackets', 'simple_fraction', 'linear_fraction_numerator', 'mixed_brackets_fractions']
+      },
+      3: {
+        title: 'Level 3: Subject Repeated',
+        description: 'Collect terms containing the subject, factorise, then divide by the coefficient or bracket.',
+        types: ['collect_terms', 'both_sides', 'subject_denominator', 'rational_subject']
+      },
+      4: {
+        title: 'Level 4: Powers and Roots',
+        description: 'Change the subject when powers, square roots, and multi-step formulae are involved.',
+        types: ['squares', 'roots', 'root_multistep', 'formulae_with_roots', 'mixed_powers_roots']
+      }
+    };
+
+    const typeDisplayNames = {
+      add_subtract: 'Add and Subtract',
+      multiply_divide: 'Multiply and Divide',
+      two_step_linear: 'Two-Step Linear Formulae',
+      mixed_foundations: 'Mixed Foundations',
+      brackets: 'Formulae with Brackets',
+      simple_fraction: 'Simple Fraction Formulae',
+      linear_fraction_numerator: 'Linear Numerator over a Constant',
+      mixed_brackets_fractions: 'Mixed Brackets and Fractions',
+      collect_terms: 'Collect Like Subject Terms',
+      both_sides: 'Subject on Both Sides',
+      subject_denominator: 'Subject in a Denominator',
+      rational_subject: 'Subject in Numerator and Denominator',
+      squares: 'Formulae with Squares',
+      roots: 'Simple Square Root Formulae',
+      root_multistep: 'Multi-Step Square Root Formulae',
+      formulae_with_roots: 'Applied Formulae with Square Roots',
+      mixed_powers_roots: 'Mixed Powers and Roots'
+    };
+
+    const setInstructions = {
+      add_subtract: 'Make the named variable the subject of each formula.',
+      multiply_divide: 'Make the named variable the subject of each formula.',
+      two_step_linear: 'Make the named variable the subject of each formula.',
+      mixed_foundations: 'Make the named variable the subject of each formula.',
+      brackets: 'Make the named variable the subject of each formula.',
+      simple_fraction: 'Make the named variable the subject of each formula.',
+      linear_fraction_numerator: 'Make the named variable the subject of each formula.',
+      mixed_brackets_fractions: 'Make the named variable the subject of each formula.',
+      collect_terms: 'Collect the terms containing the subject, then make that variable the subject.',
+      both_sides: 'Move all terms containing the subject to one side, then factorise.',
+      subject_denominator: 'Remove the denominator first, then isolate the subject.',
+      rational_subject: 'Remove the denominator, collect the subject terms, factorise, then divide.',
+      squares: 'Use inverse operations carefully. Include plus or minus when square rooting a squared variable.',
+      roots: 'Square both sides to remove the square root, then isolate the subject.',
+      root_multistep: 'Isolate the square root first, square both sides, then finish the rearrangement.',
+      formulae_with_roots: 'Work step by step through each formula involving a square root.',
+      mixed_powers_roots: 'Make the named variable the subject of each formula.'
+    };
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function choice(items) {
+      return items[randInt(0, items.length - 1)];
+    }
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+    }
+    function math(value) {
+      return `<span class="math">${value}</span>`;
+    }
+    function frac(num, den) {
+      return `<span class="frac"><span class="num">${num}</span><span class="den">${den}</span></span>`;
+    }
+    function root(value) {
+      return `<span class="root"><span class="radicand">${value}</span></span>`;
+    }
+    function formula(left, right) {
+      return math(`${left} = ${right}`);
+    }
+    function square(value) {
+      return `${value}<sup>2</sup>`;
+    }
+    function signed(value) {
+      if (value === 0) return '';
+      return value > 0 ? ` + ${value}` : ` - ${Math.abs(value)}`;
+    }
+    function cleanLinearTerm(coefficient, variable = 'x') {
+      if (coefficient === 1) return variable;
+      if (coefficient === -1) return `-${variable}`;
+      return `${coefficient}${variable}`;
+    }
+    function makeProblem(type, subject, formulaHtml, answerHtml, steps) {
+      const prompt = `
+        <div class="formula-card">
+          <div class="target">Make ${math(subject)} the subject.</div>
+          <div class="formula-display">${formulaHtml}</div>
+        </div>`;
+      return {
+        instruction: setInstructions[type],
+        subject,
+        equation: prompt,
+        question: prompt,
+        answer: answerHtml,
+        steps
+      };
+    }
+    function stepFormula(left, right) {
+      return `<div class="step-equation">${formula(left, right)}</div>`;
+    }
+
+    function genAddSubtract() {
+      const a = randInt(2, 12);
+      const add = Math.random() < 0.5;
+      const right = add ? `x + ${a}` : `x - ${a}`;
+      const inverse = add ? `y - ${a}` : `y + ${a}`;
+      const operation = add ? `subtract ${a}` : `add ${a}`;
+      const formulaHtml = formula('y', right);
+      const answer = formula('x', inverse);
+      return makeProblem('add_subtract', 'x', formulaHtml, answer, [
+        `Start with the formula and identify the term containing ${math('x')}.`,
+        stepFormula('y', right),
+        `Undo the ${add ? 'addition' : 'subtraction'} by choosing the inverse operation: ${operation} on both sides.`,
+        stepFormula(add ? `y - ${a}` : `y + ${a}`, add ? `x + ${a} - ${a}` : `x - ${a} + ${a}`),
+        `Simplify the side containing ${math('x')}.`,
+        stepFormula(inverse, 'x'),
+        `Write the formula with the new subject first.`,
+        stepFormula('x', inverse)
+      ]);
+    }
+
+    function genMultiplyDivide() {
+      const a = randInt(2, 9);
+      const formulaHtml = formula('y', `${a}x`);
+      const answer = formula('x', frac('y', a));
+      return makeProblem('multiply_divide', 'x', formulaHtml, answer, [
+        `Start with the formula and notice that ${math('x')} is multiplied by ${a}.`,
+        stepFormula('y', `${a}x`),
+        `Undo multiplication by ${a} by dividing both sides by ${a}.`,
+        stepFormula(frac('y', a), frac(`${a}x`, a)),
+        `The ${a} in the numerator and denominator cancel on the right-hand side.`,
+        stepFormula(frac('y', a), 'x'),
+        `Write the formula with ${math('x')} as the subject.`,
+        stepFormula('x', frac('y', a))
+      ]);
+    }
+
+    function genTwoStepLinear() {
+      const a = randInt(2, 9);
+      const b = randInt(2, 12);
+      const plus = Math.random() < 0.5;
+      const right = `${a}x${plus ? ` + ${b}` : ` - ${b}`}`;
+      const first = plus ? `y - ${b}` : `y + ${b}`;
+      const formulaHtml = formula('y', right);
+      const answer = formula('x', frac(first, a));
+      return makeProblem('two_step_linear', 'x', formulaHtml, answer, [
+        `Start with the formula. The subject ${math('x')} is multiplied by ${a} and then ${plus ? `${b} is added` : `${b} is subtracted`}.`,
+        stepFormula('y', right),
+        `Undo the ${plus ? 'addition' : 'subtraction'} first.`,
+        stepFormula(first, `${a}x`),
+        `Now undo multiplication by ${a} by dividing both sides by ${a}.`,
+        stepFormula(frac(first, a), frac(`${a}x`, a)),
+        `Simplify the right-hand side.`,
+        stepFormula(frac(first, a), 'x'),
+        `Write ${math('x')} as the subject.`,
+        stepFormula('x', frac(first, a))
+      ]);
+    }
+
+    function genBrackets() {
+      const a = randInt(2, 8);
+      const b = randInt(2, 10);
+      const plus = Math.random() < 0.5;
+      const bracket = plus ? `x + ${b}` : `x - ${b}`;
+      const first = frac('y', a);
+      const answerRight = plus ? `${first} - ${b}` : `${first} + ${b}`;
+      const formulaHtml = formula('y', `${a}(${bracket})`);
+      const answer = formula('x', answerRight);
+      return makeProblem('brackets', 'x', formulaHtml, answer, [
+        `Start with the formula. The bracket containing ${math('x')} is multiplied by ${a}.`,
+        stepFormula('y', `${a}(${bracket})`),
+        `Divide both sides by ${a} to isolate the bracket.`,
+        stepFormula(frac('y', a), frac(`${a}(${bracket})`, a)),
+        `Cancel the ${a} on the right-hand side.`,
+        stepFormula(frac('y', a), bracket),
+        `Undo the ${plus ? 'addition' : 'subtraction'} inside the bracket.`,
+        stepFormula(plus ? `${frac('y', a)} - ${b}` : `${frac('y', a)} + ${b}`, 'x'),
+        `Write ${math('x')} as the subject.`,
+        stepFormula('x', answerRight)
+      ]);
+    }
+
+    function genSimpleFraction() {
+      const a = randInt(2, 10);
+      const b = randInt(2, 8);
+      const plus = Math.random() < 0.5;
+      const numerator = plus ? `x + ${a}` : `x - ${a}`;
+      const afterMultiply = `${b}y`;
+      const answerRight = plus ? `${afterMultiply} - ${a}` : `${afterMultiply} + ${a}`;
+      const formulaHtml = formula('y', frac(numerator, b));
+      const answer = formula('x', answerRight);
+      return makeProblem('simple_fraction', 'x', formulaHtml, answer, [
+        `Start with the formula. The whole numerator is divided by ${b}.`,
+        stepFormula('y', frac(numerator, b)),
+        `Multiply both sides by ${b} to remove the denominator.`,
+        stepFormula(`${b}y`, numerator),
+        `Now undo the ${plus ? 'addition' : 'subtraction'} with ${a}.`,
+        stepFormula(answerRight, 'x'),
+        `Write ${math('x')} as the subject.`,
+        stepFormula('x', answerRight)
+      ]);
+    }
+
+    function genLinearFractionNumerator() {
+      const a = randInt(2, 7);
+      const b = randInt(2, 10);
+      const c = randInt(2, 8);
+      const numerator = `${a}x + ${b}`;
+      const afterMultiply = `${c}y`;
+      const subtract = `${afterMultiply} - ${b}`;
+      const formulaHtml = formula('y', frac(numerator, c));
+      const answer = formula('x', frac(subtract, a));
+      return makeProblem('linear_fraction_numerator', 'x', formulaHtml, answer, [
+        `Start with the formula. The whole numerator is divided by ${c}.`,
+        stepFormula('y', frac(numerator, c)),
+        `Multiply both sides by ${c} to remove the denominator.`,
+        stepFormula(`${c}y`, numerator),
+        `Subtract ${b} from both sides to isolate the ${math('x')} term.`,
+        stepFormula(subtract, `${a}x`),
+        `Divide both sides by ${a}.`,
+        stepFormula(frac(subtract, a), 'x'),
+        `Write ${math('x')} as the subject.`,
+        stepFormula('x', frac(subtract, a))
+      ]);
+    }
+
+    function genCollectTerms() {
+      const a = randInt(5, 10);
+      const c = randInt(2, a - 2);
+      const b = randInt(2, 12);
+      const coefficient = a - c;
+      const formulaHtml = formula('y', `${a}x + ${b} - ${c}x`);
+      const answer = formula('x', frac(`y - ${b}`, coefficient));
+      return makeProblem('collect_terms', 'x', formulaHtml, answer, [
+        `Start with the formula and identify all terms containing ${math('x')}.`,
+        stepFormula('y', `${a}x + ${b} - ${c}x`),
+        `Collect the ${math('x')} terms: ${math(`${a}x - ${c}x = ${coefficient}x`)}.`,
+        stepFormula('y', `${coefficient}x + ${b}`),
+        `Subtract ${b} from both sides.`,
+        stepFormula(`y - ${b}`, `${coefficient}x`),
+        `Divide both sides by ${coefficient}.`,
+        stepFormula(frac(`y - ${b}`, coefficient), 'x'),
+        `Write ${math('x')} as the subject.`,
+        stepFormula('x', frac(`y - ${b}`, coefficient))
+      ]);
+    }
+
+    function genBothSides() {
+      const a = randInt(2, 6);
+      const c = randInt(2, 7);
+      const b = randInt(8, 20);
+      const total = a + c;
+      const formulaHtml = formula(`y + ${a}x`, `${b} - ${c}x`);
+      const answer = formula('x', frac(`${b} - y`, total));
+      return makeProblem('both_sides', 'x', formulaHtml, answer, [
+        `Start with the formula. The subject ${math('x')} appears on both sides.`,
+        stepFormula(`y + ${a}x`, `${b} - ${c}x`),
+        `Add ${math(`${c}x`)} to both sides so all ${math('x')} terms are on the left.`,
+        stepFormula(`y + ${a}x + ${c}x`, `${b}`),
+        `Collect the ${math('x')} terms on the left.`,
+        stepFormula(`y + ${total}x`, `${b}`),
+        `Subtract ${math('y')} from both sides.`,
+        stepFormula(`${total}x`, `${b} - y`),
+        `Divide both sides by ${total}.`,
+        stepFormula('x', frac(`${b} - y`, total))
+      ]);
+    }
+
+    function genSubjectDenominator() {
+      const a = randInt(3, 12);
+      const b = randInt(2, 8);
+      const formulaHtml = formula('y', frac(a, `x + ${b}`));
+      const answer = formula('x', `${frac(a, 'y')} - ${b}`);
+      return makeProblem('subject_denominator', 'x', formulaHtml, answer, [
+        `Start with the formula. The subject is in the denominator, so remove the denominator first.`,
+        stepFormula('y', frac(a, `x + ${b}`)),
+        `Multiply both sides by ${math(`x + ${b}`)}.`,
+        stepFormula(`y(x + ${b})`, `${a}`),
+        `Divide both sides by ${math('y')} to isolate the bracket.`,
+        stepFormula(`x + ${b}`, frac(a, 'y')),
+        `Subtract ${b} from both sides.`,
+        stepFormula('x', `${frac(a, 'y')} - ${b}`)
+      ]);
+    }
+
+    function genRationalSubject() {
+      const a = randInt(2, 6);
+      const b = randInt(2, 9);
+      const c = randInt(2, 7);
+      const formulaHtml = formula('y', frac(`${a}x + ${b}`, `x + ${c}`));
+      const answer = formula('x', frac(`${b} - ${c}y`, `y - ${a}`));
+      return makeProblem('rational_subject', 'x', formulaHtml, answer, [
+        `Start with the formula. The subject appears in the numerator and denominator.`,
+        stepFormula('y', frac(`${a}x + ${b}`, `x + ${c}`)),
+        `Multiply both sides by ${math(`x + ${c}`)} to remove the denominator.`,
+        stepFormula(`y(x + ${c})`, `${a}x + ${b}`),
+        `Expand the left-hand side.`,
+        stepFormula(`xy + ${c}y`, `${a}x + ${b}`),
+        `Move the ${math('x')} terms to one side and the non-${math('x')} terms to the other side.`,
+        stepFormula(`xy - ${a}x`, `${b} - ${c}y`),
+        `Factorise the left-hand side by taking out ${math('x')}.`,
+        stepFormula(`x(y - ${a})`, `${b} - ${c}y`),
+        `Divide both sides by ${math(`y - ${a}`)}.`,
+        stepFormula('x', frac(`${b} - ${c}y`, `y - ${a}`))
+      ]);
+    }
+
+    function genSquares() {
+      const a = choice([2, 3, 4, 5]);
+      const b = randInt(2, 12);
+      const formulaHtml = formula('y', `${a}${square('x')} + ${b}`);
+      const answer = formula('x', `±${root(frac(`y - ${b}`, a))}`);
+      return makeProblem('squares', 'x', formulaHtml, answer, [
+        `Start with the formula. The subject is squared, so isolate ${math(square('x'))} first.`,
+        stepFormula('y', `${a}${square('x')} + ${b}`),
+        `Subtract ${b} from both sides.`,
+        stepFormula(`y - ${b}`, `${a}${square('x')}`),
+        `Divide both sides by ${a}.`,
+        stepFormula(frac(`y - ${b}`, a), square('x')),
+        `Take the square root of both sides. Because ${math(square('x'))} has two possible square roots, include ${math('±')}.`,
+        stepFormula('x', `±${root(frac(`y - ${b}`, a))}`)
+      ]);
+    }
+
+    function genRoots() {
+      const a = randInt(2, 12);
+      const formulaHtml = formula('y', root(`x + ${a}`));
+      const answer = formula('x', `${square('y')} - ${a}`);
+      return makeProblem('roots', 'x', formulaHtml, answer, [
+        `Start with the formula. The subject is inside a square root.`,
+        stepFormula('y', root(`x + ${a}`)),
+        `Square both sides to remove the square root.`,
+        stepFormula(square('y'), `x + ${a}`),
+        `Subtract ${a} from both sides.`,
+        stepFormula(`${square('y')} - ${a}`, 'x'),
+        `Write ${math('x')} as the subject.`,
+        stepFormula('x', `${square('y')} - ${a}`)
+      ]);
+    }
+
+    function genRootMultistep() {
+      const a = randInt(2, 5);
+      const b = randInt(2, 9);
+      const c = randInt(2, 10);
+      const formulaHtml = formula('y', `${a}${root(`x + ${b}`)} + ${c}`);
+      const isolatedRoot = frac(`y - ${c}`, a);
+      const answerRight = `${isolatedRoot}<sup>2</sup> - ${b}`;
+      const answer = formula('x', answerRight);
+      return makeProblem('root_multistep', 'x', formulaHtml, answer, [
+        `Start with the formula. Isolate the square root before squaring.`,
+        stepFormula('y', `${a}${root(`x + ${b}`)} + ${c}`),
+        `Subtract ${c} from both sides.`,
+        stepFormula(`y - ${c}`, `${a}${root(`x + ${b}`)}`),
+        `Divide both sides by ${a}.`,
+        stepFormula(isolatedRoot, root(`x + ${b}`)),
+        `Square both sides to remove the square root.`,
+        stepFormula(`${isolatedRoot}<sup>2</sup>`, `x + ${b}`),
+        `Subtract ${b} from both sides.`,
+        stepFormula('x', answerRight)
+      ]);
+    }
+
+    function genAppliedRootFormula() {
+      if (Math.random() < 0.5) {
+        const formulaHtml = formula('v', root(`${square('u')} + 2as`));
+        const answer = formula('s', frac(`${square('v')} - ${square('u')}`, '2a'));
+        return makeProblem('formulae_with_roots', 's', formulaHtml, answer, [
+          `Start with the formula and identify the subject ${math('s')} inside the square root.`,
+          stepFormula('v', root(`${square('u')} + 2as`)),
+          `Square both sides to remove the square root.`,
+          stepFormula(square('v'), `${square('u')} + 2as`),
+          `Subtract ${math(square('u'))} from both sides.`,
+          stepFormula(`${square('v')} - ${square('u')}`, '2as'),
+          `Divide both sides by ${math('2a')}.`,
+          stepFormula('s', frac(`${square('v')} - ${square('u')}`, '2a'))
+        ]);
+      }
+      const formulaHtml = formula('T', `2π${root(frac('l', 'g'))}`);
+      const answer = formula('l', frac(`${square('T')}g`, `4${square('π')}`));
+      return makeProblem('formulae_with_roots', 'l', formulaHtml, answer, [
+        `Start with the formula and isolate the square root.`,
+        stepFormula('T', `2π${root(frac('l', 'g'))}`),
+        `Divide both sides by ${math('2π')}.`,
+        stepFormula(frac('T', '2π'), root(frac('l', 'g'))),
+        `Square both sides.`,
+        stepFormula(`${frac('T', '2π')}<sup>2</sup>`, frac('l', 'g')),
+        `Simplify the left-hand side: ${math(`(${frac('T', '2π')})<sup>2</sup> = ${frac(square('T'), `4${square('π')}`)}`)}.`,
+        stepFormula(frac(square('T'), `4${square('π')}`), frac('l', 'g')),
+        `Multiply both sides by ${math('g')}.`,
+        stepFormula('l', frac(`${square('T')}g`, `4${square('π')}`))
+      ]);
+    }
+
+    function generateProblem() {
+      const type = currentType === 'select' ? choice(levelConfigs[currentLevel].types) : currentType;
+      if (type === 'add_subtract') return genAddSubtract();
+      if (type === 'multiply_divide') return genMultiplyDivide();
+      if (type === 'two_step_linear') return genTwoStepLinear();
+      if (type === 'mixed_foundations') return choice([genAddSubtract, genMultiplyDivide, genTwoStepLinear])();
+      if (type === 'brackets') return genBrackets();
+      if (type === 'simple_fraction') return genSimpleFraction();
+      if (type === 'linear_fraction_numerator') return genLinearFractionNumerator();
+      if (type === 'mixed_brackets_fractions') return choice([genBrackets, genSimpleFraction, genLinearFractionNumerator])();
+      if (type === 'collect_terms') return genCollectTerms();
+      if (type === 'both_sides') return genBothSides();
+      if (type === 'subject_denominator') return genSubjectDenominator();
+      if (type === 'rational_subject') return genRationalSubject();
+      if (type === 'squares') return genSquares();
+      if (type === 'roots') return genRoots();
+      if (type === 'root_multistep') return genRootMultistep();
+      if (type === 'formulae_with_roots') return genAppliedRootFormula();
+      if (type === 'mixed_powers_roots') return choice([genSquares, genRoots, genRootMultistep, genAppliedRootFormula])();
+      return genTwoStepLinear();
+    }
+
+    function problemKey(problem) {
+      return String(problem.equation || '').replace(/\s+/g, ' ').trim();
+    }
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = 'select';
+      document.querySelectorAll('.tab').forEach((tab, index) => tab.classList.toggle('active', index + 1 === level));
+      const config = levelConfigs[level];
+      document.getElementById('level-title').textContent = config.title;
+      document.getElementById('level-description').textContent = config.description;
+      const dropdown = document.getElementById('type-dropdown');
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + config.types.map((type) => `<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      dropdown.value = 'select';
+      showBlankPage();
+    }
+    function typeChanged() {
+      currentType = document.getElementById('type-dropdown').value;
+      currentType === 'select' ? showBlankPage() : generateNewSet();
+    }
+    function showBlankPage() {
+      document.getElementById('problem-set-header').classList.remove('visible');
+      document.getElementById('set-instruction').classList.remove('visible');
+      document.getElementById('problem-list').innerHTML = '<li style="text-align:center;padding:42px;color:#64748b;font:750 1.05rem system-ui,sans-serif">Select a question type to generate transposition practice.</li>';
+    }
+    function setInstructionForType() {
+      const instruction = document.getElementById('set-instruction');
+      instruction.textContent = setInstructions[currentType] || 'Make the named variable the subject of each formula.';
+      instruction.classList.toggle('visible', Boolean(currentType && currentType !== 'select'));
+    }
+    function generateNewSet() {
+      if (currentType === 'select') {
+        showBlankPage();
+        return;
+      }
+      answersVisible = false;
+      stepsVisible = false;
+      const count = oneExampleMode ? 1 : 5;
+      const seen = new Set();
+      problems = [];
+      let attempts = 0;
+      while (problems.length < count && attempts < 80) {
+        const problem = generateProblem();
+        const key = problemKey(problem);
+        if (!seen.has(key)) {
+          seen.add(key);
+          problems.push(problem);
+        }
+        attempts += 1;
+      }
+      renderProblems();
+    }
+    function renderStep(step) {
+      const raw = String(step);
+      if (/<table|<div|<span|<sup|<sub/i.test(raw)) return `<div class="step">${raw}</div>`;
+      if (/[=()]/.test(raw) && raw.length < 150) return `<div class="step-equation">${raw}</div>`;
+      return `<div class="step">${escapeHtml(raw)}</div>`;
+    }
+    function renderProblems() {
+      const list = document.getElementById('problem-list');
+      const header = document.getElementById('problem-set-header');
+      list.innerHTML = '';
+      header.textContent = typeDisplayNames[currentType] || 'Transposition of Formulae';
+      header.className = 'problem-set-header visible';
+      setInstructionForType();
+      problems.forEach((problem, index) => {
+        const item = document.createElement('li');
+        item.className = 'problem-item';
+        const steps = problem.steps.map(renderStep).join('');
+        item.innerHTML = `
+          <div class="problem-main">
+            <div class="problem-number">${index + 1}</div>
+            <div>${problem.equation}</div>
+          </div>
+          <div class="quick-answer" id="quick-answer-${index}">${problem.answer}</div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution</div>
+            <div class="solution-steps">
+              ${steps}
+              <div class="final-answer">${problem.answer}</div>
+            </div>
+          </div>`;
+        list.appendChild(item);
+      });
+    }
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      problems.forEach((_, index) => {
+        const element = document.getElementById(`quick-answer-${index}`);
+        if (element) element.classList.toggle('visible', answersVisible);
+      });
+    }
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const element = document.getElementById(`steps-${index}`);
+        if (element) element.classList.toggle('visible', stepsVisible);
+      });
+    }
+    function setMode(example) {
+      oneExampleMode = example;
+      document.getElementById('practiceModeBtn').classList.toggle('active', !example);
+      document.getElementById('exampleModeBtn').classList.toggle('active', example);
+      if (currentType !== 'select') generateNewSet();
+    }
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining -= 1;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerActive = false;
+      const timer = document.getElementById('timer-display');
+      timer.textContent = 'Ready';
+      timer.className = 'timer-display';
+    }
+    function updateTimerDisplay() {
+      const timer = document.getElementById('timer-display');
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      timer.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+      if (timerActive && timeRemaining <= 30) timer.className = 'timer-display warning';
+      else if (timerActive) timer.className = 'timer-display active';
+      else timer.className = 'timer-display';
+    }
+    function timerFinished() {
+      stopTimer();
+      const timer = document.getElementById('timer-display');
+      timer.textContent = 'Time Up!';
+      timer.className = 'timer-display warning';
+      document.getElementById('timer-modal').classList.remove('hidden');
+    }
+    function closeModal() {
+      document.getElementById('timer-modal').classList.add('hidden');
+    }
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('active');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.querySelector('.sidebar-overlay').classList.remove('active');
+    }
+    switchLevel(1);
+  </script>
+  <script>
+    document.documentElement.dataset.teacherExampleReady = 'true';
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
+</body>
+</html>

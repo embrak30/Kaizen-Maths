@@ -1563,6 +1563,25 @@ const tools = [
     ]
   },
   {
+    slug: "transposition-formulae",
+    title: "Transposition of Formulae: Changing the Subject",
+    category: "Algebra",
+    level: "GCSE / A-Level / CSEC / CAPE",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate changing-the-subject practice from simple inverse operations to brackets, fractions, repeated subjects, powers, square roots, and multi-step formulae.",
+    tags: ["algebra", "formulae", "transposition", "changing the subject", "rearranging formulae", "inverse operations", "square roots", "powers", "fractions", "GCSE", "A-Level", "CSEC", "CAPE"],
+    toolPath: "tools/transposition-formulae/index.html?v=transposition-formulae-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers one-step and two-step rearrangements using addition, subtraction, multiplication, and division.",
+      "Level 2 covers brackets and formulae where the subject appears in a numerator over a constant.",
+      "Level 3 covers collecting subject terms, subject on both sides, and rational formulae with the subject in a denominator.",
+      "Level 4 covers powers, square roots, and applied formulae such as v equals square root of u squared plus 2as."
+    ]
+  },
+  {
     slug: "functions",
     title: "Function Notation, Composite and Inverse Functions",
     category: "Algebra",
@@ -1915,6 +1934,7 @@ const algebraToolGroups = {
   "algebraic-fractions": "Algebra Foundations",
   "absolute-values": "Algebra Foundations",
   "linear-equations": "Equations and Inequalities",
+  "transposition-formulae": "Equations and Inequalities",
   "inequalities": "Equations and Inequalities",
   "simultaneous-equations": "Equations and Inequalities",
   "simultaneous-applications": "Equations and Inequalities",
@@ -7360,6 +7380,7 @@ const curatedRelatedToolSlugs = {
   "bearings": ["trigonometric-ratios", "earth-geometry", "missing-angles", "sine-cosine-rule"],
   "fractions-practice": ["fractions", "decimals-practice-lab", "simple-percentage-tasks", "ratio-proportion"],
   "algebraic-fractions": ["factorisation", "advanced-factorisation", "quadratic-factorisation", "linear-equations"],
+  "transposition-formulae": ["linear-equations", "substitution", "functions", "algebraic-fractions"],
   "graph-transformations-curve-sketching": ["functions", "straight-lines", "transformations", "quadratic-equations"],
   "matrices": ["advanced-matrices", "further-vectors", "simultaneous-equations", "transformations"],
   "advanced-matrices": ["matrices", "further-vectors", "complex-numbers", "transformations"],
@@ -8470,6 +8491,19 @@ function toolInsightProfile(tool) {
         "Which key points on the original graph are easiest to transform, and why are they enough to guide the sketch?",
         "What stays fixed under this transformation, and what changes in the equation, coordinates, and graph?",
         "Which features must be shown for this curve sketch to communicate the function accurately?"
+      ]
+    },
+    {
+      match: () => tool.slug === "transposition-formulae" || has("transposition", "changing the subject", "rearranging formulae"),
+      misconceptions: [
+        "Moving a term across the equals sign as a shortcut without preserving balance through an inverse operation on both sides.",
+        "Dividing only the nearest term instead of dividing the whole side or whole bracket by the coefficient.",
+        "Squaring or square-rooting too early before the square-root or squared term has been isolated."
+      ],
+      questions: [
+        "Which operation is the outermost operation around the subject, and therefore the first one that should be undone?",
+        "Where does the subject appear more than once, and how can we collect those terms before dividing?",
+        "What restriction, plus-or-minus case, or denominator condition needs to be considered after the rearrangement?"
       ]
     },
     {
