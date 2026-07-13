@@ -895,7 +895,7 @@ const tools = [
     status: "Imported",
     description: "Generate diagram-based bearings practice for three-figure bearings, reverse bearings, hidden compass-angle descriptions, and simple trigonometry in navigation contexts.",
     tags: ["geometry", "bearings", "navigation", "angles", "trigonometry", "clockwise from north", "three-figure bearings"],
-    toolPath: "tools/bearings/index.html?v=bearings-1",
+    toolPath: "tools/bearings/index.html?v=bearings-hidden-fix-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers reading bearings from diagrams and finding reverse bearings.",
