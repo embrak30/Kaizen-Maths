@@ -1,6 +1,20 @@
 const SITE_NAME = "Kaizen Maths";
 const SITE_TITLE = "Kaizen Maths | Complete Mathematics Workspace for Teachers";
 const SITE_DESCRIPTION = "Kaizen Maths is a complete mathematics workspace and virtual textbook for teachers. Generate unlimited curriculum-aligned questions, worked examples, bespoke worksheets, assessments, and classroom practice in minutes.";
+const CLASSROOM_STANDARD_VERSION = "classroom-standard-1";
+
+function addQueryParam(url, key, value) {
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+}
+
+function classroomToolPath(toolPath) {
+  return addQueryParam(toolPath, "classroomStandard", CLASSROOM_STANDARD_VERSION);
+}
+
+function classroomSharedAsset(fileName) {
+  return new URL(`tools/_shared/${fileName}?v=${CLASSROOM_STANDARD_VERSION}`, window.location.href).href;
+}
 
 function updateMetaTag(selector, attribute, value) {
   const tag = document.head.querySelector(selector);
@@ -8852,7 +8866,7 @@ function renderToolFrame(tool, options = {}) {
   const subjectGroup = toolSubjectGroup(tool);
   const startClassroom = Boolean(options.startClassroom);
   const frame = tool.imported
-    ? `<iframe class="legacy-frame" src="${tool.toolPath}" title="${tool.title}" loading="eager"></iframe>`
+    ? `<iframe class="legacy-frame" src="${classroomToolPath(tool.toolPath)}" title="${tool.title}" loading="eager"></iframe>`
     : `
       <div class="missing-tool">
         <span class="eyebrow">Coming Soon</span>
@@ -11061,7 +11075,28 @@ function bindToolFrame(tool, options = {}) {
     }
   }
 
+  function installClassroomStandardAssets(doc) {
+    doc.documentElement.classList.add("kaizen-classroom-standard");
+
+    if (!doc.getElementById("kaizen-classroom-standard-css")) {
+      const link = doc.createElement("link");
+      link.id = "kaizen-classroom-standard-css";
+      link.rel = "stylesheet";
+      link.href = classroomSharedAsset("classroom-standard.css");
+      doc.head.appendChild(link);
+    }
+
+    if (!doc.getElementById("kaizen-classroom-standard-js")) {
+      const script = doc.createElement("script");
+      script.id = "kaizen-classroom-standard-js";
+      script.src = classroomSharedAsset("classroom-standard.js");
+      script.onload = scheduleClassroomFit;
+      doc.head.appendChild(script);
+    }
+  }
+
   function installClassroomFitStyles(doc) {
+    installClassroomStandardAssets(doc);
     if (doc.getElementById("kaizen-classroom-fit-style")) return;
     const style = doc.createElement("style");
     style.id = "kaizen-classroom-fit-style";

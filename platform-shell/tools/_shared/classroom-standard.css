@@ -1,0 +1,321 @@
+/*
+  Kaizen Maths classroom standard.
+  This keeps the visible teaching controls in a common position and visual style
+  across standalone tool pages while leaving each tool's maths workspace intact.
+*/
+
+:root {
+  --kaizen-ui-font: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --kaizen-math-font: "KaTeX_Math", "KaTeX_Main", "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+  --kaizen-ink: #172033;
+  --kaizen-muted: #5f6f86;
+  --kaizen-line: #dbe7ef;
+  --kaizen-panel: #ffffff;
+  --kaizen-bg: #f8fbff;
+  --kaizen-teal: #0f766e;
+  --kaizen-teal-bright: #14b8a6;
+  --kaizen-blue: #2563eb;
+  --kaizen-amber: #f59e0b;
+  --kaizen-red: #ef4444;
+}
+
+html.kaizen-classroom-standard,
+html.kaizen-classroom-standard body {
+  color: var(--kaizen-ink);
+  font-family: var(--kaizen-ui-font) !important;
+  letter-spacing: 0;
+}
+
+html.kaizen-classroom-standard body {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(20, 184, 166, 0.10), transparent 28%),
+    radial-gradient(circle at 86% 8%, rgba(249, 115, 22, 0.08), transparent 26%),
+    linear-gradient(135deg, #f8fbff 0%, #eefdf9 100%) !important;
+}
+
+html.kaizen-classroom-standard :where(.header) {
+  background: linear-gradient(135deg, #0f172a 0%, #0f766e 68%, #f97316 145%) !important;
+  color: white !important;
+  padding: 14px 18px !important;
+}
+
+html.kaizen-classroom-standard :where(.header h1) {
+  margin: 0 !important;
+  font-family: var(--kaizen-ui-font) !important;
+  font-size: clamp(1.45rem, 2.4vw, 2rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+}
+
+html.kaizen-classroom-standard :where(.header p) {
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-family: var(--kaizen-ui-font) !important;
+  font-weight: 650 !important;
+}
+
+html.kaizen-classroom-standard :where(.tabs) {
+  background: #ecf7f5 !important;
+  border-bottom: 1px solid rgba(15, 118, 110, 0.16) !important;
+}
+
+html.kaizen-classroom-standard :where(.tab) {
+  border: 0 !important;
+  border-bottom: 3px solid transparent !important;
+  background: transparent !important;
+  color: #1f3b50 !important;
+  font-family: var(--kaizen-ui-font) !important;
+  font-weight: 900 !important;
+}
+
+html.kaizen-classroom-standard :where(.tab.active) {
+  background: white !important;
+  color: var(--kaizen-teal) !important;
+  border-bottom-color: #f97316 !important;
+}
+
+html.kaizen-classroom-standard :where(.teacher-tab) {
+  background: #0f766e !important;
+  color: white !important;
+  font-family: var(--kaizen-ui-font) !important;
+  font-weight: 850 !important;
+}
+
+.kaizen-standard-controlbar {
+  position: sticky;
+  top: 0;
+  z-index: 850;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(340px, auto) minmax(250px, auto);
+  gap: 10px;
+  align-items: center;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--kaizen-line);
+  background:
+    linear-gradient(90deg, rgba(240, 253, 250, 0.96), rgba(255, 247, 237, 0.78)),
+    var(--kaizen-panel);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.kaizen-control-context {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(190px, 1fr) minmax(190px, 340px);
+  gap: 8px;
+  align-items: end;
+}
+
+.kaizen-control-context :where(.level-info) {
+  min-width: 0 !important;
+}
+
+.kaizen-control-context :where(.level-info h2, .level-info h3) {
+  margin: 0 0 3px !important;
+  color: var(--kaizen-teal) !important;
+  font-family: var(--kaizen-ui-font) !important;
+  font-size: 1.02rem !important;
+  font-weight: 900 !important;
+  line-height: 1.15 !important;
+}
+
+.kaizen-control-context :where(.level-info p, #type-preview) {
+  margin: 0 !important;
+  color: var(--kaizen-muted) !important;
+  font-family: var(--kaizen-ui-font) !important;
+  font-size: 0.82rem !important;
+  font-weight: 650 !important;
+  line-height: 1.25 !important;
+}
+
+.kaizen-control-context :where(.dropdown-container, .type-control) {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 4px !important;
+  margin: 0 !important;
+}
+
+.kaizen-control-context :where(label) {
+  color: #456074 !important;
+  font-family: var(--kaizen-ui-font) !important;
+  font-size: 0.72rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+}
+
+.kaizen-control-context :where(select, .type-dropdown) {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: 36px !important;
+  border: 1px solid #99f6e4 !important;
+  border-radius: 8px !important;
+  background: white !important;
+  color: var(--kaizen-ink) !important;
+  padding: 6px 9px !important;
+  font-family: var(--kaizen-ui-font) !important;
+  font-size: 0.88rem !important;
+  font-weight: 800 !important;
+  outline: none !important;
+}
+
+.kaizen-control-actions {
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kaizen-control-actions > * {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+.kaizen-control-timer {
+  min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.kaizen-control-timer :where(.timer-section, .timerWrap) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+.kaizen-standard-controlbar :where(button, .btn, input[type="button"]) {
+  min-width: 68px !important;
+  min-height: 34px !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  padding: 7px 10px !important;
+  background: var(--kaizen-teal) !important;
+  color: white !important;
+  box-shadow: 0 8px 16px rgba(15, 118, 110, 0.14) !important;
+  cursor: pointer !important;
+  font-family: var(--kaizen-ui-font) !important;
+  font-size: 0.84rem !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  text-shadow: none !important;
+  transition: transform 0.12s ease, filter 0.12s ease, background 0.12s ease !important;
+}
+
+.kaizen-standard-controlbar :where(button:hover, .btn:hover, input[type="button"]:hover) {
+  filter: brightness(0.96) !important;
+  transform: translateY(-1px) !important;
+}
+
+.kaizen-standard-controlbar :where(button:disabled, .btn:disabled, input[type="button"]:disabled) {
+  opacity: 0.48 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.kaizen-standard-controlbar :where([data-kaizen-action="new"]) {
+  background: var(--kaizen-teal) !important;
+}
+
+.kaizen-standard-controlbar :where([data-kaizen-action="answers"]) {
+  background: var(--kaizen-blue) !important;
+}
+
+.kaizen-standard-controlbar :where([data-kaizen-action="steps"]) {
+  background: var(--kaizen-amber) !important;
+  color: #2d1600 !important;
+}
+
+.kaizen-standard-controlbar :where([data-kaizen-action="stop"], [data-kaizen-action="capture"]) {
+  background: var(--kaizen-red) !important;
+}
+
+.kaizen-standard-controlbar :where([data-kaizen-action="mode"]) {
+  border: 1px solid #cbd5e1 !important;
+  background: white !important;
+  color: #1f3b50 !important;
+  box-shadow: none !important;
+}
+
+.kaizen-standard-controlbar :where([data-kaizen-action="mode"].active) {
+  border-color: var(--kaizen-teal-bright) !important;
+  background: #ccfbf1 !important;
+  color: #115e59 !important;
+}
+
+.kaizen-standard-controlbar :where(.timer-display, #timer-display, #timer, #timeLeft, #time) {
+  min-width: 78px !important;
+  min-height: 34px !important;
+  border: 1px solid #99f6e4 !important;
+  border-radius: 8px !important;
+  background: white !important;
+  color: var(--kaizen-teal) !important;
+  padding: 6px 10px !important;
+  text-align: center !important;
+  font-family: var(--kaizen-ui-font) !important;
+  font-size: 1rem !important;
+  font-weight: 950 !important;
+  box-shadow: none !important;
+}
+
+.kaizen-standard-empty {
+  display: none !important;
+}
+
+html.kaizen-classroom-standard :where(.equation, .expression, .math, .step-equation, .step-calculation, .calculation, .problem-answer, .final-answer, .formula, .function-display, .derivative-result, .system-line, .coordinate, .vector-term, .colvec) {
+  font-family: var(--kaizen-math-font) !important;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+html.kaizen-classroom-standard :where(.problem-set-header) {
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #0f766e, #14b8a6) !important;
+  color: white !important;
+}
+
+html.kaizen-classroom-fit :where(.teacher-tab) {
+  display: none !important;
+}
+
+html.kaizen-classroom-fit :where(body) {
+  padding: 10px 14px !important;
+  overflow: auto !important;
+}
+
+html.kaizen-classroom-fit :where(.container) {
+  width: min(1240px, calc(100% - 8px)) !important;
+  max-width: 1240px !important;
+  margin: 0 auto !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+html.kaizen-classroom-fit :where(.problems-section, .workspace) {
+  min-height: 0 !important;
+  padding: 12px !important;
+}
+
+@media (max-width: 980px) {
+  .kaizen-standard-controlbar {
+    grid-template-columns: 1fr;
+  }
+
+  .kaizen-control-context {
+    grid-template-columns: 1fr;
+  }
+
+  .kaizen-control-actions,
+  .kaizen-control-timer,
+  .kaizen-control-timer :where(.timer-section, .timerWrap) {
+    justify-content: flex-start !important;
+  }
+}
