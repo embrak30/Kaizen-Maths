@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trigonometric Graphs and Transformations</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: #172033;
+      font-family: Cambria, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 16% 12%, rgba(20, 184, 166, 0.15), transparent 34%),
+        radial-gradient(circle at 84% 14%, rgba(249, 115, 22, 0.14), transparent 30%),
+        linear-gradient(135deg, #f8fbff 0%, #edfdf8 100%);
+    }
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1001;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      background: #0f766e;
+      color: white;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 8px;
+      cursor: pointer;
+      font: 800 0.84rem system-ui, sans-serif;
+      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.22);
+    }
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      background: rgba(15, 23, 42, 0.38);
+      transition: 0.2s ease;
+    }
+    .sidebar-overlay.active { opacity: 1; visibility: visible; }
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 -410px;
+      z-index: 1000;
+      width: min(410px, 86vw);
+      background: white;
+      overflow-y: auto;
+      transition: left 0.25s ease;
+      box-shadow: 12px 0 30px rgba(15, 23, 42, 0.18);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-header {
+      padding: 18px 22px;
+      background: linear-gradient(135deg, #0f766e, #2563eb);
+      color: white;
+      font: 900 1.18rem system-ui, sans-serif;
+    }
+    .sidebar-content { padding: 20px 24px 28px; line-height: 1.55; }
+    .sidebar-content h3 {
+      margin: 18px 0 8px;
+      color: #0f766e;
+      font: 900 1rem system-ui, sans-serif;
+    }
+    .sidebar-content p, .sidebar-content li { color: #475569; font-size: 0.96rem; }
+    .sidebar-content ul { margin: 0 0 12px; padding-left: 20px; }
+    .container {
+      width: min(1240px, calc(100% - 28px));
+      margin: 14px auto;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(20, 184, 166, 0.18);
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.13);
+    }
+    .header {
+      padding: 22px 24px;
+      color: white;
+      text-align: center;
+      background: linear-gradient(135deg, #0f172a 0%, #0f766e 60%, #f97316 132%);
+    }
+    .header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+      letter-spacing: 0;
+    }
+    .header p {
+      max-width: 880px;
+      margin: 0 auto;
+      color: rgba(255, 255, 255, 0.88);
+      font: 650 1rem/1.45 system-ui, sans-serif;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: #e9f7f4;
+      border-bottom: 1px solid rgba(15, 118, 110, 0.14);
+    }
+    .tab {
+      border: 0;
+      border-bottom: 4px solid transparent;
+      background: transparent;
+      color: #244154;
+      padding: 15px 10px;
+      cursor: pointer;
+      font: 900 0.95rem system-ui, sans-serif;
+    }
+    .tab.active {
+      background: white;
+      color: #0f766e;
+      border-bottom-color: #f97316;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) minmax(280px, 390px) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 16px 20px;
+      background: #f8fafc;
+      border-bottom: 1px solid #dbe8ea;
+    }
+    .level-info h2 {
+      margin: 0 0 4px;
+      color: #0f766e;
+      font-size: 1.25rem;
+    }
+    .level-info p {
+      margin: 0;
+      color: #64748b;
+      font: 650 0.95rem/1.35 system-ui, sans-serif;
+    }
+    .type-control {
+      display: grid;
+      gap: 6px;
+    }
+    .type-control label {
+      color: #475569;
+      font: 900 0.78rem system-ui, sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    select {
+      width: 100%;
+      border: 2px solid #99f6e4;
+      border-radius: 10px;
+      background: white;
+      color: #162033;
+      padding: 11px 12px;
+      font: 800 1rem system-ui, sans-serif;
+      outline: none;
+    }
+    .timer-section, .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .timer-display {
+      min-width: 88px;
+      padding: 10px 12px;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      background: white;
+      color: #0f766e;
+      text-align: center;
+      font: 900 1.05rem system-ui, sans-serif;
+    }
+    .timer-display.active { color: #2563eb; border-color: #93c5fd; }
+    .timer-display.warning { color: #dc2626; border-color: #fca5a5; }
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: white;
+      background: #0f766e;
+      cursor: pointer;
+      font: 900 0.95rem system-ui, sans-serif;
+      box-shadow: 0 8px 16px rgba(15, 118, 110, 0.14);
+    }
+    button.secondary { background: #2563eb; }
+    button.warn { background: #f59e0b; color: #2d1600; }
+    button.danger { background: #ef4444; }
+    button.mode {
+      border: 2px solid #cbd5e1;
+      background: white;
+      color: #1e293b;
+      box-shadow: none;
+    }
+    button.mode.active {
+      border-color: #14b8a6;
+      background: #ccfbf1;
+      color: #115e59;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 12px 20px;
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .workspace { padding: 18px 20px 26px; }
+    .problem-set-header {
+      display: none;
+      margin: 0 0 10px;
+      padding: 11px 16px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0f766e, #14b8a6);
+      color: white;
+      text-align: center;
+      font: 900 1.18rem system-ui, sans-serif;
+    }
+    .problem-set-header.visible { display: block; }
+    .set-instruction {
+      display: none;
+      margin: 0 0 14px;
+      padding: 11px 14px;
+      border-left: 5px solid #f97316;
+      border-radius: 10px;
+      background: #fff7ed;
+      color: #7c2d12;
+      font: 800 1rem/1.35 system-ui, sans-serif;
+    }
+    .set-instruction.visible { display: block; }
+    .problem-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 16px;
+    }
+    .problem-item {
+      border: 1px solid #d8e4eb;
+      border-radius: 14px;
+      background: white;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    }
+    .problem-main {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+    }
+    .problem-number {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: #f97316;
+      color: white;
+      font: 900 1.1rem system-ui, sans-serif;
+    }
+    .diagram-row {
+      display: grid;
+      grid-template-columns: minmax(280px, 560px) minmax(230px, 1fr);
+      gap: 18px;
+      align-items: center;
+    }
+    .diagram-wrap, .answer-diagram {
+      background: white;
+      border: 1px solid #d7e3ec;
+      border-radius: 12px;
+      padding: 8px;
+      overflow: hidden;
+    }
+    .trig-svg {
+      display: block;
+      width: 100%;
+      max-height: 360px;
+    }
+    .question-text {
+      font-size: clamp(1.12rem, 2vw, 1.5rem);
+      line-height: 1.45;
+      color: #172033;
+    }
+    .math {
+      font-family: Cambria, "Times New Roman", serif;
+      font-style: italic;
+      white-space: nowrap;
+    }
+    .quick-answer {
+      display: none;
+      margin: 0 16px 16px 72px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #ecfdf5;
+      color: #14532d;
+      border: 1px solid #bbf7d0;
+      font: 850 1.02rem/1.35 system-ui, sans-serif;
+    }
+    .quick-answer.visible { display: block; }
+    .steps-section {
+      display: none;
+      padding: 0 16px 16px 72px;
+    }
+    .steps-section.visible { display: block; }
+    .answer-label {
+      color: #0f766e;
+      margin: 0 0 8px;
+      font: 900 0.9rem system-ui, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .solution-steps {
+      display: grid;
+      gap: 9px;
+    }
+    .step, .step-equation {
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      padding: 10px 12px;
+      color: #334155;
+      font: 650 0.98rem/1.45 system-ui, sans-serif;
+    }
+    .step-equation {
+      background: #ffffff;
+      color: #111827;
+      font: 1.1rem/1.45 Cambria, "Times New Roman", serif;
+    }
+    .feature-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      font: 750 0.94rem system-ui, sans-serif;
+    }
+    .feature-table th, .feature-table td {
+      border: 1px solid #dbe4ea;
+      padding: 7px 8px;
+      text-align: center;
+    }
+    .feature-table th { background: #ecfeff; color: #115e59; }
+    .final-answer {
+      border-radius: 10px;
+      background: #14532d;
+      color: white;
+      padding: 11px 12px;
+      font: 900 1rem/1.35 system-ui, sans-serif;
+    }
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      line-height: 1.05;
+      font-family: Cambria, "Times New Roman", serif;
+    }
+    .frac .num {
+      border-bottom: 1.9px solid currentColor;
+      padding: 0 0.24em 0.08em;
+    }
+    .frac .den { padding-top: 0.08em; }
+    .legend {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      color: #475569;
+      font: 800 0.84rem system-ui, sans-serif;
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .legend i { width: 18px; height: 3px; display: inline-block; border-radius: 999px; }
+    .hidden { display: none !important; }
+    .timer-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1002;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.52);
+    }
+    .modal-content {
+      width: min(340px, 92vw);
+      border-radius: 16px;
+      background: white;
+      padding: 26px;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+    }
+    .modal-content h2 { margin: 0 0 10px; color: #ef4444; }
+    .modal-content p { margin: 0 0 18px; color: #64748b; }
+    @media (max-width: 940px) {
+      .tabs { grid-template-columns: repeat(2, 1fr); }
+      .controls { grid-template-columns: 1fr; }
+      .timer-section, .button-row { justify-content: flex-start; }
+      .diagram-row { grid-template-columns: 1fr; }
+      .quick-answer, .steps-section { margin-left: 0; padding-left: 16px; }
+    }
+    @media print {
+      body { background: white; }
+      .teacher-tab, .sidebar, .sidebar-overlay, .controls, .tabs, .toolbar { display: none !important; }
+      .container { width: 100%; margin: 0; border: 0; box-shadow: none; }
+      .problem-item { break-inside: avoid; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER NOTES</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Trigonometric Graphs and Transformations</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool supports teaching sine, cosine, and tangent graphs using key points, amplitude, period, midline, phase shift, and asymptotes.</p>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Build standard sine, cosine, and tangent graphs from key points.</li>
+        <li>Connect coefficient changes to amplitude and period.</li>
+        <li>Show phase shifts using the starting point of a cycle.</li>
+        <li>Mark tangent asymptotes before drawing branches.</li>
+      </ul>
+      <h3>Common Misconceptions</h3>
+      <ul>
+        <li>Using amplitude for tangent graphs.</li>
+        <li>Thinking <span class="math">sin(x - a)</span> shifts the graph left instead of right.</li>
+        <li>Using <span class="math">360b</span> instead of <span class="math">360 ÷ b</span> for sine and cosine period.</li>
+        <li>Drawing tangent as a continuous curve across an asymptote.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header">
+      <h1>Trigonometric Graphs and Transformations</h1>
+      <p>Generate graph-led practice for sine, cosine, tangent, amplitude, period, phase shift, midline, reflections, combined transformations, and tangent asymptotes.</p>
+    </header>
+
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" type="button" onclick="switchLevel(1)">Level 1: Standard Graphs</button>
+      <button class="tab" type="button" onclick="switchLevel(2)">Level 2: Single Transformations</button>
+      <button class="tab" type="button" onclick="switchLevel(3)">Level 3: Combined Transformations</button>
+      <button class="tab" type="button" onclick="switchLevel(4)">Level 4: Tangent and Inverse Reasoning</button>
+    </nav>
+
+    <section class="controls">
+      <div class="level-info">
+        <h2 id="level-title">Level 1: Standard Graphs</h2>
+        <p id="level-description">Sketch and identify sine, cosine, and tangent graphs over 0&deg; to 360&deg;.</p>
+      </div>
+      <div class="type-control">
+        <label for="type-dropdown">Question type</label>
+        <select id="type-dropdown" onchange="typeChanged()"></select>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button type="button" class="secondary" onclick="startTimer(2)">2 Min</button>
+        <button type="button" class="warn" onclick="startTimer(5)">5 Min</button>
+        <button type="button" class="danger" onclick="stopTimer()">Stop</button>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <div class="button-row">
+        <button type="button" onclick="generateNewSet()">New</button>
+        <button type="button" class="secondary" onclick="showAnswers()">Answers</button>
+        <button type="button" class="warn" onclick="showSteps()">Steps</button>
+      </div>
+      <div class="button-row">
+        <button type="button" id="practiceModeBtn" class="mode active" onclick="setMode(false)">Practice Set</button>
+        <button type="button" id="exampleModeBtn" class="mode" onclick="setMode(true)">One Example</button>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up</h2>
+      <p>Ready to discuss the graph features?</p>
+      <button type="button" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = 'select';
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+    let oneExampleMode = false;
+
+    const levelConfigs = {
+      1: {
+        title: 'Level 1: Standard Graphs',
+        description: 'Sketch and identify sine, cosine, and tangent graphs over 0 degrees to 360 degrees.',
+        types: ['standard_sine_cosine', 'standard_tangent', 'identify_standard', 'state_standard_features']
+      },
+      2: {
+        title: 'Level 2: Single Transformations',
+        description: 'Apply one transformation at a time: amplitude, period, reflection, or vertical shift.',
+        types: ['amplitude_change', 'period_change', 'vertical_shift', 'reflection']
+      },
+      3: {
+        title: 'Level 3: Combined Transformations',
+        description: 'Combine amplitude, period, phase shift, and vertical shift for sine and cosine graphs.',
+        types: ['phase_shift', 'combined_sine_cosine', 'describe_from_equation', 'find_equation_from_graph']
+      },
+      4: {
+        title: 'Level 4: Tangent and Inverse Reasoning',
+        description: 'Work with transformed tangent graphs, asymptotes, and graph-to-equation reasoning.',
+        types: ['tan_transform', 'tan_asymptotes', 'mixed_transform', 'compare_two_graphs']
+      }
+    };
+
+    const typeDisplayNames = {
+      standard_sine_cosine: 'Standard Sine and Cosine Graphs',
+      standard_tangent: 'Standard Tangent Graphs',
+      identify_standard: 'Identify the Standard Graph',
+      state_standard_features: 'State Standard Graph Features',
+      amplitude_change: 'Amplitude Changes',
+      period_change: 'Period Changes',
+      vertical_shift: 'Vertical Shifts',
+      reflection: 'Reflections',
+      phase_shift: 'Phase Shifts',
+      combined_sine_cosine: 'Combined Sine and Cosine Transformations',
+      describe_from_equation: 'Describe from Equation',
+      find_equation_from_graph: 'Find Equation from Graph',
+      tan_transform: 'Transformed Tangent Graphs',
+      tan_asymptotes: 'Tangent Asymptotes',
+      mixed_transform: 'Mixed Transformations',
+      compare_two_graphs: 'Compare Two Trig Graphs'
+    };
+
+    const setInstructions = {
+      standard_sine_cosine: 'Sketch each standard trigonometric graph and mark the key points.',
+      standard_tangent: 'Sketch each tangent graph and mark the asymptotes before drawing the branches.',
+      identify_standard: 'Identify each standard trigonometric graph.',
+      state_standard_features: 'State the amplitude, period, midline, and key graph features.',
+      amplitude_change: 'Sketch each graph and state the amplitude.',
+      period_change: 'Sketch each graph and state the period.',
+      vertical_shift: 'Sketch each graph and state the midline.',
+      reflection: 'Sketch each reflected trigonometric graph.',
+      phase_shift: 'Sketch each graph and state the phase shift.',
+      combined_sine_cosine: 'Use amplitude, period, phase shift, and midline to sketch each graph.',
+      describe_from_equation: 'Describe the transformations represented by each equation.',
+      find_equation_from_graph: 'Use the graph features to identify a possible equation.',
+      tan_transform: 'Sketch each tangent graph, showing asymptotes and intercepts.',
+      tan_asymptotes: 'Find the asymptotes before sketching the tangent graph.',
+      mixed_transform: 'Use the graph features to sketch each transformed trigonometric graph.',
+      compare_two_graphs: 'Compare the two graphs by their amplitude, period, midline, and phase shift.'
+    };
+
+    const graphBox = { minX: 0, maxX: 360, minY: -3, maxY: 3, width: 680, height: 390, padL: 50, padR: 28, padT: 28, padB: 48 };
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function choice(items) {
+      return items[randInt(0, items.length - 1)];
+    }
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+    }
+    function degText(value) {
+      return `${value}&deg;`;
+    }
+    function xCoord(x) {
+      const usable = graphBox.width - graphBox.padL - graphBox.padR;
+      return graphBox.padL + ((x - graphBox.minX) / (graphBox.maxX - graphBox.minX)) * usable;
+    }
+    function yCoord(y) {
+      const usable = graphBox.height - graphBox.padT - graphBox.padB;
+      return graphBox.height - graphBox.padB - ((y - graphBox.minY) / (graphBox.maxY - graphBox.minY)) * usable;
+    }
+    function sinDeg(angle) {
+      return Math.sin(angle * Math.PI / 180);
+    }
+    function cosDeg(angle) {
+      return Math.cos(angle * Math.PI / 180);
+    }
+    function tanDeg(angle) {
+      return Math.tan(angle * Math.PI / 180);
+    }
+    function evaluateFamily(family, angle) {
+      if (family === 'sin') return sinDeg(angle);
+      if (family === 'cos') return cosDeg(angle);
+      return tanDeg(angle);
+    }
+    function validY(y) {
+      return Number.isFinite(y) && y >= graphBox.minY - 0.1 && y <= graphBox.maxY + 0.1;
+    }
+    function formatNumber(value) {
+      if (Math.abs(value) < 1e-9) return '0';
+      if (Number.isInteger(value)) return String(value);
+      return String(Math.round(value * 100) / 100);
+    }
+    function signed(value) {
+      if (value === 0) return '';
+      return value > 0 ? ` + ${value}` : ` - ${Math.abs(value)}`;
+    }
+    function coefficient(value) {
+      if (value === 1) return '';
+      if (value === -1) return '-';
+      return String(value);
+    }
+    function insideText(b, c) {
+      if (b === 1 && c === 0) return 'x';
+      const shift = c === 0 ? 'x' : `x ${c > 0 ? '-' : '+'} ${Math.abs(c)}&deg;`;
+      return b === 1 ? shift : `${b}(${shift})`;
+    }
+    function equationText(params) {
+      const trig = `${params.family}(${insideText(params.b, params.c)})`;
+      return `<span class="math">y = ${coefficient(params.a)}${trig}${signed(params.d)}</span>`;
+    }
+    function plainEquation(params) {
+      const shift = params.c === 0 ? 'x' : `x ${params.c > 0 ? '-' : '+'} ${Math.abs(params.c)} degrees`;
+      const inside = params.b === 1 ? shift : `${params.b}(${shift})`;
+      return `y = ${coefficient(params.a)}${params.family}(${inside})${signed(params.d)}`;
+    }
+    function trigFunction(params) {
+      return (x) => params.a * evaluateFamily(params.family, params.b * (x - params.c)) + params.d;
+    }
+    function pathFor(fn) {
+      const parts = [];
+      let drawing = false;
+      let prevY = null;
+      for (let x = graphBox.minX; x <= graphBox.maxX + 0.001; x += 1.2) {
+        const y = fn(x);
+        if (!validY(y) || (prevY !== null && Math.abs(y - prevY) > 2.8)) {
+          drawing = false;
+          prevY = validY(y) ? y : null;
+          continue;
+        }
+        const px = xCoord(x).toFixed(2);
+        const py = yCoord(y).toFixed(2);
+        parts.push(`${drawing ? 'L' : 'M'} ${px} ${py}`);
+        drawing = true;
+        prevY = y;
+      }
+      return parts.join(' ');
+    }
+    function curve(fn, colour = '#0f766e', dashed = false, width = 3.2) {
+      const d = pathFor(fn);
+      return `<path d="${d}" fill="none" stroke="${colour}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"${dashed ? ' stroke-dasharray="8 7"' : ''}/>`;
+    }
+    function asymptote(x, label = '') {
+      return `<line x1="${xCoord(x)}" y1="${graphBox.padT}" x2="${xCoord(x)}" y2="${graphBox.height - graphBox.padB}" stroke="#475569" stroke-width="2" stroke-dasharray="7 7"/>
+        ${label ? `<text x="${xCoord(x) + 4}" y="${graphBox.padT + 16}" fill="#475569" font-size="13" font-weight="800">${label}</text>` : ''}`;
+    }
+    function pointMarker(point, label = '', colour = '#ea580c') {
+      const [x, y] = point;
+      if (!validY(y) || x < graphBox.minX || x > graphBox.maxX) return '';
+      return `<circle cx="${xCoord(x)}" cy="${yCoord(y)}" r="4.2" fill="${colour}"/>
+        ${label ? `<text x="${xCoord(x) + 6}" y="${yCoord(y) - 7}" fill="${colour}" font-size="13" font-weight="800">${label}</text>` : ''}`;
+    }
+    function gridSvg(inner) {
+      const lines = [];
+      for (let x = 0; x <= 360; x += 45) {
+        lines.push(`<line x1="${xCoord(x)}" y1="${graphBox.padT}" x2="${xCoord(x)}" y2="${graphBox.height - graphBox.padB}" stroke="#d8e1ea" stroke-width="1"/>`);
+      }
+      for (let y = -3; y <= 3; y += 1) {
+        lines.push(`<line x1="${graphBox.padL}" y1="${yCoord(y)}" x2="${graphBox.width - graphBox.padR}" y2="${yCoord(y)}" stroke="#d8e1ea" stroke-width="1"/>`);
+      }
+      const labels = [];
+      [0, 90, 180, 270, 360].forEach((x) => {
+        labels.push(`<text x="${xCoord(x)}" y="${graphBox.height - 20}" text-anchor="middle" fill="#64748b" font-size="13">${x}&deg;</text>`);
+      });
+      [-3, -2, -1, 1, 2, 3].forEach((y) => {
+        labels.push(`<text x="${graphBox.padL - 10}" y="${yCoord(y) + 5}" text-anchor="end" fill="#64748b" font-size="13">${y}</text>`);
+      });
+      return `<svg class="trig-svg" viewBox="0 0 ${graphBox.width} ${graphBox.height}" role="img" aria-label="Trigonometric graph">
+        <rect x="0" y="0" width="${graphBox.width}" height="${graphBox.height}" fill="#ffffff"/>
+        ${lines.join('')}
+        <line x1="${graphBox.padL}" y1="${yCoord(0)}" x2="${graphBox.width - graphBox.padR}" y2="${yCoord(0)}" stroke="#0f172a" stroke-width="2.4"/>
+        <line x1="${xCoord(0)}" y1="${graphBox.height - graphBox.padB}" x2="${xCoord(0)}" y2="${graphBox.padT}" stroke="#0f172a" stroke-width="2.4"/>
+        <text x="${graphBox.width - graphBox.padR + 10}" y="${yCoord(0) + 4}" fill="#0f172a" font-size="17" font-style="italic" font-weight="800">x</text>
+        <text x="${graphBox.padL - 9}" y="${graphBox.padT - 10}" fill="#0f172a" font-size="17" font-style="italic" font-weight="800">y</text>
+        ${labels.join('')}
+        ${inner}
+      </svg>`;
+    }
+    function wrapDiagram(svg, legend = '') {
+      return `<div class="diagram-wrap">${svg}${legend}</div>`;
+    }
+    function legend(originalText = 'original graph', imageText = 'image graph') {
+      return `<div class="legend"><span><i style="background:#64748b"></i>${originalText}</span><span><i style="background:#0f766e"></i>${imageText}</span></div>`;
+    }
+    function blankGrid() {
+      return wrapDiagram(gridSvg(''));
+    }
+    function trigDiagram(params, includeKeyPoints = false, colour = '#0f766e') {
+      const fn = trigFunction(params);
+      const pieces = [curve(fn, colour)];
+      if (params.family === 'tan') tangentAsymptotes(params).forEach((x) => pieces.unshift(asymptote(x)));
+      if (includeKeyPoints) keyPoints(params).forEach((point) => pieces.push(pointMarker(point)));
+      return wrapDiagram(gridSvg(pieces.join('')));
+    }
+    function featureTable(rows) {
+      return `<table class="feature-table"><tbody>${rows.map(([label, value]) => `<tr><th>${label}</th><td>${value}</td></tr>`).join('')}</tbody></table>`;
+    }
+    function pointTable(points) {
+      return `<table class="feature-table"><thead><tr><th>x</th><th>y</th></tr></thead><tbody>${points.map(([x, y]) => `<tr><td>${degText(x)}</td><td>${formatNumber(y)}</td></tr>`).join('')}</tbody></table>`;
+    }
+    function keyPoints(params) {
+      const period = params.family === 'tan' ? 180 / params.b : 360 / params.b;
+      if (params.family === 'tan') {
+        const start = params.c - period / 2;
+        return [
+          [start, params.d],
+          [params.c, params.d],
+          [params.c + period / 4, params.a + params.d]
+        ].filter(([x]) => x >= 0 && x <= 360);
+      }
+      const q = period / 4;
+      const pattern = params.family === 'sin' ? [0, 1, 0, -1, 0] : [1, 0, -1, 0, 1];
+      return pattern
+        .map((value, index) => [params.c + index * q, params.d + params.a * value])
+        .filter(([x]) => x >= 0 && x <= 360);
+    }
+    function tangentAsymptotes(params) {
+      const period = 180 / params.b;
+      const values = [];
+      for (let k = -6; k <= 8; k += 1) {
+        const x = params.c + 90 / params.b + k * period;
+        if (x >= 0 && x <= 360) values.push(Math.round(x * 100) / 100);
+      }
+      return values;
+    }
+    function makeProblem(type, diagramHtml, prompt, answer, steps, solutionDiagram = '') {
+      const equation = `<div class="diagram-row"><div>${diagramHtml}</div><div class="question-text">${prompt}</div></div>`;
+      return {
+        instruction: setInstructions[type],
+        diagram: diagramHtml,
+        prompt,
+        question: prompt,
+        equation,
+        answer,
+        steps,
+        solutionDiagram
+      };
+    }
+    function describeFeatures(params) {
+      const amp = params.family === 'tan' ? 'not defined for tangent' : Math.abs(params.a);
+      const period = params.family === 'tan' ? 180 / params.b : 360 / params.b;
+      return [
+        ['Amplitude', amp],
+        ['Period', `${formatNumber(period)}&deg;`],
+        ['Midline', `<span class="math">y = ${params.d}</span>`],
+        ['Phase shift', `${params.c === 0 ? 'none' : `${Math.abs(params.c)}&deg; ${params.c > 0 ? 'right' : 'left'}`}`]
+      ];
+    }
+    function transformationSteps(params) {
+      const period = params.family === 'tan' ? 180 / params.b : 360 / params.b;
+      const rows = describeFeatures(params);
+      const steps = [
+        `Start from the parent graph <span class="math">y = ${params.family} x</span>.`,
+        `The coefficient outside the trigonometric function is ${params.a}, so ${params.family === 'tan' ? 'there is a vertical scale factor, but no amplitude for tangent' : `the amplitude is |${params.a}| = ${Math.abs(params.a)}`}.`,
+        `The coefficient inside the bracket is ${params.b}, so the period is ${params.family === 'tan' ? '180' : '360'}&deg; ÷ ${params.b} = ${formatNumber(period)}&deg;.`,
+        `The graph is shifted ${params.c === 0 ? '0&deg; horizontally' : `${Math.abs(params.c)}&deg; ${params.c > 0 ? 'right' : 'left'}`}.`,
+        `The ${signed(params.d).trim() || '+ 0'} outside the function gives the midline <span class="math">y = ${params.d}</span>.`,
+        `Summarise the graph features.${featureTable(rows)}`
+      ];
+      if (params.family === 'tan') {
+        const asymptotes = tangentAsymptotes(params);
+        steps.push(`For tangent, mark the vertical asymptotes before drawing the branches: ${asymptotes.map(degText).join(', ')}.`);
+      } else {
+        steps.push(`Use the transformed key points to guide the sketch.${pointTable(keyPoints(params))}`);
+      }
+      return steps;
+    }
+    function standardParams(family) {
+      return { family, a: 1, b: 1, c: 0, d: 0 };
+    }
+    function genStandardSineCosine() {
+      const family = choice(['sin', 'cos']);
+      const params = standardParams(family);
+      const prompt = `Sketch ${equationText(params)} for <span class="math">0&deg; ≤ x ≤ 360&deg;</span>. Mark the key points.`;
+      const answer = `${family === 'sin' ? 'Sine' : 'Cosine'} graph with amplitude 1 and period 360&deg;.`;
+      return makeProblem('standard_sine_cosine', blankGrid(), prompt, answer, [
+        `Use the standard ${family} graph over one full cycle.`,
+        `The amplitude is 1, the midline is <span class="math">y = 0</span>, and the period is 360&deg;.`,
+        `Plot the key points.${pointTable(keyPoints(params))}`,
+        `<div class="answer-diagram">${trigDiagram(params, true)}</div>`
+      ], trigDiagram(params, true));
+    }
+    function genStandardTangent() {
+      const params = standardParams('tan');
+      const prompt = `Sketch ${equationText(params)} for <span class="math">0&deg; ≤ x ≤ 360&deg;</span>. Mark the asymptotes.`;
+      const answer = 'Tangent graph with period 180&deg; and asymptotes x = 90&deg; and x = 270&deg;.';
+      return makeProblem('standard_tangent', blankGrid(), prompt, answer, [
+        `The tangent graph has period 180&deg;.`,
+        `The graph crosses the x-axis at 0&deg;, 180&deg;, and 360&deg;.`,
+        `The vertical asymptotes occur at 90&deg; and 270&deg;.`,
+        `<div class="answer-diagram">${trigDiagram(params, false)}</div>`
+      ], trigDiagram(params, false));
+    }
+    function genIdentifyStandard() {
+      const family = choice(['sin', 'cos', 'tan']);
+      const params = standardParams(family);
+      const prompt = 'Identify the standard trigonometric graph shown.';
+      const answer = `<span class="math">y = ${family} x</span>.`;
+      return makeProblem('identify_standard', trigDiagram(params, false), prompt, answer, [
+        'Look at where the graph begins and whether it has asymptotes.',
+        family === 'sin' ? 'The graph starts at (0&deg;, 0), rises to 1, returns to 0, falls to -1, and returns to 0.' : '',
+        family === 'cos' ? 'The graph starts at (0&deg;, 1), falls to -1 at 180&deg;, then returns to 1.' : '',
+        family === 'tan' ? 'The graph has vertical asymptotes and repeats every 180&deg;.' : '',
+        `Therefore the graph is ${answer}`
+      ].filter(Boolean), trigDiagram(params, false));
+    }
+    function genStateStandardFeatures() {
+      const family = choice(['sin', 'cos', 'tan']);
+      const params = standardParams(family);
+      const prompt = `State the key features of ${equationText(params)}.`;
+      const answer = family === 'tan'
+        ? 'Period 180&deg;, midline y = 0, asymptotes x = 90&deg; and x = 270&deg;.'
+        : 'Amplitude 1, period 360&deg;, midline y = 0.';
+      return makeProblem('state_standard_features', trigDiagram(params, false), prompt, answer, transformationSteps(params), trigDiagram(params, true));
+    }
+    function genAmplitudeChange() {
+      const params = { family: choice(['sin', 'cos']), a: choice([2, 3, -2]), b: 1, c: 0, d: 0 };
+      const prompt = `Sketch ${equationText(params)} and state the amplitude.`;
+      const answer = `Amplitude = ${Math.abs(params.a)}. Period = 360&deg;.`;
+      return makeProblem('amplitude_change', blankGrid(), prompt, answer, transformationSteps(params).concat(`<div class="answer-diagram">${trigDiagram(params, true)}</div>`), trigDiagram(params, true));
+    }
+    function genPeriodChange() {
+      const params = { family: choice(['sin', 'cos', 'tan']), a: 1, b: choice([2, 3]), c: 0, d: 0 };
+      const period = params.family === 'tan' ? 180 / params.b : 360 / params.b;
+      const prompt = `Sketch ${equationText(params)} and state the period.`;
+      const answer = `Period = ${formatNumber(period)}&deg;.`;
+      return makeProblem('period_change', blankGrid(), prompt, answer, transformationSteps(params).concat(`<div class="answer-diagram">${trigDiagram(params, true)}</div>`), trigDiagram(params, true));
+    }
+    function genVerticalShift() {
+      const params = { family: choice(['sin', 'cos']), a: 1, b: 1, c: 0, d: choice([-2, -1, 1, 2]) };
+      const prompt = `Sketch ${equationText(params)} and state the midline.`;
+      const answer = `Midline: <span class="math">y = ${params.d}</span>.`;
+      return makeProblem('vertical_shift', blankGrid(), prompt, answer, transformationSteps(params).concat(`<div class="answer-diagram">${trigDiagram(params, true)}</div>`), trigDiagram(params, true));
+    }
+    function genReflection() {
+      const params = { family: choice(['sin', 'cos']), a: -1, b: 1, c: 0, d: 0 };
+      const prompt = `Sketch ${equationText(params)} and describe the reflection.`;
+      const answer = 'Reflection in the x-axis.';
+      return makeProblem('reflection', wrapDiagram(gridSvg(curve(trigFunction({ ...params, a: 1 }), '#64748b', true)), legend('parent graph', 'image to sketch')), prompt, answer, [
+        `Start with <span class="math">y = ${params.family} x</span>.`,
+        'The negative sign outside the function multiplies every y-coordinate by -1.',
+        'This reflects the graph in the x-axis.',
+        `The period is unchanged at 360&deg;.`,
+        `<div class="answer-diagram">${wrapDiagram(gridSvg(curve(trigFunction({ ...params, a: 1 }), '#64748b', true) + curve(trigFunction(params), '#0f766e')), legend('parent graph', plainEquation(params)))}</div>`
+      ], trigDiagram(params, true));
+    }
+    function genPhaseShift() {
+      const params = { family: choice(['sin', 'cos']), a: 1, b: 1, c: choice([-90, -60, 60, 90]), d: 0 };
+      const prompt = `Sketch ${equationText(params)} and state the phase shift.`;
+      const answer = `Phase shift: ${Math.abs(params.c)}&deg; ${params.c > 0 ? 'right' : 'left'}.`;
+      return makeProblem('phase_shift', blankGrid(), prompt, answer, transformationSteps(params).concat(`<div class="answer-diagram">${trigDiagram(params, true)}</div>`), trigDiagram(params, true));
+    }
+    function combinedParams() {
+      return {
+        family: choice(['sin', 'cos']),
+        a: choice([2, -2, 3]),
+        b: choice([1, 2]),
+        c: choice([-90, -60, 0, 60, 90]),
+        d: choice([-1, 0, 1])
+      };
+    }
+    function genCombinedSineCosine() {
+      const params = combinedParams();
+      const prompt = `Sketch ${equationText(params)} for <span class="math">0&deg; ≤ x ≤ 360&deg;</span>.`;
+      const answer = `Amplitude ${Math.abs(params.a)}, period ${formatNumber(360 / params.b)}&deg;, midline y = ${params.d}, phase shift ${params.c === 0 ? 'none' : `${Math.abs(params.c)}&deg; ${params.c > 0 ? 'right' : 'left'}`}.`;
+      return makeProblem('combined_sine_cosine', blankGrid(), prompt, answer, transformationSteps(params).concat(`<div class="answer-diagram">${trigDiagram(params, true)}</div>`), trigDiagram(params, true));
+    }
+    function genDescribeFromEquation() {
+      const params = combinedParams();
+      const prompt = `Describe the graph transformations represented by ${equationText(params)}.`;
+      const answer = `Vertical scale factor ${params.a}; period ${formatNumber(360 / params.b)}&deg;; phase shift ${params.c === 0 ? 'none' : `${Math.abs(params.c)}&deg; ${params.c > 0 ? 'right' : 'left'}`}; midline y = ${params.d}.`;
+      return makeProblem('describe_from_equation', trigDiagram(params, true), prompt, answer, transformationSteps(params), trigDiagram(params, true));
+    }
+    function genFindEquationFromGraph() {
+      const params = { family: choice(['sin', 'cos']), a: choice([2, -2]), b: choice([1, 2]), c: choice([0, 90]), d: choice([-1, 0, 1]) };
+      const prompt = 'Find a possible equation for the graph shown.';
+      const answer = equationText(params);
+      return makeProblem('find_equation_from_graph', trigDiagram(params, true), prompt, answer, [
+        `Read the midline from the graph: <span class="math">y = ${params.d}</span>.`,
+        `Read the amplitude from the distance between the midline and a maximum or minimum: amplitude = ${Math.abs(params.a)}.`,
+        `Read the period from one complete cycle: period = ${formatNumber(360 / params.b)}&deg;.`,
+        `Use ${params.family} because the graph follows the ${params.family} starting pattern after the phase shift.`,
+        `A possible equation is ${answer}.`
+      ], trigDiagram(params, true));
+    }
+    function genTanTransform() {
+      const params = { family: 'tan', a: choice([1, 2, -1]), b: choice([1, 2]), c: choice([-45, 0, 45]), d: choice([-1, 0, 1]) };
+      const prompt = `Sketch ${equationText(params)} and show the vertical asymptotes.`;
+      const answer = `Period ${formatNumber(180 / params.b)}&deg;; midline y = ${params.d}; asymptotes at ${tangentAsymptotes(params).map(degText).join(', ')}.`;
+      return makeProblem('tan_transform', blankGrid(), prompt, answer, transformationSteps(params).concat(`<div class="answer-diagram">${trigDiagram(params, false)}</div>`), trigDiagram(params, false));
+    }
+    function genTanAsymptotes() {
+      const params = { family: 'tan', a: 1, b: choice([1, 2, 3]), c: choice([-30, 0, 30, 45]), d: 0 };
+      const prompt = `For ${equationText(params)}, find the vertical asymptotes in <span class="math">0&deg; ≤ x ≤ 360&deg;</span>, then sketch the graph.`;
+      const answer = `Asymptotes: ${tangentAsymptotes(params).map(degText).join(', ')}.`;
+      return makeProblem('tan_asymptotes', blankGrid(), prompt, answer, transformationSteps(params).concat(`<div class="answer-diagram">${trigDiagram(params, false)}</div>`), trigDiagram(params, false));
+    }
+    function genMixedTransform() {
+      return choice([genAmplitudeChange, genPeriodChange, genVerticalShift, genPhaseShift, genCombinedSineCosine, genTanTransform])();
+    }
+    function genCompareTwoGraphs() {
+      const base = { family: choice(['sin', 'cos']), a: 1, b: 1, c: 0, d: 0 };
+      const image = { ...base, a: choice([2, -2]), b: choice([1, 2]), c: choice([0, 90]), d: choice([-1, 1]) };
+      const diagram = wrapDiagram(gridSvg(curve(trigFunction(base), '#64748b', true) + curve(trigFunction(image), '#0f766e')), legend('dashed: parent graph', 'solid: transformed graph'));
+      const prompt = 'Compare the dashed parent graph with the solid transformed graph. State the transformations.';
+      const answer = `Amplitude changes to ${Math.abs(image.a)}, period becomes ${formatNumber(360 / image.b)}&deg;, phase shift ${image.c === 0 ? 'none' : `${image.c}&deg; right`}, midline y = ${image.d}.`;
+      return makeProblem('compare_two_graphs', diagram, prompt, answer, transformationSteps(image), diagram);
+    }
+    function generateProblem() {
+      const type = currentType === 'select' ? choice(levelConfigs[currentLevel].types) : currentType;
+      if (type === 'standard_sine_cosine') return genStandardSineCosine();
+      if (type === 'standard_tangent') return genStandardTangent();
+      if (type === 'identify_standard') return genIdentifyStandard();
+      if (type === 'state_standard_features') return genStateStandardFeatures();
+      if (type === 'amplitude_change') return genAmplitudeChange();
+      if (type === 'period_change') return genPeriodChange();
+      if (type === 'vertical_shift') return genVerticalShift();
+      if (type === 'reflection') return genReflection();
+      if (type === 'phase_shift') return genPhaseShift();
+      if (type === 'combined_sine_cosine') return genCombinedSineCosine();
+      if (type === 'describe_from_equation') return genDescribeFromEquation();
+      if (type === 'find_equation_from_graph') return genFindEquationFromGraph();
+      if (type === 'tan_transform') return genTanTransform();
+      if (type === 'tan_asymptotes') return genTanAsymptotes();
+      if (type === 'mixed_transform') return genMixedTransform();
+      if (type === 'compare_two_graphs') return genCompareTwoGraphs();
+      return genStandardSineCosine();
+    }
+    function problemKey(problem) {
+      return String(problem.prompt || '') + String(problem.answer || '');
+    }
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = 'select';
+      document.querySelectorAll('.tab').forEach((tab, index) => tab.classList.toggle('active', index + 1 === level));
+      const config = levelConfigs[level];
+      document.getElementById('level-title').textContent = config.title;
+      document.getElementById('level-description').textContent = config.description;
+      const dropdown = document.getElementById('type-dropdown');
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + config.types.map((type) => `<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      dropdown.value = 'select';
+      showBlankPage();
+    }
+    function typeChanged() {
+      currentType = document.getElementById('type-dropdown').value;
+      currentType === 'select' ? showBlankPage() : generateNewSet();
+    }
+    function showBlankPage() {
+      document.getElementById('problem-set-header').classList.remove('visible');
+      document.getElementById('set-instruction').classList.remove('visible');
+      document.getElementById('problem-list').innerHTML = '<li style="text-align:center;padding:42px;color:#64748b;font:750 1.05rem system-ui,sans-serif">Select a question type to generate trig graph practice.</li>';
+    }
+    function setInstructionForType() {
+      const instruction = document.getElementById('set-instruction');
+      instruction.textContent = setInstructions[currentType] || 'Complete each trigonometric graph question.';
+      instruction.classList.toggle('visible', Boolean(currentType && currentType !== 'select'));
+    }
+    function generateNewSet() {
+      if (currentType === 'select') {
+        showBlankPage();
+        return;
+      }
+      answersVisible = false;
+      stepsVisible = false;
+      const count = oneExampleMode ? 1 : 2;
+      const seen = new Set();
+      problems = [];
+      let attempts = 0;
+      while (problems.length < count && attempts < 40) {
+        const problem = generateProblem();
+        const key = problemKey(problem);
+        if (!seen.has(key)) {
+          seen.add(key);
+          problems.push(problem);
+        }
+        attempts += 1;
+      }
+      renderProblems();
+    }
+    function renderStep(step) {
+      const raw = String(step);
+      if (/<table|<div|<span|<svg/i.test(raw)) return `<div class="step">${raw}</div>`;
+      if (/[=()]/.test(raw) && raw.length < 150) return `<div class="step-equation">${raw}</div>`;
+      return `<div class="step">${escapeHtml(raw)}</div>`;
+    }
+    function renderProblems() {
+      const list = document.getElementById('problem-list');
+      const header = document.getElementById('problem-set-header');
+      list.innerHTML = '';
+      header.textContent = typeDisplayNames[currentType] || 'Trigonometric Graphs';
+      header.className = 'problem-set-header visible';
+      setInstructionForType();
+      problems.forEach((problem, index) => {
+        const item = document.createElement('li');
+        item.className = 'problem-item';
+        const steps = problem.steps.map(renderStep).join('');
+        item.innerHTML = `
+          <div class="problem-main">
+            <div class="problem-number">${index + 1}</div>
+            <div class="diagram-row">
+              <div>${problem.diagram}</div>
+              <div class="question-text">${problem.prompt}</div>
+            </div>
+          </div>
+          <div class="quick-answer" id="quick-answer-${index}">${problem.answer}</div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution</div>
+            <div class="solution-steps">
+              ${steps}
+              <div class="final-answer">${problem.answer}</div>
+            </div>
+          </div>`;
+        list.appendChild(item);
+      });
+    }
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      problems.forEach((_, index) => {
+        const element = document.getElementById(`quick-answer-${index}`);
+        if (element) element.classList.toggle('visible', answersVisible);
+      });
+    }
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const element = document.getElementById(`steps-${index}`);
+        if (element) element.classList.toggle('visible', stepsVisible);
+      });
+    }
+    function setMode(example) {
+      oneExampleMode = example;
+      document.getElementById('practiceModeBtn').classList.toggle('active', !example);
+      document.getElementById('exampleModeBtn').classList.toggle('active', example);
+      if (currentType !== 'select') generateNewSet();
+    }
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining -= 1;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerActive = false;
+      const timer = document.getElementById('timer-display');
+      timer.textContent = 'Ready';
+      timer.className = 'timer-display';
+    }
+    function updateTimerDisplay() {
+      const timer = document.getElementById('timer-display');
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      timer.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+      if (timerActive && timeRemaining <= 30) timer.className = 'timer-display warning';
+      else if (timerActive) timer.className = 'timer-display active';
+      else timer.className = 'timer-display';
+    }
+    function timerFinished() {
+      stopTimer();
+      const timer = document.getElementById('timer-display');
+      timer.textContent = 'Time Up!';
+      timer.className = 'timer-display warning';
+      document.getElementById('timer-modal').classList.remove('hidden');
+    }
+    function closeModal() {
+      document.getElementById('timer-modal').classList.add('hidden');
+    }
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('active');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.querySelector('.sidebar-overlay').classList.remove('active');
+    }
+    switchLevel(1);
+  </script>
+  <script>
+    document.documentElement.dataset.teacherExampleReady = 'true';
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
+</body>
+</html>

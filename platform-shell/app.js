@@ -448,6 +448,25 @@ const tools = [
     ]
   },
   {
+    slug: "trig-graphs-transformations",
+    title: "Trigonometric Graphs and Transformations",
+    category: "Algebra",
+    level: "GCSE / A-Level / IB / CAPE",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate graph-led trigonometry practice covering sine, cosine, tangent, amplitude, period, phase shift, midline, reflections, combined transformations, and tangent asymptotes.",
+    tags: ["algebra", "trigonometry", "trig graphs", "sine graph", "cosine graph", "tangent graph", "graph transformations", "amplitude", "period", "phase shift", "midline", "asymptotes", "GCSE", "A-Level", "IB", "CAPE"],
+    toolPath: "tools/trig-graphs-transformations/index.html?v=trig-graphs-transformations-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers standard sine, cosine, and tangent graphs over 0 degrees to 360 degrees.",
+      "Level 2 covers single transformations including amplitude changes, period changes, vertical shifts, and reflections.",
+      "Level 3 covers combined sine and cosine transformations, including phase shift, midline, and graph-to-equation reasoning.",
+      "Level 4 covers transformed tangent graphs, tangent asymptotes, mixed transformations, and comparing trig graphs."
+    ]
+  },
+  {
     slug: "trigonometric-functions",
     title: "Trig Identities, Proofs and Equations",
     category: "Algebra",
@@ -1952,6 +1971,7 @@ const algebraToolGroups = {
   "series-expansions": "Sequences and Series",
   "sine-cosine-rule": "Trigonometry",
   "trig-equation-solver": "Trigonometry",
+  "trig-graphs-transformations": "Trigonometry",
   "trigonometric-functions": "Trigonometry",
   "differentiation-polynomials": "Calculus",
   "differentiation-rules": "Calculus",
@@ -7386,6 +7406,7 @@ const curatedRelatedToolSlugs = {
   "advanced-matrices": ["matrices", "further-vectors", "complex-numbers", "transformations"],
   "complex-numbers": ["polar-coordinates", "roots-of-equations", "trigonometric-functions", "advanced-matrices"],
   "polar-coordinates": ["complex-numbers", "trigonometric-functions", "graph-transformations-curve-sketching", "hyperbolic-functions"],
+  "trig-graphs-transformations": ["trig-equation-solver", "trigonometric-functions", "graph-transformations-curve-sketching", "sine-cosine-rule"],
   "series-expansions": ["differentiation-polynomials", "integration", "advanced-integration", "functions"],
   "differential-equations": ["advanced-integration", "differentiation-rules", "trig-differentiation-rules", "functions"]
 };
@@ -8491,6 +8512,19 @@ function toolInsightProfile(tool) {
         "Which key points on the original graph are easiest to transform, and why are they enough to guide the sketch?",
         "What stays fixed under this transformation, and what changes in the equation, coordinates, and graph?",
         "Which features must be shown for this curve sketch to communicate the function accurately?"
+      ]
+    },
+    {
+      match: () => tool.slug === "trig-graphs-transformations" || has("trig graphs", "sine graph", "cosine graph", "tangent graph", "phase shift", "amplitude"),
+      misconceptions: [
+        "Multiplying the period by the coefficient inside the function instead of dividing 360 degrees or 180 degrees by that coefficient.",
+        "Treating tangent graphs as if they have amplitude, rather than focusing on period, midline, intercepts, and asymptotes.",
+        "Reading sin(x - a) or cos(x - a) as a shift left instead of recognising the shift right by a degrees."
+      ],
+      questions: [
+        "Which graph feature is controlled by each part of the equation: amplitude, period, phase shift, and midline?",
+        "Where should the key points or asymptotes be placed before drawing the curve?",
+        "How can the same transformed trig graph be described using both equation language and geometric movement on the axes?"
       ]
     },
     {
