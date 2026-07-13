@@ -1149,6 +1149,25 @@ const tools = [
     ]
   },
   {
+    slug: "sampling-methods-bias",
+    title: "Sampling Methods and Bias",
+    category: "Statistics",
+    level: "GCSE / A-Level / CSEC / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate sampling practice covering random, systematic, stratified, quota, opportunity, volunteer and cluster sampling, sources of bias, questionnaire wording, representative samples, and sampling calculations.",
+    tags: ["statistics", "sampling", "sampling methods", "sampling bias", "stratified sampling", "systematic sampling", "random sampling", "quota sampling", "opportunity sampling", "volunteer sampling", "cluster sampling", "questionnaire bias", "representative samples", "CSEC", "GCSE", "A-Level", "IB"],
+    toolPath: "tools/sampling-methods-bias/index.html?v=sampling-methods-bias-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on identifying sampling methods, spotting bias, and improving weak questionnaire wording.",
+      "Level 2 practises stratified sampling calculations, systematic sampling intervals, and valid simple random sampling processes.",
+      "Level 3 asks students to critique sampling plans, design better methods, and justify improvements in context.",
+      "Worked solutions explain why a method is suitable or biased, not just the name of the method."
+    ]
+  },
+  {
     slug: "motion-graphs-constant-acceleration",
     title: "Motion Graphs and Constant Acceleration",
     category: "Mechanics",
@@ -1946,6 +1965,7 @@ const subjectToolGroups = {
     "histograms": "Data Summary and Representation",
     "cumulative-frequency-curves": "Data Summary and Representation",
     "kaizen-large-data-set": "Data Summary and Representation",
+    "sampling-methods-bias": "Data Collection and Sampling",
     "tree-diagrams-conditional-probability": "Probability and Set Diagrams",
     "venn-diagrams": "Probability and Set Diagrams",
     "discrete-random-variables": "Random Variables and Distributions",
@@ -1994,6 +2014,7 @@ const subjectGroupOrder = {
     "Angles and Shape Geometry"
   ],
   Statistics: [
+    "Data Collection and Sampling",
     "Data Summary and Representation",
     "Probability and Set Diagrams",
     "Random Variables and Distributions",
@@ -2034,6 +2055,7 @@ const subjectGroupNotes = {
   "Coordinate Geometry": "Circle equations, coordinate geometry, transformations, and links to algebraic graph work.",
   "Vectors and Similarity": "Column vectors, geometric vectors, scale drawings, and similar shapes.",
   "Angles and Shape Geometry": "Missing angles in lines, triangles, quadrilaterals, circle theorems, and standard shape facts.",
+  "Data Collection and Sampling": "Sampling methods, bias, questionnaire design, representative samples, and sampling calculations.",
   "Data Summary and Representation": "Averages, range, grouped data, histograms, cumulative frequency, and large-data-set practice.",
   "Probability and Set Diagrams": "Tree diagrams, conditional probability, Venn diagrams, and set notation.",
   "Random Variables and Distributions": "Discrete, continuous, normal, binomial, and geometric distributions.",
