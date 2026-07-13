@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loci and Constructions</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f4f8fb;min-height:100vh;padding:14px;color:#102033;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#0f4c5c;color:#fff;padding:12px 7px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 7px 7px 0;font-weight:800;font-size:.82em;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .sidebar{position:fixed;left:-420px;top:0;width:420px;height:100vh;background:#fff;z-index:1000;transition:left .25s;box-shadow:2px 0 22px rgba(0,0,0,.25);overflow-y:auto}
+    .sidebar.open{left:0}
+    .sidebar-header{background:#0f4c5c;color:#fff;padding:18px;font-size:1.25em;font-weight:850}
+    .sidebar-content{padding:22px;line-height:1.55}
+    .sidebar-content h3{color:#0f4c5c;margin:18px 0 8px;border-bottom:2px solid #22c1a8;padding-bottom:4px;font-size:1.02em}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}
+    .sidebar-content ul{padding-left:20px;margin-bottom:12px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;opacity:0;visibility:hidden;transition:.25s}
+    .sidebar-overlay.active{opacity:1;visibility:visible}
+
+    .container{max-width:1260px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 18px rgba(15,23,42,.1);overflow:hidden}
+    .header{background:#0f4c5c;background-image:linear-gradient(135deg,rgba(255,255,255,.14),transparent 46%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px);color:#fff;padding:20px;text-align:center}
+    .header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.24)}
+    .tabs{display:flex;background:#dff7f3}
+    .tab{flex:1;padding:13px 9px;border:0;background:#dff7f3;cursor:pointer;font-weight:850;font-size:.95em;border-bottom:3px solid transparent;color:#0f4c5c}
+    .tab.active{background:#fff;color:#0f766e;border-bottom-color:#0f766e}
+    .controls{padding:15px 18px;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #d8e2f0}
+    .level-info h3{color:#102033;font-size:1.16em;margin-bottom:3px}
+    .level-info p{color:#667085;font-size:.94em;max-width:660px}
+    .dropdown-container{margin-top:8px}
+    .type-dropdown{padding:8px 10px;border:2px solid #b9d6d7;border-radius:6px;background:#fff;min-width:360px;font-size:.94em;color:#102033}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .timer-display{font-size:1.45em;font-weight:850;color:#0f4c5c;background:#fff;padding:7px 12px;border:2px solid #b9d6d7;border-radius:6px;min-width:96px;text-align:center}
+    .timer-display.active{border-color:#0f766e;color:#0f766e}
+    .timer-display.warning{color:#b91c1c;border-color:#b91c1c;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:8px 14px;border:0;border-radius:6px;font-weight:850;cursor:pointer;min-width:68px;color:#fff}
+    .btn-primary{background:#0f766e}
+    .btn-success{background:#21885f}
+    .btn-warning{background:#b26a00}
+    .btn-danger{background:#b91c1c}
+
+    .problems-section{padding:14px 18px 18px;min-height:560px}
+    .problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#0f766e;color:#fff;text-align:center;font-size:1.08em;font-weight:850}
+    .problem-set-header.visible{display:block}
+    .set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border-radius:6px;background:#ecfdf5;border:1px solid #a7f3d0;color:#102033;text-align:center;font-weight:800}
+    .set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:14px;list-style:none}
+    .problem-item{background:#f8fafc;border-left:4px solid #0f766e;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:330px}
+    .problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .problem-left{display:flex;gap:10px;align-items:flex-start;min-width:0;width:100%}
+    .problem-number{background:#0f766e;color:#fff;min-width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:850}
+    .loci-row{display:grid;grid-template-columns:minmax(340px,520px) minmax(260px,1fr);gap:18px;align-items:center;width:100%}
+    .diagram-wrap{width:100%;max-width:520px;background:#fff;border:1px solid #d6e3f0;border-radius:7px;padding:6px}
+    .diagram-wrap svg{width:100%;height:auto;display:block}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.17em;color:#102033;font-weight:500;line-height:1.42;overflow-wrap:anywhere}
+    .question-text strong{font-weight:650}
+    .construction-svg{background:#fff}
+    .given-line,.main-line,.ray-line,.locus-line,.construction-line,.parallel-line,.bisector-line,.circle-line{fill:none;stroke:#111827;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+    .given-line{stroke-width:2.7}
+    .construction-line,.construction-arc{fill:none;stroke:#0f766e;stroke-width:1.8;stroke-dasharray:7 5;stroke-linecap:round;stroke-linejoin:round}
+    .locus-line,.circle-line,.parallel-line,.bisector-line{stroke:#0f4c5c;stroke-width:2.5}
+    .guide-line{stroke:#94a3b8;stroke-width:1.4;stroke-dasharray:5 5}
+    .region-boundary{fill:none;stroke:#9333ea;stroke-width:2.3;stroke-dasharray:8 5}
+    .answer-dot{fill:#9333ea;stroke:#fff;stroke-width:2}
+    .point-dot{fill:#111827;stroke:#fff;stroke-width:2}
+    .point-label,.line-label,.measure-label,.small-note{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);fill:#111827;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+    .point-label{font-size:17px;font-weight:850}
+    .line-label{font-size:15px;font-weight:850}
+    .measure-label{font-size:14px;font-weight:800}
+    .small-note{font-size:12px;fill:#64748b;font-family:"Segoe UI",Tahoma,sans-serif;stroke-width:4px}
+    .right-angle-mark{fill:none;stroke:#111827;stroke-width:1.8}
+    .problem-answer{background:#21885f;color:#fff;padding:7px 11px;border-radius:999px;font-weight:850;display:none;font-size:.94em;line-height:1.35;max-width:270px}
+    .problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:auto;padding:10px;background:#ecfdf5;border-left:3px solid #0f766e;border-radius:6px}
+    .steps-section.visible{display:block}
+    .answer-label{font-weight:850;color:#0f766e;margin-bottom:6px}
+    .solution-steps{line-height:1.45;font-size:.96em}
+    .step{margin:7px 0;color:#102033}
+    .step-equation{margin:7px 0;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:650;color:#0f4c5c;background:#fff;border:1px solid #ccfbf1;border-radius:5px;padding:7px}
+    .answer-diagram{max-width:620px;margin:10px auto;background:#fff;border:1px solid #ccfbf1;border-radius:7px;padding:6px}
+    .final-answer{margin-top:8px;text-align:center;background:#21885f;color:#fff;border-radius:6px;padding:8px;font-weight:850}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}
+    .modal-content{background:#fff;padding:28px;border-radius:10px;text-align:center;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+    .modal-content h2{color:#b91c1c;margin-bottom:10px}
+    .modal-content p{color:#667085;margin-bottom:18px}
+    .hidden{display:none}
+    @media (max-width:900px){.loci-row{grid-template-columns:1fr}.problem-answer{max-width:none}.diagram-wrap{max-width:none}}
+    @media (max-width:680px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.question-text{font-size:1.05em}}
+  </style>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Loci and Constructions Guidance</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool supports GCSE-style construction and loci work using clear compass-and-straightedge diagrams, boundary lines, and worked construction steps.</p>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Separate the given information from the construction marks.</li>
+        <li>Keep the compass width fixed when constructing perpendicular bisectors and angle bisectors.</li>
+        <li>Emphasise that a locus is a complete set of points satisfying a condition, not just one point.</li>
+        <li>For regions, construct each boundary first, then decide which side or part satisfies the condition.</li>
+      </ul>
+      <h3>Progression</h3>
+      <ul>
+        <li><strong>Level 1:</strong> standard constructions using arcs and straight lines.</li>
+        <li><strong>Level 2:</strong> core loci from points, lines, pairs of points, and pairs of lines.</li>
+        <li><strong>Level 3:</strong> two-condition regions and intersection problems.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Loci and Constructions</h1></header>
+    <nav class="tabs">
+      <button class="tab active" type="button" onclick="switchLevel(1)">Level 1: Constructions</button>
+      <button class="tab" type="button" onclick="switchLevel(2)">Level 2: Loci</button>
+      <button class="tab" type="button" onclick="switchLevel(3)">Level 3: Regions</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Constructions</h3>
+        <p id="level-description">Construct perpendicular bisectors, angle bisectors, perpendicular lines, and triangles from measurements.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" type="button" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" type="button" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" type="button" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" type="button" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" type="button" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" type="button" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" type="button" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={
+      1:{title:'Level 1: Constructions',description:'Construct perpendicular bisectors, angle bisectors, perpendicular lines, and triangles from measurements.',types:['perpendicular_bisector','angle_bisector','perpendicular_at_point','triangle_sss']},
+      2:{title:'Level 2: Loci',description:'Describe and draw loci from points, lines, and equal-distance conditions.',types:['fixed_distance_point','fixed_distance_line','equidistant_points','equidistant_lines','describe_locus']},
+      3:{title:'Level 3: Regions',description:'Combine two locus conditions to identify regions or possible positions.',types:['circle_and_bisector_region','line_band_and_point_region','two_circle_intersections','mixed_loci_region']}
+    };
+    const typeDisplayNames={
+      perpendicular_bisector:'Construct a Perpendicular Bisector',
+      angle_bisector:'Construct an Angle Bisector',
+      perpendicular_at_point:'Construct a Perpendicular to a Line',
+      triangle_sss:'Construct a Triangle from Three Sides',
+      fixed_distance_point:'Locus at a Fixed Distance from a Point',
+      fixed_distance_line:'Locus at a Fixed Distance from a Line',
+      equidistant_points:'Locus Equidistant from Two Points',
+      equidistant_lines:'Locus Equidistant from Two Lines',
+      describe_locus:'Describe the Locus Shown',
+      circle_and_bisector_region:'Region Using a Circle and Bisector',
+      line_band_and_point_region:'Region Using a Line and a Point',
+      two_circle_intersections:'Possible Positions from Two Distances',
+      mixed_loci_region:'Mixed Loci Region Problems'
+    };
+    const setInstructions={
+      perpendicular_bisector:'Construct each perpendicular bisector using compass arcs from both endpoints.',
+      angle_bisector:'Construct each angle bisector using equal compass arcs from the two arms of the angle.',
+      perpendicular_at_point:'Construct a perpendicular line through the given point on the line.',
+      triangle_sss:'Construct each triangle from the three side lengths given.',
+      fixed_distance_point:'Draw the locus of points at the stated distance from the point.',
+      fixed_distance_line:'Draw the locus of points at the stated distance from the line.',
+      equidistant_points:'Draw the locus of points equidistant from the two fixed points.',
+      equidistant_lines:'Draw the locus of points equidistant from the two intersecting lines.',
+      describe_locus:'Describe the complete locus shown in the diagram.',
+      circle_and_bisector_region:'Construct the two boundaries, then identify the region satisfying both conditions.',
+      line_band_and_point_region:'Construct the two boundaries, then identify the region satisfying both conditions.',
+      two_circle_intersections:'Construct both distance circles, then identify the possible intersection positions.',
+      mixed_loci_region:'Use each condition to create a boundary, then combine the boundaries.'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function cleanText(html){const t=document.createElement('template');t.innerHTML=html;return t.content.textContent.replace(/\s+/g,' ').trim()}
+    function pOn(cx,cy,r,angle){const rad=angle*Math.PI/180;return{x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)}}
+    function line(x1,y1,x2,y2,cls='given-line'){return `<line class="${cls}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"></line>`}
+    function circle(cx,cy,r,cls='circle-line'){return `<circle class="${cls}" cx="${cx}" cy="${cy}" r="${r}"></circle>`}
+    function arc(cx,cy,r,a1,a2,cls='construction-arc'){const s=pOn(cx,cy,r,a1),e=pOn(cx,cy,r,a2),large=Math.abs(a2-a1)>180?1:0,sweep=a2>a1?1:0;return `<path class="${cls}" d="M ${s.x.toFixed(1)} ${s.y.toFixed(1)} A ${r} ${r} 0 ${large} ${sweep} ${e.x.toFixed(1)} ${e.y.toFixed(1)}"></path>`}
+    function point(x,y,name,dx=10,dy=-10,cls='point-dot'){x=Number(x);y=Number(y);return `<circle class="${cls}" cx="${x}" cy="${y}" r="5"></circle><text class="point-label" x="${x+dx}" y="${y+dy}">${name}</text>`}
+    function label(text,x,y,cls='measure-label',anchor='middle'){return `<text class="${cls}" x="${x}" y="${y}" text-anchor="${anchor}">${text}</text>`}
+    function svg(inner,labelText='Construction diagram'){return `<svg class="construction-svg" viewBox="0 0 520 360" role="img" aria-label="${labelText}">${inner}<text class="small-note" x="260" y="342" text-anchor="middle">Use a ruler and compass. Diagram not drawn accurately.</text></svg>`}
+    function diagramWrap(diagram){return `<div class="diagram-wrap">${diagram}</div>`}
+    function answerDiagram(diagram){return `<div class="answer-diagram">${diagram}</div>`}
+    function problemShell(prompt,diagram,answer,steps,badge){return{instruction:setInstructions[currentType]||'',equation:`<div class="loci-row">${diagramWrap(diagram)}<div class="question-text">${prompt}</div></div>`,question:cleanText(prompt),answer,steps,badge}}
+    function segmentQuestion(){const len=randInt(6,10);return{A:{x:135,y:180},B:{x:385,y:180},len}}
+    function baseSegmentDiagram(data){return svg(line(data.A.x,data.A.y,data.B.x,data.B.y)+point(data.A.x,data.A.y,'A',-24,-10)+point(data.B.x,data.B.y,'B',12,-10)+label(`AB = ${data.len} cm`,260,166),'Line segment AB')}
+    function perpendicularBisectorAnswer(data){const A=data.A,B=data.B,midX=(A.x+B.x)/2,r=155;return svg(line(A.x,A.y,B.x,B.y)+arc(A.x,A.y,r,-48,48)+arc(A.x,A.y,r,312,408)+arc(B.x,B.y,r,132,228)+arc(B.x,B.y,r,-228,-132)+line(midX,64,midX,296,'bisector-line')+label('perpendicular bisector',midX+12,88,'line-label','start')+point(A.x,A.y,'A',-24,-10)+point(B.x,B.y,'B',12,-10)+`<path class="right-angle-mark" d="M ${midX} 180 L ${midX+17} 180 L ${midX+17} 163"></path>`,'Completed perpendicular bisector')}
+    function genPerpendicularBisector(){const data=segmentQuestion();return problemShell(`Construct the perpendicular bisector of AB, where AB = ${data.len} cm.`,baseSegmentDiagram(data),'The perpendicular bisector of AB.',[
+      'Set the compass radius to more than half the length of AB.',
+      'With centre A, draw arcs above and below the line segment.',
+      'Keep the same compass radius. With centre B, draw arcs to cross the first pair of arcs.',
+      'Use a ruler to join the two arc intersection points.',
+      'The line you have drawn meets AB at 90 degrees and cuts AB into two equal parts.',
+      answerDiagram(perpendicularBisectorAnswer(data)),
+      'Every point on this perpendicular bisector is equidistant from A and B.'
+    ],'construction')}
+    function angleData(){const O={x:170,y:235},a1=-70,angle=choice([48,54,60,66,72]),a2=a1+angle;return{O,a1,a2,angle}}
+    function rayFrom(O,angle,len){const p=pOn(O.x,O.y,len,angle);return p}
+    function angleQuestionDiagram(d){const P=rayFrom(d.O,d.a1,255),Q=rayFrom(d.O,d.a2,285);return svg(line(d.O.x,d.O.y,P.x.toFixed(1),P.y.toFixed(1),'ray-line')+line(d.O.x,d.O.y,Q.x.toFixed(1),Q.y.toFixed(1),'ray-line')+point(d.O.x,d.O.y,'O',-26,18)+point(P.x.toFixed(1),P.y.toFixed(1),'A',8,-10)+point(Q.x.toFixed(1),Q.y.toFixed(1),'B',8,18)+arc(d.O.x,d.O.y,46,d.a1,d.a2,'guide-line')+label(`${d.angle} degrees`,242,189),'Angle AOB')}
+    function angleAnswerDiagram(d){const O=d.O,P=rayFrom(O,d.a1,255),Q=rayFrom(O,d.a2,285),bis=(d.a1+d.a2)/2,Bi=rayFrom(O,bis,250),r1=82,S=rayFrom(O,d.a1,r1),T=rayFrom(O,d.a2,r1);return svg(line(O.x,O.y,P.x.toFixed(1),P.y.toFixed(1),'ray-line')+line(O.x,O.y,Q.x.toFixed(1),Q.y.toFixed(1),'ray-line')+arc(O.x,O.y,r1,d.a1,d.a2)+arc(S.x,S.y,68,bis-32,bis+25)+arc(T.x,T.y,68,bis-25,bis+32)+line(O.x,O.y,Bi.x.toFixed(1),Bi.y.toFixed(1),'bisector-line')+point(O.x,O.y,'O',-26,18)+point(P.x.toFixed(1),P.y.toFixed(1),'A',8,-10)+point(Q.x.toFixed(1),Q.y.toFixed(1),'B',8,18)+label('angle bisector',Bi.x-10,Bi.y+18,'line-label','middle'),'Completed angle bisector')}
+    function genAngleBisector(){const d=angleData();return problemShell(`Construct the angle bisector of angle AOB.`,angleQuestionDiagram(d),'The ray from O that bisects angle AOB.',[
+      'Place the compass point on O and draw an arc that cuts both arms of the angle.',
+      'Label the two points where the arc meets the arms.',
+      'Keeping the compass width fixed, draw an arc from each of those two points inside the angle.',
+      'The two new arcs cross inside the angle.',
+      'Use a ruler to join O to that crossing point.',
+      answerDiagram(angleAnswerDiagram(d)),
+      'The new ray divides angle AOB into two equal angles.'
+    ],'construction')}
+    function perpendicularQuestionDiagram(){return svg(line(90,210,430,210)+point(260,210,'P',10,-14)+label('line l',432,204,'line-label','start'),'Line with point P')}
+    function perpendicularAnswerDiagram(){return svg(line(90,210,430,210)+point(260,210,'P',10,-14)+label('line l',432,204,'line-label','start')+arc(260,210,72,180,360)+point(188,210,'A',-25,-10,'point-dot')+point(332,210,'B',10,-10,'point-dot')+arc(188,210,108,-55,55)+arc(332,210,108,125,235)+line(260,72,260,318,'bisector-line')+`<path class="right-angle-mark" d="M 260 210 L 277 210 L 277 193"></path>`,'Completed perpendicular through P')}
+    function genPerpendicularAtPoint(){return problemShell(`Construct a perpendicular to line l through point P.`,perpendicularQuestionDiagram(),'A line through P at 90 degrees to line l.',[
+      'With centre P, draw an arc that cuts line l at two points.',
+      'Call those points A and B.',
+      'Using the same compass width from A and B, draw arcs above the line so that they cross.',
+      'Use a ruler to join P to the arc crossing point.',
+      answerDiagram(perpendicularAnswerDiagram()),
+      'The new line is perpendicular to line l because it is the perpendicular bisector of AB.'
+    ],'construction')}
+    function triangleSides(){let a=randInt(5,8),b=randInt(5,9),c=randInt(6,10);if(a+b<=c)c=a+b-1;return{AB:c,AC:b,BC:a}}
+    function triangleQuestionDiagram(s){return svg(line(140,245,380,245)+point(140,245,'A',-25,-10)+point(380,245,'B',10,-10)+label(`AB = ${s.AB} cm`,260,230),'Triangle base AB')}
+    function triangleAnswerDiagram(s){const A={x:140,y:245},B={x:380,y:245},C={x:265,y:105};return svg(line(A.x,A.y,B.x,B.y)+line(A.x,A.y,C.x,C.y,'main-line')+line(B.x,B.y,C.x,C.y,'main-line')+arc(A.x,A.y,172,-72,-18)+arc(B.x,B.y,158,-164,-108)+point(A.x,A.y,'A',-25,-10)+point(B.x,B.y,'B',10,-10)+point(C.x,C.y,'C',8,-10)+label(`AB = ${s.AB} cm`,260,230)+label(`AC = ${s.AC} cm`,182,164,'measure-label')+label(`BC = ${s.BC} cm`,335,164,'measure-label'),'Completed SSS triangle')}
+    function genTriangleSSS(){const s=triangleSides();return problemShell(`Construct triangle ABC with AB = ${s.AB} cm, AC = ${s.AC} cm, and BC = ${s.BC} cm.`,triangleQuestionDiagram(s),'Triangle ABC constructed from the three side lengths.',[
+      `Draw the base AB = ${s.AB} cm.`,
+      `Set the compass width to ${s.AC} cm. With centre A, draw an arc above AB.`,
+      `Set the compass width to ${s.BC} cm. With centre B, draw an arc to cross the first arc.`,
+      'Label the arc intersection C.',
+      'Use a ruler to join A to C and B to C.',
+      answerDiagram(triangleAnswerDiagram(s)),
+      'The completed triangle has the required three side lengths.'
+    ],'construction')}
+    function pointOnlyDiagram(name='P'){return svg(point(260,180,name,10,-12),'Single point diagram')}
+    function fixedPointAnswer(r){return svg(point(260,180,'P',10,-12)+circle(260,180,96,'circle-line')+label(`${r} cm`,313,168),'Circle locus from point P')}
+    function genFixedDistancePoint(){const r=randInt(2,6);return problemShell(`Draw the locus of points ${r} cm from point P.`,pointOnlyDiagram('P'),`A circle with centre P and radius ${r} cm.`,[
+      'A fixed distance from a single point creates a circle.',
+      'The fixed point is the centre of the circle.',
+      `Set the compass width to ${r} cm.`,
+      'Place the compass point on P and draw a complete circle.',
+      answerDiagram(fixedPointAnswer(r)),
+      `The locus is the circle with centre P and radius ${r} cm.`
+    ],'locus')}
+    function lineOnlyDiagram(){return svg(line(90,205,430,205)+label('line l',434,198,'line-label','start'),'Single line diagram')}
+    function fixedLineAnswer(d){return svg(line(90,205,430,205)+line(90,145,430,145,'parallel-line')+line(90,265,430,265,'parallel-line')+label('line l',434,198,'line-label','start')+label(`${d} cm`,112,176)+label(`${d} cm`,112,246),'Parallel line locus')}
+    function genFixedDistanceLine(){const d=randInt(2,5);return problemShell(`Draw the locus of points ${d} cm from line l.`,lineOnlyDiagram(),`Two lines parallel to line l, each ${d} cm from l.`,[
+      'A fixed distance from a straight line creates two parallel lines.',
+      `Measure ${d} cm perpendicular to line l on one side and draw a parallel line.`,
+      `Measure ${d} cm perpendicular to line l on the other side and draw a second parallel line.`,
+      answerDiagram(fixedLineAnswer(d)),
+      `The locus is the pair of parallel lines ${d} cm from line l.`
+    ],'locus')}
+    function genEquidistantPoints(){const data=segmentQuestion();return problemShell(`Draw the locus of points equidistant from A and B.`,baseSegmentDiagram(data),'The perpendicular bisector of AB.',[
+      'Points equidistant from A and B lie on the perpendicular bisector of AB.',
+      'Set the compass radius to more than half AB.',
+      'Draw equal arcs from A and B above and below AB.',
+      'Join the two arc intersection points.',
+      answerDiagram(perpendicularBisectorAnswer(data)),
+      'Every point on this line is the same distance from A as it is from B.'
+    ],'locus')}
+    function intersectingLinesDiagram(){return svg(line(110,260,420,115,'ray-line')+line(115,110,425,260,'ray-line')+label('line l',420,108,'line-label','start')+label('line m',425,274,'line-label','start'),'Intersecting lines')}
+    function equidistantLinesAnswer(){return svg(line(110,260,420,115,'ray-line')+line(115,110,425,260,'ray-line')+line(110,180,425,180,'bisector-line')+line(260,70,260,310,'bisector-line')+label('line l',420,108,'line-label','start')+label('line m',425,274,'line-label','start')+label('angle bisectors',274,92,'line-label','start'),'Angle bisector loci')}
+    function genEquidistantLines(){return problemShell(`Draw the locus of points equidistant from line l and line m.`,intersectingLinesDiagram(),'The angle bisectors of the angles between the two lines.',[
+      'Points equidistant from two intersecting lines lie on the angle bisectors.',
+      'Construct one angle bisector using equal arcs from the two arms of the angle.',
+      'Construct the opposite angle bisector in the same way.',
+      answerDiagram(equidistantLinesAnswer()),
+      'The complete locus is the pair of angle bisectors.'
+    ],'locus')}
+    function genDescribeLocus(){const mode=choice(['circle','parallel','bisector']);if(mode==='circle'){const r=randInt(3,6),diagram=fixedPointAnswer(r);return problemShell('Describe the locus shown.',diagram,`The set of points ${r} cm from P.`,['The boundary is a circle.','The centre of the circle is P.','A circle represents all points at a fixed distance from its centre.',`Therefore the locus is all points ${r} cm from P.`],'describe')}if(mode==='parallel'){const d=randInt(2,5),diagram=fixedLineAnswer(d);return problemShell('Describe the locus shown.',diagram,`The set of points ${d} cm from line l.`,['The diagram shows two lines parallel to line l.','Each parallel line is the same perpendicular distance from line l.',`Therefore the locus is all points ${d} cm from line l.`],'describe')}const data=segmentQuestion();return problemShell('Describe the locus shown.',perpendicularBisectorAnswer(data),'The set of points equidistant from A and B.',['The line crosses AB at 90 degrees and cuts AB into two equal parts.','This is the perpendicular bisector of AB.','Every point on a perpendicular bisector is equidistant from the two endpoints.','Therefore the locus is the set of points equidistant from A and B.'],'describe')}
+    function regionBaseAB(){return svg(point(165,190,'A',-24,-10)+point(355,190,'B',12,-10)+line(165,190,355,190,'guide-line'),'Two fixed points')}
+    function circleBisectorRegionAnswer(r){return svg(point(165,190,'A',-24,-10)+point(355,190,'B',12,-10)+line(165,190,355,190,'guide-line')+circle(165,190,112,'region-boundary')+line(260,70,260,312,'bisector-line')+label('inside circle',129,96,'line-label')+label('A side of bisector',276,90,'line-label','start'),'Circle and bisector boundaries')}
+    function genCircleAndBisectorRegion(){const r=randInt(3,5);return problemShell(`A point P is less than ${r} cm from A and closer to A than to B. Describe the region where P can be.`,regionBaseAB(),`Inside the circle centre A, radius ${r} cm, on the A side of the perpendicular bisector of AB.`,[
+      `Less than ${r} cm from A means inside the circle with centre A and radius ${r} cm.`,
+      'Closer to A than to B is decided by the perpendicular bisector of AB.',
+      'Construct the perpendicular bisector of AB.',
+      'Choose the side of the perpendicular bisector that contains A.',
+      answerDiagram(circleBisectorRegionAnswer(r)),
+      `The required region is inside the circle centre A, radius ${r} cm, and on the A side of the perpendicular bisector.`
+    ],'region')}
+    function lineBandPointQuestion(){return svg(line(80,198,440,198)+point(260,105,'P',10,-10)+label('line l',444,191,'line-label','start'),'Line and point')}
+    function lineBandPointAnswer(d,r){return svg(line(80,198,440,198)+point(260,105,'P',10,-10)+line(80,146,440,146,'parallel-line')+line(80,250,440,250,'parallel-line')+circle(260,105,78,'region-boundary')+label(`within ${d} cm of l`,104,178,'line-label','start')+label(`outside ${r} cm circle`,301,70,'line-label','start')+label('line l',444,191,'line-label','start'),'Band and circle boundaries')}
+    function genLineBandPointRegion(){const d=randInt(2,4),r=randInt(3,5);return problemShell(`A point X is within ${d} cm of line l and more than ${r} cm from point P. Describe the region where X can be.`,lineBandPointQuestion(),`Between the two parallel lines ${d} cm from l, but outside the circle centre P, radius ${r} cm.`,[
+      `Within ${d} cm of line l means between two parallel lines, each ${d} cm from l.`,
+      `More than ${r} cm from P means outside the circle with centre P and radius ${r} cm.`,
+      'Draw both parallel boundary lines.',
+      'Draw the circle boundary around P.',
+      answerDiagram(lineBandPointAnswer(d,r)),
+      `The required region is inside the parallel-line band and outside the circle.`
+    ],'region')}
+    function twoCircleQuestion(){return svg(point(160,190,'A',-24,-10)+point(360,190,'B',12,-10)+line(160,190,360,190,'guide-line'),'Two fixed centres')}
+    function twoCircleAnswer(a,b){return svg(point(160,190,'A',-24,-10)+point(360,190,'B',12,-10)+line(160,190,360,190,'guide-line')+circle(160,190,128,'region-boundary')+circle(360,190,118,'region-boundary')+point(260,82,'P',10,-10,'answer-dot')+point(260,298,'Q',10,18,'answer-dot')+label(`${a} cm from A`,116,76,'line-label','start')+label(`${b} cm from B`,343,76,'line-label','start'),'Two circle intersections')}
+    function genTwoCircleIntersections(){const a=randInt(4,7),b=randInt(4,7);return problemShell(`Point X is ${a} cm from A and ${b} cm from B. Show the possible positions of X.`,twoCircleQuestion(),'The possible positions are the intersection points of the two circles.',[
+      `Draw a circle with centre A and radius ${a} cm.`,
+      `Draw a circle with centre B and radius ${b} cm.`,
+      'A point satisfying both conditions must lie on both circles.',
+      'Therefore the possible positions are where the two circles intersect.',
+      answerDiagram(twoCircleAnswer(a,b)),
+      'There are two possible positions unless the circles touch once or do not meet.'
+    ],'region')}
+    function generateProblem(){const type=currentType==='select'?choice(levelConfigs[currentLevel].types):currentType;if(type==='perpendicular_bisector')return genPerpendicularBisector();if(type==='angle_bisector')return genAngleBisector();if(type==='perpendicular_at_point')return genPerpendicularAtPoint();if(type==='triangle_sss')return genTriangleSSS();if(type==='fixed_distance_point')return genFixedDistancePoint();if(type==='fixed_distance_line')return genFixedDistanceLine();if(type==='equidistant_points')return genEquidistantPoints();if(type==='equidistant_lines')return genEquidistantLines();if(type==='describe_locus')return genDescribeLocus();if(type==='circle_and_bisector_region')return genCircleAndBisectorRegion();if(type==='line_band_and_point_region')return genLineBandPointRegion();if(type==='two_circle_intersections')return genTwoCircleIntersections();if(type==='mixed_loci_region')return choice([genCircleAndBisectorRegion,genLineBandPointRegion,genTwoCircleIntersections])();return genPerpendicularBisector()}
+    function setInstructionForType(){const text=setInstructions[currentType]||'';const el=document.getElementById('set-instruction');el.textContent=text;el.classList.toggle('visible',Boolean(text))}
+    function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));const cfg=levelConfigs[level];document.getElementById('level-title').textContent=cfg.title;document.getElementById('level-description').textContent=cfg.description;const dd=document.getElementById('type-dropdown');dd.innerHTML='<option value="select">Select Question Type</option>'+cfg.types.map(t=>'<option value="'+t+'">'+typeDisplayNames[t]+'</option>').join('');dd.value='select';showBlankPage()}
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-set-header').classList.remove('visible');document.getElementById('set-instruction').classList.remove('visible');document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:38px;color:#667085;font-size:1.05em">Please select a construction or loci question type to begin.</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<2;i++)problems.push(generateProblem());renderProblems()}
+    function renderStep(step){const html=String(step);if(/<svg|<div|<table|<figure/i.test(html))return html;if(/[=]/.test(html)&&html.length<110)return '<div class="step-equation">'+html+'</div>';return '<div class="step">'+html+'</div>'}
+    function renderProblems(){const list=document.getElementById('problem-list'),header=document.getElementById('problem-set-header');list.innerHTML='';header.textContent=typeDisplayNames[currentType]||'Loci and Constructions';header.className='problem-set-header visible';setInstructionForType();problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const steps=(p.steps||[]).map(renderStep).join('');li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(i+1)+'</div><div class="equation">'+p.equation+'</div></div><div class="problem-answer" id="quick-answer-'+i+'">'+p.answer+'</div></div><div class="steps-section" id="steps-'+i+'"><div class="answer-label">Worked construction:</div><div class="solution-steps">'+steps+'<div class="final-answer">'+p.answer+'</div></div></div>';list.appendChild(li)})}
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById('quick-answer-'+i)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById('steps-'+i)?.classList.toggle('visible',stepsVisible))}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const e=document.getElementById('timer-display');e.textContent='Ready';e.className='timer-display'}
+    function updateTimerDisplay(){const e=document.getElementById('timer-display'),m=Math.floor(timeRemaining/60),s=timeRemaining%60;e.textContent=m+':'+String(s).padStart(2,'0');if(timerActive&&timeRemaining<=30)e.className='timer-display warning';else if(timerActive)e.className='timer-display active';else e.className='timer-display'}
+    function timerFinished(){stopTimer();const e=document.getElementById('timer-display');e.textContent='Time Up!';e.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
+</body>
+</html>

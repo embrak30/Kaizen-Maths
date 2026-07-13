@@ -798,6 +798,25 @@ const tools = [
     ]
   },
   {
+    slug: "loci-constructions",
+    title: "Loci and Constructions",
+    category: "Geometry",
+    level: "GCSE / IGCSE / CSEC",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate diagram-led loci and construction practice covering perpendicular bisectors, angle bisectors, fixed-distance loci, equidistant loci, construction arcs, and region problems.",
+    tags: ["geometry", "loci", "constructions", "perpendicular bisector", "angle bisector", "compass", "straightedge", "equidistant", "fixed distance", "regions", "GCSE", "IGCSE", "CSEC"],
+    toolPath: "tools/loci-constructions/index.html?v=loci-constructions-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on standard ruler-and-compass constructions, including perpendicular bisectors, angle bisectors, perpendiculars, and SSS triangles.",
+      "Level 2 develops the main loci: fixed distance from a point, fixed distance from a line, equidistant from two points, and equidistant from two lines.",
+      "Level 3 combines two locus conditions to form regions and possible-position problems.",
+      "Worked steps keep the given diagram separate from the completed construction so teachers can reveal the method at the right moment."
+    ]
+  },
+  {
     slug: "sectors-arc-length",
     title: "Sectors, Arc Length and Area",
     category: "Geometry",
@@ -1955,6 +1974,7 @@ const subjectToolGroups = {
     "earth-geometry": "Trigonometry and Bearings",
     "equation-of-a-circle": "Coordinate Geometry",
     "transformations": "Coordinate Geometry",
+    "loci-constructions": "Constructions and Loci",
     "free-vectors": "Vectors and Similarity",
     "scale-drawing-similar-shapes": "Vectors and Similarity",
     "missing-angles": "Angles and Shape Geometry",
@@ -2010,6 +2030,7 @@ const subjectGroupOrder = {
     "3D Measures",
     "Trigonometry and Bearings",
     "Coordinate Geometry",
+    "Constructions and Loci",
     "Vectors and Similarity",
     "Angles and Shape Geometry"
   ],
@@ -2053,6 +2074,7 @@ const subjectGroupNotes = {
   "3D Measures": "Volume and surface area for prisms, cylinders, cones, and spheres.",
   "Trigonometry and Bearings": "Pythagoras, right-angled trigonometry, non-right triangle rules, bearings, and Earth geometry.",
   "Coordinate Geometry": "Circle equations, coordinate geometry, transformations, and links to algebraic graph work.",
+  "Constructions and Loci": "Compass-and-straightedge constructions, perpendicular bisectors, angle bisectors, loci, and region problems.",
   "Vectors and Similarity": "Column vectors, geometric vectors, scale drawings, and similar shapes.",
   "Angles and Shape Geometry": "Missing angles in lines, triangles, quadrilaterals, circle theorems, and standard shape facts.",
   "Data Collection and Sampling": "Sampling methods, bias, questionnaire design, representative samples, and sampling calculations.",
