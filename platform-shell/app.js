@@ -1765,7 +1765,7 @@ const tools = [
     status: "Imported",
     description: "Generate PEMDAS questions with levels for precedence, brackets, exponents, division, and negatives.",
     tags: ["numbers", "PEMDAS", "BODMAS", "order of operations", "exponents", "negative numbers"],
-    toolPath: "tools/order-of-operations/index.html?v=step-structure-1",
+    toolPath: "tools/order-of-operations/index.html?v=order-operations-math-render-1",
     imported: true,
     teacherNotes: [
       "Designed for repeated board practice on order of operations.",

@@ -268,6 +268,57 @@
       });
     }
 
+    function stripMathDelimiters(value){
+      const text = String(value ?? '').trim();
+      if(text.startsWith('$$') && text.endsWith('$$')) return text.slice(2, -2).trim();
+      if(text.startsWith('\\(') && text.endsWith('\\)')) return text.slice(2, -2).trim();
+      if(text.startsWith('\\[') && text.endsWith('\\]')) return text.slice(2, -2).trim();
+      return text;
+    }
+
+    function escapeHTML(value){
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function readableMathFallback(value){
+      const plain = stripMathDelimiters(value)
+        .replace(/\\times/g, ' × ')
+        .replace(/\\div/g, ' ÷ ')
+        .replace(/=/g, ' = ')
+        .replace(/([A-Za-z0-9)])\+([A-Za-z0-9(])/g, '$1 + $2')
+        .replace(/([A-Za-z0-9)])-([A-Za-z0-9(])/g, '$1 - $2')
+        .replace(/\\left/g, '')
+        .replace(/\\right/g, '')
+        .replace(/\\,/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      return escapeHTML(plain)
+        .replace(/\^\{([^{}]+)\}/g, '<sup>$1</sup>')
+        .replace(/\^(-?\d+)/g, '<sup>$1</sup>');
+    }
+
+    function renderMathHTML(value, displayMode=false){
+      const tex = stripMathDelimiters(value);
+      if(typeof katex === 'object' && typeof katex.renderToString === 'function'){
+        try{
+          return katex.renderToString(tex, {
+            displayMode,
+            throwOnError: false,
+            strict: 'ignore'
+          });
+        } catch(err){
+          // Fall through to readable text if the renderer is unavailable or rejects the string.
+        }
+      }
+      return readableMathFallback(value);
+    }
+
     function genLevel1(type){
       if(type==='l1_core'){
         const patterns = [
@@ -422,23 +473,23 @@
         li.className = 'problem-item';
         const stepsHTML = p.steps.map(st=>{
           const isEq = st.trim().startsWith('$$') || (st.includes('=') && !st.startsWith('Step'));
-          return isEq ? `<div class="step-equation">${st}</div>` : `<div class="step">${st}</div>`;
+          return isEq ? `<div class="step-equation">${renderMathHTML(st, true)}</div>` : `<div class="step">${escapeHTML(st)}</div>`;
         }).join('');
         li.innerHTML = `
           <div class="problem-header">
             <div class="problem-left">
               <div class="problem-number">${idx+1}</div>
               <div class="problem-content">
-                <div class="expression">${p.expression}</div>
+                <div class="expression">${renderMathHTML(p.expression)}</div>
               </div>
             </div>
-            <div class="problem-answer" id="quick-answer-${idx}">${p.answer}</div>
+            <div class="problem-answer" id="quick-answer-${idx}">${renderMathHTML(p.answer)}</div>
           </div>
           <div class="steps-section" id="steps-${idx}">
             <div class="answer-label">Solution Steps:</div>
             <div class="solution-steps">
               ${stepsHTML}
-              <div class="final-answer">${p.answer}</div>
+              <div class="final-answer">${renderMathHTML(p.answer)}</div>
             </div>
           </div>
         `;
