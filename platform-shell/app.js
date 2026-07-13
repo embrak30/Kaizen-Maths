@@ -7299,18 +7299,96 @@ function bindWorksheetGenerator() {
   });
 }
 
-function relatedTools(tool) {
+function relatedToolTokens(tool) {
+  const stopWords = new Set([
+    "and", "the", "with", "from", "for", "into", "using", "tool", "practice", "generator",
+    "level", "maths", "math", "questions", "question", "basic", "advanced", "mixed", "classroom",
+    "generate", "generates", "covering", "including", "students", "teacher", "teachers",
+    "algebra", "geometry", "statistics", "mechanics", "numbers", "tools",
+    "gcse", "igcse", "csec", "cape", "level", "trial", "free", "pro", "ks2", "ks3", "ks4", "ks5"
+  ]);
+  return new Set(
+    normalise([
+      tool.title,
+      tool.category,
+      toolSubjectGroup(tool),
+      tool.description,
+      ...toolTopicConcepts(tool),
+      ...allToolTags(tool)
+    ].join(" "))
+      .split(/[^a-z0-9]+/)
+      .map((token) => token.trim())
+      .filter((token) => token.length > 2 && !stopWords.has(token))
+  );
+}
+
+const curatedRelatedToolSlugs = {
+  "loci-constructions": ["transformations", "missing-angles", "circle-theorems", "scale-drawing-similar-shapes"],
+  "sampling-methods-bias": ["kaizen-large-data-set", "averages-range", "histograms", "cumulative-frequency-curves"],
+  "histograms": ["cumulative-frequency-curves", "averages-range", "kaizen-large-data-set", "sampling-methods-bias"],
+  "cumulative-frequency-curves": ["histograms", "averages-range", "kaizen-large-data-set", "sampling-methods-bias"],
+  "venn-diagrams": ["tree-diagrams-conditional-probability", "binomial-geometric-distribution", "discrete-random-variables", "histograms"],
+  "tree-diagrams-conditional-probability": ["venn-diagrams", "binomial-geometric-distribution", "discrete-random-variables", "sampling-methods-bias"],
+  "continuous-random-variables": ["normal-distribution", "discrete-random-variables", "integration", "hypothesis-testing"],
+  "projectiles": ["equations-of-motion", "motion-graphs-constant-acceleration", "newtons-second-law", "momentum"],
+  "momentum": ["projectiles", "equations-of-motion", "newtons-second-law", "motion-graphs-constant-acceleration"],
+  "moments": ["newtons-second-law", "projectiles", "equations-of-motion", "motion-graphs-constant-acceleration"],
+  "newtons-second-law": ["motion-graphs-constant-acceleration", "equations-of-motion", "moments", "momentum"],
+  "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
+  "circle-theorems": ["missing-angles", "circles-area-circumference", "sectors-arc-length", "trigonometric-ratios"],
+  "earth-geometry": ["bearings", "trigonometric-ratios", "circles-area-circumference", "sectors-arc-length"],
+  "bearings": ["trigonometric-ratios", "earth-geometry", "missing-angles", "sine-cosine-rule"],
+  "fractions-practice": ["fractions", "decimals-practice-lab", "simple-percentage-tasks", "ratio-proportion"],
+  "algebraic-fractions": ["factorisation", "advanced-factorisation", "quadratic-factorisation", "linear-equations"],
+  "matrices": ["advanced-matrices", "further-vectors", "simultaneous-equations", "transformations"],
+  "advanced-matrices": ["matrices", "further-vectors", "complex-numbers", "transformations"],
+  "complex-numbers": ["polar-coordinates", "roots-of-equations", "trigonometric-functions", "advanced-matrices"],
+  "polar-coordinates": ["complex-numbers", "trigonometric-functions", "curve-sketching", "hyperbolic-functions"],
+  "series-expansions": ["differentiation-polynomials", "integration", "advanced-integration", "functions"],
+  "differential-equations": ["advanced-integration", "differentiation-rules", "trig-differentiation-rules", "functions"]
+};
+
+function curatedRelatedTools(tool) {
+  return (curatedRelatedToolSlugs[tool.slug] || [])
+    .map((slug) => tools.find((candidate) => candidate.slug === slug && isVisibleTool(candidate)))
+    .filter(Boolean);
+}
+
+function relatedToolScore(tool, candidate) {
+  let score = 0;
   const group = toolSubjectGroup(tool);
-  return tools
+  const candidateGroup = toolSubjectGroup(candidate);
+  if (candidate.category === tool.category) score += 20;
+  if (group && candidateGroup === group) score += 36;
+  if (requiredAccess(candidate) === requiredAccess(tool)) score += 2;
+  const sourceTokens = relatedToolTokens(tool);
+  const candidateTokens = relatedToolTokens(candidate);
+  const overlap = [...sourceTokens].filter((token) => candidateTokens.has(token));
+  score += overlap.length * 9;
+  const titleOverlap = normalise(candidate.title)
+    .split(/[^a-z0-9]+/)
+    .filter((token) => sourceTokens.has(token)).length;
+  score += titleOverlap * 6;
+  return score;
+}
+
+function relatedTools(tool) {
+  const curated = curatedRelatedTools(tool);
+  const candidates = tools
+    .filter((candidate) => isVisibleTool(candidate) && candidate.slug !== tool.slug)
+    .map((candidate) => ({
+      tool: candidate,
+      score: relatedToolScore(tool, candidate)
+    }))
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score || a.tool.title.localeCompare(b.tool.title))
+    .map((item) => item.tool);
+
+  const fallback = tools
     .filter((candidate) => isVisibleTool(candidate) && candidate.slug !== tool.slug && candidate.category === tool.category)
-    .sort((a, b) => {
-      if (!group) return 0;
-      const aSameGroup = toolSubjectGroup(a) === group;
-      const bSameGroup = toolSubjectGroup(b) === group;
-      if (aSameGroup === bSameGroup) return a.title.localeCompare(b.title);
-      return aSameGroup ? -1 : 1;
-    })
-    .slice(0, 4);
+    .sort((a, b) => a.title.localeCompare(b.title));
+
+  return [...new Map([...curated, ...candidates, ...fallback].map((candidate) => [candidate.slug, candidate])).values()].slice(0, 4);
 }
 
 function standardsForTool(tool) {
@@ -7550,7 +7628,16 @@ function toolCurriculumLinks(tool) {
 }
 
 function toolInfoText(tool) {
-  return normalise([tool.slug, tool.title, tool.category, toolSubjectGroup(tool), tool.level, tool.description, allToolTags(tool).join(" ")].join(" "));
+  return normalise([
+    tool.slug,
+    tool.title,
+    tool.category,
+    toolSubjectGroup(tool),
+    tool.level,
+    tool.description,
+    allToolTags(tool).join(" "),
+    toolTopicConcepts(tool).join(" ")
+  ].join(" "));
 }
 
 function toolInsightProfile(tool) {
@@ -7558,6 +7645,409 @@ function toolInsightProfile(tool) {
   const has = (...needles) => needles.some((needle) => haystack.includes(needle));
   const matches = (pattern) => pattern.test(haystack);
   const profiles = [
+    {
+      match: () => tool.slug === "loci-constructions" || (haystack.includes("loci") && has("constructions", "perpendicular bisector", "angle bisector")),
+      misconceptions: [
+        "Drawing a single point instead of the complete locus of all points satisfying the condition.",
+        "Changing the compass width during a perpendicular-bisector or angle-bisector construction.",
+        "Shading the wrong side of a boundary because the inequality or distance condition has not been tested with a sample point."
+      ],
+      questions: [
+        "How can we tell whether this condition creates a circle, a pair of parallel lines, a perpendicular bisector, or an angle bisector?",
+        "Which construction marks prove that the line is genuinely a bisector rather than just a visually estimated line?",
+        "How could we test one point in the region to confirm that it satisfies every locus condition?"
+      ]
+    },
+    {
+      match: () => has("sampling", "bias", "questionnaire", "representative sample"),
+      misconceptions: [
+        "Describing a sample as representative without checking how the sample was selected.",
+        "Confusing random sampling with convenience sampling because both may feel informal in context.",
+        "Identifying bias in a question but not explaining how it would affect the responses collected."
+      ],
+      questions: [
+        "Which part of the sampling method could systematically exclude or over-represent a group?",
+        "How would you redesign the sampling process so that the results are more likely to represent the target population?",
+        "What wording in the question might push respondents toward a particular answer, and how could it be neutralised?"
+      ]
+    },
+    {
+      match: () => tool.slug === "cumulative-frequency-curves" || normalise(tool.title).includes("cumulative frequency") || normalise(tool.title).includes("ogive"),
+      misconceptions: [
+        "Plotting points at class midpoints instead of upper class boundaries for a cumulative frequency curve.",
+        "Reading the median or quartiles from the frequency axis instead of projecting correctly from the cumulative frequency value.",
+        "Treating an estimate from grouped data as exact without acknowledging that the graph or interpolation is being used."
+      ],
+      questions: [
+        "Why are upper class boundaries used when plotting an ogive?",
+        "How does the total frequency determine the median, lower quartile, and upper quartile positions?",
+        "What features of the cumulative frequency curve suggest spread, skew, or possible comparison between two groups?"
+      ]
+    },
+    {
+      match: () => has("large data set", "data set practice"),
+      misconceptions: [
+        "Answering from general context knowledge rather than using the variables and coding conventions in the data set.",
+        "Ignoring missing values, units, or category codes when interpreting a table or extract.",
+        "Making a broad conclusion from a small extract without considering whether it represents the full data set."
+      ],
+      questions: [
+        "Which variables in the data set are relevant to this question, and which are distractions?",
+        "How do units, coding, missing values, or outliers affect the calculation or interpretation?",
+        "What conclusion is justified by this extract, and what would require access to the wider data set?"
+      ]
+    },
+    {
+      match: () => has("discrete random variables", "probability distributions") && !has("binomial", "geometric"),
+      misconceptions: [
+        "Forgetting that the probabilities in a discrete distribution must add to 1.",
+        "Using x values instead of probabilities when calculating an expected value.",
+        "Calculating variance without subtracting the square of the mean."
+      ],
+      questions: [
+        "How can the total probability check reveal an error before any expectation calculation begins?",
+        "What does the expected value represent in the context of the random variable?",
+        "Why does variance use E(X squared) minus the square of E(X), rather than just averaging deviations informally?"
+      ]
+    },
+    {
+      match: () => has("continuous random variables", "density functions", "cdf", "probability density"),
+      misconceptions: [
+        "Reading the height of a density function as a probability instead of using area under the curve.",
+        "Forgetting to check that the total area under the density function is 1.",
+        "Using the cumulative distribution function without matching the correct interval endpoints."
+      ],
+      questions: [
+        "What area under the density curve corresponds to the probability being requested?",
+        "How can integration confirm that this is a valid probability density function?",
+        "When is it more efficient to use the density function directly, and when is the cumulative distribution function better?"
+      ]
+    },
+    {
+      match: () => tool.slug === "averages-range" || normalise(tool.title).includes("averages") || normalise(tool.title).includes("mean"),
+      misconceptions: [
+        "Choosing the mean automatically even when an outlier makes the median more representative.",
+        "Forgetting to reorder values before finding the median or quartiles.",
+        "Solving a missing-value mean problem without first multiplying the mean by the number of values."
+      ],
+      questions: [
+        "Which average best represents this data set, and what feature of the data supports that choice?",
+        "How does one extreme value affect the mean, median, mode, and range differently?",
+        "What equation is implied when a mean and one missing value are given?"
+      ]
+    },
+    {
+      match: () => has("tree diagrams", "conditional probability"),
+      misconceptions: [
+        "Adding along branches where multiplication is needed for a complete pathway.",
+        "Using replacement probabilities when the question says an item is not replaced.",
+        "Treating reverse conditional probabilities as if P(A given B) and P(B given A) are the same."
+      ],
+      questions: [
+        "What does each branch represent, and which complete pathways satisfy the event?",
+        "How do the second-stage probabilities change when there is no replacement?",
+        "How can the tree diagram help distinguish joint probability from conditional probability?"
+      ]
+    },
+    {
+      match: () => has("venn diagrams", "set probability"),
+      misconceptions: [
+        "Placing values in overlapping regions without subtracting the intersection first.",
+        "Confusing union with intersection, especially when the word 'or' appears in the question.",
+        "Forgetting that values outside both sets still belong to the universal set."
+      ],
+      questions: [
+        "Which region must be filled first so that the rest of the Venn diagram remains consistent?",
+        "How can set notation, words, and the shaded region be matched precisely?",
+        "What changes when the question asks for a conditional probability from the completed Venn diagram?"
+      ]
+    },
+    {
+      match: () => has("circle theorems", "cyclic quadrilateral", "alternate segment theorem"),
+      misconceptions: [
+        "Naming a circle theorem without checking that the relevant chord, arc, tangent, or centre is actually involved.",
+        "Using the cyclic quadrilateral rule on a quadrilateral that has not been shown to be cyclic.",
+        "Applying the alternate segment theorem to the wrong angle between the tangent and chord."
+      ],
+      questions: [
+        "Which chord, arc, tangent, or radius justifies the theorem being used here?",
+        "How could we mark the diagram so that the theorem chain becomes visible before calculating?",
+        "What additional reason would be needed to turn this angle calculation into a proof?"
+      ]
+    },
+    {
+      match: () => has("equation of a circle", "circle equations", "tangents") && !has("area", "circumference"),
+      misconceptions: [
+        "Reading the centre from (x - a) squared + (y - b) squared incorrectly by using the signs as written.",
+        "Using the radius squared as the radius when moving between the equation and the diagram.",
+        "Finding the gradient of a radius but not using the negative reciprocal for the tangent gradient."
+      ],
+      questions: [
+        "How does the completed-square form reveal the centre and radius of the circle?",
+        "What relationship links a tangent to the radius at the point of contact?",
+        "How can substitution into the circle equation confirm whether a point lies on, inside, or outside the circle?"
+      ]
+    },
+    {
+      match: () => tool.slug === "scale-drawing-similar-shapes" || normalise(tool.title).includes("similar shapes") || normalise(tool.title).includes("scale drawing"),
+      misconceptions: [
+        "Using the length scale factor directly for area or volume ratio questions.",
+        "Matching non-corresponding sides when comparing similar shapes or triangles.",
+        "Converting map-scale units inconsistently between centimetres, metres, and kilometres."
+      ],
+      questions: [
+        "Which lengths correspond, and how does that determine the scale factor?",
+        "How do perimeter, area, and volume ratios change when the length scale factor changes?",
+        "What unit conversion must happen before the scale drawing calculation is meaningful?"
+      ]
+    },
+    {
+      match: () => tool.slug === "earth-geometry" || normalise(tool.title).includes("earth geometry"),
+      misconceptions: [
+        "Treating distance along a parallel of latitude as if it were a great-circle distance.",
+        "Using longitude difference without multiplying by cos(latitude) for small-circle distances.",
+        "Confusing north-south latitude change with east-west longitude change."
+      ],
+      questions: [
+        "Is this route along a meridian, the equator, or a parallel of latitude?",
+        "How does the radius of a small circle depend on the latitude?",
+        "What does the sign or direction of the latitude and longitude tell us about the route?"
+      ]
+    },
+    {
+      match: () => has("bearings", "clockwise from north", "navigation"),
+      misconceptions: [
+        "Measuring the angle from east or from the line of travel instead of clockwise from north.",
+        "Writing a bearing with fewer than three digits.",
+        "Assuming the reverse bearing is found by simply changing the direction word rather than adding or subtracting 180 degrees."
+      ],
+      questions: [
+        "Where is north at the point from which the bearing is being measured?",
+        "How can alternate, corresponding, or co-interior angles reveal a hidden bearing?",
+        "How would the bearing change if the journey were described in the opposite direction?"
+      ]
+    },
+    {
+      match: () => has("upper and lower bounds", "bounds"),
+      misconceptions: [
+        "Using the rounded value itself as a bound instead of finding the half-unit interval around it.",
+        "Choosing the wrong combination of bounds for a maximum or minimum calculation.",
+        "Rounding an intermediate result before using it in a compound bound calculation."
+      ],
+      questions: [
+        "What interval of possible values is created by this rounded measurement?",
+        "Which combination of upper and lower bounds makes the expression as large or as small as possible?",
+        "How does the accuracy of each measurement affect the reliability of the final answer?"
+      ]
+    },
+    {
+      match: () => has("hcf", "lcm", "prime factorisation"),
+      misconceptions: [
+        "Listing common factors but stopping before checking that the highest common factor has been found.",
+        "Confusing HCF and LCM when interpreting a sharing or repeating-cycle context.",
+        "Using prime factorisation but omitting repeated prime factors in the final product."
+      ],
+      questions: [
+        "Does the context ask for the largest shared group size or the first common repeated amount?",
+        "How does the prime factorisation show the difference between HCF and LCM?",
+        "What check would confirm that the answer is both a factor or multiple of the required numbers?"
+      ]
+    },
+    {
+      match: () => tool.slug === "decimals-practice-lab" || normalise(tool.title).includes("decimal"),
+      misconceptions: [
+        "Aligning digits by the right edge rather than aligning decimal points.",
+        "Treating trailing zeros as changing the value rather than clarifying place value.",
+        "Multiplying or dividing by powers of ten by moving the decimal point in the wrong direction."
+      ],
+      questions: [
+        "Which place-value column controls this calculation?",
+        "How can adding placeholder zeros make the decimal operation clearer without changing the value?",
+        "What estimate should the answer be close to before we calculate exactly?"
+      ]
+    },
+    {
+      match: () => tool.slug.includes("percentage") || normalise(tool.title).includes("percentage"),
+      misconceptions: [
+        "Calculating a percentage change from the new value instead of the original value.",
+        "Treating successive percentage changes as if they can be added directly.",
+        "Using the multiplier for an increase when the question describes a decrease, or vice versa."
+      ],
+      questions: [
+        "What is the original whole in this percentage problem?",
+        "Which multiplier represents the change, and how does it show increase or decrease?",
+        "Why do repeated percentage changes need multiplicative reasoning rather than addition?"
+      ]
+    },
+    {
+      match: () => tool.slug === "ratio-proportion" || normalise(tool.title).includes("ratio") || normalise(tool.title).includes("proportion"),
+      misconceptions: [
+        "Adding ratio parts incorrectly when sharing a total amount.",
+        "Scaling only one side of a ratio and breaking the proportional relationship.",
+        "Confusing direct proportion with inverse proportion in contextual questions."
+      ],
+      questions: [
+        "What does one part of the ratio represent in this context?",
+        "How can we tell whether both quantities should increase together or one should decrease as the other increases?",
+        "Which representation, table, equation, or diagram, makes the proportional relationship clearest?"
+      ]
+    },
+    {
+      match: () => has("powers of 10", "standard form", "scientific notation"),
+      misconceptions: [
+        "Writing a standard-form coefficient that is not between 1 and 10.",
+        "Moving the decimal point but giving the power of ten the wrong sign.",
+        "Combining numbers in standard form without applying index laws correctly."
+      ],
+      questions: [
+        "How does the size of the original number determine the sign of the power of ten?",
+        "What makes a number correctly written in standard form?",
+        "How can estimation help check whether the standard-form calculation has the correct magnitude?"
+      ]
+    },
+    {
+      match: () => tool.slug === "number-bases-number-sets" || normalise(tool.title).includes("number bases"),
+      misconceptions: [
+        "Reading a number in another base as if each place value were a power of ten.",
+        "Forgetting that digits must be smaller than the base being used.",
+        "Placing a number in a set without checking all defining properties, such as integer, rational, prime, or square."
+      ],
+      questions: [
+        "What are the place values in this base, and how do they differ from base ten?",
+        "Which digits are allowed in this base, and why?",
+        "What property determines whether the number belongs in this number set?"
+      ]
+    },
+    {
+      match: () => has("projectile"),
+      misconceptions: [
+        "Using the initial speed directly in vertical or horizontal equations without resolving into components.",
+        "Applying vertical acceleration to horizontal motion when air resistance is ignored.",
+        "Using total time of flight when the question asks for time to maximum height, or the reverse."
+      ],
+      questions: [
+        "Which component of velocity controls the vertical motion, and which controls the horizontal motion?",
+        "What assumption allows horizontal velocity to remain constant?",
+        "How can the symmetry of the vertical motion help check the time or range?"
+      ]
+    },
+    {
+      match: () => tool.slug === "moments" || normalise(tool.title).includes("moments"),
+      misconceptions: [
+        "Using mass instead of weight when calculating a moment.",
+        "Measuring distance from the wrong pivot or not using the perpendicular distance.",
+        "Adding clockwise and anticlockwise moments without assigning a clear direction convention."
+      ],
+      questions: [
+        "Where is the pivot, and what is the perpendicular distance from the line of action?",
+        "Which moments are clockwise and which are anticlockwise?",
+        "How does the principle of moments express rotational equilibrium in this problem?"
+      ]
+    },
+    {
+      match: () => has("momentum", "impulse"),
+      misconceptions: [
+        "Treating momentum as a scalar and losing the direction of motion.",
+        "Using conservation of momentum when an external impulse is acting on the system.",
+        "Confusing impulse with force by ignoring the time interval."
+      ],
+      questions: [
+        "What sign convention will represent the direction of each velocity?",
+        "Is the system isolated, or is there an external force changing the total momentum?",
+        "How does the impulse connect the force-time information to the change in momentum?"
+      ]
+    },
+    {
+      match: () => has("newton", "f = ma", "resultant force"),
+      misconceptions: [
+        "Using F = ma with one force instead of the resultant force.",
+        "Substituting weight for mass without using W = mg.",
+        "Ignoring opposing forces such as friction or resistance when forming the resultant."
+      ],
+      questions: [
+        "What is the resultant force in the chosen positive direction?",
+        "Which quantity is mass, which is weight, and which is acceleration?",
+        "How would the acceleration change if one opposing force were increased?"
+      ]
+    },
+    {
+      match: () => has("classroom displays", "blank diagrams", "board displays"),
+      misconceptions: [
+        "Using a display as a completed answer rather than as a prompt for annotation and discussion.",
+        "Labelling a diagram before students have had time to interpret its structure.",
+        "Choosing a diagram that does not match the mathematical relationship being explained."
+      ],
+      questions: [
+        "What should students notice before any labels or measurements are added?",
+        "Which features of this blank diagram are essential, and which are open for teacher annotation?",
+        "How could the same display be adapted for a misconception, a proof, or a worked example?"
+      ]
+    },
+    {
+      match: () => has("manipulatives", "starter board", "primary", "elementary"),
+      misconceptions: [
+        "Revealing the numerical answer before students have interpreted the visual model.",
+        "Counting objects one by one when the model is designed to develop grouping or place-value reasoning.",
+        "Treating the visual representation as decoration rather than as evidence for the mathematical claim."
+      ],
+      questions: [
+        "What structure can students see before they calculate?",
+        "How many different representations can show the same number or relationship?",
+        "What would change in the model if the number, operation, or comparison changed?"
+      ]
+    },
+    {
+      match: () => has("surds", "radicals"),
+      misconceptions: [
+        "Simplifying a square root by splitting over addition, for example treating root(a + b) as root a + root b.",
+        "Missing square factors inside the radical before rationalising or expanding.",
+        "Using conjugates without checking that the middle surd terms cancel."
+      ],
+      questions: [
+        "Which square factor can be extracted from the surd, and how do we know it is the largest useful one?",
+        "How does the conjugate create a difference of two squares?",
+        "What evidence shows that the final expression is fully simplified?"
+      ]
+    },
+    {
+      match: () => tool.slug === "absolute-values" || normalise(tool.title).includes("absolute value") || normalise(tool.title).includes("modulus"),
+      misconceptions: [
+        "Solving only the positive case and missing the negative case of an absolute-value equation.",
+        "Treating |x - a| as x - a without considering the sign of x - a.",
+        "Graphing a modulus function without reflecting the negative part above the x-axis."
+      ],
+      questions: [
+        "What distance interpretation does this modulus expression have?",
+        "Where does the expression inside the modulus change sign?",
+        "How do the algebraic cases connect to the shape of the modulus graph?"
+      ]
+    },
+    {
+      match: () => has("roots of equations", "transformations of roots"),
+      misconceptions: [
+        "Changing roots without updating the polynomial coefficients consistently.",
+        "Using sum and product of roots formulas with the wrong sign.",
+        "Assuming transformed roots preserve the original equation rather than creating a new equation."
+      ],
+      questions: [
+        "Which symmetric sums of the roots are needed to build the new equation?",
+        "How does the transformation of each root affect the sum, product, or pairwise products?",
+        "How can substituting a transformed root back into the new equation verify the result?"
+      ]
+    },
+    {
+      match: () => has("hyperbolic"),
+      misconceptions: [
+        "Treating hyperbolic identities as if every circular trigonometric identity has the same sign pattern.",
+        "Forgetting the definitions of sinh, cosh, and tanh in terms of exponential functions.",
+        "Using inverse hyperbolic forms without checking domain restrictions."
+      ],
+      questions: [
+        "How do the exponential definitions explain the signs in the hyperbolic identities?",
+        "Which hyperbolic identity is structurally similar to a trigonometric identity, and where does it differ?",
+        "What domain or range condition is required for the inverse hyperbolic expression?"
+      ]
+    },
     {
       match: () => has("algebraic fractions"),
       misconceptions: [
@@ -7689,7 +8179,7 @@ function toolInsightProfile(tool) {
       ]
     },
     {
-      match: () => has("vector", "vectors"),
+      match: () => tool.slug === "free-vectors" || tool.slug === "further-vectors" || normalise(tool.title).includes("vector"),
       misconceptions: [
         "Writing a vector as a coordinate point and losing its direction-and-displacement meaning.",
         "Using a scalar parameter inconsistently across the x, y, and z components.",
@@ -7963,16 +8453,101 @@ function toolInsightProfile(tool) {
     }
   ];
 
-  return profiles.find((profile) => profile.match()) || {
+  return profiles.find((profile) => profile.match()) || topicFallbackInsightProfile(tool);
+}
+
+function topicFallbackInsightProfile(tool) {
+  const concepts = toolTopicConcepts(tool);
+  const primary = concepts[0] || formatTopicLabel(tool.title);
+  const secondary = concepts[1] || toolSubjectGroup(tool) || tool.category;
+  const topic = formatTopicLabel(primary);
+  const supporting = formatTopicLabel(secondary);
+
+  if (tool.category === "Geometry") {
+    return {
+      misconceptions: [
+        `Assuming a ${topic} diagram is drawn to scale instead of relying on the given measurements and relationships.`,
+        `Using a familiar geometry fact before checking that the required angle, length, or shape condition is actually present.`,
+        `Not marking equal lengths, parallel lines, right angles, or known angle facts before starting the calculation.`
+      ],
+      questions: [
+        `Which facts in the diagram prove that the ${topic} method is valid?`,
+        `What extra line, label, or construction would make the ${supporting} relationship easier to see?`,
+        `How could we check whether the final angle, length, or region is consistent with the original diagram?`
+      ]
+    };
+  }
+
+  if (tool.category === "Statistics") {
+    return {
+      misconceptions: [
+        `Applying a ${topic} procedure without first identifying the variable, sample, event, or distribution being modelled.`,
+        `Using a calculation correctly but interpreting it as a stronger conclusion than the data allows.`,
+        `Ignoring whether the question asks for an exact probability, a cumulative probability, an estimate, or an interpretation.`
+      ],
+      questions: [
+        `What does the ${topic} value represent in the context of this data or probability model?`,
+        `Which assumption or condition must be checked before using this ${supporting} method?`,
+        `What conclusion is justified by the calculation, and what would require more evidence?`
+      ]
+    };
+  }
+
+  if (tool.category === "Mechanics") {
+    return {
+      misconceptions: [
+        `Using a ${topic} formula without defining the positive direction and units first.`,
+        `Substituting values before deciding whether the situation involves equilibrium, constant acceleration, conservation, or resultant force.`,
+        `Treating the mathematical answer as complete without interpreting its sign, direction, or physical meaning.`
+      ],
+      questions: [
+        `What is the modelling assumption that makes the ${topic} method valid here?`,
+        `Which forces, velocities, distances, or time intervals belong in the ${supporting} relationship?`,
+        `How would the result change if the chosen positive direction or modelling assumption changed?`
+      ]
+    };
+  }
+
+  if (tool.category === "Numbers") {
+    return {
+      misconceptions: [
+        `Changing the representation in a ${topic} question without preserving the value of the number.`,
+        `Rounding or simplifying too early and carrying an avoidable error into the final answer.`,
+        `Choosing an operation because it looks familiar rather than because the place-value, factor, or proportional structure requires it.`
+      ],
+      questions: [
+        `Which representation makes this ${topic} calculation clearest, and why?`,
+        `What estimate can we make before calculating so that the final answer can be checked?`,
+        `What structure in the numbers shows whether this is a ${supporting} problem or a different number skill?`
+      ]
+    };
+  }
+
+  if (tool.category === "Classroom Tools") {
+    return {
+      misconceptions: [
+        `Using the ${topic} display as a finished answer rather than as a prompt for teacher questioning and annotation.`,
+        `Revealing labels or answers before students have interpreted the visual structure.`,
+        `Choosing a display that does not match the mathematical relationship being discussed.`
+      ],
+      questions: [
+        `What should students notice first in this ${topic} display?`,
+        `What could the teacher add, hide, or annotate to expose the key ${supporting} idea?`,
+        `How could this same display be reused for retrieval, modelling, or misconception checking?`
+      ]
+    };
+  }
+
+  return {
     misconceptions: [
-      "Using a familiar procedure before checking that the question has the same mathematical structure.",
-      "Skipping the line of working where the key transformation or decision must be justified.",
-      "Giving a numerical answer without checking it against the original conditions."
+      `Treating ${topic} as a memorised procedure instead of checking the algebraic structure first.`,
+      `Dropping signs, brackets, powers, or restrictions while working through the ${supporting} step.`,
+      `Giving a final answer without substituting back or checking it against the original conditions.`
     ],
     questions: [
-      "What structure in the question determines the most efficient method?",
-      "How could we justify each transformation so that another student can audit the reasoning?",
-      "What alternative method would solve the same problem, and which method gives the clearest explanation?"
+      `What feature of the expression or equation tells us that the ${topic} method is appropriate?`,
+      `Which step in the ${supporting} method most needs justification, and why?`,
+      `How could we verify the final answer using substitution, expansion, a graph, or an alternative method?`
     ]
   };
 }
@@ -8034,7 +8609,7 @@ function renderToolInfoAdminEditor(tool, info) {
     ["teacher_guidance", "Teacher Guidance"],
     ["standards", "Mathematical Standards Covered"],
     ["misconceptions", "Common Misconceptions"],
-    ["classroom_questions", "Classroom Questions"],
+    ["classroom_questions", "Inquiry Questions"],
     ["related_tools", "Related Tools"],
     ["suggested_use", "Suggested Use"]
   ];
@@ -8152,7 +8727,7 @@ function renderToolInformationPage(tool) {
         </article>
 
         <article class="tool-info-card">
-          <span class="eyebrow">Classroom Questions</span>
+          <span class="eyebrow">Inquiry Questions</span>
           ${renderToolInfoList(info.classroom_questions)}
         </article>
 
