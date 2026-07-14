@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confidence Intervals</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f4f7fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#265073;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#265073;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #ff8a3d;color:#265073;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1240px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#265073;background-image:linear-gradient(135deg,rgba(255,255,255,.16),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e7f0f6}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e7f0f6;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}.tab.active{background:#fff;color:#265073;border-bottom-color:#ff8a3d}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d3e2eb;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#265073;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:430px;padding:8px 10px;border:2px solid #bfd6e3;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #bfd6e3;border-radius:6px;background:#fff;color:#265073;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#265073;color:#265073}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#265073}.btn-success{background:#2f855a}.btn-warning{background:#ff8a3d}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#265073;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #cfe1eb;border-radius:6px;background:#f0f8fc;color:#265073;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-left:4px solid #265073;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:center;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#265073;color:#fff;font-weight:850}
+    .equation{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.17em;font-weight:500;line-height:1.48;color:#172033;overflow-x:auto;max-width:100%}.problem-answer{display:none;white-space:normal;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #265073;border-radius:6px;background:#f2f8fc}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#265073;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#223043}.step-equation{margin:6px 0;padding:7px;border:1px solid #d4e4ed;border-radius:5px;background:#fff;color:#1f4d70;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:500}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column;align-items:flex-start}.equation{font-size:1.02em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Confidence Intervals</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool generates confidence interval practice for means, proportions, margin of error, sample size, interpretation, and t-intervals.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Confidence intervals for a mean when the population standard deviation is known.</li>
+        <li><strong>Level 2:</strong> Confidence intervals for proportions from survey or sample data.</li>
+        <li><strong>Level 3:</strong> Margin of error, sample size, confidence level, and interpretation.</li>
+        <li><strong>Level 4:</strong> t-intervals for a mean when the population standard deviation is unknown.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Students should identify the statistic, standard error, critical value, and margin of error.</li>
+        <li>The interval is estimate plus or minus margin of error.</li>
+        <li>Interpretations should refer to the population parameter, not the sample statistic.</li>
+        <li>For unknown population standard deviation, use the sample standard deviation and a t critical value.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Confidence Intervals</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Mean</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Proportion</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Planning</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: t-Intervals</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Confidence Interval for a Mean</h3>
+        <p id="level-description">Use x&#772; plus or minus a critical value times the standard error.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Confidence Interval for a Mean',description:'Use x&#772; plus or minus a critical value times the standard error.',types:['mean_known_sigma','mean_margin_error','mean_interpretation','level1_mixed']},
+      2:{title:'Level 2: Confidence Interval for a Proportion',description:'Use p&#770; and its standard error to estimate a population proportion.',types:['proportion_interval','survey_context','proportion_interpretation','claim_check_proportion','level2_mixed']},
+      3:{title:'Level 3: Margin of Error and Sample Size',description:'Work backwards from interval width, margin of error, or required precision.',types:['sample_size_mean','sample_size_proportion','interval_midpoint_margin','confidence_level_compare','level3_mixed']},
+      4:{title:'Level 4: t-Intervals for a Mean',description:'Use sample standard deviation and t critical values when sigma is unknown.',types:['t_interval_mean','t_margin_error','t_context_interval','level4_mixed']}
+    };
+
+    const typeDisplayNames={
+      mean_known_sigma:'Type 1: Mean interval with known population standard deviation',
+      mean_margin_error:'Type 2: Margin of error for a mean',
+      mean_interpretation:'Type 3: Interpret a confidence interval',
+      level1_mixed:'Type 4: Mixed mean intervals',
+      proportion_interval:'Type 1: Proportion confidence interval',
+      survey_context:'Type 2: Survey context interval',
+      proportion_interpretation:'Type 3: Interpret a proportion interval',
+      claim_check_proportion:'Type 4: Check a claim using an interval',
+      level2_mixed:'Type 5: Mixed proportion intervals',
+      sample_size_mean:'Type 1: Sample size for a mean',
+      sample_size_proportion:'Type 2: Sample size for a proportion',
+      interval_midpoint_margin:'Type 3: Midpoint and margin of an interval',
+      confidence_level_compare:'Type 4: Compare confidence levels',
+      level3_mixed:'Type 5: Mixed planning questions',
+      t_interval_mean:'Type 1: t-interval for a mean',
+      t_margin_error:'Type 2: t margin of error',
+      t_context_interval:'Type 3: t-interval in context',
+      level4_mixed:'Type 4: Mixed t-intervals'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      mean_known_sigma:'Calculate the confidence interval for a population mean using the known population standard deviation.',
+      mean_margin_error:'Find the standard error and multiply by the critical value.',
+      mean_interpretation:'Interpret the confidence interval in context.',
+      level1_mixed:'Answer each confidence interval question for a mean.',
+      proportion_interval:'Calculate the confidence interval for a population proportion.',
+      survey_context:'Use the survey data to estimate a population proportion.',
+      proportion_interpretation:'Interpret the proportion interval carefully.',
+      claim_check_proportion:'Use the interval to decide whether a claimed proportion is plausible.',
+      level2_mixed:'Answer each confidence interval question for a proportion.',
+      sample_size_mean:'Find the minimum sample size needed for the required margin of error.',
+      sample_size_proportion:'Find the minimum sample size needed for a proportion estimate.',
+      interval_midpoint_margin:'Find the estimate and margin of error from the interval.',
+      confidence_level_compare:'Compare intervals by thinking about the critical value.',
+      level3_mixed:'Answer each sample-size or interval-interpretation question.',
+      t_interval_mean:'Calculate a t confidence interval for a mean.',
+      t_margin_error:'Find the t margin of error.',
+      t_context_interval:'Calculate and interpret a t confidence interval in context.',
+      level4_mixed:'Answer each t-interval question.'
+    };
+
+    const zValues={90:1.645,95:1.960,98:2.326,99:2.576};
+    const tValues={
+      9:{90:1.833,95:2.262,99:3.250},
+      14:{90:1.761,95:2.145,99:2.977},
+      19:{90:1.729,95:2.093,99:2.861},
+      24:{90:1.711,95:2.064,99:2.797}
+    };
+
+    function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[randInt(0,arr.length-1)]}
+    function fmt(n,dp=3){return Number(n).toFixed(dp)}
+    function trim(n,dp=3){return fmt(n,dp).replace(/0+$/,'').replace(/\.$/,'')}
+    function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function sqrt(n){return `&radic;${n}`}
+    function ciText(low,high,dp=3){return `(${fmt(low,dp)}, ${fmt(high,dp)})`}
+    function ceil(n){return Math.ceil(n)}
+    function problem(prompt,answer,steps,type=currentType){return {prompt,answer,steps,instruction:typeInstructions[type]||'Answer each confidence interval question.'}}
+
+    function meanIntervalData(){
+      const level=choice([90,95,99]);
+      const z=zValues[level];
+      const n=choice([25,36,49,64,81,100]);
+      const sigma=choice([4.8,5.6,6,7.2,8,9.6,12]);
+      const mean=randInt(45,95)+choice([0.2,0.4,0.5,0.7,0.8]);
+      const se=sigma/Math.sqrt(n);
+      const me=z*se;
+      return {level,z,n,sigma,mean,se,me,low:mean-me,high:mean+me};
+    }
+
+    function makeMeanKnownSigma(){
+      const d=meanIntervalData();
+      const prompt=`A sample of size ${d.n} has mean ${d.mean}. The population standard deviation is known to be ${d.sigma}. Find a ${d.level}% confidence interval for the population mean.`;
+      const answer=`${d.level}% CI: ${ciText(d.low,d.high)}.`;
+      const steps=[
+        `Use x&#772; &plusmn; z${frac('&sigma;',sqrt('n'))}.`,
+        `For ${d.level}% confidence, z = ${fmt(d.z,3)}.`,
+        `Standard error = ${frac(d.sigma,sqrt(d.n))} = ${fmt(d.se,4)}.`,
+        `Margin of error = ${fmt(d.z,3)} &times; ${fmt(d.se,4)} = ${fmt(d.me,4)}.`,
+        `Lower limit = ${d.mean} &minus; ${fmt(d.me,4)} = ${fmt(d.low,3)}.`,
+        `Upper limit = ${d.mean} + ${fmt(d.me,4)} = ${fmt(d.high,3)}.`,
+        `So the ${d.level}% confidence interval is ${ciText(d.low,d.high)}.`
+      ];
+      return problem(prompt,answer,steps,'mean_known_sigma');
+    }
+
+    function makeMeanMarginError(){
+      const d=meanIntervalData();
+      const prompt=`A population standard deviation is ${d.sigma} and a sample size is ${d.n}. Find the margin of error for a ${d.level}% confidence interval for the mean.`;
+      const answer=`Margin of error = ${fmt(d.me,3)}.`;
+      const steps=[
+        `Margin of error = z${frac('&sigma;',sqrt('n'))}.`,
+        `For ${d.level}% confidence, z = ${fmt(d.z,3)}.`,
+        `Standard error = ${frac(d.sigma,sqrt(d.n))} = ${fmt(d.se,4)}.`,
+        `Margin of error = ${fmt(d.z,3)} &times; ${fmt(d.se,4)} = ${fmt(d.me,3)}.`
+      ];
+      return problem(prompt,answer,steps,'mean_margin_error');
+    }
+
+    function makeMeanInterpretation(){
+      const d=meanIntervalData();
+      const prompt=`A ${d.level}% confidence interval for the mean waiting time is ${ciText(d.low,d.high,2)} minutes. Interpret this interval.`;
+      const answer=`We are ${d.level}% confident that the population mean waiting time lies between ${fmt(d.low,2)} and ${fmt(d.high,2)} minutes.`;
+      const steps=[
+        `The interval estimates the population mean, not the sample mean.`,
+        `The lower plausible value is ${fmt(d.low,2)} minutes.`,
+        `The upper plausible value is ${fmt(d.high,2)} minutes.`,
+        `Interpretation: We are ${d.level}% confident that the population mean waiting time lies between ${fmt(d.low,2)} and ${fmt(d.high,2)} minutes.`
+      ];
+      return problem(prompt,answer,steps,'mean_interpretation');
+    }
+
+    function proportionData(){
+      const level=choice([90,95,99]);
+      const z=zValues[level];
+      const n=choice([120,150,180,200,240,300,400]);
+      const x=randInt(Math.round(n*0.25),Math.round(n*0.75));
+      const p=x/n;
+      const se=Math.sqrt(p*(1-p)/n);
+      const me=z*se;
+      return {level,z,n,x,p,se,me,low:p-me,high:p+me};
+    }
+
+    function makeProportionInterval(){
+      const d=proportionData();
+      const prompt=`In a sample of ${d.n} people, ${d.x} support a proposal. Find a ${d.level}% confidence interval for the population proportion who support it.`;
+      const answer=`${d.level}% CI: ${ciText(d.low,d.high,4)}.`;
+      const steps=[
+        `Estimate the population proportion using p&#770; = ${frac(d.x,d.n)} = ${fmt(d.p,4)}.`,
+        `Use p&#770; &plusmn; z${sqrt(frac('p&#770;(1 &minus; p&#770;)','n'))}.`,
+        `For ${d.level}% confidence, z = ${fmt(d.z,3)}.`,
+        `Standard error = ${sqrt(frac(`${fmt(d.p,4)}(1 &minus; ${fmt(d.p,4)})`,d.n))} = ${fmt(d.se,5)}.`,
+        `Margin of error = ${fmt(d.z,3)} &times; ${fmt(d.se,5)} = ${fmt(d.me,5)}.`,
+        `Interval = ${fmt(d.p,4)} &plusmn; ${fmt(d.me,5)} = ${ciText(d.low,d.high,4)}.`
+      ];
+      return problem(prompt,answer,steps,'proportion_interval');
+    }
+
+    function makeSurveyContext(){
+      const d=proportionData();
+      const prompt=`A school survey found that ${d.x} out of ${d.n} students use an online revision tool weekly. Find a ${d.level}% confidence interval for the true proportion.`;
+      const answer=`${d.level}% CI: ${ciText(d.low,d.high,4)}.`;
+      const steps=[
+        `p&#770; = ${frac(d.x,d.n)} = ${fmt(d.p,4)}.`,
+        `Standard error = ${sqrt(frac('p&#770;(1 &minus; p&#770;)','n'))}.`,
+        `Standard error = ${sqrt(frac(`${fmt(d.p,4)}(1 &minus; ${fmt(d.p,4)})`,d.n))} = ${fmt(d.se,5)}.`,
+        `For ${d.level}% confidence, z = ${fmt(d.z,3)}.`,
+        `Margin of error = ${fmt(d.z,3)} &times; ${fmt(d.se,5)} = ${fmt(d.me,5)}.`,
+        `Confidence interval = ${fmt(d.p,4)} &plusmn; ${fmt(d.me,5)} = ${ciText(d.low,d.high,4)}.`
+      ];
+      return problem(prompt,answer,steps,'survey_context');
+    }
+
+    function makeProportionInterpretation(){
+      const d=proportionData();
+      const prompt=`A ${d.level}% confidence interval for a population proportion is ${ciText(d.low,d.high,3)}. Interpret the interval.`;
+      const answer=`We are ${d.level}% confident that the true population proportion lies between ${fmt(d.low,3)} and ${fmt(d.high,3)}.`;
+      const steps=[
+        `This interval is about the true population proportion.`,
+        `The sample proportion is only the estimate used to build the interval.`,
+        `Interpretation: We are ${d.level}% confident that the true population proportion lies between ${fmt(d.low,3)} and ${fmt(d.high,3)}.`
+      ];
+      return problem(prompt,answer,steps,'proportion_interpretation');
+    }
+
+    function makeClaimCheckProportion(){
+      const d=proportionData();
+      const claim=choice([0.25,0.30,0.40,0.50,0.60,0.70,0.75]);
+      const inside=claim>=d.low&&claim<=d.high;
+      const prompt=`A ${d.level}% confidence interval for a population proportion is ${ciText(d.low,d.high,3)}. A claim says the true proportion is ${claim}. Is this claim plausible at this confidence level?`;
+      const answer=inside?'The claim is plausible because it lies inside the interval.':'The claim is not supported because it lies outside the interval.';
+      const steps=[
+        `Compare the claimed value ${claim} with the interval ${ciText(d.low,d.high,3)}.`,
+        inside?`${claim} is between ${fmt(d.low,3)} and ${fmt(d.high,3)}.`:`${claim} is not between ${fmt(d.low,3)} and ${fmt(d.high,3)}.`,
+        inside?'A value inside the interval is plausible at this confidence level.':'A value outside the interval is not supported by this confidence interval.',
+        answer
+      ];
+      return problem(prompt,answer,steps,'claim_check_proportion');
+    }
+
+    function makeSampleSizeMean(){
+      const level=choice([90,95,99]),z=zValues[level],sigma=choice([4,5,6,8,10,12]),E=choice([0.5,0.75,1,1.25,1.5,2]);
+      const raw=Math.pow(z*sigma/E,2),n=ceil(raw);
+      const prompt=`A ${level}% confidence interval for a population mean must have margin of error at most ${E}. The population standard deviation is ${sigma}. Find the minimum sample size.`;
+      const answer=`Minimum sample size: n = ${n}.`;
+      const steps=[
+        `For a mean, margin of error E = z${frac('&sigma;',sqrt('n'))}.`,
+        `Rearrange: n &ge; (${frac('z&sigma;','E')})<sup>2</sup>.`,
+        `Substitute z = ${fmt(z,3)}, &sigma; = ${sigma}, and E = ${E}.`,
+        `n &ge; (${frac(`${fmt(z,3)} &times; ${sigma}`,E)})<sup>2</sup> = ${fmt(raw,3)}.`,
+        `Sample size must be a whole number and large enough, so n = ${n}.`
+      ];
+      return problem(prompt,answer,steps,'sample_size_mean');
+    }
+
+    function makeSampleSizeProportion(){
+      const level=choice([90,95,99]),z=zValues[level],p=choice([0.2,0.3,0.4,0.5,0.6]),E=choice([0.03,0.04,0.05,0.06]);
+      const raw=z*z*p*(1-p)/(E*E),n=ceil(raw);
+      const prompt=`A ${level}% confidence interval for a proportion should have margin of error at most ${E}. Use planning value p = ${p}. Find the minimum sample size.`;
+      const answer=`Minimum sample size: n = ${n}.`;
+      const steps=[
+        `For a proportion, E = z${sqrt(frac('p(1 &minus; p)','n'))}.`,
+        `Rearrange: n &ge; ${frac('z<sup>2</sup>p(1 &minus; p)','E<sup>2</sup>')}.`,
+        `Substitute z = ${fmt(z,3)}, p = ${p}, and E = ${E}.`,
+        `n &ge; ${frac(`${fmt(z,3)}<sup>2</sup> &times; ${p} &times; ${fmt(1-p,1)}`,`${E}<sup>2</sup>`)} = ${fmt(raw,3)}.`,
+        `Round up, so n = ${n}.`
+      ];
+      return problem(prompt,answer,steps,'sample_size_proportion');
+    }
+
+    function makeIntervalMidpointMargin(){
+      const centre=randInt(50,100)+0.5,margin=choice([1.2,1.5,2.4,3.6,4.5]),low=centre-margin,high=centre+margin;
+      const prompt=`A confidence interval is ${ciText(low,high,1)}. Find the point estimate and the margin of error.`;
+      const answer=`Point estimate = ${fmt(centre,1)}, margin of error = ${fmt(margin,1)}.`;
+      const steps=[
+        `Point estimate is the midpoint of the interval.`,
+        `Point estimate = ${frac(`${fmt(low,1)} + ${fmt(high,1)}`,'2')} = ${fmt(centre,1)}.`,
+        `Margin of error is half the width of the interval.`,
+        `Margin of error = ${frac(`${fmt(high,1)} &minus; ${fmt(low,1)}`,'2')} = ${fmt(margin,1)}.`
+      ];
+      return problem(prompt,answer,steps,'interval_midpoint_margin');
+    }
+
+    function makeConfidenceLevelCompare(){
+      const levels=[90,95,99],a=choice(levels),b=choice(levels.filter(x=>x!==a));
+      const wider=b>a?b:a;
+      const prompt=`For the same sample data, compare a ${a}% confidence interval and a ${b}% confidence interval. Which interval is wider?`;
+      const answer=`The ${wider}% confidence interval is wider.`;
+      const steps=[
+        `Higher confidence requires a larger critical value.`,
+        `z for ${a}% confidence is ${fmt(zValues[a],3)}.`,
+        `z for ${b}% confidence is ${fmt(zValues[b],3)}.`,
+        `The larger z value gives a larger margin of error.`,
+        `Therefore the ${wider}% confidence interval is wider.`
+      ];
+      return problem(prompt,answer,steps,'confidence_level_compare');
+    }
+
+    function tData(){
+      const df=choice([9,14,19,24]),level=choice([90,95,99]),t=tValues[df][level],n=df+1;
+      const mean=randInt(30,80)+choice([0.2,0.5,0.8]),s=choice([4.5,5.2,6.4,7.5,8.8,10.2]);
+      const se=s/Math.sqrt(n),me=t*se;
+      return {df,level,t,n,mean,s,se,me,low:mean-me,high:mean+me};
+    }
+
+    function makeTIntervalMean(){
+      const d=tData();
+      const prompt=`A sample of size ${d.n} has mean ${d.mean} and sample standard deviation ${d.s}. Find a ${d.level}% t confidence interval for the population mean.`;
+      const answer=`${d.level}% t CI: ${ciText(d.low,d.high)}.`;
+      const steps=[
+        `Because &sigma; is unknown, use a t interval with df = n &minus; 1 = ${d.n} &minus; 1 = ${d.df}.`,
+        `For ${d.level}% confidence and df = ${d.df}, t = ${fmt(d.t,3)}.`,
+        `Standard error = ${frac('s',sqrt('n'))} = ${frac(d.s,sqrt(d.n))} = ${fmt(d.se,4)}.`,
+        `Margin of error = ${fmt(d.t,3)} &times; ${fmt(d.se,4)} = ${fmt(d.me,4)}.`,
+        `Interval = ${d.mean} &plusmn; ${fmt(d.me,4)} = ${ciText(d.low,d.high)}.`
+      ];
+      return problem(prompt,answer,steps,'t_interval_mean');
+    }
+
+    function makeTMarginError(){
+      const d=tData();
+      const prompt=`A sample has n = ${d.n}, sample standard deviation s = ${d.s}, and df = ${d.df}. Find the ${d.level}% t margin of error.`;
+      const answer=`Margin of error = ${fmt(d.me,3)}.`;
+      const steps=[
+        `For ${d.level}% confidence and df = ${d.df}, t = ${fmt(d.t,3)}.`,
+        `Standard error = ${frac('s',sqrt('n'))} = ${frac(d.s,sqrt(d.n))} = ${fmt(d.se,4)}.`,
+        `Margin of error = t &times; standard error.`,
+        `Margin of error = ${fmt(d.t,3)} &times; ${fmt(d.se,4)} = ${fmt(d.me,3)}.`
+      ];
+      return problem(prompt,answer,steps,'t_margin_error');
+    }
+
+    function makeTContextInterval(){
+      const d=tData();
+      const prompt=`A teacher records the time taken by ${d.n} students to complete a task. The sample mean is ${d.mean} minutes and the sample standard deviation is ${d.s} minutes. Find and interpret a ${d.level}% confidence interval for the mean time.`;
+      const answer=`${d.level}% CI: ${ciText(d.low,d.high)} minutes.`;
+      const steps=[
+        `Use a t interval because the population standard deviation is not known.`,
+        `df = ${d.n} &minus; 1 = ${d.df}.`,
+        `t = ${fmt(d.t,3)} for ${d.level}% confidence.`,
+        `Standard error = ${frac(d.s,sqrt(d.n))} = ${fmt(d.se,4)}.`,
+        `Margin of error = ${fmt(d.t,3)} &times; ${fmt(d.se,4)} = ${fmt(d.me,4)}.`,
+        `Interval = ${d.mean} &plusmn; ${fmt(d.me,4)} = ${ciText(d.low,d.high)}.`,
+        `We are ${d.level}% confident that the population mean time lies between ${fmt(d.low,3)} and ${fmt(d.high,3)} minutes.`
+      ];
+      return problem(prompt,answer,steps,'t_context_interval');
+    }
+
+    function generateProblemFor(type){
+      const generators={
+        mean_known_sigma:makeMeanKnownSigma,
+        mean_margin_error:makeMeanMarginError,
+        mean_interpretation:makeMeanInterpretation,
+        level1_mixed:()=>generateProblemFor(choice(['mean_known_sigma','mean_margin_error','mean_interpretation'])),
+        proportion_interval:makeProportionInterval,
+        survey_context:makeSurveyContext,
+        proportion_interpretation:makeProportionInterpretation,
+        claim_check_proportion:makeClaimCheckProportion,
+        level2_mixed:()=>generateProblemFor(choice(['proportion_interval','survey_context','proportion_interpretation','claim_check_proportion'])),
+        sample_size_mean:makeSampleSizeMean,
+        sample_size_proportion:makeSampleSizeProportion,
+        interval_midpoint_margin:makeIntervalMidpointMargin,
+        confidence_level_compare:makeConfidenceLevelCompare,
+        level3_mixed:()=>generateProblemFor(choice(['sample_size_mean','sample_size_proportion','interval_midpoint_margin','confidence_level_compare'])),
+        t_interval_mean:makeTIntervalMean,
+        t_margin_error:makeTMarginError,
+        t_context_interval:makeTContextInterval,
+        level4_mixed:()=>generateProblemFor(choice(['t_interval_mean','t_margin_error','t_context_interval']))
+      };
+      return generators[type]();
+    }
+
+    function populateDropdown(){
+      const select=document.getElementById('type-dropdown');
+      const types=levelConfigs[currentLevel].types;
+      select.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      select.value=currentType;
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';answersVisible=false;stepsVisible=false;
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index===level-1));
+      document.getElementById('level-title').textContent=levelConfigs[level].title;
+      document.getElementById('level-description').innerHTML=levelConfigs[level].description;
+      populateDropdown();
+      showBlankPage();
+    }
+
+    function typeChanged(){
+      currentType=document.getElementById('type-dropdown').value;
+      answersVisible=false;stepsVisible=false;
+      if(currentType==='select')showBlankPage();else generateNewSet();
+    }
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').textContent='Select a question type';
+      document.getElementById('problem-set-header').className='problem-set-header visible';
+      document.getElementById('set-instruction').textContent='Choose a type, then press New to generate confidence interval questions.';
+      document.getElementById('set-instruction').className='set-instruction visible';
+      document.getElementById('problem-list').innerHTML='';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      problems=[];answersVisible=false;stepsVisible=false;
+      const config=levelConfigs[currentLevel];
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<90){
+        const type=currentType==='all'?choice(config.types.filter(t=>!t.includes('mixed'))):currentType;
+        const p=generateProblemFor(type);
+        const key=p.prompt;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed confidence interval question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|&plusmn;|&ge;|&minus;|vfrac|&radic;|CI|interval|confidence|Margin|Standard|z |t /.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div class="equation">${p.prompt}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      display.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        display.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)display.className='timer-display warning';
+        if(timeRemaining<=0){stopTimer();display.textContent='Time Up';display.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;
+      const display=document.getElementById('timer-display');
+      if(display){display.textContent='Ready';display.className='timer-display'}
+    }
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+</body>
+</html>

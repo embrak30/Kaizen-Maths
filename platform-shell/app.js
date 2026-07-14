@@ -1467,6 +1467,25 @@ const tools = [
     ]
   },
   {
+    slug: "confidence-intervals",
+    title: "Confidence Intervals",
+    category: "Statistics",
+    level: "A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate confidence interval practice covering means, proportions, margin of error, sample size, interpretation, and t-intervals.",
+    tags: ["statistics", "confidence intervals", "inference", "margin of error", "sample size", "proportion", "mean", "standard error", "t interval", "normal distribution", "A-Level", "IB"],
+    toolPath: "tools/confidence-intervals/index.html?v=confidence-intervals-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers confidence intervals for a mean when the population standard deviation is known.",
+      "Level 2 covers confidence intervals for population proportions from survey and sample data.",
+      "Level 3 works backwards with margin of error, sample size, confidence level, midpoint, and interpretation.",
+      "Level 4 introduces t-intervals when the population standard deviation is unknown."
+    ]
+  },
+  {
     slug: "correlation-regression",
     title: "Correlation and Regression",
     category: "Statistics",
@@ -2187,7 +2206,8 @@ const subjectToolGroups = {
     "binomial-geometric-distribution": "Random Variables and Distributions",
     "poisson-distribution": "Random Variables and Distributions",
     "correlation-regression": "Regression and Large Data",
-    "hypothesis-testing": "Inference"
+    "hypothesis-testing": "Inference",
+    "confidence-intervals": "Inference"
   },
   Mechanics: {
     "motion-graphs-constant-acceleration": "Motion and Kinematics",
@@ -7636,11 +7656,12 @@ const curatedRelatedToolSlugs = {
   "tree-diagrams-conditional-probability": ["venn-diagrams", "permutations-combinations", "binomial-geometric-distribution", "discrete-random-variables"],
   "permutations-combinations": ["tree-diagrams-conditional-probability", "venn-diagrams", "binomial-geometric-distribution", "discrete-random-variables"],
   "discrete-random-variables": ["binomial-geometric-distribution", "poisson-distribution", "normal-distribution", "hypothesis-testing"],
-  "binomial-geometric-distribution": ["poisson-distribution", "discrete-random-variables", "normal-distribution", "hypothesis-testing"],
+  "binomial-geometric-distribution": ["poisson-distribution", "discrete-random-variables", "normal-distribution", "confidence-intervals"],
   "poisson-distribution": ["binomial-geometric-distribution", "discrete-random-variables", "normal-distribution", "hypothesis-testing"],
-  "normal-distribution": ["poisson-distribution", "binomial-geometric-distribution", "hypothesis-testing", "continuous-random-variables"],
+  "normal-distribution": ["confidence-intervals", "poisson-distribution", "binomial-geometric-distribution", "hypothesis-testing"],
   "continuous-random-variables": ["normal-distribution", "poisson-distribution", "discrete-random-variables", "integration"],
-  "hypothesis-testing": ["poisson-distribution", "binomial-geometric-distribution", "normal-distribution", "discrete-random-variables"],
+  "hypothesis-testing": ["confidence-intervals", "poisson-distribution", "binomial-geometric-distribution", "normal-distribution"],
+  "confidence-intervals": ["hypothesis-testing", "normal-distribution", "sampling-methods-bias", "binomial-geometric-distribution"],
   "projectiles": ["equations-of-motion", "motion-graphs-constant-acceleration", "newtons-second-law", "momentum"],
   "momentum": ["projectiles", "equations-of-motion", "newtons-second-law", "motion-graphs-constant-acceleration"],
   "moments": ["newtons-second-law", "projectiles", "equations-of-motion", "motion-graphs-constant-acceleration"],
