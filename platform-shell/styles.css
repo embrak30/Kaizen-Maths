@@ -737,6 +737,15 @@ body[data-route="worksheet-generator"] .account-action {
   box-shadow: none;
 }
 
+.button.disabled,
+.button[aria-disabled="true"] {
+  opacity: 0.58;
+  cursor: not-allowed;
+  color: #64748b;
+  background: #f8fafc;
+  pointer-events: none;
+}
+
 .button.worksheet-action-muted:not(:disabled) {
   border-color: rgba(148, 163, 184, 0.42);
   background: #f8fafc;
@@ -2950,6 +2959,7 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .admin-homepage-copy input,
+.admin-homepage-copy select,
 .admin-homepage-copy textarea,
 .admin-homepage-screenshots input,
 .admin-homepage-screenshots textarea {
@@ -2969,12 +2979,17 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .admin-homepage-copy input:focus,
+.admin-homepage-copy select:focus,
 .admin-homepage-copy textarea:focus,
 .admin-homepage-screenshots input:focus,
 .admin-homepage-screenshots textarea:focus {
   border-color: rgba(23, 184, 179, 0.72);
   box-shadow: 0 0 0 3px rgba(23, 184, 179, 0.12);
   outline: none;
+}
+
+.admin-booking-grid {
+  grid-template-columns: minmax(280px, 0.82fr) minmax(360px, 1.18fr);
 }
 
 .admin-user-role,
@@ -3934,6 +3949,111 @@ body[data-route="worksheet-generator"] .account-action {
 .upgrade-page {
   display: grid;
   gap: 18px;
+}
+
+.booking-page {
+  display: grid;
+  gap: 16px;
+}
+
+.booking-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+  gap: 18px;
+  align-items: center;
+  border-color: rgba(23, 184, 179, 0.28);
+  background:
+    radial-gradient(circle at 92% 12%, rgba(23, 184, 179, 0.18), transparent 30%),
+    linear-gradient(135deg, rgba(111, 76, 195, 0.11), rgba(23, 184, 179, 0.10)),
+    #ffffff;
+}
+
+.booking-hero h2,
+.booking-calendar-head h2,
+.booking-card h3,
+.booking-empty h3 {
+  margin: 0;
+}
+
+.booking-hero p {
+  max-width: 820px;
+  margin: 8px 0 14px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.booking-quick-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: start;
+  padding: 12px;
+  border: 1px solid rgba(111, 76, 195, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.74);
+}
+
+.booking-quick-note strong {
+  flex: 0 0 100%;
+  color: #282450;
+}
+
+.booking-quick-note span {
+  border-radius: 999px;
+  padding: 6px 9px;
+  background: rgba(111, 76, 195, 0.10);
+  color: #453983;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.booking-demo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.booking-card {
+  display: grid;
+  gap: 8px;
+  border-color: rgba(23, 184, 179, 0.18);
+}
+
+.booking-card p,
+.booking-empty p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.booking-calendar-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.booking-calendar-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+}
+
+.booking-calendar-frame {
+  width: 100%;
+  min-height: 720px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+}
+
+.booking-empty {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  padding: 20px;
+  border: 1px dashed rgba(111, 76, 195, 0.35);
+  border-radius: 8px;
+  background: rgba(248, 250, 252, 0.86);
 }
 
 .upgrade-summary {
@@ -6460,6 +6580,8 @@ sup .worksheet-fraction span:last-child {
 
   .coverage-home-band,
   .classroom-feature-band,
+  .booking-hero,
+  .booking-demo-grid,
   .coverage-panel-head,
   .launch-readiness-summary,
   .admin-testimonial-row,
@@ -6470,6 +6592,10 @@ sup .worksheet-fraction span:last-child {
 
   .launch-progress {
     justify-items: start;
+  }
+
+  .booking-calendar-frame {
+    min-height: 640px;
   }
 
   .admin-testimonial-default,
@@ -6762,6 +6888,15 @@ sup .worksheet-fraction span:last-child {
   .home-hero-actions {
     justify-content: flex-start;
     max-width: none;
+  }
+
+  .booking-calendar-head {
+    display: grid;
+    align-items: start;
+  }
+
+  .booking-calendar-frame {
+    min-height: 560px;
   }
 
   .guide-callout,

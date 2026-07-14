@@ -2222,6 +2222,8 @@ const state = {
   homepageScreenshots: [],
   homepageContentLoaded: false,
   homepageScreenshotsLoaded: false,
+  bookingSettings: {},
+  bookingSettingsLoaded: false,
   toolInfoOverrides: {},
   toolInfoOverridesLoaded: false,
   universityVideos: {},
@@ -3093,7 +3095,18 @@ const defaultHomepageHeroContent = {
 
 const homepageContentStorageKey = "kaizen:homepage-content";
 const homepageScreenshotsStorageKey = "kaizen:homepage-screenshots";
+const bookingSettingsStorageKey = "kaizen:booking-settings";
 const toolInfoOverrideStorageKey = "kaizen:tool-info-overrides";
+
+const defaultBookingSettings = {
+  provider: "calendly",
+  booking_url: "",
+  headline: "Book a Kaizen Maths demo",
+  description: "Choose a short walkthrough for individual teacher access, tutor use, or a school licence. The session can focus on the tool library, Classroom View, worksheets, assessments, or department rollout.",
+  primary_button_label: "Book Demo Session",
+  contact_email: "info@kaizenmaths.com",
+  show_embed: true
+};
 
 const defaultHomeInterfaceScreenshots = [
   {
@@ -3459,6 +3472,45 @@ function homepageScreenshotAdminList() {
   return rows;
 }
 
+function normaliseBookingSettings(values = {}) {
+  return {
+    provider: String(values.provider || defaultBookingSettings.provider).trim() || defaultBookingSettings.provider,
+    booking_url: String(values.booking_url || "").trim(),
+    headline: String(values.headline || defaultBookingSettings.headline).trim() || defaultBookingSettings.headline,
+    description: String(values.description || defaultBookingSettings.description).trim() || defaultBookingSettings.description,
+    primary_button_label: String(values.primary_button_label || defaultBookingSettings.primary_button_label).trim() || defaultBookingSettings.primary_button_label,
+    contact_email: String(values.contact_email || defaultBookingSettings.contact_email).trim(),
+    show_embed: values.show_embed !== false
+  };
+}
+
+function safeExternalUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  try {
+    const parsed = new URL(raw);
+    if (parsed.protocol !== "https:") return "";
+    return parsed.href;
+  } catch {
+    return "";
+  }
+}
+
+function bookingSettings() {
+  return normaliseBookingSettings({
+    ...defaultBookingSettings,
+    ...readJsonStorage(bookingSettingsStorageKey, {}),
+    ...state.bookingSettings
+  });
+}
+
+function bookingProviderName(provider) {
+  const value = normalise(provider);
+  if (value === "google") return "Google Calendar";
+  if (value === "custom") return "Booking calendar";
+  return "Calendly";
+}
+
 async function loadHomepageContent({ rerender = false } = {}) {
   const client = await window.KaizenAuth?.getClient?.().catch(() => null);
   if (!client) return;
@@ -3558,6 +3610,54 @@ async function saveHomepageScreenshots(rows) {
   }
   state.homepageScreenshots = next;
   writeJsonStorage(homepageScreenshotsStorageKey, next);
+  return "local";
+}
+
+async function loadBookingSettings({ rerender = false } = {}) {
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client) return;
+  try {
+    const { data, error } = await client
+      .from("homepage_content")
+      .select("content_key, content_value")
+      .eq("content_key", "booking")
+      .maybeSingle();
+    if (error) throw error;
+    state.bookingSettings = normaliseBookingSettings(data?.content_value || {});
+    state.bookingSettingsLoaded = true;
+    if (rerender && ["admin", "book-demo", "schools", "upgrade", ""].includes(routeParts()[0] || "")) renderRoute();
+  } catch (error) {
+    state.bookingSettingsLoaded = false;
+    console.warn("Kaizen booking settings unavailable:", error.message);
+  }
+}
+
+async function saveBookingSettings(values) {
+  const next = normaliseBookingSettings(values);
+  if (next.booking_url && !safeExternalUrl(next.booking_url)) {
+    throw new Error("Use a full secure booking URL starting with https://.");
+  }
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (client) {
+    try {
+      const { error } = await client
+        .from("homepage_content")
+        .upsert({
+          content_key: "booking",
+          content_value: next,
+          updated_at: new Date().toISOString()
+        }, { onConflict: "content_key" });
+      if (error) throw error;
+      state.bookingSettings = next;
+      state.bookingSettingsLoaded = true;
+      writeJsonStorage(bookingSettingsStorageKey, next);
+      return "supabase";
+    } catch (error) {
+      console.warn("Saving booking settings to Supabase failed:", error.message);
+    }
+  }
+  state.bookingSettings = next;
+  writeJsonStorage(bookingSettingsStorageKey, next);
   return "local";
 }
 
@@ -6004,6 +6104,7 @@ function renderHome() {
     <section class="home-hero">
       <div class="home-hero-actions">
         <a class="button primary" href="#/upgrade">Start Free Trial</a>
+        <a class="button" href="#/book-demo">Book a Demo</a>
         <a class="button subtle" href="#/kaizen-university">See How It Works</a>
         <a class="button" href="#/coverage-map">Explore Topics</a>
       </div>
@@ -6138,16 +6239,19 @@ function renderHome() {
         <p>Give every maths teacher access to a shared resource workspace that supports classroom instruction, practice, homework, assessment, intervention, and curriculum consistency.</p>
       </div>
       <!-- Future pricing table or school licence enquiry form can be inserted here. -->
-      <a class="button primary" href="#/schools">Request a School Licence</a>
+      <div class="button-row">
+        <a class="button primary" href="#/book-demo">Book a School Demo</a>
+        <a class="button" href="#/schools">Request a School Licence</a>
+      </div>
     </section>
     <section class="final-cta" aria-labelledby="finalCtaTitle">
       <span class="eyebrow">Ready To Try It?</span>
       <h2 id="finalCtaTitle">Spend less time searching. Spend more time teaching.</h2>
       <div class="button-row">
         <a class="button primary" href="#/upgrade">Start Free Trial</a>
+        <a class="button" href="#/book-demo">Book a Demo</a>
         <a class="button" href="#/tools">Browse Tool Library</a>
       </div>
-      <!-- Future demo video link can be added beside the trial button. -->
     </section>
   `;
   bindHomeTestimonials();
@@ -10008,7 +10112,7 @@ function renderSchools() {
     ${pageHeader(
       "School Access",
       "School licences give maths departments shared access to Kaizen Maths as a virtual mathematics textbook: unlimited topic questions, board-ready generators, worked solutions, worksheets, and assessment practice for classroom use.",
-      `<a class="button" href="#/school-space">Join School Licence</a><a class="button" href="#/upgrade">Back to Upgrade</a>`
+      `<a class="button primary" href="#/book-demo">Book School Demo</a><a class="button" href="#/school-space">Join School Licence</a><a class="button" href="#/upgrade">Back to Upgrade</a>`
     )}
     <section class="upgrade-page">
       <article class="panel trial-notice">
@@ -10038,6 +10142,7 @@ function renderSchools() {
           <h2>16+ Teachers</h2>
           <p class="pricing-price">By quote</p>
           <p>For larger schools, trusts, or multi-site access. Pricing can be agreed around the number of teacher accounts, rollout needs, and whether the school wants a longer pilot period.</p>
+          <a class="button" href="#/book-demo">Discuss School Access</a>
         </article>
       </section>
 
@@ -10063,6 +10168,75 @@ function renderSchools() {
   `;
 }
 
+function renderBookDemo() {
+  const settings = bookingSettings();
+  const bookingUrl = safeExternalUrl(settings.booking_url);
+  const providerName = bookingProviderName(settings.provider);
+  const contactEmail = settings.contact_email || defaultBookingSettings.contact_email;
+  const demoCards = [
+    ["Teacher Demo", "See how to choose a topic, project questions, reveal answers and steps, and build a worksheet from the same question bank."],
+    ["School Licence Demo", "Walk through department access, school spaces, teacher roles, curriculum coverage, and how Kaizen Maths can support consistency."],
+    ["Tutor Demo", "Explore targeted practice, topic selection, worksheet creation, and tutor workflow tools for private tutoring or online lessons."]
+  ];
+  app.innerHTML = `
+    ${pageHeader(
+      "Book a Demo",
+      "Arrange a short walkthrough of Kaizen Maths for individual teacher access, tutor use, or a school licence.",
+      `<a class="button" href="#/schools">School Access</a><a class="button" href="#/kaizen-university">Watch Guides</a>`
+    )}
+    <section class="booking-page">
+      <article class="panel booking-hero">
+        <div>
+          <span class="eyebrow">${escapeHtml(providerName)} Booking</span>
+          <h2>${escapeHtml(settings.headline)}</h2>
+          <p>${escapeHtml(settings.description)}</p>
+          <div class="button-row">
+            ${bookingUrl
+              ? `<a class="button primary" href="${escapeHtml(bookingUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(settings.primary_button_label)}</a>`
+              : `<span class="button disabled" aria-disabled="true">Booking Link Coming Soon</span>`}
+            <a class="button" href="mailto:${escapeHtml(contactEmail)}?subject=Kaizen%20Maths%20demo%20request">Email Demo Request</a>
+          </div>
+        </div>
+        <aside class="booking-quick-note">
+          <strong>Useful for</strong>
+          <span>Teachers</span>
+          <span>Heads of Department</span>
+          <span>School leaders</span>
+          <span>Private tutors</span>
+        </aside>
+      </article>
+
+      <section class="booking-demo-grid" aria-label="Demo session types">
+        ${demoCards.map(([title, copy]) => `
+          <article class="panel booking-card">
+            <h3>${title}</h3>
+            <p>${copy}</p>
+          </article>
+        `).join("")}
+      </section>
+
+      <section class="panel booking-calendar-panel">
+        <div class="booking-calendar-head">
+          <div>
+            <span class="eyebrow">Choose A Time</span>
+            <h2>Book directly from the calendar</h2>
+          </div>
+          ${bookingUrl ? `<a class="button" href="${escapeHtml(bookingUrl)}" target="_blank" rel="noopener noreferrer">Open In New Tab</a>` : ""}
+        </div>
+        ${bookingUrl && settings.show_embed
+          ? `<iframe class="booking-calendar-frame" src="${escapeHtml(bookingUrl)}" title="Book a Kaizen Maths demo" loading="lazy"></iframe>`
+          : `
+            <div class="booking-empty">
+              <h3>${bookingUrl ? "Calendar embed is switched off" : "Calendar link has not been added yet"}</h3>
+              <p>${bookingUrl ? "Use the button above to open the booking calendar in a new tab." : "Once the Calendly link is added in Admin, this page will show the booking calendar and direct booking button."}</p>
+              ${isAdmin() ? `<a class="button primary" href="#/admin">Open Admin Settings</a>` : ""}
+            </div>
+          `}
+      </section>
+    </section>
+  `;
+}
+
 function renderUpgrade() {
   const role = currentUserRole();
   const profile = authState().profile || {};
@@ -10079,7 +10253,7 @@ function renderUpgrade() {
     ${pageHeader(
       "Upgrade Kaizen Maths",
       "Start a 30-day teacher trial or upgrade to keep full access to the Kaizen Maths teaching workspace.",
-      `<a class="button" href="#/tools">Browse Tools</a>`
+      `<a class="button primary" href="#/book-demo">Book a Demo</a><a class="button" href="#/tools">Browse Tools</a>`
     )}
     <section class="upgrade-page">
       <article class="panel trial-notice">
@@ -10089,6 +10263,7 @@ function renderUpgrade() {
         <p>After the trial ends, continued access requires an individual teacher subscription or a school licence. The prices below are early-adopter rates; standard pricing is expected to be higher after launch.</p>
         <div class="button-row">
           ${hasWorkspaceAccess() ? `<a class="button primary" href="#/tools">Open Full Tool Library</a>` : isSignedIn() ? `<a class="button primary" href="#/upgrade">Choose A Plan</a>` : `<button class="button primary" type="button" data-auth-action="signin">Start Free Trial</button>`}
+          <a class="button" href="#/book-demo">Book a Demo</a>
           ${hasWorkspaceAccess() ? `<a class="button" href="#/worksheet-generator">Open Worksheet Builder</a>` : `<a class="button" href="#/tools">Browse Free Samples</a>`}
         </div>
       </article>
@@ -10129,7 +10304,10 @@ function renderUpgrade() {
           <p class="pricing-price">From £299/year</p>
           <p class="pricing-note">Expected standard price: from £499/year</p>
           <p>For schools that want several teachers to use the full virtual mathematics textbook across lessons, homework, intervention, revision, and assessment.</p>
-          <a class="button" href="#/schools">Notes For Schools</a>
+          <div class="button-row">
+            <a class="button primary" href="#/book-demo">Book School Demo</a>
+            <a class="button" href="#/schools">Notes For Schools</a>
+          </div>
         </article>
       </section>
 
@@ -10519,6 +10697,7 @@ function renderAdmin() {
   }).join("");
 
   const heroContent = homepageHeroContent();
+  const booking = bookingSettings();
   const homepageScreenshotRows = homepageScreenshotAdminList()
     .map((screenshot, index) => adminHomepageScreenshotRowHtml(screenshot, index))
     .join("");
@@ -10619,6 +10798,7 @@ function renderAdmin() {
       <button class="admin-tab active" type="button" data-admin-tab="users">Users</button>
       <button class="admin-tab" type="button" data-admin-tab="launch">Launch Checklist</button>
       <button class="admin-tab" type="button" data-admin-tab="homepage">Homepage</button>
+      <button class="admin-tab" type="button" data-admin-tab="booking">Booking</button>
       <button class="admin-tab" type="button" data-admin-tab="schools">Schools</button>
       <button class="admin-tab" type="button" data-admin-tab="access">Tool Access</button>
       <button class="admin-tab" type="button" data-admin-tab="metadata">Tool Tags</button>
@@ -10690,6 +10870,57 @@ function renderAdmin() {
           <div class="admin-testimonial-list" id="adminHomepageScreenshotList">
             ${homepageScreenshotRows}
           </div>
+        </article>
+      </div>
+    </section>
+    <section class="panel admin-panel admin-tab-panel" data-admin-panel="booking">
+      <div class="admin-toolbar">
+        <div>
+          <span class="eyebrow">Demo Sessions</span>
+          <h2>Booking Calendar</h2>
+          <p>Paste your Calendly or Google Calendar booking link here. The public Book a Demo page and site buttons will use this setting.</p>
+        </div>
+        <button class="button primary" id="saveBookingSettings" type="button">Save Booking Settings</button>
+      </div>
+      <p class="admin-status" id="adminBookingStatus">${state.bookingSettingsLoaded ? "Loaded booking settings from Supabase." : "Using default booking settings. Add your Calendly link when ready."}</p>
+      <div class="admin-homepage-grid admin-booking-grid">
+        <article class="admin-homepage-copy">
+          <h3>Calendar Link</h3>
+          <label>
+            Provider
+            <select data-booking-field="provider">
+              <option value="calendly" ${booking.provider === "calendly" ? "selected" : ""}>Calendly</option>
+              <option value="google" ${booking.provider === "google" ? "selected" : ""}>Google Calendar</option>
+              <option value="custom" ${booking.provider === "custom" ? "selected" : ""}>Other booking link</option>
+            </select>
+          </label>
+          <label>
+            Booking URL
+            <input data-booking-field="booking_url" type="url" value="${escapeHtml(booking.booking_url)}" placeholder="https://calendly.com/your-name/kaizen-maths-demo">
+          </label>
+          <label class="admin-check-row">
+            <input data-booking-field="show_embed" type="checkbox" ${booking.show_embed ? "checked" : ""}>
+            Show calendar embed on the Book a Demo page
+          </label>
+        </article>
+        <article class="admin-homepage-copy">
+          <h3>Page Copy</h3>
+          <label>
+            Page heading
+            <input data-booking-field="headline" type="text" value="${escapeHtml(booking.headline)}">
+          </label>
+          <label>
+            Description
+            <textarea data-booking-field="description" rows="4">${escapeHtml(booking.description)}</textarea>
+          </label>
+          <label>
+            Button label
+            <input data-booking-field="primary_button_label" type="text" value="${escapeHtml(booking.primary_button_label)}">
+          </label>
+          <label>
+            Fallback contact email
+            <input data-booking-field="contact_email" type="email" value="${escapeHtml(booking.contact_email)}">
+          </label>
         </article>
       </div>
     </section>
@@ -10890,6 +11121,32 @@ function bindAdmin() {
       button.disabled = false;
     } catch (error) {
       homepageStatus.textContent = `Could not save homepage content: ${error.message}`;
+      button.disabled = false;
+    }
+  });
+
+  const bookingStatus = document.getElementById("adminBookingStatus");
+  document.getElementById("saveBookingSettings")?.addEventListener("click", async () => {
+    const button = document.getElementById("saveBookingSettings");
+    const field = (name) => document.querySelector(`[data-booking-field="${name}"]`);
+    button.disabled = true;
+    bookingStatus.textContent = "Saving booking settings...";
+    try {
+      const source = await saveBookingSettings({
+        provider: field("provider")?.value || "calendly",
+        booking_url: field("booking_url")?.value || "",
+        headline: field("headline")?.value || "",
+        description: field("description")?.value || "",
+        primary_button_label: field("primary_button_label")?.value || "",
+        contact_email: field("contact_email")?.value || "",
+        show_embed: Boolean(field("show_embed")?.checked)
+      });
+      bookingStatus.textContent = source === "supabase"
+        ? "Saved. The Book a Demo page is now using this calendar link."
+        : "Saved in this browser only. Save again when Supabase is available to make booking settings live for everyone.";
+      button.disabled = false;
+    } catch (error) {
+      bookingStatus.textContent = `Could not save booking settings: ${error.message}`;
       button.disabled = false;
     }
   });
@@ -11670,6 +11927,10 @@ function updateRouteSeo(parts) {
       title: routeTitle("Teacher Access and Pricing"),
       description: "Start a 30-day Kaizen Maths teacher trial or upgrade with early-adopter monthly, annual, and school access options."
     },
+    "book-demo": {
+      title: routeTitle("Book a Demo"),
+      description: "Book a Kaizen Maths walkthrough for teachers, tutors, Heads of Department, or school leaders."
+    },
     "schools": {
       title: routeTitle("School Access"),
       description: "Learn how school licences give maths departments shared access to Kaizen Maths questions, worksheets, worked examples, and assessments."
@@ -11775,6 +12036,8 @@ function renderRoute() {
     renderCoverageMap();
   } else if (parts[0] === "collections" && parts[1]) {
     renderToolLibrary(parts[1]);
+  } else if (parts[0] === "book-demo") {
+    renderBookDemo();
   } else if (parts[0] === "schools") {
     renderSchools();
   } else if (parts[0] === "school-space") {
@@ -11835,6 +12098,7 @@ window.addEventListener("kaizen-auth-change", () => {
   loadSchools({ rerender: true });
   loadHomepageContent({ rerender: true });
   loadHomepageScreenshots({ rerender: true });
+  loadBookingSettings({ rerender: true });
   loadToolInfoOverrides({ rerender: true });
   loadUniversityVideos({ rerender: true });
   loadSiteTestimonials({ rerender: true });
@@ -11848,6 +12112,7 @@ window.setTimeout(() => {
   loadSchools({ rerender: true });
   loadHomepageContent({ rerender: true });
   loadHomepageScreenshots({ rerender: true });
+  loadBookingSettings({ rerender: true });
   loadToolInfoOverrides({ rerender: true });
   loadUniversityVideos({ rerender: true });
   loadSiteTestimonials({ rerender: true });
