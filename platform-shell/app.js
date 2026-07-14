@@ -2045,10 +2045,10 @@ const tools = [
     status: "Imported",
     description: "Create printable maths vocabulary word searches from teacher-entered words, with selectable grid size, direction controls, student sheet, answer key, and print/save PDF options.",
     tags: ["classroom", "word search", "vocabulary", "maths vocabulary", "puzzle", "printable", "starter", "retrieval", "cover lesson"],
-    toolPath: "tools/word-search-builder/index.html?v=word-search-builder-1",
+    toolPath: "tools/word-search-builder/index.html?v=word-search-builder-2",
     imported: true,
     teacherNotes: [
-      "Teachers enter their own topic vocabulary and the tool places the words into a printable grid.",
+      "Teachers enter their own topic vocabulary or generate a random maths vocabulary list, then the tool places the words into a printable grid.",
       "Grid size and direction settings allow the task to be made easier or more challenging.",
       "The student puzzle and answer key can be printed separately or saved as PDF from the browser print dialog.",
       "This is the first phase of the classroom puzzle builder and is designed to support vocabulary retrieval, starters, and cover work."

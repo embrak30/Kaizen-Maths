@@ -11,20 +11,20 @@
     .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);writing-mode:vertical-rl;text-orientation:mixed;border-radius:0 8px 8px 0;padding:15px 8px;background:var(--purple);color:white;box-shadow:2px 0 10px rgba(0,0,0,.2);cursor:pointer;font-size:.9em;font-weight:800;transition:.3s}.teacher-tab:hover{background:var(--teal);transform:translateY(-50%) translateX(5px)}
     .sidebar{position:fixed;left:-400px;top:0;z-index:1000;width:400px;height:100vh;overflow-y:auto;background:white;box-shadow:2px 0 20px rgba(0,0,0,.3);transition:left .3s}.sidebar.open{left:0}.sidebar-header{padding:20px;background:var(--purple);color:white;font-size:1.3em;font-weight:800}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{margin:20px 0 10px;border-bottom:2px solid var(--teal);padding-bottom:5px;color:var(--purple);font-size:1.1em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
     .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;background:rgba(0,0,0,.5);opacity:0;transition:.3s}.sidebar-overlay.active{visibility:visible;opacity:1}
-    .app{max-width:1320px;margin:0 auto;border:1px solid rgba(23,184,179,.22);border-radius:16px;background:rgba(255,255,255,.92);box-shadow:0 18px 45px rgba(16,24,40,.12);overflow:hidden}
-    .top{padding:22px 24px;background:radial-gradient(circle at 12% 20%,rgba(111,76,195,.75),transparent 38%),radial-gradient(circle at 90% 12%,rgba(23,184,179,.72),transparent 40%),linear-gradient(135deg,#26384a,#31475d);color:#fff}.top h1{font-size:clamp(1.8rem,3vw,2.45rem);margin-bottom:5px}.top p{max-width:860px;color:rgba(255,255,255,.9);font-weight:650}
-    .workspace{display:grid;grid-template-columns:360px minmax(0,1fr);gap:0;min-height:680px}.panel{border-right:1px solid var(--line);background:linear-gradient(180deg,#fff,#f8fbff);padding:18px}.preview{padding:18px;background:#f7fafc}
-    .control-block{margin-bottom:14px}.control-block label{display:block;margin-bottom:6px;color:#344054;font-size:.92em;font-weight:800}.control-block input,.control-block textarea,.control-block select{width:100%;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-size:.98em;outline:none}.control-block input,.control-block select{height:42px;padding:0 11px}.control-block textarea{min-height:150px;padding:10px 11px;resize:vertical;line-height:1.42}.hint{margin-top:5px;color:var(--muted);font-size:.82em;font-weight:650}
+    .app{width:min(1600px,100%);margin:0 auto;border:1px solid rgba(23,184,179,.22);border-radius:16px;background:rgba(255,255,255,.92);box-shadow:0 18px 45px rgba(16,24,40,.12);overflow:hidden}
+    .top{padding:16px 22px;background:radial-gradient(circle at 12% 20%,rgba(111,76,195,.75),transparent 38%),radial-gradient(circle at 90% 12%,rgba(23,184,179,.72),transparent 40%),linear-gradient(135deg,#26384a,#31475d);color:#fff}.top h1{font-size:clamp(1.65rem,2.7vw,2.25rem);margin-bottom:3px}.top p{max-width:900px;color:rgba(255,255,255,.9);font-weight:650}
+    .workspace{display:grid;grid-template-columns:340px minmax(0,1fr);gap:0;min-height:calc(100vh - 120px)}.panel{border-right:1px solid var(--line);background:linear-gradient(180deg,#fff,#f8fbff);padding:16px}.preview{padding:14px;background:#f7fafc}
+    .control-block{margin-bottom:12px}.control-block label{display:block;margin-bottom:6px;color:#344054;font-size:.9em;font-weight:800}.control-block input,.control-block textarea,.control-block select{width:100%;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-size:.96em;outline:none}.control-block input,.control-block select{height:40px;padding:0 11px}.control-block textarea{min-height:140px;padding:10px 11px;resize:vertical;line-height:1.38}.hint{margin-top:5px;color:var(--muted);font-size:.8em;font-weight:650}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.button-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.btn{border:0;border-radius:10px;padding:11px 12px;color:white;font-weight:850;cursor:pointer;transition:.18s;box-shadow:0 8px 16px rgba(16,24,40,.1)}.btn:hover{transform:translateY(-1px);filter:brightness(.96)}.btn-primary{background:linear-gradient(135deg,var(--purple),#1e88e5)}.btn-success{background:linear-gradient(135deg,var(--green),var(--teal))}.btn-warning{background:var(--amber);color:#2f2500}.btn-ghost{background:#fff;color:#344054;border:1px solid var(--line);box-shadow:none}.btn-wide{grid-column:1/-1}
     .message{display:none;margin-top:12px;border-radius:10px;padding:10px 12px;font-size:.9em;font-weight:750;line-height:1.4}.message.visible{display:block}.message.warn{background:#fff7e6;color:#7a4b00;border:1px solid #f6d38b}.message.good{background:#eafaf4;color:#0b6847;border:1px solid #a7ead3}
     .tabs{display:flex;gap:8px;margin-bottom:12px}.tab{border:1px solid var(--line);border-radius:999px;background:#fff;color:#344054;padding:8px 12px;font-weight:850;cursor:pointer}.tab.active{border-color:var(--teal);background:#e8fbfa;color:#047a75}
-    .sheet-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}.sheet{max-width:900px;margin:0 auto;border:1px solid var(--line);border-radius:14px;background:white;box-shadow:0 12px 30px rgba(16,24,40,.08);padding:22px}.sheet.hidden{display:none}.sheet-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:16px;border-bottom:3px solid #172033;padding-bottom:12px}.sheet-title small{display:block;color:var(--teal);font-weight:900;letter-spacing:.04em;text-transform:uppercase}.sheet-title h2{font-size:clamp(1.65rem,3vw,2.25rem);line-height:1.05}.name-lines{min-width:230px;font-weight:850}.name-line{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:end;margin-bottom:12px}.line{height:1px;background:#98a2b3}
-    .student-note{margin:0 0 14px;color:#475467;font-weight:650}.puzzle-grid{display:grid;margin:0 auto 18px;border:2px solid #1d2939;background:#1d2939;gap:1px;max-width:760px}.cell{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:white;color:#111827;font-family:"Arial",sans-serif;font-size:clamp(.62rem,2vw,1.1rem);font-weight:800;line-height:1}.answer-grid .cell.solution{background:#c7f3ea;color:#063f3b}.answer-grid .cell.start{box-shadow:inset 0 0 0 2px #0b7f77}.word-bank{border:1px solid var(--line);border-radius:10px;padding:12px;background:#f8fafc}.word-bank h3{margin-bottom:8px;color:#26384a;font-size:1.02em}.word-list{columns:3;column-gap:28px;list-style-position:inside;color:#1d2939;font-weight:750}.answer-details{margin-top:14px;border:1px solid #cfe7e4;border-radius:10px;background:#f2fffd;padding:12px}.answer-details h3{margin-bottom:8px;color:#047a75}.answer-details ul{columns:2;list-style-position:inside;font-weight:700;color:#344054}
+    .sheet-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}.sheet{width:100%;max-width:1120px;margin:0 auto;border:1px solid var(--line);border-radius:14px;background:white;box-shadow:0 12px 30px rgba(16,24,40,.08);padding:16px 18px}.sheet.hidden{display:none}.sheet-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:10px;border-bottom:3px solid #172033;padding-bottom:9px}.sheet-title small{display:block;color:var(--teal);font-weight:900;letter-spacing:.04em;text-transform:uppercase}.sheet-title h2{font-size:clamp(1.45rem,2.5vw,2.05rem);line-height:1.05}.name-lines{min-width:230px;font-weight:850}.name-line{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:end;margin-bottom:10px}.line{height:1px;background:#98a2b3}
+    .student-note{margin:0 0 8px;color:#475467;font-weight:650}.puzzle-grid{--grid-size:12;display:grid;width:min(100%,calc(100vh - 250px),980px);margin:0 auto 12px;border:0;background:white;gap:0;line-height:1}.cell{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:white;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:clamp(1.05rem,calc(26rem / var(--grid-size)),2.35rem);font-weight:900;line-height:1;letter-spacing:.04em}.answer-grid .cell.solution{background:#c7f3ea;color:#063f3b;border-radius:4px}.answer-grid .cell.start{box-shadow:inset 0 0 0 2px #0b7f77}.word-bank{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#f8fafc}.word-bank h3{margin-bottom:6px;color:#26384a;font-size:.98em}.word-list{columns:4;column-gap:28px;list-style-position:inside;color:#1d2939;font-weight:800;font-size:1.02em}.answer-details{margin-top:10px;border:1px solid #cfe7e4;border-radius:10px;background:#f2fffd;padding:10px 12px}.answer-details h3{margin-bottom:8px;color:#047a75}.answer-details ul{columns:2;list-style-position:inside;font-weight:700;color:#344054}
     .placeholder{display:grid;place-items:center;min-height:560px;border:2px dashed #cbd5e1;border-radius:16px;background:#fff;color:#667085;text-align:center;padding:28px}.placeholder strong{display:block;margin-bottom:6px;color:#26384a;font-size:1.45em}
     @media (max-width:900px){body{padding:10px}.workspace{grid-template-columns:1fr}.panel{border-right:0;border-bottom:1px solid var(--line)}.word-list{columns:2}.sheet-head{flex-direction:column}.name-lines{width:100%}}
     @media print{
       @page{size:A4;margin:12mm}
-      body{padding:0;background:#fff}.teacher-tab,.sidebar,.sidebar-overlay,.top,.panel,.tabs,.placeholder,.message{display:none!important}.app{border:0;box-shadow:none;border-radius:0}.workspace{display:block;min-height:0}.preview{padding:0;background:#fff}.sheet-wrap{display:block}.sheet{box-shadow:none;border:0;border-radius:0;max-width:none;padding:0}.sheet.hidden{display:none!important}body[data-print-mode="puzzle"] #answer-sheet{display:none!important}body[data-print-mode="answer"] #puzzle-sheet{display:none!important}.word-list{columns:3}.puzzle-grid{max-width:180mm}.answer-grid .cell.solution{background:#ddd!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.answer-grid .cell.start{box-shadow:inset 0 0 0 2px #111}.cell{font-size:11pt}.sheet-head{break-after:avoid}.word-bank{break-inside:avoid}
+      body{padding:0;background:#fff}.teacher-tab,.sidebar,.sidebar-overlay,.top,.panel,.tabs,.placeholder,.message{display:none!important}.app{border:0;box-shadow:none;border-radius:0}.workspace{display:block;min-height:0}.preview{padding:0;background:#fff}.sheet-wrap{display:block}.sheet{box-shadow:none;border:0;border-radius:0;max-width:none;padding:0}.sheet.hidden{display:none!important}body[data-print-mode="puzzle"] #answer-sheet{display:none!important}body[data-print-mode="answer"] #puzzle-sheet{display:none!important}.word-list{columns:3}.puzzle-grid{width:min(100%,182mm);max-width:182mm}.answer-grid .cell.solution{background:#ddd!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.answer-grid .cell.start{box-shadow:inset 0 0 0 2px #111}.cell{font-size:calc(150pt / var(--grid-size));letter-spacing:.03em}.sheet-head{break-after:avoid}.word-bank{break-inside:avoid}
     }
   </style>
   <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
@@ -111,6 +111,7 @@ sequence</textarea>
 
         <div class="button-grid">
           <button class="btn btn-primary btn-wide" onclick="generatePuzzle()">Generate</button>
+          <button class="btn btn-success btn-wide" onclick="loadRandomMathsWords()">Random Maths Words</button>
           <button class="btn btn-ghost" onclick="loadSample('geometry')">Geometry</button>
           <button class="btn btn-ghost" onclick="loadSample('statistics')">Statistics</button>
           <button class="btn btn-success" onclick="setView('puzzle')">Student</button>
@@ -184,6 +185,17 @@ sequence</textarea>
       geometry: ["angle", "circle", "radius", "diameter", "tangent", "triangle", "parallel", "bearing", "volume", "surface"],
       statistics: ["mean", "median", "mode", "range", "quartile", "outlier", "sample", "survey", "bias", "histogram", "probability"]
     };
+
+    const mathsWordBank = [
+      "addition", "algebra", "angle", "area", "average", "axis", "bearing", "bracket", "calculus", "circle",
+      "coefficient", "constant", "coordinate", "decimal", "denominator", "diameter", "equation", "estimate", "expand", "factor",
+      "fraction", "frequency", "gradient", "graph", "histogram", "hypotenuse", "index", "integer", "intercept", "linear",
+      "mean", "median", "mode", "multiple", "negative", "numerator", "parallel", "percentage", "perimeter", "polygon",
+      "probability", "product", "quadratic", "quartile", "radius", "range", "ratio", "reflection", "rotation", "scale",
+      "sequence", "simplify", "solution", "standard", "substitution", "surface", "tangent", "translation", "triangle", "variable",
+      "vector", "velocity", "volume", "bearing", "binomial", "correlation", "density", "differentiation", "friction", "integration",
+      "matrix", "momentum", "normal", "poisson", "proof", "regression", "sampling", "surd", "trapezium", "variance"
+    ];
 
     const directionSets = {
       easy: [[1,0],[0,1]],
@@ -314,6 +326,7 @@ sequence</textarea>
       const size = currentPuzzle.size;
       const solutionCells = new Set();
       const startCells = new Set();
+      gridEl.style.setProperty("--grid-size", size);
       currentPuzzle.placed.forEach(item => {
         item.cells.forEach(([r, c]) => solutionCells.add(`${r},${c}`));
         if (item.cells[0]) startCells.add(`${item.cells[0][0]},${item.cells[0][1]}`);
@@ -384,6 +397,22 @@ sequence</textarea>
     function loadSample(name) {
       document.getElementById("word-input").value = samples[name].join("\n");
       document.getElementById("puzzle-title").value = name === "geometry" ? "Geometry Vocabulary Word Search" : "Statistics Vocabulary Word Search";
+      generatePuzzle();
+    }
+
+    function loadRandomMathsWords() {
+      const size = Number(document.getElementById("grid-size").value);
+      const targetCount = size <= 10 ? 10 : size <= 12 ? 14 : size <= 15 ? 18 : 22;
+      const candidates = mathsWordBank
+        .map(word => word.toLowerCase())
+        .filter((word, index, arr) => arr.indexOf(word) === index)
+        .filter(word => cleanWord(word).length <= size);
+      const shuffled = candidates
+        .map(word => ({ word, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(item => item.word);
+      document.getElementById("word-input").value = shuffled.slice(0, targetCount).join("\n");
+      document.getElementById("puzzle-title").value = "Maths Vocabulary Word Search";
       generatePuzzle();
     }
 
