@@ -1353,6 +1353,25 @@ const tools = [
     ]
   },
   {
+    slug: "work-energy-power",
+    title: "Work, Energy and Power",
+    category: "Mechanics",
+    level: "GCSE / A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate mechanics practice on work done, kinetic energy, gravitational potential energy, power, efficiency, work-energy principle, slopes, resistance, motors, and modelling problems.",
+    tags: ["mechanics", "work", "energy", "power", "kinetic energy", "gravitational potential energy", "work-energy principle", "efficiency", "resistance", "motors", "slopes"],
+    toolPath: "tools/work-energy-power/index.html?v=work-energy-power-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on direct use of work done, kinetic energy, gravitational potential energy, and power formulae.",
+      "Level 2 uses the work-energy principle, braking force, force-velocity power, lifting power, and efficiency.",
+      "Level 3 applies energy modelling to smooth and rough slopes, vertical motion, motors, resistance, and combined force-energy problems.",
+      "Worked steps emphasise identifying the energy transfer, writing the full energy equation, substituting values, and interpreting units."
+    ]
+  },
+  {
     slug: "moments",
     title: "Moments and Equilibrium",
     category: "Mechanics",
@@ -2214,6 +2233,7 @@ const subjectToolGroups = {
     "equations-of-motion": "Motion and Kinematics",
     "newtons-second-law": "Forces and Equilibrium",
     "moments": "Forces and Equilibrium",
+    "work-energy-power": "Work, Energy and Power",
     "momentum": "Momentum, Impulse and Projectiles",
     "projectiles": "Momentum, Impulse and Projectiles"
   },
@@ -2259,6 +2279,7 @@ const subjectGroupOrder = {
   Mechanics: [
     "Motion and Kinematics",
     "Forces and Equilibrium",
+    "Work, Energy and Power",
     "Momentum, Impulse and Projectiles"
   ],
   "Classroom Tools": [
@@ -7665,7 +7686,8 @@ const curatedRelatedToolSlugs = {
   "projectiles": ["equations-of-motion", "motion-graphs-constant-acceleration", "newtons-second-law", "momentum"],
   "momentum": ["projectiles", "equations-of-motion", "newtons-second-law", "motion-graphs-constant-acceleration"],
   "moments": ["newtons-second-law", "projectiles", "equations-of-motion", "motion-graphs-constant-acceleration"],
-  "newtons-second-law": ["motion-graphs-constant-acceleration", "equations-of-motion", "moments", "momentum"],
+  "newtons-second-law": ["work-energy-power", "motion-graphs-constant-acceleration", "equations-of-motion", "moments"],
+  "work-energy-power": ["newtons-second-law", "equations-of-motion", "motion-graphs-constant-acceleration", "projectiles"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
   "circle-theorems": ["missing-angles", "circles-area-circumference", "sectors-arc-length", "trigonometric-ratios"],
   "earth-geometry": ["bearings", "trigonometric-ratios", "circles-area-circumference", "sectors-arc-length"],
