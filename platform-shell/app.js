@@ -1353,6 +1353,25 @@ const tools = [
     ]
   },
   {
+    slug: "friction",
+    title: "Friction and Rough Surfaces",
+    category: "Mechanics",
+    level: "GCSE / A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate mechanics practice on friction, normal reaction, coefficient of friction, limiting equilibrium, rough horizontal motion, pulling at an angle, and rough inclined planes.",
+    tags: ["mechanics", "friction", "rough surfaces", "coefficient of friction", "limiting friction", "normal reaction", "inclined planes", "rough planes", "Newton's second law", "work-energy"],
+    toolPath: "tools/friction/index.html?v=friction-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on normal reaction, limiting friction, coefficient of friction, static friction, and angle of friction.",
+      "Level 2 uses friction in rough horizontal motion, acceleration, pulling force, stopping distance, and pulling at an angle.",
+      "Level 3 resolves forces on rough inclined planes, including limiting equilibrium, sliding down a slope, pulling up a slope, and angle of repose.",
+      "Worked steps emphasise finding the normal reaction first, deciding the direction of friction, and then applying F = ma, work-energy, or limiting equilibrium."
+    ]
+  },
+  {
     slug: "work-energy-power",
     title: "Work, Energy and Power",
     category: "Mechanics",
@@ -2232,6 +2251,7 @@ const subjectToolGroups = {
     "motion-graphs-constant-acceleration": "Motion and Kinematics",
     "equations-of-motion": "Motion and Kinematics",
     "newtons-second-law": "Forces and Equilibrium",
+    "friction": "Forces and Equilibrium",
     "moments": "Forces and Equilibrium",
     "work-energy-power": "Work, Energy and Power",
     "momentum": "Momentum, Impulse and Projectiles",
@@ -7686,8 +7706,9 @@ const curatedRelatedToolSlugs = {
   "projectiles": ["equations-of-motion", "motion-graphs-constant-acceleration", "newtons-second-law", "momentum"],
   "momentum": ["projectiles", "equations-of-motion", "newtons-second-law", "motion-graphs-constant-acceleration"],
   "moments": ["newtons-second-law", "projectiles", "equations-of-motion", "motion-graphs-constant-acceleration"],
-  "newtons-second-law": ["work-energy-power", "motion-graphs-constant-acceleration", "equations-of-motion", "moments"],
-  "work-energy-power": ["newtons-second-law", "equations-of-motion", "motion-graphs-constant-acceleration", "projectiles"],
+  "newtons-second-law": ["friction", "work-energy-power", "motion-graphs-constant-acceleration", "equations-of-motion"],
+  "friction": ["newtons-second-law", "work-energy-power", "equations-of-motion", "moments"],
+  "work-energy-power": ["friction", "newtons-second-law", "equations-of-motion", "motion-graphs-constant-acceleration"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
   "circle-theorems": ["missing-angles", "circles-area-circumference", "sectors-arc-length", "trigonometric-ratios"],
   "earth-geometry": ["bearings", "trigonometric-ratios", "circles-area-circumference", "sectors-arc-length"],

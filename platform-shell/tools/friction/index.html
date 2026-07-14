@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friction Practice</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden;color:#1a365d}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:white;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:700;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:white;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#1a365d;color:white;padding:20px;font-size:1.3em;font-weight:700}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1260px;margin:0 auto;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}.header{background:#2d5a87;color:white;padding:24px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}.header h1{font-size:2.15em;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:17px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:800;transition:.3s;border-bottom:3px solid transparent;color:#1a365d}.tab:hover{background:#cbd5e0}.tab.active{background:white;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px 24px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:1px solid #e2e8f0}.level-info{min-width:320px;flex:1}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.25em}.level-info p{color:#718096;font-size:.98em}.dropdown-container{margin-top:9px;display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:white;cursor:pointer;min-width:390px;max-width:100%;color:#1a365d}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:10px}.timer-section{gap:15px}.timer-display{font-size:1.85em;font-weight:bold;color:#1a365d;background:white;padding:9px 16px;border-radius:6px;border:2px solid #cbd5e0;min-width:112px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:11px 19px;border:none;border-radius:6px;font-size:.98em;font-weight:800;cursor:pointer;transition:.3s;min-width:78px}.btn-primary{background:#3182ce;color:white}.btn-success{background:#38a169;color:white}.btn-warning{background:#d69e2e;color:white}.btn-danger{background:#e53e3e;color:white}.btn:hover{transform:translateY(-1px);filter:brightness(.92)}
+    .problems-section{padding:18px 24px 24px;min-height:520px}.set-instruction{background:#ebf8ff;border-left:4px solid #3182ce;border-radius:7px;padding:10px 14px;margin-bottom:12px;color:#1a365d;font-weight:700}.problem-set-header{color:white;padding:12px 20px;margin-bottom:10px;border-radius:8px;font-size:1.18em;font-weight:bold;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);display:none}.problem-set-header.visible{display:block}.problem-set-header.basics{background:#3182ce}.problem-set-header.horizontal{background:#38a169}.problem-set-header.slopes{background:#805ad5}
+    .problem-list{list-style:none;display:grid;grid-template-columns:1fr;gap:10px}.problem-item{background:#f7fafc;padding:13px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s;min-height:0}.problem-item:hover{transform:translateX(2px)}.problem-header{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.problem-left{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;min-width:0}.problem-number{background:#3182ce;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0}.equation{font-size:1.11em;color:#1a365d;font-weight:500;line-height:1.42;min-width:0}.problem-answer{background:#38a169;color:white;padding:7px 13px;border-radius:20px;font-weight:bold;font-size:.96em;display:none;text-align:center;max-width:390px;overflow-x:auto}.problem-answer.visible{display:block;animation:slideIn .35s ease}@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+    .steps-section{grid-column:1/-1;margin-top:12px;padding:14px;background:#ebf8ff;border-radius:8px;border-left:4px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .35s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}.answer-label{font-weight:800;color:#38a169;margin-bottom:10px;font-size:1.08em}.solution-steps{font-size:1.07em;line-height:1.6}.step{margin:8px 0;color:#1a365d}.step-equation{font-weight:700;color:#805ad5;text-align:center;margin:10px 0;font-size:1.11em;overflow-x:auto}.final-answer{background:#38a169;color:white;padding:9px 15px;border-radius:7px;text-align:center;font-weight:bold;font-size:1.08em;margin-top:12px;overflow-x:auto}.step-indicator{background:#3182ce;color:white;padding:5px 9px;border-radius:5px;font-size:.86em;font-weight:bold;margin-right:8px;white-space:nowrap}
+    .formula-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.formula-pill{background:#edf2f7;border:1px solid #cbd5e0;border-radius:999px;padding:6px 10px;font-weight:800;color:#1a365d}.fraction{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.05;margin:0 3px}.fraction .numerator{border-bottom:1.7px solid currentColor;padding:0 5px 2px}.fraction .denominator{padding:2px 5px 0}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:white;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
+    @media (max-width:900px){body{padding:12px}.controls{flex-direction:column;align-items:stretch}.timer-section,.action-buttons{justify-content:center;flex-wrap:wrap}.type-dropdown{min-width:0;width:100%}.problem-header{grid-template-columns:1fr}.problem-answer{max-width:none}.tabs{flex-wrap:wrap}.tab{flex:1 1 100%;padding:12px}.sidebar{width:320px;left:-320px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool generates mechanics practice on friction, normal reaction, coefficient of friction, limiting equilibrium, rough horizontal surfaces, and rough inclined planes.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Direct friction formulae, normal reaction, limiting friction, and coefficient of friction.</li>
+        <li><strong>Level 2:</strong> Rough horizontal motion, acceleration, stopping distance, and pulling at an angle.</li>
+        <li><strong>Level 3:</strong> Rough inclined planes, limiting equilibrium, sliding, and forces parallel to a slope.</li>
+      </ul>
+      <h3>Teaching Notes</h3>
+      <ul>
+        <li>Friction acts parallel to the contact surface and opposes motion or the tendency to move.</li>
+        <li>For limiting friction, use F = &mu;R.</li>
+        <li>For non-limiting static friction, use F &le; &mu;R.</li>
+        <li>On a horizontal surface with no vertical applied force, R = mg.</li>
+        <li>On a slope, resolve weight into mg sin &theta; down the slope and mg cos &theta; perpendicular to the slope.</li>
+      </ul>
+      <div class="formula-strip">
+        <span class="formula-pill">F &le; &mu;R</span>
+        <span class="formula-pill">Limiting: F = &mu;R</span>
+        <span class="formula-pill">R = mg</span>
+        <span class="formula-pill">mg sin &theta;</span>
+        <span class="formula-pill">mg cos &theta;</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="header"><h1>Friction</h1></section>
+    <nav class="tabs" aria-label="Levels">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Friction Basics</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Rough Horizontal Motion</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Rough Inclined Planes</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Friction Basics</h3>
+        <p id="level-description">Calculate normal reaction, limiting friction, and coefficient of friction.</p>
+        <div class="dropdown-container" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div class="set-instruction" id="set-instruction">Choose a question type to practise friction.</div>
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+    const g = 9.8;
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Friction Basics",
+        description: "Calculate normal reaction, limiting friction, and coefficient of friction.",
+        instruction: "Identify the normal reaction first, then use the correct friction relationship.",
+        className: "basics",
+        options: [
+          ["normal_reaction", "Normal reaction on a horizontal surface"],
+          ["limiting_friction", "Limiting friction from coefficient"],
+          ["coefficient_from_friction", "Coefficient of friction"],
+          ["static_or_sliding", "Check whether a force causes sliding"],
+          ["angle_of_friction", "Angle of friction"],
+          ["mixed_basics", "Mixed friction basics"]
+        ]
+      },
+      2: {
+        title: "Level 2: Rough Horizontal Motion",
+        description: "Use friction in force equations and energy calculations on horizontal surfaces.",
+        instruction: "Find friction first, decide its direction, then apply F = ma or work-energy.",
+        className: "horizontal",
+        options: [
+          ["horizontal_acceleration", "Acceleration with friction"],
+          ["pulling_force", "Find the pulling force"],
+          ["stopping_distance", "Stopping distance due to friction"],
+          ["pull_at_angle", "Pulling at an angle"],
+          ["mixed_horizontal", "Mixed rough horizontal motion"]
+        ]
+      },
+      3: {
+        title: "Level 3: Rough Inclined Planes",
+        description: "Resolve forces on slopes and use friction in limiting equilibrium or motion.",
+        instruction: "Resolve parallel and perpendicular to the slope, then decide the direction of friction.",
+        className: "slopes",
+        options: [
+          ["slope_about_to_slide_down", "Coefficient to prevent sliding down"],
+          ["slope_acceleration_down", "Acceleration down a rough slope"],
+          ["force_up_slope_constant_speed", "Force up a rough slope"],
+          ["slope_limiting_angle", "Limiting angle of repose"],
+          ["mixed_slopes", "Mixed rough slope problems"]
+        ]
+      }
+    };
+
+    const typeDisplayNames = {
+      normal_reaction: "Normal reaction on a horizontal surface",
+      limiting_friction: "Limiting friction from coefficient",
+      coefficient_from_friction: "Coefficient of friction",
+      static_or_sliding: "Check whether a force causes sliding",
+      angle_of_friction: "Angle of friction",
+      mixed_basics: "Mixed friction basics",
+      horizontal_acceleration: "Acceleration with friction",
+      pulling_force: "Find the pulling force",
+      stopping_distance: "Stopping distance due to friction",
+      pull_at_angle: "Pulling at an angle",
+      mixed_horizontal: "Mixed rough horizontal motion",
+      slope_about_to_slide_down: "Coefficient to prevent sliding down",
+      slope_acceleration_down: "Acceleration down a rough slope",
+      force_up_slope_constant_speed: "Force up a rough slope",
+      slope_limiting_angle: "Limiting angle of repose",
+      mixed_slopes: "Mixed rough slope problems"
+    };
+    window.typeDisplayNames = typeDisplayNames;
+
+    const masses = [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 40, 50];
+    const coefficients = [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6];
+    const forces = [8, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 50, 60, 72, 80, 90, 100, 120, 150, 180];
+    const accelerations = [0.4, 0.5, 0.8, 1, 1.2, 1.5, 2, 2.4, 2.5, 3];
+    const speeds = [4, 5, 6, 8, 10, 12, 15, 18, 20];
+    const angles = [15, 20, 25, 30, 35, 40];
+
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function choice(items) { return items[rand(0, items.length - 1)]; }
+    function fmt(value, dp = 3) {
+      const n = Number(value);
+      if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+      return n.toFixed(dp).replace(/\.?0+$/, "");
+    }
+    function unitAcceleration() { return "m s<sup>-2</sup>"; }
+    function unitVelocity() { return "m s<sup>-1</sup>"; }
+    function quantity(value, unit, dp = 3) { return fmt(value, dp) + " " + unit; }
+    function step(text) { return { type: "text", text }; }
+    function calc(text) { return { type: "calc", text }; }
+    function answerLine(text) { return { type: "calc", text: '<span class="step-indicator">Answer</span> ' + text }; }
+    function frac(top, bottom) { return '<span class="fraction"><span class="numerator">' + top + '</span><span class="denominator">' + bottom + '</span></span>'; }
+    function sin(angle) { return Math.sin(angle * Math.PI / 180); }
+    function cos(angle) { return Math.cos(angle * Math.PI / 180); }
+    function tan(angle) { return Math.tan(angle * Math.PI / 180); }
+    function atan(value) { return Math.atan(value) * 180 / Math.PI; }
+
+    function cleanQuestionText(problem) {
+      return problem.equation.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, 260);
+    }
+
+    function signatureFor(problem) {
+      return currentType + "|" + cleanQuestionText(problem);
+    }
+
+    function makeNormalReaction() {
+      const m = choice(masses);
+      const R = m * g;
+      return {
+        equation: `A block of mass ${m} kg rests on a horizontal rough surface. Find the normal reaction. Take g = ${g} ${unitAcceleration()}.`,
+        answer: quantity(R, "N"),
+        steps: [
+          step('<span class="step-indicator">Idea</span> On a horizontal surface with no other vertical forces, the normal reaction balances the weight.'),
+          calc("R = mg"),
+          calc(`R = ${m} &times; ${g}`),
+          answerLine(`R = ${quantity(R, "N")}`)
+        ]
+      };
+    }
+
+    function makeLimitingFriction() {
+      const m = choice(masses);
+      const mu = choice(coefficients);
+      const R = m * g;
+      const F = mu * R;
+      return {
+        equation: `A block of mass ${m} kg rests on a rough horizontal surface. The coefficient of friction is ${mu}. Find the limiting friction. Take g = ${g} ${unitAcceleration()}.`,
+        answer: quantity(F, "N"),
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Find the normal reaction.'),
+          calc(`R = mg = ${m} &times; ${g} = ${fmt(R)} N`),
+          step('<span class="step-indicator">Step 2</span> Limiting friction is the maximum possible friction before sliding begins.'),
+          calc(`F = &mu;R`),
+          calc(`F = ${mu} &times; ${fmt(R)}`),
+          answerLine(`F = ${quantity(F, "N")}`)
+        ]
+      };
+    }
+
+    function makeCoefficientFromFriction() {
+      const m = choice(masses);
+      const mu = choice(coefficients);
+      const R = m * g;
+      const F = mu * R;
+      return {
+        equation: `A block of mass ${m} kg is on a horizontal rough surface. The limiting friction is ${quantity(F, "N")}. Find the coefficient of friction. Take g = ${g} ${unitAcceleration()}.`,
+        answer: `&mu; = ${fmt(mu)}`,
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Find the normal reaction.'),
+          calc(`R = mg = ${m} &times; ${g} = ${fmt(R)} N`),
+          step('<span class="step-indicator">Step 2</span> Use limiting friction.'),
+          calc(`F = &mu;R`),
+          calc(`${fmt(F)} = &mu; &times; ${fmt(R)}`),
+          calc(`&mu; = ${frac(fmt(F), fmt(R))}`),
+          answerLine(`&mu; = ${fmt(mu)}`)
+        ]
+      };
+    }
+
+    function makeStaticOrSliding() {
+      const m = choice(masses);
+      const mu = choice([0.2, 0.25, 0.3, 0.4, 0.5]);
+      const R = m * g;
+      const maxF = mu * R;
+      const applied = Math.round(choice([0.6, 0.8, 1.1, 1.25]) * maxF);
+      const slides = applied > maxF;
+      return {
+        equation: `A horizontal force of ${applied} N is applied to a block of mass ${m} kg on a rough horizontal surface. The coefficient of friction is ${mu}. Decide whether the block slides. Take g = ${g} ${unitAcceleration()}.`,
+        answer: slides ? "The block slides." : "The block does not slide.",
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Find the maximum possible static friction.'),
+          calc(`R = mg = ${m} &times; ${g} = ${fmt(R)} N`),
+          calc(`F<sub>max</sub> = &mu;R = ${mu} &times; ${fmt(R)} = ${fmt(maxF)} N`),
+          step('<span class="step-indicator">Step 2</span> Compare the applied force with the maximum friction.'),
+          calc(`${applied} ${slides ? "&gt;" : "&le;"} ${fmt(maxF)}`),
+          answerLine(slides ? "The applied force is larger than the maximum friction, so the block slides." : "The applied force can be balanced by static friction, so the block does not slide.")
+        ]
+      };
+    }
+
+    function makeAngleOfFriction() {
+      const mu = choice(coefficients);
+      const lambda = atan(mu);
+      return {
+        equation: `The coefficient of friction between two surfaces is ${mu}. Find the angle of friction to the nearest degree.`,
+        answer: `${Math.round(lambda)}&deg;`,
+        steps: [
+          step('<span class="step-indicator">Formula</span> The angle of friction &lambda; satisfies tan &lambda; = &mu;.'),
+          calc(`tan &lambda; = ${mu}`),
+          calc(`&lambda; = tan<sup>-1</sup>(${mu})`),
+          answerLine(`&lambda; = ${Math.round(lambda)}&deg;`)
+        ]
+      };
+    }
+
+    function makeHorizontalAcceleration() {
+      const m = choice([5, 8, 10, 12, 15, 20]);
+      const mu = choice([0.1, 0.2, 0.25, 0.3]);
+      const P = choice([40, 50, 60, 80, 100, 120, 150]);
+      const R = m * g;
+      const F = mu * R;
+      if (P <= F + 5) return makeHorizontalAcceleration();
+      const a = (P - F) / m;
+      return {
+        equation: `A block of mass ${m} kg is pulled horizontally by a force of ${P} N on a rough horizontal surface. The coefficient of friction is ${mu}. Find the acceleration. Take g = ${g} ${unitAcceleration()}.`,
+        answer: quantity(a, unitAcceleration()),
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Find friction.'),
+          calc(`R = mg = ${m} &times; ${g} = ${fmt(R)} N`),
+          calc(`F = &mu;R = ${mu} &times; ${fmt(R)} = ${fmt(F)} N`),
+          step('<span class="step-indicator">Step 2</span> Apply Newton&apos;s second law horizontally.'),
+          calc(`Resultant force = ${P} &minus; ${fmt(F)} = ${fmt(P - F)} N`),
+          calc(`ma = ${fmt(P - F)}`),
+          calc(`${m}a = ${fmt(P - F)}`),
+          calc(`a = ${frac(fmt(P - F), m)}`),
+          answerLine(`a = ${quantity(a, unitAcceleration())}`)
+        ]
+      };
+    }
+
+    function makePullingForce() {
+      const m = choice([5, 8, 10, 12, 15, 20]);
+      const mu = choice([0.1, 0.2, 0.25, 0.3, 0.4]);
+      const a = choice(accelerations);
+      const R = m * g;
+      const F = mu * R;
+      const P = m * a + F;
+      return {
+        equation: `A block of mass ${m} kg accelerates at ${quantity(a, unitAcceleration())} on a rough horizontal surface. The coefficient of friction is ${mu}. Find the horizontal pulling force. Take g = ${g} ${unitAcceleration()}.`,
+        answer: quantity(P, "N"),
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Find friction.'),
+          calc(`R = mg = ${m} &times; ${g} = ${fmt(R)} N`),
+          calc(`F = &mu;R = ${mu} &times; ${fmt(R)} = ${fmt(F)} N`),
+          step('<span class="step-indicator">Step 2</span> Pulling force must overcome friction and produce acceleration.'),
+          calc(`P &minus; F = ma`),
+          calc(`P &minus; ${fmt(F)} = ${m} &times; ${a}`),
+          calc(`P = ${fmt(m * a)} + ${fmt(F)}`),
+          answerLine(`P = ${quantity(P, "N")}`)
+        ]
+      };
+    }
+
+    function makeStoppingDistance() {
+      const u = choice(speeds);
+      const mu = choice([0.1, 0.2, 0.25, 0.4, 0.5]);
+      const s = u * u / (2 * mu * g);
+      return {
+        equation: `A block is moving at ${quantity(u, unitVelocity())} on a rough horizontal surface. The coefficient of friction is ${mu}. Find the stopping distance. Take g = ${g} ${unitAcceleration()}.`,
+        answer: quantity(s, "m"),
+        steps: [
+          step('<span class="step-indicator">Idea</span> Work done against friction equals the initial kinetic energy. The mass cancels.'),
+          calc(`Friction = &mu;mg`),
+          calc(`&mu;mgs = ${frac("1", "2")}m u<sup>2</sup>`),
+          calc(`Cancel m: &mu;gs = ${frac("1", "2")}u<sup>2</sup>`),
+          calc(`s = ${frac("u<sup>2</sup>", "2&mu;g")}`),
+          calc(`s = ${frac(`${u}<sup>2</sup>`, `2 &times; ${mu} &times; ${g}`)}`),
+          answerLine(`s = ${quantity(s, "m")}`)
+        ]
+      };
+    }
+
+    function makePullAtAngle() {
+      const m = choice([10, 12, 15, 20, 25]);
+      const P = choice([50, 60, 80, 100, 120, 150]);
+      const alpha = choice([20, 25, 30, 35]);
+      const mu = choice([0.1, 0.15, 0.2, 0.25]);
+      const R = m * g - P * sin(alpha);
+      if (R <= 5) return makePullAtAngle();
+      const F = mu * R;
+      const horizontal = P * cos(alpha);
+      const a = (horizontal - F) / m;
+      if (a <= 0) return makePullAtAngle();
+      return {
+        equation: `A block of mass ${m} kg is pulled by a force of ${P} N at ${alpha}&deg; above the horizontal. The coefficient of friction is ${mu}. Find the acceleration. Take g = ${g} ${unitAcceleration()}.`,
+        answer: quantity(a, unitAcceleration()),
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Resolve vertically to find the normal reaction.'),
+          calc(`R + ${P} sin ${alpha}&deg; = mg`),
+          calc(`R = ${m} &times; ${g} &minus; ${P} sin ${alpha}&deg;`),
+          calc(`R = ${fmt(R)} N`),
+          step('<span class="step-indicator">Step 2</span> Find friction and the horizontal component of the pull.'),
+          calc(`F = &mu;R = ${mu} &times; ${fmt(R)} = ${fmt(F)} N`),
+          calc(`Horizontal pull = ${P} cos ${alpha}&deg; = ${fmt(horizontal)} N`),
+          step('<span class="step-indicator">Step 3</span> Apply Newton&apos;s second law horizontally.'),
+          calc(`${fmt(horizontal)} &minus; ${fmt(F)} = ${m}a`),
+          calc(`a = ${frac(fmt(horizontal - F), m)}`),
+          answerLine(`a = ${quantity(a, unitAcceleration())}`)
+        ]
+      };
+    }
+
+    function makeSlopeAboutToSlideDown() {
+      const angle = choice([15, 20, 25, 30, 35, 40]);
+      const mu = tan(angle);
+      return {
+        equation: `A block is just on the point of sliding down a rough plane inclined at ${angle}&deg; to the horizontal. Find the coefficient of friction.`,
+        answer: `&mu; = ${fmt(mu)}`,
+        steps: [
+          step('<span class="step-indicator">Idea</span> At limiting equilibrium, friction acts up the plane and F = &mu;R.'),
+          calc(`Component down the plane = mg sin ${angle}&deg;`),
+          calc(`Normal reaction = mg cos ${angle}&deg;`),
+          calc(`mg sin ${angle}&deg; = &mu;mg cos ${angle}&deg;`),
+          calc(`&mu; = ${frac(`mg sin ${angle}&deg;`, `mg cos ${angle}&deg;`)}`),
+          calc(`&mu; = tan ${angle}&deg;`),
+          answerLine(`&mu; = ${fmt(mu)}`)
+        ]
+      };
+    }
+
+    function makeSlopeAccelerationDown() {
+      const m = choice([5, 8, 10, 12, 15]);
+      const angle = choice([25, 30, 35, 40]);
+      const mu = choice([0.1, 0.15, 0.2, 0.25]);
+      const down = m * g * sin(angle);
+      const R = m * g * cos(angle);
+      const F = mu * R;
+      const a = (down - F) / m;
+      if (a <= 0) return makeSlopeAccelerationDown();
+      return {
+        equation: `A block of mass ${m} kg slides down a rough plane inclined at ${angle}&deg;. The coefficient of friction is ${mu}. Find its acceleration. Take g = ${g} ${unitAcceleration()}.`,
+        answer: quantity(a, unitAcceleration()),
+        steps: [
+          step('<span class="step-indicator">Step 1</span> Resolve perpendicular to the plane.'),
+          calc(`R = mg cos ${angle}&deg; = ${m} &times; ${g} &times; cos ${angle}&deg; = ${fmt(R)} N`),
+          step('<span class="step-indicator">Step 2</span> Find friction. It acts up the plane because the block slides down.'),
+          calc(`F = &mu;R = ${mu} &times; ${fmt(R)} = ${fmt(F)} N`),
+          step('<span class="step-indicator">Step 3</span> Resolve down the plane.'),
+          calc(`mg sin ${angle}&deg; &minus; F = ma`),
+          calc(`${fmt(down)} &minus; ${fmt(F)} = ${m}a`),
+          calc(`a = ${frac(fmt(down - F), m)}`),
+          answerLine(`a = ${quantity(a, unitAcceleration())}`)
+        ]
+      };
+    }
+
+    function makeForceUpSlopeConstantSpeed() {
+      const m = choice([5, 8, 10, 12, 15, 20]);
+      const angle = choice([15, 20, 25, 30, 35]);
+      const mu = choice([0.1, 0.2, 0.25, 0.3, 0.4]);
+      const R = m * g * cos(angle);
+      const F = mu * R;
+      const component = m * g * sin(angle);
+      const P = component + F;
+      return {
+        equation: `A block of mass ${m} kg is pulled up a rough plane inclined at ${angle}&deg; at constant speed. The coefficient of friction is ${mu}. Find the pulling force parallel to the plane. Take g = ${g} ${unitAcceleration()}.`,
+        answer: quantity(P, "N"),
+        steps: [
+          step('<span class="step-indicator">Step 1</span> At constant speed, the resultant force along the plane is zero.'),
+          calc(`R = mg cos ${angle}&deg; = ${fmt(R)} N`),
+          calc(`Friction = &mu;R = ${mu} &times; ${fmt(R)} = ${fmt(F)} N`),
+          step('<span class="step-indicator">Step 2</span> Since motion is up the plane, friction acts down the plane.'),
+          calc(`Component of weight down plane = mg sin ${angle}&deg; = ${fmt(component)} N`),
+          calc(`P = mg sin ${angle}&deg; + F`),
+          calc(`P = ${fmt(component)} + ${fmt(F)}`),
+          answerLine(`P = ${quantity(P, "N")}`)
+        ]
+      };
+    }
+
+    function makeSlopeLimitingAngle() {
+      const mu = choice(coefficients);
+      const angle = atan(mu);
+      return {
+        equation: `A block rests on a rough plane. The coefficient of friction is ${mu}. Find the greatest angle the plane can make with the horizontal before the block begins to slide.`,
+        answer: `${fmt(angle, 1)}&deg;`,
+        steps: [
+          step('<span class="step-indicator">Idea</span> At the greatest angle, the block is in limiting equilibrium and is about to slide down.'),
+          calc(`mg sin &theta; = &mu;mg cos &theta;`),
+          calc(`tan &theta; = &mu;`),
+          calc(`tan &theta; = ${mu}`),
+          calc(`&theta; = tan<sup>-1</sup>(${mu})`),
+          answerLine(`&theta; = ${fmt(angle, 1)}&deg;`)
+        ]
+      };
+    }
+
+    const generators = {
+      normal_reaction: makeNormalReaction,
+      limiting_friction: makeLimitingFriction,
+      coefficient_from_friction: makeCoefficientFromFriction,
+      static_or_sliding: makeStaticOrSliding,
+      angle_of_friction: makeAngleOfFriction,
+      mixed_basics: () => generateProblemFor(choice(["normal_reaction", "limiting_friction", "coefficient_from_friction", "static_or_sliding", "angle_of_friction"])),
+      horizontal_acceleration: makeHorizontalAcceleration,
+      pulling_force: makePullingForce,
+      stopping_distance: makeStoppingDistance,
+      pull_at_angle: makePullAtAngle,
+      mixed_horizontal: () => generateProblemFor(choice(["horizontal_acceleration", "pulling_force", "stopping_distance", "pull_at_angle"])),
+      slope_about_to_slide_down: makeSlopeAboutToSlideDown,
+      slope_acceleration_down: makeSlopeAccelerationDown,
+      force_up_slope_constant_speed: makeForceUpSlopeConstantSpeed,
+      slope_limiting_angle: makeSlopeLimitingAngle,
+      mixed_slopes: () => generateProblemFor(choice(["slope_about_to_slide_down", "slope_acceleration_down", "force_up_slope_constant_speed", "slope_limiting_angle"]))
+    };
+
+    function generateProblemFor(type) {
+      return generators[type]();
+    }
+
+    function populateDropdown() {
+      const dropdown = document.getElementById("type-dropdown");
+      const options = levelConfigs[currentLevel].options;
+      dropdown.innerHTML = '<option value="select">Select Question Type</option><option value="all">Mixed Set from This Level</option>' +
+        options.map(([value, label]) => `<option value="${value}">${label}</option>`).join("");
+      dropdown.value = currentType;
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      answersVisible = false;
+      stepsVisible = false;
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index === level - 1));
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      document.getElementById("set-instruction").textContent = config.instruction;
+      populateDropdown();
+      renderEmptyState();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      answersVisible = false;
+      stepsVisible = false;
+      if (currentType === "select") {
+        renderEmptyState();
+      } else {
+        generateNewSet();
+      }
+    }
+
+    function renderEmptyState() {
+      const header = document.getElementById("problem-set-header");
+      header.className = "problem-set-header";
+      header.textContent = "";
+      document.getElementById("problem-list").innerHTML = "";
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        renderEmptyState();
+        return;
+      }
+      const config = levelConfigs[currentLevel];
+      const selectedTypes = currentType === "all" ? config.options.filter(([value]) => !value.startsWith("mixed")).map(([value]) => value) : [currentType];
+      problems = [];
+      const seen = new Set();
+      let attempts = 0;
+      while (problems.length < 5 && attempts < 140) {
+        attempts += 1;
+        const type = currentType === "all" ? choice(selectedTypes) : currentType;
+        const problem = generateProblemFor(type);
+        const signature = signatureFor(problem);
+        if (seen.has(signature)) continue;
+        seen.add(signature);
+        problems.push(problem);
+      }
+      answersVisible = false;
+      stepsVisible = false;
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const config = levelConfigs[currentLevel];
+      const header = document.getElementById("problem-set-header");
+      const list = document.getElementById("problem-list");
+      document.getElementById("set-instruction").textContent = currentType === "all" ? config.instruction : typeDisplayNames[currentType];
+      header.className = `problem-set-header visible ${config.className}`;
+      header.textContent = currentType === "all" ? `${config.title}: Mixed Set` : typeDisplayNames[currentType];
+      list.innerHTML = "";
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        const stepsHtml = problem.steps.map(item => {
+          const className = item.type === "calc" ? "step-equation" : "step";
+          return `<div class="${className}">${item.text}</div>`;
+        }).join("");
+        li.innerHTML = `
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index + 1}</div>
+              <div class="equation">${problem.equation}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${stepsHtml}<div class="final-answer">${problem.answer}</div></div>
+          </div>
+        `;
+        list.appendChild(li);
+      });
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(list), 0);
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      problems.forEach((_, index) => {
+        const answer = document.getElementById(`quick-answer-${index}`);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      });
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const steps = document.getElementById(`steps-${index}`);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      });
+      if (window.renderMathInElement) setTimeout(() => window.renderMathInElement(document.getElementById("problem-list")), 0);
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining -= 1;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const display = document.getElementById("timer-display");
+      if (!timerActive) return;
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      display.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      display.className = timeRemaining <= 30 ? "timer-display warning" : "timer-display active";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      document.getElementById("timer-display").textContent = "Time Up!";
+      document.getElementById("timer-display").className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+</body>
+</html>
