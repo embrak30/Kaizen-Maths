@@ -257,6 +257,25 @@ const tools = [
     ]
   },
   {
+    slug: "linear-algebra",
+    title: "Linear Algebra: Systems, Span, Basis and Transformations",
+    category: "Algebra",
+    level: "A-Level Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate linear algebra practice covering row operations, systems, span, linear independence, basis, kernel, image, rank-nullity, linear transformations, and change of basis.",
+    tags: ["algebra", "further maths", "linear algebra", "row operations", "Gaussian elimination", "span", "basis", "linear independence", "kernel", "image", "rank", "nullity", "linear transformations", "change of basis", "A-Level Further Maths"],
+    toolPath: "tools/linear-algebra/index.html?v=linear-algebra-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers systems of equations, augmented matrices, row operations, and back substitution.",
+      "Level 2 develops span, linear combinations, linear independence, bases, and dimension.",
+      "Level 3 focuses on linear transformations, kernel, image, rank, and nullity.",
+      "Level 4 introduces change of basis, basis coordinates, and linear maps defined by basis images."
+    ]
+  },
+  {
     slug: "further-vectors",
     title: "Further Vectors: Lines, Planes and Products",
     category: "Algebra",
@@ -2037,6 +2056,7 @@ const algebraToolGroups = {
   "partial-fractions": "A-Level and Further Pure",
   "matrices": "A-Level and Further Pure",
   "advanced-matrices": "A-Level and Further Pure",
+  "linear-algebra": "A-Level and Further Pure",
   "further-vectors": "A-Level and Further Pure",
   "proof-by-induction": "A-Level and Further Pure",
   "roots-of-equations": "A-Level and Further Pure",
@@ -7569,8 +7589,9 @@ const curatedRelatedToolSlugs = {
   "transposition-formulae": ["linear-equations", "substitution", "functions", "algebraic-fractions"],
   "linear-programming": ["inequalities", "straight-lines", "graph-transformations-curve-sketching", "simultaneous-equations"],
   "graph-transformations-curve-sketching": ["functions", "straight-lines", "transformations", "quadratic-equations"],
-  "matrices": ["advanced-matrices", "further-vectors", "simultaneous-equations", "transformations"],
-  "advanced-matrices": ["matrices", "further-vectors", "complex-numbers", "transformations"],
+  "matrices": ["linear-algebra", "advanced-matrices", "further-vectors", "simultaneous-equations"],
+  "advanced-matrices": ["linear-algebra", "matrices", "further-vectors", "complex-numbers"],
+  "linear-algebra": ["matrices", "advanced-matrices", "further-vectors", "simultaneous-equations"],
   "complex-numbers": ["polar-coordinates", "roots-of-equations", "trigonometric-functions", "advanced-matrices"],
   "polar-coordinates": ["complex-numbers", "trigonometric-functions", "graph-transformations-curve-sketching", "hyperbolic-functions"],
   "trig-graphs-transformations": ["trig-equation-solver", "trigonometric-functions", "graph-transformations-curve-sketching", "sine-cosine-rule"],

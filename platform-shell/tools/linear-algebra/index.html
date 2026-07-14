@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linear Algebra</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f4f7fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#155e75;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#155e75;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #f97316;color:#155e75;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1240px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#155e75;background-image:linear-gradient(135deg,rgba(255,255,255,.16),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e8f3f8}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e8f3f8;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}.tab.active{background:#fff;color:#155e75;border-bottom-color:#f97316}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d9e7ee;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#155e75;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:410px;padding:8px 10px;border:2px solid #c7dfe7;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #c7dfe7;border-radius:6px;background:#fff;color:#155e75;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#155e75;color:#155e75}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#155e75}.btn-success{background:#2f855a}.btn-warning{background:#f97316}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#155e75;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #b7e4ef;border-radius:6px;background:#ecfeff;color:#155e75;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-left:4px solid #155e75;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:center;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#155e75;color:#fff;font-weight:850}
+    .equation{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.16em;font-weight:500;line-height:1.45;color:#172033;overflow-x:auto;max-width:100%}.matrix-expression{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.matrix-wrap{display:inline-grid;grid-auto-flow:row;gap:0;position:relative;padding:7px 11px;margin:0 2px;vertical-align:middle}.matrix-wrap:before,.matrix-wrap:after{content:"";position:absolute;top:0;bottom:0;width:7px;border-top:2px solid currentColor;border-bottom:2px solid currentColor}.matrix-wrap:before{left:0;border-left:2px solid currentColor}.matrix-wrap:after{right:0;border-right:2px solid currentColor}.matrix-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(30px,auto);gap:11px;justify-content:center}.matrix-cell{text-align:center;min-width:24px}.math-chip{display:inline-block;padding:2px 6px;border-radius:5px;background:#ecfeff;color:#155e75;font-weight:850}
+    .problem-answer{display:none;white-space:normal;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #155e75;border-radius:6px;background:#f0fbff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#155e75;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#223043}.step-equation{margin:6px 0;padding:7px;border:1px solid #d5edf4;border-radius:5px;background:#fff;color:#0f4f66;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:500}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column;align-items:flex-start}.equation{font-size:1.02em}.matrix-row{grid-auto-columns:minmax(24px,auto);gap:8px}.matrix-wrap{padding:6px 9px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Linear Algebra</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This Further Maths tool builds linear algebra fluency through systems, row operations, span, basis, linear independence, linear transformations, kernel, image, rank-nullity, and change of basis.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Systems of equations, augmented matrices, row operations, and triangular systems.</li>
+        <li><strong>Level 2:</strong> Linear combinations, span, linear independence, bases, and dimension.</li>
+        <li><strong>Level 3:</strong> Linear transformations, standard matrices, kernel, image, rank, and nullity.</li>
+        <li><strong>Level 4:</strong> Change of basis, basis coordinates, and mixed linear map problems.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Keep vectors as column vectors so students distinguish vectors from coordinate points.</li>
+        <li>Stress that a basis must span the space and be linearly independent.</li>
+        <li>For kernel questions, solve Ax = 0 and write the solution as a span.</li>
+        <li>Use rank-nullity as a check: rank + nullity = number of columns.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Linear Algebra</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Systems</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Vector Spaces</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Linear Maps</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Change of Basis</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Systems and Row Operations</h3>
+        <p id="level-description">Use augmented matrices, row operations, and substitution to solve linear systems.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Systems and Row Operations',description:'Use augmented matrices, row operations, and substitution to solve linear systems.',types:['solve_2x2_elimination','row_operation','augmented_matrix','solve_3x3_triangular','systems_mixed']},
+      2:{title:'Level 2: Span, Independence and Basis',description:'Work with linear combinations, span, linear independence, bases, and dimension.',types:['linear_combination','span_check','independence_3d','basis_r2','space_mixed']},
+      3:{title:'Level 3: Linear Transformations, Kernel and Image',description:'Use standard matrices to find images, kernels, image bases, rank, and nullity.',types:['standard_matrix','kernel_singular','image_basis','rank_nullity','map_mixed']},
+      4:{title:'Level 4: Change of Basis and Linear Maps',description:'Find coordinates relative to a basis and use linearity to evaluate transformations.',types:['change_basis_coordinates','change_basis_matrix','linear_map_from_basis','rank_nullity_theorem','basis_mixed']}
+    };
+
+    const typeDisplayNames={
+      solve_2x2_elimination:'Type 1: Solve a 2 by 2 system',
+      row_operation:'Type 2: Row operation on an augmented matrix',
+      augmented_matrix:'Type 3: Write an augmented matrix',
+      solve_3x3_triangular:'Type 4: Solve a triangular 3 by 3 system',
+      systems_mixed:'Type 5: Mixed systems',
+      linear_combination:'Type 1: Express as a linear combination',
+      span_check:'Type 2: Decide whether a vector is in a span',
+      independence_3d:'Type 3: Test linear independence in R3',
+      basis_r2:'Type 4: Decide whether two vectors form a basis',
+      space_mixed:'Type 5: Mixed vector space practice',
+      standard_matrix:'Type 1: Standard matrix of a linear transformation',
+      kernel_singular:'Type 2: Kernel of a singular matrix',
+      image_basis:'Type 3: Basis for the image',
+      rank_nullity:'Type 4: Rank, nullity and kernel',
+      map_mixed:'Type 5: Mixed linear maps',
+      change_basis_coordinates:'Type 1: Coordinates relative to a basis',
+      change_basis_matrix:'Type 2: Change of basis matrix',
+      linear_map_from_basis:'Type 3: Use linearity from basis images',
+      rank_nullity_theorem:'Type 4: Interpret rank-nullity',
+      basis_mixed:'Type 5: Mixed basis and linear map practice'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      solve_2x2_elimination:'Solve each system using elimination or row operations.',
+      row_operation:'Carry out the stated row operation on the augmented matrix.',
+      augmented_matrix:'Write each system in augmented matrix form.',
+      solve_3x3_triangular:'Solve each triangular system by back substitution.',
+      systems_mixed:'Answer each systems question.',
+      linear_combination:'Express the given vector as a linear combination of the two vectors.',
+      span_check:'Decide whether the vector belongs to the span of the given vectors.',
+      independence_3d:'Determine whether the three vectors are linearly independent.',
+      basis_r2:'Decide whether the two vectors form a basis for R2.',
+      space_mixed:'Answer each vector space question.',
+      standard_matrix:'Find the standard matrix and use it to transform the vector.',
+      kernel_singular:'Find the kernel of each singular matrix.',
+      image_basis:'Find a basis for the image and state the rank.',
+      rank_nullity:'Find the rank, nullity, and kernel.',
+      map_mixed:'Answer each linear transformation question.',
+      change_basis_coordinates:'Find the coordinates of the vector relative to the given basis.',
+      change_basis_matrix:'Construct the requested change of basis matrix.',
+      linear_map_from_basis:'Use the basis images and linearity to find the image of the vector.',
+      rank_nullity_theorem:'Use rank-nullity to interpret the transformation.',
+      basis_mixed:'Answer each change of basis or linear map question.'
+    };
+
+    function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[randInt(0,arr.length-1)]}
+    function nonZero(min,max){let n=0;while(n===0)n=randInt(min,max);return n}
+    function nonUnit(min,max){let n=0;while(n===0||Math.abs(n)===1)n=randInt(min,max);return n}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function simplify(n,d){if(d<0){n=-n;d=-d}const g=gcd(n,d);return [n/g,d/g]}
+    function num(n){return String(n).replace('-', '&minus;')}
+    function signed(n){return n<0?`&minus; ${Math.abs(n)}`:`+ ${n}`}
+    function term(coef, variable, first=false){
+      if(coef===0)return first?'0':'';
+      const abs=Math.abs(coef);
+      const body=abs===1?variable:`${abs}${variable}`;
+      if(first)return coef<0?`&minus;${body}`:body;
+      return coef<0?` &minus; ${body}`:` + ${body}`;
+    }
+    function expr2(a,b,cx='x',cy='y'){
+      let out='';
+      if(a!==0)out+=term(a,cx,true);
+      if(b!==0)out+=term(b,cy,out==='');
+      return out||'0';
+    }
+    function expr3(a,b,c,cx='x',cy='y',cz='z'){
+      let out='';
+      if(a!==0)out+=term(a,cx,true);
+      if(b!==0)out+=term(b,cy,out==='');
+      if(c!==0)out+=term(c,cz,out==='');
+      return out||'0';
+    }
+    function vfrac(n,d){
+      const [a,b]=simplify(n,d);
+      if(b===1)return num(a);
+      return `<span class="vfrac"><span>${num(a)}</span><span>${num(b)}</span></span>`;
+    }
+    function matrixHtml(rows){
+      return `<span class="matrix-wrap">${rows.map(row=>`<span class="matrix-row">${row.map(cell=>`<span class="matrix-cell">${cell}</span>`).join('')}</span>`).join('')}</span>`;
+    }
+    function col(values){return matrixHtml(values.map(v=>[num(v)]))}
+    function colRaw(values){return matrixHtml(values.map(v=>[v]))}
+    function matNum(rows){return matrixHtml(rows.map(row=>row.map(num)))}
+    function det2(a,b,c,d){return a*d-b*c}
+    function problem(prompt,answer,steps,type=currentType){
+      return {prompt,answer,steps,instruction:typeInstructions[type]||'Answer each question.'};
+    }
+    function eqStep(text){return `<span>${text}</span>`}
+
+    function makeSolve2x2(){
+      let a=0,b=0,d=0,e=0,det=0;
+      while(a===0||det===0){
+        a=nonUnit(-5,5);b=nonZero(-5,5);d=nonZero(-5,5);e=nonZero(-5,5);det=det2(a,b,d,e);
+      }
+      const x=nonZero(-4,5),y=nonZero(-4,5),c=a*x+b*y,f=d*x+e*y;
+      const yCoeff=a*e-d*b,yConst=a*f-d*c;
+      const xConst=c-b*y;
+      const prompt=`Solve the system ${expr2(a,b)} = ${num(c)}, ${expr2(d,e)} = ${num(f)}.`;
+      const answer=`${col([x,y])}`;
+      const steps=[
+        `Write the augmented matrix for the system.`,
+        `${matrixHtml([[num(a),num(b),'|',num(c)],[num(d),num(e),'|',num(f)]])}`,
+        `Eliminate x using R<sub>2</sub> &larr; ${num(a)}R<sub>2</sub> ${d<0?'+':'&minus;'} ${Math.abs(d)}R<sub>1</sub>.`,
+        `${matrixHtml([[num(a),num(b),'|',num(c)],['0',num(yCoeff),'|',num(yConst)]])}`,
+        `${num(yCoeff)}y = ${num(yConst)}, so y = ${vfrac(yConst,yCoeff)} = ${num(y)}.`,
+        `Substitute y = ${num(y)} into ${expr2(a,b)} = ${num(c)}.`,
+        `${num(a)}x ${signed(b*y)} = ${num(c)}, so ${num(a)}x = ${num(xConst)} and x = ${vfrac(xConst,a)} = ${num(x)}.`,
+        `Solution vector: ${col([x,y])}.`
+      ];
+      return problem(prompt,answer,steps,'solve_2x2_elimination');
+    }
+
+    function makeRowOperation(){
+      const r1=[randInt(-4,5),nonZero(-4,5),'|',randInt(-8,8)];
+      const r2=[randInt(-4,5),nonZero(-4,5),'|',randInt(-8,8)];
+      const k=choice([-3,-2,2,3]);
+      const next=[Number(r2[0])+k*Number(r1[0]),Number(r2[1])+k*Number(r1[1]),'|',Number(r2[3])+k*Number(r1[3])];
+      const op=k>0?`R<sub>2</sub> &larr; R<sub>2</sub> + ${k}R<sub>1</sub>`:`R<sub>2</sub> &larr; R<sub>2</sub> &minus; ${Math.abs(k)}R<sub>1</sub>`;
+      const prompt=`Carry out ${op} on ${matrixHtml([[num(r1[0]),num(r1[1]),'|',num(r1[3])],[num(r2[0]),num(r2[1]),'|',num(r2[3])]])}.`;
+      const answer=`${matrixHtml([[num(r1[0]),num(r1[1]),'|',num(r1[3])],[num(next[0]),num(next[1]),'|',num(next[3])]])}`;
+      const steps=[
+        `Keep R<sub>1</sub> unchanged.`,
+        `New R<sub>2</sub> first entry: ${num(r2[0])} ${k>0?'+':'&minus;'} ${Math.abs(k)}(${num(r1[0])}) = ${num(next[0])}.`,
+        `New R<sub>2</sub> second entry: ${num(r2[1])} ${k>0?'+':'&minus;'} ${Math.abs(k)}(${num(r1[1])}) = ${num(next[1])}.`,
+        `New R<sub>2</sub> constant: ${num(r2[3])} ${k>0?'+':'&minus;'} ${Math.abs(k)}(${num(r1[3])}) = ${num(next[3])}.`,
+        `${answer}`
+      ];
+      return problem(prompt,answer,steps,'row_operation');
+    }
+
+    function makeAugmentedMatrix(){
+      const a=nonZero(-5,5),b=nonZero(-5,5),c=nonZero(-5,5);
+      const d=nonZero(-5,5),e=nonZero(-5,5),f=nonZero(-5,5);
+      const g=nonZero(-5,5),h=nonZero(-5,5),i=nonZero(-5,5);
+      const p=randInt(-9,9),q=randInt(-9,9),r=randInt(-9,9);
+      const prompt=`Write the augmented matrix for ${expr3(a,b,c)} = ${num(p)}, ${expr3(d,e,f)} = ${num(q)}, ${expr3(g,h,i)} = ${num(r)}.`;
+      const answer=`${matrixHtml([[num(a),num(b),num(c),'|',num(p)],[num(d),num(e),num(f),'|',num(q)],[num(g),num(h),num(i),'|',num(r)]])}`;
+      const steps=[
+        `The coefficient matrix uses the coefficients of x, y, and z in order.`,
+        `A = ${matNum([[a,b,c],[d,e,f],[g,h,i]])}`,
+        `The constants form the final augmented column.`,
+        `${answer}`
+      ];
+      return problem(prompt,answer,steps,'augmented_matrix');
+    }
+
+    function makeSolve3Triangular(){
+      const a=nonZero(1,4),b=nonZero(-4,4),c=nonZero(-4,4),d=nonZero(1,5),e=nonZero(-4,4),f=nonZero(1,5);
+      const x=nonZero(-3,4),y=nonZero(-3,4),z=nonZero(-3,4);
+      const r1=a*x+b*y+c*z,r2=d*y+e*z,r3=f*z;
+      const prompt=`Solve the triangular system ${expr3(a,b,c)} = ${num(r1)}, ${expr2(d,e,'y','z')} = ${num(r2)}, ${num(f)}z = ${num(r3)}.`;
+      const answer=`${col([x,y,z])}`;
+      const steps=[
+        `Start from the last equation because it contains only z.`,
+        `${num(f)}z = ${num(r3)}, so z = ${vfrac(r3,f)} = ${num(z)}.`,
+        `Substitute z = ${num(z)} into ${expr2(d,e,'y','z')} = ${num(r2)}.`,
+        `${num(d)}y ${signed(e*z)} = ${num(r2)}, so ${num(d)}y = ${num(r2-e*z)} and y = ${vfrac(r2-e*z,d)} = ${num(y)}.`,
+        `Substitute y = ${num(y)} and z = ${num(z)} into ${expr3(a,b,c)} = ${num(r1)}.`,
+        `${num(a)}x ${signed(b*y)} ${signed(c*z)} = ${num(r1)}, so ${num(a)}x = ${num(r1-b*y-c*z)} and x = ${vfrac(r1-b*y-c*z,a)} = ${num(x)}.`,
+        `Solution vector: ${col([x,y,z])}.`
+      ];
+      return problem(prompt,answer,steps,'solve_3x3_triangular');
+    }
+
+    function independentPair(){
+      let u,v,det=0;
+      while(det===0){
+        u=[nonZero(-4,4),nonZero(-4,4)];
+        v=[nonZero(-4,4),nonZero(-4,4)];
+        det=det2(u[0],v[0],u[1],v[1]);
+      }
+      return [u,v,det];
+    }
+
+    function makeLinearCombination(){
+      const [u,v]=independentPair();
+      const p=nonZero(-4,4),q=nonZero(-4,4);
+      const w=[p*u[0]+q*v[0],p*u[1]+q*v[1]];
+      const prompt=`Express ${col(w)} as a linear combination of ${col(u)} and ${col(v)}.`;
+      const answer=`${col(w)} = ${num(p)}${col(u)} ${q<0?'&minus;':'+'} ${Math.abs(q)}${col(v)}`;
+      const steps=[
+        `Let ${col(w)} = a${col(u)} + b${col(v)}.`,
+        `Equating components gives ${num(u[0])}a ${signed(v[0])}b = ${num(w[0])} and ${num(u[1])}a ${signed(v[1])}b = ${num(w[1])}.`,
+        `Solving the two simultaneous equations gives a = ${num(p)} and b = ${num(q)}.`,
+        `${col(w)} = ${num(p)}${col(u)} ${q<0?'&minus;':'+'} ${Math.abs(q)}${col(v)}.`
+      ];
+      return problem(prompt,answer,steps,'linear_combination');
+    }
+
+    function makeSpanCheck(){
+      const base=[nonZero(-4,4),nonZero(-4,4)];
+      const k=choice([-3,-2,2,3]);
+      const v=[k*base[0],k*base[1]];
+      const yes=Math.random()<0.55;
+      const t=nonZero(-4,4);
+      let w=yes?[t*base[0],t*base[1]]:[t*base[0]+1,t*base[1]];
+      if(!yes&&base[1]===0)w=[t*base[0],1];
+      const prompt=`Decide whether ${col(w)} is in span{${col(base)}, ${col(v)}}.`;
+      const answer=yes?'Yes, the vector is in the span.':'No, the vector is not in the span.';
+      const steps=yes?[
+        `${col(v)} = ${num(k)}${col(base)}, so both given vectors lie on the same line through the origin.`,
+        `${col(w)} = ${num(t)}${col(base)}.`,
+        `Therefore ${col(w)} is a scalar multiple of one of the spanning vectors, so it is in the span.`
+      ]:[
+        `${col(v)} = ${num(k)}${col(base)}, so the span is the line containing scalar multiples of ${col(base)}.`,
+        `For ${col(w)} to be in the span, the component ratios must match.`,
+        `The ratios do not match, so no scalar t gives ${col(w)} = t${col(base)}.`,
+        `Therefore ${col(w)} is not in the span.`
+      ];
+      return problem(prompt,answer,steps,'span_check');
+    }
+
+    function makeIndependence3d(){
+      const independent=Math.random()<0.55;
+      let v1=[1,0,randInt(-2,2)],v2=[0,1,randInt(-2,2)],v3;
+      if(independent)v3=[0,0,nonZero(1,4)];
+      else v3=[v1[0]+v2[0],v1[1]+v2[1],v1[2]+v2[2]];
+      const prompt=`Determine whether ${col(v1)}, ${col(v2)}, and ${col(v3)} are linearly independent.`;
+      const answer=independent?'Linearly independent.':'Linearly dependent.';
+      const steps=independent?[
+        `Put the vectors as columns of a matrix.`,
+        `${matNum([[v1[0],v2[0],v3[0]],[v1[1],v2[1],v3[1]],[v1[2],v2[2],v3[2]]])}`,
+        `This matrix is triangular after reading the first two rows, and the third pivot is ${num(v3[2])}.`,
+        `There is a pivot in each column, so the only solution to a${col(v1)} + b${col(v2)} + c${col(v3)} = ${col([0,0,0])} is a = b = c = 0.`,
+        `Therefore the vectors are linearly independent.`
+      ]:[
+        `Check whether one vector can be formed from the others.`,
+        `${col(v1)} + ${col(v2)} = ${col(v3)}.`,
+        `Rearrange this as ${col(v1)} + ${col(v2)} &minus; ${col(v3)} = ${col([0,0,0])}.`,
+        `This is a non-zero linear combination that gives the zero vector, so the vectors are linearly dependent.`
+      ];
+      return problem(prompt,answer,steps,'independence_3d');
+    }
+
+    function makeBasisR2(){
+      const [u,v,det]=independentPair();
+      const dependent=Math.random()<0.35;
+      const vUse=dependent?[2*u[0],2*u[1]]:v;
+      const detUse=det2(u[0],vUse[0],u[1],vUse[1]);
+      const prompt=`Do ${col(u)} and ${col(vUse)} form a basis for R<sup>2</sup>?`;
+      const answer=detUse===0?'No, they do not form a basis for R<sup>2</sup>.':'Yes, they form a basis for R<sup>2</sup>.';
+      const steps=[
+        `Two vectors form a basis for R<sup>2</sup> when the determinant of the matrix with those vectors as columns is not zero.`,
+        `A = ${matNum([[u[0],vUse[0]],[u[1],vUse[1]]])}`,
+        `det(A) = (${num(u[0])})(${num(vUse[1])}) &minus; (${num(vUse[0])})(${num(u[1])}) = ${num(detUse)}.`,
+        detUse===0?'The determinant is zero, so the vectors are dependent and do not form a basis.':'The determinant is not zero, so the vectors are independent and span R<sup>2</sup>.'
+      ];
+      return problem(prompt,answer,steps,'basis_r2');
+    }
+
+    function makeStandardMatrix(){
+      const e1=[nonZero(-4,4),nonZero(-4,4)],e2=[nonZero(-4,4),nonZero(-4,4)];
+      const v=[nonZero(-3,4),nonZero(-3,4)];
+      const image=[e1[0]*v[0]+e2[0]*v[1],e1[1]*v[0]+e2[1]*v[1]];
+      const prompt=`A linear transformation has T(${col([1,0])}) = ${col(e1)} and T(${col([0,1])}) = ${col(e2)}. Find the standard matrix and T(${col(v)}).`;
+      const answer=`A = ${matNum([[e1[0],e2[0]],[e1[1],e2[1]]])}, T(${col(v)}) = ${col(image)}`;
+      const steps=[
+        `The columns of the standard matrix are the images of the standard basis vectors.`,
+        `A = ${matNum([[e1[0],e2[0]],[e1[1],e2[1]]])}.`,
+        `Now multiply A by the vector.`,
+        `${matNum([[e1[0],e2[0]],[e1[1],e2[1]]])}${col(v)} = ${colRaw([`${num(e1[0])}(${num(v[0])}) ${signed(e2[0]*v[1])}`,`${num(e1[1])}(${num(v[0])}) ${signed(e2[1]*v[1])}`])} = ${col(image)}.`
+      ];
+      return problem(prompt,answer,steps,'standard_matrix');
+    }
+
+    function makeKernelSingular(){
+      const a=nonZero(-4,4),b=nonZero(-4,4),k=choice([-3,-2,2,3]);
+      const A=[[a,b],[k*a,k*b]];
+      const basis=[b,-a];
+      const prompt=`Find the kernel of A = ${matNum(A)}.`;
+      const answer=`ker(A) = span{${col(basis)}}`;
+      const steps=[
+        `Solve A${colRaw(['x','y'])} = ${col([0,0])}.`,
+        `${num(a)}x ${signed(b)}y = 0 and ${num(k*a)}x ${signed(k*b)}y = 0.`,
+        `The second equation is ${num(k)} times the first, so only ${num(a)}x ${signed(b)}y = 0 is needed.`,
+        `Choose x = ${num(b)}t and y = ${num(-a)}t. Then ${num(a)}(${num(b)}t) ${signed(b*(-a))}t = 0.`,
+        `${colRaw(['x','y'])} = t${col(basis)}, so ker(A) = span{${col(basis)}}.`
+      ];
+      return problem(prompt,answer,steps,'kernel_singular');
+    }
+
+    function makeImageBasis(){
+      const c1=[1,nonZero(-3,3)],c2=[0,nonZero(1,4)],c3=[c1[0]+c2[0],c1[1]+c2[1]];
+      const A=[[c1[0],c2[0],c3[0]],[c1[1],c2[1],c3[1]]];
+      const prompt=`Find a basis for the image of A = ${matNum(A)} and state the rank.`;
+      const answer=`Image basis: {${col(c1)}, ${col(c2)}}. Rank = 2.`;
+      const steps=[
+        `The image is spanned by the columns of A.`,
+        `Column 1 is ${col(c1)}, column 2 is ${col(c2)}, and column 3 is ${col(c3)}.`,
+        `Column 3 = column 1 + column 2, so it does not add a new direction.`,
+        `Columns 1 and 2 are not scalar multiples of each other, so they are independent.`,
+        `A basis for the image is {${col(c1)}, ${col(c2)}} and the rank is 2.`
+      ];
+      return problem(prompt,answer,steps,'image_basis');
+    }
+
+    function makeRankNullity(){
+      const p=nonZero(-4,4),q=nonZero(-4,4);
+      const R=[[1,0,p],[0,1,q]];
+      const prompt=`For the row-reduced matrix R = ${matNum(R)}, find the rank, nullity, and kernel of the associated map from R<sup>3</sup> to R<sup>2</sup>.`;
+      const answer=`rank = 2, nullity = 1, ker = span{${col([-p,-q,1])}}`;
+      const steps=[
+        `There are pivots in columns 1 and 2, so rank = 2.`,
+        `There are 3 columns in total, so nullity = 3 &minus; 2 = 1.`,
+        `Solve R${colRaw(['x','y','z'])} = ${col([0,0])}.`,
+        `x ${signed(p)}z = 0, so x = ${num(-p)}z.`,
+        `y ${signed(q)}z = 0, so y = ${num(-q)}z.`,
+        `Let z = t. Then ${colRaw(['x','y','z'])} = t${col([-p,-q,1])}.`
+      ];
+      return problem(prompt,answer,steps,'rank_nullity');
+    }
+
+    function makeChangeBasisCoordinates(){
+      const [u,v]=independentPair();
+      const p=nonZero(-4,4),q=nonZero(-4,4);
+      const w=[p*u[0]+q*v[0],p*u[1]+q*v[1]];
+      const prompt=`For the basis B = {${col(u)}, ${col(v)}}, find [${col(w)}]<sub>B</sub>.`;
+      const answer=`[${col(w)}]<sub>B</sub> = ${col([p,q])}`;
+      const steps=[
+        `Find scalars a and b such that ${col(w)} = a${col(u)} + b${col(v)}.`,
+        `Equating components gives ${num(u[0])}a ${signed(v[0])}b = ${num(w[0])} and ${num(u[1])}a ${signed(v[1])}b = ${num(w[1])}.`,
+        `Solving gives a = ${num(p)} and b = ${num(q)}.`,
+        `Therefore [${col(w)}]<sub>B</sub> = ${col([p,q])}.`
+      ];
+      return problem(prompt,answer,steps,'change_basis_coordinates');
+    }
+
+    function makeChangeBasisMatrix(){
+      const [u,v,det]=independentPair();
+      const prompt=`For the basis B = {${col(u)}, ${col(v)}}, find the matrix that converts B-coordinates into standard coordinates.`;
+      const answer=`P<sub>B</sub> = ${matNum([[u[0],v[0]],[u[1],v[1]]])}`;
+      const steps=[
+        `A coordinate vector ${colRaw(['a','b'])}<sub>B</sub> means a${col(u)} + b${col(v)}.`,
+        `The conversion matrix uses the basis vectors as its columns.`,
+        `P<sub>B</sub> = ${matNum([[u[0],v[0]],[u[1],v[1]]])}.`,
+        `Check that det(P<sub>B</sub>) = ${num(det)}, which is not zero, so B is a valid basis.`
+      ];
+      return problem(prompt,answer,steps,'change_basis_matrix');
+    }
+
+    function makeLinearMapFromBasis(){
+      const [u,v]=independentPair();
+      const p=nonZero(-3,4),q=nonZero(-3,4);
+      const w=[p*u[0]+q*v[0],p*u[1]+q*v[1]];
+      const Tu=[nonZero(-4,4),nonZero(-4,4)],Tv=[nonZero(-4,4),nonZero(-4,4)];
+      const image=[p*Tu[0]+q*Tv[0],p*Tu[1]+q*Tv[1]];
+      const prompt=`Given T(${col(u)}) = ${col(Tu)} and T(${col(v)}) = ${col(Tv)}, find T(${col(w)}).`;
+      const answer=`T(${col(w)}) = ${col(image)}`;
+      const steps=[
+        `First express the input vector using the basis vectors.`,
+        `${col(w)} = ${num(p)}${col(u)} ${q<0?'&minus;':'+'} ${Math.abs(q)}${col(v)}.`,
+        `Use linearity: T(a${col(u)} + b${col(v)}) = aT(${col(u)}) + bT(${col(v)}).`,
+        `T(${col(w)}) = ${num(p)}${col(Tu)} ${q<0?'&minus;':'+'} ${Math.abs(q)}${col(Tv)}.`,
+        `T(${col(w)}) = ${col(image)}.`
+      ];
+      return problem(prompt,answer,steps,'linear_map_from_basis');
+    }
+
+    function makeRankNullityTheorem(){
+      const rank=choice([1,2]);
+      const domain=3;
+      const nullity=domain-rank;
+      const prompt=`A linear map T: R<sup>3</sup> &rarr; R<sup>2</sup> has rank ${rank}. Use rank-nullity to find nullity(T) and decide whether T can be one-to-one.`;
+      const answer=`nullity(T) = ${nullity}. ${nullity===0?'It can be one-to-one.':'It cannot be one-to-one.'}`;
+      const steps=[
+        `Rank-nullity states: rank(T) + nullity(T) = dimension of the domain.`,
+        `${rank} + nullity(T) = ${domain}.`,
+        `nullity(T) = ${domain} &minus; ${rank} = ${nullity}.`,
+        nullity===0?'A zero nullity means only the zero vector maps to zero, so T can be one-to-one.':'A non-zero nullity means there is at least one non-zero vector in the kernel, so T cannot be one-to-one.'
+      ];
+      return problem(prompt,answer,steps,'rank_nullity_theorem');
+    }
+
+    function generateProblemFor(type){
+      const generators={
+        solve_2x2_elimination:makeSolve2x2,
+        row_operation:makeRowOperation,
+        augmented_matrix:makeAugmentedMatrix,
+        solve_3x3_triangular:makeSolve3Triangular,
+        systems_mixed:()=>generateProblemFor(choice(['solve_2x2_elimination','row_operation','augmented_matrix','solve_3x3_triangular'])),
+        linear_combination:makeLinearCombination,
+        span_check:makeSpanCheck,
+        independence_3d:makeIndependence3d,
+        basis_r2:makeBasisR2,
+        space_mixed:()=>generateProblemFor(choice(['linear_combination','span_check','independence_3d','basis_r2'])),
+        standard_matrix:makeStandardMatrix,
+        kernel_singular:makeKernelSingular,
+        image_basis:makeImageBasis,
+        rank_nullity:makeRankNullity,
+        map_mixed:()=>generateProblemFor(choice(['standard_matrix','kernel_singular','image_basis','rank_nullity'])),
+        change_basis_coordinates:makeChangeBasisCoordinates,
+        change_basis_matrix:makeChangeBasisMatrix,
+        linear_map_from_basis:makeLinearMapFromBasis,
+        rank_nullity_theorem:makeRankNullityTheorem,
+        basis_mixed:()=>generateProblemFor(choice(['change_basis_coordinates','change_basis_matrix','linear_map_from_basis','rank_nullity_theorem']))
+      };
+      return generators[type]();
+    }
+
+    function populateDropdown(){
+      const select=document.getElementById('type-dropdown');
+      const types=levelConfigs[currentLevel].types;
+      select.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      select.value=currentType;
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';answersVisible=false;stepsVisible=false;
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index===level-1));
+      document.getElementById('level-title').textContent=levelConfigs[level].title;
+      document.getElementById('level-description').textContent=levelConfigs[level].description;
+      populateDropdown();
+      showBlankPage();
+    }
+
+    function typeChanged(){
+      currentType=document.getElementById('type-dropdown').value;
+      answersVisible=false;stepsVisible=false;
+      if(currentType==='select')showBlankPage();else generateNewSet();
+    }
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').textContent='Select a question type';
+      document.getElementById('problem-set-header').className='problem-set-header visible';
+      document.getElementById('set-instruction').textContent='Choose a type, then press New to generate linear algebra questions.';
+      document.getElementById('set-instruction').className='set-instruction visible';
+      document.getElementById('problem-list').innerHTML='';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      problems=[];answersVisible=false;stepsVisible=false;
+      const config=levelConfigs[currentLevel];
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<80){
+        const type=currentType==='all'?choice(config.types.filter(t=>!t.endsWith('_mixed'))):currentType;
+        const p=generateProblemFor(type);
+        const key=p.prompt;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed linear algebra question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|&larr;|span|matrix-wrap|det|rank|nullity|ker|span/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div class="equation">${p.prompt}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;timerActive=true;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      display.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        display.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)display.className='timer-display warning';
+        if(timeRemaining<=0){stopTimer();display.textContent='Time Up';display.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;timerActive=false;
+      const display=document.getElementById('timer-display');
+      if(display){display.textContent='Ready';display.className='timer-display'}
+    }
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+</body>
+</html>
