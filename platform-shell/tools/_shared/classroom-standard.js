@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = "1.0.0";
+  const VERSION = "1.1.0";
   const root = document.documentElement;
   if (root.dataset.kaizenClassroomStandard === VERSION) return;
   root.dataset.kaizenClassroomStandard = VERSION;
@@ -148,8 +148,8 @@
     timer.className = "kaizen-control-timer";
 
     if (levelInfo) context.appendChild(levelInfo);
-    if (typeControl && typeControl.parentElement !== levelInfo) context.appendChild(typeControl);
-    if (dropdown && dropdown.parentElement !== levelInfo && dropdown.parentElement !== typeControl) context.appendChild(dropdown);
+    if (typeControl && typeControl !== levelInfo) context.appendChild(typeControl);
+    if (dropdown && dropdown !== typeControl && !typeControl?.contains(dropdown)) context.appendChild(dropdown);
 
     actionHosts.forEach((host) => {
       if (!host.closest(".kaizen-standard-controlbar")) actions.appendChild(host);

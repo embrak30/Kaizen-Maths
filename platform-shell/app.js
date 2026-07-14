@@ -1,7 +1,7 @@
 const SITE_NAME = "Kaizen Maths";
 const SITE_TITLE = "Kaizen Maths | Complete Mathematics Workspace for Teachers";
 const SITE_DESCRIPTION = "Kaizen Maths is a complete mathematics workspace and virtual textbook for teachers. Generate unlimited curriculum-aligned questions, worked examples, bespoke worksheets, assessments, and classroom practice in minutes.";
-const CLASSROOM_STANDARD_VERSION = "classroom-standard-1";
+const CLASSROOM_STANDARD_VERSION = "classroom-standard-2";
 
 function addQueryParam(url, key, value) {
   const separator = url.includes("?") ? "&" : "?";
@@ -2985,9 +2985,16 @@ function filteredTools(extraCategory) {
 
 function setActiveNav() {
   const path = location.hash || "#/";
+  const cleanPath = path.split("?")[0];
+  const parts = cleanPath.replace(/^#\/?/, "").split("/");
+  const toolRouteSlug = ["tools", "classroom"].includes(parts[0]) ? parts[1] || "" : "";
+  const activeTool = toolRouteSlug ? tools.find((tool) => tool.slug === toolRouteSlug) : null;
+  const activeCollectionHref = activeTool ? `#/collections/${categorySlug(activeTool.category)}` : "";
   document.querySelectorAll(".nav-list a, .sidebar-utility a").forEach((link) => {
     const href = link.getAttribute("href");
-    link.classList.toggle("active", href === path || (href !== "#/" && path.startsWith(href)));
+    const isCurrentRoute = href === cleanPath || (href !== "#/" && cleanPath.startsWith(href));
+    const isToolParentCollection = Boolean(activeCollectionHref && href === activeCollectionHref);
+    link.classList.toggle("active", isCurrentRoute || isToolParentCollection);
   });
 }
 

@@ -85,10 +85,13 @@ html.kaizen-classroom-standard :where(.teacher-tab) {
   top: 0;
   z-index: 850;
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(340px, auto) minmax(250px, auto);
-  gap: 10px;
-  align-items: center;
-  padding: 9px 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "context context"
+    "actions timer";
+  gap: 7px 12px;
+  align-items: start;
+  padding: 8px 12px 9px;
   border-bottom: 1px solid var(--kaizen-line);
   background:
     linear-gradient(90deg, rgba(240, 253, 250, 0.96), rgba(255, 247, 237, 0.78)),
@@ -97,22 +100,24 @@ html.kaizen-classroom-standard :where(.teacher-tab) {
 }
 
 .kaizen-control-context {
+  grid-area: context;
   min-width: 0;
   display: grid;
-  grid-template-columns: minmax(190px, 1fr) minmax(190px, 340px);
-  gap: 8px;
-  align-items: end;
+  grid-template-columns: 1fr;
+  gap: 5px;
+  align-items: start;
 }
 
 .kaizen-control-context :where(.level-info) {
   min-width: 0 !important;
+  width: 100% !important;
 }
 
 .kaizen-control-context :where(.level-info h2, .level-info h3) {
-  margin: 0 0 3px !important;
+  margin: 0 0 2px !important;
   color: var(--kaizen-teal) !important;
   font-family: var(--kaizen-ui-font) !important;
-  font-size: 1.02rem !important;
+  font-size: 0.98rem !important;
   font-weight: 900 !important;
   line-height: 1.15 !important;
 }
@@ -121,13 +126,14 @@ html.kaizen-classroom-standard :where(.teacher-tab) {
   margin: 0 !important;
   color: var(--kaizen-muted) !important;
   font-family: var(--kaizen-ui-font) !important;
-  font-size: 0.82rem !important;
+  font-size: 0.8rem !important;
   font-weight: 650 !important;
   line-height: 1.25 !important;
 }
 
 .kaizen-control-context :where(.dropdown-container, .type-control) {
   min-width: 0 !important;
+  width: min(100%, 820px) !important;
   display: grid !important;
   gap: 4px !important;
   margin: 0 !important;
@@ -146,7 +152,8 @@ html.kaizen-classroom-standard :where(.teacher-tab) {
   width: 100% !important;
   min-width: 0 !important;
   max-width: 100% !important;
-  height: 36px !important;
+  min-height: 36px !important;
+  height: auto !important;
   border: 1px solid #99f6e4 !important;
   border-radius: 8px !important;
   background: white !important;
@@ -159,9 +166,10 @@ html.kaizen-classroom-standard :where(.teacher-tab) {
 }
 
 .kaizen-control-actions {
+  grid-area: actions;
   min-width: 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
@@ -177,6 +185,7 @@ html.kaizen-classroom-standard :where(.teacher-tab) {
 }
 
 .kaizen-control-timer {
+  grid-area: timer;
   min-width: 0;
   display: flex;
   justify-content: flex-end;
@@ -307,6 +316,10 @@ html.kaizen-classroom-fit :where(.problems-section, .workspace) {
 @media (max-width: 980px) {
   .kaizen-standard-controlbar {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "context"
+      "actions"
+      "timer";
   }
 
   .kaizen-control-context {

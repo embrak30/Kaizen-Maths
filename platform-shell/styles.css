@@ -245,6 +245,15 @@ a {
   box-shadow: 0 8px 18px rgba(23,184,179,0.18);
 }
 
+.nav-list a.nav-child.active {
+  background: linear-gradient(90deg, rgba(20,184,166,0.28), rgba(249,115,22,0.22));
+  box-shadow: inset 3px 0 0 #f97316, 0 8px 18px rgba(20,184,166,0.10);
+}
+
+.nav-list a.nav-child.active::before {
+  background: #f97316;
+}
+
 .sidebar-utility {
   flex: 0 0 auto;
   display: grid;
