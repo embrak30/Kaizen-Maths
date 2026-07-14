@@ -1505,6 +1505,25 @@ const tools = [
     ]
   },
   {
+    slug: "poisson-distribution",
+    title: "Poisson Distribution",
+    category: "Statistics",
+    level: "A-Level / IB",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Generate Poisson distribution practice covering exact probabilities, cumulative probabilities, complements, rates, independent sums, conditional probabilities, parameter questions, and Poisson approximation to binomial.",
+    tags: ["statistics", "probability", "poisson distribution", "discrete distributions", "cumulative probability", "rate", "lambda", "independent poisson variables", "poisson approximation", "binomial approximation", "A-Level", "IB"],
+    toolPath: "tools/poisson-distribution/index.html?v=poisson-distribution-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on exact probabilities, cumulative probabilities, complements, mean, and variance.",
+      "Level 2 uses contextual rate questions, adjusted intervals, at most, at least, and between statements.",
+      "Level 3 covers independent Poisson sums, conditional probabilities, and finding lambda from probability information.",
+      "Level 4 introduces Poisson approximation to binomial and model-choice reasoning."
+    ]
+  },
+  {
     slug: "kaizen-large-data-set",
     title: "Large Data Set Practice",
     category: "Statistics",
@@ -2166,6 +2185,7 @@ const subjectToolGroups = {
     "continuous-random-variables": "Random Variables and Distributions",
     "normal-distribution": "Random Variables and Distributions",
     "binomial-geometric-distribution": "Random Variables and Distributions",
+    "poisson-distribution": "Random Variables and Distributions",
     "correlation-regression": "Regression and Large Data",
     "hypothesis-testing": "Inference"
   },
@@ -7615,7 +7635,12 @@ const curatedRelatedToolSlugs = {
   "venn-diagrams": ["tree-diagrams-conditional-probability", "permutations-combinations", "binomial-geometric-distribution", "discrete-random-variables"],
   "tree-diagrams-conditional-probability": ["venn-diagrams", "permutations-combinations", "binomial-geometric-distribution", "discrete-random-variables"],
   "permutations-combinations": ["tree-diagrams-conditional-probability", "venn-diagrams", "binomial-geometric-distribution", "discrete-random-variables"],
-  "continuous-random-variables": ["normal-distribution", "discrete-random-variables", "integration", "hypothesis-testing"],
+  "discrete-random-variables": ["binomial-geometric-distribution", "poisson-distribution", "normal-distribution", "hypothesis-testing"],
+  "binomial-geometric-distribution": ["poisson-distribution", "discrete-random-variables", "normal-distribution", "hypothesis-testing"],
+  "poisson-distribution": ["binomial-geometric-distribution", "discrete-random-variables", "normal-distribution", "hypothesis-testing"],
+  "normal-distribution": ["poisson-distribution", "binomial-geometric-distribution", "hypothesis-testing", "continuous-random-variables"],
+  "continuous-random-variables": ["normal-distribution", "poisson-distribution", "discrete-random-variables", "integration"],
+  "hypothesis-testing": ["poisson-distribution", "binomial-geometric-distribution", "normal-distribution", "discrete-random-variables"],
   "projectiles": ["equations-of-motion", "motion-graphs-constant-acceleration", "newtons-second-law", "momentum"],
   "momentum": ["projectiles", "equations-of-motion", "newtons-second-law", "motion-graphs-constant-acceleration"],
   "moments": ["newtons-second-law", "projectiles", "equations-of-motion", "motion-graphs-constant-acceleration"],

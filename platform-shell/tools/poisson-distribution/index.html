@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poisson Distribution</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f4f7fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#0f5f6f;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#0f5f6f;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #f97316;color:#0f5f6f;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1240px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#0f5f6f;background-image:linear-gradient(135deg,rgba(255,255,255,.16),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e5f3f5}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e5f3f5;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}.tab.active{background:#fff;color:#0f5f6f;border-bottom-color:#f97316}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d3e9ed;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#0f5f6f;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:430px;padding:8px 10px;border:2px solid #c3e2e8;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #c3e2e8;border-radius:6px;background:#fff;color:#0f5f6f;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#0f5f6f;color:#0f5f6f}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#0f5f6f}.btn-success{background:#2f855a}.btn-warning{background:#f97316}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#0f5f6f;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #bae6eb;border-radius:6px;background:#ecfeff;color:#0f5f6f;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-left:4px solid #0f5f6f;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:center;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#0f5f6f;color:#fff;font-weight:850}
+    .equation{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.17em;font-weight:500;line-height:1.48;color:#172033;overflow-x:auto;max-width:100%}.problem-answer{display:none;white-space:normal;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #0f5f6f;border-radius:6px;background:#f0fbff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#0f5f6f;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#223043}.step-equation{margin:6px 0;padding:7px;border:1px solid #d5edf4;border-radius:5px;background:#fff;color:#0f4f66;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:500}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column;align-items:flex-start}.equation{font-size:1.02em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Poisson Distribution</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool builds Poisson distribution fluency through exact probabilities, cumulative probabilities, complements, rates, independent sums, conditional probabilities, and approximation modelling.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Formula use, exact probabilities, cumulative probabilities, complements, mean and variance.</li>
+        <li><strong>Level 2:</strong> Context questions involving rates, adjusted time intervals, at most, at least, and between statements.</li>
+        <li><strong>Level 3:</strong> Independent Poisson variables, sums, conditional probabilities, and parameter questions.</li>
+        <li><strong>Level 4:</strong> Poisson approximation to binomial and mixed model-choice questions.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>For X ~ Po(lambda), both the mean and variance are lambda.</li>
+        <li>Students should state the model and parameter before substituting into the formula.</li>
+        <li>Use complements for at least questions to avoid long sums.</li>
+        <li>Independent Poisson variables add: if X and Y are independent, X + Y is Po(lambda1 + lambda2).</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Poisson Distribution</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Formula</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Contexts</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Parameters</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Approximation</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Formula and Basic Probabilities</h3>
+        <p id="level-description">Use the Poisson formula for exact, cumulative, and complement probabilities.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Formula and Basic Probabilities',description:'Use the Poisson formula for exact, cumulative, and complement probabilities.',types:['exact_probability','cumulative_probability','complement_probability','mean_variance','level1_mixed']},
+      2:{title:'Level 2: Rates and Contexts',description:'Adjust the Poisson parameter for time or space intervals and interpret probability statements.',types:['rate_adjustment','between_context','at_least_context','at_most_context','level2_mixed']},
+      3:{title:'Level 3: Parameters, Sums and Conditional Probability',description:'Use independent sums, conditional probabilities, and parameter information.',types:['poisson_sum','conditional_probability','parameter_from_zero','parameter_from_ratio','level3_mixed']},
+      4:{title:'Level 4: Approximation and Model Choice',description:'Use Poisson approximation to binomial and choose suitable models in context.',types:['binomial_approximation','approx_cumulative','model_choice','approximation_mixed']}
+    };
+
+    const typeDisplayNames={
+      exact_probability:'Type 1: Exact Poisson probability',
+      cumulative_probability:'Type 2: Cumulative probability',
+      complement_probability:'Type 3: Complement probability',
+      mean_variance:'Type 4: Mean and variance',
+      level1_mixed:'Type 5: Mixed formula practice',
+      rate_adjustment:'Type 1: Adjust a rate',
+      between_context:'Type 2: Between two values',
+      at_least_context:'Type 3: At least in context',
+      at_most_context:'Type 4: At most in context',
+      level2_mixed:'Type 5: Mixed context practice',
+      poisson_sum:'Type 1: Sum of independent Poisson variables',
+      conditional_probability:'Type 2: Conditional probability',
+      parameter_from_zero:'Type 3: Find lambda from P(X = 0)',
+      parameter_from_ratio:'Type 4: Find lambda from a probability ratio',
+      level3_mixed:'Type 5: Mixed parameter practice',
+      binomial_approximation:'Type 1: Poisson approximation to binomial',
+      approx_cumulative:'Type 2: Approximate cumulative probability',
+      model_choice:'Type 3: Choose the distribution model',
+      approximation_mixed:'Type 4: Mixed approximation practice'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      exact_probability:'Use the Poisson formula to calculate each exact probability.',
+      cumulative_probability:'Write the cumulative probability as a sum of exact Poisson probabilities.',
+      complement_probability:'Use a complement where it makes the probability shorter.',
+      mean_variance:'Use the key facts for a Poisson distribution.',
+      level1_mixed:'Answer each basic Poisson distribution question.',
+      rate_adjustment:'Adjust lambda to match the interval in the question before calculating.',
+      between_context:'Translate the words into a Poisson interval probability.',
+      at_least_context:'Use a complement for at least statements where possible.',
+      at_most_context:'Use a cumulative probability for at most statements.',
+      level2_mixed:'Answer each contextual Poisson question.',
+      poisson_sum:'Use the addition rule for independent Poisson variables.',
+      conditional_probability:'Write the conditional probability as a fraction of two probabilities.',
+      parameter_from_zero:'Use P(X = 0) = e^(-lambda) to find lambda.',
+      parameter_from_ratio:'Use the ratio of consecutive probabilities to find lambda.',
+      level3_mixed:'Answer each parameter or combined Poisson question.',
+      binomial_approximation:'Use lambda = np, then approximate with a Poisson distribution.',
+      approx_cumulative:'Approximate the binomial model using a Poisson cumulative probability.',
+      model_choice:'Choose the distribution by checking the context and assumptions.',
+      approximation_mixed:'Answer each Poisson approximation or model-choice question.'
+    };
+
+    function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[randInt(0,arr.length-1)]}
+    function fact(n){let p=1;for(let i=2;i<=n;i++)p*=i;return p}
+    function poisson(lambda,k){return Math.exp(-lambda)*Math.pow(lambda,k)/fact(k)}
+    function cdf(lambda,r){let s=0;for(let k=0;k<=r;k++)s+=poisson(lambda,k);return s}
+    function fmt(n,dp=4){return Number(n).toFixed(dp)}
+    function nice(n){return String(n).replace('-', '&minus;')}
+    function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function lambdaText(lambda){return Number.isInteger(lambda)?String(lambda):fmt(lambda,3).replace(/0+$/,'').replace(/\.$/,'')}
+    function model(lambda){return `X ~ Po(${lambdaText(lambda)})`}
+    function exactFormula(lambda,k){return `${frac(`e<sup>&minus;${lambdaText(lambda)}</sup>${lambdaText(lambda)}<sup>${k}</sup>`,`${k}!`)}`}
+    function exactExpanded(lambda,k){return `${exactFormula(lambda,k)} = ${fmt(poisson(lambda,k))}`}
+    function exactTerms(lambda,from,to){const terms=[];for(let k=from;k<=to;k++)terms.push(`P(X = ${k})`);return terms.join(' + ')}
+    function exactValues(lambda,from,to){const terms=[];for(let k=from;k<=to;k++)terms.push(fmt(poisson(lambda,k)));return terms.join(' + ')}
+    function problem(prompt,answer,steps,type=currentType){return {prompt,answer,steps,instruction:typeInstructions[type]||'Answer each Poisson question.'}}
+
+    function makeExactProbability(){
+      const lambda=randInt(2,8),k=randInt(0,5),p=poisson(lambda,k);
+      const prompt=`If ${model(lambda)}, find P(X = ${k}).`;
+      const answer=`P(X = ${k}) = ${fmt(p)}.`;
+      const steps=[
+        `For X ~ Po(lambda), P(X = r) = ${frac('e<sup>&minus;lambda</sup>lambda<sup>r</sup>','r!')}.`,
+        `Here lambda = ${lambda} and r = ${k}.`,
+        `P(X = ${k}) = ${exactFormula(lambda,k)}.`,
+        `P(X = ${k}) = ${fmt(p)}.`
+      ];
+      return problem(prompt,answer,steps,'exact_probability');
+    }
+
+    function makeCumulativeProbability(){
+      const lambda=randInt(2,7),r=randInt(2,4),p=cdf(lambda,r);
+      const prompt=`If ${model(lambda)}, find P(X &le; ${r}).`;
+      const answer=`P(X &le; ${r}) = ${fmt(p)}.`;
+      const steps=[
+        `A cumulative probability is a sum of exact probabilities.`,
+        `P(X &le; ${r}) = ${exactTerms(lambda,0,r)}.`,
+        `P(X &le; ${r}) = ${exactValues(lambda,0,r)}.`,
+        `P(X &le; ${r}) = ${fmt(p)}.`
+      ];
+      return problem(prompt,answer,steps,'cumulative_probability');
+    }
+
+    function makeComplementProbability(){
+      const lambda=randInt(2,8),r=randInt(1,4),p=1-cdf(lambda,r-1);
+      const prompt=`If ${model(lambda)}, find P(X &ge; ${r}).`;
+      const answer=`P(X &ge; ${r}) = ${fmt(p)}.`;
+      const steps=[
+        `Use the complement because X &ge; ${r} has many possible values.`,
+        `P(X &ge; ${r}) = 1 &minus; P(X &le; ${r-1}).`,
+        `P(X &le; ${r-1}) = ${r-1<0?'0':exactTerms(lambda,0,r-1)}.`,
+        `P(X &le; ${r-1}) = ${fmt(cdf(lambda,r-1))}.`,
+        `P(X &ge; ${r}) = 1 &minus; ${fmt(cdf(lambda,r-1))} = ${fmt(p)}.`
+      ];
+      return problem(prompt,answer,steps,'complement_probability');
+    }
+
+    function makeMeanVariance(){
+      const lambda=randInt(2,12);
+      const prompt=`If ${model(lambda)}, state E(X), Var(X), and the standard deviation.`;
+      const answer=`E(X) = ${lambda}, Var(X) = ${lambda}, SD = ${fmt(Math.sqrt(lambda),3)}.`;
+      const steps=[
+        `For a Poisson distribution, the mean is lambda and the variance is also lambda.`,
+        `E(X) = lambda = ${lambda}.`,
+        `Var(X) = lambda = ${lambda}.`,
+        `Standard deviation = sqrt(lambda) = sqrt(${lambda}) = ${fmt(Math.sqrt(lambda),3)}.`
+      ];
+      return problem(prompt,answer,steps,'mean_variance');
+    }
+
+    function makeRateAdjustment(){
+      const perHour=choice([2,3,4,5,6]),minutes=choice([15,20,30,45,90]),lambda=perHour*minutes/60,k=randInt(0,Math.max(2,Math.round(lambda)+2)),p=poisson(lambda,k);
+      const prompt=`Calls arrive at an average rate of ${perHour} per hour. Find the probability of exactly ${k} calls in ${minutes} minutes.`;
+      const answer=`P(X = ${k}) = ${fmt(p)}.`;
+      const steps=[
+        `First adjust the mean rate to match the time interval.`,
+        `${minutes} minutes = ${frac(minutes,'60')} hours.`,
+        `lambda = ${perHour} x ${frac(minutes,'60')} = ${lambdaText(lambda)}.`,
+        `Let X be the number of calls in ${minutes} minutes, so ${model(lambda)}.`,
+        `P(X = ${k}) = ${exactFormula(lambda,k)} = ${fmt(p)}.`
+      ];
+      return problem(prompt,answer,steps,'rate_adjustment');
+    }
+
+    function makeBetweenContext(){
+      const lambda=choice([2.5,3,4,4.5,5]),a=randInt(1,3),b=randInt(a+2,a+4),p=cdf(lambda,b)-cdf(lambda,a-1);
+      const prompt=`The number of defects on a roll of fabric follows ${model(lambda)}. Find P(${a} &le; X &le; ${b}).`;
+      const answer=`P(${a} &le; X &le; ${b}) = ${fmt(p)}.`;
+      const steps=[
+        `Between ${a} and ${b} inclusive means add exact probabilities from ${a} to ${b}.`,
+        `P(${a} &le; X &le; ${b}) = ${exactTerms(lambda,a,b)}.`,
+        `P(${a} &le; X &le; ${b}) = ${exactValues(lambda,a,b)}.`,
+        `P(${a} &le; X &le; ${b}) = ${fmt(p)}.`
+      ];
+      return problem(prompt,answer,steps,'between_context');
+    }
+
+    function makeAtLeastContext(){
+      const lambda=choice([1.8,2.4,3.2,4.6,5.5]),r=randInt(2,5),p=1-cdf(lambda,r-1);
+      const prompt=`Emails arrive at random with mean ${lambdaText(lambda)} per minute. Find the probability of at least ${r} emails in a minute.`;
+      const answer=`P(X &ge; ${r}) = ${fmt(p)}.`;
+      const steps=[
+        `Let X be the number of emails in one minute, so ${model(lambda)}.`,
+        `At least ${r} means X &ge; ${r}.`,
+        `Use the complement: P(X &ge; ${r}) = 1 &minus; P(X &le; ${r-1}).`,
+        `P(X &le; ${r-1}) = ${exactValues(lambda,0,r-1)} = ${fmt(cdf(lambda,r-1))}.`,
+        `P(X &ge; ${r}) = 1 &minus; ${fmt(cdf(lambda,r-1))} = ${fmt(p)}.`
+      ];
+      return problem(prompt,answer,steps,'at_least_context');
+    }
+
+    function makeAtMostContext(){
+      const lambda=choice([2.2,3.5,4.1,5.3,6]),r=randInt(2,5),p=cdf(lambda,r);
+      const prompt=`A printer has an average of ${lambdaText(lambda)} faults per day. Find the probability of at most ${r} faults in a day.`;
+      const answer=`P(X &le; ${r}) = ${fmt(p)}.`;
+      const steps=[
+        `Let X be the number of faults in a day, so ${model(lambda)}.`,
+        `At most ${r} means X &le; ${r}.`,
+        `P(X &le; ${r}) = ${exactTerms(lambda,0,r)}.`,
+        `P(X &le; ${r}) = ${exactValues(lambda,0,r)} = ${fmt(p)}.`
+      ];
+      return problem(prompt,answer,steps,'at_most_context');
+    }
+
+    function makePoissonSum(){
+      const l1=randInt(1,5),l2=randInt(1,6),lambda=l1+l2,k=randInt(2,7),p=poisson(lambda,k);
+      const prompt=`Independent variables X ~ Po(${l1}) and Y ~ Po(${l2}). Find P(X + Y = ${k}).`;
+      const answer=`P(X + Y = ${k}) = ${fmt(p)}.`;
+      const steps=[
+        `Independent Poisson variables can be added by adding their parameters.`,
+        `X + Y ~ Po(${l1} + ${l2}) = Po(${lambda}).`,
+        `P(X + Y = ${k}) = ${exactFormula(lambda,k)}.`,
+        `P(X + Y = ${k}) = ${fmt(p)}.`
+      ];
+      return problem(prompt,answer,steps,'poisson_sum');
+    }
+
+    function makeConditionalProbability(){
+      const lambda=randInt(2,6),k=randInt(1,3),upper=randInt(k+1,k+3);
+      const numerator=poisson(lambda,k),denominator=cdf(lambda,upper),p=numerator/denominator;
+      const prompt=`If ${model(lambda)}, find P(X = ${k} | X &le; ${upper}).`;
+      const answer=`P(X = ${k} | X &le; ${upper}) = ${fmt(p)}.`;
+      const steps=[
+        `Use P(A | B) = ${frac('P(A and B)','P(B)')}.`,
+        `Here X = ${k} is inside the event X &le; ${upper}, so P(X = ${k} and X &le; ${upper}) = P(X = ${k}).`,
+        `P(X = ${k}) = ${exactFormula(lambda,k)} = ${fmt(numerator)}.`,
+        `P(X &le; ${upper}) = ${exactValues(lambda,0,upper)} = ${fmt(denominator)}.`,
+        `P(X = ${k} | X &le; ${upper}) = ${frac(fmt(numerator),fmt(denominator))} = ${fmt(p)}.`
+      ];
+      return problem(prompt,answer,steps,'conditional_probability');
+    }
+
+    function makeParameterFromZero(){
+      const lambda=randInt(2,7),p0=Math.exp(-lambda);
+      const prompt=`For X ~ Po(lambda), P(X = 0) = ${fmt(p0,5)}. Find lambda.`;
+      const answer=`lambda = ${fmt(lambda,3)}.`;
+      const steps=[
+        `For a Poisson distribution, P(X = 0) = e<sup>&minus;lambda</sup>.`,
+        `So e<sup>&minus;lambda</sup> = ${fmt(p0,5)}.`,
+        `Take natural logarithms: &minus;lambda = ln(${fmt(p0,5)}).`,
+        `lambda = &minus;ln(${fmt(p0,5)}) = ${fmt(lambda,3)}.`
+      ];
+      return problem(prompt,answer,steps,'parameter_from_zero');
+    }
+
+    function makeParameterFromRatio(){
+      const lambda=randInt(2,8),r=randInt(1,4);
+      const ratio=lambda/(r+1);
+      const prompt=`For X ~ Po(lambda), ${frac('P(X = '+(r+1)+')','P(X = '+r+')')} = ${lambdaText(ratio)}. Find lambda.`;
+      const answer=`lambda = ${lambda}.`;
+      const steps=[
+        `Write the two probabilities using the Poisson formula.`,
+        `${frac('P(X = '+(r+1)+')','P(X = '+r+')')} = ${frac(`e<sup>&minus;lambda</sup>lambda<sup>${r+1}</sup>/${(r+1)}!`,`e<sup>&minus;lambda</sup>lambda<sup>${r}</sup>/${r}!`)}.`,
+        `Cancel the common factors e<sup>&minus;lambda</sup> and lambda<sup>${r}</sup>.`,
+        `${frac('P(X = '+(r+1)+')','P(X = '+r+')')} = ${frac('lambda',r+1)}.`,
+        `${frac('lambda',r+1)} = ${lambdaText(ratio)}, so lambda = ${lambdaText(ratio)} x ${r+1} = ${lambda}.`
+      ];
+      return problem(prompt,answer,steps,'parameter_from_ratio');
+    }
+
+    function makeBinomialApprox(){
+      const n=choice([80,100,120,150,200]),pSmall=choice([0.01,0.015,0.02,0.025,0.03]),lambda=n*pSmall,k=randInt(0,Math.max(3,Math.round(lambda)+2)),prob=poisson(lambda,k);
+      const prompt=`A binomial variable has n = ${n} and p = ${pSmall}. Use a Poisson approximation to estimate P(X = ${k}).`;
+      const answer=`P(X = ${k}) approximately ${fmt(prob)}.`;
+      const steps=[
+        `For large n and small p, use X approximately Po(lambda) with lambda = np.`,
+        `lambda = ${n} x ${pSmall} = ${lambdaText(lambda)}.`,
+        `So X is approximated by Po(${lambdaText(lambda)}).`,
+        `P(X = ${k}) approximately ${exactFormula(lambda,k)} = ${fmt(prob)}.`
+      ];
+      return problem(prompt,answer,steps,'binomial_approximation');
+    }
+
+    function makeApproxCumulative(){
+      const n=choice([100,150,200,250]),pSmall=choice([0.01,0.012,0.015,0.02]),lambda=n*pSmall,r=randInt(1,4),prob=cdf(lambda,r);
+      const prompt=`A rare event has probability ${pSmall} on each of ${n} independent trials. Approximate the probability of at most ${r} events.`;
+      const answer=`P(X &le; ${r}) approximately ${fmt(prob)}.`;
+      const steps=[
+        `Let X be the number of rare events. The exact model is Bin(${n}, ${pSmall}).`,
+        `Since n is large and p is small, use the Poisson approximation with lambda = np.`,
+        `lambda = ${n} x ${pSmall} = ${lambdaText(lambda)}.`,
+        `P(X &le; ${r}) approximately ${exactTerms(lambda,0,r)}.`,
+        `P(X &le; ${r}) approximately ${exactValues(lambda,0,r)} = ${fmt(prob)}.`
+      ];
+      return problem(prompt,answer,steps,'approx_cumulative');
+    }
+
+    function makeModelChoice(){
+      const contexts=[
+        {
+          prompt:'A call centre records the number of calls arriving in each 10-minute interval.',
+          answer:'Poisson distribution.',
+          reason:'The variable counts events occurring randomly over a fixed interval.'
+        },
+        {
+          prompt:'A factory checks whether each of 40 items is defective or not, with the same defect probability for each item.',
+          answer:'Binomial distribution.',
+          reason:'There is a fixed number of trials and each trial has success or failure.'
+        },
+        {
+          prompt:'A teacher records the number of typing errors on a randomly chosen page of text.',
+          answer:'Poisson distribution.',
+          reason:'The variable counts random events in a fixed region.'
+        }
+      ];
+      const item=choice(contexts);
+      return problem(`Choose a suitable distribution model: ${item.prompt}`,item.answer,[
+        `Identify what is being counted.`,
+        item.reason,
+        `Therefore a suitable model is: ${item.answer}`
+      ],'model_choice');
+    }
+
+    function generateProblemFor(type){
+      const generators={
+        exact_probability:makeExactProbability,
+        cumulative_probability:makeCumulativeProbability,
+        complement_probability:makeComplementProbability,
+        mean_variance:makeMeanVariance,
+        level1_mixed:()=>generateProblemFor(choice(['exact_probability','cumulative_probability','complement_probability','mean_variance'])),
+        rate_adjustment:makeRateAdjustment,
+        between_context:makeBetweenContext,
+        at_least_context:makeAtLeastContext,
+        at_most_context:makeAtMostContext,
+        level2_mixed:()=>generateProblemFor(choice(['rate_adjustment','between_context','at_least_context','at_most_context'])),
+        poisson_sum:makePoissonSum,
+        conditional_probability:makeConditionalProbability,
+        parameter_from_zero:makeParameterFromZero,
+        parameter_from_ratio:makeParameterFromRatio,
+        level3_mixed:()=>generateProblemFor(choice(['poisson_sum','conditional_probability','parameter_from_zero','parameter_from_ratio'])),
+        binomial_approximation:makeBinomialApprox,
+        approx_cumulative:makeApproxCumulative,
+        model_choice:makeModelChoice,
+        approximation_mixed:()=>generateProblemFor(choice(['binomial_approximation','approx_cumulative','model_choice']))
+      };
+      return generators[type]();
+    }
+
+    function populateDropdown(){
+      const select=document.getElementById('type-dropdown');
+      const types=levelConfigs[currentLevel].types;
+      select.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      select.value=currentType;
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';answersVisible=false;stepsVisible=false;
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index===level-1));
+      document.getElementById('level-title').textContent=levelConfigs[level].title;
+      document.getElementById('level-description').textContent=levelConfigs[level].description;
+      populateDropdown();
+      showBlankPage();
+    }
+
+    function typeChanged(){
+      currentType=document.getElementById('type-dropdown').value;
+      answersVisible=false;stepsVisible=false;
+      if(currentType==='select')showBlankPage();else generateNewSet();
+    }
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').textContent='Select a question type';
+      document.getElementById('problem-set-header').className='problem-set-header visible';
+      document.getElementById('set-instruction').textContent='Choose a type, then press New to generate Poisson distribution questions.';
+      document.getElementById('set-instruction').className='set-instruction visible';
+      document.getElementById('problem-list').innerHTML='';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      problems=[];answersVisible=false;stepsVisible=false;
+      const config=levelConfigs[currentLevel];
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<90){
+        const type=currentType==='all'?choice(config.types.filter(t=>!t.includes('mixed'))):currentType;
+        const p=generateProblemFor(type);
+        const key=p.prompt;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed Poisson distribution question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|Po|P\(|lambda|e<sup>|vfrac|sqrt|ln|Bin|approximately|&minus;|<sub>|<sup>/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div class="equation">${p.prompt}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      display.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        display.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)display.className='timer-display warning';
+        if(timeRemaining<=0){stopTimer();display.textContent='Time Up';display.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;
+      const display=document.getElementById('timer-display');
+      if(display){display.textContent='Ready';display.className='timer-display'}
+    }
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+</body>
+</html>
