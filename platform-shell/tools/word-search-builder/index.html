@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Search Builder</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--ink:#1d2939;--muted:#667085;--line:#d7dee8;--paper:#fff;--soft:#f6f8fb;--navy:#26384a;--teal:#17b8b3;--purple:#6f4cc3;--green:#16a36b;--amber:#d69e2e;--red:#e74c3c}
+    body{min-height:100vh;padding:18px;overflow-x:hidden;background:linear-gradient(135deg,#f5f8ff,#eefcf8);color:var(--ink);font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);writing-mode:vertical-rl;text-orientation:mixed;border-radius:0 8px 8px 0;padding:15px 8px;background:var(--purple);color:white;box-shadow:2px 0 10px rgba(0,0,0,.2);cursor:pointer;font-size:.9em;font-weight:800;transition:.3s}.teacher-tab:hover{background:var(--teal);transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;z-index:1000;width:400px;height:100vh;overflow-y:auto;background:white;box-shadow:2px 0 20px rgba(0,0,0,.3);transition:left .3s}.sidebar.open{left:0}.sidebar-header{padding:20px;background:var(--purple);color:white;font-size:1.3em;font-weight:800}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{margin:20px 0 10px;border-bottom:2px solid var(--teal);padding-bottom:5px;color:var(--purple);font-size:1.1em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;background:rgba(0,0,0,.5);opacity:0;transition:.3s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .app{max-width:1320px;margin:0 auto;border:1px solid rgba(23,184,179,.22);border-radius:16px;background:rgba(255,255,255,.92);box-shadow:0 18px 45px rgba(16,24,40,.12);overflow:hidden}
+    .top{padding:22px 24px;background:radial-gradient(circle at 12% 20%,rgba(111,76,195,.75),transparent 38%),radial-gradient(circle at 90% 12%,rgba(23,184,179,.72),transparent 40%),linear-gradient(135deg,#26384a,#31475d);color:#fff}.top h1{font-size:clamp(1.8rem,3vw,2.45rem);margin-bottom:5px}.top p{max-width:860px;color:rgba(255,255,255,.9);font-weight:650}
+    .workspace{display:grid;grid-template-columns:360px minmax(0,1fr);gap:0;min-height:680px}.panel{border-right:1px solid var(--line);background:linear-gradient(180deg,#fff,#f8fbff);padding:18px}.preview{padding:18px;background:#f7fafc}
+    .control-block{margin-bottom:14px}.control-block label{display:block;margin-bottom:6px;color:#344054;font-size:.92em;font-weight:800}.control-block input,.control-block textarea,.control-block select{width:100%;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-size:.98em;outline:none}.control-block input,.control-block select{height:42px;padding:0 11px}.control-block textarea{min-height:150px;padding:10px 11px;resize:vertical;line-height:1.42}.hint{margin-top:5px;color:var(--muted);font-size:.82em;font-weight:650}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.button-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.btn{border:0;border-radius:10px;padding:11px 12px;color:white;font-weight:850;cursor:pointer;transition:.18s;box-shadow:0 8px 16px rgba(16,24,40,.1)}.btn:hover{transform:translateY(-1px);filter:brightness(.96)}.btn-primary{background:linear-gradient(135deg,var(--purple),#1e88e5)}.btn-success{background:linear-gradient(135deg,var(--green),var(--teal))}.btn-warning{background:var(--amber);color:#2f2500}.btn-ghost{background:#fff;color:#344054;border:1px solid var(--line);box-shadow:none}.btn-wide{grid-column:1/-1}
+    .message{display:none;margin-top:12px;border-radius:10px;padding:10px 12px;font-size:.9em;font-weight:750;line-height:1.4}.message.visible{display:block}.message.warn{background:#fff7e6;color:#7a4b00;border:1px solid #f6d38b}.message.good{background:#eafaf4;color:#0b6847;border:1px solid #a7ead3}
+    .tabs{display:flex;gap:8px;margin-bottom:12px}.tab{border:1px solid var(--line);border-radius:999px;background:#fff;color:#344054;padding:8px 12px;font-weight:850;cursor:pointer}.tab.active{border-color:var(--teal);background:#e8fbfa;color:#047a75}
+    .sheet-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}.sheet{max-width:900px;margin:0 auto;border:1px solid var(--line);border-radius:14px;background:white;box-shadow:0 12px 30px rgba(16,24,40,.08);padding:22px}.sheet.hidden{display:none}.sheet-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:16px;border-bottom:3px solid #172033;padding-bottom:12px}.sheet-title small{display:block;color:var(--teal);font-weight:900;letter-spacing:.04em;text-transform:uppercase}.sheet-title h2{font-size:clamp(1.65rem,3vw,2.25rem);line-height:1.05}.name-lines{min-width:230px;font-weight:850}.name-line{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:end;margin-bottom:12px}.line{height:1px;background:#98a2b3}
+    .student-note{margin:0 0 14px;color:#475467;font-weight:650}.puzzle-grid{display:grid;margin:0 auto 18px;border:2px solid #1d2939;background:#1d2939;gap:1px;max-width:760px}.cell{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:white;color:#111827;font-family:"Arial",sans-serif;font-size:clamp(.62rem,2vw,1.1rem);font-weight:800;line-height:1}.answer-grid .cell.solution{background:#c7f3ea;color:#063f3b}.answer-grid .cell.start{box-shadow:inset 0 0 0 2px #0b7f77}.word-bank{border:1px solid var(--line);border-radius:10px;padding:12px;background:#f8fafc}.word-bank h3{margin-bottom:8px;color:#26384a;font-size:1.02em}.word-list{columns:3;column-gap:28px;list-style-position:inside;color:#1d2939;font-weight:750}.answer-details{margin-top:14px;border:1px solid #cfe7e4;border-radius:10px;background:#f2fffd;padding:12px}.answer-details h3{margin-bottom:8px;color:#047a75}.answer-details ul{columns:2;list-style-position:inside;font-weight:700;color:#344054}
+    .placeholder{display:grid;place-items:center;min-height:560px;border:2px dashed #cbd5e1;border-radius:16px;background:#fff;color:#667085;text-align:center;padding:28px}.placeholder strong{display:block;margin-bottom:6px;color:#26384a;font-size:1.45em}
+    @media (max-width:900px){body{padding:10px}.workspace{grid-template-columns:1fr}.panel{border-right:0;border-bottom:1px solid var(--line)}.word-list{columns:2}.sheet-head{flex-direction:column}.name-lines{width:100%}}
+    @media print{
+      @page{size:A4;margin:12mm}
+      body{padding:0;background:#fff}.teacher-tab,.sidebar,.sidebar-overlay,.top,.panel,.tabs,.placeholder,.message{display:none!important}.app{border:0;box-shadow:none;border-radius:0}.workspace{display:block;min-height:0}.preview{padding:0;background:#fff}.sheet-wrap{display:block}.sheet{box-shadow:none;border:0;border-radius:0;max-width:none;padding:0}.sheet.hidden{display:none!important}body[data-print-mode="puzzle"] #answer-sheet{display:none!important}body[data-print-mode="answer"] #puzzle-sheet{display:none!important}.word-list{columns:3}.puzzle-grid{max-width:180mm}.answer-grid .cell.solution{background:#ddd!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.answer-grid .cell.start{box-shadow:inset 0 0 0 2px #111}.cell{font-size:11pt}.sheet-head{break-after:avoid}.word-bank{break-inside:avoid}
+    }
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+</head>
+<body data-print-mode="puzzle">
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Word Search Builder</div>
+    <div class="sidebar-content">
+      <h3>How to Use</h3>
+      <ul>
+        <li>Enter the maths vocabulary words you want students to find.</li>
+        <li>Choose a grid size and direction setting.</li>
+        <li>Generate the puzzle, then print the student version or answer key.</li>
+      </ul>
+      <h3>Classroom Use</h3>
+      <ul>
+        <li>Use as a starter, retrieval task, key vocabulary review, or cover lesson activity.</li>
+        <li>Keep word lists focused so students practise the vocabulary attached to the current topic.</li>
+        <li>Print the answer key separately for quick checking.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="app">
+    <section class="top">
+      <h1>Word Search Builder</h1>
+      <p>Create printable maths vocabulary word searches. Type the words, choose the size, generate the grid, then print or save as PDF.</p>
+    </section>
+
+    <section class="workspace">
+      <aside class="panel">
+        <div class="control-block">
+          <label for="puzzle-title">Puzzle title</label>
+          <input id="puzzle-title" value="Maths Vocabulary Word Search">
+        </div>
+
+        <div class="control-block">
+          <label for="word-input">Words</label>
+          <textarea id="word-input">quadratic
+factor
+multiple
+fraction
+gradient
+radius
+diameter
+equation
+probability
+angle
+ratio
+sequence</textarea>
+          <div class="hint">One word per line. Spaces and punctuation are removed in the grid.</div>
+        </div>
+
+        <div class="row">
+          <div class="control-block">
+            <label for="grid-size">Grid size</label>
+            <select id="grid-size">
+              <option value="10">10 x 10</option>
+              <option value="12" selected>12 x 12</option>
+              <option value="15">15 x 15</option>
+              <option value="18">18 x 18</option>
+              <option value="20">20 x 20</option>
+            </select>
+          </div>
+          <div class="control-block">
+            <label for="directions">Directions</label>
+            <select id="directions">
+              <option value="easy">Across and down</option>
+              <option value="medium" selected>Add diagonals</option>
+              <option value="hard">All directions</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="control-block">
+          <label for="filler-style">Filler letters</label>
+          <select id="filler-style">
+            <option value="letters" selected>Random letters</option>
+            <option value="maths">Maths-heavy letters</option>
+          </select>
+        </div>
+
+        <div class="button-grid">
+          <button class="btn btn-primary btn-wide" onclick="generatePuzzle()">Generate</button>
+          <button class="btn btn-ghost" onclick="loadSample('geometry')">Geometry</button>
+          <button class="btn btn-ghost" onclick="loadSample('statistics')">Statistics</button>
+          <button class="btn btn-success" onclick="setView('puzzle')">Student</button>
+          <button class="btn btn-warning" onclick="setView('answer')">Answer key</button>
+          <button class="btn btn-primary" onclick="printMode('puzzle')">Print Puzzle</button>
+          <button class="btn btn-primary" onclick="printMode('answer')">Print Key</button>
+        </div>
+        <div id="message" class="message"></div>
+      </aside>
+
+      <section class="preview">
+        <div class="tabs">
+          <button id="tab-puzzle" class="tab active" onclick="setView('puzzle')">Student puzzle</button>
+          <button id="tab-answer" class="tab" onclick="setView('answer')">Answer key</button>
+        </div>
+
+        <div id="placeholder" class="placeholder">
+          <div>
+            <strong>Generate a word search</strong>
+            <p>Use the controls on the left to create a printable classroom puzzle.</p>
+          </div>
+        </div>
+
+        <div id="sheet-wrap" class="sheet-wrap" hidden>
+          <article id="puzzle-sheet" class="sheet">
+            <div class="sheet-head">
+              <div class="sheet-title">
+                <small>Kaizen Maths Classroom Tool</small>
+                <h2 id="student-title">Maths Vocabulary Word Search</h2>
+              </div>
+              <div class="name-lines">
+                <div class="name-line"><span>Name:</span><span class="line"></span></div>
+                <div class="name-line"><span>Date:</span><span class="line"></span></div>
+              </div>
+            </div>
+            <p class="student-note">Find and circle each word in the grid.</p>
+            <div id="student-grid" class="puzzle-grid"></div>
+            <div class="word-bank">
+              <h3>Words to Find</h3>
+              <ol id="student-words" class="word-list"></ol>
+            </div>
+          </article>
+
+          <article id="answer-sheet" class="sheet hidden">
+            <div class="sheet-head">
+              <div class="sheet-title">
+                <small>Answer Key</small>
+                <h2 id="answer-title">Maths Vocabulary Word Search</h2>
+              </div>
+              <div class="name-lines">
+                <div class="name-line"><span>Class:</span><span class="line"></span></div>
+                <div class="name-line"><span>Date:</span><span class="line"></span></div>
+              </div>
+            </div>
+            <div id="answer-grid" class="puzzle-grid answer-grid"></div>
+            <div class="answer-details">
+              <h3>Placed Words</h3>
+              <ul id="answer-words"></ul>
+            </div>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    let currentPuzzle = null;
+    let currentView = "puzzle";
+
+    const samples = {
+      geometry: ["angle", "circle", "radius", "diameter", "tangent", "triangle", "parallel", "bearing", "volume", "surface"],
+      statistics: ["mean", "median", "mode", "range", "quartile", "outlier", "sample", "survey", "bias", "histogram", "probability"]
+    };
+
+    const directionSets = {
+      easy: [[1,0],[0,1]],
+      medium: [[1,0],[0,1],[1,1],[-1,1]],
+      hard: [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]]
+    };
+
+    function cleanWord(word) {
+      return String(word).toUpperCase().replace(/[^A-Z0-9]/g, "");
+    }
+
+    function parseWords() {
+      const raw = document.getElementById("word-input").value.split(/\n|,/).map(item => item.trim()).filter(Boolean);
+      const seen = new Set();
+      const words = [];
+      raw.forEach(original => {
+        const clean = cleanWord(original);
+        if (!clean || seen.has(clean)) return;
+        seen.add(clean);
+        words.push({ original, clean });
+      });
+      return words;
+    }
+
+    function makeEmptyGrid(size) {
+      return Array.from({ length: size }, () => Array.from({ length: size }, () => ""));
+    }
+
+    function canPlace(grid, word, row, col, dx, dy) {
+      const size = grid.length;
+      for (let i = 0; i < word.length; i++) {
+        const r = row + dy * i;
+        const c = col + dx * i;
+        if (r < 0 || r >= size || c < 0 || c >= size) return false;
+        if (grid[r][c] && grid[r][c] !== word[i]) return false;
+      }
+      return true;
+    }
+
+    function placeWord(grid, item, directions) {
+      const size = grid.length;
+      const attempts = 500;
+      for (let attempt = 0; attempt < attempts; attempt++) {
+        const [dx, dy] = directions[Math.floor(Math.random() * directions.length)];
+        const row = Math.floor(Math.random() * size);
+        const col = Math.floor(Math.random() * size);
+        if (!canPlace(grid, item.clean, row, col, dx, dy)) continue;
+        const cells = [];
+        for (let i = 0; i < item.clean.length; i++) {
+          const r = row + dy * i;
+          const c = col + dx * i;
+          grid[r][c] = item.clean[i];
+          cells.push([r, c]);
+        }
+        return { ...item, row, col, dx, dy, cells };
+      }
+      return null;
+    }
+
+    function fillGrid(grid, style) {
+      const letters = style === "maths" ? "ABCDEFMNPQRSTXYZ0123456789" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      for (let r = 0; r < grid.length; r++) {
+        for (let c = 0; c < grid.length; c++) {
+          if (!grid[r][c]) grid[r][c] = letters[Math.floor(Math.random() * letters.length)];
+        }
+      }
+    }
+
+    function generatePuzzle() {
+      const size = Number(document.getElementById("grid-size").value);
+      const directions = directionSets[document.getElementById("directions").value];
+      const fillerStyle = document.getElementById("filler-style").value;
+      const title = document.getElementById("puzzle-title").value.trim() || "Maths Vocabulary Word Search";
+      const words = parseWords();
+      if (!words.length) {
+        showMessage("warn", "Add at least one word before generating.");
+        return;
+      }
+
+      const tooLong = words.filter(item => item.clean.length > size);
+      const usable = words.filter(item => item.clean.length <= size).sort((a, b) => b.clean.length - a.clean.length);
+      if (!usable.length) {
+        showMessage("warn", `All words are longer than the ${size} x ${size} grid.`);
+        return;
+      }
+
+      let best = null;
+      for (let pass = 0; pass < 25; pass++) {
+        const grid = makeEmptyGrid(size);
+        const placed = [];
+        const skipped = [];
+        usable.forEach(item => {
+          const result = placeWord(grid, item, directions);
+          if (result) placed.push(result);
+          else skipped.push(item);
+        });
+        if (!best || placed.length > best.placed.length) best = { grid, placed, skipped };
+        if (placed.length === usable.length) break;
+      }
+
+      fillGrid(best.grid, fillerStyle);
+      currentPuzzle = {
+        title,
+        size,
+        grid: best.grid,
+        placed: best.placed.sort((a, b) => a.original.localeCompare(b.original)),
+        skipped: [...best.skipped, ...tooLong]
+      };
+      renderPuzzle();
+      const skippedText = currentPuzzle.skipped.length ? ` Skipped: ${currentPuzzle.skipped.map(item => item.original).join(", ")}.` : "";
+      showMessage(currentPuzzle.skipped.length ? "warn" : "good", `Placed ${currentPuzzle.placed.length} word${currentPuzzle.placed.length === 1 ? "" : "s"}.${skippedText}`);
+    }
+
+    function renderPuzzle() {
+      if (!currentPuzzle) return;
+      document.getElementById("placeholder").hidden = true;
+      document.getElementById("sheet-wrap").hidden = false;
+      document.getElementById("student-title").textContent = currentPuzzle.title;
+      document.getElementById("answer-title").textContent = currentPuzzle.title;
+      renderGrid("student-grid", false);
+      renderGrid("answer-grid", true);
+      renderWordLists();
+      setView(currentView);
+    }
+
+    function renderGrid(id, answerMode) {
+      const gridEl = document.getElementById(id);
+      const size = currentPuzzle.size;
+      const solutionCells = new Set();
+      const startCells = new Set();
+      currentPuzzle.placed.forEach(item => {
+        item.cells.forEach(([r, c]) => solutionCells.add(`${r},${c}`));
+        if (item.cells[0]) startCells.add(`${item.cells[0][0]},${item.cells[0][1]}`);
+      });
+      gridEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+      gridEl.innerHTML = "";
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          const cell = document.createElement("div");
+          const key = `${r},${c}`;
+          cell.className = "cell" + (answerMode && solutionCells.has(key) ? " solution" : "") + (answerMode && startCells.has(key) ? " start" : "");
+          cell.textContent = currentPuzzle.grid[r][c];
+          gridEl.appendChild(cell);
+        }
+      }
+    }
+
+    function renderWordLists() {
+      const studentWords = document.getElementById("student-words");
+      const answerWords = document.getElementById("answer-words");
+      studentWords.innerHTML = "";
+      answerWords.innerHTML = "";
+      currentPuzzle.placed.forEach(item => {
+        const studentLi = document.createElement("li");
+        studentLi.textContent = item.original.toUpperCase();
+        studentWords.appendChild(studentLi);
+        const answerLi = document.createElement("li");
+        const direction = directionLabel(item.dx, item.dy);
+        answerLi.textContent = `${item.original.toUpperCase()}: row ${item.row + 1}, column ${item.col + 1}, ${direction}`;
+        answerWords.appendChild(answerLi);
+      });
+    }
+
+    function directionLabel(dx, dy) {
+      if (dx === 1 && dy === 0) return "across";
+      if (dx === -1 && dy === 0) return "backwards";
+      if (dx === 0 && dy === 1) return "down";
+      if (dx === 0 && dy === -1) return "up";
+      if (dx === 1 && dy === 1) return "down-right diagonal";
+      if (dx === -1 && dy === 1) return "down-left diagonal";
+      if (dx === 1 && dy === -1) return "up-right diagonal";
+      return "up-left diagonal";
+    }
+
+    function setView(view) {
+      currentView = view;
+      document.getElementById("tab-puzzle").classList.toggle("active", view === "puzzle");
+      document.getElementById("tab-answer").classList.toggle("active", view === "answer");
+      document.getElementById("puzzle-sheet").classList.toggle("hidden", view !== "puzzle");
+      document.getElementById("answer-sheet").classList.toggle("hidden", view !== "answer");
+    }
+
+    function printMode(mode) {
+      if (!currentPuzzle) {
+        showMessage("warn", "Generate a puzzle before printing.");
+        return;
+      }
+      document.body.dataset.printMode = mode;
+      const previousView = currentView;
+      setView(mode === "answer" ? "answer" : "puzzle");
+      setTimeout(() => {
+        window.print();
+        document.body.dataset.printMode = "puzzle";
+        setView(previousView);
+      }, 100);
+    }
+
+    function loadSample(name) {
+      document.getElementById("word-input").value = samples[name].join("\n");
+      document.getElementById("puzzle-title").value = name === "geometry" ? "Geometry Vocabulary Word Search" : "Statistics Vocabulary Word Search";
+      generatePuzzle();
+    }
+
+    function showMessage(type, text) {
+      const message = document.getElementById("message");
+      message.className = `message visible ${type}`;
+      message.textContent = text;
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    generatePuzzle();
+  </script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+</body>
+</html>

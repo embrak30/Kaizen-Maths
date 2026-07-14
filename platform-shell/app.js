@@ -2036,6 +2036,25 @@ const tools = [
     ]
   },
   {
+    slug: "word-search-builder",
+    title: "Word Search Builder",
+    category: "Classroom Tools",
+    level: "All",
+    type: "Printable Puzzle Builder",
+    access: "Free",
+    status: "Imported",
+    description: "Create printable maths vocabulary word searches from teacher-entered words, with selectable grid size, direction controls, student sheet, answer key, and print/save PDF options.",
+    tags: ["classroom", "word search", "vocabulary", "maths vocabulary", "puzzle", "printable", "starter", "retrieval", "cover lesson"],
+    toolPath: "tools/word-search-builder/index.html?v=word-search-builder-1",
+    imported: true,
+    teacherNotes: [
+      "Teachers enter their own topic vocabulary and the tool places the words into a printable grid.",
+      "Grid size and direction settings allow the task to be made easier or more challenging.",
+      "The student puzzle and answer key can be printed separately or saved as PDF from the browser print dialog.",
+      "This is the first phase of the classroom puzzle builder and is designed to support vocabulary retrieval, starters, and cover work."
+    ]
+  },
+  {
     slug: "exit-ticket-game",
     title: "Maths Exit Ticket Choice Board",
     category: "Classroom Tools",
@@ -2262,6 +2281,7 @@ const subjectToolGroups = {
     "elementary-manipulatives": "Board Displays and Visuals",
     "elementary-starter-board": "Starters and Retrieval",
     "fractions-table": "Starters and Retrieval",
+    "word-search-builder": "Puzzle Builders",
     "exit-ticket-game": "Games and Routines",
     "math-in-a-minute": "Games and Routines",
     "twenty4": "Games and Routines"
@@ -2305,6 +2325,7 @@ const subjectGroupOrder = {
   "Classroom Tools": [
     "Board Displays and Visuals",
     "Starters and Retrieval",
+    "Puzzle Builders",
     "Games and Routines"
   ],
   "Site Guide": [
@@ -7709,6 +7730,7 @@ const curatedRelatedToolSlugs = {
   "newtons-second-law": ["friction", "work-energy-power", "motion-graphs-constant-acceleration", "equations-of-motion"],
   "friction": ["newtons-second-law", "work-energy-power", "equations-of-motion", "moments"],
   "work-energy-power": ["friction", "newtons-second-law", "equations-of-motion", "motion-graphs-constant-acceleration"],
+  "word-search-builder": ["fractions-table", "elementary-starter-board", "classroom-displays", "exit-ticket-game"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
   "circle-theorems": ["missing-angles", "circles-area-circumference", "sectors-arc-length", "trigonometric-ratios"],
   "earth-geometry": ["bearings", "trigonometric-ratios", "circles-area-circumference", "sectors-arc-length"],
