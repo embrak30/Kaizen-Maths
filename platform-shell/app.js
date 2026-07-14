@@ -201,6 +201,25 @@ const tools = [
     ]
   },
   {
+    slug: "integration-algebraic-fractions",
+    title: "Integration of Algebraic Fractions",
+    category: "Algebra",
+    level: "A-Level / Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate integration practice for algebraic fractions, including logarithmic forms, simplification, polynomial division, partial fractions, and quadratic denominator forms.",
+    tags: ["algebra", "calculus", "integration", "algebraic fractions", "rational functions", "partial fractions", "logarithms", "inverse tangent", "polynomial division", "A-Level", "Further Maths"],
+    toolPath: "tools/integration-algebraic-fractions/index.html?v=integration-algebraic-fractions-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers linear denominator logarithmic forms and numerator-as-derivative structures.",
+      "Level 2 covers cancelling factors and polynomial division before integration.",
+      "Level 3 covers integration after partial fraction decomposition.",
+      "Level 4 covers quadratic denominators, completing the square, logarithm forms, and inverse tangent forms."
+    ]
+  },
+  {
     slug: "partial-fractions",
     title: "Partial Fractions: Decomposition",
     category: "Algebra",
@@ -349,6 +368,25 @@ const tools = [
       "Level 2 covers substitution into standard series, products, reciprocal or quotient expansions, and numerical approximations.",
       "Level 3 covers Taylor polynomials, Taylor expansions about a point, approximations near the expansion point, and reading derivative values from a series.",
       "Level 4 covers limits using series, coefficients in products of series, and simple power-series solutions to differential equations."
+    ]
+  },
+  {
+    slug: "numerical-methods",
+    title: "Numerical Methods: Iteration, Newton-Raphson and Trapezium Rule",
+    category: "Algebra",
+    level: "A-Level / Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate numerical methods practice covering sign changes, bisection, fixed-point iteration, Newton-Raphson, the trapezium rule, and Euler's method.",
+    tags: ["algebra", "calculus", "numerical methods", "iteration", "Newton-Raphson", "bisection", "sign change", "trapezium rule", "Euler method", "roots", "A-Level", "Further Maths"],
+    toolPath: "tools/numerical-methods/index.html?v=numerical-methods-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers sign changes, bisection, and fixed-point iteration.",
+      "Level 2 develops Newton-Raphson, including substituted one-step and two-step iterations.",
+      "Level 3 covers the trapezium rule from tables, functions, and interval information.",
+      "Level 4 introduces Euler's method for numerical solutions of first-order differential equations."
     ]
   },
   {
@@ -2052,6 +2090,7 @@ const algebraToolGroups = {
   "advanced-differentiation": "Calculus",
   "integration": "Calculus",
   "advanced-integration": "Calculus",
+  "integration-algebraic-fractions": "Calculus",
   "differential-equations": "Calculus",
   "partial-fractions": "A-Level and Further Pure",
   "matrices": "A-Level and Further Pure",
@@ -2060,6 +2099,7 @@ const algebraToolGroups = {
   "further-vectors": "A-Level and Further Pure",
   "proof-by-induction": "A-Level and Further Pure",
   "roots-of-equations": "A-Level and Further Pure",
+  "numerical-methods": "A-Level and Further Pure",
   "complex-numbers": "A-Level and Further Pure",
   "polar-coordinates": "A-Level and Further Pure",
   "hyperbolic-functions": "A-Level and Further Pure",
@@ -7592,11 +7632,17 @@ const curatedRelatedToolSlugs = {
   "matrices": ["linear-algebra", "advanced-matrices", "further-vectors", "simultaneous-equations"],
   "advanced-matrices": ["linear-algebra", "matrices", "further-vectors", "complex-numbers"],
   "linear-algebra": ["matrices", "advanced-matrices", "further-vectors", "simultaneous-equations"],
+  "integration": ["advanced-integration", "integration-algebraic-fractions", "differentiation-polynomials", "numerical-methods"],
+  "advanced-integration": ["integration-algebraic-fractions", "integration", "partial-fractions", "differential-equations"],
+  "integration-algebraic-fractions": ["partial-fractions", "advanced-integration", "integration", "numerical-methods"],
+  "partial-fractions": ["integration-algebraic-fractions", "algebraic-fractions", "advanced-factorisation", "advanced-integration"],
   "complex-numbers": ["polar-coordinates", "roots-of-equations", "trigonometric-functions", "advanced-matrices"],
   "polar-coordinates": ["complex-numbers", "trigonometric-functions", "graph-transformations-curve-sketching", "hyperbolic-functions"],
   "trig-graphs-transformations": ["trig-equation-solver", "trigonometric-functions", "graph-transformations-curve-sketching", "sine-cosine-rule"],
+  "roots-of-equations": ["numerical-methods", "complex-numbers", "functions", "graph-transformations-curve-sketching"],
+  "numerical-methods": ["roots-of-equations", "integration", "advanced-integration", "differential-equations"],
   "series-expansions": ["differentiation-polynomials", "integration", "advanced-integration", "functions"],
-  "differential-equations": ["advanced-integration", "differentiation-rules", "trig-differentiation-rules", "functions"]
+  "differential-equations": ["numerical-methods", "advanced-integration", "differentiation-rules", "trig-differentiation-rules"]
 };
 
 function curatedRelatedTools(tool) {

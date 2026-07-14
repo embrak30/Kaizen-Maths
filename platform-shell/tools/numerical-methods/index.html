@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Numerical Methods</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f5f7fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#174a5f;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#174a5f;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #f59e0b;color:#174a5f;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1240px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#174a5f;background-image:linear-gradient(135deg,rgba(255,255,255,.16),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e7f2f5}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e7f2f5;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}.tab.active{background:#fff;color:#174a5f;border-bottom-color:#f59e0b}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d9e7ee;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#174a5f;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:430px;padding:8px 10px;border:2px solid #c7dfe7;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #c7dfe7;border-radius:6px;background:#fff;color:#174a5f;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#174a5f;color:#174a5f}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#174a5f}.btn-success{background:#2f855a}.btn-warning{background:#f59e0b}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#174a5f;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #b7e4ef;border-radius:6px;background:#ecfeff;color:#174a5f;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-left:4px solid #174a5f;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:center;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#174a5f;color:#fff;font-weight:850}
+    .equation{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.16em;font-weight:500;line-height:1.45;color:#172033;overflow-x:auto;max-width:100%}.problem-answer{display:none;white-space:normal;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #174a5f;border-radius:6px;background:#f0fbff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#174a5f;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#223043}.step-equation{margin:6px 0;padding:7px;border:1px solid #d5edf4;border-radius:5px;background:#fff;color:#0f4f66;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:500}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column;align-items:flex-start}.equation{font-size:1.02em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Numerical Methods</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool supports A-level and Further Maths numerical methods, including locating roots, iteration, Newton-Raphson, numerical integration, and Euler's method.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Sign changes, bisection, and fixed-point iteration.</li>
+        <li><strong>Level 2:</strong> Newton-Raphson formula, one-step updates, and repeated iterations.</li>
+        <li><strong>Level 3:</strong> Trapezium rule from tables and from functions.</li>
+        <li><strong>Level 4:</strong> Euler's method for first-order differential equations.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Students should show substituted values before giving decimal approximations.</li>
+        <li>Root-location methods depend on a change of sign over an interval.</li>
+        <li>Newton-Raphson needs both f(x) and f'(x) evaluated at the current approximation.</li>
+        <li>For trapezium rule, the first and last ordinates are counted once; interior ordinates are doubled.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Numerical Methods</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Roots</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Newton-Raphson</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Trapezium Rule</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Euler Method</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Root Location and Iteration</h3>
+        <p id="level-description">Locate roots using sign changes, refine intervals, and use simple fixed-point iteration.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Root Location and Iteration',description:'Locate roots using sign changes, refine intervals, and use simple fixed-point iteration.',types:['sign_change','bisection_step','fixed_point_iteration','root_mixed']},
+      2:{title:'Level 2: Newton-Raphson',description:'Use x_{n+1} = x_n - f(x_n)/f\'(x_n) to improve approximations.',types:['newton_one_step','newton_two_steps','newton_formula','newton_mixed']},
+      3:{title:'Level 3: Trapezium Rule',description:'Estimate areas and integrals from tables and functions using the trapezium rule.',types:['trapezium_table','trapezium_function','trapezium_interval_count','trapezium_mixed']},
+      4:{title:'Level 4: Euler Method',description:'Use step-by-step numerical approximations for first-order differential equations.',types:['euler_one_step','euler_table','euler_reverse','euler_mixed']}
+    };
+
+    const typeDisplayNames={
+      sign_change:'Type 1: Locate a root by sign change',
+      bisection_step:'Type 2: One bisection step',
+      fixed_point_iteration:'Type 3: Fixed-point iteration',
+      root_mixed:'Type 4: Mixed root methods',
+      newton_one_step:'Type 1: One Newton-Raphson step',
+      newton_two_steps:'Type 2: Two Newton-Raphson iterations',
+      newton_formula:'Type 3: Derive and use an iteration formula',
+      newton_mixed:'Type 4: Mixed Newton-Raphson',
+      trapezium_table:'Type 1: Trapezium rule from a table',
+      trapezium_function:'Type 2: Trapezium rule from a function',
+      trapezium_interval_count:'Type 3: Find the step size and number of strips',
+      trapezium_mixed:'Type 4: Mixed trapezium rule',
+      euler_one_step:'Type 1: One Euler step',
+      euler_table:'Type 2: Euler table',
+      euler_reverse:'Type 3: Find the step size used',
+      euler_mixed:'Type 4: Mixed Euler method'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      sign_change:'Evaluate the function at both ends of the interval and use the sign change to locate a root.',
+      bisection_step:'Use the midpoint to choose a smaller interval containing the root.',
+      fixed_point_iteration:'Apply the iteration formula carefully and give each approximation to the stated accuracy.',
+      root_mixed:'Answer each root-finding question.',
+      newton_one_step:'Use the Newton-Raphson formula for one iteration.',
+      newton_two_steps:'Use Newton-Raphson twice, showing each substituted value.',
+      newton_formula:'Derive the Newton-Raphson iteration formula, then apply it.',
+      newton_mixed:'Answer each Newton-Raphson question.',
+      trapezium_table:'Use the trapezium rule with the ordinates given in the table.',
+      trapezium_function:'Calculate the required ordinates, then apply the trapezium rule.',
+      trapezium_interval_count:'Find the step size or number of strips before applying the rule.',
+      trapezium_mixed:'Answer each trapezium-rule question.',
+      euler_one_step:'Use one Euler step with y_{n+1} = y_n + hf(x_n,y_n).',
+      euler_table:'Complete the Euler approximations step by step.',
+      euler_reverse:'Use the Euler update to find the missing step size.',
+      euler_mixed:'Answer each Euler-method question.'
+    };
+
+    function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[randInt(0,arr.length-1)]}
+    function nonZero(min,max){let n=0;while(n===0)n=randInt(min,max);return n}
+    function fmt(n,dp=3){const rounded=Number(n).toFixed(dp);return rounded.replace(/\.?0+$/,'')}
+    function num(n){return String(n).replace('-', '&minus;')}
+    function signed(n){return n<0?`&minus; ${Math.abs(n)}`:`+ ${n}`}
+    function vfrac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function problem(prompt,answer,steps,type=currentType){return {prompt,answer,steps,instruction:typeInstructions[type]||'Answer each question.'}}
+    function poly2Label(c){return `x<sup>2</sup> &minus; ${c}`}
+    function poly2Value(c,x){return x*x-c}
+    function cubicValue(c,x){return x*x*x-c}
+    function cubicLabel(c){return `x<sup>3</sup> &minus; ${c}`}
+    function derivativeCubicLabel(){return `3x<sup>2</sup>`}
+    function derivativeCubicValue(x){return 3*x*x}
+
+    function makeSignChange(){
+      const a=randInt(1,6),c=randInt(a*a+1,(a+1)*(a+1)-1),b=a+1;
+      const fa=poly2Value(c,a),fb=poly2Value(c,b);
+      const prompt=`Show that ${poly2Label(c)} = 0 has a root in the interval [${a}, ${b}].`;
+      const answer=`A root lies in [${a}, ${b}].`;
+      const steps=[
+        `Let f(x) = ${poly2Label(c)}.`,
+        `f(${a}) = ${a}<sup>2</sup> &minus; ${c} = ${num(fa)}.`,
+        `f(${b}) = ${b}<sup>2</sup> &minus; ${c} = ${num(fb)}.`,
+        `f(${a}) is negative and f(${b}) is positive, so the function changes sign on [${a}, ${b}].`,
+        `Since f is continuous, there is a root in [${a}, ${b}].`
+      ];
+      return problem(prompt,answer,steps,'sign_change');
+    }
+
+    function makeBisectionStep(){
+      const a=randInt(1,6),c=randInt(a*a+1,(a+1)*(a+1)-1),b=a+1,mid=(a+b)/2;
+      const fa=poly2Value(c,a),fm=poly2Value(c,mid),fb=poly2Value(c,b);
+      const left=fa*fm<0;
+      const interval=left?`[${a}, ${fmt(mid,1)}]`:`[${fmt(mid,1)}, ${b}]`;
+      const prompt=`For f(x) = ${poly2Label(c)}, one root lies in [${a}, ${b}]. Use one bisection step to find the next interval.`;
+      const answer=`Next interval: ${interval}.`;
+      const steps=[
+        `The midpoint of [${a}, ${b}] is ${vfrac(`${a} + ${b}`,'2')} = ${fmt(mid,1)}.`,
+        `f(${a}) = ${num(fa)}.`,
+        `f(${fmt(mid,1)}) = (${fmt(mid,1)})<sup>2</sup> &minus; ${c} = ${fmt(fm,3)}.`,
+        `f(${b}) = ${num(fb)}.`,
+        left?`The sign changes between x = ${a} and x = ${fmt(mid,1)}, so the root is in ${interval}.`:`The sign changes between x = ${fmt(mid,1)} and x = ${b}, so the root is in ${interval}.`
+      ];
+      return problem(prompt,answer,steps,'bisection_step');
+    }
+
+    function makeFixedPoint(){
+      const c=randInt(2,8),x0=randInt(1,4);
+      const x1=(x0+c/x0)/2;
+      const x2=(x1+c/x1)/2;
+      const prompt=`Use x<sub>n+1</sub> = ${vfrac('1','2')}(x<sub>n</sub> + ${vfrac(c,'x<sub>n</sub>')}) with x<sub>0</sub> = ${x0} to find x<sub>1</sub> and x<sub>2</sub>.`;
+      const answer=`x<sub>1</sub> = ${fmt(x1,4)}, x<sub>2</sub> = ${fmt(x2,4)}.`;
+      const steps=[
+        `Substitute x<sub>0</sub> = ${x0} into the iteration formula.`,
+        `x<sub>1</sub> = ${vfrac('1','2')}(${x0} + ${vfrac(c,x0)}) = ${fmt(x1,4)}.`,
+        `Now substitute x<sub>1</sub> = ${fmt(x1,4)} back into the same formula.`,
+        `x<sub>2</sub> = ${vfrac('1','2')}(${fmt(x1,4)} + ${vfrac(c,fmt(x1,4))}) = ${fmt(x2,4)}.`,
+        `The sequence is moving towards an approximation to &radic;${c}.`
+      ];
+      return problem(prompt,answer,steps,'fixed_point_iteration');
+    }
+
+    function makeNewtonOneStep(){
+      const c=choice([2,3,5,7,10,12,15,20]),x0=Math.ceil(Math.cbrt(c));
+      const f=cubicValue(c,x0),fp=derivativeCubicValue(x0),x1=x0-f/fp;
+      const prompt=`Use one Newton-Raphson step for f(x) = ${cubicLabel(c)} with x<sub>0</sub> = ${x0}.`;
+      const answer=`x<sub>1</sub> = ${fmt(x1,5)}.`;
+      const steps=[
+        `Newton-Raphson uses x<sub>n+1</sub> = x<sub>n</sub> &minus; ${vfrac('f(x<sub>n</sub>)',"f'(x<sub>n</sub>)")}.`,
+        `f(x) = ${cubicLabel(c)}, so f'(x) = ${derivativeCubicLabel()}.`,
+        `f(${x0}) = ${x0}<sup>3</sup> &minus; ${c} = ${num(f)}.`,
+        `f'(${x0}) = 3(${x0})<sup>2</sup> = ${fp}.`,
+        `x<sub>1</sub> = ${x0} &minus; ${vfrac(num(f),fp)} = ${fmt(x1,5)}.`
+      ];
+      return problem(prompt,answer,steps,'newton_one_step');
+    }
+
+    function makeNewtonTwoSteps(){
+      const c=choice([2,3,5,7,11,13,17]),x0=Math.ceil(Math.cbrt(c));
+      const f0=cubicValue(c,x0),fp0=derivativeCubicValue(x0),x1=x0-f0/fp0;
+      const f1=cubicValue(c,x1),fp1=derivativeCubicValue(x1),x2=x1-f1/fp1;
+      const prompt=`Use Newton-Raphson twice to solve ${cubicLabel(c)} = 0, starting with x<sub>0</sub> = ${x0}.`;
+      const answer=`x<sub>2</sub> = ${fmt(x2,5)}.`;
+      const steps=[
+        `f(x) = ${cubicLabel(c)} and f'(x) = ${derivativeCubicLabel()}.`,
+        `First iteration: f(${x0}) = ${num(f0)} and f'(${x0}) = ${fmt(fp0,4)}.`,
+        `x<sub>1</sub> = ${x0} &minus; ${vfrac(num(f0),fmt(fp0,4))} = ${fmt(x1,5)}.`,
+        `Second iteration: f(${fmt(x1,5)}) = ${fmt(f1,5)} and f'(${fmt(x1,5)}) = ${fmt(fp1,5)}.`,
+        `x<sub>2</sub> = ${fmt(x1,5)} &minus; ${vfrac(fmt(f1,5),fmt(fp1,5))} = ${fmt(x2,5)}.`
+      ];
+      return problem(prompt,answer,steps,'newton_two_steps');
+    }
+
+    function makeNewtonFormula(){
+      const c=choice([2,3,5,7,10]),x0=Math.ceil(Math.cbrt(c));
+      const f0=cubicValue(c,x0),fp0=derivativeCubicValue(x0),x1=x0-f0/fp0;
+      const prompt=`For f(x) = ${cubicLabel(c)}, derive the Newton-Raphson iteration formula and use x<sub>0</sub> = ${x0} to find x<sub>1</sub>.`;
+      const answer=`x<sub>n+1</sub> = ${vfrac('2x<sub>n</sub><sup>3</sup> + '+c,'3x<sub>n</sub><sup>2</sup>')}, x<sub>1</sub> = ${fmt(x1,5)}.`;
+      const steps=[
+        `Start with x<sub>n+1</sub> = x<sub>n</sub> &minus; ${vfrac('f(x<sub>n</sub>)',"f'(x<sub>n</sub>)")}.`,
+        `Here f(x<sub>n</sub>) = x<sub>n</sub><sup>3</sup> &minus; ${c} and f'(x<sub>n</sub>) = 3x<sub>n</sub><sup>2</sup>.`,
+        `x<sub>n+1</sub> = x<sub>n</sub> &minus; ${vfrac('x<sub>n</sub><sup>3</sup> &minus; '+c,'3x<sub>n</sub><sup>2</sup>')}.`,
+        `Write x<sub>n</sub> as ${vfrac('3x<sub>n</sub><sup>3</sup>','3x<sub>n</sub><sup>2</sup>')} so the terms can be combined.`,
+        `x<sub>n+1</sub> = ${vfrac('3x<sub>n</sub><sup>3</sup> &minus; (x<sub>n</sub><sup>3</sup> &minus; '+c+')','3x<sub>n</sub><sup>2</sup>')} = ${vfrac('2x<sub>n</sub><sup>3</sup> + '+c,'3x<sub>n</sub><sup>2</sup>')}.`,
+        `x<sub>1</sub> = ${x0} &minus; ${vfrac(num(f0),fp0)} = ${fmt(x1,5)}.`
+      ];
+      return problem(prompt,answer,steps,'newton_formula');
+    }
+
+    function makeTrapeziumTable(){
+      const h=choice([0.5,1,2]),a=randInt(0,3),n=4;
+      const xs=[0,1,2,3,4].map(i=>a+i*h);
+      const ys=xs.map(x=>Number((x*x+2).toFixed(3)));
+      const area=h/2*(ys[0]+ys[4]+2*(ys[1]+ys[2]+ys[3]));
+      const prompt=`Use the trapezium rule with h = ${h} for the ordinates y = ${ys.join(', ')}.`;
+      const answer=`Estimate = ${fmt(area,4)}.`;
+      const steps=[
+        `For 4 strips, the trapezium rule is ${vfrac('h','2')}[y<sub>0</sub> + y<sub>4</sub> + 2(y<sub>1</sub> + y<sub>2</sub> + y<sub>3</sub>)].`,
+        `Substitute h = ${h}: ${vfrac(h,'2')}[${ys[0]} + ${ys[4]} + 2(${ys[1]} + ${ys[2]} + ${ys[3]})].`,
+        `Interior sum: ${ys[1]} + ${ys[2]} + ${ys[3]} = ${fmt(ys[1]+ys[2]+ys[3],4)}.`,
+        `Estimate = ${vfrac(h,'2')}[${fmt(ys[0]+ys[4],4)} + 2(${fmt(ys[1]+ys[2]+ys[3],4)})] = ${fmt(area,4)}.`
+      ];
+      return problem(prompt,answer,steps,'trapezium_table');
+    }
+
+    function makeTrapeziumFunction(){
+      const a=0,b=choice([2,3,4]),n=choice([2,4]),h=(b-a)/n,k=randInt(1,4);
+      const xs=Array.from({length:n+1},(_,i)=>a+i*h);
+      const ys=xs.map(x=>x*x+k);
+      const interior=ys.slice(1,-1).reduce((s,v)=>s+v,0);
+      const area=h/2*(ys[0]+ys[n]+2*interior);
+      const prompt=`Use the trapezium rule with ${n} strips to estimate &int;<sub>${a}</sub><sup>${b}</sup> (x<sup>2</sup> + ${k}) dx.`;
+      const answer=`Estimate = ${fmt(area,4)}.`;
+      const steps=[
+        `Step size h = ${vfrac(`${b} &minus; ${a}`,n)} = ${fmt(h,4)}.`,
+        `The x-values are ${xs.map(x=>fmt(x,4)).join(', ')}.`,
+        `The y-values from y = x<sup>2</sup> + ${k} are ${ys.map(y=>fmt(y,4)).join(', ')}.`,
+        `Use ${vfrac('h','2')}[y<sub>0</sub> + y<sub>${n}</sub> + 2(sum of interior ordinates)].`,
+        `Estimate = ${vfrac(fmt(h,4),'2')}[${fmt(ys[0],4)} + ${fmt(ys[n],4)} + 2(${fmt(interior,4)})] = ${fmt(area,4)}.`
+      ];
+      return problem(prompt,answer,steps,'trapezium_function');
+    }
+
+    function makeTrapeziumIntervalCount(){
+      const a=randInt(0,2),b=randInt(6,10),n=choice([4,5,6,8]),h=(b-a)/n;
+      const prompt=`The interval [${a}, ${b}] is divided into ${n} equal strips for the trapezium rule. Find the step size h and the number of ordinates used.`;
+      const answer=`h = ${fmt(h,4)} and ordinates = ${n+1}.`;
+      const steps=[
+        `Step size is interval width divided by number of strips.`,
+        `h = ${vfrac(`${b} &minus; ${a}`,n)} = ${fmt(h,4)}.`,
+        `If there are ${n} strips, there is one more ordinate than the number of strips.`,
+        `Number of ordinates = ${n} + 1 = ${n+1}.`
+      ];
+      return problem(prompt,answer,steps,'trapezium_interval_count');
+    }
+
+    function makeEulerOneStep(){
+      const h=choice([0.1,0.2,0.25,0.5]),x0=0,y0=randInt(1,5),a=randInt(1,3);
+      const slope=a*x0+y0,next=y0+h*slope;
+      const prompt=`Use one Euler step with ${vfrac('dy','dx')} = ${a}x + y, x<sub>0</sub> = 0, y<sub>0</sub> = ${y0}, and h = ${h}.`;
+      const answer=`y<sub>1</sub> = ${fmt(next,4)}.`;
+      const steps=[
+        `Euler's method uses y<sub>n+1</sub> = y<sub>n</sub> + hf(x<sub>n</sub>, y<sub>n</sub>).`,
+        `Here f(x,y) = ${a}x + y.`,
+        `f(0, ${y0}) = ${a}(0) + ${y0} = ${slope}.`,
+        `y<sub>1</sub> = ${y0} + ${h}(${slope}) = ${fmt(next,4)}.`
+      ];
+      return problem(prompt,answer,steps,'euler_one_step');
+    }
+
+    function makeEulerTable(){
+      const h=choice([0.1,0.2,0.25]),stepsCount=3,y0=randInt(1,4),a=randInt(1,2);
+      let x=0,y=y0;
+      const rows=[];
+      for(let i=0;i<stepsCount;i++){
+        const slope=a*x+y;
+        const next=y+h*slope;
+        rows.push({x,y,slope,next});
+        x+=h;y=next;
+      }
+      const prompt=`Use Euler's method with ${vfrac('dy','dx')} = ${a}x + y, y(0) = ${y0}, and h = ${h} to estimate y(${fmt(h*stepsCount,3)}).`;
+      const answer=`y(${fmt(h*stepsCount,3)}) &asymp; ${fmt(y,5)}.`;
+      const stepLines=[
+        `Euler's method uses y<sub>n+1</sub> = y<sub>n</sub> + hf(x<sub>n</sub>, y<sub>n</sub>).`
+      ];
+      rows.forEach((row,index)=>{
+        stepLines.push(`Step ${index+1}: f(${fmt(row.x,3)}, ${fmt(row.y,5)}) = ${a}(${fmt(row.x,3)}) + ${fmt(row.y,5)} = ${fmt(row.slope,5)}.`);
+        stepLines.push(`y<sub>${index+1}</sub> = ${fmt(row.y,5)} + ${h}(${fmt(row.slope,5)}) = ${fmt(row.next,5)}.`);
+      });
+      return problem(prompt,answer,stepLines,'euler_table');
+    }
+
+    function makeEulerReverse(){
+      const y0=randInt(1,4),slope=randInt(2,8),h=choice([0.1,0.2,0.25,0.5]),y1=y0+h*slope;
+      const prompt=`An Euler step gives y<sub>1</sub> = ${fmt(y1,4)} from y<sub>0</sub> = ${y0} when f(x<sub>0</sub>, y<sub>0</sub>) = ${slope}. Find h.`;
+      const answer=`h = ${fmt(h,4)}.`;
+      const steps=[
+        `Euler's update is y<sub>1</sub> = y<sub>0</sub> + hf(x<sub>0</sub>, y<sub>0</sub>).`,
+        `${fmt(y1,4)} = ${y0} + h(${slope}).`,
+        `${fmt(y1-y0,4)} = ${slope}h.`,
+        `h = ${vfrac(fmt(y1-y0,4),slope)} = ${fmt(h,4)}.`
+      ];
+      return problem(prompt,answer,steps,'euler_reverse');
+    }
+
+    function generateProblemFor(type){
+      const generators={
+        sign_change:makeSignChange,
+        bisection_step:makeBisectionStep,
+        fixed_point_iteration:makeFixedPoint,
+        root_mixed:()=>generateProblemFor(choice(['sign_change','bisection_step','fixed_point_iteration'])),
+        newton_one_step:makeNewtonOneStep,
+        newton_two_steps:makeNewtonTwoSteps,
+        newton_formula:makeNewtonFormula,
+        newton_mixed:()=>generateProblemFor(choice(['newton_one_step','newton_two_steps','newton_formula'])),
+        trapezium_table:makeTrapeziumTable,
+        trapezium_function:makeTrapeziumFunction,
+        trapezium_interval_count:makeTrapeziumIntervalCount,
+        trapezium_mixed:()=>generateProblemFor(choice(['trapezium_table','trapezium_function','trapezium_interval_count'])),
+        euler_one_step:makeEulerOneStep,
+        euler_table:makeEulerTable,
+        euler_reverse:makeEulerReverse,
+        euler_mixed:()=>generateProblemFor(choice(['euler_one_step','euler_table','euler_reverse']))
+      };
+      return generators[type]();
+    }
+
+    function populateDropdown(){
+      const select=document.getElementById('type-dropdown');
+      const types=levelConfigs[currentLevel].types;
+      select.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      select.value=currentType;
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';answersVisible=false;stepsVisible=false;
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index===level-1));
+      document.getElementById('level-title').textContent=levelConfigs[level].title;
+      document.getElementById('level-description').textContent=levelConfigs[level].description;
+      populateDropdown();
+      showBlankPage();
+    }
+
+    function typeChanged(){
+      currentType=document.getElementById('type-dropdown').value;
+      answersVisible=false;stepsVisible=false;
+      if(currentType==='select')showBlankPage();else generateNewSet();
+    }
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').textContent='Select a question type';
+      document.getElementById('problem-set-header').className='problem-set-header visible';
+      document.getElementById('set-instruction').textContent='Choose a type, then press New to generate numerical methods questions.';
+      document.getElementById('set-instruction').className='set-instruction visible';
+      document.getElementById('problem-list').innerHTML='';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      problems=[];answersVisible=false;stepsVisible=false;
+      const config=levelConfigs[currentLevel];
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<80){
+        const type=currentType==='all'?choice(config.types.filter(t=>!t.endsWith('_mixed'))):currentType;
+        const p=generateProblemFor(type);
+        const key=p.prompt;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed numerical methods question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|&minus;|&int;|<sub>|<sup>|vfrac|&asymp;|approx|f\(|y<sub>/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div class="equation">${p.prompt}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      display.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        display.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)display.className='timer-display warning';
+        if(timeRemaining<=0){stopTimer();display.textContent='Time Up';display.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;
+      const display=document.getElementById('timer-display');
+      if(display){display.textContent='Ready';display.className='timer-display'}
+    }
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+</body>
+</html>

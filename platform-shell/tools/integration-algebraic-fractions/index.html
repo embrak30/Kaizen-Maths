@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integration of Algebraic Fractions</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f5f7fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#5b2f7f;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-410px;top:0;z-index:1000;width:410px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#5b2f7f;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #14b8a6;color:#5b2f7f;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1240px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#5b2f7f;background-image:linear-gradient(135deg,rgba(255,255,255,.16),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#f0e9f7}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#f0e9f7;color:#283044;cursor:pointer;font-size:.94em;font-weight:850}.tab.active{background:#fff;color:#5b2f7f;border-bottom-color:#14b8a6}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #e2d8ec;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#5b2f7f;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:430px;padding:8px 10px;border:2px solid #d8c8e8;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #d8c8e8;border-radius:6px;background:#fff;color:#5b2f7f;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#5b2f7f;color:#5b2f7f}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#5b2f7f}.btn-success{background:#2f855a}.btn-warning{background:#14b8a6}.btn-danger{background:#d92d20}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#5b2f7f;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #c7e9e4;border-radius:6px;background:#ecfdf9;color:#145c55;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-left:4px solid #5b2f7f;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:center;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#5b2f7f;color:#fff;font-weight:850}
+    .equation{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.18em;font-weight:500;line-height:1.48;color:#172033;overflow-x:auto;max-width:100%}.problem-answer{display:none;white-space:normal;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #5b2f7f;border-radius:6px;background:#faf7ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#5b2f7f;font-weight:850}.solution-steps{font-size:.98em;line-height:1.45}.step{margin:5px 0;color:#223043}.step-equation{margin:6px 0;padding:7px;border:1px solid #e1d7ed;border-radius:5px;background:#fff;color:#4c1d68;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:500}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-weight:850}
+    .vfrac{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;vertical-align:middle;line-height:1.05;margin:0 3px}.vfrac span:first-child{padding:0 5px 2px;border-bottom:1.7px solid currentColor}.vfrac span:last-child{padding:2px 5px 0}.timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column;align-items:flex-start}.equation{font-size:1.02em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Integration of Algebraic Fractions</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool develops integration of rational expressions by rewriting algebraic fractions into forms that can be integrated directly.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Linear denominators, logarithmic derivative forms, and simple splitting.</li>
+        <li><strong>Level 2:</strong> Cancelling factors and polynomial division before integrating.</li>
+        <li><strong>Level 3:</strong> Partial fractions with distinct, repeated, and improper rational expressions.</li>
+        <li><strong>Level 4:</strong> Quadratic denominators, completing the square, logarithm and inverse tangent forms.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Students should rewrite the fraction before integrating.</li>
+        <li>Look for numerator as a multiple of the derivative of the denominator.</li>
+        <li>Improper algebraic fractions need division before integration.</li>
+        <li>Quadratic denominators may require completing the square and an inverse tangent result.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Integration of Algebraic Fractions</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Log Forms</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Simplify First</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Partial Fractions</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Quadratics</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Logarithmic Forms</h3>
+        <p id="level-description">Recognise direct logarithmic integrals and split simple algebraic fractions.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Logarithmic Forms',description:'Recognise direct logarithmic integrals and split simple algebraic fractions.',types:['linear_log','derivative_over_function','split_linear_fraction','level1_mixed']},
+      2:{title:'Level 2: Simplify Before Integrating',description:'Cancel common factors or use division before integrating.',types:['cancel_factor','division_linear','improper_linear','level2_mixed']},
+      3:{title:'Level 3: Integrating Partial Fractions',description:'Decompose rational functions, then integrate each fraction.',types:['distinct_linear_pf','repeated_linear_pf','improper_pf','level3_mixed']},
+      4:{title:'Level 4: Quadratic Denominators',description:'Use completing the square, logarithmic derivative forms, and inverse tangent forms.',types:['quadratic_log','basic_arctan','complete_square_arctan','log_arctan_split','level4_mixed']}
+    };
+
+    const typeDisplayNames={
+      linear_log:'Type 1: Linear denominator logarithm',
+      derivative_over_function:'Type 2: Numerator is derivative of denominator',
+      split_linear_fraction:'Type 3: Split a linear algebraic fraction',
+      level1_mixed:'Type 4: Mixed logarithmic forms',
+      cancel_factor:'Type 1: Cancel before integrating',
+      division_linear:'Type 2: Divide by a linear factor',
+      improper_linear:'Type 3: Improper algebraic fraction',
+      level2_mixed:'Type 4: Mixed simplify-first problems',
+      distinct_linear_pf:'Type 1: Distinct linear factors',
+      repeated_linear_pf:'Type 2: Repeated linear factor',
+      improper_pf:'Type 3: Improper partial fraction integral',
+      level3_mixed:'Type 4: Mixed partial fraction integrals',
+      quadratic_log:'Type 1: Quadratic logarithmic derivative',
+      basic_arctan:'Type 2: Standard inverse tangent form',
+      complete_square_arctan:'Type 3: Complete the square first',
+      log_arctan_split:'Type 4: Logarithm and inverse tangent split',
+      level4_mixed:'Type 5: Mixed quadratic denominators'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const typeInstructions={
+      linear_log:'Integrate each algebraic fraction by using the linear denominator logarithm form.',
+      derivative_over_function:'Identify the derivative of the denominator before integrating.',
+      split_linear_fraction:'Rewrite the algebraic fraction as a constant plus a proper fraction, then integrate.',
+      level1_mixed:'Answer each logarithmic-form integration question.',
+      cancel_factor:'Cancel the common factor before integrating.',
+      division_linear:'Use polynomial division before integrating.',
+      improper_linear:'Rewrite the improper algebraic fraction before integrating.',
+      level2_mixed:'Answer each simplify-first integration question.',
+      distinct_linear_pf:'Decompose into partial fractions, then integrate.',
+      repeated_linear_pf:'Use the repeated-factor partial fraction form, then integrate.',
+      improper_pf:'Divide first, decompose the proper fraction, then integrate.',
+      level3_mixed:'Answer each partial-fraction integration question.',
+      quadratic_log:'Recognise when the numerator is the derivative of the quadratic denominator.',
+      basic_arctan:'Use the standard inverse tangent integral form.',
+      complete_square_arctan:'Complete the square, then use the inverse tangent form.',
+      log_arctan_split:'Split the numerator into a derivative part and a constant part.',
+      level4_mixed:'Answer each quadratic denominator question.'
+    };
+
+    function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[randInt(0,arr.length-1)]}
+    function nonZero(min,max){let n=0;while(n===0)n=randInt(min,max);return n}
+    function num(n){return String(n).replace('-', '&minus;')}
+    function signed(n){return n<0?`&minus; ${Math.abs(n)}`:`+ ${n}`}
+    function simplify(n,d){const g=gcd(Math.abs(n),Math.abs(d));n/=g;d/=g;if(d<0){n=-n;d=-d}return [n,d]}
+    function gcd(a,b){while(b){const t=b;b=a%b;a=t}return a||1}
+    function coeff(c,variable,first=false){
+      if(c===0)return first?'0':'';
+      const abs=Math.abs(c);
+      const body=abs===1?variable:`${abs}${variable}`;
+      if(first)return c<0?`&minus;${body}`:body;
+      return c<0?` &minus; ${body}`:` + ${body}`;
+    }
+    function linear(a,b){
+      let out='';
+      if(a!==0)out+=coeff(a,'x',true);
+      if(b!==0)out+=b<0?` &minus; ${Math.abs(b)}`:` + ${b}`;
+      return out||'0';
+    }
+    function quadraticPoly(a,b,c){
+      let out='';
+      if(a!==0){
+        if(a===1)out+='x<sup>2</sup>';
+        else if(a===-1)out+='&minus;x<sup>2</sup>';
+        else out+=`${num(a)}x<sup>2</sup>`;
+      }
+      if(b!==0)out+=coeff(b,'x',out==='');
+      if(c!==0)out+=c<0?` &minus; ${Math.abs(c)}`:` + ${c}`;
+      return out||'0';
+    }
+    function linearIntegral(a,b){
+      const first=`${simpleFrac(a,2)}x<sup>2</sup>`;
+      if(b===0)return first;
+      if(b===1)return `${first} + x`;
+      if(b===-1)return `${first} &minus; x`;
+      return `${first}${b<0?' &minus; ':' + '}${Math.abs(b)}x`;
+    }
+    function simpleLinearShift(a){return a<0?`x &minus; ${Math.abs(a)}`:`x + ${a}`}
+    function quadratic(p,q){return `x<sup>2</sup>${p<0?` &minus; ${Math.abs(p)}x`:` + ${p}x`}${q<0?` &minus; ${Math.abs(q)}`:` + ${q}`}`}
+    function squareShift(h){return h<0?`x &minus; ${Math.abs(h)}`:`x + ${h}`}
+    function expandedSquareDen(h,a){return `x<sup>2</sup>${2*h<0?` &minus; ${Math.abs(2*h)}x`:` + ${2*h}x`} + ${h*h+a*a}`}
+    function frac(n,d){return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`}
+    function simpleFrac(n,d){
+      const [a,b]=simplify(Number(n),Number(d));
+      return b===1?num(a):frac(num(a),num(b));
+    }
+    function constantMultiple(c,body){
+      if(c===1)return body;
+      if(c===-1)return `&minus;${body}`;
+      return `${num(c)}${body}`;
+    }
+    function logTerm(c,inside){
+      const [n,d]=simplify(c,1);
+      const body=`ln|${inside}|`;
+      if(n===1&&d===1)return body;
+      if(n===-1&&d===1)return `&minus;${body}`;
+      return `${num(n)}${body}`;
+    }
+    function fracCoeff(n,d,body){
+      const [a,b]=simplify(n,d);
+      if(a===0)return '';
+      if(b===1)return a===1?body:a===-1?`&minus;${body}`:`${num(a)}${body}`;
+      return `${frac(num(a),num(b))}${body}`;
+    }
+    function signedLogTerm(n,d,inside,first=false){
+      const [a,b]=simplify(n,d);
+      const sign=a<0;
+      const abs=Math.abs(a);
+      const coefficient=b===1?(abs===1?'':String(abs)):frac(abs,b);
+      const body=`${coefficient}ln|${inside}|`;
+      if(first)return sign?`&minus;${body}`:body;
+      return sign?` &minus; ${body}`:` + ${body}`;
+    }
+    function signedRawTerm(coef,body,first=false){
+      const sign=coef<0;
+      const abs=Math.abs(coef);
+      const prefix=abs===1?'':String(abs);
+      const term=`${prefix}${body}`;
+      if(first)return sign?`&minus;${term}`:term;
+      return sign?` &minus; ${term}`:` + ${term}`;
+    }
+    function problem(prompt,answer,steps,type=currentType){return {prompt,answer,steps,instruction:typeInstructions[type]||'Integrate each expression.'}}
+
+    function makeLinearLog(){
+      const a=nonZero(2,6),b=nonZero(-8,8),m=nonZero(-4,5),k=a*m;
+      const den=linear(a,b);
+      const prompt=`Find &int; ${frac(num(k),den)} dx.`;
+      const answer=`${signedLogTerm(k,a,den,true)} + C`;
+      const steps=[
+        `Let u = ${den}.`,
+        `${frac('du','dx')} = ${a}, so dx = ${frac('du',a)}.`,
+        `&int; ${frac(num(k),den)} dx = &int; ${frac(num(k),'u')} ${frac('du',a)}.`,
+        `= ${simpleFrac(k,a)}&int; ${frac('1','u')} du.`,
+        `= ${signedLogTerm(k,a,'u',true)} + C.`,
+        `Substitute u = ${den}: ${answer}.`
+      ];
+      return problem(prompt,answer,steps,'linear_log');
+    }
+
+    function makeDerivativeOverFunction(){
+      const p=nonZero(-6,6),q=randInt(5,16);
+      const den=quadratic(p,q);
+      const numerator=`2x${p<0?` &minus; ${Math.abs(p)}`:` + ${p}`}`;
+      const prompt=`Find &int; ${frac(numerator,den)} dx.`;
+      const answer=`ln|${den}| + C`;
+      const steps=[
+        `Let f(x) = ${den}.`,
+        `Then f'(x) = ${numerator}.`,
+        `The numerator is exactly the derivative of the denominator.`,
+        `&int; ${frac(`f'(x)`,'f(x)')} dx = ln|f(x)| + C.`,
+        `Therefore &int; ${frac(numerator,den)} dx = ${answer}.`
+      ];
+      return problem(prompt,answer,steps,'derivative_over_function');
+    }
+
+    function makeSplitLinearFraction(){
+      const a=nonZero(2,6),b=nonZero(-7,7),q=nonZero(-4,4),r=nonZero(-8,8);
+      const m=q*a,n=q*b+r,den=linear(a,b),numExp=linear(m,n);
+      const answer=`${q===1?'x':q===-1?'&minus;x':`${num(q)}x`}${signedLogTerm(r,a,den)} + C`;
+      const prompt=`Find &int; ${frac(numExp,den)} dx.`;
+      const steps=[
+        `Rewrite the numerator in terms of the denominator.`,
+        `${numExp} = ${num(q)}(${den}) ${signed(r)}.`,
+        `So ${frac(numExp,den)} = ${num(q)} + ${frac(num(r),den)}.`,
+        `&int; ${frac(numExp,den)} dx = &int; ${num(q)} dx + &int; ${frac(num(r),den)} dx.`,
+        `= ${answer}.`
+      ];
+      return problem(prompt,answer,steps,'split_linear_fraction');
+    }
+
+    function makeCancelFactor(){
+      const a=randInt(1,6),p=nonZero(2,7),q=nonZero(-6,6);
+      const common=simpleLinearShift(a),inner=linear(p,q);
+      const prompt=`Find &int; ${frac(`(${common})(${inner})`,common)} dx.`;
+      const answer=`${linearIntegral(p,q)} + C`;
+      const steps=[
+        `The numerator and denominator share a common factor of (${common}).`,
+        `${frac(`(${common})(${inner})`,common)} = ${inner}.`,
+        `Now integrate the simplified expression.`,
+        `&int; (${inner}) dx = ${answer}.`
+      ];
+      return problem(prompt,answer,steps,'cancel_factor');
+    }
+
+    function makeDivisionLinear(){
+      const c=nonZero(-5,5),u=nonZero(1,5),v=nonZero(-6,6),r=nonZero(-9,9);
+      const den=simpleLinearShift(c);
+      const bx=v+u*c,constant=v*c+r;
+      const numerator=quadraticPoly(u,bx,constant);
+      const quotient=linear(u,v);
+      const answer=`${linearIntegral(u,v)}${signedLogTerm(r,1,den)} + C`;
+      const prompt=`Find &int; ${frac(numerator,den)} dx.`;
+      const steps=[
+        `Use division to rewrite the improper fraction.`,
+        `${numerator} = (${den})(${quotient}) ${signed(r)}.`,
+        `So ${frac(numerator,den)} = ${quotient} + ${frac(num(r),den)}.`,
+        `Integrate each part: &int; (${quotient}) dx = ${linearIntegral(u,v)}.`,
+        `Also &int; ${frac(num(r),den)} dx = ${num(r)}ln|${den}|.`,
+        `Final answer: ${answer}.`
+      ];
+      return problem(prompt,answer,steps,'division_linear');
+    }
+
+    function makeImproperLinear(){
+      return makeDivisionLinear();
+    }
+
+    function makeDistinctPF(){
+      let a=randInt(1,7),b=randInt(1,7);
+      while(a===b)b=randInt(1,7);
+      const A=nonZero(-5,5),B=nonZero(-5,5);
+      const m=A+B,n=A*b+B*a;
+      const den=`(x + ${a})(x + ${b})`,numExp=linear(m,n);
+      const prompt=`Find &int; ${frac(numExp,den)} dx.`;
+      const answer=`${signedLogTerm(A,1,`x + ${a}`,true)}${signedLogTerm(B,1,`x + ${b}`)} + C`;
+      const steps=[
+        `Decompose the fraction first.`,
+        `${frac(numExp,den)} = ${frac('A',`x + ${a}`)} + ${frac('B',`x + ${b}`)}.`,
+        `${numExp} = A(x + ${b}) + B(x + ${a}).`,
+        `Comparing coefficients gives A = ${num(A)} and B = ${num(B)}.`,
+        `So ${frac(numExp,den)} = ${frac(num(A),`x + ${a}`)} + ${frac(num(B),`x + ${b}`)}.`,
+        `Integrate term by term: ${answer}.`
+      ];
+      return problem(prompt,answer,steps,'distinct_linear_pf');
+    }
+
+    function makeRepeatedPF(){
+      const a=randInt(1,7),A=nonZero(-5,5),B=nonZero(-8,8);
+      const n=A*a+B,numExp=linear(A,n),den=`(x + ${a})<sup>2</sup>`;
+      const prompt=`Find &int; ${frac(numExp,den)} dx.`;
+      const answer=`${signedLogTerm(A,1,`x + ${a}`,true)}${signedRawTerm(-B,frac('1',`x + ${a}`))} + C`;
+      const steps=[
+        `Use the repeated-factor form.`,
+        `${frac(numExp,den)} = ${frac('A',`x + ${a}`)} + ${frac('B',`(x + ${a})<sup>2</sup>`)}.`,
+        `${numExp} = A(x + ${a}) + B.`,
+        `Comparing coefficients gives A = ${num(A)} and B = ${num(B)}.`,
+        `&int; ${frac(num(A),`x + ${a}`)} dx = ${num(A)}ln|x + ${a}|.`,
+        `&int; ${frac(num(B),`(x + ${a})<sup>2</sup>`)} dx = ${num(-B)}${frac('1',`x + ${a}`)}.`,
+        `Final answer: ${answer}.`
+      ];
+      return problem(prompt,answer,steps,'repeated_linear_pf');
+    }
+
+    function makeImproperPF(){
+      let a=randInt(1,6),b=randInt(1,6);
+      while(a===b)b=randInt(1,6);
+      const q=nonZero(1,4),A=nonZero(-4,4),B=nonZero(-4,4);
+      const xCoeff=q*(a+b)+A+B,constant=q*a*b+A*b+B*a;
+      const numerator=quadraticPoly(q,xCoeff,constant);
+      const den=`(x + ${a})(x + ${b})`;
+      const answer=`${q}x${signedLogTerm(A,1,`x + ${a}`)}${signedLogTerm(B,1,`x + ${b}`)} + C`;
+      const prompt=`Find &int; ${frac(numerator,den)} dx.`;
+      const steps=[
+        `The fraction is improper, so divide or rewrite it first.`,
+        `${frac(numerator,den)} = ${q} + ${frac(`${linear(A+B,A*b+B*a)}`,den)}.`,
+        `Now decompose the proper fraction.`,
+        `${frac(`${linear(A+B,A*b+B*a)}`,den)} = ${frac(num(A),`x + ${a}`)} + ${frac(num(B),`x + ${b}`)}.`,
+        `So the integrand is ${q} + ${frac(num(A),`x + ${a}`)} + ${frac(num(B),`x + ${b}`)}.`,
+        `Integrate term by term: ${answer}.`
+      ];
+      return problem(prompt,answer,steps,'improper_pf');
+    }
+
+    function makeQuadraticLog(){
+      const p=nonZero(-6,6),q=randInt(6,18),m=nonZero(2,5);
+      const den=quadratic(p,q);
+      const numerator=`${2*m}x${m*p<0?` &minus; ${Math.abs(m*p)}`:` + ${m*p}`}`;
+      const prompt=`Find &int; ${frac(numerator,den)} dx.`;
+      const answer=`${m}ln|${den}| + C`;
+      const steps=[
+        `Let f(x) = ${den}.`,
+        `Then f'(x) = 2x${p<0?` &minus; ${Math.abs(p)}`:` + ${p}`}.`,
+        `The numerator is ${m}f'(x).`,
+        `&int; ${frac(`${m}f'(x)`,'f(x)')} dx = ${m}ln|f(x)| + C.`,
+        `Therefore the answer is ${answer}.`
+      ];
+      return problem(prompt,answer,steps,'quadratic_log');
+    }
+
+    function makeBasicArctan(){
+      const a=randInt(2,6),k=nonZero(1,8);
+      const den=`x<sup>2</sup> + ${a*a}`;
+      const prompt=`Find &int; ${frac(k,den)} dx.`;
+      const answer=`${simpleFrac(k,a)}tan<sup>-1</sup>${frac('x',a)} + C`;
+      const steps=[
+        `Use the standard result &int; ${frac('1','x<sup>2</sup> + a<sup>2</sup>')} dx = ${frac('1','a')}tan<sup>-1</sup>${frac('x','a')} + C.`,
+        `Here a<sup>2</sup> = ${a*a}, so a = ${a}.`,
+        `&int; ${frac(k,`x<sup>2</sup> + ${a*a}`)} dx = ${k} &int; ${frac('1',`x<sup>2</sup> + ${a*a}`)} dx.`,
+        `= ${simpleFrac(k,a)}tan<sup>-1</sup>${frac('x',a)} + C.`
+      ];
+      return problem(prompt,answer,steps,'basic_arctan');
+    }
+
+    function makeCompleteSquareArctan(){
+      const h=nonZero(-4,4),a=randInt(2,6),k=nonZero(1,8),den=expandedSquareDen(h,a),shift=squareShift(h);
+      const prompt=`Find &int; ${frac(k,den)} dx.`;
+      const answer=`${simpleFrac(k,a)}tan<sup>-1</sup>${frac(shift,a)} + C`;
+      const steps=[
+        `Complete the square in the denominator.`,
+        `${den} = (${shift})<sup>2</sup> + ${a*a}.`,
+        `Use u = ${shift}, so du = dx.`,
+        `The integral becomes &int; ${frac(k,`u<sup>2</sup> + ${a*a}`)} du.`,
+        `= ${simpleFrac(k,a)}tan<sup>-1</sup>${frac('u',a)} + C.`,
+        `Substitute back u = ${shift}: ${answer}.`
+      ];
+      return problem(prompt,answer,steps,'complete_square_arctan');
+    }
+
+    function makeLogArctanSplit(){
+      const h=nonZero(-4,4),a=randInt(2,5),m=nonZero(1,4),k=nonZero(1,7),den=expandedSquareDen(h,a),shift=squareShift(h);
+      const xCoeff=2*m,constant=2*m*h+k,numerator=linear(xCoeff,constant);
+      const prompt=`Find &int; ${frac(numerator,den)} dx.`;
+      const answer=`${m}ln(${den}) + ${simpleFrac(k,a)}tan<sup>-1</sup>${frac(shift,a)} + C`;
+      const steps=[
+        `Complete the square: ${den} = (${shift})<sup>2</sup> + ${a*a}.`,
+        `The derivative of the denominator is 2(${shift}) = ${linear(2,2*h)}.`,
+        `Rewrite the numerator as ${m}[${linear(2,2*h)}] ${signed(k)}.`,
+        `Split the integral into two parts.`,
+        `&int; ${frac(`${m}(${linear(2,2*h)})`,den)} dx + &int; ${frac(k,den)} dx.`,
+        `The first part is ${m}ln(${den}).`,
+        `The second part is ${simpleFrac(k,a)}tan<sup>-1</sup>${frac(shift,a)}.`,
+        `Final answer: ${answer}.`
+      ];
+      return problem(prompt,answer,steps,'log_arctan_split');
+    }
+
+    function generateProblemFor(type){
+      const generators={
+        linear_log:makeLinearLog,
+        derivative_over_function:makeDerivativeOverFunction,
+        split_linear_fraction:makeSplitLinearFraction,
+        level1_mixed:()=>generateProblemFor(choice(['linear_log','derivative_over_function','split_linear_fraction'])),
+        cancel_factor:makeCancelFactor,
+        division_linear:makeDivisionLinear,
+        improper_linear:makeImproperLinear,
+        level2_mixed:()=>generateProblemFor(choice(['cancel_factor','division_linear','improper_linear'])),
+        distinct_linear_pf:makeDistinctPF,
+        repeated_linear_pf:makeRepeatedPF,
+        improper_pf:makeImproperPF,
+        level3_mixed:()=>generateProblemFor(choice(['distinct_linear_pf','repeated_linear_pf','improper_pf'])),
+        quadratic_log:makeQuadraticLog,
+        basic_arctan:makeBasicArctan,
+        complete_square_arctan:makeCompleteSquareArctan,
+        log_arctan_split:makeLogArctanSplit,
+        level4_mixed:()=>generateProblemFor(choice(['quadratic_log','basic_arctan','complete_square_arctan','log_arctan_split']))
+      };
+      return generators[type]();
+    }
+
+    function populateDropdown(){
+      const select=document.getElementById('type-dropdown');
+      const types=levelConfigs[currentLevel].types;
+      select.innerHTML='<option value="select">Select Question Type</option><option value="all">Mixed set</option>'+types.map(type=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join('');
+      select.value=currentType;
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';answersVisible=false;stepsVisible=false;
+      document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index===level-1));
+      document.getElementById('level-title').textContent=levelConfigs[level].title;
+      document.getElementById('level-description').textContent=levelConfigs[level].description;
+      populateDropdown();
+      showBlankPage();
+    }
+
+    function typeChanged(){
+      currentType=document.getElementById('type-dropdown').value;
+      answersVisible=false;stepsVisible=false;
+      if(currentType==='select')showBlankPage();else generateNewSet();
+    }
+
+    function showBlankPage(){
+      document.getElementById('problem-set-header').textContent='Select a question type';
+      document.getElementById('problem-set-header').className='problem-set-header visible';
+      document.getElementById('set-instruction').textContent='Choose a type, then press New to generate integration questions.';
+      document.getElementById('set-instruction').className='set-instruction visible';
+      document.getElementById('problem-list').innerHTML='';
+    }
+
+    function generateNewSet(){
+      if(currentType==='select'){showBlankPage();return}
+      problems=[];answersVisible=false;stepsVisible=false;
+      const config=levelConfigs[currentLevel];
+      const seen=new Set();
+      let guard=0;
+      while(problems.length<5&&guard<80){
+        const type=currentType==='all'?choice(config.types.filter(t=>!t.endsWith('_mixed'))):currentType;
+        const p=generateProblemFor(type);
+        const key=p.prompt;
+        if(!seen.has(key)){seen.add(key);problems.push(p)}
+        guard++;
+      }
+      renderProblems();
+    }
+
+    function renderProblems(){
+      const list=document.getElementById('problem-list');
+      const header=document.getElementById('problem-set-header');
+      const instruction=document.getElementById('set-instruction');
+      const config=levelConfigs[currentLevel];
+      list.innerHTML='';
+      header.textContent=currentType==='all'?`${config.title}: Mixed set`:typeDisplayNames[currentType];
+      header.className='problem-set-header visible';
+      const uniqueInstructions=[...new Set(problems.map(p=>p.instruction).filter(Boolean))];
+      instruction.textContent=uniqueInstructions.length===1?uniqueInstructions[0]:'Answer each mixed algebraic-fraction integration question.';
+      instruction.className='set-instruction visible';
+      problems.forEach((p,index)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(step=>{
+          const text=String(step);
+          const className=/=|&int;|ln|tan|vfrac|<sup>|<sub>|frac\(/.test(text)?'step-equation':'step';
+          return `<div class="${className}">${text}</div>`;
+        }).join('');
+        li.innerHTML=`
+          <div class="problem-header">
+            <div class="problem-left">
+              <div class="problem-number">${index+1}</div>
+              <div class="equation">${p.prompt}</div>
+            </div>
+            <div class="problem-answer" id="quick-answer-${index}">${p.answer}</div>
+          </div>
+          <div class="steps-section" id="steps-${index}">
+            <div class="answer-label">Worked solution:</div>
+            <div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById(`quick-answer-${i}`)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById(`steps-${i}`)?.classList.toggle('visible',stepsVisible))}
+    function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;
+      const display=document.getElementById('timer-display');
+      display.className='timer-display active';
+      display.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        display.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)display.className='timer-display warning';
+        if(timeRemaining<=0){stopTimer();display.textContent='Time Up';display.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;
+      const display=document.getElementById('timer-display');
+      if(display){display.textContent='Ready';display.className='timer-display'}
+    }
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+
+    populateDropdown();
+    showBlankPage();
+  </script>
+  <script src="../_shared/math-render.js?v=math-render-arrow-1"></script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+</body>
+</html>
