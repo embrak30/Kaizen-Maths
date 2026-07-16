@@ -201,6 +201,25 @@ const tools = [
     ]
   },
   {
+    slug: "volumes-of-revolution",
+    title: "Volumes of Revolution",
+    category: "Algebra",
+    level: "A-Level / Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate integration practice for volumes of revolution, including the disc method, expanded radius expressions, washers between curves, y-axis rotation, and parameter problems.",
+    tags: ["algebra", "calculus", "integration", "volumes of revolution", "disc method", "washer method", "A-Level Pure", "Further Maths"],
+    toolPath: "tools/volumes-of-revolution/index.html?v=volumes-revolution-1",
+    imported: true,
+    teacherNotes: [
+      "Students identify the radius first, then use the correct volume formula for the axis of rotation.",
+      "Worked steps show the squared radius, expansion or simplification, integration, substitution of bounds, and multiplication by pi.",
+      "Washer questions emphasise outer radius squared minus inner radius squared.",
+      "The y-axis questions use x as the radius and integrate with respect to y."
+    ]
+  },
+  {
     slug: "integration-algebraic-fractions",
     title: "Integration of Algebraic Fractions",
     category: "Algebra",
@@ -2185,6 +2204,7 @@ const algebraToolGroups = {
   "advanced-differentiation": "Calculus",
   "integration": "Calculus",
   "advanced-integration": "Calculus",
+  "volumes-of-revolution": "Calculus",
   "integration-algebraic-fractions": "Calculus",
   "differential-equations": "Calculus",
   "partial-fractions": "A-Level and Further Pure",
@@ -7743,8 +7763,9 @@ const curatedRelatedToolSlugs = {
   "matrices": ["linear-algebra", "advanced-matrices", "further-vectors", "simultaneous-equations"],
   "advanced-matrices": ["linear-algebra", "matrices", "further-vectors", "complex-numbers"],
   "linear-algebra": ["matrices", "advanced-matrices", "further-vectors", "simultaneous-equations"],
-  "integration": ["advanced-integration", "integration-algebraic-fractions", "differentiation-polynomials", "numerical-methods"],
-  "advanced-integration": ["integration-algebraic-fractions", "integration", "partial-fractions", "differential-equations"],
+  "integration": ["advanced-integration", "volumes-of-revolution", "integration-algebraic-fractions", "differentiation-polynomials"],
+  "advanced-integration": ["volumes-of-revolution", "integration-algebraic-fractions", "integration", "differential-equations"],
+  "volumes-of-revolution": ["integration", "advanced-integration", "integration-algebraic-fractions", "differentiation-polynomials"],
   "integration-algebraic-fractions": ["partial-fractions", "advanced-integration", "integration", "numerical-methods"],
   "partial-fractions": ["integration-algebraic-fractions", "algebraic-fractions", "advanced-factorisation", "advanced-integration"],
   "complex-numbers": ["polar-coordinates", "roots-of-equations", "trigonometric-functions", "advanced-matrices"],

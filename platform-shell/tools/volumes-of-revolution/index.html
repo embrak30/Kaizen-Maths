@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volumes of Revolution</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--ink:#172033;--muted:#667085;--line:#d8e2ef;--blue:#2563eb;--blue-dark:#1d4ed8;--teal:#0f9f9a;--green:#15803d;--amber:#d97706;--red:#dc2626;--soft:#f7fafc}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:linear-gradient(135deg,#f5f9ff,#eefcf8);color:var(--ink);font-family:var(--text-font,"Segoe UI",Tahoma,Geneva,Verdana,sans-serif)}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:var(--blue-dark);color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-420px;top:0;z-index:1000;width:420px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:var(--blue-dark);color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--teal);color:var(--blue-dark);font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#475467}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1280px;margin:0 auto;overflow:hidden;border-radius:10px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.11)}
+    .header{padding:18px;text-align:center;color:#fff;background:radial-gradient(circle at 18% 20%,rgba(20,184,166,.85),transparent 34%),linear-gradient(135deg,#1e3a8a,#2563eb)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.22)}
+    .tabs{display:flex;background:#eaf1ff}.tab{flex:1;padding:12px 8px;border:0;border-bottom:3px solid transparent;background:#eaf1ff;color:#1e3a8a;cursor:pointer;font-size:.93em;font-weight:850}.tab.active{background:#fff;color:var(--blue-dark);border-bottom-color:var(--teal)}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line);background:#f8fbff}.level-info h3{margin-bottom:3px;color:#1e3a8a;font-size:1.16em}.level-info p{color:var(--muted);font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:420px;padding:8px 10px;border:2px solid #c8d7ee;border-radius:7px;background:#fff;color:var(--ink);font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #c8d7ee;border-radius:7px;background:#fff;color:var(--blue-dark);text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:var(--blue);color:var(--blue)}.timer-display.warning{border-color:var(--red);color:var(--red);animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:7px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:var(--blue)}.btn-success{background:var(--green)}.btn-warning{background:var(--amber)}.btn-danger{background:var(--red)}
+    .problems-section{min-height:520px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:7px;background:#1e3a8a;color:#fff;text-align:center;font-size:1.04em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #bfe9e6;border-radius:7px;background:#ecfdf9;color:#145c55;text-align:center;font-weight:850}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-left:4px solid var(--blue);border-radius:8px;background:var(--soft)}.problem-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:center;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-weight:850}
+    .equation{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.17em;font-weight:500;line-height:1.5;color:var(--ink);overflow-x:auto;max-width:100%}.problem-answer{display:none;white-space:normal;padding:7px 11px;border-radius:999px;background:var(--green);color:#fff;font-size:.95em;font-weight:850}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid var(--blue);border-radius:7px;background:#eef6ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:var(--blue-dark);font-weight:850}.solution-steps{font-size:.98em;line-height:1.5}.step{margin:6px 0;color:#243044;overflow-x:auto}.final-answer{margin-top:8px;padding:8px;border-radius:7px;background:var(--green);color:#fff;text-align:center;font-weight:850;overflow-x:auto}
+    .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:var(--red)}.modal-content p{margin-bottom:18px;color:var(--muted)}.hidden{display:none}
+    @media (max-width:780px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column;align-items:flex-start}.equation{font-size:1.02em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Volumes of Revolution</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool generates integration practice for volumes formed by rotating regions around an axis. It focuses on using the correct volume formula, squaring the radius expression, integrating, and substituting bounds carefully.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Disc method about the x-axis.</li>
+        <li><strong>Level 2:</strong> Expanding before integrating.</li>
+        <li><strong>Level 3:</strong> Washer method between two curves.</li>
+        <li><strong>Level 4:</strong> Rotation about the y-axis and parameter problems.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Students must identify the radius before writing the integral.</li>
+        <li>The radius is squared, so brackets and expansion need care.</li>
+        <li>For washers, subtract the inner radius squared from the outer radius squared.</li>
+        <li>For the y-axis form used here, write the curve as x in terms of y and integrate with respect to y.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Volumes of Revolution</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Disc Method</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Expand First</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Washers</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: y-axis and Parameters</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Disc Method</h3>
+        <p id="level-description">Find volumes formed by rotating a region under a curve about the x-axis.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: { title: "Level 1: Disc Method", description: "Find volumes formed by rotating a region under a curve about the x-axis.", types: ["disc_linear", "disc_power", "disc_root", "level1_mixed"] },
+      2: { title: "Level 2: Expanding Before Integrating", description: "Square the radius expression, expand, then integrate term by term.", types: ["expand_quadratic", "expand_shifted_linear", "expand_mixed_polynomial", "level2_mixed"] },
+      3: { title: "Level 3: Washer Method", description: "Find volumes between two curves using outer radius squared minus inner radius squared.", types: ["washer_constant_inner", "washer_two_lines", "washer_curve_line", "level3_mixed"] },
+      4: { title: "Level 4: y-axis and Parameter Problems", description: "Use x as the radius when rotating about the y-axis, and solve parameter questions from a given volume.", types: ["y_axis_linear", "y_axis_root", "find_parameter", "level4_mixed"] }
+    };
+
+    const typeOptions = {
+      1: [["disc_linear", "Linear radius about the x-axis"], ["disc_power", "Power function radius"], ["disc_root", "Square-root radius"], ["level1_mixed", "Mixed disc method"]],
+      2: [["expand_quadratic", "Square a quadratic expression"], ["expand_shifted_linear", "Square a shifted linear expression"], ["expand_mixed_polynomial", "Polynomial radius mixed set"], ["level2_mixed", "Mixed expanding set"]],
+      3: [["washer_constant_inner", "Outer curve and constant inner radius"], ["washer_two_lines", "Two linear radii"], ["washer_curve_line", "Curve and line washer"], ["level3_mixed", "Mixed washer method"]],
+      4: [["y_axis_linear", "Rotate about the y-axis"], ["y_axis_root", "Square-root form about the y-axis"], ["find_parameter", "Find a parameter from volume"], ["level4_mixed", "Mixed y-axis and parameter set"]]
+    };
+
+    const typeDisplayNames = {
+      disc_linear: "Linear radius about the x-axis",
+      disc_power: "Power function radius",
+      disc_root: "Square-root radius",
+      level1_mixed: "Mixed disc method",
+      expand_quadratic: "Square a quadratic expression",
+      expand_shifted_linear: "Square a shifted linear expression",
+      expand_mixed_polynomial: "Polynomial radius mixed set",
+      level2_mixed: "Mixed expanding set",
+      washer_constant_inner: "Outer curve and constant inner radius",
+      washer_two_lines: "Two linear radii",
+      washer_curve_line: "Curve and line washer",
+      level3_mixed: "Mixed washer method",
+      y_axis_linear: "Rotate about the y-axis",
+      y_axis_root: "Square-root form about the y-axis",
+      find_parameter: "Find a parameter from volume",
+      level4_mixed: "Mixed y-axis and parameter set"
+    };
+    window.typeDisplayNames = typeDisplayNames;
+
+    const typeInstructions = {
+      disc_linear: "Use the disc method to find each volume.",
+      disc_power: "Use the disc method to find each volume.",
+      disc_root: "Square the square-root radius, then integrate.",
+      level1_mixed: "Use the disc method to find each volume.",
+      expand_quadratic: "Expand the squared radius before integrating.",
+      expand_shifted_linear: "Expand the squared bracket before integrating.",
+      expand_mixed_polynomial: "Expand or simplify the squared radius before integrating.",
+      level2_mixed: "Find each volume, showing the squared radius clearly.",
+      washer_constant_inner: "Use the washer method with a constant inner radius.",
+      washer_two_lines: "Use the washer method between two line radii.",
+      washer_curve_line: "Use the washer method between a curve and a line.",
+      level3_mixed: "Use the washer method to find each volume.",
+      y_axis_linear: "Rotate about the y-axis by integrating with respect to y.",
+      y_axis_root: "Rotate about the y-axis by integrating with respect to y.",
+      find_parameter: "Use the given volume to find the unknown parameter.",
+      level4_mixed: "Choose the correct revolution formula for each question."
+    };
+
+    function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function choice(items) { return items[randInt(0, items.length - 1)]; }
+    function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { const t = b; b = a % b; a = t; } return a || 1; }
+    function fracObj(n, d = 1) {
+      if (d < 0) { n = -n; d = -d; }
+      const g = gcd(n, d);
+      return { n: n / g, d: d / g };
+    }
+    function addFrac(a, b) { return fracObj(a.n * b.d + b.n * a.d, a.d * b.d); }
+    function subFrac(a, b) { return fracObj(a.n * b.d - b.n * a.d, a.d * b.d); }
+    function mulFrac(a, b) { return fracObj(a.n * b.n, a.d * b.d); }
+    function fracLatex(value) {
+      const f = fracObj(value.n, value.d);
+      if (f.d === 1) return String(f.n);
+      return "\\dfrac{" + f.n + "}{" + f.d + "}";
+    }
+    function piLatex(value) {
+      const f = fracObj(value.n, value.d);
+      if (f.n === 0) return "0";
+      const sign = f.n < 0 ? "-" : "";
+      const n = Math.abs(f.n);
+      if (f.d === 1) return sign + (n === 1 ? "\\pi" : n + "\\pi");
+      return sign + "\\dfrac{" + (n === 1 ? "" : n) + "\\pi}{" + f.d + "}";
+    }
+    function signedConst(n) { return n < 0 ? " - " + Math.abs(n) : " + " + n; }
+    function signedTerm(coefficient, variable) {
+      if (coefficient === 0) return "";
+      const body = Math.abs(coefficient) === 1 ? variable : Math.abs(coefficient) + variable;
+      return coefficient < 0 ? " - " + body : " + " + body;
+    }
+    function firstTerm(coefficient, variable) {
+      if (coefficient === 0) return "";
+      if (coefficient === 1) return variable;
+      if (coefficient === -1) return "-" + variable;
+      return coefficient + variable;
+    }
+    function linear(a, b, variable = "x") {
+      const first = firstTerm(a, variable);
+      if (b === 0) return first || "0";
+      return first + signedConst(b);
+    }
+    function shiftedLinear(a, h) {
+      if (h === 0) return firstTerm(a, "x");
+      const inner = h > 0 ? "x - " + h : "x + " + Math.abs(h);
+      return a === 1 ? inner : a + "(" + inner + ")";
+    }
+    function polynomialLatex(coefficients, variable = "x") {
+      const terms = [];
+      for (let power = coefficients.length - 1; power >= 0; power -= 1) {
+        const c = coefficients[power] || 0;
+        if (c === 0) continue;
+        let variablePart = "";
+        if (power === 1) variablePart = variable;
+        if (power > 1) variablePart = variable + "^{" + power + "}";
+        const abs = Math.abs(c);
+        const coefficient = variablePart ? (abs === 1 ? "" : String(abs)) : String(abs);
+        const term = coefficient + variablePart;
+        if (!terms.length) terms.push(c < 0 ? "-" + term : term);
+        else terms.push((c < 0 ? " - " : " + ") + term);
+      }
+      return terms.join("") || "0";
+    }
+    function squareLinearCoeffs(a, b) {
+      return [b * b, 2 * a * b, a * a];
+    }
+    function squareQuadraticPlusConstant(c) {
+      return [c * c, 0, 2 * c, 0, 1];
+    }
+    function integratePolynomialCoeffs(coefficients) {
+      const integrated = [0];
+      coefficients.forEach((c, power) => {
+        integrated[power + 1] = fracObj(c, power + 1);
+      });
+      return integrated;
+    }
+    function antiderivativeLatex(integrated, variable = "x") {
+      const terms = [];
+      for (let power = integrated.length - 1; power >= 1; power -= 1) {
+        const f = integrated[power];
+        if (!f || f.n === 0) continue;
+        const abs = fracObj(Math.abs(f.n), f.d);
+        const coefficient = abs.n === abs.d ? "" : fracLatex(abs);
+        const variablePart = power === 1 ? variable : variable + "^{" + power + "}";
+        const term = coefficient + variablePart;
+        if (!terms.length) terms.push(f.n < 0 ? "-" + term : term);
+        else terms.push((f.n < 0 ? " - " : " + ") + term);
+      }
+      return terms.join("") || "0";
+    }
+    function evalIntegrated(integrated, value) {
+      return integrated.reduce((total, f, power) => {
+        if (!f || f.n === 0) return total;
+        return addFrac(total, mulFrac(f, fracObj(Math.pow(value, power), 1)));
+      }, fracObj(0, 1));
+    }
+    function definiteIntegral(coefficients, lower, upper) {
+      const integrated = integratePolynomialCoeffs(coefficients);
+      return {
+        integrated,
+        value: subFrac(evalIntegrated(integrated, upper), evalIntegrated(integrated, lower))
+      };
+    }
+    function problem(type, question, answer, steps) {
+      return {
+        instruction: typeInstructions[type] || "Find the volume of revolution.",
+        question,
+        equation: question,
+        answer,
+        steps: steps.map((text) => ({ text }))
+      };
+    }
+    function renderMath() {
+      if (typeof renderMathInElement !== "function") return;
+      renderMathInElement(document.body, {
+        delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
+        throwOnError: false
+      });
+    }
+
+    function genDiscLinear(type = "disc_linear") {
+      const a = choice([1, 2, 3, 4]);
+      const b = choice([1, 2, 3, 4]);
+      const lower = choice([0, 1]);
+      const upper = lower + choice([2, 3]);
+      const y = linear(a, b);
+      const squared = squareLinearCoeffs(a, b);
+      const result = definiteIntegral(squared, lower, upper);
+      const answer = "$V = " + piLatex(result.value) + "$";
+      return problem(type, "$\\text{The region under } y = " + y + "\\text{ from } x = " + lower + "\\text{ to } x = " + upper + "\\text{ is rotated about the x-axis. Find the volume.}$", answer, [
+        "For rotation about the x-axis, use $V=\\pi\\int_a^b y^2\\,dx$.",
+        "Here $y=" + y + "$, $a=" + lower + "$ and $b=" + upper + "$, so $V=\\pi\\int_{" + lower + "}^{" + upper + "}(" + y + ")^2\\,dx$.",
+        "Square the radius: $(" + y + ")^2 = " + polynomialLatex(squared) + "$.",
+        "So $V=\\pi\\int_{" + lower + "}^{" + upper + "}(" + polynomialLatex(squared) + ")\\,dx$.",
+        "Integrate: $\\int(" + polynomialLatex(squared) + ")\\,dx = " + antiderivativeLatex(result.integrated) + "$.",
+        "Substitute the bounds: $\\left[" + antiderivativeLatex(result.integrated) + "\\right]_{" + lower + "}^{" + upper + "} = " + fracLatex(result.value) + "$.",
+        "Multiply by $\\pi$: " + answer + "."
+      ]);
+    }
+
+    function genDiscPower(type = "disc_power") {
+      const k = choice([1, 2, 3, 4]);
+      const n = choice([1, 2, 3]);
+      const upper = choice([2, 3]);
+      const coefficient = k * k;
+      const power = 2 * n;
+      const integralValue = fracObj(coefficient * Math.pow(upper, power + 1), power + 1);
+      const answer = "$V = " + piLatex(integralValue) + "$";
+      const y = k === 1 ? "x^{" + n + "}" : k + "x^{" + n + "}";
+      return problem(type, "$\\text{The region under } y = " + y + "\\text{ from } x = 0\\text{ to } x = " + upper + "\\text{ is rotated about the x-axis. Find the volume.}$", answer, [
+        "For rotation about the x-axis, use $V=\\pi\\int_a^b y^2\\,dx$.",
+        "Here $y=" + y + "$ and the bounds are $0$ to $" + upper + "$.",
+        "Square the radius: $(" + y + ")^2 = " + coefficient + "x^{" + power + "}$.",
+        "Set up the volume: $V=\\pi\\int_0^{" + upper + "} " + coefficient + "x^{" + power + "}\\,dx$.",
+        "Integrate: $\\int " + coefficient + "x^{" + power + "}\\,dx = " + fracLatex(fracObj(coefficient, power + 1)) + "x^{" + (power + 1) + "}$.",
+        "Substitute the bounds: $\\left[" + fracLatex(fracObj(coefficient, power + 1)) + "x^{" + (power + 1) + "}\\right]_0^{" + upper + "} = " + fracLatex(integralValue) + "$.",
+        "Multiply by $\\pi$: " + answer + "."
+      ]);
+    }
+
+    function genDiscRoot(type = "disc_root") {
+      const a = choice([1, 2, 3, 4]);
+      const b = choice([1, 2, 3, 4]);
+      const lower = 0;
+      const upper = choice([2, 3, 4]);
+      const y = "\\sqrt{" + linear(a, b) + "}";
+      const coefficients = [b, a];
+      const result = definiteIntegral(coefficients, lower, upper);
+      const answer = "$V = " + piLatex(result.value) + "$";
+      return problem(type, "$\\text{The region under } y = " + y + "\\text{ from } x = 0\\text{ to } x = " + upper + "\\text{ is rotated about the x-axis. Find the volume.}$", answer, [
+        "For rotation about the x-axis, use $V=\\pi\\int_a^b y^2\\,dx$.",
+        "Here $y=" + y + "$, so $y^2=" + linear(a, b) + "$.",
+        "Set up the volume: $V=\\pi\\int_0^{" + upper + "}(" + linear(a, b) + ")\\,dx$.",
+        "Integrate: $\\int(" + linear(a, b) + ")\\,dx = " + antiderivativeLatex(result.integrated) + "$.",
+        "Substitute the bounds: $\\left[" + antiderivativeLatex(result.integrated) + "\\right]_0^{" + upper + "} = " + fracLatex(result.value) + "$.",
+        "Multiply by $\\pi$: " + answer + "."
+      ]);
+    }
+
+    function genExpandQuadratic(type = "expand_quadratic") {
+      const c = choice([1, 2, 3]);
+      const upper = choice([1, 2]);
+      const y = "x^2 + " + c;
+      const squared = squareQuadraticPlusConstant(c);
+      const result = definiteIntegral(squared, 0, upper);
+      const answer = "$V = " + piLatex(result.value) + "$";
+      return problem(type, "$\\text{The region under } y = " + y + "\\text{ from } x=0\\text{ to } x=" + upper + "\\text{ is rotated about the x-axis. Find the volume.}$", answer, [
+        "Use $V=\\pi\\int_a^b y^2\\,dx$.",
+        "Substitute $y=" + y + "$: $V=\\pi\\int_0^{" + upper + "}(x^2+" + c + ")^2\\,dx$.",
+        "Expand before integrating: $(x^2+" + c + ")^2 = " + polynomialLatex(squared) + "$.",
+        "So $V=\\pi\\int_0^{" + upper + "}(" + polynomialLatex(squared) + ")\\,dx$.",
+        "Integrate term by term: $\\int(" + polynomialLatex(squared) + ")\\,dx = " + antiderivativeLatex(result.integrated) + "$.",
+        "Evaluate: $\\left[" + antiderivativeLatex(result.integrated) + "\\right]_0^{" + upper + "} = " + fracLatex(result.value) + "$.",
+        "Therefore " + answer + "."
+      ]);
+    }
+
+    function genExpandShiftedLinear(type = "expand_shifted_linear") {
+      const a = choice([2, 3]);
+      const h = choice([1, 2, -1]);
+      const lower = Math.max(0, h);
+      const upper = lower + choice([2, 3]);
+      const y = shiftedLinear(a, h);
+      const b = -a * h;
+      const squared = squareLinearCoeffs(a, b);
+      const result = definiteIntegral(squared, lower, upper);
+      const answer = "$V = " + piLatex(result.value) + "$";
+      return problem(type, "$\\text{The region under } y = " + y + "\\text{ from } x=" + lower + "\\text{ to } x=" + upper + "\\text{ is rotated about the x-axis. Find the volume.}$", answer, [
+        "Use $V=\\pi\\int_a^b y^2\\,dx$.",
+        "The radius is $y=" + y + "$, so $V=\\pi\\int_{" + lower + "}^{" + upper + "}[" + y + "]^2\\,dx$.",
+        "Rewrite the radius as $" + linear(a, b) + "$.",
+        "Square the bracket: $(" + linear(a, b) + ")^2 = " + polynomialLatex(squared) + "$.",
+        "Integrate: $\\int(" + polynomialLatex(squared) + ")\\,dx = " + antiderivativeLatex(result.integrated) + "$.",
+        "Evaluate the definite integral: $\\left[" + antiderivativeLatex(result.integrated) + "\\right]_{" + lower + "}^{" + upper + "} = " + fracLatex(result.value) + "$.",
+        "Therefore " + answer + "."
+      ]);
+    }
+
+    function genExpandMixedPolynomial(type = "expand_mixed_polynomial") {
+      return choice([genDiscLinear, genExpandQuadratic, genExpandShiftedLinear])(type);
+    }
+
+    function genWasherConstant(type = "washer_constant_inner") {
+      const a = choice([1, 2, 3]);
+      const b = choice([3, 4, 5]);
+      const inner = choice([1, 2]);
+      const upper = choice([2, 3]);
+      const outer = linear(a, b);
+      const outerSquared = squareLinearCoeffs(a, b);
+      outerSquared[0] -= inner * inner;
+      const result = definiteIntegral(outerSquared, 0, upper);
+      const answer = "$V = " + piLatex(result.value) + "$";
+      return problem(type, "$\\text{The region between } y=" + outer + "\\text{ and } y=" + inner + "\\text{ from } x=0\\text{ to } x=" + upper + "\\text{ is rotated about the x-axis. Find the volume.}$", answer, [
+        "For a washer, use $V=\\pi\\int_a^b(R^2-r^2)\\,dx$.",
+        "The outer radius is $R=" + outer + "$ and the inner radius is $r=" + inner + "$.",
+        "Substitute: $V=\\pi\\int_0^{" + upper + "} [(" + outer + ")^2-" + inner + "^2]\\,dx$.",
+        "Expand and subtract: $(" + outer + ")^2-" + inner + "^2 = " + polynomialLatex(outerSquared) + "$.",
+        "Integrate: $\\int(" + polynomialLatex(outerSquared) + ")\\,dx = " + antiderivativeLatex(result.integrated) + "$.",
+        "Evaluate: $\\left[" + antiderivativeLatex(result.integrated) + "\\right]_0^{" + upper + "} = " + fracLatex(result.value) + "$.",
+        "Therefore " + answer + "."
+      ]);
+    }
+
+    function genWasherTwoLines(type = "washer_two_lines") {
+      const a = choice([2, 3]);
+      const b = choice([4, 5, 6]);
+      const c = choice([1, 2]);
+      const d = choice([1, 2]);
+      const upper = choice([1, 2]);
+      const outer = linear(a, b);
+      const inner = linear(c, d);
+      const diff = squareLinearCoeffs(a, b).map((value, index) => value - squareLinearCoeffs(c, d)[index]);
+      const result = definiteIntegral(diff, 0, upper);
+      const answer = "$V = " + piLatex(result.value) + "$";
+      return problem(type, "$\\text{The region between } y=" + outer + "\\text{ and } y=" + inner + "\\text{ from } x=0\\text{ to } x=" + upper + "\\text{ is rotated about the x-axis. Find the volume.}$", answer, [
+        "Use the washer formula $V=\\pi\\int_a^b(R^2-r^2)\\,dx$.",
+        "On this interval, the outer radius is $R=" + outer + "$ and the inner radius is $r=" + inner + "$.",
+        "Set up: $V=\\pi\\int_0^{" + upper + "} [(" + outer + ")^2-(" + inner + ")^2]\\,dx$.",
+        "Expand both squares and subtract: $(" + outer + ")^2-(" + inner + ")^2 = " + polynomialLatex(diff) + "$.",
+        "Integrate: $\\int(" + polynomialLatex(diff) + ")\\,dx = " + antiderivativeLatex(result.integrated) + "$.",
+        "Substitute the bounds: $\\left[" + antiderivativeLatex(result.integrated) + "\\right]_0^{" + upper + "} = " + fracLatex(result.value) + "$.",
+        "Therefore " + answer + "."
+      ]);
+    }
+
+    function genWasherCurveLine(type = "washer_curve_line") {
+      const c = choice([2, 3, 4]);
+      const inner = choice([1, 2]);
+      const upper = choice([1, 2]);
+      const outer = "x^2 + " + c;
+      const diff = squareQuadraticPlusConstant(c);
+      diff[0] -= inner * inner;
+      const result = definiteIntegral(diff, 0, upper);
+      const answer = "$V = " + piLatex(result.value) + "$";
+      return problem(type, "$\\text{The region between } y=" + outer + "\\text{ and } y=" + inner + "\\text{ from } x=0\\text{ to } x=" + upper + "\\text{ is rotated about the x-axis. Find the volume.}$", answer, [
+        "Use $V=\\pi\\int_a^b(R^2-r^2)\\,dx$.",
+        "The outer radius is $R=" + outer + "$ and the inner radius is $r=" + inner + "$.",
+        "Set up: $V=\\pi\\int_0^{" + upper + "}[(x^2+" + c + ")^2-" + inner + "^2]\\,dx$.",
+        "Expand and simplify: $(x^2+" + c + ")^2-" + inner + "^2 = " + polynomialLatex(diff) + "$.",
+        "Integrate: $\\int(" + polynomialLatex(diff) + ")\\,dx = " + antiderivativeLatex(result.integrated) + "$.",
+        "Evaluate: $\\left[" + antiderivativeLatex(result.integrated) + "\\right]_0^{" + upper + "} = " + fracLatex(result.value) + "$.",
+        "Therefore " + answer + "."
+      ]);
+    }
+
+    function genYAxisLinear(type = "y_axis_linear") {
+      const a = choice([1, 2, 3]);
+      const b = choice([1, 2, 3]);
+      const upper = choice([2, 3]);
+      const xExpr = linear(a, b, "y");
+      const squared = squareLinearCoeffs(a, b);
+      const result = definiteIntegral(squared, 0, upper);
+      const answer = "$V = " + piLatex(result.value) + "$";
+      return problem(type, "$\\text{The region under } x=" + xExpr + "\\text{ from } y=0\\text{ to } y=" + upper + "\\text{ is rotated about the y-axis. Find the volume.}$", answer, [
+        "For rotation about the y-axis in this form, use $V=\\pi\\int_c^d x^2\\,dy$.",
+        "Here $x=" + xExpr + "$ and the bounds are $y=0$ to $y=" + upper + "$.",
+        "Set up: $V=\\pi\\int_0^{" + upper + "}(" + xExpr + ")^2\\,dy$.",
+        "Square the radius: $(" + xExpr + ")^2 = " + polynomialLatex(squared, "y") + "$.",
+        "Integrate with respect to $y$: $\\int(" + polynomialLatex(squared, "y") + ")\\,dy = " + antiderivativeLatex(result.integrated, "y") + "$.",
+        "Evaluate: $\\left[" + antiderivativeLatex(result.integrated, "y") + "\\right]_0^{" + upper + "} = " + fracLatex(result.value) + "$.",
+        "Therefore " + answer + "."
+      ]);
+    }
+
+    function genYAxisRoot(type = "y_axis_root") {
+      const a = choice([1, 2, 3]);
+      const b = choice([1, 2, 3]);
+      const upper = choice([2, 3, 4]);
+      const xExpr = "\\sqrt{" + linear(a, b, "y") + "}";
+      const coefficients = [b, a];
+      const result = definiteIntegral(coefficients, 0, upper);
+      const answer = "$V = " + piLatex(result.value) + "$";
+      return problem(type, "$\\text{The region under } x=" + xExpr + "\\text{ from } y=0\\text{ to } y=" + upper + "\\text{ is rotated about the y-axis. Find the volume.}$", answer, [
+        "For rotation about the y-axis, use $V=\\pi\\int_c^d x^2\\,dy$.",
+        "Here $x=" + xExpr + "$, so $x^2=" + linear(a, b, "y") + "$.",
+        "Set up: $V=\\pi\\int_0^{" + upper + "}(" + linear(a, b, "y") + ")\\,dy$.",
+        "Integrate with respect to $y$: $\\int(" + linear(a, b, "y") + ")\\,dy = " + antiderivativeLatex(result.integrated, "y") + "$.",
+        "Evaluate: $\\left[" + antiderivativeLatex(result.integrated, "y") + "\\right]_0^{" + upper + "} = " + fracLatex(result.value) + "$.",
+        "Therefore " + answer + "."
+      ]);
+    }
+
+    function genFindParameter(type = "find_parameter") {
+      const k = choice([2, 3, 4]);
+      const upper = choice([2, 3]);
+      const volumeNoPi = fracObj(k * k * Math.pow(upper, 3), 3);
+      const answer = "$k = " + k + "$";
+      return problem(type, "$\\text{The region under } y=kx\\text{ from } x=0\\text{ to } x=" + upper + "\\text{ is rotated about the x-axis. The volume is }" + piLatex(volumeNoPi) + "\\text{. Find }k\\text{, where }k>0\\text{.}$", answer, [
+        "For rotation about the x-axis, use $V=\\pi\\int_a^b y^2\\,dx$.",
+        "Here $y=kx$, so $y^2=k^2x^2$.",
+        "Set up the volume: $V=\\pi\\int_0^{" + upper + "} k^2x^2\\,dx$.",
+        "Treat $k^2$ as a constant: $V=\\pi k^2\\int_0^{" + upper + "}x^2\\,dx$.",
+        "Integrate and substitute the bounds: $\\int_0^{" + upper + "}x^2\\,dx=\\left[\\dfrac{x^3}{3}\\right]_0^{" + upper + "}=" + fracLatex(fracObj(Math.pow(upper, 3), 3)) + "$.",
+        "So $V=" + fracLatex(fracObj(Math.pow(upper, 3), 3)) + "k^2\\pi$.",
+        "Compare with the given volume: $" + fracLatex(fracObj(Math.pow(upper, 3), 3)) + "k^2\\pi = " + piLatex(volumeNoPi) + "$.",
+        "Cancel $\\pi$ and solve: $k^2=" + (k * k) + "$, so $k=" + k + "$ because $k>0$."
+      ]);
+    }
+
+    function generateProblem() {
+      const type = currentType === "select" ? choice(levelConfigs[currentLevel].types) : currentType;
+      const map = {
+        disc_linear: genDiscLinear,
+        disc_power: genDiscPower,
+        disc_root: genDiscRoot,
+        level1_mixed: () => choice([genDiscLinear, genDiscPower, genDiscRoot])("level1_mixed"),
+        expand_quadratic: genExpandQuadratic,
+        expand_shifted_linear: genExpandShiftedLinear,
+        expand_mixed_polynomial: genExpandMixedPolynomial,
+        level2_mixed: () => choice([genExpandQuadratic, genExpandShiftedLinear, genDiscLinear])("level2_mixed"),
+        washer_constant_inner: genWasherConstant,
+        washer_two_lines: genWasherTwoLines,
+        washer_curve_line: genWasherCurveLine,
+        level3_mixed: () => choice([genWasherConstant, genWasherTwoLines, genWasherCurveLine])("level3_mixed"),
+        y_axis_linear: genYAxisLinear,
+        y_axis_root: genYAxisRoot,
+        find_parameter: genFindParameter,
+        level4_mixed: () => choice([genYAxisLinear, genYAxisRoot, genFindParameter])("level4_mixed")
+      };
+      return map[type] ? map[type]() : genDiscLinear();
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index + 1 === level));
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = '<option value="select">Select Question Type</option>' + typeOptions[level].map(([value, label]) => '<option value="' + value + '">' + label + '</option>').join("");
+      dropdown.value = "select";
+      setInstructionForType();
+      showBlankPage();
+    }
+    function setInstructionForType() {
+      const instruction = document.getElementById("set-instruction");
+      const header = document.getElementById("problem-set-header");
+      instruction.textContent = currentType === "select" ? "" : typeInstructions[currentType] || "";
+      instruction.classList.toggle("visible", currentType !== "select");
+      header.textContent = currentType === "select" ? "" : typeDisplayNames[currentType] || "";
+      header.classList.toggle("visible", currentType !== "select");
+    }
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      setInstructionForType();
+      currentType === "select" ? showBlankPage() : generateNewSet();
+    }
+    function showBlankPage() {
+      document.getElementById("problem-list").innerHTML = '<li style="text-align:center;padding:42px;color:#667085;font-size:1.05em">Please select a question type to begin.</li>';
+    }
+    function generateNewSet() {
+      if (currentType === "select") { showBlankPage(); return; }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      const seen = new Set();
+      let guard = 0;
+      while (problems.length < 5 && guard < 140) {
+        guard += 1;
+        const generated = generateProblem();
+        const key = generated.question + "|" + generated.answer;
+        if (!seen.has(key)) {
+          seen.add(key);
+          problems.push(generated);
+        }
+      }
+      while (problems.length < 5) problems.push(generateProblem());
+      renderProblems();
+    }
+    function renderProblems() {
+      const container = document.getElementById("problem-list");
+      container.innerHTML = "";
+      problems.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        const stepsHtml = item.steps.map((step) => '<div class="step">' + step.text + '</div>').join("");
+        li.innerHTML = '<div class="problem-header"><div class="problem-left"><div class="problem-number">' + (index + 1) + '</div><div class="equation">' + item.question + '</div></div><div class="problem-answer" id="quick-answer-' + index + '">' + item.answer + '</div></div><div class="steps-section" id="steps-' + index + '"><div class="answer-label">Solution Steps:</div><div class="solution-steps">' + stepsHtml + '<div class="final-answer">' + item.answer + '</div></div></div>';
+        container.appendChild(li);
+      });
+      renderMath();
+    }
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      problems.forEach((_, index) => {
+        const el = document.getElementById("quick-answer-" + index);
+        if (el) el.classList.toggle("visible", answersVisible);
+      });
+    }
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      problems.forEach((_, index) => {
+        const el = document.getElementById("steps-" + index);
+        if (el) el.classList.toggle("visible", stepsVisible);
+      });
+    }
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining -= 1;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerActive = false;
+      const el = document.getElementById("timer-display");
+      el.textContent = "Ready";
+      el.className = "timer-display";
+    }
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const el = document.getElementById("timer-display");
+      el.textContent = minutes + ":" + String(seconds).padStart(2, "0");
+      if (timeRemaining <= 30 && timerActive) el.className = "timer-display warning";
+      else if (timerActive) el.className = "timer-display active";
+      else el.className = "timer-display";
+    }
+    function timerFinished() {
+      stopTimer();
+      const el = document.getElementById("timer-display");
+      el.textContent = "Time Up!";
+      el.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+    function closeModal() { document.getElementById("timer-modal").classList.add("hidden"); }
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+</body>
+</html>
