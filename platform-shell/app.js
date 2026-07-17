@@ -2062,14 +2062,14 @@ const tools = [
     type: "Interactive Display",
     access: "Free",
     status: "Imported",
-    description: "Open colourful teacher-led elementary maths tasks for number bonds, place value, arrays, and fractions, with large visuals and hidden answers for classroom discussion.",
-    tags: ["classroom", "primary", "elementary", "number bonds", "place value", "arrays", "fractions", "visual maths", "starter", "retrieval"],
-    toolPath: "tools/elementary-maths-playground/index.html?v=elementary-playground-2",
+    description: "Open colourful teacher-led elementary maths tasks for number bonds, place value, arrays, fractions, clocks, money, and shape sorting, with large visuals and hidden answers for classroom discussion.",
+    tags: ["classroom", "primary", "elementary", "number bonds", "place value", "arrays", "fractions", "clocks", "money", "shapes", "visual maths", "starter", "retrieval"],
+    toolPath: "tools/elementary-maths-playground/index.html?v=elementary-playground-3",
     imported: true,
     teacherNotes: [
       "Designed as a colourful board-ready activity space for younger learners.",
       "Each task keeps the answer hidden until the teacher is ready to reveal it.",
-      "Modes cover number bonds, base-ten place value, multiplication arrays, and shaded fraction bars.",
+      "Modes cover number bonds, base-ten place value, multiplication arrays, shaded fraction bars, clocks, money, and shape sorting.",
       "Use the ask, discuss, explain, reveal flow to build mathematical language and confidence."
     ]
   },

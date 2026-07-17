@@ -71,7 +71,7 @@
     .btn:hover,.select:hover{filter:brightness(.97)}
 
     .mode-strip{
-      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;
       padding:9px 12px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.86);
     }
     .mode-btn{
@@ -83,6 +83,9 @@
     .mode-btn[data-mode="place"].active{background:linear-gradient(135deg,var(--purple),var(--pink))}
     .mode-btn[data-mode="arrays"].active{background:linear-gradient(135deg,var(--green),var(--teal))}
     .mode-btn[data-mode="fractions"].active{background:linear-gradient(135deg,var(--amber),#f97316)}
+    .mode-btn[data-mode="clock"].active{background:linear-gradient(135deg,#2563eb,#0891b2)}
+    .mode-btn[data-mode="money"].active{background:linear-gradient(135deg,#15803d,#f59e0b)}
+    .mode-btn[data-mode="shapes"].active{background:linear-gradient(135deg,#db2777,#7c3aed)}
 
     .workspace{
       min-height:0;
@@ -129,7 +132,7 @@
       background:#f8fafc;border:2px dashed #b9c9d8;color:#667085;font-size:1.05rem;font-weight:950;
     }
     .answer-pill.revealed{border-color:#93e6d5;background:#e8fbf7;color:#0b6465;font-size:clamp(1.25rem,2.4vw,2rem)}
-    .board-body{min-height:0;overflow:hidden;padding:clamp(10px,1.3vw,18px);display:grid;place-items:center}
+    .board-body{min-height:0;overflow:hidden;padding:clamp(8px,1.1vw,16px);display:grid;place-items:center}
     .activity-card{width:min(100%,1060px);height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:clamp(8px,1.4vh,18px);align-content:center}
     .prompt{
       text-align:center;color:var(--navy);font-size:clamp(1.25rem,2.4vw,2.15rem);font-weight:950;line-height:1.18;
@@ -182,10 +185,47 @@
     .fraction-piece.shaded{background:linear-gradient(135deg,var(--teal),var(--green))}
     .fraction-mystery{font-size:clamp(2.2rem,5vw,4rem);font-weight:1000;color:var(--navy)}
 
+    .clock-wrap{display:grid;gap:clamp(8px,1.4vh,16px);place-items:center;width:100%;height:100%;min-height:0}
+    .clock-face{
+      position:relative;width:min(48vmin,360px);aspect-ratio:1;border:8px solid var(--navy);border-radius:50%;
+      background:radial-gradient(circle at center,#fff 0 56%,#f8fbfd 57% 100%);box-shadow:0 18px 34px rgba(24,50,74,.14)
+    }
+    .clock-face::before{content:"";position:absolute;inset:50% auto auto 50%;width:16px;height:16px;transform:translate(-50%,-50%);border-radius:50%;background:var(--red);z-index:4}
+    .clock-number{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(20vmin,150px))) rotate(calc(-1 * var(--angle)));font-size:clamp(1rem,2.6vmin,1.55rem);font-weight:1000;color:var(--navy)}
+    .hand{position:absolute;left:50%;bottom:50%;border-radius:999px;transform-origin:bottom center;transform:translateX(-50%) rotate(var(--angle));z-index:2}
+    .hour-hand{width:9px;height:28%;background:var(--navy)}
+    .minute-hand{width:6px;height:39%;background:var(--teal)}
+    .clock-tick{position:absolute;left:50%;top:50%;width:3px;height:9px;background:#8aa0b4;border-radius:999px;transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(22.5vmin,168px)))}
+
+    .money-wrap{width:100%;height:100%;display:grid;place-items:center;min-height:0}
+    .money-board{display:flex;align-items:center;justify-content:center;gap:clamp(10px,1.8vmin,18px);flex-wrap:wrap;max-width:100%;max-height:100%;padding:clamp(10px,1.8vmin,18px);border:1px solid var(--line);border-radius:18px;background:#f8fafc}
+    .coin,.note{
+      display:grid;place-items:center;color:#15324b;font-weight:1000;box-shadow:0 10px 18px rgba(24,50,74,.12);flex:0 0 auto
+    }
+    .coin{width:clamp(54px,8vmin,86px);height:clamp(54px,8vmin,86px);border:4px solid rgba(255,255,255,.76);border-radius:50%;background:linear-gradient(135deg,#fde68a,#f59e0b);font-size:clamp(.9rem,2vmin,1.35rem)}
+    .coin.silver{background:linear-gradient(135deg,#f8fafc,#cbd5e1)}
+    .note{width:clamp(98px,16vmin,150px);height:clamp(54px,8vmin,84px);border-radius:14px;background:linear-gradient(135deg,#bbf7d0,#22c55e);font-size:clamp(1rem,2.3vmin,1.6rem)}
+    .note.blue{background:linear-gradient(135deg,#bfdbfe,#3b82f6);color:#fff}
+    .money-target{font-size:clamp(2rem,6vmin,4.6rem);font-weight:1000;color:var(--navy);padding:clamp(10px,2vmin,20px);border:1px solid var(--line);border-radius:18px;background:#fff}
+
+    .shape-wrap{width:100%;height:100%;display:grid;place-items:center;min-height:0}
+    .shape-board{width:min(100%,900px);height:min(100%,420px);display:grid;grid-template-columns:repeat(5,1fr);grid-auto-rows:minmax(64px,1fr);gap:clamp(8px,1.3vmin,14px);padding:clamp(10px,1.7vmin,18px);border:1px solid var(--line);border-radius:18px;background:#f8fafc}
+    .shape-board.single{width:min(100%,360px);height:min(100%,280px);grid-template-columns:1fr;grid-auto-rows:1fr}
+    .shape-board.single .shape{width:clamp(96px,18vmin,150px);height:clamp(96px,18vmin,150px)}
+    .shape-board.single .shape.rectangle{width:clamp(142px,24vmin,210px);height:clamp(76px,12vmin,110px)}
+    .shape-board.single .shape.triangle{border-left-width:clamp(56px,10vmin,82px);border-right-width:clamp(56px,10vmin,82px);border-bottom-width:clamp(110px,18vmin,160px)}
+    .shape-cell{display:grid;place-items:center;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1px rgba(24,50,74,.08)}
+    .shape{width:clamp(42px,7vmin,78px);height:clamp(42px,7vmin,78px);background:var(--shape-color);box-shadow:0 9px 15px rgba(24,50,74,.14)}
+    .shape.circle{border-radius:50%}
+    .shape.square{border-radius:10px}
+    .shape.rectangle{width:clamp(64px,10vmin,104px);height:clamp(34px,5vmin,58px);border-radius:10px}
+    .shape.triangle{width:0;height:0;background:transparent;border-left:clamp(24px,4vmin,42px) solid transparent;border-right:clamp(24px,4vmin,42px) solid transparent;border-bottom:clamp(48px,8vmin,84px) solid var(--shape-color);box-shadow:none}
+
     @media(max-width:920px){
       body{overflow:auto}.app{height:auto;min-height:100vh}.header{grid-template-columns:1fr}.top-actions{justify-content:flex-start}
       .mode-strip{grid-template-columns:1fr 1fr}.workspace{grid-template-columns:1fr}.board{min-height:620px}.answer-pill{min-width:0}
       .parts{gap:16px}
+      .shape-board{grid-template-columns:repeat(4,1fr)}
     }
   </style>
   <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
@@ -208,6 +248,9 @@
         <li><strong>Place Value:</strong> Base-ten blocks for reading hundreds, tens, and ones.</li>
         <li><strong>Arrays:</strong> Multiplication arrays using colourful counters.</li>
         <li><strong>Fractions:</strong> Shaded fraction bars with the answer hidden.</li>
+        <li><strong>Clock Challenge:</strong> Analogue clock reading tasks with hidden answers.</li>
+        <li><strong>Money:</strong> Coin and note counting, plus make-the-amount prompts.</li>
+        <li><strong>Shape Sorter:</strong> Count, name, and sort shapes by simple properties.</li>
       </ul>
       <h3>Teacher Flow</h3>
       <p>Ask pupils what they notice, collect answers, invite explanation, then reveal. This keeps the activity playful while still supporting mathematical language.</p>
@@ -235,6 +278,9 @@
       <button class="mode-btn" type="button" data-mode="place" onclick="setMode('place')">Place Value</button>
       <button class="mode-btn" type="button" data-mode="arrays" onclick="setMode('arrays')">Arrays</button>
       <button class="mode-btn" type="button" data-mode="fractions" onclick="setMode('fractions')">Fractions</button>
+      <button class="mode-btn" type="button" data-mode="clock" onclick="setMode('clock')">Clock Challenge</button>
+      <button class="mode-btn" type="button" data-mode="money" onclick="setMode('money')">Money</button>
+      <button class="mode-btn" type="button" data-mode="shapes" onclick="setMode('shapes')">Shape Sorter</button>
     </nav>
 
     <section class="workspace">
@@ -307,6 +353,21 @@
         ["name", "Name the fraction"],
         ["equivalent", "Equivalent fraction"],
         ["compare", "Compare two fractions"]
+      ],
+      clock: [
+        ["readtime", "Read the clock"],
+        ["quarterhours", "Half past and quarters"],
+        ["fiveminutes", "Five-minute times"]
+      ],
+      money: [
+        ["countmoney", "Count the money"],
+        ["makeamount", "Make the amount"],
+        ["change", "Find the change"]
+      ],
+      shapes: [
+        ["countshape", "Count one shape"],
+        ["countcolour", "Count one colour"],
+        ["nameshape", "Name the shape"]
       ]
     };
 
@@ -314,7 +375,10 @@
       bonds: "Ask pupils to find the missing part before revealing the answer.",
       place: "Ask pupils to read the model and explain the value of each group.",
       arrays: "Ask pupils to describe the rows and columns before writing the fact.",
-      fractions: "Ask pupils to name the shaded fraction and justify the denominator."
+      fractions: "Ask pupils to name the shaded fraction and justify the denominator.",
+      clock: "Ask pupils to read the hour hand first, then the minute hand.",
+      money: "Ask pupils to count in groups before revealing the total.",
+      shapes: "Ask pupils to justify how they sorted or counted the shapes."
     };
 
     function randInt(min, max) {
@@ -551,11 +615,216 @@
       setAnswer(answer);
     }
 
+    function pad2(value) {
+      return String(value).padStart(2, "0");
+    }
+    function formatTime(hour, minute) {
+      const displayHour = hour === 0 ? 12 : hour;
+      return `${displayHour}:${pad2(minute)}`;
+    }
+    function clockNumbers() {
+      return Array.from({ length: 12 }, (_, index) => {
+        const number = index + 1;
+        return `<span class="clock-number" style="--angle:${number * 30}deg">${number}</span>`;
+      }).join("");
+    }
+    function clockTicks() {
+      return Array.from({ length: 60 }, (_, index) => {
+        const height = index % 5 === 0 ? "13px" : "7px";
+        const width = index % 5 === 0 ? "4px" : "2px";
+        return `<span class="clock-tick" style="--angle:${index * 6}deg;height:${height};width:${width}"></span>`;
+      }).join("");
+    }
+    function renderClock(hour, minute) {
+      const hourAngle = ((hour % 12) * 30) + (minute * 0.5);
+      const minuteAngle = minute * 6;
+      return `
+        <div class="clock-face">
+          ${clockTicks()}
+          ${clockNumbers()}
+          <span class="hand hour-hand" style="--angle:${hourAngle}deg"></span>
+          <span class="hand minute-hand" style="--angle:${minuteAngle}deg"></span>
+        </div>
+      `;
+    }
+    function genClock() {
+      const type = activityType();
+      let minutes = [0, 30];
+      if (type === "quarterhours" || difficulty() === "lower") minutes = [0, 15, 30, 45];
+      if (type === "fiveminutes" || difficulty() === "upper") minutes = Array.from({ length: 12 }, (_, index) => index * 5);
+      const hour = randInt(1, 12);
+      const minute = choice(minutes);
+      const answer = formatTime(hour, minute);
+      currentTask = { answer };
+      setHead("Clock Challenge", "Read the time shown.");
+      document.getElementById("activity-card").innerHTML = `
+        <div class="prompt">What time is shown on the clock?</div>
+        <div class="visual">
+          <div class="clock-wrap">${renderClock(hour, minute)}</div>
+        </div>
+        <div class="subprompt">Time: <span data-answer-fill>?</span></div>
+      `;
+      setAnswer(answer);
+    }
+
+    const moneyValues = [
+      { value: 1, label: "1p", className: "coin silver" },
+      { value: 2, label: "2p", className: "coin silver" },
+      { value: 5, label: "5p", className: "coin" },
+      { value: 10, label: "10p", className: "coin" },
+      { value: 20, label: "20p", className: "coin" },
+      { value: 50, label: "50p", className: "coin" },
+      { value: 100, label: "1 pound", className: "coin silver" },
+      { value: 200, label: "2 pounds", className: "coin silver" },
+      { value: 500, label: "5 pounds", className: "note blue" }
+    ];
+    function formatMoney(pence) {
+      if (pence < 100) return `${pence}p`;
+      const pounds = Math.floor(pence / 100);
+      const pennies = pence % 100;
+      const poundText = pounds === 1 ? "1 pound" : `${pounds} pounds`;
+      return pennies ? `${poundText} ${pennies}p` : poundText;
+    }
+    function renderMoney(items) {
+      return `
+        <div class="money-board">
+          ${items.map((item) => `<span class="${item.className}">${item.label}</span>`).join("")}
+        </div>
+      `;
+    }
+    function makeMoneyAmount(target) {
+      const usable = moneyValues.filter((item) => item.value <= target && item.value <= 200).sort((a, b) => b.value - a.value);
+      let remaining = target;
+      const items = [];
+      for (const coin of usable) {
+        while (remaining >= coin.value && items.length < 8) {
+          items.push(coin);
+          remaining -= coin.value;
+        }
+      }
+      return { items, remaining };
+    }
+    function genMoney() {
+      const type = activityType();
+      const upper = difficulty() === "upper";
+      const available = moneyValues.filter((item) => item.value <= (upper ? 500 : difficulty() === "lower" ? 200 : 50));
+      if (type === "makeamount") {
+        const target = difficulty() === "early" ? choice([10, 15, 20, 25, 30, 40, 50]) : randInt(3, upper ? 20 : 10) * 10;
+        const made = makeMoneyAmount(target);
+        const answer = made.items.length ? made.items.map((item) => item.label).join(" + ") : formatMoney(target);
+        currentTask = { answer };
+        setHead("Money", "Make the amount.");
+        document.getElementById("activity-card").innerHTML = `
+          <div class="prompt">Which coins could make this amount?</div>
+          <div class="visual"><div class="money-wrap"><div class="money-target">${formatMoney(target)}</div></div></div>
+          <div class="subprompt">One way: <span data-answer-fill>?</span></div>
+        `;
+        setAnswer(answer);
+        return;
+      }
+      if (type === "change") {
+        const paid = upper ? choice([200, 500]) : choice([100, 200]);
+        const cost = randInt(2, Math.floor((paid - 10) / 5)) * 5;
+        const answer = formatMoney(paid - cost);
+        currentTask = { answer };
+        setHead("Money", "Find the change.");
+        document.getElementById("activity-card").innerHTML = `
+          <div class="prompt">Pay with ${formatMoney(paid)}. The item costs ${formatMoney(cost)}.</div>
+          <div class="visual"><div class="money-wrap">${renderMoney([moneyValues.find((item) => item.value === paid) || available[available.length - 1]])}</div></div>
+          <div class="subprompt">Change: <span data-answer-fill>?</span></div>
+        `;
+        setAnswer(answer);
+        return;
+      }
+      const count = difficulty() === "early" ? randInt(3, 5) : randInt(5, upper ? 8 : 7);
+      const items = Array.from({ length: count }, () => choice(available));
+      const total = items.reduce((sum, item) => sum + item.value, 0);
+      const answer = formatMoney(total);
+      currentTask = { answer };
+      setHead("Money", "Count the money.");
+      document.getElementById("activity-card").innerHTML = `
+        <div class="prompt">How much money is shown?</div>
+        <div class="visual"><div class="money-wrap">${renderMoney(items)}</div></div>
+        <div class="subprompt">Total: <span data-answer-fill>?</span></div>
+      `;
+      setAnswer(answer);
+    }
+
+    const shapeTypes = ["circle", "square", "rectangle", "triangle"];
+    const shapeColours = [
+      ["blue", "#2f72bc"],
+      ["green", "#34a76b"],
+      ["orange", "#f97316"],
+      ["purple", "#7557d4"],
+      ["pink", "#df5ca8"]
+    ];
+    function renderShape(item) {
+      return `<span class="shape ${item.type}" style="--shape-color:${item.colour}"></span>`;
+    }
+    function makeShapeItems(count) {
+      return Array.from({ length: count }, () => {
+        const [name, colour] = choice(shapeColours);
+        return { type: choice(shapeTypes), colourName: name, colour };
+      });
+    }
+    function renderShapeBoard(items, single = false) {
+      return `
+        <div class="shape-board${single ? " single" : ""}">
+          ${items.map((item) => `<span class="shape-cell">${renderShape(item)}</span>`).join("")}
+        </div>
+      `;
+    }
+    function genShapes() {
+      const type = activityType();
+      const itemCount = difficulty() === "early" ? 8 : 10;
+      if (type === "nameshape") {
+        const [colourName, colour] = choice(shapeColours);
+        const item = { type: choice(shapeTypes), colourName, colour };
+        const answer = item.type;
+        currentTask = { answer };
+        setHead("Shape Sorter", "Name the shape.");
+        document.getElementById("activity-card").innerHTML = `
+          <div class="prompt">What shape is shown?</div>
+          <div class="visual"><div class="shape-wrap">${renderShapeBoard([item], true)}</div></div>
+          <div class="subprompt">Shape: <span data-answer-fill>?</span></div>
+        `;
+        setAnswer(answer);
+        return;
+      }
+      const items = makeShapeItems(itemCount);
+      if (type === "countcolour") {
+        const target = choice(shapeColours)[0];
+        const answer = String(items.filter((item) => item.colourName === target).length);
+        currentTask = { answer };
+        setHead("Shape Sorter", "Count by colour.");
+        document.getElementById("activity-card").innerHTML = `
+          <div class="prompt">How many ${target} shapes are there?</div>
+          <div class="visual"><div class="shape-wrap">${renderShapeBoard(items)}</div></div>
+          <div class="subprompt">Number of ${target} shapes: <span data-answer-fill>?</span></div>
+        `;
+        setAnswer(answer);
+        return;
+      }
+      const target = choice(shapeTypes);
+      const answer = String(items.filter((item) => item.type === target).length);
+      currentTask = { answer };
+      setHead("Shape Sorter", "Count by shape.");
+      document.getElementById("activity-card").innerHTML = `
+        <div class="prompt">How many ${target}s are there?</div>
+        <div class="visual"><div class="shape-wrap">${renderShapeBoard(items)}</div></div>
+        <div class="subprompt">Number of ${target}s: <span data-answer-fill>?</span></div>
+      `;
+      setAnswer(answer);
+    }
+
     function newTask() {
       if (currentMode === "bonds") genBond();
       if (currentMode === "place") genPlaceValue();
       if (currentMode === "arrays") genArray();
       if (currentMode === "fractions") genFractions();
+      if (currentMode === "clock") genClock();
+      if (currentMode === "money") genMoney();
+      if (currentMode === "shapes") genShapes();
       applyTheme();
     }
     function applyTheme() {
