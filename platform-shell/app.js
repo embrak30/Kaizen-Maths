@@ -2064,7 +2064,7 @@ const tools = [
     status: "Imported",
     description: "Open colourful teacher-led elementary maths tasks for number bonds, place value, arrays, and fractions, with large visuals and hidden answers for classroom discussion.",
     tags: ["classroom", "primary", "elementary", "number bonds", "place value", "arrays", "fractions", "visual maths", "starter", "retrieval"],
-    toolPath: "tools/elementary-maths-playground/index.html?v=elementary-playground-1",
+    toolPath: "tools/elementary-maths-playground/index.html?v=elementary-playground-2",
     imported: true,
     teacherNotes: [
       "Designed as a colourful board-ready activity space for younger learners.",
