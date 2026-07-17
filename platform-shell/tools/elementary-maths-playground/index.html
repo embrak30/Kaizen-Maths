@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elementary Maths Playground</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --ink:#18324a;
+      --muted:#5b6f82;
+      --line:#d6e3ee;
+      --navy:#173454;
+      --teal:#16a39f;
+      --blue:#2f72bc;
+      --green:#34a76b;
+      --amber:#f0a02a;
+      --red:#df554a;
+      --purple:#7557d4;
+      --pink:#df5ca8;
+      --paper:#fff;
+      --soft:#f5f9fc;
+      --shadow:0 20px 50px rgba(24,50,74,.16);
+    }
+    body{
+      min-height:100vh;
+      overflow:hidden;
+      color:var(--ink);
+      font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+      background:
+        radial-gradient(circle at 10% 16%,rgba(22,163,159,.18),transparent 28%),
+        radial-gradient(circle at 86% 78%,rgba(117,87,212,.15),transparent 28%),
+        linear-gradient(135deg,#f8fcff,#eefaf6);
+    }
+    button,select{font:inherit}
+    .teacher-tab{
+      position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);
+      padding:12px 7px;border-radius:0 8px 8px 0;background:var(--purple);color:#fff;
+      box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82rem;font-weight:900;
+      writing-mode:vertical-rl;text-orientation:mixed;
+    }
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}
+    .sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-420px;top:0;z-index:1000;width:420px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}
+    .sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:var(--purple);color:#fff;font-size:1.25rem;font-weight:900}
+    .sidebar-content{padding:22px;line-height:1.55}
+    .sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--teal);color:var(--purple);font-size:1.02rem}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#475467}
+    .sidebar-content ul{padding-left:20px;margin-bottom:12px}
+
+    .app{height:100vh;display:grid;grid-template-rows:auto auto 1fr;min-height:0}
+    .header{
+      display:grid;grid-template-columns:minmax(220px,1fr) auto;gap:14px;align-items:center;
+      padding:11px 16px;color:white;background:
+        radial-gradient(circle at 14% 22%,rgba(255,255,255,.16),transparent 30%),
+        linear-gradient(135deg,#173454,#0f766e 68%,#f97316 145%);
+      box-shadow:0 8px 22px rgba(15,39,63,.18);
+    }
+    .brand h1{font-size:clamp(1.15rem,2vw,1.65rem);line-height:1.1;letter-spacing:0}
+    .brand p{margin-top:3px;color:rgba(255,255,255,.86);font-size:.86rem;font-weight:700}
+    .top-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+    .btn,.select{
+      min-height:38px;border:1px solid rgba(255,255,255,.32);border-radius:9px;padding:8px 12px;
+      color:var(--navy);background:white;font-weight:900;cursor:pointer;
+    }
+    .btn{color:#fff;background:var(--teal);border-color:var(--teal)}
+    .btn.secondary{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.34);color:white}
+    .btn.orange{background:#f97316;border-color:#f97316}
+    .btn.purple{background:var(--purple);border-color:var(--purple)}
+    .btn:hover,.select:hover{filter:brightness(.97)}
+
+    .mode-strip{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;
+      padding:9px 12px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.86);
+    }
+    .mode-btn{
+      min-height:46px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);
+      cursor:pointer;font-weight:950;box-shadow:0 7px 16px rgba(24,50,74,.06);
+    }
+    .mode-btn.active{color:#fff;border-color:transparent}
+    .mode-btn[data-mode="bonds"].active{background:linear-gradient(135deg,var(--teal),var(--blue))}
+    .mode-btn[data-mode="place"].active{background:linear-gradient(135deg,var(--purple),var(--pink))}
+    .mode-btn[data-mode="arrays"].active{background:linear-gradient(135deg,var(--green),var(--teal))}
+    .mode-btn[data-mode="fractions"].active{background:linear-gradient(135deg,var(--amber),#f97316)}
+
+    .workspace{
+      min-height:0;
+      padding:14px;
+      display:grid;
+      grid-template-columns:280px minmax(0,1fr);
+      gap:14px;
+      background:
+        linear-gradient(rgba(24,50,74,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(24,50,74,.035) 1px,transparent 1px);
+      background-size:32px 32px;
+    }
+    .side-panel{
+      min-height:0;overflow:auto;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.94);
+      box-shadow:0 14px 32px rgba(24,50,74,.09);padding:14px;
+    }
+    .side-panel h2{font-size:.9rem;text-transform:uppercase;letter-spacing:.05em;color:var(--navy);margin-bottom:10px}
+    .field{margin-top:12px}
+    .field label{display:block;margin-bottom:6px;color:var(--muted);font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.03em}
+    .field select,.field input{
+      width:100%;min-height:42px;border:1px solid var(--line);border-radius:10px;background:#f8fbfd;
+      color:var(--ink);padding:8px 10px;font-weight:850;
+    }
+    .hint-card{
+      margin-top:14px;border:1px solid #bceeed;border-radius:12px;background:#ecfdf9;padding:11px 12px;color:#145c55;
+      font-size:.88rem;font-weight:750;line-height:1.4;
+    }
+    .control-grid{display:grid;grid-template-columns:1fr;gap:9px;margin-top:14px}
+    .control-grid .btn{min-height:44px}
+
+    .board{
+      position:relative;min-height:0;overflow:hidden;border:1px solid #b7cad9;border-radius:16px;background:white;
+      box-shadow:var(--shadow);display:grid;grid-template-rows:auto 1fr auto;
+    }
+    .board.fullscreen{position:fixed;inset:0;z-index:40;border:0;border-radius:0;box-shadow:none}
+    .board-head{
+      display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 16px;
+      border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(22,163,159,.08),rgba(117,87,212,.08)),#fff;
+    }
+    .task-title h2{font-size:clamp(1.05rem,1.8vw,1.45rem);color:var(--navy)}
+    .task-title p{margin-top:2px;color:var(--muted);font-weight:750;font-size:.86rem}
+    .answer-pill{
+      min-width:180px;min-height:52px;display:grid;place-items:center;border-radius:999px;
+      background:#f8fafc;border:2px dashed #b9c9d8;color:#667085;font-size:1.05rem;font-weight:950;
+    }
+    .answer-pill.revealed{border-color:#93e6d5;background:#e8fbf7;color:#0b6465;font-size:clamp(1.25rem,2.4vw,2rem)}
+    .board-body{min-height:0;overflow:auto;padding:18px;display:grid;place-items:center}
+    .activity-card{width:min(100%,1060px);min-height:min(100%,620px);display:grid;gap:18px;align-content:center}
+    .prompt{
+      text-align:center;color:var(--navy);font-size:clamp(1.25rem,2.4vw,2.15rem);font-weight:950;line-height:1.18;
+    }
+    .subprompt{text-align:center;color:var(--muted);font-size:clamp(.95rem,1.4vw,1.15rem);font-weight:800}
+    .visual{display:grid;place-items:center;min-height:330px}
+    .board-foot{
+      display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line);
+      background:#fbfdff;color:var(--muted);font-size:.88rem;font-weight:800;
+    }
+
+    .part-whole{display:grid;justify-items:center;gap:22px}
+    .whole-circle,.part-circle{
+      display:grid;place-items:center;border-radius:50%;color:#fff;font-weight:1000;box-shadow:0 12px 26px rgba(24,50,74,.15);
+    }
+    .whole-circle{width:190px;height:190px;background:linear-gradient(135deg,var(--purple),var(--pink));font-size:clamp(3rem,8vw,6rem)}
+    .parts{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}
+    .part-circle{width:150px;height:150px;background:linear-gradient(135deg,var(--teal),var(--blue));font-size:clamp(2.6rem,5vw,4.7rem)}
+    .part-circle.missing{background:linear-gradient(135deg,#f97316,var(--amber))}
+    .bond-label{text-align:center;color:var(--muted);font-size:1rem;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+
+    .base-ten{display:flex;justify-content:center;align-items:end;gap:34px;flex-wrap:wrap}
+    .pv-group{display:grid;gap:10px;justify-items:center}
+    .pv-label{color:var(--muted);font-size:.88rem;font-weight:950;text-transform:uppercase;letter-spacing:.04em}
+    .hundreds{display:grid;grid-template-columns:repeat(10,12px);grid-template-rows:repeat(10,12px);gap:2px;padding:8px;border-radius:10px;background:#eaf5ff;border:2px solid #b7d8f4}
+    .hundreds span,.ten span,.one{width:12px;height:12px;border-radius:3px;background:#2f72bc}
+    .tens-wrap{display:flex;gap:8px;align-items:end;flex-wrap:wrap;justify-content:center;max-width:300px}
+    .ten{display:grid;grid-template-rows:repeat(10,12px);gap:2px;padding:7px;border-radius:9px;background:#eefaf7;border:2px solid #bce9dc}
+    .ten span{background:#16a39f}
+    .ones-wrap{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:250px}
+    .one{width:34px;height:34px;border-radius:50%;background:#f97316;box-shadow:0 7px 14px rgba(249,115,22,.22)}
+
+    .array-wrap{display:grid;justify-items:center;gap:18px}
+    .array-grid{display:grid;gap:14px;padding:22px;border-radius:18px;background:#f8fafc;border:1px solid var(--line)}
+    .array-dot{width:clamp(34px,5vw,64px);height:clamp(34px,5vw,64px);border-radius:50%;box-shadow:0 8px 16px rgba(24,50,74,.12)}
+    .array-dot:nth-child(4n+1){background:var(--teal)}.array-dot:nth-child(4n+2){background:var(--purple)}.array-dot:nth-child(4n+3){background:var(--amber)}.array-dot:nth-child(4n){background:var(--pink)}
+    .array-labels{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+    .mini-chip{padding:8px 12px;border-radius:999px;background:#eef6ff;color:#1d4ed8;font-weight:950}
+
+    .fraction-wrap{display:grid;gap:26px;justify-items:center}
+    .fraction-bar{width:min(92vw,860px);display:grid;gap:4px;padding:10px;border-radius:16px;background:#f8fafc;border:1px solid var(--line)}
+    .fraction-row{display:grid;gap:4px;height:86px}
+    .fraction-piece{border:2px solid #fff;border-radius:10px;background:#e8eef5;box-shadow:inset 0 0 0 1px rgba(24,50,74,.07)}
+    .fraction-piece.shaded{background:linear-gradient(135deg,var(--teal),var(--green))}
+    .fraction-mystery{font-size:clamp(2.2rem,5vw,4rem);font-weight:1000;color:var(--navy)}
+
+    @media(max-width:920px){
+      body{overflow:auto}.app{height:auto;min-height:100vh}.header{grid-template-columns:1fr}.top-actions{justify-content:flex-start}
+      .mode-strip{grid-template-columns:1fr 1fr}.workspace{grid-template-columns:1fr}.board{min-height:620px}.answer-pill{min-width:0}
+      .parts{gap:16px}.whole-circle{width:150px;height:150px}.part-circle{width:120px;height:120px}
+    }
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Elementary Maths Playground</div>
+    <div class="sidebar-content">
+      <h3>How to Use</h3>
+      <ul>
+        <li>Choose an activity mode, then generate a new visual task.</li>
+        <li>Keep the answer hidden while pupils discuss or write their responses.</li>
+        <li>Reveal the answer only when the class is ready to check.</li>
+      </ul>
+      <h3>Activity Modes</h3>
+      <ul>
+        <li><strong>Number Bonds:</strong> Part-part-whole tasks with a missing part.</li>
+        <li><strong>Place Value:</strong> Base-ten blocks for reading hundreds, tens, and ones.</li>
+        <li><strong>Arrays:</strong> Multiplication arrays using colourful counters.</li>
+        <li><strong>Fractions:</strong> Shaded fraction bars with the answer hidden.</li>
+      </ul>
+      <h3>Teacher Flow</h3>
+      <p>Ask pupils what they notice, collect answers, invite explanation, then reveal. This keeps the activity playful while still supporting mathematical language.</p>
+    </div>
+  </aside>
+
+  <main class="app">
+    <header class="header">
+      <div class="brand">
+        <h1>Elementary Maths Playground</h1>
+        <p>Colourful teacher-led number tasks with hidden answers for discussion and reveal.</p>
+      </div>
+      <div class="top-actions">
+        <select class="select" id="difficulty" aria-label="Difficulty">
+          <option value="early">Early Years</option>
+          <option value="lower" selected>Lower Elementary</option>
+          <option value="upper">Upper Elementary</option>
+        </select>
+        <button class="btn secondary" type="button" onclick="toggleFullscreen()">Full Screen</button>
+      </div>
+    </header>
+
+    <nav class="mode-strip" aria-label="Activity modes">
+      <button class="mode-btn active" type="button" data-mode="bonds" onclick="setMode('bonds')">Number Bonds</button>
+      <button class="mode-btn" type="button" data-mode="place" onclick="setMode('place')">Place Value</button>
+      <button class="mode-btn" type="button" data-mode="arrays" onclick="setMode('arrays')">Arrays</button>
+      <button class="mode-btn" type="button" data-mode="fractions" onclick="setMode('fractions')">Fractions</button>
+    </nav>
+
+    <section class="workspace">
+      <aside class="side-panel">
+        <h2>Activity Setup</h2>
+        <div class="field">
+          <label for="activity-type">Focus</label>
+          <select id="activity-type" onchange="newTask()"></select>
+        </div>
+        <div class="field">
+          <label for="colour-theme">Colour theme</label>
+          <select id="colour-theme" onchange="applyTheme()">
+            <option value="mixed" selected>Mixed bright colours</option>
+            <option value="ocean">Ocean</option>
+            <option value="sunset">Sunset</option>
+            <option value="forest">Forest</option>
+          </select>
+        </div>
+        <div class="control-grid">
+          <button class="btn orange" type="button" onclick="newTask()">New Task</button>
+          <button class="btn purple" type="button" onclick="revealAnswer()">Reveal Answer</button>
+          <button class="btn" type="button" onclick="hideAnswer()">Hide Answer</button>
+        </div>
+        <div class="hint-card" id="teacher-note">Ask pupils to find the missing part before revealing the answer.</div>
+      </aside>
+
+      <section class="board" id="board">
+        <div class="board-head">
+          <div class="task-title">
+            <h2 id="task-heading">Number Bonds</h2>
+            <p id="task-instruction">Find the missing part.</p>
+          </div>
+          <div class="answer-pill" id="answer-pill">Answer hidden</div>
+        </div>
+        <div class="board-body">
+          <article class="activity-card" id="activity-card"></article>
+        </div>
+        <footer class="board-foot">
+          <span>Ask</span>
+          <span>Discuss</span>
+          <span>Explain</span>
+          <span>Reveal</span>
+        </footer>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    let currentMode = "bonds";
+    let currentTask = null;
+    let answerVisible = false;
+
+    const activityOptions = {
+      bonds: [
+        ["bond10", "Bonds to 10"],
+        ["bond20", "Bonds to 20"],
+        ["bond100", "Bonds to 100"]
+      ],
+      place: [
+        ["hto", "Hundreds, tens and ones"],
+        ["tensones", "Tens and ones"],
+        ["missingpv", "Missing place value"]
+      ],
+      arrays: [
+        ["facts", "Multiplication facts"],
+        ["commute", "Turn the array"],
+        ["missingfactor", "Missing factor"]
+      ],
+      fractions: [
+        ["name", "Name the fraction"],
+        ["equivalent", "Equivalent fraction"],
+        ["compare", "Compare two fractions"]
+      ]
+    };
+
+    const notes = {
+      bonds: "Ask pupils to find the missing part before revealing the answer.",
+      place: "Ask pupils to read the model and explain the value of each group.",
+      arrays: "Ask pupils to describe the rows and columns before writing the fact.",
+      fractions: "Ask pupils to name the shaded fraction and justify the denominator."
+    };
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function choice(items) {
+      return items[randInt(0, items.length - 1)];
+    }
+    function difficulty() {
+      return document.getElementById("difficulty").value;
+    }
+    function activityType() {
+      return document.getElementById("activity-type").value;
+    }
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll(".mode-btn").forEach((button) => {
+        button.classList.toggle("active", button.dataset.mode === mode);
+      });
+      const select = document.getElementById("activity-type");
+      select.innerHTML = activityOptions[mode].map(([value, label]) => `<option value="${value}">${label}</option>`).join("");
+      document.getElementById("teacher-note").textContent = notes[mode];
+      newTask();
+    }
+    function setHead(title, instruction) {
+      document.getElementById("task-heading").textContent = title;
+      document.getElementById("task-instruction").textContent = instruction;
+    }
+    function setAnswer(text) {
+      currentTask.answer = text;
+      hideAnswer();
+    }
+    function revealAnswer() {
+      if (!currentTask) return;
+      answerVisible = true;
+      const pill = document.getElementById("answer-pill");
+      pill.textContent = currentTask.answer;
+      pill.classList.add("revealed");
+      document.querySelectorAll("[data-answer-fill]").forEach((item) => {
+        item.textContent = currentTask.inlineAnswer || currentTask.answer;
+      });
+    }
+    function hideAnswer() {
+      answerVisible = false;
+      const pill = document.getElementById("answer-pill");
+      pill.textContent = "Answer hidden";
+      pill.classList.remove("revealed");
+      document.querySelectorAll("[data-answer-fill]").forEach((item) => {
+        item.textContent = "?";
+      });
+    }
+
+    function genBond() {
+      const type = activityType();
+      let total = 10;
+      if (type === "bond20") total = difficulty() === "early" ? 10 : 20;
+      if (type === "bond100") total = difficulty() === "upper" ? choice([50, 60, 70, 80, 90, 100]) : 100;
+      const step = total <= 20 ? 1 : 5;
+      const part = step * randInt(1, Math.floor((total - step) / step));
+      const missing = total - part;
+      currentTask = { answer: String(missing) };
+      setHead("Number Bonds", "Find the missing part.");
+      document.getElementById("activity-card").innerHTML = `
+        <div class="prompt">What number completes the whole?</div>
+        <div class="visual">
+          <div class="part-whole">
+            <div>
+              <div class="bond-label">Whole</div>
+              <div class="whole-circle">${total}</div>
+            </div>
+            <div class="parts">
+              <div>
+                <div class="bond-label">Part</div>
+                <div class="part-circle">${part}</div>
+              </div>
+              <div>
+                <div class="bond-label">Missing Part</div>
+                <div class="part-circle missing" data-answer-fill>?</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="subprompt">${part} + ? = ${total}</div>
+      `;
+      setAnswer(String(missing));
+    }
+
+    function makeHundred() {
+      return `<div class="hundreds">${Array.from({ length: 100 }, () => "<span></span>").join("")}</div>`;
+    }
+    function makeTen() {
+      return `<div class="ten">${Array.from({ length: 10 }, () => "<span></span>").join("")}</div>`;
+    }
+    function makeOnes(count) {
+      return Array.from({ length: count }, () => '<span class="one"></span>').join("");
+    }
+    function genPlaceValue() {
+      const type = activityType();
+      let hundreds = 0;
+      let tens = randInt(1, 9);
+      let ones = randInt(0, 9);
+      if (type === "hto" || difficulty() === "upper") hundreds = randInt(1, 6);
+      if (type === "tensones") hundreds = 0;
+      if (type === "missingpv") {
+        hundreds = difficulty() === "upper" ? randInt(1, 4) : 0;
+        tens = randInt(2, 9);
+        ones = randInt(1, 9);
+      }
+      const value = hundreds * 100 + tens * 10 + ones;
+      currentTask = { answer: String(value) };
+      setHead("Place Value", "What number is shown?");
+      document.getElementById("activity-card").innerHTML = `
+        <div class="prompt">Read the base-ten model.</div>
+        <div class="visual">
+          <div class="base-ten">
+            ${hundreds ? `<div class="pv-group"><div class="pv-label">Hundreds</div>${Array.from({ length: hundreds }, makeHundred).join("")}</div>` : ""}
+            <div class="pv-group"><div class="pv-label">Tens</div><div class="tens-wrap">${Array.from({ length: tens }, makeTen).join("")}</div></div>
+            <div class="pv-group"><div class="pv-label">Ones</div><div class="ones-wrap">${makeOnes(ones)}</div></div>
+          </div>
+        </div>
+        <div class="subprompt">Number shown: <span data-answer-fill>?</span></div>
+      `;
+      setAnswer(String(value));
+    }
+
+    function genArray() {
+      const type = activityType();
+      const max = difficulty() === "upper" ? 10 : difficulty() === "lower" ? 8 : 5;
+      const rows = randInt(2, max);
+      const cols = randInt(2, max);
+      const product = rows * cols;
+      const hideRows = type === "missingfactor";
+      const answer = hideRows ? String(rows) : `${rows} x ${cols} = ${product}`;
+      currentTask = { answer };
+      setHead("Arrays", hideRows ? "Find the missing number of rows." : "Write the multiplication sentence.");
+      document.getElementById("activity-card").innerHTML = `
+        <div class="prompt">${hideRows ? `? rows of ${cols}` : "What multiplication fact is shown?"}</div>
+        <div class="visual">
+          <div class="array-wrap">
+            <div class="array-grid" style="grid-template-columns:repeat(${cols},1fr)">
+              ${Array.from({ length: product }, () => '<span class="array-dot"></span>').join("")}
+            </div>
+            <div class="array-labels">
+              <span class="mini-chip">${hideRows ? "?" : rows} rows</span>
+              <span class="mini-chip">${cols} columns</span>
+              <span class="mini-chip"><span data-answer-fill>?</span></span>
+            </div>
+          </div>
+        </div>
+      `;
+      setAnswer(answer);
+    }
+
+    function fractionBar(numerator, denominator, label = "") {
+      return `
+        <div class="fraction-bar" aria-label="${label}">
+          <div class="fraction-row" style="grid-template-columns:repeat(${denominator},1fr)">
+            ${Array.from({ length: denominator }, (_, index) => `<span class="fraction-piece${index < numerator ? " shaded" : ""}"></span>`).join("")}
+          </div>
+        </div>
+      `;
+    }
+    function genFractions() {
+      const type = activityType();
+      const denominators = difficulty() === "upper" ? [4, 5, 6, 8, 10, 12] : difficulty() === "lower" ? [2, 3, 4, 5, 6, 8] : [2, 3, 4];
+      let denominator = choice(denominators);
+      let numerator = randInt(1, denominator - 1);
+      if (type === "equivalent") {
+        denominator = choice([2, 3, 4, 5]);
+        numerator = randInt(1, denominator - 1);
+        const multiplier = choice([2, 3]);
+        const equivalent = `${numerator * multiplier}/${denominator * multiplier}`;
+        const answer = `${numerator}/${denominator} = ${equivalent}`;
+        currentTask = { answer, inlineAnswer: equivalent };
+        setHead("Equivalent Fractions", "Name the equivalent fraction.");
+        document.getElementById("activity-card").innerHTML = `
+          <div class="prompt">What equivalent fraction is shown?</div>
+          <div class="visual">
+            <div class="fraction-wrap">
+              ${fractionBar(numerator, denominator, "First fraction")}
+              ${fractionBar(numerator * multiplier, denominator * multiplier, "Equivalent fraction")}
+              <div class="fraction-mystery">${numerator}/${denominator} = <span data-answer-fill>?</span></div>
+            </div>
+          </div>
+        `;
+        setAnswer(answer);
+        return;
+      }
+      if (type === "compare") {
+        const d2 = choice(denominators);
+        const n2 = randInt(1, d2 - 1);
+        const left = numerator / denominator;
+        const right = n2 / d2;
+        const sign = left > right ? ">" : left < right ? "<" : "=";
+        const answer = `${numerator}/${denominator} ${sign} ${n2}/${d2}`;
+        currentTask = { answer };
+        setHead("Compare Fractions", "Which fraction is larger?");
+        document.getElementById("activity-card").innerHTML = `
+          <div class="prompt">Compare the shaded parts.</div>
+          <div class="visual">
+            <div class="fraction-wrap">
+              ${fractionBar(numerator, denominator, "Left fraction")}
+              ${fractionBar(n2, d2, "Right fraction")}
+              <div class="fraction-mystery">${numerator}/${denominator} <span data-answer-fill>?</span> ${n2}/${d2}</div>
+            </div>
+          </div>
+        `;
+        setAnswer(sign);
+        return;
+      }
+      const answer = `${numerator}/${denominator}`;
+      currentTask = { answer };
+      setHead("Fractions", "What fraction is shaded?");
+      document.getElementById("activity-card").innerHTML = `
+        <div class="prompt">What fraction of the bar is shaded?</div>
+        <div class="visual">
+          <div class="fraction-wrap">
+            ${fractionBar(numerator, denominator, "Shaded fraction")}
+            <div class="fraction-mystery"><span data-answer-fill>?</span></div>
+          </div>
+        </div>
+      `;
+      setAnswer(answer);
+    }
+
+    function newTask() {
+      if (currentMode === "bonds") genBond();
+      if (currentMode === "place") genPlaceValue();
+      if (currentMode === "arrays") genArray();
+      if (currentMode === "fractions") genFractions();
+      applyTheme();
+    }
+    function applyTheme() {
+      const theme = document.getElementById("colour-theme").value;
+      const root = document.documentElement;
+      const themes = {
+        mixed: ["#16a39f", "#2f72bc", "#34a76b", "#f0a02a", "#7557d4", "#df5ca8"],
+        ocean: ["#0891b2", "#2563eb", "#14b8a6", "#0f766e", "#38bdf8", "#1d4ed8"],
+        sunset: ["#f97316", "#f59e0b", "#ef4444", "#db2777", "#fb7185", "#facc15"],
+        forest: ["#15803d", "#16a34a", "#84cc16", "#0f766e", "#65a30d", "#22c55e"]
+      };
+      const [teal, blue, green, amber, purple, pink] = themes[theme] || themes.mixed;
+      root.style.setProperty("--teal", teal);
+      root.style.setProperty("--blue", blue);
+      root.style.setProperty("--green", green);
+      root.style.setProperty("--amber", amber);
+      root.style.setProperty("--purple", purple);
+      root.style.setProperty("--pink", pink);
+    }
+    function toggleFullscreen() {
+      document.getElementById("board").classList.toggle("fullscreen");
+    }
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+    document.getElementById("difficulty").addEventListener("change", newTask);
+    setMode("bonds");
+  </script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+</body>
+</html>

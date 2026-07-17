@@ -2055,6 +2055,25 @@ const tools = [
     ]
   },
   {
+    slug: "elementary-maths-playground",
+    title: "Elementary Maths Playground",
+    category: "Classroom Tools",
+    level: "Primary / Elementary",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "Open colourful teacher-led elementary maths tasks for number bonds, place value, arrays, and fractions, with large visuals and hidden answers for classroom discussion.",
+    tags: ["classroom", "primary", "elementary", "number bonds", "place value", "arrays", "fractions", "visual maths", "starter", "retrieval"],
+    toolPath: "tools/elementary-maths-playground/index.html?v=elementary-playground-1",
+    imported: true,
+    teacherNotes: [
+      "Designed as a colourful board-ready activity space for younger learners.",
+      "Each task keeps the answer hidden until the teacher is ready to reveal it.",
+      "Modes cover number bonds, base-ten place value, multiplication arrays, and shaded fraction bars.",
+      "Use the ask, discuss, explain, reveal flow to build mathematical language and confidence."
+    ]
+  },
+  {
     slug: "word-search-builder",
     title: "Word Search Builder",
     category: "Classroom Tools",
@@ -2300,6 +2319,7 @@ const subjectToolGroups = {
     "classroom-displays": "Board Displays and Visuals",
     "elementary-manipulatives": "Board Displays and Visuals",
     "elementary-starter-board": "Starters and Retrieval",
+    "elementary-maths-playground": "Starters and Retrieval",
     "fractions-table": "Starters and Retrieval",
     "word-search-builder": "Puzzle Builders",
     "exit-ticket-game": "Games and Routines",
@@ -2608,6 +2628,7 @@ const freeSampleTools = new Set([
   "averages-range",
   "classroom-displays",
   "elementary-starter-board",
+  "elementary-maths-playground",
   "interface-guide"
 ]);
 
@@ -7750,7 +7771,8 @@ const curatedRelatedToolSlugs = {
   "newtons-second-law": ["friction", "work-energy-power", "motion-graphs-constant-acceleration", "equations-of-motion"],
   "friction": ["newtons-second-law", "work-energy-power", "equations-of-motion", "moments"],
   "work-energy-power": ["friction", "newtons-second-law", "equations-of-motion", "motion-graphs-constant-acceleration"],
-  "word-search-builder": ["fractions-table", "elementary-starter-board", "classroom-displays", "exit-ticket-game"],
+  "word-search-builder": ["fractions-table", "elementary-starter-board", "elementary-maths-playground", "classroom-displays"],
+  "elementary-maths-playground": ["elementary-starter-board", "elementary-manipulatives", "fractions-table", "classroom-displays"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
   "circle-theorems": ["missing-angles", "circles-area-circumference", "sectors-arc-length", "trigonometric-ratios"],
   "earth-geometry": ["bearings", "trigonometric-ratios", "circles-area-circumference", "sectors-arc-length"],
