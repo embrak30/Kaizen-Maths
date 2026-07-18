@@ -86,6 +86,7 @@
     .mode-btn[data-mode="clock"].active{background:linear-gradient(135deg,#2563eb,#0891b2)}
     .mode-btn[data-mode="money"].active{background:linear-gradient(135deg,#15803d,#f59e0b)}
     .mode-btn[data-mode="shapes"].active{background:linear-gradient(135deg,#db2777,#7c3aed)}
+    .mode-btn[data-mode="signs"].active{background:linear-gradient(135deg,#ea580c,#dc2626)}
 
     .workspace{
       min-height:0;
@@ -221,6 +222,25 @@
     .shape.rectangle{width:clamp(64px,10vmin,104px);height:clamp(34px,5vmin,58px);border-radius:10px}
     .shape.triangle{width:0;height:0;background:transparent;border-left:clamp(24px,4vmin,42px) solid transparent;border-right:clamp(24px,4vmin,42px) solid transparent;border-bottom:clamp(48px,8vmin,84px) solid var(--shape-color);box-shadow:none}
 
+    .sign-wrap{width:100%;height:100%;display:grid;place-items:center;min-height:0}
+    .sign-card{
+      width:min(100%,930px);min-height:min(100%,330px);display:grid;place-items:center;gap:clamp(12px,2vh,22px);
+      padding:clamp(16px,3vmin,34px);border:1px solid var(--line);border-radius:22px;background:
+        radial-gradient(circle at 18% 20%,rgba(249,115,22,.13),transparent 32%),
+        radial-gradient(circle at 82% 72%,rgba(220,38,38,.10),transparent 34%),
+        #fff;
+      box-shadow:0 18px 36px rgba(24,50,74,.12)
+    }
+    .sign-equation{
+      display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.4vw,20px);flex-wrap:wrap;
+      color:var(--navy);font-size:clamp(2.1rem,7vmin,5.6rem);font-weight:1000;line-height:1;
+    }
+    .sign-slot{
+      width:clamp(62px,10vmin,110px);height:clamp(62px,10vmin,110px);display:grid;place-items:center;border:4px dashed #f97316;
+      border-radius:18px;background:#fff7ed;color:#c2410c;font-size:clamp(2.1rem,6vmin,4.6rem);font-weight:1000;
+    }
+    .sign-hint{color:var(--muted);font-size:clamp(.95rem,1.5vw,1.2rem);font-weight:900;text-align:center}
+
     @media(max-width:920px){
       body{overflow:auto}.app{height:auto;min-height:100vh}.header{grid-template-columns:1fr}.top-actions{justify-content:flex-start}
       .mode-strip{grid-template-columns:1fr 1fr}.workspace{grid-template-columns:1fr}.board{min-height:620px}.answer-pill{min-width:0}
@@ -251,6 +271,7 @@
         <li><strong>Clock Challenge:</strong> Analogue clock reading tasks with hidden answers.</li>
         <li><strong>Money:</strong> Coin and note counting, plus make-the-amount prompts.</li>
         <li><strong>Shape Sorter:</strong> Count, name, and sort shapes by simple properties.</li>
+        <li><strong>Missing Signs:</strong> Complete number sentences by choosing the operation sign.</li>
       </ul>
       <h3>Teacher Flow</h3>
       <p>Ask pupils what they notice, collect answers, invite explanation, then reveal. This keeps the activity playful while still supporting mathematical language.</p>
@@ -281,6 +302,7 @@
       <button class="mode-btn" type="button" data-mode="clock" onclick="setMode('clock')">Clock Challenge</button>
       <button class="mode-btn" type="button" data-mode="money" onclick="setMode('money')">Money</button>
       <button class="mode-btn" type="button" data-mode="shapes" onclick="setMode('shapes')">Shape Sorter</button>
+      <button class="mode-btn" type="button" data-mode="signs" onclick="setMode('signs')">Missing Signs</button>
     </nav>
 
     <section class="workspace">
@@ -368,6 +390,12 @@
         ["countshape", "Count one shape"],
         ["countcolour", "Count one colour"],
         ["nameshape", "Name the shape"]
+      ],
+      signs: [
+        ["addsub", "Add or subtract"],
+        ["multiply", "Multiplication sign"],
+        ["mixed", "Mixed signs"],
+        ["twosigns", "Two missing signs"]
       ]
     };
 
@@ -378,7 +406,8 @@
       fractions: "Ask pupils to name the shaded fraction and justify the denominator.",
       clock: "Ask pupils to read the hour hand first, then the minute hand.",
       money: "Ask pupils to count in groups before revealing the total.",
-      shapes: "Ask pupils to justify how they sorted or counted the shapes."
+      shapes: "Ask pupils to justify how they sorted or counted the shapes.",
+      signs: "Ask pupils to test each operation and explain why the number sentence is true."
     };
 
     function randInt(min, max) {
@@ -418,7 +447,12 @@
       pill.textContent = currentTask.answer;
       pill.classList.add("revealed");
       document.querySelectorAll("[data-answer-fill]").forEach((item) => {
-        item.textContent = currentTask.inlineAnswer || currentTask.answer;
+        const index = item.dataset.answerIndex;
+        if (currentTask.inlineAnswers && index !== undefined) {
+          item.textContent = currentTask.inlineAnswers[Number(index)] || "";
+        } else {
+          item.textContent = currentTask.inlineAnswer || currentTask.answer;
+        }
       });
     }
     function hideAnswer() {
@@ -817,6 +851,95 @@
       setAnswer(answer);
     }
 
+    function renderSignEquation(parts, answerSlots, hint) {
+      let slotIndex = 0;
+      const equation = parts.map((part) => {
+        if (part === "?") {
+          const index = slotIndex;
+          slotIndex += 1;
+          return `<span class="sign-slot" data-answer-fill data-answer-index="${index}">?</span>`;
+        }
+        return `<span>${part}</span>`;
+      }).join("");
+      return `
+        <div class="sign-card">
+          <div class="sign-equation">${equation}</div>
+          <div class="sign-hint">${hint}</div>
+        </div>
+      `;
+    }
+    function signPuzzleAddSub() {
+      const op = choice(["+", "-"]);
+      if (op === "+") {
+        const max = difficulty() === "early" ? 10 : difficulty() === "lower" ? 20 : 50;
+        const a = randInt(1, Math.floor(max / 2));
+        const b = randInt(1, max - a);
+        return { parts: [a, "?", b, "=", a + b], answer: op, hint: "Choose plus or minus." };
+      }
+      const max = difficulty() === "early" ? 10 : difficulty() === "lower" ? 30 : 80;
+      const result = randInt(1, Math.floor(max / 2));
+      const b = randInt(1, Math.floor(max / 2));
+      const a = result + b;
+      return { parts: [a, "?", b, "=", result], answer: op, hint: "Choose plus or minus." };
+    }
+    function signPuzzleMultiply() {
+      const max = difficulty() === "upper" ? 12 : difficulty() === "lower" ? 10 : 5;
+      const a = randInt(2, max);
+      const b = randInt(2, max);
+      return { parts: [a, "?", b, "=", a * b], answer: "x", hint: "Which sign makes the product?" };
+    }
+    function signPuzzleMixed() {
+      const ops = difficulty() === "early" ? ["+", "-"] : ["+", "-", "x"];
+      const op = choice(ops);
+      if (op === "x") return signPuzzleMultiply();
+      return signPuzzleAddSub();
+    }
+    function signPuzzleTwoSigns() {
+      const signPairs = [
+        ["+", "+"],
+        ["+", "-"],
+        ["-", "+"],
+        ["-", "-"]
+      ];
+      const [first, second] = choice(signPairs);
+      const max = difficulty() === "upper" ? 40 : difficulty() === "lower" ? 25 : 12;
+      const b = randInt(1, Math.floor(max / 3));
+      const c = randInt(1, Math.floor(max / 3));
+      let a = randInt(Math.max(2, b + c), max);
+      if (first === "+" && second === "+") a = randInt(1, Math.floor(max / 3));
+      if (first === "+" && second === "-") a = randInt(1, Math.floor(max / 2));
+      if (first === "-" && second === "+") a = randInt(b + 1, max);
+      const result = first === "+"
+        ? (second === "+" ? a + b + c : a + b - c)
+        : (second === "+" ? a - b + c : a - b - c);
+      if (result < 0) return signPuzzleTwoSigns();
+      return {
+        parts: [a, "?", b, "?", c, "=", result],
+        answer: `${first} then ${second}`,
+        inlineAnswers: [first, second],
+        hint: "Find both signs. Work from left to right."
+      };
+    }
+    function genSigns() {
+      const type = activityType();
+      let task = signPuzzleAddSub();
+      if (type === "multiply") task = signPuzzleMultiply();
+      if (type === "mixed") task = signPuzzleMixed();
+      if (type === "twosigns") task = signPuzzleTwoSigns();
+      currentTask = {
+        answer: task.answer,
+        inlineAnswers: task.inlineAnswers || [task.answer]
+      };
+      setHead("Missing Signs", type === "twosigns" ? "Find both missing signs." : "Find the missing operation sign.");
+      document.getElementById("activity-card").innerHTML = `
+        <div class="prompt">Make the number sentence true.</div>
+        <div class="visual"><div class="sign-wrap">${renderSignEquation(task.parts, task.inlineAnswers || [task.answer], task.hint)}</div></div>
+        <div class="subprompt">Missing sign${type === "twosigns" ? "s" : ""}: <span data-answer-fill>?</span></div>
+      `;
+      setAnswer(task.answer);
+      currentTask.inlineAnswers = task.inlineAnswers || [task.answer];
+    }
+
     function newTask() {
       if (currentMode === "bonds") genBond();
       if (currentMode === "place") genPlaceValue();
@@ -825,6 +948,7 @@
       if (currentMode === "clock") genClock();
       if (currentMode === "money") genMoney();
       if (currentMode === "shapes") genShapes();
+      if (currentMode === "signs") genSigns();
       applyTheme();
     }
     function applyTheme() {
