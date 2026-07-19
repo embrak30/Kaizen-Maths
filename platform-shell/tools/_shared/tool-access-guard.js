@@ -15,6 +15,12 @@
   const slug = currentToolSlug();
 
   if (!slug || root.dataset.kaizenToolAccessChecked) return;
+
+  if (isTrustedClassroomFrame()) {
+    root.dataset.kaizenToolAccessChecked = "allowed";
+    return;
+  }
+
   root.dataset.kaizenToolAccessChecked = "pending";
   root.classList.add("kaizen-tool-access-pending");
 
@@ -76,6 +82,18 @@
     return match ? decodeURIComponent(match[1]) : "";
   }
 
+  function isTrustedClassroomFrame() {
+    try {
+      if (window.self === window.top) return false;
+      if (window.parent.location.origin !== window.location.origin) return false;
+      const parentHash = window.parent.location.hash || "";
+      const parentParts = parentHash.split("?")[0].replace(/^#\/?/, "").split("/");
+      return parentParts[0] === "classroom" && decodeURIComponent(parentParts[1] || "") === slug;
+    } catch (_error) {
+      return false;
+    }
+  }
+
   function normalise(value) {
     return String(value || "").toLowerCase();
   }
@@ -88,6 +106,15 @@
 
   function displayName(user) {
     return user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email || "Teacher";
+  }
+
+  function withTimeout(promise, timeoutMs, message) {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        window.setTimeout(() => reject(new Error(message)), timeoutMs);
+      })
+    ]);
   }
 
   function defaultRequiredAccess(toolSlug) {
@@ -123,7 +150,7 @@
   async function loadSupabaseClient() {
     const config = window.KAIZEN_AUTH_CONFIG || {};
     if (!config.supabaseUrl || !config.supabaseAnonKey) return null;
-    const mod = await import(SUPABASE_CDN);
+    const mod = await withTimeout(import(SUPABASE_CDN), 6000, "Supabase client timed out");
     return mod.createClient(config.supabaseUrl, config.supabaseAnonKey, {
       auth: {
         persistSession: true,
@@ -135,22 +162,22 @@
 
   async function toolAccessSetting(client, toolSlug) {
     if (!client) return defaultRequiredAccess(toolSlug);
-    const { data, error } = await client
+    const { data, error } = await withTimeout(client
       .from("tool_access")
       .select("required_access")
       .eq("tool_slug", toolSlug)
-      .maybeSingle();
+      .maybeSingle(), 6000, "Tool access check timed out");
     if (error) return defaultRequiredAccess(toolSlug);
     return normaliseRequiredAccess(data?.required_access, toolSlug);
   }
 
   async function ensureProfile(client, user) {
     if (!client || !user) return null;
-    const { data: existing, error: selectError } = await client
+    const { data: existing, error: selectError } = await withTimeout(client
       .from("profiles")
       .select("*")
       .eq("id", user.id)
-      .maybeSingle();
+      .maybeSingle(), 6000, "Profile check timed out");
 
     if (existing) return hydrateSchoolProfile(client, existing);
     if (selectError) return null;
@@ -165,11 +192,11 @@
       updated_at: new Date().toISOString()
     };
 
-    const { data, error } = await client
+    const { data, error } = await withTimeout(client
       .from("profiles")
       .insert(profile)
       .select()
-      .single();
+      .single(), 6000, "Profile creation timed out");
 
     if (error) return profile;
     return hydrateSchoolProfile(client, data);
@@ -177,11 +204,11 @@
 
   async function hydrateSchoolProfile(client, profile) {
     if (!profile?.school_id || !client) return profile;
-    const { data, error } = await client
+    const { data, error } = await withTimeout(client
       .from("schools")
       .select("id, name, licence_ends_at, is_active")
       .eq("id", profile.school_id)
-      .maybeSingle();
+      .maybeSingle(), 6000, "School licence check timed out");
     if (error || !data) return profile;
     return {
       ...profile,
@@ -252,7 +279,7 @@
         return;
       }
 
-      const { data } = await client.auth.getSession();
+      const { data } = await withTimeout(client.auth.getSession(), 6000, "Session check timed out");
       const session = data?.session || null;
       if (!session?.user) {
         redirectBlocked(required, "guest");
