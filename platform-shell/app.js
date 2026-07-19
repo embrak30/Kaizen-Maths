@@ -8457,6 +8457,23 @@ function toolInsightProfile(tool) {
       ]
     },
     {
+      match: () => tool.slug === "bar-models" || has("bar models", "singapore maths"),
+      misconceptions: [
+        "Treating every bar as the same whole when the problem involves a change, comparison, or reverse percentage.",
+        "Dividing by the numerator instead of the denominator when finding one equal part in a fraction model.",
+        "Using the final amount as 100% in a reverse percentage problem instead of recognising that it represents more or less than the original whole.",
+        "Sharing a ratio by the number of people or categories rather than by the total number of ratio parts.",
+        "Writing a calculation from the numbers in the question before deciding what each bar, part, or box represents."
+      ],
+      questions: [
+        "Which quantity is the whole in this model, and how do we know?",
+        "What does one equal part represent before we calculate the final answer?",
+        "How does the bar change when the problem describes an increase, decrease, comparison, or reverse percentage?",
+        "Where is the unknown shown in the model, and what operation will isolate it?",
+        "How could a pupil use the same bar model to explain the calculation without relying on a memorised rule?"
+      ]
+    },
+    {
       match: () => has("manipulatives", "starter board", "primary", "elementary"),
       misconceptions: [
         "Revealing the numerical answer before students have interpreted the visual model.",
