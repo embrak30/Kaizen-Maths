@@ -7,6 +7,7 @@
     "pythagoras-theorem",
     "averages-range",
     "classroom-displays",
+    "bar-models",
     "elementary-starter-board",
     "elementary-maths-playground",
     "interface-guide"

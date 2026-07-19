@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bar Models | Kaizen Maths</title>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+  <script src="../../auth-config.js?v=tool-access-guard-1"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-1"></script>
+  <style>
+    :root {
+      --ink: #16213f;
+      --muted: #63708a;
+      --line: #d9e4ef;
+      --paper: #ffffff;
+      --soft: #f7fbff;
+      --teal: #18b8ad;
+      --teal-dark: #087a76;
+      --blue: #2f80ed;
+      --purple: #7048e8;
+      --orange: #ff8a1f;
+      --rose: #ef476f;
+      --green: #20b26b;
+      --yellow: #ffd166;
+      --shadow: 0 18px 42px rgba(19, 39, 74, 0.16);
+      --soft-shadow: 0 10px 26px rgba(19, 39, 74, 0.10);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(120deg, rgba(24, 184, 173, 0.12), rgba(255, 138, 31, 0.10)),
+        repeating-linear-gradient(135deg, rgba(47, 128, 237, 0.05) 0 1px, transparent 1px 28px),
+        #f8fcff;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1001;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      padding: 14px 8px;
+      border-radius: 0 12px 12px 0;
+      background: linear-gradient(180deg, var(--purple), var(--teal));
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      box-shadow: 0 8px 20px rgba(20, 25, 60, 0.24);
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      background: rgba(5, 10, 30, 0.42);
+      transition: opacity 180ms ease;
+    }
+
+    .sidebar-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 -390px;
+      z-index: 1000;
+      width: min(390px, 88vw);
+      background: #fff;
+      box-shadow: 12px 0 34px rgba(12, 20, 45, 0.24);
+      transition: left 180ms ease;
+      overflow-y: auto;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-header {
+      padding: 22px 24px;
+      color: #fff;
+      font-weight: 950;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .sidebar-content {
+      padding: 22px 24px 28px;
+      line-height: 1.55;
+    }
+
+    .sidebar-content h3 {
+      margin: 18px 0 8px;
+      color: var(--teal-dark);
+      font-size: 1rem;
+    }
+
+    .sidebar-content p,
+    .sidebar-content li {
+      margin: 0 0 8px;
+      color: #44516c;
+    }
+
+    .sidebar-content ul {
+      margin: 0 0 12px;
+      padding-left: 20px;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 10px;
+      padding: 12px 16px 14px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      min-height: 76px;
+      padding: 10px 14px;
+      border: 1px solid rgba(24, 184, 173, 0.22);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(232, 252, 249, 0.92)),
+        linear-gradient(90deg, rgba(24, 184, 173, 0.12), rgba(255, 138, 31, 0.10));
+      box-shadow: var(--soft-shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      flex: 0 0 50px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      font-size: 1.3rem;
+      background: linear-gradient(135deg, var(--purple), var(--teal));
+      box-shadow: 0 12px 22px rgba(24, 184, 173, 0.26);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.35rem, 2.4vw, 2rem);
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 0.92rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 13px;
+      font-weight: 900;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid rgba(22, 33, 63, 0.12);
+      box-shadow: 0 6px 14px rgba(19, 39, 74, 0.08);
+      transition: transform 90ms ease, background 150ms ease, box-shadow 150ms ease;
+    }
+
+    .action-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(19, 39, 74, 0.12);
+    }
+
+    .action-btn.primary {
+      color: #fff;
+      border-color: rgba(24, 184, 173, 0.28);
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .action-btn.answer {
+      color: #fff;
+      border-color: rgba(239, 71, 111, 0.24);
+      background: linear-gradient(135deg, var(--rose), var(--orange));
+    }
+
+    .mode-strip {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 8px;
+      min-height: 48px;
+    }
+
+    .mode-btn {
+      min-width: 0;
+      padding: 10px 8px;
+      border-radius: 14px;
+      color: #25304f;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(47, 128, 237, 0.14);
+      box-shadow: 0 6px 16px rgba(19, 39, 74, 0.07);
+      font-size: clamp(0.72rem, 1vw, 0.9rem);
+      font-weight: 950;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: transform 90ms ease, background 150ms ease, color 150ms ease;
+    }
+
+    .mode-btn:hover {
+      transform: translateY(-1px);
+      background: #fff4e7;
+      color: #a14700;
+      border-color: rgba(255, 138, 31, 0.45);
+    }
+
+    .mode-btn.active {
+      color: #fff;
+      background: linear-gradient(135deg, var(--orange), var(--rose));
+      border-color: rgba(239, 71, 111, 0.38);
+    }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.38fr) minmax(290px, 0.62fr);
+      gap: 12px;
+    }
+
+    .board,
+    .step-panel {
+      min-height: 0;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(22, 33, 63, 0.10);
+      box-shadow: var(--shadow);
+    }
+
+    .board {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+    }
+
+    .prompt-band {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 18px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(22, 33, 63, 0.90), rgba(47, 128, 237, 0.78)),
+        linear-gradient(90deg, var(--teal), var(--purple));
+    }
+
+    .prompt-title {
+      margin: 0 0 5px;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.82;
+      font-weight: 950;
+    }
+
+    .prompt {
+      margin: 0;
+      font-size: clamp(1.08rem, 2.4vw, 1.76rem);
+      line-height: 1.22;
+      font-weight: 900;
+    }
+
+    .answer-pill {
+      max-width: 300px;
+      border-radius: 18px;
+      padding: 10px 14px;
+      color: var(--ink);
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+      font-weight: 950;
+      border: 2px solid rgba(255, 209, 102, 0.95);
+    }
+
+    .answer-pill small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 2px;
+    }
+
+    .model-stage {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: clamp(14px, 2vw, 24px);
+      background:
+        repeating-linear-gradient(0deg, rgba(22, 33, 63, 0.035) 0 1px, transparent 1px 40px),
+        repeating-linear-gradient(90deg, rgba(22, 33, 63, 0.035) 0 1px, transparent 1px 40px),
+        linear-gradient(180deg, #ffffff, #f5fdff);
+    }
+
+    .model-card {
+      width: min(960px, 100%);
+      display: grid;
+      gap: clamp(12px, 1.6vw, 18px);
+      padding: clamp(14px, 2vw, 22px);
+      border-radius: 24px;
+      border: 1px solid rgba(47, 128, 237, 0.15);
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 14px 32px rgba(19, 39, 74, 0.10);
+    }
+
+    .model-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      font-weight: 950;
+      color: var(--teal-dark);
+      font-size: clamp(1rem, 1.7vw, 1.35rem);
+    }
+
+    .model-heading span:last-child {
+      color: var(--muted);
+      font-size: 0.82em;
+    }
+
+    .model-row {
+      display: grid;
+      grid-template-columns: minmax(84px, 128px) minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+    }
+
+    .row-label {
+      justify-self: end;
+      color: var(--muted);
+      font-weight: 950;
+      text-align: right;
+    }
+
+    .bar-wrap {
+      min-width: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .bar {
+      width: 100%;
+      min-height: clamp(66px, 8vh, 92px);
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 1fr;
+      overflow: hidden;
+      border: 3px solid #13274a;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .segment {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      color: #16213f;
+      font-weight: 950;
+      font-size: clamp(0.92rem, 1.7vw, 1.25rem);
+      border-right: 2px solid rgba(19, 39, 74, 0.24);
+      background: linear-gradient(180deg, #f8fbff, #eef6ff);
+      transition: background 220ms ease, transform 220ms ease, opacity 220ms ease;
+    }
+
+    .segment:last-child {
+      border-right: 0;
+    }
+
+    .segment.active {
+      color: #063b39;
+      background: linear-gradient(180deg, #8ff3e6, #30d0bf);
+    }
+
+    .segment.added {
+      color: #5a2600;
+      background: linear-gradient(180deg, #ffe2ad, #ffad45);
+    }
+
+    .segment.removed {
+      color: #661429;
+      background:
+        linear-gradient(45deg, transparent 46%, rgba(102, 20, 41, 0.9) 47% 53%, transparent 54%),
+        linear-gradient(135deg, transparent 46%, rgba(102, 20, 41, 0.9) 47% 53%, transparent 54%),
+        linear-gradient(180deg, #ffd8e2, #f48aa3);
+    }
+
+    .segment.unknown {
+      color: rgba(22, 33, 63, 0.42);
+      background: repeating-linear-gradient(135deg, #f4f8fc 0 8px, #e8f0f8 8px 16px);
+    }
+
+    .segment.xbox {
+      color: #19395d;
+      background: linear-gradient(180deg, #dbeafe, #93c5fd);
+    }
+
+    .segment.constant {
+      color: #4f2800;
+      background: linear-gradient(180deg, #fff2b8, #ffd166);
+    }
+
+    .under-labels {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 1fr;
+      gap: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .equation-line {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-size: clamp(1.15rem, 2vw, 1.7rem);
+      font-weight: 950;
+    }
+
+    .mini-block {
+      min-width: clamp(58px, 8vw, 92px);
+      min-height: clamp(52px, 7vh, 76px);
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      border: 3px solid #13274a;
+      background: linear-gradient(180deg, #dbeafe, #93c5fd);
+      color: #173a67;
+    }
+
+    .mini-block.constant {
+      background: linear-gradient(180deg, #fff2b8, #ffd166);
+      color: #5a2600;
+    }
+
+    .plus,
+    .equals {
+      color: var(--muted);
+      font-weight: 950;
+    }
+
+    .model-note {
+      color: var(--muted);
+      font-weight: 800;
+      text-align: center;
+      font-size: clamp(0.88rem, 1.25vw, 1rem);
+    }
+
+    .step-panel {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 12px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .mode-card {
+      border-radius: 18px;
+      padding: 14px;
+      background: linear-gradient(135deg, rgba(24, 184, 173, 0.12), rgba(112, 72, 232, 0.10));
+      border: 1px solid rgba(24, 184, 173, 0.22);
+    }
+
+    .mode-card h2 {
+      margin: 0 0 5px;
+      font-size: 1.1rem;
+    }
+
+    .mode-card p {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 750;
+      line-height: 1.35;
+    }
+
+    .progress {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 0;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: #dbe5ef;
+      transition: width 180ms ease, background 180ms ease;
+    }
+
+    .dot.active {
+      width: 32px;
+      background: linear-gradient(90deg, var(--teal), var(--orange));
+    }
+
+    .step-card {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 12px;
+      border-radius: 20px;
+      padding: 16px;
+      background: #fff;
+      border: 1px solid rgba(22, 33, 63, 0.10);
+      box-shadow: 0 8px 20px rgba(19, 39, 74, 0.08);
+      overflow: hidden;
+    }
+
+    .step-label {
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 950;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .step-card h3 {
+      margin: 0;
+      font-size: clamp(1.05rem, 1.8vw, 1.45rem);
+      line-height: 1.14;
+    }
+
+    .step-card p {
+      margin: 0;
+      color: #42506c;
+      font-weight: 760;
+      line-height: 1.42;
+    }
+
+    .calculation {
+      align-self: end;
+      border-radius: 16px;
+      padding: 12px;
+      color: #18213a;
+      background: linear-gradient(135deg, rgba(255, 209, 102, 0.28), rgba(24, 184, 173, 0.12));
+      border: 1px solid rgba(255, 138, 31, 0.22);
+      font-size: clamp(1.05rem, 2vw, 1.6rem);
+      font-weight: 950;
+      line-height: 1.28;
+      text-align: center;
+    }
+
+    .teacher-prompt {
+      border-radius: 16px;
+      padding: 12px 14px;
+      color: #173a67;
+      background: #f2f7ff;
+      border: 1px solid rgba(47, 128, 237, 0.18);
+      font-size: 0.9rem;
+      line-height: 1.35;
+      font-weight: 780;
+    }
+
+    @media (max-width: 1050px) {
+      html,
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+      }
+
+      .topbar,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        justify-content: flex-start;
+      }
+
+      .mode-strip {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .workspace {
+        min-height: auto;
+      }
+
+      .board,
+      .step-panel {
+        min-height: 460px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .app {
+        padding: 10px;
+      }
+
+      .mode-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .model-row {
+        grid-template-columns: 1fr;
+      }
+
+      .row-label {
+        justify-self: start;
+        text-align: left;
+      }
+
+      .prompt-band {
+        grid-template-columns: 1fr;
+      }
+
+      .answer-pill {
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="teacher-tab" type="button" onclick="toggleSidebar()">TEACHER NOTES</button>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Bar Models</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>Use this display tool to make hidden relationships visible before moving to formal written methods.</p>
+
+      <h3>How to Teach With It</h3>
+      <ul>
+        <li>Display one example and ask pupils what each bar or part represents.</li>
+        <li>Reveal one step at a time so the class predicts the next move.</li>
+        <li>Use the final step to connect the model to the calculation.</li>
+      </ul>
+
+      <h3>Useful Prompts</h3>
+      <ul>
+        <li>What does one part represent?</li>
+        <li>Which quantity is the whole?</li>
+        <li>What has been added, removed, shared, or compared?</li>
+        <li>How does the bar model match the calculation?</li>
+      </ul>
+
+      <h3>Common Misconceptions</h3>
+      <ul>
+        <li>Using the final amount as the original whole in reverse percentage problems.</li>
+        <li>Sharing a ratio by the number of groups instead of the total number of parts.</li>
+        <li>Treating each bar as equal when a comparison model shows unequal quantities.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="app">
+    <section class="topbar">
+      <div class="brand">
+        <div class="logo">BM</div>
+        <div>
+          <h1>Bar Models</h1>
+          <p class="subtitle">Fractions, percentages, ratio, comparison problems, and equations with controlled step reveal.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="action-btn primary" type="button" id="newBtn">New</button>
+        <button class="action-btn" type="button" id="backBtn">Back</button>
+        <button class="action-btn primary" type="button" id="nextBtn">Next Step</button>
+        <button class="action-btn answer" type="button" id="answerBtn">Reveal Answer</button>
+        <button class="action-btn" type="button" id="resetBtn">Reset Model</button>
+      </div>
+    </section>
+
+    <nav class="mode-strip" id="modeStrip" aria-label="Bar model modes"></nav>
+
+    <section class="workspace">
+      <article class="board" aria-live="polite">
+        <div class="prompt-band">
+          <div>
+            <p class="prompt-title" id="promptType">Problem</p>
+            <p class="prompt" id="promptText"></p>
+          </div>
+          <div class="answer-pill" id="answerPill">
+            <small>Answer</small>
+            <span id="answerText">Hidden</span>
+          </div>
+        </div>
+        <div class="model-stage">
+          <div class="model-card" id="modelCard"></div>
+        </div>
+      </article>
+
+      <aside class="step-panel">
+        <div class="mode-card">
+          <h2 id="modeTitle"></h2>
+          <p id="modeDescription"></p>
+        </div>
+        <div class="progress" id="progress"></div>
+        <div class="step-card">
+          <span class="step-label" id="stepLabel"></span>
+          <h3 id="stepTitle"></h3>
+          <p id="stepNote"></p>
+          <div class="calculation" id="calculation"></div>
+        </div>
+        <div class="teacher-prompt" id="teacherPrompt"></div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const MODES = [
+      {
+        id: "fraction",
+        label: "Fractions",
+        title: "Fractions of Amounts",
+        description: "Split the whole into equal parts, then select the required fraction."
+      },
+      {
+        id: "fractionChange",
+        label: "Fraction Change",
+        title: "Fractional Increase and Decrease",
+        description: "Show what is added or removed as extra equal parts."
+      },
+      {
+        id: "percentChange",
+        label: "Percentage Change",
+        title: "Percentage Increase and Decrease",
+        description: "Represent 100% as equal parts before changing the amount."
+      },
+      {
+        id: "reversePercent",
+        label: "Reverse %",
+        title: "Reverse Percentages",
+        description: "Use the final percentage to recover the original 100%."
+      },
+      {
+        id: "ratio",
+        label: "Ratio",
+        title: "Ratio Sharing",
+        description: "Turn the ratio into equal parts and find the value of one part."
+      },
+      {
+        id: "comparison",
+        label: "Compare",
+        title: "Comparison Models",
+        description: "Use unequal bars to compare two related quantities."
+      },
+      {
+        id: "equation",
+        label: "Equations",
+        title: "Equation Models",
+        description: "Show unknown boxes and constants before solving formally."
+      },
+      {
+        id: "mixed",
+        label: "Mixed",
+        title: "Mixed Bar Model Practice",
+        description: "Generate a different bar model structure each time."
+      }
+    ];
+
+    const state = {
+      mode: "fraction",
+      problem: null,
+      stepIndex: 0,
+      answerRevealed: false
+    };
+
+    const promptTypeEl = document.getElementById("promptType");
+    const promptTextEl = document.getElementById("promptText");
+    const answerTextEl = document.getElementById("answerText");
+    const modelCardEl = document.getElementById("modelCard");
+    const modeStripEl = document.getElementById("modeStrip");
+    const modeTitleEl = document.getElementById("modeTitle");
+    const modeDescriptionEl = document.getElementById("modeDescription");
+    const progressEl = document.getElementById("progress");
+    const stepLabelEl = document.getElementById("stepLabel");
+    const stepTitleEl = document.getElementById("stepTitle");
+    const stepNoteEl = document.getElementById("stepNote");
+    const calculationEl = document.getElementById("calculation");
+    const teacherPromptEl = document.getElementById("teacherPrompt");
+
+    function rand(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function choose(items) {
+      return items[rand(0, items.length - 1)];
+    }
+
+    function gcd(a, b) {
+      return b === 0 ? Math.abs(a) : gcd(b, a % b);
+    }
+
+    function formatMoney(value) {
+      return "$" + value;
+    }
+
+    function fractionText(num, den) {
+      return num + "/" + den;
+    }
+
+    function percentParts(percent) {
+      const divisor = gcd(percent, 100);
+      return {
+        selected: percent / divisor,
+        total: 100 / divisor
+      };
+    }
+
+    function modeInfo(id) {
+      return MODES.find((mode) => mode.id === id) || MODES[0];
+    }
+
+    function makeStep(title, note, calculation, teacherPrompt) {
+      return { title, note, calculation, teacherPrompt };
+    }
+
+    function generateFractionProblem() {
+      const den = choose([3, 4, 5, 6, 8, 10]);
+      const num = rand(1, den - 1);
+      const part = choose([4, 5, 6, 8, 9, 10, 12]);
+      const whole = den * part;
+      const answer = num * part;
+      return {
+        kind: "fraction",
+        promptType: "Fractions of amounts",
+        prompt: "Find " + fractionText(num, den) + " of " + whole + ".",
+        answer: fractionText(num, den) + " of " + whole + " = " + answer,
+        data: { den, num, part, whole, answer },
+        steps: [
+          makeStep(
+            "Identify the whole.",
+            "The full bar represents the total amount.",
+            "Whole = " + whole,
+            "Ask: what does the whole bar stand for?"
+          ),
+          makeStep(
+            "Split the whole into equal parts.",
+            "The denominator tells us to make " + den + " equal parts.",
+            whole + " divided by " + den + " equal parts",
+            "Ask: why do we split into " + den + " parts?"
+          ),
+          makeStep(
+            "Find the value of one part.",
+            "Divide the whole by the denominator.",
+            whole + " / " + den + " = " + part,
+            "Ask: what does one part represent?"
+          ),
+          makeStep(
+            "Select the required number of parts.",
+            "The numerator tells us to take " + num + " of those parts.",
+            num + " x " + part + " = " + answer,
+            "Ask pupils to point to the parts that form the answer."
+          )
+        ]
+      };
+    }
+
+    function generateFractionChangeProblem() {
+      const den = choose([3, 4, 5, 6]);
+      const num = rand(1, Math.min(3, den - 1));
+      const direction = choose(["increase", "decrease"]);
+      const part = choose([6, 8, 10, 12, 15]);
+      const original = den * part;
+      const finalParts = direction === "increase" ? den + num : den - num;
+      const final = finalParts * part;
+      return {
+        kind: "fractionChange",
+        promptType: "Fractional change",
+        prompt: (direction === "increase" ? "Increase " : "Decrease ") + original + " by " + fractionText(num, den) + ".",
+        answer: direction === "increase" ? "New amount = " + final : "New amount = " + final,
+        data: { den, num, direction, part, original, finalParts, final },
+        steps: [
+          makeStep(
+            "Represent the original amount.",
+            "The original amount is the whole bar.",
+            "Original = " + original,
+            "Ask: which amount is being changed?"
+          ),
+          makeStep(
+            "Split the original into equal parts.",
+            "The denominator " + den + " tells us the number of equal parts.",
+            original + " / " + den + " = " + part,
+            "Ask: what is one equal part worth?"
+          ),
+          makeStep(
+            direction === "increase" ? "Add the fractional part." : "Remove the fractional part.",
+            "Use the numerator to decide how many parts are added or removed.",
+            fractionText(num, den) + " of " + original + " = " + (num * part),
+            "Ask pupils to describe the change before calculating."
+          ),
+          makeStep(
+            "Find the new amount.",
+            "Combine the parts left in the final bar.",
+            finalParts + " x " + part + " = " + final,
+            "Ask: does the final amount make sense compared with the original?"
+          )
+        ]
+      };
+    }
+
+    function generatePercentChangeProblem() {
+      const percent = choose([10, 20, 25, 30, 40, 50, 75]);
+      const structure = percentParts(percent);
+      const direction = choose(["increase", "decrease"]);
+      const part = choose([4, 5, 6, 8, 10, 12]);
+      const original = structure.total * part;
+      const finalParts = direction === "increase"
+        ? structure.total + structure.selected
+        : structure.total - structure.selected;
+      const final = finalParts * part;
+      return {
+        kind: "percentChange",
+        promptType: "Percentage change",
+        prompt: (direction === "increase" ? "Increase " : "Decrease ") + original + " by " + percent + "%.",
+        answer: "New amount = " + final,
+        data: { percent, structure, direction, part, original, finalParts, final },
+        steps: [
+          makeStep(
+            "Treat the original as 100%.",
+            "The original amount is the whole bar.",
+            "100% = " + original,
+            "Ask: why is the starting amount 100%?"
+          ),
+          makeStep(
+            "Split 100% into useful equal parts.",
+            "Use a number of parts that makes " + percent + "% easy to see.",
+            "100% / " + structure.total + " = " + part,
+            "Ask: what percentage is represented by one part?"
+          ),
+          makeStep(
+            direction === "increase" ? "Add the percentage change." : "Remove the percentage change.",
+            percent + "% is shown as " + structure.selected + " part" + (structure.selected === 1 ? "" : "s") + ".",
+            percent + "% of " + original + " = " + (structure.selected * part),
+            "Ask: should the final bar be longer or shorter?"
+          ),
+          makeStep(
+            "Read the final amount.",
+            "Count the parts in the final bar and multiply by one part.",
+            finalParts + " x " + part + " = " + final,
+            "Ask pupils to explain the answer without using a formula."
+          )
+        ]
+      };
+    }
+
+    function generateReversePercentProblem() {
+      const percent = choose([10, 20, 25, 30, 40, 50]);
+      const structure = percentParts(percent);
+      const direction = choose(["increase", "decrease"]);
+      const part = choose([5, 6, 8, 10, 12]);
+      const original = structure.total * part;
+      const finalParts = direction === "increase"
+        ? structure.total + structure.selected
+        : structure.total - structure.selected;
+      const final = finalParts * part;
+      const finalPercent = direction === "increase" ? 100 + percent : 100 - percent;
+      return {
+        kind: "reversePercent",
+        promptType: "Reverse percentage",
+        prompt: "After a " + percent + "% " + direction + ", the amount is " + final + ". Find the original amount.",
+        answer: "Original amount = " + original,
+        data: { percent, structure, direction, part, original, finalParts, final, finalPercent },
+        steps: [
+          makeStep(
+            "Identify the final percentage.",
+            "The given amount is not 100%; it is the amount after the change.",
+            finalPercent + "% = " + final,
+            "Ask: why is the given amount not the original whole?"
+          ),
+          makeStep(
+            "Represent the final amount in parts.",
+            "The final percentage is made from " + finalParts + " equal parts.",
+            final + " / " + finalParts + " = " + part,
+            "Ask: how many parts represent the final amount?"
+          ),
+          makeStep(
+            "Find one part.",
+            "Divide the final amount by the number of final parts.",
+            "One part = " + part,
+            "Ask: what does one part allow us to rebuild?"
+          ),
+          makeStep(
+            "Rebuild the original 100%.",
+            "The original amount is " + structure.total + " of the same equal parts.",
+            structure.total + " x " + part + " = " + original,
+            "Ask: does the original need to be bigger or smaller than the final?"
+          )
+        ]
+      };
+    }
+
+    function generateRatioProblem() {
+      let a = rand(2, 6);
+      let b = rand(2, 7);
+      while (gcd(a, b) !== 1) {
+        a = rand(2, 6);
+        b = rand(2, 7);
+      }
+      const part = choose([6, 8, 10, 12, 15]);
+      const total = (a + b) * part;
+      const first = a * part;
+      const second = b * part;
+      return {
+        kind: "ratio",
+        promptType: "Ratio sharing",
+        prompt: "Share " + total + " in the ratio " + a + ":" + b + ".",
+        answer: "The shares are " + first + " and " + second + ".",
+        data: { a, b, part, total, first, second },
+        steps: [
+          makeStep(
+            "Add the ratio parts.",
+            "The total amount is split into all the parts in the ratio.",
+            a + " + " + b + " = " + (a + b) + " parts",
+            "Ask: why do we add the ratio parts before dividing?"
+          ),
+          makeStep(
+            "Find the value of one part.",
+            "Divide the total by the total number of parts.",
+            total + " / " + (a + b) + " = " + part,
+            "Ask: what does one part represent?"
+          ),
+          makeStep(
+            "Find the first share.",
+            "Multiply one part by the first ratio number.",
+            a + " x " + part + " = " + first,
+            "Ask: where is the first share shown on the bar?"
+          ),
+          makeStep(
+            "Find the second share.",
+            "Multiply one part by the second ratio number.",
+            b + " x " + part + " = " + second,
+            "Ask: how can we check the two shares are correct?"
+          )
+        ]
+      };
+    }
+
+    function generateComparisonProblem() {
+      const multiplier = rand(2, 5);
+      const unit = choose([6, 8, 10, 12, 15]);
+      const total = (multiplier + 1) * unit;
+      const smallerName = choose(["Ari", "Sam", "Nia", "Leo"]);
+      const largerName = choose(["Maya", "Zara", "Omar", "Kai"]);
+      return {
+        kind: "comparison",
+        promptType: "Comparison model",
+        prompt: largerName + " has " + multiplier + " times as many counters as " + smallerName + ". Together they have " + total + " counters. How many does " + largerName + " have?",
+        answer: largerName + " has " + (multiplier * unit) + " counters.",
+        data: { multiplier, unit, total, smallerName, largerName },
+        steps: [
+          makeStep(
+            "Draw the smaller quantity.",
+            smallerName + " is represented by one equal part.",
+            smallerName + " = 1 part",
+            "Ask: which quantity is smaller?"
+          ),
+          makeStep(
+            "Draw the larger quantity.",
+            largerName + " has " + multiplier + " equal parts.",
+            largerName + " = " + multiplier + " parts",
+            "Ask: how does the phrase 'times as many' change the bar?"
+          ),
+          makeStep(
+            "Use the total to find one part.",
+            "All parts together represent the total number of counters.",
+            total + " / " + (multiplier + 1) + " = " + unit,
+            "Ask: why are there " + (multiplier + 1) + " parts altogether?"
+          ),
+          makeStep(
+            "Find the larger quantity.",
+            "Multiply one part by the number of parts in the larger bar.",
+            multiplier + " x " + unit + " = " + (multiplier * unit),
+            "Ask pupils to check by adding both bars."
+          )
+        ]
+      };
+    }
+
+    function generateEquationProblem() {
+      const coefficient = rand(2, 5);
+      const xValue = rand(3, 12);
+      const constant = rand(4, 18);
+      const total = coefficient * xValue + constant;
+      return {
+        kind: "equation",
+        promptType: "Equation model",
+        prompt: "Solve " + coefficient + "x + " + constant + " = " + total + ".",
+        answer: "x = " + xValue,
+        data: { coefficient, xValue, constant, total },
+        steps: [
+          makeStep(
+            "Represent the equation.",
+            "Use equal boxes for the unknown x and a separate block for the constant.",
+            coefficient + "x + " + constant + " = " + total,
+            "Ask: what does each identical blue box represent?"
+          ),
+          makeStep(
+            "Remove the constant from both sides.",
+            "To isolate the x boxes, subtract the constant.",
+            total + " - " + constant + " = " + (total - constant),
+            "Ask: why must the same change happen to both sides?"
+          ),
+          makeStep(
+            "Share the remaining amount equally.",
+            "There are " + coefficient + " identical x boxes.",
+            (total - constant) + " / " + coefficient + " = " + xValue,
+            "Ask: what operation undoes multiplication by " + coefficient + "?"
+          ),
+          makeStep(
+            "State the value of x.",
+            "Each x box has the same value.",
+            "x = " + xValue,
+            "Ask pupils to substitute the value back into the equation."
+          )
+        ]
+      };
+    }
+
+    const generators = {
+      fraction: generateFractionProblem,
+      fractionChange: generateFractionChangeProblem,
+      percentChange: generatePercentChangeProblem,
+      reversePercent: generateReversePercentProblem,
+      ratio: generateRatioProblem,
+      comparison: generateComparisonProblem,
+      equation: generateEquationProblem
+    };
+
+    function generateProblem() {
+      const actualMode = state.mode === "mixed"
+        ? choose(["fraction", "fractionChange", "percentChange", "reversePercent", "ratio", "comparison", "equation"])
+        : state.mode;
+      state.problem = generators[actualMode]();
+      state.stepIndex = 0;
+      state.answerRevealed = false;
+      render();
+    }
+
+    function segmentHtml(label, className) {
+      const safeLabel = label || "";
+      return '<div class="segment ' + (className || "") + '">' + safeLabel + '</div>';
+    }
+
+    function barHtml(totalParts, options) {
+      const opts = options || {};
+      const widthStyle = opts.maxParts ? " width: " + Math.max(8, (totalParts / opts.maxParts) * 100) + "%;" : "";
+      let html = '<div class="bar" style="grid-template-columns: repeat(' + totalParts + ', minmax(0, 1fr));' + widthStyle + '">';
+      for (let i = 0; i < totalParts; i++) {
+        let className = "";
+        if (opts.unknown) className = "unknown";
+        if (opts.active && opts.active.includes(i)) className = "active";
+        if (opts.added && opts.added.includes(i)) className = "added";
+        if (opts.removed && opts.removed.includes(i)) className = "removed";
+        if (opts.xbox && opts.xbox.includes(i)) className = "xbox";
+        if (opts.constant && opts.constant.includes(i)) className = "constant";
+        const label = opts.labels ? opts.labels[i] : "";
+        html += segmentHtml(label, className);
+      }
+      html += '</div>';
+      if (opts.underLabels) {
+        html += '<div class="under-labels" style="grid-template-columns: repeat(' + totalParts + ', minmax(0, 1fr));">';
+        opts.underLabels.forEach((label) => {
+          html += '<span>' + label + '</span>';
+        });
+        html += '</div>';
+      }
+      return html;
+    }
+
+    function rowHtml(label, barContent) {
+      return '<div class="model-row"><div class="row-label">' + label + '</div><div class="bar-wrap">' + barContent + '</div></div>';
+    }
+
+    function modelShell(title, meta, rows, note) {
+      return '<div class="model-heading"><span>' + title + '</span><span>' + meta + '</span></div>' + rows.join("") + '<div class="model-note">' + note + '</div>';
+    }
+
+    function repeatedLabels(count, text) {
+      return Array.from({ length: count }, () => text);
+    }
+
+    function labelsFromCounts(total, knownCount, knownText, unknownText) {
+      return Array.from({ length: total }, (_, index) => index < knownCount ? knownText : unknownText);
+    }
+
+    function renderFraction(problem, step) {
+      const d = problem.data;
+      let rows = [];
+      if (step === 0) {
+        rows.push(rowHtml("Whole", barHtml(1, { labels: [String(d.whole)] })));
+      } else if (step === 1) {
+        rows.push(rowHtml("Equal parts", barHtml(d.den, { unknown: true, labels: repeatedLabels(d.den, "?") })));
+      } else if (step === 2) {
+        rows.push(rowHtml("One part", barHtml(d.den, { labels: repeatedLabels(d.den, String(d.part)) })));
+      } else {
+        rows.push(rowHtml(
+          fractionText(d.num, d.den),
+          barHtml(d.den, {
+            active: Array.from({ length: d.num }, (_, i) => i),
+            labels: Array.from({ length: d.den }, (_, i) => i < d.num ? String(d.part) : "")
+          })
+        ));
+      }
+      return modelShell("Fraction model", "Whole = " + d.whole, rows, "The denominator creates equal parts; the numerator tells us how many parts to use.");
+    }
+
+    function renderFractionChange(problem, step) {
+      const d = problem.data;
+      const isIncrease = d.direction === "increase";
+      const maxParts = Math.max(d.den, d.finalParts);
+      let rows = [];
+      const originalLabels = step >= 1 ? repeatedLabels(d.den, step >= 1 ? String(d.part) : "?") : [String(d.original)];
+      rows.push(rowHtml("Original", step === 0
+        ? barHtml(d.den, { maxParts, labels: [String(d.original)].concat(repeatedLabels(d.den - 1, "")) })
+        : barHtml(d.den, { maxParts, labels: originalLabels })
+      ));
+      if (step >= 2) {
+        if (isIncrease) {
+          rows.push(rowHtml("Change", barHtml(d.den, {
+            maxParts,
+            added: Array.from({ length: d.num }, (_, i) => i),
+            labels: Array.from({ length: d.den }, (_, i) => i < d.num ? "+" + d.part : "")
+          })));
+        } else {
+          rows.push(rowHtml("Removed", barHtml(d.den, {
+            maxParts,
+            removed: Array.from({ length: d.num }, (_, i) => d.den - d.num + i),
+            labels: Array.from({ length: d.den }, (_, i) => i >= d.den - d.num ? "-" + d.part : String(d.part))
+          })));
+        }
+      }
+      if (step >= 3) {
+        rows.push(rowHtml("Final", barHtml(d.finalParts, {
+          maxParts,
+          active: Array.from({ length: d.finalParts }, (_, i) => i),
+          labels: repeatedLabels(d.finalParts, String(d.part))
+        })));
+      }
+      return modelShell("Fractional change", isIncrease ? "Increase" : "Decrease", rows, "Keep the size of each part the same, then add or remove the required number of parts.");
+    }
+
+    function renderPercentChange(problem, step) {
+      const d = problem.data;
+      const total = d.structure.total;
+      const selected = d.structure.selected;
+      const isIncrease = d.direction === "increase";
+      const maxParts = Math.max(total, d.finalParts);
+      let rows = [];
+      rows.push(rowHtml("100%", step === 0
+        ? barHtml(total, { maxParts, labels: [String(d.original)].concat(repeatedLabels(total - 1, "")) })
+        : barHtml(total, { maxParts, labels: repeatedLabels(total, step >= 2 ? String(d.part) : "?") })
+      ));
+      if (step >= 2) {
+        rows.push(rowHtml(d.percent + "%", barHtml(total, {
+          maxParts,
+          added: Array.from({ length: selected }, (_, i) => i),
+          labels: Array.from({ length: total }, (_, i) => i < selected ? String(d.part) : "")
+        })));
+      }
+      if (step >= 3) {
+        rows.push(rowHtml("Final", barHtml(d.finalParts, {
+          maxParts,
+          active: isIncrease ? Array.from({ length: total }, (_, i) => i) : Array.from({ length: d.finalParts }, (_, i) => i),
+          added: isIncrease ? Array.from({ length: selected }, (_, i) => total + i) : [],
+          labels: repeatedLabels(d.finalParts, String(d.part))
+        })));
+      }
+      return modelShell("Percentage model", d.direction + " by " + d.percent + "%", rows, "Build the percentage from equal parts of 100%, then read the final bar.");
+    }
+
+    function renderReversePercent(problem, step) {
+      const d = problem.data;
+      const maxParts = Math.max(d.finalParts, d.structure.total);
+      let rows = [];
+      rows.push(rowHtml(d.finalPercent + "%", step === 0
+        ? barHtml(d.finalParts, { maxParts, labels: [String(d.final)].concat(repeatedLabels(d.finalParts - 1, "")) })
+        : barHtml(d.finalParts, { maxParts, labels: repeatedLabels(d.finalParts, step >= 2 ? String(d.part) : "?") })
+      ));
+      if (step >= 3) {
+        rows.push(rowHtml("100%", barHtml(d.structure.total, {
+          maxParts,
+          active: Array.from({ length: d.structure.total }, (_, i) => i),
+          labels: repeatedLabels(d.structure.total, String(d.part))
+        })));
+      }
+      return modelShell("Reverse percentage", d.finalPercent + "% is given", rows, "The final amount is used to find one part, then the original 100% is rebuilt.");
+    }
+
+    function renderRatio(problem, step) {
+      const d = problem.data;
+      const totalParts = d.a + d.b;
+      let labels = repeatedLabels(totalParts, step >= 1 ? String(d.part) : "?");
+      if (step === 0) labels = [String(d.total)];
+      const rows = [
+        rowHtml("Whole ratio", step === 0
+          ? barHtml(1, { labels })
+          : barHtml(totalParts, {
+            active: step >= 2 ? Array.from({ length: d.a }, (_, i) => i) : [],
+            added: step >= 3 ? Array.from({ length: d.b }, (_, i) => d.a + i) : [],
+            labels
+          }))
+      ];
+      return modelShell("Ratio model", d.a + ":" + d.b, rows, "The whole is shared by first finding the value of one ratio part.");
+    }
+
+    function renderComparison(problem, step) {
+      const d = problem.data;
+      const smallerLabels = step >= 2 ? [String(d.unit)] : ["?"];
+      const largerLabels = repeatedLabels(d.multiplier, step >= 3 ? String(d.unit) : "?");
+      const rows = [
+        rowHtml(d.smallerName, barHtml(1, { maxParts: d.multiplier, labels: smallerLabels, active: step >= 0 ? [0] : [] })),
+        rowHtml(d.largerName, barHtml(d.multiplier, { maxParts: d.multiplier, labels: largerLabels, added: step >= 1 ? Array.from({ length: d.multiplier }, (_, i) => i) : [] }))
+      ];
+      return modelShell("Comparison model", "Total = " + d.total, rows, "Count every equal part across both bars before finding the larger amount.");
+    }
+
+    function renderEquation(problem, step) {
+      const d = problem.data;
+      let content = '<div class="equation-line">';
+      for (let i = 0; i < d.coefficient; i++) {
+        content += '<div class="mini-block">' + (step >= 2 ? d.xValue : "x") + '</div>';
+      }
+      if (step <= 0) {
+        content += '<span class="plus">+</span><div class="mini-block constant">' + d.constant + '</div>';
+      }
+      content += '<span class="equals">=</span><div class="mini-block constant">' + (step <= 0 ? d.total : d.total - d.constant) + '</div>';
+      content += '</div>';
+      const rows = [content];
+      return modelShell("Equation model", d.coefficient + " equal x boxes", rows, "Isolate the unknown boxes, then divide the remaining amount equally.");
+    }
+
+    function renderVisual(problem, step) {
+      const renderers = {
+        fraction: renderFraction,
+        fractionChange: renderFractionChange,
+        percentChange: renderPercentChange,
+        reversePercent: renderReversePercent,
+        ratio: renderRatio,
+        comparison: renderComparison,
+        equation: renderEquation
+      };
+      return renderers[problem.kind](problem, step);
+    }
+
+    function renderModeButtons() {
+      modeStripEl.innerHTML = "";
+      MODES.forEach((mode) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "mode-btn" + (mode.id === state.mode ? " active" : "");
+        btn.textContent = mode.label;
+        btn.addEventListener("click", () => {
+          state.mode = mode.id;
+          renderModeButtons();
+          generateProblem();
+        });
+        modeStripEl.appendChild(btn);
+      });
+    }
+
+    function renderProgress() {
+      const total = state.problem.steps.length;
+      progressEl.innerHTML = "";
+      for (let i = 0; i < total; i++) {
+        const dot = document.createElement("span");
+        dot.className = "dot" + (i === state.stepIndex ? " active" : "");
+        progressEl.appendChild(dot);
+      }
+    }
+
+    function render() {
+      const problem = state.problem;
+      const mode = modeInfo(state.mode);
+      const step = problem.steps[state.stepIndex];
+      promptTypeEl.textContent = problem.promptType;
+      promptTextEl.textContent = problem.prompt;
+      answerTextEl.textContent = state.answerRevealed ? problem.answer : "Hidden";
+      modelCardEl.innerHTML = renderVisual(problem, state.stepIndex);
+      modeTitleEl.textContent = mode.title;
+      modeDescriptionEl.textContent = mode.description;
+      renderProgress();
+      stepLabelEl.textContent = "Step " + (state.stepIndex + 1) + " of " + problem.steps.length;
+      stepTitleEl.textContent = step.title;
+      stepNoteEl.textContent = step.note;
+      calculationEl.textContent = step.calculation;
+      teacherPromptEl.textContent = step.teacherPrompt;
+      document.getElementById("backBtn").disabled = state.stepIndex === 0;
+      document.getElementById("nextBtn").disabled = state.stepIndex >= problem.steps.length - 1;
+    }
+
+    function nextStep() {
+      if (state.stepIndex < state.problem.steps.length - 1) {
+        state.stepIndex += 1;
+        if (state.stepIndex === state.problem.steps.length - 1) {
+          state.answerRevealed = true;
+        }
+        render();
+      }
+    }
+
+    function backStep() {
+      if (state.stepIndex > 0) {
+        state.stepIndex -= 1;
+        state.answerRevealed = false;
+        render();
+      }
+    }
+
+    function revealAnswer() {
+      state.answerRevealed = true;
+      state.stepIndex = state.problem.steps.length - 1;
+      render();
+    }
+
+    function resetModel() {
+      state.stepIndex = 0;
+      state.answerRevealed = false;
+      render();
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    document.getElementById("newBtn").addEventListener("click", generateProblem);
+    document.getElementById("nextBtn").addEventListener("click", nextStep);
+    document.getElementById("backBtn").addEventListener("click", backStep);
+    document.getElementById("answerBtn").addEventListener("click", revealAnswer);
+    document.getElementById("resetBtn").addEventListener("click", resetModel);
+
+    renderModeButtons();
+    generateProblem();
+  </script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+</body>
+</html>

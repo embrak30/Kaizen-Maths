@@ -2074,6 +2074,25 @@ const tools = [
     ]
   },
   {
+    slug: "bar-models",
+    title: "Bar Models",
+    category: "Classroom Tools",
+    level: "Primary / Elementary / KS3",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "Show colourful teacher-led bar models for fractions, percentage change, reverse percentages, ratio sharing, comparison problems, and simple equations.",
+    tags: ["classroom", "primary", "elementary", "bar models", "visual maths", "fractions", "percentages", "ratio", "proportion", "comparison", "equations", "Singapore maths"],
+    toolPath: "tools/bar-models/index.html?v=bar-models-1",
+    imported: true,
+    teacherNotes: [
+      "Designed for live conceptual modelling with one example on screen at a time.",
+      "Use Next Step to reveal the structure gradually before showing the answer.",
+      "Modes include fractions of amounts, fractional change, percentage increase and decrease, reverse percentages, ratio sharing, comparison models, and equations.",
+      "Useful when pupils need to see how the calculation is represented before using a formal written method."
+    ]
+  },
+  {
     slug: "word-search-builder",
     title: "Word Search Builder",
     category: "Classroom Tools",
@@ -2318,6 +2337,7 @@ const subjectToolGroups = {
   "Classroom Tools": {
     "classroom-displays": "Board Displays and Visuals",
     "elementary-manipulatives": "Board Displays and Visuals",
+    "bar-models": "Board Displays and Visuals",
     "elementary-starter-board": "Starters and Retrieval",
     "elementary-maths-playground": "Starters and Retrieval",
     "fractions-table": "Starters and Retrieval",
@@ -2627,6 +2647,7 @@ const freeSampleTools = new Set([
   "pythagoras-theorem",
   "averages-range",
   "classroom-displays",
+  "bar-models",
   "elementary-starter-board",
   "elementary-maths-playground",
   "interface-guide"
@@ -7772,7 +7793,8 @@ const curatedRelatedToolSlugs = {
   "friction": ["newtons-second-law", "work-energy-power", "equations-of-motion", "moments"],
   "work-energy-power": ["friction", "newtons-second-law", "equations-of-motion", "motion-graphs-constant-acceleration"],
   "word-search-builder": ["fractions-table", "elementary-starter-board", "elementary-maths-playground", "classroom-displays"],
-  "elementary-maths-playground": ["elementary-starter-board", "elementary-manipulatives", "fractions-table", "classroom-displays"],
+  "bar-models": ["elementary-manipulatives", "elementary-maths-playground", "fractions-table", "ratio-proportion"],
+  "elementary-maths-playground": ["bar-models", "elementary-starter-board", "elementary-manipulatives", "fractions-table"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
   "circle-theorems": ["missing-angles", "circles-area-circumference", "sectors-arc-length", "trigonometric-ratios"],
   "earth-geometry": ["bearings", "trigonometric-ratios", "circles-area-circumference", "sectors-arc-length"],
