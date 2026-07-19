@@ -156,7 +156,7 @@ const tools = [
     status: "Imported",
     description: "Generate polynomial differentiation questions using the power rule, gradients, tangent lines, and normal lines.",
     tags: ["algebra", "calculus", "differentiation", "derivatives", "polynomials", "tangents", "normals"],
-    toolPath: "tools/differentiation-polynomials/index.html?v=poly-diff-one-line-1",
+    toolPath: "tools/differentiation-polynomials/index.html?v=poly-diff-one-line-3",
     imported: true,
     teacherNotes: [
       "Builds from single-term power rule fluency into multi-term polynomials.",

@@ -265,8 +265,8 @@
       const m=2*a*x+b;
       const terms=[[a,2],[b,1],[c,0]];
       return problemFromTerms(terms,'applications',[
-        { text:'Evaluate the derivative at the given value of \\(x\\).', equation:"f'("+x+") = "+(2*a)+"("+x+") + "+b+" = "+m },
-        { text:'The gradient at \\(x='+x+'\\) is \\('+m+'\\).' }
+        { text:'Substitute the given x-value into the derivative.', equation:"x = "+x+",\\quad f'("+x+") = "+(2*a)+"("+x+") + "+b+" = "+m },
+        { text:'State the gradient.', equation:"\\boxed{m = f'("+x+") = "+m+"}" }
       ]);
     }
 
@@ -283,8 +283,8 @@
         derivative:'$\\text{Tangent: }'+line+'$',
         steps:[
           ...derivativeRuleSteps(terms),
-          { text:'Find the point on the curve by substituting \\(x='+x+'\\).', equation:'f('+x+') = '+a+'('+x+')^2 + '+b+'('+x+') + '+c+' = '+y },
-          { text:'Find the tangent gradient by substituting \\(x='+x+'\\) into \\(f\\prime(x)\\).', equation:"f'("+x+") = "+(2*a)+"("+x+") + "+b+" = "+m },
+          { text:'Find the point on the curve using the given x-value.', equation:'x = '+x+',\\quad f('+x+') = '+a+'('+x+')^2 + '+b+'('+x+') + '+c+' = '+y },
+          { text:'Find the tangent gradient using the same x-value.', equation:"m = f'("+x+") = "+(2*a)+"("+x+") + "+b+" = "+m },
           { text:'Use point-gradient form.', equation:'y - y_1 = m(x - x_1)' },
           { text:'Substitute the point and gradient.', equation:'y - '+y+' = '+m+'(x - '+x+')' },
           { text:'Rearrange to give the tangent equation.', equation:line }
@@ -308,8 +308,8 @@
         derivative:'$\\text{Normal: }'+line+'$',
         steps:[
           ...derivativeRuleSteps(terms),
-          { text:'Find the point on the curve by substituting \\(x='+x+'\\).', equation:'f('+x+') = '+a+'('+x+')^2 + '+b+'('+x+') + '+c+' = '+y },
-          { text:'Find the tangent gradient first.', equation:"f'("+x+") = "+tangentM },
+          { text:'Find the point on the curve using the given x-value.', equation:'x = '+x+',\\quad f('+x+') = '+a+'('+x+')^2 + '+b+'('+x+') + '+c+' = '+y },
+          { text:'Find the tangent gradient first.', equation:"m_{\\text{tangent}} = f'("+x+") = "+tangentM },
           { text:'The normal gradient is the negative reciprocal of the tangent gradient.', equation:'m_{\\text{normal}} = -\\dfrac{1}{'+tangentM+'}' },
           { text:'Use point-gradient form.', equation:'y - y_1 = m(x - x_1)' },
           { text:'Substitute the point and normal gradient.', equation:'y - '+y+' = '+slopeText+'(x - '+x+')' },
