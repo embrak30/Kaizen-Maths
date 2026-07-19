@@ -135,3 +135,57 @@ textarea,
 .prob-table td {
   letter-spacing: 0;
 }
+
+.algebra-rule-line,
+.substitution-line,
+.cancellation-line {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0.35rem auto;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid rgba(49, 130, 206, 0.22);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1a365d;
+  font-family: var(--math-font);
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: 1.45;
+  overflow-x: auto;
+}
+
+.cancelled-factor {
+  position: relative;
+  display: inline-block;
+  padding: 0 0.08em;
+}
+
+.cancelled-factor::after {
+  content: "";
+  position: absolute;
+  left: -0.06em;
+  right: -0.06em;
+  top: 50%;
+  border-top: 0.5px solid currentColor;
+  transform: rotate(-18deg);
+  transform-origin: center;
+}
+
+.cancel-fraction {
+  display: inline-grid;
+  grid-template-rows: auto auto;
+  align-items: center;
+  justify-items: center;
+  vertical-align: middle;
+  line-height: 1.05;
+  margin: 0 0.12em;
+}
+
+.cancel-fraction > span:first-child {
+  border-bottom: 1px solid currentColor;
+  padding: 0 0.28em 0.08em;
+}
+
+.cancel-fraction > span:last-child {
+  padding: 0.08em 0.28em 0;
+}

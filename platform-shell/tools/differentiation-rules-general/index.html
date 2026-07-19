@@ -118,13 +118,46 @@
     function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
     function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
     function header(){const h=document.getElementById('problem-set-header'),t=document.getElementById('problem-type-title');if(currentType==='select'){h.classList.remove('visible');return}h.className='problem-set-header visible type-'+(((Object.keys(names).indexOf(currentType)+3)%3)+1);t.textContent=names[currentType]||'Problem Set'}
+    function ruleStep(text,equation){return {text,equation}}
+    function powerRuleEquation(c,p){
+      if(p===0) return '\\dfrac{d}{dx}\\left('+mono(c,p,true)+'\\right)=0';
+      if(p===1) return '\\dfrac{d}{dx}\\left('+mono(c,p,true)+'\\right)='+c;
+      return '\\dfrac{d}{dx}\\left('+mono(c,p,true)+'\\right)='+c+'\\cdot '+p+'x^{'+p+'-1}='+mono(c*p,p-1,true);
+    }
     function basicPower(kind){
-      const steps=[{text:'Use the <span class="rule-name">Power Rule</span>: $\\dfrac{d}{dx}(x^n)=nx^{n-1}$.'}];let expr='',der='';
-      if(kind==='standard_polynomials'){const high=random(3,6),mid=random(1,2);const terms=[[choice([2,3,4,5,-2,-3]),high],[choice([2,3,4,-2]),mid],[choice([2,5,-3]),0]];expr=terms.map((t,i)=>mono(t[0],t[1],i===0)).join('');der=terms.map(([c,p],i)=>p===0?'':mono(c*p,p-1,i===0)).join('')||'0';steps.push({text:'Differentiate each term separately, then combine.'})}
-      if(kind==='fractional_indices'){const c=choice([2,3,4,6,-3]),n=choice([3,4,5]),d=choice([2,3]);expr=c+'x^{\\frac{'+n+'}{'+d+'}}';der=fracLatex(c*n,d)+'x^{\\frac{'+(n-d)+'}{'+d+'}}';steps.push({text:'Multiply by the fractional power, then subtract 1 from the exponent.'})}
-      if(kind==='negative_indices'){const c=choice([2,3,4,-2,-5]),p=-random(2,5);expr=mono(c,p,true);der=mono(c*p,p-1,true);steps.push({text:'Negative powers follow the same power rule.'})}
-      if(kind==='mixed_powers'){expr='3x^4 - 2x^{-3} + 6x^{\\frac{3}{2}}';der='12x^3 + 6x^{-4} + 9x^{\\frac{1}{2}}';steps.push({text:'Apply the same rule to each different type of power.'})}
-      const answer='$\\dfrac{dy}{dx} = '+der+'$';steps.push({text:'Rewrite the expression as powers of $x$ where needed, then differentiate one term at a time.'});steps.push({text:'For each term, multiply by the old power and reduce the power by 1.'});steps.push({text:'Collect the differentiated terms in the same order.'});steps.push({text:'Therefore: '+answer});return{equation:'$y = '+expr+'$',answer,steps}
+      const steps=[ruleStep('Use the <span class="rule-name">Power Rule</span> and show the substitution into the rule.', '\\dfrac{d}{dx}\\left(ax^n\\right)=a\\cdot n x^{n-1}')];let expr='',der='';
+      if(kind==='standard_polynomials'){
+        const high=random(3,6),mid=random(1,2);
+        const terms=[[choice([2,3,4,5,-2,-3]),high],[choice([2,3,4,-2]),mid],[choice([2,5,-3]),0]];
+        expr=terms.map((t,i)=>mono(t[0],t[1],i===0)).join('');
+        const derivativeTerms=terms.filter(([_,p])=>p!==0).map(([c,p],i)=>mono(c*p,p-1,i===0));
+        der=derivativeTerms.join('')||'0';
+        terms.forEach(([c,p])=>steps.push(ruleStep('Differentiate \\('+mono(c,p,true)+'\\).', powerRuleEquation(c,p))));
+      }
+      if(kind==='fractional_indices'){
+        const c=choice([2,3,4,6,-3]),n=choice([3,4,5]),d=choice([2,3]);
+        expr=c+'x^{\\frac{'+n+'}{'+d+'}}';
+        der=fracLatex(c*n,d)+'x^{\\frac{'+(n-d)+'}{'+d+'}}';
+        steps.push(ruleStep('Multiply by the fractional power.', '\\dfrac{d}{dx}\\left('+expr+'\\right)='+c+'\\cdot\\dfrac{'+n+'}{'+d+'}x^{\\frac{'+n+'}{'+d+'}-1}'));
+        steps.push(ruleStep('Subtract 1 by using a common denominator.', '\\dfrac{'+n+'}{'+d+'}-1=\\dfrac{'+n+'}{'+d+'}-\\dfrac{'+d+'}{'+d+'}=\\dfrac{'+(n-d)+'}{'+d+'}'));
+        steps.push(ruleStep('Simplify the coefficient and power.', '\\dfrac{d}{dx}\\left('+expr+'\\right)='+der));
+      }
+      if(kind==='negative_indices'){
+        const c=choice([2,3,4,-2,-5]),p=-random(2,5);
+        expr=mono(c,p,true);
+        der=mono(c*p,p-1,true);
+        steps.push(ruleStep('Negative powers follow the same power rule.', '\\dfrac{d}{dx}\\left('+expr+'\\right)='+c+'\\cdot('+p+')x^{'+p+'-1}='+der));
+      }
+      if(kind==='mixed_powers'){
+        expr='3x^4 - 2x^{-3} + 6x^{\\frac{3}{2}}';
+        der='12x^3 + 6x^{-4} + 9x^{\\frac{1}{2}}';
+        steps.push(ruleStep('Differentiate the positive power.', '\\dfrac{d}{dx}\\left(3x^4\\right)=3\\cdot4x^{4-1}=12x^3'));
+        steps.push(ruleStep('Differentiate the negative power.', '\\dfrac{d}{dx}\\left(-2x^{-3}\\right)=(-2)(-3)x^{-3-1}=6x^{-4}'));
+        steps.push(ruleStep('Differentiate the fractional power.', '\\dfrac{d}{dx}\\left(6x^{\\frac{3}{2}}\\right)=6\\cdot\\dfrac{3}{2}x^{\\frac{3}{2}-1}=9x^{\\frac{1}{2}}'));
+      }
+      const answer='$\\dfrac{dy}{dx} = '+der+'$';
+      steps.push(ruleStep('Collect the differentiated terms in the same order.', '\\dfrac{dy}{dx}='+der));
+      return{equation:'$y = '+expr+'$',answer,steps}
     }
     function productRule(){const a=random(2,4),b=random(2,5),p=random(2,4),q=random(2,3);const eq='$y=('+lin(a,b)+')^'+p+'(x - '+q+')^2$';const ans='$\\dfrac{dy}{dx} = '+p*a+'('+lin(a,b)+')^{'+(p-1)+'}(x-'+q+')^2 + 2('+lin(a,b)+')^'+p+'(x-'+q+')$';return{equation:eq,answer:ans,steps:[{text:'This is a product of two functions, so use the product rule.'},{text:'Let $u=('+lin(a,b)+')^'+p+'$ and $v=(x-'+q+')^2$.'},{text:'Differentiate the first factor using the chain rule: $u\\prime='+(p*a)+'('+lin(a,b)+')^{'+(p-1)+'}$.'},{text:'Differentiate the second factor: $v\\prime=2(x-'+q+')$.'},{text:'Use $y\\prime=u\\prime v+uv\\prime$.'},{text:'Therefore: '+ans}]}}
     function chainRule(){const a=random(2,5),b=random(2,5),p=random(3,6);const eq='$y=('+lin(a,b)+')^'+p+'$';const ans='$\\dfrac{dy}{dx} = '+(p*a)+'('+lin(a,b)+')^{'+(p-1)+'}$';return{equation:eq,answer:ans,steps:[{text:'This is a composite function, so use the chain rule.'},{text:'Let $u='+lin(a,b)+'$ so $y=u^'+p+'$.'},{text:'Differentiate the outer function: $dy/du='+p+'u^{'+(p-1)+'}$.'},{text:'Differentiate the inner function: $du/dx='+a+'$.'},{text:'Multiply $dy/du$ by $du/dx$ and substitute $u='+lin(a,b)+'$.'},{text:'Therefore: '+ans}]}}
@@ -140,7 +173,7 @@
     function typeChanged(){currentType=document.getElementById('type-dropdown').value;header();currentType==='select'?showBlankPage():generateNewSet()}
     function showBlankPage(){document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:40px;color:#718096;font-size:1.1em">Please select a question type to begin.</li>'}
     function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<5;i++)problems.push(generateProblem());renderProblems()}
-    function renderProblems(){const c=document.getElementById('problem-list');c.innerHTML='';problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const steps=p.steps.map(s=>'<div class="step">'+s.text+'</div>').join('');li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(i+1)+'</div><div class="equation">'+p.equation+'</div></div><div class="problem-answer" id="quick-answer-'+i+'">'+p.answer+'</div></div><div class="steps-section" id="steps-'+i+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+steps+'<div class="final-answer">'+p.answer+'</div></div></div>';c.appendChild(li)});renderMath()}
+    function renderProblems(){const c=document.getElementById('problem-list');c.innerHTML='';problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const steps=p.steps.map(s=>{const text=s.text?'<div class="step">'+s.text+'</div>':'';const equation=s.equation?'<div class="step-equation">$$'+s.equation+'$$</div>':'';return text+equation}).join('');li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(i+1)+'</div><div class="equation">'+p.equation+'</div></div><div class="problem-answer" id="quick-answer-'+i+'">'+p.answer+'</div></div><div class="steps-section" id="steps-'+i+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+steps+'<div class="final-answer">'+p.answer+'</div></div></div>';c.appendChild(li)});renderMath()}
     function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>{const el=document.getElementById('quick-answer-'+i);if(el)el.classList.toggle('visible',answersVisible)})}
     function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>{const el=document.getElementById('steps-'+i);if(el)el.classList.toggle('visible',stepsVisible)})}
     function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}

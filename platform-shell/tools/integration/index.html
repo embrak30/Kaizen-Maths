@@ -157,6 +157,50 @@
       const sign=c<0 ? (first?'-':' - ') : (first?'':' + ');
       return sign+Math.abs(c)+'x^{\\frac{'+n+'}{'+d+'}}';
     }
+    function mathStep(text,equation){ return {text,equation}; }
+    function htmlStep(html){ return {html}; }
+    function integralRuleStep(){
+      return mathStep(
+        'Use the reverse power rule. Add 1 to the power, then divide by the new power.',
+        '\\int ax^n\\,dx=\\dfrac{ax^{n+1}}{n+1}+C'
+      );
+    }
+    function powerAsFraction(n,d=1){
+      return d===1 ? String(n) : '\\dfrac{'+n+'}{'+d+'}';
+    }
+    function addOnePowerText(n,d=1){
+      if(d===1) return n+' + 1 = '+(n+1);
+      return '\\dfrac{'+n+'}{'+d+'}+1=\\dfrac{'+n+'}{'+d+'}+\\dfrac{'+d+'}{'+d+'}=\\dfrac{'+(n+d)+'}{'+d+'}';
+    }
+    function cancellationHtml(n,d,newPowerLatex){
+      const g=gcd(n,d);
+      if(g===1) return '';
+      return '<span class="cancellation-line">Simplify the coefficient: '
+        + '<span class="cancel-fraction"><span><span class="cancelled-factor">'+n+'</span></span><span><span class="cancelled-factor">'+d+'</span></span></span>'
+        + '<span class="math">x<sup>'+newPowerLatex+'</sup></span>'
+        + '</span>';
+    }
+    function polynomialAntiderivativePieces(terms, steps){
+      const pieces=[];
+      for(const t of terms){
+        const newP=t.p+1;
+        const coeff=fDiv(Frac(t.c),Frac(newP));
+        const out=coeffPower(coeff,newP);
+        pieces.push(out);
+        steps.push(mathStep(
+          'For the term \\('+termLatex(t.c,t.p,true)+'\\), add 1 to the power.',
+          t.p+'+1='+newP
+        ));
+        steps.push(mathStep(
+          'Substitute into the reverse power rule.',
+          '\\int '+termLatex(t.c,t.p,true)+'\\,dx=\\dfrac{'+t.c+'x^{'+newP+'}}{'+newP+'}'
+        ));
+        const cancelLine=cancellationHtml(t.c,newP,String(newP));
+        if(cancelLine) steps.push(htmlStep(cancelLine));
+        steps.push(mathStep('Write the simplified term.', '\\dfrac{'+t.c+'}{'+newP+'}x^{'+newP+'}='+out));
+      }
+      return pieces;
+    }
     function renderMath(){
       if(typeof renderMathInElement !== 'function') return;
       renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});
@@ -177,28 +221,51 @@
       for(let i=0;i<n;i++){ let p=random(1,5); while(used.has(p)) p=random(1,5); used.add(p); terms.push({c:choice([-6,-5,-4,-3,-2,2,3,4,5,6]),p}); }
       terms.sort((a,b)=>b.p-a.p);
       const integrand=terms.map((t,i)=>termLatex(t.c,t.p,i===0)).join('');
-      const pieces=[]; const steps=[{text:'Integrate each term: add one to the power, then divide by the new power.'}];
-      for(const t of terms){ const newP=t.p+1; const coeff=fDiv(Frac(t.c),Frac(newP)); const out=coeffPower(coeff,newP); pieces.push(out); steps.push({text:'$\\int '+termLatex(t.c,t.p,true)+'\\,dx = '+out+'$'}); }
+      const steps=[integralRuleStep()];
+      const pieces=polynomialAntiderivativePieces(terms,steps);
       const F=signedJoin(pieces);
-      steps.push({text:'Add the constant of integration $+C$.'});
+      steps.push(mathStep('Combine the integrated terms.', 'F(x)='+F));
+      steps.push({text:'Add the constant of integration \\(+C\\).'});
       return {equation:'Find $\\displaystyle \\int \\big('+integrand+'\\big)\\,dx$.',answer:'$= '+F+' + C$',steps};
     }
     function genIndefFractional(){
       const choices=[{n:3,d:2},{n:5,d:2},{n:4,d:3},{n:5,d:3}];
       const terms=[0,1].map(()=>({c:choice([-6,-4,-3,-2,2,3,4,6]),...choice(choices)}));
       const integrand=terms.map((t,i)=>fracPowerTerm(t.c,t.n,t.d,i===0)).join('');
-      const pieces=[]; const steps=[{text:'For fractional powers, add one to the exponent and divide by the new exponent.'}];
-      for(const t of terms){ const newN=t.n+t.d; const coeff=Frac(t.c*t.d,newN); let c=fToLatex(coeff); if(coeff.n===1&&coeff.d===1)c=''; if(coeff.n===-1&&coeff.d===1)c='-'; const out=c+'x^{\\frac{'+newN+'}{'+t.d+'}}'; pieces.push(out); steps.push({text:'$\\int '+t.c+'x^{\\frac{'+t.n+'}{'+t.d+'}}\\,dx = '+out+'$'}); }
+      const pieces=[]; const steps=[integralRuleStep()];
+      for(const t of terms){
+        const newN=t.n+t.d;
+        const coeff=Frac(t.c*t.d,newN);
+        let c=fToLatex(coeff); if(coeff.n===1&&coeff.d===1)c=''; if(coeff.n===-1&&coeff.d===1)c='-';
+        const out=c+'x^{\\frac{'+newN+'}{'+t.d+'}}';
+        pieces.push(out);
+        steps.push(mathStep('For \\('+t.c+'x^{'+powerAsFraction(t.n,t.d)+'}\\), add 1 to the fractional power.', addOnePowerText(t.n,t.d)));
+        steps.push(mathStep('Divide by the new power, which is the same as multiplying by its reciprocal.', '\\int '+t.c+'x^{\\frac{'+t.n+'}{'+t.d+'}}\\,dx='+t.c+'\\cdot\\dfrac{'+t.d+'}{'+newN+'}x^{\\frac{'+newN+'}{'+t.d+'}}'));
+        const cancelLine=cancellationHtml(t.c*t.d,newN,`${newN}/${t.d}`);
+        if(cancelLine) steps.push(htmlStep(cancelLine));
+        steps.push(mathStep('Write the simplified term.', t.c+'\\cdot\\dfrac{'+t.d+'}{'+newN+'}x^{\\frac{'+newN+'}{'+t.d+'}}='+out));
+      }
       return {equation:'Find $\\displaystyle \\int \\big('+integrand+'\\big)\\,dx$.',answer:'$= '+signedJoin(pieces)+' + C$',steps};
     }
     function genIndefNegative(){
       const terms=[]; let ln=false;
       for(let i=0;i<random(2,3);i++){ let p=-random(2,4); if(!ln && Math.random()<.5){p=-1;ln=true;} terms.push({c:choice([-6,-4,-3,-2,2,3,4,6]),p}); }
       const integrand=terms.map((t,i)=>termLatex(t.c,t.p,i===0)).join('');
-      const pieces=[]; const steps=[{text:'Use the power rule except for $x^{-1}$, whose integral is logarithmic.'}];
+      const pieces=[]; const steps=[integralRuleStep(), {text:'Use the logarithm rule only when the power is \\(-1\\): \\(\\int ax^{-1}\\,dx=a\\ln|x|\\).'}];
       for(const t of terms){
-        if(t.p===-1){ const out=(t.c===1?'':t.c===-1?'-':String(t.c))+'\\ln|x|'; pieces.push(out); steps.push({text:'$\\int '+termLatex(t.c,t.p,true)+'\\,dx = '+out+'$'}); }
-        else{ const coeff=fDiv(Frac(t.c),Frac(t.p+1)); const out=coeffPower(coeff,t.p+1); pieces.push(out); steps.push({text:'$\\int '+termLatex(t.c,t.p,true)+'\\,dx = '+out+'$'}); }
+        if(t.p===-1){
+          const out=(t.c===1?'':t.c===-1?'-':String(t.c))+'\\ln|x|';
+          pieces.push(out);
+          steps.push(mathStep('This term has power \\(-1\\), so use the logarithm rule.', '\\int '+termLatex(t.c,t.p,true)+'\\,dx = '+out));
+        }
+        else{
+          const newP=t.p+1;
+          const coeff=fDiv(Frac(t.c),Frac(newP));
+          const out=coeffPower(coeff,newP);
+          pieces.push(out);
+          steps.push(mathStep('For \\('+termLatex(t.c,t.p,true)+'\\), add 1 to the power.', t.p+'+1='+newP));
+          steps.push(mathStep('Substitute into the reverse power rule.', '\\int '+termLatex(t.c,t.p,true)+'\\,dx=\\dfrac{'+t.c+'x^{'+newP+'}}{'+newP+'}='+out));
+        }
       }
       return {equation:'Find $\\displaystyle \\int \\big('+integrand+'\\big)\\,dx$.',answer:'$= '+signedJoin(pieces)+' + C$',steps};
     }
@@ -215,9 +282,13 @@
       for(let i=0;i<random(2,3);i++){ let p=random(0,4); while(used.has(p)) p=random(0,4); used.add(p); terms.push({c:choice([-5,-4,-3,-2,2,3,4,5]),p}); }
       terms.sort((a,b)=>b.p-a.p);
       const integrand=terms.map((t,i)=>termLatex(t.c,t.p,i===0)).join('');
-      const pieces=terms.map(t=>coeffPower(fDiv(Frac(t.c),Frac(t.p+1)),t.p+1));
+      const steps=[integralRuleStep()];
+      const pieces=polynomialAntiderivativePieces(terms,steps);
       const Fb=evalPolyTerms(terms,hi), Fa=evalPolyTerms(terms,lo), val=Fb-Fa;
-      const steps=[{text:'Find an antiderivative $F(x)$, then compute $F('+hi+')-F('+lo+')$.'},{text:'$F(x)='+signedJoin(pieces)+'$'},{text:'$F('+hi+')='+Fb.toFixed(3)+'$ and $F('+lo+')='+Fa.toFixed(3)+'$.'}];
+      steps.push(mathStep('Name the antiderivative \\(F(x)\\).', 'F(x)='+signedJoin(pieces)));
+      steps.push(mathStep('Substitute the upper limit.', 'F('+hi+')='+Fb.toFixed(3)));
+      steps.push(mathStep('Substitute the lower limit.', 'F('+lo+')='+Fa.toFixed(3)));
+      steps.push(mathStep('Subtract lower from upper.', 'F('+hi+')-F('+lo+')='+Fb.toFixed(3)+'-('+Fa.toFixed(3)+')='+val.toFixed(3)));
       return {equation:'Evaluate $\\displaystyle \\int_{'+lo+'}^{'+hi+'} \\big('+integrand+'\\big)\\,dx$.',answer:Number.isInteger(val)?'$= '+val+'$':'$\\approx '+val.toFixed(2)+'$',steps};
     }
     function genDefiniteFractional(){
@@ -305,7 +376,13 @@
       const container=document.getElementById('problem-list'); container.innerHTML='';
       problems.forEach((problem,index)=>{
         const li=document.createElement('li'); li.className='problem-item';
-        const stepsHTML=problem.steps.map(step=>'<div class=\"step\">'+step.text+'</div>').join('');
+        const stepsHTML=problem.steps.map((step)=>{
+          if(typeof step === 'string') return '<div class=\"step\">'+step+'</div>';
+          if(step.html) return step.html;
+          const text = step.text ? '<div class=\"step\">'+step.text+'</div>' : '';
+          const equation = step.equation ? '<div class=\"step-equation\">$$'+step.equation+'$$</div>' : '';
+          return text + equation;
+        }).join('');
         li.innerHTML='<div class=\"problem-header\"><div class=\"problem-left\"><div class=\"problem-number\">'+(index+1)+'</div><div class=\"equation\">'+problem.equation+'</div></div><div class=\"problem-answer\" id=\"quick-answer-'+index+'\">'+problem.answer+'</div></div><div class=\"steps-section\" id=\"steps-'+index+'\"><div class=\"answer-label\">Solution Steps:</div><div class=\"solution-steps\">'+stepsHTML+'<div class=\"final-answer\">'+problem.answer+'</div></div></div>';
         container.appendChild(li);
       });

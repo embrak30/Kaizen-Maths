@@ -156,7 +156,7 @@ const tools = [
     status: "Imported",
     description: "Generate polynomial differentiation questions using the power rule, gradients, tangent lines, and normal lines.",
     tags: ["algebra", "calculus", "differentiation", "derivatives", "polynomials", "tangents", "normals"],
-    toolPath: "tools/differentiation-polynomials/index.html?v=batch3-steps-1",
+    toolPath: "tools/differentiation-polynomials/index.html?v=calculus-algebra-steps-1",
     imported: true,
     teacherNotes: [
       "Builds from single-term power rule fluency into multi-term polynomials.",
@@ -174,7 +174,7 @@ const tools = [
     status: "Imported",
     description: "Generate foundation integration practice covering reverse differentiation, indefinite integrals, definite integrals, and the trapezium rule.",
     tags: ["algebra", "calculus", "integration", "integrals", "trapezium rule", "area under curve"],
-    toolPath: "tools/integration/index.html?v=batch3-steps-1",
+    toolPath: "tools/integration/index.html?v=calculus-algebra-steps-1",
     imported: true,
     teacherNotes: [
       "Starts with integration as reverse differentiation and the constant of integration.",
@@ -494,7 +494,7 @@ const tools = [
     status: "Imported",
     description: "Generate general differentiation practice for product rule, quotient rule, chain rule, trigonometric, logarithmic, tangent, normal, and turning-point problems.",
     tags: ["algebra", "calculus", "differentiation", "power rule", "product rule", "quotient rule", "chain rule", "trigonometry", "logarithms"],
-    toolPath: "tools/differentiation-rules-general/index.html?v=batch1-steps-1",
+    toolPath: "tools/differentiation-rules-general/index.html?v=calculus-algebra-steps-1",
     imported: true,
     teacherNotes: [
       "Extends polynomial differentiation into product, quotient, chain, trigonometric, and logarithmic rules.",
