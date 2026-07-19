@@ -13,7 +13,7 @@
 }
 
 body {
-  font-family: var(--kaizen-tool-font) !important;
+  font-family: var(--kaizen-ui-font) !important;
   letter-spacing: 0;
 }
 

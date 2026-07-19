@@ -124,6 +124,24 @@
       if(p===1) return '\\dfrac{d}{dx}\\left('+mono(c,p,true)+'\\right)='+c;
       return '\\dfrac{d}{dx}\\left('+mono(c,p,true)+'\\right)='+c+'\\cdot '+p+'x^{'+p+'-1}='+mono(c*p,p-1,true);
     }
+    function derivativeProcessBody(c,p){
+      const abs=Math.abs(c);
+      if(p===0)return'0';
+      if(p===1)return String(abs);
+      return (abs===1?'':abs+'\\cdot ')+p+'x^{'+p+'-1}';
+    }
+    function signedDerivativeProcessTerm(c,p,first=false){
+      if(p===0)return first?'0':' + 0';
+      const body=derivativeProcessBody(c,p);
+      if(first)return c<0?'-'+body:body;
+      return c<0?' - '+body:' + '+body;
+    }
+    function derivativeProcessLatex(terms){
+      return terms.map(([c,p],i)=>signedDerivativeProcessTerm(c,p,i===0)).join('')||'0';
+    }
+    function wholeDerivativeStep(expr,process,der){
+      return ruleStep('Differentiate the whole expression in one line, then simplify.', '\\begin{aligned}\\dfrac{dy}{dx}&=\\dfrac{d}{dx}\\left('+expr+'\\right)\\\\&='+process+'\\\\&='+der+'\\end{aligned}');
+    }
     function basicPower(kind){
       const steps=[ruleStep('Use the <span class="rule-name">Power Rule</span> and show the substitution into the rule.', '\\dfrac{d}{dx}\\left(ax^n\\right)=a\\cdot n x^{n-1}')];let expr='',der='';
       if(kind==='standard_polynomials'){
@@ -132,7 +150,7 @@
         expr=terms.map((t,i)=>mono(t[0],t[1],i===0)).join('');
         const derivativeTerms=terms.filter(([_,p])=>p!==0).map(([c,p],i)=>mono(c*p,p-1,i===0));
         der=derivativeTerms.join('')||'0';
-        terms.forEach(([c,p])=>steps.push(ruleStep('Differentiate \\('+mono(c,p,true)+'\\).', powerRuleEquation(c,p))));
+        steps.push(wholeDerivativeStep(expr,derivativeProcessLatex(terms),der));
       }
       if(kind==='fractional_indices'){
         const c=choice([2,3,4,6,-3]),n=choice([3,4,5]),d=choice([2,3]);
@@ -151,12 +169,10 @@
       if(kind==='mixed_powers'){
         expr='3x^4 - 2x^{-3} + 6x^{\\frac{3}{2}}';
         der='12x^3 + 6x^{-4} + 9x^{\\frac{1}{2}}';
-        steps.push(ruleStep('Differentiate the positive power.', '\\dfrac{d}{dx}\\left(3x^4\\right)=3\\cdot4x^{4-1}=12x^3'));
-        steps.push(ruleStep('Differentiate the negative power.', '\\dfrac{d}{dx}\\left(-2x^{-3}\\right)=(-2)(-3)x^{-3-1}=6x^{-4}'));
-        steps.push(ruleStep('Differentiate the fractional power.', '\\dfrac{d}{dx}\\left(6x^{\\frac{3}{2}}\\right)=6\\cdot\\dfrac{3}{2}x^{\\frac{3}{2}-1}=9x^{\\frac{1}{2}}'));
+        steps.push(wholeDerivativeStep(expr,'3\\cdot4x^{4-1} + (-2)(-3)x^{-3-1} + 6\\cdot\\dfrac{3}{2}x^{\\frac{3}{2}-1}',der));
       }
       const answer='$\\dfrac{dy}{dx} = '+der+'$';
-      steps.push(ruleStep('Collect the differentiated terms in the same order.', '\\dfrac{dy}{dx}='+der));
+      if(!['standard_polynomials','mixed_powers'].includes(kind))steps.push(ruleStep('Write the simplified derivative.', '\\dfrac{dy}{dx}='+der));
       return{equation:'$y = '+expr+'$',answer,steps}
     }
     function productRule(){const a=random(2,4),b=random(2,5),p=random(2,4),q=random(2,3);const eq='$y=('+lin(a,b)+')^'+p+'(x - '+q+')^2$';const ans='$\\dfrac{dy}{dx} = '+p*a+'('+lin(a,b)+')^{'+(p-1)+'}(x-'+q+')^2 + 2('+lin(a,b)+')^'+p+'(x-'+q+')$';return{equation:eq,answer:ans,steps:[{text:'This is a product of two functions, so use the product rule.'},{text:'Let $u=('+lin(a,b)+')^'+p+'$ and $v=(x-'+q+')^2$.'},{text:'Differentiate the first factor using the chain rule: $u\\prime='+(p*a)+'('+lin(a,b)+')^{'+(p-1)+'}$.'},{text:'Differentiate the second factor: $v\\prime=2(x-'+q+')$.'},{text:'Use $y\\prime=u\\prime v+uv\\prime$.'},{text:'Therefore: '+ans}]}}

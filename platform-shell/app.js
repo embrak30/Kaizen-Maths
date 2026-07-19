@@ -156,7 +156,7 @@ const tools = [
     status: "Imported",
     description: "Generate polynomial differentiation questions using the power rule, gradients, tangent lines, and normal lines.",
     tags: ["algebra", "calculus", "differentiation", "derivatives", "polynomials", "tangents", "normals"],
-    toolPath: "tools/differentiation-polynomials/index.html?v=calculus-algebra-steps-1",
+    toolPath: "tools/differentiation-polynomials/index.html?v=poly-diff-one-line-1",
     imported: true,
     teacherNotes: [
       "Builds from single-term power rule fluency into multi-term polynomials.",
@@ -494,7 +494,7 @@ const tools = [
     status: "Imported",
     description: "Generate general differentiation practice for product rule, quotient rule, chain rule, trigonometric, logarithmic, tangent, normal, and turning-point problems.",
     tags: ["algebra", "calculus", "differentiation", "power rule", "product rule", "quotient rule", "chain rule", "trigonometry", "logarithms"],
-    toolPath: "tools/differentiation-rules-general/index.html?v=calculus-algebra-steps-1",
+    toolPath: "tools/differentiation-rules-general/index.html?v=diff-rules-one-line-1",
     imported: true,
     teacherNotes: [
       "Extends polynomial differentiation into product, quotient, chain, trigonometric, and logarithmic rules.",
@@ -621,7 +621,7 @@ const tools = [
     status: "Imported",
     description: "Generate implicit and parametric differentiation practice, including second derivatives, tangent and normal lines, related rates, and parameter slope analysis.",
     tags: ["algebra", "calculus", "differentiation", "implicit differentiation", "parametric differentiation", "tangents", "normals"],
-    toolPath: "tools/advanced-differentiation/index.html?v=advanced-diff-fraction-1",
+    toolPath: "tools/advanced-differentiation/index.html?v=advanced-diff-implicit-variety-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers implicit dy/dx, slopes at points, second derivatives, tangent lines, and related rates.",
