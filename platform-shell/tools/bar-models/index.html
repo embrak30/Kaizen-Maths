@@ -629,6 +629,10 @@
       font-weight: 780;
     }
 
+    .practice-print-root {
+      display: none;
+    }
+
     @media (max-width: 1050px) {
       html,
       body {
@@ -690,6 +694,216 @@
         max-width: none;
       }
     }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 12mm;
+      }
+
+      html,
+      body {
+        min-height: auto;
+        overflow: visible !important;
+        background: #fff !important;
+      }
+
+      .teacher-tab,
+      .sidebar-overlay,
+      .sidebar,
+      .app,
+      .km-annotation-layer,
+      .km-capture-button {
+        display: none !important;
+      }
+
+      .practice-print-root {
+        display: block !important;
+        color: #111827;
+        font-family: Inter, Arial, sans-serif;
+      }
+
+      .print-sheet {
+        width: 100%;
+      }
+
+      .print-header {
+        display: grid;
+        grid-template-columns: 1fr 220px;
+        gap: 18px;
+        align-items: start;
+        padding-bottom: 14px;
+        border-bottom: 2px solid #111827;
+      }
+
+      .print-kicker {
+        margin: 0 0 5px;
+        color: #087a76;
+        font-size: 10pt;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .print-title {
+        margin: 0;
+        font-size: 22pt;
+        line-height: 1.05;
+      }
+
+      .print-instruction {
+        margin: 8px 0 0;
+        color: #374151;
+        font-size: 10.5pt;
+        line-height: 1.35;
+      }
+
+      .print-fields {
+        display: grid;
+        gap: 10px;
+        font-size: 11pt;
+        font-weight: 800;
+      }
+
+      .print-field {
+        display: grid;
+        grid-template-columns: 48px 1fr;
+        gap: 8px;
+        align-items: end;
+      }
+
+      .print-line {
+        border-bottom: 1.5px solid #6b7280;
+        height: 18px;
+      }
+
+      .print-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .print-question {
+        break-inside: avoid;
+        min-height: 170px;
+        padding: 10px;
+        border: 1.5px solid #cbd5e1;
+      }
+
+      .print-question-head {
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        gap: 8px;
+        align-items: start;
+      }
+
+      .print-number {
+        width: 24px;
+        height: 24px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: #fff;
+        background: #111827;
+        font-size: 10pt;
+        font-weight: 900;
+      }
+
+      .print-prompt {
+        margin: 0;
+        font-size: 10.5pt;
+        line-height: 1.3;
+        font-weight: 760;
+      }
+
+      .print-focus {
+        margin: 5px 0 0;
+        color: #4b5563;
+        font-size: 9pt;
+        line-height: 1.25;
+      }
+
+      .print-model {
+        display: grid;
+        gap: 7px;
+        margin-top: 10px;
+      }
+
+      .print-model-row {
+        display: grid;
+        grid-template-columns: 62px minmax(0, 1fr);
+        gap: 8px;
+        align-items: center;
+      }
+
+      .print-model-label {
+        color: #374151;
+        font-size: 8.5pt;
+        font-weight: 850;
+        text-align: right;
+      }
+
+      .print-bar {
+        display: grid;
+        min-height: 30px;
+        border: 1.8px solid #111827;
+        background: #fff;
+      }
+
+      .print-segment {
+        min-width: 0;
+        border-right: 1px solid #111827;
+      }
+
+      .print-segment:last-child {
+        border-right: 0;
+      }
+
+      .print-comparison .print-bar.short {
+        width: 38%;
+      }
+
+      .print-equation {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+        font-size: 11pt;
+        font-weight: 850;
+      }
+
+      .print-block {
+        min-width: 34px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        border: 1.8px solid #111827;
+        background: #fff;
+      }
+
+      .print-response {
+        margin-top: 10px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .print-response-line {
+        height: 15px;
+        border-bottom: 1px solid #cbd5e1;
+      }
+
+      .print-footer {
+        margin-top: 12px;
+        padding-top: 8px;
+        border-top: 1px solid #cbd5e1;
+        color: #4b5563;
+        font-size: 8.5pt;
+        text-align: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -740,6 +954,7 @@
         <button class="action-btn primary" type="button" id="nextBtn">Next Step</button>
         <button class="action-btn answer" type="button" id="answerBtn">Reveal Answer</button>
         <button class="action-btn" type="button" id="resetBtn">Reset Model</button>
+        <button class="action-btn" type="button" id="practicePdfBtn">Practice PDF</button>
       </div>
     </section>
 
@@ -778,6 +993,8 @@
       </aside>
     </section>
   </main>
+
+  <section class="practice-print-root" id="practicePrintRoot" aria-hidden="true"></section>
 
   <script>
     const MODES = [
@@ -854,6 +1071,7 @@
     const stepNoteEl = document.getElementById("stepNote");
     const calculationEl = document.getElementById("calculation");
     const teacherPromptEl = document.getElementById("teacherPrompt");
+    const practicePrintRootEl = document.getElementById("practicePrintRoot");
 
     function rand(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -1505,11 +1723,206 @@
       document.querySelector(".sidebar-overlay").classList.remove("active");
     }
 
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function printSegments(parts) {
+      return Array.from({ length: parts }, () => '<span class="print-segment"></span>').join("");
+    }
+
+    function printBar(parts, label, extraClass) {
+      const className = extraClass ? " " + extraClass : "";
+      return '<div class="print-model-row">'
+        + '<span class="print-model-label">' + escapeHtml(label) + '</span>'
+        + '<div class="print-bar' + className + '" style="grid-template-columns: repeat(' + parts + ', minmax(0, 1fr));">'
+        + printSegments(parts)
+        + '</div>'
+        + '</div>';
+    }
+
+    function printComparisonModel(problem) {
+      const d = problem.data;
+      return '<div class="print-model print-comparison">'
+        + printBar(1, d.smallerName, "short")
+        + printBar(d.multiplier, d.largerName, "")
+        + '</div>';
+    }
+
+    function printEquationModel(problem) {
+      const d = problem.data;
+      let html = '<div class="print-equation">';
+      for (let i = 0; i < d.coefficient; i++) {
+        html += '<span class="print-block">' + MATH_X + '</span>';
+      }
+      html += '<span>+</span><span class="print-block">' + d.constant + '</span>';
+      html += '<span>=</span><span class="print-block">' + d.total + '</span>';
+      html += '</div>';
+      return html;
+    }
+
+    function printDefaultModel(problem) {
+      const d = problem.data;
+      if (problem.kind === "fraction") {
+        return '<div class="print-model">' + printBar(d.den, "Whole") + '</div>';
+      }
+      if (problem.kind === "fractionChange") {
+        const finalLabel = d.direction === "increase" ? "After increase" : "After decrease";
+        return '<div class="print-model">'
+          + printBar(d.den, "Original")
+          + printBar(d.finalParts, finalLabel)
+          + '</div>';
+      }
+      if (problem.kind === "percentChange") {
+        const finalLabel = d.direction === "increase" ? "After increase" : "After decrease";
+        return '<div class="print-model">'
+          + printBar(d.structure.total, "100%")
+          + printBar(d.finalParts, finalLabel)
+          + '</div>';
+      }
+      if (problem.kind === "reversePercent") {
+        return '<div class="print-model">'
+          + printBar(d.finalParts, d.finalPercent + "%")
+          + printBar(d.structure.total, "100%")
+          + '</div>';
+      }
+      if (problem.kind === "ratio") {
+        return '<div class="print-model">'
+          + printBar(d.a + d.b, d.a + ":" + d.b)
+          + '</div>';
+      }
+      if (problem.kind === "comparison") return printComparisonModel(problem);
+      if (problem.kind === "equation") return printEquationModel(problem);
+      return "";
+    }
+
+    function practicePrompt(problem) {
+      const d = problem.data;
+      if (problem.kind === "fraction") {
+        return {
+          prompt: "Represent " + fractionText(d.num, d.den) + " of " + d.whole + " with a bar model.",
+          focus: "Label the whole, one equal part, and the selected parts. Do not calculate the final answer yet."
+        };
+      }
+      if (problem.kind === "fractionChange") {
+        return {
+          prompt: "Represent a " + fractionText(d.num, d.den) + " " + d.direction + " from " + d.original + ".",
+          focus: "Show the original bar and the changed bar. Mark which parts are added or removed."
+        };
+      }
+      if (problem.kind === "percentChange") {
+        return {
+          prompt: "Represent a " + d.percent + "% " + d.direction + " from " + d.original + ".",
+          focus: "Show 100% first, then show how the final bar changes."
+        };
+      }
+      if (problem.kind === "reversePercent") {
+        return {
+          prompt: "After a " + d.percent + "% " + d.direction + ", the amount is " + d.final + ". Represent the reverse percentage model.",
+          focus: "Label the given final percentage and the original 100%. Do not find the original amount yet."
+        };
+      }
+      if (problem.kind === "ratio") {
+        return {
+          prompt: "Represent sharing " + d.total + " in the ratio " + d.a + ":" + d.b + ".",
+          focus: "Label the total number of ratio parts and explain what one part would represent."
+        };
+      }
+      if (problem.kind === "comparison") {
+        return {
+          prompt: d.largerName + " has " + d.multiplier + " times as many counters as " + d.smallerName + ". Together they have " + d.total + " counters.",
+          focus: "Draw unequal bars and label the total parts before any calculation."
+        };
+      }
+      if (problem.kind === "equation") {
+        return {
+          prompt: "Represent " + d.coefficient + MATH_X + " + " + d.constant + " = " + d.total + " using a bar model.",
+          focus: "Show equal " + MATH_X + " boxes, the constant block, and the total. Do not solve yet."
+        };
+      }
+      return {
+        prompt: problem.prompt,
+        focus: "Represent the structure with a bar model."
+      };
+    }
+
+    function nextPracticeProblem(index) {
+      const modeOrder = ["fraction", "fractionChange", "percentChange", "reversePercent", "ratio", "comparison", "equation"];
+      const actualMode = state.mode === "mixed" ? modeOrder[index % modeOrder.length] : state.mode;
+      return generators[actualMode]();
+    }
+
+    function buildPracticeQuestions() {
+      const targetCount = state.mode === "mixed" ? 12 : 10;
+      const questions = [];
+      const seen = new Set();
+      let guard = 0;
+      while (questions.length < targetCount && guard < targetCount * 8) {
+        const problem = nextPracticeProblem(questions.length + guard);
+        const task = practicePrompt(problem);
+        if (!seen.has(task.prompt)) {
+          seen.add(task.prompt);
+          questions.push({ problem, task });
+        }
+        guard += 1;
+      }
+      return questions;
+    }
+
+    function renderPracticePdf() {
+      const mode = modeInfo(state.mode);
+      const questions = buildPracticeQuestions();
+      const questionHtml = questions.map((item, index) => {
+        return '<article class="print-question">'
+          + '<div class="print-question-head">'
+          + '<span class="print-number">' + (index + 1) + '</span>'
+          + '<div>'
+          + '<p class="print-prompt">' + escapeHtml(item.task.prompt) + '</p>'
+          + '<p class="print-focus">' + escapeHtml(item.task.focus) + '</p>'
+          + '</div>'
+          + '</div>'
+          + printDefaultModel(item.problem)
+          + '<div class="print-response">'
+          + '<span class="print-response-line"></span>'
+          + '<span class="print-response-line"></span>'
+          + '</div>'
+          + '</article>';
+      }).join("");
+      practicePrintRootEl.innerHTML = '<div class="print-sheet">'
+        + '<header class="print-header">'
+        + '<div>'
+        + '<p class="print-kicker">Kaizen Maths Student Practice</p>'
+        + '<h1 class="print-title">Bar Model Concept Practice</h1>'
+        + '<p class="print-instruction">For each question, complete or draw the bar model. Label the whole, equal parts, known values, and unknown values. Focus on the representation first; do not calculate the final answer unless your teacher asks you to.</p>'
+        + '<p class="print-instruction"><strong>Mode:</strong> ' + escapeHtml(mode.title) + '</p>'
+        + '</div>'
+        + '<div class="print-fields">'
+        + '<div class="print-field"><span>Name:</span><span class="print-line"></span></div>'
+        + '<div class="print-field"><span>Class:</span><span class="print-line"></span></div>'
+        + '<div class="print-field"><span>Date:</span><span class="print-line"></span></div>'
+        + '</div>'
+        + '</header>'
+        + '<section class="print-grid">' + questionHtml + '</section>'
+        + '<footer class="print-footer">Developed in Kaizen Maths</footer>'
+        + '</div>';
+    }
+
+    function createPracticePdf() {
+      renderPracticePdf();
+      window.setTimeout(() => window.print(), 80);
+    }
+
     document.getElementById("newBtn").addEventListener("click", generateProblem);
     document.getElementById("nextBtn").addEventListener("click", nextStep);
     document.getElementById("backBtn").addEventListener("click", backStep);
     document.getElementById("answerBtn").addEventListener("click", revealAnswer);
     document.getElementById("resetBtn").addEventListener("click", resetModel);
+    document.getElementById("practicePdfBtn").addEventListener("click", createPracticePdf);
 
     renderModeButtons();
     generateProblem();
