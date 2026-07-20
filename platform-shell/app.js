@@ -2083,7 +2083,7 @@ const tools = [
     status: "Imported",
     description: "Show colourful teacher-led bar models for fractions, percentage change, reverse percentages, ratio sharing, comparison problems, and simple equations.",
     tags: ["classroom", "primary", "elementary", "bar models", "visual maths", "fractions", "percentages", "ratio", "proportion", "comparison", "equations", "Singapore maths"],
-    toolPath: "tools/bar-models/index.html?v=bar-models-2",
+    toolPath: "tools/bar-models/index.html?v=bar-models-3",
     imported: true,
     teacherNotes: [
       "Designed for live conceptual modelling with one example on screen at a time.",
@@ -2460,7 +2460,8 @@ const state = {
   tutorLoaded: false,
   tutorLoading: false,
   tutorError: "",
-  tutorSelectedLearnerId: ""
+  tutorSelectedLearnerId: "",
+  lastAuthAccessKey: ""
 };
 
 const defaultTestimonials = [
@@ -2798,6 +2799,36 @@ function hasTutorWorkspaceAccess() {
 
 function isAdmin() {
   return currentUserRole() === "admin";
+}
+
+function toolCatalogDataShouldRerenderCurrentRoute() {
+  const route = routeParts()[0] || "home";
+  return ["home", "tools", "collections", "coverage-map", "admin"].includes(route);
+}
+
+function authSensitiveRouteShouldRerender() {
+  const route = routeParts()[0] || "home";
+  return ["worksheet-generator", "gcse-exam-style", "admin", "tutor-workspace", "school-space", "upgrade"].includes(route);
+}
+
+function currentAuthAccessKey() {
+  const auth = authState();
+  const profile = auth.profile || {};
+  return [
+    auth.session?.user?.id || "guest",
+    currentUserRole(),
+    profile.role || "",
+    profile.trial_ends_at || "",
+    profile.school_id || "",
+    profile.subscription_status || ""
+  ].join("|");
+}
+
+function renderAuthSensitiveRouteIfNeeded() {
+  const key = currentAuthAccessKey();
+  const changed = key !== state.lastAuthAccessKey;
+  state.lastAuthAccessKey = key;
+  if (changed && authSensitiveRouteShouldRerender()) renderRoute();
 }
 
 function defaultRequiredAccess(tool) {
@@ -3411,7 +3442,7 @@ async function loadToolAccessSettings({ rerender = false } = {}) {
     if (error) throw error;
     state.toolAccess = Object.fromEntries((data || []).map((row) => [row.tool_slug, row.required_access]));
     state.accessLoaded = true;
-    if (rerender) renderRoute();
+    if (rerender && toolCatalogDataShouldRerenderCurrentRoute()) renderRoute();
   } catch (error) {
     console.warn("Kaizen access settings unavailable:", error.message);
   }
@@ -3437,7 +3468,7 @@ async function loadToolMetadata({ rerender = false } = {}) {
       curriculum_tags: row.curriculum_tags || "",
       admin_notes: row.admin_notes || ""
     }]));
-    if (rerender) renderRoute();
+    if (rerender && toolCatalogDataShouldRerenderCurrentRoute()) renderRoute();
   } catch (error) {
     console.warn("Kaizen tool metadata unavailable:", error.message);
   }
@@ -12351,6 +12382,7 @@ window.addEventListener("hashchange", renderRoute);
 
 window.addEventListener("kaizen-auth-change", () => {
   updateAdminNavVisibility();
+  renderAuthSensitiveRouteIfNeeded();
   resetTutorWorkspaceState();
   loadToolAccessSettings({ rerender: true });
   loadToolMetadata({ rerender: true });

@@ -501,6 +501,12 @@
       color: #5a2600;
     }
 
+    .math-x {
+      font-family: KaTeX_Math, "Cambria Math", "Times New Roman", serif;
+      font-style: italic;
+      font-weight: 700;
+    }
+
     .plus,
     .equals {
       color: var(--muted);
@@ -832,6 +838,9 @@
       answerRevealed: false
     };
 
+    const MATH_X = "𝑥";
+    const TIMES = "×";
+
     const promptTypeEl = document.getElementById("promptType");
     const promptTextEl = document.getElementById("promptText");
     const answerTextEl = document.getElementById("answerText");
@@ -916,7 +925,7 @@
           makeStep(
             "Select the required number of parts.",
             "The numerator tells us to take " + num + " of those parts.",
-            num + " x " + part + " = " + answer,
+            num + " " + TIMES + " " + part + " = " + answer,
             "Ask pupils to point to the parts that form the answer."
           )
         ]
@@ -959,7 +968,7 @@
           makeStep(
             "Find the new amount.",
             "Combine the parts left in the final bar.",
-            finalParts + " x " + part + " = " + final,
+            finalParts + " " + TIMES + " " + part + " = " + final,
             "Ask: does the final amount make sense compared with the original?"
           )
         ]
@@ -1004,7 +1013,7 @@
           makeStep(
             "Read the final amount.",
             "Count the parts in the final bar and multiply by one part.",
-            finalParts + " x " + part + " = " + final,
+            finalParts + " " + TIMES + " " + part + " = " + final,
             "Ask pupils to explain the answer without using a formula."
           )
         ]
@@ -1050,7 +1059,7 @@
           makeStep(
             "Rebuild the original 100%.",
             "The original amount is " + structure.total + " of the same equal parts.",
-            structure.total + " x " + part + " = " + original,
+            structure.total + " " + TIMES + " " + part + " = " + original,
             "Ask: does the original need to be bigger or smaller than the final?"
           )
         ]
@@ -1090,13 +1099,13 @@
           makeStep(
             "Find the first share.",
             "Multiply one part by the first ratio number.",
-            a + " x " + part + " = " + first,
+            a + " " + TIMES + " " + part + " = " + first,
             "Ask: where is the first share shown on the bar?"
           ),
           makeStep(
             "Find the second share.",
             "Multiply one part by the second ratio number.",
-            b + " x " + part + " = " + second,
+            b + " " + TIMES + " " + part + " = " + second,
             "Ask: how can we check the two shares are correct?"
           )
         ]
@@ -1137,7 +1146,7 @@
           makeStep(
             "Find the larger quantity.",
             "Multiply one part by the number of parts in the larger bar.",
-            multiplier + " x " + unit + " = " + (multiplier * unit),
+            multiplier + " " + TIMES + " " + unit + " = " + (multiplier * unit),
             "Ask pupils to check by adding both bars."
           )
         ]
@@ -1152,32 +1161,32 @@
       return {
         kind: "equation",
         promptType: "Equation model",
-        prompt: "Solve " + coefficient + "x + " + constant + " = " + total + ".",
-        answer: "x = " + xValue,
+        prompt: "Solve " + coefficient + MATH_X + " + " + constant + " = " + total + ".",
+        answer: MATH_X + " = " + xValue,
         data: { coefficient, xValue, constant, total },
         steps: [
           makeStep(
             "Represent the equation.",
-            "Use equal boxes for the unknown x and a separate block for the constant.",
-            coefficient + "x + " + constant + " = " + total,
+            "Use equal boxes for the unknown " + MATH_X + " and a separate block for the constant.",
+            coefficient + MATH_X + " + " + constant + " = " + total,
             "Ask: what does each identical blue box represent?"
           ),
           makeStep(
             "Remove the constant from both sides.",
-            "To isolate the x boxes, subtract the constant.",
+            "To isolate the " + MATH_X + " boxes, subtract the constant.",
             total + " - " + constant + " = " + (total - constant),
             "Ask: why must the same change happen to both sides?"
           ),
           makeStep(
             "Share the remaining amount equally.",
-            "There are " + coefficient + " identical x boxes.",
+            "There are " + coefficient + " identical " + MATH_X + " boxes.",
             (total - constant) + " / " + coefficient + " = " + xValue,
             "Ask: what operation undoes multiplication by " + coefficient + "?"
           ),
           makeStep(
-            "State the value of x.",
-            "Each x box has the same value.",
-            "x = " + xValue,
+            "State the value of " + MATH_X + ".",
+            "Each " + MATH_X + " box has the same value.",
+            MATH_X + " = " + xValue,
             "Ask pupils to substitute the value back into the equation."
           )
         ]
@@ -1386,7 +1395,7 @@
       const d = problem.data;
       let content = '<div class="equation-line">';
       for (let i = 0; i < d.coefficient; i++) {
-        content += '<div class="mini-block">' + (step >= 2 ? d.xValue : "x") + '</div>';
+        content += '<div class="mini-block">' + (step >= 2 ? d.xValue : '<span class="math-x">x</span>') + '</div>';
       }
       if (step <= 0) {
         content += '<span class="plus">+</span><div class="mini-block constant">' + d.constant + '</div>';
@@ -1394,7 +1403,7 @@
       content += '<span class="equals">=</span><div class="mini-block constant">' + (step <= 0 ? d.total : d.total - d.constant) + '</div>';
       content += '</div>';
       const rows = [content];
-      return modelShell("Equation model", d.coefficient + " equal x boxes", rows, "Isolate the unknown boxes, then divide the remaining amount equally.");
+      return modelShell("Equation model", d.coefficient + " equal " + MATH_X + " boxes", rows, "Isolate the unknown boxes, then divide the remaining amount equally.");
     }
 
     function renderVisual(problem, step) {
