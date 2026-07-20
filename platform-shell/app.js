@@ -2081,14 +2081,14 @@ const tools = [
     type: "Interactive Display",
     access: "Free",
     status: "Imported",
-    description: "Show colourful teacher-led bar models for fractions, percentage change, reverse percentages, ratio sharing, comparison problems, and simple equations, with printable conceptual practice sheets.",
-    tags: ["classroom", "primary", "elementary", "bar models", "visual maths", "fractions", "percentages", "ratio", "proportion", "comparison", "equations", "Singapore maths"],
-    toolPath: "tools/bar-models/index.html?v=bar-models-4",
+    description: "Show colourful teacher-led bar models for fractions, percentages of amounts, percentage change, reverse percentages, ratio sharing, reverse ratio, comparison problems, and simple equations, with printable conceptual practice sheets.",
+    tags: ["classroom", "primary", "elementary", "bar models", "visual problem models", "visual maths", "fractions", "percentages", "ratio", "proportion", "comparison", "equations", "Singapore maths"],
+    toolPath: "tools/bar-models/index.html?v=bar-models-5",
     imported: true,
     teacherNotes: [
       "Designed for live conceptual modelling with one example on screen at a time.",
       "Use Next Step to reveal the structure gradually before showing the answer.",
-      "Modes include fractions of amounts, fractional change, percentage increase and decrease, reverse percentages, ratio sharing, comparison models, and equations.",
+      "Modes include fractions of amounts, percentage of an amount, fractional change, percentage increase and decrease, reverse percentages, ratio sharing, reverse ratio, comparison models, and equations.",
       "Useful when pupils need to see how the calculation is represented before using a formal written method.",
       "Use Practice PDF to create student sheets focused on labelling and completing bar models before calculation."
     ]

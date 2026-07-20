@@ -151,11 +151,11 @@
 
     .topbar {
       display: grid;
-      grid-template-columns: minmax(240px, 1fr) auto;
-      gap: 14px;
+      grid-template-columns: minmax(260px, 1fr) minmax(640px, 760px);
+      gap: 10px;
       align-items: center;
-      min-height: 76px;
-      padding: 10px 14px;
+      min-height: 70px;
+      padding: 9px 12px;
       border: 1px solid rgba(24, 184, 173, 0.22);
       border-radius: var(--radius);
       background:
@@ -202,18 +202,21 @@
     }
 
     .actions {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 6px;
+      justify-content: stretch;
       align-items: center;
-      flex-wrap: wrap;
     }
 
     .action-btn {
-      min-height: 42px;
-      padding: 10px 14px;
-      border-radius: 13px;
+      width: 100%;
+      min-height: 38px;
+      padding: 8px 8px;
+      border-radius: 11px;
+      font-size: clamp(0.72rem, 0.82vw, 0.88rem);
       font-weight: 900;
+      line-height: 1.05;
       color: var(--ink);
       background: #fff;
       border: 1px solid rgba(22, 33, 63, 0.12);
@@ -240,7 +243,7 @@
 
     .mode-strip {
       display: grid;
-      grid-template-columns: repeat(8, minmax(0, 1fr));
+      grid-template-columns: repeat(10, minmax(0, 1fr));
       gap: 8px;
       min-height: 48px;
     }
@@ -253,7 +256,7 @@
       background: rgba(255, 255, 255, 0.82);
       border: 1px solid rgba(47, 128, 237, 0.14);
       box-shadow: 0 6px 16px rgba(19, 39, 74, 0.07);
-      font-size: clamp(0.72rem, 1vw, 0.9rem);
+      font-size: clamp(0.66rem, 0.82vw, 0.86rem);
       font-weight: 950;
       white-space: nowrap;
       overflow: hidden;
@@ -651,7 +654,7 @@
       }
 
       .actions {
-        justify-content: flex-start;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       .mode-strip {
@@ -920,6 +923,7 @@
         <li>Display one example and ask pupils what each bar or part represents.</li>
         <li>Reveal one step at a time so the class predicts the next move.</li>
         <li>Use the final step to connect the model to the calculation.</li>
+        <li>Use Practice PDF when pupils need conceptual practice drawing, labelling, or completing models.</li>
       </ul>
 
       <h3>Useful Prompts</h3>
@@ -934,6 +938,7 @@
       <ul>
         <li>Using the final amount as the original whole in reverse percentage problems.</li>
         <li>Sharing a ratio by the number of groups instead of the total number of parts.</li>
+        <li>Using the total ratio parts when only one share is given in a reverse-ratio problem.</li>
         <li>Treating each bar as equal when a comparison model shows unequal quantities.</li>
       </ul>
     </div>
@@ -1005,6 +1010,12 @@
         description: "Split the whole into equal parts, then select the required fraction."
       },
       {
+        id: "percentOf",
+        label: "% of",
+        title: "Finding a Percentage of an Amount",
+        description: "Treat the amount as 100%, split it into useful parts, then select the required percentage."
+      },
+      {
         id: "fractionChange",
         label: "Fraction Change",
         title: "Fractional Increase and Decrease",
@@ -1027,6 +1038,12 @@
         label: "Ratio",
         title: "Ratio Sharing",
         description: "Turn the ratio into equal parts and find the value of one part."
+      },
+      {
+        id: "reverseRatio",
+        label: "Reverse Ratio",
+        title: "Reverse Ratio Problems",
+        description: "Use a known share or known difference to recover one part, then rebuild the ratio."
       },
       {
         id: "comparison",
@@ -1145,6 +1162,48 @@
             "The numerator tells us to take " + num + " of those parts.",
             num + " " + TIMES + " " + part + " = " + answer,
             "Ask pupils to point to the parts that form the answer."
+          )
+        ]
+      };
+    }
+
+    function generatePercentOfProblem() {
+      const percent = choose([10, 20, 25, 30, 40, 50, 60, 75]);
+      const structure = percentParts(percent);
+      const part = choose([4, 5, 6, 8, 10, 12]);
+      const whole = structure.total * part;
+      const answer = structure.selected * part;
+      const percentPerPart = 100 / structure.total;
+      return {
+        kind: "percentOf",
+        promptType: "Percentage of an amount",
+        prompt: "Find " + percent + "% of " + whole + ".",
+        answer: percent + "% of " + whole + " = " + answer,
+        data: { percent, structure, part, whole, answer, percentPerPart },
+        steps: [
+          makeStep(
+            "Identify the whole.",
+            "The full bar represents 100% of the amount.",
+            "100% = " + whole,
+            "Ask: what does the full bar represent?"
+          ),
+          makeStep(
+            "Split 100% into useful equal parts.",
+            "Choose equal percentage parts that make " + percent + "% easy to see.",
+            "100% / " + structure.total + " = " + percentPerPart + "% per part",
+            "Ask: why is this number of parts helpful?"
+          ),
+          makeStep(
+            "Find the value of one part.",
+            "Divide the whole amount by the number of equal parts.",
+            whole + " / " + structure.total + " = " + part,
+            "Ask: what value does one percentage part have?"
+          ),
+          makeStep(
+            "Select the required percentage.",
+            percent + "% is represented by " + structure.selected + " part" + (structure.selected === 1 ? "" : "s") + ".",
+            structure.selected + " " + TIMES + " " + part + " = " + answer,
+            "Ask pupils to connect the selected parts to the percentage."
           )
         ]
       };
@@ -1330,6 +1389,96 @@
       };
     }
 
+    function generateReverseRatioProblem() {
+      let a = rand(2, 6);
+      let b = rand(3, 8);
+      while (gcd(a, b) !== 1 || a === b) {
+        a = rand(2, 6);
+        b = rand(3, 8);
+      }
+      const part = choose([4, 5, 6, 8, 10, 12, 15]);
+      const first = a * part;
+      const second = b * part;
+      const total = first + second;
+      const totalParts = a + b;
+      const differenceParts = Math.abs(a - b);
+      const difference = differenceParts * part;
+      const caseType = choose(["share", "difference"]);
+      const knownSide = choose(["first", "second"]);
+      const knownParts = knownSide === "first" ? a : b;
+      const knownShare = knownSide === "first" ? first : second;
+
+      if (caseType === "share") {
+        return {
+          kind: "reverseRatio",
+          promptType: "Reverse ratio",
+          prompt: "A quantity is shared in the ratio " + a + ":" + b + ". The " + knownSide + " share is " + knownShare + ". Find the total amount.",
+          answer: "Total amount = " + total,
+          data: { a, b, part, first, second, total, totalParts, caseType, knownSide, knownParts, knownShare, differenceParts, difference },
+          steps: [
+            makeStep(
+              "Represent the ratio parts.",
+              "Draw the two shares using " + a + " parts and " + b + " parts.",
+              a + ":" + b + " gives " + totalParts + " parts altogether",
+              "Ask: which bar represents the given share?"
+            ),
+            makeStep(
+              "Match the known share to its ratio parts.",
+              "The given share is not the total; it represents only " + knownParts + " part" + (knownParts === 1 ? "" : "s") + ".",
+              knownParts + " parts = " + knownShare,
+              "Ask: why must we divide by the known share's parts first?"
+            ),
+            makeStep(
+              "Find one ratio part.",
+              "Divide the known share by the number of parts in that share.",
+              knownShare + " / " + knownParts + " = " + part,
+              "Ask: what does one equal ratio part represent?"
+            ),
+            makeStep(
+              "Rebuild the total amount.",
+              "The total is made from all the parts in the ratio.",
+              totalParts + " " + TIMES + " " + part + " = " + total,
+              "Ask pupils to check by finding both shares and adding them."
+            )
+          ]
+        };
+      }
+
+      return {
+        kind: "reverseRatio",
+        promptType: "Reverse ratio",
+        prompt: "Two amounts are in the ratio " + a + ":" + b + ". The difference between them is " + difference + ". Find both amounts.",
+        answer: "The amounts are " + first + " and " + second + ".",
+        data: { a, b, part, first, second, total, totalParts, caseType, knownSide, knownParts, knownShare, differenceParts, difference },
+        steps: [
+          makeStep(
+            "Draw the two ratio bars.",
+            "Use one bar with " + a + " parts and one bar with " + b + " parts.",
+            a + ":" + b,
+            "Ask: which bar is longer and why?"
+          ),
+          makeStep(
+            "Identify the difference in parts.",
+            "The difference between the bars is the extra parts in the longer bar.",
+            "Difference in parts = " + differenceParts,
+            "Ask: where can we see the difference on the bars?"
+          ),
+          makeStep(
+            "Find one ratio part.",
+            "Divide the difference by the number of extra parts.",
+            difference + " / " + differenceParts + " = " + part,
+            "Ask: why does the difference tell us the value of one part?"
+          ),
+          makeStep(
+            "Find both amounts.",
+            "Multiply one part by each ratio number.",
+            a + " " + TIMES + " " + part + " = " + first + ", " + b + " " + TIMES + " " + part + " = " + second,
+            "Ask pupils to check the difference between the two answers."
+          )
+        ]
+      };
+    }
+
     function generateComparisonProblem() {
       const multiplier = rand(2, 5);
       const unit = choose([6, 8, 10, 12, 15]);
@@ -1413,17 +1562,19 @@
 
     const generators = {
       fraction: generateFractionProblem,
+      percentOf: generatePercentOfProblem,
       fractionChange: generateFractionChangeProblem,
       percentChange: generatePercentChangeProblem,
       reversePercent: generateReversePercentProblem,
       ratio: generateRatioProblem,
+      reverseRatio: generateReverseRatioProblem,
       comparison: generateComparisonProblem,
       equation: generateEquationProblem
     };
 
     function generateProblem() {
       const actualMode = state.mode === "mixed"
-        ? choose(["fraction", "fractionChange", "percentChange", "reversePercent", "ratio", "comparison", "equation"])
+        ? choose(["fraction", "percentOf", "fractionChange", "percentChange", "reversePercent", "ratio", "reverseRatio", "comparison", "equation"])
         : state.mode;
       state.problem = generators[actualMode]();
       state.stepIndex = 0;
@@ -1497,6 +1648,29 @@
         ));
       }
       return modelShell("Fraction model", "Whole = " + d.whole, rows, "The denominator creates equal parts; the numerator tells us how many parts to use.");
+    }
+
+    function renderPercentOf(problem, step) {
+      const d = problem.data;
+      const total = d.structure.total;
+      const selected = d.structure.selected;
+      let rows = [];
+      if (step === 0) {
+        rows.push(rowHtml("100%", barHtml(total, { labels: [String(d.whole)].concat(repeatedLabels(total - 1, "")) })));
+      } else if (step === 1) {
+        rows.push(rowHtml("Percent parts", barHtml(total, { labels: repeatedLabels(total, d.percentPerPart + "%") })));
+      } else if (step === 2) {
+        rows.push(rowHtml("One part", barHtml(total, { labels: repeatedLabels(total, String(d.part)) })));
+      } else {
+        rows.push(rowHtml(
+          d.percent + "%",
+          barHtml(total, {
+            active: Array.from({ length: selected }, (_, i) => i),
+            labels: Array.from({ length: total }, (_, i) => i < selected ? String(d.part) : "")
+          })
+        ));
+      }
+      return modelShell("Percentage of amount", "100% = " + d.whole, rows, "Split 100% into useful equal parts, then select the parts that make the required percentage.");
     }
 
     function renderFractionChange(problem, step) {
@@ -1598,6 +1772,56 @@
       return modelShell("Ratio model", d.a + ":" + d.b, rows, "The whole is shared by first finding the value of one ratio part.");
     }
 
+    function renderReverseRatio(problem, step) {
+      const d = problem.data;
+      if (d.caseType === "share") {
+        const knownLabel = d.knownSide === "first" ? "Known first" : "Known second";
+        const rows = [];
+        rows.push(rowHtml("Ratio", barHtml(d.totalParts, {
+          labels: repeatedLabels(d.totalParts, step >= 3 ? String(d.part) : "?")
+        })));
+        if (step >= 1) {
+          rows.push(rowHtml(knownLabel, barHtml(d.knownParts, {
+            maxParts: d.totalParts,
+            active: Array.from({ length: d.knownParts }, (_, i) => i),
+            labels: step >= 2 ? repeatedLabels(d.knownParts, String(d.part)) : [String(d.knownShare)].concat(repeatedLabels(d.knownParts - 1, ""))
+          })));
+        }
+        if (step >= 3) {
+          rows.push(rowHtml("Total", barHtml(d.totalParts, {
+            active: Array.from({ length: d.totalParts }, (_, i) => i),
+            labels: repeatedLabels(d.totalParts, String(d.part))
+          })));
+        }
+        return modelShell("Reverse ratio", d.a + ":" + d.b, rows, "Use the known share to find one equal ratio part, then rebuild the full total.");
+      }
+
+      const longerIsFirst = d.a > d.b;
+      const firstLabels = step >= 2 ? repeatedLabels(d.a, String(d.part)) : repeatedLabels(d.a, "?");
+      const secondLabels = step >= 2 ? repeatedLabels(d.b, String(d.part)) : repeatedLabels(d.b, "?");
+      const firstExtra = longerIsFirst && step >= 1 ? Array.from({ length: d.differenceParts }, (_, i) => Math.min(d.a, d.b) + i) : [];
+      const secondExtra = !longerIsFirst && step >= 1 ? Array.from({ length: d.differenceParts }, (_, i) => Math.min(d.a, d.b) + i) : [];
+      const rows = [
+        rowHtml("First", barHtml(d.a, {
+          maxParts: Math.max(d.a, d.b),
+          labels: firstLabels,
+          added: firstExtra
+        })),
+        rowHtml("Second", barHtml(d.b, {
+          maxParts: Math.max(d.a, d.b),
+          labels: secondLabels,
+          added: secondExtra
+        }))
+      ];
+      if (step >= 3) {
+        rows.push(rowHtml("Together", barHtml(d.totalParts, {
+          labels: repeatedLabels(d.totalParts, String(d.part)),
+          active: Array.from({ length: d.totalParts }, (_, i) => i)
+        })));
+      }
+      return modelShell("Reverse ratio", "Difference = " + d.difference, rows, "Use the difference between the bars to find one equal ratio part.");
+    }
+
     function renderComparison(problem, step) {
       const d = problem.data;
       const smallerLabels = step >= 2 ? [String(d.unit)] : ["?"];
@@ -1627,10 +1851,12 @@
     function renderVisual(problem, step) {
       const renderers = {
         fraction: renderFraction,
+        percentOf: renderPercentOf,
         fractionChange: renderFractionChange,
         percentChange: renderPercentChange,
         reversePercent: renderReversePercent,
         ratio: renderRatio,
+        reverseRatio: renderReverseRatio,
         comparison: renderComparison,
         equation: renderEquation
       };
@@ -1771,6 +1997,12 @@
       if (problem.kind === "fraction") {
         return '<div class="print-model">' + printBar(d.den, "Whole") + '</div>';
       }
+      if (problem.kind === "percentOf") {
+        return '<div class="print-model">'
+          + printBar(d.structure.total, "100%")
+          + printBar(d.structure.total, d.percent + "%")
+          + '</div>';
+      }
       if (problem.kind === "fractionChange") {
         const finalLabel = d.direction === "increase" ? "After increase" : "After decrease";
         return '<div class="print-model">'
@@ -1796,6 +2028,19 @@
           + printBar(d.a + d.b, d.a + ":" + d.b)
           + '</div>';
       }
+      if (problem.kind === "reverseRatio") {
+        if (d.caseType === "share") {
+          const knownLabel = d.knownSide === "first" ? "Known first" : "Known second";
+          return '<div class="print-model">'
+            + printBar(d.totalParts, d.a + ":" + d.b)
+            + printBar(d.knownParts, knownLabel)
+            + '</div>';
+        }
+        return '<div class="print-model print-comparison">'
+          + printBar(d.a, "First", d.a < d.b ? "short" : "")
+          + printBar(d.b, "Second", d.b < d.a ? "short" : "")
+          + '</div>';
+      }
       if (problem.kind === "comparison") return printComparisonModel(problem);
       if (problem.kind === "equation") return printEquationModel(problem);
       return "";
@@ -1807,6 +2052,12 @@
         return {
           prompt: "Represent " + fractionText(d.num, d.den) + " of " + d.whole + " with a bar model.",
           focus: "Label the whole, one equal part, and the selected parts. Do not calculate the final answer yet."
+        };
+      }
+      if (problem.kind === "percentOf") {
+        return {
+          prompt: "Represent " + d.percent + "% of " + d.whole + " with a bar model.",
+          focus: "Label 100%, one percentage part, and the selected percentage parts before calculating."
         };
       }
       if (problem.kind === "fractionChange") {
@@ -1833,6 +2084,18 @@
           focus: "Label the total number of ratio parts and explain what one part would represent."
         };
       }
+      if (problem.kind === "reverseRatio") {
+        if (d.caseType === "share") {
+          return {
+            prompt: "Represent a ratio of " + d.a + ":" + d.b + " where the " + d.knownSide + " share is " + d.knownShare + ".",
+            focus: "Label which ratio parts match the known share, then show how the full ratio can be rebuilt."
+          };
+        }
+        return {
+          prompt: "Represent two amounts in the ratio " + d.a + ":" + d.b + " with a difference of " + d.difference + ".",
+          focus: "Show the extra parts that create the difference before finding one part."
+        };
+      }
       if (problem.kind === "comparison") {
         return {
           prompt: d.largerName + " has " + d.multiplier + " times as many counters as " + d.smallerName + ". Together they have " + d.total + " counters.",
@@ -1852,7 +2115,7 @@
     }
 
     function nextPracticeProblem(index) {
-      const modeOrder = ["fraction", "fractionChange", "percentChange", "reversePercent", "ratio", "comparison", "equation"];
+      const modeOrder = ["fraction", "percentOf", "fractionChange", "percentChange", "reversePercent", "ratio", "reverseRatio", "comparison", "equation"];
       const actualMode = state.mode === "mixed" ? modeOrder[index % modeOrder.length] : state.mode;
       return generators[actualMode]();
     }
