@@ -151,7 +151,7 @@
 
     .topbar {
       display: grid;
-      grid-template-columns: minmax(260px, 1fr) minmax(640px, 760px);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 10px;
       align-items: center;
       min-height: 70px;
@@ -167,7 +167,11 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand > div:last-child {
       min-width: 0;
     }
 
@@ -187,7 +191,7 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(1.35rem, 2.4vw, 2rem);
+      font-size: clamp(1.22rem, 2vw, 1.72rem);
       line-height: 1.05;
     }
 
@@ -195,7 +199,7 @@
       margin: 4px 0 0;
       color: var(--muted);
       font-weight: 750;
-      font-size: 0.92rem;
+      font-size: clamp(0.72rem, 0.92vw, 0.86rem);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -212,9 +216,9 @@
     .action-btn {
       width: 100%;
       min-height: 38px;
-      padding: 8px 8px;
+      padding: 8px 6px;
       border-radius: 11px;
-      font-size: clamp(0.72rem, 0.82vw, 0.88rem);
+      font-size: clamp(0.66rem, 0.78vw, 0.84rem);
       font-weight: 900;
       line-height: 1.05;
       color: var(--ink);
@@ -233,6 +237,13 @@
       color: #fff;
       border-color: rgba(24, 184, 173, 0.28);
       background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .action-btn.new-action {
+      color: #fff;
+      border-color: rgba(32, 178, 107, 0.34);
+      background: linear-gradient(135deg, #20b26b, #087a76);
+      box-shadow: 0 10px 20px rgba(32, 178, 107, 0.20);
     }
 
     .action-btn.answer {
@@ -974,7 +985,7 @@
         </div>
       </div>
       <div class="actions">
-        <button class="action-btn primary" type="button" id="newBtn">New</button>
+        <button class="action-btn new-action" type="button" id="newBtn">New</button>
         <button class="action-btn" type="button" id="backBtn">Back</button>
         <button class="action-btn primary" type="button" id="nextBtn">Next Step</button>
         <button class="action-btn answer" type="button" id="answerBtn">Reveal Answer</button>
@@ -1031,7 +1042,7 @@
       },
       {
         id: "percentOf",
-        label: "% of",
+        label: "Percentage",
         title: "Finding a Percentage of an Amount",
         description: "Treat the amount as 100%, split it into useful parts, then select the required percentage."
       },
@@ -1336,22 +1347,22 @@
         data: { percent, structure, direction, part, original, finalParts, final, finalPercent },
         steps: [
           makeStep(
-            "Identify the final percentage.",
-            "The given amount is not 100%; it is the amount after the change.",
-            finalPercent + "% = " + final,
-            "Ask: why is the given amount not the original whole?"
+            "Start with the original percentage.",
+            "The original amount is the unknown whole, so it represents 100%.",
+            "Original = 100%",
+            "Ask: why is the original amount not the number given in the question?"
           ),
           makeStep(
-            "Represent the final amount in parts.",
-            "The final percentage is made from " + finalParts + " equal parts.",
-            final + " / " + finalParts + " = " + part,
-            "Ask: how many parts represent the final amount?"
+            "Identify the final percentage.",
+            "After the " + direction + ", the given amount represents the final percentage.",
+            finalPercent + "% = " + final,
+            "Ask: why is the given amount " + finalPercent + "% rather than 100%?"
           ),
           makeStep(
             "Find one part.",
-            "Divide the final amount by the number of final parts.",
-            "One part = " + part,
-            "Ask: what does one part allow us to rebuild?"
+            "Divide the final amount by the number of equal parts in " + finalPercent + "%.",
+            final + " / " + finalParts + " = " + part,
+            "Ask: what does one equal part allow us to rebuild?"
           ),
           makeStep(
             "Rebuild the original 100%.",
@@ -1437,20 +1448,20 @@
           data: { a, b, part, first, second, total, totalParts, caseType, knownSide, knownParts, knownShare, differenceParts, difference },
           steps: [
             makeStep(
-              "Represent the ratio parts.",
-              "Draw the two shares using " + a + " parts and " + b + " parts.",
-              a + ":" + b + " gives " + totalParts + " parts altogether",
+              "Draw the two ratio bars.",
+              "Use one bar with " + a + " parts and one bar with " + b + " parts.",
+              a + ":" + b,
               "Ask: which bar represents the given share?"
             ),
             makeStep(
-              "Match the known share to its ratio parts.",
-              "The given share is not the total; it represents only " + knownParts + " part" + (knownParts === 1 ? "" : "s") + ".",
-              knownParts + " parts = " + knownShare,
-              "Ask: why must we divide by the known share's parts first?"
+              "Place the known share on the correct bar.",
+              "The given share belongs to only one part of the ratio, not to the total.",
+              (knownSide === "first" ? "First" : "Second") + " share = " + knownShare,
+              "Ask: why is this not the total amount?"
             ),
             makeStep(
               "Find one ratio part.",
-              "Divide the known share by the number of parts in that share.",
+              "Now divide the known share by the number of equal parts in that share.",
               knownShare + " / " + knownParts + " = " + part,
               "Ask: what does one equal ratio part represent?"
             ),
@@ -1680,7 +1691,7 @@
       const selected = d.structure.selected;
       let rows = [];
       if (step === 0) {
-        rows.push(rowHtml("100%", barHtml(total, { fullLabel: "100% = " + d.whole })));
+        rows.push(rowHtml("Whole", barHtml(1, { labels: [String(d.whole)] })));
       } else if (step === 1) {
         rows.push(rowHtml("Percent parts", barHtml(total, { labels: repeatedLabels(total, d.percentPerPart + "%") })));
       } else if (step === 2) {
@@ -1704,7 +1715,7 @@
       let rows = [];
       const originalLabels = step >= 1 ? repeatedLabels(d.den, step >= 1 ? String(d.part) : "?") : [String(d.original)];
       rows.push(rowHtml("Original", step === 0
-        ? barHtml(d.den, { maxParts, fullLabel: String(d.original) })
+        ? barHtml(1, { labels: [String(d.original)] })
         : barHtml(d.den, { maxParts, labels: originalLabels })
       ));
       if (step >= 2) {
@@ -1740,7 +1751,7 @@
       const maxParts = Math.max(total, d.finalParts);
       let rows = [];
       rows.push(rowHtml("100%", step === 0
-        ? barHtml(total, { maxParts, fullLabel: "100% = " + d.original })
+        ? barHtml(1, { labels: [String(d.original)] })
         : barHtml(total, { maxParts, labels: repeatedLabels(total, step >= 2 ? String(d.part) : "?") })
       ));
       if (step >= 2) {
@@ -1765,10 +1776,17 @@
       const d = problem.data;
       const maxParts = Math.max(d.finalParts, d.structure.total);
       let rows = [];
-      rows.push(rowHtml(d.finalPercent + "%", step === 0
-        ? barHtml(d.finalParts, { maxParts, fullLabel: d.finalPercent + "% = " + d.final })
-        : barHtml(d.finalParts, { maxParts, labels: repeatedLabels(d.finalParts, step >= 2 ? String(d.part) : "?") })
-      ));
+      if (step === 0) {
+        rows.push(rowHtml("Original", barHtml(1, { fullLabel: "100%" })));
+      } else if (step === 1) {
+        rows.push(rowHtml("Original", barHtml(1, { fullLabel: "100%" })));
+        rows.push(rowHtml(d.finalPercent + "%", barHtml(1, { fullLabel: String(d.final) })));
+      } else {
+        rows.push(rowHtml(d.finalPercent + "%", barHtml(d.finalParts, {
+          maxParts,
+          labels: repeatedLabels(d.finalParts, String(d.part))
+        })));
+      }
       if (step >= 3) {
         rows.push(rowHtml("100%", barHtml(d.structure.total, {
           maxParts,
@@ -1799,25 +1817,34 @@
     function renderReverseRatio(problem, step) {
       const d = problem.data;
       if (d.caseType === "share") {
-        const knownLabel = d.knownSide === "first" ? "Known first" : "Known second";
-        const rows = [];
-        rows.push(rowHtml("Ratio", barHtml(d.totalParts, {
-          labels: repeatedLabels(d.totalParts, step >= 3 ? String(d.part) : "?")
-        })));
-        if (step >= 1) {
-          rows.push(rowHtml(knownLabel, step >= 2
-            ? barHtml(d.knownParts, {
-              maxParts: d.totalParts,
-              active: Array.from({ length: d.knownParts }, (_, i) => i),
-              labels: repeatedLabels(d.knownParts, String(d.part))
-            })
-            : barHtml(d.knownParts, {
-              maxParts: d.totalParts,
-              active: Array.from({ length: d.knownParts }, (_, i) => i),
+        const maxParts = Math.max(d.a, d.b);
+        const knownIsFirst = d.knownSide === "first";
+        const labelFor = (side, parts) => {
+          if (step === 0) return repeatedLabels(parts, "?");
+          if ((side === "first" && knownIsFirst) || (side === "second" && !knownIsFirst)) {
+            return step >= 2 ? repeatedLabels(parts, String(d.part)) : repeatedLabels(parts, "");
+          }
+          return step >= 3 ? repeatedLabels(parts, String(d.part)) : repeatedLabels(parts, "?");
+        };
+        const barFor = (side, parts) => {
+          const isKnown = (side === "first" && knownIsFirst) || (side === "second" && !knownIsFirst);
+          if (step === 1 && isKnown) {
+            return barHtml(parts, {
+              maxParts,
+              active: Array.from({ length: parts }, (_, i) => i),
               fullLabel: String(d.knownShare)
-            })
-          ));
-        }
+            });
+          }
+          return barHtml(parts, {
+            maxParts,
+            active: isKnown && step >= 1 ? Array.from({ length: parts }, (_, i) => i) : [],
+            labels: labelFor(side, parts)
+          });
+        };
+        const rows = [
+          rowHtml("First", barFor("first", d.a)),
+          rowHtml("Second", barFor("second", d.b))
+        ];
         if (step >= 3) {
           rows.push(rowHtml("Total", barHtml(d.totalParts, {
             active: Array.from({ length: d.totalParts }, (_, i) => i),

@@ -2083,7 +2083,7 @@ const tools = [
     status: "Imported",
     description: "Show colourful teacher-led bar models for fractions, percentages of amounts, percentage change, reverse percentages, ratio sharing, reverse ratio, comparison problems, and simple equations, with printable conceptual practice sheets.",
     tags: ["classroom", "primary", "elementary", "bar models", "visual problem models", "visual maths", "fractions", "percentages", "ratio", "proportion", "comparison", "equations", "Singapore maths"],
-    toolPath: "tools/bar-models/index.html?v=bar-models-6",
+    toolPath: "tools/bar-models/index.html?v=bar-models-7",
     imported: true,
     teacherNotes: [
       "Designed for live conceptual modelling with one example on screen at a time.",
