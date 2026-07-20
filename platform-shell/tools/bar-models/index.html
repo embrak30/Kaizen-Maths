@@ -1835,32 +1835,28 @@
       const d = problem.data;
       const maxParts = Math.max(d.finalParts, d.structure.total);
       let rows = [];
-      if (step === 0) {
-        rows.push(rowHtml("Original", barHtml(d.structure.total, {
-          maxParts,
-          fullLabel: "100%"
-        })));
-      } else if (step === 1) {
-        rows.push(rowHtml("Original", barHtml(d.structure.total, {
-          maxParts,
-          fullLabel: "100%"
-        })));
+      rows.push(rowHtml("Original", barHtml(d.structure.total, {
+        maxParts,
+        fullLabel: step >= 3 ? "" : "100%",
+        labels: step >= 3 ? repeatedLabels(d.structure.total, String(d.part)) : null,
+        active: step >= 3 ? Array.from({ length: d.structure.total }, (_, i) => i) : []
+      })));
+      if (step === 1) {
         rows.push(rowHtml(d.finalPercent + "%", barHtml(d.finalParts, {
           maxParts,
           fullLabel: d.finalPercent + "% = " + d.final
         })));
-      } else {
+      } else if (step >= 2) {
         rows.push(rowHtml(d.finalPercent + "%", barHtml(d.finalParts, {
           maxParts,
           labels: repeatedLabels(d.finalParts, String(d.part))
         })));
       }
-      if (step >= 3) {
-        rows.push(rowHtml("100%", barHtml(d.structure.total, {
+      if (step === 0) {
+        rows = [rowHtml("Original", barHtml(d.structure.total, {
           maxParts,
-          active: Array.from({ length: d.structure.total }, (_, i) => i),
-          labels: repeatedLabels(d.structure.total, String(d.part))
-        })));
+          fullLabel: "100%"
+        }))];
       }
       return modelShell("Reverse percentage", d.finalPercent + "% is given", rows, "The final amount is used to find one part, then the original 100% is rebuilt.");
     }
