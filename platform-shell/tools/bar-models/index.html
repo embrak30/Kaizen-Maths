@@ -887,15 +887,29 @@
 
       .print-segment {
         min-width: 0;
+        display: grid;
+        place-items: center;
         border-right: 1px solid #111827;
+        font-size: 7.8pt;
+        font-weight: 800;
       }
 
       .print-segment:last-child {
         border-right: 0;
       }
 
-      .print-comparison .print-bar.short {
-        width: 38%;
+      .print-segment.fill {
+        background: #dbeafe;
+      }
+
+      .print-segment.added {
+        background: #fde68a;
+      }
+
+      .print-segment.removed {
+        background:
+          linear-gradient(45deg, transparent 46%, #111827 48% 52%, transparent 54%),
+          linear-gradient(135deg, transparent 46%, #111827 48% 52%, transparent 54%);
       }
 
       .print-equation {
@@ -936,6 +950,51 @@
         color: #4b5563;
         font-size: 8.5pt;
         text-align: center;
+      }
+
+      .print-answer-key {
+        break-before: page;
+        margin-top: 0;
+      }
+
+      .print-answer-key h2 {
+        margin: 0 0 6px;
+        font-size: 17pt;
+      }
+
+      .print-answer-note {
+        margin: 0 0 10px;
+        color: #4b5563;
+        font-size: 9pt;
+      }
+
+      .print-key-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .print-key-item {
+        break-inside: avoid;
+        min-height: 118px;
+        padding: 8px;
+        border: 1.5px solid #cbd5e1;
+      }
+
+      .print-key-head {
+        display: flex;
+        gap: 8px;
+        align-items: baseline;
+        margin-bottom: 5px;
+        font-size: 9pt;
+        font-weight: 850;
+      }
+
+      .print-key-answer {
+        margin: 6px 0 0;
+        color: #111827;
+        font-size: 9pt;
+        font-weight: 900;
       }
     }
   </style>
@@ -2016,16 +2075,28 @@
         .replace(/'/g, "&#039;");
     }
 
-    function printSegments(parts) {
-      return Array.from({ length: parts }, () => '<span class="print-segment"></span>').join("");
+    function printSegments(parts, options) {
+      const opts = options || {};
+      const filled = opts.filled || [];
+      const added = opts.added || [];
+      const removed = opts.removed || [];
+      const labels = opts.labels || [];
+      return Array.from({ length: parts }, (_, index) => {
+        let className = "print-segment";
+        if (filled.includes(index)) className += " fill";
+        if (added.includes(index)) className += " added";
+        if (removed.includes(index)) className += " removed";
+        return '<span class="' + className + '">' + escapeHtml(labels[index] || "") + '</span>';
+      }).join("");
     }
 
-    function printBar(parts, label, extraClass) {
+    function printBar(parts, label, extraClass, maxParts, options) {
       const className = extraClass ? " " + extraClass : "";
+      const widthStyle = maxParts ? " width: " + Math.max(8, (parts / maxParts) * 100) + "%;" : "";
       return '<div class="print-model-row">'
         + '<span class="print-model-label">' + escapeHtml(label) + '</span>'
-        + '<div class="print-bar' + className + '" style="grid-template-columns: repeat(' + parts + ', minmax(0, 1fr));">'
-        + printSegments(parts)
+        + '<div class="print-bar' + className + '" style="grid-template-columns: repeat(' + parts + ', minmax(0, 1fr));' + widthStyle + '">'
+        + printSegments(parts, options)
         + '</div>'
         + '</div>';
     }
@@ -2033,8 +2104,8 @@
     function printComparisonModel(problem) {
       const d = problem.data;
       return '<div class="print-model print-comparison">'
-        + printBar(1, d.smallerName, "short")
-        + printBar(d.multiplier, d.largerName, "")
+        + printBar(1, d.smallerName, "", d.multiplier)
+        + printBar(d.multiplier, d.largerName, "", d.multiplier)
         + '</div>';
     }
 
@@ -2083,21 +2154,152 @@
           + '</div>';
       }
       if (problem.kind === "reverseRatio") {
+        const maxParts = Math.max(d.a, d.b);
         if (d.caseType === "share") {
-          const knownLabel = d.knownSide === "first" ? "Known first" : "Known second";
           return '<div class="print-model">'
-            + printBar(d.totalParts, d.a + ":" + d.b)
-            + printBar(d.knownParts, knownLabel)
+            + printBar(d.a, "First", "", maxParts)
+            + printBar(d.b, "Second", "", maxParts)
             + '</div>';
         }
         return '<div class="print-model print-comparison">'
-          + printBar(d.a, "First", d.a < d.b ? "short" : "")
-          + printBar(d.b, "Second", d.b < d.a ? "short" : "")
+          + printBar(d.a, "First", "", maxParts)
+          + printBar(d.b, "Second", "", maxParts)
           + '</div>';
       }
       if (problem.kind === "comparison") return printComparisonModel(problem);
       if (problem.kind === "equation") return printEquationModel(problem);
       return "";
+    }
+
+    function indexRange(count, start) {
+      return Array.from({ length: count }, (_, index) => (start || 0) + index);
+    }
+
+    function labelParts(count, text) {
+      return Array.from({ length: count }, () => String(text));
+    }
+
+    function printAnswerKeyModel(problem) {
+      const d = problem.data;
+      if (problem.kind === "fraction") {
+        return '<div class="print-model">'
+          + printBar(d.den, "Whole", "", null, {
+            filled: indexRange(d.num),
+            labels: Array.from({ length: d.den }, (_, index) => index < d.num ? String(d.part) : "")
+          })
+          + '</div><p class="print-key-answer">' + escapeHtml(problem.answer) + '</p>';
+      }
+      if (problem.kind === "percentOf") {
+        return '<div class="print-model">'
+          + printBar(d.structure.total, "100%", "", null, {
+            filled: indexRange(d.structure.selected),
+            labels: Array.from({ length: d.structure.total }, (_, index) => index < d.structure.selected ? String(d.part) : "")
+          })
+          + '</div><p class="print-key-answer">' + escapeHtml(problem.answer) + '</p>';
+      }
+      if (problem.kind === "fractionChange") {
+        const isIncrease = d.direction === "increase";
+        const maxParts = Math.max(d.den, d.finalParts);
+        return '<div class="print-model">'
+          + printBar(d.den, "Original", "", maxParts, { labels: labelParts(d.den, d.part) })
+          + (isIncrease
+            ? printBar(d.finalParts, "Final", "", maxParts, {
+              filled: indexRange(d.den),
+              added: indexRange(d.num, d.den),
+              labels: labelParts(d.finalParts, d.part)
+            })
+            : printBar(d.den, "Remove", "", maxParts, {
+              filled: indexRange(d.finalParts),
+              removed: indexRange(d.num, d.finalParts),
+              labels: labelParts(d.den, d.part)
+            }))
+          + '</div><p class="print-key-answer">' + escapeHtml(problem.answer) + '</p>';
+      }
+      if (problem.kind === "percentChange") {
+        const isIncrease = d.direction === "increase";
+        const maxParts = Math.max(d.structure.total, d.finalParts);
+        return '<div class="print-model">'
+          + printBar(d.structure.total, "100%", "", maxParts, { labels: labelParts(d.structure.total, d.part) })
+          + (isIncrease
+            ? printBar(d.finalParts, "Final", "", maxParts, {
+              filled: indexRange(d.structure.total),
+              added: indexRange(d.structure.selected, d.structure.total),
+              labels: labelParts(d.finalParts, d.part)
+            })
+            : printBar(d.structure.total, "Remove", "", maxParts, {
+              filled: indexRange(d.finalParts),
+              removed: indexRange(d.structure.selected, d.finalParts),
+              labels: labelParts(d.structure.total, d.part)
+            }))
+          + '</div><p class="print-key-answer">' + escapeHtml(problem.answer) + '</p>';
+      }
+      if (problem.kind === "reversePercent") {
+        const maxParts = Math.max(d.finalParts, d.structure.total);
+        return '<div class="print-model">'
+          + printBar(d.finalParts, d.finalPercent + "%", "", maxParts, {
+            filled: indexRange(d.finalParts),
+            labels: labelParts(d.finalParts, d.part)
+          })
+          + printBar(d.structure.total, "100%", "", maxParts, {
+            filled: indexRange(d.structure.total),
+            labels: labelParts(d.structure.total, d.part)
+          })
+          + '</div><p class="print-key-answer">' + escapeHtml(problem.answer) + '</p>';
+      }
+      if (problem.kind === "ratio") {
+        return '<div class="print-model">'
+          + printBar(d.a + d.b, d.a + ":" + d.b, "", null, {
+            filled: indexRange(d.a),
+            added: indexRange(d.b, d.a),
+            labels: labelParts(d.a + d.b, d.part)
+          })
+          + '</div><p class="print-key-answer">' + escapeHtml(problem.answer) + '</p>';
+      }
+      if (problem.kind === "reverseRatio") {
+        const maxParts = Math.max(d.a, d.b);
+        if (d.caseType === "share") {
+          const knownIsFirst = d.knownSide === "first";
+          return '<div class="print-model">'
+            + printBar(d.a, "First", "", maxParts, {
+              filled: knownIsFirst ? indexRange(d.a) : [],
+              labels: labelParts(d.a, d.part)
+            })
+            + printBar(d.b, "Second", "", maxParts, {
+              filled: knownIsFirst ? [] : indexRange(d.b),
+              labels: labelParts(d.b, d.part)
+            })
+            + '</div><p class="print-key-answer">' + escapeHtml(problem.answer) + '</p>';
+        }
+        const shorter = Math.min(d.a, d.b);
+        return '<div class="print-model">'
+          + printBar(d.a, "First", "", maxParts, {
+            filled: indexRange(shorter),
+            added: d.a > d.b ? indexRange(d.differenceParts, shorter) : [],
+            labels: labelParts(d.a, d.part)
+          })
+          + printBar(d.b, "Second", "", maxParts, {
+            filled: indexRange(shorter),
+            added: d.b > d.a ? indexRange(d.differenceParts, shorter) : [],
+            labels: labelParts(d.b, d.part)
+          })
+          + '</div><p class="print-key-answer">' + escapeHtml(problem.answer) + '</p>';
+      }
+      if (problem.kind === "comparison") {
+        return '<div class="print-model print-comparison">'
+          + printBar(1, d.smallerName, "", d.multiplier, {
+            filled: [0],
+            labels: [String(d.unit)]
+          })
+          + printBar(d.multiplier, d.largerName, "", d.multiplier, {
+            filled: indexRange(d.multiplier),
+            labels: labelParts(d.multiplier, d.unit)
+          })
+          + '</div><p class="print-key-answer">' + escapeHtml(problem.answer) + '</p>';
+      }
+      if (problem.kind === "equation") {
+        return printEquationModel(problem) + '<p class="print-key-answer">' + escapeHtml(problem.answer) + '</p>';
+      }
+      return '<p class="print-key-answer">' + escapeHtml(problem.answer) + '</p>';
     }
 
     function practicePrompt(problem) {
@@ -2210,6 +2412,15 @@
           + '</div>'
           + '</article>';
       }).join("");
+      const keyHtml = questions.map((item, index) => {
+        return '<article class="print-key-item">'
+          + '<div class="print-key-head">'
+          + '<span class="print-number">' + (index + 1) + '</span>'
+          + '<span>' + escapeHtml(item.task.prompt) + '</span>'
+          + '</div>'
+          + printAnswerKeyModel(item.problem)
+          + '</article>';
+      }).join("");
       practicePrintRootEl.innerHTML = '<div class="print-sheet">'
         + '<header class="print-header">'
         + '<div>'
@@ -2225,11 +2436,30 @@
         + '</div>'
         + '</header>'
         + '<section class="print-grid">' + questionHtml + '</section>'
+        + '<section class="print-answer-key">'
+        + '<h2>Answer Key</h2>'
+        + '<p class="print-answer-note">Completed models show the bar structure and selected parts for teacher reference.</p>'
+        + '<div class="print-key-grid">' + keyHtml + '</div>'
+        + '</section>'
         + '<footer class="print-footer">Developed in Kaizen Maths</footer>'
         + '</div>';
     }
 
+    function practicePrintTitle() {
+      const mode = modeInfo(state.mode);
+      const cleanTitle = mode.title
+        .replace(/[^a-zA-Z0-9 ]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+      return cleanTitle + " Practice - Kaizen Maths";
+    }
+
     function createPracticePdf() {
+      const originalTitle = document.title;
+      document.title = practicePrintTitle();
+      window.addEventListener("afterprint", () => {
+        document.title = originalTitle;
+      }, { once: true });
       renderPracticePdf();
       window.setTimeout(() => window.print(), 80);
     }
