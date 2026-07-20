@@ -1836,10 +1836,19 @@
       const maxParts = Math.max(d.finalParts, d.structure.total);
       let rows = [];
       if (step === 0) {
-        rows.push(rowHtml("Original", barHtml(1, { fullLabel: "100%" })));
+        rows.push(rowHtml("Original", barHtml(d.structure.total, {
+          maxParts,
+          fullLabel: "100%"
+        })));
       } else if (step === 1) {
-        rows.push(rowHtml("Original", barHtml(1, { fullLabel: "100%" })));
-        rows.push(rowHtml(d.finalPercent + "%", barHtml(1, { fullLabel: String(d.final) })));
+        rows.push(rowHtml("Original", barHtml(d.structure.total, {
+          maxParts,
+          fullLabel: "100%"
+        })));
+        rows.push(rowHtml(d.finalPercent + "%", barHtml(d.finalParts, {
+          maxParts,
+          fullLabel: d.finalPercent + "% = " + d.final
+        })));
       } else {
         rows.push(rowHtml(d.finalPercent + "%", barHtml(d.finalParts, {
           maxParts,
