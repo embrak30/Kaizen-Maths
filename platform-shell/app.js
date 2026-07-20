@@ -2094,6 +2094,26 @@ const tools = [
     ]
   },
   {
+    slug: "area-models",
+    title: "Area Models",
+    category: "Classroom Tools",
+    level: "Primary / Elementary / KS3 / GCSE",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "Use teacher-led rectangular area models for arrays, partitioned multiplication, fractions, percentages, expanding brackets, and factorising.",
+    tags: ["classroom", "primary", "elementary", "area models", "arrays", "multiplication", "partitioning", "fractions", "percentages", "expanding brackets", "factorising", "algebra"],
+    toolPath: "tools/area-models/index.html?v=area-models-1",
+    imported: true,
+    teacherNotes: [
+      "Designed for live conceptual modelling with one example on screen at a time.",
+      "Use Next Step to reveal the rectangle, partitions, cell products, and final calculation gradually.",
+      "Modes cover arrays, partitioned multiplication, fractions of a whole, percentages of amounts, expanding brackets, factorising, and mixed practice.",
+      "Useful when pupils need to see why multiplication, expansion, or factorisation works before using a formal written method.",
+      "Use Practice PDF to create simple student sheets focused on completing area models before calculating."
+    ]
+  },
+  {
     slug: "word-search-builder",
     title: "Word Search Builder",
     category: "Classroom Tools",
@@ -2339,6 +2359,7 @@ const subjectToolGroups = {
     "classroom-displays": "Board Displays and Visuals",
     "elementary-manipulatives": "Board Displays and Visuals",
     "bar-models": "Board Displays and Visuals",
+    "area-models": "Board Displays and Visuals",
     "elementary-starter-board": "Starters and Retrieval",
     "elementary-maths-playground": "Starters and Retrieval",
     "fractions-table": "Starters and Retrieval",
@@ -2650,6 +2671,7 @@ const freeSampleTools = new Set([
   "averages-range",
   "classroom-displays",
   "bar-models",
+  "area-models",
   "elementary-starter-board",
   "elementary-maths-playground",
   "interface-guide"
@@ -7835,8 +7857,9 @@ const curatedRelatedToolSlugs = {
   "friction": ["newtons-second-law", "work-energy-power", "equations-of-motion", "moments"],
   "work-energy-power": ["friction", "newtons-second-law", "equations-of-motion", "motion-graphs-constant-acceleration"],
   "word-search-builder": ["fractions-table", "elementary-starter-board", "elementary-maths-playground", "classroom-displays"],
-  "bar-models": ["elementary-manipulatives", "elementary-maths-playground", "fractions-table", "ratio-proportion"],
-  "elementary-maths-playground": ["bar-models", "elementary-starter-board", "elementary-manipulatives", "fractions-table"],
+  "bar-models": ["area-models", "elementary-manipulatives", "elementary-maths-playground", "ratio-proportion"],
+  "area-models": ["bar-models", "elementary-manipulatives", "fractions-practice", "algebraic-simplification"],
+  "elementary-maths-playground": ["bar-models", "area-models", "elementary-starter-board", "elementary-manipulatives"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
   "circle-theorems": ["missing-angles", "circles-area-circumference", "sectors-arc-length", "trigonometric-ratios"],
   "earth-geometry": ["bearings", "trigonometric-ratios", "circles-area-circumference", "sectors-arc-length"],
@@ -8513,6 +8536,23 @@ function toolInsightProfile(tool) {
         "How does the bar change when the problem describes an increase, decrease, comparison, or reverse percentage?",
         "Where is the unknown shown in the model, and what operation will isolate it?",
         "How could a pupil use the same bar model to explain the calculation without relying on a memorised rule?"
+      ]
+    },
+    {
+      match: () => tool.slug === "area-models" || has("area models", "arrays", "partitioned multiplication"),
+      misconceptions: [
+        "Counting the squares one by one when the structure is intended to show multiplication as rows multiplied by columns.",
+        "Partitioning one side of a rectangle but forgetting that every part on one side must multiply every part on the other side.",
+        "Treating the area model as a drawing only, rather than using each cell to justify a partial product or algebraic term.",
+        "Expanding brackets without collecting like terms after all cell products have been found.",
+        "Factorising from an area model without checking that the middle terms add to the original coefficient."
+      ],
+      questions: [
+        "What does each side length or side label represent in this model?",
+        "How does the total area prove the multiplication, expansion, or factorisation step?",
+        "Which cell would be missing if we only multiplied the first terms in two brackets?",
+        "How can the same rectangle show both the expanded expression and the factorised expression?",
+        "What changes in the model when we move from numerical area to algebraic area?"
       ]
     },
     {

@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Area Models | Kaizen Maths</title>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+  <script src="../../auth-config.js?v=tool-access-guard-2"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-2"></script>
+  <style>
+    :root {
+      --ink: #16213f;
+      --muted: #64718d;
+      --line: #d8e4ee;
+      --paper: #ffffff;
+      --soft: #f8fbff;
+      --teal: #18b8ad;
+      --teal-dark: #087a76;
+      --blue: #2f80ed;
+      --purple: #7048e8;
+      --orange: #ff8a1f;
+      --rose: #ef476f;
+      --green: #20b26b;
+      --yellow: #ffd166;
+      --math-font: "KaTeX_Math", "KaTeX_Main", "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+      --ui-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --shadow: 0 18px 42px rgba(19, 39, 74, 0.16);
+      --soft-shadow: 0 10px 26px rgba(19, 39, 74, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: var(--ui-font);
+      color: var(--ink);
+      background:
+        linear-gradient(120deg, rgba(24, 184, 173, 0.13), rgba(255, 138, 31, 0.10)),
+        repeating-linear-gradient(135deg, rgba(47, 128, 237, 0.05) 0 1px, transparent 1px 28px),
+        #f8fcff;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1001;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      padding: 14px 8px;
+      border-radius: 0 12px 12px 0;
+      background: linear-gradient(180deg, var(--purple), var(--teal));
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      box-shadow: 0 8px 20px rgba(20, 25, 60, 0.24);
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      background: rgba(5, 10, 30, 0.42);
+      transition: opacity 180ms ease;
+    }
+
+    .sidebar-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 -390px;
+      z-index: 1000;
+      width: min(390px, 88vw);
+      background: #fff;
+      box-shadow: 12px 0 34px rgba(12, 20, 45, 0.24);
+      transition: left 180ms ease;
+      overflow-y: auto;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-header {
+      padding: 22px 24px;
+      color: #fff;
+      font-weight: 950;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .sidebar-content {
+      padding: 22px 24px 28px;
+      line-height: 1.55;
+    }
+
+    .sidebar-content h3 {
+      margin: 18px 0 8px;
+      color: var(--teal-dark);
+      font-size: 1rem;
+    }
+
+    .sidebar-content p,
+    .sidebar-content li {
+      margin: 0 0 8px;
+      color: #44516c;
+    }
+
+    .sidebar-content ul {
+      margin: 0 0 12px;
+      padding-left: 20px;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 10px;
+      padding: 12px 16px 14px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
+      gap: 10px;
+      align-items: center;
+      min-height: 68px;
+      padding: 9px 12px;
+      border: 1px solid rgba(24, 184, 173, 0.22);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(232, 252, 249, 0.92)),
+        linear-gradient(90deg, rgba(24, 184, 173, 0.12), rgba(255, 138, 31, 0.10));
+      box-shadow: var(--soft-shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      flex: 0 0 50px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      font-size: 1.15rem;
+      background: linear-gradient(135deg, var(--purple), var(--teal));
+      box-shadow: 0 12px 22px rgba(24, 184, 173, 0.26);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.2rem, 2vw, 1.68rem);
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-weight: 750;
+      font-size: clamp(0.72rem, 0.92vw, 0.86rem);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 6px;
+      justify-content: stretch;
+      align-items: center;
+    }
+
+    .action-btn {
+      width: 100%;
+      min-height: 38px;
+      padding: 8px 6px;
+      border-radius: 11px;
+      font-size: clamp(0.66rem, 0.78vw, 0.84rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid rgba(22, 33, 63, 0.12);
+      box-shadow: 0 6px 14px rgba(19, 39, 74, 0.08);
+      transition: transform 90ms ease, background 150ms ease, box-shadow 150ms ease;
+    }
+
+    .action-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(19, 39, 74, 0.12);
+    }
+
+    .action-btn.new-action {
+      color: #fff;
+      border-color: rgba(32, 178, 107, 0.34);
+      background: linear-gradient(135deg, #20b26b, #087a76);
+      box-shadow: 0 10px 20px rgba(32, 178, 107, 0.20);
+    }
+
+    .action-btn.primary {
+      color: #fff;
+      border-color: rgba(24, 184, 173, 0.28);
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .action-btn.answer {
+      color: #fff;
+      border-color: rgba(239, 71, 111, 0.24);
+      background: linear-gradient(135deg, var(--rose), var(--orange));
+    }
+
+    .mode-strip {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      min-height: 48px;
+    }
+
+    .mode-btn {
+      min-width: 0;
+      padding: 10px 8px;
+      border-radius: 14px;
+      color: #25304f;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(47, 128, 237, 0.14);
+      box-shadow: 0 6px 16px rgba(19, 39, 74, 0.07);
+      font-size: clamp(0.66rem, 0.82vw, 0.86rem);
+      font-weight: 950;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: transform 90ms ease, background 150ms ease, color 150ms ease;
+    }
+
+    .mode-btn:hover {
+      transform: translateY(-1px);
+      background: #fff4e7;
+      color: #a14700;
+      border-color: rgba(255, 138, 31, 0.45);
+    }
+
+    .mode-btn.active {
+      color: #fff;
+      background: linear-gradient(135deg, var(--orange), var(--rose));
+      border-color: rgba(239, 71, 111, 0.38);
+    }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+      gap: 12px;
+    }
+
+    .board,
+    .step-panel {
+      min-height: 0;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(22, 33, 63, 0.10);
+      box-shadow: var(--shadow);
+    }
+
+    .board {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+    }
+
+    .prompt-band {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 18px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(22, 33, 63, 0.90), rgba(47, 128, 237, 0.78)),
+        linear-gradient(90deg, var(--teal), var(--purple));
+    }
+
+    .prompt-title {
+      margin: 0 0 5px;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.82;
+      font-weight: 950;
+    }
+
+    .prompt {
+      margin: 0;
+      font-size: clamp(1.08rem, 2.25vw, 1.7rem);
+      line-height: 1.22;
+      font-weight: 900;
+    }
+
+    .math-text {
+      font-family: var(--math-font);
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .answer-pill {
+      min-width: 178px;
+      max-width: 320px;
+      border-radius: 18px;
+      padding: 10px 14px;
+      color: var(--ink);
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+      font-weight: 950;
+      border: 2px solid rgba(255, 209, 102, 0.95);
+    }
+
+    .answer-pill small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 2px;
+    }
+
+    .model-wrap {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      overflow: hidden;
+    }
+
+    .model-card {
+      width: min(100%, 860px);
+      height: min(100%, 560px);
+      display: grid;
+      place-items: center;
+      padding: clamp(12px, 2vw, 24px);
+      border-radius: 20px;
+      border: 1px solid rgba(47, 128, 237, 0.12);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(241, 253, 250, 0.92)),
+        repeating-linear-gradient(135deg, rgba(47, 128, 237, 0.035) 0 1px, transparent 1px 26px);
+      overflow: hidden;
+    }
+
+    .visual {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      gap: 12px;
+    }
+
+    .empty-model {
+      width: min(70%, 560px);
+      height: min(55%, 300px);
+      border: 4px solid #172033;
+      background: rgba(255, 255, 255, 0.72);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .empty-model .side,
+    .area-shell .side,
+    .partition-shell .side {
+      position: absolute;
+      color: #172033;
+      font-weight: 950;
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      font-family: var(--math-font);
+      background: rgba(255, 255, 255, 0.82);
+      padding: 2px 7px;
+    }
+
+    .side.top {
+      top: -42px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .side.left {
+      left: -48px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .whole-label {
+      color: #1f334d;
+      font-family: var(--math-font);
+      font-size: clamp(1.2rem, 2.7vw, 2rem);
+      font-weight: 500;
+    }
+
+    .area-shell {
+      position: relative;
+      width: min(82%, 690px);
+      height: min(72%, 390px);
+      display: grid;
+      place-items: stretch;
+      padding: 0;
+    }
+
+    .array-grid {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+      grid-template-rows: repeat(var(--rows), minmax(0, 1fr));
+      border: 4px solid #172033;
+      background: #fff;
+    }
+
+    .array-cell,
+    .strip-cell,
+    .partition-cell {
+      border: 1.5px solid #9fb6c8;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .array-cell.marked,
+    .strip-cell.marked {
+      background: rgba(24, 184, 173, 0.24);
+    }
+
+    .array-cell:nth-child(4n + 1),
+    .strip-cell:nth-child(4n + 1) {
+      background-color: rgba(255, 209, 102, 0.20);
+    }
+
+    .array-cell.marked:nth-child(4n + 1),
+    .strip-cell.marked:nth-child(4n + 1) {
+      background: rgba(24, 184, 173, 0.30);
+    }
+
+    .partition-shell {
+      position: relative;
+      width: min(86%, 720px);
+      height: min(74%, 420px);
+      padding: 0;
+    }
+
+    .partition-grid {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      border: 4px solid #172033;
+      background: #fff;
+    }
+
+    .partition-cell {
+      display: grid;
+      place-items: center;
+      color: #172033;
+      background: rgba(24, 184, 173, 0.12);
+      font-family: var(--math-font);
+      font-size: clamp(1.05rem, 2.4vw, 2rem);
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .partition-cell.hot {
+      background: rgba(255, 209, 102, 0.48);
+      border-color: #172033;
+    }
+
+    .top-labels,
+    .left-labels {
+      position: absolute;
+      display: grid;
+      color: #172033;
+      font-family: var(--math-font);
+      font-size: clamp(0.9rem, 1.8vw, 1.35rem);
+      font-weight: 500;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .top-labels {
+      left: 0;
+      right: 0;
+      top: -42px;
+      grid-template-columns: var(--label-columns);
+    }
+
+    .left-labels {
+      top: 0;
+      bottom: 0;
+      left: -58px;
+      grid-template-rows: var(--label-rows);
+      align-items: center;
+    }
+
+    .fraction-strip {
+      width: min(90%, 760px);
+      height: min(46%, 250px);
+      display: grid;
+      grid-template-columns: repeat(var(--parts), minmax(0, 1fr));
+      border: 4px solid #172033;
+      background: #fff;
+    }
+
+    .strip-cell {
+      display: grid;
+      place-items: center;
+      color: #172033;
+      font-family: var(--math-font);
+      font-size: clamp(0.92rem, 1.8vw, 1.4rem);
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .strip-cell.selected {
+      background: rgba(32, 178, 107, 0.33);
+    }
+
+    .strip-cell.unit {
+      background: rgba(255, 209, 102, 0.35);
+    }
+
+    .model-caption {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: clamp(0.82rem, 1.2vw, 1rem);
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .algebra-grid {
+      width: min(86%, 720px);
+      height: min(72%, 420px);
+      display: grid;
+      grid-template-columns: var(--grid-columns);
+      grid-template-rows: var(--grid-rows);
+      border: 4px solid #172033;
+      background: #fff;
+    }
+
+    .step-panel {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+    }
+
+    .step-head {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid rgba(22, 33, 63, 0.08);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 253, 250, 0.82));
+    }
+
+    .step-label {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--teal));
+      font-size: 0.78rem;
+      font-weight: 950;
+    }
+
+    .step-head h2 {
+      margin: 10px 0 0;
+      font-size: clamp(1.08rem, 1.8vw, 1.38rem);
+      line-height: 1.15;
+    }
+
+    .step-body {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 16px 18px;
+    }
+
+    .step-note {
+      margin: 0 0 14px;
+      color: #43516d;
+      font-size: clamp(0.9rem, 1.2vw, 1rem);
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .calculation {
+      margin: 0 0 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #fff8e6;
+      border: 1px solid rgba(255, 138, 31, 0.28);
+      color: #16213f;
+      font-family: var(--math-font);
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      font-weight: 500;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .teacher-prompt {
+      margin: 0;
+      padding: 12px 14px;
+      border-left: 5px solid var(--teal);
+      background: rgba(24, 184, 173, 0.10);
+      color: #214257;
+      font-size: 0.92rem;
+      font-weight: 760;
+      line-height: 1.4;
+    }
+
+    .step-foot {
+      padding: 12px 18px 16px;
+      border-top: 1px solid rgba(22, 33, 63, 0.08);
+      display: grid;
+      gap: 8px;
+    }
+
+    .progress {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(47, 128, 237, 0.12);
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: var(--progress);
+      background: linear-gradient(90deg, var(--teal), var(--orange));
+      transition: width 160ms ease;
+    }
+
+    @media (max-width: 920px) {
+      html,
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .topbar,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .actions,
+      .mode-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .model-card {
+        min-height: 420px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        overflow: visible;
+      }
+
+      .teacher-tab,
+      .sidebar,
+      .sidebar-overlay,
+      .topbar,
+      .mode-strip,
+      .step-panel {
+        display: none !important;
+      }
+
+      .app,
+      .workspace,
+      .board {
+        display: block;
+        height: auto;
+        padding: 0;
+        box-shadow: none;
+        border: 0;
+      }
+
+      .prompt-band {
+        color: #111;
+        background: #fff;
+        border-bottom: 2px solid #111;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="teacher-tab" type="button" onclick="toggleSidebar()">TEACHER NOTES</button>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Area Models</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>Use area models to connect multiplication, fractions, percentages, expanding brackets, and factorising to a visible rectangular structure.</p>
+      <h3>Teaching Flow</h3>
+      <ul>
+        <li>Start with the rectangle before revealing calculations.</li>
+        <li>Ask what the sides or partitions represent.</li>
+        <li>Reveal one step at a time so pupils connect each cell to a product or part of a whole.</li>
+        <li>Move from the visual model to the formal written calculation.</li>
+      </ul>
+      <h3>Good Questions</h3>
+      <ul>
+        <li>What does each side length tell us?</li>
+        <li>Why must the smaller rectangles add to the total area?</li>
+        <li>Which parts of the model are equal, and which parts are different?</li>
+        <li>How does this area model explain the algebraic method?</li>
+      </ul>
+      <h3>Common Misconceptions</h3>
+      <ul>
+        <li>Adding side lengths instead of multiplying to find area.</li>
+        <li>Partitioning one side correctly but forgetting to multiply every pair of partitions.</li>
+        <li>Forgetting to collect like terms after expanding brackets.</li>
+        <li>Using an area model decoratively without checking that each cell has a meaning.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="app">
+    <section class="topbar">
+      <div class="brand">
+        <div class="logo">AM</div>
+        <div>
+          <h1>Area Models</h1>
+          <p class="subtitle">Arrays, partitioned multiplication, fractions, percentages, expanding brackets, and factorising.</p>
+        </div>
+      </div>
+      <div class="actions" aria-label="Tool controls">
+        <button class="action-btn new-action" id="newBtn" type="button">New</button>
+        <button class="action-btn" id="backBtn" type="button">Back</button>
+        <button class="action-btn primary" id="nextBtn" type="button">Next Step</button>
+        <button class="action-btn answer" id="answerBtn" type="button">Reveal Answer</button>
+        <button class="action-btn" id="resetBtn" type="button">Reset Model</button>
+        <button class="action-btn" id="practiceBtn" type="button">Practice PDF</button>
+      </div>
+    </section>
+
+    <section class="mode-strip" id="modeStrip" aria-label="Area model modes"></section>
+
+    <section class="workspace">
+      <article class="board">
+        <div class="prompt-band">
+          <div>
+            <p class="prompt-title" id="modeTitle">Area Model</p>
+            <p class="prompt" id="promptText">Use the model to represent the calculation.</p>
+          </div>
+          <div class="answer-pill" id="answerText" hidden>
+            <small>Answer</small>
+            <span></span>
+          </div>
+        </div>
+        <div class="model-wrap">
+          <div class="model-card" id="modelCard"></div>
+        </div>
+      </article>
+
+      <aside class="step-panel">
+        <div class="step-head">
+          <span class="step-label" id="stepLabel">Step 1</span>
+          <h2 id="stepTitle">Read the structure</h2>
+        </div>
+        <div class="step-body">
+          <p class="step-note" id="stepNote"></p>
+          <div class="calculation" id="calculation"></div>
+          <p class="teacher-prompt" id="teacherPrompt"></p>
+        </div>
+        <div class="step-foot">
+          <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const X = "𝑥";
+
+    const modes = [
+      {
+        id: "multiplication",
+        label: "Arrays",
+        title: "Arrays and Multiplication",
+        description: "Represent multiplication as rows, columns, and equal square units."
+      },
+      {
+        id: "partition",
+        label: "Partition Multiply",
+        title: "Partitioned Multiplication",
+        description: "Break two numbers into parts, multiply each pair, then add the partial products."
+      },
+      {
+        id: "fractionArea",
+        label: "Fractions",
+        title: "Fraction Area Models",
+        description: "Represent fractions as equal parts of one whole rectangle."
+      },
+      {
+        id: "percentageArea",
+        label: "Percentages",
+        title: "Percentage Area Models",
+        description: "Use a divided whole to find useful percentages of an amount."
+      },
+      {
+        id: "expand",
+        label: "Expand",
+        title: "Expanding Brackets",
+        description: "Use each cell of an area model to multiply every part by every part."
+      },
+      {
+        id: "factorise",
+        label: "Factorise",
+        title: "Factorising with Area",
+        description: "Use the completed area model to recover the dimensions of a quadratic expression."
+      },
+      {
+        id: "mixed",
+        label: "Mixed",
+        title: "Mixed Area Models",
+        description: "Generate a mixed teacher-led model from the area model collection."
+      }
+    ];
+
+    const state = {
+      mode: "multiplication",
+      problem: null,
+      stepIndex: 0,
+      answerVisible: false
+    };
+
+    const refs = {
+      modeStrip: document.getElementById("modeStrip"),
+      modeTitle: document.getElementById("modeTitle"),
+      promptText: document.getElementById("promptText"),
+      answerText: document.getElementById("answerText"),
+      modelCard: document.getElementById("modelCard"),
+      stepLabel: document.getElementById("stepLabel"),
+      stepTitle: document.getElementById("stepTitle"),
+      stepNote: document.getElementById("stepNote"),
+      calculation: document.getElementById("calculation"),
+      teacherPrompt: document.getElementById("teacherPrompt"),
+      progressBar: document.getElementById("progressBar"),
+      newBtn: document.getElementById("newBtn"),
+      backBtn: document.getElementById("backBtn"),
+      nextBtn: document.getElementById("nextBtn"),
+      answerBtn: document.getElementById("answerBtn"),
+      resetBtn: document.getElementById("resetBtn"),
+      practiceBtn: document.getElementById("practiceBtn")
+    };
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function choice(items) {
+      return items[randInt(0, items.length - 1)];
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function frac(n, d) {
+      return `<span class="math-text"><span style="display:inline-flex;flex-direction:column;align-items:center;line-height:1.05;vertical-align:middle;"><span>${n}</span><span style="width:100%;min-width:1.2em;border-top:1.7px solid currentColor;margin:0.08em 0;"></span><span>${d}</span></span></span>`;
+    }
+
+    function step(title, note, calculation, teacherPrompt) {
+      return { title, note, calculation, teacherPrompt };
+    }
+
+    function formatXTerm(coefficient = 1) {
+      if (coefficient === 1) return X;
+      if (coefficient === -1) return `-${X}`;
+      return `${coefficient}${X}`;
+    }
+
+    function formatConstant(value, { leading = false } = {}) {
+      if (leading) return `${value}`;
+      return value >= 0 ? `+ ${value}` : `- ${Math.abs(value)}`;
+    }
+
+    function productOfTerms(a, b) {
+      const ax = a.kind === "x";
+      const bx = b.kind === "x";
+      const coeff = a.coeff * b.coeff;
+      if (ax && bx) {
+        if (coeff === 1) return `${X}²`;
+        return `${coeff}${X}²`;
+      }
+      if (ax || bx) {
+        if (coeff === 1) return X;
+        return `${coeff}${X}`;
+      }
+      return String(coeff);
+    }
+
+    function termText(term) {
+      if (term.kind === "x") return formatXTerm(term.coeff);
+      return String(term.coeff);
+    }
+
+    function expressionText(terms) {
+      return terms.map((term, index) => {
+        const text = termText(term);
+        if (index === 0) return text;
+        return term.coeff >= 0 ? `+ ${text}` : `- ${text.replace("-", "")}`;
+      }).join(" ");
+    }
+
+    function simplifyQuadratic(c2, c1, c0) {
+      const pieces = [];
+      if (c2) pieces.push(c2 === 1 ? `${X}²` : `${c2}${X}²`);
+      if (c1) pieces.push(c1 > 0 && pieces.length ? `+ ${formatXTerm(c1)}` : formatXTerm(c1));
+      if (c0) pieces.push(c0 > 0 && pieces.length ? `+ ${c0}` : String(c0));
+      return pieces.join(" ");
+    }
+
+    function makeMultiplicationProblem() {
+      const rows = randInt(3, 9);
+      const cols = randInt(3, 9);
+      const answer = rows * cols;
+      return {
+        mode: "multiplication",
+        prompt: `Use an area model to represent <span class="math-text">${rows} × ${cols}</span>.`,
+        answer: `<span class="math-text">${rows} × ${cols} = ${answer}</span>`,
+        rows,
+        cols,
+        steps: [
+          step("Identify the side lengths.", `The factors ${rows} and ${cols} become the side lengths of the rectangle.`, `<span class="math-text">${rows} by ${cols}</span>`, "Ask: Which number tells us the rows, and which number tells us the columns?"),
+          step("Draw equal square units.", `Split the rectangle into ${rows} rows and ${cols} columns.`, `<span class="math-text">${rows} rows and ${cols} columns</span>`, "Ask pupils to predict whether counting by rows or by columns will be quicker."),
+          step("Use multiplication instead of counting one by one.", `There are ${rows} groups of ${cols} equal squares.`, `<span class="math-text">${rows} × ${cols} = ${answer}</span>`, "Ask: How does the array prove the multiplication fact?"),
+          step("State the total area.", "The total number of square units is the product.", `<span class="math-text">Area = ${answer} square units</span>`, "Connect this final line to the rectangle: every small square has been counted exactly once.")
+        ]
+      };
+    }
+
+    function makePartitionProblem() {
+      const tensA = choice([20, 30, 40, 50]);
+      const onesA = randInt(2, 9);
+      const tensB = choice([10, 20, 30]);
+      const onesB = randInt(2, 9);
+      const a = tensA + onesA;
+      const b = tensB + onesB;
+      const partials = [
+        tensA * tensB,
+        onesA * tensB,
+        tensA * onesB,
+        onesA * onesB
+      ];
+      const answer = a * b;
+      return {
+        mode: "partition",
+        prompt: `Use an area model to calculate <span class="math-text">${a} × ${b}</span>.`,
+        answer: `<span class="math-text">${a} × ${b} = ${answer}</span>`,
+        topParts: [tensA, onesA],
+        sideParts: [tensB, onesB],
+        cells: partials,
+        steps: [
+          step("Partition both factors.", "Break each number into tens and ones so every part can be multiplied.", `<span class="math-text">${a} = ${tensA} + ${onesA}<br>${b} = ${tensB} + ${onesB}</span>`, "Ask: Why does partitioning make the multiplication easier?"),
+          step("Multiply the tens parts.", "Start with the large rectangle formed by the tens parts.", `<span class="math-text">${tensA} × ${tensB} = ${partials[0]}</span>`, "Ask: Where is this product shown in the area model?"),
+          step("Multiply the top ones by the side tens.", "Every column part must multiply every row part.", `<span class="math-text">${onesA} × ${tensB} = ${partials[1]}</span>`, "Ask: Which cell would be missing if we forgot this product?"),
+          step("Multiply the top tens by the side ones.", "The other side strip gives another partial product.", `<span class="math-text">${tensA} × ${onesB} = ${partials[2]}</span>`, "Ask pupils to explain why this is different from the previous cell."),
+          step("Multiply the ones parts.", "Complete the final small rectangle.", `<span class="math-text">${onesA} × ${onesB} = ${partials[3]}</span>`, "Ask: Why is this cell usually the smallest area?"),
+          step("Add the partial products.", "The whole rectangle is made from the four smaller areas.", `<span class="math-text">${partials.join(" + ")} = ${answer}</span>`, "Ask: How does the area model prevent us from missing a product?")
+        ]
+      };
+    }
+
+    function makeFractionProblem() {
+      const den = choice([3, 4, 5, 6, 8]);
+      const num = randInt(1, den - 1);
+      return {
+        mode: "fractionArea",
+        prompt: `Use an area model to show ${frac(num, den)} of a whole.`,
+        answer: `${frac(num, den)} of the whole is shaded.`,
+        numerator: num,
+        denominator: den,
+        steps: [
+          step("Start with one whole.", "The rectangle represents one complete whole before it is divided.", `<span class="math-text">Whole = 1</span>`, "Ask: What does the whole rectangle stand for in this question?"),
+          step("Use the denominator.", `Divide the whole into ${den} equal parts because the denominator is ${den}.`, `${frac(1, den)} each`, "Ask: Why must all parts be equal?"),
+          step("Use the numerator.", `Select ${num} of the equal parts because the numerator is ${num}.`, `${frac(num, den)}`, "Ask pupils to say what each shaded part is worth before combining them."),
+          step("Describe the shaded area.", "The selected parts together make the required fraction of the whole.", `${frac(num, den)} of 1 whole`, "Ask: How would the model change if the numerator increased by 1?")
+        ]
+      };
+    }
+
+    function makePercentageProblem() {
+      const options = [
+        { percent: 10, den: 10, num: 1 },
+        { percent: 20, den: 5, num: 1 },
+        { percent: 25, den: 4, num: 1 },
+        { percent: 30, den: 10, num: 3 },
+        { percent: 40, den: 5, num: 2 },
+        { percent: 50, den: 2, num: 1 },
+        { percent: 60, den: 5, num: 3 },
+        { percent: 75, den: 4, num: 3 }
+      ];
+      const option = choice(options);
+      const onePart = randInt(4, 16);
+      const total = onePart * option.den;
+      const answer = onePart * option.num;
+      return {
+        mode: "percentageArea",
+        prompt: `Use an area model to find <span class="math-text">${option.percent}%</span> of <span class="math-text">${total}</span>.`,
+        answer: `<span class="math-text">${option.percent}% of ${total} = ${answer}</span>`,
+        percent: option.percent,
+        denominator: option.den,
+        numerator: option.num,
+        total,
+        onePart,
+        steps: [
+          step("Start with the whole amount.", `The full rectangle represents 100%, which is ${total}.`, `<span class="math-text">100% = ${total}</span>`, "Ask: Why is the whole amount the starting point?"),
+          step("Divide into useful equal parts.", `Divide by ${option.den} because ${option.percent}% can be made from ${option.num} out of ${option.den} equal parts.`, `<span class="math-text">${total} ÷ ${option.den} = ${onePart}</span>`, "Ask: What percentage does one part represent?"),
+          step("Select the required percentage.", `${option.percent}% is ${option.num} of these equal parts.`, `<span class="math-text">${option.num} × ${onePart} = ${answer}</span>`, "Ask pupils to point to the selected parts before accepting the answer."),
+          step("State the value.", "The selected area gives the required percentage of the amount.", `<span class="math-text">${option.percent}% of ${total} = ${answer}</span>`, "Ask: How could this same model help with a related percentage such as double or half?")
+        ]
+      };
+    }
+
+    function makeExpandProblem() {
+      const leftCoeff = choice([1, 1, 2, 3]);
+      const a = randInt(2, 8);
+      const b = randInt(2, 8);
+      const top = [{ kind: "x", coeff: leftCoeff }, { kind: "n", coeff: a }];
+      const side = [{ kind: "x", coeff: 1 }, { kind: "n", coeff: b }];
+      const cells = [
+        productOfTerms(top[0], side[0]),
+        productOfTerms(top[1], side[0]),
+        productOfTerms(top[0], side[1]),
+        productOfTerms(top[1], side[1])
+      ];
+      const c2 = leftCoeff;
+      const c1 = a + leftCoeff * b;
+      const c0 = a * b;
+      const expression = simplifyQuadratic(c2, c1, c0);
+      const leftFactor = `(${expressionText(top)})`;
+      const sideFactor = `(${expressionText(side)})`;
+      return {
+        mode: "expand",
+        prompt: `Use an area model to expand <span class="math-text">${leftFactor}${sideFactor}</span>.`,
+        answer: `<span class="math-text">${leftFactor}${sideFactor} = ${expression}</span>`,
+        topParts: top.map(termText),
+        sideParts: side.map(termText),
+        cells,
+        combined: expression,
+        steps: [
+          step("Place one bracket on each side.", "Each part of one bracket must multiply each part of the other bracket.", `<span class="math-text">${leftFactor}${sideFactor}</span>`, "Ask: Why will this model have four cells?"),
+          step("Multiply the first pair.", "Fill the cell where the first terms meet.", `<span class="math-text">${termText(top[0])} × ${termText(side[0])} = ${cells[0]}</span>`, "Ask pupils to check the power of the variable."),
+          step("Multiply across the first row.", "Now multiply the constant part by the variable part.", `<span class="math-text">${termText(top[1])} × ${termText(side[0])} = ${cells[1]}</span>`, "Ask: What makes this term a variable term rather than a constant?"),
+          step("Multiply down the first column.", "Use the remaining variable by constant product.", `<span class="math-text">${termText(top[0])} × ${termText(side[1])} = ${cells[2]}</span>`, "Ask pupils to compare this with the previous variable term."),
+          step("Multiply the constant parts.", "Complete the final cell.", `<span class="math-text">${termText(top[1])} × ${termText(side[1])} = ${cells[3]}</span>`, "Ask: Which cell gives the constant in the final expression?"),
+          step("Collect like terms.", "Add the four areas and combine the variable terms.", `<span class="math-text">${cells.join(" + ")} = ${expression}</span>`, "Ask: Which terms are like terms, and why?")
+        ]
+      };
+    }
+
+    function makeFactoriseProblem() {
+      const a = randInt(2, 8);
+      const b = randInt(2, 8);
+      const middle = a + b;
+      const constant = a * b;
+      const expression = `${X}² + ${middle}${X} + ${constant}`;
+      return {
+        mode: "factorise",
+        prompt: `Use an area model to factorise <span class="math-text">${expression}</span>.`,
+        answer: `<span class="math-text">${expression} = (${X} + ${a})(${X} + ${b})</span>`,
+        topParts: [X, String(a)],
+        sideParts: [X, String(b)],
+        cells: [`${X}²`, `${a}${X}`, `${b}${X}`, String(constant)],
+        expression,
+        steps: [
+          step("Place the first and last terms.", "Put the square term and the constant term into opposite corners of the area model.", `<span class="math-text">${X}² and ${constant}</span>`, "Ask: Why are these the easiest cells to place first?"),
+          step("Split the middle term.", `Find two terms that add to ${middle}${X} and multiply to ${constant}${X}².`, `<span class="math-text">${a}${X} + ${b}${X} = ${middle}${X}</span>`, "Ask pupils to justify both the sum and product checks."),
+          step("Complete the four cells.", "The four cells now show the expanded form before it is factorised.", `<span class="math-text">${X}² + ${a}${X} + ${b}${X} + ${constant}</span>`, "Ask: How can we check that the four cells still represent the original expression?"),
+          step("Read the dimensions.", "The common factors across the rows and columns give the side lengths.", `<span class="math-text">${X}, ${a}, ${X}, ${b}</span>`, "Ask pupils to explain where each side label comes from."),
+          step("Write the factorised form.", "The side lengths form the two brackets.", `<span class="math-text">${expression} = (${X} + ${a})(${X} + ${b})</span>`, "Ask: How could expanding the answer prove that the factorisation is correct?")
+        ]
+      };
+    }
+
+    function makeProblem(mode = state.mode) {
+      const actualMode = mode === "mixed"
+        ? choice(["multiplication", "partition", "fractionArea", "percentageArea", "expand", "factorise"])
+        : mode;
+      const makers = {
+        multiplication: makeMultiplicationProblem,
+        partition: makePartitionProblem,
+        fractionArea: makeFractionProblem,
+        percentageArea: makePercentageProblem,
+        expand: makeExpandProblem,
+        factorise: makeFactoriseProblem
+      };
+      return makers[actualMode]();
+    }
+
+    function cellList(count, className, content = () => "") {
+      return Array.from({ length: count }, (_, index) => `<div class="${className}">${content(index)}</div>`).join("");
+    }
+
+    function renderMultiplication(problem, stepIndex) {
+      if (stepIndex === 0) {
+        return `
+          <div class="visual">
+            <div class="empty-model">
+              <span class="side top">${problem.cols}</span>
+              <span class="side left">${problem.rows}</span>
+              <span class="whole-label">Area?</span>
+            </div>
+            <div class="model-caption">Begin with a rectangle whose side lengths match the factors.</div>
+          </div>`;
+      }
+      const marked = stepIndex >= 2 ? " marked" : "";
+      return `
+        <div class="visual">
+          <div class="area-shell">
+            <span class="side top">${problem.cols} columns</span>
+            <span class="side left">${problem.rows} rows</span>
+            <div class="array-grid" style="--cols:${problem.cols};--rows:${problem.rows};">
+              ${cellList(problem.rows * problem.cols, `array-cell${marked}`)}
+            </div>
+          </div>
+          <div class="model-caption">${stepIndex >= 3 ? `${problem.rows * problem.cols} equal squares in total` : "Each small square is one unit of area."}</div>
+        </div>`;
+    }
+
+    function renderPartition(problem, stepIndex) {
+      const cells = problem.cells.map((value, index) => {
+        const visible = stepIndex > index;
+        const hot = stepIndex === index + 1 ? " hot" : "";
+        return `<div class="partition-cell${hot}">${visible ? value : ""}</div>`;
+      }).join("");
+      const columns = `${Math.max(problem.topParts[0], 10)}fr ${Math.max(problem.topParts[1] * 2, 10)}fr`;
+      const rows = `${Math.max(problem.sideParts[0], 10)}fr ${Math.max(problem.sideParts[1] * 2, 10)}fr`;
+      return `
+        <div class="visual">
+          <div class="partition-shell">
+            <div class="top-labels" style="--label-columns:${columns};">
+              <span>${problem.topParts[0]}</span><span>${problem.topParts[1]}</span>
+            </div>
+            <div class="left-labels" style="--label-rows:${rows};">
+              <span>${problem.sideParts[0]}</span><span>${problem.sideParts[1]}</span>
+            </div>
+            <div class="partition-grid" style="grid-template-columns:${columns};grid-template-rows:${rows};">
+              ${cells}
+            </div>
+          </div>
+          <div class="model-caption">${stepIndex >= 5 ? "Add every partial area to find the total product." : "Each cell is one partial product."}</div>
+        </div>`;
+    }
+
+    function renderFraction(problem, stepIndex) {
+      const cells = Array.from({ length: problem.denominator }, (_, index) => {
+        const selected = stepIndex >= 2 && index < problem.numerator;
+        const label = stepIndex >= 1 ? frac(1, problem.denominator) : "";
+        return `<div class="strip-cell${selected ? " selected" : ""}">${label}</div>`;
+      }).join("");
+      if (stepIndex === 0) {
+        return `
+          <div class="visual">
+            <div class="empty-model"><span class="whole-label">1 whole</span></div>
+            <div class="model-caption">Start with the whole before showing any parts.</div>
+          </div>`;
+      }
+      return `
+        <div class="visual">
+          <div class="fraction-strip" style="--parts:${problem.denominator};">
+            ${cells}
+          </div>
+          <div class="model-caption">${stepIndex >= 2 ? `${problem.numerator} out of ${problem.denominator} equal parts are selected.` : `The whole is divided into ${problem.denominator} equal parts.`}</div>
+        </div>`;
+    }
+
+    function renderPercentage(problem, stepIndex) {
+      if (stepIndex === 0) {
+        return `
+          <div class="visual">
+            <div class="empty-model"><span class="whole-label">${problem.total}</span></div>
+            <div class="model-caption">The whole rectangle represents 100%.</div>
+          </div>`;
+      }
+      const cells = Array.from({ length: problem.denominator }, (_, index) => {
+        const selected = stepIndex >= 2 && index < problem.numerator;
+        const unit = stepIndex >= 1 && index === 0;
+        const label = stepIndex >= 1 ? `${100 / problem.denominator}%` : "";
+        const value = stepIndex >= 2 && index < problem.numerator ? `<br>${problem.onePart}` : "";
+        return `<div class="strip-cell${selected ? " selected" : ""}${unit ? " unit" : ""}">${label}${value}</div>`;
+      }).join("");
+      return `
+        <div class="visual">
+          <div class="fraction-strip" style="--parts:${problem.denominator};">
+            ${cells}
+          </div>
+          <div class="model-caption">${stepIndex >= 3 ? `${problem.percent}% is worth ${problem.onePart * problem.numerator}.` : "Divide the whole into useful percentage parts."}</div>
+        </div>`;
+    }
+
+    function renderAlgebra(problem, stepIndex, factorising = false) {
+      const columns = "1.35fr 0.75fr";
+      const rows = "1.1fr 0.82fr";
+      const cells = problem.cells.map((value, index) => {
+        let visible = false;
+        if (factorising) visible = stepIndex === 0 ? index === 0 || index === 3 : stepIndex >= 1;
+        else visible = stepIndex > index;
+        const hot = (!factorising && stepIndex === index + 1) || (factorising && stepIndex === 1 && (index === 1 || index === 2));
+        return `<div class="partition-cell${hot ? " hot" : ""}">${visible ? value : ""}</div>`;
+      }).join("");
+      const showLabels = factorising ? stepIndex >= 3 : stepIndex >= 0;
+      return `
+        <div class="visual">
+          <div class="partition-shell">
+            ${showLabels ? `
+              <div class="top-labels" style="--label-columns:${columns};">
+                <span>${problem.topParts[0]}</span><span>${problem.topParts[1]}</span>
+              </div>
+              <div class="left-labels" style="--label-rows:${rows};">
+                <span>${problem.sideParts[0]}</span><span>${problem.sideParts[1]}</span>
+              </div>` : ""}
+            <div class="algebra-grid" style="--grid-columns:${columns};--grid-rows:${rows};">
+              ${cells}
+            </div>
+          </div>
+          <div class="model-caption">${factorising ? "Read common dimensions to form the brackets." : "Every cell is one product from the two brackets."}</div>
+        </div>`;
+    }
+
+    function renderVisual(problem, stepIndex) {
+      const renderers = {
+        multiplication: renderMultiplication,
+        partition: renderPartition,
+        fractionArea: renderFraction,
+        percentageArea: renderPercentage,
+        expand: (item, index) => renderAlgebra(item, index, false),
+        factorise: (item, index) => renderAlgebra(item, index, true)
+      };
+      refs.modelCard.innerHTML = renderers[problem.mode](problem, stepIndex);
+    }
+
+    function renderModes() {
+      refs.modeStrip.innerHTML = modes.map((mode) => `
+        <button class="mode-btn${state.mode === mode.id ? " active" : ""}" type="button" data-mode="${mode.id}" title="${escapeHtml(mode.description)}">
+          ${escapeHtml(mode.label)}
+        </button>
+      `).join("");
+      refs.modeStrip.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.mode = button.dataset.mode;
+          newProblem();
+        });
+      });
+    }
+
+    function currentModeDetails() {
+      return modes.find((mode) => mode.id === state.mode) || modes[0];
+    }
+
+    function render() {
+      const problem = state.problem;
+      const stepData = problem.steps[state.stepIndex];
+      const mode = modes.find((item) => item.id === problem.mode) || currentModeDetails();
+
+      refs.modeTitle.textContent = mode.title;
+      refs.promptText.innerHTML = problem.prompt;
+      refs.answerText.hidden = !state.answerVisible;
+      refs.answerText.querySelector("span").innerHTML = problem.answer;
+
+      refs.stepLabel.textContent = `Step ${state.stepIndex + 1} of ${problem.steps.length}`;
+      refs.stepTitle.textContent = stepData.title;
+      refs.stepNote.textContent = stepData.note;
+      refs.calculation.innerHTML = stepData.calculation || "";
+      refs.calculation.hidden = !stepData.calculation;
+      refs.teacherPrompt.textContent = stepData.teacherPrompt || "";
+      refs.teacherPrompt.hidden = !stepData.teacherPrompt;
+      refs.progressBar.style.setProperty("--progress", `${((state.stepIndex + 1) / problem.steps.length) * 100}%`);
+
+      refs.backBtn.disabled = state.stepIndex === 0;
+      refs.nextBtn.disabled = state.stepIndex >= problem.steps.length - 1;
+      refs.answerBtn.textContent = state.answerVisible ? "Hide Answer" : "Reveal Answer";
+
+      renderModes();
+      renderVisual(problem, state.stepIndex);
+    }
+
+    function newProblem() {
+      state.problem = makeProblem();
+      state.stepIndex = 0;
+      state.answerVisible = false;
+      render();
+    }
+
+    function resetModel() {
+      state.stepIndex = 0;
+      state.answerVisible = false;
+      render();
+    }
+
+    function practicePrompt(problem) {
+      return problem.prompt.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+    }
+
+    function printableBlank(mode, problem) {
+      if (mode === "multiplication") {
+        return `<div class="print-box"><div>${problem.rows} by ${problem.cols}</div></div>`;
+      }
+      if (mode === "fractionArea" || mode === "percentageArea") {
+        return `<div class="print-strip">${Array.from({ length: problem.denominator }, () => "<span></span>").join("")}</div>`;
+      }
+      return `<div class="print-grid"><span></span><span></span><span></span><span></span></div>`;
+    }
+
+    function openPracticeSheet() {
+      const activeMode = state.mode;
+      const sheetMode = activeMode === "mixed" ? "mixed" : activeMode;
+      const items = Array.from({ length: 8 }, () => makeProblem(sheetMode));
+      const modeName = currentModeDetails().title;
+      const rows = items.map((item, index) => `
+        <section class="question">
+          <div class="number">${index + 1}</div>
+          <div>
+            <p>${practicePrompt(item)}</p>
+            ${printableBlank(item.mode, item)}
+          </div>
+        </section>
+      `).join("");
+      const answers = items.map((item, index) => `<li>${index + 1}. ${item.answer.replace(/class="math-text"/g, "")}</li>`).join("");
+      const popup = window.open("", "_blank");
+      if (!popup) return;
+      popup.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <title>${modeName} Practice | Kaizen Maths</title>
+          <style>
+            *{box-sizing:border-box}
+            body{margin:0;padding:22px;font-family:Arial,sans-serif;color:#111}
+            h1{margin:0 0 4px;font-size:24px}
+            .meta{margin:0 0 18px;color:#555}
+            .question{break-inside:avoid;display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:start;margin:0 0 18px;padding-bottom:12px;border-bottom:1px solid #ddd}
+            .number{width:30px;height:30px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;font-weight:700}
+            p{margin:0 0 10px;font-size:16px;line-height:1.35}
+            .print-box{height:112px;border:2px solid #111;display:grid;place-items:center;font-size:18px;font-weight:700}
+            .print-strip{height:94px;border:2px solid #111;display:grid;grid-template-columns:repeat(8,1fr)}
+            .print-strip span{border-left:1px solid #999}
+            .print-strip span:first-child{border-left:0}
+            .print-grid{height:116px;border:2px solid #111;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+            .print-grid span{border:1px solid #999}
+            .answers{margin-top:20px;break-before:page}
+            .answers li{margin:8px 0}
+            @media print{button{display:none}}
+          </style>
+        </head>
+        <body>
+          <h1>Kaizen Maths Area Model Practice</h1>
+          <p class="meta">${modeName}. Complete each model and show the related calculation.</p>
+          ${rows}
+          <section class="answers">
+            <h2>Answer Key</h2>
+            <ol>${answers}</ol>
+          </section>
+          <button onclick="window.print()">Print / Save PDF</button>
+        </body>
+        </html>
+      `);
+      popup.document.close();
+      popup.focus();
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    refs.newBtn.addEventListener("click", newProblem);
+    refs.backBtn.addEventListener("click", () => {
+      state.stepIndex = Math.max(0, state.stepIndex - 1);
+      render();
+    });
+    refs.nextBtn.addEventListener("click", () => {
+      state.stepIndex = Math.min(state.problem.steps.length - 1, state.stepIndex + 1);
+      render();
+    });
+    refs.answerBtn.addEventListener("click", () => {
+      state.answerVisible = !state.answerVisible;
+      render();
+    });
+    refs.resetBtn.addEventListener("click", resetModel);
+    refs.practiceBtn.addEventListener("click", openPracticeSheet);
+
+    renderModes();
+    newProblem();
+  </script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+</body>
+</html>
