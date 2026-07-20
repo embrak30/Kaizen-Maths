@@ -194,12 +194,14 @@
 
   async function refreshSession() {
     if (!state.configured) {
+      state.ready = true;
       setAccountUi("not-configured");
       return null;
     }
 
     const client = await withTimeout(loadSupabase(), 6000, "Supabase client timed out");
     const { data } = await withTimeout(client.auth.getSession(), 6000, "Supabase session check timed out");
+    state.ready = true;
     state.session = data.session;
 
     if (state.session?.user) {
@@ -245,11 +247,13 @@
       const { pill } = accountElements();
       if (pill?.dataset.authState === "loading") {
         console.warn("Kaizen auth check timed out.");
+        state.ready = true;
         setAccountUi(state.configured ? "signed-out" : "not-configured");
       }
     }, 8000);
 
     if (!state.configured) {
+      state.ready = true;
       setAccountUi("not-configured");
       return;
     }
@@ -257,8 +261,9 @@
     try {
       const client = await withTimeout(loadSupabase(), 6000, "Supabase client timed out");
       client.auth.onAuthStateChange(async (_event, session) => {
-      state.session = session;
-      if (session?.user) {
+        state.ready = true;
+        state.session = session;
+        if (session?.user) {
           state.profile = null;
           setAccountUi("signed-in", session.user);
           syncProfileInBackground(session.user);
@@ -271,6 +276,7 @@
       await refreshSession();
     } catch (error) {
       console.warn("Kaizen auth unavailable:", error.message);
+      state.ready = true;
       setAccountUi("signed-out");
     }
   }

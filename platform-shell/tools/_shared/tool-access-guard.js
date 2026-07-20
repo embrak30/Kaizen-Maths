@@ -17,7 +17,7 @@
 
   if (!slug || root.dataset.kaizenToolAccessChecked) return;
 
-  if (isTrustedClassroomFrame()) {
+  if (isTrustedClassroomFrame() || isTrustedWorksheetLoaderFrame()) {
     root.dataset.kaizenToolAccessChecked = "allowed";
     return;
   }
@@ -90,6 +90,19 @@
       const parentHash = window.parent.location.hash || "";
       const parentParts = parentHash.split("?")[0].replace(/^#\/?/, "").split("/");
       return parentParts[0] === "classroom" && decodeURIComponent(parentParts[1] || "") === slug;
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  function isTrustedWorksheetLoaderFrame() {
+    try {
+      if (window.self === window.top) return false;
+      if (window.parent.location.origin !== window.location.origin) return false;
+      const parentHash = window.parent.location.hash || "";
+      const parentParts = parentHash.split("?")[0].replace(/^#\/?/, "").split("/");
+      const worksheetLoad = new URLSearchParams(window.location.search).has("worksheetLoad");
+      return worksheetLoad && parentParts[0] === "worksheet-generator";
     } catch (_error) {
       return false;
     }

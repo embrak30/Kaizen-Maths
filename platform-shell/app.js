@@ -2789,6 +2789,11 @@ function isSignedIn() {
   return Boolean(authState().session?.user);
 }
 
+function isAuthChecking() {
+  const auth = authState();
+  return Boolean(auth.configured && !auth.ready);
+}
+
 function hasWorkspaceAccess() {
   return ["trial", "pro", "school", "admin"].includes(currentUserRole());
 }
@@ -2813,14 +2818,9 @@ function authSensitiveRouteShouldRerender() {
 
 function currentAuthAccessKey() {
   const auth = authState();
-  const profile = auth.profile || {};
   return [
     auth.session?.user?.id || "guest",
-    currentUserRole(),
-    profile.role || "",
-    profile.trial_ends_at || "",
-    profile.school_id || "",
-    profile.subscription_status || ""
+    currentUserRole()
   ].join("|");
 }
 
@@ -2896,6 +2896,16 @@ function signInCallout(title = "Sign in to continue") {
       <p>${signedIn ? "Your current account does not include this part of the virtual textbook. Upgrade for individual teacher access, or contact us for school access." : "Free visitors can try a small sample from the virtual textbook. Sign in with Google to start a 30-day trial and access the wider topic library, worksheet tools, and classroom question sets."}</p>
       ${signedIn ? `<a class="button primary" href="#/upgrade">View Upgrade Options</a>` : `<button class="button primary" type="button" data-auth-action="signin">Sign in with Google</button>`}
       <a class="button" href="#/tools">Back to Free Tools</a>
+    </section>
+  `;
+}
+
+function checkingAccessCallout(title = "Checking access") {
+  return `
+    <section class="panel access-callout">
+      <span class="eyebrow">Account Check</span>
+      <h2>${escapeHtml(title)}</h2>
+      <p>Kaizen Maths is checking your signed-in session before opening this workspace.</p>
     </section>
   `;
 }
@@ -12283,6 +12293,18 @@ function renderRoute() {
   } else if (parts[0] === "how-to-use-this-site") {
     renderSiteGuide();
   } else if (parts[0] === "worksheet-generator") {
+    if (isAuthChecking()) {
+      app.innerHTML = `
+        ${pageHeader(
+          "Worksheet Builder",
+          "Build printable worksheets and assessments from topic blocks. Choose the questions, add the block, then create the sheet.",
+          "",
+          "worksheet-page-header"
+        )}
+        ${checkingAccessCallout("Checking worksheet access")}
+      `;
+      return;
+    }
     if (!hasWorkspaceAccess()) {
       app.innerHTML = `
         ${pageHeader(
@@ -12298,6 +12320,18 @@ function renderRoute() {
     }
     renderWorksheetGenerator();
   } else if (parts[0] === "gcse-exam-style") {
+    if (isAuthChecking()) {
+      app.innerHTML = `
+        ${pageHeader(
+          "GCSE Exam Paper Builder",
+          "Generate GCSE-style maths practice sets and mock papers with marks, teacher copy options, and print-ready layout.",
+          "",
+          "worksheet-page-header"
+        )}
+        ${checkingAccessCallout("Checking exam-builder access")}
+      `;
+      return;
+    }
     if (!hasWorkspaceAccess()) {
       app.innerHTML = `
         ${pageHeader(
