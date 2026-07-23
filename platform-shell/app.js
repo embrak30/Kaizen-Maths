@@ -12059,16 +12059,23 @@ function bindToolFrame(tool, options = {}) {
       </html>`;
   }
 
+  function classroomCaptureSvg(doc, width, height, annotationUrl = "") {
+    const annotationLayer = annotationUrl
+      ? `<image href="${escapeHtml(annotationUrl)}" xlink:href="${escapeHtml(annotationUrl)}" x="0" y="0" width="${width}" height="${height}" preserveAspectRatio="none" />`
+      : "";
+    return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+      <foreignObject width="100%" height="100%">${classroomCaptureMarkup(doc, width, height)}</foreignObject>
+      ${annotationLayer}
+    </svg>`;
+  }
+
   async function renderFrameViewportImage() {
     if (!frame?.contentDocument) throw new Error("The classroom tool is not ready to capture.");
     const doc = frame.contentDocument;
     const rect = frame.getBoundingClientRect();
     const width = Math.ceil(Math.max(rect.width, frame.clientWidth, 1));
     const height = Math.ceil(Math.max(rect.height, frame.clientHeight, 1));
-    const markup = classroomCaptureMarkup(doc, width, height);
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-      <foreignObject width="100%" height="100%">${markup}</foreignObject>
-    </svg>`;
+    const svg = classroomCaptureSvg(doc, width, height);
     return { image: await imageFromSvg(svg), width, height };
   }
 
@@ -12081,24 +12088,17 @@ function bindToolFrame(tool, options = {}) {
     const rect = frame.getBoundingClientRect();
     const width = Math.ceil(Math.max(rect.width, frame.clientWidth, 1));
     const height = Math.ceil(Math.max(rect.height, frame.clientHeight, 1));
-    const frameCss = collectDocumentCss(doc) + `
-      html,body{margin:0!important;background:#fff!important;}
-      .teacher-tab,.sidebar,.sidebar-overlay,.timer-modal,.kaizen-capture-board{display:none!important;}
-      .container{box-shadow:none!important;}
-    `;
-    const clone = cloneFrameBodyForCapture(doc);
-    const scroll = frameScrollPosition(doc);
-    const bodyClass = escapeHtml(clone.className || "");
-    const bodyStyle = escapeHtml(clone.getAttribute("style") || "");
-    const bodyMarkup = clone.innerHTML || clone.outerHTML;
     let annotationUrl = "";
     try {
       annotationUrl = annotationCanvas?.toDataURL("image/png") || "";
     } catch (error) {
       annotationUrl = "";
     }
+    const svg = classroomCaptureSvg(doc, width, height, annotationUrl);
+    const svgUrl = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
     const snapshot = window.open("", "_blank");
     if (!snapshot) {
+      URL.revokeObjectURL(svgUrl);
       window.alert("The browser blocked the snapshot window. Allow pop-ups for this site or use your browser screenshot tool.");
       return;
     }
@@ -12107,29 +12107,24 @@ function bindToolFrame(tool, options = {}) {
       <head>
         <meta charset="utf-8">
         <title>${escapeHtml(tool.title)} classroom capture</title>
-        <base href="${escapeHtml(doc.location?.href || frame.src || window.location.href)}">
-        <style>${frameCss}</style>
         <style>
           body{margin:0;background:#fff;padding:18px;font-family:Arial,sans-serif;}
-          .capture-stage{position:relative;width:${width}px;height:${height}px;overflow:hidden;background:#fff;border:1px solid #d1d5db;}
-          .capture-content{position:absolute;left:${-scroll.left}px;top:${-scroll.top}px;width:${Math.max(width, doc.documentElement.scrollWidth || width)}px;}
-          .capture-stage img.annotation{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+          .capture-stage{width:${width}px;max-width:100%;background:#fff;border:1px solid #d1d5db;}
+          .capture-stage img{display:block;width:100%;height:auto;}
           button{margin-top:14px;padding:10px 14px;border:0;border-radius:8px;background:#0f766e;color:#fff;font-weight:700;}
           @media print{button{display:none}.capture-stage{border:0}}
         </style>
       </head>
       <body>
         <div class="capture-stage">
-          <div class="capture-content">
-            <div class="${bodyClass}" style="${bodyStyle}">${bodyMarkup}</div>
-          </div>
-          ${annotationUrl ? `<img class="annotation" src="${annotationUrl}" alt="">` : ""}
+          <img src="${escapeHtml(svgUrl)}" alt="${escapeHtml(tool.title)} classroom capture">
         </div>
         <button onclick="window.print()">Print / Save PDF</button>
       </body>
       </html>`);
     snapshot.document.close();
     snapshot.focus();
+    window.setTimeout(() => URL.revokeObjectURL(svgUrl), 300000);
   }
 
   async function captureClassroomBoard() {
