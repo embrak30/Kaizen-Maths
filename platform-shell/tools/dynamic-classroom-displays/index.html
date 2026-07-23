@@ -177,11 +177,13 @@
     }
 
     select,
-    input[type="range"] {
+    input[type="range"],
+    input[type="number"] {
       width: 100%;
     }
 
-    select {
+    select,
+    input[type="number"] {
       min-height: 38px;
       border: 1px solid #bed0df;
       border-radius: 7px;
@@ -189,6 +191,27 @@
       color: var(--ink);
       background: #fff;
       font-weight: 800;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .control-button {
+      width: 100%;
+      min-height: 42px;
+      margin-top: 12px;
+      border-radius: 7px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      font-weight: 950;
+      box-shadow: 0 8px 18px rgba(19, 170, 167, 0.2);
+    }
+
+    .control-button.secondary {
+      background: #14263a;
     }
 
     input[type="range"] {
@@ -320,6 +343,43 @@
       stroke-linejoin: round;
     }
 
+    .shape-original {
+      fill: rgba(20, 38, 58, 0.10);
+      stroke: #14263a;
+      stroke-width: 4;
+      stroke-linejoin: round;
+    }
+
+    .shape-final {
+      fill: rgba(100, 84, 192, 0.10);
+      stroke: var(--purple);
+      stroke-width: 3;
+      stroke-dasharray: 11 8;
+      stroke-linejoin: round;
+    }
+
+    .shape-live {
+      fill: rgba(19, 170, 167, 0.20);
+      stroke: var(--teal-dark);
+      stroke-width: 5;
+      stroke-linejoin: round;
+    }
+
+    .vector-line {
+      stroke: var(--orange);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      marker-end: url(#arrowHead);
+    }
+
+    .calculus-area {
+      fill: rgba(19, 170, 167, 0.18);
+      stroke: rgba(8, 122, 118, 0.55);
+      stroke-width: 2;
+    }
+
     .circle-line {
       fill: #fff;
       stroke: #14263a;
@@ -399,6 +459,20 @@
       padding-top: 2px;
     }
 
+    .inline-vector {
+      display: inline-grid;
+      grid-template-rows: auto auto;
+      align-items: center;
+      justify-items: center;
+      padding: 0 7px;
+      margin: 0 2px;
+      border-left: 2px solid currentColor;
+      border-right: 2px solid currentColor;
+      border-radius: 2px;
+      line-height: 1.05;
+      vertical-align: middle;
+    }
+
     .drag-point {
       cursor: grab;
       touch-action: none;
@@ -464,13 +538,16 @@
     <header class="topbar">
       <div class="brand">
         <h1>Dynamic Classroom Displays</h1>
-        <p>Interactive graph, circle equation, circle theorem, and trigonometric displays for board explanation</p>
+        <p>Interactive graph, transformation, circle, complex number, and calculus displays for board explanation</p>
       </div>
       <div class="top-actions" id="modeButtons">
-        <button class="mode-btn active" type="button" data-mode="graphs">Graph Transformations</button>
+        <button class="mode-btn active" type="button" data-mode="graphs">Graphs</button>
+        <button class="mode-btn" type="button" data-mode="transforms">Transforms</button>
         <button class="mode-btn" type="button" data-mode="circleEq">Circle Equation</button>
         <button class="mode-btn" type="button" data-mode="circles">Circle Theorems</button>
-        <button class="mode-btn" type="button" data-mode="trig">Trig Graphs</button>
+        <button class="mode-btn" type="button" data-mode="trig">Trig</button>
+        <button class="mode-btn" type="button" data-mode="complex">Complex</button>
+        <button class="mode-btn" type="button" data-mode="calculus">Calculus</button>
         <button class="action-btn" type="button" id="resetBtn">Reset</button>
         <button class="action-btn" type="button" id="fullscreenBtn">Full Screen</button>
       </div>
@@ -521,6 +598,17 @@
         original: true,
         points: true
       },
+      transforms: {
+        model: "rotation",
+        progress: 1,
+        centreX: 1,
+        centreY: 1,
+        angle: 90,
+        direction: "anticlockwise",
+        vectorX: 4,
+        vectorY: 2,
+        scale: 2
+      },
       circleEq: {
         model: "equation",
         h: 2,
@@ -549,6 +637,21 @@
         h: 0,
         k: 0,
         original: true
+      },
+      complex: {
+        model: "multiply-cis",
+        progress: 1,
+        real: 3,
+        imag: 1,
+        modulus: 1.5,
+        angle: 90
+      },
+      calculus: {
+        model: "tangent",
+        progress: 1,
+        x: 2,
+        h: 3,
+        rectangles: 6
       }
     };
 
@@ -558,6 +661,11 @@
         ["cubic", "Cubic Graph", "Compare the original cubic with the transformed curve."],
         ["absolute", "Modulus Graph", "Useful for translations, reflections, and stretch conversations."],
         ["reciprocal", "Reciprocal Graph", "Show how transformations affect asymptotes and branches."]
+      ],
+      transforms: [
+        ["rotation", "Rotation", "Set the centre, angle, and direction, then animate the movement."],
+        ["translation", "Translation", "Set the translation vector, then animate the object moving to its image."],
+        ["enlargement", "Enlargement", "Set the centre and scale factor, then animate the enlargement."]
       ],
       circleEq: [
         ["equation", "Equation of a Circle", "Move the centre or radius to show how the equation changes."]
@@ -572,6 +680,13 @@
         ["sine", "Sine Graph", "Use amplitude, horizontal scale, phase shift, and vertical shift."],
         ["cosine", "Cosine Graph", "Compare cosine with a transformed graph."],
         ["tangent", "Tangent Graph", "Show period, vertical shift, and asymptotes."]
+      ],
+      complex: [
+        ["multiply-cis", "Multiplication by r cis θ", "Animate multiplication as a stretch and rotation on the Argand diagram."]
+      ],
+      calculus: [
+        ["tangent", "Secant to Tangent", "Animate a secant line moving towards the tangent line at a point."],
+        ["area", "Area Under a Curve", "Show rectangular approximations under a curve."]
       ]
     };
 
@@ -579,19 +694,32 @@
     const graphHeight = 650;
     const graphBounds = { xmin: -10, xmax: 10, ymin: -8, ymax: 8 };
     const circleEqBounds = { xmin: -10, xmax: 10, ymin: -6.5, ymax: 6.5 };
+    const transformBounds = { xmin: -8, xmax: 8, ymin: -6, ymax: 6 };
+    const complexBounds = { xmin: -8, xmax: 8, ymin: -6, ymax: 6 };
+    const calculusBounds = { xmin: -6, xmax: 6, ymin: -4, ymax: 7 };
     const trigBounds = { xmin: 0, xmax: 360, ymin: -4, ymax: 4 };
     const circle = { cx: 500, cy: 330, r: 215 };
+    const baseShape = [
+      { label: "A", x: -4, y: -1 },
+      { label: "B", x: -1, y: -1 },
+      { label: "C", x: -3, y: 2 }
+    ];
+    let activeAnimation = null;
 
     function clamp(value, min, max) {
       return Math.max(min, Math.min(max, value));
     }
 
     function round(value, places = 1) {
-      return Number(value).toFixed(places).replace(/\.?0+$/, "");
+      return Number(value).toFixed(places).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
     }
 
     function svg(content, viewBox = "0 0 1000 650") {
       stage.innerHTML = '<svg viewBox="' + viewBox + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' + content + "</svg>";
+    }
+
+    function markerDefs() {
+      return '<defs><marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#f97316"/></marker></defs>';
     }
 
     function point(angleDeg, radius = circle.r, cx = circle.cx, cy = circle.cy) {
@@ -717,11 +845,26 @@
       return '<label class="toggle-row"><input id="' + id + '" type="checkbox"' + (checked ? " checked" : "") + '> ' + label + '</label>';
     }
 
+    function numberInput(id, label, value, min, max, step = 1) {
+      return '<div class="control-row"><label for="' + id + '">' + label + '</label><input id="' + id + '" type="number" min="' + min + '" max="' + max + '" step="' + step + '" value="' + value + '"></div>';
+    }
+
+    function selectInput(id, label, value, options) {
+      return '<div class="control-row"><label for="' + id + '">' + label + '</label><select id="' + id + '">' +
+        options.map((option) => '<option value="' + option[0] + '"' + (String(option[0]) === String(value) ? " selected" : "") + '>' + option[1] + '</option>').join("") +
+        '</select></div>';
+    }
+
+    function actionButton(id, label, secondary = false) {
+      return '<button class="control-button' + (secondary ? " secondary" : "") + '" type="button" id="' + id + '">' + label + '</button>';
+    }
+
     function attachSlider(id, target, key, renderer) {
       const input = document.getElementById(id);
       const output = document.getElementById(id + "Value");
       input.addEventListener("input", () => {
         state[target][key] = Number(input.value);
+        if (Object.prototype.hasOwnProperty.call(state[target], "progress")) state[target].progress = 1;
         output.textContent = input.value;
         renderer();
       });
@@ -732,6 +875,31 @@
         state[target][key] = event.target.checked;
         renderer();
       });
+    }
+
+    function attachNumberInput(id, target, key, renderer) {
+      const input = document.getElementById(id);
+      input.addEventListener("input", () => {
+        const value = Number(input.value);
+        if (Number.isFinite(value)) state[target][key] = value;
+        state[target].progress = 1;
+        renderer();
+      });
+    }
+
+    function attachSelectInput(id, target, key, renderer, numeric = false) {
+      const input = document.getElementById(id);
+      input.addEventListener("change", () => {
+        state[target][key] = numeric ? Number(input.value) : input.value;
+        state[target].progress = 1;
+        renderer();
+      });
+    }
+
+    function attachAnimationButton(id, target) {
+      const button = document.getElementById(id);
+      if (!button) return;
+      button.addEventListener("click", () => startAnimation(target));
     }
 
     function signedHtml(value, places = 1) {
@@ -798,6 +966,117 @@
       return squaredTerm("x", h) + " + " + squaredTerm("y", k) + " = " + round(r * r, 2);
     }
 
+    function pointToSvg(p, bounds) {
+      return { x: graphX(p.x, bounds), y: graphY(p.y, bounds) };
+    }
+
+    function polygonPath(points, bounds) {
+      return points.map((p, index) => {
+        const q = pointToSvg(p, bounds);
+        return (index ? "L" : "M") + q.x.toFixed(1) + " " + q.y.toFixed(1);
+      }).join(" ") + " Z";
+    }
+
+    function transformedShape(t, progress = 1) {
+      if (t.model === "translation") {
+        return baseShape.map((p) => ({
+          label: p.label,
+          x: p.x + t.vectorX * progress,
+          y: p.y + t.vectorY * progress
+        }));
+      }
+      if (t.model === "enlargement") {
+        const scale = 1 + (t.scale - 1) * progress;
+        return baseShape.map((p) => ({
+          label: p.label,
+          x: t.centreX + scale * (p.x - t.centreX),
+          y: t.centreY + scale * (p.y - t.centreY)
+        }));
+      }
+      const direction = t.direction === "clockwise" ? -1 : 1;
+      const theta = direction * t.angle * progress * Math.PI / 180;
+      const cos = Math.cos(theta);
+      const sin = Math.sin(theta);
+      return baseShape.map((p) => {
+        const dx = p.x - t.centreX;
+        const dy = p.y - t.centreY;
+        return {
+          label: p.label,
+          x: t.centreX + dx * cos - dy * sin,
+          y: t.centreY + dx * sin + dy * cos
+        };
+      });
+    }
+
+    function labelShape(points, bounds, prime = "") {
+      return points.map((p) => {
+        const q = pointToSvg(p, bounds);
+        return '<text class="label-text" x="' + (q.x + 10).toFixed(1) + '" y="' + (q.y - 10).toFixed(1) + '">' + p.label + prime + '</text>';
+      }).join("");
+    }
+
+    function centreMark(x, y, bounds, label = "Centre") {
+      const p = pointToSvg({ x, y }, bounds);
+      return '<line class="highlight-line" x1="' + (p.x - 12).toFixed(1) + '" y1="' + p.y.toFixed(1) + '" x2="' + (p.x + 12).toFixed(1) + '" y2="' + p.y.toFixed(1) + '"/>' +
+        '<line class="highlight-line" x1="' + p.x.toFixed(1) + '" y1="' + (p.y - 12).toFixed(1) + '" x2="' + p.x.toFixed(1) + '" y2="' + (p.y + 12).toFixed(1) + '"/>' +
+        '<text class="label-text" x="' + (p.x + 16).toFixed(1) + '" y="' + (p.y - 14).toFixed(1) + '">' + label + '</text>';
+    }
+
+    function vectorFromPoints(a, b, bounds, cls = "vector-line") {
+      const p = pointToSvg(a, bounds);
+      const q = pointToSvg(b, bounds);
+      return '<line class="' + cls + '" x1="' + p.x.toFixed(1) + '" y1="' + p.y.toFixed(1) + '" x2="' + q.x.toFixed(1) + '" y2="' + q.y.toFixed(1) + '"/>';
+    }
+
+    function coordinatePair(x, y) {
+      return "(" + round(x, 1) + ", " + round(y, 1) + ")";
+    }
+
+    function vectorColumnHtml(x, y) {
+      return '<span class="inline-vector"><span>' + round(x, 1) + '</span><span>' + round(y, 1) + '</span></span>';
+    }
+
+    function formatTransformationEquation(t) {
+      if (t.model === "translation") return "Translate by vector " + vectorColumnHtml(t.vectorX, t.vectorY);
+      if (t.model === "enlargement") return "Enlarge by scale factor " + round(t.scale, 1) + " from " + coordinatePair(t.centreX, t.centreY);
+      return "Rotate " + round(t.angle, 0) + "&deg; " + t.direction + " about " + coordinatePair(t.centreX, t.centreY);
+    }
+
+    function complexPoint(real, imag) {
+      return { x: real, y: imag };
+    }
+
+    function complexProduct(c, progress = 1) {
+      const scale = 1 + (c.modulus - 1) * progress;
+      const theta = c.angle * progress * Math.PI / 180;
+      const cos = Math.cos(theta);
+      const sin = Math.sin(theta);
+      return {
+        x: scale * (c.real * cos - c.imag * sin),
+        y: scale * (c.real * sin + c.imag * cos)
+      };
+    }
+
+    function complexText(real, imag) {
+      const a = round(real, 1);
+      const b = round(Math.abs(imag), 1);
+      if (Math.abs(imag) < 1e-9) return a;
+      if (Math.abs(real) < 1e-9) return (imag < 0 ? "-" : "") + (b === "1" ? "" : b) + "i";
+      return a + (imag < 0 ? " - " : " + ") + (b === "1" ? "" : b) + "i";
+    }
+
+    function calculusFunction(x) {
+      return 0.25 * x * x - 1;
+    }
+
+    function calculusDerivative(x) {
+      return 0.5 * x;
+    }
+
+    function calculusLabel() {
+      return "f(x) = 0.25x<sup>2</sup> - 1";
+    }
+
     function renderGraphControls() {
       const g = state.graphs;
       controlPanel.innerHTML = '<h2>Controls</h2>' +
@@ -831,6 +1110,64 @@
       }
       boardTitle.textContent = models.graphs.find((item) => item[0] === name)[1];
       boardEquation.innerHTML = formatFunctionEquation(g);
+      svg(content, "0 0 " + graphWidth + " " + graphHeight);
+    }
+
+    function renderTransformControls() {
+      const t = state.transforms;
+      let controls = '<h2>Controls</h2>';
+      if (t.model === "rotation") {
+        controls += '<div class="input-grid">' +
+          numberInput("transformCentreX", "Centre x", t.centreX, -6, 6, 1) +
+          numberInput("transformCentreY", "Centre y", t.centreY, -5, 5, 1) +
+          '</div>' +
+          selectInput("transformAngle", "Angle", t.angle, [[90, "90°"], [180, "180°"], [270, "270°"]]) +
+          selectInput("transformDirection", "Direction", t.direction, [["anticlockwise", "Anticlockwise"], ["clockwise", "Clockwise"]]) +
+          actionButton("transformAnimate", "Animate Rotation");
+      } else if (t.model === "translation") {
+        controls += '<div class="input-grid">' +
+          numberInput("transformVectorX", "Vector x", t.vectorX, -8, 8, 1) +
+          numberInput("transformVectorY", "Vector y", t.vectorY, -6, 6, 1) +
+          '</div>' +
+          actionButton("transformAnimate", "Animate Translation");
+      } else {
+        controls += '<div class="input-grid">' +
+          numberInput("transformCentreX", "Centre x", t.centreX, -6, 6, 1) +
+          numberInput("transformCentreY", "Centre y", t.centreY, -5, 5, 1) +
+          '</div>' +
+          selectInput("transformScale", "Scale factor", t.scale, [[0.5, "0.5"], [1.5, "1.5"], [2, "2"], [3, "3"]]) +
+          actionButton("transformAnimate", "Animate Enlargement");
+      }
+      controlPanel.innerHTML = controls;
+      if (document.getElementById("transformCentreX")) attachNumberInput("transformCentreX", "transforms", "centreX", render);
+      if (document.getElementById("transformCentreY")) attachNumberInput("transformCentreY", "transforms", "centreY", render);
+      if (document.getElementById("transformVectorX")) attachNumberInput("transformVectorX", "transforms", "vectorX", render);
+      if (document.getElementById("transformVectorY")) attachNumberInput("transformVectorY", "transforms", "vectorY", render);
+      if (document.getElementById("transformAngle")) attachSelectInput("transformAngle", "transforms", "angle", render, true);
+      if (document.getElementById("transformDirection")) attachSelectInput("transformDirection", "transforms", "direction", render);
+      if (document.getElementById("transformScale")) attachSelectInput("transformScale", "transforms", "scale", render, true);
+      attachAnimationButton("transformAnimate", "transforms");
+    }
+
+    function renderTransformDisplay() {
+      const t = state.transforms;
+      const finalShape = transformedShape(t, 1);
+      const liveShape = transformedShape(t, t.progress);
+      let content = markerDefs() + graphGrid(transformBounds, 1, 1);
+      content += '<path class="shape-original" d="' + polygonPath(baseShape, transformBounds) + '"/>';
+      content += '<path class="shape-final" d="' + polygonPath(finalShape, transformBounds) + '"/>';
+      content += '<path class="shape-live" d="' + polygonPath(liveShape, transformBounds) + '"/>';
+      content += labelShape(baseShape, transformBounds, "");
+      content += labelShape(finalShape, transformBounds, "'");
+      if (t.model === "translation") {
+        content += vectorFromPoints(baseShape[0], finalShape[0], transformBounds);
+      } else {
+        content += centreMark(t.centreX, t.centreY, transformBounds, "Centre");
+        content += vectorFromPoints({ x: t.centreX, y: t.centreY }, liveShape[0], transformBounds, "highlight-line");
+      }
+      const title = models.transforms.find((item) => item[0] === t.model)[1];
+      boardTitle.textContent = title;
+      boardEquation.innerHTML = formatTransformationEquation(t);
       svg(content, "0 0 " + graphWidth + " " + graphHeight);
     }
 
@@ -1054,6 +1391,120 @@
       svg(content, "0 0 " + graphWidth + " " + graphHeight);
     }
 
+    function renderComplexControls() {
+      const c = state.complex;
+      controlPanel.innerHTML = '<h2>Controls</h2>' +
+        '<div class="input-grid">' +
+        numberInput("complexReal", "Real part", c.real, -6, 6, 1) +
+        numberInput("complexImag", "Imaginary part", c.imag, -5, 5, 1) +
+        '</div>' +
+        selectInput("complexModulus", "Multiplier r", c.modulus, [[0.5, "0.5"], [1, "1"], [1.5, "1.5"], [2, "2"], [3, "3"]]) +
+        selectInput("complexAngle", "Angle θ", c.angle, [[30, "30°"], [45, "45°"], [60, "60°"], [90, "90°"], [180, "180°"], [270, "270°"]]) +
+        actionButton("complexAnimate", "Animate Multiplication");
+      attachNumberInput("complexReal", "complex", "real", render);
+      attachNumberInput("complexImag", "complex", "imag", render);
+      attachSelectInput("complexModulus", "complex", "modulus", render, true);
+      attachSelectInput("complexAngle", "complex", "angle", render, true);
+      attachAnimationButton("complexAnimate", "complex");
+    }
+
+    function renderComplexDisplay() {
+      const c = state.complex;
+      const z = complexPoint(c.real, c.imag);
+      const live = complexProduct(c, c.progress);
+      const final = complexProduct(c, 1);
+      const origin = { x: 0, y: 0 };
+      const zSvg = pointToSvg(z, complexBounds);
+      const liveSvg = pointToSvg(live, complexBounds);
+      const finalSvg = pointToSvg(final, complexBounds);
+      let content = markerDefs() + graphGrid(complexBounds, 1, 1);
+      content += vectorFromPoints(origin, z, complexBounds, "theorem-line");
+      content += vectorFromPoints(origin, final, complexBounds, "shape-final");
+      content += vectorFromPoints(origin, live, complexBounds, "vector-line");
+      content += '<circle class="point-dot" cx="' + zSvg.x.toFixed(1) + '" cy="' + zSvg.y.toFixed(1) + '" r="7"/>';
+      content += '<circle class="drag-ring" cx="' + finalSvg.x.toFixed(1) + '" cy="' + finalSvg.y.toFixed(1) + '" r="11"/>';
+      content += '<circle class="point-dot" cx="' + liveSvg.x.toFixed(1) + '" cy="' + liveSvg.y.toFixed(1) + '" r="7"/>';
+      content += '<text class="label-text" x="' + (zSvg.x + 12).toFixed(1) + '" y="' + (zSvg.y - 12).toFixed(1) + '">z</text>';
+      content += '<text class="label-text" x="' + (finalSvg.x + 12).toFixed(1) + '" y="' + (finalSvg.y - 12).toFixed(1) + '">w</text>';
+      boardTitle.textContent = "Complex Plane Transformation";
+      boardEquation.innerHTML = "z = " + complexText(c.real, c.imag) + ", w = " + round(c.modulus, 1) + "cis(" + round(c.angle, 0) + "&deg;)z";
+      svg(content, "0 0 " + graphWidth + " " + graphHeight);
+    }
+
+    function renderCalculusControls() {
+      const c = state.calculus;
+      let controls = '<h2>Controls</h2>';
+      if (c.model === "tangent") {
+        controls += slider("calculusX", "Point x", -4, 4, 0.5, c.x) +
+          slider("calculusH", "Starting gap h", 0.5, 4, 0.5, c.h) +
+          actionButton("calculusAnimate", "Animate Secant to Tangent");
+      } else {
+        controls += slider("calculusRectangles", "Rectangles", 2, 16, 1, c.rectangles) +
+          actionButton("calculusAnimate", "Animate Rectangles");
+      }
+      controlPanel.innerHTML = controls;
+      if (document.getElementById("calculusX")) attachSlider("calculusX", "calculus", "x", render);
+      if (document.getElementById("calculusH")) attachSlider("calculusH", "calculus", "h", render);
+      if (document.getElementById("calculusRectangles")) attachSlider("calculusRectangles", "calculus", "rectangles", render);
+      attachAnimationButton("calculusAnimate", "calculus");
+    }
+
+    function renderCalculusTangent() {
+      const c = state.calculus;
+      const curve = (x) => calculusFunction(x);
+      const a = c.x;
+      const h = Math.max(0.08, c.h * (1 - c.progress) + 0.08 * c.progress);
+      const b = a + h;
+      const fa = curve(a);
+      const fb = curve(b);
+      const secantGradient = (fb - fa) / (b - a);
+      const tangentGradient = calculusDerivative(a);
+      const secant = (x) => fa + secantGradient * (x - a);
+      const tangent = (x) => fa + tangentGradient * (x - a);
+      const A = pointToSvg({ x: a, y: fa }, calculusBounds);
+      const B = pointToSvg({ x: b, y: fb }, calculusBounds);
+      let content = graphGrid(calculusBounds, 1, 1);
+      content += '<path class="main-curve" d="' + pathForFunction(curve, calculusBounds) + '"/>';
+      content += '<path class="base-curve" d="' + pathForFunction(secant, calculusBounds) + '"/>';
+      content += '<path class="secondary-curve" d="' + pathForFunction(tangent, calculusBounds) + '"/>';
+      content += '<circle class="point-dot" cx="' + A.x.toFixed(1) + '" cy="' + A.y.toFixed(1) + '" r="7"/>';
+      content += '<circle class="drag-ring" cx="' + B.x.toFixed(1) + '" cy="' + B.y.toFixed(1) + '" r="10"/>';
+      content += '<text class="label-text" x="' + (A.x + 12).toFixed(1) + '" y="' + (A.y - 12).toFixed(1) + '">A</text>';
+      content += '<text class="label-text" x="' + (B.x + 12).toFixed(1) + '" y="' + (B.y - 12).toFixed(1) + '">B</text>';
+      boardTitle.textContent = "Secant to Tangent";
+      boardEquation.innerHTML = calculusLabel() + ", tangent gradient = " + round(tangentGradient, 2);
+      svg(content, "0 0 " + graphWidth + " " + graphHeight);
+    }
+
+    function renderCalculusArea() {
+      const c = state.calculus;
+      const curve = (x) => Math.max(0, calculusFunction(x) + 2);
+      const a = -4;
+      const b = 4;
+      const n = Math.max(1, Math.round(2 + (c.rectangles - 2) * c.progress));
+      const width = (b - a) / n;
+      let content = graphGrid(calculusBounds, 1, 1);
+      for (let i = 0; i < n; i++) {
+        const left = a + i * width;
+        const height = curve(left + width);
+        const p = pointToSvg({ x: left, y: height }, calculusBounds);
+        const base = pointToSvg({ x: left + width, y: 0 }, calculusBounds);
+        const rectWidth = graphX(left + width, calculusBounds) - graphX(left, calculusBounds);
+        const rectHeight = graphY(0, calculusBounds) - graphY(height, calculusBounds);
+        content += '<rect class="calculus-area" x="' + p.x.toFixed(1) + '" y="' + p.y.toFixed(1) + '" width="' + rectWidth.toFixed(1) + '" height="' + rectHeight.toFixed(1) + '"/>';
+        content += '<line class="grid-line" x1="' + base.x.toFixed(1) + '" y1="' + graphY(0, calculusBounds).toFixed(1) + '" x2="' + base.x.toFixed(1) + '" y2="' + graphY(height, calculusBounds).toFixed(1) + '"/>';
+      }
+      content += '<path class="main-curve" d="' + pathForFunction(curve, calculusBounds) + '"/>';
+      boardTitle.textContent = "Area Under a Curve";
+      boardEquation.innerHTML = "Area is approximated using " + n + " rectangles";
+      svg(content, "0 0 " + graphWidth + " " + graphHeight);
+    }
+
+    function renderCalculusDisplay() {
+      if (state.calculus.model === "area") renderCalculusArea();
+      else renderCalculusTangent();
+    }
+
     function currentModeState() {
       return state[state.mode];
     }
@@ -1067,16 +1518,22 @@
 
     function renderControls() {
       if (state.mode === "graphs") renderGraphControls();
+      if (state.mode === "transforms") renderTransformControls();
       if (state.mode === "circleEq") renderCircleEquationControls();
       if (state.mode === "circles") renderCircleControls();
       if (state.mode === "trig") renderTrigControls();
+      if (state.mode === "complex") renderComplexControls();
+      if (state.mode === "calculus") renderCalculusControls();
     }
 
     function renderDisplay() {
       if (state.mode === "graphs") renderGraphDisplay();
+      if (state.mode === "transforms") renderTransformDisplay();
       if (state.mode === "circleEq") renderCircleEquationDisplay();
       if (state.mode === "circles") renderCircleDisplay();
       if (state.mode === "trig") renderTrigDisplay();
+      if (state.mode === "complex") renderComplexDisplay();
+      if (state.mode === "calculus") renderCalculusDisplay();
     }
 
     let activeDrag = null;
@@ -1119,6 +1576,27 @@
       });
     }
 
+    function startAnimation(target) {
+      if (!state[target]) return;
+      state[target].progress = 0;
+      const raf = window.requestAnimationFrame || ((callback) => window.setTimeout(() => callback(Date.now()), 16));
+      const caf = window.cancelAnimationFrame || window.clearTimeout;
+      if (activeAnimation) caf(activeAnimation);
+      const start = window.performance && window.performance.now ? window.performance.now() : Date.now();
+      const duration = 3000;
+      const step = (now) => {
+        state[target].progress = clamp((now - start) / duration, 0, 1);
+        renderDisplay();
+        bindStageDrag();
+        if (state[target].progress < 1) {
+          activeAnimation = raf(step);
+        } else {
+          activeAnimation = null;
+        }
+      };
+      activeAnimation = raf(step);
+    }
+
     function handleDragMove(event) {
       if (!activeDrag || !stage.querySelector) return;
       const svgEl = stage.querySelector("svg");
@@ -1154,6 +1632,9 @@
       if (state.mode === "graphs") {
         state.graphs = { model: state.graphs.model, a: 1, b: 1, h: 0, k: 0, original: true, points: true };
       }
+      if (state.mode === "transforms") {
+        state.transforms = { model: state.transforms.model, progress: 1, centreX: 1, centreY: 1, angle: 90, direction: "anticlockwise", vectorX: 4, vectorY: 2, scale: 2 };
+      }
       if (state.mode === "circleEq") {
         state.circleEq = { model: state.circleEq.model, h: 2, k: -1, r: 4 };
       }
@@ -1177,6 +1658,12 @@
       if (state.mode === "trig") {
         state.trig = { model: state.trig.model, a: 1, b: 1, h: 0, k: 0, original: true };
       }
+      if (state.mode === "complex") {
+        state.complex = { model: state.complex.model, progress: 1, real: 3, imag: 1, modulus: 1.5, angle: 90 };
+      }
+      if (state.mode === "calculus") {
+        state.calculus = { model: state.calculus.model, progress: 1, x: 2, h: 3, rectangles: 6 };
+      }
       render();
     }
 
@@ -1190,6 +1677,7 @@
 
     modelSelect.addEventListener("change", () => {
       currentModeState().model = modelSelect.value;
+      if (Object.prototype.hasOwnProperty.call(currentModeState(), "progress")) currentModeState().progress = 1;
       render();
     });
 
