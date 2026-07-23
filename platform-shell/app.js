@@ -12008,7 +12008,7 @@ function bindToolFrame(tool, options = {}) {
       }
     });
 
-    clone.querySelectorAll("script,.teacher-tab,.sidebar,.sidebar-overlay,.timer-modal,.kaizen-capture-board").forEach((element) => {
+    clone.querySelectorAll("script,.teacher-tab,.sidebar,.sidebar-overlay,.timer-modal").forEach((element) => {
       element.remove();
     });
     return clone;
@@ -12034,17 +12034,19 @@ function bindToolFrame(tool, options = {}) {
   function classroomCaptureMarkup(doc, width, height) {
     const frameCss = collectDocumentCss(doc) + `
       html,body{margin:0!important;background:#fff!important;}
-      .teacher-tab,.sidebar,.sidebar-overlay,.timer-modal,.kaizen-capture-board{display:none!important;}
+      .teacher-tab,.sidebar,.sidebar-overlay,.timer-modal{display:none!important;}
       .container{box-shadow:none!important;}
     `;
     const clone = cloneFrameBodyForCapture(doc);
     const scroll = frameScrollPosition(doc);
     const baseHref = doc.location?.href || frame?.src || window.location.href;
+    const htmlClass = escapeHtml(doc.documentElement.className || "");
+    const htmlStyle = escapeHtml(doc.documentElement.getAttribute("style") || "");
     const bodyClass = escapeHtml(clone.className || "");
     const bodyStyle = escapeHtml(clone.getAttribute("style") || "");
     const bodyMarkup = clone.innerHTML || clone.outerHTML;
     return `
-      <html xmlns="http://www.w3.org/1999/xhtml">
+      <html xmlns="http://www.w3.org/1999/xhtml" class="${htmlClass}" style="${htmlStyle}">
         <head>
           <base href="${escapeHtml(baseHref)}" />
           <style>${frameCss}</style>
