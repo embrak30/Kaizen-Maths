@@ -735,6 +735,8 @@
 
       html,
       body {
+        width: auto;
+        height: auto;
         min-height: auto;
         overflow: visible !important;
         background: #fff !important;
@@ -759,19 +761,29 @@
         width: 100%;
       }
 
+      .print-page {
+        break-after: page;
+        page-break-after: always;
+      }
+
+      .print-page:last-child {
+        break-after: auto;
+        page-break-after: auto;
+      }
+
       .print-header {
         display: grid;
-        grid-template-columns: 1fr 190px;
-        gap: 14px;
+        grid-template-columns: 1fr 165px;
+        gap: 10px;
         align-items: start;
-        padding-bottom: 10px;
+        padding-bottom: 7px;
         border-bottom: 2px solid #111827;
       }
 
       .print-kicker {
-        margin: 0 0 5px;
+        margin: 0 0 3px;
         color: #087a76;
-        font-size: 10pt;
+        font-size: 8.6pt;
         font-weight: 900;
         letter-spacing: 0.08em;
         text-transform: uppercase;
@@ -779,21 +791,21 @@
 
       .print-title {
         margin: 0;
-        font-size: 19pt;
+        font-size: 17pt;
         line-height: 1.05;
       }
 
       .print-instruction {
-        margin: 6px 0 0;
+        margin: 4px 0 0;
         color: #374151;
-        font-size: 9.5pt;
-        line-height: 1.28;
+        font-size: 8.6pt;
+        line-height: 1.18;
       }
 
       .print-fields {
         display: grid;
-        gap: 10px;
-        font-size: 11pt;
+        gap: 6px;
+        font-size: 9.4pt;
         font-weight: 800;
       }
 
@@ -806,47 +818,49 @@
 
       .print-line {
         border-bottom: 1.5px solid #6b7280;
-        height: 18px;
+        height: 14px;
       }
 
       .print-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: repeat(4, 1fr);
-        gap: 8px;
-        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: stretch;
+        margin-top: 8px;
       }
 
       .print-question {
         break-inside: avoid;
-        min-height: 126px;
-        padding: 8px;
+        page-break-inside: avoid;
+        width: calc(50% - 3px);
+        min-height: 104px;
+        padding: 6px;
         border: 1.5px solid #cbd5e1;
       }
 
       .print-question-head {
         display: grid;
-        grid-template-columns: 28px 1fr;
-        gap: 8px;
+        grid-template-columns: 25px 1fr;
+        gap: 6px;
         align-items: start;
       }
 
       .print-number {
-        width: 24px;
-        height: 24px;
+        width: 21px;
+        height: 21px;
         display: grid;
         place-items: center;
         border-radius: 999px;
         color: #fff;
         background: #111827;
-        font-size: 10pt;
+        font-size: 8.8pt;
         font-weight: 900;
       }
 
       .print-prompt {
         margin: 0;
-        font-size: 10pt;
-        line-height: 1.24;
+        font-size: 9pt;
+        line-height: 1.16;
         font-weight: 760;
       }
 
@@ -860,27 +874,27 @@
 
       .print-model {
         display: grid;
-        gap: 5px;
-        margin-top: 8px;
+        gap: 4px;
+        margin-top: 6px;
       }
 
       .print-model-row {
         display: grid;
-        grid-template-columns: 62px minmax(0, 1fr);
-        gap: 8px;
+        grid-template-columns: 52px minmax(0, 1fr);
+        gap: 6px;
         align-items: center;
       }
 
       .print-model-label {
         color: #374151;
-        font-size: 8.5pt;
+        font-size: 7.6pt;
         font-weight: 850;
         text-align: right;
       }
 
       .print-bar {
         display: grid;
-        min-height: 28px;
+        min-height: 23px;
         border: 1.8px solid #111827;
         background: #fff;
       }
@@ -890,7 +904,7 @@
         display: grid;
         place-items: center;
         border-right: 1px solid #111827;
-        font-size: 7.8pt;
+        font-size: 6.8pt;
         font-weight: 800;
       }
 
@@ -915,17 +929,17 @@
       .print-equation {
         display: flex;
         flex-wrap: wrap;
-        gap: 6px;
+        gap: 4px;
         align-items: center;
         justify-content: center;
-        margin-top: 10px;
-        font-size: 11pt;
+        margin-top: 7px;
+        font-size: 9.5pt;
         font-weight: 850;
       }
 
       .print-block {
-        min-width: 34px;
-        height: 30px;
+        min-width: 28px;
+        height: 24px;
         display: grid;
         place-items: center;
         border: 1.8px solid #111827;
@@ -933,51 +947,53 @@
       }
 
       .print-response {
-        margin-top: 8px;
+        margin-top: 6px;
         display: grid;
-        gap: 5px;
+        gap: 3px;
       }
 
       .print-response-line {
-        height: 15px;
+        height: 12px;
         border-bottom: 1px solid #cbd5e1;
       }
 
       .print-footer {
-        margin-top: 12px;
-        padding-top: 8px;
+        margin-top: 8px;
+        padding-top: 5px;
         border-top: 1px solid #cbd5e1;
         color: #4b5563;
-        font-size: 8.5pt;
+        font-size: 7.8pt;
         text-align: center;
       }
 
       .print-answer-key {
-        break-before: page;
         margin-top: 0;
       }
 
       .print-answer-key h2 {
-        margin: 0 0 6px;
-        font-size: 17pt;
+        margin: 0 0 5px;
+        font-size: 15.5pt;
       }
 
       .print-answer-note {
-        margin: 0 0 10px;
+        margin: 0 0 7px;
         color: #4b5563;
-        font-size: 9pt;
+        font-size: 8.4pt;
       }
 
       .print-key-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: stretch;
       }
 
       .print-key-item {
         break-inside: avoid;
-        min-height: 118px;
-        padding: 8px;
+        page-break-inside: avoid;
+        width: calc(50% - 3px);
+        min-height: 0;
+        padding: 6px;
         border: 1.5px solid #cbd5e1;
       }
 
@@ -991,9 +1007,9 @@
       }
 
       .print-key-answer {
-        margin: 6px 0 0;
+        margin: 5px 0 0;
         color: #111827;
-        font-size: 9pt;
+        font-size: 8.5pt;
         font-weight: 900;
       }
     }
@@ -2426,7 +2442,9 @@
           + printAnswerKeyModel(item.problem)
           + '</article>';
       }).join("");
+      const printFooter = '<footer class="print-footer">Developed in Kaizen Maths</footer>';
       practicePrintRootEl.innerHTML = '<div class="print-sheet">'
+        + '<section class="print-page print-practice-page">'
         + '<header class="print-header">'
         + '<div>'
         + '<p class="print-kicker">Kaizen Maths Student Practice</p>'
@@ -2441,12 +2459,16 @@
         + '</div>'
         + '</header>'
         + '<section class="print-grid">' + questionHtml + '</section>'
+        + printFooter
+        + '</section>'
+        + '<section class="print-page print-key-page">'
         + '<section class="print-answer-key">'
         + '<h2>Answer Key</h2>'
         + '<p class="print-answer-note">Completed models show the bar structure and selected parts for teacher reference.</p>'
         + '<div class="print-key-grid">' + keyHtml + '</div>'
         + '</section>'
-        + '<footer class="print-footer">Developed in Kaizen Maths</footer>'
+        + printFooter
+        + '</section>'
         + '</div>';
     }
 
