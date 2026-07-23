@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Classroom Displays | Kaizen Maths</title>
+  <style>
+    :root {
+      --ink: #14263a;
+      --muted: #64748b;
+      --line: #d8e2ef;
+      --paper: #ffffff;
+      --soft: #f6fbff;
+      --teal: #13aaa7;
+      --teal-dark: #087a76;
+      --orange: #f97316;
+      --purple: #6554c0;
+      --blue: #2563eb;
+      --green: #16a34a;
+      --shadow: 0 16px 42px rgba(20, 38, 58, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #eef5f8;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      background:
+        linear-gradient(135deg, rgba(19, 170, 167, 0.10), rgba(249, 115, 22, 0.08)),
+        repeating-linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0 1px, transparent 1px 30px),
+        #f8fcff;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      min-height: 76px;
+      padding: 12px 16px;
+      color: #fff;
+      background: linear-gradient(135deg, #122b46, #174d67 58%, #087a76);
+      box-shadow: 0 8px 24px rgba(12, 26, 46, 0.18);
+      z-index: 5;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      line-height: 1.08;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: #d9f5f4;
+      font-size: 0.84rem;
+      font-weight: 680;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .mode-btn,
+    .action-btn {
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 7px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.13);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      font-weight: 850;
+    }
+
+    .mode-btn.active {
+      color: #10243c;
+      background: #ffffff;
+      border-color: #ffffff;
+    }
+
+    .action-btn {
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 315px minmax(0, 1fr);
+    }
+
+    .panel {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.92);
+      border-right: 1px solid var(--line);
+    }
+
+    .panel-section {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(20, 38, 58, 0.06);
+    }
+
+    .panel-section + .panel-section {
+      margin-top: 10px;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      color: var(--teal-dark);
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .panel-note {
+      margin: 0;
+      color: #42526b;
+      font-size: 0.84rem;
+      line-height: 1.32;
+      font-weight: 650;
+    }
+
+    .control-row {
+      display: grid;
+      gap: 5px;
+      margin-top: 10px;
+    }
+
+    .control-row label {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: #253858;
+      font-size: 0.82rem;
+      font-weight: 850;
+    }
+
+    .control-row span {
+      color: var(--teal-dark);
+      font-weight: 900;
+    }
+
+    select,
+    input[type="range"] {
+      width: 100%;
+    }
+
+    select {
+      min-height: 38px;
+      border: 1px solid #bed0df;
+      border-radius: 7px;
+      padding: 8px 10px;
+      color: var(--ink);
+      background: #fff;
+      font-weight: 800;
+    }
+
+    input[type="range"] {
+      accent-color: var(--teal);
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      color: #253858;
+      font-size: 0.84rem;
+      font-weight: 850;
+    }
+
+    .board-shell {
+      min-height: 0;
+      padding: 16px;
+      display: grid;
+      background: rgba(216, 226, 239, 0.68);
+      overflow: hidden;
+    }
+
+    .board {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      border: 1px solid #bfd0df;
+      border-radius: 9px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .board.fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      border: 0;
+      border-radius: 0;
+    }
+
+    .board-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 50px;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, #ffffff, #f2fffe);
+    }
+
+    .board-title {
+      margin: 0;
+      color: #14263a;
+      font-size: 1rem;
+      font-weight: 950;
+    }
+
+    .board-equation {
+      color: var(--purple);
+      font-family: "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+      font-size: 1.05rem;
+      font-weight: 780;
+      text-align: right;
+    }
+
+    .stage {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      overflow: hidden;
+    }
+
+    .stage svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .axis {
+      stroke: #172f4a;
+      stroke-width: 2.3;
+    }
+
+    .grid-line {
+      stroke: #dbe6f1;
+      stroke-width: 1;
+    }
+
+    .grid-major {
+      stroke: #c5d4e1;
+      stroke-width: 1.4;
+    }
+
+    .base-curve {
+      fill: none;
+      stroke: #64748b;
+      stroke-width: 3;
+      stroke-dasharray: 9 7;
+    }
+
+    .main-curve {
+      fill: none;
+      stroke: var(--teal);
+      stroke-width: 4.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .secondary-curve {
+      fill: none;
+      stroke: var(--orange);
+      stroke-width: 4.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .shape-line {
+      fill: none;
+      stroke: #14263a;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .circle-line {
+      fill: #fff;
+      stroke: #14263a;
+      stroke-width: 4;
+    }
+
+    .theorem-line {
+      fill: none;
+      stroke: #14263a;
+      stroke-width: 3.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .highlight-line {
+      fill: none;
+      stroke: var(--teal);
+      stroke-width: 4.5;
+      stroke-linecap: round;
+    }
+
+    .angle-mark {
+      fill: none;
+      stroke: var(--orange);
+      stroke-width: 4;
+      stroke-linecap: round;
+    }
+
+    .point-dot {
+      fill: #14263a;
+      stroke: #fff;
+      stroke-width: 3;
+    }
+
+    .label-text {
+      fill: #14263a;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      paint-order: stroke;
+      stroke: white;
+      stroke-width: 5;
+      stroke-linejoin: round;
+    }
+
+    .math-label {
+      fill: var(--purple);
+      font-family: "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+      font-size: 22px;
+      font-weight: 780;
+      paint-order: stroke;
+      stroke: white;
+      stroke-width: 5;
+      stroke-linejoin: round;
+    }
+
+    @media (max-width: 920px) {
+      html,
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .topbar,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+
+      .panel {
+        max-height: none;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .board-shell {
+        min-height: 70vh;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+  <script src="../../auth-config.js?v=tool-access-guard-2"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-2"></script>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Dynamic Classroom Displays</h1>
+        <p>Interactive graph, circle theorem, and trigonometric displays for board explanation</p>
+      </div>
+      <div class="top-actions" id="modeButtons">
+        <button class="mode-btn active" type="button" data-mode="graphs">Graph Transformations</button>
+        <button class="mode-btn" type="button" data-mode="circles">Circle Theorems</button>
+        <button class="mode-btn" type="button" data-mode="trig">Trig Graphs</button>
+        <button class="action-btn" type="button" id="resetBtn">Reset</button>
+        <button class="action-btn" type="button" id="fullscreenBtn">Full Screen</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <aside class="panel">
+        <section class="panel-section">
+          <h2>Dynamic Model</h2>
+          <select id="modelSelect" aria-label="Dynamic model"></select>
+          <p class="panel-note" id="modelNote"></p>
+        </section>
+        <section class="panel-section" id="controlPanel">
+          <h2>Controls</h2>
+        </section>
+      </aside>
+
+      <section class="board-shell">
+        <div class="board" id="board">
+          <header class="board-header">
+            <h2 class="board-title" id="boardTitle">Graph Transformations</h2>
+            <div class="board-equation" id="boardEquation">y = f(x)</div>
+          </header>
+          <div class="stage" id="stage"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const stage = document.getElementById("stage");
+    const board = document.getElementById("board");
+    const modelSelect = document.getElementById("modelSelect");
+    const modelNote = document.getElementById("modelNote");
+    const boardTitle = document.getElementById("boardTitle");
+    const boardEquation = document.getElementById("boardEquation");
+    const controlPanel = document.getElementById("controlPanel");
+    const modeButtons = document.getElementById("modeButtons");
+
+    const state = {
+      mode: "graphs",
+      graphs: {
+        model: "quadratic",
+        a: 1,
+        b: 1,
+        h: 0,
+        k: 0,
+        original: true,
+        points: true
+      },
+      circles: {
+        model: "centre-circumference",
+        arc: 110,
+        rotate: 0,
+        p: 265,
+        q: 95
+      },
+      trig: {
+        model: "sine",
+        a: 1,
+        b: 1,
+        h: 0,
+        k: 0,
+        original: true
+      }
+    };
+
+    const models = {
+      graphs: [
+        ["quadratic", "Quadratic: y = x^2", "Use sliders to show stretch, reflection, translation, and horizontal scale."],
+        ["cubic", "Cubic: y = x^3", "Compare the original cubic with the transformed curve."],
+        ["absolute", "Modulus: y = |x|", "Useful for translations, reflections, and stretch conversations."],
+        ["reciprocal", "Reciprocal: y = 1/x", "Show how transformations affect asymptotes and branches."]
+      ],
+      circles: [
+        ["centre-circumference", "Angle at Centre", "The angle at the centre is twice the angle at the circumference standing on the same arc."],
+        ["same-segment", "Angles in Same Segment", "Angles standing on the same chord are equal."],
+        ["cyclic-quadrilateral", "Cyclic Quadrilateral", "Opposite angles in a cyclic quadrilateral add to 180 degrees."],
+        ["tangent-radius", "Tangent and Radius", "A tangent is perpendicular to the radius at the point of contact."]
+      ],
+      trig: [
+        ["sine", "Sine Graph", "Use amplitude, horizontal scale, phase shift, and vertical shift."],
+        ["cosine", "Cosine Graph", "Compare cosine with a transformed graph."],
+        ["tangent", "Tangent Graph", "Show period, vertical shift, and asymptotes."]
+      ]
+    };
+
+    const graphWidth = 1000;
+    const graphHeight = 650;
+    const graphBounds = { xmin: -10, xmax: 10, ymin: -8, ymax: 8 };
+    const trigBounds = { xmin: 0, xmax: 360, ymin: -4, ymax: 4 };
+    const circle = { cx: 500, cy: 330, r: 215 };
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function round(value, places = 1) {
+      return Number(value).toFixed(places).replace(/\.0$/, "");
+    }
+
+    function svg(content, viewBox = "0 0 1000 650") {
+      stage.innerHTML = '<svg viewBox="' + viewBox + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' + content + "</svg>";
+    }
+
+    function point(angleDeg, radius = circle.r, cx = circle.cx, cy = circle.cy) {
+      const angle = (angleDeg - 90) * Math.PI / 180;
+      return {
+        x: cx + radius * Math.cos(angle),
+        y: cy + radius * Math.sin(angle)
+      };
+    }
+
+    function distPoint(p, dx, dy) {
+      return { x: p.x + dx, y: p.y + dy };
+    }
+
+    function line(a, b, cls = "theorem-line") {
+      return '<line class="' + cls + '" x1="' + a.x.toFixed(1) + '" y1="' + a.y.toFixed(1) + '" x2="' + b.x.toFixed(1) + '" y2="' + b.y.toFixed(1) + '"/>';
+    }
+
+    function dot(p, text, dx = 18, dy = -14) {
+      return '<circle class="point-dot" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="7"/>' +
+        '<text class="label-text" x="' + (p.x + dx).toFixed(1) + '" y="' + (p.y + dy).toFixed(1) + '">' + text + '</text>';
+    }
+
+    function angleBetween(a, v, b) {
+      const va = { x: a.x - v.x, y: a.y - v.y };
+      const vb = { x: b.x - v.x, y: b.y - v.y };
+      const dotProduct = va.x * vb.x + va.y * vb.y;
+      const crossProduct = va.x * vb.y - va.y * vb.x;
+      return Math.abs(Math.atan2(crossProduct, dotProduct) * 180 / Math.PI);
+    }
+
+    function graphX(x, bounds = graphBounds) {
+      return (x - bounds.xmin) / (bounds.xmax - bounds.xmin) * graphWidth;
+    }
+
+    function graphY(y, bounds = graphBounds) {
+      return graphHeight - (y - bounds.ymin) / (bounds.ymax - bounds.ymin) * graphHeight;
+    }
+
+    function graphGrid(bounds = graphBounds, stepX = 1, stepY = 1) {
+      let content = '<rect width="' + graphWidth + '" height="' + graphHeight + '" fill="white"/>';
+      for (let x = Math.ceil(bounds.xmin); x <= bounds.xmax; x += stepX) {
+        const px = graphX(x, bounds);
+        const cls = x === 0 ? "axis" : (x % 5 === 0 ? "grid-major" : "grid-line");
+        content += '<line class="' + cls + '" x1="' + px + '" y1="0" x2="' + px + '" y2="' + graphHeight + '"/>';
+      }
+      for (let y = Math.ceil(bounds.ymin); y <= bounds.ymax; y += stepY) {
+        const py = graphY(y, bounds);
+        const cls = y === 0 ? "axis" : (y % 5 === 0 ? "grid-major" : "grid-line");
+        content += '<line class="' + cls + '" x1="0" y1="' + py + '" x2="' + graphWidth + '" y2="' + py + '"/>';
+      }
+      content += '<text class="label-text" x="974" y="' + (graphY(0, bounds) - 12) + '">x</text>';
+      content += '<text class="label-text" x="' + (graphX(0, bounds) + 12) + '" y="28">y</text>';
+      return content;
+    }
+
+    function baseFunction(name, x) {
+      if (name === "quadratic") return x * x;
+      if (name === "cubic") return x * x * x / 8;
+      if (name === "absolute") return Math.abs(x);
+      if (name === "reciprocal") return x === 0 ? NaN : 1 / x;
+      return x * x;
+    }
+
+    function functionLabel(name) {
+      if (name === "quadratic") return "x<sup>2</sup>";
+      if (name === "cubic") return "x<sup>3</sup>";
+      if (name === "absolute") return "|x|";
+      if (name === "reciprocal") return "1/x";
+      return "f(x)";
+    }
+
+    function pathForFunction(fn, bounds, samples = 500) {
+      const pieces = [];
+      let current = [];
+      for (let i = 0; i <= samples; i++) {
+        const x = bounds.xmin + (bounds.xmax - bounds.xmin) * i / samples;
+        const y = fn(x);
+        if (!Number.isFinite(y) || y < bounds.ymin - 20 || y > bounds.ymax + 20) {
+          if (current.length) pieces.push(current);
+          current = [];
+          continue;
+        }
+        current.push([graphX(x, bounds), graphY(clamp(y, bounds.ymin - 1, bounds.ymax + 1), bounds)]);
+      }
+      if (current.length) pieces.push(current);
+      return pieces.map((part) => part.map((p, index) => (index ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ")).join(" ");
+    }
+
+    function slider(id, label, min, max, step, value) {
+      return '<div class="control-row"><label for="' + id + '">' + label + '<span id="' + id + 'Value">' + value + '</span></label><input id="' + id + '" type="range" min="' + min + '" max="' + max + '" step="' + step + '" value="' + value + '"></div>';
+    }
+
+    function checkbox(id, label, checked) {
+      return '<label class="toggle-row"><input id="' + id + '" type="checkbox"' + (checked ? " checked" : "") + '> ' + label + '</label>';
+    }
+
+    function attachSlider(id, target, key, renderer) {
+      const input = document.getElementById(id);
+      const output = document.getElementById(id + "Value");
+      input.addEventListener("input", () => {
+        state[target][key] = Number(input.value);
+        output.textContent = input.value;
+        renderer();
+      });
+    }
+
+    function attachCheckbox(id, target, key, renderer) {
+      document.getElementById(id).addEventListener("change", (event) => {
+        state[target][key] = event.target.checked;
+        renderer();
+      });
+    }
+
+    function signed(value) {
+      if (value === 0) return "";
+      return value > 0 ? " + " + value : " - " + Math.abs(value);
+    }
+
+    function renderGraphControls() {
+      const g = state.graphs;
+      controlPanel.innerHTML = '<h2>Controls</h2>' +
+        slider("graphA", "Vertical scale a", -3, 3, 0.5, g.a) +
+        slider("graphB", "Horizontal scale b", 0.5, 3, 0.5, g.b) +
+        slider("graphH", "Horizontal shift h", -5, 5, 1, g.h) +
+        slider("graphK", "Vertical shift k", -5, 5, 1, g.k) +
+        checkbox("graphOriginal", "Show original graph", g.original) +
+        checkbox("graphPoints", "Show key reference points", g.points);
+      attachSlider("graphA", "graphs", "a", render);
+      attachSlider("graphB", "graphs", "b", render);
+      attachSlider("graphH", "graphs", "h", render);
+      attachSlider("graphK", "graphs", "k", render);
+      attachCheckbox("graphOriginal", "graphs", "original", render);
+      attachCheckbox("graphPoints", "graphs", "points", render);
+    }
+
+    function renderGraphDisplay() {
+      const g = state.graphs;
+      const name = g.model;
+      const base = (x) => baseFunction(name, x);
+      const transformed = (x) => g.a * base(g.b * (x - g.h)) + g.k;
+      let content = graphGrid(graphBounds, 1, 1);
+      if (g.original) {
+        content += '<path class="base-curve" d="' + pathForFunction(base, graphBounds) + '"/>';
+      }
+      content += '<path class="main-curve" d="' + pathForFunction(transformed, graphBounds) + '"/>';
+      if (g.points && name !== "reciprocal") {
+        const points = [-2, -1, 0, 1, 2].map((x) => ({ x, y: transformed(x) })).filter((p) => p.y >= graphBounds.ymin && p.y <= graphBounds.ymax);
+        content += points.map((p) => '<circle cx="' + graphX(p.x) + '" cy="' + graphY(p.y) + '" r="5" fill="#f97316"/>').join("");
+      }
+      const baseText = functionLabel(name);
+      boardTitle.textContent = models.graphs.find((item) => item[0] === name)[1];
+      boardEquation.innerHTML = "y = " + round(g.a) + "f(" + round(g.b) + "(x" + signed(-g.h) + "))" + signed(g.k) + " where f(x) = " + baseText;
+      svg(content, "0 0 " + graphWidth + " " + graphHeight);
+    }
+
+    function circleBase() {
+      return '<rect width="1000" height="650" fill="white"/>' +
+        '<circle class="circle-line" cx="' + circle.cx + '" cy="' + circle.cy + '" r="' + circle.r + '"/>' +
+        '<circle class="point-dot" cx="' + circle.cx + '" cy="' + circle.cy + '" r="6"/>' +
+        '<text class="label-text" x="' + (circle.cx + 12) + '" y="' + (circle.cy - 12) + '">O</text>';
+    }
+
+    function arcPath(startDeg, endDeg, radius = 44, cx = circle.cx, cy = circle.cy) {
+      const start = point(startDeg, radius, cx, cy);
+      const end = point(endDeg, radius, cx, cy);
+      const diff = (endDeg - startDeg + 360) % 360;
+      const large = diff > 180 ? 1 : 0;
+      return 'M ' + start.x.toFixed(1) + ' ' + start.y.toFixed(1) + ' A ' + radius + ' ' + radius + ' 0 ' + large + ' 1 ' + end.x.toFixed(1) + ' ' + end.y.toFixed(1);
+    }
+
+    function renderCircleControls() {
+      const c = state.circles;
+      let controls = '<h2>Controls</h2>';
+      if (c.model === "centre-circumference") {
+        controls += slider("circleArc", "Arc angle", 50, 160, 5, c.arc) + slider("circleRotate", "Rotate diagram", -90, 90, 5, c.rotate);
+      } else if (c.model === "same-segment") {
+        controls += slider("circleArc", "Chord width", 50, 150, 5, c.arc) + slider("circleP", "Point P position", 235, 310, 5, c.p) + slider("circleQ", "Point Q position", 50, 125, 5, c.q);
+      } else if (c.model === "cyclic-quadrilateral") {
+        controls += slider("circleRotate", "Rotate diagram", -90, 90, 5, c.rotate);
+      } else {
+        controls += slider("circleRotate", "Point of contact", -120, 120, 5, c.rotate);
+      }
+      controlPanel.innerHTML = controls;
+      if (document.getElementById("circleArc")) attachSlider("circleArc", "circles", "arc", render);
+      if (document.getElementById("circleRotate")) attachSlider("circleRotate", "circles", "rotate", render);
+      if (document.getElementById("circleP")) attachSlider("circleP", "circles", "p", render);
+      if (document.getElementById("circleQ")) attachSlider("circleQ", "circles", "q", render);
+    }
+
+    function renderCentreCircumference() {
+      const c = state.circles;
+      const start = 360 - c.arc / 2 + c.rotate;
+      const end = c.arc / 2 + c.rotate;
+      const A = point(start);
+      const B = point(end);
+      const P = point(180 + c.rotate);
+      const centreAngle = c.arc;
+      const circAngle = c.arc / 2;
+      boardTitle.textContent = "Angle at the Centre";
+      boardEquation.innerHTML = "Centre angle = 2 &times; circumference angle";
+      svg(circleBase() +
+        line({ x: circle.cx, y: circle.cy }, A, "highlight-line") +
+        line({ x: circle.cx, y: circle.cy }, B, "highlight-line") +
+        line(P, A) + line(P, B) +
+        '<path class="angle-mark" d="' + arcPath(start, end, 58) + '"/>' +
+        dot(A, "A") + dot(B, "B") + dot(P, "P", 18, 24) +
+        '<text class="math-label" x="' + (circle.cx + 70) + '" y="' + (circle.cy - 4) + '">' + round(centreAngle) + '&#176;</text>' +
+        '<text class="math-label" x="' + (P.x + 34) + '" y="' + (P.y - 12) + '">' + round(circAngle) + '&#176;</text>');
+    }
+
+    function renderSameSegment() {
+      const c = state.circles;
+      const A = point(180 + c.arc / 2);
+      const B = point(180 - c.arc / 2);
+      const P = point(c.p);
+      const Q = point(c.q);
+      const angleP = angleBetween(A, P, B);
+      const angleQ = angleBetween(A, Q, B);
+      boardTitle.textContent = "Angles in the Same Segment";
+      boardEquation.innerHTML = "Angles standing on the same chord are equal";
+      svg(circleBase() +
+        line(A, B, "highlight-line") +
+        line(P, A) + line(P, B) + line(Q, A) + line(Q, B) +
+        dot(A, "A", -30, 18) + dot(B, "B", 18, 18) + dot(P, "P") + dot(Q, "Q") +
+        '<text class="math-label" x="' + (P.x + 34) + '" y="' + (P.y - 8) + '">' + round(angleP) + '&#176;</text>' +
+        '<text class="math-label" x="' + (Q.x + 34) + '" y="' + (Q.y - 8) + '">' + round(angleQ) + '&#176;</text>');
+    }
+
+    function renderCyclicQuadrilateral() {
+      const r = state.circles.rotate;
+      const A = point(35 + r);
+      const B = point(140 + r);
+      const C = point(220 + r);
+      const D = point(315 + r);
+      const angleB = angleBetween(A, B, C);
+      const angleD = angleBetween(C, D, A);
+      boardTitle.textContent = "Cyclic Quadrilateral";
+      boardEquation.innerHTML = "Opposite angles add to 180&#176;";
+      svg(circleBase() +
+        '<path class="theorem-line" d="M ' + A.x + ' ' + A.y + ' L ' + B.x + ' ' + B.y + ' L ' + C.x + ' ' + C.y + ' L ' + D.x + ' ' + D.y + ' Z"/>' +
+        dot(A, "A") + dot(B, "B", -34, -14) + dot(C, "C", -34, 22) + dot(D, "D", 18, 24) +
+        '<text class="math-label" x="' + (B.x - 70) + '" y="' + (B.y + 30) + '">' + round(angleB) + '&#176;</text>' +
+        '<text class="math-label" x="' + (D.x + 36) + '" y="' + (D.y - 22) + '">' + round(angleD) + '&#176;</text>' +
+        '<text class="math-label" x="365" y="610">' + round(angleB) + '&#176; + ' + round(angleD) + '&#176; = 180&#176;</text>');
+    }
+
+    function renderTangentRadius() {
+      const T = point(45 + state.circles.rotate);
+      const O = { x: circle.cx, y: circle.cy };
+      const vx = T.x - O.x;
+      const vy = T.y - O.y;
+      const length = Math.hypot(vx, vy);
+      const tx = -vy / length;
+      const ty = vx / length;
+      const L = { x: T.x - tx * 245, y: T.y - ty * 245 };
+      const R = { x: T.x + tx * 245, y: T.y + ty * 245 };
+      boardTitle.textContent = "Tangent and Radius";
+      boardEquation.innerHTML = "Radius &#8869; tangent";
+      svg(circleBase() +
+        line(O, T, "highlight-line") +
+        line(L, R, "theorem-line") +
+        dot(T, "T") +
+        '<text class="math-label" x="' + (T.x + 34) + '" y="' + (T.y + 38) + '">90&#176;</text>');
+    }
+
+    function renderCircleDisplay() {
+      const model = state.circles.model;
+      if (model === "centre-circumference") renderCentreCircumference();
+      if (model === "same-segment") renderSameSegment();
+      if (model === "cyclic-quadrilateral") renderCyclicQuadrilateral();
+      if (model === "tangent-radius") renderTangentRadius();
+    }
+
+    function trigValue(name, xDeg) {
+      const t = xDeg * Math.PI / 180;
+      if (name === "sine") return Math.sin(t);
+      if (name === "cosine") return Math.cos(t);
+      return Math.tan(t);
+    }
+
+    function renderTrigControls() {
+      const t = state.trig;
+      controlPanel.innerHTML = '<h2>Controls</h2>' +
+        slider("trigA", "Amplitude / scale a", -3, 3, 0.5, t.a) +
+        slider("trigB", "Horizontal scale b", 0.5, 3, 0.5, t.b) +
+        slider("trigH", "Phase shift h", -180, 180, 15, t.h) +
+        slider("trigK", "Vertical shift k", -3, 3, 0.5, t.k) +
+        checkbox("trigOriginal", "Show original graph", t.original);
+      attachSlider("trigA", "trig", "a", render);
+      attachSlider("trigB", "trig", "b", render);
+      attachSlider("trigH", "trig", "h", render);
+      attachSlider("trigK", "trig", "k", render);
+      attachCheckbox("trigOriginal", "trig", "original", render);
+    }
+
+    function trigPath(fn, bounds = trigBounds, samples = 720) {
+      const pieces = [];
+      let current = [];
+      for (let i = 0; i <= samples; i++) {
+        const x = bounds.xmin + (bounds.xmax - bounds.xmin) * i / samples;
+        const y = fn(x);
+        if (!Number.isFinite(y) || Math.abs(y) > 25) {
+          if (current.length) pieces.push(current);
+          current = [];
+          continue;
+        }
+        current.push([graphX(x, bounds), graphY(clamp(y, bounds.ymin - 0.2, bounds.ymax + 0.2), bounds)]);
+      }
+      if (current.length) pieces.push(current);
+      return pieces.map((part) => part.map((p, index) => (index ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ")).join(" ");
+    }
+
+    function renderTrigDisplay() {
+      const t = state.trig;
+      let content = graphGrid(trigBounds, 30, 1);
+      if (t.model === "tangent") {
+        for (let n = -3; n <= 5; n++) {
+          const x = t.h + (90 + 180 * n) / t.b;
+          if (x < trigBounds.xmin || x > trigBounds.xmax) continue;
+          content += '<line x1="' + graphX(x, trigBounds) + '" y1="0" x2="' + graphX(x, trigBounds) + '" y2="' + graphHeight + '" stroke="#f97316" stroke-width="2" stroke-dasharray="8 7"/>';
+        }
+      }
+      if (t.original) content += '<path class="base-curve" d="' + trigPath((x) => trigValue(t.model, x), trigBounds) + '"/>';
+      const transformed = (x) => t.a * trigValue(t.model, t.b * (x - t.h)) + t.k;
+      content += '<path class="secondary-curve" d="' + trigPath(transformed, trigBounds) + '"/>';
+      boardTitle.textContent = models.trig.find((item) => item[0] === t.model)[1];
+      boardEquation.innerHTML = "y = " + round(t.a) + " " + t.model + "(" + round(t.b) + "(x" + signed(-t.h) + "))" + signed(t.k);
+      svg(content, "0 0 " + graphWidth + " " + graphHeight);
+    }
+
+    function currentModeState() {
+      return state[state.mode];
+    }
+
+    function populateModelSelect() {
+      const options = models[state.mode];
+      modelSelect.innerHTML = options.map((item) => '<option value="' + item[0] + '">' + item[1] + '</option>').join("");
+      modelSelect.value = currentModeState().model;
+      modelNote.textContent = options.find((item) => item[0] === modelSelect.value)[2];
+    }
+
+    function renderControls() {
+      if (state.mode === "graphs") renderGraphControls();
+      if (state.mode === "circles") renderCircleControls();
+      if (state.mode === "trig") renderTrigControls();
+    }
+
+    function renderDisplay() {
+      if (state.mode === "graphs") renderGraphDisplay();
+      if (state.mode === "circles") renderCircleDisplay();
+      if (state.mode === "trig") renderTrigDisplay();
+    }
+
+    function render() {
+      populateModelSelect();
+      renderControls();
+      renderDisplay();
+    }
+
+    function resetCurrent() {
+      if (state.mode === "graphs") {
+        state.graphs = { model: state.graphs.model, a: 1, b: 1, h: 0, k: 0, original: true, points: true };
+      }
+      if (state.mode === "circles") {
+        state.circles = { model: state.circles.model, arc: 110, rotate: 0, p: 265, q: 95 };
+      }
+      if (state.mode === "trig") {
+        state.trig = { model: state.trig.model, a: 1, b: 1, h: 0, k: 0, original: true };
+      }
+      render();
+    }
+
+    modeButtons.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-mode]");
+      if (!button) return;
+      state.mode = button.dataset.mode;
+      modeButtons.querySelectorAll("[data-mode]").forEach((btn) => btn.classList.toggle("active", btn === button));
+      render();
+    });
+
+    modelSelect.addEventListener("change", () => {
+      currentModeState().model = modelSelect.value;
+      render();
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", resetCurrent);
+    document.getElementById("fullscreenBtn").addEventListener("click", async () => {
+      if (!document.fullscreenElement) {
+        await board.requestFullscreen?.();
+        board.classList.add("fullscreen");
+      } else {
+        await document.exitFullscreen?.();
+      }
+    });
+    document.addEventListener("fullscreenchange", () => {
+      board.classList.toggle("fullscreen", Boolean(document.fullscreenElement));
+      document.getElementById("fullscreenBtn").textContent = document.fullscreenElement ? "Exit Full Screen" : "Full Screen";
+    });
+
+    render();
+  </script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+</body>
+</html>

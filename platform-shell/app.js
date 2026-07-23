@@ -2019,6 +2019,26 @@ const tools = [
     ]
   },
   {
+    slug: "dynamic-classroom-displays",
+    title: "Dynamic Classroom Displays",
+    category: "Classroom Tools",
+    level: "GCSE / A-Level",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "Open dynamic board-ready displays for graph transformations, circle theorems, and trigonometric graphs, with sliders for live mathematical exploration.",
+    tags: ["classroom", "dynamic displays", "interactive graphs", "graph transformations", "circle theorems", "trigonometric graphs", "sliders", "visual maths", "board"],
+    toolPath: "tools/dynamic-classroom-displays/index.html?v=dynamic-classroom-displays-1",
+    imported: true,
+    teacherNotes: [
+      "Designed as a selective dynamic layer for topics where movement and live adjustment strengthen understanding.",
+      "Graph transformation displays let teachers vary stretch, reflection, translation, and scale while comparing the original and transformed graph.",
+      "Circle theorem displays show angle relationships dynamically, including angle at the centre, angles in the same segment, cyclic quadrilaterals, and tangent-radius relationships.",
+      "Trigonometric graph displays use sliders for amplitude, horizontal scale, phase shift, and vertical shift.",
+      "Use full-screen mode and the write function for live explanation and annotation."
+    ]
+  },
+  {
     slug: "elementary-manipulatives",
     title: "Primary and Elementary Maths Manipulatives",
     category: "Classroom Tools",
@@ -2357,6 +2377,7 @@ const subjectToolGroups = {
   },
   "Classroom Tools": {
     "classroom-displays": "Board Displays and Visuals",
+    "dynamic-classroom-displays": "Board Displays and Visuals",
     "elementary-manipulatives": "Board Displays and Visuals",
     "bar-models": "Board Displays and Visuals",
     "area-models": "Board Displays and Visuals",
@@ -2670,6 +2691,7 @@ const freeSampleTools = new Set([
   "pythagoras-theorem",
   "averages-range",
   "classroom-displays",
+  "dynamic-classroom-displays",
   "bar-models",
   "area-models",
   "elementary-starter-board",
@@ -7856,6 +7878,8 @@ const curatedRelatedToolSlugs = {
   "newtons-second-law": ["friction", "work-energy-power", "motion-graphs-constant-acceleration", "equations-of-motion"],
   "friction": ["newtons-second-law", "work-energy-power", "equations-of-motion", "moments"],
   "work-energy-power": ["friction", "newtons-second-law", "equations-of-motion", "motion-graphs-constant-acceleration"],
+  "classroom-displays": ["dynamic-classroom-displays", "bar-models", "area-models", "elementary-manipulatives"],
+  "dynamic-classroom-displays": ["classroom-displays", "graph-transformations-curve-sketching", "circle-theorems", "trig-graphs-transformations"],
   "word-search-builder": ["fractions-table", "elementary-starter-board", "elementary-maths-playground", "classroom-displays"],
   "bar-models": ["area-models", "elementary-manipulatives", "elementary-maths-playground", "ratio-proportion"],
   "area-models": ["bar-models", "elementary-manipulatives", "fractions-practice", "algebraic-simplification"],
@@ -8506,6 +8530,19 @@ function toolInsightProfile(tool) {
         "What is the resultant force in the chosen positive direction?",
         "Which quantity is mass, which is weight, and which is acceleration?",
         "How would the acceleration change if one opposing force were increased?"
+      ]
+    },
+    {
+      match: () => tool.slug === "dynamic-classroom-displays" || has("dynamic displays", "interactive graphs", "circle theorems", "trigonometric graphs"),
+      misconceptions: [
+        "Treating a slider movement as decoration rather than using it to describe the mathematical invariant that stays true.",
+        "Reading transformed graphs by memorising a movement rule without checking how key points have changed.",
+        "Assuming a circle theorem is true from one drawing only, instead of noticing that the relationship remains true as the points move."
+      ],
+      questions: [
+        "What stays the same as the diagram changes, and what changes?",
+        "Which key point, angle, or graph feature gives the strongest evidence for the transformation or theorem?",
+        "How could a student use the dynamic display to explain the result before writing the formal solution?"
       ]
     },
     {
