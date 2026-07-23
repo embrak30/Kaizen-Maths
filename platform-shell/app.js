@@ -5773,8 +5773,8 @@ function gcseGenerateStandardForm(filters) {
     answer: `${mantissa} × 10^${power}`,
     worked: [
       "Standard form is written as a × 10^n where 1 ≤ a < 10.",
-      `Move the decimal point until the first number is ${mantissa}.`,
-      `The decimal point moves ${power} places, so ${number.toLocaleString("en-GB")} = ${mantissa} × 10^${power}.`
+      `Shift the digits ${power} places right through the fixed decimal point to make the coefficient ${mantissa}.`,
+      `The decimal point marks the fixed boundary between ones and tenths; the digit shift gives ${number.toLocaleString("en-GB")} = ${mantissa} × 10^${power}.`
     ],
     markScheme: [
       "1 mark for a number between 1 and 10.",
@@ -8396,12 +8396,12 @@ function toolInsightProfile(tool) {
       misconceptions: [
         "Aligning digits by the right edge rather than aligning decimal points.",
         "Treating trailing zeros as changing the value rather than clarifying place value.",
-        "Multiplying or dividing by powers of ten by moving the decimal point in the wrong direction."
+        "Thinking the decimal point itself moves when multiplying or dividing by powers of ten, rather than shifting digits through fixed place-value columns."
       ],
       questions: [
         "Which place-value column controls this calculation?",
         "How can adding placeholder zeros make the decimal operation clearer without changing the value?",
-        "What estimate should the answer be close to before we calculate exactly?"
+        "How do the digits shift through the fixed decimal point, and what estimate should the answer be close to?"
       ]
     },
     {
@@ -8434,11 +8434,11 @@ function toolInsightProfile(tool) {
       match: () => has("powers of 10", "standard form", "scientific notation"),
       misconceptions: [
         "Writing a standard-form coefficient that is not between 1 and 10.",
-        "Moving the decimal point but giving the power of ten the wrong sign.",
+        "Shifting digits the wrong way when deciding the power of ten in standard form.",
         "Combining numbers in standard form without applying index laws correctly."
       ],
       questions: [
-        "How does the size of the original number determine the sign of the power of ten?",
+        "How does the digit shift needed to make the coefficient determine the sign of the power of ten?",
         "What makes a number correctly written in standard form?",
         "How can estimation help check whether the standard-form calculation has the correct magnitude?"
       ]

@@ -50,14 +50,15 @@
       </ul>
       <h3>Key Ideas</h3>
       <ul>
-        <li>Multiplying by powers of 10 moves the decimal point to the right.</li>
-        <li>Dividing by powers of 10 moves the decimal point to the left.</li>
+        <li>Multiplying by powers of 10 shifts the digits left into larger place-value columns.</li>
+        <li>Dividing by powers of 10 shifts the digits right into smaller place-value columns.</li>
+        <li>The decimal point is the fixed marker between ones and tenths; it only looks as if it moves.</li>
         <li>Standard form is A x 10^n where 1 <= A < 10.</li>
         <li>Use index laws: 10^a x 10^b = 10^(a+b) and 10^a / 10^b = 10^(a-b).</li>
       </ul>
       <h3>Common Mistakes</h3>
       <ul>
-        <li>Moving the decimal point in the wrong direction.</li>
+        <li>Thinking the decimal point itself moves instead of shifting the digits through fixed place-value columns.</li>
         <li>Miscounting the number of places.</li>
         <li>Forgetting zero placeholders.</li>
         <li>Leaving a standard form coefficient outside the range 1 to 10.</li>
@@ -130,7 +131,8 @@
     function roundResult(num,decimals=6){return Math.round(num*10**decimals)/10**decimals}
     function addCommas(num){return String(num).replace(/\B(?=(\d{3})+(?!\d))/g,',')}
     function tenSup(n){return `10<sup>${n}</sup>`}
-    function movement(num,places,direction,result){return `<div class="decimal-movement">${num} <span class="arrow">→</span> move ${places} place${places>1?'s':''} ${direction} <span class="arrow">→</span> ${result}</div>`}
+    function movement(num,places,direction,result){return `<div class="decimal-movement">${num} <span class="arrow">→</span> digits shift ${places} place${places>1?'s':''} ${direction} <span class="arrow">→</span> ${result}</div>`}
+    function shiftExplanation(action,places,direction,size){return `${action} by a power of 10 shifts the digits <span class="result-highlight">${places} place${places>1?'s':''} ${direction}</span> into ${size} place-value columns. The decimal point stays fixed between ones and tenths.`}
 
     function generateProblem(){
       const config=levelConfigs[currentLevel];let types=config.types;if(currentType!=='all'&&currentType!=='select')types=[currentType];const type=types[Math.floor(Math.random()*types.length)];
@@ -138,43 +140,43 @@
         case 'whole_multiply':{
           const n=random(2,999), p=random(1,6), pow=10**p, res=roundResult(n*pow);
           return {badge:'multiply',calculation:`<span class="base-number">${addCommas(n)}</span> × <span class="power-of-ten">${addCommas(pow)}</span>`,answer:addCommas(res),steps:[
-            'Step 1: Identify the power of 10',`We are multiplying by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Apply the decimal movement rule',`Multiplying by ${tenSup(p)} moves the decimal point <span class="result-highlight">${p} place${p>1?'s':''} to the right</span>`,movement(`${n}.0`,p,'right',`${addCommas(res)}.0`),'Step 3: Write the final answer',`<div class="step-equation">${addCommas(n)} × ${addCommas(pow)} = ${addCommas(res)}</div>`]};
+            'Step 1: Identify the power of 10',`We are multiplying by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Shift the digits through the fixed decimal point',shiftExplanation('Multiplying',p,'left','larger'),movement(`${n}.0`,p,'left',`${addCommas(res)}.0`),'Step 3: Write the final answer',`<div class="step-equation">${addCommas(n)} × ${addCommas(pow)} = ${addCommas(res)}</div>`]};
         }
         case 'decimal_multiply':{
           const n=randomDecimal(1.2,9.99), p=random(1,4), pow=10**p, res=roundResult(n*pow);
           return {badge:'multiply',calculation:`<span class="base-number">${n}</span> × <span class="power-of-ten">${addCommas(pow)}</span>`,answer:formatNumber(res),steps:[
-            'Step 1: Identify the power of 10',`We are multiplying by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Apply the decimal movement rule',`Multiplying by ${tenSup(p)} moves the decimal point <span class="result-highlight">${p} place${p>1?'s':''} to the right</span>`,movement(n,p,'right',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${n} × ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
+            'Step 1: Identify the power of 10',`We are multiplying by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Shift the digits through the fixed decimal point',shiftExplanation('Multiplying',p,'left','larger'),movement(n,p,'left',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${n} × ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
         }
         case 'mixed_multiply':{
           const n=Math.random()<.5?random(12,999):randomDecimal(2.1,99.9), p=random(1,4), pow=10**p, res=roundResult(n*pow);
           return {badge:'multiply',calculation:`<span class="base-number">${formatNumber(n)}</span> × <span class="power-of-ten">${addCommas(pow)}</span>`,answer:formatNumber(res),steps:[
-            'Step 1: Identify the power of 10',`We are multiplying by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Apply the decimal movement rule',`Multiplying by ${tenSup(p)} moves the decimal point <span class="result-highlight">${p} place${p>1?'s':''} to the right</span>`,movement(formatNumber(n),p,'right',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${formatNumber(n)} × ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
+            'Step 1: Identify the power of 10',`We are multiplying by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Shift the digits through the fixed decimal point',shiftExplanation('Multiplying',p,'left','larger'),movement(formatNumber(n),p,'left',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${formatNumber(n)} × ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
         }
         case 'whole_divide':{
           const n=random(1200,999000), p=random(1,4), pow=10**p, res=roundResult(n/pow);
           return {badge:'divide',calculation:`<span class="base-number">${addCommas(n)}</span> ÷ <span class="power-of-ten">${addCommas(pow)}</span>`,answer:formatNumber(res),steps:[
-            'Step 1: Identify the power of 10',`We are dividing by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Apply the decimal movement rule',`Dividing by ${tenSup(p)} moves the decimal point <span class="result-highlight">${p} place${p>1?'s':''} to the left</span>`,movement(`${addCommas(n)}.0`,p,'left',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${addCommas(n)} ÷ ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
+            'Step 1: Identify the power of 10',`We are dividing by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Shift the digits through the fixed decimal point',shiftExplanation('Dividing',p,'right','smaller'),movement(`${addCommas(n)}.0`,p,'right',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${addCommas(n)} ÷ ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
         }
         case 'decimal_divide':{
           const n=randomDecimal(12.34,999.99), p=random(1,3), pow=10**p, res=roundResult(n/pow);
           return {badge:'divide',calculation:`<span class="base-number">${n}</span> ÷ <span class="power-of-ten">${addCommas(pow)}</span>`,answer:formatNumber(res),steps:[
-            'Step 1: Identify the power of 10',`We are dividing by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Apply the decimal movement rule',`Dividing by ${tenSup(p)} moves the decimal point <span class="result-highlight">${p} place${p>1?'s':''} to the left</span>`,movement(n,p,'left',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${n} ÷ ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
+            'Step 1: Identify the power of 10',`We are dividing by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Shift the digits through the fixed decimal point',shiftExplanation('Dividing',p,'right','smaller'),movement(n,p,'right',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${n} ÷ ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
         }
         case 'mixed_divide':{
           const n=Math.random()<.5?random(1500,85000):randomDecimal(34.5,876.4), p=random(1,3), pow=10**p, res=roundResult(n/pow);
           return {badge:'divide',calculation:`<span class="base-number">${formatNumber(n)}</span> ÷ <span class="power-of-ten">${addCommas(pow)}</span>`,answer:formatNumber(res),steps:[
-            'Step 1: Identify the power of 10',`We are dividing by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Apply the decimal movement rule',`Dividing by ${tenSup(p)} moves the decimal point <span class="result-highlight">${p} place${p>1?'s':''} to the left</span>`,movement(formatNumber(n),p,'left',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${formatNumber(n)} ÷ ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
+            'Step 1: Identify the power of 10',`We are dividing by <span class="power-of-ten">${addCommas(pow)}</span> = ${tenSup(p)}`,'Step 2: Shift the digits through the fixed decimal point',shiftExplanation('Dividing',p,'right','smaller'),movement(formatNumber(n),p,'right',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${formatNumber(n)} ÷ ${addCommas(pow)} = ${formatNumber(res)}</div>`]};
         }
         case 'express_standard':{
           const large=Math.random()<.5?random(12000,9850000):randomDecimal(.00012,.0987,5);let coeff, exp;
           if(large>=1){const intPart=String(Math.floor(large));exp=intPart.length-1;coeff=roundResult(large/10**exp)}else{const s=formatNumber(large);const dec=s.indexOf('.');let first=-1;for(let i=dec+1;i<s.length;i++){if(s[i]!=='0'){first=i;break}}exp=-(first-dec);coeff=roundResult(large/10**exp)}
           return {badge:'standard-form',calculation:`Express <span class="base-number">${formatNumber(large)}</span> in standard form`,answer:`${formatNumber(coeff)} × ${tenSup(exp)}`,steps:[
-            'Step 1: Standard form requires the coefficient to be at least 1 and less than 10','Step 2: Count decimal place movements',movement(formatNumber(large),Math.abs(exp),exp>0?'left':'right',formatNumber(coeff)),'Step 3: Determine the power of 10',`Moved ${Math.abs(exp)} places ${exp>0?'left':'right'}, so exponent is ${exp}`,'Step 4: Write in standard form',`<div class="step-equation">${formatNumber(large)} = ${formatNumber(coeff)} × ${tenSup(exp)}</div>`]};
+            'Step 1: Standard form requires the coefficient to be at least 1 and less than 10','Step 2: Count the place-value shifts needed to form the coefficient',movement(formatNumber(large),Math.abs(exp),exp>0?'right':'left',formatNumber(coeff)),'Step 3: Determine the power of 10',`The coefficient was made by shifting digits ${Math.abs(exp)} place${Math.abs(exp)>1?'s':''} ${exp>0?'right':'left'}, so the compensating power is ${exp}.`,'Step 4: Write in standard form',`<div class="step-equation">${formatNumber(large)} = ${formatNumber(coeff)} × ${tenSup(exp)}</div>`]};
         }
         case 'evaluate_standard':{
           const coeff=randomDecimal(1.2,9.8), exp=random(-4,6), res=roundResult(coeff*10**exp);
           return {badge:'standard-form',calculation:`Evaluate <span class="base-number">${coeff}</span> × <span class="power-of-ten">${tenSup(exp)}</span>`,answer:formatNumber(res),steps:[
-            'Step 1: Identify the coefficient and exponent',`Coefficient: <span class="base-number">${coeff}</span>, Exponent: <span class="power-of-ten">${exp}</span>`,'Step 2: Apply decimal movement rule',`${tenSup(exp)} means move decimal point ${Math.abs(exp)} place${Math.abs(exp)>1?'s':''} ${exp>0?'right':'left'}`,movement(coeff,Math.abs(exp),exp>0?'right':'left',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${coeff} × ${tenSup(exp)} = ${formatNumber(res)}</div>`]};
+            'Step 1: Identify the coefficient and exponent',`Coefficient: <span class="base-number">${coeff}</span>, Exponent: <span class="power-of-ten">${exp}</span>`,'Step 2: Shift the digits using the power of 10',`${tenSup(exp)} shifts the digits ${Math.abs(exp)} place${Math.abs(exp)>1?'s':''} ${exp>0?'left':'right'} while the decimal point stays fixed.`,movement(coeff,Math.abs(exp),exp>0?'left':'right',formatNumber(res)),'Step 3: Write the final answer',`<div class="step-equation">${coeff} × ${tenSup(exp)} = ${formatNumber(res)}</div>`]};
         }
         case 'calculate_standard':{
           const c1=randomDecimal(2.1,8.9), e1=random(2,5), c2=randomDecimal(1.5,6.8), e2=random(1,4), op=Math.random()<.5?'×':'÷';let fc,fe,rawCoeff,rawExp;

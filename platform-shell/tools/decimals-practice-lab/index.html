@@ -116,7 +116,7 @@
         <li>Thinking 3.5 is less than 3.45 because 45 is larger than 5.</li>
         <li>Applying rounding rules to the wrong digit.</li>
         <li>Misaligning decimal points in addition and subtraction.</li>
-        <li>Moving the decimal point the wrong way for powers of 10.</li>
+        <li>Thinking the decimal point itself moves instead of shifting the digits through fixed place-value columns.</li>
       </ul>
     </div>
   </div>
@@ -192,6 +192,7 @@
     function highlightIndex(v){return `<span class="index">${v}</span>`}
     function highlightOperation(v){return `<span class="operation">${v}</span>`}
     function fixedTrim(num,dp){return Number(num).toFixed(dp).replace(/(\.\d*?[1-9])0+$/,'$1').replace(/\.0+$/,'')}
+    function powerTenShiftText(action,places,direction,size){return `${action} by a power of 10 shifts the digits ${places} place${places>1?'s':''} ${direction} into ${size} place-value columns. The decimal point stays fixed between ones and tenths.`}
     function alignAddSub(a,b,op,result){
       const parts=[a,b,result].map(value=>String(value));
       const decimalPlaces=Math.max(...parts.map(value=>(value.split('.')[1]||'').length));
@@ -297,22 +298,24 @@ ${answer}</pre>`;
           ]};
         }
         case 'times_powers10':{
-          const a=Number((random(1,999)/100).toFixed(random(1,3))), p=randomElement([10,100,1000]), res=a*p;
+          const a=Number((random(1,999)/100).toFixed(random(1,3))), p=randomElement([10,100,1000]), places=Math.log10(p), res=a*p;
           return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} × ${highlightOperation(p)}`,answer:fixedTrim(res,3),steps:[
             `<span class="step-indicator">Step 1</span> Identify the power of 10.`,
-            `${p} = 10${Math.log10(p) === 1 ? '' : `<sup>${Math.log10(p)}</sup>`}`,
-            `<span class="step-indicator">Step 2</span> Move the decimal point ${Math.log10(p)} place(s) to the right.`,
+            `${p} = 10${places === 1 ? '' : `<sup>${places}</sup>`}`,
+            `<span class="step-indicator">Step 2</span> Shift the digits through the fixed decimal point.`,
+            powerTenShiftText('Multiplying',places,'left','larger'),
             `${a} → ${fixedTrim(res,3)}`,
             `<span class="step-indicator">Step 3</span> Write the calculation.`,
             `${a} × ${p} = ${fixedTrim(res,3)}`
           ]};
         }
         case 'divide_powers10':{
-          const a=Number((random(1,999)/10).toFixed(random(1,3))), p=randomElement([10,100,1000]), res=a/p;
+          const a=Number((random(1,999)/10).toFixed(random(1,3))), p=randomElement([10,100,1000]), places=Math.log10(p), res=a/p;
           return {badge:'operations',equation:`Calculate: ${highlightBase(a.toString())} ÷ ${highlightOperation(p)}`,answer:fixedTrim(res,6),steps:[
             `<span class="step-indicator">Step 1</span> Identify the power of 10.`,
-            `${p} = 10${Math.log10(p) === 1 ? '' : `<sup>${Math.log10(p)}</sup>`}`,
-            `<span class="step-indicator">Step 2</span> Move the decimal point ${Math.log10(p)} place(s) to the left.`,
+            `${p} = 10${places === 1 ? '' : `<sup>${places}</sup>`}`,
+            `<span class="step-indicator">Step 2</span> Shift the digits through the fixed decimal point.`,
+            powerTenShiftText('Dividing',places,'right','smaller'),
             `${a} → ${fixedTrim(res,6)}`,
             `<span class="step-indicator">Step 3</span> Write the calculation.`,
             `${a} ÷ ${p} = ${fixedTrim(res,6)}`
