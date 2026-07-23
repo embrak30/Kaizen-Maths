@@ -326,6 +326,10 @@
       stroke-width: 4;
     }
 
+    .circle-equation-line {
+      fill: none;
+    }
+
     .theorem-line {
       fill: none;
       stroke: #14263a;
@@ -376,6 +380,50 @@
       stroke-linejoin: round;
     }
 
+    .inline-frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      line-height: 1;
+      margin: 0 2px;
+    }
+
+    .inline-frac span:first-child {
+      border-bottom: 1.8px solid currentColor;
+      padding: 0 4px 2px;
+    }
+
+    .inline-frac span:last-child {
+      padding-top: 2px;
+    }
+
+    .drag-point {
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .drag-point:active {
+      cursor: grabbing;
+    }
+
+    .drag-target {
+      fill: transparent;
+      pointer-events: all;
+    }
+
+    .drag-ring {
+      fill: #ffffff;
+      stroke: var(--orange);
+      stroke-width: 3;
+    }
+
+    .label-text,
+    .math-label {
+      pointer-events: none;
+    }
+
     @media (max-width: 920px) {
       html,
       body {
@@ -416,10 +464,11 @@
     <header class="topbar">
       <div class="brand">
         <h1>Dynamic Classroom Displays</h1>
-        <p>Interactive graph, circle theorem, and trigonometric displays for board explanation</p>
+        <p>Interactive graph, circle equation, circle theorem, and trigonometric displays for board explanation</p>
       </div>
       <div class="top-actions" id="modeButtons">
         <button class="mode-btn active" type="button" data-mode="graphs">Graph Transformations</button>
+        <button class="mode-btn" type="button" data-mode="circleEq">Circle Equation</button>
         <button class="mode-btn" type="button" data-mode="circles">Circle Theorems</button>
         <button class="mode-btn" type="button" data-mode="trig">Trig Graphs</button>
         <button class="action-btn" type="button" id="resetBtn">Reset</button>
@@ -472,12 +521,26 @@
         original: true,
         points: true
       },
+      circleEq: {
+        model: "equation",
+        h: 2,
+        k: -1,
+        r: 4
+      },
       circles: {
         model: "centre-circumference",
-        arc: 110,
-        rotate: 0,
-        p: 265,
-        q: 95
+        centreA: 305,
+        centreB: 55,
+        centreP: 180,
+        sameA: 235,
+        sameB: 125,
+        sameP: 265,
+        sameQ: 95,
+        quadA: 35,
+        quadB: 140,
+        quadC: 220,
+        quadD: 315,
+        tangentT: 45
       },
       trig: {
         model: "sine",
@@ -491,10 +554,13 @@
 
     const models = {
       graphs: [
-        ["quadratic", "Quadratic: y = x^2", "Use sliders to show stretch, reflection, translation, and horizontal scale."],
-        ["cubic", "Cubic: y = x^3", "Compare the original cubic with the transformed curve."],
-        ["absolute", "Modulus: y = |x|", "Useful for translations, reflections, and stretch conversations."],
-        ["reciprocal", "Reciprocal: y = 1/x", "Show how transformations affect asymptotes and branches."]
+        ["quadratic", "Quadratic Graph", "Use sliders to show stretch, reflection, translation, and horizontal scale."],
+        ["cubic", "Cubic Graph", "Compare the original cubic with the transformed curve."],
+        ["absolute", "Modulus Graph", "Useful for translations, reflections, and stretch conversations."],
+        ["reciprocal", "Reciprocal Graph", "Show how transformations affect asymptotes and branches."]
+      ],
+      circleEq: [
+        ["equation", "Equation of a Circle", "Move the centre or radius to show how the equation changes."]
       ],
       circles: [
         ["centre-circumference", "Angle at Centre", "The angle at the centre is twice the angle at the circumference standing on the same arc."],
@@ -512,6 +578,7 @@
     const graphWidth = 1000;
     const graphHeight = 650;
     const graphBounds = { xmin: -10, xmax: 10, ymin: -8, ymax: 8 };
+    const circleEqBounds = { xmin: -10, xmax: 10, ymin: -6.5, ymax: 6.5 };
     const trigBounds = { xmin: 0, xmax: 360, ymin: -4, ymax: 4 };
     const circle = { cx: 500, cy: 330, r: 215 };
 
@@ -520,7 +587,7 @@
     }
 
     function round(value, places = 1) {
-      return Number(value).toFixed(places).replace(/\.0$/, "");
+      return Number(value).toFixed(places).replace(/\.?0+$/, "");
     }
 
     function svg(content, viewBox = "0 0 1000 650") {
@@ -544,8 +611,14 @@
     }
 
     function dot(p, text, dx = 18, dy = -14) {
-      return '<circle class="point-dot" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="7"/>' +
-        '<text class="label-text" x="' + (p.x + dx).toFixed(1) + '" y="' + (p.y + dy).toFixed(1) + '">' + text + '</text>';
+      return dotWithDrag(p, text, null, dx, dy);
+    }
+
+    function dotWithDrag(p, text, dragId, dx = 18, dy = -14) {
+      const pointMarkup = dragId
+        ? '<g class="drag-point" data-drag="' + dragId + '"><circle class="drag-target" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="24"/><circle class="drag-ring" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="12"/><circle class="point-dot" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="6"/></g>'
+        : '<circle class="point-dot" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="7"/>';
+      return pointMarkup + '<text class="label-text" x="' + (p.x + dx).toFixed(1) + '" y="' + (p.y + dy).toFixed(1) + '">' + text + '</text>';
     }
 
     function angleBetween(a, v, b) {
@@ -554,6 +627,28 @@
       const dotProduct = va.x * vb.x + va.y * vb.y;
       const crossProduct = va.x * vb.y - va.y * vb.x;
       return Math.abs(Math.atan2(crossProduct, dotProduct) * 180 / Math.PI);
+    }
+
+    function angleLabelPoint(a, v, b, radius = 48) {
+      const va = { x: a.x - v.x, y: a.y - v.y };
+      const vb = { x: b.x - v.x, y: b.y - v.y };
+      const la = Math.hypot(va.x, va.y) || 1;
+      const lb = Math.hypot(vb.x, vb.y) || 1;
+      let ux = va.x / la + vb.x / lb;
+      let uy = va.y / la + vb.y / lb;
+      const length = Math.hypot(ux, uy);
+      if (length < 0.08) {
+        ux = -va.y / la;
+        uy = va.x / la;
+      } else {
+        ux /= length;
+        uy /= length;
+      }
+      return { x: v.x + ux * radius, y: v.y + uy * radius };
+    }
+
+    function normalizeAngle(value) {
+      return ((value % 360) + 360) % 360;
     }
 
     function graphX(x, bounds = graphBounds) {
@@ -593,7 +688,7 @@
       if (name === "quadratic") return "x<sup>2</sup>";
       if (name === "cubic") return "x<sup>3</sup>";
       if (name === "absolute") return "|x|";
-      if (name === "reciprocal") return "1/x";
+      if (name === "reciprocal") return '<span class="inline-frac"><span>1</span><span>x</span></span>';
       return "f(x)";
     }
 
@@ -639,9 +734,68 @@
       });
     }
 
-    function signed(value) {
-      if (value === 0) return "";
-      return value > 0 ? " + " + value : " - " + Math.abs(value);
+    function signedHtml(value, places = 1) {
+      const n = Number(value);
+      if (Math.abs(n) < 1e-9) return "";
+      return n > 0 ? " + " + round(n, places) : " - " + round(Math.abs(n), places);
+    }
+
+    function scalarPrefix(value, places = 1) {
+      const n = Number(value);
+      if (Math.abs(n - 1) < 1e-9) return "";
+      if (Math.abs(n + 1) < 1e-9) return "-";
+      return round(n, places);
+    }
+
+    function formatLinearInput(scale, shift, degreeMode = false) {
+      const variable = "x";
+      const shiftText = Number(shift) === 0
+        ? variable
+        : variable + (shift > 0 ? " - " + round(shift, 1) : " + " + round(Math.abs(shift), 1)) + (degreeMode ? "&deg;" : "");
+      if (Math.abs(scale - 1) < 1e-9) return shiftText;
+      if (Math.abs(scale + 1) < 1e-9) return "-" + (shiftText === variable ? variable : "(" + shiftText + ")");
+      return round(scale, 1) + (shiftText === variable ? variable : "(" + shiftText + ")");
+    }
+
+    function formatFunctionEquation(g) {
+      const input = formatLinearInput(g.b, g.h, false);
+      let expression;
+      if (Math.abs(g.a) < 1e-9) {
+        expression = "0";
+      } else {
+        expression = scalarPrefix(g.a) + "f(" + input + ")";
+      }
+      expression += signedHtml(g.k);
+      return "y = " + expression + ", where f(x) = " + functionLabel(g.model);
+    }
+
+    function trigShortName(name) {
+      if (name === "sine") return "sin";
+      if (name === "cosine") return "cos";
+      return "tan";
+    }
+
+    function formatTrigEquation(t) {
+      const input = formatLinearInput(t.b, t.h, true);
+      const functionPart = trigShortName(t.model) + (input === "x" ? " x" : "(" + input + ")");
+      let expression;
+      if (Math.abs(t.a) < 1e-9) {
+        expression = "0";
+      } else {
+        expression = scalarPrefix(t.a) + functionPart;
+      }
+      expression += signedHtml(t.k);
+      return "y = " + expression;
+    }
+
+    function squaredTerm(variable, shift) {
+      const n = Number(shift);
+      if (Math.abs(n) < 1e-9) return variable + "<sup>2</sup>";
+      return "(" + variable + (n > 0 ? " - " + round(n, 1) : " + " + round(Math.abs(n), 1)) + ")<sup>2</sup>";
+    }
+
+    function circleEquationHtml(h, k, r) {
+      return squaredTerm("x", h) + " + " + squaredTerm("y", k) + " = " + round(r * r, 2);
     }
 
     function renderGraphControls() {
@@ -675,9 +829,35 @@
         const points = [-2, -1, 0, 1, 2].map((x) => ({ x, y: transformed(x) })).filter((p) => p.y >= graphBounds.ymin && p.y <= graphBounds.ymax);
         content += points.map((p) => '<circle cx="' + graphX(p.x) + '" cy="' + graphY(p.y) + '" r="5" fill="#f97316"/>').join("");
       }
-      const baseText = functionLabel(name);
       boardTitle.textContent = models.graphs.find((item) => item[0] === name)[1];
-      boardEquation.innerHTML = "y = " + round(g.a) + "f(" + round(g.b) + "(x" + signed(-g.h) + "))" + signed(g.k) + " where f(x) = " + baseText;
+      boardEquation.innerHTML = formatFunctionEquation(g);
+      svg(content, "0 0 " + graphWidth + " " + graphHeight);
+    }
+
+    function renderCircleEquationControls() {
+      const c = state.circleEq;
+      controlPanel.innerHTML = '<h2>Controls</h2>' +
+        slider("circleEqH", "Centre h", -6, 6, 0.5, c.h) +
+        slider("circleEqK", "Centre k", -4, 4, 0.5, c.k) +
+        slider("circleEqR", "Radius r", 1, 6, 0.5, c.r);
+      attachSlider("circleEqH", "circleEq", "h", render);
+      attachSlider("circleEqK", "circleEq", "k", render);
+      attachSlider("circleEqR", "circleEq", "r", render);
+    }
+
+    function renderCircleEquationDisplay() {
+      const c = state.circleEq;
+      const centre = { x: graphX(c.h, circleEqBounds), y: graphY(c.k, circleEqBounds) };
+      const radiusPoint = { x: graphX(c.h + c.r, circleEqBounds), y: graphY(c.k, circleEqBounds) };
+      const pixelRadius = Math.abs(graphX(c.h + c.r, circleEqBounds) - graphX(c.h, circleEqBounds));
+      let content = graphGrid(circleEqBounds, 1, 1);
+      content += '<circle class="circle-line circle-equation-line" cx="' + centre.x.toFixed(1) + '" cy="' + centre.y.toFixed(1) + '" r="' + pixelRadius.toFixed(1) + '"/>';
+      content += line(centre, radiusPoint, "highlight-line");
+      content += dotWithDrag(centre, "C", "circleEqCenter", 18, -16);
+      content += dotWithDrag(radiusPoint, "R", "circleEqRadius", 16, -14);
+      content += '<text class="math-label" x="' + (centre.x + pixelRadius / 2 - 8).toFixed(1) + '" y="' + (centre.y - 14).toFixed(1) + '">r = ' + round(c.r, 1) + '</text>';
+      boardTitle.textContent = "Equation of a Circle";
+      boardEquation.innerHTML = circleEquationHtml(c.h, c.k, c.r);
       svg(content, "0 0 " + graphWidth + " " + graphHeight);
     }
 
@@ -696,84 +876,101 @@
       return 'M ' + start.x.toFixed(1) + ' ' + start.y.toFixed(1) + ' A ' + radius + ' ' + radius + ' 0 ' + large + ' 1 ' + end.x.toFixed(1) + ' ' + end.y.toFixed(1);
     }
 
+    function minorArcPath(startDeg, endDeg, radius = 44, cx = circle.cx, cy = circle.cy) {
+      const diff = normalizeAngle(endDeg - startDeg);
+      return diff > 180 ? arcPath(endDeg, startDeg, radius, cx, cy) : arcPath(startDeg, endDeg, radius, cx, cy);
+    }
+
     function renderCircleControls() {
       const c = state.circles;
       let controls = '<h2>Controls</h2>';
       if (c.model === "centre-circumference") {
-        controls += slider("circleArc", "Arc angle", 50, 160, 5, c.arc) + slider("circleRotate", "Rotate diagram", -90, 90, 5, c.rotate);
+        controls += slider("centreA", "Point A", 0, 360, 1, c.centreA) +
+          slider("centreB", "Point B", 0, 360, 1, c.centreB) +
+          slider("centreP", "Point P", 0, 360, 1, c.centreP);
       } else if (c.model === "same-segment") {
-        controls += slider("circleArc", "Chord width", 50, 150, 5, c.arc) + slider("circleP", "Point P position", 235, 310, 5, c.p) + slider("circleQ", "Point Q position", 50, 125, 5, c.q);
+        controls += slider("sameA", "Point A", 0, 360, 1, c.sameA) +
+          slider("sameB", "Point B", 0, 360, 1, c.sameB) +
+          slider("sameP", "Point P", 0, 360, 1, c.sameP) +
+          slider("sameQ", "Point Q", 0, 360, 1, c.sameQ);
       } else if (c.model === "cyclic-quadrilateral") {
-        controls += slider("circleRotate", "Rotate diagram", -90, 90, 5, c.rotate);
+        controls += slider("quadA", "Point A", 0, 360, 1, c.quadA) +
+          slider("quadB", "Point B", 0, 360, 1, c.quadB) +
+          slider("quadC", "Point C", 0, 360, 1, c.quadC) +
+          slider("quadD", "Point D", 0, 360, 1, c.quadD);
       } else {
-        controls += slider("circleRotate", "Point of contact", -120, 120, 5, c.rotate);
+        controls += slider("tangentT", "Point of contact", 0, 360, 1, c.tangentT);
       }
       controlPanel.innerHTML = controls;
-      if (document.getElementById("circleArc")) attachSlider("circleArc", "circles", "arc", render);
-      if (document.getElementById("circleRotate")) attachSlider("circleRotate", "circles", "rotate", render);
-      if (document.getElementById("circleP")) attachSlider("circleP", "circles", "p", render);
-      if (document.getElementById("circleQ")) attachSlider("circleQ", "circles", "q", render);
+      ["centreA", "centreB", "centreP", "sameA", "sameB", "sameP", "sameQ", "quadA", "quadB", "quadC", "quadD", "tangentT"].forEach((id) => {
+        if (document.getElementById(id)) attachSlider(id, "circles", id, render);
+      });
     }
 
     function renderCentreCircumference() {
       const c = state.circles;
-      const start = 360 - c.arc / 2 + c.rotate;
-      const end = c.arc / 2 + c.rotate;
-      const A = point(start);
-      const B = point(end);
-      const P = point(180 + c.rotate);
-      const centreAngle = c.arc;
-      const circAngle = c.arc / 2;
+      const A = point(c.centreA);
+      const B = point(c.centreB);
+      const P = point(c.centreP);
+      const O = { x: circle.cx, y: circle.cy };
+      const centreAngle = angleBetween(A, O, B);
+      const circAngle = angleBetween(A, P, B);
+      const centreLabel = angleLabelPoint(A, O, B, 82);
+      const pointLabel = angleLabelPoint(A, P, B, 58);
       boardTitle.textContent = "Angle at the Centre";
       boardEquation.innerHTML = "Centre angle = 2 &times; circumference angle";
       svg(circleBase() +
-        line({ x: circle.cx, y: circle.cy }, A, "highlight-line") +
-        line({ x: circle.cx, y: circle.cy }, B, "highlight-line") +
+        line(O, A, "highlight-line") +
+        line(O, B, "highlight-line") +
         line(P, A) + line(P, B) +
-        '<path class="angle-mark" d="' + arcPath(start, end, 58) + '"/>' +
-        dot(A, "A") + dot(B, "B") + dot(P, "P", 18, 24) +
-        '<text class="math-label" x="' + (circle.cx + 70) + '" y="' + (circle.cy - 4) + '">' + round(centreAngle) + '&#176;</text>' +
-        '<text class="math-label" x="' + (P.x + 34) + '" y="' + (P.y - 12) + '">' + round(circAngle) + '&#176;</text>');
+        '<path class="angle-mark" d="' + minorArcPath(c.centreA, c.centreB, 62) + '"/>' +
+        dotWithDrag(A, "A", "centreA") + dotWithDrag(B, "B", "centreB") + dotWithDrag(P, "P", "centreP", 18, 24) +
+        '<text class="math-label" x="' + centreLabel.x.toFixed(1) + '" y="' + centreLabel.y.toFixed(1) + '">' + round(centreAngle) + '&#176;</text>' +
+        '<text class="math-label" x="' + pointLabel.x.toFixed(1) + '" y="' + pointLabel.y.toFixed(1) + '">' + round(circAngle) + '&#176;</text>');
     }
 
     function renderSameSegment() {
       const c = state.circles;
-      const A = point(180 + c.arc / 2);
-      const B = point(180 - c.arc / 2);
-      const P = point(c.p);
-      const Q = point(c.q);
+      const A = point(c.sameA);
+      const B = point(c.sameB);
+      const P = point(c.sameP);
+      const Q = point(c.sameQ);
       const angleP = angleBetween(A, P, B);
       const angleQ = angleBetween(A, Q, B);
+      const labelP = angleLabelPoint(A, P, B, 58);
+      const labelQ = angleLabelPoint(A, Q, B, 58);
       boardTitle.textContent = "Angles in the Same Segment";
       boardEquation.innerHTML = "Angles standing on the same chord are equal";
       svg(circleBase() +
         line(A, B, "highlight-line") +
         line(P, A) + line(P, B) + line(Q, A) + line(Q, B) +
-        dot(A, "A", -30, 18) + dot(B, "B", 18, 18) + dot(P, "P") + dot(Q, "Q") +
-        '<text class="math-label" x="' + (P.x + 34) + '" y="' + (P.y - 8) + '">' + round(angleP) + '&#176;</text>' +
-        '<text class="math-label" x="' + (Q.x + 34) + '" y="' + (Q.y - 8) + '">' + round(angleQ) + '&#176;</text>');
+        dotWithDrag(A, "A", "sameA", -30, 18) + dotWithDrag(B, "B", "sameB", 18, 18) + dotWithDrag(P, "P", "sameP") + dotWithDrag(Q, "Q", "sameQ") +
+        '<text class="math-label" x="' + labelP.x.toFixed(1) + '" y="' + labelP.y.toFixed(1) + '">' + round(angleP) + '&#176;</text>' +
+        '<text class="math-label" x="' + labelQ.x.toFixed(1) + '" y="' + labelQ.y.toFixed(1) + '">' + round(angleQ) + '&#176;</text>');
     }
 
     function renderCyclicQuadrilateral() {
-      const r = state.circles.rotate;
-      const A = point(35 + r);
-      const B = point(140 + r);
-      const C = point(220 + r);
-      const D = point(315 + r);
+      const c = state.circles;
+      const A = point(c.quadA);
+      const B = point(c.quadB);
+      const C = point(c.quadC);
+      const D = point(c.quadD);
       const angleB = angleBetween(A, B, C);
       const angleD = angleBetween(C, D, A);
+      const labelB = angleLabelPoint(A, B, C, 56);
+      const labelD = angleLabelPoint(C, D, A, 56);
       boardTitle.textContent = "Cyclic Quadrilateral";
       boardEquation.innerHTML = "Opposite angles add to 180&#176;";
       svg(circleBase() +
         '<path class="theorem-line" d="M ' + A.x + ' ' + A.y + ' L ' + B.x + ' ' + B.y + ' L ' + C.x + ' ' + C.y + ' L ' + D.x + ' ' + D.y + ' Z"/>' +
-        dot(A, "A") + dot(B, "B", -34, -14) + dot(C, "C", -34, 22) + dot(D, "D", 18, 24) +
-        '<text class="math-label" x="' + (B.x - 70) + '" y="' + (B.y + 30) + '">' + round(angleB) + '&#176;</text>' +
-        '<text class="math-label" x="' + (D.x + 36) + '" y="' + (D.y - 22) + '">' + round(angleD) + '&#176;</text>' +
+        dotWithDrag(A, "A", "quadA") + dotWithDrag(B, "B", "quadB", -34, -14) + dotWithDrag(C, "C", "quadC", -34, 22) + dotWithDrag(D, "D", "quadD", 18, 24) +
+        '<text class="math-label" x="' + labelB.x.toFixed(1) + '" y="' + labelB.y.toFixed(1) + '">' + round(angleB) + '&#176;</text>' +
+        '<text class="math-label" x="' + labelD.x.toFixed(1) + '" y="' + labelD.y.toFixed(1) + '">' + round(angleD) + '&#176;</text>' +
         '<text class="math-label" x="365" y="610">' + round(angleB) + '&#176; + ' + round(angleD) + '&#176; = 180&#176;</text>');
     }
 
     function renderTangentRadius() {
-      const T = point(45 + state.circles.rotate);
+      const T = point(state.circles.tangentT);
       const O = { x: circle.cx, y: circle.cy };
       const vx = T.x - O.x;
       const vy = T.y - O.y;
@@ -782,13 +979,14 @@
       const ty = vx / length;
       const L = { x: T.x - tx * 245, y: T.y - ty * 245 };
       const R = { x: T.x + tx * 245, y: T.y + ty * 245 };
+      const label = angleLabelPoint(O, T, R, 54);
       boardTitle.textContent = "Tangent and Radius";
       boardEquation.innerHTML = "Radius &#8869; tangent";
       svg(circleBase() +
         line(O, T, "highlight-line") +
         line(L, R, "theorem-line") +
-        dot(T, "T") +
-        '<text class="math-label" x="' + (T.x + 34) + '" y="' + (T.y + 38) + '">90&#176;</text>');
+        dotWithDrag(T, "T", "tangentT") +
+        '<text class="math-label" x="' + label.x.toFixed(1) + '" y="' + label.y.toFixed(1) + '">90&#176;</text>');
     }
 
     function renderCircleDisplay() {
@@ -852,7 +1050,7 @@
       const transformed = (x) => t.a * trigValue(t.model, t.b * (x - t.h)) + t.k;
       content += '<path class="secondary-curve" d="' + trigPath(transformed, trigBounds) + '"/>';
       boardTitle.textContent = models.trig.find((item) => item[0] === t.model)[1];
-      boardEquation.innerHTML = "y = " + round(t.a) + " " + t.model + "(" + round(t.b) + "(x" + signed(-t.h) + "))" + signed(t.k);
+      boardEquation.innerHTML = formatTrigEquation(t);
       svg(content, "0 0 " + graphWidth + " " + graphHeight);
     }
 
@@ -869,28 +1067,112 @@
 
     function renderControls() {
       if (state.mode === "graphs") renderGraphControls();
+      if (state.mode === "circleEq") renderCircleEquationControls();
       if (state.mode === "circles") renderCircleControls();
       if (state.mode === "trig") renderTrigControls();
     }
 
     function renderDisplay() {
       if (state.mode === "graphs") renderGraphDisplay();
+      if (state.mode === "circleEq") renderCircleEquationDisplay();
       if (state.mode === "circles") renderCircleDisplay();
       if (state.mode === "trig") renderTrigDisplay();
+    }
+
+    let activeDrag = null;
+
+    function svgPointFromPointer(svgEl, event) {
+      const rect = svgEl.getBoundingClientRect();
+      const box = svgEl.viewBox && svgEl.viewBox.baseVal ? svgEl.viewBox.baseVal : { x: 0, y: 0, width: graphWidth, height: graphHeight };
+      return {
+        x: box.x + (event.clientX - rect.left) * box.width / (rect.width || 1),
+        y: box.y + (event.clientY - rect.top) * box.height / (rect.height || 1)
+      };
+    }
+
+    function angleFromPointer(svgEl, event) {
+      const p = svgPointFromPointer(svgEl, event);
+      return normalizeAngle(Math.atan2(p.y - circle.cy, p.x - circle.cx) * 180 / Math.PI + 90);
+    }
+
+    function graphCoordsFromPointer(svgEl, event, bounds) {
+      const p = svgPointFromPointer(svgEl, event);
+      return {
+        x: bounds.xmin + p.x / graphWidth * (bounds.xmax - bounds.xmin),
+        y: bounds.ymax - p.y / graphHeight * (bounds.ymax - bounds.ymin)
+      };
+    }
+
+    function snapHalf(value) {
+      return Math.round(value * 2) / 2;
+    }
+
+    function bindStageDrag() {
+      const svgEl = stage.querySelector ? stage.querySelector("svg") : null;
+      if (!svgEl || !svgEl.querySelectorAll) return;
+      svgEl.querySelectorAll("[data-drag]").forEach((element) => {
+        element.addEventListener("pointerdown", (event) => {
+          activeDrag = element.dataset.drag;
+          element.setPointerCapture?.(event.pointerId);
+          event.preventDefault();
+        });
+      });
+    }
+
+    function handleDragMove(event) {
+      if (!activeDrag || !stage.querySelector) return;
+      const svgEl = stage.querySelector("svg");
+      if (!svgEl) return;
+      event.preventDefault();
+      if (state.mode === "circles" && Object.prototype.hasOwnProperty.call(state.circles, activeDrag)) {
+        state.circles[activeDrag] = Math.round(angleFromPointer(svgEl, event));
+        render();
+      }
+      if (state.mode === "circleEq") {
+        const p = graphCoordsFromPointer(svgEl, event, circleEqBounds);
+        if (activeDrag === "circleEqCenter") {
+          state.circleEq.h = snapHalf(clamp(p.x, -6, 6));
+          state.circleEq.k = snapHalf(clamp(p.y, -4, 4));
+          render();
+        }
+        if (activeDrag === "circleEqRadius") {
+          const radius = Math.hypot(p.x - state.circleEq.h, p.y - state.circleEq.k);
+          state.circleEq.r = snapHalf(clamp(radius, 1, 6));
+          render();
+        }
+      }
     }
 
     function render() {
       populateModelSelect();
       renderControls();
       renderDisplay();
+      bindStageDrag();
     }
 
     function resetCurrent() {
       if (state.mode === "graphs") {
         state.graphs = { model: state.graphs.model, a: 1, b: 1, h: 0, k: 0, original: true, points: true };
       }
+      if (state.mode === "circleEq") {
+        state.circleEq = { model: state.circleEq.model, h: 2, k: -1, r: 4 };
+      }
       if (state.mode === "circles") {
-        state.circles = { model: state.circles.model, arc: 110, rotate: 0, p: 265, q: 95 };
+        state.circles = {
+          model: state.circles.model,
+          centreA: 305,
+          centreB: 55,
+          centreP: 180,
+          sameA: 235,
+          sameB: 125,
+          sameP: 265,
+          sameQ: 95,
+          quadA: 35,
+          quadB: 140,
+          quadC: 220,
+          quadD: 315,
+          tangentT: 45
+        };
       }
       if (state.mode === "trig") {
         state.trig = { model: state.trig.model, a: 1, b: 1, h: 0, k: 0, original: true };
@@ -910,6 +1192,10 @@
       currentModeState().model = modelSelect.value;
       render();
     });
+
+    window.addEventListener("pointermove", handleDragMove);
+    window.addEventListener("pointerup", () => { activeDrag = null; });
+    window.addEventListener("pointercancel", () => { activeDrag = null; });
 
     document.getElementById("resetBtn").addEventListener("click", resetCurrent);
     document.getElementById("fullscreenBtn").addEventListener("click", async () => {

@@ -2026,13 +2026,14 @@ const tools = [
     type: "Interactive Display",
     access: "Free",
     status: "Imported",
-    description: "Open dynamic board-ready displays for graph transformations, circle theorems, and trigonometric graphs, with sliders for live mathematical exploration.",
-    tags: ["classroom", "dynamic displays", "interactive graphs", "graph transformations", "circle theorems", "trigonometric graphs", "sliders", "visual maths", "board"],
-    toolPath: "tools/dynamic-classroom-displays/index.html?v=dynamic-classroom-displays-1",
+    description: "Open dynamic board-ready displays for graph transformations, equations of circles, circle theorems, and trigonometric graphs, with sliders and draggable points for live mathematical exploration.",
+    tags: ["classroom", "dynamic displays", "interactive graphs", "graph transformations", "equation of a circle", "circle theorems", "trigonometric graphs", "sliders", "drag points", "visual maths", "board"],
+    toolPath: "tools/dynamic-classroom-displays/index.html?v=dynamic-classroom-displays-2",
     imported: true,
     teacherNotes: [
       "Designed as a selective dynamic layer for topics where movement and live adjustment strengthen understanding.",
       "Graph transformation displays let teachers vary stretch, reflection, translation, and scale while comparing the original and transformed graph.",
+      "The circle equation display lets teachers move the centre and radius while the equation updates cleanly.",
       "Circle theorem displays show angle relationships dynamically, including angle at the centre, angles in the same segment, cyclic quadrilaterals, and tangent-radius relationships.",
       "Trigonometric graph displays use sliders for amplitude, horizontal scale, phase shift, and vertical shift.",
       "Use full-screen mode and the write function for live explanation and annotation."
@@ -8533,15 +8534,17 @@ function toolInsightProfile(tool) {
       ]
     },
     {
-      match: () => tool.slug === "dynamic-classroom-displays" || has("dynamic displays", "interactive graphs", "circle theorems", "trigonometric graphs"),
+      match: () => tool.slug === "dynamic-classroom-displays" || has("dynamic displays", "interactive graphs", "circle equation", "circle theorems", "trigonometric graphs"),
       misconceptions: [
         "Treating a slider movement as decoration rather than using it to describe the mathematical invariant that stays true.",
         "Reading transformed graphs by memorising a movement rule without checking how key points have changed.",
-        "Assuming a circle theorem is true from one drawing only, instead of noticing that the relationship remains true as the points move."
+        "Assuming a circle theorem is true from one drawing only, instead of noticing that the relationship remains true as the points move.",
+        "For equations of circles, confusing movement of the centre with movement of the radius."
       ],
       questions: [
         "What stays the same as the diagram changes, and what changes?",
         "Which key point, angle, or graph feature gives the strongest evidence for the transformation or theorem?",
+        "How does the equation change when the centre moves, and how does it change when only the radius changes?",
         "How could a student use the dynamic display to explain the result before writing the formal solution?"
       ]
     },
