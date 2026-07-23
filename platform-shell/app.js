@@ -2027,16 +2027,16 @@ const tools = [
     access: "Free",
     status: "Imported",
     description: "Open dynamic board-ready displays for animated graph transformations, animated shape transformations, equations of circles, circle theorems, trigonometric graphs, complex numbers, and calculus visualisations.",
-    tags: ["classroom", "dynamic displays", "interactive graphs", "graph transformations", "animated transformations", "rotation", "translation", "enlargement", "equation of a circle", "circle theorems", "trigonometric graphs", "complex numbers", "calculus", "visual maths", "board"],
-    toolPath: "tools/dynamic-classroom-displays/index.html?v=dynamic-classroom-displays-4",
+    tags: ["classroom", "dynamic displays", "interactive graphs", "graph transformations", "animated transformations", "rotation", "translation", "reflection", "enlargement", "shear", "equation of a circle", "circle theorems", "trigonometric graphs", "complex numbers", "calculus", "visual maths", "board"],
+    toolPath: "tools/dynamic-classroom-displays/index.html?v=dynamic-classroom-displays-6",
     imported: true,
     teacherNotes: [
       "Designed as a selective dynamic layer for topics where movement and live adjustment strengthen understanding.",
       "Graph transformation displays let teachers vary stretch, reflection, translation, and scale, or enter common target equations, then animate from the base graph to the transformed graph.",
-      "Animated transformation displays let teachers set a centre, angle, direction, vector, or scale factor, then show the object moving to its image.",
+      "Animated transformation displays let teachers set a centre, angle, direction, vector, reflection line, scale factor, or shear factor, then show the object moving to its image.",
       "The circle equation display lets teachers move the centre and radius while the equation updates cleanly, then animate from the unit circle to the target circle.",
       "Circle theorem displays show angle relationships dynamically, including angle at the centre, angles in the same segment, cyclic quadrilaterals, and tangent-radius relationships.",
-      "Trigonometric graph displays use sliders for amplitude, horizontal scale, phase shift, and vertical shift.",
+      "Trigonometric graph displays use sliders for amplitude, horizontal scale, phase shift, and vertical shift, then animate from the parent graph to the transformed graph.",
       "Complex-plane and calculus displays introduce visual demonstrations that can be expanded as further maths coverage grows.",
       "Use full-screen mode and the write function for live explanation and annotation."
     ]
