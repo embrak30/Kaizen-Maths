@@ -4264,6 +4264,12 @@ body[data-route="worksheet-generator"] .account-action {
   padding: 5px 10px;
 }
 
+.classroom-capture {
+  display: none;
+  min-height: 30px;
+  padding: 5px 10px;
+}
+
 .classroom-draw-toggle,
 .classroom-annotation-control {
   display: none;
@@ -4289,6 +4295,12 @@ body[data-route="worksheet-generator"] .account-action {
 
 .legacy-stage.classroom .classroom-fullscreen {
   display: inline-flex;
+}
+
+.legacy-stage.classroom .classroom-capture {
+  display: inline-flex;
+  background: #0f766e;
+  color: white;
 }
 
 .legacy-stage.classroom .classroom-draw-toggle {

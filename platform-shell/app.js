@@ -9393,6 +9393,7 @@ function renderToolFrame(tool, options = {}) {
             ${startClassroom ? `<a class="button classroom-info-link" href="#/tools/${escapeHtml(tool.slug)}">Tool Info</a>` : ""}
             <button class="button primary" id="focusTool" type="button" ${startClassroom ? "hidden" : ""}>Classroom View</button>
             <button class="button classroom-fullscreen" id="classroomFullscreen" type="button">Full Screen</button>
+            <button class="button classroom-capture" id="classroomCapture" type="button">Capture</button>
             <button class="button classroom-draw-toggle" id="classroomDrawToggle" type="button" aria-pressed="false">Write</button>
             <button class="button classroom-annotation-control active" id="annotationPen" type="button" aria-pressed="true">Pen</button>
             <button class="button classroom-annotation-control" id="annotationHighlighter" type="button" aria-pressed="false">Highlighter</button>
@@ -11680,6 +11681,7 @@ function bindToolFrame(tool, options = {}) {
   const button = document.getElementById("focusTool");
   const exitButton = document.getElementById("exitClassroom");
   const fullscreenButton = document.getElementById("classroomFullscreen");
+  const captureButton = document.getElementById("classroomCapture");
   const drawToggle = document.getElementById("classroomDrawToggle");
   const annotationCanvas = document.getElementById("classroomAnnotationCanvas");
   const annotationPen = document.getElementById("annotationPen");
@@ -11856,6 +11858,10 @@ function bindToolFrame(tool, options = {}) {
       html.kaizen-classroom-fit .teacher-tab {
         display: none !important;
       }
+
+      html.kaizen-classroom-fit .kaizen-capture-board {
+        display: none !important;
+      }
     `;
     doc.head.appendChild(style);
   }
@@ -11948,6 +11954,225 @@ function bindToolFrame(tool, options = {}) {
   function requestClassroomFullscreen() {
     if (stage.requestFullscreen && document.fullscreenElement !== stage) {
       stage.requestFullscreen().catch(() => {});
+    }
+  }
+
+  function safeCaptureFileName(value) {
+    return String(value || "kaizen-classroom")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 64) || "kaizen-classroom";
+  }
+
+  function collectDocumentCss(doc) {
+    return Array.from(doc.styleSheets).map((sheet) => {
+      try {
+        return Array.from(sheet.cssRules || []).map((rule) => rule.cssText).join("\n");
+      } catch (error) {
+        return "";
+      }
+    }).join("\n");
+  }
+
+  function frameScrollPosition(doc) {
+    return {
+      left: doc.defaultView?.scrollX || doc.documentElement.scrollLeft || doc.body?.scrollLeft || 0,
+      top: doc.defaultView?.scrollY || doc.documentElement.scrollTop || doc.body?.scrollTop || 0
+    };
+  }
+
+  function cloneFrameBodyForCapture(doc) {
+    const source = doc.body || doc.documentElement;
+    const clone = source.cloneNode(true);
+    const sourceCanvases = Array.from(source.querySelectorAll("canvas"));
+    const cloneCanvases = Array.from(clone.querySelectorAll("canvas"));
+
+    sourceCanvases.forEach((sourceCanvas, index) => {
+      const clonedCanvas = cloneCanvases[index];
+      if (!clonedCanvas) return;
+      try {
+        const rect = sourceCanvas.getBoundingClientRect();
+        const image = doc.createElement("img");
+        image.src = sourceCanvas.toDataURL("image/png");
+        image.alt = "";
+        image.width = Math.max(1, Math.round(rect.width || sourceCanvas.width || 1));
+        image.height = Math.max(1, Math.round(rect.height || sourceCanvas.height || 1));
+        image.className = clonedCanvas.className || "";
+        image.style.cssText = clonedCanvas.getAttribute("style") || "";
+        image.style.width = `${image.width}px`;
+        image.style.height = `${image.height}px`;
+        clonedCanvas.replaceWith(image);
+      } catch (error) {
+        // If a canvas cannot be converted, keep the cloned element in place.
+      }
+    });
+
+    clone.querySelectorAll("script,.teacher-tab,.sidebar,.sidebar-overlay,.timer-modal,.kaizen-capture-board").forEach((element) => {
+      element.remove();
+    });
+    return clone;
+  }
+
+  async function imageFromSvg(svg) {
+    const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    try {
+      const image = new Image();
+      image.decoding = "sync";
+      await new Promise((resolve, reject) => {
+        image.onload = resolve;
+        image.onerror = reject;
+        image.src = url;
+      });
+      return image;
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  }
+
+  function classroomCaptureMarkup(doc, width, height) {
+    const frameCss = collectDocumentCss(doc) + `
+      html,body{margin:0!important;background:#fff!important;}
+      .teacher-tab,.sidebar,.sidebar-overlay,.timer-modal,.kaizen-capture-board{display:none!important;}
+      .container{box-shadow:none!important;}
+    `;
+    const clone = cloneFrameBodyForCapture(doc);
+    const scroll = frameScrollPosition(doc);
+    const baseHref = doc.location?.href || frame?.src || window.location.href;
+    const bodyClass = escapeHtml(clone.className || "");
+    const bodyStyle = escapeHtml(clone.getAttribute("style") || "");
+    const bodyMarkup = clone.innerHTML || clone.outerHTML;
+    return `
+      <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+          <base href="${escapeHtml(baseHref)}" />
+          <style>${frameCss}</style>
+        </head>
+        <body style="margin:0;background:#fff;">
+          <div xmlns="http://www.w3.org/1999/xhtml" style="position:relative;width:${width}px;height:${height}px;overflow:hidden;background:#fff;">
+            <div style="position:absolute;left:${-scroll.left}px;top:${-scroll.top}px;width:${Math.max(width, doc.documentElement.scrollWidth || width)}px;">
+              <div class="${bodyClass}" style="${bodyStyle}">${bodyMarkup}</div>
+            </div>
+          </div>
+        </body>
+      </html>`;
+  }
+
+  async function renderFrameViewportImage() {
+    if (!frame?.contentDocument) throw new Error("The classroom tool is not ready to capture.");
+    const doc = frame.contentDocument;
+    const rect = frame.getBoundingClientRect();
+    const width = Math.ceil(Math.max(rect.width, frame.clientWidth, 1));
+    const height = Math.ceil(Math.max(rect.height, frame.clientHeight, 1));
+    const markup = classroomCaptureMarkup(doc, width, height);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+      <foreignObject width="100%" height="100%">${markup}</foreignObject>
+    </svg>`;
+    return { image: await imageFromSvg(svg), width, height };
+  }
+
+  function openClassroomCaptureFallback() {
+    if (!frame?.contentDocument) {
+      window.alert("The classroom board is still loading. Try Capture again in a moment.");
+      return;
+    }
+    const doc = frame.contentDocument;
+    const rect = frame.getBoundingClientRect();
+    const width = Math.ceil(Math.max(rect.width, frame.clientWidth, 1));
+    const height = Math.ceil(Math.max(rect.height, frame.clientHeight, 1));
+    const frameCss = collectDocumentCss(doc) + `
+      html,body{margin:0!important;background:#fff!important;}
+      .teacher-tab,.sidebar,.sidebar-overlay,.timer-modal,.kaizen-capture-board{display:none!important;}
+      .container{box-shadow:none!important;}
+    `;
+    const clone = cloneFrameBodyForCapture(doc);
+    const scroll = frameScrollPosition(doc);
+    const bodyClass = escapeHtml(clone.className || "");
+    const bodyStyle = escapeHtml(clone.getAttribute("style") || "");
+    const bodyMarkup = clone.innerHTML || clone.outerHTML;
+    let annotationUrl = "";
+    try {
+      annotationUrl = annotationCanvas?.toDataURL("image/png") || "";
+    } catch (error) {
+      annotationUrl = "";
+    }
+    const snapshot = window.open("", "_blank");
+    if (!snapshot) {
+      window.alert("The browser blocked the snapshot window. Allow pop-ups for this site or use your browser screenshot tool.");
+      return;
+    }
+    snapshot.document.write(`<!doctype html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>${escapeHtml(tool.title)} classroom capture</title>
+        <base href="${escapeHtml(doc.location?.href || frame.src || window.location.href)}">
+        <style>${frameCss}</style>
+        <style>
+          body{margin:0;background:#fff;padding:18px;font-family:Arial,sans-serif;}
+          .capture-stage{position:relative;width:${width}px;height:${height}px;overflow:hidden;background:#fff;border:1px solid #d1d5db;}
+          .capture-content{position:absolute;left:${-scroll.left}px;top:${-scroll.top}px;width:${Math.max(width, doc.documentElement.scrollWidth || width)}px;}
+          .capture-stage img.annotation{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+          button{margin-top:14px;padding:10px 14px;border:0;border-radius:8px;background:#0f766e;color:#fff;font-weight:700;}
+          @media print{button{display:none}.capture-stage{border:0}}
+        </style>
+      </head>
+      <body>
+        <div class="capture-stage">
+          <div class="capture-content">
+            <div class="${bodyClass}" style="${bodyStyle}">${bodyMarkup}</div>
+          </div>
+          ${annotationUrl ? `<img class="annotation" src="${annotationUrl}" alt="">` : ""}
+        </div>
+        <button onclick="window.print()">Print / Save PDF</button>
+      </body>
+      </html>`);
+    snapshot.document.close();
+    snapshot.focus();
+  }
+
+  async function captureClassroomBoard() {
+    if (!stage.classList.contains("classroom")) return;
+    const originalText = captureButton?.textContent || "Capture";
+    if (captureButton) {
+      captureButton.disabled = true;
+      captureButton.textContent = "Capturing...";
+    }
+    try {
+      resizeAnnotationCanvas();
+      renderAnnotations();
+      const { image, width, height } = await renderFrameViewportImage();
+      const outputScale = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(width * outputScale);
+      canvas.height = Math.round(height * outputScale);
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Capture canvas unavailable.");
+      context.setTransform(outputScale, 0, 0, outputScale, 0, 0);
+      context.fillStyle = "#ffffff";
+      context.fillRect(0, 0, width, height);
+      context.drawImage(image, 0, 0, width, height);
+      if (annotationCanvas) {
+        context.drawImage(annotationCanvas, 0, 0, width, height);
+      }
+      const pngBlob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png", 0.95));
+      if (!pngBlob) throw new Error("Capture image could not be created.");
+      const downloadUrl = URL.createObjectURL(pngBlob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = `${safeCaptureFileName(tool.title)}-classroom-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    } catch (error) {
+      openClassroomCaptureFallback();
+    } finally {
+      if (captureButton) {
+        captureButton.disabled = false;
+        captureButton.textContent = originalText;
+      }
     }
   }
 
@@ -12113,6 +12338,7 @@ function bindToolFrame(tool, options = {}) {
   annotationEraser?.addEventListener("click", () => setAnnotationTool("eraser"));
   annotationUndo?.addEventListener("click", undoAnnotation);
   annotationClear?.addEventListener("click", clearAnnotations);
+  captureButton?.addEventListener("click", captureClassroomBoard);
 
   function setClassroomMode(active, options = {}) {
     stage.classList.toggle("classroom", active);
