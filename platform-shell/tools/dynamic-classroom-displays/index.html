@@ -178,12 +178,14 @@
 
     select,
     input[type="range"],
-    input[type="number"] {
+    input[type="number"],
+    input[type="text"] {
       width: 100%;
     }
 
     select,
-    input[type="number"] {
+    input[type="number"],
+    input[type="text"] {
       min-height: 38px;
       border: 1px solid #bed0df;
       border-radius: 7px;
@@ -333,6 +335,16 @@
       stroke-width: 4.5;
       stroke-linecap: round;
       stroke-linejoin: round;
+    }
+
+    .target-curve {
+      fill: none;
+      stroke: var(--purple);
+      stroke-width: 3;
+      stroke-dasharray: 12 8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.62;
     }
 
     .shape-line {
@@ -591,6 +603,7 @@
       mode: "graphs",
       graphs: {
         model: "quadratic",
+        progress: 1,
         a: 1,
         b: 1,
         h: 0,
@@ -611,6 +624,7 @@
       },
       circleEq: {
         model: "equation",
+        progress: 1,
         h: 2,
         k: -1,
         r: 4
@@ -712,6 +726,14 @@
 
     function round(value, places = 1) {
       return Number(value).toFixed(places).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+    }
+
+    function escapeAttr(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
     }
 
     function svg(content, viewBox = "0 0 1000 650") {
@@ -849,6 +871,10 @@
       return '<div class="control-row"><label for="' + id + '">' + label + '</label><input id="' + id + '" type="number" min="' + min + '" max="' + max + '" step="' + step + '" value="' + value + '"></div>';
     }
 
+    function textInput(id, label, value) {
+      return '<div class="control-row"><label for="' + id + '">' + label + '</label><input id="' + id + '" type="text" value="' + escapeAttr(value) + '"></div>';
+    }
+
     function selectInput(id, label, value, options) {
       return '<div class="control-row"><label for="' + id + '">' + label + '</label><select id="' + id + '">' +
         options.map((option) => '<option value="' + option[0] + '"' + (String(option[0]) === String(value) ? " selected" : "") + '>' + option[1] + '</option>').join("") +
@@ -966,6 +992,64 @@
       return squaredTerm("x", h) + " + " + squaredTerm("y", k) + " = " + round(r * r, 2);
     }
 
+    function coefficientText(value) {
+      if (Math.abs(value - 1) < 1e-9) return "";
+      if (Math.abs(value + 1) < 1e-9) return "-";
+      return round(value, 1);
+    }
+
+    function graphPlainEquation(g) {
+      const shift = g.h === 0 ? "x" : "x " + (g.h > 0 ? "- " + round(g.h, 1) : "+ " + round(Math.abs(g.h), 1));
+      const tail = signedHtml(g.k, 1);
+      const coeff = coefficientText(g.a);
+      if (g.model === "quadratic") return "y = " + coeff + "(" + shift + ")²" + tail;
+      if (g.model === "cubic") return "y = " + coeff + "(" + shift + ")³" + tail;
+      if (g.model === "absolute") return "y = " + coeff + "|" + shift + "|" + tail;
+      if (g.model === "reciprocal") return "y = " + (Math.abs(g.a - 1) < 1e-9 ? "1" : Math.abs(g.a + 1) < 1e-9 ? "-1" : round(g.a, 1)) + "/(" + shift + ")" + tail;
+      return "y = f(x)";
+    }
+
+    function parseNumberPrefix(value) {
+      if (!value || value === "+") return 1;
+      if (value === "-") return -1;
+      return Number(value);
+    }
+
+    function parseShift(value) {
+      if (!value) return 0;
+      return -Number(value);
+    }
+
+    function normaliseGraphEquation(value) {
+      return String(value || "")
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/^y=/, "")
+        .replace(/−/g, "-")
+        .replace(/×/g, "*");
+    }
+
+    function parseGraphEquation(value, model) {
+      const text = normaliseGraphEquation(value);
+      let match;
+      if (model === "quadratic") {
+        match = text.match(/^([+-]?(?:\d+(?:\.\d+)?)?)\*?\(?x([+-]\d+(?:\.\d+)?)?\)?(?:\^2|²)([+-]\d+(?:\.\d+)?)?$/);
+      } else if (model === "cubic") {
+        match = text.match(/^([+-]?(?:\d+(?:\.\d+)?)?)\*?\(?x([+-]\d+(?:\.\d+)?)?\)?(?:\^3|³)([+-]\d+(?:\.\d+)?)?$/);
+      } else if (model === "absolute") {
+        match = text.match(/^([+-]?(?:\d+(?:\.\d+)?)?)\*?(?:\|x([+-]\d+(?:\.\d+)?)?\||abs\(x([+-]\d+(?:\.\d+)?)?\))([+-]\d+(?:\.\d+)?)?$/);
+        if (match) match = [match[0], match[1], match[2] || match[3], match[4]];
+      } else if (model === "reciprocal") {
+        match = text.match(/^([+-]?(?:\d+(?:\.\d+)?)?)\/\(x([+-]\d+(?:\.\d+)?)?\)([+-]\d+(?:\.\d+)?)?$/);
+      }
+      if (!match) return null;
+      const a = parseNumberPrefix(match[1]);
+      const h = parseShift(match[2]);
+      const k = match[3] ? Number(match[3]) : 0;
+      if (![a, h, k].every(Number.isFinite)) return null;
+      return { a, b: 1, h, k };
+    }
+
     function pointToSvg(p, bounds) {
       return { x: graphX(p.x, bounds), y: graphY(p.y, bounds) };
     }
@@ -1080,6 +1164,11 @@
     function renderGraphControls() {
       const g = state.graphs;
       controlPanel.innerHTML = '<h2>Controls</h2>' +
+        textInput("graphEquationInput", "Target equation", graphPlainEquation(g)) +
+        '<div class="input-grid">' +
+        actionButton("graphApplyEquation", "Apply Equation", true) +
+        actionButton("graphAnimate", "Animate Graph") +
+        '</div>' +
         slider("graphA", "Vertical scale a", -3, 3, 0.5, g.a) +
         slider("graphB", "Horizontal scale b", 0.5, 3, 0.5, g.b) +
         slider("graphH", "Horizontal shift h", -5, 5, 1, g.h) +
@@ -1092,16 +1181,36 @@
       attachSlider("graphK", "graphs", "k", render);
       attachCheckbox("graphOriginal", "graphs", "original", render);
       attachCheckbox("graphPoints", "graphs", "points", render);
+      document.getElementById("graphApplyEquation").addEventListener("click", () => {
+        const parsed = parseGraphEquation(document.getElementById("graphEquationInput").value, state.graphs.model);
+        if (!parsed) {
+          modelNote.textContent = "Use the matching form for the selected graph, such as y = 2(x - 3)² + 1.";
+          return;
+        }
+        Object.assign(state.graphs, parsed, { progress: 1 });
+        render();
+      });
+      attachAnimationButton("graphAnimate", "graphs");
     }
 
     function renderGraphDisplay() {
       const g = state.graphs;
       const name = g.model;
       const base = (x) => baseFunction(name, x);
-      const transformed = (x) => g.a * base(g.b * (x - g.h)) + g.k;
+      const live = {
+        a: 1 + (g.a - 1) * g.progress,
+        b: 1 + (g.b - 1) * g.progress,
+        h: g.h * g.progress,
+        k: g.k * g.progress
+      };
+      const transformed = (x) => live.a * base(live.b * (x - live.h)) + live.k;
+      const target = (x) => g.a * base(g.b * (x - g.h)) + g.k;
       let content = graphGrid(graphBounds, 1, 1);
       if (g.original) {
         content += '<path class="base-curve" d="' + pathForFunction(base, graphBounds) + '"/>';
+      }
+      if (g.progress < 0.995) {
+        content += '<path class="target-curve" d="' + pathForFunction(target, graphBounds) + '"/>';
       }
       content += '<path class="main-curve" d="' + pathForFunction(transformed, graphBounds) + '"/>';
       if (g.points && name !== "reciprocal") {
@@ -1135,7 +1244,7 @@
           numberInput("transformCentreX", "Centre x", t.centreX, -6, 6, 1) +
           numberInput("transformCentreY", "Centre y", t.centreY, -5, 5, 1) +
           '</div>' +
-          selectInput("transformScale", "Scale factor", t.scale, [[0.5, "0.5"], [1.5, "1.5"], [2, "2"], [3, "3"]]) +
+          selectInput("transformScale", "Scale factor", t.scale, [[-1, "-1"], [-0.5, "-0.5"], [0.5, "0.5"], [1.5, "1.5"], [2, "2"]]) +
           actionButton("transformAnimate", "Animate Enlargement");
       }
       controlPanel.innerHTML = controls;
@@ -1176,23 +1285,38 @@
       controlPanel.innerHTML = '<h2>Controls</h2>' +
         slider("circleEqH", "Centre h", -6, 6, 0.5, c.h) +
         slider("circleEqK", "Centre k", -4, 4, 0.5, c.k) +
-        slider("circleEqR", "Radius r", 1, 6, 0.5, c.r);
+        slider("circleEqR", "Radius r", 1, 6, 0.5, c.r) +
+        actionButton("circleEqAnimate", "Animate Circle");
       attachSlider("circleEqH", "circleEq", "h", render);
       attachSlider("circleEqK", "circleEq", "k", render);
       attachSlider("circleEqR", "circleEq", "r", render);
+      attachAnimationButton("circleEqAnimate", "circleEq");
     }
 
     function renderCircleEquationDisplay() {
       const c = state.circleEq;
-      const centre = { x: graphX(c.h, circleEqBounds), y: graphY(c.k, circleEqBounds) };
-      const radiusPoint = { x: graphX(c.h + c.r, circleEqBounds), y: graphY(c.k, circleEqBounds) };
-      const pixelRadius = Math.abs(graphX(c.h + c.r, circleEqBounds) - graphX(c.h, circleEqBounds));
+      const live = {
+        h: c.h * c.progress,
+        k: c.k * c.progress,
+        r: 1 + (c.r - 1) * c.progress
+      };
+      const unitCentre = { x: graphX(0, circleEqBounds), y: graphY(0, circleEqBounds) };
+      const unitRadius = Math.abs(graphX(1, circleEqBounds) - graphX(0, circleEqBounds));
+      const centre = { x: graphX(live.h, circleEqBounds), y: graphY(live.k, circleEqBounds) };
+      const radiusPoint = { x: graphX(live.h + live.r, circleEqBounds), y: graphY(live.k, circleEqBounds) };
+      const targetCentre = { x: graphX(c.h, circleEqBounds), y: graphY(c.k, circleEqBounds) };
+      const targetRadius = Math.abs(graphX(c.h + c.r, circleEqBounds) - graphX(c.h, circleEqBounds));
+      const pixelRadius = Math.abs(graphX(live.h + live.r, circleEqBounds) - graphX(live.h, circleEqBounds));
       let content = graphGrid(circleEqBounds, 1, 1);
+      content += '<circle class="base-curve" cx="' + unitCentre.x.toFixed(1) + '" cy="' + unitCentre.y.toFixed(1) + '" r="' + unitRadius.toFixed(1) + '"/>';
+      if (c.progress < 0.995) {
+        content += '<circle class="target-curve" cx="' + targetCentre.x.toFixed(1) + '" cy="' + targetCentre.y.toFixed(1) + '" r="' + targetRadius.toFixed(1) + '"/>';
+      }
       content += '<circle class="circle-line circle-equation-line" cx="' + centre.x.toFixed(1) + '" cy="' + centre.y.toFixed(1) + '" r="' + pixelRadius.toFixed(1) + '"/>';
       content += line(centre, radiusPoint, "highlight-line");
       content += dotWithDrag(centre, "C", "circleEqCenter", 18, -16);
       content += dotWithDrag(radiusPoint, "R", "circleEqRadius", 16, -14);
-      content += '<text class="math-label" x="' + (centre.x + pixelRadius / 2 - 8).toFixed(1) + '" y="' + (centre.y - 14).toFixed(1) + '">r = ' + round(c.r, 1) + '</text>';
+      content += '<text class="math-label" x="' + (centre.x + pixelRadius / 2 - 8).toFixed(1) + '" y="' + (centre.y - 14).toFixed(1) + '">r = ' + round(live.r, 1) + '</text>';
       boardTitle.textContent = "Equation of a Circle";
       boardEquation.innerHTML = circleEquationHtml(c.h, c.k, c.r);
       svg(content, "0 0 " + graphWidth + " " + graphHeight);
@@ -1630,13 +1754,13 @@
 
     function resetCurrent() {
       if (state.mode === "graphs") {
-        state.graphs = { model: state.graphs.model, a: 1, b: 1, h: 0, k: 0, original: true, points: true };
+        state.graphs = { model: state.graphs.model, progress: 1, a: 1, b: 1, h: 0, k: 0, original: true, points: true };
       }
       if (state.mode === "transforms") {
         state.transforms = { model: state.transforms.model, progress: 1, centreX: 1, centreY: 1, angle: 90, direction: "anticlockwise", vectorX: 4, vectorY: 2, scale: 2 };
       }
       if (state.mode === "circleEq") {
-        state.circleEq = { model: state.circleEq.model, h: 2, k: -1, r: 4 };
+        state.circleEq = { model: state.circleEq.model, progress: 1, h: 2, k: -1, r: 4 };
       }
       if (state.mode === "circles") {
         state.circles = {
