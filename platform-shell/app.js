@@ -2126,7 +2126,7 @@ const tools = [
     status: "Imported",
     description: "Use teacher-led rectangular area models for arrays, partitioned multiplication, fractions, percentages, expanding brackets, and factorising.",
     tags: ["classroom", "primary", "elementary", "area models", "arrays", "multiplication", "partitioning", "fractions", "percentages", "expanding brackets", "factorising", "algebra"],
-    toolPath: "tools/area-models/index.html?v=area-models-1",
+    toolPath: "tools/area-models/index.html?v=area-models-2",
     imported: true,
     teacherNotes: [
       "Designed for live conceptual modelling with one example on screen at a time.",
