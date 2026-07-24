@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concept Explainer | Kaizen Maths</title>
+  <style>
+    :root {
+      --ink: #14263a;
+      --muted: #66758a;
+      --line: #d8e5ef;
+      --paper: #ffffff;
+      --soft: #f6fbff;
+      --teal: #12a8a4;
+      --teal-dark: #087a76;
+      --orange: #f97316;
+      --blue: #2563eb;
+      --purple: #6f4cc3;
+      --green: #16a34a;
+      --red: #ef4444;
+      --shadow: 0 16px 38px rgba(20, 38, 58, 0.16);
+      --math-font: "KaTeX_Math", "Cambria Math", "Times New Roman", serif;
+      --ui-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      color: var(--ink);
+      font-family: var(--ui-font);
+      background:
+        linear-gradient(135deg, rgba(18, 168, 164, 0.12), rgba(249, 115, 22, 0.08)),
+        repeating-linear-gradient(135deg, rgba(37, 99, 235, 0.04) 0 1px, transparent 1px 30px),
+        #f8fcff;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      min-height: 74px;
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) minmax(280px, 520px) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 16px;
+      color: #fff;
+      background: linear-gradient(135deg, #122b46, #174d67 56%, #087a76);
+      box-shadow: 0 8px 24px rgba(12, 26, 46, 0.18);
+      z-index: 4;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.08rem, 1.7vw, 1.34rem);
+      line-height: 1.05;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .control-field {
+      display: grid;
+      gap: 5px;
+    }
+
+    .control-field label {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .control-field select {
+      min-height: 40px;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      border-radius: 9px;
+      padding: 7px 10px;
+      color: #14263a;
+      background: #fff;
+      font-weight: 850;
+      outline: none;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      min-height: 38px;
+      min-width: 72px;
+      border-radius: 9px;
+      padding: 8px 12px;
+      color: #fff;
+      background: var(--teal);
+      font-weight: 900;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.13);
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .action-btn:hover {
+      filter: brightness(0.96);
+      transform: translateY(-1px);
+    }
+
+    .action-btn.secondary {
+      color: #14324a;
+      background: #fff;
+    }
+
+    .action-btn.orange {
+      background: var(--orange);
+    }
+
+    .action-btn.blue {
+      background: var(--blue);
+    }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 390px);
+      gap: 14px;
+      padding: 14px;
+    }
+
+    .stage-shell,
+    .property-panel {
+      min-height: 0;
+      border: 1px solid rgba(18, 168, 164, 0.18);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .stage-shell {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .concept-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, rgba(240, 253, 250, 0.98), rgba(255, 247, 237, 0.82));
+    }
+
+    .concept-head h2 {
+      margin: 0;
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      line-height: 1.08;
+    }
+
+    .concept-head p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 0.9rem;
+    }
+
+    .group-tag {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: #064e3b;
+      background: #ccfbf1;
+      font-size: 0.78rem;
+      font-weight: 950;
+    }
+
+    .board {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 14px;
+      background:
+        repeating-linear-gradient(0deg, rgba(20, 38, 58, 0.035) 0 1px, transparent 1px 42px),
+        repeating-linear-gradient(90deg, rgba(20, 38, 58, 0.035) 0 1px, transparent 1px 42px),
+        linear-gradient(180deg, #ffffff, #f6fbff);
+    }
+
+    .diagram-frame,
+    .algebra-frame {
+      width: min(96%, 980px);
+      height: min(100%, 620px);
+      min-height: 430px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      border: 1px solid #dbe7ef;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.94);
+      overflow: hidden;
+    }
+
+    .diagram-frame svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .base-shape,
+    .base-line {
+      fill: rgba(232, 248, 246, 0.72);
+      stroke: #172033;
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .base-line {
+      fill: none;
+    }
+
+    .construction-line {
+      fill: none;
+      stroke: #64748b;
+      stroke-width: 3;
+      stroke-dasharray: 8 8;
+      stroke-linecap: round;
+    }
+
+    .label,
+    .math-label {
+      fill: #172033;
+      font-family: var(--math-font);
+      font-size: 27px;
+      font-weight: 700;
+    }
+
+    .small-label {
+      fill: #435469;
+      font-size: 18px;
+      font-weight: 800;
+      font-family: var(--ui-font);
+    }
+
+    .feature {
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+    }
+
+    .feature.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .feature-line {
+      fill: none;
+      stroke: var(--blue);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 900;
+      stroke-dashoffset: 900;
+    }
+
+    .feature.visible .feature-line {
+      animation: drawLine 900ms ease forwards;
+    }
+
+    .feature-mark {
+      fill: none;
+      stroke: var(--orange);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .feature-fill {
+      fill: rgba(37, 99, 235, 0.12);
+      stroke: var(--blue);
+      stroke-width: 4;
+    }
+
+    .feature-label {
+      fill: #0f4f73;
+      font-family: var(--ui-font);
+      font-size: 21px;
+      font-weight: 950;
+    }
+
+    .feature-badge {
+      fill: rgba(255, 255, 255, 0.92);
+      stroke: rgba(37, 99, 235, 0.22);
+      stroke-width: 2;
+    }
+
+    @keyframes drawLine {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    .property-panel {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .panel-head {
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      font-size: 1.04rem;
+    }
+
+    .panel-head p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 700;
+      line-height: 1.32;
+    }
+
+    .property-list {
+      min-height: 0;
+      overflow: auto;
+      padding: 12px;
+      display: grid;
+      gap: 9px;
+      align-content: start;
+    }
+
+    .property-btn {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 10px;
+      border: 1px solid #dbe7ef;
+      border-radius: 10px;
+      color: var(--ink);
+      background: #fff;
+      text-align: left;
+      box-shadow: 0 4px 12px rgba(20, 38, 58, 0.06);
+      transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+    }
+
+    .property-btn:hover {
+      border-color: #67e8f9;
+      transform: translateY(-1px);
+    }
+
+    .property-btn.active {
+      border-color: #14b8a6;
+      background: linear-gradient(135deg, rgba(204, 251, 241, 0.86), rgba(255, 247, 237, 0.74));
+    }
+
+    .property-number {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--teal);
+      font-weight: 950;
+      font-size: 0.82rem;
+    }
+
+    .property-btn.active .property-number {
+      background: var(--orange);
+    }
+
+    .property-title {
+      display: block;
+      font-weight: 950;
+      line-height: 1.18;
+    }
+
+    .property-detail {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.34;
+      font-weight: 650;
+    }
+
+    .active-note {
+      min-height: 86px;
+      padding: 12px 14px;
+      border-top: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(15, 118, 110, 0.08), rgba(249, 115, 22, 0.08));
+    }
+
+    .active-note strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #0f766e;
+      font-size: 0.96rem;
+    }
+
+    .active-note span {
+      display: block;
+      color: #304258;
+      font-weight: 700;
+      line-height: 1.34;
+    }
+
+    .algebra-frame {
+      padding: 28px;
+      align-content: center;
+      gap: 22px;
+      justify-items: center;
+    }
+
+    .expression {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-family: var(--math-font);
+      font-size: clamp(3rem, 8vw, 6.6rem);
+      line-height: 1;
+      color: #14263a;
+    }
+
+    .expr-part {
+      position: relative;
+      display: inline-flex;
+      align-items: baseline;
+      justify-content: center;
+      min-width: 0.72em;
+      padding: 0 0.04em;
+      border-radius: 10px;
+      transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .expr-part sup {
+      font-size: 0.46em;
+      line-height: 0;
+      transform: translateY(-0.52em);
+    }
+
+    .expr-part.active {
+      color: #0f4f73;
+      background: rgba(20, 184, 166, 0.15);
+      box-shadow: inset 0 -8px 0 rgba(249, 115, 22, 0.28);
+    }
+
+    .expr-label {
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 8px);
+      min-width: max-content;
+      transform: translate(-50%, 8px);
+      opacity: 0;
+      padding: 5px 8px;
+      border-radius: 999px;
+      color: #0f4f73;
+      background: #e0fdfa;
+      font-family: var(--ui-font);
+      font-size: 0.88rem;
+      font-weight: 950;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+    }
+
+    .expr-part.active .expr-label {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .algebra-caption {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+      line-height: 1.4;
+      text-align: center;
+      font-weight: 760;
+    }
+
+    .footer-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      background: #fff;
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    .progress-text {
+      color: #0f766e;
+      font-weight: 950;
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        justify-content: flex-start;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(0, 1fr) minmax(220px, 34vh);
+      }
+
+      .property-panel {
+        min-height: 0;
+      }
+
+      .property-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      html,
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        min-height: 100vh;
+        height: auto;
+      }
+
+      .workspace {
+        grid-template-rows: auto auto;
+      }
+
+      .diagram-frame,
+      .algebra-frame {
+        min-height: 360px;
+      }
+
+      .property-list {
+        grid-template-columns: 1fr;
+        max-height: 360px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+</head>
+<body>
+  <main class="app" id="conceptApp">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Concept Explainer</h1>
+        <p>Reveal mathematical properties, labels, and notation for live classroom explanation.</p>
+      </div>
+      <div class="control-field">
+        <label for="conceptSelect">Concept</label>
+        <select id="conceptSelect"></select>
+      </div>
+      <div class="actions" aria-label="Display controls">
+        <button class="action-btn" id="nextBtn" type="button">Next</button>
+        <button class="action-btn blue" id="revealBtn" type="button">Reveal All</button>
+        <button class="action-btn secondary" id="hideBtn" type="button">Hide All</button>
+        <button class="action-btn orange" id="fullscreenBtn" type="button">Full Screen</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <section class="stage-shell" id="board">
+        <div class="concept-head">
+          <div>
+            <h2 id="conceptTitle"></h2>
+            <p id="conceptSubtitle"></p>
+          </div>
+          <span class="group-tag" id="groupTag"></span>
+        </div>
+        <div class="board" id="diagramHost"></div>
+        <div class="footer-strip">
+          <span id="conceptFooter"></span>
+          <span class="progress-text" id="progressText"></span>
+        </div>
+      </section>
+
+      <aside class="property-panel">
+        <div class="panel-head">
+          <h3>Properties</h3>
+          <p id="propertySummary"></p>
+        </div>
+        <div class="property-list" id="propertyList"></div>
+        <div class="active-note">
+          <strong id="activeTitle">Ready</strong>
+          <span id="activeDetail">Select a property to show it on the explanation board.</span>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const CONCEPTS = [
+      {
+        id: "square",
+        group: "Quadrilaterals",
+        title: "Square",
+        subtitle: "Equal sides, parallel sides, right angles, and diagonal properties.",
+        type: "quadrilateral",
+        points: [[220, 105], [500, 105], [500, 385], [220, 385]],
+        labels: ["A", "B", "C", "D"],
+        props: [
+          { id: "equal-sides", title: "All four sides are equal", detail: "Each side has the same length. Matching tick marks show equal sides." },
+          { id: "parallel-sides", title: "Opposite sides are parallel", detail: "AB is parallel to DC, and AD is parallel to BC." },
+          { id: "right-angles", title: "Each angle is 90 degrees", detail: "Every corner of a square is a right angle." },
+          { id: "diagonals", title: "Diagonals are equal and bisect each other", detail: "AC and BD are equal in length and meet at their midpoint." },
+          { id: "symmetry", title: "Four lines of symmetry", detail: "A square has two diagonal and two midline lines of symmetry." }
+        ]
+      },
+      {
+        id: "rectangle",
+        group: "Quadrilaterals",
+        title: "Rectangle",
+        subtitle: "Parallel opposite sides, equal opposite sides, right angles, and equal diagonals.",
+        type: "quadrilateral",
+        points: [[170, 135], [550, 135], [550, 355], [170, 355]],
+        labels: ["A", "B", "C", "D"],
+        props: [
+          { id: "opposite-equal", title: "Opposite sides are equal", detail: "AB = DC and AD = BC." },
+          { id: "parallel-sides", title: "Opposite sides are parallel", detail: "AB is parallel to DC, and AD is parallel to BC." },
+          { id: "right-angles", title: "Each angle is 90 degrees", detail: "All four interior angles are right angles." },
+          { id: "diagonals", title: "Diagonals are equal and bisect each other", detail: "AC and BD are equal, and they cross at the midpoint." },
+          { id: "symmetry-rect", title: "Two lines of symmetry", detail: "A rectangle has a horizontal and a vertical line of symmetry." }
+        ]
+      },
+      {
+        id: "rhombus",
+        group: "Quadrilaterals",
+        title: "Rhombus",
+        subtitle: "Equal sides, parallel opposite sides, and perpendicular bisecting diagonals.",
+        type: "quadrilateral",
+        points: [[360, 80], [545, 245], [360, 410], [175, 245]],
+        labels: ["A", "B", "C", "D"],
+        props: [
+          { id: "equal-sides", title: "All four sides are equal", detail: "Every side of a rhombus has the same length." },
+          { id: "parallel-sides", title: "Opposite sides are parallel", detail: "Each pair of opposite sides remains parallel." },
+          { id: "perpendicular-diagonals", title: "Diagonals meet at 90 degrees", detail: "The diagonals cross at right angles." },
+          { id: "diagonal-bisect", title: "Diagonals bisect each other", detail: "Each diagonal cuts the other into two equal parts." },
+          { id: "opposite-angles", title: "Opposite angles are equal", detail: "The opposite angles in a rhombus are equal." }
+        ]
+      },
+      {
+        id: "kite",
+        group: "Quadrilaterals",
+        title: "Kite",
+        subtitle: "Two pairs of adjacent equal sides and one diagonal that bisects the other.",
+        type: "quadrilateral",
+        points: [[360, 70], [525, 250], [360, 420], [240, 250]],
+        labels: ["A", "B", "C", "D"],
+        props: [
+          { id: "adjacent-equal", title: "Adjacent sides are equal in pairs", detail: "Two pairs of neighbouring sides have matching lengths." },
+          { id: "kite-diagonals", title: "Diagonals are perpendicular", detail: "The diagonals meet at a right angle." },
+          { id: "one-bisects", title: "One diagonal bisects the other", detail: "The line of symmetry cuts the other diagonal into two equal parts." },
+          { id: "one-symmetry", title: "One line of symmetry", detail: "A kite usually has one line of symmetry." }
+        ]
+      },
+      {
+        id: "circle-parts",
+        group: "Circle Geometry",
+        title: "Parts of a Circle",
+        subtitle: "Radius, diameter, chord, tangent, arc, sector, segment, and circumference.",
+        type: "circle",
+        props: [
+          { id: "centre", title: "Centre", detail: "The fixed point in the middle of the circle." },
+          { id: "radius", title: "Radius", detail: "A line from the centre to the circumference." },
+          { id: "diameter", title: "Diameter", detail: "A line through the centre from one side of the circle to the other." },
+          { id: "chord", title: "Chord", detail: "A straight line joining two points on the circumference." },
+          { id: "tangent", title: "Tangent", detail: "A line that touches the circle at exactly one point." },
+          { id: "arc", title: "Arc", detail: "Part of the circumference." },
+          { id: "sector", title: "Sector", detail: "A region bounded by two radii and an arc." },
+          { id: "segment", title: "Segment", detail: "A region bounded by a chord and an arc." }
+        ]
+      },
+      {
+        id: "cube",
+        group: "3D Solids",
+        title: "Cube and Cuboid",
+        subtitle: "Faces, edges, vertices, dimensions, and parallel faces.",
+        type: "solid",
+        solid: "cube",
+        props: [
+          { id: "faces", title: "Faces", detail: "A face is a flat surface on a solid." },
+          { id: "edges", title: "Edges", detail: "An edge is where two faces meet." },
+          { id: "vertices", title: "Vertices", detail: "A vertex is a corner where edges meet." },
+          { id: "dimensions", title: "Length, width, and height", detail: "These dimensions describe the size of a cuboid." },
+          { id: "parallel-faces", title: "Opposite faces are parallel", detail: "The front and back faces lie in parallel planes." }
+        ]
+      },
+      {
+        id: "cylinder-cone-sphere",
+        group: "3D Solids",
+        title: "Cylinder, Cone and Sphere",
+        subtitle: "Curved surfaces, circular bases, apex, radius, and diameter.",
+        type: "solid",
+        solid: "round",
+        props: [
+          { id: "cylinder-bases", title: "Cylinder bases", detail: "A cylinder has two congruent circular bases." },
+          { id: "curved-surface", title: "Curved surface", detail: "The outside surface wraps around the solid." },
+          { id: "cone-apex", title: "Cone apex", detail: "The apex is the single point at the top of a cone." },
+          { id: "radius-diameter", title: "Radius and diameter", detail: "The radius is half the diameter of the circular base." },
+          { id: "sphere-surface", title: "Sphere surface", detail: "A sphere has one continuous curved surface and no edges." }
+        ]
+      },
+      {
+        id: "algebra-expression",
+        group: "Algebra Language",
+        title: "Algebraic Expression",
+        subtitle: "Coefficient, variable, constant, term, operation, and power.",
+        type: "algebra",
+        expression: [
+          { key: "coefficient", text: "5", label: "coefficient" },
+          { key: "variable", text: "x", label: "variable" },
+          { key: "power", text: "2", label: "power", superscript: true },
+          { key: "operation", text: "+", label: "operation" },
+          { key: "term", text: "3x", label: "term" },
+          { key: "operation", text: "-", label: "operation" },
+          { key: "constant", text: "7", label: "constant" }
+        ],
+        props: [
+          { id: "coefficient", title: "Coefficient", detail: "The number multiplying a variable. In 5x squared, the coefficient is 5." },
+          { id: "variable", title: "Variable", detail: "A letter used to represent a value that can change." },
+          { id: "power", title: "Power or index", detail: "The small number shows repeated multiplication by the base." },
+          { id: "term", title: "Term", detail: "A term is a single part of an expression, separated by plus or minus signs." },
+          { id: "constant", title: "Constant", detail: "A number term with no variable." },
+          { id: "operation", title: "Operation", detail: "The operation tells us how terms are connected." }
+        ]
+      },
+      {
+        id: "equation-language",
+        group: "Algebra Language",
+        title: "Equation Language",
+        subtitle: "Equation, expression, left side, right side, solution, and inverse operation.",
+        type: "algebra",
+        expression: [
+          { key: "left-side expression", text: "3x + 5", label: "left side" },
+          { key: "equals", text: "=", label: "equals" },
+          { key: "right-side expression", text: "20", label: "right side" }
+        ],
+        props: [
+          { id: "equation", title: "Equation", detail: "An equation states that two expressions are equal." },
+          { id: "left-side", title: "Left side", detail: "The expression on the left of the equals sign." },
+          { id: "right-side", title: "Right side", detail: "The expression on the right of the equals sign." },
+          { id: "equals", title: "Equals sign", detail: "The equals sign means both sides have the same value." },
+          { id: "solution", title: "Solution", detail: "A solution is a value of the variable that makes the equation true." },
+          { id: "inverse", title: "Inverse operation", detail: "An inverse operation undoes another operation when solving." }
+        ]
+      }
+    ];
+
+    const state = {
+      conceptId: CONCEPTS[0].id,
+      active: new Set(),
+      lastActive: null
+    };
+
+    const selectEl = document.getElementById("conceptSelect");
+    const titleEl = document.getElementById("conceptTitle");
+    const subtitleEl = document.getElementById("conceptSubtitle");
+    const groupEl = document.getElementById("groupTag");
+    const hostEl = document.getElementById("diagramHost");
+    const listEl = document.getElementById("propertyList");
+    const summaryEl = document.getElementById("propertySummary");
+    const activeTitleEl = document.getElementById("activeTitle");
+    const activeDetailEl = document.getElementById("activeDetail");
+    const progressEl = document.getElementById("progressText");
+    const footerEl = document.getElementById("conceptFooter");
+    const boardEl = document.getElementById("board");
+
+    function currentConcept() {
+      return CONCEPTS.find((concept) => concept.id === state.conceptId) || CONCEPTS[0];
+    }
+
+    function isActive(id) {
+      return state.active.has(id);
+    }
+
+    function cls(id) {
+      return "feature" + (isActive(id) ? " visible" : "");
+    }
+
+    function pointText(point) {
+      return point[0] + "," + point[1];
+    }
+
+    function polygon(points) {
+      return points.map(pointText).join(" ");
+    }
+
+    function label(text, x, y, className = "label") {
+      return `<text class="${className}" x="${x}" y="${y}" text-anchor="middle">${text}</text>`;
+    }
+
+    function featureLabel(text, x, y) {
+      const width = Math.max(92, text.length * 9 + 18);
+      return `
+        <rect class="feature-badge" x="${x - width / 2}" y="${y - 24}" width="${width}" height="32" rx="16"></rect>
+        <text class="feature-label" x="${x}" y="${y - 2}" text-anchor="middle">${text}</text>`;
+    }
+
+    function ticksOnSegment(a, b, count, offset = 0) {
+      const [x1, y1] = a;
+      const [x2, y2] = b;
+      const mx = (x1 + x2) / 2;
+      const my = (y1 + y2) / 2;
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const length = Math.hypot(dx, dy) || 1;
+      const nx = -dy / length;
+      const ny = dx / length;
+      const spread = 9;
+      const marks = [];
+      for (let i = 0; i < count; i += 1) {
+        const shift = (i - (count - 1) / 2) * spread;
+        const cx = mx + (dx / length) * shift + nx * offset;
+        const cy = my + (dy / length) * shift + ny * offset;
+        marks.push(`<line class="feature-mark" x1="${cx - nx * 12}" y1="${cy - ny * 12}" x2="${cx + nx * 12}" y2="${cy + ny * 12}"></line>`);
+      }
+      return marks.join("");
+    }
+
+    function parallelMarks(a, b, count, offset = 0) {
+      const [x1, y1] = a;
+      const [x2, y2] = b;
+      const mx = (x1 + x2) / 2;
+      const my = (y1 + y2) / 2;
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const length = Math.hypot(dx, dy) || 1;
+      const ux = dx / length;
+      const uy = dy / length;
+      const nx = -uy;
+      const ny = ux;
+      const marks = [];
+      for (let i = 0; i < count; i += 1) {
+        const shift = (i - (count - 1) / 2) * 14;
+        const cx = mx + ux * shift + nx * offset;
+        const cy = my + uy * shift + ny * offset;
+        marks.push(`<path class="feature-mark" d="M ${cx - ux * 11 - nx * 6} ${cy - uy * 11 - ny * 6} L ${cx + nx * 4} ${cy + ny * 4} L ${cx + ux * 11 - nx * 6} ${cy + uy * 11 - ny * 6}"></path>`);
+      }
+      return marks.join("");
+    }
+
+    function rightAngleMark(x, y, sx, sy) {
+      const size = 30;
+      return `<path class="feature-mark" d="M ${x + sx * size} ${y} L ${x + sx * size} ${y + sy * size} L ${x} ${y + sy * size}"></path>`;
+    }
+
+    function midpointMark(x, y) {
+      return `<circle class="feature-fill" cx="${x}" cy="${y}" r="8"></circle>`;
+    }
+
+    function renderQuadrilateral(concept) {
+      const [A, B, C, D] = concept.points;
+      const labels = concept.labels || ["A", "B", "C", "D"];
+      const center = [(A[0] + C[0]) / 2, (A[1] + C[1]) / 2];
+      const base = `
+        <polygon class="base-shape" points="${polygon(concept.points)}"></polygon>
+        ${label(labels[0], A[0] - 26, A[1] - 16)}
+        ${label(labels[1], B[0] + 26, B[1] - 16)}
+        ${label(labels[2], C[0] + 26, C[1] + 34)}
+        ${label(labels[3], D[0] - 26, D[1] + 34)}`;
+
+      const equalSides = `
+        <g class="${cls("equal-sides")}">
+          ${ticksOnSegment(A, B, 1, -18)}
+          ${ticksOnSegment(B, C, 1, -18)}
+          ${ticksOnSegment(C, D, 1, -18)}
+          ${ticksOnSegment(D, A, 1, -18)}
+          ${featureLabel("AB = BC = CD = DA", 360, 455)}
+        </g>`;
+      const oppositeEqual = `
+        <g class="${cls("opposite-equal")}">
+          ${ticksOnSegment(A, B, 1, -18)}
+          ${ticksOnSegment(C, D, 1, -18)}
+          ${ticksOnSegment(B, C, 2, -18)}
+          ${ticksOnSegment(D, A, 2, -18)}
+          ${featureLabel("Opposite sides equal", 360, 455)}
+        </g>`;
+      const adjacentEqual = `
+        <g class="${cls("adjacent-equal")}">
+          ${ticksOnSegment(A, B, 1, -16)}
+          ${ticksOnSegment(A, D, 1, 16)}
+          ${ticksOnSegment(C, B, 2, 16)}
+          ${ticksOnSegment(C, D, 2, -16)}
+          ${featureLabel("Adjacent equal sides", 360, 455)}
+        </g>`;
+      const parallelSides = `
+        <g class="${cls("parallel-sides")}">
+          ${parallelMarks(A, B, 1, -26)}
+          ${parallelMarks(D, C, 1, 26)}
+          ${parallelMarks(A, D, 2, 24)}
+          ${parallelMarks(B, C, 2, -24)}
+          ${featureLabel("Opposite sides parallel", 360, 455)}
+        </g>`;
+      const rightAngles = `
+        <g class="${cls("right-angles")}">
+          ${rightAngleMark(A[0], A[1], 1, 1)}
+          ${rightAngleMark(B[0], B[1], -1, 1)}
+          ${rightAngleMark(C[0], C[1], -1, -1)}
+          ${rightAngleMark(D[0], D[1], 1, -1)}
+          ${featureLabel("90 degrees", 360, 455)}
+        </g>`;
+      const diagonals = `
+        <g class="${cls("diagonals")}">
+          <line class="feature-line" x1="${A[0]}" y1="${A[1]}" x2="${C[0]}" y2="${C[1]}"></line>
+          <line class="feature-line" x1="${B[0]}" y1="${B[1]}" x2="${D[0]}" y2="${D[1]}"></line>
+          ${midpointMark(center[0], center[1])}
+          ${featureLabel("AC = BD", 360, 455)}
+        </g>`;
+      const perpendicularDiagonals = `
+        <g class="${cls("perpendicular-diagonals")}">
+          <line class="feature-line" x1="${A[0]}" y1="${A[1]}" x2="${C[0]}" y2="${C[1]}"></line>
+          <line class="feature-line" x1="${B[0]}" y1="${B[1]}" x2="${D[0]}" y2="${D[1]}"></line>
+          ${rightAngleMark(center[0], center[1], 1, 1)}
+          ${featureLabel("Diagonals meet at 90 degrees", 360, 455)}
+        </g>`;
+      const diagonalBisect = `
+        <g class="${cls("diagonal-bisect")}">
+          <line class="feature-line" x1="${A[0]}" y1="${A[1]}" x2="${C[0]}" y2="${C[1]}"></line>
+          <line class="feature-line" x1="${B[0]}" y1="${B[1]}" x2="${D[0]}" y2="${D[1]}"></line>
+          ${ticksOnSegment(A, [center[0], center[1]], 1, -11)}
+          ${ticksOnSegment([center[0], center[1]], C, 1, -11)}
+          ${ticksOnSegment(B, [center[0], center[1]], 2, -11)}
+          ${ticksOnSegment([center[0], center[1]], D, 2, -11)}
+          ${midpointMark(center[0], center[1])}
+          ${featureLabel("Bisect each other", 360, 455)}
+        </g>`;
+      const kiteDiagonals = `
+        <g class="${cls("kite-diagonals")}">
+          <line class="feature-line" x1="${A[0]}" y1="${A[1]}" x2="${C[0]}" y2="${C[1]}"></line>
+          <line class="feature-line" x1="${B[0]}" y1="${B[1]}" x2="${D[0]}" y2="${D[1]}"></line>
+          ${rightAngleMark(center[0], center[1], 1, 1)}
+          ${featureLabel("Diagonals perpendicular", 360, 455)}
+        </g>`;
+      const oneBisects = `
+        <g class="${cls("one-bisects")}">
+          <line class="feature-line" x1="${A[0]}" y1="${A[1]}" x2="${C[0]}" y2="${C[1]}"></line>
+          <line class="feature-line" x1="${B[0]}" y1="${B[1]}" x2="${D[0]}" y2="${D[1]}"></line>
+          ${ticksOnSegment(B, [center[0], center[1]], 1, -11)}
+          ${ticksOnSegment([center[0], center[1]], D, 1, -11)}
+          ${midpointMark(center[0], center[1])}
+          ${featureLabel("One diagonal bisects the other", 360, 455)}
+        </g>`;
+      const symmetry = `
+        <g class="${cls("symmetry")}">
+          <line class="construction-line" x1="${A[0]}" y1="${A[1]}" x2="${C[0]}" y2="${C[1]}"></line>
+          <line class="construction-line" x1="${B[0]}" y1="${B[1]}" x2="${D[0]}" y2="${D[1]}"></line>
+          <line class="construction-line" x1="360" y1="80" x2="360" y2="410"></line>
+          <line class="construction-line" x1="165" y1="245" x2="555" y2="245"></line>
+          ${featureLabel("4 lines of symmetry", 360, 455)}
+        </g>`;
+      const symmetryRect = `
+        <g class="${cls("symmetry-rect")}">
+          <line class="construction-line" x1="360" y1="105" x2="360" y2="385"></line>
+          <line class="construction-line" x1="140" y1="245" x2="580" y2="245"></line>
+          ${featureLabel("2 lines of symmetry", 360, 455)}
+        </g>`;
+      const oneSymmetry = `
+        <g class="${cls("one-symmetry")}">
+          <line class="construction-line" x1="${A[0]}" y1="${A[1]}" x2="${C[0]}" y2="${C[1]}"></line>
+          ${featureLabel("1 line of symmetry", 360, 455)}
+        </g>`;
+      const oppositeAngles = `
+        <g class="${cls("opposite-angles")}">
+          <path class="feature-mark" d="M 346 111 Q 360 142 382 111"></path>
+          <path class="feature-mark" d="M 346 379 Q 360 348 382 379"></path>
+          <path class="feature-mark" d="M 500 233 Q 470 245 500 267"></path>
+          <path class="feature-mark" d="M 220 233 Q 250 245 220 267"></path>
+          ${featureLabel("Opposite angles equal", 360, 455)}
+        </g>`;
+
+      return `
+        <div class="diagram-frame">
+          <svg viewBox="0 0 720 500" role="img" aria-label="${concept.title} diagram">
+            ${base}
+            ${equalSides}
+            ${oppositeEqual}
+            ${adjacentEqual}
+            ${parallelSides}
+            ${rightAngles}
+            ${diagonals}
+            ${perpendicularDiagonals}
+            ${diagonalBisect}
+            ${kiteDiagonals}
+            ${oneBisects}
+            ${symmetry}
+            ${symmetryRect}
+            ${oneSymmetry}
+            ${oppositeAngles}
+          </svg>
+        </div>`;
+    }
+
+    function renderCircle() {
+      return `
+        <div class="diagram-frame">
+          <svg viewBox="0 0 720 500" role="img" aria-label="Circle parts diagram">
+            <circle class="base-line" cx="360" cy="245" r="165"></circle>
+            ${label("O", 360, 251)}
+            <g class="${cls("centre")}">
+              <circle class="feature-fill" cx="360" cy="245" r="10"></circle>
+              ${featureLabel("Centre", 360, 304)}
+            </g>
+            <g class="${cls("radius")}">
+              <line class="feature-line" x1="360" y1="245" x2="505" y2="166"></line>
+              ${featureLabel("Radius", 452, 187)}
+            </g>
+            <g class="${cls("diameter")}">
+              <line class="feature-line" x1="205" y1="245" x2="525" y2="245"></line>
+              ${featureLabel("Diameter", 360, 226)}
+            </g>
+            <g class="${cls("chord")}">
+              <line class="feature-line" x1="245" y1="133" x2="518" y2="294"></line>
+              ${featureLabel("Chord", 430, 145)}
+            </g>
+            <g class="${cls("tangent")}">
+              <line class="feature-line" x1="537" y1="86" x2="620" y2="233"></line>
+              <circle class="feature-fill" cx="505" cy="166" r="7"></circle>
+              ${featureLabel("Tangent", 598, 142)}
+            </g>
+            <g class="${cls("arc")}">
+              <path class="feature-line" d="M 245 133 A 165 165 0 0 1 505 166"></path>
+              ${featureLabel("Arc", 365, 93)}
+            </g>
+            <g class="${cls("sector")}">
+              <path class="feature-fill" d="M 360 245 L 505 166 A 165 165 0 0 1 432 95 Z"></path>
+              ${featureLabel("Sector", 462, 236)}
+            </g>
+            <g class="${cls("segment")}">
+              <path class="feature-fill" d="M 245 133 A 165 165 0 0 1 518 294 L 245 133 Z"></path>
+              ${featureLabel("Segment", 355, 132)}
+            </g>
+            <g class="${cls("circumference")}">
+              <circle class="feature-line" cx="360" cy="245" r="165"></circle>
+              ${featureLabel("Circumference", 360, 455)}
+            </g>
+          </svg>
+        </div>`;
+    }
+
+    function renderCube() {
+      return `
+        <div class="diagram-frame">
+          <svg viewBox="0 0 720 500" role="img" aria-label="Cube and cuboid parts diagram">
+            <polygon class="base-shape" points="220,155 455,155 540,235 305,235"></polygon>
+            <polygon class="base-shape" points="305,235 540,235 540,390 305,390"></polygon>
+            <polygon class="base-shape" points="220,155 305,235 305,390 220,310"></polygon>
+            <line class="base-line" x1="455" y1="155" x2="540" y2="235"></line>
+            <line class="base-line" x1="220" y1="310" x2="455" y2="310"></line>
+            <line class="base-line" x1="455" y1="155" x2="455" y2="310"></line>
+            <line class="construction-line" x1="455" y1="310" x2="540" y2="390"></line>
+            <g class="${cls("faces")}">
+              <polygon class="feature-fill" points="305,235 540,235 540,390 305,390"></polygon>
+              ${featureLabel("Face", 430, 322)}
+            </g>
+            <g class="${cls("edges")}">
+              <line class="feature-line" x1="305" y1="235" x2="540" y2="235"></line>
+              <line class="feature-line" x1="540" y1="235" x2="540" y2="390"></line>
+              <line class="feature-line" x1="305" y1="390" x2="540" y2="390"></line>
+              ${featureLabel("Edges", 525, 205)}
+            </g>
+            <g class="${cls("vertices")}">
+              <circle class="feature-fill" cx="220" cy="155" r="9"></circle>
+              <circle class="feature-fill" cx="455" cy="155" r="9"></circle>
+              <circle class="feature-fill" cx="540" cy="235" r="9"></circle>
+              <circle class="feature-fill" cx="540" cy="390" r="9"></circle>
+              <circle class="feature-fill" cx="305" cy="390" r="9"></circle>
+              <circle class="feature-fill" cx="220" cy="310" r="9"></circle>
+              ${featureLabel("Vertices", 360, 455)}
+            </g>
+            <g class="${cls("dimensions")}">
+              <line class="feature-line" x1="305" y1="414" x2="540" y2="414"></line>
+              <line class="feature-line" x1="565" y1="235" x2="565" y2="390"></line>
+              <line class="feature-line" x1="192" y1="135" x2="278" y2="216"></line>
+              ${label("length", 423, 448, "small-label")}
+              ${label("height", 610, 318, "small-label")}
+              ${label("width", 206, 187, "small-label")}
+            </g>
+            <g class="${cls("parallel-faces")}">
+              <polygon class="feature-fill" points="305,235 540,235 540,390 305,390"></polygon>
+              <polygon class="feature-fill" points="220,155 455,155 455,310 220,310"></polygon>
+              ${featureLabel("Parallel faces", 360, 455)}
+            </g>
+          </svg>
+        </div>`;
+    }
+
+    function renderRoundSolids() {
+      return `
+        <div class="diagram-frame">
+          <svg viewBox="0 0 720 500" role="img" aria-label="Cylinder cone and sphere parts diagram">
+            <ellipse class="base-shape" cx="175" cy="145" rx="88" ry="30"></ellipse>
+            <path class="base-shape" d="M 87 145 L 87 330 A 88 30 0 0 0 263 330 L 263 145"></path>
+            <ellipse class="construction-line" cx="175" cy="330" rx="88" ry="30"></ellipse>
+            <path class="base-shape" d="M 360 105 L 260 340 A 100 34 0 0 0 460 340 Z"></path>
+            <ellipse class="construction-line" cx="360" cy="340" rx="100" ry="34"></ellipse>
+            <circle class="base-shape" cx="565" cy="245" r="105"></circle>
+            <ellipse class="construction-line" cx="565" cy="245" rx="105" ry="30"></ellipse>
+            <g class="${cls("cylinder-bases")}">
+              <ellipse class="feature-fill" cx="175" cy="145" rx="88" ry="30"></ellipse>
+              <ellipse class="feature-fill" cx="175" cy="330" rx="88" ry="30"></ellipse>
+              ${featureLabel("Circular bases", 175, 410)}
+            </g>
+            <g class="${cls("curved-surface")}">
+              <path class="feature-fill" d="M 87 145 L 87 330 A 88 30 0 0 0 263 330 L 263 145 A 88 30 0 0 1 87 145 Z"></path>
+              ${featureLabel("Curved surface", 175, 98)}
+            </g>
+            <g class="${cls("cone-apex")}">
+              <circle class="feature-fill" cx="360" cy="105" r="10"></circle>
+              ${featureLabel("Apex", 360, 75)}
+            </g>
+            <g class="${cls("radius-diameter")}">
+              <line class="feature-line" x1="360" y1="340" x2="460" y2="340"></line>
+              <line class="feature-line" x1="260" y1="364" x2="460" y2="364"></line>
+              ${label("r", 412, 328, "math-label")}
+              ${label("d", 360, 394, "math-label")}
+            </g>
+            <g class="${cls("sphere-surface")}">
+              <circle class="feature-line" cx="565" cy="245" r="105"></circle>
+              <ellipse class="feature-line" cx="565" cy="245" rx="105" ry="30"></ellipse>
+              ${featureLabel("One curved surface", 565, 396)}
+            </g>
+          </svg>
+        </div>`;
+    }
+
+    function renderAlgebra(concept) {
+      if (concept.id === "equation-language") {
+        const leftActive = isActive("left-side") || isActive("equation") || isActive("solution") || isActive("inverse");
+        const eqActive = isActive("equals") || isActive("equation");
+        const rightActive = isActive("right-side") || isActive("equation") || isActive("solution") || isActive("inverse");
+        return `
+          <div class="algebra-frame">
+            <div class="expression" aria-label="Equation 3x plus 5 equals 20">
+              <span class="expr-part${leftActive ? " active" : ""}">3x + 5<span class="expr-label">left side</span></span>
+              <span class="expr-part${eqActive ? " active" : ""}">=<span class="expr-label">equals</span></span>
+              <span class="expr-part${rightActive ? " active" : ""}">20<span class="expr-label">right side</span></span>
+            </div>
+            <p class="algebra-caption">${isActive("solution") ? "A solution is the value of x that makes both sides equal." : isActive("inverse") ? "Inverse operations keep the two sides balanced while isolating the variable." : "3x + 5 = 20"}</p>
+          </div>`;
+      }
+      const expression = concept.expression.map((part) => {
+        const active = state.active.has(part.key);
+        const token = part.superscript ? `<sup>${part.text}</sup>` : part.text;
+        return `<span class="expr-part${active ? " active" : ""}">${token}<span class="expr-label">${part.label}</span></span>`;
+      }).join("");
+      return `
+        <div class="algebra-frame">
+          <div class="expression" aria-label="Algebraic expression 5 x squared plus 3x minus 7">${expression}</div>
+          <p class="algebra-caption">${isActive("term") ? "Terms are separated by plus or minus signs." : "5x² + 3x - 7"}</p>
+        </div>`;
+    }
+
+    function renderVisual(concept) {
+      if (concept.type === "quadrilateral") return renderQuadrilateral(concept);
+      if (concept.type === "circle") return renderCircle();
+      if (concept.type === "solid" && concept.solid === "cube") return renderCube();
+      if (concept.type === "solid" && concept.solid === "round") return renderRoundSolids();
+      if (concept.type === "algebra") return renderAlgebra(concept);
+      return "";
+    }
+
+    function renderSelect() {
+      const groups = [...new Set(CONCEPTS.map((concept) => concept.group))];
+      selectEl.innerHTML = groups.map((group) => {
+        const options = CONCEPTS
+          .filter((concept) => concept.group === group)
+          .map((concept) => `<option value="${concept.id}">${concept.title}</option>`)
+          .join("");
+        return `<optgroup label="${group}">${options}</optgroup>`;
+      }).join("");
+      selectEl.value = state.conceptId;
+    }
+
+    function renderProperties(concept) {
+      listEl.innerHTML = concept.props.map((prop, index) => `
+        <button class="property-btn${isActive(prop.id) ? " active" : ""}" type="button" data-property="${prop.id}">
+          <span class="property-number">${index + 1}</span>
+          <span>
+            <span class="property-title">${prop.title}</span>
+            <span class="property-detail">${prop.detail}</span>
+          </span>
+        </button>
+      `).join("");
+    }
+
+    function updateActiveNote(concept) {
+      const activeProp = concept.props.find((prop) => prop.id === state.lastActive) ||
+        [...concept.props].reverse().find((prop) => state.active.has(prop.id));
+      if (!activeProp) {
+        activeTitleEl.textContent = "Ready";
+        activeDetailEl.textContent = "Select a property to show it on the explanation board.";
+        return;
+      }
+      activeTitleEl.textContent = activeProp.title;
+      activeDetailEl.textContent = activeProp.detail;
+    }
+
+    function render() {
+      const concept = currentConcept();
+      titleEl.textContent = concept.title;
+      subtitleEl.textContent = concept.subtitle;
+      groupEl.textContent = concept.group;
+      summaryEl.textContent = concept.props.length + " revealable properties";
+      footerEl.textContent = concept.group + " | " + concept.title;
+      progressEl.textContent = state.active.size + " of " + concept.props.length + " shown";
+      hostEl.innerHTML = renderVisual(concept);
+      renderProperties(concept);
+      updateActiveNote(concept);
+    }
+
+    function setConcept(id) {
+      state.conceptId = id;
+      state.active = new Set();
+      state.lastActive = null;
+      render();
+    }
+
+    function toggleProperty(id) {
+      if (state.active.has(id)) {
+        state.active.delete(id);
+        state.lastActive = null;
+      } else {
+        state.active.add(id);
+        state.lastActive = id;
+      }
+      render();
+    }
+
+    function revealNext() {
+      const concept = currentConcept();
+      const next = concept.props.find((prop) => !state.active.has(prop.id));
+      if (next) {
+        state.active.add(next.id);
+        state.lastActive = next.id;
+      } else {
+        state.active.clear();
+        state.lastActive = null;
+      }
+      render();
+    }
+
+    function revealAll() {
+      const concept = currentConcept();
+      state.active = new Set(concept.props.map((prop) => prop.id));
+      state.lastActive = concept.props[concept.props.length - 1]?.id || null;
+      render();
+    }
+
+    function hideAll() {
+      state.active.clear();
+      state.lastActive = null;
+      render();
+    }
+
+    selectEl.addEventListener("change", () => setConcept(selectEl.value));
+    listEl.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-property]");
+      if (!button) return;
+      toggleProperty(button.dataset.property);
+    });
+    document.getElementById("nextBtn").addEventListener("click", revealNext);
+    document.getElementById("revealBtn").addEventListener("click", revealAll);
+    document.getElementById("hideBtn").addEventListener("click", hideAll);
+    document.getElementById("fullscreenBtn").addEventListener("click", async () => {
+      if (!document.fullscreenElement) {
+        await boardEl.requestFullscreen?.();
+      } else {
+        await document.exitFullscreen?.();
+      }
+    });
+    document.addEventListener("fullscreenchange", () => {
+      document.getElementById("fullscreenBtn").textContent = document.fullscreenElement ? "Exit Full Screen" : "Full Screen";
+    });
+
+    renderSelect();
+    render();
+  </script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-3"></script>
+</body>
+</html>

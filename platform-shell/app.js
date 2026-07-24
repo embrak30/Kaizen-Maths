@@ -2042,6 +2042,25 @@ const tools = [
     ]
   },
   {
+    slug: "concept-explainer",
+    title: "Concept Explainer",
+    category: "Classroom Tools",
+    level: "KS2 / KS3 / GCSE",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "Open teacher-led explanation boards for revealing properties, labels, and notation on shapes, circle parts, 3D solids, and algebra language.",
+    tags: ["classroom", "explanation", "concept explainer", "visual maths", "properties", "quadrilaterals", "circle parts", "3D solids", "algebra language", "vocabulary", "notation"],
+    toolPath: "tools/concept-explainer/index.html?v=concept-explainer-1",
+    imported: true,
+    teacherNotes: [
+      "Designed for the beginning of a topic when teachers need to introduce vocabulary, notation, and key properties clearly.",
+      "Teachers choose a concept, then reveal properties, labels, and markings one at a time.",
+      "Modes cover quadrilaterals, circle parts, 3D solids, algebraic expressions, and equation language.",
+      "Use full-screen mode and the write function to annotate the display during live explanation."
+    ]
+  },
+  {
     slug: "elementary-manipulatives",
     title: "Primary and Elementary Maths Manipulatives",
     category: "Classroom Tools",
@@ -2381,6 +2400,7 @@ const subjectToolGroups = {
   "Classroom Tools": {
     "classroom-displays": "Board Displays and Visuals",
     "dynamic-classroom-displays": "Board Displays and Visuals",
+    "concept-explainer": "Board Displays and Visuals",
     "elementary-manipulatives": "Board Displays and Visuals",
     "bar-models": "Board Displays and Visuals",
     "area-models": "Board Displays and Visuals",
@@ -2695,6 +2715,7 @@ const freeSampleTools = new Set([
   "averages-range",
   "classroom-displays",
   "dynamic-classroom-displays",
+  "concept-explainer",
   "bar-models",
   "area-models",
   "elementary-starter-board",
@@ -7881,8 +7902,9 @@ const curatedRelatedToolSlugs = {
   "newtons-second-law": ["friction", "work-energy-power", "motion-graphs-constant-acceleration", "equations-of-motion"],
   "friction": ["newtons-second-law", "work-energy-power", "equations-of-motion", "moments"],
   "work-energy-power": ["friction", "newtons-second-law", "equations-of-motion", "motion-graphs-constant-acceleration"],
-  "classroom-displays": ["dynamic-classroom-displays", "bar-models", "area-models", "elementary-manipulatives"],
-  "dynamic-classroom-displays": ["classroom-displays", "graph-transformations-curve-sketching", "circle-theorems", "trig-graphs-transformations"],
+  "classroom-displays": ["concept-explainer", "dynamic-classroom-displays", "bar-models", "area-models"],
+  "dynamic-classroom-displays": ["concept-explainer", "classroom-displays", "graph-transformations-curve-sketching", "circle-theorems"],
+  "concept-explainer": ["classroom-displays", "dynamic-classroom-displays", "bar-models", "area-models"],
   "word-search-builder": ["fractions-table", "elementary-starter-board", "elementary-maths-playground", "classroom-displays"],
   "bar-models": ["area-models", "elementary-manipulatives", "elementary-maths-playground", "ratio-proportion"],
   "area-models": ["bar-models", "elementary-manipulatives", "fractions-practice", "algebraic-simplification"],
@@ -8533,6 +8555,21 @@ function toolInsightProfile(tool) {
         "What is the resultant force in the chosen positive direction?",
         "Which quantity is mass, which is weight, and which is acceleration?",
         "How would the acceleration change if one opposing force were increased?"
+      ]
+    },
+    {
+      match: () => tool.slug === "concept-explainer" || has("concept explainer", "explanation board", "shape properties", "circle parts", "algebra language"),
+      misconceptions: [
+        "Naming a property without connecting it to the marking, label, or notation on the display.",
+        "Assuming a property of one quadrilateral applies to every quadrilateral.",
+        "Confusing vertices, edges, faces, sides, arcs, chords, radii, and diameters because the vocabulary is not tied to a visible part.",
+        "Using algebra vocabulary such as coefficient, term, variable, power, equation, and expression without identifying the exact part it describes."
+      ],
+      questions: [
+        "Which marking or label on the display proves this property, and what does that notation mean?",
+        "Which properties stay true if the shape is moved, rotated, or resized?",
+        "How would you explain this property without relying on the label?",
+        "Which examples and non-examples would help students avoid overgeneralising this idea?"
       ]
     },
     {
