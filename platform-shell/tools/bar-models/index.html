@@ -372,7 +372,9 @@
 
     .model-card {
       width: min(960px, 100%);
+      min-height: min(62vh, 540px);
       display: grid;
+      align-content: center;
       gap: clamp(12px, 1.6vw, 18px);
       padding: clamp(14px, 2vw, 22px);
       border-radius: 24px;
@@ -401,6 +403,11 @@
       grid-template-columns: minmax(84px, 128px) minmax(0, 1fr);
       gap: 12px;
       align-items: center;
+    }
+
+    .model-row.placeholder-row {
+      visibility: hidden;
+      pointer-events: none;
     }
 
     .row-label {
@@ -494,6 +501,37 @@
     .segment.constant {
       color: #4f2800;
       background: linear-gradient(180deg, #fff2b8, #ffd166);
+    }
+
+    .model-card.step-animating .segment,
+    .model-card.step-animating .bar-label,
+    .model-card.step-animating .under-labels span,
+    .model-card.step-animating .mini-block {
+      animation: modelInteriorReveal 3000ms ease-out both;
+    }
+
+    @keyframes modelInteriorReveal {
+      0% {
+        opacity: 0.28;
+        filter: saturate(0.7);
+      }
+      32% {
+        opacity: 1;
+        filter: saturate(1.25);
+      }
+      100% {
+        opacity: 1;
+        filter: saturate(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .model-card.step-animating .segment,
+      .model-card.step-animating .bar-label,
+      .model-card.step-animating .under-labels span,
+      .model-card.step-animating .mini-block {
+        animation: none;
+      }
     }
 
     .under-labels {
@@ -1195,6 +1233,8 @@
     const calculationEl = document.getElementById("calculation");
     const teacherPromptEl = document.getElementById("teacherPrompt");
     const practicePrintRootEl = document.getElementById("practicePrintRoot");
+    const STEP_ANIMATION_MS = 3000;
+    let stepAnimationTimer = null;
 
     function rand(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -1723,12 +1763,20 @@
       return html;
     }
 
-    function rowHtml(label, barContent) {
-      return '<div class="model-row"><div class="row-label">' + label + '</div><div class="bar-wrap">' + barContent + '</div></div>';
+    function rowHtml(label, barContent, className) {
+      return '<div class="model-row ' + (className || "") + '"><div class="row-label">' + label + '</div><div class="bar-wrap">' + barContent + '</div></div>';
     }
 
-    function modelShell(title, meta, rows, note) {
-      return '<div class="model-heading"><span>' + title + '</span><span>' + meta + '</span></div>' + rows.join("") + '<div class="model-note">' + note + '</div>';
+    function placeholderRow() {
+      return rowHtml("", barHtml(1, { labels: [""] }), "placeholder-row");
+    }
+
+    function modelShell(title, meta, rows, note, minimumRows) {
+      const stableRows = rows.slice();
+      while (minimumRows && stableRows.length < minimumRows) {
+        stableRows.push(placeholderRow());
+      }
+      return '<div class="model-heading"><span>' + title + '</span><span>' + meta + '</span></div>' + stableRows.join("") + '<div class="model-note">' + note + '</div>';
     }
 
     function repeatedLabels(count, text) {
@@ -1815,7 +1863,7 @@
           labels: repeatedLabels(d.finalParts, String(d.part))
         })));
       }
-      return modelShell("Fractional change", isIncrease ? "Increase" : "Decrease", rows, "Keep the size of each part the same, then add or remove the required number of parts.");
+      return modelShell("Fractional change", isIncrease ? "Increase" : "Decrease", rows, "Keep the size of each part the same, then add or remove the required number of parts.", 3);
     }
 
     function renderPercentChange(problem, step) {
@@ -1844,7 +1892,7 @@
           labels: repeatedLabels(d.finalParts, String(d.part))
         })));
       }
-      return modelShell("Percentage model", d.direction + " by " + d.percent + "%", rows, "Build the percentage from equal parts of 100%, then read the final bar.");
+      return modelShell("Percentage model", d.direction + " by " + d.percent + "%", rows, "Build the percentage from equal parts of 100%, then read the final bar.", 3);
     }
 
     function renderReversePercent(problem, step) {
@@ -1874,7 +1922,7 @@
           fullLabel: "100%"
         }))];
       }
-      return modelShell("Reverse percentage", d.finalPercent + "% is given", rows, "The final amount is used to find one part, then the original 100% is rebuilt.");
+      return modelShell("Reverse percentage", d.finalPercent + "% is given", rows, "The final amount is used to find one part, then the original 100% is rebuilt.", 2);
     }
 
     function renderRatio(problem, step) {
@@ -1931,7 +1979,7 @@
             labels: repeatedLabels(d.totalParts, String(d.part))
           })));
         }
-        return modelShell("Reverse ratio", d.a + ":" + d.b, rows, "Use the known share to find one equal ratio part, then rebuild the full total.");
+        return modelShell("Reverse ratio", d.a + ":" + d.b, rows, "Use the known share to find one equal ratio part, then rebuild the full total.", 3);
       }
 
       const longerIsFirst = d.a > d.b;
@@ -1957,7 +2005,7 @@
           active: Array.from({ length: d.totalParts }, (_, i) => i)
         })));
       }
-      return modelShell("Reverse ratio", "Difference = " + d.difference, rows, "Use the difference between the bars to find one equal ratio part.");
+      return modelShell("Reverse ratio", "Difference = " + d.difference, rows, "Use the difference between the bars to find one equal ratio part.", 3);
     }
 
     function renderComparison(problem, step) {
@@ -2027,7 +2075,17 @@
       }
     }
 
-    function render() {
+    function playStepAnimation() {
+      clearTimeout(stepAnimationTimer);
+      modelCardEl.classList.remove("step-animating");
+      void modelCardEl.offsetWidth;
+      modelCardEl.classList.add("step-animating");
+      stepAnimationTimer = setTimeout(() => {
+        modelCardEl.classList.remove("step-animating");
+      }, STEP_ANIMATION_MS);
+    }
+
+    function render(animateStep = false) {
       const problem = state.problem;
       const mode = modeInfo(state.mode);
       const step = problem.steps[state.stepIndex];
@@ -2045,6 +2103,7 @@
       teacherPromptEl.textContent = step.teacherPrompt;
       document.getElementById("backBtn").disabled = state.stepIndex === 0;
       document.getElementById("nextBtn").disabled = state.stepIndex >= problem.steps.length - 1;
+      if (animateStep) playStepAnimation();
     }
 
     function nextStep() {
@@ -2053,7 +2112,7 @@
         if (state.stepIndex === state.problem.steps.length - 1) {
           state.answerRevealed = true;
         }
-        render();
+        render(true);
       }
     }
 
@@ -2061,7 +2120,7 @@
       if (state.stepIndex > 0) {
         state.stepIndex -= 1;
         state.answerRevealed = false;
-        render();
+        render(true);
       }
     }
 

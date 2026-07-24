@@ -2106,11 +2106,11 @@ const tools = [
     status: "Imported",
     description: "Show colourful teacher-led bar models for fractions, percentages of amounts, percentage change, reverse percentages, ratio sharing, reverse ratio, comparison problems, and simple equations, with printable conceptual practice sheets.",
     tags: ["classroom", "primary", "elementary", "bar models", "visual problem models", "visual maths", "fractions", "percentages", "ratio", "proportion", "comparison", "equations", "Singapore maths"],
-    toolPath: "tools/bar-models/index.html?v=bar-models-10",
+    toolPath: "tools/bar-models/index.html?v=bar-models-12",
     imported: true,
     teacherNotes: [
       "Designed for live conceptual modelling with one example on screen at a time.",
-      "Use Next Step to reveal the structure gradually before showing the answer.",
+      "Use Next Step to reveal the structure gradually with a short animation before showing the answer.",
       "Modes include fractions of amounts, percentage of an amount, fractional change, percentage increase and decrease, reverse percentages, ratio sharing, reverse ratio, comparison models, and equations.",
       "Useful when pupils need to see how the calculation is represented before using a formal written method.",
       "Use Practice PDF to create student sheets focused on labelling and completing bar models before calculation."
@@ -2126,11 +2126,11 @@ const tools = [
     status: "Imported",
     description: "Use teacher-led rectangular area models for arrays, partitioned multiplication, fractions, percentages, expanding brackets, and factorising.",
     tags: ["classroom", "primary", "elementary", "area models", "arrays", "multiplication", "partitioning", "fractions", "percentages", "expanding brackets", "factorising", "algebra"],
-    toolPath: "tools/area-models/index.html?v=area-models-2",
+    toolPath: "tools/area-models/index.html?v=area-models-3",
     imported: true,
     teacherNotes: [
       "Designed for live conceptual modelling with one example on screen at a time.",
-      "Use Next Step to reveal the rectangle, partitions, cell products, and final calculation gradually.",
+      "Use Next Step to reveal the rectangle, partitions, cell products, and final calculation gradually with a short animation inside the model.",
       "Modes cover arrays, partitioned multiplication, fractions of a whole, percentages of amounts, expanding brackets, factorising, and mixed practice.",
       "Useful when pupils need to see why multiplication, expansion, or factorisation works before using a formal written method.",
       "Use Practice PDF to create simple student sheets focused on completing area models before calculating."
