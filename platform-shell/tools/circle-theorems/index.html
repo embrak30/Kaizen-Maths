@@ -27,7 +27,7 @@
     @media (max-width:980px){.problem-list{grid-template-columns:1fr}.circle-theorem-row{grid-template-columns:250px minmax(0,1fr)}}
     @media (max-width:650px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.circle-theorem-row{grid-template-columns:1fr}.diagram-wrap{width:min(280px,100%)}}
   </style>
-  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
   <script src="../../auth-config.js?v=tool-access-guard-2"></script>
   <script src="../_shared/tool-access-guard.js?v=tool-access-guard-2"></script>
 
@@ -160,7 +160,7 @@
     function arc(cx,cy,r,a1,a2){const s=pOn(cx,cy,r,a1),e=pOn(cx,cy,r,a2),large=Math.abs(a2-a1)>180?1:0,sweep=a2>a1?0:1;return `<path class="angle-arc" d="M ${s.x.toFixed(1)} ${s.y.toFixed(1)} A ${r} ${r} 0 ${large} ${sweep} ${e.x.toFixed(1)} ${e.y.toFixed(1)}"></path>`}
     function pOn(cx,cy,r,angle){const rad=angle*Math.PI/180;return{x:cx+r*Math.cos(rad),y:cy-r*Math.sin(rad)}}
     function tangentAt(pt,angle){const rad=angle*Math.PI/180,tx=Math.sin(rad),ty=Math.cos(rad),len=64;return{u:{x:pt.x-tx*len,y:pt.y-ty*len},v:{x:pt.x+tx*len,y:pt.y+ty*len}}}
-    function svg(inner){return `<svg viewBox="0 0 260 220" role="img" aria-label="Circle theorem diagram"><circle class="circle-outline" cx="${CX}" cy="${CY}" r="${R}"></circle>${inner}<text class="diagram-note" x="130" y="210" text-anchor="middle">Diagram not drawn accurately</text></svg>`}
+    function svg(inner){return `<svg viewBox="0 0 260 220" role="img" aria-label="Circle theorem diagram"><circle class="circle-outline" cx="${CX}" cy="${CY}" r="${R}"></circle>${inner}<text class="diagram-note" x="130" y="210" text-anchor="middle">Not drawn to scale</text></svg>`}
     function problemShell(prompt,diagram,answer,steps,badge){return{equation:`<div class="circle-theorem-row"><div class="diagram-wrap">${diagram}</div><div class="question-text">${prompt}</div></div>`,question:cleanText(prompt),answer,steps,badge}}
     function valueOf(expr){return expr.replace(/°/g,'')}
 
@@ -200,6 +200,6 @@
     switchLevel(1);
   </script>
   <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
-  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-3"></script>
 </body>
 </html>

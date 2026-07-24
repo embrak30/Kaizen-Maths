@@ -89,7 +89,7 @@
     @media (max-width:900px){.loci-row{grid-template-columns:1fr}.problem-answer{max-width:none}.diagram-wrap{max-width:none}}
     @media (max-width:680px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.question-text{font-size:1.05em}}
   </style>
-  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-2">
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
   <script src="../../auth-config.js?v=tool-access-guard-2"></script>
   <script src="../_shared/tool-access-guard.js?v=tool-access-guard-2"></script>
 
@@ -212,7 +212,7 @@
     function arc(cx,cy,r,a1,a2,cls='construction-arc'){const s=pOn(cx,cy,r,a1),e=pOn(cx,cy,r,a2),large=Math.abs(a2-a1)>180?1:0,sweep=a2>a1?1:0;return `<path class="${cls}" d="M ${s.x.toFixed(1)} ${s.y.toFixed(1)} A ${r} ${r} 0 ${large} ${sweep} ${e.x.toFixed(1)} ${e.y.toFixed(1)}"></path>`}
     function point(x,y,name,dx=10,dy=-10,cls='point-dot'){x=Number(x);y=Number(y);return `<circle class="${cls}" cx="${x}" cy="${y}" r="5"></circle><text class="point-label" x="${x+dx}" y="${y+dy}">${name}</text>`}
     function label(text,x,y,cls='measure-label',anchor='middle'){return `<text class="${cls}" x="${x}" y="${y}" text-anchor="${anchor}">${text}</text>`}
-    function svg(inner,labelText='Construction diagram'){return `<svg class="construction-svg" viewBox="0 0 520 360" role="img" aria-label="${labelText}">${inner}<text class="small-note" x="260" y="342" text-anchor="middle">Use a ruler and compass. Diagram not drawn accurately.</text></svg>`}
+    function svg(inner,labelText='Construction diagram'){return `<svg class="construction-svg" viewBox="0 0 520 360" role="img" aria-label="${labelText}">${inner}<text class="small-note" x="260" y="342" text-anchor="middle">Not drawn to scale</text></svg>`}
     function diagramWrap(diagram){return `<div class="diagram-wrap">${diagram}</div>`}
     function answerDiagram(diagram){return `<div class="answer-diagram">${diagram}</div>`}
     function problemShell(prompt,diagram,answer,steps,badge){return{instruction:setInstructions[currentType]||'',equation:`<div class="loci-row">${diagramWrap(diagram)}<div class="question-text">${prompt}</div></div>`,question:cleanText(prompt),answer,steps,badge}}
@@ -348,6 +348,6 @@
     switchLevel(1);
   </script>
   <script src="../_shared/worksheet-standard.js?v=worksheet-standard-23"></script>
-  <script src="../_shared/classroom-standard.js?v=classroom-standard-2"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-3"></script>
 </body>
 </html>

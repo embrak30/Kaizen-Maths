@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = "1.1.0";
+  const VERSION = "1.2.0";
   const root = document.documentElement;
   if (root.dataset.kaizenClassroomStandard === VERSION) return;
   root.dataset.kaizenClassroomStandard = VERSION;
@@ -14,6 +14,25 @@
     ".action-buttons"
   ].join(",");
   const TIMER_HOSTS = ".timer-section, .timerWrap";
+  const SCALE_NOTE_TEXT = "Not drawn to scale";
+  const DIAGRAM_CANDIDATES = "svg, canvas";
+  const DIAGRAM_HOSTS = [
+    ".diagram-wrap",
+    ".shape-diagram",
+    ".diagram-box",
+    ".diagram-card",
+    ".diagram-panel",
+    ".graph-wrap",
+    ".graph-frame",
+    ".graph-panel",
+    ".chart-wrap",
+    ".canvas-wrap",
+    ".visual",
+    ".model-stage",
+    ".display-stage",
+    ".svg-wrap"
+  ].join(",");
+  const DIAGRAM_WORDS = /diagram|graph|chart|curve|circle|triangle|shape|angle|bearing|venn|histogram|tree|model|grid|axes|axis|coordinate|construction|projectile|earth|globe|sphere|force|motion|visual|geometry|sector|polygon/i;
 
   function textOf(element) {
     return (element?.textContent || element?.value || "")
@@ -55,6 +74,54 @@
 
   function tagButtons(rootElement = document) {
     rootElement.querySelectorAll("button, input[type='button']").forEach(tagButton);
+  }
+
+  function descriptorFor(element) {
+    const host = element.closest?.(DIAGRAM_HOSTS);
+    return [
+      element.getAttribute?.("aria-label"),
+      element.getAttribute?.("role"),
+      element.id,
+      element.className?.baseVal || element.className,
+      host?.id,
+      host?.className
+    ].filter(Boolean).join(" ");
+  }
+
+  function isLikelyDiagram(element) {
+    if (!element || !element.isConnected) return false;
+    if (element.closest("button, a, nav, .kaizen-standard-controlbar, .teacher-tab")) return false;
+    if (element.tagName?.toLowerCase() === "canvas") return true;
+    if (DIAGRAM_WORDS.test(descriptorFor(element))) return true;
+    const box = element.getBoundingClientRect();
+    return box.width >= 120 && box.height >= 80;
+  }
+
+  function noteHostFor(element) {
+    const preferred = element.closest?.(DIAGRAM_HOSTS);
+    if (preferred && preferred !== document.body) return preferred;
+    return element.parentElement && element.parentElement !== document.body ? element.parentElement : element;
+  }
+
+  function labelDiagrams(rootElement = document) {
+    rootElement.querySelectorAll(DIAGRAM_CANDIDATES).forEach((element) => {
+      if (!isLikelyDiagram(element)) return;
+      const host = noteHostFor(element);
+      if (!host) return;
+      const hasScaleText = host.textContent && host.textContent.includes(SCALE_NOTE_TEXT);
+      const hasScaleNote = Boolean(host.querySelector?.(".kaizen-diagram-scale-note"));
+      if (host.dataset.kaizenScaleNote === "true" && (hasScaleText || hasScaleNote)) return;
+      if (host.textContent && host.textContent.includes(SCALE_NOTE_TEXT)) {
+        host.dataset.kaizenScaleNote = "true";
+        return;
+      }
+      const note = document.createElement("span");
+      note.className = "kaizen-diagram-scale-note";
+      note.textContent = SCALE_NOTE_TEXT;
+      host.classList.add("kaizen-diagram-scale-host");
+      host.dataset.kaizenScaleNote = "true";
+      host.appendChild(note);
+    });
   }
 
   function isMeaningfullyEmpty(element) {
@@ -130,6 +197,7 @@
     const pieces = collectStandardPieces();
     if (!pieces) {
       tagButtons();
+      labelDiagrams();
       return;
     }
 
@@ -163,12 +231,16 @@
     markEmptyHosts(hosts);
 
     document.body.classList.add("kaizen-standardized-controls");
+    labelDiagrams();
   }
 
   function scheduleStandardize() {
     window.requestAnimationFrame(() => {
       standardizeControls();
-      window.requestAnimationFrame(() => tagButtons());
+      window.requestAnimationFrame(() => {
+        tagButtons();
+        labelDiagrams();
+      });
     });
   }
 
@@ -183,6 +255,7 @@
   const observer = new MutationObserver((mutations) => {
     if (!mutations.some((mutation) => mutation.addedNodes.length)) return;
     tagButtons();
+    labelDiagrams();
   });
   observer.observe(document.documentElement, { childList: true, subtree: true });
 })();

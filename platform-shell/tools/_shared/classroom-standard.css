@@ -291,6 +291,32 @@ html.kaizen-classroom-standard :where(.problem-set-header) {
   color: white !important;
 }
 
+.kaizen-diagram-scale-host {
+  position: relative !important;
+}
+
+.kaizen-diagram-scale-note {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  z-index: 12;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: calc(100% - 12px);
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #526174;
+  font-family: var(--kaizen-ui-font);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0;
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.10);
+}
+
 html.kaizen-classroom-fit :where(.teacher-tab) {
   display: none !important;
 }

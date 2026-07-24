@@ -1,7 +1,7 @@
 const SITE_NAME = "Kaizen Maths";
 const SITE_TITLE = "Kaizen Maths | Complete Mathematics Workspace for Teachers";
 const SITE_DESCRIPTION = "Kaizen Maths is a complete mathematics workspace and virtual textbook for teachers. Generate unlimited curriculum-aligned questions, worked examples, bespoke worksheets, assessments, and classroom practice in minutes.";
-const CLASSROOM_STANDARD_VERSION = "classroom-standard-2";
+const CLASSROOM_STANDARD_VERSION = "classroom-standard-3";
 
 function addQueryParam(url, key, value) {
   const separator = url.includes("?") ? "&" : "?";
@@ -4743,7 +4743,7 @@ function gcseDiagramFrame(title, svg) {
 }
 
 function gcseRightTriangleDiagram({ baseLabel, heightLabel, hypLabel }) {
-  return gcseDiagramFrame("Diagram not drawn accurately", `
+  return gcseDiagramFrame("Not drawn to scale", `
     <svg viewBox="0 0 300 190" role="img" aria-label="Right-angled triangle diagram">
       <polygon points="54,142 246,142 246,42" fill="#ffffff" stroke="#111111" stroke-width="3" />
       <path d="M226 142 L226 122 L246 122" fill="none" stroke="#111111" stroke-width="2.4" />
@@ -4802,7 +4802,7 @@ function gcseTreeDiagram({ red, blue, total, format = "fraction" }) {
 }
 
 function gcseAreaComparisonDiagram({ triangleBase, triangleHeight, shortSide, longSide, trapHeight }) {
-  return gcseDiagramFrame("Shapes not drawn accurately", `
+  return gcseDiagramFrame("Not drawn to scale", `
     <svg viewBox="0 0 440 190" role="img" aria-label="Triangle and trapezium area diagram">
       <polygon points="48,142 196,142 196,48" fill="#ffffff" stroke="#111111" stroke-width="3" />
       <line x1="196" y1="48" x2="196" y2="142" stroke="#111111" stroke-width="2.5" stroke-dasharray="6 5" />
