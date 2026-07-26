@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.2.3';
+  const VERSION = '0.2.4';
 
   function readBinding(name, fallback = undefined) {
     try {
@@ -647,6 +647,38 @@
     normalizeProblem
   };
 
+  function requestMathRender() {
+    window.setTimeout(() => {
+      if (typeof window.kaizenRenderMath === 'function') {
+        window.kaizenRenderMath();
+        return;
+      }
+
+      const localRenderer = readBinding('reRenderMath', null);
+      if (typeof localRenderer === 'function') {
+        localRenderer();
+        return;
+      }
+
+      if (typeof window.renderMathInElement === 'function') {
+        window.renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '\\(', right: '\\)', display: false }
+          ],
+          throwOnError: false
+        });
+        return;
+      }
+
+      if (window.MathJax?.typesetPromise) {
+        window.MathJax.typesetPromise();
+      } else if (window.MathJax?.typeset) {
+        window.MathJax.typeset();
+      }
+    }, 0);
+  }
+
   installWorkedStepStructure();
   installSharedInstructionLift();
   installRepeatedTypeBadgeCleanup();
@@ -723,9 +755,7 @@
       } catch (_) {
         originalGenerateNewSet();
       }
-      if (typeof window.kaizenRenderMath === 'function') {
-        setTimeout(() => window.kaizenRenderMath(), 0);
-      }
+      requestMathRender();
       window.KaizenQuestionPersistence?.saveSoon?.();
       document.documentElement.classList.add('teacher-example-mode');
     }
@@ -936,9 +966,7 @@
     if (snapshot.teacherExampleMode && window.KaizenTeacherExample?.setActive) {
       window.KaizenTeacherExample.setActive(true, { regenerate: false });
     }
-    if (typeof window.kaizenRenderMath === 'function') {
-      window.setTimeout(() => window.kaizenRenderMath(), 0);
-    }
+    requestMathRender();
     document.dispatchEvent(new CustomEvent('kaizen:classroom-board-restored', { detail: snapshot }));
     return true;
   }
