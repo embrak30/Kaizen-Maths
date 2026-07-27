@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Real-Life Maths</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f4f8fb;color:#172033;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#0f766e;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:850;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}
+    .sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-420px;top:0;z-index:1000;width:420px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}
+    .sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#0f766e;color:#fff;font-size:1.25em;font-weight:850}
+    .sidebar-content{padding:22px;line-height:1.55}
+    .sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #f97316;color:#0f766e;font-size:1.02em}
+    .sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#475569}
+    .sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1240px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#0f172a;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(249,115,22,.2)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px)}
+    .header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .header p{margin-top:4px;color:rgba(255,255,255,.86);font-weight:650}
+    .tabs{display:flex;background:#e8f7f4}
+    .tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e8f7f4;color:#153b4a;cursor:pointer;font-size:.95em;font-weight:850}
+    .tab.active{background:#fff;color:#0f766e;border-bottom-color:#f97316}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #dbe7ef;background:#f8fafc}
+    .level-info h3{margin-bottom:3px;color:#0f766e;font-size:1.16em}
+    .level-info p{max-width:680px;color:#64748b;font-size:.94em}
+    .dropdown-container{margin-top:8px}
+    .type-dropdown{min-width:390px;max-width:100%;padding:8px 10px;border:2px solid #b9e7df;border-radius:6px;background:#fff;color:#172033;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .timer-display{min-width:96px;padding:7px 12px;border:2px solid #b9e7df;border-radius:6px;background:#fff;color:#0f766e;text-align:center;font-size:1.45em;font-weight:850}
+    .timer-display.active{border-color:#0f766e;color:#0f766e}.timer-display.warning{border-color:#dc2626;color:#dc2626;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}
+    .btn-primary{background:#2563eb}.btn-success{background:#15803d}.btn-warning{background:#f59e0b;color:#1f2937}.btn-danger{background:#dc2626}
+    .problems-section{min-height:520px;padding:14px 18px 18px}
+    .problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#0f766e;color:#fff;text-align:center;font-size:1.08em;font-weight:850}
+    .problem-set-header.visible{display:block}
+    .set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #a7f3d0;border-radius:6px;background:#ecfdf5;color:#134e4a;text-align:center;font-weight:850}
+    .set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:10px;list-style:none}
+    .problem-item{display:flex;flex-direction:column;gap:8px;padding:12px;border-left:4px solid #0f766e;border-radius:7px;background:#f8fafc}
+    .problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}
+    .problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#0f766e;color:#fff;font-weight:850}
+    .context-badge{display:inline-flex;margin-bottom:6px;padding:4px 9px;border-radius:999px;background:#ccfbf1;color:#115e59;font-family:"Segoe UI",Tahoma,sans-serif;font-size:.76em;font-weight:850}
+    .question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.16em;font-weight:560;line-height:1.38;color:#172033;overflow-wrap:anywhere}
+    .question-text .word{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;font-size:.91em;font-weight:700;color:#334155}
+    .money{color:#166534;font-weight:850;white-space:nowrap}.rate{color:#b45309;font-weight:850;white-space:nowrap}.unit{color:#1d4ed8;font-weight:850;white-space:nowrap}
+    .problem-answer{display:none;white-space:nowrap;padding:7px 11px;border-radius:999px;background:#15803d;color:#fff;font-size:.95em;font-weight:850}
+    .problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #0f766e;border-radius:6px;background:#ecfeff}
+    .steps-section.visible{display:block}
+    .answer-label{margin-bottom:6px;color:#0f766e;font-weight:850}
+    .solution-steps{font-size:.98em;line-height:1.45}
+    .step{margin:5px 0;color:#174058}
+    .step-equation{margin:6px 0;padding:7px;border:1px solid #c7f0ef;border-radius:5px;background:#fff;color:#134e4a;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:760}
+    .final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#15803d;color:#fff;text-align:center;font-weight:850}
+    .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}
+    .modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+    .modal-content h2{margin-bottom:10px;color:#dc2626}.modal-content p{margin-bottom:18px;color:#64748b}.hidden{display:none}
+    @media (min-width:1000px){.problem-list.compact{grid-template-columns:repeat(2,minmax(0,1fr))}.problem-list.compact .question-text{font-size:1.06em}.problem-list.compact .problem-item{min-height:214px}}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.problem-answer{white-space:normal}.question-text{font-size:1.04em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <script src="../../auth-config.js?v=tool-access-guard-2"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-2"></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Financial Real-Life Maths</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool practises practical financial mathematics for GCSE, IGCSE, CSEC, and functional real-life number work.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> best buys, discounts, VAT, and exchange rates.</li>
+        <li><strong>Level 2:</strong> wages, overtime, commission, profit, markup, and margin.</li>
+        <li><strong>Level 3:</strong> simple interest, compound interest, depreciation, loans, and hire purchase.</li>
+        <li><strong>Level 4:</strong> mixed finance decisions, reverse calculations, and budget problems.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Identify the original amount before applying a percentage change.</li>
+        <li>Keep money rounded to two decimal places, but avoid rounding too early in a multi-step calculation.</li>
+        <li>Separate percentage markup from profit margin: they use different denominators.</li>
+        <li>When comparing options, calculate the total cost of each option before deciding.</li>
+      </ul>
+      <h3>Common Misconceptions</h3>
+      <ul>
+        <li>Adding successive percentage changes instead of applying them in order.</li>
+        <li>Applying VAT to the original price when the question says a discount happens first.</li>
+        <li>Dividing by the wrong exchange rate when converting currencies.</li>
+        <li>Confusing interest earned with the final amount in a savings or loan context.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header">
+      <h1>Financial Real-Life Maths</h1>
+      <p>Money, wages, best buys, tax, interest, loans, exchange rates, and finance decisions</p>
+    </header>
+    <nav class="tabs">
+      <button class="tab active" type="button" onclick="switchLevel(1)">Level 1: Everyday Money</button>
+      <button class="tab" type="button" onclick="switchLevel(2)">Level 2: Income & Business</button>
+      <button class="tab" type="button" onclick="switchLevel(3)">Level 3: Savings & Borrowing</button>
+      <button class="tab" type="button" onclick="switchLevel(4)">Level 4: Finance Decisions</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Everyday Money</h3>
+        <p id="level-description">Use unit prices, discounts, VAT, and exchange rates in everyday contexts.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" type="button" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" type="button" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" type="button" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" type="button" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" type="button" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" type="button" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list compact"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" type="button" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={
+      1:{title:'Level 1: Everyday Money',description:'Use unit prices, discounts, VAT, and exchange rates in everyday contexts.',types:['best_buys','discounts_vat','exchange_rates']},
+      2:{title:'Level 2: Income & Business',description:'Calculate wages, overtime, commission, markup, profit, and margin.',types:['wages_overtime','commission_earnings','profit_markup_margin']},
+      3:{title:'Level 3: Savings & Borrowing',description:'Use simple interest, compound interest, depreciation, loans, and hire purchase.',types:['simple_interest','compound_depreciation','loans_hire_purchase']},
+      4:{title:'Level 4: Finance Decisions',description:'Solve mixed, reverse, and comparison problems involving several finance ideas.',types:['budgeting','reverse_finance','compare_options','mixed_finance']}
+    };
+    const typeDisplayNames={
+      best_buys:'Best Buys and Unit Pricing',
+      discounts_vat:'Discounts, VAT and Final Price',
+      exchange_rates:'Exchange Rates',
+      wages_overtime:'Wages and Overtime',
+      commission_earnings:'Commission and Total Earnings',
+      profit_markup_margin:'Profit, Markup and Margin',
+      simple_interest:'Simple Interest',
+      compound_depreciation:'Compound Interest and Depreciation',
+      loans_hire_purchase:'Loans and Hire Purchase',
+      budgeting:'Budgeting and Bills',
+      reverse_finance:'Reverse Financial Calculations',
+      compare_options:'Compare Financial Options',
+      mixed_finance:'Mixed Finance Practice'
+    };
+    const setInstructions={
+      best_buys:'Compare unit prices to decide the better value.',
+      discounts_vat:'Apply the changes in the order stated in the question.',
+      exchange_rates:'Use the given exchange rate to convert currencies.',
+      wages_overtime:'Calculate normal pay and overtime pay separately, then combine.',
+      commission_earnings:'Find commission first, then add it to the fixed pay if needed.',
+      profit_markup_margin:'Distinguish between cost price, selling price, profit, markup, and margin.',
+      simple_interest:'Use simple interest, where interest is calculated on the original principal.',
+      compound_depreciation:'Apply repeated percentage change using a multiplier each year.',
+      loans_hire_purchase:'Find the full amount repaid, then compare it with the cash price or borrowed amount.',
+      budgeting:'Track income and outgoings clearly before answering the final question.',
+      reverse_finance:'Work backwards from the final amount using the correct multiplier.',
+      compare_options:'Calculate the total cost of each option before choosing.',
+      mixed_finance:'Read the context carefully and choose the correct financial method.'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function round2(n){return Math.round((Number(n)+Number.EPSILON)*100)/100}
+    function money(n){return `<span class="money">&pound;${round2(n).toFixed(2)}</span>`}
+    function moneyText(n){return `&pound;${round2(n).toFixed(2)}`}
+    function rate(n){return `<span class="rate">${n}%</span>`}
+    function unit(n,u){return `<span class="unit">${round2(n).toFixed(2)} ${u}</span>`}
+    function plain(html){const t=document.createElement('template');t.innerHTML=String(html);return t.content.textContent.replace(/\s+/g,' ').trim()}
+    function pence(n){return n>=100?moneyText(n/100):`${round2(n).toFixed(2)}p`}
+    function problem(prompt,answer,steps,badge=currentType){
+      const instruction=setInstructions[currentType]||'Answer each financial question.';
+      return {prompt,question:plain(prompt),answer,steps,badge,typeLabel:typeDisplayNames[currentType]||'Finance',instruction,instructionText:instruction};
+    }
+    function badgeText(type){return typeDisplayNames[type]||'Finance'}
+    function pickPercent(list=[5,10,12,15,20,25,30]){return choice(list)}
+    function multiplierFromPercent(percent,change='increase'){return change==='decrease'?1-percent/100:1+percent/100}
+
+    function genBestBuys(){
+      const items=choice([{name:'notebooks',u:'notebook'},{name:'pens',u:'pen'},{name:'batteries',u:'battery'},{name:'juice cartons',u:'carton'},{name:'packs of rice',u:'kg'}]);
+      const qtyA=choice([4,5,6,8,10,12]), qtyB=choice([3,5,6,9,10,15]);
+      const unitA=choice([42,48,55,64,75,90,120]), diff=choice([-12,-8,-5,6,9,14]);
+      const unitB=Math.max(25,unitA+diff);
+      const priceA=qtyA*unitA/100, priceB=qtyB*unitB/100;
+      const better=unitA<unitB?'A':'B', saving=Math.abs(unitA-unitB);
+      return problem(`<span class="word">Shop A sells ${qtyA} ${items.name} for ${money(priceA)}. Shop B sells ${qtyB} ${items.name} for ${money(priceB)}. Which shop is better value?</span>`,`Shop ${better}, saving ${pence(saving)} per ${items.u}`,[
+        `Find the unit price for Shop A.`,
+        `Shop A unit price = ${moneyText(priceA)} &divide; ${qtyA} = ${pence(unitA)} per ${items.u}.`,
+        `Find the unit price for Shop B.`,
+        `Shop B unit price = ${moneyText(priceB)} &divide; ${qtyB} = ${pence(unitB)} per ${items.u}.`,
+        `Compare the unit prices: ${pence(Math.min(unitA,unitB))} is less than ${pence(Math.max(unitA,unitB))}.`,
+        `Shop ${better} is better value by ${pence(saving)} per ${items.u}.`
+      ],'best_buys');
+    }
+    function genDiscountVat(){
+      const price=choice([40,55,60,75,80,95,120,150]), discount=pickPercent([10,15,20,25,30]), vat=choice([5,10,12,15,20]);
+      const discountAmount=price*discount/100, sale=price-discountAmount, vatAmount=sale*vat/100, final=sale+vatAmount;
+      return problem(`<span class="word">An item costs ${money(price)}. It is reduced by ${rate(discount)}, then ${rate(vat)} VAT is added to the reduced price. Find the final price.</span>`,moneyText(final),[
+        `Find the discount amount first.`,
+        `Discount = ${discount}% of ${moneyText(price)} = ${discount/100} &times; ${moneyText(price)} = ${moneyText(discountAmount)}.`,
+        `Subtract the discount from the original price.`,
+        `Reduced price = ${moneyText(price)} - ${moneyText(discountAmount)} = ${moneyText(sale)}.`,
+        `Find VAT on the reduced price, not on the original price.`,
+        `VAT = ${vat}% of ${moneyText(sale)} = ${vat/100} &times; ${moneyText(sale)} = ${moneyText(vatAmount)}.`,
+        `Final price = ${moneyText(sale)} + ${moneyText(vatAmount)} = ${moneyText(final)}.`
+      ],'discounts_vat');
+    }
+    function genExchangeRates(){
+      const data=choice([{currency:'US dollars',symbol:'$',rate:choice([1.22,1.25,1.28,1.32])},{currency:'euros',symbol:'EUR ',rate:choice([1.14,1.16,1.18,1.20])},{currency:'Jamaican dollars',symbol:'JMD ',rate:choice([190,195,200,205])}]);
+      const direction=Math.random()<0.5?'fromPounds':'toPounds';
+      if(direction==='fromPounds'){
+        const pounds=choice([60,75,90,120,150,200]), converted=pounds*data.rate;
+        return problem(`<span class="word">The exchange rate is ${money(1)} = ${data.symbol}${data.rate}. Convert ${money(pounds)} to ${data.currency}.</span>`,`${data.symbol}${round2(converted).toFixed(2)}`,[
+          `The rate tells us how many ${data.currency} are equal to ${moneyText(1)}.`,
+          `To convert from pounds, multiply by the exchange rate.`,
+          `${moneyText(pounds)} &times; ${data.rate} = ${data.symbol}${round2(converted).toFixed(2)}.`
+        ],'exchange_rates');
+      }
+      const pounds=choice([60,80,100,120,150]), foreign=pounds*data.rate;
+      return problem(`<span class="word">The exchange rate is ${money(1)} = ${data.symbol}${data.rate}. Convert ${data.symbol}${round2(foreign).toFixed(2)} to pounds.</span>`,moneyText(pounds),[
+        `The rate tells us that ${data.symbol}${data.rate} is equal to ${moneyText(1)}.`,
+        `To convert to pounds, divide by the exchange rate.`,
+        `${data.symbol}${round2(foreign).toFixed(2)} &divide; ${data.rate} = ${moneyText(pounds)}.`
+      ],'exchange_rates');
+    }
+    function genWagesOvertime(){
+      const ratePay=choice([9.5,10,10.5,11,12,14,15]), normal=choice([28,30,32,35,37]), overtime=choice([3,4,5,6,8]), mult=choice([1.25,1.5,2]);
+      const normalPay=ratePay*normal, overtimeRate=ratePay*mult, overtimePay=overtimeRate*overtime, total=normalPay+overtimePay;
+      return problem(`<span class="word">A worker is paid ${money(ratePay)} per hour for ${normal} normal hours. They work ${overtime} overtime hours paid at ${mult} times the normal rate. Find the total pay.</span>`,moneyText(total),[
+        `Find the pay for the normal hours.`,
+        `Normal pay = ${normal} &times; ${moneyText(ratePay)} = ${moneyText(normalPay)}.`,
+        `Find the overtime hourly rate.`,
+        `Overtime rate = ${mult} &times; ${moneyText(ratePay)} = ${moneyText(overtimeRate)}.`,
+        `Find the overtime pay.`,
+        `Overtime pay = ${overtime} &times; ${moneyText(overtimeRate)} = ${moneyText(overtimePay)}.`,
+        `Total pay = ${moneyText(normalPay)} + ${moneyText(overtimePay)} = ${moneyText(total)}.`
+      ],'wages_overtime');
+    }
+    function genCommission(){
+      const base=choice([250,300,350,400,450]), sales=choice([1200,1500,1800,2200,2600,3000]), commission=choice([3,4,5,6,8]);
+      const commissionPay=sales*commission/100, total=base+commissionPay;
+      return problem(`<span class="word">A salesperson earns a fixed weekly pay of ${money(base)} plus ${rate(commission)} commission on sales. They make sales of ${money(sales)}. Find their total earnings.</span>`,moneyText(total),[
+        `Find the commission first.`,
+        `Commission = ${commission}% of ${moneyText(sales)} = ${commission/100} &times; ${moneyText(sales)} = ${moneyText(commissionPay)}.`,
+        `Add the fixed weekly pay.`,
+        `Total earnings = ${moneyText(base)} + ${moneyText(commissionPay)} = ${moneyText(total)}.`
+      ],'commission_earnings');
+    }
+    function genProfitMarkupMargin(){
+      const cost=choice([24,30,36,45,60,80,120]), markup=choice([20,25,30,40,50,60]);
+      const profit=cost*markup/100, selling=cost+profit, margin=profit/selling*100;
+      return problem(`<span class="word">A product costs ${money(cost)} to buy. A shop adds a ${rate(markup)} markup before selling it. Find the selling price and the profit margin.</span>`,`${moneyText(selling)}, margin ${round2(margin).toFixed(2)}%`,[
+        `Markup is calculated from the cost price.`,
+        `Profit = ${markup}% of ${moneyText(cost)} = ${markup/100} &times; ${moneyText(cost)} = ${moneyText(profit)}.`,
+        `Selling price = cost price + profit.`,
+        `Selling price = ${moneyText(cost)} + ${moneyText(profit)} = ${moneyText(selling)}.`,
+        `Profit margin compares profit with selling price.`,
+        `Profit margin = (${moneyText(profit)} &divide; ${moneyText(selling)}) &times; 100 = ${round2(margin).toFixed(2)}%.`
+      ],'profit_markup_margin');
+    }
+    function genSimpleInterest(){
+      const principal=choice([500,800,1000,1200,1500,2000]), r=choice([3,4,5,6,7,8]), t=choice([2,3,4,5]);
+      const interest=principal*r*t/100, total=principal+interest;
+      return problem(`<span class="word">${money(principal)} is saved at ${rate(r)} simple interest per year for ${t} years. Find the interest earned and the final amount.</span>`,`${moneyText(interest)} interest, ${moneyText(total)} total`,[
+        `Simple interest is calculated on the original amount only.`,
+        `Interest = principal &times; rate &times; time.`,
+        `Interest = ${moneyText(principal)} &times; ${r/100} &times; ${t} = ${moneyText(interest)}.`,
+        `Final amount = original amount + interest.`,
+        `Final amount = ${moneyText(principal)} + ${moneyText(interest)} = ${moneyText(total)}.`
+      ],'simple_interest');
+    }
+    function genCompoundDepreciation(){
+      const isDep=Math.random()<0.45, principal=choice([600,800,1000,1200,1500,2000]), r=choice([4,5,6,8,10,12]), years=choice([2,3,4]);
+      const mult=multiplierFromPercent(r,isDep?'decrease':'increase'), final=principal*Math.pow(mult,years), change=Math.abs(final-principal);
+      const context=isDep?'decreases in value':'grows';
+      const answer=isDep?`${moneyText(final)}, loss ${moneyText(change)}`:`${moneyText(final)}, interest ${moneyText(change)}`;
+      return problem(`<span class="word">A ${isDep?'car':'savings account'} worth ${money(principal)} ${context} by ${rate(r)} each year for ${years} years. Find its value after ${years} years.</span>`,answer,[
+        `${isDep?'Depreciation':'Compound interest'} means the percentage change is applied repeatedly.`,
+        `The multiplier is ${isDep?`1 - ${r/100}`:`1 + ${r/100}`} = ${mult}.`,
+        `Final value = ${moneyText(principal)} &times; ${mult}<sup>${years}</sup>.`,
+        `Final value = ${moneyText(final)}.`,
+        `${isDep?'Loss':'Interest'} = ${moneyText(Math.max(principal,final))} - ${moneyText(Math.min(principal,final))} = ${moneyText(change)}.`
+      ],'compound_depreciation');
+    }
+    function genLoansHirePurchase(){
+      const cash=choice([480,600,750,900,1200,1500]), depositPct=choice([10,15,20,25]), months=choice([6,10,12,18,24]);
+      const deposit=cash*depositPct/100, borrowed=cash-deposit, extra=choice([60,90,120,150,180,240]), totalRepay=cash+extra, monthly=(totalRepay-deposit)/months;
+      return problem(`<span class="word">A laptop has a cash price of ${money(cash)}. On hire purchase, a customer pays a ${rate(depositPct)} deposit and then ${months} equal monthly payments. The total hire-purchase cost is ${money(totalRepay)}. Find the deposit, each monthly payment, and the extra cost.</span>`,`${moneyText(deposit)} deposit, ${moneyText(monthly)} per month, ${moneyText(extra)} extra`,[
+        `Find the deposit.`,
+        `Deposit = ${depositPct}% of ${moneyText(cash)} = ${moneyText(deposit)}.`,
+        `Find the amount left to pay through monthly payments.`,
+        `Monthly-payment total = ${moneyText(totalRepay)} - ${moneyText(deposit)} = ${moneyText(totalRepay-deposit)}.`,
+        `Monthly payment = ${moneyText(totalRepay-deposit)} &divide; ${months} = ${moneyText(monthly)}.`,
+        `Extra cost = hire-purchase total - cash price.`,
+        `Extra cost = ${moneyText(totalRepay)} - ${moneyText(cash)} = ${moneyText(extra)}.`
+      ],'loans_hire_purchase');
+    }
+    function genBudgeting(){
+      const income=choice([1250,1500,1800,2200,2600]), rent=choice([450,550,650,750,850]), bills=choice([120,160,200,240]), food=choice([180,220,260,300]), travel=choice([70,90,120,150]), savePct=choice([10,12,15,20]);
+      const left=income-rent-bills-food-travel, target=income*savePct/100, afterSaving=left-target;
+      return problem(`<span class="word">A monthly income is ${money(income)}. Costs are rent ${money(rent)}, bills ${money(bills)}, food ${money(food)}, and travel ${money(travel)}. The person wants to save ${rate(savePct)} of their income. How much is left after saving?</span>`,moneyText(afterSaving),[
+        `Add the monthly costs.`,
+        `Total costs = ${moneyText(rent)} + ${moneyText(bills)} + ${moneyText(food)} + ${moneyText(travel)} = ${moneyText(rent+bills+food+travel)}.`,
+        `Find the amount left before saving.`,
+        `Left before saving = ${moneyText(income)} - ${moneyText(rent+bills+food+travel)} = ${moneyText(left)}.`,
+        `Find the saving target.`,
+        `Saving target = ${savePct}% of ${moneyText(income)} = ${moneyText(target)}.`,
+        `Left after saving = ${moneyText(left)} - ${moneyText(target)} = ${moneyText(afterSaving)}.`
+      ],'budgeting');
+    }
+    function genReverseFinance(){
+      const final=choice([72,84,96,108,120,144,180]), change=choice([10,15,20,25]);
+      const isIncrease=Math.random()<0.5, mult=multiplierFromPercent(change,isIncrease?'increase':'decrease'), original=final/mult;
+      return problem(`<span class="word">After a ${rate(change)} ${isIncrease?'increase':'decrease'}, the price is ${money(final)}. Find the original price.</span>`,moneyText(original),[
+        `The original price represents 100%.`,
+        `After a ${change}% ${isIncrease?'increase':'decrease'}, the final price represents ${isIncrease?100+change:100-change}%.`,
+        `Use the multiplier ${mult}.`,
+        `Original price &times; ${mult} = ${moneyText(final)}.`,
+        `Original price = ${moneyText(final)} &divide; ${mult} = ${moneyText(original)}.`
+      ],'reverse_finance');
+    }
+    function genCompareOptions(){
+      const months=choice([6,10,12]), optionA=choice([18,22,25,30,35]), setup=choice([20,30,40,50]), optionB=optionA-choice([2,3,4,5]);
+      const totalA=months*optionA, totalB=setup+months*optionB, better=totalA<totalB?'Option A':'Option B', saving=Math.abs(totalA-totalB);
+      return problem(`<span class="word">A subscription can be paid in two ways. Option A costs ${money(optionA)} per month for ${months} months. Option B has a set-up fee of ${money(setup)} and costs ${money(optionB)} per month for ${months} months. Which option is cheaper?</span>`,`${better}, saving ${moneyText(saving)}`,[
+        `Calculate the total cost of Option A.`,
+        `Option A total = ${months} &times; ${moneyText(optionA)} = ${moneyText(totalA)}.`,
+        `Calculate the total cost of Option B, including the set-up fee.`,
+        `Option B total = ${moneyText(setup)} + ${months} &times; ${moneyText(optionB)} = ${moneyText(totalB)}.`,
+        `Compare the totals: ${moneyText(Math.min(totalA,totalB))} is less than ${moneyText(Math.max(totalA,totalB))}.`,
+        `${better} is cheaper by ${moneyText(saving)}.`
+      ],'compare_options');
+    }
+    function generateProblem(){
+      const type=currentType==='select'?choice(levelConfigs[currentLevel].types):currentType;
+      if(type==='best_buys')return genBestBuys();
+      if(type==='discounts_vat')return genDiscountVat();
+      if(type==='exchange_rates')return genExchangeRates();
+      if(type==='wages_overtime')return genWagesOvertime();
+      if(type==='commission_earnings')return genCommission();
+      if(type==='profit_markup_margin')return genProfitMarkupMargin();
+      if(type==='simple_interest')return genSimpleInterest();
+      if(type==='compound_depreciation')return genCompoundDepreciation();
+      if(type==='loans_hire_purchase')return genLoansHirePurchase();
+      if(type==='budgeting')return genBudgeting();
+      if(type==='reverse_finance')return genReverseFinance();
+      if(type==='compare_options')return genCompareOptions();
+      if(type==='mixed_finance')return choice([genBestBuys,genDiscountVat,genExchangeRates,genWagesOvertime,genCommission,genProfitMarkupMargin,genSimpleInterest,genCompoundDepreciation,genLoansHirePurchase,genBudgeting,genReverseFinance,genCompareOptions])();
+      return genBestBuys();
+    }
+    function setInstructionForType(){const text=setInstructions[currentType]||'';const el=document.getElementById('set-instruction');el.textContent=text;el.classList.toggle('visible',Boolean(text))}
+    function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));const cfg=levelConfigs[level];document.getElementById('level-title').textContent=cfg.title;document.getElementById('level-description').textContent=cfg.description;const dd=document.getElementById('type-dropdown');dd.innerHTML='<option value="select">Select Question Type</option>'+cfg.types.map(t=>'<option value="'+t+'">'+typeDisplayNames[t]+'</option>').join('');dd.value='select';showBlankPage()}
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-set-header').classList.remove('visible');document.getElementById('set-instruction').classList.remove('visible');document.getElementById('problem-list').innerHTML='<li style="grid-column:1/-1;text-align:center;padding:38px;color:#64748b;font-size:1.05em">Please select a financial maths question type to begin.</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;const seen=new Set();for(let i=0;i<5;i++){let p=generateProblem(),attempts=0;while(seen.has(p.question)&&attempts<50){p=generateProblem();attempts++}seen.add(p.question);problems.push(p)}renderProblems()}
+    function renderProblems(){const list=document.getElementById('problem-list'),header=document.getElementById('problem-set-header');list.innerHTML='';header.textContent=typeDisplayNames[currentType]||'Financial Real-Life Maths';header.className='problem-set-header visible';setInstructionForType();problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const steps=(p.steps||[]).map(s=>/=|&times;|&divide;|\d+\s*%|\d+\.\d+p/i.test(String(s))?'<div class="step-equation">'+s+'</div>':'<div class="step">'+s+'</div>').join('');li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(i+1)+'</div><div class="question-text"><span class="context-badge">'+badgeText(p.badge)+'</span><br>'+p.prompt+'</div></div><div class="problem-answer" id="quick-answer-'+i+'">'+p.answer+'</div></div><div class="steps-section" id="steps-'+i+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+steps+'<div class="final-answer">'+p.answer+'</div></div></div>';list.appendChild(li)})}
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById('quick-answer-'+i)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById('steps-'+i)?.classList.toggle('visible',stepsVisible))}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const e=document.getElementById('timer-display');e.textContent='Ready';e.className='timer-display'}
+    function updateTimerDisplay(){const e=document.getElementById('timer-display'),m=Math.floor(timeRemaining/60),s=timeRemaining%60;e.textContent=m+':'+String(s).padStart(2,'0');if(timerActive&&timeRemaining<=30)e.className='timer-display warning';else if(timerActive)e.className='timer-display active';else e.className='timer-display'}
+    function timerFinished(){stopTimer();const e=document.getElementById('timer-display');e.textContent='Time Up!';e.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-24"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-3"></script>
+</body>
+</html>

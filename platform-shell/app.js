@@ -2020,6 +2020,25 @@ const tools = [
     ]
   },
   {
+    slug: "financial-real-life-maths",
+    title: "Financial Real-Life Maths",
+    category: "Numbers",
+    level: "KS3 / GCSE / IGCSE / CSEC",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate practical finance questions for best buys, discounts, VAT, exchange rates, wages, commission, profit, interest, depreciation, loans, hire purchase, budgeting, and comparison decisions.",
+    tags: ["numbers", "financial maths", "money", "best buys", "VAT", "discounts", "exchange rates", "wages", "commission", "profit", "interest", "depreciation", "loans", "hire purchase", "budgeting", "GCSE", "IGCSE", "CSEC"],
+    toolPath: "tools/financial-real-life-maths/index.html?v=financial-real-life-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 covers everyday money decisions including best buys, discounts, VAT, and exchange rates.",
+      "Level 2 develops income and business contexts such as wages, overtime, commission, markup, profit, and margin.",
+      "Level 3 focuses on savings and borrowing through simple interest, compound interest, depreciation, loans, and hire purchase.",
+      "Level 4 brings ideas together in budgeting, reverse finance, and comparison problems."
+    ]
+  },
+  {
     slug: "averages-range",
     title: "Averages, Range and Missing Values",
     category: "Statistics",
@@ -2379,7 +2398,8 @@ const subjectToolGroups = {
     "hcf-lcm": "Number Fluency and Operations",
     "fractions-practice": "Fractions, Decimals and Percentages",
     "simple-percentage-tasks": "Fractions, Decimals and Percentages",
-    "percentages-real-world": "Fractions, Decimals and Percentages",
+    "percentages-real-world": "Financial and Real-Life Maths",
+    "financial-real-life-maths": "Financial and Real-Life Maths",
     "ratio-proportion": "Ratio, Proportion and Units",
     "conversions-teaching": "Ratio, Proportion and Units",
     "upper-lower-bounds": "Ratio, Proportion and Units",
@@ -2461,6 +2481,7 @@ const subjectGroupOrder = {
   Numbers: [
     "Number Fluency and Operations",
     "Fractions, Decimals and Percentages",
+    "Financial and Real-Life Maths",
     "Ratio, Proportion and Units",
     "Powers, Standard Form and Bases"
   ],
@@ -2508,7 +2529,8 @@ const subjectGroupNotes = {
   "Calculus": "Differentiation, integration, implicit and parametric methods, and differential equations.",
   "A-Level and Further Pure": "Partial fractions, matrices, vectors, roots, complex numbers, polar coordinates, hyperbolic functions, and theorem work.",
   "Number Fluency and Operations": "Arithmetic, place value, decimal calculation, order of operations, HCF, LCM, and prime factorisation.",
-  "Fractions, Decimals and Percentages": "Fraction arithmetic, percentage fluency, finance contexts, and percentage applications.",
+  "Fractions, Decimals and Percentages": "Fraction arithmetic, percentage fluency, decimal links, and percentage change.",
+  "Financial and Real-Life Maths": "Money calculations, best buys, tax, wages, interest, borrowing, budgeting, and financial decisions.",
   "Ratio, Proportion and Units": "Ratio, proportion, unit conversion, compound measures, and bounds.",
   "Powers, Standard Form and Bases": "Powers of 10, standard form, number bases, and number sets.",
   "Area, Perimeter and Circles": "2D measure topics for rectangles, triangles, circles, sectors, arcs, and compound contexts.",
@@ -7954,6 +7976,8 @@ const curatedRelatedToolSlugs = {
   "earth-geometry": ["bearings", "trigonometric-ratios", "circles-area-circumference", "sectors-arc-length"],
   "bearings": ["trigonometric-ratios", "earth-geometry", "missing-angles", "sine-cosine-rule"],
   "fractions-practice": ["fractions", "decimals-practice-lab", "simple-percentage-tasks", "ratio-proportion"],
+  "financial-real-life-maths": ["percentages-real-world", "simple-percentage-tasks", "ratio-proportion", "decimals-practice-lab"],
+  "percentages-real-world": ["financial-real-life-maths", "simple-percentage-tasks", "ratio-proportion", "upper-lower-bounds"],
   "algebraic-fractions": ["factorisation", "advanced-factorisation", "quadratic-factorisation", "linear-equations"],
   "transposition-formulae": ["linear-equations", "substitution", "functions", "algebraic-fractions"],
   "linear-programming": ["inequalities", "straight-lines", "graph-transformations-curve-sketching", "simultaneous-equations"],
@@ -8505,6 +8529,19 @@ function toolInsightProfile(tool) {
         "Which place-value column controls this calculation?",
         "How can adding placeholder zeros make the decimal operation clearer without changing the value?",
         "How do the digits shift through the fixed decimal point, and what estimate should the answer be close to?"
+      ]
+    },
+    {
+      match: () => tool.slug === "financial-real-life-maths" || has("financial maths", "best buys", "hire purchase", "commission", "depreciation", "exchange rates"),
+      misconceptions: [
+        "Comparing total prices rather than unit prices in best-buy questions.",
+        "Confusing markup with profit margin, even though markup uses cost price and margin uses selling price.",
+        "Applying a percentage change to the wrong amount in multi-step finance questions, especially discount followed by VAT or compound change over time."
+      ],
+      questions: [
+        "What quantity is the financial decision actually comparing: total cost, unit cost, profit, interest, or amount left?",
+        "Which amount is the original whole for this percentage or money calculation?",
+        "How can we check whether the final answer is sensible in the context of money, borrowing, saving, or exchange?"
       ]
     },
     {
