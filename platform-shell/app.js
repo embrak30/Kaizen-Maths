@@ -3370,6 +3370,18 @@ function worksheetQuestionMarksHtml(problem, options = {}) {
   return label ? `<span class="worksheet-question-marks">[${label}]</span>` : "";
 }
 
+function worksheetBrandingText() {
+  const context = currentSchoolContext();
+  const schoolName = context?.school_name || currentSchoolName();
+  const schoolDetail = context?.pilot_name || context?.organisation_name || "";
+  if (!schoolName) return "Generated with Kaizen Maths";
+  return `Generated with Kaizen Maths for ${[schoolName, schoolDetail].filter(Boolean).join(" · ")}`;
+}
+
+function worksheetBrandingFooterHtml(extraClass = "") {
+  return `<footer class="worksheet-branding-footer${extraClass ? ` ${extraClass}` : ""}">${escapeHtml(worksheetBrandingText())}</footer>`;
+}
+
 function renderWorksheetAnswerKey(worksheet, options = {}) {
   let answerNumber = 0;
   const renderAnswer = (problem) => {
@@ -3412,6 +3424,7 @@ function renderWorksheetAnswerKey(worksheet, options = {}) {
           ${worksheet.problems.map(renderAnswer).join("")}
         </ol>
       `}
+      ${worksheetBrandingFooterHtml("teacher-copy")}
     </section>
   `;
 }
@@ -7833,6 +7846,7 @@ function renderWorksheetPreview(worksheet, options = {}) {
           </li>
         `;
       }).join("")}</ol>`}
+      ${worksheetBrandingFooterHtml()}
       ${options.answers ? renderWorksheetAnswerKey(worksheet, options) : ""}
     </article>
   `;
@@ -10030,10 +10044,25 @@ function renderSchoolSpace() {
     app.innerHTML = `
       ${pageHeader(
         "School Space",
-        "Join or view a Kaizen Maths school licence for your department.",
-        `<a class="button" href="#/schools">School Licence Notes</a>`
+        "Use this page to connect your teacher account to a school licence or pilot.",
+        `<a class="button primary" href="#/book-demo">Book a Demo Session</a><a class="button" href="#/schools">School Licence Notes</a>`
       )}
-      ${signInCallout("Sign in to join a school licence")}
+      <section class="school-space-page school-space-intro">
+        <article class="panel school-join-card">
+          <span class="eyebrow">School Code Required</span>
+          <h2>Sign in first, then enter your school code</h2>
+          <p>School Space is the account-linking area for teachers whose school or pilot group already has a Kaizen Maths access code.</p>
+          <div class="school-code-preview" aria-hidden="true">SCHOOL-CODE</div>
+          <p class="school-join-status">After signing in, this page will show the code box where you can join your school space.</p>
+        </article>
+        <article class="panel school-help-card">
+          <span class="eyebrow">Different From School Access</span>
+          <h2>Access notes are separate</h2>
+          <p>The School Access page explains licences and pricing. This page is where signed-in teachers connect to an existing school licence, pilot, or department space.</p>
+          <a class="button" href="#/schools">Read School Access Notes</a>
+        </article>
+      </section>
+      ${signInCallout("Sign in to enter a school code")}
     `;
     bindAuthActions();
     return;
@@ -10045,7 +10074,7 @@ function renderSchoolSpace() {
       isSchoolUser
         ? "Your account is linked to your school licence."
         : "Use the school code from your department to join a school licence.",
-      `<a class="button" href="#/schools">School Licence Notes</a>`
+      `<a class="button primary" href="#/book-demo">Book a Demo Session</a><a class="button" href="#/schools">School Licence Notes</a>`
     )}
     <section class="school-space-page">
       ${isSchoolUser ? `
@@ -10100,7 +10129,7 @@ function renderSchoolSpace() {
           </label>
           <div class="button-row">
             <button class="button primary" id="joinSchoolButton" type="button">Join School Licence</button>
-            <a class="button" href="#/schools">Read School Licence Notes</a>
+            <a class="button" href="#/schools">Read School Access Notes</a>
           </div>
           <p class="school-join-status" id="schoolJoinStatus"></p>
         </article>
@@ -10772,7 +10801,7 @@ function renderBookDemo() {
   ];
   app.innerHTML = `
     ${pageHeader(
-      "Book a Demo",
+      "Book a Demo Session",
       "Arrange a short walkthrough of Kaizen Maths for individual teacher access, tutor use, or a school licence.",
       `<a class="button" href="#/schools">School Access</a><a class="button" href="#/kaizen-university">Watch Guides</a>`
     )}
@@ -12791,7 +12820,7 @@ function updateRouteSeo(parts) {
       description: "Start a 30-day Kaizen Maths teacher trial or upgrade with early-adopter monthly, annual, and school access options."
     },
     "book-demo": {
-      title: routeTitle("Book a Demo"),
+      title: routeTitle("Book a Demo Session"),
       description: "Book a Kaizen Maths walkthrough for teachers, tutors, Heads of Department, or school leaders."
     },
     "schools": {
