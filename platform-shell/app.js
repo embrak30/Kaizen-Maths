@@ -1072,6 +1072,24 @@ const tools = [
     ]
   },
   {
+    slug: "polygons-angles",
+    title: "Polygons and Interior/Exterior Angles",
+    category: "Geometry",
+    level: "KS3 / GCSE / IGCSE / CSEC",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate diagram-based polygon angle practice covering interior angle sums, exterior angles, regular polygons, sides from angles, and algebraic polygon problems.",
+    tags: ["geometry", "polygons", "interior angles", "exterior angles", "regular polygons", "irregular polygons", "angle sum", "algebra", "GCSE", "IGCSE", "CSEC"],
+    toolPath: "tools/polygons-angles/index.html?v=polygons-angles-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 focuses on interior angle sums, exterior angle sums, and missing interior angles in irregular polygons.",
+      "Level 2 develops regular polygon fluency, including interior angles, exterior angles, and finding the number of sides from a given angle.",
+      "Level 3 uses polygon angle facts to form and solve algebraic equations, including irregular polygons and linked interior/exterior angle problems."
+    ]
+  },
+  {
     slug: "circle-theorems",
     title: "Circle Theorems",
     category: "Geometry",
@@ -2387,6 +2405,7 @@ const subjectToolGroups = {
     "free-vectors": "Vectors and Similarity",
     "scale-drawing-similar-shapes": "Vectors and Similarity",
     "missing-angles": "Angles and Shape Geometry",
+    "polygons-angles": "Angles and Shape Geometry",
     "circle-theorems": "Angles and Shape Geometry"
   },
   Statistics: {
@@ -7930,7 +7949,8 @@ const curatedRelatedToolSlugs = {
   "area-models": ["bar-models", "elementary-manipulatives", "fractions-practice", "algebraic-simplification"],
   "elementary-maths-playground": ["bar-models", "area-models", "elementary-starter-board", "elementary-manipulatives"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
-  "circle-theorems": ["missing-angles", "circles-area-circumference", "sectors-arc-length", "trigonometric-ratios"],
+  "polygons-angles": ["missing-angles", "circle-theorems", "loci-constructions", "scale-drawing-similar-shapes"],
+  "circle-theorems": ["missing-angles", "polygons-angles", "circles-area-circumference", "sectors-arc-length"],
   "earth-geometry": ["bearings", "trigonometric-ratios", "circles-area-circumference", "sectors-arc-length"],
   "bearings": ["trigonometric-ratios", "earth-geometry", "missing-angles", "sine-cosine-rule"],
   "fractions-practice": ["fractions", "decimals-practice-lab", "simple-percentage-tasks", "ratio-proportion"],
@@ -8368,6 +8388,19 @@ function toolInsightProfile(tool) {
         "Which region must be filled first so that the rest of the Venn diagram remains consistent?",
         "How can set notation, words, and the shaded region be matched precisely?",
         "What changes when the question asks for a conditional probability from the completed Venn diagram?"
+      ]
+    },
+    {
+      match: () => tool.slug === "polygons-angles" || has("polygons", "interior angles", "exterior angles", "regular polygons"),
+      misconceptions: [
+        "Dividing the interior angle sum by the number of sides when the polygon is not regular.",
+        "Using 180 degrees as the exterior angle sum instead of recognising that exterior angles make one full turn of 360 degrees.",
+        "Finding the number of sides from an interior angle without first converting it to the corresponding exterior angle."
+      ],
+      questions: [
+        "How do we know whether this question needs the interior angle sum, the exterior angle sum, or both?",
+        "Why does the exterior angle method often give the number of sides more directly for regular polygons?",
+        "What changes in the algebra when the polygon is irregular rather than regular?"
       ]
     },
     {

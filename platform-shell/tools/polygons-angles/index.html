@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polygons and Interior/Exterior Angles</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f3f7fb;min-height:100vh;padding:14px;color:#111827;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#0f766e;color:#fff;padding:12px 7px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 7px 7px 0;font-weight:850;font-size:.82em;box-shadow:2px 0 10px rgba(0,0,0,.18)}
+    .sidebar{position:fixed;left:-430px;top:0;width:430px;height:100vh;background:#fff;z-index:1000;transition:left .25s;box-shadow:2px 0 22px rgba(0,0,0,.25);overflow-y:auto}.sidebar.open{left:0}
+    .sidebar-header{background:#0f766e;color:#fff;padding:18px;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{color:#0f766e;margin:18px 0 8px;border-bottom:2px solid #f97316;padding-bottom:4px;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#475569}.sidebar-content ul{padding-left:20px;margin-bottom:12px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;opacity:0;visibility:hidden;transition:.25s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1240px;margin:0 auto;background:#fff;border-radius:9px;box-shadow:0 4px 18px rgba(15,23,42,.1);overflow:hidden}
+    .header{background:#0f172a;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 46%,rgba(249,115,22,.18)),repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 2px,transparent 2px 24px);color:#fff;padding:20px;text-align:center}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.22)}
+    .tabs{display:flex;background:#e8f7f4}.tab{flex:1;padding:13px 9px;border:0;background:#e8f7f4;cursor:pointer;font-weight:850;font-size:.96em;border-bottom:3px solid transparent;color:#153b4a}.tab.active{background:#fff;color:#0f766e;border-bottom-color:#f97316}
+    .controls{padding:15px 18px;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #dbe7ef}.level-info h3{color:#0f766e;font-size:1.16em;margin-bottom:3px}.level-info p{color:#64748b;font-size:.94em;max-width:680px}.dropdown-container{margin-top:8px}.type-dropdown{padding:8px 10px;border:2px solid #b9e7df;border-radius:6px;background:#fff;min-width:380px;font-size:.94em;color:#111827}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{font-size:1.45em;font-weight:850;color:#0f766e;background:#fff;padding:7px 12px;border:2px solid #b9e7df;border-radius:6px;min-width:96px;text-align:center}.timer-display.active{border-color:#0f766e;color:#0f766e}.timer-display.warning{color:#b91c1c;border-color:#b91c1c;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .btn{padding:8px 14px;border:0;border-radius:6px;font-weight:850;cursor:pointer;min-width:68px;color:#fff}.btn-primary{background:#2563eb}.btn-success{background:#15803d}.btn-warning{background:#f59e0b;color:#1f2937}.btn-danger{background:#dc2626}
+    .problems-section{padding:12px 18px 18px;min-height:520px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#0f766e;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border-radius:6px;background:#ecfdf5;border:1px solid #a7f3d0;color:#134e4a;text-align:center;font-weight:800}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;list-style:none}.problem-item{background:#f8fafc;border-left:4px solid #0f766e;border-radius:7px;padding:10px;display:flex;flex-direction:column;gap:9px;min-height:292px}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.problem-left{display:flex;gap:10px;align-items:flex-start;min-width:0}.problem-number{background:#0f766e;color:#fff;min-width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:850}
+    .polygon-row{display:grid;grid-template-columns:260px minmax(0,1fr);gap:12px;align-items:center}.diagram-wrap{width:260px;background:#fff;border:1px solid #d7e3f0;border-radius:6px;padding:4px}.diagram-wrap svg{width:100%;height:auto;display:block}.question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.1em;line-height:1.35;color:#111827;font-weight:520}.diagram-note{font-size:10px;fill:#64748b;font-family:"Segoe UI",Tahoma,sans-serif}
+    .polygon-outline,.angle-ray,.extension-line,.split-line{fill:none;stroke:#111827;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}.polygon-outline{fill:#fff}.extension-line{stroke-dasharray:5 4}.split-line{stroke-width:1.5;stroke:#475569}.angle-arc,.turn-arc{fill:none;stroke:#111827;stroke-width:1.35;stroke-linecap:round}.point-dot{fill:#111827}.angle-label,.side-label,.point-label{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);fill:#111827;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}.angle-label{font-size:13.5px;font-weight:850}.unknown-label{font-size:18px;font-style:italic;font-weight:900}.side-label{font-size:13px;font-weight:850}.point-label{font-size:12px;font-weight:850}
+    .problem-answer{background:#15803d;color:#fff;padding:7px 11px;border-radius:999px;font-weight:850;display:none;font-size:.94em;line-height:1.35;white-space:nowrap}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:auto;padding:10px;background:#eff6ff;border-left:3px solid #2563eb;border-radius:6px}.steps-section.visible{display:block}.answer-label{font-weight:850;color:#2563eb;margin-bottom:6px}.solution-steps{line-height:1.45;font-size:.96em}.step{margin:6px 0;color:#111827}.step-equation{margin:6px 0;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:650;color:#134e4a;background:#fff;border:1px solid #bfdbfe;border-radius:5px;padding:6px}.final-answer{margin-top:8px;text-align:center;background:#15803d;color:#fff;border-radius:6px;padding:8px;font-weight:850}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:#fff;padding:28px;border-radius:10px;text-align:center;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{color:#b91c1c;margin-bottom:10px}.modal-content p{color:#64748b;margin-bottom:18px}.hidden{display:none}
+    @media (max-width:980px){.problem-list{grid-template-columns:1fr}.polygon-row{grid-template-columns:260px minmax(0,1fr)}}
+    @media (max-width:650px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.polygon-row{grid-template-columns:1fr}.diagram-wrap{width:min(300px,100%)}.problem-answer{white-space:normal}}
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <script src="../../auth-config.js?v=tool-access-guard-2"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-2"></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Polygons and Angles Guidance</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool practises interior and exterior angle facts for regular and irregular polygons, including algebraic angle problems.</p>
+      <h3>Core Facts</h3>
+      <ul>
+        <li>The sum of the interior angles of an n-sided polygon is (n - 2) times 180 degrees.</li>
+        <li>The exterior angles of any convex polygon add to 360 degrees.</li>
+        <li>In a regular polygon, all interior angles are equal and all exterior angles are equal.</li>
+        <li>For a regular polygon, each exterior angle is 360 degrees divided by n.</li>
+        <li>Interior angle + exterior angle = 180 degrees at each vertex.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Separate the two big ideas: interior angle sum and exterior angle sum.</li>
+        <li>Ask students to identify whether the polygon is regular before dividing by the number of sides.</li>
+        <li>For algebra problems, insist on writing the angle-sum equation before simplifying.</li>
+        <li>Use the diagram to identify which angle is interior and which angle is exterior.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Polygons and Interior/Exterior Angles</h1></header>
+    <nav class="tabs">
+      <button class="tab active" type="button" onclick="switchLevel(1)">Level 1: Core Angle Facts</button>
+      <button class="tab" type="button" onclick="switchLevel(2)">Level 2: Regular Polygons</button>
+      <button class="tab" type="button" onclick="switchLevel(3)">Level 3: Algebraic Polygons</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Core Angle Facts</h3>
+        <p id="level-description">Use the interior angle sum and exterior angle sum for polygons.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" type="button" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" type="button" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" type="button" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" type="button" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" type="button" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" type="button" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" type="button" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={
+      1:{title:'Level 1: Core Angle Facts',description:'Use the interior angle sum and exterior angle sum for polygons.',types:['interior_sum','exterior_sum','missing_irregular']},
+      2:{title:'Level 2: Regular Polygons',description:'Find interior angles, exterior angles, and the number of sides in regular polygons.',types:['regular_interior','regular_exterior','sides_from_exterior','sides_from_interior']},
+      3:{title:'Level 3: Algebraic Polygons',description:'Form and solve equations from polygon angle facts.',types:['algebra_irregular','algebra_regular_interior','algebra_regular_exterior','interior_exterior_link','mixed_algebra']}
+    };
+    const typeDisplayNames={
+      interior_sum:'Interior Angle Sum',
+      exterior_sum:'Exterior Angle Sum',
+      missing_irregular:'Missing Angle in an Irregular Polygon',
+      regular_interior:'Interior Angle of a Regular Polygon',
+      regular_exterior:'Exterior Angle of a Regular Polygon',
+      sides_from_exterior:'Number of Sides from an Exterior Angle',
+      sides_from_interior:'Number of Sides from an Interior Angle',
+      algebra_irregular:'Algebra in an Irregular Polygon',
+      algebra_regular_interior:'Algebra with Regular Interior Angles',
+      algebra_regular_exterior:'Algebra with Regular Exterior Angles',
+      interior_exterior_link:'Algebra Linking Interior and Exterior Angles',
+      mixed_algebra:'Mixed Algebraic Polygon Angles'
+    };
+    const setInstructions={
+      interior_sum:'Find the sum of the interior angles of each polygon.',
+      exterior_sum:'Use the exterior angle sum for each polygon.',
+      missing_irregular:'Find the missing interior angle in each irregular polygon.',
+      regular_interior:'Find one interior angle of each regular polygon.',
+      regular_exterior:'Find one exterior angle of each regular polygon.',
+      sides_from_exterior:'Find the number of sides from the exterior angle.',
+      sides_from_interior:'Find the number of sides from the interior angle.',
+      algebra_irregular:'Set up an interior-angle-sum equation, then solve for x.',
+      algebra_regular_interior:'Use the regular polygon interior angle to form and solve an equation.',
+      algebra_regular_exterior:'Use the regular polygon exterior angle to form and solve an equation.',
+      interior_exterior_link:'Use interior angle + exterior angle = 180 degrees, then find the number of sides.',
+      mixed_algebra:'Choose the correct polygon angle fact, form the equation, and solve.'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function deg(n){return n+'&deg;'}
+    function cleanText(html){const t=document.createElement('template');t.innerHTML=html;return t.content.textContent.replace(/\s+/g,' ').trim()}
+    function polygonName(n){return {3:'triangle',4:'quadrilateral',5:'pentagon',6:'hexagon',7:'heptagon',8:'octagon',9:'nonagon',10:'decagon',12:'dodecagon'}[n]||`${n}-sided polygon`}
+    function expr(a,b){const first=a===1?'x':`${a}x`;if(b===0)return first;if(b>0)return `${first} + ${b}&deg;`;return `${first} - ${Math.abs(b)}&deg;`}
+    function exprPlain(a,b){const first=a===1?'x':`${a}x`;if(b===0)return first;if(b>0)return `${first} + ${b}`;return `${first} - ${Math.abs(b)}`}
+    function coeffX(a){return a===1?'x':`${a}x`}
+    function problemShell(prompt,diagram,answer,steps,badge){return{equation:`<div class="polygon-row"><div class="diagram-wrap">${diagram}</div><div class="question-text">${prompt}</div></div>`,question:cleanText(prompt),answer,steps,badge}}
+    function svg(inner){return `<svg viewBox="0 0 270 230" role="img" aria-label="Polygon angle diagram">${inner}<text class="diagram-note" x="135" y="220" text-anchor="middle">Not drawn to scale</text></svg>`}
+    function point(cx,cy,r,angle){const rad=angle*Math.PI/180;return{x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)}}
+    function regularPoints(n,cx=135,cy=111,r=68){return Array.from({length:n},(_,i)=>point(cx,cy,r,-90+i*360/n))}
+    function pointsAttr(points){return points.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')}
+    function label(text,x,y,cls='angle-label'){return `<text class="${cls}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle">${text}</text>`}
+    function vertexLabel(text,vertex,cx=135,cy=111,scale=.32,cls='angle-label'){return label(text,vertex.x+(cx-vertex.x)*scale,vertex.y+(cy-vertex.y)*scale+4,cls)}
+    function line(a,b,cls='angle-ray'){return `<line class="${cls}" x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}"></line>`}
+    function unit(v){const len=Math.hypot(v.x,v.y)||1;return{x:v.x/len,y:v.y/len}}
+    function add(a,b,k=1){return{x:a.x+b.x*k,y:a.y+b.y*k}}
+    function arcAt(vertex,rayA,rayB,r=22,cls='angle-arc'){const a=add(vertex,unit({x:rayA.x-vertex.x,y:rayA.y-vertex.y}),r),b=add(vertex,unit({x:rayB.x-vertex.x,y:rayB.y-vertex.y}),r);return `<path class="${cls}" d="M ${a.x.toFixed(1)} ${a.y.toFixed(1)} A ${r} ${r} 0 0 1 ${b.x.toFixed(1)} ${b.y.toFixed(1)}"></path>`}
+    function regularPolygonSvg(n,angleText='',mode='interior'){
+      const pts=regularPoints(n);
+      let inner=`<polygon class="polygon-outline" points="${pointsAttr(pts)}"></polygon>`;
+      if(mode==='triangles'){
+        const top=pts[0];
+        for(let i=2;i<n-1;i++)inner+=line(top,pts[i],'split-line');
+        inner+=label(`${n - 2} triangles`,135,113,'side-label');
+      }
+      if(angleText){
+        const v=pts[0],prev=pts[n-1],next=pts[1];
+        if(mode==='exterior'||mode==='sides'){
+          const ext=add(v,unit({x:v.x-prev.x,y:v.y-prev.y}),45);
+          inner+=line(v,ext,'extension-line')+arcAt(v,ext,next,22,'turn-arc')+label(angleText,v.x+38,v.y+20,angleText==='x'?'angle-label unknown-label':'angle-label');
+        }else{
+          inner+=arcAt(v,prev,next,20,'angle-arc')+vertexLabel(angleText,v,135,111,.28,angleText==='x'?'angle-label unknown-label':'angle-label');
+        }
+      }
+      return svg(inner);
+    }
+    function irregularPoints(n){
+      if(n===5)return [{x:65,y:167},{x:45,y:84},{x:112,y:40},{x:204,y:75},{x:218,y:160}];
+      return [{x:61,y:164},{x:45,y:97},{x:88,y:43},{x:166,y:38},{x:223,y:90},{x:210,y:164}];
+    }
+    function irregularSvg(labels){
+      const pts=irregularPoints(labels.length),cx=135,cy=111;
+      let inner=`<polygon class="polygon-outline" points="${pointsAttr(pts)}"></polygon>`;
+      pts.forEach((p,i)=>{inner+=vertexLabel(labels[i],p,cx,cy,.28,labels[i]==='x'||labels[i].includes('x')?'angle-label unknown-label':'angle-label')});
+      return svg(inner);
+    }
+    function numberOptions(){return [5,6,8,9,10,12]}
+    function regularData(n){return{n,exterior:360/n,interior:180-360/n,sum:(n-2)*180}}
+
+    function genInteriorSum(){
+      const n=choice([5,6,7,8,9,10]);
+      const sum=(n-2)*180;
+      return problemShell(`Find the sum of the interior angles of a ${polygonName(n)}.`,regularPolygonSvg(n,'','triangles'),deg(sum),[
+        `A ${polygonName(n)} has ${n} sides.`,
+        `A polygon with n sides can be split into n - 2 triangles from one vertex.`,
+        `Number of triangles = ${n} - 2 = ${n-2}.`,
+        `Interior angle sum = (${n} - 2) &times; 180&deg;.`,
+        `Interior angle sum = ${n-2} &times; 180&deg; = ${sum}&deg;.`
+      ],'interior-sum');
+    }
+    function genExteriorSum(){
+      const n=choice([5,6,7,8]);
+      return problemShell(`Find the sum of the exterior angles of this ${polygonName(n)}.`,regularPolygonSvg(n,'x','exterior'),deg(360),[
+        `Walking around any convex polygon makes one complete turn.`,
+        `One complete turn is 360&deg;.`,
+        `So the exterior angles add to 360&deg;.`
+      ],'exterior-sum');
+    }
+    function genMissingIrregular(){
+      const n=choice([5,6]),sum=(n-2)*180;
+      let angles,x;
+      for(let attempt=0;attempt<200;attempt++){
+        angles=Array.from({length:n-1},()=>randInt(88,144));
+        x=sum-angles.reduce((a,b)=>a+b,0);
+        if(x>=76&&x<=156)break;
+      }
+      const labels=angles.map(deg).concat('x');
+      return problemShell(`Find the missing interior angle x.`,irregularSvg(labels),deg(x),[
+        `This is a ${polygonName(n)}, so it has ${n} sides.`,
+        `Interior angle sum = (${n} - 2) &times; 180&deg; = ${sum}&deg;.`,
+        `Known angles = ${angles.join('&deg; + ')}&deg; = ${angles.reduce((a,b)=>a+b,0)}&deg;.`,
+        `x = ${sum}&deg; - ${angles.reduce((a,b)=>a+b,0)}&deg;.`,
+        `x = ${x}&deg;.`
+      ],'missing-angle');
+    }
+    function genRegularInterior(){
+      const d=regularData(choice(numberOptions()));
+      return problemShell(`Find one interior angle of a regular ${polygonName(d.n)}.`,regularPolygonSvg(d.n,'x','interior'),deg(d.interior),[
+        `A regular ${polygonName(d.n)} has ${d.n} equal exterior angles.`,
+        `Each exterior angle = 360&deg; ÷ ${d.n} = ${d.exterior}&deg;.`,
+        `Interior angle + exterior angle = 180&deg;.`,
+        `Interior angle = 180&deg; - ${d.exterior}&deg; = ${d.interior}&deg;.`
+      ],'regular-interior');
+    }
+    function genRegularExterior(){
+      const d=regularData(choice(numberOptions()));
+      return problemShell(`Find one exterior angle of a regular ${polygonName(d.n)}.`,regularPolygonSvg(d.n,'x','exterior'),deg(d.exterior),[
+        `The exterior angles of a polygon add to 360&deg;.`,
+        `In a regular ${polygonName(d.n)}, the ${d.n} exterior angles are equal.`,
+        `Each exterior angle = 360&deg; ÷ ${d.n}.`,
+        `Each exterior angle = ${d.exterior}&deg;.`
+      ],'regular-exterior');
+    }
+    function genSidesFromExterior(){
+      const d=regularData(choice(numberOptions()));
+      return problemShell(`Each exterior angle of a regular polygon is ${deg(d.exterior)}. Find the number of sides.`,regularPolygonSvg(d.n,deg(d.exterior),'sides'),String(d.n),[
+        `The exterior angles of any polygon add to 360&deg;.`,
+        `In a regular polygon, all exterior angles are equal.`,
+        `Number of sides = 360&deg; ÷ exterior angle.`,
+        `Number of sides = 360&deg; ÷ ${d.exterior}&deg; = ${d.n}.`
+      ],'sides-from-exterior');
+    }
+    function genSidesFromInterior(){
+      const d=regularData(choice(numberOptions()));
+      return problemShell(`Each interior angle of a regular polygon is ${deg(d.interior)}. Find the number of sides.`,regularPolygonSvg(d.n,deg(d.interior),'interior'),String(d.n),[
+        `Interior angle + exterior angle = 180&deg;.`,
+        `Exterior angle = 180&deg; - ${d.interior}&deg; = ${d.exterior}&deg;.`,
+        `Number of sides = 360&deg; ÷ exterior angle.`,
+        `Number of sides = 360&deg; ÷ ${d.exterior}&deg; = ${d.n}.`
+      ],'sides-from-interior');
+    }
+    function targetAngles(n){
+      const sum=(n-2)*180;
+      for(let attempt=0;attempt<300;attempt++){
+        const vals=Array.from({length:n-1},()=>randInt(92,142));
+        const last=sum-vals.reduce((a,b)=>a+b,0);
+        if(last>=86&&last<=154)return vals.concat(last);
+      }
+      return n===5?[105,118,96,132,89]:[112,94,126,108,130,150];
+    }
+    function expressionForValue(value,x){
+      const coeffs=[3,2,1].filter(c=>value-c*x>=5&&value-c*x<=120);
+      const a=choice(coeffs.length?coeffs:[1]);
+      return {a,b:value-a*x,html:expr(a,value-a*x),plain:exprPlain(a,value-a*x)};
+    }
+    function genAlgebraIrregular(){
+      const n=choice([5,6]),sum=(n-2)*180,x=randInt(18,28),values=targetAngles(n),parts=values.map(v=>expressionForValue(v,x));
+      const sumA=parts.reduce((t,p)=>t+p.a,0),sumB=parts.reduce((t,p)=>t+p.b,0);
+      return problemShell(`The interior angles of this ${polygonName(n)} are given in terms of x. Find x.`,irregularSvg(parts.map(p=>p.html)),String(x),[
+        `A ${polygonName(n)} has interior angle sum (${n} - 2) &times; 180&deg; = ${sum}&deg;.`,
+        `Add the given angle expressions and set them equal to ${sum}&deg;.`,
+        `${parts.map(p=>`(${p.plain})`).join(' + ')} = ${sum}`,
+        `${sumA}x + ${sumB} = ${sum}`,
+        `${sumA}x = ${sum-sumB}`,
+        `x = ${sum-sumB} ÷ ${sumA} = ${x}.`
+      ],'algebra-irregular');
+    }
+    function genAlgebraRegularInterior(){
+      const d=regularData(choice(numberOptions()));
+      let a,b,x;
+      for(let attempt=0;attempt<80;attempt++){
+        a=choice([2,3,4,5]);x=randInt(12,30);b=d.interior-a*x;
+        if(b>=8&&b<=100)break;
+      }
+      const e=expr(a,b),plain=exprPlain(a,b);
+      return problemShell(`Each interior angle of a regular ${polygonName(d.n)} is ${e}. Find x.`,regularPolygonSvg(d.n,e,'interior'),String(x),[
+        `First find one interior angle of a regular ${polygonName(d.n)}.`,
+        `Each exterior angle = 360&deg; ÷ ${d.n} = ${d.exterior}&deg;.`,
+        `Each interior angle = 180&deg; - ${d.exterior}&deg; = ${d.interior}&deg;.`,
+        `Set the expression equal to the interior angle.`,
+        `${plain} = ${d.interior}`,
+        `${a}x = ${d.interior-b}`,
+        `x = ${d.interior-b} ÷ ${a} = ${x}.`
+      ],'algebra-regular-interior');
+    }
+    function genAlgebraRegularExterior(){
+      const d=regularData(choice(numberOptions()));
+      let a,b,x;
+      for(let attempt=0;attempt<80;attempt++){
+        a=choice([1,2,3]);x=randInt(6,24);b=d.exterior-a*x;
+        if(b>=4&&b<=60)break;
+      }
+      const e=expr(a,b),plain=exprPlain(a,b);
+      return problemShell(`Each exterior angle of a regular ${polygonName(d.n)} is ${e}. Find x.`,regularPolygonSvg(d.n,e,'exterior'),String(x),[
+        `The exterior angles of a polygon add to 360&deg;.`,
+        `A regular ${polygonName(d.n)} has ${d.n} equal exterior angles.`,
+        `Each exterior angle = 360&deg; ÷ ${d.n} = ${d.exterior}&deg;.`,
+        `Set the expression equal to the exterior angle.`,
+        `${plain} = ${d.exterior}`,
+        `${coeffX(a)} = ${d.exterior-b}`,
+        `x = ${d.exterior-b} ÷ ${a} = ${x}.`
+      ],'algebra-regular-exterior');
+    }
+    function genInteriorExteriorLink(){
+      const d=regularData(choice([5,6,8,9,10])),x=randInt(10,20),a=choice([3,4,5]),c=1;
+      const b=d.interior-a*x,dd=d.exterior-c*x;
+      const interior=expr(a,b),exterior=expr(c,dd),intPlain=exprPlain(a,b),extPlain=exprPlain(c,dd);
+      return problemShell(`In a regular polygon, one interior angle is ${interior} and the exterior angle at the same vertex is ${exterior}. Find x and the number of sides.`,regularPolygonSvg(d.n,exterior,'exterior'),`x = ${x}, ${d.n} sides`,[
+        `At one vertex, interior angle + exterior angle = 180&deg;.`,
+        `(${intPlain}) + (${extPlain}) = 180`,
+        `${a+c}x + ${b+dd} = 180`,
+        `${a+c}x = ${180-b-dd}`,
+        `x = ${180-b-dd} ÷ ${a+c} = ${x}.`,
+        `Exterior angle = ${extPlain} = ${d.exterior}&deg;.`,
+        `Number of sides = 360&deg; ÷ ${d.exterior}&deg; = ${d.n}.`
+      ],'interior-exterior-link');
+    }
+    function generateProblem(){
+      const type=currentType==='select'?choice(levelConfigs[currentLevel].types):currentType;
+      if(type==='interior_sum')return genInteriorSum();
+      if(type==='exterior_sum')return genExteriorSum();
+      if(type==='missing_irregular')return genMissingIrregular();
+      if(type==='regular_interior')return genRegularInterior();
+      if(type==='regular_exterior')return genRegularExterior();
+      if(type==='sides_from_exterior')return genSidesFromExterior();
+      if(type==='sides_from_interior')return genSidesFromInterior();
+      if(type==='algebra_irregular')return genAlgebraIrregular();
+      if(type==='algebra_regular_interior')return genAlgebraRegularInterior();
+      if(type==='algebra_regular_exterior')return genAlgebraRegularExterior();
+      if(type==='interior_exterior_link')return genInteriorExteriorLink();
+      if(type==='mixed_algebra')return choice([genAlgebraIrregular,genAlgebraRegularInterior,genAlgebraRegularExterior,genInteriorExteriorLink])();
+      return genInteriorSum();
+    }
+    function setInstructionForType(){const text=setInstructions[currentType]||'';const el=document.getElementById('set-instruction');el.textContent=text;el.classList.toggle('visible',Boolean(text))}
+    function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));const cfg=levelConfigs[level];document.getElementById('level-title').textContent=cfg.title;document.getElementById('level-description').textContent=cfg.description;const dd=document.getElementById('type-dropdown');dd.innerHTML='<option value="select">Select Question Type</option>'+cfg.types.map(t=>'<option value="'+t+'">'+typeDisplayNames[t]+'</option>').join('');dd.value='select';showBlankPage()}
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-set-header').classList.remove('visible');document.getElementById('set-instruction').classList.remove('visible');document.getElementById('problem-list').innerHTML='<li style="grid-column:1/-1;text-align:center;padding:38px;color:#64748b;font-size:1.05em">Please select a polygon angle question type to begin.</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;const seen=new Set();for(let i=0;i<4;i++){let p=generateProblem(),attempts=0;while(seen.has(p.question)&&attempts<40){p=generateProblem();attempts++}seen.add(p.question);problems.push(p)}renderProblems()}
+    function renderProblems(){const list=document.getElementById('problem-list'),header=document.getElementById('problem-set-header');list.innerHTML='';header.textContent=typeDisplayNames[currentType]||'Polygons and Angles';header.className='problem-set-header visible';setInstructionForType();problems.forEach((p,i)=>{const li=document.createElement('li');li.className='problem-item';const steps=(p.steps||[]).map(s=>/=|&times;|&deg;|÷|[0-9]x|x\s*=/.test(String(s))?'<div class="step-equation">'+s+'</div>':'<div class="step">'+s+'</div>').join('');li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(i+1)+'</div><div class="equation">'+p.equation+'</div></div><div class="problem-answer" id="quick-answer-'+i+'">'+p.answer+'</div></div><div class="steps-section" id="steps-'+i+'"><div class="answer-label">Solution Steps:</div><div class="solution-steps">'+steps+'<div class="final-answer">'+p.answer+'</div></div></div>';list.appendChild(li)})}
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById('quick-answer-'+i)?.classList.toggle('visible',answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById('steps-'+i)?.classList.toggle('visible',stepsVisible))}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const e=document.getElementById('timer-display');e.textContent='Ready';e.className='timer-display'}
+    function updateTimerDisplay(){const e=document.getElementById('timer-display'),m=Math.floor(timeRemaining/60),s=timeRemaining%60;e.textContent=m+':'+String(s).padStart(2,'0');if(timerActive&&timeRemaining<=30)e.className='timer-display warning';else if(timerActive)e.className='timer-display active';else e.className='timer-display'}
+    function timerFinished(){stopTimer();const e=document.getElementById('timer-display');e.textContent='Time Up!';e.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-24"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-3"></script>
+</body>
+</html>
