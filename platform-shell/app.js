@@ -9607,6 +9607,7 @@ function renderToolInformationPage(tool) {
 function renderToolFrame(tool, options = {}) {
   const subjectGroup = toolSubjectGroup(tool);
   const startClassroom = Boolean(options.startClassroom);
+  const classroomSchoolName = currentSchoolContext()?.school_name || currentSchoolName();
   const frame = tool.imported
     ? `<iframe class="legacy-frame" src="${classroomToolPath(tool.toolPath)}" title="${tool.title}" loading="eager"></iframe>`
     : `
@@ -9628,7 +9629,7 @@ function renderToolFrame(tool, options = {}) {
     <section class="legacy-layout">
       <div class="legacy-stage ${startClassroom ? "classroom" : ""}">
         <div class="legacy-toolbar">
-          ${startClassroom ? `<div class="classroom-toolbar-title">Classroom View</div>` : `<div class="badge-row">
+          ${startClassroom ? `<div class="classroom-toolbar-title" title="${escapeHtml(classroomSchoolName || "Classroom View")}">${classroomSchoolName ? `<span class="classroom-school-name">${escapeHtml(classroomSchoolName)}</span>` : "Classroom View"}</div>` : `<div class="badge-row">
             <span class="badge">${tool.category}</span>
             ${subjectGroup ? `<span class="badge subject-group">${escapeHtml(subjectGroup)}</span>` : ""}
             <span class="badge">${tool.level}</span>

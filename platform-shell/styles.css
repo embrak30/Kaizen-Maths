@@ -4245,11 +4245,20 @@ body[data-route="worksheet-generator"] .account-action {
 
 .classroom-toolbar-title {
   margin-right: auto;
+  min-width: 0;
+  max-width: min(46vw, 560px);
   color: #e5e7eb;
   font-size: 0.82rem;
   font-weight: 850;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.classroom-school-name {
+  color: #ffffff;
 }
 
 .legacy-toolbar-actions {
