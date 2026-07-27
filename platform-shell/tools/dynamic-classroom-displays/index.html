@@ -337,16 +337,6 @@
       stroke-linejoin: round;
     }
 
-    .target-curve {
-      fill: none;
-      stroke: var(--purple);
-      stroke-width: 3;
-      stroke-dasharray: 12 8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      opacity: 0.62;
-    }
-
     .shape-line {
       fill: none;
       stroke: #14263a;
@@ -359,14 +349,6 @@
       fill: rgba(20, 38, 58, 0.10);
       stroke: #14263a;
       stroke-width: 4;
-      stroke-linejoin: round;
-    }
-
-    .shape-final {
-      fill: rgba(100, 84, 192, 0.10);
-      stroke: var(--purple);
-      stroke-width: 3;
-      stroke-dasharray: 11 8;
       stroke-linejoin: round;
     }
 
@@ -603,7 +585,7 @@
       mode: "graphs",
       graphs: {
         model: "quadratic",
-        progress: 1,
+        progress: 0,
         a: 1,
         b: 1,
         h: 0,
@@ -613,7 +595,7 @@
       },
       transforms: {
         model: "rotation",
-        progress: 1,
+        progress: 0,
         centreX: 1,
         centreY: 1,
         angle: 90,
@@ -627,7 +609,7 @@
       },
       circleEq: {
         model: "equation",
-        progress: 1,
+        progress: 0,
         h: 2,
         k: -1,
         r: 4
@@ -649,7 +631,7 @@
       },
       trig: {
         model: "sine",
-        progress: 1,
+        progress: 0,
         a: 1,
         b: 1,
         h: 0,
@@ -658,7 +640,7 @@
       },
       complex: {
         model: "multiply-cis",
-        progress: 1,
+        progress: 0,
         real: 3,
         imag: 1,
         modulus: 1.5,
@@ -666,7 +648,7 @@
       },
       calculus: {
         model: "tangent",
-        progress: 1,
+        progress: 0,
         x: 2,
         h: 3,
         rectangles: 6
@@ -896,7 +878,7 @@
       const output = document.getElementById(id + "Value");
       input.addEventListener("input", () => {
         state[target][key] = Number(input.value);
-        if (Object.prototype.hasOwnProperty.call(state[target], "progress")) state[target].progress = 1;
+        if (Object.prototype.hasOwnProperty.call(state[target], "progress")) state[target].progress = 0;
         output.textContent = input.value;
         renderer();
       });
@@ -914,7 +896,7 @@
       input.addEventListener("input", () => {
         const value = Number(input.value);
         if (Number.isFinite(value)) state[target][key] = value;
-        state[target].progress = 1;
+        state[target].progress = 0;
         renderer();
       });
     }
@@ -923,7 +905,7 @@
       const input = document.getElementById(id);
       input.addEventListener("change", () => {
         state[target][key] = numeric ? Number(input.value) : input.value;
-        state[target].progress = 1;
+        state[target].progress = 0;
         renderer();
       });
     }
@@ -1261,7 +1243,7 @@
           modelNote.textContent = "Use the matching form for the selected graph, such as y = 2(x - 3)² + 1.";
           return;
         }
-        Object.assign(state.graphs, parsed, { progress: 1 });
+        Object.assign(state.graphs, parsed, { progress: 0 });
         render();
       });
       attachAnimationButton("graphAnimate", "graphs");
@@ -1278,13 +1260,9 @@
         k: g.k * g.progress
       };
       const transformed = (x) => live.a * base(live.b * (x - live.h)) + live.k;
-      const target = (x) => g.a * base(g.b * (x - g.h)) + g.k;
       let content = graphGrid(graphBounds, 1, 1);
       if (g.original) {
         content += '<path class="base-curve" d="' + pathForFunction(base, graphBounds) + '"/>';
-      }
-      if (g.progress < 0.995) {
-        content += '<path class="target-curve" d="' + pathForFunction(target, graphBounds) + '"/>';
       }
       content += '<path class="main-curve" d="' + pathForFunction(transformed, graphBounds) + '"/>';
       if (g.points && name !== "reciprocal") {
@@ -1354,16 +1332,16 @@
 
     function renderTransformDisplay() {
       const t = state.transforms;
-      const finalShape = transformedShape(t, 1);
       const liveShape = transformedShape(t, t.progress);
       let content = markerDefs() + graphGrid(transformBounds, 1, 1);
       content += '<path class="shape-original" d="' + polygonPath(baseShape, transformBounds) + '"/>';
-      content += '<path class="shape-final" d="' + polygonPath(finalShape, transformBounds) + '"/>';
-      content += '<path class="shape-live" d="' + polygonPath(liveShape, transformBounds) + '"/>';
       content += labelShape(baseShape, transformBounds, "");
-      content += labelShape(finalShape, transformBounds, "'");
+      if (t.progress > 0.001) {
+        content += '<path class="shape-live" d="' + polygonPath(liveShape, transformBounds) + '"/>';
+        content += labelShape(liveShape, transformBounds, "'");
+      }
       if (t.model === "translation") {
-        content += vectorFromPoints(baseShape[0], finalShape[0], transformBounds);
+        if (t.progress > 0.001) content += vectorFromPoints(baseShape[0], liveShape[0], transformBounds);
       } else if (t.model === "rotation" || t.model === "enlargement") {
         content += centreMark(t.centreX, t.centreY, transformBounds, "Centre");
         content += vectorFromPoints({ x: t.centreX, y: t.centreY }, liveShape[0], transformBounds, "highlight-line");
@@ -1402,14 +1380,9 @@
       const unitRadius = Math.abs(graphX(1, circleEqBounds) - graphX(0, circleEqBounds));
       const centre = { x: graphX(live.h, circleEqBounds), y: graphY(live.k, circleEqBounds) };
       const radiusPoint = { x: graphX(live.h + live.r, circleEqBounds), y: graphY(live.k, circleEqBounds) };
-      const targetCentre = { x: graphX(c.h, circleEqBounds), y: graphY(c.k, circleEqBounds) };
-      const targetRadius = Math.abs(graphX(c.h + c.r, circleEqBounds) - graphX(c.h, circleEqBounds));
       const pixelRadius = Math.abs(graphX(live.h + live.r, circleEqBounds) - graphX(live.h, circleEqBounds));
       let content = graphGrid(circleEqBounds, 1, 1);
       content += '<circle class="base-curve" cx="' + unitCentre.x.toFixed(1) + '" cy="' + unitCentre.y.toFixed(1) + '" r="' + unitRadius.toFixed(1) + '"/>';
-      if (c.progress < 0.995) {
-        content += '<circle class="target-curve" cx="' + targetCentre.x.toFixed(1) + '" cy="' + targetCentre.y.toFixed(1) + '" r="' + targetRadius.toFixed(1) + '"/>';
-      }
       content += '<circle class="circle-line circle-equation-line" cx="' + centre.x.toFixed(1) + '" cy="' + centre.y.toFixed(1) + '" r="' + pixelRadius.toFixed(1) + '"/>';
       content += line(centre, radiusPoint, "highlight-line");
       content += dotWithDrag(centre, "C", "circleEqCenter", 18, -16);
@@ -1629,10 +1602,6 @@
         }
       }
       if (t.original) content += '<path class="base-curve" d="' + trigPath((x) => trigValue(t.model, x), bounds) + '"/>';
-      const target = (x) => t.a * trigValue(t.model, t.b * (x - t.h)) + t.k;
-      if (t.progress < 0.995) {
-        content += '<path class="target-curve" d="' + trigPath(target, bounds) + '"/>';
-      }
       const transformed = (x) => live.a * trigValue(live.model, live.b * (x - live.h)) + live.k;
       content += '<path class="secondary-curve" d="' + trigPath(transformed, bounds) + '"/>';
       boardTitle.textContent = models.trig.find((item) => item[0] === live.model)[1];
@@ -1661,20 +1630,18 @@
       const c = state.complex;
       const z = complexPoint(c.real, c.imag);
       const live = complexProduct(c, c.progress);
-      const final = complexProduct(c, 1);
       const origin = { x: 0, y: 0 };
       const zSvg = pointToSvg(z, complexBounds);
       const liveSvg = pointToSvg(live, complexBounds);
-      const finalSvg = pointToSvg(final, complexBounds);
       let content = markerDefs() + graphGrid(complexBounds, 1, 1);
       content += vectorFromPoints(origin, z, complexBounds, "theorem-line");
-      content += vectorFromPoints(origin, final, complexBounds, "shape-final");
-      content += vectorFromPoints(origin, live, complexBounds, "vector-line");
       content += '<circle class="point-dot" cx="' + zSvg.x.toFixed(1) + '" cy="' + zSvg.y.toFixed(1) + '" r="7"/>';
-      content += '<circle class="drag-ring" cx="' + finalSvg.x.toFixed(1) + '" cy="' + finalSvg.y.toFixed(1) + '" r="11"/>';
-      content += '<circle class="point-dot" cx="' + liveSvg.x.toFixed(1) + '" cy="' + liveSvg.y.toFixed(1) + '" r="7"/>';
       content += '<text class="label-text" x="' + (zSvg.x + 12).toFixed(1) + '" y="' + (zSvg.y - 12).toFixed(1) + '">z</text>';
-      content += '<text class="label-text" x="' + (finalSvg.x + 12).toFixed(1) + '" y="' + (finalSvg.y - 12).toFixed(1) + '">w</text>';
+      if (c.progress > 0.001) {
+        content += vectorFromPoints(origin, live, complexBounds, "vector-line");
+        content += '<circle class="point-dot" cx="' + liveSvg.x.toFixed(1) + '" cy="' + liveSvg.y.toFixed(1) + '" r="7"/>';
+        content += '<text class="label-text" x="' + (liveSvg.x + 12).toFixed(1) + '" y="' + (liveSvg.y - 12).toFixed(1) + '">w</text>';
+      }
       boardTitle.textContent = "Complex Plane Transformation";
       boardEquation.innerHTML = "z = " + complexText(c.real, c.imag) + ", w = " + round(c.modulus, 1) + "cis(" + round(c.angle, 0) + "&deg;)z";
       svg(content, "0 0 " + graphWidth + " " + graphHeight);
@@ -1715,7 +1682,9 @@
       let content = graphGrid(calculusBounds, 1, 1);
       content += '<path class="main-curve" d="' + pathForFunction(curve, calculusBounds) + '"/>';
       content += '<path class="base-curve" d="' + pathForFunction(secant, calculusBounds) + '"/>';
-      content += '<path class="secondary-curve" d="' + pathForFunction(tangent, calculusBounds) + '"/>';
+      if (c.progress > 0.995) {
+        content += '<path class="secondary-curve" d="' + pathForFunction(tangent, calculusBounds) + '"/>';
+      }
       content += '<circle class="point-dot" cx="' + A.x.toFixed(1) + '" cy="' + A.y.toFixed(1) + '" r="7"/>';
       content += '<circle class="drag-ring" cx="' + B.x.toFixed(1) + '" cy="' + B.y.toFixed(1) + '" r="10"/>';
       content += '<text class="label-text" x="' + (A.x + 12).toFixed(1) + '" y="' + (A.y - 12).toFixed(1) + '">A</text>';
@@ -1879,13 +1848,13 @@
 
     function resetCurrent() {
       if (state.mode === "graphs") {
-        state.graphs = { model: state.graphs.model, progress: 1, a: 1, b: 1, h: 0, k: 0, original: true, points: true };
+        state.graphs = { model: state.graphs.model, progress: 0, a: 1, b: 1, h: 0, k: 0, original: true, points: true };
       }
       if (state.mode === "transforms") {
-        state.transforms = { model: state.transforms.model, progress: 1, centreX: 1, centreY: 1, angle: 90, direction: "anticlockwise", vectorX: 4, vectorY: 2, scale: 2, reflectionLine: "x-axis", shearAxis: "x-axis", shearFactor: 1 };
+        state.transforms = { model: state.transforms.model, progress: 0, centreX: 1, centreY: 1, angle: 90, direction: "anticlockwise", vectorX: 4, vectorY: 2, scale: 2, reflectionLine: "x-axis", shearAxis: "x-axis", shearFactor: 1 };
       }
       if (state.mode === "circleEq") {
-        state.circleEq = { model: state.circleEq.model, progress: 1, h: 2, k: -1, r: 4 };
+        state.circleEq = { model: state.circleEq.model, progress: 0, h: 2, k: -1, r: 4 };
       }
       if (state.mode === "circles") {
         state.circles = {
@@ -1905,13 +1874,13 @@
         };
       }
       if (state.mode === "trig") {
-        state.trig = { model: state.trig.model, progress: 1, a: 1, b: 1, h: 0, k: 0, original: true };
+        state.trig = { model: state.trig.model, progress: 0, a: 1, b: 1, h: 0, k: 0, original: true };
       }
       if (state.mode === "complex") {
-        state.complex = { model: state.complex.model, progress: 1, real: 3, imag: 1, modulus: 1.5, angle: 90 };
+        state.complex = { model: state.complex.model, progress: 0, real: 3, imag: 1, modulus: 1.5, angle: 90 };
       }
       if (state.mode === "calculus") {
-        state.calculus = { model: state.calculus.model, progress: 1, x: 2, h: 3, rectangles: 6 };
+        state.calculus = { model: state.calculus.model, progress: 0, x: 2, h: 3, rectangles: 6 };
       }
       render();
     }
@@ -1926,7 +1895,7 @@
 
     modelSelect.addEventListener("change", () => {
       currentModeState().model = modelSelect.value;
-      if (Object.prototype.hasOwnProperty.call(currentModeState(), "progress")) currentModeState().progress = 1;
+      if (Object.prototype.hasOwnProperty.call(currentModeState(), "progress")) currentModeState().progress = 0;
       render();
     });
 
