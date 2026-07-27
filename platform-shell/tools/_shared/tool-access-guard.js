@@ -14,6 +14,7 @@
   ]);
   const root = document.documentElement;
   const slug = currentToolSlug();
+  const SCHOOL_CONTEXT_KEY = "kaizen:school-context";
 
   if (!slug || root.dataset.kaizenToolAccessChecked) return;
 
@@ -122,6 +123,36 @@
     return user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email || "Teacher";
   }
 
+  function schoolContextFromRecord(school) {
+    if (!school?.id) return null;
+    return {
+      school_id: school.id,
+      school_name: school.name || "",
+      organisation_name: school.organisation_name || "",
+      pilot_name: school.pilot_name || "",
+      country: school.country || "",
+      currency_code: school.currency_code || "GBP",
+      currency_symbol: school.currency_symbol || "£",
+      locale: school.locale || "en-GB",
+      curriculum_focus: school.curriculum_focus || "",
+      standards_label: school.standards_label || ""
+    };
+  }
+
+  function syncSchoolContext(context) {
+    try {
+      if (context?.school_id) {
+        localStorage.setItem(SCHOOL_CONTEXT_KEY, JSON.stringify(context));
+        window.KaizenSchoolContext = context;
+      } else {
+        localStorage.removeItem(SCHOOL_CONTEXT_KEY);
+        window.KaizenSchoolContext = null;
+      }
+    } catch (_error) {
+      window.KaizenSchoolContext = context || null;
+    }
+  }
+
   function withTimeout(promise, timeoutMs, message) {
     return Promise.race([
       promise,
@@ -217,18 +248,44 @@
   }
 
   async function hydrateSchoolProfile(client, profile) {
-    if (!profile?.school_id || !client) return profile;
-    const { data, error } = await withTimeout(client
+    if (!profile?.school_id || !client) {
+      syncSchoolContext(null);
+      return profile;
+    }
+    let { data, error } = await withTimeout(client
       .from("schools")
-      .select("id, name, licence_ends_at, is_active")
+      .select("id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, standards_label, licence_ends_at, is_active")
       .eq("id", profile.school_id)
       .maybeSingle(), 6000, "School licence check timed out");
-    if (error || !data) return profile;
+    if (error && /column|schema cache/i.test(error.message || "")) {
+      const fallback = await withTimeout(client
+        .from("schools")
+        .select("id, name, licence_ends_at, is_active")
+        .eq("id", profile.school_id)
+        .maybeSingle(), 6000, "School licence check timed out");
+      data = fallback.data;
+      error = fallback.error;
+    }
+    if (error || !data) {
+      syncSchoolContext(null);
+      return profile;
+    }
+    const schoolContext = schoolContextFromRecord(data);
+    syncSchoolContext(schoolContext);
     return {
       ...profile,
       school_name: data.name,
+      school_organisation_name: data.organisation_name,
+      school_pilot_name: data.pilot_name,
+      school_country: data.country,
+      school_currency_code: data.currency_code,
+      school_currency_symbol: data.currency_symbol,
+      school_locale: data.locale,
+      school_curriculum_focus: data.curriculum_focus,
+      school_standards_label: data.standards_label,
       school_licence_ends_at: data.licence_ends_at,
-      school_is_active: data.is_active
+      school_is_active: data.is_active,
+      school_context: schoolContext
     };
   }
 

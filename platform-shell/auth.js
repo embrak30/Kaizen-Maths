@@ -27,6 +27,38 @@
     return email.length > 24 ? email.slice(0, 21) + "..." : email;
   }
 
+  const SCHOOL_CONTEXT_KEY = "kaizen:school-context";
+
+  function schoolContextFromRecord(school) {
+    if (!school?.id) return null;
+    return {
+      school_id: school.id,
+      school_name: school.name || "",
+      organisation_name: school.organisation_name || "",
+      pilot_name: school.pilot_name || "",
+      country: school.country || "",
+      currency_code: school.currency_code || "GBP",
+      currency_symbol: school.currency_symbol || "£",
+      locale: school.locale || "en-GB",
+      curriculum_focus: school.curriculum_focus || "",
+      standards_label: school.standards_label || ""
+    };
+  }
+
+  function syncSchoolContext(context) {
+    try {
+      if (context?.school_id) {
+        localStorage.setItem(SCHOOL_CONTEXT_KEY, JSON.stringify(context));
+        window.KaizenSchoolContext = context;
+      } else {
+        localStorage.removeItem(SCHOOL_CONTEXT_KEY);
+        window.KaizenSchoolContext = null;
+      }
+    } catch (_error) {
+      window.KaizenSchoolContext = context || null;
+    }
+  }
+
   function trialEndDate() {
     const date = new Date();
     date.setDate(date.getDate() + Number(config.trialDays || 30));
@@ -43,17 +75,18 @@
     if (mode === "signed-in") {
       const role = state.profile?.role || "";
       const schoolName = state.profile?.school_name || "";
+      const pilotName = state.profile?.school_pilot_name || "";
       const schoolEnds = state.profile?.school_licence_ends_at ? new Date(state.profile.school_licence_ends_at) : null;
       const schoolActive = role === "school"
         && schoolName
         && state.profile?.school_is_active !== false
         && (!schoolEnds || Number.isNaN(schoolEnds.getTime()) || schoolEnds >= new Date());
-      eyebrow.textContent = schoolActive ? "SCHOOL ACCESS" : role ? role.toUpperCase() : "SIGNED IN";
+      eyebrow.textContent = schoolActive ? (pilotName ? "PILOT ACCESS" : "SCHOOL ACCESS") : role ? role.toUpperCase() : "SIGNED IN";
       label.textContent = schoolActive ? schoolName : displayName(user);
       action.textContent = "Sign out";
       action.disabled = false;
       action.onclick = signOut;
-      action.title = shortEmail(user);
+      action.title = schoolActive && pilotName ? `${pilotName} · ${shortEmail(user)}` : shortEmail(user);
       return;
     }
 
@@ -84,19 +117,45 @@
   }
 
   async function hydrateProfile(profile) {
-    if (!profile?.school_id || !state.client) return profile;
+    if (!profile?.school_id || !state.client) {
+      syncSchoolContext(null);
+      return profile;
+    }
     try {
-      const { data, error } = await state.client
+      let { data, error } = await state.client
         .from("schools")
-        .select("id, name, licence_ends_at, is_active")
+        .select("id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, standards_label, licence_ends_at, is_active")
         .eq("id", profile.school_id)
         .maybeSingle();
-      if (error || !data) return profile;
+      if (error && /column|schema cache/i.test(error.message || "")) {
+        const fallback = await state.client
+          .from("schools")
+          .select("id, name, licence_ends_at, is_active")
+          .eq("id", profile.school_id)
+          .maybeSingle();
+        data = fallback.data;
+        error = fallback.error;
+      }
+      if (error || !data) {
+        syncSchoolContext(null);
+        return profile;
+      }
+      const schoolContext = schoolContextFromRecord(data);
+      syncSchoolContext(schoolContext);
       return {
         ...profile,
         school_name: data.name,
+        school_organisation_name: data.organisation_name,
+        school_pilot_name: data.pilot_name,
+        school_country: data.country,
+        school_currency_code: data.currency_code,
+        school_currency_symbol: data.currency_symbol,
+        school_locale: data.locale,
+        school_curriculum_focus: data.curriculum_focus,
+        school_standards_label: data.standards_label,
         school_licence_ends_at: data.licence_ends_at,
-        school_is_active: data.is_active
+        school_is_active: data.is_active,
+        school_context: schoolContext
       };
     } catch (error) {
       console.warn("Kaizen school lookup skipped:", error.message);
@@ -210,6 +269,7 @@
       syncProfileInBackground(state.session.user);
     } else {
       state.profile = null;
+      syncSchoolContext(null);
       setAccountUi("signed-out");
     }
     return state.session;
@@ -238,6 +298,7 @@
     await state.client.auth.signOut();
     state.session = null;
     state.profile = null;
+    syncSchoolContext(null);
     setAccountUi("signed-out");
   }
 
@@ -269,6 +330,7 @@
           syncProfileInBackground(session.user);
         } else {
           state.profile = null;
+          syncSchoolContext(null);
           setAccountUi("signed-out");
         }
         window.dispatchEvent(new CustomEvent("kaizen-auth-change", { detail: { session, profile: state.profile } }));

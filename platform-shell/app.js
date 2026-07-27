@@ -2882,6 +2882,52 @@ function currentSchoolName() {
   return profile.school_name || schoolById(profile.school_id)?.name || "";
 }
 
+const schoolContextStorageKey = "kaizen:school-context";
+
+function schoolContextFromRecord(record = {}) {
+  const schoolId = record.school_id || record.id || "";
+  if (!schoolId) return null;
+  return {
+    school_id: schoolId,
+    school_name: record.school_name || record.name || "",
+    organisation_name: record.school_organisation_name || record.organisation_name || "",
+    pilot_name: record.school_pilot_name || record.pilot_name || "",
+    country: record.school_country || record.country || "",
+    currency_code: record.school_currency_code || record.currency_code || "GBP",
+    currency_symbol: record.school_currency_symbol || record.currency_symbol || "£",
+    locale: record.school_locale || record.locale || "en-GB",
+    curriculum_focus: record.school_curriculum_focus || record.curriculum_focus || "",
+    standards_label: record.school_standards_label || record.standards_label || ""
+  };
+}
+
+function storedSchoolContext() {
+  try {
+    return JSON.parse(localStorage.getItem(schoolContextStorageKey) || "null");
+  } catch (error) {
+    return null;
+  }
+}
+
+function currentSchoolContext() {
+  const profile = authState().profile || {};
+  if (profile.school_context) return profile.school_context;
+  const school = schoolById(profile.school_id);
+  return schoolContextFromRecord(profile.school_id ? { ...school, ...profile, id: profile.school_id } : storedSchoolContext());
+}
+
+function schoolContextBadges(context = currentSchoolContext()) {
+  if (!context) return [];
+  return [
+    context.pilot_name,
+    context.organisation_name,
+    context.country,
+    context.currency_code ? `${context.currency_code} ${context.currency_symbol || ""}`.trim() : "",
+    context.curriculum_focus,
+    context.standards_label
+  ].filter(Boolean);
+}
+
 function schoolTeacherEmails(schoolId) {
   return state.schoolTeacherAccess
     .filter((row) => row.school_id === schoolId)
@@ -2948,9 +2994,13 @@ function authSensitiveRouteShouldRerender() {
 
 function currentAuthAccessKey() {
   const auth = authState();
+  const schoolContext = currentSchoolContext();
   return [
     auth.session?.user?.id || "guest",
-    currentUserRole()
+    currentUserRole(),
+    schoolContext?.school_id || "",
+    schoolContext?.currency_code || "",
+    schoolContext?.curriculum_focus || ""
   ].join("|");
 }
 
@@ -3678,7 +3728,7 @@ async function loadSchools({ rerender = false } = {}) {
     const [{ data: schools, error: schoolsError }, { data: teacherAccess, error: teacherAccessError }] = await Promise.all([
       client
         .from("schools")
-        .select("id, name, licence_type, allowed_domains, seat_limit, join_code, join_code_expires_at, is_active, notes, licence_starts_at, licence_ends_at, created_at, updated_at")
+        .select("id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, standards_label, licence_type, allowed_domains, seat_limit, join_code, join_code_expires_at, is_active, notes, licence_starts_at, licence_ends_at, created_at, updated_at")
         .order("name", { ascending: true }),
       client
         .from("school_teacher_access")
@@ -3701,7 +3751,15 @@ async function saveSchool(values) {
   if (!client) throw new Error("Supabase is not available.");
   const payload = {
     name: values.name.trim(),
-    licence_type: values.licence_type.trim() || "school",
+    organisation_name: String(values.organisation_name || "").trim(),
+    pilot_name: String(values.pilot_name || "").trim(),
+    country: String(values.country || "").trim(),
+    currency_code: String(values.currency_code || "").trim().toUpperCase() || "GBP",
+    currency_symbol: String(values.currency_symbol || "").trim() || "£",
+    locale: String(values.locale || "").trim() || "en-GB",
+    curriculum_focus: String(values.curriculum_focus || "").trim(),
+    standards_label: String(values.standards_label || "").trim(),
+    licence_type: String(values.licence_type || "").trim() || "school",
     allowed_domains: normaliseDomainList(values.allowed_domains).join(", "),
     seat_limit: values.seat_limit ? Number(values.seat_limit) : null,
     join_code: values.join_code.trim().toUpperCase() || null,
@@ -9963,6 +10021,8 @@ function renderSchoolSpace() {
   const profile = authState().profile || {};
   const role = currentUserRole();
   const schoolName = currentSchoolName();
+  const schoolContext = currentSchoolContext();
+  const schoolContextItems = schoolContextBadges(schoolContext);
   const isSchoolUser = role === "school" && schoolName;
   const licenceEnds = profile.school_licence_ends_at || schoolById(profile.school_id)?.licence_ends_at || "";
 
@@ -9992,7 +10052,12 @@ function renderSchoolSpace() {
         <article class="panel school-status-card">
           <span class="eyebrow">School Licence</span>
           <h2>${escapeHtml(schoolName)}</h2>
-          <p>Your account has school access. You can use the full Kaizen Maths teaching workspace while this licence is active.</p>
+          <p>Your account has school access. You can use the full Kaizen Maths teaching workspace while this licence is active.${schoolContext?.pilot_name ? ` This account is part of ${escapeHtml(schoolContext.pilot_name)}.` : ""}</p>
+          ${schoolContextItems.length ? `
+            <div class="badge-row">
+              ${schoolContextItems.map((item) => `<span class="badge">${escapeHtml(item)}</span>`).join("")}
+            </div>
+          ` : ""}
           <div class="school-detail-grid">
             <div>
               <span>Email</span>
@@ -10005,6 +10070,18 @@ function renderSchoolSpace() {
             <div>
               <span>Licence Ends</span>
               <strong>${escapeHtml(formatDisplayDate(licenceEnds))}</strong>
+            </div>
+            <div>
+              <span>Currency</span>
+              <strong>${escapeHtml(schoolContext?.currency_code ? `${schoolContext.currency_code} ${schoolContext.currency_symbol || ""}`.trim() : "Default")}</strong>
+            </div>
+            <div>
+              <span>Curriculum</span>
+              <strong>${escapeHtml(schoolContext?.curriculum_focus || "Default")}</strong>
+            </div>
+            <div>
+              <span>Standards</span>
+              <strong>${escapeHtml(schoolContext?.standards_label || "Default")}</strong>
             </div>
           </div>
           <div class="button-row">
@@ -10032,7 +10109,7 @@ function renderSchoolSpace() {
         <span class="eyebrow">How School Access Works</span>
         <h2>Admin controlled, teacher simple</h2>
         <p>A Kaizen Maths admin creates the school licence, sets the approved domains or teacher emails, chooses the seat limit, and shares a join code with the school.</p>
-        <p>Teachers sign in with Google, enter the code once, and their account becomes part of the school licence.</p>
+        <p>Teachers sign in with Google, enter the code once, and their account becomes part of the school licence. Pilot settings such as country, currency, and curriculum focus are controlled from the admin console.</p>
       </article>
     </section>
   `;
@@ -11021,17 +11098,58 @@ function adminSchoolRowHtml(school = {}, index = 0) {
   const seatCopy = id
     ? `${currentSeats} of ${seatLimit || "unlimited"} teacher seats in use`
     : "New school licence";
+  const contextSummary = [
+    school.pilot_name,
+    school.organisation_name,
+    school.country,
+    school.currency_code,
+    school.curriculum_focus,
+    school.standards_label
+  ].filter(Boolean).join(" · ");
   return `
     <article class="admin-school-row" data-school-row data-school-id="${escapeHtml(id)}">
       <div class="admin-school-default">
         <strong>${escapeHtml(school.name || `School ${index + 1}`)}</strong>
         <small>${escapeHtml(seatCopy)}</small>
         <small>${school.is_active === false ? "Inactive" : "Active"} · Code: ${escapeHtml(school.join_code || "Not set")}</small>
+        ${contextSummary ? `<small>${escapeHtml(contextSummary)}</small>` : `<small>No pilot/localisation settings yet</small>`}
       </div>
       <div class="admin-school-fields">
         <label>
           School name
           <input data-school-field="name" type="text" value="${escapeHtml(school.name || "")}" placeholder="School or trust name">
+        </label>
+        <label>
+          Organisation / group
+          <input data-school-field="organisation_name" type="text" value="${escapeHtml(school.organisation_name || "")}" placeholder="Jamaica Ministry Pilot">
+        </label>
+        <label>
+          Pilot name
+          <input data-school-field="pilot_name" type="text" value="${escapeHtml(school.pilot_name || "")}" placeholder="Region 6 Pilot">
+        </label>
+        <label>
+          Country
+          <input data-school-field="country" type="text" value="${escapeHtml(school.country || "")}" placeholder="Jamaica">
+        </label>
+        <label>
+          Currency code
+          <input data-school-field="currency_code" type="text" value="${escapeHtml(school.currency_code || "GBP")}" placeholder="JMD">
+        </label>
+        <label>
+          Currency symbol
+          <input data-school-field="currency_symbol" type="text" value="${escapeHtml(school.currency_symbol || "£")}" placeholder="J$">
+        </label>
+        <label>
+          Locale
+          <input data-school-field="locale" type="text" value="${escapeHtml(school.locale || "en-GB")}" placeholder="en-JM">
+        </label>
+        <label>
+          Curriculum focus
+          <input data-school-field="curriculum_focus" type="text" value="${escapeHtml(school.curriculum_focus || "")}" placeholder="CSEC, CAPE, MOE Jamaica">
+        </label>
+        <label>
+          Standards label
+          <input data-school-field="standards_label" type="text" value="${escapeHtml(school.standards_label || "")}" placeholder="MOE Jamaica Mathematics Standards">
         </label>
         <label>
           Licence type
@@ -11314,7 +11432,7 @@ function renderAdmin() {
       <button class="admin-tab" type="button" data-admin-tab="launch">Launch Checklist</button>
       <button class="admin-tab" type="button" data-admin-tab="homepage">Homepage</button>
       <button class="admin-tab" type="button" data-admin-tab="booking">Booking</button>
-      <button class="admin-tab" type="button" data-admin-tab="schools">Schools</button>
+      <button class="admin-tab" type="button" data-admin-tab="schools">Schools / Pilots</button>
       <button class="admin-tab" type="button" data-admin-tab="access">Tool Access</button>
       <button class="admin-tab" type="button" data-admin-tab="metadata">Tool Tags</button>
       <button class="admin-tab" type="button" data-admin-tab="university">Kaizen University</button>
@@ -11442,9 +11560,9 @@ function renderAdmin() {
     <section class="panel admin-panel admin-tab-panel" data-admin-panel="schools">
       <div class="admin-toolbar">
         <div>
-          <span class="eyebrow">School Licences</span>
-          <h2>Schools</h2>
-          <p>Create school spaces, approve domains or teacher emails, set seat limits, and share join codes with departments.</p>
+          <span class="eyebrow">School And Pilot Access</span>
+          <h2>Schools / Pilots</h2>
+          <p>Create school spaces, approve domains or teacher emails, set seat limits, select pilot settings, and choose the currency or curriculum lens teachers should see.</p>
         </div>
         <div class="button-row">
           <button class="button" id="addSchoolRow" type="button">Add School</button>
@@ -11702,6 +11820,14 @@ function bindAdmin() {
         const schoolId = await saveSchool({
           id: row.dataset.schoolId || "",
           name,
+          organisation_name: field("organisation_name")?.value || "",
+          pilot_name: field("pilot_name")?.value || "",
+          country: field("country")?.value || "",
+          currency_code: field("currency_code")?.value || "",
+          currency_symbol: field("currency_symbol")?.value || "",
+          locale: field("locale")?.value || "",
+          curriculum_focus: field("curriculum_focus")?.value || "",
+          standards_label: field("standards_label")?.value || "",
           licence_type: field("licence_type")?.value || "school",
           allowed_domains: field("allowed_domains")?.value || "",
           seat_limit: field("seat_limit")?.value || "",

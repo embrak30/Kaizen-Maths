@@ -72,6 +72,14 @@ with check (public.is_admin());
 create table if not exists public.schools (
   id uuid primary key default gen_random_uuid(),
   name text not null,
+  organisation_name text,
+  pilot_name text,
+  country text,
+  currency_code text default 'GBP',
+  currency_symbol text default '£',
+  locale text default 'en-GB',
+  curriculum_focus text,
+  standards_label text,
   licence_type text default 'school',
   allowed_domains text,
   seat_limit integer,
@@ -85,6 +93,14 @@ create table if not exists public.schools (
   updated_at timestamptz not null default now()
 );
 
+alter table public.schools add column if not exists organisation_name text;
+alter table public.schools add column if not exists pilot_name text;
+alter table public.schools add column if not exists country text;
+alter table public.schools add column if not exists currency_code text default 'GBP';
+alter table public.schools add column if not exists currency_symbol text default '£';
+alter table public.schools add column if not exists locale text default 'en-GB';
+alter table public.schools add column if not exists curriculum_focus text;
+alter table public.schools add column if not exists standards_label text;
 alter table public.schools add column if not exists allowed_domains text;
 alter table public.schools add column if not exists seat_limit integer;
 alter table public.schools add column if not exists join_code text;
