@@ -446,9 +446,9 @@
     }
 
     .algebra-frame {
-      padding: 36px;
+      padding: 46px 38px 86px;
       align-content: center;
-      gap: 30px;
+      gap: 38px;
       justify-items: center;
     }
 
@@ -456,10 +456,10 @@
       display: flex;
       align-items: baseline;
       justify-content: center;
-      gap: 12px;
+      gap: 15px;
       flex-wrap: wrap;
       font-family: var(--math-font);
-      font-size: clamp(4rem, 10vw, 8.4rem);
+      font-size: clamp(5rem, 11vw, 9.8rem);
       font-weight: 850;
       line-height: 1;
       color: #14263a;
@@ -491,19 +491,46 @@
     .expr-label {
       position: absolute;
       left: 50%;
-      top: calc(100% + 8px);
+      top: calc(100% + 36px);
       min-width: max-content;
       transform: translate(-50%, 8px);
       opacity: 0;
-      padding: 5px 8px;
-      border-radius: 999px;
-      color: #0f4f73;
-      background: #e0fdfa;
+      padding: 7px 11px;
+      border: 2px solid rgba(249, 115, 22, 0.42);
+      border-radius: 10px;
+      color: #12314a;
+      background: rgba(255, 255, 255, 0.96);
       font-family: var(--ui-font);
-      font-size: 1.02rem;
+      font-size: 1.06rem;
       font-weight: 950;
+      box-shadow: 0 8px 20px rgba(20, 38, 58, 0.14);
       transition: opacity 0.25s ease, transform 0.25s ease;
       pointer-events: none;
+    }
+
+    .expr-label::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -35px;
+      width: 3px;
+      height: 33px;
+      border-radius: 99px;
+      background: var(--orange);
+      transform: translateX(-50%);
+    }
+
+    .expr-label::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -40px;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 10px solid var(--orange);
+      transform: translateX(-50%);
     }
 
     .expr-part.active .expr-label {
@@ -1128,12 +1155,12 @@
               ${featureLabel("Vertices", 360, 455)}
             </g>
             <g class="${cls("dimensions")}">
-              <line class="feature-line" x1="305" y1="414" x2="540" y2="414"></line>
-              <line class="feature-line" x1="565" y1="235" x2="565" y2="390"></line>
-              <line class="feature-line" x1="192" y1="135" x2="278" y2="216"></line>
-              ${label("length", 423, 448, "small-label")}
-              ${label("height", 610, 318, "small-label")}
-              ${label("width", 206, 187, "small-label")}
+              <line class="feature-line" x1="220" y1="310" x2="455" y2="310"></line>
+              <line class="feature-line" x1="455" y1="155" x2="455" y2="310"></line>
+              <line class="feature-line" x1="220" y1="155" x2="305" y2="235"></line>
+              ${label("length", 337, 348, "small-label")}
+              ${label("height", 503, 236, "small-label")}
+              ${label("width", 237, 208, "small-label")}
             </g>
             <g class="${cls("parallel-faces")}">
               <polygon class="feature-fill" points="305,235 540,235 540,390 305,390"></polygon>
