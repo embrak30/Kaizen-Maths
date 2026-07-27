@@ -201,6 +201,25 @@ const tools = [
     ]
   },
   {
+    slug: "limits-first-principles",
+    title: "Limits and First Principles",
+    category: "Algebra",
+    level: "A-Level / Further Maths",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate calculus practice for limits of functions, one-sided limits, continuity, parameter limits, and differentiation from first principles.",
+    tags: ["algebra", "calculus", "limits", "first principles", "differentiation", "continuity", "one-sided limits", "A-Level Pure", "Further Maths", "CAPE"],
+    toolPath: "tools/limits-first-principles/index.html?v=limits-first-principles-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 evaluates direct, factorised, rationalised, and quotient-law limits while keeping limit notation in place until evaluation.",
+      "Level 2 develops one-sided limits, piecewise functions, numerical table interpretation, and limits as x tends to infinity.",
+      "Level 3 uses the first-principles derivative definition, expanding f(x+h), subtracting f(x), factorising h, cancelling, and then taking the limit.",
+      "Level 4 connects limits to continuity, unknown parameters, and tangent equations found from first principles."
+    ]
+  },
+  {
     slug: "volumes-of-revolution",
     title: "Volumes of Revolution",
     category: "Algebra",
@@ -2303,6 +2322,7 @@ const algebraToolGroups = {
   "trig-differentiation-rules": "Calculus",
   "inverse-trig-differentiation": "Calculus",
   "advanced-differentiation": "Calculus",
+  "limits-first-principles": "Calculus",
   "integration": "Calculus",
   "advanced-integration": "Calculus",
   "volumes-of-revolution": "Calculus",
@@ -7931,7 +7951,8 @@ const curatedRelatedToolSlugs = {
   "trig-graphs-transformations": ["trig-equation-solver", "trigonometric-functions", "graph-transformations-curve-sketching", "sine-cosine-rule"],
   "roots-of-equations": ["numerical-methods", "complex-numbers", "functions", "graph-transformations-curve-sketching"],
   "numerical-methods": ["roots-of-equations", "integration", "advanced-integration", "differential-equations"],
-  "series-expansions": ["differentiation-polynomials", "integration", "advanced-integration", "functions"],
+  "limits-first-principles": ["differentiation-polynomials", "advanced-differentiation", "series-expansions", "numerical-methods"],
+  "series-expansions": ["limits-first-principles", "differentiation-polynomials", "integration", "advanced-integration"],
   "differential-equations": ["numerical-methods", "advanced-integration", "differentiation-rules", "trig-differentiation-rules"]
 };
 

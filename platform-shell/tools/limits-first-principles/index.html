@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Limits and First Principles</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f0f4f8;color:#1a365d;font-family:var(--text-font,"Segoe UI",Tahoma,Geneva,Verdana,sans-serif)}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#1a365d;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-420px;top:0;z-index:1000;width:420px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 20px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#1a365d;color:#fff;font-size:1.25em;font-weight:800}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #3182ce;color:#1a365d;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1260px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#1a365d;background-image:linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(0,0,0,.14)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px)}.header h1{font-size:2.08em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e2e8f0;color:#1a365d;cursor:pointer;font-size:.92em;font-weight:800}.tab.active{background:#fff;color:#3182ce;border-bottom-color:#3182ce}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #d9deef;background:#f7fafc}.level-info h3{margin-bottom:3px;color:#1a365d;font-size:1.16em}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:430px;max-width:100%;padding:8px 10px;border:2px solid #cbd5e0;border-radius:6px;background:#fff;color:#1a365d;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #cbd5e0;border-radius:6px;background:#fff;color:#1a365d;text-align:center;font-size:1.45em;font-weight:800}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{border-color:#d92d20;color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:800}.btn-primary{background:#3182ce}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{min-height:530px;padding:14px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#1a365d;color:#fff;text-align:center;font-size:1.08em;font-weight:800}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #bde4ff;border-radius:6px;background:#ebf8ff;color:#1a365d;text-align:center;font-weight:800}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:1fr;gap:9px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:8px;padding:12px;border-left:4px solid #3182ce;border-radius:7px;background:#f7fafc}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#3182ce;color:#fff;font-weight:800}
+    .question-text{font-family:var(--math-font,"KaTeX_Math","KaTeX_Main","Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.2em;font-weight:500;line-height:1.42;color:#172033;overflow-wrap:anywhere}.problem-answer{display:none;max-width:42%;padding:7px 11px;border-radius:999px;background:#2f855a;color:#fff;font-family:var(--math-font,"KaTeX_Math","KaTeX_Main","Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:.95em;font-weight:700;text-align:center}.problem-answer.visible{display:block}
+    .steps-section{display:none;margin-top:2px;padding:10px;border-left:3px solid #3182ce;border-radius:6px;background:#ebf8ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#3182ce;font-weight:800}.solution-steps{font-size:.98em;line-height:1.48}.step{margin:6px 0;color:#1a365d}.step-equation{margin:7px 0;padding:8px;border:1px solid #dbe3ff;border-radius:5px;background:#fff;color:#1a365d;text-align:center;font-family:var(--math-font,"KaTeX_Math","KaTeX_Main","Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:500;overflow-x:auto}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#2f855a;color:#fff;text-align:center;font-family:var(--math-font,"KaTeX_Math","KaTeX_Main","Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:700;overflow-x:auto}
+    .limit-table-wrap{margin-top:6px;overflow-x:auto}.limit-table{border-collapse:collapse;min-width:430px;background:#fff;font-family:var(--math-font,"KaTeX_Main","Times New Roman",serif);font-size:.92em}.limit-table th,.limit-table td{padding:6px 10px;border:1px solid #cbd5e0;text-align:center}.limit-table th{background:#e8f2ff;color:#1a365d;font-family:var(--text-font,"Segoe UI",Tahoma,Geneva,Verdana,sans-serif)}
+    .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#d92d20}.modal-content p{margin-bottom:18px;color:#667085}.hidden{display:none!important}
+    @media (max-width:760px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.problem-answer{max-width:none}.question-text{font-size:1.08em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <script src="../../auth-config.js?v=tool-access-guard-2"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-2"></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Limits and First Principles</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This calculus tool develops limits of functions and first-principles differentiation. It is designed for careful notation, explicit substitution, cancellation, rationalising, one-sided limits, and derivative definitions.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Direct limits, factorising before substitution, rationalising surd limits, and limit laws.</li>
+        <li><strong>Level 2:</strong> One-sided limits, piecewise functions, numerical tables, and limits as x tends to infinity.</li>
+        <li><strong>Level 3:</strong> Differentiation from first principles for linear, quadratic, cubic, and point-gradient cases.</li>
+        <li><strong>Level 4:</strong> Continuity, parameter limits, tangent equations from first principles, and mixed limit practice.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Keep the limit notation in place until the expression is safe to evaluate.</li>
+        <li>Do not substitute into a fraction while the denominator is zero; simplify first.</li>
+        <li>For first principles, expand f(x+h), subtract f(x), factor h, cancel h, then take the limit as h tends to zero.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Limits and First Principles</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Core Limits</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Behaviour Near a Point</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: First Principles</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Parameters and Tangents</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Core Limits</h3>
+        <p id="level-description">Evaluate limits by substitution, simplification, factorising, rationalising, and limit laws.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review the limits?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const levelConfigs = {
+      1: { title: "Level 1: Core Limits", description: "Evaluate limits by substitution, simplification, factorising, rationalising, and limit laws.", types: ["direct_substitution", "factor_cancel", "rationalise_surd", "limit_laws"] },
+      2: { title: "Level 2: Behaviour Near a Point", description: "Use one-sided limits, piecewise functions, tables, and limits at infinity.", types: ["one_sided_absolute", "piecewise_limits", "limit_from_table", "infinity_rational"] },
+      3: { title: "Level 3: First Principles", description: "Use the definition of the derivative as a limit.", types: ["first_principles_linear", "first_principles_quadratic", "first_principles_cubic", "derivative_at_point"] },
+      4: { title: "Level 4: Parameters and Tangents", description: "Use limits to handle continuity, parameters, and tangent equations.", types: ["continuity_parameter", "parameter_limit", "tangent_first_principles", "mixed_limits"] }
+    };
+
+    const typeOptions = {
+      1: [["direct_substitution", "Direct substitution limits"], ["factor_cancel", "Factorise and cancel first"], ["rationalise_surd", "Rationalise before evaluating"], ["limit_laws", "Limit laws with fractions"]],
+      2: [["one_sided_absolute", "One-sided absolute value limits"], ["piecewise_limits", "Piecewise one-sided limits"], ["limit_from_table", "Estimate a limit from a table"], ["infinity_rational", "Limits as x tends to infinity"]],
+      3: [["first_principles_linear", "Linear functions from first principles"], ["first_principles_quadratic", "Quadratics from first principles"], ["first_principles_cubic", "Cubics from first principles"], ["derivative_at_point", "Gradient at a point from first principles"]],
+      4: [["continuity_parameter", "Continuity with a parameter"], ["parameter_limit", "Find a parameter so a limit exists"], ["tangent_first_principles", "Tangent equation from first principles"], ["mixed_limits", "Mixed limit and first-principles set"]]
+    };
+
+    const typeDisplayNames = {
+      direct_substitution: "Direct substitution limits",
+      factor_cancel: "Factorise and cancel first",
+      rationalise_surd: "Rationalise before evaluating",
+      limit_laws: "Limit laws with fractions",
+      one_sided_absolute: "One-sided absolute value limits",
+      piecewise_limits: "Piecewise one-sided limits",
+      limit_from_table: "Estimate a limit from a table",
+      infinity_rational: "Limits as x tends to infinity",
+      first_principles_linear: "Linear functions from first principles",
+      first_principles_quadratic: "Quadratics from first principles",
+      first_principles_cubic: "Cubics from first principles",
+      derivative_at_point: "Gradient at a point from first principles",
+      continuity_parameter: "Continuity with a parameter",
+      parameter_limit: "Find a parameter so a limit exists",
+      tangent_first_principles: "Tangent equation from first principles",
+      mixed_limits: "Mixed limit and first-principles set"
+    };
+    window.typeDisplayNames = typeDisplayNames;
+
+    const typeInstructions = {
+      direct_substitution: "Evaluate each limit by direct substitution.",
+      factor_cancel: "Simplify each expression before taking the limit.",
+      rationalise_surd: "Rationalise the numerator before taking the limit.",
+      limit_laws: "Use limit laws to evaluate each limit.",
+      one_sided_absolute: "Evaluate each one-sided limit.",
+      piecewise_limits: "Find the one-sided limits and decide whether the two-sided limit exists.",
+      limit_from_table: "Use the table values to estimate each limit.",
+      infinity_rational: "Evaluate each limit as x tends to infinity.",
+      first_principles_linear: "Differentiate each linear function from first principles.",
+      first_principles_quadratic: "Differentiate each quadratic function from first principles.",
+      first_principles_cubic: "Differentiate each cubic function from first principles.",
+      derivative_at_point: "Find each gradient at a point using first principles.",
+      continuity_parameter: "Find the parameter value that makes each function continuous.",
+      parameter_limit: "Find the parameter so the limit exists, then evaluate the limit.",
+      tangent_first_principles: "Find each tangent equation using a gradient from first principles.",
+      mixed_limits: "Answer each mixed limits and first-principles question."
+    };
+
+    function toggleSidebar(){document.getElementById("sidebar").classList.toggle("open");document.querySelector(".sidebar-overlay").classList.toggle("active")}
+    function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.querySelector(".sidebar-overlay").classList.remove("active")}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function fracLatex(n,d){if(d<0){n=-n;d=-d}const g=gcd(n,d);n/=g;d/=g;if(d===1)return String(n);return "\\dfrac{"+n+"}{"+d+"}"}
+    function signedConst(n){if(n===0)return "";return n>0?" + "+n:" - "+Math.abs(n)}
+    function coeffVar(c,variable="x",power=1){
+      if(c===0)return "";
+      const base = power===0 ? "" : power===1 ? variable : variable+"^{"+power+"}";
+      if(power===0)return String(c);
+      if(c===1)return base;
+      if(c===-1)return "-"+base;
+      return c+base;
+    }
+    function coeffBody(c,body){
+      if(c===1)return body;
+      if(c===-1)return "-"+body;
+      return c+body;
+    }
+    function coeffTimes(c,body){
+      if(c===1)return body;
+      if(c===-1)return "-"+body;
+      return c+body;
+    }
+    function signedBody(c,body,first=false){
+      if(c===0)return "";
+      const text=coeffBody(Math.abs(c),body);
+      if(first)return c<0?"-"+text:text;
+      return c<0?" - "+text:" + "+text;
+    }
+    function signedProduct(c,body){
+      if(c===0)return "";
+      return c<0?" - "+coeffTimes(Math.abs(c),body):" + "+coeffTimes(c,body);
+    }
+    function signedTerm(c,p,first=false){
+      if(c===0)return "";
+      const body=coeffVar(Math.abs(c),"x",p);
+      if(first)return c<0?"-"+body:body;
+      return c<0?" - "+body:" + "+body;
+    }
+    function polyLatex(terms){
+      let out="";
+      terms.forEach(([c,p])=>{if(c!==0){out+=signedTerm(c,p,out==="")}});
+      return out||"0";
+    }
+    function linearLatex(a,b){return coeffVar(a,"x",1)+signedConst(b)}
+    function binomialXMinus(a){return a===0?"x":a>0?"x - "+a:"x + "+Math.abs(a)}
+    function cleanText(html){return String(html).replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim()}
+    function math(content){return "$"+content+"$"}
+    function display(content){return "$$"+content+"$$"}
+    function limitLatex(variable,target,body){return "\\lim_{"+variable+"\\to "+target+"} "+body}
+    function limitAnswer(target,value){return math("\\lim = "+value)}
+    function instructionForType(type){return typeInstructions[type]||"Answer each question."}
+    function makeProblem(type,prompt,answer,steps){
+      const instruction=instructionForType(type);
+      return {
+        prompt,
+        question: cleanText(prompt),
+        equation: prompt,
+        answer,
+        steps,
+        instruction,
+        instructionText: instruction,
+        typeLabel: typeDisplayNames[type]||"Limits"
+      };
+    }
+
+    function genDirect(type="direct_substitution"){
+      const a=random(-3,4);
+      const A=choice([2,3,4,-2,-3]);
+      const B=choice([1,2,3,-1,-2]);
+      const C=random(-8,8);
+      const f=polyLatex([[A,2],[B,1],[C,0]]);
+      const value=A*a*a+B*a+C;
+      return makeProblem(type, math(limitLatex("x",a,f)), math(value), [
+        "Polynomials are continuous, so this limit can be evaluated by substitution.",
+        display("\\begin{aligned}"+limitLatex("x",a,f)+"&="+f.replaceAll("x","("+a+")")+"\\\\&="+A+"("+a+")^2"+signedConst(B*a)+signedConst(C)+"\\\\&="+value+"\\end{aligned}"),
+        "The value approached by the function is "+math(value)+"."
+      ]);
+    }
+
+    function genFactorCancel(type="factor_cancel"){
+      const r=choice([-4,-3,-2,2,3,4,5]);
+      let s=choice([-5,-3,-1,1,2,4,6]);
+      if(s===r)s+=2;
+      const p=-(r+s);
+      const q=r*s;
+      const numerator=polyLatex([[1,2],[p,1],[q,0]]);
+      const denominator=binomialXMinus(r);
+      const factor2=binomialXMinus(s);
+      const value=r-s;
+      return makeProblem(type, math(limitLatex("x",r,"\\dfrac{"+numerator+"}{"+denominator+"}")), math(value), [
+        "Direct substitution gives a zero denominator, so factorise before evaluating.",
+        display("\\begin{aligned}"+numerator+"&=("+denominator+")("+factor2+")\\end{aligned}"),
+        display("\\begin{aligned}"+limitLatex("x",r,"\\dfrac{"+numerator+"}{"+denominator+"}")+"&="+limitLatex("x",r,"\\dfrac{("+denominator+")("+factor2+")}{"+denominator+"}")+"\\\\&="+limitLatex("x",r,"("+factor2+")")+"\\end{aligned}"),
+        "After cancelling, the simplified expression is valid for values close to "+math("x="+r)+", with "+math("x\\ne "+r)+".",
+        display("\\begin{aligned}"+limitLatex("x",r,"("+factor2+")")+"&="+r+signedConst(-s)+"\\\\&="+value+"\\end{aligned}")
+      ]);
+    }
+
+    function genRationalise(type="rationalise_surd"){
+      const a=random(2,8);
+      const root=choice([3,4,5,6,7]);
+      const c=root*root-a;
+      const radicand="x"+signedConst(c);
+      const targetRadicand=a+c;
+      const answer=fracLatex(1,2*root);
+      return makeProblem(type, math(limitLatex("x",a,"\\dfrac{\\sqrt{"+radicand+"} - "+root+"}{x - "+a+"}")), math(answer), [
+        "Substitution gives "+math("\\dfrac{0}{0}")+", so multiply by the conjugate.",
+        display("\\begin{aligned}"+limitLatex("x",a,"\\dfrac{\\sqrt{"+radicand+"} - "+root+"}{x - "+a+"}")+"&="+limitLatex("x",a,"\\dfrac{\\sqrt{"+radicand+"} - "+root+"}{x - "+a+"}\\cdot\\dfrac{\\sqrt{"+radicand+"} + "+root+"}{\\sqrt{"+radicand+"} + "+root+"}")+"\\end{aligned}"),
+        display("\\begin{aligned}&"+limitLatex("x",a,"\\dfrac{("+radicand+") - "+root+"^2}{(x - "+a+")(\\sqrt{"+radicand+"} + "+root+")}")+"\\\\&="+limitLatex("x",a,"\\dfrac{x"+signedConst(c)+" - "+(root*root)+"}{(x - "+a+")(\\sqrt{"+radicand+"} + "+root+")}")+"\\end{aligned}"),
+        display("\\begin{aligned}&"+limitLatex("x",a,"\\dfrac{x - "+a+"}{(x - "+a+")(\\sqrt{"+radicand+"} + "+root+")}")+"\\\\&="+limitLatex("x",a,"\\dfrac{1}{\\sqrt{"+radicand+"} + "+root+"}")+"\\end{aligned}"),
+        display("\\begin{aligned}\\lim&=\\dfrac{1}{\\sqrt{"+targetRadicand+"} + "+root+"}\\\\&=\\dfrac{1}{"+root+" + "+root+"}\\\\&="+answer+"\\end{aligned}")
+      ]);
+    }
+
+    function genLimitLaws(type="limit_laws"){
+      const a=random(-3,4);
+      const m=choice([2,3,4,-2]);
+      const b=random(-6,6);
+      const n=choice([2,3,5,-2]);
+      let d=random(-5,6);
+      while(n*a+d===0)d+=1;
+      const top=linearLatex(m,b);
+      const bottom=linearLatex(n,d);
+      const topVal=m*a+b;
+      const bottomVal=n*a+d;
+      const ans=fracLatex(topVal,bottomVal);
+      return makeProblem(type, math(limitLatex("x",a,"\\dfrac{"+top+"}{"+bottom+"}")), math(ans), [
+        "The denominator does not approach zero, so the quotient law can be used.",
+        display("\\begin{aligned}"+limitLatex("x",a,"\\dfrac{"+top+"}{"+bottom+"}")+"&=\\dfrac{\\lim_{x\\to "+a+"}("+top+")}{\\lim_{x\\to "+a+"}("+bottom+")}\\\\&=\\dfrac{"+top.replaceAll("x","("+a+")")+"}{"+bottom.replaceAll("x","("+a+")")+"}\\\\&=\\dfrac{"+topVal+"}{"+bottomVal+"}\\\\&="+ans+"\\end{aligned}")
+      ]);
+    }
+
+    function genOneSidedAbsolute(type="one_sided_absolute"){
+      const a=random(-4,4);
+      const side=choice(["+","-"]);
+      const ans=side==="+"?1:-1;
+      const signText=side==="+"?"right":"left";
+      const diff=binomialXMinus(a);
+      const condition=side==="+"?diff+">0":diff+"<0";
+      const absForm=side==="+"?diff:"-("+diff+")";
+      return makeProblem(type, math("\\lim_{x\\to "+a+"^{"+side+"}} \\dfrac{|"+diff+"|}{"+diff+"}"), math(ans), [
+        "This is a one-sided limit, so use the sign of "+math(diff)+" on the "+signText+" of "+math(a)+".",
+        "As "+math("x\\to "+a+"^{"+side+"}")+", "+math(condition)+".",
+        display("\\begin{aligned}|"+diff+"|&="+absForm+"\\\\\\dfrac{|"+diff+"|}{"+diff+"}&=\\dfrac{"+absForm+"}{"+diff+"}\\\\&="+ans+"\\end{aligned}"),
+        display("\\lim_{x\\to "+a+"^{"+side+"}} \\dfrac{|"+diff+"|}{"+diff+"}="+ans)
+      ]);
+    }
+
+    function genPiecewise(type="piecewise_limits"){
+      const a=random(-2,4);
+      const m1=choice([1,2,3,-1,-2]);
+      const b1=random(-5,5);
+      const left=m1*a+b1;
+      const jump=choice([0,-4,-2,2,3,5]);
+      const right=left+jump;
+      const m2=choice([1,2,-1,-2,3]);
+      const b2=right-m2*a;
+      const leftRule=linearLatex(m1,b1);
+      const rightRule=linearLatex(m2,b2);
+      const exists=left===right;
+      return makeProblem(type, "For "+math("f(x)=\\begin{cases}"+leftRule+",&x<"+a+"\\\\"+rightRule+",&x>"+a+"\\end{cases}")+" find the one-sided limits at "+math("x="+a)+" and decide whether "+math("\\lim_{x\\to "+a+"}f(x)")+" exists.", exists?math(left):"Does not exist", [
+        "Use the rule that applies on the left of "+math(a)+".",
+        display("\\begin{aligned}\\lim_{x\\to "+a+"^-}f(x)&=\\lim_{x\\to "+a+"^-}("+leftRule+")\\\\&="+leftRule.replaceAll("x","("+a+")")+"\\\\&="+left+"\\end{aligned}"),
+        "Use the rule that applies on the right of "+math(a)+".",
+        display("\\begin{aligned}\\lim_{x\\to "+a+"^+}f(x)&=\\lim_{x\\to "+a+"^+}("+rightRule+")\\\\&="+rightRule.replaceAll("x","("+a+")")+"\\\\&="+right+"\\end{aligned}"),
+        left===right ? "The left-hand and right-hand limits are equal, so the two-sided limit exists." : "The left-hand and right-hand limits are different, so the two-sided limit does not exist.",
+        left===right ? display("\\lim_{x\\to "+a+"}f(x)="+left) : display("\\lim_{x\\to "+a+"}f(x)\\text{ does not exist}")
+      ]);
+    }
+
+    function genLimitFromTable(type="limit_from_table"){
+      const a=random(2,8);
+      const xs=[a-0.1,a-0.01,a-0.001,a+0.001,a+0.01,a+0.1];
+      const vals=xs.map(x=>(x+a).toFixed(3));
+      const table='<div class="limit-table-wrap"><table class="limit-table"><tr><th>x</th>'+xs.map(x=>'<td>'+x.toFixed(3)+'</td>').join("")+'</tr><tr><th>f(x)</th>'+vals.map(v=>'<td>'+v+'</td>').join("")+'</tr></table></div>';
+      const prompt="The table shows values of "+math("f(x)=\\dfrac{x^2-"+(a*a)+"}{x-"+a+"}")+" near "+math("x="+a)+". Estimate "+math("\\lim_{x\\to "+a+"}f(x)")+"."+table;
+      return makeProblem(type,prompt,math(2*a),[
+        "The values of "+math("x")+" approach "+math(a)+" from both sides.",
+        "The corresponding values of "+math("f(x)")+" approach "+math(2*a)+".",
+        "Algebra confirms the table pattern.",
+        display("\\begin{aligned}\\lim_{x\\to "+a+"}\\dfrac{x^2-"+(a*a)+"}{x-"+a+"}&=\\lim_{x\\to "+a+"}\\dfrac{(x-"+a+")(x+"+a+")}{x-"+a+"}\\\\&=\\lim_{x\\to "+a+"}(x+"+a+")\\\\&="+(2*a)+"\\end{aligned}")
+      ]);
+    }
+
+    function genInfinityRational(type="infinity_rational"){
+      const a=choice([2,3,4,5,-2]);
+      const b=random(-6,6);
+      const c=random(-8,8);
+      const d=choice([2,3,5,-3]);
+      const e=random(-5,5);
+      const f=random(-7,7);
+      const top=polyLatex([[a,2],[b,1],[c,0]]);
+      const bottom=polyLatex([[d,2],[e,1],[f,0]]);
+      const ans=fracLatex(a,d);
+      return makeProblem(type, math("\\lim_{x\\to\\infty}\\dfrac{"+top+"}{"+bottom+"}"), math(ans), [
+        "The highest power in the numerator and denominator is "+math("x^2")+", so divide every term by "+math("x^2")+".",
+        display("\\begin{aligned}\\lim_{x\\to\\infty}\\dfrac{"+top+"}{"+bottom+"}&=\\lim_{x\\to\\infty}\\dfrac{"+a+" + \\dfrac{"+b+"}{x} + \\dfrac{"+c+"}{x^2}}{"+d+" + \\dfrac{"+e+"}{x} + \\dfrac{"+f+"}{x^2}}\\end{aligned}"),
+        "As "+math("x\\to\\infty")+", the terms "+math("\\dfrac{1}{x}")+" and "+math("\\dfrac{1}{x^2}")+" tend to zero.",
+        display("\\begin{aligned}\\lim&=\\dfrac{"+a+"+0+0}{"+d+"+0+0}\\\\&="+ans+"\\end{aligned}")
+      ]);
+    }
+
+    function genFirstLinear(type="first_principles_linear"){
+      const m=choice([-5,-3,2,4,6]);
+      const c=random(-7,7);
+      const f=linearLatex(m,c);
+      return makeProblem(type, "Use first principles to differentiate "+math("f(x)="+f)+".", math("f'(x)="+m), [
+        "Start with the first-principles definition.",
+        display("f'(x)=\\lim_{h\\to 0}\\dfrac{f(x+h)-f(x)}{h}"),
+        display("\\begin{aligned}f(x+h)&="+m+"(x+h)"+signedConst(c)+"\\\\&="+m+"x"+signedConst(m)+"h"+signedConst(c)+"\\end{aligned}"),
+        display("\\begin{aligned}f(x+h)-f(x)&=("+m+"x"+signedConst(m)+"h"+signedConst(c)+")-("+f+")\\\\&="+m+"h\\end{aligned}"),
+        display("\\begin{aligned}f'(x)&=\\lim_{h\\to 0}\\dfrac{"+m+"h}{h}\\\\&=\\lim_{h\\to 0}"+m+"\\\\&="+m+"\\end{aligned}")
+      ]);
+    }
+
+    function genFirstQuadratic(type="first_principles_quadratic"){
+      const a=choice([1,2,3,-1,-2]);
+      const b=choice([-5,-3,2,4]);
+      const c=random(-6,6);
+      const f=polyLatex([[a,2],[b,1],[c,0]]);
+      const deriv=polyLatex([[2*a,1],[b,0]]);
+      const expanded=f+signedBody(2*a,"xh")+signedBody(a,"h^2")+signedBody(b,"h");
+      const change=signedBody(2*a,"xh",true)+signedBody(a,"h^2")+signedBody(b,"h");
+      const factor=coeffVar(2*a,"x",1)+signedBody(a,"h")+signedConst(b);
+      return makeProblem(type, "Use first principles to differentiate "+math("f(x)="+f)+".", math("f'(x)="+deriv), [
+        "Start with the first-principles definition.",
+        display("f'(x)=\\lim_{h\\to 0}\\dfrac{f(x+h)-f(x)}{h}"),
+        display("\\begin{aligned}f(x+h)&="+coeffTimes(a,"(x+h)^2")+signedConst(b)+"(x+h)"+signedConst(c)+"\\\\&="+coeffTimes(a,"(x^2+2xh+h^2)")+signedConst(b)+"x"+signedBody(b,"h")+signedConst(c)+"\\\\&="+expanded+"\\end{aligned}"),
+        display("\\begin{aligned}f(x+h)-f(x)&=("+expanded+")-("+f+")\\\\&="+change+"\\\\&=h("+factor+")\\end{aligned}"),
+        display("\\begin{aligned}f'(x)&=\\lim_{h\\to 0}\\dfrac{h("+factor+")}{h}\\\\&=\\lim_{h\\to 0}("+factor+")\\\\&="+deriv+"\\end{aligned}")
+      ]);
+    }
+
+    function genFirstCubic(type="first_principles_cubic"){
+      const a=choice([1,2,-1]);
+      const b=choice([-4,-2,2,5]);
+      const c=random(-5,5);
+      const f=polyLatex([[a,3],[b,1],[c,0]]);
+      const deriv=polyLatex([[3*a,2],[b,0]]);
+      const expanded=f+signedBody(3*a,"x^{2}h")+signedBody(3*a,"xh^{2}")+signedBody(a,"h^{3}")+signedBody(b,"h");
+      const change=signedBody(3*a,"x^{2}h",true)+signedBody(3*a,"xh^{2}")+signedBody(a,"h^{3}")+signedBody(b,"h");
+      const factor=signedBody(3*a,"x^{2}",true)+signedBody(3*a,"xh")+signedBody(a,"h^{2}")+signedConst(b);
+      return makeProblem(type, "Use first principles to differentiate "+math("f(x)="+f)+".", math("f'(x)="+deriv), [
+        "Start with the first-principles definition.",
+        display("f'(x)=\\lim_{h\\to 0}\\dfrac{f(x+h)-f(x)}{h}"),
+        "Use the expansion "+math("(x+h)^3=x^3+3x^2h+3xh^2+h^3")+".",
+        display("\\begin{aligned}f(x+h)&="+coeffTimes(a,"(x+h)^3")+signedConst(b)+"(x+h)"+signedConst(c)+"\\\\&="+expanded+"\\end{aligned}"),
+        display("\\begin{aligned}f(x+h)-f(x)&=("+expanded+")-("+f+")\\\\&="+change+"\\\\&=h("+factor+")\\end{aligned}"),
+        display("\\begin{aligned}f'(x)&=\\lim_{h\\to 0}\\dfrac{h("+factor+")}{h}\\\\&=\\lim_{h\\to 0}("+factor+")\\\\&="+deriv+"\\end{aligned}")
+      ]);
+    }
+
+    function genDerivativeAtPoint(type="derivative_at_point"){
+      const a=choice([1,2,3,-1]);
+      const p=random(-3,4);
+      const c=random(-5,5);
+      const f=polyLatex([[a,2],[c,0]]);
+      const fp=a*p*p+c;
+      const grad=2*a*p;
+      return makeProblem(type, "Use first principles to find the gradient of "+math("f(x)="+f)+" at "+math("x="+p)+".", math(grad), [
+        "Use the point form of the first-principles definition.",
+        display("f'("+p+")=\\lim_{h\\to 0}\\dfrac{f("+p+"+h)-f("+p+")}{h}"),
+        display("\\begin{aligned}f("+p+"+h)&="+coeffTimes(a,"("+p+"+h)^2")+signedConst(c)+"\\\\&="+coeffTimes(a,"("+p*p+signedConst(2*p)+"h+h^2)")+signedConst(c)+"\\\\&="+fp+signedConst(2*a*p)+"h"+signedConst(a)+"h^2\\end{aligned}"),
+        display("f("+p+")="+fp),
+        display("\\begin{aligned}f'("+p+")&=\\lim_{h\\to 0}\\dfrac{("+fp+signedConst(2*a*p)+"h"+signedConst(a)+"h^2)-"+fp+"}{h}\\\\&=\\lim_{h\\to 0}\\dfrac{h("+grad+signedConst(a)+"h)}{h}\\\\&=\\lim_{h\\to 0}("+grad+signedConst(a)+"h)\\\\&="+grad+"\\end{aligned}")
+      ]);
+    }
+
+    function genContinuity(type="continuity_parameter"){
+      const a=random(-2,4);
+      const m1=choice([1,2,3,-1]);
+      const b1=random(-4,5);
+      const L=m1*a+b1;
+      const m2=choice([2,-2,3,-1]);
+      const b2=L-m2*a;
+      const left=linearLatex(m1,b1);
+      const right=linearLatex(m2,b2);
+      return makeProblem(type, "Find "+math("k")+" so that "+math("f(x)=\\begin{cases}"+left+",&x<"+a+"\\\\k,&x="+a+"\\\\"+right+",&x>"+a+"\\end{cases}")+" is continuous at "+math("x="+a)+".", math("k="+L), [
+        "For continuity, the left-hand limit, right-hand limit, and function value must all be equal.",
+        display("\\begin{aligned}\\lim_{x\\to "+a+"^-}f(x)&="+left.replaceAll("x","("+a+")")+"\\\\&="+L+"\\end{aligned}"),
+        display("\\begin{aligned}\\lim_{x\\to "+a+"^+}f(x)&="+right.replaceAll("x","("+a+")")+"\\\\&="+L+"\\end{aligned}"),
+        "The two one-sided limits are equal, so "+math("\\lim_{x\\to "+a+"}f(x)="+L)+".",
+        "Set the function value equal to the limit: "+math("k="+L)+"."
+      ]);
+    }
+
+    function genParameterLimit(type="parameter_limit"){
+      const r=choice([-3,-2,2,3,4]);
+      let s=choice([-4,-1,1,2,5]);
+      if(s===r)s+=1;
+      const p=-(r+s);
+      const k=r*s;
+      const numerator=polyLatex([[1,2],[p,1]])+" + k";
+      const actualNumerator=polyLatex([[1,2],[p,1],[k,0]]);
+      const denom=binomialXMinus(r);
+      const limitValue=r-s;
+      return makeProblem(type, "Find "+math("k")+" so that "+math("\\lim_{x\\to "+r+"}\\dfrac{"+numerator+"}{"+denom+"}")+" exists, then evaluate the limit.", math("k="+k+",\\ \\lim="+limitValue), [
+        "For a finite limit, the numerator must also be zero when "+math("x="+r)+", because the denominator is zero there.",
+        display("\\begin{aligned}"+r+"^2"+signedProduct(p,"("+r+")")+" + k&=0\\\\"+(r*r+p*r)+"+k&=0\\\\k&="+k+"\\end{aligned}"),
+        "Substitute "+math("k="+k)+" and factorise the numerator.",
+        display(actualNumerator+"=("+denom+")("+binomialXMinus(s)+")"),
+        display("\\begin{aligned}\\lim_{x\\to "+r+"}\\dfrac{("+denom+")("+binomialXMinus(s)+")}{"+denom+"}&=\\lim_{x\\to "+r+"}("+binomialXMinus(s)+")\\\\&="+r+signedConst(-s)+"\\\\&="+limitValue+"\\end{aligned}")
+      ]);
+    }
+
+    function genTangentFirstPrinciples(type="tangent_first_principles"){
+      const a=choice([1,2,3,-1]);
+      const p=random(-3,4);
+      const c=random(-5,5);
+      const f=polyLatex([[a,2],[c,0]]);
+      const y0=a*p*p+c;
+      const m=2*a*p;
+      const intercept=y0-m*p;
+      const line=coeffVar(m,"x",1)+signedConst(intercept);
+      return makeProblem(type, "Use first principles to find the equation of the tangent to "+math("y="+f)+" at "+math("x="+p)+".", math("y="+line), [
+        "First find the gradient from first principles.",
+        display("f'("+p+")=\\lim_{h\\to 0}\\dfrac{f("+p+"+h)-f("+p+")}{h}"),
+        display("\\begin{aligned}f("+p+"+h)&="+coeffTimes(a,"("+p+"+h)^2")+signedConst(c)+"\\\\&="+y0+signedConst(2*a*p)+"h"+signedConst(a)+"h^2\\end{aligned}"),
+        display("\\begin{aligned}f'("+p+")&=\\lim_{h\\to 0}\\dfrac{("+y0+signedConst(2*a*p)+"h"+signedConst(a)+"h^2)-"+y0+"}{h}\\\\&=\\lim_{h\\to 0}("+m+signedConst(a)+"h)\\\\&="+m+"\\end{aligned}"),
+        "Find the point on the curve: "+math("f("+p+")="+y0)+", so the point is "+math("("+p+","+y0+")")+".",
+        "Use point-gradient form.",
+        display("\\begin{aligned}y-"+y0+"&="+m+"(x-"+p+")\\\\y&="+line+"\\end{aligned}")
+      ]);
+    }
+
+    function generateProblem(){
+      const map={
+        direct_substitution: genDirect,
+        factor_cancel: genFactorCancel,
+        rationalise_surd: genRationalise,
+        limit_laws: genLimitLaws,
+        one_sided_absolute: genOneSidedAbsolute,
+        piecewise_limits: genPiecewise,
+        limit_from_table: genLimitFromTable,
+        infinity_rational: genInfinityRational,
+        first_principles_linear: genFirstLinear,
+        first_principles_quadratic: genFirstQuadratic,
+        first_principles_cubic: genFirstCubic,
+        derivative_at_point: genDerivativeAtPoint,
+        continuity_parameter: genContinuity,
+        parameter_limit: genParameterLimit,
+        tangent_first_principles: genTangentFirstPrinciples,
+        mixed_limits: () => choice([genDirect,genFactorCancel,genRationalise,genOneSidedAbsolute,genPiecewise,genFirstQuadratic,genDerivativeAtPoint,genParameterLimit,genTangentFirstPrinciples])("mixed_limits")
+      };
+      return (map[currentType]||genDirect)();
+    }
+
+    function populateDropdown(){
+      const dropdown=document.getElementById("type-dropdown");
+      dropdown.innerHTML='<option value="select">Select Question Type</option>'+typeOptions[currentLevel].map(([value,label])=>'<option value="'+value+'">'+label+'</option>').join("");
+      dropdown.value=currentType;
+    }
+    function switchLevel(level){
+      currentLevel=level;
+      currentType="select";
+      document.querySelectorAll(".tab").forEach((tab,index)=>tab.classList.toggle("active",index+1===level));
+      const config=levelConfigs[level];
+      document.getElementById("level-title").textContent=config.title;
+      document.getElementById("level-description").textContent=config.description;
+      populateDropdown();
+      setInstructionForType();
+      showBlankPage();
+    }
+    function setInstructionForType(){
+      const instruction=document.getElementById("set-instruction");
+      instruction.textContent=currentType==="select"?"":instructionForType(currentType);
+      instruction.classList.toggle("visible",currentType!=="select");
+    }
+    function typeChanged(){
+      currentType=document.getElementById("type-dropdown").value;
+      setInstructionForType();
+      currentType==="select"?showBlankPage():generateNewSet();
+    }
+    function showBlankPage(){
+      document.getElementById("problem-set-header").className="problem-set-header";
+      document.getElementById("problem-list").innerHTML='<li style="text-align:center;padding:42px;color:#718096;font-size:1.05em">Please select a question type to begin.</li>';
+    }
+    function renderMath(){
+      if(typeof renderMathInElement!=="function")return;
+      renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});
+    }
+    function generateNewSet(){
+      if(currentType==="select"){showBlankPage();return}
+      problems=[];answersVisible=false;stepsVisible=false;
+      const seen=new Set();
+      let attempts=0;
+      const count=currentType==="limit_from_table"?3:5;
+      while(problems.length<count&&attempts<100){
+        attempts++;
+        const p=generateProblem();
+        const key=p.prompt+"|"+p.answer;
+        if(seen.has(key))continue;
+        seen.add(key);
+        problems.push(p);
+      }
+      renderProblems();
+    }
+    function renderProblems(){
+      const list=document.getElementById("problem-list");
+      const header=document.getElementById("problem-set-header");
+      list.innerHTML="";
+      header.textContent=typeDisplayNames[currentType]||"Limits";
+      header.className="problem-set-header visible";
+      problems.forEach((p,index)=>{
+        const li=document.createElement("li");
+        li.className="problem-item";
+        const steps=p.steps.map(step=>{
+          const isMathStep=step.includes("\\lim")||step.includes("\\dfrac")||step.includes("\\begin")||step.includes("=")||step.includes("f(")||step.includes("f'")||step.includes("cases");
+          const cls=isMathStep?"step-equation":"step";
+          return '<div class="'+cls+'">'+step+'</div>';
+        }).join("");
+        li.innerHTML='<div class="problem-header"><div class="problem-left"><div class="problem-number">'+(index+1)+'</div><div class="question-text">'+p.prompt+'</div></div><div class="problem-answer" id="quick-answer-'+index+'">'+p.answer+'</div></div><div class="steps-section" id="steps-'+index+'"><div class="answer-label">Worked solution:</div><div class="solution-steps">'+steps+'<div class="final-answer">'+p.answer+'</div></div></div>';
+        list.appendChild(li);
+      });
+      renderMath();
+    }
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById("quick-answer-"+i)?.classList.toggle("visible",answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById("steps-"+i)?.classList.toggle("visible",stepsVisible));renderMath()}
+    function formatTime(seconds){return Math.floor(seconds/60)+":"+String(seconds%60).padStart(2,"0")}
+    function startTimer(minutes){
+      stopTimer();
+      timeRemaining=minutes*60;
+      const displayEl=document.getElementById("timer-display");
+      displayEl.className="timer-display active";
+      displayEl.textContent=formatTime(timeRemaining);
+      timerInterval=setInterval(()=>{
+        timeRemaining--;
+        displayEl.textContent=formatTime(Math.max(0,timeRemaining));
+        if(timeRemaining<=30)displayEl.className="timer-display warning";
+        if(timeRemaining<=0){stopTimer();displayEl.textContent="Time Up";displayEl.className="timer-display warning";document.getElementById("timer-modal").classList.remove("hidden")}
+      },1000);
+    }
+    function stopTimer(){
+      if(timerInterval)clearInterval(timerInterval);
+      timerInterval=null;
+      const displayEl=document.getElementById("timer-display");
+      if(displayEl){displayEl.textContent="Ready";displayEl.className="timer-display"}
+    }
+    function closeModal(){document.getElementById("timer-modal").classList.add("hidden")}
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-24"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-3"></script>
+</body>
+</html>
