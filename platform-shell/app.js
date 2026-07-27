@@ -10044,14 +10044,14 @@ function renderSchoolSpace() {
     app.innerHTML = `
       ${pageHeader(
         "School Space",
-        "Use this page to connect your teacher account to a school licence or pilot.",
+        "Sign in first, then connect your teacher account to a school licence or pilot.",
         `<a class="button primary" href="#/book-demo">Book a Demo Session</a><a class="button" href="#/schools">School Licence Notes</a>`
       )}
       <section class="school-space-page school-space-intro">
         <article class="panel school-join-card">
           <span class="eyebrow">School Code Required</span>
           <h2>Sign in first, then enter your school code</h2>
-          <p>School Space is the account-linking area for teachers whose school or pilot group already has a Kaizen Maths access code.</p>
+          <p>Teachers must sign in with Google before a school code can be used. This lets Kaizen Maths attach the school licence to the correct teacher profile.</p>
           <div class="school-code-preview" aria-hidden="true">SCHOOL-CODE</div>
           <p class="school-join-status">After signing in, this page will show the code box where you can join your school space.</p>
         </article>
@@ -10062,7 +10062,7 @@ function renderSchoolSpace() {
           <a class="button" href="#/schools">Read School Access Notes</a>
         </article>
       </section>
-      ${signInCallout("Sign in to enter a school code")}
+      ${signInCallout("Sign in first to enter a school code")}
     `;
     bindAuthActions();
     return;
@@ -10733,7 +10733,7 @@ function renderSchools() {
     ${pageHeader(
       "School Access",
       "School licences give maths departments shared access to Kaizen Maths as a virtual mathematics textbook: unlimited topic questions, board-ready generators, worked solutions, worksheets, and assessment practice for classroom use.",
-      `<a class="button primary" href="#/book-demo">Book School Demo</a><a class="button" href="#/school-space">Join School Licence</a><a class="button" href="#/upgrade">Back to Upgrade</a>`
+      `<a class="button primary" href="#/book-demo">Book School Demo</a><a class="button" href="#/school-space">Sign In to Join School Licence</a><a class="button" href="#/upgrade">Back to Upgrade</a>`
     )}
     <section class="upgrade-page">
       <article class="panel trial-notice">
