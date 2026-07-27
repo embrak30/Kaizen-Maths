@@ -2885,6 +2885,7 @@ function currentSchoolName() {
 const schoolContextStorageKey = "kaizen:school-context";
 
 function schoolContextFromRecord(record = {}) {
+  if (!record || typeof record !== "object") return null;
   const schoolId = record.school_id || record.id || "";
   if (!schoolId) return null;
   return {
@@ -2913,7 +2914,9 @@ function currentSchoolContext() {
   const profile = authState().profile || {};
   if (profile.school_context) return profile.school_context;
   const school = schoolById(profile.school_id);
-  return schoolContextFromRecord(profile.school_id ? { ...school, ...profile, id: profile.school_id } : storedSchoolContext());
+  return profile.school_id
+    ? schoolContextFromRecord({ ...(school || {}), ...profile, id: profile.school_id })
+    : schoolContextFromRecord(storedSchoolContext());
 }
 
 function schoolContextBadges(context = currentSchoolContext()) {
