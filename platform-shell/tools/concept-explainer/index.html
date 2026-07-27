@@ -694,7 +694,7 @@
         title: "Kite",
         subtitle: "Two pairs of adjacent equal sides and one diagonal that bisects the other.",
         type: "quadrilateral",
-        points: [[360, 70], [525, 250], [360, 420], [240, 250]],
+        points: [[360, 70], [525, 245], [360, 420], [195, 245]],
         labels: ["A", "B", "C", "D"],
         props: [
           { id: "adjacent-equal", title: "Adjacent sides are equal in pairs", detail: "Two pairs of neighbouring sides have matching lengths." },
@@ -1059,33 +1059,33 @@
               ${featureLabel("Centre", 360, 304)}
             </g>
             <g class="${cls("radius")}">
-              <line class="feature-line" x1="360" y1="245" x2="505" y2="166"></line>
-              ${featureLabel("Radius", 452, 187)}
+              <line class="feature-line" x1="360" y1="245" x2="525" y2="245"></line>
+              ${featureLabel("Radius", 455, 226)}
             </g>
             <g class="${cls("diameter")}">
-              <line class="feature-line" x1="205" y1="245" x2="525" y2="245"></line>
+              <line class="feature-line" x1="195" y1="245" x2="525" y2="245"></line>
               ${featureLabel("Diameter", 360, 226)}
             </g>
             <g class="${cls("chord")}">
-              <line class="feature-line" x1="245" y1="133" x2="518" y2="294"></line>
-              ${featureLabel("Chord", 430, 145)}
+              <line class="feature-line" x1="360" y1="80" x2="525" y2="245"></line>
+              ${featureLabel("Chord", 455, 145)}
             </g>
             <g class="${cls("tangent")}">
-              <line class="feature-line" x1="537" y1="86" x2="620" y2="233"></line>
-              <circle class="feature-fill" cx="505" cy="166" r="7"></circle>
-              ${featureLabel("Tangent", 598, 142)}
+              <line class="feature-line" x1="525" y1="88" x2="525" y2="402"></line>
+              <circle class="feature-fill" cx="525" cy="245" r="7"></circle>
+              ${featureLabel("Tangent", 596, 252)}
             </g>
             <g class="${cls("arc")}">
-              <path class="feature-line" d="M 245 133 A 165 165 0 0 1 505 166"></path>
-              ${featureLabel("Arc", 365, 93)}
+              <path class="feature-line" d="M 360 80 A 165 165 0 0 1 525 245"></path>
+              ${featureLabel("Arc", 458, 102)}
             </g>
             <g class="${cls("sector")}">
-              <path class="feature-fill" d="M 360 245 L 505 166 A 165 165 0 0 1 432 95 Z"></path>
-              ${featureLabel("Sector", 462, 236)}
+              <path class="feature-fill" d="M 360 245 L 360 80 A 165 165 0 0 1 525 245 Z"></path>
+              ${featureLabel("Sector", 442, 202)}
             </g>
             <g class="${cls("segment")}">
-              <path class="feature-fill" d="M 245 133 A 165 165 0 0 1 518 294 L 245 133 Z"></path>
-              ${featureLabel("Segment", 355, 132)}
+              <path class="feature-fill" d="M 360 80 A 165 165 0 0 1 525 245 L 360 80 Z"></path>
+              ${featureLabel("Segment", 474, 134)}
             </g>
             <g class="${cls("circumference")}">
               <circle class="feature-line" cx="360" cy="245" r="165"></circle>
@@ -1120,6 +1120,8 @@
               <circle class="feature-fill" cx="220" cy="155" r="9"></circle>
               <circle class="feature-fill" cx="455" cy="155" r="9"></circle>
               <circle class="feature-fill" cx="540" cy="235" r="9"></circle>
+              <circle class="feature-fill" cx="305" cy="235" r="9"></circle>
+              <circle class="feature-fill" cx="455" cy="310" r="9"></circle>
               <circle class="feature-fill" cx="540" cy="390" r="9"></circle>
               <circle class="feature-fill" cx="305" cy="390" r="9"></circle>
               <circle class="feature-fill" cx="220" cy="310" r="9"></circle>
