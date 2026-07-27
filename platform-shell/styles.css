@@ -3164,6 +3164,12 @@ body[data-route="worksheet-generator"] .account-action {
   letter-spacing: 0.04em;
 }
 
+.school-code-field input:disabled {
+  background: #f3f6fa;
+  color: #8a94a6;
+  cursor: not-allowed;
+}
+
 .school-code-preview {
   width: min(100%, 360px);
   border: 1px dashed #91d9d0;

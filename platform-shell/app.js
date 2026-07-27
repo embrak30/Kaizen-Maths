@@ -10049,11 +10049,18 @@ function renderSchoolSpace() {
       )}
       <section class="school-space-page school-space-intro">
         <article class="panel school-join-card">
-          <span class="eyebrow">School Code Required</span>
-          <h2>Sign in first, then enter your school code</h2>
+          <span class="eyebrow">Join Your School</span>
+          <h2>Enter your school access code</h2>
           <p>Teachers must sign in with Google before a school code can be used. This lets Kaizen Maths attach the school licence to the correct teacher profile.</p>
-          <div class="school-code-preview" aria-hidden="true">SCHOOL-CODE</div>
-          <p class="school-join-status">After signing in, this page will show the code box where you can join your school space.</p>
+          <label class="school-code-field">
+            School code
+            <input type="text" autocomplete="off" spellcheck="false" placeholder="Sign in first" disabled>
+          </label>
+          <div class="button-row">
+            <button class="button primary" type="button" data-auth-action="signin">Sign in with Google to enter code</button>
+            <a class="button" href="#/schools">Read School Access Notes</a>
+          </div>
+          <p class="school-join-status">After signing in, this same page will unlock the code box for school or pilot access.</p>
         </article>
         <article class="panel school-help-card">
           <span class="eyebrow">Different From School Access</span>
@@ -10062,7 +10069,6 @@ function renderSchoolSpace() {
           <a class="button" href="#/schools">Read School Access Notes</a>
         </article>
       </section>
-      ${signInCallout("Sign in first to enter a school code")}
     `;
     bindAuthActions();
     return;
