@@ -1447,13 +1447,14 @@
       `).join("");
       const answers = isArrayPractice ? "" : items.map((item, index) => `<li>${index + 1}. ${item.answer.replace(/class="math-text"/g, "")}</li>`).join("");
       const questionPages = isArrayPractice ? `<section class="array-question-sheet">${rows}</section>` : rows;
+      const responseGridCells = isArrayPractice ? Array.from({ length: 24 * 30 }, () => "<span></span>").join("") : "";
       const responseGrid = isArrayPractice ? `
         <section class="response-grid-page">
           <div class="grid-head">
             <h2>Array Response Grid</h2>
             <p>Draw each array from the question sheet on the grid below.</p>
           </div>
-          <div class="full-page-grid" aria-label="Full page square grid for drawing arrays"></div>
+          <div class="full-page-grid" aria-label="Full page square grid for drawing arrays">${responseGridCells}</div>
         </section>
       ` : "";
       const popup = window.open("", "_blank");
@@ -1481,7 +1482,8 @@
             .grid-head{display:flex;align-items:end;justify-content:space-between;gap:16px;border-bottom:2px solid #111;padding-bottom:8px}
             .grid-head h2{margin:0;font-size:22px}
             .grid-head p{margin:0;color:#444;font-size:14px}
-            .full-page-grid{width:100%;height:238mm;border:2px solid #111;background-image:linear-gradient(#b8c1cc 1px,transparent 1px),linear-gradient(90deg,#b8c1cc 1px,transparent 1px);background-size:8mm 8mm;background-position:-1px -1px}
+            .full-page-grid{display:grid;grid-template-columns:repeat(24,1fr);grid-template-rows:repeat(30,1fr);width:180mm;height:225mm;max-width:100%;margin:0 auto;border:2px solid #111;background:#fff}
+            .full-page-grid span{border:0.5pt solid #b8c1cc;min-width:0;min-height:0}
             .print-box{height:112px;border:2px solid #111;display:grid;place-items:center;font-size:18px;font-weight:700}
             .print-array{display:grid;grid-template-columns:repeat(var(--cols),var(--print-cell));grid-template-rows:repeat(var(--rows),var(--print-cell));width:max-content;border:2px solid #111;margin:0 auto}
             .print-array span{width:var(--print-cell);height:var(--print-cell);border:1px solid #999}
