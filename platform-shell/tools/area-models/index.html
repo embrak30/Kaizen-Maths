@@ -1435,16 +1435,26 @@
       const sheetMode = activeMode === "mixed" ? "mixed" : activeMode;
       const items = Array.from({ length: 8 }, () => makeProblem(sheetMode));
       const modeName = currentModeDetails().title;
+      const isArrayPractice = activeMode === "multiplication";
       const rows = items.map((item, index) => `
         <section class="question">
           <div class="number">${index + 1}</div>
           <div>
             <p>${practicePrompt(item)}</p>
-            ${printableBlank(item.mode, item)}
+            ${isArrayPractice ? "" : printableBlank(item.mode, item)}
           </div>
         </section>
       `).join("");
-      const answers = items.map((item, index) => `<li>${index + 1}. ${item.answer.replace(/class="math-text"/g, "")}</li>`).join("");
+      const answers = isArrayPractice ? "" : items.map((item, index) => `<li>${index + 1}. ${item.answer.replace(/class="math-text"/g, "")}</li>`).join("");
+      const responseGrid = isArrayPractice ? `
+        <section class="response-grid-page">
+          <div class="grid-head">
+            <h2>Array Response Grid</h2>
+            <p>Draw each array from the question sheet on the grid below.</p>
+          </div>
+          <div class="full-page-grid" aria-label="Full page square grid for drawing arrays"></div>
+        </section>
+      ` : "";
       const popup = window.open("", "_blank");
       if (!popup) return;
       popup.document.write(`
@@ -1456,11 +1466,17 @@
           <style>
             *{box-sizing:border-box}
             body{margin:0;padding:22px;font-family:Arial,sans-serif;color:#111}
+            @page{size:A4;margin:10mm}
             h1{margin:0 0 4px;font-size:24px}
             .meta{margin:0 0 18px;color:#555}
             .question{break-inside:avoid;display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:start;margin:0 0 18px;padding-bottom:12px;border-bottom:1px solid #ddd}
             .number{width:30px;height:30px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;font-weight:700}
             p{margin:0 0 10px;font-size:16px;line-height:1.35}
+            .response-grid-page{break-before:page;page-break-before:always;min-height:250mm;display:grid;grid-template-rows:auto 1fr;gap:10px}
+            .grid-head{display:flex;align-items:end;justify-content:space-between;gap:16px;border-bottom:2px solid #111;padding-bottom:8px}
+            .grid-head h2{margin:0;font-size:22px}
+            .grid-head p{margin:0;color:#444;font-size:14px}
+            .full-page-grid{width:100%;height:238mm;border:2px solid #111;background-image:linear-gradient(#b8c1cc 1px,transparent 1px),linear-gradient(90deg,#b8c1cc 1px,transparent 1px);background-size:8mm 8mm;background-position:-1px -1px}
             .print-box{height:112px;border:2px solid #111;display:grid;place-items:center;font-size:18px;font-weight:700}
             .print-array{display:grid;grid-template-columns:repeat(var(--cols),var(--print-cell));grid-template-rows:repeat(var(--rows),var(--print-cell));width:max-content;border:2px solid #111;margin:0 auto}
             .print-array span{width:var(--print-cell);height:var(--print-cell);border:1px solid #999}
@@ -1471,17 +1487,18 @@
             .print-grid span{border:1px solid #999}
             .answers{margin-top:20px;break-before:page}
             .answers li{margin:8px 0}
-            @media print{button{display:none}}
+            @media print{body{padding:0}button{display:none}}
           </style>
         </head>
         <body>
           <h1>Kaizen Maths Area Model Practice</h1>
-          <p class="meta">${modeName}. Complete each model and show the related calculation.</p>
+          <p class="meta">${modeName}. ${isArrayPractice ? "Draw each array on the separate response grid sheet." : "Complete each model and show the related calculation."}</p>
           ${rows}
-          <section class="answers">
+          ${responseGrid}
+          ${isArrayPractice ? "" : `<section class="answers">
             <h2>Answer Key</h2>
             <ol>${answers}</ol>
-          </section>
+          </section>`}
           <button onclick="window.print()">Print / Save PDF</button>
         </body>
         </html>
