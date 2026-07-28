@@ -1446,6 +1446,7 @@
         </section>
       `).join("");
       const answers = isArrayPractice ? "" : items.map((item, index) => `<li>${index + 1}. ${item.answer.replace(/class="math-text"/g, "")}</li>`).join("");
+      const questionPages = isArrayPractice ? `<section class="array-question-sheet">${rows}</section>` : rows;
       const responseGrid = isArrayPractice ? `
         <section class="response-grid-page">
           <div class="grid-head">
@@ -1470,9 +1471,13 @@
             h1{margin:0 0 4px;font-size:24px}
             .meta{margin:0 0 18px;color:#555}
             .question{break-inside:avoid;display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:start;margin:0 0 18px;padding-bottom:12px;border-bottom:1px solid #ddd}
+            .array-question-sheet{break-after:page;page-break-after:always}
+            .array-question-sheet .question{margin-bottom:12px;padding-bottom:10px}
+            .array-question-sheet .question:last-child{margin-bottom:0}
             .number{width:30px;height:30px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;font-weight:700}
             p{margin:0 0 10px;font-size:16px;line-height:1.35}
             .response-grid-page{break-before:page;page-break-before:always;min-height:250mm;display:grid;grid-template-rows:auto 1fr;gap:10px}
+            .array-question-sheet + .response-grid-page{break-before:auto;page-break-before:auto}
             .grid-head{display:flex;align-items:end;justify-content:space-between;gap:16px;border-bottom:2px solid #111;padding-bottom:8px}
             .grid-head h2{margin:0;font-size:22px}
             .grid-head p{margin:0;color:#444;font-size:14px}
@@ -1493,7 +1498,7 @@
         <body>
           <h1>Kaizen Maths Area Model Practice</h1>
           <p class="meta">${modeName}. ${isArrayPractice ? "Draw each array on the separate response grid sheet." : "Complete each model and show the related calculation."}</p>
-          ${rows}
+          ${questionPages}
           ${responseGrid}
           ${isArrayPractice ? "" : `<section class="answers">
             <h2>Answer Key</h2>
