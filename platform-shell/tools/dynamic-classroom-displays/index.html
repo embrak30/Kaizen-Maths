@@ -495,21 +495,51 @@
     @media (max-width: 920px) {
       html,
       body {
-        overflow: auto;
+        width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
       }
 
       .app {
+        width: 100%;
+        min-width: 0;
         height: auto;
         min-height: 100vh;
+        min-height: 100svh;
       }
 
       .topbar,
       .workspace {
         grid-template-columns: 1fr;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .topbar {
+        gap: 10px;
+        min-height: 0;
+        padding: 10px;
+      }
+
+      .brand h1 {
+        font-size: 1.06rem;
+      }
+
+      .brand p {
+        font-size: 0.78rem;
       }
 
       .top-actions {
         justify-content: flex-start;
+        gap: 6px;
+      }
+
+      .mode-btn,
+      .action-btn {
+        min-height: 34px;
+        padding: 7px 9px;
+        font-size: 0.82rem;
       }
 
       .panel {
@@ -519,7 +549,104 @@
       }
 
       .board-shell {
-        min-height: 70vh;
+        width: 100%;
+        min-width: 0;
+        min-height: 72vh;
+        min-height: 72svh;
+        padding: 8px;
+        place-items: center;
+      }
+
+      .board {
+        width: 100%;
+        max-width: 100%;
+        height: min(72vh, 620px);
+        height: min(72svh, 620px);
+        min-height: 420px;
+      }
+
+      .board-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+        min-height: 0;
+        padding: 8px 10px;
+      }
+
+      .board-equation {
+        width: 100%;
+        overflow-x: auto;
+        text-align: left;
+        font-size: 0.94rem;
+      }
+
+      .stage {
+        width: 100%;
+        min-width: 0;
+        padding: 6px;
+      }
+
+      .stage svg {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+
+    @supports (height: 100dvh) {
+      @media (max-width: 920px) {
+        .app {
+          min-height: 100dvh;
+        }
+
+        .board-shell {
+          min-height: 72dvh;
+        }
+
+        .board {
+          height: min(72dvh, 620px);
+        }
+      }
+    }
+
+    @media (max-width: 520px) {
+      .brand p {
+        display: none;
+      }
+
+      .panel {
+        padding: 10px;
+      }
+
+      .panel-section {
+        padding: 10px;
+      }
+
+      .input-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .board-shell {
+        min-height: 68vh;
+        min-height: 68svh;
+        padding: 6px;
+      }
+
+      .board {
+        height: 68vh;
+        height: 68svh;
+        min-height: 360px;
+      }
+    }
+
+    @supports (height: 100dvh) {
+      @media (max-width: 520px) {
+        .board-shell {
+          min-height: 68dvh;
+        }
+
+        .board {
+          height: 68dvh;
+        }
       }
     }
   </style>
