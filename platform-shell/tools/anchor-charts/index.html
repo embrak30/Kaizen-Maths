@@ -58,103 +58,25 @@
       cursor: pointer;
     }
 
-    .teacher-tab {
-      position: fixed;
-      left: 0;
-      top: 50%;
-      z-index: 1001;
-      transform: translateY(-50%);
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      padding: 14px 8px;
-      border-radius: 0 10px 10px 0;
-      background: linear-gradient(180deg, var(--purple), var(--teal));
-      color: #fff;
-      font-size: 0.78rem;
-      font-weight: 950;
-      letter-spacing: 0.08em;
-      box-shadow: 0 8px 20px rgba(20, 25, 60, 0.24);
-    }
-
-    .sidebar-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 999;
-      visibility: hidden;
-      opacity: 0;
-      background: rgba(5, 10, 30, 0.42);
-      transition: opacity 180ms ease;
-    }
-
-    .sidebar-overlay.active {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .sidebar {
-      position: fixed;
-      inset: 0 auto 0 -390px;
-      z-index: 1000;
-      width: min(390px, 88vw);
-      background: #fff;
-      box-shadow: 12px 0 34px rgba(12, 20, 45, 0.24);
-      transition: left 180ms ease;
-      overflow-y: auto;
-    }
-
-    .sidebar.open {
-      left: 0;
-    }
-
-    .sidebar-header {
-      padding: 22px 24px;
-      color: #fff;
-      font-weight: 950;
-      font-size: 1.18rem;
-      background: linear-gradient(135deg, var(--teal), var(--purple));
-    }
-
-    .sidebar-content {
-      padding: 22px 24px 28px;
-      line-height: 1.55;
-    }
-
-    .sidebar-content h3 {
-      margin: 18px 0 8px;
-      color: #087a76;
-      font-size: 1rem;
-    }
-
-    .sidebar-content p,
-    .sidebar-content li {
-      margin: 0 0 8px;
-      color: #44516c;
-    }
-
-    .sidebar-content ul {
-      margin: 0 0 12px;
-      padding-left: 20px;
-    }
-
     .app {
       width: 100vw;
       height: 100vh;
       display: grid;
-      grid-template-rows: auto 1fr;
-      gap: 10px;
-      padding: 12px 16px 14px;
+      grid-template-rows: auto auto minmax(0, 1fr);
+      gap: 8px;
+      padding: 8px 12px 10px;
       min-height: 0;
     }
 
     .topbar {
       display: grid;
       grid-template-columns: minmax(260px, 0.92fr) minmax(0, 1.08fr);
-      gap: 10px;
+      gap: 8px;
       align-items: center;
-      min-height: 70px;
-      padding: 9px 12px;
+      min-height: 58px;
+      padding: 7px 10px;
       border: 1px solid rgba(24, 184, 173, 0.22);
-      border-radius: 18px;
+      border-radius: 14px;
       background:
         linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(232, 252, 249, 0.92)),
         linear-gradient(90deg, rgba(24, 184, 173, 0.12), rgba(255, 138, 31, 0.10));
@@ -180,15 +102,15 @@
       place-items: center;
       color: #fff;
       font-weight: 950;
-      font-size: 1.18rem;
-      border-radius: 16px;
+      font-size: 1.12rem;
+      border-radius: 14px;
       background: linear-gradient(135deg, var(--purple), var(--teal));
       box-shadow: 0 12px 22px rgba(24, 184, 173, 0.26);
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(1.18rem, 2vw, 1.68rem);
+      font-size: clamp(1.08rem, 1.7vw, 1.44rem);
       line-height: 1.05;
       letter-spacing: 0;
     }
@@ -197,7 +119,7 @@
       margin: 4px 0 0;
       color: var(--muted);
       font-weight: 760;
-      font-size: clamp(0.72rem, 0.92vw, 0.86rem);
+      font-size: clamp(0.68rem, 0.82vw, 0.8rem);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -205,7 +127,7 @@
 
     .controls {
       display: grid;
-      grid-template-columns: minmax(170px, 1.35fr) repeat(6, minmax(82px, 0.65fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 6px;
       justify-content: stretch;
       align-items: center;
@@ -214,14 +136,15 @@
     select,
     .action-btn {
       width: 100%;
-      min-height: 38px;
+      min-height: 42px;
       border: 1px solid #c9d8e5;
-      border-radius: 11px;
-      padding: 8px 9px;
+      border-radius: 14px;
+      padding: 8px 10px;
       color: var(--navy);
       background: #fff;
       font-weight: 900;
       line-height: 1.05;
+      touch-action: manipulation;
     }
 
     .action-btn {
@@ -251,72 +174,77 @@
     .workspace {
       min-height: 0;
       display: grid;
-      grid-template-columns: 240px minmax(0, 1fr);
-      gap: 12px;
+      grid-template-columns: minmax(0, 1fr);
     }
 
-    .chart-nav {
+    .chart-strip {
       min-height: 0;
-      overflow-y: auto;
-      padding: 12px;
+      padding: 6px;
       border: 1px solid var(--line);
-      border-radius: 16px;
+      border-radius: 14px;
       background: rgba(255, 255, 255, 0.94);
       box-shadow: var(--soft-shadow);
     }
 
-    .chart-nav h2 {
-      margin: 0 0 10px;
-      color: var(--navy);
-      font-size: 0.86rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
     .chart-list {
       display: grid;
-      gap: 7px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
     }
 
     .chart-tab {
       width: 100%;
-      min-height: 42px;
+      min-height: 45px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 8px 10px;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1px;
+      padding: 6px 8px;
       border: 1px solid var(--line);
-      border-left: 5px solid transparent;
-      border-radius: 10px;
-      background: #fff;
+      border-bottom: 5px solid transparent;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #ffffff, #f8fafc);
       color: var(--ink);
-      text-align: left;
+      text-align: center;
       font-weight: 900;
+      box-shadow: 0 7px 14px rgba(19, 39, 74, 0.08);
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+      touch-action: manipulation;
+    }
+
+    .chart-tab:hover,
+    .chart-tab:focus-visible {
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, #fff7ed, #ecfdf9);
+      box-shadow: 0 10px 18px rgba(19, 39, 74, 0.12);
+      outline: none;
+    }
+
+    .chart-tab span:first-child {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: clamp(0.58rem, 0.86vw, 0.8rem);
     }
 
     .chart-tab span:last-child {
       color: var(--muted);
-      font-size: 0.76rem;
+      font-size: clamp(0.54rem, 0.72vw, 0.68rem);
       font-weight: 850;
     }
 
     .chart-tab.active {
-      border-left-color: var(--orange);
-      background: #fff7ed;
-      color: #9a3412;
+      border-color: rgba(255, 138, 31, 0.42);
+      border-bottom-color: var(--orange);
+      background: linear-gradient(135deg, #ffd166, #ff8a1f);
+      color: #2b1b07;
+      box-shadow: 0 12px 22px rgba(255, 138, 31, 0.22);
     }
 
-    .teacher-card {
-      margin-top: 12px;
-      padding: 11px 12px;
-      border: 1px solid #bceeed;
-      border-radius: 12px;
-      background: #ecfdf9;
-      color: #145c55;
-      font-size: 0.84rem;
-      font-weight: 760;
-      line-height: 1.4;
+    .chart-tab.active span:last-child {
+      color: #5f3305;
     }
 
     .board {
@@ -343,20 +271,21 @@
     .board-head {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
-      min-height: 76px;
-      padding: 12px 16px;
+      min-height: 58px;
+      padding: 8px 12px;
       border-bottom: 1px solid var(--line);
       background:
-        radial-gradient(circle at 8% 20%, rgba(24, 184, 173, 0.14), transparent 28%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(247, 251, 255, 0.95));
+        radial-gradient(circle at 8% 20%, rgba(255, 209, 102, 0.30), transparent 28%),
+        radial-gradient(circle at 88% 30%, rgba(239, 71, 111, 0.12), transparent 26%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(236, 253, 249, 0.95));
     }
 
     .board-kicker {
       margin: 0 0 3px;
       color: var(--teal);
-      font-size: 0.78rem;
+      font-size: 0.68rem;
       font-weight: 950;
       letter-spacing: 0.07em;
       text-transform: uppercase;
@@ -365,26 +294,27 @@
     .board-title {
       margin: 0;
       color: var(--navy);
-      font-size: clamp(1.18rem, 2.2vw, 1.9rem);
+      font-size: clamp(1.04rem, 1.7vw, 1.48rem);
       line-height: 1.04;
     }
 
     .board-subtitle {
       margin: 5px 0 0;
       color: var(--muted);
-      font-size: clamp(0.78rem, 1vw, 0.95rem);
+      font-size: clamp(0.68rem, 0.86vw, 0.82rem);
       font-weight: 760;
     }
 
     .progress-badge {
       min-width: 96px;
-      padding: 8px 12px;
+      padding: 7px 10px;
       border-radius: 999px;
       color: #0f5f59;
       background: #e8fbf7;
       border: 1px solid rgba(24, 184, 173, 0.34);
       text-align: center;
       font-weight: 950;
+      font-size: 0.82rem;
       white-space: nowrap;
     }
 
@@ -392,9 +322,9 @@
       min-height: 0;
       overflow: hidden;
       display: grid;
-      grid-template-columns: minmax(360px, 0.98fr) minmax(0, 1.02fr);
-      gap: 14px;
-      padding: 14px;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.95fr);
+      gap: 10px;
+      padding: 10px;
       background:
         linear-gradient(rgba(24, 50, 74, 0.035) 1px, transparent 1px),
         linear-gradient(90deg, rgba(24, 50, 74, 0.035) 1px, transparent 1px);
@@ -422,16 +352,17 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      min-height: 44px;
-      padding: 10px 12px;
+      min-height: 36px;
+      padding: 7px 10px;
       border-bottom: 1px solid var(--line);
       color: var(--navy);
       font-weight: 950;
+      font-size: 0.86rem;
     }
 
     .scale-note {
       color: var(--muted);
-      font-size: 0.72rem;
+      font-size: 0.64rem;
       font-weight: 850;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -441,31 +372,53 @@
       min-height: 0;
       display: grid;
       place-items: center;
-      padding: 12px;
+      padding: 8px;
       overflow: hidden;
     }
 
     .notes-panel {
       display: grid;
-      grid-template-rows: repeat(4, minmax(0, 1fr));
-      gap: 0;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      padding: 8px;
     }
 
     .note-section {
       min-height: 0;
       display: grid;
       grid-template-rows: auto minmax(0, 1fr);
-      border-bottom: 1px solid var(--line);
+      border: 1px solid rgba(216, 228, 239, 0.95);
+      border-radius: 13px;
+      background:
+        radial-gradient(circle at 12% 14%, rgba(255, 255, 255, 0.72), transparent 35%),
+        linear-gradient(135deg, rgba(24, 184, 173, 0.10), rgba(112, 72, 232, 0.08));
+      box-shadow: 0 8px 16px rgba(19, 39, 74, 0.07);
+      overflow: hidden;
     }
 
-    .note-section:last-child {
-      border-bottom: 0;
+    .note-section:nth-child(2) {
+      background:
+        radial-gradient(circle at 12% 14%, rgba(255, 255, 255, 0.72), transparent 35%),
+        linear-gradient(135deg, rgba(255, 209, 102, 0.16), rgba(255, 138, 31, 0.10));
+    }
+
+    .note-section:nth-child(3) {
+      background:
+        radial-gradient(circle at 12% 14%, rgba(255, 255, 255, 0.72), transparent 35%),
+        linear-gradient(135deg, rgba(112, 72, 232, 0.10), rgba(239, 71, 111, 0.10));
+    }
+
+    .note-section:nth-child(4) {
+      background:
+        radial-gradient(circle at 12% 14%, rgba(255, 255, 255, 0.72), transparent 35%),
+        linear-gradient(135deg, rgba(47, 128, 237, 0.10), rgba(32, 178, 107, 0.10));
     }
 
     .note-heading {
-      padding: 8px 12px 4px;
-      color: var(--muted);
-      font-size: 0.72rem;
+      padding: 7px 9px 3px;
+      color: #0f5f59;
+      font-size: clamp(0.58rem, 0.72vw, 0.7rem);
       font-weight: 950;
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -474,49 +427,54 @@
     .reveal-list {
       min-height: 0;
       display: grid;
-      gap: 6px;
-      padding: 0 10px 10px;
+      gap: 4px;
+      padding: 0 7px 7px;
       align-content: start;
       overflow: hidden;
     }
 
     .reveal-item {
-      min-height: 34px;
+      min-height: 0;
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 7px 9px;
+      gap: 6px;
+      padding: 5px 7px;
       border: 1px dashed #c7d8e5;
-      border-radius: 10px;
+      border-radius: 9px;
       color: #94a3b8;
-      background: #f8fafc;
-      font-size: clamp(0.78rem, 0.92vw, 0.94rem);
-      font-weight: 780;
-      line-height: 1.25;
+      background: rgba(255, 255, 255, 0.74);
+      font-size: clamp(0.62rem, 0.78vw, 0.82rem);
+      font-weight: 820;
+      line-height: 1.16;
+      transform: translateY(0);
+      transition: transform 220ms ease, background 220ms ease, border-color 220ms ease, color 220ms ease, box-shadow 220ms ease;
     }
 
     .reveal-item.revealed {
       border-style: solid;
       color: var(--ink);
       background: #fff;
+      border-color: rgba(255, 138, 31, 0.42);
+      box-shadow: 0 8px 14px rgba(255, 138, 31, 0.12);
+      animation: itemPop 260ms ease both;
     }
 
     .reveal-item::before {
       content: "";
-      width: 12px;
-      height: 12px;
-      flex: 0 0 12px;
-      border-radius: 3px;
+      width: 10px;
+      height: 10px;
+      flex: 0 0 10px;
+      border-radius: 50%;
       background: #cbd5e1;
     }
 
     .reveal-item.revealed::before {
-      background: var(--orange);
+      background: linear-gradient(135deg, var(--orange), var(--rose));
     }
 
     .hidden-text {
-      filter: blur(5px);
-      opacity: 0.42;
+      filter: blur(3px);
+      opacity: 0.34;
     }
 
     .reveal-item.revealed .hidden-text {
@@ -525,11 +483,12 @@
     }
 
     .chart-visual {
-      width: min(100%, 720px);
-      height: min(100%, 560px);
+      width: min(100%, 820px);
+      height: min(100%, 620px);
       display: grid;
       place-items: center;
       color: var(--ink);
+      animation: visualFloat 320ms ease both;
     }
 
     .math {
@@ -896,60 +855,79 @@
 
     .shape-board {
       position: relative;
-      width: min(100%, 440px);
-      height: min(45vh, 260px);
+      width: min(100%, 520px);
+      height: min(52vh, 320px);
       border: 5px solid var(--navy);
       background: #e8fbf7;
     }
 
     .shape-board.square {
-      width: min(56vmin, 300px);
-      height: min(56vmin, 300px);
+      width: min(58vmin, 340px);
+      height: min(58vmin, 340px);
     }
 
     .parallel-mark,
     .equal-mark {
       position: absolute;
+      pointer-events: none;
+    }
+
+    .parallel-mark {
+      display: grid;
+      place-items: center;
+      color: #fff;
       background: var(--orange);
+      border: 2px solid #fff;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 950;
+      line-height: 1;
+      box-shadow: 0 6px 12px rgba(255, 138, 31, 0.22);
     }
 
     .parallel-mark.top,
     .parallel-mark.bottom {
-      width: 28px;
-      height: 4px;
+      width: 34px;
+      height: 22px;
       left: 50%;
       transform: translateX(-50%);
     }
 
     .parallel-mark.top {
-      top: 14px;
+      top: -13px;
     }
 
     .parallel-mark.bottom {
-      bottom: 14px;
+      bottom: -13px;
     }
 
     .parallel-mark.left,
     .parallel-mark.right {
-      width: 4px;
-      height: 28px;
+      width: 22px;
+      height: 34px;
       top: 50%;
       transform: translateY(-50%);
     }
 
     .parallel-mark.left {
-      left: 14px;
+      left: -13px;
     }
 
     .parallel-mark.right {
-      right: 14px;
+      right: -13px;
+    }
+
+    .equal-mark {
+      background: var(--rose);
+      border-radius: 999px;
+      box-shadow: 0 0 0 2px #fff, 0 5px 10px rgba(239, 71, 111, 0.18);
     }
 
     .equal-mark.top,
     .equal-mark.bottom {
       width: 5px;
-      height: 34px;
-      left: 50%;
+      height: 36px;
+      left: 31%;
       transform: translateX(-50%);
     }
 
@@ -963,9 +941,9 @@
 
     .equal-mark.left,
     .equal-mark.right {
-      width: 34px;
+      width: 36px;
       height: 5px;
-      top: 50%;
+      top: 32%;
       transform: translateY(-50%);
     }
 
@@ -975,6 +953,21 @@
 
     .equal-mark.right {
       right: -19px;
+    }
+
+    .equal-mark.double::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: var(--rose);
+    }
+
+    .equal-mark.left.double::after,
+    .equal-mark.right.double::after {
+      width: 36px;
+      height: 5px;
+      left: 0;
+      top: 11px;
     }
 
     .measure-model {
@@ -1071,55 +1064,170 @@
       display: none;
     }
 
+    @keyframes visualFloat {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.985);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes itemPop {
+      from {
+        opacity: 0;
+        transform: translateY(7px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
     @media (max-width: 1100px) {
       .controls {
-        grid-template-columns: minmax(180px, 1fr) repeat(3, minmax(84px, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
-      .workspace {
-        grid-template-columns: 1fr;
-      }
-
-      .chart-nav {
-        display: none;
+      .chart-stage {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
       }
     }
 
     @media (max-width: 820px) {
       html,
       body {
-        overflow-y: auto;
+        overflow: hidden;
       }
 
       .app {
-        height: auto;
+        height: 100vh;
         min-height: 100vh;
         min-height: 100svh;
+        padding: 6px;
+        gap: 6px;
       }
 
       .topbar {
         grid-template-columns: 1fr;
+        min-height: 0;
+        gap: 6px;
+        padding: 6px 8px;
+      }
+
+      .brand {
+        gap: 7px;
+      }
+
+      .brand p {
+        display: none;
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
       }
 
       .controls {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 5px;
       }
 
-      .controls select {
-        grid-column: 1 / -1;
+      .action-btn {
+        min-height: 34px;
+        padding: 6px 5px;
+        border-radius: 10px;
+        font-size: 0.7rem;
+      }
+
+      .chart-strip {
+        padding: 4px;
+        border-radius: 10px;
+      }
+
+      .chart-list {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 4px;
+      }
+
+      .chart-tab {
+        min-height: 34px;
+        padding: 4px 3px;
+        border-radius: 9px;
+      }
+
+      .chart-tab span:first-child {
+        font-size: 0.52rem;
+      }
+
+      .chart-tab span:last-child {
+        display: none;
+      }
+
+      .board-head {
+        min-height: 48px;
+        padding: 6px 8px;
+      }
+
+      .board-subtitle {
+        display: none;
+      }
+
+      .progress-badge {
+        min-width: 76px;
+        padding: 5px 7px;
+        font-size: 0.68rem;
       }
 
       .chart-stage {
         grid-template-columns: 1fr;
-        overflow: visible;
+        grid-template-rows: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        gap: 7px;
+        padding: 7px;
+        overflow: hidden;
       }
 
       .board {
-        overflow: visible;
+        overflow: hidden;
       }
 
       .notes-panel {
-        grid-template-rows: none;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        gap: 5px;
+        padding: 5px;
+      }
+
+      .note-heading {
+        padding: 5px 6px 2px;
+        font-size: 0.52rem;
+      }
+
+      .reveal-list {
+        gap: 3px;
+        padding: 0 5px 5px;
+      }
+
+      .reveal-item {
+        gap: 4px;
+        padding: 3px 5px;
+        border-radius: 7px;
+        font-size: 0.54rem;
+      }
+
+      .reveal-item::before {
+        width: 7px;
+        height: 7px;
+        flex-basis: 7px;
+      }
+
+      .chart-visual {
+        height: 100%;
       }
     }
 
@@ -1130,11 +1238,8 @@
         background: #fff;
       }
 
-      .teacher-tab,
-      .sidebar,
-      .sidebar-overlay,
       .topbar,
-      .chart-nav {
+      .chart-strip {
         display: none !important;
       }
 
@@ -1191,25 +1296,6 @@
   </style>
 </head>
 <body>
-  <button class="teacher-tab" type="button" onclick="toggleSidebar()">TEACHER NOTES</button>
-  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">Elementary Maths Anchor Charts</div>
-    <div class="sidebar-content">
-      <h3>Purpose</h3>
-      <p>Anchor charts are visual references that capture a key model, rule, vocabulary set, or method. They help pupils return to the idea while practising.</p>
-      <h3>Classroom Flow</h3>
-      <ul>
-        <li>Choose the chart linked to the concept you are teaching.</li>
-        <li>Start with the visual model before revealing all of the written information.</li>
-        <li>Use Reveal Next to build the chart with the class.</li>
-        <li>Use the write function in Classroom View to add examples, labels, and pupil responses.</li>
-      </ul>
-      <h3>Best Use</h3>
-      <p>These are designed for teacher explanation, retrieval, intervention, and display. They should not replace modelling; they give the teacher a clean board-ready structure to build from.</p>
-    </div>
-  </aside>
-
   <main class="app">
     <header class="topbar">
       <div class="brand">
@@ -1220,7 +1306,6 @@
         </div>
       </div>
       <div class="controls">
-        <select id="chartSelect" aria-label="Choose anchor chart"></select>
         <button class="action-btn" type="button" id="newExampleBtn">New Example</button>
         <button class="action-btn orange" type="button" id="revealNextBtn">Reveal Next</button>
         <button class="action-btn purple" type="button" id="showAllBtn">Show All</button>
@@ -1230,13 +1315,11 @@
       </div>
     </header>
 
-    <section class="workspace">
-      <aside class="chart-nav">
-        <h2>Chart Library</h2>
-        <div class="chart-list" id="chartList"></div>
-        <div class="teacher-card">Use the chart selector for live teaching. The chart reveals gradually so pupils can predict, discuss, and explain before the final reference is complete.</div>
-      </aside>
+    <nav class="chart-strip" aria-label="Choose anchor chart">
+      <div class="chart-list" id="chartList"></div>
+    </nav>
 
+    <section class="workspace">
       <section class="board" id="board">
         <div class="board-head">
           <div>
@@ -1663,13 +1746,13 @@
         visual: (ex) => `
           <div class="shape-model">
             <div class="shape-board ${ex.shape === "square" ? "square" : ""}">
-              <span class="parallel-mark top"></span>
-              <span class="parallel-mark bottom"></span>
-              <span class="parallel-mark left"></span>
-              <span class="parallel-mark right"></span>
+              <span class="parallel-mark top">→</span>
+              <span class="parallel-mark bottom">→</span>
+              <span class="parallel-mark left">↑</span>
+              <span class="parallel-mark right">↑</span>
               <span class="equal-mark top"></span>
               <span class="equal-mark bottom"></span>
-              ${ex.shape === "square" ? '<span class="equal-mark left"></span><span class="equal-mark right"></span>' : ""}
+              ${ex.shape === "square" ? '<span class="equal-mark left"></span><span class="equal-mark right"></span>' : '<span class="equal-mark left double"></span><span class="equal-mark right double"></span>'}
             </div>
             <div class="equation-strip">${ex.shape === "square" ? "Square" : "Rectangle"}</div>
           </div>
@@ -1793,12 +1876,9 @@
     }
 
     function renderTabs() {
-      const select = document.getElementById("chartSelect");
       const list = document.getElementById("chartList");
-      select.innerHTML = chartOrder.map((slug) => `<option value="${slug}">${safeText(chartBuilders[slug].label)}</option>`).join("");
-      select.value = currentChart;
       list.innerHTML = chartOrder.map((slug) => `
-        <button class="chart-tab ${slug === currentChart ? "active" : ""}" type="button" data-chart="${slug}">
+        <button class="chart-tab ${slug === currentChart ? "active" : ""}" type="button" data-chart="${slug}" aria-pressed="${slug === currentChart ? "true" : "false"}">
           <span>${safeText(chartBuilders[slug].label)}</span>
           <span>${safeText(chartBuilders[slug].short)}</span>
         </button>
@@ -1816,7 +1896,7 @@
             ${items.map((item) => {
               const visible = runningIndex < revealCount;
               runningIndex += 1;
-              return `<div class="reveal-item ${visible ? "revealed" : ""}"><span class="hidden-text">${visible ? safeText(item) : "Click Reveal Next to build this part of the chart."}</span></div>`;
+              return `<div class="reveal-item ${visible ? "revealed" : ""}"><span class="hidden-text">${visible ? safeText(item) : "Ready to reveal"}</span></div>`;
             }).join("")}
           </div>
         </section>
@@ -1876,17 +1956,6 @@
       document.getElementById("board").classList.toggle("fullscreen");
     }
 
-    function toggleSidebar() {
-      document.getElementById("sidebar").classList.toggle("open");
-      document.querySelector(".sidebar-overlay").classList.toggle("active");
-    }
-
-    function closeSidebar() {
-      document.getElementById("sidebar").classList.remove("open");
-      document.querySelector(".sidebar-overlay").classList.remove("active");
-    }
-
-    document.getElementById("chartSelect").addEventListener("change", (event) => setChart(event.target.value));
     document.getElementById("newExampleBtn").addEventListener("click", newExample);
     document.getElementById("revealNextBtn").addEventListener("click", revealNext);
     document.getElementById("showAllBtn").addEventListener("click", showAll);
