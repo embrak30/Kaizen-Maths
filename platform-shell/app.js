@@ -2126,7 +2126,7 @@ const tools = [
     status: "Imported",
     description: "Open teacher-led elementary maths anchor charts for number bonds, place value, operation language, fractions, arrays, time, money, shape properties, measurement, and bar-model reasoning.",
     tags: ["classroom", "primary", "elementary", "anchor charts", "visual maths", "number bonds", "place value", "operation language", "fractions", "arrays", "time", "money", "shape properties", "measurement", "bar models", "reference charts"],
-    toolPath: "tools/anchor-charts/index.html?v=anchor-charts-2",
+    toolPath: "tools/anchor-charts/index.html?v=anchor-charts-3",
     imported: true,
     teacherNotes: [
       "Designed as a teacher-led reference board for building key elementary maths ideas gradually.",
