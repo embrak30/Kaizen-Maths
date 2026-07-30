@@ -2117,6 +2117,25 @@ const tools = [
     ]
   },
   {
+    slug: "anchor-charts",
+    title: "Elementary Maths Anchor Charts",
+    category: "Classroom Tools",
+    level: "Primary / Elementary",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "Open teacher-led elementary maths anchor charts for number bonds, place value, operation language, fractions, arrays, time, money, shape properties, measurement, and bar-model reasoning.",
+    tags: ["classroom", "primary", "elementary", "anchor charts", "visual maths", "number bonds", "place value", "operation language", "fractions", "arrays", "time", "money", "shape properties", "measurement", "bar models", "reference charts"],
+    toolPath: "tools/anchor-charts/index.html?v=anchor-charts-1",
+    imported: true,
+    teacherNotes: [
+      "Designed as a teacher-led reference board for building key elementary maths ideas gradually.",
+      "Teachers choose a chart, start with the visual model, then use Reveal Next to add the key idea, teacher model, vocabulary, and inquiry questions.",
+      "Modes cover number bonds, place value, operation language, fractions, arrays, telling time, money, 2D shape properties, perimeter and area, and bar-model reasoning.",
+      "Use full-screen mode and the write function to annotate examples while keeping the anchor chart visible."
+    ]
+  },
+  {
     slug: "elementary-manipulatives",
     title: "Primary and Elementary Maths Manipulatives",
     category: "Classroom Tools",
@@ -2460,6 +2479,7 @@ const subjectToolGroups = {
     "classroom-displays": "Board Displays and Visuals",
     "dynamic-classroom-displays": "Board Displays and Visuals",
     "concept-explainer": "Board Displays and Visuals",
+    "anchor-charts": "Board Displays and Visuals",
     "elementary-manipulatives": "Board Displays and Visuals",
     "bar-models": "Board Displays and Visuals",
     "area-models": "Board Displays and Visuals",
@@ -2777,6 +2797,7 @@ const freeSampleTools = new Set([
   "classroom-displays",
   "dynamic-classroom-displays",
   "concept-explainer",
+  "anchor-charts",
   "bar-models",
   "area-models",
   "elementary-starter-board",
@@ -8040,11 +8061,12 @@ const curatedRelatedToolSlugs = {
   "work-energy-power": ["friction", "newtons-second-law", "equations-of-motion", "motion-graphs-constant-acceleration"],
   "classroom-displays": ["concept-explainer", "dynamic-classroom-displays", "bar-models", "area-models"],
   "dynamic-classroom-displays": ["concept-explainer", "classroom-displays", "graph-transformations-curve-sketching", "circle-theorems"],
-  "concept-explainer": ["classroom-displays", "dynamic-classroom-displays", "bar-models", "area-models"],
+  "concept-explainer": ["anchor-charts", "classroom-displays", "dynamic-classroom-displays", "bar-models"],
+  "anchor-charts": ["elementary-manipulatives", "elementary-maths-playground", "bar-models", "area-models"],
   "word-search-builder": ["fractions-table", "elementary-starter-board", "elementary-maths-playground", "classroom-displays"],
-  "bar-models": ["area-models", "elementary-manipulatives", "elementary-maths-playground", "ratio-proportion"],
-  "area-models": ["bar-models", "elementary-manipulatives", "fractions-practice", "algebraic-simplification"],
-  "elementary-maths-playground": ["bar-models", "area-models", "elementary-starter-board", "elementary-manipulatives"],
+  "bar-models": ["anchor-charts", "area-models", "elementary-manipulatives", "elementary-maths-playground"],
+  "area-models": ["anchor-charts", "bar-models", "elementary-manipulatives", "fractions-practice"],
+  "elementary-maths-playground": ["anchor-charts", "bar-models", "area-models", "elementary-starter-board"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
   "polygons-angles": ["missing-angles", "circle-theorems", "loci-constructions", "scale-drawing-similar-shapes"],
   "circle-theorems": ["missing-angles", "polygons-angles", "circles-area-circumference", "sectors-arc-length"],
@@ -8122,7 +8144,11 @@ function standardsForTool(tool) {
   const haystack = normalise([tool.title, tool.category, toolSubjectGroup(tool), tool.level, allToolTags(tool).join(" "), tool.description].join(" "));
   const standards = [];
 
-  if (haystack.includes("matrix") || haystack.includes("matrices") || haystack.includes("determinant") || haystack.includes("eigenvalue")) {
+  if (haystack.includes("primary") || haystack.includes("elementary") || haystack.includes("anchor chart") || haystack.includes("manipulative")) {
+    standards.push("Common Core: elementary number sense, operations, place value, fractions, measurement, geometry, and mathematical reasoning standards where relevant.");
+    standards.push("England: KS1/KS2 number, fractions, measurement, geometry, and mathematical vocabulary, with links into KS3 intervention.");
+    standards.push("International primary curricula: supports visual modelling, mathematical language, concrete-pictorial-abstract progression, and teacher-led explanation.");
+  } else if (haystack.includes("matrix") || haystack.includes("matrices") || haystack.includes("determinant") || haystack.includes("eigenvalue")) {
     standards.push("England: GCSE and A-Level matrix work where specified, including operations, transformations, determinants, inverses, singular matrices, and algebraic matrix equations.");
     standards.push("Further Mathematics / international routes: matrices, linear transformations, systems, eigenvalues, eigenvectors, and proof-based reasoning where relevant.");
   } else if (haystack.includes("mechanics") || haystack.includes("suvat") || haystack.includes("kinematics") || haystack.includes("equations of motion") || haystack.includes("motion graphs") || haystack.includes("constant acceleration") || haystack.includes("velocity-time") || haystack.includes("distance-time") || haystack.includes("momentum") || haystack.includes("impulse") || haystack.includes("moments") || haystack.includes("projectiles") || haystack.includes("newton") || haystack.includes("f = ma") || haystack.includes("resultant force") || haystack.includes("forces")) {
@@ -8721,6 +8747,21 @@ function toolInsightProfile(tool) {
         "What is the resultant force in the chosen positive direction?",
         "Which quantity is mass, which is weight, and which is acceleration?",
         "How would the acceleration change if one opposing force were increased?"
+      ]
+    },
+    {
+      match: () => tool.slug === "anchor-charts" || has("anchor charts", "reference charts", "visual reference"),
+      misconceptions: [
+        "Showing the completed chart too early, so pupils copy the rule without first connecting it to the visual model.",
+        "Treating vocabulary such as numerator, denominator, product, perimeter, or place value as labels to memorise rather than meanings linked to the diagram.",
+        "Using a chart that looks tidy but does not preserve the key mathematical structure, such as unequal fraction parts or unequal bar-model parts.",
+        "Moving from the visual straight to the answer without asking pupils what each part of the model represents."
+      ],
+      questions: [
+        "What should pupils notice in the visual before the written rule is revealed?",
+        "Which part of the chart shows the mathematical structure, not just the vocabulary?",
+        "How could a pupil use this chart to explain the method to someone else?",
+        "What example, non-example, or misconception would make this anchor chart stronger?"
       ]
     },
     {

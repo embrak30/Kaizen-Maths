@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elementary Maths Anchor Charts | Kaizen Maths</title>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <script src="../../auth-config.js?v=tool-access-guard-2"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-2"></script>
+  <style>
+    :root {
+      --ink: #16213f;
+      --muted: #63718b;
+      --line: #d8e4ef;
+      --paper: #ffffff;
+      --soft: #f6fbff;
+      --navy: #173454;
+      --teal: #18b8ad;
+      --blue: #2f80ed;
+      --purple: #7048e8;
+      --orange: #ff8a1f;
+      --rose: #ef476f;
+      --green: #20b26b;
+      --yellow: #ffd166;
+      --math-font: "KaTeX_Main", "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+      --ui-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --shadow: 0 18px 42px rgba(19, 39, 74, 0.16);
+      --soft-shadow: 0 10px 26px rgba(19, 39, 74, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      color: var(--ink);
+      font-family: var(--ui-font);
+      background:
+        linear-gradient(120deg, rgba(24, 184, 173, 0.14), rgba(255, 138, 31, 0.10)),
+        repeating-linear-gradient(135deg, rgba(47, 128, 237, 0.045) 0 1px, transparent 1px 28px),
+        #f8fcff;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      z-index: 1001;
+      transform: translateY(-50%);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      padding: 14px 8px;
+      border-radius: 0 10px 10px 0;
+      background: linear-gradient(180deg, var(--purple), var(--teal));
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      box-shadow: 0 8px 20px rgba(20, 25, 60, 0.24);
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      background: rgba(5, 10, 30, 0.42);
+      transition: opacity 180ms ease;
+    }
+
+    .sidebar-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 -390px;
+      z-index: 1000;
+      width: min(390px, 88vw);
+      background: #fff;
+      box-shadow: 12px 0 34px rgba(12, 20, 45, 0.24);
+      transition: left 180ms ease;
+      overflow-y: auto;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-header {
+      padding: 22px 24px;
+      color: #fff;
+      font-weight: 950;
+      font-size: 1.18rem;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .sidebar-content {
+      padding: 22px 24px 28px;
+      line-height: 1.55;
+    }
+
+    .sidebar-content h3 {
+      margin: 18px 0 8px;
+      color: #087a76;
+      font-size: 1rem;
+    }
+
+    .sidebar-content p,
+    .sidebar-content li {
+      margin: 0 0 8px;
+      color: #44516c;
+    }
+
+    .sidebar-content ul {
+      margin: 0 0 12px;
+      padding-left: 20px;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 10px;
+      padding: 12px 16px 14px;
+      min-height: 0;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.92fr) minmax(0, 1.08fr);
+      gap: 10px;
+      align-items: center;
+      min-height: 70px;
+      padding: 9px 12px;
+      border: 1px solid rgba(24, 184, 173, 0.22);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(232, 252, 249, 0.92)),
+        linear-gradient(90deg, rgba(24, 184, 173, 0.12), rgba(255, 138, 31, 0.10));
+      box-shadow: var(--soft-shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand > div:last-child {
+      min-width: 0;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      flex: 0 0 50px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      font-size: 1.18rem;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--purple), var(--teal));
+      box-shadow: 0 12px 22px rgba(24, 184, 173, 0.26);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.18rem, 2vw, 1.68rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-weight: 760;
+      font-size: clamp(0.72rem, 0.92vw, 0.86rem);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(170px, 1.35fr) repeat(6, minmax(82px, 0.65fr));
+      gap: 6px;
+      justify-content: stretch;
+      align-items: center;
+    }
+
+    select,
+    .action-btn {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid #c9d8e5;
+      border-radius: 11px;
+      padding: 8px 9px;
+      color: var(--navy);
+      background: #fff;
+      font-weight: 900;
+      line-height: 1.05;
+    }
+
+    .action-btn {
+      color: #fff;
+      background: var(--teal);
+      border-color: var(--teal);
+      box-shadow: 0 8px 16px rgba(24, 184, 173, 0.18);
+    }
+
+    .action-btn.secondary {
+      color: var(--navy);
+      background: #fff;
+      border-color: var(--line);
+      box-shadow: none;
+    }
+
+    .action-btn.orange {
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+
+    .action-btn.purple {
+      background: var(--purple);
+      border-color: var(--purple);
+    }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .chart-nav {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .chart-nav h2 {
+      margin: 0 0 10px;
+      color: var(--navy);
+      font-size: 0.86rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .chart-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    .chart-tab {
+      width: 100%;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-left: 5px solid transparent;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      text-align: left;
+      font-weight: 900;
+    }
+
+    .chart-tab span:last-child {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 850;
+    }
+
+    .chart-tab.active {
+      border-left-color: var(--orange);
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .teacher-card {
+      margin-top: 12px;
+      padding: 11px 12px;
+      border: 1px solid #bceeed;
+      border-radius: 12px;
+      background: #ecfdf9;
+      color: #145c55;
+      font-size: 0.84rem;
+      font-weight: 760;
+      line-height: 1.4;
+    }
+
+    .board {
+      position: relative;
+      min-height: 0;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      border: 1px solid #b7cad9;
+      border-radius: 18px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .board.fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .board-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 76px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 8% 20%, rgba(24, 184, 173, 0.14), transparent 28%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(247, 251, 255, 0.95));
+    }
+
+    .board-kicker {
+      margin: 0 0 3px;
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .board-title {
+      margin: 0;
+      color: var(--navy);
+      font-size: clamp(1.18rem, 2.2vw, 1.9rem);
+      line-height: 1.04;
+    }
+
+    .board-subtitle {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: clamp(0.78rem, 1vw, 0.95rem);
+      font-weight: 760;
+    }
+
+    .progress-badge {
+      min-width: 96px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #0f5f59;
+      background: #e8fbf7;
+      border: 1px solid rgba(24, 184, 173, 0.34);
+      text-align: center;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .chart-stage {
+      min-height: 0;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(360px, 0.98fr) minmax(0, 1.02fr);
+      gap: 14px;
+      padding: 14px;
+      background:
+        linear-gradient(rgba(24, 50, 74, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(24, 50, 74, 0.035) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    .visual-panel,
+    .notes-panel {
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 10px 24px rgba(19, 39, 74, 0.08);
+    }
+
+    .visual-panel {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 44px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      color: var(--navy);
+      font-weight: 950;
+    }
+
+    .scale-note {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .visual-board {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .notes-panel {
+      display: grid;
+      grid-template-rows: repeat(4, minmax(0, 1fr));
+      gap: 0;
+    }
+
+    .note-section {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .note-section:last-child {
+      border-bottom: 0;
+    }
+
+    .note-heading {
+      padding: 8px 12px 4px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .reveal-list {
+      min-height: 0;
+      display: grid;
+      gap: 6px;
+      padding: 0 10px 10px;
+      align-content: start;
+      overflow: hidden;
+    }
+
+    .reveal-item {
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 9px;
+      border: 1px dashed #c7d8e5;
+      border-radius: 10px;
+      color: #94a3b8;
+      background: #f8fafc;
+      font-size: clamp(0.78rem, 0.92vw, 0.94rem);
+      font-weight: 780;
+      line-height: 1.25;
+    }
+
+    .reveal-item.revealed {
+      border-style: solid;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .reveal-item::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      flex: 0 0 12px;
+      border-radius: 3px;
+      background: #cbd5e1;
+    }
+
+    .reveal-item.revealed::before {
+      background: var(--orange);
+    }
+
+    .hidden-text {
+      filter: blur(5px);
+      opacity: 0.42;
+    }
+
+    .reveal-item.revealed .hidden-text {
+      filter: none;
+      opacity: 1;
+    }
+
+    .chart-visual {
+      width: min(100%, 720px);
+      height: min(100%, 560px);
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+    }
+
+    .math {
+      font-family: var(--math-font);
+      letter-spacing: 0;
+    }
+
+    .part-whole {
+      width: min(100%, 560px);
+      display: grid;
+      grid-template-rows: auto auto;
+      gap: 28px;
+      justify-items: center;
+    }
+
+    .whole-box,
+    .part-box {
+      display: grid;
+      place-items: center;
+      border: 4px solid var(--navy);
+      background: #fff;
+      color: var(--navy);
+      font-family: var(--math-font);
+      font-weight: 950;
+      box-shadow: 0 8px 18px rgba(19, 39, 74, 0.12);
+    }
+
+    .whole-box {
+      width: min(100%, 420px);
+      min-height: 110px;
+      background: #e8fbf7;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+    }
+
+    .part-row {
+      width: min(100%, 520px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .part-box {
+      min-height: 96px;
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+    }
+
+    .part-box.known {
+      background: #eef2ff;
+      border-color: var(--purple);
+    }
+
+    .part-box.missing {
+      background: #fff7ed;
+      border-color: var(--orange);
+    }
+
+    .arrow-text {
+      color: var(--muted);
+      font-size: clamp(1.05rem, 1.8vw, 1.4rem);
+      font-weight: 950;
+    }
+
+    .place-chart {
+      width: min(100%, 680px);
+      display: grid;
+      gap: 14px;
+    }
+
+    .place-columns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 4px solid var(--navy);
+      background: #fff;
+    }
+
+    .place-cell {
+      min-height: 150px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      border-right: 4px solid var(--navy);
+      text-align: center;
+    }
+
+    .place-cell:last-child {
+      border-right: 0;
+    }
+
+    .place-label {
+      padding: 10px 8px;
+      color: #fff;
+      background: var(--navy);
+      font-weight: 950;
+    }
+
+    .place-digit {
+      display: grid;
+      place-items: center;
+      font-family: var(--math-font);
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 950;
+    }
+
+    .place-value-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .value-chip {
+      padding: 10px;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      text-align: center;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .operation-grid {
+      width: min(100%, 660px);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .operation-card {
+      min-height: 150px;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      border: 4px solid var(--navy);
+      background: #fff;
+      text-align: center;
+    }
+
+    .operation-symbol {
+      display: block;
+      color: var(--purple);
+      font-family: var(--math-font);
+      font-size: clamp(3rem, 7vw, 5rem);
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .operation-words {
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .fraction-model {
+      width: min(100%, 690px);
+      display: grid;
+      gap: 24px;
+      justify-items: center;
+    }
+
+    .fraction-bar {
+      width: min(100%, 620px);
+      display: grid;
+      grid-template-columns: repeat(var(--denominator), 1fr);
+      border: 4px solid var(--navy);
+      background: #fff;
+    }
+
+    .fraction-piece {
+      min-height: clamp(74px, 12vh, 118px);
+      border-right: 3px solid var(--navy);
+      background: #fff;
+    }
+
+    .fraction-piece:last-child {
+      border-right: 0;
+    }
+
+    .fraction-piece.shaded {
+      background: linear-gradient(135deg, rgba(24, 184, 173, 0.75), rgba(32, 178, 107, 0.72));
+    }
+
+    .fraction-labels {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      width: min(100%, 620px);
+    }
+
+    .fraction-label {
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      padding: 8px;
+      border: 2px solid var(--line);
+      background: #f8fafc;
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .array-model {
+      width: min(100%, 680px);
+      display: grid;
+      gap: 16px;
+      justify-items: center;
+    }
+
+    .array-grid {
+      --cell-size: 46px;
+      display: grid;
+      grid-template-columns: repeat(var(--cols), var(--cell-size));
+      grid-template-rows: repeat(var(--rows), var(--cell-size));
+      border: 4px solid var(--navy);
+      background: #fff;
+    }
+
+    .array-cell {
+      width: var(--cell-size);
+      height: var(--cell-size);
+      border-right: 2px solid #9fb2c4;
+      border-bottom: 2px solid #9fb2c4;
+      background: #e8fbf7;
+    }
+
+    .array-cell:nth-child(3n) {
+      background: #eef2ff;
+    }
+
+    .array-caption {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .caption-chip {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--navy);
+      font-weight: 950;
+    }
+
+    .clock-model {
+      display: grid;
+      gap: 16px;
+      justify-items: center;
+    }
+
+    .clock-face {
+      position: relative;
+      width: min(50vmin, 360px);
+      aspect-ratio: 1;
+      border: 8px solid var(--navy);
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #fff 0 56%, #f8fbfd 57% 100%);
+      box-shadow: 0 18px 34px rgba(24, 50, 74, 0.14);
+    }
+
+    .clock-face::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 4;
+      width: 16px;
+      height: 16px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: var(--rose);
+    }
+
+    .clock-number {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      color: var(--navy);
+      font-size: clamp(1rem, 2.6vmin, 1.55rem);
+      font-weight: 950;
+      transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * min(21vmin, 150px))) rotate(calc(-1 * var(--angle)));
+    }
+
+    .clock-tick {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 3px;
+      height: 9px;
+      border-radius: 999px;
+      background: #8aa0b4;
+      transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * min(23vmin, 168px)));
+    }
+
+    .hand {
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      z-index: 2;
+      border-radius: 999px;
+      transform-origin: bottom center;
+      transform: translateX(-50%) rotate(var(--angle));
+    }
+
+    .hour-hand {
+      width: 10px;
+      height: 28%;
+      background: var(--navy);
+    }
+
+    .minute-hand {
+      width: 6px;
+      height: 40%;
+      background: var(--teal);
+    }
+
+    .money-model {
+      width: min(100%, 650px);
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+    }
+
+    .money-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 16px;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+    }
+
+    .coin,
+    .note {
+      display: grid;
+      place-items: center;
+      color: #15324b;
+      font-weight: 950;
+      box-shadow: 0 10px 18px rgba(24, 50, 74, 0.12);
+    }
+
+    .coin {
+      width: clamp(58px, 8vmin, 84px);
+      height: clamp(58px, 8vmin, 84px);
+      border: 4px solid rgba(255, 255, 255, 0.76);
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fde68a, #f59e0b);
+      font-size: clamp(0.9rem, 2vmin, 1.25rem);
+    }
+
+    .coin.silver {
+      background: linear-gradient(135deg, #f8fafc, #cbd5e1);
+    }
+
+    .note {
+      width: clamp(110px, 16vmin, 155px);
+      height: clamp(58px, 8vmin, 86px);
+      background: linear-gradient(135deg, #bbf7d0, #22c55e);
+      font-size: clamp(1rem, 2.2vmin, 1.5rem);
+    }
+
+    .shape-model {
+      width: min(100%, 660px);
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+    }
+
+    .shape-board {
+      position: relative;
+      width: min(100%, 440px);
+      height: min(45vh, 260px);
+      border: 5px solid var(--navy);
+      background: #e8fbf7;
+    }
+
+    .shape-board.square {
+      width: min(56vmin, 300px);
+      height: min(56vmin, 300px);
+    }
+
+    .parallel-mark,
+    .equal-mark {
+      position: absolute;
+      background: var(--orange);
+    }
+
+    .parallel-mark.top,
+    .parallel-mark.bottom {
+      width: 28px;
+      height: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .parallel-mark.top {
+      top: 14px;
+    }
+
+    .parallel-mark.bottom {
+      bottom: 14px;
+    }
+
+    .parallel-mark.left,
+    .parallel-mark.right {
+      width: 4px;
+      height: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .parallel-mark.left {
+      left: 14px;
+    }
+
+    .parallel-mark.right {
+      right: 14px;
+    }
+
+    .equal-mark.top,
+    .equal-mark.bottom {
+      width: 5px;
+      height: 34px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .equal-mark.top {
+      top: -19px;
+    }
+
+    .equal-mark.bottom {
+      bottom: -19px;
+    }
+
+    .equal-mark.left,
+    .equal-mark.right {
+      width: 34px;
+      height: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .equal-mark.left {
+      left: -19px;
+    }
+
+    .equal-mark.right {
+      right: -19px;
+    }
+
+    .measure-model {
+      width: min(100%, 650px);
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+    }
+
+    .measure-rectangle {
+      position: relative;
+      width: min(100%, 500px);
+      height: min(36vh, 230px);
+      border: 6px solid var(--navy);
+      background:
+        linear-gradient(rgba(24, 184, 173, 0.28), rgba(24, 184, 173, 0.28)),
+        repeating-linear-gradient(0deg, transparent 0 31px, rgba(23, 52, 84, 0.16) 31px 32px),
+        repeating-linear-gradient(90deg, transparent 0 31px, rgba(23, 52, 84, 0.16) 31px 32px);
+    }
+
+    .measure-label {
+      position: absolute;
+      padding: 5px 8px;
+      color: #fff;
+      background: var(--navy);
+      font-weight: 950;
+    }
+
+    .measure-label.length {
+      left: 50%;
+      bottom: -38px;
+      transform: translateX(-50%);
+    }
+
+    .measure-label.width {
+      top: 50%;
+      right: -54px;
+      transform: translateY(-50%);
+    }
+
+    .bar-model {
+      width: min(100%, 680px);
+      display: grid;
+      gap: 18px;
+    }
+
+    .bar {
+      display: grid;
+      grid-template-columns: repeat(var(--parts), 1fr);
+      border: 4px solid var(--navy);
+      background: #fff;
+    }
+
+    .bar-part {
+      min-height: clamp(54px, 9vh, 92px);
+      display: grid;
+      place-items: center;
+      border-right: 3px solid var(--navy);
+      font-family: var(--math-font);
+      font-size: clamp(1.3rem, 3vw, 2.4rem);
+      font-weight: 950;
+      background: #e8fbf7;
+    }
+
+    .bar-part:last-child {
+      border-right: 0;
+    }
+
+    .bar-part.highlight {
+      background: #fff7ed;
+    }
+
+    .equation-strip {
+      width: min(100%, 680px);
+      padding: 14px 16px;
+      border: 2px solid var(--line);
+      background: #fff;
+      color: var(--navy);
+      font-family: var(--math-font);
+      font-size: clamp(1.4rem, 3.2vw, 2.8rem);
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .chart-caption {
+      color: var(--muted);
+      font-size: clamp(0.9rem, 1.2vw, 1rem);
+      font-weight: 850;
+      text-align: center;
+      line-height: 1.34;
+    }
+
+    .print-footer {
+      display: none;
+    }
+
+    @media (max-width: 1100px) {
+      .controls {
+        grid-template-columns: minmax(180px, 1fr) repeat(3, minmax(84px, 1fr));
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-nav {
+        display: none;
+      }
+    }
+
+    @media (max-width: 820px) {
+      html,
+      body {
+        overflow-y: auto;
+      }
+
+      .app {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100svh;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .controls select {
+        grid-column: 1 / -1;
+      }
+
+      .chart-stage {
+        grid-template-columns: 1fr;
+        overflow: visible;
+      }
+
+      .board {
+        overflow: visible;
+      }
+
+      .notes-panel {
+        grid-template-rows: none;
+      }
+    }
+
+    @media print {
+      html,
+      body {
+        overflow: visible;
+        background: #fff;
+      }
+
+      .teacher-tab,
+      .sidebar,
+      .sidebar-overlay,
+      .topbar,
+      .chart-nav {
+        display: none !important;
+      }
+
+      .app {
+        display: block;
+        width: auto;
+        height: auto;
+        padding: 0;
+      }
+
+      .workspace {
+        display: block;
+      }
+
+      .board {
+        border: 0;
+        box-shadow: none;
+      }
+
+      .chart-stage {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10mm;
+        padding: 8mm 0 0;
+        background: #fff;
+      }
+
+      .visual-panel,
+      .notes-panel {
+        border-color: #111827;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .reveal-item {
+        color: var(--ink);
+        border-style: solid;
+        background: #fff;
+      }
+
+      .reveal-item .hidden-text {
+        filter: none;
+        opacity: 1;
+      }
+
+      .print-footer {
+        display: block;
+        margin-top: 7mm;
+        color: #475569;
+        font-size: 9pt;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="teacher-tab" type="button" onclick="toggleSidebar()">TEACHER NOTES</button>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Elementary Maths Anchor Charts</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>Anchor charts are visual references that capture a key model, rule, vocabulary set, or method. They help pupils return to the idea while practising.</p>
+      <h3>Classroom Flow</h3>
+      <ul>
+        <li>Choose the chart linked to the concept you are teaching.</li>
+        <li>Start with the visual model before revealing all of the written information.</li>
+        <li>Use Reveal Next to build the chart with the class.</li>
+        <li>Use the write function in Classroom View to add examples, labels, and pupil responses.</li>
+      </ul>
+      <h3>Best Use</h3>
+      <p>These are designed for teacher explanation, retrieval, intervention, and display. They should not replace modelling; they give the teacher a clean board-ready structure to build from.</p>
+    </div>
+  </aside>
+
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">AC</div>
+        <div>
+          <h1>Elementary Maths Anchor Charts</h1>
+          <p class="subtitle">Build visual reference charts one step at a time for primary and elementary maths.</p>
+        </div>
+      </div>
+      <div class="controls">
+        <select id="chartSelect" aria-label="Choose anchor chart"></select>
+        <button class="action-btn" type="button" id="newExampleBtn">New Example</button>
+        <button class="action-btn orange" type="button" id="revealNextBtn">Reveal Next</button>
+        <button class="action-btn purple" type="button" id="showAllBtn">Show All</button>
+        <button class="action-btn secondary" type="button" id="resetBtn">Reset</button>
+        <button class="action-btn secondary" type="button" id="printBtn">Print / Save</button>
+        <button class="action-btn secondary" type="button" id="fullscreenBtn">Full Screen</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <aside class="chart-nav">
+        <h2>Chart Library</h2>
+        <div class="chart-list" id="chartList"></div>
+        <div class="teacher-card">Use the chart selector for live teaching. The chart reveals gradually so pupils can predict, discuss, and explain before the final reference is complete.</div>
+      </aside>
+
+      <section class="board" id="board">
+        <div class="board-head">
+          <div>
+            <p class="board-kicker" id="boardKicker">Anchor Chart</p>
+            <h2 class="board-title" id="boardTitle">Number Bonds</h2>
+            <p class="board-subtitle" id="boardSubtitle">Use whole and part thinking to connect addition and subtraction.</p>
+          </div>
+          <div class="progress-badge" id="progressBadge">0 / 0 shown</div>
+        </div>
+        <div class="chart-stage">
+          <section class="visual-panel">
+            <div class="panel-title">
+              <span id="visualTitle">Model</span>
+              <span class="scale-note" id="scaleNote">Not drawn to scale</span>
+            </div>
+            <div class="visual-board">
+              <div class="chart-visual" id="chartVisual"></div>
+            </div>
+          </section>
+          <section class="notes-panel" id="notesPanel"></section>
+        </div>
+      </section>
+    </section>
+    <div class="print-footer">Generated with Kaizen Maths for classroom teaching.</div>
+  </main>
+
+  <script>
+    const chartOrder = [
+      "numberBonds",
+      "placeValue",
+      "operations",
+      "fractions",
+      "arrays",
+      "time",
+      "money",
+      "shapeProperties",
+      "measurement",
+      "barModels"
+    ];
+
+    let currentChart = "numberBonds";
+    let currentExample = {};
+    let revealCount = 0;
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function choice(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function safeText(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function makeNumberBondExample() {
+      const whole = choice([10, 12, 15, 18, 20, 25, 30, 50, 100]);
+      const part = whole === 100 ? choice([20, 25, 30, 40, 60, 75]) : randInt(2, whole - 2);
+      return { whole, part, missing: whole - part };
+    }
+
+    function makePlaceValueExample() {
+      const hundreds = randInt(2, 8);
+      const tens = randInt(1, 9);
+      const ones = randInt(1, 9);
+      return { number: hundreds * 100 + tens * 10 + ones, hundreds, tens, ones };
+    }
+
+    function makeFractionExample() {
+      const denominator = choice([3, 4, 5, 6, 8, 10]);
+      const numerator = randInt(1, denominator - 1);
+      return { numerator, denominator };
+    }
+
+    function makeArrayExample() {
+      const rows = randInt(2, 6);
+      const cols = randInt(3, 8);
+      return { rows, cols, product: rows * cols };
+    }
+
+    function makeTimeExample() {
+      const hour = randInt(1, 12);
+      const minute = choice([0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]);
+      return { hour, minute };
+    }
+
+    function makeMoneyExample() {
+      const values = choice([
+        [10, 10, 5, 5, 1],
+        [25, 25, 10, 5],
+        [50, 20, 20, 10],
+        [100, 50, 20, 20, 10],
+        [200, 100, 50, 25, 25]
+      ]);
+      return { values, total: values.reduce((sum, value) => sum + value, 0) };
+    }
+
+    function makeMeasureExample() {
+      const length = randInt(4, 9);
+      const width = randInt(2, 6);
+      return { length, width, area: length * width, perimeter: 2 * (length + width) };
+    }
+
+    function makeBarModelExample() {
+      const parts = choice([3, 4, 5, 6]);
+      const value = choice([4, 5, 6, 8, 10, 12]);
+      return { parts, value, total: parts * value };
+    }
+
+    const chartBuilders = {
+      numberBonds: {
+        label: "Number Bonds",
+        short: "Whole-part",
+        title: "Number Bonds",
+        subtitle: "Use whole and part thinking to connect addition and subtraction.",
+        visualTitle: "Whole and Part Model",
+        newExample: makeNumberBondExample,
+        visual: (ex) => `
+          <div class="part-whole">
+            <div class="whole-box">${ex.whole}</div>
+            <div class="arrow-text">whole = part + part</div>
+            <div class="part-row">
+              <div class="part-box known">${ex.part}</div>
+              <div class="part-box missing">?</div>
+            </div>
+            <div class="equation-strip">${ex.part} + ? = ${ex.whole}</div>
+          </div>
+        `,
+        sections: (ex) => ({
+          "Key Idea": [
+            "A whole can be split into two or more parts.",
+            "If one part is missing, use the inverse relationship.",
+            `${ex.whole} - ${ex.part} = ${ex.missing}`
+          ],
+          "Teacher Model": [
+            `Start with the whole: ${ex.whole}.`,
+            `One known part is ${ex.part}.`,
+            `The missing part is ${ex.missing}, because ${ex.part} + ${ex.missing} = ${ex.whole}.`
+          ],
+          "Vocabulary": [
+            "Whole",
+            "Part",
+            "Missing part",
+            "Inverse operation"
+          ],
+          "Ask Pupils": [
+            "How do you know which number is the whole?",
+            "Which subtraction checks the missing part?",
+            "What other number bond has the same whole?"
+          ]
+        })
+      },
+      placeValue: {
+        label: "Place Value",
+        short: "HTO",
+        title: "Place Value",
+        subtitle: "A digit has a different value depending on its place.",
+        visualTitle: "Hundreds, Tens and Ones",
+        newExample: makePlaceValueExample,
+        visual: (ex) => `
+          <div class="place-chart">
+            <div class="place-columns">
+              <div class="place-cell"><div class="place-label">Hundreds</div><div class="place-digit">${ex.hundreds}</div></div>
+              <div class="place-cell"><div class="place-label">Tens</div><div class="place-digit">${ex.tens}</div></div>
+              <div class="place-cell"><div class="place-label">Ones</div><div class="place-digit">${ex.ones}</div></div>
+            </div>
+            <div class="place-value-row">
+              <div class="value-chip">${ex.hundreds} hundreds = ${ex.hundreds * 100}</div>
+              <div class="value-chip">${ex.tens} tens = ${ex.tens * 10}</div>
+              <div class="value-chip">${ex.ones} ones = ${ex.ones}</div>
+            </div>
+            <div class="equation-strip">${ex.number}</div>
+          </div>
+        `,
+        sections: (ex) => ({
+          "Key Idea": [
+            "The place tells us the value of each digit.",
+            `${ex.hundreds} in the hundreds column means ${ex.hundreds * 100}.`,
+            `${ex.tens} in the tens column means ${ex.tens * 10}.`
+          ],
+          "Teacher Model": [
+            `Read ${ex.number} as ${ex.hundreds} hundreds, ${ex.tens} tens and ${ex.ones} ones.`,
+            `Expanded form: ${ex.hundreds * 100} + ${ex.tens * 10} + ${ex.ones}.`,
+            `The digit is not the same as its value.`
+          ],
+          "Vocabulary": [
+            "Digit",
+            "Place",
+            "Value",
+            "Expanded form"
+          ],
+          "Ask Pupils": [
+            `What is the value of the ${ex.tens} in ${ex.number}?`,
+            "Which digit would change if we added 10?",
+            "How would the number change if the hundreds digit increased by 1?"
+          ]
+        })
+      },
+      operations: {
+        label: "Operation Language",
+        short: "Symbols",
+        title: "Operation Language",
+        subtitle: "Connect operation symbols to words, actions, and inverse operations.",
+        visualTitle: "Symbols and Meaning",
+        newExample: () => ({ a: randInt(6, 20), b: randInt(2, 9) }),
+        visual: (ex) => `
+          <div class="operation-grid">
+            <div class="operation-card"><div><span class="operation-symbol">+</span><div class="operation-words">add<br>sum<br>altogether</div></div></div>
+            <div class="operation-card"><div><span class="operation-symbol">-</span><div class="operation-words">subtract<br>difference<br>less than</div></div></div>
+            <div class="operation-card"><div><span class="operation-symbol">x</span><div class="operation-words">multiply<br>groups of<br>product</div></div></div>
+            <div class="operation-card"><div><span class="operation-symbol">÷</span><div class="operation-words">divide<br>share<br>quotient</div></div></div>
+            <div class="equation-strip" style="grid-column:1 / -1">${ex.a} + ${ex.b} = ${ex.a + ex.b}</div>
+          </div>
+        `,
+        sections: (ex) => ({
+          "Key Idea": [
+            "The symbol tells us the action in the calculation.",
+            "Addition and subtraction are inverse operations.",
+            "Multiplication and division are inverse operations."
+          ],
+          "Teacher Model": [
+            `In ${ex.a} + ${ex.b}, the plus sign means combine the quantities.`,
+            `The inverse check is ${ex.a + ex.b} - ${ex.b} = ${ex.a}.`,
+            "Use the words in the problem to decide the operation."
+          ],
+          "Vocabulary": [
+            "Sum",
+            "Difference",
+            "Product",
+            "Quotient"
+          ],
+          "Ask Pupils": [
+            "Which words in the question tell us the operation?",
+            "What inverse operation checks the answer?",
+            "Could a different operation make sense in this context?"
+          ]
+        })
+      },
+      fractions: {
+        label: "Fractions",
+        short: "Parts",
+        title: "Fractions",
+        subtitle: "Fractions describe equal parts of the same whole.",
+        visualTitle: "Equal Parts of a Whole",
+        newExample: makeFractionExample,
+        visual: (ex) => `
+          <div class="fraction-model">
+            <div class="fraction-bar" style="--denominator:${ex.denominator}">
+              ${Array.from({ length: ex.denominator }, (_, index) => `<span class="fraction-piece${index < ex.numerator ? " shaded" : ""}"></span>`).join("")}
+            </div>
+            <div class="fraction-labels">
+              <div class="fraction-label">Numerator: ${ex.numerator}</div>
+              <div class="fraction-label">Denominator: ${ex.denominator}</div>
+              <div class="fraction-label">Fraction: <span class="math">${ex.numerator}/${ex.denominator}</span></div>
+            </div>
+          </div>
+        `,
+        sections: (ex) => ({
+          "Key Idea": [
+            "The parts must be equal in size.",
+            "The denominator tells how many equal parts make the whole.",
+            "The numerator tells how many equal parts are selected."
+          ],
+          "Teacher Model": [
+            `The whole is divided into ${ex.denominator} equal parts.`,
+            `${ex.numerator} parts are shaded.`,
+            `The shaded fraction is ${ex.numerator}/${ex.denominator}.`
+          ],
+          "Vocabulary": [
+            "Whole",
+            "Equal parts",
+            "Numerator",
+            "Denominator"
+          ],
+          "Ask Pupils": [
+            "How can we tell the parts are equal?",
+            "Which number names the total number of parts?",
+            "What would change if one more part was shaded?"
+          ]
+        })
+      },
+      arrays: {
+        label: "Arrays",
+        short: "Rows",
+        title: "Multiplication Arrays",
+        subtitle: "Arrays show multiplication as equal rows and columns.",
+        visualTitle: "Rows and Columns",
+        newExample: makeArrayExample,
+        visual: (ex) => `
+          <div class="array-model">
+            <div class="array-grid" style="--rows:${ex.rows};--cols:${ex.cols};--cell-size:${Math.max(28, Math.min(56, Math.floor(300 / Math.max(ex.rows, ex.cols))))}px">
+              ${Array.from({ length: ex.product }, () => '<span class="array-cell"></span>').join("")}
+            </div>
+            <div class="array-caption">
+              <span class="caption-chip">${ex.rows} rows</span>
+              <span class="caption-chip">${ex.cols} columns</span>
+              <span class="caption-chip">${ex.rows} x ${ex.cols} = ${ex.product}</span>
+            </div>
+          </div>
+        `,
+        sections: (ex) => ({
+          "Key Idea": [
+            "Each row has the same number of objects.",
+            "Multiplication can be read as rows times columns.",
+            "The total is the product."
+          ],
+          "Teacher Model": [
+            `There are ${ex.rows} rows.`,
+            `Each row has ${ex.cols} squares.`,
+            `${ex.rows} x ${ex.cols} = ${ex.product}.`
+          ],
+          "Vocabulary": [
+            "Rows",
+            "Columns",
+            "Product",
+            "Equal groups"
+          ],
+          "Ask Pupils": [
+            "What is repeated in each row?",
+            "How could we write this as repeated addition?",
+            "Why does turning the array not change the product?"
+          ]
+        })
+      },
+      time: {
+        label: "Telling Time",
+        short: "Clock",
+        title: "Telling Time",
+        subtitle: "Read the hour hand and minute hand together.",
+        visualTitle: "Analogue Clock",
+        newExample: makeTimeExample,
+        visual: (ex) => {
+          const hourAngle = ((ex.hour % 12) * 30) + (ex.minute * 0.5);
+          const minuteAngle = ex.minute * 6;
+          return `
+            <div class="clock-model">
+              <div class="clock-face">
+                ${Array.from({ length: 60 }, (_, index) => `<span class="clock-tick" style="--angle:${index * 6}deg;${index % 5 === 0 ? 'height:13px;width:4px' : ''}"></span>`).join("")}
+                ${Array.from({ length: 12 }, (_, index) => `<span class="clock-number" style="--angle:${(index + 1) * 30}deg">${index + 1}</span>`).join("")}
+                <span class="hand hour-hand" style="--angle:${hourAngle}deg"></span>
+                <span class="hand minute-hand" style="--angle:${minuteAngle}deg"></span>
+              </div>
+              <div class="equation-strip">${ex.hour}:${String(ex.minute).padStart(2, "0")}</div>
+            </div>
+          `;
+        },
+        sections: (ex) => ({
+          "Key Idea": [
+            "The short hand shows the hour.",
+            "The long hand shows the minutes.",
+            "Each number on the clock is worth 5 minutes."
+          ],
+          "Teacher Model": [
+            `The minute hand points to ${ex.minute === 0 ? "12" : ex.minute / 5}.`,
+            `${ex.minute} minutes have passed the hour.`,
+            `The time is ${ex.hour}:${String(ex.minute).padStart(2, "0")}.`
+          ],
+          "Vocabulary": [
+            "Hour hand",
+            "Minute hand",
+            "O'clock",
+            "Past and to"
+          ],
+          "Ask Pupils": [
+            "Which hand should we read first?",
+            "How many minutes does each number represent?",
+            "Where will the hour hand be halfway through the hour?"
+          ]
+        })
+      },
+      money: {
+        label: "Money",
+        short: "Value",
+        title: "Money and Amounts",
+        subtitle: "Combine money units carefully and keep track of the total.",
+        visualTitle: "Counting Money",
+        newExample: makeMoneyExample,
+        visual: (ex) => `
+          <div class="money-model">
+            <div class="money-row">
+              ${ex.values.map((value) => value >= 100 ? `<span class="note">${value}</span>` : `<span class="coin${value <= 10 ? " silver" : ""}">${value}</span>`).join("")}
+            </div>
+            <div class="equation-strip">Total = ${ex.total}</div>
+            <div class="chart-caption">Use the local currency unit when teaching this chart.</div>
+          </div>
+        `,
+        sections: (ex) => ({
+          "Key Idea": [
+            "Each coin or note has its own value.",
+            "Count from the largest value where possible.",
+            "Keep the same currency unit throughout the calculation."
+          ],
+          "Teacher Model": [
+            `Values shown: ${ex.values.join(" + ")}.`,
+            `Total: ${ex.total}.`,
+            "Check by grouping friendly amounts first."
+          ],
+          "Vocabulary": [
+            "Coin",
+            "Note",
+            "Total",
+            "Change"
+          ],
+          "Ask Pupils": [
+            "Which value should we count first?",
+            "Which coins can be grouped to make a friendly total?",
+            "How could you make the same amount another way?"
+          ]
+        })
+      },
+      shapeProperties: {
+        label: "2D Shape Properties",
+        short: "Shapes",
+        title: "2D Shape Properties",
+        subtitle: "Use markings to connect shape names with properties.",
+        visualTitle: "Rectangle and Square Properties",
+        newExample: () => ({ shape: choice(["rectangle", "square"]) }),
+        visual: (ex) => `
+          <div class="shape-model">
+            <div class="shape-board ${ex.shape === "square" ? "square" : ""}">
+              <span class="parallel-mark top"></span>
+              <span class="parallel-mark bottom"></span>
+              <span class="parallel-mark left"></span>
+              <span class="parallel-mark right"></span>
+              <span class="equal-mark top"></span>
+              <span class="equal-mark bottom"></span>
+              ${ex.shape === "square" ? '<span class="equal-mark left"></span><span class="equal-mark right"></span>' : ""}
+            </div>
+            <div class="equation-strip">${ex.shape === "square" ? "Square" : "Rectangle"}</div>
+          </div>
+        `,
+        sections: (ex) => ({
+          "Key Idea": [
+            "A property is something that is always true for that shape.",
+            "Markings show equal sides, parallel sides, and right angles.",
+            ex.shape === "square" ? "A square has four equal sides and four right angles." : "A rectangle has opposite sides equal and four right angles."
+          ],
+          "Teacher Model": [
+            "Point to the sides that are parallel.",
+            "Point to the sides that are equal in length.",
+            "Use the markings to justify the shape name."
+          ],
+          "Vocabulary": [
+            "Side",
+            "Vertex",
+            "Parallel",
+            "Equal length"
+          ],
+          "Ask Pupils": [
+            "Which marking tells us two sides are equal?",
+            "Which sides are parallel?",
+            "Which property would change if this became a different quadrilateral?"
+          ]
+        })
+      },
+      measurement: {
+        label: "Perimeter and Area",
+        short: "Measure",
+        title: "Perimeter and Area",
+        subtitle: "Perimeter measures around a shape; area measures the space inside.",
+        visualTitle: "Length, Width, Perimeter and Area",
+        newExample: makeMeasureExample,
+        visual: (ex) => `
+          <div class="measure-model">
+            <div class="measure-rectangle">
+              <span class="measure-label length">length = ${ex.length}</span>
+              <span class="measure-label width">width = ${ex.width}</span>
+            </div>
+            <div class="equation-strip">Area = ${ex.length} x ${ex.width}</div>
+          </div>
+        `,
+        sections: (ex) => ({
+          "Key Idea": [
+            "Perimeter is the distance around the outside.",
+            "Area is the space inside the shape.",
+            "Area is measured in square units."
+          ],
+          "Teacher Model": [
+            `Area: ${ex.length} x ${ex.width} = ${ex.area}.`,
+            `Perimeter: ${ex.length} + ${ex.width} + ${ex.length} + ${ex.width} = ${ex.perimeter}.`,
+            "Use units carefully: length units for perimeter, square units for area."
+          ],
+          "Vocabulary": [
+            "Length",
+            "Width",
+            "Perimeter",
+            "Area"
+          ],
+          "Ask Pupils": [
+            "Are we measuring around the outside or covering the inside?",
+            "Why does area use square units?",
+            "How could two rectangles have the same area but different perimeters?"
+          ]
+        })
+      },
+      barModels: {
+        label: "Bar Model Reasoning",
+        short: "Models",
+        title: "Bar Model Reasoning",
+        subtitle: "Use equal parts to represent fractions, ratios, comparison, and unknowns.",
+        visualTitle: "Equal Parts Model",
+        newExample: makeBarModelExample,
+        visual: (ex) => `
+          <div class="bar-model">
+            <div class="bar" style="--parts:${ex.parts}">
+              ${Array.from({ length: ex.parts }, (_, index) => `<span class="bar-part${index === ex.parts - 1 ? " highlight" : ""}">${ex.value}</span>`).join("")}
+            </div>
+            <div class="equation-strip">${ex.parts} equal parts = ${ex.total}</div>
+            <div class="chart-caption">Each rectangle must represent the same amount.</div>
+          </div>
+        `,
+        sections: (ex) => ({
+          "Key Idea": [
+            "A bar model represents quantities with equal parts.",
+            "Each equal part must have the same value.",
+            "The unknown can be shown as a box before calculating."
+          ],
+          "Teacher Model": [
+            `There are ${ex.parts} equal parts.`,
+            `Each part is worth ${ex.value}.`,
+            `The total is ${ex.parts} x ${ex.value} = ${ex.total}.`
+          ],
+          "Vocabulary": [
+            "Whole",
+            "Equal part",
+            "Comparison",
+            "Unknown"
+          ],
+          "Ask Pupils": [
+            "What does one box represent?",
+            "Which quantity is the whole?",
+            "How does the model show the operation before we calculate?"
+          ]
+        })
+      }
+    };
+
+    function allRevealItems() {
+      const builder = chartBuilders[currentChart];
+      return Object.entries(builder.sections(currentExample)).flatMap(([heading, items]) => items.map((item) => ({ heading, item })));
+    }
+
+    function setChart(slug, keepReveal = false) {
+      currentChart = slug;
+      currentExample = chartBuilders[currentChart].newExample();
+      revealCount = keepReveal ? revealCount : 0;
+      render();
+    }
+
+    function renderTabs() {
+      const select = document.getElementById("chartSelect");
+      const list = document.getElementById("chartList");
+      select.innerHTML = chartOrder.map((slug) => `<option value="${slug}">${safeText(chartBuilders[slug].label)}</option>`).join("");
+      select.value = currentChart;
+      list.innerHTML = chartOrder.map((slug) => `
+        <button class="chart-tab ${slug === currentChart ? "active" : ""}" type="button" data-chart="${slug}">
+          <span>${safeText(chartBuilders[slug].label)}</span>
+          <span>${safeText(chartBuilders[slug].short)}</span>
+        </button>
+      `).join("");
+    }
+
+    function renderNotes() {
+      const builder = chartBuilders[currentChart];
+      const sections = builder.sections(currentExample);
+      let runningIndex = 0;
+      return Object.entries(sections).map(([heading, items]) => `
+        <section class="note-section">
+          <div class="note-heading">${safeText(heading)}</div>
+          <div class="reveal-list">
+            ${items.map((item) => {
+              const visible = runningIndex < revealCount;
+              runningIndex += 1;
+              return `<div class="reveal-item ${visible ? "revealed" : ""}"><span class="hidden-text">${visible ? safeText(item) : "Click Reveal Next to build this part of the chart."}</span></div>`;
+            }).join("")}
+          </div>
+        </section>
+      `).join("");
+    }
+
+    function render() {
+      const builder = chartBuilders[currentChart];
+      const total = allRevealItems().length;
+      revealCount = Math.min(revealCount, total);
+      document.getElementById("boardKicker").textContent = "Elementary Anchor Chart";
+      document.getElementById("boardTitle").textContent = builder.title;
+      document.getElementById("boardSubtitle").textContent = builder.subtitle;
+      document.getElementById("visualTitle").textContent = builder.visualTitle;
+      document.getElementById("progressBadge").textContent = `${revealCount} / ${total} shown`;
+      document.getElementById("chartVisual").innerHTML = builder.visual(currentExample);
+      document.getElementById("notesPanel").innerHTML = renderNotes();
+      document.getElementById("scaleNote").style.visibility = ["time", "operations"].includes(currentChart) ? "hidden" : "visible";
+      renderTabs();
+      bindTabs();
+    }
+
+    function bindTabs() {
+      document.querySelectorAll(".chart-tab").forEach((button) => {
+        button.addEventListener("click", () => setChart(button.dataset.chart));
+      });
+    }
+
+    function revealNext() {
+      const total = allRevealItems().length;
+      revealCount = Math.min(total, revealCount + 1);
+      render();
+    }
+
+    function showAll() {
+      revealCount = allRevealItems().length;
+      render();
+    }
+
+    function printChart() {
+      showAll();
+      window.setTimeout(() => window.print(), 50);
+    }
+
+    function resetReveal() {
+      revealCount = 0;
+      render();
+    }
+
+    function newExample() {
+      currentExample = chartBuilders[currentChart].newExample();
+      revealCount = 0;
+      render();
+    }
+
+    function toggleFullscreen() {
+      document.getElementById("board").classList.toggle("fullscreen");
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    document.getElementById("chartSelect").addEventListener("change", (event) => setChart(event.target.value));
+    document.getElementById("newExampleBtn").addEventListener("click", newExample);
+    document.getElementById("revealNextBtn").addEventListener("click", revealNext);
+    document.getElementById("showAllBtn").addEventListener("click", showAll);
+    document.getElementById("resetBtn").addEventListener("click", resetReveal);
+    document.getElementById("fullscreenBtn").addEventListener("click", toggleFullscreen);
+    document.getElementById("printBtn").addEventListener("click", printChart);
+    window.addEventListener("beforeprint", showAll);
+
+    setChart(currentChart);
+  </script>
+</body>
+</html>
