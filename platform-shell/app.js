@@ -2919,7 +2919,10 @@ function schoolContextFromRecord(record = {}) {
     currency_symbol: record.school_currency_symbol || record.currency_symbol || "£",
     locale: record.school_locale || record.locale || "en-GB",
     curriculum_focus: record.school_curriculum_focus || record.curriculum_focus || "",
-    standards_label: record.school_standards_label || record.standards_label || ""
+    standards_label: record.school_standards_label || record.standards_label || "",
+    logo_url: record.school_logo_url || record.logo_url || "",
+    contact_person: record.school_contact_person || record.contact_person || "",
+    school_synopsis: record.school_synopsis || record.synopsis || ""
   };
 }
 
@@ -3762,16 +3765,19 @@ async function loadSchools({ rerender = false } = {}) {
   const client = await window.KaizenAuth?.getClient?.().catch(() => null);
   if (!client || !isAdmin()) return;
   try {
-    const [{ data: schools, error: schoolsError }, { data: teacherAccess, error: teacherAccessError }] = await Promise.all([
-      client
-        .from("schools")
-        .select("id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, standards_label, licence_type, allowed_domains, seat_limit, join_code, join_code_expires_at, is_active, notes, licence_starts_at, licence_ends_at, created_at, updated_at")
-        .order("name", { ascending: true }),
+    const schoolSelect = "id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, standards_label, logo_url, contact_person, school_synopsis, licence_type, allowed_domains, seat_limit, join_code, join_code_expires_at, is_active, notes, licence_starts_at, licence_ends_at, created_at, updated_at";
+    const fallbackSchoolSelect = "id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, standards_label, licence_type, allowed_domains, seat_limit, join_code, join_code_expires_at, is_active, notes, licence_starts_at, licence_ends_at, created_at, updated_at";
+    let [schoolsResponse, { data: teacherAccess, error: teacherAccessError }] = await Promise.all([
+      client.from("schools").select(schoolSelect).order("name", { ascending: true }),
       client
         .from("school_teacher_access")
         .select("id, school_id, email, created_at")
         .order("email", { ascending: true })
     ]);
+    if (schoolsResponse.error && /column|schema cache/i.test(schoolsResponse.error.message || "")) {
+      schoolsResponse = await client.from("schools").select(fallbackSchoolSelect).order("name", { ascending: true });
+    }
+    const { data: schools, error: schoolsError } = schoolsResponse;
     if (schoolsError) throw schoolsError;
     if (teacherAccessError) throw teacherAccessError;
     state.schools = schools || [];
@@ -3796,6 +3802,9 @@ async function saveSchool(values) {
     locale: String(values.locale || "").trim() || "en-GB",
     curriculum_focus: String(values.curriculum_focus || "").trim(),
     standards_label: String(values.standards_label || "").trim(),
+    logo_url: String(values.logo_url || "").trim(),
+    contact_person: String(values.contact_person || "").trim(),
+    school_synopsis: String(values.school_synopsis || "").trim(),
     licence_type: String(values.licence_type || "").trim() || "school",
     allowed_domains: normaliseDomainList(values.allowed_domains).join(", "),
     seat_limit: values.seat_limit ? Number(values.seat_limit) : null,
@@ -3984,6 +3993,59 @@ function safeExternalUrl(value) {
   } catch {
     return "";
   }
+}
+
+function safeImageSource(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  if (/^data:image\/(png|jpe?g|webp|gif|svg\+xml);base64,/i.test(raw)) return raw;
+  if (/^(assets\/|\/assets\/|favicon\.svg)/i.test(raw)) return raw;
+  try {
+    const parsed = new URL(raw);
+    return parsed.protocol === "https:" ? parsed.href : "";
+  } catch {
+    return "";
+  }
+}
+
+function schoolLogoFileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    if (!file) {
+      resolve("");
+      return;
+    }
+    if (!String(file.type || "").startsWith("image/")) {
+      reject(new Error("Choose an image file for the school logo."));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("The logo file could not be read."));
+    reader.onload = () => {
+      const originalDataUrl = String(reader.result || "");
+      if (!originalDataUrl || file.type === "image/svg+xml") {
+        resolve(originalDataUrl);
+        return;
+      }
+      const image = new Image();
+      image.onerror = () => resolve(originalDataUrl);
+      image.onload = () => {
+        const maxDimension = 420;
+        const scale = Math.min(1, maxDimension / Math.max(image.width || maxDimension, image.height || maxDimension));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round((image.width || maxDimension) * scale));
+        canvas.height = Math.max(1, Math.round((image.height || maxDimension) * scale));
+        const context = canvas.getContext("2d");
+        if (!context) {
+          resolve(originalDataUrl);
+          return;
+        }
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/png"));
+      };
+      image.src = originalDataUrl;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 function bookingSettings() {
@@ -10084,6 +10146,10 @@ function renderSchoolSpace() {
   const schoolContextItems = schoolContextBadges(schoolContext);
   const isSchoolUser = role === "school" && schoolName;
   const licenceEnds = profile.school_licence_ends_at || schoolById(profile.school_id)?.licence_ends_at || "";
+  const schoolLogo = safeImageSource(schoolContext?.logo_url);
+  const schoolInitial = (schoolName || "K").trim().charAt(0).toUpperCase() || "K";
+  const contactPerson = String(schoolContext?.contact_person || "").trim();
+  const schoolSynopsis = String(schoolContext?.school_synopsis || "").trim();
 
   if (!isSignedIn()) {
     app.innerHTML = `
@@ -10123,16 +10189,25 @@ function renderSchoolSpace() {
     ${pageHeader(
       "School Space",
       isSchoolUser
-        ? "Your account is linked to your school licence."
+        ? `Welcome to ${escapeHtml(schoolName)} on Kaizen Maths.`
         : "Use the school code from your department to join a school licence.",
       `<a class="button primary" href="#/book-demo">Book a Demo Session</a><a class="button" href="#/schools">School Licence Notes</a>`
     )}
     <section class="school-space-page">
       ${isSchoolUser ? `
-        <article class="panel school-status-card">
-          <span class="eyebrow">School Licence</span>
-          <h2>${escapeHtml(schoolName)}</h2>
-          <p>Your account has school access. You can use the full Kaizen Maths teaching workspace while this licence is active.${schoolContext?.pilot_name ? ` This account is part of ${escapeHtml(schoolContext.pilot_name)}.` : ""}</p>
+        <article class="panel school-status-card school-identity-card">
+          <div class="school-identity-head">
+            <div class="school-logo-frame">
+              ${schoolLogo
+                ? `<img src="${escapeHtml(schoolLogo)}" alt="${escapeHtml(schoolName)} logo">`
+                : `<span>${escapeHtml(schoolInitial)}</span>`}
+            </div>
+            <div>
+              <span class="eyebrow">${escapeHtml(schoolContext?.pilot_name || schoolContext?.organisation_name || "School Workspace")}</span>
+              <h2>${escapeHtml(schoolName)}</h2>
+              <p>${escapeHtml(schoolSynopsis || "Your school has access to Kaizen Maths for classroom practice, worksheets, assessments, worked examples, and teaching displays.")}</p>
+            </div>
+          </div>
           ${schoolContextItems.length ? `
             <div class="badge-row">
               ${schoolContextItems.map((item) => `<span class="badge">${escapeHtml(item)}</span>`).join("")}
@@ -10152,10 +10227,6 @@ function renderSchoolSpace() {
               <strong>${escapeHtml(formatDisplayDate(licenceEnds))}</strong>
             </div>
             <div>
-              <span>Currency</span>
-              <strong>${escapeHtml(schoolContext?.currency_code ? `${schoolContext.currency_code} ${schoolContext.currency_symbol || ""}`.trim() : "Default")}</strong>
-            </div>
-            <div>
               <span>Curriculum</span>
               <strong>${escapeHtml(schoolContext?.curriculum_focus || "Default")}</strong>
             </div>
@@ -10163,12 +10234,23 @@ function renderSchoolSpace() {
               <span>Standards</span>
               <strong>${escapeHtml(schoolContext?.standards_label || "Default")}</strong>
             </div>
+            <div>
+              <span>Country</span>
+              <strong>${escapeHtml(schoolContext?.country || "Not set")}</strong>
+            </div>
           </div>
           <div class="button-row">
             <a class="button primary" href="#/tools">Open Tool Library</a>
             <a class="button" href="#/worksheet-generator">Open Worksheet Builder</a>
           </div>
         </article>
+        ${contactPerson ? `
+          <article class="panel school-contact-card">
+            <span class="eyebrow">School Contact</span>
+            <h2>${escapeHtml(contactPerson)}</h2>
+            <p>Your school lead for Kaizen Maths access, pilot updates, and local rollout questions.</p>
+          </article>
+        ` : ""}
       ` : `
         <article class="panel school-join-card">
           <span class="eyebrow">Join Your School</span>
@@ -10185,12 +10267,24 @@ function renderSchoolSpace() {
           <p class="school-join-status" id="schoolJoinStatus"></p>
         </article>
       `}
-      <article class="panel school-help-card">
-        <span class="eyebrow">How School Access Works</span>
-        <h2>Admin controlled, teacher simple</h2>
-        <p>A Kaizen Maths admin creates the school licence, sets the approved domains or teacher emails, chooses the seat limit, and shares a join code with the school.</p>
-        <p>Teachers sign in with Google, enter the code once, and their account becomes part of the school licence. Pilot settings such as country, currency, and curriculum focus are controlled from the admin console.</p>
-      </article>
+      ${isSchoolUser ? `
+        <article class="panel school-help-card">
+          <span class="eyebrow">Ready For Lessons</span>
+          <h2>Use your school workspace</h2>
+          <p>Open a topic, project questions in classroom view, build worksheets, or prepare assessment practice for your classes.</p>
+          <div class="school-action-list">
+            <a href="#/tools">Browse curriculum tools</a>
+            <a href="#/coverage-map">View coverage map</a>
+            <a href="#/kaizen-university">Watch Kaizen University guides</a>
+          </div>
+        </article>
+      ` : `
+        <article class="panel school-help-card">
+          <span class="eyebrow">School Access</span>
+          <h2>Sign in, then enter your code</h2>
+          <p>Your school code connects your teacher account to the correct school or pilot space.</p>
+        </article>
+      `}
     </section>
   `;
   bindAuthActions();
@@ -11178,6 +11272,8 @@ function adminSchoolRowHtml(school = {}, index = 0) {
   const seatCopy = id
     ? `${currentSeats} of ${seatLimit || "unlimited"} teacher seats in use`
     : "New school licence";
+  const logo = safeImageSource(school.logo_url);
+  const schoolInitial = (school.name || `School ${index + 1}`).trim().charAt(0).toUpperCase() || "K";
   const contextSummary = [
     school.pilot_name,
     school.organisation_name,
@@ -11189,6 +11285,9 @@ function adminSchoolRowHtml(school = {}, index = 0) {
   return `
     <article class="admin-school-row" data-school-row data-school-id="${escapeHtml(id)}">
       <div class="admin-school-default">
+        <div class="admin-school-logo-preview" data-school-logo-preview>
+          ${logo ? `<img src="${escapeHtml(logo)}" alt="${escapeHtml(school.name || "School")} logo preview">` : `<span>${escapeHtml(schoolInitial)}</span>`}
+        </div>
         <strong>${escapeHtml(school.name || `School ${index + 1}`)}</strong>
         <small>${escapeHtml(seatCopy)}</small>
         <small>${school.is_active === false ? "Inactive" : "Active"} · Code: ${escapeHtml(school.join_code || "Not set")}</small>
@@ -11232,6 +11331,18 @@ function adminSchoolRowHtml(school = {}, index = 0) {
           <input data-school-field="standards_label" type="text" value="${escapeHtml(school.standards_label || "")}" placeholder="MOE Jamaica Mathematics Standards">
         </label>
         <label>
+          School logo URL
+          <input data-school-field="logo_url" type="text" value="${escapeHtml(school.logo_url || "")}" placeholder="Paste logo URL or upload a logo below">
+        </label>
+        <label>
+          Upload school logo
+          <input data-school-logo-upload type="file" accept="image/*">
+        </label>
+        <label>
+          Contact person
+          <input data-school-field="contact_person" type="text" value="${escapeHtml(school.contact_person || "")}" placeholder="Maths lead, HOD, pilot contact">
+        </label>
+        <label>
           Licence type
           <input data-school-field="licence_type" type="text" value="${escapeHtml(school.licence_type || "school")}" placeholder="school, trust, pilot">
         </label>
@@ -11269,6 +11380,10 @@ function adminSchoolRowHtml(school = {}, index = 0) {
         <label>
           Approved teacher emails
           <textarea data-school-field="teacher_emails" rows="4" placeholder="One email per line, or separate with commas">${escapeHtml(teacherEmails)}</textarea>
+        </label>
+        <label>
+          School page synopsis
+          <textarea data-school-field="school_synopsis" rows="4" placeholder="Short school-facing message shown on the School Space page">${escapeHtml(school.school_synopsis || "")}</textarea>
         </label>
         <label>
           Admin notes
@@ -11642,7 +11757,7 @@ function renderAdmin() {
         <div>
           <span class="eyebrow">School And Pilot Access</span>
           <h2>Schools / Pilots</h2>
-          <p>Create school spaces, approve domains or teacher emails, set seat limits, select pilot settings, and choose the currency or curriculum lens teachers should see.</p>
+          <p>Create school spaces, approve domains or teacher emails, set seat limits, select pilot settings, and personalise the school-facing page with a logo, contact person, and school synopsis.</p>
         </div>
         <div class="button-row">
           <button class="button" id="addSchoolRow" type="button">Add School</button>
@@ -11873,7 +11988,43 @@ function bindAdmin() {
     });
   }
 
+  function updateSchoolLogoPreview(row, value) {
+    const preview = row?.querySelector("[data-school-logo-preview]");
+    if (!preview) return;
+    const logo = safeImageSource(value);
+    const name = row.querySelector('[data-school-field="name"]')?.value.trim() || "School";
+    const initial = name.charAt(0).toUpperCase() || "K";
+    preview.innerHTML = logo
+      ? `<img src="${escapeHtml(logo)}" alt="${escapeHtml(name)} logo preview">`
+      : `<span>${escapeHtml(initial)}</span>`;
+  }
+
+  function bindSchoolLogoInputs(scope = document) {
+    scope.querySelectorAll('[data-school-field="logo_url"]').forEach((input) => {
+      input.addEventListener("input", () => updateSchoolLogoPreview(input.closest("[data-school-row]"), input.value));
+    });
+    scope.querySelectorAll('[data-school-field="name"]').forEach((input) => {
+      input.addEventListener("input", () => updateSchoolLogoPreview(input.closest("[data-school-row]"), input.closest("[data-school-row]")?.querySelector('[data-school-field="logo_url"]')?.value || ""));
+    });
+    scope.querySelectorAll("[data-school-logo-upload]").forEach((input) => {
+      input.addEventListener("change", async () => {
+        const row = input.closest("[data-school-row]");
+        const logoField = row?.querySelector('[data-school-field="logo_url"]');
+        if (!row || !logoField || !input.files?.[0]) return;
+        try {
+          const dataUrl = await schoolLogoFileToDataUrl(input.files[0]);
+          logoField.value = dataUrl;
+          updateSchoolLogoPreview(row, dataUrl);
+          if (schoolsStatus) schoolsStatus.textContent = "Logo ready. Click Save Schools to publish it.";
+        } catch (error) {
+          if (schoolsStatus) schoolsStatus.textContent = error.message;
+        }
+      });
+    });
+  }
+
   bindSchoolCodeButtons();
+  bindSchoolLogoInputs();
 
   document.getElementById("addSchoolRow")?.addEventListener("click", () => {
     const rows = schoolList?.querySelectorAll("[data-school-row]").length || 0;
@@ -11883,6 +12034,7 @@ function bindAdmin() {
     if (!row) return;
     schoolList?.appendChild(row);
     bindSchoolCodeButtons(row);
+    bindSchoolLogoInputs(row);
     row.querySelector('[data-school-field="name"]')?.focus();
   });
 
@@ -11908,6 +12060,9 @@ function bindAdmin() {
           locale: field("locale")?.value || "",
           curriculum_focus: field("curriculum_focus")?.value || "",
           standards_label: field("standards_label")?.value || "",
+          logo_url: field("logo_url")?.value || "",
+          contact_person: field("contact_person")?.value || "",
+          school_synopsis: field("school_synopsis")?.value || "",
           licence_type: field("licence_type")?.value || "school",
           allowed_domains: field("allowed_domains")?.value || "",
           seat_limit: field("seat_limit")?.value || "",

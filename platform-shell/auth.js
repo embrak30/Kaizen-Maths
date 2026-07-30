@@ -41,7 +41,10 @@
       currency_symbol: school.currency_symbol || "£",
       locale: school.locale || "en-GB",
       curriculum_focus: school.curriculum_focus || "",
-      standards_label: school.standards_label || ""
+      standards_label: school.standards_label || "",
+      logo_url: school.logo_url || "",
+      contact_person: school.contact_person || "",
+      school_synopsis: school.school_synopsis || ""
     };
   }
 
@@ -124,7 +127,7 @@
     try {
       let { data, error } = await state.client
         .from("schools")
-        .select("id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, standards_label, licence_ends_at, is_active")
+        .select("id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, standards_label, logo_url, contact_person, school_synopsis, licence_ends_at, is_active")
         .eq("id", profile.school_id)
         .maybeSingle();
       if (error && /column|schema cache/i.test(error.message || "")) {
@@ -153,6 +156,9 @@
         school_locale: data.locale,
         school_curriculum_focus: data.curriculum_focus,
         school_standards_label: data.standards_label,
+        school_logo_url: data.logo_url,
+        school_contact_person: data.contact_person,
+        school_synopsis: data.school_synopsis,
         school_licence_ends_at: data.licence_ends_at,
         school_is_active: data.is_active,
         school_context: schoolContext

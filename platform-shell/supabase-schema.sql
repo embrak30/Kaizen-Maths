@@ -80,6 +80,9 @@ create table if not exists public.schools (
   locale text default 'en-GB',
   curriculum_focus text,
   standards_label text,
+  logo_url text,
+  contact_person text,
+  school_synopsis text,
   licence_type text default 'school',
   allowed_domains text,
   seat_limit integer,
@@ -101,6 +104,9 @@ alter table public.schools add column if not exists currency_symbol text default
 alter table public.schools add column if not exists locale text default 'en-GB';
 alter table public.schools add column if not exists curriculum_focus text;
 alter table public.schools add column if not exists standards_label text;
+alter table public.schools add column if not exists logo_url text;
+alter table public.schools add column if not exists contact_person text;
+alter table public.schools add column if not exists school_synopsis text;
 alter table public.schools add column if not exists allowed_domains text;
 alter table public.schools add column if not exists seat_limit integer;
 alter table public.schools add column if not exists join_code text;
