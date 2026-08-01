@@ -384,6 +384,19 @@
             return Number.isInteger(value) ? value.toString() : value.toFixed(1);
         }
 
+        function sumData(data) {
+            return data.reduce((a, b) => a + b, 0);
+        }
+
+        function shuffleData(data) {
+            const copy = [...data];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = random(0, i);
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
         function uniqueSortedData(size, min, max) {
             const values = new Set();
             while (values.size < size) values.add(random(min, max));
@@ -411,9 +424,61 @@
             return salaries.sort((a, b) => a - b);
         }
 
+        function generateRepeatedDataSet() {
+            const values = uniqueSortedData(4, 8, 26);
+            return shuffleData([values[0], values[0], values[0], values[1], values[1], values[1], values[2], values[3]]);
+        }
+
+        function generateSingleMissingData({ knownCount, min, max, wantDecimalMean }) {
+            for (let attempt = 0; attempt < 250; attempt++) {
+                const knownValues = generateDataSet(knownCount, min, max);
+                const missingValue = random(min, max);
+                const totalValues = knownCount + 1;
+                const requiredSum = sumData(knownValues) + missingValue;
+                const targetMean = requiredSum / totalValues;
+                const oneDecimal = Number.isInteger(targetMean * 10);
+                const wholeNumber = Number.isInteger(targetMean);
+                if (wantDecimalMean ? oneDecimal && !wholeNumber : wholeNumber) {
+                    return { knownValues, missingValue, totalValues, requiredSum, targetMean };
+                }
+            }
+            const knownValues = generateDataSet(knownCount, min, max);
+            const missingValue = random(min, max);
+            const totalValues = knownCount + 1;
+            const requiredSum = sumData(knownValues) + missingValue;
+            return { knownValues, missingValue, totalValues, requiredSum, targetMean: requiredSum / totalValues };
+        }
+
+        function generateEqualMissingData() {
+            for (let attempt = 0; attempt < 250; attempt++) {
+                const knownValues = generateDataSet(3, 60, 96);
+                const eachMissing = random(62, 98);
+                const totalValues = 5;
+                const requiredSum = sumData(knownValues) + (2 * eachMissing);
+                const targetMean = requiredSum / totalValues;
+                if (Number.isInteger(targetMean)) {
+                    return { knownValues, eachMissing, totalValues, requiredSum, targetMean, twoMissingSum: eachMissing * 2 };
+                }
+            }
+            const knownValues = generateDataSet(3, 60, 96);
+            const eachMissing = random(62, 98);
+            const requiredSum = sumData(knownValues) + (2 * eachMissing);
+            return { knownValues, eachMissing, totalValues: 5, requiredSum, targetMean: requiredSum / 5, twoMissingSum: eachMissing * 2 };
+        }
+
         function generateProblem(retryCount = 0) {
             if (retryCount > 10) {
-                return { equation: 'Find the mean of: 12, 15, 18, 20, 25', answer: '18', steps: ['Step 1: Add all values: 12 + 15 + 18 + 20 + 25 = 90', 'Step 2: Divide by count: 90 ÷ 5 = 18'] };
+                const fallbackData = generateDataSet(5, 5, 25);
+                const fallbackSum = sumData(fallbackData);
+                const fallbackMean = fallbackSum / fallbackData.length;
+                return {
+                    equation: `Find the mean of: ${formatDataSet(fallbackData)}`,
+                    answer: formatNumber(fallbackMean),
+                    steps: [
+                        `<div class="calculation-box">${fallbackData.join(' + ')} = ${fallbackSum}</div>`,
+                        `<div class="calculation-box">Mean = ${fallbackSum} ÷ ${fallbackData.length} = ${formatNumber(fallbackMean)}</div>`
+                    ]
+                };
             }
 
             const config = levelConfigs[currentLevel];
@@ -548,12 +613,12 @@
                 }
 
                 case 'combined_repeated': {
-                    const repeatedData = [12, 15, 12, 18, 15, 12, 20, 15];
+                    const repeatedData = generateRepeatedDataSet();
                     const repMean = calculateMean(repeatedData);
                     const repMedian = calculateMedian(repeatedData);
                     const repMode = calculateMode(repeatedData);
                     const repSorted = [...repeatedData].sort((a, b) => a - b);
-                    const repSum = repeatedData.reduce((a, b) => a + b, 0);
+                    const repSum = sumData(repeatedData);
                     problem = {
                         equation: `Find the mean, median, and mode for: ${formatDataSet(repeatedData)}`,
                         answer: `Mean: ${repMean.toFixed(1)}, Median: ${repMedian}, Mode: ${Array.isArray(repMode) ? repMode.join(", ") : repMode}`,
@@ -629,51 +694,49 @@
 
         function missingValueProblem(type) {
             if (type === 'find_missing_decimal') {
-                const decimalKnown = [78, 82, 74, 86];
-                const decimalMean = 79.2;
-                const decimalTotal = decimalKnown.length + 1;
-                const decimalRequired = decimalMean * decimalTotal;
-                const decimalKnownSum = decimalKnown.reduce((a, b) => a + b, 0);
-                const decimalMissing = decimalRequired - decimalKnownSum;
+                const { knownValues, missingValue, totalValues, requiredSum, targetMean } = generateSingleMissingData({
+                    knownCount: 4,
+                    min: 58,
+                    max: 96,
+                    wantDecimalMean: true
+                });
+                const knownSum = sumData(knownValues);
                 return {
-                    equation: `The mean of 5 quiz scores is 79.2. Four scores are ${formatDataSet(decimalKnown)}. Find the missing score.`,
-                    answer: decimalMissing.toString(),
+                    equation: `The mean of ${totalValues} quiz scores is ${formatNumber(targetMean)}. Four scores are ${formatDataSet(knownValues)}. Find the missing score.`,
+                    answer: missingValue.toString(),
                     steps: [
-                        `<div class="calculation-box">Required sum = 79.2 × 5 = ${decimalRequired}</div>`,
-                        `<div class="calculation-box">Known sum = ${decimalKnown.join(' + ')} = ${decimalKnownSum}</div>`,
-                        `<div class="calculation-box">Missing score = ${decimalRequired} - ${decimalKnownSum} = ${decimalMissing}</div>`
+                        `<div class="calculation-box">Required sum = ${formatNumber(targetMean)} × ${totalValues} = ${requiredSum}</div>`,
+                        `<div class="calculation-box">Known sum = ${knownValues.join(' + ')} = ${knownSum}</div>`,
+                        `<div class="calculation-box">Missing score = ${requiredSum} - ${knownSum} = ${missingValue}</div>`
                     ]
                 };
             }
             if (type === 'find_missing_complex') {
-                const complexKnown = [85, 92, 78];
-                const complexMean = 84;
-                const complexTotal = 5;
-                const complexRequired = complexMean * complexTotal;
-                const complexKnownSum = complexKnown.reduce((a, b) => a + b, 0);
-                const twoMissingSum = complexRequired - complexKnownSum;
+                const { knownValues, eachMissing, totalValues, requiredSum, targetMean, twoMissingSum } = generateEqualMissingData();
+                const knownSum = sumData(knownValues);
                 return {
-                    equation: `The mean of 5 test scores is 84. Three known scores are ${formatDataSet(complexKnown)}. If the two missing scores are equal, find each missing score.`,
-                    answer: (twoMissingSum / 2).toString(),
+                    equation: `The mean of ${totalValues} test scores is ${formatNumber(targetMean)}. Three known scores are ${formatDataSet(knownValues)}. If the two missing scores are equal, find each missing score.`,
+                    answer: eachMissing.toString(),
                     steps: [
-                        `<div class="calculation-box">Required sum = 84 × 5 = ${complexRequired}</div>`,
-                        `<div class="calculation-box">Known sum = ${complexKnown.join(' + ')} = ${complexKnownSum}</div>`,
+                        `<div class="calculation-box">Required sum = ${formatNumber(targetMean)} × ${totalValues} = ${requiredSum}</div>`,
+                        `<div class="calculation-box">Known sum = ${knownValues.join(' + ')} = ${knownSum}</div>`,
                         `<div class="calculation-box">Two missing scores sum to ${twoMissingSum}</div>`,
-                        `<div class="calculation-box">Each score = ${twoMissingSum} ÷ 2 = ${twoMissingSum / 2}</div>`
+                        `<div class="calculation-box">Each score = ${twoMissingSum} ÷ 2 = ${eachMissing}</div>`
                     ]
                 };
             }
-            const knownValues = generateDataSet(random(3, 4), 10, 30);
-            const targetMean = random(15, 35);
-            const totalValues = knownValues.length + 1;
-            const requiredSum = targetMean * totalValues;
-            const knownSum = knownValues.reduce((a, b) => a + b, 0);
-            const missingValue = requiredSum - knownSum;
+            const { knownValues, missingValue, totalValues, requiredSum, targetMean } = generateSingleMissingData({
+                knownCount: random(3, 4),
+                min: 10,
+                max: 35,
+                wantDecimalMean: false
+            });
+            const knownSum = sumData(knownValues);
             return {
-                equation: `The mean of ${totalValues} test scores is ${targetMean}. If ${totalValues - 1} scores are ${formatDataSet(knownValues)}, find the missing score.`,
+                equation: `The mean of ${totalValues} test scores is ${formatNumber(targetMean)}. If ${totalValues - 1} scores are ${formatDataSet(knownValues)}, find the missing score.`,
                 answer: missingValue.toString(),
                 steps: [
-                    `<div class="calculation-box">Required sum = ${targetMean} × ${totalValues} = ${requiredSum}</div>`,
+                    `<div class="calculation-box">Required sum = ${formatNumber(targetMean)} × ${totalValues} = ${requiredSum}</div>`,
                     `<div class="calculation-box">Known sum = ${knownValues.join(' + ')} = ${knownSum}</div>`,
                     `<div class="calculation-box">Missing value = ${requiredSum} - ${knownSum} = ${missingValue}</div>`
                 ]
