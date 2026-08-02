@@ -3844,8 +3844,8 @@ body[data-route="worksheet-generator"] .account-action {
 .textbook-hero-panel,
 .textbook-map-panel {
   display: grid;
-  gap: 14px;
-  padding: 18px;
+  gap: 12px;
+  padding: 14px;
   border: 1px solid rgba(23, 184, 179, 0.22);
   border-radius: 10px;
   background:
@@ -3937,14 +3937,14 @@ body[data-route="worksheet-generator"] .account-action {
 .textbook-alignment-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.84rem;
 }
 
 .textbook-alignment-table th,
 .textbook-alignment-table td {
-  padding: 10px;
+  padding: 7px 9px;
   border-top: 1px solid #e3e9f2;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 .textbook-alignment-table thead th {
@@ -3958,9 +3958,10 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .textbook-alignment-table tbody th {
-  width: 220px;
+  width: 210px;
   color: #252946;
   font-weight: 900;
+  line-height: 1.25;
 }
 
 .textbook-alignment-table tbody th > span {
@@ -3972,12 +3973,12 @@ body[data-route="worksheet-generator"] .account-action {
 .textbook-alignment-table tbody th small {
   width: max-content;
   display: block;
-  margin-top: 6px;
-  padding: 3px 7px;
+  margin-top: 4px;
+  padding: 2px 6px;
   border-radius: 999px;
   background: #eef2ff;
   color: #4f46e5;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 900;
 }
 
@@ -3991,18 +3992,36 @@ body[data-route="worksheet-generator"] .account-action {
   color: #9a3412;
 }
 
-.textbook-tool-list,
+.textbook-focus-line,
+.textbook-use-line {
+  margin: 0;
+}
+
+.textbook-focus-line {
+  color: #2f3654;
+  line-height: 1.35;
+}
+
+.textbook-use-line {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  line-height: 1.32;
+}
+
+.textbook-tool-list {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .textbook-reverse-list {
   display: grid;
   gap: 7px;
 }
 
-.textbook-tool-list li {
-  display: grid;
-  gap: 2px;
-}
-
-.textbook-tool-list a,
+.textbook-tool-chip,
 .textbook-reverse-list a {
   color: #1455a0;
   font-weight: 850;
@@ -4010,7 +4029,32 @@ body[data-route="worksheet-generator"] .account-action {
   text-underline-offset: 2px;
 }
 
-.textbook-tool-list small,
+.textbook-tool-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 7px;
+  border: 1px solid rgba(20, 85, 160, 0.18);
+  border-radius: 999px;
+  background: #f5fbff;
+  font-size: 0.78rem;
+  line-height: 1.15;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.textbook-tool-chip:hover,
+.textbook-tool-chip:focus-visible {
+  border-color: rgba(249, 115, 22, 0.65);
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.textbook-tool-chip.missing {
+  color: var(--muted);
+  text-decoration: none;
+}
+
 .textbook-reverse-list span {
   color: var(--muted);
   line-height: 1.4;

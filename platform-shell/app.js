@@ -7173,17 +7173,12 @@ function textbookAlignmentById(id) {
   return textbookAlignmentCourses.find((course) => course.id === id) || textbookAlignmentCourses[0];
 }
 
-function alignmentToolLink([slug, use]) {
+function alignmentToolChip([slug, use]) {
   const tool = tools.find((item) => item.slug === slug);
   if (!tool || !isVisibleTool(tool)) {
-    return `<li><strong>${escapeHtml(slug)}</strong><small>${escapeHtml(use)} · gap / unavailable</small></li>`;
+    return `<span class="textbook-tool-chip missing" title="${escapeHtml(use)}">${escapeHtml(slug)}</span>`;
   }
-  return `
-    <li>
-      <a href="#/tools/${escapeHtml(tool.slug)}">${escapeHtml(tool.title)}</a>
-      <small>${escapeHtml(use)}</small>
-    </li>
-  `;
+  return `<a class="textbook-tool-chip" href="#/tools/${escapeHtml(tool.slug)}" title="${escapeHtml(use)}" aria-label="${escapeHtml(`${tool.title}: ${use}`)}">${escapeHtml(tool.title)}</a>`;
 }
 
 function textbookReverseToolIndex(course) {
@@ -7240,7 +7235,7 @@ function renderTextbookAlignments() {
           <div>
             <span class="eyebrow">Chapter To Tool Map</span>
             <h2>Holt McDougal Grade 6 pilot map</h2>
-            <p>Each row shows the likely textbook chapter focus, the best Kaizen tools to use, and how a teacher might use them in lessons.</p>
+            <p>A compact map from the likely Grade 6 textbook sequence to the best Kaizen tools for teaching, practice, worksheets, and intervention.</p>
           </div>
           <a class="button" href="#/tools">Open Tool Library</a>
         </div>
@@ -7248,9 +7243,8 @@ function renderTextbookAlignments() {
           <thead>
             <tr>
               <th scope="col">Textbook Unit</th>
-              <th scope="col">Focus</th>
+              <th scope="col">Focus and Use</th>
               <th scope="col">Kaizen Tools</th>
-              <th scope="col">Use</th>
             </tr>
           </thead>
           <tbody>
@@ -7261,13 +7255,15 @@ function renderTextbookAlignments() {
                   ${escapeHtml(chapter.title)}
                   <small data-coverage="${escapeHtml(chapter.coverage.toLowerCase())}">${escapeHtml(chapter.coverage)} match</small>
                 </th>
-                <td>${escapeHtml(chapter.focus)}</td>
                 <td>
-                  <ul class="textbook-tool-list">
-                    ${chapter.tools.map(alignmentToolLink).join("")}
-                  </ul>
+                  <p class="textbook-focus-line">${escapeHtml(chapter.focus)}</p>
+                  <small class="textbook-use-line">${escapeHtml(chapter.teacherMove)}</small>
                 </td>
-                <td>${escapeHtml(chapter.teacherMove)}</td>
+                <td>
+                  <div class="textbook-tool-list">
+                    ${chapter.tools.map(alignmentToolChip).join("")}
+                  </div>
+                </td>
               </tr>
             `).join("")}
           </tbody>
