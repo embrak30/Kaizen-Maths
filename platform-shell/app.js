@@ -7662,6 +7662,173 @@ const textbookAlignmentCourses = [
         teacherMove: "Use averages and displays for core statistics, then bring in correlation and probability tools for applied practice."
       }
     ]
+  },
+  {
+    id: "holt-mcdougal-precalculus",
+    seriesId: "holt-mcdougal",
+    publisher: "Holt McDougal",
+    course: "Precalculus",
+    label: "Holt McDougal Precalculus",
+    status: "Pilot",
+    basis: "Pilot map based on the public Larson Precalculus chapter structure. Schools can refine this with their exact edition, ISBN, and local pacing guide.",
+    chapters: [
+      {
+        code: "PC.P",
+        title: "Prerequisites and Algebra Review",
+        focus: "Real numbers, expressions, equations, inequalities, graphing basics, and algebraic fluency needed before precalculus.",
+        coverage: "Strong",
+        tools: [
+          ["linear-equations", "equation solving and algebraic fluency"],
+          ["inequalities", "linear inequalities and solution sets"],
+          ["simplification", "simplifying algebraic expressions"],
+          ["advanced-factorisation", "factorisation and algebraic structure"]
+        ],
+        teacherMove: "Use this as a diagnostic route before starting functions, especially for students who need algebra repair."
+      },
+      {
+        code: "PC.1",
+        title: "Functions and Their Graphs",
+        focus: "Function notation, domain and range, transformations, composite functions, inverse functions, and graph interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "function notation, composite functions, inverse functions, and values"],
+          ["graph-transformations-curve-sketching", "graph transformations and curve sketching"],
+          ["straight-lines", "linear graph foundations"],
+          ["dynamic-classroom-displays", "interactive graph transformation demonstrations"]
+        ],
+        teacherMove: "Start with function notation and mapping, then use graph transformations to connect algebraic changes to visual effects."
+      },
+      {
+        code: "PC.2",
+        title: "Polynomial and Rational Functions",
+        focus: "Polynomial graphs, roots, factorisation, rational functions, asymptotes, and solving polynomial equations.",
+        coverage: "Strong",
+        tools: [
+          ["roots-of-equations", "roots, factors, and graph links"],
+          ["quadratic-equations", "quadratic solving and graph interpretation"],
+          ["advanced-factorisation", "polynomial factorisation including grouping and cubics"],
+          ["algebraic-fractions", "rational expressions and simplification"]
+        ],
+        teacherMove: "Build the factor-root connection explicitly before moving into rational expressions and graph behaviour."
+      },
+      {
+        code: "PC.3",
+        title: "Exponential and Logarithmic Functions",
+        focus: "Exponential models, logarithmic equations, laws of logarithms, growth and decay, and graph behaviour.",
+        coverage: "Strong",
+        tools: [
+          ["logarithms-practice", "logarithmic equations and laws"],
+          ["functions", "exponential and logarithmic function notation"],
+          ["sequences-series", "geometric sequences and repeated growth"],
+          ["powers-of-10", "powers and index-law foundations"]
+        ],
+        teacherMove: "Link exponential growth to repeated multiplication, then use logarithms as the inverse process."
+      },
+      {
+        code: "PC.4",
+        title: "Trigonometric Functions",
+        focus: "Radians, unit circle values, trigonometric ratios, exact values, trigonometric graphs, and periodic behaviour.",
+        coverage: "Strong",
+        tools: [
+          ["trigonometric-functions", "exact trig values, identities, and proof-style practice"],
+          ["trig-graphs-transformations", "trig graphs and transformations"],
+          ["trigonometric-ratios", "right-triangle trigonometry foundations"],
+          ["dynamic-classroom-displays", "interactive trig graph and circle demonstrations"]
+        ],
+        teacherMove: "Use exact values and the unit-circle idea before moving into graph shape, period, amplitude, and transformations."
+      },
+      {
+        code: "PC.5",
+        title: "Analytic Trigonometry",
+        focus: "Trigonometric identities, equations, transformations, proofs, and simplifying trigonometric expressions.",
+        coverage: "Strong",
+        tools: [
+          ["trigonometric-functions", "identity proofs and exact simplification"],
+          ["trig-equation-solver", "solving trigonometric equations"],
+          ["trig-graphs-transformations", "graphical support for trig equations"],
+          ["inverse-trig-differentiation", "inverse trigonometric notation for extension"]
+        ],
+        teacherMove: "Keep identity proof steps explicit, then connect equation solutions to the graph and period."
+      },
+      {
+        code: "PC.6",
+        title: "Additional Topics in Trigonometry",
+        focus: "Sine rule, cosine rule, bearings, vectors, polar coordinates, and trigonometric applications.",
+        coverage: "Strong",
+        tools: [
+          ["trigonometric-ratios", "triangle trigonometry foundations"],
+          ["bearings", "bearing diagrams and trigonometric applications"],
+          ["further-vectors", "vector notation and geometric applications"],
+          ["polar-coordinates", "polar coordinate representation and graph links"]
+        ],
+        teacherMove: "Use diagrams first, then move into triangle or vector calculation once the geometry is clear."
+      },
+      {
+        code: "PC.7",
+        title: "Systems of Equations and Inequalities",
+        focus: "Linear and nonlinear systems, simultaneous equations, inequalities, graphing regions, and modelling constraints.",
+        coverage: "Strong",
+        tools: [
+          ["simultaneous-equations", "algebraic solution of systems"],
+          ["linear-programming", "inequality regions and feasible-region problems"],
+          ["straight-lines", "graphing linear equations and intersections"],
+          ["inequalities", "inequality notation and representation"]
+        ],
+        teacherMove: "Use simultaneous equations for exact solving, then graph regions to support systems of inequalities."
+      },
+      {
+        code: "PC.8",
+        title: "Matrices and Determinants",
+        focus: "Matrix operations, determinants, inverses, systems, transformations, eigenvalue extension, and matrix applications.",
+        coverage: "Strong",
+        tools: [
+          ["matrices", "matrix operations, determinants, and inverses"],
+          ["advanced-matrices", "transformations, eigenvalues, diagonalisation, and extension topics"],
+          ["linear-algebra", "linear algebra structures and systems"],
+          ["simultaneous-equations", "systems solved by algebraic methods"]
+        ],
+        teacherMove: "Use basic matrix operations first, then connect determinants and inverses to solving systems."
+      },
+      {
+        code: "PC.9",
+        title: "Sequences, Probability and Counting Theory",
+        focus: "Arithmetic and geometric sequences, series notation, binomial ideas, permutations, combinations, and probability.",
+        coverage: "Strong",
+        tools: [
+          ["sequences-series", "arithmetic and geometric sequences and series"],
+          ["series-expansions", "series extension and notation links"],
+          ["permutations-combinations", "counting arrangements and selections"],
+          ["tree-diagrams-conditional-probability", "structured probability and compound events"]
+        ],
+        teacherMove: "Separate sequence formula work from counting methods before using probability questions that combine both ideas."
+      },
+      {
+        code: "PC.10",
+        title: "Topics in Analytic Geometry",
+        focus: "Conics, circles, parabolas, coordinate geometry, polar form, and relationships between equations and graphs.",
+        coverage: "Strong",
+        tools: [
+          ["equation-of-a-circle", "circle equations, centres, radii, tangents, and intersections"],
+          ["straight-lines", "coordinate geometry and gradients"],
+          ["polar-coordinates", "polar representation and graph links"],
+          ["complex-numbers", "complex-plane and polar-form extension"]
+        ],
+        teacherMove: "Use coordinate geometry to anchor the algebra, then extend into circle equations, polar form, and complex-plane links."
+      },
+      {
+        code: "PC.11",
+        title: "Limits and an Introduction to Calculus",
+        focus: "Limits, continuity, first principles, derivative meaning, introductory differentiation, and series links.",
+        coverage: "Strong",
+        tools: [
+          ["limits-first-principles", "limit notation and first-principles reasoning"],
+          ["differentiation-polynomials", "introductory polynomial differentiation"],
+          ["differentiation-rules", "differentiation rules for extension"],
+          ["series-expansions", "Taylor and Maclaurin series as further extension"]
+        ],
+        teacherMove: "Keep the limit notation precise, then show how the derivative emerges from the first-principles process."
+      }
+    ]
   }
 ];
 
@@ -7670,7 +7837,7 @@ const textbookAlignmentSeries = [
     id: "holt-mcdougal",
     publisher: "Holt McDougal",
     title: "Holt McDougal Mathematics",
-    description: "Middle-school and high-school textbook alignments can be selected here. Grade 6, Grade 7, Pre-Algebra, and Algebra 1 are mapped now; later courses can be added using the same structure.",
+    description: "Middle-school and high-school textbook alignments can be selected here. Grade 6, Grade 7, Pre-Algebra, Algebra 1, and Precalculus are mapped now; later courses can be added using the same structure.",
     levels: [
       { id: "holt-mcdougal-g6", label: "Grade 6 / Course 1", status: "Pilot" },
       { id: "holt-mcdougal-g7", label: "Grade 7 / Course 2", status: "Pilot" },
@@ -7679,7 +7846,7 @@ const textbookAlignmentSeries = [
       { id: "holt-mcdougal-algebra-1", label: "Algebra 1", status: "Pilot" },
       { id: "holt-mcdougal-geometry", label: "Geometry", status: "Planned" },
       { id: "holt-mcdougal-algebra-2", label: "Algebra 2", status: "Planned" },
-      { id: "holt-mcdougal-precalculus", label: "Precalculus", status: "Planned" },
+      { id: "holt-mcdougal-precalculus", label: "Precalculus", status: "Pilot" },
       { id: "holt-mcdougal-advanced", label: "Advanced Mathematics", status: "Planned" }
     ]
   }
@@ -13826,7 +13993,7 @@ function updateRouteSeo(parts) {
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
-      description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes Holt McDougal Mathematics Grade 6, Grade 7, Pre-Algebra, and Algebra 1 pilot alignments."
+      description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes Holt McDougal Mathematics Grade 6, Grade 7, Pre-Algebra, Algebra 1, and Precalculus pilot alignments."
     },
     "collections": {
       title: routeTitle(collectionPageTitle),
