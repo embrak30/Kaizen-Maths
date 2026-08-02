@@ -685,6 +685,25 @@ const tools = [
     ]
   },
   {
+    slug: "integer-operations",
+    title: "Integer Operations",
+    category: "Numbers",
+    level: "KS2 / KS3 / Grade 6",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate integer practice covering comparing, ordering, opposites, addition, subtraction, multiplication, division, BIDMAS, and real-life directed-number contexts.",
+    tags: ["numbers", "integers", "directed numbers", "negative numbers", "number line", "integer operations", "Common Core", "Grade 6", "KS3"],
+    toolPath: "tools/integer-operations/index.html?v=integer-operations-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 builds integer meaning through comparing, ordering, and opposites.",
+      "Level 2 focuses on adding and subtracting integers, including subtracting negative numbers by adding the opposite.",
+      "Level 3 covers multiplication, division, and order of operations with integers.",
+      "Level 4 applies integer operations to temperature, money, elevation, and depth contexts."
+    ]
+  },
+  {
     slug: "powers-of-10",
     title: "Powers of 10 and Standard Form",
     category: "Numbers",
@@ -2414,6 +2433,7 @@ const subjectToolGroups = {
     "four-operations": "Number Fluency and Operations",
     "order-of-operations": "Number Fluency and Operations",
     "decimals-practice-lab": "Number Fluency and Operations",
+    "integer-operations": "Number Fluency and Operations",
     "hcf-lcm": "Number Fluency and Operations",
     "fractions-practice": "Fractions, Decimals and Percentages",
     "simple-percentage-tasks": "Fractions, Decimals and Percentages",
@@ -7104,14 +7124,14 @@ const textbookAlignmentCourses = [
         code: "G6.6",
         title: "Integers and the Coordinate Plane",
         focus: "Positive and negative numbers, absolute value, coordinate plotting, quadrants and simple graph interpretation.",
-        coverage: "Partial",
+        coverage: "Strong",
         tools: [
+          ["integer-operations", "integer comparison, ordering, all four operations, and directed-number contexts"],
           ["absolute-values", "absolute value and distance from zero"],
           ["straight-lines", "coordinate plane, gradient and line graphs for extension"],
-          ["transformations", "coordinate movement on grids"],
-          ["dynamic-classroom-displays", "interactive coordinate and graph displays"]
+          ["transformations", "coordinate movement on grids"]
         ],
-        teacherMove: "Good for coordinate work and absolute value; a dedicated integer operations tool would strengthen this chapter."
+        teacherMove: "Use integer operations first for directed-number fluency, then move into absolute value and coordinate-plane work."
       },
       {
         code: "G6.7",
@@ -8399,6 +8419,7 @@ const curatedRelatedToolSlugs = {
   "circle-theorems": ["missing-angles", "polygons-angles", "circles-area-circumference", "sectors-arc-length"],
   "earth-geometry": ["bearings", "trigonometric-ratios", "circles-area-circumference", "sectors-arc-length"],
   "bearings": ["trigonometric-ratios", "earth-geometry", "missing-angles", "sine-cosine-rule"],
+  "integer-operations": ["four-operations", "order-of-operations", "absolute-values", "number-bases-number-sets"],
   "fractions-practice": ["fractions", "decimals-practice-lab", "simple-percentage-tasks", "ratio-proportion"],
   "financial-real-life-maths": ["percentages-real-world", "simple-percentage-tasks", "ratio-proportion", "decimals-practice-lab"],
   "percentages-real-world": ["financial-real-life-maths", "simple-percentage-tasks", "ratio-proportion", "upper-lower-bounds"],
@@ -8957,6 +8978,19 @@ function toolInsightProfile(tool) {
         "Which place-value column controls this calculation?",
         "How can adding placeholder zeros make the decimal operation clearer without changing the value?",
         "How do the digits shift through the fixed decimal point, and what estimate should the answer be close to?"
+      ]
+    },
+    {
+      match: () => tool.slug === "integer-operations" || has("integer operations", "directed numbers", "negative numbers"),
+      misconceptions: [
+        "Thinking -12 is greater than -5 because 12 is the larger digit, instead of using position on the number line.",
+        "Forgetting that subtracting a negative number means adding its opposite, for example 4 - (-7) = 4 + 7.",
+        "Using multiplication sign rules for addition, even though adding integers depends on direction and distance."
+      ],
+      questions: [
+        "Where would each integer sit on a number line, and how does that decide which one is greater?",
+        "How does changing subtraction into adding the opposite make the direction of movement clearer?",
+        "Why do multiplication and division of integers use same-sign and different-sign rules, but addition and subtraction do not?"
       ]
     },
     {

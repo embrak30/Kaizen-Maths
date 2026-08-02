@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integer Operations Teaching Tool</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;min-height:100vh;padding:20px;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#1a365d;color:#fff;padding:15px 8px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 8px 8px 0;font-weight:600;font-size:.9em;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.2)}
+    .teacher-tab:hover{background:#2d5a87;transform:translateY(-50%) translateX(5px)}
+    .sidebar{position:fixed;left:-400px;top:0;width:400px;height:100vh;background:#fff;z-index:1000;transition:left .3s;box-shadow:2px 0 20px rgba(0,0,0,.3);overflow-y:auto}
+    .sidebar.open{left:0}.sidebar-header{background:#1a365d;color:#fff;padding:20px;font-size:1.3em;font-weight:600}.sidebar-content{padding:25px;line-height:1.6}.sidebar-content h3{color:#1a365d;margin:20px 0 10px;font-size:1.1em;border-bottom:2px solid #3182ce;padding-bottom:5px}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#555}.sidebar-content ul{padding-left:20px;margin-bottom:15px}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}
+    .header{background:#2d5a87;background-image:linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce),linear-gradient(45deg,#3182ce 25%,transparent 25%,transparent 75%,#3182ce 75%,#3182ce);background-size:30px 30px;background-position:0 0,15px 15px;color:#fff;padding:25px;text-align:center;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.2)}
+    .header::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 50%,rgba(0,0,0,.05))}.header h1{font-size:2.2em;margin-bottom:5px;position:relative;z-index:1;text-shadow:0 2px 4px rgba(0,0,0,.3)}.header p{font-size:1.1em;opacity:.9;position:relative;z-index:1}
+    .tabs{display:flex;background:#e2e8f0}.tab{flex:1;padding:18px;background:#e2e8f0;border:none;cursor:pointer;font-size:1.05em;font-weight:700;transition:.3s;border-bottom:3px solid transparent}.tab:hover{background:#cbd5e0}.tab.active{background:#fff;border-bottom-color:#3182ce;color:#3182ce}
+    .controls{padding:20px;background:#f7fafc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #e2e8f0}.level-info h3{color:#1a365d;margin-bottom:5px;font-size:1.3em}.level-info p{color:#718096;font-size:1em}.dropdown-container{margin-top:10px;display:none}.dropdown-container.visible{display:block}.type-dropdown{padding:8px 12px;border:2px solid #cbd5e0;border-radius:6px;font-size:1em;background:#fff;cursor:pointer;min-width:380px}.type-dropdown:focus{border-color:#3182ce;outline:none}
+    .timer-section{display:flex;align-items:center;gap:15px}.timer-display{font-size:2em;font-weight:700;color:#1a365d;background:#fff;padding:10px 18px;border-radius:6px;border:2px solid #cbd5e0;min-width:120px;text-align:center}.timer-display.active{border-color:#3182ce;color:#3182ce}.timer-display.warning{color:#e53e3e;border-color:#e53e3e;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .action-buttons{display:flex;gap:10px}.btn{padding:12px 22px;border:none;border-radius:6px;font-size:1em;font-weight:700;cursor:pointer;transition:.3s;min-width:85px}.btn-primary{background:#3182ce;color:#fff}.btn-primary:hover{background:#2c5282;transform:translateY(-1px)}.btn-success{background:#38a169;color:#fff}.btn-success:hover{background:#2f855a;transform:translateY(-1px)}.btn-warning{background:#d69e2e;color:#fff}.btn-warning:hover{background:#b7791f;transform:translateY(-1px)}.btn-danger{background:#e53e3e;color:#fff}.btn-danger:hover{background:#c53030;transform:translateY(-1px)}
+    .problems-section{padding:20px;min-height:500px}.problem-set-header{background:#3182ce;color:#fff;padding:15px 25px;border-radius:8px;margin-bottom:20px;text-align:center;font-size:1.35em;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.1)}.problem-set-header.compare{background:#2b6cb0}.problem-set-header.addsub{background:#38a169}.problem-set-header.multdiv{background:#805ad5}.problem-set-header.context{background:#d69e2e}.problem-list{list-style:none}
+    .problem-item{background:#f7fafc;margin:12px 0;padding:18px;border-radius:8px;border-left:4px solid #3182ce;transition:.3s}.problem-item:hover{transform:translateX(2px)}.problem-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:15px}.problem-left{display:flex;align-items:center;flex:1;min-width:0}.problem-answer{background:#38a169;color:#fff;padding:8px 16px;border-radius:20px;font-weight:800;font-size:1.15em;display:none;margin-left:15px;min-width:100px;text-align:center}.problem-answer.visible{display:block;animation:slideIn .4s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}.problem-number{background:#3182ce;color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;margin-right:15px;font-size:1em;flex-shrink:0}
+    .calculation-container{flex:1}.calculation{font-size:1.8em;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);color:#1a365d;font-weight:600;line-height:1.25;margin-bottom:5px;overflow-wrap:anywhere}.word-problem{font-size:1.22em;color:#1a365d;line-height:1.35;margin-bottom:5px}.integer-chip{background:#c6f6d5;color:#22543d;padding:2px 7px;border-radius:5px;font-weight:800}.operator-chip{background:#bee3f8;color:#2c5282;padding:2px 7px;border-radius:5px;font-weight:800}.negative-chip{background:#fed7d7;color:#9b2c2c;padding:2px 7px;border-radius:5px;font-weight:800}
+    .steps-section{margin-top:10px;padding:15px;background:#ebf8ff;border-radius:6px;border-left:3px solid #3182ce;display:none}.steps-section.visible{display:block;animation:slideDown .4s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}.steps-label{font-weight:700;color:#3182ce;margin-bottom:10px;font-size:1.1em}.solution-steps{font-size:1.05em;line-height:1.45}.step{margin:8px 0;color:#1a365d}.step-equation{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:600;color:#805ad5;text-align:center;margin:10px 0;font-size:1.2em;background:#f7fafc;padding:8px;border-radius:4px}.final-answer{background:#38a169;color:#fff;padding:12px 16px;border-radius:6px;text-align:center;font-weight:800;font-size:1.2em;margin-top:10px;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif)}
+    .integer-line{display:flex;gap:4px;align-items:center;justify-content:center;flex-wrap:wrap;padding:8px;background:#fff;border:1px solid #cbd5e0;border-radius:6px;margin:8px 0}.integer-line span{min-width:30px;text-align:center;padding:4px 6px;border-radius:4px;background:#edf2f7;color:#1a365d;font-weight:800}.integer-line .active{background:#3182ce;color:#fff}.integer-line .result{background:#38a169;color:#fff}
+    .timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:35px;border-radius:12px;text-align:center;max-width:350px;box-shadow:0 10px 30px rgba(0,0,0,.3)}.modal-content h2{color:#e53e3e;margin-bottom:18px;font-size:2em}.modal-content p{color:#718096;margin-bottom:25px;font-size:1.1em}.hidden{display:none}
+    @media (max-width:768px){.controls{flex-direction:column;align-items:stretch;padding:15px}.timer-section{justify-content:center}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%;padding:15px}.sidebar{width:320px;left:-320px}.type-dropdown{min-width:100%;width:100%}.calculation{font-size:1.45em}.word-problem{font-size:1.1em}.problem-header{align-items:flex-start;flex-direction:column}.problem-answer{margin-left:0}.problem-set-header{font-size:1.18em;padding:12px 20px}}
+    @media (min-width:1200px){.calculation{font-size:2.2em}.word-problem{font-size:1.35em}.problem-item{padding:22px;margin:15px 0}.problem-number{width:35px;height:35px;font-size:1.1em}.solution-steps{font-size:1.18em}.step-equation{font-size:1.35em}.problem-set-header{font-size:1.55em;padding:18px 30px}}
+  </style>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <script src="../_shared/math-render.js?v=math-render-arrow-1" defer></script>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <script src="../../auth-config.js?v=tool-access-guard-2"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-2"></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Teacher Instructions</div>
+    <div class="sidebar-content">
+      <h3>Getting Started</h3>
+      <p>This tool develops directed-number fluency from comparing integers through all four operations and simple contexts.</p>
+      <h3>Level Structure</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Compare, order, and identify opposites on the integer number line.</li>
+        <li><strong>Level 2:</strong> Add and subtract integers, including subtracting negative numbers.</li>
+        <li><strong>Level 3:</strong> Multiply, divide, and use order of operations with integers.</li>
+        <li><strong>Level 4:</strong> Apply integer operations to temperature, money, elevation, and change contexts.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Keep the language of direction clear: positive means move right or up, negative means move left or down.</li>
+        <li>For subtraction, explicitly change to adding the opposite before calculating.</li>
+        <li>For multiplication and division, separate the size of the answer from the sign of the answer.</li>
+      </ul>
+      <h3>Common Mistakes</h3>
+      <ul>
+        <li>Thinking a negative number with a larger digit is greater because the digit is larger.</li>
+        <li>Treating subtraction of a negative as subtraction again instead of adding the opposite.</li>
+        <li>Applying sign rules for multiplication to addition, where the reasoning is different.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <h1>Integer Operations Teaching Tool</h1>
+      <p>Compare, Order, Add, Subtract, Multiply, and Divide Directed Numbers</p>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Integer Meaning</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Add and Subtract</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Multiply and Divide</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Contexts</button>
+    </div>
+    <div class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Integer Meaning</h3>
+        <p id="level-description">Compare, order, and identify opposites of integers</p>
+        <div class="dropdown-container visible" id="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Problem Type</option>
+            <option value="compare_integers">Type 1: Compare two integers</option>
+            <option value="order_integers">Type 2: Order integers</option>
+            <option value="opposites">Type 3: Identify opposites</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+          <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+          <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </div>
+    <div class="problems-section">
+      <ol id="problem-list" class="problem-list"></ol>
+    </div>
+  </div>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up!</h2>
+      <p>Ready to review the solutions?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+    const levelConfigs={
+      1:{title:'Level 1: Integer Meaning',description:'Compare, order, and identify opposites of integers',types:['compare_integers','order_integers','opposites']},
+      2:{title:'Level 2: Add and Subtract Integers',description:'Add and subtract positive and negative integers',types:['add_integers','subtract_integers','mixed_add_subtract']},
+      3:{title:'Level 3: Multiply, Divide, and BIDMAS',description:'Use sign rules and order of operations with integers',types:['multiply_divide_integers','integer_order_operations','mixed_integer_operations']},
+      4:{title:'Level 4: Integer Contexts',description:'Apply integer operations to real-life change contexts',types:['temperature_change','money_balance','elevation_depth']}
+    };
+    const typeDisplayNames={
+      compare_integers:'Compare two integers',
+      order_integers:'Order integers',
+      opposites:'Identify opposites',
+      add_integers:'Add integers',
+      subtract_integers:'Subtract integers',
+      mixed_add_subtract:'Mixed addition and subtraction',
+      multiply_divide_integers:'Multiply and divide integers',
+      integer_order_operations:'Order of operations with integers',
+      mixed_integer_operations:'Mixed integer operations',
+      temperature_change:'Temperature change contexts',
+      money_balance:'Money balance contexts',
+      elevation_depth:'Elevation and depth contexts'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(items){return items[random(0,items.length-1)]}
+    function signed(n){return n < 0 ? `-${Math.abs(n)}` : String(n)}
+    function signedTerm(n){return n < 0 ? `(${signed(n)})` : String(n)}
+    function money(n){return n < 0 ? `-&pound;${Math.abs(n)}` : `&pound;${n}`}
+    function answerText(value){return signed(value)}
+    function eq(text){return `<div class="step-equation">${text}</div>`}
+    function intChip(n){return `<span class="${n<0?'negative-chip':'integer-chip'}">${signed(n)}</span>`}
+    function opChip(op){return `<span class="operator-chip">${op}</span>`}
+    function numberLine(values, result){
+      const min=Math.max(-12, Math.min(...values,result)-2);
+      const max=Math.min(12, Math.max(...values,result)+2);
+      let ticks='';
+      for(let n=min;n<=max;n++){
+        const cls=n===result?'result':values.includes(n)?'active':'';
+        ticks+=`<span class="${cls}">${signed(n)}</span>`;
+      }
+      return `<div class="integer-line">${ticks}</div>`;
+    }
+    function uniqueSet(generator,count=5){
+      const set=[],seen=new Set();let guard=0;
+      while(set.length<count&&guard<80){
+        const item=generator();
+        const key=item.questionText || item.question || item.calculation || JSON.stringify(item);
+        if(!seen.has(key)){seen.add(key);set.push(item)}
+        guard++;
+      }
+      return set;
+    }
+
+    function compareProblem(){
+      let a=random(-15,15),b=random(-15,15);while(a===b)b=random(-15,15);
+      const symbol=a>b?'&gt;':'&lt;';
+      return {
+        badge:'compare',
+        calculation:`Compare: ${intChip(a)} ___ ${intChip(b)}`,
+        questionText:`Compare: ${signed(a)} ___ ${signed(b)}`,
+        answer:`${signed(a)} ${a>b?'>':'<'} ${signed(b)}`,
+        steps:[
+          'Step 1: Locate both integers on the number line.',
+          numberLine([a,b],a>b?a:b),
+          'Step 2: The integer farther to the right is greater.',
+          `${signed(a)} is ${a>b?'to the right of':'to the left of'} ${signed(b)}.`,
+          eq(`${signed(a)} ${symbol} ${signed(b)}`)
+        ]
+      };
+    }
+
+    function orderProblem(){
+      const values=[];while(values.length<5){const n=random(-12,12);if(!values.includes(n))values.push(n)}
+      const ordered=[...values].sort((a,b)=>a-b);
+      return {
+        badge:'compare',
+        calculation:`Order from least to greatest: ${values.map(intChip).join(' ')}`,
+        questionText:`Order from least to greatest: ${values.map(signed).join(', ')}`,
+        answer:ordered.map(signed).join(', '),
+        steps:[
+          'Step 1: Least means farthest left on the number line.',
+          numberLine(values,ordered[0]),
+          'Step 2: Write the integers from left to right.',
+          eq(ordered.map(signed).join(' &lt; '))
+        ]
+      };
+    }
+
+    function oppositeProblem(){
+      let a=random(-14,14);while(a===0)a=random(-14,14);
+      const opposite=-a;
+      return {
+        badge:'compare',
+        calculation:`Write the opposite of ${intChip(a)}.`,
+        questionText:`Write the opposite of ${signed(a)}.`,
+        answer:signed(opposite),
+        steps:[
+          'Step 1: Opposite integers are the same distance from zero in opposite directions.',
+          numberLine([a,opposite],opposite),
+          'Step 2: Change the sign while keeping the size the same.',
+          eq(`The opposite of ${signed(a)} is ${signed(opposite)}.`)
+        ]
+      };
+    }
+
+    function addProblem(){
+      let a=random(-15,15),b=random(-12,12);while(b===0)b=random(-12,12);
+      const result=a+b;
+      return {
+        badge:'addsub',
+        calculation:`${intChip(a)} ${opChip('+')} ${intChip(b)}`,
+        questionText:`Calculate: ${signed(a)} + ${signedTerm(b)}`,
+        answer:answerText(result),
+        steps:[
+          'Step 1: Start at the first integer.',
+          `Start at ${signed(a)}.`,
+          'Step 2: Use the sign of the second integer to decide the direction.',
+          b>0?`Adding ${b} means move ${b} places right.`:`Adding ${signed(b)} means move ${Math.abs(b)} places left.`,
+          numberLine([a],result),
+          'Step 3: Read the final position.',
+          eq(`${signed(a)} + ${signedTerm(b)} = ${signed(result)}`)
+        ]
+      };
+    }
+
+    function subtractProblem(){
+      let a=random(-15,15),b=random(-12,12);while(b===0)b=random(-12,12);
+      const result=a-b;
+      const opposite=-b;
+      return {
+        badge:'addsub',
+        calculation:`${intChip(a)} ${opChip('-')} ${intChip(b)}`,
+        questionText:`Calculate: ${signed(a)} - ${signedTerm(b)}`,
+        answer:answerText(result),
+        steps:[
+          'Step 1: Change subtraction into addition of the opposite.',
+          eq(`${signed(a)} - ${signedTerm(b)} = ${signed(a)} + ${signedTerm(opposite)}`),
+          'Step 2: Now add the opposite integer.',
+          opposite>0?`Adding ${opposite} means move ${opposite} places right.`:`Adding ${signed(opposite)} means move ${Math.abs(opposite)} places left.`,
+          numberLine([a],result),
+          'Step 3: Read the final position.',
+          eq(`${signed(a)} - ${signedTerm(b)} = ${signed(result)}`)
+        ]
+      };
+    }
+
+    function mixedAddSubtractProblem(){
+      const first=random(-12,12);
+      let second=random(-10,10),third=random(-10,10);
+      while(second===0)second=random(-10,10);
+      while(third===0)third=random(-10,10);
+      const subtractSecond=Math.random()<0.5;
+      const subtractThird=Math.random()<0.5;
+      const afterFirst=subtractSecond?first-second:first+second;
+      const result=subtractThird?afterFirst-third:afterFirst+third;
+      const expr=`${signed(first)} ${subtractSecond?'-':'+'} ${signedTerm(second)} ${subtractThird?'-':'+'} ${signedTerm(third)}`;
+      const converted=`${signed(first)} + ${signedTerm(subtractSecond?-second:second)} + ${signedTerm(subtractThird?-third:third)}`;
+      return {
+        badge:'addsub',
+        calculation:`Calculate: ${expr}`,
+        questionText:`Calculate: ${expr}`,
+        answer:signed(result),
+        steps:[
+          'Step 1: Convert any subtraction into adding the opposite.',
+          eq(expr + ' = ' + converted),
+          'Step 2: Work from left to right.',
+          eq(`${signed(first)} ${subtractSecond?'-':'+'} ${signedTerm(second)} = ${signed(afterFirst)}`),
+          'Step 3: Complete the final addition or subtraction.',
+          eq(`${signed(afterFirst)} ${subtractThird?'-':'+'} ${signedTerm(third)} = ${signed(result)}`)
+        ]
+      };
+    }
+
+    function multiplyDivideProblem(){
+      const multiply=Math.random()<0.5;
+      const a=choice([-12,-11,-9,-8,-7,-6,-5,4,5,6,7,8,9,11,12]);
+      const b=choice([-9,-8,-7,-6,-5,-4,3,4,5,6,7,8,9]);
+      if(multiply){
+        const result=a*b;
+        return {
+          badge:'multdiv',
+          calculation:`${intChip(a)} ${opChip('&times;')} ${intChip(b)}`,
+          questionText:`Calculate: ${signed(a)} x ${signedTerm(b)}`,
+          answer:signed(result),
+          steps:[
+            'Step 1: Multiply the sizes without the signs.',
+            eq(`${Math.abs(a)} &times; ${Math.abs(b)} = ${Math.abs(result)}`),
+            'Step 2: Decide the sign.',
+            a*b>0?'The signs are the same, so the answer is positive.':'The signs are different, so the answer is negative.',
+            'Step 3: Combine the sign and the size.',
+            eq(`${signed(a)} &times; ${signedTerm(b)} = ${signed(result)}`)
+          ]
+        };
+      }
+      const quotient=choice([-12,-9,-8,-7,-6,-5,4,5,6,7,8,9,12]);
+      const divisor=choice([-9,-8,-7,-6,-5,-4,3,4,5,6,7,8,9]);
+      const dividend=quotient*divisor;
+      return {
+        badge:'multdiv',
+        calculation:`${intChip(dividend)} ${opChip('&divide;')} ${intChip(divisor)}`,
+        questionText:`Calculate: ${signed(dividend)} / ${signedTerm(divisor)}`,
+        answer:signed(quotient),
+        steps:[
+          'Step 1: Divide the sizes without the signs.',
+          eq(`${Math.abs(dividend)} &divide; ${Math.abs(divisor)} = ${Math.abs(quotient)}`),
+          'Step 2: Decide the sign.',
+          dividend*divisor>0?'The signs are the same, so the answer is positive.':'The signs are different, so the answer is negative.',
+          'Step 3: Combine the sign and the size.',
+          eq(`${signed(dividend)} &divide; ${signedTerm(divisor)} = ${signed(quotient)}`)
+        ]
+      };
+    }
+
+    function orderOperationsProblem(){
+      let a=random(-10,10),b=random(-8,8),c=random(-8,8),d=random(-10,10);
+      while([a,b,c,d].includes(0)){a=random(-10,10);b=random(-8,8);c=random(-8,8);d=random(-10,10)}
+      const product=b*c;
+      const result=a+product-d;
+      const expr=`${signed(a)} + ${signedTerm(b)} &times; ${signedTerm(c)} - ${signedTerm(d)}`;
+      return {
+        badge:'multdiv',
+        calculation:`Calculate: ${expr}`,
+        questionText:`Calculate: ${signed(a)} + ${signedTerm(b)} x ${signedTerm(c)} - ${signedTerm(d)}`,
+        answer:signed(result),
+        steps:[
+          'Step 1: Multiply before adding or subtracting.',
+          eq(`${signed(b)} &times; ${signedTerm(c)} = ${signed(product)}`),
+          'Step 2: Substitute that result back into the expression.',
+          eq(`${signed(a)} + ${signedTerm(product)} - ${signedTerm(d)}`),
+          'Step 3: Change subtraction into adding the opposite if useful, then work left to right.',
+          eq(`${signed(a)} + ${signedTerm(product)} - ${signedTerm(d)} = ${signed(result)}`)
+        ]
+      };
+    }
+
+    function mixedIntegerOperationsProblem(){
+      return Math.random()<0.5?mixedAddSubtractProblem():orderOperationsProblem();
+    }
+
+    function temperatureProblem(){
+      const start=random(-12,18),change=choice([-15,-12,-10,-8,-6,5,7,9,11,14]);
+      const result=start+change;
+      return {
+        badge:'context',
+        wordProblem:`The temperature is ${signed(start)}&deg;C. It changes by ${signed(change)}&deg;C. What is the new temperature?`,
+        questionText:`The temperature is ${signed(start)} degrees C. It changes by ${signed(change)} degrees C. What is the new temperature?`,
+        answer:`${signed(result)}&deg;C`,
+        steps:[
+          'Step 1: Represent the change as an integer.',
+          change>0?`${signed(change)} means the temperature increases.`:`${signed(change)} means the temperature decreases.`,
+          'Step 2: Add the change to the starting temperature.',
+          eq(`${signed(start)} + ${signedTerm(change)} = ${signed(result)}`),
+          'Step 3: Include the unit in the answer.',
+          eq(`New temperature = ${signed(result)}&deg;C`)
+        ]
+      };
+    }
+
+    function moneyProblem(){
+      const start=random(-20,80),change=choice([-45,-30,-25,-15,12,18,24,35,50]);
+      const result=start+change;
+      const action=change>0?'deposits':'spends';
+      return {
+        badge:'context',
+        wordProblem:`A bank balance is ${money(start)}. The customer ${action} &pound;${Math.abs(change)}. What is the new balance?`,
+        questionText:`A bank balance is ${signed(start)} pounds. The customer ${action} ${Math.abs(change)} pounds. What is the new balance?`,
+        answer:money(result),
+        steps:[
+          'Step 1: Represent the money change as an integer.',
+          action==='deposits'?`A deposit is +${Math.abs(change)}.`:`Spending is -${Math.abs(change)}.`,
+          'Step 2: Add the change to the starting balance.',
+          eq(`${signed(start)} + ${signedTerm(change)} = ${signed(result)}`),
+          'Step 3: Interpret the result.',
+          result<0?`The account is overdrawn by &pound;${Math.abs(result)}.`:`The account has &pound;${result}.`
+        ]
+      };
+    }
+
+    function elevationProblem(){
+      const start=choice([-80,-50,-30,20,45,60,90]),change=choice([-70,-40,-25,30,55,75]);
+      const result=start+change;
+      return {
+        badge:'context',
+        wordProblem:`A diver is at ${signed(start)} m relative to sea level. The diver moves ${change>0?'up':'down'} ${Math.abs(change)} m. What is the new position?`,
+        questionText:`A diver is at ${signed(start)} m relative to sea level. The diver moves ${change>0?'up':'down'} ${Math.abs(change)} m. What is the new position?`,
+        answer:`${signed(result)} m`,
+        steps:[
+          'Step 1: Choose the sign of the movement.',
+          change>0?`Moving up is +${Math.abs(change)}.`:`Moving down is -${Math.abs(change)}.`,
+          'Step 2: Add the movement to the starting position.',
+          eq(`${signed(start)} + ${signedTerm(change)} = ${signed(result)}`),
+          'Step 3: Interpret the sign.',
+          result<0?`${signed(result)} m means ${Math.abs(result)} m below sea level.`:`${signed(result)} m means ${result} m above sea level.`
+        ]
+      };
+    }
+
+    const generators={
+      compare_integers:compareProblem,
+      order_integers:orderProblem,
+      opposites:oppositeProblem,
+      add_integers:addProblem,
+      subtract_integers:subtractProblem,
+      mixed_add_subtract:mixedAddSubtractProblem,
+      multiply_divide_integers:multiplyDivideProblem,
+      integer_order_operations:orderOperationsProblem,
+      mixed_integer_operations:mixedIntegerOperationsProblem,
+      temperature_change:temperatureProblem,
+      money_balance:moneyProblem,
+      elevation_depth:elevationProblem
+    };
+
+    function generateProblem(){
+      const config=levelConfigs[currentLevel];
+      let types=config.types;
+      if(currentType!=='all'&&currentType!=='select')types=[currentType];
+      const problem=generators[choice(types)]();
+      problem.question=problem.wordProblem||problem.questionText||problem.calculation||'';
+      return problem;
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,index)=>tab.classList.toggle('active',index+1===level));
+      const config=levelConfigs[level];document.getElementById('level-title').textContent=config.title;document.getElementById('level-description').textContent=config.description;
+      const dropdown=document.getElementById('type-dropdown');document.getElementById('dropdown-container').classList.add('visible');
+      const options=config.types.map((type,index)=>`<option value="${type}">Type ${index+1}: ${typeDisplayNames[type]}</option>`).join('');
+      dropdown.innerHTML='<option value="select">Select Problem Type</option>'+options+'<option value="all">Mixed set from this level</option>';
+      dropdown.value='select';showBlankPage();
+    }
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;if(currentType==='select')showBlankPage();else generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-list').innerHTML='<li style="text-align:center;padding:50px;color:#718096;font-size:1.2em;">Please select a problem type to begin practising integer operations</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}answersVisible=false;stepsVisible=false;problems=uniqueSet(generateProblem,5);renderProblems()}
+    function renderProblems(){
+      const container=document.getElementById('problem-list');container.innerHTML='';if(!problems.length)return;
+      const names={compare:'Integer Meaning and Ordering',addsub:'Adding and Subtracting Integers',multdiv:'Integer Multiplication, Division, and BIDMAS',context:'Integer Contexts'};
+      const header=document.createElement('div');header.className=`problem-set-header ${problems[0].badge}`;header.textContent=names[problems[0].badge]||'Integer Practice';container.appendChild(header);
+      problems.forEach((problem,index)=>{
+        const li=document.createElement('li');li.className='problem-item';
+        const stepsHTML=problem.steps.map(step=>step.includes('<div class="step-equation">')||step.includes('<div class="integer-line">')?step:`<div class="step">${step}</div>`).join('');
+        const body=problem.wordProblem?`<div class="word-problem">${problem.wordProblem}</div>`:`<div class="calculation">${problem.calculation}</div>`;
+        li.innerHTML=`<div class="problem-header"><div class="problem-left"><div class="problem-number">${index+1}</div><div class="calculation-container">${body}</div></div><div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div></div><div class="steps-section" id="steps-${index}"><div class="steps-label">Solution Steps:</div><div class="solution-steps">${stepsHTML}<div class="final-answer">${problem.answer}</div></div></div>`;
+        container.appendChild(li);
+      });
+    }
+    function showAnswers(){answersVisible=!answersVisible;for(let i=0;i<problems.length;i++){const el=document.getElementById(`quick-answer-${i}`);if(el)el.classList.toggle('visible',answersVisible)}}
+    function showSteps(){stepsVisible=!stepsVisible;for(let i=0;i<problems.length;i++){const el=document.getElementById(`steps-${i}`);if(el)el.classList.toggle('visible',stepsVisible)}}
+    function startTimer(minutes){if(timerActive)stopTimer();timeRemaining=minutes*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const el=document.getElementById('timer-display');el.textContent='Ready';el.className='timer-display'}
+    function updateTimerDisplay(){const minutes=Math.floor(timeRemaining/60),seconds=timeRemaining%60,el=document.getElementById('timer-display');el.textContent=`${minutes}:${seconds.toString().padStart(2,'0')}`;if(timeRemaining<=30)el.className='timer-display warning';else if(timerActive)el.className='timer-display active';else el.className='timer-display'}
+    function timerFinished(){stopTimer();const el=document.getElementById('timer-display');el.textContent='Time Up!';el.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-24"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-3"></script>
+</body>
+</html>
