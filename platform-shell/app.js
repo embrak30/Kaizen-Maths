@@ -7996,6 +7996,340 @@ const textbookAlignmentCourses = [
         teacherMove: "Begin with prisms and nets, then extend to curved solids and mixed surface-area or volume tasks."
       }
     ]
+  },
+  {
+    id: "holt-mcdougal-algebra-trigonometry",
+    seriesId: "holt-mcdougal",
+    publisher: "Holt McDougal / Larson",
+    course: "Algebra and Trigonometry",
+    label: "Holt McDougal / Larson Algebra and Trigonometry",
+    status: "Pilot",
+    basis: "Pilot map based on the public Larson Algebra and Trigonometry chapter structure. Schools can refine this with their exact edition, ISBN, and local pacing guide.",
+    chapters: [
+      {
+        code: "AT.P",
+        title: "Prerequisites",
+        focus: "Real numbers, exponents, radicals, algebraic expressions, factoring, rational expressions, and coordinate-plane foundations.",
+        coverage: "Strong",
+        tools: [
+          ["powers-of-10", "powers, exponent foundations, and standard form"],
+          ["surds-radicals", "radicals, surds, and simplification"],
+          ["advanced-factorisation", "factorisation including HCF, grouping, and difference of squares"],
+          ["algebraic-fractions", "rational expressions and algebraic fractions"]
+        ],
+        teacherMove: "Use this as a readiness route before functions, especially when students need repair in algebraic manipulation."
+      },
+      {
+        code: "AT.1",
+        title: "Equations, Inequalities and Mathematical Models",
+        focus: "Linear equations, quadratic equations, inequalities, absolute value, formula rearrangement, and modelling contexts.",
+        coverage: "Strong",
+        tools: [
+          ["linear-equations", "linear equation fluency and multi-step solving"],
+          ["quadratic-equations", "quadratic solving by factorising, formula, and graph links"],
+          ["inequalities", "solving and representing inequalities"],
+          ["transposition-formulae", "rearranging formulae and modelling relationships"]
+        ],
+        teacherMove: "Keep solving methods separate at first, then use mixed equation and modelling questions once fluency is secure."
+      },
+      {
+        code: "AT.2",
+        title: "Functions and Their Graphs",
+        focus: "Function notation, domain and range, transformations, inverse functions, graph interpretation, and modelling with functions.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "function notation, mappings, inverse functions, and values"],
+          ["graph-transformations-curve-sketching", "graph transformations and curve sketching"],
+          ["straight-lines", "linear graphs, gradients, and coordinate foundations"],
+          ["dynamic-classroom-displays", "interactive graph transformation demonstrations"]
+        ],
+        teacherMove: "Use function notation and substitution first, then make graph transformations visual through the dynamic display tools."
+      },
+      {
+        code: "AT.3",
+        title: "Polynomial Functions",
+        focus: "Polynomial graphs, zeros, factors, roots, end behaviour, division ideas, and solving polynomial equations.",
+        coverage: "Strong",
+        tools: [
+          ["roots-of-equations", "roots, factors, and graph links"],
+          ["advanced-factorisation", "complete factorisation including cubics and grouping"],
+          ["quadratic-factorisation", "quadratic factorisation as a foundation"],
+          ["graph-transformations-curve-sketching", "curve sketching and graph behaviour"]
+        ],
+        teacherMove: "Build the factor-root connection explicitly, then use graphing to discuss turning points, intercepts, and behaviour."
+      },
+      {
+        code: "AT.4",
+        title: "Rational Functions and Conics",
+        focus: "Rational expressions, asymptotes, reciprocal behaviour, conic sections, circle equations, and coordinate geometry.",
+        coverage: "Strong",
+        tools: [
+          ["algebraic-fractions", "simplifying and solving with rational expressions"],
+          ["partial-fractions", "decomposing rational expressions for extension"],
+          ["equation-of-a-circle", "circle equations, centres, radii, tangents, and intersections"],
+          ["graph-transformations-curve-sketching", "reciprocal and rational graph behaviour"]
+        ],
+        teacherMove: "Use algebraic fractions to secure manipulation, then connect rational functions and conics through graph behaviour."
+      },
+      {
+        code: "AT.5",
+        title: "Exponential and Logarithmic Functions",
+        focus: "Exponential functions, logarithmic functions, laws of logarithms, equations, growth, decay, and modelling.",
+        coverage: "Strong",
+        tools: [
+          ["logarithms-practice", "logarithmic equations, laws, and evaluated solutions"],
+          ["functions", "exponential and logarithmic function notation"],
+          ["sequences-series", "geometric growth and repeated multiplication"],
+          ["powers-of-10", "powers and index-law foundations"]
+        ],
+        teacherMove: "Connect exponentials to repeated growth first, then use logarithms as the inverse operation and solving tool."
+      },
+      {
+        code: "AT.6",
+        title: "Trigonometric Functions",
+        focus: "Angles, radians, unit circle values, exact trigonometric values, periodic functions, and right-triangle links.",
+        coverage: "Strong",
+        tools: [
+          ["trigonometric-functions", "exact values, identities, and proof-style practice"],
+          ["trigonometric-ratios", "right-triangle sine, cosine, and tangent"],
+          ["trig-graphs-transformations", "trigonometric graphs and transformations"],
+          ["dynamic-classroom-displays", "interactive unit-circle and trig graph demonstrations"]
+        ],
+        teacherMove: "Use exact values and unit-circle reasoning before moving into graphs, period, amplitude, and transformations."
+      },
+      {
+        code: "AT.7",
+        title: "Analytic Trigonometry",
+        focus: "Trigonometric identities, simplifying trigonometric expressions, proving identities, inverse trigonometric functions, and trig equations.",
+        coverage: "Strong",
+        tools: [
+          ["trigonometric-functions", "identity proof and exact trigonometric manipulation"],
+          ["trig-equation-solver", "solving trigonometric equations"],
+          ["trig-graphs-transformations", "graphical support for equation solutions"],
+          ["inverse-trig-differentiation", "inverse trigonometric notation for extension"]
+        ],
+        teacherMove: "Make the identity transformations explicit, then connect equation solutions to the graph and the period."
+      },
+      {
+        code: "AT.8",
+        title: "Additional Topics in Trigonometry",
+        focus: "Sine rule, cosine rule, bearings, vectors, polar coordinates, complex numbers in polar form, and trigonometric applications.",
+        coverage: "Strong",
+        tools: [
+          ["trigonometric-ratios", "triangle trigonometry foundations"],
+          ["bearings", "bearing diagrams and trigonometric applications"],
+          ["polar-coordinates", "polar coordinates and graph links"],
+          ["complex-numbers", "complex numbers and polar form extension"]
+        ],
+        teacherMove: "Use diagrams and geometric interpretation first, then move into polar and complex-number representations as extension."
+      },
+      {
+        code: "AT.9",
+        title: "Systems of Equations and Inequalities",
+        focus: "Linear systems, nonlinear systems, systems of inequalities, graphical solutions, applications, and feasible regions.",
+        coverage: "Strong",
+        tools: [
+          ["simultaneous-equations", "algebraic solution of systems"],
+          ["simultaneous-applications", "contextual simultaneous-equation problems"],
+          ["linear-programming", "systems of inequalities and feasible regions"],
+          ["straight-lines", "graphical interpretation of intersections"]
+        ],
+        teacherMove: "Use algebraic solving to establish precision, then use graphs to show intersections, regions, and constraints."
+      },
+      {
+        code: "AT.10",
+        title: "Matrices and Determinants",
+        focus: "Matrix operations, determinants, inverses, systems of equations, transformations, and matrix applications.",
+        coverage: "Strong",
+        tools: [
+          ["matrices", "matrix operations, determinants, inverses, and algebraic entries"],
+          ["advanced-matrices", "matrix transformations, eigenvalues, and extension topics"],
+          ["linear-algebra", "linear algebra structures and systems"],
+          ["simultaneous-equations", "systems connected to matrix methods"]
+        ],
+        teacherMove: "Start with matrix arithmetic and determinants, then connect inverses and systems when the operations are secure."
+      },
+      {
+        code: "AT.11",
+        title: "Sequences, Series and Probability",
+        focus: "Arithmetic sequences, geometric sequences, series, sigma notation, binomial expansion, permutations, combinations, and probability.",
+        coverage: "Strong",
+        tools: [
+          ["sequences-series", "arithmetic and geometric sequences and series"],
+          ["series-expansions", "series notation and expansion extension"],
+          ["binomial-expansion", "binomial coefficients and expansion practice"],
+          ["permutations-combinations", "counting arrangements and selections"]
+        ],
+        teacherMove: "Separate sequence and series formulae from counting methods before building mixed probability or expansion questions."
+      },
+      {
+        code: "AT.12",
+        title: "Statistics and Data Analysis",
+        focus: "Data summaries, correlation, regression, distributions, sampling, inference ideas, and statistical modelling.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "mean, median, mode, range, and choosing averages"],
+          ["correlation-regression", "scatter diagrams, correlation, and regression lines"],
+          ["sampling-methods-bias", "sampling methods and bias"],
+          ["hypothesis-testing", "introductory inference and hypothesis testing extension"]
+        ],
+        teacherMove: "Use data summaries and regression first, then add sampling and inference tools where the course goes deeper."
+      }
+    ]
+  },
+  {
+    id: "holt-mcdougal-calculus",
+    seriesId: "holt-mcdougal",
+    publisher: "Holt McDougal / Larson",
+    course: "Calculus",
+    label: "Holt McDougal / Larson Calculus",
+    status: "Pilot",
+    basis: "Pilot map based on the public Larson Calculus for AP chapter sequence. Schools can refine this with their exact edition, ISBN, AP route, or local pacing guide.",
+    chapters: [
+      {
+        code: "CALC.P",
+        title: "Preparation for Calculus",
+        focus: "Functions, graphs, algebraic manipulation, trigonometric functions, logarithms, coordinate geometry, and precalculus readiness.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "function notation, values, composites, and inverses"],
+          ["graph-transformations-curve-sketching", "graph transformations and curve sketching"],
+          ["trigonometric-functions", "exact trig values and identities"],
+          ["logarithms-practice", "logarithmic equations and laws"]
+        ],
+        teacherMove: "Use this as a readiness check before limits, especially where students need fluency with functions, graphs, trig, and logarithms."
+      },
+      {
+        code: "CALC.1",
+        title: "Limits and Their Properties",
+        focus: "Limit notation, evaluating limits, one-sided limits, continuity, asymptotic behaviour, and first-principles reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["limits-first-principles", "limit notation, evaluating limits, and first-principles reasoning"],
+          ["functions", "function notation and values around a point"],
+          ["graph-transformations-curve-sketching", "graphical behaviour near key points"],
+          ["dynamic-classroom-displays", "interactive graph demonstrations for limit behaviour"]
+        ],
+        teacherMove: "Keep notation precise, then use graph behaviour to support the difference between value, approach, and continuity."
+      },
+      {
+        code: "CALC.2",
+        title: "Differentiation",
+        focus: "Derivative notation, first principles, polynomial differentiation, product, quotient, chain rule, trigonometric derivatives, and implicit differentiation.",
+        coverage: "Strong",
+        tools: [
+          ["differentiation-polynomials", "introductory polynomial differentiation"],
+          ["differentiation-rules", "product, quotient, and chain rule practice"],
+          ["trig-differentiation-rules", "trigonometric differentiation"],
+          ["advanced-differentiation", "implicit and parametric differentiation, tangents, normals, and related rates"]
+        ],
+        teacherMove: "Begin with the derivative as a limit, then move through rule-based fluency while keeping notation and substitutions explicit."
+      },
+      {
+        code: "CALC.3",
+        title: "Applications of Differentiation",
+        focus: "Tangents, normals, gradients, increasing and decreasing functions, stationary points, optimisation, related rates, and curve interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["advanced-differentiation", "tangents, normals, related rates, and implicit applications"],
+          ["differentiation-rules", "rule-based differentiation for application problems"],
+          ["graph-transformations-curve-sketching", "curve behaviour and graphical interpretation"],
+          ["roots-of-equations", "solving equations connected to stationary points and intersections"]
+        ],
+        teacherMove: "Use derivative calculations first, then connect the sign and value of the derivative to graph behaviour and context."
+      },
+      {
+        code: "CALC.4",
+        title: "Integration",
+        focus: "Antiderivatives, indefinite integrals, definite integrals, area under curves, integration notation, and fundamental theorem links.",
+        coverage: "Strong",
+        tools: [
+          ["integration", "basic integration and definite integrals"],
+          ["advanced-integration", "integration by substitution and integration by parts"],
+          ["integration-algebraic-fractions", "integrating algebraic fractions"],
+          ["graph-transformations-curve-sketching", "graphical interpretation of area and accumulation"]
+        ],
+        teacherMove: "Make the reverse-differentiation link explicit, then show how definite integrals connect to area and accumulation."
+      },
+      {
+        code: "CALC.5",
+        title: "Differential Equations",
+        focus: "Separable differential equations, first-order linear differential equations, modelling, initial conditions, and solution interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["differential-equations", "separable, first-order linear, second-order, and modelling problems"],
+          ["advanced-integration", "integration methods used in solving differential equations"],
+          ["integration", "core antiderivative fluency"],
+          ["equations-of-motion", "mechanics contexts where rates of change are interpreted"]
+        ],
+        teacherMove: "Show the separation or integrating-factor setup carefully, then substitute initial conditions only after the general solution is clear."
+      },
+      {
+        code: "CALC.6",
+        title: "Applications of Integration",
+        focus: "Area between curves, volume, volume of revolution, accumulation, average value, and contextual integral applications.",
+        coverage: "Strong",
+        tools: [
+          ["volumes-of-revolution", "volumes of revolution using integration"],
+          ["integration", "definite integrals and area under curves"],
+          ["advanced-integration", "integration methods for applied integrals"],
+          ["continuous-random-variables", "integration as accumulation in probability contexts"]
+        ],
+        teacherMove: "Start with what the integral represents in the diagram or context, then choose the correct bounds and method."
+      },
+      {
+        code: "CALC.7",
+        title: "Integration Techniques, L'Hopital's Rule and Improper Integrals",
+        focus: "Substitution, integration by parts, partial fractions, algebraic fractions, improper integrals, and L'Hopital-style limit reasoning.",
+        coverage: "Partial",
+        tools: [
+          ["advanced-integration", "substitution and integration by parts"],
+          ["partial-fractions", "partial fraction decomposition before integration"],
+          ["integration-algebraic-fractions", "integrating rational algebraic expressions"],
+          ["limits-first-principles", "limit notation and limit reasoning for extension"]
+        ],
+        teacherMove: "Use the available tools for substitution, parts, and partial fractions; add teacher-led work for L'Hopital's Rule and improper-integral convergence."
+      },
+      {
+        code: "CALC.8",
+        title: "Infinite Series",
+        focus: "Sequences, series, convergence ideas, power series, Taylor series, Maclaurin series, and binomial expansion links.",
+        coverage: "Strong",
+        tools: [
+          ["series-expansions", "Taylor and Maclaurin series"],
+          ["sequences-series", "arithmetic and geometric sequences and series"],
+          ["binomial-expansion", "binomial coefficients and expansion links"],
+          ["proof-by-induction", "proof structure for sequence and series identities"]
+        ],
+        teacherMove: "Use familiar sequence and binomial structures first, then build into Taylor and Maclaurin expansions with every substitution shown."
+      },
+      {
+        code: "CALC.9",
+        title: "Parametric Equations, Polar Coordinates and Vectors",
+        focus: "Parametric curves, polar coordinates, polar graphs, vectors, vector motion, and geometric interpretation of changing coordinates.",
+        coverage: "Partial",
+        tools: [
+          ["polar-coordinates", "polar coordinate representation and graphs"],
+          ["further-vectors", "column vectors, vector geometry, and applications"],
+          ["advanced-differentiation", "parametric differentiation"],
+          ["complex-numbers", "complex-plane and polar-form links"]
+        ],
+        teacherMove: "Use polar and vector tools for representation, then supplement with teacher-led parametric curve sketching and vector-valued function applications."
+      },
+      {
+        code: "CALC.A",
+        title: "Appendices: Proofs, Integration Tables, Precalculus and Algebra Review",
+        focus: "Selected proofs, integration tables, algebra review, precalculus review, complex numbers, and additional modelling applications.",
+        coverage: "Strong",
+        tools: [
+          ["proof-by-induction", "formal proof structure and proof language"],
+          ["integration", "core integration review"],
+          ["functions", "precalculus function review"],
+          ["complex-numbers", "complex-number extension and polar form"]
+        ],
+        teacherMove: "Use this as a support bank when students need prerequisite repair or when a lesson depends on proof or algebraic recall."
+      }
+    ]
   }
 ];
 
@@ -8004,7 +8338,7 @@ const textbookAlignmentSeries = [
     id: "holt-mcdougal",
     publisher: "Holt McDougal",
     title: "Holt McDougal Mathematics",
-    description: "Middle-school and high-school textbook alignments can be selected here. Grade 6, Grade 7, Pre-Algebra, Algebra 1, Geometry, and Precalculus are mapped now; later courses can be added using the same structure.",
+    description: "Middle-school and high-school textbook alignments can be selected here. Grade 6, Grade 7, Pre-Algebra, Algebra 1, Geometry, Algebra & Trigonometry, Precalculus, and Calculus are mapped now; later courses can be added using the same structure.",
     levels: [
       { id: "holt-mcdougal-g6", label: "Grade 6 / Course 1", status: "Pilot" },
       { id: "holt-mcdougal-g7", label: "Grade 7 / Course 2", status: "Pilot" },
@@ -8013,7 +8347,9 @@ const textbookAlignmentSeries = [
       { id: "holt-mcdougal-algebra-1", label: "Algebra 1", status: "Pilot" },
       { id: "holt-mcdougal-geometry", label: "Geometry", status: "Pilot" },
       { id: "holt-mcdougal-algebra-2", label: "Algebra 2", status: "Planned" },
+      { id: "holt-mcdougal-algebra-trigonometry", label: "Algebra & Trigonometry", status: "Pilot" },
       { id: "holt-mcdougal-precalculus", label: "Precalculus", status: "Pilot" },
+      { id: "holt-mcdougal-calculus", label: "Calculus", status: "Pilot" },
       { id: "holt-mcdougal-advanced", label: "Advanced Mathematics", status: "Planned" }
     ]
   }
@@ -14160,7 +14496,7 @@ function updateRouteSeo(parts) {
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
-      description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes Holt McDougal Mathematics Grade 6, Grade 7, Pre-Algebra, Algebra 1, Geometry, and Precalculus pilot alignments."
+      description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes Holt McDougal Mathematics Grade 6, Grade 7, Pre-Algebra, Algebra 1, Geometry, Algebra & Trigonometry, Precalculus, and Calculus pilot alignments."
     },
     "collections": {
       title: routeTitle(collectionPageTitle),
