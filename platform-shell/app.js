@@ -7508,6 +7508,160 @@ const textbookAlignmentCourses = [
         teacherMove: "Use averages and histograms for core data analysis, then sampling and cumulative frequency as extension or enrichment."
       }
     ]
+  },
+  {
+    id: "holt-mcdougal-algebra-1",
+    seriesId: "holt-mcdougal",
+    publisher: "Holt McDougal",
+    course: "Algebra 1",
+    label: "Holt McDougal Algebra 1",
+    status: "Pilot",
+    basis: "Pilot map based on the public Holt McDougal Algebra I chapter sequence. Schools can refine this with their exact edition, ISBN, and local pacing guide.",
+    chapters: [
+      {
+        code: "A1.1",
+        title: "Foundations for Algebra",
+        focus: "Variables, expressions, order of operations, real numbers, properties, and evaluating algebraic expressions.",
+        coverage: "Strong",
+        tools: [
+          ["simplification", "collecting like terms and simplifying algebraic expressions"],
+          ["substitution", "evaluating expressions by substitution"],
+          ["order-of-operations", "BIDMAS and multi-step numerical expressions"],
+          ["integer-operations", "integer fluency and directed-number operations"]
+        ],
+        teacherMove: "Use order of operations and integer operations for number fluency, then move into substitution and simplification."
+      },
+      {
+        code: "A1.2",
+        title: "Solving Equations",
+        focus: "One-step, two-step, multi-step, and bracketed linear equations, including checking solutions.",
+        coverage: "Strong",
+        tools: [
+          ["linear-equations", "one-step, two-step, brackets, and variables on both sides"],
+          ["transposition-formulae", "rearranging formulae and isolating variables"],
+          ["substitution", "checking solutions by substitution"],
+          ["bar-models", "conceptual equation models for support"]
+        ],
+        teacherMove: "Model inverse operations clearly, then use equation sets for fluency, checking, and intervention."
+      },
+      {
+        code: "A1.3",
+        title: "Solving Inequalities",
+        focus: "Solving, graphing, and interpreting linear inequalities, including compound inequalities and solution sets.",
+        coverage: "Strong",
+        tools: [
+          ["inequalities", "solving and representing inequalities"],
+          ["linear-equations", "equation fluency before inequality solving"],
+          ["straight-lines", "graphical interpretation of inequalities"],
+          ["integer-operations", "negative-number operations when rearranging"]
+        ],
+        teacherMove: "Use equations to secure the solving process, then highlight the inequality-specific decisions and representations."
+      },
+      {
+        code: "A1.4",
+        title: "An Introduction to Functions",
+        focus: "Function rules, input-output tables, mappings, notation, substitution, domain ideas, and interpreting relationships.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "function notation, mappings, values, and inverse ideas"],
+          ["substitution", "evaluating expressions and functions"],
+          ["sequences", "rules, patterns, and nth-term thinking"],
+          ["straight-lines", "tables and coordinate graph links"]
+        ],
+        teacherMove: "Connect function notation to substitution first, then use tables and graphs to show the same relationship visually."
+      },
+      {
+        code: "A1.5",
+        title: "Linear Functions",
+        focus: "Gradient, intercepts, equations of lines, graphing from tables, rate of change, and linear modelling.",
+        coverage: "Strong",
+        tools: [
+          ["straight-lines", "gradient, intercepts, coordinate tables, and line equations"],
+          ["functions", "linear functions and function notation"],
+          ["graph-transformations-curve-sketching", "graph behaviour and transformations for extension"],
+          ["correlation-regression", "linear modelling and scatter diagrams for application"]
+        ],
+        teacherMove: "Use straight-line tools for the main skill sequence, then connect to functions and modelling contexts."
+      },
+      {
+        code: "A1.6",
+        title: "Systems of Equations and Inequalities",
+        focus: "Simultaneous linear equations, graphical solutions, systems of inequalities, and feasible regions.",
+        coverage: "Strong",
+        tools: [
+          ["simultaneous-equations", "solving linear systems algebraically"],
+          ["straight-lines", "graphical meaning of simultaneous equations"],
+          ["inequalities", "inequality notation and regions"],
+          ["linear-programming", "systems of inequalities and feasible-region extension"]
+        ],
+        teacherMove: "Start with algebraic simultaneous equations, then use graphs to make the solution point and inequality regions visible."
+      },
+      {
+        code: "A1.7",
+        title: "Exponents and Polynomials",
+        focus: "Index laws, powers, standard form, polynomial expressions, multiplying terms, and simplifying products.",
+        coverage: "Strong",
+        tools: [
+          ["powers-of-10", "powers, standard form, and exponent foundations"],
+          ["simplification", "simplifying algebraic terms and expressions"],
+          ["advanced-factorisation", "multivariable factors and polynomial structure"],
+          ["quadratic-factorisation", "polynomial structure leading into factorising"]
+        ],
+        teacherMove: "Use exponent fluency before expanding or simplifying polynomial expressions, then connect structure to factorisation."
+      },
+      {
+        code: "A1.8",
+        title: "Factoring Polynomials",
+        focus: "Common factors, grouping, difference of two squares, quadratic factorisation, and complete factorisation.",
+        coverage: "Strong",
+        tools: [
+          ["quadratic-factorisation", "factorising quadratic expressions"],
+          ["advanced-factorisation", "HCF, grouping, difference of two squares, and cubics"],
+          ["simplification", "collecting and preparing expressions before factorising"],
+          ["algebraic-fractions", "using factorisation to simplify rational expressions"]
+        ],
+        teacherMove: "Separate common-factor work, grouping, and quadratic factorisation before mixing methods."
+      },
+      {
+        code: "A1.9",
+        title: "Quadratic Functions and Equations",
+        focus: "Quadratic graphs, solving quadratics, factorising, the quadratic formula, completing the square, and interpreting roots.",
+        coverage: "Strong",
+        tools: [
+          ["quadratic-equations", "solving quadratics by factorising, formula, and graph links"],
+          ["quadratic-factorisation", "factorising quadratic expressions"],
+          ["graph-transformations-curve-sketching", "quadratic graphs and transformations"],
+          ["functions", "function notation and evaluating quadratic functions"]
+        ],
+        teacherMove: "Use factorisation first where appropriate, then compare formula and graph methods so students see why roots matter."
+      },
+      {
+        code: "A1.10",
+        title: "Exponential Functions",
+        focus: "Exponential growth and decay, powers, percentage change, graphs, and introductory logarithmic links.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "exponential function notation and evaluation"],
+          ["sequences", "geometric sequences and repeated multiplication"],
+          ["powers-of-10", "powers and standard form fluency"],
+          ["logarithms-practice", "logarithmic equations as extension"]
+        ],
+        teacherMove: "Build from powers and geometric sequences into exponential functions, then use logarithms only as an extension bridge."
+      },
+      {
+        code: "A1.11",
+        title: "Data Analysis and Probability",
+        focus: "Averages, data displays, scatter diagrams, correlation, lines of best fit, probability, and interpreting data.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "mean, median, mode, range, and choosing averages"],
+          ["histograms", "frequency tables and histogram interpretation"],
+          ["correlation-regression", "scatter diagrams, correlation, and regression lines"],
+          ["tree-diagrams-conditional-probability", "structured probability and compound events"]
+        ],
+        teacherMove: "Use averages and displays for core statistics, then bring in correlation and probability tools for applied practice."
+      }
+    ]
   }
 ];
 
@@ -7516,13 +7670,13 @@ const textbookAlignmentSeries = [
     id: "holt-mcdougal",
     publisher: "Holt McDougal",
     title: "Holt McDougal Mathematics",
-    description: "Middle-school and high-school textbook alignments can be selected here. Grade 6, Grade 7, and Pre-Algebra are mapped now; later courses can be added using the same structure.",
+    description: "Middle-school and high-school textbook alignments can be selected here. Grade 6, Grade 7, Pre-Algebra, and Algebra 1 are mapped now; later courses can be added using the same structure.",
     levels: [
       { id: "holt-mcdougal-g6", label: "Grade 6 / Course 1", status: "Pilot" },
       { id: "holt-mcdougal-g7", label: "Grade 7 / Course 2", status: "Pilot" },
       { id: "holt-mcdougal-g8", label: "Grade 8 / Course 3", status: "Planned" },
       { id: "holt-mcdougal-pre-algebra", label: "Pre-Algebra", status: "Pilot" },
-      { id: "holt-mcdougal-algebra-1", label: "Algebra 1", status: "Planned" },
+      { id: "holt-mcdougal-algebra-1", label: "Algebra 1", status: "Pilot" },
       { id: "holt-mcdougal-geometry", label: "Geometry", status: "Planned" },
       { id: "holt-mcdougal-algebra-2", label: "Algebra 2", status: "Planned" },
       { id: "holt-mcdougal-precalculus", label: "Precalculus", status: "Planned" },
@@ -13672,7 +13826,7 @@ function updateRouteSeo(parts) {
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
-      description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes Holt McDougal Mathematics Grade 6, Grade 7, and Pre-Algebra pilot alignments."
+      description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes Holt McDougal Mathematics Grade 6, Grade 7, Pre-Algebra, and Algebra 1 pilot alignments."
     },
     "collections": {
       title: routeTitle(collectionPageTitle),
