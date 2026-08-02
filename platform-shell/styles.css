@@ -3842,6 +3842,7 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .textbook-hero-panel,
+.textbook-series-panel,
 .textbook-map-panel {
   display: grid;
   gap: 12px;
@@ -3860,12 +3861,14 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .textbook-hero-panel h2,
+.textbook-series-panel h2,
 .textbook-map-panel h2 {
   margin: 0;
   color: #282450;
 }
 
 .textbook-hero-panel p,
+.textbook-series-panel p,
 .textbook-map-panel p {
   margin: 6px 0 0;
   color: var(--muted);
@@ -3905,7 +3908,7 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .textbook-course-tabs a,
-.textbook-coming-soon {
+.textbook-level-disabled {
   min-height: 46px;
   display: grid;
   align-content: center;
@@ -3924,14 +3927,20 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .textbook-course-tabs small,
-.textbook-coming-soon {
+.textbook-level-disabled small {
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 800;
 }
 
-.textbook-coming-soon {
-  flex: 1 1 280px;
+.textbook-level-disabled {
+  border-style: dashed;
+  background: #f8fafc;
+  opacity: 0.72;
+}
+
+.textbook-level-disabled strong {
+  color: #475569;
 }
 
 .textbook-alignment-table {
