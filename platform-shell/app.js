@@ -7354,6 +7354,160 @@ const textbookAlignmentCourses = [
         teacherMove: "Use simplification to prepare equations, then move into equations, inequalities, and formula rearrangement."
       }
     ]
+  },
+  {
+    id: "holt-mcdougal-pre-algebra",
+    seriesId: "holt-mcdougal",
+    publisher: "Holt McDougal",
+    course: "Pre-Algebra",
+    label: "Holt McDougal Pre-Algebra",
+    status: "Pilot",
+    basis: "Pilot map based on the public Holt McDougal Pre-Algebra table of contents. Schools can refine this with their exact edition, ISBN, and local pacing guide.",
+    chapters: [
+      {
+        code: "PA.1",
+        title: "Variables, Expressions and Integers",
+        focus: "Variables, expressions, order of operations, integer meaning, comparing integers, and evaluating expressions.",
+        coverage: "Strong",
+        tools: [
+          ["integer-operations", "integer meaning, ordering, and directed-number fluency"],
+          ["substitution", "evaluating expressions by substitution"],
+          ["order-of-operations", "BIDMAS and expression evaluation"],
+          ["simplification", "simplifying algebraic expressions"]
+        ],
+        teacherMove: "Use integers and order of operations first, then move into substitution and simplification for algebra readiness."
+      },
+      {
+        code: "PA.2",
+        title: "Solving Equations",
+        focus: "One-step and two-step equations, inverse operations, checking solutions, and equation contexts.",
+        coverage: "Strong",
+        tools: [
+          ["linear-equations", "one-step, two-step, and bracketed linear equations"],
+          ["substitution", "checking solutions by substitution"],
+          ["transposition-formulae", "rearranging simple formulae"],
+          ["bar-models", "visual equation models for conceptual support"]
+        ],
+        teacherMove: "Model inverse operations with one example, then generate equation sets for fluency and checking."
+      },
+      {
+        code: "PA.3",
+        title: "Multi-Step Equations and Inequalities",
+        focus: "Multi-step equations, equations with variables on both sides, inequalities, and solution checking.",
+        coverage: "Strong",
+        tools: [
+          ["linear-equations", "multi-step equations and variables on both sides"],
+          ["inequalities", "solving and representing inequalities"],
+          ["simplification", "collecting like terms before solving"],
+          ["transposition-formulae", "formula rearrangement for extension"]
+        ],
+        teacherMove: "Use simplification as the bridge into multi-step solving, then practise inequalities separately."
+      },
+      {
+        code: "PA.4",
+        title: "Factors, Fractions and Exponents",
+        focus: "Factors, multiples, prime factorisation, fraction operations, powers, exponents, and scientific notation foundations.",
+        coverage: "Strong",
+        tools: [
+          ["hcf-lcm", "factors, multiples, HCF, LCM, and prime factorisation"],
+          ["fractions-practice", "fraction arithmetic and mixed numbers"],
+          ["powers-of-10", "powers of ten, standard form, and index-law foundations"],
+          ["number-bases-number-sets", "number-set classification for extension"]
+        ],
+        teacherMove: "Use HCF/LCM to strengthen factor reasoning before fraction operations and exponent work."
+      },
+      {
+        code: "PA.5",
+        title: "Rational Numbers and Equations",
+        focus: "Fractions, decimals, negative rational numbers, rational-number operations, and equations involving rational values.",
+        coverage: "Strong",
+        tools: [
+          ["fractions-practice", "fraction operations and mixed numbers"],
+          ["decimals-practice-lab", "decimal operations and place value"],
+          ["integer-operations", "negative-number operations"],
+          ["linear-equations", "equations involving rational values"]
+        ],
+        teacherMove: "Keep rational-number calculation separate at first, then use linear equations to apply the same operations in algebraic form."
+      },
+      {
+        code: "PA.6",
+        title: "Ratio, Proportion and Probability",
+        focus: "Ratios, rates, proportions, scale, probability language, simple events, and compound-event foundations.",
+        coverage: "Strong",
+        tools: [
+          ["ratio-proportion", "ratio, rates, sharing, scale, and proportion"],
+          ["bar-models", "ratio and reverse-ratio models"],
+          ["venn-diagrams", "set diagrams and probability language"],
+          ["tree-diagrams-conditional-probability", "compound events for extension"]
+        ],
+        teacherMove: "Use ratio-proportion for calculation fluency, then introduce probability diagrams when moving into event reasoning."
+      },
+      {
+        code: "PA.7",
+        title: "Percents",
+        focus: "Percent of amounts, percent change, discounts, tax, simple interest, error, and real-life percentage applications.",
+        coverage: "Strong",
+        tools: [
+          ["simple-percentage-tasks", "percentage of amounts and conversions"],
+          ["percentages-real-world", "discounts, VAT, tips, interest, and applications"],
+          ["financial-real-life-maths", "financial percentage contexts"],
+          ["bar-models", "percentage and reverse-percentage models"]
+        ],
+        teacherMove: "Use percentage tasks for core skills, then move into real-life maths for application and word-problem practice."
+      },
+      {
+        code: "PA.8",
+        title: "Linear Functions",
+        focus: "Coordinate graphs, linear rules, tables, slope, intercepts, equations of lines, and interpreting linear relationships.",
+        coverage: "Strong",
+        tools: [
+          ["straight-lines", "gradient, intercepts, coordinate tables, and line equations"],
+          ["functions", "function rules, values, mappings, and notation"],
+          ["sequences", "linear patterns and rules"],
+          ["graph-transformations-curve-sketching", "graph behaviour for extension"]
+        ],
+        teacherMove: "Use straight-lines for the main chapter work and functions/sequences to connect tables, rules, and graphs."
+      },
+      {
+        code: "PA.9",
+        title: "Real Numbers and Right Triangles",
+        focus: "Square roots, real numbers, Pythagoras, right-triangle calculations, and irrational-number links.",
+        coverage: "Strong",
+        tools: [
+          ["surds-radicals", "square roots, radicals, and irrational-number simplification"],
+          ["pythagoras-theorem", "right-triangle side calculations"],
+          ["trigonometric-ratios", "right-triangle trigonometry for extension"],
+          ["number-bases-number-sets", "real, rational, and irrational number classification"]
+        ],
+        teacherMove: "Use number-set language and surds to prepare for Pythagoras, then extend to trigonometric ratios where appropriate."
+      },
+      {
+        code: "PA.10",
+        title: "Measurement: Area and Volume",
+        focus: "Perimeter, area, circles, surface area, volume, units, prisms, cylinders, cones, pyramids, and spheres.",
+        coverage: "Strong",
+        tools: [
+          ["area-rectangles", "area and perimeter of rectangles"],
+          ["area-triangles", "triangle area"],
+          ["circles-area-circumference", "circle area and circumference"],
+          ["volume-surface-area-prisms", "volume and surface area of prisms"]
+        ],
+        teacherMove: "Use area tools for two-dimensional fluency, then move into prism volume and surface area for three-dimensional measurement."
+      },
+      {
+        code: "PA.11",
+        title: "Data Analysis and Probability",
+        focus: "Averages, spread, data displays, histograms, cumulative frequency, samples, probability, and data interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "mean, median, mode, range, and choosing averages"],
+          ["histograms", "frequency tables and histogram interpretation"],
+          ["cumulative-frequency-curves", "cumulative frequency for extension"],
+          ["sampling-methods-bias", "sampling methods and bias"]
+        ],
+        teacherMove: "Use averages and histograms for core data analysis, then sampling and cumulative frequency as extension or enrichment."
+      }
+    ]
   }
 ];
 
@@ -7362,12 +7516,12 @@ const textbookAlignmentSeries = [
     id: "holt-mcdougal",
     publisher: "Holt McDougal",
     title: "Holt McDougal Mathematics",
-    description: "Middle-school and high-school textbook alignments can be selected here. Grade 6 and Grade 7 are mapped now; later courses can be added using the same structure.",
+    description: "Middle-school and high-school textbook alignments can be selected here. Grade 6, Grade 7, and Pre-Algebra are mapped now; later courses can be added using the same structure.",
     levels: [
       { id: "holt-mcdougal-g6", label: "Grade 6 / Course 1", status: "Pilot" },
       { id: "holt-mcdougal-g7", label: "Grade 7 / Course 2", status: "Pilot" },
       { id: "holt-mcdougal-g8", label: "Grade 8 / Course 3", status: "Planned" },
-      { id: "holt-mcdougal-pre-algebra", label: "Pre-Algebra", status: "Planned" },
+      { id: "holt-mcdougal-pre-algebra", label: "Pre-Algebra", status: "Pilot" },
       { id: "holt-mcdougal-algebra-1", label: "Algebra 1", status: "Planned" },
       { id: "holt-mcdougal-geometry", label: "Geometry", status: "Planned" },
       { id: "holt-mcdougal-algebra-2", label: "Algebra 2", status: "Planned" },
@@ -13518,7 +13672,7 @@ function updateRouteSeo(parts) {
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
-      description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes Holt McDougal Mathematics Grade 6 and Grade 7 pilot alignments."
+      description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes Holt McDougal Mathematics Grade 6, Grade 7, and Pre-Algebra pilot alignments."
     },
     "collections": {
       title: routeTitle(collectionPageTitle),
