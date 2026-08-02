@@ -3011,7 +3011,7 @@ function isAdmin() {
 
 function toolCatalogDataShouldRerenderCurrentRoute() {
   const route = routeParts()[0] || "home";
-  return ["home", "tools", "collections", "coverage-map", "admin"].includes(route);
+  return ["home", "tools", "collections", "coverage-map", "textbook-alignments", "admin"].includes(route);
 }
 
 function authSensitiveRouteShouldRerender() {
@@ -7024,6 +7024,275 @@ function scrollToCoverageSection(sectionId, areaData = curriculumMapAreas) {
   window.requestAnimationFrame(() => {
     document.getElementById(`coverage-${sectionId}`)?.scrollIntoView({ block: "start", behavior: "smooth" });
   });
+}
+
+const textbookAlignmentCourses = [
+  {
+    id: "holt-mcdougal-g6",
+    publisher: "Holt McDougal",
+    course: "Mathematics Grade 6",
+    label: "Holt McDougal Mathematics Grade 6",
+    status: "Pilot",
+    basis: "Pilot map based on the common public Grade 6 / Course 1 scope. Schools can refine this with their exact edition, ISBN, and chapter titles.",
+    chapters: [
+      {
+        code: "G6.1",
+        title: "Whole Numbers, Operations and Properties",
+        focus: "Place value, operation fluency, factors, multiples, order of operations, and properties of arithmetic.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "daily calculation fluency and word problems"],
+          ["order-of-operations", "BIDMAS / order of operations practice"],
+          ["hcf-lcm", "factors, multiples, HCF, LCM and prime factorisation"],
+          ["powers-of-10", "place value links and powers of ten"]
+        ],
+        teacherMove: "Use as starter practice, retrieval, and intervention before moving into algebraic notation."
+      },
+      {
+        code: "G6.2",
+        title: "Introduction to Algebra",
+        focus: "Variables, expressions, substitution, simple equations, and translating between words and symbols.",
+        coverage: "Strong",
+        tools: [
+          ["substitution", "substituting values into expressions"],
+          ["simplification", "collecting like terms and simplifying expressions"],
+          ["linear-equations", "one-step and two-step equation solving"],
+          ["transposition-formulae", "rearranging simple formulae for extension"]
+        ],
+        teacherMove: "Use one-example mode to model the meaning of a variable, then generate five-question practice sets."
+      },
+      {
+        code: "G6.3",
+        title: "Decimals and Powers of Ten",
+        focus: "Decimal place value, comparing, rounding, decimal operations, and multiplying or dividing by powers of ten.",
+        coverage: "Strong",
+        tools: [
+          ["decimals-practice-lab", "decimal place value, operations and rounding"],
+          ["powers-of-10", "multiplying and dividing by powers of ten"],
+          ["four-operations", "column methods and operation choice"],
+          ["conversions-teaching", "decimal, fraction and percentage conversions"]
+        ],
+        teacherMove: "Use the decimal lab for direct chapter practice and the conversion table as a quick board starter."
+      },
+      {
+        code: "G6.4",
+        title: "Number Theory, Fractions and Mixed Numbers",
+        focus: "Equivalent fractions, simplifying, mixed numbers, common denominators, and fraction operations.",
+        coverage: "Strong",
+        tools: [
+          ["fractions-practice", "equivalent fractions, simplifying and operations"],
+          ["hcf-lcm", "common factors and common multiples for simplifying and denominators"],
+          ["bar-models", "conceptual fraction and proportion models"],
+          ["area-models", "visual fraction and array reasoning"]
+        ],
+        teacherMove: "Pair the fraction practice tool with bar models when students need a visual route before calculation."
+      },
+      {
+        code: "G6.5",
+        title: "Ratios, Rates, Proportions and Percents",
+        focus: "Ratio language, rates, unit rates, proportional reasoning, percentage of amounts, and simple percentage change.",
+        coverage: "Strong",
+        tools: [
+          ["ratio-proportion", "ratio, sharing, scale, recipes and proportion"],
+          ["simple-percentage-tasks", "percentage conversions and percentage of amounts"],
+          ["percentages-real-world", "discounts, VAT, tips, interest and real-life contexts"],
+          ["bar-models", "ratio, reverse ratio and percentage models"]
+        ],
+        teacherMove: "Use ratio-proportion for structured practice, then move to real-world percentages for application."
+      },
+      {
+        code: "G6.6",
+        title: "Integers and the Coordinate Plane",
+        focus: "Positive and negative numbers, absolute value, coordinate plotting, quadrants and simple graph interpretation.",
+        coverage: "Partial",
+        tools: [
+          ["absolute-values", "absolute value and distance from zero"],
+          ["straight-lines", "coordinate plane, gradient and line graphs for extension"],
+          ["transformations", "coordinate movement on grids"],
+          ["dynamic-classroom-displays", "interactive coordinate and graph displays"]
+        ],
+        teacherMove: "Good for coordinate work and absolute value; a dedicated integer operations tool would strengthen this chapter."
+      },
+      {
+        code: "G6.7",
+        title: "Data, Averages and Probability",
+        focus: "Mean, median, mode, range, simple data displays, interpretation, and introductory probability.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "mean, median, mode, range and choosing suitable averages"],
+          ["discrete-random-variables", "probability tables for extension"],
+          ["tree-diagrams-conditional-probability", "structured probability for later extension"],
+          ["venn-diagrams", "set diagrams and probability language"]
+        ],
+        teacherMove: "Start with Averages and Range for the Grade 6 core; use probability tools selectively as extension or enrichment."
+      },
+      {
+        code: "G6.8",
+        title: "Geometry: Angles, Polygons and Transformations",
+        focus: "Angle facts, polygons, symmetry, transformations, coordinate movement and geometric vocabulary.",
+        coverage: "Strong",
+        tools: [
+          ["missing-angles", "angle facts and missing-angle reasoning"],
+          ["polygons-angles", "interior and exterior angle problems"],
+          ["transformations", "translation, reflection, rotation and enlargement"],
+          ["concept-explainer", "properties of shapes and classroom explanations"]
+        ],
+        teacherMove: "Use the explainer for vocabulary, then transformations or angle tools for practice and board discussion."
+      },
+      {
+        code: "G6.9",
+        title: "Measurement, Area, Surface Area and Volume",
+        focus: "Perimeter, area, surface area, volume, units, and problem-solving with rectangles, triangles and prisms.",
+        coverage: "Strong",
+        tools: [
+          ["area-rectangles", "area and perimeter of rectangles"],
+          ["area-triangles", "triangle area and related calculations"],
+          ["volume-surface-area-prisms", "volume and surface area of prisms"],
+          ["conversions-teaching", "unit conversion support"]
+        ],
+        teacherMove: "Build fluency with area tools, then use prism questions for multi-step measurement practice."
+      },
+      {
+        code: "G6.10",
+        title: "Patterns, Functions and Graphs",
+        focus: "Number patterns, input-output rules, simple functions, tables and graphing relationships.",
+        coverage: "Partial",
+        tools: [
+          ["sequences", "number patterns and nth-term thinking"],
+          ["functions", "function notation and mappings for extension"],
+          ["straight-lines", "tables, coordinates and linear relationships"],
+          ["graph-transformations-curve-sketching", "graph behaviour for enrichment"]
+        ],
+        teacherMove: "Use sequences and straight lines for Grade 6; functions and graph transformations are better for extension."
+      }
+    ]
+  }
+];
+
+function textbookAlignmentById(id) {
+  return textbookAlignmentCourses.find((course) => course.id === id) || textbookAlignmentCourses[0];
+}
+
+function alignmentToolLink([slug, use]) {
+  const tool = tools.find((item) => item.slug === slug);
+  if (!tool || !isVisibleTool(tool)) {
+    return `<li><strong>${escapeHtml(slug)}</strong><small>${escapeHtml(use)} · gap / unavailable</small></li>`;
+  }
+  return `
+    <li>
+      <a href="#/tools/${escapeHtml(tool.slug)}">${escapeHtml(tool.title)}</a>
+      <small>${escapeHtml(use)}</small>
+    </li>
+  `;
+}
+
+function textbookReverseToolIndex(course) {
+  const index = new Map();
+  course.chapters.forEach((chapter) => {
+    chapter.tools.forEach(([slug]) => {
+      const tool = tools.find((item) => item.slug === slug);
+      if (!tool || !isVisibleTool(tool)) return;
+      if (!index.has(slug)) index.set(slug, { tool, chapters: [] });
+      index.get(slug).chapters.push(`${chapter.code} ${chapter.title}`);
+    });
+  });
+  return [...index.values()].sort((a, b) => a.tool.title.localeCompare(b.tool.title));
+}
+
+function renderTextbookAlignments() {
+  const requestedCourse = routeParts()[1] || "holt-mcdougal-g6";
+  const course = textbookAlignmentById(requestedCourse);
+  const reverseIndex = textbookReverseToolIndex(course);
+  const strongCount = course.chapters.filter((chapter) => chapter.coverage === "Strong").length;
+  const partialCount = course.chapters.filter((chapter) => chapter.coverage === "Partial").length;
+  app.innerHTML = `
+    ${pageHeader(
+      "Textbook Alignments",
+      "Connect a school textbook sequence to Kaizen Maths tools, worksheets, worked examples, and classroom practice.",
+      `<a class="button primary" href="#/worksheet-generator">Build Worksheet</a><a class="button" href="#/coverage-map">Coverage Map</a>`
+    )}
+    <section class="textbook-page">
+      <section class="textbook-hero-panel">
+        <div>
+          <span class="eyebrow">${escapeHtml(course.publisher)} Alignment Pilot</span>
+          <h2>${escapeHtml(course.course)}</h2>
+          <p>${escapeHtml(course.basis)}</p>
+        </div>
+        <div class="textbook-metrics" aria-label="Textbook alignment summary">
+          <span><strong>${course.chapters.length}</strong> units mapped</span>
+          <span><strong>${strongCount}</strong> strong matches</span>
+          <span><strong>${partialCount}</strong> partial matches</span>
+        </div>
+      </section>
+
+      <section class="textbook-course-tabs" aria-label="Available textbook alignments">
+        ${textbookAlignmentCourses.map((item) => `
+          <a class="${item.id === course.id ? "active" : ""}" href="#/textbook-alignments/${escapeHtml(item.id)}">
+            <strong>${escapeHtml(item.course)}</strong>
+            <small>${escapeHtml(item.status)}</small>
+          </a>
+        `).join("")}
+        <span class="textbook-coming-soon">Grade 7, Grade 8, Pre-Algebra, Algebra, and Geometry can be added next.</span>
+      </section>
+
+      <section class="textbook-map-panel">
+        <div class="coverage-panel-head">
+          <div>
+            <span class="eyebrow">Chapter To Tool Map</span>
+            <h2>Holt McDougal Grade 6 pilot map</h2>
+            <p>Each row shows the likely textbook chapter focus, the best Kaizen tools to use, and how a teacher might use them in lessons.</p>
+          </div>
+          <a class="button" href="#/tools">Open Tool Library</a>
+        </div>
+        <table class="textbook-alignment-table">
+          <thead>
+            <tr>
+              <th scope="col">Textbook Unit</th>
+              <th scope="col">Focus</th>
+              <th scope="col">Kaizen Tools</th>
+              <th scope="col">Use</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${course.chapters.map((chapter) => `
+              <tr>
+                <th scope="row">
+                  <span>${escapeHtml(chapter.code)}</span>
+                  ${escapeHtml(chapter.title)}
+                  <small data-coverage="${escapeHtml(chapter.coverage.toLowerCase())}">${escapeHtml(chapter.coverage)} match</small>
+                </th>
+                <td>${escapeHtml(chapter.focus)}</td>
+                <td>
+                  <ul class="textbook-tool-list">
+                    ${chapter.tools.map(alignmentToolLink).join("")}
+                  </ul>
+                </td>
+                <td>${escapeHtml(chapter.teacherMove)}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </section>
+
+      <section class="textbook-map-panel">
+        <div class="coverage-panel-head">
+          <div>
+            <span class="eyebrow">Reverse Lookup</span>
+            <h2>Kaizen tools used in this Grade 6 map</h2>
+            <p>This lets a teacher start from a Kaizen tool and see where it fits into the textbook sequence.</p>
+          </div>
+        </div>
+        <ul class="textbook-reverse-list">
+          ${reverseIndex.map(({ tool, chapters }) => `
+            <li>
+              <a href="#/tools/${escapeHtml(tool.slug)}">${escapeHtml(tool.title)}</a>
+              <span>${chapters.map((chapter) => escapeHtml(chapter)).join(" · ")}</span>
+            </li>
+          `).join("")}
+        </ul>
+      </section>
+    </section>
+  `;
 }
 
 function compactToolDescription(tool) {
@@ -13003,6 +13272,10 @@ function updateRouteSeo(parts) {
       title: routeTitle("Curriculum Coverage Map"),
       description: "View Kaizen Maths coverage across GCSE, CSEC, CAPE, Common Core, A-Level Pure, Further Maths, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
     },
+    "textbook-alignments": {
+      title: routeTitle("Textbook Alignments"),
+      description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes a Holt McDougal Mathematics Grade 6 pilot alignment."
+    },
     "collections": {
       title: routeTitle(collectionPageTitle),
       description: collectionName
@@ -13156,6 +13429,8 @@ function renderRoute() {
     renderToolLibrary();
   } else if (parts[0] === "coverage-map") {
     renderCoverageMap();
+  } else if (parts[0] === "textbook-alignments") {
+    renderTextbookAlignments();
   } else if (parts[0] === "collections" && parts[1]) {
     renderToolLibrary(parts[1]);
   } else if (parts[0] === "book-demo") {

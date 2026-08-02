@@ -3836,6 +3836,199 @@ body[data-route="worksheet-generator"] .account-action {
   white-space: nowrap;
 }
 
+.textbook-page {
+  display: grid;
+  gap: 16px;
+}
+
+.textbook-hero-panel,
+.textbook-map-panel {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(23, 184, 179, 0.22);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(23, 184, 179, 0.08), rgba(255, 255, 255, 0.92) 45%, rgba(249, 115, 22, 0.07)),
+    white;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.textbook-hero-panel {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.textbook-hero-panel h2,
+.textbook-map-panel h2 {
+  margin: 0;
+  color: #282450;
+}
+
+.textbook-hero-panel p,
+.textbook-map-panel p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.textbook-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(96px, 1fr));
+  gap: 8px;
+  min-width: min(100%, 360px);
+}
+
+.textbook-metrics span {
+  display: grid;
+  gap: 2px;
+  padding: 10px;
+  border: 1px solid #dbe7f2;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.84);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.textbook-metrics strong {
+  color: #0f766e;
+  font-size: 1.25rem;
+}
+
+.textbook-course-tabs {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.textbook-course-tabs a,
+.textbook-coming-soon {
+  min-height: 46px;
+  display: grid;
+  align-content: center;
+  padding: 8px 12px;
+  border: 1px solid #dbe7f2;
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.textbook-course-tabs a.active {
+  border-color: rgba(23, 184, 179, 0.72);
+  background: #ecfdfb;
+  box-shadow: inset 4px 0 0 var(--orange);
+}
+
+.textbook-course-tabs small,
+.textbook-coming-soon {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.textbook-coming-soon {
+  flex: 1 1 280px;
+}
+
+.textbook-alignment-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.textbook-alignment-table th,
+.textbook-alignment-table td {
+  padding: 10px;
+  border-top: 1px solid #e3e9f2;
+  vertical-align: top;
+}
+
+.textbook-alignment-table thead th {
+  border-top: 0;
+  border-bottom: 2px solid #cfd8e6;
+  color: #2f3654;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.textbook-alignment-table tbody th {
+  width: 220px;
+  color: #252946;
+  font-weight: 900;
+}
+
+.textbook-alignment-table tbody th > span {
+  display: block;
+  color: var(--teal-dark);
+  font-size: 0.78rem;
+}
+
+.textbook-alignment-table tbody th small {
+  width: max-content;
+  display: block;
+  margin-top: 6px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.textbook-alignment-table tbody th small[data-coverage="strong"] {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.textbook-alignment-table tbody th small[data-coverage="partial"] {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.textbook-tool-list,
+.textbook-reverse-list {
+  display: grid;
+  gap: 7px;
+}
+
+.textbook-tool-list li {
+  display: grid;
+  gap: 2px;
+}
+
+.textbook-tool-list a,
+.textbook-reverse-list a {
+  color: #1455a0;
+  font-weight: 850;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.textbook-tool-list small,
+.textbook-reverse-list span {
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.textbook-reverse-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.textbook-reverse-list li {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid #e3e9f2;
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
 .admin-metadata-list {
   display: grid;
   gap: 12px;
@@ -6628,6 +6821,11 @@ sup .worksheet-fraction span:last-child {
     min-height: 0;
   }
 
+  .textbook-hero-panel,
+  .textbook-reverse-list {
+    grid-template-columns: 1fr;
+  }
+
   .hero-copy,
   .home-hero-side,
   .home-testimonial-strip {
@@ -7084,6 +7282,8 @@ sup .worksheet-fraction span:last-child {
   .pricing-grid,
   .coverage-area-grid,
   .coverage-panel-head,
+  .textbook-hero-panel,
+  .textbook-reverse-list,
   .video-grid {
     grid-template-columns: 1fr;
   }
