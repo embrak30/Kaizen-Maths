@@ -7829,6 +7829,173 @@ const textbookAlignmentCourses = [
         teacherMove: "Keep the limit notation precise, then show how the derivative emerges from the first-principles process."
       }
     ]
+  },
+  {
+    id: "holt-mcdougal-geometry",
+    seriesId: "holt-mcdougal",
+    publisher: "Holt McDougal",
+    course: "Geometry",
+    label: "Holt McDougal Geometry",
+    status: "Pilot",
+    basis: "Pilot map based on the public Holt McDougal Geometry chapter sequence. Schools can refine this with their exact edition, ISBN, and local pacing guide.",
+    chapters: [
+      {
+        code: "GEO.1",
+        title: "Essentials of Geometry",
+        focus: "Points, lines, planes, segments, rays, angles, basic constructions, geometric notation, and measurement language.",
+        coverage: "Strong",
+        tools: [
+          ["concept-explainer", "shape, angle, line, and geometric vocabulary displays"],
+          ["classroom-displays", "blank diagrams, grids, and geometry templates for live explanation"],
+          ["loci-constructions", "construction and geometric-locus practice"],
+          ["missing-angles", "angle notation and basic angle relationships"]
+        ],
+        teacherMove: "Use the explainer and blank displays for vocabulary first, then generate short angle or construction tasks."
+      },
+      {
+        code: "GEO.2",
+        title: "Reasoning and Proof",
+        focus: "Conjectures, counterexamples, conditional statements, deductive reasoning, geometric arguments, and proof structure.",
+        coverage: "Partial",
+        tools: [
+          ["concept-explainer", "visual prompts for discussing properties and definitions"],
+          ["circle-theorems", "structured theorem-based reasoning"],
+          ["polygons-angles", "angle-sum arguments and algebraic reasoning"],
+          ["missing-angles", "step-by-step angle reasoning"]
+        ],
+        teacherMove: "Use theorem and angle tools to model reasoning chains, while noting that a dedicated formal proof tool would strengthen this chapter."
+      },
+      {
+        code: "GEO.3",
+        title: "Parallel and Perpendicular Lines",
+        focus: "Parallel lines, transversals, corresponding angles, alternate angles, perpendicular lines, gradients, and coordinate-line links.",
+        coverage: "Strong",
+        tools: [
+          ["missing-angles", "parallel-line and angle relationship practice"],
+          ["straight-lines", "gradient, perpendicular gradients, and coordinate lines"],
+          ["loci-constructions", "perpendicular and parallel construction links"],
+          ["classroom-displays", "blank angle and line diagrams for board modelling"]
+        ],
+        teacherMove: "Start with visual angle relationships, then connect parallel and perpendicular ideas to gradients on coordinate axes."
+      },
+      {
+        code: "GEO.4",
+        title: "Congruent Triangles",
+        focus: "Congruence, rigid transformations, SSS, SAS, ASA, AAS, RHS/HL reasoning, and identifying matching sides and angles.",
+        coverage: "Partial",
+        tools: [
+          ["transformations", "rigid transformations and congruent-image reasoning"],
+          ["concept-explainer", "triangle and quadrilateral property displays"],
+          ["missing-angles", "angle facts inside triangle reasoning"],
+          ["dynamic-classroom-displays", "interactive transformation demonstrations"]
+        ],
+        teacherMove: "Use transformations to make congruence visual, then supplement with teacher-led SSS, SAS, ASA, AAS, and RHS proof discussion."
+      },
+      {
+        code: "GEO.5",
+        title: "Relationships Within Triangles",
+        focus: "Triangle angle sums, exterior angles, isosceles triangles, triangle inequality, medians, altitudes, perpendicular bisectors, and angle bisectors.",
+        coverage: "Strong",
+        tools: [
+          ["missing-angles", "triangle angle facts and algebraic missing-angle problems"],
+          ["polygons-angles", "angle-sum reasoning extended from triangles"],
+          ["loci-constructions", "bisectors, perpendicular bisectors, and loci"],
+          ["concept-explainer", "triangle properties and labelled diagrams"]
+        ],
+        teacherMove: "Use triangle angle work for fluency, then move into construction displays for bisectors and special triangle lines."
+      },
+      {
+        code: "GEO.6",
+        title: "Similarity",
+        focus: "Similar figures, similar triangles, scale factors, proportional sides, enlargement, and area/volume scale links.",
+        coverage: "Strong",
+        tools: [
+          ["scale-drawing-similar-shapes", "scale drawings, similar shapes, similar triangles, and area ratios"],
+          ["transformations", "enlargements and scale factors"],
+          ["trigonometric-ratios", "similar right triangles leading to trig ratios"],
+          ["bar-models", "proportional reasoning support"]
+        ],
+        teacherMove: "Use enlargement and scale-factor tasks first, then move into similar-triangle applications and proportional reasoning."
+      },
+      {
+        code: "GEO.7",
+        title: "Right Triangles and Trigonometry",
+        focus: "Pythagoras, special right triangles, sine, cosine, tangent, solving right triangles, elevation, depression, bearings, and vectors.",
+        coverage: "Strong",
+        tools: [
+          ["pythagoras-theorem", "right-triangle side calculations"],
+          ["trigonometric-ratios", "sine, cosine, tangent, and solving right triangles"],
+          ["bearings", "bearing and trigonometry applications"],
+          ["further-vectors", "vector extension and geometric direction"]
+        ],
+        teacherMove: "Secure Pythagoras first, then use trig ratio questions with clear diagrams before applying to bearings and vectors."
+      },
+      {
+        code: "GEO.8",
+        title: "Quadrilaterals",
+        focus: "Properties of parallelograms, rectangles, rhombi, squares, trapezia/trapezoids, kites, diagonals, and polygon angle sums.",
+        coverage: "Strong",
+        tools: [
+          ["concept-explainer", "quadrilateral property displays"],
+          ["polygons-angles", "interior and exterior angle problems"],
+          ["area-rectangles", "area and perimeter links"],
+          ["transformations", "symmetry and transformation links"]
+        ],
+        teacherMove: "Use the explainer for properties and notation, then generate polygon-angle tasks and area connections."
+      },
+      {
+        code: "GEO.9",
+        title: "Properties of Transformations",
+        focus: "Reflections, translations, rotations, enlargements/dilations, symmetry, compositions, congruence, and coordinate transformations.",
+        coverage: "Strong",
+        tools: [
+          ["transformations", "translation, reflection, rotation, and enlargement practice"],
+          ["dynamic-classroom-displays", "animated transformation demonstrations"],
+          ["matrices", "matrix transformations for extension"],
+          ["graph-transformations-curve-sketching", "graph transformation links"]
+        ],
+        teacherMove: "Use dynamic displays to show motion first, then generate coordinate transformation questions for practice."
+      },
+      {
+        code: "GEO.10",
+        title: "Properties of Circles",
+        focus: "Circle vocabulary, chords, tangents, arcs, sectors, angles in circles, cyclic quadrilaterals, and circle theorems.",
+        coverage: "Strong",
+        tools: [
+          ["circle-theorems", "angle theorems, cyclic quadrilaterals, tangents, and chord reasoning"],
+          ["circles-area-circumference", "circle vocabulary, circumference, and area"],
+          ["sectors-arc-length", "sectors and arc length"],
+          ["equation-of-a-circle", "coordinate circle links for extension"]
+        ],
+        teacherMove: "Use circle vocabulary and theorem diagrams before moving to mixed theorem questions and coordinate-circle extensions."
+      },
+      {
+        code: "GEO.11",
+        title: "Measuring Length and Area",
+        focus: "Perimeter, circumference, area of polygons, area of triangles, circle area, sectors, compound shapes, and unit links.",
+        coverage: "Strong",
+        tools: [
+          ["area-rectangles", "area and perimeter of rectangles"],
+          ["area-triangles", "triangle area and related calculations"],
+          ["circles-area-circumference", "circle area and circumference"],
+          ["sectors-arc-length", "sector area and arc length"]
+        ],
+        teacherMove: "Use focused area tools first, then move into compound and circular measurements when students are secure."
+      },
+      {
+        code: "GEO.12",
+        title: "Surface Area and Volume of Solids",
+        focus: "Prisms, cylinders, cones, pyramids, spheres, surface area, volume, nets, and three-dimensional measurement.",
+        coverage: "Strong",
+        tools: [
+          ["volume-surface-area-prisms", "volume and surface area of prisms"],
+          ["cylinders-cones-volume-surface-area", "cylinders and cones"],
+          ["pyramids-spheres-volume-surface-area", "pyramids and spheres"],
+          ["concept-explainer", "solids, faces, edges, vertices, and labelled diagrams"]
+        ],
+        teacherMove: "Begin with prisms and nets, then extend to curved solids and mixed surface-area or volume tasks."
+      }
+    ]
   }
 ];
 
@@ -7837,14 +8004,14 @@ const textbookAlignmentSeries = [
     id: "holt-mcdougal",
     publisher: "Holt McDougal",
     title: "Holt McDougal Mathematics",
-    description: "Middle-school and high-school textbook alignments can be selected here. Grade 6, Grade 7, Pre-Algebra, Algebra 1, and Precalculus are mapped now; later courses can be added using the same structure.",
+    description: "Middle-school and high-school textbook alignments can be selected here. Grade 6, Grade 7, Pre-Algebra, Algebra 1, Geometry, and Precalculus are mapped now; later courses can be added using the same structure.",
     levels: [
       { id: "holt-mcdougal-g6", label: "Grade 6 / Course 1", status: "Pilot" },
       { id: "holt-mcdougal-g7", label: "Grade 7 / Course 2", status: "Pilot" },
       { id: "holt-mcdougal-g8", label: "Grade 8 / Course 3", status: "Planned" },
       { id: "holt-mcdougal-pre-algebra", label: "Pre-Algebra", status: "Pilot" },
       { id: "holt-mcdougal-algebra-1", label: "Algebra 1", status: "Pilot" },
-      { id: "holt-mcdougal-geometry", label: "Geometry", status: "Planned" },
+      { id: "holt-mcdougal-geometry", label: "Geometry", status: "Pilot" },
       { id: "holt-mcdougal-algebra-2", label: "Algebra 2", status: "Planned" },
       { id: "holt-mcdougal-precalculus", label: "Precalculus", status: "Pilot" },
       { id: "holt-mcdougal-advanced", label: "Advanced Mathematics", status: "Planned" }
@@ -13993,7 +14160,7 @@ function updateRouteSeo(parts) {
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
-      description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes Holt McDougal Mathematics Grade 6, Grade 7, Pre-Algebra, Algebra 1, and Precalculus pilot alignments."
+      description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes Holt McDougal Mathematics Grade 6, Grade 7, Pre-Algebra, Algebra 1, Geometry, and Precalculus pilot alignments."
     },
     "collections": {
       title: routeTitle(collectionPageTitle),
