@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formal Geometric Proof</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;padding:14px;overflow-x:hidden;background:#f3f7fb;color:#111827;font-family:var(--text-font,"Segoe UI",Tahoma,Geneva,Verdana,sans-serif)}
+    .teacher-tab{position:fixed;left:0;top:50%;z-index:1001;transform:translateY(-50%);padding:12px 7px;border-radius:0 7px 7px 0;background:#0f172a;color:#fff;box-shadow:2px 0 10px rgba(0,0,0,.18);cursor:pointer;font-size:.82em;font-weight:850;writing-mode:vertical-rl;text-orientation:mixed}
+    .sidebar-overlay{position:fixed;inset:0;z-index:999;visibility:hidden;opacity:0;background:rgba(0,0,0,.45);transition:.25s}.sidebar-overlay.active{visibility:visible;opacity:1}
+    .sidebar{position:fixed;left:-430px;top:0;z-index:1000;width:430px;height:100vh;overflow-y:auto;background:#fff;box-shadow:2px 0 22px rgba(0,0,0,.24);transition:left .25s}.sidebar.open{left:0}
+    .sidebar-header{padding:18px;background:#0f172a;color:#fff;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #14b8a6;color:#0f172a;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#475569}.sidebar-content ul{margin-bottom:12px;padding-left:20px}
+    .container{max-width:1260px;margin:0 auto;overflow:hidden;border-radius:9px;background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.1)}
+    .header{padding:20px;text-align:center;color:#fff;background:#0f172a;background-image:linear-gradient(135deg,rgba(255,255,255,.13),transparent 45%,rgba(20,184,166,.22)),repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 2px,transparent 2px 24px)}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.24)}
+    .tabs{display:flex;background:#e6fffb}.tab{flex:1;padding:13px 9px;border:0;border-bottom:3px solid transparent;background:#e6fffb;color:#134e4a;cursor:pointer;font-size:.9em;font-weight:850}.tab.active{background:#fff;color:#0f766e;border-bottom-color:#f97316}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #dbe7ef;background:#f8fafc}.level-info h3{margin-bottom:3px;color:#0f766e;font-size:1.16em}.level-info p{max-width:720px;color:#64748b;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{min-width:430px;max-width:100%;padding:8px 10px;border:2px solid #99f6e4;border-radius:6px;background:#fff;color:#111827;font-size:.94em}
+    .timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{min-width:96px;padding:7px 12px;border:2px solid #99f6e4;border-radius:6px;background:#fff;color:#0f766e;text-align:center;font-size:1.45em;font-weight:850}.timer-display.active{border-color:#0f766e;color:#0f766e}.timer-display.warning{border-color:#b91c1c;color:#b91c1c;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{min-width:68px;padding:8px 14px;border:0;border-radius:6px;color:#fff;cursor:pointer;font-weight:850}.btn-primary{background:#2563eb}.btn-success{background:#15803d}.btn-warning{background:#f59e0b;color:#1f2937}.btn-danger{background:#dc2626}
+    .problems-section{min-height:530px;padding:12px 18px 18px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#0f766e;color:#fff;text-align:center;font-size:1.08em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border:1px solid #99f6e4;border-radius:6px;background:#ecfdf5;color:#134e4a;text-align:center;font-weight:800}.set-instruction.visible{display:block}
+    .problem-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;list-style:none}.problem-item{display:flex;flex-direction:column;gap:9px;min-height:294px;padding:10px;border-left:4px solid #0f766e;border-radius:7px;background:#f8fafc}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.problem-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.problem-number{display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:#0f766e;color:#fff;font-weight:850}
+    .proof-row{display:grid;grid-template-columns:260px minmax(0,1fr);gap:12px;align-items:center}.diagram-wrap{width:260px;background:#fff;border:1px solid #d7e3f0;border-radius:6px;padding:4px}.diagram-wrap svg{width:100%;height:auto;display:block}.question-text{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-size:1.08em;line-height:1.36;color:#111827;font-weight:520}.diagram-note{font-size:10px;fill:#64748b;font-family:"Segoe UI",Tahoma,sans-serif}
+    .geo-line,.geo-dash,.geo-shape,.geo-arc,.geo-ray,.geo-tick,.geo-arrow{fill:none;stroke:#111827;stroke-linecap:round;stroke-linejoin:round}.geo-line,.geo-shape{stroke-width:2.2}.geo-dash{stroke-width:1.7;stroke-dasharray:6 5}.geo-ray{stroke-width:2}.geo-arc{stroke-width:1.45}.geo-tick{stroke-width:2}.geo-arrow{stroke-width:1.8}.geo-point{fill:#111827}.geo-fill{fill:#fff;stroke:#111827;stroke-width:2.2;stroke-linejoin:round}.angle-label,.point-label,.side-label{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);fill:#111827;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}.angle-label{font-size:13px;font-weight:850}.unknown-label{font-size:18px;font-style:italic;font-weight:900}.point-label{font-size:12px;font-weight:850}.side-label{font-size:12px;font-weight:850}
+    .proof-table{width:100%;border-collapse:collapse;margin:6px 0;background:#fff;font-size:.94em}.proof-table th,.proof-table td{border:1px solid #cbd5e1;padding:7px 8px;vertical-align:top;text-align:left}.proof-table th{background:#e6fffb;color:#134e4a;font-weight:850}.proof-table td:first-child{font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:550}
+    .problem-answer{display:none;max-width:42%;padding:7px 11px;border-radius:999px;background:#15803d;color:#fff;font-size:.92em;font-weight:850;line-height:1.35;text-align:center}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:auto;padding:10px;border-left:3px solid #2563eb;border-radius:6px;background:#eff6ff}.steps-section.visible{display:block}.answer-label{margin-bottom:6px;color:#2563eb;font-weight:850}.solution-steps{line-height:1.45;font-size:.96em}.step{margin:6px 0;color:#111827}.step-equation{margin:6px 0;padding:6px;border:1px solid #bfdbfe;border-radius:5px;background:#fff;color:#134e4a;text-align:center;font-family:var(--math-font,"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif);font-weight:650}.final-answer{margin-top:8px;padding:8px;border-radius:6px;background:#15803d;color:#fff;text-align:center;font-weight:850}
+    .timer-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}.modal-content{max-width:340px;padding:28px;border-radius:10px;background:#fff;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{margin-bottom:10px;color:#b91c1c}.modal-content p{margin-bottom:18px;color:#64748b}.hidden{display:none!important}
+    @media (max-width:980px){.problem-list{grid-template-columns:1fr}.proof-row{grid-template-columns:260px minmax(0,1fr)}}
+    @media (max-width:650px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.proof-row{grid-template-columns:1fr}.diagram-wrap{width:min(300px,100%)}.problem-header{flex-direction:column}.problem-answer{max-width:none}}
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <script src="../../auth-config.js?v=tool-access-guard-2"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-2"></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Formal Geometric Proof Guidance</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool helps teachers model geometric reasoning as a chain of justified statements. It separates calculation from proof by asking students to name the theorem, identify the matching parts, and write the reason for each conclusion.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> Identify the correct reason from a diagram.</li>
+        <li><strong>Level 2:</strong> Build angle-proof chains using parallel lines, triangles, and circle theorems.</li>
+        <li><strong>Level 3:</strong> Prove congruence or similarity using corresponding sides and angles.</li>
+        <li><strong>Level 4:</strong> Complete formal two-column proofs and paragraph-style proof arguments.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Insist that every statement has a reason.</li>
+        <li>Ask students to point to the diagram before naming the theorem.</li>
+        <li>Keep corresponding vertices in the same order for congruence and similarity statements.</li>
+        <li>Encourage concise proof language: statement first, reason second.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Formal Geometric Proof</h1></header>
+    <nav class="tabs">
+      <button class="tab active" type="button" onclick="switchLevel(1)">Level 1: Proof Foundations</button>
+      <button class="tab" type="button" onclick="switchLevel(2)">Level 2: Angle Chains</button>
+      <button class="tab" type="button" onclick="switchLevel(3)">Level 3: Congruence & Similarity</button>
+      <button class="tab" type="button" onclick="switchLevel(4)">Level 4: Formal Proofs</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Proof Foundations</h3>
+        <p id="level-description">Name the correct geometric reason and connect it to the conclusion.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" type="button" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" type="button" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" type="button" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" type="button" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" type="button" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" type="button" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review the proof chains?</p>
+      <button class="btn btn-primary" type="button" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType="select",timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:"Level 1: Proof Foundations",description:"Name the correct geometric reason and connect it to the conclusion.",types:["reason_parallel","reason_isosceles","reason_cyclic","reason_tangent"]},
+      2:{title:"Level 2: Angle Chains",description:"Use theorem chains to prove or calculate a final angle.",types:["parallel_triangle_chain","isosceles_chain","circle_chain","mixed_angle_chain"]},
+      3:{title:"Level 3: Congruence & Similarity",description:"Prove congruence or similarity by matching corresponding parts in the correct order.",types:["congruence_sas","congruence_asa","similarity_aa","cpctc_conclusion"]},
+      4:{title:"Level 4: Formal Proofs",description:"Complete two-column and paragraph-style proofs with clear statement-reason logic.",types:["two_column_parallel","two_column_circle","paragraph_congruence","mixed_formal_proof"]}
+    };
+
+    const typeDisplayNames={
+      reason_parallel:"Identify a Parallel-Line Reason",
+      reason_isosceles:"Identify an Isosceles Triangle Reason",
+      reason_cyclic:"Identify a Cyclic Quadrilateral Reason",
+      reason_tangent:"Identify a Tangent-Radius Reason",
+      parallel_triangle_chain:"Parallel Lines and Triangle Proof Chain",
+      isosceles_chain:"Isosceles Triangle Proof Chain",
+      circle_chain:"Circle Theorem Proof Chain",
+      mixed_angle_chain:"Mixed Angle Proof Chains",
+      congruence_sas:"Prove Triangles Congruent by SAS",
+      congruence_asa:"Prove Triangles Congruent by ASA",
+      similarity_aa:"Prove Triangles Similar by AA",
+      cpctc_conclusion:"Use Congruence to Prove a Final Statement",
+      two_column_parallel:"Two-Column Proof: Parallel Lines",
+      two_column_circle:"Two-Column Proof: Circle Theorem",
+      paragraph_congruence:"Paragraph Proof: Congruence",
+      mixed_formal_proof:"Mixed Formal Proof"
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    const setInstructions={
+      reason_parallel:"Name the theorem or angle fact that justifies each conclusion.",
+      reason_isosceles:"Use equal sides to identify equal base angles.",
+      reason_cyclic:"Use cyclic-quadrilateral angle facts to justify the conclusion.",
+      reason_tangent:"Use the tangent-radius theorem to justify the conclusion.",
+      parallel_triangle_chain:"Complete the proof chain using parallel-line facts and triangle angle facts.",
+      isosceles_chain:"Complete the proof chain using equal radii or equal sides.",
+      circle_chain:"Complete the proof chain using circle theorems.",
+      mixed_angle_chain:"Choose the correct theorem at each step and complete the chain.",
+      congruence_sas:"Prove the triangles congruent by matching side-angle-side in the correct order.",
+      congruence_asa:"Prove the triangles congruent by matching angle-side-angle in the correct order.",
+      similarity_aa:"Prove the triangles similar by matching two equal angles.",
+      cpctc_conclusion:"Prove congruence first, then use corresponding parts of congruent triangles.",
+      two_column_parallel:"Complete a two-column proof with a statement and reason in every row.",
+      two_column_circle:"Complete a two-column proof using circle-theorem reasons.",
+      paragraph_congruence:"Write the proof as a connected paragraph.",
+      mixed_formal_proof:"Build a formal proof from the diagram, one justified statement at a time."
+    };
+
+    function toggleSidebar(){document.getElementById("sidebar").classList.toggle("open");document.querySelector(".sidebar-overlay").classList.toggle("active")}
+    function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.querySelector(".sidebar-overlay").classList.remove("active")}
+    function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function deg(n){return n+"&deg;"}
+    function cleanText(html){const template=document.createElement("template");template.innerHTML=String(html||"");return template.content.textContent.replace(/\s+/g," ").trim()}
+    function svg(inner){return `<svg viewBox="0 0 270 230" role="img" aria-label="Geometric proof diagram">${inner}<text class="diagram-note" x="135" y="220" text-anchor="middle">Not drawn to scale</text></svg>`}
+    function pt(x,y){return{x,y}}
+    function line(a,b,cls="geo-line"){return `<line class="${cls}" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"></line>`}
+    function poly(points,cls="geo-fill"){return `<polygon class="${cls}" points="${points.map((p)=>`${p.x},${p.y}`).join(" ")}"></polygon>`}
+    function label(text,x,y,cls="angle-label"){return `<text class="${cls}" x="${x}" y="${y}" text-anchor="middle">${text}</text>`}
+    function dot(name,p,dx=0,dy=0){return `<circle class="geo-point" cx="${p.x}" cy="${p.y}" r="3"></circle><text class="point-label" x="${p.x+dx}" y="${p.y+dy}">${name}</text>`}
+    function arc(x,y,r,a1,a2){const s=polar(x,y,r,a1),e=polar(x,y,r,a2),large=Math.abs(a2-a1)>180?1:0,sweep=a2>a1?1:0;return `<path class="geo-arc" d="M ${s.x.toFixed(1)} ${s.y.toFixed(1)} A ${r} ${r} 0 ${large} ${sweep} ${e.x.toFixed(1)} ${e.y.toFixed(1)}"></path>`}
+    function polar(x,y,r,a){const rad=a*Math.PI/180;return{x:x+r*Math.cos(rad),y:y+r*Math.sin(rad)}}
+    function tick(a,b,count=1){const mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy)||1,nx=-dy/len,ny=dx/len,gap=count===1?0:4;let out="";for(let i=0;i<count;i++){const off=(i-(count-1)/2)*gap;out+=line(pt(Math.round(mx+nx*8+dx/len*off),Math.round(my+ny*8+dy/len*off)),pt(Math.round(mx-nx*8+dx/len*off),Math.round(my-ny*8+dy/len*off)),"geo-tick")}return out}
+    function proofTable(rows){return `<table class="proof-table"><thead><tr><th>Statement</th><th>Reason</th></tr></thead><tbody>${rows.map(([statement,reason])=>`<tr><td>${statement}</td><td>${reason}</td></tr>`).join("")}</tbody></table>`}
+    function stepTable(rows){return {html:proofTable(rows)}}
+    function problemShell(prompt,diagram,answer,steps){return{equation:`<div class="proof-row"><div class="diagram-wrap">${diagram}</div><div class="question-text">${prompt}</div></div>`,question:cleanText(prompt),answer,steps,instruction:setInstructions[currentType]||"Complete each proof.",instructionText:setInstructions[currentType]||"Complete each proof.",typeLabel:typeDisplayNames[currentType]||"Formal Geometric Proof"}}
+
+    function parallelDiagram(a=62,b=62,showX=false){
+      const A=pt(42,70),B=pt(224,70),C=pt(38,154),D=pt(220,154),E=pt(86,32),F=pt(178,188);
+      const arrow1=`<path class="geo-arrow" d="M 118 66 l8 4 l-8 4"></path><path class="geo-arrow" d="M 142 66 l8 4 l-8 4"></path>`;
+      const arrow2=`<path class="geo-arrow" d="M 114 150 l8 4 l-8 4"></path><path class="geo-arrow" d="M 138 150 l8 4 l-8 4"></path>`;
+      return svg(line(A,B)+line(C,D)+line(E,F,"geo-ray")+arrow1+arrow2+arc(103,70,18,196,240)+arc(147,154,18,16,60)+label(deg(a),95,61)+label(showX?"x":deg(b),162,151,showX?"angle-label unknown-label":"angle-label")+label("l",34,73,"side-label")+label("m",30,157,"side-label")+dot("A",pt(103,70),-15,-9)+dot("B",pt(147,154),8,18));
+    }
+
+    function isoscelesDiagram(value=48,showX=false){
+      const A=pt(135,36),B=pt(62,170),C=pt(208,170);
+      return svg(poly([A,B,C])+tick(A,B,1)+tick(A,C,1)+arc(B.x,B.y,21,300,350)+arc(C.x,C.y,21,190,240)+label(deg(value),82,157)+label(showX?"x":deg(value),188,157,showX?"angle-label unknown-label":"angle-label")+dot("A",A,-4,-12)+dot("B",B,-18,14)+dot("C",C,8,14));
+    }
+
+    function isoscelesVertexDiagram(vertex){
+      const A=pt(135,36),B=pt(62,170),C=pt(208,170);
+      return svg(poly([A,B,C])+tick(A,B,1)+tick(A,C,1)+arc(A.x,A.y,20,108,72)+arc(B.x,B.y,21,300,350)+arc(C.x,C.y,21,190,240)+label(deg(vertex),135,60)+label("x",82,157,"angle-label unknown-label")+label("x",188,157,"angle-label unknown-label")+dot("A",A,-4,-12)+dot("B",B,-18,14)+dot("C",C,8,14));
+    }
+
+    function parallelTriangleDiagram(a,b){
+      return svg(line(pt(38,66),pt(228,66))+line(pt(38,166),pt(228,166))+line(pt(80,166),pt(140,66),"geo-ray")+line(pt(80,166),pt(198,166))+line(pt(140,66),pt(198,166))+`<path class="geo-arrow" d="M 114 62 l8 4 l-8 4"></path><path class="geo-arrow" d="M 114 162 l8 4 l-8 4"></path>`+arc(140,66,20,120,180)+arc(198,166,20,205,250)+arc(80,166,20,315,350)+label(deg(a),118,80)+label(deg(b),180,153)+label("x",103,154,"angle-label unknown-label")+dot("A",pt(140,66),-5,-12)+dot("B",pt(80,166),-18,14)+dot("C",pt(198,166),8,14));
+    }
+
+    function cyclicDiagram(a=112,showX=true){
+      const cx=135,cy=112,r=74,A=polar(cx,cy,r,225),B=polar(cx,cy,r,130),C=polar(cx,cy,r,40),D=polar(cx,cy,r,315);
+      const x=180-a;
+      return svg(`<circle class="geo-shape" cx="${cx}" cy="${cy}" r="${r}"></circle>`+line(A,B)+line(B,C)+line(C,D)+line(D,A)+label(deg(a),B.x+23,B.y+28)+label(showX?"x":deg(x),D.x-25,D.y-22,showX?"angle-label unknown-label":"angle-label")+dot("A",A,-18,10)+dot("B",B,-20,-8)+dot("C",C,9,-8)+dot("D",D,8,15));
+    }
+
+    function tangentDiagram(){
+      const cx=133,cy=112,r=72,A=polar(cx,cy,r,315),O=pt(cx,cy),T1=pt(A.x-45,A.y-45),T2=pt(A.x+45,A.y+45);
+      return svg(`<circle class="geo-shape" cx="${cx}" cy="${cy}" r="${r}"></circle>`+line(O,A,"geo-line")+line(T1,T2,"geo-ray")+`<path class="geo-arc" d="M ${A.x-9} ${A.y-9} L ${A.x+3} ${A.y-21} L ${A.x+15} ${A.y-9}"></path>`+label("x",A.x+19,A.y-22,"angle-label unknown-label")+dot("O",O,6,14)+dot("A",A,8,16));
+    }
+
+    function centreCircleDiagram(circ=42){
+      const cx=135,cy=112,r=74,A=polar(cx,cy,r,218),B=polar(cx,cy,r,322),C=polar(cx,cy,r,90),O=pt(cx,cy),centre=2*circ;
+      return svg(`<circle class="geo-shape" cx="${cx}" cy="${cy}" r="${r}"></circle>`+line(O,A)+line(O,B)+line(A,C)+line(B,C)+arc(C.x,C.y,20,236,304)+arc(cx,cy,26,218,322)+label(deg(circ),C.x,C.y+28)+label("x",cx,cy+31,"angle-label unknown-label")+dot("A",A,-17,10)+dot("B",B,8,10)+dot("C",C,-4,-10)+dot("O",O,6,14));
+    }
+
+    function congruenceDiagram(mode="sas"){
+      const A=pt(52,158),B=pt(121,62),C=pt(177,158),D=pt(177,158),E=pt(231,62),F=pt(254,158);
+      let inner=poly([A,B,C])+poly([D,E,F])+tick(A,B,1)+tick(E,F,1);
+      if(mode==="sas") inner+=tick(B,C,2)+tick(D,E,2)+arc(B.x,B.y,18,108,152)+arc(E.x,E.y,18,25,72);
+      if(mode==="asa") inner+=tick(A,C,1)+arc(A.x,A.y,18,305,350)+arc(D.x,D.y,18,190,237)+arc(C.x,C.y,18,190,235)+arc(F.x,F.y,18,305,350);
+      return svg(inner+dot("A",A,-17,14)+dot("B",B,-5,-12)+dot("C",C,8,14)+dot("D",D,-4,18)+dot("E",E,-3,-12)+dot("F",F,8,14));
+    }
+
+    function similarityDiagram(){
+      const A=pt(55,165),B=pt(118,72),C=pt(181,165),D=pt(188,165),E=pt(225,106),F=pt(260,165);
+      return svg(poly([A,B,C])+poly([D,E,F])+arc(A.x,A.y,18,305,350)+arc(D.x,D.y,15,303,350)+arc(C.x,C.y,18,190,235)+arc(F.x,F.y,15,190,235)+label("48&deg;",78,151)+label("48&deg;",202,153)+label("67&deg;",158,151)+label("67&deg;",247,153)+dot("A",A,-17,14)+dot("B",B,-5,-12)+dot("C",C,8,14)+dot("D",D,-4,18)+dot("E",E,-3,-12)+dot("F",F,8,14));
+    }
+
+    function genReasonParallel(){
+      const a=choice([56,64,72,118]);
+      return problemShell(`Lines l and m are parallel. The marked angles are equal. State the reason.`,parallelDiagram(a,a,false),"Alternate interior angles are equal.",[
+        "The diagram shows l parallel to m.",
+        "The two marked angles are inside the parallel lines and on opposite sides of the transversal.",
+        "That relationship is called alternate interior angles.",
+        "Therefore the correct reason is: alternate interior angles are equal."
+      ]);
+    }
+
+    function genReasonIsosceles(){
+      const a=choice([42,48,54,61]);
+      return problemShell(`In triangle ABC, AB = AC. Explain why angle B equals angle C.`,isoscelesDiagram(a,false),"Base angles in an isosceles triangle are equal.",[
+        "AB = AC, so triangle ABC has two equal sides.",
+        "The equal sides meet the base BC at B and C.",
+        "In an isosceles triangle, equal sides have equal opposite angles.",
+        "Therefore angle B = angle C."
+      ]);
+    }
+
+    function genReasonCyclic(){
+      const a=choice([104,112,118,126]);
+      return problemShell(`ABCD is cyclic. Explain why the opposite angles add to 180&deg;.`,cyclicDiagram(a,true),"Opposite angles in a cyclic quadrilateral are supplementary.",[
+        "All four vertices lie on the circumference, so ABCD is a cyclic quadrilateral.",
+        "A cyclic quadrilateral has opposite angles that are supplementary.",
+        "Supplementary means the two angles add to 180&deg;.",
+        "Therefore angle B + angle D = 180&deg;."
+      ]);
+    }
+
+    function genReasonTangent(){
+      return problemShell(`The line touches the circle at A. State the angle between the tangent and radius OA.`,tangentDiagram(),"90&deg;",[
+        "The line through A is a tangent because it touches the circle at A.",
+        "OA is a radius drawn to the point of contact.",
+        "A tangent is perpendicular to the radius at the point of contact.",
+        "Therefore the angle between the tangent and OA is 90&deg;."
+      ]);
+    }
+
+    function genParallelTriangleChain(){
+      const a=choice([54,62,68]),b=choice([42,48,56]),x=180-a-b;
+      const diagram=parallelTriangleDiagram(a,b);
+      return problemShell(`The two horizontal lines are parallel. Prove that x = ${deg(x)}.`,diagram,deg(x),[
+        stepTable([["Angle at A in triangle ABC = "+deg(a),"Alternate interior angles are equal because the lines are parallel."],["Angle at C = "+deg(b),"Given in the diagram."],["x + "+deg(a)+" + "+deg(b)+" = 180&deg;","Angles in a triangle add to 180&deg;."],["x = 180&deg; - "+deg(a)+" - "+deg(b),"Rearrange to isolate x."],["x = "+deg(x),"Calculate the value."]])
+      ]);
+    }
+
+    function genIsoscelesChain(){
+      const vertex=choice([44,52,68]),base=(180-vertex)/2;
+      const diagram=isoscelesVertexDiagram(vertex);
+      return problemShell(`AB = AC and angle A = ${deg(vertex)}. Prove that each base angle is ${deg(base)}.`,diagram,deg(base),[
+        stepTable([["AB = AC","Given in the diagram."],["Angle B = angle C","Base angles in an isosceles triangle are equal."],["Angle A + angle B + angle C = 180&deg;","Angles in a triangle add to 180&deg;."],[""+deg(vertex)+" + x + x = 180&deg;","Substitute angle A = "+deg(vertex)+" and angle B = angle C = x."],["2x = "+deg(180-vertex),"Subtract "+deg(vertex)+" from both sides."],["x = "+deg(base),"Divide by 2."]])
+      ]);
+    }
+
+    function genCircleChain(){
+      const circ=choice([34,38,44,52]),centre=2*circ;
+      return problemShell(`Angle ACB = ${deg(circ)}. Prove that angle AOB = ${deg(centre)}.`,centreCircleDiagram(circ),deg(centre),[
+        stepTable([["Angle ACB stands on arc AB.","A and B are the endpoints of the chord or arc."],["Angle AOB also stands on arc AB.","O is the centre and OA, OB are radii."],["Angle AOB = 2 &times; angle ACB","The angle at the centre is twice the angle at the circumference on the same arc."],["Angle AOB = 2 &times; "+deg(circ),"Substitute angle ACB = "+deg(circ)+"."],["Angle AOB = "+deg(centre),"Calculate."]])
+      ]);
+    }
+
+    function genCongruenceSas(){
+      return problemShell(`Use the markings to prove triangle ABC is congruent to triangle EFD.`,congruenceDiagram("sas"),"Triangle ABC is congruent to triangle EFD by SAS.",[
+        stepTable([["AB = EF","Marked equal on the diagram."],["BC = FD","Marked equal on the diagram."],["Angle ABC = angle EFD","Marked equal on the diagram."],["Triangle ABC is congruent to triangle EFD","Two sides and the included angle are equal, so the triangles are congruent by SAS."]])
+      ]);
+    }
+
+    function genCongruenceAsa(){
+      return problemShell(`Use the markings to prove triangle ABC is congruent to triangle DFE.`,congruenceDiagram("asa"),"Triangle ABC is congruent to triangle DFE by ASA.",[
+        stepTable([["Angle BAC = angle FDE","Marked equal on the diagram."],["AC = DF","Marked equal on the diagram."],["Angle BCA = angle DFE","Marked equal on the diagram."],["Triangle ABC is congruent to triangle DFE","Two angles and the included side are equal, so the triangles are congruent by ASA."]])
+      ]);
+    }
+
+    function genSimilarityAa(){
+      return problemShell(`Use the angle markings to prove triangle ABC is similar to triangle DEF.`,similarityDiagram(),"Triangle ABC is similar to triangle DEF by AA.",[
+        stepTable([["Angle BAC = angle EDF","Both angles are 48&deg;."],["Angle BCA = angle DFE","Both angles are 67&deg;."],["Triangle ABC is similar to triangle DEF","Two pairs of corresponding angles are equal, so the triangles are similar by AA."]])
+      ]);
+    }
+
+    function genCpctc(){
+      const diagram=congruenceDiagram("sas");
+      return problemShell(`The markings show triangle ABC is congruent to triangle EFD. Prove that AC = ED.`,diagram,"AC = ED.",[
+        stepTable([["AB = EF","Marked equal on the diagram."],["BC = FD","Marked equal on the diagram."],["Angle ABC = angle EFD","Marked equal on the diagram."],["Triangle ABC is congruent to triangle EFD","SAS congruence."],["AC = ED","Corresponding parts of congruent triangles are equal."]])
+      ]);
+    }
+
+    function genTwoColumnParallel(){
+      const a=choice([58,66,74]),b=choice([46,52,60]),x=180-a-b;
+      return problemShell(`Complete the proof that x = ${deg(x)}.`,parallelTriangleDiagram(a,b),deg(x),[
+        stepTable([["The two marked angles on the parallel lines are equal.","Alternate interior angles are equal."],["One angle in the triangle is "+deg(a)+".","Substitute the corresponding angle value."],["The second given angle is "+deg(b)+".","Given."],["x + "+deg(a)+" + "+deg(b)+" = 180&deg;","Angles in a triangle add to 180&deg;."],["x = "+deg(x),"Solve the equation."]])
+      ]);
+    }
+
+    function genTwoColumnCircle(){
+      const a=choice([98,106,114,122]),x=180-a;
+      return problemShell(`ABCD is cyclic. Complete the proof that x = ${deg(x)}.`,cyclicDiagram(a,true),deg(x),[
+        stepTable([["ABCD is cyclic.","Given by the diagram."],["Angle B + angle D = 180&deg;","Opposite angles in a cyclic quadrilateral are supplementary."],[""+deg(a)+" + x = 180&deg;","Substitute angle B = "+deg(a)+"."],["x = 180&deg; - "+deg(a),"Subtract "+deg(a)+" from both sides."],["x = "+deg(x),"Calculate."]])
+      ]);
+    }
+
+    function genParagraphCongruence(){
+      return problemShell(`Write a paragraph proof that triangle ABC is congruent to triangle EFD.`,congruenceDiagram("sas"),"Triangle ABC is congruent to triangle EFD by SAS.",[
+        "From the diagram, AB = EF and BC = FD.",
+        "The included angles are also equal: angle ABC = angle EFD.",
+        "The equal angle is between the two equal sides in each triangle.",
+        "Therefore, by side-angle-side congruence, triangle ABC is congruent to triangle EFD."
+      ]);
+    }
+
+    function generateProblem(){
+      const type=currentType==="select"?choice(levelConfigs[currentLevel].types):currentType;
+      if(type==="reason_parallel")return genReasonParallel();
+      if(type==="reason_isosceles")return genReasonIsosceles();
+      if(type==="reason_cyclic")return genReasonCyclic();
+      if(type==="reason_tangent")return genReasonTangent();
+      if(type==="parallel_triangle_chain")return genParallelTriangleChain();
+      if(type==="isosceles_chain")return genIsoscelesChain();
+      if(type==="circle_chain")return genCircleChain();
+      if(type==="mixed_angle_chain")return choice([genParallelTriangleChain,genIsoscelesChain,genCircleChain])();
+      if(type==="congruence_sas")return genCongruenceSas();
+      if(type==="congruence_asa")return genCongruenceAsa();
+      if(type==="similarity_aa")return genSimilarityAa();
+      if(type==="cpctc_conclusion")return genCpctc();
+      if(type==="two_column_parallel")return genTwoColumnParallel();
+      if(type==="two_column_circle")return genTwoColumnCircle();
+      if(type==="paragraph_congruence")return genParagraphCongruence();
+      if(type==="mixed_formal_proof")return choice([genTwoColumnParallel,genTwoColumnCircle,genParagraphCongruence,genCongruenceSas,genSimilarityAa])();
+      return genReasonParallel();
+    }
+
+    function setInstructionForType(){const text=setInstructions[currentType]||"";const el=document.getElementById("set-instruction");el.textContent=text;el.classList.toggle("visible",Boolean(text))}
+    function switchLevel(level){currentLevel=level;currentType="select";document.querySelectorAll(".tab").forEach((tab,i)=>tab.classList.toggle("active",i+1===level));const cfg=levelConfigs[level];document.getElementById("level-title").textContent=cfg.title;document.getElementById("level-description").textContent=cfg.description;const dropdown=document.getElementById("type-dropdown");dropdown.innerHTML='<option value="select">Select Question Type</option>'+cfg.types.map((type)=>`<option value="${type}">${typeDisplayNames[type]}</option>`).join("");dropdown.value="select";showBlankPage()}
+    function typeChanged(){currentType=document.getElementById("type-dropdown").value;currentType==="select"?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById("problem-set-header").classList.remove("visible");document.getElementById("set-instruction").classList.remove("visible");document.getElementById("problem-list").innerHTML='<li style="grid-column:1/-1;text-align:center;padding:36px;color:#64748b;font-size:1.05em">Please select a proof question type to begin.</li>'}
+    function generateNewSet(){if(currentType==="select"){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;for(let i=0;i<4;i++)problems.push(generateProblem());renderProblems()}
+    function renderStep(step){if(step&&typeof step==="object"&&step.html)return step.html;const text=String(step||"");if(/[=]|&deg;|\bangle\b|triangle|congruent|similar/i.test(text))return `<div class="step-equation">${text}</div>`;return `<div class="step">${text}</div>`}
+    function renderProblems(){const list=document.getElementById("problem-list"),header=document.getElementById("problem-set-header");list.innerHTML="";header.textContent=typeDisplayNames[currentType]||"Formal Geometric Proof";header.className="problem-set-header visible";setInstructionForType();problems.forEach((p,i)=>{const li=document.createElement("li");li.className="problem-item";if(problems.length===1)li.style.gridColumn="1 / -1";const steps=(p.steps||[]).map(renderStep).join("");li.innerHTML=`<div class="problem-header"><div class="problem-left"><div class="problem-number">${i+1}</div><div class="equation">${p.equation}</div></div><div class="problem-answer" id="quick-answer-${i}">${p.answer}</div></div><div class="steps-section" id="steps-${i}"><div class="answer-label">Solution Steps:</div><div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div></div>`;list.appendChild(li)})}
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>document.getElementById("quick-answer-"+i)?.classList.toggle("visible",answersVisible))}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>document.getElementById("steps-"+i)?.classList.toggle("visible",stepsVisible))}
+    function startTimer(minutes){if(timerActive)stopTimer();timeRemaining=minutes*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const el=document.getElementById("timer-display");el.textContent="Ready";el.className="timer-display"}
+    function updateTimerDisplay(){const el=document.getElementById("timer-display"),minutes=Math.floor(timeRemaining/60),seconds=timeRemaining%60;el.textContent=minutes+":"+String(seconds).padStart(2,"0");if(timerActive&&timeRemaining<=30)el.className="timer-display warning";else if(timerActive)el.className="timer-display active";else el.className="timer-display"}
+    function timerFinished(){stopTimer();const el=document.getElementById("timer-display");el.textContent="Time Up!";el.className="timer-display warning";document.getElementById("timer-modal").classList.remove("hidden")}
+    function closeModal(){document.getElementById("timer-modal").classList.add("hidden")}
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-24"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-3"></script>
+</body>
+</html>

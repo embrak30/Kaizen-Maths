@@ -1127,6 +1127,25 @@ const tools = [
     ]
   },
   {
+    slug: "formal-geometric-proof",
+    title: "Formal Geometric Proof",
+    category: "Geometry",
+    level: "GCSE / IGCSE / CSEC / Geometry",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate formal geometry proof practice using statement-reason tables, theorem chains, parallel-line reasoning, triangle congruence, similarity, circle theorems, and proof-style justification.",
+    tags: ["geometry", "proof", "formal proof", "statement reason", "theorem chains", "parallel lines", "congruence", "similarity", "circle theorems", "angle facts", "GCSE", "IGCSE", "CSEC", "Common Core", "Geometry"],
+    toolPath: "tools/formal-geometric-proof/index.html?v=formal-proof-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 asks students to identify the correct theorem or reason from a diagram.",
+      "Level 2 builds angle proof chains using parallel lines, triangles, isosceles reasoning, and circle theorems.",
+      "Level 3 develops congruence and similarity proofs, including corresponding parts after congruence.",
+      "Level 4 uses two-column and paragraph-style formal proofs so every conclusion has a reason."
+    ]
+  },
+  {
     slug: "volume-surface-area-prisms",
     title: "Prisms: Volume and Surface Area",
     category: "Geometry",
@@ -7856,14 +7875,14 @@ const textbookAlignmentCourses = [
         code: "GEO.2",
         title: "Reasoning and Proof",
         focus: "Conjectures, counterexamples, conditional statements, deductive reasoning, geometric arguments, and proof structure.",
-        coverage: "Partial",
+        coverage: "Strong",
         tools: [
+          ["formal-geometric-proof", "statement-reason proof, theorem chains, and formal proof structure"],
           ["concept-explainer", "visual prompts for discussing properties and definitions"],
           ["circle-theorems", "structured theorem-based reasoning"],
-          ["polygons-angles", "angle-sum arguments and algebraic reasoning"],
-          ["missing-angles", "step-by-step angle reasoning"]
+          ["polygons-angles", "angle-sum arguments and algebraic reasoning"]
         ],
-        teacherMove: "Use theorem and angle tools to model reasoning chains, while noting that a dedicated formal proof tool would strengthen this chapter."
+        teacherMove: "Use the formal proof tool to model statement-reason chains, then connect those chains to theorem and angle tools for practice."
       },
       {
         code: "GEO.3",
@@ -7882,14 +7901,14 @@ const textbookAlignmentCourses = [
         code: "GEO.4",
         title: "Congruent Triangles",
         focus: "Congruence, rigid transformations, SSS, SAS, ASA, AAS, RHS/HL reasoning, and identifying matching sides and angles.",
-        coverage: "Partial",
+        coverage: "Strong",
         tools: [
+          ["formal-geometric-proof", "SAS, ASA, similarity, and corresponding-part proof structure"],
           ["transformations", "rigid transformations and congruent-image reasoning"],
           ["concept-explainer", "triangle and quadrilateral property displays"],
-          ["missing-angles", "angle facts inside triangle reasoning"],
-          ["dynamic-classroom-displays", "interactive transformation demonstrations"]
+          ["missing-angles", "angle facts inside triangle reasoning"]
         ],
-        teacherMove: "Use transformations to make congruence visual, then supplement with teacher-led SSS, SAS, ASA, AAS, and RHS proof discussion."
+        teacherMove: "Use transformations to make congruence visual, then use the formal proof tool to practise matching corresponding vertices and writing justified conclusions."
       },
       {
         code: "GEO.5",
@@ -9607,8 +9626,9 @@ const curatedRelatedToolSlugs = {
   "area-models": ["anchor-charts", "bar-models", "elementary-manipulatives", "fractions-practice"],
   "elementary-maths-playground": ["anchor-charts", "bar-models", "area-models", "elementary-starter-board"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
-  "polygons-angles": ["missing-angles", "circle-theorems", "loci-constructions", "scale-drawing-similar-shapes"],
-  "circle-theorems": ["missing-angles", "polygons-angles", "circles-area-circumference", "sectors-arc-length"],
+  "formal-geometric-proof": ["missing-angles", "polygons-angles", "circle-theorems", "transformations"],
+  "polygons-angles": ["formal-geometric-proof", "missing-angles", "circle-theorems", "loci-constructions"],
+  "circle-theorems": ["formal-geometric-proof", "missing-angles", "polygons-angles", "circles-area-circumference"],
   "earth-geometry": ["bearings", "trigonometric-ratios", "circles-area-circumference", "sectors-arc-length"],
   "bearings": ["trigonometric-ratios", "earth-geometry", "missing-angles", "sine-cosine-rule"],
   "integer-operations": ["four-operations", "order-of-operations", "absolute-values", "number-bases-number-sets"],
@@ -9709,6 +9729,9 @@ function standardsForTool(tool) {
   } else if (haystack.includes("area") || haystack.includes("perimeter") || haystack.includes("volume") || haystack.includes("compound shape")) {
     standards.push("Common Core: 6.G, 7.G, HSG-MG, and HSN-Q for area, composite figures, measurement, units, and modelling.");
     standards.push("England: KS2/KS3 geometry and measures; GCSE Geometry and measure, including perimeter, area of triangles and rectangles, compound shapes, and algebraic dimensions where relevant.");
+  } else if (haystack.includes("proof") || haystack.includes("congruence") || haystack.includes("similarity")) {
+    standards.push("Common Core: HSG-CO and HSG-SRT for geometric proof, congruence, similarity, transformations, and theorem-based reasoning.");
+    standards.push("England / international: GCSE geometry reasoning, proof, angle facts, circle theorems, congruence, and similarity.");
   } else if (haystack.includes("geometry") || haystack.includes("sine") || haystack.includes("cosine") || haystack.includes("conic") || haystack.includes("straight line")) {
     standards.push("Common Core: HSG-SRT, HSG-GPE, and HSF-IF links to coordinate geometry, trigonometry, and modelling.");
     standards.push("England: KS3 geometry foundations; GCSE Geometry and measures; A-Level coordinate geometry where included.");
@@ -10027,6 +10050,19 @@ function toolInsightProfile(tool) {
         "Which average best represents this data set, and what feature of the data supports that choice?",
         "How does one extreme value affect the mean, median, mode, and range differently?",
         "What equation is implied when a mean and one missing value are given?"
+      ]
+    },
+    {
+      match: () => tool.slug === "formal-geometric-proof" || has("formal proof", "statement reason", "theorem chains", "geometric proof"),
+      misconceptions: [
+        "Writing a true geometric statement without giving the theorem, definition, or given fact that justifies it.",
+        "Using a diagram as if it is drawn to scale instead of proving the relationship from marked information.",
+        "Writing congruence or similarity statements with corresponding vertices in the wrong order."
+      ],
+      questions: [
+        "Which statement is known from the diagram, and which statement still needs to be proved?",
+        "What theorem, definition, or given fact justifies this exact step in the proof chain?",
+        "How does the order of the vertices show which sides and angles correspond?"
       ]
     },
     {
