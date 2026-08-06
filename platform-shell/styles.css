@@ -3943,6 +3943,48 @@ body[data-route="worksheet-generator"] .account-action {
   color: #475569;
 }
 
+.curriculum-selector {
+  display: grid;
+  gap: 5px;
+  min-width: min(100%, 300px);
+}
+
+.curriculum-selector span {
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.curriculum-selector select {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 36px 8px 12px;
+  border: 1px solid rgba(23, 184, 179, 0.42);
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 850;
+}
+
+.curriculum-status-note {
+  width: max-content;
+  align-self: center;
+  padding: 8px 12px;
+  border: 1px dashed rgba(249, 115, 22, 0.55);
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #9a3412;
+  font-weight: 900;
+}
+
+.curriculum-empty-panel {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
 .textbook-alignment-table {
   width: 100%;
   border-collapse: collapse;
@@ -6875,6 +6917,7 @@ sup .worksheet-fraction span:last-child {
   }
 
   .textbook-hero-panel,
+  .curriculum-empty-panel,
   .textbook-reverse-list {
     grid-template-columns: 1fr;
   }
@@ -7336,6 +7379,7 @@ sup .worksheet-fraction span:last-child {
   .coverage-area-grid,
   .coverage-panel-head,
   .textbook-hero-panel,
+  .curriculum-empty-panel,
   .textbook-reverse-list,
   .video-grid {
     grid-template-columns: 1fr;

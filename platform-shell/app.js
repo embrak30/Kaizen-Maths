@@ -3050,7 +3050,7 @@ function isAdmin() {
 
 function toolCatalogDataShouldRerenderCurrentRoute() {
   const route = routeParts()[0] || "home";
-  return ["home", "tools", "collections", "coverage-map", "textbook-alignments", "admin"].includes(route);
+  return ["home", "tools", "collections", "coverage-map", "curriculum-alignments", "textbook-alignments", "admin"].includes(route);
 }
 
 function authSensitiveRouteShouldRerender() {
@@ -8374,6 +8374,251 @@ const textbookAlignmentSeries = [
   }
 ];
 
+const curriculumAlignmentFrameworks = [
+  {
+    id: "common-core",
+    label: "Common Core",
+    country: "United States",
+    status: "Mapped",
+    title: "Common Core State Standards for Mathematics",
+    description: "A grade-by-grade map from Common Core Mathematics domains and high-school conceptual categories to Kaizen Maths teaching tools, classroom displays, worked examples, and worksheet generators.",
+    basis: "Pilot alignment based on the Common Core grade domains for K-8 and the high-school conceptual categories: Number and Quantity, Algebra, Functions, Geometry, Statistics and Probability, and Modeling.",
+    standards: [
+      {
+        code: "K.CC / K.OA / K.NBT / K.MD / K.G",
+        title: "Kindergarten: Counting, Operations, Measurement and Geometry",
+        focus: "Counting objects, comparing quantities, simple addition and subtraction situations, base-ten foundations, describing measurable attributes, and naming shapes.",
+        coverage: "Partial",
+        tools: [
+          ["elementary-manipulatives", "use counters, ten frames, base-ten blocks, clock faces, and fraction bars for early number sense"],
+          ["anchor-charts", "project bright concept summaries for number bonds, shapes, time, money, and operation language"],
+          ["elementary-starter-board", "run short teacher-led retrieval prompts"],
+          ["classroom-displays", "show blank shapes, grids, and simple visual templates for live explanation"]
+        ],
+        teacherMove: "Use these as display and discussion tools rather than independent worksheets; the emphasis is oral reasoning, counting, comparing, and teacher modelling."
+      },
+      {
+        code: "1.OA / 1.NBT / 1.MD / 1.G",
+        title: "Grade 1: Addition, Subtraction, Place Value, Measurement and Shapes",
+        focus: "Representing and solving addition/subtraction problems, understanding tens and ones, measuring lengths, telling time, and composing or partitioning shapes.",
+        coverage: "Partial",
+        tools: [
+          ["elementary-manipulatives", "model place value, number bonds, and early addition/subtraction"],
+          ["bar-models", "represent comparison and part-whole situations visually"],
+          ["anchor-charts", "support operation language, shape properties, and early measurement"],
+          ["elementary-maths-playground", "use colourful short tasks for whole-class number fluency"]
+        ],
+        teacherMove: "Start with concrete or visual representations, then connect the picture to the number sentence."
+      },
+      {
+        code: "2.OA / 2.NBT / 2.MD / 2.G",
+        title: "Grade 2: Base Ten, Fluency, Measurement, Arrays and Data",
+        focus: "Adding and subtracting within 1000, skip counting, equal groups and arrays, length and money contexts, and simple picture or bar-graph interpretation.",
+        coverage: "Partial",
+        tools: [
+          ["elementary-manipulatives", "represent base-ten structure and regrouping"],
+          ["area-models", "introduce arrays as equal rows and columns"],
+          ["bar-models", "model one-step and two-step word problems"],
+          ["anchor-charts", "project vocabulary and structure for operations, time, money, arrays, and measurement"]
+        ],
+        teacherMove: "Make the structure visible: tens and ones for calculation, equal groups for multiplication readiness, and labelled bars for word problems."
+      },
+      {
+        code: "3.OA / 3.NBT / 3.NF / 3.MD / 3.G",
+        title: "Grade 3: Multiplication, Division, Fractions, Area and Data",
+        focus: "Multiplication/division facts, properties of operations, fractions as parts of a whole, area and perimeter, and interpreting simple data displays.",
+        coverage: "Partial",
+        tools: [
+          ["area-models", "model multiplication with arrays and partitioned rectangles"],
+          ["fractions-practice", "generate fraction comparison and arithmetic readiness practice"],
+          ["bar-models", "use fraction and comparison models before formal calculation"],
+          ["area-rectangles", "connect multiplication to area and perimeter"]
+        ],
+        teacherMove: "Use arrays and bar models first, then move towards symbolic equations once the representation is secure."
+      },
+      {
+        code: "4.OA / 4.NBT / 4.NF / 4.MD / 4.G",
+        title: "Grade 4: Multi-Digit Operations, Fractions, Decimals and Angles",
+        focus: "Factors and multiples, multi-digit calculation, fraction equivalence and operations, decimal notation, measurement conversion, angles, lines, and symmetry.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "build calculation fluency across the four operations"],
+          ["fractions-practice", "practice equivalent fractions, mixed numbers, and fraction operations"],
+          ["decimals-practice-lab", "support decimal place value and operations"],
+          ["missing-angles", "introduce line and angle reasoning"],
+          ["area-models", "use rectangular models for multiplication and fractions"]
+        ],
+        teacherMove: "Keep calculation steps explicit, especially regrouping, equivalent fractions, and why decimal points remain fixed in place-value shifts."
+      },
+      {
+        code: "5.OA / 5.NBT / 5.NF / 5.MD / 5.G",
+        title: "Grade 5: Expressions, Decimals, Fraction Operations, Volume and Coordinates",
+        focus: "Writing and interpreting expressions, decimal operations, multiplying and dividing fractions, volume, unit conversion, coordinate-plane work, and classifying shapes.",
+        coverage: "Strong",
+        tools: [
+          ["decimals-practice-lab", "generate decimal arithmetic and place-value practice"],
+          ["fractions-practice", "develop fraction multiplication, division, and mixed-number fluency"],
+          ["volume-surface-area-prisms", "connect volume to layers and rectangular prisms"],
+          ["straight-lines", "support coordinate-plane plotting and gradient readiness"],
+          ["classroom-displays", "project coordinate grids, nets, solids, and blank diagrams"]
+        ],
+        teacherMove: "Use the worksheet builder for practice sets, but keep classroom modelling visual when moving between fractions, decimals, and volume."
+      },
+      {
+        code: "6.RP / 6.NS / 6.EE / 6.G / 6.SP",
+        title: "Grade 6: Ratios, The Number System, Expressions, Geometry and Statistics",
+        focus: "Ratios and unit rates, rational-number operations, expressions and one-variable equations, area/surface area/volume, and statistical variability.",
+        coverage: "Strong",
+        tools: [
+          ["ratio-proportion", "generate ratio, rate, and proportion practice"],
+          ["integer-operations", "build rational-number and directed-number fluency"],
+          ["linear-equations", "solve one-step and multi-step equations"],
+          ["area-rectangles", "support area, perimeter, and composite-shape readiness"],
+          ["averages-range", "practice measures of centre and spread"]
+        ],
+        teacherMove: "Move from visual models and contexts into equations, especially for ratios, negative numbers, and statistical summaries."
+      },
+      {
+        code: "7.RP / 7.NS / 7.EE / 7.G / 7.SP",
+        title: "Grade 7: Proportional Relationships, Rational Numbers, Geometry and Probability",
+        focus: "Proportional relationships, operations with rational numbers, linear expressions and equations, scale drawings, angle facts, area/volume, sampling, and probability.",
+        coverage: "Strong",
+        tools: [
+          ["ratio-proportion", "build proportional reasoning and unit-rate practice"],
+          ["percentages-real-world", "connect percent problems to real contexts"],
+          ["integer-operations", "secure rational-number operations"],
+          ["linear-equations", "solve equations arising from contexts"],
+          ["scale-drawing-similar-shapes", "support scale drawings and similar shapes"],
+          ["tree-diagrams-conditional-probability", "develop probability structures from diagrams"]
+        ],
+        teacherMove: "Use proportional reasoning across number, geometry, and probability rather than treating it as one isolated topic."
+      },
+      {
+        code: "8.NS / 8.EE / 8.F / 8.G / 8.SP",
+        title: "Grade 8: Expressions, Equations, Functions, Transformations and Bivariate Data",
+        focus: "Integer exponents, irrational numbers, linear equations, functions, transformations, congruence, similarity, Pythagoras, and scatter-plot association.",
+        coverage: "Strong",
+        tools: [
+          ["exponents-index-notation", "practice exponent laws and standard form readiness"],
+          ["surds-radicals", "introduce radicals and irrational-number simplification"],
+          ["straight-lines", "generate linear graph and gradient practice"],
+          ["functions", "develop function notation and input-output reasoning"],
+          ["transformations", "show coordinate transformations"],
+          ["pythagoras-theorem", "build right-triangle reasoning"],
+          ["correlation-regression", "support bivariate data and trend-line interpretation"]
+        ],
+        teacherMove: "Connect equations, graphs, tables, and transformations so students see functions as multiple linked representations."
+      },
+      {
+        code: "HSN",
+        title: "High School: Number and Quantity",
+        focus: "The real number system, quantities, vectors, matrices where used, and complex-number extension for advanced pathways.",
+        coverage: "Strong",
+        tools: [
+          ["surds-radicals", "simplify radicals and rationalise denominators"],
+          ["complex-numbers", "support complex-number extension routes"],
+          ["free-vectors", "use column vectors and geometric vector operations"],
+          ["matrices", "introduce matrix operations where they support transformations or systems"]
+        ],
+        teacherMove: "Keep representation clean: radicals as exact values, vectors as column vectors, and matrices in correct rectangular form."
+      },
+      {
+        code: "HSA",
+        title: "High School: Algebra",
+        focus: "Seeing structure in expressions, arithmetic with polynomials and rational expressions, equations, inequalities, systems, quadratics, and modelling with algebra.",
+        coverage: "Strong",
+        tools: [
+          ["simplification", "simplify and collect algebraic terms"],
+          ["linear-equations", "solve linear equations with clear inverse-operation steps"],
+          ["simultaneous-equations", "solve systems algebraically"],
+          ["quadratic-equations", "solve quadratics by factorising, completing the square, and formula methods"],
+          ["advanced-factorisation", "develop grouping, difference of squares, cubics, and harder factorisation"],
+          ["algebraic-fractions", "simplify and solve with rational expressions"]
+        ],
+        teacherMove: "Use graduated practice to show structure first, then move towards more efficient methods once the structure is visible."
+      },
+      {
+        code: "HSF",
+        title: "High School: Functions",
+        focus: "Interpreting functions, building functions, linear, quadratic, exponential, logarithmic, trigonometric, and transformed functions.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "practice function notation, composition, and inverse functions"],
+          ["graph-transformations-curve-sketching", "connect algebraic transformations to graph behaviour"],
+          ["trig-graphs-transformations", "model transformed sine, cosine, and tangent graphs"],
+          ["logarithms-practice", "solve exponential and logarithmic equations"],
+          ["sequences-series", "link recursive and explicit sequence structures"]
+        ],
+        teacherMove: "Use the dynamic classroom displays to show what changes in the equation do to the graph before formal practice."
+      },
+      {
+        code: "HSG",
+        title: "High School: Geometry",
+        focus: "Congruence, similarity, transformations, right-triangle trigonometry, circles, coordinate geometry, geometric measurement, and proof.",
+        coverage: "Strong",
+        tools: [
+          ["formal-geometric-proof", "build statement-reason proof chains"],
+          ["circle-theorems", "develop circle angle and tangent reasoning"],
+          ["equation-of-a-circle", "connect coordinate geometry with circle equations"],
+          ["transformations", "practice translations, reflections, rotations, enlargements, and descriptions"],
+          ["trigonometric-ratios", "solve right-triangle problems"],
+          ["sine-cosine-rule", "extend trigonometry to non-right triangles"]
+        ],
+        teacherMove: "Use diagrams for reasoning, then require students to name the theorem, state the relationship, and calculate from it."
+      },
+      {
+        code: "HSS",
+        title: "High School: Statistics and Probability",
+        focus: "Interpreting categorical and quantitative data, probability, conditional probability, distributions, inference, correlation, and regression.",
+        coverage: "Strong",
+        tools: [
+          ["histograms", "interpret frequency density and grouped data"],
+          ["cumulative-frequency-curves", "work with ogives, percentiles, quartiles, and medians"],
+          ["venn-diagrams", "connect set notation, regions, and probability"],
+          ["normal-distribution", "standardise and use normal probabilities"],
+          ["hypothesis-testing", "develop inference decisions with clear wording"],
+          ["correlation-regression", "analyse bivariate data, correlation, regression, interpolation, and extrapolation"]
+        ],
+        teacherMove: "Ask students to justify what the statistic or probability represents in context, not only calculate it."
+      },
+      {
+        code: "Modeling",
+        title: "High School: Mathematical Modeling",
+        focus: "Using mathematics to represent real situations, make assumptions, compare models, interpret outputs, and communicate conclusions.",
+        coverage: "Strong",
+        tools: [
+          ["financial-real-life-maths", "model money, best buys, interest, depreciation, wages, and exchange rates"],
+          ["linear-programming", "optimise contextual problems with constraints"],
+          ["graph-transformations-curve-sketching", "interpret graphical models and behaviour"],
+          ["normal-distribution", "model continuous variation"],
+          ["correlation-regression", "build, use, and critique linear regression models"]
+        ],
+        teacherMove: "Emphasise assumptions, units, constraints, and whether the answer makes sense in the real situation."
+      }
+    ]
+  },
+  {
+    id: "gcse",
+    label: "GCSE",
+    country: "United Kingdom",
+    status: "Coming next",
+    title: "GCSE Mathematics Curriculum Alignment",
+    description: "GCSE will be mapped next using the same structure: topic strands, standards coverage, working tools, classroom tools, and worksheet support.",
+    basis: "Placeholder for the next curriculum alignment build.",
+    standards: []
+  },
+  {
+    id: "csec",
+    label: "CSEC",
+    country: "Caribbean",
+    status: "Coming next",
+    title: "CSEC Mathematics Curriculum Alignment",
+    description: "CSEC will be mapped after Common Core and GCSE, with attention to Caribbean secondary mathematics strands and exam preparation.",
+    basis: "Placeholder for the next curriculum alignment build.",
+    standards: []
+  }
+];
+
 function textbookAlignmentById(id) {
   return textbookAlignmentCourses.find((course) => course.id === id) || textbookAlignmentCourses[0];
 }
@@ -8408,6 +8653,38 @@ function alignmentToolChip([slug, use]) {
   return `<a class="textbook-tool-chip" href="#/tools/${escapeHtml(tool.slug)}" title="${escapeHtml(use)}" aria-label="${escapeHtml(`${tool.title}: ${use}`)}">${escapeHtml(tool.title)}</a>`;
 }
 
+function curriculumAlignmentById(id) {
+  return curriculumAlignmentFrameworks.find((framework) => framework.id === id) || curriculumAlignmentFrameworks[0];
+}
+
+function curriculumAlignmentSelect(framework) {
+  return `
+    <label class="curriculum-selector" for="curriculumAlignmentSelect">
+      <span>Curriculum</span>
+      <select id="curriculumAlignmentSelect" onchange="location.hash='#/curriculum-alignments/'+this.value">
+        ${curriculumAlignmentFrameworks.map((item) => `
+          <option value="${escapeHtml(item.id)}" ${item.id === framework.id ? "selected" : ""}>
+            ${escapeHtml(item.label)}${item.status === "Mapped" ? "" : ` - ${escapeHtml(item.status)}`}
+          </option>
+        `).join("")}
+      </select>
+    </label>
+  `;
+}
+
+function curriculumReverseToolIndex(framework) {
+  const index = new Map();
+  framework.standards.forEach((standard) => {
+    standard.tools.forEach(([slug]) => {
+      const tool = tools.find((item) => item.slug === slug);
+      if (!tool || !isVisibleTool(tool)) return;
+      if (!index.has(slug)) index.set(slug, { tool, standards: [] });
+      index.get(slug).standards.push(`${standard.code} ${standard.title}`);
+    });
+  });
+  return [...index.values()].sort((a, b) => a.tool.title.localeCompare(b.tool.title));
+}
+
 function textbookReverseToolIndex(course) {
   const index = new Map();
   course.chapters.forEach((chapter) => {
@@ -8419,6 +8696,118 @@ function textbookReverseToolIndex(course) {
     });
   });
   return [...index.values()].sort((a, b) => a.tool.title.localeCompare(b.tool.title));
+}
+
+function renderCurriculumAlignments() {
+  const requestedFramework = routeParts()[1] || "common-core";
+  const framework = curriculumAlignmentById(requestedFramework);
+  const reverseIndex = curriculumReverseToolIndex(framework);
+  const strongCount = framework.standards.filter((standard) => standard.coverage === "Strong").length;
+  const partialCount = framework.standards.filter((standard) => standard.coverage === "Partial").length;
+  const hasStandards = framework.standards.length > 0;
+  app.innerHTML = `
+    ${pageHeader(
+      "Curriculum Alignments",
+      "Connect curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators.",
+      `<a class="button primary" href="#/coverage-map">Coverage Map</a><a class="button" href="#/textbook-alignments">Textbook Alignments</a>`
+    )}
+    <section class="textbook-page curriculum-page">
+      <section class="textbook-hero-panel curriculum-hero-panel">
+        <div>
+          <span class="eyebrow">Curriculum Alignment Hub</span>
+          <h2>${escapeHtml(framework.title)}</h2>
+          <p>${escapeHtml(framework.description)}</p>
+        </div>
+        ${curriculumAlignmentSelect(framework)}
+      </section>
+
+      <section class="textbook-series-panel">
+        <div class="coverage-panel-head">
+          <div>
+            <span class="eyebrow">${escapeHtml(framework.country)} · ${escapeHtml(framework.status)}</span>
+            <h2>${escapeHtml(framework.label)} alignment</h2>
+            <p>${escapeHtml(framework.basis)}</p>
+          </div>
+          ${hasStandards
+            ? `<div class="textbook-metrics" aria-label="Curriculum alignment summary">
+                <span><strong>${framework.standards.length}</strong> standards rows</span>
+                <span><strong>${strongCount}</strong> strong matches</span>
+                <span><strong>${partialCount}</strong> partial matches</span>
+              </div>`
+            : `<span class="curriculum-status-note">Coming next</span>`}
+        </div>
+      </section>
+
+      ${hasStandards ? `
+        <section class="textbook-map-panel">
+          <div class="coverage-panel-head">
+            <div>
+              <span class="eyebrow">Standards To Tool Map</span>
+              <h2>${escapeHtml(framework.label)} pilot map</h2>
+              <p>A compact map from standards domains and categories to the best Kaizen tools for teaching, practice, worksheets, and intervention.</p>
+            </div>
+            <a class="button" href="#/tools">Open Tool Library</a>
+          </div>
+          <table class="textbook-alignment-table">
+            <thead>
+              <tr>
+                <th scope="col">Standard / Domain</th>
+                <th scope="col">Focus and Use</th>
+                <th scope="col">Kaizen Tools</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${framework.standards.map((standard) => `
+                <tr>
+                  <th scope="row">
+                    <span>${escapeHtml(standard.code)}</span>
+                    ${escapeHtml(standard.title)}
+                    <small data-coverage="${escapeHtml(standard.coverage.toLowerCase())}">${escapeHtml(standard.coverage)} match</small>
+                  </th>
+                  <td>
+                    <p class="textbook-focus-line">${escapeHtml(standard.focus)}</p>
+                    <small class="textbook-use-line">${escapeHtml(standard.teacherMove)}</small>
+                  </td>
+                  <td>
+                    <div class="textbook-tool-list">
+                      ${standard.tools.map(alignmentToolChip).join("")}
+                    </div>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="textbook-map-panel">
+          <div class="coverage-panel-head">
+            <div>
+              <span class="eyebrow">Reverse Lookup</span>
+              <h2>Kaizen tools used in this ${escapeHtml(framework.label)} map</h2>
+              <p>Start from a Kaizen tool and see where it supports the curriculum alignment.</p>
+            </div>
+          </div>
+          <ul class="textbook-reverse-list">
+            ${reverseIndex.map(({ tool, standards }) => `
+              <li>
+                <a href="#/tools/${escapeHtml(tool.slug)}">${escapeHtml(tool.title)}</a>
+                <span>${standards.map((standard) => escapeHtml(standard)).join(" · ")}</span>
+              </li>
+            `).join("")}
+          </ul>
+        </section>
+      ` : `
+        <section class="textbook-map-panel curriculum-empty-panel">
+          <div>
+            <span class="eyebrow">Alignment Pending</span>
+            <h2>${escapeHtml(framework.label)} will use this same structure</h2>
+            <p>${escapeHtml(framework.description)}</p>
+          </div>
+          <a class="button primary" href="#/curriculum-alignments/common-core">View Common Core Map</a>
+        </section>
+      `}
+    </section>
+  `;
 }
 
 function renderTextbookAlignments() {
@@ -14530,6 +14919,10 @@ function updateRouteSeo(parts) {
       title: routeTitle("Curriculum Coverage Map"),
       description: "View Kaizen Maths coverage across GCSE, CSEC, CAPE, Common Core, A-Level Pure, Further Maths, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
     },
+    "curriculum-alignments": {
+      title: routeTitle("Curriculum Alignments"),
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. The first pilot alignment covers Common Core Mathematics."
+    },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
       description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes Holt McDougal Mathematics Grade 6, Grade 7, Pre-Algebra, Algebra 1, Geometry, Algebra & Trigonometry, Precalculus, and Calculus pilot alignments."
@@ -14687,6 +15080,8 @@ function renderRoute() {
     renderToolLibrary();
   } else if (parts[0] === "coverage-map") {
     renderCoverageMap();
+  } else if (parts[0] === "curriculum-alignments") {
+    renderCurriculumAlignments();
   } else if (parts[0] === "textbook-alignments") {
     renderTextbookAlignments();
   } else if (parts[0] === "collections" && parts[1]) {
