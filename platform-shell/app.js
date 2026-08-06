@@ -8601,11 +8601,238 @@ const curriculumAlignmentFrameworks = [
     id: "gcse",
     label: "GCSE",
     country: "United Kingdom",
-    status: "Coming next",
+    status: "Mapped",
     title: "GCSE Mathematics Curriculum Alignment",
-    description: "GCSE will be mapped next using the same structure: topic strands, standards coverage, working tools, classroom tools, and worksheet support.",
-    basis: "Placeholder for the next curriculum alignment build.",
-    standards: []
+    description: "A strand-by-strand map from GCSE Mathematics subject content to Kaizen Maths teaching tools, classroom displays, worked examples, worksheet generators, and assessment practice.",
+    basis: "Pilot alignment based on the GCSE Mathematics subject-content areas used across awarding organisations: Number, Algebra, Ratio, Proportion and Rates of Change, Geometry and Measures, Probability, and Statistics.",
+    standards: [
+      {
+        code: "N1-N4",
+        title: "Number: Structure, Operations, Factors, Powers and Roots",
+        focus: "Place value, four operations, order of operations, factors, multiples, primes, roots, powers, index notation, and exact numerical fluency.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "secure written and mental calculation across the four operations"],
+          ["order-of-operations", "build BIDMAS fluency with integers and brackets"],
+          ["hcf-lcm", "develop prime factorisation, HCF, and LCM methods"],
+          ["exponents-index-notation", "practise powers, roots, and index laws"],
+          ["integer-operations", "repair directed-number fluency before algebraic work"]
+        ],
+        teacherMove: "Use these tools for fast diagnostic work: calculation errors here usually explain later difficulties in algebra, ratio, and geometry."
+      },
+      {
+        code: "N5-N8",
+        title: "Number: Fractions, Decimals, Percentages and Reciprocals",
+        focus: "Equivalent forms, ordering, converting between fractions/decimals/percentages, fraction arithmetic, mixed numbers, percentages of quantities, and reciprocal thinking.",
+        coverage: "Strong",
+        tools: [
+          ["fractions-practice", "generate fraction arithmetic, mixed-number, and multi-operation practice"],
+          ["decimals-practice-lab", "support decimal place value and decimal operations"],
+          ["simple-percentage-tasks", "build percentage fluency before contextual applications"],
+          ["fractions-table", "use classroom starter tables for quick conversion practice"],
+          ["bar-models", "show fraction and percentage relationships visually"]
+        ],
+        teacherMove: "Move between representations frequently so students do not treat fractions, decimals, and percentages as separate topics."
+      },
+      {
+        code: "N9-N15",
+        title: "Number: Units, Accuracy, Bounds, Standard Form, Surds and Exact Values",
+        focus: "Estimation, units, rounding, significant figures, error intervals, upper and lower bounds, standard form, surds, rationalising, and exact answers.",
+        coverage: "Strong",
+        tools: [
+          ["conversions-teaching", "practise units, compound measures, and conversions"],
+          ["upper-lower-bounds", "generate upper/lower-bound and error-interval practice"],
+          ["powers-of-10", "support powers of ten and standard-form thinking"],
+          ["surds-radicals", "simplify surds and rationalise denominators"],
+          ["financial-real-life-maths", "apply rounding, estimation, units, and money contexts"]
+        ],
+        teacherMove: "Keep units and degree of accuracy visible in the working, especially when students move from calculation to interpretation."
+      },
+      {
+        code: "A1-A6",
+        title: "Algebra: Notation, Substitution, Simplifying, Expanding and Factorising",
+        focus: "Algebraic notation, substitution, collecting like terms, expanding brackets, factorising, manipulating powers, and recognising structure in expressions.",
+        coverage: "Strong",
+        tools: [
+          ["substitution", "practise substituting values into expressions and formulae"],
+          ["simplification", "collect like terms and simplify expressions"],
+          ["bracket-expansion", "expand single and double brackets"],
+          ["quadratic-factorisation", "factorise simple quadratics"],
+          ["advanced-factorisation", "develop HCF, grouping, difference of squares, cubics, and harder factorisation"]
+        ],
+        teacherMove: "Show the algebra vertically and make the structure explicit before expecting students to shortcut the manipulation."
+      },
+      {
+        code: "A7-A11",
+        title: "Algebra: Equations, Inequalities, Formulae and Simultaneous Equations",
+        focus: "Solving linear equations, inequalities, equations with brackets or fractions, changing the subject, simultaneous equations, and algebraic problem solving.",
+        coverage: "Strong",
+        tools: [
+          ["linear-equations", "solve one-step, two-step, bracketed, and fractional linear equations"],
+          ["inequalities", "practise inequality solving and representation"],
+          ["simultaneous-equations", "solve simultaneous equations by elimination and substitution"],
+          ["transposition-formulae", "change the subject of formulae from simple to complex forms"],
+          ["algebraic-fractions", "solve equations involving algebraic fractions"]
+        ],
+        teacherMove: "Make inverse operations and balance explicit, then connect the algebraic solution to checking by substitution."
+      },
+      {
+        code: "A12-A14",
+        title: "Algebra: Sequences and Pattern Generalisation",
+        focus: "Generating terms, finding nth terms, recognising arithmetic and geometric structure, using recursive descriptions, and linking sequences to graphs.",
+        coverage: "Strong",
+        tools: [
+          ["sequences", "generate GCSE nth-term and pattern questions"],
+          ["sequences-series", "extend into arithmetic and geometric sequence notation"],
+          ["functions", "connect input-output thinking to sequence rules"],
+          ["straight-lines", "link linear sequences to straight-line graphs"]
+        ],
+        teacherMove: "Use tables, diagrams, and nth-term notation together so students see the same structure in several forms."
+      },
+      {
+        code: "A15-A21",
+        title: "Algebra: Graphs, Functions and Coordinate Geometry",
+        focus: "Coordinates, gradients, straight-line graphs, quadratic graphs, graph interpretation, function notation, transformations of graphs, and graphical solutions.",
+        coverage: "Strong",
+        tools: [
+          ["straight-lines", "generate coordinate, gradient, and line-equation practice"],
+          ["functions", "develop function notation, composite functions, and inverses"],
+          ["graph-transformations-curve-sketching", "support graph transformations and curve sketching"],
+          ["quadratic-equations", "connect quadratic equations and graphs"],
+          ["dynamic-classroom-displays", "animate graph transformations for live modelling"]
+        ],
+        teacherMove: "Keep equation, table, graph, and verbal description connected; students should know what each representation is telling them."
+      },
+      {
+        code: "A22-A25",
+        title: "Algebra: Higher Algebra, Iteration and Advanced Problem Solving",
+        focus: "Quadratic formula, completing the square, algebraic fractions, functions, proof-style algebra, iteration, and more demanding manipulation.",
+        coverage: "Strong",
+        tools: [
+          ["quadratic-equations", "solve quadratics by factorising, completing the square, and formula methods"],
+          ["algebraic-fractions", "simplify and solve with rational algebraic expressions"],
+          ["roots-of-equations", "support roots and transformations of equations"],
+          ["numerical-methods", "practise iteration, approximation, and numerical methods"],
+          ["functions", "develop higher function notation and inverse-function reasoning"]
+        ],
+        teacherMove: "Use this strand for Higher-tier extension and revision where students need complete working, not only final answers."
+      },
+      {
+        code: "R1-R7",
+        title: "Ratio, Proportion and Rates of Change: Ratio, Scale, Units and Direct Proportion",
+        focus: "Ratio notation, simplifying ratios, sharing in a ratio, unit rates, scale drawings, similar shapes, recipes, maps, and proportional relationships.",
+        coverage: "Strong",
+        tools: [
+          ["ratio-proportion", "generate ratio, sharing, unit-rate, and proportion practice"],
+          ["scale-drawing-similar-shapes", "connect scale factor, similar shapes, and length ratios"],
+          ["conversions-teaching", "practise units and compound measures"],
+          ["bar-models", "represent ratio and reverse-ratio reasoning visually"],
+          ["area-models", "support multiplicative structure and proportional reasoning"]
+        ],
+        teacherMove: "Use diagrams and tables before equations, especially where students confuse additive and multiplicative comparison."
+      },
+      {
+        code: "R8-R16",
+        title: "Ratio, Proportion and Rates of Change: Percentages, Growth, Compound Measures and Graphs",
+        focus: "Percentage increase/decrease, reverse percentage, interest, speed, density, pressure, rates of change, gradients, and proportional graphs.",
+        coverage: "Strong",
+        tools: [
+          ["percentages-real-world", "generate percentage change, reverse percentage, and contextual questions"],
+          ["financial-real-life-maths", "apply percentages to money, interest, discounts, wages, and depreciation"],
+          ["straight-lines", "connect rate of change to gradient"],
+          ["conversions-teaching", "support speed, density, pressure, and compound units"],
+          ["graph-transformations-curve-sketching", "interpret proportional and non-linear graph behaviour"]
+        ],
+        teacherMove: "Keep the original amount, multiplier, and final amount distinct; reverse percentage work is strongest when the model is visible."
+      },
+      {
+        code: "G1-G6",
+        title: "Geometry and Measures: Properties, Constructions, Angles and Polygons",
+        focus: "Angle facts, parallel lines, polygons, bearings, constructions, loci, symmetry, congruence language, and geometric reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["missing-angles", "practise line, triangle, quadrilateral, and parallel-line angle facts"],
+          ["polygons-angles", "generate interior and exterior angle problems"],
+          ["bearings", "develop three-figure bearings and hidden bearing reasoning"],
+          ["loci-constructions", "support construction and loci diagrams"],
+          ["classroom-displays", "project blank grids, shape outlines, and geometry templates"]
+        ],
+        teacherMove: "Require students to name the rule before calculating; this builds a reasoning chain rather than isolated angle chasing."
+      },
+      {
+        code: "G7-G13",
+        title: "Geometry and Measures: Transformations, Congruence and Similarity",
+        focus: "Translations, reflections, rotations, enlargements, combined transformations, scale factors, congruent shapes, similar figures, and area/volume scale factors.",
+        coverage: "Strong",
+        tools: [
+          ["transformations", "generate coordinate-grid transformation practice"],
+          ["dynamic-classroom-displays", "animate transformations for live teaching"],
+          ["scale-drawing-similar-shapes", "practise similar triangles, similar shapes, and ratio links"],
+          ["free-vectors", "connect translation vectors and column-vector notation"],
+          ["formal-geometric-proof", "support congruence, similarity, and theorem reasoning"]
+        ],
+        teacherMove: "Use diagrams large enough for students to see the object, image, invariant points, and full transformation description."
+      },
+      {
+        code: "G14-G17",
+        title: "Geometry and Measures: Length, Area, Circles, Surface Area and Volume",
+        focus: "Perimeter, area, circumference, circle sectors, arc length, surface area, volume, prisms, cylinders, cones, pyramids, spheres, and units.",
+        coverage: "Strong",
+        tools: [
+          ["area-rectangles", "support area, perimeter, and compound rectangles"],
+          ["circles-area-circumference", "generate area and circumference questions"],
+          ["sectors-arc-length", "practise sectors, arc length, and sector area"],
+          ["volume-surface-area-prisms", "develop volume and surface area of prisms"],
+          ["cylinders-cones-volume-surface-area", "extend to cylinders and cones"],
+          ["pyramids-spheres-volume-surface-area", "extend to pyramids and spheres"]
+        ],
+        teacherMove: "Keep formula choice, substitution, units, and final rounding visible; many GCSE errors are unit or formula-selection errors."
+      },
+      {
+        code: "G18-G23",
+        title: "Geometry and Measures: Pythagoras, Trigonometry, Circles, Vectors and Coordinate Geometry",
+        focus: "Pythagoras, right-angled trigonometry, sine rule, cosine rule, circle theorems, equation of a circle, vector geometry, and geometric proof.",
+        coverage: "Strong",
+        tools: [
+          ["pythagoras-theorem", "generate right-triangle side problems with clear working"],
+          ["trigonometric-ratios", "practise SOHCAHTOA and right-triangle contexts"],
+          ["sine-cosine-rule", "extend to non-right triangles and triangle area"],
+          ["circle-theorems", "develop theorem-based circle angle reasoning"],
+          ["equation-of-a-circle", "connect centre, radius, tangents, and intersections"],
+          ["free-vectors", "practise column vectors and vector geometry"]
+        ],
+        teacherMove: "Use the diagram to decide the theorem or formula first; then show the substitution and rearrangement without skipping steps."
+      },
+      {
+        code: "P1-P9",
+        title: "Probability: Events, Diagrams, Sets, Relative Frequency and Conditional Probability",
+        focus: "Probability scales, mutually exclusive and independent events, expected frequency, tree diagrams, Venn diagrams, set notation, and conditional probability.",
+        coverage: "Strong",
+        tools: [
+          ["tree-diagrams-conditional-probability", "generate independent, dependent, and conditional probability tree problems"],
+          ["venn-diagrams", "connect set notation, regions, complements, and probabilities"],
+          ["permutations-combinations", "support counting methods where needed for probability"],
+          ["fractions-practice", "repair fraction arithmetic needed for probability"],
+          ["classroom-displays", "project blank Venn diagrams and probability templates"]
+        ],
+        teacherMove: "Ask students to describe the region or path in words before writing probability notation."
+      },
+      {
+        code: "S1-S6",
+        title: "Statistics: Data, Averages, Graphs, Scatter Diagrams and Interpretation",
+        focus: "Collecting data, sampling, averages, range, grouped data, frequency tables, charts, histograms, cumulative frequency, scatter diagrams, correlation, and interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "practise mean, median, mode, range, and missing values"],
+          ["histograms", "develop frequency density and grouped-data interpretation"],
+          ["cumulative-frequency-curves", "work with ogives, quartiles, medians, and percentiles"],
+          ["correlation-regression", "support scatter diagrams, correlation, regression, interpolation, and extrapolation"],
+          ["sampling-methods-bias", "teach sampling choices and bias"],
+          ["kaizen-large-data-set", "use data interpretation practice with larger datasets"]
+        ],
+        teacherMove: "Require context in the final answer: students should say what the statistic, graph, or trend means, not only calculate it."
+      }
+    ]
   },
   {
     id: "csec",
@@ -14921,7 +15148,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. The first pilot alignment covers Common Core Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics and GCSE Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
