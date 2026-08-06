@@ -8997,6 +8997,231 @@ const curriculumAlignmentFrameworks = [
         teacherMove: "Keep vectors in column form and matrices in rectangular form, and insist that matrix equality means corresponding entries are equal."
       }
     ]
+  },
+  {
+    id: "jamaica-nsc-7-9",
+    label: "Jamaica NSC 7-9",
+    country: "Jamaica",
+    status: "Mapped",
+    title: "MOE Jamaica NSC Grades 7-9 Mathematics Curriculum Alignment",
+    description: "A grade-and-strand map from the Jamaica NSC Grades 7-9 essential mathematics objectives to Kaizen Maths teaching tools, classroom displays, worked examples, worksheet generators, and intervention practice.",
+    basis: "Pilot alignment based on the Ministry of Education Curriculum Analysis: Essential Objectives and Content Focus for NSC Grades 7-9, 2nd Edition, updated October 2025. The map follows the mathematics strands used in the document: Number, Measurement, Geometry, Algebra, and Statistics and Probability.",
+    standards: [
+      {
+        code: "Grade 7 Number",
+        title: "Grade 7: Number",
+        focus: "Real number types, ordering numbers, four operations with real numbers, rounding, arithmetic properties, identity and inverse, ratio, proportion, two-set Venn diagrams, unit price, best buys, profit and loss, and currency conversion.",
+        coverage: "Strong",
+        tools: [
+          ["number-bases-number-sets", "classify real numbers and connect number sets to set language"],
+          ["four-operations", "practise the four operations and multiple operations"],
+          ["order-of-operations", "build multi-operation fluency"],
+          ["ratio-proportion", "support ratio, proportion, and sharing"],
+          ["venn-diagrams", "represent two-set Venn diagrams and interpret regions"],
+          ["financial-real-life-maths", "generate unit price, best buys, profit, loss, and currency-context practice"]
+        ],
+        teacherMove: "Use this strand for diagnostic number repair before students move into algebra, measurement, and consumer arithmetic."
+      },
+      {
+        code: "Grade 7 Measurement",
+        title: "Grade 7: Measurement",
+        focus: "Measuring length, mass, time, temperature, volume and capacity; converting within and across related units; perimeter and area of composite plane figures.",
+        coverage: "Strong",
+        tools: [
+          ["conversions-teaching", "practise unit conversions and compound measure readiness"],
+          ["area-rectangles", "support area, perimeter, and composite-shape reasoning"],
+          ["area-triangles", "extend area work to triangular regions"],
+          ["classroom-displays", "project blank measurement and shape diagrams for live modelling"],
+          ["bar-models", "support proportional unit and quantity reasoning where needed"]
+        ],
+        teacherMove: "Make the chosen unit visible throughout the working so students connect measurement, conversion, and final interpretation."
+      },
+      {
+        code: "Grade 7 Geometry",
+        title: "Grade 7: Geometry",
+        focus: "Nets of solids, translations, reflections, rotations, and angle, side and symmetry properties of triangles and quadrilaterals.",
+        coverage: "Strong",
+        tools: [
+          ["classroom-displays", "project nets, solids, quadrilaterals, triangles, and blank geometry templates"],
+          ["concept-explainer", "show shape properties, sides, angles, diagonals, and notation one feature at a time"],
+          ["transformations", "generate translation, reflection, and rotation practice"],
+          ["dynamic-classroom-displays", "animate transformations for teacher modelling"],
+          ["missing-angles", "support angle and shape-property reasoning"]
+        ],
+        teacherMove: "Use diagrams first, then ask students to describe the relationship between object and image using correct transformation language."
+      },
+      {
+        code: "Grade 7 Algebra",
+        title: "Grade 7: Algebra",
+        focus: "Like and unlike terms, writing equations from word problems, solving simple linear equations by flow diagrams and balancing, simplifying by grouping like terms, Cartesian coordinates, mappings, ordered pairs, and mapping types.",
+        coverage: "Strong",
+        tools: [
+          ["simplification", "collect like terms and simplify expressions"],
+          ["linear-equations", "solve simple and multi-step linear equations"],
+          ["substitution", "connect expressions, variables, and values"],
+          ["straight-lines", "support Cartesian-plane plotting and coordinate reading"],
+          ["functions", "connect mappings, ordered pairs, rules, and function language"]
+        ],
+        teacherMove: "Keep the link between words, equation, diagram, and coordinate representation visible for students who are new to formal algebra."
+      },
+      {
+        code: "Grade 7 Statistics and Probability",
+        title: "Grade 7: Statistics and Probability",
+        focus: "Mode, median, mean, range, simple frequency tables, and interpreting data from raw lists or frequency tables.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "generate mean, median, mode, range, and missing-value practice"],
+          ["histograms", "extend frequency-table thinking where useful"],
+          ["kaizen-large-data-set", "provide simple data interpretation contexts"],
+          ["classroom-displays", "project blank tables and data displays for modelling"],
+          ["fractions-table", "use starter tables for quick data and conversion warm-ups"]
+        ],
+        teacherMove: "Ask students to explain what each average tells them about the data, not only calculate it."
+      },
+      {
+        code: "Grade 8 Number",
+        title: "Grade 8: Number",
+        focus: "Index laws, standard form, decimal places and significant figures, place value in different bases, operations in base n, conversion between base n and base 10, properties of relations, ratio and proportion, simple and compound interest, hire purchase, discounts and taxes, subsets, and simple propositions.",
+        coverage: "Strong",
+        tools: [
+          ["exponents-index-notation", "practise powers and index laws"],
+          ["powers-of-10", "develop powers of ten and standard-form fluency"],
+          ["number-bases-number-sets", "support number bases, set language, and number classification"],
+          ["ratio-proportion", "generate ratio and proportion practice"],
+          ["financial-real-life-maths", "apply interest, hire purchase, discounts, taxes, and cost comparison"],
+          ["venn-diagrams", "connect subsets and set notation to diagrams"]
+        ],
+        teacherMove: "Separate notation, calculation, and interpretation; Grade 8 number work spans both abstract structure and consumer arithmetic."
+      },
+      {
+        code: "Grade 8 Measurement",
+        title: "Grade 8: Measurement",
+        focus: "Area of parallelograms, triangles and trapezia; total surface area of cubes, cuboids, cylinders and triangular prisms; conversion up to cubed units; volume and capacity of cubes, cuboids, prisms, cylinders and composite objects.",
+        coverage: "Strong",
+        tools: [
+          ["area-rectangles", "support composite area and formula substitution"],
+          ["area-triangles", "develop triangle area and related plane figures"],
+          ["volume-surface-area-prisms", "generate cube, cuboid, prism, volume and surface-area practice"],
+          ["cylinders-cones-volume-surface-area", "support cylinder surface-area and volume work"],
+          ["conversions-teaching", "practise squared and cubed unit conversions"]
+        ],
+        teacherMove: "Use one diagram, one formula, one substitution line, and one unit line so the method remains clean."
+      },
+      {
+        code: "Grade 8 Geometry",
+        title: "Grade 8: Geometry",
+        focus: "Angles formed by transversals and parallel lines, intersecting lines, translations by vectors, reflections in the x- or y-axis, n-sided polygons for 3 <= n <= 10, and interior angle sums.",
+        coverage: "Strong",
+        tools: [
+          ["missing-angles", "practise parallel-line, intersecting-line, and polygon angle facts"],
+          ["transformations", "generate vector translations and axis reflections"],
+          ["dynamic-classroom-displays", "animate transformations for live teaching"],
+          ["polygons-angles", "support interior and exterior angle work for polygons"],
+          ["classroom-displays", "project blank grids, axes, and polygon diagrams"]
+        ],
+        teacherMove: "Ask students to identify the angle relationship or transformation rule before calculating or drawing."
+      },
+      {
+        code: "Grade 8 Algebra",
+        title: "Grade 8: Algebra",
+        focus: "Changing the subject of simple formulae, writing inequalities from word problems, representing inequalities on number lines, solving simple linear inequalities, straight-line graphs by plotting points and by gradient/intercept, and finding gradients and intercepts.",
+        coverage: "Strong",
+        tools: [
+          ["transposition-formulae", "change the subject of simple and multi-step formulae"],
+          ["inequalities", "solve and represent inequalities on number lines"],
+          ["linear-equations", "repair equation-solving fluency where needed"],
+          ["straight-lines", "generate straight-line graph, gradient, and intercept practice"],
+          ["functions", "connect equations, mappings, and graph representations"]
+        ],
+        teacherMove: "Use the same language of balance and inverse operations in equations, formula rearrangement, and inequalities."
+      },
+      {
+        code: "Grade 8 Statistics and Probability",
+        title: "Grade 8: Statistics and Probability",
+        focus: "Mean, median and mode from frequency tables, and reading, interpreting and constructing pictographs, bar charts, pie charts and line graphs.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "generate averages from lists and tables"],
+          ["histograms", "extend grouped-table reasoning where appropriate"],
+          ["cumulative-frequency-curves", "prepare for later cumulative data displays"],
+          ["kaizen-large-data-set", "support data interpretation and graph choice"],
+          ["classroom-displays", "project blank data tables and display templates"]
+        ],
+        teacherMove: "Keep the table visible while calculating averages so students see frequency as repeated data."
+      },
+      {
+        code: "Grade 9 Number",
+        title: "Grade 9: Number",
+        focus: "Index laws, standard form for numbers less than, greater than or equal to 10, more complex ratio and proportion, consumer arithmetic including bills and wages, three-subset Venn problems, and introductory matrix order, scalar multiplication, commutativity and distributivity under addition.",
+        coverage: "Strong",
+        tools: [
+          ["exponents-index-notation", "practise index laws"],
+          ["powers-of-10", "support standard-form notation and powers of ten"],
+          ["ratio-proportion", "generate more complex ratio and proportion practice"],
+          ["financial-real-life-maths", "apply bills, wages, salary, and consumer-arithmetic contexts"],
+          ["venn-diagrams", "support three-set and subset problems"],
+          ["matrices", "introduce matrix order, scalar multiplication, and matrix addition properties"]
+        ],
+        teacherMove: "Use this strand to connect exam-style number fluency with real-life consumer contexts and introductory matrix structure."
+      },
+      {
+        code: "Grade 9 Measurement",
+        title: "Grade 9: Measurement",
+        focus: "Area and circumference of a circle, identifying arc, sector and segment, arc length, sector area, segment area, and parts of circles using angles.",
+        coverage: "Strong",
+        tools: [
+          ["circles-area-circumference", "generate area and circumference practice"],
+          ["sectors-arc-length", "support arc length, sector area, and segment questions"],
+          ["classroom-displays", "project circle diagrams, sectors, and blank templates"],
+          ["concept-explainer", "show circle parts such as radius, chord, tangent, sector, segment, and arc"],
+          ["upper-lower-bounds", "support rounding and accuracy where measurements are involved"]
+        ],
+        teacherMove: "Name the circle part first, then select the formula; this prevents sector, arc, and segment confusion."
+      },
+      {
+        code: "Grade 9 Geometry",
+        title: "Grade 9: Geometry",
+        focus: "Pythagoras' theorem, trigonometric ratios in right-angled triangles, enlargements with centre at the origin and natural-number scale factors, and reflections in any given line in the plane.",
+        coverage: "Strong",
+        tools: [
+          ["pythagoras-theorem", "generate right-triangle side and context problems"],
+          ["trigonometric-ratios", "practise right-angled trigonometry"],
+          ["transformations", "generate enlargements and reflections on coordinate grids"],
+          ["dynamic-classroom-displays", "animate transformations and geometric changes"],
+          ["scale-drawing-similar-shapes", "connect enlargement to scale factor and similarity"]
+        ],
+        teacherMove: "Use accurate-looking diagrams and insist that students choose Pythagoras, trigonometry, or transformation language for a reason."
+      },
+      {
+        code: "Grade 9 Algebra",
+        title: "Grade 9: Algebra",
+        focus: "Expanding two binomials, algebraic fractions, factorising by a common factor, simultaneous linear equations by substitution and elimination, functions as one-to-one or many-to-one relations, domain and range, and column vectors including position and relative position vectors.",
+        coverage: "Strong",
+        tools: [
+          ["bracket-expansion", "expand double brackets cleanly"],
+          ["algebraic-fractions", "simplify, add, subtract, multiply, and divide algebraic fractions"],
+          ["advanced-factorisation", "factorise using common factors and structured methods"],
+          ["simultaneous-equations", "solve simultaneous equations by substitution and elimination"],
+          ["functions", "develop function language, domain, range, and relations"],
+          ["free-vectors", "write and use column vectors and position vectors"]
+        ],
+        teacherMove: "Keep notation precise: algebraic fractions need vertical fraction bars, and vectors should be written as column vectors."
+      },
+      {
+        code: "Grade 9 Statistics and Probability",
+        title: "Grade 9: Statistics and Probability",
+        focus: "Simple probabilities, drawing conclusions from probability, and interpreting probability as fractions or percentages.",
+        coverage: "Strong",
+        tools: [
+          ["tree-diagrams-conditional-probability", "model probability with structured diagrams"],
+          ["venn-diagrams", "connect probability to sets and regions"],
+          ["fractions-practice", "repair fraction arithmetic needed for probability"],
+          ["simple-percentage-tasks", "connect fractions and percentages in probability statements"],
+          ["classroom-displays", "project blank probability templates for explanation"]
+        ],
+        teacherMove: "Require probability answers to be interpreted in words, especially when students move between fractions and percentages."
+      }
+    ]
   }
 ];
 
@@ -15302,7 +15527,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, and CSEC Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
