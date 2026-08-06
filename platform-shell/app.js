@@ -8838,11 +8838,165 @@ const curriculumAlignmentFrameworks = [
     id: "csec",
     label: "CSEC",
     country: "Caribbean",
-    status: "Coming next",
+    status: "Mapped",
     title: "CSEC Mathematics Curriculum Alignment",
-    description: "CSEC will be mapped after Common Core and GCSE, with attention to Caribbean secondary mathematics strands and exam preparation.",
-    basis: "Placeholder for the next curriculum alignment build.",
-    standards: []
+    description: "A syllabus-section map from CSEC Mathematics to Kaizen Maths working tools, classroom displays, worked examples, worksheet generators, and exam-preparation practice.",
+    basis: "Pilot alignment based on the CXC CSEC Mathematics syllabus sections: Computation, Number Theory, Consumer Arithmetic, Sets, Measurement, Statistics, Algebra, Relations, Functions and Graphs, Geometry and Trigonometry, and Vectors and Matrices.",
+    standards: [
+      {
+        code: "Section 1",
+        title: "Computation",
+        focus: "Whole-number operations, integers, decimals, fractions, percentages, approximations, order of operations, mental calculation, and numerical accuracy.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "secure addition, subtraction, multiplication, and division"],
+          ["order-of-operations", "build order-of-operations fluency with brackets and directed numbers"],
+          ["integer-operations", "practise negative-number operations and directed-number contexts"],
+          ["fractions-practice", "develop fraction and mixed-number arithmetic"],
+          ["decimals-practice-lab", "support decimal place value, multiplication, and division"]
+        ],
+        teacherMove: "Use this section diagnostically before algebra or measurement; computation weakness will usually surface later as method errors."
+      },
+      {
+        code: "Section 2",
+        title: "Number Theory",
+        focus: "Factors, multiples, primes, HCF, LCM, powers, roots, number bases, number sets, rational and irrational numbers, and exact notation.",
+        coverage: "Strong",
+        tools: [
+          ["hcf-lcm", "generate HCF, LCM, prime-factorisation, and algebraic factor practice"],
+          ["number-bases-number-sets", "support number bases and classification of number sets"],
+          ["exponents-index-notation", "practise powers, roots, and index laws"],
+          ["surds-radicals", "extend exact-value work with surds and radicals"],
+          ["fractions-practice", "repair rational-number fluency when needed"]
+        ],
+        teacherMove: "Make students justify the number set or factor structure rather than only giving a numerical answer."
+      },
+      {
+        code: "Section 3",
+        title: "Consumer Arithmetic",
+        focus: "Money, wages, bills, profit and loss, discounts, tax, simple and compound interest, hire purchase, depreciation, exchange rates, and real-life financial decisions.",
+        coverage: "Strong",
+        tools: [
+          ["financial-real-life-maths", "generate finance, money, wage, tax, profit, interest, and depreciation problems"],
+          ["percentages-real-world", "practise contextual percentage increase, decrease, and reverse percentage"],
+          ["simple-percentage-tasks", "build percentage fluency before financial contexts"],
+          ["ratio-proportion", "support unit rates and proportional comparisons"],
+          ["conversions-teaching", "connect currency, units, and compound measures"]
+        ],
+        teacherMove: "Keep the real decision visible: students should know whether they are comparing cost, saving, profit, rate, or final amount."
+      },
+      {
+        code: "Section 4",
+        title: "Sets",
+        focus: "Set notation, subsets, union, intersection, complement, Venn diagrams, regions, cardinality, and probability links.",
+        coverage: "Strong",
+        tools: [
+          ["venn-diagrams", "generate two-set and three-set Venn diagram practice with notation and probability"],
+          ["classroom-displays", "project blank Venn diagrams and set templates"],
+          ["number-bases-number-sets", "connect number-set classification to set language"],
+          ["tree-diagrams-conditional-probability", "extend from set regions to conditional probability structures"]
+        ],
+        teacherMove: "Translate every notation statement into words first, then locate the exact Venn region."
+      },
+      {
+        code: "Section 5",
+        title: "Measurement",
+        focus: "Units, perimeter, area, circumference, sectors, volume, surface area, scale drawings, bearings, compound measures, accuracy, and bounds.",
+        coverage: "Strong",
+        tools: [
+          ["conversions-teaching", "practise unit conversions and compound measures"],
+          ["area-rectangles", "support area, perimeter, and composite rectangles"],
+          ["circles-area-circumference", "generate circle area and circumference questions"],
+          ["sectors-arc-length", "extend to sectors and arc length"],
+          ["volume-surface-area-prisms", "develop prism volume and surface area"],
+          ["cylinders-cones-volume-surface-area", "extend measurement work to cylinders and cones"],
+          ["upper-lower-bounds", "support accuracy, error intervals, and bounds"]
+        ],
+        teacherMove: "Make formula choice, substitution, units, and rounding decisions explicit in each worked solution."
+      },
+      {
+        code: "Section 6",
+        title: "Statistics",
+        focus: "Data collection, sampling, tables, charts, averages, range, grouped data, histograms, cumulative frequency, scatter diagrams, correlation, and interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "practise mean, median, mode, range, and missing values"],
+          ["histograms", "develop grouped data and frequency-density reasoning"],
+          ["cumulative-frequency-curves", "work with ogives, quartiles, medians, and percentiles"],
+          ["correlation-regression", "support scatter diagrams, correlation, regression, and interpretation"],
+          ["sampling-methods-bias", "teach sampling methods and bias"],
+          ["kaizen-large-data-set", "provide larger-data interpretation practice"]
+        ],
+        teacherMove: "Require students to interpret the statistic or graph in context, especially where data reliability or sampling is involved."
+      },
+      {
+        code: "Section 7",
+        title: "Algebra",
+        focus: "Algebraic notation, substitution, simplifying, expanding, factorising, equations, inequalities, formulae, algebraic fractions, simultaneous equations, and quadratic methods.",
+        coverage: "Strong",
+        tools: [
+          ["substitution", "practise substitution into expressions and formulae"],
+          ["simplification", "collect like terms and simplify expressions"],
+          ["bracket-expansion", "expand single and double brackets"],
+          ["linear-equations", "solve linear equations from simple to complex forms"],
+          ["inequalities", "solve and represent inequalities"],
+          ["simultaneous-equations", "solve systems of equations"],
+          ["quadratic-factorisation", "factorise and solve simple quadratics"],
+          ["quadratic-equations", "extend to completing the square and formula methods"],
+          ["algebraic-fractions", "simplify and solve with rational expressions"],
+          ["transposition-formulae", "change the subject of formulae"]
+        ],
+        teacherMove: "Keep each algebraic line equivalent to the previous one; this is especially important for students who need to see why a step is allowed."
+      },
+      {
+        code: "Section 8",
+        title: "Relations, Functions and Graphs",
+        focus: "Coordinate geometry, straight-line graphs, gradients, intercepts, quadratic graphs, relations, functions, sequences, inequalities on graphs, and modelling from graphs.",
+        coverage: "Strong",
+        tools: [
+          ["straight-lines", "generate gradient, coordinate, intercept, and line-equation practice"],
+          ["functions", "develop function notation, evaluation, composite functions, and inverses"],
+          ["graph-transformations-curve-sketching", "support graph shape, transformations, and curve sketching"],
+          ["sequences", "connect patterns and nth terms to functions"],
+          ["linear-programming", "extend graphical inequalities into feasible-region problems"],
+          ["dynamic-classroom-displays", "animate graph transformations and equation changes"]
+        ],
+        teacherMove: "Connect table, graph, equation, and context so students can move between representations rather than memorise isolated procedures."
+      },
+      {
+        code: "Section 9",
+        title: "Geometry and Trigonometry",
+        focus: "Angles, polygons, congruence, similarity, transformations, constructions, circle theorems, Pythagoras, trigonometric ratios, bearings, sine rule, cosine rule, and Earth geometry links.",
+        coverage: "Strong",
+        tools: [
+          ["missing-angles", "practise angle facts and geometric reasoning"],
+          ["polygons-angles", "generate interior and exterior angle problems"],
+          ["transformations", "support translations, rotations, reflections, and enlargements"],
+          ["loci-constructions", "cover construction and loci reasoning"],
+          ["pythagoras-theorem", "develop right-triangle side calculations"],
+          ["trigonometric-ratios", "practise SOHCAHTOA and right-triangle contexts"],
+          ["sine-cosine-rule", "extend to non-right-triangle trigonometry"],
+          ["bearings", "generate bearings and trigonometry-with-bearings problems"],
+          ["circle-theorems", "build theorem-based circle reasoning"],
+          ["earth-geometry", "support latitude, longitude, and surface-distance contexts"]
+        ],
+        teacherMove: "Use diagrams to choose the rule first, then calculate; students should be able to name the geometric fact they are using."
+      },
+      {
+        code: "Section 10",
+        title: "Vectors and Matrices",
+        focus: "Column vectors, vector operations, magnitude and direction, matrix operations, determinants, inverses, singular matrices, transformations, and simultaneous equations links.",
+        coverage: "Strong",
+        tools: [
+          ["free-vectors", "practise column vectors, addition, subtraction, scalar multiples, and geometry"],
+          ["matrices", "generate matrix addition, subtraction, multiplication, determinants, inverses, and algebraic matrix questions"],
+          ["advanced-matrices", "extend into matrix transformations and eigenvalue-style enrichment where needed"],
+          ["simultaneous-equations", "connect matrices to systems of equations"],
+          ["transformations", "link vectors and matrices to coordinate transformations"]
+        ],
+        teacherMove: "Keep vectors in column form and matrices in rectangular form, and insist that matrix equality means corresponding entries are equal."
+      }
+    ]
   }
 ];
 
@@ -15148,7 +15302,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics and GCSE Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, and CSEC Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
