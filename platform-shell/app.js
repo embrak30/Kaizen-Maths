@@ -8996,6 +8996,160 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    id: "uk-further-mathematics",
+    label: "UK Further Maths",
+    country: "United Kingdom",
+    status: "Mapped",
+    title: "UK Further Mathematics Curriculum Alignment",
+    description: "A content-area map from UK AS and A-level Further Mathematics to Kaizen Maths advanced pure, further statistics, further mechanics, discrete mathematics, worked-example, worksheet, and classroom-display tools.",
+    basis: "Pilot alignment based on the UK AS and A-level Further Mathematics subject-content structure used across awarding organisations: overarching mathematical themes, core pure content, optional further pure, further statistics, further mechanics, and discrete or decision mathematics routes.",
+    standards: [
+      {
+        code: "OT1-OT3",
+        title: "Overarching Themes: Proof, Problem Solving and Modelling",
+        focus: "Constructing rigorous arguments, using precise mathematical language, selecting methods, modelling assumptions, interpreting results and evaluating limitations.",
+        coverage: "Strong",
+        tools: [
+          ["proof-by-induction", "model formal proof language and inductive reasoning"],
+          ["formal-geometric-proof", "support structured statement-reason proof"],
+          ["dynamic-classroom-displays", "visualise advanced concepts before formal work"],
+          ["classroom-displays", "project clean diagrams and blank modelling spaces"],
+          ["interface-guide", "support the classroom workflow for examples, steps and practice"]
+        ],
+        teacherMove: "Make proof structure and modelling decisions visible: students should know what is assumed, what is proved and why the conclusion follows."
+      },
+      {
+        code: "CP1",
+        title: "Core Pure: Complex Numbers and Roots of Polynomials",
+        focus: "Complex arithmetic, Argand diagrams, modulus-argument form, conjugates, roots of equations, polynomial roots, De Moivre links and geometric interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["complex-numbers", "generate complex-number arithmetic, polar form, roots and loci practice"],
+          ["roots-of-equations", "support roots, transformations and equation structure"],
+          ["polar-coordinates", "connect polar representation to complex-number geometry"],
+          ["graph-transformations-curve-sketching", "support polynomial and curve interpretation"],
+          ["advanced-factorisation", "develop algebraic factor structure used with polynomial roots"]
+        ],
+        teacherMove: "Keep rectangular form, modulus-argument form and the geometric interpretation connected, especially when moving to roots and loci."
+      },
+      {
+        code: "CP2",
+        title: "Core Pure: Matrices and Linear Algebra",
+        focus: "Matrix operations, inverses, determinants, transformations, systems of equations, eigenvalues, eigenvectors, diagonalisation and linear algebra structure.",
+        coverage: "Strong",
+        tools: [
+          ["matrices", "secure matrix arithmetic, determinants, inverses and algebraic entries"],
+          ["advanced-matrices", "develop transformations, eigenvalues, eigenvectors and diagonalisation"],
+          ["linear-algebra", "support systems, subspaces, independence and linear transformations"],
+          ["simultaneous-equations", "connect matrix methods to systems of equations"],
+          ["dynamic-classroom-displays", "visualise transformations where helpful"]
+        ],
+        teacherMove: "Insist that matrix equality, transformations and eigenvalue equations are written explicitly before calculation shortcuts."
+      },
+      {
+        code: "CP3",
+        title: "Core Pure: Further Algebra, Series and Methods",
+        focus: "Advanced algebraic manipulation, partial fractions, summations, method of differences, Maclaurin and Taylor series, inequalities and structured exact work.",
+        coverage: "Strong",
+        tools: [
+          ["partial-fractions", "decompose rational expressions with detailed steps"],
+          ["series-expansions", "generate Taylor, Maclaurin and series expansion practice"],
+          ["sequences-series", "support sigma notation, sums and sequence structure"],
+          ["advanced-factorisation", "develop harder algebraic manipulation and factorising"],
+          ["numerical-methods", "support approximation and iterative methods where courses include them"]
+        ],
+        teacherMove: "Show the substitution or decomposition line before simplifying; advanced algebra still needs visible structure."
+      },
+      {
+        code: "CP4",
+        title: "Core Pure: Further Calculus and Differential Equations",
+        focus: "Advanced differentiation, integration techniques, volumes of revolution, improper or extended integrals where required, first-order and second-order differential equations and modelling.",
+        coverage: "Strong",
+        tools: [
+          ["advanced-differentiation", "develop implicit, parametric, tangent, normal and related-rate questions"],
+          ["advanced-integration", "practise integration by substitution and by parts"],
+          ["integration-algebraic-fractions", "integrate rational algebraic expressions"],
+          ["volumes-of-revolution", "generate volumes of revolution practice"],
+          ["differential-equations", "cover separable, first-order linear, second-order and modelling problems"]
+        ],
+        teacherMove: "Make the method choice explicit: identify the form first, then carry out the substitution, integration by parts or differential-equation setup."
+      },
+      {
+        code: "CP5",
+        title: "Core Pure: Polar Coordinates, Hyperbolic Functions and Vectors",
+        focus: "Polar curves, area in polar coordinates, hyperbolic functions and identities, inverse hyperbolic functions, three-dimensional vectors and vector equations.",
+        coverage: "Strong",
+        tools: [
+          ["polar-coordinates", "generate polar coordinate conversion, curve and graph practice"],
+          ["hyperbolic-functions", "support hyperbolic identities, equations and calculus links"],
+          ["further-vectors", "develop 3D vectors, lines, planes and vector geometry"],
+          ["free-vectors", "secure column-vector notation and vector operations"],
+          ["dynamic-classroom-displays", "visualise graphs, polar curves and vector behaviour"]
+        ],
+        teacherMove: "Use diagrams and notation together: polar and vector topics are much clearer when the geometry and algebra are shown side by side."
+      },
+      {
+        code: "FP",
+        title: "Optional Further Pure: Extended Algebra, Calculus, Geometry and Number",
+        focus: "Optional further pure topics such as extended complex numbers, conics, groups, number theory, additional differential equations, further matrices and advanced geometry.",
+        coverage: "Partial",
+        tools: [
+          ["complex-numbers", "extend complex-number practice and geometric interpretation"],
+          ["linear-algebra", "support additional matrix and vector-space ideas"],
+          ["advanced-matrices", "extend matrix transformation and eigenvalue work"],
+          ["differential-equations", "support higher-level differential-equation practice"],
+          ["polar-coordinates", "support conic and polar-style representation where useful"]
+        ],
+        teacherMove: "Use this as a support map for optional pure routes; specialist topics such as groups or full conics may need teacher-led examples until dedicated tools are added."
+      },
+      {
+        code: "FS",
+        title: "Further Statistics: Distributions, Inference, Regression and Modelling",
+        focus: "Discrete random variables, probability generating ideas where required, Poisson and normal models, hypothesis tests, confidence intervals, correlation, regression and interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["discrete-random-variables", "support distributions, expectation and variance"],
+          ["poisson-distribution", "generate Poisson distribution practice"],
+          ["normal-distribution", "standardise and use normal distribution probabilities"],
+          ["hypothesis-testing", "develop inference decisions with clear wording"],
+          ["correlation-regression", "support regression lines, interpolation and correlation strength"],
+          ["continuous-random-variables", "extend probability work into density functions and integration"]
+        ],
+        teacherMove: "Require students to state the model, parameter values, tail or test direction and final conclusion in context."
+      },
+      {
+        code: "FM",
+        title: "Further Mechanics: Momentum, Energy, Forces and Extended Motion",
+        focus: "Momentum and impulse, work, energy and power, projectiles, variable or extended forces where required, friction, moments, connected particles and mechanics modelling.",
+        coverage: "Strong",
+        tools: [
+          ["momentum", "generate momentum and impulse modelling questions"],
+          ["work-energy-power", "support work, energy, power and efficiency"],
+          ["newtons-second-law", "model resultant force and F = ma"],
+          ["friction", "develop rough-surface and inclined-plane questions"],
+          ["moments", "practise equilibrium and turning effects"],
+          ["projectiles", "generate projectile-motion problems"],
+          ["equations-of-motion", "repair SUVAT and constant-acceleration fluency"]
+        ],
+        teacherMove: "Start with a clear diagram and a chosen positive direction, then decide whether the model is force, energy, momentum or equilibrium."
+      },
+      {
+        code: "D1-D2",
+        title: "Discrete or Decision Mathematics: Algorithms, Networks and Optimisation",
+        focus: "Algorithms, networks, graph theory, route inspection, critical path analysis, linear programming, allocation, matching and optimisation.",
+        coverage: "Partial",
+        tools: [
+          ["linear-programming", "support optimisation with constraints and feasible regions"],
+          ["permutations-combinations", "develop counting structures useful in discrete reasoning"],
+          ["numerical-methods", "support iterative and algorithmic thinking"],
+          ["proof-by-induction", "develop formal reasoning about repeated or recursive processes"],
+          ["classroom-displays", "project blank graph, grid and network-style diagrams for teacher-led modelling"]
+        ],
+        teacherMove: "This is a partial alignment: use the existing tools for optimisation and algorithmic reasoning, then add dedicated network and graph-theory tools when needed."
+      }
+    ]
+  },
+  {
     id: "csec",
     label: "CSEC",
     country: "Caribbean",
@@ -15688,7 +15842,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, UK A-Level Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
