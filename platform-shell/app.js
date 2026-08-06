@@ -8835,6 +8835,167 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    id: "uk-a-level-mathematics",
+    label: "UK A-Level Maths",
+    country: "United Kingdom",
+    status: "Mapped",
+    title: "UK A-Level Mathematics Curriculum Alignment",
+    description: "A content-area map from UK AS and A-level Mathematics to Kaizen Maths pure mathematics, statistics, mechanics, classroom-display, worked-example, worksheet, and assessment tools.",
+    basis: "Pilot alignment based on the UK AS and A-level Mathematics subject-content structure used across awarding organisations: overarching mathematical themes, pure mathematics, statistics, and mechanics.",
+    standards: [
+      {
+        code: "OT1-OT3",
+        title: "Overarching Themes: Argument, Problem Solving and Modelling",
+        focus: "Mathematical argument, language and proof; mathematical problem solving; modelling assumptions, interpretation, units, accuracy and limitations.",
+        coverage: "Strong",
+        tools: [
+          ["proof-by-induction", "develop formal argument and proof language"],
+          ["formal-geometric-proof", "support statement-reason proof chains"],
+          ["dynamic-classroom-displays", "model concepts dynamically before formalising"],
+          ["classroom-displays", "project diagrams, blank templates and modelling spaces for explanation"],
+          ["interface-guide", "support teacher workflow for classroom routines, worked examples and printable practice"]
+        ],
+        teacherMove: "Make students state assumptions, justify each mathematical step, and interpret the result in the original context."
+      },
+      {
+        code: "A: Proof",
+        title: "Pure Mathematics: Proof",
+        focus: "Mathematical proof by deduction, exhaustion and contradiction, including proof language and clear chains of reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["proof-by-induction", "model proof structure, assumptions, inductive steps, and conclusions"],
+          ["formal-geometric-proof", "develop statement-reason proof habits"],
+          ["advanced-factorisation", "support algebraic structure used in proof"],
+          ["sequences-series", "connect sequence identities to proof and generalisation"]
+        ],
+        teacherMove: "Separate the claim, the assumption, the algebraic step, and the conclusion so students see why the proof is complete."
+      },
+      {
+        code: "B-C",
+        title: "Pure Mathematics: Algebra and Functions",
+        focus: "Algebraic manipulation, indices and surds, quadratics, simultaneous equations, inequalities, algebraic fractions, partial fractions, functions, composite functions, inverse functions and graph transformations.",
+        coverage: "Strong",
+        tools: [
+          ["advanced-factorisation", "develop advanced factorising and algebraic structure"],
+          ["algebraic-fractions", "simplify and solve with algebraic fractions"],
+          ["partial-fractions", "decompose rational expressions before integration"],
+          ["quadratic-equations", "solve quadratics by multiple methods"],
+          ["simultaneous-equations", "solve systems algebraically"],
+          ["functions", "develop function notation, composition, inverses, domain and range"],
+          ["graph-transformations-curve-sketching", "connect algebraic changes to graph behaviour"]
+        ],
+        teacherMove: "Keep notation precise and show equivalent algebraic lines vertically; this is the repair strand for many A-level errors."
+      },
+      {
+        code: "D",
+        title: "Pure Mathematics: Coordinate Geometry in the x-y Plane",
+        focus: "Straight-line graphs, gradients, equations of lines, circles, intersections, tangents, parametric ideas and coordinate geometry problem solving.",
+        coverage: "Strong",
+        tools: [
+          ["straight-lines", "generate gradient, line equation and coordinate-geometry practice"],
+          ["equation-of-a-circle", "connect centre, radius, tangents and intersections"],
+          ["graph-transformations-curve-sketching", "support curve sketching and coordinate reasoning"],
+          ["advanced-differentiation", "link tangents, normals and gradients to calculus"],
+          ["dynamic-classroom-displays", "show graph changes and coordinate behaviour dynamically"]
+        ],
+        teacherMove: "Use diagrams to identify the geometric relationship, then write the algebraic condition or equation."
+      },
+      {
+        code: "E-F",
+        title: "Pure Mathematics: Sequences, Series, Trigonometry, Exponentials and Logarithms",
+        focus: "Arithmetic and geometric sequences and series, sigma notation, binomial expansion, trigonometric ratios and identities, trigonometric equations, radians, exponentials, logarithms and transformed graphs.",
+        coverage: "Strong",
+        tools: [
+          ["sequences-series", "generate arithmetic and geometric sequence and series practice"],
+          ["binomial-expansion", "support binomial coefficients, selected terms and approximations"],
+          ["trigonometric-functions", "develop exact values, identities and proof-style trig"],
+          ["trig-equation-solver", "solve trigonometric equations"],
+          ["trig-graphs-transformations", "show and practise transformed trig graphs"],
+          ["logarithms-practice", "solve exponential and logarithmic equations"]
+        ],
+        teacherMove: "Connect the symbolic rule to the graph or sequence structure before asking students to generalise."
+      },
+      {
+        code: "G-H",
+        title: "Pure Mathematics: Differentiation and Integration",
+        focus: "Derivative notation, gradients, stationary points, tangents and normals, differentiation rules, integration as reverse differentiation, definite integrals, area under curves, substitution, parts and applications.",
+        coverage: "Strong",
+        tools: [
+          ["differentiation-polynomials", "secure introductory polynomial differentiation"],
+          ["differentiation-rules", "practise product, quotient and chain rule"],
+          ["advanced-differentiation", "develop implicit, parametric, tangents, normals and related rates"],
+          ["integration", "cover basic integration, definite integrals and trapezium rule readiness"],
+          ["advanced-integration", "practise integration by substitution and by parts"],
+          ["integration-algebraic-fractions", "integrate algebraic fractions"],
+          ["volumes-of-revolution", "extend integration into generated volume practice"]
+        ],
+        teacherMove: "Show the rule, the substitution into the rule, and the simplified result; do not rely on verbal shortcuts."
+      },
+      {
+        code: "I-J",
+        title: "Pure Mathematics: Numerical Methods and Vectors",
+        focus: "Solving equations numerically, iteration, sign change, Newton-Raphson, trapezium rule, vector notation, vector equations, geometric vector reasoning and modelling.",
+        coverage: "Strong",
+        tools: [
+          ["numerical-methods", "generate bisection, fixed-point iteration, Newton-Raphson and trapezium-rule practice"],
+          ["roots-of-equations", "support roots and equation transformations"],
+          ["free-vectors", "use column vectors, scalar multiples and geometric vector reasoning"],
+          ["further-vectors", "extend vector work for stronger A-level and Further Maths classes"],
+          ["dynamic-classroom-displays", "provide visual support for vector and graph behaviour"]
+        ],
+        teacherMove: "Keep iteration tables, approximation statements and column-vector notation clean so students can follow the method."
+      },
+      {
+        code: "K-L",
+        title: "Statistics: Statistical Sampling and Data Presentation",
+        focus: "Sampling methods, bias, large data set awareness, diagrams, measures of location and spread, coding, outliers, histograms and cumulative frequency.",
+        coverage: "Strong",
+        tools: [
+          ["sampling-methods-bias", "teach sampling choices, bias and limitations"],
+          ["kaizen-large-data-set", "support large-data-set familiarisation and contextual questions"],
+          ["averages-range", "practise averages, spread and choosing appropriate measures"],
+          ["histograms", "develop frequency density and grouped-data interpretation"],
+          ["cumulative-frequency-curves", "work with ogives, medians, quartiles and percentiles"],
+          ["correlation-regression", "support scatter diagrams, correlation and regression"]
+        ],
+        teacherMove: "Require students to interpret data in context and comment on reliability, outliers and suitability of the method."
+      },
+      {
+        code: "M-N",
+        title: "Statistics: Probability and Statistical Distributions",
+        focus: "Probability laws, mutually exclusive and independent events, conditional probability, discrete random variables, binomial distribution, normal distribution, hypothesis testing and inference.",
+        coverage: "Strong",
+        tools: [
+          ["tree-diagrams-conditional-probability", "generate tree diagrams and conditional probability practice"],
+          ["venn-diagrams", "connect probability to sets, intersections and complements"],
+          ["discrete-random-variables", "support probability distributions and expectation"],
+          ["binomial-geometric-distribution", "generate binomial and geometric distribution practice"],
+          ["normal-distribution", "standardise and use normal distribution probabilities"],
+          ["hypothesis-testing", "develop hypothesis-test decisions and inference wording"],
+          ["poisson-distribution", "extend distribution work where required"]
+        ],
+        teacherMove: "Make the distribution, parameter values, tail direction and final inference explicit in every worked solution."
+      },
+      {
+        code: "O-R",
+        title: "Mechanics: Quantities, Kinematics, Forces, Newton's Laws and Moments",
+        focus: "Modelling assumptions, units, constant acceleration, SUVAT, motion graphs, forces, resultant force, F = ma, connected particles, friction, equilibrium, moments and projectiles.",
+        coverage: "Strong",
+        tools: [
+          ["motion-graphs-constant-acceleration", "interpret distance-time and velocity-time graphs"],
+          ["equations-of-motion", "generate SUVAT and constant-acceleration problems"],
+          ["newtons-second-law", "model resultant force and F = ma problems"],
+          ["friction", "develop rough-surface and inclined-plane mechanics"],
+          ["moments", "practise turning effects, beams and equilibrium"],
+          ["projectiles", "generate projectile-motion questions"],
+          ["work-energy-power", "extend mechanics into energy and power contexts"],
+          ["momentum", "support impulse and momentum modelling"]
+        ],
+        teacherMove: "Start with a diagram and a positive direction, then write the model equation before substituting values."
+      }
+    ]
+  },
+  {
     id: "csec",
     label: "CSEC",
     country: "Caribbean",
@@ -15527,7 +15688,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, UK A-Level Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
