@@ -9027,6 +9027,182 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    id: "ib-mathematics",
+    label: "IB Maths",
+    country: "International",
+    status: "Mapped",
+    title: "IB Mathematics Curriculum Alignment",
+    description: "A programme-level map from IB MYP Mathematics and IB Diploma Programme Mathematics to Kaizen Maths teaching tools, classroom displays, worked examples, worksheet practice, modelling tasks and inquiry support.",
+    basis: "Pilot alignment based on the IB Middle Years Programme mathematics framework and the IB Diploma Programme mathematics courses: Mathematics: analysis and approaches SL/HL and Mathematics: applications and interpretation SL/HL.",
+    standards: [
+      {
+        code: "MYP Number and Algebra",
+        title: "MYP Mathematics: Number, Algebra and Pattern",
+        focus: "Number fluency, proportional reasoning, percentages, indices, algebraic notation, substitution, simplifying, equations, inequalities, sequences, functions and modelling familiar or unfamiliar situations.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "secure arithmetic and calculation fluency"],
+          ["fractions-practice", "develop fraction and mixed-number reasoning"],
+          ["percentages-real-world", "connect percentages to applied contexts"],
+          ["ratio-proportion", "support proportional reasoning and sharing"],
+          ["exponents-index-notation", "practise powers and index laws"],
+          ["simplification", "collect like terms and simplify expressions"],
+          ["linear-equations", "solve linear equations with clear inverse operations"],
+          ["inequalities", "solve and represent inequalities"],
+          ["sequences", "generate pattern and nth-term practice"],
+          ["functions", "connect mappings, rules, domain, range and representations"]
+        ],
+        teacherMove: "Use MYP tasks to move from representation and pattern noticing into formal algebra, while keeping the real or inquiry context visible."
+      },
+      {
+        code: "MYP Geometry",
+        title: "MYP Mathematics: Geometry, Trigonometry and Measurement",
+        focus: "Shape properties, angle reasoning, transformations, similarity, scale, coordinate geometry, Pythagoras, trigonometry, perimeter, area, surface area, volume and measurement contexts.",
+        coverage: "Strong",
+        tools: [
+          ["missing-angles", "develop angle facts and geometric reasoning"],
+          ["polygons-angles", "generate interior and exterior angle problems"],
+          ["transformations", "support translations, reflections, rotations and enlargements"],
+          ["dynamic-classroom-displays", "animate transformations and graph changes for teacher modelling"],
+          ["scale-drawing-similar-shapes", "connect similarity, scale and ratio"],
+          ["pythagoras-theorem", "generate right-triangle side questions"],
+          ["trigonometric-ratios", "practise right-angled trigonometry"],
+          ["area-rectangles", "support area, perimeter and compound shapes"],
+          ["volume-surface-area-prisms", "develop volume and surface area practice"],
+          ["classroom-displays", "project blank grids, shapes and geometry templates"]
+        ],
+        teacherMove: "Make diagrams central: MYP geometry works best when students explain relationships before applying a formula."
+      },
+      {
+        code: "MYP Data",
+        title: "MYP Mathematics: Statistics, Probability and Modelling",
+        focus: "Data representation, averages, spread, probability, Venn diagrams, tree diagrams, scatter diagrams, correlation, sampling, bias and interpreting results in context.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "generate averages, spread and missing-value questions"],
+          ["histograms", "develop grouped-data and frequency-density reasoning"],
+          ["cumulative-frequency-curves", "support cumulative data interpretation"],
+          ["correlation-regression", "support scatter diagrams, correlation and trend lines"],
+          ["sampling-methods-bias", "teach sampling methods and limitations"],
+          ["tree-diagrams-conditional-probability", "generate tree diagrams and conditional probability practice"],
+          ["venn-diagrams", "connect set notation, regions and probability"],
+          ["kaizen-large-data-set", "support contextual data interpretation and inquiry prompts"]
+        ],
+        teacherMove: "Require students to interpret every statistic or probability statement in context and comment on whether it answers the original question."
+      },
+      {
+        code: "DP AA 1-3",
+        title: "DP Mathematics: Analysis and Approaches - Number, Algebra, Functions and Trigonometry",
+        focus: "Algebraic structure, proof, sequences and series, binomial expansion, functions, inverse and composite functions, graph transformations, trigonometric functions, identities and equations.",
+        coverage: "Strong",
+        tools: [
+          ["proof-by-induction", "support proof structure and mathematical argument"],
+          ["advanced-factorisation", "develop higher algebraic manipulation"],
+          ["sequences-series", "generate arithmetic and geometric sequence and series practice"],
+          ["binomial-expansion", "support binomial coefficients and expansion questions"],
+          ["functions", "develop function notation, composition, inverses, domain and range"],
+          ["graph-transformations-curve-sketching", "connect equations to graph behaviour"],
+          ["trigonometric-functions", "support exact values, identities and proof-style trig"],
+          ["trig-equation-solver", "solve trigonometric equations"],
+          ["trig-graphs-transformations", "show and practise transformed trig graphs"],
+          ["logarithms-practice", "generate exponential and logarithmic equation practice"]
+        ],
+        teacherMove: "AA students need symbolic fluency and justification; show structure before asking them to generalise or prove."
+      },
+      {
+        code: "DP AA 4-5",
+        title: "DP Mathematics: Analysis and Approaches - Geometry, Vectors and Calculus",
+        focus: "Coordinate geometry, vectors, trigonometry, differentiation, integration, optimisation, area, kinematics links, differential equations and extended calculus for HL routes.",
+        coverage: "Strong",
+        tools: [
+          ["straight-lines", "support coordinate geometry and gradients"],
+          ["equation-of-a-circle", "connect centre, radius, tangents and intersections"],
+          ["free-vectors", "practise column vectors and vector geometry"],
+          ["further-vectors", "extend vector work for HL classes where needed"],
+          ["differentiation-polynomials", "secure introductory differentiation"],
+          ["differentiation-rules", "practise product, quotient and chain rule"],
+          ["advanced-differentiation", "develop implicit, parametric, tangents and normals"],
+          ["integration", "cover basic and definite integration"],
+          ["advanced-integration", "practise substitution and integration by parts"],
+          ["differential-equations", "support differential-equation modelling"],
+          ["volumes-of-revolution", "extend integration for HL-style practice where appropriate"]
+        ],
+        teacherMove: "Link symbolic calculus to graphical meaning: gradient, rate of change, area, accumulation and model interpretation should stay connected."
+      },
+      {
+        code: "DP AI Modelling",
+        title: "DP Mathematics: Applications and Interpretation - Modelling, Functions and Technology",
+        focus: "Mathematical modelling, functions, graph interpretation, technology-supported methods, numerical approaches, matrices where required, networks or optimisation where used, and interpretation of results.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "support function notation and modelling relationships"],
+          ["graph-transformations-curve-sketching", "interpret graphical behaviour and transformed models"],
+          ["dynamic-classroom-displays", "model graph changes and transformations dynamically"],
+          ["numerical-methods", "support iteration, approximation and algorithmic thinking"],
+          ["matrices", "support matrix operations and transformations where used"],
+          ["linear-programming", "model optimisation with constraints"],
+          ["correlation-regression", "build and interpret regression models"],
+          ["financial-real-life-maths", "support applied percentage, money and growth contexts"]
+        ],
+        teacherMove: "AI work should start with the context and assumptions, then move into the mathematical model and back out to interpretation."
+      },
+      {
+        code: "DP AI Statistics",
+        title: "DP Mathematics: Applications and Interpretation - Statistics, Probability and Inference",
+        focus: "Data displays, sampling, correlation, regression, probability, discrete and continuous distributions, normal models, hypothesis testing, confidence intervals where applicable, and statistical communication.",
+        coverage: "Strong",
+        tools: [
+          ["sampling-methods-bias", "teach sampling choices, bias and limitations"],
+          ["kaizen-large-data-set", "support data familiarisation and contextual questions"],
+          ["histograms", "develop grouped-data and frequency-density reasoning"],
+          ["cumulative-frequency-curves", "support medians, quartiles and percentiles"],
+          ["correlation-regression", "support scatter diagrams, regression and interpretation"],
+          ["tree-diagrams-conditional-probability", "generate conditional probability practice"],
+          ["discrete-random-variables", "support probability distributions and expectation"],
+          ["normal-distribution", "standardise and use normal distribution probabilities"],
+          ["hypothesis-testing", "develop inference decisions and conclusion wording"],
+          ["confidence-intervals", "support interval estimates and interpretation"]
+        ],
+        teacherMove: "Make the final sentence do statistical work: students should state the conclusion in context and acknowledge limitations."
+      },
+      {
+        code: "DP HL Extension",
+        title: "DP Higher Level Extension Support",
+        focus: "HL extension support across complex numbers, matrices, advanced functions, further calculus, distributions, differential equations, vectors and advanced modelling where schools require it.",
+        coverage: "Partial",
+        tools: [
+          ["complex-numbers", "support complex-number arithmetic, polar form and roots where used"],
+          ["advanced-matrices", "extend matrix and transformation practice"],
+          ["linear-algebra", "support advanced matrix and vector structure"],
+          ["series-expansions", "generate Taylor and Maclaurin series practice"],
+          ["polar-coordinates", "support polar representation and graphs where used"],
+          ["hyperbolic-functions", "support extension calculus and identities where required"],
+          ["continuous-random-variables", "extend probability into density functions and integration"],
+          ["poisson-distribution", "support additional distribution practice where relevant"],
+          ["differential-equations", "support HL differential-equation modelling"],
+          ["work-energy-power", "support applied modelling for mathematically stronger mechanics contexts"]
+        ],
+        teacherMove: "This row is intentionally marked partial because IB HL route choices and updates vary; use it as an extension bank rather than a complete course claim."
+      },
+      {
+        code: "IA",
+        title: "Internal Assessment and Mathematical Inquiry",
+        focus: "Problem specification, assumptions, abstraction, computation, interpretation, evaluation, refinement, communication and mathematically valid exploration.",
+        coverage: "Strong",
+        tools: [
+          ["kaizen-large-data-set", "support data-led exploration and question generation"],
+          ["correlation-regression", "provide regression and model interpretation examples"],
+          ["normal-distribution", "support distribution modelling"],
+          ["hypothesis-testing", "support inference and conclusion wording"],
+          ["dynamic-classroom-displays", "help teachers demonstrate concepts dynamically"],
+          ["classroom-displays", "project blank diagrams, grids and templates for modelling discussions"],
+          ["interface-guide", "support teacher workflow for examples, questions and practice routines"]
+        ],
+        teacherMove: "Use Kaizen to model the mathematics, but keep IA authorship with the student: the teacher role is to question assumptions, method choice and interpretation."
+      }
+    ]
+  },
+  {
     id: "cambridge-igcse",
     label: "Cambridge IGCSE",
     country: "International",
@@ -16220,7 +16396,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, IB Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
