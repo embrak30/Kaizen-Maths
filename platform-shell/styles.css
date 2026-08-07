@@ -3969,6 +3969,192 @@ body[data-route="worksheet-generator"] .account-action {
   font-weight: 850;
 }
 
+.curriculum-chooser-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+}
+
+.curriculum-hero-copy h2 {
+  font-size: clamp(1.35rem, 2.5vw, 2rem);
+}
+
+.curriculum-framework-panel,
+.curriculum-summary-panel,
+.curriculum-strand-panel {
+  padding: 12px;
+}
+
+.curriculum-framework-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+  gap: 7px;
+}
+
+.curriculum-framework-chip {
+  display: grid;
+  gap: 2px;
+  min-height: 48px;
+  align-content: center;
+  padding: 8px 10px;
+  border: 1px solid #dbe7f2;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.curriculum-framework-chip strong {
+  font-size: 0.88rem;
+  line-height: 1.15;
+}
+
+.curriculum-framework-chip span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.curriculum-framework-chip:hover,
+.curriculum-framework-chip:focus-visible {
+  border-color: rgba(249, 115, 22, 0.72);
+  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.12);
+  transform: translateY(-1px);
+}
+
+.curriculum-framework-chip.active {
+  border-color: rgba(23, 184, 179, 0.72);
+  background: #ecfdfb;
+  box-shadow: inset 4px 0 0 var(--orange);
+}
+
+.curriculum-strand-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 7px;
+}
+
+.curriculum-strand-chip {
+  display: grid;
+  gap: 3px;
+  min-height: 54px;
+  align-content: center;
+  padding: 8px 10px;
+  border: 1px solid #dbe7f2;
+  border-radius: 8px;
+  background: #fbfdff;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.curriculum-strand-chip span {
+  color: var(--teal-dark);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.curriculum-strand-chip strong {
+  font-size: 0.84rem;
+  line-height: 1.2;
+}
+
+.curriculum-strand-chip:hover,
+.curriculum-strand-chip:focus-visible {
+  border-color: rgba(249, 115, 22, 0.7);
+  background: #fff7ed;
+}
+
+.curriculum-map-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 10px;
+}
+
+.curriculum-standard-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(23, 184, 179, 0.22);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(23, 184, 179, 0.06), rgba(255, 255, 255, 0.96) 54%, rgba(249, 115, 22, 0.05)),
+    white;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.045);
+  scroll-margin-top: 20px;
+}
+
+.curriculum-standard-head {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.curriculum-standard-head h2 {
+  margin: 2px 0 0;
+  color: #282450;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.curriculum-standard-head small {
+  flex: 0 0 auto;
+  width: max-content;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 0.68rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.curriculum-standard-head small[data-coverage="strong"] {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.curriculum-standard-head small[data-coverage="partial"] {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.curriculum-teacher-move {
+  display: grid;
+  gap: 3px;
+  padding: 8px 10px;
+  border-left: 4px solid var(--teal);
+  border-radius: 8px;
+  background: rgba(236, 253, 251, 0.72);
+}
+
+.curriculum-teacher-move span,
+.curriculum-tool-label {
+  color: #0f766e;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.curriculum-teacher-move p {
+  margin: 0;
+  color: #334155;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.curriculum-tool-label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.curriculum-tool-list {
+  align-items: flex-start;
+}
+
 .curriculum-status-note {
   width: max-content;
   align-self: center;
@@ -7379,6 +7565,8 @@ sup .worksheet-fraction span:last-child {
   .coverage-area-grid,
   .coverage-panel-head,
   .textbook-hero-panel,
+  .curriculum-chooser-hero,
+  .curriculum-map-grid,
   .curriculum-empty-panel,
   .textbook-reverse-list,
   .video-grid {
