@@ -9704,6 +9704,179 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    id: "australian-curriculum",
+    label: "Australian Curriculum",
+    country: "Australia",
+    status: "Mapped",
+    title: "Australian Curriculum Mathematics Alignment",
+    description: "A pathway map linking Australian Curriculum Mathematics F-10 and senior secondary Mathematics subjects to Kaizen Maths teaching tools, classroom displays, worked examples, worksheet practice and assessment support.",
+    basis: "Pilot alignment based on Australian Curriculum Mathematics Version 9.0 for Foundation to Year 10, organised through Number, Algebra, Measurement, Space, Statistics and Probability, and the senior secondary Mathematics subjects: Essential Mathematics, General Mathematics, Mathematical Methods and Specialist Mathematics.",
+    standards: [
+      {
+        code: "F-6 Number Algebra",
+        title: "Foundation to Year 6: Number and Algebra",
+        focus: "Counting, place value, operations, fractions, decimals, percentages, patterns, equivalence, simple equations, proportional reasoning and mathematical modelling through concrete, pictorial and abstract representations.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "secure whole-number and multi-step calculations"],
+          ["fractions-practice", "build fraction and mixed-number fluency"],
+          ["decimals-practice-lab", "support decimal place value and calculation"],
+          ["simple-percentage-tasks", "introduce percentages and benchmark percentages"],
+          ["ratio-proportion", "develop proportional reasoning and sharing"],
+          ["bar-models", "support part-whole, comparison and proportional reasoning"],
+          ["area-models", "support arrays, multiplication and fraction structure"],
+          ["sequences", "generate pattern and rule practice"],
+          ["linear-equations", "model simple equations with inverse operations"],
+          ["classroom-displays", "project manipulatives, number lines, grids and visual templates"]
+        ],
+        teacherMove: "Move deliberately from representation to notation; students should explain the model before recording the calculation."
+      },
+      {
+        code: "F-6 Measurement Space Data",
+        title: "Foundation to Year 6: Measurement, Space, Statistics and Probability",
+        focus: "Length, area, volume, time, money, location, shape, symmetry, transformations, data displays, chance language, simple probability and interpretation of results.",
+        coverage: "Strong",
+        tools: [
+          ["conversions-teaching", "support measurement units and conversion readiness"],
+          ["area-rectangles", "develop area, perimeter and composite rectangle reasoning"],
+          ["volume-surface-area-prisms", "introduce volume and spatial reasoning where appropriate"],
+          ["transformations", "generate translations, reflections, rotations and enlargements"],
+          ["missing-angles", "support early angle reasoning"],
+          ["averages-range", "introduce data summaries and comparison"],
+          ["histograms", "extend grouped-data display thinking where useful"],
+          ["tree-diagrams-conditional-probability", "support chance structures"],
+          ["venn-diagrams", "connect classification, sets and probability"],
+          ["classroom-displays", "project blank grids, shapes, clocks, probability templates and diagrams"]
+        ],
+        teacherMove: "Keep measurement and data grounded in context: students should say what is being measured, counted or compared."
+      },
+      {
+        code: "Years 7-10 Number Algebra",
+        title: "Years 7-10: Number, Algebra, Functions and Modelling",
+        focus: "Directed numbers, rational numbers, percentages, ratio, rates, indices, standard form, algebraic manipulation, equations, inequalities, functions, relations, graphs, linear and non-linear modelling.",
+        coverage: "Strong",
+        tools: [
+          ["integer-operations", "repair directed-number fluency"],
+          ["fractions-practice", "strengthen rational-number operations"],
+          ["percentages-real-world", "connect percentages to real contexts"],
+          ["ratio-proportion", "generate ratio, rate and proportion practice"],
+          ["exponents-index-notation", "practise powers and index laws"],
+          ["powers-of-10", "support standard form and powers of ten"],
+          ["simplification", "collect like terms and simplify expressions"],
+          ["bracket-expansion", "expand algebraic expressions"],
+          ["linear-equations", "solve linear equations cleanly"],
+          ["inequalities", "solve and represent inequalities"],
+          ["functions", "connect rules, tables, graphs and notation"],
+          ["graph-transformations-curve-sketching", "connect equations to graph behaviour"]
+        ],
+        teacherMove: "Use multiple representations: table, graph, equation and context should describe the same relationship."
+      },
+      {
+        code: "Years 7-10 Measurement Space",
+        title: "Years 7-10: Measurement, Space, Geometry and Trigonometry",
+        focus: "Metric measurement, area, surface area, volume, similarity, scale, transformations, angle reasoning, circles, Pythagoras, trigonometry, coordinates and geometric modelling.",
+        coverage: "Strong",
+        tools: [
+          ["area-rectangles", "support area, perimeter and composite figures"],
+          ["circles-area-circumference", "generate circle area and circumference practice"],
+          ["sectors-arc-length", "extend to sectors and arc length"],
+          ["volume-surface-area-prisms", "generate volume and surface area practice"],
+          ["scale-drawing-similar-shapes", "connect scale factor, similarity and ratio"],
+          ["transformations", "generate transformation practice on grids"],
+          ["polygons-angles", "support interior and exterior angle reasoning"],
+          ["circle-theorems", "support theorem-based circle reasoning where needed"],
+          ["pythagoras-theorem", "generate right-triangle side questions"],
+          ["trigonometric-ratios", "practise right-angled trigonometry"],
+          ["straight-lines", "connect geometry to coordinate graphs"],
+          ["dynamic-classroom-displays", "animate transformations and graph changes"]
+        ],
+        teacherMove: "Start from the diagram and named relationship, then show formula choice, substitution, units and final interpretation."
+      },
+      {
+        code: "Years 7-10 Statistics Probability",
+        title: "Years 7-10: Statistics and Probability",
+        focus: "Statistical investigation, data displays, summary statistics, variation, sampling, probability experiments, simulations, compound events, two-way tables, Venn diagrams and interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "generate mean, median, mode, range and missing-value practice"],
+          ["histograms", "develop grouped-data and distribution-shape reasoning"],
+          ["cumulative-frequency-curves", "support medians, quartiles and percentiles"],
+          ["sampling-methods-bias", "teach sampling choices, bias and limitations"],
+          ["tree-diagrams-conditional-probability", "generate conditional probability and tree diagram practice"],
+          ["venn-diagrams", "connect set notation, regions and probability"],
+          ["correlation-regression", "support scatter diagrams, trend and interpretation"],
+          ["kaizen-large-data-set", "support contextual data interpretation and investigation prompts"]
+        ],
+        teacherMove: "Ask students to describe variation and context before calculation; the statistic is only useful if it answers the question."
+      },
+      {
+        code: "Senior Essential General",
+        title: "Senior Secondary: Essential Mathematics and General Mathematics",
+        focus: "Practical numeracy, financial mathematics, measurement, statistics, networks, linear modelling, discrete mathematics, growth and decay, decision making and applied modelling contexts.",
+        coverage: "Strong",
+        tools: [
+          ["financial-real-life-maths", "generate financial, consumer and workplace contexts"],
+          ["percentages-real-world", "support percentage change and reverse percentage"],
+          ["ratio-proportion", "support rates and proportional modelling"],
+          ["conversions-teaching", "support unit and compound-measure contexts"],
+          ["straight-lines", "generate linear modelling and graph interpretation"],
+          ["functions", "connect rules, inputs and outputs"],
+          ["linear-programming", "support optimisation with constraints"],
+          ["averages-range", "support summary statistics and interpretation"],
+          ["histograms", "develop grouped-data reasoning"],
+          ["correlation-regression", "support association, regression and interpolation"],
+          ["sampling-methods-bias", "teach sampling, bias and limitations"],
+          ["tree-diagrams-conditional-probability", "support applied probability"]
+        ],
+        teacherMove: "Keep the applied context visible all the way through: calculation, interpretation and decision should sit together."
+      },
+      {
+        code: "Senior Methods",
+        title: "Senior Secondary: Mathematical Methods",
+        focus: "Functions, graphs, calculus, exponential and logarithmic functions, trigonometry, probability, random variables, binomial and normal distributions, statistical inference and mathematical modelling.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "support function notation, inverses and composition"],
+          ["graph-transformations-curve-sketching", "connect functions to key graph features"],
+          ["logarithms-practice", "support logarithmic and exponential equations"],
+          ["trigonometric-functions", "support identities, exact values and proof-style trig"],
+          ["trig-graphs-transformations", "show transformed trigonometric graphs"],
+          ["limits-first-principles", "support limits and first-principles reasoning"],
+          ["differentiation-polynomials", "secure introductory differentiation"],
+          ["differentiation-rules", "practise product, quotient and chain rule"],
+          ["advanced-differentiation", "develop implicit, parametric and applications of differentiation"],
+          ["integration", "cover basic and definite integration"],
+          ["binomial-geometric-distribution", "generate binomial and geometric distribution questions"],
+          ["normal-distribution", "standardise and use normal distribution probabilities"],
+          ["hypothesis-testing", "develop inference decisions and conclusion wording"]
+        ],
+        teacherMove: "Link symbolic manipulation to meaning: graph behaviour, rate of change, accumulation, probability model or inference conclusion."
+      },
+      {
+        code: "Senior Specialist",
+        title: "Senior Secondary: Specialist Mathematics",
+        focus: "Advanced algebra, proof, vectors, complex numbers, matrices, polar coordinates, advanced calculus, differential equations, mechanics-style modelling, probability distributions and deeper mathematical reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["proof-by-induction", "support proof language and induction structure"],
+          ["advanced-factorisation", "develop higher algebraic manipulation"],
+          ["free-vectors", "secure vector notation and geometry"],
+          ["further-vectors", "extend vector reasoning for senior classes"],
+          ["matrices", "support matrix operations and transformations"],
+          ["advanced-matrices", "extend matrix transformations and advanced structure"],
+          ["complex-numbers", "support complex arithmetic, polar form and roots"],
+          ["polar-coordinates", "support polar representation and curve interpretation"],
+          ["series-expansions", "generate Taylor and Maclaurin series practice"],
+          ["advanced-integration", "support extended integration methods"],
+          ["differential-equations", "support differential-equation modelling"],
+          ["continuous-random-variables", "extend probability into density functions and integration"],
+          ["poisson-distribution", "support additional distribution practice"]
+        ],
+        teacherMove: "Make method choice explicit: students should know why a proof, vector, complex-number, matrix or calculus method is the right tool."
+      }
+    ]
+  },
+  {
     id: "cambridge-igcse",
     label: "Cambridge IGCSE",
     country: "International",
@@ -17068,7 +17241,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, Ontario Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, Ontario Mathematics, Australian Curriculum Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
