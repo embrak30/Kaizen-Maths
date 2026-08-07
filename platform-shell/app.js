@@ -9877,6 +9877,173 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    id: "finland-mathematics",
+    label: "Finland Curriculum",
+    country: "Finland",
+    status: "Mapped",
+    title: "Finland Mathematics Curriculum Alignment",
+    description: "A curriculum pathway map linking Finnish basic education mathematics and general upper secondary short and long mathematics to Kaizen Maths teaching tools, classroom displays, worked examples, worksheets and assessment practice.",
+    basis: "Pilot alignment based on the Finnish National Core Curriculum for Basic Education and the Finnish general upper secondary mathematics routes, including short mathematics and long mathematics. The map uses broad curriculum areas rather than local school-specific module decisions.",
+    standards: [
+      {
+        code: "Basic Education Number",
+        title: "Basic Education: Numbers, Operations and Mathematical Thinking",
+        focus: "Number sense, arithmetic fluency, integers, fractions, decimals, percentages, ratio, proportional reasoning, estimation, problem solving, reasoning, patterns and mathematical communication.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "secure arithmetic and multi-step calculations"],
+          ["integer-operations", "develop directed-number fluency"],
+          ["fractions-practice", "build fraction and mixed-number operations"],
+          ["decimals-practice-lab", "support decimal place value and calculation"],
+          ["simple-percentage-tasks", "introduce percentages and benchmark percentages"],
+          ["percentages-real-world", "connect percentages to practical contexts"],
+          ["ratio-proportion", "develop proportional reasoning and sharing"],
+          ["bar-models", "support visual problem solving and comparison reasoning"],
+          ["area-models", "support multiplication, fractions and visual structure"],
+          ["classroom-displays", "project manipulatives, number lines, grids and visual templates"]
+        ],
+        teacherMove: "Keep reasoning visible: students should explain the method and representation, not only produce the answer."
+      },
+      {
+        code: "Basic Education Algebra",
+        title: "Basic Education: Algebra, Functions and Modelling",
+        focus: "Patterns, variables, expressions, equations, inequalities, coordinate systems, functions, graphs, direct proportion, modelling situations and interpreting mathematical relationships.",
+        coverage: "Strong",
+        tools: [
+          ["sequences", "generate pattern and rule practice"],
+          ["simplification", "collect like terms and simplify expressions"],
+          ["bracket-expansion", "expand algebraic expressions"],
+          ["linear-equations", "solve equations with inverse operations"],
+          ["inequalities", "solve and represent inequalities"],
+          ["straight-lines", "support coordinate geometry, gradients and linear graphs"],
+          ["functions", "connect mappings, rules, domain, range and representations"],
+          ["graph-transformations-curve-sketching", "connect equations to graph behaviour"],
+          ["ratio-proportion", "support proportional models"],
+          ["dynamic-classroom-displays", "animate graph and parameter changes for teacher modelling"]
+        ],
+        teacherMove: "Move between table, graph, equation and real context so modelling feels connected rather than procedural."
+      },
+      {
+        code: "Basic Education Geometry",
+        title: "Basic Education: Geometry, Measurement and Space",
+        focus: "Geometric shapes, angle reasoning, transformations, similarity, scale, perimeter, area, surface area, volume, units, coordinates, Pythagoras and introductory trigonometric reasoning where appropriate.",
+        coverage: "Strong",
+        tools: [
+          ["missing-angles", "support angle facts and geometric reasoning"],
+          ["polygons-angles", "generate polygon angle questions"],
+          ["transformations", "generate translations, reflections, rotations and enlargements"],
+          ["scale-drawing-similar-shapes", "connect similarity, scale and ratio"],
+          ["conversions-teaching", "practise measurement conversions"],
+          ["area-rectangles", "develop area, perimeter and composite figures"],
+          ["volume-surface-area-prisms", "support volume and surface area practice"],
+          ["circles-area-circumference", "generate circle area and circumference practice"],
+          ["pythagoras-theorem", "generate right-triangle side questions"],
+          ["trigonometric-ratios", "practise right-angled trigonometry"],
+          ["classroom-displays", "project blank grids, shapes and geometry templates"]
+        ],
+        teacherMove: "Start with the diagram and named relationship, then show the formula, substitution, unit and final interpretation."
+      },
+      {
+        code: "Basic Education Data",
+        title: "Basic Education: Data, Statistics and Probability",
+        focus: "Collecting, organising and interpreting data, averages, spread, charts, grouped data, probability, chance, simulation, critical interpretation and using evidence to justify conclusions.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "generate mean, median, mode, range and missing-value practice"],
+          ["histograms", "develop grouped-data and distribution-shape reasoning"],
+          ["cumulative-frequency-curves", "support medians, quartiles and percentiles"],
+          ["sampling-methods-bias", "teach sampling choices, bias and limitations"],
+          ["tree-diagrams-conditional-probability", "generate probability tree questions"],
+          ["venn-diagrams", "connect set notation, regions and probability"],
+          ["correlation-regression", "support scatter diagrams, trend and interpretation"],
+          ["kaizen-large-data-set", "support contextual data interpretation and investigation prompts"]
+        ],
+        teacherMove: "Ask students to describe what the data shows and what it does not show; interpretation matters as much as calculation."
+      },
+      {
+        code: "Upper Secondary Short",
+        title: "General Upper Secondary: Short Mathematics",
+        focus: "Everyday mathematical modelling, equations, functions, geometry, financial mathematics, statistics, probability, data interpretation, applied calculus ideas and mathematical reasoning for practical contexts.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "support foundational function notation and modelling"],
+          ["linear-equations", "solve equations cleanly"],
+          ["simultaneous-equations", "solve systems by elimination and substitution"],
+          ["quadratic-equations", "support quadratic methods and graph links"],
+          ["graph-transformations-curve-sketching", "connect functions to graph behaviour"],
+          ["financial-real-life-maths", "generate money, interest, tax and consumer contexts"],
+          ["percentages-real-world", "support percentage change and reverse percentage"],
+          ["averages-range", "support descriptive statistics"],
+          ["histograms", "develop grouped-data reasoning"],
+          ["correlation-regression", "support regression and interpretation"],
+          ["normal-distribution", "support normal model calculations"],
+          ["hypothesis-testing", "develop inference decisions and conclusion wording"]
+        ],
+        teacherMove: "Keep the applied context at the centre: students should calculate, interpret and make a decision or conclusion."
+      },
+      {
+        code: "Upper Secondary Long 1",
+        title: "General Upper Secondary Long Mathematics: Algebra, Functions, Geometry and Vectors",
+        focus: "Advanced algebra, equations, inequalities, functions, graphs, logarithms, exponential models, trigonometry, analytic geometry, vectors, matrices where useful and mathematical modelling.",
+        coverage: "Strong",
+        tools: [
+          ["advanced-factorisation", "develop higher algebraic manipulation"],
+          ["algebraic-fractions", "simplify rational expressions and equations"],
+          ["functions", "support function notation, inverses and composition"],
+          ["graph-transformations-curve-sketching", "connect functions to graph features"],
+          ["roots-of-equations", "link roots, factors and graphs"],
+          ["logarithms-practice", "generate logarithmic and exponential equation practice"],
+          ["trigonometric-functions", "support identities, exact values and proof-style trigonometry"],
+          ["trig-graphs-transformations", "show transformed trigonometric graphs"],
+          ["free-vectors", "secure vector notation and geometry"],
+          ["further-vectors", "extend vector reasoning for advanced classes"],
+          ["matrices", "support matrix operations and transformations where useful"],
+          ["dynamic-classroom-displays", "animate graph and transformation ideas"]
+        ],
+        teacherMove: "Ask students why a particular representation or algebraic form is useful before they begin the calculation."
+      },
+      {
+        code: "Upper Secondary Long 2",
+        title: "General Upper Secondary Long Mathematics: Calculus and Numerical Methods",
+        focus: "Limits, continuity, derivatives, applications of differentiation, integral calculus, area, accumulation, differential equations, approximation, numerical methods and modelling with rates of change.",
+        coverage: "Strong",
+        tools: [
+          ["limits-first-principles", "support limit notation, continuity and first-principles reasoning"],
+          ["differentiation-polynomials", "secure introductory differentiation"],
+          ["differentiation-rules", "practise product, quotient and chain rule"],
+          ["advanced-differentiation", "develop implicit, parametric, tangents, normals and optimisation"],
+          ["integration", "cover basic and definite integration"],
+          ["advanced-integration", "support substitution and integration by parts"],
+          ["differential-equations", "support differential-equation modelling"],
+          ["numerical-methods", "support approximation and iterative methods"],
+          ["sequences-series", "support sequence and series links"],
+          ["dynamic-classroom-displays", "show gradients, areas and graph behaviour dynamically"]
+        ],
+        teacherMove: "Pair symbolic work with meaning: gradient, rate of change, area, accumulation, approximation or model behaviour."
+      },
+      {
+        code: "Upper Secondary Long 3",
+        title: "General Upper Secondary Long Mathematics: Statistics, Probability and Advanced Modelling",
+        focus: "Counting, probability, random variables, probability distributions, normal models, statistical inference, correlation, regression, financial mathematics and modelling with uncertainty.",
+        coverage: "Strong",
+        tools: [
+          ["permutations-combinations", "develop counting, factorial, nPr and nCr reasoning"],
+          ["tree-diagrams-conditional-probability", "generate conditional probability practice"],
+          ["venn-diagrams", "connect set notation, regions and probability"],
+          ["discrete-random-variables", "support probability distributions and expectation"],
+          ["normal-distribution", "standardise and use normal distribution probabilities"],
+          ["poisson-distribution", "support additional distribution practice where useful"],
+          ["continuous-random-variables", "extend probability into density functions and integration"],
+          ["hypothesis-testing", "develop inference decisions and conclusion wording"],
+          ["confidence-intervals", "support interval estimates and interpretation"],
+          ["correlation-regression", "support scatterplots, regression and interpretation"],
+          ["financial-real-life-maths", "connect modelling to financial decisions"]
+        ],
+        teacherMove: "Make students state the model, assumptions and conclusion in context, especially when uncertainty is involved."
+      }
+    ]
+  },
+  {
     id: "cambridge-igcse",
     label: "Cambridge IGCSE",
     country: "International",
@@ -17241,7 +17408,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, Ontario Mathematics, Australian Curriculum Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, Ontario Mathematics, Australian Curriculum Mathematics, Finland Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
