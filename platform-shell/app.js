@@ -10020,6 +10020,177 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    id: "cape-mathematics",
+    label: "CAPE Mathematics",
+    country: "Caribbean",
+    status: "Mapped",
+    title: "CAPE Mathematics Curriculum Alignment",
+    description: "A CAPE route map linking Pure Mathematics, Applied Mathematics and Integrated Mathematics to Kaizen Maths teaching tools, classroom displays, worked examples, worksheet practice and assessment preparation.",
+    basis: "Pilot alignment based on CXC CAPE Pure Mathematics, CAPE Applied Mathematics and CAPE Integrated Mathematics subject structures. Pure Mathematics is mapped by its two units; Applied Mathematics is mapped by statistical analysis and mathematical applications; Integrated Mathematics is mapped by its foundations, statistics and calculus modules.",
+    standards: [
+      {
+        code: "Pure Unit 1 M1",
+        title: "Pure Mathematics Unit 1: Basic Algebra and Functions",
+        focus: "Algebraic manipulation, equations, inequalities, functions, graphs, transformations, inverse and composite functions, polynomial and rational expressions, exponential and logarithmic relationships, and modelling with functions.",
+        coverage: "Strong",
+        tools: [
+          ["advanced-factorisation", "develop higher algebraic manipulation and factor structure"],
+          ["functions", "support function notation, domain, range, inverses and composition"],
+          ["graph-transformations-curve-sketching", "connect algebraic changes to graph behaviour"],
+          ["roots-of-equations", "link roots, factors, equations and graphs"],
+          ["logarithms-practice", "generate exponential and logarithmic equation practice"],
+          ["transposition-formulae", "support formula rearrangement and symbolic control"],
+          ["numerical-methods", "support approximation and iterative methods"],
+          ["dynamic-classroom-displays", "animate graph and parameter changes for teacher modelling"]
+        ],
+        teacherMove: "Require students to move between symbolic form, graph features and interpretation, especially when a function has several equivalent forms."
+      },
+      {
+        code: "Pure Unit 1 M2",
+        title: "Pure Mathematics Unit 1: Trigonometry, Geometry and Vectors",
+        focus: "Trigonometric identities, equations and graphs; coordinate geometry; geometric reasoning; vectors, vector notation, vector operations and applications to geometry.",
+        coverage: "Strong",
+        tools: [
+          ["trigonometric-functions", "support exact values, identities and proof-style trigonometry"],
+          ["trig-equation-solver", "generate trigonometric equation practice"],
+          ["trig-graphs-transformations", "show transformed trigonometric graphs and equations"],
+          ["graph-transformations-curve-sketching", "support curve sketching and graph interpretation"],
+          ["equation-of-a-circle", "connect centre, radius, tangent and intersection work"],
+          ["free-vectors", "secure column-vector notation and vector geometry"],
+          ["further-vectors", "extend vector reasoning for CAPE Pure classes"],
+          ["dynamic-classroom-displays", "model trig graphs, vector movement and geometric changes dynamically"]
+        ],
+        teacherMove: "Keep diagrams and notation precise: students should name the trig identity, geometric fact or vector relationship before calculating."
+      },
+      {
+        code: "Pure Unit 1 M3",
+        title: "Pure Mathematics Unit 1: Calculus I",
+        focus: "Limits, first principles, differentiation rules, tangents and normals, stationary points, optimisation, introductory integration, definite integrals and area under curves.",
+        coverage: "Strong",
+        tools: [
+          ["limits-first-principles", "support limit notation, first-principles reasoning and continuity"],
+          ["differentiation-polynomials", "secure introductory differentiation and gradient functions"],
+          ["differentiation-rules", "practise product, quotient and chain rule"],
+          ["advanced-differentiation", "develop implicit, parametric, tangents, normals and optimisation"],
+          ["integration", "cover basic integration, definite integrals and area"],
+          ["advanced-integration", "support substitution and integration by parts where needed"],
+          ["graph-transformations-curve-sketching", "connect derivative information to curve sketching"],
+          ["dynamic-classroom-displays", "show gradient and accumulation ideas dynamically"]
+        ],
+        teacherMove: "Show the rule, substitution into the rule and simplified result; do not let calculus become only a verbal instruction."
+      },
+      {
+        code: "Pure Unit 2 M1",
+        title: "Pure Mathematics Unit 2: Complex Numbers and Calculus II",
+        focus: "Complex-number arithmetic, polar form, roots, loci and representation, together with extended differentiation and integration methods.",
+        coverage: "Strong",
+        tools: [
+          ["complex-numbers", "support complex arithmetic, modulus-argument form, roots and loci"],
+          ["polar-coordinates", "connect polar representation and curve interpretation"],
+          ["advanced-differentiation", "extend implicit, parametric and higher-level differentiation"],
+          ["advanced-integration", "practise substitution and integration by parts"],
+          ["volumes-of-revolution", "support extended applications of integration"],
+          ["differential-equations", "connect calculus to equation-based modelling"],
+          ["dynamic-classroom-displays", "support visual modelling of complex, polar and calculus ideas"]
+        ],
+        teacherMove: "Use the Argand diagram or graph alongside algebra so students see both the representation and the calculation."
+      },
+      {
+        code: "Pure Unit 2 M2",
+        title: "Pure Mathematics Unit 2: Sequences, Series and Approximations",
+        focus: "Sequences, arithmetic and geometric series, convergence ideas, binomial expansion, Taylor and Maclaurin series, approximation and numerical methods.",
+        coverage: "Strong",
+        tools: [
+          ["sequences-series", "generate sequence and series foundations"],
+          ["binomial-expansion", "support binomial coefficients, terms and approximations"],
+          ["series-expansions", "generate Taylor and Maclaurin series practice"],
+          ["numerical-methods", "support approximation, iteration and numerical reasoning"],
+          ["roots-of-equations", "connect numerical methods to equation roots"],
+          ["limits-first-principles", "support limiting behaviour and convergence language"],
+          ["graph-transformations-curve-sketching", "connect approximations to graphical behaviour"]
+        ],
+        teacherMove: "Make the approximation target explicit: students should know what is being approximated, the order used and why the approximation is reasonable."
+      },
+      {
+        code: "Pure Unit 2 M3",
+        title: "Pure Mathematics Unit 2: Counting, Matrices and Differential Equations",
+        focus: "Counting principles, permutations and combinations, matrices, matrix transformations, systems, differential equations and modelling with rates of change.",
+        coverage: "Strong",
+        tools: [
+          ["permutations-combinations", "develop counting, factorial, nPr and nCr reasoning"],
+          ["matrices", "support matrix operations, determinants, inverses and transformations"],
+          ["advanced-matrices", "extend matrix transformations and advanced matrix structure"],
+          ["linear-algebra", "support systems, linear transformations and vector spaces where needed"],
+          ["differential-equations", "cover separable, first-order linear, second-order and modelling problems"],
+          ["advanced-integration", "support integration methods needed in differential equations"],
+          ["functions", "connect solution families and model behaviour"]
+        ],
+        teacherMove: "Separate the structure from the calculation: identify the counting case, matrix operation or differential equation type before solving."
+      },
+      {
+        code: "Applied Unit 1",
+        title: "Applied Mathematics Unit 1: Statistical Analysis",
+        focus: "Collecting and describing data, sampling, uncertainty, probability, correlation, regression, statistical distributions, estimation, hypothesis testing and interpretation of statistical results.",
+        coverage: "Strong",
+        tools: [
+          ["sampling-methods-bias", "teach sampling choices, experimental design, bias and limitations"],
+          ["averages-range", "support summary statistics and spread"],
+          ["histograms", "develop grouped-data and frequency-density reasoning"],
+          ["cumulative-frequency-curves", "support medians, quartiles and percentiles"],
+          ["correlation-regression", "support regression lines, correlation and interpretation"],
+          ["tree-diagrams-conditional-probability", "generate conditional probability practice"],
+          ["discrete-random-variables", "support probability distributions and expectation"],
+          ["normal-distribution", "standardise and use normal distribution probabilities"],
+          ["hypothesis-testing", "develop inference decisions and conclusion wording"],
+          ["confidence-intervals", "support interval estimates and interpretation"]
+        ],
+        teacherMove: "Make the final statistical sentence do real work: it should refer to the data, context, uncertainty and conclusion."
+      },
+      {
+        code: "Applied Unit 2",
+        title: "Applied Mathematics Unit 2: Mathematical Applications",
+        focus: "Discrete mathematics, probability and distributions, optimisation, modelling, algorithms, counting, linear programming, mechanics, forces, motion, energy, momentum and interpretation of applied models.",
+        coverage: "Strong",
+        tools: [
+          ["linear-programming", "support optimisation with constraints and feasible regions"],
+          ["permutations-combinations", "develop counting structures for discrete mathematics"],
+          ["poisson-distribution", "support probability distribution practice"],
+          ["binomial-geometric-distribution", "generate binomial and geometric distribution questions"],
+          ["continuous-random-variables", "extend probability into density functions and integration"],
+          ["motion-graphs-constant-acceleration", "interpret distance-time and velocity-time graphs"],
+          ["equations-of-motion", "generate constant-acceleration practice"],
+          ["newtons-second-law", "model resultant force and F = ma questions"],
+          ["friction", "support limiting equilibrium and friction models"],
+          ["moments", "generate turning-effect and equilibrium questions"],
+          ["projectiles", "support projectile-motion modelling"],
+          ["momentum", "generate momentum and impulse questions"],
+          ["work-energy-power", "support work, energy and power modelling"]
+        ],
+        teacherMove: "Start from the real situation, draw the model, state assumptions, then solve and interpret the result in context."
+      },
+      {
+        code: "Integrated Mathematics",
+        title: "Integrated Mathematics: Foundations, Statistics and Calculus",
+        focus: "Foundational algebra and functions, mathematical modelling, statistics, probability, data interpretation, calculus ideas and reasoning across practical contexts.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "support foundational function notation and modelling"],
+          ["advanced-factorisation", "repair algebraic manipulation needed for modelling"],
+          ["graph-transformations-curve-sketching", "connect equations to graph behaviour"],
+          ["sampling-methods-bias", "support data collection and interpretation"],
+          ["correlation-regression", "build regression models and interpret results"],
+          ["normal-distribution", "support normal model calculations"],
+          ["hypothesis-testing", "develop inference and conclusion wording"],
+          ["limits-first-principles", "support calculus foundations"],
+          ["differentiation-polynomials", "secure introductory differentiation"],
+          ["integration", "cover introductory integration and accumulation"],
+          ["dynamic-classroom-displays", "support modelling and explanation in live lessons"]
+        ],
+        teacherMove: "Use this route for mixed applied teaching: keep the model, calculation and interpretation visible in every task."
+      }
+    ]
+  },
+  {
     id: "jamaica-nsc-7-9",
     label: "Jamaica NSC 7-9",
     country: "Jamaica",
@@ -16548,7 +16719,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
