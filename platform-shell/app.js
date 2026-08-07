@@ -11141,16 +11141,18 @@ function alignmentToolChip([slug, use]) {
 }
 
 function curriculumAlignmentById(id) {
-  return curriculumAlignmentFrameworks.find((framework) => framework.id === id) || curriculumAlignmentFrameworks[0];
+  return curriculumAlignmentFrameworks.find((framework) => framework.id === id) || null;
 }
 
 function curriculumAlignmentSelect(framework) {
+  const activeId = framework?.id || "";
   return `
     <label class="curriculum-selector" for="curriculumAlignmentSelect">
-      <span>Curriculum</span>
+      <span>Select curriculum</span>
       <select id="curriculumAlignmentSelect" onchange="location.hash='#/curriculum-alignments/'+this.value">
+        <option value="" disabled ${activeId ? "" : "selected"}>Choose a curriculum map...</option>
         ${curriculumAlignmentFrameworks.map((item) => `
-          <option value="${escapeHtml(item.id)}" ${item.id === framework.id ? "selected" : ""}>
+          <option value="${escapeHtml(item.id)}" ${item.id === activeId ? "selected" : ""}>
             ${escapeHtml(item.label)}${item.status === "Mapped" ? "" : ` - ${escapeHtml(item.status)}`}
           </option>
         `).join("")}
@@ -11214,12 +11216,68 @@ function textbookReverseToolIndex(course) {
 }
 
 function renderCurriculumAlignments() {
-  const requestedFramework = routeParts()[1] || "common-core";
-  const framework = curriculumAlignmentById(requestedFramework);
-  const reverseIndex = curriculumReverseToolIndex(framework);
-  const strongCount = framework.standards.filter((standard) => standard.coverage === "Strong").length;
-  const partialCount = framework.standards.filter((standard) => standard.coverage === "Partial").length;
-  const hasStandards = framework.standards.length > 0;
+  const requestedFramework = routeParts()[1] || "";
+  const framework = requestedFramework ? curriculumAlignmentById(requestedFramework) : null;
+  const reverseIndex = framework ? curriculumReverseToolIndex(framework) : [];
+  const strongCount = framework ? framework.standards.filter((standard) => standard.coverage === "Strong").length : 0;
+  const partialCount = framework ? framework.standards.filter((standard) => standard.coverage === "Partial").length : 0;
+  const hasStandards = Boolean(framework?.standards?.length);
+  if (!framework) {
+    app.innerHTML = `
+      ${pageHeader(
+        "Curriculum Alignments",
+        "Select a curriculum map to see how Kaizen Maths tools connect with the standards, strands, and classroom priorities teachers are working from.",
+        `<a class="button primary" href="#/coverage-map">Coverage Map</a><a class="button" href="#/textbook-alignments">Textbook Alignments</a>`
+      )}
+      <section class="textbook-page curriculum-page">
+        <section class="textbook-hero-panel curriculum-hero-panel curriculum-chooser-hero">
+          <div class="curriculum-hero-copy">
+            <span class="eyebrow">Curriculum Alignment Hub</span>
+            <h2>Choose the curriculum you want to review.</h2>
+            <p>Schools describe mathematics through different standards, exam bodies, grade levels, and strands. This page helps teachers and leaders connect that curriculum language to the Kaizen Maths tools available for teaching, practice, worksheets, assessment, and intervention.</p>
+          </div>
+          ${curriculumAlignmentSelect(null)}
+        </section>
+
+        <section class="textbook-map-panel curriculum-intro-panel">
+          <div class="coverage-panel-head">
+            <div>
+              <span class="eyebrow">How To Use This Page</span>
+              <h2>Start by selecting a curriculum</h2>
+              <p>Once selected, the alignment map loads as a vertical standards-style table so the connection between curriculum areas and Kaizen tools is easy to scan.</p>
+            </div>
+          </div>
+          <table class="textbook-alignment-table curriculum-guide-table">
+            <thead>
+              <tr>
+                <th scope="col">Step</th>
+                <th scope="col">What To Check</th>
+                <th scope="col">Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><span>1</span>Select</th>
+                <td><p class="textbook-focus-line">Choose the national, exam-board, or programme curriculum that best matches your school context.</p></td>
+                <td><small class="textbook-use-line">Loads the relevant standards map only when needed.</small></td>
+              </tr>
+              <tr>
+                <th scope="row"><span>2</span>Review</th>
+                <td><p class="textbook-focus-line">Scan the strand, topic focus, and teacher use notes in the table.</p></td>
+                <td><small class="textbook-use-line">Supports curriculum planning, intervention, and departmental consistency.</small></td>
+              </tr>
+              <tr>
+                <th scope="row"><span>3</span>Open Tools</th>
+                <td><p class="textbook-focus-line">Use the related Kaizen tools for classroom examples, worksheets, and assessment practice.</p></td>
+                <td><small class="textbook-use-line">Moves from curriculum intent to usable teaching resources.</small></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </section>
+    `;
+    return;
+  }
   app.innerHTML = `
     ${pageHeader(
       "Curriculum Alignments",
@@ -11230,23 +11288,10 @@ function renderCurriculumAlignments() {
       <section class="textbook-hero-panel curriculum-hero-panel curriculum-chooser-hero">
         <div class="curriculum-hero-copy">
           <span class="eyebrow">Curriculum Alignment Hub</span>
-          <h2>Country / Framework → Level / Strand → Related Kaizen tools</h2>
+          <h2>${escapeHtml(framework.label)} alignment map</h2>
           <p>${escapeHtml(framework.description)}</p>
         </div>
         ${curriculumAlignmentSelect(framework)}
-      </section>
-
-      <section class="textbook-series-panel curriculum-framework-panel">
-        <div class="coverage-panel-head">
-          <div>
-            <span class="eyebrow">Choose Framework</span>
-            <h2>Curriculum routes</h2>
-            <p>Select the curriculum language teachers and schools recognise. These are pilot alignment maps, not official endorsements.</p>
-          </div>
-        </div>
-        <div class="curriculum-framework-grid" aria-label="Available curriculum frameworks">
-          ${curriculumFrameworkCards(framework)}
-        </div>
       </section>
 
       <section class="textbook-series-panel curriculum-summary-panel">
@@ -11267,43 +11312,44 @@ function renderCurriculumAlignments() {
       </section>
 
       ${hasStandards ? `
-        <section class="textbook-map-panel curriculum-strand-panel">
+        <section class="textbook-map-panel">
           <div class="coverage-panel-head">
             <div>
-              <span class="eyebrow">Level / Strand</span>
-              <h2>Jump to a strand</h2>
-              <p>Use this as the fast route from curriculum area to the matching Kaizen tools.</p>
+              <span class="eyebrow">Curriculum To Tool Map</span>
+              <h2>${escapeHtml(framework.label)} pilot map</h2>
+              <p>A compact standards-style table showing the curriculum area, teaching focus, and related Kaizen tools.</p>
             </div>
             <a class="button" href="#/tools">Open Tool Library</a>
           </div>
-          <nav class="curriculum-strand-nav" aria-label="${escapeHtml(framework.label)} strands">
-            ${curriculumStrandNav(framework)}
-          </nav>
-        </section>
-
-        <section class="curriculum-map-grid" aria-label="${escapeHtml(framework.label)} curriculum-to-tool map">
-          ${framework.standards.map((standard, index) => `
-            <article class="curriculum-standard-card" id="${escapeHtml(curriculumStandardDomId(framework, standard, index))}">
-              <div class="curriculum-standard-head">
-                <div>
-                  <span class="eyebrow">${escapeHtml(standard.code)}</span>
-                  <h2>${escapeHtml(standard.title)}</h2>
-                </div>
-                <small data-coverage="${escapeHtml(standard.coverage.toLowerCase())}">${escapeHtml(standard.coverage)} match</small>
-              </div>
-              <p class="textbook-focus-line">${escapeHtml(standard.focus)}</p>
-              <div class="curriculum-teacher-move">
-                <span>Teacher move</span>
-                <p>${escapeHtml(standard.teacherMove)}</p>
-              </div>
-              <div>
-                <span class="curriculum-tool-label">Related Kaizen tools</span>
-                <div class="textbook-tool-list curriculum-tool-list">
-                  ${standard.tools.map(alignmentToolChip).join("")}
-                </div>
-              </div>
-            </article>
-          `).join("")}
+          <table class="textbook-alignment-table">
+            <thead>
+              <tr>
+                <th scope="col">Curriculum Area</th>
+                <th scope="col">Focus and Use</th>
+                <th scope="col">Kaizen Tools</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${framework.standards.map((standard) => `
+                <tr>
+                  <th scope="row">
+                    <span>${escapeHtml(standard.code)}</span>
+                    ${escapeHtml(standard.title)}
+                    <small data-coverage="${escapeHtml(standard.coverage.toLowerCase())}">${escapeHtml(standard.coverage)} match</small>
+                  </th>
+                  <td>
+                    <p class="textbook-focus-line">${escapeHtml(standard.focus)}</p>
+                    <small class="textbook-use-line">${escapeHtml(standard.teacherMove)}</small>
+                  </td>
+                  <td>
+                    <div class="textbook-tool-list">
+                      ${standard.tools.map(alignmentToolChip).join("")}
+                    </div>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
         </section>
 
         <section class="textbook-map-panel">
