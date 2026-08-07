@@ -9355,6 +9355,187 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    id: "singapore-mathematics",
+    label: "Singapore Mathematics",
+    country: "Singapore / International",
+    status: "Mapped",
+    title: "Singapore Mathematics Curriculum Alignment",
+    description: "A pathway map linking Singapore Primary and Secondary Mathematics, O-Level Mathematics, O-Level Additional Mathematics, A-Level H2 Mathematics and H2 Further Mathematics to Kaizen Maths teaching tools, classroom displays, worked examples, worksheets and assessment practice.",
+    basis: "Pilot alignment based on Singapore Ministry of Education mathematics curriculum principles and SEAB GCE O-Level and A-Level Mathematics syllabus routes, including Mathematics, Additional Mathematics, H2 Mathematics and H2 Further Mathematics.",
+    standards: [
+      {
+        code: "Primary / Lower Secondary",
+        title: "Primary and Lower Secondary: Number, Algebra, Geometry, Measurement, Statistics and Probability",
+        focus: "Number sense, fractions, decimals, percentages, ratio, rate, algebraic thinking, equations, geometry, measurement, graphs, data handling, probability and problem solving through representation and reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "secure arithmetic and multi-step calculations"],
+          ["integer-operations", "develop directed-number operations"],
+          ["fractions-practice", "build fraction and mixed-number fluency"],
+          ["decimals-practice-lab", "support decimal place value and calculation"],
+          ["percentages-real-world", "connect percentages to applied contexts"],
+          ["ratio-proportion", "develop proportional reasoning and sharing"],
+          ["bar-models", "support visual problem solving and comparison reasoning"],
+          ["area-models", "support multiplication, fractions and visual structure"],
+          ["linear-equations", "solve equations with clear inverse operations"],
+          ["classroom-displays", "project blank grids, shapes and display templates"]
+        ],
+        teacherMove: "Use representations deliberately: Singapore-style teaching works best when students move from concrete or pictorial models into abstract notation."
+      },
+      {
+        code: "O-Level Mathematics 1",
+        title: "O-Level Mathematics: Number, Algebra and Graphs",
+        focus: "Indices, standard form, percentages, ratio, rate, algebraic manipulation, formulae, equations, inequalities, functions, graphs, coordinate geometry, approximation and numerical reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["upper-lower-bounds", "develop accuracy, estimation and bounds"],
+          ["advanced-factorisation", "support factorising, expanding and algebraic structure"],
+          ["algebraic-fractions", "simplify and solve rational expressions"],
+          ["linear-equations", "solve linear equations cleanly"],
+          ["simultaneous-equations", "solve systems by elimination and substitution"],
+          ["quadratic-factorisation", "factorise and solve quadratic equations"],
+          ["functions", "connect functions, notation, domain and range"],
+          ["straight-lines", "support gradient, intercepts and coordinate geometry"],
+          ["graph-transformations-curve-sketching", "connect equations to graph behaviour"],
+          ["numerical-methods", "support approximation and iterative thinking"]
+        ],
+        teacherMove: "Keep equivalent algebraic lines vertical and connect algebra to graphs so students see structure, not just procedures."
+      },
+      {
+        code: "O-Level Mathematics 2",
+        title: "O-Level Mathematics: Geometry, Trigonometry, Vectors and Measurement",
+        focus: "Angles, polygons, circles, similarity, congruence, transformations, Pythagoras, trigonometry, bearings, mensuration, vectors, scale drawing and spatial reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["polygons-angles", "generate interior and exterior angle problems"],
+          ["circle-theorems", "support theorem-based circle reasoning"],
+          ["scale-drawing-similar-shapes", "connect similarity, scale factor and ratios"],
+          ["pythagoras-theorem", "generate right-triangle side questions"],
+          ["trigonometric-ratios", "practise right-angled trigonometry"],
+          ["sine-cosine-rule", "extend to non-right-triangle trigonometry"],
+          ["bearings", "develop bearing and hidden-bearing reasoning"],
+          ["free-vectors", "secure column-vector notation and vector geometry"],
+          ["circles-area-circumference", "generate circle area and circumference practice"],
+          ["volume-surface-area-prisms", "support volume and surface area practice"]
+        ],
+        teacherMove: "Start from the diagram and the named rule; students should know whether they are using a theorem, similarity, trigonometry or vector reasoning."
+      },
+      {
+        code: "O-Level Mathematics 3",
+        title: "O-Level Mathematics: Statistics, Probability and Data Interpretation",
+        focus: "Data representation, averages, spread, cumulative frequency, histograms, probability, set notation, Venn diagrams, conditional probability, scatter diagrams and interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "generate mean, median, mode, range and missing-value practice"],
+          ["histograms", "develop frequency-density and grouped-data interpretation"],
+          ["cumulative-frequency-curves", "support medians, quartiles and percentiles"],
+          ["tree-diagrams-conditional-probability", "generate probability tree questions"],
+          ["venn-diagrams", "connect set notation, regions and probability"],
+          ["correlation-regression", "support scatter diagrams and correlation"],
+          ["sampling-methods-bias", "teach sampling choices and limitations"],
+          ["kaizen-large-data-set", "support contextual data interpretation"]
+        ],
+        teacherMove: "Require interpretation in context: the graph, statistic or probability statement should answer the question being asked."
+      },
+      {
+        code: "Additional Mathematics 1",
+        title: "O-Level Additional Mathematics: Algebra, Functions and Graphs",
+        focus: "Quadratic functions, polynomial and rational expressions, equations, inequalities, surds, logarithms, exponential functions, modulus, graph transformations, coordinate geometry and advanced algebraic manipulation.",
+        coverage: "Strong",
+        tools: [
+          ["advanced-factorisation", "develop algebraic factor structure and manipulation"],
+          ["quadratic-equations", "solve quadratics by several methods"],
+          ["functions", "support function notation, inverses and composition"],
+          ["graph-transformations-curve-sketching", "connect equations to transformed graphs"],
+          ["roots-of-equations", "link roots, factors and graph intersections"],
+          ["logarithms-practice", "generate logarithmic and exponential equation practice"],
+          ["surds-radicals", "support exact surd simplification and rationalising"],
+          ["straight-lines", "support coordinate geometry and gradients"],
+          ["transposition-formulae", "build confidence rearranging formulae"],
+          ["dynamic-classroom-displays", "animate graph changes for teacher modelling"]
+        ],
+        teacherMove: "Ask students to explain why a chosen algebraic form is useful: factorised, expanded, completed-square, logarithmic or graphical."
+      },
+      {
+        code: "Additional Mathematics 2",
+        title: "O-Level Additional Mathematics: Trigonometry and Calculus",
+        focus: "Trigonometric functions, identities, equations, graph transformations, differentiation, rates of change, tangents and normals, stationary points, integration and area under a curve.",
+        coverage: "Strong",
+        tools: [
+          ["trigonometric-functions", "support exact values, identities and proof-style trig"],
+          ["trig-equation-solver", "generate trigonometric equation practice"],
+          ["trig-graphs-transformations", "show transformed trigonometric graphs"],
+          ["limits-first-principles", "support introductory limit and first-principles reasoning"],
+          ["differentiation-polynomials", "secure introductory differentiation"],
+          ["differentiation-rules", "practise product, quotient and chain rule where needed"],
+          ["advanced-differentiation", "develop tangents, normals, stationary points and implicit extension"],
+          ["integration", "cover basic and definite integration"],
+          ["advanced-integration", "support substitution and integration by parts as extension"]
+        ],
+        teacherMove: "Make the rule visible before the result; calculus and trigonometry should be shown through clear mathematical lines, not only described in words."
+      },
+      {
+        code: "A-Level H2 Mathematics Pure",
+        title: "A-Level H2 Mathematics: Pure Mathematics",
+        focus: "Functions, graphs, sequences and series, vectors, complex numbers, calculus, differential equations, numerical methods and proof-oriented algebraic reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "support function notation, composite and inverse functions"],
+          ["graph-transformations-curve-sketching", "connect function behaviour to graphs"],
+          ["sequences-series", "generate sequence and series practice"],
+          ["series-expansions", "support Taylor and Maclaurin series where needed"],
+          ["free-vectors", "secure vector notation and geometry"],
+          ["further-vectors", "extend vector reasoning for H2 classes"],
+          ["complex-numbers", "support complex arithmetic, polar form and roots"],
+          ["advanced-differentiation", "develop implicit, parametric and applied differentiation"],
+          ["advanced-integration", "support substitution, parts and algebraic integration"],
+          ["differential-equations", "cover differential-equation modelling"],
+          ["numerical-methods", "support approximation and iteration"]
+        ],
+        teacherMove: "Link symbolic methods to graphical and modelling meaning, especially in calculus, vectors and complex numbers."
+      },
+      {
+        code: "A-Level H2 Mathematics Statistics",
+        title: "A-Level H2 Mathematics: Probability and Statistics",
+        focus: "Permutations, combinations, probability, random variables, binomial and normal distributions, sampling, correlation, regression, hypothesis testing and statistical interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["permutations-combinations", "develop counting, nPr and nCr reasoning"],
+          ["tree-diagrams-conditional-probability", "generate conditional probability practice"],
+          ["discrete-random-variables", "support probability distributions and expectation"],
+          ["binomial-geometric-distribution", "generate binomial and geometric distribution questions"],
+          ["normal-distribution", "standardise and use normal distribution probabilities"],
+          ["sampling-methods-bias", "support sampling and statistical limitations"],
+          ["correlation-regression", "support regression lines and interpretation"],
+          ["hypothesis-testing", "develop inference decisions and conclusion wording"],
+          ["confidence-intervals", "support interval estimates and interpretation where used"]
+        ],
+        teacherMove: "State the model and conditions before calculation, then write the conclusion in the context of the problem."
+      },
+      {
+        code: "H2 Further Mathematics",
+        title: "A-Level H2 Further Mathematics: Advanced Pure, Statistics and Mechanics Support",
+        focus: "Advanced algebra, matrices, linear algebra, complex numbers, polar coordinates, further calculus, differential equations, numerical methods, probability distributions, statistics and mechanics-style modelling.",
+        coverage: "Strong",
+        tools: [
+          ["advanced-matrices", "extend matrix transformations and advanced matrix structure"],
+          ["linear-algebra", "support systems, subspaces and linear transformations"],
+          ["complex-numbers", "support polar form, roots and loci"],
+          ["polar-coordinates", "support polar representation and curve interpretation"],
+          ["series-expansions", "generate Taylor and Maclaurin series practice"],
+          ["advanced-integration", "support extended integration methods"],
+          ["differential-equations", "support separable, first-order linear, second-order and modelling problems"],
+          ["continuous-random-variables", "extend probability into density functions and integration"],
+          ["poisson-distribution", "support additional distribution practice"],
+          ["motion-graphs-constant-acceleration", "support mechanics-style motion modelling"],
+          ["newtons-second-law", "model force and acceleration questions"],
+          ["work-energy-power", "support work, energy and power modelling"]
+        ],
+        teacherMove: "Use this as an extension and enrichment route; keep each advanced method anchored to why that method is being used."
+      }
+    ]
+  },
+  {
     id: "cambridge-igcse",
     label: "Cambridge IGCSE",
     country: "International",
@@ -16719,7 +16900,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
