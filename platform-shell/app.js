@@ -8835,6 +8835,198 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    id: "pearson-edexcel",
+    label: "Pearson Edexcel",
+    country: "United Kingdom / International",
+    status: "Mapped",
+    title: "Pearson Edexcel Mathematics Curriculum Alignment",
+    description: "A Pearson Edexcel route map linking GCSE, International GCSE, A-level, International A-level, and Further Mathematics content to Kaizen Maths tools for classroom teaching, practice, worksheets, assessment and intervention.",
+    basis: "Pilot alignment based on Pearson Edexcel GCSE Mathematics, Pearson Edexcel International GCSE Mathematics A, Pearson Edexcel International GCSE Further Pure Mathematics, Pearson Edexcel AS/A-level Mathematics and Further Mathematics, and Pearson Edexcel International AS/A Level Mathematics routes.",
+    standards: [
+      {
+        code: "GCSE / IGCSE Number",
+        title: "GCSE and International GCSE: Number, Ratio and Accuracy",
+        focus: "Number operations, factors and multiples, fractions, decimals, percentages, ratio, proportion, standard form, estimation, bounds, indices, surds, money and real-life number contexts.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "secure arithmetic across integers, decimals and negatives"],
+          ["fractions-practice", "develop fraction and mixed-number operations"],
+          ["decimals-practice-lab", "support decimal calculations and place value"],
+          ["hcf-lcm", "practise factors, multiples, HCF, LCM and prime factorisation"],
+          ["powers-of-10", "support standard form and powers of ten"],
+          ["upper-lower-bounds", "generate error interval and bounds questions"],
+          ["surds-radicals", "extend exact-number work with surds"],
+          ["percentages-real-world", "develop percentage change, reverse percentage and contextual percentage work"],
+          ["ratio-proportion", "support ratio, proportion and sharing"],
+          ["financial-real-life-maths", "generate money, wages, interest, bills and consumer arithmetic practice"]
+        ],
+        teacherMove: "Use this as the fluency and intervention strand before algebra, graphs and applied problem solving."
+      },
+      {
+        code: "GCSE / IGCSE Algebra",
+        title: "GCSE and International GCSE: Algebra, Formulae and Graphs",
+        focus: "Algebraic notation, substitution, simplification, expanding, factorising, equations, inequalities, formula rearrangement, simultaneous equations, quadratics, sequences, functions and graph interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["substitution", "practise substitution into expressions and formulae"],
+          ["simplification", "collect like terms and simplify expressions"],
+          ["bracket-expansion", "expand single and double brackets"],
+          ["advanced-factorisation", "develop common-factor, grouping and quadratic factorisation"],
+          ["linear-equations", "solve linear equations from simple to complex forms"],
+          ["inequalities", "solve and represent inequalities"],
+          ["transposition-formulae", "change the subject of formulae"],
+          ["simultaneous-equations", "solve simultaneous equations by elimination and substitution"],
+          ["quadratic-equations", "solve quadratics by factorising, completing the square and formula methods"],
+          ["sequences", "generate nth-term and pattern questions"],
+          ["functions", "support functions, mappings, domain, range and inverse/composite ideas"],
+          ["straight-lines", "connect equations to gradients, intercepts and coordinate graphs"]
+        ],
+        teacherMove: "Keep the algebra vertical and equivalent line by line, then connect symbolic work to graph or table representations."
+      },
+      {
+        code: "GCSE / IGCSE Geometry",
+        title: "GCSE and International GCSE: Geometry, Measures and Trigonometry",
+        focus: "Angles, polygons, constructions, loci, similarity, congruence, transformations, bearings, Pythagoras, trigonometry, circles, compound measures, area, volume and surface area.",
+        coverage: "Strong",
+        tools: [
+          ["missing-angles", "practise line, triangle, quadrilateral and parallel-line angle facts"],
+          ["polygons-angles", "generate interior and exterior angle problems"],
+          ["transformations", "support translations, reflections, rotations and enlargements"],
+          ["loci-constructions", "cover construction and loci reasoning"],
+          ["scale-drawing-similar-shapes", "connect scale factor, similarity and area or volume ratios"],
+          ["pythagoras-theorem", "generate right-triangle side problems"],
+          ["trigonometric-ratios", "practise right-angled trigonometry"],
+          ["sine-cosine-rule", "extend to non-right-triangle trigonometry"],
+          ["bearings", "develop bearings and hidden-bearing reasoning"],
+          ["circles-area-circumference", "generate circle area and circumference practice"],
+          ["sectors-arc-length", "support arc length, sector area and segment contexts"],
+          ["volume-surface-area-prisms", "develop volume and surface area of prisms"],
+          ["cylinders-cones-volume-surface-area", "extend measurement to cylinders and cones"]
+        ],
+        teacherMove: "Start with the diagram and named rule, then show formula choice, substitution, units and final interpretation."
+      },
+      {
+        code: "GCSE / IGCSE Data",
+        title: "GCSE and International GCSE: Probability, Statistics and Data Handling",
+        focus: "Probability, Venn diagrams, tree diagrams, frequency tables, averages, range, charts, histograms, cumulative frequency, scatter diagrams, correlation and interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["tree-diagrams-conditional-probability", "generate independent, dependent and conditional probability tree questions"],
+          ["venn-diagrams", "connect set notation, regions, complements and probabilities"],
+          ["averages-range", "practise mean, median, mode, range and missing values"],
+          ["histograms", "develop frequency density and grouped-data interpretation"],
+          ["cumulative-frequency-curves", "work with ogives, medians, quartiles and percentiles"],
+          ["correlation-regression", "support scatter diagrams, correlation and regression lines"],
+          ["sampling-methods-bias", "teach sampling choices and bias where required"]
+        ],
+        teacherMove: "Require students to interpret the statistic, probability or graph in context, not only calculate it."
+      },
+      {
+        code: "IGCSE FPM",
+        title: "International GCSE Further Pure Mathematics",
+        focus: "Higher-tier extension into functions, quadratics, inequalities, polynomial factors, logarithmic and exponential functions, trigonometry, matrices, calculus, vectors, binomial expansion and proof-style algebra.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "develop function notation, inverse and composite functions"],
+          ["quadratic-equations", "support advanced quadratic methods and graphs"],
+          ["advanced-factorisation", "develop polynomial factor structure"],
+          ["logarithms-practice", "generate logarithmic and exponential equation practice"],
+          ["trigonometric-functions", "support exact values, identities and proof-style trig"],
+          ["matrices", "introduce matrix operations and transformations"],
+          ["free-vectors", "secure column-vector notation and vector geometry"],
+          ["binomial-expansion", "support binomial coefficients and expansions"],
+          ["differentiation-polynomials", "secure introductory differentiation"],
+          ["integration", "cover basic integration and definite integrals"]
+        ],
+        teacherMove: "Use this row as the IGCSE-to-A-level bridge; keep advanced notation and calculus rules very explicit."
+      },
+      {
+        code: "A-Level Maths Pure",
+        title: "AS/A-Level Mathematics: Pure Mathematics",
+        focus: "Proof, algebra and functions, coordinate geometry, sequences and series, trigonometry, exponentials and logarithms, differentiation, integration, numerical methods and vectors.",
+        coverage: "Strong",
+        tools: [
+          ["proof-by-induction", "support proof language and structure"],
+          ["advanced-factorisation", "develop advanced algebraic manipulation"],
+          ["partial-fractions", "prepare rational expressions for integration"],
+          ["functions", "develop function notation, composition and inverses"],
+          ["straight-lines", "support coordinate geometry and gradients"],
+          ["equation-of-a-circle", "connect centre, radius, tangents and intersections"],
+          ["sequences-series", "generate sequence and series practice"],
+          ["trigonometric-functions", "support trig identities and exact values"],
+          ["logarithms-practice", "generate exponential and logarithmic equation practice"],
+          ["advanced-differentiation", "develop implicit, parametric, tangents and normals"],
+          ["advanced-integration", "practise substitution and integration by parts"],
+          ["numerical-methods", "support iteration, Newton-Raphson and trapezium rule"],
+          ["free-vectors", "practise column vectors and vector geometry"]
+        ],
+        teacherMove: "Show the rule, substitution into the rule, and simplified result; A-level students still need complete algebraic working."
+      },
+      {
+        code: "A-Level Maths Applied",
+        title: "AS/A-Level Mathematics: Statistics, Mechanics and Large Data Set",
+        focus: "Sampling, data presentation, probability, statistical distributions, hypothesis testing, correlation, regression, quantities and units, kinematics, forces and Newton's laws.",
+        coverage: "Strong",
+        tools: [
+          ["sampling-methods-bias", "teach sampling methods, bias and limitations"],
+          ["kaizen-large-data-set", "support large-data-set familiarisation and contextual questions"],
+          ["histograms", "develop grouped-data and frequency-density reasoning"],
+          ["cumulative-frequency-curves", "support medians, quartiles and percentiles"],
+          ["correlation-regression", "support regression, correlation and interpolation"],
+          ["tree-diagrams-conditional-probability", "generate probability tree questions"],
+          ["discrete-random-variables", "support probability distributions and expectation"],
+          ["binomial-geometric-distribution", "generate binomial and geometric distribution practice"],
+          ["normal-distribution", "standardise and use normal distribution probabilities"],
+          ["hypothesis-testing", "develop inference decisions and conclusion wording"],
+          ["motion-graphs-constant-acceleration", "interpret distance-time and velocity-time graphs"],
+          ["equations-of-motion", "generate SUVAT and constant-acceleration practice"],
+          ["newtons-second-law", "model resultant force and F = ma questions"]
+        ],
+        teacherMove: "For statistics, state the model and conclusion in context; for mechanics, draw the diagram and choose a positive direction first."
+      },
+      {
+        code: "Further Maths",
+        title: "AS/A-Level Further Mathematics",
+        focus: "Core pure mathematics, complex numbers, matrices, linear algebra, further calculus, differential equations, polar coordinates, hyperbolic functions, further statistics, further mechanics and decision mathematics.",
+        coverage: "Strong",
+        tools: [
+          ["complex-numbers", "generate complex-number arithmetic, polar form, roots and loci practice"],
+          ["advanced-matrices", "develop transformations, eigenvalues and diagonalisation"],
+          ["linear-algebra", "support systems, subspaces and linear transformations"],
+          ["series-expansions", "generate Taylor and Maclaurin series practice"],
+          ["differential-equations", "cover separable, first-order linear, second-order and modelling problems"],
+          ["polar-coordinates", "generate polar coordinate and polar curve practice"],
+          ["hyperbolic-functions", "support hyperbolic identities and calculus links"],
+          ["poisson-distribution", "support further statistics distribution work"],
+          ["continuous-random-variables", "extend probability into density functions and integration"],
+          ["momentum", "generate momentum and impulse questions"],
+          ["work-energy-power", "support work, energy and power modelling"],
+          ["linear-programming", "support decision mathematics and optimisation contexts"]
+        ],
+        teacherMove: "Separate core pure from optional applied pathways so teachers can align practice to the exact Edexcel route being taught."
+      },
+      {
+        code: "IAL",
+        title: "International AS/A Level Mathematics Modular Route",
+        focus: "Pearson Edexcel IAL modular combinations across Pure Mathematics, Further Pure Mathematics, Statistics, Mechanics and Decision Mathematics.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "support Pure Mathematics units"],
+          ["advanced-differentiation", "support calculus and coordinate-geometry units"],
+          ["advanced-integration", "support integration methods and applications"],
+          ["complex-numbers", "support Further Pure routes"],
+          ["matrices", "support matrix and transformation routes"],
+          ["normal-distribution", "support Statistics units"],
+          ["hypothesis-testing", "support inference and testing units"],
+          ["equations-of-motion", "support Mechanics units"],
+          ["newtons-second-law", "support force and acceleration modelling"],
+          ["linear-programming", "support Decision Mathematics optimisation routes"]
+        ],
+        teacherMove: "Use this row for international schools choosing modular Pearson routes; map practice to the exact unit combination a class is taking."
+      }
+    ]
+  },
+  {
     id: "cambridge-igcse",
     label: "Cambridge IGCSE",
     country: "International",
@@ -16028,7 +16220,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, Cambridge IGCSE Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
