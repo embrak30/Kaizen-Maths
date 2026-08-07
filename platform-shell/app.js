@@ -11219,8 +11219,6 @@ function renderCurriculumAlignments() {
   const requestedFramework = routeParts()[1] || "";
   const framework = requestedFramework ? curriculumAlignmentById(requestedFramework) : null;
   const reverseIndex = framework ? curriculumReverseToolIndex(framework) : [];
-  const strongCount = framework ? framework.standards.filter((standard) => standard.coverage === "Strong").length : 0;
-  const partialCount = framework ? framework.standards.filter((standard) => standard.coverage === "Partial").length : 0;
   const hasStandards = Boolean(framework?.standards?.length);
   if (!framework) {
     app.innerHTML = `
@@ -11294,23 +11292,6 @@ function renderCurriculumAlignments() {
         ${curriculumAlignmentSelect(framework)}
       </section>
 
-      <section class="textbook-series-panel curriculum-summary-panel">
-        <div class="coverage-panel-head">
-          <div>
-            <span class="eyebrow">${escapeHtml(framework.country)} · ${escapeHtml(framework.status)}</span>
-            <h2>${escapeHtml(framework.label)} alignment</h2>
-            <p>${escapeHtml(framework.basis)}</p>
-          </div>
-          ${hasStandards
-            ? `<div class="textbook-metrics" aria-label="Curriculum alignment summary">
-                <span><strong>${framework.standards.length}</strong> standards rows</span>
-                <span><strong>${strongCount}</strong> strong matches</span>
-                <span><strong>${partialCount}</strong> partial matches</span>
-              </div>`
-            : `<span class="curriculum-status-note">Coming next</span>`}
-        </div>
-      </section>
-
       ${hasStandards ? `
         <section class="textbook-map-panel">
           <div class="coverage-panel-head">
@@ -11335,7 +11316,6 @@ function renderCurriculumAlignments() {
                   <th scope="row">
                     <span>${escapeHtml(standard.code)}</span>
                     ${escapeHtml(standard.title)}
-                    <small data-coverage="${escapeHtml(standard.coverage.toLowerCase())}">${escapeHtml(standard.coverage)} match</small>
                   </th>
                   <td>
                     <p class="textbook-focus-line">${escapeHtml(standard.focus)}</p>
