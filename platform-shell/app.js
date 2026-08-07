@@ -9536,6 +9536,174 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    id: "ontario-mathematics",
+    label: "Ontario Mathematics",
+    country: "Canada",
+    status: "Mapped",
+    title: "Ontario Mathematics Curriculum Alignment",
+    description: "A curriculum pathway map linking Ontario elementary mathematics, Grade 9 de-streamed mathematics, and senior secondary mathematics courses to Kaizen Maths teaching tools, classroom displays, worked examples, worksheets and assessment practice.",
+    basis: "Pilot alignment based on Ontario Mathematics Grades 1-8, Grade 9 de-streamed Mathematics, and senior secondary mathematics course pathways including Principles of Mathematics, Functions, Advanced Functions, Calculus and Vectors, and Mathematics of Data Management.",
+    standards: [
+      {
+        code: "Grades 1-8 Number",
+        title: "Elementary Mathematics: Number, Financial Literacy and Problem Solving",
+        focus: "Whole numbers, operations, fractions, decimals, percentages, ratio, rate, proportional reasoning, money, financial literacy, estimation, mental strategies and multi-step problem solving.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "secure arithmetic and multi-step calculations"],
+          ["integer-operations", "develop directed-number operations where needed"],
+          ["fractions-practice", "build fraction and mixed-number fluency"],
+          ["decimals-practice-lab", "support decimal place value and calculation"],
+          ["simple-percentage-tasks", "develop percentage foundations"],
+          ["percentages-real-world", "connect percentages to applied and financial contexts"],
+          ["ratio-proportion", "support proportional reasoning and sharing"],
+          ["financial-real-life-maths", "generate money, wages, discounts, tax and interest contexts"],
+          ["bar-models", "support visual comparison and part-whole reasoning"],
+          ["area-models", "support arrays, multiplication and fractional reasoning"]
+        ],
+        teacherMove: "Use visual models first, then move students into number sentences and abstract notation once the structure is clear."
+      },
+      {
+        code: "Grades 1-8 Algebra Data Spatial",
+        title: "Elementary Mathematics: Algebra, Data and Spatial Sense",
+        focus: "Patterns, variables, equations, coding-style thinking, data collection and displays, probability, measurement, geometry, location, movement, transformations and spatial reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["sequences", "generate pattern and rule practice"],
+          ["linear-equations", "solve simple equations with inverse operations"],
+          ["functions", "connect mappings, rules and inputs or outputs"],
+          ["averages-range", "support data summaries"],
+          ["histograms", "extend grouped-data thinking where appropriate"],
+          ["tree-diagrams-conditional-probability", "support probability structure"],
+          ["venn-diagrams", "connect classification, sets and probability"],
+          ["conversions-teaching", "practise measurement conversions"],
+          ["area-rectangles", "support area, perimeter and composite figures"],
+          ["transformations", "generate translations, reflections, rotations and enlargements"],
+          ["classroom-displays", "project grids, shapes, clocks, manipulatives and display templates"]
+        ],
+        teacherMove: "Keep the representation visible: tables, graphs, diagrams and concrete models should support the written mathematics."
+      },
+      {
+        code: "Grade 9 MTH1W",
+        title: "Grade 9 Mathematics: De-Streamed Mathematics",
+        focus: "Number, algebra, linear and non-linear relationships, coding and modelling ideas, data, geometry, measurement, financial literacy and mathematical processes.",
+        coverage: "Strong",
+        tools: [
+          ["integer-operations", "repair directed-number fluency"],
+          ["fractions-practice", "strengthen rational-number operations"],
+          ["ratio-proportion", "support proportional relationships"],
+          ["simplification", "collect like terms and simplify expressions"],
+          ["bracket-expansion", "expand expressions"],
+          ["linear-equations", "solve linear equations"],
+          ["inequalities", "solve and represent inequalities"],
+          ["straight-lines", "support slope, intercepts and linear relations"],
+          ["functions", "connect rules, tables, graphs and notation"],
+          ["quadratic-equations", "introduce non-linear relationships where appropriate"],
+          ["averages-range", "support data analysis"],
+          ["financial-real-life-maths", "connect mathematics to personal finance contexts"]
+        ],
+        teacherMove: "Use Grade 9 as a bridge year: students should connect numerical, algebraic, graphical and contextual representations of the same idea."
+      },
+      {
+        code: "Grade 10 Mathematics",
+        title: "Grade 10 Mathematics: Academic, Applied and Workplace Pathways",
+        focus: "Linear systems, analytic geometry, quadratic relationships, measurement, trigonometry, financial applications, proportional reasoning and applied problem solving across pathway levels.",
+        coverage: "Strong",
+        tools: [
+          ["straight-lines", "generate slope, intercept and coordinate-geometry practice"],
+          ["simultaneous-equations", "solve systems by substitution and elimination"],
+          ["quadratic-factorisation", "factorise and solve quadratic equations"],
+          ["quadratic-equations", "extend quadratic methods and graph links"],
+          ["graph-transformations-curve-sketching", "connect equations to graph behaviour"],
+          ["pythagoras-theorem", "generate right-triangle side questions"],
+          ["trigonometric-ratios", "practise right-angled trigonometry"],
+          ["area-rectangles", "support area and composite figures"],
+          ["volume-surface-area-prisms", "generate volume and surface area practice"],
+          ["financial-real-life-maths", "support applied finance and workplace contexts"]
+        ],
+        teacherMove: "Make pathway differences about support and context, not vague standards: keep core concepts visible and adjust scaffolding."
+      },
+      {
+        code: "Grade 11 Functions",
+        title: "Grade 11 Functions and Applications",
+        focus: "Functions, transformations, quadratic, polynomial, rational, exponential, logarithmic and trigonometric relationships, rates of change, modelling and applied contexts.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "support function notation, domain, range, inverses and composition"],
+          ["graph-transformations-curve-sketching", "connect algebraic changes to graph behaviour"],
+          ["advanced-factorisation", "develop polynomial factor structure"],
+          ["roots-of-equations", "connect roots, factors and graphs"],
+          ["logarithms-practice", "generate exponential and logarithmic equation practice"],
+          ["trig-graphs-transformations", "show transformed trigonometric graphs"],
+          ["trigonometric-functions", "support exact values, identities and equations"],
+          ["straight-lines", "support rates of change and analytic geometry"],
+          ["numerical-methods", "support approximation and iterative reasoning"],
+          ["dynamic-classroom-displays", "animate graph and parameter changes for teacher modelling"]
+        ],
+        teacherMove: "Ask students to justify which representation best answers the question: equation, graph, table or context."
+      },
+      {
+        code: "Grade 12 Advanced Functions",
+        title: "Grade 12 Advanced Functions",
+        focus: "Polynomial, rational, logarithmic, exponential and trigonometric functions; transformations; rates of change; combinations of functions; equations and modelling.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "develop advanced function notation and operations"],
+          ["advanced-factorisation", "support polynomial and rational manipulation"],
+          ["algebraic-fractions", "simplify rational expressions and equations"],
+          ["graph-transformations-curve-sketching", "connect functions to key graph features"],
+          ["roots-of-equations", "link factors, roots and intersections"],
+          ["logarithms-practice", "support logarithmic and exponential equations"],
+          ["trigonometric-functions", "support identities, exact values and proof-style trigonometry"],
+          ["trig-equation-solver", "generate trigonometric equation practice"],
+          ["trig-graphs-transformations", "show transformed trigonometric graphs"],
+          ["sequences-series", "support sequence and series links where needed"]
+        ],
+        teacherMove: "Keep equivalent forms purposeful: students should know why they are factoring, expanding, transforming or applying logarithms."
+      },
+      {
+        code: "Grade 12 Calculus Vectors",
+        title: "Grade 12 Calculus and Vectors",
+        focus: "Limits, derivatives, curve sketching, optimisation, related rates, integration connections, vectors, lines and planes, geometric applications and modelling with rates of change.",
+        coverage: "Strong",
+        tools: [
+          ["limits-first-principles", "support limit notation, continuity and first-principles reasoning"],
+          ["differentiation-polynomials", "secure introductory differentiation"],
+          ["differentiation-rules", "practise product, quotient and chain rule"],
+          ["advanced-differentiation", "develop implicit, parametric, tangents, normals, optimisation and related rates"],
+          ["integration", "connect antiderivatives, area and accumulation"],
+          ["advanced-integration", "extend integration methods where useful"],
+          ["graph-transformations-curve-sketching", "support curve sketching with derivative information"],
+          ["free-vectors", "secure column-vector notation and vector geometry"],
+          ["further-vectors", "extend vector reasoning for senior classes"],
+          ["dynamic-classroom-displays", "show gradients, areas and vector movement dynamically"]
+        ],
+        teacherMove: "Connect every calculation to meaning: gradient, rate of change, area, direction, magnitude or geometric relationship."
+      },
+      {
+        code: "Grade 12 Data Management",
+        title: "Grade 12 Mathematics of Data Management",
+        focus: "Counting methods, probability, probability distributions, statistics, data analysis, correlation, regression, normal models, sampling, simulations, inference and communication of results.",
+        coverage: "Strong",
+        tools: [
+          ["permutations-combinations", "develop counting, factorial, nPr and nCr reasoning"],
+          ["tree-diagrams-conditional-probability", "generate conditional probability practice"],
+          ["venn-diagrams", "connect set notation, regions and probability"],
+          ["discrete-random-variables", "support probability distributions and expectation"],
+          ["binomial-geometric-distribution", "generate binomial and geometric distribution questions"],
+          ["normal-distribution", "standardise and use normal distribution probabilities"],
+          ["averages-range", "support descriptive statistics"],
+          ["histograms", "develop distribution-shape and grouped-data reasoning"],
+          ["correlation-regression", "support scatterplots, regression and interpretation"],
+          ["sampling-methods-bias", "teach sampling choices, bias and limitations"],
+          ["hypothesis-testing", "develop inference decisions and conclusion wording"],
+          ["confidence-intervals", "support interval estimates and interpretation"]
+        ],
+        teacherMove: "Make students state the population, variable, model and conclusion; data management is about communication as much as calculation."
+      }
+    ]
+  },
+  {
     id: "cambridge-igcse",
     label: "Cambridge IGCSE",
     country: "International",
@@ -16900,7 +17068,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, Ontario Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
