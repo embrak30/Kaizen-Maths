@@ -8835,6 +8835,192 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    id: "cambridge-igcse",
+    label: "Cambridge IGCSE",
+    country: "International",
+    status: "Mapped",
+    title: "Cambridge IGCSE Mathematics Curriculum Alignment",
+    description: "A syllabus-area map from Cambridge IGCSE Mathematics to Kaizen Maths topic generators, classroom displays, worked examples, worksheet tools, and assessment practice.",
+    basis: "Pilot alignment based on Cambridge IGCSE Mathematics 0580 topic areas, with extension links for Cambridge IGCSE International Mathematics 0607 and Cambridge IGCSE Additional Mathematics 0606 where the Kaizen tool library already supports the content.",
+    standards: [
+      {
+        code: "0580-1",
+        title: "Number",
+        focus: "Number operations, directed numbers, fractions, decimals, percentages, ratio, proportion, standard form, estimation, bounds, indices, surds and calculator accuracy.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "secure arithmetic with integers, decimals and negatives"],
+          ["fractions-practice", "develop fraction and mixed-number operations"],
+          ["decimals-practice-lab", "support decimal place value and decimal calculations"],
+          ["percentages-real-world", "generate percentage increase, decrease and reverse percentage practice"],
+          ["ratio-proportion", "practise ratio, proportion and sharing"],
+          ["powers-of-10", "support standard form and powers of ten"],
+          ["upper-lower-bounds", "develop rounding, error intervals and bounds"],
+          ["surds-radicals", "extend exact-number work with surds where needed"]
+        ],
+        teacherMove: "Use this strand diagnostically; number weaknesses usually reappear later in algebra, mensuration and probability."
+      },
+      {
+        code: "0580-2",
+        title: "Algebra and Graphs",
+        focus: "Algebraic notation, substitution, simplifying, expanding, factorising, equations, inequalities, sequences, formulae, graphs, functions and quadratic relationships.",
+        coverage: "Strong",
+        tools: [
+          ["substitution", "practise substitution into expressions and formulae"],
+          ["simplification", "collect like terms and simplify expressions"],
+          ["bracket-expansion", "expand single and double brackets"],
+          ["advanced-factorisation", "develop common-factor, grouping and quadratic factorisation"],
+          ["linear-equations", "solve linear equations from simple to complex forms"],
+          ["inequalities", "solve and represent inequalities"],
+          ["quadratic-equations", "solve quadratics by factorising, completing the square and formula methods"],
+          ["sequences", "generate sequence and nth-term practice"],
+          ["functions", "support function notation, mappings and inverse/composite work"],
+          ["graph-transformations-curve-sketching", "connect equations to graph shapes and transformations"]
+        ],
+        teacherMove: "Keep each algebraic line equivalent to the previous one and connect the graph, table and equation where possible."
+      },
+      {
+        code: "0580-3",
+        title: "Coordinate Geometry",
+        focus: "Coordinates, gradients, equations of straight lines, parallel and perpendicular lines, intersections, distance, midpoint and coordinate problem solving.",
+        coverage: "Strong",
+        tools: [
+          ["straight-lines", "generate gradient, line equation, intercept and coordinate practice"],
+          ["functions", "connect input-output rules to coordinate pairs"],
+          ["graph-transformations-curve-sketching", "support coordinate graph interpretation"],
+          ["equation-of-a-circle", "extend coordinate work for stronger IGCSE groups"],
+          ["classroom-displays", "project blank grids, axes and coordinate templates"]
+        ],
+        teacherMove: "Ask students to identify whether the question needs gradient, equation, distance, midpoint or intersection before calculating."
+      },
+      {
+        code: "0580-4",
+        title: "Geometry",
+        focus: "Angle facts, triangles, quadrilaterals, polygons, symmetry, similarity, congruence, circle theorems, constructions, loci and geometric reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["missing-angles", "practise line, triangle, quadrilateral and parallel-line angle facts"],
+          ["polygons-angles", "generate interior and exterior angle problems"],
+          ["circle-theorems", "develop circle angle and tangent reasoning"],
+          ["loci-constructions", "support construction and loci diagrams"],
+          ["scale-drawing-similar-shapes", "connect similarity, scale factor and shape reasoning"],
+          ["formal-geometric-proof", "support theorem and reasoning chains"],
+          ["concept-explainer", "project shape-property explanations one feature at a time"]
+        ],
+        teacherMove: "Require students to name the geometric fact or theorem before they calculate; this builds exam-style reasoning."
+      },
+      {
+        code: "0580-5",
+        title: "Mensuration",
+        focus: "Perimeter, area, compound shapes, circumference, circle area, arc length, sector area, surface area, volume, prisms, cylinders, cones, spheres and units.",
+        coverage: "Strong",
+        tools: [
+          ["area-rectangles", "support area, perimeter and compound-shape practice"],
+          ["area-triangles", "develop triangle and related plane-area questions"],
+          ["circles-area-circumference", "generate circumference and circle-area practice"],
+          ["sectors-arc-length", "extend to arcs, sectors and segment contexts"],
+          ["volume-surface-area-prisms", "develop volume and surface area of prisms"],
+          ["cylinders-cones-volume-surface-area", "support cylinder and cone problems"],
+          ["pyramids-spheres-volume-surface-area", "extend to pyramids and spheres"],
+          ["conversions-teaching", "practise unit conversion and compound units"]
+        ],
+        teacherMove: "Keep formula choice, substitution, units and final rounding visible; most errors come from using the wrong measure or unit."
+      },
+      {
+        code: "0580-6",
+        title: "Trigonometry",
+        focus: "Right-angled trigonometry, Pythagoras' theorem, bearings, sine rule, cosine rule, area of a triangle and three-dimensional applications where required.",
+        coverage: "Strong",
+        tools: [
+          ["pythagoras-theorem", "generate right-triangle side problems"],
+          ["trigonometric-ratios", "practise SOHCAHTOA and right-triangle contexts"],
+          ["sine-cosine-rule", "extend to non-right triangles and triangle area"],
+          ["bearings", "develop three-figure bearings and hidden-bearing reasoning"],
+          ["classroom-displays", "project blank triangle and bearing diagrams"],
+          ["dynamic-classroom-displays", "use dynamic visuals for graph and transformation support"]
+        ],
+        teacherMove: "Use the diagram to decide the trigonometric model first, then show substitution and rearrangement without skipping steps."
+      },
+      {
+        code: "0580-7",
+        title: "Vectors and Transformations",
+        focus: "Translations, reflections, rotations, enlargements, combined transformations, column vectors, vector arithmetic and geometric vector interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["transformations", "generate coordinate transformation questions"],
+          ["dynamic-classroom-displays", "animate transformations for teacher modelling"],
+          ["free-vectors", "practise column vectors, scalar multiples and vector geometry"],
+          ["scale-drawing-similar-shapes", "connect enlargement to scale factor and similarity"],
+          ["classroom-displays", "project blank coordinate grids and transformation templates"]
+        ],
+        teacherMove: "Keep vectors in column form and make students describe the transformation fully: type, direction, centre, mirror line or scale factor."
+      },
+      {
+        code: "0580-8",
+        title: "Probability",
+        focus: "Probability scale, mutually exclusive events, relative frequency, Venn diagrams, tree diagrams, independent and dependent events, and conditional reasoning where appropriate.",
+        coverage: "Strong",
+        tools: [
+          ["tree-diagrams-conditional-probability", "generate tree diagrams and conditional probability practice"],
+          ["venn-diagrams", "connect set notation, regions and probabilities"],
+          ["fractions-practice", "repair fraction arithmetic needed for probability"],
+          ["simple-percentage-tasks", "connect probability written as fractions, decimals and percentages"],
+          ["classroom-displays", "project blank Venn and probability templates"]
+        ],
+        teacherMove: "Ask students to describe the event in words before writing the fraction, decimal or probability notation."
+      },
+      {
+        code: "0580-9",
+        title: "Statistics",
+        focus: "Data collection, tables, charts, averages, range, grouped data, histograms, cumulative frequency, scatter diagrams, correlation and interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "generate mean, median, mode, range and missing-value questions"],
+          ["histograms", "develop frequency-density and grouped-data reasoning"],
+          ["cumulative-frequency-curves", "work with ogives, medians, quartiles and percentiles"],
+          ["correlation-regression", "support scatter diagrams, correlation and regression lines"],
+          ["sampling-methods-bias", "teach sampling choices and bias where required"],
+          ["kaizen-large-data-set", "support contextual data interpretation"]
+        ],
+        teacherMove: "Require interpretation in context: students should say what the graph, average, spread or trend tells them."
+      },
+      {
+        code: "0607",
+        title: "Cambridge IGCSE International Mathematics Extension",
+        focus: "Extended modelling, functions, sets, transformations, vectors, graphical interpretation, statistics and problem solving in international IGCSE-style contexts.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "develop functions, mappings, domains, ranges and inverse/composite ideas"],
+          ["venn-diagrams", "support set notation, subsets and regions"],
+          ["dynamic-classroom-displays", "model graph and transformation ideas dynamically"],
+          ["graph-transformations-curve-sketching", "support graphical interpretation and transformed curves"],
+          ["correlation-regression", "support scatter diagrams and trend interpretation"],
+          ["interface-guide", "support teacher workflow for classroom practice, worked examples and printable resources"]
+        ],
+        teacherMove: "Use this row for international IGCSE classes that need stronger modelling, graph interpretation and function language."
+      },
+      {
+        code: "0606",
+        title: "Cambridge IGCSE Additional Mathematics",
+        focus: "Functions, quadratics, inequalities, indices and surds, factors of polynomials, logarithmic and exponential functions, circular measure, trigonometry, permutations, combinations, binomial expansion, vectors, matrices, differentiation and integration.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "develop advanced function notation and transformations"],
+          ["quadratic-equations", "support quadratics, equations and graphs"],
+          ["advanced-factorisation", "develop polynomial factor structure"],
+          ["logarithms-practice", "generate logarithmic and exponential equation practice"],
+          ["trigonometric-functions", "support exact trig values, identities and proof"],
+          ["permutations-combinations", "generate counting practice"],
+          ["binomial-expansion", "support binomial coefficients and expansions"],
+          ["matrices", "introduce matrix operations and transformations"],
+          ["differentiation-polynomials", "secure introductory differentiation"],
+          ["integration", "cover basic integration and definite integrals"]
+        ],
+        teacherMove: "Treat this as the bridge between IGCSE and A-level: make notation, algebraic steps and calculus rules explicit."
+      }
+    ]
+  },
+  {
     id: "uk-a-level-mathematics",
     label: "UK A-Level Maths",
     country: "United Kingdom",
@@ -15842,7 +16028,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, Cambridge IGCSE Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
