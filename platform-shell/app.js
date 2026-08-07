@@ -9203,6 +9203,158 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    id: "ap-mathematics",
+    label: "AP Mathematics",
+    country: "United States / International",
+    status: "Mapped",
+    title: "AP Mathematics Curriculum Alignment",
+    description: "A course-level map from AP Precalculus, AP Calculus AB, AP Calculus BC and AP Statistics to Kaizen Maths teaching tools, classroom displays, worked examples, worksheet practice and assessment support.",
+    basis: "Pilot alignment based on current College Board AP Central course frameworks for AP Precalculus, AP Calculus AB and BC, and AP Statistics.",
+    standards: [
+      {
+        code: "AP Precalculus 1",
+        title: "AP Precalculus: Polynomial and Rational Functions",
+        focus: "Polynomial and rational functions, rates of change, end behaviour, zeros, multiplicity, asymptotes, equivalent forms, transformations, modelling and interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "connect function notation, domain, range, composition and inverse functions"],
+          ["graph-transformations-curve-sketching", "support transformations, key features and curve sketching"],
+          ["quadratic-equations", "secure quadratic structure, roots and graph links"],
+          ["advanced-factorisation", "develop polynomial factor structure and algebraic manipulation"],
+          ["roots-of-equations", "connect roots, factors and graphs"],
+          ["numerical-methods", "support approximation and iteration where graphing is not enough"],
+          ["dynamic-classroom-displays", "model graph changes and transformations dynamically"]
+        ],
+        teacherMove: "Ask students to move between equation, graph, table and context, then justify which representation best explains the behaviour."
+      },
+      {
+        code: "AP Precalculus 2",
+        title: "AP Precalculus: Exponential and Logarithmic Functions",
+        focus: "Exponential and logarithmic models, inverse relationships, transformations, equations, parameters, growth and decay, semi-log reasoning and contextual interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["logarithms-practice", "generate exponential and logarithmic equation practice"],
+          ["functions", "connect inverse functions and function notation"],
+          ["graph-transformations-curve-sketching", "show transformed exponential and logarithmic graphs"],
+          ["transposition-formulae", "support rearranging exponential and logarithmic formulae"],
+          ["financial-real-life-maths", "connect percentage change, growth, interest and applied models"],
+          ["dynamic-classroom-displays", "animate graph and parameter changes for teacher modelling"]
+        ],
+        teacherMove: "Keep the inverse relationship visible: every logarithmic statement should be translated back to an equivalent exponential statement."
+      },
+      {
+        code: "AP Precalculus 3",
+        title: "AP Precalculus: Trigonometric and Polar Functions",
+        focus: "Trigonometric functions, unit-circle structure, periodicity, transformations, identities, equations, inverse trigonometric ideas, polar coordinates and graphical interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["trigonometric-functions", "support exact values, identities and proof-style trig"],
+          ["trig-graphs-transformations", "show transformed trig graphs and equations"],
+          ["trig-equation-solver", "generate trigonometric equation practice"],
+          ["polar-coordinates", "support polar coordinates and polar curve interpretation"],
+          ["graph-transformations-curve-sketching", "connect equation changes to graph features"],
+          ["dynamic-classroom-displays", "animate trig graph transformations and circle representations"]
+        ],
+        teacherMove: "Use periodicity and symmetry before procedures; students should explain why multiple solutions occur."
+      },
+      {
+        code: "AP Precalculus 4",
+        title: "AP Precalculus: Parameters, Vectors and Matrices",
+        focus: "Functions involving parameters, vector-valued relationships, matrix notation, transformations and multiple representations used as optional extension content.",
+        coverage: "Strong",
+        tools: [
+          ["free-vectors", "secure column-vector notation and vector geometry"],
+          ["further-vectors", "extend vector reasoning for stronger classes"],
+          ["matrices", "support matrix operations and transformations"],
+          ["advanced-matrices", "extend matrices into transformations and eigenvalue ideas where appropriate"],
+          ["functions", "connect parameters to changing function behaviour"],
+          ["dynamic-classroom-displays", "support visual modelling of transformations and parameter changes"]
+        ],
+        teacherMove: "Treat this as an extension bank: show how parameters change a family of objects rather than teaching each example as an isolated procedure."
+      },
+      {
+        code: "AP Calculus AB",
+        title: "AP Calculus AB: Limits, Differentiation, Integration and Applications",
+        focus: "Limits and continuity, derivative definitions and rules, composite, implicit and inverse differentiation, applications of derivatives, integration, accumulation, differential equations and applications of integration.",
+        coverage: "Strong",
+        tools: [
+          ["limits-first-principles", "support limit notation, first-principles reasoning and continuity"],
+          ["differentiation-polynomials", "secure introductory differentiation and gradient functions"],
+          ["differentiation-rules", "practise product, quotient and chain rule"],
+          ["advanced-differentiation", "develop implicit, parametric, tangents, normals and optimisation"],
+          ["integration", "cover basic integration, definite integrals and area under curves"],
+          ["advanced-integration", "practise substitution and integration by parts where extension is needed"],
+          ["differential-equations", "support separable models and solution interpretation"],
+          ["volumes-of-revolution", "support applications of integration where required"],
+          ["dynamic-classroom-displays", "show gradient, area and transformation ideas dynamically"]
+        ],
+        teacherMove: "Require notation and meaning together: students should say what a derivative, integral or limit represents in the problem context."
+      },
+      {
+        code: "AP Calculus BC",
+        title: "AP Calculus BC: Parametric, Polar, Vector-Valued Functions and Series",
+        focus: "AP Calculus AB content plus parametric equations, polar coordinates, vector-valued functions, infinite sequences, infinite series, Taylor series and Maclaurin series.",
+        coverage: "Strong",
+        tools: [
+          ["advanced-differentiation", "support parametric differentiation and higher-level curve analysis"],
+          ["polar-coordinates", "support polar coordinates and polar curve work"],
+          ["further-vectors", "support vector-valued function and vector interpretation practice"],
+          ["sequences-series", "generate sequence and series foundations"],
+          ["series-expansions", "generate Taylor and Maclaurin series practice"],
+          ["advanced-integration", "support integration methods needed for BC extension work"],
+          ["differential-equations", "support modelling and solution methods"],
+          ["graph-transformations-curve-sketching", "connect symbolic forms to graphical behaviour"]
+        ],
+        teacherMove: "Use BC extension tools after AB foundations are secure; make convergence, approximation and representation choices explicit."
+      },
+      {
+        code: "AP Statistics 1",
+        title: "AP Statistics: Exploring Data and Collecting Data",
+        focus: "One-variable data, data displays, summary statistics, variation, sampling methods, experimental design, bias, data collection and interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "practise summary statistics and missing values"],
+          ["histograms", "develop grouped-data and distribution-shape reasoning"],
+          ["cumulative-frequency-curves", "support medians, quartiles, percentiles and cumulative interpretation"],
+          ["sampling-methods-bias", "teach sampling methods, bias and limitations"],
+          ["kaizen-large-data-set", "support contextual data familiarisation and investigation prompts"],
+          ["correlation-regression", "introduce scatterplots and early association language"]
+        ],
+        teacherMove: "Make students describe the distribution before calculating; shape, centre, spread, context and limitations should be part of the answer."
+      },
+      {
+        code: "AP Statistics 2",
+        title: "AP Statistics: Probability, Random Variables and Distributions",
+        focus: "Probability rules, conditional probability, random variables, expected value, discrete distributions, binomial models, normal models and distribution interpretation.",
+        coverage: "Strong",
+        tools: [
+          ["tree-diagrams-conditional-probability", "generate conditional probability and tree diagram practice"],
+          ["venn-diagrams", "connect set notation, regions and probability"],
+          ["discrete-random-variables", "support probability distributions and expectation"],
+          ["binomial-geometric-distribution", "generate binomial and geometric distribution practice"],
+          ["normal-distribution", "standardise and use normal distribution probabilities"],
+          ["continuous-random-variables", "extend probability into density functions where helpful"]
+        ],
+        teacherMove: "Before calculation, require students to identify the random variable and state the model or probability rule being used."
+      },
+      {
+        code: "AP Statistics 3",
+        title: "AP Statistics: Inference, Confidence Intervals and Regression",
+        focus: "Inference for proportions and means, hypotheses, confidence intervals, regression analysis, conditions, conclusion writing, interpreting results and justifying claims.",
+        coverage: "Strong",
+        tools: [
+          ["hypothesis-testing", "develop inference decisions and conclusion wording"],
+          ["confidence-intervals", "support interval estimates and interpretation"],
+          ["normal-distribution", "support normal approximations and standardisation"],
+          ["correlation-regression", "support regression lines, residual reasoning and interpretation"],
+          ["sampling-methods-bias", "revisit method choice, conditions and limitations"],
+          ["kaizen-large-data-set", "support contextual statistical questions and investigation practice"]
+        ],
+        teacherMove: "The final sentence matters: students should connect the statistical result back to the claim, population and context."
+      }
+    ]
+  },
+  {
     id: "cambridge-igcse",
     label: "Cambridge IGCSE",
     country: "International",
@@ -16396,7 +16548,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, IB Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
