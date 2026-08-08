@@ -3328,6 +3328,7 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .admin-school-fields input,
+.admin-school-fields select,
 .admin-school-fields textarea {
   width: 100%;
   min-width: 0;
@@ -3337,6 +3338,10 @@ body[data-route="worksheet-generator"] .account-action {
   background: white;
   color: var(--ink);
   font: inherit;
+}
+
+.admin-school-fields select {
+  min-height: 42px;
 }
 
 .admin-school-fields input[type="file"] {
@@ -3350,6 +3355,7 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .admin-school-fields input:focus,
+.admin-school-fields select:focus,
 .admin-school-fields textarea:focus,
 .school-code-field input:focus {
   border-color: rgba(23, 184, 179, 0.72);
@@ -4169,6 +4175,10 @@ body[data-route="worksheet-generator"] .account-action {
 .curriculum-empty-panel {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
+}
+
+.curriculum-print-title {
+  display: none;
 }
 
 .textbook-alignment-table {
@@ -6942,6 +6952,48 @@ sup .worksheet-fraction span:last-child {
   margin: 10px 0 16px;
 }
 
+.curriculum-standards-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+.curriculum-standard-link {
+  display: grid;
+  gap: 3px;
+}
+
+.curriculum-standard-link a {
+  display: grid;
+  gap: 2px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.curriculum-standard-link a span {
+  color: var(--teal-dark);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.curriculum-standard-link a strong {
+  color: #282450;
+  font-size: 0.83rem;
+  line-height: 1.25;
+}
+
+.curriculum-standard-link a:hover strong,
+.curriculum-standard-link a:focus-visible strong {
+  color: var(--orange);
+}
+
+.curriculum-standard-link small {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
 .tool-stage {
   min-width: 0;
   border: 1px solid var(--line);
@@ -7763,6 +7815,10 @@ sup .worksheet-fraction span:last-child {
     background: white;
   }
 
+  body.printing-curriculum-alignment {
+    background: white;
+  }
+
   .sidebar,
   .topbar,
   .page-header,
@@ -7773,6 +7829,11 @@ sup .worksheet-fraction span:last-child {
   .exam-paper-summary,
   .site-trust-note,
   .mobile-nav {
+    display: none !important;
+  }
+
+  body.printing-curriculum-alignment .curriculum-chooser-hero,
+  body.printing-curriculum-alignment .curriculum-print-hide {
     display: none !important;
   }
 
@@ -7788,6 +7849,45 @@ sup .worksheet-fraction span:last-child {
     border: 0;
     box-shadow: none;
     background: white;
+  }
+
+  body.printing-curriculum-alignment .textbook-page,
+  body.printing-curriculum-alignment .textbook-map-panel {
+    display: block;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+    background: white;
+  }
+
+  body.printing-curriculum-alignment .curriculum-print-title {
+    display: block;
+    margin: 0 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #111827;
+  }
+
+  body.printing-curriculum-alignment .curriculum-print-title h1 {
+    margin: 0 0 4px;
+    color: #111827;
+    font-size: 20pt;
+  }
+
+  body.printing-curriculum-alignment .curriculum-print-title p {
+    margin: 0;
+    color: #374151;
+    font-size: 9pt;
+  }
+
+  body.printing-curriculum-alignment .textbook-alignment-table {
+    font-size: 9pt;
+  }
+
+  body.printing-curriculum-alignment .textbook-alignment-table th,
+  body.printing-curriculum-alignment .textbook-alignment-table td {
+    padding: 6px;
+    border-color: #cbd5e1;
   }
 
   .worksheet-sheet {

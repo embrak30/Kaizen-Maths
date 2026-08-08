@@ -79,6 +79,7 @@ create table if not exists public.schools (
   currency_symbol text default '£',
   locale text default 'en-GB',
   curriculum_focus text,
+  default_curriculum_id text,
   standards_label text,
   logo_url text,
   contact_person text,
@@ -103,6 +104,7 @@ alter table public.schools add column if not exists currency_code text default '
 alter table public.schools add column if not exists currency_symbol text default '£';
 alter table public.schools add column if not exists locale text default 'en-GB';
 alter table public.schools add column if not exists curriculum_focus text;
+alter table public.schools add column if not exists default_curriculum_id text;
 alter table public.schools add column if not exists standards_label text;
 alter table public.schools add column if not exists logo_url text;
 alter table public.schools add column if not exists contact_person text;

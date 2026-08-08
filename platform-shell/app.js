@@ -2958,6 +2958,7 @@ function schoolContextFromRecord(record = {}) {
     currency_symbol: record.school_currency_symbol || record.currency_symbol || "£",
     locale: record.school_locale || record.locale || "en-GB",
     curriculum_focus: record.school_curriculum_focus || record.curriculum_focus || "",
+    default_curriculum_id: record.school_default_curriculum_id || record.default_curriculum_id || "",
     standards_label: record.school_standards_label || record.standards_label || "",
     logo_url: record.school_logo_url || record.logo_url || "",
     contact_person: record.school_contact_person || record.contact_person || "",
@@ -2990,6 +2991,7 @@ function schoolContextBadges(context = currentSchoolContext()) {
     context.country,
     context.currency_code ? `${context.currency_code} ${context.currency_symbol || ""}`.trim() : "",
     context.curriculum_focus,
+    curriculumAlignmentLabelById(context.default_curriculum_id),
     context.standards_label
   ].filter(Boolean);
 }
@@ -3055,7 +3057,7 @@ function toolCatalogDataShouldRerenderCurrentRoute() {
 
 function authSensitiveRouteShouldRerender() {
   const route = routeParts()[0] || "home";
-  return ["worksheet-generator", "gcse-exam-style", "admin", "tutor-workspace", "school-space", "upgrade"].includes(route);
+  return ["tools", "curriculum-alignments", "worksheet-generator", "gcse-exam-style", "admin", "tutor-workspace", "school-space", "upgrade"].includes(route);
 }
 
 function currentAuthAccessKey() {
@@ -3066,7 +3068,9 @@ function currentAuthAccessKey() {
     currentUserRole(),
     schoolContext?.school_id || "",
     schoolContext?.currency_code || "",
-    schoolContext?.curriculum_focus || ""
+    schoolContext?.curriculum_focus || "",
+    schoolContext?.default_curriculum_id || "",
+    schoolContext?.standards_label || ""
   ].join("|");
 }
 
@@ -3804,7 +3808,7 @@ async function loadSchools({ rerender = false } = {}) {
   const client = await window.KaizenAuth?.getClient?.().catch(() => null);
   if (!client || !isAdmin()) return;
   try {
-    const schoolSelect = "id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, standards_label, logo_url, contact_person, school_synopsis, licence_type, allowed_domains, seat_limit, join_code, join_code_expires_at, is_active, notes, licence_starts_at, licence_ends_at, created_at, updated_at";
+    const schoolSelect = "id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, default_curriculum_id, standards_label, logo_url, contact_person, school_synopsis, licence_type, allowed_domains, seat_limit, join_code, join_code_expires_at, is_active, notes, licence_starts_at, licence_ends_at, created_at, updated_at";
     const fallbackSchoolSelect = "id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, standards_label, licence_type, allowed_domains, seat_limit, join_code, join_code_expires_at, is_active, notes, licence_starts_at, licence_ends_at, created_at, updated_at";
     let [schoolsResponse, { data: teacherAccess, error: teacherAccessError }] = await Promise.all([
       client.from("schools").select(schoolSelect).order("name", { ascending: true }),
@@ -3840,6 +3844,7 @@ async function saveSchool(values) {
     currency_symbol: String(values.currency_symbol || "").trim() || "£",
     locale: String(values.locale || "").trim() || "en-GB",
     curriculum_focus: String(values.curriculum_focus || "").trim(),
+    default_curriculum_id: String(values.default_curriculum_id || "").trim(),
     standards_label: String(values.standards_label || "").trim(),
     logo_url: String(values.logo_url || "").trim(),
     contact_person: String(values.contact_person || "").trim(),
@@ -3858,10 +3863,14 @@ async function saveSchool(values) {
   if (!payload.name) throw new Error("Every school needs a name.");
   if (payload.seat_limit !== null && payload.seat_limit < 1) payload.seat_limit = null;
 
-  const request = values.id
-    ? client.from("schools").update(payload).eq("id", values.id).select("id").single()
-    : client.from("schools").insert(payload).select("id").single();
-  const { data, error } = await request;
+  const request = (nextPayload) => values.id
+    ? client.from("schools").update(nextPayload).eq("id", values.id).select("id").single()
+    : client.from("schools").insert(nextPayload).select("id").single();
+  let { data, error } = await request(payload);
+  if (error && /default_curriculum_id|column|schema cache/i.test(error.message || "")) {
+    const { default_curriculum_id, ...fallbackPayload } = payload;
+    ({ data, error } = await request(fallbackPayload));
+  }
   if (error) throw error;
   return data.id;
 }
@@ -11144,21 +11153,64 @@ function curriculumAlignmentById(id) {
   return curriculumAlignmentFrameworks.find((framework) => framework.id === id) || null;
 }
 
+function curriculumAlignmentLabelById(id) {
+  return curriculumAlignmentById(id)?.label || "";
+}
+
+function curriculumAlignmentOptionMarkup(activeId = "", placeholder = "Choose a curriculum map...") {
+  return `
+    ${placeholder ? `<option value="" disabled ${activeId ? "" : "selected"}>${escapeHtml(placeholder)}</option>` : ""}
+    ${curriculumAlignmentFrameworks.map((item) => `
+      <option value="${escapeHtml(item.id)}" ${item.id === activeId ? "selected" : ""}>
+        ${escapeHtml(item.label)}${item.status === "Mapped" ? "" : ` - ${escapeHtml(item.status)}`}
+      </option>
+    `).join("")}
+  `;
+}
+
 function curriculumAlignmentSelect(framework) {
   const activeId = framework?.id || "";
   return `
     <label class="curriculum-selector" for="curriculumAlignmentSelect">
       <span>Select curriculum</span>
       <select id="curriculumAlignmentSelect" onchange="location.hash='#/curriculum-alignments/'+this.value">
-        <option value="" disabled ${activeId ? "" : "selected"}>Choose a curriculum map...</option>
-        ${curriculumAlignmentFrameworks.map((item) => `
-          <option value="${escapeHtml(item.id)}" ${item.id === activeId ? "selected" : ""}>
-            ${escapeHtml(item.label)}${item.status === "Mapped" ? "" : ` - ${escapeHtml(item.status)}`}
-          </option>
-        `).join("")}
+        ${curriculumAlignmentOptionMarkup(activeId)}
       </select>
     </label>
   `;
+}
+
+function inferCurriculumIdFromSchoolContext(context = currentSchoolContext()) {
+  const direct = String(context?.default_curriculum_id || "").trim();
+  if (direct && curriculumAlignmentById(direct)) return direct;
+  const text = normalise([
+    context?.curriculum_focus,
+    context?.standards_label,
+    context?.country,
+    context?.organisation_name,
+    context?.pilot_name
+  ].join(" "));
+  if (!text) return "";
+  if (text.includes("jamaica") || text.includes("nsc")) return "jamaica-nsc-7-9";
+  if (text.includes("cape")) return "cape-mathematics";
+  if (text.includes("csec")) return "csec";
+  if (text.includes("common core")) return "common-core";
+  if (text.includes("myp") || text.includes("ib")) return "ib-mathematics";
+  if (text.includes("gcse")) return "gcse";
+  if (text.includes("igcse") || text.includes("cambridge")) return "cambridge-igcse";
+  if (text.includes("edexcel") || text.includes("pearson")) return "pearson-edexcel";
+  if (text.includes("further")) return "uk-further-mathematics";
+  if (text.includes("a level") || text.includes("alevel")) return "uk-a-level-mathematics";
+  if (text.includes("singapore")) return "singapore-mathematics";
+  if (text.includes("ontario")) return "ontario-mathematics";
+  if (text.includes("australia")) return "australian-curriculum";
+  if (text.includes("finland")) return "finland-mathematics";
+  return "";
+}
+
+function currentSchoolCurriculumId() {
+  const context = currentSchoolContext();
+  return context ? inferCurriculumIdFromSchoolContext(context) : "";
 }
 
 function curriculumStandardDomId(framework, standard, index) {
@@ -11216,7 +11268,10 @@ function textbookReverseToolIndex(course) {
 }
 
 function renderCurriculumAlignments() {
-  const requestedFramework = routeParts()[1] || "";
+  const explicitFramework = routeParts()[1] || "";
+  const targetStandardId = routeParts()[2] || "";
+  const schoolDefaultFramework = currentSchoolCurriculumId();
+  const requestedFramework = explicitFramework || schoolDefaultFramework;
   const framework = requestedFramework ? curriculumAlignmentById(requestedFramework) : null;
   const reverseIndex = framework ? curriculumReverseToolIndex(framework) : [];
   const hasStandards = Boolean(framework?.standards?.length);
@@ -11280,12 +11335,16 @@ function renderCurriculumAlignments() {
     ${pageHeader(
       "Curriculum Alignments",
       "Choose a curriculum, scan the strand map, and open the Kaizen tools that support classroom teaching, practice, worksheets, and intervention.",
-      `<a class="button primary" href="#/coverage-map">Coverage Map</a><a class="button" href="#/textbook-alignments">Textbook Alignments</a>`
+      `<button class="button primary" id="exportCurriculumPdf" type="button">Export PDF</button><a class="button" href="#/coverage-map">Coverage Map</a><a class="button" href="#/textbook-alignments">Textbook Alignments</a>`
     )}
     <section class="textbook-page curriculum-page">
+      <div class="curriculum-print-title">
+        <h1>${escapeHtml(framework.label)} alignment map</h1>
+        <p>${escapeHtml(schoolContextReportLine() || "Generated with Kaizen Maths")}</p>
+      </div>
       <section class="textbook-hero-panel curriculum-hero-panel curriculum-chooser-hero">
         <div class="curriculum-hero-copy">
-          <span class="eyebrow">Curriculum Alignment Hub</span>
+          <span class="eyebrow">${explicitFramework ? "Curriculum Alignment Hub" : "School Default Curriculum"}</span>
           <h2>${escapeHtml(framework.label)} alignment map</h2>
           <p>${escapeHtml(framework.description)}</p>
         </div>
@@ -11311,9 +11370,9 @@ function renderCurriculumAlignments() {
               </tr>
             </thead>
             <tbody>
-              ${framework.standards.map((standard) => `
+              ${framework.standards.map((standard, index) => `
                 <tr>
-                  <th scope="row">
+                  <th scope="row" id="${escapeHtml(curriculumStandardDomId(framework, standard, index))}">
                     <span>${escapeHtml(standard.code)}</span>
                     ${escapeHtml(standard.title)}
                   </th>
@@ -11332,7 +11391,7 @@ function renderCurriculumAlignments() {
           </table>
         </section>
 
-        <section class="textbook-map-panel">
+        <section class="textbook-map-panel curriculum-print-hide">
           <div class="coverage-panel-head">
             <div>
               <span class="eyebrow">Reverse Lookup</span>
@@ -11361,6 +11420,28 @@ function renderCurriculumAlignments() {
       `}
     </section>
   `;
+  bindCurriculumAlignmentActions(framework);
+  if (targetStandardId) {
+    window.requestAnimationFrame(() => {
+      document.getElementById(targetStandardId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+}
+
+function bindCurriculumAlignmentActions(framework) {
+  document.getElementById("exportCurriculumPdf")?.addEventListener("click", () => {
+    const originalTitle = document.title;
+    document.title = `${framework.label} - Kaizen Maths Curriculum Alignment`;
+    document.body.classList.add("printing-curriculum-alignment");
+    const cleanup = () => {
+      document.body.classList.remove("printing-curriculum-alignment");
+      document.title = originalTitle;
+      window.removeEventListener("afterprint", cleanup);
+    };
+    window.addEventListener("afterprint", cleanup);
+    window.print();
+    window.setTimeout(cleanup, 1000);
+  });
 }
 
 function renderTextbookAlignments() {
@@ -12845,7 +12926,7 @@ function renderTopicMap(levels, tool) {
 }
 
 function renderStandardsList(tool) {
-  return `<ul class="standards-list">${standardsForTool(tool).map((standard) => `<li>${escapeHtml(standard)}</li>`).join("")}</ul>`;
+  return renderToolCurriculumStandards(tool);
 }
 
 function toolCurriculumLinks(tool) {
@@ -14007,6 +14088,78 @@ function renderToolInfoBadges(items) {
   return `<div class="tool-info-badges">${items.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>`;
 }
 
+function curriculumStandardMatchesTool(standard, tool) {
+  return (standard.tools || []).some(([slug]) => slug === tool.slug);
+}
+
+function curriculumStandardsForTool(framework, tool, filter = null) {
+  if (!framework) return [];
+  return framework.standards
+    .filter((standard) => !filter || filter(standard))
+    .filter((standard) => curriculumStandardMatchesTool(standard, tool));
+}
+
+function curriculumStandardLine(framework, standard, routeLabel = framework.label) {
+  const standardIndex = framework.standards.indexOf(standard);
+  const targetId = curriculumStandardDomId(framework, standard, Math.max(0, standardIndex));
+  return `
+    <li class="curriculum-standard-link">
+      <a href="#/curriculum-alignments/${escapeHtml(framework.id)}/${escapeHtml(targetId)}">
+        <span>${escapeHtml(routeLabel)}</span>
+        <strong>${escapeHtml(standard.code)}: ${escapeHtml(standard.title)}</strong>
+      </a>
+      <small>${escapeHtml(standard.focus)}</small>
+    </li>
+  `;
+}
+
+function renderToolCurriculumStandards(tool) {
+  const schoolContext = currentSchoolContext();
+  const schoolCurriculumId = currentSchoolCurriculumId();
+  const schoolFramework = schoolCurriculumId ? curriculumAlignmentById(schoolCurriculumId) : null;
+
+  if (schoolContext && schoolFramework) {
+    const matches = curriculumStandardsForTool(schoolFramework, tool);
+    const schoolLabel = schoolContext.standards_label || schoolFramework.label;
+    return `
+      <ul class="standards-list curriculum-standards-list">
+        ${matches.length
+          ? matches.slice(0, 4).map((standard) => curriculumStandardLine(schoolFramework, standard, schoolLabel)).join("")
+          : `<li class="curriculum-standard-link">
+              <a href="#/curriculum-alignments/${escapeHtml(schoolFramework.id)}">
+                <span>${escapeHtml(schoolLabel)}</span>
+                <strong>View the school curriculum alignment map</strong>
+              </a>
+              <small>This tool does not yet have a direct row in the school map, but the full alignment can be reviewed from here.</small>
+            </li>`}
+      </ul>
+    `;
+  }
+
+  const defaultRoutes = [
+    { id: "common-core", label: "Common Core" },
+    { id: "ib-mathematics", label: "IB MYP", filter: (standard) => /^MYP\b/i.test(standard.code) },
+    { id: "gcse", label: "UK GCSE" }
+  ];
+  const rows = defaultRoutes.map((route) => {
+    const framework = curriculumAlignmentById(route.id);
+    const matches = curriculumStandardsForTool(framework, tool, route.filter);
+    if (framework && matches.length) {
+      return matches.slice(0, 2).map((standard) => curriculumStandardLine(framework, standard, route.label)).join("");
+    }
+    return `
+      <li class="curriculum-standard-link">
+        <a href="#/curriculum-alignments/${escapeHtml(route.id)}">
+          <span>${escapeHtml(route.label)}</span>
+          <strong>View the full ${escapeHtml(route.label)} alignment map</strong>
+        </a>
+        <small>Use the curriculum map to review the closest strand for this tool.</small>
+      </li>
+    `;
+  }).join("");
+  return `<ul class="standards-list curriculum-standards-list">${rows}</ul>`;
+}
+
 function renderRelatedTools(tool) {
   const related = relatedTools(tool);
   if (!related.length) return `<p class="tool-info-muted">Related tools will appear as the library grows.</p>`;
@@ -14145,8 +14298,8 @@ function renderToolInformationPage(tool) {
         </article>
 
         <article class="tool-info-card">
-          <span class="eyebrow">Mathematical Standards Covered</span>
-          ${renderToolInfoList(info.standards, "standards-list")}
+          <span class="eyebrow">${currentSchoolCurriculumId() ? "School Standards Link" : "Default Standards Links"}</span>
+          ${renderToolCurriculumStandards(tool)}
         </article>
       </section>
 
@@ -15749,6 +15902,7 @@ function adminSchoolRowHtml(school = {}, index = 0) {
     school.country,
     school.currency_code,
     school.curriculum_focus,
+    curriculumAlignmentLabelById(school.default_curriculum_id),
     school.standards_label
   ].filter(Boolean).join(" · ");
   return `
@@ -15794,6 +15948,13 @@ function adminSchoolRowHtml(school = {}, index = 0) {
         <label>
           Curriculum focus
           <input data-school-field="curriculum_focus" type="text" value="${escapeHtml(school.curriculum_focus || "")}" placeholder="CSEC, CAPE, MOE Jamaica">
+        </label>
+        <label>
+          Default curriculum map
+          <select data-school-field="default_curriculum_id">
+            <option value="">Use text focus / ask teacher to select</option>
+            ${curriculumAlignmentOptionMarkup(school.default_curriculum_id || "", "")}
+          </select>
         </label>
         <label>
           Standards label
@@ -16528,6 +16689,7 @@ function bindAdmin() {
           currency_symbol: field("currency_symbol")?.value || "",
           locale: field("locale")?.value || "",
           curriculum_focus: field("curriculum_focus")?.value || "",
+          default_curriculum_id: field("default_curriculum_id")?.value || "",
           standards_label: field("standards_label")?.value || "",
           logo_url: field("logo_url")?.value || "",
           contact_person: field("contact_person")?.value || "",
