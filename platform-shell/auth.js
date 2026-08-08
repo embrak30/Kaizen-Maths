@@ -28,9 +28,24 @@
   }
 
   const SCHOOL_CONTEXT_KEY = "kaizen:school-context";
+  const SCHOOL_CURRICULUM_FALLBACK_KEY = "kaizen:school-default-curriculum";
+
+  function schoolCurriculumFallbacks() {
+    try {
+      return JSON.parse(localStorage.getItem(SCHOOL_CURRICULUM_FALLBACK_KEY) || "{}") || {};
+    } catch (_error) {
+      return {};
+    }
+  }
+
+  function storedDefaultCurriculumForSchool(schoolId) {
+    if (!schoolId) return "";
+    return schoolCurriculumFallbacks()[schoolId] || "";
+  }
 
   function schoolContextFromRecord(school) {
     if (!school?.id) return null;
+    const storedCurriculumId = storedDefaultCurriculumForSchool(school.id);
     return {
       school_id: school.id,
       school_name: school.name || "",
@@ -41,7 +56,7 @@
       currency_symbol: school.currency_symbol || "£",
       locale: school.locale || "en-GB",
       curriculum_focus: school.curriculum_focus || "",
-      default_curriculum_id: school.default_curriculum_id || "",
+      default_curriculum_id: school.default_curriculum_id || storedCurriculumId,
       standards_label: school.standards_label || "",
       logo_url: school.logo_url || "",
       contact_person: school.contact_person || "",
@@ -153,7 +168,9 @@
         return profile;
       }
       const previousContext = storedSchoolContext();
-      const preservedCurriculum = previousContext?.school_id === data.id ? previousContext.default_curriculum_id || "" : "";
+      const preservedCurriculum = previousContext?.school_id === data.id
+        ? previousContext.default_curriculum_id || storedDefaultCurriculumForSchool(data.id)
+        : storedDefaultCurriculumForSchool(data.id);
       const schoolContext = schoolContextFromRecord({
         ...data,
         default_curriculum_id: data.default_curriculum_id || preservedCurriculum

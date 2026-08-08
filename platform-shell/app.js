@@ -2625,6 +2625,7 @@ const state = {
   schools: [],
   schoolTeacherAccess: [],
   schoolsLoaded: false,
+  schoolDefaultCurriculumSchemaMissing: false,
   usersLoaded: false,
   homepageContent: {},
   homepageScreenshots: [],
@@ -2943,11 +2944,41 @@ function currentSchoolName() {
 }
 
 const schoolContextStorageKey = "kaizen:school-context";
+const schoolCurriculumFallbackStorageKey = "kaizen:school-default-curriculum";
+
+function schoolCurriculumFallbacks() {
+  try {
+    return JSON.parse(localStorage.getItem(schoolCurriculumFallbackStorageKey) || "{}") || {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function storedDefaultCurriculumForSchool(schoolId) {
+  if (!schoolId) return "";
+  return schoolCurriculumFallbacks()[schoolId] || "";
+}
+
+function saveStoredDefaultCurriculumForSchool(schoolId, curriculumId) {
+  if (!schoolId) return;
+  try {
+    const saved = schoolCurriculumFallbacks();
+    if (curriculumId) {
+      saved[schoolId] = curriculumId;
+    } else {
+      delete saved[schoolId];
+    }
+    localStorage.setItem(schoolCurriculumFallbackStorageKey, JSON.stringify(saved));
+  } catch (error) {
+    console.warn("Kaizen school curriculum fallback unavailable:", error.message);
+  }
+}
 
 function schoolContextFromRecord(record = {}) {
   if (!record || typeof record !== "object") return null;
   const schoolId = record.school_id || record.id || "";
   if (!schoolId) return null;
+  const storedCurriculumId = storedDefaultCurriculumForSchool(schoolId);
   return {
     school_id: schoolId,
     school_name: record.school_name || record.name || "",
@@ -2958,7 +2989,7 @@ function schoolContextFromRecord(record = {}) {
     currency_symbol: record.school_currency_symbol || record.currency_symbol || "£",
     locale: record.school_locale || record.locale || "en-GB",
     curriculum_focus: record.school_curriculum_focus || record.curriculum_focus || "",
-    default_curriculum_id: record.school_default_curriculum_id || record.default_curriculum_id || "",
+    default_curriculum_id: record.school_default_curriculum_id || record.default_curriculum_id || storedCurriculumId,
     standards_label: record.school_standards_label || record.standards_label || "",
     logo_url: record.school_logo_url || record.logo_url || "",
     contact_person: record.school_contact_person || record.contact_person || "",
@@ -2976,7 +3007,7 @@ function storedSchoolContext() {
 
 function currentSchoolContext() {
   const profile = authState().profile || {};
-  if (profile.school_context) return profile.school_context;
+  if (profile.school_context) return schoolContextFromRecord(profile.school_context) || profile.school_context;
   const school = schoolById(profile.school_id);
   return profile.school_id
     ? schoolContextFromRecord({ ...(school || {}), ...profile, id: profile.school_id })
@@ -3823,7 +3854,10 @@ async function loadSchools({ rerender = false } = {}) {
     const { data: schools, error: schoolsError } = schoolsResponse;
     if (schoolsError) throw schoolsError;
     if (teacherAccessError) throw teacherAccessError;
-    state.schools = schools || [];
+    state.schools = (schools || []).map((school) => ({
+      ...school,
+      default_curriculum_id: school.default_curriculum_id || storedDefaultCurriculumForSchool(school.id)
+    }));
     state.schoolTeacherAccess = teacherAccess || [];
     state.schoolsLoaded = true;
     if (rerender && routeParts()[0] === "admin") renderRoute();
@@ -3869,9 +3903,11 @@ async function saveSchool(values) {
   let { data, error } = await request(payload);
   if (error && /default_curriculum_id|column|schema cache/i.test(error.message || "")) {
     const { default_curriculum_id, ...fallbackPayload } = payload;
+    state.schoolDefaultCurriculumSchemaMissing = true;
     ({ data, error } = await request(fallbackPayload));
   }
   if (error) throw error;
+  saveStoredDefaultCurriculumForSchool(data.id, payload.default_curriculum_id);
   return data.id;
 }
 
@@ -11173,7 +11209,7 @@ function curriculumAlignmentSelect(framework) {
   return `
     <label class="curriculum-selector" for="curriculumAlignmentSelect">
       <span>Select curriculum</span>
-      <select id="curriculumAlignmentSelect" onchange="location.hash='#/curriculum-alignments/'+this.value">
+      <select id="curriculumAlignmentSelect" data-curriculum-alignment-select>
         ${curriculumAlignmentOptionMarkup(activeId)}
       </select>
     </label>
@@ -11329,6 +11365,7 @@ function renderCurriculumAlignments() {
         </section>
       </section>
     `;
+    bindCurriculumAlignmentActions(null);
     return;
   }
   app.innerHTML = `
@@ -11429,6 +11466,19 @@ function renderCurriculumAlignments() {
 }
 
 function bindCurriculumAlignmentActions(framework) {
+  document.querySelectorAll("[data-curriculum-alignment-select]").forEach((select) => {
+    select.addEventListener("change", () => {
+      const selectedFramework = select.value;
+      if (!selectedFramework) {
+        location.hash = "#/curriculum-alignments";
+        return;
+      }
+      location.hash = `#/curriculum-alignments/${selectedFramework}`;
+    });
+  });
+
+  if (!framework) return;
+
   document.getElementById("exportCurriculumPdf")?.addEventListener("click", () => {
     const originalTitle = document.title;
     document.title = `${framework.label} - Kaizen Maths Curriculum Alignment`;
@@ -15888,6 +15938,7 @@ function adminHomepageScreenshotRowHtml(screenshot, index) {
 
 function adminSchoolRowHtml(school = {}, index = 0) {
   const id = school.id || "";
+  const defaultCurriculumId = school.default_curriculum_id || storedDefaultCurriculumForSchool(id);
   const teacherEmails = id ? schoolTeacherEmails(id).join("\n") : "";
   const currentSeats = id ? schoolSeatCount(id) : 0;
   const seatLimit = school.seat_limit || "";
@@ -15902,7 +15953,7 @@ function adminSchoolRowHtml(school = {}, index = 0) {
     school.country,
     school.currency_code,
     school.curriculum_focus,
-    curriculumAlignmentLabelById(school.default_curriculum_id),
+    curriculumAlignmentLabelById(defaultCurriculumId),
     school.standards_label
   ].filter(Boolean).join(" · ");
   return `
@@ -15953,8 +16004,9 @@ function adminSchoolRowHtml(school = {}, index = 0) {
           Default curriculum map
           <select data-school-field="default_curriculum_id">
             <option value="">Use text focus / ask teacher to select</option>
-            ${curriculumAlignmentOptionMarkup(school.default_curriculum_id || "", "")}
+            ${curriculumAlignmentOptionMarkup(defaultCurriculumId, "")}
           </select>
+          <small>Run the latest Supabase schema to save this across devices. Until then, this browser will remember the selected map.</small>
         </label>
         <label>
           Standards label
@@ -16394,7 +16446,13 @@ function renderAdmin() {
           <button class="button primary" id="saveSchools" type="button">Save Schools</button>
         </div>
       </div>
-      <p class="admin-status" id="adminSchoolsStatus">${state.schoolsLoaded ? `Loaded ${state.schools.length} school${state.schools.length === 1 ? "" : "s"}.` : "Loading schools from Supabase..."}</p>
+      <p class="admin-status" id="adminSchoolsStatus">${
+        state.schoolDefaultCurriculumSchemaMissing
+          ? "Schools loaded. The selected default curriculum is being remembered in this browser until Supabase returns the default_curriculum_id column."
+          : state.schoolsLoaded
+            ? `Loaded ${state.schools.length} school${state.schools.length === 1 ? "" : "s"}.`
+            : "Loading schools from Supabase..."
+      }</p>
       <div class="admin-school-list" id="adminSchoolList">
         ${schoolRows}
       </div>
@@ -16674,6 +16732,7 @@ function bindAdmin() {
     button.disabled = true;
     schoolsStatus.textContent = "Saving school licences...";
     try {
+      state.schoolDefaultCurriculumSchemaMissing = false;
       let savedCount = 0;
       for (const row of rows) {
         const field = (name) => row.querySelector(`[data-school-field="${name}"]`);
@@ -16709,7 +16768,10 @@ function bindAdmin() {
       }
       await loadSchools();
       await loadUserProfiles();
-      schoolsStatus.textContent = `Saved ${savedCount} school licence${savedCount === 1 ? "" : "s"}.`;
+      const schemaNote = state.schoolDefaultCurriculumSchemaMissing
+        ? " Default curriculum is saved in this browser until the Supabase school schema is updated."
+        : "";
+      schoolsStatus.textContent = `Saved ${savedCount} school licence${savedCount === 1 ? "" : "s"}.${schemaNote}`;
       renderRoute();
     } catch (error) {
       schoolsStatus.textContent = `Could not save schools: ${error.message}`;
