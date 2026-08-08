@@ -3027,6 +3027,14 @@ function schoolContextBadges(context = currentSchoolContext()) {
   ].filter(Boolean);
 }
 
+function schoolContextReportLine() {
+  const context = currentSchoolContext();
+  const schoolName = context?.school_name || currentSchoolName();
+  const schoolDetail = context?.pilot_name || context?.organisation_name || "";
+  if (!schoolName) return "Generated with Kaizen Maths";
+  return `Generated with Kaizen Maths for ${[schoolName, schoolDetail].filter(Boolean).join(" · ")}`;
+}
+
 function schoolTeacherEmails(schoolId) {
   return state.schoolTeacherAccess
     .filter((row) => row.school_id === schoolId)
@@ -3472,11 +3480,7 @@ function worksheetQuestionMarksHtml(problem, options = {}) {
 }
 
 function worksheetBrandingText() {
-  const context = currentSchoolContext();
-  const schoolName = context?.school_name || currentSchoolName();
-  const schoolDetail = context?.pilot_name || context?.organisation_name || "";
-  if (!schoolName) return "Generated with Kaizen Maths";
-  return `Generated with Kaizen Maths for ${[schoolName, schoolDetail].filter(Boolean).join(" · ")}`;
+  return schoolContextReportLine();
 }
 
 function worksheetBrandingFooterHtml(extraClass = "") {
@@ -11467,14 +11471,16 @@ function renderCurriculumAlignments() {
 
 function bindCurriculumAlignmentActions(framework) {
   document.querySelectorAll("[data-curriculum-alignment-select]").forEach((select) => {
-    select.addEventListener("change", () => {
+    const openSelectedCurriculum = () => {
       const selectedFramework = select.value;
       if (!selectedFramework) {
         location.hash = "#/curriculum-alignments";
         return;
       }
       location.hash = `#/curriculum-alignments/${selectedFramework}`;
-    });
+    };
+    select.addEventListener("change", openSelectedCurriculum);
+    select.addEventListener("input", openSelectedCurriculum);
   });
 
   if (!framework) return;
