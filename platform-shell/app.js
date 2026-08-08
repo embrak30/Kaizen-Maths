@@ -2748,6 +2748,14 @@ function isCapeCoverageTool(tool) {
   return taggedMatch || (categoryMatch && advancedLevelMatch);
 }
 
+function isOmanGedCoverageTool(tool) {
+  const level = normalise(tool.level);
+  const taggedMatch = curriculumTagMatches(tool, "Oman GED") || curriculumTagMatches(tool, "Oman");
+  const categoryMatch = ["Algebra", "Numbers", "Geometry", "Statistics", "Mechanics"].includes(tool.category);
+  const secondaryOrAdvancedMatch = level.includes("gcse") || level.includes("igcse") || level.includes("csec") || level.includes("a-level") || level.includes("cape");
+  return taggedMatch || (categoryMatch && secondaryOrAdvancedMatch && !isFurtherMathsTool(tool));
+}
+
 const curriculumMapAreas = [
   {
     id: "gcse",
@@ -2790,6 +2798,13 @@ const curriculumMapAreas = [
     subtitle: "Caribbean advanced mathematics coverage",
     description: "Advanced pure, statistics, and mechanics tools that support CAPE-style practice, including calculus, functions, proof, distributions, hypothesis testing, vectors, matrices, and mechanics.",
     match: (tool) => isCapeCoverageTool(tool)
+  },
+  {
+    id: "oman-ged",
+    title: "Oman GED",
+    subtitle: "General Education Diploma mathematics coverage",
+    description: "Basic and advanced mathematics links for Oman General Education Diploma classes, including algebra, functions, trigonometry, calculus, statistics, probability, and applied modelling.",
+    match: (tool) => isOmanGedCoverageTool(tool)
   },
   {
     id: "further-maths",
@@ -6801,8 +6816,8 @@ function renderHome() {
     <section class="coverage-home-band" aria-labelledby="homeCoverageTitle">
       <div>
         <span class="eyebrow">Curriculum Coverage</span>
-        <h2 id="homeCoverageTitle">Mapped across GCSE, CSEC, CAPE, Common Core, A-Level, and Further Maths</h2>
-        <p>See current coverage for GCSE, CSEC, CAPE, Common Core, A-Level Pure, Further Maths, A-Level Statistics, and A-Level Mechanics, with future tagging routes for IGCSE and IB.</p>
+        <h2 id="homeCoverageTitle">Mapped across GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level, and Further Maths</h2>
+        <p>See current coverage for GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level Pure, Further Maths, A-Level Statistics, and A-Level Mechanics, with future tagging routes for IGCSE and IB.</p>
       </div>
       <div class="coverage-home-counts" aria-label="Coverage counts">
         ${curriculumMapAreas.map((area) => `<span><strong>${coverageToolsFor(area).length}</strong>${escapeHtml(area.title)}</span>`).join("")}
@@ -7021,7 +7036,7 @@ function renderCoverageMap() {
   app.innerHTML = `
     ${pageHeader(
       "Curriculum Coverage Map",
-      "A compact live view of the Kaizen Maths tool library across GCSE, CSEC, CAPE, Common Core, A-Level Pure, Further Maths, Statistics, and Mechanics.",
+      "A compact live view of the Kaizen Maths tool library across GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level Pure, Further Maths, Statistics, and Mechanics.",
       `<a class="button" href="#/tools">Browse Tool Library</a>${isAdmin() ? `<a class="button" href="#/admin">Edit Tags In Admin</a>` : ""}`
     )}
     <section class="coverage-page">
@@ -10929,6 +10944,126 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    id: "oman-ged",
+    label: "Oman GED",
+    country: "Oman",
+    status: "Mapped",
+    title: "Oman General Education Diploma Mathematics Alignment",
+    description: "A pilot alignment linking Oman General Education Diploma mathematics routes to Kaizen Maths tools for classroom teaching, revision, worked examples, worksheets, and assessment preparation.",
+    basis: "Pilot alignment based on public Oman Ministry of Education references to Grade 12 General Education Diploma mathematics, including basic and advanced mathematics routes, and the Ministry's 2022 announcement of refreshed Grade 12 mathematics and science curricula for 2023/2024.",
+    standards: [
+      {
+        code: "GED Basic Mathematics",
+        title: "Number, Algebra and Everyday Mathematics",
+        focus: "Number fluency, percentage change, ratio and proportion, formula substitution, rearranging formulae, linear equations, quadratic equations, sequences, financial contexts and real-life problem solving.",
+        coverage: "Strong",
+        tools: [
+          ["fractions-practice", "repair fraction fluency and mixed-operation number work"],
+          ["simple-percentage-tasks", "build percentage increase, decrease, reverse percentage and comparison practice"],
+          ["ratio-proportion", "support ratio, proportion, sharing and scaling"],
+          ["linear-equations", "generate equation-solving practice with clear working"],
+          ["quadratic-equations", "practise factorising, completing the square and formula methods"],
+          ["transposition-formulae", "strengthen rearranging formulae before applied contexts"],
+          ["financial-real-life-maths", "support money, interest, discounts, profit, loss and practical calculation"]
+        ],
+        teacherMove: "Use this route for intervention and GED readiness: keep the method visible, require correct notation, and connect each calculation back to the context."
+      },
+      {
+        code: "GED Advanced Mathematics",
+        title: "Functions, Graphs and Coordinate Geometry",
+        focus: "Function notation, mappings, domains, ranges, transformations of graphs, polynomial and rational relationships, coordinate geometry, straight lines, circles and modelling with graphs.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "practise notation, mappings, domains, ranges, composites and inverses"],
+          ["graph-transformations-curve-sketching", "connect algebraic changes to graph movement and curve features"],
+          ["straight-lines", "practise gradients, equations of lines and coordinate geometry"],
+          ["equation-of-a-circle", "connect centre, radius, tangents and intersections"],
+          ["roots-of-equations", "link roots, factors, equations and graphical interpretation"],
+          ["dynamic-classroom-displays", "animate graph and parameter changes during teacher modelling"]
+        ],
+        teacherMove: "Move between equation, graph and interpretation. Students should describe what a parameter changes before they calculate."
+      },
+      {
+        code: "GED Advanced Mathematics",
+        title: "Trigonometry and Geometric Reasoning",
+        focus: "Trigonometric ratios, exact trigonometric values, trig graphs, identities, equations, bearings, circle geometry, vectors, transformations and multi-step geometric reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["trigonometric-functions", "develop exact values, identities, equations and proof-style trig questions"],
+          ["trig-graphs-transformations", "show sine, cosine and tangent graphs with transformations"],
+          ["bearings", "support bearing notation, hidden bearings and trigonometry contexts"],
+          ["circle-theorems", "build circle-theorem reasoning chains"],
+          ["formal-geometric-proof", "support statement-and-reason proof structure"],
+          ["transformations", "practise translation, reflection, rotation and enlargement"]
+        ],
+        teacherMove: "Ask students to name the relationship first, then calculate. Diagrams should support reasoning rather than become the whole solution."
+      },
+      {
+        code: "GED Advanced Mathematics",
+        title: "Calculus and Rates of Change",
+        focus: "Limits, first principles, differentiation, tangents and normals, stationary points, optimisation, integration, area under curves and connected applications.",
+        coverage: "Strong",
+        tools: [
+          ["limits-first-principles", "support limit notation, first-principles reasoning and continuity"],
+          ["differentiation-polynomials", "secure polynomial differentiation and gradient functions"],
+          ["advanced-differentiation", "extend to product, quotient, chain, implicit and parametric differentiation"],
+          ["integration", "cover basic integration, definite integrals and area"],
+          ["advanced-integration", "introduce integration by substitution and by parts where needed"],
+          ["volumes-of-revolution", "extend integration into volume applications"],
+          ["dynamic-classroom-displays", "show gradients, accumulation and transformation ideas dynamically"]
+        ],
+        teacherMove: "Show the rule, the substitution into the rule and the simplified result. Avoid leaving calculus steps as verbal instructions only."
+      },
+      {
+        code: "GED Data and Probability",
+        title: "Statistics, Probability and Data Handling",
+        focus: "Averages and spread, grouped data, histograms, cumulative frequency, probability, distributions, sampling, correlation, regression and interpretation of statistical results.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "generate mean, median, mode, range and representative-measure practice"],
+          ["histograms", "develop grouped-data and frequency-density reasoning"],
+          ["cumulative-frequency-curves", "support medians, quartiles and percentiles from ogives"],
+          ["tree-diagrams-conditional-probability", "generate conditional probability practice"],
+          ["sampling-methods-bias", "teach sampling choices, bias and limitations"],
+          ["correlation-regression", "find and interpret regression lines from tables"],
+          ["normal-distribution", "standardise normal variables and interpret probabilities"]
+        ],
+        teacherMove: "Make the final sentence interpret the result in context. Students should not stop at a calculation when the question asks for a decision or comparison."
+      },
+      {
+        code: "GED Applied Modelling",
+        title: "Mechanics and Applied Mathematics Links",
+        focus: "Constant acceleration, motion graphs, forces, momentum, work, energy, power, projectiles, modelling assumptions, units and interpretation of results.",
+        coverage: "Developing",
+        tools: [
+          ["motion-graphs-constant-acceleration", "interpret distance-time and velocity-time graphs"],
+          ["equations-of-motion", "generate constant-acceleration practice"],
+          ["newtons-second-law", "connect resultant force, mass and acceleration"],
+          ["momentum", "generate momentum and impulse questions"],
+          ["projectiles", "separate horizontal and vertical motion in projectile problems"],
+          ["work-energy-power", "link work done, energy changes and power"],
+          ["friction", "support limiting equilibrium and friction models"]
+        ],
+        teacherMove: "Start from the model: draw the situation, state the known quantities, choose the equation, substitute clearly, then interpret the answer with units."
+      },
+      {
+        code: "GED Revision",
+        title: "Mixed Practice, Worksheets and Assessment Preparation",
+        focus: "Combining basic and advanced mathematics topics into classroom practice, intervention tasks, revision sheets, mock-style sets and worked-solution resources.",
+        coverage: "Strong",
+        tools: [
+          ["functions", "combine algebra and function topic blocks into printable practice"],
+          ["trigonometric-functions", "include higher-level trigonometry revision sets"],
+          ["normal-distribution", "add statistics and distribution practice where needed"],
+          ["classroom-displays", "project grids, diagrams and reference displays during revision"],
+          ["dynamic-classroom-displays", "animate graphs, transformations and circle relationships for whole-class teaching"],
+          ["motion-graphs-constant-acceleration", "include applied modelling and mechanics revision where relevant"]
+        ],
+        teacherMove: "Use the alignment as a planning guide: select the topic, generate practice at the right level, then build a worksheet or assessment when students are ready."
+      }
+    ]
+  },
+  {
     id: "jamaica-nsc-7-9",
     label: "Jamaica NSC 7-9",
     country: "Jamaica",
@@ -11245,6 +11380,7 @@ function inferCurriculumIdFromSchoolContext(context = currentSchoolContext()) {
   if (text.includes("ontario")) return "ontario-mathematics";
   if (text.includes("australia")) return "australian-curriculum";
   if (text.includes("finland")) return "finland-mathematics";
+  if (text.includes("oman") || text.includes("general education diploma")) return "oman-ged";
   return "";
 }
 
@@ -12870,6 +13006,9 @@ function isCurriculumOrMetaTopic(label, tool) {
     "common core",
     "csec",
     "cape",
+    "oman ged",
+    "oman",
+    "ged",
     "ib",
     "ap",
     "aqa",
@@ -12893,6 +13032,9 @@ function isCurriculumOrMetaTopic(label, tool) {
     "commoncore",
     "csec",
     "cape",
+    "omanged",
+    "oman",
+    "ged",
     "ib",
     "ap",
     "aqa",
@@ -12900,7 +13042,7 @@ function isCurriculumOrMetaTopic(label, tool) {
     "ocr"
   ]);
   if (meta.has(value) || compactMeta.has(compact)) return true;
-  return /\b(ks2|ks3|ks4|ks5|gcse|igcse|a[-\s]?level|aqa|edexcel|ocr|common\s*core|csec|cape|ib|ap)\b/.test(value);
+  return /\b(ks2|ks3|ks4|ks5|gcse|igcse|a[-\s]?level|aqa|edexcel|ocr|common\s*core|csec|cape|oman\s*ged|oman|ged|ib|ap)\b/.test(value);
 }
 
 function formatTopicLabel(label) {
@@ -12915,7 +13057,7 @@ function formatTopicLabel(label) {
 
 function cleanTopicLabel(label) {
   return String(label || "")
-    .replace(/\b(KS2|KS3|KS4|KS5|GCSE|IGCSE|A[-\s]?Level|AQA|Edexcel|OCR|Common\s*Core|CSEC|CAPE|IB|AP)\b/gi, "")
+    .replace(/\b(KS2|KS3|KS4|KS5|GCSE|IGCSE|A[-\s]?Level|AQA|Edexcel|OCR|Common\s*Core|CSEC|CAPE|Oman\s*GED|Oman|GED|IB|AP)\b/gi, "")
     .replace(/^\s*\b(and|or)\b\s*/gi, "")
     .replace(/\b(and|or)\b\s*$/gi, "")
     .replace(/^[\s:;,\-/]+|[\s:;,\-/]+$/g, "")
@@ -12992,6 +13134,7 @@ function toolCurriculumLinks(tool) {
     if (!links.includes(label)) links.push(label);
   };
   const schoolRoute = /\b(ks2|ks3|ks4|gcse|igcse|csec)\b/.test(haystack);
+  const omanRoute = /\boman\b|\bged\b/.test(haystack) || haystack.includes("general education diploma");
   const advancedRoute = /\b(a[-\s]?level|cape|ib|ap)\b/.test(haystack) || haystack.includes("further maths") || haystack.includes("calculus") || haystack.includes("mechanics");
 
   if (schoolRoute) {
@@ -13015,6 +13158,7 @@ function toolCurriculumLinks(tool) {
   if (haystack.includes("further maths") || haystack.includes("complex") || haystack.includes("matrices") || haystack.includes("polar") || haystack.includes("hyperbolic") || haystack.includes("induction")) add("Further Maths");
   if (haystack.includes("csec")) add("CSEC");
   if (haystack.includes("cape")) add("CAPE");
+  if (omanRoute) add("Oman GED");
   if (haystack.includes("common core")) add("Common Core");
   if (haystack.includes("ib") || haystack.includes("international")) add("IB");
   if (haystack.includes("igcse")) add("IGCSE");
@@ -16007,7 +16151,7 @@ function adminSchoolRowHtml(school = {}, index = 0) {
         </label>
         <label>
           Curriculum focus
-          <input data-school-field="curriculum_focus" type="text" value="${escapeHtml(school.curriculum_focus || "")}" placeholder="CSEC, CAPE, MOE Jamaica">
+          <input data-school-field="curriculum_focus" type="text" value="${escapeHtml(school.curriculum_focus || "")}" placeholder="CSEC, CAPE, Oman GED, MOE Jamaica">
         </label>
         <label>
           Default curriculum map
@@ -16205,7 +16349,7 @@ function renderAdmin() {
         </div>
         <label class="admin-metadata-field">
           Curriculum / exam tags
-          <input class="admin-metadata-input" type="text" autocomplete="off" spellcheck="false" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="curriculum_tags" value="${escapeHtml(metadata.curriculum_tags || "")}" placeholder="CSEC, CAPE, Common Core, IGCSE, IB, AP">
+          <input class="admin-metadata-input" type="text" autocomplete="off" spellcheck="false" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="curriculum_tags" value="${escapeHtml(metadata.curriculum_tags || "")}" placeholder="CSEC, CAPE, Oman GED, Common Core, IGCSE, IB, AP">
         </label>
         <label class="admin-metadata-field">
           Admin notes
@@ -16490,7 +16634,7 @@ function renderAdmin() {
         <div>
           <span class="eyebrow">Search And Alignment</span>
           <h2>Tool Tags</h2>
-          <p>Add curriculum, exam-board, country, or route labels manually. Use commas between tags, for example: CSEC, CAPE, Common Core, IGCSE, IB, AP.</p>
+          <p>Add curriculum, exam-board, country, or route labels manually. Use commas between tags, for example: CSEC, CAPE, Oman GED, Common Core, IGCSE, IB, AP.</p>
         </div>
         <button class="button primary" id="saveToolMetadata" type="button">Save Tool Tags</button>
       </div>
@@ -17708,11 +17852,11 @@ function updateRouteSeo(parts) {
     },
     "coverage-map": {
       title: routeTitle("Curriculum Coverage Map"),
-      description: "View Kaizen Maths coverage across GCSE, CSEC, CAPE, Common Core, A-Level Pure, Further Maths, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
+      description: "View Kaizen Maths coverage across GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level Pure, Further Maths, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, Ontario Mathematics, Australian Curriculum Mathematics, Finland Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, Ontario Mathematics, Australian Curriculum Mathematics, Finland Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, Oman GED Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
