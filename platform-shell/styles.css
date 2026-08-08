@@ -4852,6 +4852,12 @@ body[data-route="worksheet-generator"] .account-action {
   display: none;
 }
 
+.classroom-exit {
+  display: none;
+  min-height: 30px;
+  padding: 5px 10px;
+}
+
 .classroom-fullscreen {
   display: none;
   min-height: 30px;
@@ -4862,6 +4868,25 @@ body[data-route="worksheet-generator"] .account-action {
   display: none;
   min-height: 30px;
   padding: 5px 10px;
+}
+
+.classroom-write-tools {
+  display: none;
+  position: relative;
+}
+
+.classroom-write-palette {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.96);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.24);
 }
 
 .classroom-draw-toggle,
@@ -4883,6 +4908,15 @@ body[data-route="worksheet-generator"] .account-action {
   color: white;
 }
 
+.legacy-stage.classroom #focusTool,
+.legacy-stage.classroom .classroom-info-link {
+  display: none !important;
+}
+
+.legacy-stage.classroom .classroom-exit {
+  display: inline-flex;
+}
+
 .legacy-stage.classroom .classroom-fullscreen {
   display: inline-flex;
 }
@@ -4893,11 +4927,13 @@ body[data-route="worksheet-generator"] .account-action {
   color: white;
 }
 
+.legacy-stage.classroom .classroom-write-tools,
 .legacy-stage.classroom .classroom-draw-toggle {
   display: inline-flex;
 }
 
-.legacy-stage.classroom.annotation-active .classroom-annotation-control {
+.legacy-stage.classroom.annotation-active .classroom-write-palette,
+.legacy-stage.classroom.annotation-active .classroom-write-palette .classroom-annotation-control {
   display: inline-flex;
 }
 

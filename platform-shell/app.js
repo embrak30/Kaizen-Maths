@@ -14419,16 +14419,20 @@ function renderToolFrame(tool, options = {}) {
           </div>`}
           <div class="legacy-toolbar-actions">
             ${startClassroom ? "" : `<span class="tool-path">${tool.toolPath}</span>`}
-            ${startClassroom ? `<a class="button classroom-info-link" href="#/tools/${escapeHtml(tool.slug)}">Tool Info</a>` : ""}
-            <button class="button primary" id="focusTool" type="button" ${startClassroom ? "hidden" : ""}>Classroom View</button>
+            ${startClassroom ? "" : `<button class="button primary" id="focusTool" type="button">Classroom View</button>`}
             <button class="button classroom-fullscreen" id="classroomFullscreen" type="button">Full Screen</button>
             <button class="button classroom-capture" id="classroomCapture" type="button">Capture</button>
-            <button class="button classroom-draw-toggle" id="classroomDrawToggle" type="button" aria-pressed="false">Write</button>
-            <button class="button classroom-annotation-control active" id="annotationPen" type="button" aria-pressed="true">Pen</button>
-            <button class="button classroom-annotation-control" id="annotationHighlighter" type="button" aria-pressed="false">Highlighter</button>
-            <button class="button classroom-annotation-control" id="annotationEraser" type="button" aria-pressed="false">Eraser</button>
-            <button class="button classroom-annotation-control" id="annotationUndo" type="button">Undo</button>
-            <button class="button classroom-annotation-control danger" id="annotationClear" type="button">Clear</button>
+            <div class="classroom-write-tools">
+              <button class="button classroom-draw-toggle" id="classroomDrawToggle" type="button" aria-pressed="false">Write</button>
+              <div class="classroom-write-palette" aria-label="Writing tools">
+                <button class="button classroom-annotation-control active" id="annotationPen" type="button" aria-pressed="true">Pen</button>
+                <button class="button classroom-annotation-control" id="annotationHighlighter" type="button" aria-pressed="false">Highlighter</button>
+                <button class="button classroom-annotation-control" id="annotationEraser" type="button" aria-pressed="false">Eraser</button>
+                <button class="button classroom-annotation-control" id="annotationUndo" type="button">Undo</button>
+                <button class="button classroom-annotation-control danger" id="annotationClear" type="button">Clear</button>
+              </div>
+            </div>
+            <button class="button classroom-exit" id="exitClassroom" type="button">Exit</button>
           </div>
         </div>
         ${frame}
@@ -16910,6 +16914,7 @@ function bindAdmin() {
 
 function bindToolFrame(tool, options = {}) {
   const button = document.getElementById("focusTool");
+  const exitButton = document.getElementById("exitClassroom");
   const fullscreenButton = document.getElementById("classroomFullscreen");
   const captureButton = document.getElementById("classroomCapture");
   const drawToggle = document.getElementById("classroomDrawToggle");
@@ -17177,14 +17182,24 @@ function bindToolFrame(tool, options = {}) {
 
   function updateFullscreenButton() {
     if (!fullscreenButton) return;
-    fullscreenButton.textContent = document.fullscreenElement === stage ? "Full Screen Active" : "Full Screen";
-    fullscreenButton.disabled = document.fullscreenElement === stage;
+    const active = document.fullscreenElement === stage;
+    fullscreenButton.textContent = active ? "Exit Full Screen" : "Full Screen";
+    fullscreenButton.setAttribute("aria-pressed", String(active));
+    fullscreenButton.disabled = false;
   }
 
   function requestClassroomFullscreen() {
     if (stage.requestFullscreen && document.fullscreenElement !== stage) {
       stage.requestFullscreen().catch(() => {});
     }
+  }
+
+  function toggleClassroomFullscreen() {
+    if (document.fullscreenElement === stage) {
+      document.exitFullscreen().catch(() => {});
+      return;
+    }
+    requestClassroomFullscreen();
   }
 
   function safeCaptureFileName(value) {
@@ -17593,14 +17608,21 @@ function bindToolFrame(tool, options = {}) {
 
   button?.addEventListener("click", () => {
     if (stage.classList.contains("classroom")) {
-      requestClassroomFullscreen();
+      toggleClassroomFullscreen();
       return;
     }
     setClassroomMode(true);
   });
 
+  if (exitButton) {
+    exitButton.addEventListener("click", () => {
+      setClassroomMode(false);
+      if (options.exitRoute) location.hash = options.exitRoute;
+    });
+  }
+
   if (fullscreenButton) {
-    fullscreenButton.addEventListener("click", requestClassroomFullscreen);
+    fullscreenButton.addEventListener("click", toggleClassroomFullscreen);
   }
 
   if (frame) {
