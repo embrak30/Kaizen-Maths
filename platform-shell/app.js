@@ -2980,7 +2980,7 @@ function currentSchoolContext() {
   const school = schoolById(profile.school_id);
   return profile.school_id
     ? schoolContextFromRecord({ ...(school || {}), ...profile, id: profile.school_id })
-    : schoolContextFromRecord(storedSchoolContext());
+    : schoolContextFromRecord(window.KaizenSchoolContext || storedSchoolContext());
 }
 
 function schoolContextBadges(context = currentSchoolContext()) {

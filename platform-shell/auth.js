@@ -63,6 +63,14 @@
     }
   }
 
+  function storedSchoolContext() {
+    try {
+      return JSON.parse(localStorage.getItem(SCHOOL_CONTEXT_KEY) || "null");
+    } catch (_error) {
+      return null;
+    }
+  }
+
   function trialEndDate() {
     const date = new Date();
     date.setDate(date.getDate() + Number(config.trialDays || 30));
@@ -134,7 +142,7 @@
       if (error && /column|schema cache/i.test(error.message || "")) {
         const fallback = await state.client
           .from("schools")
-          .select("id, name, licence_ends_at, is_active")
+          .select("id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, standards_label, logo_url, contact_person, school_synopsis, licence_ends_at, is_active")
           .eq("id", profile.school_id)
           .maybeSingle();
         data = fallback.data;
@@ -144,7 +152,12 @@
         syncSchoolContext(null);
         return profile;
       }
-      const schoolContext = schoolContextFromRecord(data);
+      const previousContext = storedSchoolContext();
+      const preservedCurriculum = previousContext?.school_id === data.id ? previousContext.default_curriculum_id || "" : "";
+      const schoolContext = schoolContextFromRecord({
+        ...data,
+        default_curriculum_id: data.default_curriculum_id || preservedCurriculum
+      });
       syncSchoolContext(schoolContext);
       return {
         ...profile,
@@ -156,7 +169,7 @@
         school_currency_symbol: data.currency_symbol,
         school_locale: data.locale,
         school_curriculum_focus: data.curriculum_focus,
-        school_default_curriculum_id: data.default_curriculum_id,
+        school_default_curriculum_id: data.default_curriculum_id || preservedCurriculum,
         school_standards_label: data.standards_label,
         school_logo_url: data.logo_url,
         school_contact_person: data.contact_person,
