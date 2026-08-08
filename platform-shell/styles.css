@@ -4852,12 +4852,6 @@ body[data-route="worksheet-generator"] .account-action {
   display: none;
 }
 
-.classroom-exit {
-  display: none;
-  min-height: 30px;
-  padding: 5px 10px;
-}
-
 .classroom-fullscreen {
   display: none;
   min-height: 30px;
@@ -4887,10 +4881,6 @@ body[data-route="worksheet-generator"] .account-action {
 .classroom-annotation-control.danger {
   background: #7f1d1d;
   color: white;
-}
-
-.legacy-stage.classroom .classroom-exit {
-  display: inline-flex;
 }
 
 .legacy-stage.classroom .classroom-fullscreen {
@@ -5611,12 +5601,12 @@ body[data-route="worksheet-generator"] .account-action {
   line-height: 1.05;
 }
 
-.worksheet-fraction span:first-child {
+.worksheet-fraction > span:first-child {
   border-bottom: 1px solid currentColor;
   padding: 0 0.18em 0.08em;
 }
 
-.worksheet-fraction span:last-child {
+.worksheet-fraction > span:last-child {
   padding: 0.08em 0.18em 0;
 }
 
@@ -5627,11 +5617,11 @@ sup .worksheet-fraction {
   transform: translateY(-0.18em);
 }
 
-sup .worksheet-fraction span:first-child {
+sup .worksheet-fraction > span:first-child {
   padding: 0 0.12em 0.03em;
 }
 
-sup .worksheet-fraction span:last-child {
+sup .worksheet-fraction > span:last-child {
   padding: 0.03em 0.12em 0;
 }
 

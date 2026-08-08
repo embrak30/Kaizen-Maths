@@ -14429,7 +14429,6 @@ function renderToolFrame(tool, options = {}) {
             <button class="button classroom-annotation-control" id="annotationEraser" type="button" aria-pressed="false">Eraser</button>
             <button class="button classroom-annotation-control" id="annotationUndo" type="button">Undo</button>
             <button class="button classroom-annotation-control danger" id="annotationClear" type="button">Clear</button>
-            <button class="button classroom-exit" id="exitClassroom" type="button">Exit</button>
           </div>
         </div>
         ${frame}
@@ -16911,7 +16910,6 @@ function bindAdmin() {
 
 function bindToolFrame(tool, options = {}) {
   const button = document.getElementById("focusTool");
-  const exitButton = document.getElementById("exitClassroom");
   const fullscreenButton = document.getElementById("classroomFullscreen");
   const captureButton = document.getElementById("classroomCapture");
   const drawToggle = document.getElementById("classroomDrawToggle");
@@ -17573,7 +17571,7 @@ function bindToolFrame(tool, options = {}) {
     stage.classList.toggle("classroom", active);
     document.body.classList.toggle("classroom-active", active);
     if (button) {
-      button.textContent = active ? "Exit Classroom View" : "Classroom View";
+      button.textContent = "Classroom View";
       button.setAttribute("aria-pressed", String(active));
     }
     if (options.persist !== false) saveClassroomState(active);
@@ -17600,18 +17598,6 @@ function bindToolFrame(tool, options = {}) {
     }
     setClassroomMode(true);
   });
-
-  if (exitButton) {
-    exitButton.addEventListener("click", () => {
-      try {
-        frame?.contentWindow?.KaizenQuestionPersistence?.clear?.();
-      } catch (error) {
-        // Older or cross-origin tools simply start fresh when they reload.
-      }
-      setClassroomMode(false);
-      if (options.exitRoute) location.hash = options.exitRoute;
-    });
-  }
 
   if (fullscreenButton) {
     fullscreenButton.addEventListener("click", requestClassroomFullscreen);
