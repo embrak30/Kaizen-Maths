@@ -90,16 +90,16 @@
       shapes: {
         label: "2D Shapes",
         displays: [
-          { id:"rectangle", label:"Rectangle", render: () => renderPolygon("Rectangle", "M220 180 H820 V520 H220 Z", "shape-fill-a") },
-          { id:"square", label:"Square", render: () => renderPolygon("Square", "M300 150 H700 V550 H300 Z", "shape-fill-b") },
-          { id:"parallelogram", label:"Parallelogram", render: () => renderPolygon("Parallelogram", "M280 210 H780 L700 520 H200 Z", "shape-fill-a") },
-          { id:"trapezium", label:"Trapezium", render: () => renderPolygon("Trapezium", "M340 200 H700 L820 520 H220 Z", "shape-fill-c") },
-          { id:"kite", label:"Kite", render: () => renderPolygon("Kite", "M520 120 L760 360 L520 610 L300 360 Z", "shape-fill-b") },
-          { id:"rhombus", label:"Rhombus", render: () => renderPolygon("Rhombus", "M520 140 L790 360 L520 580 L250 360 Z", "shape-fill-a") },
+          { id:"rectangle", label:"Rectangle", render: () => renderPolygon("Rectangle", "M224 192 H832 V512 H224 Z", "shape-fill-a") },
+          { id:"square", label:"Square", render: () => renderPolygon("Square", "M320 160 H704 V544 H320 Z", "shape-fill-b") },
+          { id:"parallelogram", label:"Parallelogram", render: () => renderPolygon("Parallelogram", "M288 224 H800 L704 512 H192 Z", "shape-fill-a") },
+          { id:"trapezium", label:"Trapezium", render: () => renderPolygon("Trapezium", "M352 192 H704 L832 512 H224 Z", "shape-fill-c") },
+          { id:"kite", label:"Kite", render: () => renderPolygon("Kite", "M512 128 L768 352 L512 608 L288 352 Z", "shape-fill-b") },
+          { id:"rhombus", label:"Rhombus", render: () => renderPolygon("Rhombus", "M512 128 L800 352 L512 576 L224 352 Z", "shape-fill-a") },
           { id:"right-triangle", label:"Right-Angled Triangle", render: renderRightTriangle },
-          { id:"isosceles-triangle", label:"Isosceles Triangle", render: () => renderPolygon("Isosceles Triangle", "M520 130 L800 560 H240 Z", "shape-fill-c") },
-          { id:"equilateral-triangle", label:"Equilateral Triangle", render: () => renderPolygon("Equilateral Triangle", "M520 130 L820 650 H220 Z", "shape-fill-a") },
-          { id:"scalene-triangle", label:"Scalene Triangle", render: () => renderPolygon("Scalene Triangle", "M250 560 L760 500 L610 150 Z", "shape-fill-b") },
+          { id:"isosceles-triangle", label:"Isosceles Triangle", render: () => renderPolygon("Isosceles Triangle", "M512 128 L800 544 H224 Z", "shape-fill-c") },
+          { id:"equilateral-triangle", label:"Equilateral Triangle", render: () => renderPolygon("Equilateral Triangle", "M512 128 L800 640 H224 Z", "shape-fill-a") },
+          { id:"scalene-triangle", label:"Scalene Triangle", render: () => renderPolygon("Scalene Triangle", "M256 544 L768 512 L608 160 Z", "shape-fill-b") },
           { id:"circle", label:"Circle", render: renderCircle },
           { id:"sector", label:"Sector", render: renderSector }
         ]
@@ -161,8 +161,32 @@
     const displayList = document.getElementById("displayList");
     const displayTitle = document.getElementById("displayTitle");
 
-    function svg(content, viewBox = "-48 -42 1136 804") {
-      return '<svg class="shape-svg" viewBox="' + viewBox + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' + content + "</svg>";
+    const boardWidth = 1040;
+    const boardHeight = 720;
+    const gridStep = 32;
+
+    function currentTheme() {
+      return document.getElementById("themeSelect").value;
+    }
+
+    function svgGridBackground() {
+      const theme = currentTheme();
+      const minor = Array.from({length:Math.floor(boardWidth / gridStep) + 1},(_,i)=>'<line x1="'+(i*gridStep)+'" y1="0" x2="'+(i*gridStep)+'" y2="'+boardHeight+'" stroke="#e7eef5" stroke-width="1"/>').join("") +
+        Array.from({length:Math.floor(boardHeight / gridStep) + 1},(_,i)=>'<line x1="0" y1="'+(i*gridStep)+'" x2="'+boardWidth+'" y2="'+(i*gridStep)+'" stroke="#e7eef5" stroke-width="1"/>').join("");
+      if (theme === "major") {
+        const majorStep = gridStep * 5;
+        const major = Array.from({length:Math.floor(boardWidth / majorStep) + 1},(_,i)=>'<line x1="'+(i*majorStep)+'" y1="0" x2="'+(i*majorStep)+'" y2="'+boardHeight+'" stroke="#c6d5e2" stroke-width="2"/>').join("") +
+          Array.from({length:Math.floor(boardHeight / majorStep) + 1},(_,i)=>'<line x1="0" y1="'+(i*majorStep)+'" x2="'+boardWidth+'" y2="'+(i*majorStep)+'" stroke="#c6d5e2" stroke-width="2"/>').join("");
+        return '<rect width="'+boardWidth+'" height="'+boardHeight+'" fill="white"/>' + minor + major;
+      }
+      if (theme === "grid") {
+        return '<rect width="'+boardWidth+'" height="'+boardHeight+'" fill="white"/>' + minor;
+      }
+      return '<rect width="'+boardWidth+'" height="'+boardHeight+'" fill="white"/>';
+    }
+
+    function svg(content, viewBox = "0 0 1040 720") {
+      return '<svg class="shape-svg" viewBox="' + viewBox + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' + svgGridBackground() + content + "</svg>";
     }
 
     function label(text, x, y) {
@@ -203,15 +227,15 @@
     }
 
     function renderRightTriangle() {
-      stage.innerHTML = svg('<path class="shape-fill-a" d="M260 560 H790 V170 Z"/><path class="shape-line" d="M710 560 V480 H790"/>' + label("Right-Angled Triangle", 520, 665));
+      stage.innerHTML = svg('<path class="shape-fill-a" d="M256 544 H800 V160 Z"/><path class="shape-line" d="M704 544 V480 H800"/>' + label("Right-Angled Triangle", 520, 665));
     }
 
     function renderCircle() {
-      stage.innerHTML = svg('<circle class="shape-fill-b" cx="520" cy="360" r="230"/><line class="shape-line" x1="520" y1="360" x2="750" y2="360"/><circle cx="520" cy="360" r="7" fill="#1a365d"/>' + label("Circle", 520, 665));
+      stage.innerHTML = svg('<circle class="shape-fill-b" cx="512" cy="352" r="224"/><line class="shape-line" x1="512" y1="352" x2="736" y2="352"/><circle cx="512" cy="352" r="7" fill="#1a365d"/>' + label("Circle", 520, 665));
     }
 
     function renderSector() {
-      stage.innerHTML = svg('<path class="shape-fill-c" d="M520 360 L760 190 A300 300 0 0 1 810 510 Z"/><path class="shape-line" d="M520 360 L760 190 M520 360 L810 510"/>' + label("Sector", 520, 665));
+      stage.innerHTML = svg('<path class="shape-fill-c" d="M512 352 L768 192 A288 288 0 0 1 800 512 Z"/><path class="shape-line" d="M512 352 L768 192 M512 352 L800 512"/>' + label("Sector", 520, 665));
     }
 
     function renderCuboid(name, cube) {
