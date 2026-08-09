@@ -12848,8 +12848,29 @@ function renderKaizenUniversity() {
   const signedIn = isSignedIn();
   const requestedSectionId = routeParts()[1] || "";
   const requestedSection = certificationSectionById(requestedSectionId);
-  const activeSection = requestedSection && certificationSectionUnlocked(requestedSection.id, progress) ? requestedSection : null;
+  const activeSection = signedIn && requestedSection && certificationSectionUnlocked(requestedSection.id, progress) ? requestedSection : null;
   const screenshots = homepageScreenshotList();
+
+  if (requestedSection && !signedIn) {
+    app.innerHTML = `
+      ${pageHeader(
+        "Kaizen University",
+        "Kaizen University is visible to everyone, but the certification course opens only after sign-in so progress can be saved to a teacher account.",
+        `<a class="button" href="#/kaizen-university">All Modules</a>`
+      )}
+      <section class="certification-course-intro panel">
+        <div>
+          <span class="eyebrow">Sign In Required</span>
+          <h2>${escapeHtml(requestedSection.title.replace(/^Module \d+:\s*/, ""))}</h2>
+          <p>${escapeHtml(requestedSection.intro)}</p>
+          <p class="certification-save-note">Sign in to start this module, watch the training videos, answer the quick checks, and save certification progress.</p>
+        </div>
+        <button class="button primary" type="button" data-auth-action="signin">Sign In To Start Certification</button>
+      </section>
+    `;
+    bindAuthActions();
+    return;
+  }
 
   if (!activeSection) {
     app.innerHTML = `
@@ -12880,7 +12901,7 @@ function renderKaizenUniversity() {
       <section class="certification-module-grid" aria-label="Kaizen certification modules">
         ${universitySections.map((section, index) => {
           const sectionProgress = certificationSectionProgress(section, progress);
-          const unlocked = certificationSectionUnlocked(section.id, progress);
+          const unlocked = signedIn && certificationSectionUnlocked(section.id, progress);
           const complete = sectionProgress.completed === sectionProgress.total;
           const screenshot = screenshots[index % Math.max(screenshots.length, 1)];
           const body = `
@@ -12891,10 +12912,13 @@ function renderKaizenUniversity() {
               <p>${escapeHtml(section.intro)}</p>
               <div class="certification-course-card-meta">
                 <span>${sectionProgress.completed}/${sectionProgress.total} lessons</span>
-                <strong>${complete ? "Complete" : unlocked ? "Start Module" : "Locked"}</strong>
+                <strong>${!signedIn ? "Sign in to start" : complete ? "Complete" : unlocked ? "Start Module" : "Locked"}</strong>
               </div>
             </div>
           `;
+          if (!signedIn) {
+            return `<button class="certification-course-card sign-in-required" type="button" data-auth-action="signin">${body}</button>`;
+          }
           return unlocked
             ? `<a class="certification-course-card ${complete ? "complete" : ""}" href="#/kaizen-university/${escapeHtml(section.id)}" data-certification-open-module="${escapeHtml(section.id)}">${body}</a>`
             : `<article class="certification-course-card locked" aria-disabled="true">${body}</article>`;
