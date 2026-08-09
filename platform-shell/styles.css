@@ -2105,8 +2105,93 @@ body[data-route="worksheet-generator"] .account-action {
     #ffffff;
 }
 
+.certification-hero {
+  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+}
+
 .university-hero h2 {
   margin: 4px 0 8px;
+}
+
+.certification-save-note {
+  margin-top: 12px;
+  color: #475569;
+  font-size: 0.92rem;
+  font-weight: 750;
+}
+
+.certification-progress-card {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid rgba(111, 76, 195, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 10px 28px rgba(44, 35, 91, 0.08);
+}
+
+.certification-progress-card strong {
+  color: #282450;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 0.95;
+}
+
+.certification-progress-card > span {
+  color: #475569;
+  font-weight: 850;
+}
+
+.certification-progress-card ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #4a5570;
+  font-weight: 750;
+}
+
+.certification-progress-bar {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e7eef5;
+}
+
+.certification-progress-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--violet), var(--teal));
+}
+
+.certification-overview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.certification-overview article {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid rgba(23, 184, 179, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.certification-overview h3,
+.certification-certificate-box h3 {
+  margin: 0;
+  color: #282450;
+}
+
+.certification-overview p,
+.certification-certificate-box p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
 }
 
 .university-steps {
@@ -2281,6 +2366,16 @@ body[data-route="worksheet-generator"] .account-action {
   box-shadow: 0 1px 2px rgba(23, 32, 51, 0.04);
 }
 
+.certification-module-card {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.certification-module-card.complete {
+  border-color: rgba(22, 163, 74, 0.35);
+  box-shadow: 0 12px 30px rgba(22, 163, 74, 0.08);
+}
+
 .video-placeholder {
   min-height: 156px;
   display: grid;
@@ -2334,6 +2429,109 @@ body[data-route="worksheet-generator"] .account-action {
   margin: 0;
   color: var(--muted);
   line-height: 1.5;
+}
+
+.certification-module-toggle {
+  margin-top: 12px;
+}
+
+.certification-checkout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.certification-quiz,
+.certification-practical {
+  display: grid;
+  gap: 14px;
+}
+
+.certification-question {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #e3eaf3;
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.certification-question legend {
+  padding: 0 4px;
+  color: #282450;
+  font-weight: 900;
+}
+
+.certification-question label,
+.certification-task {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: #4a5570;
+  line-height: 1.45;
+}
+
+.certification-question input,
+.certification-task input {
+  margin-top: 0.25em;
+}
+
+.certification-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.certification-actions span {
+  color: #4a5570;
+  font-weight: 800;
+}
+
+.certification-task-list {
+  display: grid;
+  gap: 10px;
+}
+
+.certification-task {
+  padding: 12px;
+  border: 1px solid #e3eaf3;
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.certification-task strong,
+.certification-task small {
+  display: block;
+}
+
+.certification-task strong {
+  color: #282450;
+}
+
+.certification-task small {
+  margin-top: 3px;
+  color: var(--muted);
+}
+
+.certification-certificate-box {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid rgba(111, 76, 195, 0.2);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(111, 76, 195, 0.08), rgba(23, 184, 179, 0.09)),
+    #ffffff;
+}
+
+.certification-certificate-box.ready {
+  border-color: rgba(22, 163, 74, 0.32);
+  background:
+    linear-gradient(135deg, rgba(220, 252, 231, 0.8), rgba(231, 251, 250, 0.86)),
+    #ffffff;
 }
 
 .beta-intro p,
@@ -7874,6 +8072,28 @@ sup .worksheet-fraction > span:last-child {
 
   .exam-mode-summary {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .certification-hero,
+  .certification-checkout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .certification-overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .certification-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .certification-actions {
+    align-items: stretch;
+    flex-direction: column;
   }
 }
 

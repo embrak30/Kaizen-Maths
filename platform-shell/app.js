@@ -2636,6 +2636,9 @@ const state = {
   toolInfoOverrides: {},
   toolInfoOverridesLoaded: false,
   universityVideos: {},
+  universityProgress: null,
+  universityProgressLoaded: false,
+  universityProgressSource: "local",
   siteTestimonials: [],
   testimonialsLoaded: false,
   accessLoaded: false,
@@ -2689,7 +2692,7 @@ const launchReadinessSections = [
       ["tool-samples", "Core tool categories have been checked", "Algebra, number, geometry, statistics, mechanics, classroom tools, worksheet builder, and exam builder open correctly."],
       ["worked-steps", "Worked solutions are good enough for public testing", "High-priority tools show clear working and avoid obvious formatting issues."],
       ["worksheet-builder", "Worksheet builder flow is understandable", "Teachers can load question blocks, edit marks, generate the worksheet, and view the answer key."],
-      ["kaizen-university", "Kaizen University has starter guidance", "At least one short walkthrough or placeholder explains how teachers should begin."]
+      ["kaizen-university", "Kaizen University certification is ready", "Training modules, video slots, quiz, practical tasks, and certificate generation can be tested."]
     ]
   },
   {
@@ -3135,7 +3138,7 @@ function toolCatalogDataShouldRerenderCurrentRoute() {
 
 function authSensitiveRouteShouldRerender() {
   const route = routeParts()[0] || "home";
-  return ["tools", "curriculum-alignments", "worksheet-generator", "gcse-exam-style", "admin", "tutor-workspace", "school-space", "upgrade"].includes(route);
+  return ["tools", "curriculum-alignments", "worksheet-generator", "gcse-exam-style", "admin", "tutor-workspace", "school-space", "upgrade", "kaizen-university"].includes(route);
 }
 
 function currentAuthAccessKey() {
@@ -3758,6 +3761,89 @@ function allUniversityVideos() {
   return universitySections.flatMap((section) => section.videos.map((video) => ({ ...video, section: section.title })));
 }
 
+const certificationProgressStorageKey = "kaizen:certification-progress-v1";
+
+const certificationPracticalTasks = [
+  {
+    id: "classroom-routine",
+    title: "Plan one classroom routine",
+    description: "Choose one topic, one level, and one question type you would use for live board practice."
+  },
+  {
+    id: "worked-example",
+    title: "Model one worked example",
+    description: "Use One Example mode, reveal the steps, and identify one misconception you would discuss."
+  },
+  {
+    id: "worksheet",
+    title: "Create one worksheet",
+    description: "Build a short worksheet with selected questions and a separate answer key."
+  },
+  {
+    id: "assessment",
+    title: "Create one assessment resource",
+    description: "Use marks or an assessment-style set to produce a short quiz, intervention task, or review sheet."
+  },
+  {
+    id: "teacher-only",
+    title: "Confirm teacher-only use",
+    description: "Confirm that Kaizen Maths is used by adult teachers and that student personal data should not be entered."
+  }
+];
+
+const certificationQuiz = [
+  {
+    id: "identity",
+    question: "What is the best description of Kaizen Maths?",
+    answer: "workspace",
+    options: [
+      ["workspace", "A virtual mathematics textbook and teaching workspace for teachers."],
+      ["replacement", "A replacement for teacher planning and teaching."],
+      ["student-app", "A student account platform for collecting student work."]
+    ]
+  },
+  {
+    id: "control",
+    question: "Who remains in control of the lesson when using Kaizen Maths?",
+    answer: "teacher",
+    options: [
+      ["teacher", "The teacher selects the topic, pace, examples, questions, and next step."],
+      ["software", "The software decides the sequence of teaching."],
+      ["students", "Students choose the whole learning route independently."]
+    ]
+  },
+  {
+    id: "classroom-view",
+    question: "What is Classroom View mainly for?",
+    answer: "projection",
+    options: [
+      ["projection", "Projecting questions, examples, diagrams, answers, steps, and annotations during teaching."],
+      ["billing", "Managing school subscriptions and payments."],
+      ["database", "Storing student names and assessment histories."]
+    ]
+  },
+  {
+    id: "worksheet-builder",
+    question: "What is the key workflow in the Worksheet Builder?",
+    answer: "select-build",
+    options: [
+      ["select-build", "Select questions, add them to the block, edit if needed, then create and print or save."],
+      ["auto-only", "Press one button and never review the questions."],
+      ["manual-copy", "Copy every question manually into a separate document."]
+    ]
+  },
+  {
+    id: "privacy",
+    question: "What should teachers avoid entering into Kaizen Maths?",
+    answer: "student-data",
+    options: [
+      ["student-data", "Student names, class lists, marks, or other student identifiers."],
+      ["topics", "Mathematics topics and question choices."],
+      ["school-context", "School licence or curriculum context set by an administrator."]
+    ]
+  }
+];
+
 function youtubeIdFromUrl(url) {
   const value = String(url || "").trim();
   if (!value) return "";
@@ -4045,6 +4131,150 @@ function readJsonStorage(key, fallback) {
   } catch {
     return fallback;
   }
+}
+
+function certificationModules() {
+  return allUniversityVideos().map((video, index) => ({
+    ...video,
+    moduleNumber: index + 1,
+    required: true
+  }));
+}
+
+function defaultCertificationProgress() {
+  return {
+    completed_modules: {},
+    quiz_answers: {},
+    quiz_score: 0,
+    quiz_passed: false,
+    practical_tasks: {},
+    certified_at: "",
+    updated_at: ""
+  };
+}
+
+function certificationProgressKey() {
+  return `${certificationProgressStorageKey}:${authState().session?.user?.id || "guest"}`;
+}
+
+function normaliseCertificationProgress(row = {}) {
+  return {
+    ...defaultCertificationProgress(),
+    completed_modules: row.completed_modules || row.module_progress || {},
+    quiz_answers: row.quiz_answers || {},
+    quiz_score: Number(row.quiz_score || 0),
+    quiz_passed: Boolean(row.quiz_passed),
+    practical_tasks: row.practical_tasks || {},
+    certified_at: row.certified_at || "",
+    updated_at: row.updated_at || ""
+  };
+}
+
+function certificationProgress() {
+  if (state.universityProgress) return state.universityProgress;
+  return normaliseCertificationProgress(readJsonStorage(certificationProgressKey(), defaultCertificationProgress()));
+}
+
+function certificationTotals(progress = certificationProgress()) {
+  const modules = certificationModules();
+  const completedModules = modules.filter((module) => progress.completed_modules?.[module.id]).length;
+  const completedTasks = certificationPracticalTasks.filter((task) => progress.practical_tasks?.[task.id]).length;
+  const totalItems = modules.length + certificationPracticalTasks.length + 1;
+  const completeItems = completedModules + completedTasks + (progress.quiz_passed ? 1 : 0);
+  return {
+    modules,
+    completedModules,
+    totalModules: modules.length,
+    completedTasks,
+    totalTasks: certificationPracticalTasks.length,
+    totalItems,
+    completeItems,
+    percent: totalItems ? Math.round((completeItems / totalItems) * 100) : 0
+  };
+}
+
+function certificationIsComplete(progress = certificationProgress()) {
+  const totals = certificationTotals(progress);
+  return totals.completedModules === totals.totalModules
+    && totals.completedTasks === totals.totalTasks
+    && progress.quiz_passed;
+}
+
+function maybeAwardCertification(progress) {
+  const next = normaliseCertificationProgress(progress);
+  if (certificationIsComplete(next) && !next.certified_at) {
+    next.certified_at = new Date().toISOString();
+  }
+  if (!certificationIsComplete(next)) {
+    next.certified_at = "";
+  }
+  next.updated_at = new Date().toISOString();
+  return next;
+}
+
+async function loadCertificationProgress({ rerender = false } = {}) {
+  state.universityProgress = normaliseCertificationProgress(readJsonStorage(certificationProgressKey(), defaultCertificationProgress()));
+  state.universityProgressLoaded = false;
+  state.universityProgressSource = "local";
+
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  const userId = authState().session?.user?.id;
+  if (!client || !userId) {
+    if (rerender && routeParts()[0] === "kaizen-university") renderRoute();
+    return;
+  }
+
+  try {
+    const { data, error } = await client
+      .from("university_certification_progress")
+      .select("completed_modules, quiz_answers, quiz_score, quiz_passed, practical_tasks, certified_at, updated_at")
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (error) throw error;
+    if (data) {
+      state.universityProgress = normaliseCertificationProgress(data);
+      localStorage.setItem(certificationProgressKey(), JSON.stringify(state.universityProgress));
+    }
+    state.universityProgressLoaded = true;
+    state.universityProgressSource = "supabase";
+    if (rerender && routeParts()[0] === "kaizen-university") renderRoute();
+  } catch (error) {
+    console.warn("Kaizen certification progress unavailable:", error.message);
+    if (rerender && routeParts()[0] === "kaizen-university") renderRoute();
+  }
+}
+
+async function saveCertificationProgress(progress, { rerender = true } = {}) {
+  const next = maybeAwardCertification(progress);
+  state.universityProgress = next;
+  localStorage.setItem(certificationProgressKey(), JSON.stringify(next));
+
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  const userId = authState().session?.user?.id;
+  if (client && userId) {
+    try {
+      const { error } = await client
+        .from("university_certification_progress")
+        .upsert({
+          user_id: userId,
+          completed_modules: next.completed_modules,
+          quiz_answers: next.quiz_answers,
+          quiz_score: next.quiz_score,
+          quiz_passed: next.quiz_passed,
+          practical_tasks: next.practical_tasks,
+          certified_at: next.certified_at || null,
+          updated_at: next.updated_at
+        }, { onConflict: "user_id" });
+      if (error) throw error;
+      state.universityProgressLoaded = true;
+      state.universityProgressSource = "supabase";
+    } catch (error) {
+      state.universityProgressSource = "local";
+      console.warn("Kaizen certification progress saved locally only:", error.message);
+    }
+  }
+
+  if (rerender && routeParts()[0] === "kaizen-university") renderRoute();
 }
 
 function writeJsonStorage(key, value) {
@@ -6857,7 +7087,7 @@ function renderHome() {
       </div>
       <div class="classroom-feature-actions">
         <a class="button primary" href="#/collections/classroom-tools">Explore Classroom Tools</a>
-        <a class="button" href="#/kaizen-university">Watch Guides</a>
+        <a class="button" href="#/kaizen-university">Complete Certification</a>
       </div>
     </section>
 
@@ -7019,7 +7249,7 @@ function homepageVideoPanelHtml() {
         <h2 id="homeFeatureVideoTitle">${escapeHtml(display.title)}</h2>
         <p>${escapeHtml(display.description)}</p>
         <div class="button-row">
-          <a class="button primary" href="#/kaizen-university">More Videos</a>
+          <a class="button primary" href="#/kaizen-university">Certification Pathway</a>
           <a class="button" href="#/how-to-use-this-site">Open Site Guide</a>
         </div>
       </div>
@@ -12157,25 +12387,36 @@ function renderSiteGuide() {
   `;
 }
 
-function videoCard(video) {
+function videoCard(video, options = {}) {
   const display = universityVideoOverrides(video);
   const url = display.youtube_url || "";
   const youtubeId = youtubeIdFromUrl(url);
+  const completed = Boolean(options.progress?.completed_modules?.[video.id]);
   return `
-    <article class="video-card">
+    <article class="video-card ${options.certification ? "certification-module-card" : ""} ${completed ? "complete" : ""}">
       ${youtubeId
         ? `<div class="video-embed"><iframe src="https://www.youtube.com/embed/${escapeHtml(youtubeId)}" title="${escapeHtml(display.title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`
         : `<div class="video-placeholder"><span>▶</span><small>YouTube embed</small></div>`}
       <div class="video-card-copy">
-        <span class="eyebrow">${escapeHtml(display.duration_label)}</span>
+        <span class="eyebrow">${options.moduleNumber ? `Module ${options.moduleNumber}` : escapeHtml(display.duration_label)}</span>
         <h3>${escapeHtml(display.title)}</h3>
         <p>${escapeHtml(display.description)}</p>
+        ${options.certification ? `
+          <button class="button ${completed ? "subtle" : "primary"} certification-module-toggle" type="button" data-certification-module="${escapeHtml(video.id)}">
+            ${completed ? "Completed" : "Mark Complete"}
+          </button>
+        ` : ""}
       </div>
     </article>
   `;
 }
 
 function renderKaizenUniversity() {
+  const progress = certificationProgress();
+  const totals = certificationTotals(progress);
+  const certified = certificationIsComplete(progress);
+  const passMark = Math.ceil(certificationQuiz.length * 0.8);
+  const signedIn = isSignedIn();
   const section = ({ title, intro, videos }) => `
     <section class="university-section">
       <div class="university-section-head">
@@ -12183,7 +12424,10 @@ function renderKaizenUniversity() {
         <p>${intro}</p>
       </div>
       <div class="video-grid">
-        ${videos.map((video) => videoCard(video)).join("")}
+        ${videos.map((video) => {
+          const module = totals.modules.find((item) => item.id === video.id);
+          return videoCard(video, { certification: true, progress, moduleNumber: module?.moduleNumber });
+        }).join("")}
       </div>
     </section>
   `;
@@ -12191,25 +12435,216 @@ function renderKaizenUniversity() {
   app.innerHTML = `
     ${pageHeader(
       "Kaizen University",
-      "Short practical video guides for teachers using Kaizen Maths in the classroom. Learn the site, the workflow, and the routines that make the question generators useful on the board and in worksheets.",
+      "Complete the Kaizen Certified Teacher pathway: watch the required training modules, pass the short quiz, complete the practical tasks, and generate your certificate.",
       `<a class="button" href="#/">Back to Dashboard</a><a class="button primary" href="#/how-to-use-this-site">Open Site Guide</a>`
     )}
-    <section class="university-hero panel">
+    <section class="university-hero panel certification-hero">
       <div>
-        <span class="eyebrow">How To Kaizen</span>
-        <h2>Teacher training that stays practical</h2>
-        <p>Kaizen University is a home for short videos showing teachers how to use Kaizen Maths without changing the role of the teacher. The focus is simple: choose the right topic, generate the right questions, teach from the board, reveal support when needed, and repeat practice until students are ready to move forward.</p>
+        <span class="eyebrow">Kaizen Certified Teacher</span>
+        <h2>${certified ? "Certification Complete" : "Complete Your Certification"}</h2>
+        <p>This pathway trains teachers to use Kaizen Maths as a virtual mathematics textbook and teaching workspace. Complete the videos, show that you understand the core workflow, and confirm one practical classroom implementation task.</p>
+        ${signedIn ? `
+          <p class="certification-save-note">${state.universityProgressSource === "supabase" ? "Progress is saved to your teacher account." : "Progress is saved in this browser until the certification progress table is added in Supabase."}</p>
+        ` : `
+          <p class="certification-save-note">Sign in to save certification progress to your teacher account.</p>
+          <button class="button primary" type="button" data-auth-action="signin">Sign In To Track Certification</button>
+        `}
       </div>
-      <div class="university-steps">
-        <span>Find</span>
-        <span>Project</span>
-        <span>Discuss</span>
-        <span>Practise</span>
-        <span>Assess</span>
+      <div class="certification-progress-card">
+        <strong>${totals.percent}%</strong>
+        <span>${totals.completeItems} of ${totals.totalItems} certification requirements complete</span>
+        <div class="certification-progress-bar"><i style="width:${totals.percent}%"></i></div>
+        <ul>
+          <li>${totals.completedModules}/${totals.totalModules} video modules</li>
+          <li>Quiz: ${progress.quiz_passed ? `Passed (${progress.quiz_score}/${certificationQuiz.length})` : `Not passed yet (${passMark}/${certificationQuiz.length} required)`}</li>
+          <li>${totals.completedTasks}/${totals.totalTasks} practical tasks</li>
+        </ul>
       </div>
     </section>
+    <section class="certification-overview panel">
+      <article>
+        <span class="eyebrow">1</span>
+        <h3>Complete The Modules</h3>
+        <p>Watch the short training videos and mark each module complete when you are ready.</p>
+      </article>
+      <article>
+        <span class="eyebrow">2</span>
+        <h3>Pass The Quiz</h3>
+        <p>Answer the core workflow and teacher-use questions. The pass mark is ${passMark}/${certificationQuiz.length}.</p>
+      </article>
+      <article>
+        <span class="eyebrow">3</span>
+        <h3>Confirm The Practical Tasks</h3>
+        <p>Create a classroom routine, worksheet, and assessment-style resource using Kaizen Maths.</p>
+      </article>
+      <article>
+        <span class="eyebrow">4</span>
+        <h3>Generate Certificate</h3>
+        <p>When every requirement is complete, print or save your Kaizen Certified Teacher certificate.</p>
+      </article>
+    </section>
     ${universitySections.map(section).join("")}
+    <section class="certification-checkout-grid">
+      <article class="panel certification-quiz">
+        <div class="university-section-head">
+          <h2>Certification Quiz</h2>
+          <p>Choose the strongest answer for each question. You can retake this whenever needed.</p>
+        </div>
+        ${certificationQuiz.map((item, index) => `
+          <fieldset class="certification-question">
+            <legend>${index + 1}. ${escapeHtml(item.question)}</legend>
+            ${item.options.map(([value, label]) => `
+              <label>
+                <input type="radio" name="certification-${escapeHtml(item.id)}" value="${escapeHtml(value)}" ${progress.quiz_answers?.[item.id] === value ? "checked" : ""}>
+                <span>${escapeHtml(label)}</span>
+              </label>
+            `).join("")}
+          </fieldset>
+        `).join("")}
+        <div class="certification-actions">
+          <button class="button primary" id="submitCertificationQuiz" type="button">Check Quiz</button>
+          <span id="certificationQuizStatus">${progress.quiz_score ? `Latest score: ${progress.quiz_score}/${certificationQuiz.length}${progress.quiz_passed ? " · Passed" : ""}` : "No quiz attempt yet."}</span>
+        </div>
+      </article>
+      <article class="panel certification-practical">
+        <div class="university-section-head">
+          <h2>Practical Completion</h2>
+          <p>Use these as a simple implementation checklist before certification is awarded.</p>
+        </div>
+        <div class="certification-task-list">
+          ${certificationPracticalTasks.map((task) => `
+            <label class="certification-task">
+              <input type="checkbox" data-certification-task="${escapeHtml(task.id)}" ${progress.practical_tasks?.[task.id] ? "checked" : ""}>
+              <span>
+                <strong>${escapeHtml(task.title)}</strong>
+                <small>${escapeHtml(task.description)}</small>
+              </span>
+            </label>
+          `).join("")}
+        </div>
+        <div class="certification-certificate-box ${certified ? "ready" : ""}">
+          <span class="eyebrow">Certificate</span>
+          <h3>${certified ? "Ready To Download" : "Locked Until Complete"}</h3>
+          <p>${certified ? `Certified on ${escapeHtml(formatDisplayDate(progress.certified_at))}.` : "Complete the modules, pass the quiz, and confirm the practical tasks to unlock the certificate."}</p>
+          <button class="button primary" id="downloadCertificationCertificate" type="button" ${certified ? "" : "disabled"}>Print / Save Certificate</button>
+        </div>
+      </article>
+    </section>
   `;
+  bindAuthActions();
+  bindKaizenUniversityCertification();
+}
+
+function teacherDisplayName() {
+  const auth = authState();
+  return auth.profile?.full_name
+    || auth.session?.user?.user_metadata?.full_name
+    || auth.session?.user?.email
+    || "Kaizen Maths Teacher";
+}
+
+function openCertificationCertificate() {
+  const progress = certificationProgress();
+  if (!certificationIsComplete(progress)) {
+    window.alert("Complete the modules, quiz, and practical tasks before generating the certificate.");
+    return;
+  }
+  const name = teacherDisplayName();
+  const certifiedDate = formatDisplayDate(progress.certified_at || new Date().toISOString());
+  const certificate = window.open("", "_blank");
+  if (!certificate) {
+    window.alert("The browser blocked the certificate window. Allow pop-ups for this site and try again.");
+    return;
+  }
+  certificate.document.write(`<!doctype html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Kaizen Certified Teacher Certificate</title>
+      <style>
+        body{margin:0;background:#eef3f8;font-family:Arial,sans-serif;color:#172033;}
+        .certificate{min-height:100vh;display:grid;place-items:center;padding:32px;}
+        .page{width:min(980px,100%);border:12px solid #17b8b3;border-radius:18px;background:#fff;padding:54px;text-align:center;box-shadow:0 24px 70px rgba(23,32,51,.18);}
+        .eyebrow{text-transform:uppercase;letter-spacing:.12em;color:#6f4cc3;font-weight:800;font-size:.82rem;}
+        h1{margin:14px 0 8px;font-size:clamp(2.2rem,5vw,4rem);line-height:1.05;color:#282450;}
+        h2{margin:28px 0 8px;font-size:clamp(1.6rem,3vw,2.5rem);color:#0f766e;}
+        p{font-size:1.05rem;line-height:1.6;color:#4a5570;}
+        .seal{width:104px;height:104px;margin:24px auto;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#6f4cc3,#17b8b3);color:#fff;font-weight:900;font-size:2rem;}
+        .footer{display:flex;justify-content:space-between;gap:24px;margin-top:42px;border-top:1px solid #dfe6ef;padding-top:18px;text-align:left;color:#4a5570;font-weight:700;}
+        button{margin:18px auto 0;display:block;border:0;border-radius:10px;padding:12px 18px;background:#0f766e;color:#fff;font-weight:800;cursor:pointer;}
+        @media print{body{background:#fff}.certificate{padding:0}.page{box-shadow:none;border-radius:0;min-height:calc(100vh - 24px)}button{display:none}}
+      </style>
+    </head>
+    <body>
+      <main class="certificate">
+        <section class="page">
+          <span class="eyebrow">Kaizen Maths</span>
+          <h1>Certificate of Completion</h1>
+          <p>This certifies that</p>
+          <h2>${escapeHtml(name)}</h2>
+          <p>has completed the <strong>Kaizen Certified Teacher</strong> pathway and demonstrated readiness to use Kaizen Maths for classroom practice, worked examples, worksheets, assessment, differentiation, and teacher-led instruction.</p>
+          <div class="seal">K</div>
+          <div class="footer">
+            <span>Certified on ${escapeHtml(certifiedDate)}</span>
+            <span>Generated by Kaizen Maths</span>
+          </div>
+          <button onclick="window.print()">Print / Save PDF</button>
+        </section>
+      </main>
+    </body>
+    </html>`);
+  certificate.document.close();
+  certificate.focus();
+}
+
+function bindKaizenUniversityCertification() {
+  document.querySelectorAll("[data-certification-module]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const moduleId = button.dataset.certificationModule;
+      const progress = certificationProgress();
+      const next = {
+        ...progress,
+        completed_modules: {
+          ...progress.completed_modules,
+          [moduleId]: !progress.completed_modules?.[moduleId]
+        }
+      };
+      await saveCertificationProgress(next);
+    });
+  });
+
+  document.getElementById("submitCertificationQuiz")?.addEventListener("click", async () => {
+    const answers = {};
+    let score = 0;
+    certificationQuiz.forEach((item) => {
+      const selected = document.querySelector(`input[name="certification-${CSS.escape(item.id)}"]:checked`)?.value || "";
+      answers[item.id] = selected;
+      if (selected === item.answer) score += 1;
+    });
+    const passMark = Math.ceil(certificationQuiz.length * 0.8);
+    const progress = certificationProgress();
+    await saveCertificationProgress({
+      ...progress,
+      quiz_answers: answers,
+      quiz_score: score,
+      quiz_passed: score >= passMark
+    });
+  });
+
+  document.querySelectorAll("[data-certification-task]").forEach((input) => {
+    input.addEventListener("change", async () => {
+      const progress = certificationProgress();
+      await saveCertificationProgress({
+        ...progress,
+        practical_tasks: {
+          ...progress.practical_tasks,
+          [input.dataset.certificationTask]: input.checked
+        }
+      });
+    });
+  });
+
+  document.getElementById("downloadCertificationCertificate")?.addEventListener("click", openCertificationCertificate);
 }
 
 function renderBetaFeedback() {
@@ -15418,7 +15853,7 @@ function renderSchoolSpace() {
           <div class="school-action-list">
             <a href="#/tools">Browse curriculum tools</a>
             <a href="#/coverage-map">View coverage map</a>
-            <a href="#/kaizen-university">Watch Kaizen University guides</a>
+            <a href="#/kaizen-university">Complete Kaizen University certification</a>
           </div>
         </article>
       ` : `
@@ -16091,7 +16526,7 @@ function renderBookDemo() {
     ${pageHeader(
       "Book a Demo Session",
       "Arrange a short walkthrough of Kaizen Maths for individual teacher access, tutor use, or a school licence.",
-      `<a class="button" href="#/schools">School Access</a><a class="button" href="#/kaizen-university">Watch Guides</a>`
+      `<a class="button" href="#/schools">School Access</a><a class="button" href="#/kaizen-university">Complete Certification</a>`
     )}
     <section class="booking-page">
       <article class="panel booking-hero">
@@ -16965,12 +17400,12 @@ function renderAdmin() {
       <div class="admin-toolbar">
         <div>
           <span class="eyebrow">Kaizen University</span>
-          <h2>Video Embeds</h2>
-          <p>Paste the correct YouTube link beside each training video slot. The first section controls the homepage video shown underneath the testimonials in the hero area.</p>
+          <h2>Certification Video Content</h2>
+          <p>Paste the correct YouTube link beside each certification module. The first section controls the homepage video shown underneath the testimonials in the hero area.</p>
         </div>
         <button class="button primary" id="saveUniversityVideos" type="button">Save Video Content</button>
       </div>
-      <p class="admin-status" id="adminVideoStatus">Use the Homepage Feature row to change the video on the landing page. Empty copy fields use the default text. Paste full YouTube links, unlisted links, embed links, or video IDs.</p>
+      <p class="admin-status" id="adminVideoStatus">Use the module rows to update the videos teachers complete for certification. Empty copy fields use the default text. Paste full YouTube links, unlisted links, embed links, or video IDs.</p>
       <div class="admin-video-list">
         ${videoRows}
       </div>
@@ -18270,7 +18705,7 @@ function updateRouteSeo(parts) {
     },
     "kaizen-university": {
       title: routeTitle("Kaizen University"),
-      description: "Watch practical guides showing teachers how to use Kaizen Maths for classroom practice, worksheets, assessment, and live modelling."
+      description: "Complete the Kaizen Certified Teacher pathway with training videos, a short quiz, practical tasks, and a printable certificate."
     },
     "how-to-use-this-site": {
       title: routeTitle("How to Use Kaizen Maths"),
@@ -18455,6 +18890,7 @@ window.addEventListener("kaizen-auth-change", () => {
   loadBookingSettings({ rerender: true });
   loadToolInfoOverrides({ rerender: true });
   loadUniversityVideos({ rerender: true });
+  loadCertificationProgress({ rerender: true });
   loadSiteTestimonials({ rerender: true });
 });
 
@@ -18469,6 +18905,7 @@ window.setTimeout(() => {
   loadBookingSettings({ rerender: true });
   loadToolInfoOverrides({ rerender: true });
   loadUniversityVideos({ rerender: true });
+  loadCertificationProgress({ rerender: true });
   loadSiteTestimonials({ rerender: true });
 }, 1200);
 

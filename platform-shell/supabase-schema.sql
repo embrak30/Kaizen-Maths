@@ -414,6 +414,48 @@ on public.university_videos
 for delete
 using (public.is_admin());
 
+create table if not exists public.university_certification_progress (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  completed_modules jsonb not null default '{}'::jsonb,
+  quiz_answers jsonb not null default '{}'::jsonb,
+  quiz_score integer not null default 0,
+  quiz_passed boolean not null default false,
+  practical_tasks jsonb not null default '{}'::jsonb,
+  certified_at timestamptz,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.university_certification_progress add column if not exists completed_modules jsonb not null default '{}'::jsonb;
+alter table public.university_certification_progress add column if not exists quiz_answers jsonb not null default '{}'::jsonb;
+alter table public.university_certification_progress add column if not exists quiz_score integer not null default 0;
+alter table public.university_certification_progress add column if not exists quiz_passed boolean not null default false;
+alter table public.university_certification_progress add column if not exists practical_tasks jsonb not null default '{}'::jsonb;
+alter table public.university_certification_progress add column if not exists certified_at timestamptz;
+alter table public.university_certification_progress add column if not exists updated_at timestamptz not null default now();
+
+alter table public.university_certification_progress enable row level security;
+
+grant select, insert, update on public.university_certification_progress to authenticated;
+
+drop policy if exists "Users can read their own certification progress" on public.university_certification_progress;
+create policy "Users can read their own certification progress"
+on public.university_certification_progress
+for select
+using (auth.uid() = user_id or public.is_admin());
+
+drop policy if exists "Users can insert their own certification progress" on public.university_certification_progress;
+create policy "Users can insert their own certification progress"
+on public.university_certification_progress
+for insert
+with check (auth.uid() = user_id);
+
+drop policy if exists "Users can update their own certification progress" on public.university_certification_progress;
+create policy "Users can update their own certification progress"
+on public.university_certification_progress
+for update
+using (auth.uid() = user_id or public.is_admin())
+with check (auth.uid() = user_id or public.is_admin());
+
 create table if not exists public.site_testimonials (
   slot_id text primary key,
   quote text not null default '',
