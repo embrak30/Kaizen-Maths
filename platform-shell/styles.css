@@ -67,15 +67,17 @@ a {
   position: sticky;
   top: 0;
   height: 100vh;
-  padding: 16px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   background:
-    linear-gradient(180deg, rgba(23, 184, 179, 0.12), transparent 34%),
-    #15142a;
+    radial-gradient(circle at 20% 2%, rgba(45, 212, 191, 0.36), transparent 28%),
+    radial-gradient(circle at 94% 18%, rgba(249, 115, 22, 0.24), transparent 30%),
+    linear-gradient(180deg, #26347a 0%, #173c63 42%, #0f314f 100%);
   color: #f8fafc;
   overflow: hidden;
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.10);
 }
 
 .brand {
@@ -123,16 +125,17 @@ a {
 
 .brand small {
   display: block;
-  color: #c9c7df;
+  color: #d8f5f2;
   margin-top: 2px;
 }
 
 .nav-list {
   flex: 1 1 auto;
   display: grid;
-  gap: 10px;
+  align-content: start;
+  gap: 7px;
   min-height: 0;
-  padding: 0 4px 2px 0;
+  padding: 2px 4px 4px 0;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(45, 212, 191, 0.55) rgba(255, 255, 255, 0.08);
@@ -154,31 +157,45 @@ a {
 
 .nav-group {
   display: grid;
-  gap: 4px;
+  gap: 3px;
+  padding: 4px 4px 5px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.055);
+}
+
+.nav-group-featured {
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.18), rgba(255,255,255,0.055));
+  border-color: rgba(125, 255, 239, 0.22);
+}
+
+.nav-group-reference {
+  background: rgba(255,255,255,0.025);
+  border-color: rgba(255,255,255,0.04);
 }
 
 .nav-heading {
-  padding: 4px 9px 1px;
-  color: #8ee8df;
-  font-size: 0.64rem;
+  padding: 1px 7px 0;
+  color: #b9fff6;
+  font-size: 0.61rem;
   font-weight: 900;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .nav-list a,
 .sidebar-utility a {
-  min-height: 34px;
+  min-height: 31px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 7px 9px;
+  gap: 8px;
+  padding: 5px 7px;
   border-radius: 6px;
-  color: #dedcf0;
+  color: #eef4ff;
   text-decoration: none;
   font-weight: 650;
-  font-size: 0.92rem;
-  transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+  font-size: 0.86rem;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
 .nav-list a.nav-primary,
@@ -188,22 +205,22 @@ a {
 }
 
 .nav-list a.nav-child {
-  margin-left: 12px;
-  min-height: 30px;
-  color: #cbc8e5;
-  font-size: 0.86rem;
+  margin-left: 6px;
+  min-height: 28px;
+  color: #d9e2f7;
+  font-size: 0.82rem;
   position: relative;
 }
 
 .nav-list a.nav-child::before {
   content: "";
   position: absolute;
-  left: -9px;
-  top: 9px;
-  bottom: 9px;
+  left: -5px;
+  top: 8px;
+  bottom: 8px;
   width: 2px;
   border-radius: 999px;
-  background: rgba(45, 212, 191, 0.25);
+  background: rgba(45, 212, 191, 0.32);
 }
 
 .nav-list a.nav-child .nav-icon {
@@ -214,26 +231,27 @@ a {
 }
 
 .nav-icon {
-  width: 22px;
-  height: 22px;
+  width: 21px;
+  height: 21px;
   display: grid;
   place-items: center;
-  flex: 0 0 22px;
+  flex: 0 0 21px;
   border-radius: 6px;
-  background: rgba(255,255,255,0.08);
-  color: #9ff4eb;
-  font-size: 0.78rem;
+  background: rgba(255,255,255,0.12);
+  color: #c4fff7;
+  font-size: 0.76rem;
   font-weight: 850;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
 }
 
 .nav-list a:hover,
 .nav-list a.active,
 .sidebar-utility a:hover,
 .sidebar-utility a.active {
-  background: linear-gradient(90deg, rgba(23,184,179,0.18), rgba(111,76,195,0.18));
+  background: linear-gradient(90deg, rgba(45, 212, 191, 0.26), rgba(249, 115, 22, 0.24));
   color: white;
   transform: translateX(3px);
+  box-shadow: 0 8px 20px rgba(3, 18, 32, 0.18);
 }
 
 .nav-list a:hover .nav-icon,
@@ -259,24 +277,25 @@ a {
   display: grid;
   gap: 4px;
   padding-top: 10px;
-  border-top: 1px solid rgba(255,255,255,0.12);
+  border-top: 1px solid rgba(255,255,255,0.18);
 }
 
 .sidebar-utility a {
-  min-height: 32px;
+  min-height: 34px;
   font-size: 0.88rem;
   color: #f8fafc;
-  background: rgba(255,255,255,0.045);
+  background: linear-gradient(135deg, rgba(249,115,22,0.26), rgba(45,212,191,0.15));
+  border: 1px solid rgba(255,255,255,0.12);
 }
 
 .sidebar-panel {
   flex: 0 0 auto;
   margin-top: 0;
-  padding: 10px;
+  padding: 9px;
   border-radius: 8px;
-  background: rgba(255,255,255,0.075);
-  color: #dedcf0;
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.10);
+  color: #e9f8ff;
+  border: 1px solid rgba(255,255,255,0.12);
 }
 
 .sidebar-panel p {

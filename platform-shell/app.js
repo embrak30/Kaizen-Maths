@@ -3608,8 +3608,12 @@ function setActiveNav() {
 }
 
 function updateAdminNavVisibility() {
+  const adminVisible = isAdmin();
   document.querySelectorAll("[data-admin-link]").forEach((link) => {
-    link.hidden = !isAdmin();
+    link.hidden = !adminVisible;
+  });
+  document.querySelectorAll("[data-admin-zone]").forEach((zone) => {
+    zone.hidden = !adminVisible;
   });
 }
 
