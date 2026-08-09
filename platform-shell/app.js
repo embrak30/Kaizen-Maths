@@ -2758,6 +2758,18 @@ function isOmanGedCoverageTool(tool) {
 
 const curriculumMapAreas = [
   {
+    id: "uk-ks2",
+    title: "UK KS2",
+    subtitle: "Key Stage 2 mathematics coverage",
+    description: "Primary mathematics tools for Key Stage 2 number fluency, fractions, decimals, percentages, measurement, geometry, statistics, ratio, algebra readiness, and SATs preparation.",
+    match: (tool) => {
+      const level = normalise(tool.level);
+      const taggedMatch = curriculumTagMatches(tool, "UK KS2") || curriculumTagMatches(tool, "KS2") || curriculumTagMatches(tool, "Key Stage 2");
+      const categoryMatch = ["Algebra", "Numbers", "Geometry", "Statistics", "Classroom Tools"].includes(tool.category);
+      return !isFurtherMathsTool(tool) && (taggedMatch || (categoryMatch && (level.includes("ks2") || level.includes("ks3"))));
+    }
+  },
+  {
     id: "gcse",
     title: "GCSE",
     subtitle: "Core secondary mathematics coverage",
@@ -2766,6 +2778,18 @@ const curriculumMapAreas = [
       const level = normalise(tool.level);
       return ["Algebra", "Numbers", "Geometry", "Statistics"].includes(tool.category)
         && (level.includes("gcse") || level.includes("ks3") || level.includes("ks2"));
+    }
+  },
+  {
+    id: "uk-ks3",
+    title: "UK KS3",
+    subtitle: "Key Stage 3 mathematics coverage",
+    description: "Lower-secondary mathematics tools for Key Stage 3 number, algebra, ratio and proportion, geometry and measures, probability, statistics, reasoning, and GCSE readiness.",
+    match: (tool) => {
+      const level = normalise(tool.level);
+      const taggedMatch = curriculumTagMatches(tool, "UK KS3") || curriculumTagMatches(tool, "KS3") || curriculumTagMatches(tool, "Key Stage 3");
+      const categoryMatch = ["Algebra", "Numbers", "Geometry", "Statistics"].includes(tool.category);
+      return !isFurtherMathsTool(tool) && (taggedMatch || (categoryMatch && (level.includes("ks3") || level.includes("gcse"))));
     }
   },
   {
@@ -6816,8 +6840,8 @@ function renderHome() {
     <section class="coverage-home-band" aria-labelledby="homeCoverageTitle">
       <div>
         <span class="eyebrow">Curriculum Coverage</span>
-        <h2 id="homeCoverageTitle">Mapped across GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level, and Further Maths</h2>
-        <p>See current coverage for GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level Pure, Further Maths, A-Level Statistics, and A-Level Mechanics, with future tagging routes for IGCSE and IB.</p>
+        <h2 id="homeCoverageTitle">Mapped across UK KS2, UK KS3, GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level, and Further Maths</h2>
+        <p>See current coverage for UK KS2, UK KS3, GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level Pure, Further Maths, A-Level Statistics, and A-Level Mechanics, with future tagging routes for IGCSE and IB.</p>
       </div>
       <div class="coverage-home-counts" aria-label="Coverage counts">
         ${curriculumMapAreas.map((area) => `<span><strong>${coverageToolsFor(area).length}</strong>${escapeHtml(area.title)}</span>`).join("")}
@@ -7034,11 +7058,11 @@ function renderCoverageMap() {
   const requestedSection = routeParts()[1] || "";
   const totalMappedTools = new Set(areaData.flatMap((area) => area.tools.map((tool) => tool.slug))).size;
   app.innerHTML = `
-    ${pageHeader(
-      "Curriculum Coverage Map",
-      "A compact live view of the Kaizen Maths tool library across GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level Pure, Further Maths, Statistics, and Mechanics.",
-      `<a class="button" href="#/tools">Browse Tool Library</a>${isAdmin() ? `<a class="button" href="#/admin">Edit Tags In Admin</a>` : ""}`
-    )}
+      ${pageHeader(
+        "Curriculum Coverage Map",
+        "A compact live view of the Kaizen Maths tool library across UK KS2, UK KS3, GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level Pure, Further Maths, Statistics, and Mechanics.",
+        `<a class="button" href="#/tools">Browse Tool Library</a>${isAdmin() ? `<a class="button" href="#/admin">Edit Tags In Admin</a>` : ""}`
+      )}
     <section class="coverage-page">
       <nav class="coverage-jump-list" aria-label="Coverage sections">
         <span>Jump to:</span>
@@ -8658,6 +8682,286 @@ const curriculumAlignmentFrameworks = [
           ["correlation-regression", "build, use, and critique linear regression models"]
         ],
         teacherMove: "Emphasise assumptions, units, constraints, and whether the answer makes sense in the real situation."
+      }
+    ]
+  },
+  {
+    id: "uk-ks2-mathematics",
+    label: "UK KS2",
+    country: "United Kingdom",
+    status: "Mapped",
+    title: "UK Key Stage 2 Mathematics Curriculum Alignment",
+    description: "A Key Stage 2 map from the National Curriculum mathematics programme of study to Kaizen Maths teaching tools, classroom displays, worked examples, worksheet generators, visual models, and SATs preparation.",
+    basis: "Pilot alignment based on the National Curriculum in England mathematics programme of study for Key Stage 2, covering Years 3 to 6 across number and place value, calculation, fractions and decimals, measurement, geometry, statistics, and the Year 6 introduction to ratio, proportion and algebra.",
+    standards: [
+      {
+        code: "KS2 Fluency",
+        title: "Mathematical Fluency, Reasoning and Problem Solving",
+        focus: "Developing secure recall, written methods, mental strategies, visual representations, reasoning, multi-step problem solving, checking answers, and explaining methods clearly.",
+        coverage: "Strong",
+        tools: [
+          ["elementary-starter-board", "run short whole-class retrieval starters"],
+          ["elementary-manipulatives", "model number sense with counters, ten frames, base-ten blocks, clocks and fraction bars"],
+          ["anchor-charts", "project bright concept summaries for pupils"],
+          ["bar-models", "represent comparison, part-whole, fraction, percentage and ratio structures"],
+          ["area-models", "use arrays and area models for multiplication and partitioning"],
+          ["classroom-displays", "project blank grids, shapes, tables and number templates"]
+        ],
+        teacherMove: "Use visual models before formal methods, then ask pupils to explain the calculation, the representation and why the answer is reasonable."
+      },
+      {
+        code: "Years 3-4 Number",
+        title: "Lower KS2: Number, Place Value and Calculation",
+        focus: "Counting, place value, comparing and ordering numbers, rounding, addition and subtraction, multiplication tables, written multiplication and division, estimating, checking and solving number problems.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "build addition, subtraction, multiplication and division fluency"],
+          ["order-of-operations", "introduce operation order and bracket structure where appropriate"],
+          ["integer-operations", "support early directed-number extension for stronger groups"],
+          ["decimals-practice-lab", "develop place value and decimal readiness"],
+          ["elementary-manipulatives", "model place value and regrouping visually"],
+          ["elementary-maths-playground", "use colourful number tasks for younger pupils"]
+        ],
+        teacherMove: "Keep place value visible. Pupils should see what is regrouped, exchanged or partitioned before the written method becomes compact."
+      },
+      {
+        code: "Years 3-4 Fractions",
+        title: "Lower KS2: Fractions and Decimal Readiness",
+        focus: "Recognising, finding, naming and writing fractions, equivalent fractions, comparing simple fractions, adding and subtracting fractions with the same denominator, tenths, hundredths and early decimal connections.",
+        coverage: "Strong",
+        tools: [
+          ["fractions-practice", "generate equivalent fraction and same-denominator practice"],
+          ["bar-models", "show fractions as parts of a whole and parts of a quantity"],
+          ["area-models", "use rectangular models to support fractional parts"],
+          ["fractions-table", "use starter tables for quick fraction-decimal-percentage readiness"],
+          ["elementary-manipulatives", "model fractions with bars and visual partitions"]
+        ],
+        teacherMove: "Start with the whole, then partition it. Pupils should know what the denominator counts and what the numerator selects."
+      },
+      {
+        code: "Years 5-6 Number",
+        title: "Upper KS2: Number, Calculation, Fractions, Decimals and Percentages",
+        focus: "Large numbers, negative numbers in context, formal written methods, factors, multiples, primes, common factors, common multiples, fraction operations, decimals, percentages, rounding and problem solving.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "secure efficient written calculation methods"],
+          ["hcf-lcm", "practise factors, multiples, primes, HCF and LCM"],
+          ["fractions-practice", "extend to mixed numbers, unlike denominators and multi-step fraction calculations"],
+          ["decimals-practice-lab", "generate decimal operation and place-value practice"],
+          ["simple-percentage-tasks", "connect percentages with fractions, decimals, quantities and change"],
+          ["bar-models", "model fraction and percentage questions visually before calculation"]
+        ],
+        teacherMove: "Move between fractions, decimals and percentages often so pupils recognise equivalent representations rather than isolated procedures."
+      },
+      {
+        code: "KS2 Measurement",
+        title: "Measurement",
+        focus: "Length, mass, capacity, time, money, metric conversions, perimeter, area, volume, estimating measures, reading scales, formula use and solving practical measurement problems.",
+        coverage: "Strong",
+        tools: [
+          ["conversions-teaching", "practise metric units, time and compound measure readiness"],
+          ["area-rectangles", "support area, perimeter and composite rectangle problems"],
+          ["area-triangles", "introduce triangle area extension where appropriate"],
+          ["volume-surface-area-prisms", "connect volume to layers, cubes and rectangular prisms"],
+          ["financial-real-life-maths", "apply money, discounts and everyday arithmetic contexts"],
+          ["classroom-displays", "project blank measurement diagrams and grids for modelling"]
+        ],
+        teacherMove: "Make the unit part of every line of working. Pupils should state what is being measured before choosing a formula or conversion."
+      },
+      {
+        code: "KS2 Geometry",
+        title: "Geometry: Properties of Shapes, Position and Direction",
+        focus: "2D and 3D shape properties, angles, right angles, parallel and perpendicular lines, symmetry, coordinates, translation, reflection, position, direction and simple scale reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["concept-explainer", "show shape properties, sides, vertices, faces, edges and notation one feature at a time"],
+          ["anchor-charts", "support geometry vocabulary and shape-property recall"],
+          ["missing-angles", "develop basic angle facts and reasoning"],
+          ["polygons-angles", "extend into polygon angle patterns for stronger groups"],
+          ["transformations", "generate translation and reflection practice"],
+          ["straight-lines", "support coordinate grids and plotting readiness"],
+          ["scale-drawing-similar-shapes", "connect scale drawings and similar-shape reasoning for upper KS2 extension"]
+        ],
+        teacherMove: "Use accurate diagrams and ask pupils to describe the property before calculating or naming the shape."
+      },
+      {
+        code: "KS2 Statistics",
+        title: "Statistics",
+        focus: "Interpreting and presenting data using tables, pictograms, bar charts, line graphs, timetables, two-way tables, pie-chart readiness, averages and solving comparison problems from data.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "generate mean, median, mode and range practice for upper KS2 readiness"],
+          ["histograms", "use selectively for grouped-data extension and transition work"],
+          ["fractions-table", "use starter tables for quick comparison and conversion tasks"],
+          ["classroom-displays", "project blank tables and display templates"],
+          ["elementary-starter-board", "run short data interpretation starters"]
+        ],
+        teacherMove: "Ask pupils what the data shows before calculating. The key habit is reading the graph or table in context."
+      },
+      {
+        code: "Year 6 Ratio and Algebra",
+        title: "Upper KS2: Ratio, Proportion and Algebra Readiness",
+        focus: "Ratio language, proportional reasoning, scaling, missing values, simple formulae, one-step and two-step equations, sequences, substitution-style reasoning and preparing for Key Stage 3 algebra.",
+        coverage: "Strong",
+        tools: [
+          ["ratio-proportion", "generate ratio, sharing, scale and proportion practice"],
+          ["bar-models", "model ratio, reverse ratio and comparison structures"],
+          ["substitution", "introduce values in expressions and simple formulae"],
+          ["linear-equations", "support missing-number and equation readiness"],
+          ["sequences-series", "generate pattern and sequence work"],
+          ["simplification", "introduce collecting like terms for stronger Year 6 groups"]
+        ],
+        teacherMove: "Keep algebra connected to structure: boxes, bars, tables and sequences should lead into symbols rather than symbols appearing first."
+      },
+      {
+        code: "KS2 SATs",
+        title: "SATs Readiness and Intervention",
+        focus: "Arithmetic fluency, reasoning questions, multi-step word problems, fractions, decimals, percentages, ratio, measures, geometry, statistics and targeted intervention before Year 6 assessment.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "build arithmetic paper fluency"],
+          ["fractions-practice", "target fraction arithmetic and mixed-number gaps"],
+          ["simple-percentage-tasks", "prepare percentage and comparison reasoning"],
+          ["ratio-proportion", "support proportional reasoning and scaling"],
+          ["bar-models", "represent multi-step reasoning questions"],
+          ["elementary-starter-board", "run targeted SATs-style retrieval and intervention starters"]
+        ],
+        teacherMove: "Use the worksheet builder for short intervention sets. Keep each set focused so teachers can identify the exact gap being addressed."
+      }
+    ]
+  },
+  {
+    id: "uk-ks3-mathematics",
+    label: "UK KS3",
+    country: "United Kingdom",
+    status: "Mapped",
+    title: "UK Key Stage 3 Mathematics Curriculum Alignment",
+    description: "A Key Stage 3 map from the National Curriculum mathematics strands to Kaizen Maths teaching tools, classroom displays, worked examples, worksheet generators, and intervention practice.",
+    basis: "Pilot alignment based on the National Curriculum in England mathematics programme of study for Key Stage 3: working mathematically; number; algebra; ratio, proportion and rates of change; geometry and measures; probability; and statistics.",
+    standards: [
+      {
+        code: "KS3 WM",
+        title: "Working Mathematically",
+        focus: "Fluency, reasoning, problem solving, selecting methods, representing situations, developing arguments, interpreting answers, and communicating mathematical thinking clearly.",
+        coverage: "Strong",
+        tools: [
+          ["classroom-displays", "project grids, diagrams, shapes, tables and templates for teacher modelling"],
+          ["dynamic-classroom-displays", "animate graphs, transformations and geometric relationships for discussion"],
+          ["formal-geometric-proof", "build statement-and-reason chains for early proof habits"],
+          ["bar-models", "represent comparison, ratio, percentage and equation structures visually"],
+          ["area-models", "support multiplicative reasoning before formal algebraic methods"]
+        ],
+        teacherMove: "Use this strand across all KS3 lessons: ask students to explain the representation, choose a method, justify each step, and check whether the answer makes sense."
+      },
+      {
+        code: "KS3 Number",
+        title: "Number",
+        focus: "Integers, place value, directed numbers, fractions, decimals, percentages, ratio links, factors, multiples, primes, powers, roots, standard form readiness, rounding, estimation, units, and calculation fluency.",
+        coverage: "Strong",
+        tools: [
+          ["four-operations", "build fluent written and mental methods across the four operations"],
+          ["order-of-operations", "practise BIDMAS, brackets and directed-number calculations"],
+          ["integer-operations", "secure negative-number operations and number-line reasoning"],
+          ["fractions-practice", "develop equivalent fractions, simplifying, mixed numbers and fraction operations"],
+          ["decimals-practice-lab", "support decimal place value, rounding and decimal operations"],
+          ["simple-percentage-tasks", "connect percentages with fractions, decimals, quantities and change"],
+          ["hcf-lcm", "practise factors, multiples, prime factors, HCF and LCM"],
+          ["exponents-index-notation", "introduce powers, roots and index notation"]
+        ],
+        teacherMove: "Treat number as the foundation for later algebra and ratio work. Keep place value, sign, equivalence and units visible in the working."
+      },
+      {
+        code: "KS3 Algebra",
+        title: "Algebra",
+        focus: "Using algebraic notation, substituting values, simplifying expressions, expanding brackets, factorising, solving linear equations, inequalities, sequences, coordinates, straight-line graphs, and beginning function language.",
+        coverage: "Strong",
+        tools: [
+          ["substitution", "practise substituting values into expressions and formulae"],
+          ["simplification", "collect like terms and simplify algebraic expressions"],
+          ["bracket-expansion", "expand single and double brackets with clear steps"],
+          ["linear-equations", "solve one-step, two-step and bracketed linear equations"],
+          ["simultaneous-equations", "introduce paired linear relationships for stronger KS3 groups"],
+          ["sequences-series", "generate arithmetic and geometric sequence practice"],
+          ["straight-lines", "connect coordinates, gradients, intercepts and equations of lines"],
+          ["functions", "introduce input-output rules, mappings and function notation where appropriate"]
+        ],
+        teacherMove: "Move between words, expressions, equations, tables and graphs. Students should know what the letter represents before manipulating it."
+      },
+      {
+        code: "KS3 Ratio",
+        title: "Ratio, Proportion and Rates of Change",
+        focus: "Ratio notation, simplifying and sharing in a ratio, scale factors, proportional reasoning, percentages, direct and inverse proportion readiness, compound measures, speed, density, rates and multiplicative comparison.",
+        coverage: "Strong",
+        tools: [
+          ["ratio-proportion", "generate simplifying, sharing, scale, recipes, exchange rates and proportion practice"],
+          ["simple-percentage-tasks", "build percentage of amounts, change and reverse percentage readiness"],
+          ["bar-models", "represent ratio, reverse ratio and percentage structures visually"],
+          ["scale-drawing-similar-shapes", "connect scale factors, similar shapes and proportional reasoning"],
+          ["conversions-teaching", "support units, compound measures and conversion fluency"],
+          ["financial-real-life-maths", "apply percentages, rates and proportional reasoning to real contexts"]
+        ],
+        teacherMove: "Keep the multiplicative relationship explicit. Ask whether the situation is additive or proportional before students choose a method."
+      },
+      {
+        code: "KS3 Geometry",
+        title: "Geometry and Measures",
+        focus: "Properties of 2D and 3D shapes, angles, parallel lines, polygons, transformations, constructions, perimeter, area, surface area, volume, units, Pythagoras, scale drawings and geometric reasoning.",
+        coverage: "Strong",
+        tools: [
+          ["missing-angles", "develop angle facts, parallel lines and multi-step angle reasoning"],
+          ["polygons-angles", "practise interior and exterior angles of polygons"],
+          ["transformations", "generate translation, reflection, rotation and enlargement practice"],
+          ["loci-constructions", "support compass-and-straightedge construction and loci reasoning"],
+          ["area-rectangles", "practise area, perimeter and composite plane figures"],
+          ["area-triangles", "extend area work to triangles and related shapes"],
+          ["volume-surface-area-prisms", "generate volume and surface-area practice for prisms"],
+          ["pythagoras-theorem", "introduce right-triangle reasoning and missing lengths"]
+        ],
+        teacherMove: "Use diagrams for reasoning, not decoration. Students should name the angle fact, shape property, transformation or measure relationship before calculating."
+      },
+      {
+        code: "KS3 Probability",
+        title: "Probability",
+        focus: "Probability language, probability scales, equally likely outcomes, sample spaces, theoretical and experimental probability, mutually exclusive outcomes, simple combined events, Venn diagrams and tree diagrams.",
+        coverage: "Strong",
+        tools: [
+          ["venn-diagrams", "connect regions, set language, probability and simple algebraic probability"],
+          ["tree-diagrams-conditional-probability", "build structured probability trees for independent and dependent events"],
+          ["fractions-practice", "repair fraction arithmetic needed for probability"],
+          ["ratio-proportion", "connect probability to proportional reasoning and expected frequency"],
+          ["classroom-displays", "project blank Venn diagrams and probability templates for modelling"]
+        ],
+        teacherMove: "Ask students to describe the event in words before writing a fraction, region or tree-path calculation."
+      },
+      {
+        code: "KS3 Statistics",
+        title: "Statistics",
+        focus: "Collecting and representing data, averages and range, frequency tables, grouped data readiness, charts and diagrams, comparing distributions, scatter graphs, correlation and interpreting data in context.",
+        coverage: "Strong",
+        tools: [
+          ["averages-range", "generate mean, median, mode, range and representative-measure practice"],
+          ["histograms", "introduce grouped-data thinking and frequency-density extension where appropriate"],
+          ["correlation-regression", "support scatter graphs, correlation and lines of best fit for stronger KS3 groups"],
+          ["sampling-methods-bias", "teach sampling choices, bias and reliability of conclusions"],
+          ["kaizen-large-data-set", "provide data-context prompts for interpretation and discussion"],
+          ["classroom-displays", "project blank tables and statistical display templates"]
+        ],
+        teacherMove: "Keep interpretation central: students should explain what the statistic, chart or trend tells them about the context."
+      },
+      {
+        code: "KS3 GCSE Bridge",
+        title: "GCSE Readiness and Intervention",
+        focus: "Consolidating KS3 foundations before GCSE: algebra fluency, proportional reasoning, angle facts, transformations, area and volume, probability, statistics, and multi-step problem solving.",
+        coverage: "Strong",
+        tools: [
+          ["quadratic-factorisation", "prepare stronger KS3 students for GCSE algebraic structure"],
+          ["quadratic-equations", "introduce factorising and solving quadratics where appropriate"],
+          ["straight-lines", "bridge coordinate work into GCSE graph interpretation"],
+          ["scale-drawing-similar-shapes", "connect KS3 scale work to GCSE similarity"],
+          ["upper-lower-bounds", "extend rounding and accuracy into GCSE bounds"],
+          ["formal-geometric-proof", "strengthen reasoning chains before GCSE proof-style questions"]
+        ],
+        teacherMove: "Use this row for Year 9 transition and intervention. Select only the GCSE bridge content students are ready to meet."
       }
     ]
   },
@@ -11371,6 +11675,8 @@ function inferCurriculumIdFromSchoolContext(context = currentSchoolContext()) {
   if (text.includes("csec")) return "csec";
   if (text.includes("common core")) return "common-core";
   if (text.includes("myp") || text.includes("ib")) return "ib-mathematics";
+  if (text.includes("key stage 2") || /\bks2\b/.test(text)) return "uk-ks2-mathematics";
+  if (text.includes("key stage 3") || /\bks3\b/.test(text)) return "uk-ks3-mathematics";
   if (text.includes("gcse")) return "gcse";
   if (text.includes("igcse") || text.includes("cambridge")) return "cambridge-igcse";
   if (text.includes("edexcel") || text.includes("pearson")) return "pearson-edexcel";
@@ -12991,6 +13297,11 @@ function isCurriculumOrMetaTopic(label, tool) {
     "ks4",
     "ks5",
     "gcse",
+    "uk ks2",
+    "uk ks3",
+    "key stage 2",
+    "key stage 3",
+    "uk",
     "igcse",
     "a-level",
     "a level",
@@ -13021,6 +13332,11 @@ function isCurriculumOrMetaTopic(label, tool) {
     "ks4",
     "ks5",
     "gcse",
+    "ukks2",
+    "ukks3",
+    "keystage2",
+    "keystage3",
+    "uk",
     "igcse",
     "alevel",
     "alevelpure",
@@ -13042,7 +13358,7 @@ function isCurriculumOrMetaTopic(label, tool) {
     "ocr"
   ]);
   if (meta.has(value) || compactMeta.has(compact)) return true;
-  return /\b(ks2|ks3|ks4|ks5|gcse|igcse|a[-\s]?level|aqa|edexcel|ocr|common\s*core|csec|cape|oman\s*ged|oman|ged|ib|ap)\b/.test(value);
+  return /\b(ks2|ks3|ks4|ks5|gcse|igcse|uk\s*ks2|uk\s*ks3|key\s*stage\s*2|key\s*stage\s*3|a[-\s]?level|aqa|edexcel|ocr|common\s*core|csec|cape|oman\s*ged|oman|ged|ib|ap)\b/.test(value);
 }
 
 function formatTopicLabel(label) {
@@ -13057,7 +13373,7 @@ function formatTopicLabel(label) {
 
 function cleanTopicLabel(label) {
   return String(label || "")
-    .replace(/\b(KS2|KS3|KS4|KS5|GCSE|IGCSE|A[-\s]?Level|AQA|Edexcel|OCR|Common\s*Core|CSEC|CAPE|Oman\s*GED|Oman|GED|IB|AP)\b/gi, "")
+    .replace(/\b(UK\s*KS2|UK\s*KS3|Key\s*Stage\s*2|Key\s*Stage\s*3|KS2|KS3|KS4|KS5|GCSE|IGCSE|A[-\s]?Level|AQA|Edexcel|OCR|Common\s*Core|CSEC|CAPE|Oman\s*GED|Oman|GED|IB|AP)\b/gi, "")
     .replace(/^\s*\b(and|or)\b\s*/gi, "")
     .replace(/\b(and|or)\b\s*$/gi, "")
     .replace(/^[\s:;,\-/]+|[\s:;,\-/]+$/g, "")
@@ -13137,6 +13453,8 @@ function toolCurriculumLinks(tool) {
   const omanRoute = /\boman\b|\bged\b/.test(haystack) || haystack.includes("general education diploma");
   const advancedRoute = /\b(a[-\s]?level|cape|ib|ap)\b/.test(haystack) || haystack.includes("further maths") || haystack.includes("calculus") || haystack.includes("mechanics");
 
+  if (/\bks2\b/.test(haystack) || haystack.includes("key stage 2")) add("UK KS2");
+  if (/\bks3\b/.test(haystack) || haystack.includes("key stage 3")) add("UK KS3");
   if (schoolRoute) {
     add("GCSE");
     add("IGCSE");
@@ -16151,7 +16469,7 @@ function adminSchoolRowHtml(school = {}, index = 0) {
         </label>
         <label>
           Curriculum focus
-          <input data-school-field="curriculum_focus" type="text" value="${escapeHtml(school.curriculum_focus || "")}" placeholder="CSEC, CAPE, Oman GED, MOE Jamaica">
+          <input data-school-field="curriculum_focus" type="text" value="${escapeHtml(school.curriculum_focus || "")}" placeholder="UK KS2, UK KS3, CSEC, CAPE, Oman GED, MOE Jamaica">
         </label>
         <label>
           Default curriculum map
@@ -16349,7 +16667,7 @@ function renderAdmin() {
         </div>
         <label class="admin-metadata-field">
           Curriculum / exam tags
-          <input class="admin-metadata-input" type="text" autocomplete="off" spellcheck="false" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="curriculum_tags" value="${escapeHtml(metadata.curriculum_tags || "")}" placeholder="CSEC, CAPE, Oman GED, Common Core, IGCSE, IB, AP">
+          <input class="admin-metadata-input" type="text" autocomplete="off" spellcheck="false" data-tool-slug="${escapeHtml(tool.slug)}" data-metadata-field="curriculum_tags" value="${escapeHtml(metadata.curriculum_tags || "")}" placeholder="UK KS2, UK KS3, CSEC, CAPE, Oman GED, Common Core, IGCSE, IB, AP">
         </label>
         <label class="admin-metadata-field">
           Admin notes
@@ -16634,7 +16952,7 @@ function renderAdmin() {
         <div>
           <span class="eyebrow">Search And Alignment</span>
           <h2>Tool Tags</h2>
-          <p>Add curriculum, exam-board, country, or route labels manually. Use commas between tags, for example: CSEC, CAPE, Oman GED, Common Core, IGCSE, IB, AP.</p>
+          <p>Add curriculum, exam-board, country, or route labels manually. Use commas between tags, for example: UK KS2, UK KS3, CSEC, CAPE, Oman GED, Common Core, IGCSE, IB, AP.</p>
         </div>
         <button class="button primary" id="saveToolMetadata" type="button">Save Tool Tags</button>
       </div>
@@ -17852,11 +18170,11 @@ function updateRouteSeo(parts) {
     },
     "coverage-map": {
       title: routeTitle("Curriculum Coverage Map"),
-      description: "View Kaizen Maths coverage across GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level Pure, Further Maths, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
+      description: "View Kaizen Maths coverage across UK KS2, UK KS3, GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level Pure, Further Maths, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, Ontario Mathematics, Australian Curriculum Mathematics, Finland Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, Oman GED Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, Ontario Mathematics, Australian Curriculum Mathematics, Finland Mathematics, UK KS2 Mathematics, UK KS3 Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, Oman GED Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
