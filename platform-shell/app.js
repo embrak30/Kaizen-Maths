@@ -17647,6 +17647,10 @@ function bindToolFrame(tool, options = {}) {
     const fullscreenElement = document.fullscreenElement;
     const active = fullscreenElement === stage || Boolean(fullscreenElement && stage.contains(fullscreenElement));
     stage.classList.toggle("classroom-fullscreen-active", active);
+    withFrameDocument((doc) => {
+      doc.documentElement.classList.toggle("kaizen-shell-fullscreen", active);
+      doc.body?.classList.toggle("kaizen-shell-fullscreen", active);
+    });
     fullscreenButton.textContent = active ? "Exit Full Screen" : "Full Screen";
     fullscreenButton.setAttribute("aria-pressed", String(active));
     fullscreenButton.setAttribute(
@@ -18136,6 +18140,7 @@ function bindToolFrame(tool, options = {}) {
     frame.addEventListener("load", () => {
       bindFrameFitRefreshers();
       refreshTeacherTopicMap();
+      updateFullscreenButton();
       scheduleClassroomFit();
       scheduleAnnotationResize();
     });

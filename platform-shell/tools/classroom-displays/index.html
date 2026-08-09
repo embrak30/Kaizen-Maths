@@ -27,6 +27,14 @@
     .grid-bg.major{background-image:linear-gradient(#c6d5e2 2px,transparent 2px),linear-gradient(90deg,#c6d5e2 2px,transparent 2px),linear-gradient(#e7eef5 1px,transparent 1px),linear-gradient(90deg,#e7eef5 1px,transparent 1px);background-size:160px 160px,160px 160px,32px 32px,32px 32px}
     .shape-svg text{font-family:"Segoe UI",Tahoma,sans-serif;font-weight:800;fill:#1a365d}.shape-fill-a{fill:#dff7f6;stroke:#157f82;stroke-width:5}.shape-fill-b{fill:#f1eefe;stroke:#6554c0;stroke-width:5}.shape-fill-c{fill:#fff2d9;stroke:#b7791f;stroke-width:5}.shape-line{stroke:#1a365d;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}.dash{stroke-dasharray:12 10}.solid-face{fill:#e9fbfb;stroke:#157f82;stroke-width:4}.solid-top{fill:#f1eefe;stroke:#6554c0;stroke-width:4}.solid-side{fill:#d8ebff;stroke:#2d6cdf;stroke-width:4}.curve{stroke:#1a365d;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}
     .axis{stroke:#172f4a;stroke-width:3}.axis-light{stroke:#64748b;stroke-width:2}.axis-arrow{fill:#172f4a}.origin-dot{fill:#172f4a}
+    html.kaizen-shell-fullscreen body{overflow:hidden}
+    html.kaizen-shell-fullscreen .app{height:100vh;grid-template-rows:minmax(0,1fr)}
+    html.kaizen-shell-fullscreen .topbar,html.kaizen-shell-fullscreen .palette{display:none}
+    html.kaizen-shell-fullscreen .workspace{grid-template-columns:minmax(0,1fr);min-height:0}
+    html.kaizen-shell-fullscreen .board-shell{min-height:0;padding:8px;background:#f7fafc}
+    html.kaizen-shell-fullscreen .board{border:0;border-radius:0;box-shadow:none}
+    html.kaizen-shell-fullscreen .display-stage{width:min(98vw,1280px);max-height:calc(100vh - 20px)}
+    html.kaizen-shell-fullscreen .display-title{top:10px;left:10px;font-size:.78rem;padding:5px 9px}
     @media(max-width:850px){body{overflow:auto}.app{height:auto;min-height:100vh}.workspace{grid-template-columns:1fr}.palette{max-height:none;border-right:none;border-bottom:1px solid #d8e2ef}.board-shell{min-height:70vh}.topbar{align-items:flex-start;flex-direction:column}.controls{justify-content:flex-start}.display-stage{width:94%;max-height:68vh}}
   </style>
   <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
@@ -94,7 +102,7 @@
           { id:"square", label:"Square", render: () => renderPolygon("Square", "M320 160 H704 V544 H320 Z", "shape-fill-b") },
           { id:"parallelogram", label:"Parallelogram", render: () => renderPolygon("Parallelogram", "M288 224 H800 L704 512 H192 Z", "shape-fill-a") },
           { id:"trapezium", label:"Trapezium", render: () => renderPolygon("Trapezium", "M352 192 H704 L832 512 H224 Z", "shape-fill-c") },
-          { id:"kite", label:"Kite", render: () => renderPolygon("Kite", "M512 128 L768 352 L512 608 L288 352 Z", "shape-fill-b") },
+          { id:"kite", label:"Kite", render: () => renderPolygon("Kite", "M512 132 L780 310 L512 650 L244 310 Z", "shape-fill-b") },
           { id:"rhombus", label:"Rhombus", render: () => renderPolygon("Rhombus", "M512 128 L800 352 L512 576 L224 352 Z", "shape-fill-a") },
           { id:"right-triangle", label:"Right-Angled Triangle", render: renderRightTriangle },
           { id:"isosceles-triangle", label:"Isosceles Triangle", render: () => renderPolygon("Isosceles Triangle", "M512 128 L800 544 H224 Z", "shape-fill-c") },
