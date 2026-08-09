@@ -4027,6 +4027,7 @@ function allUniversityVideos() {
 
 const certificationProgressStorageKey = "kaizen:certification-progress-v1";
 const certificationActiveLessonStorageKey = "kaizen:certification-active-lesson";
+const certificationActiveModuleStorageKey = "kaizen:certification-active-module";
 
 const certificationPracticalTasks = [
   {
@@ -4414,6 +4415,23 @@ function certificationLessonById(lessonId) {
   return certificationModules().find((lesson) => lesson.id === lessonId) || null;
 }
 
+function certificationSectionById(sectionId) {
+  return universitySections.find((section) => section.id === sectionId) || null;
+}
+
+function certificationSectionUnlocked(sectionId, progress = certificationProgress()) {
+  const index = universitySections.findIndex((section) => section.id === sectionId);
+  if (index <= 0) return index === 0;
+  return universitySections.slice(0, index).every((section) => (
+    section.videos.every((lesson) => progress.completed_modules?.[lesson.id])
+  ));
+}
+
+function certificationFirstLessonForSection(section, progress = certificationProgress()) {
+  if (!section?.videos?.length) return null;
+  return section.videos.find((lesson) => !progress.completed_modules?.[lesson.id]) || section.videos[0];
+}
+
 function certificationLessonUnlocked(lessonId, progress = certificationProgress()) {
   const lessons = certificationModules();
   const index = lessons.findIndex((lesson) => lesson.id === lessonId);
@@ -4445,6 +4463,15 @@ function setCertificationActiveLesson(lessonId) {
   }
 }
 
+function setCertificationActiveModule(sectionId) {
+  if (!sectionId) return;
+  try {
+    sessionStorage.setItem(certificationActiveModuleStorageKey, sectionId);
+  } catch {
+    // If session storage is unavailable, the URL still controls the open module.
+  }
+}
+
 function nextCertificationLessonId(currentLessonId, progress = certificationProgress()) {
   const lessons = certificationModules();
   const currentIndex = lessons.findIndex((lesson) => lesson.id === currentLessonId);
@@ -4462,6 +4489,7 @@ function defaultCertificationProgress() {
   return {
     completed_modules: {},
     watched_lessons: {},
+    video_finished_lessons: {},
     lesson_answers: {},
     quiz_answers: {},
     quiz_score: 0,
@@ -4481,6 +4509,7 @@ function normaliseCertificationProgress(row = {}) {
     ...defaultCertificationProgress(),
     completed_modules: row.completed_modules || row.module_progress || {},
     watched_lessons: row.watched_lessons || {},
+    video_finished_lessons: row.video_finished_lessons || {},
     lesson_answers: row.lesson_answers || {},
     quiz_answers: row.quiz_answers || {},
     quiz_score: Number(row.quiz_score || 0),
@@ -4545,21 +4574,29 @@ async function loadCertificationProgress({ rerender = false } = {}) {
   }
 
   try {
+    const localProgress = state.universityProgress;
+    let usedLegacyCertificationSelect = false;
     let { data, error } = await client
       .from("university_certification_progress")
-      .select("completed_modules, watched_lessons, lesson_answers, quiz_answers, quiz_score, quiz_passed, practical_tasks, certified_at, updated_at")
+      .select("completed_modules, watched_lessons, video_finished_lessons, lesson_answers, quiz_answers, quiz_score, quiz_passed, practical_tasks, certified_at, updated_at")
       .eq("user_id", userId)
       .maybeSingle();
-    if (error && /watched_lessons|lesson_answers|column|schema cache/i.test(error.message || "")) {
+    if (error && /watched_lessons|video_finished_lessons|lesson_answers|column|schema cache/i.test(error.message || "")) {
       ({ data, error } = await client
         .from("university_certification_progress")
         .select("completed_modules, quiz_answers, quiz_score, quiz_passed, practical_tasks, certified_at, updated_at")
         .eq("user_id", userId)
         .maybeSingle());
+      usedLegacyCertificationSelect = true;
     }
     if (error) throw error;
     if (data) {
-      state.universityProgress = normaliseCertificationProgress(data);
+      state.universityProgress = normaliseCertificationProgress({
+        ...data,
+        watched_lessons: usedLegacyCertificationSelect ? localProgress.watched_lessons : data.watched_lessons,
+        video_finished_lessons: usedLegacyCertificationSelect ? localProgress.video_finished_lessons : data.video_finished_lessons,
+        lesson_answers: usedLegacyCertificationSelect ? localProgress.lesson_answers : data.lesson_answers
+      });
       localStorage.setItem(certificationProgressKey(), JSON.stringify(state.universityProgress));
     }
     state.universityProgressLoaded = true;
@@ -4589,6 +4626,7 @@ async function saveCertificationProgress(progress, { rerender = true } = {}) {
           user_id: userId,
           completed_modules: next.completed_modules,
           watched_lessons: next.watched_lessons,
+          video_finished_lessons: next.video_finished_lessons,
           lesson_answers: next.lesson_answers,
           quiz_answers: next.quiz_answers,
           quiz_score: next.quiz_score,
@@ -4597,7 +4635,7 @@ async function saveCertificationProgress(progress, { rerender = true } = {}) {
           certified_at: next.certified_at || null,
           updated_at: next.updated_at
         }, { onConflict: "user_id" });
-      if (error && /watched_lessons|lesson_answers|column|schema cache/i.test(error.message || "")) {
+      if (error && /watched_lessons|video_finished_lessons|lesson_answers|column|schema cache/i.test(error.message || "")) {
         ({ error } = await client
           .from("university_certification_progress")
           .upsert({
@@ -4629,8 +4667,8 @@ async function loadCertificationRecords({ rerender = false } = {}) {
   try {
     let { data, error } = await client
       .from("university_certification_progress")
-      .select("user_id, completed_modules, watched_lessons, lesson_answers, practical_tasks, certified_at, updated_at");
-    if (error && /watched_lessons|lesson_answers|column|schema cache/i.test(error.message || "")) {
+      .select("user_id, completed_modules, watched_lessons, video_finished_lessons, lesson_answers, practical_tasks, certified_at, updated_at");
+    if (error && /watched_lessons|video_finished_lessons|lesson_answers|column|schema cache/i.test(error.message || "")) {
       ({ data, error } = await client
         .from("university_certification_progress")
         .select("user_id, completed_modules, practical_tasks, certified_at, updated_at"));
@@ -12808,94 +12846,148 @@ function renderKaizenUniversity() {
   const totals = certificationTotals(progress);
   const certified = certificationIsComplete(progress);
   const signedIn = isSignedIn();
-  const activeLesson = certificationLessonById(certificationActiveLessonId(progress)) || totals.modules[0];
+  const requestedSectionId = routeParts()[1] || "";
+  const requestedSection = certificationSectionById(requestedSectionId);
+  const activeSection = requestedSection && certificationSectionUnlocked(requestedSection.id, progress) ? requestedSection : null;
+  const screenshots = homepageScreenshotList();
+
+  if (!activeSection) {
+    app.innerHTML = `
+      ${pageHeader(
+        "Kaizen University",
+        "Complete the Kaizen Certified Teacher pathway through ordered training modules, short videos, and quick checks. Each module opens after the previous module is complete.",
+        `<a class="button" href="#/">Back to Dashboard</a><a class="button primary" href="#/how-to-use-this-site">Open Site Guide</a>`
+      )}
+      <section class="certification-course-intro panel">
+        <div>
+          <span class="eyebrow">Kaizen Certified Teacher</span>
+          <h2>${certified ? "Certification Complete" : "Training Modules"}</h2>
+          <p>Use this pathway when a teacher is ready to learn the site properly. Videos must play to the end before the quick check opens, so progress reflects a genuine training commitment.</p>
+          ${signedIn ? `
+            <p class="certification-save-note">${state.universityProgressSource === "supabase" ? "Progress is saved to your teacher account." : "Progress is saved in this browser until the certification progress table is added in Supabase."}</p>
+          ` : `
+            <p class="certification-save-note">Sign in to save certification progress to your teacher account.</p>
+            <button class="button primary" type="button" data-auth-action="signin">Sign In To Track Certification</button>
+          `}
+        </div>
+        <div class="certification-progress-card compact">
+          <strong>${totals.percent}%</strong>
+          <span>${totals.completedModules}/${totals.totalModules} lessons complete</span>
+          <div class="certification-progress-bar"><i style="width:${totals.percent}%"></i></div>
+          <small>${certified ? "Kaizen Certified Teacher" : "Certificate unlocks after all modules and commitments are complete."}</small>
+        </div>
+      </section>
+      <section class="certification-module-grid" aria-label="Kaizen certification modules">
+        ${universitySections.map((section, index) => {
+          const sectionProgress = certificationSectionProgress(section, progress);
+          const unlocked = certificationSectionUnlocked(section.id, progress);
+          const complete = sectionProgress.completed === sectionProgress.total;
+          const screenshot = screenshots[index % Math.max(screenshots.length, 1)];
+          const body = `
+            ${screenshot?.image_url ? `<img src="${escapeHtml(screenshot.image_url)}" alt="" loading="lazy">` : ""}
+            <div class="certification-course-card-copy">
+              <span class="eyebrow">Module ${index + 1}</span>
+              <h3>${escapeHtml(section.title.replace(/^Module \d+:\s*/, ""))}</h3>
+              <p>${escapeHtml(section.intro)}</p>
+              <div class="certification-course-card-meta">
+                <span>${sectionProgress.completed}/${sectionProgress.total} lessons</span>
+                <strong>${complete ? "Complete" : unlocked ? "Start Module" : "Locked"}</strong>
+              </div>
+            </div>
+          `;
+          return unlocked
+            ? `<a class="certification-course-card ${complete ? "complete" : ""}" href="#/kaizen-university/${escapeHtml(section.id)}" data-certification-open-module="${escapeHtml(section.id)}">${body}</a>`
+            : `<article class="certification-course-card locked" aria-disabled="true">${body}</article>`;
+        }).join("")}
+      </section>
+      ${totals.completedModules === totals.totalModules && !certified ? `
+        <section class="panel certification-practical certification-landing-practical">
+          <div class="university-section-head">
+            <h2>Final Practical Commitment</h2>
+            <p>Confirm these implementation tasks to unlock the Kaizen Certified Teacher certificate.</p>
+          </div>
+          <div class="certification-task-list">
+            ${certificationPracticalTasks.map((task) => `
+              <label class="certification-task">
+                <input type="checkbox" data-certification-task="${escapeHtml(task.id)}" ${progress.practical_tasks?.[task.id] ? "checked" : ""}>
+                <span>
+                  <strong>${escapeHtml(task.title)}</strong>
+                  <small>${escapeHtml(task.description)}</small>
+                </span>
+              </label>
+            `).join("")}
+          </div>
+        </section>
+      ` : ""}
+      ${certified ? `
+        <section class="panel certification-certificate-box ready">
+          <span class="eyebrow">Certificate</span>
+          <h3>Ready To Download</h3>
+          <p>Certified on ${escapeHtml(formatDisplayDate(progress.certified_at))}. Your admin status also shows Kaizen Certified Teacher.</p>
+          <button class="button primary" id="downloadCertificationCertificate" type="button">Print / Save Certificate</button>
+        </section>
+      ` : ""}
+    `;
+    bindAuthActions();
+    bindKaizenUniversityCertification();
+    return;
+  }
+
+  setCertificationActiveModule(activeSection.id);
+  let activeLesson = certificationLessonById(certificationActiveLessonId(progress));
+  if (!activeLesson || activeLesson.sectionId !== activeSection.id || !certificationLessonUnlocked(activeLesson.id, progress)) {
+    activeLesson = certificationFirstLessonForSection(activeSection, progress);
+    setCertificationActiveLesson(activeLesson?.id || "");
+  }
   const activeDisplay = activeLesson ? universityVideoOverrides(activeLesson) : null;
   const activeYoutubeId = activeDisplay?.youtube_url ? youtubeIdFromUrl(activeDisplay.youtube_url) : "";
-  const watched = Boolean(activeLesson && (progress.watched_lessons?.[activeLesson.id] || progress.completed_modules?.[activeLesson.id]));
+  const videoFinished = Boolean(activeLesson && (progress.video_finished_lessons?.[activeLesson.id] || progress.completed_modules?.[activeLesson.id]));
   const lessonComplete = Boolean(activeLesson && progress.completed_modules?.[activeLesson.id]);
   const lessonsComplete = totals.completedModules === totals.totalModules;
   const activeAnswers = activeLesson ? progress.lesson_answers?.[activeLesson.id] || {} : {};
+  const sectionProgress = certificationSectionProgress(activeSection, progress);
 
   app.innerHTML = `
     ${pageHeader(
       "Kaizen University",
-      "Complete the Kaizen Certified Teacher pathway through short videos, quick checks, and practical implementation commitments.",
-      `<a class="button" href="#/">Back to Dashboard</a><a class="button primary" href="#/how-to-use-this-site">Open Site Guide</a>`
+      `${activeSection.title.replace(/^Module \d+:\s*/, "")}: ${activeSection.intro}`,
+      `<a class="button" href="#/kaizen-university">All Modules</a><a class="button primary" href="#/how-to-use-this-site">Open Site Guide</a>`
     )}
-    <section class="university-hero panel certification-hero">
+    <section class="certification-module-active-head panel">
       <div>
-        <span class="eyebrow">Kaizen Certified Teacher</span>
-        <h2>${certified ? "Certification Complete" : "Complete Your Certification"}</h2>
-        <p>This pathway helps teachers move beyond a demo and commit to using Kaizen Maths confidently: finding topics, teaching from Classroom View, using curriculum alignment, creating worksheets, and building assessment resources.</p>
-        ${signedIn ? `
-          <p class="certification-save-note">${state.universityProgressSource === "supabase" ? "Progress is saved to your teacher account." : "Progress is saved in this browser until the certification progress table is added in Supabase."}</p>
-        ` : `
-          <p class="certification-save-note">Sign in to save certification progress to your teacher account.</p>
-          <button class="button primary" type="button" data-auth-action="signin">Sign In To Track Certification</button>
-        `}
+        <span class="eyebrow">Module ${universitySections.findIndex((section) => section.id === activeSection.id) + 1}</span>
+        <h2>${escapeHtml(activeSection.title.replace(/^Module \d+:\s*/, ""))}</h2>
+        <p>${escapeHtml(activeSection.intro)}</p>
       </div>
-      <div class="certification-progress-card">
-        <strong>${totals.percent}%</strong>
-        <span>${totals.completeItems} of ${totals.totalItems} certification requirements complete</span>
-        <div class="certification-progress-bar"><i style="width:${totals.percent}%"></i></div>
-        <ul>
-          <li>${totals.completedModules}/${totals.totalModules} locked lessons complete</li>
-          <li>${totals.completedTasks}/${totals.totalTasks} practical tasks</li>
-          <li>${certified ? "Profile title: Kaizen Certified Teacher" : "Certificate unlocks after completion"}</li>
-        </ul>
+      <div class="certification-progress-card compact">
+        <strong>${Math.round((sectionProgress.completed / Math.max(sectionProgress.total, 1)) * 100)}%</strong>
+        <span>${sectionProgress.completed}/${sectionProgress.total} lessons complete</span>
+        <div class="certification-progress-bar"><i style="width:${Math.round((sectionProgress.completed / Math.max(sectionProgress.total, 1)) * 100)}%"></i></div>
       </div>
-    </section>
-    <section class="certification-overview panel">
-      <article>
-        <span class="eyebrow">1</span>
-        <h3>Follow The Pathway</h3>
-        <p>Lessons unlock in order so every teacher completes the same core training route.</p>
-      </article>
-      <article>
-        <span class="eyebrow">2</span>
-        <h3>Watch And Check</h3>
-        <p>Confirm each video, then answer a short check before the next lesson opens.</p>
-      </article>
-      <article>
-        <span class="eyebrow">3</span>
-        <h3>Commit To Practice</h3>
-        <p>Complete practical tasks that show readiness to use Kaizen Maths in real teaching.</p>
-      </article>
-      <article>
-        <span class="eyebrow">4</span>
-        <h3>Unlock Recognition</h3>
-        <p>The certificate and admin status update when the pathway is complete.</p>
-      </article>
     </section>
     <section class="certification-pathway">
       <aside class="certification-module-list" aria-label="Certification modules">
-        ${universitySections.map((section) => {
-          const sectionProgress = certificationSectionProgress(section, progress);
-          return `
-            <section class="certification-module-panel ${sectionProgress.completed === sectionProgress.total ? "complete" : ""}">
-              <div class="certification-module-head">
-                <span class="eyebrow">Module ${escapeHtml(String(universitySections.indexOf(section) + 1))}</span>
-                <h3>${escapeHtml(section.title.replace(/^Module \d+:\s*/, ""))}</h3>
-                <small>${sectionProgress.completed}/${sectionProgress.total} lessons</small>
-              </div>
-              <p>${escapeHtml(section.intro)}</p>
-              <div class="certification-lesson-list">
-                ${section.videos.map((lesson) => {
-                  const unlocked = certificationLessonUnlocked(lesson.id, progress);
-                  const complete = Boolean(progress.completed_modules?.[lesson.id]);
-                  const current = activeLesson?.id === lesson.id;
-                  return `
-                    <button class="certification-lesson-row ${current ? "current" : ""} ${complete ? "complete" : ""}" type="button" data-certification-select="${escapeHtml(lesson.id)}" ${unlocked ? "" : "disabled"}>
-                      <span>Lesson ${escapeHtml(String(lesson.lessonNumber || section.videos.indexOf(lesson) + 1))}</span>
-                      <strong>${escapeHtml(lesson.title)}</strong>
-                      <small>${complete ? "Complete" : unlocked ? current ? "Current" : "Open" : "Locked"}</small>
-                    </button>
-                  `;
-                }).join("")}
-              </div>
-            </section>
-          `;
-        }).join("")}
+        <section class="certification-module-panel">
+          <div class="certification-module-head">
+            <span class="eyebrow">Lessons</span>
+            <h3>${escapeHtml(activeSection.title.replace(/^Module \d+:\s*/, ""))}</h3>
+            <small>${sectionProgress.completed}/${sectionProgress.total}</small>
+          </div>
+          <div class="certification-lesson-list">
+            ${activeSection.videos.map((lesson) => {
+              const unlocked = certificationLessonUnlocked(lesson.id, progress);
+              const complete = Boolean(progress.completed_modules?.[lesson.id]);
+              const current = activeLesson?.id === lesson.id;
+              return `
+                <button class="certification-lesson-row ${current ? "current" : ""} ${complete ? "complete" : ""}" type="button" data-certification-select="${escapeHtml(lesson.id)}" ${unlocked ? "" : "disabled"}>
+                  <span>Lesson ${escapeHtml(String(activeSection.videos.indexOf(lesson) + 1))}</span>
+                  <strong>${escapeHtml(lesson.title)}</strong>
+                  <small>${complete ? "Complete" : unlocked ? current ? "Current" : "Open" : "Locked"}</small>
+                </button>
+              `;
+            }).join("")}
+          </div>
+        </section>
       </aside>
       <article class="panel certification-active-lesson" data-active-certification-lesson="${escapeHtml(activeLesson?.id || "")}">
         <div class="university-section-head">
@@ -12904,34 +12996,36 @@ function renderKaizenUniversity() {
           <p>${escapeHtml(activeDisplay?.description || "Choose a lesson from the pathway to begin.")}</p>
         </div>
         ${activeYoutubeId
-          ? `<div class="video-embed certification-video"><iframe src="https://www.youtube.com/embed/${escapeHtml(activeYoutubeId)}" title="${escapeHtml(activeDisplay.title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`
+          ? `<div class="video-embed certification-video"><div id="certificationYoutubePlayer" data-certification-youtube="${escapeHtml(activeYoutubeId)}" data-certification-lesson-id="${escapeHtml(activeLesson.id)}" data-video-complete="${videoFinished ? "true" : "false"}"></div></div>`
           : `<div class="video-placeholder certification-video"><span>▶</span><small>Add this YouTube link in Admin</small></div>`}
         <div class="certification-lesson-gate">
           <div>
-            <strong>${watched ? "Video confirmed" : "Start with the video"}</strong>
-            <p>${watched ? "The quick check is available. Complete it to unlock the next lesson." : "After watching the video, confirm completion to open the quick check."}</p>
+            <strong>${lessonComplete ? "Lesson complete" : videoFinished ? "Video complete" : activeYoutubeId ? "Watch the video to the end" : "Video link needed"}</strong>
+            <p>${lessonComplete ? "This lesson is already complete." : videoFinished ? "The quick check is now available." : activeYoutubeId ? "The quick check will appear automatically when the video reaches the end." : "Paste the YouTube link for this lesson in Admin before teachers can progress."}</p>
           </div>
-          <button class="button ${watched ? "subtle" : "primary"}" id="confirmCertificationVideo" type="button" ${lessonComplete ? "disabled" : ""}>
-            ${watched ? "Watched" : "Confirm I Watched This Video"}
-          </button>
+          <span class="certification-video-status ${videoFinished ? "complete" : ""}">${videoFinished ? "Video finished" : "Waiting for video completion"}</span>
         </div>
-        <div class="certification-checks ${watched ? "" : "locked"}">
+        <div class="certification-checks ${videoFinished ? "" : "locked"}">
           <h3>Quick Check</h3>
-          ${(activeLesson?.checks || []).map((item, index) => `
-            <fieldset class="certification-question">
-              <legend>${index + 1}. ${escapeHtml(item.question)}</legend>
-              ${item.options.map(([value, label]) => `
-                <label>
-                  <input type="radio" data-certification-check="${escapeHtml(item.id)}" name="certification-check-${escapeHtml(activeLesson.id)}-${escapeHtml(item.id)}" value="${escapeHtml(value)}" ${activeAnswers[item.id] === value ? "checked" : ""} ${watched && !lessonComplete ? "" : "disabled"}>
-                  <span>${escapeHtml(label)}</span>
-                </label>
-              `).join("")}
-            </fieldset>
-          `).join("")}
-          <div class="certification-actions">
-            <button class="button primary" id="submitCertificationLesson" type="button" ${watched && !lessonComplete ? "" : "disabled"}>${lessonComplete ? "Lesson Complete" : "Check And Continue"}</button>
-            <span id="certificationLessonStatus">${lessonComplete ? "This lesson is complete." : watched ? "Choose an answer, then continue." : "Confirm the video first."}</span>
-          </div>
+          ${videoFinished ? `
+            ${(activeLesson?.checks || []).map((item, index) => `
+              <fieldset class="certification-question">
+                <legend>${index + 1}. ${escapeHtml(item.question)}</legend>
+                ${item.options.map(([value, label]) => `
+                  <label>
+                    <input type="radio" data-certification-check="${escapeHtml(item.id)}" name="certification-check-${escapeHtml(activeLesson.id)}-${escapeHtml(item.id)}" value="${escapeHtml(value)}" ${activeAnswers[item.id] === value ? "checked" : ""} ${!lessonComplete ? "" : "disabled"}>
+                    <span>${escapeHtml(label)}</span>
+                  </label>
+                `).join("")}
+              </fieldset>
+            `).join("")}
+            <div class="certification-actions">
+              <button class="button primary" id="submitCertificationLesson" type="button" ${!lessonComplete ? "" : "disabled"}>${lessonComplete ? "Lesson Complete" : "Check And Continue"}</button>
+              <span id="certificationLessonStatus">${lessonComplete ? "This lesson is complete." : "Choose an answer, then continue."}</span>
+            </div>
+          ` : `
+            <p class="certification-locked-message">The questions open after the video has played to the end.</p>
+          `}
         </div>
       </article>
     </section>
@@ -13034,7 +13128,83 @@ function openCertificationCertificate() {
   certificate.focus();
 }
 
+let youtubeIframeApiPromise = null;
+
+function loadYouTubeIframeApi() {
+  if (window.YT?.Player) return Promise.resolve(window.YT);
+  if (youtubeIframeApiPromise) return youtubeIframeApiPromise;
+  youtubeIframeApiPromise = new Promise((resolve) => {
+    const previousReady = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      if (typeof previousReady === "function") previousReady();
+      resolve(window.YT);
+    };
+    if (!document.getElementById("youtubeIframeApiScript")) {
+      const script = document.createElement("script");
+      script.id = "youtubeIframeApiScript";
+      script.src = "https://www.youtube.com/iframe_api";
+      script.async = true;
+      document.head.appendChild(script);
+    }
+  });
+  return youtubeIframeApiPromise;
+}
+
+async function markCertificationVideoFinished(lessonId) {
+  const progress = certificationProgress();
+  if (progress.video_finished_lessons?.[lessonId]) return;
+  await saveCertificationProgress({
+    ...progress,
+    watched_lessons: {
+      ...progress.watched_lessons,
+      [lessonId]: true
+    },
+    video_finished_lessons: {
+      ...progress.video_finished_lessons,
+      [lessonId]: true
+    }
+  });
+}
+
+function bindCertificationVideoPlayer() {
+  const playerMount = document.getElementById("certificationYoutubePlayer");
+  if (!playerMount) return;
+  const videoId = playerMount.dataset.certificationYoutube || "";
+  const lessonId = playerMount.dataset.certificationLessonId || "";
+  const alreadyComplete = playerMount.dataset.videoComplete === "true";
+  if (!videoId || !lessonId || alreadyComplete) return;
+  loadYouTubeIframeApi().then((YT) => {
+    if (!document.body.contains(playerMount)) return;
+    new YT.Player(playerMount, {
+      videoId,
+      playerVars: {
+        rel: 0,
+        modestbranding: 1,
+        playsinline: 1,
+        origin: window.location.origin
+      },
+      events: {
+        onStateChange(event) {
+          if (event.data === YT.PlayerState.ENDED) {
+            markCertificationVideoFinished(lessonId);
+          }
+        }
+      }
+    });
+  });
+}
+
 function bindKaizenUniversityCertification() {
+  document.querySelectorAll("[data-certification-open-module]").forEach((link) => {
+    link.addEventListener("click", () => {
+      const section = certificationSectionById(link.dataset.certificationOpenModule || "");
+      if (!section) return;
+      const firstLesson = certificationFirstLessonForSection(section, certificationProgress());
+      setCertificationActiveModule(section.id);
+      setCertificationActiveLesson(firstLesson?.id || "");
+    });
+  });
+
   document.querySelectorAll("[data-certification-select]").forEach((button) => {
     button.addEventListener("click", async () => {
       const lessonId = button.dataset.certificationSelect;
@@ -13042,19 +13212,6 @@ function bindKaizenUniversityCertification() {
       if (!certificationLessonUnlocked(lessonId, progress)) return;
       setCertificationActiveLesson(lessonId);
       renderRoute();
-    });
-  });
-
-  document.getElementById("confirmCertificationVideo")?.addEventListener("click", async () => {
-    const lessonId = document.querySelector("[data-active-certification-lesson]")?.dataset.activeCertificationLesson || "";
-    if (!lessonId) return;
-    const progress = certificationProgress();
-    await saveCertificationProgress({
-      ...progress,
-      watched_lessons: {
-        ...progress.watched_lessons,
-        [lessonId]: true
-      }
     });
   });
 
@@ -13090,8 +13247,16 @@ function bindKaizenUniversityCertification() {
         [lessonId]: true
       }
     };
-    setCertificationActiveLesson(nextCertificationLessonId(lessonId, next));
-    await saveCertificationProgress(next);
+    const nextLessonId = nextCertificationLessonId(lessonId, next);
+    const nextLesson = certificationLessonById(nextLessonId);
+    setCertificationActiveLesson(nextLessonId);
+    await saveCertificationProgress(next, { rerender: false });
+    if (nextLesson?.sectionId && nextLesson.sectionId !== lesson.sectionId) {
+      setCertificationActiveModule(nextLesson.sectionId);
+      location.hash = `#/kaizen-university/${nextLesson.sectionId}`;
+      return;
+    }
+    renderRoute();
   });
 
   document.querySelectorAll("[data-certification-task]").forEach((input) => {
@@ -13108,6 +13273,7 @@ function bindKaizenUniversityCertification() {
   });
 
   document.getElementById("downloadCertificationCertificate")?.addEventListener("click", openCertificationCertificate);
+  bindCertificationVideoPlayer();
 }
 
 function renderBetaFeedback() {

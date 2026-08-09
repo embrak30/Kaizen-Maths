@@ -2130,6 +2130,21 @@ body[data-route="worksheet-generator"] .account-action {
   box-shadow: 0 10px 28px rgba(44, 35, 91, 0.08);
 }
 
+.certification-progress-card.compact {
+  min-width: 220px;
+  padding: 14px;
+}
+
+.certification-progress-card.compact strong {
+  font-size: clamp(2rem, 5vw, 3.1rem);
+}
+
+.certification-progress-card.compact small {
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
 .certification-progress-card strong {
   color: #282450;
   font-size: clamp(2.4rem, 6vw, 4rem);
@@ -2192,6 +2207,122 @@ body[data-route="worksheet-generator"] .account-action {
   margin: 0;
   color: var(--muted);
   line-height: 1.45;
+}
+
+.certification-course-intro,
+.certification-module-active-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+  border-color: rgba(23, 184, 179, 0.28);
+  background:
+    linear-gradient(135deg, rgba(231, 251, 250, 0.82), rgba(241, 239, 255, 0.72)),
+    #ffffff;
+}
+
+.certification-course-intro h2,
+.certification-module-active-head h2 {
+  margin: 4px 0 6px;
+  color: #282450;
+}
+
+.certification-course-intro p,
+.certification-module-active-head p {
+  max-width: 820px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.certification-module-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.certification-course-card {
+  min-height: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 128px minmax(0, 1fr);
+  border: 1px solid rgba(223, 230, 239, 0.95);
+  border-radius: 8px;
+  background: #ffffff;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 1px 2px rgba(23, 32, 51, 0.04);
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.certification-course-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(23, 184, 179, 0.52);
+  box-shadow: 0 18px 36px rgba(23, 32, 51, 0.11);
+}
+
+.certification-course-card.locked {
+  opacity: 0.58;
+  filter: grayscale(0.42);
+}
+
+.certification-course-card.locked:hover {
+  transform: none;
+  border-color: rgba(223, 230, 239, 0.95);
+  box-shadow: 0 1px 2px rgba(23, 32, 51, 0.04);
+}
+
+.certification-course-card.complete {
+  border-color: rgba(22, 163, 74, 0.34);
+}
+
+.certification-course-card img {
+  width: 100%;
+  height: 128px;
+  display: block;
+  object-fit: cover;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(23, 184, 179, 0.24), transparent 42%),
+    radial-gradient(circle at 78% 74%, rgba(111, 76, 195, 0.22), transparent 42%),
+    #172f4a;
+}
+
+.certification-course-card-copy {
+  display: grid;
+  gap: 7px;
+  padding: 13px;
+}
+
+.certification-course-card-copy h3 {
+  margin: 0;
+  color: #282450;
+  font-size: 1.02rem;
+  line-height: 1.2;
+}
+
+.certification-course-card-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.42;
+}
+
+.certification-course-card-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.certification-course-card-meta strong {
+  color: #0f766e;
+  white-space: nowrap;
 }
 
 .university-steps {
@@ -2568,6 +2699,32 @@ body[data-route="worksheet-generator"] .account-action {
   overflow: hidden;
 }
 
+.certification-video iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+}
+
+.certification-video-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.82rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.certification-video-status.complete {
+  background: #dcfce7;
+  color: #166534;
+}
+
 .certification-lesson-gate {
   display: flex;
   flex-wrap: wrap;
@@ -2605,6 +2762,16 @@ body[data-route="worksheet-generator"] .account-action {
 .certification-checks h3 {
   margin: 0;
   color: #282450;
+}
+
+.certification-locked-message {
+  margin: 0;
+  padding: 12px;
+  border: 1px dashed rgba(111, 76, 195, 0.26);
+  border-radius: 8px;
+  background: #fbfdff;
+  color: var(--muted);
+  font-weight: 800;
 }
 
 .certification-checkout-grid {
@@ -2665,6 +2832,10 @@ body[data-route="worksheet-generator"] .account-action {
 .certification-task-list {
   display: grid;
   gap: 10px;
+}
+
+.certification-landing-practical {
+  margin-bottom: 18px;
 }
 
 .certification-task {
@@ -8076,7 +8247,9 @@ sup .worksheet-fraction > span:last-child {
   .exam-callout,
   .beta-callout,
   .university-callout,
-  .university-hero {
+  .university-hero,
+  .certification-course-intro,
+  .certification-module-active-head {
     grid-template-columns: 1fr;
     align-items: start;
   }
@@ -8109,6 +8282,7 @@ sup .worksheet-fraction > span:last-child {
   .curriculum-empty-panel,
   .textbook-reverse-list,
   .video-grid,
+  .certification-module-grid,
   .certification-pathway,
   .certification-checkout-grid {
     grid-template-columns: 1fr;
