@@ -417,6 +417,8 @@ using (public.is_admin());
 create table if not exists public.university_certification_progress (
   user_id uuid primary key references auth.users(id) on delete cascade,
   completed_modules jsonb not null default '{}'::jsonb,
+  watched_lessons jsonb not null default '{}'::jsonb,
+  lesson_answers jsonb not null default '{}'::jsonb,
   quiz_answers jsonb not null default '{}'::jsonb,
   quiz_score integer not null default 0,
   quiz_passed boolean not null default false,
@@ -426,6 +428,8 @@ create table if not exists public.university_certification_progress (
 );
 
 alter table public.university_certification_progress add column if not exists completed_modules jsonb not null default '{}'::jsonb;
+alter table public.university_certification_progress add column if not exists watched_lessons jsonb not null default '{}'::jsonb;
+alter table public.university_certification_progress add column if not exists lesson_answers jsonb not null default '{}'::jsonb;
 alter table public.university_certification_progress add column if not exists quiz_answers jsonb not null default '{}'::jsonb;
 alter table public.university_certification_progress add column if not exists quiz_score integer not null default 0;
 alter table public.university_certification_progress add column if not exists quiz_passed boolean not null default false;

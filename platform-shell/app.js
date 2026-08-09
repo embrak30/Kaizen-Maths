@@ -2639,6 +2639,8 @@ const state = {
   universityProgress: null,
   universityProgressLoaded: false,
   universityProgressSource: "local",
+  universityCertificationRecords: {},
+  universityCertificationRecordsLoaded: false,
   siteTestimonials: [],
   testimonialsLoaded: false,
   accessLoaded: false,
@@ -3641,41 +3643,303 @@ function restorePendingFocus() {
 
 const universitySections = [
   {
-    title: "Getting Started",
-    intro: "For teachers opening Kaizen Maths for the first time.",
+    id: "workspace-foundations",
+    title: "Module 1: Understanding The Kaizen Workspace",
+    intro: "Build a clear picture of Kaizen Maths as a virtual mathematics textbook and professional teaching workspace.",
     videos: [
-      { id: "what-kaizen-maths-is", title: "What Kaizen Maths Is", description: "A short introduction to Kaizen Maths as a virtual mathematics textbook for teachers." },
-      { id: "finding-a-topic", title: "Finding A Topic", description: "How to use the dashboard, Tool Library, search, and subject collections." },
-      { id: "using-a-topic-tool", title: "Using A Topic Tool", description: "How to choose levels, question types, generate new sets, show answers, and reveal worked steps." }
+      {
+        id: "what-kaizen-maths-is",
+        title: "What Kaizen Maths Is",
+        description: "A short introduction to Kaizen Maths as a virtual mathematics textbook for teachers.",
+        checks: [
+          {
+            id: "identity",
+            question: "Which statement best describes Kaizen Maths?",
+            answer: "workspace",
+            options: [
+              ["workspace", "A virtual mathematics textbook and teaching workspace for teachers."],
+              ["replacement", "A replacement for teacher planning and classroom decision-making."],
+              ["student-app", "A student account platform for collecting student personal data."]
+            ]
+          }
+        ]
+      },
+      {
+        id: "finding-a-topic",
+        title: "Finding A Topic",
+        description: "How to use the dashboard, Tool Library, search, and subject collections.",
+        checks: [
+          {
+            id: "route",
+            question: "What is the quickest way to reach a specific topic?",
+            answer: "search",
+            options: [
+              ["search", "Use the search box or subject collection, then open the matching tool."],
+              ["scroll", "Scroll through every page until the topic appears."],
+              ["admin", "Open the admin console before every lesson."]
+            ]
+          }
+        ]
+      },
+      {
+        id: "classroom-tools-overview",
+        title: "Classroom Tools And Displays",
+        description: "How display tools, manipulatives, blank diagrams, and explanation tools support live teaching.",
+        checks: [
+          {
+            id: "display-purpose",
+            question: "When should Classroom Displays be used?",
+            answer: "explain",
+            options: [
+              ["explain", "When a teacher wants a board-ready visual, model, diagram, or teaching prompt."],
+              ["replace", "When the class should work without teacher explanation."],
+              ["store", "Only when saving worksheets."]
+            ]
+          }
+        ]
+      },
+      {
+        id: "worksheet-assessment-overview",
+        title: "Worksheets, Assessments, And Exam Builders",
+        description: "How Kaizen Maths turns topic questions into printable worksheets, assessments, and exam-style practice.",
+        checks: [
+          {
+            id: "resource-flow",
+            question: "What is the correct resource-building flow?",
+            answer: "select-build-print",
+            options: [
+              ["select-build-print", "Select questions, add the block, create the worksheet, then print or save."],
+              ["print-select", "Print first, then choose the questions afterwards."],
+              ["random-only", "Only use the first random set that appears."]
+            ]
+          }
+        ]
+      }
     ]
   },
   {
-    title: "Classroom Workflow",
-    intro: "How to use Kaizen Maths during live teaching, modelling, checking, and practice.",
+    id: "alignment-and-coverage",
+    title: "Module 2: Curriculum, Textbook, And Coverage Tools",
+    intro: "Use curriculum alignment, textbook alignment, and coverage maps to plan with confidence.",
     videos: [
-      { id: "practice-set-mode", title: "Practice Set Mode", description: "How to project a compact set of questions and use it for retrieval, fluency, and checking misconceptions." },
-      { id: "one-example-mode", title: "One Example Mode", description: "How to put one question on the board for teacher modelling and class discussion." },
-      { id: "write-mode", title: "Writing On Classroom View", description: "How to use pen, highlighter, eraser, undo, and clear controls while modelling solutions live." },
-      { id: "classroom-displays", title: "Classroom Displays", description: "How to use graph grids, shapes, solids, probability templates, statistics displays, and mechanics setups during live explanation." }
+      {
+        id: "coverage-map",
+        title: "Using The Coverage Map",
+        description: "How to read the live subject coverage across GCSE, A-Level, Further Maths, statistics, mechanics, and international routes.",
+        checks: [
+          {
+            id: "coverage-use",
+            question: "What does the coverage map help teachers check?",
+            answer: "coverage",
+            options: [
+              ["coverage", "Which mathematical areas are supported and where matching tools can be found."],
+              ["billing", "Which Stripe plan a teacher has bought."],
+              ["attendance", "Which students were present in class."]
+            ]
+          }
+        ]
+      },
+      {
+        id: "curriculum-alignment",
+        title: "Using Curriculum Alignment",
+        description: "How to choose a curriculum and see which Kaizen tools support the standards.",
+        checks: [
+          {
+            id: "standards",
+            question: "What should a teacher do first on the Curriculum Alignment page?",
+            answer: "choose",
+            options: [
+              ["choose", "Choose the curriculum or exam route they want to inspect."],
+              ["certificate", "Download a certificate."],
+              ["erase", "Clear all topic tools."]
+            ]
+          }
+        ]
+      },
+      {
+        id: "textbook-alignment",
+        title: "Using Textbook Alignment",
+        description: "How textbook chapters can be matched to the most useful Kaizen Maths tools.",
+        checks: [
+          {
+            id: "chapter-match",
+            question: "What is the purpose of textbook alignment?",
+            answer: "chapter-tools",
+            options: [
+              ["chapter-tools", "To connect textbook chapters with relevant Kaizen topic tools."],
+              ["rewrite-book", "To replace a school's textbook completely."],
+              ["mark-homework", "To mark every student response automatically."]
+            ]
+          }
+        ]
+      },
+      {
+        id: "school-defaults",
+        title: "School-Specific Defaults",
+        description: "How school access can show a default curriculum, school name, and school-facing context.",
+        checks: [
+          {
+            id: "school-lens",
+            question: "Why are school defaults useful?",
+            answer: "context",
+            options: [
+              ["context", "They help teachers see Kaizen Maths through their school's curriculum and licence context."],
+              ["hide", "They hide every other tool from the site."],
+              ["student-data", "They require students to enter personal data."]
+            ]
+          }
+        ]
+      }
     ]
   },
   {
-    title: "Worksheets And Assessment",
-    intro: "How to turn topic generators into homework, quizzes, assessments, and intervention sheets.",
+    id: "live-teaching-workflow",
+    title: "Module 3: Using Topic Tools In Lessons",
+    intro: "Practise the core teacher workflow for selecting questions, projecting them, revealing answers, and modelling methods.",
     videos: [
-      { id: "building-a-worksheet", title: "Building A Worksheet", description: "How to choose topics, levels, and question types from across the site." },
-      { id: "assessment-mode-and-marks", title: "Assessment Mode And Marks", description: "How to add marks and shape a worksheet into a quiz or test-style paper." },
-      { id: "using-the-exam-paper-builder", title: "Using The Exam Paper Builder", description: "How to choose a GCSE-style format, generate a short set or 100-mark mock, add teacher copy when needed, and print the paper." },
-      { id: "using-the-answer-key", title: "Using The Answer Key", description: "How the separate teacher copy can support marking, feedback, and review." }
+      {
+        id: "using-a-topic-tool",
+        title: "Choosing Topic, Level, And Question Type",
+        description: "How to choose levels, question types, generate new sets, show answers, and reveal worked steps.",
+        checks: [
+          {
+            id: "teacher-control",
+            question: "Who controls the topic, level, and pace?",
+            answer: "teacher",
+            options: [
+              ["teacher", "The teacher."],
+              ["software", "The software chooses automatically."],
+              ["students", "Students choose the sequence without teacher input."]
+            ]
+          }
+        ]
+      },
+      {
+        id: "practice-set-mode",
+        title: "Practice Set Mode",
+        description: "How to project a compact set of questions and use it for retrieval, fluency, and checking misconceptions.",
+        checks: [
+          {
+            id: "practice-purpose",
+            question: "What is Practice Set mode best for?",
+            answer: "fluency",
+            options: [
+              ["fluency", "Board practice, retrieval, checking misconceptions, and repeated fluency."],
+              ["profile", "Editing a teacher profile."],
+              ["payment", "Changing a payment method."]
+            ]
+          }
+        ]
+      },
+      {
+        id: "one-example-mode",
+        title: "One Example Mode",
+        description: "How to put one question on the board for teacher modelling and class discussion.",
+        checks: [
+          {
+            id: "model",
+            question: "Why use One Example mode?",
+            answer: "model",
+            options: [
+              ["model", "To focus the class on one worked example and the reasoning behind it."],
+              ["quantity", "To fit as many questions as possible on screen."],
+              ["admin-only", "To change access roles."]
+            ]
+          }
+        ]
+      },
+      {
+        id: "write-mode",
+        title: "Writing, Capture, Timer, And Fullscreen",
+        description: "How to use pen, highlighter, eraser, capture, timers, and fullscreen tools while teaching live.",
+        checks: [
+          {
+            id: "write-capture",
+            question: "What does the write and capture workflow support?",
+            answer: "live-modelling",
+            options: [
+              ["live-modelling", "Teacher annotation, live explanation, and saving what was shown on the board."],
+              ["billing", "Creating invoices."],
+              ["student-login", "Collecting student usernames."]
+            ]
+          }
+        ]
+      }
     ]
   },
   {
-    title: "School And Department Use",
-    intro: "How a school or department can use Kaizen Maths consistently during a trial or school licence.",
+    id: "worksheets-and-assessment",
+    title: "Module 4: Worksheets, Assessment, And Implementation",
+    intro: "Turn the virtual textbook into printable resources, intervention tasks, and school-ready routines.",
     videos: [
-      { id: "using-kaizen-in-a-department", title: "Using Kaizen In A Department", description: "How a department can use shared routines across lessons, homework, intervention, and revision." },
-      { id: "supporting-less-confident-topics", title: "Supporting Less Confident Topics", description: "How worked examples, answers, and structured practice can support teacher confidence." },
-      { id: "giving-useful-feedback", title: "Giving Useful Feedback", description: "What to test during a trial and how to report issues or suggestions clearly." }
+      {
+        id: "building-a-worksheet",
+        title: "Building A Worksheet",
+        description: "How to choose topics, levels, and question types from across the site.",
+        checks: [
+          {
+            id: "builder-step",
+            question: "What must happen before creating the worksheet?",
+            answer: "add-block",
+            options: [
+              ["add-block", "Add the selected question block so it can be edited."],
+              ["close-page", "Close the page."],
+              ["skip", "Skip the question selection."]
+            ]
+          }
+        ]
+      },
+      {
+        id: "assessment-mode-and-marks",
+        title: "Assessment Mode And Marks",
+        description: "How to add marks and shape a worksheet into a quiz or test-style paper.",
+        checks: [
+          {
+            id: "marks",
+            question: "Why edit marks before printing?",
+            answer: "assessment",
+            options: [
+              ["assessment", "To shape the resource as a quiz, assessment, homework, or intervention sheet."],
+              ["decoration", "Only to change the page colour."],
+              ["unrelated", "It has no effect on assessment use."]
+            ]
+          }
+        ]
+      },
+      {
+        id: "using-the-exam-paper-builder",
+        title: "Using The Exam Paper Builder",
+        description: "How to generate GCSE-style practice, short sets, revision papers, and mock-style papers.",
+        checks: [
+          {
+            id: "exam-style",
+            question: "What is the exam builder intended to create?",
+            answer: "exam-practice",
+            options: [
+              ["exam-practice", "Exam-style practice resources and mock-style papers."],
+              ["student-chat", "A student messaging system."],
+              ["calendar", "A demo booking calendar."]
+            ]
+          }
+        ]
+      },
+      {
+        id: "using-kaizen-in-a-department",
+        title: "Using Kaizen In A Department Or Trial",
+        description: "How a department can use shared routines across lessons, homework, intervention, feedback, and revision.",
+        checks: [
+          {
+            id: "implementation",
+            question: "What makes a school trial more useful?",
+            answer: "routine",
+            options: [
+              ["routine", "Agreeing a clear topic, routine, teacher commitment, and feedback process."],
+              ["unplanned", "Letting every teacher use it randomly without any shared focus."],
+              ["students-data", "Asking students to enter personal details."]
+            ]
+          }
+        ]
+      }
     ]
   }
 ];
@@ -3762,6 +4026,7 @@ function allUniversityVideos() {
 }
 
 const certificationProgressStorageKey = "kaizen:certification-progress-v1";
+const certificationActiveLessonStorageKey = "kaizen:certification-active-lesson";
 
 const certificationPracticalTasks = [
   {
@@ -4134,16 +4399,70 @@ function readJsonStorage(key, fallback) {
 }
 
 function certificationModules() {
-  return allUniversityVideos().map((video, index) => ({
+  return universitySections.flatMap((section, sectionIndex) => section.videos.map((video, lessonIndex) => ({
     ...video,
-    moduleNumber: index + 1,
+    section: section.title,
+    sectionId: section.id,
+    moduleTitle: section.title,
+    moduleNumber: sectionIndex + 1,
+    lessonNumber: lessonIndex + 1,
     required: true
-  }));
+  })));
+}
+
+function certificationLessonById(lessonId) {
+  return certificationModules().find((lesson) => lesson.id === lessonId) || null;
+}
+
+function certificationLessonUnlocked(lessonId, progress = certificationProgress()) {
+  const lessons = certificationModules();
+  const index = lessons.findIndex((lesson) => lesson.id === lessonId);
+  if (index <= 0) return index === 0;
+  return lessons.slice(0, index).every((lesson) => progress.completed_modules?.[lesson.id]);
+}
+
+function certificationActiveLessonId(progress = certificationProgress()) {
+  const lessons = certificationModules();
+  let saved = "";
+  try {
+    saved = sessionStorage.getItem(certificationActiveLessonStorageKey) || "";
+  } catch {
+    saved = "";
+  }
+  if (saved && lessons.some((lesson) => lesson.id === saved) && certificationLessonUnlocked(saved, progress)) {
+    return saved;
+  }
+  const nextLesson = lessons.find((lesson) => certificationLessonUnlocked(lesson.id, progress) && !progress.completed_modules?.[lesson.id]);
+  return nextLesson?.id || lessons[lessons.length - 1]?.id || "";
+}
+
+function setCertificationActiveLesson(lessonId) {
+  if (!lessonId) return;
+  try {
+    sessionStorage.setItem(certificationActiveLessonStorageKey, lessonId);
+  } catch {
+    // If session storage is unavailable, the pathway falls back to the next incomplete lesson.
+  }
+}
+
+function nextCertificationLessonId(currentLessonId, progress = certificationProgress()) {
+  const lessons = certificationModules();
+  const currentIndex = lessons.findIndex((lesson) => lesson.id === currentLessonId);
+  if (currentIndex < 0) return certificationActiveLessonId(progress);
+  return lessons[currentIndex + 1]?.id || currentLessonId;
+}
+
+function certificationSectionProgress(section, progress = certificationProgress()) {
+  const lessons = section.videos || [];
+  const completed = lessons.filter((lesson) => progress.completed_modules?.[lesson.id]).length;
+  return { completed, total: lessons.length };
 }
 
 function defaultCertificationProgress() {
   return {
     completed_modules: {},
+    watched_lessons: {},
+    lesson_answers: {},
     quiz_answers: {},
     quiz_score: 0,
     quiz_passed: false,
@@ -4161,6 +4480,8 @@ function normaliseCertificationProgress(row = {}) {
   return {
     ...defaultCertificationProgress(),
     completed_modules: row.completed_modules || row.module_progress || {},
+    watched_lessons: row.watched_lessons || {},
+    lesson_answers: row.lesson_answers || {},
     quiz_answers: row.quiz_answers || {},
     quiz_score: Number(row.quiz_score || 0),
     quiz_passed: Boolean(row.quiz_passed),
@@ -4179,8 +4500,8 @@ function certificationTotals(progress = certificationProgress()) {
   const modules = certificationModules();
   const completedModules = modules.filter((module) => progress.completed_modules?.[module.id]).length;
   const completedTasks = certificationPracticalTasks.filter((task) => progress.practical_tasks?.[task.id]).length;
-  const totalItems = modules.length + certificationPracticalTasks.length + 1;
-  const completeItems = completedModules + completedTasks + (progress.quiz_passed ? 1 : 0);
+  const totalItems = modules.length + certificationPracticalTasks.length;
+  const completeItems = completedModules + completedTasks;
   return {
     modules,
     completedModules,
@@ -4196,8 +4517,7 @@ function certificationTotals(progress = certificationProgress()) {
 function certificationIsComplete(progress = certificationProgress()) {
   const totals = certificationTotals(progress);
   return totals.completedModules === totals.totalModules
-    && totals.completedTasks === totals.totalTasks
-    && progress.quiz_passed;
+    && totals.completedTasks === totals.totalTasks;
 }
 
 function maybeAwardCertification(progress) {
@@ -4225,11 +4545,18 @@ async function loadCertificationProgress({ rerender = false } = {}) {
   }
 
   try {
-    const { data, error } = await client
+    let { data, error } = await client
       .from("university_certification_progress")
-      .select("completed_modules, quiz_answers, quiz_score, quiz_passed, practical_tasks, certified_at, updated_at")
+      .select("completed_modules, watched_lessons, lesson_answers, quiz_answers, quiz_score, quiz_passed, practical_tasks, certified_at, updated_at")
       .eq("user_id", userId)
       .maybeSingle();
+    if (error && /watched_lessons|lesson_answers|column|schema cache/i.test(error.message || "")) {
+      ({ data, error } = await client
+        .from("university_certification_progress")
+        .select("completed_modules, quiz_answers, quiz_score, quiz_passed, practical_tasks, certified_at, updated_at")
+        .eq("user_id", userId)
+        .maybeSingle());
+    }
     if (error) throw error;
     if (data) {
       state.universityProgress = normaliseCertificationProgress(data);
@@ -4251,13 +4578,18 @@ async function saveCertificationProgress(progress, { rerender = true } = {}) {
 
   const client = await window.KaizenAuth?.getClient?.().catch(() => null);
   const userId = authState().session?.user?.id;
+  if (userId) {
+    state.universityCertificationRecords[userId] = next;
+  }
   if (client && userId) {
     try {
-      const { error } = await client
+      let { error } = await client
         .from("university_certification_progress")
         .upsert({
           user_id: userId,
           completed_modules: next.completed_modules,
+          watched_lessons: next.watched_lessons,
+          lesson_answers: next.lesson_answers,
           quiz_answers: next.quiz_answers,
           quiz_score: next.quiz_score,
           quiz_passed: next.quiz_passed,
@@ -4265,6 +4597,20 @@ async function saveCertificationProgress(progress, { rerender = true } = {}) {
           certified_at: next.certified_at || null,
           updated_at: next.updated_at
         }, { onConflict: "user_id" });
+      if (error && /watched_lessons|lesson_answers|column|schema cache/i.test(error.message || "")) {
+        ({ error } = await client
+          .from("university_certification_progress")
+          .upsert({
+            user_id: userId,
+            completed_modules: next.completed_modules,
+            quiz_answers: next.quiz_answers,
+            quiz_score: next.quiz_score,
+            quiz_passed: next.quiz_passed,
+            practical_tasks: next.practical_tasks,
+            certified_at: next.certified_at || null,
+            updated_at: next.updated_at
+          }, { onConflict: "user_id" }));
+      }
       if (error) throw error;
       state.universityProgressLoaded = true;
       state.universityProgressSource = "supabase";
@@ -4275,6 +4621,52 @@ async function saveCertificationProgress(progress, { rerender = true } = {}) {
   }
 
   if (rerender && routeParts()[0] === "kaizen-university") renderRoute();
+}
+
+async function loadCertificationRecords({ rerender = false } = {}) {
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client || !isAdmin()) return;
+  try {
+    let { data, error } = await client
+      .from("university_certification_progress")
+      .select("user_id, completed_modules, watched_lessons, lesson_answers, practical_tasks, certified_at, updated_at");
+    if (error && /watched_lessons|lesson_answers|column|schema cache/i.test(error.message || "")) {
+      ({ data, error } = await client
+        .from("university_certification_progress")
+        .select("user_id, completed_modules, practical_tasks, certified_at, updated_at"));
+    }
+    if (error) throw error;
+    state.universityCertificationRecords = Object.fromEntries((data || []).map((row) => [row.user_id, normaliseCertificationProgress(row)]));
+    state.universityCertificationRecordsLoaded = true;
+    if (rerender && routeParts()[0] === "admin") renderRoute();
+  } catch (error) {
+    state.universityCertificationRecords = {};
+    state.universityCertificationRecordsLoaded = true;
+    console.warn("Kaizen certification records unavailable:", error.message);
+    if (rerender && routeParts()[0] === "admin") renderRoute();
+  }
+}
+
+function adminCertificationStatusHtml(profile) {
+  const row = state.universityCertificationRecords[profile.id];
+  if (!row) {
+    return `
+      <span class="admin-certification-status not-started">Not started</span>
+      <small>No pathway progress yet</small>
+    `;
+  }
+  const progress = normaliseCertificationProgress(row);
+  const totals = certificationTotals(progress);
+  if (certificationIsComplete(progress)) {
+    return `
+      <span class="admin-certification-status certified">&#10003; Kaizen Certified Teacher</span>
+      <small>Completed ${escapeHtml(formatDisplayDate(progress.certified_at || progress.updated_at))}</small>
+    `;
+  }
+  return `
+    <span class="admin-certification-status in-progress">${totals.percent}% in progress</span>
+    <small>${totals.completedModules}/${totals.totalModules} lessons · ${totals.completedTasks}/${totals.totalTasks} practical tasks</small>
+  `;
 }
 
 function writeJsonStorage(key, value) {
@@ -12415,34 +12807,26 @@ function renderKaizenUniversity() {
   const progress = certificationProgress();
   const totals = certificationTotals(progress);
   const certified = certificationIsComplete(progress);
-  const passMark = Math.ceil(certificationQuiz.length * 0.8);
   const signedIn = isSignedIn();
-  const section = ({ title, intro, videos }) => `
-    <section class="university-section">
-      <div class="university-section-head">
-        <h2>${title}</h2>
-        <p>${intro}</p>
-      </div>
-      <div class="video-grid">
-        ${videos.map((video) => {
-          const module = totals.modules.find((item) => item.id === video.id);
-          return videoCard(video, { certification: true, progress, moduleNumber: module?.moduleNumber });
-        }).join("")}
-      </div>
-    </section>
-  `;
+  const activeLesson = certificationLessonById(certificationActiveLessonId(progress)) || totals.modules[0];
+  const activeDisplay = activeLesson ? universityVideoOverrides(activeLesson) : null;
+  const activeYoutubeId = activeDisplay?.youtube_url ? youtubeIdFromUrl(activeDisplay.youtube_url) : "";
+  const watched = Boolean(activeLesson && (progress.watched_lessons?.[activeLesson.id] || progress.completed_modules?.[activeLesson.id]));
+  const lessonComplete = Boolean(activeLesson && progress.completed_modules?.[activeLesson.id]);
+  const lessonsComplete = totals.completedModules === totals.totalModules;
+  const activeAnswers = activeLesson ? progress.lesson_answers?.[activeLesson.id] || {} : {};
 
   app.innerHTML = `
     ${pageHeader(
       "Kaizen University",
-      "Complete the Kaizen Certified Teacher pathway: watch the required training modules, pass the short quiz, complete the practical tasks, and generate your certificate.",
+      "Complete the Kaizen Certified Teacher pathway through short videos, quick checks, and practical implementation commitments.",
       `<a class="button" href="#/">Back to Dashboard</a><a class="button primary" href="#/how-to-use-this-site">Open Site Guide</a>`
     )}
     <section class="university-hero panel certification-hero">
       <div>
         <span class="eyebrow">Kaizen Certified Teacher</span>
         <h2>${certified ? "Certification Complete" : "Complete Your Certification"}</h2>
-        <p>This pathway trains teachers to use Kaizen Maths as a virtual mathematics textbook and teaching workspace. Complete the videos, show that you understand the core workflow, and confirm one practical classroom implementation task.</p>
+        <p>This pathway helps teachers move beyond a demo and commit to using Kaizen Maths confidently: finding topics, teaching from Classroom View, using curriculum alignment, creating worksheets, and building assessment resources.</p>
         ${signedIn ? `
           <p class="certification-save-note">${state.universityProgressSource === "supabase" ? "Progress is saved to your teacher account." : "Progress is saved in this browser until the certification progress table is added in Supabase."}</p>
         ` : `
@@ -12455,66 +12839,112 @@ function renderKaizenUniversity() {
         <span>${totals.completeItems} of ${totals.totalItems} certification requirements complete</span>
         <div class="certification-progress-bar"><i style="width:${totals.percent}%"></i></div>
         <ul>
-          <li>${totals.completedModules}/${totals.totalModules} video modules</li>
-          <li>Quiz: ${progress.quiz_passed ? `Passed (${progress.quiz_score}/${certificationQuiz.length})` : `Not passed yet (${passMark}/${certificationQuiz.length} required)`}</li>
+          <li>${totals.completedModules}/${totals.totalModules} locked lessons complete</li>
           <li>${totals.completedTasks}/${totals.totalTasks} practical tasks</li>
+          <li>${certified ? "Profile title: Kaizen Certified Teacher" : "Certificate unlocks after completion"}</li>
         </ul>
       </div>
     </section>
     <section class="certification-overview panel">
       <article>
         <span class="eyebrow">1</span>
-        <h3>Complete The Modules</h3>
-        <p>Watch the short training videos and mark each module complete when you are ready.</p>
+        <h3>Follow The Pathway</h3>
+        <p>Lessons unlock in order so every teacher completes the same core training route.</p>
       </article>
       <article>
         <span class="eyebrow">2</span>
-        <h3>Pass The Quiz</h3>
-        <p>Answer the core workflow and teacher-use questions. The pass mark is ${passMark}/${certificationQuiz.length}.</p>
+        <h3>Watch And Check</h3>
+        <p>Confirm each video, then answer a short check before the next lesson opens.</p>
       </article>
       <article>
         <span class="eyebrow">3</span>
-        <h3>Confirm The Practical Tasks</h3>
-        <p>Create a classroom routine, worksheet, and assessment-style resource using Kaizen Maths.</p>
+        <h3>Commit To Practice</h3>
+        <p>Complete practical tasks that show readiness to use Kaizen Maths in real teaching.</p>
       </article>
       <article>
         <span class="eyebrow">4</span>
-        <h3>Generate Certificate</h3>
-        <p>When every requirement is complete, print or save your Kaizen Certified Teacher certificate.</p>
+        <h3>Unlock Recognition</h3>
+        <p>The certificate and admin status update when the pathway is complete.</p>
       </article>
     </section>
-    ${universitySections.map(section).join("")}
-    <section class="certification-checkout-grid">
-      <article class="panel certification-quiz">
+    <section class="certification-pathway">
+      <aside class="certification-module-list" aria-label="Certification modules">
+        ${universitySections.map((section) => {
+          const sectionProgress = certificationSectionProgress(section, progress);
+          return `
+            <section class="certification-module-panel ${sectionProgress.completed === sectionProgress.total ? "complete" : ""}">
+              <div class="certification-module-head">
+                <span class="eyebrow">Module ${escapeHtml(String(universitySections.indexOf(section) + 1))}</span>
+                <h3>${escapeHtml(section.title.replace(/^Module \d+:\s*/, ""))}</h3>
+                <small>${sectionProgress.completed}/${sectionProgress.total} lessons</small>
+              </div>
+              <p>${escapeHtml(section.intro)}</p>
+              <div class="certification-lesson-list">
+                ${section.videos.map((lesson) => {
+                  const unlocked = certificationLessonUnlocked(lesson.id, progress);
+                  const complete = Boolean(progress.completed_modules?.[lesson.id]);
+                  const current = activeLesson?.id === lesson.id;
+                  return `
+                    <button class="certification-lesson-row ${current ? "current" : ""} ${complete ? "complete" : ""}" type="button" data-certification-select="${escapeHtml(lesson.id)}" ${unlocked ? "" : "disabled"}>
+                      <span>Lesson ${escapeHtml(String(lesson.lessonNumber || section.videos.indexOf(lesson) + 1))}</span>
+                      <strong>${escapeHtml(lesson.title)}</strong>
+                      <small>${complete ? "Complete" : unlocked ? current ? "Current" : "Open" : "Locked"}</small>
+                    </button>
+                  `;
+                }).join("")}
+              </div>
+            </section>
+          `;
+        }).join("")}
+      </aside>
+      <article class="panel certification-active-lesson" data-active-certification-lesson="${escapeHtml(activeLesson?.id || "")}">
         <div class="university-section-head">
-          <h2>Certification Quiz</h2>
-          <p>Choose the strongest answer for each question. You can retake this whenever needed.</p>
+          <span class="eyebrow">${activeLesson ? `Module ${activeLesson.moduleNumber} · Lesson ${activeLesson.lessonNumber}` : "Certification lesson"}</span>
+          <h2>${escapeHtml(activeDisplay?.title || "Certification Lesson")}</h2>
+          <p>${escapeHtml(activeDisplay?.description || "Choose a lesson from the pathway to begin.")}</p>
         </div>
-        ${certificationQuiz.map((item, index) => `
-          <fieldset class="certification-question">
-            <legend>${index + 1}. ${escapeHtml(item.question)}</legend>
-            ${item.options.map(([value, label]) => `
-              <label>
-                <input type="radio" name="certification-${escapeHtml(item.id)}" value="${escapeHtml(value)}" ${progress.quiz_answers?.[item.id] === value ? "checked" : ""}>
-                <span>${escapeHtml(label)}</span>
-              </label>
-            `).join("")}
-          </fieldset>
-        `).join("")}
-        <div class="certification-actions">
-          <button class="button primary" id="submitCertificationQuiz" type="button">Check Quiz</button>
-          <span id="certificationQuizStatus">${progress.quiz_score ? `Latest score: ${progress.quiz_score}/${certificationQuiz.length}${progress.quiz_passed ? " · Passed" : ""}` : "No quiz attempt yet."}</span>
+        ${activeYoutubeId
+          ? `<div class="video-embed certification-video"><iframe src="https://www.youtube.com/embed/${escapeHtml(activeYoutubeId)}" title="${escapeHtml(activeDisplay.title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`
+          : `<div class="video-placeholder certification-video"><span>▶</span><small>Add this YouTube link in Admin</small></div>`}
+        <div class="certification-lesson-gate">
+          <div>
+            <strong>${watched ? "Video confirmed" : "Start with the video"}</strong>
+            <p>${watched ? "The quick check is available. Complete it to unlock the next lesson." : "After watching the video, confirm completion to open the quick check."}</p>
+          </div>
+          <button class="button ${watched ? "subtle" : "primary"}" id="confirmCertificationVideo" type="button" ${lessonComplete ? "disabled" : ""}>
+            ${watched ? "Watched" : "Confirm I Watched This Video"}
+          </button>
+        </div>
+        <div class="certification-checks ${watched ? "" : "locked"}">
+          <h3>Quick Check</h3>
+          ${(activeLesson?.checks || []).map((item, index) => `
+            <fieldset class="certification-question">
+              <legend>${index + 1}. ${escapeHtml(item.question)}</legend>
+              ${item.options.map(([value, label]) => `
+                <label>
+                  <input type="radio" data-certification-check="${escapeHtml(item.id)}" name="certification-check-${escapeHtml(activeLesson.id)}-${escapeHtml(item.id)}" value="${escapeHtml(value)}" ${activeAnswers[item.id] === value ? "checked" : ""} ${watched && !lessonComplete ? "" : "disabled"}>
+                  <span>${escapeHtml(label)}</span>
+                </label>
+              `).join("")}
+            </fieldset>
+          `).join("")}
+          <div class="certification-actions">
+            <button class="button primary" id="submitCertificationLesson" type="button" ${watched && !lessonComplete ? "" : "disabled"}>${lessonComplete ? "Lesson Complete" : "Check And Continue"}</button>
+            <span id="certificationLessonStatus">${lessonComplete ? "This lesson is complete." : watched ? "Choose an answer, then continue." : "Confirm the video first."}</span>
+          </div>
         </div>
       </article>
-      <article class="panel certification-practical">
+    </section>
+    <section class="certification-checkout-grid">
+      <article class="panel certification-practical ${lessonsComplete ? "" : "locked"}">
         <div class="university-section-head">
-          <h2>Practical Completion</h2>
-          <p>Use these as a simple implementation checklist before certification is awarded.</p>
+          <h2>Practical Commitment</h2>
+          <p>${lessonsComplete ? "Complete these implementation commitments before certification is awarded." : "This opens after all pathway lessons are complete."}</p>
         </div>
         <div class="certification-task-list">
           ${certificationPracticalTasks.map((task) => `
             <label class="certification-task">
-              <input type="checkbox" data-certification-task="${escapeHtml(task.id)}" ${progress.practical_tasks?.[task.id] ? "checked" : ""}>
+              <input type="checkbox" data-certification-task="${escapeHtml(task.id)}" ${progress.practical_tasks?.[task.id] ? "checked" : ""} ${lessonsComplete ? "" : "disabled"}>
               <span>
                 <strong>${escapeHtml(task.title)}</strong>
                 <small>${escapeHtml(task.description)}</small>
@@ -12522,11 +12952,18 @@ function renderKaizenUniversity() {
             </label>
           `).join("")}
         </div>
+      </article>
+      <article class="panel certification-practical">
         <div class="certification-certificate-box ${certified ? "ready" : ""}">
           <span class="eyebrow">Certificate</span>
           <h3>${certified ? "Ready To Download" : "Locked Until Complete"}</h3>
-          <p>${certified ? `Certified on ${escapeHtml(formatDisplayDate(progress.certified_at))}.` : "Complete the modules, pass the quiz, and confirm the practical tasks to unlock the certificate."}</p>
+          <p>${certified ? `Certified on ${escapeHtml(formatDisplayDate(progress.certified_at))}. Your admin status also shows Kaizen Certified Teacher.` : "Complete the lessons and confirm the practical tasks to unlock the certificate and profile title."}</p>
           <button class="button primary" id="downloadCertificationCertificate" type="button" ${certified ? "" : "disabled"}>Print / Save Certificate</button>
+        </div>
+        <div class="certification-next-pathway">
+          <span class="eyebrow">Coming Next</span>
+          <h3>Advanced Certification Pathways</h3>
+          <p>Later pathways can cover department rollout, intervention leadership, tutor workflows, and school pilot implementation.</p>
         </div>
       </article>
     </section>
@@ -12546,7 +12983,7 @@ function teacherDisplayName() {
 function openCertificationCertificate() {
   const progress = certificationProgress();
   if (!certificationIsComplete(progress)) {
-    window.alert("Complete the modules, quiz, and practical tasks before generating the certificate.");
+    window.alert("Complete the lessons and practical tasks before generating the certificate.");
     return;
   }
   const name = teacherDisplayName();
@@ -12598,37 +13035,63 @@ function openCertificationCertificate() {
 }
 
 function bindKaizenUniversityCertification() {
-  document.querySelectorAll("[data-certification-module]").forEach((button) => {
+  document.querySelectorAll("[data-certification-select]").forEach((button) => {
     button.addEventListener("click", async () => {
-      const moduleId = button.dataset.certificationModule;
+      const lessonId = button.dataset.certificationSelect;
       const progress = certificationProgress();
-      const next = {
-        ...progress,
-        completed_modules: {
-          ...progress.completed_modules,
-          [moduleId]: !progress.completed_modules?.[moduleId]
-        }
-      };
-      await saveCertificationProgress(next);
+      if (!certificationLessonUnlocked(lessonId, progress)) return;
+      setCertificationActiveLesson(lessonId);
+      renderRoute();
     });
   });
 
-  document.getElementById("submitCertificationQuiz")?.addEventListener("click", async () => {
-    const answers = {};
-    let score = 0;
-    certificationQuiz.forEach((item) => {
-      const selected = document.querySelector(`input[name="certification-${CSS.escape(item.id)}"]:checked`)?.value || "";
-      answers[item.id] = selected;
-      if (selected === item.answer) score += 1;
-    });
-    const passMark = Math.ceil(certificationQuiz.length * 0.8);
+  document.getElementById("confirmCertificationVideo")?.addEventListener("click", async () => {
+    const lessonId = document.querySelector("[data-active-certification-lesson]")?.dataset.activeCertificationLesson || "";
+    if (!lessonId) return;
     const progress = certificationProgress();
     await saveCertificationProgress({
       ...progress,
-      quiz_answers: answers,
-      quiz_score: score,
-      quiz_passed: score >= passMark
+      watched_lessons: {
+        ...progress.watched_lessons,
+        [lessonId]: true
+      }
     });
+  });
+
+  document.getElementById("submitCertificationLesson")?.addEventListener("click", async () => {
+    const lessonId = document.querySelector("[data-active-certification-lesson]")?.dataset.activeCertificationLesson || "";
+    const lesson = certificationLessonById(lessonId);
+    if (!lesson) return;
+    const answers = {};
+    let allCorrect = true;
+    (lesson.checks || []).forEach((item) => {
+      const selected = document.querySelector(`input[data-certification-check="${CSS.escape(item.id)}"]:checked`)?.value || "";
+      answers[item.id] = selected;
+      if (selected !== item.answer) allCorrect = false;
+    });
+    const status = document.getElementById("certificationLessonStatus");
+    if (!allCorrect) {
+      if (status) status.textContent = "Not quite. Review the video, adjust your answer, and try again.";
+      return;
+    }
+    const progress = certificationProgress();
+    const next = {
+      ...progress,
+      watched_lessons: {
+        ...progress.watched_lessons,
+        [lessonId]: true
+      },
+      lesson_answers: {
+        ...progress.lesson_answers,
+        [lessonId]: answers
+      },
+      completed_modules: {
+        ...progress.completed_modules,
+        [lessonId]: true
+      }
+    };
+    setCertificationActiveLesson(nextCertificationLessonId(lessonId, next));
+    await saveCertificationProgress(next);
   });
 
   document.querySelectorAll("[data-certification-task]").forEach((input) => {
@@ -17073,6 +17536,10 @@ function renderAdmin() {
     loadSchools({ rerender: true });
   }
 
+  if (!state.universityCertificationRecordsLoaded) {
+    loadCertificationRecords({ rerender: true });
+  }
+
   const adminTools = tools.filter(isVisibleTool);
   const rows = adminTools.map((tool) => {
     const current = requiredAccess(tool);
@@ -17196,12 +17663,15 @@ function renderAdmin() {
         <small>${escapeHtml(profile.plan_key || "No plan")}</small>
       </td>
       <td>
+        ${adminCertificationStatusHtml(profile)}
+      </td>
+      <td>
         <button class="button subtle admin-save-user" type="button" data-user-id="${escapeHtml(profile.id)}">Save</button>
       </td>
     </tr>
   `).join("") : `
     <tr>
-      <td colspan="6">
+      <td colspan="7">
         <strong>No signed-up users loaded yet.</strong>
         <small>${state.usersLoaded ? "No profile rows were found." : "Open this tab after Supabase has loaded, or refresh while signed in as admin."}</small>
       </td>
@@ -17234,7 +17704,7 @@ function renderAdmin() {
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
-            <tr><th>User</th><th>Role</th><th>School</th><th>Trial Until</th><th>Billing</th><th>Action</th></tr>
+            <tr><th>User</th><th>Role</th><th>School</th><th>Trial Until</th><th>Billing</th><th>Certification</th><th>Action</th></tr>
           </thead>
           <tbody>${userRows}</tbody>
         </table>
@@ -17401,11 +17871,11 @@ function renderAdmin() {
         <div>
           <span class="eyebrow">Kaizen University</span>
           <h2>Certification Video Content</h2>
-          <p>Paste the correct YouTube link beside each certification module. The first section controls the homepage video shown underneath the testimonials in the hero area.</p>
+          <p>Paste the correct YouTube link beside each certification lesson. The first section controls the homepage video shown underneath the testimonials in the hero area.</p>
         </div>
         <button class="button primary" id="saveUniversityVideos" type="button">Save Video Content</button>
       </div>
-      <p class="admin-status" id="adminVideoStatus">Use the module rows to update the videos teachers complete for certification. Empty copy fields use the default text. Paste full YouTube links, unlisted links, embed links, or video IDs.</p>
+      <p class="admin-status" id="adminVideoStatus">Use the lesson rows to update the videos teachers complete for certification. Empty copy fields use the default text. Paste full YouTube links, unlisted links, embed links, or video IDs.</p>
       <div class="admin-video-list">
         ${videoRows}
       </div>
@@ -17448,7 +17918,12 @@ function bindAdmin() {
     const button = document.getElementById("refreshAdminUsers");
     button.disabled = true;
     usersStatus.textContent = "Refreshing users...";
-    await loadUserProfiles({ rerender: true });
+    await Promise.all([
+      loadUserProfiles(),
+      loadCertificationRecords()
+    ]);
+    button.disabled = false;
+    renderRoute();
   });
 
   document.querySelectorAll(".admin-save-user").forEach((button) => {
@@ -18891,6 +19366,7 @@ window.addEventListener("kaizen-auth-change", () => {
   loadToolInfoOverrides({ rerender: true });
   loadUniversityVideos({ rerender: true });
   loadCertificationProgress({ rerender: true });
+  loadCertificationRecords({ rerender: true });
   loadSiteTestimonials({ rerender: true });
 });
 
@@ -18906,6 +19382,7 @@ window.setTimeout(() => {
   loadToolInfoOverrides({ rerender: true });
   loadUniversityVideos({ rerender: true });
   loadCertificationProgress({ rerender: true });
+  loadCertificationRecords({ rerender: true });
   loadSiteTestimonials({ rerender: true });
 }, 1200);
 
