@@ -4787,6 +4787,9 @@ body[data-route="worksheet-generator"] .account-action {
   height: 100vh;
   height: 100dvh;
   box-shadow: none;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0f172a;
 }
 
 .legacy-toolbar {
@@ -4803,6 +4806,12 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .legacy-stage.classroom .legacy-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  grid-row: 1;
+  grid-column: 1;
+  width: 100%;
   min-height: 42px;
   padding: 7px 10px;
   align-items: center;
@@ -4810,6 +4819,30 @@ body[data-route="worksheet-generator"] .account-action {
   justify-content: flex-end;
   background: #111827;
   color: white;
+  overflow: visible;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 20px rgba(15, 23, 42, 0.18);
+}
+
+.legacy-stage.classroom.classroom-fullscreen-active,
+.legacy-stage.classroom:fullscreen,
+.legacy-stage.classroom:-webkit-full-screen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #0f172a;
+}
+
+.legacy-stage.classroom.classroom-fullscreen-active .legacy-toolbar,
+.legacy-stage.classroom:fullscreen .legacy-toolbar,
+.legacy-stage.classroom:-webkit-full-screen .legacy-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 120;
 }
 
 .legacy-stage.classroom .badge-row {
@@ -4880,7 +4913,7 @@ body[data-route="worksheet-generator"] .account-action {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  z-index: 10;
+  z-index: 140;
   gap: 6px;
   padding: 8px;
   border: 1px solid rgba(255, 255, 255, 0.16);
@@ -4938,6 +4971,8 @@ body[data-route="worksheet-generator"] .account-action {
 }
 
 .legacy-stage.classroom .legacy-toolbar-actions {
+  position: relative;
+  z-index: 90;
   flex: 1;
   justify-content: flex-end;
   gap: 6px;
@@ -4957,6 +4992,12 @@ body[data-route="worksheet-generator"] .account-action {
 .legacy-stage.classroom .classroom-annotation-layer {
   grid-row: 2;
   grid-column: 1;
+}
+
+.legacy-stage.classroom .legacy-frame {
+  position: relative;
+  z-index: 1;
+  height: 100%;
 }
 
 .legacy-stage.classroom .classroom-annotation-layer {

@@ -17644,25 +17644,70 @@ function bindToolFrame(tool, options = {}) {
 
   function updateFullscreenButton() {
     if (!fullscreenButton) return;
-    const active = document.fullscreenElement === stage;
+    const fullscreenElement = document.fullscreenElement;
+    const active = fullscreenElement === stage || Boolean(fullscreenElement && stage.contains(fullscreenElement));
+    stage.classList.toggle("classroom-fullscreen-active", active);
     fullscreenButton.textContent = active ? "Exit Full Screen" : "Full Screen";
     fullscreenButton.setAttribute("aria-pressed", String(active));
+    fullscreenButton.setAttribute(
+      "aria-label",
+      active ? "Exit full screen classroom view" : "Open classroom view full screen"
+    );
     fullscreenButton.disabled = false;
   }
 
-  function requestClassroomFullscreen() {
-    if (stage.requestFullscreen && document.fullscreenElement !== stage) {
-      stage.requestFullscreen().catch(() => {});
-    }
+  function isClassroomFullscreenActive() {
+    const fullscreenElement = document.fullscreenElement;
+    return fullscreenElement === stage || Boolean(fullscreenElement && stage.contains(fullscreenElement));
   }
 
-  function toggleClassroomFullscreen() {
+  async function requestClassroomFullscreen() {
+    if (!stage.requestFullscreen) return;
     if (document.fullscreenElement === stage) {
-      document.exitFullscreen().catch(() => {});
+      updateFullscreenButton();
       return;
     }
-    requestClassroomFullscreen();
+    if (document.fullscreenElement) {
+      try {
+        await document.exitFullscreen();
+      } catch (error) {
+        // Keep trying to place the classroom shell in charge of full screen.
+      }
+    }
+    try {
+      await stage.requestFullscreen();
+    } catch (error) {
+      // Some browser/device combinations block fullscreen requests.
+    }
+    updateFullscreenButton();
+    scheduleClassroomFit();
+    scheduleAnnotationResize();
   }
+
+  async function exitClassroomFullscreen() {
+    if (isClassroomFullscreenActive()) {
+      try {
+        await document.exitFullscreen();
+      } catch (error) {
+        // The browser may already be leaving fullscreen.
+      }
+    }
+    updateFullscreenButton();
+    scheduleClassroomFit();
+    scheduleAnnotationResize();
+  }
+
+  async function toggleClassroomFullscreen() {
+    if (isClassroomFullscreenActive()) {
+      await exitClassroomFullscreen();
+      return;
+    }
+    await requestClassroomFullscreen();
+  }
+
+  window.kaizenToggleClassroomFullscreen = toggleClassroomFullscreen;
+  window.kaizenRequestClassroomFullscreen = requestClassroomFullscreen;
+  window.kaizenExitClassroomFullscreen = exitClassroomFullscreen;
 
   function safeCaptureFileName(value) {
     return String(value || "kaizen-classroom")
@@ -18062,8 +18107,8 @@ function bindToolFrame(tool, options = {}) {
 
     if (active && options.requestFullscreen !== false) {
       requestClassroomFullscreen();
-    } else if (!active && document.fullscreenElement === stage) {
-      document.exitFullscreen().catch(() => {});
+    } else if (!active && isClassroomFullscreenActive()) {
+      exitClassroomFullscreen();
     }
     updateFullscreenButton();
   }

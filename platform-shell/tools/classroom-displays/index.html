@@ -486,18 +486,45 @@
       event.currentTarget.textContent = labelsVisible ? "Labels On" : "Labels Off";
       render();
     });
-    document.getElementById("fullscreenBtn").addEventListener("click", async () => {
+    function parentClassroomFullscreenActive() {
+      try {
+        return Boolean(window.parent?.document?.querySelector(".legacy-stage.classroom.classroom-fullscreen-active"));
+      } catch (error) {
+        return false;
+      }
+    }
+
+    function updateFullscreenLabel() {
+      const localActive = Boolean(document.fullscreenElement);
+      const shellActive = parentClassroomFullscreenActive();
+      board.classList.toggle("fullscreen", document.fullscreenElement === board);
+      document.getElementById("fullscreenBtn").textContent = localActive || shellActive ? "Exit Full Screen" : "Full Screen";
+    }
+
+    async function toggleFullscreen() {
+      if (window.parent && window.parent !== window) {
+        try {
+          const parentToggle = window.parent.kaizenToggleClassroomFullscreen;
+          if (typeof parentToggle === "function") {
+            await parentToggle();
+            updateFullscreenLabel();
+            return;
+          }
+        } catch (error) {
+          // Fall back to local fullscreen if the shell is unavailable.
+        }
+      }
+
       if (!document.fullscreenElement) {
-        await board.requestFullscreen?.();
-        board.classList.add("fullscreen");
+        await document.querySelector(".app")?.requestFullscreen?.();
       } else {
         await document.exitFullscreen?.();
       }
-    });
-    document.addEventListener("fullscreenchange", () => {
-      board.classList.toggle("fullscreen", Boolean(document.fullscreenElement));
-      document.getElementById("fullscreenBtn").textContent = document.fullscreenElement ? "Exit Full Screen" : "Full Screen";
-    });
+      updateFullscreenLabel();
+    }
+
+    document.getElementById("fullscreenBtn").addEventListener("click", toggleFullscreen);
+    document.addEventListener("fullscreenchange", updateFullscreenLabel);
 
     render();
   </script>
