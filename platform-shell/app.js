@@ -3135,7 +3135,7 @@ function isAdmin() {
 
 function toolCatalogDataShouldRerenderCurrentRoute() {
   const route = routeParts()[0] || "home";
-  return ["home", "tools", "collections", "coverage-map", "curriculum-alignments", "textbook-alignments", "admin"].includes(route);
+  return ["home", "tools", "collections", "coverage-map", "curriculum-alignments", "textbook-alignments", "textbook-assessments", "admin"].includes(route);
 }
 
 function authSensitiveRouteShouldRerender() {
@@ -3599,11 +3599,13 @@ function setActiveNav() {
   const toolRouteSlug = ["tools", "classroom"].includes(parts[0]) ? parts[1] || "" : "";
   const activeTool = toolRouteSlug ? tools.find((tool) => tool.slug === toolRouteSlug) : null;
   const activeCollectionHref = activeTool ? `#/collections/${categorySlug(activeTool.category)}` : "";
+  const activeParentHref = parts[0] === "textbook-assessments" ? "#/textbook-alignments" : "";
   document.querySelectorAll(".nav-list a, .sidebar-utility a").forEach((link) => {
     const href = link.getAttribute("href");
     const isCurrentRoute = href === cleanPath || (href !== "#/" && cleanPath.startsWith(href));
     const isToolParentCollection = Boolean(activeCollectionHref && href === activeCollectionHref);
-    link.classList.toggle("active", isCurrentRoute || isToolParentCollection);
+    const isMappedParent = Boolean(activeParentHref && href === activeParentHref);
+    link.classList.toggle("active", isCurrentRoute || isToolParentCollection || isMappedParent);
   });
 }
 
@@ -9126,6 +9128,103 @@ const textbookAlignmentSeries = [
   }
 ];
 
+function assessmentFraction(numerator, denominator) {
+  return `<span class="assessment-fraction"><span>${escapeHtml(numerator)}</span><span>${escapeHtml(denominator)}</span></span>`;
+}
+
+const textbookAssessmentConfigs = {
+  "holt-mcdougal-g6": {
+    title: "Grade 6 Course Assessment",
+    subtitle: "Original Kaizen Maths assessment aligned to the Grade 6 / Course 1 textbook map.",
+    time: "60 minutes",
+    audience: "Placement, end-of-unit review, or course readiness check",
+    questions: [
+      { chapterCode: "G6.1", marks: 2, prompt: "Calculate 48 ÷ 6 + 7 × 3.", answer: "29", method: ["Work division and multiplication first: 48 ÷ 6 = 8 and 7 × 3 = 21.", "Then add: 8 + 21 = 29."] },
+      { chapterCode: "G6.1", marks: 2, prompt: "Find the highest common factor and lowest common multiple of 18 and 24.", answer: "HCF = 6, LCM = 72", method: ["18 = 2 × 3² and 24 = 2³ × 3.", "Common prime factors give HCF = 2 × 3 = 6; highest powers give LCM = 2³ × 3² = 72."] },
+      { chapterCode: "G6.2", marks: 2, prompt: "Evaluate 4x + 7 when x = 6.", answer: "31", method: ["Substitute x = 6.", "4(6) + 7 = 24 + 7 = 31."] },
+      { chapterCode: "G6.2", marks: 2, prompt: "Solve 3x + 5 = 26.", answer: "x = 7", method: ["Subtract 5 from both sides: 3x = 21.", "Divide by 3: x = 7."] },
+      { chapterCode: "G6.3", marks: 2, prompt: "Calculate 4.37 × 100 and 4.37 ÷ 10.", answer: "437 and 0.437", method: ["For ×100, the digits move two places left relative to the fixed decimal point.", "For ÷10, the digits move one place right relative to the fixed decimal point."] },
+      { chapterCode: "G6.3", marks: 2, prompt: "Round 38.746 to the nearest tenth.", answer: "38.7", method: ["The tenths digit is 7.", "The hundredths digit is 4, so the tenths digit stays the same."] },
+      { chapterCode: "G6.4", marks: 3, promptHtml: `Simplify ${assessmentFraction(18, 30)}, then add ${assessmentFraction(1, 5)}.`, answerHtml: `${assessmentFraction(4, 5)}`, method: ["18/30 simplifies to 3/5 by dividing numerator and denominator by 6.", "3/5 + 1/5 = 4/5."] },
+      { chapterCode: "G6.4", marks: 3, promptHtml: `Calculate 2${assessmentFraction(1, 4)} − ${assessmentFraction(3, 8)}.`, answerHtml: `1${assessmentFraction(7, 8)}`, method: ["Convert 2 1/4 to 18/8.", "18/8 - 3/8 = 15/8 = 1 7/8."] },
+      { chapterCode: "G6.5", marks: 3, prompt: "Share 45 in the ratio 2 : 3.", answer: "18 and 27", method: ["There are 2 + 3 = 5 equal parts.", "45 ÷ 5 = 9, so the shares are 2 × 9 = 18 and 3 × 9 = 27."] },
+      { chapterCode: "G6.5", marks: 3, prompt: "Find 35% of 80.", answer: "28", method: ["10% of 80 is 8, so 30% is 24.", "5% of 80 is 4, so 35% is 24 + 4 = 28."] },
+      { chapterCode: "G6.6", marks: 2, prompt: "Calculate -7 + 12 - 5.", answer: "0", method: ["-7 + 12 = 5.", "5 - 5 = 0."] },
+      { chapterCode: "G6.6", marks: 2, prompt: "Point A is at (-3, 4). Write the coordinates after translating A by 5 units right and 2 units down.", answer: "(2, 2)", method: ["Right 5 adds 5 to the x-coordinate: -3 + 5 = 2.", "Down 2 subtracts 2 from the y-coordinate: 4 - 2 = 2."] },
+      { chapterCode: "G6.7", marks: 4, prompt: "For the data 6, 8, 8, 11, 12, find the mean, median, mode and range.", answer: "Mean = 9, median = 8, mode = 8, range = 6", method: ["Sum = 45 and there are 5 values, so mean = 45 ÷ 5 = 9.", "The middle value is 8, the most common value is 8, and range = 12 - 6 = 6."] },
+      { chapterCode: "G6.7", marks: 2, prompt: "A bag contains 3 red counters, 5 blue counters and 2 green counters. Find P(blue).", answerHtml: `${assessmentFraction(1, 2)}`, method: ["There are 3 + 5 + 2 = 10 counters.", "P(blue) = 5/10 = 1/2."] },
+      { chapterCode: "G6.8", marks: 3, prompt: "A triangle has angles 48° and 67°. Find the third angle.", answer: "65°", method: ["Angles in a triangle sum to 180°.", "Third angle = 180° - 48° - 67° = 65°."] },
+      { chapterCode: "G6.8", marks: 3, prompt: "A regular polygon has exterior angle 45°. Find the number of sides.", answer: "8 sides", method: ["Exterior angles of a regular polygon sum to 360°.", "Number of sides = 360 ÷ 45 = 8."] },
+      { chapterCode: "G6.9", marks: 3, prompt: "A rectangle is 8 cm long and 5 cm wide. Find its perimeter and area.", answer: "Perimeter = 26 cm, area = 40 cm²", method: ["Perimeter = 2(8 + 5) = 26 cm.", "Area = 8 × 5 = 40 cm²."] },
+      { chapterCode: "G6.9", marks: 3, prompt: "A cuboid has length 6 cm, width 4 cm and height 3 cm. Find its volume.", answer: "72 cm³", method: ["Volume = length × width × height.", "Volume = 6 × 4 × 3 = 72 cm³."] },
+      { chapterCode: "G6.10", marks: 2, prompt: "The sequence is 4, 9, 14, 19, ... Write the next two terms.", answer: "24, 29", method: ["The sequence increases by 5 each time.", "19 + 5 = 24 and 24 + 5 = 29."] },
+      { chapterCode: "G6.10", marks: 2, prompt: "A function rule is multiply by 3, then subtract 2. Find the output when the input is 8.", answer: "22", method: ["Multiply by 3: 8 × 3 = 24.", "Subtract 2: 24 - 2 = 22."] }
+    ]
+  },
+  "holt-mcdougal-g7": {
+    title: "Grade 7 Course Assessment",
+    subtitle: "Original Kaizen Maths assessment aligned to the Grade 7 / Course 2 textbook map.",
+    time: "75 minutes",
+    audience: "Course assessment, placement check, or intervention baseline",
+    questions: [
+      { chapterCode: "G7.1", marks: 2, prompt: "Simplify 5x + 3x - 7 + 12.", answer: "8x + 5", method: ["Collect x terms: 5x + 3x = 8x.", "Collect constants: -7 + 12 = 5."] },
+      { chapterCode: "G7.1", marks: 3, prompt: "A number is multiplied by 4 and then 9 is added. The result is 37. Form and solve an equation.", answer: "4x + 9 = 37, x = 7", method: ["Let the number be x, so 4x + 9 = 37.", "Subtract 9: 4x = 28. Divide by 4: x = 7."] },
+      { chapterCode: "G7.2", marks: 2, prompt: "Calculate -6 × 4 + 15.", answer: "-9", method: ["-6 × 4 = -24.", "-24 + 15 = -9."] },
+      { chapterCode: "G7.2", marks: 3, promptHtml: `Order from smallest to largest: -2.4, ${assessmentFraction(-5, 2)}, -2.05, ${assessmentFraction(-11, 5)}.`, answerHtml: `${assessmentFraction(-5, 2)}, -2.4, ${assessmentFraction(-11, 5)}, -2.05`, method: ["Convert fractions: -5/2 = -2.5 and -11/5 = -2.2.", "For negative numbers, the value further left on the number line is smaller."] },
+      { chapterCode: "G7.3", marks: 2, promptHtml: `Calculate ${assessmentFraction(3, 4)} + ${assessmentFraction(5, 6)}.`, answerHtml: `1${assessmentFraction(7, 12)}`, method: ["Common denominator is 12: 3/4 = 9/12 and 5/6 = 10/12.", "9/12 + 10/12 = 19/12 = 1 7/12."] },
+      { chapterCode: "G7.3", marks: 3, prompt: "Calculate 6.4 ÷ 0.8.", answer: "8", method: ["Multiply both numbers by 10 to make the divisor a whole number.", "64 ÷ 8 = 8."] },
+      { chapterCode: "G7.4", marks: 2, prompt: "A car travels 180 miles in 3 hours. Find its average speed.", answer: "60 miles per hour", method: ["Average speed = distance ÷ time.", "180 ÷ 3 = 60."] },
+      { chapterCode: "G7.4", marks: 3, prompt: "A model has scale 1 : 50. A length on the model is 7 cm. Find the real length in metres.", answer: "3.5 m", method: ["Real length = 7 × 50 = 350 cm.", "350 cm = 3.5 m."] },
+      { chapterCode: "G7.5", marks: 2, prompt: "Find 18% of 250.", answer: "45", method: ["10% is 25 and 8% is 20.", "18% is 25 + 20 = 45."] },
+      { chapterCode: "G7.5", marks: 3, prompt: "A jacket costs £48 after a 20% discount. Find the original price.", answer: "£60", method: ["After a 20% discount, the price is 80% of the original.", "80% = £48, so 10% = £6 and 100% = £60."] },
+      { chapterCode: "G7.6", marks: 2, prompt: "For the rule y = 3x - 4, find y when x = 7.", answer: "17", method: ["Substitute x = 7.", "y = 3(7) - 4 = 21 - 4 = 17."] },
+      { chapterCode: "G7.6", marks: 3, prompt: "A line has gradient 2 and crosses the y-axis at -5. Write its equation.", answer: "y = 2x - 5", method: ["Use y = mx + c.", "m = 2 and c = -5, so y = 2x - 5."] },
+      { chapterCode: "G7.7", marks: 2, prompt: "Find the range of 12, 18, 21, 21, 28, 30.", answer: "18", method: ["Range = highest value - lowest value.", "30 - 12 = 18."] },
+      { chapterCode: "G7.7", marks: 3, prompt: "The frequencies for test scores 1, 2, 3, 4 are 2, 5, 4, 1. Find the mean score.", answer: "2.33 to 2 d.p.", method: ["Total score = 1×2 + 2×5 + 3×4 + 4×1 = 28.", "Total frequency = 12, so mean = 28 ÷ 12 = 2.33 to 2 d.p."] },
+      { chapterCode: "G7.8", marks: 2, prompt: "Two angles on a straight line are 7x and 5x. Find x.", answer: "x = 15", method: ["Angles on a straight line sum to 180°.", "7x + 5x = 180, so 12x = 180 and x = 15."] },
+      { chapterCode: "G7.8", marks: 3, prompt: "A shape is translated by the vector 4 right and 3 down. Point P starts at (-2, 5). Find the image of P.", answer: "(2, 2)", method: ["Add 4 to the x-coordinate: -2 + 4 = 2.", "Subtract 3 from the y-coordinate: 5 - 3 = 2."] },
+      { chapterCode: "G7.9", marks: 2, prompt: "Find the circumference of a circle with radius 6 cm. Give your answer in terms of π.", answer: "12π cm", method: ["Circumference = 2πr.", "2π × 6 = 12π cm."] },
+      { chapterCode: "G7.9", marks: 3, prompt: "A triangle has base 14 cm and height 9 cm. Find its area.", answer: "63 cm²", method: ["Area of a triangle = 1/2 × base × height.", "1/2 × 14 × 9 = 63 cm²."] },
+      { chapterCode: "G7.10", marks: 2, prompt: "Find the volume of a prism with cross-sectional area 18 cm² and length 7 cm.", answer: "126 cm³", method: ["Volume of a prism = cross-sectional area × length.", "18 × 7 = 126 cm³."] },
+      { chapterCode: "G7.10", marks: 3, prompt: "A cylinder has radius 3 cm and height 10 cm. Find its volume in terms of π.", answer: "90π cm³", method: ["Volume = πr²h.", "π × 3² × 10 = 90π cm³."] },
+      { chapterCode: "G7.11", marks: 2, prompt: "A fair spinner has 8 equal sections. Three sections are red. Find P(red).", answerHtml: `${assessmentFraction(3, 8)}`, method: ["There are 3 favourable outcomes out of 8 equally likely outcomes.", "P(red) = 3/8."] },
+      { chapterCode: "G7.11", marks: 3, prompt: "A coin is flipped and a fair six-sided die is rolled. Find P(head and an even number).", answerHtml: `${assessmentFraction(1, 4)}`, method: ["P(head) = 1/2 and P(even) = 3/6 = 1/2.", "P(head and even) = 1/2 × 1/2 = 1/4."] },
+      { chapterCode: "G7.12", marks: 2, prompt: "Solve 5x - 8 = 27.", answer: "x = 7", method: ["Add 8 to both sides: 5x = 35.", "Divide by 5: x = 7."] },
+      { chapterCode: "G7.12", marks: 3, prompt: "Solve 3(x + 4) = 2x + 19.", answer: "x = 7", method: ["Expand: 3x + 12 = 2x + 19.", "Subtract 2x: x + 12 = 19. Subtract 12: x = 7."] }
+    ]
+  },
+  "holt-mcdougal-pre-algebra": {
+    title: "Pre-Algebra Course Assessment",
+    subtitle: "Original Kaizen Maths assessment aligned to the Pre-Algebra textbook map.",
+    time: "75 minutes",
+    audience: "Pre-Algebra placement, readiness, or end-of-course assessment",
+    questions: [
+      { chapterCode: "PA.1", marks: 2, prompt: "Evaluate 2a² - 5 when a = 4.", answer: "27", method: ["Substitute a = 4: 2(4²) - 5.", "4² = 16, so 2 × 16 - 5 = 27."] },
+      { chapterCode: "PA.1", marks: 3, prompt: "Calculate -3(5 - 9) + 7.", answer: "19", method: ["Work inside brackets: 5 - 9 = -4.", "-3 × -4 = 12, then 12 + 7 = 19."] },
+      { chapterCode: "PA.2", marks: 2, prompt: "Solve x/6 = 9.", answer: "x = 54", method: ["Multiply both sides by 6.", "x = 9 × 6 = 54."] },
+      { chapterCode: "PA.2", marks: 3, prompt: "Solve 4x + 11 = 39 and check your answer.", answer: "x = 7", method: ["Subtract 11: 4x = 28. Divide by 4: x = 7.", "Check: 4(7) + 11 = 39."] },
+      { chapterCode: "PA.3", marks: 2, prompt: "Solve 6x - 5 > 31.", answer: "x > 6", method: ["Add 5: 6x > 36.", "Divide by 6: x > 6."] },
+      { chapterCode: "PA.3", marks: 3, prompt: "Solve 5x + 7 = 2x + 25.", answer: "x = 6", method: ["Subtract 2x: 3x + 7 = 25.", "Subtract 7: 3x = 18. Divide by 3: x = 6."] },
+      { chapterCode: "PA.4", marks: 2, prompt: "Write 360 as a product of prime factors.", answer: "2³ × 3² × 5", method: ["360 = 36 × 10 = 2² × 3² × 2 × 5.", "Collect powers: 2³ × 3² × 5."] },
+      { chapterCode: "PA.4", marks: 3, promptHtml: `Calculate ${assessmentFraction(5, 8)} × ${assessmentFraction(12, 15)} and simplify.`, answerHtml: `${assessmentFraction(1, 2)}`, method: ["Cancel before multiplying: 12/8 simplifies to 3/2 and 5/15 simplifies to 1/3.", "The product is 1/2."] },
+      { chapterCode: "PA.5", marks: 2, prompt: "Calculate -2.5 + 7.8.", answer: "5.3", method: ["The signs are different, so subtract 2.5 from 7.8.", "7.8 - 2.5 = 5.3 and the larger absolute value is positive."] },
+      { chapterCode: "PA.5", marks: 3, promptHtml: `Solve ${assessmentFraction(3, 4)}x = 18.`, answer: "x = 24", method: ["Divide by 3/4, which is the same as multiplying by 4/3.", "x = 18 × 4/3 = 24."] },
+      { chapterCode: "PA.6", marks: 2, prompt: "Simplify the ratio 42 : 56.", answer: "3 : 4", method: ["The HCF of 42 and 56 is 14.", "42 ÷ 14 = 3 and 56 ÷ 14 = 4."] },
+      { chapterCode: "PA.6", marks: 3, prompt: "There are 5 red counters and 7 blue counters. Two counters are selected without replacement. Find P(red then blue).", answerHtml: `${assessmentFraction(35, 132)}`, method: ["P(red first) = 5/12.", "After one red is removed, P(blue second) = 7/11, so probability = 5/12 × 7/11 = 35/132."] },
+      { chapterCode: "PA.7", marks: 2, prompt: "Increase 80 by 15%.", answer: "92", method: ["15% of 80 = 12.", "80 + 12 = 92."] },
+      { chapterCode: "PA.7", marks: 3, prompt: "A price rises from £40 to £46. Find the percentage increase.", answer: "15%", method: ["Increase = 46 - 40 = 6.", "Percentage increase = 6/40 × 100 = 15%."] },
+      { chapterCode: "PA.8", marks: 2, prompt: "Find the gradient of the line through (2, 5) and (6, 13).", answer: "2", method: ["Gradient = change in y ÷ change in x.", "(13 - 5) ÷ (6 - 2) = 8 ÷ 4 = 2."] },
+      { chapterCode: "PA.8", marks: 3, prompt: "A line has equation y = -3x + 4. Find the y-intercept and the value of y when x = -2.", answer: "y-intercept = 4, y = 10", method: ["In y = mx + c, c is the y-intercept, so it is 4.", "When x = -2, y = -3(-2) + 4 = 10."] },
+      { chapterCode: "PA.9", marks: 2, prompt: "Simplify √72.", answer: "6√2", method: ["72 = 36 × 2.", "√72 = √36 × √2 = 6√2."] },
+      { chapterCode: "PA.9", marks: 3, prompt: "A right triangle has shorter sides 9 cm and 12 cm. Find the hypotenuse.", answer: "15 cm", method: ["Use Pythagoras: c² = 9² + 12².", "c² = 81 + 144 = 225, so c = 15 cm."] },
+      { chapterCode: "PA.10", marks: 2, prompt: "Find the area of a circle with radius 5 cm. Give your answer in terms of π.", answer: "25π cm²", method: ["Area = πr².", "π × 5² = 25π cm²."] },
+      { chapterCode: "PA.10", marks: 3, prompt: "A rectangular prism measures 8 cm by 5 cm by 4 cm. Find its volume and surface area.", answer: "Volume = 160 cm³, surface area = 184 cm²", method: ["Volume = 8 × 5 × 4 = 160 cm³.", "Surface area = 2(8×5 + 8×4 + 5×4) = 2(40 + 32 + 20) = 184 cm²."] },
+      { chapterCode: "PA.11", marks: 2, prompt: "Find the median of 14, 17, 18, 21, 25, 31.", answer: "19.5", method: ["There are six values, so use the mean of the middle two.", "(18 + 21) ÷ 2 = 19.5."] },
+      { chapterCode: "PA.11", marks: 3, prompt: "A sample survey asks only students in the football team about after-school clubs. Explain one source of bias.", answer: "The sample is biased because it only represents football-team students, not the whole school.", method: ["A good sample should represent the population.", "Football-team students may have different interests from other students, so the results may not be reliable for the whole school."] }
+    ]
+  }
+};
+
 const curriculumAlignmentFrameworks = [
   {
     id: "common-core",
@@ -12262,12 +12361,21 @@ function textbookAlignmentById(id) {
   return textbookAlignmentCourses.find((course) => course.id === id) || textbookAlignmentCourses[0];
 }
 
+function textbookAssessmentByCourseId(courseId) {
+  return textbookAssessmentConfigs[courseId] || null;
+}
+
+function hasTextbookAssessment(courseId) {
+  return Boolean(textbookAssessmentByCourseId(courseId));
+}
+
 function textbookAlignmentSeriesForCourse(course) {
   return textbookAlignmentSeries.find((series) => series.id === course.seriesId) || textbookAlignmentSeries[0];
 }
 
 function textbookAlignmentLevelLink(level, course) {
   const available = textbookAlignmentCourses.some((item) => item.id === level.id);
+  const assessment = hasTextbookAssessment(level.id);
   if (!available) {
     return `
       <span class="textbook-level-disabled">
@@ -12279,9 +12387,77 @@ function textbookAlignmentLevelLink(level, course) {
   return `
     <a class="${level.id === course.id ? "active" : ""}" href="#/textbook-alignments/${escapeHtml(level.id)}">
       <strong>${escapeHtml(level.label)}</strong>
-      <small>${escapeHtml(level.status)}</small>
+      <small>${escapeHtml(level.status)}${assessment ? " · Assessment" : ""}</small>
     </a>
   `;
+}
+
+function textbookCourseAssessmentLink(course) {
+  if (!hasTextbookAssessment(course.id)) return "";
+  return `<a class="button primary" href="#/textbook-assessments/${escapeHtml(course.id)}">Open Course Assessment</a>`;
+}
+
+function chapterTitleByCode(course, code) {
+  return course.chapters.find((chapter) => chapter.code === code)?.title || code;
+}
+
+function assessmentQuestionText(question) {
+  return question.promptHtml || escapeHtml(question.prompt || "");
+}
+
+function assessmentAnswerText(question) {
+  return question.answerHtml || escapeHtml(question.answer || "");
+}
+
+function textbookAssessmentTotalMarks(assessment) {
+  return assessment.questions.reduce((sum, question) => sum + Number(question.marks || 0), 0);
+}
+
+function renderTextbookAssessmentQuestion(question, index, course) {
+  return `
+    <article class="textbook-assessment-question">
+      <div class="textbook-assessment-question-head">
+        <span>${index + 1}</span>
+        <strong>${escapeHtml(question.marks)} ${Number(question.marks) === 1 ? "mark" : "marks"}</strong>
+      </div>
+      <div class="textbook-assessment-question-body">
+        <small>${escapeHtml(question.chapterCode)} · ${escapeHtml(chapterTitleByCode(course, question.chapterCode))}</small>
+        <p>${assessmentQuestionText(question)}</p>
+        <div class="textbook-answer-lines" aria-hidden="true"></div>
+      </div>
+    </article>
+  `;
+}
+
+function renderTextbookAssessmentAnswer(question, index, course) {
+  return `
+    <article class="textbook-assessment-answer">
+      <h3>${index + 1}. ${escapeHtml(question.chapterCode)} · ${escapeHtml(chapterTitleByCode(course, question.chapterCode))}</h3>
+      <p><strong>Answer:</strong> ${assessmentAnswerText(question)}</p>
+      ${Array.isArray(question.method) && question.method.length ? `
+        <ol>
+          ${question.method.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}
+        </ol>
+      ` : ""}
+    </article>
+  `;
+}
+
+function bindTextbookAssessmentPage(course, assessment) {
+  const printButton = document.getElementById("printTextbookAssessment");
+  printButton?.addEventListener("click", () => {
+    const originalTitle = document.title;
+    document.body.classList.add("printing-textbook-assessment");
+    document.title = `${assessment.title} - ${course.course} - Kaizen Maths`;
+    const cleanup = () => {
+      document.body.classList.remove("printing-textbook-assessment");
+      document.title = originalTitle;
+      window.removeEventListener("afterprint", cleanup);
+    };
+    window.addEventListener("afterprint", cleanup);
+    window.print();
+    window.setTimeout(cleanup, 1000);
+  });
 }
 
 function alignmentToolChip([slug, use]) {
@@ -12613,11 +12789,12 @@ function renderTextbookAlignments() {
   const reverseIndex = textbookReverseToolIndex(course);
   const strongCount = course.chapters.filter((chapter) => chapter.coverage === "Strong").length;
   const partialCount = course.chapters.filter((chapter) => chapter.coverage === "Partial").length;
+  const assessment = textbookAssessmentByCourseId(course.id);
   app.innerHTML = `
     ${pageHeader(
       "Textbook Alignments",
       "Connect a school textbook sequence to Kaizen Maths tools, worksheets, worked examples, and classroom practice.",
-      `<a class="button primary" href="#/worksheet-generator">Build Worksheet</a><a class="button" href="#/coverage-map">Coverage Map</a>`
+      `${textbookCourseAssessmentLink(course)}<a class="button" href="#/worksheet-generator">Build Worksheet</a><a class="button" href="#/coverage-map">Coverage Map</a>`
     )}
     <section class="textbook-page">
       <section class="textbook-hero-panel">
@@ -12630,6 +12807,7 @@ function renderTextbookAlignments() {
           <span><strong>${course.chapters.length}</strong> units mapped</span>
           <span><strong>${strongCount}</strong> strong matches</span>
           <span><strong>${partialCount}</strong> partial matches</span>
+          ${assessment ? `<span><strong>${textbookAssessmentTotalMarks(assessment)}</strong> assessment marks</span>` : ""}
         </div>
       </section>
 
@@ -12640,6 +12818,7 @@ function renderTextbookAlignments() {
             <h2>${escapeHtml(course.course)}</h2>
             <p>${escapeHtml(course.basis)}</p>
           </div>
+          ${assessment ? `<a class="button primary" href="#/textbook-assessments/${escapeHtml(course.id)}">Open Assessment PDF</a>` : ""}
         </div>
         <div class="textbook-course-tabs" aria-label="Available textbook levels">
           ${series.levels.map((level) => textbookAlignmentLevelLink(level, course)).join("")}
@@ -12705,6 +12884,77 @@ function renderTextbookAlignments() {
       </section>
     </section>
   `;
+}
+
+function renderTextbookAssessment() {
+  const requestedCourse = routeParts()[1] || "holt-mcdougal-g6";
+  const course = textbookAlignmentById(requestedCourse);
+  const assessment = textbookAssessmentByCourseId(course.id);
+  if (!assessment) {
+    app.innerHTML = `
+      ${pageHeader(
+        "Textbook Assessment",
+        "This course does not yet have a linked Kaizen assessment.",
+        `<a class="button primary" href="#/textbook-alignments/${escapeHtml(course.id)}">Back To Textbook Alignment</a>`
+      )}
+      <section class="textbook-page">
+        <section class="textbook-map-panel curriculum-empty-panel">
+          <div>
+            <span class="eyebrow">Assessment Not Added Yet</span>
+            <h2>${escapeHtml(course.course)}</h2>
+            <p>The alignment is ready, but a course assessment has not yet been built for this textbook level.</p>
+          </div>
+        </section>
+      </section>
+    `;
+    return;
+  }
+  const totalMarks = textbookAssessmentTotalMarks(assessment);
+  app.innerHTML = `
+    ${pageHeader(
+      assessment.title,
+      `${assessment.subtitle} Print or save as PDF for student use, with the answer key on separate pages.`,
+      `<button class="button primary" id="printTextbookAssessment" type="button">Print / Save PDF</button><a class="button" href="#/textbook-alignments/${escapeHtml(course.id)}">Back To Alignment</a>`
+    )}
+    <section class="textbook-assessment-page">
+      <section class="textbook-assessment-sheet">
+        <header class="textbook-assessment-cover">
+          <div>
+            <span class="eyebrow">Kaizen Maths Assessment</span>
+            <h1>${escapeHtml(assessment.title)}</h1>
+            <p>${escapeHtml(course.label)}</p>
+          </div>
+          <div class="textbook-assessment-total">${totalMarks} marks</div>
+        </header>
+        <section class="textbook-assessment-meta" aria-label="Student details">
+          <div><strong>Name:</strong><span></span></div>
+          <div><strong>Class:</strong><span></span></div>
+          <div><strong>Date:</strong><span></span></div>
+          <div><strong>Time:</strong><span>${escapeHtml(assessment.time)}</span></div>
+        </section>
+        <section class="textbook-assessment-instructions">
+          <h2>Instructions</h2>
+          <p>Answer all questions. Show working where appropriate. Use the answer key only after completing the assessment.</p>
+          <p>${escapeHtml(assessment.audience)}</p>
+        </section>
+        <section class="textbook-assessment-grid" aria-label="Assessment questions">
+          ${assessment.questions.map((question, index) => renderTextbookAssessmentQuestion(question, index, course)).join("")}
+        </section>
+        <footer class="textbook-assessment-footer">Generated with Kaizen Maths · Original assessment aligned to the textbook coverage map.</footer>
+      </section>
+      <section class="textbook-assessment-answer-key">
+        <header>
+          <span class="eyebrow">Teacher Copy</span>
+          <h2>Answer Key and Method Notes</h2>
+          <p>${escapeHtml(assessment.title)} · ${totalMarks} marks</p>
+        </header>
+        <div class="textbook-assessment-answer-grid">
+          ${assessment.questions.map((question, index) => renderTextbookAssessmentAnswer(question, index, course)).join("")}
+        </div>
+      </section>
+    </section>
+  `;
+  bindTextbookAssessmentPage(course, assessment);
 }
 
 function compactToolDescription(tool) {
@@ -19334,6 +19584,10 @@ function updateRouteSeo(parts) {
       title: routeTitle("Textbook Alignments"),
       description: "Map school textbook chapters to Kaizen Maths tools, worksheets, worked examples, and classroom practice. Includes Holt McDougal Mathematics Grade 6, Grade 7, Pre-Algebra, Algebra 1, Geometry, Algebra & Trigonometry, Precalculus, and Calculus pilot alignments."
     },
+    "textbook-assessments": {
+      title: routeTitle("Textbook Course Assessments"),
+      description: "Print or save original Kaizen Maths assessments aligned to textbook coverage maps, including Grade 6, Grade 7, and Pre-Algebra pilot assessments."
+    },
     "collections": {
       title: routeTitle(collectionPageTitle),
       description: collectionName
@@ -19491,6 +19745,8 @@ function renderRoute() {
     renderCurriculumAlignments();
   } else if (parts[0] === "textbook-alignments") {
     renderTextbookAlignments();
+  } else if (parts[0] === "textbook-assessments") {
+    renderTextbookAssessment();
   } else if (parts[0] === "collections" && parts[1]) {
     renderToolLibrary(parts[1]);
   } else if (parts[0] === "book-demo") {
