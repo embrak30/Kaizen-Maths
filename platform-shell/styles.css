@@ -6493,6 +6493,12 @@ button.certification-course-card {
   stroke-width: 5px;
 }
 
+.worksheet-question-text svg text.measure-label {
+  font-size: 10px;
+  font-weight: 650;
+  stroke-width: 3.5px;
+}
+
 .worksheet-question-text .card-prompt,
 .worksheet-question-text .worksheet-diagram-prompt,
 .worksheet-question-text .question-text,
