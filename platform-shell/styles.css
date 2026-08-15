@@ -6383,8 +6383,8 @@ button.certification-course-card {
 .worksheet-question-text .polar-card,
 .worksheet-question-text .venn-card {
   display: grid;
-  grid-template-columns: minmax(150px, 240px) minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: minmax(220px, 340px) minmax(0, 1fr);
+  gap: 18px;
   align-items: center;
   max-width: 100%;
 }
@@ -6402,14 +6402,14 @@ button.certification-course-card {
 .worksheet-question-text .data-table-wrap,
 .worksheet-question-text .diagram-wrap {
   width: 100%;
-  max-width: 260px;
+  max-width: 340px;
   min-width: 0;
   height: auto;
-  overflow: hidden;
+  overflow: visible;
   background: #fff;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  padding: 4px;
+  border: 0;
+  border-radius: 0;
+  padding: 10px 16px 12px;
 }
 
 .worksheet-question-text .worksheet-embedded-diagram,
@@ -6444,6 +6444,7 @@ button.certification-course-card {
   min-width: 0;
   height: auto;
   display: block;
+  overflow: visible;
 }
 
 .worksheet-question-text .shape-diagram :is(.triangle-fill, .shape-fill),
