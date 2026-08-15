@@ -6376,6 +6376,8 @@ button.certification-course-card {
 .worksheet-question-text .worksheet-diagram-row,
 .worksheet-question-text .shape-row,
 .worksheet-question-text .diagram-row,
+.worksheet-question-text .circle-theorem-row,
+.worksheet-question-text .polygon-row,
 .worksheet-question-text .bearing-row,
 .worksheet-question-text .motion-row,
 .worksheet-question-text .polar-card,
@@ -6410,6 +6412,15 @@ button.certification-course-card {
   padding: 4px;
 }
 
+.worksheet-question-text .worksheet-embedded-diagram,
+.worksheet-question-text .shape-diagram,
+.worksheet-question-text .diagram-wrap,
+.worksheet-question-text .transform-diagram {
+  --shape-fill: transparent;
+  --shape-stroke: #111827;
+  --shape-accent: #111827;
+}
+
 .worksheet-question-text .histogram-wrap,
 .worksheet-question-text .cf-wrap,
 .worksheet-question-text .tree-wrap,
@@ -6433,6 +6444,52 @@ button.certification-course-card {
   min-width: 0;
   height: auto;
   display: block;
+}
+
+.worksheet-question-text .shape-diagram :is(.triangle-fill, .shape-fill),
+.worksheet-question-text .worksheet-embedded-diagram :is(.triangle-fill, .shape-fill),
+.worksheet-question-text .diagram-wrap :is(.triangle-fill, .shape-fill),
+.worksheet-question-text .transform-diagram :is(.object-shape, .image-shape, .shape-original, .shape-image) {
+  fill: transparent !important;
+  stroke: #111827 !important;
+}
+
+.worksheet-question-text :is(.shape-diagram, .worksheet-embedded-diagram, .diagram-wrap) :is(.circle-fill, .circle-outline, .polygon-outline, .sector-fill) {
+  fill: transparent !important;
+  stroke: #111827 !important;
+  stroke-width: 2.4px;
+}
+
+.worksheet-question-text :is(.shape-diagram, .worksheet-embedded-diagram, .diagram-wrap) :is(.right-mark, .altitude, .extension, .shape-split, .angle-arc, .angle-ray, .split-line, .theorem-line, .radius-line, .tangent-line, .diameter-line, .shape-line, .line-marker, .axis-line, .grid-line, .sector-arc, .sector-radius) {
+  fill: none !important;
+  stroke: #111827;
+}
+
+.worksheet-question-text :is(.shape-diagram, .worksheet-embedded-diagram, .diagram-wrap) :is(.point-dot, .center-dot) {
+  fill: #111827 !important;
+  stroke: none !important;
+}
+
+.worksheet-question-text .shape-diagram :is(polygon, rect, path):not(.right-mark, .altitude, .extension, .shape-split, .angle-arc, .angle-ray, .split-line, .theorem-line, .radius-line, .tangent-line, .diameter-line, .shape-line, .line-marker, .axis-line, .grid-line, .sector-arc, .sector-radius),
+.worksheet-question-text .worksheet-embedded-diagram :is(polygon, rect, path):not(.right-mark, .altitude, .extension, .shape-split, .angle-arc, .angle-ray, .split-line, .theorem-line, .radius-line, .tangent-line, .diameter-line, .shape-line, .line-marker, .axis-line, .grid-line, .sector-arc, .sector-radius),
+.worksheet-question-text .diagram-wrap :is(polygon, rect, path):not(.right-mark, .altitude, .extension, .shape-split, .angle-arc, .angle-ray, .split-line, .theorem-line, .radius-line, .tangent-line, .diameter-line, .shape-line, .line-marker, .axis-line, .grid-line, .sector-arc, .sector-radius) {
+  fill: transparent;
+  stroke: #111827;
+}
+
+.worksheet-question-text .shape-diagram :is(line, path, polygon, rect),
+.worksheet-question-text .worksheet-embedded-diagram :is(line, path, polygon, rect),
+.worksheet-question-text .diagram-wrap :is(line, path, polygon, rect) {
+  vector-effect: non-scaling-stroke;
+}
+
+.worksheet-question-text svg text {
+  fill: #111827;
+  font-weight: 650;
+  paint-order: stroke fill;
+  stroke: #fff;
+  stroke-linejoin: round;
+  stroke-width: 5px;
 }
 
 .worksheet-question-text .card-prompt,
