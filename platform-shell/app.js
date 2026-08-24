@@ -945,6 +945,25 @@ const tools = [
     ]
   },
   {
+    slug: "midpoint-length-lines",
+    title: "Midpoint and Length of Line Segments",
+    category: "Geometry",
+    level: "KS3 / GCSE / IGCSE / CSEC",
+    type: "Practice Generator",
+    access: "Free",
+    status: "Imported",
+    description: "Generate coordinate-geometry practice for finding midpoints, line segment lengths, missing endpoints, missing coordinates, circle diameter links, and midpoint reasoning in quadrilaterals.",
+    tags: ["geometry", "coordinate geometry", "midpoint", "distance formula", "line segments", "length of a line", "missing coordinates", "circle diameter", "quadrilateral diagonals"],
+    toolPath: "tools/midpoint-length-lines/index.html?v=midpoint-length-lines-1",
+    imported: true,
+    teacherNotes: [
+      "Level 1 builds midpoint fluency and finding an endpoint from a midpoint.",
+      "Level 2 covers horizontal, vertical, and diagonal line segment lengths using coordinate differences.",
+      "Level 3 introduces missing coordinates using midpoint and distance information.",
+      "Level 4 combines midpoint and length with circle diameter and quadrilateral diagonal reasoning."
+    ]
+  },
+  {
     slug: "transformations",
     title: "Transformations",
     category: "Geometry",
@@ -2478,6 +2497,7 @@ const subjectToolGroups = {
     "bearings": "Trigonometry and Bearings",
     "earth-geometry": "Trigonometry and Bearings",
     "equation-of-a-circle": "Coordinate Geometry",
+    "midpoint-length-lines": "Coordinate Geometry",
     "transformations": "Coordinate Geometry",
     "loci-constructions": "Constructions and Loci",
     "free-vectors": "Vectors and Similarity",
@@ -14489,6 +14509,7 @@ const curatedRelatedToolSlugs = {
   "area-models": ["anchor-charts", "bar-models", "elementary-manipulatives", "fractions-practice"],
   "elementary-maths-playground": ["anchor-charts", "bar-models", "area-models", "elementary-starter-board"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
+  "midpoint-length-lines": ["straight-lines", "equation-of-a-circle", "transformations", "pythagoras-theorem"],
   "formal-geometric-proof": ["missing-angles", "polygons-angles", "circle-theorems", "transformations"],
   "polygons-angles": ["formal-geometric-proof", "missing-angles", "circle-theorems", "loci-constructions"],
   "circle-theorems": ["formal-geometric-proof", "missing-angles", "polygons-angles", "circles-area-circumference"],

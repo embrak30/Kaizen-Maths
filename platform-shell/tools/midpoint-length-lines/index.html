@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Midpoint and Length of Line Segments</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#f2f6fb;min-height:100vh;padding:14px;color:#14213d;overflow-x:hidden}
+    .teacher-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);background:#14213d;color:#fff;padding:12px 7px;writing-mode:vertical-rl;text-orientation:mixed;cursor:pointer;z-index:1001;border-radius:0 7px 7px 0;font-weight:800;font-size:.82em;box-shadow:2px 0 10px rgba(0,0,0,.18)}
+    .sidebar{position:fixed;left:-410px;top:0;width:410px;height:100vh;background:#fff;z-index:1000;transition:left .25s;box-shadow:2px 0 20px rgba(0,0,0,.25);overflow-y:auto}.sidebar.open{left:0}.sidebar-header{background:#14213d;color:#fff;padding:18px;font-size:1.25em;font-weight:850}.sidebar-content{padding:22px;line-height:1.55}.sidebar-content h3{color:#14213d;margin:18px 0 8px;border-bottom:2px solid #2563eb;padding-bottom:4px;font-size:1.02em}.sidebar-content p,.sidebar-content li{margin-bottom:8px;color:#4b5563}.sidebar-content ul{padding-left:20px;margin-bottom:12px}.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;opacity:0;visibility:hidden;transition:.25s}.sidebar-overlay.active{opacity:1;visibility:visible}
+    .container{max-width:1220px;margin:0 auto;background:#fff;border-radius:9px;box-shadow:0 4px 18px rgba(15,23,42,.1);overflow:hidden}.header{background:#14213d;background-image:linear-gradient(135deg,rgba(255,255,255,.10),transparent 48%,rgba(0,0,0,.12)),repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 24px);color:#fff;padding:20px;text-align:center}.header h1{font-size:2.05em;text-shadow:0 2px 4px rgba(0,0,0,.25)}
+    .tabs{display:flex;background:#e5edf7}.tab{flex:1;padding:13px 9px;border:0;background:#e5edf7;cursor:pointer;font-weight:850;font-size:.95em;border-bottom:3px solid transparent;color:#1f2937}.tab.active{background:#fff;color:#1d4ed8;border-bottom-color:#1d4ed8}
+    .controls{padding:15px 18px;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #d8e2f0}.level-info h3{color:#14213d;font-size:1.16em;margin-bottom:3px}.level-info p{color:#667085;font-size:.94em}.dropdown-container{margin-top:8px}.type-dropdown{padding:8px 10px;border:2px solid #c7d2e2;border-radius:6px;background:#fff;min-width:350px;font-size:.94em}.timer-section,.action-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timer-display{font-size:1.45em;font-weight:850;color:#14213d;background:#fff;padding:7px 12px;border:2px solid #c7d2e2;border-radius:6px;min-width:96px;text-align:center}.timer-display.active{border-color:#1d4ed8;color:#1d4ed8}.timer-display.warning{color:#d92d20;border-color:#d92d20;animation:pulse 1s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.btn{padding:8px 14px;border:0;border-radius:6px;font-weight:850;cursor:pointer;min-width:68px;color:#fff}.btn-primary{background:#1d4ed8}.btn-success{background:#2f855a}.btn-warning{background:#c77700}.btn-danger{background:#d92d20}
+    .problems-section{padding:14px 18px 18px;min-height:520px}.problem-set-header{display:none;margin-bottom:8px;padding:8px 14px;border-radius:6px;background:#1d4ed8;color:#fff;text-align:center;font-size:1.06em;font-weight:850}.problem-set-header.visible{display:block}.set-instruction{display:none;margin:0 0 10px;padding:8px 14px;border-radius:6px;background:#eff6ff;border:1px solid #bfdbfe;color:#14213d;text-align:center;font-weight:800}.set-instruction.visible{display:block}.problem-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;list-style:none}
+    .problem-item{background:#f8fafc;border-left:4px solid #1d4ed8;border-radius:7px;padding:10px 11px;display:flex;flex-direction:column;gap:8px;min-height:260px}.problem-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.problem-left{display:flex;gap:10px;align-items:flex-start;min-width:0}.problem-number{background:#1d4ed8;color:#fff;min-width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:850}.question-shell{min-width:0;width:100%}.question-text{font-family:var(--kaizen-ui-font,"Segoe UI",Tahoma,Geneva,Verdana,sans-serif);font-size:1.02em;color:#14213d;font-weight:700;line-height:1.35;overflow-wrap:anywhere}.math-text,.coordinate,.step-equation{font-family:var(--math-font,"KaTeX_Main","Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif)}.coordinate{font-weight:760;white-space:nowrap}.diagram-row{display:grid;grid-template-columns:236px minmax(0,1fr);gap:10px;align-items:center}.coord-diagram{width:236px;height:186px;background:#fff;border:0;border-radius:0;padding:0}.coord-diagram svg{width:100%;height:100%;display:block;overflow:visible}.grid-line{stroke:#d8e2f0;stroke-width:1}.axis-line{stroke:#111827;stroke-width:1.7}.segment-line{stroke:#111827;stroke-width:2.4;stroke-linecap:round}.segment-alt{stroke:#0f766e;stroke-width:2.2;stroke-linecap:round;stroke-dasharray:5 4}.point-dot{fill:#111827}.mid-dot{fill:#0f766e}.point-label{font-family:var(--kaizen-ui-font,"Segoe UI",Tahoma,Geneva,Verdana,sans-serif);font-size:10px;fill:#111827;font-weight:800;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}.axis-label{font-size:9px;fill:#64748b;font-weight:700}.problem-answer{background:#2f855a;color:#fff;padding:7px 11px;border-radius:999px;font-weight:850;display:none;font-size:.9em;max-width:220px}.problem-answer.visible{display:block}.steps-section{display:none;margin-top:auto;padding:10px;background:#eff6ff;border-left:3px solid #1d4ed8;border-radius:6px}.steps-section.visible{display:block}.answer-label{font-weight:850;color:#1d4ed8;margin-bottom:6px}.solution-steps{line-height:1.42;font-size:.95em}.step{margin:5px 0;color:#14213d}.step-equation{margin:6px 0;text-align:center;font-weight:760;color:#5b21b6;background:#fff;border:1px solid #dbeafe;border-radius:5px;padding:7px;overflow-x:auto}.vfrac{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;vertical-align:middle;line-height:1.05;margin:0 2px}.vfrac span:first-child{border-bottom:1.7px solid currentColor;padding:0 4px 2px}.vfrac span:last-child{padding:2px 4px 0}.final-answer{margin-top:8px;text-align:center;background:#2f855a;color:#fff;border-radius:6px;padding:8px;font-weight:850}.timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1100}.modal-content{background:#fff;padding:28px;border-radius:10px;text-align:center;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.28)}.modal-content h2{color:#d92d20;margin-bottom:10px}.modal-content p{color:#667085;margin-bottom:18px}.hidden{display:none}
+    @media (max-width:980px){.problem-list{grid-template-columns:1fr}.diagram-row{grid-template-columns:236px minmax(0,1fr)}}
+    @media (max-width:650px){body{padding:8px}.controls{align-items:stretch}.timer-section,.action-buttons{justify-content:center}.type-dropdown{min-width:0;width:100%}.tabs{flex-wrap:wrap}.tab{flex:1 1 50%}.sidebar{width:330px;left:-330px}.problem-header{flex-direction:column}.diagram-row{grid-template-columns:1fr}.coord-diagram{width:100%;max-width:260px;height:auto}.problem-answer{max-width:100%}.question-text{font-size:1em}}
+  </style>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <script src="../../auth-config.js?v=tool-access-guard-2"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-2"></script>
+</head>
+<body>
+  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Midpoint and Length Guidance</div>
+    <div class="sidebar-content">
+      <h3>Overview</h3>
+      <p>This tool supports coordinate geometry practice for midpoint, length of a line segment, missing endpoints, and combined challenge questions.</p>
+      <h3>Level Guide</h3>
+      <ul>
+        <li><strong>Level 1:</strong> midpoint formula and finding an endpoint from a midpoint.</li>
+        <li><strong>Level 2:</strong> horizontal, vertical, and diagonal line segment lengths.</li>
+        <li><strong>Level 3:</strong> missing coordinates using midpoint or distance information.</li>
+        <li><strong>Level 4:</strong> combined midpoint and length problems, circle diameter links, and quadrilateral reasoning.</li>
+      </ul>
+      <h3>Teaching Focus</h3>
+      <ul>
+        <li>Midpoint means average the x-coordinates and average the y-coordinates separately.</li>
+        <li>Length comes from horizontal and vertical changes, then Pythagoras.</li>
+        <li>For missing endpoints, use the fact that the midpoint sits exactly halfway between the endpoints.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header"><h1>Midpoint and Length of Line Segments</h1></header>
+    <nav class="tabs">
+      <button class="tab active" onclick="switchLevel(1)">Level 1: Midpoint</button>
+      <button class="tab" onclick="switchLevel(2)">Level 2: Length</button>
+      <button class="tab" onclick="switchLevel(3)">Level 3: Missing Values</button>
+      <button class="tab" onclick="switchLevel(4)">Level 4: Challenge</button>
+    </nav>
+    <section class="controls">
+      <div class="level-info">
+        <h3 id="level-title">Level 1: Midpoint</h3>
+        <p id="level-description">Find midpoints and endpoints using coordinate averages.</p>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
+            <option value="select">Select Question Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop</button>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-success" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" onclick="showSteps()">Steps</button>
+      </div>
+    </section>
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <div id="set-instruction" class="set-instruction"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time is up</h2>
+      <p>Ready to review answers?</p>
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel=1,currentType='select',timerInterval=null,timeRemaining=0,timerActive=false,problems=[],answersVisible=false,stepsVisible=false;
+
+    const levelConfigs={
+      1:{title:'Level 1: Midpoint',description:'Find midpoints and endpoints using coordinate averages.',types:['midpoint_two_points','endpoint_from_midpoint']},
+      2:{title:'Level 2: Length of a Line Segment',description:'Find horizontal, vertical, and diagonal distances on the coordinate plane.',types:['axis_aligned_length','distance_two_points']},
+      3:{title:'Level 3: Missing Values',description:'Use midpoint and distance information to find missing coordinates.',types:['missing_endpoint','missing_coordinate_length','compare_lengths']},
+      4:{title:'Level 4: Challenge',description:'Combine midpoint, length, circle diameter, and quadrilateral reasoning.',types:['combined_midpoint_length','diameter_centre_radius','quadrilateral_midpoints']}
+    };
+
+    const typeDisplayNames={
+      midpoint_two_points:'Type 1: Find the midpoint',
+      endpoint_from_midpoint:'Type 2: Find an endpoint from the midpoint',
+      axis_aligned_length:'Type 1: Horizontal or vertical length',
+      distance_two_points:'Type 2: Distance between two points',
+      missing_endpoint:'Type 1: Missing endpoint',
+      missing_coordinate_length:'Type 2: Missing coordinate from length',
+      compare_lengths:'Type 3: Compare two line lengths',
+      combined_midpoint_length:'Type 1: Midpoint and length together',
+      diameter_centre_radius:'Type 2: Diameter, centre and radius',
+      quadrilateral_midpoints:'Type 3: Midpoints of diagonals'
+    };
+    window.typeDisplayNames=typeDisplayNames;
+
+    function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active')}
+    function random(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a||1}
+    function stripTags(html){return String(html).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}
+    function mathStep(html){return {html,math:true}}
+    function note(html){return {html,math:false}}
+    function problem(prompt,diagram,answer,steps,typeLabel=typeDisplayNames[currentType]||'Question'){return {prompt,diagram,answer,steps,typeLabel,question:stripTags(prompt)}}
+
+    function simplifyFraction(n,d){if(d<0){n=-n;d=-d}const g=gcd(n,d);return {n:n/g,d:d/g}}
+    function vfrac(n,d){
+      if(typeof n==='number'&&typeof d==='number'){
+        const f=simplifyFraction(n,d);
+        if(f.d===1)return String(f.n);
+        return `<span class="vfrac"><span>${f.n}</span><span>${f.d}</span></span>`;
+      }
+      return `<span class="vfrac"><span>${n}</span><span>${d}</span></span>`;
+    }
+    function half(n){return vfrac(n,2)}
+    function coordHtml(x,y){return `<span class="coordinate">(${x}, ${y})</span>`}
+    function coordPlain(x,y){return `(${x}, ${y})`}
+    function square(n){return `${n}<sup>2</sup>`}
+    function sqrtAnswer(n){const r=Math.sqrt(n);return Number.isInteger(r)?String(r):`√${n}`}
+    function sqrtAnswerWithDecimal(n){const r=Math.sqrt(n);return Number.isInteger(r)?String(r):`√${n} ≈ ${r.toFixed(2)}`}
+    function midpointValues(a,b){return {x:a.x+b.x,y:a.y+b.y,html:coordHtml(half(a.x+b.x),half(a.y+b.y)),plain:coordPlain((a.x+b.x)/2,(a.y+b.y)/2)}}
+    function distanceInfo(a,b){const dx=b.x-a.x,dy=b.y-a.y,sum=dx*dx+dy*dy;return {dx,dy,sum,answer:sqrtAnswer(sum),answerDecimal:sqrtAnswerWithDecimal(sum)}}
+    function validRange(n){return n>=-6&&n<=6}
+    function pointPair(){
+      let a,b;
+      do{a={x:random(-5,5),y:random(-5,5)};b={x:random(-5,5),y:random(-5,5)}}while(a.x===b.x&&a.y===b.y);
+      return {a,b};
+    }
+    function diagonalPair(){
+      let a,b;
+      do{a={x:random(-5,4),y:random(-5,4)};b={x:random(-5,5),y:random(-5,5)}}while(a.x===b.x||a.y===b.y||!validRange(b.x)||!validRange(b.y));
+      return {a,b};
+    }
+    function pairWithDelta(dx,dy){
+      const minX=Math.max(-6,-6-dx),maxX=Math.min(6,6-dx),minY=Math.max(-6,-6-dy),maxY=Math.min(6,6-dy);
+      const a={x:random(minX,maxX),y:random(minY,maxY)};
+      return {a,b:{x:a.x+dx,y:a.y+dy}};
+    }
+
+    function gridDiagram(points,segments=[],midpoints=[]){
+      const originX=110,originY=95,step=12,labels=[-6,-4,-2,2,4,6];
+      const px=p=>originX+p.x*step, py=p=>originY-p.y*step;
+      let grid='';
+      for(let i=-6;i<=6;i++){
+        grid+=`<line class="grid-line" x1="${px({x:i})}" y1="${py({y:-6})}" x2="${px({x:i})}" y2="${py({y:6})}"/>`;
+        grid+=`<line class="grid-line" x1="${px({x:-6})}" y1="${py({y:i})}" x2="${px({x:6})}" y2="${py({y:i})}"/>`;
+      }
+      let labelText=labels.map(v=>`<text class="axis-label" x="${px({x:v})}" y="${originY+13}" text-anchor="middle">${v}</text><text class="axis-label" x="${originX-8}" y="${py({y:v})+3}" text-anchor="end">${v}</text>`).join('');
+      const segmentText=segments.map(s=>`<line class="${s.alt?'segment-alt':'segment-line'}" x1="${px(s.from)}" y1="${py(s.from)}" x2="${px(s.to)}" y2="${py(s.to)}"/>`).join('');
+      const midText=midpoints.map(p=>`<circle class="mid-dot" cx="${px(p)}" cy="${py(p)}" r="3.5"/><text class="point-label" x="${px(p)+7}" y="${py(p)-7}">${p.label}</text>`).join('');
+      const pointText=points.map(p=>`<circle class="point-dot" cx="${px(p)}" cy="${py(p)}" r="3.2"/><text class="point-label" x="${px(p)+7}" y="${py(p)-7}">${p.label}</text>`).join('');
+      return `<div class="coord-diagram"><svg viewBox="0 0 240 190" role="img" aria-label="Coordinate diagram">
+        ${grid}
+        <line class="axis-line" x1="${px({x:-6})}" y1="${originY}" x2="${px({x:6})}" y2="${originY}"/>
+        <line class="axis-line" x1="${originX}" y1="${py({y:-6})}" x2="${originX}" y2="${py({y:6})}"/>
+        <text class="axis-label" x="${px({x:6})+10}" y="${originY+4}">x</text>
+        <text class="axis-label" x="${originX+5}" y="${py({y:6})-6}">y</text>
+        ${labelText}${segmentText}${midText}${pointText}
+      </svg></div>`;
+    }
+
+    function genMidpointTwoPoints(){
+      const {a,b}=pointPair(),m=midpointValues(a,b),mid={x:(a.x+b.x)/2,y:(a.y+b.y)/2,label:'M'};
+      const diagram=gridDiagram([{...a,label:'A'},{...b,label:'B'}],[{from:a,to:b}],validRange(mid.x)&&validRange(mid.y)?[mid]:[]);
+      return problem(`Find the midpoint of A${coordHtml(a.x,a.y)} and B${coordHtml(b.x,b.y)}.`,diagram,m.html,[
+        note('Use the midpoint formula. Average the x-coordinates and average the y-coordinates separately.'),
+        mathStep(`M = (${vfrac('x<sub>1</sub> + x<sub>2</sub>',2)}, ${vfrac('y<sub>1</sub> + y<sub>2</sub>',2)})`),
+        mathStep(`M = (${vfrac(`${a.x} + ${b.x}`,2)}, ${vfrac(`${a.y} + ${b.y}`,2)})`),
+        mathStep(`M = (${vfrac(a.x+b.x,2)}, ${vfrac(a.y+b.y,2)})`),
+        note(`The midpoint is ${m.html}.`)
+      ]);
+    }
+
+    function genEndpointFromMidpoint(){
+      let a,b,m;
+      do{a={x:random(-5,5),y:random(-5,5)};b={x:random(-5,5),y:random(-5,5)};m={x:(a.x+b.x)/2,y:(a.y+b.y)/2}}while((a.x===b.x&&a.y===b.y)||!Number.isInteger(m.x)||!Number.isInteger(m.y));
+      const diagram=gridDiagram([{...a,label:'A'},{...m,label:'M'}],[{from:a,to:m,alt:true}],[]);
+      return problem(`M${coordHtml(m.x,m.y)} is the midpoint of AB. A is ${coordHtml(a.x,a.y)}. Find B.`,diagram,coordHtml(b.x,b.y),[
+        note('If M is the midpoint, each coordinate of M is halfway between A and B.'),
+        mathStep(`x_B = 2x_M - x_A = 2(${m.x}) - (${a.x}) = ${b.x}`),
+        mathStep(`y_B = 2y_M - y_A = 2(${m.y}) - (${a.y}) = ${b.y}`),
+        note(`Therefore B = ${coordHtml(b.x,b.y)}.`)
+      ]);
+    }
+
+    function genAxisAlignedLength(){
+      const horizontal=Math.random()<0.5;
+      const length=random(3,10);
+      let a,b;
+      if(horizontal){const y=random(-5,5),x=random(-6,6-length);a={x,y};b={x:x+length,y}}
+      else{const x=random(-5,5),y=random(-6,6-length);a={x,y};b={x,y:y+length}}
+      const diagram=gridDiagram([{...a,label:'A'},{...b,label:'B'}],[{from:a,to:b}],[]);
+      return problem(`Find the length of AB where A${coordHtml(a.x,a.y)} and B${coordHtml(b.x,b.y)}.`,diagram,`${length} units`,[
+        note(horizontal?'The y-coordinates are the same, so this is a horizontal distance.':'The x-coordinates are the same, so this is a vertical distance.'),
+        mathStep(horizontal?`Length = |${b.x} - (${a.x})|`:`Length = |${b.y} - (${a.y})|`),
+        mathStep(`Length = ${length}`),
+        note(`Therefore AB = ${length} units.`)
+      ]);
+    }
+
+    function genDistanceTwoPoints(){
+      const deltas=choice([[3,4],[4,3],[5,2],[2,5],[6,3],[3,6],[-3,4],[4,-3],[-5,-2]]);
+      const {a,b}=pairWithDelta(deltas[0],deltas[1]),d=distanceInfo(a,b);
+      const diagram=gridDiagram([{...a,label:'A'},{...b,label:'B'}],[{from:a,to:b}],[]);
+      return problem(`Find the length of AB where A${coordHtml(a.x,a.y)} and B${coordHtml(b.x,b.y)}. Give an exact answer.`,diagram,`${d.answer} units`,[
+        note('Use the distance formula. This is Pythagoras applied to the horizontal and vertical changes.'),
+        mathStep(`AB = √((x<sub>2</sub> - x<sub>1</sub>)<sup>2</sup> + (y<sub>2</sub> - y<sub>1</sub>)<sup>2</sup>)`),
+        mathStep(`AB = √((${b.x} - (${a.x}))<sup>2</sup> + (${b.y} - (${a.y}))<sup>2</sup>)`),
+        mathStep(`AB = √(${square(d.dx)} + ${square(d.dy)})`),
+        mathStep(`AB = √${d.sum}`),
+        note(`Therefore AB = ${d.answer} units.`)
+      ]);
+    }
+
+    function genMissingEndpoint(){
+      return genEndpointFromMidpoint();
+    }
+
+    function genMissingCoordinateLength(){
+      const horizontal=Math.random()<0.5,length=random(3,9);
+      let a,b,prompt,answer,steps;
+      if(horizontal){
+        const direction=choice(['right','left']),y=random(-5,5),x=random(-4,4);
+        const bx=direction==='right'?x+length:x-length;
+        a={x,y};b={x:bx,y};
+        prompt=`A is ${coordHtml(a.x,a.y)} and B is <span class="coordinate">(x, ${y})</span>. AB = ${length} units and B is ${direction} of A. Find x.`;
+        answer=`x = ${bx}`;
+        steps=[
+          note('The segment is horizontal because the y-coordinate is unchanged.'),
+          mathStep(direction==='right'?`x = ${a.x} + ${length}`:`x = ${a.x} - ${length}`),
+          mathStep(`x = ${bx}`)
+        ];
+      }else{
+        const direction=choice(['above','below']),x=random(-5,5),y=random(-4,4);
+        const by=direction==='above'?y+length:y-length;
+        a={x,y};b={x,y:by};
+        prompt=`A is ${coordHtml(a.x,a.y)} and B is <span class="coordinate">(${x}, y)</span>. AB = ${length} units and B is ${direction} A. Find y.`;
+        answer=`y = ${by}`;
+        steps=[
+          note('The segment is vertical because the x-coordinate is unchanged.'),
+          mathStep(direction==='above'?`y = ${a.y} + ${length}`:`y = ${a.y} - ${length}`),
+          mathStep(`y = ${by}`)
+        ];
+      }
+      return problem(prompt,'',answer,[...steps,note(`Therefore the missing coordinate is ${answer}.`)]);
+    }
+
+    function genCompareLengths(){
+      const first=pairWithDelta(...choice([[3,4],[4,3],[5,0],[0,6]]));
+      const second=pairWithDelta(...choice([[2,4],[6,0],[1,5],[4,4]]));
+      const d1=distanceInfo(first.a,first.b),d2=distanceInfo(second.a,second.b);
+      const longer=d1.sum===d2.sum?'The two segments are equal in length.':d1.sum>d2.sum?'AB is longer.':'CD is longer.';
+      const diagram=gridDiagram([{...first.a,label:'A'},{...first.b,label:'B'},{...second.a,label:'C'},{...second.b,label:'D'}],[{from:first.a,to:first.b},{from:second.a,to:second.b,alt:true}],[]);
+      return problem(`Compare the lengths of AB and CD. A${coordHtml(first.a.x,first.a.y)}, B${coordHtml(first.b.x,first.b.y)}, C${coordHtml(second.a.x,second.a.y)}, D${coordHtml(second.b.x,second.b.y)}.`,diagram,longer,[
+        note('Compare squared lengths first. This avoids rounding square roots.'),
+        mathStep(`AB<sup>2</sup> = ${square(d1.dx)} + ${square(d1.dy)} = ${d1.sum}`),
+        mathStep(`CD<sup>2</sup> = ${square(d2.dx)} + ${square(d2.dy)} = ${d2.sum}`),
+        note(longer)
+      ]);
+    }
+
+    function genCombinedMidpointLength(){
+      const {a,b}=diagonalPair(),m=midpointValues(a,b),d=distanceInfo(a,b),mid={x:(a.x+b.x)/2,y:(a.y+b.y)/2,label:'M'};
+      const diagram=gridDiagram([{...a,label:'A'},{...b,label:'B'}],[{from:a,to:b}],validRange(mid.x)&&validRange(mid.y)?[mid]:[]);
+      return problem(`A${coordHtml(a.x,a.y)} and B${coordHtml(b.x,b.y)} are endpoints of a line segment. Find the midpoint and the length of AB.`,diagram,`Midpoint ${m.html}; length ${d.answer} units`,[
+        note('First find the midpoint by averaging coordinates.'),
+        mathStep(`M = (${vfrac(`${a.x} + ${b.x}`,2)}, ${vfrac(`${a.y} + ${b.y}`,2)}) = ${m.html}`),
+        note('Then find the length using the distance formula.'),
+        mathStep(`AB = √((${b.x} - (${a.x}))<sup>2</sup> + (${b.y} - (${a.y}))<sup>2</sup>)`),
+        mathStep(`AB = √(${square(d.dx)} + ${square(d.dy)}) = √${d.sum}`),
+        note(`So the midpoint is ${m.html} and AB = ${d.answer} units.`)
+      ]);
+    }
+
+    function genDiameterCentreRadius(){
+      const {a,b}=diagonalPair(),m=midpointValues(a,b),d=distanceInfo(a,b),mid={x:(a.x+b.x)/2,y:(a.y+b.y)/2,label:'C'};
+      const radiusSum=d.sum/4;
+      const radiusText=Number.isInteger(Math.sqrt(radiusSum))?String(Math.sqrt(radiusSum)):Number.isInteger(radiusSum)?`√${radiusSum}`:`${vfrac(`√${d.sum}`,2)}`;
+      const diagram=gridDiagram([{...a,label:'A'},{...b,label:'B'}],[{from:a,to:b}],validRange(mid.x)&&validRange(mid.y)?[mid]:[]);
+      return problem(`AB is the diameter of a circle. A${coordHtml(a.x,a.y)} and B${coordHtml(b.x,b.y)}. Find the centre and radius.`,diagram,`Centre ${m.html}; radius ${radiusText}`,[
+        note('The centre of the circle is the midpoint of the diameter.'),
+        mathStep(`Centre = (${vfrac(`${a.x} + ${b.x}`,2)}, ${vfrac(`${a.y} + ${b.y}`,2)}) = ${m.html}`),
+        note('The radius is half the diameter. First find the length of AB.'),
+        mathStep(`AB = √((${b.x} - (${a.x}))<sup>2</sup> + (${b.y} - (${a.y}))<sup>2</sup>) = √${d.sum}`),
+        mathStep(`Radius = ${vfrac(`AB`,2)} = ${vfrac(`√${d.sum}`,2)}`),
+        note(`Therefore the centre is ${m.html} and the radius is ${radiusText}.`)
+      ]);
+    }
+
+    function genQuadrilateralMidpoints(){
+      const ax=random(-5,-2),ay=random(1,5),bx=random(1,5),by=random(1,5),cx=random(1,5),cy=random(-5,-1);
+      const a={x:ax,y:ay},b={x:bx,y:by},c={x:cx,y:cy},d={x:ax+cx-bx,y:ay+cy-by};
+      if(!validRange(d.x)||!validRange(d.y))return genCombinedMidpointLength();
+      const mAC=midpointValues(a,c),mBD=midpointValues(b,d);
+      const diagram=gridDiagram([{...a,label:'A'},{...b,label:'B'},{...c,label:'C'},{...d,label:'D'}],[{from:a,to:c},{from:b,to:d,alt:true}],[]);
+      return problem(`A${coordHtml(a.x,a.y)}, B${coordHtml(b.x,b.y)}, C${coordHtml(c.x,c.y)} and D${coordHtml(d.x,d.y)} form a quadrilateral. Use the midpoints of the diagonals to decide whether ABCD is a parallelogram.`,diagram,'ABCD is a parallelogram.',[
+        note('A quadrilateral is a parallelogram if its diagonals bisect each other. That means the diagonals have the same midpoint.'),
+        mathStep(`Midpoint of AC = (${vfrac(`${a.x} + ${c.x}`,2)}, ${vfrac(`${a.y} + ${c.y}`,2)}) = ${mAC.html}`),
+        mathStep(`Midpoint of BD = (${vfrac(`${b.x} + ${d.x}`,2)}, ${vfrac(`${b.y} + ${d.y}`,2)}) = ${mBD.html}`),
+        note(`The two diagonals have the same midpoint, ${mAC.html}.`),
+        note('Therefore the diagonals bisect each other, so ABCD is a parallelogram.')
+      ]);
+    }
+
+    function generateProblem(){
+      const t=currentType==='select'?choice(levelConfigs[currentLevel].types):currentType;
+      if(t==='midpoint_two_points')return genMidpointTwoPoints();
+      if(t==='endpoint_from_midpoint')return genEndpointFromMidpoint();
+      if(t==='axis_aligned_length')return genAxisAlignedLength();
+      if(t==='distance_two_points')return genDistanceTwoPoints();
+      if(t==='missing_endpoint')return genMissingEndpoint();
+      if(t==='missing_coordinate_length')return genMissingCoordinateLength();
+      if(t==='compare_lengths')return genCompareLengths();
+      if(t==='combined_midpoint_length')return genCombinedMidpointLength();
+      if(t==='diameter_centre_radius')return genDiameterCentreRadius();
+      if(t==='quadrilateral_midpoints')return genQuadrilateralMidpoints();
+      return genMidpointTwoPoints();
+    }
+
+    function setInstructionForType(){
+      const text={
+        midpoint_two_points:'Find the midpoint by averaging the x-coordinates and y-coordinates separately.',
+        endpoint_from_midpoint:'Use the midpoint to work back to the missing endpoint.',
+        axis_aligned_length:'Use the change in the coordinate that varies.',
+        distance_two_points:'Use Pythagoras through the distance formula.',
+        missing_endpoint:'Double the midpoint coordinate, then subtract the known endpoint coordinate.',
+        missing_coordinate_length:'Use the direction and the given length to find the missing coordinate.',
+        compare_lengths:'Compare squared distances before deciding which segment is longer.',
+        combined_midpoint_length:'Find the midpoint first, then use the distance formula.',
+        diameter_centre_radius:'The centre is the midpoint of the diameter; the radius is half the diameter.',
+        quadrilateral_midpoints:'Compare the midpoints of the diagonals to test whether they bisect each other.'
+      }[currentType]||'';
+      const el=document.getElementById('set-instruction');
+      el.textContent=text;
+      el.classList.toggle('visible',Boolean(text));
+    }
+
+    function switchLevel(level){
+      currentLevel=level;currentType='select';
+      document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));
+      const cfg=levelConfigs[level];
+      document.getElementById('level-title').textContent=cfg.title;
+      document.getElementById('level-description').textContent=cfg.description;
+      const dd=document.getElementById('type-dropdown');
+      dd.innerHTML='<option value="select">Select Question Type</option>'+cfg.types.map(t=>`<option value="${t}">${typeDisplayNames[t]}</option>`).join('');
+      dd.value='select';
+      showBlankPage();
+    }
+
+    function typeChanged(){currentType=document.getElementById('type-dropdown').value;currentType==='select'?showBlankPage():generateNewSet()}
+    function showBlankPage(){document.getElementById('problem-set-header').classList.remove('visible');document.getElementById('set-instruction').classList.remove('visible');document.getElementById('problem-list').innerHTML='<li style="grid-column:1/-1;text-align:center;padding:38px;color:#667085;font-size:1.05em">Please select a question type to begin midpoint and length practice.</li>'}
+    function generateNewSet(){if(currentType==='select'){showBlankPage();return}problems=[];answersVisible=false;stepsVisible=false;const seen=new Set();let guard=0;while(problems.length<5&&guard<80){guard++;const p=generateProblem(),key=p.question+'|'+stripTags(p.answer);if(seen.has(key))continue;seen.add(key);problems.push(p)}while(problems.length<5)problems.push(generateProblem());renderProblems()}
+
+    function renderProblems(){
+      const c=document.getElementById('problem-list'),h=document.getElementById('problem-set-header');
+      c.innerHTML='';
+      h.textContent=typeDisplayNames[currentType]||'Midpoint and Length of Line Segments';
+      h.className='problem-set-header visible';
+      setInstructionForType();
+      problems.forEach((p,i)=>{
+        const li=document.createElement('li');
+        li.className='problem-item';
+        const steps=p.steps.map(s=>`<div class="${s.math?'step-equation':'step'}">${s.html}</div>`).join('');
+        const prompt=p.diagram?`<div class="diagram-row">${p.diagram}<div class="question-text">${p.prompt}</div></div>`:`<div class="question-text">${p.prompt}</div>`;
+        li.innerHTML=`<div class="problem-header"><div class="problem-left"><div class="problem-number">${i+1}</div><div class="question-shell">${prompt}</div></div><div class="problem-answer" id="quick-answer-${i}">${p.answer}</div></div><div class="steps-section" id="steps-${i}"><div class="answer-label">Solution Steps:</div><div class="solution-steps">${steps}<div class="final-answer">${p.answer}</div></div></div>`;
+        c.appendChild(li);
+      });
+    }
+
+    function showAnswers(){answersVisible=!answersVisible;problems.forEach((_,i)=>{const e=document.getElementById(`quick-answer-${i}`);if(e)e.classList.toggle('visible',answersVisible)})}
+    function showSteps(){stepsVisible=!stepsVisible;problems.forEach((_,i)=>{const e=document.getElementById(`steps-${i}`);if(e)e.classList.toggle('visible',stepsVisible)})}
+    function startTimer(m){if(timerActive)stopTimer();timeRemaining=m*60;timerActive=true;updateTimerDisplay();timerInterval=setInterval(()=>{timeRemaining--;updateTimerDisplay();if(timeRemaining<=0)timerFinished()},1000)}
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerActive=false;const e=document.getElementById('timer-display');e.textContent='Ready';e.className='timer-display'}
+    function updateTimerDisplay(){const e=document.getElementById('timer-display'),m=Math.floor(timeRemaining/60),s=timeRemaining%60;e.textContent=m+':'+String(s).padStart(2,'0');if(timerActive&&timeRemaining<=30)e.className='timer-display warning';else if(timerActive)e.className='timer-display active';else e.className='timer-display'}
+    function timerFinished(){stopTimer();const e=document.getElementById('timer-display');e.textContent='Time Up!';e.className='timer-display warning';document.getElementById('timer-modal').classList.remove('hidden')}
+    function closeModal(){document.getElementById('timer-modal').classList.add('hidden')}
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-24"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-3"></script>
+</body>
+</html>
