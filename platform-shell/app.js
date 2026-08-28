@@ -952,15 +952,15 @@ const tools = [
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate coordinate-geometry practice for finding midpoints, line segment lengths, missing endpoints, missing coordinates, circle diameter links, and midpoint reasoning in quadrilaterals.",
-    tags: ["geometry", "coordinate geometry", "midpoint", "distance formula", "line segments", "length of a line", "missing coordinates", "circle diameter", "quadrilateral diagonals"],
-    toolPath: "tools/midpoint-length-lines/index.html?v=midpoint-length-lines-1",
+    description: "Generate coordinate-geometry practice for finding midpoints, line segment lengths, missing endpoints, missing coordinates, and circle diameter links.",
+    tags: ["geometry", "coordinate geometry", "midpoint", "distance formula", "line segments", "length of a line", "missing coordinates", "circle diameter"],
+    toolPath: "tools/midpoint-length-lines/index.html?v=midpoint-length-lines-2",
     imported: true,
     teacherNotes: [
       "Level 1 builds midpoint fluency and finding an endpoint from a midpoint.",
       "Level 2 covers horizontal, vertical, and diagonal line segment lengths using coordinate differences.",
       "Level 3 introduces missing coordinates using midpoint and distance information.",
-      "Level 4 combines midpoint and length with circle diameter and quadrilateral diagonal reasoning."
+      "Level 4 combines midpoint and length with circle diameter reasoning."
     ]
   },
   {
@@ -5629,10 +5629,15 @@ function metricGrid() {
 }
 
 const gcseExamStyles = [
-  { id: "general", label: "GCSE exam-style", note: "Balanced GCSE-style layout with marks and structured working." },
+  { id: "general", label: "General exam-style", note: "Balanced assessment-style layout with marks and structured working." },
+  { id: "gcse", label: "GCSE exam-style", note: "UK GCSE-style questions with clear command words, marks, and structured working." },
   { id: "aqa", label: "AQA-style", note: "Concise prompts with clear command words and mark allocation." },
   { id: "edexcel", label: "Edexcel-style", note: "Structured multi-part questions with clear progression." },
-  { id: "ocr", label: "OCR-style", note: "Context-led questions with method and interpretation marks." }
+  { id: "ocr", label: "OCR-style", note: "Context-led questions with method and interpretation marks." },
+  { id: "international", label: "International reasoning", note: "Original questions inspired by international assessment structures, with reasoning, interpretation, and justification." },
+  { id: "pisa", label: "PISA-style problem solving", note: "Original real-world contexts where students interpret information, model the situation, and justify a decision." },
+  { id: "timss", label: "TIMSS-style curriculum reasoning", note: "Original curriculum-style questions focused on mathematical content, representations, and precise reasoning." },
+  { id: "regents", label: "Regents-style structured practice", note: "Original structured questions with algebraic setup, multi-part working, and clear final conclusions." }
 ];
 
 const gcseExamTopics = [
@@ -5657,7 +5662,7 @@ const gcsePaperModes = [
     id: "one",
     label: "One question",
     count: 1,
-    title: "GCSE Modelling Question",
+    title: "Assessment Modelling Question",
     time: "5-8 minutes",
     description: "Use one focused question for modelling, discussion, or a quick check for understanding."
   },
@@ -5665,7 +5670,7 @@ const gcsePaperModes = [
     id: "class",
     label: "Short class set",
     count: 4,
-    title: "GCSE Class Practice Set",
+    title: "Class Practice Set",
     time: "15-20 minutes",
     description: "A compact set for board practice, pair work, or a short independent task."
   },
@@ -5673,7 +5678,7 @@ const gcsePaperModes = [
     id: "revision",
     label: "Revision/homework set",
     count: 10,
-    title: "GCSE Revision Practice Paper",
+    title: "Revision Practice Paper",
     time: "35-45 minutes",
     description: "A longer set for homework, revision, intervention, or a lesson-end assessment."
   },
@@ -5681,7 +5686,7 @@ const gcsePaperModes = [
     id: "custom",
     label: "Custom paper",
     count: null,
-    title: "GCSE Custom Practice Paper",
+    title: "Custom Practice Paper",
     time: "Teacher selected",
     description: "Choose the number of questions and use the filters to shape the paper."
   },
@@ -5691,9 +5696,9 @@ const gcsePaperModes = [
     count: null,
     targetMarks: 100,
     targetQuestions: 28,
-    title: "GCSE Mock Practice Paper",
+    title: "100-Mark Mock Practice Paper",
     time: "1 hour 30 minutes",
-    description: "Create a full 100-mark GCSE-style paper with short fluency questions and multi-step problem solving."
+    description: "Create a full 100-mark assessment-style paper with short fluency questions and multi-step problem solving."
   }
 ];
 
@@ -5907,6 +5912,22 @@ function gcseShuffle(items) {
 
 function gcseBoardNote(boardId) {
   return gcseExamStyles.find((style) => style.id === boardId)?.note || gcseExamStyles[0].note;
+}
+
+function gcseAssessmentStyleLabel(styleId) {
+  return gcseExamStyles.find((style) => style.id === styleId)?.label || gcseExamStyles[0].label;
+}
+
+function gcseAssessmentStyleSpecificGenerators(pool, styleId) {
+  if (!styleId || styleId === "general" || ["gcse", "aqa", "edexcel", "ocr"].includes(styleId)) return pool;
+  const internationalStyles = ["international", "pisa", "timss", "regents"];
+  const preferred = pool.filter((item) => Array.isArray(item.styles) && item.styles.includes(styleId));
+  if (preferred.length) return preferred;
+  if (styleId === "international") {
+    const international = pool.filter((item) => Array.isArray(item.styles) && item.styles.some((style) => internationalStyles.includes(style)));
+    if (international.length) return international;
+  }
+  return pool;
 }
 
 function gcseGenerateQuadratic(filters) {
@@ -6978,6 +6999,403 @@ function gcseGenerateProbabilitySingleEvent(filters) {
   };
 }
 
+function gcseGeneratePisaTransportDecision(filters) {
+  const students = gcseChoice([96, 108, 118, 126, 144]);
+  const coachSeats = gcseChoice([48, 52, 56]);
+  const coachCost = gcseChoice([360, 390, 420]);
+  const minibusSeats = gcseChoice([14, 16, 18]);
+  const minibusCost = gcseChoice([115, 130, 145]);
+  const coachCount = Math.ceil(students / coachSeats);
+  const minibusCount = Math.ceil(students / minibusSeats);
+  const coachTotal = coachCount * coachCost;
+  const minibusTotal = minibusCount * minibusCost;
+  const better = coachTotal < minibusTotal ? "coaches" : "minibuses";
+  const saving = Math.abs(coachTotal - minibusTotal);
+  return {
+    topic: "Ratio and proportion",
+    subtopic: "Real-world decision making",
+    difficulty: "Crossover grades 4-5",
+    marks: 5,
+    calculator: "Calculator",
+    commandWords: ["decide", "justify"],
+    questionHtml: `<p>A school is choosing transport for ${students} students.</p><table class="exam-mini-table"><thead><tr><th>Transport</th><th>Seats</th><th>Cost per vehicle</th></tr></thead><tbody><tr><td>Coach</td><td>${coachSeats}</td><td>${gcseMoney(coachCost)}</td></tr><tr><td>Minibus</td><td>${minibusSeats}</td><td>${gcseMoney(minibusCost)}</td></tr></tbody></table><p>Which option is cheaper? Show calculations and explain one practical limitation of your answer.</p>`,
+    answer: `Use ${better}; saving ${gcseMoney(saving)}.`,
+    worked: [
+      `Coaches needed = ceil(${students} ÷ ${coachSeats}) = ${coachCount}.`,
+      `Coach cost = ${coachCount} × ${gcseMoney(coachCost)} = ${gcseMoney(coachTotal)}.`,
+      `Minibuses needed = ceil(${students} ÷ ${minibusSeats}) = ${minibusCount}.`,
+      `Minibus cost = ${minibusCount} × ${gcseMoney(minibusCost)} = ${gcseMoney(minibusTotal)}.`,
+      `The cheaper option is ${better}, by ${gcseMoney(saving)}. A limitation is that this only compares vehicle hire cost, not availability, journey time, or luggage space.`
+    ],
+    markScheme: [
+      "1 mark for finding the number of coaches needed.",
+      "1 mark for finding the coach cost.",
+      "1 mark for finding the number of minibuses and minibus cost.",
+      "1 mark for making the correct cheaper decision.",
+      "1 mark for a sensible limitation."
+    ]
+  };
+}
+
+function gcseGeneratePisaDataClaim(filters) {
+  const base = gcseChoice([42, 48, 55]);
+  const increases = gcseChoice([
+    [8, 9, 7, 10],
+    [12, 10, 11, 9],
+    [6, 8, 7, 9]
+  ]);
+  const values = [base];
+  increases.forEach((increase) => values.push(values[values.length - 1] + increase));
+  const totalIncrease = values[4] - values[0];
+  const averageIncrease = totalIncrease / 4;
+  const projected = values[4] + averageIncrease * 3;
+  const rows = values.map((value, index) => `<tr><td>${index}</td><td>${value}</td></tr>`).join("");
+  return {
+    topic: "Probability and statistics",
+    subtopic: "Data interpretation and projection",
+    difficulty: "Crossover grades 4-5",
+    marks: 5,
+    calculator: "Calculator",
+    commandWords: ["interpret", "estimate"],
+    questionHtml: `<p>The table shows the number of members in a school club after each month.</p><table class="exam-mini-table"><thead><tr><th>Month</th><th>Members</th></tr></thead><tbody>${rows}</tbody></table><p>A teacher says, "If the overall trend continues, there will be more than ${Math.floor(projected) - 1} members after month 7."</p><p>Use the data to decide whether the teacher's statement is reasonable.</p>`,
+    answer: `Reasonable estimate: about ${projected.toFixed(1)} members after month 7.`,
+    worked: [
+      `Total increase from month 0 to month 4 = ${values[4]} - ${values[0]} = ${totalIncrease}.`,
+      `Average increase per month = ${totalIncrease} ÷ 4 = ${averageIncrease.toFixed(1)}.`,
+      `From month 4 to month 7 is 3 more months.`,
+      `Projected members = ${values[4]} + 3 × ${averageIncrease.toFixed(1)} = ${projected.toFixed(1)}.`,
+      `This is greater than ${Math.floor(projected) - 1}, so the statement is reasonable if the trend continues.`
+    ],
+    markScheme: [
+      "1 mark for finding the overall increase.",
+      "1 mark for finding the average monthly increase.",
+      "1 mark for projecting three months ahead.",
+      "1 mark for comparing with the teacher's statement.",
+      "1 mark for qualifying the conclusion using the trend assumption."
+    ]
+  };
+}
+
+function gcseGeneratePisaAreaEfficiency(filters) {
+  const panels = gcseChoice([
+    { length: 1.6, width: 1.0, power: 320 },
+    { length: 1.8, width: 1.1, power: 390 },
+    { length: 1.5, width: 1.2, power: 360 }
+  ]);
+  const roofArea = gcseChoice([24, 30, 36, 42]);
+  const panelArea = panels.length * panels.width;
+  const numberPanels = Math.floor(roofArea / panelArea);
+  const totalPower = numberPanels * panels.power;
+  return {
+    topic: "Geometry and measures",
+    subtopic: "Area and proportional reasoning",
+    difficulty: "Higher grades 6-7",
+    marks: 5,
+    calculator: "Calculator",
+    commandWords: ["calculate", "interpret"],
+    questionHtml: `<p>A rectangular roof has usable area ${roofArea} m².</p><p>One solar panel measures ${panels.length} m by ${panels.width} m and produces ${panels.power} W.</p><p>Estimate the maximum power output if the roof is filled with whole panels. State one assumption in your model.</p>`,
+    answer: `${totalPower} W, assuming area alone determines the number of panels.`,
+    worked: [
+      `Area of one panel = ${panels.length} × ${panels.width} = ${panelArea.toFixed(2)} m².`,
+      `Maximum whole panels = floor(${roofArea} ÷ ${panelArea.toFixed(2)}) = ${numberPanels}.`,
+      `Total power = ${numberPanels} × ${panels.power} W = ${totalPower} W.`,
+      "One assumption is that the panels can be arranged without gaps, roof edges, shading, or access space reducing the number."
+    ],
+    markScheme: [
+      "1 mark for calculating panel area.",
+      "1 mark for dividing roof area by panel area.",
+      "1 mark for using whole panels only.",
+      "1 mark for calculating total power.",
+      "1 mark for a reasonable modelling assumption."
+    ]
+  };
+}
+
+function gcseGeneratePisaPlanComparison(filters) {
+  const fixedA = gcseChoice([8, 10, 12]);
+  const unitA = gcseChoice([2, 3, 4]);
+  const fixedB = fixedA + gcseChoice([6, 8, 10]);
+  const unitB = Math.max(1, unitA - 1);
+  const units = gcseChoice([8, 10, 12, 15]);
+  const costA = fixedA + unitA * units;
+  const costB = fixedB + unitB * units;
+  const cheaper = costA < costB ? "Plan A" : "Plan B";
+  const saving = Math.abs(costA - costB);
+  return {
+    topic: "Number",
+    subtopic: "Comparing tariffs and interpreting value",
+    difficulty: "Crossover grades 4-5",
+    marks: 4,
+    calculator: "Calculator",
+    commandWords: ["compare", "justify"],
+    questionHtml: `<p>Two printing plans are shown.</p><table class="exam-mini-table"><thead><tr><th>Plan</th><th>Monthly fee</th><th>Cost per worksheet pack</th></tr></thead><tbody><tr><td>A</td><td>${gcseMoney(fixedA)}</td><td>${gcseMoney(unitA)}</td></tr><tr><td>B</td><td>${gcseMoney(fixedB)}</td><td>${gcseMoney(unitB)}</td></tr></tbody></table><p>A teacher expects to print ${units} worksheet packs in a month. Which plan is cheaper? Justify your decision.</p>`,
+    answer: `${cheaper} is cheaper by ${gcseMoney(saving)}.`,
+    worked: [
+      `Plan A cost = ${gcseMoney(fixedA)} + ${units} × ${gcseMoney(unitA)} = ${gcseMoney(costA)}.`,
+      `Plan B cost = ${gcseMoney(fixedB)} + ${units} × ${gcseMoney(unitB)} = ${gcseMoney(costB)}.`,
+      `Compare ${gcseMoney(costA)} and ${gcseMoney(costB)}.`,
+      `${cheaper} is cheaper by ${gcseMoney(saving)} for this number of packs.`
+    ],
+    markScheme: [
+      "1 mark for calculating Plan A.",
+      "1 mark for calculating Plan B.",
+      "1 mark for comparing the two costs.",
+      "1 mark for a justified decision."
+    ]
+  };
+}
+
+function gcseGenerateTimssPatternRule(filters) {
+  const start = gcseChoice([3, 5, 7]);
+  const difference = gcseChoice([4, 5, 6, 8]);
+  const terms = [1, 2, 3, 4].map((n) => start + (n - 1) * difference);
+  const twentieth = start + 19 * difference;
+  const nth = `${difference}n ${start - difference >= 0 ? "+" : "-"} ${Math.abs(start - difference)}`;
+  const rows = terms.map((term, index) => `<tr><td>${index + 1}</td><td>${term}</td></tr>`).join("");
+  return {
+    topic: "Algebra",
+    subtopic: "Linear sequences and generalisation",
+    difficulty: "Crossover grades 4-5",
+    marks: 4,
+    calculator: "Non-calculator",
+    commandWords: ["find", "explain"],
+    questionHtml: `<p>The table shows a pattern.</p><table class="exam-mini-table"><thead><tr><th>Pattern number</th><th>Number of tiles</th></tr></thead><tbody>${rows}</tbody></table><p>(a) Find the rule for the nth pattern.</p><p>(b) Find the number of tiles in pattern 20.</p>`,
+    answer: `(a) ${nth}, (b) ${twentieth}`,
+    worked: [
+      `The difference between consecutive terms is ${difference}.`,
+      `Start with ${difference}n because the pattern increases by ${difference} each time.`,
+      `When n = 1, ${difference}n = ${difference}. The first term is ${start}, so adjust by ${start - difference}.`,
+      `Rule: ${nth}.`,
+      `Pattern 20 = ${difference} × 20 ${start - difference >= 0 ? "+" : "-"} ${Math.abs(start - difference)} = ${twentieth}.`
+    ],
+    markScheme: [
+      "1 mark for identifying the common difference.",
+      "1 mark for forming the nth-term rule.",
+      "1 mark for substituting n = 20.",
+      "1 mark for the correct pattern 20 value."
+    ]
+  };
+}
+
+function gcseGenerateTimssNumberStructure(filters) {
+  const multiple = gcseChoice([6, 8, 9, 12]);
+  const quotient = gcseChoice([7, 8, 9, 11]);
+  const number = multiple * quotient;
+  const add = gcseChoice([multiple, multiple * 2, multiple * 3]);
+  const newNumber = number + add;
+  return {
+    topic: "Number",
+    subtopic: "Multiples and factors reasoning",
+    difficulty: "Foundation grades 1-3",
+    marks: 3,
+    calculator: "Non-calculator",
+    commandWords: ["explain"],
+    questionHtml: `<p>${number} is a multiple of ${multiple}.</p><p>Explain why ${newNumber} is also a multiple of ${multiple}.</p>`,
+    answer: `${number} = ${multiple} × ${quotient} and ${add} = ${multiple} × ${add / multiple}, so ${newNumber} = ${multiple} × ${newNumber / multiple}.`,
+    worked: [
+      `${number} = ${multiple} × ${quotient}.`,
+      `${add} = ${multiple} × ${add / multiple}.`,
+      `Adding two multiples of ${multiple} gives another multiple of ${multiple}.`,
+      `${newNumber} = ${multiple} × ${newNumber / multiple}.`
+    ],
+    markScheme: [
+      "1 mark for writing the first number as a multiple.",
+      "1 mark for recognising the added amount is also a multiple.",
+      "1 mark for a clear explanation or calculation showing the result is a multiple."
+    ]
+  };
+}
+
+function gcseGenerateTimssFractionComparison(filters) {
+  const pairs = gcseChoice([
+    { a: [3, 5], b: [5, 8] },
+    { a: [4, 7], b: [7, 12] },
+    { a: [5, 9], b: [3, 5] }
+  ]);
+  const leftCross = pairs.a[0] * pairs.b[1];
+  const rightCross = pairs.b[0] * pairs.a[1];
+  const larger = leftCross > rightCross ? `${pairs.a[0]}/${pairs.a[1]}` : `${pairs.b[0]}/${pairs.b[1]}`;
+  return {
+    topic: "Number",
+    subtopic: "Comparing fractions",
+    difficulty: "Crossover grades 4-5",
+    marks: 3,
+    calculator: "Non-calculator",
+    commandWords: ["compare", "explain"],
+    questionHtml: `<p>Which fraction is larger?</p><p>${pairs.a[0]}/${pairs.a[1]} or ${pairs.b[0]}/${pairs.b[1]}</p><p>Show a method that does not use decimals.</p>`,
+    answer: `${larger}`,
+    worked: [
+      `Compare by cross multiplying.`,
+      `${pairs.a[0]} × ${pairs.b[1]} = ${leftCross}.`,
+      `${pairs.b[0]} × ${pairs.a[1]} = ${rightCross}.`,
+      `${leftCross > rightCross ? "The first product is larger" : "The second product is larger"}, so the larger fraction is ${larger}.`
+    ],
+    markScheme: [
+      "1 mark for using a common-denominator or cross-multiplication method.",
+      "1 mark for correct products or equivalent comparison.",
+      "1 mark for the correct larger fraction."
+    ]
+  };
+}
+
+function gcseGenerateTimssPolygonReasoning(filters) {
+  const sides = gcseChoice([5, 6, 8, 9, 10, 12]);
+  const exterior = 360 / sides;
+  const interior = 180 - exterior;
+  return {
+    topic: "Geometry and measures",
+    subtopic: "Regular polygons and angle reasoning",
+    difficulty: "Crossover grades 4-5",
+    marks: 4,
+    calculator: "Non-calculator",
+    commandWords: ["find", "explain"],
+    questionHtml: `<p>A regular polygon has ${sides} sides.</p><p>(a) Find the size of each exterior angle.</p><p>(b) Find the size of each interior angle.</p><p>Explain why your answers are connected.</p>`,
+    answer: `(a) ${exterior}°, (b) ${interior}°.`,
+    worked: [
+      "Exterior angles of any polygon add to 360°.",
+      `Each exterior angle = 360° ÷ ${sides} = ${exterior}°.`,
+      "An interior angle and exterior angle on a straight line add to 180°.",
+      `Interior angle = 180° - ${exterior}° = ${interior}°.`
+    ],
+    markScheme: [
+      "1 mark for using the exterior-angle sum.",
+      "1 mark for the exterior angle.",
+      "1 mark for using the straight-line relationship.",
+      "1 mark for the interior angle and explanation."
+    ]
+  };
+}
+
+function gcseGenerateRegentsLinearSystem(filters) {
+  const adult = gcseChoice([8, 10, 12]);
+  const student = gcseChoice([5, 6, 7]);
+  const adultTickets = gcseChoice([12, 15, 18]);
+  const studentTickets = gcseChoice([20, 24, 30]);
+  const totalTickets = adultTickets + studentTickets;
+  const totalCost = adult * adultTickets + student * studentTickets;
+  return {
+    topic: "Algebra",
+    subtopic: "Systems of equations in context",
+    difficulty: "Higher grades 6-7",
+    marks: 5,
+    calculator: "Non-calculator",
+    commandWords: ["write", "solve"],
+    questionHtml: `<p>Tickets for a school event cost ${gcseMoney(adult)} for an adult and ${gcseMoney(student)} for a student.</p><p>A total of ${totalTickets} tickets were sold for ${gcseMoney(totalCost)}.</p><p>Write and solve simultaneous equations to find the number of adult tickets and student tickets sold.</p>`,
+    answer: `${adultTickets} adult tickets and ${studentTickets} student tickets.`,
+    worked: [
+      "Let a be the number of adult tickets and s be the number of student tickets.",
+      `a + s = ${totalTickets}.`,
+      `${adult}a + ${student}s = ${totalCost}.`,
+      `Substitute s = ${totalTickets} - a into the money equation.`,
+      `${adult}a + ${student}(${totalTickets} - a) = ${totalCost}.`,
+      `Solving gives a = ${adultTickets}, then s = ${studentTickets}.`
+    ],
+    markScheme: [
+      "1 mark for defining variables.",
+      "1 mark for the total tickets equation.",
+      "1 mark for the cost equation.",
+      "1 mark for a valid substitution or elimination method.",
+      "1 mark for both correct ticket numbers."
+    ]
+  };
+}
+
+function gcseGenerateRegentsCoordinateLine(filters) {
+  const x1 = gcseChoice([-4, -3, -2, 1]);
+  const y1 = gcseChoice([-5, -2, 1, 3]);
+  const dx = gcseChoice([4, 6, 8]);
+  const dy = gcseChoice([2, 4, 6]);
+  const x2 = x1 + dx;
+  const y2 = y1 + dy;
+  const midX = (x1 + x2) / 2;
+  const midY = (y1 + y2) / 2;
+  const gradientDivisor = gcseGcd(Math.abs(dy), Math.abs(dx));
+  const gradient = `${dy / gradientDivisor}/${dx / gradientDivisor}`;
+  return {
+    topic: "Geometry and measures",
+    subtopic: "Coordinate geometry from two points",
+    difficulty: "Crossover grades 4-5",
+    marks: 4,
+    calculator: "Non-calculator",
+    commandWords: ["find"],
+    questionHtml: `<p>The endpoints of a line segment are A(${x1}, ${y1}) and B(${x2}, ${y2}).</p><p>(a) Find the midpoint of AB.</p><p>(b) Find the gradient of AB.</p>`,
+    answer: `(a) (${midX}, ${midY}), (b) ${gradient}.`,
+    worked: [
+      `Midpoint x-coordinate = (${x1} + ${x2}) ÷ 2 = ${midX}.`,
+      `Midpoint y-coordinate = (${y1} + ${y2}) ÷ 2 = ${midY}.`,
+      `Change in y = ${y2} - (${y1}) = ${dy}.`,
+      `Change in x = ${x2} - (${x1}) = ${dx}.`,
+      `Gradient = ${dy}/${dx} = ${gradient}.`
+    ],
+    markScheme: [
+      "1 mark for averaging the x-coordinates.",
+      "1 mark for averaging the y-coordinates.",
+      "1 mark for finding the coordinate changes.",
+      "1 mark for the correct gradient."
+    ]
+  };
+}
+
+function gcseGenerateRegentsQuadraticModel(filters) {
+  const width = gcseChoice([5, 6, 7, 8]);
+  const extra = gcseChoice([3, 4, 5]);
+  const area = width * (width + extra);
+  return {
+    topic: "Algebra",
+    subtopic: "Quadratic equations in context",
+    difficulty: "Higher grades 6-7",
+    marks: 5,
+    calculator: "Non-calculator",
+    commandWords: ["form", "solve"],
+    questionHtml: `<p>A rectangle has width x cm. Its length is ${extra} cm more than its width.</p><p>The area of the rectangle is ${area} cm².</p><p>Form and solve an equation to find the width of the rectangle.</p>`,
+    answer: `x = ${width} cm`,
+    worked: [
+      `Width = x and length = x + ${extra}.`,
+      `Area = x(x + ${extra}).`,
+      `x(x + ${extra}) = ${area}.`,
+      `x² + ${extra}x - ${area} = 0.`,
+      `Factorise: (x - ${width})(x + ${width + extra}) = 0.`,
+      `x = ${width} or x = -${width + extra}. The width must be positive, so x = ${width} cm.`
+    ],
+    markScheme: [
+      "1 mark for forming the product for area.",
+      "1 mark for forming the quadratic equation.",
+      "1 mark for factorising or solving the quadratic.",
+      "1 mark for rejecting the negative solution.",
+      "1 mark for the width with units."
+    ]
+  };
+}
+
+function gcseGenerateRegentsFunctionInterpretation(filters) {
+  const gradient = gcseChoice([3, 4, 5]);
+  const fixed = gcseChoice([12, 15, 20]);
+  const input = gcseChoice([6, 8, 10]);
+  const output = gradient * input + fixed;
+  return {
+    topic: "Algebra",
+    subtopic: "Linear functions and interpretation",
+    difficulty: "Crossover grades 4-5",
+    marks: 4,
+    calculator: "Non-calculator",
+    commandWords: ["evaluate", "interpret"],
+    questionHtml: `<p>A service is modelled by the function C(n) = ${gradient}n + ${fixed}, where n is the number of items and C is the total cost in pounds.</p><p>(a) Find C(${input}).</p><p>(b) Interpret the meaning of ${fixed} in this context.</p>`,
+    answer: `(a) ${gcseMoney(output)}, (b) the fixed starting cost.`,
+    worked: [
+      `Substitute n = ${input}.`,
+      `C(${input}) = ${gradient} × ${input} + ${fixed}.`,
+      `C(${input}) = ${output}.`,
+      `The ${fixed} is the fixed cost before any items are added.`
+    ],
+    markScheme: [
+      "1 mark for substituting the input.",
+      "1 mark for correct calculation.",
+      "1 mark for the cost with units.",
+      "1 mark for interpreting the fixed cost."
+    ]
+  };
+}
+
 const gcseExamGenerators = [
   { topic: "number", difficulty: "foundation", marks: 4, calculator: "non-calculator", create: gcseGenerateNumberFacts },
   { topic: "statistics", difficulty: "foundation", marks: 3, calculator: "non-calculator", create: gcseGenerateMedianRange },
@@ -7011,7 +7429,19 @@ const gcseExamGenerators = [
   { topic: "statistics", difficulty: "higher", marks: 5, calculator: "calculator", create: gcseGenerateFrequencyMean },
   { topic: "statistics", difficulty: "crossover", marks: 5, calculator: "calculator", create: gcseGeneratePieChartReasoning },
   { topic: "algebra", difficulty: "higher", marks: 3, calculator: "non-calculator", create: gcseGenerateSimultaneousEquations },
-  { topic: "algebra", difficulty: "stretch", marks: 5, calculator: "non-calculator", create: gcseGenerateCompletingSquare }
+  { topic: "algebra", difficulty: "stretch", marks: 5, calculator: "non-calculator", create: gcseGenerateCompletingSquare },
+  { topic: "ratio", difficulty: "crossover", marks: 5, calculator: "calculator", styles: ["pisa", "international"], create: gcseGeneratePisaTransportDecision },
+  { topic: "statistics", difficulty: "crossover", marks: 5, calculator: "calculator", styles: ["pisa", "international"], create: gcseGeneratePisaDataClaim },
+  { topic: "geometry", difficulty: "higher", marks: 5, calculator: "calculator", styles: ["pisa", "international"], create: gcseGeneratePisaAreaEfficiency },
+  { topic: "number", difficulty: "crossover", marks: 4, calculator: "calculator", styles: ["pisa", "international"], create: gcseGeneratePisaPlanComparison },
+  { topic: "algebra", difficulty: "crossover", marks: 4, calculator: "non-calculator", styles: ["timss", "international"], create: gcseGenerateTimssPatternRule },
+  { topic: "number", difficulty: "foundation", marks: 3, calculator: "non-calculator", styles: ["timss", "international"], create: gcseGenerateTimssNumberStructure },
+  { topic: "number", difficulty: "crossover", marks: 3, calculator: "non-calculator", styles: ["timss", "international"], create: gcseGenerateTimssFractionComparison },
+  { topic: "geometry", difficulty: "crossover", marks: 4, calculator: "non-calculator", styles: ["timss", "international"], create: gcseGenerateTimssPolygonReasoning },
+  { topic: "algebra", difficulty: "higher", marks: 5, calculator: "non-calculator", styles: ["regents", "international"], create: gcseGenerateRegentsLinearSystem },
+  { topic: "geometry", difficulty: "crossover", marks: 4, calculator: "non-calculator", styles: ["regents", "international"], create: gcseGenerateRegentsCoordinateLine },
+  { topic: "algebra", difficulty: "higher", marks: 5, calculator: "non-calculator", styles: ["regents", "international"], create: gcseGenerateRegentsQuadraticModel },
+  { topic: "algebra", difficulty: "crossover", marks: 4, calculator: "non-calculator", styles: ["regents", "international"], create: gcseGenerateRegentsFunctionInterpretation }
 ];
 
 const gcseMockMarkPlan = [4, 3, 3, 4, 3, 3, 4, 3, 5, 3, 3, 4, 2, 5, 3, 4, 3, 3, 3, 3, 5, 4, 3, 3, 5, 5, 5, 2];
@@ -7067,7 +7497,7 @@ function gcseBuildMockBlueprint() {
 function gcseQuestionWithMetadata(template, question, filters) {
   return {
     ...question,
-    examBoard: gcseExamStyles.find((style) => style.id === filters.board)?.label || gcseExamStyles[0].label,
+    examBoard: gcseAssessmentStyleLabel(filters.board),
     styleNote: gcseBoardNote(filters.board),
     paperType: question.calculator,
     marks: template.marks || question.marks
@@ -7110,12 +7540,15 @@ function gcseFilteredGenerators(filters) {
     (filters.marks === "any" || String(item.marks) === String(filters.marks)) &&
     (filters.calculator === "any" || item.calculator === filters.calculator)
   ));
-  if (exact.length) return exact;
+  const styledExact = gcseAssessmentStyleSpecificGenerators(exact, filters.board);
+  if (styledExact.length) return styledExact;
   const relaxedTopic = gcseExamGenerators.filter((item) => (
     (filters.topic === "any" || item.topic === filters.topic) &&
     (filters.calculator === "any" || item.calculator === filters.calculator)
   ));
-  return relaxedTopic.length ? relaxedTopic : gcseExamGenerators;
+  const styledRelaxed = gcseAssessmentStyleSpecificGenerators(relaxedTopic, filters.board);
+  if (styledRelaxed.length) return styledRelaxed;
+  return gcseAssessmentStyleSpecificGenerators(gcseExamGenerators, filters.board);
 }
 
 function gcseBuildQuestionSet(filters, count = 4) {
@@ -7136,8 +7569,9 @@ function gcseMockPool(criteria, filters) {
   const exact = markPool.filter((item) => item.topic === criteria.topic && item.difficulty === criteria.difficulty);
   const nearby = markPool.filter((item) => item.topic === criteria.topic || item.difficulty === criteria.difficulty);
   const merged = [...exact, ...nearby, ...markPool].filter((item, index, list) => list.indexOf(item) === index);
-  if (merged.length) return merged;
-  return gcseExamGenerators.filter((item) => matchesPaper(item));
+  const styledMerged = gcseAssessmentStyleSpecificGenerators(merged, filters.board);
+  if (styledMerged.length) return styledMerged;
+  return gcseAssessmentStyleSpecificGenerators(gcseExamGenerators.filter((item) => matchesPaper(item)), filters.board);
 }
 
 function gcseBuildMockPaper(filters) {
@@ -7248,6 +7682,7 @@ function bindGcseExamStyle() {
   const output = document.getElementById("gcseExamOutput");
   const printButton = document.getElementById("printGcseExamSet");
   const modeSelect = document.getElementById("gcseMode");
+  const styleSelect = document.getElementById("gcseBoard");
   const countInput = document.getElementById("gcseCount");
   const countControl = document.getElementById("gcseCountControl");
   const titleInput = document.getElementById("gcsePaperTitle");
@@ -7274,8 +7709,9 @@ function bindGcseExamStyle() {
     }
     if (modeHint) {
       const sizeText = mode.id === "mock" ? "Target: 100 marks across about 25-28 questions." : mode.count ? `Questions: ${mode.count}.` : "Questions: choose your own count.";
-      const mockNote = mode.id === "mock" ? " Topic, difficulty, and mark filters are cleared so the paper follows a balanced GCSE-style mark spread; the paper type filter can still be used." : "";
-      modeHint.innerHTML = `<strong>${escapeHtml(mode.label)}</strong><span> ${escapeHtml(mode.description)} ${escapeHtml(sizeText)} Suggested time: ${escapeHtml(mode.time)}.${escapeHtml(mockNote)}</span>`;
+      const mockNote = mode.id === "mock" ? " Topic, difficulty, and mark filters are cleared so the paper follows a balanced assessment mark spread; the paper type filter can still be used." : "";
+      const selectedStyle = styleSelect?.value || "general";
+      modeHint.innerHTML = `<strong>${escapeHtml(mode.label)}</strong><span> ${escapeHtml(mode.description)} ${escapeHtml(sizeText)} Suggested time: ${escapeHtml(mode.time)}. Style: ${escapeHtml(gcseAssessmentStyleLabel(selectedStyle))}. ${escapeHtml(gcseBoardNote(selectedStyle))}${escapeHtml(mockNote)}</span>`;
     }
   }
 
@@ -7283,13 +7719,13 @@ function bindGcseExamStyle() {
     const filters = gcseReadFilters();
     const paper = gcseBuildPaper(filters);
     const { mode, questions } = paper;
-    const boardLabel = gcseExamStyles.find((style) => style.id === filters.board)?.label || "GCSE exam-style";
+    const boardLabel = gcseAssessmentStyleLabel(filters.board);
     const questionLabel = questions.length === 1 ? "question" : "questions";
     output.innerHTML = `
       <section class="exam-paper">
         <section class="exam-set-header">
           <div>
-            <span class="eyebrow">Original GCSE-style practice</span>
+            <span class="eyebrow">Original assessment-style practice</span>
             <h2>${escapeHtml(paper.title)}</h2>
             <p>${escapeHtml(boardLabel)} · ${escapeHtml(mode.label)}. ${escapeHtml(gcseBoardNote(filters.board))}</p>
           </div>
@@ -7305,6 +7741,7 @@ function bindGcseExamStyle() {
           <h3>Instructions</h3>
           <p>${escapeHtml(paper.instructions)}</p>
           <p>Show your working clearly. Calculators should only be used where the paper type allows it.</p>
+          <p>Questions are original Kaizen Maths questions written in the selected assessment style.</p>
         </section>
         <div class="exam-question-grid">
           ${questions.map((question, index) => renderGcseQuestionCard(question, index, { includeTeacherCopy: paper.includeTeacherCopy })).join("")}
@@ -7333,6 +7770,11 @@ function bindGcseExamStyle() {
     syncModeControls(true);
   });
 
+  styleSelect?.addEventListener("change", () => {
+    syncModeControls(false);
+    generate();
+  });
+
   mockButton?.addEventListener("click", () => {
     if (modeSelect) modeSelect.value = "mock";
     const topicSelect = document.getElementById("gcseTopic");
@@ -7358,7 +7800,7 @@ function renderGcseExamStyle() {
         <form class="exam-controls" id="gcseExamForm">
           <div class="exam-builder-title">
             <span class="eyebrow">Assessment Practice</span>
-            <h1>GCSE Exam Paper Builder</h1>
+            <h1>Assessment Builder</h1>
           </div>
           <div class="exam-filter-bank">
             <div class="worksheet-control">
@@ -7416,7 +7858,7 @@ function renderGcseExamStyle() {
               <div class="exam-advanced-grid">
                 <div class="worksheet-control">
                   <label for="gcsePaperTitle">Paper title</label>
-                  <input id="gcsePaperTitle" type="text" value="GCSE Class Practice Set">
+                  <input id="gcsePaperTitle" type="text" value="Class Practice Set">
                 </div>
                 <div class="worksheet-control">
                   <label for="gcseInstructions">Student instruction</label>
@@ -19620,8 +20062,8 @@ function updateRouteSeo(parts) {
       description: "Create printable maths worksheets, homework, quizzes, assessments, and intervention sheets from Kaizen Maths topic question generators."
     },
     "gcse-exam-style": {
-      title: routeTitle("GCSE Exam Paper Builder"),
-      description: "Generate GCSE-style maths practice sets and mock papers with marks, teacher copy options, and print-ready layout."
+      title: routeTitle("Exam & Assessment Style Builder"),
+      description: "Generate original maths practice sets and mock papers in GCSE, PISA-style, TIMSS-style, Regents-style, and international assessment formats."
     },
     "tutor-workspace": {
       title: routeTitle("Tutor Workspace"),
@@ -19726,8 +20168,8 @@ function renderRoute() {
     if (isAuthChecking()) {
       app.innerHTML = `
         ${pageHeader(
-          "GCSE Exam Paper Builder",
-          "Generate GCSE-style maths practice sets and mock papers with marks, teacher copy options, and print-ready layout.",
+          "Exam & Assessment Style Builder",
+          "Generate original maths practice sets and mock papers in GCSE, PISA-style, TIMSS-style, Regents-style, and international assessment formats.",
           "",
           "worksheet-page-header"
         )}
@@ -19738,8 +20180,8 @@ function renderRoute() {
     if (!hasWorkspaceAccess()) {
       app.innerHTML = `
         ${pageHeader(
-          "GCSE Exam Paper Builder",
-          "Generate GCSE-style maths practice sets and mock papers with marks, teacher copy options, and print-ready layout.",
+          "Exam & Assessment Style Builder",
+          "Generate original maths practice sets and mock papers in GCSE, PISA-style, TIMSS-style, Regents-style, and international assessment formats.",
           "",
           "worksheet-page-header"
         )}
