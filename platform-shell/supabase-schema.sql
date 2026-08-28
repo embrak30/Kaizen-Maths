@@ -974,3 +974,151 @@ create policy "Tutors can delete their own assessments"
 on public.tutor_assessments
 for delete
 using (auth.uid() = tutor_id or public.is_admin());
+
+create table if not exists public.class_tasks (
+  id uuid primary key default gen_random_uuid(),
+  teacher_id uuid not null references auth.users(id) on delete cascade,
+  school_id uuid references public.schools(id) on delete set null,
+  title text not null,
+  instructions text,
+  source_tool_slug text,
+  source_tool_title text,
+  source_level_label text,
+  source_type_label text,
+  join_code text not null unique,
+  questions jsonb not null default '[]'::jsonb,
+  settings jsonb not null default '{}'::jsonb,
+  expires_at timestamptz,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.class_tasks add column if not exists school_id uuid references public.schools(id) on delete set null;
+alter table public.class_tasks add column if not exists instructions text;
+alter table public.class_tasks add column if not exists source_tool_slug text;
+alter table public.class_tasks add column if not exists source_tool_title text;
+alter table public.class_tasks add column if not exists source_level_label text;
+alter table public.class_tasks add column if not exists source_type_label text;
+alter table public.class_tasks add column if not exists questions jsonb not null default '[]'::jsonb;
+alter table public.class_tasks add column if not exists settings jsonb not null default '{}'::jsonb;
+alter table public.class_tasks add column if not exists expires_at timestamptz;
+alter table public.class_tasks add column if not exists is_active boolean not null default true;
+alter table public.class_tasks add column if not exists updated_at timestamptz not null default now();
+
+create index if not exists class_tasks_teacher_id_idx on public.class_tasks(teacher_id);
+create index if not exists class_tasks_school_id_idx on public.class_tasks(school_id);
+create index if not exists class_tasks_join_code_idx on public.class_tasks(join_code);
+create index if not exists class_tasks_active_expiry_idx on public.class_tasks(is_active, expires_at);
+
+alter table public.class_tasks enable row level security;
+
+grant select, insert, update, delete on public.class_tasks to authenticated;
+
+drop policy if exists "Teachers can read their own class tasks" on public.class_tasks;
+create policy "Teachers can read their own class tasks"
+on public.class_tasks
+for select
+using (auth.uid() = teacher_id or public.is_admin());
+
+drop policy if exists "Teachers can insert their own class tasks" on public.class_tasks;
+create policy "Teachers can insert their own class tasks"
+on public.class_tasks
+for insert
+with check (
+  auth.uid() = teacher_id
+  and exists (
+    select 1
+    from public.profiles
+    where profiles.id = auth.uid()
+      and profiles.role in ('trial', 'pro', 'school', 'admin')
+  )
+);
+
+drop policy if exists "Teachers can update their own class tasks" on public.class_tasks;
+create policy "Teachers can update their own class tasks"
+on public.class_tasks
+for update
+using (auth.uid() = teacher_id or public.is_admin())
+with check (auth.uid() = teacher_id or public.is_admin());
+
+drop policy if exists "Teachers can delete their own class tasks" on public.class_tasks;
+create policy "Teachers can delete their own class tasks"
+on public.class_tasks
+for delete
+using (auth.uid() = teacher_id or public.is_admin());
+
+create table if not exists public.class_task_responses (
+  id uuid primary key default gen_random_uuid(),
+  task_id uuid not null references public.class_tasks(id) on delete cascade,
+  pupil_alias text not null check (char_length(pupil_alias) <= 80),
+  answers jsonb not null default '{}'::jsonb,
+  auto_score numeric,
+  max_score numeric,
+  marking jsonb not null default '{}'::jsonb,
+  reviewed boolean not null default false,
+  teacher_notes text,
+  created_at timestamptz not null default now(),
+  submitted_at timestamptz not null default now()
+);
+
+alter table public.class_task_responses add column if not exists auto_score numeric;
+alter table public.class_task_responses add column if not exists max_score numeric;
+alter table public.class_task_responses add column if not exists marking jsonb not null default '{}'::jsonb;
+alter table public.class_task_responses add column if not exists reviewed boolean not null default false;
+alter table public.class_task_responses add column if not exists teacher_notes text;
+alter table public.class_task_responses add column if not exists submitted_at timestamptz not null default now();
+
+create index if not exists class_task_responses_task_id_idx on public.class_task_responses(task_id);
+create index if not exists class_task_responses_submitted_at_idx on public.class_task_responses(submitted_at);
+
+alter table public.class_task_responses enable row level security;
+
+grant select, update, delete on public.class_task_responses to authenticated;
+
+drop policy if exists "Teachers can read responses for their class tasks" on public.class_task_responses;
+create policy "Teachers can read responses for their class tasks"
+on public.class_task_responses
+for select
+using (
+  exists (
+    select 1
+    from public.class_tasks
+    where class_tasks.id = class_task_responses.task_id
+      and (class_tasks.teacher_id = auth.uid() or public.is_admin())
+  )
+);
+
+drop policy if exists "Teachers can update responses for their class tasks" on public.class_task_responses;
+create policy "Teachers can update responses for their class tasks"
+on public.class_task_responses
+for update
+using (
+  exists (
+    select 1
+    from public.class_tasks
+    where class_tasks.id = class_task_responses.task_id
+      and (class_tasks.teacher_id = auth.uid() or public.is_admin())
+  )
+)
+with check (
+  exists (
+    select 1
+    from public.class_tasks
+    where class_tasks.id = class_task_responses.task_id
+      and (class_tasks.teacher_id = auth.uid() or public.is_admin())
+  )
+);
+
+drop policy if exists "Teachers can delete responses for their class tasks" on public.class_task_responses;
+create policy "Teachers can delete responses for their class tasks"
+on public.class_task_responses
+for delete
+using (
+  exists (
+    select 1
+    from public.class_tasks
+    where class_tasks.id = class_task_responses.task_id
+      and (class_tasks.teacher_id = auth.uid() or public.is_admin())
+  )
+);

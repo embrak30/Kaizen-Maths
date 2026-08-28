@@ -2673,6 +2673,19 @@ const state = {
   tutorLoading: false,
   tutorError: "",
   tutorSelectedLearnerId: "",
+  classTasks: [],
+  classTasksLoaded: false,
+  classTasksLoading: false,
+  classTaskError: "",
+  classTaskSource: "",
+  classTaskLastMessage: "",
+  classTaskToolSlug: "",
+  classTaskMetadata: null,
+  pupilTask: null,
+  pupilTaskCode: "",
+  pupilTaskLoading: false,
+  pupilTaskError: "",
+  pupilSubmission: null,
   lastAuthAccessKey: ""
 };
 
@@ -3160,7 +3173,7 @@ function toolCatalogDataShouldRerenderCurrentRoute() {
 
 function authSensitiveRouteShouldRerender() {
   const route = routeParts()[0] || "home";
-  return ["tools", "curriculum-alignments", "worksheet-generator", "gcse-exam-style", "admin", "tutor-workspace", "school-space", "upgrade", "kaizen-university"].includes(route);
+  return ["tools", "curriculum-alignments", "worksheet-generator", "gcse-exam-style", "class-tasks", "admin", "tutor-workspace", "school-space", "upgrade", "kaizen-university"].includes(route);
 }
 
 function currentAuthAccessKey() {
@@ -14326,8 +14339,8 @@ function selectedWorksheetTool() {
   return worksheetEligibleTools().find((tool) => tool.slug === slug) || worksheetEligibleTools()[0];
 }
 
-function getWorksheetFrameApi() {
-  const frame = document.getElementById("worksheetLoader");
+function getWorksheetFrameApi(frameId = "worksheetLoader") {
+  const frame = document.getElementById(frameId);
   return frame?.contentWindow?.KaizenWorksheet || null;
 }
 
@@ -14400,7 +14413,7 @@ function populateWorksheetControls(metadata) {
 }
 
 function loadWorksheetToolForApi(tool, options = {}) {
-  const frame = document.getElementById("worksheetLoader");
+  const frame = document.getElementById(options.frameId || "worksheetLoader");
   if (!frame || !tool) return Promise.reject(new Error("Worksheet loader is not available."));
 
   return new Promise((resolve, reject) => {
@@ -14430,7 +14443,7 @@ function loadWorksheetToolForApi(tool, options = {}) {
       } catch (_) {
         return;
       }
-      const api = getWorksheetFrameApi();
+      const api = getWorksheetFrameApi(options.frameId || "worksheetLoader");
       if (!api) return;
       if (!api.canGenerate()) {
         finishError(new Error(`${tool.title} is not worksheet-ready yet.`));
@@ -14895,6 +14908,932 @@ function bindWorksheetGenerator() {
 
   printButton?.addEventListener("click", () => {
     window.print();
+  });
+}
+
+const classTaskLocalTasksStorageKey = "kaizen:class-tasks-local-v1";
+const classTaskLocalResponsesStorageKey = "kaizen:class-task-responses-local-v1";
+const pupilAliasStorageKey = "kaizen:pupil-alias";
+
+function classTaskEligibleTools() {
+  return worksheetEligibleTools();
+}
+
+function classTaskToolOptions() {
+  const eligible = classTaskEligibleTools();
+  const grouped = new Map();
+  eligible.forEach((tool) => {
+    if (!grouped.has(tool.category)) grouped.set(tool.category, []);
+    grouped.get(tool.category).push(tool);
+  });
+
+  return [...grouped.entries()].map(([category, items]) => `
+    <optgroup label="${escapeHtml(category)}">
+      ${items.map((tool) => `<option value="${escapeHtml(tool.slug)}">${escapeHtml(tool.title)}</option>`).join("")}
+    </optgroup>
+  `).join("");
+}
+
+function selectedClassTaskTool() {
+  const slug = document.getElementById("classTaskTool")?.value || state.classTaskToolSlug;
+  return classTaskEligibleTools().find((tool) => tool.slug === slug) || classTaskEligibleTools()[0] || null;
+}
+
+function selectedClassTaskLevelMeta() {
+  const levelValue = document.getElementById("classTaskLevel")?.value;
+  return state.classTaskMetadata?.levels?.find((level) => String(level.id) === String(levelValue)) || state.classTaskMetadata?.levels?.[0] || null;
+}
+
+function selectedClassTaskTypeMeta() {
+  const typeValue = document.getElementById("classTaskType")?.value;
+  const level = selectedClassTaskLevelMeta();
+  return level?.types?.find((type) => type.id === typeValue) || level?.types?.[0] || null;
+}
+
+function classTaskDefaultExpiryDate(days = 14) {
+  const date = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+  return date.toISOString().slice(0, 10);
+}
+
+function normaliseClassTaskCode(value) {
+  return String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 16);
+}
+
+function classTaskRandomCode(length = 7) {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const values = new Uint32Array(length);
+  if (window.crypto?.getRandomValues) {
+    window.crypto.getRandomValues(values);
+    return Array.from(values, (value) => alphabet[value % alphabet.length]).join("");
+  }
+  return Array.from({ length }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join("");
+}
+
+function classTaskJoinUrl(code) {
+  const base = location.origin && location.origin !== "null"
+    ? `${location.origin}${location.pathname}`
+    : location.href.split("#")[0];
+  return `${base}#/pupil/${encodeURIComponent(normaliseClassTaskCode(code))}`;
+}
+
+function classTaskReadLocal(key, fallback) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "null") || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function classTaskWriteLocal(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.warn("Kaizen class task local storage unavailable:", error.message);
+  }
+}
+
+function classTaskCurrentTeacherId() {
+  return authState().session?.user?.id || "local-teacher";
+}
+
+function classTaskCurrentTeacherEmail() {
+  return authState().session?.user?.email || "local-teacher";
+}
+
+function classTaskIsAvailable(task) {
+  if (!task?.is_active) return false;
+  if (!task.expires_at) return true;
+  const expiry = new Date(task.expires_at);
+  return Number.isNaN(expiry.getTime()) || expiry >= new Date();
+}
+
+function classTaskStripHtml(value) {
+  return String(value ?? "")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&#039;/g, "'");
+}
+
+function classTaskNormaliseAnswer(value) {
+  return classTaskStripHtml(value)
+    .toLowerCase()
+    .replace(/\\dfrac/g, "\\frac")
+    .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, "$1/$2")
+    .replace(/\\sqrt\s*\{([^{}]+)\}/g, "sqrt($1)")
+    .replace(/\\left|\\right/g, "")
+    .replace(/\\times|×/g, "*")
+    .replace(/\\div|÷/g, "/")
+    .replace(/[−–—]/g, "-")
+    .replace(/\\\(|\\\)|\\\[|\\\]|\$|\{|\}/g, "")
+    .replace(/\btherefore\b|\banswer\b|\bresult\b/g, "")
+    .replace(/\s+/g, "")
+    .replace(/[.;,]+$/g, "");
+}
+
+function classTaskAcceptableAnswers(expected) {
+  const clean = classTaskNormaliseAnswer(expected);
+  const answers = new Set([clean]);
+  const withoutVariable = clean.replace(/^[a-z][a-z0-9_]*=/, "");
+  if (withoutVariable) answers.add(withoutVariable);
+  return [...answers].filter(Boolean);
+}
+
+function classTaskScoreSubmission(questions = [], answers = {}) {
+  let autoScore = 0;
+  let maxScore = 0;
+  const feedback = questions.map((question, index) => {
+    const id = question.id || `q${index + 1}`;
+    const expected = question.answer || "";
+    const submitted = answers[id] ?? answers[String(index)] ?? "";
+    const marks = Number(question.marks) || 1;
+    const accepted = classTaskAcceptableAnswers(expected);
+    const submittedClean = classTaskNormaliseAnswer(submitted);
+    const markable = Boolean(accepted.length);
+    const correct = Boolean(markable && submittedClean && accepted.includes(submittedClean));
+    if (markable) {
+      maxScore += marks;
+      if (correct) autoScore += marks;
+    }
+    return {
+      id,
+      submitted: String(submitted || "").trim(),
+      correct,
+      markable,
+      marks,
+      expected
+    };
+  });
+  return { auto_score: autoScore, max_score: maxScore, feedback };
+}
+
+function classTaskPublicQuestion(question, index) {
+  return {
+    id: question.id || `q${index + 1}`,
+    question: question.question || question.questionText || "",
+    diagram: question.diagram || question.diagramHtml || "",
+    instruction: question.instruction || question.instructionText || "",
+    marks: Number(question.marks) || 1,
+    sectionTitle: question.sectionTitle || "",
+    sectionType: question.sectionType || ""
+  };
+}
+
+async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
+  const tasks = classTaskReadLocal(classTaskLocalTasksStorageKey, []);
+  const responses = classTaskReadLocal(classTaskLocalResponsesStorageKey, []);
+  const teacherId = classTaskCurrentTeacherId();
+
+  if (action === "list") {
+    const visibleTasks = tasks
+      .filter((task) => isAdmin() || task.teacher_id === teacherId)
+      .sort((a, b) => String(b.created_at || "").localeCompare(String(a.created_at || "")))
+      .map((task) => ({
+        ...task,
+        responses: responses.filter((response) => response.task_id === task.id)
+      }));
+    return { tasks: visibleTasks, source: "local" };
+  }
+
+  if (action === "create") {
+    let joinCode = normaliseClassTaskCode(body.join_code) || classTaskRandomCode();
+    while (tasks.some((task) => task.join_code === joinCode)) joinCode = classTaskRandomCode();
+    const profile = authState().profile || {};
+    const task = {
+      id: `local-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      teacher_id: teacherId,
+      teacher_email: classTaskCurrentTeacherEmail(),
+      school_id: profile.school_id || "",
+      title: String(body.title || "Kaizen Maths Class Task").trim(),
+      instructions: String(body.instructions || "Answer each question. Show working where appropriate.").trim(),
+      source_tool_slug: body.source_tool_slug || "",
+      source_tool_title: body.source_tool_title || "",
+      source_level_label: body.source_level_label || "",
+      source_type_label: body.source_type_label || "",
+      join_code: joinCode,
+      questions: Array.isArray(body.questions) ? body.questions : [],
+      settings: body.settings || {},
+      expires_at: body.expires_at || null,
+      is_active: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      responses: []
+    };
+    classTaskWriteLocal(classTaskLocalTasksStorageKey, [task, ...tasks]);
+    return { task, source: "local" };
+  }
+
+  if (action === "get") {
+    const code = normaliseClassTaskCode(params.code);
+    const task = tasks.find((item) => item.join_code === code);
+    if (!task || !classTaskIsAvailable(task)) throw new Error("This class task was not found or has expired.");
+    const schoolContext = currentSchoolContext();
+    return {
+      task: {
+        id: task.id,
+        title: task.title,
+        instructions: task.instructions,
+        source_tool_title: task.source_tool_title,
+        source_level_label: task.source_level_label,
+        source_type_label: task.source_type_label,
+        join_code: task.join_code,
+        expires_at: task.expires_at,
+        school_name: schoolContext?.school_name || currentSchoolName() || "",
+        settings: task.settings || {},
+        questions: (task.questions || []).map(classTaskPublicQuestion)
+      },
+      source: "local"
+    };
+  }
+
+  if (action === "submit") {
+    const code = normaliseClassTaskCode(body.code);
+    const alias = String(body.pupil_alias || "").trim().slice(0, 80);
+    const task = tasks.find((item) => item.join_code === code);
+    if (!task || !classTaskIsAvailable(task)) throw new Error("This class task was not found or has expired.");
+    if (!alias) throw new Error("Enter an alias or initials before submitting.");
+    if (!task.settings?.allow_multiple_submissions && responses.some((response) => response.task_id === task.id && normalise(response.pupil_alias) === normalise(alias))) {
+      throw new Error("This alias has already submitted this task. Ask your teacher before trying again.");
+    }
+    const marking = classTaskScoreSubmission(task.questions || [], body.answers || {});
+    const response = {
+      id: `local-response-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      task_id: task.id,
+      pupil_alias: alias,
+      answers: body.answers || {},
+      auto_score: marking.auto_score,
+      max_score: marking.max_score,
+      marking,
+      submitted_at: new Date().toISOString()
+    };
+    classTaskWriteLocal(classTaskLocalResponsesStorageKey, [response, ...responses]);
+    return {
+      response,
+      show_answers: Boolean(task.settings?.show_answers_after_submit),
+      answers: task.settings?.show_answers_after_submit
+        ? (task.questions || []).map((question, index) => ({ id: question.id || `q${index + 1}`, answer: question.answer || "", steps: question.steps || [] }))
+        : [],
+      source: "local"
+    };
+  }
+
+  if (action === "close") {
+    const taskId = body.task_id;
+    const nextTasks = tasks.map((task) => task.id === taskId && (isAdmin() || task.teacher_id === teacherId)
+      ? { ...task, is_active: false, updated_at: new Date().toISOString() }
+      : task);
+    classTaskWriteLocal(classTaskLocalTasksStorageKey, nextTasks);
+    return { ok: true, source: "local" };
+  }
+
+  throw new Error("Unsupported class task action.");
+}
+
+function classTaskShouldUseLocalFallback(error) {
+  const message = String(error?.message || "");
+  return /api is not available|unexpected token|failed to fetch|not found in this preview|class task preview fallback/i.test(message);
+}
+
+async function classTaskApi(action, { method = "GET", body = null, auth = false, params = {} } = {}) {
+  if (location.protocol === "file:" || !location.origin || location.origin === "null") {
+    return classTaskLocalApi(action, { body: body || {}, params });
+  }
+
+  const url = new URL("/api/class-tasks", location.origin);
+  url.searchParams.set("action", action);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") url.searchParams.set(key, value);
+  });
+
+  const headers = {};
+  if (body) headers["Content-Type"] = "application/json";
+  if (auth) {
+    const token = await currentAccessToken().catch(() => "");
+    if (token) headers.Authorization = `Bearer ${token}`;
+  }
+
+  try {
+    const response = await fetch(url.href, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined
+    });
+    const text = await response.text();
+    let payload = null;
+    try {
+      payload = text ? JSON.parse(text) : {};
+    } catch {
+      const error = new Error("Class task API is not available in this preview.");
+      error.localFallback = true;
+      throw error;
+    }
+    if (!response.ok) {
+      const error = new Error(payload.error || "Class task request failed.");
+      error.status = response.status;
+      throw error;
+    }
+    return payload;
+  } catch (error) {
+    if (error.localFallback || classTaskShouldUseLocalFallback(error)) {
+      return classTaskLocalApi(action, { body: body || {}, params });
+    }
+    throw error;
+  }
+}
+
+function setClassTaskStatus(message, tone = "") {
+  const status = document.getElementById("classTaskStatus");
+  if (!status) return;
+  status.textContent = message;
+  status.dataset.tone = tone;
+}
+
+function populateClassTaskControls(metadata) {
+  const levelSelect = document.getElementById("classTaskLevel");
+  const typeSelect = document.getElementById("classTaskType");
+  if (!levelSelect || !typeSelect) return;
+
+  const levels = metadata?.levels || [];
+  levelSelect.disabled = !levels.length;
+  levelSelect.innerHTML = levels.length
+    ? levels.map((level) => `<option value="${escapeHtml(level.id)}">${escapeHtml(level.title)}</option>`).join("")
+    : `<option value="">No levels found</option>`;
+
+  function populateTypes() {
+    const level = levels.find((item) => String(item.id) === String(levelSelect.value)) || levels[0];
+    const types = level?.types || [];
+    typeSelect.disabled = !types.length;
+    typeSelect.innerHTML = types.length
+      ? types.map((type) => `<option value="${escapeHtml(type.id)}">${escapeHtml(type.label)}</option>`).join("")
+      : `<option value="">No question types found</option>`;
+  }
+
+  if (levels.length) levelSelect.value = String(levels[0].id);
+  levelSelect.onchange = populateTypes;
+  populateTypes();
+}
+
+function loadClassTaskTool(tool) {
+  const levelSelect = document.getElementById("classTaskLevel");
+  const typeSelect = document.getElementById("classTaskType");
+  if (!tool) return;
+  state.classTaskToolSlug = tool.slug;
+  state.classTaskMetadata = null;
+  if (levelSelect) {
+    levelSelect.disabled = true;
+    levelSelect.innerHTML = `<option>Loading levels...</option>`;
+  }
+  if (typeSelect) {
+    typeSelect.disabled = true;
+    typeSelect.innerHTML = `<option>Loading question types...</option>`;
+  }
+  setClassTaskStatus(`Loading ${tool.title}...`);
+  loadWorksheetToolForApi(tool, { frameId: "classTaskLoader" })
+    .then(({ metadata }) => {
+      state.classTaskMetadata = metadata;
+      populateClassTaskControls(metadata);
+      setClassTaskStatus(`${tool.title} is ready. Choose the task size, then create a pupil join code.`, "success");
+    })
+    .catch((error) => {
+      setClassTaskStatus(error.message, "error");
+      if (levelSelect) levelSelect.innerHTML = `<option value="">Not available</option>`;
+      if (typeSelect) typeSelect.innerHTML = `<option value="">Not available</option>`;
+    });
+}
+
+function classTaskSerialiseQuestion(problem, index, defaults = {}) {
+  return {
+    id: `q${index + 1}`,
+    question: problem.question || problem.questionText || problem.prompt || problem.equation || "",
+    diagram: problem.diagram || problem.diagramHtml || "",
+    answer: problem.answer || problem.answerText || problem.plainAnswer || "",
+    steps: Array.isArray(problem.steps) ? problem.steps.slice(0, 12) : [],
+    marks: defaults.marks,
+    instruction: problem.instruction || problem.instructionText || defaults.instruction || "",
+    sectionTitle: defaults.sectionTitle || "",
+    sectionType: defaults.sectionType || ""
+  };
+}
+
+async function createClassTaskFromForm(form) {
+  const tool = selectedClassTaskTool();
+  const level = selectedClassTaskLevelMeta();
+  const type = selectedClassTaskTypeMeta();
+  if (!tool || !level || !type) throw new Error("Choose a topic, level, and question type first.");
+
+  const api = getWorksheetFrameApi("classTaskLoader") || (await loadWorksheetToolForApi(tool, { frameId: "classTaskLoader" })).api;
+  if (!api?.canGenerate?.()) throw new Error(`${tool.title} is not ready for pupil tasks yet.`);
+
+  const count = Math.max(1, Math.min(30, Number(form.querySelector("[name='count']")?.value || 5)));
+  const marks = Math.max(1, Math.min(20, Number(form.querySelector("[name='marks']")?.value || 1)));
+  const result = api.generate({
+    level: Number.isNaN(Number(level.id)) ? level.id : Number(level.id),
+    type: type.id,
+    count
+  });
+  const instruction = result.instruction || "Answer each question. Show working where appropriate.";
+  const questions = (result.problems || []).map((problem, index) => classTaskSerialiseQuestion(problem, index, {
+    marks,
+    instruction,
+    sectionTitle: tool.title,
+    sectionType: type.label
+  }));
+  if (!questions.length) throw new Error("No questions were generated. Try a different question type.");
+
+  const title = form.querySelector("[name='title']")?.value.trim() || `${tool.title}: ${type.label}`;
+  const instructions = form.querySelector("[name='instructions']")?.value.trim() || instruction;
+  const expiresAt = dateInputToIso(form.querySelector("[name='expires_at']")?.value, true);
+  const payload = await classTaskApi("create", {
+    method: "POST",
+    auth: true,
+    body: {
+      title,
+      instructions,
+      source_tool_slug: tool.slug,
+      source_tool_title: tool.title,
+      source_level_label: level.title,
+      source_type_label: type.label,
+      questions,
+      expires_at: expiresAt,
+      settings: {
+        show_answers_after_submit: Boolean(form.querySelector("[name='show_answers_after_submit']")?.checked),
+        allow_multiple_submissions: Boolean(form.querySelector("[name='allow_multiple_submissions']")?.checked)
+      }
+    }
+  });
+  state.classTaskLastMessage = `Created "${payload.task?.title || title}" with code ${payload.task?.join_code || ""}.`;
+  await loadClassTasks({ rerender: true });
+}
+
+async function loadClassTasks({ rerender = false } = {}) {
+  if (!isSignedIn() || !hasWorkspaceAccess() || state.classTasksLoading) return;
+  state.classTasksLoading = true;
+  state.classTaskError = "";
+  try {
+    const payload = await classTaskApi("list", { auth: true });
+    state.classTasks = payload.tasks || [];
+    state.classTaskSource = payload.source || "supabase";
+    state.classTasksLoaded = true;
+  } catch (error) {
+    state.classTaskError = error.message || "Class tasks could not load.";
+    state.classTasksLoaded = true;
+  } finally {
+    state.classTasksLoading = false;
+    if (rerender && routeParts()[0] === "class-tasks") renderRoute();
+  }
+}
+
+function resetClassTaskState() {
+  state.classTasks = [];
+  state.classTasksLoaded = false;
+  state.classTasksLoading = false;
+  state.classTaskError = "";
+  state.classTaskSource = "";
+  state.classTaskLastMessage = "";
+  state.classTaskMetadata = null;
+}
+
+function classTaskResponseSummary(response) {
+  const score = Number(response.auto_score);
+  const max = Number(response.max_score);
+  if (!Number.isFinite(score) || !Number.isFinite(max) || max <= 0) return "Needs review";
+  return `${score}/${max}`;
+}
+
+function classTaskSourceNotice() {
+  if (state.classTaskSource === "local") {
+    return `<p class="class-task-local-note">Preview mode: tasks are saved in this browser only. After the Supabase schema is run and the site is redeployed, join codes will work across devices.</p>`;
+  }
+  return "";
+}
+
+function classTaskCardHtml(task) {
+  const responses = task.responses || [];
+  const questionCount = Array.isArray(task.questions) ? task.questions.length : 0;
+  const isOpen = classTaskIsAvailable(task);
+  const joinUrl = classTaskJoinUrl(task.join_code);
+  return `
+    <article class="class-task-card">
+      <div class="class-task-card-head">
+        <div>
+          <span class="eyebrow">${isOpen ? "Open Task" : "Closed Task"}</span>
+          <h3>${escapeHtml(task.title || "Kaizen Maths Class Task")}</h3>
+          <p>${escapeHtml([task.source_tool_title, task.source_type_label].filter(Boolean).join(" · ") || "Pupil practice task")}</p>
+        </div>
+        <strong class="class-task-code">${escapeHtml(task.join_code)}</strong>
+      </div>
+      <div class="class-task-meta">
+        <span>${questionCount} question${questionCount === 1 ? "" : "s"}</span>
+        <span>${responses.length} submission${responses.length === 1 ? "" : "s"}</span>
+        <span>Expires ${escapeHtml(formatDisplayDate(task.expires_at))}</span>
+      </div>
+      <label class="class-task-link-field">
+        Pupil link
+        <input type="text" readonly value="${escapeHtml(joinUrl)}">
+      </label>
+      <div class="button-row">
+        <button class="button primary" type="button" data-class-task-copy="${escapeHtml(joinUrl)}">Copy Link</button>
+        <a class="button" href="#/pupil/${escapeHtml(task.join_code)}">Open Pupil Page</a>
+        ${isOpen ? `<button class="button subtle" type="button" data-class-task-close="${escapeHtml(task.id)}">Close Task</button>` : ""}
+      </div>
+      <details class="class-task-responses">
+        <summary>Responses (${responses.length})</summary>
+        ${responses.length ? `
+          <div class="class-task-response-list">
+            ${responses.map((response) => `
+              <article>
+                <div>
+                  <strong>${escapeHtml(response.pupil_alias || "Pupil alias")}</strong>
+                  <small>${escapeHtml(formatDisplayDate(response.submitted_at))}</small>
+                </div>
+                <span>${escapeHtml(classTaskResponseSummary(response))}</span>
+              </article>
+            `).join("")}
+          </div>
+        ` : `<p>No submissions yet.</p>`}
+      </details>
+    </article>
+  `;
+}
+
+function renderClassTasks() {
+  if (!isSignedIn()) {
+    app.innerHTML = `
+      ${pageHeader(
+        "Pupil Pilot",
+        "Create short online class tasks with a join code. Pupils use an alias only; they do not need a Kaizen account.",
+        `<a class="button" href="#/pupil">Open Pupil Join Page</a>`
+      )}
+      ${signInCallout("Teacher sign-in required")}
+    `;
+    bindAuthActions();
+    return;
+  }
+
+  if (!hasWorkspaceAccess()) {
+    app.innerHTML = `
+      ${pageHeader(
+        "Pupil Pilot",
+        "Class tasks are available for trial, pro, school, and admin teacher accounts.",
+        `<a class="button primary" href="#/upgrade">View Access Options</a>`
+      )}
+      ${signInCallout("Trial access required")}
+    `;
+    bindAuthActions();
+    return;
+  }
+
+  if (!state.classTasksLoaded && !state.classTasksLoading) {
+    loadClassTasks({ rerender: true });
+  }
+
+  const firstTool = classTaskEligibleTools()[0];
+  state.classTaskToolSlug = state.classTaskToolSlug || firstTool?.slug || "";
+
+  app.innerHTML = `
+    ${pageHeader(
+      "Pupil Pilot",
+      "Send a short Kaizen Maths task to pupils using a class code. This is a closed pilot layer for practice, evidence gathering, and classroom feedback.",
+      `<a class="button" href="#/pupil">Pupil Join Page</a><a class="button" href="#/worksheet-generator">Worksheet Builder</a>`
+    )}
+    <section class="class-task-page">
+      <article class="panel class-task-builder">
+        <div class="class-task-builder-head">
+          <div>
+            <span class="eyebrow">Teacher Task Builder</span>
+            <h2>Create a class task</h2>
+            <p>Choose a topic block, generate fresh questions, then share the join code or link. Pupils enter an alias only.</p>
+          </div>
+          <button class="button subtle" type="button" id="refreshClassTasks">Refresh</button>
+        </div>
+        <form id="classTaskForm" class="class-task-form">
+          <div class="class-task-form-main">
+            <label>
+              Task title
+              <input name="title" type="text" maxlength="160" placeholder="Example: Fractions starter task">
+            </label>
+            <label>
+              Instructions
+              <textarea name="instructions" rows="2" maxlength="900">Answer each question. Show working where appropriate.</textarea>
+            </label>
+            <label>
+              Topic tool
+              <select id="classTaskTool" name="tool">${classTaskToolOptions()}</select>
+            </label>
+            <label>
+              Level
+              <select id="classTaskLevel" name="level" disabled><option>Loading levels...</option></select>
+            </label>
+            <label>
+              Question type
+              <select id="classTaskType" name="type" disabled><option>Loading question types...</option></select>
+            </label>
+          </div>
+          <div class="class-task-form-side">
+            <label>
+              Questions
+              <input name="count" type="number" min="1" max="30" value="5">
+            </label>
+            <label>
+              Marks each
+              <input name="marks" type="number" min="1" max="20" value="1">
+            </label>
+            <label>
+              Expires
+              <input name="expires_at" type="date" value="${classTaskDefaultExpiryDate()}">
+            </label>
+            <label class="admin-check-row">
+              <input name="show_answers_after_submit" type="checkbox">
+              Show answers after submission
+            </label>
+            <label class="admin-check-row">
+              <input name="allow_multiple_submissions" type="checkbox">
+              Allow repeat submissions
+            </label>
+            <button class="button primary" type="submit">Create Join Code</button>
+          </div>
+        </form>
+        <p class="worksheet-status" id="classTaskStatus" data-tone="${state.classTaskError ? "error" : ""}">${escapeHtml(state.classTaskLastMessage || state.classTaskError || "Loading the selected topic tool...")}</p>
+        ${classTaskSourceNotice()}
+        <iframe class="worksheet-loader" id="classTaskLoader" title="Class task tool loader" aria-hidden="true"></iframe>
+      </article>
+
+      <section class="class-task-list-panel panel">
+        <div class="class-task-list-head">
+          <div>
+            <span class="eyebrow">Live Tasks</span>
+            <h2>Recent class tasks</h2>
+          </div>
+          <span>${state.classTasksLoading ? "Loading..." : `${state.classTasks.length} task${state.classTasks.length === 1 ? "" : "s"}`}</span>
+        </div>
+        <div class="class-task-list">
+          ${state.classTasksLoading
+            ? `<div class="empty-state">Loading class tasks...</div>`
+            : state.classTasks.length
+              ? state.classTasks.map(classTaskCardHtml).join("")
+              : `<div class="empty-state">No class tasks yet. Create a join code from the builder on this page.</div>`}
+        </div>
+      </section>
+    </section>
+  `;
+  bindClassTasks();
+}
+
+function bindClassTasks() {
+  const form = document.getElementById("classTaskForm");
+  const toolSelect = document.getElementById("classTaskTool");
+  if (!form || !toolSelect) return;
+  toolSelect.value = state.classTaskToolSlug;
+  loadClassTaskTool(selectedClassTaskTool());
+
+  toolSelect.addEventListener("change", () => {
+    state.classTaskToolSlug = toolSelect.value;
+    loadClassTaskTool(selectedClassTaskTool());
+  });
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = form.querySelector("button[type='submit']");
+    button.disabled = true;
+    setClassTaskStatus("Generating questions and creating the join code...", "loading");
+    try {
+      await createClassTaskFromForm(form);
+    } catch (error) {
+      setClassTaskStatus(error.message, "error");
+      button.disabled = false;
+    }
+  });
+
+  document.getElementById("refreshClassTasks")?.addEventListener("click", async (event) => {
+    event.currentTarget.disabled = true;
+    state.classTasksLoaded = false;
+    await loadClassTasks({ rerender: true });
+  });
+
+  document.querySelectorAll("[data-class-task-copy]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const text = button.dataset.classTaskCopy || "";
+      try {
+        await navigator.clipboard.writeText(text);
+        button.textContent = "Copied";
+        window.setTimeout(() => { button.textContent = "Copy Link"; }, 1200);
+      } catch {
+        const input = button.closest(".class-task-card")?.querySelector(".class-task-link-field input");
+        input?.focus();
+        input?.select();
+        button.textContent = "Select link";
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-class-task-close]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!window.confirm("Close this pupil task so no new submissions can be made?")) return;
+      button.disabled = true;
+      try {
+        await classTaskApi("close", {
+          method: "POST",
+          auth: true,
+          body: { task_id: button.dataset.classTaskClose }
+        });
+        state.classTaskLastMessage = "Task closed.";
+        await loadClassTasks({ rerender: true });
+      } catch (error) {
+        window.alert(error.message);
+        button.disabled = false;
+      }
+    });
+  });
+}
+
+async function loadPupilTask(code, { rerender = false } = {}) {
+  const cleanCode = normaliseClassTaskCode(code);
+  if (!cleanCode || state.pupilTaskLoading) return;
+  state.pupilTaskLoading = true;
+  state.pupilTaskError = "";
+  state.pupilSubmission = null;
+  state.pupilTaskCode = cleanCode;
+  try {
+    const payload = await classTaskApi("get", { params: { code: cleanCode } });
+    state.pupilTask = payload.task;
+  } catch (error) {
+    state.pupilTask = null;
+    state.pupilTaskError = error.message || "Class task could not be loaded.";
+  } finally {
+    state.pupilTaskLoading = false;
+    if (rerender && routeParts()[0] === "pupil") renderRoute();
+  }
+}
+
+function pupilQuestionHtml(question, index) {
+  return `
+    <article class="pupil-question-card">
+      <div class="pupil-question-number">${index + 1}</div>
+      <div class="pupil-question-main">
+        ${question.instruction ? `<p class="pupil-question-instruction">${escapeHtml(question.instruction)}</p>` : ""}
+        ${question.diagram ? `<div class="pupil-question-diagram">${worksheetContentHtml(question.diagram)}</div>` : ""}
+        <div class="pupil-question-text">${worksheetContentHtml(question.question || "")}</div>
+        <label>
+          Your answer
+          <input type="text" data-pupil-answer="${escapeHtml(question.id)}" autocomplete="off" spellcheck="false">
+        </label>
+      </div>
+      <span class="pupil-question-marks">${Number(question.marks) || 1} mark${Number(question.marks) === 1 ? "" : "s"}</span>
+    </article>
+  `;
+}
+
+function pupilSubmissionHtml(task) {
+  if (!state.pupilSubmission) return "";
+  const response = state.pupilSubmission.response || {};
+  const score = Number(response.auto_score);
+  const max = Number(response.max_score);
+  const scoreLine = Number.isFinite(score) && Number.isFinite(max) && max > 0
+    ? `Auto-marked score: ${score}/${max}.`
+    : "Your teacher will review this response.";
+  const answers = state.pupilSubmission.answers || [];
+  return `
+    <section class="panel pupil-submission-panel">
+      <span class="eyebrow">Submitted</span>
+      <h2>Response received</h2>
+      <p>${escapeHtml(scoreLine)} Some answers may still need teacher judgement.</p>
+      ${answers.length ? `
+        <details open>
+          <summary>Show answer key</summary>
+          <ol class="pupil-answer-key">
+            ${answers.map((answer, index) => `
+              <li>
+                <strong>${index + 1}</strong>
+                <div>${worksheetContentHtml(answer.answer || "Answer not available")}</div>
+              </li>
+            `).join("")}
+          </ol>
+        </details>
+      ` : ""}
+      <a class="button" href="#/pupil/${escapeHtml(task.join_code)}">Back to task</a>
+    </section>
+  `;
+}
+
+function renderPupilJoin(routeCode = "") {
+  const cleanCode = normaliseClassTaskCode(routeCode || state.pupilTaskCode);
+  if (cleanCode && cleanCode !== state.pupilTaskCode) {
+    state.pupilTask = null;
+    state.pupilTaskError = "";
+    state.pupilSubmission = null;
+  }
+  const task = state.pupilTask?.join_code === cleanCode ? state.pupilTask : null;
+  const savedAlias = readJsonStorage(pupilAliasStorageKey, "");
+
+  if (cleanCode && !task && !state.pupilTaskLoading && !state.pupilTaskError) {
+    loadPupilTask(cleanCode, { rerender: true });
+  }
+
+  app.innerHTML = `
+    ${pageHeader(
+      "Pupil Task",
+      "Join a Kaizen Maths class task with the code from your teacher. Use an alias or initials only.",
+      `<a class="button" href="#/">Back to Kaizen Maths</a>`
+    )}
+    <section class="pupil-task-page">
+      <article class="panel pupil-join-panel">
+        <span class="eyebrow">Class Code</span>
+        <h2>Enter your task code</h2>
+        <div class="pupil-code-row">
+          <input id="pupilTaskCodeInput" type="text" value="${escapeHtml(cleanCode)}" autocomplete="off" spellcheck="false" placeholder="Example: KZPRACT">
+          <button class="button primary" id="loadPupilTaskButton" type="button">Load Task</button>
+        </div>
+        <p class="worksheet-status" id="pupilTaskStatus" data-tone="${state.pupilTaskError ? "error" : ""}">${escapeHtml(state.pupilTaskLoading ? "Loading task..." : state.pupilTaskError || "Use the class code shared by your teacher.")}</p>
+      </article>
+
+      ${task ? `
+        <form id="pupilTaskForm" class="panel pupil-task-panel">
+          <header class="pupil-task-head">
+            <div>
+              <span class="eyebrow">${escapeHtml(task.school_name || "Kaizen Maths")}</span>
+              <h2>${escapeHtml(task.title || "Class Task")}</h2>
+              <p>${escapeHtml(task.instructions || "Answer each question. Show working where appropriate.")}</p>
+            </div>
+            <strong>${escapeHtml(task.join_code)}</strong>
+          </header>
+          <label class="pupil-alias-field">
+            Alias or initials
+            <input name="pupil_alias" type="text" maxlength="80" value="${escapeHtml(savedAlias)}" autocomplete="off" spellcheck="false" placeholder="Do not enter your full name" required>
+          </label>
+          <div class="pupil-question-list">
+            ${(task.questions || []).map(pupilQuestionHtml).join("")}
+          </div>
+          <div class="pupil-submit-row">
+            <button class="button primary" type="submit">Submit Answers</button>
+            <p>Do not enter personal details. Your teacher sees the alias and answers only.</p>
+          </div>
+        </form>
+        ${pupilSubmissionHtml(task)}
+      ` : state.pupilTaskLoading ? `<section class="panel"><p>Loading the class task...</p></section>` : ""}
+    </section>
+  `;
+  bindPupilJoin();
+}
+
+function bindPupilJoin() {
+  const codeInput = document.getElementById("pupilTaskCodeInput");
+  const loadButton = document.getElementById("loadPupilTaskButton");
+  const form = document.getElementById("pupilTaskForm");
+
+  loadButton?.addEventListener("click", () => {
+    const code = normaliseClassTaskCode(codeInput?.value || "");
+    if (!code) {
+      const status = document.getElementById("pupilTaskStatus");
+      if (status) {
+        status.textContent = "Enter the code from your teacher.";
+        status.dataset.tone = "error";
+      }
+      codeInput?.focus();
+      return;
+    }
+    state.pupilTaskError = "";
+    state.pupilTask = null;
+    location.hash = `#/pupil/${code}`;
+  });
+
+  codeInput?.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      loadButton?.click();
+    }
+  });
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = form.querySelector("button[type='submit']");
+    const alias = form.querySelector("[name='pupil_alias']")?.value.trim() || "";
+    const answers = Object.fromEntries([...form.querySelectorAll("[data-pupil-answer]")].map((input) => [input.dataset.pupilAnswer, input.value.trim()]));
+    if (!state.pupilTask?.join_code) return;
+    button.disabled = true;
+    try {
+      classTaskWriteLocal(pupilAliasStorageKey, alias);
+      const payload = await classTaskApi("submit", {
+        method: "POST",
+        body: {
+          code: state.pupilTask.join_code,
+          pupil_alias: alias,
+          answers
+        }
+      });
+      state.pupilSubmission = payload;
+      renderRoute();
+    } catch (error) {
+      const status = document.getElementById("pupilTaskStatus");
+      if (status) {
+        status.textContent = error.message;
+        status.dataset.tone = "error";
+      }
+      button.disabled = false;
+    }
   });
 }
 
@@ -20065,6 +21004,14 @@ function updateRouteSeo(parts) {
       title: routeTitle("Exam & Assessment Style Builder"),
       description: "Generate original maths practice sets and mock papers in GCSE, PISA-style, TIMSS-style, Regents-style, and international assessment formats."
     },
+    "class-tasks": {
+      title: routeTitle("Pupil Pilot"),
+      description: "Create short online Kaizen Maths class tasks with join codes and alias-only pupil submissions."
+    },
+    "pupil": {
+      title: routeTitle("Pupil Task"),
+      description: "Join a Kaizen Maths class task using a teacher-provided code and alias."
+    },
     "tutor-workspace": {
       title: routeTitle("Tutor Workspace"),
       description: "Track learner aliases, tutoring sessions, tools used, confidence, next steps, and homework notes inside Kaizen Maths."
@@ -20191,6 +21138,21 @@ function renderRoute() {
       return;
     }
     renderGcseExamStyle();
+  } else if (parts[0] === "class-tasks") {
+    if (isAuthChecking()) {
+      app.innerHTML = `
+        ${pageHeader(
+          "Pupil Pilot",
+          "Create short online class tasks with join codes and alias-only pupil submissions.",
+          `<a class="button" href="#/pupil">Pupil Join Page</a>`
+        )}
+        ${checkingAccessCallout("Checking pupil-task access")}
+      `;
+      return;
+    }
+    renderClassTasks();
+  } else if (parts[0] === "pupil") {
+    renderPupilJoin(parts[1] || "");
   } else if (parts[0] === "tutor-workspace") {
     renderTutorWorkspace();
   } else if (parts[0] === "tools" && parts[1] === "interface-guide") {
@@ -20267,8 +21229,9 @@ window.addEventListener("hashchange", renderRoute);
 
 window.addEventListener("kaizen-auth-change", () => {
   updateAdminNavVisibility();
-  renderAuthSensitiveRouteIfNeeded();
   resetTutorWorkspaceState();
+  resetClassTaskState();
+  renderAuthSensitiveRouteIfNeeded();
   loadToolAccessSettings({ rerender: true });
   loadToolMetadata({ rerender: true });
   loadUserProfiles({ rerender: true });
@@ -20281,6 +21244,7 @@ window.addEventListener("kaizen-auth-change", () => {
   loadCertificationProgress({ rerender: true });
   loadCertificationRecords({ rerender: true });
   loadSiteTestimonials({ rerender: true });
+  loadClassTasks({ rerender: true });
 });
 
 window.setTimeout(() => {
@@ -20297,6 +21261,7 @@ window.setTimeout(() => {
   loadCertificationProgress({ rerender: true });
   loadCertificationRecords({ rerender: true });
   loadSiteTestimonials({ rerender: true });
+  loadClassTasks({ rerender: true });
 }, 1200);
 
 renderRoute();
