@@ -2681,6 +2681,9 @@ const state = {
   classTaskLastMessage: "",
   classTaskToolSlug: "",
   classTaskMetadata: null,
+  classTaskLoadedToolSlug: "",
+  classTaskLoadToken: 0,
+  classTaskAuthKey: "",
   pupilTask: null,
   pupilTaskCode: "",
   pupilTaskLoading: false,
@@ -15281,8 +15284,11 @@ function loadClassTaskTool(tool) {
   const levelSelect = document.getElementById("classTaskLevel");
   const typeSelect = document.getElementById("classTaskType");
   if (!tool) return;
+  const loadToken = state.classTaskLoadToken + 1;
+  state.classTaskLoadToken = loadToken;
   state.classTaskToolSlug = tool.slug;
   state.classTaskMetadata = null;
+  state.classTaskLoadedToolSlug = "";
   if (levelSelect) {
     levelSelect.disabled = true;
     levelSelect.innerHTML = `<option>Loading levels...</option>`;
@@ -15294,11 +15300,14 @@ function loadClassTaskTool(tool) {
   setClassTaskStatus(`Loading ${tool.title}...`);
   loadWorksheetToolForApi(tool, { frameId: "classTaskLoader" })
     .then(({ metadata }) => {
+      if (loadToken !== state.classTaskLoadToken || routeParts()[0] !== "class-tasks") return;
       state.classTaskMetadata = metadata;
+      state.classTaskLoadedToolSlug = tool.slug;
       populateClassTaskControls(metadata);
       setClassTaskStatus(`${tool.title} is ready. Choose the task size, then create a pupil join code.`, "success");
     })
     .catch((error) => {
+      if (loadToken !== state.classTaskLoadToken || routeParts()[0] !== "class-tasks") return;
       setClassTaskStatus(error.message, "error");
       if (levelSelect) levelSelect.innerHTML = `<option value="">Not available</option>`;
       if (typeSelect) typeSelect.innerHTML = `<option value="">Not available</option>`;
@@ -15366,11 +15375,12 @@ async function createClassTaskFromForm(form) {
     }
   });
   state.classTaskLastMessage = `Created "${payload.task?.title || title}" with code ${payload.task?.join_code || ""}.`;
-  await loadClassTasks({ rerender: true });
+  await loadClassTasks({ rerender: true, force: true });
 }
 
-async function loadClassTasks({ rerender = false } = {}) {
+async function loadClassTasks({ rerender = false, force = false } = {}) {
   if (!isSignedIn() || !hasWorkspaceAccess() || state.classTasksLoading) return;
+  if (state.classTasksLoaded && !force) return;
   state.classTasksLoading = true;
   state.classTaskError = "";
   try {
@@ -15395,6 +15405,21 @@ function resetClassTaskState() {
   state.classTaskSource = "";
   state.classTaskLastMessage = "";
   state.classTaskMetadata = null;
+  state.classTaskLoadedToolSlug = "";
+  state.classTaskLoadToken += 1;
+}
+
+function syncClassTaskAuthState() {
+  const auth = authState();
+  const key = [
+    auth.session?.user?.id || "guest",
+    currentUserRole(),
+    auth.profile?.school_id || ""
+  ].join("|");
+  if (state.classTaskAuthKey === key) return false;
+  state.classTaskAuthKey = key;
+  resetClassTaskState();
+  return true;
 }
 
 function classTaskResponseSummary(response) {
@@ -15489,6 +15514,19 @@ function renderClassTasks() {
 
   if (!state.classTasksLoaded && !state.classTasksLoading) {
     loadClassTasks({ rerender: true });
+    app.innerHTML = `
+      ${pageHeader(
+        "Pupil Pilot",
+        "Create short online class tasks with a join code. Pupils use an alias only; they do not need a Kaizen account.",
+        `<a class="button" href="#/pupil">Pupil Join Page</a>`
+      )}
+      <section class="panel">
+        <span class="eyebrow">Loading</span>
+        <h2>Preparing pupil tasks</h2>
+        <p>Kaizen Maths is loading your recent tasks before opening the task builder.</p>
+      </section>
+    `;
+    return;
   }
 
   const firstTool = classTaskEligibleTools()[0];
@@ -15588,7 +15626,13 @@ function bindClassTasks() {
   const toolSelect = document.getElementById("classTaskTool");
   if (!form || !toolSelect) return;
   toolSelect.value = state.classTaskToolSlug;
-  loadClassTaskTool(selectedClassTaskTool());
+  const selectedTool = selectedClassTaskTool();
+  if (state.classTaskMetadata && state.classTaskLoadedToolSlug === selectedTool?.slug) {
+    populateClassTaskControls(state.classTaskMetadata);
+    setClassTaskStatus(`${selectedTool.title} is ready. Choose the task size, then create a pupil join code.`, "success");
+  } else {
+    loadClassTaskTool(selectedTool);
+  }
 
   toolSelect.addEventListener("change", () => {
     state.classTaskToolSlug = toolSelect.value;
@@ -15611,7 +15655,7 @@ function bindClassTasks() {
   document.getElementById("refreshClassTasks")?.addEventListener("click", async (event) => {
     event.currentTarget.disabled = true;
     state.classTasksLoaded = false;
-    await loadClassTasks({ rerender: true });
+    await loadClassTasks({ rerender: true, force: true });
   });
 
   document.querySelectorAll("[data-class-task-copy]").forEach((button) => {
@@ -15641,7 +15685,7 @@ function bindClassTasks() {
           body: { task_id: button.dataset.classTaskClose }
         });
         state.classTaskLastMessage = "Task closed.";
-        await loadClassTasks({ rerender: true });
+        await loadClassTasks({ rerender: true, force: true });
       } catch (error) {
         window.alert(error.message);
         button.disabled = false;
@@ -21230,7 +21274,7 @@ window.addEventListener("hashchange", renderRoute);
 window.addEventListener("kaizen-auth-change", () => {
   updateAdminNavVisibility();
   resetTutorWorkspaceState();
-  resetClassTaskState();
+  const classTaskAuthChanged = syncClassTaskAuthState();
   renderAuthSensitiveRouteIfNeeded();
   loadToolAccessSettings({ rerender: true });
   loadToolMetadata({ rerender: true });
@@ -21244,11 +21288,12 @@ window.addEventListener("kaizen-auth-change", () => {
   loadCertificationProgress({ rerender: true });
   loadCertificationRecords({ rerender: true });
   loadSiteTestimonials({ rerender: true });
-  loadClassTasks({ rerender: true });
+  if (classTaskAuthChanged && routeParts()[0] === "class-tasks") loadClassTasks({ rerender: true });
 });
 
 window.setTimeout(() => {
   updateAdminNavVisibility();
+  syncClassTaskAuthState();
   loadToolAccessSettings({ rerender: true });
   loadToolMetadata({ rerender: true });
   loadUserProfiles({ rerender: true });
@@ -21261,7 +21306,7 @@ window.setTimeout(() => {
   loadCertificationProgress({ rerender: true });
   loadCertificationRecords({ rerender: true });
   loadSiteTestimonials({ rerender: true });
-  loadClassTasks({ rerender: true });
+  if (routeParts()[0] === "class-tasks") loadClassTasks({ rerender: true });
 }, 1200);
 
 renderRoute();
