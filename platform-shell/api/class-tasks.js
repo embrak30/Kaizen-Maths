@@ -30,6 +30,8 @@ const SUBMISSION_SELECT = "id, pupil_alias, answers, auto_score, max_score, mark
 const SUBMISSION_SELECT_WITH_WORKING = "id, pupil_alias, answers, working, working_images, auto_score, max_score, marking, submitted_at";
 const PARTICIPANT_SELECT = "id, task_id, pupil_alias, status, current_attempt, submissions_count, last_score, max_score, pass_met, first_seen_at, last_seen_at";
 const SCHOOL_PUPIL_MODULE_SELECT = "id, name, pupil_module_enabled, is_active";
+const CLASS_GROUP_SELECT = "id, teacher_id, school_id, name, notes, is_active, created_at, updated_at";
+const CLASS_GROUP_MEMBER_SELECT = "id, group_id, pupil_alias, pupil_code, notes, is_active, created_at, updated_at";
 
 function queryParam(req, name) {
   const url = new URL(req.url || "/", "https://kaizenmaths.com");
@@ -74,6 +76,10 @@ function randomCode(length = 7) {
 }
 
 function normaliseCode(value) {
+  return String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 16);
+}
+
+function normalisePupilCode(value) {
   return String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 16);
 }
 
@@ -254,7 +260,9 @@ function publicTaskSettings(settings = {}) {
     coverage_label: taskCoverageLabel(settings),
     minimum_questions: taskMinimumQuestions(settings),
     time_target_minutes: taskTimeTargetMinutes(settings),
-    score_only_answered: Boolean(settings.score_only_answered)
+    score_only_answered: Boolean(settings.score_only_answered),
+    roster_required: taskUsesRoster(settings),
+    class_group_name: cleanText(settings.class_group_name, 120)
   };
 }
 
@@ -288,6 +296,7 @@ function publicTaskForAttempt(task, schoolName = "", attemptIndex = 0) {
     join_code: task.join_code,
     expires_at: task.expires_at,
     school_name: schoolName,
+    class_group_name: cleanText(task.settings?.class_group_name, 120),
     settings: publicTaskSettings(task.settings || {}),
     attempt_index: clampNumber(attemptIndex, 0, 9, 0),
     attempt_number: clampNumber(attemptIndex, 0, 9, 0) + 1,
@@ -403,8 +412,120 @@ function isMissingParticipantsTableError(error) {
   return /class_task_participants|schema cache|relation .*does not exist|could not find the table/i.test(text);
 }
 
+function isMissingClassGroupsTableError(error) {
+  const text = [error?.code, error?.message, error?.details, error?.hint].filter(Boolean).join(" ");
+  return /class_groups|class_group_members|schema cache|relation .*does not exist|could not find the table/i.test(text);
+}
+
 function normaliseAliasKey(value) {
   return cleanText(value, 80).toLowerCase();
+}
+
+function taskGroupId(taskOrSettings = {}) {
+  const settings = taskOrSettings.settings || taskOrSettings;
+  return cleanText(settings.class_group_id, 80);
+}
+
+function taskUsesRoster(taskOrSettings = {}) {
+  const settings = taskOrSettings.settings || taskOrSettings;
+  return Boolean(settings.roster_required && taskGroupId(settings));
+}
+
+function cleanRosterMembers(value) {
+  const rows = Array.isArray(value) ? value : [];
+  const seenAliases = new Set();
+  const seenCodes = new Set();
+  return rows
+    .slice(0, 80)
+    .map((member) => ({
+      id: cleanText(member?.id, 80),
+      pupil_alias: cleanText(member?.pupil_alias || member?.alias, 80),
+      pupil_code: normalisePupilCode(member?.pupil_code || member?.code),
+      notes: cleanLongText(member?.notes, 1000),
+      is_active: member?.is_active === false ? false : true
+    }))
+    .filter((member) => member.pupil_alias && member.pupil_code)
+    .filter((member) => {
+      const aliasKey = normaliseAliasKey(member.pupil_alias);
+      const codeKey = normalisePupilCode(member.pupil_code);
+      if (seenAliases.has(aliasKey) || seenCodes.has(codeKey)) return false;
+      seenAliases.add(aliasKey);
+      seenCodes.add(codeKey);
+      return true;
+    });
+}
+
+function classGroupOwnerQuery(supabase, profile, groupId) {
+  let query = supabase
+    .from("class_groups")
+    .select(CLASS_GROUP_SELECT)
+    .eq("id", groupId);
+  if (normaliseRole(profile) !== "admin") query = query.eq("teacher_id", profile.id);
+  return query;
+}
+
+async function classGroupForTaskSettings(supabase, profile, settings = {}) {
+  const groupId = taskGroupId(settings);
+  if (!groupId) return null;
+  const { data, error } = await classGroupOwnerQuery(supabase, profile, groupId)
+    .maybeSingle();
+  if (error) {
+    if (isMissingClassGroupsTableError(error)) {
+      const schemaError = new Error("Run the latest Supabase schema before using class rosters.");
+      schemaError.schemaMissing = true;
+      throw schemaError;
+    }
+    throw error;
+  }
+  return data || null;
+}
+
+async function resolvePupilIdentity(supabase, task, body) {
+  if (!taskUsesRoster(task)) {
+    const alias = cleanText(body.pupil_alias, 80);
+    if (!alias) {
+      const error = new Error(body.forSubmit ? "Enter an alias or initials before submitting." : "Enter an alias or initials before starting.");
+      error.status = 400;
+      throw error;
+    }
+    return { pupilAlias: alias, pupilCode: "", memberId: "" };
+  }
+
+  const pupilCode = normalisePupilCode(body.pupil_code);
+  if (!pupilCode) {
+    const error = new Error(body.forSubmit ? "Enter your pupil code before submitting." : "Enter your pupil code before starting.");
+    error.status = 400;
+    throw error;
+  }
+
+  const { data: members, error } = await supabase
+    .from("class_group_members")
+    .select(CLASS_GROUP_MEMBER_SELECT)
+    .eq("group_id", taskGroupId(task))
+    .eq("is_active", true)
+    .limit(200);
+  if (error) {
+    if (isMissingClassGroupsTableError(error)) {
+      const schemaError = new Error("Run the latest Supabase schema before pupils can use roster codes.");
+      schemaError.schemaMissing = true;
+      schemaError.status = 500;
+      throw schemaError;
+    }
+    throw error;
+  }
+
+  const member = (members || []).find((row) => normalisePupilCode(row.pupil_code) === pupilCode);
+  if (!member) {
+    const error = new Error("This pupil code was not found for this task. Check the code with your teacher.");
+    error.status = 404;
+    throw error;
+  }
+
+  return {
+    pupilAlias: member.pupil_alias,
+    pupilCode: member.pupil_code,
+    memberId: member.id
+  };
 }
 
 function cleanParticipantStatus(value) {
@@ -557,6 +678,13 @@ async function createTask(req, res, supabase) {
   if (!questions.length) return sendJson(res, 400, { error: "Add at least one question before creating a pupil task." });
 
   const incomingSettings = body.settings && typeof body.settings === "object" ? body.settings : {};
+  let classGroup = null;
+  if (taskGroupId(incomingSettings)) {
+    classGroup = await classGroupForTaskSettings(supabase, { ...profile, id: user.id }, incomingSettings);
+    if (!classGroup || classGroup.is_active === false) {
+      return sendJson(res, 400, { error: "Choose an active class roster, or leave the class tracker blank." });
+    }
+  }
   const mode = taskMode(incomingSettings);
   const attemptSets = taskAttemptSets(incomingSettings)
     .slice(0, 9)
@@ -582,6 +710,9 @@ async function createTask(req, res, supabase) {
     source_type_id: cleanText(incomingSettings.source_type_id, 120),
     source_count: clampNumber(incomingSettings.source_count, 1, 40, questions.length),
     source_marks: clampNumber(incomingSettings.source_marks, 1, 20, 1),
+    class_group_id: classGroup?.id || "",
+    class_group_name: classGroup?.name || "",
+    roster_required: Boolean(classGroup?.id),
     source: "kaizen-class-task",
     pupil_module_enabled: true,
     pupil_module_owner: profile.school_id ? "school" : "admin"
@@ -643,10 +774,8 @@ async function getPublicTask(req, res, supabase) {
 async function joinPublicTask(req, res, supabase) {
   const body = await readJsonBody(req);
   const code = normaliseCode(body.code);
-  const pupilAlias = cleanText(body.pupil_alias, 80);
   const attemptIndex = clampNumber(body.attempt_index, 0, 9, 0);
   if (!code) return sendJson(res, 400, { error: "Enter a pupil task code." });
-  if (!pupilAlias) return sendJson(res, 400, { error: "Enter an alias or initials before starting." });
 
   const { data: task, error } = await supabase
     .from("class_tasks")
@@ -659,24 +788,29 @@ async function joinPublicTask(req, res, supabase) {
   if (!access) return;
 
   try {
-    const participant = await upsertParticipantForTask(supabase, task, pupilAlias, {
+    const identity = await resolvePupilIdentity(supabase, task, body);
+    const participant = await upsertParticipantForTask(supabase, task, identity.pupilAlias, {
       status: "joined",
       current_attempt: attemptIndex + 1
     });
-    return sendJson(res, 200, { participant });
+    return sendJson(res, 200, {
+      participant: participant ? {
+        ...participant,
+        pupil_code: identity.pupilCode,
+        class_group_member_id: identity.memberId
+      } : null
+    });
   } catch (participantError) {
     if (isMissingParticipantsTableError(participantError)) return sendJson(res, 200, { participant: null });
-    return sendJson(res, 500, { error: participantError.message });
+    return sendJson(res, participantError.status || 500, { error: participantError.message });
   }
 }
 
 async function submitPublicTask(req, res, supabase) {
   const body = await readJsonBody(req);
   const code = normaliseCode(body.code);
-  const pupilAlias = cleanText(body.pupil_alias, 80);
   const attemptIndex = clampNumber(body.attempt_index, 0, 9, 0);
   if (!code) return sendJson(res, 400, { error: "Enter a pupil task code." });
-  if (!pupilAlias) return sendJson(res, 400, { error: "Enter an alias or initials before submitting." });
 
   const { data: task, error } = await supabase
     .from("class_tasks")
@@ -687,6 +821,12 @@ async function submitPublicTask(req, res, supabase) {
   if (!task || !taskIsAvailable(task)) return sendJson(res, 404, { error: "This pupil task was not found or has expired." });
   const access = await taskPupilAccess(res, supabase, task);
   if (!access) return;
+  let identity = null;
+  try {
+    identity = await resolvePupilIdentity(supabase, task, { ...body, forSubmit: true });
+  } catch (identityError) {
+    return sendJson(res, identityError.status || 500, { error: identityError.message });
+  }
 
   const passPercent = taskPassPercent(task.settings || {});
   if (!task.settings?.allow_multiple_submissions) {
@@ -694,7 +834,7 @@ async function submitPublicTask(req, res, supabase) {
       .from("class_task_responses")
       .select("id, marking")
       .eq("task_id", task.id)
-      .ilike("pupil_alias", pupilAlias)
+      .ilike("pupil_alias", identity.pupilAlias)
       .limit(20);
     const hasCompleted = (existing || []).some((response) => response.marking?.pass_met);
     const hasSameAttempt = (existing || []).some((response) => Number(response.marking?.attempt_index || 0) === attemptIndex);
@@ -714,11 +854,13 @@ async function submitPublicTask(req, res, supabase) {
   });
   const marking = markPassStatus({
     ...scored,
-    activity: cleanActivity(body.activity)
+    activity: cleanActivity(body.activity),
+    class_group_member_id: identity.memberId,
+    pupil_code: identity.pupilCode
   }, task.settings || {}, attemptIndex);
   const baseResponse = {
     task_id: task.id,
-    pupil_alias: pupilAlias,
+    pupil_alias: identity.pupilAlias,
     answers,
     auto_score: marking.auto_score,
     max_score: marking.max_score,
@@ -749,7 +891,7 @@ async function submitPublicTask(req, res, supabase) {
     : null;
   let participant = null;
   try {
-    participant = await upsertParticipantForTask(supabase, task, pupilAlias, {
+    participant = await upsertParticipantForTask(supabase, task, identity.pupilAlias, {
       status: marking.pass_met ? "completed" : nextTask ? "retrying" : "submitted",
       current_attempt: marking.attempt_number,
       last_score: marking.auto_score,
@@ -765,7 +907,11 @@ async function submitPublicTask(req, res, supabase) {
 
   return sendJson(res, 200, {
     response,
-    participant,
+    participant: participant ? {
+      ...participant,
+      pupil_code: identity.pupilCode,
+      class_group_member_id: identity.memberId
+    } : null,
     show_answers: true,
     answers: attemptQuestions.map((question, index) => ({
       id: question.id || `q${index + 1}`,
@@ -842,13 +988,201 @@ async function closeTask(req, res, supabase) {
   return sendJson(res, 200, { ok: true });
 }
 
+async function groupsWithMembers(supabase, groups = []) {
+  const groupIds = groups.map((group) => group.id).filter(Boolean);
+  if (!groupIds.length) return groups;
+  const { data: members, error } = await supabase
+    .from("class_group_members")
+    .select(CLASS_GROUP_MEMBER_SELECT)
+    .in("group_id", groupIds)
+    .order("pupil_alias", { ascending: true });
+  if (error) throw error;
+  return groups.map((group) => ({
+    ...group,
+    members: (members || []).filter((member) => member.group_id === group.id)
+  }));
+}
+
+async function listGroups(req, res, supabase) {
+  const { user, profile, error } = await teacherProfile(req, supabase);
+  if (error) return sendJson(res, 401, { error });
+  const school = await requirePupilModuleManager(res, supabase, profile);
+  if (!school) return;
+
+  try {
+    let query = supabase
+      .from("class_groups")
+      .select(CLASS_GROUP_SELECT)
+      .order("updated_at", { ascending: false })
+      .limit(40);
+    if (normaliseRole(profile) !== "admin") query = query.eq("teacher_id", user.id);
+    const { data, error: groupsError } = await query;
+    if (groupsError) throw groupsError;
+    return sendJson(res, 200, { groups: await groupsWithMembers(supabase, data || []) });
+  } catch (groupsError) {
+    if (isMissingClassGroupsTableError(groupsError)) {
+      return sendJson(res, 200, { groups: [], schema_missing: true });
+    }
+    return sendJson(res, 500, { error: groupsError.message });
+  }
+}
+
+async function saveGroup(req, res, supabase) {
+  const { user, profile, error } = await teacherProfile(req, supabase);
+  if (error) return sendJson(res, 401, { error });
+  const school = await requirePupilModuleManager(res, supabase, profile);
+  if (!school) return;
+
+  const body = await readJsonBody(req);
+  const groupId = cleanText(body.id, 80);
+  const rawMemberRows = Array.isArray(body.members)
+    ? body.members
+        .slice(0, 80)
+        .filter((member) => cleanText(member?.pupil_alias || member?.alias, 80) || normalisePupilCode(member?.pupil_code || member?.code))
+    : [];
+  const members = cleanRosterMembers(body.members);
+  const aliasSet = new Set(members.map((member) => normaliseAliasKey(member.pupil_alias)));
+  const codeSet = new Set(members.map((member) => normalisePupilCode(member.pupil_code)));
+  if (!cleanText(body.name, 120)) return sendJson(res, 400, { error: "Give the class tracker a name." });
+  if (rawMemberRows.length !== members.length || aliasSet.size !== members.length || codeSet.size !== members.length) {
+    return sendJson(res, 400, { error: "Each pupil alias and pupil code must be unique inside the class tracker." });
+  }
+
+  try {
+    let savedGroup = null;
+    if (groupId) {
+      const { data: existing, error: readError } = await classGroupOwnerQuery(supabase, { ...profile, id: user.id }, groupId).maybeSingle();
+      if (readError) throw readError;
+      if (!existing) return sendJson(res, 403, { error: "You cannot edit this class tracker." });
+      const { data, error: updateError } = await supabase
+        .from("class_groups")
+        .update({
+          name: cleanText(body.name, 120),
+          notes: cleanLongText(body.notes, 2000),
+          is_active: body.is_active === false ? false : true,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", groupId)
+        .select(CLASS_GROUP_SELECT)
+        .single();
+      if (updateError) throw updateError;
+      savedGroup = data;
+    } else {
+      const { data, error: insertError } = await supabase
+        .from("class_groups")
+        .insert({
+          teacher_id: user.id,
+          school_id: profile.school_id || school.id || null,
+          name: cleanText(body.name, 120),
+          notes: cleanLongText(body.notes, 2000),
+          is_active: body.is_active === false ? false : true,
+          updated_at: new Date().toISOString()
+        })
+        .select(CLASS_GROUP_SELECT)
+        .single();
+      if (insertError) throw insertError;
+      savedGroup = data;
+    }
+
+    const { data: existingMembers, error: existingMembersError } = await supabase
+      .from("class_group_members")
+      .select(CLASS_GROUP_MEMBER_SELECT)
+      .eq("group_id", savedGroup.id)
+      .limit(200);
+    if (existingMembersError) throw existingMembersError;
+
+    const keepIds = new Set();
+    for (const member of members) {
+      const existing = (existingMembers || []).find((row) => (
+        (member.id && row.id === member.id)
+        || normalisePupilCode(row.pupil_code) === normalisePupilCode(member.pupil_code)
+        || normaliseAliasKey(row.pupil_alias) === normaliseAliasKey(member.pupil_alias)
+      ));
+      const payload = {
+        pupil_alias: member.pupil_alias,
+        pupil_code: member.pupil_code,
+        notes: member.notes,
+        is_active: member.is_active,
+        updated_at: new Date().toISOString()
+      };
+      if (existing) {
+        const { data, error: updateError } = await supabase
+          .from("class_group_members")
+          .update(payload)
+          .eq("id", existing.id)
+          .select(CLASS_GROUP_MEMBER_SELECT)
+          .single();
+        if (updateError) throw updateError;
+        keepIds.add(data.id);
+      } else {
+        const { data, error: insertError } = await supabase
+          .from("class_group_members")
+          .insert({
+            group_id: savedGroup.id,
+            ...payload
+          })
+          .select(CLASS_GROUP_MEMBER_SELECT)
+          .single();
+        if (insertError) throw insertError;
+        keepIds.add(data.id);
+      }
+    }
+
+    const retireIds = (existingMembers || [])
+      .filter((member) => !keepIds.has(member.id))
+      .map((member) => member.id);
+    if (retireIds.length) {
+      const { error: retireError } = await supabase
+        .from("class_group_members")
+        .update({ is_active: false, updated_at: new Date().toISOString() })
+        .in("id", retireIds);
+      if (retireError) throw retireError;
+    }
+
+    const [group] = await groupsWithMembers(supabase, [savedGroup]);
+    return sendJson(res, 200, { group });
+  } catch (saveError) {
+    if (isMissingClassGroupsTableError(saveError)) {
+      return sendJson(res, 500, { error: "Run the latest Supabase schema before saving class trackers." });
+    }
+    return sendJson(res, 500, { error: saveError.message });
+  }
+}
+
+async function archiveGroup(req, res, supabase) {
+  const { user, profile, error } = await teacherProfile(req, supabase);
+  if (error) return sendJson(res, 401, { error });
+  const school = await requirePupilModuleManager(res, supabase, profile);
+  if (!school) return;
+  const body = await readJsonBody(req);
+  const groupId = cleanText(body.id, 80);
+  if (!groupId) return sendJson(res, 400, { error: "Missing class tracker id." });
+
+  let query = supabase
+    .from("class_groups")
+    .update({ is_active: false, updated_at: new Date().toISOString() })
+    .eq("id", groupId);
+  if (normaliseRole(profile) !== "admin") query = query.eq("teacher_id", user.id);
+  const { error: updateError } = await query;
+  if (updateError) {
+    if (isMissingClassGroupsTableError(updateError)) {
+      return sendJson(res, 500, { error: "Run the latest Supabase schema before archiving class trackers." });
+    }
+    return sendJson(res, 500, { error: updateError.message });
+  }
+  return sendJson(res, 200, { ok: true });
+}
+
 module.exports = async function handler(req, res) {
   const action = queryParam(req, "action");
   const supabase = supabaseAdmin();
 
   try {
     if (req.method === "GET" && action === "list") return listTasks(req, res, supabase);
+    if (req.method === "GET" && action === "list-groups") return listGroups(req, res, supabase);
     if (req.method === "POST" && action === "create") return createTask(req, res, supabase);
+    if (req.method === "POST" && action === "save-group") return saveGroup(req, res, supabase);
+    if (req.method === "POST" && action === "archive-group") return archiveGroup(req, res, supabase);
     if (req.method === "GET" && action === "get") return getPublicTask(req, res, supabase);
     if (req.method === "POST" && action === "join") return joinPublicTask(req, res, supabase);
     if (req.method === "POST" && action === "submit") return submitPublicTask(req, res, supabase);

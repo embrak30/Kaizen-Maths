@@ -979,6 +979,161 @@ on public.tutor_assessments
 for delete
 using (auth.uid() = tutor_id or public.is_admin());
 
+create table if not exists public.class_groups (
+  id uuid primary key default gen_random_uuid(),
+  teacher_id uuid not null references auth.users(id) on delete cascade,
+  school_id uuid references public.schools(id) on delete set null,
+  name text not null,
+  notes text,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.class_groups add column if not exists school_id uuid references public.schools(id) on delete set null;
+alter table public.class_groups add column if not exists notes text;
+alter table public.class_groups add column if not exists is_active boolean not null default true;
+alter table public.class_groups add column if not exists updated_at timestamptz not null default now();
+
+create index if not exists class_groups_teacher_id_idx on public.class_groups(teacher_id);
+create index if not exists class_groups_school_id_idx on public.class_groups(school_id);
+create index if not exists class_groups_active_idx on public.class_groups(is_active);
+
+alter table public.class_groups enable row level security;
+
+grant select, insert, update, delete on public.class_groups to authenticated;
+
+drop policy if exists "Teachers can read their own class groups" on public.class_groups;
+create policy "Teachers can read their own class groups"
+on public.class_groups
+for select
+using (auth.uid() = teacher_id or public.is_admin());
+
+drop policy if exists "Teachers can insert their own class groups" on public.class_groups;
+create policy "Teachers can insert their own class groups"
+on public.class_groups
+for insert
+with check (
+  auth.uid() = teacher_id
+  and exists (
+    select 1
+    from public.profiles
+    where profiles.id = auth.uid()
+      and (
+        profiles.role = 'admin'
+        or (
+          profiles.role = 'school'
+          and exists (
+            select 1
+            from public.schools
+            where schools.id = profiles.school_id
+              and schools.is_active = true
+              and schools.pupil_module_enabled = true
+          )
+        )
+      )
+  )
+);
+
+drop policy if exists "Teachers can update their own class groups" on public.class_groups;
+create policy "Teachers can update their own class groups"
+on public.class_groups
+for update
+using (auth.uid() = teacher_id or public.is_admin())
+with check (auth.uid() = teacher_id or public.is_admin());
+
+drop policy if exists "Teachers can delete their own class groups" on public.class_groups;
+create policy "Teachers can delete their own class groups"
+on public.class_groups
+for delete
+using (auth.uid() = teacher_id or public.is_admin());
+
+create table if not exists public.class_group_members (
+  id uuid primary key default gen_random_uuid(),
+  group_id uuid not null references public.class_groups(id) on delete cascade,
+  pupil_alias text not null check (char_length(pupil_alias) <= 80),
+  pupil_code text not null check (char_length(pupil_code) <= 16),
+  notes text,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.class_group_members add column if not exists notes text;
+alter table public.class_group_members add column if not exists is_active boolean not null default true;
+alter table public.class_group_members add column if not exists updated_at timestamptz not null default now();
+
+create unique index if not exists class_group_members_alias_idx
+on public.class_group_members(group_id, lower(pupil_alias));
+create unique index if not exists class_group_members_code_idx
+on public.class_group_members(group_id, lower(pupil_code));
+create index if not exists class_group_members_group_id_idx on public.class_group_members(group_id);
+create index if not exists class_group_members_active_idx on public.class_group_members(is_active);
+
+alter table public.class_group_members enable row level security;
+
+grant select, insert, update, delete on public.class_group_members to authenticated;
+
+drop policy if exists "Teachers can read members for their class groups" on public.class_group_members;
+create policy "Teachers can read members for their class groups"
+on public.class_group_members
+for select
+using (
+  exists (
+    select 1
+    from public.class_groups
+    where class_groups.id = class_group_members.group_id
+      and (class_groups.teacher_id = auth.uid() or public.is_admin())
+  )
+);
+
+drop policy if exists "Teachers can insert members for their class groups" on public.class_group_members;
+create policy "Teachers can insert members for their class groups"
+on public.class_group_members
+for insert
+with check (
+  exists (
+    select 1
+    from public.class_groups
+    where class_groups.id = class_group_members.group_id
+      and (class_groups.teacher_id = auth.uid() or public.is_admin())
+  )
+);
+
+drop policy if exists "Teachers can update members for their class groups" on public.class_group_members;
+create policy "Teachers can update members for their class groups"
+on public.class_group_members
+for update
+using (
+  exists (
+    select 1
+    from public.class_groups
+    where class_groups.id = class_group_members.group_id
+      and (class_groups.teacher_id = auth.uid() or public.is_admin())
+  )
+)
+with check (
+  exists (
+    select 1
+    from public.class_groups
+    where class_groups.id = class_group_members.group_id
+      and (class_groups.teacher_id = auth.uid() or public.is_admin())
+  )
+);
+
+drop policy if exists "Teachers can delete members for their class groups" on public.class_group_members;
+create policy "Teachers can delete members for their class groups"
+on public.class_group_members
+for delete
+using (
+  exists (
+    select 1
+    from public.class_groups
+    where class_groups.id = class_group_members.group_id
+      and (class_groups.teacher_id = auth.uid() or public.is_admin())
+  )
+);
+
 create table if not exists public.class_tasks (
   id uuid primary key default gen_random_uuid(),
   teacher_id uuid not null references auth.users(id) on delete cascade,

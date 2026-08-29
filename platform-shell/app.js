@@ -2677,6 +2677,11 @@ const state = {
   classTasks: [],
   classTasksLoaded: false,
   classTasksLoading: false,
+  classTaskGroups: [],
+  classTaskGroupsLoaded: false,
+  classTaskGroupsLoading: false,
+  classTaskGroupsSchemaMissing: false,
+  classTaskSelectedGroupId: "",
   classTaskError: "",
   classTaskSource: "",
   classTaskListSignature: "",
@@ -2692,6 +2697,7 @@ const state = {
   pupilTaskLoading: false,
   pupilTaskError: "",
   pupilSubmission: null,
+  pupilResolvedAlias: "",
   pupilTaskAttemptIndex: 0,
   pupilActiveQuestionIndex: 0,
   pupilJoinRegisteredKey: "",
@@ -15005,7 +15011,9 @@ function bindWorksheetGenerator() {
 const classTaskLocalTasksStorageKey = "kaizen:class-tasks-local-v1";
 const classTaskLocalResponsesStorageKey = "kaizen:class-task-responses-local-v1";
 const classTaskLocalParticipantsStorageKey = "kaizen:class-task-participants-local-v1";
+const classTaskLocalGroupsStorageKey = "kaizen:class-task-groups-local-v1";
 const pupilAliasStorageKey = "kaizen:pupil-alias";
+const pupilCodeStorageKey = "kaizen:pupil-code";
 
 function classTaskEligibleTools() {
   return worksheetEligibleTools();
@@ -15051,6 +15059,10 @@ function normaliseClassTaskCode(value) {
   return String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 16);
 }
 
+function normalisePupilCode(value) {
+  return String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 16);
+}
+
 function classTaskRandomCode(length = 7) {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const values = new Uint32Array(length);
@@ -15059,6 +15071,15 @@ function classTaskRandomCode(length = 7) {
     return Array.from(values, (value) => alphabet[value % alphabet.length]).join("");
   }
   return Array.from({ length }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join("");
+}
+
+function classTaskRandomPupilCode(existingCodes = [], length = 5) {
+  const existing = new Set(existingCodes.map(normalisePupilCode));
+  let code = "";
+  for (let attempt = 0; attempt < 40 && (!code || existing.has(code)); attempt += 1) {
+    code = classTaskRandomCode(length);
+  }
+  return code || classTaskRandomCode(length);
 }
 
 function classTaskJoinUrl(code) {
@@ -15247,6 +15268,152 @@ function classTaskCoverageLabel(settings = {}) {
   return "Selected question type";
 }
 
+function classTaskGroupId(taskOrSettings = {}) {
+  const settings = taskOrSettings.settings || taskOrSettings;
+  return String(settings.class_group_id || "").trim();
+}
+
+function classTaskUsesRoster(taskOrSettings = {}) {
+  const settings = taskOrSettings.settings || taskOrSettings;
+  return Boolean(settings.roster_required || classTaskGroupId(settings));
+}
+
+function classTaskGroupById(groupId) {
+  return state.classTaskGroups.find((group) => String(group.id) === String(groupId)) || null;
+}
+
+function classTaskActiveGroups() {
+  return state.classTaskGroups
+    .filter((group) => group.is_active !== false)
+    .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
+}
+
+function classTaskSelectedGroup() {
+  if (state.classTaskSelectedGroupId === "new") return null;
+  return classTaskGroupById(state.classTaskSelectedGroupId) || classTaskActiveGroups()[0] || null;
+}
+
+function classTaskGroupForTask(task) {
+  return classTaskGroupById(classTaskGroupId(task));
+}
+
+function classTaskGroupMemberRows(group) {
+  return (group?.members || [])
+    .filter((member) => member.is_active !== false)
+    .sort((a, b) => String(a.pupil_alias || "").localeCompare(String(b.pupil_alias || "")));
+}
+
+function classTaskGroupMemberByAlias(group, alias) {
+  const key = classTaskAliasKey(alias);
+  return classTaskGroupMemberRows(group).find((member) => classTaskAliasKey(member.pupil_alias) === key) || null;
+}
+
+function classTaskGroupOptions(selectedId = "") {
+  const groups = classTaskActiveGroups();
+  if (!groups.length) return `<option value="">No class tracker yet</option>`;
+  return groups.map((group) => `
+    <option value="${escapeHtml(group.id)}" ${String(group.id) === String(selectedId) ? "selected" : ""}>
+      ${escapeHtml(group.name || "Class tracker")}
+    </option>
+  `).join("");
+}
+
+function classTaskTaskGroupSelectOptions(selectedId = "") {
+  const groups = classTaskActiveGroups();
+  return `
+    <option value="">No roster - pupils type aliases</option>
+    ${groups.map((group) => `
+      <option value="${escapeHtml(group.id)}" ${String(group.id) === String(selectedId) ? "selected" : ""}>
+        ${escapeHtml(group.name || "Class tracker")} (${classTaskGroupMemberRows(group).length})
+      </option>
+    `).join("")}
+  `;
+}
+
+function classTaskRosterMemberRowHtml(member = {}, index = 0) {
+  const existingCodes = classTaskGroupMemberRows(classTaskSelectedGroup()).map((row) => row.pupil_code);
+  const code = normalisePupilCode(member.pupil_code) || classTaskRandomPupilCode(existingCodes);
+  return `
+    <div class="class-tracker-member-row" data-class-tracker-member="${escapeHtml(member.id || "")}">
+      <span>${index + 1}</span>
+      <input data-class-tracker-member-field="pupil_alias" type="text" maxlength="80" value="${escapeHtml(member.pupil_alias || "")}" placeholder="Alias or first name">
+      <span class="class-tracker-code-cell">
+        <input data-class-tracker-member-field="pupil_code" type="text" maxlength="16" value="${escapeHtml(code)}" placeholder="Code">
+        <button class="button subtle" type="button" data-class-tracker-generate-code>New</button>
+      </span>
+      <input data-class-tracker-member-field="notes" type="text" maxlength="1000" value="${escapeHtml(member.notes || "")}" placeholder="Optional note">
+      <label class="class-tracker-active-check">
+        <input data-class-tracker-member-field="is_active" type="checkbox" ${member.is_active === false ? "" : "checked"}>
+        Active
+      </label>
+    </div>
+  `;
+}
+
+function classTaskTrackerProgressHtml(group) {
+  if (!group?.id) return "";
+  const members = classTaskGroupMemberRows(group);
+  const tasks = state.classTasks.filter((task) => classTaskGroupId(task) === group.id);
+  if (!members.length || !tasks.length) {
+    return `
+      <div class="class-tracker-progress-empty">
+        ${members.length ? "Assign a task to this class tracker to begin building progress history." : "Add pupils to this class tracker before assigning tasks."}
+      </div>
+    `;
+  }
+  return `
+    <div class="class-tracker-progress">
+      <div class="class-tracker-progress-head">
+        <span>Progress Across Linked Tasks</span>
+        <strong>${tasks.length} task${tasks.length === 1 ? "" : "s"}</strong>
+      </div>
+      <div class="class-task-monitor-table-wrap">
+        <table class="class-task-monitor-table class-tracker-progress-table">
+          <thead>
+            <tr>
+              <th>Pupil</th>
+              <th>Code</th>
+              <th>Started</th>
+              <th>Complete</th>
+              <th>Average</th>
+              <th>Latest</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${members.map((member) => {
+              const aliasKey = classTaskAliasKey(member.pupil_alias);
+              const memberResponses = tasks.flatMap((task) => (task.responses || [])
+                .filter((response) => classTaskAliasKey(response.pupil_alias) === aliasKey));
+              const scores = memberResponses
+                .map((response) => {
+                  const score = Number(response.auto_score);
+                  const max = Number(response.max_score);
+                  return Number.isFinite(score) && Number.isFinite(max) && max > 0 ? score / max : null;
+                })
+                .filter((score) => score !== null);
+              const average = scores.length ? `${Math.round((scores.reduce((sum, score) => sum + score, 0) / scores.length) * 100)}%` : "No score";
+              const completed = memberResponses.filter((response) => response.marking?.pass_met).length;
+              const latest = memberResponses
+                .slice()
+                .sort((a, b) => String(b.submitted_at || "").localeCompare(String(a.submitted_at || "")))[0];
+              return `
+                <tr>
+                  <td>${escapeHtml(member.pupil_alias || "Pupil")}</td>
+                  <td>${escapeHtml(member.pupil_code || "")}</td>
+                  <td>${memberResponses.length}</td>
+                  <td>${completed}</td>
+                  <td>${escapeHtml(average)}</td>
+                  <td>${escapeHtml(latest ? classTaskResponseSummary(latest) : "Not yet")}</td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
 function classTaskFormatSeconds(seconds) {
   const safeSeconds = Math.max(0, Math.round(Number(seconds) || 0));
   const minutes = Math.floor(safeSeconds / 60);
@@ -15294,7 +15461,9 @@ function classTaskPublicSettings(settings = {}) {
     coverage_label: classTaskCoverageLabel(settings),
     minimum_questions: classTaskMinimumQuestions(settings),
     time_target_minutes: classTaskTimeTargetMinutes(settings),
-    score_only_answered: Boolean(settings.score_only_answered)
+    score_only_answered: Boolean(settings.score_only_answered),
+    roster_required: classTaskUsesRoster(settings),
+    class_group_name: String(settings.class_group_name || "")
   };
 }
 
@@ -15338,6 +15507,7 @@ function classTaskPublicTaskForAttempt(task, attemptIndex = 0) {
     join_code: task.join_code,
     expires_at: task.expires_at,
     school_name: task.school_name || currentSchoolName() || "",
+    class_group_name: String(task.settings?.class_group_name || ""),
     settings: classTaskPublicSettings(task.settings || {}),
     attempt_index: classTaskClampNumber(attemptIndex, 0, 9, 0),
     attempt_number: classTaskClampNumber(attemptIndex, 0, 9, 0) + 1,
@@ -15357,11 +15527,12 @@ function classTaskAliasKey(value) {
 
 function classTaskParticipantStatus(status) {
   const clean = String(status || "").toLowerCase();
-  return ["joined", "submitted", "retrying", "completed"].includes(clean) ? clean : "joined";
+  return ["not_started", "joined", "submitted", "retrying", "completed"].includes(clean) ? clean : "joined";
 }
 
 function classTaskParticipantStatusText(status) {
   const labels = {
+    not_started: "Not started",
     joined: "Working",
     submitted: "Submitted",
     retrying: "Retrying",
@@ -15400,11 +15571,97 @@ function classTaskUpsertLocalParticipant(participants, task, alias, patch = {}) 
   return { participants: nextParticipants, participant };
 }
 
+function classTaskLocalResolvePupilIdentity(task, body = {}, groups = [], forSubmit = false) {
+  if (!classTaskUsesRoster(task)) {
+    const alias = String(body.pupil_alias || "").trim().slice(0, 80);
+    if (!alias) throw new Error(forSubmit ? "Enter an alias or initials before submitting." : "Enter an alias or initials before starting.");
+    return { pupilAlias: alias, pupilCode: "", memberId: "" };
+  }
+  const pupilCode = normalisePupilCode(body.pupil_code);
+  if (!pupilCode) throw new Error(forSubmit ? "Enter your pupil code before submitting." : "Enter your pupil code before starting.");
+  const group = groups.find((item) => item.id === classTaskGroupId(task));
+  const member = classTaskGroupMemberRows(group).find((row) => normalisePupilCode(row.pupil_code) === pupilCode);
+  if (!member) throw new Error("This pupil code was not found for this task. Check the code with your teacher.");
+  return {
+    pupilAlias: member.pupil_alias,
+    pupilCode: member.pupil_code,
+    memberId: member.id
+  };
+}
+
 async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
   const tasks = classTaskReadLocal(classTaskLocalTasksStorageKey, []);
   const responses = classTaskReadLocal(classTaskLocalResponsesStorageKey, []);
   const participants = classTaskReadLocal(classTaskLocalParticipantsStorageKey, []);
+  const groups = classTaskReadLocal(classTaskLocalGroupsStorageKey, []);
   const teacherId = classTaskCurrentTeacherId();
+
+  if (action === "list-groups") {
+    classTaskAssertPupilModuleAccess();
+    const visibleGroups = groups
+      .filter((group) => isAdmin() || group.teacher_id === teacherId)
+      .sort((a, b) => String(b.updated_at || "").localeCompare(String(a.updated_at || "")));
+    return { groups: visibleGroups, source: "local" };
+  }
+
+  if (action === "save-group") {
+    classTaskAssertPupilModuleAccess();
+    const now = new Date().toISOString();
+    const cleanName = String(body.name || "").trim().slice(0, 120);
+    if (!cleanName) throw new Error("Give the class tracker a name.");
+    const rawMembers = Array.isArray(body.members) ? body.members : [];
+    const seenAliases = new Set();
+    const seenCodes = new Set();
+    const members = rawMembers
+      .slice(0, 80)
+      .map((member, index) => {
+        const alias = String(member?.pupil_alias || "").trim().slice(0, 80);
+        const code = normalisePupilCode(member?.pupil_code || classTaskRandomPupilCode([...seenCodes]));
+        if (!alias || !code) return null;
+        const aliasKey = classTaskAliasKey(alias);
+        if (seenAliases.has(aliasKey) || seenCodes.has(code)) return null;
+        seenAliases.add(aliasKey);
+        seenCodes.add(code);
+        return {
+          id: member.id || `local-member-${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`,
+          group_id: body.id || "",
+          pupil_alias: alias,
+          pupil_code: code,
+          notes: String(member?.notes || "").trim().slice(0, 1000),
+          is_active: member?.is_active === false ? false : true,
+          created_at: member.created_at || now,
+          updated_at: now
+        };
+      })
+      .filter(Boolean);
+    const existingIndex = groups.findIndex((group) => group.id === body.id && (isAdmin() || group.teacher_id === teacherId));
+    const groupId = existingIndex >= 0 ? groups[existingIndex].id : `local-group-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const group = {
+      id: groupId,
+      teacher_id: existingIndex >= 0 ? groups[existingIndex].teacher_id : teacherId,
+      school_id: authState().profile?.school_id || "",
+      name: cleanName,
+      notes: String(body.notes || "").trim().slice(0, 2000),
+      is_active: body.is_active === false ? false : true,
+      created_at: existingIndex >= 0 ? groups[existingIndex].created_at : now,
+      updated_at: now,
+      members: members.map((member) => ({ ...member, group_id: groupId }))
+    };
+    const nextGroups = existingIndex >= 0
+      ? groups.map((entry, index) => index === existingIndex ? group : entry)
+      : [group, ...groups];
+    classTaskWriteLocal(classTaskLocalGroupsStorageKey, nextGroups);
+    return { group, source: "local" };
+  }
+
+  if (action === "archive-group") {
+    classTaskAssertPupilModuleAccess();
+    const nextGroups = groups.map((group) => group.id === body.id && (isAdmin() || group.teacher_id === teacherId)
+      ? { ...group, is_active: false, updated_at: new Date().toISOString() }
+      : group);
+    classTaskWriteLocal(classTaskLocalGroupsStorageKey, nextGroups);
+    return { ok: true, source: "local" };
+  }
 
   if (action === "list") {
     classTaskAssertPupilModuleAccess();
@@ -15425,6 +15682,12 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     while (tasks.some((task) => task.join_code === joinCode)) joinCode = classTaskRandomCode();
     const profile = authState().profile || {};
     const incomingSettings = body.settings && typeof body.settings === "object" ? body.settings : {};
+    const classGroup = incomingSettings.class_group_id
+      ? groups.find((group) => group.id === incomingSettings.class_group_id && (isAdmin() || group.teacher_id === teacherId) && group.is_active !== false)
+      : null;
+    if (incomingSettings.class_group_id && !classGroup) {
+      throw new Error("Choose an active class tracker, or leave the class tracker blank.");
+    }
     const taskMode = classTaskMode(incomingSettings);
     const attemptSets = classTaskAttemptSets(incomingSettings)
       .slice(0, 9)
@@ -15462,6 +15725,9 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
         source_type_id: incomingSettings.source_type_id || "",
         source_count: classTaskClampNumber(incomingSettings.source_count, 1, 40, Array.isArray(body.questions) ? body.questions.length : 5),
         source_marks: classTaskClampNumber(incomingSettings.source_marks, 1, 20, 1),
+        class_group_id: classGroup?.id || "",
+        class_group_name: classGroup?.name || "",
+        roster_required: Boolean(classGroup?.id),
         source: "kaizen-class-task",
         pupil_module_enabled: true,
         pupil_module_owner: profile.school_id ? "school" : "admin"
@@ -15490,29 +15756,34 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
 
   if (action === "join") {
     const code = normaliseClassTaskCode(body.code);
-    const alias = String(body.pupil_alias || "").trim().slice(0, 80);
     const attemptIndex = classTaskClampNumber(body.attempt_index, 0, 9, 0);
     const task = tasks.find((item) => item.join_code === code);
     if (!task || !classTaskIsAvailable(task)) throw new Error("This pupil task was not found or has expired.");
     if (!classTaskLocalTaskIsPupilEnabled(task)) throw new Error("This pupil task is not available.");
-    if (!alias) throw new Error("Enter an alias or initials before starting.");
-    const result = classTaskUpsertLocalParticipant(participants, task, alias, {
+    const identity = classTaskLocalResolvePupilIdentity(task, body, groups);
+    const result = classTaskUpsertLocalParticipant(participants, task, identity.pupilAlias, {
       status: "joined",
       current_attempt: attemptIndex + 1
     });
     classTaskWriteLocal(classTaskLocalParticipantsStorageKey, result.participants);
-    return { participant: result.participant, source: "local" };
+    return {
+      participant: result.participant ? {
+        ...result.participant,
+        pupil_code: identity.pupilCode,
+        class_group_member_id: identity.memberId
+      } : null,
+      source: "local"
+    };
   }
 
   if (action === "submit") {
     const code = normaliseClassTaskCode(body.code);
-    const alias = String(body.pupil_alias || "").trim().slice(0, 80);
     const attemptIndex = classTaskClampNumber(body.attempt_index, 0, 9, 0);
     const task = tasks.find((item) => item.join_code === code);
     if (!task || !classTaskIsAvailable(task)) throw new Error("This pupil task was not found or has expired.");
     if (!classTaskLocalTaskIsPupilEnabled(task)) throw new Error("This pupil task is not available.");
-    if (!alias) throw new Error("Enter an alias or initials before submitting.");
-    const aliasResponses = responses.filter((response) => response.task_id === task.id && normalise(response.pupil_alias) === normalise(alias));
+    const identity = classTaskLocalResolvePupilIdentity(task, body, groups, true);
+    const aliasResponses = responses.filter((response) => response.task_id === task.id && normalise(response.pupil_alias) === normalise(identity.pupilAlias));
     const passPercent = classTaskPassPercent(task.settings || {});
     const hasCompleted = aliasResponses.some((response) => response.marking?.pass_met);
     const hasSameAttempt = aliasResponses.some((response) => Number(response.marking?.attempt_index || 0) === attemptIndex);
@@ -15531,12 +15802,14 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     });
     const marking = classTaskMarkPassStatus({
       ...scored,
-      activity: pupilTaskCleanActivity(body.activity)
+      activity: pupilTaskCleanActivity(body.activity),
+      class_group_member_id: identity.memberId,
+      pupil_code: identity.pupilCode
     }, task.settings || {}, attemptIndex);
     const response = {
       id: `local-response-${Date.now()}-${Math.random().toString(16).slice(2)}`,
       task_id: task.id,
-      pupil_alias: alias,
+      pupil_alias: identity.pupilAlias,
       answers,
       working,
       working_images: workingImages,
@@ -15546,7 +15819,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
       submitted_at: new Date().toISOString()
     };
     const nextTask = marking.pass_required && !marking.pass_met ? classTaskPublicTaskForAttempt(task, attemptIndex + 1) : null;
-    const participantResult = classTaskUpsertLocalParticipant(participants, task, alias, {
+    const participantResult = classTaskUpsertLocalParticipant(participants, task, identity.pupilAlias, {
       status: marking.pass_met ? "completed" : nextTask ? "retrying" : "submitted",
       current_attempt: marking.attempt_number,
       last_score: marking.auto_score,
@@ -15558,7 +15831,11 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     classTaskWriteLocal(classTaskLocalParticipantsStorageKey, participantResult.participants);
     return {
       response,
-      participant: participantResult.participant,
+      participant: participantResult.participant ? {
+        ...participantResult.participant,
+        pupil_code: identity.pupilCode,
+        class_group_member_id: identity.memberId
+      } : null,
       show_answers: true,
       answers: attemptQuestions.map((question, index) => ({ id: question.id || `q${index + 1}`, answer: question.answer || "", steps: question.steps || [] })),
       next_task: nextTask,
@@ -15851,6 +16128,9 @@ async function createClassTaskFromForm(form) {
     ? Math.max(0, Math.min(180, Number(form.querySelector("[name='time_target_minutes']")?.value || 20)))
     : 0;
   const passPercent = Math.max(0, Math.min(100, Number(form.querySelector("[name='pass_percent']")?.value || (taskMode === "practice_room" ? 80 : 100))));
+  const classGroupId = form.querySelector("[name='class_group_id']")?.value || "";
+  const classGroup = classTaskGroupById(classGroupId);
+  if (classGroupId && !classGroup) throw new Error("Choose an active class tracker, or leave the class tracker blank.");
   const maxAttempts = passPercent > 0 ? 5 : 1;
   const firstSet = taskMode === "practice_room"
     ? generateClassTaskPracticeQuestionSet(api, tool, metadata, level, type, count, marks, coverageMode)
@@ -15908,7 +16188,10 @@ async function createClassTaskFromForm(form) {
         source_level_id: String(level.id),
         source_type_id: String(type.id),
         source_count: count,
-        source_marks: marks
+        source_marks: marks,
+        class_group_id: classGroup?.id || "",
+        class_group_name: classGroup?.name || "",
+        roster_required: Boolean(classGroup?.id)
       }
     }
   });
@@ -15921,9 +16204,16 @@ function classTaskListSignature(tasks = state.classTasks, error = state.classTas
   return JSON.stringify({
     source,
     error,
+    groups: (state.classTaskGroups || []).map((group) => [
+      group.id,
+      group.name,
+      group.is_active,
+      (group.members || []).map((member) => [member.id, member.pupil_alias, member.pupil_code, member.is_active]).join("|")
+    ]),
     tasks: (tasks || []).map((task) => ({
       id: task.id,
       join_code: task.join_code,
+      class_group_id: classTaskGroupId(task),
       is_active: task.is_active,
       expires_at: task.expires_at,
       updated_at: task.updated_at,
@@ -15988,6 +16278,29 @@ async function loadClassTasks({ rerender = false, force = false, quiet = false }
   }
 }
 
+async function loadClassTaskGroups({ rerender = false, force = false } = {}) {
+  if (!isSignedIn() || !hasPupilModuleAccess() || state.classTaskGroupsLoading) return;
+  if (state.classTaskGroupsLoaded && !force) return;
+  state.classTaskGroupsLoading = true;
+  state.classTaskGroupsSchemaMissing = false;
+  try {
+    const payload = await classTaskApi("list-groups", { auth: true });
+    state.classTaskGroups = payload.groups || [];
+    state.classTaskGroupsSchemaMissing = Boolean(payload.schema_missing);
+    state.classTaskGroupsLoaded = true;
+    if (!state.classTaskSelectedGroupId && state.classTaskGroups.length) {
+      state.classTaskSelectedGroupId = classTaskActiveGroups()[0]?.id || state.classTaskGroups[0]?.id || "";
+    }
+  } catch (error) {
+    state.classTaskGroupsLoaded = true;
+    state.classTaskGroupsSchemaMissing = /schema|class tracker|class group/i.test(error.message || "");
+    console.warn("Kaizen class trackers unavailable:", error.message);
+  } finally {
+    state.classTaskGroupsLoading = false;
+    if (rerender && routeParts()[0] === "class-tasks") renderRoute();
+  }
+}
+
 function resetClassTaskState() {
   if (state.classTaskMonitorTimer) {
     window.clearInterval(state.classTaskMonitorTimer);
@@ -15996,6 +16309,11 @@ function resetClassTaskState() {
   state.classTasks = [];
   state.classTasksLoaded = false;
   state.classTasksLoading = false;
+  state.classTaskGroups = [];
+  state.classTaskGroupsLoaded = false;
+  state.classTaskGroupsLoading = false;
+  state.classTaskGroupsSchemaMissing = false;
+  state.classTaskSelectedGroupId = "";
   state.classTaskError = "";
   state.classTaskSource = "";
   state.classTaskListSignature = "";
@@ -16017,7 +16335,7 @@ function startClassTaskMonitorRefresh() {
       return;
     }
     const activeElement = document.activeElement;
-    if (activeElement?.closest?.(".class-task-builder, .class-task-response-detail, .class-task-feedback-form")) return;
+    if (activeElement?.closest?.(".class-tracker-panel, .class-task-builder, .class-task-response-detail, .class-task-feedback-form")) return;
     if (!state.classTasksLoading) {
       loadClassTasks({ rerender: true, force: true, quiet: true });
     }
@@ -16134,6 +16452,68 @@ function classTaskSourceNotice() {
   return "";
 }
 
+function classTaskTrackerHtml() {
+  const selectedGroup = classTaskSelectedGroup();
+  const groups = classTaskActiveGroups();
+  const selectedId = state.classTaskSelectedGroupId === "new" ? "new" : selectedGroup?.id || "";
+  const members = selectedGroup ? classTaskGroupMemberRows(selectedGroup) : [];
+  return `
+    <section class="panel class-tracker-panel">
+      <div class="class-tracker-head">
+        <div>
+          <span class="eyebrow">Class Tracker</span>
+          <h2>Stable aliases and pupil codes</h2>
+          <p>Create a roster once, then assign tasks to that class. Pupils enter only their code, while you see the same alias across tasks.</p>
+        </div>
+        <div class="button-row">
+          <button class="button subtle" type="button" id="newClassTracker">New Class</button>
+          <button class="button primary" type="button" id="saveClassTracker">Save Roster</button>
+        </div>
+      </div>
+      ${state.classTaskGroupsSchemaMissing ? `
+        <p class="class-task-local-note">Run the latest Supabase schema before class trackers can save across devices.</p>
+      ` : ""}
+      <div class="class-tracker-grid">
+        <label>
+          Select class
+          <select id="classTrackerSelect">
+            ${groups.length ? classTaskGroupOptions(selectedId) : ""}
+            <option value="new" ${selectedId === "new" || !groups.length ? "selected" : ""}>Create new class tracker</option>
+          </select>
+        </label>
+        <label>
+          Class name
+          <input id="classTrackerName" type="text" maxlength="120" value="${escapeHtml(selectedGroup?.name || "")}" placeholder="Example: 8A Intervention">
+        </label>
+        <label>
+          Notes
+          <input id="classTrackerNotes" type="text" maxlength="2000" value="${escapeHtml(selectedGroup?.notes || "")}" placeholder="Optional teacher notes">
+        </label>
+      </div>
+      <div class="class-tracker-roster-head">
+        <span>${members.length || 0} active pupil${members.length === 1 ? "" : "s"}</span>
+        <button class="button subtle" type="button" id="addClassTrackerMember">Add Pupil</button>
+      </div>
+      <div class="class-tracker-member-header" aria-hidden="true">
+        <span>#</span>
+        <span>Alias</span>
+        <span>Pupil code</span>
+        <span>Note</span>
+        <span>Status</span>
+      </div>
+      <div class="class-tracker-members" id="classTrackerMembers">
+        ${members.length
+          ? members.map(classTaskRosterMemberRowHtml).join("")
+          : [0, 1, 2].map((_, index) => classTaskRosterMemberRowHtml({}, index)).join("")}
+      </div>
+      <div class="class-tracker-foot">
+        <p class="worksheet-status" id="classTrackerStatus">${state.classTaskGroupsLoading ? "Loading class trackers..." : "Use aliases, initials, or teacher identifiers. Avoid full student records."}</p>
+      </div>
+      ${classTaskTrackerProgressHtml(selectedGroup)}
+    </section>
+  `;
+}
+
 function classTaskListHtml() {
   if (state.classTasksLoading && !state.classTasks.length) return `<div class="empty-state">Loading pupil tasks...</div>`;
   if (!state.classTasks.length) return `<div class="empty-state">No pupil tasks yet. Create a join code from the builder on this page.</div>`;
@@ -16168,6 +16548,11 @@ function updateClassTaskListPanel() {
   list.innerHTML = classTaskListHtml();
   if (sourceNotice) sourceNotice.innerHTML = classTaskSourceNotice();
   bindClassTaskListActions();
+  const trackerPanel = document.querySelector(".class-tracker-panel");
+  if (trackerPanel) {
+    trackerPanel.outerHTML = classTaskTrackerHtml();
+    bindClassTaskTracker();
+  }
   return true;
 }
 
@@ -16183,13 +16568,164 @@ function updateClassTaskResponseInState(taskId, response) {
   });
 }
 
+function updateClassTaskTrackerPanel() {
+  const panel = document.querySelector(".class-tracker-panel");
+  if (!panel) return;
+  panel.outerHTML = classTaskTrackerHtml();
+  bindClassTaskTracker();
+}
+
+function bindClassTaskTracker() {
+  const select = document.getElementById("classTrackerSelect");
+  const membersList = document.getElementById("classTrackerMembers");
+  const status = document.getElementById("classTrackerStatus");
+  if (!select || !membersList) return;
+
+  select.addEventListener("change", () => {
+    state.classTaskSelectedGroupId = select.value || "new";
+    const taskClassSelect = document.getElementById("classTaskClassGroup");
+    if (taskClassSelect && state.classTaskSelectedGroupId !== "new") taskClassSelect.value = state.classTaskSelectedGroupId;
+    updateClassTaskTrackerPanel();
+  });
+
+  document.getElementById("newClassTracker")?.addEventListener("click", () => {
+    state.classTaskSelectedGroupId = "new";
+    updateClassTaskTrackerPanel();
+    document.getElementById("classTrackerName")?.focus();
+  });
+
+  function bindGenerateButtons(scope = document) {
+    scope.querySelectorAll("[data-class-tracker-generate-code]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const row = button.closest("[data-class-tracker-member]");
+        const input = row?.querySelector('[data-class-tracker-member-field="pupil_code"]');
+        const existing = [...membersList.querySelectorAll('[data-class-tracker-member-field="pupil_code"]')]
+          .filter((field) => field !== input)
+          .map((field) => field.value);
+        if (input) input.value = classTaskRandomPupilCode(existing);
+      });
+    });
+  }
+
+  bindGenerateButtons();
+
+  document.getElementById("addClassTrackerMember")?.addEventListener("click", () => {
+    const index = membersList.querySelectorAll("[data-class-tracker-member]").length;
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = classTaskRosterMemberRowHtml({}, index);
+    const row = wrapper.firstElementChild;
+    if (!row) return;
+    membersList.appendChild(row);
+    bindGenerateButtons(row);
+    row.querySelector('[data-class-tracker-member-field="pupil_alias"]')?.focus();
+  });
+
+  document.getElementById("saveClassTracker")?.addEventListener("click", async (event) => {
+    const button = event.currentTarget;
+    const group = state.classTaskSelectedGroupId === "new" ? null : classTaskSelectedGroup();
+    const name = document.getElementById("classTrackerName")?.value.trim() || "";
+    const notes = document.getElementById("classTrackerNotes")?.value || "";
+    const rows = [...membersList.querySelectorAll("[data-class-tracker-member]")];
+    const members = rows.map((row) => {
+      const field = (name) => row.querySelector(`[data-class-tracker-member-field="${name}"]`);
+      return {
+        id: row.dataset.classTrackerMember || "",
+        pupil_alias: field("pupil_alias")?.value.trim() || "",
+        pupil_code: normalisePupilCode(field("pupil_code")?.value || ""),
+        notes: field("notes")?.value || "",
+        is_active: Boolean(field("is_active")?.checked)
+      };
+    }).filter((member) => member.pupil_alias || member.pupil_code);
+    if (!name) {
+      if (status) {
+        status.textContent = "Give this class tracker a name.";
+        status.dataset.tone = "error";
+      }
+      document.getElementById("classTrackerName")?.focus();
+      return;
+    }
+    if (members.some((member) => !member.pupil_alias || !member.pupil_code)) {
+      if (status) {
+        status.textContent = "Every roster row needs both an alias and a pupil code.";
+        status.dataset.tone = "error";
+      }
+      return;
+    }
+    const duplicateAlias = members.some((member, index) => members.findIndex((other) => classTaskAliasKey(other.pupil_alias) === classTaskAliasKey(member.pupil_alias)) !== index);
+    const duplicateCode = members.some((member, index) => members.findIndex((other) => normalisePupilCode(other.pupil_code) === normalisePupilCode(member.pupil_code)) !== index);
+    if (duplicateAlias || duplicateCode) {
+      if (status) {
+        status.textContent = "Aliases and pupil codes must be unique inside this class.";
+        status.dataset.tone = "error";
+      }
+      return;
+    }
+    button.disabled = true;
+    if (status) {
+      status.textContent = "Saving class tracker...";
+      status.dataset.tone = "loading";
+    }
+    try {
+      const payload = await classTaskApi("save-group", {
+        method: "POST",
+        auth: true,
+        body: {
+          id: group?.id || "",
+          name,
+          notes,
+          is_active: true,
+          members
+        }
+      });
+      const saved = payload.group;
+      state.classTaskGroups = [
+        saved,
+        ...state.classTaskGroups.filter((item) => String(item.id) !== String(saved.id))
+      ];
+      state.classTaskGroupsLoaded = true;
+      state.classTaskSelectedGroupId = saved.id;
+      updateClassTaskTrackerPanel();
+      const taskClassSelect = document.getElementById("classTaskClassGroup");
+      if (taskClassSelect) taskClassSelect.innerHTML = classTaskTaskGroupSelectOptions(saved.id);
+      setClassTaskStatus(`Saved ${saved.name}. You can now assign new pupil tasks to this class.`, "success");
+    } catch (error) {
+      if (status) {
+        status.textContent = error.message || "Class tracker could not be saved.";
+        status.dataset.tone = "error";
+      }
+      button.disabled = false;
+    }
+  });
+}
+
 function classTaskMonitorRows(task) {
   const rows = new Map();
+  const group = classTaskGroupForTask(task);
+  classTaskGroupMemberRows(group).forEach((member) => {
+    const key = classTaskAliasKey(member.pupil_alias);
+    if (!key) return;
+    rows.set(key, {
+      alias: member.pupil_alias || "Pupil",
+      pupil_code: member.pupil_code || "",
+      member_id: member.id || "",
+      status: "not_started",
+      current_attempt: 1,
+      submissions_count: 0,
+      last_score: null,
+      max_score: null,
+      pass_met: false,
+      last_seen_at: ""
+    });
+  });
+
   (task.participants || []).forEach((participant) => {
     const key = classTaskAliasKey(participant.pupil_alias);
     if (!key) return;
+    const member = classTaskGroupMemberByAlias(group, participant.pupil_alias);
     rows.set(key, {
       alias: participant.pupil_alias || "Pupil",
+      pupil_code: member?.pupil_code || participant.pupil_code || "",
+      member_id: member?.id || participant.class_group_member_id || "",
       status: classTaskParticipantStatus(participant.status),
       current_attempt: Number(participant.current_attempt) || 1,
       submissions_count: Number(participant.submissions_count) || 0,
@@ -16204,11 +16740,14 @@ function classTaskMonitorRows(task) {
     const key = classTaskAliasKey(response.pupil_alias);
     if (!key) return;
     const existing = rows.get(key) || {};
+    const member = classTaskGroupMemberByAlias(group, response.pupil_alias);
     const marking = response.marking || {};
     const passMet = Boolean(marking.pass_met);
     const status = passMet ? "completed" : marking.pass_required ? "retrying" : "submitted";
       rows.set(key, {
         alias: existing.alias || response.pupil_alias || "Pupil",
+        pupil_code: existing.pupil_code || member?.pupil_code || marking.pupil_code || "",
+        member_id: existing.member_id || member?.id || marking.class_group_member_id || "",
         status: existing.status && existing.submissions_count ? existing.status : status,
         current_attempt: Math.max(Number(existing.current_attempt) || 1, Number(marking.attempt_number) || 1),
         submissions_count: Math.max(Number(existing.submissions_count) || 0, 1),
@@ -16220,7 +16759,11 @@ function classTaskMonitorRows(task) {
       });
   });
 
-  return [...rows.values()].sort((a, b) => String(b.last_seen_at || "").localeCompare(String(a.last_seen_at || "")));
+  return [...rows.values()].sort((a, b) => {
+    if (a.status === "not_started" && b.status !== "not_started") return 1;
+    if (a.status !== "not_started" && b.status === "not_started") return -1;
+    return String(b.last_seen_at || "").localeCompare(String(a.last_seen_at || "")) || String(a.alias || "").localeCompare(String(b.alias || ""));
+  });
 }
 
 function classTaskMonitorScore(row) {
@@ -16245,24 +16788,25 @@ function classTaskMonitorSeen(value) {
 
 function classTaskMonitorHtml(task) {
   const rows = classTaskMonitorRows(task);
+  const joined = rows.filter((row) => row.status !== "not_started").length;
   const submitted = rows.filter((row) => Number(row.submissions_count || 0) > 0).length;
   const completed = rows.filter((row) => row.pass_met || row.status === "completed").length;
   const needsSupport = rows.filter((row) => (
     Number(row.submissions_count || 0) > 0 && !row.pass_met && row.status !== "completed"
   )).length;
-  const working = rows.length - submitted;
+  const working = rows.filter((row) => row.status !== "not_started" && Number(row.submissions_count || 0) === 0).length;
   return `
     <details open class="class-task-monitor">
       <summary class="class-task-monitor-summary">
         <span>Live monitor</span>
-        <small>${rows.length} joined · ${submitted} submitted</small>
+        <small>${joined} joined · ${submitted} submitted</small>
       </summary>
       <div class="class-task-monitor-stats" aria-label="Class task live status">
-        <span><strong>${rows.length}</strong> joined</span>
+        <span><strong>${rows.length}</strong> roster</span>
+        <span><strong>${joined}</strong> joined</span>
         <span><strong>${working}</strong> working</span>
         <span><strong>${submitted}</strong> submitted</span>
         <span><strong>${needsSupport}</strong> support</span>
-        <span><strong>${completed}</strong> complete</span>
       </div>
       ${rows.length ? `
         <div class="class-task-monitor-table-wrap">
@@ -16270,6 +16814,7 @@ function classTaskMonitorHtml(task) {
             <thead>
               <tr>
                 <th>Pupil</th>
+                <th>Code</th>
                 <th>Status</th>
                 <th>Attempt</th>
                 <th>Score</th>
@@ -16281,6 +16826,7 @@ function classTaskMonitorHtml(task) {
               ${rows.map((row) => `
                 <tr data-status="${escapeHtml(classTaskParticipantStatus(row.status))}">
                   <td>${escapeHtml(row.alias)}</td>
+                  <td>${escapeHtml(row.pupil_code || "Alias")}</td>
                   <td>${escapeHtml(classTaskParticipantStatusText(row.status))}</td>
                   <td>${escapeHtml(String(row.current_attempt || 1))}</td>
                   <td>${escapeHtml(classTaskMonitorScore(row))}</td>
@@ -16308,6 +16854,7 @@ function classTaskCardHtml(task) {
   const isPractice = classTaskIsPracticeRoom(settings);
   const timeTarget = classTaskTimeTargetMinutes(settings);
   const minimumQuestions = classTaskMinimumQuestions(settings);
+  const classGroupName = settings.class_group_name || classTaskGroupForTask(task)?.name || "";
   return `
     <article class="class-task-card">
       <div class="class-task-card-head">
@@ -16324,6 +16871,8 @@ function classTaskCardHtml(task) {
         ${isPractice ? `<span>${minimumQuestions} minimum</span>` : ""}
         ${isPractice && timeTarget ? `<span>${timeTarget} min target</span>` : ""}
         ${isPractice ? `<span>${escapeHtml(classTaskCoverageLabel(settings))}</span>` : ""}
+        ${classGroupName ? `<span>${escapeHtml(classGroupName)}</span>` : ""}
+        ${classTaskUsesRoster(settings) ? `<span>Pupil codes</span>` : ""}
         ${passPercent ? `<span>${passPercent}% required</span>` : ""}
         ${maxAttempts > 1 ? `<span>${maxAttempts} attempts available</span>` : ""}
         <span>${participants.length} joined</span>
@@ -16479,6 +17028,9 @@ function renderClassTasks() {
   if (!state.classTasksLoaded && !state.classTasksLoading) {
     loadClassTasks({ rerender: true });
   }
+  if (!state.classTaskGroupsLoaded && !state.classTaskGroupsLoading) {
+    loadClassTaskGroups({ rerender: true });
+  }
 
   const firstTool = classTaskEligibleTools()[0];
   state.classTaskToolSlug = state.classTaskToolSlug || firstTool?.slug || "";
@@ -16490,13 +17042,14 @@ function renderClassTasks() {
       `<a class="button" href="#/pupil">Pupil Join Page</a><a class="button" href="#/worksheet-generator">Worksheet Builder</a>`
     )}
     ${pupilModuleOverviewHtml()}
+    ${classTaskTrackerHtml()}
     <section class="class-task-page">
       <article class="panel class-task-builder">
         <div class="class-task-builder-head">
           <div>
             <span class="eyebrow">Teacher Task Builder</span>
             <h2>Create a pupil room</h2>
-            <p>Choose a topic block, then share one join code. Pupils enter an alias only.</p>
+            <p>Choose a topic block, then share one join code. Select a class tracker when pupils should use saved codes.</p>
           </div>
           <button class="button subtle" type="button" id="refreshClassTasks">Refresh</button>
         </div>
@@ -16526,6 +17079,13 @@ function renderClassTasks() {
             <label>
               Instructions
               <textarea name="instructions" rows="2" maxlength="900">Answer each question. Show working where appropriate.</textarea>
+            </label>
+            <label>
+              Class tracker
+              <select id="classTaskClassGroup" name="class_group_id">
+                ${classTaskTaskGroupSelectOptions(state.classTaskSelectedGroupId)}
+              </select>
+              <small>If selected, pupils enter their saved pupil code instead of typing an alias.</small>
             </label>
             <label>
               Topic tool
@@ -16608,6 +17168,7 @@ function bindClassTasks() {
   const toolSelect = document.getElementById("classTaskTool");
   if (!form || !toolSelect) return;
   startClassTaskMonitorRefresh();
+  bindClassTaskTracker();
   function syncClassTaskModeUi() {
     const taskMode = form.querySelector("[name='task_mode']:checked")?.value || "fixed_task";
     form.dataset.taskMode = taskMode;
@@ -16766,8 +17327,8 @@ function startPupilTaskActivityTracking(form) {
       stopPupilTaskActivityTracking();
       return;
     }
-    const alias = form.querySelector("[name='pupil_alias']")?.value || "";
-    if (alias.trim()) registerPupilTaskJoin(alias, { force: true });
+    const identity = pupilIdentityFromForm(form);
+    if (pupilIdentityHasValue(identity)) registerPupilTaskJoin(identity, { force: true });
   }, 30000);
 }
 
@@ -16777,6 +17338,7 @@ async function loadPupilTask(code, { rerender = false } = {}) {
   state.pupilTaskLoading = true;
   state.pupilTaskError = "";
   state.pupilSubmission = null;
+  state.pupilResolvedAlias = "";
   state.pupilActiveQuestionIndex = 0;
   state.pupilTaskAttemptIndex = 0;
   state.pupilJoinRegisteredKey = "";
@@ -16829,6 +17391,39 @@ function pupilAnswerPreviewHtml(value) {
   const template = document.createElement("template");
   template.content.appendChild(worksheetMathFragment(displayText));
   return template.innerHTML;
+}
+
+function pupilIdentityFromForm(form) {
+  if (classTaskUsesRoster(state.pupilTask || {})) {
+    return {
+      pupil_code: normalisePupilCode(form?.querySelector("[name='pupil_code']")?.value || "")
+    };
+  }
+  return {
+    pupil_alias: String(form?.querySelector("[name='pupil_alias']")?.value || "").trim().slice(0, 80)
+  };
+}
+
+function pupilIdentityHasValue(identity = {}) {
+  return Boolean(normalisePupilCode(identity.pupil_code) || String(identity.pupil_alias || "").trim());
+}
+
+function pupilIdentityFieldHtml(task, savedAlias, savedCode) {
+  if (classTaskUsesRoster(task || {})) {
+    return `
+      <label class="pupil-alias-field">
+        Pupil code
+        <input name="pupil_code" type="text" maxlength="16" value="${escapeHtml(savedCode)}" autocomplete="off" spellcheck="false" placeholder="Code from teacher" required>
+        <small data-pupil-resolved-alias>${state.pupilResolvedAlias ? `Joined as ${escapeHtml(state.pupilResolvedAlias)}` : "Your teacher gives each pupil a stable code."}</small>
+      </label>
+    `;
+  }
+  return `
+    <label class="pupil-alias-field">
+      Alias or initials
+      <input name="pupil_alias" type="text" maxlength="80" value="${escapeHtml(savedAlias)}" autocomplete="off" spellcheck="false" placeholder="No full name" required>
+    </label>
+  `;
 }
 
 function pupilQuestionHtml(question, index) {
@@ -16972,21 +17567,24 @@ function renderPupilJoin(routeCode = "") {
     state.pupilTask = null;
     state.pupilTaskError = "";
     state.pupilSubmission = null;
+    state.pupilResolvedAlias = "";
     state.pupilTaskAttemptIndex = 0;
     state.pupilActiveQuestionIndex = 0;
   }
   const task = state.pupilTask?.join_code === cleanCode ? state.pupilTask : null;
   const savedAlias = readJsonStorage(pupilAliasStorageKey, "");
+  const savedCode = readJsonStorage(pupilCodeStorageKey, "");
 
   if (cleanCode && !task && !state.pupilTaskLoading && !state.pupilTaskError) {
     loadPupilTask(cleanCode, { rerender: true });
   }
   const schoolName = task?.school_name || "Kaizen Maths";
   const isPracticeRoom = classTaskIsPracticeRoom(task?.settings || {});
+  const usesRoster = classTaskUsesRoster(task?.settings || {});
   const minimumQuestions = task ? classTaskMinimumQuestions(task.settings || {}) : 0;
   const timeTarget = task ? classTaskTimeTargetMinutes(task.settings || {}) : 0;
   const taskSummary = task
-    ? [classTaskModeLabel(task.settings || {}), task.source_tool_title, isPracticeRoom ? task.settings?.coverage_label : task.source_type_label].filter(Boolean).join(" · ") || "Assigned Kaizen Maths task"
+    ? [classTaskModeLabel(task.settings || {}), task.settings?.class_group_name || task.class_group_name, task.source_tool_title, isPracticeRoom ? task.settings?.coverage_label : task.source_type_label].filter(Boolean).join(" · ") || "Assigned Kaizen Maths task"
     : "Enter the class code from your teacher.";
   const attemptLabel = task?.attempt_number && task?.max_attempts > 1
     ? `Attempt ${task.attempt_number} of ${task.max_attempts}`
@@ -17026,7 +17624,7 @@ function renderPupilJoin(routeCode = "") {
         <article class="panel pupil-join-panel">
           <span class="eyebrow">Pupil Workspace</span>
           <h1>Load your pupil task</h1>
-          <p>This page only opens with a code from your teacher or tutor. Use initials, a nickname, or the identifier your teacher gives you rather than a full name.</p>
+          <p>This page only opens with a code from your teacher or tutor. Some tasks also use your private pupil code so your teacher can track progress across lessons.</p>
         </article>
       ` : ""}
 
@@ -17044,10 +17642,7 @@ function renderPupilJoin(routeCode = "") {
                 </div>
               ` : ""}
             </div>
-            <label class="pupil-alias-field">
-              Alias or initials
-              <input name="pupil_alias" type="text" maxlength="80" value="${escapeHtml(savedAlias)}" autocomplete="off" spellcheck="false" placeholder="No full name" required>
-            </label>
+            ${pupilIdentityFieldHtml(task, savedAlias, savedCode)}
           </header>
           <div class="pupil-workspace-layout">
             <aside class="pupil-question-nav" aria-label="Question navigation">
@@ -17070,7 +17665,7 @@ function renderPupilJoin(routeCode = "") {
           </div>
           <div class="pupil-submit-row">
             <button class="button primary" type="submit" data-pupil-submit disabled>Submit Answers</button>
-            <p><strong data-pupil-completion>0 of ${questions.length} answered</strong><span> ${isPracticeRoom ? `Submit once you have answered at least ${minimumQuestions}.` : "Complete every final answer box before submitting."} Your teacher sees the alias, answers, and working.</span></p>
+            <p><strong data-pupil-completion>0 of ${questions.length} answered</strong><span> ${isPracticeRoom ? `Submit once you have answered at least ${minimumQuestions}.` : "Complete every final answer box before submitting."} Your teacher sees the ${usesRoster ? "saved alias" : "alias"}, answers, and working.</span></p>
           </div>
         </form>
       ` : state.pupilTaskLoading ? `<section class="panel"><p>Loading the pupil task...</p></section>` : ""}
@@ -17080,12 +17675,15 @@ function renderPupilJoin(routeCode = "") {
   bindPupilJoin();
 }
 
-async function registerPupilTaskJoin(alias, { force = false } = {}) {
-  const cleanAlias = String(alias || "").trim().slice(0, 80);
+async function registerPupilTaskJoin(identityInput, { force = false } = {}) {
   const task = state.pupilTask;
-  if (!task?.join_code || !cleanAlias) return null;
+  const identity = typeof identityInput === "string" ? { pupil_alias: identityInput } : (identityInput || {});
+  const usesRoster = classTaskUsesRoster(task || {});
+  const cleanAlias = String(identity.pupil_alias || "").trim().slice(0, 80);
+  const cleanCode = normalisePupilCode(identity.pupil_code);
+  if (!task?.join_code || (usesRoster ? !cleanCode : !cleanAlias)) return null;
   const attemptIndex = Number(task.attempt_index ?? state.pupilTaskAttemptIndex ?? 0);
-  const joinKey = `${normaliseClassTaskCode(task.join_code)}|${classTaskAliasKey(cleanAlias)}|${attemptIndex}`;
+  const joinKey = `${normaliseClassTaskCode(task.join_code)}|${usesRoster ? cleanCode : classTaskAliasKey(cleanAlias)}|${attemptIndex}`;
   if (!force && state.pupilJoinRegisteredKey === joinKey) return null;
   state.pupilJoinRegisteredKey = joinKey;
   try {
@@ -17094,14 +17692,19 @@ async function registerPupilTaskJoin(alias, { force = false } = {}) {
       body: {
         code: task.join_code,
         pupil_alias: cleanAlias,
+        pupil_code: cleanCode,
         attempt_index: attemptIndex
       }
     });
+    const resolvedAlias = payload.participant?.pupil_alias || cleanAlias;
+    state.pupilResolvedAlias = resolvedAlias;
     const status = document.getElementById("pupilTaskStatus");
     if (status?.isConnected) {
-      status.textContent = `Joined as ${cleanAlias}.`;
+      status.textContent = `Joined as ${resolvedAlias}.`;
       status.dataset.tone = "success";
     }
+    const aliasNote = document.querySelector("[data-pupil-resolved-alias]");
+    if (aliasNote && resolvedAlias) aliasNote.textContent = `Joined as ${resolvedAlias}.`;
     return payload.participant || null;
   } catch (error) {
     state.pupilJoinRegisteredKey = "";
@@ -17175,7 +17778,8 @@ function setupPupilHandwritingPads() {
       context.moveTo(position.x, position.y);
       canvas.dataset.hasInk = "true";
       canvas.setPointerCapture?.(event.pointerId);
-      registerPupilTaskJoin(document.querySelector("#pupilTaskForm [name='pupil_alias']")?.value || "");
+      const taskForm = document.getElementById("pupilTaskForm");
+      registerPupilTaskJoin(pupilIdentityFromForm(taskForm));
     }
 
     function move(event) {
@@ -17247,6 +17851,7 @@ function bindPupilJoin() {
   document.querySelector("[data-pupil-new-task]")?.addEventListener("click", () => {
     state.pupilTask = null;
     state.pupilSubmission = null;
+    state.pupilResolvedAlias = "";
     state.pupilTaskCode = "";
     state.pupilTaskAttemptIndex = 0;
     state.pupilActiveQuestionIndex = 0;
@@ -17262,6 +17867,7 @@ function bindPupilJoin() {
     state.pupilTask = nextTask;
     state.pupilTaskAttemptIndex = Number(nextTask.attempt_index || 0);
     state.pupilSubmission = null;
+    state.pupilResolvedAlias = "";
     state.pupilActiveQuestionIndex = 0;
     state.pupilJoinRegisteredKey = "";
     resetPupilTaskActivityTracking();
@@ -17274,7 +17880,8 @@ function bindPupilJoin() {
     const answeredCount = answers.filter((input) => input.value.trim()).length;
     const isPractice = classTaskIsPracticeRoom(state.pupilTask?.settings || {});
     const minimum = isPractice ? Math.min(answers.length, classTaskMinimumQuestions(state.pupilTask?.settings || {})) : answers.length;
-    const complete = answers.length > 0 && answeredCount >= minimum;
+    const identityReady = pupilIdentityHasValue(pupilIdentityFromForm(form));
+    const complete = answers.length > 0 && answeredCount >= minimum && identityReady;
     const submitButton = form.querySelector("[data-pupil-submit]");
     if (submitButton) submitButton.disabled = !complete;
     const progress = form.querySelector("[data-pupil-completion]");
@@ -17322,7 +17929,7 @@ function bindPupilJoin() {
     input.addEventListener("focus", () => {
       const card = input.closest("[data-pupil-question-card]");
       if (card) setActivePupilQuestion(card.dataset.pupilQuestionCard);
-      registerPupilTaskJoin(form?.querySelector("[name='pupil_alias']")?.value || "");
+      registerPupilTaskJoin(pupilIdentityFromForm(form));
     });
   });
   document.querySelectorAll("[data-pupil-answer]").forEach((input) => {
@@ -17348,11 +17955,16 @@ function bindPupilJoin() {
       pupilInsertMathToken(input, payload.token || event.dataTransfer.getData("text/plain") || "", payload.cursor);
     });
   });
-  form?.querySelector("[name='pupil_alias']")?.addEventListener("blur", (event) => {
-    registerPupilTaskJoin(event.currentTarget.value);
+  form?.querySelector("[name='pupil_alias'], [name='pupil_code']")?.addEventListener("blur", () => {
+    registerPupilTaskJoin(pupilIdentityFromForm(form));
+    updatePupilSubmitState();
   });
-  form?.querySelector("[name='pupil_alias']")?.addEventListener("change", (event) => {
-    registerPupilTaskJoin(event.currentTarget.value);
+  form?.querySelector("[name='pupil_alias'], [name='pupil_code']")?.addEventListener("change", () => {
+    registerPupilTaskJoin(pupilIdentityFromForm(form));
+    updatePupilSubmitState();
+  });
+  form?.querySelector("[name='pupil_alias'], [name='pupil_code']")?.addEventListener("input", () => {
+    updatePupilSubmitState();
   });
 
   setActivePupilQuestion(state.pupilActiveQuestionIndex || 0);
@@ -17384,7 +17996,8 @@ function bindPupilJoin() {
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const button = form.querySelector("[data-pupil-submit]");
-    const alias = form.querySelector("[name='pupil_alias']")?.value.trim() || "";
+    const identity = pupilIdentityFromForm(form);
+    const usesRoster = classTaskUsesRoster(state.pupilTask || {});
     const answerInputs = [...form.querySelectorAll("[data-pupil-answer]")];
     const firstBlankAnswer = answerInputs.find((input) => !input.value.trim());
     const answeredCount = answerInputs.filter((input) => input.value.trim()).length;
@@ -17396,6 +18009,15 @@ function bindPupilJoin() {
       .map((canvas) => [canvas.dataset.pupilWorkingCanvas, pupilCanvasDataUrl(canvas)])
       .filter(([key, value]) => key && value));
     if (!state.pupilTask?.join_code) return;
+    if (!pupilIdentityHasValue(identity)) {
+      const status = document.getElementById("pupilTaskStatus");
+      if (status) {
+        status.textContent = usesRoster ? "Enter your pupil code before submitting." : "Enter your alias or initials before submitting.";
+        status.dataset.tone = "error";
+      }
+      form.querySelector(usesRoster ? "[name='pupil_code']" : "[name='pupil_alias']")?.focus();
+      return;
+    }
     if (!isPractice && firstBlankAnswer) {
       updatePupilSubmitState();
       const card = firstBlankAnswer.closest("[data-pupil-question-card]");
@@ -17415,13 +18037,18 @@ function bindPupilJoin() {
     }
     if (button) button.disabled = true;
     try {
-      classTaskWriteLocal(pupilAliasStorageKey, alias);
-      await registerPupilTaskJoin(alias);
+      if (usesRoster) {
+        classTaskWriteLocal(pupilCodeStorageKey, normalisePupilCode(identity.pupil_code));
+      } else {
+        classTaskWriteLocal(pupilAliasStorageKey, identity.pupil_alias || "");
+      }
+      await registerPupilTaskJoin(identity);
       const payload = await classTaskApi("submit", {
         method: "POST",
         body: {
           code: state.pupilTask.join_code,
-          pupil_alias: alias,
+          pupil_alias: identity.pupil_alias || "",
+          pupil_code: normalisePupilCode(identity.pupil_code),
           attempt_index: Number(state.pupilTask.attempt_index ?? state.pupilTaskAttemptIndex ?? 0),
           answers,
           working,
