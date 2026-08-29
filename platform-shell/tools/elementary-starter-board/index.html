@@ -233,6 +233,39 @@
       grid-template-rows: auto minmax(0, 1fr) auto;
     }
 
+    .layout-four .task {
+      border-color: var(--starter-border, #c8e9ec);
+      background:
+        radial-gradient(circle at 92% 12%, var(--starter-halo, rgba(19,168,181,.2)), transparent 28%),
+        linear-gradient(135deg, var(--starter-tint, #e9fbfb), #ffffff 74%);
+      box-shadow: 0 12px 24px rgba(24, 50, 74, .08);
+    }
+
+    .layout-four .task:nth-child(4n+1) {
+      --starter-accent: #13a8b5;
+      --starter-border: #a9e8ec;
+      --starter-halo: rgba(19,168,181,.23);
+      --starter-tint: #e9fbfb;
+    }
+    .layout-four .task:nth-child(4n+2) {
+      --starter-accent: #f97316;
+      --starter-border: #fed0a8;
+      --starter-halo: rgba(249,115,22,.22);
+      --starter-tint: #fff3e8;
+    }
+    .layout-four .task:nth-child(4n+3) {
+      --starter-accent: #7b5be6;
+      --starter-border: #d5c9ff;
+      --starter-halo: rgba(123,91,230,.2);
+      --starter-tint: #f3efff;
+    }
+    .layout-four .task:nth-child(4n) {
+      --starter-accent: #2ab393;
+      --starter-border: #aeead9;
+      --starter-halo: rgba(42,179,147,.22);
+      --starter-tint: #ebfbf4;
+    }
+
     .task.four-ops-task {
       border: 0;
       background:
@@ -272,17 +305,23 @@
       letter-spacing: .04em;
     }
 
+    .task-head.task-head-number-only {
+      justify-content: flex-end;
+      padding-bottom: 0;
+    }
+
     .task-number {
       width: 30px;
       height: 30px;
       border-radius: 50%;
       display: grid;
       place-items: center;
-      background: #e8f8f7;
-      color: #0b6465;
-      border: 1px solid rgba(21,159,155,.22);
+      background: var(--starter-accent, #e8f8f7);
+      color: white;
+      border: 1px solid rgba(255,255,255,.7);
       font-weight: 950;
       letter-spacing: 0;
+      box-shadow: 0 6px 12px rgba(24,50,74,.14);
     }
 
     .prompt {
@@ -1299,15 +1338,20 @@
           : "Four quick questions for a short classroom starter.";
       const displayLayout = state.topic === "fourOps" ? "four-ops" : state.layout;
       starterGrid.className = "starter-grid layout-" + displayLayout;
+      const repeatedType = state.tasks.length > 1 && state.tasks.every((task) => task.type === state.tasks[0].type);
       starterGrid.innerHTML = state.tasks.map((task, index) => {
         const revealed = !!state.revealed[task.id];
+        const showTaskType = !repeatedType || state.topic === "mixed";
         const answerContent = task.kind === "fourOps"
           ? (revealed
             ? '<div class="four-ops-samples">' + task.samples.map((sample) => '<span class="four-ops-sample">' + sample + '</span>').join("") + '</div>'
             : "")
           : "";
         return '<article class="task' + (task.kind === "fourOps" ? " four-ops-task" : "") + '">' +
-          '<div class="task-head"><span>' + task.type + '</span><span class="task-number">' + (index + 1) + '</span></div>' +
+          '<div class="task-head' + (showTaskType ? "" : " task-head-number-only") + '">' +
+            (showTaskType ? '<span>' + task.type + '</span>' : '') +
+            '<span class="task-number">' + (index + 1) + '</span>' +
+          '</div>' +
           '<div class="prompt">' +
             '<div class="question">' + task.question + '</div>' +
             '<div class="visual">' + (task.visual || "") + '</div>' +

@@ -2220,7 +2220,7 @@ const tools = [
     status: "Imported",
     description: "Generate quick visual starter questions for counting, number bonds, place value, comparing numbers, missing numbers, arrays, fractions, time, money, shapes, and Four Ops number reasoning.",
     tags: ["classroom", "primary", "elementary", "starter", "bell work", "number sense", "four operations", "place value", "fractions", "time", "money", "shapes"],
-    toolPath: "tools/elementary-starter-board/index.html?v=elementary-starter-board-3",
+    toolPath: "tools/elementary-starter-board/index.html?v=elementary-starter-board-4",
     imported: true,
     teacherNotes: [
       "Designed for short start-of-lesson routines with answers hidden until the teacher is ready to reveal them.",
