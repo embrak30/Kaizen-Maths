@@ -5,6 +5,7 @@
     ready: false,
     configured: Boolean(config.supabaseUrl && config.supabaseAnonKey),
     client: null,
+    clientPromise: null,
     session: null,
     profile: null
   };
@@ -233,17 +234,23 @@
   async function loadSupabase() {
     if (!state.configured) return null;
     if (state.client) return state.client;
-    const mod = await import(SUPABASE_CDN);
-    state.client = mod.createClient(config.supabaseUrl, config.supabaseAnonKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
-      }
-    });
-    return state.client;
+    if (!state.clientPromise) {
+      state.clientPromise = import(SUPABASE_CDN).then((mod) => {
+        state.client = mod.createClient(config.supabaseUrl, config.supabaseAnonKey, {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        });
+        return state.client;
+      }).catch((error) => {
+        state.clientPromise = null;
+        throw error;
+      });
+    }
+    return state.clientPromise;
   }
-
   async function ensureProfile(user) {
     if (!state.client || !user) return null;
     const { data: existing, error: selectError } = await state.client

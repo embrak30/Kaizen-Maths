@@ -15280,10 +15280,24 @@ function populateClassTaskControls(metadata) {
   populateTypes();
 }
 
+function resetClassTaskControls(message = "Choose a topic, then load question types when you are ready to create a class task.") {
+  const levelSelect = document.getElementById("classTaskLevel");
+  const typeSelect = document.getElementById("classTaskType");
+  if (levelSelect) {
+    levelSelect.disabled = true;
+    levelSelect.innerHTML = `<option value="">Load question types first</option>`;
+  }
+  if (typeSelect) {
+    typeSelect.disabled = true;
+    typeSelect.innerHTML = `<option value="">Load question types first</option>`;
+  }
+  setClassTaskStatus(message);
+}
+
 function loadClassTaskTool(tool) {
   const levelSelect = document.getElementById("classTaskLevel");
   const typeSelect = document.getElementById("classTaskType");
-  if (!tool) return;
+  if (!tool) return Promise.reject(new Error("Choose a topic tool first."));
   const loadToken = state.classTaskLoadToken + 1;
   state.classTaskLoadToken = loadToken;
   state.classTaskToolSlug = tool.slug;
@@ -15298,20 +15312,28 @@ function loadClassTaskTool(tool) {
     typeSelect.innerHTML = `<option>Loading question types...</option>`;
   }
   setClassTaskStatus(`Loading ${tool.title}...`);
-  loadWorksheetToolForApi(tool, { frameId: "classTaskLoader" })
+  return loadWorksheetToolForApi(tool, { frameId: "classTaskLoader" })
     .then(({ metadata }) => {
       if (loadToken !== state.classTaskLoadToken || routeParts()[0] !== "class-tasks") return;
       state.classTaskMetadata = metadata;
       state.classTaskLoadedToolSlug = tool.slug;
       populateClassTaskControls(metadata);
       setClassTaskStatus(`${tool.title} is ready. Choose the task size, then create a pupil join code.`, "success");
+      return metadata;
     })
     .catch((error) => {
       if (loadToken !== state.classTaskLoadToken || routeParts()[0] !== "class-tasks") return;
       setClassTaskStatus(error.message, "error");
       if (levelSelect) levelSelect.innerHTML = `<option value="">Not available</option>`;
       if (typeSelect) typeSelect.innerHTML = `<option value="">Not available</option>`;
+      throw error;
     });
+}
+
+async function ensureClassTaskMetadata(tool) {
+  if (!tool) throw new Error("Choose a topic tool first.");
+  if (state.classTaskMetadata && state.classTaskLoadedToolSlug === tool.slug) return state.classTaskMetadata;
+  return loadClassTaskTool(tool);
 }
 
 function classTaskSerialiseQuestion(problem, index, defaults = {}) {
@@ -15330,6 +15352,7 @@ function classTaskSerialiseQuestion(problem, index, defaults = {}) {
 
 async function createClassTaskFromForm(form) {
   const tool = selectedClassTaskTool();
+  await ensureClassTaskMetadata(tool);
   const level = selectedClassTaskLevelMeta();
   const type = selectedClassTaskTypeMeta();
   if (!tool || !level || !type) throw new Error("Choose a topic, level, and question type first.");
@@ -15376,12 +15399,14 @@ async function createClassTaskFromForm(form) {
   });
   state.classTaskLastMessage = `Created "${payload.task?.title || title}" with code ${payload.task?.join_code || ""}.`;
   await loadClassTasks({ rerender: true, force: true });
+  setClassTaskStatus(state.classTaskLastMessage, "success");
 }
 
 async function loadClassTasks({ rerender = false, force = false } = {}) {
   if (!isSignedIn() || !hasWorkspaceAccess() || state.classTasksLoading) return;
   if (state.classTasksLoaded && !force) return;
   state.classTasksLoading = true;
+  if (rerender && routeParts()[0] === "class-tasks") updateClassTaskListPanel();
   state.classTaskError = "";
   try {
     const payload = await classTaskApi("list", { auth: true });
@@ -15393,7 +15418,7 @@ async function loadClassTasks({ rerender = false, force = false } = {}) {
     state.classTasksLoaded = true;
   } finally {
     state.classTasksLoading = false;
-    if (rerender && routeParts()[0] === "class-tasks") renderRoute();
+    if (rerender && routeParts()[0] === "class-tasks" && !updateClassTaskListPanel()) renderRoute();
   }
 }
 
@@ -15434,6 +15459,26 @@ function classTaskSourceNotice() {
     return `<p class="class-task-local-note">Preview mode: tasks are saved in this browser only. After the Supabase schema is run and the site is redeployed, join codes will work across devices.</p>`;
   }
   return "";
+}
+
+function classTaskListHtml() {
+  if (state.classTasksLoading) return `<div class="empty-state">Loading class tasks...</div>`;
+  if (state.classTasks.length) return state.classTasks.map(classTaskCardHtml).join("");
+  return `<div class="empty-state">No class tasks yet. Create a join code from the builder on this page.</div>`;
+}
+
+function updateClassTaskListPanel() {
+  const count = document.querySelector("[data-class-task-count]");
+  const list = document.getElementById("classTaskList");
+  const sourceNotice = document.getElementById("classTaskSourceNotice");
+  if (!count || !list) return false;
+  count.textContent = state.classTasksLoading
+    ? "Loading..."
+    : `${state.classTasks.length} task${state.classTasks.length === 1 ? "" : "s"}`;
+  list.innerHTML = classTaskListHtml();
+  if (sourceNotice) sourceNotice.innerHTML = classTaskSourceNotice();
+  bindClassTaskListActions();
+  return true;
 }
 
 function classTaskCardHtml(task) {
@@ -15485,6 +15530,44 @@ function classTaskCardHtml(task) {
   `;
 }
 
+function bindClassTaskListActions() {
+  document.querySelectorAll("[data-class-task-copy]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const text = button.dataset.classTaskCopy || "";
+      try {
+        await navigator.clipboard.writeText(text);
+        button.textContent = "Copied";
+        window.setTimeout(() => { button.textContent = "Copy Link"; }, 1200);
+      } catch {
+        const input = button.closest(".class-task-card")?.querySelector(".class-task-link-field input");
+        input?.focus();
+        input?.select();
+        button.textContent = "Select link";
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-class-task-close]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!window.confirm("Close this pupil task so no new submissions can be made?")) return;
+      button.disabled = true;
+      try {
+        await classTaskApi("close", {
+          method: "POST",
+          auth: true,
+          body: { task_id: button.dataset.classTaskClose }
+        });
+        state.classTaskLastMessage = "Task closed.";
+        await loadClassTasks({ rerender: true, force: true });
+        setClassTaskStatus(state.classTaskLastMessage, "success");
+      } catch (error) {
+        window.alert(error.message);
+        button.disabled = false;
+      }
+    });
+  });
+}
+
 function renderClassTasks() {
   if (!isSignedIn()) {
     app.innerHTML = `
@@ -15514,19 +15597,6 @@ function renderClassTasks() {
 
   if (!state.classTasksLoaded && !state.classTasksLoading) {
     loadClassTasks({ rerender: true });
-    app.innerHTML = `
-      ${pageHeader(
-        "Pupil Pilot",
-        "Create short online class tasks with a join code. Pupils use an alias only; they do not need a Kaizen account.",
-        `<a class="button" href="#/pupil">Pupil Join Page</a>`
-      )}
-      <section class="panel">
-        <span class="eyebrow">Loading</span>
-        <h2>Preparing pupil tasks</h2>
-        <p>Kaizen Maths is loading your recent tasks before opening the task builder.</p>
-      </section>
-    `;
-    return;
   }
 
   const firstTool = classTaskEligibleTools()[0];
@@ -15592,11 +15662,12 @@ function renderClassTasks() {
               <input name="allow_multiple_submissions" type="checkbox">
               Allow repeat submissions
             </label>
+            <button class="button subtle" type="button" id="prepareClassTaskTool">Load Question Types</button>
             <button class="button primary" type="submit">Create Join Code</button>
           </div>
         </form>
-        <p class="worksheet-status" id="classTaskStatus" data-tone="${state.classTaskError ? "error" : ""}">${escapeHtml(state.classTaskLastMessage || state.classTaskError || "Loading the selected topic tool...")}</p>
-        ${classTaskSourceNotice()}
+        <p class="worksheet-status" id="classTaskStatus" data-tone="${state.classTaskError ? "error" : ""}">${escapeHtml(state.classTaskLastMessage || state.classTaskError || "Choose a topic, then load question types when you are ready to create a class task.")}</p>
+        <div id="classTaskSourceNotice">${classTaskSourceNotice()}</div>
         <iframe class="worksheet-loader" id="classTaskLoader" title="Class task tool loader" aria-hidden="true"></iframe>
       </article>
 
@@ -15606,14 +15677,10 @@ function renderClassTasks() {
             <span class="eyebrow">Live Tasks</span>
             <h2>Recent class tasks</h2>
           </div>
-          <span>${state.classTasksLoading ? "Loading..." : `${state.classTasks.length} task${state.classTasks.length === 1 ? "" : "s"}`}</span>
+          <span data-class-task-count>${state.classTasksLoading ? "Loading..." : `${state.classTasks.length} task${state.classTasks.length === 1 ? "" : "s"}`}</span>
         </div>
-        <div class="class-task-list">
-          ${state.classTasksLoading
-            ? `<div class="empty-state">Loading class tasks...</div>`
-            : state.classTasks.length
-              ? state.classTasks.map(classTaskCardHtml).join("")
-              : `<div class="empty-state">No class tasks yet. Create a join code from the builder on this page.</div>`}
+        <div class="class-task-list" id="classTaskList">
+          ${classTaskListHtml()}
         </div>
       </section>
     </section>
@@ -15631,67 +15698,51 @@ function bindClassTasks() {
     populateClassTaskControls(state.classTaskMetadata);
     setClassTaskStatus(`${selectedTool.title} is ready. Choose the task size, then create a pupil join code.`, "success");
   } else {
-    loadClassTaskTool(selectedTool);
+    resetClassTaskControls();
   }
 
   toolSelect.addEventListener("change", () => {
     state.classTaskToolSlug = toolSelect.value;
-    loadClassTaskTool(selectedClassTaskTool());
+    state.classTaskMetadata = null;
+    state.classTaskLoadedToolSlug = "";
+    state.classTaskLoadToken += 1;
+    resetClassTaskControls();
+  });
+
+  document.getElementById("prepareClassTaskTool")?.addEventListener("click", async (event) => {
+    const button = event.currentTarget;
+    button.disabled = true;
+    try {
+      await loadClassTaskTool(selectedClassTaskTool());
+    } catch (_) {
+      // The status line already reports the loading error.
+    } finally {
+      button.disabled = false;
+    }
   });
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const button = form.querySelector("button[type='submit']");
-    button.disabled = true;
+    if (button) button.disabled = true;
     setClassTaskStatus("Generating questions and creating the join code...", "loading");
     try {
       await createClassTaskFromForm(form);
     } catch (error) {
       setClassTaskStatus(error.message, "error");
-      button.disabled = false;
+      if (button) button.disabled = false;
     }
   });
 
   document.getElementById("refreshClassTasks")?.addEventListener("click", async (event) => {
-    event.currentTarget.disabled = true;
+    const button = event.currentTarget;
+    button.disabled = true;
     state.classTasksLoaded = false;
     await loadClassTasks({ rerender: true, force: true });
+    button.disabled = false;
   });
 
-  document.querySelectorAll("[data-class-task-copy]").forEach((button) => {
-    button.addEventListener("click", async () => {
-      const text = button.dataset.classTaskCopy || "";
-      try {
-        await navigator.clipboard.writeText(text);
-        button.textContent = "Copied";
-        window.setTimeout(() => { button.textContent = "Copy Link"; }, 1200);
-      } catch {
-        const input = button.closest(".class-task-card")?.querySelector(".class-task-link-field input");
-        input?.focus();
-        input?.select();
-        button.textContent = "Select link";
-      }
-    });
-  });
-
-  document.querySelectorAll("[data-class-task-close]").forEach((button) => {
-    button.addEventListener("click", async () => {
-      if (!window.confirm("Close this pupil task so no new submissions can be made?")) return;
-      button.disabled = true;
-      try {
-        await classTaskApi("close", {
-          method: "POST",
-          auth: true,
-          body: { task_id: button.dataset.classTaskClose }
-        });
-        state.classTaskLastMessage = "Task closed.";
-        await loadClassTasks({ rerender: true, force: true });
-      } catch (error) {
-        window.alert(error.message);
-        button.disabled = false;
-      }
-    });
-  });
+  bindClassTaskListActions();
 }
 
 async function loadPupilTask(code, { rerender = false } = {}) {
