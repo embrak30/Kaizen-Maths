@@ -15514,7 +15514,7 @@ function classTaskResponseDetailHtml(response, task) {
               </div>
               <div>
                 <span>Expected answer</span>
-                <p>${expected ? worksheetContentHtml(expected) : "Teacher review needed"}</p>
+                <p class="class-task-expected-answer">${expected ? worksheetContentHtml(expected) : "Teacher review needed"}</p>
               </div>
             </div>
             ${workingText ? `
@@ -15901,7 +15901,7 @@ function pupilSubmissionHtml(task) {
             ${answers.map((answer, index) => `
               <li>
                 <strong>${index + 1}</strong>
-                <div>${worksheetContentHtml(answer.answer || "Answer not available")}</div>
+                <div class="pupil-answer-key-answer">${worksheetContentHtml(answer.answer || "Answer not available")}</div>
               </li>
             `).join("")}
           </ol>
