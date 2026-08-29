@@ -1,5 +1,7 @@
 (() => {
-  const VERSION = '0.2.4';
+  const VERSION = '0.2.5';
+  const MIXED_TYPE_ID = '__kaizen_mixed_practice__';
+  const MIXED_TYPE_LABEL = 'Mixed Practice';
 
   function readBinding(name, fallback = undefined) {
     try {
@@ -329,7 +331,18 @@
     return explicitLabel || typeDisplayNames?.[typeId] || typeMeta?.[typeId]?.title || prettifyType(typeId);
   }
 
-  function normalizeTypes(config, typeDisplayNames, typeMeta) {
+  function isSelectType(typeItem) {
+    const id = String(typeItem?.id ?? typeItem ?? '').toLowerCase();
+    return id === '' || id === 'select';
+  }
+
+  function isMixedType(typeItem) {
+    const id = String(typeItem?.id ?? typeItem ?? '').toLowerCase();
+    const label = String(typeItem?.label ?? typeItem?.title ?? typeItem?.name ?? '').toLowerCase();
+    return id === MIXED_TYPE_ID || /\bmixed\b/.test(id) || /\bmixed\b/.test(label);
+  }
+
+  function normalizeConfiguredTypes(config, typeDisplayNames, typeMeta) {
     if (Array.isArray(config?.types)) {
       return config.types.map((typeId) => ({
         id: typeId,
@@ -357,6 +370,21 @@
     }
 
     return [];
+  }
+
+  function normalizeTypes(config, typeDisplayNames, typeMeta) {
+    const types = normalizeConfiguredTypes(config, typeDisplayNames, typeMeta)
+      .filter((typeItem) => !isSelectType(typeItem))
+      .map((typeItem) => isMixedType(typeItem)
+        ? { ...typeItem, label: MIXED_TYPE_LABEL }
+        : typeItem);
+
+    const sourceTypes = types.filter((typeItem) => !isMixedType(typeItem));
+    if (sourceTypes.length > 1 && !types.some(isMixedType)) {
+      types.push({ id: MIXED_TYPE_ID, label: MIXED_TYPE_LABEL });
+    }
+
+    return types;
   }
 
   function hasRichWorksheetHtml(value) {
@@ -459,6 +487,65 @@
     return typeof generator === 'function' ? generator : null;
   }
 
+  function mixedSourceTypesForLevel(level) {
+    const levelConfigs = readBinding('levelConfigs', {});
+    const typeDisplayNames = readBinding('typeDisplayNames', {});
+    const typeMeta = readBinding('typeMeta', {});
+    const config = levelConfigs?.[level];
+    return normalizeTypes(config, typeDisplayNames, typeMeta)
+      .filter((typeItem) => !isMixedType(typeItem) && !isSelectType(typeItem))
+      .map((typeItem) => typeItem.id);
+  }
+
+  function shuffled(items) {
+    const copy = [...items];
+    for (let i = copy.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function uniqueProblemKey(problem) {
+    const normalized = normalizeProblem(problem);
+    return [
+      normalized.questionText || textFromHtml(normalized.question),
+      normalized.answerText || textFromHtml(normalized.answer)
+    ].join('|').replace(/\s+/g, ' ').trim().toLowerCase();
+  }
+
+  function generateMixedRawProblems(generator, level, count, restoreType = MIXED_TYPE_ID) {
+    const typePool = mixedSourceTypesForLevel(level);
+    const problems = [];
+    if (!generator || typePool.length < 2) return problems;
+
+    const seen = new Set();
+    let typeCycle = shuffled(typePool);
+    let attempts = 0;
+    const maxAttempts = Math.max(60, count * typePool.length * 10);
+
+    while (problems.length < count && attempts < maxAttempts) {
+      attempts += 1;
+      if (!typeCycle.length) typeCycle = shuffled(typePool);
+      const sourceType = typeCycle.shift();
+      writeBinding('currentType', sourceType);
+      let problem = null;
+      try {
+        problem = generator();
+      } catch (_) {
+        problem = null;
+      }
+      if (!problem) continue;
+      const key = uniqueProblemKey(problem);
+      if (key && seen.has(key)) continue;
+      if (key) seen.add(key);
+      problems.push(problem);
+    }
+
+    writeBinding('currentType', restoreType);
+    return problems;
+  }
+
   function canGenerate() {
     return Boolean(getGenerator());
   }
@@ -480,15 +567,32 @@
       };
     }
 
-    if (options.level !== undefined) writeBinding('currentLevel', options.level);
-    if (options.type !== undefined) writeBinding('currentType', options.type);
+    let problems = [];
+    try {
+      if (options.level !== undefined) writeBinding('currentLevel', options.level);
+      if (options.type !== undefined) writeBinding('currentType', options.type);
 
-    const problems = [];
-    for (let i = 0; i < count; i += 1) {
-      problems.push(normalizeProblem(generator(), {
-        level: requestedLevel,
-        type: requestedType
-      }));
+      if (isMixedType({ id: requestedType })) {
+        const mixedRawProblems = generateMixedRawProblems(generator, requestedLevel, count, requestedType);
+        if (mixedRawProblems.length) {
+          problems = mixedRawProblems.map((problem) => normalizeProblem(problem, {
+            level: requestedLevel,
+            type: requestedType
+          }));
+        }
+      }
+
+      if (!problems.length) {
+        for (let i = 0; i < count; i += 1) {
+          problems.push(normalizeProblem(generator(), {
+            level: requestedLevel,
+            type: requestedType
+          }));
+        }
+      }
+    } finally {
+      if (options.level !== undefined && oldLevel !== null) writeBinding('currentLevel', oldLevel);
+      if (options.type !== undefined && oldType !== null) writeBinding('currentType', oldType);
     }
 
     const explicitInstruction = problems
@@ -513,9 +617,6 @@
         }
       }
     }
-
-    if (options.level !== undefined && oldLevel !== null) writeBinding('currentLevel', oldLevel);
-    if (options.type !== undefined && oldType !== null) writeBinding('currentType', oldType);
 
     return {
       ok: true,
@@ -683,6 +784,181 @@
   installSharedInstructionLift();
   installRepeatedTypeBadgeCleanup();
 
+  function installMixedPracticeType() {
+    if (document.documentElement.dataset.kaizenMixedPracticeReady === 'true') return;
+    if (!getGenerator()) return;
+
+    function currentLevelValue() {
+      return readBinding('currentLevel', null);
+    }
+
+    function ensureMixedMetadata() {
+      const typeDescriptions = readBinding('typeDescriptions', null);
+      if (typeDescriptions && typeof typeDescriptions === 'object') {
+        typeDescriptions[MIXED_TYPE_ID] = {
+          title: MIXED_TYPE_LABEL,
+          description: 'A varied set drawn from the question types in this level.',
+          preview: 'A mixed set from this level.'
+        };
+      }
+
+      const typeDisplayNames = readBinding('typeDisplayNames', null);
+      if (typeDisplayNames && typeof typeDisplayNames === 'object') {
+        typeDisplayNames[MIXED_TYPE_ID] = MIXED_TYPE_LABEL;
+      }
+
+      const typeMeta = readBinding('typeMeta', null);
+      if (typeMeta && typeof typeMeta === 'object') {
+        typeMeta[MIXED_TYPE_ID] = {
+          ...(typeMeta[MIXED_TYPE_ID] || {}),
+          title: MIXED_TYPE_LABEL,
+          description: 'A varied set drawn from the question types in this level.'
+        };
+      }
+    }
+
+    function standardizeMixedMetadata(typeId) {
+      if (!typeId) return;
+      const typeDescriptions = readBinding('typeDescriptions', null);
+      if (typeDescriptions && typeof typeDescriptions === 'object') {
+        typeDescriptions[typeId] = {
+          ...(typeDescriptions[typeId] || {}),
+          title: MIXED_TYPE_LABEL,
+          description: typeDescriptions[typeId]?.description || 'A varied set drawn from the question types in this level.',
+          preview: typeDescriptions[typeId]?.preview || 'A mixed set from this level.'
+        };
+      }
+
+      const typeDisplayNames = readBinding('typeDisplayNames', null);
+      if (typeDisplayNames && typeof typeDisplayNames === 'object') {
+        typeDisplayNames[typeId] = MIXED_TYPE_LABEL;
+      }
+
+      const typeMeta = readBinding('typeMeta', null);
+      if (typeMeta && typeof typeMeta === 'object') {
+        typeMeta[typeId] = {
+          ...(typeMeta[typeId] || {}),
+          title: MIXED_TYPE_LABEL
+        };
+      }
+    }
+
+    function refreshDropdown() {
+      ensureMixedMetadata();
+      const dropdown = document.getElementById('type-dropdown');
+      if (!dropdown) return false;
+      const level = currentLevelValue();
+      const sourceTypes = mixedSourceTypesForLevel(level);
+      if (sourceTypes.length < 2) return false;
+
+      let hasMixedOption = false;
+      Array.from(dropdown.options || []).forEach((option) => {
+        const optionType = { id: option.value, label: option.textContent };
+        if (!isMixedType(optionType)) return;
+        hasMixedOption = true;
+        option.textContent = MIXED_TYPE_LABEL;
+        standardizeMixedMetadata(option.value);
+      });
+
+      if (!hasMixedOption) {
+        const option = document.createElement('option');
+        option.value = MIXED_TYPE_ID;
+        option.textContent = MIXED_TYPE_LABEL;
+        option.dataset.kaizenVirtualMixed = 'true';
+        dropdown.appendChild(option);
+      }
+
+      return true;
+    }
+
+    function refreshDropdownSoon() {
+      window.setTimeout(refreshDropdown, 0);
+    }
+
+    function shouldUseMixed() {
+      return isMixedType({ id: readBinding('currentType', '') });
+    }
+
+    function defaultMixedPracticeCount() {
+      const source = String(originalGenerateNewSet || '');
+      const match = source.match(/i\s*<\s*(\d+)/);
+      const count = Number(match?.[1]);
+      return Number.isFinite(count) && count >= 1 && count <= 10 ? count : 5;
+    }
+
+    function generateMixedSet(count = defaultMixedPracticeCount()) {
+      const generator = getGenerator();
+      const level = currentLevelValue();
+      const requestedMixedType = readBinding('currentType', MIXED_TYPE_ID);
+      const mixedProblems = generateMixedRawProblems(generator, level, count, requestedMixedType);
+      if (!mixedProblems.length) return false;
+
+      writeBinding('currentType', requestedMixedType);
+      writeBinding('problems', mixedProblems);
+      writeBinding('answersVisible', false);
+      writeBinding('stepsVisible', false);
+
+      try {
+        window.eval('if (typeof updateProblemSetHeader === "function") updateProblemSetHeader(); if (typeof renderProblems === "function") renderProblems();');
+      } catch (_) {
+        return false;
+      }
+
+      requestMathRender();
+      window.KaizenQuestionPersistence?.saveSoon?.();
+      return true;
+    }
+
+    const originalGenerateNewSet = readBinding('generateNewSet', null);
+    const originalSwitchLevel = readBinding('switchLevel', null);
+    const originalTypeChanged = readBinding('typeChanged', null);
+
+    window.KaizenMixedPractice = {
+      id: MIXED_TYPE_ID,
+      label: MIXED_TYPE_LABEL,
+      refreshDropdown,
+      refreshDropdownSoon,
+      shouldUseMixed,
+      generateMixedSet,
+      _originalGenerateNewSet: originalGenerateNewSet,
+      _originalSwitchLevel: originalSwitchLevel,
+      _originalTypeChanged: originalTypeChanged
+    };
+
+    if (typeof originalGenerateNewSet === 'function') {
+      try {
+        window.eval('generateNewSet = function(){ if (window.KaizenMixedPractice?.shouldUseMixed?.()) return window.KaizenMixedPractice.generateMixedSet() || window.KaizenMixedPractice._originalGenerateNewSet(); return window.KaizenMixedPractice._originalGenerateNewSet(); }');
+      } catch (_) {
+        // Keep the original tool behaviour if the page does not allow reassignment.
+      }
+    }
+
+    if (typeof originalSwitchLevel === 'function') {
+      try {
+        window.eval('switchLevel = function(level){ const result = window.KaizenMixedPractice._originalSwitchLevel(level); window.KaizenMixedPractice.refreshDropdownSoon(); return result; }');
+      } catch (_) {
+        // Level switching still works through the tool's original handler.
+      }
+    }
+
+    if (typeof originalTypeChanged === 'function') {
+      try {
+        window.eval('typeChanged = function(){ const result = window.KaizenMixedPractice._originalTypeChanged(); window.KaizenMixedPractice.refreshDropdownSoon(); return result; }');
+      } catch (_) {
+        // Type changing still works through the tool's original handler.
+      }
+    }
+
+    refreshDropdown();
+    const observer = new MutationObserver((mutations) => {
+      if (mutations.some((mutation) => mutation.target?.id === 'type-dropdown' || [...mutation.addedNodes].some((node) => node.nodeType === Node.ELEMENT_NODE && (node.id === 'type-dropdown' || node.querySelector?.('#type-dropdown'))))) {
+        refreshDropdownSoon();
+      }
+    });
+    if (document.body) observer.observe(document.body, { childList: true, subtree: true });
+    document.documentElement.dataset.kaizenMixedPracticeReady = 'true';
+  }
+
   function installTeacherExampleMode() {
     if (document.documentElement.dataset.teacherExampleReady === 'true') return;
     if (!document.querySelector('.action-buttons')) return;
@@ -750,10 +1026,24 @@
       writeBinding('answersVisible', false);
       writeBinding('stepsVisible', false);
 
-      try {
-        window.eval('problems.push(generateProblem()); renderProblems();');
-      } catch (_) {
-        originalGenerateNewSet();
+      if (isMixedType({ id: currentType })) {
+        const mixedProblem = generateMixedRawProblems(getGenerator(), readBinding('currentLevel', null), 1, currentType)[0];
+        if (mixedProblem) {
+          writeBinding('problems', [mixedProblem]);
+          try {
+            window.eval('if (typeof updateProblemSetHeader === "function") updateProblemSetHeader(); if (typeof renderProblems === "function") renderProblems();');
+          } catch (_) {
+            originalGenerateNewSet();
+          }
+        } else {
+          originalGenerateNewSet();
+        }
+      } else {
+        try {
+          window.eval('problems.push(generateProblem()); renderProblems();');
+        } catch (_) {
+          originalGenerateNewSet();
+        }
       }
       requestMathRender();
       window.KaizenQuestionPersistence?.saveSoon?.();
@@ -1134,6 +1424,7 @@
   }
 
   function installToolEnhancements() {
+    installMixedPracticeType();
     installTeacherExampleMode();
     installQuestionPersistence();
     installBoardCapture();
