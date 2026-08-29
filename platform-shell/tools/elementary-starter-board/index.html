@@ -214,6 +214,11 @@
       grid-auto-rows: minmax(520px, 1fr);
     }
 
+    .starter-grid.layout-four-ops {
+      grid-template-columns: 1fr;
+      grid-auto-rows: minmax(0, 1fr);
+    }
+
     .task {
       position: relative;
       min-width: 0;
@@ -226,6 +231,32 @@
         #ffffff;
       display: grid;
       grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    .task.four-ops-task {
+      border: 0;
+      background:
+        radial-gradient(circle at 12% 15%, rgba(255, 188, 64, .26), transparent 24%),
+        radial-gradient(circle at 88% 16%, rgba(231, 77, 130, .18), transparent 27%),
+        radial-gradient(circle at 78% 86%, rgba(42, 179, 147, .2), transparent 30%),
+        linear-gradient(135deg, #fffdf6, #f3fffb);
+    }
+
+    .layout-four-ops .task {
+      min-height: 0;
+    }
+
+    .layout-four-ops .prompt {
+      padding: 0 16px 4px;
+      gap: 6px;
+      align-content: stretch;
+    }
+
+    .layout-four-ops .question {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-size: clamp(1rem, 1.55vw, 1.55rem);
+      font-weight: 900;
+      color: #143657;
     }
 
     .task-head {
@@ -331,6 +362,169 @@
       background: #e8fbfa;
       border-color: rgba(21,159,155,.45);
       color: #0b6465;
+    }
+
+    .four-ops-board {
+      position: relative;
+      width: min(100%, 1040px);
+      min-height: min(56vh, 540px);
+      aspect-ratio: 16 / 9;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    .four-ops-lines {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .four-ops-lines line {
+      stroke: rgba(23, 52, 84, .34);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 9 10;
+    }
+
+    .four-ops-centre,
+    .four-ops-box {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 14px 28px rgba(24, 50, 74, .13);
+    }
+
+    .four-ops-centre {
+      left: 50%;
+      top: 50%;
+      width: clamp(124px, 15vw, 184px);
+      height: clamp(124px, 15vw, 184px);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      border: 6px solid #ffffff;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,.45), transparent 28%),
+        linear-gradient(135deg, #ff7a1a, #f04867);
+      color: white;
+    }
+
+    .four-ops-centre span {
+      display: grid;
+      gap: 2px;
+      text-align: center;
+      text-transform: uppercase;
+      font-size: clamp(.72rem, 1vw, .95rem);
+      letter-spacing: .08em;
+      font-weight: 950;
+    }
+
+    .four-ops-centre strong {
+      display: block;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      line-height: .9;
+      letter-spacing: 0;
+    }
+
+    .four-ops-box {
+      left: var(--x);
+      top: var(--y);
+      width: clamp(146px, 17vw, 214px);
+      min-height: clamp(62px, 8vw, 82px);
+      display: grid;
+      grid-template-columns: clamp(48px, 5.5vw, 68px) 1fr;
+      align-items: stretch;
+      border: 4px solid #ffffff;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .four-ops-number {
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--accent);
+      font-size: clamp(1.75rem, 3vw, 2.65rem);
+      font-weight: 950;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .four-ops-workspace {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      background:
+        linear-gradient(90deg, rgba(24, 50, 74, .08) 1px, transparent 1px),
+        linear-gradient(rgba(24, 50, 74, .08) 1px, transparent 1px),
+        #ffffff;
+      background-size: 18px 18px;
+    }
+
+    .four-ops-workspace::after {
+      content: "";
+      width: 74%;
+      border-bottom: 4px dotted rgba(23, 52, 84, .42);
+    }
+
+    .four-ops-rule {
+      position: absolute;
+      left: 50%;
+      bottom: 2.5%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
+      border: 1px solid rgba(24, 50, 74, .1);
+      font-size: clamp(.76rem, 1vw, .9rem);
+      font-weight: 950;
+      color: #143657;
+    }
+
+    .four-ops-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--accent);
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .four-ops-answer-row {
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .four-ops-samples {
+      width: min(100%, 920px);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      font-weight: 900;
+      color: #143657;
+    }
+
+    .four-ops-sample {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      font-size: clamp(.86rem, 1vw, 1rem);
+      white-space: nowrap;
     }
 
     .dots,
@@ -618,6 +812,7 @@
         </select>
         <select id="topicSelect" aria-label="Starter topic">
           <option value="mixed" selected>Mixed Starter</option>
+          <option value="fourOps">Four Ops</option>
           <option value="counting">Count Objects</option>
           <option value="bonds">Number Bonds</option>
           <option value="place">Place Value</option>
@@ -646,6 +841,7 @@
             <p id="boardSubtitle">Show the task first. Reveal answers when pupils are ready to discuss.</p>
           </div>
           <div class="board-actions">
+            <button class="btn light" id="newBoardBtn" type="button">New</button>
             <button class="btn light" id="hideAnswersBtn" type="button">Hide Answers</button>
             <button class="btn" id="revealAnswersBtn" type="button">Reveal All</button>
           </div>
@@ -668,6 +864,7 @@
 
     const topicNames = {
       mixed: "Mixed Starter",
+      fourOps: "Four Ops",
       counting: "Count Objects",
       bonds: "Number Bonds",
       place: "Place Value",
@@ -681,6 +878,7 @@
     };
 
     const topicPool = ["counting", "bonds", "place", "compare", "missing", "arrays", "fractions", "time", "money", "shapes"];
+    const fourOpsAccents = ["#f04b38", "#ff9f1c", "#2ab393", "#2f6fab", "#7b5be6", "#e85088", "#13a8b5", "#7db928"];
 
     const starterGrid = document.getElementById("starterGrid");
     const board = document.getElementById("board");
@@ -802,6 +1000,114 @@
     function shapesVisual(shape) {
       if (shape === "triangle") return '<div class="shape-row"><span class="shape triangle"></span></div>';
       return '<div class="shape-row"><span class="shape ' + shape + '"></span></div>';
+    }
+
+    function fourOpsEntryHtml(entry, index) {
+      const positions = [
+        [18, 20], [50, 10], [82, 20], [90, 50],
+        [82, 80], [50, 90], [18, 80], [10, 50]
+      ];
+      const position = positions[index] || [50, 50];
+      return '<div class="four-ops-box" style="--x:' + position[0] + '%;--y:' + position[1] + '%;--accent:' + fourOpsAccents[index % fourOpsAccents.length] + '">' +
+        '<span class="four-ops-number">' + entry.outer + '</span>' +
+        '<span class="four-ops-workspace" aria-hidden="true"></span>' +
+      '</div>';
+    }
+
+    function fourOpsVisual(target, entries) {
+      const positions = [
+        [18, 20], [50, 10], [82, 20], [90, 50],
+        [82, 80], [50, 90], [18, 80], [10, 50]
+      ];
+      const lines = positions.map((position) => (
+        '<line x1="50" y1="50" x2="' + position[0] + '" y2="' + position[1] + '"></line>'
+      )).join("");
+      return '<div class="four-ops-board">' +
+        '<svg class="four-ops-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">' + lines + '</svg>' +
+        '<div class="four-ops-centre"><span>Target<strong>' + target + '</strong></span></div>' +
+        entries.map(fourOpsEntryHtml).join("") +
+        '<div class="four-ops-rule">' +
+          '<span>Use one extra number and one operation. Try all four:</span>' +
+          '<span class="four-ops-badge" style="--accent:#f04b38">+</span>' +
+          '<span class="four-ops-badge" style="--accent:#2f6fab">−</span>' +
+          '<span class="four-ops-badge" style="--accent:#2ab393">×</span>' +
+          '<span class="four-ops-badge" style="--accent:#7b5be6">÷</span>' +
+        '</div>' +
+      '</div>';
+    }
+
+    function uniqueOuter(entries, outer) {
+      return !entries.some((entry) => entry.outer === outer);
+    }
+
+    function pushFourOpsEntry(entries, entry) {
+      if (entry.outer > 0 && entry.outer < 100 && uniqueOuter(entries, entry.outer)) {
+        entries.push(entry);
+        return true;
+      }
+      return false;
+    }
+
+    function makeFourOps() {
+      const possibleTargets = Array.from({ length: 25 }, (_, index) => index + 12).filter((target) => {
+        const factorCount = Array.from({ length: target - 2 }, (_, factorIndex) => factorIndex + 2)
+          .filter((factor) => target % factor === 0 && factor !== target).length;
+        return factorCount >= 2 && Math.floor(99 / target) >= 2;
+      });
+      const target = choose(possibleTargets);
+      const entries = [];
+      let guard = 0;
+
+      while (entries.filter((entry) => entry.op === "+").length < 2 && guard < 80) {
+        guard += 1;
+        const extra = randInt(2, target - 2);
+        pushFourOpsEntry(entries, { op: "+", outer: target - extra, extra, sample: (target - extra) + " + " + extra + " = " + target });
+      }
+
+      guard = 0;
+      while (entries.filter((entry) => entry.op === "−").length < 2 && guard < 80) {
+        guard += 1;
+        const extra = randInt(2, Math.min(35, 99 - target));
+        pushFourOpsEntry(entries, { op: "−", outer: target + extra, extra, sample: (target + extra) + " − " + extra + " = " + target });
+      }
+
+      const factors = shuffle(Array.from({ length: target - 2 }, (_, index) => index + 2)
+        .filter((factor) => target % factor === 0 && factor !== target));
+      factors.forEach((factor) => {
+        if (entries.filter((entry) => entry.op === "×").length < 2) {
+          pushFourOpsEntry(entries, { op: "×", outer: factor, extra: target / factor, sample: factor + " × " + (target / factor) + " = " + target });
+        }
+      });
+
+      const divisors = shuffle(Array.from({ length: Math.max(0, Math.floor(99 / target) - 1) }, (_, index) => index + 2));
+      divisors.forEach((divisor) => {
+        if (entries.filter((entry) => entry.op === "÷").length < 2) {
+          pushFourOpsEntry(entries, { op: "÷", outer: target * divisor, extra: divisor, sample: (target * divisor) + " ÷ " + divisor + " = " + target });
+        }
+      });
+
+      guard = 0;
+      while (entries.length < 8 && guard < 120) {
+        guard += 1;
+        const outer = randInt(2, 98);
+        if (outer === target) continue;
+        const difference = Math.abs(target - outer);
+        const op = outer > target ? "−" : "+";
+        const sample = outer > target
+          ? outer + " − " + difference + " = " + target
+          : outer + " + " + difference + " = " + target;
+        pushFourOpsEntry(entries, { op, outer, extra: difference, sample });
+      }
+
+      const finalEntries = shuffle(entries).slice(0, 8);
+      return {
+        type: "Four Ops",
+        kind: "fourOps",
+        question: "Make the centre number from each outer number.",
+        answer: finalEntries.map((entry) => entry.sample).join(" | "),
+        samples: finalEntries.map((entry) => entry.sample),
+        visual: fourOpsVisual(target, finalEntries)
+      };
     }
 
     function makeCounting(level) {
@@ -953,7 +1259,8 @@
       fractions: makeFractions,
       time: makeTime,
       money: makeMoney,
-      shapes: makeShapes
+      shapes: makeShapes,
+      fourOps: makeFourOps
     };
 
     function makeTask(topic) {
@@ -962,9 +1269,11 @@
     }
 
     function generateBoard() {
-      const count = state.layout === "one" ? 1 : 4;
+      const count = state.topic === "fourOps" || state.layout === "one" ? 1 : 4;
       let topics = [];
-      if (state.topic === "mixed") {
+      if (state.topic === "fourOps") {
+        topics = ["fourOps"];
+      } else if (state.topic === "mixed") {
         topics = shuffle(topicPool).slice(0, count);
       } else {
         topics = Array.from({ length: count }, () => state.topic);
@@ -976,21 +1285,32 @@
 
     function render() {
       boardTitle.textContent = topicNames[state.topic];
-      boardSubtitle.textContent = state.layout === "one"
-        ? "One large starter for whole-class discussion."
-        : "Four quick questions for a short classroom starter.";
-      starterGrid.className = "starter-grid layout-" + state.layout;
+      boardSubtitle.textContent = state.topic === "fourOps"
+        ? "Use one operation and one extra number for each box. Creativity counts."
+        : state.layout === "one"
+          ? "One large starter for whole-class discussion."
+          : "Four quick questions for a short classroom starter.";
+      const displayLayout = state.topic === "fourOps" ? "four-ops" : state.layout;
+      starterGrid.className = "starter-grid layout-" + displayLayout;
       starterGrid.innerHTML = state.tasks.map((task, index) => {
         const revealed = !!state.revealed[task.id];
-        return '<article class="task">' +
+        const answerContent = task.kind === "fourOps"
+          ? (revealed
+            ? '<div class="four-ops-samples">' + task.samples.map((sample) => '<span class="four-ops-sample">' + sample + '</span>').join("") + '</div>'
+            : "")
+          : "";
+        return '<article class="task' + (task.kind === "fourOps" ? " four-ops-task" : "") + '">' +
           '<div class="task-head"><span>' + task.type + '</span><span class="task-number">' + (index + 1) + '</span></div>' +
           '<div class="prompt">' +
             '<div class="question">' + task.question + '</div>' +
             '<div class="visual">' + (task.visual || "") + '</div>' +
           '</div>' +
-          '<div class="answer-row">' +
+          '<div class="answer-row' + (task.kind === "fourOps" ? " four-ops-answer-row" : "") + '">' +
+            answerContent +
             '<button class="answer-btn' + (revealed ? " revealed" : "") + '" type="button" data-answer="' + task.id + '">' +
-              (revealed ? "Answer: " + task.answer : "Reveal Answer") +
+              (task.kind === "fourOps"
+                ? (revealed ? "Hide Sample Connections" : "Show Sample Connections")
+                : (revealed ? "Answer: " + task.answer : "Reveal Answer")) +
             '</button>' +
           '</div>' +
         '</article>';
@@ -1030,6 +1350,7 @@
         generateBoard();
       });
       document.getElementById("newBtn").addEventListener("click", generateBoard);
+      document.getElementById("newBoardBtn").addEventListener("click", generateBoard);
       document.getElementById("revealAnswersBtn").addEventListener("click", revealAll);
       document.getElementById("hideAnswersBtn").addEventListener("click", hideAll);
       document.getElementById("fullscreenBtn").addEventListener("click", () => {

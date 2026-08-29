@@ -2218,13 +2218,13 @@ const tools = [
     type: "Classroom Routine",
     access: "Free",
     status: "Imported",
-    description: "Generate quick visual starter questions for counting, number bonds, place value, comparing numbers, missing numbers, arrays, fractions, time, money, and shapes.",
-    tags: ["classroom", "primary", "elementary", "starter", "bell work", "number sense", "place value", "fractions", "time", "money", "shapes"],
-    toolPath: "tools/elementary-starter-board/index.html?v=elementary-starter-board-1",
+    description: "Generate quick visual starter questions for counting, number bonds, place value, comparing numbers, missing numbers, arrays, fractions, time, money, shapes, and Four Ops number reasoning.",
+    tags: ["classroom", "primary", "elementary", "starter", "bell work", "number sense", "four operations", "place value", "fractions", "time", "money", "shapes"],
+    toolPath: "tools/elementary-starter-board/index.html?v=elementary-starter-board-2",
     imported: true,
     teacherNotes: [
       "Designed for short start-of-lesson routines with answers hidden until the teacher is ready to reveal them.",
-      "Teachers can generate one large starter question or a four-question board across mixed or focused elementary topics.",
+      "Teachers can generate one large starter question, a four-question board, or a colourful Four Ops spider diagram for number reasoning.",
       "Use the reveal buttons to support the ask, discuss, reveal classroom flow."
     ]
   },
