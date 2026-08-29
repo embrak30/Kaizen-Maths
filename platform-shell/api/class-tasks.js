@@ -235,6 +235,8 @@ function normaliseMathAnswer(value) {
   text = text
     .replace(/\\dfrac/g, "\\frac")
     .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, "$1/$2")
+    .replace(/\(([^()]+)\)\s*\/\s*\(([^()]+)\)/g, "$1/$2")
+    .replace(/\^\(([^()]+)\)/g, "^$1")
     .replace(/\\sqrt\s*\{([^{}]+)\}/g, "sqrt($1)")
     .replace(/\\left|\\right/g, "")
     .replace(/\\times|×/g, "*")

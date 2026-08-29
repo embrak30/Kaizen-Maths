@@ -15056,6 +15056,8 @@ function classTaskNormaliseAnswer(value) {
     .toLowerCase()
     .replace(/\\dfrac/g, "\\frac")
     .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, "$1/$2")
+    .replace(/\(([^()]+)\)\s*\/\s*\(([^()]+)\)/g, "$1/$2")
+    .replace(/\^\(([^()]+)\)/g, "^$1")
     .replace(/\\sqrt\s*\{([^{}]+)\}/g, "sqrt($1)")
     .replace(/\\left|\\right/g, "")
     .replace(/\\times|×/g, "*")
@@ -16320,9 +16322,9 @@ function pupilMathToolbarHtml(extraClass = "") {
   const tools = [
     { label: "x²", token: "²" },
     { label: "x³", token: "³" },
-    { label: "xⁿ", token: "^{}", cursor: "2" },
-    { label: "a/b", token: "\\frac{}{}", cursor: "6" },
-    { label: "√", token: "\\sqrt{}", cursor: "6" },
+    { label: "xⁿ", token: "^()", cursor: "2" },
+    { label: "a/b", token: "()/()", cursor: "1" },
+    { label: "√", token: "√()", cursor: "2" },
     { label: "≤", token: "≤" },
     { label: "≥", token: "≥" },
     { label: "π", token: "π" },
@@ -16341,7 +16343,11 @@ function pupilAnswerPreviewHtml(value) {
   const text = String(value || "").trim();
   if (!text) return `<span class="pupil-answer-preview-empty">Preview appears here</span>`;
   const displayText = text
+    .replace(/\\dfrac/g, "\\frac")
+    .replace(/√\s*\(([^()]+)\)/g, "\\sqrt{$1}")
     .replace(/\bsqrt\(([^()]+)\)/gi, "\\sqrt{$1}")
+    .replace(/\^\(([^()]+)\)/g, "^{$1}")
+    .replace(/\(([^()]+)\)\s*\/\s*\(([^()]+)\)/g, "\\frac{$1}{$2}")
     .replace(/\b(-?\d+|[A-Za-z][A-Za-z0-9]*)\/(-?\d+|[A-Za-z][A-Za-z0-9]*)\b/g, "\\frac{$1}{$2}");
   const template = document.createElement("template");
   template.content.appendChild(worksheetMathFragment(displayText));
