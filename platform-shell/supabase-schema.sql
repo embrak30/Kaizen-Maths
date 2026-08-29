@@ -84,6 +84,8 @@ create table if not exists public.schools (
   logo_url text,
   contact_person text,
   school_synopsis text,
+  pupil_module_enabled boolean not null default false,
+  pupil_module_terms text,
   licence_type text default 'school',
   allowed_domains text,
   seat_limit integer,
@@ -109,6 +111,8 @@ alter table public.schools add column if not exists standards_label text;
 alter table public.schools add column if not exists logo_url text;
 alter table public.schools add column if not exists contact_person text;
 alter table public.schools add column if not exists school_synopsis text;
+alter table public.schools add column if not exists pupil_module_enabled boolean not null default false;
+alter table public.schools add column if not exists pupil_module_terms text;
 alter table public.schools add column if not exists allowed_domains text;
 alter table public.schools add column if not exists seat_limit integer;
 alter table public.schools add column if not exists join_code text;
@@ -1031,7 +1035,19 @@ with check (
     select 1
     from public.profiles
     where profiles.id = auth.uid()
-      and profiles.role in ('trial', 'pro', 'school', 'admin')
+      and (
+        profiles.role = 'admin'
+        or (
+          profiles.role = 'school'
+          and exists (
+            select 1
+            from public.schools
+            where schools.id = profiles.school_id
+              and schools.is_active = true
+              and schools.pupil_module_enabled = true
+          )
+        )
+      )
   )
 );
 

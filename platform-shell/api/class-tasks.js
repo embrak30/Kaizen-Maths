@@ -29,6 +29,7 @@ const RESPONSE_SELECT_WITH_WORKING = "id, task_id, pupil_alias, answers, working
 const SUBMISSION_SELECT = "id, pupil_alias, answers, auto_score, max_score, marking, submitted_at";
 const SUBMISSION_SELECT_WITH_WORKING = "id, pupil_alias, answers, working, working_images, auto_score, max_score, marking, submitted_at";
 const PARTICIPANT_SELECT = "id, task_id, pupil_alias, status, current_attempt, submissions_count, last_score, max_score, pass_met, first_seen_at, last_seen_at";
+const SCHOOL_PUPIL_MODULE_SELECT = "id, name, pupil_module_enabled, is_active";
 
 function queryParam(req, name) {
   const url = new URL(req.url || "/", "https://kaizenmaths.com");
@@ -80,16 +81,68 @@ function normaliseRole(profile) {
   return String(profile?.role || "").toLowerCase();
 }
 
-function hasActiveTrial(profile) {
-  if (!profile?.trial_ends_at) return true;
-  const trialEnds = new Date(profile.trial_ends_at);
-  return Number.isNaN(trialEnds.getTime()) || trialEnds >= new Date();
+function canManagePupilModule(profile, school = null) {
+  const role = normaliseRole(profile);
+  if (role === "admin") return true;
+  return role === "school"
+    && Boolean(profile?.school_id)
+    && school?.is_active !== false
+    && school?.pupil_module_enabled === true;
 }
 
-function canCreateClassTask(profile) {
-  const role = normaliseRole(profile);
-  if (["admin", "pro", "school"].includes(role)) return true;
-  return role === "trial" && hasActiveTrial(profile);
+function pupilModuleAccessMessage(school = null) {
+  if (school?.pupil_module_schema_missing) {
+    return "Run the latest Supabase schema, then enable the pupil module for this school or tutor organisation.";
+  }
+  return "Pupil tasks are only available for school or tutor organisations with the pupil module enabled.";
+}
+
+function isMissingPupilModuleColumnError(error) {
+  const text = [error?.code, error?.message, error?.details, error?.hint].filter(Boolean).join(" ");
+  return /pupil_module_enabled|schema cache|column/i.test(text);
+}
+
+async function schoolForPupilModule(supabase, schoolId) {
+  if (!schoolId) return null;
+  const { data, error } = await supabase
+    .from("schools")
+    .select(SCHOOL_PUPIL_MODULE_SELECT)
+    .eq("id", schoolId)
+    .maybeSingle();
+  if (error && isMissingPupilModuleColumnError(error)) {
+    return { id: schoolId, name: "", pupil_module_enabled: false, is_active: true, pupil_module_schema_missing: true };
+  }
+  if (error) throw error;
+  return data || null;
+}
+
+async function requirePupilModuleManager(res, supabase, profile) {
+  const school = normaliseRole(profile) === "school"
+    ? await schoolForPupilModule(supabase, profile.school_id)
+    : null;
+  if (!canManagePupilModule(profile, school)) {
+    sendJson(res, 403, { error: pupilModuleAccessMessage(school) });
+    return null;
+  }
+  return school || {};
+}
+
+function taskHasPupilModuleFlag(task) {
+  return task?.settings?.source === "kaizen-class-task" && task.settings?.pupil_module_enabled === true;
+}
+
+async function taskPupilAccess(res, supabase, task) {
+  if (!taskHasPupilModuleFlag(task)) {
+    sendJson(res, 404, { error: "This class task is not available." });
+    return null;
+  }
+  if (!task.school_id) return { schoolName: "" };
+  const school = await schoolForPupilModule(supabase, task.school_id);
+  if (!school || school.is_active === false || school.pupil_module_enabled !== true) {
+    sendJson(res, 404, { error: "This class task is not available." });
+    return null;
+  }
+  return { schoolName: school.name || "" };
 }
 
 function taskIsAvailable(task) {
@@ -400,7 +453,8 @@ async function teacherProfile(req, supabase) {
 async function listTasks(req, res, supabase) {
   const { user, profile, error } = await teacherProfile(req, supabase);
   if (error) return sendJson(res, 401, { error });
-  if (!canCreateClassTask(profile)) return sendJson(res, 403, { error: "Teacher access is required to view class tasks." });
+  const school = await requirePupilModuleManager(res, supabase, profile);
+  if (!school) return;
 
   let query = supabase
     .from("class_tasks")
@@ -449,7 +503,8 @@ async function listTasks(req, res, supabase) {
 async function createTask(req, res, supabase) {
   const { user, profile, error } = await teacherProfile(req, supabase);
   if (error) return sendJson(res, 401, { error });
-  if (!canCreateClassTask(profile)) return sendJson(res, 403, { error: "Teacher access is required to create pupil tasks." });
+  const school = await requirePupilModuleManager(res, supabase, profile);
+  if (!school) return;
 
   const body = await readJsonBody(req);
   const questions = Array.isArray(body.questions) ? body.questions.slice(0, 40).map(cleanQuestion).filter((question) => question.question) : [];
@@ -475,7 +530,9 @@ async function createTask(req, res, supabase) {
     source_type_id: cleanText(incomingSettings.source_type_id, 120),
     source_count: clampNumber(incomingSettings.source_count, 1, 40, questions.length),
     source_marks: clampNumber(incomingSettings.source_marks, 1, 20, 1),
-    source: "kaizen-class-task"
+    source: "kaizen-class-task",
+    pupil_module_enabled: true,
+    pupil_module_owner: profile.school_id ? "school" : "admin"
   };
   const expiresAt = body.expires_at ? new Date(body.expires_at) : null;
 
@@ -487,7 +544,7 @@ async function createTask(req, res, supabase) {
       .from("class_tasks")
       .insert({
         teacher_id: user.id,
-        school_id: profile.school_id || null,
+        school_id: profile.school_id || school.id || null,
         title: cleanText(body.title, 160) || "Kaizen Maths Class Task",
         instructions: cleanText(body.instructions, 900) || "Answer each question. Show working where appropriate.",
         source_tool_slug: cleanText(body.source_tool_slug, 100),
@@ -523,15 +580,11 @@ async function getPublicTask(req, res, supabase) {
     .maybeSingle();
   if (error) return sendJson(res, 500, { error: error.message });
   if (!task || !taskIsAvailable(task)) return sendJson(res, 404, { error: "This class task was not found or has expired." });
-
-  let schoolName = "";
-  if (task.school_id) {
-    const { data: school } = await supabase.from("schools").select("name").eq("id", task.school_id).maybeSingle();
-    schoolName = school?.name || "";
-  }
+  const access = await taskPupilAccess(res, supabase, task);
+  if (!access) return;
 
   return sendJson(res, 200, {
-    task: publicTaskForAttempt(task, schoolName, 0)
+    task: publicTaskForAttempt(task, access.schoolName, 0)
   });
 }
 
@@ -550,6 +603,8 @@ async function joinPublicTask(req, res, supabase) {
     .maybeSingle();
   if (error) return sendJson(res, 500, { error: error.message });
   if (!task || !taskIsAvailable(task)) return sendJson(res, 404, { error: "This class task was not found or has expired." });
+  const access = await taskPupilAccess(res, supabase, task);
+  if (!access) return;
 
   try {
     const participant = await upsertParticipantForTask(supabase, task, pupilAlias, {
@@ -578,6 +633,8 @@ async function submitPublicTask(req, res, supabase) {
     .maybeSingle();
   if (error) return sendJson(res, 500, { error: error.message });
   if (!task || !taskIsAvailable(task)) return sendJson(res, 404, { error: "This class task was not found or has expired." });
+  const access = await taskPupilAccess(res, supabase, task);
+  if (!access) return;
 
   const passPercent = taskPassPercent(task.settings || {});
   if (!task.settings?.allow_multiple_submissions) {
@@ -629,13 +686,8 @@ async function submitPublicTask(req, res, supabase) {
   const { data: response, error: responseError } = responseResult;
   if (responseError) return sendJson(res, 500, { error: responseError.message });
 
-  let schoolName = "";
-  if (task.school_id) {
-    const { data: school } = await supabase.from("schools").select("name").eq("id", task.school_id).maybeSingle();
-    schoolName = school?.name || "";
-  }
   const nextTask = marking.pass_required && !marking.pass_met
-    ? publicTaskForAttempt(task, schoolName, attemptIndex + 1)
+    ? publicTaskForAttempt(task, access.schoolName, attemptIndex + 1)
     : null;
   let participant = null;
   try {
@@ -669,7 +721,8 @@ async function submitPublicTask(req, res, supabase) {
 async function reviewResponse(req, res, supabase) {
   const { user, profile, error } = await teacherProfile(req, supabase);
   if (error) return sendJson(res, 401, { error });
-  if (!canCreateClassTask(profile)) return sendJson(res, 403, { error: "Teacher access is required to review pupil responses." });
+  const school = await requirePupilModuleManager(res, supabase, profile);
+  if (!school) return;
 
   const body = await readJsonBody(req);
   const taskId = cleanText(body.task_id, 80);
@@ -715,7 +768,8 @@ async function reviewResponse(req, res, supabase) {
 async function closeTask(req, res, supabase) {
   const { user, profile, error } = await teacherProfile(req, supabase);
   if (error) return sendJson(res, 401, { error });
-  if (!canCreateClassTask(profile)) return sendJson(res, 403, { error: "Teacher access is required to update class tasks." });
+  const school = await requirePupilModuleManager(res, supabase, profile);
+  if (!school) return;
   const body = await readJsonBody(req);
   const taskId = cleanText(body.task_id, 80);
   if (!taskId) return sendJson(res, 400, { error: "Missing task id." });

@@ -4095,6 +4095,37 @@ button.certification-course-card {
   align-items: start;
 }
 
+.pupil-module-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pupil-module-info-card {
+  border-color: rgba(23, 184, 179, 0.2);
+  background:
+    linear-gradient(135deg, rgba(231, 251, 250, 0.68), rgba(255, 255, 255, 0.95)),
+    white;
+  box-shadow: 0 14px 30px rgba(23, 32, 51, 0.06);
+}
+
+.pupil-module-info-card h2 {
+  margin: 3px 0 6px;
+  color: #282450;
+}
+
+.pupil-module-info-card p,
+.pupil-module-info-card li {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.pupil-module-info-card ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
 .class-task-builder,
 .class-task-list-panel,
 .pupil-join-panel,
@@ -10202,6 +10233,7 @@ sup .worksheet-fraction > span:last-child {
 }
 
 @media (max-width: 1120px) {
+  .pupil-module-info-grid,
   .class-task-page {
     grid-template-columns: 1fr;
   }

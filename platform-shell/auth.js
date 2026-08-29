@@ -61,7 +61,9 @@
       standards_label: school.standards_label || "",
       logo_url: school.logo_url || "",
       contact_person: school.contact_person || "",
-      school_synopsis: school.school_synopsis || ""
+      school_synopsis: school.school_synopsis || "",
+      pupil_module_enabled: Boolean(school.pupil_module_enabled),
+      pupil_module_terms: school.pupil_module_terms || ""
     };
   }
 
@@ -152,7 +154,7 @@
     try {
       let { data, error } = await state.client
         .from("schools")
-        .select("id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, default_curriculum_id, standards_label, logo_url, contact_person, school_synopsis, licence_ends_at, is_active")
+        .select("id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, default_curriculum_id, standards_label, logo_url, contact_person, school_synopsis, pupil_module_enabled, pupil_module_terms, licence_ends_at, is_active")
         .eq("id", profile.school_id)
         .maybeSingle();
       if (error && /column|schema cache/i.test(error.message || "")) {
@@ -192,6 +194,8 @@
         school_logo_url: data.logo_url,
         school_contact_person: data.contact_person,
         school_synopsis: data.school_synopsis,
+        school_pupil_module_enabled: Boolean(data.pupil_module_enabled),
+        school_pupil_module_terms: data.pupil_module_terms,
         school_licence_ends_at: data.licence_ends_at,
         school_is_active: data.is_active,
         school_context: schoolContext

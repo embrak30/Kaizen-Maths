@@ -2646,6 +2646,7 @@ const state = {
   schoolTeacherAccess: [],
   schoolsLoaded: false,
   schoolDefaultCurriculumSchemaMissing: false,
+  schoolPupilModuleSchemaMissing: false,
   usersLoaded: false,
   homepageContent: {},
   homepageScreenshots: [],
@@ -3077,7 +3078,9 @@ function schoolContextFromRecord(record = {}) {
     standards_label: record.school_standards_label || record.standards_label || "",
     logo_url: record.school_logo_url || record.logo_url || "",
     contact_person: record.school_contact_person || record.contact_person || "",
-    school_synopsis: record.school_synopsis || record.synopsis || ""
+    school_synopsis: record.school_synopsis || record.synopsis || "",
+    pupil_module_enabled: Boolean(record.school_pupil_module_enabled ?? record.pupil_module_enabled),
+    pupil_module_terms: record.school_pupil_module_terms || record.pupil_module_terms || ""
   };
 }
 
@@ -3091,7 +3094,13 @@ function storedSchoolContext() {
 
 function currentSchoolContext() {
   const profile = authState().profile || {};
-  if (profile.school_context) return schoolContextFromRecord(profile.school_context) || profile.school_context;
+  if (profile.school_context) {
+    return schoolContextFromRecord({
+      ...profile.school_context,
+      ...profile,
+      id: profile.school_id || profile.school_context.school_id || profile.school_context.id
+    }) || profile.school_context;
+  }
   const school = schoolById(profile.school_id);
   return profile.school_id
     ? schoolContextFromRecord({ ...(school || {}), ...profile, id: profile.school_id })
@@ -3193,8 +3202,63 @@ function currentAuthAccessKey() {
     schoolContext?.currency_code || "",
     schoolContext?.curriculum_focus || "",
     schoolContext?.default_curriculum_id || "",
-    schoolContext?.standards_label || ""
+    schoolContext?.standards_label || "",
+    schoolContext?.pupil_module_enabled ? "pupil-module-on" : "pupil-module-off"
   ].join("|");
+}
+
+const defaultPupilModuleTerms = [
+  "Pupil tasks are for closed school or tutor groups using a teacher-issued task code.",
+  "Pupils use an alias, initials, or teacher-issued identifier rather than a full personal profile.",
+  "Teachers control the task, pass mark, feedback, expiry, and when a task is closed.",
+  "Schools and tutors should share codes only with the intended pupils and follow their own safeguarding and data-protection policies."
+];
+
+function currentSchoolPupilModuleEnabled() {
+  const context = currentSchoolContext();
+  if (context?.pupil_module_enabled !== undefined) return Boolean(context.pupil_module_enabled);
+  const profile = authState().profile || {};
+  return Boolean(schoolById(profile.school_id)?.pupil_module_enabled);
+}
+
+function currentPupilModuleTerms() {
+  const context = currentSchoolContext();
+  const profile = authState().profile || {};
+  const school = schoolById(profile.school_id);
+  const customTerms = String(context?.pupil_module_terms || school?.pupil_module_terms || "").trim();
+  return customTerms ? splitEditableLines(customTerms) : defaultPupilModuleTerms;
+}
+
+function hasPupilModuleAccess() {
+  const role = currentUserRole();
+  if (role === "admin") return true;
+  return role === "school" && currentSchoolPupilModuleEnabled() && Boolean(currentSchoolName());
+}
+
+function pupilModuleOverviewHtml({ locked = false } = {}) {
+  const schoolName = currentSchoolName();
+  const roleLabel = currentUserRole() === "school" && schoolName ? schoolName : "School or tutor organisation";
+  const terms = currentPupilModuleTerms();
+  return `
+    <section class="pupil-module-info-grid">
+      <article class="panel pupil-module-info-card">
+        <span class="eyebrow">How It Works</span>
+        <h2>${locked ? "Pupil module access is controlled by school" : "Closed pupil tasks for your organisation"}</h2>
+        <p>Teachers create a short Kaizen Maths task, share one join code, and pupils complete it in the pupil task space using an alias or initials.</p>
+      </article>
+      <article class="panel pupil-module-info-card">
+        <span class="eyebrow">Access</span>
+        <h2>${escapeHtml(roleLabel)}</h2>
+        <p>${locked ? "This account is not linked to a school or tutor organisation with the pupil module enabled." : "This organisation can create pupil task codes and review pupil submissions."}</p>
+      </article>
+      <article class="panel pupil-module-info-card">
+        <span class="eyebrow">Safety And Use</span>
+        <ul>
+          ${terms.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+        </ul>
+      </article>
+    </section>
+  `;
 }
 
 function renderAuthSensitiveRouteIfNeeded() {
@@ -4280,7 +4344,7 @@ async function loadSchools({ rerender = false } = {}) {
   const client = await window.KaizenAuth?.getClient?.().catch(() => null);
   if (!client || !isAdmin()) return;
   try {
-    const schoolSelect = "id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, default_curriculum_id, standards_label, logo_url, contact_person, school_synopsis, licence_type, allowed_domains, seat_limit, join_code, join_code_expires_at, is_active, notes, licence_starts_at, licence_ends_at, created_at, updated_at";
+    const schoolSelect = "id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, default_curriculum_id, standards_label, logo_url, contact_person, school_synopsis, pupil_module_enabled, pupil_module_terms, licence_type, allowed_domains, seat_limit, join_code, join_code_expires_at, is_active, notes, licence_starts_at, licence_ends_at, created_at, updated_at";
     const fallbackSchoolSelect = "id, name, organisation_name, pilot_name, country, currency_code, currency_symbol, locale, curriculum_focus, standards_label, licence_type, allowed_domains, seat_limit, join_code, join_code_expires_at, is_active, notes, licence_starts_at, licence_ends_at, created_at, updated_at";
     let [schoolsResponse, { data: teacherAccess, error: teacherAccessError }] = await Promise.all([
       client.from("schools").select(schoolSelect).order("name", { ascending: true }),
@@ -4324,6 +4388,8 @@ async function saveSchool(values) {
     logo_url: String(values.logo_url || "").trim(),
     contact_person: String(values.contact_person || "").trim(),
     school_synopsis: String(values.school_synopsis || "").trim(),
+    pupil_module_enabled: Boolean(values.pupil_module_enabled),
+    pupil_module_terms: String(values.pupil_module_terms || "").trim(),
     licence_type: String(values.licence_type || "").trim() || "school",
     allowed_domains: normaliseDomainList(values.allowed_domains).join(", "),
     seat_limit: values.seat_limit ? Number(values.seat_limit) : null,
@@ -4342,9 +4408,10 @@ async function saveSchool(values) {
     ? client.from("schools").update(nextPayload).eq("id", values.id).select("id").single()
     : client.from("schools").insert(nextPayload).select("id").single();
   let { data, error } = await request(payload);
-  if (error && /default_curriculum_id|column|schema cache/i.test(error.message || "")) {
-    const { default_curriculum_id, ...fallbackPayload } = payload;
+  if (error && /default_curriculum_id|pupil_module_enabled|pupil_module_terms|column|schema cache/i.test(error.message || "")) {
+    const { default_curriculum_id, pupil_module_enabled, pupil_module_terms, ...fallbackPayload } = payload;
     state.schoolDefaultCurriculumSchemaMissing = true;
+    state.schoolPupilModuleSchemaMissing = true;
     ({ data, error } = await request(fallbackPayload));
   }
   if (error) throw error;
@@ -15159,6 +15226,16 @@ function classTaskPublicSettings(settings = {}) {
   };
 }
 
+function classTaskAssertPupilModuleAccess() {
+  if (!hasPupilModuleAccess()) {
+    throw new Error("Pupil tasks are only available for school or tutor organisations with the pupil module enabled.");
+  }
+}
+
+function classTaskLocalTaskIsPupilEnabled(task) {
+  return task?.settings?.source === "kaizen-class-task" && task.settings?.pupil_module_enabled === true;
+}
+
 function classTaskMarkPassStatus(marking, settings = {}, attemptIndex = 0) {
   const passPercent = classTaskPassPercent(settings);
   const maxScore = Number(marking.max_score) || 0;
@@ -15258,6 +15335,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
   const teacherId = classTaskCurrentTeacherId();
 
   if (action === "list") {
+    classTaskAssertPupilModuleAccess();
     const visibleTasks = tasks
       .filter((task) => isAdmin() || task.teacher_id === teacherId)
       .sort((a, b) => String(b.created_at || "").localeCompare(String(a.created_at || "")))
@@ -15270,6 +15348,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
   }
 
   if (action === "create") {
+    classTaskAssertPupilModuleAccess();
     let joinCode = normaliseClassTaskCode(body.join_code) || classTaskRandomCode();
     while (tasks.some((task) => task.join_code === joinCode)) joinCode = classTaskRandomCode();
     const profile = authState().profile || {};
@@ -15305,7 +15384,9 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
         source_type_id: incomingSettings.source_type_id || "",
         source_count: classTaskClampNumber(incomingSettings.source_count, 1, 40, Array.isArray(body.questions) ? body.questions.length : 5),
         source_marks: classTaskClampNumber(incomingSettings.source_marks, 1, 20, 1),
-        source: "kaizen-class-task"
+        source: "kaizen-class-task",
+        pupil_module_enabled: true,
+        pupil_module_owner: profile.school_id ? "school" : "admin"
       },
       expires_at: body.expires_at || null,
       is_active: true,
@@ -15322,6 +15403,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     const code = normaliseClassTaskCode(params.code);
     const task = tasks.find((item) => item.join_code === code);
     if (!task || !classTaskIsAvailable(task)) throw new Error("This class task was not found or has expired.");
+    if (!classTaskLocalTaskIsPupilEnabled(task)) throw new Error("This class task is not available.");
     return {
       task: classTaskPublicTaskForAttempt(task, 0),
       source: "local"
@@ -15334,6 +15416,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     const attemptIndex = classTaskClampNumber(body.attempt_index, 0, 9, 0);
     const task = tasks.find((item) => item.join_code === code);
     if (!task || !classTaskIsAvailable(task)) throw new Error("This class task was not found or has expired.");
+    if (!classTaskLocalTaskIsPupilEnabled(task)) throw new Error("This class task is not available.");
     if (!alias) throw new Error("Enter an alias or initials before starting.");
     const result = classTaskUpsertLocalParticipant(participants, task, alias, {
       status: "joined",
@@ -15349,6 +15432,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     const attemptIndex = classTaskClampNumber(body.attempt_index, 0, 9, 0);
     const task = tasks.find((item) => item.join_code === code);
     if (!task || !classTaskIsAvailable(task)) throw new Error("This class task was not found or has expired.");
+    if (!classTaskLocalTaskIsPupilEnabled(task)) throw new Error("This class task is not available.");
     if (!alias) throw new Error("Enter an alias or initials before submitting.");
     const aliasResponses = responses.filter((response) => response.task_id === task.id && normalise(response.pupil_alias) === normalise(alias));
     const passPercent = classTaskPassPercent(task.settings || {});
@@ -15399,6 +15483,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
   }
 
   if (action === "review") {
+    classTaskAssertPupilModuleAccess();
     const responseId = body.response_id;
     const taskId = body.task_id;
     const task = tasks.find((item) => item.id === taskId && (isAdmin() || item.teacher_id === teacherId));
@@ -15412,6 +15497,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
   }
 
   if (action === "close") {
+    classTaskAssertPupilModuleAccess();
     const taskId = body.task_id;
     const nextTasks = tasks.map((task) => task.id === taskId && (isAdmin() || task.teacher_id === teacherId)
       ? { ...task, is_active: false, updated_at: new Date().toISOString() }
@@ -15674,7 +15760,7 @@ async function createClassTaskFromForm(form) {
 }
 
 async function loadClassTasks({ rerender = false, force = false } = {}) {
-  if (!isSignedIn() || !hasWorkspaceAccess() || state.classTasksLoading) return;
+  if (!isSignedIn() || !hasPupilModuleAccess() || state.classTasksLoading) return;
   if (state.classTasksLoaded && !force) return;
   state.classTasksLoading = true;
   if (rerender && routeParts()[0] === "class-tasks") updateClassTaskListPanel();
@@ -16108,23 +16194,30 @@ function renderClassTasks() {
     app.innerHTML = `
       ${pageHeader(
         "Pupil Pilot",
-        "Create short online class tasks with a join code. Pupils use an alias only; they do not need a Kaizen account.",
-        `<a class="button" href="#/pupil">Open Pupil Join Page</a>`
+        "A controlled school and tutor module for setting short online Kaizen Maths tasks.",
+        `<button class="button primary" type="button" data-auth-action="signin">Sign in with Google</button>`
       )}
+      ${pupilModuleOverviewHtml({ locked: true })}
       ${signInCallout("Teacher sign-in required")}
     `;
     bindAuthActions();
     return;
   }
 
-  if (!hasWorkspaceAccess()) {
+  if (!hasPupilModuleAccess()) {
     app.innerHTML = `
       ${pageHeader(
         "Pupil Pilot",
-        "Class tasks are available for trial, pro, school, and admin teacher accounts.",
-        `<a class="button primary" href="#/upgrade">View Access Options</a>`
+        "Pupil tasks are available only where the pupil module has been enabled for a school or tutor organisation.",
+        `<a class="button primary" href="#/school-space">Join School Licence</a><a class="button" href="#/book-demo">Book a Demo Session</a>`
       )}
-      ${signInCallout("Trial access required")}
+      ${pupilModuleOverviewHtml({ locked: true })}
+      <section class="panel access-callout">
+        <span class="eyebrow">Controlled Access</span>
+        <h2>Pupil module not enabled</h2>
+        <p>This account can use the normal Kaizen Maths workspace, but it cannot create pupil task codes until it is connected to an enabled school or tutor organisation.</p>
+        <a class="button" href="#/school-space">Enter a School Code</a>
+      </section>
     `;
     bindAuthActions();
     return;
@@ -16140,9 +16233,10 @@ function renderClassTasks() {
   app.innerHTML = `
     ${pageHeader(
       "Pupil Pilot",
-      "Send a short Kaizen Maths task to pupils using a class code. This is a closed pilot layer for practice, evidence gathering, and classroom feedback.",
+      "Create a closed pupil task code for your school or tutor organisation.",
       `<a class="button" href="#/pupil">Pupil Join Page</a><a class="button" href="#/worksheet-generator">Worksheet Builder</a>`
     )}
+    ${pupilModuleOverviewHtml()}
     <section class="class-task-page">
       <article class="panel class-task-builder">
         <div class="class-task-builder-head">
@@ -16525,7 +16619,7 @@ function renderPupilJoin(routeCode = "") {
           </span>
         </div>
         <div class="pupil-header-task">
-          <span class="eyebrow">Class Task</span>
+          <span class="eyebrow">Pupil Task</span>
           <strong>${escapeHtml(task?.title || "Enter your task code")}</strong>
           <small>${escapeHtml([taskSummary, attemptLabel].filter(Boolean).join(" · "))}</small>
         </div>
@@ -16544,7 +16638,7 @@ function renderPupilJoin(routeCode = "") {
         <article class="panel pupil-join-panel">
           <span class="eyebrow">Pupil Workspace</span>
           <h1>Load your class task</h1>
-          <p>This page only shows the task your teacher has assigned. Use initials, a nickname, or the code your teacher gives you.</p>
+          <p>This page only opens with a code from your teacher or tutor. Use initials, a nickname, or the identifier your teacher gives you rather than a full name.</p>
         </article>
       ` : ""}
 
@@ -19052,6 +19146,10 @@ function renderTermsPage() {
           <h2>School Licences</h2>
           <p>The teacher count, access period, price, and support arrangements should be confirmed before purchase.</p>
         </article>
+        <article class="panel">
+          <h2>Pupil Module</h2>
+          <p>Where the pupil module is enabled for a school or tutor organisation, pupils use teacher-issued task codes and aliases rather than Kaizen Maths accounts. Schools and tutors are responsible for sharing codes only with the intended pupils and following their own safeguarding and data-protection policies.</p>
+        </article>
       </section>
     </section>
   `;
@@ -19132,6 +19230,7 @@ function renderSchoolSpace() {
   const schoolInitial = (schoolName || "K").trim().charAt(0).toUpperCase() || "K";
   const contactPerson = String(schoolContext?.contact_person || "").trim();
   const schoolSynopsis = String(schoolContext?.school_synopsis || "").trim();
+  const pupilModuleEnabled = currentSchoolPupilModuleEnabled();
 
   if (!isSignedIn()) {
     app.innerHTML = `
@@ -19220,10 +19319,15 @@ function renderSchoolSpace() {
               <span>Country</span>
               <strong>${escapeHtml(schoolContext?.country || "Not set")}</strong>
             </div>
+            <div>
+              <span>Pupil Module</span>
+              <strong>${pupilModuleEnabled ? "Enabled" : "Not enabled"}</strong>
+            </div>
           </div>
           <div class="button-row">
             <a class="button primary" href="#/tools">Open Tool Library</a>
             <a class="button" href="#/worksheet-generator">Open Worksheet Builder</a>
+            ${pupilModuleEnabled ? `<a class="button" href="#/class-tasks">Open Pupil Pilot</a>` : ""}
           </div>
         </article>
         ${contactPerson ? `
@@ -20369,6 +20473,10 @@ function adminSchoolRowHtml(school = {}, index = 0) {
           <input data-school-field="is_active" type="checkbox" ${school.is_active === false ? "" : "checked"}>
           Active school licence
         </label>
+        <label class="admin-check-row">
+          <input data-school-field="pupil_module_enabled" type="checkbox" ${school.pupil_module_enabled ? "checked" : ""}>
+          Enable pupil module for this school or tutor organisation
+        </label>
         <label>
           Approved teacher emails
           <textarea data-school-field="teacher_emails" rows="4" placeholder="One email per line, or separate with commas">${escapeHtml(teacherEmails)}</textarea>
@@ -20376,6 +20484,10 @@ function adminSchoolRowHtml(school = {}, index = 0) {
         <label>
           School page synopsis
           <textarea data-school-field="school_synopsis" rows="4" placeholder="Short school-facing message shown on the School Space page">${escapeHtml(school.school_synopsis || "")}</textarea>
+        </label>
+        <label>
+          Pupil module terms
+          <textarea data-school-field="pupil_module_terms" rows="4" placeholder="Optional school/tutor-specific terms shown beside the pupil module">${escapeHtml(school.pupil_module_terms || "")}</textarea>
         </label>
         <label>
           Admin notes
@@ -21055,6 +21167,7 @@ function bindAdmin() {
     schoolsStatus.textContent = "Saving school licences...";
     try {
       state.schoolDefaultCurriculumSchemaMissing = false;
+      state.schoolPupilModuleSchemaMissing = false;
       let savedCount = 0;
       for (const row of rows) {
         const field = (name) => row.querySelector(`[data-school-field="${name}"]`);
@@ -21075,6 +21188,8 @@ function bindAdmin() {
           logo_url: field("logo_url")?.value || "",
           contact_person: field("contact_person")?.value || "",
           school_synopsis: field("school_synopsis")?.value || "",
+          pupil_module_enabled: Boolean(field("pupil_module_enabled")?.checked),
+          pupil_module_terms: field("pupil_module_terms")?.value || "",
           licence_type: field("licence_type")?.value || "school",
           allowed_domains: field("allowed_domains")?.value || "",
           seat_limit: field("seat_limit")?.value || "",
@@ -21090,9 +21205,11 @@ function bindAdmin() {
       }
       await loadSchools();
       await loadUserProfiles();
-      const schemaNote = state.schoolDefaultCurriculumSchemaMissing
-        ? " Default curriculum is saved in this browser until the Supabase school schema is updated."
-        : "";
+      const schemaNotes = [
+        state.schoolDefaultCurriculumSchemaMissing ? "Default curriculum is saved in this browser until the Supabase school schema is updated." : "",
+        state.schoolPupilModuleSchemaMissing ? "Run the latest Supabase schema before the pupil module switch and terms can save across devices." : ""
+      ].filter(Boolean).join(" ");
+      const schemaNote = schemaNotes ? ` ${schemaNotes}` : "";
       schoolsStatus.textContent = `Saved ${savedCount} school licence${savedCount === 1 ? "" : "s"}.${schemaNote}`;
       renderRoute();
     } catch (error) {
@@ -22101,11 +22218,11 @@ function updateRouteSeo(parts) {
     },
     "class-tasks": {
       title: routeTitle("Pupil Pilot"),
-      description: "Create short online Kaizen Maths class tasks with join codes and alias-only pupil submissions."
+      description: "Create controlled online Kaizen Maths pupil tasks for enabled school and tutor organisations, using join codes and alias-only pupil submissions."
     },
     "pupil": {
       title: routeTitle("Pupil Task"),
-      description: "Join a Kaizen Maths class task using a teacher-provided code and alias."
+      description: "Join a Kaizen Maths pupil task using a teacher-provided code and alias."
     },
     "tutor-workspace": {
       title: routeTitle("Tutor Workspace"),
