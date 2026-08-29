@@ -15211,10 +15211,8 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     classTaskWriteLocal(classTaskLocalResponsesStorageKey, [response, ...responses]);
     return {
       response,
-      show_answers: Boolean(task.settings?.show_answers_after_submit),
-      answers: task.settings?.show_answers_after_submit
-        ? (task.questions || []).map((question, index) => ({ id: question.id || `q${index + 1}`, answer: question.answer || "", steps: question.steps || [] }))
-        : [],
+      show_answers: true,
+      answers: (task.questions || []).map((question, index) => ({ id: question.id || `q${index + 1}`, answer: question.answer || "", steps: question.steps || [] })),
       source: "local"
     };
   }
@@ -15427,7 +15425,7 @@ async function createClassTaskFromForm(form) {
       questions,
       expires_at: expiresAt,
       settings: {
-        show_answers_after_submit: Boolean(form.querySelector("[name='show_answers_after_submit']")?.checked),
+        show_answers_after_submit: true,
         allow_multiple_submissions: Boolean(form.querySelector("[name='allow_multiple_submissions']")?.checked)
       }
     }
@@ -15739,10 +15737,6 @@ function renderClassTasks() {
               <input name="expires_at" type="date" value="${classTaskDefaultExpiryDate()}">
             </label>
             <label class="admin-check-row">
-              <input name="show_answers_after_submit" type="checkbox">
-              Show answers after submission
-            </label>
-            <label class="admin-check-row">
               <input name="allow_multiple_submissions" type="checkbox">
               Allow repeat submissions
             </label>
@@ -15915,21 +15909,53 @@ function pupilSubmissionHtml(task) {
     ? `Auto-marked score: ${score}/${max}.`
     : "Your teacher will review this response.";
   const answers = state.pupilSubmission.answers || [];
+  const answerById = new Map(answers.map((answer, index) => [answer.id || `q${index + 1}`, answer]));
+  const questions = task.questions || [];
+  const submittedAnswers = response.answers || {};
+  const submittedWorking = response.working || {};
   return `
     <section class="panel pupil-submission-panel">
       <span class="eyebrow">Submitted</span>
       <h2>Response received</h2>
       <p>${escapeHtml(scoreLine)} Some answers may still need teacher judgement.</p>
-      ${answers.length ? `
+      ${questions.length ? `
         <details open>
-          <summary>Show answer key</summary>
-          <ol class="pupil-answer-key">
-            ${answers.map((answer, index) => `
+          <summary>Review your answers and worked solutions</summary>
+          <ol class="pupil-answer-key pupil-submission-review">
+            ${questions.map((question, index) => {
+              const questionId = question.id || `q${index + 1}`;
+              const expected = answerById.get(questionId) || answerById.get(`q${index + 1}`) || {};
+              return `
               <li>
                 <strong>${index + 1}</strong>
-                <div class="pupil-answer-key-answer">${worksheetContentHtml(answer.answer || "Answer not available")}</div>
+                <div>
+                  <div class="pupil-review-question">${worksheetContentHtml(question.question || "")}</div>
+                  <div class="pupil-review-grid">
+                    <div>
+                      <span>Your answer</span>
+                      <p>${escapeHtml(submittedAnswers[questionId] || "No answer entered")}</p>
+                    </div>
+                    <div>
+                      <span>Expected answer</span>
+                      <p class="pupil-answer-key-answer">${worksheetContentHtml(expected.answer || "Teacher review needed")}</p>
+                    </div>
+                  </div>
+                  ${submittedWorking[questionId] ? `
+                    <div class="pupil-review-working">
+                      <span>Your working</span>
+                      <p>${escapeHtml(submittedWorking[questionId]).replace(/\n/g, "<br>")}</p>
+                    </div>
+                  ` : ""}
+                  ${expected.steps?.length ? `
+                    <details class="pupil-worked-solution">
+                      <summary>Worked solution</summary>
+                      ${worksheetStepsHtml(expected.steps)}
+                    </details>
+                  ` : ""}
+                </div>
               </li>
-            `).join("")}
+              `;
+            }).join("")}
           </ol>
         </details>
       ` : ""}
@@ -15956,6 +15982,9 @@ function renderPupilJoin(routeCode = "") {
   const taskSummary = task
     ? [task.source_tool_title, task.source_level_label, task.source_type_label].filter(Boolean).join(" · ") || "Assigned Kaizen Maths task"
     : "Enter the class code from your teacher.";
+  const statusText = state.pupilTaskLoading
+    ? "Loading task..."
+    : state.pupilTaskError || (task ? "Task loaded." : "Use the class code shared by your teacher.");
   const questions = task?.questions || [];
 
   app.innerHTML = `
@@ -15968,34 +15997,41 @@ function renderPupilJoin(routeCode = "") {
             <small>Pupil task space</small>
           </span>
         </div>
+        <div class="pupil-header-task">
+          <span class="eyebrow">Class Task</span>
+          <strong>${escapeHtml(task?.title || "Enter your task code")}</strong>
+          <small>${escapeHtml(taskSummary)}</small>
+        </div>
+        <div class="pupil-header-code">
+          <div class="pupil-code-row">
+            <input id="pupilTaskCodeInput" type="text" value="${escapeHtml(cleanCode)}" autocomplete="off" spellcheck="false" placeholder="Example: KZPRACT" aria-label="Class task code">
+            <button class="button primary" id="loadPupilTaskButton" type="button">Load</button>
+          </div>
+          <p class="worksheet-status" id="pupilTaskStatus" data-tone="${state.pupilTaskError ? "error" : ""}">${escapeHtml(statusText)}</p>
+        </div>
         <span class="pupil-only-school">${escapeHtml(schoolName)}</span>
       </header>
 
-      <section class="pupil-task-page">
-      <article class="panel pupil-join-panel ${task ? "pupil-join-panel-compact" : ""}">
-        <span class="eyebrow">Class Task</span>
-        <h1>Enter your task code</h1>
-        <p>This page only shows the task your teacher has assigned. Use initials, a nickname, or the code your teacher gives you.</p>
-        <div class="pupil-code-row">
-          <input id="pupilTaskCodeInput" type="text" value="${escapeHtml(cleanCode)}" autocomplete="off" spellcheck="false" placeholder="Example: KZPRACT">
-          <button class="button primary" id="loadPupilTaskButton" type="button">Load Task</button>
-        </div>
-        <p class="worksheet-status" id="pupilTaskStatus" data-tone="${state.pupilTaskError ? "error" : ""}">${escapeHtml(state.pupilTaskLoading ? "Loading task..." : state.pupilTaskError || "Use the class code shared by your teacher.")}</p>
-      </article>
+      <section class="pupil-task-page ${task ? "pupil-task-page-loaded" : ""}">
+      ${!task ? `
+        <article class="panel pupil-join-panel">
+          <span class="eyebrow">Pupil Workspace</span>
+          <h1>Load your class task</h1>
+          <p>This page only shows the task your teacher has assigned. Use initials, a nickname, or the code your teacher gives you.</p>
+        </article>
+      ` : ""}
 
       ${task ? state.pupilSubmission ? pupilSubmissionHtml(task) : `
         <form id="pupilTaskForm" class="panel pupil-task-panel pupil-workspace-panel">
           <header class="pupil-task-head">
             <div>
               <span class="eyebrow">${escapeHtml(taskSummary)}</span>
-              <h2>${escapeHtml(task.title || "Class Task")}</h2>
               <p>${escapeHtml(task.instructions || "Answer each question. Show working where appropriate.")}</p>
             </div>
             <label class="pupil-alias-field">
               Alias or initials
               <input name="pupil_alias" type="text" maxlength="80" value="${escapeHtml(savedAlias)}" autocomplete="off" spellcheck="false" placeholder="No full name" required>
             </label>
-            <strong>${escapeHtml(task.join_code)}</strong>
           </header>
           <div class="pupil-workspace-layout">
             <aside class="pupil-question-nav" aria-label="Question navigation">
@@ -16017,8 +16053,8 @@ function renderPupilJoin(routeCode = "") {
             </aside>
           </div>
           <div class="pupil-submit-row">
-            <button class="button primary" type="submit">Submit Answers</button>
-            <p>Do not enter personal details. Your teacher sees the alias and answers only.</p>
+            <button class="button primary" type="submit" data-pupil-submit disabled>Submit Answers</button>
+            <p><strong data-pupil-completion>0 of ${questions.length} answered</strong><span> Complete every final answer box before submitting. Your teacher sees the alias, answers, and working.</span></p>
           </div>
         </form>
       ` : state.pupilTaskLoading ? `<section class="panel"><p>Loading the class task...</p></section>` : ""}
@@ -16065,6 +16101,22 @@ function bindPupilJoin() {
     if (routeParts()[0] === "pupil") renderRoute();
   });
 
+  function updatePupilSubmitState() {
+    if (!form) return;
+    const answers = [...form.querySelectorAll("[data-pupil-answer]")];
+    const answeredCount = answers.filter((input) => input.value.trim()).length;
+    const complete = answers.length > 0 && answeredCount === answers.length;
+    const submitButton = form.querySelector("[data-pupil-submit]");
+    if (submitButton) submitButton.disabled = !complete;
+    const progress = form.querySelector("[data-pupil-completion]");
+    if (progress) progress.textContent = `${answeredCount} of ${answers.length} answered`;
+    document.querySelectorAll("[data-pupil-question-tab]").forEach((tab) => {
+      const card = form.querySelector(`[data-pupil-question-card="${tab.dataset.pupilQuestionTab}"]`);
+      const answer = card?.querySelector("[data-pupil-answer]");
+      tab.classList.toggle("answered", Boolean(answer?.value.trim()));
+    });
+  }
+
   function setActivePupilQuestion(index) {
     const cards = [...document.querySelectorAll("[data-pupil-question-card]")];
     if (!cards.length) return;
@@ -16101,8 +16153,12 @@ function bindPupilJoin() {
       if (card) setActivePupilQuestion(card.dataset.pupilQuestionCard);
     });
   });
+  document.querySelectorAll("[data-pupil-answer]").forEach((input) => {
+    input.addEventListener("input", updatePupilSubmitState);
+  });
 
   setActivePupilQuestion(state.pupilActiveQuestionIndex || 0);
+  updatePupilSubmitState();
 
   document.querySelectorAll("[data-pupil-math-insert], [data-pupil-math-template]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -16125,17 +16181,27 @@ function bindPupilJoin() {
       const nextCursor = start + cursorOffset;
       input.focus();
       input.setSelectionRange(nextCursor, nextCursor);
+      updatePupilSubmitState();
     });
   });
 
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const button = form.querySelector("button[type='submit']");
+    const button = form.querySelector("[data-pupil-submit]");
     const alias = form.querySelector("[name='pupil_alias']")?.value.trim() || "";
-    const answers = Object.fromEntries([...form.querySelectorAll("[data-pupil-answer]")].map((input) => [input.dataset.pupilAnswer, input.value.trim()]));
+    const answerInputs = [...form.querySelectorAll("[data-pupil-answer]")];
+    const firstBlankAnswer = answerInputs.find((input) => !input.value.trim());
+    const answers = Object.fromEntries(answerInputs.map((input) => [input.dataset.pupilAnswer, input.value.trim()]));
     const working = Object.fromEntries([...form.querySelectorAll("[data-pupil-working]")].map((input) => [input.dataset.pupilWorking, input.value.trim()]));
     if (!state.pupilTask?.join_code) return;
-    button.disabled = true;
+    if (firstBlankAnswer) {
+      updatePupilSubmitState();
+      const card = firstBlankAnswer.closest("[data-pupil-question-card]");
+      if (card) setActivePupilQuestion(card.dataset.pupilQuestionCard);
+      firstBlankAnswer.focus();
+      return;
+    }
+    if (button) button.disabled = true;
     try {
       classTaskWriteLocal(pupilAliasStorageKey, alias);
       const payload = await classTaskApi("submit", {
@@ -16155,7 +16221,7 @@ function bindPupilJoin() {
         status.textContent = error.message;
         status.dataset.tone = "error";
       }
-      button.disabled = false;
+      updatePupilSubmitState();
     }
   });
 }

@@ -4450,11 +4450,11 @@ button.certification-course-card {
 }
 
 .pupil-only-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(220px, 1fr) minmax(260px, 380px) auto;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
-  padding: 12px 14px;
+  padding: 8px 12px;
   border: 1px solid rgba(23, 184, 179, 0.22);
   border-radius: 10px;
   background:
@@ -4467,6 +4467,7 @@ button.certification-course-card {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: max-content;
 }
 
 .pupil-only-brand strong,
@@ -4488,14 +4489,64 @@ button.certification-course-card {
   font-weight: 900;
 }
 
+.pupil-header-task {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pupil-header-task .eyebrow {
+  font-size: 0.64rem;
+}
+
+.pupil-header-task strong {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: clamp(0.98rem, 1.5vw, 1.25rem);
+  font-weight: 950;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pupil-header-task small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pupil-header-code {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pupil-header-code .pupil-code-row {
+  margin-top: 0;
+}
+
+.pupil-header-code .worksheet-status {
+  min-height: 16px;
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.15;
+}
+
 .pupil-task-page {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 16px;
+  gap: 10px;
   width: min(1220px, 100%);
   max-width: 1220px;
   min-height: 0;
   margin: 0 auto;
+}
+
+.pupil-task-page-loaded {
+  grid-template-rows: minmax(0, 1fr);
 }
 
 .pupil-join-panel {
@@ -4573,10 +4624,10 @@ button.certification-course-card {
 
 .pupil-task-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(180px, 280px) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 260px);
   gap: 12px;
   align-items: end;
-  padding-bottom: 12px;
+  padding-bottom: 8px;
   border-bottom: 1px solid rgba(217, 224, 234, 0.9);
 }
 
@@ -4675,6 +4726,12 @@ button.certification-course-card {
   box-shadow: 0 8px 18px rgba(15, 118, 110, 0.18);
 }
 
+.pupil-question-tabs button.answered:not(.active) {
+  border-color: rgba(19, 138, 99, 0.34);
+  background: rgba(240, 253, 244, 0.96);
+  color: #126044;
+}
+
 .pupil-question-move {
   display: grid;
   gap: 6px;
@@ -4737,7 +4794,7 @@ button.certification-course-card {
 }
 
 .pupil-workspace-list .pupil-question-main {
-  grid-template-columns: minmax(0, 1fr) minmax(250px, 0.7fr);
+  grid-template-columns: minmax(250px, 0.75fr) minmax(360px, 1fr);
   gap: 12px;
   align-items: stretch;
 }
@@ -4749,7 +4806,6 @@ button.certification-course-card {
   border-radius: 8px;
   background: #fbfdff;
   border: 1px solid rgba(217, 224, 234, 0.72);
-}
 }
 
 .pupil-question-instruction {
@@ -4767,12 +4823,19 @@ button.certification-course-card {
 .pupil-answer-field input {
   font-family: var(--body-font);
   font-size: 1.02rem;
+  min-height: 42px;
 }
 
 .pupil-response-grid {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 9px;
+  min-height: 0;
+}
+
+.pupil-working-field {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   min-height: 0;
 }
 
@@ -4862,6 +4925,16 @@ button.certification-course-card {
   font-size: 0.82rem;
 }
 
+.pupil-submit-row p strong {
+  color: var(--ink);
+}
+
+.pupil-submit-row button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.18);
+  opacity: 0.48;
+}
+
 .pupil-submission-panel {
   background: #f0fdf4;
   border-color: rgba(19, 138, 99, 0.24);
@@ -4893,6 +4966,50 @@ button.certification-course-card {
   border-radius: 999px;
   background: var(--green);
   color: white;
+}
+
+.pupil-submission-review li {
+  align-items: stretch;
+}
+
+.pupil-review-question {
+  margin: 0 0 8px;
+  font-family: var(--math-font);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.pupil-review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.pupil-review-grid > div,
+.pupil-review-working,
+.pupil-worked-solution {
+  padding: 8px;
+  border: 1px solid rgba(217, 224, 234, 0.78);
+  border-radius: 7px;
+  background: #fbfdff;
+}
+
+.pupil-review-grid span,
+.pupil-review-working span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.pupil-review-grid p,
+.pupil-review-working p {
+  margin: 3px 0 0;
+}
+
+.pupil-worked-solution {
+  margin-top: 8px;
 }
 
 .tutor-setup-warning {

@@ -276,7 +276,7 @@ async function createTask(req, res, supabase) {
   if (!questions.length) return sendJson(res, 400, { error: "Add at least one question before creating a class task." });
 
   const settings = {
-    show_answers_after_submit: Boolean(body.settings?.show_answers_after_submit),
+    show_answers_after_submit: true,
     allow_multiple_submissions: Boolean(body.settings?.allow_multiple_submissions),
     source: "kaizen-class-task"
   };
@@ -407,14 +407,12 @@ async function submitPublicTask(req, res, supabase) {
 
   return sendJson(res, 200, {
     response,
-    show_answers: Boolean(task.settings?.show_answers_after_submit),
-    answers: task.settings?.show_answers_after_submit
-      ? (task.questions || []).map((question, index) => ({
-        id: question.id || `q${index + 1}`,
-        answer: question.answer || "",
-        steps: question.steps || []
-      }))
-      : []
+    show_answers: true,
+    answers: (task.questions || []).map((question, index) => ({
+      id: question.id || `q${index + 1}`,
+      answer: question.answer || "",
+      steps: question.steps || []
+    }))
   });
 }
 
