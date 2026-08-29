@@ -133,13 +133,13 @@ function taskHasPupilModuleFlag(task) {
 
 async function taskPupilAccess(res, supabase, task) {
   if (!taskHasPupilModuleFlag(task)) {
-    sendJson(res, 404, { error: "This class task is not available." });
+    sendJson(res, 404, { error: "This pupil task is not available." });
     return null;
   }
   if (!task.school_id) return { schoolName: "" };
   const school = await schoolForPupilModule(supabase, task.school_id);
   if (!school || school.is_active === false || school.pupil_module_enabled !== true) {
-    sendJson(res, 404, { error: "This class task is not available." });
+    sendJson(res, 404, { error: "This pupil task is not available." });
     return null;
   }
   return { schoolName: school.name || "" };
@@ -508,7 +508,7 @@ async function createTask(req, res, supabase) {
 
   const body = await readJsonBody(req);
   const questions = Array.isArray(body.questions) ? body.questions.slice(0, 40).map(cleanQuestion).filter((question) => question.question) : [];
-  if (!questions.length) return sendJson(res, 400, { error: "Add at least one question before creating a class task." });
+  if (!questions.length) return sendJson(res, 400, { error: "Add at least one question before creating a pupil task." });
 
   const incomingSettings = body.settings && typeof body.settings === "object" ? body.settings : {};
   const attemptSets = taskAttemptSets(incomingSettings)
@@ -545,7 +545,7 @@ async function createTask(req, res, supabase) {
       .insert({
         teacher_id: user.id,
         school_id: profile.school_id || school.id || null,
-        title: cleanText(body.title, 160) || "Kaizen Maths Class Task",
+        title: cleanText(body.title, 160) || "Kaizen Maths Pupil Task",
         instructions: cleanText(body.instructions, 900) || "Answer each question. Show working where appropriate.",
         source_tool_slug: cleanText(body.source_tool_slug, 100),
         source_tool_title: cleanText(body.source_tool_title, 160),
@@ -565,13 +565,13 @@ async function createTask(req, res, supabase) {
     if (taskError && !/duplicate|unique/i.test(taskError.message || "")) break;
   }
 
-  if (!inserted) return sendJson(res, 500, { error: insertError?.message || "Could not create a unique class task code." });
+  if (!inserted) return sendJson(res, 500, { error: insertError?.message || "Could not create a unique pupil task code." });
   return sendJson(res, 200, { task: { ...inserted, responses: [] } });
 }
 
 async function getPublicTask(req, res, supabase) {
   const code = normaliseCode(queryParam(req, "code"));
-  if (!code) return sendJson(res, 400, { error: "Enter a class task code." });
+  if (!code) return sendJson(res, 400, { error: "Enter a pupil task code." });
 
   const { data: task, error } = await supabase
     .from("class_tasks")
@@ -579,7 +579,7 @@ async function getPublicTask(req, res, supabase) {
     .eq("join_code", code)
     .maybeSingle();
   if (error) return sendJson(res, 500, { error: error.message });
-  if (!task || !taskIsAvailable(task)) return sendJson(res, 404, { error: "This class task was not found or has expired." });
+  if (!task || !taskIsAvailable(task)) return sendJson(res, 404, { error: "This pupil task was not found or has expired." });
   const access = await taskPupilAccess(res, supabase, task);
   if (!access) return;
 
@@ -593,7 +593,7 @@ async function joinPublicTask(req, res, supabase) {
   const code = normaliseCode(body.code);
   const pupilAlias = cleanText(body.pupil_alias, 80);
   const attemptIndex = clampNumber(body.attempt_index, 0, 9, 0);
-  if (!code) return sendJson(res, 400, { error: "Enter a class task code." });
+  if (!code) return sendJson(res, 400, { error: "Enter a pupil task code." });
   if (!pupilAlias) return sendJson(res, 400, { error: "Enter an alias or initials before starting." });
 
   const { data: task, error } = await supabase
@@ -602,7 +602,7 @@ async function joinPublicTask(req, res, supabase) {
     .eq("join_code", code)
     .maybeSingle();
   if (error) return sendJson(res, 500, { error: error.message });
-  if (!task || !taskIsAvailable(task)) return sendJson(res, 404, { error: "This class task was not found or has expired." });
+  if (!task || !taskIsAvailable(task)) return sendJson(res, 404, { error: "This pupil task was not found or has expired." });
   const access = await taskPupilAccess(res, supabase, task);
   if (!access) return;
 
@@ -623,7 +623,7 @@ async function submitPublicTask(req, res, supabase) {
   const code = normaliseCode(body.code);
   const pupilAlias = cleanText(body.pupil_alias, 80);
   const attemptIndex = clampNumber(body.attempt_index, 0, 9, 0);
-  if (!code) return sendJson(res, 400, { error: "Enter a class task code." });
+  if (!code) return sendJson(res, 400, { error: "Enter a pupil task code." });
   if (!pupilAlias) return sendJson(res, 400, { error: "Enter an alias or initials before submitting." });
 
   const { data: task, error } = await supabase
@@ -632,7 +632,7 @@ async function submitPublicTask(req, res, supabase) {
     .eq("join_code", code)
     .maybeSingle();
   if (error) return sendJson(res, 500, { error: error.message });
-  if (!task || !taskIsAvailable(task)) return sendJson(res, 404, { error: "This class task was not found or has expired." });
+  if (!task || !taskIsAvailable(task)) return sendJson(res, 404, { error: "This pupil task was not found or has expired." });
   const access = await taskPupilAccess(res, supabase, task);
   if (!access) return;
 

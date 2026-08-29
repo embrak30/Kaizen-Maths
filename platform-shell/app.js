@@ -2679,6 +2679,7 @@ const state = {
   classTasksLoading: false,
   classTaskError: "",
   classTaskSource: "",
+  classTaskListSignature: "",
   classTaskLastMessage: "",
   classTaskToolSlug: "",
   classTaskMetadata: null,
@@ -3244,7 +3245,11 @@ function pupilModuleOverviewHtml({ locked = false } = {}) {
       <article class="panel pupil-module-info-card">
         <span class="eyebrow">How It Works</span>
         <h2>${locked ? "Pupil module access is controlled by school" : "Closed pupil tasks for your organisation"}</h2>
-        <p>Teachers create a short Kaizen Maths task, share one join code, and pupils complete it in the pupil task space using an alias or initials.</p>
+        <ol class="pupil-module-flow">
+          <li><span>1</span><strong>Create</strong><small>Choose the tool, level, question type, score, and expiry.</small></li>
+          <li><span>2</span><strong>Share</strong><small>Give pupils one join code or link for that task.</small></li>
+          <li><span>3</span><strong>Review</strong><small>See aliases, submissions, scores, working, and feedback notes.</small></li>
+        </ol>
       </article>
       <article class="panel pupil-module-info-card">
         <span class="eyebrow">Access</span>
@@ -3253,7 +3258,7 @@ function pupilModuleOverviewHtml({ locked = false } = {}) {
       </article>
       <article class="panel pupil-module-info-card">
         <span class="eyebrow">Safety And Use</span>
-        <ul>
+        <ul class="pupil-module-checklist">
           ${terms.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
         </ul>
       </article>
@@ -15366,7 +15371,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
       teacher_email: classTaskCurrentTeacherEmail(),
       school_id: profile.school_id || "",
       school_name: currentSchoolName() || "",
-      title: String(body.title || "Kaizen Maths Class Task").trim(),
+      title: String(body.title || "Kaizen Maths Pupil Task").trim(),
       instructions: String(body.instructions || "Answer each question. Show working where appropriate.").trim(),
       source_tool_slug: body.source_tool_slug || "",
       source_tool_title: body.source_tool_title || "",
@@ -15402,8 +15407,8 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
   if (action === "get") {
     const code = normaliseClassTaskCode(params.code);
     const task = tasks.find((item) => item.join_code === code);
-    if (!task || !classTaskIsAvailable(task)) throw new Error("This class task was not found or has expired.");
-    if (!classTaskLocalTaskIsPupilEnabled(task)) throw new Error("This class task is not available.");
+    if (!task || !classTaskIsAvailable(task)) throw new Error("This pupil task was not found or has expired.");
+    if (!classTaskLocalTaskIsPupilEnabled(task)) throw new Error("This pupil task is not available.");
     return {
       task: classTaskPublicTaskForAttempt(task, 0),
       source: "local"
@@ -15415,8 +15420,8 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     const alias = String(body.pupil_alias || "").trim().slice(0, 80);
     const attemptIndex = classTaskClampNumber(body.attempt_index, 0, 9, 0);
     const task = tasks.find((item) => item.join_code === code);
-    if (!task || !classTaskIsAvailable(task)) throw new Error("This class task was not found or has expired.");
-    if (!classTaskLocalTaskIsPupilEnabled(task)) throw new Error("This class task is not available.");
+    if (!task || !classTaskIsAvailable(task)) throw new Error("This pupil task was not found or has expired.");
+    if (!classTaskLocalTaskIsPupilEnabled(task)) throw new Error("This pupil task is not available.");
     if (!alias) throw new Error("Enter an alias or initials before starting.");
     const result = classTaskUpsertLocalParticipant(participants, task, alias, {
       status: "joined",
@@ -15431,8 +15436,8 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     const alias = String(body.pupil_alias || "").trim().slice(0, 80);
     const attemptIndex = classTaskClampNumber(body.attempt_index, 0, 9, 0);
     const task = tasks.find((item) => item.join_code === code);
-    if (!task || !classTaskIsAvailable(task)) throw new Error("This class task was not found or has expired.");
-    if (!classTaskLocalTaskIsPupilEnabled(task)) throw new Error("This class task is not available.");
+    if (!task || !classTaskIsAvailable(task)) throw new Error("This pupil task was not found or has expired.");
+    if (!classTaskLocalTaskIsPupilEnabled(task)) throw new Error("This pupil task is not available.");
     if (!alias) throw new Error("Enter an alias or initials before submitting.");
     const aliasResponses = responses.filter((response) => response.task_id === task.id && normalise(response.pupil_alias) === normalise(alias));
     const passPercent = classTaskPassPercent(task.settings || {});
@@ -15602,16 +15607,16 @@ function populateClassTaskControls(metadata) {
   populateTypes();
 }
 
-function resetClassTaskControls(message = "Choose a topic, then load question types when you are ready to create a class task.") {
+function resetClassTaskControls(message = "Choose a topic. Levels and question types will load automatically.") {
   const levelSelect = document.getElementById("classTaskLevel");
   const typeSelect = document.getElementById("classTaskType");
   if (levelSelect) {
     levelSelect.disabled = true;
-    levelSelect.innerHTML = `<option value="">Load question types first</option>`;
+    levelSelect.innerHTML = `<option value="">Loading levels...</option>`;
   }
   if (typeSelect) {
     typeSelect.disabled = true;
-    typeSelect.innerHTML = `<option value="">Load question types first</option>`;
+    typeSelect.innerHTML = `<option value="">Loading question types...</option>`;
   }
   setClassTaskStatus(message);
 }
@@ -15759,11 +15764,52 @@ async function createClassTaskFromForm(form) {
   setClassTaskStatus(state.classTaskLastMessage, "success");
 }
 
-async function loadClassTasks({ rerender = false, force = false } = {}) {
+function classTaskListSignature(tasks = state.classTasks, error = state.classTaskError, source = state.classTaskSource) {
+  return JSON.stringify({
+    source,
+    error,
+    tasks: (tasks || []).map((task) => ({
+      id: task.id,
+      join_code: task.join_code,
+      is_active: task.is_active,
+      expires_at: task.expires_at,
+      updated_at: task.updated_at,
+      responses: (task.responses || []).map((response) => [
+        response.id,
+        response.reviewed,
+        response.teacher_notes || "",
+        response.auto_score,
+        response.max_score,
+        response.submitted_at
+      ]),
+      participants: (task.participants || []).map((participant) => [
+        participant.id,
+        participant.pupil_alias,
+        participant.status,
+        participant.current_attempt,
+        participant.submissions_count,
+        participant.last_score,
+        participant.pass_met,
+        participant.last_seen_at
+      ])
+    }))
+  });
+}
+
+function classTaskCountLabel() {
+  const activeCount = state.classTasks.filter(classTaskIsAvailable).length;
+  const closedCount = Math.max(0, state.classTasks.length - activeCount);
+  if (state.classTasksLoading && !state.classTasks.length) return "Loading...";
+  if (!state.classTasks.length) return "0 tasks";
+  return `${activeCount} open · ${closedCount} closed`;
+}
+
+async function loadClassTasks({ rerender = false, force = false, quiet = false } = {}) {
   if (!isSignedIn() || !hasPupilModuleAccess() || state.classTasksLoading) return;
   if (state.classTasksLoaded && !force) return;
+  const previousSignature = state.classTaskListSignature || classTaskListSignature();
   state.classTasksLoading = true;
-  if (rerender && routeParts()[0] === "class-tasks") updateClassTaskListPanel();
+  if (rerender && routeParts()[0] === "class-tasks" && !quiet) updateClassTaskListPanel();
   state.classTaskError = "";
   try {
     const payload = await classTaskApi("list", { auth: true });
@@ -15771,11 +15817,21 @@ async function loadClassTasks({ rerender = false, force = false } = {}) {
     state.classTaskSource = payload.source || "supabase";
     state.classTasksLoaded = true;
   } catch (error) {
-    state.classTaskError = error.message || "Class tasks could not load.";
+    state.classTaskError = error.message || "Pupil tasks could not load.";
     state.classTasksLoaded = true;
   } finally {
     state.classTasksLoading = false;
-    if (rerender && routeParts()[0] === "class-tasks" && !updateClassTaskListPanel()) renderRoute();
+    const nextSignature = classTaskListSignature();
+    const shouldUpdate = !quiet || nextSignature !== previousSignature;
+    state.classTaskListSignature = nextSignature;
+    if (rerender && routeParts()[0] === "class-tasks") {
+      const list = document.getElementById("classTaskList");
+      if (!list) {
+        renderRoute();
+      } else if (shouldUpdate) {
+        updateClassTaskListPanel();
+      }
+    }
   }
 }
 
@@ -15789,6 +15845,7 @@ function resetClassTaskState() {
   state.classTasksLoading = false;
   state.classTaskError = "";
   state.classTaskSource = "";
+  state.classTaskListSignature = "";
   state.classTaskLastMessage = "";
   state.classTaskMetadata = null;
   state.classTaskLoadedToolSlug = "";
@@ -15807,11 +15864,11 @@ function startClassTaskMonitorRefresh() {
       return;
     }
     const activeElement = document.activeElement;
-    if (activeElement?.closest?.(".class-task-response-detail, .class-task-feedback-form")) return;
+    if (activeElement?.closest?.(".class-task-builder, .class-task-response-detail, .class-task-feedback-form")) return;
     if (!state.classTasksLoading) {
-      loadClassTasks({ rerender: true, force: true });
+      loadClassTasks({ rerender: true, force: true, quiet: true });
     }
-  }, 10000);
+  }, 15000);
 }
 
 function syncClassTaskAuthState() {
@@ -15915,9 +15972,28 @@ function classTaskSourceNotice() {
 }
 
 function classTaskListHtml() {
-  if (state.classTasksLoading) return `<div class="empty-state">Loading class tasks...</div>`;
-  if (state.classTasks.length) return state.classTasks.map(classTaskCardHtml).join("");
-  return `<div class="empty-state">No class tasks yet. Create a join code from the builder on this page.</div>`;
+  if (state.classTasksLoading && !state.classTasks.length) return `<div class="empty-state">Loading pupil tasks...</div>`;
+  if (!state.classTasks.length) return `<div class="empty-state">No pupil tasks yet. Create a join code from the builder on this page.</div>`;
+  const openTasks = state.classTasks.filter(classTaskIsAvailable);
+  const closedTasks = state.classTasks.filter((task) => !classTaskIsAvailable(task));
+  return `
+    <div class="class-task-section-title">
+      <span>Open pupil tasks</span>
+      <strong>${openTasks.length}</strong>
+    </div>
+    ${openTasks.length ? openTasks.map(classTaskCardHtml).join("") : `<div class="empty-state">No open pupil tasks. Create a new join code when you are ready.</div>`}
+    ${closedTasks.length ? `
+      <details class="class-task-archive">
+        <summary>
+          <span>Closed tasks</span>
+          <strong>${closedTasks.length}</strong>
+        </summary>
+        <div class="class-task-archive-list">
+          ${closedTasks.map(classTaskCardHtml).join("")}
+        </div>
+      </details>
+    ` : ""}
+  `;
 }
 
 function updateClassTaskListPanel() {
@@ -15925,9 +16001,7 @@ function updateClassTaskListPanel() {
   const list = document.getElementById("classTaskList");
   const sourceNotice = document.getElementById("classTaskSourceNotice");
   if (!count || !list) return false;
-  count.textContent = state.classTasksLoading
-    ? "Loading..."
-    : `${state.classTasks.length} task${state.classTasks.length === 1 ? "" : "s"}`;
+  count.textContent = classTaskCountLabel();
   list.innerHTML = classTaskListHtml();
   if (sourceNotice) sourceNotice.innerHTML = classTaskSourceNotice();
   bindClassTaskListActions();
@@ -16064,7 +16138,7 @@ function classTaskCardHtml(task) {
       <div class="class-task-card-head">
         <div>
           <span class="eyebrow">${isOpen ? "Open Task" : "Closed Task"}</span>
-          <h3>${escapeHtml(task.title || "Kaizen Maths Class Task")}</h3>
+          <h3>${escapeHtml(task.title || "Kaizen Maths Pupil Task")}</h3>
           <p>${escapeHtml([task.source_tool_title, task.source_type_label].filter(Boolean).join(" · ") || "Pupil practice task")}</p>
         </div>
         <strong class="class-task-code">${escapeHtml(task.join_code)}</strong>
@@ -16193,7 +16267,7 @@ function renderClassTasks() {
   if (!isSignedIn()) {
     app.innerHTML = `
       ${pageHeader(
-        "Pupil Pilot",
+        "Pupil Module",
         "A controlled school and tutor module for setting short online Kaizen Maths tasks.",
         `<button class="button primary" type="button" data-auth-action="signin">Sign in with Google</button>`
       )}
@@ -16207,7 +16281,7 @@ function renderClassTasks() {
   if (!hasPupilModuleAccess()) {
     app.innerHTML = `
       ${pageHeader(
-        "Pupil Pilot",
+        "Pupil Module",
         "Pupil tasks are available only where the pupil module has been enabled for a school or tutor organisation.",
         `<a class="button primary" href="#/school-space">Join School Licence</a><a class="button" href="#/book-demo">Book a Demo Session</a>`
       )}
@@ -16232,7 +16306,7 @@ function renderClassTasks() {
 
   app.innerHTML = `
     ${pageHeader(
-      "Pupil Pilot",
+      "Pupil Module",
       "Create a closed pupil task code for your school or tutor organisation.",
       `<a class="button" href="#/pupil">Pupil Join Page</a><a class="button" href="#/worksheet-generator">Worksheet Builder</a>`
     )}
@@ -16242,7 +16316,7 @@ function renderClassTasks() {
         <div class="class-task-builder-head">
           <div>
             <span class="eyebrow">Teacher Task Builder</span>
-            <h2>Create a class task</h2>
+            <h2>Create a pupil task</h2>
             <p>Choose a topic block, generate fresh questions, then share the join code or link. Pupils enter an alias only.</p>
           </div>
           <button class="button subtle" type="button" id="refreshClassTasks">Refresh</button>
@@ -16291,22 +16365,22 @@ function renderClassTasks() {
               <input name="allow_multiple_submissions" type="checkbox">
               Allow repeat submissions
             </label>
-            <button class="button subtle" type="button" id="prepareClassTaskTool">Load / Retry Types</button>
+            <button class="button subtle" type="button" id="prepareClassTaskTool" title="Refresh the level and question-type dropdowns if a topic has not loaded correctly.">Refresh Types</button>
             <button class="button primary" type="submit">Create Join Code</button>
           </div>
         </form>
-        <p class="worksheet-status" id="classTaskStatus" data-tone="${state.classTaskError ? "error" : ""}">${escapeHtml(state.classTaskLastMessage || state.classTaskError || "Choose a topic, then load question types when you are ready to create a class task.")}</p>
+        <p class="worksheet-status" id="classTaskStatus" data-tone="${state.classTaskError ? "error" : ""}">${escapeHtml(state.classTaskLastMessage || state.classTaskError || "Choose a topic, level, and question type, then create a join code.")}</p>
         <div id="classTaskSourceNotice">${classTaskSourceNotice()}</div>
-        <iframe class="worksheet-loader" id="classTaskLoader" title="Class task tool loader" aria-hidden="true"></iframe>
+        <iframe class="worksheet-loader" id="classTaskLoader" title="Pupil task tool loader" aria-hidden="true"></iframe>
       </article>
 
       <section class="class-task-list-panel panel">
         <div class="class-task-list-head">
           <div>
             <span class="eyebrow">Live Tasks</span>
-            <h2>Recent class tasks</h2>
+            <h2>Pupil tasks</h2>
           </div>
-          <span data-class-task-count>${state.classTasksLoading ? "Loading..." : `${state.classTasks.length} task${state.classTasks.length === 1 ? "" : "s"}`}</span>
+          <span data-class-task-count>${classTaskCountLabel()}</span>
         </div>
         <div class="class-task-list" id="classTaskList">
           ${classTaskListHtml()}
@@ -16360,7 +16434,7 @@ function bindClassTasks() {
     } finally {
       if (button.isConnected) {
         button.disabled = false;
-        button.textContent = originalLabel || "Reload Question Types";
+        button.textContent = originalLabel || "Refresh Types";
       }
     }
   });
@@ -16405,7 +16479,7 @@ async function loadPupilTask(code, { rerender = false } = {}) {
     state.pupilTaskAttemptIndex = Number(payload.task?.attempt_index || 0);
   } catch (error) {
     state.pupilTask = null;
-    state.pupilTaskError = error.message || "Class task could not be loaded.";
+    state.pupilTaskError = error.message || "Pupil task could not be loaded.";
   } finally {
     state.pupilTaskLoading = false;
     if (rerender && routeParts()[0] === "pupil") renderRoute();
@@ -16625,7 +16699,7 @@ function renderPupilJoin(routeCode = "") {
         </div>
         <div class="pupil-header-code">
           <div class="pupil-code-row">
-            <input id="pupilTaskCodeInput" type="text" value="${escapeHtml(cleanCode)}" autocomplete="off" spellcheck="false" placeholder="Example: KZPRACT" aria-label="Class task code">
+            <input id="pupilTaskCodeInput" type="text" value="${escapeHtml(cleanCode)}" autocomplete="off" spellcheck="false" placeholder="Example: KZPRACT" aria-label="Pupil task code">
             <button class="button primary" id="loadPupilTaskButton" type="button">Load</button>
           </div>
           <p class="worksheet-status" id="pupilTaskStatus" data-tone="${state.pupilTaskError ? "error" : ""}">${escapeHtml(statusText)}</p>
@@ -16637,7 +16711,7 @@ function renderPupilJoin(routeCode = "") {
       ${!task ? `
         <article class="panel pupil-join-panel">
           <span class="eyebrow">Pupil Workspace</span>
-          <h1>Load your class task</h1>
+          <h1>Load your pupil task</h1>
           <p>This page only opens with a code from your teacher or tutor. Use initials, a nickname, or the identifier your teacher gives you rather than a full name.</p>
         </article>
       ` : ""}
@@ -16678,7 +16752,7 @@ function renderPupilJoin(routeCode = "") {
             <p><strong data-pupil-completion>0 of ${questions.length} answered</strong><span> Complete every final answer box before submitting. Your teacher sees the alias, answers, and working.</span></p>
           </div>
         </form>
-      ` : state.pupilTaskLoading ? `<section class="panel"><p>Loading the class task...</p></section>` : ""}
+      ` : state.pupilTaskLoading ? `<section class="panel"><p>Loading the pupil task...</p></section>` : ""}
       </section>
     </section>
   `;
@@ -19327,7 +19401,7 @@ function renderSchoolSpace() {
           <div class="button-row">
             <a class="button primary" href="#/tools">Open Tool Library</a>
             <a class="button" href="#/worksheet-generator">Open Worksheet Builder</a>
-            ${pupilModuleEnabled ? `<a class="button" href="#/class-tasks">Open Pupil Pilot</a>` : ""}
+            ${pupilModuleEnabled ? `<a class="button" href="#/class-tasks">Open Pupil Module</a>` : ""}
           </div>
         </article>
         ${contactPerson ? `
@@ -22217,7 +22291,7 @@ function updateRouteSeo(parts) {
       description: "Generate original maths practice sets and mock papers in GCSE, PISA-style, TIMSS-style, Regents-style, and international assessment formats."
     },
     "class-tasks": {
-      title: routeTitle("Pupil Pilot"),
+      title: routeTitle("Pupil Module"),
       description: "Create controlled online Kaizen Maths pupil tasks for enabled school and tutor organisations, using join codes and alias-only pupil submissions."
     },
     "pupil": {
@@ -22355,8 +22429,8 @@ function renderRoute() {
     if (isAuthChecking()) {
       app.innerHTML = `
         ${pageHeader(
-          "Pupil Pilot",
-          "Create short online class tasks with join codes and alias-only pupil submissions.",
+          "Pupil Module",
+          "Create controlled pupil tasks with join codes and alias-only pupil submissions.",
           `<a class="button" href="#/pupil">Pupil Join Page</a>`
         )}
         ${checkingAccessCallout("Checking pupil-task access")}

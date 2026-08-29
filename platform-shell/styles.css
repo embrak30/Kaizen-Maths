@@ -4126,6 +4126,88 @@ button.certification-course-card {
   padding-left: 18px;
 }
 
+.pupil-module-flow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pupil-module-flow li {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding: 10px 9px;
+  border: 1px solid rgba(23, 184, 179, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.pupil-module-flow li:not(:last-child)::after {
+  content: "\2192";
+  position: absolute;
+  top: 50%;
+  right: -9px;
+  z-index: 1;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--teal);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 950;
+  line-height: 18px;
+  text-align: center;
+  transform: translateY(-50%);
+}
+
+.pupil-module-flow li > span {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #172033;
+  color: white;
+  font-size: 0.76rem;
+  font-weight: 950;
+  line-height: 24px;
+  text-align: center;
+}
+
+.pupil-module-flow strong {
+  color: #172033;
+  font-size: 0.88rem;
+}
+
+.pupil-module-flow small {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.pupil-module-checklist {
+  display: grid;
+  gap: 6px;
+  list-style: none;
+  padding-left: 0 !important;
+}
+
+.pupil-module-checklist li {
+  position: relative;
+  padding-left: 22px;
+}
+
+.pupil-module-checklist li::before {
+  content: "\2192";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--teal-dark);
+  font-weight: 950;
+}
+
 .class-task-builder,
 .class-task-list-panel,
 .pupil-join-panel,
@@ -4266,6 +4348,55 @@ button.certification-course-card {
   display: grid;
   gap: 12px;
   margin-top: 12px;
+}
+
+.class-task-section-title,
+.class-task-archive summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(231, 251, 250, 0.74);
+  color: #0d6970;
+  font-size: 0.82rem;
+  font-weight: 950;
+}
+
+.class-task-section-title strong,
+.class-task-archive summary strong {
+  min-width: 28px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: white;
+  color: #172033;
+  text-align: center;
+}
+
+.class-task-archive {
+  display: grid;
+  gap: 10px;
+  margin-top: 2px;
+  border: 1px solid rgba(217, 224, 234, 0.82);
+  border-radius: 8px;
+  padding: 8px;
+  background: rgba(248, 250, 252, 0.78);
+}
+
+.class-task-archive summary {
+  cursor: pointer;
+}
+
+.class-task-archive-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.class-task-archive .class-task-card {
+  border-left-color: #94a3b8;
+  opacity: 0.92;
 }
 
 .class-task-card {
@@ -10250,6 +10381,17 @@ sup .worksheet-fraction > span:last-child {
 @media (max-width: 820px) {
   .class-task-form {
     grid-template-columns: 1fr;
+  }
+
+  .pupil-module-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .pupil-module-flow li:not(:last-child)::after {
+    top: auto;
+    right: 14px;
+    bottom: -13px;
+    transform: rotate(90deg);
   }
 
   .class-task-builder-head,
