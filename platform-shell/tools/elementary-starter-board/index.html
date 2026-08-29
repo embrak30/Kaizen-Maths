@@ -367,7 +367,7 @@
     .four-ops-board {
       position: relative;
       width: min(100%, 1040px);
-      min-height: min(56vh, 540px);
+      height: clamp(380px, 58vh, 540px);
       aspect-ratio: 16 / 9;
       margin: 0 auto;
       overflow: hidden;
@@ -457,36 +457,13 @@
       display: grid;
       place-items: center;
       min-width: 0;
-      background:
-        linear-gradient(90deg, rgba(24, 50, 74, .08) 1px, transparent 1px),
-        linear-gradient(rgba(24, 50, 74, .08) 1px, transparent 1px),
-        #ffffff;
-      background-size: 18px 18px;
+      background: #ffffff;
     }
 
     .four-ops-workspace::after {
       content: "";
       width: 74%;
       border-bottom: 4px dotted rgba(23, 52, 84, .42);
-    }
-
-    .four-ops-rule {
-      position: absolute;
-      left: 50%;
-      bottom: 2.5%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.82);
-      border: 1px solid rgba(24, 50, 74, .1);
-      font-size: clamp(.76rem, 1vw, .9rem);
-      font-weight: 950;
-      color: #143657;
     }
 
     .four-ops-badge {
@@ -525,6 +502,31 @@
       border: 1px solid var(--line);
       font-size: clamp(.86rem, 1vw, 1rem);
       white-space: nowrap;
+    }
+
+    .four-ops-instruction {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      max-width: min(100%, 980px);
+      margin: 0 auto;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(24, 50, 74, .1);
+      color: #143657;
+      font-size: clamp(.84rem, 1.2vw, 1.05rem);
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .four-ops-instruction .four-ops-badge {
+      width: 26px;
+      height: 26px;
+      font-size: 1rem;
+      flex: 0 0 auto;
     }
 
     .dots,
@@ -1004,8 +1006,8 @@
 
     function fourOpsEntryHtml(entry, index) {
       const positions = [
-        [18, 20], [50, 10], [82, 20], [90, 50],
-        [82, 80], [50, 90], [18, 80], [10, 50]
+        [17, 22], [50, 13], [83, 22], [88, 50],
+        [83, 78], [50, 87], [17, 78], [12, 50]
       ];
       const position = positions[index] || [50, 50];
       return '<div class="four-ops-box" style="--x:' + position[0] + '%;--y:' + position[1] + '%;--accent:' + fourOpsAccents[index % fourOpsAccents.length] + '">' +
@@ -1016,8 +1018,8 @@
 
     function fourOpsVisual(target, entries) {
       const positions = [
-        [18, 20], [50, 10], [82, 20], [90, 50],
-        [82, 80], [50, 90], [18, 80], [10, 50]
+        [17, 22], [50, 13], [83, 22], [88, 50],
+        [83, 78], [50, 87], [17, 78], [12, 50]
       ];
       const lines = positions.map((position) => (
         '<line x1="50" y1="50" x2="' + position[0] + '" y2="' + position[1] + '"></line>'
@@ -1026,14 +1028,18 @@
         '<svg class="four-ops-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">' + lines + '</svg>' +
         '<div class="four-ops-centre"><span>Target<strong>' + target + '</strong></span></div>' +
         entries.map(fourOpsEntryHtml).join("") +
-        '<div class="four-ops-rule">' +
-          '<span>Use one extra number and one operation. Try all four:</span>' +
-          '<span class="four-ops-badge" style="--accent:#f04b38">+</span>' +
-          '<span class="four-ops-badge" style="--accent:#2f6fab">−</span>' +
-          '<span class="four-ops-badge" style="--accent:#2ab393">×</span>' +
-          '<span class="four-ops-badge" style="--accent:#7b5be6">÷</span>' +
-        '</div>' +
       '</div>';
+    }
+
+    function fourOpsInstructionHtml() {
+      return '<span class="four-ops-instruction">' +
+        '<span>Use each outer number with one extra number and one operation to make the target.</span>' +
+        '<span>Use all four:</span>' +
+        '<span class="four-ops-badge" style="--accent:#f04b38">+</span>' +
+        '<span class="four-ops-badge" style="--accent:#2f6fab">−</span>' +
+        '<span class="four-ops-badge" style="--accent:#2ab393">×</span>' +
+        '<span class="four-ops-badge" style="--accent:#7b5be6">÷</span>' +
+      '</span>';
     }
 
     function uniqueOuter(entries, outer) {
@@ -1048,28 +1054,15 @@
       return false;
     }
 
-    function makeFourOps() {
-      const possibleTargets = Array.from({ length: 25 }, (_, index) => index + 12).filter((target) => {
+    function makeFourOps(level) {
+      const targetRange = level === "early" ? [10, 24] : level === "upper" ? [18, 36] : [12, 30];
+      const possibleTargets = Array.from({ length: targetRange[1] - targetRange[0] + 1 }, (_, index) => index + targetRange[0]).filter((target) => {
         const factorCount = Array.from({ length: target - 2 }, (_, factorIndex) => factorIndex + 2)
           .filter((factor) => target % factor === 0 && factor !== target).length;
-        return factorCount >= 2 && Math.floor(99 / target) >= 2;
+        return factorCount >= 2 && Math.floor(99 / target) >= 3;
       });
       const target = choose(possibleTargets);
       const entries = [];
-      let guard = 0;
-
-      while (entries.filter((entry) => entry.op === "+").length < 2 && guard < 80) {
-        guard += 1;
-        const extra = randInt(2, target - 2);
-        pushFourOpsEntry(entries, { op: "+", outer: target - extra, extra, sample: (target - extra) + " + " + extra + " = " + target });
-      }
-
-      guard = 0;
-      while (entries.filter((entry) => entry.op === "−").length < 2 && guard < 80) {
-        guard += 1;
-        const extra = randInt(2, Math.min(35, 99 - target));
-        pushFourOpsEntry(entries, { op: "−", outer: target + extra, extra, sample: (target + extra) + " − " + extra + " = " + target });
-      }
 
       const factors = shuffle(Array.from({ length: target - 2 }, (_, index) => index + 2)
         .filter((factor) => target % factor === 0 && factor !== target));
@@ -1085,6 +1078,20 @@
           pushFourOpsEntry(entries, { op: "÷", outer: target * divisor, extra: divisor, sample: (target * divisor) + " ÷ " + divisor + " = " + target });
         }
       });
+
+      let guard = 0;
+      while (entries.filter((entry) => entry.op === "+").length < 2 && guard < 80) {
+        guard += 1;
+        const extra = randInt(2, target - 2);
+        pushFourOpsEntry(entries, { op: "+", outer: target - extra, extra, sample: (target - extra) + " + " + extra + " = " + target });
+      }
+
+      guard = 0;
+      while (entries.filter((entry) => entry.op === "−").length < 2 && guard < 80) {
+        guard += 1;
+        const extra = randInt(2, Math.min(35, 99 - target));
+        pushFourOpsEntry(entries, { op: "−", outer: target + extra, extra, sample: (target + extra) + " − " + extra + " = " + target });
+      }
 
       guard = 0;
       while (entries.length < 8 && guard < 120) {
@@ -1103,7 +1110,7 @@
       return {
         type: "Four Ops",
         kind: "fourOps",
-        question: "Make the centre number from each outer number.",
+        question: fourOpsInstructionHtml(),
         answer: finalEntries.map((entry) => entry.sample).join(" | "),
         samples: finalEntries.map((entry) => entry.sample),
         visual: fourOpsVisual(target, finalEntries)
