@@ -2695,6 +2695,10 @@ const state = {
   pupilTaskAttemptIndex: 0,
   pupilActiveQuestionIndex: 0,
   pupilJoinRegisteredKey: "",
+  pupilTaskActivityStartedAt: "",
+  pupilTaskVisibleSeconds: 0,
+  pupilTaskActivityTimer: null,
+  pupilTaskHeartbeatTimer: null,
   lastAuthAccessKey: ""
 };
 
@@ -3244,11 +3248,11 @@ function pupilModuleOverviewHtml({ locked = false } = {}) {
     <section class="pupil-module-info-grid">
       <article class="panel pupil-module-info-card">
         <span class="eyebrow">How It Works</span>
-        <h2>${locked ? "Pupil module access is controlled by school" : "Closed pupil tasks for your organisation"}</h2>
+        <h2>${locked ? "Pupil module access is controlled by school" : "Tasks and practice rooms for your organisation"}</h2>
         <ol class="pupil-module-flow">
-          <li><span>1</span><strong>Create</strong><small>Choose the tool, level, question type, score, and expiry.</small></li>
+          <li><span>1</span><strong>Create</strong><small>Choose a fixed task or timed practice room.</small></li>
           <li><span>2</span><strong>Share</strong><small>Give pupils one join code or link for that task.</small></li>
-          <li><span>3</span><strong>Review</strong><small>See aliases, submissions, scores, working, and feedback notes.</small></li>
+          <li><span>3</span><strong>Review</strong><small>Track joins, attempts, scores, working, and feedback notes.</small></li>
         </ol>
       </article>
       <article class="panel pupil-module-info-card">
@@ -15153,9 +15157,10 @@ function classTaskAcceptableAnswers(expected) {
   return [...answers].filter(Boolean);
 }
 
-function classTaskScoreSubmission(questions = [], answers = {}, working = {}) {
+function classTaskScoreSubmission(questions = [], answers = {}, working = {}, options = {}) {
   let autoScore = 0;
   let maxScore = 0;
+  let attemptedCount = 0;
   const feedback = questions.map((question, index) => {
     const id = question.id || `q${index + 1}`;
     const expected = question.answer || "";
@@ -15164,7 +15169,10 @@ function classTaskScoreSubmission(questions = [], answers = {}, working = {}) {
     const marks = Number(question.marks) || 1;
     const accepted = classTaskAcceptableAnswers(expected);
     const submittedClean = classTaskNormaliseAnswer(submitted);
-    const markable = Boolean(accepted.length);
+    const attempted = Boolean(submittedClean || String(workingText || "").trim());
+    if (attempted) attemptedCount += 1;
+    const scoreThisQuestion = !(options.scoreOnlyAnswered && !attempted);
+    const markable = Boolean(accepted.length && scoreThisQuestion);
     const correct = Boolean(markable && submittedClean && accepted.includes(submittedClean));
     if (markable) {
       maxScore += marks;
@@ -15175,12 +15183,13 @@ function classTaskScoreSubmission(questions = [], answers = {}, working = {}) {
       submitted: String(submitted || "").trim(),
       correct,
       markable,
+      attempted,
       marks,
       expected,
       working: String(workingText || "").trim().slice(0, 4000)
     };
   });
-  return { auto_score: autoScore, max_score: maxScore, feedback };
+  return { auto_score: autoScore, max_score: maxScore, questions_attempted: attemptedCount, questions_available: questions.length, feedback };
 }
 
 function classTaskPublicQuestion(question, index) {
@@ -15205,6 +15214,58 @@ function classTaskPassPercent(settings = {}) {
   return classTaskClampNumber(settings.pass_percent, 0, 100, 0);
 }
 
+function classTaskMode(settings = {}) {
+  const mode = String(settings.task_mode || settings.mode || "").toLowerCase();
+  return mode === "practice_room" ? "practice_room" : "fixed_task";
+}
+
+function classTaskModeLabel(settings = {}) {
+  return classTaskMode(settings) === "practice_room" ? "Practice Room" : "Fixed Task";
+}
+
+function classTaskIsPracticeRoom(taskOrSettings = {}) {
+  const settings = taskOrSettings.settings || taskOrSettings;
+  return classTaskMode(settings) === "practice_room";
+}
+
+function classTaskMinimumQuestions(settings = {}) {
+  return classTaskClampNumber(settings.minimum_questions, 1, 40, classTaskClampNumber(settings.source_count, 1, 40, 5));
+}
+
+function classTaskTimeTargetMinutes(settings = {}) {
+  return classTaskClampNumber(settings.time_target_minutes, 0, 180, 0);
+}
+
+function classTaskCoverageMode(settings = {}) {
+  const mode = String(settings.coverage_mode || "").toLowerCase();
+  return ["selected_type", "level_mix", "tool_mix"].includes(mode) ? mode : "selected_type";
+}
+
+function classTaskCoverageLabel(settings = {}) {
+  if (classTaskCoverageMode(settings) === "tool_mix") return "Across levels";
+  if (classTaskCoverageMode(settings) === "level_mix") return "Mixed question types";
+  return "Selected question type";
+}
+
+function classTaskFormatSeconds(seconds) {
+  const safeSeconds = Math.max(0, Math.round(Number(seconds) || 0));
+  const minutes = Math.floor(safeSeconds / 60);
+  const remaining = safeSeconds % 60;
+  if (minutes <= 0) return `${remaining}s`;
+  return `${minutes}m ${String(remaining).padStart(2, "0")}s`;
+}
+
+function pupilTaskCleanActivity(activity = {}) {
+  if (!activity || typeof activity !== "object") return {};
+  const startedAt = activity.started_at ? new Date(activity.started_at) : null;
+  const submittedAt = activity.submitted_at ? new Date(activity.submitted_at) : null;
+  return {
+    started_at: startedAt && !Number.isNaN(startedAt.getTime()) ? startedAt.toISOString() : "",
+    submitted_at: submittedAt && !Number.isNaN(submittedAt.getTime()) ? submittedAt.toISOString() : "",
+    active_seconds: classTaskClampNumber(activity.active_seconds, 0, 21600, 0)
+  };
+}
+
 function classTaskAttemptSets(settings = {}) {
   return Array.isArray(settings.attempt_sets) ? settings.attempt_sets : [];
 }
@@ -15227,7 +15288,13 @@ function classTaskPublicSettings(settings = {}) {
     show_answers_after_submit: true,
     allow_multiple_submissions: Boolean(settings.allow_multiple_submissions),
     pass_percent: classTaskPassPercent(settings),
-    max_attempts: classTaskClampNumber(settings.max_attempts, 1, 10, 1)
+    max_attempts: classTaskClampNumber(settings.max_attempts, 1, 10, 1),
+    task_mode: classTaskMode(settings),
+    coverage_mode: classTaskCoverageMode(settings),
+    coverage_label: classTaskCoverageLabel(settings),
+    minimum_questions: classTaskMinimumQuestions(settings),
+    time_target_minutes: classTaskTimeTargetMinutes(settings),
+    score_only_answered: Boolean(settings.score_only_answered)
   };
 }
 
@@ -15358,6 +15425,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     while (tasks.some((task) => task.join_code === joinCode)) joinCode = classTaskRandomCode();
     const profile = authState().profile || {};
     const incomingSettings = body.settings && typeof body.settings === "object" ? body.settings : {};
+    const taskMode = classTaskMode(incomingSettings);
     const attemptSets = classTaskAttemptSets(incomingSettings)
       .slice(0, 9)
       .map((set, setIndex) => ({
@@ -15385,6 +15453,11 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
         pass_percent: classTaskPassPercent(incomingSettings),
         max_attempts: Math.max(1, Math.min(10, 1 + attemptSets.length)),
         attempt_sets: attemptSets,
+        task_mode: taskMode,
+        coverage_mode: classTaskCoverageMode(incomingSettings),
+        minimum_questions: classTaskMinimumQuestions(incomingSettings),
+        time_target_minutes: classTaskTimeTargetMinutes(incomingSettings),
+        score_only_answered: taskMode === "practice_room" || Boolean(incomingSettings.score_only_answered),
         source_level_id: incomingSettings.source_level_id || "",
         source_type_id: incomingSettings.source_type_id || "",
         source_count: classTaskClampNumber(incomingSettings.source_count, 1, 40, Array.isArray(body.questions) ? body.questions.length : 5),
@@ -15453,7 +15526,13 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     const workingImages = body.working_images && typeof body.working_images === "object"
       ? Object.fromEntries(Object.entries(body.working_images).map(([key, value]) => [key, pupilSafeWorkingImage(value)]).filter(([, value]) => value))
       : {};
-    const marking = classTaskMarkPassStatus(classTaskScoreSubmission(attemptQuestions, answers, working), task.settings || {}, attemptIndex);
+    const scored = classTaskScoreSubmission(attemptQuestions, answers, working, {
+      scoreOnlyAnswered: Boolean(task.settings?.score_only_answered)
+    });
+    const marking = classTaskMarkPassStatus({
+      ...scored,
+      activity: pupilTaskCleanActivity(body.activity)
+    }, task.settings || {}, attemptIndex);
     const response = {
       id: `local-response-${Date.now()}-${Math.random().toString(16).slice(2)}`,
       task_id: task.id,
@@ -15698,9 +15777,59 @@ function generateClassTaskQuestionSet(api, tool, level, type, count, marks) {
   return { instruction, questions };
 }
 
+function classTaskPracticeSources(metadata, selectedLevel, selectedType, coverageMode) {
+  const levels = metadata?.levels || [];
+  if (coverageMode === "tool_mix") {
+    return levels.flatMap((level) => (level.types || []).map((type) => ({ level, type })));
+  }
+  if (coverageMode === "level_mix") {
+    return (selectedLevel?.types || []).map((type) => ({ level: selectedLevel, type }));
+  }
+  return selectedLevel && selectedType ? [{ level: selectedLevel, type: selectedType }] : [];
+}
+
+function generateClassTaskPracticeQuestionSet(api, tool, metadata, level, type, count, marks, coverageMode) {
+  const sources = classTaskPracticeSources(metadata, level, type, coverageMode)
+    .filter((source) => source.level && source.type);
+  if (!sources.length) return generateClassTaskQuestionSet(api, tool, level, type, count, marks);
+
+  const questions = [];
+  const seen = new Set();
+  let attempts = 0;
+  while (questions.length < count && attempts < count * Math.max(4, sources.length * 2)) {
+    const source = sources[attempts % sources.length];
+    attempts += 1;
+    try {
+      const result = api.generate({
+        level: classTaskLevelApiValue(source.level.id),
+        type: source.type.id,
+        count: 1
+      });
+      const problem = (result.problems || [])[0];
+      if (!problem) continue;
+      const signature = normalise([problem.question, problem.questionText, problem.prompt, problem.equation].filter(Boolean).join(" "));
+      if (signature && seen.has(signature) && attempts < count * sources.length * 3) continue;
+      if (signature) seen.add(signature);
+      questions.push(classTaskSerialiseQuestion(problem, questions.length, {
+        marks,
+        instruction: result.instruction || "Answer each question. Show working where appropriate.",
+        sectionTitle: tool.title,
+        sectionType: source.type.label
+      }));
+    } catch (_) {
+      // Try the next source so one weaker question type does not block the room.
+    }
+  }
+
+  return {
+    instruction: "Practise the assigned tool. Answer as many questions as you can, showing working where appropriate.",
+    questions
+  };
+}
+
 async function createClassTaskFromForm(form) {
   const tool = selectedClassTaskTool();
-  await ensureClassTaskMetadata(tool);
+  const metadata = await ensureClassTaskMetadata(tool);
   const level = selectedClassTaskLevelMeta();
   const type = selectedClassTaskTypeMeta();
   if (!tool || !level || !type) throw new Error("Choose a topic, level, and question type first.");
@@ -15708,18 +15837,33 @@ async function createClassTaskFromForm(form) {
   const api = getWorksheetFrameApi("classTaskLoader") || (await loadWorksheetToolForApi(tool, { frameId: "classTaskLoader" })).api;
   if (!api?.canGenerate?.()) throw new Error(`${tool.title} is not ready for pupil tasks yet.`);
 
-  const count = Math.max(1, Math.min(30, Number(form.querySelector("[name='count']")?.value || 5)));
+  const taskMode = form.querySelector("[name='task_mode']:checked")?.value === "practice_room" ? "practice_room" : "fixed_task";
+  const coverageMode = taskMode === "practice_room"
+    ? classTaskCoverageMode({ coverage_mode: form.querySelector("[name='coverage_mode']")?.value || "level_mix" })
+    : "selected_type";
+  const maxCount = taskMode === "practice_room" ? 40 : 30;
+  const count = Math.max(1, Math.min(maxCount, Number(form.querySelector("[name='count']")?.value || (taskMode === "practice_room" ? 20 : 5))));
   const marks = Math.max(1, Math.min(20, Number(form.querySelector("[name='marks']")?.value || 1)));
-  const passPercent = Math.max(0, Math.min(100, Number(form.querySelector("[name='pass_percent']")?.value || 100)));
+  const minimumQuestions = taskMode === "practice_room"
+    ? Math.max(1, Math.min(count, Number(form.querySelector("[name='minimum_questions']")?.value || Math.min(10, count))))
+    : count;
+  const timeTargetMinutes = taskMode === "practice_room"
+    ? Math.max(0, Math.min(180, Number(form.querySelector("[name='time_target_minutes']")?.value || 20)))
+    : 0;
+  const passPercent = Math.max(0, Math.min(100, Number(form.querySelector("[name='pass_percent']")?.value || (taskMode === "practice_room" ? 80 : 100))));
   const maxAttempts = passPercent > 0 ? 5 : 1;
-  const firstSet = generateClassTaskQuestionSet(api, tool, level, type, count, marks);
+  const firstSet = taskMode === "practice_room"
+    ? generateClassTaskPracticeQuestionSet(api, tool, metadata, level, type, count, marks, coverageMode)
+    : generateClassTaskQuestionSet(api, tool, level, type, count, marks);
   const instruction = firstSet.instruction;
   const questions = firstSet.questions;
   if (!questions.length) throw new Error("No questions were generated. Try a different question type.");
   const attemptSets = [];
   for (let attemptIndex = 1; attemptIndex < maxAttempts; attemptIndex += 1) {
     try {
-      const attemptSet = generateClassTaskQuestionSet(api, tool, level, type, count, marks);
+      const attemptSet = taskMode === "practice_room"
+        ? generateClassTaskPracticeQuestionSet(api, tool, metadata, level, type, count, marks, coverageMode)
+        : generateClassTaskQuestionSet(api, tool, level, type, count, marks);
       if (attemptSet.questions.length) {
         attemptSets.push({
           attempt_index: attemptIndex,
@@ -15731,8 +15875,12 @@ async function createClassTaskFromForm(form) {
     }
   }
 
-  const title = form.querySelector("[name='title']")?.value.trim() || `${tool.title}: ${type.label}`;
-  const instructions = form.querySelector("[name='instructions']")?.value.trim() || instruction;
+  const title = form.querySelector("[name='title']")?.value.trim() || (taskMode === "practice_room"
+    ? `${tool.title}: Practice Room`
+    : `${tool.title}: ${type.label}`);
+  const instructions = form.querySelector("[name='instructions']")?.value.trim() || (taskMode === "practice_room"
+    ? "Practise the assigned tool. Try to meet the question and accuracy targets."
+    : instruction);
   const expiresAt = dateInputToIso(form.querySelector("[name='expires_at']")?.value, true);
   const payload = await classTaskApi("create", {
     method: "POST",
@@ -15742,8 +15890,8 @@ async function createClassTaskFromForm(form) {
       instructions,
       source_tool_slug: tool.slug,
       source_tool_title: tool.title,
-      source_level_label: level.title,
-      source_type_label: type.label,
+      source_level_label: taskMode === "practice_room" && coverageMode === "tool_mix" ? "Across levels" : level.title,
+      source_type_label: taskMode === "practice_room" ? classTaskCoverageLabel({ coverage_mode: coverageMode }) : type.label,
       questions,
       expires_at: expiresAt,
       settings: {
@@ -15752,6 +15900,11 @@ async function createClassTaskFromForm(form) {
         pass_percent: passPercent,
         max_attempts: Math.max(1, 1 + attemptSets.length),
         attempt_sets: attemptSets,
+        task_mode: taskMode,
+        coverage_mode: coverageMode,
+        minimum_questions: minimumQuestions,
+        time_target_minutes: timeTargetMinutes,
+        score_only_answered: taskMode === "practice_room",
         source_level_id: String(level.id),
         source_type_id: String(type.id),
         source_count: count,
@@ -15891,7 +16044,10 @@ function classTaskResponseSummary(response) {
   const marking = response.marking || {};
   const attempt = marking.attempt_number ? `Attempt ${marking.attempt_number}: ` : "";
   const passStatus = marking.pass_required ? (marking.pass_met ? " complete" : " retry") : "";
-  return `${attempt}${score}/${max}${passStatus}`;
+  const activeTime = Number(marking.activity?.active_seconds) > 0
+    ? ` · ${classTaskFormatSeconds(marking.activity.active_seconds)} active`
+    : "";
+  return `${attempt}${score}/${max}${passStatus}${activeTime}`;
 }
 
 function classTaskFeedbackFormHtml(response, task) {
@@ -15926,7 +16082,8 @@ function classTaskResponseDetailHtml(response, task) {
         const workingImage = pupilSafeWorkingImage(response.working_images?.[item.id] ?? response.working_images?.[String(index)] ?? "");
         const submitted = item.submitted || response.answers?.[item.id] || response.answers?.[String(index)] || "";
         const expected = item.expected || question.answer || "";
-        const status = item.correct ? "Correct" : item.markable ? "Incorrect" : "Teacher review";
+        const attempted = item.attempted !== false && Boolean(submitted || workingText);
+        const status = !attempted ? "Not attempted" : item.correct ? "Correct" : item.markable ? "Incorrect" : "Teacher review";
         return `
           <li>
             <div class="class-task-response-question">
@@ -15944,6 +16101,12 @@ function classTaskResponseDetailHtml(response, task) {
                 <p class="class-task-expected-answer">${expected ? worksheetContentHtml(expected) : "Teacher review needed"}</p>
               </div>
             </div>
+            ${index === 0 && Number(response.marking?.activity?.active_seconds) > 0 ? `
+              <div class="class-task-working">
+                <span>Practice time</span>
+                <p>${escapeHtml(classTaskFormatSeconds(response.marking.activity.active_seconds))} active on this attempt.</p>
+              </div>
+            ` : ""}
             ${workingText ? `
               <div class="class-task-working">
                 <span>Working</span>
@@ -16044,16 +16207,17 @@ function classTaskMonitorRows(task) {
     const marking = response.marking || {};
     const passMet = Boolean(marking.pass_met);
     const status = passMet ? "completed" : marking.pass_required ? "retrying" : "submitted";
-    rows.set(key, {
-      alias: existing.alias || response.pupil_alias || "Pupil",
-      status: existing.status && existing.submissions_count ? existing.status : status,
-      current_attempt: Math.max(Number(existing.current_attempt) || 1, Number(marking.attempt_number) || 1),
-      submissions_count: Math.max(Number(existing.submissions_count) || 0, 1),
-      last_score: existing.last_score ?? response.auto_score,
-      max_score: existing.max_score ?? response.max_score,
-      pass_met: Boolean(existing.pass_met) || passMet,
-      last_seen_at: existing.last_seen_at || response.submitted_at || ""
-    });
+      rows.set(key, {
+        alias: existing.alias || response.pupil_alias || "Pupil",
+        status: existing.status && existing.submissions_count ? existing.status : status,
+        current_attempt: Math.max(Number(existing.current_attempt) || 1, Number(marking.attempt_number) || 1),
+        submissions_count: Math.max(Number(existing.submissions_count) || 0, 1),
+        last_score: existing.last_score ?? response.auto_score,
+        max_score: existing.max_score ?? response.max_score,
+        pass_met: Boolean(existing.pass_met) || passMet,
+        active_seconds: Math.max(Number(existing.active_seconds) || 0, Number(marking.activity?.active_seconds) || 0),
+        last_seen_at: existing.last_seen_at || response.submitted_at || ""
+      });
   });
 
   return [...rows.values()].sort((a, b) => String(b.last_seen_at || "").localeCompare(String(a.last_seen_at || "")));
@@ -16064,6 +16228,11 @@ function classTaskMonitorScore(row) {
   const max = Number(row.max_score);
   if (!Number.isFinite(score) || !Number.isFinite(max) || max <= 0) return "Not submitted";
   return `${score}/${max}`;
+}
+
+function classTaskMonitorActiveTime(row) {
+  const seconds = Number(row.active_seconds) || 0;
+  return seconds > 0 ? classTaskFormatSeconds(seconds) : "Working";
 }
 
 function classTaskMonitorSeen(value) {
@@ -16104,6 +16273,7 @@ function classTaskMonitorHtml(task) {
                 <th>Status</th>
                 <th>Attempt</th>
                 <th>Score</th>
+                <th>Active</th>
                 <th>Seen</th>
               </tr>
             </thead>
@@ -16114,6 +16284,7 @@ function classTaskMonitorHtml(task) {
                   <td>${escapeHtml(classTaskParticipantStatusText(row.status))}</td>
                   <td>${escapeHtml(String(row.current_attempt || 1))}</td>
                   <td>${escapeHtml(classTaskMonitorScore(row))}</td>
+                  <td>${escapeHtml(classTaskMonitorActiveTime(row))}</td>
                   <td>${escapeHtml(classTaskMonitorSeen(row.last_seen_at))}</td>
                 </tr>
               `).join("")}
@@ -16131,20 +16302,28 @@ function classTaskCardHtml(task) {
   const questionCount = Array.isArray(task.questions) ? task.questions.length : 0;
   const isOpen = classTaskIsAvailable(task);
   const joinUrl = classTaskJoinUrl(task.join_code);
-  const passPercent = classTaskPassPercent(task.settings || {});
+  const settings = task.settings || {};
+  const passPercent = classTaskPassPercent(settings);
   const maxAttempts = classTaskMaxAttempts(task);
+  const isPractice = classTaskIsPracticeRoom(settings);
+  const timeTarget = classTaskTimeTargetMinutes(settings);
+  const minimumQuestions = classTaskMinimumQuestions(settings);
   return `
     <article class="class-task-card">
       <div class="class-task-card-head">
         <div>
-          <span class="eyebrow">${isOpen ? "Open Task" : "Closed Task"}</span>
+          <span class="eyebrow">${isOpen ? "Open" : "Closed"} ${classTaskModeLabel(settings)}</span>
           <h3>${escapeHtml(task.title || "Kaizen Maths Pupil Task")}</h3>
           <p>${escapeHtml([task.source_tool_title, task.source_type_label].filter(Boolean).join(" · ") || "Pupil practice task")}</p>
         </div>
         <strong class="class-task-code">${escapeHtml(task.join_code)}</strong>
       </div>
       <div class="class-task-meta">
+        <span>${escapeHtml(classTaskModeLabel(settings))}</span>
         <span>${questionCount} question${questionCount === 1 ? "" : "s"}</span>
+        ${isPractice ? `<span>${minimumQuestions} minimum</span>` : ""}
+        ${isPractice && timeTarget ? `<span>${timeTarget} min target</span>` : ""}
+        ${isPractice ? `<span>${escapeHtml(classTaskCoverageLabel(settings))}</span>` : ""}
         ${passPercent ? `<span>${passPercent}% required</span>` : ""}
         ${maxAttempts > 1 ? `<span>${maxAttempts} attempts available</span>` : ""}
         <span>${participants.length} joined</span>
@@ -16307,7 +16486,7 @@ function renderClassTasks() {
   app.innerHTML = `
     ${pageHeader(
       "Pupil Module",
-      "Create a closed pupil task code for your school or tutor organisation.",
+      "Create fixed online tasks or timed practice rooms for your school or tutor organisation.",
       `<a class="button" href="#/pupil">Pupil Join Page</a><a class="button" href="#/worksheet-generator">Worksheet Builder</a>`
     )}
     ${pupilModuleOverviewHtml()}
@@ -16316,13 +16495,30 @@ function renderClassTasks() {
         <div class="class-task-builder-head">
           <div>
             <span class="eyebrow">Teacher Task Builder</span>
-            <h2>Create a pupil task</h2>
-            <p>Choose a topic block, generate fresh questions, then share the join code or link. Pupils enter an alias only.</p>
+            <h2>Create a pupil room</h2>
+            <p>Choose a topic block, then share one join code. Pupils enter an alias only.</p>
           </div>
           <button class="button subtle" type="button" id="refreshClassTasks">Refresh</button>
         </div>
         <form id="classTaskForm" class="class-task-form">
           <div class="class-task-form-main">
+            <fieldset class="class-task-mode-switch">
+              <legend>Task mode</legend>
+              <label>
+                <input type="radio" name="task_mode" value="fixed_task" checked>
+                <span>
+                  <strong>Fixed task</strong>
+                  <small>Set questions or assessment.</small>
+                </span>
+              </label>
+              <label>
+                <input type="radio" name="task_mode" value="practice_room">
+                <span>
+                  <strong>Practice room</strong>
+                  <small>Timed independent tool practice.</small>
+                </span>
+              </label>
+            </fieldset>
             <label>
               Task title
               <input name="title" type="text" maxlength="160" placeholder="Example: Fractions starter task">
@@ -16343,11 +16539,27 @@ function renderClassTasks() {
               Question type
               <select id="classTaskType" name="type" disabled><option>Loading question types...</option></select>
             </label>
+            <label class="class-task-practice-field">
+              Practice coverage
+              <select name="coverage_mode">
+                <option value="level_mix">Mixed question types in this level</option>
+                <option value="selected_type">Selected question type only</option>
+                <option value="tool_mix">Across all levels in this tool</option>
+              </select>
+            </label>
           </div>
           <div class="class-task-form-side">
             <label>
               Questions
-              <input name="count" type="number" min="1" max="30" value="5">
+              <input name="count" type="number" min="1" max="40" value="5">
+            </label>
+            <label class="class-task-practice-field">
+              Minimum questions
+              <input name="minimum_questions" type="number" min="1" max="40" value="10">
+            </label>
+            <label class="class-task-practice-field">
+              Active minutes target
+              <input name="time_target_minutes" type="number" min="0" max="180" value="20">
             </label>
             <label>
               Marks each
@@ -16396,6 +16608,38 @@ function bindClassTasks() {
   const toolSelect = document.getElementById("classTaskTool");
   if (!form || !toolSelect) return;
   startClassTaskMonitorRefresh();
+  function syncClassTaskModeUi() {
+    const taskMode = form.querySelector("[name='task_mode']:checked")?.value || "fixed_task";
+    form.dataset.taskMode = taskMode;
+    const isPractice = taskMode === "practice_room";
+    form.querySelectorAll(".class-task-practice-field").forEach((field) => {
+      field.hidden = !isPractice;
+    });
+    const countInput = form.querySelector("[name='count']");
+    const passInput = form.querySelector("[name='pass_percent']");
+    const minInput = form.querySelector("[name='minimum_questions']");
+    if (countInput) {
+      countInput.max = isPractice ? "40" : "30";
+      if (isPractice && Number(countInput.value || 0) < 10) countInput.value = "20";
+      if (!isPractice && Number(countInput.value || 0) > 30) countInput.value = "5";
+    }
+    if (minInput && isPractice) {
+      minInput.max = countInput?.value || "40";
+      if (Number(minInput.value || 0) > Number(countInput?.value || 40)) minInput.value = countInput?.value || "10";
+    }
+    if (passInput) {
+      if (isPractice && passInput.dataset.practiceDefault !== "set") {
+        passInput.value = "80";
+        passInput.dataset.practiceDefault = "set";
+      }
+      if (!isPractice) {
+        passInput.dataset.practiceDefault = "";
+        if (!passInput.value || passInput.value === "80") passInput.value = "100";
+      }
+    }
+    const submitButton = form.querySelector("button[type='submit']");
+    if (submitButton) submitButton.textContent = isPractice ? "Create Practice Room" : "Create Join Code";
+  }
   toolSelect.value = state.classTaskToolSlug;
   const selectedTool = selectedClassTaskTool();
   if (state.classTaskMetadata && state.classTaskLoadedToolSlug === selectedTool?.slug) {
@@ -16411,6 +16655,11 @@ function bindClassTasks() {
       }, 0);
     }
   }
+  syncClassTaskModeUi();
+  form.querySelectorAll("[name='task_mode']").forEach((input) => {
+    input.addEventListener("change", syncClassTaskModeUi);
+  });
+  form.querySelector("[name='count']")?.addEventListener("input", syncClassTaskModeUi);
 
   toolSelect.addEventListener("change", () => {
     state.classTaskToolSlug = toolSelect.value;
@@ -16463,6 +16712,65 @@ function bindClassTasks() {
   bindClassTaskListActions();
 }
 
+function stopPupilTaskActivityTracking() {
+  if (state.pupilTaskActivityTimer) {
+    window.clearInterval(state.pupilTaskActivityTimer);
+    state.pupilTaskActivityTimer = null;
+  }
+  if (state.pupilTaskHeartbeatTimer) {
+    window.clearInterval(state.pupilTaskHeartbeatTimer);
+    state.pupilTaskHeartbeatTimer = null;
+  }
+}
+
+function resetPupilTaskActivityTracking() {
+  stopPupilTaskActivityTracking();
+  state.pupilTaskActivityStartedAt = "";
+  state.pupilTaskVisibleSeconds = 0;
+}
+
+function pupilTaskActivityPayload() {
+  return {
+    started_at: state.pupilTaskActivityStartedAt || new Date().toISOString(),
+    submitted_at: new Date().toISOString(),
+    active_seconds: Math.round(Number(state.pupilTaskVisibleSeconds) || 0)
+  };
+}
+
+function updatePupilTaskActivityText() {
+  const target = document.querySelector("[data-pupil-active-time]");
+  if (!target) return;
+  target.textContent = classTaskFormatSeconds(state.pupilTaskVisibleSeconds);
+}
+
+function startPupilTaskActivityTracking(form) {
+  stopPupilTaskActivityTracking();
+  if (!form || !state.pupilTask?.join_code || state.pupilSubmission) return;
+  state.pupilTaskActivityStartedAt = state.pupilTaskActivityStartedAt || new Date().toISOString();
+  let lastTick = Date.now();
+  state.pupilTaskActivityTimer = window.setInterval(() => {
+    if (routeParts()[0] !== "pupil" || !form.isConnected || state.pupilSubmission) {
+      stopPupilTaskActivityTracking();
+      return;
+    }
+    const now = Date.now();
+    if (document.visibilityState !== "hidden") {
+      state.pupilTaskVisibleSeconds += Math.max(0, Math.min(5, (now - lastTick) / 1000));
+      updatePupilTaskActivityText();
+    }
+    lastTick = now;
+  }, 1000);
+
+  state.pupilTaskHeartbeatTimer = window.setInterval(() => {
+    if (routeParts()[0] !== "pupil" || !form.isConnected || state.pupilSubmission) {
+      stopPupilTaskActivityTracking();
+      return;
+    }
+    const alias = form.querySelector("[name='pupil_alias']")?.value || "";
+    if (alias.trim()) registerPupilTaskJoin(alias, { force: true });
+  }, 30000);
+}
+
 async function loadPupilTask(code, { rerender = false } = {}) {
   const cleanCode = normaliseClassTaskCode(code);
   if (!cleanCode || state.pupilTaskLoading) return;
@@ -16472,6 +16780,7 @@ async function loadPupilTask(code, { rerender = false } = {}) {
   state.pupilActiveQuestionIndex = 0;
   state.pupilTaskAttemptIndex = 0;
   state.pupilJoinRegisteredKey = "";
+  resetPupilTaskActivityTracking();
   state.pupilTaskCode = cleanCode;
   try {
     const payload = await classTaskApi("get", { params: { code: cleanCode } });
@@ -16563,10 +16872,11 @@ function pupilSubmissionHtml(task) {
   if (!state.pupilSubmission) return "";
   const response = state.pupilSubmission.response || {};
   const marking = response.marking || {};
+  const isPractice = classTaskIsPracticeRoom(task.settings || {});
   const score = Number(response.auto_score);
   const max = Number(response.max_score);
   const scoreLine = Number.isFinite(score) && Number.isFinite(max) && max > 0
-    ? `Auto-marked score: ${score}/${max}.`
+    ? `${isPractice ? "Practice score" : "Auto-marked score"}: ${score}/${max}${isPractice && marking.questions_attempted ? ` from ${marking.questions_attempted} attempted` : ""}.`
     : "Your teacher will review this response.";
   const answers = state.pupilSubmission.answers || [];
   const answerById = new Map(answers.map((answer, index) => [answer.id || `q${index + 1}`, answer]));
@@ -16581,8 +16891,8 @@ function pupilSubmissionHtml(task) {
   const nextTask = state.pupilSubmission.next_task || null;
   const passLine = passRequired
     ? passMet
-      ? `Task completed. Required score: ${marking.pass_mark}/${max} (${marking.pass_percent}%).`
-      : `Pass rate not met yet. Required score: ${marking.pass_mark}/${max} (${marking.pass_percent}%).`
+      ? `${isPractice ? "Practice target met" : "Task completed"}. Required score: ${marking.pass_mark}/${max} (${marking.pass_percent}%).`
+      : `${isPractice ? "Practice target not met yet" : "Pass rate not met yet"}. Required score: ${marking.pass_mark}/${max} (${marking.pass_percent}%).`
     : "Your response has been submitted.";
   return `
     <section class="panel pupil-submission-panel">
@@ -16605,9 +16915,10 @@ function pupilSubmissionHtml(task) {
               const item = feedbackById.get(questionId) || feedbackById.get(`q${index + 1}`) || {};
               const correct = Boolean(item.correct);
               const markable = item.markable !== false;
-              const status = correct ? "Correct" : markable ? "Incorrect" : "Teacher review";
+              const attempted = item.attempted !== false && Boolean(item.submitted || submittedAnswers[questionId] || submittedWorking[questionId]);
+              const status = !attempted ? "Not attempted" : correct ? "Correct" : markable ? "Incorrect" : "Teacher review";
               const steps = Array.isArray(expected.steps) ? expected.steps : [];
-              const showWorking = !correct && steps.length;
+              const showWorking = attempted && !correct && steps.length;
               const workingImage = pupilSafeWorkingImage(submittedWorkingImages[questionId] || submittedWorkingImages[String(index)] || "");
               return `
               <li class="${correct ? "is-correct" : "is-incorrect"}">
@@ -16671,8 +16982,11 @@ function renderPupilJoin(routeCode = "") {
     loadPupilTask(cleanCode, { rerender: true });
   }
   const schoolName = task?.school_name || "Kaizen Maths";
+  const isPracticeRoom = classTaskIsPracticeRoom(task?.settings || {});
+  const minimumQuestions = task ? classTaskMinimumQuestions(task.settings || {}) : 0;
+  const timeTarget = task ? classTaskTimeTargetMinutes(task.settings || {}) : 0;
   const taskSummary = task
-    ? [task.source_tool_title, task.source_level_label, task.source_type_label].filter(Boolean).join(" · ") || "Assigned Kaizen Maths task"
+    ? [classTaskModeLabel(task.settings || {}), task.source_tool_title, isPracticeRoom ? task.settings?.coverage_label : task.source_type_label].filter(Boolean).join(" · ") || "Assigned Kaizen Maths task"
     : "Enter the class code from your teacher.";
   const attemptLabel = task?.attempt_number && task?.max_attempts > 1
     ? `Attempt ${task.attempt_number} of ${task.max_attempts}`
@@ -16693,7 +17007,7 @@ function renderPupilJoin(routeCode = "") {
           </span>
         </div>
         <div class="pupil-header-task">
-          <span class="eyebrow">Pupil Task</span>
+          <span class="eyebrow">${isPracticeRoom ? "Practice Room" : "Pupil Task"}</span>
           <strong>${escapeHtml(task?.title || "Enter your task code")}</strong>
           <small>${escapeHtml([taskSummary, attemptLabel].filter(Boolean).join(" · "))}</small>
         </div>
@@ -16722,6 +17036,13 @@ function renderPupilJoin(routeCode = "") {
             <div>
               <span class="eyebrow">${escapeHtml(taskSummary)}</span>
               <p>${escapeHtml(task.instructions || "Answer each question. Show working where appropriate.")}</p>
+              ${isPracticeRoom ? `
+                <div class="pupil-room-targets" aria-label="Practice room targets">
+                  <span><strong>${minimumQuestions}</strong> minimum questions</span>
+                  ${timeTarget ? `<span><strong>${timeTarget}</strong> minute target</span>` : ""}
+                  <span><strong data-pupil-active-time>${classTaskFormatSeconds(state.pupilTaskVisibleSeconds)}</strong> active time</span>
+                </div>
+              ` : ""}
             </div>
             <label class="pupil-alias-field">
               Alias or initials
@@ -16749,7 +17070,7 @@ function renderPupilJoin(routeCode = "") {
           </div>
           <div class="pupil-submit-row">
             <button class="button primary" type="submit" data-pupil-submit disabled>Submit Answers</button>
-            <p><strong data-pupil-completion>0 of ${questions.length} answered</strong><span> Complete every final answer box before submitting. Your teacher sees the alias, answers, and working.</span></p>
+            <p><strong data-pupil-completion>0 of ${questions.length} answered</strong><span> ${isPracticeRoom ? `Submit once you have answered at least ${minimumQuestions}.` : "Complete every final answer box before submitting."} Your teacher sees the alias, answers, and working.</span></p>
           </div>
         </form>
       ` : state.pupilTaskLoading ? `<section class="panel"><p>Loading the pupil task...</p></section>` : ""}
@@ -16759,13 +17080,13 @@ function renderPupilJoin(routeCode = "") {
   bindPupilJoin();
 }
 
-async function registerPupilTaskJoin(alias) {
+async function registerPupilTaskJoin(alias, { force = false } = {}) {
   const cleanAlias = String(alias || "").trim().slice(0, 80);
   const task = state.pupilTask;
   if (!task?.join_code || !cleanAlias) return null;
   const attemptIndex = Number(task.attempt_index ?? state.pupilTaskAttemptIndex ?? 0);
   const joinKey = `${normaliseClassTaskCode(task.join_code)}|${classTaskAliasKey(cleanAlias)}|${attemptIndex}`;
-  if (state.pupilJoinRegisteredKey === joinKey) return null;
+  if (!force && state.pupilJoinRegisteredKey === joinKey) return null;
   state.pupilJoinRegisteredKey = joinKey;
   try {
     const payload = await classTaskApi("join", {
@@ -16930,6 +17251,7 @@ function bindPupilJoin() {
     state.pupilTaskAttemptIndex = 0;
     state.pupilActiveQuestionIndex = 0;
     state.pupilJoinRegisteredKey = "";
+    resetPupilTaskActivityTracking();
     location.hash = "#/pupil";
     if (routeParts()[0] === "pupil") renderRoute();
   });
@@ -16942,6 +17264,7 @@ function bindPupilJoin() {
     state.pupilSubmission = null;
     state.pupilActiveQuestionIndex = 0;
     state.pupilJoinRegisteredKey = "";
+    resetPupilTaskActivityTracking();
     renderRoute();
   });
 
@@ -16949,11 +17272,15 @@ function bindPupilJoin() {
     if (!form) return;
     const answers = [...form.querySelectorAll("[data-pupil-answer]")];
     const answeredCount = answers.filter((input) => input.value.trim()).length;
-    const complete = answers.length > 0 && answeredCount === answers.length;
+    const isPractice = classTaskIsPracticeRoom(state.pupilTask?.settings || {});
+    const minimum = isPractice ? Math.min(answers.length, classTaskMinimumQuestions(state.pupilTask?.settings || {})) : answers.length;
+    const complete = answers.length > 0 && answeredCount >= minimum;
     const submitButton = form.querySelector("[data-pupil-submit]");
     if (submitButton) submitButton.disabled = !complete;
     const progress = form.querySelector("[data-pupil-completion]");
-    if (progress) progress.textContent = `${answeredCount} of ${answers.length} answered`;
+    if (progress) progress.textContent = isPractice
+      ? `${answeredCount} answered · ${minimum} required`
+      : `${answeredCount} of ${answers.length} answered`;
     document.querySelectorAll("[data-pupil-question-tab]").forEach((tab) => {
       const card = form.querySelector(`[data-pupil-question-card="${tab.dataset.pupilQuestionTab}"]`);
       const answer = card?.querySelector("[data-pupil-answer]");
@@ -17031,6 +17358,7 @@ function bindPupilJoin() {
   setActivePupilQuestion(state.pupilActiveQuestionIndex || 0);
   updatePupilSubmitState();
   window.requestAnimationFrame(setupPupilHandwritingPads);
+  startPupilTaskActivityTracking(form);
 
   document.querySelectorAll("[data-pupil-math-token]").forEach((button) => {
     button.addEventListener("dragstart", (event) => {
@@ -17059,17 +17387,30 @@ function bindPupilJoin() {
     const alias = form.querySelector("[name='pupil_alias']")?.value.trim() || "";
     const answerInputs = [...form.querySelectorAll("[data-pupil-answer]")];
     const firstBlankAnswer = answerInputs.find((input) => !input.value.trim());
+    const answeredCount = answerInputs.filter((input) => input.value.trim()).length;
+    const isPractice = classTaskIsPracticeRoom(state.pupilTask?.settings || {});
+    const minimumQuestions = isPractice ? Math.min(answerInputs.length, classTaskMinimumQuestions(state.pupilTask?.settings || {})) : answerInputs.length;
     const answers = Object.fromEntries(answerInputs.map((input) => [input.dataset.pupilAnswer, input.value.trim()]));
     const working = Object.fromEntries([...form.querySelectorAll("[data-pupil-working]")].map((input) => [input.dataset.pupilWorking, input.value.trim()]));
     const workingImages = Object.fromEntries([...form.querySelectorAll("[data-pupil-working-canvas]")]
       .map((canvas) => [canvas.dataset.pupilWorkingCanvas, pupilCanvasDataUrl(canvas)])
       .filter(([key, value]) => key && value));
     if (!state.pupilTask?.join_code) return;
-    if (firstBlankAnswer) {
+    if (!isPractice && firstBlankAnswer) {
       updatePupilSubmitState();
       const card = firstBlankAnswer.closest("[data-pupil-question-card]");
       if (card) setActivePupilQuestion(card.dataset.pupilQuestionCard);
       firstBlankAnswer.focus();
+      return;
+    }
+    if (isPractice && answeredCount < minimumQuestions) {
+      updatePupilSubmitState();
+      const status = document.getElementById("pupilTaskStatus");
+      if (status) {
+        status.textContent = `Answer at least ${minimumQuestions} questions before submitting this practice room.`;
+        status.dataset.tone = "error";
+      }
+      (firstBlankAnswer || answerInputs[0])?.focus();
       return;
     }
     if (button) button.disabled = true;
@@ -17084,10 +17425,12 @@ function bindPupilJoin() {
           attempt_index: Number(state.pupilTask.attempt_index ?? state.pupilTaskAttemptIndex ?? 0),
           answers,
           working,
-          working_images: workingImages
+          working_images: workingImages,
+          activity: pupilTaskActivityPayload()
         }
       });
       state.pupilSubmission = payload;
+      stopPupilTaskActivityTracking();
       renderRoute();
     } catch (error) {
       const status = document.getElementById("pupilTaskStatus");

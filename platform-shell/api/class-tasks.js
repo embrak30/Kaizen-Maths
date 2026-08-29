@@ -191,6 +191,41 @@ function taskPassPercent(settings = {}) {
   return clampNumber(settings.pass_percent, 0, 100, 0);
 }
 
+function taskMode(settings = {}) {
+  const mode = String(settings.task_mode || settings.mode || "").toLowerCase();
+  return mode === "practice_room" ? "practice_room" : "fixed_task";
+}
+
+function taskMinimumQuestions(settings = {}) {
+  return clampNumber(settings.minimum_questions, 1, 40, clampNumber(settings.source_count, 1, 40, 5));
+}
+
+function taskTimeTargetMinutes(settings = {}) {
+  return clampNumber(settings.time_target_minutes, 0, 180, 0);
+}
+
+function taskCoverageMode(settings = {}) {
+  const mode = String(settings.coverage_mode || "").toLowerCase();
+  return ["selected_type", "level_mix", "tool_mix"].includes(mode) ? mode : "selected_type";
+}
+
+function taskCoverageLabel(settings = {}) {
+  if (taskCoverageMode(settings) === "tool_mix") return "Across levels";
+  if (taskCoverageMode(settings) === "level_mix") return "Mixed question types";
+  return "Selected question type";
+}
+
+function cleanActivity(activity = {}) {
+  if (!activity || typeof activity !== "object") return {};
+  const startedAt = activity.started_at ? new Date(activity.started_at) : null;
+  const submittedAt = activity.submitted_at ? new Date(activity.submitted_at) : null;
+  return {
+    started_at: startedAt && !Number.isNaN(startedAt.getTime()) ? startedAt.toISOString() : "",
+    submitted_at: submittedAt && !Number.isNaN(submittedAt.getTime()) ? submittedAt.toISOString() : "",
+    active_seconds: clampNumber(activity.active_seconds, 0, 21600, 0)
+  };
+}
+
 function taskAttemptSets(settings = {}) {
   return Array.isArray(settings.attempt_sets) ? settings.attempt_sets : [];
 }
@@ -213,7 +248,13 @@ function publicTaskSettings(settings = {}) {
     show_answers_after_submit: true,
     allow_multiple_submissions: Boolean(settings.allow_multiple_submissions),
     pass_percent: taskPassPercent(settings),
-    max_attempts: clampNumber(settings.max_attempts, 1, 10, 1)
+    max_attempts: clampNumber(settings.max_attempts, 1, 10, 1),
+    task_mode: taskMode(settings),
+    coverage_mode: taskCoverageMode(settings),
+    coverage_label: taskCoverageLabel(settings),
+    minimum_questions: taskMinimumQuestions(settings),
+    time_target_minutes: taskTimeTargetMinutes(settings),
+    score_only_answered: Boolean(settings.score_only_answered)
   };
 }
 
@@ -317,34 +358,39 @@ function acceptableAnswers(expected) {
   return [...answers].filter(Boolean);
 }
 
-function scoreSubmission(questions, answers, working = {}) {
+function scoreSubmission(questions, answers, working = {}, options = {}) {
   let autoScore = 0;
   let maxScore = 0;
+  let attemptedCount = 0;
   const feedback = questions.map((question, index) => {
     const key = question.id || `q${index + 1}`;
     const expected = question.answer || "";
     const submitted = answers?.[key] ?? answers?.[String(index)] ?? "";
     const workingText = working?.[key] ?? working?.[String(index)] ?? "";
     const mark = Number(question.marks) || 1;
-    const options = acceptableAnswers(expected);
+    const accepted = acceptableAnswers(expected);
     const submittedClean = normaliseMathAnswer(submitted);
-    const markable = Boolean(options.length && submittedClean);
-    const correct = markable && options.includes(submittedClean);
-    if (options.length) {
-      maxScore += mark;
+    const attempted = Boolean(submittedClean || String(workingText || "").trim());
+    if (attempted) attemptedCount += 1;
+    const scoreThisQuestion = !(options.scoreOnlyAnswered && !attempted);
+    const markable = Boolean(accepted.length && scoreThisQuestion);
+    const correct = markable && accepted.includes(submittedClean);
+    if (accepted.length) {
+      if (scoreThisQuestion) maxScore += mark;
       if (correct) autoScore += mark;
     }
     return {
       id: key,
       submitted: cleanText(submitted, 500),
       correct,
-      markable: Boolean(options.length),
+      markable: Boolean(accepted.length && scoreThisQuestion),
+      attempted,
       marks: mark,
       expected: expected ? cleanLongText(expected, 12000) : "",
       working: cleanLongText(workingText, 4000)
     };
   });
-  return { auto_score: autoScore, max_score: maxScore, feedback };
+  return { auto_score: autoScore, max_score: maxScore, questions_attempted: attemptedCount, questions_available: questions.length, feedback };
 }
 
 function isMissingWorkingColumnError(error) {
@@ -511,6 +557,7 @@ async function createTask(req, res, supabase) {
   if (!questions.length) return sendJson(res, 400, { error: "Add at least one question before creating a pupil task." });
 
   const incomingSettings = body.settings && typeof body.settings === "object" ? body.settings : {};
+  const mode = taskMode(incomingSettings);
   const attemptSets = taskAttemptSets(incomingSettings)
     .slice(0, 9)
     .map((set, setIndex) => ({
@@ -526,6 +573,11 @@ async function createTask(req, res, supabase) {
     pass_percent: taskPassPercent(incomingSettings),
     max_attempts: Math.max(1, Math.min(10, 1 + attemptSets.length)),
     attempt_sets: attemptSets,
+    task_mode: mode,
+    coverage_mode: taskCoverageMode(incomingSettings),
+    minimum_questions: taskMinimumQuestions(incomingSettings),
+    time_target_minutes: taskTimeTargetMinutes(incomingSettings),
+    score_only_answered: mode === "practice_room" || Boolean(incomingSettings.score_only_answered),
     source_level_id: cleanText(incomingSettings.source_level_id, 80),
     source_type_id: cleanText(incomingSettings.source_type_id, 120),
     source_count: clampNumber(incomingSettings.source_count, 1, 40, questions.length),
@@ -657,7 +709,13 @@ async function submitPublicTask(req, res, supabase) {
   const answers = cleanStringMap(body.answers, 3000);
   const working = cleanStringMap(body.working, 8000);
   const workingImages = cleanImageDataMap(body.working_images);
-  const marking = markPassStatus(scoreSubmission(attemptQuestions, answers, working), task.settings || {}, attemptIndex);
+  const scored = scoreSubmission(attemptQuestions, answers, working, {
+    scoreOnlyAnswered: Boolean(task.settings?.score_only_answered)
+  });
+  const marking = markPassStatus({
+    ...scored,
+    activity: cleanActivity(body.activity)
+  }, task.settings || {}, attemptIndex);
   const baseResponse = {
     task_id: task.id,
     pupil_alias: pupilAlias,
