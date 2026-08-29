@@ -1054,6 +1054,7 @@ create table if not exists public.class_task_responses (
   pupil_alias text not null check (char_length(pupil_alias) <= 80),
   answers jsonb not null default '{}'::jsonb,
   working jsonb not null default '{}'::jsonb,
+  working_images jsonb not null default '{}'::jsonb,
   auto_score numeric,
   max_score numeric,
   marking jsonb not null default '{}'::jsonb,
@@ -1066,6 +1067,7 @@ create table if not exists public.class_task_responses (
 alter table public.class_task_responses add column if not exists auto_score numeric;
 alter table public.class_task_responses add column if not exists max_score numeric;
 alter table public.class_task_responses add column if not exists working jsonb not null default '{}'::jsonb;
+alter table public.class_task_responses add column if not exists working_images jsonb not null default '{}'::jsonb;
 alter table public.class_task_responses add column if not exists marking jsonb not null default '{}'::jsonb;
 alter table public.class_task_responses add column if not exists reviewed boolean not null default false;
 alter table public.class_task_responses add column if not exists teacher_notes text;
@@ -1121,6 +1123,85 @@ using (
     select 1
     from public.class_tasks
     where class_tasks.id = class_task_responses.task_id
+      and (class_tasks.teacher_id = auth.uid() or public.is_admin())
+  )
+);
+
+create table if not exists public.class_task_participants (
+  id uuid primary key default gen_random_uuid(),
+  task_id uuid not null references public.class_tasks(id) on delete cascade,
+  pupil_alias text not null check (char_length(pupil_alias) <= 80),
+  status text not null default 'joined' check (status in ('joined', 'submitted', 'retrying', 'completed')),
+  current_attempt integer not null default 1,
+  submissions_count integer not null default 0,
+  last_score numeric,
+  max_score numeric,
+  pass_met boolean not null default false,
+  first_seen_at timestamptz not null default now(),
+  last_seen_at timestamptz not null default now()
+);
+
+alter table public.class_task_participants add column if not exists status text not null default 'joined';
+alter table public.class_task_participants add column if not exists current_attempt integer not null default 1;
+alter table public.class_task_participants add column if not exists submissions_count integer not null default 0;
+alter table public.class_task_participants add column if not exists last_score numeric;
+alter table public.class_task_participants add column if not exists max_score numeric;
+alter table public.class_task_participants add column if not exists pass_met boolean not null default false;
+alter table public.class_task_participants add column if not exists first_seen_at timestamptz not null default now();
+alter table public.class_task_participants add column if not exists last_seen_at timestamptz not null default now();
+
+create unique index if not exists class_task_participants_task_alias_idx
+on public.class_task_participants(task_id, lower(pupil_alias));
+create index if not exists class_task_participants_task_id_idx on public.class_task_participants(task_id);
+create index if not exists class_task_participants_last_seen_idx on public.class_task_participants(last_seen_at);
+
+alter table public.class_task_participants enable row level security;
+
+grant select, update, delete on public.class_task_participants to authenticated;
+
+drop policy if exists "Teachers can read participants for their class tasks" on public.class_task_participants;
+create policy "Teachers can read participants for their class tasks"
+on public.class_task_participants
+for select
+using (
+  exists (
+    select 1
+    from public.class_tasks
+    where class_tasks.id = class_task_participants.task_id
+      and (class_tasks.teacher_id = auth.uid() or public.is_admin())
+  )
+);
+
+drop policy if exists "Teachers can update participants for their class tasks" on public.class_task_participants;
+create policy "Teachers can update participants for their class tasks"
+on public.class_task_participants
+for update
+using (
+  exists (
+    select 1
+    from public.class_tasks
+    where class_tasks.id = class_task_participants.task_id
+      and (class_tasks.teacher_id = auth.uid() or public.is_admin())
+  )
+)
+with check (
+  exists (
+    select 1
+    from public.class_tasks
+    where class_tasks.id = class_task_participants.task_id
+      and (class_tasks.teacher_id = auth.uid() or public.is_admin())
+  )
+);
+
+drop policy if exists "Teachers can delete participants for their class tasks" on public.class_task_participants;
+create policy "Teachers can delete participants for their class tasks"
+on public.class_task_participants
+for delete
+using (
+  exists (
+    select 1
+    from public.class_tasks
+    where class_tasks.id = class_task_participants.task_id
       and (class_tasks.teacher_id = auth.uid() or public.is_admin())
   )
 );

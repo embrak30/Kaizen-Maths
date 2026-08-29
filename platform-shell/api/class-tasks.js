@@ -25,9 +25,10 @@ const TASK_SELECT = [
 ].join(", ");
 
 const RESPONSE_SELECT = "id, task_id, pupil_alias, answers, auto_score, max_score, marking, reviewed, teacher_notes, submitted_at";
-const RESPONSE_SELECT_WITH_WORKING = "id, task_id, pupil_alias, answers, working, auto_score, max_score, marking, reviewed, teacher_notes, submitted_at";
+const RESPONSE_SELECT_WITH_WORKING = "id, task_id, pupil_alias, answers, working, working_images, auto_score, max_score, marking, reviewed, teacher_notes, submitted_at";
 const SUBMISSION_SELECT = "id, pupil_alias, answers, auto_score, max_score, marking, submitted_at";
-const SUBMISSION_SELECT_WITH_WORKING = "id, pupil_alias, answers, working, auto_score, max_score, marking, submitted_at";
+const SUBMISSION_SELECT_WITH_WORKING = "id, pupil_alias, answers, working, working_images, auto_score, max_score, marking, submitted_at";
+const PARTICIPANT_SELECT = "id, task_id, pupil_alias, status, current_attempt, submissions_count, last_score, max_score, pass_met, first_seen_at, last_seen_at";
 
 function queryParam(req, name) {
   const url = new URL(req.url || "/", "https://kaizenmaths.com");
@@ -49,6 +50,16 @@ function cleanStringMap(value, maxValueLength = 4000) {
       .slice(0, 80)
       .map(([key, entry]) => [cleanText(key, 80), cleanLongText(entry, maxValueLength)])
       .filter(([key]) => key)
+  );
+}
+
+function cleanImageDataMap(value, maxValueLength = 650000) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return Object.fromEntries(
+    Object.entries(value)
+      .slice(0, 40)
+      .map(([key, entry]) => [cleanText(key, 80), String(entry || "").trim().slice(0, maxValueLength)])
+      .filter(([key, entry]) => key && /^data:image\/(?:png|jpeg);base64,[A-Za-z0-9+/=]+$/i.test(entry))
   );
 }
 
@@ -286,6 +297,92 @@ function isMissingWorkingColumnError(error) {
   return /working|schema cache|column/i.test(text);
 }
 
+function isMissingParticipantsTableError(error) {
+  const text = [error?.code, error?.message, error?.details, error?.hint].filter(Boolean).join(" ");
+  return /class_task_participants|schema cache|relation .*does not exist|could not find the table/i.test(text);
+}
+
+function normaliseAliasKey(value) {
+  return cleanText(value, 80).toLowerCase();
+}
+
+function cleanParticipantStatus(value) {
+  const status = cleanText(value, 40).toLowerCase();
+  return ["joined", "submitted", "retrying", "completed"].includes(status) ? status : "joined";
+}
+
+async function participantsForTasks(supabase, taskIds = []) {
+  if (!taskIds.length) return [];
+  const { data, error } = await supabase
+    .from("class_task_participants")
+    .select(PARTICIPANT_SELECT)
+    .in("task_id", taskIds)
+    .order("last_seen_at", { ascending: false });
+  if (error) {
+    if (isMissingParticipantsTableError(error)) return [];
+    throw error;
+  }
+  return data || [];
+}
+
+async function upsertParticipantForTask(supabase, task, pupilAlias, patch = {}) {
+  const alias = cleanText(pupilAlias, 80);
+  if (!task?.id || !alias) return null;
+  const now = new Date().toISOString();
+  const { data: existingRows, error: readError } = await supabase
+    .from("class_task_participants")
+    .select(PARTICIPANT_SELECT)
+    .eq("task_id", task.id)
+    .limit(250);
+  if (readError) {
+    if (isMissingParticipantsTableError(readError)) return null;
+    throw readError;
+  }
+
+  const existing = (existingRows || []).find((participant) => normaliseAliasKey(participant.pupil_alias) === normaliseAliasKey(alias));
+  let nextStatus = cleanParticipantStatus(patch.status || existing?.status || "joined");
+  if (nextStatus === "joined" && existing?.pass_met) nextStatus = "completed";
+  if (nextStatus === "joined" && Number(existing?.submissions_count || 0) > 0) nextStatus = "retrying";
+
+  const payload = {
+    pupil_alias: alias,
+    status: nextStatus,
+    current_attempt: clampNumber(patch.current_attempt, 1, 10, Number(existing?.current_attempt) || 1),
+    last_seen_at: now
+  };
+  if (patch.increment_submissions) {
+    payload.submissions_count = Math.max(0, Number(existing?.submissions_count) || 0) + 1;
+  }
+  if (patch.last_score !== undefined) payload.last_score = Number(patch.last_score);
+  if (patch.max_score !== undefined) payload.max_score = Number(patch.max_score);
+  if (patch.pass_met !== undefined) payload.pass_met = Boolean(patch.pass_met);
+
+  const result = existing
+    ? await supabase
+      .from("class_task_participants")
+      .update(payload)
+      .eq("id", existing.id)
+      .select(PARTICIPANT_SELECT)
+      .single()
+    : await supabase
+      .from("class_task_participants")
+      .insert({
+        task_id: task.id,
+        first_seen_at: now,
+        submissions_count: patch.increment_submissions ? 1 : 0,
+        pass_met: Boolean(patch.pass_met),
+        ...payload
+      })
+      .select(PARTICIPANT_SELECT)
+      .single();
+
+  if (result.error) {
+    if (isMissingParticipantsTableError(result.error)) return null;
+    throw result.error;
+  }
+  return result.data || null;
+}
+
 async function teacherProfile(req, supabase) {
   const { user, error: userError } = await getSignedInUser(req, supabase);
   if (userError) return { user: null, profile: null, error: userError };
@@ -314,6 +411,7 @@ async function listTasks(req, res, supabase) {
 
   const taskIds = (tasks || []).map((task) => task.id);
   let responses = [];
+  let participants = [];
   if (taskIds.length) {
     let responseResult = await supabase
       .from("class_task_responses")
@@ -330,12 +428,18 @@ async function listTasks(req, res, supabase) {
     const { data, error: responseError } = responseResult;
     if (responseError) return sendJson(res, 500, { error: responseError.message });
     responses = data || [];
+    try {
+      participants = await participantsForTasks(supabase, taskIds);
+    } catch (participantError) {
+      return sendJson(res, 500, { error: participantError.message });
+    }
   }
 
   return sendJson(res, 200, {
     tasks: (tasks || []).map((task) => ({
       ...task,
-      responses: responses.filter((response) => response.task_id === task.id)
+      responses: responses.filter((response) => response.task_id === task.id),
+      participants: participants.filter((participant) => participant.task_id === task.id)
     }))
   });
 }
@@ -429,6 +533,34 @@ async function getPublicTask(req, res, supabase) {
   });
 }
 
+async function joinPublicTask(req, res, supabase) {
+  const body = await readJsonBody(req);
+  const code = normaliseCode(body.code);
+  const pupilAlias = cleanText(body.pupil_alias, 80);
+  const attemptIndex = clampNumber(body.attempt_index, 0, 9, 0);
+  if (!code) return sendJson(res, 400, { error: "Enter a class task code." });
+  if (!pupilAlias) return sendJson(res, 400, { error: "Enter an alias or initials before starting." });
+
+  const { data: task, error } = await supabase
+    .from("class_tasks")
+    .select(TASK_SELECT)
+    .eq("join_code", code)
+    .maybeSingle();
+  if (error) return sendJson(res, 500, { error: error.message });
+  if (!task || !taskIsAvailable(task)) return sendJson(res, 404, { error: "This class task was not found or has expired." });
+
+  try {
+    const participant = await upsertParticipantForTask(supabase, task, pupilAlias, {
+      status: "joined",
+      current_attempt: attemptIndex + 1
+    });
+    return sendJson(res, 200, { participant });
+  } catch (participantError) {
+    if (isMissingParticipantsTableError(participantError)) return sendJson(res, 200, { participant: null });
+    return sendJson(res, 500, { error: participantError.message });
+  }
+}
+
 async function submitPublicTask(req, res, supabase) {
   const body = await readJsonBody(req);
   const code = normaliseCode(body.code);
@@ -465,6 +597,7 @@ async function submitPublicTask(req, res, supabase) {
 
   const answers = cleanStringMap(body.answers, 3000);
   const working = cleanStringMap(body.working, 8000);
+  const workingImages = cleanImageDataMap(body.working_images);
   const marking = markPassStatus(scoreSubmission(attemptQuestions, answers, working), task.settings || {}, attemptIndex);
   const baseResponse = {
     task_id: task.id,
@@ -477,16 +610,19 @@ async function submitPublicTask(req, res, supabase) {
   };
   let responseResult = await supabase
     .from("class_task_responses")
-    .insert({ ...baseResponse, working })
+    .insert({ ...baseResponse, working, working_images: workingImages })
     .select(SUBMISSION_SELECT_WITH_WORKING)
     .single();
   if (responseResult.error && isMissingWorkingColumnError(responseResult.error)) {
     responseResult = await supabase
       .from("class_task_responses")
-      .insert(baseResponse)
+      .insert({ ...baseResponse, working })
       .select(SUBMISSION_SELECT)
       .single();
-    if (responseResult.data) responseResult.data.working = working;
+    if (responseResult.data) {
+      responseResult.data.working = working;
+      responseResult.data.working_images = workingImages;
+    }
   }
   const { data: response, error: responseError } = responseResult;
   if (responseError) return sendJson(res, 500, { error: responseError.message });
@@ -499,9 +635,25 @@ async function submitPublicTask(req, res, supabase) {
   const nextTask = marking.pass_required && !marking.pass_met
     ? publicTaskForAttempt(task, schoolName, attemptIndex + 1)
     : null;
+  let participant = null;
+  try {
+    participant = await upsertParticipantForTask(supabase, task, pupilAlias, {
+      status: marking.pass_met ? "completed" : nextTask ? "retrying" : "submitted",
+      current_attempt: marking.attempt_number,
+      last_score: marking.auto_score,
+      max_score: marking.max_score,
+      pass_met: marking.pass_met,
+      increment_submissions: true
+    });
+  } catch (participantError) {
+    if (!isMissingParticipantsTableError(participantError)) {
+      console.warn("Class task participant update failed:", participantError.message);
+    }
+  }
 
   return sendJson(res, 200, {
     response,
+    participant,
     show_answers: true,
     answers: attemptQuestions.map((question, index) => ({
       id: question.id || `q${index + 1}`,
@@ -584,6 +736,7 @@ module.exports = async function handler(req, res) {
     if (req.method === "GET" && action === "list") return listTasks(req, res, supabase);
     if (req.method === "POST" && action === "create") return createTask(req, res, supabase);
     if (req.method === "GET" && action === "get") return getPublicTask(req, res, supabase);
+    if (req.method === "POST" && action === "join") return joinPublicTask(req, res, supabase);
     if (req.method === "POST" && action === "submit") return submitPublicTask(req, res, supabase);
     if (req.method === "POST" && action === "review") return reviewResponse(req, res, supabase);
     if (req.method === "POST" && action === "close") return closeTask(req, res, supabase);

@@ -4294,6 +4294,96 @@ button.certification-course-card {
   gap: 8px;
 }
 
+.class-task-monitor {
+  display: grid;
+  gap: 8px;
+  padding: 9px 10px;
+  border: 1px solid rgba(23, 184, 179, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(231, 251, 250, 0.66), rgba(255, 255, 255, 0.94)),
+    white;
+}
+
+.class-task-monitor-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.class-task-monitor-summary small {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+.class-task-monitor-stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.class-task-monitor-stats span {
+  display: grid;
+  gap: 1px;
+  padding: 7px 8px;
+  border: 1px solid rgba(23, 184, 179, 0.18);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 850;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.class-task-monitor-stats strong {
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.class-task-monitor-table-wrap {
+  overflow-x: auto;
+}
+
+.class-task-monitor-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.class-task-monitor-table th,
+.class-task-monitor-table td {
+  padding: 7px 8px;
+  border-bottom: 1px solid rgba(217, 224, 234, 0.82);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.class-task-monitor-table th {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.class-task-monitor-table td:first-child {
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.class-task-monitor-table tr[data-status="retrying"] td {
+  background: #fff7ed;
+}
+
+.class-task-monitor-table tr[data-status="completed"] td {
+  background: #f0fdf4;
+}
+
 .class-task-responses {
   border-top: 1px solid rgba(217, 224, 234, 0.78);
   padding-top: 8px;
@@ -4438,6 +4528,16 @@ button.certification-course-card {
   gap: 4px;
   padding-top: 5px;
   border-top: 1px solid rgba(217, 224, 234, 0.72);
+}
+
+.class-task-working-image,
+.pupil-working-image {
+  width: 100%;
+  max-height: 340px;
+  object-fit: contain;
+  border: 1px solid rgba(217, 224, 234, 0.9);
+  border-radius: 7px;
+  background: white;
 }
 
 .pupil-only-page {
@@ -4826,6 +4926,38 @@ button.certification-course-card {
   min-height: 42px;
 }
 
+.pupil-answer-stack {
+  display: grid;
+  gap: 5px;
+}
+
+.pupil-answer-stack small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.pupil-answer-preview {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 7px 10px;
+  border: 1px dashed rgba(23, 184, 179, 0.34);
+  border-radius: 7px;
+  background: rgba(247, 255, 255, 0.92);
+  color: var(--ink);
+  font-family: var(--math-font);
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.pupil-answer-preview-empty {
+  color: var(--muted);
+  font-family: var(--body-font);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
 .pupil-response-grid {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
@@ -4835,8 +4967,62 @@ button.certification-course-card {
 
 .pupil-working-field {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 7px;
   min-height: 0;
+}
+
+.pupil-working-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pupil-working-head span {
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.pupil-working-head button {
+  border: 1px solid rgba(217, 224, 234, 0.9);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 5px 8px;
+}
+
+.pupil-working-head button:hover,
+.pupil-working-head button:focus-visible {
+  border-color: rgba(23, 184, 179, 0.55);
+  color: var(--teal-dark);
+  outline: none;
+}
+
+.pupil-handwriting-pad {
+  min-height: 0;
+  border: 1px solid rgba(217, 224, 234, 0.95);
+  border-radius: 8px;
+  background:
+    linear-gradient(rgba(217, 224, 234, 0.55) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(217, 224, 234, 0.55) 1px, transparent 1px),
+    #fff;
+  background-size: 28px 28px;
+  overflow: hidden;
+}
+
+.pupil-handwriting-pad canvas {
+  width: 100%;
+  height: 100%;
+  min-height: 190px;
+  display: block;
+  cursor: crosshair;
+  touch-action: none;
 }
 
 .pupil-math-toolbar {
@@ -4857,6 +5043,7 @@ button.certification-course-card {
   font-family: var(--math-font);
   font-size: 0.88rem;
   font-weight: 850;
+  user-select: none;
 }
 
 .pupil-math-rail {
@@ -4889,10 +5076,11 @@ button.certification-course-card {
 }
 
 .pupil-working-field textarea {
-  min-height: 0;
-  height: 100%;
+  min-height: 68px;
+  max-height: 118px;
+  height: auto;
   line-height: 1.45;
-  resize: none;
+  resize: vertical;
 }
 
 .pupil-question-diagram {
@@ -10021,6 +10209,10 @@ sup .worksheet-fraction > span:last-child {
   .class-task-builder {
     position: static;
   }
+
+  .class-task-monitor-stats {
+    grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  }
 }
 
 @media (max-width: 820px) {
@@ -10044,6 +10236,10 @@ sup .worksheet-fraction > span:last-child {
   .class-task-response-grid,
   .pupil-join-panel-compact {
     grid-template-columns: 1fr;
+  }
+
+  .class-task-monitor-summary {
+    display: grid;
   }
 
   .pupil-question-number {

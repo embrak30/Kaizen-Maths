@@ -2684,6 +2684,7 @@ const state = {
   classTaskLoadedToolSlug: "",
   classTaskLoadToken: 0,
   classTaskAuthKey: "",
+  classTaskMonitorTimer: null,
   pupilTask: null,
   pupilTaskCode: "",
   pupilTaskLoading: false,
@@ -2691,6 +2692,7 @@ const state = {
   pupilSubmission: null,
   pupilTaskAttemptIndex: 0,
   pupilActiveQuestionIndex: 0,
+  pupilJoinRegisteredKey: "",
   lastAuthAccessKey: ""
 };
 
@@ -14926,6 +14928,7 @@ function bindWorksheetGenerator() {
 
 const classTaskLocalTasksStorageKey = "kaizen:class-tasks-local-v1";
 const classTaskLocalResponsesStorageKey = "kaizen:class-task-responses-local-v1";
+const classTaskLocalParticipantsStorageKey = "kaizen:class-task-participants-local-v1";
 const pupilAliasStorageKey = "kaizen:pupil-alias";
 
 function classTaskEligibleTools() {
@@ -15192,9 +15195,64 @@ function classTaskPublicTaskForAttempt(task, attemptIndex = 0) {
   };
 }
 
+function pupilSafeWorkingImage(value) {
+  const text = String(value || "").trim();
+  return /^data:image\/(?:png|jpeg);base64,[A-Za-z0-9+/=]+$/i.test(text) ? text : "";
+}
+
+function classTaskAliasKey(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function classTaskParticipantStatus(status) {
+  const clean = String(status || "").toLowerCase();
+  return ["joined", "submitted", "retrying", "completed"].includes(clean) ? clean : "joined";
+}
+
+function classTaskParticipantStatusText(status) {
+  const labels = {
+    joined: "Working",
+    submitted: "Submitted",
+    retrying: "Retrying",
+    completed: "Completed"
+  };
+  return labels[classTaskParticipantStatus(status)] || "Working";
+}
+
+function classTaskUpsertLocalParticipant(participants, task, alias, patch = {}) {
+  const cleanAlias = String(alias || "").trim().slice(0, 80);
+  if (!task?.id || !cleanAlias) return { participants, participant: null };
+  const now = new Date().toISOString();
+  const index = participants.findIndex((participant) => (
+    participant.task_id === task.id && classTaskAliasKey(participant.pupil_alias) === classTaskAliasKey(cleanAlias)
+  ));
+  const existing = index >= 0 ? participants[index] : null;
+  let status = classTaskParticipantStatus(patch.status || existing?.status || "joined");
+  if (status === "joined" && existing?.pass_met) status = "completed";
+  if (status === "joined" && Number(existing?.submissions_count || 0) > 0) status = "retrying";
+  const participant = {
+    id: existing?.id || `local-participant-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    task_id: task.id,
+    pupil_alias: cleanAlias,
+    status,
+    current_attempt: classTaskClampNumber(patch.current_attempt, 1, 10, Number(existing?.current_attempt) || 1),
+    submissions_count: Math.max(0, Number(existing?.submissions_count) || 0) + (patch.increment_submissions ? 1 : 0),
+    last_score: patch.last_score !== undefined ? Number(patch.last_score) : existing?.last_score ?? null,
+    max_score: patch.max_score !== undefined ? Number(patch.max_score) : existing?.max_score ?? null,
+    pass_met: patch.pass_met !== undefined ? Boolean(patch.pass_met) : Boolean(existing?.pass_met),
+    first_seen_at: existing?.first_seen_at || now,
+    last_seen_at: now
+  };
+  const nextParticipants = index >= 0
+    ? participants.map((entry, entryIndex) => entryIndex === index ? participant : entry)
+    : [participant, ...participants];
+  return { participants: nextParticipants, participant };
+}
+
 async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
   const tasks = classTaskReadLocal(classTaskLocalTasksStorageKey, []);
   const responses = classTaskReadLocal(classTaskLocalResponsesStorageKey, []);
+  const participants = classTaskReadLocal(classTaskLocalParticipantsStorageKey, []);
   const teacherId = classTaskCurrentTeacherId();
 
   if (action === "list") {
@@ -15203,7 +15261,8 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
       .sort((a, b) => String(b.created_at || "").localeCompare(String(a.created_at || "")))
       .map((task) => ({
         ...task,
-        responses: responses.filter((response) => response.task_id === task.id)
+        responses: responses.filter((response) => response.task_id === task.id),
+        participants: participants.filter((participant) => participant.task_id === task.id)
       }));
     return { tasks: visibleTasks, source: "local" };
   }
@@ -15250,7 +15309,8 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
       is_active: true,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      responses: []
+      responses: [],
+      participants: []
     };
     classTaskWriteLocal(classTaskLocalTasksStorageKey, [task, ...tasks]);
     return { task, source: "local" };
@@ -15264,6 +15324,21 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
       task: classTaskPublicTaskForAttempt(task, 0),
       source: "local"
     };
+  }
+
+  if (action === "join") {
+    const code = normaliseClassTaskCode(body.code);
+    const alias = String(body.pupil_alias || "").trim().slice(0, 80);
+    const attemptIndex = classTaskClampNumber(body.attempt_index, 0, 9, 0);
+    const task = tasks.find((item) => item.join_code === code);
+    if (!task || !classTaskIsAvailable(task)) throw new Error("This class task was not found or has expired.");
+    if (!alias) throw new Error("Enter an alias or initials before starting.");
+    const result = classTaskUpsertLocalParticipant(participants, task, alias, {
+      status: "joined",
+      current_attempt: attemptIndex + 1
+    });
+    classTaskWriteLocal(classTaskLocalParticipantsStorageKey, result.participants);
+    return { participant: result.participant, source: "local" };
   }
 
   if (action === "submit") {
@@ -15284,6 +15359,9 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     if (!attemptQuestions) throw new Error("This task attempt is not available. Ask your teacher for a new code.");
     const answers = body.answers && typeof body.answers === "object" ? body.answers : {};
     const working = body.working && typeof body.working === "object" ? body.working : {};
+    const workingImages = body.working_images && typeof body.working_images === "object"
+      ? Object.fromEntries(Object.entries(body.working_images).map(([key, value]) => [key, pupilSafeWorkingImage(value)]).filter(([, value]) => value))
+      : {};
     const marking = classTaskMarkPassStatus(classTaskScoreSubmission(attemptQuestions, answers, working), task.settings || {}, attemptIndex);
     const response = {
       id: `local-response-${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -15291,17 +15369,29 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
       pupil_alias: alias,
       answers,
       working,
+      working_images: workingImages,
       auto_score: marking.auto_score,
       max_score: marking.max_score,
       marking,
       submitted_at: new Date().toISOString()
     };
+    const nextTask = marking.pass_required && !marking.pass_met ? classTaskPublicTaskForAttempt(task, attemptIndex + 1) : null;
+    const participantResult = classTaskUpsertLocalParticipant(participants, task, alias, {
+      status: marking.pass_met ? "completed" : nextTask ? "retrying" : "submitted",
+      current_attempt: marking.attempt_number,
+      last_score: marking.auto_score,
+      max_score: marking.max_score,
+      pass_met: marking.pass_met,
+      increment_submissions: true
+    });
     classTaskWriteLocal(classTaskLocalResponsesStorageKey, [response, ...responses]);
+    classTaskWriteLocal(classTaskLocalParticipantsStorageKey, participantResult.participants);
     return {
       response,
+      participant: participantResult.participant,
       show_answers: true,
       answers: attemptQuestions.map((question, index) => ({ id: question.id || `q${index + 1}`, answer: question.answer || "", steps: question.steps || [] })),
-      next_task: marking.pass_required && !marking.pass_met ? classTaskPublicTaskForAttempt(task, attemptIndex + 1) : null,
+      next_task: nextTask,
       source: "local"
     };
   }
@@ -15602,6 +15692,10 @@ async function loadClassTasks({ rerender = false, force = false } = {}) {
 }
 
 function resetClassTaskState() {
+  if (state.classTaskMonitorTimer) {
+    window.clearInterval(state.classTaskMonitorTimer);
+    state.classTaskMonitorTimer = null;
+  }
   state.classTasks = [];
   state.classTasksLoaded = false;
   state.classTasksLoading = false;
@@ -15611,6 +15705,25 @@ function resetClassTaskState() {
   state.classTaskMetadata = null;
   state.classTaskLoadedToolSlug = "";
   state.classTaskLoadToken += 1;
+}
+
+function startClassTaskMonitorRefresh() {
+  if (state.classTaskMonitorTimer) {
+    window.clearInterval(state.classTaskMonitorTimer);
+    state.classTaskMonitorTimer = null;
+  }
+  state.classTaskMonitorTimer = window.setInterval(() => {
+    if (routeParts()[0] !== "class-tasks") {
+      window.clearInterval(state.classTaskMonitorTimer);
+      state.classTaskMonitorTimer = null;
+      return;
+    }
+    const activeElement = document.activeElement;
+    if (activeElement?.closest?.(".class-task-response-detail, .class-task-feedback-form")) return;
+    if (!state.classTasksLoading) {
+      loadClassTasks({ rerender: true, force: true });
+    }
+  }, 10000);
 }
 
 function syncClassTaskAuthState() {
@@ -15665,6 +15778,7 @@ function classTaskResponseDetailHtml(response, task) {
       ${feedback.map((item, index) => {
         const question = questions.find((entry) => (entry.id || "") === item.id) || questions[index] || {};
         const workingText = item.working ?? response.working?.[item.id] ?? response.working?.[String(index)] ?? "";
+        const workingImage = pupilSafeWorkingImage(response.working_images?.[item.id] ?? response.working_images?.[String(index)] ?? "");
         const submitted = item.submitted || response.answers?.[item.id] || response.answers?.[String(index)] || "";
         const expected = item.expected || question.answer || "";
         const status = item.correct ? "Correct" : item.markable ? "Incorrect" : "Teacher review";
@@ -15689,6 +15803,12 @@ function classTaskResponseDetailHtml(response, task) {
               <div class="class-task-working">
                 <span>Working</span>
                 <p>${escapeHtml(workingText).replace(/\n/g, "<br>")}</p>
+              </div>
+            ` : ""}
+            ${workingImage ? `
+              <div class="class-task-working">
+                <span>Handwritten working</span>
+                <img class="class-task-working-image" src="${workingImage}" alt="Handwritten working for question ${index + 1}">
               </div>
             ` : ""}
           </li>
@@ -15738,8 +15858,114 @@ function updateClassTaskResponseInState(taskId, response) {
   });
 }
 
+function classTaskMonitorRows(task) {
+  const rows = new Map();
+  (task.participants || []).forEach((participant) => {
+    const key = classTaskAliasKey(participant.pupil_alias);
+    if (!key) return;
+    rows.set(key, {
+      alias: participant.pupil_alias || "Pupil",
+      status: classTaskParticipantStatus(participant.status),
+      current_attempt: Number(participant.current_attempt) || 1,
+      submissions_count: Number(participant.submissions_count) || 0,
+      last_score: participant.last_score,
+      max_score: participant.max_score,
+      pass_met: Boolean(participant.pass_met),
+      last_seen_at: participant.last_seen_at || participant.first_seen_at || ""
+    });
+  });
+
+  (task.responses || []).forEach((response) => {
+    const key = classTaskAliasKey(response.pupil_alias);
+    if (!key) return;
+    const existing = rows.get(key) || {};
+    const marking = response.marking || {};
+    const passMet = Boolean(marking.pass_met);
+    const status = passMet ? "completed" : marking.pass_required ? "retrying" : "submitted";
+    rows.set(key, {
+      alias: existing.alias || response.pupil_alias || "Pupil",
+      status: existing.status && existing.submissions_count ? existing.status : status,
+      current_attempt: Math.max(Number(existing.current_attempt) || 1, Number(marking.attempt_number) || 1),
+      submissions_count: Math.max(Number(existing.submissions_count) || 0, 1),
+      last_score: existing.last_score ?? response.auto_score,
+      max_score: existing.max_score ?? response.max_score,
+      pass_met: Boolean(existing.pass_met) || passMet,
+      last_seen_at: existing.last_seen_at || response.submitted_at || ""
+    });
+  });
+
+  return [...rows.values()].sort((a, b) => String(b.last_seen_at || "").localeCompare(String(a.last_seen_at || "")));
+}
+
+function classTaskMonitorScore(row) {
+  const score = Number(row.last_score);
+  const max = Number(row.max_score);
+  if (!Number.isFinite(score) || !Number.isFinite(max) || max <= 0) return "Not submitted";
+  return `${score}/${max}`;
+}
+
+function classTaskMonitorSeen(value) {
+  if (!value) return "Not set";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Not set";
+  const time = date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  return date.toDateString() === new Date().toDateString() ? time : `${formatDisplayDate(value)}, ${time}`;
+}
+
+function classTaskMonitorHtml(task) {
+  const rows = classTaskMonitorRows(task);
+  const submitted = rows.filter((row) => Number(row.submissions_count || 0) > 0).length;
+  const completed = rows.filter((row) => row.pass_met || row.status === "completed").length;
+  const needsSupport = rows.filter((row) => (
+    Number(row.submissions_count || 0) > 0 && !row.pass_met && row.status !== "completed"
+  )).length;
+  const working = rows.length - submitted;
+  return `
+    <details open class="class-task-monitor">
+      <summary class="class-task-monitor-summary">
+        <span>Live monitor</span>
+        <small>${rows.length} joined · ${submitted} submitted</small>
+      </summary>
+      <div class="class-task-monitor-stats" aria-label="Class task live status">
+        <span><strong>${rows.length}</strong> joined</span>
+        <span><strong>${working}</strong> working</span>
+        <span><strong>${submitted}</strong> submitted</span>
+        <span><strong>${needsSupport}</strong> support</span>
+        <span><strong>${completed}</strong> complete</span>
+      </div>
+      ${rows.length ? `
+        <div class="class-task-monitor-table-wrap">
+          <table class="class-task-monitor-table">
+            <thead>
+              <tr>
+                <th>Pupil</th>
+                <th>Status</th>
+                <th>Attempt</th>
+                <th>Score</th>
+                <th>Seen</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map((row) => `
+                <tr data-status="${escapeHtml(classTaskParticipantStatus(row.status))}">
+                  <td>${escapeHtml(row.alias)}</td>
+                  <td>${escapeHtml(classTaskParticipantStatusText(row.status))}</td>
+                  <td>${escapeHtml(String(row.current_attempt || 1))}</td>
+                  <td>${escapeHtml(classTaskMonitorScore(row))}</td>
+                  <td>${escapeHtml(classTaskMonitorSeen(row.last_seen_at))}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      ` : `<p>No pupils have joined this task yet.</p>`}
+    </details>
+  `;
+}
+
 function classTaskCardHtml(task) {
   const responses = task.responses || [];
+  const participants = classTaskMonitorRows(task);
   const questionCount = Array.isArray(task.questions) ? task.questions.length : 0;
   const isOpen = classTaskIsAvailable(task);
   const joinUrl = classTaskJoinUrl(task.join_code);
@@ -15759,6 +15985,7 @@ function classTaskCardHtml(task) {
         <span>${questionCount} question${questionCount === 1 ? "" : "s"}</span>
         ${passPercent ? `<span>${passPercent}% required</span>` : ""}
         ${maxAttempts > 1 ? `<span>${maxAttempts} attempts available</span>` : ""}
+        <span>${participants.length} joined</span>
         <span>${responses.length} submission${responses.length === 1 ? "" : "s"}</span>
         <span>Expires ${escapeHtml(formatDisplayDate(task.expires_at))}</span>
       </div>
@@ -15771,6 +15998,7 @@ function classTaskCardHtml(task) {
         <a class="button" href="#/pupil/${escapeHtml(task.join_code)}">Open Pupil Page</a>
         ${isOpen ? `<button class="button subtle" type="button" data-class-task-close="${escapeHtml(task.id)}">Close Task</button>` : ""}
       </div>
+      ${classTaskMonitorHtml(task)}
       <details class="class-task-responses">
         <summary>Responses (${responses.length})</summary>
         ${responses.length ? `
@@ -15997,6 +16225,7 @@ function bindClassTasks() {
   const form = document.getElementById("classTaskForm");
   const toolSelect = document.getElementById("classTaskTool");
   if (!form || !toolSelect) return;
+  startClassTaskMonitorRefresh();
   toolSelect.value = state.classTaskToolSlug;
   const selectedTool = selectedClassTaskTool();
   if (state.classTaskMetadata && state.classTaskLoadedToolSlug === selectedTool?.slug) {
@@ -16072,6 +16301,7 @@ async function loadPupilTask(code, { rerender = false } = {}) {
   state.pupilSubmission = null;
   state.pupilActiveQuestionIndex = 0;
   state.pupilTaskAttemptIndex = 0;
+  state.pupilJoinRegisteredKey = "";
   state.pupilTaskCode = cleanCode;
   try {
     const payload = await classTaskApi("get", { params: { code: cleanCode } });
@@ -16087,19 +16317,35 @@ async function loadPupilTask(code, { rerender = false } = {}) {
 }
 
 function pupilMathToolbarHtml(extraClass = "") {
+  const tools = [
+    { label: "x²", token: "²" },
+    { label: "x³", token: "³" },
+    { label: "xⁿ", token: "^{}", cursor: "2" },
+    { label: "a/b", token: "\\frac{}{}", cursor: "6" },
+    { label: "√", token: "\\sqrt{}", cursor: "6" },
+    { label: "≤", token: "≤" },
+    { label: "≥", token: "≥" },
+    { label: "π", token: "π" },
+    { label: "±", token: "±" }
+  ];
   return `
     <div class="pupil-math-toolbar ${escapeHtml(extraClass)}" aria-label="Maths answer shortcuts">
-      <button type="button" data-pupil-math-insert="²">x²</button>
-      <button type="button" data-pupil-math-insert="³">x³</button>
-      <button type="button" data-pupil-math-template="power">xⁿ</button>
-      <button type="button" data-pupil-math-template="fraction">a/b</button>
-      <button type="button" data-pupil-math-template="sqrt">√</button>
-      <button type="button" data-pupil-math-insert="≤">≤</button>
-      <button type="button" data-pupil-math-insert="≥">≥</button>
-      <button type="button" data-pupil-math-insert="π">π</button>
-      <button type="button" data-pupil-math-insert="±">±</button>
+      ${tools.map((tool) => `
+        <button type="button" draggable="true" data-pupil-math-token="${escapeHtml(tool.token)}" data-pupil-math-cursor="${escapeHtml(tool.cursor || "")}" title="Tap or drag into the answer or working box">${escapeHtml(tool.label)}</button>
+      `).join("")}
     </div>
   `;
+}
+
+function pupilAnswerPreviewHtml(value) {
+  const text = String(value || "").trim();
+  if (!text) return `<span class="pupil-answer-preview-empty">Preview appears here</span>`;
+  const displayText = text
+    .replace(/\bsqrt\(([^()]+)\)/gi, "\\sqrt{$1}")
+    .replace(/\b(-?\d+|[A-Za-z][A-Za-z0-9]*)\/(-?\d+|[A-Za-z][A-Za-z0-9]*)\b/g, "\\frac{$1}{$2}");
+  const template = document.createElement("template");
+  template.content.appendChild(worksheetMathFragment(displayText));
+  return template.innerHTML;
 }
 
 function pupilQuestionHtml(question, index) {
@@ -16114,14 +16360,24 @@ function pupilQuestionHtml(question, index) {
           <div class="pupil-question-text">${worksheetContentHtml(question.question || "")}</div>
         </div>
         <div class="pupil-response-grid">
-          <label class="pupil-answer-field">
-            Final answer
-            <input type="text" data-pupil-answer="${questionId}" data-pupil-math-input autocomplete="off" spellcheck="false" inputmode="text" placeholder="Type your final answer">
-          </label>
-          <label class="pupil-working-field">
-            Working
-            <textarea data-pupil-working="${questionId}" rows="4" spellcheck="false" placeholder="Show your working for your teacher"></textarea>
-          </label>
+          <div class="pupil-answer-stack">
+            <label class="pupil-answer-field">
+              Final answer
+              <input type="text" data-pupil-answer="${questionId}" data-pupil-math-input autocomplete="off" spellcheck="false" inputmode="text" placeholder="Type your final answer">
+            </label>
+            <small>Tap or drag symbols. Fractions preview vertically.</small>
+            <div class="pupil-answer-preview" data-pupil-answer-preview="${questionId}">${pupilAnswerPreviewHtml("")}</div>
+          </div>
+          <section class="pupil-working-field" aria-label="Working for question ${index + 1}">
+            <div class="pupil-working-head">
+              <span>Working</span>
+              <button type="button" data-pupil-clear-canvas="${questionId}">Clear writing</button>
+            </div>
+            <textarea data-pupil-working="${questionId}" data-pupil-math-input rows="3" spellcheck="false" placeholder="Type working, or write below with your finger or stylus"></textarea>
+            <div class="pupil-handwriting-pad">
+              <canvas data-pupil-working-canvas="${questionId}" aria-label="Handwriting space for question ${index + 1}"></canvas>
+            </div>
+          </section>
         </div>
       </div>
       <span class="pupil-question-marks">${Number(question.marks) || 1} mark${Number(question.marks) === 1 ? "" : "s"}</span>
@@ -16145,6 +16401,7 @@ function pupilSubmissionHtml(task) {
   const questions = task.questions || [];
   const submittedAnswers = response.answers || {};
   const submittedWorking = response.working || {};
+  const submittedWorkingImages = response.working_images || {};
   const passRequired = Boolean(marking.pass_required);
   const passMet = passRequired ? Boolean(marking.pass_met) : true;
   const nextTask = state.pupilSubmission.next_task || null;
@@ -16177,6 +16434,7 @@ function pupilSubmissionHtml(task) {
               const status = correct ? "Correct" : markable ? "Incorrect" : "Teacher review";
               const steps = Array.isArray(expected.steps) ? expected.steps : [];
               const showWorking = !correct && steps.length;
+              const workingImage = pupilSafeWorkingImage(submittedWorkingImages[questionId] || submittedWorkingImages[String(index)] || "");
               return `
               <li class="${correct ? "is-correct" : "is-incorrect"}">
                 <strong>${index + 1}</strong>
@@ -16197,6 +16455,12 @@ function pupilSubmissionHtml(task) {
                     <div class="pupil-review-working">
                       <span>Your working</span>
                       <p>${escapeHtml(submittedWorking[questionId]).replace(/\n/g, "<br>")}</p>
+                    </div>
+                  ` : ""}
+                  ${workingImage ? `
+                    <div class="pupil-review-working">
+                      <span>Written working</span>
+                      <img class="pupil-working-image" src="${workingImage}" alt="Your handwritten working for question ${index + 1}">
                     </div>
                   ` : ""}
                   ${showWorking ? `
@@ -16321,6 +16585,142 @@ function renderPupilJoin(routeCode = "") {
   bindPupilJoin();
 }
 
+async function registerPupilTaskJoin(alias) {
+  const cleanAlias = String(alias || "").trim().slice(0, 80);
+  const task = state.pupilTask;
+  if (!task?.join_code || !cleanAlias) return null;
+  const attemptIndex = Number(task.attempt_index ?? state.pupilTaskAttemptIndex ?? 0);
+  const joinKey = `${normaliseClassTaskCode(task.join_code)}|${classTaskAliasKey(cleanAlias)}|${attemptIndex}`;
+  if (state.pupilJoinRegisteredKey === joinKey) return null;
+  state.pupilJoinRegisteredKey = joinKey;
+  try {
+    const payload = await classTaskApi("join", {
+      method: "POST",
+      body: {
+        code: task.join_code,
+        pupil_alias: cleanAlias,
+        attempt_index: attemptIndex
+      }
+    });
+    const status = document.getElementById("pupilTaskStatus");
+    if (status?.isConnected) {
+      status.textContent = `Joined as ${cleanAlias}.`;
+      status.dataset.tone = "success";
+    }
+    return payload.participant || null;
+  } catch (error) {
+    state.pupilJoinRegisteredKey = "";
+    console.warn("Could not register pupil task join:", error.message);
+    return null;
+  }
+}
+
+function pupilInsertMathToken(input, token, cursorOffset = token.length) {
+  if (!input || !token) return;
+  const start = input.selectionStart ?? input.value.length;
+  const end = input.selectionEnd ?? start;
+  input.value = `${input.value.slice(0, start)}${token}${input.value.slice(end)}`;
+  const nextCursor = start + Math.max(0, Math.min(token.length, Number(cursorOffset) || token.length));
+  input.focus();
+  input.setSelectionRange(nextCursor, nextCursor);
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
+function pupilUpdateAnswerPreview(input) {
+  const questionId = input?.dataset?.pupilAnswer || "";
+  if (!questionId) return;
+  const preview = document.querySelector(`[data-pupil-answer-preview="${CSS.escape(questionId)}"]`);
+  if (preview) preview.innerHTML = pupilAnswerPreviewHtml(input.value);
+}
+
+function pupilCanvasDataUrl(canvas) {
+  if (!canvas || canvas.dataset.hasInk !== "true") return "";
+  const exportCanvas = document.createElement("canvas");
+  exportCanvas.width = canvas.width;
+  exportCanvas.height = canvas.height;
+  const context = exportCanvas.getContext("2d");
+  context.fillStyle = "#fff";
+  context.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+  context.drawImage(canvas, 0, 0);
+  return exportCanvas.toDataURL("image/png");
+}
+
+function setupPupilHandwritingPads() {
+  document.querySelectorAll("[data-pupil-working-canvas]").forEach((canvas) => {
+    if (canvas.dataset.ready === "true") return;
+    const rect = canvas.getBoundingClientRect();
+    const cssWidth = Math.max(300, Math.round(rect.width || 520));
+    const cssHeight = Math.max(190, Math.round(rect.height || 260));
+    const scale = Math.min(window.devicePixelRatio || 1, 1.5, 900 / cssWidth, 420 / cssHeight);
+    canvas.width = Math.round(cssWidth * scale);
+    canvas.height = Math.round(cssHeight * scale);
+    canvas.dataset.ready = "true";
+    canvas.dataset.hasInk = "false";
+    const context = canvas.getContext("2d");
+    context.setTransform(scale, 0, 0, scale, 0, 0);
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    context.lineWidth = 2.8;
+    context.strokeStyle = "#172033";
+    let drawing = false;
+
+    function point(event) {
+      const box = canvas.getBoundingClientRect();
+      return {
+        x: event.clientX - box.left,
+        y: event.clientY - box.top
+      };
+    }
+
+    function start(event) {
+      event.preventDefault();
+      drawing = true;
+      const position = point(event);
+      context.beginPath();
+      context.moveTo(position.x, position.y);
+      canvas.dataset.hasInk = "true";
+      canvas.setPointerCapture?.(event.pointerId);
+      registerPupilTaskJoin(document.querySelector("#pupilTaskForm [name='pupil_alias']")?.value || "");
+    }
+
+    function move(event) {
+      if (!drawing) return;
+      event.preventDefault();
+      const position = point(event);
+      context.lineTo(position.x, position.y);
+      context.stroke();
+    }
+
+    function end(event) {
+      if (!drawing) return;
+      event.preventDefault();
+      drawing = false;
+      canvas.releasePointerCapture?.(event.pointerId);
+    }
+
+    canvas.addEventListener("pointerdown", start);
+    canvas.addEventListener("pointermove", move);
+    canvas.addEventListener("pointerup", end);
+    canvas.addEventListener("pointercancel", end);
+    canvas.addEventListener("pointerleave", end);
+  });
+
+  document.querySelectorAll("[data-pupil-clear-canvas]").forEach((button) => {
+    if (button.dataset.bound === "true") return;
+    button.dataset.bound = "true";
+    button.addEventListener("click", () => {
+      const canvas = document.querySelector(`[data-pupil-working-canvas="${CSS.escape(button.dataset.pupilClearCanvas || "")}"]`);
+      if (!canvas) return;
+      const context = canvas.getContext("2d");
+      context.save();
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.restore();
+      canvas.dataset.hasInk = "false";
+    });
+  });
+}
+
 function bindPupilJoin() {
   const codeInput = document.getElementById("pupilTaskCodeInput");
   const loadButton = document.getElementById("loadPupilTaskButton");
@@ -16355,6 +16755,7 @@ function bindPupilJoin() {
     state.pupilTaskCode = "";
     state.pupilTaskAttemptIndex = 0;
     state.pupilActiveQuestionIndex = 0;
+    state.pupilJoinRegisteredKey = "";
     location.hash = "#/pupil";
     if (routeParts()[0] === "pupil") renderRoute();
   });
@@ -16366,6 +16767,7 @@ function bindPupilJoin() {
     state.pupilTaskAttemptIndex = Number(nextTask.attempt_index || 0);
     state.pupilSubmission = null;
     state.pupilActiveQuestionIndex = 0;
+    state.pupilJoinRegisteredKey = "";
     renderRoute();
   });
 
@@ -16419,37 +16821,61 @@ function bindPupilJoin() {
     input.addEventListener("focus", () => {
       const card = input.closest("[data-pupil-question-card]");
       if (card) setActivePupilQuestion(card.dataset.pupilQuestionCard);
+      registerPupilTaskJoin(form?.querySelector("[name='pupil_alias']")?.value || "");
     });
   });
   document.querySelectorAll("[data-pupil-answer]").forEach((input) => {
-    input.addEventListener("input", updatePupilSubmitState);
+    input.addEventListener("input", () => {
+      pupilUpdateAnswerPreview(input);
+      updatePupilSubmitState();
+    });
+    pupilUpdateAnswerPreview(input);
+  });
+  document.querySelectorAll("[data-pupil-math-input]").forEach((input) => {
+    input.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = "copy";
+    });
+    input.addEventListener("drop", (event) => {
+      event.preventDefault();
+      let payload = {};
+      try {
+        payload = JSON.parse(event.dataTransfer.getData("application/json") || "{}");
+      } catch {
+        payload = { token: event.dataTransfer.getData("text/plain") || "" };
+      }
+      pupilInsertMathToken(input, payload.token || event.dataTransfer.getData("text/plain") || "", payload.cursor);
+    });
+  });
+  form?.querySelector("[name='pupil_alias']")?.addEventListener("blur", (event) => {
+    registerPupilTaskJoin(event.currentTarget.value);
+  });
+  form?.querySelector("[name='pupil_alias']")?.addEventListener("change", (event) => {
+    registerPupilTaskJoin(event.currentTarget.value);
   });
 
   setActivePupilQuestion(state.pupilActiveQuestionIndex || 0);
   updatePupilSubmitState();
+  window.requestAnimationFrame(setupPupilHandwritingPads);
 
-  document.querySelectorAll("[data-pupil-math-insert], [data-pupil-math-template]").forEach((button) => {
+  document.querySelectorAll("[data-pupil-math-token]").forEach((button) => {
+    button.addEventListener("dragstart", (event) => {
+      const payload = {
+        token: button.dataset.pupilMathToken || "",
+        cursor: Number(button.dataset.pupilMathCursor || button.dataset.pupilMathToken?.length || 0)
+      };
+      event.dataTransfer.setData("application/json", JSON.stringify(payload));
+      event.dataTransfer.setData("text/plain", payload.token);
+      event.dataTransfer.effectAllowed = "copy";
+    });
+
     button.addEventListener("click", () => {
       const input = button.closest(".pupil-answer-field")?.querySelector("[data-pupil-math-input]")
         || (document.activeElement?.matches?.("[data-pupil-math-input]") ? document.activeElement : null)
         || document.querySelector(".pupil-question-card.active [data-pupil-math-input]")
         || document.querySelector("[data-pupil-math-input]");
       if (!input) return;
-      const templates = {
-        fraction: { text: "()/()", cursorOffset: 1 },
-        sqrt: { text: "√()", cursorOffset: 2 },
-        power: { text: "^()", cursorOffset: 2 }
-      };
-      const template = button.dataset.pupilMathTemplate ? templates[button.dataset.pupilMathTemplate] : null;
-      const insertText = template?.text || button.dataset.pupilMathInsert || "";
-      const cursorOffset = Number.isFinite(template?.cursorOffset) ? template.cursorOffset : insertText.length;
-      const start = input.selectionStart ?? input.value.length;
-      const end = input.selectionEnd ?? start;
-      input.value = `${input.value.slice(0, start)}${insertText}${input.value.slice(end)}`;
-      const nextCursor = start + cursorOffset;
-      input.focus();
-      input.setSelectionRange(nextCursor, nextCursor);
-      updatePupilSubmitState();
+      pupilInsertMathToken(input, button.dataset.pupilMathToken || "", Number(button.dataset.pupilMathCursor || ""));
     });
   });
 
@@ -16461,6 +16887,9 @@ function bindPupilJoin() {
     const firstBlankAnswer = answerInputs.find((input) => !input.value.trim());
     const answers = Object.fromEntries(answerInputs.map((input) => [input.dataset.pupilAnswer, input.value.trim()]));
     const working = Object.fromEntries([...form.querySelectorAll("[data-pupil-working]")].map((input) => [input.dataset.pupilWorking, input.value.trim()]));
+    const workingImages = Object.fromEntries([...form.querySelectorAll("[data-pupil-working-canvas]")]
+      .map((canvas) => [canvas.dataset.pupilWorkingCanvas, pupilCanvasDataUrl(canvas)])
+      .filter(([key, value]) => key && value));
     if (!state.pupilTask?.join_code) return;
     if (firstBlankAnswer) {
       updatePupilSubmitState();
@@ -16472,6 +16901,7 @@ function bindPupilJoin() {
     if (button) button.disabled = true;
     try {
       classTaskWriteLocal(pupilAliasStorageKey, alias);
+      await registerPupilTaskJoin(alias);
       const payload = await classTaskApi("submit", {
         method: "POST",
         body: {
@@ -16479,7 +16909,8 @@ function bindPupilJoin() {
           pupil_alias: alias,
           attempt_index: Number(state.pupilTask.attempt_index ?? state.pupilTaskAttemptIndex ?? 0),
           answers,
-          working
+          working,
+          working_images: workingImages
         }
       });
       state.pupilSubmission = payload;
