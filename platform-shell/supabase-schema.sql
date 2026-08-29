@@ -1053,6 +1053,7 @@ create table if not exists public.class_task_responses (
   task_id uuid not null references public.class_tasks(id) on delete cascade,
   pupil_alias text not null check (char_length(pupil_alias) <= 80),
   answers jsonb not null default '{}'::jsonb,
+  working jsonb not null default '{}'::jsonb,
   auto_score numeric,
   max_score numeric,
   marking jsonb not null default '{}'::jsonb,
@@ -1064,6 +1065,7 @@ create table if not exists public.class_task_responses (
 
 alter table public.class_task_responses add column if not exists auto_score numeric;
 alter table public.class_task_responses add column if not exists max_score numeric;
+alter table public.class_task_responses add column if not exists working jsonb not null default '{}'::jsonb;
 alter table public.class_task_responses add column if not exists marking jsonb not null default '{}'::jsonb;
 alter table public.class_task_responses add column if not exists reviewed boolean not null default false;
 alter table public.class_task_responses add column if not exists teacher_notes text;

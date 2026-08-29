@@ -46,6 +46,26 @@ body.classroom-active {
   overflow: hidden;
 }
 
+body.pupil-shell-active .sidebar,
+body.pupil-shell-active .topbar,
+body.pupil-shell-active .site-trust-note,
+body.pupil-shell-active .mobile-nav {
+  display: none !important;
+}
+
+body.pupil-shell-active .app-shell {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+body.pupil-shell-active .main-wrap {
+  min-height: 100vh;
+}
+
+body.pupil-shell-active #app {
+  min-height: 100vh;
+  padding: clamp(14px, 2.4vw, 28px);
+}
+
 button,
 input,
 select,
@@ -4149,7 +4169,8 @@ button.certification-course-card {
 .class-task-form textarea,
 .class-task-link-field input,
 .pupil-code-row input,
-.pupil-task-panel input {
+.pupil-task-panel input,
+.pupil-task-panel textarea {
   width: 100%;
   min-width: 0;
   border: 1px solid var(--line);
@@ -4160,7 +4181,8 @@ button.certification-course-card {
   font: inherit;
 }
 
-.class-task-form textarea {
+.class-task-form textarea,
+.pupil-task-panel textarea {
   resize: vertical;
 }
 
@@ -4169,7 +4191,8 @@ button.certification-course-card {
 .class-task-form textarea:focus,
 .class-task-link-field input:focus,
 .pupil-code-row input:focus,
-.pupil-task-panel input:focus {
+.pupil-task-panel input:focus,
+.pupil-task-panel textarea:focus {
   border-color: rgba(23, 184, 179, 0.72);
   box-shadow: 0 0 0 3px rgba(23, 184, 179, 0.12);
   outline: none;
@@ -4287,15 +4310,20 @@ button.certification-course-card {
   margin-top: 8px;
 }
 
-.class-task-response-list article {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+.class-task-response-list .class-task-response-card {
+  display: grid;
+  gap: 8px;
   padding: 8px 10px;
   border-radius: 7px;
   background: #f8fbff;
   color: var(--ink);
+}
+
+.class-task-response-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .class-task-response-list small {
@@ -4304,16 +4332,130 @@ button.certification-course-card {
   font-weight: 700;
 }
 
-.class-task-response-list span {
+.class-task-response-summary-row > span {
   font-weight: 900;
   color: var(--teal-dark);
   white-space: nowrap;
 }
 
+.class-task-response-detail summary {
+  cursor: pointer;
+  color: var(--violet);
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.class-task-response-review {
+  display: grid;
+  gap: 9px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.class-task-response-review li {
+  display: grid;
+  gap: 7px;
+  padding: 9px;
+  border: 1px solid rgba(217, 224, 234, 0.9);
+  border-radius: 7px;
+  background: white;
+}
+
+.class-task-response-question {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.class-task-response-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.class-task-response-question span,
+.class-task-response-grid span,
+.class-task-working span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.class-task-response-grid p,
+.class-task-working p,
+.class-task-response-empty {
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.class-task-response-prompt {
+  color: #334155;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.class-task-working {
+  display: grid;
+  gap: 4px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(217, 224, 234, 0.72);
+}
+
+.pupil-only-page {
+  min-height: calc(100vh - clamp(28px, 4.8vw, 56px));
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.pupil-only-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(23, 184, 179, 0.22);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(231, 251, 250, 0.78)),
+    var(--paper);
+  box-shadow: 0 16px 36px rgba(23, 32, 51, 0.07);
+}
+
+.pupil-only-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pupil-only-brand strong,
+.pupil-only-brand small {
+  display: block;
+}
+
+.pupil-only-brand small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.pupil-only-school {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(111, 76, 195, 0.11);
+  color: #49308f;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
 .pupil-task-page {
   display: grid;
   gap: 16px;
-  max-width: 1100px;
+  width: min(1220px, 100%);
+  max-width: 1220px;
   margin: 0 auto;
 }
 
@@ -4321,6 +4463,46 @@ button.certification-course-card {
   background:
     linear-gradient(135deg, rgba(231, 251, 250, 0.75), rgba(241, 239, 255, 0.7)),
     white;
+}
+
+.pupil-join-panel h1 {
+  margin: 4px 0 5px;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  letter-spacing: 0;
+}
+
+.pupil-join-panel p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.pupil-join-panel-compact {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr);
+  gap: 10px 14px;
+  align-items: end;
+}
+
+.pupil-join-panel-compact .eyebrow,
+.pupil-join-panel-compact h1,
+.pupil-join-panel-compact p {
+  grid-column: 1 / -1;
+}
+
+.pupil-join-panel-compact h1 {
+  margin-bottom: 0;
+  font-size: 1.35rem;
+}
+
+.pupil-join-panel-compact p {
+  font-size: 0.86rem;
+}
+
+.pupil-join-panel-compact .pupil-code-row,
+.pupil-join-panel-compact #pupilTaskStatus {
+  margin: 0;
 }
 
 .pupil-code-row {
@@ -4403,6 +4585,43 @@ button.certification-course-card {
   font-family: var(--math-font);
   font-size: 1.08rem;
   line-height: 1.55;
+}
+
+.pupil-answer-field input {
+  font-family: var(--math-font);
+  font-size: 1.02rem;
+}
+
+.pupil-math-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.pupil-math-toolbar button {
+  min-width: 38px;
+  min-height: 32px;
+  border: 1px solid rgba(23, 184, 179, 0.24);
+  border-radius: 7px;
+  background: #f7ffff;
+  color: var(--ink);
+  cursor: pointer;
+  font-family: var(--math-font);
+  font-size: 0.88rem;
+  font-weight: 850;
+}
+
+.pupil-math-toolbar button:hover,
+.pupil-math-toolbar button:focus-visible {
+  border-color: rgba(23, 184, 179, 0.65);
+  background: rgba(23, 184, 179, 0.13);
+  outline: none;
+}
+
+.pupil-working-field textarea {
+  min-height: 96px;
+  line-height: 1.45;
 }
 
 .pupil-question-diagram {
@@ -9396,13 +9615,16 @@ sup .worksheet-fraction > span:last-child {
   .class-task-list-head,
   .class-task-card-head,
   .pupil-task-head,
+  .pupil-only-header,
   .pupil-submit-row {
     display: grid;
     grid-template-columns: 1fr;
   }
 
   .pupil-code-row,
-  .pupil-question-card {
+  .pupil-question-card,
+  .class-task-response-grid,
+  .pupil-join-panel-compact {
     grid-template-columns: 1fr;
   }
 

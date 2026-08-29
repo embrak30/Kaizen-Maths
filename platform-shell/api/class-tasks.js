@@ -24,6 +24,11 @@ const TASK_SELECT = [
   "updated_at"
 ].join(", ");
 
+const RESPONSE_SELECT = "id, task_id, pupil_alias, answers, auto_score, max_score, marking, reviewed, teacher_notes, submitted_at";
+const RESPONSE_SELECT_WITH_WORKING = "id, task_id, pupil_alias, answers, working, auto_score, max_score, marking, reviewed, teacher_notes, submitted_at";
+const SUBMISSION_SELECT = "id, pupil_alias, answers, auto_score, max_score, marking, submitted_at";
+const SUBMISSION_SELECT_WITH_WORKING = "id, pupil_alias, answers, working, auto_score, max_score, marking, submitted_at";
+
 function queryParam(req, name) {
   const url = new URL(req.url || "/", "https://kaizenmaths.com");
   return url.searchParams.get(name) || "";
@@ -35,6 +40,16 @@ function cleanText(value, max = 2000) {
 
 function cleanLongText(value, max = 30000) {
   return String(value ?? "").trim().slice(0, max);
+}
+
+function cleanStringMap(value, maxValueLength = 4000) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return Object.fromEntries(
+    Object.entries(value)
+      .slice(0, 80)
+      .map(([key, entry]) => [cleanText(key, 80), cleanLongText(entry, maxValueLength)])
+      .filter(([key]) => key)
+  );
 }
 
 function randomCode(length = 7) {
@@ -114,8 +129,24 @@ function stripHtml(value) {
     .replace(/&#039;/g, "'");
 }
 
+function normaliseSuperscripts(value) {
+  const superscriptMap = {
+    "⁰": "0",
+    "¹": "1",
+    "²": "2",
+    "³": "3",
+    "⁴": "4",
+    "⁵": "5",
+    "⁶": "6",
+    "⁷": "7",
+    "⁸": "8",
+    "⁹": "9"
+  };
+  return String(value ?? "").replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, (match) => `^${[...match].map((char) => superscriptMap[char] || "").join("")}`);
+}
+
 function normaliseMathAnswer(value) {
-  let text = stripHtml(value).toLowerCase();
+  let text = normaliseSuperscripts(stripHtml(value)).toLowerCase();
   text = text
     .replace(/\\dfrac/g, "\\frac")
     .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, "$1/$2")
@@ -123,6 +154,10 @@ function normaliseMathAnswer(value) {
     .replace(/\\left|\\right/g, "")
     .replace(/\\times|×/g, "*")
     .replace(/\\div|÷/g, "/")
+    .replace(/\\leq?|≤/g, "<=")
+    .replace(/\\geq?|≥/g, ">=")
+    .replace(/\\pi|π/g, "pi")
+    .replace(/√\s*\(?([^)]*)\)?/g, "sqrt($1)")
     .replace(/[−–—]/g, "-")
     .replace(/\\\(|\\\)|\\\[|\\\]|\$|\{|\}/g, "")
     .replace(/\btherefore\b|\banswer\b|\bresult\b/g, "")
@@ -142,13 +177,14 @@ function acceptableAnswers(expected) {
   return [...answers].filter(Boolean);
 }
 
-function scoreSubmission(questions, answers) {
+function scoreSubmission(questions, answers, working = {}) {
   let autoScore = 0;
   let maxScore = 0;
   const feedback = questions.map((question, index) => {
     const key = question.id || `q${index + 1}`;
     const expected = question.answer || "";
     const submitted = answers?.[key] ?? answers?.[String(index)] ?? "";
+    const workingText = working?.[key] ?? working?.[String(index)] ?? "";
     const mark = Number(question.marks) || 1;
     const options = acceptableAnswers(expected);
     const submittedClean = normaliseMathAnswer(submitted);
@@ -164,10 +200,16 @@ function scoreSubmission(questions, answers) {
       correct,
       markable: Boolean(options.length),
       marks: mark,
-      expected: expected ? cleanLongText(expected, 12000) : ""
+      expected: expected ? cleanLongText(expected, 12000) : "",
+      working: cleanLongText(workingText, 4000)
     };
   });
   return { auto_score: autoScore, max_score: maxScore, feedback };
+}
+
+function isMissingWorkingColumnError(error) {
+  const text = [error?.code, error?.message, error?.details, error?.hint].filter(Boolean).join(" ");
+  return /working|schema cache|column/i.test(text);
 }
 
 async function teacherProfile(req, supabase) {
@@ -199,11 +241,19 @@ async function listTasks(req, res, supabase) {
   const taskIds = (tasks || []).map((task) => task.id);
   let responses = [];
   if (taskIds.length) {
-    const { data, error: responseError } = await supabase
+    let responseResult = await supabase
       .from("class_task_responses")
-      .select("id, task_id, pupil_alias, answers, auto_score, max_score, marking, reviewed, teacher_notes, submitted_at")
+      .select(RESPONSE_SELECT_WITH_WORKING)
       .in("task_id", taskIds)
       .order("submitted_at", { ascending: false });
+    if (responseResult.error && isMissingWorkingColumnError(responseResult.error)) {
+      responseResult = await supabase
+        .from("class_task_responses")
+        .select(RESPONSE_SELECT)
+        .in("task_id", taskIds)
+        .order("submitted_at", { ascending: false });
+    }
+    const { data, error: responseError } = responseResult;
     if (responseError) return sendJson(res, 500, { error: responseError.message });
     responses = data || [];
   }
@@ -327,21 +377,32 @@ async function submitPublicTask(req, res, supabase) {
     }
   }
 
-  const answers = typeof body.answers === "object" && body.answers ? body.answers : {};
-  const marking = scoreSubmission(task.questions || [], answers);
-  const { data: response, error: responseError } = await supabase
+  const answers = cleanStringMap(body.answers, 3000);
+  const working = cleanStringMap(body.working, 8000);
+  const marking = scoreSubmission(task.questions || [], answers, working);
+  const baseResponse = {
+    task_id: task.id,
+    pupil_alias: pupilAlias,
+    answers,
+    auto_score: marking.auto_score,
+    max_score: marking.max_score,
+    marking,
+    submitted_at: new Date().toISOString()
+  };
+  let responseResult = await supabase
     .from("class_task_responses")
-    .insert({
-      task_id: task.id,
-      pupil_alias: pupilAlias,
-      answers,
-      auto_score: marking.auto_score,
-      max_score: marking.max_score,
-      marking,
-      submitted_at: new Date().toISOString()
-    })
-    .select("id, pupil_alias, auto_score, max_score, marking, submitted_at")
+    .insert({ ...baseResponse, working })
+    .select(SUBMISSION_SELECT_WITH_WORKING)
     .single();
+  if (responseResult.error && isMissingWorkingColumnError(responseResult.error)) {
+    responseResult = await supabase
+      .from("class_task_responses")
+      .insert(baseResponse)
+      .select(SUBMISSION_SELECT)
+      .single();
+    if (responseResult.data) responseResult.data.working = working;
+  }
+  const { data: response, error: responseError } = responseResult;
   if (responseError) return sendJson(res, 500, { error: responseError.message });
 
   return sendJson(res, 200, {
