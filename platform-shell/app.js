@@ -14462,7 +14462,8 @@ function loadWorksheetToolForApi(tool, options = {}) {
       finishSuccess(api);
     }
 
-    const timeout = window.setTimeout(() => finishError(new Error(`${tool.title} took too long to load. Try selecting it again.`)), 10000);
+    const timeoutMs = Number(options.timeoutMs) || 10000;
+    const timeout = window.setTimeout(() => finishError(new Error(`${tool.title} took too long to load. Try selecting it again.`)), timeoutMs);
     const originalFinishSuccess = finishSuccess;
     finishSuccess = (api) => {
       window.clearTimeout(timeout);
@@ -15345,9 +15346,9 @@ function loadClassTaskTool(tool) {
     typeSelect.innerHTML = `<option>Loading question types...</option>`;
   }
   setClassTaskStatus(`Loading ${tool.title}...`);
-  return loadWorksheetToolForApi(tool, { frameId: "classTaskLoader" })
+  return loadWorksheetToolForApi(tool, { frameId: "classTaskLoader", timeoutMs: 15000 })
     .then(({ metadata }) => {
-      if (loadToken !== state.classTaskLoadToken || routeParts()[0] !== "class-tasks") return;
+      if (loadToken !== state.classTaskLoadToken) return metadata;
       state.classTaskMetadata = metadata;
       state.classTaskLoadedToolSlug = tool.slug;
       populateClassTaskControls(metadata);
@@ -15355,7 +15356,7 @@ function loadClassTaskTool(tool) {
       return metadata;
     })
     .catch((error) => {
-      if (loadToken !== state.classTaskLoadToken || routeParts()[0] !== "class-tasks") return;
+      if (loadToken !== state.classTaskLoadToken) return;
       setClassTaskStatus(error.message, "error");
       if (levelSelect) levelSelect.innerHTML = `<option value="">Not available</option>`;
       if (typeSelect) typeSelect.innerHTML = `<option value="">Not available</option>`;
@@ -15744,7 +15745,7 @@ function renderClassTasks() {
               <input name="allow_multiple_submissions" type="checkbox">
               Allow repeat submissions
             </label>
-            <button class="button subtle" type="button" id="prepareClassTaskTool">Load Question Types</button>
+            <button class="button subtle" type="button" id="prepareClassTaskTool">Load / Retry Types</button>
             <button class="button primary" type="submit">Create Join Code</button>
           </div>
         </form>
@@ -15780,7 +15781,14 @@ function bindClassTasks() {
     populateClassTaskControls(state.classTaskMetadata);
     setClassTaskStatus(`${selectedTool.title} is ready. Choose the task size, then create a pupil join code.`, "success");
   } else {
-    resetClassTaskControls();
+    resetClassTaskControls(selectedTool ? `Loading ${selectedTool.title}...` : undefined);
+    if (selectedTool) {
+      window.setTimeout(() => {
+        if (!document.getElementById("classTaskForm")) return;
+        if (selectedClassTaskTool()?.slug !== selectedTool.slug) return;
+        loadClassTaskTool(selectedTool).catch(() => {});
+      }, 0);
+    }
   }
 
   toolSelect.addEventListener("change", () => {
@@ -15788,18 +15796,25 @@ function bindClassTasks() {
     state.classTaskMetadata = null;
     state.classTaskLoadedToolSlug = "";
     state.classTaskLoadToken += 1;
-    resetClassTaskControls();
+    const nextTool = selectedClassTaskTool();
+    resetClassTaskControls(nextTool ? `Loading ${nextTool.title}...` : undefined);
+    if (nextTool) loadClassTaskTool(nextTool).catch(() => {});
   });
 
   document.getElementById("prepareClassTaskTool")?.addEventListener("click", async (event) => {
     const button = event.currentTarget;
     button.disabled = true;
+    const originalLabel = button.textContent;
+    button.textContent = "Loading...";
     try {
       await loadClassTaskTool(selectedClassTaskTool());
     } catch (_) {
       // The status line already reports the loading error.
     } finally {
-      button.disabled = false;
+      if (button.isConnected) {
+        button.disabled = false;
+        button.textContent = originalLabel || "Reload Question Types";
+      }
     }
   });
 

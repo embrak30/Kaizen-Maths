@@ -103,7 +103,7 @@
       const parentHash = window.parent.location.hash || "";
       const parentParts = parentHash.split("?")[0].replace(/^#\/?/, "").split("/");
       const worksheetLoad = new URLSearchParams(window.location.search).has("worksheetLoad");
-      return worksheetLoad && parentParts[0] === "worksheet-generator";
+      return worksheetLoad && ["worksheet-generator", "class-tasks"].includes(parentParts[0]);
     } catch (_error) {
       return false;
     }
