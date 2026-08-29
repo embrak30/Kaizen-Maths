@@ -2689,6 +2689,7 @@ const state = {
   pupilTaskLoading: false,
   pupilTaskError: "",
   pupilSubmission: null,
+  pupilTaskAttemptIndex: 0,
   pupilActiveQuestionIndex: 0,
   lastAuthAccessKey: ""
 };
@@ -15117,6 +15118,80 @@ function classTaskPublicQuestion(question, index) {
   };
 }
 
+function classTaskClampNumber(value, min, max, fallback) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return fallback;
+  return Math.max(min, Math.min(max, number));
+}
+
+function classTaskPassPercent(settings = {}) {
+  return classTaskClampNumber(settings.pass_percent, 0, 100, 0);
+}
+
+function classTaskAttemptSets(settings = {}) {
+  return Array.isArray(settings.attempt_sets) ? settings.attempt_sets : [];
+}
+
+function classTaskMaxAttempts(task) {
+  const configured = classTaskClampNumber(task?.settings?.max_attempts, 1, 10, 0);
+  if (configured) return configured;
+  return 1 + classTaskAttemptSets(task?.settings).length;
+}
+
+function classTaskQuestionsForAttempt(task, attemptIndex = 0) {
+  const index = classTaskClampNumber(attemptIndex, 0, 9, 0);
+  if (index <= 0) return Array.isArray(task?.questions) ? task.questions : [];
+  const attemptSet = classTaskAttemptSets(task?.settings).find((set) => Number(set?.attempt_index) === index);
+  return Array.isArray(attemptSet?.questions) ? attemptSet.questions : null;
+}
+
+function classTaskPublicSettings(settings = {}) {
+  return {
+    show_answers_after_submit: true,
+    allow_multiple_submissions: Boolean(settings.allow_multiple_submissions),
+    pass_percent: classTaskPassPercent(settings),
+    max_attempts: classTaskClampNumber(settings.max_attempts, 1, 10, 1)
+  };
+}
+
+function classTaskMarkPassStatus(marking, settings = {}, attemptIndex = 0) {
+  const passPercent = classTaskPassPercent(settings);
+  const maxScore = Number(marking.max_score) || 0;
+  const score = Number(marking.auto_score) || 0;
+  const passRequired = passPercent > 0 && maxScore > 0;
+  const passMark = passRequired ? Math.ceil((maxScore * passPercent) / 100) : 0;
+  return {
+    ...marking,
+    pass_required: passRequired,
+    pass_percent: passPercent,
+    pass_mark: passMark,
+    pass_met: passRequired ? score >= passMark : true,
+    attempt_index: classTaskClampNumber(attemptIndex, 0, 9, 0),
+    attempt_number: classTaskClampNumber(attemptIndex, 0, 9, 0) + 1
+  };
+}
+
+function classTaskPublicTaskForAttempt(task, attemptIndex = 0) {
+  const questions = classTaskQuestionsForAttempt(task, attemptIndex);
+  if (!questions) return null;
+  return {
+    id: task.id,
+    title: task.title,
+    instructions: task.instructions,
+    source_tool_title: task.source_tool_title,
+    source_level_label: task.source_level_label,
+    source_type_label: task.source_type_label,
+    join_code: task.join_code,
+    expires_at: task.expires_at,
+    school_name: task.school_name || currentSchoolName() || "",
+    settings: classTaskPublicSettings(task.settings || {}),
+    attempt_index: classTaskClampNumber(attemptIndex, 0, 9, 0),
+    attempt_number: classTaskClampNumber(attemptIndex, 0, 9, 0) + 1,
+    max_attempts: classTaskMaxAttempts(task),
+    questions: questions.map(classTaskPublicQuestion)
+  };
+}
+
 async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
   const tasks = classTaskReadLocal(classTaskLocalTasksStorageKey, []);
   const responses = classTaskReadLocal(classTaskLocalResponsesStorageKey, []);
@@ -15137,6 +15212,14 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     let joinCode = normaliseClassTaskCode(body.join_code) || classTaskRandomCode();
     while (tasks.some((task) => task.join_code === joinCode)) joinCode = classTaskRandomCode();
     const profile = authState().profile || {};
+    const incomingSettings = body.settings && typeof body.settings === "object" ? body.settings : {};
+    const attemptSets = classTaskAttemptSets(incomingSettings)
+      .slice(0, 9)
+      .map((set, setIndex) => ({
+        attempt_index: classTaskClampNumber(set?.attempt_index, 1, 9, setIndex + 1),
+        questions: Array.isArray(set?.questions) ? set.questions.slice(0, 40) : []
+      }))
+      .filter((set) => set.questions.length);
     const task = {
       id: `local-${Date.now()}-${Math.random().toString(16).slice(2)}`,
       teacher_id: teacherId,
@@ -15151,7 +15234,18 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
       source_type_label: body.source_type_label || "",
       join_code: joinCode,
       questions: Array.isArray(body.questions) ? body.questions : [],
-      settings: body.settings || {},
+      settings: {
+        show_answers_after_submit: true,
+        allow_multiple_submissions: Boolean(incomingSettings.allow_multiple_submissions),
+        pass_percent: classTaskPassPercent(incomingSettings),
+        max_attempts: Math.max(1, Math.min(10, 1 + attemptSets.length)),
+        attempt_sets: attemptSets,
+        source_level_id: incomingSettings.source_level_id || "",
+        source_type_id: incomingSettings.source_type_id || "",
+        source_count: classTaskClampNumber(incomingSettings.source_count, 1, 40, Array.isArray(body.questions) ? body.questions.length : 5),
+        source_marks: classTaskClampNumber(incomingSettings.source_marks, 1, 20, 1),
+        source: "kaizen-class-task"
+      },
       expires_at: body.expires_at || null,
       is_active: true,
       created_at: new Date().toISOString(),
@@ -15166,21 +15260,8 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     const code = normaliseClassTaskCode(params.code);
     const task = tasks.find((item) => item.join_code === code);
     if (!task || !classTaskIsAvailable(task)) throw new Error("This class task was not found or has expired.");
-    const schoolContext = currentSchoolContext();
     return {
-      task: {
-        id: task.id,
-        title: task.title,
-        instructions: task.instructions,
-        source_tool_title: task.source_tool_title,
-        source_level_label: task.source_level_label,
-        source_type_label: task.source_type_label,
-        join_code: task.join_code,
-        expires_at: task.expires_at,
-        school_name: task.school_name || schoolContext?.school_name || currentSchoolName() || "",
-        settings: task.settings || {},
-        questions: (task.questions || []).map(classTaskPublicQuestion)
-      },
+      task: classTaskPublicTaskForAttempt(task, 0),
       source: "local"
     };
   }
@@ -15188,15 +15269,22 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
   if (action === "submit") {
     const code = normaliseClassTaskCode(body.code);
     const alias = String(body.pupil_alias || "").trim().slice(0, 80);
+    const attemptIndex = classTaskClampNumber(body.attempt_index, 0, 9, 0);
     const task = tasks.find((item) => item.join_code === code);
     if (!task || !classTaskIsAvailable(task)) throw new Error("This class task was not found or has expired.");
     if (!alias) throw new Error("Enter an alias or initials before submitting.");
-    if (!task.settings?.allow_multiple_submissions && responses.some((response) => response.task_id === task.id && normalise(response.pupil_alias) === normalise(alias))) {
+    const aliasResponses = responses.filter((response) => response.task_id === task.id && normalise(response.pupil_alias) === normalise(alias));
+    const passPercent = classTaskPassPercent(task.settings || {});
+    const hasCompleted = aliasResponses.some((response) => response.marking?.pass_met);
+    const hasSameAttempt = aliasResponses.some((response) => Number(response.marking?.attempt_index || 0) === attemptIndex);
+    if (!task.settings?.allow_multiple_submissions && ((!passPercent && aliasResponses.length) || hasCompleted || hasSameAttempt)) {
       throw new Error("This alias has already submitted this task. Ask your teacher before trying again.");
     }
+    const attemptQuestions = classTaskQuestionsForAttempt(task, attemptIndex);
+    if (!attemptQuestions) throw new Error("This task attempt is not available. Ask your teacher for a new code.");
     const answers = body.answers && typeof body.answers === "object" ? body.answers : {};
     const working = body.working && typeof body.working === "object" ? body.working : {};
-    const marking = classTaskScoreSubmission(task.questions || [], answers, working);
+    const marking = classTaskMarkPassStatus(classTaskScoreSubmission(attemptQuestions, answers, working), task.settings || {}, attemptIndex);
     const response = {
       id: `local-response-${Date.now()}-${Math.random().toString(16).slice(2)}`,
       task_id: task.id,
@@ -15212,9 +15300,23 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     return {
       response,
       show_answers: true,
-      answers: (task.questions || []).map((question, index) => ({ id: question.id || `q${index + 1}`, answer: question.answer || "", steps: question.steps || [] })),
+      answers: attemptQuestions.map((question, index) => ({ id: question.id || `q${index + 1}`, answer: question.answer || "", steps: question.steps || [] })),
+      next_task: marking.pass_required && !marking.pass_met ? classTaskPublicTaskForAttempt(task, attemptIndex + 1) : null,
       source: "local"
     };
+  }
+
+  if (action === "review") {
+    const responseId = body.response_id;
+    const taskId = body.task_id;
+    const task = tasks.find((item) => item.id === taskId && (isAdmin() || item.teacher_id === teacherId));
+    if (!task) throw new Error("You cannot review this response.");
+    const nextResponses = responses.map((response) => response.id === responseId && response.task_id === task.id
+      ? { ...response, teacher_notes: String(body.teacher_notes || "").trim().slice(0, 4000), reviewed: Boolean(body.reviewed) }
+      : response);
+    classTaskWriteLocal(classTaskLocalResponsesStorageKey, nextResponses);
+    const response = nextResponses.find((item) => item.id === responseId) || null;
+    return { response, source: "local" };
   }
 
   if (action === "close") {
@@ -15252,11 +15354,15 @@ async function classTaskApi(action, { method = "GET", body = null, auth = false,
     if (token) headers.Authorization = `Bearer ${token}`;
   }
 
+  const controller = typeof AbortController === "function" ? new AbortController() : null;
+  const timeout = controller ? window.setTimeout(() => controller.abort(), 15000) : null;
+
   try {
     const response = await fetch(url.href, {
       method,
       headers,
-      body: body ? JSON.stringify(body) : undefined
+      body: body ? JSON.stringify(body) : undefined,
+      signal: controller?.signal
     });
     const text = await response.text();
     let payload = null;
@@ -15274,10 +15380,15 @@ async function classTaskApi(action, { method = "GET", body = null, auth = false,
     }
     return payload;
   } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new Error("Class task request timed out. Try again.");
+    }
     if (error.localFallback || classTaskShouldUseLocalFallback(error)) {
       return classTaskLocalApi(action, { body: body || {}, params });
     }
     throw error;
+  } finally {
+    if (timeout) window.clearTimeout(timeout);
   }
 }
 
@@ -15375,12 +15486,33 @@ function classTaskSerialiseQuestion(problem, index, defaults = {}) {
     question: problem.question || problem.questionText || problem.prompt || problem.equation || "",
     diagram: problem.diagram || problem.diagramHtml || "",
     answer: problem.answer || problem.answerText || problem.plainAnswer || "",
-    steps: Array.isArray(problem.steps) ? problem.steps.slice(0, 12) : [],
+    steps: Array.isArray(problem.steps) ? problem.steps.slice(0, 24) : [],
     marks: defaults.marks,
     instruction: problem.instruction || problem.instructionText || defaults.instruction || "",
     sectionTitle: defaults.sectionTitle || "",
     sectionType: defaults.sectionType || ""
   };
+}
+
+function classTaskLevelApiValue(levelId) {
+  const numeric = Number(levelId);
+  return Number.isNaN(numeric) ? levelId : numeric;
+}
+
+function generateClassTaskQuestionSet(api, tool, level, type, count, marks) {
+  const result = api.generate({
+    level: classTaskLevelApiValue(level.id),
+    type: type.id,
+    count
+  });
+  const instruction = result.instruction || "Answer each question. Show working where appropriate.";
+  const questions = (result.problems || []).map((problem, index) => classTaskSerialiseQuestion(problem, index, {
+    marks,
+    instruction,
+    sectionTitle: tool.title,
+    sectionType: type.label
+  }));
+  return { instruction, questions };
 }
 
 async function createClassTaskFromForm(form) {
@@ -15395,19 +15527,26 @@ async function createClassTaskFromForm(form) {
 
   const count = Math.max(1, Math.min(30, Number(form.querySelector("[name='count']")?.value || 5)));
   const marks = Math.max(1, Math.min(20, Number(form.querySelector("[name='marks']")?.value || 1)));
-  const result = api.generate({
-    level: Number.isNaN(Number(level.id)) ? level.id : Number(level.id),
-    type: type.id,
-    count
-  });
-  const instruction = result.instruction || "Answer each question. Show working where appropriate.";
-  const questions = (result.problems || []).map((problem, index) => classTaskSerialiseQuestion(problem, index, {
-    marks,
-    instruction,
-    sectionTitle: tool.title,
-    sectionType: type.label
-  }));
+  const passPercent = Math.max(0, Math.min(100, Number(form.querySelector("[name='pass_percent']")?.value || 100)));
+  const maxAttempts = passPercent > 0 ? 5 : 1;
+  const firstSet = generateClassTaskQuestionSet(api, tool, level, type, count, marks);
+  const instruction = firstSet.instruction;
+  const questions = firstSet.questions;
   if (!questions.length) throw new Error("No questions were generated. Try a different question type.");
+  const attemptSets = [];
+  for (let attemptIndex = 1; attemptIndex < maxAttempts; attemptIndex += 1) {
+    try {
+      const attemptSet = generateClassTaskQuestionSet(api, tool, level, type, count, marks);
+      if (attemptSet.questions.length) {
+        attemptSets.push({
+          attempt_index: attemptIndex,
+          questions: attemptSet.questions
+        });
+      }
+    } catch (_) {
+      // Keep the first task usable even if one reserve attempt fails to generate.
+    }
+  }
 
   const title = form.querySelector("[name='title']")?.value.trim() || `${tool.title}: ${type.label}`;
   const instructions = form.querySelector("[name='instructions']")?.value.trim() || instruction;
@@ -15426,7 +15565,14 @@ async function createClassTaskFromForm(form) {
       expires_at: expiresAt,
       settings: {
         show_answers_after_submit: true,
-        allow_multiple_submissions: Boolean(form.querySelector("[name='allow_multiple_submissions']")?.checked)
+        allow_multiple_submissions: Boolean(form.querySelector("[name='allow_multiple_submissions']")?.checked),
+        pass_percent: passPercent,
+        max_attempts: Math.max(1, 1 + attemptSets.length),
+        attempt_sets: attemptSets,
+        source_level_id: String(level.id),
+        source_type_id: String(type.id),
+        source_count: count,
+        source_marks: marks
       }
     }
   });
@@ -15484,14 +15630,35 @@ function classTaskResponseSummary(response) {
   const score = Number(response.auto_score);
   const max = Number(response.max_score);
   if (!Number.isFinite(score) || !Number.isFinite(max) || max <= 0) return "Needs review";
-  return `${score}/${max}`;
+  const marking = response.marking || {};
+  const attempt = marking.attempt_number ? `Attempt ${marking.attempt_number}: ` : "";
+  const passStatus = marking.pass_required ? (marking.pass_met ? " complete" : " retry") : "";
+  return `${attempt}${score}/${max}${passStatus}`;
+}
+
+function classTaskFeedbackFormHtml(response, task) {
+  return `
+    <form class="class-task-feedback-form" data-class-task-feedback="${escapeHtml(response.id)}" data-class-task-feedback-task="${escapeHtml(task.id)}">
+      <label>
+        Teacher feedback
+        <textarea name="teacher_notes" rows="3" maxlength="4000" placeholder="Add a short note, prompt, or correction for this pupil.">${escapeHtml(response.teacher_notes || "")}</textarea>
+      </label>
+      <label class="admin-check-row">
+        <input name="reviewed" type="checkbox" ${response.reviewed ? "checked" : ""}>
+        Mark this response as reviewed
+      </label>
+      <button class="button subtle" type="submit">Save Feedback</button>
+      <span class="worksheet-status" data-class-task-feedback-status></span>
+    </form>
+  `;
 }
 
 function classTaskResponseDetailHtml(response, task) {
-  const questions = Array.isArray(task.questions) ? task.questions : [];
+  const attemptIndex = Number(response.marking?.attempt_index || 0);
+  const questions = classTaskQuestionsForAttempt(task, attemptIndex) || [];
   const feedback = Array.isArray(response.marking?.feedback) ? response.marking.feedback : [];
   if (!feedback.length) {
-    return `<p class="class-task-response-empty">No answer detail is available for this submission.</p>`;
+    return `<p class="class-task-response-empty">No answer detail is available for this submission.</p>${classTaskFeedbackFormHtml(response, task)}`;
   }
   return `
     <ol class="class-task-response-review">
@@ -15500,11 +15667,12 @@ function classTaskResponseDetailHtml(response, task) {
         const workingText = item.working ?? response.working?.[item.id] ?? response.working?.[String(index)] ?? "";
         const submitted = item.submitted || response.answers?.[item.id] || response.answers?.[String(index)] || "";
         const expected = item.expected || question.answer || "";
+        const status = item.correct ? "Correct" : item.markable ? "Incorrect" : "Teacher review";
         return `
           <li>
             <div class="class-task-response-question">
               <strong>Q${index + 1}</strong>
-              <span>${escapeHtml(item.correct ? "Auto-marked correct" : item.markable ? "Needs checking" : "Teacher review")}</span>
+              <span>${escapeHtml(status)}</span>
             </div>
             ${question.question ? `<div class="class-task-response-prompt">${worksheetContentHtml(question.question)}</div>` : ""}
             <div class="class-task-response-grid">
@@ -15527,6 +15695,7 @@ function classTaskResponseDetailHtml(response, task) {
         `;
       }).join("")}
     </ol>
+    ${classTaskFeedbackFormHtml(response, task)}
   `;
 }
 
@@ -15557,11 +15726,25 @@ function updateClassTaskListPanel() {
   return true;
 }
 
+function updateClassTaskResponseInState(taskId, response) {
+  if (!response?.id) return;
+  state.classTasks = state.classTasks.map((task) => {
+    if (String(task.id) !== String(taskId)) return task;
+    const responses = Array.isArray(task.responses) ? task.responses : [];
+    return {
+      ...task,
+      responses: responses.map((item) => String(item.id) === String(response.id) ? { ...item, ...response } : item)
+    };
+  });
+}
+
 function classTaskCardHtml(task) {
   const responses = task.responses || [];
   const questionCount = Array.isArray(task.questions) ? task.questions.length : 0;
   const isOpen = classTaskIsAvailable(task);
   const joinUrl = classTaskJoinUrl(task.join_code);
+  const passPercent = classTaskPassPercent(task.settings || {});
+  const maxAttempts = classTaskMaxAttempts(task);
   return `
     <article class="class-task-card">
       <div class="class-task-card-head">
@@ -15574,6 +15757,8 @@ function classTaskCardHtml(task) {
       </div>
       <div class="class-task-meta">
         <span>${questionCount} question${questionCount === 1 ? "" : "s"}</span>
+        ${passPercent ? `<span>${passPercent}% required</span>` : ""}
+        ${maxAttempts > 1 ? `<span>${maxAttempts} attempts available</span>` : ""}
         <span>${responses.length} submission${responses.length === 1 ? "" : "s"}</span>
         <span>Expires ${escapeHtml(formatDisplayDate(task.expires_at))}</span>
       </div>
@@ -15613,6 +15798,44 @@ function classTaskCardHtml(task) {
 }
 
 function bindClassTaskListActions() {
+  document.querySelectorAll("[data-class-task-feedback]").forEach((form) => {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = form.querySelector("button[type='submit']");
+      const status = form.querySelector("[data-class-task-feedback-status]");
+      if (button) button.disabled = true;
+      if (status) {
+        status.textContent = "Saving...";
+        status.dataset.tone = "";
+      }
+      try {
+        const taskId = form.dataset.classTaskFeedbackTask || "";
+        const payload = await classTaskApi("review", {
+          method: "POST",
+          auth: true,
+          body: {
+            task_id: taskId,
+            response_id: form.dataset.classTaskFeedback || "",
+            teacher_notes: form.querySelector("[name='teacher_notes']")?.value || "",
+            reviewed: Boolean(form.querySelector("[name='reviewed']")?.checked)
+          }
+        });
+        updateClassTaskResponseInState(taskId, payload.response);
+        if (status) {
+          status.textContent = "Saved.";
+          status.dataset.tone = "success";
+        }
+      } catch (error) {
+        if (status) {
+          status.textContent = error.message || "Feedback could not be saved.";
+          status.dataset.tone = "error";
+        }
+      } finally {
+        if (button?.isConnected) button.disabled = false;
+      }
+    });
+  });
+
   document.querySelectorAll("[data-class-task-copy]").forEach((button) => {
     button.addEventListener("click", async () => {
       const text = button.dataset.classTaskCopy || "";
@@ -15733,6 +15956,10 @@ function renderClassTasks() {
               <input name="marks" type="number" min="1" max="20" value="1">
             </label>
             <label>
+              Required score %
+              <input name="pass_percent" type="number" min="0" max="100" value="100">
+            </label>
+            <label>
               Expires
               <input name="expires_at" type="date" value="${classTaskDefaultExpiryDate()}">
             </label>
@@ -15844,10 +16071,12 @@ async function loadPupilTask(code, { rerender = false } = {}) {
   state.pupilTaskError = "";
   state.pupilSubmission = null;
   state.pupilActiveQuestionIndex = 0;
+  state.pupilTaskAttemptIndex = 0;
   state.pupilTaskCode = cleanCode;
   try {
     const payload = await classTaskApi("get", { params: { code: cleanCode } });
     state.pupilTask = payload.task;
+    state.pupilTaskAttemptIndex = Number(payload.task?.attempt_index || 0);
   } catch (error) {
     state.pupilTask = null;
     state.pupilTaskError = error.message || "Class task could not be loaded.";
@@ -15903,6 +16132,7 @@ function pupilQuestionHtml(question, index) {
 function pupilSubmissionHtml(task) {
   if (!state.pupilSubmission) return "";
   const response = state.pupilSubmission.response || {};
+  const marking = response.marking || {};
   const score = Number(response.auto_score);
   const max = Number(response.max_score);
   const scoreLine = Number.isFinite(score) && Number.isFinite(max) && max > 0
@@ -15910,25 +16140,48 @@ function pupilSubmissionHtml(task) {
     : "Your teacher will review this response.";
   const answers = state.pupilSubmission.answers || [];
   const answerById = new Map(answers.map((answer, index) => [answer.id || `q${index + 1}`, answer]));
+  const feedback = Array.isArray(marking.feedback) ? marking.feedback : [];
+  const feedbackById = new Map(feedback.map((item, index) => [item.id || `q${index + 1}`, item]));
   const questions = task.questions || [];
   const submittedAnswers = response.answers || {};
   const submittedWorking = response.working || {};
+  const passRequired = Boolean(marking.pass_required);
+  const passMet = passRequired ? Boolean(marking.pass_met) : true;
+  const nextTask = state.pupilSubmission.next_task || null;
+  const passLine = passRequired
+    ? passMet
+      ? `Task completed. Required score: ${marking.pass_mark}/${max} (${marking.pass_percent}%).`
+      : `Pass rate not met yet. Required score: ${marking.pass_mark}/${max} (${marking.pass_percent}%).`
+    : "Your response has been submitted.";
   return `
     <section class="panel pupil-submission-panel">
-      <span class="eyebrow">Submitted</span>
-      <h2>Response received</h2>
-      <p>${escapeHtml(scoreLine)} Some answers may still need teacher judgement.</p>
+      <div class="pupil-submission-head">
+        <div>
+          <span class="eyebrow">${escapeHtml(marking.attempt_number ? `Attempt ${marking.attempt_number}` : "Submitted")}</span>
+          <h2>${passRequired && passMet ? "Task Completed" : "Response received"}</h2>
+          <p>${escapeHtml(scoreLine)} ${escapeHtml(passLine)}</p>
+        </div>
+        ${nextTask ? `<button class="button primary" type="button" data-pupil-next-attempt>Load New Task Set</button>` : ""}
+      </div>
+      ${passRequired && !passMet && !nextTask ? `<p class="pupil-retry-note">No more fresh attempts are available for this task. Ask your teacher for the next step.</p>` : ""}
       ${questions.length ? `
-        <details open>
-          <summary>Review your answers and worked solutions</summary>
+        <details open class="pupil-submission-details">
+          <summary>Review your answers</summary>
           <ol class="pupil-answer-key pupil-submission-review">
             ${questions.map((question, index) => {
               const questionId = question.id || `q${index + 1}`;
               const expected = answerById.get(questionId) || answerById.get(`q${index + 1}`) || {};
+              const item = feedbackById.get(questionId) || feedbackById.get(`q${index + 1}`) || {};
+              const correct = Boolean(item.correct);
+              const markable = item.markable !== false;
+              const status = correct ? "Correct" : markable ? "Incorrect" : "Teacher review";
+              const steps = Array.isArray(expected.steps) ? expected.steps : [];
+              const showWorking = !correct && steps.length;
               return `
-              <li>
+              <li class="${correct ? "is-correct" : "is-incorrect"}">
                 <strong>${index + 1}</strong>
                 <div>
+                  <div class="pupil-review-status">${escapeHtml(status)}</div>
                   <div class="pupil-review-question">${worksheetContentHtml(question.question || "")}</div>
                   <div class="pupil-review-grid">
                     <div>
@@ -15946,10 +16199,10 @@ function pupilSubmissionHtml(task) {
                       <p>${escapeHtml(submittedWorking[questionId]).replace(/\n/g, "<br>")}</p>
                     </div>
                   ` : ""}
-                  ${expected.steps?.length ? `
+                  ${showWorking ? `
                     <details class="pupil-worked-solution">
-                      <summary>Worked solution</summary>
-                      ${worksheetStepsHtml(expected.steps)}
+                      <summary>Show working out</summary>
+                      ${worksheetStepsHtml(steps)}
                     </details>
                   ` : ""}
                 </div>
@@ -15970,6 +16223,7 @@ function renderPupilJoin(routeCode = "") {
     state.pupilTask = null;
     state.pupilTaskError = "";
     state.pupilSubmission = null;
+    state.pupilTaskAttemptIndex = 0;
     state.pupilActiveQuestionIndex = 0;
   }
   const task = state.pupilTask?.join_code === cleanCode ? state.pupilTask : null;
@@ -15982,6 +16236,9 @@ function renderPupilJoin(routeCode = "") {
   const taskSummary = task
     ? [task.source_tool_title, task.source_level_label, task.source_type_label].filter(Boolean).join(" · ") || "Assigned Kaizen Maths task"
     : "Enter the class code from your teacher.";
+  const attemptLabel = task?.attempt_number && task?.max_attempts > 1
+    ? `Attempt ${task.attempt_number} of ${task.max_attempts}`
+    : "";
   const statusText = state.pupilTaskLoading
     ? "Loading task..."
     : state.pupilTaskError || (task ? "Task loaded." : "Use the class code shared by your teacher.");
@@ -16000,7 +16257,7 @@ function renderPupilJoin(routeCode = "") {
         <div class="pupil-header-task">
           <span class="eyebrow">Class Task</span>
           <strong>${escapeHtml(task?.title || "Enter your task code")}</strong>
-          <small>${escapeHtml(taskSummary)}</small>
+          <small>${escapeHtml([taskSummary, attemptLabel].filter(Boolean).join(" · "))}</small>
         </div>
         <div class="pupil-header-code">
           <div class="pupil-code-row">
@@ -16096,9 +16353,20 @@ function bindPupilJoin() {
     state.pupilTask = null;
     state.pupilSubmission = null;
     state.pupilTaskCode = "";
+    state.pupilTaskAttemptIndex = 0;
     state.pupilActiveQuestionIndex = 0;
     location.hash = "#/pupil";
     if (routeParts()[0] === "pupil") renderRoute();
+  });
+
+  document.querySelector("[data-pupil-next-attempt]")?.addEventListener("click", () => {
+    const nextTask = state.pupilSubmission?.next_task;
+    if (!nextTask) return;
+    state.pupilTask = nextTask;
+    state.pupilTaskAttemptIndex = Number(nextTask.attempt_index || 0);
+    state.pupilSubmission = null;
+    state.pupilActiveQuestionIndex = 0;
+    renderRoute();
   });
 
   function updatePupilSubmitState() {
@@ -16209,6 +16477,7 @@ function bindPupilJoin() {
         body: {
           code: state.pupilTask.join_code,
           pupil_alias: alias,
+          attempt_index: Number(state.pupilTask.attempt_index ?? state.pupilTaskAttemptIndex ?? 0),
           answers,
           working
         }

@@ -96,7 +96,7 @@ function cleanQuestion(question, index) {
     diagram: cleanLongText(question?.diagram || question?.diagramHtml || "", 30000),
     answer: cleanLongText(question?.answer || question?.answerText || question?.plainAnswer || "", 12000),
     steps: Array.isArray(question?.steps)
-      ? question.steps.slice(0, 12).map((step) => cleanLongText(step, 12000)).filter(Boolean)
+      ? question.steps.slice(0, 24).map((step) => cleanLongText(step, 12000)).filter(Boolean)
       : [],
     marks,
     instruction: cleanText(question?.instruction || question?.instructionText || "", 600),
@@ -114,6 +114,80 @@ function publicQuestion(question, index) {
     instruction: question.instruction || "",
     sectionTitle: question.sectionTitle || "",
     sectionType: question.sectionType || ""
+  };
+}
+
+function clampNumber(value, min, max, fallback) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return fallback;
+  return Math.max(min, Math.min(max, number));
+}
+
+function taskPassPercent(settings = {}) {
+  return clampNumber(settings.pass_percent, 0, 100, 0);
+}
+
+function taskAttemptSets(settings = {}) {
+  return Array.isArray(settings.attempt_sets) ? settings.attempt_sets : [];
+}
+
+function taskMaxAttempts(task) {
+  const configured = clampNumber(task?.settings?.max_attempts, 1, 10, 0);
+  if (configured) return configured;
+  return 1 + taskAttemptSets(task?.settings).length;
+}
+
+function questionsForAttempt(task, attemptIndex = 0) {
+  const index = clampNumber(attemptIndex, 0, 9, 0);
+  if (index <= 0) return Array.isArray(task?.questions) ? task.questions : [];
+  const attemptSet = taskAttemptSets(task?.settings).find((set) => Number(set?.attempt_index) === index);
+  return Array.isArray(attemptSet?.questions) ? attemptSet.questions : null;
+}
+
+function publicTaskSettings(settings = {}) {
+  return {
+    show_answers_after_submit: true,
+    allow_multiple_submissions: Boolean(settings.allow_multiple_submissions),
+    pass_percent: taskPassPercent(settings),
+    max_attempts: clampNumber(settings.max_attempts, 1, 10, 1)
+  };
+}
+
+function markPassStatus(marking, settings = {}, attemptIndex = 0) {
+  const passPercent = taskPassPercent(settings);
+  const maxScore = Number(marking.max_score) || 0;
+  const score = Number(marking.auto_score) || 0;
+  const passRequired = passPercent > 0 && maxScore > 0;
+  const passMark = passRequired ? Math.ceil((maxScore * passPercent) / 100) : 0;
+  return {
+    ...marking,
+    pass_required: passRequired,
+    pass_percent: passPercent,
+    pass_mark: passMark,
+    pass_met: passRequired ? score >= passMark : true,
+    attempt_index: clampNumber(attemptIndex, 0, 9, 0),
+    attempt_number: clampNumber(attemptIndex, 0, 9, 0) + 1
+  };
+}
+
+function publicTaskForAttempt(task, schoolName = "", attemptIndex = 0) {
+  const questions = questionsForAttempt(task, attemptIndex);
+  if (!questions) return null;
+  return {
+    id: task.id,
+    title: task.title,
+    instructions: task.instructions,
+    source_tool_title: task.source_tool_title,
+    source_level_label: task.source_level_label,
+    source_type_label: task.source_type_label,
+    join_code: task.join_code,
+    expires_at: task.expires_at,
+    school_name: schoolName,
+    settings: publicTaskSettings(task.settings || {}),
+    attempt_index: clampNumber(attemptIndex, 0, 9, 0),
+    attempt_number: clampNumber(attemptIndex, 0, 9, 0) + 1,
+    max_attempts: taskMaxAttempts(task),
+    questions: questions.map(publicQuestion)
   };
 }
 
@@ -275,9 +349,26 @@ async function createTask(req, res, supabase) {
   const questions = Array.isArray(body.questions) ? body.questions.slice(0, 40).map(cleanQuestion).filter((question) => question.question) : [];
   if (!questions.length) return sendJson(res, 400, { error: "Add at least one question before creating a class task." });
 
+  const incomingSettings = body.settings && typeof body.settings === "object" ? body.settings : {};
+  const attemptSets = taskAttemptSets(incomingSettings)
+    .slice(0, 9)
+    .map((set, setIndex) => ({
+      attempt_index: clampNumber(set?.attempt_index, 1, 9, setIndex + 1),
+      questions: Array.isArray(set?.questions)
+        ? set.questions.slice(0, 40).map(cleanQuestion).filter((question) => question.question)
+        : []
+    }))
+    .filter((set) => set.questions.length);
   const settings = {
     show_answers_after_submit: true,
-    allow_multiple_submissions: Boolean(body.settings?.allow_multiple_submissions),
+    allow_multiple_submissions: Boolean(incomingSettings.allow_multiple_submissions),
+    pass_percent: taskPassPercent(incomingSettings),
+    max_attempts: Math.max(1, Math.min(10, 1 + attemptSets.length)),
+    attempt_sets: attemptSets,
+    source_level_id: cleanText(incomingSettings.source_level_id, 80),
+    source_type_id: cleanText(incomingSettings.source_type_id, 120),
+    source_count: clampNumber(incomingSettings.source_count, 1, 40, questions.length),
+    source_marks: clampNumber(incomingSettings.source_marks, 1, 20, 1),
     source: "kaizen-class-task"
   };
   const expiresAt = body.expires_at ? new Date(body.expires_at) : null;
@@ -334,19 +425,7 @@ async function getPublicTask(req, res, supabase) {
   }
 
   return sendJson(res, 200, {
-    task: {
-      id: task.id,
-      title: task.title,
-      instructions: task.instructions,
-      source_tool_title: task.source_tool_title,
-      source_level_label: task.source_level_label,
-      source_type_label: task.source_type_label,
-      join_code: task.join_code,
-      expires_at: task.expires_at,
-      school_name: schoolName,
-      settings: task.settings || {},
-      questions: (task.questions || []).map(publicQuestion)
-    }
+    task: publicTaskForAttempt(task, schoolName, 0)
   });
 }
 
@@ -354,6 +433,7 @@ async function submitPublicTask(req, res, supabase) {
   const body = await readJsonBody(req);
   const code = normaliseCode(body.code);
   const pupilAlias = cleanText(body.pupil_alias, 80);
+  const attemptIndex = clampNumber(body.attempt_index, 0, 9, 0);
   if (!code) return sendJson(res, 400, { error: "Enter a class task code." });
   if (!pupilAlias) return sendJson(res, 400, { error: "Enter an alias or initials before submitting." });
 
@@ -365,21 +445,27 @@ async function submitPublicTask(req, res, supabase) {
   if (error) return sendJson(res, 500, { error: error.message });
   if (!task || !taskIsAvailable(task)) return sendJson(res, 404, { error: "This class task was not found or has expired." });
 
+  const passPercent = taskPassPercent(task.settings || {});
   if (!task.settings?.allow_multiple_submissions) {
     const { data: existing } = await supabase
       .from("class_task_responses")
-      .select("id")
+      .select("id, marking")
       .eq("task_id", task.id)
       .ilike("pupil_alias", pupilAlias)
-      .limit(1);
-    if (existing?.length) {
+      .limit(20);
+    const hasCompleted = (existing || []).some((response) => response.marking?.pass_met);
+    const hasSameAttempt = (existing || []).some((response) => Number(response.marking?.attempt_index || 0) === attemptIndex);
+    if ((!passPercent && existing?.length) || hasCompleted || hasSameAttempt) {
       return sendJson(res, 409, { error: "This alias has already submitted this task. Ask your teacher before trying again." });
     }
   }
 
+  const attemptQuestions = questionsForAttempt(task, attemptIndex);
+  if (!attemptQuestions) return sendJson(res, 404, { error: "This task attempt is not available. Ask your teacher for a new code." });
+
   const answers = cleanStringMap(body.answers, 3000);
   const working = cleanStringMap(body.working, 8000);
-  const marking = scoreSubmission(task.questions || [], answers, working);
+  const marking = markPassStatus(scoreSubmission(attemptQuestions, answers, working), task.settings || {}, attemptIndex);
   const baseResponse = {
     task_id: task.id,
     pupil_alias: pupilAlias,
@@ -405,15 +491,71 @@ async function submitPublicTask(req, res, supabase) {
   const { data: response, error: responseError } = responseResult;
   if (responseError) return sendJson(res, 500, { error: responseError.message });
 
+  let schoolName = "";
+  if (task.school_id) {
+    const { data: school } = await supabase.from("schools").select("name").eq("id", task.school_id).maybeSingle();
+    schoolName = school?.name || "";
+  }
+  const nextTask = marking.pass_required && !marking.pass_met
+    ? publicTaskForAttempt(task, schoolName, attemptIndex + 1)
+    : null;
+
   return sendJson(res, 200, {
     response,
     show_answers: true,
-    answers: (task.questions || []).map((question, index) => ({
+    answers: attemptQuestions.map((question, index) => ({
       id: question.id || `q${index + 1}`,
       answer: question.answer || "",
       steps: question.steps || []
-    }))
+    })),
+    next_task: nextTask
   });
+}
+
+async function reviewResponse(req, res, supabase) {
+  const { user, profile, error } = await teacherProfile(req, supabase);
+  if (error) return sendJson(res, 401, { error });
+  if (!canCreateClassTask(profile)) return sendJson(res, 403, { error: "Teacher access is required to review pupil responses." });
+
+  const body = await readJsonBody(req);
+  const taskId = cleanText(body.task_id, 80);
+  const responseId = cleanText(body.response_id, 80);
+  if (!taskId || !responseId) return sendJson(res, 400, { error: "Missing task or response id." });
+
+  let taskQuery = supabase
+    .from("class_tasks")
+    .select("id, teacher_id")
+    .eq("id", taskId);
+  if (normaliseRole(profile) !== "admin") taskQuery = taskQuery.eq("teacher_id", user.id);
+  const { data: task, error: taskError } = await taskQuery.maybeSingle();
+  if (taskError) return sendJson(res, 500, { error: taskError.message });
+  if (!task) return sendJson(res, 403, { error: "You cannot review this response." });
+
+  let updateResult = await supabase
+    .from("class_task_responses")
+    .update({
+      teacher_notes: cleanLongText(body.teacher_notes, 4000),
+      reviewed: Boolean(body.reviewed)
+    })
+    .eq("id", responseId)
+    .eq("task_id", task.id)
+    .select(RESPONSE_SELECT_WITH_WORKING)
+    .single();
+  if (updateResult.error && isMissingWorkingColumnError(updateResult.error)) {
+    updateResult = await supabase
+      .from("class_task_responses")
+      .update({
+        teacher_notes: cleanLongText(body.teacher_notes, 4000),
+        reviewed: Boolean(body.reviewed)
+      })
+      .eq("id", responseId)
+      .eq("task_id", task.id)
+      .select(RESPONSE_SELECT)
+      .single();
+  }
+  const { data: response, error: updateError } = updateResult;
+  if (updateError) return sendJson(res, 500, { error: updateError.message });
+  return sendJson(res, 200, { response });
 }
 
 async function closeTask(req, res, supabase) {
@@ -443,6 +585,7 @@ module.exports = async function handler(req, res) {
     if (req.method === "POST" && action === "create") return createTask(req, res, supabase);
     if (req.method === "GET" && action === "get") return getPublicTask(req, res, supabase);
     if (req.method === "POST" && action === "submit") return submitPublicTask(req, res, supabase);
+    if (req.method === "POST" && action === "review") return reviewResponse(req, res, supabase);
     if (req.method === "POST" && action === "close") return closeTask(req, res, supabase);
 
     res.setHeader("Allow", "GET, POST");

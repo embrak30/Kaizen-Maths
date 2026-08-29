@@ -4936,8 +4936,37 @@ button.certification-course-card {
 }
 
 .pupil-submission-panel {
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
   background: #f0fdf4;
   border-color: rgba(19, 138, 99, 0.24);
+}
+
+.pupil-submission-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.pupil-retry-note {
+  padding: 9px 10px;
+  border: 1px solid rgba(194, 65, 47, 0.2);
+  border-radius: 7px;
+  background: #fff7ed;
+  color: #7c2d12;
+  font-weight: 800;
+}
+
+.pupil-submission-details {
+  min-height: 0;
+}
+
+.pupil-submission-details summary {
+  cursor: pointer;
+  font-weight: 900;
 }
 
 .pupil-answer-key {
@@ -4970,6 +4999,27 @@ button.certification-course-card {
 
 .pupil-submission-review li {
   align-items: stretch;
+}
+
+.pupil-submission-review li.is-incorrect strong {
+  background: #dc2626;
+}
+
+.pupil-review-status {
+  width: fit-content;
+  margin-bottom: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(23, 184, 179, 0.11);
+  color: var(--teal-dark);
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.pupil-submission-review li.is-incorrect .pupil-review-status {
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .pupil-review-question {
@@ -5010,6 +5060,41 @@ button.certification-course-card {
 
 .pupil-worked-solution {
   margin-top: 8px;
+}
+
+.pupil-worked-solution summary {
+  cursor: pointer;
+  color: var(--violet);
+  font-weight: 900;
+}
+
+.class-task-feedback-form {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid rgba(23, 184, 179, 0.18);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(231, 251, 250, 0.62), rgba(255, 255, 255, 0.96));
+}
+
+.class-task-feedback-form label {
+  display: grid;
+  gap: 5px;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.class-task-feedback-form textarea {
+  width: 100%;
+  min-height: 76px;
+  border: 1px solid rgba(217, 224, 234, 0.95);
+  border-radius: 7px;
+  padding: 8px 9px;
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
 }
 
 .tutor-setup-warning {
@@ -9948,6 +10033,7 @@ sup .worksheet-fraction > span:last-child {
   .class-task-card-head,
   .pupil-task-head,
   .pupil-only-header,
+  .pupil-submission-head,
   .pupil-submit-row {
     display: grid;
     grid-template-columns: 1fr;

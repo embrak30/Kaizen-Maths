@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.2.5';
+  const VERSION = '0.2.6';
   const MIXED_TYPE_ID = '__kaizen_mixed_practice__';
   const MIXED_TYPE_LABEL = 'Mixed Practice';
 
@@ -788,6 +788,9 @@
     if (document.documentElement.dataset.kaizenMixedPracticeReady === 'true') return;
     if (!getGenerator()) return;
 
+    let refreshingDropdown = false;
+    let refreshDropdownTimer = null;
+
     function currentLevelValue() {
       return readBinding('currentLevel', null);
     }
@@ -844,35 +847,47 @@
     }
 
     function refreshDropdown() {
-      ensureMixedMetadata();
-      const dropdown = document.getElementById('type-dropdown');
-      if (!dropdown) return false;
-      const level = currentLevelValue();
-      const sourceTypes = mixedSourceTypesForLevel(level);
-      if (sourceTypes.length < 2) return false;
+      if (refreshingDropdown) return false;
+      refreshingDropdown = true;
+      try {
+        ensureMixedMetadata();
+        const dropdown = document.getElementById('type-dropdown');
+        if (!dropdown) return false;
+        const level = currentLevelValue();
+        const sourceTypes = mixedSourceTypesForLevel(level);
+        if (sourceTypes.length < 2) return false;
 
-      let hasMixedOption = false;
-      Array.from(dropdown.options || []).forEach((option) => {
-        const optionType = { id: option.value, label: option.textContent };
-        if (!isMixedType(optionType)) return;
-        hasMixedOption = true;
-        option.textContent = MIXED_TYPE_LABEL;
-        standardizeMixedMetadata(option.value);
-      });
+        let hasMixedOption = false;
+        Array.from(dropdown.options || []).forEach((option) => {
+          const optionType = { id: option.value, label: option.textContent };
+          if (!isMixedType(optionType)) return;
+          hasMixedOption = true;
+          if (option.textContent !== MIXED_TYPE_LABEL) {
+            option.textContent = MIXED_TYPE_LABEL;
+          }
+          standardizeMixedMetadata(option.value);
+        });
 
-      if (!hasMixedOption) {
-        const option = document.createElement('option');
-        option.value = MIXED_TYPE_ID;
-        option.textContent = MIXED_TYPE_LABEL;
-        option.dataset.kaizenVirtualMixed = 'true';
-        dropdown.appendChild(option);
+        if (!hasMixedOption) {
+          const option = document.createElement('option');
+          option.value = MIXED_TYPE_ID;
+          option.textContent = MIXED_TYPE_LABEL;
+          option.dataset.kaizenVirtualMixed = 'true';
+          dropdown.appendChild(option);
+        }
+
+        return true;
+      } finally {
+        refreshingDropdown = false;
       }
-
-      return true;
     }
 
     function refreshDropdownSoon() {
-      window.setTimeout(refreshDropdown, 0);
+      if (refreshDropdownTimer) window.clearTimeout(refreshDropdownTimer);
+      refreshDropdownTimer = window.setTimeout(() => {
+        refreshDropdownTimer = null;
+        refreshDropdown();
+      }, 0);
     }
 
     function shouldUseMixed() {
@@ -951,6 +966,7 @@
 
     refreshDropdown();
     const observer = new MutationObserver((mutations) => {
+      if (refreshingDropdown) return;
       if (mutations.some((mutation) => mutation.target?.id === 'type-dropdown' || [...mutation.addedNodes].some((node) => node.nodeType === Node.ELEMENT_NODE && (node.id === 'type-dropdown' || node.querySelector?.('#type-dropdown'))))) {
         refreshDropdownSoon();
       }
