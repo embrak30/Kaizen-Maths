@@ -2689,6 +2689,7 @@ const state = {
   pupilTaskLoading: false,
   pupilTaskError: "",
   pupilSubmission: null,
+  pupilActiveQuestionIndex: 0,
   lastAuthAccessKey: ""
 };
 
@@ -15848,6 +15849,7 @@ async function loadPupilTask(code, { rerender = false } = {}) {
   state.pupilTaskLoading = true;
   state.pupilTaskError = "";
   state.pupilSubmission = null;
+  state.pupilActiveQuestionIndex = 0;
   state.pupilTaskCode = cleanCode;
   try {
     const payload = await classTaskApi("get", { params: { code: cleanCode } });
@@ -15861,34 +15863,43 @@ async function loadPupilTask(code, { rerender = false } = {}) {
   }
 }
 
+function pupilMathToolbarHtml(extraClass = "") {
+  return `
+    <div class="pupil-math-toolbar ${escapeHtml(extraClass)}" aria-label="Maths answer shortcuts">
+      <button type="button" data-pupil-math-insert="²">x²</button>
+      <button type="button" data-pupil-math-insert="³">x³</button>
+      <button type="button" data-pupil-math-template="power">xⁿ</button>
+      <button type="button" data-pupil-math-template="fraction">a/b</button>
+      <button type="button" data-pupil-math-template="sqrt">√</button>
+      <button type="button" data-pupil-math-insert="≤">≤</button>
+      <button type="button" data-pupil-math-insert="≥">≥</button>
+      <button type="button" data-pupil-math-insert="π">π</button>
+      <button type="button" data-pupil-math-insert="±">±</button>
+    </div>
+  `;
+}
+
 function pupilQuestionHtml(question, index) {
   const questionId = escapeHtml(question.id || `q${index + 1}`);
   return `
-    <article class="pupil-question-card">
+    <article class="pupil-question-card ${index === 0 ? "active" : ""}" data-pupil-question-card="${index}">
       <div class="pupil-question-number">${index + 1}</div>
       <div class="pupil-question-main">
-        ${question.instruction ? `<p class="pupil-question-instruction">${escapeHtml(question.instruction)}</p>` : ""}
-        ${question.diagram ? `<div class="pupil-question-diagram">${worksheetContentHtml(question.diagram)}</div>` : ""}
-        <div class="pupil-question-text">${worksheetContentHtml(question.question || "")}</div>
-        <label class="pupil-answer-field">
-          Final answer
-          <input type="text" data-pupil-answer="${questionId}" data-pupil-math-input autocomplete="off" spellcheck="false" inputmode="text" placeholder="Type your final answer">
-          <div class="pupil-math-toolbar" aria-label="Maths answer shortcuts">
-            <button type="button" data-pupil-math-insert="²">x²</button>
-            <button type="button" data-pupil-math-insert="³">x³</button>
-            <button type="button" data-pupil-math-template="power">xⁿ</button>
-            <button type="button" data-pupil-math-template="fraction">a/b</button>
-            <button type="button" data-pupil-math-template="sqrt">√</button>
-            <button type="button" data-pupil-math-insert="≤">≤</button>
-            <button type="button" data-pupil-math-insert="≥">≥</button>
-            <button type="button" data-pupil-math-insert="π">π</button>
-            <button type="button" data-pupil-math-insert="±">±</button>
-          </div>
-        </label>
-        <label class="pupil-working-field">
-          Working
-          <textarea data-pupil-working="${questionId}" rows="4" spellcheck="false" placeholder="Show your working for your teacher"></textarea>
-        </label>
+        <div class="pupil-question-content">
+          ${question.instruction ? `<p class="pupil-question-instruction">${escapeHtml(question.instruction)}</p>` : ""}
+          ${question.diagram ? `<div class="pupil-question-diagram">${worksheetContentHtml(question.diagram)}</div>` : ""}
+          <div class="pupil-question-text">${worksheetContentHtml(question.question || "")}</div>
+        </div>
+        <div class="pupil-response-grid">
+          <label class="pupil-answer-field">
+            Final answer
+            <input type="text" data-pupil-answer="${questionId}" data-pupil-math-input autocomplete="off" spellcheck="false" inputmode="text" placeholder="Type your final answer">
+          </label>
+          <label class="pupil-working-field">
+            Working
+            <textarea data-pupil-working="${questionId}" rows="4" spellcheck="false" placeholder="Show your working for your teacher"></textarea>
+          </label>
+        </div>
       </div>
       <span class="pupil-question-marks">${Number(question.marks) || 1} mark${Number(question.marks) === 1 ? "" : "s"}</span>
     </article>
@@ -15933,6 +15944,7 @@ function renderPupilJoin(routeCode = "") {
     state.pupilTask = null;
     state.pupilTaskError = "";
     state.pupilSubmission = null;
+    state.pupilActiveQuestionIndex = 0;
   }
   const task = state.pupilTask?.join_code === cleanCode ? state.pupilTask : null;
   const savedAlias = readJsonStorage(pupilAliasStorageKey, "");
@@ -15944,6 +15956,7 @@ function renderPupilJoin(routeCode = "") {
   const taskSummary = task
     ? [task.source_tool_title, task.source_level_label, task.source_type_label].filter(Boolean).join(" · ") || "Assigned Kaizen Maths task"
     : "Enter the class code from your teacher.";
+  const questions = task?.questions || [];
 
   app.innerHTML = `
     <section class="pupil-only-page">
@@ -15971,21 +15984,37 @@ function renderPupilJoin(routeCode = "") {
       </article>
 
       ${task ? state.pupilSubmission ? pupilSubmissionHtml(task) : `
-        <form id="pupilTaskForm" class="panel pupil-task-panel">
+        <form id="pupilTaskForm" class="panel pupil-task-panel pupil-workspace-panel">
           <header class="pupil-task-head">
             <div>
               <span class="eyebrow">${escapeHtml(taskSummary)}</span>
               <h2>${escapeHtml(task.title || "Class Task")}</h2>
               <p>${escapeHtml(task.instructions || "Answer each question. Show working where appropriate.")}</p>
             </div>
+            <label class="pupil-alias-field">
+              Alias or initials
+              <input name="pupil_alias" type="text" maxlength="80" value="${escapeHtml(savedAlias)}" autocomplete="off" spellcheck="false" placeholder="No full name" required>
+            </label>
             <strong>${escapeHtml(task.join_code)}</strong>
           </header>
-          <label class="pupil-alias-field">
-            Alias or initials
-            <input name="pupil_alias" type="text" maxlength="80" value="${escapeHtml(savedAlias)}" autocomplete="off" spellcheck="false" placeholder="Do not enter your full name" required>
-          </label>
-          <div class="pupil-question-list">
-            ${(task.questions || []).map(pupilQuestionHtml).join("")}
+          <div class="pupil-workspace-layout">
+            <aside class="pupil-question-nav" aria-label="Question navigation">
+              <span id="pupilQuestionProgress">Question 1 of ${questions.length}</span>
+              <div class="pupil-question-tabs">
+                ${questions.map((_, index) => `<button class="${index === 0 ? "active" : ""}" type="button" data-pupil-question-tab="${index}">${index + 1}</button>`).join("")}
+              </div>
+              <div class="pupil-question-move">
+                <button type="button" data-pupil-question-prev>Back</button>
+                <button type="button" data-pupil-question-next>Next</button>
+              </div>
+            </aside>
+            <div class="pupil-question-list pupil-workspace-list">
+              ${questions.map(pupilQuestionHtml).join("")}
+            </div>
+            <aside class="pupil-math-rail" aria-label="Maths symbols">
+              <span>Symbols</span>
+              ${pupilMathToolbarHtml("pupil-math-toolbar-rail")}
+            </aside>
           </div>
           <div class="pupil-submit-row">
             <button class="button primary" type="submit">Submit Answers</button>
@@ -16031,13 +16060,56 @@ function bindPupilJoin() {
     state.pupilTask = null;
     state.pupilSubmission = null;
     state.pupilTaskCode = "";
+    state.pupilActiveQuestionIndex = 0;
     location.hash = "#/pupil";
     if (routeParts()[0] === "pupil") renderRoute();
   });
 
+  function setActivePupilQuestion(index) {
+    const cards = [...document.querySelectorAll("[data-pupil-question-card]")];
+    if (!cards.length) return;
+    const safeIndex = Math.max(0, Math.min(cards.length - 1, Number(index) || 0));
+    cards.forEach((card, cardIndex) => card.classList.toggle("active", cardIndex === safeIndex));
+    document.querySelectorAll("[data-pupil-question-tab]").forEach((tab) => {
+      tab.classList.toggle("active", Number(tab.dataset.pupilQuestionTab) === safeIndex);
+    });
+    const progress = document.getElementById("pupilQuestionProgress");
+    if (progress) progress.textContent = `Question ${safeIndex + 1} of ${cards.length}`;
+    state.pupilActiveQuestionIndex = safeIndex;
+  }
+
+  document.querySelectorAll("[data-pupil-question-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setActivePupilQuestion(button.dataset.pupilQuestionTab);
+      document.querySelector(".pupil-question-card.active [data-pupil-math-input]")?.focus({ preventScroll: true });
+    });
+  });
+
+  document.querySelector("[data-pupil-question-prev]")?.addEventListener("click", () => {
+    setActivePupilQuestion((state.pupilActiveQuestionIndex || 0) - 1);
+    document.querySelector(".pupil-question-card.active [data-pupil-math-input]")?.focus({ preventScroll: true });
+  });
+
+  document.querySelector("[data-pupil-question-next]")?.addEventListener("click", () => {
+    setActivePupilQuestion((state.pupilActiveQuestionIndex || 0) + 1);
+    document.querySelector(".pupil-question-card.active [data-pupil-math-input]")?.focus({ preventScroll: true });
+  });
+
+  document.querySelectorAll("[data-pupil-answer], [data-pupil-working]").forEach((input) => {
+    input.addEventListener("focus", () => {
+      const card = input.closest("[data-pupil-question-card]");
+      if (card) setActivePupilQuestion(card.dataset.pupilQuestionCard);
+    });
+  });
+
+  setActivePupilQuestion(state.pupilActiveQuestionIndex || 0);
+
   document.querySelectorAll("[data-pupil-math-insert], [data-pupil-math-template]").forEach((button) => {
     button.addEventListener("click", () => {
-      const input = button.closest(".pupil-answer-field")?.querySelector("[data-pupil-math-input]");
+      const input = button.closest(".pupil-answer-field")?.querySelector("[data-pupil-math-input]")
+        || (document.activeElement?.matches?.("[data-pupil-math-input]") ? document.activeElement : null)
+        || document.querySelector(".pupil-question-card.active [data-pupil-math-input]")
+        || document.querySelector("[data-pupil-math-input]");
       if (!input) return;
       const templates = {
         fraction: { text: "()/()", cursorOffset: 1 },
