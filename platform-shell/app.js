@@ -16682,7 +16682,7 @@ function classTaskResponseDetailHtml(response, task) {
             <div class="class-task-response-grid">
               <div>
                 <span>Final answer</span>
-                <p>${escapeHtml(submitted || "No answer entered")}</p>
+                <p>${pupilMathPreviewHtml(submitted || "", "No answer entered")}</p>
               </div>
               <div>
                 <span>Expected answer</span>
@@ -16698,7 +16698,7 @@ function classTaskResponseDetailHtml(response, task) {
             ${workingText ? `
               <div class="class-task-working">
                 <span>Working</span>
-                <p>${escapeHtml(workingText).replace(/\n/g, "<br>")}</p>
+                <p>${pupilMathPreviewHtml(workingText, "")}</p>
               </div>
             ` : ""}
             ${workingImage ? `
@@ -17627,40 +17627,85 @@ async function loadPupilTask(code, { rerender = false } = {}) {
   }
 }
 
+function pupilMathToolLabelHtml(tool) {
+  if (tool.kind === "fraction") {
+    return `<span class="pupil-tool-fraction"><span>a</span><span>b</span></span><span>${escapeHtml(tool.name)}</span>`;
+  }
+  if (tool.kind === "power") {
+    return `<span class="pupil-tool-symbol">x<sup>${escapeHtml(tool.power || "n")}</sup></span><span>${escapeHtml(tool.name)}</span>`;
+  }
+  if (tool.kind === "root") {
+    return `<span class="pupil-tool-symbol">√</span><span>${escapeHtml(tool.name)}</span>`;
+  }
+  return `<span class="pupil-tool-symbol">${escapeHtml(tool.label)}</span><span>${escapeHtml(tool.name)}</span>`;
+}
+
 function pupilMathToolbarHtml(extraClass = "") {
   const tools = [
-    { label: "x²", token: "²" },
-    { label: "x³", token: "³" },
-    { label: "xⁿ", token: "^()", cursor: "2" },
-    { label: "a/b", token: "()/()", cursor: "1" },
-    { label: "√", token: "√()", cursor: "2" },
-    { label: "≤", token: "≤" },
-    { label: "≥", token: "≥" },
-    { label: "π", token: "π" },
-    { label: "±", token: "±" }
+    { name: "Fraction", kind: "fraction", label: "a/b", token: "()/()", cursor: "1", title: "Insert a vertical fraction template" },
+    { name: "Square", kind: "power", label: "x²", power: "2", token: "²", title: "Insert squared" },
+    { name: "Cube", kind: "power", label: "x³", power: "3", token: "³", title: "Insert cubed" },
+    { name: "Power", kind: "power", label: "xⁿ", power: "n", token: "^()", cursor: "2", title: "Insert a power template" },
+    { name: "Root", kind: "root", label: "√", token: "√()", cursor: "2", title: "Insert a square root template" },
+    { name: "Point", label: "(x, y)", token: "(, )", cursor: "1", title: "Insert coordinate brackets" },
+    { name: "Equals", label: "=", token: " = ", title: "Insert equals sign" },
+    { name: "Less equal", label: "≤", token: "≤", title: "Insert less than or equal to" },
+    { name: "Greater equal", label: "≥", token: "≥", title: "Insert greater than or equal to" },
+    { name: "Pi", label: "π", token: "π", title: "Insert pi" },
+    { name: "Plus minus", label: "±", token: "±", title: "Insert plus or minus" }
   ];
   return `
     <div class="pupil-math-toolbar ${escapeHtml(extraClass)}" aria-label="Maths answer shortcuts">
       ${tools.map((tool) => `
-        <button type="button" draggable="true" data-pupil-math-token="${escapeHtml(tool.token)}" data-pupil-math-cursor="${escapeHtml(tool.cursor || "")}" title="Tap or drag into the answer or working box">${escapeHtml(tool.label)}</button>
+        <button type="button" draggable="true" data-pupil-math-token="${escapeHtml(tool.token)}" data-pupil-math-cursor="${escapeHtml(tool.cursor || "")}" aria-label="${escapeHtml(tool.title || tool.name)}" title="${escapeHtml(tool.title || "Tap or drag into the answer or working box")}">${pupilMathToolLabelHtml(tool)}</button>
       `).join("")}
     </div>
   `;
 }
 
-function pupilAnswerPreviewHtml(value) {
-  const text = String(value || "").trim();
-  if (!text) return `<span class="pupil-answer-preview-empty">Preview appears here</span>`;
-  const displayText = text
+function pupilCleanMathEntry(value) {
+  return String(value ?? "")
     .replace(/\\dfrac/g, "\\frac")
-    .replace(/√\s*\(([^()]+)\)/g, "\\sqrt{$1}")
-    .replace(/\bsqrt\(([^()]+)\)/gi, "\\sqrt{$1}")
-    .replace(/\^\(([^()]+)\)/g, "^{$1}")
-    .replace(/\(([^()]+)\)\s*\/\s*\(([^()]+)\)/g, "\\frac{$1}{$2}")
-    .replace(/\b(-?\d+|[A-Za-z][A-Za-z0-9]*)\/(-?\d+|[A-Za-z][A-Za-z0-9]*)\b/g, "\\frac{$1}{$2}");
+    .replace(/\\frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, "($1)/($2)")
+    .replace(/\bsqrt\s*\(([^()]*)\)/gi, "√($1)")
+    .replace(/<=|=<|\\leq?/g, "≤")
+    .replace(/>=|=>|\\geq?/g, "≥")
+    .replace(/\\times/g, "×")
+    .replace(/\\div/g, "÷")
+    .replace(/\\pm/g, "±")
+    .replace(/\\pi/g, "π")
+    .replace(/\^\(([^()]*)\)/g, (_, power) => `^(${power})`)
+    .replace(/\^2\b/g, "²")
+    .replace(/\^3\b/g, "³")
+    .replace(/\s{3,}/g, "  ");
+}
+
+function pupilMathEntryToDisplay(value) {
+  return pupilCleanMathEntry(value)
+    .replace(/\(([^()]*)\)\s*\/\s*\(([^()]*)\)/g, (_, numerator, denominator) => {
+      if (!numerator.trim() || !denominator.trim()) return "□/□";
+      return `\\frac{${numerator}}{${denominator}}`;
+    })
+    .replace(/\b(-?\d+|[A-Za-z][A-Za-z0-9]*)\s+over\s+(-?\d+|[A-Za-z][A-Za-z0-9]*)\b/gi, "\\frac{$1}{$2}")
+    .replace(/\b(-?\d+|[A-Za-z][A-Za-z0-9]*)\/(-?\d+|[A-Za-z][A-Za-z0-9]*)\b/g, "\\frac{$1}{$2}")
+    .replace(/√\s*\(([^()]*)\)/g, (_, radicand) => radicand.trim() ? `\\sqrt{${radicand}}` : "√□")
+    .replace(/\^\(([^()]*)\)/g, (_, power) => power.trim() ? `^{${power}}` : "^□")
+    .replace(/\^(-?[A-Za-z0-9]+)/g, "^{$1}");
+}
+
+function pupilMathPreviewHtml(value, emptyLabel = "Preview appears here") {
+  const text = String(value || "").trim();
+  if (!text) return `<span class="pupil-answer-preview-empty">${escapeHtml(emptyLabel)}</span>`;
   const template = document.createElement("template");
-  template.content.appendChild(worksheetMathFragment(displayText));
+  text.split(/\n/).forEach((line, index) => {
+    if (index > 0) template.content.appendChild(document.createElement("br"));
+    template.content.appendChild(worksheetMathFragment(pupilMathEntryToDisplay(line)));
+  });
   return template.innerHTML;
+}
+
+function pupilAnswerPreviewHtml(value) {
+  return pupilMathPreviewHtml(value, "Preview appears here");
 }
 
 function pupilIdentityFromForm(form) {
@@ -17713,7 +17758,7 @@ function pupilQuestionHtml(question, index) {
               Final answer
               <input type="text" data-pupil-answer="${questionId}" data-pupil-math-input autocomplete="off" spellcheck="false" inputmode="text" placeholder="Type your final answer">
             </label>
-            <small>Tap or drag symbols. Fractions preview vertically.</small>
+            <small>Use the maths tools for fractions, powers, roots, coordinates, and equations.</small>
             <div class="pupil-answer-preview" data-pupil-answer-preview="${questionId}">${pupilAnswerPreviewHtml("")}</div>
           </div>
           <section class="pupil-working-field" aria-label="Working for question ${index + 1}">
@@ -17722,6 +17767,7 @@ function pupilQuestionHtml(question, index) {
               <button type="button" data-pupil-clear-canvas="${questionId}">Clear writing</button>
             </div>
             <textarea data-pupil-working="${questionId}" data-pupil-math-input rows="3" spellcheck="false" placeholder="Type working, or write below with your finger or stylus"></textarea>
+            <div class="pupil-working-preview" data-pupil-working-preview="${questionId}">${pupilMathPreviewHtml("", "Typed working preview")}</div>
             <div class="pupil-handwriting-pad">
               <canvas data-pupil-working-canvas="${questionId}" aria-label="Handwriting space for question ${index + 1}"></canvas>
             </div>
@@ -17794,7 +17840,7 @@ function pupilSubmissionHtml(task) {
                   <div class="pupil-review-grid">
                     <div>
                       <span>Your answer</span>
-                      <p>${escapeHtml(submittedAnswers[questionId] || "No answer entered")}</p>
+                      <p>${pupilMathPreviewHtml(submittedAnswers[questionId] || "", "No answer entered")}</p>
                     </div>
                     <div>
                       <span>Expected answer</span>
@@ -17804,7 +17850,7 @@ function pupilSubmissionHtml(task) {
                   ${submittedWorking[questionId] ? `
                     <div class="pupil-review-working">
                       <span>Your working</span>
-                      <p>${escapeHtml(submittedWorking[questionId]).replace(/\n/g, "<br>")}</p>
+                      <p>${pupilMathPreviewHtml(submittedWorking[questionId], "")}</p>
                     </div>
                   ` : ""}
                   ${workingImage ? `
@@ -17999,6 +18045,26 @@ function pupilUpdateAnswerPreview(input) {
   if (!questionId) return;
   const preview = document.querySelector(`[data-pupil-answer-preview="${CSS.escape(questionId)}"]`);
   if (preview) preview.innerHTML = pupilAnswerPreviewHtml(input.value);
+}
+
+function pupilUpdateWorkingPreview(input) {
+  const questionId = input?.dataset?.pupilWorking || "";
+  if (!questionId) return;
+  const preview = document.querySelector(`[data-pupil-working-preview="${CSS.escape(questionId)}"]`);
+  if (preview) preview.innerHTML = pupilMathPreviewHtml(input.value, "Typed working preview");
+}
+
+function pupilUpdateMathInputPreview(input) {
+  if (!input) return;
+  if (input.matches("[data-pupil-answer]")) pupilUpdateAnswerPreview(input);
+  if (input.matches("[data-pupil-working]")) pupilUpdateWorkingPreview(input);
+}
+
+function pupilCommitMathInput(input) {
+  if (!input) return;
+  const cleaned = pupilCleanMathEntry(input.value);
+  if (cleaned !== input.value) input.value = cleaned;
+  pupilUpdateMathInputPreview(input);
 }
 
 function pupilCanvasDataUrl(canvas) {
@@ -18209,7 +18275,17 @@ function bindPupilJoin() {
     });
     pupilUpdateAnswerPreview(input);
   });
+  document.querySelectorAll("[data-pupil-working]").forEach((input) => {
+    input.addEventListener("input", () => {
+      pupilUpdateWorkingPreview(input);
+    });
+    pupilUpdateWorkingPreview(input);
+  });
   document.querySelectorAll("[data-pupil-math-input]").forEach((input) => {
+    input.addEventListener("blur", () => {
+      pupilCommitMathInput(input);
+      updatePupilSubmitState();
+    });
     input.addEventListener("dragover", (event) => {
       event.preventDefault();
       event.dataTransfer.dropEffect = "copy";
@@ -18268,6 +18344,7 @@ function bindPupilJoin() {
     const button = form.querySelector("[data-pupil-submit]");
     const identity = pupilIdentityFromForm(form);
     const usesRoster = classTaskUsesRoster(state.pupilTask || {});
+    form.querySelectorAll("[data-pupil-math-input]").forEach((input) => pupilCommitMathInput(input));
     const answerInputs = [...form.querySelectorAll("[data-pupil-answer]")];
     const firstBlankAnswer = answerInputs.find((input) => !input.value.trim());
     const answeredCount = answerInputs.filter((input) => input.value.trim()).length;

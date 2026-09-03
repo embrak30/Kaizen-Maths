@@ -5188,7 +5188,7 @@ button.certification-course-card {
 
 .pupil-workspace-layout {
   display: grid;
-  grid-template-columns: 112px minmax(0, 1fr) 78px;
+  grid-template-columns: 112px minmax(0, 1fr) 124px;
   gap: 10px;
   min-height: 0;
 }
@@ -5341,6 +5341,14 @@ button.certification-course-card {
   line-height: 1.55;
 }
 
+.pupil-answer-field {
+  display: grid;
+  gap: 4px;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
 .pupil-answer-field input {
   font-family: var(--body-font);
   font-size: 1.02rem;
@@ -5358,7 +5366,8 @@ button.certification-course-card {
   font-weight: 800;
 }
 
-.pupil-answer-preview {
+.pupil-answer-preview,
+.pupil-working-preview {
   min-height: 38px;
   display: flex;
   align-items: center;
@@ -5370,6 +5379,14 @@ button.certification-course-card {
   font-family: var(--math-font);
   font-size: 1rem;
   line-height: 1.25;
+}
+
+.pupil-working-preview {
+  min-height: 34px;
+  max-height: 74px;
+  align-items: flex-start;
+  overflow: auto;
+  font-size: 0.92rem;
 }
 
 .pupil-answer-preview-empty {
@@ -5388,7 +5405,7 @@ button.certification-course-card {
 
 .pupil-working-field {
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: auto auto auto minmax(0, 1fr);
   gap: 7px;
   min-height: 0;
 }
@@ -5454,8 +5471,13 @@ button.certification-course-card {
 }
 
 .pupil-math-toolbar button {
-  min-width: 38px;
-  min-height: 32px;
+  min-width: 44px;
+  min-height: 38px;
+  display: grid;
+  grid-template-columns: minmax(22px, auto) minmax(0, 1fr);
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
   border: 1px solid rgba(23, 184, 179, 0.24);
   border-radius: 7px;
   background: #f7ffff;
@@ -5464,7 +5486,50 @@ button.certification-course-card {
   font-family: var(--math-font);
   font-size: 0.88rem;
   font-weight: 850;
+  line-height: 1.05;
+  padding: 6px 7px;
+  text-align: left;
   user-select: none;
+}
+
+.pupil-tool-symbol {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  color: var(--teal-dark);
+  font-family: var(--math-font);
+  font-size: 1.08rem;
+  font-weight: 900;
+}
+
+.pupil-tool-symbol sup {
+  font-size: 0.62em;
+}
+
+.pupil-tool-fraction {
+  display: inline-grid;
+  grid-template-rows: 1fr 1fr;
+  min-width: 24px;
+  color: var(--teal-dark);
+  font-family: var(--math-font);
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+}
+
+.pupil-tool-fraction span:first-child {
+  border-bottom: 1.5px solid currentColor;
+}
+
+.pupil-math-toolbar button > span:last-child:not(.pupil-tool-symbol):not(.pupil-tool-fraction) {
+  overflow: hidden;
+  color: #334155;
+  font-family: var(--body-font);
+  font-size: 0.64rem;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .pupil-math-rail {
@@ -5485,7 +5550,7 @@ button.certification-course-card {
 .pupil-math-toolbar-rail button {
   width: 100%;
   min-width: 0;
-  min-height: 36px;
+  min-height: 44px;
   font-family: var(--body-font);
 }
 
@@ -10851,8 +10916,20 @@ sup .worksheet-fraction > span:last-child {
   }
 
   .pupil-math-toolbar-rail {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     overflow: visible;
+  }
+
+  .pupil-math-toolbar button {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    min-height: 46px;
+    text-align: center;
+  }
+
+  .pupil-math-toolbar button > span:last-child:not(.pupil-tool-symbol):not(.pupil-tool-fraction) {
+    max-width: 100%;
+    font-size: 0.58rem;
   }
 
   .pupil-workspace-list .pupil-question-card {
