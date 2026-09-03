@@ -2947,6 +2947,8 @@ const worksheetState = {
   metadata: null,
   worksheet: null,
   sections: [],
+  quizLink: "",
+  quizCode: "",
   lastAddedSignature: "",
   loadToken: 0
 };
@@ -14284,11 +14286,11 @@ function renderWorksheetGenerator() {
   app.innerHTML = `
     ${pageHeader(
       "Worksheet Builder",
-      `<span class="worksheet-header-summary">Build printable worksheets and assessments from topic blocks.</span>
+      `<span class="worksheet-header-summary">Build printable worksheets, assessments, and online pupil quizzes from topic blocks.</span>
        <span class="worksheet-header-steps" aria-label="Worksheet builder workflow">
          <span><strong>1 Select questions</strong><small>Choose a topic, level, question type, and count.</small></span>
          <span><strong>2 Add selected questions</strong><small>Load that block so you can edit questions and marks.</small></span>
-         <span><strong>3 Create worksheet</strong><small>Generate the sheet, then print or save as PDF.</small></span>
+         <span><strong>3 Create resource</strong><small>Print the sheet or send it as an online quiz.</small></span>
        </span>`,
       "",
       "worksheet-page-header"
@@ -14353,13 +14355,44 @@ function renderWorksheetGenerator() {
             <button class="button worksheet-print-button" id="printWorksheet" type="button" disabled>Print / Save PDF</button>
             <small>Available after creating the worksheet.</small>
           </div>
+          <div class="worksheet-quiz-panel">
+            <div class="worksheet-quiz-heading">
+              <strong>Online quiz</strong>
+              <span>Send the added blocks to the Pupil Module as one join-code quiz.</span>
+            </div>
+            <label>
+              Class tracker
+              <select id="worksheetQuizClassGroup" ${isSignedIn() && hasPupilModuleAccess() ? "" : "disabled"}>
+                ${isSignedIn() && hasPupilModuleAccess() ? classTaskTaskGroupSelectOptions(state.classTaskSelectedGroupId) : `<option value="">Pupil Module required</option>`}
+              </select>
+            </label>
+            <div class="worksheet-quiz-settings">
+              <label>
+                Required %
+                <input id="worksheetQuizPassPercent" type="number" min="0" max="100" value="100" ${isSignedIn() && hasPupilModuleAccess() ? "" : "disabled"}>
+              </label>
+              <label>
+                Expires
+                <input id="worksheetQuizExpires" type="date" value="${classTaskDefaultExpiryDate()}" ${isSignedIn() && hasPupilModuleAccess() ? "" : "disabled"}>
+              </label>
+            </div>
+            <label class="worksheet-quiz-check">
+              <input id="worksheetQuizRetry" type="checkbox" checked ${isSignedIn() && hasPupilModuleAccess() ? "" : "disabled"}>
+              Create retry sets if the pass mark is not met
+            </label>
+            <button class="button worksheet-quiz-button" id="createWorksheetQuiz" type="button">Create Online Quiz</button>
+            <p class="worksheet-status" id="worksheetQuizStatus">${isSignedIn() && hasPupilModuleAccess() ? "Available after adding question blocks." : "Sign in through a school or tutor account with Pupil Module access."}</p>
+            <div class="worksheet-quiz-result" id="worksheetQuizResult" ${worksheetState.quizLink ? "" : "hidden"}>
+              ${worksheetState.quizLink ? `<strong>Code: ${escapeHtml(worksheetState.quizCode)}</strong><a href="#/pupil/${escapeHtml(worksheetState.quizCode)}">Open pupil quiz</a><button class="button subtle" type="button" data-copy-worksheet-quiz="${escapeHtml(worksheetState.quizLink)}">Copy link</button>` : ""}
+            </div>
+          </div>
           <button class="button subtle worksheet-reset-button" id="resetWorksheet" type="button">Reset Worksheet</button>
         </div>
         <div class="worksheet-section-list" id="worksheetSectionList"></div>
         <p class="worksheet-status" id="worksheetStatus">Loading the selected tool...</p>
       </form>
       <section class="worksheet-preview panel" id="worksheetPreview">
-        <div class="empty-state">Choose the questions, add the selected block, then create a printable worksheet.</div>
+        <div class="empty-state">Choose the questions, add the selected block, then create a printable worksheet or online quiz.</div>
       </section>
       <iframe class="worksheet-loader" id="worksheetLoader" title="Worksheet tool loader" aria-hidden="true"></iframe>
     </section>
@@ -14651,6 +14684,7 @@ function worksheetCurrentSelectionReady() {
 function updateWorksheetFlow() {
   const addButton = document.getElementById("addWorksheetSection");
   const generateButton = document.getElementById("generateWorksheet");
+  const quizButton = document.getElementById("createWorksheetQuiz");
   const hasSections = worksheetState.sections.length > 0;
   const selectionReady = worksheetCurrentSelectionReady();
   const currentSignature = selectionReady ? worksheetSelectionSignature() : "";
@@ -14669,6 +14703,13 @@ function updateWorksheetFlow() {
     generateButton.disabled = !hasSections;
     generateButton.classList.toggle("primary", prioritiseGenerate);
     generateButton.classList.toggle("worksheet-action-muted", !prioritiseGenerate);
+  }
+
+  if (quizButton) {
+    const canCreateQuiz = hasSections && isSignedIn() && hasPupilModuleAccess();
+    quizButton.disabled = !canCreateQuiz;
+    quizButton.classList.toggle("primary", canCreateQuiz);
+    quizButton.classList.toggle("worksheet-action-muted", !canCreateQuiz);
   }
 }
 
@@ -14785,6 +14826,196 @@ async function generateWorksheetFromSections(sections, options = {}) {
   return { ok: problems.length > 0, count: problems.length, sections: generatedSections, problems, options };
 }
 
+function setWorksheetQuizStatus(message, tone = "") {
+  const status = document.getElementById("worksheetQuizStatus");
+  if (!status) return;
+  status.textContent = message;
+  status.dataset.tone = tone;
+}
+
+function worksheetQuizTitleFromPresentation(title) {
+  const cleanTitle = String(title || "").trim() || "Kaizen Maths Quiz";
+  if (/quiz/i.test(cleanTitle)) return cleanTitle;
+  if (/worksheet/i.test(cleanTitle)) return cleanTitle.replace(/worksheet/ig, "Quiz");
+  if (/assessment/i.test(cleanTitle)) return cleanTitle;
+  return `${cleanTitle} Quiz`;
+}
+
+function updateWorksheetQuizGroupSelect() {
+  const select = document.getElementById("worksheetQuizClassGroup");
+  if (!select) return;
+  const previousValue = select.value;
+  if (!isSignedIn() || !hasPupilModuleAccess()) {
+    select.innerHTML = `<option value="">Pupil Module required</option>`;
+    select.disabled = true;
+    return;
+  }
+  select.disabled = false;
+  select.innerHTML = classTaskTaskGroupSelectOptions(previousValue || state.classTaskSelectedGroupId);
+  if (previousValue && [...select.options].some((option) => option.value === previousValue)) {
+    select.value = previousValue;
+  }
+}
+
+async function loadWorksheetQuizGroups() {
+  if (!isSignedIn() || !hasPupilModuleAccess()) {
+    updateWorksheetQuizGroupSelect();
+    updateWorksheetFlow();
+    return;
+  }
+  await loadClassTaskGroups();
+  updateWorksheetQuizGroupSelect();
+  updateWorksheetFlow();
+}
+
+function worksheetQuizProblemMarks(problem, worksheet, fallbackMarks = 1) {
+  const section = worksheet?.sections?.find((item) => item.id === problem.sectionId);
+  const marks = Number(problem.marks) || Number(section?.marksPerQuestion) || Number(fallbackMarks) || 1;
+  return Math.max(1, Math.min(20, marks));
+}
+
+function worksheetQuizQuestionsFromWorksheet(worksheet, fallbackMarks = 1) {
+  return (worksheet?.problems || []).map((problem, index) => classTaskSerialiseQuestion(problem, index, {
+    marks: worksheetQuizProblemMarks(problem, worksheet, fallbackMarks),
+    instruction: problem.instruction || problem.instructionText || "",
+    sectionTitle: problem.sectionTitle || "",
+    sectionType: problem.sectionType || ""
+  }));
+}
+
+function worksheetQuizSourceLabels(worksheet) {
+  const sections = worksheet?.sections || [];
+  if (sections.length === 1) {
+    const [section] = sections;
+    return {
+      source_tool_slug: section.toolSlug,
+      source_tool_title: section.toolTitle,
+      source_level_label: section.levelLabel,
+      source_type_label: section.typeLabel
+    };
+  }
+  return {
+    source_tool_slug: "worksheet-builder",
+    source_tool_title: "Worksheet Builder",
+    source_level_label: `${sections.length} blocks`,
+    source_type_label: "Mixed online quiz"
+  };
+}
+
+async function createWorksheetQuizFromSections() {
+  if (!isSignedIn()) throw new Error("Sign in before creating an online quiz.");
+  if (!hasPupilModuleAccess()) throw new Error("Online quizzes need Pupil Module access for your school or tutor organisation.");
+  const sections = [...worksheetState.sections];
+  if (!sections.length) throw new Error("First add at least one question block.");
+
+  const assessmentOptions = worksheetAssessmentOptions();
+  const fallbackMarks = Number(assessmentOptions.marksPerQuestion) || 1;
+  const presentation = worksheetPresentationOptions(assessmentOptions.assessment);
+  const classGroupId = document.getElementById("worksheetQuizClassGroup")?.value || "";
+  const classGroup = classTaskGroupById(classGroupId);
+  if (classGroupId && !classGroup) throw new Error("Choose an active class tracker, or leave the class tracker blank.");
+
+  setWorksheetQuizStatus("Generating the online quiz questions...");
+  const worksheet = await generateWorksheetFromSections(sections, {
+    assessment: true,
+    marksPerQuestion: fallbackMarks
+  });
+  if (!worksheet?.ok || !worksheet.problems?.length) throw new Error("No quiz questions were generated. Try a different block.");
+  worksheetState.worksheet = worksheet;
+  renderWorksheetPreview(worksheet, { answers: false, steps: false, assessment: true, marksPerQuestion: fallbackMarks });
+
+  const questions = worksheetQuizQuestionsFromWorksheet(worksheet, fallbackMarks);
+  const passPercent = Math.max(0, Math.min(100, Number(document.getElementById("worksheetQuizPassPercent")?.value || 100)));
+  const createRetries = Boolean(document.getElementById("worksheetQuizRetry")?.checked);
+  const attemptSets = [];
+  const maxAttempts = passPercent > 0 && createRetries ? 3 : 1;
+  for (let attemptIndex = 1; attemptIndex < maxAttempts; attemptIndex += 1) {
+    setWorksheetQuizStatus(`Generating retry set ${attemptIndex + 1}...`);
+    try {
+      const retryWorksheet = await generateWorksheetFromSections(sections, {
+        assessment: true,
+        marksPerQuestion: fallbackMarks
+      });
+      const retryQuestions = worksheetQuizQuestionsFromWorksheet(retryWorksheet, fallbackMarks);
+      if (retryQuestions.length) {
+        attemptSets.push({
+          attempt_index: attemptIndex,
+          questions: retryQuestions
+        });
+      }
+    } catch (_) {
+      // Keep the first quiz usable even if a reserve set fails to generate.
+    }
+  }
+
+  const sourceLabels = worksheetQuizSourceLabels(worksheet);
+  const expiresAt = dateInputToIso(document.getElementById("worksheetQuizExpires")?.value, true);
+  const taskTitle = worksheetQuizTitleFromPresentation(presentation.title);
+  const totalQuestions = questions.length;
+  setWorksheetQuizStatus("Creating pupil join code...");
+  const payload = await classTaskApi("create", {
+    method: "POST",
+    auth: true,
+    body: {
+      title: taskTitle,
+      instructions: presentation.instruction,
+      ...sourceLabels,
+      questions,
+      expires_at: expiresAt,
+      settings: {
+        show_answers_after_submit: true,
+        allow_multiple_submissions: false,
+        pass_percent: passPercent,
+        max_attempts: Math.max(1, 1 + attemptSets.length),
+        attempt_sets: attemptSets,
+        task_mode: "fixed_task",
+        coverage_mode: "selected_type",
+        minimum_questions: totalQuestions,
+        time_target_minutes: 0,
+        score_only_answered: false,
+        source_level_id: sourceLabels.source_level_label,
+        source_type_id: sourceLabels.source_type_label,
+        source_count: totalQuestions,
+        source_marks: fallbackMarks,
+        class_group_id: classGroup?.id || "",
+        class_group_name: classGroup?.name || "",
+        roster_required: Boolean(classGroup?.id)
+      }
+    }
+  });
+
+  const task = payload.task || {};
+  const code = normaliseClassTaskCode(task.join_code || "");
+  if (!code) throw new Error("The quiz was created, but no join code was returned. Open the Pupil Module to check the task.");
+  const link = classTaskJoinUrl(code);
+  worksheetState.quizCode = code;
+  worksheetState.quizLink = link;
+  const result = document.getElementById("worksheetQuizResult");
+  if (result) {
+    result.hidden = false;
+    result.innerHTML = `<strong>Code: ${escapeHtml(code)}</strong><a href="#/pupil/${escapeHtml(code)}">Open pupil quiz</a><button class="button subtle" type="button" data-copy-worksheet-quiz="${escapeHtml(link)}">Copy link</button>`;
+    bindWorksheetQuizResultActions();
+  }
+  await loadClassTasks({ force: true, quiet: true });
+  setWorksheetQuizStatus(`Created online quiz with ${totalQuestions} question${totalQuestions === 1 ? "" : "s"}.`, "success");
+}
+
+function bindWorksheetQuizResultActions() {
+  document.querySelectorAll("[data-copy-worksheet-quiz]").forEach((button) => {
+    if (button.dataset.bound === "true") return;
+    button.dataset.bound = "true";
+    button.addEventListener("click", async () => {
+      const link = button.dataset.copyWorksheetQuiz || worksheetState.quizLink;
+      try {
+        await navigator.clipboard.writeText(link);
+        setWorksheetQuizStatus("Pupil quiz link copied.", "success");
+      } catch (_) {
+        setWorksheetQuizStatus("Open the pupil quiz link and copy it from the address bar.", "error");
+      }
+    });
+  });
+}
+
 function renderWorksheetPreview(worksheet, options = {}) {
   const preview = document.getElementById("worksheetPreview");
   const printButton = document.getElementById("printWorksheet");
@@ -14873,6 +15104,7 @@ function renderWorksheetPreview(worksheet, options = {}) {
 function resetWorksheetBuilder() {
   const preview = document.getElementById("worksheetPreview");
   const printButton = document.getElementById("printWorksheet");
+  const quizResult = document.getElementById("worksheetQuizResult");
   const assessmentMode = document.getElementById("worksheetAssessmentMode");
   const assessmentPanel = document.getElementById("worksheetAssessmentPanel");
   const marksInput = document.getElementById("worksheetMarks");
@@ -14880,6 +15112,8 @@ function resetWorksheetBuilder() {
   const paperInstructionInput = document.getElementById("worksheetPaperInstruction");
   worksheetState.sections = [];
   worksheetState.worksheet = null;
+  worksheetState.quizLink = "";
+  worksheetState.quizCode = "";
   worksheetState.lastAddedSignature = "";
   if (assessmentMode) assessmentMode.checked = false;
   if (assessmentPanel) assessmentPanel.hidden = true;
@@ -14888,10 +15122,15 @@ function resetWorksheetBuilder() {
   if (paperInstructionInput) paperInstructionInput.value = "Complete the following questions. Show working where appropriate.";
   renderWorksheetSections();
   if (preview) {
-    preview.innerHTML = `<div class="empty-state">Choose the questions, add the selected block, then create a printable worksheet.</div>`;
+    preview.innerHTML = `<div class="empty-state">Choose the questions, add the selected block, then create a printable worksheet or online quiz.</div>`;
   }
   if (printButton) printButton.disabled = true;
+  if (quizResult) {
+    quizResult.hidden = true;
+    quizResult.innerHTML = "";
+  }
   updateWorksheetFlow();
+  setWorksheetQuizStatus(isSignedIn() && hasPupilModuleAccess() ? "Available after adding question blocks." : "Sign in through a school or tutor account with Pupil Module access.");
   setWorksheetStatus("Worksheet selections cleared. Choose options to start again.", "success");
 }
 
@@ -14902,6 +15141,8 @@ function bindWorksheetGenerator() {
   const previewPane = document.getElementById("worksheetPreview");
   const printButton = document.getElementById("printWorksheet");
   const addSectionButton = document.getElementById("addWorksheetSection");
+  const createQuizButton = document.getElementById("createWorksheetQuiz");
+  const quizGroupSelect = document.getElementById("worksheetQuizClassGroup");
   const resetButton = document.getElementById("resetWorksheet");
   const assessmentMode = document.getElementById("worksheetAssessmentMode");
   const assessmentPanel = document.getElementById("worksheetAssessmentPanel");
@@ -14926,12 +15167,28 @@ function bindWorksheetGenerator() {
   toolSelect.value = worksheetState.toolSlug;
   loadWorksheetTool(selectedWorksheetTool());
   renderWorksheetSections();
+  updateWorksheetQuizGroupSelect();
+  loadWorksheetQuizGroups();
+  bindWorksheetQuizResultActions();
 
   toolSelect.addEventListener("change", () => {
     loadWorksheetTool(selectedWorksheetTool());
   });
 
   addSectionButton?.addEventListener("click", addWorksheetSection);
+  quizGroupSelect?.addEventListener("change", () => {
+    if (quizGroupSelect.value) state.classTaskSelectedGroupId = quizGroupSelect.value;
+  });
+  createQuizButton?.addEventListener("click", async () => {
+    createQuizButton.disabled = true;
+    try {
+      await createWorksheetQuizFromSections();
+    } catch (error) {
+      setWorksheetQuizStatus(error.message || "The online quiz could not be created.", "error");
+    } finally {
+      updateWorksheetFlow();
+    }
+  });
   resetButton?.addEventListener("click", resetWorksheetBuilder);
   [paperTitleInput, paperInstructionInput].forEach((input) => {
     input?.addEventListener("input", () => {
@@ -23346,7 +23603,7 @@ function renderRoute() {
       app.innerHTML = `
         ${pageHeader(
           "Worksheet Builder",
-          "Build printable worksheets and assessments from topic blocks. Choose the questions, add the block, then create the sheet.",
+          "Build printable worksheets, assessments, and online pupil quizzes from topic blocks. Choose the questions, add the block, then create the resource.",
           "",
           "worksheet-page-header"
         )}
@@ -23358,7 +23615,7 @@ function renderRoute() {
       app.innerHTML = `
         ${pageHeader(
           "Worksheet Builder",
-          "Build printable worksheets and assessments from topic blocks. Choose the questions, add the block, then create the sheet.",
+          "Build printable worksheets, assessments, and online pupil quizzes from topic blocks. Choose the questions, add the block, then create the resource.",
           "",
           "worksheet-page-header"
         )}

@@ -7869,6 +7869,107 @@ button.certification-course-card {
   line-height: 1.25;
 }
 
+.worksheet-quiz-panel {
+  display: grid;
+  gap: 7px;
+  padding: 8px;
+  border: 1px solid rgba(111, 76, 195, 0.22);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(245, 243, 255, 0.88), rgba(236, 253, 253, 0.72)),
+    #ffffff;
+}
+
+.worksheet-quiz-heading {
+  display: grid;
+  gap: 2px;
+}
+
+.worksheet-quiz-heading strong {
+  color: #282450;
+  font-size: 0.86rem;
+}
+
+.worksheet-quiz-heading span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.worksheet-quiz-panel label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.worksheet-quiz-panel select,
+.worksheet-quiz-panel input {
+  width: 100%;
+  min-height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 8px;
+  background: white;
+  color: var(--ink);
+  font-size: 0.82rem;
+}
+
+.worksheet-quiz-settings {
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 7px;
+}
+
+.worksheet-quiz-check {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  color: #282450 !important;
+  line-height: 1.25;
+}
+
+.worksheet-quiz-button {
+  width: 100%;
+  min-height: 36px !important;
+  font-weight: 900;
+}
+
+.worksheet-quiz-result {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  justify-items: start;
+  gap: 6px;
+  padding: 7px;
+  border: 1px solid rgba(23, 184, 179, 0.28);
+  border-radius: 8px;
+  background: #f2fffd;
+}
+
+.worksheet-quiz-result[hidden] {
+  display: none;
+}
+
+.worksheet-quiz-result strong {
+  color: #106a6e;
+  font-size: 0.78rem;
+}
+
+.worksheet-quiz-result a {
+  color: #4c2d88;
+  font-size: 0.74rem;
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.worksheet-quiz-result .button {
+  min-height: 28px;
+  padding: 4px 7px;
+  font-size: 0.7rem;
+}
+
 .worksheet-print-button {
   width: 100%;
   min-height: 38px !important;
@@ -9858,6 +9959,11 @@ sup .worksheet-fraction > span:last-child {
     height: auto;
     padding-bottom: 12px;
     scroll-padding-bottom: 0;
+  }
+
+  .worksheet-quiz-settings,
+  .worksheet-quiz-result {
+    grid-template-columns: 1fr;
   }
 
   .coverage-home-band,
