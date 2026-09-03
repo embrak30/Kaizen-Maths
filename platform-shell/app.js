@@ -15391,6 +15391,8 @@ function classTaskStripHtml(value) {
 
 function classTaskNormaliseSuperscripts(value) {
   const superscriptMap = {
+    "⁺": "+",
+    "⁻": "-",
     "⁰": "0",
     "¹": "1",
     "²": "2",
@@ -15402,7 +15404,7 @@ function classTaskNormaliseSuperscripts(value) {
     "⁸": "8",
     "⁹": "9"
   };
-  return String(value ?? "").replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, (match) => `^${[...match].map((char) => superscriptMap[char] || "").join("")}`);
+  return String(value ?? "").replace(/[⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, (match) => `^${[...match].map((char) => superscriptMap[char] || "").join("")}`);
 }
 
 function classTaskNormaliseAnswer(value) {
@@ -15413,6 +15415,7 @@ function classTaskNormaliseAnswer(value) {
     .replace(/\(([^()]+)\)\s*\/\s*\(([^()]+)\)/g, "$1/$2")
     .replace(/\^\(([^()]+)\)/g, "^$1")
     .replace(/\\sqrt\s*\{([^{}]+)\}/g, "sqrt($1)")
+    .replace(/\b(-?\d+|[a-z][a-z0-9]*)\s+over\s+(-?\d+|[a-z][a-z0-9]*)\b/g, "$1/$2")
     .replace(/\\left|\\right/g, "")
     .replace(/\\times|×/g, "*")
     .replace(/\\div|÷/g, "/")
@@ -15427,12 +15430,21 @@ function classTaskNormaliseAnswer(value) {
     .replace(/[.;,]+$/g, "");
 }
 
-function classTaskAcceptableAnswers(expected) {
-  const clean = classTaskNormaliseAnswer(expected);
-  const answers = new Set([clean]);
-  const withoutVariable = clean.replace(/^[a-z][a-z0-9_]*=/, "");
-  if (withoutVariable) answers.add(withoutVariable);
+function classTaskAnswerVariants(value) {
+  const answers = new Set();
+  const parts = String(value ?? "").split(/\bor\b|\/\//i);
+  parts.forEach((part) => {
+    const clean = classTaskNormaliseAnswer(part);
+    if (!clean) return;
+    answers.add(clean);
+    const withoutVariable = clean.replace(/^[a-z][a-z0-9_]*=/, "");
+    if (withoutVariable) answers.add(withoutVariable);
+  });
   return [...answers].filter(Boolean);
+}
+
+function classTaskAcceptableAnswers(expected) {
+  return classTaskAnswerVariants(expected);
 }
 
 function classTaskScoreSubmission(questions = [], answers = {}, working = {}, options = {}) {
@@ -15447,11 +15459,12 @@ function classTaskScoreSubmission(questions = [], answers = {}, working = {}, op
     const marks = Number(question.marks) || 1;
     const accepted = classTaskAcceptableAnswers(expected);
     const submittedClean = classTaskNormaliseAnswer(submitted);
+    const submittedVariants = classTaskAnswerVariants(submitted);
     const attempted = Boolean(submittedClean || String(workingText || "").trim());
     if (attempted) attemptedCount += 1;
     const scoreThisQuestion = !(options.scoreOnlyAnswered && !attempted);
     const markable = Boolean(accepted.length && scoreThisQuestion);
-    const correct = Boolean(markable && submittedClean && accepted.includes(submittedClean));
+    const correct = Boolean(markable && submittedVariants.some((entry) => accepted.includes(entry)));
     if (markable) {
       maxScore += marks;
       if (correct) autoScore += marks;

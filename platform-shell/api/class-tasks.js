@@ -319,6 +319,8 @@ function stripHtml(value) {
 
 function normaliseSuperscripts(value) {
   const superscriptMap = {
+    "⁺": "+",
+    "⁻": "-",
     "⁰": "0",
     "¹": "1",
     "²": "2",
@@ -330,7 +332,7 @@ function normaliseSuperscripts(value) {
     "⁸": "8",
     "⁹": "9"
   };
-  return String(value ?? "").replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, (match) => `^${[...match].map((char) => superscriptMap[char] || "").join("")}`);
+  return String(value ?? "").replace(/[⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, (match) => `^${[...match].map((char) => superscriptMap[char] || "").join("")}`);
 }
 
 function normaliseMathAnswer(value) {
@@ -341,6 +343,7 @@ function normaliseMathAnswer(value) {
     .replace(/\(([^()]+)\)\s*\/\s*\(([^()]+)\)/g, "$1/$2")
     .replace(/\^\(([^()]+)\)/g, "^$1")
     .replace(/\\sqrt\s*\{([^{}]+)\}/g, "sqrt($1)")
+    .replace(/\b(-?\d+|[a-z][a-z0-9]*)\s+over\s+(-?\d+|[a-z][a-z0-9]*)\b/g, "$1/$2")
     .replace(/\\left|\\right/g, "")
     .replace(/\\times|×/g, "*")
     .replace(/\\div|÷/g, "/")
@@ -355,16 +358,19 @@ function normaliseMathAnswer(value) {
   return text.replace(/[.;,]+$/g, "");
 }
 
-function acceptableAnswers(expected) {
-  const clean = normaliseMathAnswer(expected);
-  const answers = new Set([clean]);
-  const withoutVariable = clean.replace(/^[a-z][a-z0-9_]*=/, "");
-  if (withoutVariable) answers.add(withoutVariable);
-  clean.split(/\bor\b|\/\//).forEach((part) => {
+function answerVariants(value) {
+  const answers = new Set();
+  String(value ?? "").split(/\bor\b|\/\//i).forEach((part) => {
     const option = normaliseMathAnswer(part);
     if (option) answers.add(option);
+    const withoutVariable = option.replace(/^[a-z][a-z0-9_]*=/, "");
+    if (withoutVariable) answers.add(withoutVariable);
   });
   return [...answers].filter(Boolean);
+}
+
+function acceptableAnswers(expected) {
+  return answerVariants(expected);
 }
 
 function scoreSubmission(questions, answers, working = {}, options = {}) {
@@ -379,11 +385,12 @@ function scoreSubmission(questions, answers, working = {}, options = {}) {
     const mark = Number(question.marks) || 1;
     const accepted = acceptableAnswers(expected);
     const submittedClean = normaliseMathAnswer(submitted);
+    const submittedVariants = answerVariants(submitted);
     const attempted = Boolean(submittedClean || String(workingText || "").trim());
     if (attempted) attemptedCount += 1;
     const scoreThisQuestion = !(options.scoreOnlyAnswered && !attempted);
     const markable = Boolean(accepted.length && scoreThisQuestion);
-    const correct = markable && accepted.includes(submittedClean);
+    const correct = Boolean(markable && submittedVariants.some((entry) => accepted.includes(entry)));
     if (accepted.length) {
       if (scoreThisQuestion) maxScore += mark;
       if (correct) autoScore += mark;
