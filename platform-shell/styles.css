@@ -68,7 +68,7 @@ body.pupil-shell-active #app {
   height: 100dvh;
   min-height: 100dvh;
   overflow: hidden;
-  padding: clamp(14px, 2.4vw, 28px);
+  padding: clamp(8px, 1.7vw, 18px);
   background:
     radial-gradient(circle at 4% 6%, rgba(23, 184, 179, 0.22), transparent 28%),
     radial-gradient(circle at 98% 2%, rgba(249, 115, 22, 0.16), transparent 30%),
@@ -4955,7 +4955,7 @@ button.certification-course-card {
   min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 10px;
+  gap: 8px;
   align-content: start;
   overflow: hidden;
 }
@@ -5207,7 +5207,7 @@ button.certification-course-card {
 
 .pupil-workspace-layout {
   display: grid;
-  grid-template-columns: 96px minmax(0, 1fr) 150px;
+  grid-template-columns: 94px minmax(0, 1fr) 142px;
   gap: 8px;
   min-height: 0;
   overflow: hidden;
@@ -5315,7 +5315,7 @@ button.certification-course-card {
   display: none;
   height: 100%;
   min-height: 0;
-  grid-template-columns: 34px minmax(0, 1fr) auto;
+  grid-template-columns: 34px minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
   gap: 8px;
   padding: 10px;
@@ -5354,6 +5354,7 @@ button.certification-course-card {
 
 .pupil-workspace-list .pupil-question-content {
   max-height: min(22vh, 190px);
+  padding-right: 76px;
 }
 
 .pupil-question-content {
@@ -5597,34 +5598,42 @@ button.certification-course-card {
 .pupil-math-rail {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 8px;
+  gap: 5px;
+  overflow: hidden;
 }
 
 .pupil-math-toolbar-rail {
   display: grid;
   grid-template-columns: 1fr;
   align-content: start;
-  gap: 5px;
+  gap: 4px;
   margin: 0;
-  overflow: auto;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 .pupil-math-toolbar-rail button {
   width: 100%;
   min-width: 0;
-  min-height: 36px;
+  min-height: 30px;
   font-family: var(--body-font);
-  grid-template-columns: 36px minmax(0, 1fr);
-  padding: 5px 8px;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 5px;
+  padding: 3px 6px;
 }
 
 .pupil-math-toolbar-rail .pupil-tool-fraction {
-  min-width: 28px;
-  font-size: 0.78rem;
+  min-width: 24px;
+  font-size: 0.7rem;
+}
+
+.pupil-math-toolbar-rail .pupil-tool-symbol {
+  min-width: 24px;
+  font-size: 0.9rem;
 }
 
 .pupil-math-toolbar-rail button > span:last-child:not(.pupil-tool-symbol):not(.pupil-tool-fraction) {
-  font-size: 0.6rem;
+  font-size: 0.56rem;
 }
 
 .pupil-math-toolbar button:hover,
@@ -5658,12 +5667,19 @@ button.certification-course-card {
   white-space: nowrap;
 }
 
+.pupil-workspace-list .pupil-question-marks {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+}
+
 .pupil-submit-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 38px;
-  padding: 7px 10px;
+  min-height: 34px;
+  padding: 6px 10px;
   border: 1px solid rgba(249, 115, 22, 0.2);
   border-radius: 8px;
   background: rgba(255, 247, 237, 0.76);
@@ -5672,7 +5688,7 @@ button.certification-course-card {
 .pupil-submit-row p {
   margin: 0;
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
 }
 
 .pupil-submit-row p strong {
@@ -10995,7 +11011,7 @@ sup .worksheet-fraction > span:last-child {
 
   .pupil-math-toolbar-rail {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    overflow: visible;
+    overflow-y: auto;
   }
 
   .pupil-math-toolbar button {
@@ -11024,7 +11040,10 @@ sup .worksheet-fraction > span:last-child {
   }
 
   .pupil-workspace-list .pupil-question-marks {
-    grid-column: 2 / -1;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    grid-column: auto;
   }
 
   .pupil-question-content {
