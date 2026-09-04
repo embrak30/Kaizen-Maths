@@ -66,6 +66,11 @@ body.pupil-shell-active .main-wrap {
 body.pupil-shell-active #app {
   min-height: 100vh;
   padding: clamp(14px, 2.4vw, 28px);
+  background:
+    radial-gradient(circle at 4% 6%, rgba(23, 184, 179, 0.22), transparent 28%),
+    radial-gradient(circle at 98% 2%, rgba(249, 115, 22, 0.16), transparent 30%),
+    radial-gradient(circle at 72% 92%, rgba(111, 76, 195, 0.18), transparent 34%),
+    linear-gradient(135deg, #f7ffff 0%, #fbf9ff 52%, #fff8ed 100%);
 }
 
 button,
@@ -4957,10 +4962,10 @@ button.certification-course-card {
   align-items: center;
   gap: 12px;
   padding: 8px 12px;
-  border: 1px solid rgba(23, 184, 179, 0.22);
+  border: 1px solid rgba(23, 184, 179, 0.34);
   border-radius: 10px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(231, 251, 250, 0.78)),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(231, 251, 250, 0.84) 48%, rgba(255, 247, 237, 0.86)),
     var(--paper);
   box-shadow: 0 16px 36px rgba(23, 32, 51, 0.07);
 }
@@ -4985,7 +4990,7 @@ button.certification-course-card {
 .pupil-only-school {
   padding: 7px 10px;
   border-radius: 999px;
-  background: rgba(111, 76, 195, 0.11);
+  background: linear-gradient(135deg, rgba(111, 76, 195, 0.14), rgba(23, 184, 179, 0.12));
   color: #49308f;
   font-size: 0.82rem;
   font-weight: 900;
@@ -5122,6 +5127,10 @@ button.certification-course-card {
   gap: 10px;
   overflow: hidden;
   padding: 12px;
+  border-color: rgba(23, 184, 179, 0.26);
+  background:
+    linear-gradient(135deg, rgba(231, 251, 250, 0.9), rgba(241, 239, 255, 0.82) 58%, rgba(255, 247, 237, 0.82)),
+    #ffffff;
 }
 
 .pupil-task-head {
@@ -5129,8 +5138,10 @@ button.certification-course-card {
   grid-template-columns: minmax(0, 1fr) minmax(180px, 260px);
   gap: 12px;
   align-items: end;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(217, 224, 234, 0.9);
+  padding: 10px;
+  border: 1px solid rgba(23, 184, 179, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .pupil-task-head h2 {
@@ -5197,12 +5208,19 @@ button.certification-course-card {
 .pupil-question-nav,
 .pupil-math-rail {
   min-height: 0;
-  border: 1px solid rgba(217, 224, 234, 0.9);
+  border: 1px solid rgba(23, 184, 179, 0.24);
   border-radius: 8px;
   background:
-    linear-gradient(145deg, rgba(231, 251, 250, 0.7), rgba(255, 255, 255, 0.96)),
+    linear-gradient(145deg, rgba(231, 251, 250, 0.94), rgba(255, 247, 237, 0.66)),
     white;
   padding: 7px;
+}
+
+.pupil-math-rail {
+  border-color: rgba(111, 76, 195, 0.22);
+  background:
+    linear-gradient(145deg, rgba(241, 239, 255, 0.92), rgba(231, 251, 250, 0.7)),
+    white;
 }
 
 .pupil-question-nav {
@@ -5233,7 +5251,7 @@ button.certification-course-card {
   min-height: 34px;
   border: 1px solid rgba(23, 184, 179, 0.26);
   border-radius: 7px;
-  background: white;
+  background: rgba(255, 255, 255, 0.92);
   color: var(--ink);
   cursor: pointer;
   font: inherit;
@@ -5243,14 +5261,14 @@ button.certification-course-card {
 
 .pupil-question-tabs button.active {
   border-color: transparent;
-  background: var(--teal);
+  background: linear-gradient(135deg, var(--teal), var(--violet));
   color: white;
   box-shadow: 0 8px 18px rgba(15, 118, 110, 0.18);
 }
 
 .pupil-question-tabs button.answered:not(.active) {
   border-color: rgba(19, 138, 99, 0.34);
-  background: rgba(240, 253, 244, 0.96);
+  background: linear-gradient(135deg, rgba(240, 253, 244, 0.98), rgba(231, 251, 250, 0.92));
   color: #126044;
 }
 
@@ -5278,9 +5296,11 @@ button.certification-course-card {
   gap: 10px;
   align-items: start;
   padding: 12px;
-  border: 1px solid rgba(217, 224, 234, 0.9);
+  border: 1px solid rgba(23, 184, 179, 0.24);
   border-radius: 8px;
-  background: #fff;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 253, 255, 0.92)),
+    #fff;
 }
 
 .pupil-workspace-list .pupil-question-card {
@@ -5304,7 +5324,7 @@ button.certification-course-card {
   display: grid;
   place-items: center;
   border-radius: 999px;
-  background: var(--ink);
+  background: linear-gradient(135deg, #172033, var(--violet));
   color: white;
   font-weight: 950;
 }
@@ -5333,8 +5353,8 @@ button.certification-course-card {
   overflow: auto;
   padding: 7px;
   border-radius: 8px;
-  background: #fbfdff;
-  border: 1px solid rgba(217, 224, 234, 0.72);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(23, 184, 179, 0.18);
 }
 
 .pupil-question-instruction {
@@ -5376,6 +5396,11 @@ button.certification-course-card {
 .pupil-answer-stack {
   display: grid;
   gap: 5px;
+  align-content: start;
+  padding: 9px;
+  border: 1px solid rgba(23, 184, 179, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
 }
 
 .pupil-answer-stack small {
@@ -5392,7 +5417,7 @@ button.certification-course-card {
   padding: 7px 10px;
   border: 1px dashed rgba(23, 184, 179, 0.34);
   border-radius: 7px;
-  background: rgba(247, 255, 255, 0.92);
+  background: #ffffff;
   color: var(--ink);
   font-family: var(--question-math-font);
   font-size: 1rem;
@@ -5427,6 +5452,10 @@ button.certification-course-card {
   grid-template-rows: auto auto auto minmax(0, 1fr);
   gap: 6px;
   min-height: 0;
+  padding: 9px;
+  border: 1px solid rgba(111, 76, 195, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
 }
 
 .pupil-working-head {
@@ -5437,7 +5466,7 @@ button.certification-course-card {
 }
 
 .pupil-working-head span {
-  color: #334155;
+  color: #49308f;
   font-size: 0.82rem;
   font-weight: 850;
 }
@@ -5497,9 +5526,11 @@ button.certification-course-card {
   gap: 7px;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(23, 184, 179, 0.24);
+  border: 1px solid rgba(111, 76, 195, 0.2);
   border-radius: 7px;
-  background: #f7ffff;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(231, 251, 250, 0.84)),
+    #f7ffff;
   color: var(--ink);
   cursor: pointer;
   font-family: var(--math-font);
@@ -5624,8 +5655,10 @@ button.certification-course-card {
   align-items: center;
   gap: 12px;
   min-height: 42px;
-  padding-top: 7px;
-  border-top: 1px solid rgba(217, 224, 234, 0.9);
+  padding: 8px 10px;
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 247, 237, 0.76);
 }
 
 .pupil-submit-row p {
