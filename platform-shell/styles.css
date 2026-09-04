@@ -5493,17 +5493,21 @@ button.certification-course-card {
 }
 
 .pupil-tool-symbol {
-  display: inline-grid;
-  place-items: center;
-  min-width: 22px;
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 28px;
   color: var(--teal-dark);
   font-family: var(--math-font);
-  font-size: 1.08rem;
+  font-size: 1rem;
   font-weight: 900;
+  line-height: 1;
 }
 
 .pupil-tool-symbol sup {
-  font-size: 0.62em;
+  margin-left: 1px;
+  font-size: 0.58em;
+  line-height: 1;
 }
 
 .pupil-tool-fraction {
@@ -5542,7 +5546,7 @@ button.certification-course-card {
   display: grid;
   grid-template-columns: 1fr;
   align-content: start;
-  gap: 6px;
+  gap: 5px;
   margin: 0;
   overflow: auto;
 }
@@ -5550,8 +5554,19 @@ button.certification-course-card {
 .pupil-math-toolbar-rail button {
   width: 100%;
   min-width: 0;
-  min-height: 42px;
+  min-height: 36px;
   font-family: var(--body-font);
+  grid-template-columns: 36px minmax(0, 1fr);
+  padding: 5px 8px;
+}
+
+.pupil-math-toolbar-rail .pupil-tool-fraction {
+  min-width: 28px;
+  font-size: 0.78rem;
+}
+
+.pupil-math-toolbar-rail button > span:last-child:not(.pupil-tool-symbol):not(.pupil-tool-fraction) {
+  font-size: 0.6rem;
 }
 
 .pupil-math-toolbar button:hover,
