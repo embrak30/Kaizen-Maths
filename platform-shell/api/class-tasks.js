@@ -339,81 +339,375 @@ function normaliseMathAnswer(value) {
   let text = normaliseSuperscripts(stripHtml(value)).toLowerCase();
   text = text
     .replace(/\\dfrac/g, "\\frac")
-    .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, "$1/$2")
-    .replace(/\(([^()]+)\)\s*\/\s*\(([^()]+)\)/g, "$1/$2")
+    .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, "($1)/($2)")
+    .replace(/\(([^()]+)\)\s*\/\s*\(([^()]+)\)/g, "($1)/($2)")
     .replace(/\^\(([^()]+)\)/g, "^$1")
     .replace(/\\sqrt\s*\{([^{}]+)\}/g, "sqrt($1)")
     .replace(/\b(-?\d+|[a-z][a-z0-9]*)\s+over\s+(-?\d+|[a-z][a-z0-9]*)\b/g, "$1/$2")
     .replace(/\\left|\\right/g, "")
+    .replace(/\\(sin|cos|tan|sec|csc|cot|ln|log)/g, "$1")
     .replace(/\\times|×/g, "*")
+    .replace(/\\cdot|·/g, "*")
     .replace(/\\div|÷/g, "/")
     .replace(/\\leq?|≤/g, "<=")
     .replace(/\\geq?|≥/g, ">=")
     .replace(/\\pi|π/g, "pi")
-    .replace(/√\s*\(?([^)]*)\)?/g, "sqrt($1)")
+    .replace(/√\s*\(([^()]+)\)/g, "sqrt($1)")
+    .replace(/√\s*([a-z0-9.]+)/g, "sqrt($1)")
     .replace(/[−–—]/g, "-")
     .replace(/\\\(|\\\)|\\\[|\\\]|\$|\{|\}/g, "")
     .replace(/\btherefore\b|\banswer\b|\bresult\b/g, "")
+    .replace(/\b([a-z])([2-9])\b/g, "$1^$2")
     .replace(/\s+/g, "");
   return text.replace(/[.;,]+$/g, "");
 }
 
-function canonicalLinearTerm(term) {
-  const negative = term.startsWith("-");
-  const body = term.replace(/^[+-]/, "");
-  const variableMatch = body.match(/^(\d+(?:\.\d+)?\*?)?([a-z])(?:\^(\d+))?$/);
-  if (variableMatch) {
-    const coefficient = String(variableMatch[1] || "").replace("*", "");
-    const variable = variableMatch[2];
-    const power = variableMatch[3] ? `^${variableMatch[3]}` : "";
-    return {
-      kind: "variable",
-      key: `${variable}${power}`,
-      body: coefficient && coefficient !== "1" ? `${coefficient}${variable}${power}` : `${variable}${power}`,
-      negative
-    };
+const mathKnownNames = ["sqrt", "sin", "cos", "tan", "sec", "csc", "cot", "ln", "log", "abs", "pi"];
+const mathFunctionNames = new Set(mathKnownNames.filter((name) => name !== "pi"));
+const mathSampleValues = [-5, -3, -2, -1, -0.5, 0, 0.5, 1, 2, 3, 5, 7, 11];
+
+function mathTokens(value) {
+  const source = String(value || "").replace(/\s+/g, "");
+  const tokens = [];
+  let index = 0;
+  while (index < source.length) {
+    const char = source[index];
+    if (/[0-9.]/.test(char)) {
+      const match = source.slice(index).match(/^(?:\d+(?:\.\d*)?|\.\d+)/);
+      if (!match) return null;
+      tokens.push({ type: "number", value: Number(match[0]) });
+      index += match[0].length;
+      continue;
+    }
+    if (/[a-z]/.test(char)) {
+      const tail = source.slice(index);
+      const known = mathKnownNames.find((name) => tail.startsWith(name));
+      if (known) {
+        tokens.push({ type: "name", value: known });
+        index += known.length;
+      } else {
+        tokens.push({ type: "name", value: char });
+        index += 1;
+      }
+      continue;
+    }
+    if ("+-*/^(),".includes(char)) {
+      tokens.push({ type: "operator", value: char });
+      index += 1;
+      continue;
+    }
+    return null;
   }
-  if (/^\d+(?:\.\d+)?$/.test(body)) {
-    return { kind: "constant", key: "", body, negative };
+  return tokens;
+}
+
+function parseMathExpression(value) {
+  const tokens = mathTokens(value);
+  if (!tokens || !tokens.length) return null;
+  let index = 0;
+  const current = () => tokens[index] || null;
+  const take = (valueToTake) => {
+    if (current()?.value !== valueToTake) return false;
+    index += 1;
+    return true;
+  };
+  const startsPrimary = (token) => Boolean(token && (token.type === "number" || token.type === "name" || token.value === "("));
+
+  function parseAddSub() {
+    let node = parseMulDiv();
+    if (!node) return null;
+    while (current()?.value === "+" || current()?.value === "-") {
+      const operator = current().value;
+      index += 1;
+      const right = parseMulDiv();
+      if (!right) return null;
+      node = { type: "binary", operator, left: node, right };
+    }
+    return node;
+  }
+
+  function parseMulDiv() {
+    let node = parseUnary();
+    if (!node) return null;
+    while (current()?.value === "*" || current()?.value === "/" || startsPrimary(current())) {
+      const implicit = startsPrimary(current());
+      const operator = implicit ? "*" : current().value;
+      if (!implicit) index += 1;
+      const right = parseUnary();
+      if (!right) return null;
+      node = { type: "binary", operator, left: node, right };
+    }
+    return node;
+  }
+
+  function parseUnary() {
+    if (take("+")) return parseUnary();
+    if (take("-")) {
+      const argument = parseUnary();
+      return argument ? { type: "unary", operator: "-", argument } : null;
+    }
+    return parsePower();
+  }
+
+  function parsePower() {
+    let node = parsePrimary();
+    if (!node) return null;
+    if (take("^")) {
+      const right = parseUnary();
+      if (!right) return null;
+      node = { type: "binary", operator: "^", left: node, right };
+    }
+    return node;
+  }
+
+  function parsePrimary() {
+    const token = current();
+    if (!token) return null;
+    if (token.type === "number") {
+      index += 1;
+      return { type: "number", value: token.value };
+    }
+    if (token.value === "(") {
+      index += 1;
+      const node = parseAddSub();
+      if (!take(")")) return null;
+      return node;
+    }
+    if (token.type === "name") {
+      index += 1;
+      if (token.value === "pi") return { type: "number", value: Math.PI };
+      if (mathFunctionNames.has(token.value) && startsPrimary(current())) {
+        const argument = parsePrimary();
+        return argument ? { type: "function", name: token.value, argument } : null;
+      }
+      return { type: "variable", name: token.value };
+    }
+    return null;
+  }
+
+  const ast = parseAddSub();
+  return ast && index === tokens.length ? ast : null;
+}
+
+function evaluateMathAst(node, variables = {}) {
+  if (!node) return NaN;
+  if (node.type === "number") return node.value;
+  if (node.type === "variable") return Object.prototype.hasOwnProperty.call(variables, node.name) ? variables[node.name] : NaN;
+  if (node.type === "unary") return -evaluateMathAst(node.argument, variables);
+  if (node.type === "function") {
+    const value = evaluateMathAst(node.argument, variables);
+    if (!Number.isFinite(value)) return NaN;
+    if (node.name === "sqrt") return value < -1e-10 ? NaN : Math.sqrt(Math.max(0, value));
+    if (node.name === "sin") return Math.sin(value);
+    if (node.name === "cos") return Math.cos(value);
+    if (node.name === "tan") return Math.abs(Math.cos(value)) < 1e-10 ? NaN : Math.tan(value);
+    if (node.name === "sec") return Math.abs(Math.cos(value)) < 1e-10 ? NaN : 1 / Math.cos(value);
+    if (node.name === "csc") return Math.abs(Math.sin(value)) < 1e-10 ? NaN : 1 / Math.sin(value);
+    if (node.name === "cot") return Math.abs(Math.sin(value)) < 1e-10 ? NaN : 1 / Math.tan(value);
+    if (node.name === "ln") return value <= 0 ? NaN : Math.log(value);
+    if (node.name === "log") return value <= 0 ? NaN : Math.log10(value);
+    if (node.name === "abs") return Math.abs(value);
+    return NaN;
+  }
+  if (node.type !== "binary") return NaN;
+  const left = evaluateMathAst(node.left, variables);
+  const right = evaluateMathAst(node.right, variables);
+  if (!Number.isFinite(left) || !Number.isFinite(right)) return NaN;
+  if (node.operator === "+") return left + right;
+  if (node.operator === "-") return left - right;
+  if (node.operator === "*") return left * right;
+  if (node.operator === "/") return Math.abs(right) < 1e-10 ? NaN : left / right;
+  if (node.operator === "^") {
+    const result = Math.pow(left, right);
+    return Number.isFinite(result) ? result : NaN;
+  }
+  return NaN;
+}
+
+function collectMathVariables(node, variables = new Set()) {
+  if (!node) return variables;
+  if (node.type === "variable") variables.add(node.name);
+  if (node.argument) collectMathVariables(node.argument, variables);
+  if (node.left) collectMathVariables(node.left, variables);
+  if (node.right) collectMathVariables(node.right, variables);
+  return variables;
+}
+
+function mathAssignments(variableNames) {
+  if (!variableNames.length) return [{}];
+  return Array.from({ length: 36 }, (_, sampleIndex) => Object.fromEntries(variableNames.map((name, variableIndex) => [
+    name,
+    mathSampleValues[(sampleIndex * (variableIndex + 3) + variableIndex * 2) % mathSampleValues.length]
+  ])));
+}
+
+function mathClose(left, right) {
+  return Math.abs(left - right) <= 1e-7 * Math.max(1, Math.abs(left), Math.abs(right));
+}
+
+function expressionsEquivalent(leftExpression, rightExpression) {
+  const left = parseMathExpression(leftExpression);
+  const right = parseMathExpression(rightExpression);
+  if (!left || !right) return false;
+  const variables = [...new Set([
+    ...collectMathVariables(left),
+    ...collectMathVariables(right)
+  ])].sort();
+  if (variables.length > 5) return false;
+  let validComparisons = 0;
+  for (const assignment of mathAssignments(variables)) {
+    const leftValue = evaluateMathAst(left, assignment);
+    const rightValue = evaluateMathAst(right, assignment);
+    if (!Number.isFinite(leftValue) || !Number.isFinite(rightValue)) continue;
+    if (!mathClose(leftValue, rightValue)) return false;
+    validComparisons += 1;
+  }
+  return validComparisons >= (variables.length ? 8 : 1);
+}
+
+function equationDifferenceAst(value) {
+  const parts = String(value || "").split("=");
+  if (parts.length !== 2 || !parts[0] || !parts[1]) return null;
+  const left = parseMathExpression(parts[0]);
+  const right = parseMathExpression(parts[1]);
+  return left && right ? { type: "binary", operator: "-", left, right } : null;
+}
+
+function isIsolatedNumericSolution(value) {
+  const parts = String(value || "").split("=");
+  if (parts.length !== 2 || !/^[a-z]$/.test(parts[0])) return false;
+  const right = parseMathExpression(parts[1]);
+  return Boolean(right && collectMathVariables(right).size === 0);
+}
+
+function sameIsolatedSolution(leftValue, rightValue) {
+  const leftParts = String(leftValue || "").split("=");
+  const rightParts = String(rightValue || "").split("=");
+  if (leftParts.length !== 2 || rightParts.length !== 2 || leftParts[0] !== rightParts[0]) return false;
+  return expressionsEquivalent(leftParts[1], rightParts[1]);
+}
+
+function splitAnswerList(value) {
+  const source = String(value ?? "")
+    .replace(/\bor\b/gi, "\n")
+    .replace(/([0-9a-z)])or(?=[a-z0-9(-])/gi, "$1\n");
+  const parts = [];
+  let depth = 0;
+  let buffer = "";
+  for (const char of source) {
+    if ("([{".includes(char)) depth += 1;
+    if (")]}".includes(char)) depth = Math.max(0, depth - 1);
+    if ((char === "," || char === ";" || char === "\n") && depth === 0) {
+      if (buffer.trim()) parts.push(buffer.trim());
+      buffer = "";
+    } else {
+      buffer += char;
+    }
+  }
+  if (buffer.trim()) parts.push(buffer.trim());
+  return parts;
+}
+
+function readIsolatedNumericSolutionPart(part, fallbackVariable = "") {
+  const clean = normaliseMathAnswer(part);
+  const equation = clean.match(/^([a-z])=(.+)$/);
+  if (equation) {
+    const right = parseMathExpression(equation[2]);
+    return right && collectMathVariables(right).size === 0
+      ? { variable: equation[1], value: equation[2] }
+      : null;
+  }
+  if (fallbackVariable) {
+    const value = parseMathExpression(clean);
+    return value && collectMathVariables(value).size === 0
+      ? { variable: fallbackVariable, value: clean }
+      : null;
   }
   return null;
 }
 
-function canonicalLinearExpression(value) {
-  const clean = String(value || "");
-  if (!clean || /[(){}\[\]\/\\]/.test(clean)) return "";
-  if (clean.includes("=")) {
-    const parts = clean.split("=");
-    if (parts.length !== 2 || !parts[0] || !parts[1]) return "";
-    const right = canonicalLinearExpression(parts[1]);
-    return right ? `${parts[0]}=${right}` : "";
+function expectedSolutionSet(value) {
+  const parts = splitAnswerList(value);
+  if (parts.length < 2) return null;
+  const solutions = parts.map((part) => readIsolatedNumericSolutionPart(part));
+  if (solutions.some((solution) => !solution)) return null;
+  const variable = solutions[0].variable;
+  if (solutions.some((solution) => solution.variable !== variable)) return null;
+  return { variable, values: solutions.map((solution) => solution.value) };
+}
+
+function submittedSolutionValues(value, variable) {
+  const parts = splitAnswerList(value);
+  if (!parts.length) return null;
+  const solutions = parts.map((part) => readIsolatedNumericSolutionPart(part, variable));
+  return solutions.some((solution) => !solution) ? null : solutions.map((solution) => solution.value);
+}
+
+function multiSolutionSetMatches(expected, submitted) {
+  const expectedSet = expectedSolutionSet(expected);
+  if (!expectedSet) return null;
+  const submittedValues = submittedSolutionValues(submitted, expectedSet.variable);
+  if (!submittedValues || submittedValues.length !== expectedSet.values.length) return false;
+  const used = new Set();
+  return expectedSet.values.every((expectedValue) => {
+    const matchIndex = submittedValues.findIndex((submittedValue, index) => (
+      !used.has(index) && expressionsEquivalent(expectedValue, submittedValue)
+    ));
+    if (matchIndex < 0) return false;
+    used.add(matchIndex);
+    return true;
+  });
+}
+
+function equationsEquivalent(leftEquation, rightEquation) {
+  if (isIsolatedNumericSolution(leftEquation) || isIsolatedNumericSolution(rightEquation)) {
+    return sameIsolatedSolution(leftEquation, rightEquation);
   }
-  if (!/[a-z]/.test(clean) || !/[+-]/.test(clean.replace(/^[+-]/, ""))) return "";
-  if (!/^[+-]?(?:\d+(?:\.\d+)?\*?[a-z](?:\^\d+)?|[a-z](?:\^\d+)?|\d+(?:\.\d+)?)(?:[+-](?:\d+(?:\.\d+)?\*?[a-z](?:\^\d+)?|[a-z](?:\^\d+)?|\d+(?:\.\d+)?))*$/.test(clean)) return "";
-  const parsed = (clean.match(/[+-]?[^+-]+/g) || []).map(canonicalLinearTerm);
-  if (parsed.length < 2 || parsed.some((term) => !term)) return "";
-  return parsed
-    .sort((a, b) => {
-      if (a.kind !== b.kind) return a.kind === "variable" ? -1 : 1;
-      return a.key.localeCompare(b.key);
-    })
-    .map((term, index) => `${term.negative ? "-" : index ? "+" : ""}${term.body}`)
-    .join("");
+  const left = equationDifferenceAst(leftEquation);
+  const right = equationDifferenceAst(rightEquation);
+  if (!left || !right) return false;
+  const variables = [...new Set([
+    ...collectMathVariables(left),
+    ...collectMathVariables(right)
+  ])].sort();
+  if (variables.length > 5) return false;
+  let ratio = null;
+  let validComparisons = 0;
+  for (const assignment of mathAssignments(variables)) {
+    const leftValue = evaluateMathAst(left, assignment);
+    const rightValue = evaluateMathAst(right, assignment);
+    if (!Number.isFinite(leftValue) || !Number.isFinite(rightValue)) continue;
+    const leftZero = mathClose(leftValue, 0);
+    const rightZero = mathClose(rightValue, 0);
+    if (leftZero && rightZero) {
+      validComparisons += 1;
+      continue;
+    }
+    if (leftZero !== rightZero || Math.abs(rightValue) < 1e-10) return false;
+    const nextRatio = leftValue / rightValue;
+    if (!Number.isFinite(nextRatio)) return false;
+    if (ratio === null) ratio = nextRatio;
+    if (!mathClose(nextRatio, ratio)) return false;
+    validComparisons += 1;
+  }
+  return validComparisons >= (variables.length ? 8 : 1);
+}
+
+function algebraicallyEquivalent(expected, submitted) {
+  if (!expected || !submitted || expected === submitted) return expected === submitted;
+  const expectedIsEquation = expected.includes("=");
+  const submittedIsEquation = submitted.includes("=");
+  if (expectedIsEquation || submittedIsEquation) {
+    return expectedIsEquation && submittedIsEquation && equationsEquivalent(expected, submitted);
+  }
+  return expressionsEquivalent(expected, submitted);
 }
 
 function addAnswerVariant(answers, clean) {
   if (!clean) return;
   answers.add(clean);
-  const canonical = canonicalLinearExpression(clean);
-  if (canonical) answers.add(canonical);
   const withoutVariable = clean.replace(/^[a-z][a-z0-9_]*=/, "");
-  if (withoutVariable) {
-    answers.add(withoutVariable);
-    const withoutVariableCanonical = canonicalLinearExpression(withoutVariable);
-    if (withoutVariableCanonical) answers.add(withoutVariableCanonical);
-  }
-  const canonicalWithoutVariable = canonical.replace(/^[a-z][a-z0-9_]*=/, "");
-  if (canonicalWithoutVariable && canonicalWithoutVariable !== canonical) answers.add(canonicalWithoutVariable);
+  if (withoutVariable) answers.add(withoutVariable);
 }
 
 function answerVariants(value) {
@@ -427,6 +721,12 @@ function answerVariants(value) {
 
 function acceptableAnswers(expected) {
   return answerVariants(expected);
+}
+
+function answersMatch(acceptedAnswers = [], submittedAnswers = []) {
+  return submittedAnswers.some((submitted) => acceptedAnswers.some((expected) => (
+    submitted === expected || algebraicallyEquivalent(expected, submitted)
+  )));
 }
 
 function scoreSubmission(questions, answers, working = {}, options = {}) {
@@ -446,7 +746,8 @@ function scoreSubmission(questions, answers, working = {}, options = {}) {
     if (attempted) attemptedCount += 1;
     const scoreThisQuestion = !(options.scoreOnlyAnswered && !attempted);
     const markable = Boolean(accepted.length && scoreThisQuestion);
-    const correct = Boolean(markable && submittedVariants.some((entry) => accepted.includes(entry)));
+    const multiSolutionMatch = multiSolutionSetMatches(expected, submitted);
+    const correct = Boolean(markable && (multiSolutionMatch === null ? answersMatch(accepted, submittedVariants) : multiSolutionMatch));
     if (accepted.length) {
       if (scoreThisQuestion) maxScore += mark;
       if (correct) autoScore += mark;

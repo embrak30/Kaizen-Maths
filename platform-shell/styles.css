@@ -5188,8 +5188,8 @@ button.certification-course-card {
 
 .pupil-workspace-layout {
   display: grid;
-  grid-template-columns: 112px minmax(0, 1fr) 124px;
-  gap: 10px;
+  grid-template-columns: 96px minmax(0, 1fr) 150px;
+  gap: 8px;
   min-height: 0;
 }
 
@@ -5201,7 +5201,7 @@ button.certification-course-card {
   background:
     linear-gradient(145deg, rgba(231, 251, 250, 0.7), rgba(255, 255, 255, 0.96)),
     white;
-  padding: 8px;
+  padding: 7px;
 }
 
 .pupil-question-nav {
@@ -5273,10 +5273,10 @@ button.certification-course-card {
 .pupil-question-card {
   position: relative;
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr) auto;
-  gap: 12px;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  gap: 10px;
   align-items: start;
-  padding: 14px;
+  padding: 12px;
   border: 1px solid rgba(217, 224, 234, 0.9);
   border-radius: 8px;
   background: #fff;
@@ -5286,9 +5286,9 @@ button.certification-course-card {
   display: none;
   height: 100%;
   min-height: 0;
-  grid-template-columns: 38px minmax(0, 1fr) auto;
-  gap: 10px;
-  padding: 12px;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: 8px;
+  padding: 10px;
   overflow: hidden;
 }
 
@@ -5315,15 +5315,15 @@ button.certification-course-card {
 }
 
 .pupil-workspace-list .pupil-question-main {
-  grid-template-columns: minmax(250px, 0.75fr) minmax(360px, 1fr);
-  gap: 12px;
+  grid-template-columns: minmax(180px, 0.48fr) minmax(420px, 1.52fr);
+  gap: 10px;
   align-items: stretch;
 }
 
 .pupil-question-content {
   min-height: 0;
   overflow: auto;
-  padding: 8px;
+  padding: 7px;
   border-radius: 8px;
   background: #fbfdff;
   border: 1px solid rgba(217, 224, 234, 0.72);
@@ -5337,8 +5337,8 @@ button.certification-course-card {
 
 .pupil-question-text {
   font-family: var(--math-font);
-  font-size: clamp(1.08rem, 1.8vw, 1.45rem);
-  line-height: 1.55;
+  font-size: clamp(1rem, 1.45vw, 1.26rem);
+  line-height: 1.45;
 }
 
 .pupil-answer-field {
@@ -5368,7 +5368,7 @@ button.certification-course-card {
 
 .pupil-answer-preview,
 .pupil-working-preview {
-  min-height: 38px;
+  min-height: 36px;
   display: flex;
   align-items: center;
   padding: 7px 10px;
@@ -5382,8 +5382,8 @@ button.certification-course-card {
 }
 
 .pupil-working-preview {
-  min-height: 34px;
-  max-height: 74px;
+  min-height: 30px;
+  max-height: 58px;
   align-items: flex-start;
   overflow: auto;
   font-size: 0.92rem;
@@ -5399,14 +5399,14 @@ button.certification-course-card {
 .pupil-response-grid {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 9px;
+  gap: 8px;
   min-height: 0;
 }
 
 .pupil-working-field {
   display: grid;
   grid-template-rows: auto auto auto minmax(0, 1fr);
-  gap: 7px;
+  gap: 6px;
   min-height: 0;
 }
 
@@ -5457,7 +5457,7 @@ button.certification-course-card {
 .pupil-handwriting-pad canvas {
   width: 100%;
   height: 100%;
-  min-height: 190px;
+  min-height: 220px;
   display: block;
   cursor: crosshair;
   touch-action: none;
@@ -5471,11 +5471,11 @@ button.certification-course-card {
 }
 
 .pupil-math-toolbar button {
-  min-width: 44px;
-  min-height: 38px;
+  min-width: 52px;
+  min-height: 40px;
   display: grid;
-  grid-template-columns: minmax(22px, auto) minmax(0, 1fr);
-  gap: 6px;
+  grid-template-columns: minmax(24px, auto) minmax(0, 1fr);
+  gap: 7px;
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(23, 184, 179, 0.24);
@@ -5487,7 +5487,7 @@ button.certification-course-card {
   font-size: 0.88rem;
   font-weight: 850;
   line-height: 1.05;
-  padding: 6px 7px;
+  padding: 6px 8px;
   text-align: left;
   user-select: none;
 }
@@ -5550,7 +5550,7 @@ button.certification-course-card {
 .pupil-math-toolbar-rail button {
   width: 100%;
   min-width: 0;
-  min-height: 44px;
+  min-height: 42px;
   font-family: var(--body-font);
 }
 
@@ -5562,8 +5562,8 @@ button.certification-course-card {
 }
 
 .pupil-working-field textarea {
-  min-height: 68px;
-  max-height: 118px;
+  min-height: 58px;
+  max-height: 104px;
   height: auto;
   line-height: 1.45;
   resize: vertical;
