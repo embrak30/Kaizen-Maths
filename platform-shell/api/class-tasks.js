@@ -358,13 +358,69 @@ function normaliseMathAnswer(value) {
   return text.replace(/[.;,]+$/g, "");
 }
 
+function canonicalLinearTerm(term) {
+  const negative = term.startsWith("-");
+  const body = term.replace(/^[+-]/, "");
+  const variableMatch = body.match(/^(\d+(?:\.\d+)?\*?)?([a-z])(?:\^(\d+))?$/);
+  if (variableMatch) {
+    const coefficient = String(variableMatch[1] || "").replace("*", "");
+    const variable = variableMatch[2];
+    const power = variableMatch[3] ? `^${variableMatch[3]}` : "";
+    return {
+      kind: "variable",
+      key: `${variable}${power}`,
+      body: coefficient && coefficient !== "1" ? `${coefficient}${variable}${power}` : `${variable}${power}`,
+      negative
+    };
+  }
+  if (/^\d+(?:\.\d+)?$/.test(body)) {
+    return { kind: "constant", key: "", body, negative };
+  }
+  return null;
+}
+
+function canonicalLinearExpression(value) {
+  const clean = String(value || "");
+  if (!clean || /[(){}\[\]\/\\]/.test(clean)) return "";
+  if (clean.includes("=")) {
+    const parts = clean.split("=");
+    if (parts.length !== 2 || !parts[0] || !parts[1]) return "";
+    const right = canonicalLinearExpression(parts[1]);
+    return right ? `${parts[0]}=${right}` : "";
+  }
+  if (!/[a-z]/.test(clean) || !/[+-]/.test(clean.replace(/^[+-]/, ""))) return "";
+  if (!/^[+-]?(?:\d+(?:\.\d+)?\*?[a-z](?:\^\d+)?|[a-z](?:\^\d+)?|\d+(?:\.\d+)?)(?:[+-](?:\d+(?:\.\d+)?\*?[a-z](?:\^\d+)?|[a-z](?:\^\d+)?|\d+(?:\.\d+)?))*$/.test(clean)) return "";
+  const parsed = (clean.match(/[+-]?[^+-]+/g) || []).map(canonicalLinearTerm);
+  if (parsed.length < 2 || parsed.some((term) => !term)) return "";
+  return parsed
+    .sort((a, b) => {
+      if (a.kind !== b.kind) return a.kind === "variable" ? -1 : 1;
+      return a.key.localeCompare(b.key);
+    })
+    .map((term, index) => `${term.negative ? "-" : index ? "+" : ""}${term.body}`)
+    .join("");
+}
+
+function addAnswerVariant(answers, clean) {
+  if (!clean) return;
+  answers.add(clean);
+  const canonical = canonicalLinearExpression(clean);
+  if (canonical) answers.add(canonical);
+  const withoutVariable = clean.replace(/^[a-z][a-z0-9_]*=/, "");
+  if (withoutVariable) {
+    answers.add(withoutVariable);
+    const withoutVariableCanonical = canonicalLinearExpression(withoutVariable);
+    if (withoutVariableCanonical) answers.add(withoutVariableCanonical);
+  }
+  const canonicalWithoutVariable = canonical.replace(/^[a-z][a-z0-9_]*=/, "");
+  if (canonicalWithoutVariable && canonicalWithoutVariable !== canonical) answers.add(canonicalWithoutVariable);
+}
+
 function answerVariants(value) {
   const answers = new Set();
   String(value ?? "").split(/\bor\b|\/\//i).forEach((part) => {
     const option = normaliseMathAnswer(part);
-    if (option) answers.add(option);
-    const withoutVariable = option.replace(/^[a-z][a-z0-9_]*=/, "");
-    if (withoutVariable) answers.add(withoutVariable);
+    addAnswerVariant(answers, option);
   });
   return [...answers].filter(Boolean);
 }
