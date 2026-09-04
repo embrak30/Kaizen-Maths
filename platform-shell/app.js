@@ -17084,59 +17084,195 @@ function classTaskTrackerHtml() {
   const selectedId = state.classTaskSelectedGroupId === "new" ? "new" : selectedGroup?.id || "";
   const members = selectedGroup ? classTaskGroupMemberRows(selectedGroup) : [];
   return `
-    <section class="panel class-tracker-panel">
-      <div class="class-tracker-head">
-        <div>
-          <span class="eyebrow">Class Tracker</span>
-          <h2>Stable aliases and pupil codes</h2>
-          <p>Create a roster once, then assign tasks to that class. Pupils enter only their code, while you see the same alias across tasks.</p>
+    <details class="panel class-tracker-panel" ${groups.length ? "" : "open"}>
+      <summary class="class-tracker-summary">
+        <span class="eyebrow">Class Tracker</span>
+        <strong>${escapeHtml(selectedGroup?.name || "Stable aliases and pupil codes")}</strong>
+        <small>${members.length || 0} active pupil${members.length === 1 ? "" : "s"} · manage roster</small>
+      </summary>
+      <div class="class-tracker-body">
+        <div class="class-tracker-head">
+          <div>
+            <span class="eyebrow">Roster Setup</span>
+            <h2>Stable aliases and pupil codes</h2>
+            <p>Create a roster once, then assign tasks to that class. Pupils enter only their code, while you see the same alias across tasks.</p>
+          </div>
+          <div class="button-row">
+            <button class="button subtle" type="button" id="newClassTracker">New Class</button>
+            <button class="button primary" type="button" id="saveClassTracker">Save Roster</button>
+          </div>
         </div>
-        <div class="button-row">
-          <button class="button subtle" type="button" id="newClassTracker">New Class</button>
-          <button class="button primary" type="button" id="saveClassTracker">Save Roster</button>
+        ${state.classTaskGroupsSchemaMissing ? `
+          <p class="class-task-local-note">Run the latest Supabase schema before class trackers can save across devices.</p>
+        ` : ""}
+        <div class="class-tracker-grid">
+          <label>
+            Select class
+            <select id="classTrackerSelect">
+              ${groups.length ? classTaskGroupOptions(selectedId) : ""}
+              <option value="new" ${selectedId === "new" || !groups.length ? "selected" : ""}>Create new class tracker</option>
+            </select>
+          </label>
+          <label>
+            Class name
+            <input id="classTrackerName" type="text" maxlength="120" value="${escapeHtml(selectedGroup?.name || "")}" placeholder="Example: 8A Intervention">
+          </label>
+          <label>
+            Notes
+            <input id="classTrackerNotes" type="text" maxlength="2000" value="${escapeHtml(selectedGroup?.notes || "")}" placeholder="Optional teacher notes">
+          </label>
         </div>
+        <div class="class-tracker-roster-head">
+          <span>${members.length || 0} active pupil${members.length === 1 ? "" : "s"}</span>
+          <button class="button subtle" type="button" id="addClassTrackerMember">Add Pupil</button>
+        </div>
+        <div class="class-tracker-member-header" aria-hidden="true">
+          <span>#</span>
+          <span>Alias</span>
+          <span>Pupil code</span>
+          <span>Note</span>
+          <span>Status</span>
+        </div>
+        <div class="class-tracker-members" id="classTrackerMembers">
+          ${members.length
+            ? members.map(classTaskRosterMemberRowHtml).join("")
+            : [0, 1, 2].map((_, index) => classTaskRosterMemberRowHtml({}, index)).join("")}
+        </div>
+        <div class="class-tracker-foot">
+          <p class="worksheet-status" id="classTrackerStatus">${state.classTaskGroupsLoading ? "Loading class trackers..." : "Use aliases, initials, or teacher identifiers. Avoid full student records."}</p>
+        </div>
+        ${classTaskTrackerProgressHtml(selectedGroup)}
       </div>
-      ${state.classTaskGroupsSchemaMissing ? `
-        <p class="class-task-local-note">Run the latest Supabase schema before class trackers can save across devices.</p>
-      ` : ""}
-      <div class="class-tracker-grid">
-        <label>
-          Select class
-          <select id="classTrackerSelect">
-            ${groups.length ? classTaskGroupOptions(selectedId) : ""}
-            <option value="new" ${selectedId === "new" || !groups.length ? "selected" : ""}>Create new class tracker</option>
-          </select>
-        </label>
-        <label>
-          Class name
-          <input id="classTrackerName" type="text" maxlength="120" value="${escapeHtml(selectedGroup?.name || "")}" placeholder="Example: 8A Intervention">
-        </label>
-        <label>
-          Notes
-          <input id="classTrackerNotes" type="text" maxlength="2000" value="${escapeHtml(selectedGroup?.notes || "")}" placeholder="Optional teacher notes">
-        </label>
+    </details>
+  `;
+}
+
+function classTaskTeacherGuideHtml() {
+  return `
+    <section class="panel class-task-guide">
+      <div class="class-task-guide-copy">
+        <span class="eyebrow">Pupil Assignment</span>
+        <strong>Set the work, share the code, monitor responses.</strong>
       </div>
-      <div class="class-tracker-roster-head">
-        <span>${members.length || 0} active pupil${members.length === 1 ? "" : "s"}</span>
-        <button class="button subtle" type="button" id="addClassTrackerMember">Add Pupil</button>
-      </div>
-      <div class="class-tracker-member-header" aria-hidden="true">
-        <span>#</span>
-        <span>Alias</span>
-        <span>Pupil code</span>
-        <span>Note</span>
-        <span>Status</span>
-      </div>
-      <div class="class-tracker-members" id="classTrackerMembers">
-        ${members.length
-          ? members.map(classTaskRosterMemberRowHtml).join("")
-          : [0, 1, 2].map((_, index) => classTaskRosterMemberRowHtml({}, index)).join("")}
-      </div>
-      <div class="class-tracker-foot">
-        <p class="worksheet-status" id="classTrackerStatus">${state.classTaskGroupsLoading ? "Loading class trackers..." : "Use aliases, initials, or teacher identifiers. Avoid full student records."}</p>
-      </div>
-      ${classTaskTrackerProgressHtml(selectedGroup)}
+      <ol class="class-task-guide-steps" aria-label="Pupil module workflow">
+        <li><span>1</span><strong>Choose</strong><small>Topic, level, type</small></li>
+        <li><span>2</span><strong>Set</strong><small>Marks, pass rate, expiry</small></li>
+        <li><span>3</span><strong>Share</strong><small>Join code or link</small></li>
+      </ol>
     </section>
+  `;
+}
+
+function classTaskBuilderHtml() {
+  return `
+    <article class="panel class-task-builder">
+      <div class="class-task-builder-head">
+        <div>
+          <span class="eyebrow">Teacher Task Builder</span>
+          <h2>Assign pupil work</h2>
+          <p>Choose the task, create the code, then watch pupil progress from the live task panel.</p>
+        </div>
+        <div class="class-task-builder-actions">
+          <a class="button subtle" href="#/pupil">Pupil Join Page</a>
+          <button class="button subtle" type="button" id="refreshClassTasks">Refresh</button>
+        </div>
+      </div>
+      <form id="classTaskForm" class="class-task-form">
+        <fieldset class="class-task-mode-switch">
+          <legend>Mode</legend>
+          <label>
+            <input type="radio" name="task_mode" value="fixed_task" checked>
+            <span>
+              <strong>Fixed task</strong>
+              <small>Set questions or assessment</small>
+            </span>
+          </label>
+          <label>
+            <input type="radio" name="task_mode" value="practice_room">
+            <span>
+              <strong>Practice room</strong>
+              <small>Timed independent practice</small>
+            </span>
+          </label>
+        </fieldset>
+        <div class="class-task-field-grid">
+          <label>
+            Task title
+            <input name="title" type="text" maxlength="160" placeholder="Example: Fractions starter task">
+          </label>
+          <label>
+            Class tracker
+            <select id="classTaskClassGroup" name="class_group_id">
+              ${classTaskTaskGroupSelectOptions(state.classTaskSelectedGroupId)}
+            </select>
+            <small>Use saved pupil codes, or leave as aliases only.</small>
+          </label>
+        </div>
+        <label class="class-task-wide-field">
+          Instructions
+          <textarea name="instructions" rows="1" maxlength="900">Answer each question. Show working where appropriate.</textarea>
+        </label>
+        <div class="class-task-picker-grid">
+          <label>
+            Topic tool
+            <select id="classTaskTool" name="tool">${classTaskToolOptions()}</select>
+          </label>
+          <label>
+            Level
+            <select id="classTaskLevel" name="level" disabled><option>Loading levels...</option></select>
+          </label>
+          <label>
+            Question type
+            <select id="classTaskType" name="type" disabled><option>Loading question types...</option></select>
+          </label>
+          <label class="class-task-practice-field">
+            Coverage
+            <select name="coverage_mode">
+              <option value="level_mix">Mixed question types in this level</option>
+              <option value="selected_type">Selected question type only</option>
+              <option value="tool_mix">Across all levels in this tool</option>
+            </select>
+          </label>
+        </div>
+        <div class="class-task-settings-grid">
+          <label>
+            Questions
+            <input name="count" type="number" min="1" max="40" value="5">
+          </label>
+          <label class="class-task-practice-field">
+            Minimum
+            <input name="minimum_questions" type="number" min="1" max="40" value="10">
+          </label>
+          <label class="class-task-practice-field">
+            Minutes
+            <input name="time_target_minutes" type="number" min="0" max="180" value="20">
+          </label>
+          <label>
+            Marks each
+            <input name="marks" type="number" min="1" max="20" value="1">
+          </label>
+          <label>
+            Required %
+            <input name="pass_percent" type="number" min="0" max="100" value="100">
+          </label>
+          <label>
+            Expires
+            <input name="expires_at" type="date" value="${classTaskDefaultExpiryDate()}">
+          </label>
+          <label class="admin-check-row class-task-repeat-field">
+            <input name="allow_multiple_submissions" type="checkbox">
+            Repeat submissions
+          </label>
+        </div>
+        <div class="class-task-action-row">
+          <p class="worksheet-status" id="classTaskStatus" data-tone="${state.classTaskError ? "error" : ""}">${escapeHtml(state.classTaskLastMessage || state.classTaskError || "Choose a topic, level, and question type, then create a join code.")}</p>
+          <button class="button subtle" type="button" id="prepareClassTaskTool" title="Refresh the level and question-type dropdowns if a topic has not loaded correctly.">Refresh Types</button>
+          <button class="button primary" type="submit">Create Join Code</button>
+        </div>
+      </form>
+      <div class="class-task-source-notice" id="classTaskSourceNotice">${classTaskSourceNotice()}</div>
+      <iframe class="worksheet-loader" id="classTaskLoader" title="Pupil task tool loader" aria-hidden="true"></iframe>
+    </article>
   `;
 }
 
@@ -17665,113 +17801,11 @@ function renderClassTasks() {
     ${pageHeader(
       "Pupil Module",
       "Create fixed online tasks or timed practice rooms for your school or tutor organisation.",
-      `<a class="button" href="#/pupil">Pupil Join Page</a><a class="button" href="#/worksheet-generator">Worksheet Builder</a>`
+      `<a class="button" href="#/worksheet-generator">Worksheet Builder</a>`
     )}
-    ${pupilModuleOverviewHtml()}
-    ${classTaskTrackerHtml()}
+    ${classTaskTeacherGuideHtml()}
     <section class="class-task-page">
-      <article class="panel class-task-builder">
-        <div class="class-task-builder-head">
-          <div>
-            <span class="eyebrow">Teacher Task Builder</span>
-            <h2>Create a pupil room</h2>
-            <p>Choose a topic block, then share one join code. Select a class tracker when pupils should use saved codes.</p>
-          </div>
-          <button class="button subtle" type="button" id="refreshClassTasks">Refresh</button>
-        </div>
-        <form id="classTaskForm" class="class-task-form">
-          <div class="class-task-form-main">
-            <fieldset class="class-task-mode-switch">
-              <legend>Task mode</legend>
-              <label>
-                <input type="radio" name="task_mode" value="fixed_task" checked>
-                <span>
-                  <strong>Fixed task</strong>
-                  <small>Set questions or assessment.</small>
-                </span>
-              </label>
-              <label>
-                <input type="radio" name="task_mode" value="practice_room">
-                <span>
-                  <strong>Practice room</strong>
-                  <small>Timed independent tool practice.</small>
-                </span>
-              </label>
-            </fieldset>
-            <label>
-              Task title
-              <input name="title" type="text" maxlength="160" placeholder="Example: Fractions starter task">
-            </label>
-            <label>
-              Instructions
-              <textarea name="instructions" rows="2" maxlength="900">Answer each question. Show working where appropriate.</textarea>
-            </label>
-            <label>
-              Class tracker
-              <select id="classTaskClassGroup" name="class_group_id">
-                ${classTaskTaskGroupSelectOptions(state.classTaskSelectedGroupId)}
-              </select>
-              <small>If selected, pupils enter their saved pupil code instead of typing an alias.</small>
-            </label>
-            <label>
-              Topic tool
-              <select id="classTaskTool" name="tool">${classTaskToolOptions()}</select>
-            </label>
-            <label>
-              Level
-              <select id="classTaskLevel" name="level" disabled><option>Loading levels...</option></select>
-            </label>
-            <label>
-              Question type
-              <select id="classTaskType" name="type" disabled><option>Loading question types...</option></select>
-            </label>
-            <label class="class-task-practice-field">
-              Practice coverage
-              <select name="coverage_mode">
-                <option value="level_mix">Mixed question types in this level</option>
-                <option value="selected_type">Selected question type only</option>
-                <option value="tool_mix">Across all levels in this tool</option>
-              </select>
-            </label>
-          </div>
-          <div class="class-task-form-side">
-            <label>
-              Questions
-              <input name="count" type="number" min="1" max="40" value="5">
-            </label>
-            <label class="class-task-practice-field">
-              Minimum questions
-              <input name="minimum_questions" type="number" min="1" max="40" value="10">
-            </label>
-            <label class="class-task-practice-field">
-              Active minutes target
-              <input name="time_target_minutes" type="number" min="0" max="180" value="20">
-            </label>
-            <label>
-              Marks each
-              <input name="marks" type="number" min="1" max="20" value="1">
-            </label>
-            <label>
-              Required score %
-              <input name="pass_percent" type="number" min="0" max="100" value="100">
-            </label>
-            <label>
-              Expires
-              <input name="expires_at" type="date" value="${classTaskDefaultExpiryDate()}">
-            </label>
-            <label class="admin-check-row">
-              <input name="allow_multiple_submissions" type="checkbox">
-              Allow repeat submissions
-            </label>
-            <button class="button subtle" type="button" id="prepareClassTaskTool" title="Refresh the level and question-type dropdowns if a topic has not loaded correctly.">Refresh Types</button>
-            <button class="button primary" type="submit">Create Join Code</button>
-          </div>
-        </form>
-        <p class="worksheet-status" id="classTaskStatus" data-tone="${state.classTaskError ? "error" : ""}">${escapeHtml(state.classTaskLastMessage || state.classTaskError || "Choose a topic, level, and question type, then create a join code.")}</p>
-        <div id="classTaskSourceNotice">${classTaskSourceNotice()}</div>
-        <iframe class="worksheet-loader" id="classTaskLoader" title="Pupil task tool loader" aria-hidden="true"></iframe>
-      </article>
-
+      ${classTaskBuilderHtml()}
       <section class="class-task-list-panel panel">
         <div class="class-task-list-head">
           <div>
@@ -17785,6 +17819,7 @@ function renderClassTasks() {
         </div>
       </section>
     </section>
+    ${classTaskTrackerHtml()}
   `;
   bindClassTasks();
 }
