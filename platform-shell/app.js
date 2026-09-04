@@ -17163,6 +17163,11 @@ function classTaskTeacherGuideHtml() {
   `;
 }
 
+function classTaskHelpTip(text) {
+  const safeText = escapeHtml(text);
+  return `<span class="field-help" tabindex="0" role="note" aria-label="${safeText}" data-tooltip="${safeText}">?</span>`;
+}
+
 function classTaskBuilderHtml() {
   return `
     <article class="panel class-task-builder">
@@ -17173,8 +17178,8 @@ function classTaskBuilderHtml() {
           <p>Choose the task, create the code, then watch pupil progress from the live task panel.</p>
         </div>
         <div class="class-task-builder-actions">
-          <a class="button subtle" href="#/pupil">Pupil Join Page</a>
-          <button class="button subtle" type="button" id="refreshClassTasks">Refresh</button>
+          <a class="button subtle has-tooltip" href="#/pupil" data-tooltip="Open the pupil-facing join page. Pupils only need the task code or link you give them.">Pupil Join Page</a>
+          <button class="button subtle has-tooltip" type="button" id="refreshClassTasks" data-tooltip="Reload the live task list and pupil submissions shown on this page.">Refresh</button>
         </div>
       </div>
       <form id="classTaskForm" class="class-task-form">
@@ -17183,25 +17188,25 @@ function classTaskBuilderHtml() {
           <label>
             <input type="radio" name="task_mode" value="fixed_task" checked>
             <span>
-              <strong>Fixed task</strong>
+              <strong>Fixed task ${classTaskHelpTip("Best for homework, quizzes, short assessments, or a fixed set where every pupil gets the same task structure.")}</strong>
               <small>Set questions or assessment</small>
             </span>
           </label>
           <label>
             <input type="radio" name="task_mode" value="practice_room">
             <span>
-              <strong>Practice room</strong>
+              <strong>Practice room ${classTaskHelpTip("Best for independent practice. Pupils can work through a larger timed set while you monitor attempts, score, and active time.")}</strong>
               <small>Timed independent practice</small>
             </span>
           </label>
         </fieldset>
         <div class="class-task-field-grid">
           <label>
-            Task title
+            <span class="class-task-label-row">Task title ${classTaskHelpTip("This is the name you will see in Live Tasks. Use a short classroom-friendly title.")}</span>
             <input name="title" type="text" maxlength="160" placeholder="Example: Fractions starter task">
           </label>
           <label>
-            Class tracker
+            <span class="class-task-label-row">Class tracker ${classTaskHelpTip("Choose a saved class when pupils should enter their private pupil codes. Leave it blank if pupils will type an alias or initials.")}</span>
             <select id="classTaskClassGroup" name="class_group_id">
               ${classTaskTaskGroupSelectOptions(state.classTaskSelectedGroupId)}
             </select>
@@ -17209,24 +17214,24 @@ function classTaskBuilderHtml() {
           </label>
         </div>
         <label class="class-task-wide-field">
-          Instructions
+          <span class="class-task-label-row">Instructions ${classTaskHelpTip("These instructions appear at the top of the pupil task. Keep them short and practical.")}</span>
           <textarea name="instructions" rows="1" maxlength="900">Answer each question. Show working where appropriate.</textarea>
         </label>
         <div class="class-task-picker-grid">
           <label>
-            Topic tool
+            <span class="class-task-label-row">Topic tool ${classTaskHelpTip("Choose the Kaizen tool that will generate the pupil questions.")}</span>
             <select id="classTaskTool" name="tool">${classTaskToolOptions()}</select>
           </label>
           <label>
-            Level
+            <span class="class-task-label-row">Level ${classTaskHelpTip("Choose the level of difficulty from inside the selected tool.")}</span>
             <select id="classTaskLevel" name="level" disabled><option>Loading levels...</option></select>
           </label>
           <label>
-            Question type
+            <span class="class-task-label-row">Question type ${classTaskHelpTip("Choose the exact type of question, or use a mixed type when you want wider practice.")}</span>
             <select id="classTaskType" name="type" disabled><option>Loading question types...</option></select>
           </label>
           <label class="class-task-practice-field">
-            Coverage
+            <span class="class-task-label-row">Coverage ${classTaskHelpTip("For practice rooms, choose whether pupils practise one type, a level mix, or the whole tool.")}</span>
             <select name="coverage_mode">
               <option value="level_mix">Mixed question types in this level</option>
               <option value="selected_type">Selected question type only</option>
@@ -17236,38 +17241,38 @@ function classTaskBuilderHtml() {
         </div>
         <div class="class-task-settings-grid">
           <label>
-            Questions
+            <span class="class-task-label-row">Questions ${classTaskHelpTip("How many questions the task generates. Fixed tasks are usually short; practice rooms can be longer.")}</span>
             <input name="count" type="number" min="1" max="40" value="5">
           </label>
           <label class="class-task-practice-field">
-            Minimum
+            <span class="class-task-label-row">Minimum ${classTaskHelpTip("The minimum number of answers pupils must complete before they can submit a practice room.")}</span>
             <input name="minimum_questions" type="number" min="1" max="40" value="10">
           </label>
           <label class="class-task-practice-field">
-            Minutes
+            <span class="class-task-label-row">Minutes ${classTaskHelpTip("The active-time target shown to pupils and recorded for the teacher monitor.")}</span>
             <input name="time_target_minutes" type="number" min="0" max="180" value="20">
           </label>
           <label>
-            Marks each
+            <span class="class-task-label-row">Marks each ${classTaskHelpTip("Sets the mark value for each question in the pupil task and teacher score summary.")}</span>
             <input name="marks" type="number" min="1" max="20" value="1">
           </label>
           <label>
-            Required %
+            <span class="class-task-label-row">Required % ${classTaskHelpTip("Set the score pupils need to complete the task. If they miss it, Kaizen can offer a fresh retry set.")}</span>
             <input name="pass_percent" type="number" min="0" max="100" value="100">
           </label>
           <label>
-            Expires
+            <span class="class-task-label-row">Expires ${classTaskHelpTip("After this date, the join code closes to new submissions.")}</span>
             <input name="expires_at" type="date" value="${classTaskDefaultExpiryDate()}">
           </label>
           <label class="admin-check-row class-task-repeat-field">
             <input name="allow_multiple_submissions" type="checkbox">
-            Repeat submissions
+            <span class="class-task-label-row">Repeat submissions ${classTaskHelpTip("Allow pupils to submit more than once even when a pass target has already been met.")}</span>
           </label>
         </div>
         <div class="class-task-action-row">
           <p class="worksheet-status" id="classTaskStatus" data-tone="${state.classTaskError ? "error" : ""}">${escapeHtml(state.classTaskLastMessage || state.classTaskError || "Choose a topic, level, and question type, then create a join code.")}</p>
-          <button class="button subtle" type="button" id="prepareClassTaskTool" title="Refresh the level and question-type dropdowns if a topic has not loaded correctly.">Refresh Types</button>
-          <button class="button primary" type="submit">Create Join Code</button>
+          <button class="button subtle has-tooltip" type="button" id="prepareClassTaskTool" data-tooltip="Refresh the level and question-type dropdowns if a topic has not loaded correctly.">Refresh Types</button>
+          <button class="button primary has-tooltip" type="submit" data-tooltip="Generate the questions and create the code or link pupils will use to enter the task.">Create Join Code</button>
         </div>
       </form>
       <div class="class-task-source-notice" id="classTaskSourceNotice">${classTaskSourceNotice()}</div>
