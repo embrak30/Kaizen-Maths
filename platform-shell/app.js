@@ -16024,6 +16024,7 @@ function classTaskTrackerProgressHtml(group) {
               <th>Code</th>
               <th>Tasks</th>
               <th>Mastered</th>
+              <th>Stars</th>
               <th>Average best</th>
               <th>Latest</th>
             </tr>
@@ -16037,6 +16038,7 @@ function classTaskTrackerProgressHtml(group) {
                   <td>${escapeHtml(member.pupil_code || "")}</td>
                   <td>${Number(summary.completed || 0)}/${Number(summary.assigned || 0)}</td>
                   <td><span class="class-tracker-mastery-pill" data-status="${Number(summary.mastered || 0) ? "mastered" : "waiting"}">${Number(summary.mastered || 0)} mastered</span></td>
+                  <td>${Number(summary.total_stars || 0)}</td>
                   <td>${escapeHtml(pupilProgressPercentLabel(summary.average_best_percent))}</td>
                   <td>${escapeHtml(latestTask ? `${latestTask.source_tool_title || latestTask.title || "Task"} · ${latestTask.latest_score_label}` : "Not yet")}</td>
                 </tr>
@@ -16064,6 +16066,7 @@ function classTaskTrackerProgressHtml(group) {
                   <div class="class-tracker-history-item" data-status="${escapeHtml(task.status || "completed")}">
                     <span>${escapeHtml(pupilProgressStatusLabel(task.status))}</span>
                     <strong>${escapeHtml([task.source_tool_title, task.source_type_label].filter(Boolean).join(" · ") || task.title || "Kaizen Maths task")}</strong>
+                    ${pupilRewardStarsHtml(task.best_reward || task.latest_reward || {}, { compact: true })}
                     <small>${escapeHtml([task.latest_score_label, task.best_percent !== null && task.best_percent !== undefined ? `best ${pupilProgressPercentLabel(task.best_percent)}` : "", `${Number(task.submitted_count || 0)} attempt${Number(task.submitted_count || 0) === 1 ? "" : "s"}`].filter(Boolean).join(" · "))}</small>
                   </div>
                 `).join("") : `<p class="class-tracker-progress-empty">No completed tasks for this pupil yet.</p>`}
@@ -16252,7 +16255,72 @@ function classTaskScoreLabel(response) {
   return `${score}/${max}`;
 }
 
-function classTaskPupilSubmissionHistory(task, response) {
+function classTaskRewardForResponse(response, task = {}, previousBestPercent = null) {
+  if (!response?.id) {
+    return {
+      stars: 0,
+      growth_star: false,
+      total_stars: 0,
+      labels: [],
+      label: "No stars yet"
+    };
+  }
+  const percent = classTaskResponsePercent(response);
+  const passRequired = Boolean(response?.marking?.pass_required) || classTaskPassPercent(task.settings || {}) > 0;
+  const metTarget = Boolean(response?.marking?.pass_met) || (!passRequired && Number.isFinite(percent) && percent >= 80);
+  const fullMarks = Number.isFinite(percent) && percent === 100;
+  const strongMastery = Number.isFinite(percent) && percent >= 95;
+  const improved = Number.isFinite(percent) && Number.isFinite(previousBestPercent) && percent > previousBestPercent;
+  let stars = 1;
+  const labels = ["Completed task"];
+  if (metTarget) {
+    stars = Math.max(stars, 2);
+    labels.push("Met target");
+  }
+  if (fullMarks || strongMastery) {
+    stars = Math.max(stars, 3);
+    labels.push(fullMarks ? "Full marks" : "Strong mastery");
+  }
+  if (improved) labels.push("Improved from last best");
+  const growthStar = Boolean(improved);
+  const totalStars = stars + (growthStar ? 1 : 0);
+  return {
+    stars,
+    growth_star: growthStar,
+    total_stars: totalStars,
+    labels,
+    label: labels.join(" · ")
+  };
+}
+
+function classTaskBestReward(rewards = []) {
+  return rewards
+    .slice()
+    .sort((a, b) => Number(b.total_stars || 0) - Number(a.total_stars || 0) || Number(b.stars || 0) - Number(a.stars || 0))[0] || {
+      stars: 0,
+      growth_star: false,
+      total_stars: 0,
+      labels: [],
+      label: "No stars yet"
+    };
+}
+
+function classTaskRewardMap(task, sortedResponses = []) {
+  const rewardById = new Map();
+  let previousBest = null;
+  sortedResponses
+    .slice()
+    .sort((a, b) => String(a.submitted_at || "").localeCompare(String(b.submitted_at || "")))
+    .forEach((response) => {
+      const reward = classTaskRewardForResponse(response, task, previousBest);
+      rewardById.set(response.id, reward);
+      const percent = classTaskResponsePercent(response);
+      if (Number.isFinite(percent)) previousBest = previousBest === null ? percent : Math.max(previousBest, percent);
+    });
+  return rewardById;
+}
+
+function classTaskPupilSubmissionHistory(task, response, reward = null) {
   const attemptIndex = classTaskResponseAttemptIndex(response);
   const attemptQuestions = classTaskQuestionsForAttempt(task, attemptIndex) || [];
   const feedback = Array.isArray(response?.marking?.feedback) ? response.marking.feedback : [];
@@ -16267,6 +16335,7 @@ function classTaskPupilSubmissionHistory(task, response) {
     max_score: Number(response.max_score) || 0,
     score_label: classTaskScoreLabel(response),
     percent: classTaskResponsePercent(response),
+    reward: reward || classTaskRewardForResponse(response, task),
     pass_met: Boolean(response?.marking?.pass_met),
     reviewed: Boolean(response.reviewed),
     teacher_notes: String(response.teacher_notes || "").trim(),
@@ -16291,6 +16360,8 @@ function classTaskPupilTaskProgress(task, responses = []) {
   const sortedResponses = responses
     .slice()
     .sort((a, b) => String(b.submitted_at || "").localeCompare(String(a.submitted_at || "")));
+  const rewardById = classTaskRewardMap(task, sortedResponses);
+  const rewards = sortedResponses.map((response) => rewardById.get(response.id) || classTaskRewardForResponse(response, task));
   const latest = sortedResponses[0] || null;
   const best = sortedResponses
     .slice()
@@ -16314,8 +16385,12 @@ function classTaskPupilTaskProgress(task, responses = []) {
     latest_score_label: latest ? classTaskScoreLabel(latest) : "Not started",
     latest_percent: classTaskResponsePercent(latest),
     best_percent: classTaskResponsePercent(best),
+    latest_reward: latest ? rewardById.get(latest.id) || classTaskRewardForResponse(latest, task) : classTaskBestReward([]),
+    best_reward: classTaskBestReward(rewards),
+    total_stars: Number(classTaskBestReward(rewards).total_stars || 0),
+    growth_stars: rewards.filter((reward) => reward.growth_star).length,
     pass_percent: classTaskPassPercent(task.settings || {}),
-    submissions: sortedResponses.slice(0, 5).map((response) => classTaskPupilSubmissionHistory(task, response))
+    submissions: sortedResponses.slice(0, 5).map((response) => classTaskPupilSubmissionHistory(task, response, rewardById.get(response.id)))
   };
 }
 
@@ -16338,6 +16413,8 @@ function classTaskPupilProgressProfile(tasks = [], responses = [], identity = {}
   const completed = items.filter((item) => item.completed).length;
   const mastered = items.filter((item) => item.mastered).length;
   const attempts = items.reduce((sum, item) => sum + item.submitted_count, 0);
+  const totalStars = items.reduce((sum, item) => sum + Number(item.total_stars || 0), 0);
+  const growthStars = items.reduce((sum, item) => sum + Number(item.growth_stars || 0), 0);
   const percentages = items.map((item) => item.best_percent).filter((value) => Number.isFinite(value));
   const averageBest = percentages.length
     ? Math.round(percentages.reduce((sum, value) => sum + value, 0) / percentages.length)
@@ -16351,6 +16428,8 @@ function classTaskPupilProgressProfile(tasks = [], responses = [], identity = {}
       completed,
       mastered,
       attempts,
+      total_stars: totalStars,
+      growth_stars: growthStars,
       average_best_percent: averageBest
     },
     tasks: items
@@ -17826,6 +17905,23 @@ function classTaskMonitorRows(task) {
     });
   });
 
+  const rewardByAlias = new Map();
+  (task.responses || []).forEach((response) => {
+    const key = classTaskAliasKey(response.pupil_alias);
+    if (!key) return;
+    const list = rewardByAlias.get(key) || [];
+    list.push(response);
+    rewardByAlias.set(key, list);
+  });
+  rewardByAlias.forEach((responses, key) => {
+    const sortedResponses = responses
+      .slice()
+      .sort((a, b) => String(b.submitted_at || "").localeCompare(String(a.submitted_at || "")));
+    const rewardMap = classTaskRewardMap(task, sortedResponses);
+    const rewards = sortedResponses.map((response) => rewardMap.get(response.id) || classTaskRewardForResponse(response, task));
+    rewardByAlias.set(key, classTaskBestReward(rewards));
+  });
+
   (task.responses || []).forEach((response) => {
     const key = classTaskAliasKey(response.pupil_alias);
     if (!key) return;
@@ -17844,6 +17940,7 @@ function classTaskMonitorRows(task) {
         last_score: existing.last_score ?? response.auto_score,
         max_score: existing.max_score ?? response.max_score,
         pass_met: Boolean(existing.pass_met) || passMet,
+        reward: existing.reward || rewardByAlias.get(key) || classTaskBestReward([]),
         active_seconds: Math.max(Number(existing.active_seconds) || 0, Number(marking.activity?.active_seconds) || 0),
         last_seen_at: existing.last_seen_at || response.submitted_at || ""
       });
@@ -17908,6 +18005,7 @@ function classTaskMonitorHtml(task) {
                 <th>Status</th>
                 <th>Attempt</th>
                 <th>Score</th>
+                <th>Stars</th>
                 <th>Active</th>
                 <th>Seen</th>
               </tr>
@@ -17920,6 +18018,7 @@ function classTaskMonitorHtml(task) {
                   <td>${escapeHtml(classTaskParticipantStatusText(row.status))}</td>
                   <td>${escapeHtml(String(row.current_attempt || 1))}</td>
                   <td>${escapeHtml(classTaskMonitorScore(row))}</td>
+                  <td>${pupilRewardStarsHtml(row.reward || {}, { compact: true })}</td>
                   <td>${escapeHtml(classTaskMonitorActiveTime(row))}</td>
                   <td>${escapeHtml(classTaskMonitorSeen(row.last_seen_at))}</td>
                 </tr>
@@ -18574,6 +18673,7 @@ function pupilSubmissionHtml(task) {
   const submittedAnswers = response.answers || {};
   const submittedWorking = response.working || {};
   const submittedWorkingImages = response.working_images || {};
+  const reward = pupilRewardForSubmission(state.pupilProgress, task, response);
   const passRequired = Boolean(marking.pass_required);
   const passMet = passRequired ? Boolean(marking.pass_met) : true;
   const nextTask = state.pupilSubmission.next_task || null;
@@ -18596,6 +18696,7 @@ function pupilSubmissionHtml(task) {
         </div>
         ${nextTask ? `<button class="button primary" type="button" data-pupil-next-attempt>Load New Task Set</button>` : ""}
       </div>
+      ${pupilRewardCelebrationHtml(reward)}
       <div class="pupil-teacher-feedback ${teacherReviewed ? "is-reviewed" : ""}">
         <span>${escapeHtml(teacherFeedbackTitle)}</span>
         <p>${escapeHtml(teacherFeedbackBody)}</p>
@@ -18676,6 +18777,48 @@ function pupilProgressPercentLabel(value) {
   return Number.isFinite(Number(value)) ? `${Math.round(Number(value))}%` : "No score";
 }
 
+function pupilRewardStarsHtml(reward = {}, options = {}) {
+  const baseStars = Math.max(0, Math.min(3, Number(reward?.stars || 0)));
+  const label = reward?.label || "No stars yet";
+  const stars = [0, 1, 2].map((index) => `
+    <span class="${index < baseStars ? "earned" : ""}" aria-hidden="true">★</span>
+  `).join("");
+  return `
+    <span class="kaizen-star-strip ${options.compact ? "is-compact" : ""}" aria-label="${escapeHtml(label)}">
+      ${stars}
+      ${reward?.growth_star ? `<span class="kaizen-growth-star">Growth</span>` : ""}
+    </span>
+  `;
+}
+
+function pupilRewardLabel(reward = {}) {
+  const total = Number(reward?.total_stars || reward?.stars || 0);
+  if (!total) return "No stars yet";
+  return `${total} Kaizen star${total === 1 ? "" : "s"}`;
+}
+
+function pupilRewardForSubmission(profile, task, response) {
+  const taskProgress = (profile?.tasks || []).find((item) => String(item.id) === String(task?.id));
+  const responseReward = (taskProgress?.submissions || [])
+    .find((submission) => String(submission.id) === String(response?.id))?.reward;
+  return responseReward || taskProgress?.latest_reward || classTaskRewardForResponse(response, task);
+}
+
+function pupilRewardCelebrationHtml(reward = {}) {
+  const total = Number(reward?.total_stars || reward?.stars || 0);
+  if (!total) return "";
+  return `
+    <div class="pupil-reward-celebration">
+      <div>
+        <span class="eyebrow">Kaizen Stars</span>
+        <strong>${escapeHtml(pupilRewardLabel(reward))}</strong>
+        <p>${escapeHtml(reward.label || "Keep building steady progress.")}</p>
+      </div>
+      ${pupilRewardStarsHtml(reward)}
+    </div>
+  `;
+}
+
 function pupilProgressQuestionReviewHtml(question, index) {
   const status = !question.submitted && !question.working
     ? "Not attempted"
@@ -18719,11 +18862,13 @@ function pupilProgressQuestionReviewHtml(question, index) {
 
 function pupilProgressSubmissionHtml(submission) {
   const reviewedText = submission.reviewed ? "Teacher reviewed" : submission.teacher_notes ? "Teacher feedback" : "Awaiting review";
+  const reward = submission.reward || {};
   return `
     <details class="pupil-progress-attempt">
       <summary>
         <span>Attempt ${escapeHtml(String(submission.attempt_number || 1))}</span>
         <strong>${escapeHtml(submission.score_label || "Needs review")}</strong>
+        ${pupilRewardStarsHtml(reward, { compact: true })}
         <small>${escapeHtml(reviewedText)}</small>
       </summary>
       ${submission.teacher_notes ? `
@@ -18741,6 +18886,7 @@ function pupilProgressSubmissionHtml(submission) {
 
 function pupilProgressTaskHtml(task) {
   const title = [task.source_tool_title, task.source_type_label].filter(Boolean).join(" · ") || task.title || "Kaizen Maths task";
+  const reward = task.best_reward || task.latest_reward || {};
   const score = task.best_percent !== null && task.best_percent !== undefined
     ? `Best ${pupilProgressPercentLabel(task.best_percent)}`
     : task.latest_score_label || "Not started";
@@ -18749,7 +18895,8 @@ function pupilProgressTaskHtml(task) {
       <summary>
         <span class="pupil-progress-status" data-status="${escapeHtml(task.status || "assigned")}">${escapeHtml(pupilProgressStatusLabel(task.status))}</span>
         <strong>${escapeHtml(title)}</strong>
-        <small>${escapeHtml(score)} · ${Number(task.submitted_count || 0)} attempt${Number(task.submitted_count || 0) === 1 ? "" : "s"}</small>
+        ${pupilRewardStarsHtml(reward, { compact: true })}
+        <small>${escapeHtml(score)} · ${escapeHtml(pupilRewardLabel(reward))} · ${Number(task.submitted_count || 0)} attempt${Number(task.submitted_count || 0) === 1 ? "" : "s"}</small>
       </summary>
       ${task.submissions?.length ? task.submissions.map(pupilProgressSubmissionHtml).join("") : `<p class="pupil-progress-empty">No submitted work for this task yet.</p>`}
     </details>
@@ -18776,7 +18923,9 @@ function pupilProgressProfileHtml(profile = state.pupilProgress, options = {}) {
         <span><strong>${Number(summary.assigned || 0)}</strong> assigned</span>
         <span><strong>${Number(summary.completed || 0)}</strong> completed</span>
         <span><strong>${Number(summary.attempts || 0)}</strong> attempts</span>
+        <span><strong>${Number(summary.total_stars || 0)}</strong> stars</span>
         <span><strong>${pupilProgressPercentLabel(summary.average_best_percent)}</strong> average best</span>
+        ${Number(summary.growth_stars || 0) ? `<span><strong>${Number(summary.growth_stars || 0)}</strong> growth</span>` : ""}
       </div>
       <details class="pupil-progress-history" ${options.returnedWork ? "open" : ""}>
         <summary>Completed and assigned tasks</summary>

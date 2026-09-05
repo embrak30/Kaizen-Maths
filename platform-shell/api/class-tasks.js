@@ -359,7 +359,72 @@ function responseScoreLabel(response) {
   return `${score}/${max}`;
 }
 
-function publicPupilSubmissionHistory(task, response) {
+function rewardForResponse(response, task = {}, previousBestPercent = null) {
+  if (!response?.id) {
+    return {
+      stars: 0,
+      growth_star: false,
+      total_stars: 0,
+      labels: [],
+      label: "No stars yet"
+    };
+  }
+  const percent = responsePercent(response);
+  const passRequired = Boolean(response?.marking?.pass_required) || taskPassPercent(task.settings || {}) > 0;
+  const metTarget = Boolean(response?.marking?.pass_met) || (!passRequired && Number.isFinite(percent) && percent >= 80);
+  const fullMarks = Number.isFinite(percent) && percent === 100;
+  const strongMastery = Number.isFinite(percent) && percent >= 95;
+  const improved = Number.isFinite(percent) && Number.isFinite(previousBestPercent) && percent > previousBestPercent;
+  let stars = 1;
+  const labels = ["Completed task"];
+  if (metTarget) {
+    stars = Math.max(stars, 2);
+    labels.push("Met target");
+  }
+  if (fullMarks || strongMastery) {
+    stars = Math.max(stars, 3);
+    labels.push(fullMarks ? "Full marks" : "Strong mastery");
+  }
+  if (improved) labels.push("Improved from last best");
+  const growthStar = Boolean(improved);
+  const totalStars = stars + (growthStar ? 1 : 0);
+  return {
+    stars,
+    growth_star: growthStar,
+    total_stars: totalStars,
+    labels,
+    label: labels.join(" · ")
+  };
+}
+
+function bestReward(rewards = []) {
+  return rewards
+    .slice()
+    .sort((a, b) => Number(b.total_stars || 0) - Number(a.total_stars || 0) || Number(b.stars || 0) - Number(a.stars || 0))[0] || {
+      stars: 0,
+      growth_star: false,
+      total_stars: 0,
+      labels: [],
+      label: "No stars yet"
+    };
+}
+
+function rewardMapForTask(task, sortedResponses = []) {
+  const rewardById = new Map();
+  let previousBest = null;
+  sortedResponses
+    .slice()
+    .sort((a, b) => String(a.submitted_at || "").localeCompare(String(b.submitted_at || "")))
+    .forEach((response) => {
+      const reward = rewardForResponse(response, task, previousBest);
+      rewardById.set(response.id, reward);
+      const percent = responsePercent(response);
+      if (Number.isFinite(percent)) previousBest = previousBest === null ? percent : Math.max(previousBest, percent);
+    });
+  return rewardById;
+}
+
+function publicPupilSubmissionHistory(task, response, reward = null) {
   const attemptIndex = responseAttemptIndex(response);
   const attemptQuestions = questionsForAttempt(task, attemptIndex) || [];
   const feedback = Array.isArray(response?.marking?.feedback) ? response.marking.feedback : [];
@@ -374,6 +439,7 @@ function publicPupilSubmissionHistory(task, response) {
     max_score: Number(response.max_score) || 0,
     score_label: responseScoreLabel(response),
     percent: responsePercent(response),
+    reward: reward || rewardForResponse(response, task),
     pass_met: Boolean(response?.marking?.pass_met),
     reviewed: Boolean(response.reviewed),
     teacher_notes: cleanLongText(response.teacher_notes, 4000),
@@ -398,6 +464,8 @@ function publicPupilTaskProgress(task, responses = []) {
   const sortedResponses = responses
     .slice()
     .sort((a, b) => String(b.submitted_at || "").localeCompare(String(a.submitted_at || "")));
+  const rewardById = rewardMapForTask(task, sortedResponses);
+  const rewards = sortedResponses.map((response) => rewardById.get(response.id) || rewardForResponse(response, task));
   const latest = sortedResponses[0] || null;
   const best = sortedResponses
     .slice()
@@ -421,8 +489,12 @@ function publicPupilTaskProgress(task, responses = []) {
     latest_score_label: latest ? responseScoreLabel(latest) : "Not started",
     latest_percent: responsePercent(latest),
     best_percent: responsePercent(best),
+    latest_reward: latest ? rewardById.get(latest.id) || rewardForResponse(latest, task) : bestReward([]),
+    best_reward: bestReward(rewards),
+    total_stars: Number(bestReward(rewards).total_stars || 0),
+    growth_stars: rewards.filter((reward) => reward.growth_star).length,
     pass_percent: taskPassPercent(task.settings || {}),
-    submissions: sortedResponses.slice(0, 5).map((response) => publicPupilSubmissionHistory(task, response))
+    submissions: sortedResponses.slice(0, 5).map((response) => publicPupilSubmissionHistory(task, response, rewardById.get(response.id)))
   };
 }
 
@@ -445,6 +517,8 @@ function publicPupilProfile(tasks = [], responses = [], identity = {}, groupName
   const completed = items.filter((item) => item.completed).length;
   const mastered = items.filter((item) => item.mastered).length;
   const attempts = items.reduce((sum, item) => sum + item.submitted_count, 0);
+  const totalStars = items.reduce((sum, item) => sum + Number(item.total_stars || 0), 0);
+  const growthStars = items.reduce((sum, item) => sum + Number(item.growth_stars || 0), 0);
   const percentages = items.map((item) => item.best_percent).filter((value) => Number.isFinite(value));
   const averageBest = percentages.length
     ? Math.round(percentages.reduce((sum, value) => sum + value, 0) / percentages.length)
@@ -458,6 +532,8 @@ function publicPupilProfile(tasks = [], responses = [], identity = {}, groupName
       completed,
       mastered,
       attempts,
+      total_stars: totalStars,
+      growth_stars: growthStars,
       average_best_percent: averageBest
     },
     tasks: items
