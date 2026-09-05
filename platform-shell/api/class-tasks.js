@@ -158,8 +158,26 @@ function taskIsAvailable(task) {
   return Number.isNaN(expiry.getTime()) || expiry >= new Date();
 }
 
+function cleanAnswerTemplate(template) {
+  if (!template || typeof template !== "object") return null;
+  const type = cleanText(template.type, 40);
+  if (!["matrix", "column_vector"].includes(type)) return null;
+  const rows = clampNumber(template.rows, 1, 5, 0);
+  const cols = clampNumber(template.cols, 1, 5, 0);
+  if (!rows || !cols) return null;
+  if (type === "column_vector" && cols !== 1) return null;
+  const defaultLabel = type === "column_vector" ? `${rows}-component column vector` : `${rows} by ${cols} matrix`;
+  return {
+    type,
+    rows,
+    cols,
+    label: cleanText(template.label || defaultLabel, 80)
+  };
+}
+
 function cleanQuestion(question, index) {
   const marks = Math.max(0, Math.min(20, Number(question?.marks || 1)));
+  const answerTemplate = cleanAnswerTemplate(question?.answer_template || question?.answerTemplate);
   return {
     id: cleanText(question?.id || `q${index + 1}`, 80) || `q${index + 1}`,
     question: cleanLongText(question?.question || question?.questionText || question?.prompt || question?.equation || "", 24000),
@@ -171,11 +189,13 @@ function cleanQuestion(question, index) {
     marks,
     instruction: cleanText(question?.instruction || question?.instructionText || "", 600),
     sectionTitle: cleanText(question?.sectionTitle || "", 120),
-    sectionType: cleanText(question?.sectionType || "", 120)
+    sectionType: cleanText(question?.sectionType || "", 120),
+    ...(answerTemplate ? { answer_template: answerTemplate } : {})
   };
 }
 
 function publicQuestion(question, index) {
+  const answerTemplate = cleanAnswerTemplate(question.answer_template || question.answerTemplate);
   return {
     id: question.id || `q${index + 1}`,
     question: question.question || "",
@@ -183,7 +203,8 @@ function publicQuestion(question, index) {
     marks: Number(question.marks) || 1,
     instruction: question.instruction || "",
     sectionTitle: question.sectionTitle || "",
-    sectionType: question.sectionType || ""
+    sectionType: question.sectionType || "",
+    ...(answerTemplate ? { answer_template: answerTemplate } : {})
   };
 }
 
@@ -938,6 +959,73 @@ function algebraicallyEquivalent(expected, submitted) {
   return expressionsEquivalent(expected, submitted);
 }
 
+function splitMatrixCells(rowBody) {
+  const cells = [];
+  let depth = 0;
+  let buffer = "";
+  for (const char of String(rowBody || "")) {
+    if ("([{".includes(char)) depth += 1;
+    if (")]}".includes(char)) depth = Math.max(0, depth - 1);
+    if (char === "," && depth === 0) {
+      if (!buffer.trim()) return null;
+      cells.push(buffer.trim());
+      buffer = "";
+      continue;
+    }
+    buffer += char;
+  }
+  if (!buffer.trim()) return null;
+  cells.push(buffer.trim());
+  return cells;
+}
+
+function matrixRowsFromLiteral(literal) {
+  const source = String(literal || "").trim();
+  if (!source.startsWith("[[") || !source.endsWith("]]")) return null;
+  const body = source.slice(1, -1).trim();
+  const rows = [];
+  let depth = 0;
+  let rowStart = -1;
+  for (let index = 0; index < body.length; index += 1) {
+    const char = body[index];
+    if (char === "[") {
+      if (depth === 0) rowStart = index + 1;
+      depth += 1;
+      continue;
+    }
+    if (char === "]") {
+      depth -= 1;
+      if (depth < 0) return null;
+      if (depth === 0 && rowStart >= 0) {
+        const cells = splitMatrixCells(body.slice(rowStart, index));
+        if (!cells?.length) return null;
+        rows.push(cells);
+        rowStart = -1;
+      }
+      continue;
+    }
+    if (depth === 0 && !/[\s,]/.test(char)) return null;
+  }
+  if (depth !== 0 || !rows.length) return null;
+  const width = rows[0].length;
+  if (!width || rows.some((row) => row.length !== width)) return null;
+  return rows;
+}
+
+function matrixAnswersEquivalent(expected, submitted) {
+  const expectedRows = matrixRowsFromLiteral(expected);
+  if (!expectedRows) return null;
+  const submittedRows = matrixRowsFromLiteral(submitted);
+  if (!submittedRows) return false;
+  if (expectedRows.length !== submittedRows.length || expectedRows[0].length !== submittedRows[0].length) return false;
+  return expectedRows.every((row, rowIndex) => row.every((expectedCell, colIndex) => {
+    const submittedCell = submittedRows[rowIndex][colIndex];
+    const expectedClean = normaliseMathAnswer(expectedCell);
+    const submittedClean = normaliseMathAnswer(submittedCell);
+    return expectedClean === submittedClean || algebraicallyEquivalent(expectedClean, submittedClean);
+  }));
+}
+
 function addAnswerVariant(answers, clean) {
   if (!clean) return;
   answers.add(clean);
@@ -982,7 +1070,12 @@ function scoreSubmission(questions, answers, working = {}, options = {}) {
     const scoreThisQuestion = !(options.scoreOnlyAnswered && !attempted);
     const markable = Boolean(accepted.length && scoreThisQuestion);
     const multiSolutionMatch = multiSolutionSetMatches(expected, submitted);
-    const correct = Boolean(markable && (multiSolutionMatch === null ? answersMatch(accepted, submittedVariants) : multiSolutionMatch));
+    const matrixMatch = matrixAnswersEquivalent(expected, submitted);
+    const correct = Boolean(markable && (
+      matrixMatch === null
+        ? (multiSolutionMatch === null ? answersMatch(accepted, submittedVariants) : multiSolutionMatch)
+        : matrixMatch
+    ));
     if (accepted.length) {
       if (scoreThisQuestion) maxScore += mark;
       if (correct) autoScore += mark;

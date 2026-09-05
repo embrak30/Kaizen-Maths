@@ -3627,7 +3627,7 @@ function worksheetCreateMatrixElement(rows) {
     row.forEach((cell) => {
       const cellElement = document.createElement("span");
       cellElement.className = "matrix-cell";
-      cellElement.textContent = formatWorksheetMathText(cell);
+      cellElement.appendChild(worksheetMathFragment(cell));
       rowElement.appendChild(cellElement);
     });
     matrix.appendChild(rowElement);
@@ -15028,12 +15028,16 @@ function worksheetQuizProblemMarks(problem, worksheet, fallbackMarks = 1) {
 }
 
 function worksheetQuizQuestionsFromWorksheet(worksheet, fallbackMarks = 1) {
-  return (worksheet?.problems || []).map((problem, index) => classTaskSerialiseQuestion(problem, index, {
-    marks: worksheetQuizProblemMarks(problem, worksheet, fallbackMarks),
-    instruction: problem.instruction || problem.instructionText || "",
-    sectionTitle: problem.sectionTitle || "",
-    sectionType: problem.sectionType || ""
-  }));
+  return (worksheet?.problems || []).map((problem, index) => {
+    const section = worksheet?.sections?.find((item) => item.id === problem.sectionId) || {};
+    return classTaskSerialiseQuestion(problem, index, {
+      marks: worksheetQuizProblemMarks(problem, worksheet, fallbackMarks),
+      instruction: problem.instruction || problem.instructionText || "",
+      sectionTitle: problem.sectionTitle || section.toolTitle || "",
+      sectionType: problem.sectionType || section.typeLabel || "",
+      toolSlug: problem.toolSlug || section.toolSlug || ""
+    });
+  });
 }
 
 function worksheetQuizSourceLabels(worksheet) {
@@ -15928,6 +15932,20 @@ function classTaskAlgebraicallyEquivalent(expected, submitted) {
   return classTaskExpressionsEquivalent(expected, submitted);
 }
 
+function classTaskMatrixAnswersEquivalent(expected, submitted) {
+  const expectedRows = worksheetMatrixRowsFromLiteral(expected);
+  if (!expectedRows) return null;
+  const submittedRows = worksheetMatrixRowsFromLiteral(submitted);
+  if (!submittedRows) return false;
+  if (expectedRows.length !== submittedRows.length || expectedRows[0].length !== submittedRows[0].length) return false;
+  return expectedRows.every((row, rowIndex) => row.every((expectedCell, colIndex) => {
+    const submittedCell = submittedRows[rowIndex][colIndex];
+    const expectedClean = classTaskNormaliseAnswer(expectedCell);
+    const submittedClean = classTaskNormaliseAnswer(submittedCell);
+    return expectedClean === submittedClean || classTaskAlgebraicallyEquivalent(expectedClean, submittedClean);
+  }));
+}
+
 function classTaskAddAnswerVariant(answers, clean) {
   if (!clean) return;
   answers.add(clean);
@@ -15973,7 +15991,12 @@ function classTaskScoreSubmission(questions = [], answers = {}, working = {}, op
     const scoreThisQuestion = !(options.scoreOnlyAnswered && !attempted);
     const markable = Boolean(accepted.length && scoreThisQuestion);
     const multiSolutionMatch = classTaskMultiSolutionSetMatches(expected, submitted);
-    const correct = Boolean(markable && (multiSolutionMatch === null ? classTaskAnswersMatch(accepted, submittedVariants) : multiSolutionMatch));
+    const matrixMatch = classTaskMatrixAnswersEquivalent(expected, submitted);
+    const correct = Boolean(markable && (
+      matrixMatch === null
+        ? (multiSolutionMatch === null ? classTaskAnswersMatch(accepted, submittedVariants) : multiSolutionMatch)
+        : matrixMatch
+    ));
     if (markable) {
       maxScore += marks;
       if (correct) autoScore += marks;
@@ -15993,6 +16016,7 @@ function classTaskScoreSubmission(questions = [], answers = {}, working = {}, op
 }
 
 function classTaskPublicQuestion(question, index) {
+  const answerTemplate = classTaskCleanAnswerTemplate(question.answer_template || question.answerTemplate);
   return {
     id: question.id || `q${index + 1}`,
     question: question.question || question.questionText || "",
@@ -16000,7 +16024,8 @@ function classTaskPublicQuestion(question, index) {
     instruction: question.instruction || question.instructionText || "",
     marks: Number(question.marks) || 1,
     sectionTitle: question.sectionTitle || "",
-    sectionType: question.sectionType || ""
+    sectionType: question.sectionType || "",
+    ...(answerTemplate ? { answer_template: answerTemplate } : {})
   };
 }
 
@@ -17135,7 +17160,168 @@ async function ensureClassTaskMetadata(tool) {
   return loadClassTaskTool(tool);
 }
 
-function classTaskAnswerValue(problem) {
+function classTaskCleanAnswerTemplate(template) {
+  if (!template || typeof template !== "object") return null;
+  const type = String(template.type || "").trim();
+  if (!["matrix", "column_vector"].includes(type)) return null;
+  const rows = classTaskClampNumber(template.rows, 1, 5, 0);
+  const cols = classTaskClampNumber(template.cols, 1, 5, 0);
+  if (!rows || !cols) return null;
+  if (type === "column_vector" && cols !== 1) return null;
+  const defaultLabel = type === "column_vector" ? `${rows}-component column vector` : `${rows} by ${cols} matrix`;
+  return {
+    type,
+    rows,
+    cols,
+    label: String(template.label || defaultLabel).trim().slice(0, 80)
+  };
+}
+
+function classTaskStructuredCellText(cell) {
+  const clone = cell?.cloneNode?.(true);
+  if (!clone) return "";
+
+  function nodeText(node) {
+    return String(node?.textContent || "")
+      .replace(/[−–—]/g, "-")
+      .replace(/\s+/g, "")
+      .trim();
+  }
+
+  clone.querySelectorAll(".vfrac, .worksheet-fraction").forEach((fraction) => {
+    const parts = [...fraction.children].filter((child) => child.textContent?.trim());
+    if (parts.length < 2) return;
+    fraction.replaceWith(document.createTextNode(`(${nodeText(parts[0])})/(${nodeText(parts[1])})`));
+  });
+  clone.querySelectorAll("sup").forEach((sup) => {
+    sup.replaceWith(document.createTextNode(`^${nodeText(sup)}`));
+  });
+  clone.querySelectorAll("sub").forEach((sub) => {
+    sub.replaceWith(document.createTextNode(`_${nodeText(sub)}`));
+  });
+
+  return nodeText(clone);
+}
+
+function classTaskStructuredRowsToLiteral(rows = []) {
+  return `[${rows.map((row) => `[${row.map((cell) => String(cell || "").trim() || "0").join(", ")}]`).join(", ")}]`;
+}
+
+function classTaskStructuredRowsHaveSeparator(rows = []) {
+  return rows.some((row) => row.some((cell) => /^[|¦:]$/.test(String(cell || "").trim())));
+}
+
+function classTaskIgnorableStructuredPrefix(value) {
+  const compact = String(value || "")
+    .replace(/[−–—]/g, "-")
+    .replace(/\s+/g, "")
+    .replace(/[.:;]+$/g, "")
+    .toLowerCase();
+  if (!compact) return true;
+  if (/^[a-z][a-z0-9_]*=$/.test(compact)) return true;
+  if (/^[a-z]{1,4}=$/.test(compact)) return true;
+  if (/^[a-z](?:[×x*+\-·][a-z])+=$/.test(compact)) return true;
+  return /^(solution|answer|result|vector|solutionvector)=$/.test(compact);
+}
+
+function classTaskOutsideStructuredText(html, selector) {
+  const template = document.createElement("template");
+  template.innerHTML = String(html || "");
+  template.content.querySelector(selector)?.remove();
+  return String(template.content.textContent || "").replace(/\s+/g, " ").trim();
+}
+
+function classTaskStructuredContext(problem = {}, defaults = {}) {
+  return [
+    defaults.toolSlug,
+    defaults.sectionTitle,
+    defaults.sectionType,
+    problem.typeLabel,
+    problem.instruction,
+    problem.instructionText,
+    problem.question,
+    problem.questionText,
+    problem.prompt
+  ].filter(Boolean).join(" ").toLowerCase();
+}
+
+function classTaskStructuredContextIsVector(context) {
+  return /\b(vector|vectors|linear algebra|displacement|resultant)\b/.test(String(context || ""));
+}
+
+function classTaskMatrixRowsFromHtml(matrix) {
+  const rowElements = [...matrix?.children || []].filter((child) => child.classList?.contains("matrix-row"));
+  const rows = rowElements.map((row) => [...row.children || []]
+    .filter((cell) => cell.classList?.contains("matrix-cell"))
+    .map(classTaskStructuredCellText));
+  if (!rows.length || rows.some((row) => !row.length)) return null;
+  const width = rows[0].length;
+  if (!width || rows.some((row) => row.length !== width)) return null;
+  if (classTaskStructuredRowsHaveSeparator(rows)) return null;
+  return rows;
+}
+
+function classTaskVectorRowsFromHtml(vector) {
+  const entries = vector?.classList?.contains("cvec")
+    ? [...vector.querySelectorAll(".entries > span")]
+    : [...vector?.children || []].filter((child) => child.tagName?.toLowerCase() === "span");
+  const rows = entries.map((entry) => [classTaskStructuredCellText(entry)]);
+  return rows.length ? rows : null;
+}
+
+function classTaskStructuredAnswerInfo(problem = {}, defaults = {}) {
+  const context = classTaskStructuredContext(problem, defaults);
+  const explicitTemplate = classTaskCleanAnswerTemplate(problem.answer_template || problem.answerTemplate);
+  const rawAnswer = String(problem.plainAnswer || problem.answerText || "").trim();
+  const rawRows = worksheetMatrixRowsFromLiteral(rawAnswer);
+  if (rawRows && !classTaskStructuredRowsHaveSeparator(rawRows)) {
+    const type = rawRows[0]?.length === 1 && classTaskStructuredContextIsVector(context) ? "column_vector" : "matrix";
+    return {
+      answer: rawAnswer,
+      template: explicitTemplate || classTaskCleanAnswerTemplate({ type, rows: rawRows.length, cols: rawRows[0].length })
+    };
+  }
+
+  const richAnswer = String(problem.answer || "");
+  if (!/<[a-z][\s\S]*>/i.test(richAnswer)) {
+    return explicitTemplate ? { answer: "", template: explicitTemplate } : null;
+  }
+
+  const vectorTemplate = document.createElement("template");
+  vectorTemplate.innerHTML = richAnswer;
+  const vectorNodes = vectorTemplate.content.querySelectorAll(".colvec, .cvec");
+  if (vectorNodes.length === 1 && !vectorTemplate.content.querySelector(".matrix-wrap")) {
+    const rows = classTaskVectorRowsFromHtml(vectorNodes[0]);
+    const outside = classTaskOutsideStructuredText(richAnswer, ".colvec, .cvec");
+    if (rows && !classTaskStructuredRowsHaveSeparator(rows) && classTaskIgnorableStructuredPrefix(outside)) {
+      return {
+        answer: classTaskStructuredRowsToLiteral(rows),
+        template: explicitTemplate || classTaskCleanAnswerTemplate({ type: "column_vector", rows: rows.length, cols: 1 })
+      };
+    }
+  }
+
+  const matrixTemplate = document.createElement("template");
+  matrixTemplate.innerHTML = richAnswer;
+  const matrixNodes = matrixTemplate.content.querySelectorAll(".matrix-wrap");
+  if (matrixNodes.length === 1 && !matrixTemplate.content.querySelector(".colvec, .cvec")) {
+    const rows = classTaskMatrixRowsFromHtml(matrixNodes[0]);
+    const outside = classTaskOutsideStructuredText(richAnswer, ".matrix-wrap");
+    if (rows && classTaskIgnorableStructuredPrefix(outside)) {
+      const type = rows[0]?.length === 1 && classTaskStructuredContextIsVector(context) ? "column_vector" : "matrix";
+      return {
+        answer: classTaskStructuredRowsToLiteral(rows),
+        template: explicitTemplate || classTaskCleanAnswerTemplate({ type, rows: rows.length, cols: rows[0].length })
+      };
+    }
+  }
+
+  return explicitTemplate ? { answer: "", template: explicitTemplate } : null;
+}
+
+function classTaskAnswerValue(problem, defaults = {}) {
+  const structuredAnswer = classTaskStructuredAnswerInfo(problem, defaults);
+  if (structuredAnswer?.answer) return structuredAnswer.answer;
   const richAnswer = problem.answer;
   if (
     problem.plainAnswer &&
@@ -17147,16 +17333,19 @@ function classTaskAnswerValue(problem) {
 }
 
 function classTaskSerialiseQuestion(problem, index, defaults = {}) {
+  const structuredAnswer = classTaskStructuredAnswerInfo(problem, defaults);
+  const answerTemplate = classTaskCleanAnswerTemplate(structuredAnswer?.template || problem.answer_template || problem.answerTemplate);
   return {
     id: `q${index + 1}`,
     question: problem.question || problem.questionText || problem.prompt || problem.equation || "",
     diagram: problem.diagram || problem.diagramHtml || "",
-    answer: classTaskAnswerValue(problem),
+    answer: structuredAnswer?.answer || classTaskAnswerValue(problem, defaults),
     steps: Array.isArray(problem.steps) ? problem.steps.slice(0, 24) : [],
     marks: defaults.marks,
     instruction: problem.instruction || problem.instructionText || defaults.instruction || "",
     sectionTitle: defaults.sectionTitle || "",
-    sectionType: defaults.sectionType || ""
+    sectionType: defaults.sectionType || "",
+    ...(answerTemplate ? { answer_template: answerTemplate } : {})
   };
 }
 
@@ -17176,7 +17365,8 @@ function generateClassTaskQuestionSet(api, tool, level, type, count, marks) {
     marks,
     instruction,
     sectionTitle: tool.title,
-    sectionType: type.label
+    sectionType: type.label,
+    toolSlug: tool.slug
   }));
   return { instruction, questions };
 }
@@ -17218,7 +17408,8 @@ function generateClassTaskPracticeQuestionSet(api, tool, metadata, level, type, 
         marks,
         instruction: result.instruction || "Answer each question. Show working where appropriate.",
         sectionTitle: tool.title,
-        sectionType: source.type.label
+        sectionType: source.type.label,
+        toolSlug: tool.slug
       }));
     } catch (_) {
       // Try the next source so one weaker question type does not block the room.
@@ -18733,13 +18924,81 @@ function pupilMathPreviewHtml(value, emptyLabel = "Preview appears here") {
   const template = document.createElement("template");
   text.split(/\n/).forEach((line, index) => {
     if (index > 0) template.content.appendChild(document.createElement("br"));
-    template.content.appendChild(worksheetMathFragment(pupilMathEntryToDisplay(line)));
+    const displayLine = pupilMathEntryToDisplay(line);
+    if (displayLine.includes("[[")) {
+      const lineTemplate = document.createElement("template");
+      lineTemplate.innerHTML = worksheetContentHtml(displayLine);
+      template.content.appendChild(lineTemplate.content.cloneNode(true));
+    } else {
+      template.content.appendChild(worksheetMathFragment(displayLine));
+    }
   });
   return template.innerHTML;
 }
 
 function pupilAnswerPreviewHtml(value) {
   return pupilMathPreviewHtml(value, "Preview appears here");
+}
+
+function pupilStructuredTemplate(question = {}) {
+  return classTaskCleanAnswerTemplate(question.answer_template || question.answerTemplate);
+}
+
+function pupilStructuredAnswerHint(template) {
+  if (!template) return "Use the maths tools for fractions, powers, roots, coordinates, and equations.";
+  if (template.type === "column_vector") return "Enter one component in each row of the column vector.";
+  return `Enter each entry in the ${template.rows} by ${template.cols} matrix.`;
+}
+
+function pupilStructuredAnswerCellsHtml(questionId, template) {
+  const rows = Array.from({ length: template.rows }, (_, rowIndex) => rowIndex);
+  const cols = Array.from({ length: template.cols }, (_, colIndex) => colIndex);
+  return rows.map((rowIndex) => cols.map((colIndex) => `
+    <input
+      class="pupil-matrix-cell-input"
+      type="text"
+      data-pupil-math-input
+      data-pupil-matrix-cell="${escapeHtml(questionId)}"
+      data-row="${rowIndex}"
+      data-col="${colIndex}"
+      autocomplete="off"
+      spellcheck="false"
+      inputmode="text"
+      aria-label="${template.type === "column_vector" ? "Vector" : "Matrix"} entry row ${rowIndex + 1}, column ${colIndex + 1}">
+  `).join("")).join("");
+}
+
+function pupilAnswerEntryHtml(questionId, question) {
+  const template = pupilStructuredTemplate(question);
+  if (!template) {
+    return `
+      <label class="pupil-answer-field">
+        Final answer
+        <input type="text" data-pupil-answer="${escapeHtml(questionId)}" data-pupil-math-input autocomplete="off" spellcheck="false" inputmode="text" placeholder="Type your final answer">
+      </label>
+      <small>${pupilStructuredAnswerHint(template)}</small>
+      <div class="pupil-answer-preview" data-pupil-answer-preview="${escapeHtml(questionId)}">${pupilAnswerPreviewHtml("")}</div>
+    `;
+  }
+
+  return `
+    <div class="pupil-answer-field pupil-structured-answer-field" data-pupil-structured-answer="${escapeHtml(template.type)}" data-pupil-structured-target="${escapeHtml(questionId)}">
+      <div class="pupil-structured-answer-title">
+        <span>Final answer</span>
+        <strong>${escapeHtml(template.label || (template.type === "column_vector" ? "Column vector" : `${template.rows} by ${template.cols} matrix`))}</strong>
+      </div>
+      <input type="hidden" data-pupil-answer="${escapeHtml(questionId)}" data-pupil-answer-structured="true">
+      <div class="pupil-matrix-entry-shell ${template.type === "column_vector" ? "is-column-vector" : ""}" style="--matrix-cols:${template.cols}; --matrix-rows:${template.rows};">
+        <span class="pupil-matrix-entry-bracket" aria-hidden="true"></span>
+        <div class="pupil-matrix-input-grid">
+          ${pupilStructuredAnswerCellsHtml(questionId, template)}
+        </div>
+        <span class="pupil-matrix-entry-bracket right" aria-hidden="true"></span>
+      </div>
+    </div>
+    <small>${pupilStructuredAnswerHint(template)}</small>
+    <div class="pupil-answer-preview" data-pupil-answer-preview="${escapeHtml(questionId)}">${pupilAnswerPreviewHtml("")}</div>
+  `;
 }
 
 function pupilIdentityFromForm(form) {
@@ -18776,7 +19035,8 @@ function pupilIdentityFieldHtml(task, savedAlias, savedCode) {
 }
 
 function pupilQuestionHtml(question, index) {
-  const questionId = escapeHtml(question.id || `q${index + 1}`);
+  const questionId = question.id || `q${index + 1}`;
+  const safeQuestionId = escapeHtml(questionId);
   const allowHandwriting = classTaskAllowsHandwriting(state.pupilTask?.settings || {});
   return `
     <article class="pupil-question-card ${index === 0 ? "active" : ""}" data-pupil-question-card="${index}">
@@ -18789,22 +19049,17 @@ function pupilQuestionHtml(question, index) {
         </div>
         <div class="pupil-response-grid">
           <div class="pupil-answer-stack">
-            <label class="pupil-answer-field">
-              Final answer
-              <input type="text" data-pupil-answer="${questionId}" data-pupil-math-input autocomplete="off" spellcheck="false" inputmode="text" placeholder="Type your final answer">
-            </label>
-            <small>Use the maths tools for fractions, powers, roots, coordinates, and equations.</small>
-            <div class="pupil-answer-preview" data-pupil-answer-preview="${questionId}">${pupilAnswerPreviewHtml("")}</div>
+            ${pupilAnswerEntryHtml(questionId, question)}
           </div>
           <section class="pupil-working-field" aria-label="Working for question ${index + 1}">
             <div class="pupil-working-head">
               <span>Working</span>
-              ${allowHandwriting ? `<button type="button" data-pupil-clear-canvas="${questionId}">Clear writing</button>` : ""}
+              ${allowHandwriting ? `<button type="button" data-pupil-clear-canvas="${safeQuestionId}">Clear writing</button>` : ""}
             </div>
-            <textarea data-pupil-working="${questionId}" data-pupil-math-input rows="3" spellcheck="false" placeholder="${allowHandwriting ? "Type working, or write below with your finger or stylus" : "Type any useful working here"}"></textarea>
-            <div class="pupil-working-preview" data-pupil-working-preview="${questionId}">${pupilMathPreviewHtml("", "Typed working preview")}</div>
+            <textarea data-pupil-working="${safeQuestionId}" data-pupil-math-input rows="3" spellcheck="false" placeholder="${allowHandwriting ? "Type working, or write below with your finger or stylus" : "Type any useful working here"}"></textarea>
+            <div class="pupil-working-preview" data-pupil-working-preview="${safeQuestionId}">${pupilMathPreviewHtml("", "Typed working preview")}</div>
             ${allowHandwriting ? `<div class="pupil-handwriting-pad">
-              <canvas data-pupil-working-canvas="${questionId}" aria-label="Handwriting space for question ${index + 1}"></canvas>
+              <canvas data-pupil-working-canvas="${safeQuestionId}" aria-label="Handwriting space for question ${index + 1}"></canvas>
             </div>` : ""}
           </section>
         </div>
@@ -19317,6 +19572,10 @@ function pupilUpdateMathInputPreview(input) {
   if (!input) return;
   if (input.matches("[data-pupil-answer]")) pupilUpdateAnswerPreview(input);
   if (input.matches("[data-pupil-working]")) pupilUpdateWorkingPreview(input);
+  if (input.matches("[data-pupil-matrix-cell]")) {
+    const hiddenInput = pupilSyncStructuredAnswer(input);
+    if (hiddenInput) pupilUpdateAnswerPreview(hiddenInput);
+  }
 }
 
 function pupilCommitMathInput(input) {
@@ -19324,6 +19583,44 @@ function pupilCommitMathInput(input) {
   const cleaned = pupilCleanMathEntry(input.value);
   if (cleaned !== input.value) input.value = cleaned;
   pupilUpdateMathInputPreview(input);
+}
+
+function pupilStructuredContainerFromInput(input) {
+  return input?.closest?.("[data-pupil-structured-answer]");
+}
+
+function pupilStructuredRowsFromContainer(container) {
+  if (!container) return [];
+  const cells = [...container.querySelectorAll("[data-pupil-matrix-cell]")];
+  const rowCount = Math.max(0, ...cells.map((cell) => Number(cell.dataset.row) + 1));
+  const colCount = Math.max(0, ...cells.map((cell) => Number(cell.dataset.col) + 1));
+  return Array.from({ length: rowCount }, (_, rowIndex) => (
+    Array.from({ length: colCount }, (_, colIndex) => {
+      const cell = cells.find((entry) => Number(entry.dataset.row) === rowIndex && Number(entry.dataset.col) === colIndex);
+      return pupilCleanMathEntry(cell?.value || "").trim();
+    })
+  ));
+}
+
+function pupilSyncStructuredAnswer(inputOrContainer) {
+  const container = inputOrContainer?.matches?.("[data-pupil-structured-answer]")
+    ? inputOrContainer
+    : pupilStructuredContainerFromInput(inputOrContainer);
+  if (!container) return null;
+  const questionId = container.dataset.pupilStructuredTarget || "";
+  const hiddenInput = questionId ? container.querySelector(`[data-pupil-answer="${CSS.escape(questionId)}"]`) : null;
+  if (!hiddenInput) return null;
+  const rows = pupilStructuredRowsFromContainer(container);
+  const hasAllEntries = rows.length && rows.every((row) => row.length && row.every((cell) => Boolean(cell)));
+  hiddenInput.value = hasAllEntries ? classTaskStructuredRowsToLiteral(rows) : "";
+  pupilUpdateAnswerPreview(hiddenInput);
+  return hiddenInput;
+}
+
+function pupilSyncAllStructuredAnswers(root = document) {
+  root.querySelectorAll("[data-pupil-structured-answer]").forEach((container) => {
+    pupilSyncStructuredAnswer(container);
+  });
 }
 
 function pupilCanvasDataUrl(canvas) {
@@ -19474,6 +19771,7 @@ function bindPupilJoin() {
 
   function updatePupilSubmitState() {
     if (!form) return;
+    pupilSyncAllStructuredAnswers(form);
     const answers = [...form.querySelectorAll("[data-pupil-answer]")];
     const answeredCount = answers.filter((input) => input.value.trim()).length;
     const isPractice = classTaskIsPracticeRoom(state.pupilTask?.settings || {});
@@ -19491,6 +19789,18 @@ function bindPupilJoin() {
       const answer = card?.querySelector("[data-pupil-answer]");
       tab.classList.toggle("answered", Boolean(answer?.value.trim()));
     });
+  }
+
+  function focusPupilAnswerInput(input) {
+    if (!input) return;
+    if (input.type === "hidden") {
+      const container = input.closest("[data-pupil-structured-answer]");
+      const firstEmpty = [...container?.querySelectorAll("[data-pupil-matrix-cell]") || []].find((cell) => !cell.value.trim())
+        || container?.querySelector("[data-pupil-matrix-cell]");
+      firstEmpty?.focus();
+      return;
+    }
+    input.focus();
   }
 
   function setActivePupilQuestion(index) {
@@ -19523,7 +19833,7 @@ function bindPupilJoin() {
     document.querySelector(".pupil-question-card.active [data-pupil-math-input]")?.focus({ preventScroll: true });
   });
 
-  document.querySelectorAll("[data-pupil-answer], [data-pupil-working]").forEach((input) => {
+  document.querySelectorAll("[data-pupil-answer], [data-pupil-working], [data-pupil-matrix-cell]").forEach((input) => {
     input.addEventListener("focus", () => {
       const card = input.closest("[data-pupil-question-card]");
       if (card) setActivePupilQuestion(card.dataset.pupilQuestionCard);
@@ -19536,6 +19846,12 @@ function bindPupilJoin() {
       updatePupilSubmitState();
     });
     pupilUpdateAnswerPreview(input);
+  });
+  document.querySelectorAll("[data-pupil-matrix-cell]").forEach((input) => {
+    input.addEventListener("input", () => {
+      pupilSyncStructuredAnswer(input);
+      updatePupilSubmitState();
+    });
   });
   document.querySelectorAll("[data-pupil-working]").forEach((input) => {
     input.addEventListener("input", () => {
@@ -19576,6 +19892,7 @@ function bindPupilJoin() {
   });
 
   setActivePupilQuestion(state.pupilActiveQuestionIndex || 0);
+  pupilSyncAllStructuredAnswers(form || document);
   updatePupilSubmitState();
   window.requestAnimationFrame(setupPupilHandwritingPads);
   startPupilTaskActivityTracking(form);
@@ -19616,6 +19933,7 @@ function bindPupilJoin() {
     const identity = pupilIdentityFromForm(form);
     const usesRoster = classTaskUsesRoster(state.pupilTask || {});
     form.querySelectorAll("[data-pupil-math-input]").forEach((input) => pupilCommitMathInput(input));
+    pupilSyncAllStructuredAnswers(form);
     const answerInputs = [...form.querySelectorAll("[data-pupil-answer]")];
     const firstBlankAnswer = answerInputs.find((input) => !input.value.trim());
     const answeredCount = answerInputs.filter((input) => input.value.trim()).length;
@@ -19640,7 +19958,7 @@ function bindPupilJoin() {
       updatePupilSubmitState();
       const card = firstBlankAnswer.closest("[data-pupil-question-card]");
       if (card) setActivePupilQuestion(card.dataset.pupilQuestionCard);
-      firstBlankAnswer.focus();
+      focusPupilAnswerInput(firstBlankAnswer);
       return;
     }
     if (isPractice && answeredCount < minimumQuestions) {
@@ -19650,7 +19968,7 @@ function bindPupilJoin() {
         status.textContent = `Answer at least ${minimumQuestions} questions before submitting this practice room.`;
         status.dataset.tone = "error";
       }
-      (firstBlankAnswer || answerInputs[0])?.focus();
+      focusPupilAnswerInput(firstBlankAnswer || answerInputs[0]);
       return;
     }
     if (button) button.disabled = true;

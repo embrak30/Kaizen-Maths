@@ -6074,6 +6074,87 @@ button.certification-course-card {
   min-height: 42px;
 }
 
+.pupil-structured-answer-field {
+  gap: 7px;
+}
+
+.pupil-structured-answer-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pupil-structured-answer-title strong {
+  color: var(--teal-dark);
+  font-family: var(--body-font);
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pupil-matrix-entry-shell {
+  --matrix-cols: 2;
+  --matrix-rows: 2;
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, max-content) auto;
+  align-items: stretch;
+  justify-self: start;
+  max-width: 100%;
+  color: #172033;
+  overflow: visible;
+}
+
+.pupil-matrix-entry-bracket {
+  width: 9px;
+  min-height: calc((var(--matrix-rows) * 34px) + ((var(--matrix-rows) - 1) * 7px) + 10px);
+  border-top: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  border-left: 2px solid currentColor;
+}
+
+.pupil-matrix-entry-bracket.right {
+  border-left: 0;
+  border-right: 2px solid currentColor;
+}
+
+.pupil-matrix-input-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--matrix-cols), minmax(42px, 60px));
+  grid-auto-rows: minmax(34px, auto);
+  gap: 7px 9px;
+  align-content: center;
+  justify-content: center;
+  padding: 5px 9px;
+}
+
+.pupil-matrix-entry-shell.is-column-vector .pupil-matrix-input-grid {
+  grid-template-columns: minmax(54px, 72px);
+}
+
+.pupil-matrix-cell-input {
+  width: 100%;
+  min-width: 0;
+  min-height: 34px;
+  padding: 4px 5px;
+  border: 1px solid rgba(23, 184, 179, 0.32);
+  border-radius: 5px;
+  background: #ffffff;
+  color: #172033;
+  font-family: var(--question-math-font);
+  font-size: 0.96rem;
+  font-weight: 500;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.pupil-matrix-cell-input:focus {
+  border-color: rgba(23, 184, 179, 0.78);
+  box-shadow: 0 0 0 3px rgba(23, 184, 179, 0.12);
+  outline: none;
+}
+
 .pupil-answer-stack {
   display: grid;
   gap: 5px;
