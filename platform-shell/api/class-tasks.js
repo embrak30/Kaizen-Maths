@@ -561,16 +561,45 @@ function publicPupilProfile(tasks = [], responses = [], identity = {}, groupName
   };
 }
 
+function decodeCommonMathEntities(value, options = {}) {
+  const decodeAngles = options.decodeAngles !== false;
+  let text = String(value ?? "");
+  for (let pass = 0; pass < 2; pass += 1) {
+    text = text
+      .replace(/&amp;(nbsp|minus|times|divide|plusmn|leq?|geq?|lt|gt|deg|pound|pi|mu|theta|sigma|radic);/gi, "&$1;")
+      .replace(/&amp;#(\d+);/gi, "&#$1;");
+  }
+  text = text
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .replace(/&minus;|&#8722;/gi, "−")
+    .replace(/&times;|&#215;/gi, "×")
+    .replace(/&divide;|&#247;/gi, "÷")
+    .replace(/&plusmn;|&#177;/gi, "±")
+    .replace(/&leq;|&le;|&#8804;/gi, "≤")
+    .replace(/&geq;|&ge;|&#8805;/gi, "≥")
+    .replace(/&deg;|&#176;/gi, "°")
+    .replace(/&pound;|&#163;/gi, "£")
+    .replace(/&pi;|&#960;/gi, "π")
+    .replace(/&mu;|&#956;/gi, "μ")
+    .replace(/&theta;|&#952;/gi, "θ")
+    .replace(/&sigma;|&#963;/gi, "σ")
+    .replace(/&radic;|&#8730;/gi, "√")
+    .replace(/&#039;|&apos;/gi, "'")
+    .replace(/&quot;/gi, "\"");
+  if (decodeAngles) {
+    text = text
+      .replace(/&lt;|&#60;/gi, "<")
+      .replace(/&gt;|&#62;/gi, ">");
+  }
+  return text.replace(/&amp;/gi, "&");
+}
+
 function stripHtml(value) {
-  return String(value ?? "")
+  return decodeCommonMathEntities(String(value ?? "")
     .replace(/<style[\s\S]*?<\/style>/gi, " ")
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
     .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
-    .replace(/&#039;/g, "'");
+  );
 }
 
 function normaliseSuperscripts(value) {

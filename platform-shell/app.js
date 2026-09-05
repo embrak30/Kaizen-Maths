@@ -694,7 +694,7 @@ const tools = [
     status: "Imported",
     description: "Generate integer practice covering comparing, ordering, opposites, addition, subtraction, multiplication, division, BIDMAS, and real-life directed-number contexts.",
     tags: ["numbers", "integers", "directed numbers", "negative numbers", "number line", "integer operations", "Common Core", "Grade 6", "KS3"],
-    toolPath: "tools/integer-operations/index.html?v=integer-operations-1",
+    toolPath: "tools/integer-operations/index.html?v=integer-operations-2",
     imported: true,
     teacherNotes: [
       "Level 1 builds integer meaning through comparing, ordering, and opposites.",
@@ -3366,9 +3366,42 @@ function checkingAccessCallout(title = "Checking access") {
   `;
 }
 
+function decodeCommonMathEntities(value, options = {}) {
+  const decodeAngles = options.decodeAngles !== false;
+  let text = String(value ?? "");
+  for (let pass = 0; pass < 2; pass += 1) {
+    text = text
+      .replace(/&amp;(nbsp|minus|times|divide|plusmn|leq?|geq?|lt|gt|deg|pound|pi|mu|theta|sigma|radic);/gi, "&$1;")
+      .replace(/&amp;#(\d+);/gi, "&#$1;");
+  }
+  text = text
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .replace(/&minus;|&#8722;/gi, "−")
+    .replace(/&times;|&#215;/gi, "×")
+    .replace(/&divide;|&#247;/gi, "÷")
+    .replace(/&plusmn;|&#177;/gi, "±")
+    .replace(/&leq;|&le;|&#8804;/gi, "≤")
+    .replace(/&geq;|&ge;|&#8805;/gi, "≥")
+    .replace(/&deg;|&#176;/gi, "°")
+    .replace(/&pound;|&#163;/gi, "£")
+    .replace(/&pi;|&#960;/gi, "π")
+    .replace(/&mu;|&#956;/gi, "μ")
+    .replace(/&theta;|&#952;/gi, "θ")
+    .replace(/&sigma;|&#963;/gi, "σ")
+    .replace(/&radic;|&#8730;/gi, "√")
+    .replace(/&#039;|&apos;/gi, "'")
+    .replace(/&quot;/gi, "\"");
+  if (decodeAngles) {
+    text = text
+      .replace(/&lt;|&#60;/gi, "<")
+      .replace(/&gt;|&#62;/gi, ">");
+  }
+  return text.replace(/&amp;/gi, "&");
+}
+
 function worksheetMathFragment(value) {
   const fragment = document.createDocumentFragment();
-  const source = normaliseAlgebraUnitCoefficients(String(value ?? ""))
+  const source = normaliseAlgebraUnitCoefficients(decodeCommonMathEntities(value))
     .replace(/\\\(|\\\)|\\\[|\\\]|\$\$/g, "")
     .replace(/\$/g, "")
     .replace(/\\left|\\right/g, "")
@@ -3507,12 +3540,12 @@ function normaliseAlgebraUnitCoefficients(value) {
 }
 
 function textLooksWorksheetMathLike(text) {
-  const source = String(text ?? "");
+  const source = decodeCommonMathEntities(text);
   return /(\$\$|\\\(|\\\[|[_^]|[A-Za-z0-9)\]}]\s*@\s*(?:\{[^{}]+\}|\([^()]+\)|-?\d+)|[A-Za-z][2-9]\b|\\d?frac|\\sqrt|\\displaystyle|\\boxed|\\text|\\left|\\right|\\big|\\quad|\\;|\\,|\\times|\\cdot|\\pm|\+\/-|\\approx|\\neq|\\Rightarrow|\\rightarrow|\\leq?|\\geq?|\\lt|\\gt|\\infty|\\theta|\\alpha|\\beta|\\gamma|\\Delta|\\pi|\\sin|\\cos|\\tan|\\sec|\\csc|\\cot|\\ln|[A-Za-z0-9)\]°]\s*[=<>≤≥]\s*-?[A-Za-z0-9(]|[A-Za-z]\s*[+\-]\s*\d|\d\s*[+\-×÷*/]\s*-?\d|\d+[A-Za-z]\s*[+\-]\s*\d|\d\s*[×÷*/]\s*\d)/.test(source);
 }
 
 function formatWorksheetMathText(text) {
-  return normaliseAlgebraUnitCoefficients(text)
+  return normaliseAlgebraUnitCoefficients(decodeCommonMathEntities(text))
     .replace(/(?<=[A-Za-z0-9)\]°])\s*(=|≤|≥|<|>|≈|≠)\s*(?=-?[A-Za-z0-9(]|[πθ])/g, " $1 ")
     .replace(/(?<=[A-Za-z0-9)\]°])\s*(×|÷|·)\s*(?=-?[A-Za-z0-9(]|[πθ])/g, " $1 ")
     .replace(/(?<=[A-Za-z0-9)\]°])\s*([+−])\s*(?=-?[A-Za-z0-9(]|[πθ])/g, " $1 ")
@@ -3694,10 +3727,33 @@ function worksheetReplaceRawMatrixText(root) {
   });
 }
 
+function worksheetDecodeTextNodes(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (!/[&#]/.test(node.nodeValue || "")) return NodeFilter.FILTER_REJECT;
+      const parent = node.parentElement;
+      if (parent && ["SCRIPT", "STYLE", "TEXTAREA", "SELECT", "OPTION"].includes(parent.tagName)) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      if (parent?.closest?.("svg")) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const textNodes = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode);
+  textNodes.forEach((node) => {
+    node.nodeValue = decodeCommonMathEntities(node.nodeValue);
+  });
+}
+
 function worksheetContentHtml(value) {
-  const source = worksheetLatexArrayHtml(value);
+  const rawSource = worksheetLatexArrayHtml(value);
+  const hasHtml = /<[a-z][\s\S]*>/i.test(rawSource);
+  const source = hasHtml ? rawSource : decodeCommonMathEntities(rawSource);
   const template = document.createElement("template");
-  if (/<[a-z][\s\S]*>/i.test(source)) {
+  if (hasHtml) {
     template.innerHTML = source;
   } else {
     template.content.appendChild(document.createTextNode(source));
@@ -3736,6 +3792,7 @@ function worksheetContentHtml(value) {
   });
 
   worksheetReplaceRawMatrixText(template.content);
+  worksheetDecodeTextNodes(template.content);
 
   const walker = document.createTreeWalker(template.content, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
@@ -15535,15 +15592,11 @@ function classTaskIsAvailable(task) {
 }
 
 function classTaskStripHtml(value) {
-  return String(value ?? "")
+  return decodeCommonMathEntities(String(value ?? "")
     .replace(/<style[\s\S]*?<\/style>/gi, " ")
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
     .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
-    .replace(/&#039;/g, "'");
+  );
 }
 
 function classTaskNormaliseSuperscripts(value) {
@@ -17323,6 +17376,9 @@ function classTaskAnswerValue(problem, defaults = {}) {
   const structuredAnswer = classTaskStructuredAnswerInfo(problem, defaults);
   if (structuredAnswer?.answer) return structuredAnswer.answer;
   const richAnswer = problem.answer;
+  if (richAnswer && !/<[a-z][\s\S]*>/i.test(String(richAnswer))) {
+    return decodeCommonMathEntities(richAnswer);
+  }
   if (
     problem.plainAnswer &&
     /class=["'][^"']*matrix-wrap|class=["'][^"']*matrix-expression/i.test(String(richAnswer || ""))
@@ -17332,15 +17388,20 @@ function classTaskAnswerValue(problem, defaults = {}) {
   return richAnswer || problem.answerText || problem.plainAnswer || "";
 }
 
+function classTaskDisplayMarkup(value) {
+  const source = String(value ?? "");
+  return /<[a-z][\s\S]*>/i.test(source) ? source : decodeCommonMathEntities(source);
+}
+
 function classTaskSerialiseQuestion(problem, index, defaults = {}) {
   const structuredAnswer = classTaskStructuredAnswerInfo(problem, defaults);
   const answerTemplate = classTaskCleanAnswerTemplate(structuredAnswer?.template || problem.answer_template || problem.answerTemplate);
   return {
     id: `q${index + 1}`,
-    question: problem.question || problem.questionText || problem.prompt || problem.equation || "",
-    diagram: problem.diagram || problem.diagramHtml || "",
+    question: classTaskDisplayMarkup(problem.question || problem.questionText || problem.prompt || problem.equation || ""),
+    diagram: classTaskDisplayMarkup(problem.diagram || problem.diagramHtml || ""),
     answer: structuredAnswer?.answer || classTaskAnswerValue(problem, defaults),
-    steps: Array.isArray(problem.steps) ? problem.steps.slice(0, 24) : [],
+    steps: Array.isArray(problem.steps) ? problem.steps.slice(0, 24).map(classTaskDisplayMarkup) : [],
     marks: defaults.marks,
     instruction: problem.instruction || problem.instructionText || defaults.instruction || "",
     sectionTitle: defaults.sectionTitle || "",

@@ -21,10 +21,39 @@
     }
   }
 
+  function decodeTextEntities(value) {
+    let text = String(value ?? '');
+    for (let pass = 0; pass < 2; pass += 1) {
+      text = text
+        .replace(/&amp;(nbsp|minus|times|divide|plusmn|leq?|geq?|lt|gt|deg|pound|pi|mu|theta|sigma|radic);/gi, '&$1;')
+        .replace(/&amp;#(\d+);/gi, '&#$1;');
+    }
+    return text
+      .replace(/&nbsp;|&#160;/gi, ' ')
+      .replace(/&minus;|&#8722;/gi, '−')
+      .replace(/&times;|&#215;/gi, '×')
+      .replace(/&divide;|&#247;/gi, '÷')
+      .replace(/&plusmn;|&#177;/gi, '±')
+      .replace(/&leq;|&le;|&#8804;/gi, '≤')
+      .replace(/&geq;|&ge;|&#8805;/gi, '≥')
+      .replace(/&lt;|&#60;/gi, '<')
+      .replace(/&gt;|&#62;/gi, '>')
+      .replace(/&deg;|&#176;/gi, '°')
+      .replace(/&pound;|&#163;/gi, '£')
+      .replace(/&pi;|&#960;/gi, 'π')
+      .replace(/&mu;|&#956;/gi, 'μ')
+      .replace(/&theta;|&#952;/gi, 'θ')
+      .replace(/&sigma;|&#963;/gi, 'σ')
+      .replace(/&radic;|&#8730;/gi, '√')
+      .replace(/&#039;|&apos;/gi, "'")
+      .replace(/&quot;/gi, '"')
+      .replace(/&amp;/gi, '&');
+  }
+
   function textFromHtml(value) {
     if (value == null) return '';
     const text = String(value);
-    if (!/[<&]/.test(text)) return normaliseAlgebraUnitCoefficients(text);
+    if (!/[<&]/.test(text)) return normaliseAlgebraUnitCoefficients(decodeTextEntities(text));
     const template = document.createElement('template');
     template.innerHTML = text;
     template.content.querySelectorAll('span.fraction, span.frac').forEach((fraction) => {
@@ -43,7 +72,7 @@
       if (!rows.length) return;
       matrix.replaceWith(document.createTextNode(`[${rows.map((row) => `[${row.join(', ')}]`).join(', ')}]`));
     });
-    return normaliseAlgebraUnitCoefficients(template.content.textContent.replace(/\s+/g, ' ').trim());
+    return normaliseAlgebraUnitCoefficients(decodeTextEntities(template.content.textContent.replace(/\s+/g, ' ').trim()));
   }
 
   function normalisePowerAtSymbols(value) {
@@ -147,12 +176,12 @@
 
   function normalizeStep(step) {
     if (step == null) return '';
-    if (typeof step === 'string' || typeof step === 'number') return normaliseAlgebraUnitCoefficients(step);
-    if (typeof step.text === 'string') return normaliseAlgebraUnitCoefficients(step.text);
-    if (typeof step.latex === 'string') return normaliseAlgebraUnitCoefficients(step.latex);
-    if (typeof step.html === 'string') return normaliseAlgebraUnitCoefficients(step.html);
-    if (typeof step.equation === 'string') return normaliseAlgebraUnitCoefficients(step.equation);
-    return normaliseAlgebraUnitCoefficients(step);
+    if (typeof step === 'string' || typeof step === 'number') return normaliseAlgebraUnitCoefficients(decodeTextEntities(step));
+    if (typeof step.text === 'string') return normaliseAlgebraUnitCoefficients(decodeTextEntities(step.text));
+    if (typeof step.latex === 'string') return normaliseAlgebraUnitCoefficients(decodeTextEntities(step.latex));
+    if (typeof step.html === 'string') return normaliseAlgebraUnitCoefficients(decodeTextEntities(step.html));
+    if (typeof step.equation === 'string') return normaliseAlgebraUnitCoefficients(decodeTextEntities(step.equation));
+    return normaliseAlgebraUnitCoefficients(decodeTextEntities(step));
   }
 
   function normalizeSteps(steps) {

@@ -145,7 +145,7 @@
     function choice(items){return items[random(0,items.length-1)]}
     function signed(n){return n < 0 ? `-${Math.abs(n)}` : String(n)}
     function signedTerm(n){return n < 0 ? `(${signed(n)})` : String(n)}
-    function money(n){return n < 0 ? `-&pound;${Math.abs(n)}` : `&pound;${n}`}
+    function money(n){return n < 0 ? `-£${Math.abs(n)}` : `£${n}`}
     function answerText(value){return signed(value)}
     function eq(text){return `<div class="step-equation">${text}</div>`}
     function intChip(n){return `<span class="${n<0?'negative-chip':'integer-chip'}">${signed(n)}</span>`}
@@ -299,16 +299,16 @@
         const result=a*b;
         return {
           badge:'multdiv',
-          calculation:`${intChip(a)} ${opChip('&times;')} ${intChip(b)}`,
-          questionText:`Calculate: ${signed(a)} x ${signedTerm(b)}`,
+          calculation:`${intChip(a)} ${opChip('×')} ${intChip(b)}`,
+          questionText:`Calculate: ${signed(a)} × ${signedTerm(b)}`,
           answer:signed(result),
           steps:[
             'Step 1: Multiply the sizes without the signs.',
-            eq(`${Math.abs(a)} &times; ${Math.abs(b)} = ${Math.abs(result)}`),
+            eq(`${Math.abs(a)} × ${Math.abs(b)} = ${Math.abs(result)}`),
             'Step 2: Decide the sign.',
             a*b>0?'The signs are the same, so the answer is positive.':'The signs are different, so the answer is negative.',
             'Step 3: Combine the sign and the size.',
-            eq(`${signed(a)} &times; ${signedTerm(b)} = ${signed(result)}`)
+            eq(`${signed(a)} × ${signedTerm(b)} = ${signed(result)}`)
           ]
         };
       }
@@ -317,16 +317,16 @@
       const dividend=quotient*divisor;
       return {
         badge:'multdiv',
-        calculation:`${intChip(dividend)} ${opChip('&divide;')} ${intChip(divisor)}`,
-        questionText:`Calculate: ${signed(dividend)} / ${signedTerm(divisor)}`,
+        calculation:`${intChip(dividend)} ${opChip('÷')} ${intChip(divisor)}`,
+        questionText:`Calculate: ${signed(dividend)} ÷ ${signedTerm(divisor)}`,
         answer:signed(quotient),
         steps:[
           'Step 1: Divide the sizes without the signs.',
-          eq(`${Math.abs(dividend)} &divide; ${Math.abs(divisor)} = ${Math.abs(quotient)}`),
+          eq(`${Math.abs(dividend)} ÷ ${Math.abs(divisor)} = ${Math.abs(quotient)}`),
           'Step 2: Decide the sign.',
           dividend*divisor>0?'The signs are the same, so the answer is positive.':'The signs are different, so the answer is negative.',
           'Step 3: Combine the sign and the size.',
-          eq(`${signed(dividend)} &divide; ${signedTerm(divisor)} = ${signed(quotient)}`)
+          eq(`${signed(dividend)} ÷ ${signedTerm(divisor)} = ${signed(quotient)}`)
         ]
       };
     }
@@ -336,15 +336,15 @@
       while([a,b,c,d].includes(0)){a=random(-10,10);b=random(-8,8);c=random(-8,8);d=random(-10,10)}
       const product=b*c;
       const result=a+product-d;
-      const expr=`${signed(a)} + ${signedTerm(b)} &times; ${signedTerm(c)} - ${signedTerm(d)}`;
+      const expr=`${signed(a)} + ${signedTerm(b)} × ${signedTerm(c)} - ${signedTerm(d)}`;
       return {
         badge:'multdiv',
         calculation:`Calculate: ${expr}`,
-        questionText:`Calculate: ${signed(a)} + ${signedTerm(b)} x ${signedTerm(c)} - ${signedTerm(d)}`,
+        questionText:`Calculate: ${signed(a)} + ${signedTerm(b)} × ${signedTerm(c)} - ${signedTerm(d)}`,
         answer:signed(result),
         steps:[
           'Step 1: Multiply before adding or subtracting.',
-          eq(`${signed(b)} &times; ${signedTerm(c)} = ${signed(product)}`),
+          eq(`${signed(b)} × ${signedTerm(c)} = ${signed(product)}`),
           'Step 2: Substitute that result back into the expression.',
           eq(`${signed(a)} + ${signedTerm(product)} - ${signedTerm(d)}`),
           'Step 3: Change subtraction into adding the opposite if useful, then work left to right.',
@@ -362,16 +362,16 @@
       const result=start+change;
       return {
         badge:'context',
-        wordProblem:`The temperature is ${signed(start)}&deg;C. It changes by ${signed(change)}&deg;C. What is the new temperature?`,
+        wordProblem:`The temperature is ${signed(start)}°C. It changes by ${signed(change)}°C. What is the new temperature?`,
         questionText:`The temperature is ${signed(start)} degrees C. It changes by ${signed(change)} degrees C. What is the new temperature?`,
-        answer:`${signed(result)}&deg;C`,
+        answer:`${signed(result)}°C`,
         steps:[
           'Step 1: Represent the change as an integer.',
           change>0?`${signed(change)} means the temperature increases.`:`${signed(change)} means the temperature decreases.`,
           'Step 2: Add the change to the starting temperature.',
           eq(`${signed(start)} + ${signedTerm(change)} = ${signed(result)}`),
           'Step 3: Include the unit in the answer.',
-          eq(`New temperature = ${signed(result)}&deg;C`)
+          eq(`New temperature = ${signed(result)}°C`)
         ]
       };
     }
@@ -382,7 +382,7 @@
       const action=change>0?'deposits':'spends';
       return {
         badge:'context',
-        wordProblem:`A bank balance is ${money(start)}. The customer ${action} &pound;${Math.abs(change)}. What is the new balance?`,
+        wordProblem:`A bank balance is ${money(start)}. The customer ${action} £${Math.abs(change)}. What is the new balance?`,
         questionText:`A bank balance is ${signed(start)} pounds. The customer ${action} ${Math.abs(change)} pounds. What is the new balance?`,
         answer:money(result),
         steps:[
@@ -391,7 +391,7 @@
           'Step 2: Add the change to the starting balance.',
           eq(`${signed(start)} + ${signedTerm(change)} = ${signed(result)}`),
           'Step 3: Interpret the result.',
-          result<0?`The account is overdrawn by &pound;${Math.abs(result)}.`:`The account has &pound;${result}.`
+          result<0?`The account is overdrawn by £${Math.abs(result)}.`:`The account has £${result}.`
         ]
       };
     }
