@@ -15906,6 +15906,16 @@ function classTaskUsesRoster(taskOrSettings = {}) {
   return Boolean(settings.roster_required || classTaskGroupId(settings));
 }
 
+function classTaskShowsInPupilProfile(taskOrSettings = {}) {
+  const settings = taskOrSettings.settings || taskOrSettings;
+  return settings.show_in_pupil_profile !== false;
+}
+
+function classTaskAllowsHandwriting(taskOrSettings = {}) {
+  const settings = taskOrSettings.settings || taskOrSettings;
+  return settings.allow_handwriting === true;
+}
+
 function classTaskGroupById(groupId) {
   return state.classTaskGroups.find((group) => String(group.id) === String(groupId)) || null;
 }
@@ -16112,6 +16122,8 @@ function classTaskPublicSettings(settings = {}) {
   return {
     show_answers_after_submit: true,
     allow_multiple_submissions: Boolean(settings.allow_multiple_submissions),
+    allow_handwriting: classTaskAllowsHandwriting(settings),
+    show_in_pupil_profile: classTaskShowsInPupilProfile(settings),
     pass_percent: classTaskPassPercent(settings),
     max_attempts: classTaskClampNumber(settings.max_attempts, 1, 10, 1),
     task_mode: classTaskMode(settings),
@@ -16312,6 +16324,7 @@ function classTaskPupilProgressProfile(tasks = [], responses = [], identity = {}
   const pupilCodeKey = normalisePupilCode(identity.pupilCode || identity.pupil_code);
   const visibleTasks = tasks
     .filter((task) => classTaskLocalTaskIsPupilEnabled(task))
+    .filter((task) => classTaskShowsInPupilProfile(task))
     .sort((a, b) => String(b.created_at || "").localeCompare(String(a.created_at || "")));
   const responseMatchesPupil = (response) => {
     const responseAliasKey = classTaskAliasKey(response.pupil_alias);
@@ -16565,6 +16578,8 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
         class_group_id: classGroup?.id || "",
         class_group_name: classGroup?.name || "",
         roster_required: Boolean(classGroup?.id),
+        allow_handwriting: Boolean(incomingSettings.allow_handwriting),
+        show_in_pupil_profile: incomingSettings.show_in_pupil_profile !== false,
         source: "kaizen-class-task",
         pupil_module_enabled: true,
         pupil_module_owner: profile.school_id ? "school" : "admin"
@@ -16707,6 +16722,25 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     classTaskWriteLocal(classTaskLocalResponsesStorageKey, nextResponses);
     const response = nextResponses.find((item) => item.id === responseId) || null;
     return { response, source: "local" };
+  }
+
+  if (action === "profile-visibility") {
+    classTaskAssertPupilModuleAccess();
+    const taskId = body.task_id;
+    const showInProfile = body.show_in_pupil_profile !== false;
+    const nextTasks = tasks.map((task) => task.id === taskId && (isAdmin() || task.teacher_id === teacherId)
+      ? {
+          ...task,
+          settings: {
+            ...(task.settings || {}),
+            show_in_pupil_profile: showInProfile
+          },
+          updated_at: new Date().toISOString()
+        }
+      : task);
+    classTaskWriteLocal(classTaskLocalTasksStorageKey, nextTasks);
+    const task = nextTasks.find((item) => item.id === taskId) || null;
+    return { task, source: "local" };
   }
 
   if (action === "close") {
@@ -17043,7 +17077,9 @@ async function createClassTaskFromForm(form) {
         source_marks: marks,
         class_group_id: classGroup?.id || "",
         class_group_name: classGroup?.name || "",
-        roster_required: Boolean(classGroup?.id)
+        roster_required: Boolean(classGroup?.id),
+        allow_handwriting: Boolean(form.querySelector("[name='allow_handwriting']")?.checked),
+        show_in_pupil_profile: form.querySelector("[name='show_in_pupil_profile']")?.checked !== false
       }
     }
   });
@@ -17070,6 +17106,8 @@ function classTaskListSignature(tasks = state.classTasks, error = state.classTas
       is_active: task.is_active,
       expires_at: task.expires_at,
       updated_at: task.updated_at,
+      show_in_pupil_profile: classTaskShowsInPupilProfile(task),
+      allow_handwriting: classTaskAllowsHandwriting(task),
       responses: (task.responses || []).map((response) => [
         response.id,
         response.reviewed,
@@ -17543,6 +17581,14 @@ function classTaskBuilderHtml() {
             <input name="allow_multiple_submissions" type="checkbox">
             <span class="class-task-label-row">Repeat submissions ${classTaskHelpTip("Allow pupils to submit more than once even when a pass target has already been met.")}</span>
           </label>
+          <label class="admin-check-row">
+            <input name="allow_handwriting" type="checkbox">
+            <span class="class-task-label-row">Handwriting space ${classTaskHelpTip("Off by default. Turn this on only when pupils should be able to write working with a finger or stylus on the screen.")}</span>
+          </label>
+          <label class="admin-check-row">
+            <input name="show_in_pupil_profile" type="checkbox" checked>
+            <span class="class-task-label-row">Show in pupil profile ${classTaskHelpTip("Keep this on for normal assignments. Turn it off for tests, demos, or old tasks you do not want pupils to see in their progress history.")}</span>
+          </label>
         </div>
         <div class="class-task-action-row">
           <p class="worksheet-status" id="classTaskStatus" data-tone="${state.classTaskError ? "error" : ""}">${escapeHtml(state.classTaskLastMessage || state.classTaskError || "Choose a topic, level, and question type, then create a join code.")}</p>
@@ -17896,11 +17942,13 @@ function classTaskCardHtml(task) {
   const passPercent = classTaskPassPercent(settings);
   const maxAttempts = classTaskMaxAttempts(task);
   const isPractice = classTaskIsPracticeRoom(settings);
+  const showInProfile = classTaskShowsInPupilProfile(settings);
+  const allowHandwriting = classTaskAllowsHandwriting(settings);
   const timeTarget = classTaskTimeTargetMinutes(settings);
   const minimumQuestions = classTaskMinimumQuestions(settings);
   const classGroupName = settings.class_group_name || classTaskGroupForTask(task)?.name || "";
   return `
-    <article class="class-task-card">
+    <article class="class-task-card" data-profile-visible="${showInProfile ? "true" : "false"}">
       <div class="class-task-card-head">
         <div>
           <span class="eyebrow">${isOpen ? "Open" : "Closed"} ${classTaskModeLabel(settings)}</span>
@@ -17917,6 +17965,8 @@ function classTaskCardHtml(task) {
         ${isPractice ? `<span>${escapeHtml(classTaskCoverageLabel(settings))}</span>` : ""}
         ${classGroupName ? `<span>${escapeHtml(classGroupName)}</span>` : ""}
         ${classTaskUsesRoster(settings) ? `<span>Pupil codes</span>` : ""}
+        <span>${showInProfile ? "Profile visible" : "Hidden from profile"}</span>
+        ${allowHandwriting ? `<span>Handwriting on</span>` : ""}
         ${passPercent ? `<span>${passPercent}% required</span>` : ""}
         ${maxAttempts > 1 ? `<span>${maxAttempts} attempts available</span>` : ""}
         <span>${participants.length} joined</span>
@@ -17930,6 +17980,7 @@ function classTaskCardHtml(task) {
       <div class="button-row">
         <button class="button primary" type="button" data-class-task-copy="${escapeHtml(joinUrl)}">Copy Link</button>
         <a class="button" href="#/pupil/${escapeHtml(task.join_code)}">Open Pupil Page</a>
+        <button class="button subtle" type="button" data-class-task-profile-visibility="${escapeHtml(task.id)}" data-show-in-profile="${showInProfile ? "false" : "true"}">${showInProfile ? "Remove from Profile" : "Restore to Profile"}</button>
         ${isOpen ? `<button class="button subtle" type="button" data-class-task-close="${escapeHtml(task.id)}">Close Task</button>` : ""}
       </div>
       ${classTaskMonitorHtml(task)}
@@ -18010,6 +18061,33 @@ function bindClassTaskListActions() {
         input?.focus();
         input?.select();
         button.textContent = "Select link";
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-class-task-profile-visibility]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const showInProfile = button.dataset.showInProfile === "true";
+      const prompt = showInProfile
+        ? "Restore this task to pupil profiles?"
+        : "Remove this task from pupil profiles? The task and submissions will stay in the teacher monitor.";
+      if (!window.confirm(prompt)) return;
+      button.disabled = true;
+      try {
+        await classTaskApi("profile-visibility", {
+          method: "POST",
+          auth: true,
+          body: {
+            task_id: button.dataset.classTaskProfileVisibility,
+            show_in_pupil_profile: showInProfile
+          }
+        });
+        state.classTaskLastMessage = showInProfile ? "Task restored to pupil profiles." : "Task removed from pupil profiles.";
+        await loadClassTasks({ rerender: true, force: true });
+        setClassTaskStatus(state.classTaskLastMessage, "success");
+      } catch (error) {
+        window.alert(error.message);
+        button.disabled = false;
       }
     });
   });
@@ -18438,6 +18516,7 @@ function pupilIdentityFieldHtml(task, savedAlias, savedCode) {
 
 function pupilQuestionHtml(question, index) {
   const questionId = escapeHtml(question.id || `q${index + 1}`);
+  const allowHandwriting = classTaskAllowsHandwriting(state.pupilTask?.settings || {});
   return `
     <article class="pupil-question-card ${index === 0 ? "active" : ""}" data-pupil-question-card="${index}">
       <div class="pupil-question-number">${index + 1}</div>
@@ -18459,13 +18538,13 @@ function pupilQuestionHtml(question, index) {
           <section class="pupil-working-field" aria-label="Working for question ${index + 1}">
             <div class="pupil-working-head">
               <span>Working</span>
-              <button type="button" data-pupil-clear-canvas="${questionId}">Clear writing</button>
+              ${allowHandwriting ? `<button type="button" data-pupil-clear-canvas="${questionId}">Clear writing</button>` : ""}
             </div>
-            <textarea data-pupil-working="${questionId}" data-pupil-math-input rows="3" spellcheck="false" placeholder="Type working, or write below with your finger or stylus"></textarea>
+            <textarea data-pupil-working="${questionId}" data-pupil-math-input rows="3" spellcheck="false" placeholder="${allowHandwriting ? "Type working, or write below with your finger or stylus" : "Type any useful working here"}"></textarea>
             <div class="pupil-working-preview" data-pupil-working-preview="${questionId}">${pupilMathPreviewHtml("", "Typed working preview")}</div>
-            <div class="pupil-handwriting-pad">
+            ${allowHandwriting ? `<div class="pupil-handwriting-pad">
               <canvas data-pupil-working-canvas="${questionId}" aria-label="Handwriting space for question ${index + 1}"></canvas>
-            </div>
+            </div>` : ""}
           </section>
         </div>
       </div>

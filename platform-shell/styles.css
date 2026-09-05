@@ -4926,7 +4926,7 @@ button.certification-course-card {
 }
 
 .class-task-settings-grid {
-  grid-template-columns: repeat(6, minmax(88px, 1fr)) minmax(132px, auto);
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
   align-items: end;
 }
 
@@ -5277,6 +5277,11 @@ button.certification-course-card {
   border-left: 4px solid var(--teal);
   border-radius: 8px;
   background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(248,250,252,0.96));
+}
+
+.class-task-card[data-profile-visible="false"] {
+  border-left-color: #94a3b8;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 0.94));
 }
 
 .class-task-card h3 {

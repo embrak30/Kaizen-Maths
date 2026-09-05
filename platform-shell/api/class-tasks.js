@@ -253,6 +253,8 @@ function publicTaskSettings(settings = {}) {
   return {
     show_answers_after_submit: true,
     allow_multiple_submissions: Boolean(settings.allow_multiple_submissions),
+    allow_handwriting: taskAllowsHandwriting(settings),
+    show_in_pupil_profile: taskShowsInPupilProfile(settings),
     pass_percent: taskPassPercent(settings),
     max_attempts: clampNumber(settings.max_attempts, 1, 10, 1),
     task_mode: taskMode(settings),
@@ -429,6 +431,7 @@ function publicPupilProfile(tasks = [], responses = [], identity = {}, groupName
   const pupilCodeKey = normalisePupilCode(identity.pupilCode);
   const visibleTasks = tasks
     .filter((task) => taskHasPupilModuleFlag(task))
+    .filter((task) => taskShowsInPupilProfile(task))
     .sort((a, b) => String(b.created_at || "").localeCompare(String(a.created_at || "")));
   const responseMatchesPupil = (response) => {
     const responseAliasKey = normaliseAliasKey(response.pupil_alias);
@@ -951,6 +954,16 @@ function taskUsesRoster(taskOrSettings = {}) {
   return Boolean(settings.roster_required && taskGroupId(settings));
 }
 
+function taskShowsInPupilProfile(taskOrSettings = {}) {
+  const settings = taskOrSettings.settings || taskOrSettings;
+  return settings.show_in_pupil_profile !== false;
+}
+
+function taskAllowsHandwriting(taskOrSettings = {}) {
+  const settings = taskOrSettings.settings || taskOrSettings;
+  return settings.allow_handwriting === true;
+}
+
 function cleanRosterMembers(value) {
   const rows = Array.isArray(value) ? value : [];
   const seenAliases = new Set();
@@ -1151,10 +1164,11 @@ async function latestResponseForPupil(supabase, task, pupilAlias, attemptIndex =
   return matches[0] || null;
 }
 
-async function responsesForPupilTasks(supabase, tasks = [], pupilAlias = "") {
+async function responsesForPupilTasks(supabase, tasks = [], identity = {}) {
   const taskIds = tasks.map((task) => task.id).filter(Boolean);
-  const aliasKey = normaliseAliasKey(pupilAlias);
-  if (!taskIds.length || !aliasKey) return [];
+  const aliasKey = normaliseAliasKey(identity.pupilAlias || identity.pupil_alias || identity);
+  const pupilCodeKey = normalisePupilCode(identity.pupilCode || identity.pupil_code);
+  if (!taskIds.length || (!aliasKey && !pupilCodeKey)) return [];
   let responseResult = await supabase
     .from("class_task_responses")
     .select(RESPONSE_SELECT_WITH_WORKING)
@@ -1170,7 +1184,11 @@ async function responsesForPupilTasks(supabase, tasks = [], pupilAlias = "") {
       .limit(500);
   }
   if (responseResult.error) throw responseResult.error;
-  return (responseResult.data || []).filter((response) => normaliseAliasKey(response.pupil_alias) === aliasKey);
+  return (responseResult.data || []).filter((response) => {
+    const responseAliasKey = normaliseAliasKey(response.pupil_alias);
+    const responseCodeKey = normalisePupilCode(response?.marking?.pupil_code || response?.pupil_code);
+    return Boolean((aliasKey && responseAliasKey === aliasKey) || (pupilCodeKey && responseCodeKey === pupilCodeKey));
+  });
 }
 
 async function pupilProgressProfile(supabase, anchorTask, identity, schoolName = "") {
@@ -1190,7 +1208,7 @@ async function pupilProgressProfile(supabase, anchorTask, identity, schoolName =
     if (error) throw error;
     tasks = (data || []).filter((task) => taskHasPupilModuleFlag(task) && taskGroupId(task) === groupId);
   }
-  const responses = await responsesForPupilTasks(supabase, tasks, identity.pupilAlias);
+  const responses = await responsesForPupilTasks(supabase, tasks, identity);
   return publicPupilProfile(tasks, responses, identity, anchorTask.settings?.class_group_name || schoolName);
 }
 
@@ -1302,6 +1320,8 @@ async function createTask(req, res, supabase) {
     class_group_id: classGroup?.id || "",
     class_group_name: classGroup?.name || "",
     roster_required: Boolean(classGroup?.id),
+    allow_handwriting: Boolean(incomingSettings.allow_handwriting),
+    show_in_pupil_profile: incomingSettings.show_in_pupil_profile !== false,
     source: "kaizen-class-task",
     pupil_module_enabled: true,
     pupil_module_owner: profile.school_id ? "school" : "admin"
@@ -1577,6 +1597,40 @@ async function reviewResponse(req, res, supabase) {
   return sendJson(res, 200, { response });
 }
 
+async function updateTaskProfileVisibility(req, res, supabase) {
+  const { user, profile, error } = await teacherProfile(req, supabase);
+  if (error) return sendJson(res, 401, { error });
+  const school = await requirePupilModuleManager(res, supabase, profile);
+  if (!school) return;
+
+  const body = await readJsonBody(req);
+  const taskId = cleanText(body.task_id, 80);
+  const showInProfile = body.show_in_pupil_profile !== false;
+  if (!taskId) return sendJson(res, 400, { error: "Missing task id." });
+
+  let taskQuery = supabase
+    .from("class_tasks")
+    .select("id, teacher_id, settings")
+    .eq("id", taskId);
+  if (normaliseRole(profile) !== "admin") taskQuery = taskQuery.eq("teacher_id", user.id);
+  const { data: task, error: taskError } = await taskQuery.maybeSingle();
+  if (taskError) return sendJson(res, 500, { error: taskError.message });
+  if (!task) return sendJson(res, 403, { error: "You cannot update this pupil task." });
+
+  const settings = {
+    ...(task.settings || {}),
+    show_in_pupil_profile: showInProfile
+  };
+  const { data: updatedTask, error: updateError } = await supabase
+    .from("class_tasks")
+    .update({ settings, updated_at: new Date().toISOString() })
+    .eq("id", task.id)
+    .select(TASK_SELECT)
+    .single();
+  if (updateError) return sendJson(res, 500, { error: updateError.message });
+  return sendJson(res, 200, { task: updatedTask });
+}
+
 async function closeTask(req, res, supabase) {
   const { user, profile, error } = await teacherProfile(req, supabase);
   if (error) return sendJson(res, 401, { error });
@@ -1795,6 +1849,7 @@ module.exports = async function handler(req, res) {
     if (req.method === "POST" && action === "join") return joinPublicTask(req, res, supabase);
     if (req.method === "POST" && action === "submit") return submitPublicTask(req, res, supabase);
     if (req.method === "POST" && action === "review") return reviewResponse(req, res, supabase);
+    if (req.method === "POST" && action === "profile-visibility") return updateTaskProfileVisibility(req, res, supabase);
     if (req.method === "POST" && action === "close") return closeTask(req, res, supabase);
 
     res.setHeader("Allow", "GET, POST");
