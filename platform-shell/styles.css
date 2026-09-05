@@ -4104,6 +4104,130 @@ button.certification-course-card {
   align-items: start;
 }
 
+.class-task-workspace {
+  overflow: hidden;
+  border: 1px solid rgba(23, 184, 179, 0.22);
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, rgba(231, 251, 250, 0.66), rgba(241, 239, 255, 0.7)),
+    white;
+  box-shadow: 0 18px 42px rgba(23, 32, 51, 0.07);
+}
+
+.class-task-phase-bar {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid rgba(23, 184, 179, 0.18);
+  background: rgba(255, 255, 255, 0.64);
+}
+
+.class-task-phase-bar button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  min-height: 42px;
+  border: 1px solid rgba(217, 224, 234, 0.92);
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--body-font);
+  text-align: left;
+  transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
+}
+
+.class-task-phase-bar button strong,
+.class-task-phase-bar button span {
+  display: block;
+  overflow: hidden;
+  min-width: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.class-task-phase-bar button strong {
+  color: inherit;
+  font-size: 0.92rem;
+  font-weight: 950;
+}
+
+.class-task-phase-bar button span {
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.class-task-phase-bar button:hover,
+.class-task-phase-bar button:focus-visible {
+  border-color: rgba(23, 184, 179, 0.45);
+  box-shadow: 0 10px 22px rgba(23, 184, 179, 0.1);
+  color: var(--teal-dark);
+  outline: none;
+}
+
+.class-task-phase-bar button.active {
+  border-color: rgba(23, 184, 179, 0.66);
+  background: linear-gradient(135deg, var(--teal), var(--violet));
+  color: white;
+  box-shadow: 0 14px 28px rgba(23, 184, 179, 0.18);
+}
+
+.class-task-slider-viewport {
+  overflow: hidden;
+}
+
+.class-task-slider {
+  display: flex;
+  width: 200%;
+  transform: translateX(0);
+  transition: transform 0.32s ease;
+  will-change: transform;
+}
+
+.class-task-workspace[data-class-task-phase="monitor"] .class-task-slider {
+  transform: translateX(-50%);
+}
+
+.class-task-slide {
+  flex: 0 0 50%;
+  min-width: 0;
+  padding: 12px;
+}
+
+.class-task-slide .class-task-guide {
+  margin-bottom: 10px;
+}
+
+.class-task-slide .class-task-builder,
+.class-task-slide .class-task-list-panel {
+  position: static;
+  top: auto;
+  max-height: none;
+}
+
+.class-task-slide .class-task-builder {
+  z-index: auto;
+}
+
+.class-task-slide .class-task-list-panel {
+  min-height: min(70vh, 720px);
+}
+
+.class-task-workspace[data-class-task-phase="monitor"] .class-task-list-panel {
+  max-height: min(72vh, 780px);
+  overflow: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .class-task-slider {
+    transition: none;
+  }
+}
+
 .class-task-guide {
   display: grid;
   grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1fr);
@@ -4924,7 +5048,29 @@ button.certification-course-card {
   padding: 14px;
 }
 
-.class-task-list-head > span {
+.class-task-list-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 780;
+  line-height: 1.35;
+}
+
+.class-task-list-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.class-task-list-actions .button {
+  min-height: 0;
+  padding: 7px 10px;
+  font-size: 0.76rem;
+}
+
+.class-task-list-head > span,
+.class-task-list-actions [data-class-task-count] {
   padding: 6px 10px;
   border-radius: 999px;
   background: var(--teal-soft);
@@ -11279,6 +11425,14 @@ sup .worksheet-fraction > span:last-child {
   .class-task-settings-grid,
   .class-task-action-row {
     grid-template-columns: 1fr;
+  }
+
+  .class-task-phase-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .class-task-slide {
+    padding: 8px;
   }
 
   .class-task-guide {

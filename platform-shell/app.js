@@ -2692,6 +2692,7 @@ const state = {
   classTaskLoadToken: 0,
   classTaskAuthKey: "",
   classTaskMonitorTimer: null,
+  classTaskWorkspacePhase: "assign",
   pupilTask: null,
   pupilTaskCode: "",
   pupilTaskLoading: false,
@@ -16822,6 +16823,7 @@ async function createClassTaskFromForm(form) {
     }
   });
   state.classTaskLastMessage = `Created "${payload.task?.title || title}" with code ${payload.task?.join_code || ""}.`;
+  state.classTaskWorkspacePhase = "monitor";
   await loadClassTasks({ rerender: true, force: true });
   setClassTaskStatus(state.classTaskLastMessage, "success");
 }
@@ -17168,6 +17170,54 @@ function classTaskHelpTip(text) {
   return `<span class="field-help" tabindex="0" role="note" aria-label="${safeText}" data-tooltip="${safeText}">?</span>`;
 }
 
+function classTaskWorkspacePhase() {
+  return state.classTaskWorkspacePhase === "monitor" ? "monitor" : "assign";
+}
+
+function classTaskPhaseTabsHtml() {
+  const phase = classTaskWorkspacePhase();
+  const tabs = [
+    {
+      id: "assign",
+      label: "Assign Work",
+      detail: "Create the task"
+    },
+    {
+      id: "monitor",
+      label: "Monitor Tasks",
+      detail: classTaskCountLabel()
+    }
+  ];
+  return `
+    <div class="class-task-phase-bar" role="tablist" aria-label="Pupil module phases">
+      ${tabs.map((tab) => `
+        <button
+          class="${phase === tab.id ? "active" : ""}"
+          type="button"
+          role="tab"
+          aria-selected="${phase === tab.id ? "true" : "false"}"
+          data-class-task-phase-tab="${tab.id}"
+        >
+          <strong>${tab.label}</strong>
+          <span ${tab.id === "monitor" ? "data-class-task-count" : ""}>${escapeHtml(tab.detail)}</span>
+        </button>
+      `).join("")}
+    </div>
+  `;
+}
+
+function setClassTaskWorkspacePhase(phase) {
+  const safePhase = phase === "monitor" ? "monitor" : "assign";
+  state.classTaskWorkspacePhase = safePhase;
+  const workspace = document.querySelector("[data-class-task-workspace]");
+  if (workspace) workspace.dataset.classTaskPhase = safePhase;
+  document.querySelectorAll("[data-class-task-phase-tab]").forEach((button) => {
+    const isActive = button.dataset.classTaskPhaseTab === safePhase;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-selected", isActive ? "true" : "false");
+  });
+}
+
 function classTaskBuilderHtml() {
   return `
     <article class="panel class-task-builder">
@@ -17179,7 +17229,7 @@ function classTaskBuilderHtml() {
         </div>
         <div class="class-task-builder-actions">
           <a class="button subtle has-tooltip" href="#/pupil" data-tooltip="Open the pupil-facing join page. Pupils only need the task code or link you give them.">Pupil Join Page</a>
-          <button class="button subtle has-tooltip" type="button" id="refreshClassTasks" data-tooltip="Reload the live task list and pupil submissions shown on this page.">Refresh</button>
+          <button class="button subtle has-tooltip" type="button" data-refresh-class-tasks data-tooltip="Reload the live task list and pupil submissions shown on this page.">Refresh</button>
         </div>
       </div>
       <form id="classTaskForm" class="class-task-form">
@@ -17307,11 +17357,13 @@ function classTaskListHtml() {
 }
 
 function updateClassTaskListPanel() {
-  const count = document.querySelector("[data-class-task-count]");
+  const counts = document.querySelectorAll("[data-class-task-count]");
   const list = document.getElementById("classTaskList");
   const sourceNotice = document.getElementById("classTaskSourceNotice");
-  if (!count || !list) return false;
-  count.textContent = classTaskCountLabel();
+  if (!list) return false;
+  counts.forEach((count) => {
+    count.textContent = classTaskCountLabel();
+  });
   list.innerHTML = classTaskListHtml();
   if (sourceNotice) sourceNotice.innerHTML = classTaskSourceNotice();
   bindClassTaskListActions();
@@ -17808,21 +17860,34 @@ function renderClassTasks() {
       "Create fixed online tasks or timed practice rooms for your school or tutor organisation.",
       `<a class="button" href="#/worksheet-generator">Worksheet Builder</a>`
     )}
-    ${classTaskTeacherGuideHtml()}
-    <section class="class-task-page">
-      ${classTaskBuilderHtml()}
-      <section class="class-task-list-panel panel">
-        <div class="class-task-list-head">
-          <div>
-            <span class="eyebrow">Live Tasks</span>
-            <h2>Pupil tasks</h2>
-          </div>
-          <span data-class-task-count>${classTaskCountLabel()}</span>
+    <section class="class-task-workspace" data-class-task-workspace data-class-task-phase="${classTaskWorkspacePhase()}">
+      ${classTaskPhaseTabsHtml()}
+      <div class="class-task-slider-viewport">
+        <div class="class-task-slider">
+          <section class="class-task-slide" data-class-task-slide="assign" role="tabpanel">
+            ${classTaskTeacherGuideHtml()}
+            ${classTaskBuilderHtml()}
+          </section>
+          <section class="class-task-slide" data-class-task-slide="monitor" role="tabpanel">
+            <section class="class-task-list-panel panel">
+              <div class="class-task-list-head">
+                <div>
+                  <span class="eyebrow">Live Tasks</span>
+                  <h2>Pupil tasks</h2>
+                  <p>Share the code, then track who has joined, submitted, and met the pass target.</p>
+                </div>
+                <div class="class-task-list-actions">
+                  <span data-class-task-count>${classTaskCountLabel()}</span>
+                  <button class="button subtle has-tooltip" type="button" data-refresh-class-tasks data-tooltip="Reload the live task list and pupil submissions shown on this page.">Refresh</button>
+                </div>
+              </div>
+              <div class="class-task-list" id="classTaskList">
+                ${classTaskListHtml()}
+              </div>
+            </section>
+          </section>
         </div>
-        <div class="class-task-list" id="classTaskList">
-          ${classTaskListHtml()}
-        </div>
-      </section>
+      </div>
     </section>
     ${classTaskTrackerHtml()}
   `;
@@ -17835,6 +17900,12 @@ function bindClassTasks() {
   if (!form || !toolSelect) return;
   startClassTaskMonitorRefresh();
   bindClassTaskTracker();
+  setClassTaskWorkspacePhase(classTaskWorkspacePhase());
+  document.querySelectorAll("[data-class-task-phase-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setClassTaskWorkspacePhase(button.dataset.classTaskPhaseTab);
+    });
+  });
   function syncClassTaskModeUi() {
     const taskMode = form.querySelector("[name='task_mode']:checked")?.value || "fixed_task";
     form.dataset.taskMode = taskMode;
@@ -17928,12 +17999,14 @@ function bindClassTasks() {
     }
   });
 
-  document.getElementById("refreshClassTasks")?.addEventListener("click", async (event) => {
-    const button = event.currentTarget;
-    button.disabled = true;
-    state.classTasksLoaded = false;
-    await loadClassTasks({ rerender: true, force: true });
-    button.disabled = false;
+  document.querySelectorAll("[data-refresh-class-tasks]").forEach((refreshButton) => {
+    refreshButton.addEventListener("click", async (event) => {
+      const button = event.currentTarget;
+      button.disabled = true;
+      state.classTasksLoaded = false;
+      await loadClassTasks({ rerender: true, force: true });
+      if (button.isConnected) button.disabled = false;
+    });
   });
 
   bindClassTaskListActions();
