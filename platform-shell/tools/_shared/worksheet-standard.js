@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.2.6';
+  const VERSION = '0.2.7';
   const MIXED_TYPE_ID = '__kaizen_mixed_practice__';
   const MIXED_TYPE_LABEL = 'Mixed Practice';
 
@@ -32,6 +32,16 @@
       const denominator = fraction.querySelector('.denominator, .den')?.textContent?.replace(/\s+/g, ' ').trim();
       if (!numerator || !denominator) return;
       fraction.replaceWith(document.createTextNode(`\\frac{${numerator}}{${denominator}}`));
+    });
+    template.content.querySelectorAll('.matrix-wrap').forEach((matrix) => {
+      const rows = Array.from(matrix.children)
+        .filter((child) => child.classList?.contains('matrix-row'))
+        .map((row) => Array.from(row.children)
+          .filter((child) => child.classList?.contains('matrix-cell'))
+          .map((cell) => cell.textContent.replace(/\s+/g, ' ').trim()))
+        .filter((row) => row.length);
+      if (!rows.length) return;
+      matrix.replaceWith(document.createTextNode(`[${rows.map((row) => `[${row.join(', ')}]`).join(', ')}]`));
     });
     return normaliseAlgebraUnitCoefficients(template.content.textContent.replace(/\s+/g, ' ').trim());
   }

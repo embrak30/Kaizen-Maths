@@ -9498,10 +9498,18 @@ sup .worksheet-fraction > span:last-child {
   margin-top: 8px;
 }
 
-.worksheet-question-text .matrix-expression,
-.worksheet-answer .matrix-expression,
-.worksheet-steps .matrix-expression,
-.worksheet-key-item .matrix-expression {
+:is(
+  .worksheet-question-text,
+  .worksheet-answer,
+  .worksheet-steps,
+  .worksheet-key-item,
+  .pupil-question-text,
+  .pupil-review-question,
+  .pupil-answer-key-answer,
+  .class-task-response-prompt,
+  .class-task-expected-answer,
+  .class-task-response-review
+) .matrix-expression {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
@@ -9509,10 +9517,18 @@ sup .worksheet-fraction > span:last-child {
   vertical-align: middle;
 }
 
-.worksheet-question-text .matrix-wrap,
-.worksheet-answer .matrix-wrap,
-.worksheet-steps .matrix-wrap,
-.worksheet-key-item .matrix-wrap {
+:is(
+  .worksheet-question-text,
+  .worksheet-answer,
+  .worksheet-steps,
+  .worksheet-key-item,
+  .pupil-question-text,
+  .pupil-review-question,
+  .pupil-answer-key-answer,
+  .class-task-response-prompt,
+  .class-task-expected-answer,
+  .class-task-response-review
+) .matrix-wrap {
   display: inline-grid;
   grid-auto-flow: row;
   gap: 0;
@@ -9525,14 +9541,30 @@ sup .worksheet-fraction > span:last-child {
   line-height: 1.12;
 }
 
-.worksheet-question-text .matrix-wrap::before,
-.worksheet-question-text .matrix-wrap::after,
-.worksheet-answer .matrix-wrap::before,
-.worksheet-answer .matrix-wrap::after,
-.worksheet-steps .matrix-wrap::before,
-.worksheet-steps .matrix-wrap::after,
-.worksheet-key-item .matrix-wrap::before,
-.worksheet-key-item .matrix-wrap::after {
+:is(
+  .worksheet-question-text,
+  .worksheet-answer,
+  .worksheet-steps,
+  .worksheet-key-item,
+  .pupil-question-text,
+  .pupil-review-question,
+  .pupil-answer-key-answer,
+  .class-task-response-prompt,
+  .class-task-expected-answer,
+  .class-task-response-review
+) .matrix-wrap::before,
+:is(
+  .worksheet-question-text,
+  .worksheet-answer,
+  .worksheet-steps,
+  .worksheet-key-item,
+  .pupil-question-text,
+  .pupil-review-question,
+  .pupil-answer-key-answer,
+  .class-task-response-prompt,
+  .class-task-expected-answer,
+  .class-task-response-review
+) .matrix-wrap::after {
   content: "";
   position: absolute;
   top: 0;
@@ -9542,26 +9574,50 @@ sup .worksheet-fraction > span:last-child {
   border-bottom: 1.5px solid currentColor;
 }
 
-.worksheet-question-text .matrix-wrap::before,
-.worksheet-answer .matrix-wrap::before,
-.worksheet-steps .matrix-wrap::before,
-.worksheet-key-item .matrix-wrap::before {
+:is(
+  .worksheet-question-text,
+  .worksheet-answer,
+  .worksheet-steps,
+  .worksheet-key-item,
+  .pupil-question-text,
+  .pupil-review-question,
+  .pupil-answer-key-answer,
+  .class-task-response-prompt,
+  .class-task-expected-answer,
+  .class-task-response-review
+) .matrix-wrap::before {
   left: 0;
   border-left: 1.5px solid currentColor;
 }
 
-.worksheet-question-text .matrix-wrap::after,
-.worksheet-answer .matrix-wrap::after,
-.worksheet-steps .matrix-wrap::after,
-.worksheet-key-item .matrix-wrap::after {
+:is(
+  .worksheet-question-text,
+  .worksheet-answer,
+  .worksheet-steps,
+  .worksheet-key-item,
+  .pupil-question-text,
+  .pupil-review-question,
+  .pupil-answer-key-answer,
+  .class-task-response-prompt,
+  .class-task-expected-answer,
+  .class-task-response-review
+) .matrix-wrap::after {
   right: 0;
   border-right: 1.5px solid currentColor;
 }
 
-.worksheet-question-text .matrix-row,
-.worksheet-answer .matrix-row,
-.worksheet-steps .matrix-row,
-.worksheet-key-item .matrix-row {
+:is(
+  .worksheet-question-text,
+  .worksheet-answer,
+  .worksheet-steps,
+  .worksheet-key-item,
+  .pupil-question-text,
+  .pupil-review-question,
+  .pupil-answer-key-answer,
+  .class-task-response-prompt,
+  .class-task-expected-answer,
+  .class-task-response-review
+) .matrix-row {
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: minmax(1.55rem, auto);
@@ -9569,10 +9625,18 @@ sup .worksheet-fraction > span:last-child {
   justify-content: center;
 }
 
-.worksheet-question-text .matrix-cell,
-.worksheet-answer .matrix-cell,
-.worksheet-steps .matrix-cell,
-.worksheet-key-item .matrix-cell {
+:is(
+  .worksheet-question-text,
+  .worksheet-answer,
+  .worksheet-steps,
+  .worksheet-key-item,
+  .pupil-question-text,
+  .pupil-review-question,
+  .pupil-answer-key-answer,
+  .class-task-response-prompt,
+  .class-task-expected-answer,
+  .class-task-response-review
+) .matrix-cell {
   min-width: 1.25rem;
   text-align: center;
 }

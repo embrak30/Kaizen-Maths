@@ -286,7 +286,7 @@ const tools = [
     status: "Imported",
     description: "Generate matrix questions covering addition, subtraction, scalar multiplication, multiplication, determinants, inverses, and algebraic matrix problems.",
     tags: ["algebra", "matrices", "determinants", "inverse matrices", "matrix multiplication", "singular matrices", "A-Level"],
-    toolPath: "tools/matrices/index.html?v=matrix-multi-1",
+    toolPath: "tools/matrices/index.html?v=matrix-render-1",
     imported: true,
     teacherNotes: [
       "Level 1 focuses on matrix operations: addition, subtraction, and scalar multiplication.",
@@ -304,7 +304,7 @@ const tools = [
     status: "Imported",
     description: "Generate advanced matrix practice covering transformations, eigenvalues, eigenvectors, diagonalisation, Cayley-Hamilton, powers, and matrix systems.",
     tags: ["algebra", "further maths", "advanced matrices", "eigenvalues", "eigenvectors", "diagonalisation", "Cayley-Hamilton", "matrix transformations", "systems"],
-    toolPath: "tools/advanced-matrices/index.html?v=advanced-matrices-1",
+    toolPath: "tools/advanced-matrices/index.html?v=advanced-matrices-render-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers matrix transformations, composite transformations, and fixed lines.",
@@ -323,7 +323,7 @@ const tools = [
     status: "Imported",
     description: "Generate linear algebra practice covering row operations, systems, span, linear independence, basis, kernel, image, rank-nullity, linear transformations, and change of basis.",
     tags: ["algebra", "further maths", "linear algebra", "row operations", "Gaussian elimination", "span", "basis", "linear independence", "kernel", "image", "rank", "nullity", "linear transformations", "change of basis", "A-Level Further Maths"],
-    toolPath: "tools/linear-algebra/index.html?v=linear-algebra-1",
+    toolPath: "tools/linear-algebra/index.html?v=linear-algebra-render-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers systems of equations, augmented matrices, row operations, and back substitution.",
@@ -3545,6 +3545,155 @@ function worksheetLatexArrayHtml(value) {
   });
 }
 
+function worksheetSplitMatrixCells(rowBody) {
+  const cells = [];
+  let depth = 0;
+  let buffer = "";
+
+  for (const char of String(rowBody || "")) {
+    if ("([{".includes(char)) depth += 1;
+    if (")]}".includes(char)) depth = Math.max(0, depth - 1);
+    if (char === "," && depth === 0) {
+      if (!buffer.trim()) return null;
+      cells.push(buffer.trim());
+      buffer = "";
+      continue;
+    }
+    buffer += char;
+  }
+
+  if (!buffer.trim()) return null;
+  cells.push(buffer.trim());
+  return cells;
+}
+
+function worksheetMatrixRowsFromLiteral(literal) {
+  const source = String(literal || "").trim();
+  if (!source.startsWith("[[") || !source.endsWith("]]")) return null;
+
+  const body = source.slice(1, -1).trim();
+  const rows = [];
+  let depth = 0;
+  let rowStart = -1;
+
+  for (let index = 0; index < body.length; index += 1) {
+    const char = body[index];
+    if (char === "[") {
+      if (depth === 0) rowStart = index + 1;
+      depth += 1;
+      continue;
+    }
+    if (char === "]") {
+      depth -= 1;
+      if (depth < 0) return null;
+      if (depth === 0 && rowStart >= 0) {
+        const cells = worksheetSplitMatrixCells(body.slice(rowStart, index));
+        if (!cells?.length) return null;
+        rows.push(cells);
+        rowStart = -1;
+      }
+      continue;
+    }
+    if (depth === 0 && !/[\s,]/.test(char)) return null;
+  }
+
+  if (depth !== 0 || !rows.length) return null;
+  const width = rows[0].length;
+  if (!width || rows.some((row) => row.length !== width)) return null;
+  return rows;
+}
+
+function worksheetFindMatrixLiteralEnd(text, startIndex) {
+  let depth = 0;
+  for (let index = startIndex; index < text.length; index += 1) {
+    const char = text[index];
+    if (char === "[") depth += 1;
+    if (char === "]") {
+      depth -= 1;
+      if (depth === 0) return index + 1;
+      if (depth < 0) return -1;
+    }
+  }
+  return -1;
+}
+
+function worksheetCreateMatrixElement(rows) {
+  const matrix = document.createElement("span");
+  matrix.className = "matrix-wrap worksheet-raw-matrix";
+
+  rows.forEach((row) => {
+    const rowElement = document.createElement("span");
+    rowElement.className = "matrix-row";
+    row.forEach((cell) => {
+      const cellElement = document.createElement("span");
+      cellElement.className = "matrix-cell";
+      cellElement.textContent = formatWorksheetMathText(cell);
+      rowElement.appendChild(cellElement);
+    });
+    matrix.appendChild(rowElement);
+  });
+
+  return matrix;
+}
+
+function worksheetRawMatrixFragment(text) {
+  const fragment = document.createDocumentFragment();
+  const source = String(text ?? "");
+  let cursor = 0;
+  let converted = false;
+
+  while (cursor < source.length) {
+    const start = source.indexOf("[[", cursor);
+    if (start < 0) {
+      fragment.appendChild(document.createTextNode(source.slice(cursor)));
+      break;
+    }
+
+    const end = worksheetFindMatrixLiteralEnd(source, start);
+    if (end < 0) {
+      fragment.appendChild(document.createTextNode(source.slice(cursor)));
+      break;
+    }
+
+    const literal = source.slice(start, end);
+    const rows = worksheetMatrixRowsFromLiteral(literal);
+    if (!rows) {
+      fragment.appendChild(document.createTextNode(source.slice(cursor, start + 2)));
+      cursor = start + 2;
+      continue;
+    }
+
+    if (start > cursor) fragment.appendChild(document.createTextNode(source.slice(cursor, start)));
+    fragment.appendChild(worksheetCreateMatrixElement(rows));
+    converted = true;
+    cursor = end;
+  }
+
+  return converted ? fragment : null;
+}
+
+function worksheetReplaceRawMatrixText(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (!node.nodeValue.includes("[[")) return NodeFilter.FILTER_REJECT;
+      const parent = node.parentElement;
+      if (parent && ["SCRIPT", "STYLE", "TEXTAREA", "SELECT", "OPTION", "SUP", "SUB"].includes(parent.tagName)) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      if (parent?.closest?.("svg,.matrix-wrap")) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const textNodes = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode);
+  textNodes.forEach((node) => {
+    const fragment = worksheetRawMatrixFragment(node.nodeValue);
+    if (fragment) node.replaceWith(fragment);
+  });
+}
+
 function worksheetContentHtml(value) {
   const source = worksheetLatexArrayHtml(value);
   const template = document.createElement("template");
@@ -3585,6 +3734,8 @@ function worksheetContentHtml(value) {
     worksheetFraction.append(worksheetNumerator, worksheetDenominator);
     fraction.replaceWith(worksheetFraction);
   });
+
+  worksheetReplaceRawMatrixText(template.content);
 
   const walker = document.createTreeWalker(template.content, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
@@ -16984,12 +17135,23 @@ async function ensureClassTaskMetadata(tool) {
   return loadClassTaskTool(tool);
 }
 
+function classTaskAnswerValue(problem) {
+  const richAnswer = problem.answer;
+  if (
+    problem.plainAnswer &&
+    /class=["'][^"']*matrix-wrap|class=["'][^"']*matrix-expression/i.test(String(richAnswer || ""))
+  ) {
+    return problem.plainAnswer;
+  }
+  return richAnswer || problem.answerText || problem.plainAnswer || "";
+}
+
 function classTaskSerialiseQuestion(problem, index, defaults = {}) {
   return {
     id: `q${index + 1}`,
     question: problem.question || problem.questionText || problem.prompt || problem.equation || "",
     diagram: problem.diagram || problem.diagramHtml || "",
-    answer: problem.answer || problem.answerText || problem.plainAnswer || "",
+    answer: classTaskAnswerValue(problem),
     steps: Array.isArray(problem.steps) ? problem.steps.slice(0, 24) : [],
     marks: defaults.marks,
     instruction: problem.instruction || problem.instructionText || defaults.instruction || "",
