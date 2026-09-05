@@ -2698,6 +2698,7 @@ const state = {
   pupilTaskLoading: false,
   pupilTaskError: "",
   pupilSubmission: null,
+  pupilProgress: null,
   pupilResolvedAlias: "",
   pupilTaskAttemptIndex: 0,
   pupilActiveQuestionIndex: 0,
@@ -15988,6 +15989,17 @@ function classTaskTrackerProgressHtml(group) {
       </div>
     `;
   }
+  const allResponses = tasks.flatMap((task) => task.responses || []);
+  const progressRows = members.map((member) => {
+    const profile = classTaskPupilProgressProfile(tasks, allResponses, {
+      pupilAlias: member.pupil_alias,
+      pupilCode: member.pupil_code
+    }, group.name || "");
+    const latestTask = (profile.tasks || [])
+      .filter((task) => task.latest_submitted_at)
+      .sort((a, b) => String(b.latest_submitted_at || "").localeCompare(String(a.latest_submitted_at || "")))[0] || null;
+    return { member, profile, latestTask };
+  });
   return `
     <div class="class-tracker-progress">
       <div class="class-tracker-progress-head">
@@ -16000,42 +16012,61 @@ function classTaskTrackerProgressHtml(group) {
             <tr>
               <th>Pupil</th>
               <th>Code</th>
-              <th>Started</th>
-              <th>Complete</th>
-              <th>Average</th>
+              <th>Tasks</th>
+              <th>Mastered</th>
+              <th>Average best</th>
               <th>Latest</th>
             </tr>
           </thead>
           <tbody>
-            ${members.map((member) => {
-              const aliasKey = classTaskAliasKey(member.pupil_alias);
-              const memberResponses = tasks.flatMap((task) => (task.responses || [])
-                .filter((response) => classTaskAliasKey(response.pupil_alias) === aliasKey));
-              const scores = memberResponses
-                .map((response) => {
-                  const score = Number(response.auto_score);
-                  const max = Number(response.max_score);
-                  return Number.isFinite(score) && Number.isFinite(max) && max > 0 ? score / max : null;
-                })
-                .filter((score) => score !== null);
-              const average = scores.length ? `${Math.round((scores.reduce((sum, score) => sum + score, 0) / scores.length) * 100)}%` : "No score";
-              const completed = memberResponses.filter((response) => response.marking?.pass_met).length;
-              const latest = memberResponses
-                .slice()
-                .sort((a, b) => String(b.submitted_at || "").localeCompare(String(a.submitted_at || "")))[0];
+            ${progressRows.map(({ member, profile, latestTask }) => {
+              const summary = profile.summary || {};
               return `
                 <tr>
                   <td>${escapeHtml(member.pupil_alias || "Pupil")}</td>
                   <td>${escapeHtml(member.pupil_code || "")}</td>
-                  <td>${memberResponses.length}</td>
-                  <td>${completed}</td>
-                  <td>${escapeHtml(average)}</td>
-                  <td>${escapeHtml(latest ? classTaskResponseSummary(latest) : "Not yet")}</td>
+                  <td>${Number(summary.completed || 0)}/${Number(summary.assigned || 0)}</td>
+                  <td><span class="class-tracker-mastery-pill" data-status="${Number(summary.mastered || 0) ? "mastered" : "waiting"}">${Number(summary.mastered || 0)} mastered</span></td>
+                  <td>${escapeHtml(pupilProgressPercentLabel(summary.average_best_percent))}</td>
+                  <td>${escapeHtml(latestTask ? `${latestTask.source_tool_title || latestTask.title || "Task"} · ${latestTask.latest_score_label}` : "Not yet")}</td>
                 </tr>
               `;
             }).join("")}
           </tbody>
         </table>
+      </div>
+      <div class="class-tracker-history-list" aria-label="Pupil progress history">
+        ${progressRows.map(({ member, profile }) => {
+          const summary = profile.summary || {};
+          const completedTasks = (profile.tasks || []).filter((task) => task.completed);
+          const assignedTasks = (profile.tasks || []).filter((task) => !task.completed).slice(0, 4);
+          return `
+            <details class="class-tracker-pupil-history">
+              <summary>
+                <span>
+                  <strong>${escapeHtml(member.pupil_alias || "Pupil")}</strong>
+                  <small>${Number(summary.completed || 0)} completed · ${Number(summary.attempts || 0)} attempt${Number(summary.attempts || 0) === 1 ? "" : "s"}</small>
+                </span>
+                <span class="class-tracker-mastery-pill" data-status="${Number(summary.mastered || 0) ? "mastered" : "waiting"}">${Number(summary.mastered || 0)} mastered</span>
+              </summary>
+              <div class="class-tracker-history-items">
+                ${completedTasks.length ? completedTasks.map((task) => `
+                  <div class="class-tracker-history-item" data-status="${escapeHtml(task.status || "completed")}">
+                    <span>${escapeHtml(pupilProgressStatusLabel(task.status))}</span>
+                    <strong>${escapeHtml([task.source_tool_title, task.source_type_label].filter(Boolean).join(" · ") || task.title || "Kaizen Maths task")}</strong>
+                    <small>${escapeHtml([task.latest_score_label, task.best_percent !== null && task.best_percent !== undefined ? `best ${pupilProgressPercentLabel(task.best_percent)}` : "", `${Number(task.submitted_count || 0)} attempt${Number(task.submitted_count || 0) === 1 ? "" : "s"}`].filter(Boolean).join(" · "))}</small>
+                  </div>
+                `).join("") : `<p class="class-tracker-progress-empty">No completed tasks for this pupil yet.</p>`}
+                ${assignedTasks.length ? `
+                  <div class="class-tracker-history-assigned">
+                    <span>Still assigned</span>
+                    ${assignedTasks.map((task) => `<small>${escapeHtml([task.source_tool_title, task.source_type_label].filter(Boolean).join(" · ") || task.title || "Assigned task")}</small>`).join("")}
+                  </div>
+                ` : ""}
+              </div>
+            </details>
+          `;
+        }).join("")}
       </div>
     </div>
   `;
@@ -16141,6 +16172,185 @@ function classTaskPublicTaskForAttempt(task, attemptIndex = 0) {
     max_attempts: classTaskMaxAttempts(task),
     questions: questions.map(classTaskPublicQuestion)
   };
+}
+
+function classTaskResponseAttemptIndex(response) {
+  return classTaskClampNumber(response?.marking?.attempt_index, 0, 9, 0);
+}
+
+function classTaskShouldReturnPupilWork(task, response) {
+  if (!response?.id) return false;
+  if (!task?.settings?.allow_multiple_submissions) return true;
+  return Boolean(response.reviewed || String(response.teacher_notes || "").trim());
+}
+
+function classTaskLatestLocalResponseForAlias(responses, task, alias, attemptIndex = 0) {
+  const aliasKey = classTaskAliasKey(alias);
+  if (!task?.id || !aliasKey) return null;
+  const targetAttempt = classTaskClampNumber(attemptIndex, 0, 9, 0);
+  const matches = responses
+    .filter((response) => response.task_id === task.id && classTaskAliasKey(response.pupil_alias) === aliasKey)
+    .sort((a, b) => String(b.submitted_at || "").localeCompare(String(a.submitted_at || "")));
+  if (targetAttempt > 0) {
+    return matches.find((response) => classTaskResponseAttemptIndex(response) === targetAttempt) || null;
+  }
+  return matches[0] || null;
+}
+
+function classTaskPupilSubmissionPayload(task, response, participant = null) {
+  const attemptIndex = classTaskResponseAttemptIndex(response);
+  const attemptQuestions = classTaskQuestionsForAttempt(task, attemptIndex) || [];
+  const marking = response.marking || {};
+  const nextTask = marking.pass_required && !marking.pass_met
+    ? classTaskPublicTaskForAttempt(task, attemptIndex + 1)
+    : null;
+  return {
+    response: {
+      ...response,
+      working: response.working || {},
+      working_images: response.working_images || {},
+      teacher_notes: response.teacher_notes || "",
+      reviewed: Boolean(response.reviewed)
+    },
+    participant,
+    returned_work: true,
+    show_answers: true,
+    answers: attemptQuestions.map((question, index) => ({
+      id: question.id || `q${index + 1}`,
+      answer: question.answer || "",
+      steps: question.steps || []
+    })),
+    next_task: nextTask,
+    task: classTaskPublicTaskForAttempt(task, attemptIndex),
+    source: "local"
+  };
+}
+
+function classTaskResponsePercent(response) {
+  const score = Number(response?.auto_score);
+  const max = Number(response?.max_score);
+  if (!Number.isFinite(score) || !Number.isFinite(max) || max <= 0) return null;
+  return Math.round((score / max) * 100);
+}
+
+function classTaskScoreLabel(response) {
+  const score = Number(response?.auto_score);
+  const max = Number(response?.max_score);
+  if (!Number.isFinite(score) || !Number.isFinite(max) || max <= 0) return "Needs review";
+  return `${score}/${max}`;
+}
+
+function classTaskPupilSubmissionHistory(task, response) {
+  const attemptIndex = classTaskResponseAttemptIndex(response);
+  const attemptQuestions = classTaskQuestionsForAttempt(task, attemptIndex) || [];
+  const feedback = Array.isArray(response?.marking?.feedback) ? response.marking.feedback : [];
+  const feedbackById = new Map(feedback.map((item, index) => [item.id || `q${index + 1}`, item]));
+  const submittedAnswers = response.answers || {};
+  const submittedWorking = response.working || {};
+  return {
+    id: response.id,
+    attempt_number: response?.marking?.attempt_number || attemptIndex + 1,
+    submitted_at: response.submitted_at,
+    score: Number(response.auto_score) || 0,
+    max_score: Number(response.max_score) || 0,
+    score_label: classTaskScoreLabel(response),
+    percent: classTaskResponsePercent(response),
+    pass_met: Boolean(response?.marking?.pass_met),
+    reviewed: Boolean(response.reviewed),
+    teacher_notes: String(response.teacher_notes || "").trim(),
+    questions: attemptQuestions.map((question, index) => {
+      const id = question.id || `q${index + 1}`;
+      const item = feedbackById.get(id) || feedbackById.get(`q${index + 1}`) || {};
+      return {
+        id,
+        question: question.question || "",
+        submitted: String(submittedAnswers[id] ?? submittedAnswers[String(index)] ?? item.submitted ?? "").trim(),
+        expected: String(item.expected || question.answer || "").trim(),
+        correct: Boolean(item.correct),
+        markable: item.markable !== false,
+        working: String(submittedWorking[id] ?? submittedWorking[String(index)] ?? item.working ?? "").trim(),
+        steps: Array.isArray(question.steps) ? question.steps.slice(0, 24) : []
+      };
+    })
+  };
+}
+
+function classTaskPupilTaskProgress(task, responses = []) {
+  const sortedResponses = responses
+    .slice()
+    .sort((a, b) => String(b.submitted_at || "").localeCompare(String(a.submitted_at || "")));
+  const latest = sortedResponses[0] || null;
+  const best = sortedResponses
+    .slice()
+    .sort((a, b) => (classTaskResponsePercent(b) ?? -1) - (classTaskResponsePercent(a) ?? -1))[0] || null;
+  const passRequired = sortedResponses.some((response) => response?.marking?.pass_required) || classTaskPassPercent(task.settings || {}) > 0;
+  const mastered = sortedResponses.some((response) => response?.marking?.pass_met) || (!passRequired && sortedResponses.length > 0);
+  const status = mastered ? "mastered" : sortedResponses.length ? "needs_retry" : "assigned";
+  return {
+    id: task.id,
+    title: task.title || "Kaizen Maths Pupil Task",
+    join_code: task.join_code,
+    source_tool_title: task.source_tool_title || "",
+    source_type_label: task.source_type_label || "",
+    source_level_label: task.source_level_label || "",
+    submitted_count: sortedResponses.length,
+    status,
+    mastered,
+    completed: sortedResponses.length > 0,
+    reviewed: latest ? Boolean(latest.reviewed) : false,
+    latest_submitted_at: latest?.submitted_at || "",
+    latest_score_label: latest ? classTaskScoreLabel(latest) : "Not started",
+    latest_percent: classTaskResponsePercent(latest),
+    best_percent: classTaskResponsePercent(best),
+    pass_percent: classTaskPassPercent(task.settings || {}),
+    submissions: sortedResponses.slice(0, 5).map((response) => classTaskPupilSubmissionHistory(task, response))
+  };
+}
+
+function classTaskPupilProgressProfile(tasks = [], responses = [], identity = {}, groupName = "") {
+  const aliasKey = classTaskAliasKey(identity.pupilAlias || identity.pupil_alias);
+  const pupilCodeKey = normalisePupilCode(identity.pupilCode || identity.pupil_code);
+  const visibleTasks = tasks
+    .filter((task) => classTaskLocalTaskIsPupilEnabled(task))
+    .sort((a, b) => String(b.created_at || "").localeCompare(String(a.created_at || "")));
+  const responseMatchesPupil = (response) => {
+    const responseAliasKey = classTaskAliasKey(response.pupil_alias);
+    const responseCodeKey = normalisePupilCode(response?.marking?.pupil_code || response?.pupil_code);
+    return Boolean((aliasKey && responseAliasKey === aliasKey) || (pupilCodeKey && responseCodeKey === pupilCodeKey));
+  };
+  const items = visibleTasks.map((task) => classTaskPupilTaskProgress(
+    task,
+    responses.filter((response) => response.task_id === task.id && responseMatchesPupil(response))
+  ));
+  const completed = items.filter((item) => item.completed).length;
+  const mastered = items.filter((item) => item.mastered).length;
+  const attempts = items.reduce((sum, item) => sum + item.submitted_count, 0);
+  const percentages = items.map((item) => item.best_percent).filter((value) => Number.isFinite(value));
+  const averageBest = percentages.length
+    ? Math.round(percentages.reduce((sum, value) => sum + value, 0) / percentages.length)
+    : null;
+  return {
+    pupil_alias: identity.pupilAlias || identity.pupil_alias || "",
+    pupil_code: identity.pupilCode || identity.pupil_code || "",
+    class_group_name: groupName || "",
+    summary: {
+      assigned: items.length,
+      completed,
+      mastered,
+      attempts,
+      average_best_percent: averageBest
+    },
+    tasks: items
+  };
+}
+
+function classTaskLocalPupilProfile(tasks, responses, task, identity) {
+  if (!task?.id || !identity?.pupilAlias) return null;
+  const groupId = classTaskGroupId(task);
+  const profileTasks = groupId
+    ? tasks.filter((item) => classTaskLocalTaskIsPupilEnabled(item) && classTaskGroupId(item) === groupId)
+    : [task];
+  return classTaskPupilProgressProfile(profileTasks, responses, identity, task.settings?.class_group_name || task.school_name || "");
 }
 
 function pupilSafeWorkingImage(value) {
@@ -16384,6 +16594,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
   if (action === "join") {
     const code = normaliseClassTaskCode(body.code);
     const attemptIndex = classTaskClampNumber(body.attempt_index, 0, 9, 0);
+    const includeProfile = body.include_profile !== false;
     const task = tasks.find((item) => item.join_code === code);
     if (!task || !classTaskIsAvailable(task)) throw new Error("This pupil task was not found or has expired.");
     if (!classTaskLocalTaskIsPupilEnabled(task)) throw new Error("This pupil task is not available.");
@@ -16393,12 +16604,22 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
       current_attempt: attemptIndex + 1
     });
     classTaskWriteLocal(classTaskLocalParticipantsStorageKey, result.participants);
+    const participant = result.participant ? {
+      ...result.participant,
+      pupil_code: identity.pupilCode,
+      class_group_member_id: identity.memberId
+    } : null;
+    const latestResponse = includeProfile ? classTaskLatestLocalResponseForAlias(responses, task, identity.pupilAlias, attemptIndex) : null;
+    const pupilProfile = includeProfile ? classTaskLocalPupilProfile(tasks, responses, task, identity) : null;
+    if (classTaskShouldReturnPupilWork(task, latestResponse)) {
+      return {
+        ...classTaskPupilSubmissionPayload(task, latestResponse, participant),
+        pupil_profile: pupilProfile
+      };
+    }
     return {
-      participant: result.participant ? {
-        ...result.participant,
-        pupil_code: identity.pupilCode,
-        class_group_member_id: identity.memberId
-      } : null,
+      participant,
+      pupil_profile: pupilProfile,
       source: "local"
     };
   }
@@ -16443,6 +16664,8 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
       auto_score: marking.auto_score,
       max_score: marking.max_score,
       marking,
+      reviewed: false,
+      teacher_notes: "",
       submitted_at: new Date().toISOString()
     };
     const nextTask = marking.pass_required && !marking.pass_met ? classTaskPublicTaskForAttempt(task, attemptIndex + 1) : null;
@@ -16456,6 +16679,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
     });
     classTaskWriteLocal(classTaskLocalResponsesStorageKey, [response, ...responses]);
     classTaskWriteLocal(classTaskLocalParticipantsStorageKey, participantResult.participants);
+    const pupilProfile = classTaskLocalPupilProfile(tasks, [response, ...responses], task, identity);
     return {
       response,
       participant: participantResult.participant ? {
@@ -16466,6 +16690,7 @@ async function classTaskLocalApi(action, { body = {}, params = {} } = {}) {
       show_answers: true,
       answers: attemptQuestions.map((question, index) => ({ id: question.id || `q${index + 1}`, answer: question.answer || "", steps: question.steps || [] })),
       next_task: nextTask,
+      pupil_profile: pupilProfile,
       source: "local"
     };
   }
@@ -18077,6 +18302,7 @@ async function loadPupilTask(code, { rerender = false } = {}) {
   state.pupilTaskLoading = true;
   state.pupilTaskError = "";
   state.pupilSubmission = null;
+  state.pupilProgress = null;
   state.pupilResolvedAlias = "";
   state.pupilActiveQuestionIndex = 0;
   state.pupilTaskAttemptIndex = 0;
@@ -18253,6 +18479,9 @@ function pupilSubmissionHtml(task) {
   const response = state.pupilSubmission.response || {};
   const marking = response.marking || {};
   const isPractice = classTaskIsPracticeRoom(task.settings || {});
+  const returnedWork = Boolean(state.pupilSubmission.returned_work);
+  const teacherNotes = String(response.teacher_notes || "").trim();
+  const teacherReviewed = Boolean(response.reviewed);
   const score = Number(response.auto_score);
   const max = Number(response.max_score);
   const scoreLine = Number.isFinite(score) && Number.isFinite(max) && max > 0
@@ -18274,16 +18503,25 @@ function pupilSubmissionHtml(task) {
       ? `${isPractice ? "Practice target met" : "Task completed"}. Required score: ${marking.pass_mark}/${max} (${marking.pass_percent}%).`
       : `${isPractice ? "Practice target not met yet" : "Pass rate not met yet"}. Required score: ${marking.pass_mark}/${max} (${marking.pass_percent}%).`
     : "Your response has been submitted.";
+  const teacherFeedbackTitle = teacherReviewed ? "Teacher reviewed" : teacherNotes ? "Teacher feedback added" : "Awaiting teacher review";
+  const teacherFeedbackBody = teacherNotes || (teacherReviewed
+    ? "Your teacher has marked this work as reviewed."
+    : "Your teacher has not added a written comment yet. You can still use the auto-marked feedback and worked solutions below.");
   return `
     <section class="panel pupil-submission-panel">
       <div class="pupil-submission-head">
         <div>
-          <span class="eyebrow">${escapeHtml(marking.attempt_number ? `Attempt ${marking.attempt_number}` : "Submitted")}</span>
-          <h2>${passRequired && passMet ? "Task Completed" : "Response received"}</h2>
+          <span class="eyebrow">${escapeHtml(returnedWork ? "Returned Work" : marking.attempt_number ? `Attempt ${marking.attempt_number}` : "Submitted")}</span>
+          <h2>${returnedWork ? "Your marked work" : passRequired && passMet ? "Task Completed" : "Response received"}</h2>
           <p>${escapeHtml(scoreLine)} ${escapeHtml(passLine)}</p>
         </div>
         ${nextTask ? `<button class="button primary" type="button" data-pupil-next-attempt>Load New Task Set</button>` : ""}
       </div>
+      <div class="pupil-teacher-feedback ${teacherReviewed ? "is-reviewed" : ""}">
+        <span>${escapeHtml(teacherFeedbackTitle)}</span>
+        <p>${escapeHtml(teacherFeedbackBody)}</p>
+      </div>
+      ${pupilProgressProfileHtml(state.pupilProgress, { returnedWork: true })}
       ${passRequired && !passMet && !nextTask ? `<p class="pupil-retry-note">No more fresh attempts are available for this task. Ask your teacher for the next step.</p>` : ""}
       ${questions.length ? `
         <details open class="pupil-submission-details">
@@ -18346,12 +18584,157 @@ function pupilSubmissionHtml(task) {
   `;
 }
 
+function pupilProgressStatusLabel(status) {
+  const labels = {
+    mastered: "Mastered",
+    needs_retry: "Needs retry",
+    assigned: "Assigned"
+  };
+  return labels[status] || "Completed";
+}
+
+function pupilProgressPercentLabel(value) {
+  return Number.isFinite(Number(value)) ? `${Math.round(Number(value))}%` : "No score";
+}
+
+function pupilProgressQuestionReviewHtml(question, index) {
+  const status = !question.submitted && !question.working
+    ? "Not attempted"
+    : question.correct
+      ? "Correct"
+      : question.markable
+        ? "Incorrect"
+        : "Teacher review";
+  return `
+    <li class="${question.correct ? "is-correct" : "is-incorrect"}">
+      <strong>${index + 1}</strong>
+      <div>
+        <div class="pupil-review-status">${escapeHtml(status)}</div>
+        <div class="pupil-review-question">${worksheetContentHtml(question.question || "")}</div>
+        <div class="pupil-review-grid">
+          <div>
+            <span>Your answer</span>
+            <p>${pupilMathPreviewHtml(question.submitted || "", "No answer entered")}</p>
+          </div>
+          <div>
+            <span>Expected answer</span>
+            <p class="pupil-answer-key-answer">${question.expected ? worksheetContentHtml(question.expected) : "Teacher review needed"}</p>
+          </div>
+        </div>
+        ${question.working ? `
+          <div class="pupil-review-working">
+            <span>Your working</span>
+            <p>${pupilMathPreviewHtml(question.working, "")}</p>
+          </div>
+        ` : ""}
+        ${!question.correct && Array.isArray(question.steps) && question.steps.length ? `
+          <details class="pupil-worked-solution">
+            <summary>Show working out</summary>
+            ${worksheetStepsHtml(question.steps)}
+          </details>
+        ` : ""}
+      </div>
+    </li>
+  `;
+}
+
+function pupilProgressSubmissionHtml(submission) {
+  const reviewedText = submission.reviewed ? "Teacher reviewed" : submission.teacher_notes ? "Teacher feedback" : "Awaiting review";
+  return `
+    <details class="pupil-progress-attempt">
+      <summary>
+        <span>Attempt ${escapeHtml(String(submission.attempt_number || 1))}</span>
+        <strong>${escapeHtml(submission.score_label || "Needs review")}</strong>
+        <small>${escapeHtml(reviewedText)}</small>
+      </summary>
+      ${submission.teacher_notes ? `
+        <div class="pupil-teacher-feedback is-reviewed">
+          <span>Teacher feedback</span>
+          <p>${escapeHtml(submission.teacher_notes)}</p>
+        </div>
+      ` : ""}
+      <ol class="pupil-answer-key pupil-submission-review">
+        ${(submission.questions || []).map(pupilProgressQuestionReviewHtml).join("")}
+      </ol>
+    </details>
+  `;
+}
+
+function pupilProgressTaskHtml(task) {
+  const title = [task.source_tool_title, task.source_type_label].filter(Boolean).join(" · ") || task.title || "Kaizen Maths task";
+  const score = task.best_percent !== null && task.best_percent !== undefined
+    ? `Best ${pupilProgressPercentLabel(task.best_percent)}`
+    : task.latest_score_label || "Not started";
+  return `
+    <details class="pupil-progress-task" data-status="${escapeHtml(task.status || "assigned")}">
+      <summary>
+        <span class="pupil-progress-status" data-status="${escapeHtml(task.status || "assigned")}">${escapeHtml(pupilProgressStatusLabel(task.status))}</span>
+        <strong>${escapeHtml(title)}</strong>
+        <small>${escapeHtml(score)} · ${Number(task.submitted_count || 0)} attempt${Number(task.submitted_count || 0) === 1 ? "" : "s"}</small>
+      </summary>
+      ${task.submissions?.length ? task.submissions.map(pupilProgressSubmissionHtml).join("") : `<p class="pupil-progress-empty">No submitted work for this task yet.</p>`}
+    </details>
+  `;
+}
+
+function pupilProgressProfileHtml(profile = state.pupilProgress, options = {}) {
+  if (!profile) return `<section class="pupil-progress-profile" id="pupilProgressProfile" hidden></section>`;
+  const summary = profile.summary || {};
+  const tasks = Array.isArray(profile.tasks) ? profile.tasks : [];
+  const completedTasks = tasks.filter((task) => task.completed);
+  const assignedTasks = tasks.filter((task) => !task.completed);
+  return `
+    <section class="pupil-progress-profile ${options.returnedWork ? "is-returned-work" : ""}" id="pupilProgressProfile">
+      <div class="pupil-progress-head">
+        <div>
+          <span class="eyebrow">My Progress</span>
+          <h2>${escapeHtml(profile.pupil_alias || "Pupil profile")}</h2>
+          <p>${escapeHtml([profile.class_group_name, profile.pupil_code ? `Code ${profile.pupil_code}` : ""].filter(Boolean).join(" · ") || "Your task history")}</p>
+        </div>
+        <span class="pupil-progress-mastered">${Number(summary.mastered || 0)} mastered</span>
+      </div>
+      <div class="pupil-progress-stats" aria-label="Pupil progress summary">
+        <span><strong>${Number(summary.assigned || 0)}</strong> assigned</span>
+        <span><strong>${Number(summary.completed || 0)}</strong> completed</span>
+        <span><strong>${Number(summary.attempts || 0)}</strong> attempts</span>
+        <span><strong>${pupilProgressPercentLabel(summary.average_best_percent)}</strong> average best</span>
+      </div>
+      <details class="pupil-progress-history" ${options.returnedWork ? "open" : ""}>
+        <summary>Completed and assigned tasks</summary>
+        <div class="pupil-progress-task-list">
+          ${completedTasks.length ? completedTasks.map(pupilProgressTaskHtml).join("") : `<p class="pupil-progress-empty">Completed tasks will appear here after you submit work.</p>`}
+          ${assignedTasks.length ? `
+            <div class="pupil-progress-assigned">
+              <span>Still to complete</span>
+              ${assignedTasks.map((task) => `
+                <div>
+                  <strong>${escapeHtml([task.source_tool_title, task.source_type_label].filter(Boolean).join(" · ") || task.title || "Assigned task")}</strong>
+                  <small>${escapeHtml(task.join_code || "")}</small>
+                </div>
+              `).join("")}
+            </div>
+          ` : ""}
+        </div>
+      </details>
+    </section>
+  `;
+}
+
+function updatePupilProgressProfilePanel() {
+  const panel = document.getElementById("pupilProgressProfile");
+  if (!panel) return;
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = pupilProgressProfileHtml(state.pupilProgress);
+  panel.replaceWith(wrapper.firstElementChild);
+}
+
 function renderPupilJoin(routeCode = "") {
   const cleanCode = normaliseClassTaskCode(routeCode || state.pupilTaskCode);
   if (cleanCode && cleanCode !== state.pupilTaskCode) {
     state.pupilTask = null;
     state.pupilTaskError = "";
     state.pupilSubmission = null;
+    state.pupilProgress = null;
     state.pupilResolvedAlias = "";
     state.pupilTaskAttemptIndex = 0;
     state.pupilActiveQuestionIndex = 0;
@@ -18414,6 +18797,7 @@ function renderPupilJoin(routeCode = "") {
       ` : ""}
 
       ${task ? state.pupilSubmission ? pupilSubmissionHtml(task) : `
+        ${pupilProgressProfileHtml(state.pupilProgress)}
         <form id="pupilTaskForm" class="panel pupil-task-panel pupil-workspace-panel">
           <header class="pupil-task-head">
             <div>
@@ -18478,11 +18862,27 @@ async function registerPupilTaskJoin(identityInput, { force = false } = {}) {
         code: task.join_code,
         pupil_alias: cleanAlias,
         pupil_code: cleanCode,
-        attempt_index: attemptIndex
+        attempt_index: attemptIndex,
+        include_profile: !force
       }
     });
     const resolvedAlias = payload.participant?.pupil_alias || cleanAlias;
     state.pupilResolvedAlias = resolvedAlias;
+    if (payload.pupil_profile) {
+      state.pupilProgress = payload.pupil_profile;
+      updatePupilProgressProfilePanel();
+    }
+    if (payload.response && payload.returned_work) {
+      if (payload.task) {
+        state.pupilTask = payload.task;
+        state.pupilTaskAttemptIndex = Number(payload.task.attempt_index || 0);
+      }
+      state.pupilSubmission = payload;
+      state.pupilProgress = payload.pupil_profile || state.pupilProgress;
+      stopPupilTaskActivityTracking();
+      if (routeParts()[0] === "pupil") renderRoute();
+      return { participant: payload.participant || null, returnedWork: true };
+    }
     const status = document.getElementById("pupilTaskStatus");
     if (status?.isConnected) {
       status.textContent = `Joined as ${resolvedAlias}.`;
@@ -18643,6 +19043,8 @@ function bindPupilJoin() {
     }
     state.pupilTaskError = "";
     state.pupilTask = null;
+    state.pupilSubmission = null;
+    state.pupilProgress = null;
     location.hash = `#/pupil/${code}`;
   });
 
@@ -18656,6 +19058,7 @@ function bindPupilJoin() {
   document.querySelector("[data-pupil-new-task]")?.addEventListener("click", () => {
     state.pupilTask = null;
     state.pupilSubmission = null;
+    state.pupilProgress = null;
     state.pupilResolvedAlias = "";
     state.pupilTaskCode = "";
     state.pupilTaskAttemptIndex = 0;
@@ -18786,6 +19189,15 @@ function bindPupilJoin() {
   updatePupilSubmitState();
   window.requestAnimationFrame(setupPupilHandwritingPads);
   startPupilTaskActivityTracking(form);
+  if (form) {
+    const initialIdentity = pupilIdentityFromForm(form);
+    if (pupilIdentityHasValue(initialIdentity)) {
+      window.setTimeout(() => {
+        if (!document.getElementById("pupilTaskForm") || state.pupilSubmission) return;
+        registerPupilTaskJoin(initialIdentity);
+      }, 0);
+    }
+  }
 
   document.querySelectorAll("[data-pupil-math-token]").forEach((button) => {
     button.addEventListener("dragstart", (event) => {
@@ -18859,6 +19271,7 @@ function bindPupilJoin() {
         classTaskWriteLocal(pupilAliasStorageKey, identity.pupil_alias || "");
       }
       await registerPupilTaskJoin(identity);
+      if (state.pupilSubmission) return;
       const payload = await classTaskApi("submit", {
         method: "POST",
         body: {
@@ -18873,6 +19286,7 @@ function bindPupilJoin() {
         }
       });
       state.pupilSubmission = payload;
+      state.pupilProgress = payload.pupil_profile || state.pupilProgress;
       stopPupilTaskActivityTracking();
       renderRoute();
     } catch (error) {

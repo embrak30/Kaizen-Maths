@@ -4640,6 +4640,140 @@ button.certification-course-card {
   letter-spacing: 0.04em;
 }
 
+.class-tracker-progress-table td:last-child {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.class-tracker-mastery-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 23px;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 3px 8px;
+  background: #f1efff;
+  color: #49308f;
+  font-size: 0.72rem;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.class-tracker-mastery-pill[data-status="mastered"] {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.class-tracker-history-list {
+  display: grid;
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.class-tracker-pupil-history {
+  border: 1px solid rgba(217, 224, 234, 0.78);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.class-tracker-pupil-history summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 10px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.class-tracker-pupil-history summary::-webkit-details-marker {
+  display: none;
+}
+
+.class-tracker-pupil-history summary strong,
+.class-tracker-pupil-history summary small {
+  display: block;
+}
+
+.class-tracker-pupil-history summary strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.class-tracker-pupil-history summary small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 850;
+}
+
+.class-tracker-history-items {
+  display: grid;
+  gap: 7px;
+  padding: 0 10px 10px;
+}
+
+.class-tracker-history-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 7px 8px;
+  border-radius: 7px;
+  background: #fbfdff;
+}
+
+.class-tracker-history-item > span {
+  min-width: 86px;
+  border-radius: 999px;
+  padding: 3px 7px;
+  background: #fff7ed;
+  color: #9a3412;
+  font-size: 0.68rem;
+  font-weight: 950;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.class-tracker-history-item[data-status="mastered"] > span {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.class-tracker-history-item strong {
+  overflow: hidden;
+  color: #282450;
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.class-tracker-history-item small,
+.class-tracker-history-assigned small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.class-tracker-history-assigned {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 7px 8px;
+  border-radius: 7px;
+  background: rgba(231, 251, 250, 0.62);
+}
+
+.class-tracker-history-assigned span {
+  color: var(--teal-dark);
+  font-size: 0.7rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
 .class-task-builder {
   position: sticky;
   top: 76px;
@@ -6208,6 +6342,257 @@ button.certification-course-card {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 10px;
+}
+
+.pupil-teacher-feedback {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(23, 184, 179, 0.22);
+  border-radius: 9px;
+  background:
+    linear-gradient(135deg, rgba(231, 251, 250, 0.74), rgba(255, 255, 255, 0.92)),
+    white;
+}
+
+.pupil-teacher-feedback.is-reviewed {
+  border-color: rgba(19, 138, 99, 0.28);
+  background:
+    linear-gradient(135deg, rgba(220, 252, 231, 0.82), rgba(255, 255, 255, 0.94)),
+    white;
+}
+
+.pupil-teacher-feedback span {
+  color: var(--teal-dark);
+  font-size: 0.74rem;
+  font-weight: 950;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pupil-teacher-feedback p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 780;
+  line-height: 1.42;
+}
+
+.pupil-progress-profile {
+  display: grid;
+  gap: 9px;
+  margin-bottom: 10px;
+  padding: 12px;
+  border: 1px solid rgba(23, 184, 179, 0.24);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(231, 251, 250, 0.84), rgba(241, 239, 255, 0.72)),
+    white;
+}
+
+.pupil-progress-profile[hidden] {
+  display: none;
+}
+
+.pupil-progress-profile.is-returned-work {
+  background:
+    linear-gradient(135deg, rgba(220, 252, 231, 0.82), rgba(255, 255, 255, 0.94)),
+    white;
+}
+
+.pupil-progress-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pupil-progress-head h2 {
+  margin: 2px 0;
+  color: var(--ink);
+  font-size: 1.18rem;
+}
+
+.pupil-progress-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.pupil-progress-mastered,
+.pupil-progress-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 4px 9px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 0.72rem;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.pupil-progress-status[data-status="needs_retry"] {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.pupil-progress-status[data-status="assigned"] {
+  background: #f1efff;
+  color: #49308f;
+}
+
+.pupil-progress-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.pupil-progress-stats span {
+  min-width: 0;
+  border: 1px solid rgba(217, 224, 234, 0.78);
+  border-radius: 8px;
+  padding: 7px 8px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.pupil-progress-stats strong {
+  display: block;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.1;
+}
+
+.pupil-progress-history {
+  border: 1px solid rgba(217, 224, 234, 0.72);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.pupil-progress-history summary,
+.pupil-progress-task summary,
+.pupil-progress-attempt summary {
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.pupil-progress-history > summary {
+  padding: 8px 10px;
+  color: var(--teal-dark);
+}
+
+.pupil-progress-task-list {
+  display: grid;
+  gap: 7px;
+  padding: 0 10px 10px;
+}
+
+.pupil-progress-task,
+.pupil-progress-attempt {
+  border: 1px solid rgba(217, 224, 234, 0.78);
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.pupil-progress-task > summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px 9px;
+  align-items: center;
+  padding: 8px;
+  list-style: none;
+}
+
+.pupil-progress-task > summary::-webkit-details-marker,
+.pupil-progress-attempt > summary::-webkit-details-marker {
+  display: none;
+}
+
+.pupil-progress-task > summary strong {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pupil-progress-task > summary small {
+  grid-column: 2;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.pupil-progress-attempt {
+  margin: 0 8px 8px;
+}
+
+.pupil-progress-attempt > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  list-style: none;
+}
+
+.pupil-progress-attempt > summary span,
+.pupil-progress-attempt > summary small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.pupil-progress-attempt > summary strong {
+  color: var(--ink);
+  font-size: 0.82rem;
+}
+
+.pupil-progress-assigned {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border: 1px dashed rgba(23, 184, 179, 0.36);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.pupil-progress-assigned > span {
+  color: var(--teal-dark);
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.pupil-progress-assigned div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: baseline;
+}
+
+.pupil-progress-assigned strong {
+  color: var(--ink);
+  font-size: 0.82rem;
+}
+
+.pupil-progress-assigned small,
+.pupil-progress-empty {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.pupil-progress-empty {
+  margin: 0;
+  padding: 8px;
 }
 
 .pupil-retry-note {
