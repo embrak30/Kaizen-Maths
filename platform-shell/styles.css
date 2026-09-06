@@ -5557,6 +5557,30 @@ button.certification-course-card {
   text-transform: uppercase;
 }
 
+.class-task-response-question span.is-correct {
+  color: var(--green-dark);
+}
+
+.class-task-response-question span.is-partial {
+  color: #b45309;
+}
+
+.class-task-response-question span.is-incorrect {
+  color: #991b1b;
+}
+
+.class-task-response-note,
+.pupil-review-message {
+  margin: 0;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 0.82rem;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
 .class-task-response-grid p,
 .class-task-working p,
 .class-task-response-empty {
@@ -6803,6 +6827,10 @@ button.certification-course-card {
   background: #dc2626;
 }
 
+.pupil-submission-review li.is-partial strong {
+  background: #f59e0b;
+}
+
 .pupil-review-status {
   width: fit-content;
   margin-bottom: 6px;
@@ -6818,6 +6846,11 @@ button.certification-course-card {
 .pupil-submission-review li.is-incorrect .pupil-review-status {
   background: #fee2e2;
   color: #991b1b;
+}
+
+.pupil-submission-review li.is-partial .pupil-review-status {
+  background: #fef3c7;
+  color: #92400e;
 }
 
 .pupil-review-question {

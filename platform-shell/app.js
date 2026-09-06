@@ -15617,8 +15617,43 @@ function classTaskNormaliseSuperscripts(value) {
   return String(value ?? "").replace(/[⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, (match) => `^${[...match].map((char) => superscriptMap[char] || "").join("")}`);
 }
 
+function classTaskNormaliseUnitNotation(value) {
+  return String(value ?? "")
+    .replace(/\bpounds?\b|\bgbp\b/gi, "£")
+    .replace(/\bdollars?\b|\busd\b/gi, "$")
+    .replace(/\beuros?\b|\beur\b/gi, "€")
+    .replace(/(\d(?:\.\d+)?)\s*([£$€])/g, "$2$1")
+    .replace(/([£$€])\s*(\d)/g, "$1$2")
+    .replace(/\bdegrees?\s+c(?:elsius)?\b|\bcelsius\b/gi, "°c")
+    .replace(/\bdegrees?\b|\bdeg\b/gi, "°")
+    .replace(/\bmet(?:re|er)s?\s+per\s+second\s+squared\b/gi, "m/s^2")
+    .replace(/\bmet(?:re|er)s?\s+per\s+second\b/gi, "m/s")
+    .replace(/\bsquare\s+(milli|centi|kilo)?met(?:re|er)s?\b/gi, (_, prefix = "") => `${prefix ? prefix.charAt(0) : ""}m^2`)
+    .replace(/\bcubic\s+(milli|centi|kilo)?met(?:re|er)s?\b/gi, (_, prefix = "") => `${prefix ? prefix.charAt(0) : ""}m^3`)
+    .replace(/\bcentimet(?:re|er)s?\b/gi, "cm")
+    .replace(/\bmillimet(?:re|er)s?\b/gi, "mm")
+    .replace(/\bkilomet(?:re|er)s?\b/gi, "km")
+    .replace(/\bmet(?:re|er)s?\b/gi, "m")
+    .replace(/\bkilograms?\b/gi, "kg")
+    .replace(/\bmilligrams?\b/gi, "mg")
+    .replace(/\bgrams?\b/gi, "g")
+    .replace(/\bmillilit(?:re|er)s?\b/gi, "ml")
+    .replace(/\blit(?:re|er)s?\b/gi, "L")
+    .replace(/\bnewtons?\b/gi, "N")
+    .replace(/\bjoules?\b/gi, "J")
+    .replace(/\bwatts?\b/gi, "W")
+    .replace(/\bseconds?\b|\bsecs?\b/gi, "s")
+    .replace(/\b(cm|mm|km|m)\s+(2|3)\b/gi, "$1^$2")
+    .replace(/\b(cm|mm|km|m)(2|3)\b/gi, "$1^$2")
+    .replace(/\b(cm|mm|km|m)\s*(?:squared|square)\b/gi, "$1^2")
+    .replace(/\b(cm|mm|km|m)\s*(?:cubed|cubic)\b/gi, "$1^3")
+    .replace(/\bm\s*\/\s*s\s*(?:2|squared)\b/gi, "m/s^2")
+    .replace(/\bm\s*s\s*(?:-1|−1)\b/gi, "m/s")
+    .replace(/\bm\s*s\s*(?:-2|−2)\b/gi, "m/s^2");
+}
+
 function classTaskNormaliseAnswer(value) {
-  return classTaskNormaliseSuperscripts(classTaskStripHtml(value))
+  return classTaskNormaliseSuperscripts(classTaskNormaliseUnitNotation(classTaskStripHtml(value)))
     .toLowerCase()
     .replace(/\\dfrac/g, "\\frac")
     .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, "($1)/($2)")
@@ -16026,6 +16061,121 @@ function classTaskAnswersMatch(acceptedAnswers = [], submittedAnswers = []) {
   )));
 }
 
+function classTaskUnitContextText(question = {}) {
+  return [
+    question.question,
+    question.instruction,
+    question.sectionTitle,
+    question.sectionType
+  ].filter(Boolean).join(" ");
+}
+
+function classTaskUnitContextSuggestsMeasurement(context) {
+  return /\b(metre|meter|centimetre|centimeter|millimetre|millimeter|kilometre|kilometer|distance|length|height|width|radius|diameter|perimeter|area|volume|speed|velocity|acceleration|force|newton|mass|weight|temperature|time|second|minute|hour|journey|travel|scale|money|balance|cost|price|litre|liter|capacity)\b/i.test(String(context || ""));
+}
+
+function classTaskAnswerUnitLabels(value, context = "") {
+  const text = classTaskStripHtml(value).replace(/\s+/g, " ").trim();
+  const lower = text.toLowerCase();
+  const labels = [];
+  const add = (label) => {
+    if (!labels.includes(label)) labels.push(label);
+  };
+  const measurementContext = classTaskUnitContextSuggestsMeasurement(context);
+
+  if (/£|\bpounds?\b|\bgbp\b/i.test(text)) add("£");
+  if (/\$|\bdollars?\b|\busd\b/i.test(text)) add("$");
+  if (/€|\beuros?\b|\beur\b/i.test(text)) add("€");
+  if (/°\s*c|\bdegrees?\s+c(?:elsius)?\b|\bcelsius\b/i.test(text)) add("°C");
+  else if (/°|\bdegrees?\b|\bdeg\b/i.test(text)) add("°");
+
+  const speedSquared = /\bm\s*\/\s*s\s*(?:\^?\s*2|²|2)\b|\bm\s*s\s*(?:\^?\s*-\s*2|−2|-2)\b|\bmet(?:re|er)s?\s+per\s+second\s+squared\b/i.test(text);
+  const speed = speedSquared || /\bm\s*\/\s*s\b|\bm\s*s\s*(?:\^?\s*-\s*1|−1|-1)\b|\bmet(?:re|er)s?\s+per\s+second\b/i.test(text);
+  if (speedSquared) add("m/s²");
+  else if (speed) add("m/s");
+
+  const squareUnit = /(?:^|[^a-z])(?:mm|cm|km|m)\s*(?:\^?\s*2|²|2|squared)\b|\bsquare\s+(?:milli|centi|kilo)?met(?:re|er)s?\b/i.test(text);
+  const cubicUnit = /(?:^|[^a-z])(?:mm|cm|km|m)\s*(?:\^?\s*3|³|3|cubed)\b|\bcubic\s+(?:milli|centi|kilo)?met(?:re|er)s?\b/i.test(text);
+  if (/(?:^|[^a-z])cm\s*(?:\^?\s*2|²|2|squared)\b|\bsquare\s+centimet(?:re|er)s?\b/i.test(text)) add("cm²");
+  if (/(?:^|[^a-z])cm\s*(?:\^?\s*3|³|3|cubed)\b|\bcubic\s+centimet(?:re|er)s?\b/i.test(text)) add("cm³");
+  if (/(?:^|[^a-z])m\s*(?:\^?\s*2|²|2|squared)\b|\bsquare\s+met(?:re|er)s?\b/i.test(text)) add("m²");
+  if (/(?:^|[^a-z])m\s*(?:\^?\s*3|³|3|cubed)\b|\bcubic\s+met(?:re|er)s?\b/i.test(text)) add("m³");
+
+  if (/(?:^|[^a-z])cm\b|\bcentimet(?:re|er)s?\b/i.test(text) && !labels.some((label) => label.startsWith("cm"))) add("cm");
+  if (/(?:^|[^a-z])mm\b|\bmillimet(?:re|er)s?\b/i.test(text)) add("mm");
+  if (/(?:^|[^a-z])km\b|\bkilomet(?:re|er)s?\b/i.test(text)) add("km");
+  if (!speed && !squareUnit && !cubicUnit && (/\bmet(?:re|er)s?\b/i.test(text) || (measurementContext && /(?:^|[^a-z0-9])\d+(?:\.\d+)?\s*m\b/i.test(text)))) add("m");
+
+  if (/\bkg\b|\bkilograms?\b/i.test(text)) add("kg");
+  if (/\bmg\b|\bmilligrams?\b/i.test(text)) add("mg");
+  if ((/\bgrams?\b/i.test(text) || (measurementContext && /(?:^|[^a-z0-9])\d+(?:\.\d+)?\s*g\b/i.test(text))) && !/\bdeg\b/i.test(text)) add("g");
+  if (/\bml\b|\bmillilit(?:re|er)s?\b/i.test(text)) add("ml");
+  if (/\blit(?:re|er)s?\b/i.test(text) || /\b\d+(?:\.\d+)?\s*L\b/.test(text)) add("L");
+  if (/(?:^|[^a-z])N\b|\bnewtons?\b/.test(text)) add("N");
+  if (/(?:^|[^a-z])J\b|\bjoules?\b/.test(text)) add("J");
+  if (/(?:^|[^a-z])W\b|\bwatts?\b/.test(text)) add("W");
+  if (/\bseconds?\b|\bsecs?\b|\b\d+(?:\.\d+)?\s*s\b/i.test(lower)) add("s");
+
+  return labels;
+}
+
+function classTaskStripAnswerUnits(value, context = "") {
+  let text = classTaskStripHtml(value);
+  const measurementContext = classTaskUnitContextSuggestsMeasurement(context);
+  text = text
+    .replace(/[£$€]/g, " ")
+    .replace(/\b(?:pounds?|gbp|dollars?|usd|euros?|eur)\b/gi, " ")
+    .replace(/°\s*c|\bdegrees?\s+c(?:elsius)?\b|\bcelsius\b|°|\bdegrees?\b|\bdeg\b/gi, " ")
+    .replace(/\bmet(?:re|er)s?\s+per\s+second\s+squared\b/gi, " ")
+    .replace(/\bmet(?:re|er)s?\s+per\s+second\b/gi, " ")
+    .replace(/\b(?:square|cubic)\s+(?:milli|centi|kilo)?met(?:re|er)s?\b/gi, " ")
+    .replace(/\b(?:centimet(?:re|er)s?|millimet(?:re|er)s?|kilomet(?:re|er)s?|kilograms?|grams?|milligrams?|millilit(?:re|er)s?|lit(?:re|er)s?|newtons?|joules?|watts?|seconds?|secs?)\b/gi, " ")
+    .replace(/(\d(?:\.\d+)?)\s*(?:m\s*\/\s*s(?:\s*(?:\^?\s*2|²|2))?|m\s*s\s*(?:\^?\s*-\s*2|−2|-2))\b/gi, "$1")
+    .replace(/(\d(?:\.\d+)?)\s*(?:m\s*\/\s*s|m\s*s\s*(?:\^?\s*-\s*1|−1|-1))\b/gi, "$1")
+    .replace(/(\d(?:\.\d+)?)\s*(?:cm|mm|km|kg|mg|ml|l)\s*(?:\^?\s*[23]|²|³|squared|cubed)?\b/gi, "$1")
+    .replace(/(\d(?:\.\d+)?)\s*(?:N|J|W)\b/g, "$1");
+  if (measurementContext) {
+    text = text.replace(/(\d(?:\.\d+)?)\s*m\s*(?:\^?\s*[23]|²|³|squared|cubed)?\b/gi, "$1");
+  }
+  return text;
+}
+
+function classTaskUnitlessAnswerVariants(value, context = "") {
+  const answers = new Set();
+  String(value ?? "").split(/\bor\b|\/\//i).forEach((part) => {
+    const clean = classTaskNormaliseAnswer(classTaskStripAnswerUnits(part, context));
+    classTaskAddAnswerVariant(answers, clean);
+  });
+  return [...answers].filter(Boolean);
+}
+
+function classTaskMissingUnitMatch(question, expected, submitted) {
+  if (!String(submitted ?? "").trim()) return null;
+  const context = classTaskUnitContextText(question);
+  const expectedUnits = classTaskAnswerUnitLabels(expected, context);
+  if (!expectedUnits.length) return null;
+  const submittedUnits = classTaskAnswerUnitLabels(submitted, context);
+  if (submittedUnits.length) return null;
+  const expectedUnitless = classTaskUnitlessAnswerVariants(expected, context);
+  const submittedUnitless = classTaskUnitlessAnswerVariants(submitted, context);
+  if (!expectedUnitless.length || !submittedUnitless.length) return null;
+  const multiSolutionMatch = classTaskMultiSolutionSetMatches(classTaskStripAnswerUnits(expected, context), classTaskStripAnswerUnits(submitted, context));
+  const matches = multiSolutionMatch === null
+    ? classTaskAnswersMatch(expectedUnitless, submittedUnitless)
+    : multiSolutionMatch;
+  if (!matches) return null;
+  return {
+    partial: true,
+    reason: "missing_unit",
+    units: expectedUnits,
+    message: `Number is correct. Always state your units${expectedUnits.length ? ` (${expectedUnits.join(", ")})` : ""}.`
+  };
+}
+
+function classTaskMissingUnitPartialScore(marks) {
+  return marks > 1 ? Math.max(0, marks - 1) : 0.5;
+}
+
 function classTaskScoreSubmission(questions = [], answers = {}, working = {}, options = {}) {
   let autoScore = 0;
   let maxScore = 0;
@@ -16050,14 +16200,22 @@ function classTaskScoreSubmission(questions = [], answers = {}, working = {}, op
         ? (multiSolutionMatch === null ? classTaskAnswersMatch(accepted, submittedVariants) : multiSolutionMatch)
         : matrixMatch
     ));
+    const unitPartial = !correct && markable && attempted
+      ? classTaskMissingUnitMatch(question, expected, submitted)
+      : null;
+    const awarded = correct ? marks : unitPartial ? classTaskMissingUnitPartialScore(marks) : 0;
     if (markable) {
       maxScore += marks;
-      if (correct) autoScore += marks;
+      autoScore += awarded;
     }
     return {
       id,
       submitted: String(submitted || "").trim(),
       correct,
+      partial: Boolean(unitPartial),
+      partial_reason: unitPartial?.reason || "",
+      feedback_message: unitPartial?.message || "",
+      awarded,
       markable,
       attempted,
       marks,
@@ -16577,6 +16735,10 @@ function classTaskPupilSubmissionHistory(task, response, reward = null) {
         submitted: String(submittedAnswers[id] ?? submittedAnswers[String(index)] ?? item.submitted ?? "").trim(),
         expected: String(item.expected || question.answer || "").trim(),
         correct: Boolean(item.correct),
+        partial: Boolean(item.partial),
+        partial_reason: String(item.partial_reason || "").trim(),
+        feedback_message: String(item.feedback_message || "").trim(),
+        awarded: Number.isFinite(Number(item.awarded)) ? Number(item.awarded) : (item.correct ? Number(question.marks) || 1 : 0),
         markable: item.markable !== false,
         working: String(submittedWorking[id] ?? submittedWorking[String(index)] ?? item.working ?? "").trim(),
         steps: Array.isArray(question.steps) ? question.steps.slice(0, 24) : []
@@ -17785,13 +17947,16 @@ function classTaskResponseDetailHtml(response, task) {
         const submitted = item.submitted || response.answers?.[item.id] || response.answers?.[String(index)] || "";
         const expected = item.expected || question.answer || "";
         const attempted = item.attempted !== false && Boolean(submitted || workingText);
-        const status = !attempted ? "Not attempted" : item.correct ? "Correct" : item.markable ? "Incorrect" : "Teacher review";
+        const partial = Boolean(item.partial);
+        const status = !attempted ? "Not attempted" : item.correct ? "Correct" : partial ? "Partially correct" : item.markable ? "Incorrect" : "Teacher review";
+        const feedbackMessage = item.feedback_message || item.message || "";
         return `
           <li>
             <div class="class-task-response-question">
               <strong>Q${index + 1}</strong>
-              <span>${escapeHtml(status)}</span>
+              <span class="${partial ? "is-partial" : item.correct ? "is-correct" : item.markable ? "is-incorrect" : ""}">${escapeHtml(status)}</span>
             </div>
+            ${feedbackMessage ? `<p class="class-task-response-note">${escapeHtml(feedbackMessage)}</p>` : ""}
             ${question.question ? `<div class="class-task-response-prompt">${worksheetContentHtml(question.question)}</div>` : ""}
             <div class="class-task-response-grid">
               <div>
@@ -19190,17 +19355,21 @@ function pupilSubmissionHtml(task) {
               const expected = answerById.get(questionId) || answerById.get(`q${index + 1}`) || {};
               const item = feedbackById.get(questionId) || feedbackById.get(`q${index + 1}`) || {};
               const correct = Boolean(item.correct);
+              const partial = Boolean(item.partial);
               const markable = item.markable !== false;
               const attempted = item.attempted !== false && Boolean(item.submitted || submittedAnswers[questionId] || submittedWorking[questionId]);
-              const status = !attempted ? "Not attempted" : correct ? "Correct" : markable ? "Incorrect" : "Teacher review";
+              const status = !attempted ? "Not attempted" : correct ? "Correct" : partial ? "Partially correct" : markable ? "Incorrect" : "Teacher review";
+              const reviewClass = correct ? "is-correct" : partial ? "is-partial" : "is-incorrect";
+              const feedbackMessage = item.feedback_message || item.message || "";
               const steps = Array.isArray(expected.steps) ? expected.steps : [];
-              const showWorking = attempted && !correct && steps.length;
+              const showWorking = attempted && !correct && !partial && steps.length;
               const workingImage = pupilSafeWorkingImage(submittedWorkingImages[questionId] || submittedWorkingImages[String(index)] || "");
               return `
-              <li class="${correct ? "is-correct" : "is-incorrect"}">
+              <li class="${reviewClass}">
                 <strong>${index + 1}</strong>
                 <div>
                   <div class="pupil-review-status">${escapeHtml(status)}</div>
+                  ${feedbackMessage ? `<p class="pupil-review-message">${escapeHtml(feedbackMessage)}</p>` : ""}
                   <div class="pupil-review-question">${worksheetContentHtml(question.question || "")}</div>
                   <div class="pupil-review-grid">
                     <div>
@@ -19298,18 +19467,23 @@ function pupilRewardCelebrationHtml(reward = {}) {
 }
 
 function pupilProgressQuestionReviewHtml(question, index) {
+  const partial = Boolean(question.partial);
   const status = !question.submitted && !question.working
     ? "Not attempted"
     : question.correct
       ? "Correct"
-      : question.markable
+      : partial
+        ? "Partially correct"
+        : question.markable
         ? "Incorrect"
         : "Teacher review";
+  const reviewClass = question.correct ? "is-correct" : partial ? "is-partial" : "is-incorrect";
   return `
-    <li class="${question.correct ? "is-correct" : "is-incorrect"}">
+    <li class="${reviewClass}">
       <strong>${index + 1}</strong>
       <div>
         <div class="pupil-review-status">${escapeHtml(status)}</div>
+        ${question.feedback_message ? `<p class="pupil-review-message">${escapeHtml(question.feedback_message)}</p>` : ""}
         <div class="pupil-review-question">${worksheetContentHtml(question.question || "")}</div>
         <div class="pupil-review-grid">
           <div>

@@ -473,6 +473,10 @@ function publicPupilSubmissionHistory(task, response, reward = null) {
         submitted: cleanLongText(submittedAnswers[id] ?? submittedAnswers[String(index)] ?? item.submitted ?? "", 3000),
         expected: cleanLongText(item.expected || question.answer || "", 12000),
         correct: Boolean(item.correct),
+        partial: Boolean(item.partial),
+        partial_reason: cleanText(item.partial_reason || "", 80),
+        feedback_message: cleanText(item.feedback_message || "", 500),
+        awarded: Number.isFinite(Number(item.awarded)) ? Number(item.awarded) : (item.correct ? Number(question.marks) || 1 : 0),
         markable: item.markable !== false,
         working: cleanLongText(submittedWorking[id] ?? submittedWorking[String(index)] ?? item.working ?? "", 4000),
         steps: Array.isArray(question.steps) ? question.steps.slice(0, 24) : []
@@ -620,8 +624,43 @@ function normaliseSuperscripts(value) {
   return String(value ?? "").replace(/[⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, (match) => `^${[...match].map((char) => superscriptMap[char] || "").join("")}`);
 }
 
+function normaliseUnitNotation(value) {
+  return String(value ?? "")
+    .replace(/\bpounds?\b|\bgbp\b/gi, "£")
+    .replace(/\bdollars?\b|\busd\b/gi, "$")
+    .replace(/\beuros?\b|\beur\b/gi, "€")
+    .replace(/(\d(?:\.\d+)?)\s*([£$€])/g, "$2$1")
+    .replace(/([£$€])\s*(\d)/g, "$1$2")
+    .replace(/\bdegrees?\s+c(?:elsius)?\b|\bcelsius\b/gi, "°c")
+    .replace(/\bdegrees?\b|\bdeg\b/gi, "°")
+    .replace(/\bmet(?:re|er)s?\s+per\s+second\s+squared\b/gi, "m/s^2")
+    .replace(/\bmet(?:re|er)s?\s+per\s+second\b/gi, "m/s")
+    .replace(/\bsquare\s+(milli|centi|kilo)?met(?:re|er)s?\b/gi, (_, prefix = "") => `${prefix ? prefix.charAt(0) : ""}m^2`)
+    .replace(/\bcubic\s+(milli|centi|kilo)?met(?:re|er)s?\b/gi, (_, prefix = "") => `${prefix ? prefix.charAt(0) : ""}m^3`)
+    .replace(/\bcentimet(?:re|er)s?\b/gi, "cm")
+    .replace(/\bmillimet(?:re|er)s?\b/gi, "mm")
+    .replace(/\bkilomet(?:re|er)s?\b/gi, "km")
+    .replace(/\bmet(?:re|er)s?\b/gi, "m")
+    .replace(/\bkilograms?\b/gi, "kg")
+    .replace(/\bmilligrams?\b/gi, "mg")
+    .replace(/\bgrams?\b/gi, "g")
+    .replace(/\bmillilit(?:re|er)s?\b/gi, "ml")
+    .replace(/\blit(?:re|er)s?\b/gi, "L")
+    .replace(/\bnewtons?\b/gi, "N")
+    .replace(/\bjoules?\b/gi, "J")
+    .replace(/\bwatts?\b/gi, "W")
+    .replace(/\bseconds?\b|\bsecs?\b/gi, "s")
+    .replace(/\b(cm|mm|km|m)\s+(2|3)\b/gi, "$1^$2")
+    .replace(/\b(cm|mm|km|m)(2|3)\b/gi, "$1^$2")
+    .replace(/\b(cm|mm|km|m)\s*(?:squared|square)\b/gi, "$1^2")
+    .replace(/\b(cm|mm|km|m)\s*(?:cubed|cubic)\b/gi, "$1^3")
+    .replace(/\bm\s*\/\s*s\s*(?:2|squared)\b/gi, "m/s^2")
+    .replace(/\bm\s*s\s*(?:-1|−1)\b/gi, "m/s")
+    .replace(/\bm\s*s\s*(?:-2|−2)\b/gi, "m/s^2");
+}
+
 function normaliseMathAnswer(value) {
-  let text = normaliseSuperscripts(stripHtml(value)).toLowerCase();
+  let text = normaliseSuperscripts(normaliseUnitNotation(stripHtml(value))).toLowerCase();
   text = text
     .replace(/\\dfrac/g, "\\frac")
     .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, "($1)/($2)")
@@ -1081,6 +1120,121 @@ function answersMatch(acceptedAnswers = [], submittedAnswers = []) {
   )));
 }
 
+function unitContextText(question = {}) {
+  return [
+    question.question,
+    question.instruction,
+    question.sectionTitle,
+    question.sectionType
+  ].filter(Boolean).join(" ");
+}
+
+function unitContextSuggestsMeasurement(context) {
+  return /\b(metre|meter|centimetre|centimeter|millimetre|millimeter|kilometre|kilometer|distance|length|height|width|radius|diameter|perimeter|area|volume|speed|velocity|acceleration|force|newton|mass|weight|temperature|time|second|minute|hour|journey|travel|scale|money|balance|cost|price|litre|liter|capacity)\b/i.test(String(context || ""));
+}
+
+function answerUnitLabels(value, context = "") {
+  const text = stripHtml(value).replace(/\s+/g, " ").trim();
+  const lower = text.toLowerCase();
+  const labels = [];
+  const add = (label) => {
+    if (!labels.includes(label)) labels.push(label);
+  };
+  const measurementContext = unitContextSuggestsMeasurement(context);
+
+  if (/£|\bpounds?\b|\bgbp\b/i.test(text)) add("£");
+  if (/\$|\bdollars?\b|\busd\b/i.test(text)) add("$");
+  if (/€|\beuros?\b|\beur\b/i.test(text)) add("€");
+  if (/°\s*c|\bdegrees?\s+c(?:elsius)?\b|\bcelsius\b/i.test(text)) add("°C");
+  else if (/°|\bdegrees?\b|\bdeg\b/i.test(text)) add("°");
+
+  const speedSquared = /\bm\s*\/\s*s\s*(?:\^?\s*2|²|2)\b|\bm\s*s\s*(?:\^?\s*-\s*2|−2|-2)\b|\bmet(?:re|er)s?\s+per\s+second\s+squared\b/i.test(text);
+  const speed = speedSquared || /\bm\s*\/\s*s\b|\bm\s*s\s*(?:\^?\s*-\s*1|−1|-1)\b|\bmet(?:re|er)s?\s+per\s+second\b/i.test(text);
+  if (speedSquared) add("m/s²");
+  else if (speed) add("m/s");
+
+  const squareUnit = /(?:^|[^a-z])(?:mm|cm|km|m)\s*(?:\^?\s*2|²|2|squared)\b|\bsquare\s+(?:milli|centi|kilo)?met(?:re|er)s?\b/i.test(text);
+  const cubicUnit = /(?:^|[^a-z])(?:mm|cm|km|m)\s*(?:\^?\s*3|³|3|cubed)\b|\bcubic\s+(?:milli|centi|kilo)?met(?:re|er)s?\b/i.test(text);
+  if (/(?:^|[^a-z])cm\s*(?:\^?\s*2|²|2|squared)\b|\bsquare\s+centimet(?:re|er)s?\b/i.test(text)) add("cm²");
+  if (/(?:^|[^a-z])cm\s*(?:\^?\s*3|³|3|cubed)\b|\bcubic\s+centimet(?:re|er)s?\b/i.test(text)) add("cm³");
+  if (/(?:^|[^a-z])m\s*(?:\^?\s*2|²|2|squared)\b|\bsquare\s+met(?:re|er)s?\b/i.test(text)) add("m²");
+  if (/(?:^|[^a-z])m\s*(?:\^?\s*3|³|3|cubed)\b|\bcubic\s+met(?:re|er)s?\b/i.test(text)) add("m³");
+
+  if (/(?:^|[^a-z])cm\b|\bcentimet(?:re|er)s?\b/i.test(text) && !labels.some((label) => label.startsWith("cm"))) add("cm");
+  if (/(?:^|[^a-z])mm\b|\bmillimet(?:re|er)s?\b/i.test(text)) add("mm");
+  if (/(?:^|[^a-z])km\b|\bkilomet(?:re|er)s?\b/i.test(text)) add("km");
+  if (!speed && !squareUnit && !cubicUnit && (/\bmet(?:re|er)s?\b/i.test(text) || (measurementContext && /(?:^|[^a-z0-9])\d+(?:\.\d+)?\s*m\b/i.test(text)))) add("m");
+
+  if (/\bkg\b|\bkilograms?\b/i.test(text)) add("kg");
+  if (/\bmg\b|\bmilligrams?\b/i.test(text)) add("mg");
+  if ((/\bgrams?\b/i.test(text) || (measurementContext && /(?:^|[^a-z0-9])\d+(?:\.\d+)?\s*g\b/i.test(text))) && !/\bdeg\b/i.test(text)) add("g");
+  if (/\bml\b|\bmillilit(?:re|er)s?\b/i.test(text)) add("ml");
+  if (/\blit(?:re|er)s?\b/i.test(text) || /\b\d+(?:\.\d+)?\s*L\b/.test(text)) add("L");
+  if (/(?:^|[^a-z])N\b|\bnewtons?\b/.test(text)) add("N");
+  if (/(?:^|[^a-z])J\b|\bjoules?\b/.test(text)) add("J");
+  if (/(?:^|[^a-z])W\b|\bwatts?\b/.test(text)) add("W");
+  if (/\bseconds?\b|\bsecs?\b|\b\d+(?:\.\d+)?\s*s\b/i.test(lower)) add("s");
+
+  return labels;
+}
+
+function stripAnswerUnits(value, context = "") {
+  let text = stripHtml(value);
+  const measurementContext = unitContextSuggestsMeasurement(context);
+  text = text
+    .replace(/[£$€]/g, " ")
+    .replace(/\b(?:pounds?|gbp|dollars?|usd|euros?|eur)\b/gi, " ")
+    .replace(/°\s*c|\bdegrees?\s+c(?:elsius)?\b|\bcelsius\b|°|\bdegrees?\b|\bdeg\b/gi, " ")
+    .replace(/\bmet(?:re|er)s?\s+per\s+second\s+squared\b/gi, " ")
+    .replace(/\bmet(?:re|er)s?\s+per\s+second\b/gi, " ")
+    .replace(/\b(?:square|cubic)\s+(?:milli|centi|kilo)?met(?:re|er)s?\b/gi, " ")
+    .replace(/\b(?:centimet(?:re|er)s?|millimet(?:re|er)s?|kilomet(?:re|er)s?|kilograms?|grams?|milligrams?|millilit(?:re|er)s?|lit(?:re|er)s?|newtons?|joules?|watts?|seconds?|secs?)\b/gi, " ")
+    .replace(/(\d(?:\.\d+)?)\s*(?:m\s*\/\s*s(?:\s*(?:\^?\s*2|²|2))?|m\s*s\s*(?:\^?\s*-\s*2|−2|-2))\b/gi, "$1")
+    .replace(/(\d(?:\.\d+)?)\s*(?:m\s*\/\s*s|m\s*s\s*(?:\^?\s*-\s*1|−1|-1))\b/gi, "$1")
+    .replace(/(\d(?:\.\d+)?)\s*(?:cm|mm|km|kg|mg|ml|l)\s*(?:\^?\s*[23]|²|³|squared|cubed)?\b/gi, "$1")
+    .replace(/(\d(?:\.\d+)?)\s*(?:N|J|W)\b/g, "$1");
+  if (measurementContext) {
+    text = text.replace(/(\d(?:\.\d+)?)\s*m\s*(?:\^?\s*[23]|²|³|squared|cubed)?\b/gi, "$1");
+  }
+  return text;
+}
+
+function unitlessAnswerVariants(value, context = "") {
+  const answers = new Set();
+  String(value ?? "").split(/\bor\b|\/\//i).forEach((part) => {
+    const clean = normaliseMathAnswer(stripAnswerUnits(part, context));
+    addAnswerVariant(answers, clean);
+  });
+  return [...answers].filter(Boolean);
+}
+
+function missingUnitMatch(question, expected, submitted) {
+  if (!String(submitted ?? "").trim()) return null;
+  const context = unitContextText(question);
+  const expectedUnits = answerUnitLabels(expected, context);
+  if (!expectedUnits.length) return null;
+  const submittedUnits = answerUnitLabels(submitted, context);
+  if (submittedUnits.length) return null;
+  const expectedUnitless = unitlessAnswerVariants(expected, context);
+  const submittedUnitless = unitlessAnswerVariants(submitted, context);
+  if (!expectedUnitless.length || !submittedUnitless.length) return null;
+  const multiSolutionMatch = multiSolutionSetMatches(stripAnswerUnits(expected, context), stripAnswerUnits(submitted, context));
+  const matches = multiSolutionMatch === null
+    ? answersMatch(expectedUnitless, submittedUnitless)
+    : multiSolutionMatch;
+  if (!matches) return null;
+  return {
+    partial: true,
+    reason: "missing_unit",
+    units: expectedUnits,
+    message: `Number is correct. Always state your units${expectedUnits.length ? ` (${expectedUnits.join(", ")})` : ""}.`
+  };
+}
+
+function missingUnitPartialScore(marks) {
+  return marks > 1 ? Math.max(0, marks - 1) : 0.5;
+}
+
 function scoreSubmission(questions, answers, working = {}, options = {}) {
   let autoScore = 0;
   let maxScore = 0;
@@ -1105,14 +1259,22 @@ function scoreSubmission(questions, answers, working = {}, options = {}) {
         ? (multiSolutionMatch === null ? answersMatch(accepted, submittedVariants) : multiSolutionMatch)
         : matrixMatch
     ));
+    const unitPartial = !correct && markable && attempted
+      ? missingUnitMatch(question, expected, submitted)
+      : null;
+    const awarded = correct ? mark : unitPartial ? missingUnitPartialScore(mark) : 0;
     if (accepted.length) {
       if (scoreThisQuestion) maxScore += mark;
-      if (correct) autoScore += mark;
+      autoScore += awarded;
     }
     return {
       id: key,
       submitted: cleanText(submitted, 500),
       correct,
+      partial: Boolean(unitPartial),
+      partial_reason: unitPartial?.reason || "",
+      feedback_message: unitPartial?.message || "",
+      awarded,
       markable: Boolean(accepted.length && scoreThisQuestion),
       attempted,
       marks: mark,
