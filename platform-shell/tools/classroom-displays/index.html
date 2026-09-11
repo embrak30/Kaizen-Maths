@@ -21,8 +21,8 @@
     .board{position:relative;overflow:hidden;border-radius:8px;background:#fff;box-shadow:0 16px 42px rgba(20,38,58,.18);border:1px solid #bfd0df;display:grid;place-items:center}
     .board.fullscreen{position:fixed;inset:0;z-index:20;border-radius:0;border:none;box-shadow:none}
     .display-title{position:absolute;top:14px;left:16px;z-index:2;background:rgba(255,255,255,.86);border:1px solid #d8e2ef;border-radius:999px;padding:7px 11px;color:#1a365d;font-size:.86rem;font-weight:850}
-    .display-stage{width:min(94%,1040px);max-height:min(90%,720px);aspect-ratio:13/9;display:grid;place-items:center}
-    .display-stage svg{width:100%;height:100%;display:block;overflow:visible}
+    .display-stage{height:min(66vh,540px);max-height:calc(100% - 28px);width:auto;max-width:min(88%,960px);aspect-ratio:13/9;display:grid;place-items:center}
+    .display-stage svg{width:100%;height:100%;display:block;overflow:hidden}
     .grid-bg{background-color:#fff;background-image:linear-gradient(#d8e2ef 1px,transparent 1px),linear-gradient(90deg,#d8e2ef 1px,transparent 1px);background-size:32px 32px}
     .grid-bg.major{background-image:linear-gradient(#c6d5e2 2px,transparent 2px),linear-gradient(90deg,#c6d5e2 2px,transparent 2px),linear-gradient(#e7eef5 1px,transparent 1px),linear-gradient(90deg,#e7eef5 1px,transparent 1px);background-size:160px 160px,160px 160px,32px 32px,32px 32px}
     .shape-svg text{font-family:"Segoe UI",Tahoma,sans-serif;font-weight:800;fill:#1a365d}.shape-fill-a{fill:#dff7f6;stroke:#157f82;stroke-width:5}.shape-fill-b{fill:#f1eefe;stroke:#6554c0;stroke-width:5}.shape-fill-c{fill:#fff2d9;stroke:#b7791f;stroke-width:5}.shape-line{stroke:#1a365d;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}.dash{stroke-dasharray:12 10}.solid-face{fill:#e9fbfb;stroke:#157f82;stroke-width:4}.solid-top{fill:#f1eefe;stroke:#6554c0;stroke-width:4}.solid-side{fill:#d8ebff;stroke:#2d6cdf;stroke-width:4}.curve{stroke:#1a365d;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}
@@ -31,11 +31,11 @@
     html.kaizen-shell-fullscreen .app{height:100vh;grid-template-rows:minmax(0,1fr)}
     html.kaizen-shell-fullscreen .topbar,html.kaizen-shell-fullscreen .palette{display:none}
     html.kaizen-shell-fullscreen .workspace{grid-template-columns:minmax(0,1fr);min-height:0}
-    html.kaizen-shell-fullscreen .board-shell{min-height:0;padding:8px;background:#f7fafc}
+    html.kaizen-shell-fullscreen .board-shell{min-height:0;padding:10px;background:#f7fafc}
     html.kaizen-shell-fullscreen .board{border:0;border-radius:0;box-shadow:none}
-    html.kaizen-shell-fullscreen .display-stage{width:min(98vw,1280px);max-height:calc(100vh - 20px)}
+    html.kaizen-shell-fullscreen .display-stage{height:min(82vh,760px);max-height:calc(100% - 34px);width:auto;max-width:min(92vw,1160px)}
     html.kaizen-shell-fullscreen .display-title{top:10px;left:10px;font-size:.78rem;padding:5px 9px}
-    @media(max-width:850px){body{overflow:auto}.app{height:auto;min-height:100vh}.workspace{grid-template-columns:1fr}.palette{max-height:none;border-right:none;border-bottom:1px solid #d8e2ef}.board-shell{min-height:70vh}.topbar{align-items:flex-start;flex-direction:column}.controls{justify-content:flex-start}.display-stage{width:94%;max-height:68vh}}
+    @media(max-width:850px){body{overflow:auto}.app{height:auto;min-height:100vh}.workspace{grid-template-columns:1fr}.palette{max-height:none;border-right:none;border-bottom:1px solid #d8e2ef}.board-shell{min-height:70vh}.topbar{align-items:flex-start;flex-direction:column}.controls{justify-content:flex-start}.display-stage{height:min(58vh,440px);max-width:94%}}
   </style>
   <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
   <script src="../../auth-config.js?v=tool-access-guard-3"></script>
@@ -102,7 +102,7 @@
           { id:"square", label:"Square", render: () => renderPolygon("Square", "M320 160 H704 V544 H320 Z", "shape-fill-b") },
           { id:"parallelogram", label:"Parallelogram", render: () => renderPolygon("Parallelogram", "M288 224 H800 L704 512 H192 Z", "shape-fill-a") },
           { id:"trapezium", label:"Trapezium", render: () => renderPolygon("Trapezium", "M352 192 H704 L832 512 H224 Z", "shape-fill-c") },
-          { id:"kite", label:"Kite", render: () => renderPolygon("Kite", "M512 132 L780 310 L512 650 L244 310 Z", "shape-fill-b") },
+          { id:"kite", label:"Kite", render: () => renderPolygon("Kite", "M512 126 L690 306 L512 632 L334 306 Z", "shape-fill-b") },
           { id:"rhombus", label:"Rhombus", render: () => renderPolygon("Rhombus", "M512 128 L800 352 L512 576 L224 352 Z", "shape-fill-a") },
           { id:"right-triangle", label:"Right-Angled Triangle", render: renderRightTriangle },
           { id:"isosceles-triangle", label:"Isosceles Triangle", render: () => renderPolygon("Isosceles Triangle", "M512 128 L800 544 H224 Z", "shape-fill-c") },
@@ -197,6 +197,16 @@
       return '<svg class="shape-svg" viewBox="' + viewBox + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' + svgGridBackground() + content + "</svg>";
     }
 
+    function fittedContent(content, scale = 0.86, offsetX = 0, offsetY = 0) {
+      const x = ((boardWidth - boardWidth * scale) / 2) + offsetX;
+      const y = ((boardHeight - boardHeight * scale) / 2) + offsetY;
+      return '<g transform="translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') scale(' + scale + ')">' + content + '</g>';
+    }
+
+    function fittedSvg(content, options = {}) {
+      return svg(fittedContent(content, options.scale || 0.86, options.offsetX || 0, options.offsetY || 0));
+    }
+
     function label(text, x, y) {
       return labelsVisible ? '<text x="' + x + '" y="' + y + '" text-anchor="middle" font-size="38">' + text + "</text>" : "";
     }
@@ -231,19 +241,19 @@
     }
 
     function renderPolygon(name, points, cls) {
-      stage.innerHTML = svg('<path class="' + cls + '" d="' + points + '"/>' + label(name, 520, 665));
+      stage.innerHTML = fittedSvg('<path class="' + cls + '" d="' + points + '"/>' + label(name, 520, 665), { scale: 0.82 });
     }
 
     function renderRightTriangle() {
-      stage.innerHTML = svg('<path class="shape-fill-a" d="M256 544 H800 V160 Z"/><path class="shape-line" d="M704 544 V480 H800"/>' + label("Right-Angled Triangle", 520, 665));
+      stage.innerHTML = fittedSvg('<path class="shape-fill-a" d="M256 544 H800 V160 Z"/><path class="shape-line" d="M704 544 V480 H800"/>' + label("Right-Angled Triangle", 520, 665), { scale: 0.82 });
     }
 
     function renderCircle() {
-      stage.innerHTML = svg('<circle class="shape-fill-b" cx="512" cy="352" r="224"/><line class="shape-line" x1="512" y1="352" x2="736" y2="352"/><circle cx="512" cy="352" r="7" fill="#1a365d"/>' + label("Circle", 520, 665));
+      stage.innerHTML = fittedSvg('<circle class="shape-fill-b" cx="512" cy="352" r="224"/><line class="shape-line" x1="512" y1="352" x2="736" y2="352"/><circle cx="512" cy="352" r="7" fill="#1a365d"/>' + label("Circle", 520, 665), { scale: 0.86 });
     }
 
     function renderSector() {
-      stage.innerHTML = svg('<path class="shape-fill-c" d="M512 352 L768 192 A288 288 0 0 1 800 512 Z"/><path class="shape-line" d="M512 352 L768 192 M512 352 L800 512"/>' + label("Sector", 520, 665));
+      stage.innerHTML = fittedSvg('<path class="shape-fill-c" d="M512 352 L768 192 A288 288 0 0 1 800 512 Z"/><path class="shape-line" d="M512 352 L768 192 M512 352 L800 512"/>' + label("Sector", 520, 665), { scale: 0.82 });
     }
 
     function renderCuboid(name, cube) {
@@ -251,93 +261,95 @@
       const dx = cube ? 120 : 150;
       const dy = cube ? -100 : -95;
       const x1 = cube ? 360 : 290, x2 = cube ? 650 : 720, y1 = cube ? 230 : 260, y2 = 520;
-      stage.innerHTML = svg(
+      stage.innerHTML = fittedSvg(
         '<path class="solid-face" d="'+front+'"/>' +
         '<path class="solid-top" d="M'+x1+' '+y1+' L'+(x1+dx)+' '+(y1+dy)+' H'+(x2+dx)+' L'+x2+' '+y1+' Z"/>' +
         '<path class="solid-side" d="M'+x2+' '+y1+' L'+(x2+dx)+' '+(y1+dy)+' V'+(y2+dy)+' L'+x2+' '+y2+' Z"/>' +
         '<path class="shape-line" d="M'+x1+' '+y1+' H'+x2+' V'+y2+' H'+x1+' Z M'+x1+' '+y1+' L'+(x1+dx)+' '+(y1+dy)+' H'+(x2+dx)+' L'+x2+' '+y1+' M'+(x2+dx)+' '+(y1+dy)+' V'+(y2+dy)+' L'+x2+' '+y2+'"/>' +
-        label(name, 520, 665));
+        label(name, 520, 665), { scale: 0.84 });
     }
 
     function renderTriangularPrism() {
-      stage.innerHTML = svg('<path class="solid-face" d="M250 530 L420 220 L590 530 Z"/><path class="solid-side" d="M420 220 L740 170 L890 480 L590 530 Z"/><path class="solid-top" d="M250 530 L560 480 L890 480 L590 530 Z"/><path class="shape-line" d="M250 530 L420 220 L590 530 Z M420 220 L740 170 L890 480 L590 530 M250 530 L560 480 L890 480 M560 480 L740 170"/>' + label("Triangular Prism", 520, 665));
+      stage.innerHTML = fittedSvg('<path class="solid-face" d="M250 530 L420 220 L590 530 Z"/><path class="solid-side" d="M420 220 L740 170 L890 480 L590 530 Z"/><path class="solid-top" d="M250 530 L560 480 L890 480 L590 530 Z"/><path class="shape-line" d="M250 530 L420 220 L590 530 Z M420 220 L740 170 L890 480 L590 530 M250 530 L560 480 L890 480 M560 480 L740 170"/>' + label("Triangular Prism", 520, 665), { scale: 0.8 });
     }
 
     function renderCylinder() {
-      stage.innerHTML = svg('<ellipse class="solid-top" cx="520" cy="200" rx="210" ry="70"/><path class="solid-face" d="M310 200 V520 A210 70 0 0 0 730 520 V200 A210 70 0 0 1 310 200"/><ellipse class="shape-line" cx="520" cy="520" rx="210" ry="70"/><ellipse class="shape-line" cx="520" cy="200" rx="210" ry="70"/><line class="shape-line" x1="310" y1="200" x2="310" y2="520"/><line class="shape-line" x1="730" y1="200" x2="730" y2="520"/>' + label("Cylinder", 520, 665));
+      stage.innerHTML = fittedSvg('<ellipse class="solid-top" cx="520" cy="200" rx="210" ry="70"/><path class="solid-face" d="M310 200 V520 A210 70 0 0 0 730 520 V200 A210 70 0 0 1 310 200"/><ellipse class="shape-line" cx="520" cy="520" rx="210" ry="70"/><ellipse class="shape-line" cx="520" cy="200" rx="210" ry="70"/><line class="shape-line" x1="310" y1="200" x2="310" y2="520"/><line class="shape-line" x1="730" y1="200" x2="730" y2="520"/>' + label("Cylinder", 520, 665), { scale: 0.84 });
     }
 
     function renderCone() {
-      stage.innerHTML = svg('<path class="solid-face" d="M520 110 L300 540 A220 72 0 0 0 740 540 Z"/><ellipse class="shape-line" cx="520" cy="540" rx="220" ry="72"/><path class="shape-line" d="M520 110 L300 540 M520 110 L740 540"/>' + label("Cone", 520, 665));
+      stage.innerHTML = fittedSvg('<path class="solid-face" d="M520 110 L300 540 A220 72 0 0 0 740 540 Z"/><ellipse class="shape-line" cx="520" cy="540" rx="220" ry="72"/><path class="shape-line" d="M520 110 L300 540 M520 110 L740 540"/>' + label("Cone", 520, 665), { scale: 0.82 });
     }
 
     function renderSphere() {
-      stage.innerHTML = svg('<circle class="shape-fill-b" cx="520" cy="350" r="230"/><ellipse class="shape-line" cx="520" cy="350" rx="230" ry="70"/><ellipse class="shape-line dash" cx="520" cy="350" rx="70" ry="230"/>' + label("Sphere", 520, 665));
+      stage.innerHTML = fittedSvg('<circle class="shape-fill-b" cx="520" cy="350" r="230"/><ellipse class="shape-line" cx="520" cy="350" rx="230" ry="70"/><ellipse class="shape-line dash" cx="520" cy="350" rx="70" ry="230"/>' + label("Sphere", 520, 665), { scale: 0.84 });
     }
 
     function renderPyramid() {
-      stage.innerHTML = svg(
+      stage.innerHTML = fittedSvg(
         '<path d="M520 130 L250 470 L520 610 Z" fill="#e9fbfb" stroke="#157f82" stroke-width="4"/>' +
         '<path d="M520 130 L790 470 L520 610 Z" fill="#d8ebff" stroke="#2d6cdf" stroke-width="4"/>' +
         '<path d="M250 470 L520 350 L790 470 L520 610 Z" fill="rgba(241,238,254,.62)" stroke="#6554c0" stroke-width="4"/>' +
         '<path class="shape-line" d="M520 130 L250 470 L520 610 L790 470 Z M520 130 L520 610 M250 470 L520 350 L790 470"/>' +
         '<path class="shape-line dash" d="M520 130 L520 350 M250 470 L790 470"/>' +
         '<circle cx="520" cy="130" r="6" fill="#1a365d"/>' +
-        label("Square-Based Pyramid", 520, 665));
+        label("Square-Based Pyramid", 520, 665), { scale: 0.82 });
     }
 
     function renderTwoSetVenn() {
-      stage.innerHTML = svg('<rect x="140" y="120" width="760" height="480" rx="18" fill="white" stroke="#1a365d" stroke-width="5"/><circle cx="430" cy="360" r="190" fill="rgba(23,179,176,.20)" stroke="#157f82" stroke-width="5"/><circle cx="610" cy="360" r="190" fill="rgba(101,84,192,.20)" stroke="#6554c0" stroke-width="5"/>' + label("Venn Diagram", 520, 665));
+      stage.innerHTML = fittedSvg('<rect x="140" y="120" width="760" height="480" rx="18" fill="white" stroke="#1a365d" stroke-width="5"/><circle cx="430" cy="360" r="190" fill="rgba(23,179,176,.20)" stroke="#157f82" stroke-width="5"/><circle cx="610" cy="360" r="190" fill="rgba(101,84,192,.20)" stroke="#6554c0" stroke-width="5"/>' + label("Venn Diagram", 520, 665), { scale: 0.84 });
     }
 
     function renderThreeSetVenn() {
-      stage.innerHTML = svg('<rect x="160" y="100" width="720" height="520" rx="18" fill="white" stroke="#1a365d" stroke-width="5"/><circle cx="455" cy="335" r="155" fill="rgba(23,179,176,.20)" stroke="#157f82" stroke-width="5"/><circle cx="585" cy="335" r="155" fill="rgba(101,84,192,.20)" stroke="#6554c0" stroke-width="5"/><circle cx="520" cy="455" r="155" fill="rgba(245,158,11,.18)" stroke="#b7791f" stroke-width="5"/>' + label("Three-Set Venn Diagram", 520, 665));
+      stage.innerHTML = fittedSvg('<rect x="160" y="100" width="720" height="520" rx="18" fill="white" stroke="#1a365d" stroke-width="5"/><circle cx="455" cy="335" r="155" fill="rgba(23,179,176,.20)" stroke="#157f82" stroke-width="5"/><circle cx="585" cy="335" r="155" fill="rgba(101,84,192,.20)" stroke="#6554c0" stroke-width="5"/><circle cx="520" cy="455" r="155" fill="rgba(245,158,11,.18)" stroke="#b7791f" stroke-width="5"/>' + label("Three-Set Venn Diagram", 520, 665), { scale: 0.84 });
     }
 
     function renderTreeDiagram() {
-      stage.innerHTML = svg('<path class="shape-line" d="M180 360 L430 210 M180 360 L430 510 M430 210 L720 130 M430 210 L720 290 M430 510 L720 430 M430 510 L720 590"/><circle cx="180" cy="360" r="10" fill="#1a365d"/><circle cx="430" cy="210" r="8" fill="#1a365d"/><circle cx="430" cy="510" r="8" fill="#1a365d"/><circle cx="720" cy="130" r="7" fill="#1a365d"/><circle cx="720" cy="290" r="7" fill="#1a365d"/><circle cx="720" cy="430" r="7" fill="#1a365d"/><circle cx="720" cy="590" r="7" fill="#1a365d"/>' + label("Blank Tree Diagram", 520, 665));
+      stage.innerHTML = fittedSvg('<path class="shape-line" d="M180 360 L430 210 M180 360 L430 510 M430 210 L720 130 M430 210 L720 290 M430 510 L720 430 M430 510 L720 590"/><circle cx="180" cy="360" r="10" fill="#1a365d"/><circle cx="430" cy="210" r="8" fill="#1a365d"/><circle cx="430" cy="510" r="8" fill="#1a365d"/><circle cx="720" cy="130" r="7" fill="#1a365d"/><circle cx="720" cy="290" r="7" fill="#1a365d"/><circle cx="720" cy="430" r="7" fill="#1a365d"/><circle cx="720" cy="590" r="7" fill="#1a365d"/>' + label("Blank Tree Diagram", 520, 665), { scale: 0.84 });
     }
 
     function renderTwoWayTable() {
-      stage.innerHTML = svg('<rect x="210" y="150" width="620" height="420" fill="white" stroke="#1a365d" stroke-width="5"/><path class="shape-line" d="M210 255 H830 M210 360 H830 M210 465 H830 M365 150 V570 M520 150 V570 M675 150 V570"/>' + label("Two-Way Table", 520, 665));
+      stage.innerHTML = fittedSvg('<rect x="210" y="150" width="620" height="420" fill="white" stroke="#1a365d" stroke-width="5"/><path class="shape-line" d="M210 255 H830 M210 360 H830 M210 465 H830 M365 150 V570 M520 150 V570 M675 150 V570"/>' + label("Two-Way Table", 520, 665), { scale: 0.86 });
     }
 
     function renderFrequencyTable() {
-      stage.innerHTML = svg('<rect x="260" y="135" width="520" height="450" fill="white" stroke="#1a365d" stroke-width="5"/><path class="shape-line" d="M260 225 H780 M260 315 H780 M260 405 H780 M260 495 H780 M520 135 V585"/>' + label("Frequency Table", 520, 665));
+      stage.innerHTML = fittedSvg('<rect x="260" y="135" width="520" height="450" fill="white" stroke="#1a365d" stroke-width="5"/><path class="shape-line" d="M260 225 H780 M260 315 H780 M260 405 H780 M260 495 H780 M520 135 V585"/>' + label("Frequency Table", 520, 665), { scale: 0.86 });
     }
 
     function renderHistogramAxes() {
-      stage.innerHTML = svg('<rect width="1040" height="720" fill="white"/><line class="axis" x1="150" y1="570" x2="900" y2="570"/><polygon class="axis-arrow" points="900,570 876,559 876,581"/><line class="axis" x1="150" y1="570" x2="150" y2="120"/><polygon class="axis-arrow" points="150,120 139,144 161,144"/><rect x="230" y="390" width="100" height="180" fill="rgba(23,179,176,.25)" stroke="#157f82" stroke-width="4"/><rect x="330" y="260" width="120" height="310" fill="rgba(101,84,192,.22)" stroke="#6554c0" stroke-width="4"/><rect x="450" y="190" width="150" height="380" fill="rgba(245,158,11,.20)" stroke="#b7791f" stroke-width="4"/><rect x="600" y="330" width="110" height="240" fill="rgba(23,179,176,.25)" stroke="#157f82" stroke-width="4"/>' + label("Histogram Axes", 520, 665));
+      stage.innerHTML = fittedSvg('<rect width="1040" height="720" fill="white"/><line class="axis" x1="150" y1="570" x2="900" y2="570"/><polygon class="axis-arrow" points="900,570 876,559 876,581"/><line class="axis" x1="150" y1="570" x2="150" y2="120"/><polygon class="axis-arrow" points="150,120 139,144 161,144"/><rect x="230" y="390" width="100" height="180" fill="rgba(23,179,176,.25)" stroke="#157f82" stroke-width="4"/><rect x="330" y="260" width="120" height="310" fill="rgba(101,84,192,.22)" stroke="#6554c0" stroke-width="4"/><rect x="450" y="190" width="150" height="380" fill="rgba(245,158,11,.20)" stroke="#b7791f" stroke-width="4"/><rect x="600" y="330" width="110" height="240" fill="rgba(23,179,176,.25)" stroke="#157f82" stroke-width="4"/>' + label("Histogram Axes", 520, 665), { scale: 0.84 });
     }
 
     function renderBoxPlotAxis() {
-      stage.innerHTML = svg('<line class="axis" x1="130" y1="470" x2="910" y2="470"/><polygon class="axis-arrow" points="910,470 886,459 886,481"/><path class="shape-line" d="M260 360 H410 M410 300 V420 H640 V300 H410 M520 300 V420 M640 360 H800"/><line class="shape-line" x1="260" y1="330" x2="260" y2="390"/><line class="shape-line" x1="800" y1="330" x2="800" y2="390"/>' + label("Box Plot Axis", 520, 665));
+      stage.innerHTML = fittedSvg('<line class="axis" x1="130" y1="470" x2="910" y2="470"/><polygon class="axis-arrow" points="910,470 886,459 886,481"/><path class="shape-line" d="M260 360 H410 M410 300 V420 H640 V300 H410 M520 300 V420 M640 360 H800"/><line class="shape-line" x1="260" y1="330" x2="260" y2="390"/><line class="shape-line" x1="800" y1="330" x2="800" y2="390"/>' + label("Box Plot Axis", 520, 665), { scale: 0.86 });
     }
 
     function renderNormalCurve() {
-      stage.innerHTML = svg('<line class="axis" x1="120" y1="560" x2="920" y2="560"/><polygon class="axis-arrow" points="920,560 896,549 896,571"/><path class="curve" d="M130 560 C210 560 250 548 300 510 C355 468 380 350 430 240 C470 150 570 150 610 240 C660 350 685 468 740 510 C790 548 830 560 910 560"/>' + label("Normal Curve", 520, 665));
+      stage.innerHTML = fittedSvg('<line class="axis" x1="120" y1="560" x2="920" y2="560"/><polygon class="axis-arrow" points="920,560 896,549 896,571"/><path class="curve" d="M130 560 C210 560 250 548 300 510 C355 468 380 350 430 240 C470 150 570 150 610 240 C660 350 685 468 740 510 C790 548 830 560 910 560"/>' + label("Normal Curve", 520, 665), { scale: 0.86 });
     }
 
     function renderInclinedPlane() {
-      stage.innerHTML = svg(
+      stage.innerHTML = fittedSvg(
         '<path class="shape-line" d="M160 570 H900 L330 230 Z"/>' +
         '<rect x="485" y="315" width="135" height="92" rx="6" fill="white" stroke="#1a365d" stroke-width="5" transform="rotate(-31 552.5 361)"/>' +
-        '<path class="shape-line" d="M330 230 L900 570"/>'
+        '<path class="shape-line" d="M330 230 L900 570"/>',
+        { scale: 0.84 }
       );
     }
 
     function renderProjectileTemplate() {
-      stage.innerHTML = svg(
+      stage.innerHTML = fittedSvg(
         '<line class="shape-line" x1="140" y1="570" x2="900" y2="570"/>' +
         '<line class="shape-line" x1="190" y1="570" x2="190" y2="245"/>' +
         '<path class="shape-line dash" d="M190 245 C325 90 555 90 735 570"/>' +
         '<path class="shape-line" d="M190 245 L275 210"/>' +
-        '<polygon class="axis-arrow" points="275,210 247,207 260,232"/>'
+        '<polygon class="axis-arrow" points="275,210 247,207 260,232"/>',
+        { scale: 0.84 }
       );
     }
 
     function renderPulleySystem() {
-      stage.innerHTML = svg(
+      stage.innerHTML = fittedSvg(
         '<path class="shape-line" d="M250 110 H790 M520 110 V185"/>' +
         '<circle cx="520" cy="225" r="50" fill="white" stroke="#1a365d" stroke-width="5"/>' +
         '<circle cx="520" cy="225" r="8" fill="#1a365d"/>' +
@@ -346,29 +358,32 @@
         '<path class="shape-line" d="M470 225 V410 M570 225 V410 M570 225 H700 V520"/>' +
         '<rect x="650" y="520" width="100" height="100" fill="white" stroke="#1a365d" stroke-width="5"/>' +
         '<path class="shape-line" d="M520 460 V555"/>' +
-        '<rect x="470" y="555" width="100" height="90" fill="white" stroke="#1a365d" stroke-width="5"/>'
+        '<rect x="470" y="555" width="100" height="90" fill="white" stroke="#1a365d" stroke-width="5"/>',
+        { scale: 0.82 }
       );
     }
 
     function renderPulleyTable() {
-      stage.innerHTML = svg(
+      stage.innerHTML = fittedSvg(
         '<path class="shape-line" d="M170 360 H760 M170 360 V585 M760 360 V585"/>' +
         '<rect x="285" y="255" width="150" height="95" fill="white" stroke="#1a365d" stroke-width="5"/>' +
         '<circle cx="760" cy="300" r="55" fill="white" stroke="#1a365d" stroke-width="5"/>' +
         '<circle cx="760" cy="300" r="8" fill="#1a365d"/>' +
         '<path class="shape-line" d="M435 302 H760 M815 300 V505"/>' +
-        '<rect x="765" y="505" width="100" height="100" fill="white" stroke="#1a365d" stroke-width="5"/>'
+        '<rect x="765" y="505" width="100" height="100" fill="white" stroke="#1a365d" stroke-width="5"/>',
+        { scale: 0.84 }
       );
     }
 
     function renderVerticalPulley() {
-      stage.innerHTML = svg(
+      stage.innerHTML = fittedSvg(
         '<path class="shape-line" d="M290 115 H750 M520 115 V190"/>' +
         '<circle cx="520" cy="245" r="58" fill="white" stroke="#1a365d" stroke-width="5"/>' +
         '<circle cx="520" cy="245" r="8" fill="#1a365d"/>' +
         '<path class="shape-line" d="M462 245 V520 M578 245 V520"/>' +
         '<rect x="412" y="520" width="100" height="100" fill="white" stroke="#1a365d" stroke-width="5"/>' +
-        '<rect x="528" y="520" width="100" height="100" fill="white" stroke="#1a365d" stroke-width="5"/>'
+        '<rect x="528" y="520" width="100" height="100" fill="white" stroke="#1a365d" stroke-width="5"/>',
+        { scale: 0.82 }
       );
     }
 
@@ -444,7 +459,7 @@
           earthLabel("1 hour per 15°", cx, 660, "middle", 36);
       }
 
-      stage.innerHTML = svg(content);
+      stage.innerHTML = fittedSvg(content, { scale: 0.84 });
     }
 
     function currentDisplayObject() {
