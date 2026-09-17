@@ -4033,7 +4033,7 @@ const researchPrinciples = [
   },
   {
     title: "Curriculum coherence and teacher workload reduction",
-    claim: "A shared workspace can reduce scattered resource searching while helping departments keep practice aligned to curriculum priorities.",
+    claim: "A shared workspace reduces the need for teachers to search across multiple sites, rebuild resources from scratch, or work in isolation.",
     kaizen: "Curriculum maps, school default curriculum, coverage map, worksheet builder, and school-branded resources."
   },
   {
@@ -4052,7 +4052,7 @@ function renderResearchInformedPage() {
   app.innerHTML = `
     ${pageHeader(
       "Research-Informed Design",
-      "A school-facing summary of the evidence-informed and research-supported principles behind Kaizen Maths.",
+      "A district-facing case for how Kaizen Maths supports stronger mathematics teaching, faster planning, and more consistent classroom practice.",
       `<a class="button primary" href="${pdfPath}" target="_blank" rel="noopener noreferrer">Open One-Page PDF</a><a class="button" href="#/book-demo">Book a Demo Session</a>`,
       "research-page-header"
     )}
@@ -4060,13 +4060,36 @@ function renderResearchInformedPage() {
       <section class="research-hero-panel">
         <div>
           <span class="eyebrow">Evidence-Informed, Research-Supported</span>
-          <h2>The design is grounded in what effective mathematics teaching already asks teachers to do.</h2>
-          <p>Kaizen Maths should be described carefully: it is not yet an independently evaluated intervention with published impact findings. It is, however, deliberately built around well-established principles from mathematics education, learning science, formative assessment, and purposeful educational technology.</p>
+          <h2>A practical teaching workspace for districts that want stronger maths instruction at scale.</h2>
+          <p>Kaizen Maths helps teachers plan faster, teach with clearer worked examples, generate high-quality practice, create assessments, and use classroom-ready representations from one professional mathematics workspace. Its design is grounded in established principles from mathematics education, learning science, formative assessment, and purposeful educational technology.</p>
         </div>
         <aside class="research-claim-card">
-          <strong>Responsible claim</strong>
-          <p>Kaizen Maths gives teachers a practical workspace for applying research-informed mathematics teaching routines: structured practice, worked examples, visual representations, feedback, curriculum alignment, and teacher-led classroom use.</p>
+          <strong>District value</strong>
+          <p>Kaizen Maths strengthens implementation by giving every teacher access to the same structured question bank, worked examples, curriculum maps, classroom displays, worksheets, assessments, and pupil practice routines.</p>
         </aside>
+      </section>
+
+      <section class="research-district-grid" aria-label="District value of Kaizen Maths">
+        <article>
+          <span>01</span>
+          <h3>Save teacher planning time</h3>
+          <p>Teachers can move from topic selection to board practice, worksheet, quiz, or assessment in minutes rather than spending planning time searching, formatting, and rebuilding resources.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Improve consistency across classrooms</h3>
+          <p>Departments can use shared topic structures, curriculum alignment, question levels, and worked-solution routines while still allowing teachers to adapt to their class.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Support intervention and catch-up</h3>
+          <p>Teachers can quickly generate focused practice for prerequisite skills, current classwork, revision, and targeted intervention without waiting for new materials to be produced.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <h3>Scale professional routines</h3>
+          <p>Kaizen University, tool information pages, classroom questions, misconceptions, and worked examples help teachers use the platform consistently across a school or district rollout.</p>
+        </article>
       </section>
 
       <section class="research-pillars" aria-labelledby="researchPrinciplesTitle">
@@ -4104,18 +4127,18 @@ function renderResearchInformedPage() {
         </article>
       </section>
 
-      <section class="research-pilot-panel">
+      <section class="research-wellbeing-panel">
         <div>
-          <span class="eyebrow">Next Evidence Step</span>
-          <h2>Pilot evaluation can test implementation and impact</h2>
-          <p>For a school or ministry pilot, the strongest next step is to measure use and learning in a defined topic: baseline task, Kaizen-supported teaching sequence, post-task, teacher feedback, pupil work samples, and implementation notes. That would move the claim from research-informed design toward local evidence of impact.</p>
+          <span class="eyebrow">Teacher Wellbeing</span>
+          <h2>Effective implementation can reduce planning pressure and decision fatigue.</h2>
+          <p>Teachers are still the professionals making instructional decisions, but Kaizen reduces the low-value workload around finding questions, rewriting tasks, formatting worksheets, locating diagrams, and preparing worked examples. When a department uses Kaizen well, teachers gain back time for explanation, feedback, relationship-building, and responsive teaching.</p>
         </div>
         <ul class="research-checklist">
-          <li>Agree the topic and classes.</li>
-          <li>Collect a short baseline assessment.</li>
-          <li>Train teachers to use the relevant tools.</li>
-          <li>Teach and practise using Kaizen routines.</li>
-          <li>Compare post-assessment and teacher feedback.</li>
+          <li>Less time spent searching for suitable questions.</li>
+          <li>Less duplication of worksheet and assessment preparation.</li>
+          <li>More confidence when teaching less familiar topics.</li>
+          <li>Clearer routines for worked examples and feedback.</li>
+          <li>More shared planning capacity across the department.</li>
         </ul>
       </section>
 
@@ -25644,7 +25667,7 @@ function updateRouteSeo(parts) {
     },
     "research-informed": {
       title: routeTitle("Research-Informed Mathematics Teaching Design"),
-      description: "Read how Kaizen Maths is designed around evidence-informed mathematics teaching principles: mastery, retrieval practice, worked examples, representations, feedback, curriculum alignment, and purposeful technology."
+      description: "Read the district-facing case for Kaizen Maths as a research-informed mathematics teaching workspace that saves planning time, improves consistency, supports intervention, and strengthens teacher wellbeing."
     },
     "kaizen-university": {
       title: routeTitle("Kaizen University"),
