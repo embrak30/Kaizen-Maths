@@ -3962,6 +3962,182 @@ function pageHeader(title, description, actions = "", className = "") {
   `;
 }
 
+const researchEvidenceSources = [
+  {
+    title: "EEF: Improving Mathematics in Key Stages 2 and 3",
+    url: "https://educationendowmentfoundation.org.uk/education-evidence/evidence-reviews/mathematics-in-key-stages-2-and-3",
+    summary: "Reviews mathematics teaching evidence and supports coherent progression, reasoning, representation, and structured practice."
+  },
+  {
+    title: "WWC: Assisting Students Struggling with Mathematics",
+    url: "https://ies.ed.gov/ncee/WWC/PracticeGuide/26/Published",
+    summary: "Recommends systematic instruction, clear mathematical language, representations, number lines, word problems, and fluency routines."
+  },
+  {
+    title: "WWC: Teaching Strategies for Improving Algebra Knowledge",
+    url: "https://ies.ed.gov/ncee/WWC/PracticeGuide/20",
+    summary: "Supports solved problems, analysing algebraic structure, and choosing between valid algebraic strategies."
+  },
+  {
+    title: "EEF: Teacher Feedback to Improve Pupil Learning",
+    url: "https://educationendowmentfoundation.org.uk/education-evidence/guidance-reports/feedback",
+    summary: "Highlights feedback that moves learning forward by addressing task, process, and self-regulation."
+  },
+  {
+    title: "Dunlosky et al.: Effective Learning Techniques",
+    url: "https://www.psychologicalscience.org/publications/journals/pspi/learning-techniques.html",
+    summary: "Identifies practice testing and distributed practice as high-utility learning strategies."
+  },
+  {
+    title: "Roediger and Karpicke: Test-Enhanced Learning",
+    url: "https://doi.org/10.1111/j.1467-9280.2006.01693.x",
+    summary: "Shows that retrieval through testing can strengthen long-term retention."
+  },
+  {
+    title: "NCETM: Five Big Ideas in Teaching for Mastery",
+    url: "https://www.ncetm.org.uk/teaching-for-mastery/mastery-explained/five-big-ideas-in-teaching-for-mastery/",
+    summary: "Frames mastery around coherence, representation and structure, mathematical thinking, fluency, and variation."
+  },
+  {
+    title: "EEF: Using Digital Technology to Improve Learning",
+    url: "https://educationendowmentfoundation.org.uk/education-evidence/guidance-reports/digital",
+    summary: "Emphasises that technology helps when it has a clear pedagogical role and improves practice, feedback, or teaching decisions."
+  }
+];
+
+const researchPrinciples = [
+  {
+    title: "Small-step mastery and coherent progression",
+    claim: "Kaizen tools are organised by topic, level, and question type so teachers can move from prerequisite skills into more demanding practice without losing the structure of the mathematics.",
+    kaizen: "Topic levels, mixed sets, curriculum alignment, textbook alignment, and tool information pages."
+  },
+  {
+    title: "Retrieval practice and deliberate fluency",
+    claim: "Fresh question generation makes it easier to revisit ideas, practise without memorising a fixed sheet, and build confidence through repeated retrieval.",
+    kaizen: "New question sets, starters, worksheet builder, exam-style builder, and pupil tasks."
+  },
+  {
+    title: "Worked examples and explicit solution steps",
+    claim: "Teachers and pupils benefit when methods are modelled clearly, especially where steps expose reasoning rather than simply reveal answers.",
+    kaizen: "One Example mode, worked steps, answer reveal, teacher-controlled step progression, and improved algebraic formatting."
+  },
+  {
+    title: "Representations, diagrams, and bar models",
+    claim: "Visual models help pupils see mathematical structure before working symbolically, particularly in number, ratio, geometry, graphs, and elementary concepts.",
+    kaizen: "Classroom displays, manipulatives, bar models, area models, dynamic graph tools, geometry diagrams, and annotation."
+  },
+  {
+    title: "Feedback, checking, and responsive teaching",
+    claim: "Effective feedback helps teachers identify misconceptions, adjust instruction, and give pupils information they can act on.",
+    kaizen: "Answers, worked steps, pupil module marking, teacher monitoring, mastery attempts, and review comments."
+  },
+  {
+    title: "Curriculum coherence and teacher workload reduction",
+    claim: "A shared workspace can reduce scattered resource searching while helping departments keep practice aligned to curriculum priorities.",
+    kaizen: "Curriculum maps, school default curriculum, coverage map, worksheet builder, and school-branded resources."
+  },
+  {
+    title: "Purposeful technology led by pedagogy",
+    claim: "Kaizen is designed to support teacher decisions rather than replace teaching. The teacher chooses the task, pace, reveal points, and classroom routine.",
+    kaizen: "Classroom View, writing layer, capture, full-screen teaching controls, and Kaizen University training."
+  }
+];
+
+function externalEvidenceLink(source) {
+  return `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a>`;
+}
+
+function renderResearchInformedPage() {
+  const pdfPath = "assets/research/kaizen-maths-research-informed-design.pdf";
+  app.innerHTML = `
+    ${pageHeader(
+      "Research-Informed Design",
+      "A school-facing summary of the evidence-informed and research-supported principles behind Kaizen Maths.",
+      `<a class="button primary" href="${pdfPath}" target="_blank" rel="noopener noreferrer">Open One-Page PDF</a><a class="button" href="#/book-demo">Book a Demo Session</a>`,
+      "research-page-header"
+    )}
+    <section class="research-page">
+      <section class="research-hero-panel">
+        <div>
+          <span class="eyebrow">Evidence-Informed, Research-Supported</span>
+          <h2>The design is grounded in what effective mathematics teaching already asks teachers to do.</h2>
+          <p>Kaizen Maths should be described carefully: it is not yet an independently evaluated intervention with published impact findings. It is, however, deliberately built around well-established principles from mathematics education, learning science, formative assessment, and purposeful educational technology.</p>
+        </div>
+        <aside class="research-claim-card">
+          <strong>Responsible claim</strong>
+          <p>Kaizen Maths gives teachers a practical workspace for applying research-informed mathematics teaching routines: structured practice, worked examples, visual representations, feedback, curriculum alignment, and teacher-led classroom use.</p>
+        </aside>
+      </section>
+
+      <section class="research-pillars" aria-labelledby="researchPrinciplesTitle">
+        <div class="section-heading">
+          <span class="eyebrow">Design Principles</span>
+          <h2 id="researchPrinciplesTitle">How the evidence connects to Kaizen Maths</h2>
+        </div>
+        <div class="research-principle-grid">
+          ${researchPrinciples.map((principle, index) => `
+            <article class="research-principle-card">
+              <span>${index + 1}</span>
+              <h3>${escapeHtml(principle.title)}</h3>
+              <p>${escapeHtml(principle.claim)}</p>
+              <small>${escapeHtml(principle.kaizen)}</small>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="research-implementation-grid" aria-label="Kaizen implementation evidence">
+        <article class="panel research-implementation-card">
+          <span class="eyebrow">Virtual Textbook</span>
+          <h2>Unlimited, structured practice without starting from a blank page</h2>
+          <p>The virtual textbook model gives teachers topic-based question generation, levels, worked examples, and printable resources. This supports repeated practice, retrieval, differentiation, and intervention while keeping the teacher in control.</p>
+        </article>
+        <article class="panel research-implementation-card">
+          <span class="eyebrow">Classroom View</span>
+          <h2>Teacher-led modelling, questioning, and annotation</h2>
+          <p>Classroom View supports board-led teaching: teachers can reveal answers, show steps, write over diagrams, capture screens, and use dynamic or static representations to focus pupil attention.</p>
+        </article>
+        <article class="panel research-implementation-card">
+          <span class="eyebrow">Assessment And Feedback</span>
+          <h2>From quick checks to pupil tasks</h2>
+          <p>Worksheets, quizzes, exam-style questions, pupil tasks, mastery thresholds, and teacher review tools turn practice into usable evidence about what pupils can do next.</p>
+        </article>
+      </section>
+
+      <section class="research-pilot-panel">
+        <div>
+          <span class="eyebrow">Next Evidence Step</span>
+          <h2>Pilot evaluation can test implementation and impact</h2>
+          <p>For a school or ministry pilot, the strongest next step is to measure use and learning in a defined topic: baseline task, Kaizen-supported teaching sequence, post-task, teacher feedback, pupil work samples, and implementation notes. That would move the claim from research-informed design toward local evidence of impact.</p>
+        </div>
+        <ul class="research-checklist">
+          <li>Agree the topic and classes.</li>
+          <li>Collect a short baseline assessment.</li>
+          <li>Train teachers to use the relevant tools.</li>
+          <li>Teach and practise using Kaizen routines.</li>
+          <li>Compare post-assessment and teacher feedback.</li>
+        </ul>
+      </section>
+
+      <section class="research-sources-panel" aria-labelledby="researchSourcesTitle">
+        <div class="section-heading">
+          <span class="eyebrow">Selected Research Links</span>
+          <h2 id="researchSourcesTitle">Sources that support the design principles</h2>
+          <p>These links are provided so school leaders can see the evidence base behind the design logic.</p>
+        </div>
+        <div class="research-source-list">
+          ${researchEvidenceSources.map((source) => `
+            <article>
+              <h3>${externalEvidenceLink(source)}</h3>
+              <p>${escapeHtml(source.summary)}</p>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+    </section>
+  `;
+}
+
 function focusSearchInput(id) {
   const input = document.getElementById(id);
   if (!input) return;
@@ -8363,6 +8539,7 @@ function renderHome() {
       <div class="button-row">
         <a class="button primary" href="#/book-demo">Book a School Demo</a>
         <a class="button" href="#/schools">Request a School Licence</a>
+        <a class="button" href="#/research-informed">Research-Informed Design</a>
       </div>
     </section>
     <section class="final-cta" aria-labelledby="finalCtaTitle">
@@ -25465,6 +25642,10 @@ function updateRouteSeo(parts) {
       title: routeTitle(trustPage?.title || "Trust & Privacy"),
       description: trustPage?.description || "School-ready information about Kaizen Maths privacy, teacher-only use, data protection, security, and terms."
     },
+    "research-informed": {
+      title: routeTitle("Research-Informed Mathematics Teaching Design"),
+      description: "Read how Kaizen Maths is designed around evidence-informed mathematics teaching principles: mastery, retrieval practice, worked examples, representations, feedback, curriculum alignment, and purposeful technology."
+    },
     "kaizen-university": {
       title: routeTitle("Kaizen University"),
       description: "Complete the Kaizen Certified Teacher pathway with training videos, a short quiz, practical tasks, and a printable certificate."
@@ -25612,6 +25793,8 @@ function renderRoute() {
     renderSchoolSpace();
   } else if (parts[0] === "trust") {
     renderTrustPage(parts[1] || "");
+  } else if (parts[0] === "research-informed") {
+    renderResearchInformedPage();
   } else if (parts[0] === "kaizen-university") {
     renderKaizenUniversity();
   } else if (parts[0] === "teacher") {
