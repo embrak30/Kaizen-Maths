@@ -1998,7 +1998,7 @@ body[data-route="worksheet-generator"] .account-action {
 
 .mission-programme-band {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 220px) auto;
   gap: 18px;
   align-items: center;
   margin: 0 0 18px;
@@ -2024,6 +2024,41 @@ body[data-route="worksheet-generator"] .account-action {
   margin: 0;
   color: var(--muted);
   line-height: 1.55;
+}
+
+.make-it-count-logo-card {
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  border: 1px solid rgba(23, 184, 179, 0.2);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.84)),
+    #ffffff;
+  box-shadow: 0 10px 24px rgba(21, 39, 70, 0.09);
+}
+
+.make-it-count-logo-card img,
+.make-it-count-identity-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.home-make-it-count-logo img {
+  max-width: 190px;
+}
+
+.make-it-count-identity-card {
+  align-content: start;
+}
+
+.make-it-count-identity-card img {
+  max-width: 260px;
+  margin: 0 auto 8px;
+  border-radius: 6px;
 }
 
 .mission-partner-band {
@@ -4125,6 +4160,36 @@ button.certification-course-card {
 
 .admin-booking-grid {
   grid-template-columns: minmax(280px, 0.82fr) minmax(360px, 1.18fr);
+}
+
+.admin-programme-grid {
+  grid-template-columns: repeat(2, minmax(300px, 1fr));
+}
+
+.admin-programme-copy {
+  align-content: start;
+}
+
+.admin-programme-logo-preview {
+  display: grid;
+  place-items: center;
+  min-height: 140px;
+  border: 1px solid rgba(23, 184, 179, 0.26);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(236, 253, 245, 0.72)),
+    #ffffff;
+  overflow: hidden;
+  color: var(--teal-dark);
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.admin-programme-logo-preview img {
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  padding: 10px;
 }
 
 .admin-user-role,

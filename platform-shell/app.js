@@ -2,6 +2,7 @@ const SITE_NAME = "Kaizen Maths";
 const SITE_TITLE = "Kaizen Maths | Practical Maths Resources and Make It Count";
 const SITE_DESCRIPTION = "Kaizen Maths provides practical mathematics resources for teachers. Make It Count brings those resources together with teacher development, coaching, and sustained classroom support.";
 const CLASSROOM_STANDARD_VERSION = "classroom-standard-3";
+const MAKE_IT_COUNT_LOGO = "assets/brand/make-it-count-brighter-futures.png";
 
 function addQueryParam(url, key, value) {
   const separator = url.includes("?") ? "&" : "?";
@@ -2654,6 +2655,8 @@ const state = {
   homepageScreenshotsLoaded: false,
   bookingSettings: {},
   bookingSettingsLoaded: false,
+  programmeContent: {},
+  programmeContentLoaded: false,
   toolInfoOverrides: {},
   toolInfoOverridesLoaded: false,
   universityVideos: {},
@@ -4501,6 +4504,7 @@ const defaultHomepageHeroContent = {
 const homepageContentStorageKey = "kaizen:homepage-content";
 const homepageScreenshotsStorageKey = "kaizen:homepage-screenshots";
 const bookingSettingsStorageKey = "kaizen:booking-settings";
+const programmeContentStorageKey = "kaizen:programme-content";
 const toolInfoOverrideStorageKey = "kaizen:tool-info-overrides";
 
 const defaultBookingSettings = {
@@ -4511,6 +4515,29 @@ const defaultBookingSettings = {
   primary_button_label: "Book Demo Session",
   contact_email: "info@kaizenmaths.com",
   show_embed: true
+};
+
+const defaultProgrammeContent = {
+  logo_url: MAKE_IT_COUNT_LOGO,
+  logo_alt: "Make It Count: A Mathematics Teacher Development Programme logo",
+  enquiry_email: "info@kaizenmaths.com",
+  enquiry_url: "",
+  enquiry_subject: "Kaizen Maths / Make It Count enquiry",
+  enquiry_button_label: "Contact / Enquire",
+  home_programme_eyebrow: "Make It Count",
+  home_programme_heading: "A proposed teacher development initiative using Kaizen Maths as the core classroom resource",
+  home_programme_copy: "The initial pilot concept focuses on ten schools in Jamaica, approximately thirty mathematics teachers, an in-person launch workshop, six weeks of initial professional development, school visits, online mentoring, and 12 months of follow-up. Participation would depend on securing funding and confirming programme arrangements.",
+  make_it_count_heading: "Make It Count is being developed to help teachers use mathematics resources effectively, not just access them.",
+  make_it_count_copy: "Many schools need more than a login. They need practical training, shared routines, coaching, and follow-up that helps teachers turn resources into better classroom practice. Make It Count is designed around that implementation gap.",
+  make_it_count_status: "The pilot is proposed and subject to securing funding, confirming school participation, and finalising programme arrangements.",
+  pilot_summary: "Ten participating schools.\nApproximately 30 mathematics teachers, with three teachers from each school.\nFree Kaizen Maths access for participating teachers during the programme.\nIn-person launch workshop, six-week initial professional development programme, school visits, online mentoring, and 12-month follow-up.\nProvisional pilot budget: US$41,855, subject to funding and final programme approval.",
+  school_interest_heading: "Kaizen Maths can support everyday teaching while Make It Count adds training and implementation support.",
+  school_interest_copy: "The resource helps teachers prepare and deliver mathematics activities. The programme model is designed for schools that need structured professional development, coaching, and follow-up so that resource use becomes part of classroom practice.",
+  school_interest_status: "Schools can enquire about resource access without applying for Make It Count. Programme participation depends on funding and agreed arrangements.",
+  partner_heading: "The aim is to make practical mathematics support available to schools that may not otherwise afford sustained resource access and professional development.",
+  partner_copy: "Kaizen Maths provides the classroom resource base. Make It Count is the proposed route for combining that resource with training, coaching, mentoring, and implementation support through funded partnerships.",
+  partner_status: "The initial Jamaica pilot concept has a provisional budget of US$41,855. Funding has not yet been secured.",
+  partner_support: "Kaizen Maths access for participating teachers.\nIn-person launch training and online professional development sessions.\nSchool visits, classroom coaching, and mentoring activity.\nCoordination, facilitator support, monitoring, evaluation, and reporting."
 };
 
 const defaultHomeInterfaceScreenshots = [
@@ -5334,18 +5361,18 @@ function safeImageSource(value) {
   }
 }
 
-function schoolLogoFileToDataUrl(file) {
+function imageFileToDataUrl(file, label = "image") {
   return new Promise((resolve, reject) => {
     if (!file) {
       resolve("");
       return;
     }
     if (!String(file.type || "").startsWith("image/")) {
-      reject(new Error("Choose an image file for the school logo."));
+      reject(new Error(`Choose an image file for the ${label}.`));
       return;
     }
     const reader = new FileReader();
-    reader.onerror = () => reject(new Error("The logo file could not be read."));
+    reader.onerror = () => reject(new Error(`The ${label} file could not be read.`));
     reader.onload = () => {
       const originalDataUrl = String(reader.result || "");
       if (!originalDataUrl || file.type === "image/svg+xml") {
@@ -5374,6 +5401,10 @@ function schoolLogoFileToDataUrl(file) {
   });
 }
 
+function schoolLogoFileToDataUrl(file) {
+  return imageFileToDataUrl(file, "school logo");
+}
+
 function bookingSettings() {
   return normaliseBookingSettings({
     ...defaultBookingSettings,
@@ -5387,6 +5418,73 @@ function bookingProviderName(provider) {
   if (value === "google") return "Google Calendar";
   if (value === "custom") return "Booking calendar";
   return "Calendly";
+}
+
+function normaliseProgrammeContent(values = {}) {
+  const text = (key) => {
+    const value = String(values[key] ?? defaultProgrammeContent[key] ?? "").trim();
+    return value || defaultProgrammeContent[key] || "";
+  };
+  const logoUrl = safeImageSource(values.logo_url || defaultProgrammeContent.logo_url) || defaultProgrammeContent.logo_url;
+  const enquiryUrl = safeExternalUrl(values.enquiry_url || "");
+  return {
+    logo_url: logoUrl,
+    logo_alt: text("logo_alt"),
+    enquiry_email: text("enquiry_email"),
+    enquiry_url: enquiryUrl,
+    enquiry_subject: text("enquiry_subject"),
+    enquiry_button_label: text("enquiry_button_label"),
+    home_programme_eyebrow: text("home_programme_eyebrow"),
+    home_programme_heading: text("home_programme_heading"),
+    home_programme_copy: text("home_programme_copy"),
+    make_it_count_heading: text("make_it_count_heading"),
+    make_it_count_copy: text("make_it_count_copy"),
+    make_it_count_status: text("make_it_count_status"),
+    pilot_summary: text("pilot_summary"),
+    school_interest_heading: text("school_interest_heading"),
+    school_interest_copy: text("school_interest_copy"),
+    school_interest_status: text("school_interest_status"),
+    partner_heading: text("partner_heading"),
+    partner_copy: text("partner_copy"),
+    partner_status: text("partner_status"),
+    partner_support: text("partner_support")
+  };
+}
+
+function programmeContent() {
+  return normaliseProgrammeContent({
+    ...defaultProgrammeContent,
+    ...readJsonStorage(programmeContentStorageKey, {}),
+    ...state.programmeContent
+  });
+}
+
+function programmeListItems(value) {
+  return String(value || "")
+    .split(/\n+/)
+    .map((line) => line.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+}
+
+function programmeEnquiryHref(content = programmeContent()) {
+  if (content.enquiry_url) return content.enquiry_url;
+  const email = content.enquiry_email || defaultProgrammeContent.enquiry_email;
+  return `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(content.enquiry_subject || defaultProgrammeContent.enquiry_subject)}`;
+}
+
+function programmeEnquiryButtonHtml(label = "", className = "button primary", content = programmeContent()) {
+  const href = programmeEnquiryHref(content);
+  const isExternal = /^https:\/\//i.test(href);
+  const text = label || content.enquiry_button_label || defaultProgrammeContent.enquiry_button_label;
+  return `<a class="${escapeHtml(className)}" href="${escapeHtml(href)}"${isExternal ? ` target="_blank" rel="noopener noreferrer"` : ""}>${escapeHtml(text)}</a>`;
+}
+
+function programmeLogoHtml(className = "make-it-count-logo-card", content = programmeContent()) {
+  return `
+    <figure class="${escapeHtml(className)}">
+      <img src="${escapeHtml(content.logo_url)}" alt="${escapeHtml(content.logo_alt)}">
+    </figure>
+  `;
 }
 
 async function loadHomepageContent({ rerender = false } = {}) {
@@ -5536,6 +5634,59 @@ async function saveBookingSettings(values) {
   }
   state.bookingSettings = next;
   writeJsonStorage(bookingSettingsStorageKey, next);
+  return "local";
+}
+
+async function loadProgrammeContent({ rerender = false } = {}) {
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client) return;
+  try {
+    const { data, error } = await client
+      .from("homepage_content")
+      .select("content_key, content_value")
+      .eq("content_key", "programme")
+      .maybeSingle();
+    if (error) throw error;
+    state.programmeContent = normaliseProgrammeContent(data?.content_value || {});
+    state.programmeContentLoaded = true;
+    if (rerender && ["admin", "make-it-count", "for-schools", "partners", "contact", ""].includes(routeParts()[0] || "")) renderRoute();
+  } catch (error) {
+    state.programmeContentLoaded = false;
+    console.warn("Kaizen programme content unavailable:", error.message);
+  }
+}
+
+async function saveProgrammeContent(values) {
+  const rawLogo = String(values.logo_url || "").trim();
+  const rawEnquiryUrl = String(values.enquiry_url || "").trim();
+  if (rawLogo && !safeImageSource(rawLogo)) {
+    throw new Error("Use an asset path, data image, or secure https image URL for the programme logo.");
+  }
+  if (rawEnquiryUrl && !safeExternalUrl(rawEnquiryUrl)) {
+    throw new Error("Use a full secure enquiry URL starting with https://, or leave it blank to use email.");
+  }
+  const next = normaliseProgrammeContent(values);
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (client) {
+    try {
+      const { error } = await client
+        .from("homepage_content")
+        .upsert({
+          content_key: "programme",
+          content_value: next,
+          updated_at: new Date().toISOString()
+        }, { onConflict: "content_key" });
+      if (error) throw error;
+      state.programmeContent = next;
+      state.programmeContentLoaded = true;
+      writeJsonStorage(programmeContentStorageKey, next);
+      return "supabase";
+    } catch (error) {
+      console.warn("Saving programme content to Supabase failed:", error.message);
+    }
+  }
+  state.programmeContent = next;
+  writeJsonStorage(programmeContentStorageKey, next);
   return "local";
 }
 
@@ -8455,6 +8606,7 @@ function renderKaizenMathsResourcePage() {
 }
 
 function renderMakeItCountPage() {
+  const programme = programmeContent();
   const programmeModel = [
     ["Kaizen Maths access", "Teachers use the resource for classroom teaching, worksheets, homework, intervention, assessment, and pupil practice."],
     ["Launch workshop", "A practical in-person starting point for participating schools and teachers."],
@@ -8468,18 +8620,19 @@ function renderMakeItCountPage() {
     ${pageHeader(
       "Make It Count",
       "A mathematics teacher development initiative that combines access to Kaizen Maths with practical training, classroom coaching, and sustained professional support.",
-      `<a class="button primary" href="#/for-schools">For Schools</a><a class="button" href="#/partners">For Partners</a><a class="button" href="#/contact">Contact / Enquire</a>`
+      `<a class="button primary" href="#/for-schools">For Schools</a><a class="button" href="#/partners">For Partners</a>${programmeEnquiryButtonHtml("", "button", programme)}`
     )}
     <section class="mission-page">
       <article class="mission-hero-panel make-it-count-hero">
         <div>
           <span class="eyebrow">Flagship Initiative</span>
-          <h2>Make It Count is being developed to help teachers use mathematics resources effectively, not just access them.</h2>
-          <p>Many schools need more than a login. They need practical training, shared routines, coaching, and follow-up that helps teachers turn resources into better classroom practice. Make It Count is designed around that implementation gap.</p>
+          <h2>${escapeHtml(programme.make_it_count_heading)}</h2>
+          <p>${escapeHtml(programme.make_it_count_copy)}</p>
         </div>
-        <aside class="mission-claim-card">
+        <aside class="mission-claim-card make-it-count-identity-card">
+          <img src="${escapeHtml(programme.logo_url)}" alt="${escapeHtml(programme.logo_alt)}">
           <strong>Important status</strong>
-          <p>The pilot is proposed and subject to securing funding, confirming school participation, and finalising programme arrangements.</p>
+          <p>${escapeHtml(programme.make_it_count_status)}</p>
         </aside>
       </article>
 
@@ -8501,11 +8654,7 @@ function renderMakeItCountPage() {
           <span class="eyebrow">Proposed Jamaica Pilot</span>
           <h2>Initial pilot concept</h2>
           <ul class="mission-check-list">
-            <li>Ten participating schools.</li>
-            <li>Approximately 30 mathematics teachers, with three teachers from each school.</li>
-            <li>Free Kaizen Maths access for participating teachers during the programme.</li>
-            <li>In-person launch workshop, six-week initial professional development programme, school visits, online mentoring, and 12-month follow-up.</li>
-            <li>Provisional pilot budget: US$41,855, subject to funding and final programme approval.</li>
+            ${programmeListItems(programme.pilot_summary).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
           </ul>
         </article>
         <article class="panel mission-note-panel">
@@ -8520,6 +8669,7 @@ function renderMakeItCountPage() {
 }
 
 function renderForSchoolsPage() {
+  const programme = programmeContent();
   const schoolBenefits = [
     ["For teachers", "Reduced preparation load, clearer worked examples, fresh practice, and classroom-ready routines."],
     ["For departments", "Shared structures for practice, homework, intervention, assessment, and curriculum consistency."],
@@ -8531,18 +8681,18 @@ function renderForSchoolsPage() {
     ${pageHeader(
       "For Schools",
       "Schools can explore Kaizen Maths as a practical teaching resource and express interest in future Make It Count programme opportunities.",
-      `<a class="button primary" href="#/contact">Express Interest</a><a class="button" href="#/make-it-count">Make It Count</a><a class="button" href="#/schools">School Licence Notes</a>`
+      `${programmeEnquiryButtonHtml("Express Interest", "button primary", programme)}<a class="button" href="#/make-it-count">Make It Count</a><a class="button" href="#/schools">School Licence Notes</a>`
     )}
     <section class="mission-page">
       <article class="mission-hero-panel">
         <div>
           <span class="eyebrow">School Support</span>
-          <h2>Kaizen Maths can support everyday teaching while Make It Count adds training and implementation support.</h2>
-          <p>The resource helps teachers prepare and deliver mathematics activities. The programme model is designed for schools that need structured professional development, coaching, and follow-up so that resource use becomes part of classroom practice.</p>
+          <h2>${escapeHtml(programme.school_interest_heading)}</h2>
+          <p>${escapeHtml(programme.school_interest_copy)}</p>
         </div>
         <aside class="mission-claim-card">
           <strong>Clear distinction</strong>
-          <p>Schools can enquire about resource access without applying for Make It Count. Programme participation depends on funding and agreed arrangements.</p>
+          <p>${escapeHtml(programme.school_interest_status)}</p>
         </aside>
       </article>
 
@@ -8568,9 +8718,9 @@ function renderForSchoolsPage() {
         <article class="panel mission-note-panel">
           <span class="eyebrow">Next Step</span>
           <h2>Express interest</h2>
-          <p>Schools can make an initial enquiry, book a conversation, or ask about the proposed Make It Count pilot. No public page should be read as confirming funded places or guaranteed participation.</p>
+          <p>${escapeHtml(programme.school_interest_status)}</p>
           <div class="button-row">
-            <a class="button primary" href="#/contact">Contact / Enquire</a>
+            ${programmeEnquiryButtonHtml("", "button primary", programme)}
             <a class="button" href="#/book-demo">Book A Conversation</a>
           </div>
         </article>
@@ -8580,6 +8730,7 @@ function renderForSchoolsPage() {
 }
 
 function renderPartnersPage() {
+  const programme = programmeContent();
   const partnerRoutes = [
     ["Funding and sponsorship", "Support a pilot that gives schools access to Kaizen Maths alongside training, coaching, and sustained follow-up."],
     ["School partnerships", "Connect the initiative with schools, clusters, regions, districts, or education systems where mathematics support is needed."],
@@ -8591,18 +8742,18 @@ function renderPartnersPage() {
     ${pageHeader(
       "For Partners and Supporters",
       "Make It Count is being developed as a sustainable model for strengthening mathematics teaching through practical resources, teacher development, and funded partnerships.",
-      `<a class="button primary" href="#/contact">Partner With Us</a><a class="button" href="#/make-it-count">View Programme</a><a class="button" href="#/research-informed">Research-Informed Design</a>`
+      `${programmeEnquiryButtonHtml("Partner With Us", "button primary", programme)}<a class="button" href="#/make-it-count">View Programme</a><a class="button" href="#/research-informed">Research-Informed Design</a>`
     )}
     <section class="mission-page">
       <article class="mission-hero-panel">
         <div>
           <span class="eyebrow">Partnership Opportunity</span>
-          <h2>The aim is to make practical mathematics support available to schools that may not otherwise afford sustained resource access and professional development.</h2>
-          <p>Kaizen Maths provides the classroom resource base. Make It Count is the proposed route for combining that resource with training, coaching, mentoring, and implementation support through funded partnerships.</p>
+          <h2>${escapeHtml(programme.partner_heading)}</h2>
+          <p>${escapeHtml(programme.partner_copy)}</p>
         </div>
         <aside class="mission-claim-card">
           <strong>Provisional pilot</strong>
-          <p>The initial Jamaica pilot concept has a provisional budget of US$41,855. Funding has not yet been secured.</p>
+          <p>${escapeHtml(programme.partner_status)}</p>
         </aside>
       </article>
 
@@ -8619,18 +8770,15 @@ function renderPartnersPage() {
         <article class="panel">
           <h2>What support can help provide</h2>
           <ul class="mission-check-list">
-            <li>Kaizen Maths access for participating teachers.</li>
-            <li>In-person launch training and online professional development sessions.</li>
-            <li>School visits, classroom coaching, and mentoring activity.</li>
-            <li>Coordination, facilitator support, monitoring, evaluation, and reporting.</li>
+            ${programmeListItems(programme.partner_support).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
           </ul>
         </article>
         <article class="panel mission-note-panel">
           <span class="eyebrow">Careful Language</span>
           <h2>Developed, not yet funded</h2>
-          <p>The site should invite conversations with funders, sponsors, districts, ministries, schools, and delivery partners without implying that funded places or formal partnerships have already been confirmed.</p>
+          <p>${escapeHtml(programme.partner_status)}</p>
           <div class="button-row">
-            <a class="button primary" href="#/contact">Start A Conversation</a>
+            ${programmeEnquiryButtonHtml("Start A Conversation", "button primary", programme)}
             <a class="button" href="#/our-story">Read The Story</a>
           </div>
         </article>
@@ -8676,9 +8824,12 @@ function renderOurStoryPage() {
 
 function renderContactPage() {
   const settings = bookingSettings();
+  const programme = programmeContent();
   const bookingUrl = safeExternalUrl(settings.booking_url);
-  const contactEmail = settings.contact_email || defaultBookingSettings.contact_email;
-  const subject = encodeURIComponent("Kaizen Maths / Make It Count enquiry");
+  const contactEmail = programme.enquiry_email || settings.contact_email || defaultBookingSettings.contact_email;
+  const subject = encodeURIComponent(programme.enquiry_subject || defaultProgrammeContent.enquiry_subject);
+  const programmeHref = programmeEnquiryHref(programme);
+  const programmeIsExternal = /^https:\/\//i.test(programmeHref);
   const enquiryCards = [
     ["Teachers", "Explore Kaizen Maths, ask about access, or request a walkthrough of the teaching resource."],
     ["Schools", "Express interest in Kaizen Maths access, school support, or a future Make It Count programme opportunity."],
@@ -8689,7 +8840,7 @@ function renderContactPage() {
     ${pageHeader(
       "Contact / Enquire",
       "Use this page to start a conversation about Kaizen Maths, Make It Count, school access, funded partnerships, or professional development support.",
-      `<a class="button primary" href="mailto:${escapeHtml(contactEmail)}?subject=${subject}">Email Enquiry</a>${bookingUrl ? `<a class="button" href="${escapeHtml(bookingUrl)}" target="_blank" rel="noopener noreferrer">Book A Conversation</a>` : `<a class="button" href="#/book-demo">Book A Conversation</a>`}`
+      `${programmeEnquiryButtonHtml(programme.enquiry_button_label || "Email / Enquire", "button primary", programme)}${bookingUrl ? `<a class="button" href="${escapeHtml(bookingUrl)}" target="_blank" rel="noopener noreferrer">Book A Conversation</a>` : `<a class="button" href="#/book-demo">Book A Conversation</a>`}`
     )}
     <section class="mission-page">
       <article class="mission-hero-panel">
@@ -8699,8 +8850,9 @@ function renderContactPage() {
           <p>Teachers can explore Kaizen Maths directly. Schools can ask about resource access or express interest in the Make It Count model. Funders, sponsors, and delivery partners can discuss how the initiative could be supported responsibly.</p>
         </div>
         <aside class="mission-claim-card">
-          <strong>Email</strong>
-          <p><a href="mailto:${escapeHtml(contactEmail)}?subject=${subject}">${escapeHtml(contactEmail)}</a></p>
+          <strong>${programmeIsExternal ? "Enquiry form" : "Email"}</strong>
+          <p><a href="${escapeHtml(programmeHref)}"${programmeIsExternal ? ` target="_blank" rel="noopener noreferrer"` : ""}>${escapeHtml(programmeIsExternal ? programmeHref : contactEmail)}</a></p>
+          ${programmeIsExternal && contactEmail ? `<p><a href="mailto:${escapeHtml(contactEmail)}?subject=${subject}">${escapeHtml(contactEmail)}</a></p>` : ""}
         </aside>
       </article>
 
@@ -8739,6 +8891,7 @@ function renderContactPage() {
 
 function renderHome() {
   const heroContent = homepageHeroContent();
+  const programme = programmeContent();
   const heroScreenshots = homepageScreenshotList();
   const missionCards = [
     ["Kaizen Maths", "The practical resource", "A teacher-built mathematics workspace for questions, worked examples, worksheets, assessments, classroom displays, and pupil tasks."],
@@ -8853,14 +9006,15 @@ function renderHome() {
 
     <section class="mission-programme-band" aria-labelledby="makeItCountHomeTitle">
       <div>
-        <span class="eyebrow">Make It Count</span>
-        <h2 id="makeItCountHomeTitle">A proposed teacher development initiative using Kaizen Maths as the core classroom resource</h2>
-        <p>The initial pilot concept focuses on ten schools in Jamaica, approximately thirty mathematics teachers, an in-person launch workshop, six weeks of initial professional development, school visits, online mentoring, and 12 months of follow-up. Participation would depend on securing funding and confirming programme arrangements.</p>
+        <span class="eyebrow">${escapeHtml(programme.home_programme_eyebrow)}</span>
+        <h2 id="makeItCountHomeTitle">${escapeHtml(programme.home_programme_heading)}</h2>
+        <p>${escapeHtml(programme.home_programme_copy)}</p>
       </div>
+      ${programmeLogoHtml("make-it-count-logo-card home-make-it-count-logo", programme)}
       <div class="button-row">
         <a class="button primary" href="#/make-it-count">Read About The Initiative</a>
         <a class="button" href="#/for-schools">School Interest</a>
-        <a class="button" href="#/partners">Funding And Partners</a>
+        ${programmeEnquiryButtonHtml("Funding And Partners", "button", programme)}
       </div>
     </section>
 
@@ -8945,7 +9099,7 @@ function renderHome() {
         <p>Schools can express interest in using Kaizen Maths or joining a future Make It Count programme. Funders, sponsors, and delivery partners can discuss how to support pilot development, training, coaching, and school implementation.</p>
       </div>
       <div class="button-row">
-        <a class="button primary" href="#/contact">Contact / Enquire</a>
+        ${programmeEnquiryButtonHtml("", "button primary", programme)}
         <a class="button" href="#/partners">Partner With Us</a>
         <a class="button" href="#/research-informed">Research-Informed Design</a>
       </div>
@@ -24436,6 +24590,7 @@ function renderAdmin() {
 
   const heroContent = homepageHeroContent();
   const booking = bookingSettings();
+  const programme = programmeContent();
   const homepageScreenshotRows = homepageScreenshotAdminList()
     .map((screenshot, index) => adminHomepageScreenshotRowHtml(screenshot, index))
     .join("");
@@ -24539,6 +24694,7 @@ function renderAdmin() {
       <button class="admin-tab active" type="button" data-admin-tab="users">Users</button>
       <button class="admin-tab" type="button" data-admin-tab="launch">Launch Checklist</button>
       <button class="admin-tab" type="button" data-admin-tab="homepage">Homepage</button>
+      <button class="admin-tab" type="button" data-admin-tab="programme">Programme</button>
       <button class="admin-tab" type="button" data-admin-tab="booking">Booking</button>
       <button class="admin-tab" type="button" data-admin-tab="schools">Schools / Pilots</button>
       <button class="admin-tab" type="button" data-admin-tab="access">Tool Access</button>
@@ -24611,6 +24767,118 @@ function renderAdmin() {
           <div class="admin-testimonial-list" id="adminHomepageScreenshotList">
             ${homepageScreenshotRows}
           </div>
+        </article>
+      </div>
+    </section>
+    <section class="panel admin-panel admin-tab-panel" data-admin-panel="programme">
+      <div class="admin-toolbar">
+        <div>
+          <span class="eyebrow">Make It Count</span>
+          <h2>Programme Content</h2>
+          <p>Edit the public-facing Make It Count copy, partner copy, school interest copy, logo, and enquiry destination without changing code.</p>
+        </div>
+        <button class="button primary" id="saveProgrammeContent" type="button">Save Programme Content</button>
+      </div>
+      <p class="admin-status" id="adminProgrammeStatus">${state.programmeContentLoaded ? "Loaded programme settings from Supabase." : "Using default programme settings. Save here to publish live content when Supabase is available."}</p>
+      <div class="admin-homepage-grid admin-programme-grid">
+        <article class="admin-homepage-copy admin-programme-copy">
+          <h3>Logo And Enquiry</h3>
+          <div class="admin-programme-logo-preview" data-programme-logo-preview>
+            <img src="${escapeHtml(programme.logo_url)}" alt="${escapeHtml(programme.logo_alt)}">
+          </div>
+          <label>
+            Logo image path or URL
+            <input data-programme-field="logo_url" type="text" value="${escapeHtml(programme.logo_url)}" placeholder="assets/brand/make-it-count-brighter-futures.png">
+          </label>
+          <label>
+            Upload logo image
+            <input data-programme-logo-upload type="file" accept="image/*">
+          </label>
+          <label>
+            Logo alt text
+            <input data-programme-field="logo_alt" type="text" value="${escapeHtml(programme.logo_alt)}">
+          </label>
+          <label>
+            Enquiry email
+            <input data-programme-field="enquiry_email" type="email" value="${escapeHtml(programme.enquiry_email)}">
+          </label>
+          <label>
+            Enquiry URL
+            <input data-programme-field="enquiry_url" type="url" value="${escapeHtml(programme.enquiry_url)}" placeholder="https://forms.gle/... or leave blank for email">
+          </label>
+          <label>
+            Email subject
+            <input data-programme-field="enquiry_subject" type="text" value="${escapeHtml(programme.enquiry_subject)}">
+          </label>
+          <label>
+            Button label
+            <input data-programme-field="enquiry_button_label" type="text" value="${escapeHtml(programme.enquiry_button_label)}">
+          </label>
+        </article>
+        <article class="admin-homepage-copy admin-programme-copy">
+          <h3>Homepage And Programme Page</h3>
+          <label>
+            Homepage small heading
+            <input data-programme-field="home_programme_eyebrow" type="text" value="${escapeHtml(programme.home_programme_eyebrow)}">
+          </label>
+          <label>
+            Homepage programme heading
+            <textarea data-programme-field="home_programme_heading" rows="3">${escapeHtml(programme.home_programme_heading)}</textarea>
+          </label>
+          <label>
+            Homepage programme copy
+            <textarea data-programme-field="home_programme_copy" rows="5">${escapeHtml(programme.home_programme_copy)}</textarea>
+          </label>
+          <label>
+            Make It Count page heading
+            <textarea data-programme-field="make_it_count_heading" rows="3">${escapeHtml(programme.make_it_count_heading)}</textarea>
+          </label>
+          <label>
+            Make It Count page copy
+            <textarea data-programme-field="make_it_count_copy" rows="5">${escapeHtml(programme.make_it_count_copy)}</textarea>
+          </label>
+          <label>
+            Programme status note
+            <textarea data-programme-field="make_it_count_status" rows="3">${escapeHtml(programme.make_it_count_status)}</textarea>
+          </label>
+          <label>
+            Pilot summary bullets
+            <textarea data-programme-field="pilot_summary" rows="7">${escapeHtml(programme.pilot_summary)}</textarea>
+          </label>
+        </article>
+        <article class="admin-homepage-copy admin-programme-copy">
+          <h3>Schools</h3>
+          <label>
+            School interest heading
+            <textarea data-programme-field="school_interest_heading" rows="3">${escapeHtml(programme.school_interest_heading)}</textarea>
+          </label>
+          <label>
+            School interest copy
+            <textarea data-programme-field="school_interest_copy" rows="5">${escapeHtml(programme.school_interest_copy)}</textarea>
+          </label>
+          <label>
+            School status / next-step note
+            <textarea data-programme-field="school_interest_status" rows="4">${escapeHtml(programme.school_interest_status)}</textarea>
+          </label>
+        </article>
+        <article class="admin-homepage-copy admin-programme-copy">
+          <h3>Partners</h3>
+          <label>
+            Partner heading
+            <textarea data-programme-field="partner_heading" rows="3">${escapeHtml(programme.partner_heading)}</textarea>
+          </label>
+          <label>
+            Partner copy
+            <textarea data-programme-field="partner_copy" rows="5">${escapeHtml(programme.partner_copy)}</textarea>
+          </label>
+          <label>
+            Partner status note
+            <textarea data-programme-field="partner_status" rows="4">${escapeHtml(programme.partner_status)}</textarea>
+          </label>
+          <label>
+            Partner support bullets
+            <textarea data-programme-field="partner_support" rows="6">${escapeHtml(programme.partner_support)}</textarea>
+          </label>
         </article>
       </div>
     </section>
@@ -24899,6 +25167,74 @@ function bindAdmin() {
       button.disabled = false;
     } catch (error) {
       bookingStatus.textContent = `Could not save booking settings: ${error.message}`;
+      button.disabled = false;
+    }
+  });
+
+  const programmeStatus = document.getElementById("adminProgrammeStatus");
+  const programmeLogoField = document.querySelector('[data-programme-field="logo_url"]');
+  const programmeLogoAltField = document.querySelector('[data-programme-field="logo_alt"]');
+  const programmeLogoPreview = document.querySelector("[data-programme-logo-preview]");
+
+  function updateProgrammeLogoPreview() {
+    if (!programmeLogoPreview) return;
+    const logo = safeImageSource(programmeLogoField?.value || "");
+    const alt = programmeLogoAltField?.value.trim() || "Make It Count logo preview";
+    programmeLogoPreview.innerHTML = logo
+      ? `<img src="${escapeHtml(logo)}" alt="${escapeHtml(alt)}">`
+      : `<span>Make It Count</span>`;
+  }
+
+  programmeLogoField?.addEventListener("input", updateProgrammeLogoPreview);
+  programmeLogoAltField?.addEventListener("input", updateProgrammeLogoPreview);
+  document.querySelector("[data-programme-logo-upload]")?.addEventListener("change", async (event) => {
+    const input = event.currentTarget;
+    if (!programmeLogoField || !input.files?.[0]) return;
+    try {
+      const dataUrl = await imageFileToDataUrl(input.files[0], "programme logo");
+      programmeLogoField.value = dataUrl;
+      updateProgrammeLogoPreview();
+      if (programmeStatus) programmeStatus.textContent = "Logo ready. Click Save Programme Content to publish it.";
+    } catch (error) {
+      if (programmeStatus) programmeStatus.textContent = error.message;
+    }
+  });
+
+  document.getElementById("saveProgrammeContent")?.addEventListener("click", async () => {
+    const button = document.getElementById("saveProgrammeContent");
+    const field = (name) => document.querySelector(`[data-programme-field="${name}"]`)?.value || "";
+    if (!window.confirm("Save these programme edits to the public Make It Count pages?")) return;
+    button.disabled = true;
+    programmeStatus.textContent = "Saving programme content...";
+    try {
+      const source = await saveProgrammeContent({
+        logo_url: field("logo_url"),
+        logo_alt: field("logo_alt"),
+        enquiry_email: field("enquiry_email"),
+        enquiry_url: field("enquiry_url"),
+        enquiry_subject: field("enquiry_subject"),
+        enquiry_button_label: field("enquiry_button_label"),
+        home_programme_eyebrow: field("home_programme_eyebrow"),
+        home_programme_heading: field("home_programme_heading"),
+        home_programme_copy: field("home_programme_copy"),
+        make_it_count_heading: field("make_it_count_heading"),
+        make_it_count_copy: field("make_it_count_copy"),
+        make_it_count_status: field("make_it_count_status"),
+        pilot_summary: field("pilot_summary"),
+        school_interest_heading: field("school_interest_heading"),
+        school_interest_copy: field("school_interest_copy"),
+        school_interest_status: field("school_interest_status"),
+        partner_heading: field("partner_heading"),
+        partner_copy: field("partner_copy"),
+        partner_status: field("partner_status"),
+        partner_support: field("partner_support")
+      });
+      programmeStatus.textContent = source === "supabase"
+        ? "Saved. Make It Count programme content is now live."
+        : "Saved in this browser only. Save again when Supabase is available to make programme content live for everyone.";
+      button.disabled = false;
+    } catch (error) {
+      programmeStatus.textContent = `Could not save programme content: ${error.message}`;
       button.disabled = false;
     }
   });
@@ -26296,6 +26632,7 @@ window.addEventListener("kaizen-auth-change", () => {
   loadHomepageContent({ rerender: true });
   loadHomepageScreenshots({ rerender: true });
   loadBookingSettings({ rerender: true });
+  loadProgrammeContent({ rerender: true });
   loadToolInfoOverrides({ rerender: true });
   loadUniversityVideos({ rerender: true });
   loadCertificationProgress({ rerender: true });
@@ -26314,6 +26651,7 @@ window.setTimeout(() => {
   loadHomepageContent({ rerender: true });
   loadHomepageScreenshots({ rerender: true });
   loadBookingSettings({ rerender: true });
+  loadProgrammeContent({ rerender: true });
   loadToolInfoOverrides({ rerender: true });
   loadUniversityVideos({ rerender: true });
   loadCertificationProgress({ rerender: true });
