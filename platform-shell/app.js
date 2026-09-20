@@ -5779,6 +5779,24 @@ async function saveProgrammeEnquiry(values) {
   if (payload.enquiry_type === "school_interest" && !payload.school_name) {
     throw new Error("Please add the school name.");
   }
+  if (payload.enquiry_type === "school_commitment") {
+    const teachers = Array.isArray(payload.commitment_details?.participating_teachers)
+      ? payload.commitment_details.participating_teachers
+      : [];
+    if (!payload.school_name) throw new Error("Please add the school name.");
+    if (!payload.commitment_details?.principal_name) throw new Error("Please add the principal or senior leader name.");
+    if (!payload.commitment_details?.maths_lead_name) throw new Error("Please add the mathematics lead name.");
+    if (!teachers.length) throw new Error("Please add at least one participating teacher.");
+    const commitments = payload.commitment_details?.commitments || {};
+    const commitmentComplete = [
+      commitments.launch_orientation,
+      commitments.professional_development,
+      commitments.classroom_use,
+      commitments.feedback_and_monitoring,
+      commitments.evaluation_discussion
+    ].every(Boolean);
+    if (!commitmentComplete) throw new Error("Please confirm each school commitment before submitting.");
+  }
   if (payload.enquiry_type === "partner_interest" && !payload.organisation_name) {
     throw new Error("Please add the organisation or supporter name.");
   }
@@ -5786,11 +5804,12 @@ async function saveProgrammeEnquiry(values) {
   const client = await window.KaizenAuth?.getClient?.().catch(() => null);
   if (!client) throw new Error("The enquiry form is temporarily unavailable. Please use the contact email on the Contact page.");
   const { id, status, admin_notes, created_at, updated_at, ...insertPayload } = payload;
+  const initialStatus = payload.enquiry_type === "school_commitment" ? "committed" : "new";
   const { error } = await client
     .from("programme_enquiries")
     .insert({
       ...insertPayload,
-      status: "new",
+      status: initialStatus,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     });
@@ -8941,7 +8960,7 @@ function renderSchoolInterestPage() {
     ${pageHeader(
       "Express School Interest",
       "Share initial details if your school would like to explore Kaizen Maths access, Make It Count, or future pilot participation.",
-      `<a class="button" href="#/make-it-count">Programme Overview</a><a class="button" href="#/for-schools">For Schools</a>`
+      `<a class="button" href="#/make-it-count">Programme Overview</a><a class="button" href="#/for-schools">For Schools</a><a class="button" href="#/school-commitment">Invited School Commitment</a>`
     )}
     <section class="mission-page programme-interest-page">
       <article class="mission-hero-panel">
@@ -9020,6 +9039,153 @@ function renderSchoolInterestPage() {
         </label>
         <div class="programme-form-actions">
           <button class="button primary" type="submit">Submit Interest</button>
+          <p class="admin-status" data-programme-form-status>Ready to submit.</p>
+        </div>
+      </form>
+    </section>
+  `;
+  bindProgrammeEnquiryForm();
+}
+
+function renderSchoolCommitmentPage() {
+  const programme = programmeContent();
+  const teacherRows = Array.from({ length: 8 }, (_, index) => index + 1).map((number) => `
+    <div class="programme-teacher-row">
+      <label>
+        Teacher ${number} name
+        <input name="teacher_${number}_name" type="text" autocomplete="name">
+      </label>
+      <label>
+        Teacher ${number} email
+        <input name="teacher_${number}_email" type="email" autocomplete="email">
+      </label>
+    </div>
+  `).join("");
+
+  app.innerHTML = `
+    ${pageHeader(
+      "School Commitment Form",
+      "For invited schools ready to confirm participating teachers and commit to the Make It Count programme requirements.",
+      `<a class="button" href="#/make-it-count">Programme Overview</a><a class="button" href="#/school-interest">Expression Of Interest</a>`
+    )}
+    <section class="mission-page programme-interest-page">
+      <article class="mission-hero-panel">
+        <div>
+          <span class="eyebrow">Invited Schools</span>
+          <h2>Confirm your school details, participating teachers, and programme commitments.</h2>
+          <p>This form is intended for schools that have been invited to move beyond interest and confirm readiness for programme planning. Submission does not by itself guarantee a funded place; it gives Kaizen Maths the information needed to count and coordinate committed schools.</p>
+        </div>
+        <aside class="mission-claim-card make-it-count-identity-card">
+          <img src="${escapeHtml(programme.logo_url)}" alt="${escapeHtml(programme.logo_alt)}">
+          <strong>Programme commitment</strong>
+          <p>Please only complete this form if the school leadership and participating teachers understand the expected training, classroom use, feedback, and follow-up requirements.</p>
+        </aside>
+      </article>
+
+      <form class="programme-interest-form panel programme-commitment-form" data-programme-enquiry-form data-enquiry-type="school_commitment">
+        <div class="programme-form-head">
+          <span class="eyebrow">School Commitment</span>
+          <h2>School and lead contacts</h2>
+        </div>
+        <div class="programme-form-grid">
+          <label>
+            School name
+            <input name="school_name" type="text" autocomplete="organization" required>
+          </label>
+          <label>
+            Country / region
+            <input name="country_region" type="text" autocomplete="country-name" placeholder="Example: Jamaica, Region 6">
+          </label>
+          <label>
+            Main contact name
+            <input name="contact_name" type="text" autocomplete="name" required>
+          </label>
+          <label>
+            Main contact role
+            <input name="contact_role" type="text" autocomplete="organization-title" placeholder="Principal, HOD, project contact">
+          </label>
+          <label>
+            Main contact email
+            <input name="contact_email" type="email" autocomplete="email" required>
+          </label>
+          <label>
+            Contact phone
+            <input name="contact_phone" type="tel" autocomplete="tel">
+          </label>
+          <label>
+            Principal / senior leader name
+            <input name="principal_name" type="text" autocomplete="name" required>
+          </label>
+          <label>
+            Principal / senior leader email
+            <input name="principal_email" type="email" autocomplete="email">
+          </label>
+          <label>
+            Mathematics lead name
+            <input name="maths_lead_name" type="text" autocomplete="name" required>
+          </label>
+          <label>
+            Mathematics lead email
+            <input name="maths_lead_email" type="email" autocomplete="email">
+          </label>
+          <label>
+            Classes / year groups involved
+            <input name="year_groups" type="text" placeholder="Example: Grade 8, Year 9, CSEC groups">
+          </label>
+          <label>
+            Curriculum or examination route
+            <input name="curriculum_route" type="text" placeholder="Example: NSC, CSEC, GCSE">
+          </label>
+        </div>
+
+        <section class="programme-teacher-section" aria-labelledby="commitmentTeachersTitle">
+          <div>
+            <span class="eyebrow">Participating Teachers</span>
+            <h2 id="commitmentTeachersTitle">Teacher names and email addresses</h2>
+            <p>Add the teachers who will take part in the project. Leave unused rows blank.</p>
+          </div>
+          <div class="programme-teacher-list">
+            ${teacherRows}
+          </div>
+        </section>
+
+        <section class="programme-commitment-checks" aria-labelledby="commitmentChecksTitle">
+          <div>
+            <span class="eyebrow">School Commitment</span>
+            <h2 id="commitmentChecksTitle">Confirm the school understands the programme expectations</h2>
+          </div>
+          <label>
+            <input name="commit_launch" type="checkbox">
+            The school will identify participating teachers and support attendance at the launch / orientation session.
+          </label>
+          <label>
+            <input name="commit_training" type="checkbox">
+            Participating teachers will engage with the initial professional development sequence.
+          </label>
+          <label>
+            <input name="commit_use_kaizen" type="checkbox">
+            Participating teachers will use Kaizen Maths as part of agreed classroom practice during the programme period.
+          </label>
+          <label>
+            <input name="commit_feedback" type="checkbox">
+            The school will support teacher feedback, implementation reflection, and reasonable programme monitoring.
+          </label>
+          <label>
+            <input name="commit_evaluation" type="checkbox">
+            The school understands that learning indicators or implementation evidence may be discussed as part of programme evaluation.
+          </label>
+        </section>
+
+        <label>
+          Notes about readiness, classes, timetable, or implementation
+          <textarea name="message" rows="5" placeholder="Add anything that helps with programme planning, teacher availability, topics, year groups, or implementation constraints."></textarea>
+        </label>
+        <label class="programme-consent-row">
+          <input name="consent" type="checkbox" required>
+          I confirm that I am authorised to share these details and that the school can be contacted about Make It Count programme planning.
+        </label>
+        <div class="programme-form-actions">
+          <button class="button primary" type="submit">Submit School Commitment</button>
           <p class="admin-status" data-programme-form-status>Ready to submit.</p>
         </div>
       </form>
@@ -9112,10 +9278,18 @@ function bindProgrammeEnquiryForm() {
   const form = document.querySelector("[data-programme-enquiry-form]");
   if (!form) return;
   const status = form.querySelector("[data-programme-form-status]");
+  const checkbox = (name) => Boolean(form.querySelector(`[name="${name}"]`)?.checked);
+  const teacherRows = () => Array.from({ length: 8 }, (_, index) => index + 1)
+    .map((number) => ({
+      name: programmeEnquiryFieldValue(form, `teacher_${number}_name`),
+      email: programmeEnquiryFieldValue(form, `teacher_${number}_email`)
+    }))
+    .filter((teacher) => teacher.name || teacher.email);
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const button = form.querySelector("button[type='submit']");
     const enquiryType = form.dataset.enquiryType || "school_interest";
+    const participatingTeachers = teacherRows();
     const values = {
       enquiry_type: enquiryType,
       school_name: programmeEnquiryFieldValue(form, "school_name"),
@@ -9125,13 +9299,29 @@ function bindProgrammeEnquiryForm() {
       contact_role: programmeEnquiryFieldValue(form, "contact_role"),
       contact_email: programmeEnquiryFieldValue(form, "contact_email"),
       contact_phone: programmeEnquiryFieldValue(form, "contact_phone"),
-      teacher_count: programmeEnquiryFieldValue(form, "teacher_count"),
       year_groups: programmeEnquiryFieldValue(form, "year_groups"),
       curriculum_route: programmeEnquiryFieldValue(form, "curriculum_route"),
       interest_focus: programmeEnquiryFieldValue(form, "interest_focus"),
       support_type: programmeEnquiryFieldValue(form, "support_type"),
       challenge_summary: programmeEnquiryFieldValue(form, "challenge_summary"),
       message: programmeEnquiryFieldValue(form, "message"),
+      commitment_details: enquiryType === "school_commitment" ? {
+        principal_name: programmeEnquiryFieldValue(form, "principal_name"),
+        principal_email: programmeEnquiryFieldValue(form, "principal_email"),
+        maths_lead_name: programmeEnquiryFieldValue(form, "maths_lead_name"),
+        maths_lead_email: programmeEnquiryFieldValue(form, "maths_lead_email"),
+        participating_teachers: participatingTeachers,
+        commitments: {
+          launch_orientation: checkbox("commit_launch"),
+          professional_development: checkbox("commit_training"),
+          classroom_use: checkbox("commit_use_kaizen"),
+          feedback_and_monitoring: checkbox("commit_feedback"),
+          evaluation_discussion: checkbox("commit_evaluation")
+        }
+      } : {},
+      teacher_count: enquiryType === "school_commitment"
+        ? String(participatingTeachers.length || "")
+        : programmeEnquiryFieldValue(form, "teacher_count"),
       consent: Boolean(form.querySelector('[name="consent"]')?.checked)
     };
     button.disabled = true;
@@ -9161,6 +9351,43 @@ function adminProgrammeEnquiryDetail(label, value) {
 
 function adminProgrammeEnquiryCardHtml(enquiry) {
   const item = normaliseProgrammeEnquiry(enquiry);
+  const commitment = item.commitment_details || {};
+  const commitmentTeachers = Array.isArray(commitment.participating_teachers)
+    ? commitment.participating_teachers.filter((teacher) => teacher?.name || teacher?.email)
+    : [];
+  const commitmentChecks = [
+    ["launch_orientation", "Launch / orientation attendance supported"],
+    ["professional_development", "Initial professional development supported"],
+    ["classroom_use", "Kaizen Maths will be used in agreed classroom practice"],
+    ["feedback_and_monitoring", "Feedback, reflection, and monitoring supported"],
+    ["evaluation_discussion", "Evaluation evidence or indicators can be discussed"]
+  ];
+  const commitmentTeacherHtml = item.enquiry_type === "school_commitment" && commitmentTeachers.length ? `
+    <div class="programme-enquiry-copy programme-enquiry-teachers">
+      <strong>Participating teachers</strong>
+      <ul>
+        ${commitmentTeachers.map((teacher) => `
+          <li>
+            <span>${escapeHtml(teacher.name || "Teacher")}</span>
+            ${teacher.email ? `<a href="mailto:${escapeHtml(teacher.email)}">${escapeHtml(teacher.email)}</a>` : ""}
+          </li>
+        `).join("")}
+      </ul>
+    </div>
+  ` : "";
+  const commitmentChecklistHtml = item.enquiry_type === "school_commitment" ? `
+    <div class="programme-enquiry-copy programme-enquiry-commitments">
+      <strong>Confirmed commitments</strong>
+      <ul>
+        ${commitmentChecks.map(([key, label]) => `
+          <li class="${commitment.commitments?.[key] ? "is-confirmed" : "is-missing"}">
+            <span>${commitment.commitments?.[key] ? "Confirmed" : "Missing"}</span>
+            ${escapeHtml(label)}
+          </li>
+        `).join("")}
+      </ul>
+    </div>
+  ` : "";
   const primaryName = item.school_name || item.organisation_name || "Programme enquiry";
   const secondary = [
     item.contact_name,
@@ -9188,7 +9415,13 @@ function adminProgrammeEnquiryCardHtml(enquiry) {
         ${adminProgrammeEnquiryDetail("Year groups", item.year_groups)}
         ${adminProgrammeEnquiryDetail("Curriculum", item.curriculum_route)}
         ${adminProgrammeEnquiryDetail("Phone", item.contact_phone)}
+        ${adminProgrammeEnquiryDetail("Principal / senior leader", commitment.principal_name)}
+        ${adminProgrammeEnquiryDetail("Principal email", commitment.principal_email)}
+        ${adminProgrammeEnquiryDetail("Maths lead", commitment.maths_lead_name)}
+        ${adminProgrammeEnquiryDetail("Maths lead email", commitment.maths_lead_email)}
       </div>
+      ${commitmentTeacherHtml}
+      ${commitmentChecklistHtml}
       ${item.challenge_summary ? `
         <div class="programme-enquiry-copy">
           <strong>Challenges / priorities</strong>
@@ -26848,6 +27081,10 @@ function updateRouteSeo(parts) {
       title: routeTitle("Express School Interest"),
       description: "Express school interest in Kaizen Maths access, Make It Count, teacher development support, or future pilot participation."
     },
+    "school-commitment": {
+      title: routeTitle("School Commitment Form"),
+      description: "Invited schools can confirm participating teachers, lead contacts, and programme commitments for Make It Count planning."
+    },
     "partner-interest": {
       title: routeTitle("Support Make It Count"),
       description: "Submit a funder, sponsor, supporter, or partner enquiry for the Make It Count mathematics teacher development initiative."
@@ -26991,6 +27228,8 @@ function renderRoute() {
     renderPartnersPage();
   } else if (parts[0] === "school-interest") {
     renderSchoolInterestPage();
+  } else if (parts[0] === "school-commitment") {
+    renderSchoolCommitmentPage();
   } else if (parts[0] === "partner-interest") {
     renderPartnerInterestPage();
   } else if (parts[0] === "our-story") {

@@ -608,7 +608,13 @@ drop policy if exists "Anyone can submit programme enquiries" on public.programm
 create policy "Anyone can submit programme enquiries"
 on public.programme_enquiries
 for insert
-with check (consent = true and status = 'new');
+with check (
+  consent = true
+  and (
+    (enquiry_type = 'school_commitment' and status = 'committed')
+    or (enquiry_type <> 'school_commitment' and status = 'new')
+  )
+);
 
 drop policy if exists "Admins can read programme enquiries" on public.programme_enquiries;
 create policy "Admins can read programme enquiries"

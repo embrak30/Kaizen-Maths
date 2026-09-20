@@ -2313,6 +2313,56 @@ body[data-route="worksheet-generator"] .account-action {
   align-items: center;
 }
 
+.programme-teacher-section,
+.programme-commitment-checks {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(23, 184, 179, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.programme-teacher-section h2,
+.programme-commitment-checks h2 {
+  margin: 2px 0 4px;
+  color: #1c2440;
+  font-size: 1.15rem;
+}
+
+.programme-teacher-section p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.programme-teacher-list {
+  display: grid;
+  gap: 10px;
+}
+
+.programme-teacher-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+
+.programme-commitment-checks label {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  padding: 9px 10px;
+  border: 1px solid #e8f1f1;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #2f3654;
+  line-height: 1.35;
+}
+
+.programme-commitment-checks input {
+  width: auto;
+  margin-top: 3px;
+}
+
 .guide-callout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(240px, 390px);
@@ -4421,6 +4471,54 @@ button.certification-course-card {
   margin: 0;
   color: #2f3654;
   line-height: 1.5;
+}
+
+.programme-enquiry-teachers ul,
+.programme-enquiry-commitments ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.programme-enquiry-teachers li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  padding: 7px 9px;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #2f3654;
+  font-weight: 800;
+}
+
+.programme-enquiry-teachers a {
+  color: var(--teal-dark);
+  font-weight: 850;
+}
+
+.programme-enquiry-commitments li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  color: #2f3654;
+}
+
+.programme-enquiry-commitments li span {
+  border-radius: 999px;
+  padding: 3px 7px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.programme-enquiry-commitments li.is-confirmed span {
+  background: #ecfdf5;
+  color: #047857;
 }
 
 .programme-enquiry-actions {
@@ -12465,6 +12563,7 @@ sup .worksheet-fraction > span:last-child {
   .certification-pathway,
   .certification-checkout-grid,
   .programme-form-grid,
+  .programme-teacher-row,
   .programme-enquiry-summary,
   .programme-enquiry-details,
   .programme-enquiry-actions,
