@@ -1,6 +1,6 @@
 const SITE_NAME = "Kaizen Maths";
-const SITE_TITLE = "Kaizen Maths | Complete Mathematics Workspace for Teachers";
-const SITE_DESCRIPTION = "Kaizen Maths is a complete mathematics workspace and virtual textbook for teachers. Generate unlimited curriculum-aligned questions, worked examples, bespoke worksheets, assessments, and classroom practice in minutes.";
+const SITE_TITLE = "Kaizen Maths | Practical Maths Resources and Make It Count";
+const SITE_DESCRIPTION = "Kaizen Maths provides practical mathematics resources for teachers. Make It Count brings those resources together with teacher development, coaching, and sustained classroom support.";
 const CLASSROOM_STANDARD_VERSION = "classroom-standard-3";
 
 function addQueryParam(url, key, value) {
@@ -4488,12 +4488,12 @@ const homepageFeaturedVideo = {
 };
 
 const defaultHomepageHeroContent = {
-  eyebrow: "Your Complete Mathematics Workspace",
-  headline: "Create bespoke maths resources from a virtual textbook.",
-  subheading: "Kaizen Maths gives teachers unlimited curriculum-aligned questions, worked examples, worksheets, assessments, and classroom tools for independent, national, and international curricula.",
-  highlight_1: "Generate fresh practice from an infinite topic library",
-  highlight_2: "Create differentiated tasks, individualised assessments, and bespoke worksheets",
-  highlight_3: "Prepare teaching resources for different groups in minutes",
+  eyebrow: "Kaizen Maths + Make It Count",
+  headline: "Better mathematics teaching starts with the right resources and support.",
+  subheading: "Kaizen Maths provides practical mathematics resources for teachers. Through Make It Count, we are working to bring those resources together with professional development and ongoing classroom support to schools that need them.",
+  highlight_1: "Practical classroom resources for everyday teaching",
+  highlight_2: "Teacher development, coaching, and sustained support",
+  highlight_3: "Funded partnerships for schools that need mathematics support",
   gallery_label: "Inside Kaizen Maths",
   gallery_heading: "See the workspace in action"
 };
@@ -5503,7 +5503,7 @@ async function loadBookingSettings({ rerender = false } = {}) {
     if (error) throw error;
     state.bookingSettings = normaliseBookingSettings(data?.content_value || {});
     state.bookingSettingsLoaded = true;
-    if (rerender && ["admin", "book-demo", "schools", "upgrade", ""].includes(routeParts()[0] || "")) renderRoute();
+    if (rerender && ["admin", "book-demo", "schools", "upgrade", "contact", ""].includes(routeParts()[0] || "")) renderRoute();
   } catch (error) {
     state.bookingSettingsLoaded = false;
     console.warn("Kaizen booking settings unavailable:", error.message);
@@ -8389,49 +8389,406 @@ function renderGcseExamStyle() {
   bindGcseExamStyle();
 }
 
+function renderKaizenMathsResourcePage() {
+  const resourceCards = [
+    ["Classroom teaching", "Project questions, reveal answers and steps, annotate live, and use diagrams or displays to support explanation."],
+    ["Practice and homework", "Generate focused question sets, mixed practice, worksheets, answer keys, and pupil tasks from the same topic structures."],
+    ["Assessment and intervention", "Build assessments, exam-style practice, and targeted follow-up for pupils who need more time with a topic."],
+    ["Curriculum alignment", "Connect topics to curriculum maps, textbook alignments, school defaults, and international standards where those mappings have been added."]
+  ];
+  const featureList = [
+    "Unlimited fresh questions across a growing mathematics library.",
+    "Worked examples and step-by-step solutions designed for teacher modelling.",
+    "Classroom View with reveal controls, timers, annotation, capture, and full-screen teaching.",
+    "Worksheet Builder, assessment builder, pupil module, tutor workspace, and curriculum alignment tools.",
+    "School-aware branding and curriculum context where schools have been set up by an administrator."
+  ];
+
+  app.innerHTML = `
+    ${pageHeader(
+      "Kaizen Maths: The Resource",
+      "A practical digital mathematics resource created by an experienced mathematics educator for everyday classroom teaching, practice, homework, assessment, and intervention.",
+      `<a class="button primary" href="#/tools">Explore Tools</a><a class="button" href="#/worksheet-generator">Worksheet Builder</a><a class="button" href="#/curriculum-alignments">Curriculum Alignment</a>`
+    )}
+    <section class="mission-page">
+      <article class="mission-hero-panel">
+        <div>
+          <span class="eyebrow">Created by a maths educator</span>
+          <h2>Kaizen Maths gives teachers usable mathematics resources at the point of need.</h2>
+          <p>It is not an AI lesson planner. It is a purpose-built mathematics teaching resource for generating questions, examples, worksheets, assessments, classroom displays, and pupil practice. The teacher remains in control of the topic, timing, explanation, and classroom decisions.</p>
+        </div>
+        <aside class="mission-claim-card">
+          <strong>Core idea</strong>
+          <p>Teachers should not have to spend excessive time searching, reformatting, or rebuilding mathematics resources before they can teach well.</p>
+        </aside>
+      </article>
+
+      <section class="mission-grid mission-grid-four" aria-label="How Kaizen Maths supports teachers">
+        ${resourceCards.map(([title, copy]) => `
+          <article class="mission-card">
+            <h3>${title}</h3>
+            <p>${copy}</p>
+          </article>
+        `).join("")}
+      </section>
+
+      <section class="mission-split">
+        <article class="panel">
+          <h2>What teachers can use it for</h2>
+          <ul class="mission-check-list">
+            ${featureList.map((item) => `<li>${item}</li>`).join("")}
+          </ul>
+        </article>
+        <article class="panel mission-note-panel">
+          <span class="eyebrow">Access Model</span>
+          <h2>The resource can stand alone or support a programme</h2>
+          <p>Individual teachers can explore Kaizen Maths directly. Schools can use it through school access. Make It Count uses Kaizen Maths as the core classroom resource within a broader teacher development model.</p>
+          <div class="button-row">
+            <a class="button primary" href="#/upgrade">Individual Access</a>
+            <a class="button" href="#/school-space">School Space</a>
+            <a class="button" href="#/make-it-count">Make It Count</a>
+          </div>
+        </article>
+      </section>
+    </section>
+  `;
+}
+
+function renderMakeItCountPage() {
+  const programmeModel = [
+    ["Kaizen Maths access", "Teachers use the resource for classroom teaching, worksheets, homework, intervention, assessment, and pupil practice."],
+    ["Launch workshop", "A practical in-person starting point for participating schools and teachers."],
+    ["Six-week initial PD", "Structured online sessions focused on using resources effectively in real teaching routines."],
+    ["School support visits", "Two in-person visits to each participating school are included in the pilot concept."],
+    ["Mentoring and follow-up", "Online mentoring and implementation support would continue across a 12-month period."],
+    ["Monitoring and evaluation", "The programme would track teacher participation, classroom implementation, and relevant learning indicators."]
+  ];
+
+  app.innerHTML = `
+    ${pageHeader(
+      "Make It Count",
+      "A mathematics teacher development initiative that combines access to Kaizen Maths with practical training, classroom coaching, and sustained professional support.",
+      `<a class="button primary" href="#/for-schools">For Schools</a><a class="button" href="#/partners">For Partners</a><a class="button" href="#/contact">Contact / Enquire</a>`
+    )}
+    <section class="mission-page">
+      <article class="mission-hero-panel make-it-count-hero">
+        <div>
+          <span class="eyebrow">Flagship Initiative</span>
+          <h2>Make It Count is being developed to help teachers use mathematics resources effectively, not just access them.</h2>
+          <p>Many schools need more than a login. They need practical training, shared routines, coaching, and follow-up that helps teachers turn resources into better classroom practice. Make It Count is designed around that implementation gap.</p>
+        </div>
+        <aside class="mission-claim-card">
+          <strong>Important status</strong>
+          <p>The pilot is proposed and subject to securing funding, confirming school participation, and finalising programme arrangements.</p>
+        </aside>
+      </article>
+
+      <section class="mission-grid mission-grid-three" aria-labelledby="programmeModelTitle">
+        <div class="section-heading mission-grid-heading">
+          <span class="eyebrow">Programme Model</span>
+          <h2 id="programmeModelTitle">What participating schools would receive</h2>
+        </div>
+        ${programmeModel.map(([title, copy]) => `
+          <article class="mission-card">
+            <h3>${title}</h3>
+            <p>${copy}</p>
+          </article>
+        `).join("")}
+      </section>
+
+      <section class="mission-split">
+        <article class="panel">
+          <span class="eyebrow">Proposed Jamaica Pilot</span>
+          <h2>Initial pilot concept</h2>
+          <ul class="mission-check-list">
+            <li>Ten participating schools.</li>
+            <li>Approximately 30 mathematics teachers, with three teachers from each school.</li>
+            <li>Free Kaizen Maths access for participating teachers during the programme.</li>
+            <li>In-person launch workshop, six-week initial professional development programme, school visits, online mentoring, and 12-month follow-up.</li>
+            <li>Provisional pilot budget: US$41,855, subject to funding and final programme approval.</li>
+          </ul>
+        </article>
+        <article class="panel mission-note-panel">
+          <span class="eyebrow">Organisational Structure</span>
+          <h2>Resource, initiative, and delivery</h2>
+          <p>Make It Count is a mathematics teacher development initiative being developed through Embark Education, using Kaizen Maths as its core classroom resource, with Curiov8 as the proposed professional development delivery partner.</p>
+          <p>Kaizen Maths remains the independently developed mathematics resource. The initiative is the route through which that resource can be combined with training and sustained support.</p>
+        </article>
+      </section>
+    </section>
+  `;
+}
+
+function renderForSchoolsPage() {
+  const schoolBenefits = [
+    ["For teachers", "Reduced preparation load, clearer worked examples, fresh practice, and classroom-ready routines."],
+    ["For departments", "Shared structures for practice, homework, intervention, assessment, and curriculum consistency."],
+    ["For pupils", "More opportunities to practise, revisit misconceptions, and see methods modelled clearly."],
+    ["For leaders", "A practical resource and development model that can support mathematics improvement work."]
+  ];
+
+  app.innerHTML = `
+    ${pageHeader(
+      "For Schools",
+      "Schools can explore Kaizen Maths as a practical teaching resource and express interest in future Make It Count programme opportunities.",
+      `<a class="button primary" href="#/contact">Express Interest</a><a class="button" href="#/make-it-count">Make It Count</a><a class="button" href="#/schools">School Licence Notes</a>`
+    )}
+    <section class="mission-page">
+      <article class="mission-hero-panel">
+        <div>
+          <span class="eyebrow">School Support</span>
+          <h2>Kaizen Maths can support everyday teaching while Make It Count adds training and implementation support.</h2>
+          <p>The resource helps teachers prepare and deliver mathematics activities. The programme model is designed for schools that need structured professional development, coaching, and follow-up so that resource use becomes part of classroom practice.</p>
+        </div>
+        <aside class="mission-claim-card">
+          <strong>Clear distinction</strong>
+          <p>Schools can enquire about resource access without applying for Make It Count. Programme participation depends on funding and agreed arrangements.</p>
+        </aside>
+      </article>
+
+      <section class="mission-grid mission-grid-four">
+        ${schoolBenefits.map(([title, copy]) => `
+          <article class="mission-card">
+            <h3>${title}</h3>
+            <p>${copy}</p>
+          </article>
+        `).join("")}
+      </section>
+
+      <section class="mission-split">
+        <article class="panel">
+          <h2>What a school conversation can cover</h2>
+          <ul class="mission-check-list">
+            <li>Which year groups, topics, or exam routes need the most support.</li>
+            <li>Whether teachers need resource access only or a supported development model.</li>
+            <li>How Kaizen Maths can support curriculum alignment, worksheets, pupil tasks, and department consistency.</li>
+            <li>Whether the school is interested in a future funded pilot, school licence, or commissioned support.</li>
+          </ul>
+        </article>
+        <article class="panel mission-note-panel">
+          <span class="eyebrow">Next Step</span>
+          <h2>Express interest</h2>
+          <p>Schools can make an initial enquiry, book a conversation, or ask about the proposed Make It Count pilot. No public page should be read as confirming funded places or guaranteed participation.</p>
+          <div class="button-row">
+            <a class="button primary" href="#/contact">Contact / Enquire</a>
+            <a class="button" href="#/book-demo">Book A Conversation</a>
+          </div>
+        </article>
+      </section>
+    </section>
+  `;
+}
+
+function renderPartnersPage() {
+  const partnerRoutes = [
+    ["Funding and sponsorship", "Support a pilot that gives schools access to Kaizen Maths alongside training, coaching, and sustained follow-up."],
+    ["School partnerships", "Connect the initiative with schools, clusters, regions, districts, or education systems where mathematics support is needed."],
+    ["Programme delivery", "Discuss professional development, mentoring, facilitation, school visits, and implementation support."],
+    ["Evaluation and learning", "Support monitoring, feedback, and evidence gathering so future rollouts can improve responsibly."]
+  ];
+
+  app.innerHTML = `
+    ${pageHeader(
+      "For Partners and Supporters",
+      "Make It Count is being developed as a sustainable model for strengthening mathematics teaching through practical resources, teacher development, and funded partnerships.",
+      `<a class="button primary" href="#/contact">Partner With Us</a><a class="button" href="#/make-it-count">View Programme</a><a class="button" href="#/research-informed">Research-Informed Design</a>`
+    )}
+    <section class="mission-page">
+      <article class="mission-hero-panel">
+        <div>
+          <span class="eyebrow">Partnership Opportunity</span>
+          <h2>The aim is to make practical mathematics support available to schools that may not otherwise afford sustained resource access and professional development.</h2>
+          <p>Kaizen Maths provides the classroom resource base. Make It Count is the proposed route for combining that resource with training, coaching, mentoring, and implementation support through funded partnerships.</p>
+        </div>
+        <aside class="mission-claim-card">
+          <strong>Provisional pilot</strong>
+          <p>The initial Jamaica pilot concept has a provisional budget of US$41,855. Funding has not yet been secured.</p>
+        </aside>
+      </article>
+
+      <section class="mission-grid mission-grid-four">
+        ${partnerRoutes.map(([title, copy]) => `
+          <article class="mission-card">
+            <h3>${title}</h3>
+            <p>${copy}</p>
+          </article>
+        `).join("")}
+      </section>
+
+      <section class="mission-split">
+        <article class="panel">
+          <h2>What support can help provide</h2>
+          <ul class="mission-check-list">
+            <li>Kaizen Maths access for participating teachers.</li>
+            <li>In-person launch training and online professional development sessions.</li>
+            <li>School visits, classroom coaching, and mentoring activity.</li>
+            <li>Coordination, facilitator support, monitoring, evaluation, and reporting.</li>
+          </ul>
+        </article>
+        <article class="panel mission-note-panel">
+          <span class="eyebrow">Careful Language</span>
+          <h2>Developed, not yet funded</h2>
+          <p>The site should invite conversations with funders, sponsors, districts, ministries, schools, and delivery partners without implying that funded places or formal partnerships have already been confirmed.</p>
+          <div class="button-row">
+            <a class="button primary" href="#/contact">Start A Conversation</a>
+            <a class="button" href="#/our-story">Read The Story</a>
+          </div>
+        </article>
+      </section>
+    </section>
+  `;
+}
+
+function renderOurStoryPage() {
+  app.innerHTML = `
+    ${pageHeader(
+      "Our Story",
+      "Kaizen Maths was created by a mathematics educator with more than 30 years of experience in teaching, school leadership, research, and educational development.",
+      `<a class="button primary" href="#/kaizen-maths">Explore The Resource</a><a class="button" href="#/make-it-count">Make It Count</a>`
+    )}
+    <section class="mission-page">
+      <article class="mission-hero-panel">
+        <div>
+          <span class="eyebrow">Founder Story</span>
+          <h2>Kaizen Maths grew from the practical reality of mathematics teaching.</h2>
+          <p>After more than three decades in education across Jamaica, the United Kingdom, and Oman, the need was clear: teachers need reliable, flexible, classroom-ready mathematics resources that help them prepare, explain, practise, assess, and intervene without losing hours searching and rebuilding materials.</p>
+          <p>Kaizen Maths began as that resource. Make It Count is the next step: a way to combine the resource with professional development, coaching, and sustained support so that more teachers and schools can benefit from it.</p>
+        </div>
+        <aside class="mission-claim-card">
+          <strong>Central principle</strong>
+          <p>Kaizen Maths is the resource. Make It Count is the initiative through which that resource can serve more teachers and schools.</p>
+        </aside>
+      </article>
+
+      <section class="mission-split">
+        <article class="panel">
+          <h2>Why the emphasis is changing</h2>
+          <p>Kaizen Maths remains a viable digital resource with individual, school, and institutional access routes. The public message is now broader: the aim is not simply to sell access to a mathematics tool, but to create a sustainable educational model where practical resources and teacher development work together.</p>
+        </article>
+        <article class="panel">
+          <h2>What stays the same</h2>
+          <p>The working product remains intact. Teachers can still use the tool library, classroom view, worksheet builder, assessment builder, pupil module, curriculum alignment, and training resources. The new story gives those tools a clearer educational purpose.</p>
+        </article>
+      </section>
+    </section>
+  `;
+}
+
+function renderContactPage() {
+  const settings = bookingSettings();
+  const bookingUrl = safeExternalUrl(settings.booking_url);
+  const contactEmail = settings.contact_email || defaultBookingSettings.contact_email;
+  const subject = encodeURIComponent("Kaizen Maths / Make It Count enquiry");
+  const enquiryCards = [
+    ["Teachers", "Explore Kaizen Maths, ask about access, or request a walkthrough of the teaching resource."],
+    ["Schools", "Express interest in Kaizen Maths access, school support, or a future Make It Count programme opportunity."],
+    ["Partners and funders", "Discuss funding, sponsorship, school partnerships, programme delivery, or pilot development."]
+  ];
+
+  app.innerHTML = `
+    ${pageHeader(
+      "Contact / Enquire",
+      "Use this page to start a conversation about Kaizen Maths, Make It Count, school access, funded partnerships, or professional development support.",
+      `<a class="button primary" href="mailto:${escapeHtml(contactEmail)}?subject=${subject}">Email Enquiry</a>${bookingUrl ? `<a class="button" href="${escapeHtml(bookingUrl)}" target="_blank" rel="noopener noreferrer">Book A Conversation</a>` : `<a class="button" href="#/book-demo">Book A Conversation</a>`}`
+    )}
+    <section class="mission-page">
+      <article class="mission-hero-panel">
+        <div>
+          <span class="eyebrow">Enquiry Routes</span>
+          <h2>Tell us whether you are exploring the resource, school support, or partnership opportunities.</h2>
+          <p>Teachers can explore Kaizen Maths directly. Schools can ask about resource access or express interest in the Make It Count model. Funders, sponsors, and delivery partners can discuss how the initiative could be supported responsibly.</p>
+        </div>
+        <aside class="mission-claim-card">
+          <strong>Email</strong>
+          <p><a href="mailto:${escapeHtml(contactEmail)}?subject=${subject}">${escapeHtml(contactEmail)}</a></p>
+        </aside>
+      </article>
+
+      <section class="mission-grid mission-grid-three">
+        ${enquiryCards.map(([title, copy]) => `
+          <article class="mission-card">
+            <h3>${title}</h3>
+            <p>${copy}</p>
+          </article>
+        `).join("")}
+      </section>
+
+      <section class="mission-split">
+        <article class="panel">
+          <h2>Useful details to include</h2>
+          <ul class="mission-check-list">
+            <li>Your role and organisation, if relevant.</li>
+            <li>Whether you are asking about the Kaizen Maths resource, Make It Count, school access, or partnership support.</li>
+            <li>The country, curriculum, year groups, or examination pathway you are most interested in.</li>
+            <li>Whether you would like a walkthrough, a school conversation, or a partnership discussion.</li>
+          </ul>
+        </article>
+        <article class="panel mission-note-panel">
+          <span class="eyebrow">Existing Access</span>
+          <h2>Already have a school code?</h2>
+          <p>Teachers who already have a school access code should sign in first, then use School Space to join the correct school or pilot workspace.</p>
+          <div class="button-row">
+            <a class="button primary" href="#/school-space">Open School Space</a>
+            <a class="button" href="#/upgrade">Individual Access</a>
+          </div>
+        </article>
+      </section>
+    </section>
+  `;
+}
+
 function renderHome() {
   const heroContent = homepageHeroContent();
   const heroScreenshots = homepageScreenshotList();
+  const missionCards = [
+    ["Kaizen Maths", "The practical resource", "A teacher-built mathematics workspace for questions, worked examples, worksheets, assessments, classroom displays, and pupil tasks."],
+    ["Make It Count", "The development initiative", "A proposed teacher development programme combining Kaizen Maths access with training, coaching, school visits, and mentoring."],
+    ["Get involved", "Explore, enquire, or partner", "Teachers can explore the resource. Schools can express interest. Funders and partners can discuss support for programme delivery."]
+  ];
   const workflowSteps = [
-    ["1", "Choose a topic", "Open the exact GCSE, A-level, Further Maths, Statistics, or Mechanics topic you need."],
-    ["2", "Select questions", "Choose the level, question type, and amount of practice for the class in front of you."],
-    ["3", "Generate a resource", "Create board practice, worked examples, worksheets, quizzes, or assessment-style sets."],
-    ["4", "Teach, print, or share", "Project it, write over it, download it, print it, or use it for homework and intervention."]
+    ["1", "Choose a topic", "Open the exact mathematics topic, level, or curriculum area you need."],
+    ["2", "Select questions", "Choose the question type, amount of practice, and whether pupils need worked support."],
+    ["3", "Generate the resource", "Create board practice, worked examples, worksheets, quizzes, or assessment-style sets."],
+    ["4", "Teach, print, or share", "Project it, annotate it, print it, or use it for homework, intervention, and follow-up."]
   ];
   const benefitCards = [
-    ["Teach from the board", "Project focused questions, reveal answers, show worked steps, and keep the pace of practice under teacher control."],
-    ["Write over Classroom View", "Use pen, highlighter, eraser, undo, and clear tools while modelling solutions or marking up diagrams live."],
-    ["Create resources quickly", "Move from topic choice to printable worksheets, quizzes, homework, and assessments in minutes."],
-    ["Cover more curriculum", "Use one workspace across GCSE, A-level Pure, Further Maths, Statistics, Mechanics, and classroom display resources."],
-    ["Support departments", "Give teams a shared structure for practice, intervention, assessment, and curriculum consistency."],
-    ["Keep teachers in control", "Kaizen Maths supplies the questions and worked support; teachers decide what to use, when to reveal it, and how to teach it."]
+    ["Save planning time", "Move from topic choice to usable classroom material quickly, without hunting across scattered sites."],
+    ["Support stronger explanations", "Use worked examples, revealable steps, diagrams, and classroom displays to model methods clearly."],
+    ["Create differentiated practice", "Generate fresh questions by topic, level, question type, and purpose for different groups."],
+    ["Strengthen intervention", "Use focused practice, pupil tasks, worksheets, and assessment evidence to revisit gaps."],
+    ["Build department consistency", "Give teachers a shared resource structure while preserving teacher choice and professional judgement."],
+    ["Protect teacher wellbeing", "Reduce the repeated workload of searching, formatting, and rebuilding mathematics resources from scratch."]
   ];
   const audienceCards = [
-    ["For Teachers", "Teach from a stronger question bank.", "Generate board practice, examples, worksheets, answer keys, and worked solutions whenever you need them."],
-    ["For Heads of Department", "Build consistency across your maths department.", "Support shared routines for homework, intervention, assessment, and curriculum coverage."],
-    ["For Tutors", "Create targeted practice for every learner.", "Select exactly the topic and level a learner needs, then regenerate fresh practice instantly."],
-    ["For Schools", "A scalable workspace for mathematics teaching.", "Give teachers shared access to structured questions, worked examples, assessments, and classroom tools."]
+    ["For Teachers", "Prepare faster and teach with confidence.", "Use Kaizen Maths independently for lessons, worksheets, practice, homework, assessment, and classroom modelling."],
+    ["For Schools", "Support mathematics improvement with structure.", "Use Make It Count to connect the resource with training, coaching, implementation support, and follow-up."],
+    ["For Partners", "Help practical support reach more classrooms.", "Discuss funding, sponsorship, pilot support, professional development delivery, or school partnerships."],
+    ["For Tutors", "Create targeted practice for every learner.", "Select exactly the topic and level a learner needs, then regenerate fresh practice for lessons or homework."]
   ];
   const comparisonRows = [
-    ["Searching multiple free websites", "One structured workspace with searchable topic generators, classroom display tools, and printable outputs."],
+    ["Searching multiple websites", "One structured resource with searchable topic generators, classroom display tools, and printable outputs."],
+    ["Giving software without support", "Make It Count connects the resource to teacher development, coaching, and implementation routines."],
     ["Manually building worksheets", "Generate clean worksheets and assessments from selected topics in minutes."],
-    ["Unstructured question lists", "Teacher-focused, curriculum-aligned practice with clear levels, answers, and worked steps."],
-    ["Static textbook resources", "Unlimited fresh questions, worked examples, board projection, annotation, and assessment support."]
+    ["Static textbook resources", "Fresh questions, worked examples, board projection, annotation, and assessment support."]
   ];
   const testimonials = testimonialDisplayList();
 
   app.innerHTML = `
-    <section class="home-hero">
+    <section class="home-hero mission-home-hero">
       <div class="home-hero-actions">
-        <a class="button primary" href="#/upgrade">Start Free Trial</a>
-        <a class="button" href="#/book-demo">Book a Demo</a>
-        <a class="button subtle" href="#/kaizen-university">See How It Works</a>
-        <a class="button" href="#/coverage-map">Explore Topics</a>
+        <a class="button primary" href="#/kaizen-maths">Explore Kaizen Maths</a>
+        <a class="button" href="#/make-it-count">Discover Make It Count</a>
+        <a class="button" href="#/partners">Partner With Us</a>
       </div>
       <div class="hero-copy">
         <span class="eyebrow">${escapeHtml(heroContent.eyebrow)}</span>
         <h1>${escapeHtml(heroContent.headline)}</h1>
         <p class="hero-lede">${escapeHtml(heroContent.subheading)}</p>
+        <div class="hero-win-list mission-win-list" aria-label="Kaizen Maths and Make It Count priorities">
+          <span>${escapeHtml(heroContent.highlight_1 || defaultHomepageHeroContent.highlight_1)}</span>
+          <span>${escapeHtml(heroContent.highlight_2 || defaultHomepageHeroContent.highlight_2)}</span>
+          <span>${escapeHtml(heroContent.highlight_3 || defaultHomepageHeroContent.highlight_3)}</span>
+        </div>
         ${homepageVideoPanelHtml()}
       </div>
       <div class="home-hero-side">
@@ -8462,9 +8819,25 @@ function renderHome() {
       </aside>
     </section>
 
+    <section class="mission-card-row section-block" aria-labelledby="missionOverviewTitle">
+      <div class="section-heading">
+        <span class="eyebrow">The New Direction</span>
+        <h2 id="missionOverviewTitle">A resource, a programme, and a route to support more schools</h2>
+      </div>
+      <div class="home-card-grid mission-overview-grid">
+        ${missionCards.map(([label, title, copy]) => `
+          <article class="home-card mission-home-card">
+            <span class="eyebrow">${label}</span>
+            <h3>${title}</h3>
+            <p>${copy}</p>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+
     <section class="home-workflow section-block" aria-labelledby="workflowTitle">
       <div class="section-heading">
-        <span class="eyebrow">Simple Workflow</span>
+        <span class="eyebrow">Kaizen Maths Resource</span>
         <h2 id="workflowTitle">From topic to teaching resource in minutes</h2>
       </div>
       <div class="workflow-grid">
@@ -8475,6 +8848,19 @@ function renderHome() {
             <p>${copy}</p>
           </article>
         `).join("")}
+      </div>
+    </section>
+
+    <section class="mission-programme-band" aria-labelledby="makeItCountHomeTitle">
+      <div>
+        <span class="eyebrow">Make It Count</span>
+        <h2 id="makeItCountHomeTitle">A proposed teacher development initiative using Kaizen Maths as the core classroom resource</h2>
+        <p>The initial pilot concept focuses on ten schools in Jamaica, approximately thirty mathematics teachers, an in-person launch workshop, six weeks of initial professional development, school visits, online mentoring, and 12 months of follow-up. Participation would depend on securing funding and confirming programme arrangements.</p>
+      </div>
+      <div class="button-row">
+        <a class="button primary" href="#/make-it-count">Read About The Initiative</a>
+        <a class="button" href="#/for-schools">School Interest</a>
+        <a class="button" href="#/partners">Funding And Partners</a>
       </div>
     </section>
 
@@ -8520,7 +8906,7 @@ function renderHome() {
     <section class="home-audiences section-block" aria-labelledby="audienceTitle">
       <div class="section-heading">
         <span class="eyebrow">Who It Supports</span>
-        <h2 id="audienceTitle">Built for different mathematics teaching roles</h2>
+        <h2 id="audienceTitle">Practical routes for teachers, schools, tutors, and supporters</h2>
       </div>
       <div class="audience-grid">
         ${audienceCards.map(([label, title, copy]) => `
@@ -8536,7 +8922,7 @@ function renderHome() {
     <section class="comparison-section section-block" aria-labelledby="comparisonTitle">
       <div class="section-heading">
         <span class="eyebrow">Why Kaizen Maths?</span>
-        <h2 id="comparisonTitle">A structured alternative to scattered resources</h2>
+        <h2 id="comparisonTitle">Resources plus implementation support</h2>
       </div>
       <div class="comparison-table" role="table" aria-label="Why Kaizen Maths comparison">
         <div class="comparison-row comparison-head" role="row">
@@ -8552,26 +8938,25 @@ function renderHome() {
       </div>
     </section>
 
-    <section class="school-licence-band" aria-labelledby="schoolLicenceTitle">
+    <section class="school-licence-band mission-partner-band" aria-labelledby="partnerHomeTitle">
       <div>
-        <span class="eyebrow">School Licence</span>
-        <h2 id="schoolLicenceTitle">Designed for departments and schools</h2>
-        <p>Give every maths teacher access to a shared resource workspace that supports classroom instruction, practice, homework, assessment, intervention, and curriculum consistency.</p>
+        <span class="eyebrow">Schools And Supporters</span>
+        <h2 id="partnerHomeTitle">Help practical mathematics support reach the classrooms that need it</h2>
+        <p>Schools can express interest in using Kaizen Maths or joining a future Make It Count programme. Funders, sponsors, and delivery partners can discuss how to support pilot development, training, coaching, and school implementation.</p>
       </div>
-      <!-- Future pricing table or school licence enquiry form can be inserted here. -->
       <div class="button-row">
-        <a class="button primary" href="#/book-demo">Book a School Demo</a>
-        <a class="button" href="#/schools">Request a School Licence</a>
+        <a class="button primary" href="#/contact">Contact / Enquire</a>
+        <a class="button" href="#/partners">Partner With Us</a>
         <a class="button" href="#/research-informed">Research-Informed Design</a>
       </div>
     </section>
     <section class="final-cta" aria-labelledby="finalCtaTitle">
-      <span class="eyebrow">Ready To Try It?</span>
-      <h2 id="finalCtaTitle">Spend less time searching. Spend more time teaching.</h2>
+      <span class="eyebrow">Next Step</span>
+      <h2 id="finalCtaTitle">Explore the resource. Discover the initiative. Start the conversation.</h2>
       <div class="button-row">
-        <a class="button primary" href="#/upgrade">Start Free Trial</a>
-        <a class="button" href="#/book-demo">Book a Demo</a>
-        <a class="button" href="#/tools">Browse Tool Library</a>
+        <a class="button primary" href="#/kaizen-maths">Explore Kaizen Maths</a>
+        <a class="button" href="#/make-it-count">Discover Make It Count</a>
+        <a class="button" href="#/contact">Contact / Enquire</a>
       </div>
     </section>
   `;
@@ -25593,6 +25978,30 @@ function updateRouteSeo(parts) {
       title: SITE_TITLE,
       description: SITE_DESCRIPTION
     },
+    "kaizen-maths": {
+      title: routeTitle("Kaizen Maths Resource"),
+      description: "Learn how Kaizen Maths supports mathematics teachers with classroom questions, worked examples, worksheets, assessments, displays, and pupil practice."
+    },
+    "make-it-count": {
+      title: routeTitle("Make It Count"),
+      description: "Learn about Make It Count, the proposed mathematics teacher development initiative combining Kaizen Maths access with training, coaching, and sustained classroom support."
+    },
+    "for-schools": {
+      title: routeTitle("For Schools"),
+      description: "Explore how schools can use Kaizen Maths as a mathematics teaching resource and express interest in future Make It Count programme opportunities."
+    },
+    "partners": {
+      title: routeTitle("For Partners and Supporters"),
+      description: "Find out how funders, sponsors, school partners, and delivery partners can support the Make It Count mathematics teacher development initiative."
+    },
+    "our-story": {
+      title: routeTitle("Our Story"),
+      description: "Read why Kaizen Maths was created by an experienced mathematics educator and how Make It Count extends the resource into a wider teacher development mission."
+    },
+    "contact": {
+      title: routeTitle("Contact / Enquire"),
+      description: "Contact Kaizen Maths about the resource, Make It Count, school access, funded partnerships, or professional development support."
+    },
     "tools": {
       title: routeTitle(parts[1] ? "Tool Information" : "Maths Tool Library"),
       description: parts[1]
@@ -25714,6 +26123,18 @@ function renderRoute() {
   document.body.dataset.route = parts[0] || "home";
   if (!parts[0]) {
     renderHome();
+  } else if (parts[0] === "kaizen-maths") {
+    renderKaizenMathsResourcePage();
+  } else if (parts[0] === "make-it-count") {
+    renderMakeItCountPage();
+  } else if (parts[0] === "for-schools") {
+    renderForSchoolsPage();
+  } else if (parts[0] === "partners") {
+    renderPartnersPage();
+  } else if (parts[0] === "our-story") {
+    renderOurStoryPage();
+  } else if (parts[0] === "contact") {
+    renderContactPage();
   } else if (parts[0] === "beta-feedback") {
     renderBetaFeedback();
   } else if (parts[0] === "how-to-use-this-site") {
