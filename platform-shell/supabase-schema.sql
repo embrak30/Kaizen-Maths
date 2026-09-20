@@ -549,6 +549,86 @@ on public.homepage_content
 for delete
 using (public.is_admin());
 
+create table if not exists public.programme_enquiries (
+  id uuid primary key default gen_random_uuid(),
+  enquiry_type text not null default 'school_interest' check (enquiry_type in ('school_interest', 'partner_interest', 'school_commitment')),
+  status text not null default 'new' check (status in ('new', 'reviewed', 'follow_up', 'shortlisted', 'committed', 'declined')),
+  school_name text,
+  organisation_name text,
+  country_region text,
+  contact_name text not null,
+  contact_role text,
+  contact_email text not null,
+  contact_phone text,
+  teacher_count text,
+  year_groups text,
+  curriculum_route text,
+  interest_focus text,
+  support_type text,
+  challenge_summary text,
+  message text,
+  commitment_details jsonb not null default '{}'::jsonb,
+  consent boolean not null default false,
+  admin_notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.programme_enquiries add column if not exists enquiry_type text not null default 'school_interest';
+alter table public.programme_enquiries add column if not exists status text not null default 'new';
+alter table public.programme_enquiries add column if not exists school_name text;
+alter table public.programme_enquiries add column if not exists organisation_name text;
+alter table public.programme_enquiries add column if not exists country_region text;
+alter table public.programme_enquiries add column if not exists contact_name text;
+alter table public.programme_enquiries add column if not exists contact_role text;
+alter table public.programme_enquiries add column if not exists contact_email text;
+alter table public.programme_enquiries add column if not exists contact_phone text;
+alter table public.programme_enquiries add column if not exists teacher_count text;
+alter table public.programme_enquiries add column if not exists year_groups text;
+alter table public.programme_enquiries add column if not exists curriculum_route text;
+alter table public.programme_enquiries add column if not exists interest_focus text;
+alter table public.programme_enquiries add column if not exists support_type text;
+alter table public.programme_enquiries add column if not exists challenge_summary text;
+alter table public.programme_enquiries add column if not exists message text;
+alter table public.programme_enquiries add column if not exists commitment_details jsonb not null default '{}'::jsonb;
+alter table public.programme_enquiries add column if not exists consent boolean not null default false;
+alter table public.programme_enquiries add column if not exists admin_notes text;
+alter table public.programme_enquiries add column if not exists updated_at timestamptz not null default now();
+
+create index if not exists programme_enquiries_created_at_idx on public.programme_enquiries(created_at desc);
+create index if not exists programme_enquiries_status_idx on public.programme_enquiries(status);
+create index if not exists programme_enquiries_type_idx on public.programme_enquiries(enquiry_type);
+
+alter table public.programme_enquiries enable row level security;
+
+grant insert on public.programme_enquiries to anon, authenticated;
+grant select, update, delete on public.programme_enquiries to authenticated;
+
+drop policy if exists "Anyone can submit programme enquiries" on public.programme_enquiries;
+create policy "Anyone can submit programme enquiries"
+on public.programme_enquiries
+for insert
+with check (consent = true and status = 'new');
+
+drop policy if exists "Admins can read programme enquiries" on public.programme_enquiries;
+create policy "Admins can read programme enquiries"
+on public.programme_enquiries
+for select
+using (public.is_admin());
+
+drop policy if exists "Admins can update programme enquiries" on public.programme_enquiries;
+create policy "Admins can update programme enquiries"
+on public.programme_enquiries
+for update
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Admins can delete programme enquiries" on public.programme_enquiries;
+create policy "Admins can delete programme enquiries"
+on public.programme_enquiries
+for delete
+using (public.is_admin());
+
 create table if not exists public.homepage_screenshots (
   screenshot_id text primary key,
   title text not null default '',

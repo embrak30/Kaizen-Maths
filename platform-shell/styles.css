@@ -2226,6 +2226,93 @@ body[data-route="worksheet-generator"] .account-action {
   background: linear-gradient(135deg, var(--orange), var(--teal));
 }
 
+.programme-interest-page {
+  gap: 16px;
+}
+
+.programme-interest-form {
+  display: grid;
+  gap: 14px;
+  border-color: rgba(23, 184, 179, 0.22);
+  background:
+    linear-gradient(135deg, rgba(236, 253, 245, 0.7), rgba(255, 255, 255, 0.96) 38%, rgba(255, 247, 237, 0.54)),
+    #ffffff;
+}
+
+.programme-form-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: end;
+  border-bottom: 1px solid rgba(23, 184, 179, 0.16);
+  padding-bottom: 10px;
+}
+
+.programme-form-head h2 {
+  margin: 2px 0 0;
+  color: #1c2440;
+}
+
+.programme-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.programme-interest-form label {
+  display: grid;
+  gap: 6px;
+  color: #4a5570;
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
+.programme-interest-form input,
+.programme-interest-form select,
+.programme-interest-form textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #dce5f1;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+}
+
+.programme-interest-form textarea {
+  resize: vertical;
+}
+
+.programme-interest-form input:focus,
+.programme-interest-form select:focus,
+.programme-interest-form textarea:focus {
+  border-color: rgba(23, 184, 179, 0.76);
+  box-shadow: 0 0 0 3px rgba(23, 184, 179, 0.12);
+  outline: none;
+}
+
+.programme-consent-row {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  padding: 12px;
+  border: 1px solid rgba(23, 184, 179, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.programme-consent-row input {
+  width: auto;
+  margin-top: 3px;
+}
+
+.programme-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
 .guide-callout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(240px, 390px);
@@ -4190,6 +4277,178 @@ button.certification-course-card {
   max-height: 180px;
   object-fit: contain;
   padding: 10px;
+}
+
+.programme-enquiry-summary {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(110px, 1fr));
+  gap: 8px;
+}
+
+.programme-enquiry-summary span {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid rgba(23, 184, 179, 0.2);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(236, 253, 245, 0.78), #ffffff);
+  color: #4a5570;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.programme-enquiry-summary strong {
+  color: #16213f;
+  font-size: 1.4rem;
+}
+
+.programme-enquiry-list {
+  display: grid;
+  gap: 12px;
+}
+
+.programme-enquiry-card,
+.programme-enquiry-empty {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #e1e8f2;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.programme-enquiry-empty h3 {
+  margin: 0;
+  color: #1c2440;
+}
+
+.programme-enquiry-empty p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.programme-enquiry-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+}
+
+.programme-enquiry-card-head h3 {
+  margin: 3px 0 4px;
+  color: #1c2440;
+}
+
+.programme-enquiry-card-head p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.programme-enquiry-type,
+.programme-enquiry-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 0.73rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.programme-enquiry-type {
+  background: #eef7ff;
+  color: #24527a;
+}
+
+.programme-enquiry-status {
+  background: #f5f3ff;
+  color: #5b21b6;
+}
+
+.programme-enquiry-status.status-new {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.programme-enquiry-status.status-committed {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.programme-enquiry-status.status-declined {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.programme-enquiry-details {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.programme-enquiry-details span {
+  display: grid;
+  gap: 3px;
+  padding: 8px;
+  border: 1px solid #edf2f7;
+  border-radius: 7px;
+  background: #fbfdff;
+  color: #39445f;
+  font-size: 0.84rem;
+}
+
+.programme-enquiry-details strong,
+.programme-enquiry-copy strong {
+  color: #647089;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.programme-enquiry-copy {
+  display: grid;
+  gap: 5px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.programme-enquiry-copy p {
+  margin: 0;
+  color: #2f3654;
+  line-height: 1.5;
+}
+
+.programme-enquiry-actions {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.35fr) minmax(260px, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+  padding-top: 4px;
+}
+
+.programme-enquiry-actions label {
+  display: grid;
+  gap: 5px;
+  color: #4a5570;
+  font-size: 0.8rem;
+  font-weight: 850;
+}
+
+.programme-enquiry-actions select,
+.programme-enquiry-actions textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 9px 10px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
 }
 
 .admin-user-role,
@@ -12204,7 +12463,12 @@ sup .worksheet-fraction > span:last-child {
   .video-grid,
   .certification-module-grid,
   .certification-pathway,
-  .certification-checkout-grid {
+  .certification-checkout-grid,
+  .programme-form-grid,
+  .programme-enquiry-summary,
+  .programme-enquiry-details,
+  .programme-enquiry-actions,
+  .admin-programme-grid {
     grid-template-columns: 1fr;
   }
 

@@ -2657,6 +2657,8 @@ const state = {
   bookingSettingsLoaded: false,
   programmeContent: {},
   programmeContentLoaded: false,
+  programmeEnquiries: [],
+  programmeEnquiriesLoaded: false,
   toolInfoOverrides: {},
   toolInfoOverridesLoaded: false,
   universityVideos: {},
@@ -4540,6 +4542,41 @@ const defaultProgrammeContent = {
   partner_support: "Kaizen Maths access for participating teachers.\nIn-person launch training and online professional development sessions.\nSchool visits, classroom coaching, and mentoring activity.\nCoordination, facilitator support, monitoring, evaluation, and reporting."
 };
 
+const programmeEnquiryStatuses = [
+  "new",
+  "reviewed",
+  "follow_up",
+  "shortlisted",
+  "committed",
+  "declined"
+];
+
+const programmeEnquiryStatusLabels = {
+  new: "New",
+  reviewed: "Reviewed",
+  follow_up: "Follow up",
+  shortlisted: "Shortlisted",
+  committed: "Committed",
+  declined: "Declined"
+};
+
+const schoolInterestFocusOptions = [
+  ["pilot", "Make It Count pilot participation"],
+  ["kaizen-access", "Kaizen Maths school access"],
+  ["training", "Teacher training and implementation support"],
+  ["all", "Resource access, training, and support"],
+  ["conversation", "Initial conversation only"]
+];
+
+const partnerSupportTypeOptions = [
+  ["fund-school", "Fund one or more schools"],
+  ["pilot-sponsor", "Support a pilot programme"],
+  ["organisation-partner", "Organisation partnership"],
+  ["delivery", "Training or delivery support"],
+  ["general-support", "General contribution or supporter enquiry"],
+  ["conversation", "Initial conversation only"]
+];
+
 const defaultHomeInterfaceScreenshots = [
   {
     screenshot_id: "tool-library-algebra",
@@ -5688,6 +5725,113 @@ async function saveProgrammeContent(values) {
   state.programmeContent = next;
   writeJsonStorage(programmeContentStorageKey, next);
   return "local";
+}
+
+function programmeEnquiryStatusLabel(status) {
+  return programmeEnquiryStatusLabels[status] || titleCase(status || "new");
+}
+
+function programmeEnquiryTypeLabel(type) {
+  if (type === "school_interest") return "School interest";
+  if (type === "partner_interest") return "Partner / supporter";
+  if (type === "school_commitment") return "School commitment";
+  return "Programme enquiry";
+}
+
+function programmeEnquiryFieldValue(form, name) {
+  return String(new FormData(form).get(name) || "").trim();
+}
+
+function normaliseProgrammeEnquiry(row = {}) {
+  return {
+    id: row.id || "",
+    enquiry_type: row.enquiry_type || "school_interest",
+    status: programmeEnquiryStatuses.includes(row.status) ? row.status : "new",
+    school_name: String(row.school_name || "").trim(),
+    organisation_name: String(row.organisation_name || "").trim(),
+    country_region: String(row.country_region || "").trim(),
+    contact_name: String(row.contact_name || "").trim(),
+    contact_role: String(row.contact_role || "").trim(),
+    contact_email: String(row.contact_email || "").trim(),
+    contact_phone: String(row.contact_phone || "").trim(),
+    teacher_count: String(row.teacher_count || "").trim(),
+    year_groups: String(row.year_groups || "").trim(),
+    curriculum_route: String(row.curriculum_route || "").trim(),
+    interest_focus: String(row.interest_focus || "").trim(),
+    support_type: String(row.support_type || "").trim(),
+    challenge_summary: String(row.challenge_summary || "").trim(),
+    message: String(row.message || "").trim(),
+    commitment_details: row.commitment_details && typeof row.commitment_details === "object" ? row.commitment_details : {},
+    consent: row.consent === true,
+    admin_notes: String(row.admin_notes || "").trim(),
+    created_at: row.created_at || "",
+    updated_at: row.updated_at || ""
+  };
+}
+
+async function saveProgrammeEnquiry(values) {
+  const payload = normaliseProgrammeEnquiry(values);
+  if (!payload.contact_name) throw new Error("Please add a contact name.");
+  if (!payload.contact_email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.contact_email)) {
+    throw new Error("Please add a valid contact email.");
+  }
+  if (!payload.consent) throw new Error("Please confirm that you can be contacted about this enquiry.");
+  if (payload.enquiry_type === "school_interest" && !payload.school_name) {
+    throw new Error("Please add the school name.");
+  }
+  if (payload.enquiry_type === "partner_interest" && !payload.organisation_name) {
+    throw new Error("Please add the organisation or supporter name.");
+  }
+
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client) throw new Error("The enquiry form is temporarily unavailable. Please use the contact email on the Contact page.");
+  const { id, status, admin_notes, created_at, updated_at, ...insertPayload } = payload;
+  const { error } = await client
+    .from("programme_enquiries")
+    .insert({
+      ...insertPayload,
+      status: "new",
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    });
+  if (error) throw error;
+}
+
+async function loadProgrammeEnquiries({ rerender = false } = {}) {
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client || !isAdmin()) return;
+  try {
+    const { data, error } = await client
+      .from("programme_enquiries")
+      .select("id, enquiry_type, status, school_name, organisation_name, country_region, contact_name, contact_role, contact_email, contact_phone, teacher_count, year_groups, curriculum_route, interest_focus, support_type, challenge_summary, message, commitment_details, consent, admin_notes, created_at, updated_at")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    state.programmeEnquiries = (data || []).map(normaliseProgrammeEnquiry);
+    state.programmeEnquiriesLoaded = true;
+    if (rerender && routeParts()[0] === "admin") renderRoute();
+  } catch (error) {
+    state.programmeEnquiriesLoaded = false;
+    console.warn("Kaizen programme enquiries unavailable:", error.message);
+  }
+}
+
+async function updateProgrammeEnquiry(id, values) {
+  const client = await window.KaizenAuth?.getClient?.();
+  if (!client) throw new Error("Supabase is not available.");
+  const status = programmeEnquiryStatuses.includes(values.status) ? values.status : "reviewed";
+  const payload = {
+    status,
+    admin_notes: String(values.admin_notes || "").trim(),
+    updated_at: new Date().toISOString()
+  };
+  const { error } = await client
+    .from("programme_enquiries")
+    .update(payload)
+    .eq("id", id);
+  if (error) throw error;
+  state.programmeEnquiries = state.programmeEnquiries.map((row) => (
+    row.id === id ? { ...row, ...payload } : row
+  ));
 }
 
 function toolInfoOverridesFromStorage() {
@@ -8681,7 +8825,7 @@ function renderForSchoolsPage() {
     ${pageHeader(
       "For Schools",
       "Schools can explore Kaizen Maths as a practical teaching resource and express interest in future Make It Count programme opportunities.",
-      `${programmeEnquiryButtonHtml("Express Interest", "button primary", programme)}<a class="button" href="#/make-it-count">Make It Count</a><a class="button" href="#/schools">School Licence Notes</a>`
+      `<a class="button primary" href="#/school-interest">Express Interest</a><a class="button" href="#/make-it-count">Make It Count</a><a class="button" href="#/schools">School Licence Notes</a>`
     )}
     <section class="mission-page">
       <article class="mission-hero-panel">
@@ -8720,7 +8864,7 @@ function renderForSchoolsPage() {
           <h2>Express interest</h2>
           <p>${escapeHtml(programme.school_interest_status)}</p>
           <div class="button-row">
-            ${programmeEnquiryButtonHtml("", "button primary", programme)}
+            <a class="button primary" href="#/school-interest">Express Interest</a>
             <a class="button" href="#/book-demo">Book A Conversation</a>
           </div>
         </article>
@@ -8742,7 +8886,7 @@ function renderPartnersPage() {
     ${pageHeader(
       "For Partners and Supporters",
       "Make It Count is being developed as a sustainable model for strengthening mathematics teaching through practical resources, teacher development, and funded partnerships.",
-      `${programmeEnquiryButtonHtml("Partner With Us", "button primary", programme)}<a class="button" href="#/make-it-count">View Programme</a><a class="button" href="#/research-informed">Research-Informed Design</a>`
+      `<a class="button primary" href="#/partner-interest">Partner With Us</a><a class="button" href="#/make-it-count">View Programme</a><a class="button" href="#/research-informed">Research-Informed Design</a>`
     )}
     <section class="mission-page">
       <article class="mission-hero-panel">
@@ -8778,12 +8922,299 @@ function renderPartnersPage() {
           <h2>Developed, not yet funded</h2>
           <p>${escapeHtml(programme.partner_status)}</p>
           <div class="button-row">
-            ${programmeEnquiryButtonHtml("Start A Conversation", "button primary", programme)}
+            <a class="button primary" href="#/partner-interest">Start A Conversation</a>
             <a class="button" href="#/our-story">Read The Story</a>
           </div>
         </article>
       </section>
     </section>
+  `;
+}
+
+function programmeOptionHtml(options, selected = "") {
+  return options.map(([value, label]) => `<option value="${escapeHtml(value)}" ${selected === value ? "selected" : ""}>${escapeHtml(label)}</option>`).join("");
+}
+
+function renderSchoolInterestPage() {
+  const programme = programmeContent();
+  app.innerHTML = `
+    ${pageHeader(
+      "Express School Interest",
+      "Share initial details if your school would like to explore Kaizen Maths access, Make It Count, or future pilot participation.",
+      `<a class="button" href="#/make-it-count">Programme Overview</a><a class="button" href="#/for-schools">For Schools</a>`
+    )}
+    <section class="mission-page programme-interest-page">
+      <article class="mission-hero-panel">
+        <div>
+          <span class="eyebrow">School Enquiry</span>
+          <h2>Tell us about your school and the mathematics support you are exploring.</h2>
+          <p>This is an expression of interest, not a confirmed programme place. The details help start the right conversation about Kaizen Maths, school access, teacher development, or a future Make It Count pilot.</p>
+        </div>
+        <aside class="mission-claim-card make-it-count-identity-card">
+          <img src="${escapeHtml(programme.logo_url)}" alt="${escapeHtml(programme.logo_alt)}">
+          <strong>What happens next</strong>
+          <p>The enquiry is saved for review in the Kaizen admin area. You can then be contacted about the best next step.</p>
+        </aside>
+      </article>
+
+      <form class="programme-interest-form panel" data-programme-enquiry-form data-enquiry-type="school_interest">
+        <div class="programme-form-head">
+          <span class="eyebrow">Expression Of Interest</span>
+          <h2>School details</h2>
+        </div>
+        <div class="programme-form-grid">
+          <label>
+            School name
+            <input name="school_name" type="text" autocomplete="organization" required>
+          </label>
+          <label>
+            Country / region
+            <input name="country_region" type="text" autocomplete="country-name" placeholder="Example: Jamaica, Region 6">
+          </label>
+          <label>
+            Contact person
+            <input name="contact_name" type="text" autocomplete="name" required>
+          </label>
+          <label>
+            Role
+            <input name="contact_role" type="text" autocomplete="organization-title" placeholder="Principal, Head of Department, teacher">
+          </label>
+          <label>
+            Contact email
+            <input name="contact_email" type="email" autocomplete="email" required>
+          </label>
+          <label>
+            Contact phone
+            <input name="contact_phone" type="tel" autocomplete="tel">
+          </label>
+          <label>
+            Number of mathematics teachers
+            <input name="teacher_count" type="text" inputmode="numeric" placeholder="Example: 3">
+          </label>
+          <label>
+            Year groups / grades involved
+            <input name="year_groups" type="text" placeholder="Example: Grades 7-9, GCSE, CSEC">
+          </label>
+          <label>
+            Curriculum or examination route
+            <input name="curriculum_route" type="text" placeholder="Example: NSC, CSEC, GCSE, Common Core">
+          </label>
+          <label>
+            Main interest
+            <select name="interest_focus">
+              ${programmeOptionHtml(schoolInterestFocusOptions)}
+            </select>
+          </label>
+        </div>
+        <label>
+          Main mathematics challenges or priorities
+          <textarea name="challenge_summary" rows="5" placeholder="Tell us about the topic gaps, year groups, teacher support needs, or intervention priorities."></textarea>
+        </label>
+        <label>
+          Anything else you want to share
+          <textarea name="message" rows="4" placeholder="Add any context that would help shape the conversation."></textarea>
+        </label>
+        <label class="programme-consent-row">
+          <input name="consent" type="checkbox" required>
+          I confirm that these details can be used to contact the school about Kaizen Maths and Make It Count.
+        </label>
+        <div class="programme-form-actions">
+          <button class="button primary" type="submit">Submit Interest</button>
+          <p class="admin-status" data-programme-form-status>Ready to submit.</p>
+        </div>
+      </form>
+    </section>
+  `;
+  bindProgrammeEnquiryForm();
+}
+
+function renderPartnerInterestPage() {
+  const programme = programmeContent();
+  app.innerHTML = `
+    ${pageHeader(
+      "Support Make It Count",
+      "Use this form if you are interested in funding, sponsoring, partnering, or supporting the Make It Count initiative.",
+      `<a class="button" href="#/partners">Partner Overview</a><a class="button" href="#/make-it-count">Programme Overview</a>`
+    )}
+    <section class="mission-page programme-interest-page">
+      <article class="mission-hero-panel">
+        <div>
+          <span class="eyebrow">Partner / Supporter Enquiry</span>
+          <h2>Help practical mathematics support reach more classrooms.</h2>
+          <p>This page is for funders, sponsors, organisations, delivery partners, and individual supporters who want to discuss how Make It Count could be supported responsibly.</p>
+        </div>
+        <aside class="mission-claim-card">
+          <strong>Important note</strong>
+          <p>Make It Count is being developed as an educational initiative. This form begins a conversation; it does not process donations or imply charity tax status.</p>
+        </aside>
+      </article>
+
+      <form class="programme-interest-form panel" data-programme-enquiry-form data-enquiry-type="partner_interest">
+        <div class="programme-form-head">
+          <span class="eyebrow">Supporter Enquiry</span>
+          <h2>Partner details</h2>
+        </div>
+        <div class="programme-form-grid">
+          <label>
+            Organisation / supporter name
+            <input name="organisation_name" type="text" autocomplete="organization" required>
+          </label>
+          <label>
+            Country / region
+            <input name="country_region" type="text" autocomplete="country-name">
+          </label>
+          <label>
+            Contact person
+            <input name="contact_name" type="text" autocomplete="name" required>
+          </label>
+          <label>
+            Role
+            <input name="contact_role" type="text" autocomplete="organization-title">
+          </label>
+          <label>
+            Contact email
+            <input name="contact_email" type="email" autocomplete="email" required>
+          </label>
+          <label>
+            Contact phone
+            <input name="contact_phone" type="tel" autocomplete="tel">
+          </label>
+          <label>
+            Support type
+            <select name="support_type">
+              ${programmeOptionHtml(partnerSupportTypeOptions)}
+            </select>
+          </label>
+          <label>
+            Curriculum, country, or school focus
+            <input name="curriculum_route" type="text" placeholder="Example: Jamaica pilot, Caribbean schools, GCSE support">
+          </label>
+        </div>
+        <label>
+          What kind of support or partnership are you interested in?
+          <textarea name="message" rows="6" placeholder="Tell us whether you are interested in funding, sponsorship, programme support, school connections, training delivery, evaluation, or another form of involvement."></textarea>
+        </label>
+        <label class="programme-consent-row">
+          <input name="consent" type="checkbox" required>
+          I confirm that these details can be used to contact me about supporting Kaizen Maths and Make It Count.
+        </label>
+        <div class="programme-form-actions">
+          <button class="button primary" type="submit">Submit Supporter Enquiry</button>
+          <p class="admin-status" data-programme-form-status>Ready to submit.</p>
+        </div>
+      </form>
+    </section>
+  `;
+  bindProgrammeEnquiryForm();
+}
+
+function bindProgrammeEnquiryForm() {
+  const form = document.querySelector("[data-programme-enquiry-form]");
+  if (!form) return;
+  const status = form.querySelector("[data-programme-form-status]");
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = form.querySelector("button[type='submit']");
+    const enquiryType = form.dataset.enquiryType || "school_interest";
+    const values = {
+      enquiry_type: enquiryType,
+      school_name: programmeEnquiryFieldValue(form, "school_name"),
+      organisation_name: programmeEnquiryFieldValue(form, "organisation_name") || programmeEnquiryFieldValue(form, "school_name"),
+      country_region: programmeEnquiryFieldValue(form, "country_region"),
+      contact_name: programmeEnquiryFieldValue(form, "contact_name"),
+      contact_role: programmeEnquiryFieldValue(form, "contact_role"),
+      contact_email: programmeEnquiryFieldValue(form, "contact_email"),
+      contact_phone: programmeEnquiryFieldValue(form, "contact_phone"),
+      teacher_count: programmeEnquiryFieldValue(form, "teacher_count"),
+      year_groups: programmeEnquiryFieldValue(form, "year_groups"),
+      curriculum_route: programmeEnquiryFieldValue(form, "curriculum_route"),
+      interest_focus: programmeEnquiryFieldValue(form, "interest_focus"),
+      support_type: programmeEnquiryFieldValue(form, "support_type"),
+      challenge_summary: programmeEnquiryFieldValue(form, "challenge_summary"),
+      message: programmeEnquiryFieldValue(form, "message"),
+      consent: Boolean(form.querySelector('[name="consent"]')?.checked)
+    };
+    button.disabled = true;
+    if (status) status.textContent = "Submitting enquiry...";
+    try {
+      await saveProgrammeEnquiry(values);
+      form.reset();
+      if (status) status.textContent = "Thank you. Your enquiry has been submitted and can now be reviewed by Kaizen Maths.";
+    } catch (error) {
+      if (status) status.textContent = `Could not submit: ${error.message}`;
+    } finally {
+      button.disabled = false;
+    }
+  });
+}
+
+function adminProgrammeEnquiryDetail(label, value) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  return `
+    <span>
+      <strong>${escapeHtml(label)}</strong>
+      ${escapeHtml(text)}
+    </span>
+  `;
+}
+
+function adminProgrammeEnquiryCardHtml(enquiry) {
+  const item = normaliseProgrammeEnquiry(enquiry);
+  const primaryName = item.school_name || item.organisation_name || "Programme enquiry";
+  const secondary = [
+    item.contact_name,
+    item.contact_role,
+    item.contact_email
+  ].filter(Boolean).join(" · ");
+  const intent = item.enquiry_type === "partner_interest"
+    ? partnerSupportTypeOptions.find(([value]) => value === item.support_type)?.[1] || item.support_type
+    : schoolInterestFocusOptions.find(([value]) => value === item.interest_focus)?.[1] || item.interest_focus;
+  return `
+    <article class="programme-enquiry-card" data-programme-enquiry-row data-enquiry-id="${escapeHtml(item.id)}">
+      <div class="programme-enquiry-card-head">
+        <div>
+          <span class="programme-enquiry-type">${escapeHtml(programmeEnquiryTypeLabel(item.enquiry_type))}</span>
+          <h3>${escapeHtml(primaryName)}</h3>
+          <p>${escapeHtml(secondary || "No contact details supplied")}</p>
+        </div>
+        <span class="programme-enquiry-status status-${escapeHtml(item.status)}">${escapeHtml(programmeEnquiryStatusLabel(item.status))}</span>
+      </div>
+      <div class="programme-enquiry-details">
+        ${adminProgrammeEnquiryDetail("Submitted", formatDisplayDate(item.created_at))}
+        ${adminProgrammeEnquiryDetail("Country / region", item.country_region)}
+        ${adminProgrammeEnquiryDetail("Interest", intent)}
+        ${adminProgrammeEnquiryDetail("Teachers", item.teacher_count)}
+        ${adminProgrammeEnquiryDetail("Year groups", item.year_groups)}
+        ${adminProgrammeEnquiryDetail("Curriculum", item.curriculum_route)}
+        ${adminProgrammeEnquiryDetail("Phone", item.contact_phone)}
+      </div>
+      ${item.challenge_summary ? `
+        <div class="programme-enquiry-copy">
+          <strong>Challenges / priorities</strong>
+          <p>${escapeHtml(item.challenge_summary)}</p>
+        </div>
+      ` : ""}
+      ${item.message ? `
+        <div class="programme-enquiry-copy">
+          <strong>Message</strong>
+          <p>${escapeHtml(item.message)}</p>
+        </div>
+      ` : ""}
+      <div class="programme-enquiry-actions">
+        <label>
+          Status
+          <select data-programme-enquiry-field="status">
+            ${programmeEnquiryStatuses.map((status) => `<option value="${status}" ${item.status === status ? "selected" : ""}>${escapeHtml(programmeEnquiryStatusLabel(status))}</option>`).join("")}
+          </select>
+        </label>
+        <label>
+          Admin notes
+          <textarea data-programme-enquiry-field="admin_notes" rows="3" placeholder="Follow-up notes, next action, decision">${escapeHtml(item.admin_notes)}</textarea>
+        </label>
+        <button class="button subtle admin-save-programme-enquiry" type="button" data-enquiry-id="${escapeHtml(item.id)}">Save Review</button>
+      </div>
+    </article>
   `;
 }
 
@@ -9013,8 +9444,8 @@ function renderHome() {
       ${programmeLogoHtml("make-it-count-logo-card home-make-it-count-logo", programme)}
       <div class="button-row">
         <a class="button primary" href="#/make-it-count">Read About The Initiative</a>
-        <a class="button" href="#/for-schools">School Interest</a>
-        ${programmeEnquiryButtonHtml("Funding And Partners", "button", programme)}
+        <a class="button" href="#/school-interest">School Interest</a>
+        <a class="button" href="#/partner-interest">Funding And Partners</a>
       </div>
     </section>
 
@@ -9099,7 +9530,7 @@ function renderHome() {
         <p>Schools can express interest in using Kaizen Maths or joining a future Make It Count programme. Funders, sponsors, and delivery partners can discuss how to support pilot development, training, coaching, and school implementation.</p>
       </div>
       <div class="button-row">
-        ${programmeEnquiryButtonHtml("", "button primary", programme)}
+        <a class="button primary" href="#/school-interest">Express School Interest</a>
         <a class="button" href="#/partners">Partner With Us</a>
         <a class="button" href="#/research-informed">Research-Informed Design</a>
       </div>
@@ -24549,6 +24980,10 @@ function renderAdmin() {
     loadCertificationRecords({ rerender: true });
   }
 
+  if (!state.programmeEnquiriesLoaded) {
+    loadProgrammeEnquiries({ rerender: true });
+  }
+
   const adminTools = tools.filter(isVisibleTool);
   const rows = adminTools.map((tool) => {
     const current = requiredAccess(tool);
@@ -24638,6 +25073,20 @@ function renderAdmin() {
     .map((testimonial, index) => adminTestimonialRowHtml(testimonial, index))
     .join("");
 
+  const programmeEnquiryRows = state.programmeEnquiries.length
+    ? state.programmeEnquiries.map(adminProgrammeEnquiryCardHtml).join("")
+    : `
+      <article class="programme-enquiry-empty">
+        <span class="eyebrow">No Enquiries Yet</span>
+        <h3>Programme interest submissions will appear here.</h3>
+        <p>Schools and potential supporters can use the public interest forms. Once Supabase has the latest schema, submissions will be listed here for review.</p>
+      </article>
+    `;
+  const programmeEnquiryCounts = programmeEnquiryStatuses.map((status) => [
+    status,
+    state.programmeEnquiries.filter((row) => row.status === status).length
+  ]);
+
   const schoolRows = state.schools.length
     ? state.schools.map((school, index) => adminSchoolRowHtml(school, index)).join("")
     : adminSchoolRowHtml({}, 0);
@@ -24695,6 +25144,7 @@ function renderAdmin() {
       <button class="admin-tab" type="button" data-admin-tab="launch">Launch Checklist</button>
       <button class="admin-tab" type="button" data-admin-tab="homepage">Homepage</button>
       <button class="admin-tab" type="button" data-admin-tab="programme">Programme</button>
+      <button class="admin-tab" type="button" data-admin-tab="programme-enquiries">Programme Enquiries</button>
       <button class="admin-tab" type="button" data-admin-tab="booking">Booking</button>
       <button class="admin-tab" type="button" data-admin-tab="schools">Schools / Pilots</button>
       <button class="admin-tab" type="button" data-admin-tab="access">Tool Access</button>
@@ -24880,6 +25330,32 @@ function renderAdmin() {
             <textarea data-programme-field="partner_support" rows="6">${escapeHtml(programme.partner_support)}</textarea>
           </label>
         </article>
+      </div>
+    </section>
+    <section class="panel admin-panel admin-tab-panel" data-admin-panel="programme-enquiries">
+      <div class="admin-toolbar">
+        <div>
+          <span class="eyebrow">Programme Pipeline</span>
+          <h2>Programme Enquiries</h2>
+          <p>Review school interest and partner/supporter enquiries submitted through the Make It Count public pages.</p>
+        </div>
+        <button class="button" id="refreshProgrammeEnquiries" type="button">Refresh Enquiries</button>
+      </div>
+      <p class="admin-status" id="adminProgrammeEnquiriesStatus">${
+        state.programmeEnquiriesLoaded
+          ? `Loaded ${state.programmeEnquiries.length} programme enquir${state.programmeEnquiries.length === 1 ? "y" : "ies"}.`
+          : "Loading programme enquiries from Supabase..."
+      }</p>
+      <div class="programme-enquiry-summary" aria-label="Programme enquiry summary">
+        ${programmeEnquiryCounts.map(([status, count]) => `
+          <span>
+            <strong>${count}</strong>
+            ${escapeHtml(programmeEnquiryStatusLabel(status))}
+          </span>
+        `).join("")}
+      </div>
+      <div class="programme-enquiry-list">
+        ${programmeEnquiryRows}
       </div>
     </section>
     <section class="panel admin-panel admin-tab-panel" data-admin-panel="booking">
@@ -25237,6 +25713,44 @@ function bindAdmin() {
       programmeStatus.textContent = `Could not save programme content: ${error.message}`;
       button.disabled = false;
     }
+  });
+
+  const programmeEnquiriesStatus = document.getElementById("adminProgrammeEnquiriesStatus");
+  document.getElementById("refreshProgrammeEnquiries")?.addEventListener("click", async () => {
+    const button = document.getElementById("refreshProgrammeEnquiries");
+    button.disabled = true;
+    if (programmeEnquiriesStatus) programmeEnquiriesStatus.textContent = "Refreshing programme enquiries...";
+    await loadProgrammeEnquiries();
+    button.disabled = false;
+    renderRoute();
+  });
+
+  document.querySelectorAll(".admin-save-programme-enquiry").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const row = button.closest("[data-programme-enquiry-row]");
+      const enquiryId = button.dataset.enquiryId || row?.dataset.enquiryId || "";
+      const field = (name) => row?.querySelector(`[data-programme-enquiry-field="${name}"]`);
+      if (!enquiryId || !row) return;
+      button.disabled = true;
+      if (programmeEnquiriesStatus) programmeEnquiriesStatus.textContent = "Saving enquiry review...";
+      try {
+        const selectedStatus = field("status")?.value || "reviewed";
+        await updateProgrammeEnquiry(enquiryId, {
+          status: selectedStatus,
+          admin_notes: field("admin_notes")?.value || ""
+        });
+        const statusPill = row.querySelector(".programme-enquiry-status");
+        if (statusPill) {
+          statusPill.className = `programme-enquiry-status status-${selectedStatus}`;
+          statusPill.textContent = programmeEnquiryStatusLabel(selectedStatus);
+        }
+        if (programmeEnquiriesStatus) programmeEnquiriesStatus.textContent = "Saved. Programme enquiry review has been updated.";
+        button.disabled = false;
+      } catch (error) {
+        if (programmeEnquiriesStatus) programmeEnquiriesStatus.textContent = `Could not save enquiry review: ${error.message}`;
+        button.disabled = false;
+      }
+    });
   });
 
   function bindSchoolCodeButtons(scope = document) {
@@ -26330,6 +26844,14 @@ function updateRouteSeo(parts) {
       title: routeTitle("For Partners and Supporters"),
       description: "Find out how funders, sponsors, school partners, and delivery partners can support the Make It Count mathematics teacher development initiative."
     },
+    "school-interest": {
+      title: routeTitle("Express School Interest"),
+      description: "Express school interest in Kaizen Maths access, Make It Count, teacher development support, or future pilot participation."
+    },
+    "partner-interest": {
+      title: routeTitle("Support Make It Count"),
+      description: "Submit a funder, sponsor, supporter, or partner enquiry for the Make It Count mathematics teacher development initiative."
+    },
     "our-story": {
       title: routeTitle("Our Story"),
       description: "Read why Kaizen Maths was created by an experienced mathematics educator and how Make It Count extends the resource into a wider teacher development mission."
@@ -26467,6 +26989,10 @@ function renderRoute() {
     renderForSchoolsPage();
   } else if (parts[0] === "partners") {
     renderPartnersPage();
+  } else if (parts[0] === "school-interest") {
+    renderSchoolInterestPage();
+  } else if (parts[0] === "partner-interest") {
+    renderPartnerInterestPage();
   } else if (parts[0] === "our-story") {
     renderOurStoryPage();
   } else if (parts[0] === "contact") {
@@ -26638,6 +27164,7 @@ window.addEventListener("kaizen-auth-change", () => {
   loadCertificationProgress({ rerender: true });
   loadCertificationRecords({ rerender: true });
   loadSiteTestimonials({ rerender: true });
+  loadProgrammeEnquiries({ rerender: true });
   if (classTaskAuthChanged && routeParts()[0] === "class-tasks") loadClassTasks({ rerender: true });
 });
 
@@ -26657,6 +27184,7 @@ window.setTimeout(() => {
   loadCertificationProgress({ rerender: true });
   loadCertificationRecords({ rerender: true });
   loadSiteTestimonials({ rerender: true });
+  loadProgrammeEnquiries({ rerender: true });
   if (routeParts()[0] === "class-tasks") loadClassTasks({ rerender: true });
 }, 1200);
 
