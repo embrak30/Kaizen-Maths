@@ -136,6 +136,10 @@
   }
 
   function start() {
+    if (!document.body) {
+      document.addEventListener('DOMContentLoaded', start, { once: true });
+      return;
+    }
     process();
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {

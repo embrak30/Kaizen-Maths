@@ -263,6 +263,11 @@
       root.querySelectorAll?.('.solution-steps').forEach(enhanceContainer);
     }
 
+    if (!document.body) {
+      document.addEventListener('DOMContentLoaded', installWorkedStepStructure, { once: true });
+      return;
+    }
+
     enhance();
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
@@ -1354,8 +1359,10 @@
     ['click', 'change', 'input'].forEach((eventName) => {
       document.addEventListener(eventName, saveSoon, true);
     });
-    const observer = new MutationObserver(saveSoon);
-    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    if (document.body) {
+      const observer = new MutationObserver(saveSoon);
+      observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    }
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') saveNow();
     });

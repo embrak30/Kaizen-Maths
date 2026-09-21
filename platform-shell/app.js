@@ -2701,6 +2701,7 @@ const state = {
   classroomRemoteDisplayTimer: null,
   classroomRemoteControllerTimer: null,
   classroomRemoteControllerSession: null,
+  classroomRemoteControllerTool: "pointer",
   pupilTask: null,
   pupilTaskCode: "",
   pupilTaskLoading: false,
@@ -3383,6 +3384,7 @@ function checkingAccessCallout(title = "Checking access") {
 }
 
 const classroomRemotePollMs = 1200;
+const classroomRemoteDisplayPollMs = 650;
 const classroomRemoteSessionMinutes = 25;
 
 function classroomRemoteCode(length = 6) {
@@ -3524,7 +3526,7 @@ function classroomRemoteControllerShell(pairingCode = "") {
     )}
     <section class="classroom-remote-page">
       <div class="classroom-remote-card classroom-remote-intro">
-        <span class="eyebrow">Stage 1 Remote</span>
+        <span class="eyebrow">Classroom Remote</span>
         <h2>Connect to a classroom display</h2>
         <p>Use the code shown on the projected classroom screen. For security, the phone or tablet must be signed in with the same teacher account, and the classroom screen must approve the connection.</p>
         <form class="classroom-remote-code-form" id="classroomRemoteCodeForm">
@@ -3555,6 +3557,189 @@ function bindClassroomRemoteCodeForm() {
   });
 }
 
+function classroomRemoteCommandLabel(action) {
+  const labels = {
+    new: "New question",
+    answers: "Answers",
+    steps: "Worked steps",
+    "timer-2": "2 minute timer",
+    "timer-5": "5 minute timer",
+    "timer-stop": "Timer stop",
+    "annotation-undo": "Undo",
+    "annotation-clear": "Clear writing",
+    "pointer-hide": "Hide pointer",
+    disconnect: "Disconnect"
+  };
+  return labels[action] || titleCaseText(String(action || "command").replace(/-/g, " "));
+}
+
+function classroomRemoteClamp(value, min = 0, max = 1) {
+  return Math.max(min, Math.min(max, Number(value) || 0));
+}
+
+function classroomRemotePointFromEvent(event, element) {
+  const rect = element.getBoundingClientRect();
+  const x = rect.width ? (event.clientX - rect.left) / rect.width : 0;
+  const y = rect.height ? (event.clientY - rect.top) / rect.height : 0;
+  return { x: classroomRemoteClamp(x), y: classroomRemoteClamp(y) };
+}
+
+function bindClassroomRemoteStage(session) {
+  const stage = document.getElementById("classroomRemoteInputStage");
+  const canvas = document.getElementById("classroomRemoteDrawCanvas");
+  if (!stage || !canvas || !session?.id) return;
+
+  const context = canvas.getContext("2d");
+  if (!context) return;
+  let drawing = false;
+  let activeStroke = null;
+  let pointerSending = false;
+  let strokeSending = false;
+  let lastPointerSentAt = 0;
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+    const width = Math.max(1, Math.round(rect.width));
+    const height = Math.max(1, Math.round(rect.height));
+    const pixelWidth = Math.round(width * dpr);
+    const pixelHeight = Math.round(height * dpr);
+    if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+      canvas.width = pixelWidth;
+      canvas.height = pixelHeight;
+    }
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function localSettings(tool = state.classroomRemoteControllerTool) {
+    if (tool === "highlighter") return { color: "#facc15", width: 18, alpha: 0.34, composite: "source-over" };
+    if (tool === "eraser") return { color: "rgba(0,0,0,1)", width: 30, alpha: 1, composite: "destination-out" };
+    return { color: "#172033", width: 3.4, alpha: 1, composite: "source-over" };
+  }
+
+  function drawLocalStroke(stroke) {
+    if (!stroke?.points?.length) return;
+    resizeCanvas();
+    const rect = canvas.getBoundingClientRect();
+    const settings = localSettings(stroke.tool);
+    context.save();
+    context.globalAlpha = settings.alpha;
+    context.globalCompositeOperation = settings.composite;
+    context.strokeStyle = settings.color;
+    context.fillStyle = settings.color;
+    context.lineWidth = settings.width;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    context.beginPath();
+    context.moveTo(stroke.points[0].x * rect.width, stroke.points[0].y * rect.height);
+    stroke.points.slice(1).forEach((point) => context.lineTo(point.x * rect.width, point.y * rect.height));
+    context.stroke();
+    if (stroke.points.length === 1) {
+      context.beginPath();
+      context.arc(stroke.points[0].x * rect.width, stroke.points[0].y * rect.height, settings.width / 2, 0, Math.PI * 2);
+      context.fill();
+    }
+    context.restore();
+  }
+
+  function updateToolButtons() {
+    stage.dataset.remoteTool = state.classroomRemoteControllerTool;
+    document.querySelectorAll("[data-remote-tool]").forEach((button) => {
+      const active = button.dataset.remoteTool === state.classroomRemoteControllerTool;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+  }
+
+  async function sendStageCommand(action, payload = {}, options = {}) {
+    const activeSession = state.classroomRemoteControllerSession || session;
+    if (!activeSession?.id) return;
+    if (options.stream) {
+      if (pointerSending) return;
+      pointerSending = true;
+    } else if (strokeSending) {
+      return;
+    } else {
+      strokeSending = true;
+    }
+    try {
+      const updated = await sendClassroomRemoteCommand(activeSession, action, payload);
+      if (updated) state.classroomRemoteControllerSession = updated;
+    } catch (error) {
+      const status = document.getElementById("classroomRemoteControllerStatus");
+      const note = status?.querySelector(".classroom-remote-live-status");
+      if (note) note.textContent = `Could not send ${classroomRemoteCommandLabel(action).toLowerCase()}: ${error.message}`;
+    } finally {
+      if (options.stream) pointerSending = false;
+      else strokeSending = false;
+    }
+  }
+
+  function sendPointer(event, immediate = false) {
+    const now = Date.now();
+    if (!immediate && now - lastPointerSentAt < 420) return;
+    lastPointerSentAt = now;
+    sendStageCommand("pointer-move", { point: classroomRemotePointFromEvent(event, canvas) }, { stream: true });
+  }
+
+  stage.querySelectorAll("[data-remote-tool]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.classroomRemoteControllerTool = button.dataset.remoteTool || "pointer";
+      updateToolButtons();
+    });
+  });
+
+  resizeCanvas();
+  updateToolButtons();
+  window.addEventListener("resize", resizeCanvas, { passive: true });
+
+  canvas.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    resizeCanvas();
+    canvas.setPointerCapture?.(event.pointerId);
+    const tool = state.classroomRemoteControllerTool || "pointer";
+    if (tool === "pointer") {
+      sendPointer(event, true);
+      return;
+    }
+    drawing = true;
+    activeStroke = {
+      tool,
+      points: [classroomRemotePointFromEvent(event, canvas)]
+    };
+    drawLocalStroke(activeStroke);
+  });
+
+  canvas.addEventListener("pointermove", (event) => {
+    event.preventDefault();
+    const tool = state.classroomRemoteControllerTool || "pointer";
+    if (tool === "pointer") {
+      sendPointer(event);
+      return;
+    }
+    if (!drawing || !activeStroke) return;
+    activeStroke.points.push(classroomRemotePointFromEvent(event, canvas));
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    drawLocalStroke(activeStroke);
+  });
+
+  function finishRemoteStroke(event) {
+    const tool = state.classroomRemoteControllerTool || "pointer";
+    if (tool === "pointer") return;
+    if (!drawing || !activeStroke) return;
+    event.preventDefault();
+    canvas.releasePointerCapture?.(event.pointerId);
+    if (activeStroke.points.length < 2) activeStroke.points.push(classroomRemotePointFromEvent(event, canvas));
+    drawLocalStroke(activeStroke);
+    sendStageCommand("annotation-stroke", { stroke: activeStroke });
+    activeStroke = null;
+    drawing = false;
+  }
+
+  canvas.addEventListener("pointerup", finishRemoteStroke);
+  canvas.addEventListener("pointercancel", finishRemoteStroke);
+}
+
 function renderClassroomRemoteStatus(session, message = "") {
   const target = document.getElementById("classroomRemoteControllerStatus");
   if (!target) return;
@@ -3562,6 +3747,9 @@ function renderClassroomRemoteStatus(session, message = "") {
   const connected = session?.status === "connected" && !expired;
   const waiting = session?.status === "pending_approval" && !expired;
   const ended = expired || session?.status === "ended" || session?.status === "expired";
+  if (connected && target.dataset.remoteConnected === "true" && target.dataset.sessionId === session.id && !message) {
+    return;
+  }
   const heading = connected
     ? "Remote Connected"
     : waiting
@@ -3571,6 +3759,8 @@ function renderClassroomRemoteStatus(session, message = "") {
         : session
           ? "Joining classroom display"
           : "Pairing code not found";
+  target.dataset.remoteConnected = connected ? "true" : "false";
+  target.dataset.sessionId = session?.id || "";
   target.innerHTML = `
     <span class="eyebrow">Remote Status</span>
     <h2>${escapeHtml(heading)}</h2>
@@ -3586,21 +3776,43 @@ function renderClassroomRemoteStatus(session, message = "") {
         <button class="button primary" type="button" data-remote-command="new">New</button>
         <button class="button" type="button" data-remote-command="answers">Answers</button>
         <button class="button" type="button" data-remote-command="steps">Steps</button>
-        <button class="button danger" type="button" data-remote-command="disconnect">Disconnect</button>
+        <button class="button" type="button" data-remote-command="timer-2">2 Min</button>
+        <button class="button" type="button" data-remote-command="timer-5">5 Min</button>
+        <button class="button" type="button" data-remote-command="timer-stop">Stop Timer</button>
       </div>
-      <p class="classroom-remote-note">Stage 1 sends classroom commands only. Tablet handwriting and pointer mirroring come in Stage 2.</p>
+      <section class="classroom-remote-workspace" aria-label="Pointer and annotation workspace">
+        <div class="classroom-remote-tool-row" aria-label="Remote tools">
+          <button class="button" type="button" data-remote-tool="pointer" aria-pressed="true">Pointer</button>
+          <button class="button" type="button" data-remote-tool="pen" aria-pressed="false">Pen</button>
+          <button class="button" type="button" data-remote-tool="highlighter" aria-pressed="false">Highlighter</button>
+          <button class="button" type="button" data-remote-tool="eraser" aria-pressed="false">Eraser</button>
+        </div>
+        <div class="classroom-remote-input-stage" id="classroomRemoteInputStage">
+          <canvas id="classroomRemoteDrawCanvas" aria-label="Touch area for pointer and writing"></canvas>
+          <span>Use this space as the projected board surface.</span>
+        </div>
+        <div class="classroom-remote-markup-actions">
+          <button class="button" type="button" data-remote-command="pointer-hide">Hide Pointer</button>
+          <button class="button" type="button" data-remote-command="annotation-undo">Undo Writing</button>
+          <button class="button danger" type="button" data-remote-command="annotation-clear">Clear Writing</button>
+        </div>
+        <p class="classroom-remote-live-status">Pointer updates live. Writing appears on the projected display when each stroke is completed.</p>
+      </section>
+      <button class="button danger classroom-remote-disconnect" type="button" data-remote-command="disconnect">Disconnect</button>
     ` : ""}
     ${ended ? `<a class="button" href="#/classroom-remote">Enter a new code</a>` : ""}
   `;
+  if (connected) bindClassroomRemoteStage(session);
 }
 
-async function sendClassroomRemoteCommand(session, action) {
+async function sendClassroomRemoteCommand(session, action, payload = {}) {
   if (!session?.id || session.status !== "connected" || classroomRemoteIsExpired(session)) return session;
   const command = {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     action,
     sent_at: new Date().toISOString(),
-    source: "remote"
+    source: "remote",
+    ...payload
   };
   if (action === "disconnect") {
     return updateClassroomRemoteSession(session.id, {
@@ -3659,9 +3871,9 @@ async function bindClassroomRemoteController(pairingCode) {
     isSending = true;
     control.disabled = true;
     try {
-      currentSession = await sendClassroomRemoteCommand(currentSession, action);
+      currentSession = await sendClassroomRemoteCommand(state.classroomRemoteControllerSession || currentSession, action);
       state.classroomRemoteControllerSession = currentSession;
-      renderClassroomRemoteStatus(currentSession, action === "disconnect" ? "Disconnected from the classroom display." : `${titleCaseText(action)} sent.`);
+      renderClassroomRemoteStatus(currentSession, action === "disconnect" ? "Disconnected from the classroom display." : `${classroomRemoteCommandLabel(action)} sent.`);
     } catch (error) {
       renderClassroomRemoteStatus(currentSession, `Could not send ${action}: ${error.message}`);
     } finally {
@@ -24140,6 +24352,7 @@ function renderToolFrame(tool, options = {}) {
         </div>
         ${frame}
         <canvas class="classroom-annotation-layer" id="classroomAnnotationCanvas" aria-label="Classroom writing layer"></canvas>
+        <div class="classroom-remote-pointer-dot" id="classroomRemotePointer" hidden></div>
         <div class="classroom-remote-panel" id="classroomRemotePanel" hidden></div>
       </div>
       <aside class="panel teacher-panel">
@@ -26932,6 +27145,7 @@ function bindToolFrame(tool, options = {}) {
   const annotationClear = document.getElementById("annotationClear");
   const stage = document.querySelector(".legacy-stage");
   const frame = stage?.querySelector(".legacy-frame");
+  const remotePointer = document.getElementById("classroomRemotePointer");
   if (!stage) return;
   if (state.classroomRemoteDisplayTimer) {
     window.clearInterval(state.classroomRemoteDisplayTimer);
@@ -27627,6 +27841,45 @@ function bindToolFrame(tool, options = {}) {
     renderAnnotations();
   }
 
+  function remoteStrokeToLocal(stroke) {
+    const width = annotationState.width || annotationCanvas?.getBoundingClientRect?.().width || 1;
+    const height = annotationState.height || annotationCanvas?.getBoundingClientRect?.().height || 1;
+    return {
+      tool: ["pen", "highlighter", "eraser"].includes(stroke?.tool) ? stroke.tool : "pen",
+      points: (stroke?.points || [])
+        .map((point) => ({
+          x: classroomRemoteClamp(point?.x) * width,
+          y: classroomRemoteClamp(point?.y) * height
+        }))
+        .filter((point) => Number.isFinite(point.x) && Number.isFinite(point.y))
+    };
+  }
+
+  function addRemoteAnnotationStroke(stroke) {
+    if (!annotationCanvas) return;
+    resizeAnnotationCanvas();
+    const localStroke = remoteStrokeToLocal(stroke);
+    if (!localStroke.points.length) return;
+    annotationState.strokes.push(localStroke);
+    annotationState.currentStroke = null;
+    renderAnnotations();
+  }
+
+  function moveRemotePointer(point) {
+    if (!remotePointer || !annotationCanvas) return;
+    const canvasRect = annotationCanvas.getBoundingClientRect();
+    const stageRect = stage.getBoundingClientRect();
+    const x = canvasRect.left - stageRect.left + classroomRemoteClamp(point?.x) * canvasRect.width;
+    const y = canvasRect.top - stageRect.top + classroomRemoteClamp(point?.y) * canvasRect.height;
+    remotePointer.style.left = `${x}px`;
+    remotePointer.style.top = `${y}px`;
+    remotePointer.hidden = false;
+  }
+
+  function hideRemotePointer() {
+    if (remotePointer) remotePointer.hidden = true;
+  }
+
   if (annotationCanvas) {
     annotationCanvas.addEventListener("pointerdown", startAnnotationStroke);
     annotationCanvas.addEventListener("pointermove", continueAnnotationStroke);
@@ -27703,6 +27956,31 @@ function bindToolFrame(tool, options = {}) {
     return false;
   }
 
+  function clickFrameTimerAction(action) {
+    const patterns = {
+      "timer-2": /\b2\s*min\b|2:00|two\s*min/i,
+      "timer-5": /\b5\s*min\b|5:00|five\s*min/i,
+      "timer-stop": /\bstop\b|\bpause\b|\breset\b/i
+    };
+    const pattern = patterns[action];
+    if (!pattern) return false;
+    let clicked = false;
+    withFrameDocument((doc) => {
+      const buttons = Array.from(doc.querySelectorAll("button, input[type='button']"))
+        .filter((button) => !button.disabled);
+      const timerButtons = buttons.filter((button) => button.dataset.kaizenAction === "timer");
+      const button = [...timerButtons, ...buttons].find((candidate) => {
+        const label = `${candidate.textContent || ""} ${candidate.value || ""} ${candidate.id || ""}`.replace(/\s+/g, " ");
+        return pattern.test(label);
+      });
+      if (button) {
+        button.click();
+        clicked = true;
+      }
+    });
+    return clicked;
+  }
+
   function applyClassroomRemoteCommand(command) {
     const action = command?.action;
     if (!action) return;
@@ -27714,6 +27992,30 @@ function bindToolFrame(tool, options = {}) {
       clickFrameAction(action);
       scheduleClassroomFit();
       scheduleAnnotationResize();
+      return;
+    }
+    if (["timer-2", "timer-5", "timer-stop"].includes(action)) {
+      clickFrameTimerAction(action);
+      return;
+    }
+    if (action === "pointer-move") {
+      moveRemotePointer(command.point || {});
+      return;
+    }
+    if (action === "pointer-hide") {
+      hideRemotePointer();
+      return;
+    }
+    if (action === "annotation-stroke") {
+      addRemoteAnnotationStroke(command.stroke || {});
+      return;
+    }
+    if (action === "annotation-undo") {
+      undoAnnotation();
+      return;
+    }
+    if (action === "annotation-clear") {
+      clearAnnotations();
     }
   }
 
@@ -27813,7 +28115,7 @@ function bindToolFrame(tool, options = {}) {
 
   function startClassroomRemoteDisplayPolling() {
     stopClassroomRemoteDisplayPolling();
-    state.classroomRemoteDisplayTimer = window.setInterval(() => refreshClassroomRemoteDisplaySession({ quiet: true }), classroomRemotePollMs);
+    state.classroomRemoteDisplayTimer = window.setInterval(() => refreshClassroomRemoteDisplaySession({ quiet: true }), classroomRemoteDisplayPollMs);
   }
 
   async function startClassroomRemoteDisplaySession() {
