@@ -4549,6 +4549,262 @@ button.certification-course-card {
   font: inherit;
 }
 
+.programme-form-result {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid rgba(23, 184, 179, 0.28);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(236, 253, 245, 0.88), #ffffff);
+  color: #25304a;
+}
+
+.programme-form-result strong {
+  color: #0f766e;
+  font-size: 1rem;
+}
+
+.programme-form-result p {
+  margin: 0;
+  color: #4a5570;
+  line-height: 1.45;
+}
+
+.programme-form-result-actions {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.programme-form-result-actions input,
+.programme-status-link input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(23, 184, 179, 0.26);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #ffffff;
+  color: #25304a;
+  font: inherit;
+  font-size: 0.86rem;
+}
+
+.programme-enquiry-review-link a {
+  color: var(--teal-dark);
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.programme-status-page {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.32fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.programme-status-sidebar,
+.programme-submission-document {
+  border: 1px solid #dbe7ee;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+}
+
+.programme-status-sidebar {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.programme-status-sidebar h2 {
+  margin: 0;
+  color: #17213b;
+  font-size: 1.25rem;
+}
+
+.programme-status-sidebar p {
+  margin: 0;
+  color: #4a5570;
+  line-height: 1.5;
+}
+
+.programme-status-link {
+  display: grid;
+  gap: 6px;
+}
+
+.programme-status-link strong {
+  color: #667085;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.programme-submission-document {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+}
+
+.programme-document-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 130px;
+  gap: 18px;
+  align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #17213b;
+}
+
+.programme-document-head h2 {
+  margin: 3px 0 5px;
+  color: #17213b;
+  font-size: 2rem;
+}
+
+.programme-document-head p {
+  margin: 0;
+  color: #4a5570;
+  line-height: 1.45;
+}
+
+.programme-document-head img {
+  width: 100%;
+  max-height: 110px;
+  object-fit: contain;
+}
+
+.programme-document-status {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.programme-document-status p {
+  margin: 0;
+  color: #344054;
+  line-height: 1.45;
+}
+
+.programme-document-section {
+  display: grid;
+  gap: 10px;
+}
+
+.programme-document-section h3,
+.programme-document-section h4 {
+  margin: 0;
+  color: #17213b;
+}
+
+.programme-document-section h3 {
+  font-size: 1.05rem;
+}
+
+.programme-document-section h4 {
+  font-size: 0.92rem;
+}
+
+.programme-document-section p,
+.programme-document-section li {
+  color: #344054;
+  line-height: 1.5;
+}
+
+.programme-document-section p,
+.programme-document-section ul {
+  margin: 0;
+}
+
+.programme-document-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.programme-document-grid span {
+  display: grid;
+  gap: 4px;
+  padding: 9px 10px;
+  border: 1px solid #e8eef6;
+  border-radius: 7px;
+  background: #fbfdff;
+  color: #2f3654;
+  font-size: 0.84rem;
+}
+
+.programme-document-grid strong {
+  color: #667085;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.programme-document-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #2f3654;
+  font-size: 0.9rem;
+}
+
+.programme-document-table th,
+.programme-document-table td {
+  border: 1px solid #e3eaf3;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.programme-document-table th {
+  background: #f8fafc;
+  color: #17213b;
+}
+
+.programme-document-checklist {
+  display: grid;
+  gap: 6px;
+  padding: 0;
+  list-style: none;
+}
+
+.programme-document-checklist li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.programme-document-checklist span {
+  border-radius: 999px;
+  padding: 3px 7px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.programme-document-checklist .is-confirmed span {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.programme-document-footer {
+  display: grid;
+  gap: 4px;
+  padding-top: 12px;
+  border-top: 1px solid #e3eaf3;
+  color: #4a5570;
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.programme-document-footer strong {
+  color: #17213b;
+}
+
 .admin-user-role,
 .admin-user-school,
 .admin-user-trial-date {
@@ -13171,5 +13427,66 @@ sup .worksheet-fraction > span:last-child {
 
   .pupil-question-content {
     max-height: 30vh;
+  }
+}
+
+@media (max-width: 980px) {
+  .programme-status-page {
+    grid-template-columns: 1fr;
+  }
+
+  .programme-status-sidebar {
+    position: static;
+  }
+
+  .programme-document-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .programme-form-result-actions,
+  .programme-document-head,
+  .programme-document-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .programme-document-head img {
+    max-width: 180px;
+  }
+}
+
+@media print {
+  body[data-route="programme-status"] {
+    background: #ffffff;
+  }
+
+  body[data-route="programme-status"] .sidebar,
+  body[data-route="programme-status"] .topbar,
+  body[data-route="programme-status"] .site-trust-note,
+  body[data-route="programme-status"] .page-header,
+  body[data-route="programme-status"] .programme-status-sidebar {
+    display: none !important;
+  }
+
+  body[data-route="programme-status"] .app-shell,
+  body[data-route="programme-status"] .main-wrap,
+  body[data-route="programme-status"] #app,
+  body[data-route="programme-status"] .programme-status-page {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body[data-route="programme-status"] .programme-submission-document {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  body[data-route="programme-status"] .programme-document-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

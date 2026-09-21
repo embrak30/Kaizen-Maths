@@ -551,6 +551,7 @@ using (public.is_admin());
 
 create table if not exists public.programme_enquiries (
   id uuid primary key default gen_random_uuid(),
+  public_token text,
   enquiry_type text not null default 'school_interest' check (enquiry_type in ('school_interest', 'partner_interest', 'school_commitment')),
   status text not null default 'new' check (status in ('new', 'reviewed', 'follow_up', 'shortlisted', 'committed', 'declined')),
   school_name text,
@@ -574,6 +575,7 @@ create table if not exists public.programme_enquiries (
   updated_at timestamptz not null default now()
 );
 
+alter table public.programme_enquiries add column if not exists public_token text;
 alter table public.programme_enquiries add column if not exists enquiry_type text not null default 'school_interest';
 alter table public.programme_enquiries add column if not exists status text not null default 'new';
 alter table public.programme_enquiries add column if not exists school_name text;
@@ -598,6 +600,7 @@ alter table public.programme_enquiries add column if not exists updated_at times
 create index if not exists programme_enquiries_created_at_idx on public.programme_enquiries(created_at desc);
 create index if not exists programme_enquiries_status_idx on public.programme_enquiries(status);
 create index if not exists programme_enquiries_type_idx on public.programme_enquiries(enquiry_type);
+create unique index if not exists programme_enquiries_public_token_idx on public.programme_enquiries(public_token) where public_token is not null;
 
 alter table public.programme_enquiries enable row level security;
 
@@ -634,6 +637,61 @@ create policy "Admins can delete programme enquiries"
 on public.programme_enquiries
 for delete
 using (public.is_admin());
+
+create or replace function public.get_programme_enquiry_status(lookup_token text)
+returns table (
+  enquiry_type text,
+  status text,
+  school_name text,
+  organisation_name text,
+  country_region text,
+  contact_name text,
+  contact_role text,
+  contact_email text,
+  contact_phone text,
+  teacher_count text,
+  year_groups text,
+  curriculum_route text,
+  interest_focus text,
+  support_type text,
+  challenge_summary text,
+  message text,
+  commitment_details jsonb,
+  created_at timestamptz,
+  updated_at timestamptz
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    enquiry_type,
+    status,
+    school_name,
+    organisation_name,
+    country_region,
+    contact_name,
+    contact_role,
+    contact_email,
+    contact_phone,
+    teacher_count,
+    year_groups,
+    curriculum_route,
+    interest_focus,
+    support_type,
+    challenge_summary,
+    message,
+    commitment_details,
+    created_at,
+    updated_at
+  from public.programme_enquiries
+  where public_token = lookup_token
+  limit 1;
+$$;
+
+revoke all on function public.get_programme_enquiry_status(text) from public;
+grant execute on function public.get_programme_enquiry_status(text) to anon, authenticated;
 
 create table if not exists public.homepage_screenshots (
   screenshot_id text primary key,

@@ -3007,6 +3007,14 @@ function formatDisplayDate(value) {
   return date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
+function titleCaseText(value) {
+  return String(value || "")
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 function dateInputToIso(value, endOfDay = false) {
   if (!value) return null;
   const time = endOfDay ? "23:59:59.000Z" : "00:00:00.000Z";
@@ -4560,6 +4568,24 @@ const programmeEnquiryStatusLabels = {
   declined: "Declined"
 };
 
+const programmePublicStatusLabels = {
+  new: "In review",
+  reviewed: "Reviewed",
+  follow_up: "Follow-up needed",
+  shortlisted: "Shortlisted",
+  committed: "Committed",
+  declined: "Not proceeding"
+};
+
+const programmePublicStatusCopy = {
+  new: "Your submission has been received and is waiting for review.",
+  reviewed: "Your submission has been reviewed. Further contact or programme planning may follow.",
+  follow_up: "Further information or a conversation may be needed before a decision is made.",
+  shortlisted: "Your submission has been shortlisted for further programme consideration.",
+  committed: "Your school commitment has been recorded for programme planning.",
+  declined: "This submission is not currently being taken forward."
+};
+
 const schoolInterestFocusOptions = [
   ["pilot", "Make It Count pilot participation"],
   ["kaizen-access", "Kaizen Maths school access"],
@@ -5728,7 +5754,15 @@ async function saveProgrammeContent(values) {
 }
 
 function programmeEnquiryStatusLabel(status) {
-  return programmeEnquiryStatusLabels[status] || titleCase(status || "new");
+  return programmeEnquiryStatusLabels[status] || titleCaseText(status || "new");
+}
+
+function programmePublicStatusLabel(status) {
+  return programmePublicStatusLabels[status] || programmeEnquiryStatusLabel(status);
+}
+
+function programmePublicStatusDescription(status) {
+  return programmePublicStatusCopy[status] || "Your submission status will be updated here as the programme team reviews it.";
 }
 
 function programmeEnquiryTypeLabel(type) {
@@ -5742,9 +5776,38 @@ function programmeEnquiryFieldValue(form, name) {
   return String(new FormData(form).get(name) || "").trim();
 }
 
+function generateProgrammePublicToken(length = 32) {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+  const values = new Uint32Array(length);
+  if (window.crypto?.getRandomValues) {
+    window.crypto.getRandomValues(values);
+  } else {
+    for (let index = 0; index < length; index += 1) values[index] = Math.floor(Math.random() * 100000);
+  }
+  return Array.from(values, (value) => alphabet[value % alphabet.length]).join("");
+}
+
+function programmeStatusPath(token) {
+  return `#/programme-status/${encodeURIComponent(token || "")}`;
+}
+
+function programmeStatusUrl(token) {
+  const base = `${window.location.origin}${window.location.pathname}${window.location.search}`;
+  return `${base}${programmeStatusPath(token)}`;
+}
+
+function decodeRouteValue(value) {
+  try {
+    return decodeURIComponent(value || "");
+  } catch (error) {
+    return String(value || "");
+  }
+}
+
 function normaliseProgrammeEnquiry(row = {}) {
   return {
     id: row.id || "",
+    public_token: String(row.public_token || "").trim(),
     enquiry_type: row.enquiry_type || "school_interest",
     status: programmeEnquiryStatuses.includes(row.status) ? row.status : "new",
     school_name: String(row.school_name || "").trim(),
@@ -5803,17 +5866,24 @@ async function saveProgrammeEnquiry(values) {
 
   const client = await window.KaizenAuth?.getClient?.().catch(() => null);
   if (!client) throw new Error("The enquiry form is temporarily unavailable. Please use the contact email on the Contact page.");
+  const publicToken = payload.public_token || generateProgrammePublicToken();
   const { id, status, admin_notes, created_at, updated_at, ...insertPayload } = payload;
   const initialStatus = payload.enquiry_type === "school_commitment" ? "committed" : "new";
   const { error } = await client
     .from("programme_enquiries")
     .insert({
       ...insertPayload,
+      public_token: publicToken,
       status: initialStatus,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     });
   if (error) throw error;
+  return {
+    ...payload,
+    public_token: publicToken,
+    status: initialStatus
+  };
 }
 
 async function loadProgrammeEnquiries({ rerender = false } = {}) {
@@ -5822,7 +5892,7 @@ async function loadProgrammeEnquiries({ rerender = false } = {}) {
   try {
     const { data, error } = await client
       .from("programme_enquiries")
-      .select("id, enquiry_type, status, school_name, organisation_name, country_region, contact_name, contact_role, contact_email, contact_phone, teacher_count, year_groups, curriculum_route, interest_focus, support_type, challenge_summary, message, commitment_details, consent, admin_notes, created_at, updated_at")
+      .select("id, public_token, enquiry_type, status, school_name, organisation_name, country_region, contact_name, contact_role, contact_email, contact_phone, teacher_count, year_groups, curriculum_route, interest_focus, support_type, challenge_summary, message, commitment_details, consent, admin_notes, created_at, updated_at")
       .order("created_at", { ascending: false });
     if (error) throw error;
     state.programmeEnquiries = (data || []).map(normaliseProgrammeEnquiry);
@@ -5832,6 +5902,20 @@ async function loadProgrammeEnquiries({ rerender = false } = {}) {
     state.programmeEnquiriesLoaded = false;
     console.warn("Kaizen programme enquiries unavailable:", error.message);
   }
+}
+
+async function loadProgrammeEnquiryStatus(publicToken) {
+  const token = String(publicToken || "").trim();
+  if (!token) throw new Error("Missing review link token.");
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client) throw new Error("The review page is temporarily unavailable.");
+  const { data, error } = await client.rpc("get_programme_enquiry_status", {
+    lookup_token: token
+  });
+  if (error) throw error;
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row) return null;
+  return normaliseProgrammeEnquiry({ ...row, public_token: token });
 }
 
 async function updateProgrammeEnquiry(id, values) {
@@ -9327,15 +9411,284 @@ function bindProgrammeEnquiryForm() {
     button.disabled = true;
     if (status) status.textContent = "Submitting enquiry...";
     try {
-      await saveProgrammeEnquiry(values);
+      const saved = await saveProgrammeEnquiry(values);
+      const reviewPath = programmeStatusPath(saved.public_token);
+      const reviewUrl = programmeStatusUrl(saved.public_token);
       form.reset();
-      if (status) status.textContent = "Thank you. Your enquiry has been submitted and can now be reviewed by Kaizen Maths.";
+      let result = form.querySelector("[data-programme-form-result]");
+      if (!result) {
+        result = document.createElement("div");
+        result.className = "programme-form-result";
+        result.dataset.programmeFormResult = "";
+        form.querySelector(".programme-form-actions")?.after(result);
+      }
+      result.innerHTML = `
+        <strong>Thank you. Your review page is ready.</strong>
+        <p>Your submission has been received. Keep this private link so you can review the submitted details, print or save the PDF record, and check the current status.</p>
+        <div class="programme-form-result-actions">
+          <a class="button primary" href="${escapeHtml(reviewPath)}">Open Review Page</a>
+          <input type="text" readonly value="${escapeHtml(reviewUrl)}" aria-label="Private review page link">
+        </div>
+      `;
+      if (status) status.textContent = "Submitted. Open the private review page below.";
     } catch (error) {
       if (status) status.textContent = `Could not submit: ${error.message}`;
     } finally {
       button.disabled = false;
     }
   });
+}
+
+function programmeOptionLabel(options, value) {
+  return options.find(([optionValue]) => optionValue === value)?.[1] || titleCaseText(value);
+}
+
+function programmeReviewDetail(label, value) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  return `
+    <span>
+      <strong>${escapeHtml(label)}</strong>
+      ${escapeHtml(text)}
+    </span>
+  `;
+}
+
+function programmeReviewCommitmentsHtml(commitment = {}) {
+  const commitments = commitment.commitments || {};
+  const rows = [
+    ["launch_orientation", "Launch or orientation attendance supported"],
+    ["professional_development", "Initial professional development supported"],
+    ["classroom_use", "Kaizen Maths classroom use supported"],
+    ["feedback_and_monitoring", "Feedback and monitoring supported"],
+    ["evaluation_discussion", "Evaluation discussion supported"]
+  ];
+  if (!Object.keys(commitments).length) return "";
+  return `
+    <section class="programme-document-section">
+      <h3>Confirmed Commitments</h3>
+      <ul class="programme-document-checklist">
+        ${rows.map(([key, label]) => `
+          <li class="${commitments[key] ? "is-confirmed" : "is-missing"}">
+            <span>${commitments[key] ? "Confirmed" : "Not confirmed"}</span>
+            ${escapeHtml(label)}
+          </li>
+        `).join("")}
+      </ul>
+    </section>
+  `;
+}
+
+function programmeReviewTeachersHtml(commitment = {}) {
+  const teachers = Array.isArray(commitment.participating_teachers)
+    ? commitment.participating_teachers.filter((teacher) => teacher?.name || teacher?.email)
+    : [];
+  if (!teachers.length) return "";
+  return `
+    <section class="programme-document-section">
+      <h3>Participating Teachers</h3>
+      <table class="programme-document-table">
+        <thead>
+          <tr>
+            <th>Teacher</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${teachers.map((teacher) => `
+            <tr>
+              <td>${escapeHtml(teacher.name || "Teacher")}</td>
+              <td>${escapeHtml(teacher.email || "")}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </section>
+  `;
+}
+
+function programmeSubmissionDocumentHtml(item, token) {
+  const programme = programmeContent();
+  const reviewUrl = programmeStatusUrl(token);
+  const commitment = item.commitment_details || {};
+  const primaryName = item.school_name || item.organisation_name || "Programme submission";
+  const intent = item.enquiry_type === "partner_interest"
+    ? programmeOptionLabel(partnerSupportTypeOptions, item.support_type)
+    : programmeOptionLabel(schoolInterestFocusOptions, item.interest_focus);
+  const pilotItems = programmeListItems(programme.pilot_summary);
+  const partnerItems = programmeListItems(programme.partner_support);
+  return `
+    <article class="programme-submission-document" id="programmeSubmissionDocument">
+      <header class="programme-document-head">
+        <div>
+          <span class="eyebrow">Make It Count</span>
+          <h2>Submission Record</h2>
+          <p>Generated for ${escapeHtml(primaryName)} through Kaizen Maths.</p>
+        </div>
+        <img src="${escapeHtml(programme.logo_url)}" alt="${escapeHtml(programme.logo_alt)}">
+      </header>
+
+      <section class="programme-document-status">
+        <span class="programme-enquiry-status status-${escapeHtml(item.status)}">${escapeHtml(programmePublicStatusLabel(item.status))}</span>
+        <p>${escapeHtml(programmePublicStatusDescription(item.status))}</p>
+      </section>
+
+      <section class="programme-document-section">
+        <h3>Submission Details</h3>
+        <div class="programme-document-grid">
+          ${programmeReviewDetail("Submission type", programmeEnquiryTypeLabel(item.enquiry_type))}
+          ${programmeReviewDetail("Submitted", formatDisplayDate(item.created_at))}
+          ${programmeReviewDetail("School / organisation", primaryName)}
+          ${programmeReviewDetail("Country / region", item.country_region)}
+          ${programmeReviewDetail("Contact person", item.contact_name)}
+          ${programmeReviewDetail("Role", item.contact_role)}
+          ${programmeReviewDetail("Email", item.contact_email)}
+          ${programmeReviewDetail("Phone", item.contact_phone)}
+          ${programmeReviewDetail("Interest", intent)}
+          ${programmeReviewDetail("Number of teachers", item.teacher_count)}
+          ${programmeReviewDetail("Year groups", item.year_groups)}
+          ${programmeReviewDetail("Curriculum route", item.curriculum_route)}
+          ${programmeReviewDetail("Principal / senior leader", commitment.principal_name)}
+          ${programmeReviewDetail("Principal email", commitment.principal_email)}
+          ${programmeReviewDetail("Mathematics lead", commitment.maths_lead_name)}
+          ${programmeReviewDetail("Mathematics lead email", commitment.maths_lead_email)}
+        </div>
+      </section>
+
+      ${programmeReviewTeachersHtml(commitment)}
+      ${programmeReviewCommitmentsHtml(commitment)}
+
+      ${item.challenge_summary ? `
+        <section class="programme-document-section">
+          <h3>Mathematics Challenges Or Priorities</h3>
+          <p>${escapeHtml(item.challenge_summary)}</p>
+        </section>
+      ` : ""}
+
+      ${item.message ? `
+        <section class="programme-document-section">
+          <h3>Additional Notes</h3>
+          <p>${escapeHtml(item.message)}</p>
+        </section>
+      ` : ""}
+
+      <section class="programme-document-section">
+        <h3>Programme Particulars</h3>
+        <p>${escapeHtml(programme.make_it_count_copy)}</p>
+        ${programme.make_it_count_status ? `<p><strong>Status:</strong> ${escapeHtml(programme.make_it_count_status)}</p>` : ""}
+        ${pilotItems.length ? `
+          <ul>
+            ${pilotItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+          </ul>
+        ` : ""}
+        ${partnerItems.length ? `
+          <h4>Support model</h4>
+          <ul>
+            ${partnerItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+          </ul>
+        ` : ""}
+      </section>
+
+      <footer class="programme-document-footer">
+        <strong>Private review page</strong>
+        <span>${escapeHtml(reviewUrl)}</span>
+      </footer>
+    </article>
+  `;
+}
+
+function bindProgrammeStatusPage() {
+  document.querySelector("[data-print-programme-document]")?.addEventListener("click", () => {
+    window.print();
+  });
+  document.querySelector("[data-copy-programme-link]")?.addEventListener("click", async (event) => {
+    const button = event.currentTarget;
+    const url = button.dataset.copyUrl || window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      button.textContent = "Link Copied";
+      window.setTimeout(() => {
+        button.textContent = "Copy Review Link";
+      }, 1800);
+    } catch (error) {
+      button.textContent = "Copy Not Available";
+    }
+  });
+}
+
+function renderProgrammeStatusLoaded(token, item) {
+  const reviewUrl = programmeStatusUrl(token);
+  const primaryName = item.school_name || item.organisation_name || "Programme submission";
+  app.innerHTML = `
+    ${pageHeader(
+      "Programme Review Page",
+      "This private page shows the current status and printable record for a Make It Count or Kaizen Maths programme submission.",
+      `<button class="button primary" type="button" data-print-programme-document>Download / Save PDF</button><button class="button" type="button" data-copy-programme-link data-copy-url="${escapeHtml(reviewUrl)}">Copy Review Link</button>`
+    )}
+    <section class="programme-status-page">
+      <aside class="programme-status-sidebar">
+        <span class="programme-enquiry-type">${escapeHtml(programmeEnquiryTypeLabel(item.enquiry_type))}</span>
+        <h2>${escapeHtml(primaryName)}</h2>
+        <span class="programme-enquiry-status status-${escapeHtml(item.status)}">${escapeHtml(programmePublicStatusLabel(item.status))}</span>
+        <p>${escapeHtml(programmePublicStatusDescription(item.status))}</p>
+        <div class="programme-status-link">
+          <strong>Keep this private link</strong>
+          <input type="text" readonly value="${escapeHtml(reviewUrl)}" aria-label="Private programme review link">
+        </div>
+      </aside>
+      ${programmeSubmissionDocumentHtml(item, token)}
+    </section>
+  `;
+  bindProgrammeStatusPage();
+}
+
+function renderProgrammeStatusPage(rawToken = "") {
+  const token = decodeRouteValue(rawToken).trim();
+  if (!token) {
+    app.innerHTML = `
+      ${pageHeader("Programme Review Page", "Open this page using the private review link created after a programme form is submitted.")}
+      <section class="panel empty-state">
+        <h2>Review link needed</h2>
+        <p>This page needs the private link generated after submission.</p>
+        <a class="button primary" href="#/school-interest">Express School Interest</a>
+      </section>
+    `;
+    return;
+  }
+  app.innerHTML = `
+    ${pageHeader("Programme Review Page", "Loading the private review record for this programme submission.")}
+    <section class="panel empty-state">
+      <h2>Loading review page...</h2>
+      <p>Please wait while Kaizen Maths checks the submitted details.</p>
+    </section>
+  `;
+  loadProgrammeEnquiryStatus(token)
+    .then((item) => {
+      const current = routeParts();
+      if (current[0] !== "programme-status" || decodeRouteValue(current[1] || "") !== token) return;
+      if (!item) {
+        app.innerHTML = `
+          ${pageHeader("Programme Review Page", "The private review link could not be matched to a programme submission.")}
+          <section class="panel empty-state">
+            <h2>Review page not found</h2>
+            <p>Please check the private link. If the form was submitted before review links were introduced, submit the form again or contact Kaizen Maths.</p>
+            <a class="button primary" href="#/contact">Contact / Enquire</a>
+          </section>
+        `;
+        return;
+      }
+      renderProgrammeStatusLoaded(token, item);
+    })
+    .catch((error) => {
+      app.innerHTML = `
+        ${pageHeader("Programme Review Page", "The private review page could not be loaded.")}
+        <section class="panel empty-state">
+          <h2>Could not load review page</h2>
+          <p>${escapeHtml(error.message || "Please try again later.")}</p>
+          <a class="button primary" href="#/contact">Contact / Enquire</a>
+        </section>
+      `;
+    });
 }
 
 function adminProgrammeEnquiryDetail(label, value) {
@@ -9397,6 +9750,7 @@ function adminProgrammeEnquiryCardHtml(enquiry) {
   const intent = item.enquiry_type === "partner_interest"
     ? partnerSupportTypeOptions.find(([value]) => value === item.support_type)?.[1] || item.support_type
     : schoolInterestFocusOptions.find(([value]) => value === item.interest_focus)?.[1] || item.interest_focus;
+  const reviewUrl = item.public_token ? programmeStatusUrl(item.public_token) : "";
   return `
     <article class="programme-enquiry-card" data-programme-enquiry-row data-enquiry-id="${escapeHtml(item.id)}">
       <div class="programme-enquiry-card-head">
@@ -9432,6 +9786,12 @@ function adminProgrammeEnquiryCardHtml(enquiry) {
         <div class="programme-enquiry-copy">
           <strong>Message</strong>
           <p>${escapeHtml(item.message)}</p>
+        </div>
+      ` : ""}
+      ${reviewUrl ? `
+        <div class="programme-enquiry-copy programme-enquiry-review-link">
+          <strong>Private review page</strong>
+          <p><a href="${escapeHtml(programmeStatusPath(item.public_token))}" target="_blank" rel="noopener noreferrer">${escapeHtml(reviewUrl)}</a></p>
         </div>
       ` : ""}
       <div class="programme-enquiry-actions">
@@ -27089,6 +27449,10 @@ function updateRouteSeo(parts) {
       title: routeTitle("Support Make It Count"),
       description: "Submit a funder, sponsor, supporter, or partner enquiry for the Make It Count mathematics teacher development initiative."
     },
+    "programme-status": {
+      title: routeTitle("Programme Review Page"),
+      description: "Private programme review page for a Make It Count or Kaizen Maths school, partner, or commitment submission."
+    },
     "our-story": {
       title: routeTitle("Our Story"),
       description: "Read why Kaizen Maths was created by an experienced mathematics educator and how Make It Count extends the resource into a wider teacher development mission."
@@ -27232,6 +27596,8 @@ function renderRoute() {
     renderSchoolCommitmentPage();
   } else if (parts[0] === "partner-interest") {
     renderPartnerInterestPage();
+  } else if (parts[0] === "programme-status") {
+    renderProgrammeStatusPage(parts[1] || "");
   } else if (parts[0] === "our-story") {
     renderOurStoryPage();
   } else if (parts[0] === "contact") {
