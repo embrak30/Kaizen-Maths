@@ -1363,6 +1363,76 @@ on public.class_tasks
 for delete
 using (auth.uid() = teacher_id or public.is_admin());
 
+create table if not exists public.classroom_remote_sessions (
+  id uuid primary key default gen_random_uuid(),
+  teacher_id uuid not null references auth.users(id) on delete cascade,
+  school_id uuid references public.schools(id) on delete set null,
+  tool_slug text not null,
+  tool_title text not null,
+  pairing_code text not null unique,
+  controller_name text,
+  status text not null default 'pairing' check (status in ('pairing', 'pending_approval', 'connected', 'ended', 'expired')),
+  approved_at timestamptz,
+  last_seen_at timestamptz,
+  last_controller_seen_at timestamptz,
+  expires_at timestamptz not null default (now() + interval '25 minutes'),
+  command_seq integer not null default 0,
+  last_command jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.classroom_remote_sessions add column if not exists school_id uuid references public.schools(id) on delete set null;
+alter table public.classroom_remote_sessions add column if not exists controller_name text;
+alter table public.classroom_remote_sessions add column if not exists approved_at timestamptz;
+alter table public.classroom_remote_sessions add column if not exists last_seen_at timestamptz;
+alter table public.classroom_remote_sessions add column if not exists last_controller_seen_at timestamptz;
+alter table public.classroom_remote_sessions add column if not exists expires_at timestamptz not null default (now() + interval '25 minutes');
+alter table public.classroom_remote_sessions add column if not exists command_seq integer not null default 0;
+alter table public.classroom_remote_sessions add column if not exists last_command jsonb not null default '{}'::jsonb;
+alter table public.classroom_remote_sessions add column if not exists updated_at timestamptz not null default now();
+
+create index if not exists classroom_remote_sessions_teacher_id_idx on public.classroom_remote_sessions(teacher_id);
+create index if not exists classroom_remote_sessions_pairing_code_idx on public.classroom_remote_sessions(pairing_code);
+create index if not exists classroom_remote_sessions_status_expiry_idx on public.classroom_remote_sessions(status, expires_at);
+
+alter table public.classroom_remote_sessions enable row level security;
+
+grant select, insert, update, delete on public.classroom_remote_sessions to authenticated;
+
+drop policy if exists "Teachers can read their own classroom remote sessions" on public.classroom_remote_sessions;
+create policy "Teachers can read their own classroom remote sessions"
+on public.classroom_remote_sessions
+for select
+using (auth.uid() = teacher_id or public.is_admin());
+
+drop policy if exists "Teachers can insert their own classroom remote sessions" on public.classroom_remote_sessions;
+create policy "Teachers can insert their own classroom remote sessions"
+on public.classroom_remote_sessions
+for insert
+with check (
+  auth.uid() = teacher_id
+  and exists (
+    select 1
+    from public.profiles
+    where profiles.id = auth.uid()
+      and profiles.role in ('trial', 'pro', 'school', 'admin')
+  )
+);
+
+drop policy if exists "Teachers can update their own classroom remote sessions" on public.classroom_remote_sessions;
+create policy "Teachers can update their own classroom remote sessions"
+on public.classroom_remote_sessions
+for update
+using (auth.uid() = teacher_id or public.is_admin())
+with check (auth.uid() = teacher_id or public.is_admin());
+
+drop policy if exists "Teachers can delete their own classroom remote sessions" on public.classroom_remote_sessions;
+create policy "Teachers can delete their own classroom remote sessions"
+on public.classroom_remote_sessions
+for delete
+using (auth.uid() = teacher_id or public.is_admin());
+
 create table if not exists public.class_task_responses (
   id uuid primary key default gen_random_uuid(),
   task_id uuid not null references public.class_tasks(id) on delete cascade,

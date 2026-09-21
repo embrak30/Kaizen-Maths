@@ -2698,6 +2698,9 @@ const state = {
   classTaskAuthKey: "",
   classTaskMonitorTimer: null,
   classTaskWorkspacePhase: "assign",
+  classroomRemoteDisplayTimer: null,
+  classroomRemoteControllerTimer: null,
+  classroomRemoteControllerSession: null,
   pupilTask: null,
   pupilTaskCode: "",
   pupilTaskLoading: false,
@@ -3217,7 +3220,7 @@ function toolCatalogDataShouldRerenderCurrentRoute() {
 
 function authSensitiveRouteShouldRerender() {
   const route = routeParts()[0] || "home";
-  return ["tools", "curriculum-alignments", "worksheet-generator", "gcse-exam-style", "class-tasks", "admin", "tutor-workspace", "school-space", "upgrade", "kaizen-university"].includes(route);
+  return ["tools", "classroom", "classroom-remote", "curriculum-alignments", "worksheet-generator", "gcse-exam-style", "class-tasks", "admin", "tutor-workspace", "school-space", "upgrade", "kaizen-university"].includes(route);
 }
 
 function currentAuthAccessKey() {
@@ -3377,6 +3380,330 @@ function checkingAccessCallout(title = "Checking access") {
       <p>Kaizen Maths is checking your signed-in session before opening this workspace.</p>
     </section>
   `;
+}
+
+const classroomRemotePollMs = 1200;
+const classroomRemoteSessionMinutes = 25;
+
+function classroomRemoteCode(length = 6) {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const values = new Uint32Array(length);
+  if (window.crypto?.getRandomValues) {
+    window.crypto.getRandomValues(values);
+  } else {
+    values.forEach((_, index) => {
+      values[index] = Math.floor(Math.random() * alphabet.length);
+    });
+  }
+  return Array.from(values, (value) => alphabet[value % alphabet.length]).join("");
+}
+
+function classroomRemoteBaseUrl() {
+  return `${window.location.origin}${window.location.pathname}${window.location.search}`;
+}
+
+function classroomRemoteJoinUrl(pairingCode = "") {
+  const suffix = pairingCode ? `/${encodeURIComponent(pairingCode)}` : "";
+  return `${classroomRemoteBaseUrl()}#/classroom-remote${suffix}`;
+}
+
+function classroomRemoteQrUrl(pairingCode) {
+  const joinUrl = classroomRemoteJoinUrl(pairingCode);
+  return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&data=${encodeURIComponent(joinUrl)}`;
+}
+
+function classroomRemoteTeacherName() {
+  const auth = authState();
+  return auth.profile?.full_name || auth.session?.user?.email || "Teacher";
+}
+
+function classroomRemoteIsExpired(session) {
+  const expiresAt = session?.expires_at ? new Date(session.expires_at) : null;
+  return Boolean(expiresAt && !Number.isNaN(expiresAt.getTime()) && expiresAt < new Date());
+}
+
+function classroomRemoteExpiryIso(minutes = classroomRemoteSessionMinutes) {
+  return new Date(Date.now() + minutes * 60 * 1000).toISOString();
+}
+
+function classroomRemoteNormaliseCode(value) {
+  return String(value || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
+}
+
+function classroomRemoteStatusCopy(session) {
+  if (!session) return "Not connected.";
+  if (classroomRemoteIsExpired(session)) return "This classroom remote session has expired.";
+  if (session.status === "pairing") return "Scan the QR code or open the link on your phone, then sign in with the same teacher account.";
+  if (session.status === "pending_approval") return `${session.controller_name || "A device"} is waiting for approval.`;
+  if (session.status === "connected") return `${session.controller_name || "Remote device"} is connected.`;
+  if (session.status === "ended") return "This classroom remote session has ended.";
+  return "Classroom remote is updating.";
+}
+
+async function classroomRemoteClient() {
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client) throw new Error("Supabase is not available for classroom remote sessions.");
+  return client;
+}
+
+async function createClassroomRemoteSession(tool) {
+  if (!isSignedIn()) throw new Error("Sign in before connecting a phone or tablet.");
+  if (!hasWorkspaceAccess()) throw new Error("Classroom remote requires teacher workspace access.");
+  const client = await classroomRemoteClient();
+  const auth = authState();
+  const teacherId = auth.session?.user?.id;
+  if (!teacherId) throw new Error("Teacher account could not be confirmed.");
+
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    const pairingCode = classroomRemoteCode();
+    const payload = {
+      teacher_id: teacherId,
+      school_id: auth.profile?.school_id || null,
+      tool_slug: tool.slug,
+      tool_title: tool.title,
+      pairing_code: pairingCode,
+      status: "pairing",
+      last_seen_at: new Date().toISOString(),
+      expires_at: classroomRemoteExpiryIso()
+    };
+    const { data, error } = await client
+      .from("classroom_remote_sessions")
+      .insert(payload)
+      .select("*")
+      .single();
+    if (!error) return data;
+    if (!/duplicate|unique/i.test(error.message || "")) throw error;
+  }
+  throw new Error("Could not create a unique classroom pairing code. Try again.");
+}
+
+async function loadClassroomRemoteSession(pairingCode) {
+  const client = await classroomRemoteClient();
+  const code = classroomRemoteNormaliseCode(pairingCode);
+  if (!code) return null;
+  const { data, error } = await client
+    .from("classroom_remote_sessions")
+    .select("*")
+    .eq("pairing_code", code)
+    .maybeSingle();
+  if (error) throw error;
+  return data || null;
+}
+
+async function updateClassroomRemoteSession(sessionId, patch) {
+  const client = await classroomRemoteClient();
+  const payload = {
+    ...patch,
+    updated_at: new Date().toISOString()
+  };
+  const { data, error } = await client
+    .from("classroom_remote_sessions")
+    .update(payload)
+    .eq("id", sessionId)
+    .select("*")
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+function stopClassroomRemoteControllerTimer() {
+  if (state.classroomRemoteControllerTimer) {
+    window.clearInterval(state.classroomRemoteControllerTimer);
+    state.classroomRemoteControllerTimer = null;
+  }
+}
+
+function classroomRemoteControllerShell(pairingCode = "") {
+  const code = classroomRemoteNormaliseCode(pairingCode);
+  return `
+    ${pageHeader(
+      "Classroom Remote",
+      "Control the projected Kaizen Maths classroom display from a phone or tablet.",
+      `<a class="button" href="#/">Home</a>`,
+      "remote-page-header"
+    )}
+    <section class="classroom-remote-page">
+      <div class="classroom-remote-card classroom-remote-intro">
+        <span class="eyebrow">Stage 1 Remote</span>
+        <h2>Connect to a classroom display</h2>
+        <p>Use the code shown on the projected classroom screen. For security, the phone or tablet must be signed in with the same teacher account, and the classroom screen must approve the connection.</p>
+        <form class="classroom-remote-code-form" id="classroomRemoteCodeForm">
+          <label for="classroomRemoteCodeInput">Pairing code</label>
+          <div class="classroom-remote-code-row">
+            <input id="classroomRemoteCodeInput" type="text" inputmode="text" autocomplete="one-time-code" value="${escapeHtml(code)}" placeholder="ABC234">
+            <button class="button primary" type="submit">Join</button>
+          </div>
+        </form>
+      </div>
+      <div class="classroom-remote-card classroom-remote-control-card" id="classroomRemoteControllerStatus">
+        <span class="eyebrow">Remote Status</span>
+        <h2>${code ? "Checking classroom session" : "Waiting for a code"}</h2>
+        <p>${code ? "Kaizen Maths is checking the pairing code." : "Open Connect Phone on the classroom screen, then scan the QR code or enter the code here."}</p>
+      </div>
+    </section>
+  `;
+}
+
+function bindClassroomRemoteCodeForm() {
+  const form = document.getElementById("classroomRemoteCodeForm");
+  const input = document.getElementById("classroomRemoteCodeInput");
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const code = classroomRemoteNormaliseCode(input?.value || "");
+    if (!code) return;
+    location.hash = `#/classroom-remote/${encodeURIComponent(code)}`;
+  });
+}
+
+function renderClassroomRemoteStatus(session, message = "") {
+  const target = document.getElementById("classroomRemoteControllerStatus");
+  if (!target) return;
+  const expired = classroomRemoteIsExpired(session);
+  const connected = session?.status === "connected" && !expired;
+  const waiting = session?.status === "pending_approval" && !expired;
+  const ended = expired || session?.status === "ended" || session?.status === "expired";
+  const heading = connected
+    ? "Remote Connected"
+    : waiting
+      ? "Waiting for classroom approval"
+      : ended
+        ? "Remote session ended"
+        : session
+          ? "Joining classroom display"
+          : "Pairing code not found";
+  target.innerHTML = `
+    <span class="eyebrow">Remote Status</span>
+    <h2>${escapeHtml(heading)}</h2>
+    <p>${escapeHtml(message || classroomRemoteStatusCopy(session))}</p>
+    ${session ? `
+      <div class="classroom-remote-session-strip">
+        <span>${escapeHtml(session.tool_title || "Kaizen classroom tool")}</span>
+        <strong>${escapeHtml(session.pairing_code || "")}</strong>
+      </div>
+    ` : ""}
+    ${connected ? `
+      <div class="classroom-remote-controls" aria-label="Classroom controls">
+        <button class="button primary" type="button" data-remote-command="new">New</button>
+        <button class="button" type="button" data-remote-command="answers">Answers</button>
+        <button class="button" type="button" data-remote-command="steps">Steps</button>
+        <button class="button danger" type="button" data-remote-command="disconnect">Disconnect</button>
+      </div>
+      <p class="classroom-remote-note">Stage 1 sends classroom commands only. Tablet handwriting and pointer mirroring come in Stage 2.</p>
+    ` : ""}
+    ${ended ? `<a class="button" href="#/classroom-remote">Enter a new code</a>` : ""}
+  `;
+}
+
+async function sendClassroomRemoteCommand(session, action) {
+  if (!session?.id || session.status !== "connected" || classroomRemoteIsExpired(session)) return session;
+  const command = {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    action,
+    sent_at: new Date().toISOString(),
+    source: "remote"
+  };
+  if (action === "disconnect") {
+    return updateClassroomRemoteSession(session.id, {
+      status: "ended",
+      last_controller_seen_at: new Date().toISOString(),
+      command_seq: (Number(session.command_seq) || 0) + 1,
+      last_command: command
+    });
+  }
+  return updateClassroomRemoteSession(session.id, {
+    last_controller_seen_at: new Date().toISOString(),
+    command_seq: (Number(session.command_seq) || 0) + 1,
+    last_command: command
+  });
+}
+
+async function bindClassroomRemoteController(pairingCode) {
+  stopClassroomRemoteControllerTimer();
+  const code = classroomRemoteNormaliseCode(pairingCode);
+  let currentSession = null;
+  let isSending = false;
+
+  async function refreshRemoteSession({ quiet = false } = {}) {
+    try {
+      let session = await loadClassroomRemoteSession(code);
+      if (!session) {
+        state.classroomRemoteControllerSession = null;
+        renderClassroomRemoteStatus(null, "No classroom remote session was found for this code.");
+        return;
+      }
+      if (classroomRemoteIsExpired(session) && session.status !== "expired") {
+        session = await updateClassroomRemoteSession(session.id, { status: "expired" }).catch(() => session);
+      } else if (session.status === "pairing") {
+        session = await updateClassroomRemoteSession(session.id, {
+          status: "pending_approval",
+          controller_name: classroomRemoteTeacherName(),
+          last_controller_seen_at: new Date().toISOString()
+        });
+      } else if (session.status === "connected") {
+        await updateClassroomRemoteSession(session.id, {
+          last_controller_seen_at: new Date().toISOString()
+        }).catch(() => null);
+      }
+      currentSession = session;
+      state.classroomRemoteControllerSession = session;
+      renderClassroomRemoteStatus(session);
+    } catch (error) {
+      if (!quiet) renderClassroomRemoteStatus(null, `Could not connect: ${error.message}`);
+    }
+  }
+
+  document.getElementById("classroomRemoteControllerStatus")?.addEventListener("click", async (event) => {
+    const control = event.target.closest?.("[data-remote-command]");
+    if (!control || isSending) return;
+    const action = control.dataset.remoteCommand;
+    isSending = true;
+    control.disabled = true;
+    try {
+      currentSession = await sendClassroomRemoteCommand(currentSession, action);
+      state.classroomRemoteControllerSession = currentSession;
+      renderClassroomRemoteStatus(currentSession, action === "disconnect" ? "Disconnected from the classroom display." : `${titleCaseText(action)} sent.`);
+    } catch (error) {
+      renderClassroomRemoteStatus(currentSession, `Could not send ${action}: ${error.message}`);
+    } finally {
+      isSending = false;
+    }
+  });
+
+  await refreshRemoteSession();
+  state.classroomRemoteControllerTimer = window.setInterval(() => refreshRemoteSession({ quiet: true }), classroomRemotePollMs);
+}
+
+function renderClassroomRemotePage(pairingCode = "") {
+  stopClassroomRemoteControllerTimer();
+  const code = classroomRemoteNormaliseCode(decodeURIComponent(pairingCode || ""));
+  if (isAuthChecking()) {
+    app.innerHTML = `
+      ${pageHeader("Classroom Remote", "Control the projected classroom display from a phone or tablet.", "", "remote-page-header")}
+      ${checkingAccessCallout("Checking classroom remote access")}
+    `;
+    return;
+  }
+  if (!isSignedIn()) {
+    app.innerHTML = `
+      ${classroomRemoteControllerShell(code)}
+      ${signInCallout("Teacher sign-in required")}
+    `;
+    bindClassroomRemoteCodeForm();
+    bindAuthActions();
+    return;
+  }
+  if (!hasWorkspaceAccess()) {
+    app.innerHTML = `
+      ${classroomRemoteControllerShell(code)}
+      ${signInCallout("Teacher workspace access required")}
+    `;
+    bindClassroomRemoteCodeForm();
+    bindAuthActions();
+    return;
+  }
+  app.innerHTML = classroomRemoteControllerShell(code);
+  bindClassroomRemoteCodeForm();
+  if (code) bindClassroomRemoteController(code);
 }
 
 function decodeCommonMathEntities(value, options = {}) {
@@ -23797,6 +24124,7 @@ function renderToolFrame(tool, options = {}) {
             ${startClassroom ? "" : `<button class="button primary" id="focusTool" type="button">Classroom View</button>`}
             <button class="button classroom-fullscreen" id="classroomFullscreen" type="button">Full Screen</button>
             <button class="button classroom-capture" id="classroomCapture" type="button">Capture</button>
+            <button class="button classroom-remote-button" id="classroomRemote" type="button">Connect Phone</button>
             <div class="classroom-write-tools">
               <button class="button classroom-draw-toggle" id="classroomDrawToggle" type="button" aria-pressed="false">Write</button>
               <div class="classroom-write-palette" aria-label="Writing tools">
@@ -23812,6 +24140,7 @@ function renderToolFrame(tool, options = {}) {
         </div>
         ${frame}
         <canvas class="classroom-annotation-layer" id="classroomAnnotationCanvas" aria-label="Classroom writing layer"></canvas>
+        <div class="classroom-remote-panel" id="classroomRemotePanel" hidden></div>
       </div>
       <aside class="panel teacher-panel">
         <span class="eyebrow">Teacher Guidance</span>
@@ -26592,6 +26921,8 @@ function bindToolFrame(tool, options = {}) {
   const exitButton = document.getElementById("exitClassroom");
   const fullscreenButton = document.getElementById("classroomFullscreen");
   const captureButton = document.getElementById("classroomCapture");
+  const remoteButton = document.getElementById("classroomRemote");
+  const remotePanel = document.getElementById("classroomRemotePanel");
   const drawToggle = document.getElementById("classroomDrawToggle");
   const annotationCanvas = document.getElementById("classroomAnnotationCanvas");
   const annotationPen = document.getElementById("annotationPen");
@@ -26602,6 +26933,10 @@ function bindToolFrame(tool, options = {}) {
   const stage = document.querySelector(".legacy-stage");
   const frame = stage?.querySelector(".legacy-frame");
   if (!stage) return;
+  if (state.classroomRemoteDisplayTimer) {
+    window.clearInterval(state.classroomRemoteDisplayTimer);
+    state.classroomRemoteDisplayTimer = null;
+  }
   const classroomStateKey = "kaizen:classroom-view";
   const annotationState = {
     active: false,
@@ -27306,6 +27641,251 @@ function bindToolFrame(tool, options = {}) {
   annotationClear?.addEventListener("click", clearAnnotations);
   captureButton?.addEventListener("click", captureClassroomBoard);
 
+  let classroomRemoteSession = null;
+  let classroomRemoteLastSeq = 0;
+  let classroomRemoteBusy = false;
+
+  function frameActionSelectors(action) {
+    const selectors = {
+      new: [
+        "[data-kaizen-action='new']",
+        "button[onclick*='generateNewSet']",
+        "button[id*='new' i]",
+        "button[id*='generate' i]"
+      ],
+      answers: [
+        "[data-kaizen-action='answers']",
+        "button[onclick*='showAnswers']",
+        "button[id*='answer' i]",
+        "button[id*='solution' i]"
+      ],
+      steps: [
+        "[data-kaizen-action='steps']",
+        "button[onclick*='showSteps']",
+        "button[id*='step' i]",
+        "button[id*='hint' i]",
+        "button[id*='worked' i]"
+      ]
+    };
+    return selectors[action] || [];
+  }
+
+  function clickFrameAction(action) {
+    let clicked = false;
+    withFrameDocument((doc) => {
+      const buttons = frameActionSelectors(action)
+        .flatMap((selector) => Array.from(doc.querySelectorAll(selector)))
+        .filter((element, index, all) => all.indexOf(element) === index);
+      const button = buttons.find((element) => !element.disabled && element.offsetParent !== null) || buttons.find((element) => !element.disabled);
+      if (button) {
+        button.click();
+        clicked = true;
+      }
+    });
+    if (clicked) return true;
+    try {
+      const legacyWindow = frame?.contentWindow;
+      if (action === "new" && typeof legacyWindow?.generateNewSet === "function") {
+        legacyWindow.generateNewSet();
+        return true;
+      }
+      if (action === "answers" && typeof legacyWindow?.showAnswers === "function") {
+        legacyWindow.showAnswers();
+        return true;
+      }
+      if (action === "steps" && typeof legacyWindow?.showSteps === "function") {
+        legacyWindow.showSteps();
+        return true;
+      }
+    } catch (error) {
+      return false;
+    }
+    return false;
+  }
+
+  function applyClassroomRemoteCommand(command) {
+    const action = command?.action;
+    if (!action) return;
+    if (action === "disconnect") {
+      endClassroomRemoteDisplaySession({ quiet: true });
+      return;
+    }
+    if (["new", "answers", "steps"].includes(action)) {
+      clickFrameAction(action);
+      scheduleClassroomFit();
+      scheduleAnnotationResize();
+    }
+  }
+
+  function renderClassroomRemotePanel(session = classroomRemoteSession, message = "") {
+    if (!remotePanel) return;
+    const activeSession = session || classroomRemoteSession;
+    const expired = classroomRemoteIsExpired(activeSession);
+    const pending = activeSession?.status === "pending_approval" && !expired;
+    const connected = activeSession?.status === "connected" && !expired;
+    const ended = expired || activeSession?.status === "ended" || activeSession?.status === "expired";
+    if (!activeSession) {
+      remotePanel.hidden = false;
+      remotePanel.innerHTML = `
+        <div class="classroom-remote-panel-head">
+          <div>
+            <span class="eyebrow">Classroom Remote</span>
+            <h2>Connect Phone</h2>
+          </div>
+          <button class="button subtle" type="button" data-classroom-remote-action="close">Close</button>
+        </div>
+        <p>${escapeHtml(message || "Create a temporary remote session for this classroom display.")}</p>
+      `;
+      return;
+    }
+    const joinUrl = classroomRemoteJoinUrl(activeSession.pairing_code);
+    const statusTone = connected ? "success" : pending ? "warning" : ended ? "ended" : "pairing";
+    remotePanel.hidden = false;
+    remotePanel.innerHTML = `
+      <div class="classroom-remote-panel-head">
+        <div>
+          <span class="eyebrow">Classroom Remote</span>
+          <h2>${connected ? "Remote Connected" : pending ? "Approve Device" : ended ? "Remote Ended" : "Connect Phone"}</h2>
+        </div>
+        <button class="button subtle" type="button" data-classroom-remote-action="close">Close</button>
+      </div>
+      <p class="classroom-remote-status" data-tone="${escapeHtml(statusTone)}">${escapeHtml(message || classroomRemoteStatusCopy(activeSession))}</p>
+      ${ended ? "" : `
+        <div class="classroom-remote-pairing">
+          <div class="classroom-remote-qr">
+            <img src="${escapeHtml(classroomRemoteQrUrl(activeSession.pairing_code))}" alt="QR code for Kaizen classroom remote">
+          </div>
+          <div class="classroom-remote-code">
+            <span>Pairing code</span>
+            <strong>${escapeHtml(activeSession.pairing_code)}</strong>
+            <a href="${escapeHtml(joinUrl)}" target="_blank" rel="noopener noreferrer">Open remote link</a>
+          </div>
+        </div>
+      `}
+      <div class="classroom-remote-panel-actions">
+        ${pending ? `
+          <button class="button primary" type="button" data-classroom-remote-action="approve">Approve</button>
+          <button class="button danger" type="button" data-classroom-remote-action="end">Decline</button>
+        ` : ""}
+        ${connected ? `<button class="button danger" type="button" data-classroom-remote-action="end">End Remote</button>` : ""}
+        ${!ended ? `<button class="button" type="button" data-classroom-remote-action="copy">Copy Link</button>` : `<button class="button primary" type="button" data-classroom-remote-action="restart">Start New Remote</button>`}
+      </div>
+      <p class="classroom-remote-panel-note">The phone or tablet must be signed in with the same teacher account. The QR opens this Kaizen site only.</p>
+    `;
+  }
+
+  function stopClassroomRemoteDisplayPolling() {
+    if (state.classroomRemoteDisplayTimer) {
+      window.clearInterval(state.classroomRemoteDisplayTimer);
+      state.classroomRemoteDisplayTimer = null;
+    }
+  }
+
+  async function refreshClassroomRemoteDisplaySession({ quiet = false } = {}) {
+    if (!classroomRemoteSession?.pairing_code) return;
+    try {
+      let session = await loadClassroomRemoteSession(classroomRemoteSession.pairing_code);
+      if (!session) {
+        stopClassroomRemoteDisplayPolling();
+        classroomRemoteSession = null;
+        renderClassroomRemotePanel(null, "This classroom remote session could not be found.");
+        return;
+      }
+      if (classroomRemoteIsExpired(session) && session.status !== "expired") {
+        session = await updateClassroomRemoteSession(session.id, { status: "expired" }).catch(() => session);
+      } else if (!["ended", "expired"].includes(session.status)) {
+        await updateClassroomRemoteSession(session.id, { last_seen_at: new Date().toISOString() }).catch(() => null);
+      }
+      const commandSeq = Number(session.command_seq) || 0;
+      if (commandSeq > classroomRemoteLastSeq) {
+        classroomRemoteLastSeq = commandSeq;
+        applyClassroomRemoteCommand(session.last_command || {});
+      }
+      classroomRemoteSession = session;
+      renderClassroomRemotePanel(session);
+      if (["ended", "expired"].includes(session.status) || classroomRemoteIsExpired(session)) {
+        stopClassroomRemoteDisplayPolling();
+      }
+    } catch (error) {
+      if (!quiet) renderClassroomRemotePanel(classroomRemoteSession, `Could not update remote session: ${error.message}`);
+    }
+  }
+
+  function startClassroomRemoteDisplayPolling() {
+    stopClassroomRemoteDisplayPolling();
+    state.classroomRemoteDisplayTimer = window.setInterval(() => refreshClassroomRemoteDisplaySession({ quiet: true }), classroomRemotePollMs);
+  }
+
+  async function startClassroomRemoteDisplaySession() {
+    if (classroomRemoteSession && !["ended", "expired"].includes(classroomRemoteSession.status) && !classroomRemoteIsExpired(classroomRemoteSession)) {
+      renderClassroomRemotePanel(classroomRemoteSession);
+      return;
+    }
+    renderClassroomRemotePanel(null, "Creating classroom remote session...");
+    try {
+      classroomRemoteSession = await createClassroomRemoteSession(tool);
+      classroomRemoteLastSeq = Number(classroomRemoteSession.command_seq) || 0;
+      renderClassroomRemotePanel(classroomRemoteSession);
+      startClassroomRemoteDisplayPolling();
+    } catch (error) {
+      classroomRemoteSession = null;
+      renderClassroomRemotePanel(null, `Could not start classroom remote: ${error.message}`);
+    }
+  }
+
+  async function endClassroomRemoteDisplaySession({ quiet = false } = {}) {
+    stopClassroomRemoteDisplayPolling();
+    if (!classroomRemoteSession?.id) {
+      if (!quiet && remotePanel) remotePanel.hidden = true;
+      return;
+    }
+    try {
+      classroomRemoteSession = await updateClassroomRemoteSession(classroomRemoteSession.id, {
+        status: "ended",
+        last_seen_at: new Date().toISOString()
+      });
+      if (!quiet) renderClassroomRemotePanel(classroomRemoteSession);
+    } catch (error) {
+      if (!quiet) renderClassroomRemotePanel(classroomRemoteSession, `Could not end remote session: ${error.message}`);
+    }
+  }
+
+  remoteButton?.addEventListener("click", startClassroomRemoteDisplaySession);
+  remotePanel?.addEventListener("click", async (event) => {
+    const control = event.target.closest?.("[data-classroom-remote-action]");
+    if (!control || classroomRemoteBusy) return;
+    const action = control.dataset.classroomRemoteAction;
+    if (action === "close") {
+      remotePanel.hidden = true;
+      return;
+    }
+    classroomRemoteBusy = true;
+    control.disabled = true;
+    try {
+      if (action === "approve" && classroomRemoteSession?.id) {
+        classroomRemoteSession = await updateClassroomRemoteSession(classroomRemoteSession.id, {
+          status: "connected",
+          approved_at: new Date().toISOString(),
+          last_seen_at: new Date().toISOString()
+        });
+        classroomRemoteLastSeq = Number(classroomRemoteSession.command_seq) || 0;
+        renderClassroomRemotePanel(classroomRemoteSession);
+      } else if (action === "end") {
+        await endClassroomRemoteDisplaySession();
+      } else if (action === "restart") {
+        classroomRemoteSession = null;
+        await startClassroomRemoteDisplaySession();
+      } else if (action === "copy" && classroomRemoteSession?.pairing_code) {
+        await navigator.clipboard?.writeText?.(classroomRemoteJoinUrl(classroomRemoteSession.pairing_code));
+        renderClassroomRemotePanel(classroomRemoteSession, "Remote link copied.");
+      }
+    } catch (error) {
+      renderClassroomRemotePanel(classroomRemoteSession, `Remote action failed: ${error.message}`);
+    } finally {
+      classroomRemoteBusy = false;
+    }
+  });
+
   function setClassroomMode(active, options = {}) {
     stage.classList.toggle("classroom", active);
     document.body.classList.toggle("classroom-active", active);
@@ -27340,6 +27920,7 @@ function bindToolFrame(tool, options = {}) {
 
   if (exitButton) {
     exitButton.addEventListener("click", () => {
+      endClassroomRemoteDisplaySession({ quiet: true });
       setClassroomMode(false);
       if (options.exitRoute) location.hash = options.exitRoute;
     });
@@ -27471,6 +28052,10 @@ function updateRouteSeo(parts) {
       title: routeTitle("Classroom View"),
       description: "Project a Kaizen Maths tool for live teaching, modelling, questioning, annotation, and classroom practice."
     },
+    "classroom-remote": {
+      title: routeTitle("Classroom Remote"),
+      description: "Connect a phone or tablet to a Kaizen Maths classroom display and control questions, answers, and worked steps."
+    },
     "coverage-map": {
       title: routeTitle("Curriculum Coverage Map"),
       description: "View Kaizen Maths coverage across UK KS2, UK KS3, GCSE, CSEC, CAPE, Oman GED, Common Core, A-Level Pure, Further Maths, A-Level Statistics, A-Level Mechanics, and future curriculum tags."
@@ -27568,8 +28153,14 @@ function renderRoute() {
   updateAdminNavVisibility();
   const parts = routeParts();
   document.body.classList.toggle("pupil-shell-active", parts[0] === "pupil");
+  document.body.classList.toggle("classroom-remote-active", parts[0] === "classroom-remote");
   setActiveNav();
   document.body.classList.toggle("classroom-active", parts[0] === "classroom");
+  if (parts[0] !== "classroom-remote") stopClassroomRemoteControllerTimer();
+  if (parts[0] !== "classroom" && state.classroomRemoteDisplayTimer) {
+    window.clearInterval(state.classroomRemoteDisplayTimer);
+    state.classroomRemoteDisplayTimer = null;
+  }
   if (parts[0] && homeTestimonialTimer) {
     window.clearInterval(homeTestimonialTimer);
     homeTestimonialTimer = null;
@@ -27673,6 +28264,8 @@ function renderRoute() {
       return;
     }
     renderClassTasks();
+  } else if (parts[0] === "classroom-remote") {
+    renderClassroomRemotePage(parts[1] || "");
   } else if (parts[0] === "pupil") {
     renderPupilJoin(parts[1] || "");
   } else if (parts[0] === "tutor-workspace") {
