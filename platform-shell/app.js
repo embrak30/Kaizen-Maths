@@ -2700,6 +2700,7 @@ const state = {
   classTaskWorkspacePhase: "assign",
   classroomRemoteDisplayTimer: null,
   classroomRemoteControllerTimer: null,
+  classroomRemoteControllerCleanup: null,
   classroomRemoteControllerSession: null,
   classroomRemoteControllerTool: "pointer",
   pupilTask: null,
@@ -3386,6 +3387,8 @@ function checkingAccessCallout(title = "Checking access") {
 const classroomRemotePollMs = 1200;
 const classroomRemoteDisplayPollMs = 650;
 const classroomRemoteSessionMinutes = 25;
+const classroomRemotePausedAfterMs = 7000;
+const classroomRemoteReconnectStorageKey = "kaizen:classroom-remote:last-session";
 
 function classroomRemoteCode(length = 6) {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -3432,11 +3435,55 @@ function classroomRemoteNormaliseCode(value) {
   return String(value || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
 }
 
+function classroomRemoteTimestampMs(value) {
+  const stamp = value ? new Date(value).getTime() : 0;
+  return Number.isFinite(stamp) ? stamp : 0;
+}
+
+function classroomRemoteControllerIsPaused(session, thresholdMs = classroomRemotePausedAfterMs) {
+  if (!session || session.status !== "connected" || classroomRemoteIsExpired(session)) return false;
+  const seenAt = classroomRemoteTimestampMs(session.last_controller_seen_at || session.approved_at);
+  return !seenAt || Date.now() - seenAt > thresholdMs;
+}
+
+function classroomRemoteStorageKey() {
+  return `${classroomRemoteReconnectStorageKey}:${authState().session?.user?.id || "guest"}`;
+}
+
+function rememberClassroomRemoteSession(session) {
+  if (!session?.pairing_code || ["ended", "expired"].includes(session.status) || classroomRemoteIsExpired(session)) return;
+  writeJsonStorage(classroomRemoteStorageKey(), {
+    pairing_code: session.pairing_code,
+    session_id: session.id || "",
+    expires_at: session.expires_at || "",
+    saved_at: new Date().toISOString()
+  });
+}
+
+function forgetClassroomRemoteSession() {
+  try {
+    localStorage.removeItem(classroomRemoteStorageKey());
+  } catch {
+    // Reconnection is a convenience only; the active session remains in Supabase.
+  }
+}
+
+function savedClassroomRemoteSession() {
+  const saved = readJsonStorage(classroomRemoteStorageKey(), null);
+  if (!saved?.pairing_code) return null;
+  if (saved.expires_at && classroomRemoteTimestampMs(saved.expires_at) < Date.now()) {
+    forgetClassroomRemoteSession();
+    return null;
+  }
+  return saved;
+}
+
 function classroomRemoteStatusCopy(session) {
   if (!session) return "Not connected.";
   if (classroomRemoteIsExpired(session)) return "This classroom remote session has expired.";
   if (session.status === "pairing") return "Scan the QR code or open the link on your phone, then sign in with the same teacher account.";
   if (session.status === "pending_approval") return `${session.controller_name || "A device"} is waiting for approval.`;
+  if (classroomRemoteControllerIsPaused(session)) return "Remote paused. Reopen the remote page on the phone or tablet to continue.";
   if (session.status === "connected") return `${session.controller_name || "Remote device"} is connected.`;
   if (session.status === "ended") return "This classroom remote session has ended.";
   return "Classroom remote is updating.";
@@ -3512,6 +3559,10 @@ function stopClassroomRemoteControllerTimer() {
   if (state.classroomRemoteControllerTimer) {
     window.clearInterval(state.classroomRemoteControllerTimer);
     state.classroomRemoteControllerTimer = null;
+  }
+  if (typeof state.classroomRemoteControllerCleanup === "function") {
+    state.classroomRemoteControllerCleanup();
+    state.classroomRemoteControllerCleanup = null;
   }
 }
 
@@ -3740,18 +3791,19 @@ function bindClassroomRemoteStage(session) {
   canvas.addEventListener("pointercancel", finishRemoteStroke);
 }
 
-function renderClassroomRemoteStatus(session, message = "") {
+function renderClassroomRemoteStatus(session, message = "", options = {}) {
   const target = document.getElementById("classroomRemoteControllerStatus");
   if (!target) return;
   const expired = classroomRemoteIsExpired(session);
   const connected = session?.status === "connected" && !expired;
+  const paused = classroomRemoteControllerIsPaused(session);
   const waiting = session?.status === "pending_approval" && !expired;
   const ended = expired || session?.status === "ended" || session?.status === "expired";
-  if (connected && target.dataset.remoteConnected === "true" && target.dataset.sessionId === session.id && !message) {
+  if (connected && target.dataset.remoteConnected === "true" && target.dataset.sessionId === session.id && !message && !options.forceRender) {
     return;
   }
   const heading = connected
-    ? "Remote Connected"
+    ? paused ? "Remote Reconnecting" : "Remote Connected"
     : waiting
       ? "Waiting for classroom approval"
       : ended
@@ -3806,7 +3858,11 @@ function renderClassroomRemoteStatus(session, message = "") {
 }
 
 async function sendClassroomRemoteCommand(session, action, payload = {}) {
-  if (!session?.id || session.status !== "connected" || classroomRemoteIsExpired(session)) return session;
+  let activeSession = session;
+  if (session?.pairing_code) {
+    activeSession = await loadClassroomRemoteSession(session.pairing_code).catch(() => session);
+  }
+  if (!activeSession?.id || activeSession.status !== "connected" || classroomRemoteIsExpired(activeSession)) return activeSession || session;
   const command = {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     action,
@@ -3815,16 +3871,16 @@ async function sendClassroomRemoteCommand(session, action, payload = {}) {
     ...payload
   };
   if (action === "disconnect") {
-    return updateClassroomRemoteSession(session.id, {
+    return updateClassroomRemoteSession(activeSession.id, {
       status: "ended",
       last_controller_seen_at: new Date().toISOString(),
-      command_seq: (Number(session.command_seq) || 0) + 1,
+      command_seq: (Number(activeSession.command_seq) || 0) + 1,
       last_command: command
     });
   }
-  return updateClassroomRemoteSession(session.id, {
+  return updateClassroomRemoteSession(activeSession.id, {
     last_controller_seen_at: new Date().toISOString(),
-    command_seq: (Number(session.command_seq) || 0) + 1,
+    command_seq: (Number(activeSession.command_seq) || 0) + 1,
     last_command: command
   });
 }
@@ -3835,11 +3891,13 @@ async function bindClassroomRemoteController(pairingCode) {
   let currentSession = null;
   let isSending = false;
 
-  async function refreshRemoteSession({ quiet = false } = {}) {
+  async function refreshRemoteSession({ quiet = false, forceRender = false } = {}) {
     try {
       let session = await loadClassroomRemoteSession(code);
       if (!session) {
         state.classroomRemoteControllerSession = null;
+        forgetClassroomRemoteSession();
+        stopClassroomRemoteControllerTimer();
         renderClassroomRemoteStatus(null, "No classroom remote session was found for this code.");
         return;
       }
@@ -3852,15 +3910,22 @@ async function bindClassroomRemoteController(pairingCode) {
           last_controller_seen_at: new Date().toISOString()
         });
       } else if (session.status === "connected") {
-        await updateClassroomRemoteSession(session.id, {
+        session = await updateClassroomRemoteSession(session.id, {
           last_controller_seen_at: new Date().toISOString()
-        }).catch(() => null);
+        }).catch(() => session);
       }
       currentSession = session;
       state.classroomRemoteControllerSession = session;
-      renderClassroomRemoteStatus(session);
+      if (["ended", "expired"].includes(session.status) || classroomRemoteIsExpired(session)) {
+        forgetClassroomRemoteSession();
+        renderClassroomRemoteStatus(session, "", { forceRender: true });
+        stopClassroomRemoteControllerTimer();
+        return;
+      }
+      rememberClassroomRemoteSession(session);
+      renderClassroomRemoteStatus(session, "", { forceRender });
     } catch (error) {
-      if (!quiet) renderClassroomRemoteStatus(null, `Could not connect: ${error.message}`);
+      if (!quiet) renderClassroomRemoteStatus(currentSession, `Could not connect: ${error.message}`, { forceRender: true });
     }
   }
 
@@ -3873,6 +3938,12 @@ async function bindClassroomRemoteController(pairingCode) {
     try {
       currentSession = await sendClassroomRemoteCommand(state.classroomRemoteControllerSession || currentSession, action);
       state.classroomRemoteControllerSession = currentSession;
+      if (action === "disconnect") {
+        forgetClassroomRemoteSession();
+        stopClassroomRemoteControllerTimer();
+      } else {
+        rememberClassroomRemoteSession(currentSession);
+      }
       renderClassroomRemoteStatus(currentSession, action === "disconnect" ? "Disconnected from the classroom display." : `${classroomRemoteCommandLabel(action)} sent.`);
     } catch (error) {
       renderClassroomRemoteStatus(currentSession, `Could not send ${action}: ${error.message}`);
@@ -3882,12 +3953,28 @@ async function bindClassroomRemoteController(pairingCode) {
   });
 
   await refreshRemoteSession();
+  if (!currentSession || ["ended", "expired"].includes(currentSession.status) || classroomRemoteIsExpired(currentSession)) return;
   state.classroomRemoteControllerTimer = window.setInterval(() => refreshRemoteSession({ quiet: true }), classroomRemotePollMs);
+  const resumeRemote = () => {
+    if (document.hidden) return;
+    refreshRemoteSession({ quiet: true, forceRender: true });
+  };
+  window.addEventListener("pageshow", resumeRemote);
+  document.addEventListener("visibilitychange", resumeRemote);
+  window.addEventListener("focus", resumeRemote);
+  state.classroomRemoteControllerCleanup = () => {
+    window.removeEventListener("pageshow", resumeRemote);
+    document.removeEventListener("visibilitychange", resumeRemote);
+    window.removeEventListener("focus", resumeRemote);
+  };
 }
 
 function renderClassroomRemotePage(pairingCode = "") {
   stopClassroomRemoteControllerTimer();
-  const code = classroomRemoteNormaliseCode(decodeURIComponent(pairingCode || ""));
+  let code = classroomRemoteNormaliseCode(decodeURIComponent(pairingCode || ""));
+  if (!code) {
+    code = classroomRemoteNormaliseCode(savedClassroomRemoteSession()?.pairing_code || "");
+  }
   if (isAuthChecking()) {
     app.innerHTML = `
       ${pageHeader("Classroom Remote", "Control the projected classroom display from a phone or tablet.", "", "remote-page-header")}
@@ -28037,9 +28124,10 @@ function bindToolFrame(tool, options = {}) {
     }
     const pending = activeSession.status === "pending_approval";
     const connected = activeSession.status === "connected";
+    const paused = classroomRemoteControllerIsPaused(activeSession);
     remoteStatusChip.hidden = false;
-    remoteStatusChip.dataset.tone = connected ? "connected" : pending ? "pending" : "pairing";
-    remoteStatusChip.textContent = connected ? "Remote connected" : pending ? "Approval needed" : `Code ${activeSession.pairing_code}`;
+    remoteStatusChip.dataset.tone = paused ? "paused" : connected ? "connected" : pending ? "pending" : "pairing";
+    remoteStatusChip.textContent = paused ? "Remote paused" : connected ? "Remote connected" : pending ? "Approval needed" : `Code ${activeSession.pairing_code}`;
     remoteButton?.classList.toggle("active", connected || pending || activeSession.status === "pairing");
     if (remoteButton) remoteButton.textContent = "Connect";
   }
@@ -28072,13 +28160,14 @@ function bindToolFrame(tool, options = {}) {
       return;
     }
     const joinUrl = classroomRemoteJoinUrl(activeSession.pairing_code);
-    const statusTone = connected ? "success" : pending ? "warning" : ended ? "ended" : "pairing";
+    const paused = classroomRemoteControllerIsPaused(activeSession);
+    const statusTone = connected && !paused ? "success" : pending || paused ? "warning" : ended ? "ended" : "pairing";
     remotePanel.hidden = false;
     remotePanel.innerHTML = `
       <div class="classroom-remote-panel-head">
         <div>
           <span class="eyebrow">Classroom Remote</span>
-          <h2>${connected ? "Remote Connected" : pending ? "Approve Device" : ended ? "Remote Ended" : "Connect"}</h2>
+          <h2>${connected ? paused ? "Remote Paused" : "Remote Connected" : pending ? "Approve Device" : ended ? "Remote Ended" : "Connect"}</h2>
         </div>
         <button class="button subtle" type="button" data-classroom-remote-action="close">Close</button>
       </div>
