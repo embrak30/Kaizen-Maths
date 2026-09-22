@@ -3516,17 +3516,11 @@ function classroomRemoteActivityHtml(displayState = {}) {
   const levels = Array.isArray(displayState.levels) ? displayState.levels : [];
   const types = classroomRemoteLevelTypes(displayState);
   if (!levels.length && !types.length) {
-    return `
-      <section class="classroom-remote-activity">
-        <span class="eyebrow">Activity</span>
-        <p>Activity selection appears here when the classroom tool exposes its levels and question types.</p>
-      </section>
-    `;
+    return "";
   }
 
   return `
     <section class="classroom-remote-activity">
-      <span class="eyebrow">Activity</span>
       <div class="classroom-remote-activity-grid">
         ${levels.length ? `
           <label>
@@ -3545,17 +3539,11 @@ function classroomRemoteActivityHtml(displayState = {}) {
           </label>
         ` : ""}
       </div>
-      <p>Changing either menu updates the projected classroom display.</p>
     </section>
   `;
 }
 
 function classroomRemotePreviewHtml(displayState = {}) {
-  const questions = Array.isArray(displayState.questions) ? displayState.questions : [];
-  const previewQuestions = questions
-    .slice(0, 3)
-    .map((question, index) => `<li><span>${index + 1}</span>${escapeHtml(classroomRemoteTrimText(question.text || question.question || "", 170) || "Question shown on board")}</li>`)
-    .join("");
   const title = displayState.typeLabel || displayState.levelTitle || displayState.tool_title || "Current classroom display";
   const meta = [
     displayState.levelTitle,
@@ -3566,10 +3554,8 @@ function classroomRemotePreviewHtml(displayState = {}) {
 
   return `
     <section class="classroom-remote-preview">
-      <span class="eyebrow">Projected Preview</span>
       <h3>${escapeHtml(classroomRemoteTrimText(title, 90) || "Current classroom display")}</h3>
       ${meta ? `<p>${escapeHtml(meta)}</p>` : ""}
-      ${previewQuestions ? `<ol>${previewQuestions}</ol>` : `<p>The classroom display will send a preview after the first question is generated.</p>`}
     </section>
   `;
 }
@@ -3821,7 +3807,7 @@ function bindClassroomRemoteStage(session) {
     sendStageCommand("pointer-move", { point: classroomRemotePointFromEvent(event, canvas) }, { stream: true });
   }
 
-  stage.querySelectorAll("[data-remote-tool]").forEach((button) => {
+  document.getElementById("classroomRemoteControllerStatus")?.querySelectorAll("[data-remote-tool]").forEach((button) => {
     button.addEventListener("click", () => {
       state.classroomRemoteControllerTool = button.dataset.remoteTool || "pointer";
       updateToolButtons();
@@ -3919,14 +3905,15 @@ function renderClassroomRemoteStatus(session, message = "", options = {}) {
         : session
           ? "Joining classroom display"
           : "Pairing code not found";
+  const statusMessage = message || (connected ? "" : classroomRemoteStatusCopy(session));
   target.dataset.remoteConnected = connected ? "true" : "false";
   target.dataset.sessionId = session?.id || "";
   target.dataset.displaySignature = displaySignature;
   target.innerHTML = `
     <span class="eyebrow">Remote Status</span>
     <h2>${escapeHtml(heading)}</h2>
-    <p>${escapeHtml(message || classroomRemoteStatusCopy(session))}</p>
-    ${session ? `
+    ${statusMessage ? `<p>${escapeHtml(statusMessage)}</p>` : ""}
+    ${session && !connected ? `
       <div class="classroom-remote-session-strip">
         <span>${escapeHtml(session.tool_title || "Kaizen classroom tool")}</span>
         <strong>${escapeHtml(session.pairing_code || "")}</strong>
@@ -3941,9 +3928,9 @@ function renderClassroomRemoteStatus(session, message = "", options = {}) {
         <button class="button primary" type="button" data-remote-command="new">New</button>
         <button class="button" type="button" data-remote-command="answers">Answers</button>
         <button class="button" type="button" data-remote-command="steps">Steps</button>
-        <button class="button" type="button" data-remote-command="timer-2">2 Min</button>
-        <button class="button" type="button" data-remote-command="timer-5">5 Min</button>
-        <button class="button" type="button" data-remote-command="timer-stop">Stop Timer</button>
+        <button class="button" type="button" data-remote-command="timer-2">2m</button>
+        <button class="button" type="button" data-remote-command="timer-5">5m</button>
+        <button class="button" type="button" data-remote-command="timer-stop">Stop</button>
       </div>
       <section class="classroom-remote-workspace" aria-label="Pointer and annotation workspace">
         <div class="classroom-remote-tool-row" aria-label="Remote tools">
