@@ -1,0 +1,136 @@
+/*
+  Shared number-tool presentation.
+  Older arithmetic tools had local font choices that made calculations and
+  worked steps feel different from the newer Kaizen Maths tools.
+*/
+
+:root {
+  --kaizen-number-font: "KaTeX_Main", "Latin Modern Roman", "Latin Modern Math", "STIX Two Text", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+  --kaizen-number-ui-font: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.calculation,
+.equation,
+.expression,
+.step-equation,
+.step-calculation,
+.problem-numbers,
+.problem-answer,
+.final-answer,
+.base-number,
+.set-symbol,
+.number-highlight,
+.operation-highlight,
+.integer-chip,
+.operator-chip,
+.negative-chip,
+.power-of-ten,
+.result-highlight,
+.base,
+.index,
+.operation,
+.highlight,
+.interval,
+.vfrac,
+.fraction,
+.frac,
+.calculation-box,
+.print-equation,
+.print-key-answer {
+  font-family: var(--kaizen-number-font) !important;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: 0;
+}
+
+.word-problem,
+.question-text,
+.question-text .word,
+.problem-type,
+.step,
+.solution-steps,
+.steps-label,
+.answer-label {
+  font-family: var(--kaizen-number-ui-font) !important;
+  letter-spacing: 0;
+}
+
+.question-text :where(.base-number, .set-symbol, .vfrac, .fraction, .frac),
+.solution-steps :where(.base-number, .set-symbol, .vfrac, .fraction, .frac),
+.step :where(.base-number, .set-symbol, .vfrac, .fraction, .frac) {
+  font-family: var(--kaizen-number-font) !important;
+}
+
+.calculation,
+.equation,
+.expression,
+.problem-numbers,
+.question-text {
+  line-height: 1.35;
+}
+
+.step-equation,
+.step-calculation {
+  line-height: 1.45;
+}
+
+.number-highlight,
+.operation-highlight,
+.integer-chip,
+.operator-chip,
+.negative-chip,
+.power-of-ten,
+.result-highlight,
+.base,
+.index,
+.operation,
+.highlight {
+  display: inline-block;
+  line-height: 1.15;
+}
+
+.working-section,
+.decimal-movement,
+.column-working,
+.decimal-column,
+.solution-steps pre,
+.step pre,
+pre.number-working,
+pre[style*="Consolas"] {
+  font-family: var(--kaizen-number-font) !important;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.working-section,
+.decimal-movement,
+.column-working,
+.decimal-column,
+pre.number-working {
+  white-space: pre-wrap;
+}
+
+html.kaizen-classroom-standard :where(
+  .calculation,
+  .equation,
+  .expression,
+  .step-equation,
+  .step-calculation,
+  .problem-numbers,
+  .problem-answer,
+  .final-answer,
+  .base-number,
+  .set-symbol,
+  .number-highlight,
+  .operation-highlight,
+  .integer-chip,
+  .operator-chip,
+  .negative-chip,
+  .power-of-ten,
+  .result-highlight,
+  .vfrac,
+  .fraction,
+  .frac,
+  .calculation-box
+) {
+  font-family: var(--kaizen-number-font) !important;
+}
