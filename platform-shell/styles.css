@@ -10153,6 +10153,93 @@ button.certification-course-card {
   letter-spacing: 0.12em;
 }
 
+.classroom-remote-preview,
+.classroom-remote-activity {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid rgba(23, 179, 176, 0.22);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(231, 251, 250, 0.72), rgba(255, 255, 255, 0.9)),
+    #fff;
+}
+
+.classroom-remote-preview h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.05rem;
+  line-height: 1.18;
+}
+
+.classroom-remote-preview p,
+.classroom-remote-activity p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+.classroom-remote-preview ol {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.classroom-remote-preview li {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.classroom-remote-preview li span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--teal);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.classroom-remote-activity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.classroom-remote-activity label {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.classroom-remote-activity select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 800;
+  padding: 10px;
+}
+
 .classroom-remote-controls {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -10274,6 +10361,10 @@ button.certification-course-card {
 
   .classroom-remote-controls {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .classroom-remote-activity-grid {
+    grid-template-columns: 1fr;
   }
 
   .classroom-remote-tool-row,

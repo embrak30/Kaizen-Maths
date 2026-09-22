@@ -3388,6 +3388,7 @@ const classroomRemotePollMs = 1200;
 const classroomRemoteDisplayPollMs = 650;
 const classroomRemoteSessionMinutes = 25;
 const classroomRemotePausedAfterMs = 7000;
+const classroomRemoteDisplayStateMinMs = 1600;
 const classroomRemoteReconnectStorageKey = "kaizen:classroom-remote:last-session";
 
 function classroomRemoteCode(length = 6) {
@@ -3487,6 +3488,90 @@ function classroomRemoteStatusCopy(session) {
   if (session.status === "connected") return `${session.controller_name || "Remote device"} is connected.`;
   if (session.status === "ended") return "This classroom remote session has ended.";
   return "Classroom remote is updating.";
+}
+
+function classroomRemoteTrimText(value, maxLength = 220) {
+  const clean = String(value || "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (clean.length <= maxLength) return clean;
+  return `${clean.slice(0, maxLength).replace(/\s+\S*$/, "").trim()}...`;
+}
+
+function classroomRemoteLevelTypes(displayState = {}, selectedLevel = displayState.level) {
+  const levels = Array.isArray(displayState.levels) ? displayState.levels : [];
+  const level = levels.find((item) => String(item.id) === String(selectedLevel)) || levels[0] || null;
+  return Array.isArray(level?.types) ? level.types : Array.isArray(displayState.types) ? displayState.types : [];
+}
+
+function classroomRemoteOptionList(options = [], selected = "") {
+  return options.map((option) => {
+    const id = option?.id ?? option?.value ?? "";
+    const label = option?.label ?? option?.title ?? option?.name ?? id;
+    return `<option value="${escapeHtml(id)}"${String(id) === String(selected) ? " selected" : ""}>${escapeHtml(label)}</option>`;
+  }).join("");
+}
+
+function classroomRemoteActivityHtml(displayState = {}) {
+  const levels = Array.isArray(displayState.levels) ? displayState.levels : [];
+  const types = classroomRemoteLevelTypes(displayState);
+  if (!levels.length && !types.length) {
+    return `
+      <section class="classroom-remote-activity">
+        <span class="eyebrow">Activity</span>
+        <p>Activity selection appears here when the classroom tool exposes its levels and question types.</p>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="classroom-remote-activity">
+      <span class="eyebrow">Activity</span>
+      <div class="classroom-remote-activity-grid">
+        ${levels.length ? `
+          <label>
+            <span>Level</span>
+            <select data-remote-activity-level>
+              ${classroomRemoteOptionList(levels, displayState.level)}
+            </select>
+          </label>
+        ` : ""}
+        ${types.length ? `
+          <label>
+            <span>Question type</span>
+            <select data-remote-activity-type>
+              ${classroomRemoteOptionList(types, displayState.type)}
+            </select>
+          </label>
+        ` : ""}
+      </div>
+      <p>Changing either menu updates the projected classroom display.</p>
+    </section>
+  `;
+}
+
+function classroomRemotePreviewHtml(displayState = {}) {
+  const questions = Array.isArray(displayState.questions) ? displayState.questions : [];
+  const previewQuestions = questions
+    .slice(0, 3)
+    .map((question, index) => `<li><span>${index + 1}</span>${escapeHtml(classroomRemoteTrimText(question.text || question.question || "", 170) || "Question shown on board")}</li>`)
+    .join("");
+  const title = displayState.typeLabel || displayState.levelTitle || displayState.tool_title || "Current classroom display";
+  const meta = [
+    displayState.levelTitle,
+    displayState.typeLabel,
+    displayState.answersVisible ? "Answers showing" : "",
+    displayState.stepsVisible ? "Steps showing" : ""
+  ].filter(Boolean).join(" · ");
+
+  return `
+    <section class="classroom-remote-preview">
+      <span class="eyebrow">Projected Preview</span>
+      <h3>${escapeHtml(classroomRemoteTrimText(title, 90) || "Current classroom display")}</h3>
+      ${meta ? `<p>${escapeHtml(meta)}</p>` : ""}
+      ${previewQuestions ? `<ol>${previewQuestions}</ol>` : `<p>The classroom display will send a preview after the first question is generated.</p>`}
+    </section>
+  `;
 }
 
 async function classroomRemoteClient() {
@@ -3618,7 +3703,10 @@ function classroomRemoteCommandLabel(action) {
     "timer-stop": "Timer stop",
     "annotation-undo": "Undo",
     "annotation-clear": "Clear writing",
+    "annotation-save": "Save writing",
+    "annotation-restore": "Restore writing",
     "pointer-hide": "Hide pointer",
+    "set-activity": "Activity change",
     disconnect: "Disconnect"
   };
   return labels[action] || titleCaseText(String(action || "command").replace(/-/g, " "));
@@ -3799,7 +3887,27 @@ function renderClassroomRemoteStatus(session, message = "", options = {}) {
   const paused = classroomRemoteControllerIsPaused(session);
   const waiting = session?.status === "pending_approval" && !expired;
   const ended = expired || session?.status === "ended" || session?.status === "expired";
-  if (connected && target.dataset.remoteConnected === "true" && target.dataset.sessionId === session.id && !message && !options.forceRender) {
+  const displayState = session?.display_state && typeof session.display_state === "object" ? session.display_state : {};
+  const displaySignature = JSON.stringify({
+    updatedAt: displayState.updated_at || "",
+    level: displayState.level || "",
+    type: displayState.type || "",
+    levelTitle: displayState.levelTitle || "",
+    typeLabel: displayState.typeLabel || "",
+    questions: (displayState.questions || []).map((question) => question?.text || question?.question || "").join("|"),
+    answersVisible: Boolean(displayState.answersVisible),
+    stepsVisible: Boolean(displayState.stepsVisible),
+    annotationCount: Number(displayState.annotationCount || 0),
+    annotationSavedAt: displayState.annotationSavedAt || ""
+  });
+  if (
+    connected
+    && target.dataset.remoteConnected === "true"
+    && target.dataset.sessionId === session.id
+    && target.dataset.displaySignature === displaySignature
+    && !message
+    && !options.forceRender
+  ) {
     return;
   }
   const heading = connected
@@ -3813,6 +3921,7 @@ function renderClassroomRemoteStatus(session, message = "", options = {}) {
           : "Pairing code not found";
   target.dataset.remoteConnected = connected ? "true" : "false";
   target.dataset.sessionId = session?.id || "";
+  target.dataset.displaySignature = displaySignature;
   target.innerHTML = `
     <span class="eyebrow">Remote Status</span>
     <h2>${escapeHtml(heading)}</h2>
@@ -3822,6 +3931,10 @@ function renderClassroomRemoteStatus(session, message = "", options = {}) {
         <span>${escapeHtml(session.tool_title || "Kaizen classroom tool")}</span>
         <strong>${escapeHtml(session.pairing_code || "")}</strong>
       </div>
+    ` : ""}
+    ${connected ? `
+      ${classroomRemotePreviewHtml(displayState)}
+      ${classroomRemoteActivityHtml(displayState)}
     ` : ""}
     ${connected ? `
       <div class="classroom-remote-controls" aria-label="Classroom controls">
@@ -3846,6 +3959,8 @@ function renderClassroomRemoteStatus(session, message = "", options = {}) {
         <div class="classroom-remote-markup-actions">
           <button class="button" type="button" data-remote-command="pointer-hide">Hide Pointer</button>
           <button class="button" type="button" data-remote-command="annotation-undo">Undo Writing</button>
+          <button class="button" type="button" data-remote-command="annotation-save">Save Writing</button>
+          <button class="button" type="button" data-remote-command="annotation-restore">Restore Writing</button>
           <button class="button danger" type="button" data-remote-command="annotation-clear">Clear Writing</button>
         </div>
         <p class="classroom-remote-live-status">Pointer updates live. Writing appears on the projected display when each stroke is completed.</p>
@@ -3948,6 +4063,38 @@ async function bindClassroomRemoteController(pairingCode) {
     } catch (error) {
       renderClassroomRemoteStatus(currentSession, `Could not send ${action}: ${error.message}`);
     } finally {
+      isSending = false;
+    }
+  });
+
+  document.getElementById("classroomRemoteControllerStatus")?.addEventListener("change", async (event) => {
+    const levelSelect = event.target.closest?.("[data-remote-activity-level]");
+    const typeSelect = event.target.closest?.("[data-remote-activity-type]");
+    if ((!levelSelect && !typeSelect) || isSending) return;
+    const displayState = currentSession?.display_state && typeof currentSession.display_state === "object"
+      ? currentSession.display_state
+      : {};
+    const level = levelSelect?.value ?? displayState.level ?? "";
+    const types = classroomRemoteLevelTypes(displayState, level);
+    const firstType = types.find((item) => String(item?.id ?? item?.value ?? "") !== "select");
+    const type = typeSelect?.value
+      ?? firstType?.id
+      ?? firstType?.value
+      ?? displayState.type
+      ?? "select";
+    isSending = true;
+    event.target.disabled = true;
+    try {
+      currentSession = await sendClassroomRemoteCommand(state.classroomRemoteControllerSession || currentSession, "set-activity", {
+        activity: { level, type }
+      });
+      state.classroomRemoteControllerSession = currentSession;
+      rememberClassroomRemoteSession(currentSession);
+      renderClassroomRemoteStatus(currentSession, "Activity change sent.");
+    } catch (error) {
+      renderClassroomRemoteStatus(currentSession, `Could not change activity: ${error.message}`, { forceRender: true });
+    } finally {
+      event.target.disabled = false;
       isSending = false;
     }
   });
@@ -27470,9 +27617,13 @@ function bindToolFrame(tool, options = {}) {
 
   function bindFrameFitRefreshers() {
     withFrameDocument((doc) => {
-      doc.addEventListener("click", scheduleClassroomFit, true);
-      doc.addEventListener("change", scheduleClassroomFit, true);
-      doc.addEventListener("input", scheduleClassroomFit, true);
+      const handleFrameInteraction = () => {
+        scheduleClassroomFit();
+        scheduleClassroomRemoteDisplayState();
+      };
+      doc.addEventListener("click", handleFrameInteraction, true);
+      doc.addEventListener("change", handleFrameInteraction, true);
+      doc.addEventListener("input", handleFrameInteraction, true);
       if ("ResizeObserver" in window) {
         const observer = new ResizeObserver(scheduleClassroomFit);
         observer.observe(doc.body);
@@ -27916,18 +28067,21 @@ function bindToolFrame(tool, options = {}) {
     annotationState.currentStroke = null;
     annotationState.drawing = false;
     renderAnnotations();
+    scheduleClassroomRemoteDisplayState(true);
   }
 
   function clearAnnotations() {
     annotationState.strokes = [];
     annotationState.currentStroke = null;
     renderAnnotations();
+    scheduleClassroomRemoteDisplayState(true);
   }
 
   function undoAnnotation() {
     annotationState.strokes.pop();
     annotationState.currentStroke = null;
     renderAnnotations();
+    scheduleClassroomRemoteDisplayState(true);
   }
 
   function remoteStrokeToLocal(stroke) {
@@ -27952,6 +28106,7 @@ function bindToolFrame(tool, options = {}) {
     annotationState.strokes.push(localStroke);
     annotationState.currentStroke = null;
     renderAnnotations();
+    scheduleClassroomRemoteDisplayState(true);
   }
 
   function moveRemotePointer(point) {
@@ -27987,6 +28142,172 @@ function bindToolFrame(tool, options = {}) {
   let classroomRemoteLastSeq = 0;
   let classroomRemoteBusy = false;
   let classroomRemotePanelDismissed = false;
+  let classroomRemoteDisplayStateTimer = null;
+  let classroomRemoteLastDisplayStateSignature = "";
+  let classroomRemoteLastDisplayStateAt = 0;
+  let classroomRemoteDisplayStateSchemaMissing = false;
+
+  function classroomRemoteAnnotationSnapshotKey() {
+    return `kaizen:classroom-remote:annotations:${tool.slug || "tool"}`;
+  }
+
+  function normalisedAnnotationStrokes() {
+    resizeAnnotationCanvas();
+    const width = annotationState.width || annotationCanvas?.getBoundingClientRect?.().width || 1;
+    const height = annotationState.height || annotationCanvas?.getBoundingClientRect?.().height || 1;
+    return annotationState.strokes.map((stroke) => ({
+      tool: stroke.tool || "pen",
+      points: (stroke.points || []).map((point) => ({
+        x: classroomRemoteClamp(point.x / width),
+        y: classroomRemoteClamp(point.y / height)
+      }))
+    }));
+  }
+
+  function saveAnnotationSnapshot() {
+    const snapshot = {
+      tool_slug: tool.slug,
+      tool_title: tool.title,
+      saved_at: new Date().toISOString(),
+      strokes: normalisedAnnotationStrokes()
+    };
+    writeJsonStorage(classroomRemoteAnnotationSnapshotKey(), snapshot);
+    scheduleClassroomRemoteDisplayState(true);
+    return snapshot;
+  }
+
+  function restoreAnnotationSnapshot() {
+    const snapshot = readJsonStorage(classroomRemoteAnnotationSnapshotKey(), null);
+    if (!snapshot?.strokes?.length || !annotationCanvas) return false;
+    resizeAnnotationCanvas();
+    const width = annotationState.width || annotationCanvas.getBoundingClientRect().width || 1;
+    const height = annotationState.height || annotationCanvas.getBoundingClientRect().height || 1;
+    annotationState.strokes = snapshot.strokes.map((stroke) => ({
+      tool: ["pen", "highlighter", "eraser"].includes(stroke?.tool) ? stroke.tool : "pen",
+      points: (stroke.points || []).map((point) => ({
+        x: classroomRemoteClamp(point?.x) * width,
+        y: classroomRemoteClamp(point?.y) * height
+      }))
+    })).filter((stroke) => stroke.points.length);
+    annotationState.currentStroke = null;
+    renderAnnotations();
+    scheduleClassroomRemoteDisplayState(true);
+    return true;
+  }
+
+  function framePreviewText(element, maxLength = 260) {
+    if (!element) return "";
+    const clone = element.cloneNode(true);
+    (clone.querySelectorAll?.(".problem-answer,.answer-section,.steps-section,.solution-steps,.final-answer,.teacher-tab,.sidebar,.timer-modal") || []).forEach((node) => node.remove());
+    return classroomRemoteTrimText(clone.textContent || "", maxLength);
+  }
+
+  function collectFrameQuestions(doc) {
+    const selectors = [".problem-item", ".question-card", ".problem-row", ".task-card"];
+    const nodes = selectors.flatMap((selector) => Array.from(doc.querySelectorAll(selector)));
+    const seen = new Set();
+    return nodes
+      .map((node) => framePreviewText(node))
+      .filter(Boolean)
+      .filter((text) => {
+        const key = text.toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .slice(0, 5)
+      .map((text) => ({ text }));
+  }
+
+  function collectClassroomRemoteDisplayState() {
+    const savedAnnotation = readJsonStorage(classroomRemoteAnnotationSnapshotKey(), null);
+    const baseState = {
+      version: 1,
+      tool_slug: tool.slug,
+      tool_title: tool.title,
+      level: "",
+      type: "",
+      levelTitle: "",
+      typeLabel: "",
+      levels: [],
+      types: [],
+      questions: [],
+      answersVisible: false,
+      stepsVisible: false,
+      annotationCount: annotationState.strokes.length,
+      annotationSavedAt: savedAnnotation?.saved_at || "",
+      updated_at: new Date().toISOString()
+    };
+    withFrameDocument((doc) => {
+      const apiState = frame?.contentWindow?.KaizenWorksheet?.getState?.() || {};
+      const levels = (apiState.levels || []).map((level) => ({
+        id: String(level.id ?? ""),
+        label: level.title || `Level ${level.id}`,
+        title: level.title || `Level ${level.id}`,
+        types: (level.types || []).map((typeItem) => ({
+          id: String(typeItem.id ?? ""),
+          label: typeItem.label || typeItem.title || String(typeItem.id ?? "")
+        })).filter((typeItem) => typeItem.id && typeItem.id !== "select")
+      })).filter((level) => level.id);
+      const types = classroomRemoteLevelTypes({ levels, types: [], level: apiState.level }).map((typeItem) => ({
+        id: String(typeItem.id ?? typeItem.value ?? ""),
+        label: typeItem.label || typeItem.title || String(typeItem.id ?? typeItem.value ?? "")
+      })).filter((typeItem) => typeItem.id && typeItem.id !== "select");
+      const currentType = String(apiState.type || doc.getElementById("type-dropdown")?.value || "");
+      const typeLabel = types.find((item) => String(item.id) === currentType)?.label
+        || doc.querySelector("#type-dropdown option:checked")?.textContent?.trim()
+        || "";
+      baseState.level = apiState.level ?? "";
+      baseState.type = currentType;
+      baseState.levelTitle = apiState.levelTitle || doc.getElementById("level-title")?.textContent?.trim() || "";
+      baseState.typeLabel = typeLabel;
+      baseState.levels = levels;
+      baseState.types = types;
+      baseState.questions = collectFrameQuestions(doc);
+      baseState.answersVisible = Boolean(doc.querySelector(".problem-answer.visible,.answer-section.visible"));
+      baseState.stepsVisible = Boolean(doc.querySelector(".steps-section.visible,.solution-section.visible"));
+    });
+    return baseState;
+  }
+
+  async function publishClassroomRemoteDisplayState({ force = false } = {}) {
+    if (!classroomRemoteSession?.id || classroomRemoteDisplayStateSchemaMissing) return;
+    if (["ended", "expired"].includes(classroomRemoteSession.status) || classroomRemoteIsExpired(classroomRemoteSession)) return;
+    const now = Date.now();
+    if (!force && now - classroomRemoteLastDisplayStateAt < classroomRemoteDisplayStateMinMs) return;
+    const displayState = collectClassroomRemoteDisplayState();
+    const signature = JSON.stringify({
+      level: displayState.level,
+      type: displayState.type,
+      questions: displayState.questions.map((question) => question.text).join("|"),
+      answersVisible: displayState.answersVisible,
+      stepsVisible: displayState.stepsVisible,
+      annotationCount: displayState.annotationCount,
+      annotationSavedAt: displayState.annotationSavedAt
+    });
+    if (!force && signature === classroomRemoteLastDisplayStateSignature) return;
+    classroomRemoteLastDisplayStateSignature = signature;
+    classroomRemoteLastDisplayStateAt = now;
+    try {
+      classroomRemoteSession = await updateClassroomRemoteSession(classroomRemoteSession.id, {
+        display_state: displayState,
+        last_seen_at: new Date().toISOString()
+      });
+      updateClassroomRemoteStatusChip(classroomRemoteSession);
+    } catch (error) {
+      if (/display_state|schema cache|column/i.test(error.message || "")) {
+        classroomRemoteDisplayStateSchemaMissing = true;
+      } else {
+        console.warn("Kaizen classroom remote display state unavailable:", error.message);
+      }
+    }
+  }
+
+  function scheduleClassroomRemoteDisplayState(force = false) {
+    if (!classroomRemoteSession?.id) return;
+    window.clearTimeout(classroomRemoteDisplayStateTimer);
+    classroomRemoteDisplayStateTimer = window.setTimeout(() => publishClassroomRemoteDisplayState({ force }), force ? 120 : 700);
+  }
 
   function frameActionSelectors(action) {
     const selectors = {
@@ -28071,6 +28392,40 @@ function bindToolFrame(tool, options = {}) {
     return clicked;
   }
 
+  function applyClassroomRemoteActivity(activity = {}) {
+    const level = activity.level;
+    const type = activity.type;
+    let applied = false;
+    try {
+      const legacyWindow = frame?.contentWindow;
+      if (legacyWindow?.KaizenWorksheet?.setActivity) {
+        const result = legacyWindow.KaizenWorksheet.setActivity({ level, type, generate: true });
+        applied = result?.ok !== false;
+      } else if (legacyWindow) {
+        if (level !== undefined && typeof legacyWindow.switchLevel === "function") {
+          const numericLevel = Number(level);
+          legacyWindow.switchLevel(Number.isFinite(numericLevel) ? numericLevel : level);
+        }
+        const dropdown = legacyWindow.document?.getElementById?.("type-dropdown");
+        if (dropdown && type) {
+          dropdown.value = String(type);
+          if (typeof legacyWindow.typeChanged === "function") legacyWindow.typeChanged();
+          else if (typeof legacyWindow.generateNewSet === "function") legacyWindow.generateNewSet();
+        }
+        applied = true;
+      }
+    } catch (error) {
+      applied = false;
+    }
+    if (applied) {
+      clearAnnotations();
+      scheduleClassroomFit();
+      scheduleAnnotationResize();
+      scheduleClassroomRemoteDisplayState(true);
+    }
+    return applied;
+  }
+
   function applyClassroomRemoteCommand(command) {
     const action = command?.action;
     if (!action) return;
@@ -28086,6 +28441,10 @@ function bindToolFrame(tool, options = {}) {
     }
     if (["timer-2", "timer-5", "timer-stop"].includes(action)) {
       clickFrameTimerAction(action);
+      return;
+    }
+    if (action === "set-activity") {
+      applyClassroomRemoteActivity(command.activity || {});
       return;
     }
     if (action === "pointer-move") {
@@ -28106,6 +28465,15 @@ function bindToolFrame(tool, options = {}) {
     }
     if (action === "annotation-clear") {
       clearAnnotations();
+      return;
+    }
+    if (action === "annotation-save") {
+      saveAnnotationSnapshot();
+      return;
+    }
+    if (action === "annotation-restore") {
+      restoreAnnotationSnapshot();
+      return;
     }
   }
 
@@ -28201,6 +28569,8 @@ function bindToolFrame(tool, options = {}) {
       window.clearInterval(state.classroomRemoteDisplayTimer);
       state.classroomRemoteDisplayTimer = null;
     }
+    window.clearTimeout(classroomRemoteDisplayStateTimer);
+    classroomRemoteDisplayStateTimer = null;
   }
 
   async function refreshClassroomRemoteDisplaySession({ quiet = false } = {}) {
@@ -28219,12 +28589,17 @@ function bindToolFrame(tool, options = {}) {
         await updateClassroomRemoteSession(session.id, { last_seen_at: new Date().toISOString() }).catch(() => null);
       }
       const commandSeq = Number(session.command_seq) || 0;
+      let commandApplied = false;
       if (commandSeq > classroomRemoteLastSeq) {
         classroomRemoteLastSeq = commandSeq;
         applyClassroomRemoteCommand(session.last_command || {});
+        commandApplied = true;
       }
       classroomRemoteSession = session;
       renderClassroomRemotePanel(session);
+      if (!["ended", "expired"].includes(session.status) && !classroomRemoteIsExpired(session)) {
+        scheduleClassroomRemoteDisplayState(commandApplied);
+      }
       if (["ended", "expired"].includes(session.status) || classroomRemoteIsExpired(session)) {
         stopClassroomRemoteDisplayPolling();
       }
@@ -28250,6 +28625,7 @@ function bindToolFrame(tool, options = {}) {
       classroomRemoteLastSeq = Number(classroomRemoteSession.command_seq) || 0;
       renderClassroomRemotePanel(classroomRemoteSession, "", { forceOpen: true });
       startClassroomRemoteDisplayPolling();
+      scheduleClassroomRemoteDisplayState(true);
     } catch (error) {
       classroomRemoteSession = null;
       renderClassroomRemotePanel(null, `Could not start classroom remote: ${error.message}`, { forceOpen: true });
@@ -28297,6 +28673,7 @@ function bindToolFrame(tool, options = {}) {
         classroomRemoteLastSeq = Number(classroomRemoteSession.command_seq) || 0;
         classroomRemotePanelDismissed = true;
         renderClassroomRemotePanel(classroomRemoteSession);
+        scheduleClassroomRemoteDisplayState(true);
       } else if (action === "end") {
         await endClassroomRemoteDisplaySession();
       } else if (action === "restart") {
@@ -28364,9 +28741,11 @@ function bindToolFrame(tool, options = {}) {
       updateFullscreenButton();
       scheduleClassroomFit();
       scheduleAnnotationResize();
+      scheduleClassroomRemoteDisplayState(true);
     });
     bindFrameFitRefreshers();
     refreshTeacherTopicMap();
+    scheduleClassroomRemoteDisplayState(true);
   }
 
   window.addEventListener("resize", () => {

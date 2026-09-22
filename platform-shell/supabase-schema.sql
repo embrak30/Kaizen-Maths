@@ -1375,6 +1375,7 @@ create table if not exists public.classroom_remote_sessions (
   approved_at timestamptz,
   last_seen_at timestamptz,
   last_controller_seen_at timestamptz,
+  display_state jsonb not null default '{}'::jsonb,
   expires_at timestamptz not null default (now() + interval '25 minutes'),
   command_seq integer not null default 0,
   last_command jsonb not null default '{}'::jsonb,
@@ -1387,6 +1388,7 @@ alter table public.classroom_remote_sessions add column if not exists controller
 alter table public.classroom_remote_sessions add column if not exists approved_at timestamptz;
 alter table public.classroom_remote_sessions add column if not exists last_seen_at timestamptz;
 alter table public.classroom_remote_sessions add column if not exists last_controller_seen_at timestamptz;
+alter table public.classroom_remote_sessions add column if not exists display_state jsonb not null default '{}'::jsonb;
 alter table public.classroom_remote_sessions add column if not exists expires_at timestamptz not null default (now() + interval '25 minutes');
 alter table public.classroom_remote_sessions add column if not exists command_seq integer not null default 0;
 alter table public.classroom_remote_sessions add column if not exists last_command jsonb not null default '{}'::jsonb;

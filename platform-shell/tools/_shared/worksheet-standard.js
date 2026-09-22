@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.2.7';
+  const VERSION = '0.2.8';
   const MIXED_TYPE_ID = '__kaizen_mixed_practice__';
   const MIXED_TYPE_LABEL = 'Mixed Practice';
 
@@ -309,6 +309,58 @@
       availableTypes: normalizeTypes(levelConfig, typeDisplayNames, typeMeta).map((typeItem) => typeItem.id),
       levels
     };
+  }
+
+  function normaliseActivityLevel(level) {
+    if (level === undefined || level === null || level === '') return readBinding('currentLevel', null);
+    const numeric = Number(level);
+    return Number.isFinite(numeric) && String(level).trim() !== '' ? numeric : level;
+  }
+
+  function setActivity(options = {}) {
+    const nextLevel = normaliseActivityLevel(options.level);
+    const nextType = options.type !== undefined && options.type !== null ? String(options.type) : readBinding('currentType', 'select');
+    const canSwitchLevel = typeof readBinding('switchLevel', null) === 'function';
+
+    if (nextLevel !== undefined && nextLevel !== null) {
+      if (canSwitchLevel) {
+        try {
+          readBinding('switchLevel')(nextLevel);
+        } catch (_) {
+          writeBinding('currentLevel', nextLevel);
+          syncLevelDisplay(nextLevel);
+        }
+      } else {
+        writeBinding('currentLevel', nextLevel);
+        syncLevelDisplay(nextLevel);
+      }
+    }
+
+    if (nextType) {
+      writeBinding('currentType', nextType);
+      syncTypeDropdown(nextType, nextLevel);
+    }
+
+    if (options.generate !== false && nextType && nextType !== 'select') {
+      const generator = readBinding('generateNewSet', null);
+      try {
+        if (window.KaizenTeacherExample?.isActive?.() && window.KaizenTeacherExample?.setActive) {
+          window.KaizenTeacherExample.setActive(true);
+        } else if (typeof generator === 'function') {
+          generator();
+        } else {
+          window.eval('if (typeof generateNewSet === "function") generateNewSet();');
+        }
+      } catch (_) {
+        return { ok: false, ...getState() };
+      }
+    } else {
+      requestMathRender();
+    }
+
+    window.KaizenQuestionPersistence?.saveSoon?.();
+    document.dispatchEvent(new CustomEvent('kaizen:activity-changed', { detail: getState() }));
+    return { ok: true, ...getState() };
   }
 
   function prettifyType(typeId) {
@@ -789,6 +841,8 @@
     canGenerate,
     generate,
     getState,
+    setActivity,
+    getBoardSnapshot: currentBoardSnapshot,
     normalizeProblem
   };
 
