@@ -9768,6 +9768,20 @@ button.certification-course-card {
   padding: 5px 10px;
 }
 
+.classroom-remote-status-chip {
+  display: none;
+  min-height: 26px;
+  align-items: center;
+  padding: 4px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.74rem;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 .classroom-write-tools {
   display: none;
   position: relative;
@@ -9829,6 +9843,33 @@ button.certification-course-card {
   display: inline-flex;
   background: #f97316;
   color: white;
+}
+
+.legacy-stage.classroom .classroom-remote-button.active {
+  background: #0f766e;
+  color: white;
+}
+
+.legacy-stage.classroom .classroom-remote-status-chip {
+  display: inline-flex;
+}
+
+.legacy-stage.classroom .classroom-remote-status-chip[hidden] {
+  display: none;
+}
+
+.legacy-stage.classroom .classroom-remote-status-chip[data-tone="pairing"] {
+  background: rgba(249, 115, 22, 0.18);
+}
+
+.legacy-stage.classroom .classroom-remote-status-chip[data-tone="pending"] {
+  background: rgba(245, 158, 11, 0.24);
+  color: #fde68a;
+}
+
+.legacy-stage.classroom .classroom-remote-status-chip[data-tone="connected"] {
+  background: rgba(20, 184, 166, 0.26);
+  color: #ccfbf1;
 }
 
 .legacy-stage.classroom .classroom-write-tools,
@@ -9917,10 +9958,10 @@ button.certification-course-card {
   top: 54px;
   right: 12px;
   z-index: 160;
-  width: min(380px, calc(100vw - 24px));
+  width: min(326px, calc(100vw - 24px));
   max-height: calc(100vh - 76px);
   overflow: auto;
-  padding: 14px;
+  padding: 12px;
   border: 1px solid rgba(148, 163, 184, 0.28);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.98);
@@ -9936,8 +9977,8 @@ button.certification-course-card {
   display: flex;
   align-items: start;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
 .classroom-remote-panel h2,
@@ -9954,7 +9995,7 @@ button.certification-course-card {
 }
 
 .classroom-remote-status {
-  padding: 9px 10px;
+  padding: 8px 9px;
   border-radius: 8px;
   background: #f8fafc;
 }
@@ -9976,16 +10017,16 @@ button.certification-course-card {
 
 .classroom-remote-pairing {
   display: grid;
-  grid-template-columns: 142px minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: 108px minmax(0, 1fr);
+  gap: 10px;
   align-items: center;
-  margin: 12px 0;
+  margin: 10px 0;
 }
 
 .classroom-remote-qr {
   display: grid;
   place-items: center;
-  padding: 8px;
+  padding: 6px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
@@ -9993,8 +10034,8 @@ button.certification-course-card {
 
 .classroom-remote-qr img {
   display: block;
-  width: 124px;
-  height: 124px;
+  width: 96px;
+  height: 96px;
 }
 
 .classroom-remote-code {
@@ -10012,7 +10053,7 @@ button.certification-course-card {
 
 .classroom-remote-code strong {
   letter-spacing: 0.12em;
-  font-size: 1.65rem;
+  font-size: 1.32rem;
   color: var(--blue-dark);
 }
 
@@ -10025,8 +10066,13 @@ button.certification-course-card {
 .classroom-remote-panel-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 12px 0 8px;
+  gap: 7px;
+  margin: 10px 0 6px;
+}
+
+.classroom-remote-panel-actions .button {
+  min-height: 30px;
+  padding: 5px 10px;
 }
 
 .classroom-remote-page {

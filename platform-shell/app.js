@@ -3540,7 +3540,7 @@ function classroomRemoteControllerShell(pairingCode = "") {
       <div class="classroom-remote-card classroom-remote-control-card" id="classroomRemoteControllerStatus">
         <span class="eyebrow">Remote Status</span>
         <h2>${code ? "Checking classroom session" : "Waiting for a code"}</h2>
-        <p>${code ? "Kaizen Maths is checking the pairing code." : "Open Connect Phone on the classroom screen, then scan the QR code or enter the code here."}</p>
+        <p>${code ? "Kaizen Maths is checking the pairing code." : "Open Connect on the classroom screen, then scan the QR code or enter the code here."}</p>
       </div>
     </section>
   `;
@@ -24336,7 +24336,8 @@ function renderToolFrame(tool, options = {}) {
             ${startClassroom ? "" : `<button class="button primary" id="focusTool" type="button">Classroom View</button>`}
             <button class="button classroom-fullscreen" id="classroomFullscreen" type="button">Full Screen</button>
             <button class="button classroom-capture" id="classroomCapture" type="button">Capture</button>
-            <button class="button classroom-remote-button" id="classroomRemote" type="button">Connect Phone</button>
+            <button class="button classroom-remote-button" id="classroomRemote" type="button">Connect</button>
+            <span class="classroom-remote-status-chip" id="classroomRemoteStatusChip" hidden>Remote off</span>
             <div class="classroom-write-tools">
               <button class="button classroom-draw-toggle" id="classroomDrawToggle" type="button" aria-pressed="false">Write</button>
               <div class="classroom-write-palette" aria-label="Writing tools">
@@ -27136,6 +27137,7 @@ function bindToolFrame(tool, options = {}) {
   const captureButton = document.getElementById("classroomCapture");
   const remoteButton = document.getElementById("classroomRemote");
   const remotePanel = document.getElementById("classroomRemotePanel");
+  const remoteStatusChip = document.getElementById("classroomRemoteStatusChip");
   const drawToggle = document.getElementById("classroomDrawToggle");
   const annotationCanvas = document.getElementById("classroomAnnotationCanvas");
   const annotationPen = document.getElementById("annotationPen");
@@ -27897,6 +27899,7 @@ function bindToolFrame(tool, options = {}) {
   let classroomRemoteSession = null;
   let classroomRemoteLastSeq = 0;
   let classroomRemoteBusy = false;
+  let classroomRemotePanelDismissed = false;
 
   function frameActionSelectors(action) {
     const selectors = {
@@ -28019,20 +28022,48 @@ function bindToolFrame(tool, options = {}) {
     }
   }
 
-  function renderClassroomRemotePanel(session = classroomRemoteSession, message = "") {
+  function updateClassroomRemoteStatusChip(session = classroomRemoteSession) {
+    if (!remoteStatusChip) return;
+    const activeSession = session || classroomRemoteSession;
+    const expired = classroomRemoteIsExpired(activeSession);
+    const inactive = !activeSession || expired || ["ended", "expired"].includes(activeSession.status);
+    if (inactive) {
+      remoteStatusChip.hidden = true;
+      remoteStatusChip.textContent = "Remote off";
+      remoteStatusChip.dataset.tone = "off";
+      remoteButton?.classList.remove("active");
+      if (remoteButton) remoteButton.textContent = "Connect";
+      return;
+    }
+    const pending = activeSession.status === "pending_approval";
+    const connected = activeSession.status === "connected";
+    remoteStatusChip.hidden = false;
+    remoteStatusChip.dataset.tone = connected ? "connected" : pending ? "pending" : "pairing";
+    remoteStatusChip.textContent = connected ? "Remote connected" : pending ? "Approval needed" : `Code ${activeSession.pairing_code}`;
+    remoteButton?.classList.toggle("active", connected || pending || activeSession.status === "pairing");
+    if (remoteButton) remoteButton.textContent = "Connect";
+  }
+
+  function renderClassroomRemotePanel(session = classroomRemoteSession, message = "", options = {}) {
     if (!remotePanel) return;
     const activeSession = session || classroomRemoteSession;
     const expired = classroomRemoteIsExpired(activeSession);
     const pending = activeSession?.status === "pending_approval" && !expired;
     const connected = activeSession?.status === "connected" && !expired;
     const ended = expired || activeSession?.status === "ended" || activeSession?.status === "expired";
+    updateClassroomRemoteStatusChip(activeSession);
+    const forceOpen = Boolean(options.forceOpen || message);
+    if (classroomRemotePanelDismissed && !forceOpen) {
+      remotePanel.hidden = true;
+      return;
+    }
     if (!activeSession) {
       remotePanel.hidden = false;
       remotePanel.innerHTML = `
         <div class="classroom-remote-panel-head">
           <div>
             <span class="eyebrow">Classroom Remote</span>
-            <h2>Connect Phone</h2>
+            <h2>Connect</h2>
           </div>
           <button class="button subtle" type="button" data-classroom-remote-action="close">Close</button>
         </div>
@@ -28047,12 +28078,12 @@ function bindToolFrame(tool, options = {}) {
       <div class="classroom-remote-panel-head">
         <div>
           <span class="eyebrow">Classroom Remote</span>
-          <h2>${connected ? "Remote Connected" : pending ? "Approve Device" : ended ? "Remote Ended" : "Connect Phone"}</h2>
+          <h2>${connected ? "Remote Connected" : pending ? "Approve Device" : ended ? "Remote Ended" : "Connect"}</h2>
         </div>
         <button class="button subtle" type="button" data-classroom-remote-action="close">Close</button>
       </div>
       <p class="classroom-remote-status" data-tone="${escapeHtml(statusTone)}">${escapeHtml(message || classroomRemoteStatusCopy(activeSession))}</p>
-      ${ended ? "" : `
+      ${ended || connected ? "" : `
         <div class="classroom-remote-pairing">
           <div class="classroom-remote-qr">
             <img src="${escapeHtml(classroomRemoteQrUrl(activeSession.pairing_code))}" alt="QR code for Kaizen classroom remote">
@@ -28119,19 +28150,20 @@ function bindToolFrame(tool, options = {}) {
   }
 
   async function startClassroomRemoteDisplaySession() {
+    classroomRemotePanelDismissed = false;
     if (classroomRemoteSession && !["ended", "expired"].includes(classroomRemoteSession.status) && !classroomRemoteIsExpired(classroomRemoteSession)) {
-      renderClassroomRemotePanel(classroomRemoteSession);
+      renderClassroomRemotePanel(classroomRemoteSession, "", { forceOpen: true });
       return;
     }
-    renderClassroomRemotePanel(null, "Creating classroom remote session...");
+    renderClassroomRemotePanel(null, "Creating classroom remote session...", { forceOpen: true });
     try {
       classroomRemoteSession = await createClassroomRemoteSession(tool);
       classroomRemoteLastSeq = Number(classroomRemoteSession.command_seq) || 0;
-      renderClassroomRemotePanel(classroomRemoteSession);
+      renderClassroomRemotePanel(classroomRemoteSession, "", { forceOpen: true });
       startClassroomRemoteDisplayPolling();
     } catch (error) {
       classroomRemoteSession = null;
-      renderClassroomRemotePanel(null, `Could not start classroom remote: ${error.message}`);
+      renderClassroomRemotePanel(null, `Could not start classroom remote: ${error.message}`, { forceOpen: true });
     }
   }
 
@@ -28146,9 +28178,10 @@ function bindToolFrame(tool, options = {}) {
         status: "ended",
         last_seen_at: new Date().toISOString()
       });
-      if (!quiet) renderClassroomRemotePanel(classroomRemoteSession);
+      updateClassroomRemoteStatusChip(classroomRemoteSession);
+      if (!quiet) renderClassroomRemotePanel(classroomRemoteSession, "", { forceOpen: true });
     } catch (error) {
-      if (!quiet) renderClassroomRemotePanel(classroomRemoteSession, `Could not end remote session: ${error.message}`);
+      if (!quiet) renderClassroomRemotePanel(classroomRemoteSession, `Could not end remote session: ${error.message}`, { forceOpen: true });
     }
   }
 
@@ -28158,7 +28191,9 @@ function bindToolFrame(tool, options = {}) {
     if (!control || classroomRemoteBusy) return;
     const action = control.dataset.classroomRemoteAction;
     if (action === "close") {
+      classroomRemotePanelDismissed = true;
       remotePanel.hidden = true;
+      updateClassroomRemoteStatusChip(classroomRemoteSession);
       return;
     }
     classroomRemoteBusy = true;
@@ -28171,6 +28206,7 @@ function bindToolFrame(tool, options = {}) {
           last_seen_at: new Date().toISOString()
         });
         classroomRemoteLastSeq = Number(classroomRemoteSession.command_seq) || 0;
+        classroomRemotePanelDismissed = true;
         renderClassroomRemotePanel(classroomRemoteSession);
       } else if (action === "end") {
         await endClassroomRemoteDisplaySession();
@@ -28179,10 +28215,10 @@ function bindToolFrame(tool, options = {}) {
         await startClassroomRemoteDisplaySession();
       } else if (action === "copy" && classroomRemoteSession?.pairing_code) {
         await navigator.clipboard?.writeText?.(classroomRemoteJoinUrl(classroomRemoteSession.pairing_code));
-        renderClassroomRemotePanel(classroomRemoteSession, "Remote link copied.");
+        renderClassroomRemotePanel(classroomRemoteSession, "Remote link copied.", { forceOpen: true });
       }
     } catch (error) {
-      renderClassroomRemotePanel(classroomRemoteSession, `Remote action failed: ${error.message}`);
+      renderClassroomRemotePanel(classroomRemoteSession, `Remote action failed: ${error.message}`, { forceOpen: true });
     } finally {
       classroomRemoteBusy = false;
     }
