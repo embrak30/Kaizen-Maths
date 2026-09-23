@@ -2659,6 +2659,9 @@ const state = {
   programmeContentLoaded: false,
   programmeEnquiries: [],
   programmeEnquiriesLoaded: false,
+  programmeUserEnquiries: [],
+  programmeUserEnquiriesLoaded: false,
+  programmeUserEnquiriesEmail: "",
   toolInfoOverrides: {},
   toolInfoOverridesLoaded: false,
   universityVideos: {},
@@ -5300,7 +5303,7 @@ const defaultProgrammeContent = {
   make_it_count_heading: "Make It Count is being developed to help teachers use mathematics resources effectively, not just access them.",
   make_it_count_copy: "Many schools need more than a login. They need practical training, shared routines, coaching, and follow-up that helps teachers turn resources into better classroom practice. Make It Count is designed around that implementation gap.",
   make_it_count_status: "The pilot is proposed and subject to securing funding, confirming school participation, and finalising programme arrangements.",
-  pilot_summary: "Ten participating schools.\nApproximately 30 mathematics teachers, with three teachers from each school.\nFree Kaizen Maths access for participating teachers during the programme.\nIn-person launch workshop, six-week initial professional development programme, school visits, online mentoring, and 12-month follow-up.\nProvisional pilot budget: US$41,855, subject to funding and final programme approval.",
+  pilot_summary: "Ten participating schools.\nApproximately 30 mathematics teachers, with three teachers from each school.\nFree Kaizen Maths access for participating teachers during the programme.\nIn-person launch workshop, six-week initial professional development programme, school visits, online mentoring, and 12-month follow-up.\nParticipation subject to funding and final programme approval.",
   school_interest_heading: "Kaizen Maths can support everyday teaching while Make It Count adds training and implementation support.",
   school_interest_copy: "The resource helps teachers prepare and deliver mathematics activities. The programme model is designed for schools that need structured professional development, coaching, and follow-up so that resource use becomes part of classroom practice.",
   school_interest_status: "Schools can enquire about resource access without applying for Make It Count. Programme participation depends on funding and agreed arrangements.",
@@ -6676,6 +6679,23 @@ async function loadProgrammeEnquiryStatus(publicToken) {
   const row = Array.isArray(data) ? data[0] : data;
   if (!row) return null;
   return normaliseProgrammeEnquiry({ ...row, public_token: token });
+}
+
+async function loadMyProgrammeEnquiries() {
+  const email = String(authState().session?.user?.email || "").trim().toLowerCase();
+  if (!email) return [];
+  if (state.programmeUserEnquiriesLoaded && state.programmeUserEnquiriesEmail === email) {
+    return state.programmeUserEnquiries;
+  }
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client) throw new Error("Sign in is needed to check saved programme submissions.");
+  const { data, error } = await client.rpc("get_my_programme_enquiries");
+  if (error) throw error;
+  const rows = (data || []).map(normaliseProgrammeEnquiry);
+  state.programmeUserEnquiries = rows;
+  state.programmeUserEnquiriesLoaded = true;
+  state.programmeUserEnquiriesEmail = email;
+  return rows;
 }
 
 async function updateProgrammeEnquiry(id, values) {
@@ -9612,6 +9632,102 @@ function renderKaizenMathsResourcePage() {
   `;
 }
 
+function programmeReturningContactPanelHtml() {
+  if (isAuthChecking()) {
+    return `
+      <section class="programme-return-panel panel" aria-live="polite">
+        <span class="eyebrow">Returning Contact</span>
+        <h2>Checking your signed-in account...</h2>
+        <p>If your account email matches a programme submission contact email, your private review page link will appear here.</p>
+      </section>
+    `;
+  }
+  if (!isSignedIn()) {
+    return `
+      <section class="programme-return-panel panel">
+        <div>
+          <span class="eyebrow">Returning Contact</span>
+          <h2>Already submitted a school interest form?</h2>
+          <p>Sign in with the same email used on the form, then return to Make It Count. Your private review page link will appear here.</p>
+        </div>
+        <button class="button primary" type="button" data-auth-action="signin">Sign In To View Submission</button>
+      </section>
+    `;
+  }
+  return `
+    <section class="programme-return-panel panel" data-programme-user-submissions aria-live="polite">
+      <div>
+        <span class="eyebrow">Your Submissions</span>
+        <h2>Checking for review pages linked to your email...</h2>
+        <p>Signed in as ${escapeHtml(authState().session?.user?.email || "your account")}.</p>
+      </div>
+    </section>
+  `;
+}
+
+function programmeUserSubmissionCardHtml(item) {
+  const primaryName = item.school_name || item.organisation_name || "Programme submission";
+  return `
+    <article class="programme-return-card">
+      <div>
+        <span class="programme-enquiry-type">${escapeHtml(programmeEnquiryTypeLabel(item.enquiry_type))}</span>
+        <h3>${escapeHtml(primaryName)}</h3>
+        <p>${escapeHtml(formatDisplayDate(item.created_at))}</p>
+      </div>
+      <span class="programme-enquiry-status status-${escapeHtml(item.status)}">${escapeHtml(programmePublicStatusLabel(item.status))}</span>
+      <a class="button primary" href="${escapeHtml(programmeStatusPath(item.public_token))}">Open Review Page</a>
+    </article>
+  `;
+}
+
+function renderProgrammeUserSubmissionsPanel(rows = []) {
+  const panel = document.querySelector("[data-programme-user-submissions]");
+  if (!panel) return;
+  const email = authState().session?.user?.email || "your account";
+  if (!rows.length) {
+    panel.innerHTML = `
+      <div>
+        <span class="eyebrow">Your Submissions</span>
+        <h2>No programme submissions linked to this account yet.</h2>
+        <p>Signed in as ${escapeHtml(email)}. If you submitted a form with another email address, sign in with that contact email or use the private review link created at submission.</p>
+      </div>
+      <a class="button" href="#/school-interest">Express School Interest</a>
+    `;
+    return;
+  }
+  panel.innerHTML = `
+    <div>
+      <span class="eyebrow">Your Submissions</span>
+      <h2>Open your Make It Count review page</h2>
+      <p>These private review links are connected to ${escapeHtml(email)}.</p>
+    </div>
+    <div class="programme-return-list">
+      ${rows.map(programmeUserSubmissionCardHtml).join("")}
+    </div>
+  `;
+}
+
+function bindProgrammeReturningContactPanel() {
+  bindAuthActions();
+  if (!isSignedIn()) return;
+  loadMyProgrammeEnquiries()
+    .then((rows) => {
+      if (routeParts()[0] !== "make-it-count") return;
+      renderProgrammeUserSubmissionsPanel(rows);
+    })
+    .catch((error) => {
+      const panel = document.querySelector("[data-programme-user-submissions]");
+      if (!panel) return;
+      panel.innerHTML = `
+        <div>
+          <span class="eyebrow">Your Submissions</span>
+          <h2>Review links could not be checked.</h2>
+          <p>${escapeHtml(error.message || "Please try again later. If the form has already been submitted, use the private link created at submission.")}</p>
+        </div>
+      `;
+    });
+}
+
 function renderMakeItCountPage() {
   const programme = programmeContent();
   const programmeModel = [
@@ -9643,6 +9759,8 @@ function renderMakeItCountPage() {
         </aside>
       </article>
 
+      ${programmeReturningContactPanelHtml()}
+
       <section class="mission-grid mission-grid-three" aria-labelledby="programmeModelTitle">
         <div class="section-heading mission-grid-heading">
           <span class="eyebrow">Programme Model</span>
@@ -9673,6 +9791,7 @@ function renderMakeItCountPage() {
       </section>
     </section>
   `;
+  bindProgrammeReturningContactPanel();
 }
 
 function renderForSchoolsPage() {
@@ -10172,6 +10291,9 @@ function bindProgrammeEnquiryForm() {
     if (status) status.textContent = "Submitting enquiry...";
     try {
       const saved = await saveProgrammeEnquiry(values);
+      if (values.contact_email.toLowerCase() === String(authState().session?.user?.email || "").trim().toLowerCase()) {
+        state.programmeUserEnquiriesLoaded = false;
+      }
       const reviewPath = programmeStatusPath(saved.public_token);
       const reviewUrl = programmeStatusUrl(saved.public_token);
       form.reset();
@@ -10275,7 +10397,8 @@ function programmeSubmissionDocumentHtml(item, token) {
   const intent = item.enquiry_type === "partner_interest"
     ? programmeOptionLabel(partnerSupportTypeOptions, item.support_type)
     : programmeOptionLabel(schoolInterestFocusOptions, item.interest_focus);
-  const pilotItems = programmeListItems(programme.pilot_summary);
+  const pilotItems = programmeListItems(programme.pilot_summary)
+    .filter((line) => !/(budget|US\$|USD|\$41,855)/i.test(line));
   const partnerItems = programmeListItems(programme.partner_support);
   return `
     <article class="programme-submission-document" id="programmeSubmissionDocument">

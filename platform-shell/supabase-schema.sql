@@ -693,6 +693,41 @@ $$;
 revoke all on function public.get_programme_enquiry_status(text) from public;
 grant execute on function public.get_programme_enquiry_status(text) to anon, authenticated;
 
+create or replace function public.get_my_programme_enquiries()
+returns table (
+  public_token text,
+  enquiry_type text,
+  status text,
+  school_name text,
+  organisation_name text,
+  contact_email text,
+  created_at timestamptz,
+  updated_at timestamptz
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    pe.public_token,
+    pe.enquiry_type,
+    pe.status,
+    pe.school_name,
+    pe.organisation_name,
+    pe.contact_email,
+    pe.created_at,
+    pe.updated_at
+  from public.programme_enquiries pe
+  where pe.public_token is not null
+    and lower(pe.contact_email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+  order by pe.created_at desc
+  limit 20;
+$$;
+
+revoke all on function public.get_my_programme_enquiries() from public;
+grant execute on function public.get_my_programme_enquiries() to authenticated;
+
 create table if not exists public.homepage_screenshots (
   screenshot_id text primary key,
   title text not null default '',
