@@ -1774,20 +1774,21 @@ const tools = [
   },
   {
     slug: "quadratic-factorisation",
-    title: "Quadratic Factorisation Basics",
+    title: "Factorising Quadratic Expressions",
     category: "Algebra",
     level: "KS3 / GCSE",
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate foundation factorisation questions for common factors, special quadratic forms, trinomials, grouping, and mixed expressions.",
-    tags: ["algebra", "quadratics", "factorisation", "factorising", "difference of squares", "trinomials", "common factor"],
-    toolPath: "tools/quadratic-factorisation/index.html?v=factorisation-steps-1",
+    description: "Generate focused quadratic factorisation practice covering monic quadratics, coefficient-of-x-squared trinomials, split-middle grouping, common-factor-first questions, and difference of two squares.",
+    tags: ["algebra", "quadratics", "quadratic expressions", "factorisation", "factorising", "difference of squares", "trinomials", "split middle term", "grouping", "common factor", "complete factorisation"],
+    toolPath: "tools/quadratic-factorisation/index.html?v=factorising-quadratics-1",
     imported: true,
     teacherNotes: [
-      "Builds from common factor extraction into special products and trinomial factorisation.",
-      "Advanced question sets return complete factorised answers rather than placeholders.",
-      "Step-by-step highlighting supports board modelling and Classroom View projection."
+      "Level 1 builds monic quadratic factorisation, signed factors, and difference of two squares.",
+      "Level 2 develops coefficient-of-x-squared questions through split-middle-term grouping.",
+      "Level 3 focuses on complete factorisation, including common-factor-first and hidden difference-of-squares forms.",
+      "Worked steps show product-sum checks, middle-term splitting, grouping, and expansion checks."
     ]
   },
   {
