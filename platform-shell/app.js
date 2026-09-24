@@ -5319,7 +5319,10 @@ const programmeEnquiryStatuses = [
   "reviewed",
   "follow_up",
   "shortlisted",
+  "commitment_requested",
   "committed",
+  "confirmed",
+  "active",
   "declined"
 ];
 
@@ -5328,7 +5331,10 @@ const programmeEnquiryStatusLabels = {
   reviewed: "Reviewed",
   follow_up: "Follow up",
   shortlisted: "Shortlisted",
-  committed: "Committed",
+  commitment_requested: "Commitment requested",
+  committed: "Commitment received",
+  confirmed: "Confirmed for pilot",
+  active: "Active programme",
   declined: "Declined"
 };
 
@@ -5337,7 +5343,10 @@ const programmePublicStatusLabels = {
   reviewed: "Reviewed",
   follow_up: "Follow-up needed",
   shortlisted: "Shortlisted",
-  committed: "Committed",
+  commitment_requested: "Commitment requested",
+  committed: "Commitment received",
+  confirmed: "Confirmed for pilot",
+  active: "Active programme",
   declined: "Not proceeding"
 };
 
@@ -5345,8 +5354,11 @@ const programmePublicStatusCopy = {
   new: "Your submission has been received and is waiting for review.",
   reviewed: "Your submission has been reviewed. Further contact or programme planning may follow.",
   follow_up: "Further information or a conversation may be needed before a decision is made.",
-  shortlisted: "Your submission has been shortlisted for further programme consideration.",
-  committed: "Your school commitment has been recorded for programme planning.",
+  shortlisted: "Your school has been shortlisted for further programme consideration. If you are invited to move forward, the next step is to complete the school commitment details.",
+  commitment_requested: "Your school has been invited to confirm its programme commitment. Please complete the commitment form on this page so the programme team can review teacher participation, leadership confirmation, and implementation readiness.",
+  committed: "Your school commitment has been received and is being held for final programme planning.",
+  confirmed: "Your school has been confirmed for the pilot, subject to final programme arrangements and direct communication from the programme team.",
+  active: "Your school is listed as active in the programme cycle.",
   declined: "This submission is not currently being taken forward."
 };
 
@@ -6540,6 +6552,88 @@ function programmeEnquiryFieldValue(form, name) {
   return String(new FormData(form).get(name) || "").trim();
 }
 
+function programmeCommitmentCanBeSubmitted(item) {
+  return item?.enquiry_type !== "partner_interest" && ["shortlisted", "commitment_requested"].includes(item?.status);
+}
+
+function programmeCommitmentTeacherRows(commitment = {}, count = 8) {
+  const teachers = Array.isArray(commitment.participating_teachers)
+    ? commitment.participating_teachers
+    : [];
+  return Array.from({ length: count }, (_, index) => {
+    const number = index + 1;
+    const teacher = teachers[index] || {};
+    return `
+      <div class="programme-teacher-row">
+        <label>
+          Teacher ${number} name
+          <input name="teacher_${number}_name" type="text" autocomplete="name" value="${escapeHtml(teacher.name || "")}">
+        </label>
+        <label>
+          Teacher ${number} email
+          <input name="teacher_${number}_email" type="email" autocomplete="email" value="${escapeHtml(teacher.email || "")}">
+        </label>
+      </div>
+    `;
+  }).join("");
+}
+
+function programmeCommitmentPayloadFromForm(form, item = {}) {
+  const teacherRows = Array.from({ length: 8 }, (_, index) => index + 1)
+    .map((number) => ({
+      name: programmeEnquiryFieldValue(form, `teacher_${number}_name`),
+      email: programmeEnquiryFieldValue(form, `teacher_${number}_email`)
+    }))
+    .filter((teacher) => teacher.name || teacher.email);
+  const checkbox = (name) => Boolean(form.querySelector(`[name="${name}"]`)?.checked);
+  return {
+    school_name: item.school_name || programmeEnquiryFieldValue(form, "school_name"),
+    country_region: programmeEnquiryFieldValue(form, "country_region") || item.country_region || "",
+    contact_name: programmeEnquiryFieldValue(form, "contact_name") || item.contact_name || "",
+    contact_role: programmeEnquiryFieldValue(form, "contact_role") || item.contact_role || "",
+    contact_email: programmeEnquiryFieldValue(form, "contact_email") || item.contact_email || "",
+    contact_phone: programmeEnquiryFieldValue(form, "contact_phone") || item.contact_phone || "",
+    year_groups: programmeEnquiryFieldValue(form, "year_groups") || item.year_groups || "",
+    curriculum_route: programmeEnquiryFieldValue(form, "curriculum_route") || item.curriculum_route || "",
+    principal_name: programmeEnquiryFieldValue(form, "principal_name"),
+    principal_email: programmeEnquiryFieldValue(form, "principal_email"),
+    maths_lead_name: programmeEnquiryFieldValue(form, "maths_lead_name"),
+    maths_lead_email: programmeEnquiryFieldValue(form, "maths_lead_email"),
+    participating_teachers: teacherRows,
+    commitments: {
+      launch_orientation: checkbox("commit_launch"),
+      professional_development: checkbox("commit_training"),
+      classroom_use: checkbox("commit_use_kaizen"),
+      feedback_and_monitoring: checkbox("commit_feedback"),
+      evaluation_discussion: checkbox("commit_evaluation")
+    },
+    message: programmeEnquiryFieldValue(form, "message")
+  };
+}
+
+function validateProgrammeCommitmentPayload(payload) {
+  if (!payload.contact_name) throw new Error("Please add the main contact name.");
+  if (!payload.contact_email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.contact_email)) {
+    throw new Error("Please add a valid main contact email.");
+  }
+  if (!payload.principal_name) throw new Error("Please add the principal or senior leader name.");
+  if (!payload.maths_lead_name) throw new Error("Please add the mathematics lead name.");
+  if (!Array.isArray(payload.participating_teachers) || !payload.participating_teachers.length) {
+    throw new Error("Please add at least one participating teacher.");
+  }
+  const incompleteTeacher = payload.participating_teachers.find((teacher) => teacher.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(teacher.email));
+  if (incompleteTeacher) throw new Error("Please check the participating teacher email addresses.");
+  const commitments = payload.commitments || {};
+  const commitmentComplete = [
+    commitments.launch_orientation,
+    commitments.professional_development,
+    commitments.classroom_use,
+    commitments.feedback_and_monitoring,
+    commitments.evaluation_discussion
+  ].every(Boolean);
+  if (!commitmentComplete) throw new Error("Please confirm each school commitment before submitting.");
+}
+
 function generateProgrammePublicToken(length = 32) {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
   const values = new Uint32Array(length);
@@ -6679,6 +6773,22 @@ async function loadProgrammeEnquiryStatus(publicToken) {
   if (error) throw error;
   const row = Array.isArray(data) ? data[0] : data;
   if (!row) return null;
+  return normaliseProgrammeEnquiry({ ...row, public_token: token });
+}
+
+async function submitProgrammeCommitment(publicToken, payload) {
+  const token = String(publicToken || "").trim();
+  if (!token) throw new Error("Missing private review token.");
+  validateProgrammeCommitmentPayload(payload);
+  const client = await window.KaizenAuth?.getClient?.().catch(() => null);
+  if (!client) throw new Error("The commitment form is temporarily unavailable.");
+  const { data, error } = await client.rpc("submit_programme_commitment", {
+    lookup_token: token,
+    commitment_payload: payload
+  });
+  if (error) throw error;
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row) throw new Error("The commitment could not be saved.");
   return normaliseProgrammeEnquiry({ ...row, public_token: token });
 }
 
@@ -10390,6 +10500,193 @@ function programmeReviewTeachersHtml(commitment = {}) {
   `;
 }
 
+function programmeStatusTimelineHtml(status) {
+  const normalStatus = programmeEnquiryStatuses.includes(status) ? status : "new";
+  if (normalStatus === "declined") {
+    return `
+      <div class="programme-status-timeline" aria-label="Programme status timeline">
+        <span class="eyebrow">Status Timeline</span>
+        <ol>
+          <li class="is-complete"><span>1</span><strong>Expression received</strong></li>
+          <li class="is-complete"><span>2</span><strong>Reviewed</strong></li>
+          <li class="is-current"><span>!</span><strong>Not proceeding</strong></li>
+        </ol>
+      </div>
+    `;
+  }
+  const stages = [
+    ["new", "Expression received"],
+    ["reviewed", "Initial review"],
+    ["shortlisted", "Shortlisted"],
+    ["commitment_requested", "Commitment requested"],
+    ["committed", "Commitment received"],
+    ["confirmed", "Confirmed for pilot"],
+    ["active", "Programme active"]
+  ];
+  const statusRank = {
+    new: 0,
+    reviewed: 1,
+    follow_up: 1,
+    shortlisted: 2,
+    commitment_requested: 3,
+    committed: 4,
+    confirmed: 5,
+    active: 6
+  };
+  const currentRank = statusRank[normalStatus] ?? 0;
+  return `
+    <div class="programme-status-timeline" aria-label="Programme status timeline">
+      <span class="eyebrow">Status Timeline</span>
+      <ol>
+        ${stages.map(([stage, label], index) => `
+          <li class="${index < currentRank ? "is-complete" : index === currentRank ? "is-current" : ""}">
+            <span>${index < currentRank ? "✓" : index + 1}</span>
+            <strong>${escapeHtml(label)}</strong>
+          </li>
+        `).join("")}
+      </ol>
+    </div>
+  `;
+}
+
+function programmeCommitmentRequestPanelHtml(token, item) {
+  if (!programmeCommitmentCanBeSubmitted(item)) {
+    if (item.status === "committed") {
+      return `
+        <section class="programme-commitment-request-panel is-complete">
+          <span class="eyebrow">Commitment Received</span>
+          <h2>Your school commitment has been submitted.</h2>
+          <p>The details below now include the participating teachers, lead contacts, and confirmed programme commitments. The programme team can now review final pilot places and confirm next steps directly.</p>
+        </section>
+      `;
+    }
+    if (item.status === "confirmed") {
+      return `
+        <section class="programme-commitment-request-panel is-complete">
+          <span class="eyebrow">Confirmed For Pilot</span>
+          <h2>Your school has been confirmed for pilot planning.</h2>
+          <p>Please keep this page as the school record. Further dates, training arrangements, and school-space setup can be shared directly as the programme moves forward.</p>
+        </section>
+      `;
+    }
+    return "";
+  }
+
+  const commitment = item.commitment_details || {};
+  const commitments = commitment.commitments || {};
+  return `
+    <section class="programme-commitment-request-panel" id="programmeCommitmentRequest">
+      <div class="programme-commitment-head">
+        <div>
+          <span class="eyebrow">Next Step</span>
+          <h2>Confirm school commitment for Make It Count</h2>
+          <p>Complete this section after the school has been shortlisted and invited to confirm participation. The form records the school lead, mathematics lead, participating teachers, and the implementation commitments needed before final pilot confirmation.</p>
+        </div>
+        <a class="button" href="${escapeHtml(programmeStatusPath(token))}">Private page</a>
+      </div>
+      <form class="programme-interest-form programme-private-commitment-form" data-programme-commitment-form>
+        <div class="programme-form-grid">
+          <label>
+            School name
+            <input name="school_name" type="text" value="${escapeHtml(item.school_name || "")}" disabled>
+          </label>
+          <label>
+            Country / region
+            <input name="country_region" type="text" value="${escapeHtml(item.country_region || "")}">
+          </label>
+          <label>
+            Main contact name
+            <input name="contact_name" type="text" autocomplete="name" value="${escapeHtml(item.contact_name || "")}" required>
+          </label>
+          <label>
+            Main contact role
+            <input name="contact_role" type="text" autocomplete="organization-title" value="${escapeHtml(item.contact_role || "")}">
+          </label>
+          <label>
+            Main contact email
+            <input name="contact_email" type="email" autocomplete="email" value="${escapeHtml(item.contact_email || "")}" required>
+          </label>
+          <label>
+            Contact phone
+            <input name="contact_phone" type="tel" autocomplete="tel" value="${escapeHtml(item.contact_phone || "")}">
+          </label>
+          <label>
+            Principal / senior leader name
+            <input name="principal_name" type="text" autocomplete="name" value="${escapeHtml(commitment.principal_name || "")}" required>
+          </label>
+          <label>
+            Principal / senior leader email
+            <input name="principal_email" type="email" autocomplete="email" value="${escapeHtml(commitment.principal_email || "")}">
+          </label>
+          <label>
+            Mathematics lead name
+            <input name="maths_lead_name" type="text" autocomplete="name" value="${escapeHtml(commitment.maths_lead_name || "")}" required>
+          </label>
+          <label>
+            Mathematics lead email
+            <input name="maths_lead_email" type="email" autocomplete="email" value="${escapeHtml(commitment.maths_lead_email || "")}">
+          </label>
+          <label>
+            Classes / year groups involved
+            <input name="year_groups" type="text" value="${escapeHtml(item.year_groups || "")}" placeholder="Example: Grade 8, Year 9, CSEC groups">
+          </label>
+          <label>
+            Curriculum or examination route
+            <input name="curriculum_route" type="text" value="${escapeHtml(item.curriculum_route || "")}" placeholder="Example: NSC, CSEC, GCSE">
+          </label>
+        </div>
+
+        <section class="programme-teacher-section" aria-labelledby="privateCommitmentTeachersTitle">
+          <div>
+            <span class="eyebrow">Participating Teachers</span>
+            <h2 id="privateCommitmentTeachersTitle">Teacher names and email addresses</h2>
+            <p>Add the teachers who will take part in the project. Leave unused rows blank.</p>
+          </div>
+          <div class="programme-teacher-list">
+            ${programmeCommitmentTeacherRows(commitment)}
+          </div>
+        </section>
+
+        <section class="programme-commitment-checks" aria-labelledby="privateCommitmentChecksTitle">
+          <div>
+            <span class="eyebrow">School Commitment</span>
+            <h2 id="privateCommitmentChecksTitle">Confirm readiness for programme participation</h2>
+          </div>
+          <label>
+            <input name="commit_launch" type="checkbox" ${commitments.launch_orientation ? "checked" : ""}>
+            The school will identify participating teachers and support attendance at the launch / orientation session.
+          </label>
+          <label>
+            <input name="commit_training" type="checkbox" ${commitments.professional_development ? "checked" : ""}>
+            Participating teachers will engage with the initial professional development sequence.
+          </label>
+          <label>
+            <input name="commit_use_kaizen" type="checkbox" ${commitments.classroom_use ? "checked" : ""}>
+            Participating teachers will use Kaizen Maths as part of agreed classroom practice during the programme period.
+          </label>
+          <label>
+            <input name="commit_feedback" type="checkbox" ${commitments.feedback_and_monitoring ? "checked" : ""}>
+            The school will support teacher feedback, implementation reflection, and reasonable programme monitoring.
+          </label>
+          <label>
+            <input name="commit_evaluation" type="checkbox" ${commitments.evaluation_discussion ? "checked" : ""}>
+            The school understands that learning indicators or implementation evidence may be discussed as part of programme evaluation.
+          </label>
+        </section>
+
+        <label>
+          Notes about readiness, classes, timetable, or implementation
+          <textarea name="message" rows="5" placeholder="Add anything that helps with programme planning, teacher availability, topics, year groups, or implementation constraints.">${escapeHtml(commitment.message || item.message || "")}</textarea>
+        </label>
+        <div class="programme-form-actions">
+          <button class="button primary" type="submit">Submit Commitment</button>
+          <p class="admin-status" data-programme-commitment-status>Ready to submit.</p>
+        </div>
+      </form>
+    </section>
+  `;
+}
+
 function programmeSubmissionDocumentHtml(item, token) {
   const programme = programmeContent();
   const reviewUrl = programmeStatusUrl(token);
@@ -10481,7 +10778,7 @@ function programmeSubmissionDocumentHtml(item, token) {
   `;
 }
 
-function bindProgrammeStatusPage() {
+function bindProgrammeStatusPage(token = "", item = {}) {
   document.querySelector("[data-print-programme-document]")?.addEventListener("click", () => {
     window.print();
   });
@@ -10496,6 +10793,24 @@ function bindProgrammeStatusPage() {
       }, 1800);
     } catch (error) {
       button.textContent = "Copy Not Available";
+    }
+  });
+
+  const commitmentForm = document.querySelector("[data-programme-commitment-form]");
+  const commitmentStatus = commitmentForm?.querySelector("[data-programme-commitment-status]");
+  commitmentForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = commitmentForm.querySelector("button[type='submit']");
+    const payload = programmeCommitmentPayloadFromForm(commitmentForm, item);
+    button.disabled = true;
+    if (commitmentStatus) commitmentStatus.textContent = "Submitting commitment...";
+    try {
+      const updated = await submitProgrammeCommitment(token, payload);
+      if (commitmentStatus) commitmentStatus.textContent = "Commitment received. Updating this review page...";
+      renderProgrammeStatusLoaded(token, updated);
+    } catch (error) {
+      if (commitmentStatus) commitmentStatus.textContent = `Could not submit: ${error.message}`;
+      button.disabled = false;
     }
   });
 }
@@ -10519,11 +10834,15 @@ function renderProgrammeStatusLoaded(token, item) {
           <strong>Keep this private link</strong>
           <input type="text" readonly value="${escapeHtml(reviewUrl)}" aria-label="Private programme review link">
         </div>
+        ${programmeStatusTimelineHtml(item.status)}
       </aside>
-      ${programmeSubmissionDocumentHtml(item, token)}
+      <div class="programme-status-main">
+        ${programmeCommitmentRequestPanelHtml(token, item)}
+        ${programmeSubmissionDocumentHtml(item, token)}
+      </div>
     </section>
   `;
-  bindProgrammeStatusPage();
+  bindProgrammeStatusPage(token, item);
 }
 
 function renderProgrammeStatusPage(rawToken = "") {
@@ -10573,6 +10892,58 @@ function renderProgrammeStatusPage(rawToken = "") {
         </section>
       `;
     });
+}
+
+function programmeCommitmentEmailTemplate(item) {
+  const primaryName = item.school_name || item.organisation_name || "your school";
+  const reviewUrl = item.public_token ? programmeStatusUrl(item.public_token) : "";
+  const contactName = item.contact_name || "there";
+  const subject = `Make It Count: commitment details requested for ${primaryName}`;
+  const body = [
+    `Dear ${contactName},`,
+    "",
+    `Thank you for expressing interest in Make It Count. ${primaryName} has now been shortlisted for the next stage of programme planning.`,
+    "",
+    "The next step is to confirm the school's commitment to participate. This does not by itself guarantee a final pilot place, but it allows us to check readiness, confirm the participating teachers, and prepare the programme plan responsibly.",
+    "",
+    "Please use the private review page below to complete the commitment section:",
+    reviewUrl,
+    "",
+    "The commitment section asks for:",
+    "- confirmation of the principal or senior leader contact;",
+    "- confirmation of the mathematics lead;",
+    "- names and email addresses of participating teachers;",
+    "- the year groups, classes, or curriculum route involved;",
+    "- confirmation that the school will support training, classroom use, feedback, and evaluation activity.",
+    "",
+    "Once the commitment is submitted, the page will update to show that the commitment has been received. I will then review the details and confirm the next stage when programme arrangements and available places are finalised.",
+    "",
+    "Kind regards,",
+    "Kaizen Maths / Make It Count"
+  ].join("\n");
+  return { subject, body };
+}
+
+function adminProgrammeCommitmentEmailHtml(item) {
+  if (!item.public_token || !["shortlisted", "commitment_requested"].includes(item.status)) return "";
+  const template = programmeCommitmentEmailTemplate(item);
+  return `
+    <div class="programme-enquiry-copy programme-email-template">
+      <strong>Commitment request email template</strong>
+      <label>
+        Subject
+        <input type="text" readonly value="${escapeHtml(template.subject)}">
+      </label>
+      <label>
+        Message
+        <textarea rows="9" readonly data-programme-email-template>${escapeHtml(template.body)}</textarea>
+      </label>
+      <div class="button-row">
+        <button class="button subtle admin-copy-programme-email" type="button">Copy Email Template</button>
+        <a class="button subtle" href="mailto:${escapeHtml(item.contact_email)}?subject=${encodeURIComponent(template.subject)}&body=${encodeURIComponent(template.body)}">Open Email</a>
+      </div>
+    </div>
+  `;
 }
 
 function adminProgrammeEnquiryDetail(label, value) {
@@ -10678,6 +11049,7 @@ function adminProgrammeEnquiryCardHtml(enquiry) {
           <p><a href="${escapeHtml(programmeStatusPath(item.public_token))}" target="_blank" rel="noopener noreferrer">${escapeHtml(reviewUrl)}</a></p>
         </div>
       ` : ""}
+      ${adminProgrammeCommitmentEmailHtml(item)}
       <div class="programme-enquiry-actions">
         <label>
           Status
@@ -27230,6 +27602,22 @@ function bindAdmin() {
       } catch (error) {
         if (programmeEnquiriesStatus) programmeEnquiriesStatus.textContent = `Could not save enquiry review: ${error.message}`;
         button.disabled = false;
+      }
+    });
+  });
+
+  document.querySelectorAll(".admin-copy-programme-email").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const template = button.closest(".programme-email-template")?.querySelector("[data-programme-email-template]")?.value || "";
+      if (!template) return;
+      try {
+        await navigator.clipboard.writeText(template);
+        button.textContent = "Copied";
+        window.setTimeout(() => {
+          button.textContent = "Copy Email Template";
+        }, 1800);
+      } catch (error) {
+        button.textContent = "Copy Not Available";
       }
     });
   });

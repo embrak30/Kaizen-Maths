@@ -549,11 +549,24 @@ on public.homepage_content
 for delete
 using (public.is_admin());
 
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.table_constraints
+    where constraint_schema = 'public'
+      and table_name = 'programme_enquiries'
+      and constraint_name = 'programme_enquiries_status_check'
+  ) then
+    alter table public.programme_enquiries drop constraint programme_enquiries_status_check;
+  end if;
+end $$;
+
 create table if not exists public.programme_enquiries (
   id uuid primary key default gen_random_uuid(),
   public_token text,
   enquiry_type text not null default 'school_interest' check (enquiry_type in ('school_interest', 'partner_interest', 'school_commitment')),
-  status text not null default 'new' check (status in ('new', 'reviewed', 'follow_up', 'shortlisted', 'committed', 'declined')),
+  status text not null default 'new',
   school_name text,
   organisation_name text,
   country_region text,
@@ -596,6 +609,11 @@ alter table public.programme_enquiries add column if not exists commitment_detai
 alter table public.programme_enquiries add column if not exists consent boolean not null default false;
 alter table public.programme_enquiries add column if not exists admin_notes text;
 alter table public.programme_enquiries add column if not exists updated_at timestamptz not null default now();
+
+alter table public.programme_enquiries drop constraint if exists programme_enquiries_status_check;
+alter table public.programme_enquiries
+  add constraint programme_enquiries_status_check
+  check (status in ('new', 'reviewed', 'follow_up', 'shortlisted', 'commitment_requested', 'committed', 'confirmed', 'active', 'declined'));
 
 create index if not exists programme_enquiries_created_at_idx on public.programme_enquiries(created_at desc);
 create index if not exists programme_enquiries_status_idx on public.programme_enquiries(status);
@@ -727,6 +745,122 @@ $$;
 
 revoke all on function public.get_my_programme_enquiries() from public;
 grant execute on function public.get_my_programme_enquiries() to authenticated;
+
+create or replace function public.submit_programme_commitment(
+  lookup_token text,
+  commitment_payload jsonb
+)
+returns table (
+  enquiry_type text,
+  status text,
+  school_name text,
+  organisation_name text,
+  country_region text,
+  contact_name text,
+  contact_role text,
+  contact_email text,
+  contact_phone text,
+  teacher_count text,
+  year_groups text,
+  curriculum_route text,
+  interest_focus text,
+  support_type text,
+  challenge_summary text,
+  message text,
+  commitment_details jsonb,
+  created_at timestamptz,
+  updated_at timestamptz
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  teacher_total integer;
+begin
+  if lookup_token is null or length(trim(lookup_token)) < 12 then
+    raise exception 'A valid private review token is required.';
+  end if;
+
+  if commitment_payload is null or jsonb_typeof(commitment_payload) <> 'object' then
+    raise exception 'Commitment details are required.';
+  end if;
+
+  teacher_total := jsonb_array_length(coalesce(commitment_payload -> 'participating_teachers', '[]'::jsonb));
+
+  if teacher_total < 1 then
+    raise exception 'At least one participating teacher is required.';
+  end if;
+
+  update public.programme_enquiries pe
+  set
+    enquiry_type = 'school_commitment',
+    status = 'committed',
+    contact_name = coalesce(nullif(trim(commitment_payload ->> 'contact_name'), ''), pe.contact_name),
+    contact_role = coalesce(nullif(trim(commitment_payload ->> 'contact_role'), ''), pe.contact_role),
+    contact_email = coalesce(nullif(trim(commitment_payload ->> 'contact_email'), ''), pe.contact_email),
+    contact_phone = coalesce(nullif(trim(commitment_payload ->> 'contact_phone'), ''), pe.contact_phone),
+    country_region = coalesce(nullif(trim(commitment_payload ->> 'country_region'), ''), pe.country_region),
+    year_groups = coalesce(nullif(trim(commitment_payload ->> 'year_groups'), ''), pe.year_groups),
+    curriculum_route = coalesce(nullif(trim(commitment_payload ->> 'curriculum_route'), ''), pe.curriculum_route),
+    teacher_count = teacher_total::text,
+    message = coalesce(nullif(trim(commitment_payload ->> 'message'), ''), pe.message),
+    commitment_details = commitment_payload,
+    consent = true,
+    updated_at = now()
+  where pe.public_token = lookup_token
+    and pe.status in ('shortlisted', 'commitment_requested')
+  returning
+    pe.enquiry_type,
+    pe.status,
+    pe.school_name,
+    pe.organisation_name,
+    pe.country_region,
+    pe.contact_name,
+    pe.contact_role,
+    pe.contact_email,
+    pe.contact_phone,
+    pe.teacher_count,
+    pe.year_groups,
+    pe.curriculum_route,
+    pe.interest_focus,
+    pe.support_type,
+    pe.challenge_summary,
+    pe.message,
+    pe.commitment_details,
+    pe.created_at,
+    pe.updated_at
+  into
+    enquiry_type,
+    status,
+    school_name,
+    organisation_name,
+    country_region,
+    contact_name,
+    contact_role,
+    contact_email,
+    contact_phone,
+    teacher_count,
+    year_groups,
+    curriculum_route,
+    interest_focus,
+    support_type,
+    challenge_summary,
+    message,
+    commitment_details,
+    created_at,
+    updated_at;
+
+  if not found then
+    raise exception 'This review page is not currently open for commitment submission.';
+  end if;
+
+  return next;
+end;
+$$;
+
+revoke all on function public.submit_programme_commitment(text, jsonb) from public;
+grant execute on function public.submit_programme_commitment(text, jsonb) to anon, authenticated;
 
 create table if not exists public.homepage_screenshots (
   screenshot_id text primary key,
