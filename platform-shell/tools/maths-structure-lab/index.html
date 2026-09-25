@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maths Structure Lab | Kaizen Maths</title>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <script src="../../auth-config.js?v=tool-access-guard-3"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-3"></script>
+  <style>
+    :root {
+      --ink: #16213f;
+      --muted: #62708a;
+      --line: #d7e4ed;
+      --paper: #ffffff;
+      --soft: #f7fbff;
+      --teal: #18b8ad;
+      --teal-dark: #087a76;
+      --blue: #2f80ed;
+      --purple: #7048e8;
+      --orange: #ff8a1f;
+      --rose: #ef476f;
+      --green: #20b26b;
+      --yellow: #ffd166;
+      --math-font: "KaTeX_Math", "KaTeX_Main", "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+      --ui-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --shadow: 0 16px 34px rgba(19, 39, 74, 0.15);
+      --soft-shadow: 0 8px 22px rgba(19, 39, 74, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: var(--ui-font);
+      color: var(--ink);
+      background:
+        linear-gradient(120deg, rgba(24, 184, 173, 0.13), rgba(255, 138, 31, 0.11)),
+        repeating-linear-gradient(135deg, rgba(47, 128, 237, 0.05) 0 1px, transparent 1px 28px),
+        #f8fcff;
+    }
+
+    button {
+      border: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1001;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      padding: 14px 8px;
+      border-radius: 0 8px 8px 0;
+      background: linear-gradient(180deg, var(--purple), var(--teal));
+      color: #fff;
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      box-shadow: 0 8px 20px rgba(20, 25, 60, 0.24);
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      background: rgba(5, 10, 30, 0.42);
+      transition: opacity 180ms ease;
+    }
+
+    .sidebar-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 -390px;
+      z-index: 1000;
+      width: min(390px, 88vw);
+      background: #fff;
+      box-shadow: 12px 0 34px rgba(12, 20, 45, 0.24);
+      transition: left 180ms ease;
+      overflow-y: auto;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-header {
+      padding: 22px 24px;
+      color: #fff;
+      font-weight: 950;
+      font-size: 1.18rem;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .sidebar-content {
+      padding: 22px 24px 28px;
+      line-height: 1.55;
+    }
+
+    .sidebar-content h3 {
+      margin: 18px 0 8px;
+      color: var(--teal-dark);
+      font-size: 1rem;
+    }
+
+    .sidebar-content p,
+    .sidebar-content li {
+      margin: 0 0 8px;
+      color: #44516c;
+    }
+
+    .sidebar-content ul {
+      margin: 0 0 12px;
+      padding-left: 20px;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 10px;
+      padding: 12px 16px 14px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
+      gap: 10px;
+      align-items: center;
+      min-height: 68px;
+      padding: 9px 12px;
+      border: 1px solid rgba(24, 184, 173, 0.24);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(232, 252, 249, 0.92)),
+        linear-gradient(90deg, rgba(24, 184, 173, 0.13), rgba(255, 138, 31, 0.10));
+      box-shadow: var(--soft-shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      flex: 0 0 50px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      font-size: 1.05rem;
+      background: linear-gradient(135deg, var(--purple), var(--teal));
+      box-shadow: 0 12px 22px rgba(24, 184, 173, 0.25);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.18rem, 1.9vw, 1.64rem);
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-weight: 750;
+      font-size: clamp(0.72rem, 0.9vw, 0.86rem);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 7px;
+      align-items: center;
+    }
+
+    .action-btn {
+      min-height: 38px;
+      padding: 8px 6px;
+      border-radius: 8px;
+      color: #25304f;
+      background: #fff;
+      border: 1px solid rgba(22, 33, 63, 0.12);
+      box-shadow: 0 6px 14px rgba(19, 39, 74, 0.08);
+      font-size: clamp(0.66rem, 0.78vw, 0.84rem);
+      font-weight: 900;
+      line-height: 1.05;
+      transition: transform 90ms ease, box-shadow 150ms ease;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(19, 39, 74, 0.12);
+    }
+
+    .action-btn.primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .action-btn.new-action {
+      color: #fff;
+      background: linear-gradient(135deg, var(--green), var(--teal-dark));
+    }
+
+    .mode-strip {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      min-height: 46px;
+    }
+
+    .mode-btn {
+      min-width: 0;
+      padding: 9px 8px;
+      border-radius: 8px;
+      color: #25304f;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(47, 128, 237, 0.14);
+      box-shadow: 0 6px 16px rgba(19, 39, 74, 0.07);
+      font-size: clamp(0.62rem, 0.78vw, 0.82rem);
+      font-weight: 950;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: transform 90ms ease, background 150ms ease, color 150ms ease;
+    }
+
+    .mode-btn:hover {
+      transform: translateY(-1px);
+      background: #fff4e7;
+      color: #a14700;
+      border-color: rgba(255, 138, 31, 0.45);
+    }
+
+    .mode-btn.active {
+      color: #fff;
+      background: linear-gradient(135deg, var(--orange), var(--rose));
+    }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.36fr) minmax(295px, 0.64fr);
+      gap: 12px;
+    }
+
+    .board,
+    .step-panel {
+      min-height: 0;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(22, 33, 63, 0.10);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .board {
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .prompt-band {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 13px 16px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(22, 33, 63, 0.92), rgba(47, 128, 237, 0.78)),
+        linear-gradient(90deg, var(--teal), var(--purple));
+    }
+
+    .prompt-title {
+      margin: 0 0 5px;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.82;
+      font-weight: 950;
+    }
+
+    .prompt {
+      margin: 0;
+      font-size: clamp(1.04rem, 2vw, 1.58rem);
+      line-height: 1.2;
+      font-weight: 900;
+    }
+
+    .step-chip {
+      min-width: 130px;
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--ink);
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+      font-weight: 950;
+      border: 2px solid rgba(255, 209, 102, 0.95);
+    }
+
+    .step-chip small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 2px;
+    }
+
+    .model-wrap {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .model-card {
+      position: relative;
+      width: min(100%, 900px);
+      height: min(100%, 600px);
+      display: grid;
+      place-items: center;
+      padding: clamp(12px, 2vw, 24px);
+      border-radius: 8px;
+      border: 1px solid rgba(47, 128, 237, 0.12);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(241, 253, 250, 0.92)),
+        repeating-linear-gradient(135deg, rgba(47, 128, 237, 0.035) 0 1px, transparent 1px 26px);
+      overflow: hidden;
+    }
+
+    .scale-note {
+      position: absolute;
+      right: 12px;
+      bottom: 10px;
+      color: #7b879a;
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .visual {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      gap: 14px;
+    }
+
+    .visual > * {
+      max-width: 100%;
+    }
+
+    .math {
+      font-family: var(--math-font);
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .vfrac {
+      display: inline-grid;
+      grid-template-rows: auto auto;
+      align-items: center;
+      justify-items: center;
+      line-height: 1;
+      vertical-align: middle;
+      margin: 0 0.08em;
+      font-family: var(--math-font);
+    }
+
+    .vfrac .top {
+      width: 100%;
+      padding: 0 0.1em 0.08em;
+      border-bottom: 0.08em solid currentColor;
+      text-align: center;
+    }
+
+    .vfrac .bottom {
+      padding: 0.08em 0.1em 0;
+      text-align: center;
+    }
+
+    .big-equation {
+      font-family: var(--math-font);
+      font-size: clamp(1.35rem, 3.2vw, 2.55rem);
+      color: var(--ink);
+      text-align: center;
+      line-height: 1.22;
+    }
+
+    .hint-line {
+      color: #40506b;
+      font-size: clamp(0.92rem, 1.35vw, 1.14rem);
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .whole-row,
+    .fraction-bars,
+    .area-layout,
+    .tile-layout,
+    .balance-layout {
+      width: 100%;
+      display: grid;
+      place-items: center;
+      gap: 14px;
+    }
+
+    .whole-row {
+      grid-template-columns: repeat(var(--whole-count), minmax(64px, 1fr));
+      align-items: stretch;
+    }
+
+    .whole {
+      min-height: 104px;
+      border: 4px solid #172033;
+      background: #fff;
+      display: grid;
+      grid-template-columns: repeat(var(--denom), 1fr);
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    .whole.unsplit {
+      display: grid;
+      place-items: center;
+    }
+
+    .whole-label {
+      color: #172033;
+      font-size: clamp(1.7rem, 3vw, 2.45rem);
+      font-weight: 950;
+    }
+
+    .piece {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      min-height: 0;
+      border-left: 1.5px solid #9fb6c8;
+      color: #172033;
+      font-weight: 900;
+    }
+
+    .piece:first-child {
+      border-left: 0;
+    }
+
+    .piece.grouped {
+      background: var(--group-color);
+    }
+
+    .piece.remainder {
+      background:
+        repeating-linear-gradient(135deg, rgba(239, 71, 111, 0.24) 0 8px, rgba(255, 255, 255, 0.78) 8px 16px);
+    }
+
+    .piece.grouped::after {
+      content: "";
+      position: absolute;
+      left: 13%;
+      right: 13%;
+      top: 50%;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(22, 33, 63, 0.72);
+      transform: translateY(-50%);
+    }
+
+    .group-summary {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      max-width: 760px;
+    }
+
+    .mini-group {
+      min-width: 48px;
+      min-height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      color: #172033;
+      font-weight: 950;
+      border: 2px solid rgba(22, 33, 63, 0.14);
+      background: rgba(24, 184, 173, 0.22);
+    }
+
+    .bar-stack {
+      width: min(96%, 760px);
+      display: grid;
+      gap: 14px;
+    }
+
+    .bar-line {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .bar-label {
+      color: #24324d;
+      font-size: clamp(0.78rem, 1vw, 0.94rem);
+      font-weight: 950;
+      text-align: right;
+    }
+
+    .bar {
+      height: clamp(54px, 9vh, 82px);
+      display: grid;
+      grid-template-columns: repeat(var(--parts), 1fr);
+      border: 4px solid #172033;
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bar-part {
+      border-left: 1.5px solid #9fb6c8;
+      display: grid;
+      place-items: center;
+      font-weight: 950;
+      color: #172033;
+      min-width: 0;
+    }
+
+    .bar-part:first-child {
+      border-left: 0;
+    }
+
+    .bar-part.shaded-a {
+      background: rgba(24, 184, 173, 0.35);
+    }
+
+    .bar-part.shaded-b {
+      background: rgba(255, 138, 31, 0.34);
+    }
+
+    .bar-part.shaded-both {
+      background: linear-gradient(135deg, rgba(24, 184, 173, 0.42), rgba(255, 138, 31, 0.36));
+    }
+
+    .area-grid {
+      display: grid;
+      grid-template-columns: 100px repeat(2, minmax(150px, 1fr));
+      grid-template-rows: 64px repeat(2, minmax(110px, 1fr));
+      width: min(94%, 690px);
+      min-height: min(72%, 420px);
+      border-radius: 8px;
+    }
+
+    .area-corner {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .area-head,
+    .area-side {
+      display: grid;
+      place-items: center;
+      color: #172033;
+      font-family: var(--math-font);
+      font-size: clamp(1.1rem, 2vw, 1.65rem);
+      font-weight: 700;
+    }
+
+    .area-cell {
+      display: grid;
+      place-items: center;
+      border: 2px solid #172033;
+      background: rgba(255, 255, 255, 0.94);
+      color: #172033;
+      font-family: var(--math-font);
+      font-size: clamp(1rem, 2.1vw, 1.6rem);
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .area-cell:nth-child(4n) {
+      background: rgba(24, 184, 173, 0.17);
+    }
+
+    .area-cell:nth-child(4n + 1) {
+      background: rgba(255, 209, 102, 0.22);
+    }
+
+    .tile-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: min(100%, 760px);
+    }
+
+    .term-tile,
+    .factor-tile,
+    .balance-tile {
+      border: 3px solid #172033;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      min-height: 72px;
+      padding: 10px 16px;
+      background: #fff;
+      color: #172033;
+      font-family: var(--math-font);
+      font-size: clamp(1.18rem, 2.5vw, 2rem);
+      font-weight: 600;
+    }
+
+    .term-tile.x-term {
+      width: min(240px, 42vw);
+      background: rgba(24, 184, 173, 0.22);
+    }
+
+    .term-tile.num-term {
+      width: min(180px, 32vw);
+      background: rgba(255, 209, 102, 0.34);
+    }
+
+    .factor-tile {
+      background: rgba(112, 72, 232, 0.14);
+    }
+
+    .balance-scale {
+      width: min(96%, 740px);
+      display: grid;
+      grid-template-columns: 1fr 64px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .balance-pan {
+      min-height: 210px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-content: center;
+      gap: 8px;
+      padding: 16px;
+      border: 4px solid #172033;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .balance-equals {
+      display: grid;
+      place-items: center;
+      color: var(--purple);
+      font-family: var(--math-font);
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 700;
+    }
+
+    .balance-tile {
+      min-width: 58px;
+      min-height: 50px;
+      padding: 6px 10px;
+      font-size: clamp(1rem, 1.8vw, 1.45rem);
+      background: rgba(47, 128, 237, 0.12);
+    }
+
+    .balance-tile.constant {
+      background: rgba(255, 209, 102, 0.36);
+    }
+
+    .removed {
+      opacity: 0.25;
+      text-decoration: line-through;
+    }
+
+    .model-card.step-animating .whole,
+    .model-card.step-animating .bar,
+    .model-card.step-animating .area-cell,
+    .model-card.step-animating .term-tile,
+    .model-card.step-animating .balance-tile {
+      animation: structureReveal 3000ms ease-out both;
+    }
+
+    @keyframes structureReveal {
+      0% {
+        opacity: 0.35;
+        filter: saturate(0.65);
+        transform: scale(0.985);
+      }
+      34% {
+        opacity: 1;
+        filter: saturate(1.25);
+        transform: scale(1.01);
+      }
+      100% {
+        opacity: 1;
+        filter: saturate(1);
+        transform: scale(1);
+      }
+    }
+
+    .step-panel {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 16px;
+      gap: 12px;
+    }
+
+    .step-panel h2 {
+      margin: 0;
+      color: var(--teal-dark);
+      font-size: clamp(1rem, 1.55vw, 1.28rem);
+      line-height: 1.1;
+    }
+
+    .step-copy {
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .step-label {
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(24, 184, 173, 0.13);
+      color: var(--teal-dark);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .step-text {
+      margin: 0;
+      color: #263552;
+      font-size: clamp(0.98rem, 1.45vw, 1.18rem);
+      font-weight: 850;
+      line-height: 1.34;
+    }
+
+    .method-box {
+      min-height: 70px;
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(112, 72, 232, 0.10), rgba(24, 184, 173, 0.10));
+      border: 1px solid rgba(112, 72, 232, 0.17);
+      color: #172033;
+      font-family: var(--math-font);
+      font-size: clamp(1.1rem, 2vw, 1.62rem);
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    .teacher-points {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .teacher-points li {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 8px;
+      color: #44516c;
+      font-size: clamp(0.78rem, 1vw, 0.92rem);
+      font-weight: 720;
+      line-height: 1.28;
+    }
+
+    .teacher-points li::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-top: 5px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 0 4px rgba(255, 138, 31, 0.15);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .model-card.step-animating .whole,
+      .model-card.step-animating .bar,
+      .model-card.step-animating .area-cell,
+      .model-card.step-animating .term-tile,
+      .model-card.step-animating .balance-tile {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 980px) {
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+      }
+
+      .topbar,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .mode-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .model-card {
+        min-height: 520px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .app {
+        padding: 10px;
+      }
+
+      .actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .prompt-band {
+        grid-template-columns: 1fr;
+      }
+
+      .whole-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .bar-line {
+        grid-template-columns: 1fr;
+      }
+
+      .bar-label {
+        text-align: left;
+      }
+
+      .balance-scale {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="teacher-tab" type="button" onclick="toggleSidebar()">TEACHER NOTES</button>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Maths Structure Lab</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool is for teaching the structure behind a method before showing the formal shortcut.</p>
+      <h3>How to Use</h3>
+      <ul>
+        <li>Choose a structure from the horizontal menu.</li>
+        <li>Use Next Step to reveal the model gradually.</li>
+        <li>Ask pupils to describe what each part represents before revealing the symbolic method.</li>
+        <li>Use New to generate a fresh example within the same structure.</li>
+      </ul>
+      <h3>Classroom Questions</h3>
+      <ul>
+        <li>What is the whole in this model?</li>
+        <li>What has stayed the same, and what has been repartitioned?</li>
+        <li>Where can we see the operation in the diagram?</li>
+        <li>How does the diagram explain the formal rule?</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">S</div>
+        <div>
+          <h1>Maths Structure Lab</h1>
+          <p class="subtitle">Teacher-led visual methods for explaining why key rules work.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="action-btn new-action" type="button" onclick="newExample()">New</button>
+        <button class="action-btn" type="button" onclick="previousStep()">Back</button>
+        <button class="action-btn primary" type="button" onclick="nextStep()">Next Step</button>
+        <button class="action-btn" type="button" onclick="showAll()">Show All</button>
+        <button class="action-btn" type="button" onclick="resetSteps()">Reset</button>
+      </div>
+    </header>
+
+    <nav class="mode-strip" id="modeStrip" aria-label="Structure type"></nav>
+
+    <section class="workspace">
+      <article class="board">
+        <div class="prompt-band">
+          <div>
+            <p class="prompt-title" id="modeTitle">Structure</p>
+            <p class="prompt" id="promptText"></p>
+          </div>
+          <div class="step-chip">
+            <small>Reveal</small>
+            <span id="stepCounter">Step 1</span>
+          </div>
+        </div>
+        <div class="model-wrap">
+          <div class="model-card" id="modelCard">
+            <div class="visual" id="visual"></div>
+            <div class="scale-note">Not drawn to scale</div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="step-panel">
+        <h2 id="structureHeading">Structure</h2>
+        <div class="step-copy">
+          <div class="step-label" id="stepLabel">Step 1</div>
+          <p class="step-text" id="stepText"></p>
+          <div class="method-box" id="methodBox"></div>
+        </div>
+        <ul class="teacher-points" id="teacherPoints"></ul>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const modes = [
+      {
+        id: "fractionDivision",
+        label: "Fraction Division",
+        title: "Division by a Fraction",
+        focus: "How many fractional groups fit into the whole amount?",
+        points: [
+          "Start by making the whole number visible as separate wholes.",
+          "Split every whole using the denominator of the divisor.",
+          "Group the parts using the numerator of the divisor before showing invert and multiply."
+        ],
+        generate: () => {
+          const options = [
+            { whole: 4, num: 2, denom: 3 },
+            { whole: 3, num: 2, denom: 5 },
+            { whole: 5, num: 3, denom: 4 },
+            { whole: 2, num: 3, denom: 5 },
+            { whole: 6, num: 4, denom: 5 }
+          ];
+          const ex = pick(options);
+          const totalPieces = ex.whole * ex.denom;
+          const groups = Math.floor(totalPieces / ex.num);
+          const remainder = totalPieces % ex.num;
+          const answer = remainder === 0 ? `${groups}` : `${groups} ${vfrac(remainder, ex.num)}`;
+          return {
+            ...ex,
+            answer,
+            prompt: `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)}`,
+            steps: [
+              {
+                label: "Represent the whole number",
+                text: `Show ${ex.whole} as ${ex.whole} separate whole bars.`,
+                method: `${ex.whole} = ${Array(ex.whole).fill("1").join(" + ")}`,
+                visual: () => fractionDivisionVisual(ex, 0)
+              },
+              {
+                label: "Use the denominator",
+                text: `Because the divisor is in ${ordinalPart(ex.denom)}, split every whole into ${ex.denom} equal parts.`,
+                method: `${ex.whole} = ${totalPieces} ${partName(ex.denom)}`,
+                visual: () => fractionDivisionVisual(ex, 1)
+              },
+              {
+                label: "Group the divisor",
+                text: `Each group must contain ${ex.num} of those ${ordinalPart(ex.denom)} because the divisor is ${vfrac(ex.num, ex.denom)}.`,
+                method: `${totalPieces} ${partName(ex.denom)} &divide; ${ex.num} ${partName(ex.denom)}`,
+                visual: () => fractionDivisionVisual(ex, 2)
+              },
+              {
+                label: "Count the groups",
+                text: remainder === 0 ? `There are exactly ${groups} complete groups.` : `There are ${groups} complete groups with ${remainder} part left over.`,
+                method: `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${answer}`,
+                visual: () => fractionDivisionVisual(ex, 3)
+              },
+              {
+                label: "Connect to the rule",
+                text: "The diagram shows why dividing by a fraction is the same as multiplying by its reciprocal.",
+                method: `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${ex.whole} &times; ${vfrac(ex.denom, ex.num)} = ${answer}`,
+                visual: () => fractionDivisionVisual(ex, 4)
+              }
+            ]
+          };
+        }
+      },
+      {
+        id: "equivalentFractions",
+        label: "Equivalent Fractions",
+        title: "Equivalent Fractions",
+        focus: "Same amount, smaller equal parts.",
+        points: [
+          "The shaded amount does not change when the parts are refined.",
+          "The numerator and denominator change by the same scale factor.",
+          "Equivalent fractions describe the same point on the same whole."
+        ],
+        generate: () => {
+          const options = [
+            { n: 2, d: 3, scale: 4 },
+            { n: 3, d: 5, scale: 2 },
+            { n: 1, d: 4, scale: 5 },
+            { n: 2, d: 5, scale: 3 },
+            { n: 3, d: 4, scale: 3 }
+          ];
+          const ex = pick(options);
+          return {
+            ...ex,
+            prompt: `Show why ${vfrac(ex.n, ex.d)} = ${vfrac(ex.n * ex.scale, ex.d * ex.scale)}`,
+            steps: [
+              {
+                label: "Start with one whole",
+                text: `Split the same whole into ${ex.d} equal parts and shade ${ex.n}.`,
+                method: `${vfrac(ex.n, ex.d)}`,
+                visual: () => equivalentVisual(ex, 0)
+              },
+              {
+                label: "Refine each part",
+                text: `Split each existing part into ${ex.scale} smaller equal parts.`,
+                method: `${ex.d} &times; ${ex.scale} = ${ex.d * ex.scale} parts`,
+                visual: () => equivalentVisual(ex, 1)
+              },
+              {
+                label: "Count shaded parts",
+                text: `Each shaded part becomes ${ex.scale} shaded smaller parts.`,
+                method: `${ex.n} &times; ${ex.scale} = ${ex.n * ex.scale}`,
+                visual: () => equivalentVisual(ex, 2)
+              },
+              {
+                label: "Write the equivalent fraction",
+                text: "The shaded region is the same size, but it is described with more equal parts.",
+                method: `${vfrac(ex.n, ex.d)} = ${vfrac(ex.n * ex.scale, ex.d * ex.scale)}`,
+                visual: () => equivalentVisual(ex, 3)
+              }
+            ]
+          };
+        }
+      },
+      {
+        id: "addingFractions",
+        label: "Adding Fractions",
+        title: "Adding Fractions",
+        focus: "Add same-sized parts, not unlike parts.",
+        points: [
+          "Fractions can only be added directly when the parts are the same size.",
+          "The common denominator creates one shared unit of counting.",
+          "The numerator counts how many common parts are shaded altogether."
+        ],
+        generate: () => {
+          const options = [
+            { a: 1, b: 3, c: 1, d: 4 },
+            { a: 2, b: 5, c: 1, d: 2 },
+            { a: 1, b: 4, c: 2, d: 3 },
+            { a: 3, b: 8, c: 1, d: 4 },
+            { a: 2, b: 3, c: 1, d: 6 }
+          ];
+          const ex = pick(options);
+          const common = lcm(ex.b, ex.d);
+          const left = ex.a * (common / ex.b);
+          const right = ex.c * (common / ex.d);
+          const sum = left + right;
+          const g = gcd(sum, common);
+          const simplified = g > 1 ? vfrac(sum / g, common / g) : vfrac(sum, common);
+          return {
+            ...ex,
+            common,
+            left,
+            right,
+            sum,
+            simplified,
+            prompt: `${vfrac(ex.a, ex.b)} + ${vfrac(ex.c, ex.d)}`,
+            steps: [
+              {
+                label: "See the problem",
+                text: "The two fractions are split into different-sized parts.",
+                method: `${vfrac(ex.a, ex.b)} + ${vfrac(ex.c, ex.d)}`,
+                visual: () => addingVisual(ex, 0)
+              },
+              {
+                label: "Make common parts",
+                text: `Use ${common} equal parts so both fractions use the same size pieces.`,
+                method: `Common denominator = ${common}`,
+                visual: () => addingVisual(ex, 1)
+              },
+              {
+                label: "Convert each fraction",
+                text: `Rewrite both fractions in ${common}ths.`,
+                method: `${vfrac(ex.a, ex.b)} = ${vfrac(left, common)}, ${vfrac(ex.c, ex.d)} = ${vfrac(right, common)}`,
+                visual: () => addingVisual(ex, 2)
+              },
+              {
+                label: "Add the numerators",
+                text: "Now the parts are the same size, so count the shaded parts altogether.",
+                method: `${vfrac(left, common)} + ${vfrac(right, common)} = ${vfrac(sum, common)} = ${simplified}`,
+                visual: () => addingVisual(ex, 3)
+              }
+            ]
+          };
+        }
+      },
+      {
+        id: "areaMultiplication",
+        label: "Area Multiplication",
+        title: "Multiplication as Area",
+        focus: "Partition both dimensions and add the partial products.",
+        points: [
+          "Every part on one side must multiply every part on the other side.",
+          "The total area is the sum of all the smaller rectangles.",
+          "This structure connects arithmetic multiplication to algebraic expansion."
+        ],
+        generate: () => {
+          const options = [
+            { a: 23, b: 14 },
+            { a: 32, b: 15 },
+            { a: 41, b: 13 },
+            { a: 26, b: 18 },
+            { a: 35, b: 12 }
+          ];
+          const ex = pick(options);
+          const aT = Math.floor(ex.a / 10) * 10;
+          const aO = ex.a - aT;
+          const bT = Math.floor(ex.b / 10) * 10;
+          const bO = ex.b - bT;
+          return {
+            ...ex,
+            aT,
+            aO,
+            bT,
+            bO,
+            prompt: `${ex.a} &times; ${ex.b}`,
+            steps: [
+              {
+                label: "Represent the product",
+                text: `Think of ${ex.a} &times; ${ex.b} as the area of a rectangle.`,
+                method: `Area = length &times; width`,
+                visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 0)
+              },
+              {
+                label: "Partition the sides",
+                text: `Split ${ex.a} into ${aT} and ${aO}, and split ${ex.b} into ${bT} and ${bO}.`,
+                method: `${ex.a} = ${aT} + ${aO}, ${ex.b} = ${bT} + ${bO}`,
+                visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 1)
+              },
+              {
+                label: "Find each area",
+                text: "Multiply each row part by each column part.",
+                method: `${aT}&times;${bT}, ${aT}&times;${bO}, ${aO}&times;${bT}, ${aO}&times;${bO}`,
+                visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 2)
+              },
+              {
+                label: "Add the partial products",
+                text: "The whole product is the sum of the smaller rectangle areas.",
+                method: `${aT * bT} + ${aT * bO} + ${aO * bT} + ${aO * bO} = ${ex.a * ex.b}`,
+                visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 3)
+              }
+            ]
+          };
+        }
+      },
+      {
+        id: "factorisation",
+        label: "Reverse Area",
+        title: "Factorisation as Reverse Area",
+        focus: "Find the shared factor and rebuild the rectangle.",
+        points: [
+          "Factorising reverses expanding: the total area is reorganised into a product.",
+          "The common factor becomes one side of the rectangle.",
+          "The bracket records the remaining widths."
+        ],
+        generate: () => {
+          const options = [
+            { h: 3, p: 2, q: 5 },
+            { h: 4, p: 3, q: 2 },
+            { h: 5, p: 2, q: 7 },
+            { h: 6, p: 1, q: 4 },
+            { h: 2, p: 5, q: 3 }
+          ];
+          const ex = pick(options);
+          const first = ex.h * ex.p;
+          const second = ex.h * ex.q;
+          const bracket = `${ex.h}(${formatCoeff(ex.p)}x + ${ex.q})`;
+          return {
+            ...ex,
+            first,
+            second,
+            bracket,
+            prompt: `Factorise ${formatCoeff(first)}x + ${second}`,
+            steps: [
+              {
+                label: "Start with the terms",
+                text: "Treat each term as an area that needs to be rebuilt into one rectangle.",
+                method: `${formatCoeff(first)}x + ${second}`,
+                visual: () => factorVisual({ ...ex, first, second, bracket }, 0)
+              },
+              {
+                label: "Find the shared factor",
+                text: `Both terms share a factor of ${ex.h}.`,
+                method: `HCF(${first}, ${second}) = ${ex.h}`,
+                visual: () => factorVisual({ ...ex, first, second, bracket }, 1)
+              },
+              {
+                label: "Use the common factor as a side",
+                text: `If one side is ${ex.h}, the remaining widths are ${formatCoeff(ex.p)}x and ${ex.q}.`,
+                method: `${formatCoeff(first)}x &divide; ${ex.h} = ${formatCoeff(ex.p)}x, ${second} &divide; ${ex.h} = ${ex.q}`,
+                visual: () => factorVisual({ ...ex, first, second, bracket }, 2)
+              },
+              {
+                label: "Write the factorised form",
+                text: "The common side outside the bracket multiplies everything inside the bracket.",
+                method: `${formatCoeff(first)}x + ${second} = ${bracket}`,
+                visual: () => factorVisual({ ...ex, first, second, bracket }, 3)
+              }
+            ]
+          };
+        }
+      },
+      {
+        id: "percentages",
+        label: "Percent Structure",
+        title: "Percentage of an Amount",
+        focus: "Use 100% as the whole, then split it into useful equal parts.",
+        points: [
+          "The original whole is 100%.",
+          "Choose partitions that match the percentage structure.",
+          "The shaded part shows the percentage before the calculation is written."
+        ],
+        generate: () => {
+          const options = [
+            { p: 25, amount: 80, parts: 4, shaded: 1 },
+            { p: 20, amount: 60, parts: 5, shaded: 1 },
+            { p: 40, amount: 75, parts: 5, shaded: 2 },
+            { p: 75, amount: 48, parts: 4, shaded: 3 },
+            { p: 10, amount: 90, parts: 10, shaded: 1 },
+            { p: 30, amount: 70, parts: 10, shaded: 3 }
+          ];
+          const ex = pick(options);
+          const onePart = ex.amount / ex.parts;
+          const answer = onePart * ex.shaded;
+          return {
+            ...ex,
+            onePart,
+            answer,
+            prompt: `Find ${ex.p}% of ${ex.amount}`,
+            steps: [
+              {
+                label: "Identify the whole",
+                text: `${ex.amount} represents 100%.`,
+                method: `100% = ${ex.amount}`,
+                visual: () => percentVisual(ex, 0)
+              },
+              {
+                label: "Split the whole",
+                text: `Split 100% into ${ex.parts} equal parts.`,
+                method: `${100 / ex.parts}% = ${onePart}`,
+                visual: () => percentVisual(ex, 1)
+              },
+              {
+                label: "Shade the target percent",
+                text: `${ex.p}% is ${ex.shaded} of those equal parts.`,
+                method: `${ex.shaded} &times; ${onePart} = ${answer}`,
+                visual: () => percentVisual(ex, 2)
+              },
+              {
+                label: "Write the result",
+                text: "The model shows the part of the whole that the percentage represents.",
+                method: `${ex.p}% of ${ex.amount} = ${answer}`,
+                visual: () => percentVisual(ex, 3)
+              }
+            ]
+          };
+        }
+      },
+      {
+        id: "equationBalance",
+        label: "Equation Balance",
+        title: "Solving Equations by Balance",
+        focus: "Keep both sides equal while isolating the unknown.",
+        points: [
+          "The equals sign means both sides have the same value.",
+          "Whatever is removed from one side must be removed from the other.",
+          "Splitting into equal groups shows division as sharing."
+        ],
+        generate: () => {
+          const options = [
+            { a: 3, b: 5, x: 4 },
+            { a: 4, b: 6, x: 3 },
+            { a: 5, b: 2, x: 6 },
+            { a: 2, b: 7, x: 8 },
+            { a: 6, b: 4, x: 5 }
+          ];
+          const ex = pick(options);
+          ex.total = ex.a * ex.x + ex.b;
+          return {
+            ...ex,
+            prompt: `Solve ${formatCoeff(ex.a)}x + ${ex.b} = ${ex.total}`,
+            steps: [
+              {
+                label: "Show the balance",
+                text: "The left side and right side have equal value.",
+                method: `${formatCoeff(ex.a)}x + ${ex.b} = ${ex.total}`,
+                visual: () => balanceVisual(ex, 0)
+              },
+              {
+                label: "Remove the constant",
+                text: `Subtract ${ex.b} from both sides to keep the balance equal.`,
+                method: `${formatCoeff(ex.a)}x + ${ex.b} - ${ex.b} = ${ex.total} - ${ex.b}`,
+                visual: () => balanceVisual(ex, 1)
+              },
+              {
+                label: "Simplify",
+                text: `There are ${ex.a} equal x-parts worth ${ex.total - ex.b}.`,
+                method: `${formatCoeff(ex.a)}x = ${ex.total - ex.b}`,
+                visual: () => balanceVisual(ex, 2)
+              },
+              {
+                label: "Split into equal groups",
+                text: `Divide both sides by ${ex.a}.`,
+                method: `x = ${ex.total - ex.b} &divide; ${ex.a} = ${ex.x}`,
+                visual: () => balanceVisual(ex, 3)
+              }
+            ]
+          };
+        }
+      }
+    ];
+
+    let currentModeId = modes[0].id;
+    let currentExample = null;
+    let currentStep = 0;
+    let animTimer = null;
+
+    function pick(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function gcd(a, b) {
+      return b === 0 ? Math.abs(a) : gcd(b, a % b);
+    }
+
+    function lcm(a, b) {
+      return Math.abs(a * b) / gcd(a, b);
+    }
+
+    function vfrac(top, bottom) {
+      return `<span class="vfrac"><span class="top">${top}</span><span class="bottom">${bottom}</span></span>`;
+    }
+
+    function formatCoeff(value) {
+      if (value === 1) return "";
+      if (value === -1) return "-";
+      return String(value);
+    }
+
+    function partName(denom) {
+      const names = { 2: "halves", 3: "thirds", 4: "quarters", 5: "fifths", 6: "sixths", 8: "eighths", 10: "tenths" };
+      return names[denom] || `${denom}ths`;
+    }
+
+    function ordinalPart(denom) {
+      const names = { 2: "halves", 3: "thirds", 4: "quarters", 5: "fifths", 6: "sixths", 8: "eighths", 10: "tenths" };
+      return names[denom] || `${denom} equal parts`;
+    }
+
+    function renderModeButtons() {
+      document.getElementById("modeStrip").innerHTML = modes.map((mode) => `
+        <button class="mode-btn ${mode.id === currentModeId ? "active" : ""}" type="button" onclick="setMode('${mode.id}')">${mode.label}</button>
+      `).join("");
+    }
+
+    function setMode(modeId) {
+      currentModeId = modeId;
+      currentExample = getCurrentMode().generate();
+      currentStep = 0;
+      render();
+    }
+
+    function getCurrentMode() {
+      return modes.find((mode) => mode.id === currentModeId) || modes[0];
+    }
+
+    function newExample() {
+      currentExample = getCurrentMode().generate();
+      currentStep = 0;
+      render();
+    }
+
+    function nextStep() {
+      currentStep = Math.min(currentStep + 1, currentExample.steps.length - 1);
+      render(true);
+    }
+
+    function previousStep() {
+      currentStep = Math.max(currentStep - 1, 0);
+      render(true);
+    }
+
+    function showAll() {
+      currentStep = currentExample.steps.length - 1;
+      render(true);
+    }
+
+    function resetSteps() {
+      currentStep = 0;
+      render(true);
+    }
+
+    function render(animate = false) {
+      const mode = getCurrentMode();
+      if (!currentExample) currentExample = mode.generate();
+      const step = currentExample.steps[currentStep];
+      renderModeButtons();
+      document.getElementById("modeTitle").textContent = mode.title;
+      document.getElementById("promptText").innerHTML = currentExample.prompt;
+      document.getElementById("stepCounter").textContent = `Step ${currentStep + 1} of ${currentExample.steps.length}`;
+      document.getElementById("structureHeading").textContent = mode.focus;
+      document.getElementById("stepLabel").textContent = step.label;
+      document.getElementById("stepText").innerHTML = step.text;
+      document.getElementById("methodBox").innerHTML = step.method;
+      document.getElementById("teacherPoints").innerHTML = mode.points.map((point) => `<li>${point}</li>`).join("");
+      document.getElementById("visual").innerHTML = step.visual();
+      if (animate) animateModel();
+    }
+
+    function animateModel() {
+      const card = document.getElementById("modelCard");
+      clearTimeout(animTimer);
+      card.classList.remove("step-animating");
+      void card.offsetWidth;
+      card.classList.add("step-animating");
+      animTimer = setTimeout(() => card.classList.remove("step-animating"), 3100);
+    }
+
+    function fractionDivisionVisual(ex, stage) {
+      const cells = [];
+      let flatIndex = 0;
+      for (let wholeIndex = 0; wholeIndex < ex.whole; wholeIndex++) {
+        if (stage === 0) {
+          cells.push(`<div class="whole unsplit"><span class="whole-label">1</span></div>`);
+        } else {
+          const pieces = [];
+          for (let i = 0; i < ex.denom; i++) {
+            const group = Math.floor(flatIndex / ex.num);
+            const posInGroup = flatIndex % ex.num;
+            const isRemainder = stage >= 2 && flatIndex >= Math.floor((ex.whole * ex.denom) / ex.num) * ex.num;
+            const color = groupColors[group % groupColors.length];
+            const groupedClass = stage >= 2 && !isRemainder ? "grouped" : "";
+            const remainderClass = isRemainder ? "remainder" : "";
+            const label = stage >= 3 && !isRemainder && posInGroup === 0 ? group + 1 : "";
+            pieces.push(`<span class="piece ${groupedClass} ${remainderClass}" style="--group-color:${color}">${label}</span>`);
+            flatIndex++;
+          }
+          cells.push(`<div class="whole" style="--denom:${ex.denom}">${pieces.join("")}</div>`);
+        }
+      }
+      const total = ex.whole * ex.denom;
+      const groups = Math.floor(total / ex.num);
+      const remainder = total % ex.num;
+      const summary = stage >= 3 ? `<div class="group-summary">${Array.from({ length: groups }, (_, i) => `<span class="mini-group">Group ${i + 1}</span>`).join("")}${remainder ? `<span class="mini-group">left ${remainder}/${ex.num}</span>` : ""}</div>` : "";
+      return `
+        <div class="whole-row" style="--whole-count:${Math.min(ex.whole, 6)}">${cells.join("")}</div>
+        ${summary}
+        <div class="hint-line">${stage < 2 ? "First make the parts visible." : `Each group is ${vfrac(ex.num, ex.denom)}.`}</div>
+      `;
+    }
+
+    function equivalentVisual(ex, stage) {
+      const refinedParts = ex.d * ex.scale;
+      return `
+        <div class="bar-stack">
+          <div class="bar-line">
+            <div class="bar-label">Original</div>
+            ${bar(ex.d, ex.n, 0, true)}
+          </div>
+          <div class="bar-line">
+            <div class="bar-label">${stage >= 1 ? "Refined" : "Same whole"}</div>
+            ${stage >= 1 ? bar(refinedParts, ex.n * ex.scale, 0, stage >= 2) : `<div class="bar" style="--parts:${ex.d}">${Array.from({ length: ex.d }, (_, i) => `<span class="bar-part ${i < ex.n ? "shaded-a" : ""}"></span>`).join("")}</div>`}
+          </div>
+          <div class="big-equation">${stage >= 3 ? `${vfrac(ex.n, ex.d)} = ${vfrac(ex.n * ex.scale, refinedParts)}` : "The shaded amount stays the same."}</div>
+        </div>
+      `;
+    }
+
+    function addingVisual(ex, stage) {
+      const common = lcm(ex.b, ex.d);
+      const left = ex.a * (common / ex.b);
+      const right = ex.c * (common / ex.d);
+      const sum = left + right;
+      return `
+        <div class="bar-stack">
+          <div class="bar-line">
+            <div class="bar-label">${vfrac(ex.a, ex.b)}</div>
+            ${stage >= 1 ? bar(common, left, 0, stage >= 2) : bar(ex.b, ex.a, 0, true)}
+          </div>
+          <div class="bar-line">
+            <div class="bar-label">${vfrac(ex.c, ex.d)}</div>
+            ${stage >= 1 ? bar(common, 0, right, stage >= 2) : bar(ex.d, ex.c, 0, true)}
+          </div>
+          <div class="bar-line">
+            <div class="bar-label">Together</div>
+            ${stage >= 3 ? bar(common, left, right, true) : `<div class="bar" style="--parts:${common}">${Array.from({ length: common }, () => `<span class="bar-part"></span>`).join("")}</div>`}
+          </div>
+          <div class="big-equation">${stage >= 3 ? `${vfrac(left, common)} + ${vfrac(right, common)} = ${vfrac(sum, common)}` : `Common parts: ${common}`}</div>
+        </div>
+      `;
+    }
+
+    function bar(parts, shadedA, shadedB = 0, labels = false) {
+      const cells = [];
+      for (let i = 0; i < parts; i++) {
+        const a = i < shadedA;
+        const b = i >= shadedA && i < shadedA + shadedB;
+        const cls = a && b ? "shaded-both" : a ? "shaded-a" : b ? "shaded-b" : "";
+        cells.push(`<span class="bar-part ${cls}">${labels && cls ? "" : ""}</span>`);
+      }
+      return `<div class="bar" style="--parts:${parts}">${cells.join("")}</div>`;
+    }
+
+    function areaVisual(ex, stage) {
+      const entries = [
+        { cls: "area-head", value: stage >= 1 ? ex.bT : "" },
+        { cls: "area-head", value: stage >= 1 ? ex.bO : "" },
+        { cls: "area-side", value: stage >= 1 ? ex.aT : "" },
+        { cls: "area-cell", value: stage >= 2 ? ex.aT * ex.bT : "" },
+        { cls: "area-cell", value: stage >= 2 ? ex.aT * ex.bO : "" },
+        { cls: "area-side", value: stage >= 1 ? ex.aO : "" },
+        { cls: "area-cell", value: stage >= 2 ? ex.aO * ex.bT : "" },
+        { cls: "area-cell", value: stage >= 2 ? ex.aO * ex.bO : "" }
+      ];
+      return `
+        <div class="area-layout">
+          <div class="area-grid">
+            <div class="area-corner"></div>
+            ${entries.map((item) => `<div class="${item.cls}">${item.value}</div>`).join("")}
+          </div>
+          <div class="big-equation">${stage >= 3 ? `${ex.a} &times; ${ex.b} = ${ex.a * ex.b}` : "Partition the rectangle before calculating."}</div>
+        </div>
+      `;
+    }
+
+    function factorVisual(ex, stage) {
+      const rectangle = `
+        <div class="tile-row">
+          <span class="factor-tile">${ex.h}</span>
+          <span class="term-tile x-term">${formatCoeff(ex.p)}x</span>
+          <span class="term-tile num-term">${ex.q}</span>
+        </div>
+      `;
+      return `
+        <div class="tile-layout">
+          <div class="tile-row">
+            <span class="term-tile x-term">${formatCoeff(ex.first)}x</span>
+            <span class="big-equation">+</span>
+            <span class="term-tile num-term">${ex.second}</span>
+          </div>
+          ${stage >= 1 ? `<div class="hint-line">Common factor: ${ex.h}</div>` : ""}
+          ${stage >= 2 ? rectangle : ""}
+          <div class="big-equation">${stage >= 3 ? ex.bracket : "Rebuild one rectangle from the terms."}</div>
+        </div>
+      `;
+    }
+
+    function percentVisual(ex, stage) {
+      return `
+        <div class="bar-stack">
+          <div class="bar-line">
+            <div class="bar-label">100%</div>
+            ${stage >= 1 ? percentBar(ex, stage) : `<div class="bar" style="--parts:1"><span class="bar-part">${ex.amount}</span></div>`}
+          </div>
+          <div class="big-equation">${stage >= 3 ? `${ex.p}% of ${ex.amount} = ${ex.answer}` : stage >= 1 ? `${100 / ex.parts}% = ${ex.onePart}` : `100% = ${ex.amount}`}</div>
+        </div>
+      `;
+    }
+
+    function percentBar(ex, stage) {
+      const cells = [];
+      for (let i = 0; i < ex.parts; i++) {
+        const shaded = stage >= 2 && i < ex.shaded;
+        const label = stage >= 1 ? `${100 / ex.parts}%` : "";
+        cells.push(`<span class="bar-part ${shaded ? "shaded-a" : ""}">${label}</span>`);
+      }
+      return `<div class="bar" style="--parts:${ex.parts}">${cells.join("")}</div>`;
+    }
+
+    function balanceVisual(ex, stage) {
+      const leftTiles = [];
+      for (let i = 0; i < ex.a; i++) leftTiles.push(`<span class="balance-tile">x</span>`);
+      leftTiles.push(`<span class="balance-tile constant ${stage >= 1 ? "removed" : ""}">+${ex.b}</span>`);
+      const rightValue = stage >= 1 ? ex.total - ex.b : ex.total;
+      const rightTiles = stage >= 3
+        ? Array.from({ length: ex.a }, () => `<span class="balance-tile constant">${ex.x}</span>`).join("")
+        : `<span class="balance-tile constant">${rightValue}</span>`;
+      return `
+        <div class="balance-layout">
+          <div class="balance-scale">
+            <div class="balance-pan">${stage >= 3 ? `<span class="balance-tile">x</span>`.repeat(ex.a) : leftTiles.join("")}</div>
+            <div class="balance-equals">=</div>
+            <div class="balance-pan">${rightTiles}</div>
+          </div>
+          <div class="big-equation">${stage >= 3 ? `x = ${ex.x}` : stage >= 2 ? `${formatCoeff(ex.a)}x = ${rightValue}` : `${formatCoeff(ex.a)}x + ${ex.b} = ${ex.total}`}</div>
+        </div>
+      `;
+    }
+
+    const groupColors = [
+      "rgba(24, 184, 173, 0.28)",
+      "rgba(255, 209, 102, 0.38)",
+      "rgba(112, 72, 232, 0.20)",
+      "rgba(255, 138, 31, 0.25)",
+      "rgba(47, 128, 237, 0.20)",
+      "rgba(239, 71, 111, 0.18)"
+    ];
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    render();
+  </script>
+</body>
+</html>

@@ -2290,6 +2290,25 @@ const tools = [
     ]
   },
   {
+    slug: "maths-structure-lab",
+    title: "Maths Structure Lab",
+    category: "Classroom Tools",
+    level: "Primary / Elementary / KS3 / GCSE",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "Use teacher-led visual methods to reveal the structure behind fraction division, equivalent fractions, adding fractions, area multiplication, factorisation, percentages, and equation balance.",
+    tags: ["classroom", "visual maths", "structure of mathematics", "conceptual understanding", "fractions", "fraction division", "equivalent fractions", "area models", "factorisation", "percentages", "equations", "teacher training"],
+    toolPath: "tools/maths-structure-lab/index.html?v=maths-structure-lab-1",
+    imported: true,
+    teacherNotes: [
+      "Designed for modelling why key mathematical methods work before pupils use the shortcut.",
+      "Use Next Step to reveal each visual structure gradually, then connect the model to the symbolic rule.",
+      "Modes cover fraction division, equivalent fractions, adding fractions, multiplication as area, factorisation as reverse area, percentages of amounts, and solving equations by balance.",
+      "Useful for intervention, teacher training, whole-class explanation, and building mathematical language around structure."
+    ]
+  },
+  {
     slug: "word-search-builder",
     title: "Word Search Builder",
     category: "Classroom Tools",
@@ -2544,6 +2563,7 @@ const subjectToolGroups = {
     "elementary-manipulatives": "Board Displays and Visuals",
     "bar-models": "Board Displays and Visuals",
     "area-models": "Board Displays and Visuals",
+    "maths-structure-lab": "Board Displays and Visuals",
     "elementary-starter-board": "Starters and Retrieval",
     "elementary-maths-playground": "Starters and Retrieval",
     "fractions-table": "Starters and Retrieval",
@@ -23311,8 +23331,9 @@ const curatedRelatedToolSlugs = {
   "concept-explainer": ["anchor-charts", "classroom-displays", "dynamic-classroom-displays", "bar-models"],
   "anchor-charts": ["elementary-manipulatives", "elementary-maths-playground", "bar-models", "area-models"],
   "word-search-builder": ["fractions-table", "elementary-starter-board", "elementary-maths-playground", "classroom-displays"],
-  "bar-models": ["anchor-charts", "area-models", "elementary-manipulatives", "elementary-maths-playground"],
-  "area-models": ["anchor-charts", "bar-models", "elementary-manipulatives", "fractions-practice"],
+  "bar-models": ["maths-structure-lab", "anchor-charts", "area-models", "elementary-manipulatives"],
+  "area-models": ["maths-structure-lab", "anchor-charts", "bar-models", "fractions-practice"],
+  "maths-structure-lab": ["bar-models", "area-models", "elementary-manipulatives", "fractions-practice"],
   "elementary-maths-playground": ["anchor-charts", "bar-models", "area-models", "elementary-starter-board"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
   "midpoint-length-lines": ["straight-lines", "equation-of-a-circle", "transformations", "pythagoras-theorem"],
@@ -24140,6 +24161,23 @@ function toolInsightProfile(tool) {
         "Which cell would be missing if we only multiplied the first terms in two brackets?",
         "How can the same rectangle show both the expanded expression and the factorised expression?",
         "What changes in the model when we move from numerical area to algebraic area?"
+      ]
+    },
+    {
+      match: () => tool.slug === "maths-structure-lab" || has("structure of mathematics", "conceptual understanding", "visual maths"),
+      misconceptions: [
+        "Using a memorised rule such as invert and multiply before pupils understand what quantity is being counted.",
+        "Changing the partition of a whole without making clear that the whole itself has stayed the same.",
+        "Adding fractions by adding denominators because pupils are counting unlike-sized parts.",
+        "Factorising as a symbol manipulation only, rather than recognising it as rebuilding one rectangle from shared structure.",
+        "Solving equations by moving terms across the equals sign without preserving the balance relationship."
+      ],
+      questions: [
+        "What is the whole or unit in this model, and how do we know?",
+        "What has been repartitioned, grouped, or preserved from one step to the next?",
+        "Where can pupils see the operation in the diagram before the written method appears?",
+        "How does this model explain the shortcut, rather than simply decorate it?",
+        "Which misconception would this visual structure help a pupil repair?"
       ]
     },
     {
