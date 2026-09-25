@@ -2318,7 +2318,7 @@ const tools = [
     status: "Imported",
     description: "Use concrete, pictorial, and symbolic balance models to teach solving equations, including two-step equations, variables on both sides, negative constants, and negative x terms.",
     tags: ["classroom", "visual maths", "equations", "equation balance", "solving equations", "algebra tiles", "variables both sides", "negative x", "conceptual algebra", "teacher training"],
-    toolPath: "tools/equation-balance-models/index.html?v=equation-balance-models-1",
+    toolPath: "tools/equation-balance-models/index.html?v=equation-balance-models-2",
     imported: true,
     teacherNotes: [
       "Designed as a focused classroom explanation tool for solving equations by balance.",
