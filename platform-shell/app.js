@@ -2309,6 +2309,25 @@ const tools = [
     ]
   },
   {
+    slug: "equation-balance-models",
+    title: "Equation Balance Models",
+    category: "Classroom Tools",
+    level: "Primary / Elementary / KS3 / GCSE",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "Use concrete, pictorial, and symbolic balance models to teach solving equations, including two-step equations, variables on both sides, negative constants, and negative x terms.",
+    tags: ["classroom", "visual maths", "equations", "equation balance", "solving equations", "algebra tiles", "variables both sides", "negative x", "conceptual algebra", "teacher training"],
+    toolPath: "tools/equation-balance-models/index.html?v=equation-balance-models-1",
+    imported: true,
+    teacherNotes: [
+      "Designed as a focused classroom explanation tool for solving equations by balance.",
+      "Begins with concrete picture balances, then moves through algebra tiles and counters into symbolic algebra.",
+      "Modes cover one-step equations, two-step equations, variables on both sides, negative constants, and negative x terms.",
+      "Use the crossed-out objects to show that the same quantity is removed from both sides before simplifying."
+    ]
+  },
+  {
     slug: "word-search-builder",
     title: "Word Search Builder",
     category: "Classroom Tools",
@@ -2564,6 +2583,7 @@ const subjectToolGroups = {
     "bar-models": "Board Displays and Visuals",
     "area-models": "Board Displays and Visuals",
     "maths-structure-lab": "Board Displays and Visuals",
+    "equation-balance-models": "Board Displays and Visuals",
     "elementary-starter-board": "Starters and Retrieval",
     "elementary-maths-playground": "Starters and Retrieval",
     "fractions-table": "Starters and Retrieval",
@@ -23331,9 +23351,10 @@ const curatedRelatedToolSlugs = {
   "concept-explainer": ["anchor-charts", "classroom-displays", "dynamic-classroom-displays", "bar-models"],
   "anchor-charts": ["elementary-manipulatives", "elementary-maths-playground", "bar-models", "area-models"],
   "word-search-builder": ["fractions-table", "elementary-starter-board", "elementary-maths-playground", "classroom-displays"],
-  "bar-models": ["maths-structure-lab", "anchor-charts", "area-models", "elementary-manipulatives"],
+  "bar-models": ["maths-structure-lab", "equation-balance-models", "area-models", "elementary-manipulatives"],
   "area-models": ["maths-structure-lab", "anchor-charts", "bar-models", "fractions-practice"],
-  "maths-structure-lab": ["bar-models", "area-models", "elementary-manipulatives", "fractions-practice"],
+  "maths-structure-lab": ["equation-balance-models", "bar-models", "area-models", "elementary-manipulatives"],
+  "equation-balance-models": ["maths-structure-lab", "bar-models", "linear-equations", "simplification"],
   "elementary-maths-playground": ["anchor-charts", "bar-models", "area-models", "elementary-starter-board"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
   "midpoint-length-lines": ["straight-lines", "equation-of-a-circle", "transformations", "pythagoras-theorem"],
@@ -24178,6 +24199,23 @@ function toolInsightProfile(tool) {
         "Where can pupils see the operation in the diagram before the written method appears?",
         "How does this model explain the shortcut, rather than simply decorate it?",
         "Which misconception would this visual structure help a pupil repair?"
+      ]
+    },
+    {
+      match: () => tool.slug === "equation-balance-models" || has("equation balance", "algebra tiles", "negative x", "variables both sides"),
+      misconceptions: [
+        "Thinking that terms move across the equals sign by magic rather than seeing the same operation applied to both sides.",
+        "Removing counters or x tiles from one side only, which breaks the balance relationship.",
+        "Cancelling x terms on both sides without recognising that identical x tiles must be removed from each side.",
+        "Misreading -2x as a positive 2x with a small sign attached, rather than two negative x tiles.",
+        "Dividing by a negative coefficient without first making sense of what a negative x tile represents."
+      ],
+      questions: [
+        "What identical object or quantity can be removed from both sides of the balance?",
+        "What remains on each side after the crossed-out objects are removed?",
+        "How does the visual model show the inverse operation before the symbolic step is written?",
+        "What does a negative x tile mean, and how is it different from a positive x tile?",
+        "How can we check the solution in the original balance, not only in the final line?"
       ]
     },
     {
