@@ -1,6 +1,6 @@
 const SITE_NAME = "Kaizen Maths";
 const SITE_TITLE = "Kaizen Maths | Practical Maths Resources and Make It Count";
-const SITE_DESCRIPTION = "Kaizen Maths provides practical mathematics resources for teachers. Make It Count brings those resources together with teacher development, coaching, and sustained classroom support.";
+const SITE_DESCRIPTION = "Kaizen Maths provides practical mathematics resources for teachers. Make It Count brings those resources together with online teacher development, coaching, and sustained implementation support.";
 const CLASSROOM_STANDARD_VERSION = "classroom-standard-3";
 const MAKE_IT_COUNT_LOGO = "assets/brand/make-it-count-brighter-futures.png";
 
@@ -5307,9 +5307,9 @@ const homepageFeaturedVideo = {
 const defaultHomepageHeroContent = {
   eyebrow: "Kaizen Maths + Make It Count",
   headline: "Better mathematics teaching starts with the right resources and support.",
-  subheading: "Kaizen Maths provides practical mathematics resources for teachers. Through Make It Count, we are working to bring those resources together with professional development and ongoing classroom support to schools that need them.",
+  subheading: "Kaizen Maths provides practical mathematics resources for teachers. Through Make It Count, we are working to bring those resources together with online professional development and ongoing implementation support to schools that need them.",
   highlight_1: "Practical classroom resources for everyday teaching",
-  highlight_2: "Teacher development, coaching, and sustained support",
+  highlight_2: "Online teacher development and sustained support",
   highlight_3: "Funded partnerships for schools that need mathematics support",
   gallery_label: "Inside Kaizen Maths",
   gallery_heading: "See the workspace in action"
@@ -5340,18 +5340,18 @@ const defaultProgrammeContent = {
   enquiry_button_label: "Contact / Enquire",
   home_programme_eyebrow: "Make It Count",
   home_programme_heading: "A proposed teacher development initiative using Kaizen Maths as the core classroom resource",
-  home_programme_copy: "The initial pilot concept focuses on ten schools in Jamaica, approximately thirty mathematics teachers, an in-person launch workshop, six weeks of initial professional development, school visits, online mentoring, and 12 months of follow-up. Participation would depend on securing funding and confirming programme arrangements.",
+  home_programme_copy: "The initial pilot concept focuses on ten schools in Jamaica and approximately thirty mathematics teachers. This first version is planned as an online programme, with an online launch orientation, six weeks of initial online professional development, online mentoring, and 12 months of follow-up. In-person training or school visits may be considered later if funding allows.",
   make_it_count_heading: "Make It Count is being developed to help teachers use mathematics resources effectively, not just access them.",
-  make_it_count_copy: "Many schools need more than a login. They need practical training, shared routines, coaching, and follow-up that helps teachers turn resources into better classroom practice. Make It Count is designed around that implementation gap.",
+  make_it_count_copy: "Many schools need more than a login. They need practical training, shared routines, online coaching, and follow-up that helps teachers turn resources into better classroom practice. Make It Count is designed around that implementation gap.",
   make_it_count_status: "The pilot is proposed and subject to securing funding, confirming school participation, and finalising programme arrangements.",
-  pilot_summary: "Ten participating schools.\nApproximately 30 mathematics teachers, with three teachers from each school.\nFree Kaizen Maths access for participating teachers during the programme.\nIn-person launch workshop, six-week initial professional development programme, school visits, online mentoring, and 12-month follow-up.\nParticipation subject to funding and final programme approval.",
+  pilot_summary: "Ten participating schools.\nApproximately 30 mathematics teachers, with three teachers from each school.\nFree Kaizen Maths access for participating teachers during the programme.\nOnline launch orientation, six-week initial online professional development programme, online mentoring, and 12-month follow-up.\nIn-person training or school visits are not part of the initial pilot and may be considered later if funding allows.\nParticipation subject to funding and final programme approval.",
   school_interest_heading: "Kaizen Maths can support everyday teaching while Make It Count adds training and implementation support.",
-  school_interest_copy: "The resource helps teachers prepare and deliver mathematics activities. The programme model is designed for schools that need structured professional development, coaching, and follow-up so that resource use becomes part of classroom practice.",
+  school_interest_copy: "The resource helps teachers prepare and deliver mathematics activities. The programme model is designed for schools that need structured online professional development, coaching, and follow-up so that resource use becomes part of classroom practice.",
   school_interest_status: "Schools can enquire about resource access without applying for Make It Count. Programme participation depends on funding and agreed arrangements.",
   partner_heading: "The aim is to make practical mathematics support available to schools that may not otherwise afford sustained resource access and professional development.",
-  partner_copy: "Kaizen Maths provides the classroom resource base. Make It Count is the proposed route for combining that resource with training, coaching, mentoring, and implementation support through funded partnerships.",
+  partner_copy: "Kaizen Maths provides the classroom resource base. Make It Count is the proposed route for combining that resource with online training, coaching, mentoring, and implementation support through funded partnerships.",
   partner_status: "The initial Jamaica pilot concept has a provisional budget of US$41,855. Funding has not yet been secured.",
-  partner_support: "Kaizen Maths access for participating teachers.\nIn-person launch training and online professional development sessions.\nSchool visits, classroom coaching, and mentoring activity.\nCoordination, facilitator support, monitoring, evaluation, and reporting."
+  partner_support: "Kaizen Maths access for participating teachers.\nOnline launch orientation and online professional development sessions.\nOnline mentoring, implementation check-ins, and school-level support conversations.\nCoordination, facilitator support, monitoring, evaluation, and reporting.\nFuture in-person training or school visits may be added if funding and programme arrangements allow."
 };
 
 const programmeEnquiryStatuses = [
@@ -6300,9 +6300,32 @@ function bookingProviderName(provider) {
 }
 
 function normaliseProgrammeContent(values = {}) {
+  const onlinePilotCopy = (key, value) => {
+    if (!["home_programme_copy", "make_it_count_copy", "pilot_summary", "school_interest_copy", "partner_copy", "partner_support"].includes(key)) return value;
+    return String(value || "")
+      .replace(
+        /The initial pilot concept focuses on ten schools in Jamaica, approximately thirty mathematics teachers, an in-person launch workshop, six weeks of initial professional development, school visits, online mentoring, and 12 months of follow-up\. Participation would depend on securing funding and confirming programme arrangements\./g,
+        defaultProgrammeContent.home_programme_copy
+      )
+      .replace(
+        /In-person launch workshop, six-week initial professional development programme, school visits, online mentoring, and 12-month follow-up\./g,
+        "Online launch orientation, six-week initial online professional development programme, online mentoring, and 12-month follow-up."
+      )
+      .replace(
+        /In-person launch training and online professional development sessions\./g,
+        "Online launch orientation and online professional development sessions."
+      )
+      .replace(
+        /School visits, classroom coaching, and mentoring activity\./g,
+        "Online mentoring, implementation check-ins, and school-level support conversations."
+      )
+      .replace(/\bpractical training, shared routines, coaching, and follow-up\b/g, "practical training, shared routines, online coaching, and follow-up")
+      .replace(/\bstructured professional development, coaching, and follow-up\b/g, "structured online professional development, coaching, and follow-up")
+      .replace(/\bwith training, coaching, mentoring, and implementation support\b/g, "with online training, coaching, mentoring, and implementation support");
+  };
   const text = (key) => {
     const value = String(values[key] ?? defaultProgrammeContent[key] ?? "").trim();
-    return value || defaultProgrammeContent[key] || "";
+    return onlinePilotCopy(key, value || defaultProgrammeContent[key] || "");
   };
   const logoUrl = safeImageSource(values.logo_url || defaultProgrammeContent.logo_url) || defaultProgrammeContent.logo_url;
   const enquiryUrl = safeExternalUrl(values.enquiry_url || "");
@@ -9883,17 +9906,23 @@ function renderMakeItCountPage() {
   const programme = programmeContent();
   const programmeModel = [
     ["Kaizen Maths access", "Teachers use the resource for classroom teaching, worksheets, homework, intervention, assessment, and pupil practice."],
-    ["Launch workshop", "A practical in-person starting point for participating schools and teachers."],
+    ["Online launch orientation", "A practical online starting point for participating schools and teachers."],
     ["Six-week initial PD", "Structured online sessions focused on using resources effectively in real teaching routines."],
-    ["School support visits", "Two in-person visits to each participating school are included in the pilot concept."],
+    ["Online implementation check-ins", "Regular online check-ins support participating schools as teachers begin using Kaizen Maths in lessons."],
     ["Mentoring and follow-up", "Online mentoring and implementation support would continue across a 12-month period."],
     ["Monitoring and evaluation", "The programme would track teacher participation, classroom implementation, and relevant learning indicators."]
+  ];
+  const trackingModel = [
+    ["Current stage", "Commitment and planning", "Schools are moving through interest, shortlist, commitment, and confirmation stages before the pilot begins."],
+    ["Online training", "To be tracked", "Once active, the programme page can record online orientation, session attendance, and professional development completion."],
+    ["Classroom use", "To be tracked", "Implementation tracking can show teacher engagement with Kaizen Maths routines, tools, worksheets, and pupil tasks."],
+    ["Feedback and evaluation", "To be tracked", "The pilot can collect teacher feedback, participation evidence, and agreed learning indicators for review."]
   ];
 
   app.innerHTML = `
     ${pageHeader(
       "Make It Count",
-      "A mathematics teacher development initiative that combines access to Kaizen Maths with practical training, classroom coaching, and sustained professional support.",
+      "A mathematics teacher development initiative that combines access to Kaizen Maths with online training, coaching, and sustained professional support.",
       `<a class="button primary" href="#/for-schools">For Schools</a><a class="button" href="#/partners">For Partners</a>${programmeEnquiryButtonHtml("", "button", programme)}`
     )}
     <section class="mission-page">
@@ -9939,6 +9968,20 @@ function renderMakeItCountPage() {
           <p>Make It Count is a mathematics teacher development initiative being developed through Embark Education, using Kaizen Maths as its core classroom resource, with Curiov8 as the proposed professional development delivery partner.</p>
           <p>Kaizen Maths remains the independently developed mathematics resource. The initiative is the route through which that resource can be combined with training and sustained support.</p>
         </article>
+      </section>
+
+      <section class="mission-grid mission-grid-four" aria-labelledby="pilotTrackingTitle">
+        <div class="section-heading mission-grid-heading">
+          <span class="eyebrow">Pilot Tracking</span>
+          <h2 id="pilotTrackingTitle">How progress will be reflected once the pilot begins</h2>
+        </div>
+        ${trackingModel.map(([title, status, copy]) => `
+          <article class="mission-card">
+            <span class="eyebrow">${escapeHtml(status)}</span>
+            <h3>${escapeHtml(title)}</h3>
+            <p>${escapeHtml(copy)}</p>
+          </article>
+        `).join("")}
       </section>
     </section>
   `;
@@ -10009,9 +10052,9 @@ function renderForSchoolsPage() {
 function renderPartnersPage() {
   const programme = programmeContent();
   const partnerRoutes = [
-    ["Funding and sponsorship", "Support a pilot that gives schools access to Kaizen Maths alongside training, coaching, and sustained follow-up."],
+    ["Funding and sponsorship", "Support a pilot that gives schools access to Kaizen Maths alongside online training, coaching, and sustained follow-up."],
     ["School partnerships", "Connect the initiative with schools, clusters, regions, districts, or education systems where mathematics support is needed."],
-    ["Programme delivery", "Discuss professional development, mentoring, facilitation, school visits, and implementation support."],
+    ["Programme delivery", "Discuss online professional development, mentoring, facilitation, implementation check-ins, and school support."],
     ["Evaluation and learning", "Support monitoring, feedback, and evidence gathering so future rollouts can improve responsibly."]
   ];
 
@@ -10270,7 +10313,7 @@ function renderSchoolCommitmentPage() {
           </div>
           <label>
             <input name="commit_launch" type="checkbox">
-            The school will identify participating teachers and support attendance at the launch / orientation session.
+            The school will identify participating teachers and support attendance at the online launch / orientation session.
           </label>
           <label>
             <input name="commit_training" type="checkbox">
@@ -10490,7 +10533,7 @@ function programmeReviewDetail(label, value) {
 function programmeReviewCommitmentsHtml(commitment = {}) {
   const commitments = commitment.commitments || {};
   const rows = [
-    ["launch_orientation", "Launch or orientation attendance supported"],
+    ["launch_orientation", "Online launch or orientation attendance supported"],
     ["professional_development", "Initial professional development supported"],
     ["classroom_use", "Kaizen Maths classroom use supported"],
     ["feedback_and_monitoring", "Feedback and monitoring supported"],
@@ -10727,6 +10770,51 @@ function programmeCommitmentRequestPanelHtml(token, item) {
   `;
 }
 
+function programmePilotTrackingHtml(item) {
+  const normalStatus = programmeEnquiryStatuses.includes(item?.status) ? item.status : "new";
+  const stageLabel = programmePublicStatusLabel(normalStatus);
+  const commitmentReady = ["committed", "confirmed", "active"].includes(normalStatus) || item?.enquiry_type === "school_commitment";
+  const confirmed = ["confirmed", "active"].includes(normalStatus);
+  const active = normalStatus === "active";
+  const trackingItems = [
+    ["Current stage", stageLabel, programmePublicStatusDescription(normalStatus)],
+    [
+      "Commitment",
+      commitmentReady ? "Received or in place" : "Not yet received",
+      commitmentReady
+        ? "The record includes, or is ready to include, school leadership, mathematics lead, teacher details, and agreed participation commitments."
+        : "When the school is shortlisted, the commitment section will collect teacher details, leadership confirmation, and readiness information."
+    ],
+    [
+      "Online delivery",
+      confirmed || active ? "Ready to schedule" : "Planned",
+      "The initial pilot is planned as online delivery: online launch orientation, online professional development, mentoring, implementation check-ins, and follow-up."
+    ],
+    [
+      "Implementation tracking",
+      active ? "Active" : "Not started",
+      active
+        ? "This page can be used as the school-facing record for training participation, Kaizen Maths use, feedback, and agreed evaluation indicators."
+        : "Once the pilot begins, this page can show participation, teacher engagement, classroom implementation, and evaluation notes."
+    ]
+  ];
+  return `
+    <section class="programme-document-section programme-pilot-tracking">
+      <h3>Pilot Tracking</h3>
+      <p>This gives the school a simple record of where the submission sits and what will be tracked once the pilot begins.</p>
+      <div class="programme-document-grid">
+        ${trackingItems.map(([label, value, copy]) => `
+          <span>
+            <strong>${escapeHtml(label)}</strong>
+            ${escapeHtml(value)}
+            <small>${escapeHtml(copy)}</small>
+          </span>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
 function programmeSubmissionDocumentHtml(item, token) {
   const programme = programmeContent();
   const reviewUrl = programmeStatusUrl(token);
@@ -10778,6 +10866,7 @@ function programmeSubmissionDocumentHtml(item, token) {
 
       ${programmeReviewTeachersHtml(commitment)}
       ${programmeReviewCommitmentsHtml(commitment)}
+      ${programmePilotTrackingHtml(item)}
 
       ${item.challenge_summary ? `
         <section class="programme-document-section">
@@ -11004,7 +11093,7 @@ function adminProgrammeEnquiryCardHtml(enquiry) {
     ? commitment.participating_teachers.filter((teacher) => teacher?.name || teacher?.email)
     : [];
   const commitmentChecks = [
-    ["launch_orientation", "Launch / orientation attendance supported"],
+    ["launch_orientation", "Online launch / orientation attendance supported"],
     ["professional_development", "Initial professional development supported"],
     ["classroom_use", "Kaizen Maths will be used in agreed classroom practice"],
     ["feedback_and_monitoring", "Feedback, reflection, and monitoring supported"],
@@ -11215,7 +11304,7 @@ function renderHome() {
   const heroScreenshots = homepageScreenshotList();
   const missionCards = [
     ["Kaizen Maths", "The practical resource", "A teacher-built mathematics workspace for questions, worked examples, worksheets, assessments, classroom displays, and pupil tasks."],
-    ["Make It Count", "The development initiative", "A proposed teacher development programme combining Kaizen Maths access with training, coaching, school visits, and mentoring."],
+    ["Make It Count", "The development initiative", "A proposed teacher development programme combining Kaizen Maths access with online training, coaching, mentoring, and sustained follow-up."],
     ["Get involved", "Explore, enquire, or partner", "Teachers can explore the resource. Schools can express interest. Funders and partners can discuss support for programme delivery."]
   ];
   const workflowSteps = [
@@ -11234,13 +11323,13 @@ function renderHome() {
   ];
   const audienceCards = [
     ["For Teachers", "Prepare faster and teach with confidence.", "Use Kaizen Maths independently for lessons, worksheets, practice, homework, assessment, and classroom modelling."],
-    ["For Schools", "Support mathematics improvement with structure.", "Use Make It Count to connect the resource with training, coaching, implementation support, and follow-up."],
+    ["For Schools", "Support mathematics improvement with structure.", "Use Make It Count to connect the resource with online training, coaching, implementation support, and follow-up."],
     ["For Partners", "Help practical support reach more classrooms.", "Discuss funding, sponsorship, pilot support, professional development delivery, or school partnerships."],
     ["For Tutors", "Create targeted practice for every learner.", "Select exactly the topic and level a learner needs, then regenerate fresh practice for lessons or homework."]
   ];
   const comparisonRows = [
     ["Searching multiple websites", "One structured resource with searchable topic generators, classroom display tools, and printable outputs."],
-    ["Giving software without support", "Make It Count connects the resource to teacher development, coaching, and implementation routines."],
+    ["Giving software without support", "Make It Count connects the resource to teacher development, online coaching, and implementation routines."],
     ["Manually building worksheets", "Generate clean worksheets and assessments from selected topics in minutes."],
     ["Static textbook resources", "Fresh questions, worked examples, board projection, annotation, and assessment support."]
   ];
@@ -11416,7 +11505,7 @@ function renderHome() {
       <div>
         <span class="eyebrow">Schools And Supporters</span>
         <h2 id="partnerHomeTitle">Help practical mathematics support reach the classrooms that need it</h2>
-        <p>Schools can express interest in using Kaizen Maths or joining a future Make It Count programme. Funders, sponsors, and delivery partners can discuss how to support pilot development, training, coaching, and school implementation.</p>
+        <p>Schools can express interest in using Kaizen Maths or joining a future Make It Count programme. Funders, sponsors, and delivery partners can discuss how to support pilot development, online training, coaching, and school implementation.</p>
       </div>
       <div class="button-row">
         <a class="button primary" href="#/school-interest">Express School Interest</a>
@@ -29389,7 +29478,7 @@ function updateRouteSeo(parts) {
     },
     "make-it-count": {
       title: routeTitle("Make It Count"),
-      description: "Learn about Make It Count, the proposed mathematics teacher development initiative combining Kaizen Maths access with training, coaching, and sustained classroom support."
+      description: "Learn about Make It Count, the proposed mathematics teacher development initiative combining Kaizen Maths access with online training, coaching, and sustained implementation support."
     },
     "for-schools": {
       title: routeTitle("For Schools"),

@@ -4928,6 +4928,20 @@ button.certification-course-card {
   font-size: 0.84rem;
 }
 
+.programme-document-grid small {
+  color: #667085;
+  line-height: 1.4;
+}
+
+.programme-pilot-tracking .programme-document-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.programme-pilot-tracking .programme-document-grid span {
+  align-content: start;
+  background: linear-gradient(135deg, rgba(236, 253, 245, 0.72), rgba(255, 255, 255, 0.96));
+}
+
 .programme-document-grid strong {
   color: #667085;
   font-size: 0.7rem;
