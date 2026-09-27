@@ -231,7 +231,7 @@
 
     .mode-strip {
       display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 8px;
       min-height: 46px;
     }
@@ -425,6 +425,7 @@
     }
 
     .whole-row,
+    .fraction-division-model,
     .fraction-bars,
     .area-layout,
     .tile-layout,
@@ -438,6 +439,112 @@
     .whole-row {
       grid-template-columns: repeat(var(--whole-count), minmax(64px, 1fr));
       align-items: stretch;
+    }
+
+    .fraction-division-model {
+      align-content: center;
+      gap: 12px;
+    }
+
+    .division-layer {
+      width: min(100%, 820px);
+      display: grid;
+      gap: 6px;
+    }
+
+    .division-layer-title {
+      color: #344054;
+      font-size: clamp(0.74rem, 0.95vw, 0.9rem);
+      font-weight: 950;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      text-align: left;
+    }
+
+    .division-original-row {
+      width: min(100%, 820px);
+    }
+
+    .division-original-row .whole {
+      min-height: clamp(54px, 8vh, 78px);
+      border-width: 3px;
+    }
+
+    .division-piece-strip {
+      display: grid;
+      grid-template-columns: repeat(var(--piece-count), minmax(0, 1fr));
+      width: 100%;
+      min-height: clamp(84px, 13vh, 124px);
+      border: 4px solid #172033;
+      border-radius: 6px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .division-piece {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      border-left: 1px solid #adc0d0;
+      color: #172033;
+      font-weight: 950;
+      background: #fff;
+    }
+
+    .division-piece:first-child {
+      border-left: 0;
+    }
+
+    .division-piece.whole-end {
+      border-right: 4px solid #172033;
+    }
+
+    .division-piece.grouped {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.06)),
+        var(--group-color);
+      border-top: 5px solid rgba(22, 33, 63, 0.82);
+      border-bottom: 5px solid rgba(22, 33, 63, 0.82);
+    }
+
+    .division-piece.group-first,
+    .division-piece.group-single {
+      border-left: 5px solid rgba(22, 33, 63, 0.82);
+    }
+
+    .division-piece.group-last,
+    .division-piece.group-single {
+      border-right: 5px solid rgba(22, 33, 63, 0.82);
+    }
+
+    .division-piece.remainder {
+      background:
+        repeating-linear-gradient(135deg, rgba(239, 71, 111, 0.22) 0 7px, rgba(255, 255, 255, 0.82) 7px 14px);
+    }
+
+    .piece-group-label {
+      display: inline-grid;
+      place-items: center;
+      width: clamp(20px, 2.2vw, 30px);
+      height: clamp(20px, 2.2vw, 30px);
+      border-radius: 50%;
+      background: #172033;
+      color: #fff;
+      font-family: var(--ui-font);
+      font-size: clamp(0.68rem, 0.9vw, 0.84rem);
+      font-weight: 950;
+    }
+
+    .division-count-line {
+      width: min(100%, 820px);
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: rgba(24, 184, 173, 0.10);
+      color: #24324d;
+      text-align: center;
+      font-size: clamp(0.92rem, 1.35vw, 1.14rem);
+      font-weight: 900;
     }
 
     .whole {
@@ -704,6 +811,7 @@
     }
 
     .model-card.step-animating .whole,
+    .model-card.step-animating .division-piece,
     .model-card.step-animating .bar,
     .model-card.step-animating .area-cell,
     .model-card.step-animating .term-tile,
@@ -815,6 +923,7 @@
 
     @media (prefers-reduced-motion: reduce) {
       .model-card.step-animating .whole,
+      .model-card.step-animating .division-piece,
       .model-card.step-animating .bar,
       .model-card.step-animating .area-cell,
       .model-card.step-animating .term-tile,
@@ -1194,9 +1303,9 @@
       },
       {
         id: "factorisation",
-        label: "Reverse Area",
-        title: "Factorisation as Reverse Area",
-        focus: "Find the shared factor and rebuild the rectangle.",
+        label: "Factorising Area",
+        title: "Factorising with an Area Model",
+        focus: "Use the common factor as one side of a rectangle.",
         points: [
           "Factorising reverses expanding: the total area is reorganised into a product.",
           "The common factor becomes one side of the rectangle.",
@@ -1271,87 +1380,34 @@
           const ex = pick(options);
           const onePart = ex.amount / ex.parts;
           const answer = onePart * ex.shaded;
+          const model = { ...ex, onePart, answer };
           return {
-            ...ex,
-            onePart,
-            answer,
+            ...model,
             prompt: `Find ${ex.p}% of ${ex.amount}`,
             steps: [
               {
                 label: "Identify the whole",
                 text: `${ex.amount} represents 100%.`,
                 method: `100% = ${ex.amount}`,
-                visual: () => percentVisual(ex, 0)
+                visual: () => percentVisual(model, 0)
               },
               {
                 label: "Split the whole",
                 text: `Split 100% into ${ex.parts} equal parts.`,
                 method: `${100 / ex.parts}% = ${onePart}`,
-                visual: () => percentVisual(ex, 1)
+                visual: () => percentVisual(model, 1)
               },
               {
                 label: "Shade the target percent",
                 text: `${ex.p}% is ${ex.shaded} of those equal parts.`,
                 method: `${ex.shaded} &times; ${onePart} = ${answer}`,
-                visual: () => percentVisual(ex, 2)
+                visual: () => percentVisual(model, 2)
               },
               {
                 label: "Write the result",
                 text: "The model shows the part of the whole that the percentage represents.",
                 method: `${ex.p}% of ${ex.amount} = ${answer}`,
-                visual: () => percentVisual(ex, 3)
-              }
-            ]
-          };
-        }
-      },
-      {
-        id: "equationBalance",
-        label: "Equation Balance",
-        title: "Solving Equations by Balance",
-        focus: "Keep both sides equal while isolating the unknown.",
-        points: [
-          "The equals sign means both sides have the same value.",
-          "Whatever is removed from one side must be removed from the other.",
-          "Splitting into equal groups shows division as sharing."
-        ],
-        generate: () => {
-          const options = [
-            { a: 3, b: 5, x: 4 },
-            { a: 4, b: 6, x: 3 },
-            { a: 5, b: 2, x: 6 },
-            { a: 2, b: 7, x: 8 },
-            { a: 6, b: 4, x: 5 }
-          ];
-          const ex = pick(options);
-          ex.total = ex.a * ex.x + ex.b;
-          return {
-            ...ex,
-            prompt: `Solve ${formatCoeff(ex.a)}x + ${ex.b} = ${ex.total}`,
-            steps: [
-              {
-                label: "Show the balance",
-                text: "The left side and right side have equal value.",
-                method: `${formatCoeff(ex.a)}x + ${ex.b} = ${ex.total}`,
-                visual: () => balanceVisual(ex, 0)
-              },
-              {
-                label: "Remove the constant",
-                text: `Subtract ${ex.b} from both sides to keep the balance equal.`,
-                method: `${formatCoeff(ex.a)}x + ${ex.b} - ${ex.b} = ${ex.total} - ${ex.b}`,
-                visual: () => balanceVisual(ex, 1)
-              },
-              {
-                label: "Simplify",
-                text: `There are ${ex.a} equal x-parts worth ${ex.total - ex.b}.`,
-                method: `${formatCoeff(ex.a)}x = ${ex.total - ex.b}`,
-                visual: () => balanceVisual(ex, 2)
-              },
-              {
-                label: "Split into equal groups",
-                text: `Divide both sides by ${ex.a}.`,
-                method: `x = ${ex.total - ex.b} &divide; ${ex.a} = ${ex.x}`,
-                visual: () => balanceVisual(ex, 3)
+                visual: () => percentVisual(model, 3)
               }
             ]
           };
@@ -1466,35 +1522,63 @@
     }
 
     function fractionDivisionVisual(ex, stage) {
-      const cells = [];
-      let flatIndex = 0;
-      for (let wholeIndex = 0; wholeIndex < ex.whole; wholeIndex++) {
-        if (stage === 0) {
-          cells.push(`<div class="whole unsplit"><span class="whole-label">1</span></div>`);
-        } else {
-          const pieces = [];
-          for (let i = 0; i < ex.denom; i++) {
-            const group = Math.floor(flatIndex / ex.num);
-            const posInGroup = flatIndex % ex.num;
-            const isRemainder = stage >= 2 && flatIndex >= Math.floor((ex.whole * ex.denom) / ex.num) * ex.num;
-            const color = groupColors[group % groupColors.length];
-            const groupedClass = stage >= 2 && !isRemainder ? "grouped" : "";
-            const remainderClass = isRemainder ? "remainder" : "";
-            const label = stage >= 3 && !isRemainder && posInGroup === 0 ? group + 1 : "";
-            pieces.push(`<span class="piece ${groupedClass} ${remainderClass}" style="--group-color:${color}">${label}</span>`);
-            flatIndex++;
-          }
-          cells.push(`<div class="whole" style="--denom:${ex.denom}">${pieces.join("")}</div>`);
-        }
-      }
       const total = ex.whole * ex.denom;
       const groups = Math.floor(total / ex.num);
       const remainder = total % ex.num;
-      const summary = stage >= 3 ? `<div class="group-summary">${Array.from({ length: groups }, (_, i) => `<span class="mini-group">Group ${i + 1}</span>`).join("")}${remainder ? `<span class="mini-group">left ${remainder}/${ex.num}</span>` : ""}</div>` : "";
+      const wholeCells = Array.from({ length: ex.whole }, () => `
+        <div class="whole unsplit"><span class="whole-label">1</span></div>
+      `).join("");
+      const splitCells = Array.from({ length: total }, (_, flatIndex) => {
+        const group = Math.floor(flatIndex / ex.num);
+        const posInGroup = flatIndex % ex.num;
+        const isRemainder = stage >= 2 && flatIndex >= groups * ex.num;
+        const color = groupColors[group % groupColors.length];
+        const grouped = stage >= 2 && !isRemainder;
+        const groupEdge = grouped
+          ? ex.num === 1
+            ? "group-single"
+            : posInGroup === 0
+              ? "group-first"
+              : posInGroup === ex.num - 1
+                ? "group-last"
+                : "group-middle"
+          : "";
+        const wholeEnd = (flatIndex + 1) % ex.denom === 0 && flatIndex !== total - 1 ? "whole-end" : "";
+        const label = stage >= 3 && grouped && posInGroup === 0
+          ? `<span class="piece-group-label">${group + 1}</span>`
+          : "";
+        return `
+          <span class="division-piece ${grouped ? "grouped" : ""} ${groupEdge} ${isRemainder ? "remainder" : ""} ${wholeEnd}" style="--group-color:${color}">
+            ${label}
+          </span>
+        `;
+      }).join("");
+      const splitLayer = stage >= 1 ? `
+        <div class="division-layer">
+          <div class="division-layer-title">Same wholes split into ${partName(ex.denom)}</div>
+          <div class="division-piece-strip" style="--piece-count:${total}">
+            ${splitCells}
+          </div>
+        </div>
+      ` : "";
+      const groupText = remainder
+        ? `${groups} complete groups of ${vfrac(ex.num, ex.denom)}, with ${remainder} of ${ex.num} parts left over.`
+        : `${groups} complete groups of ${vfrac(ex.num, ex.denom)}.`;
+      const countLine = stage >= 2 ? `
+        <div class="division-count-line">
+          ${stage >= 3 ? groupText : `Now group every ${ex.num} ${partName(ex.denom)} to make ${vfrac(ex.num, ex.denom)}.`}
+        </div>
+      ` : "";
       return `
-        <div class="whole-row" style="--whole-count:${Math.min(ex.whole, 6)}">${cells.join("")}</div>
-        ${summary}
-        <div class="hint-line">${stage < 2 ? "First make the parts visible." : `Each group is ${vfrac(ex.num, ex.denom)}.`}</div>
+        <div class="fraction-division-model">
+          <div class="division-layer">
+            <div class="division-layer-title">Original whole amount</div>
+            <div class="whole-row division-original-row" style="--whole-count:${Math.min(ex.whole, 6)}">${wholeCells}</div>
+          </div>
+          ${splitLayer}
+          ${countLine}
+          <div class="hint-line">${stage < 1 ? "Keep the whole number visible before repartitioning." : stage < 2 ? "The denominator tells us how to split each whole." : `Each outlined group is ${vfrac(ex.num, ex.denom)}.`}</div>
+        </div>
       `;
     }
 
