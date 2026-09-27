@@ -271,6 +271,10 @@
       gap: 12px;
     }
 
+    body[data-mode="fractionDivision"] .workspace {
+      grid-template-columns: minmax(0, 1.62fr) minmax(235px, 0.38fr);
+    }
+
     .board,
     .step-panel {
       min-height: 0;
@@ -443,101 +447,176 @@
 
     .fraction-division-model {
       align-content: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .division-layer {
-      width: min(100%, 820px);
+    .division-stage {
+      width: min(100%, 860px);
       display: grid;
-      gap: 6px;
+      gap: 10px;
     }
 
-    .division-layer-title {
-      color: #344054;
-      font-size: clamp(0.74rem, 0.95vw, 0.9rem);
-      font-weight: 950;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      text-align: left;
-    }
-
-    .division-original-row {
-      width: min(100%, 820px);
-    }
-
-    .division-original-row .whole {
-      min-height: clamp(54px, 8vh, 78px);
-      border-width: 3px;
-    }
-
-    .division-piece-strip {
+    .division-wholes {
       display: grid;
-      grid-template-columns: repeat(var(--piece-count), minmax(0, 1fr));
-      width: 100%;
-      min-height: clamp(84px, 13vh, 124px);
+      grid-template-columns: repeat(var(--whole-count), minmax(74px, 1fr));
+      gap: 10px;
+    }
+
+    .division-whole-card {
+      min-height: clamp(92px, 15vh, 128px);
+      display: grid;
+      grid-template-columns: repeat(var(--denom), 1fr);
       border: 4px solid #172033;
-      border-radius: 6px;
-      background: #fff;
+      border-radius: 8px;
       overflow: hidden;
+      background: #fff;
+      box-shadow: 0 10px 18px rgba(19, 39, 74, 0.10);
     }
 
-    .division-piece {
+    .division-whole-card.unsplit {
+      display: grid;
+      grid-template-columns: 1fr;
+      place-items: center;
+      background:
+        radial-gradient(circle at 30% 22%, rgba(24, 184, 173, 0.16), transparent 34%),
+        #fff;
+    }
+
+    .division-unit {
       position: relative;
       display: grid;
       place-items: center;
       min-width: 0;
-      border-left: 1px solid #adc0d0;
-      color: #172033;
-      font-weight: 950;
+      border-left: 1.5px solid #a7bacd;
       background: #fff;
     }
 
-    .division-piece:first-child {
+    .division-unit:first-child {
       border-left: 0;
     }
 
-    .division-piece.whole-end {
-      border-right: 4px solid #172033;
-    }
-
-    .division-piece.grouped {
+    .division-unit.fit {
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.06)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.20), rgba(255, 255, 255, 0.02)),
         var(--group-color);
       border-top: 5px solid rgba(22, 33, 63, 0.82);
       border-bottom: 5px solid rgba(22, 33, 63, 0.82);
     }
 
-    .division-piece.group-first,
-    .division-piece.group-single {
+    .division-unit.fit-start {
       border-left: 5px solid rgba(22, 33, 63, 0.82);
     }
 
-    .division-piece.group-last,
-    .division-piece.group-single {
+    .division-unit.fit-end {
       border-right: 5px solid rgba(22, 33, 63, 0.82);
     }
 
-    .division-piece.remainder {
+    .division-unit.leftover {
       background:
-        repeating-linear-gradient(135deg, rgba(239, 71, 111, 0.22) 0 7px, rgba(255, 255, 255, 0.82) 7px 14px);
+        repeating-linear-gradient(135deg, rgba(255, 138, 31, 0.32) 0 8px, rgba(255, 255, 255, 0.86) 8px 16px);
     }
 
-    .piece-group-label {
+    .division-unit.leftover.collected {
+      opacity: 0.42;
+    }
+
+    .division-badge {
       display: inline-grid;
       place-items: center;
-      width: clamp(20px, 2.2vw, 30px);
-      height: clamp(20px, 2.2vw, 30px);
+      width: clamp(22px, 2.3vw, 32px);
+      height: clamp(22px, 2.3vw, 32px);
       border-radius: 50%;
       background: #172033;
       color: #fff;
       font-family: var(--ui-font);
-      font-size: clamp(0.68rem, 0.9vw, 0.84rem);
+      font-size: clamp(0.7rem, 0.85vw, 0.86rem);
       font-weight: 950;
     }
 
+    .leftover-stage {
+      width: min(100%, 860px);
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(255, 247, 237, 0.94), rgba(232, 252, 249, 0.9));
+      border: 1px solid rgba(255, 138, 31, 0.22);
+    }
+
+    .leftover-title {
+      color: #8a3e00;
+      font-size: clamp(0.78rem, 0.95vw, 0.9rem);
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .leftover-pool {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .leftover-chip {
+      position: relative;
+      width: clamp(38px, 4vw, 54px);
+      height: clamp(38px, 4vw, 54px);
+      display: inline-grid;
+      place-items: center;
+      background:
+        repeating-linear-gradient(135deg, rgba(255, 138, 31, 0.34) 0 7px, rgba(255, 255, 255, 0.86) 7px 14px);
+      border: 3px solid rgba(138, 62, 0, 0.78);
+      border-radius: 8px;
+    }
+
+    .leftover-chip.extra-group {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.04)),
+        rgba(24, 184, 173, 0.30);
+      border-color: rgba(22, 33, 63, 0.82);
+    }
+
+    .leftover-chip.group-start {
+      border-left-width: 5px;
+    }
+
+    .leftover-chip.group-end {
+      border-right-width: 5px;
+    }
+
+    .leftover-chip.final-leftover {
+      background:
+        repeating-linear-gradient(135deg, rgba(239, 71, 111, 0.28) 0 7px, rgba(255, 255, 255, 0.86) 7px 14px);
+      border-color: rgba(185, 28, 28, 0.70);
+    }
+
+    .result-row {
+      width: min(100%, 860px);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .result-pill {
+      min-width: 74px;
+      min-height: 44px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(24, 184, 173, 0.94), rgba(112, 72, 232, 0.88));
+      color: #fff;
+      font-size: clamp(1rem, 1.4vw, 1.22rem);
+      font-weight: 950;
+      box-shadow: 0 8px 18px rgba(24, 184, 173, 0.22);
+    }
+
     .division-count-line {
-      width: min(100%, 820px);
+      width: min(100%, 860px);
       padding: 8px 12px;
       border-radius: 8px;
       background: rgba(24, 184, 173, 0.10);
@@ -545,6 +624,30 @@
       text-align: center;
       font-size: clamp(0.92rem, 1.35vw, 1.14rem);
       font-weight: 900;
+    }
+
+    body[data-mode="fractionDivision"] .step-panel {
+      padding: 12px;
+      gap: 8px;
+    }
+
+    body[data-mode="fractionDivision"] .step-panel h2 {
+      font-size: clamp(0.9rem, 1vw, 1.04rem);
+    }
+
+    body[data-mode="fractionDivision"] .step-text {
+      font-size: clamp(0.82rem, 0.95vw, 0.96rem);
+      line-height: 1.25;
+    }
+
+    body[data-mode="fractionDivision"] .method-box {
+      min-height: 54px;
+      padding: 9px;
+      font-size: clamp(1rem, 1.35vw, 1.28rem);
+    }
+
+    body[data-mode="fractionDivision"] .teacher-points {
+      display: none;
     }
 
     .whole {
@@ -811,7 +914,9 @@
     }
 
     .model-card.step-animating .whole,
-    .model-card.step-animating .division-piece,
+    .model-card.step-animating .division-unit,
+    .model-card.step-animating .leftover-chip,
+    .model-card.step-animating .result-pill,
     .model-card.step-animating .bar,
     .model-card.step-animating .area-cell,
     .model-card.step-animating .term-tile,
@@ -923,7 +1028,9 @@
 
     @media (prefers-reduced-motion: reduce) {
       .model-card.step-animating .whole,
-      .model-card.step-animating .division-piece,
+      .model-card.step-animating .division-unit,
+      .model-card.step-animating .leftover-chip,
+      .model-card.step-animating .result-pill,
       .model-card.step-animating .bar,
       .model-card.step-animating .area-cell,
       .model-card.step-animating .term-tile,
@@ -1079,51 +1186,70 @@
         ],
         generate: () => {
           const options = [
-            { whole: 4, num: 2, denom: 3 },
-            { whole: 3, num: 2, denom: 5 },
-            { whole: 5, num: 3, denom: 4 },
-            { whole: 2, num: 3, denom: 5 },
-            { whole: 6, num: 4, denom: 5 }
+            { whole: 5, num: 2, denom: 3 },
+            { whole: 4, num: 3, denom: 4 },
+            { whole: 6, num: 4, denom: 5 },
+            { whole: 3, num: 2, denom: 3 },
+            { whole: 5, num: 4, denom: 5 }
           ];
           const ex = pick(options);
-          const totalPieces = ex.whole * ex.denom;
-          const groups = Math.floor(totalPieces / ex.num);
-          const remainder = totalPieces % ex.num;
-          const answer = remainder === 0 ? `${groups}` : `${groups} ${vfrac(remainder, ex.num)}`;
-          return {
+          const groupsPerWhole = Math.floor(ex.denom / ex.num);
+          const leftoverPerWhole = ex.denom % ex.num;
+          const baseGroups = ex.whole * groupsPerWhole;
+          const leftoverPieces = ex.whole * leftoverPerWhole;
+          const extraGroups = Math.floor(leftoverPieces / ex.num);
+          const remainder = leftoverPieces % ex.num;
+          const groups = baseGroups + extraGroups;
+          const answer = mixedQuotient(groups, remainder, ex.num);
+          const model = {
             ...ex,
             answer,
+            groupsPerWhole,
+            leftoverPerWhole,
+            baseGroups,
+            leftoverPieces,
+            extraGroups,
+            remainder
+          };
+          return {
+            ...model,
             prompt: `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)}`,
             steps: [
               {
-                label: "Represent the whole number",
-                text: `Show ${ex.whole} as ${ex.whole} separate whole bars.`,
+                label: "Start with the wholes",
+                text: `Show ${ex.whole} wholes.`,
                 method: `${ex.whole} = ${Array(ex.whole).fill("1").join(" + ")}`,
-                visual: () => fractionDivisionVisual(ex, 0)
+                visual: () => fractionDivisionVisual(model, 0)
               },
               {
-                label: "Use the denominator",
-                text: `Because the divisor is in ${ordinalPart(ex.denom)}, split every whole into ${ex.denom} equal parts.`,
-                method: `${ex.whole} = ${totalPieces} ${partName(ex.denom)}`,
-                visual: () => fractionDivisionVisual(ex, 1)
+                label: "Split every whole",
+                text: `Split each whole into ${ex.denom} equal parts.`,
+                method: `${ex.whole} = ${ex.whole * ex.denom} ${partName(ex.denom)}`,
+                visual: () => fractionDivisionVisual(model, 1)
               },
               {
-                label: "Group the divisor",
-                text: `Each group must contain ${ex.num} of those ${ordinalPart(ex.denom)} because the divisor is ${vfrac(ex.num, ex.denom)}.`,
-                method: `${totalPieces} ${partName(ex.denom)} &divide; ${ex.num} ${partName(ex.denom)}`,
-                visual: () => fractionDivisionVisual(ex, 2)
+                label: `Show ${ex.num}/${ex.denom}`,
+                text: `Mark the ${vfrac(ex.num, ex.denom)} groups that fit inside each whole.`,
+                method: `${baseGroups} group${baseGroups === 1 ? "" : "s"} so far`,
+                visual: () => fractionDivisionVisual(model, 2)
+              },
+              {
+                label: "Use the leftovers",
+                text: `Put the leftover ${partName(ex.denom)} together to make more ${vfrac(ex.num, ex.denom)} groups.`,
+                method: `${leftoverPieces} ${partName(ex.denom)} = ${extraGroups} more group${extraGroups === 1 ? "" : "s"}${remainder ? ` and ${remainder} left` : ""}`,
+                visual: () => fractionDivisionVisual(model, 3)
               },
               {
                 label: "Count the groups",
-                text: remainder === 0 ? `There are exactly ${groups} complete groups.` : `There are ${groups} complete groups with ${remainder} part left over.`,
-                method: `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${answer}`,
-                visual: () => fractionDivisionVisual(ex, 3)
+                text: "Count all the complete groups and any part of a final group.",
+                method: `${baseGroups} + ${extraGroups}${remainder ? ` + ${simplifiedFraction(remainder, ex.num)}` : ""} = ${answer}`,
+                visual: () => fractionDivisionVisual(model, 4)
               },
               {
                 label: "Connect to the rule",
-                text: "The diagram shows why dividing by a fraction is the same as multiplying by its reciprocal.",
+                text: "The reciprocal rule gives the same result as the model.",
                 method: `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${ex.whole} &times; ${vfrac(ex.denom, ex.num)} = ${answer}`,
-                visual: () => fractionDivisionVisual(ex, 4)
+                visual: () => fractionDivisionVisual(model, 5)
               }
             ]
           };
@@ -1436,6 +1562,18 @@
       return `<span class="vfrac"><span class="top">${top}</span><span class="bottom">${bottom}</span></span>`;
     }
 
+    function mixedQuotient(groups, remainder, denominator) {
+      if (!remainder) return `${groups}`;
+      const factor = gcd(remainder, denominator);
+      return `${groups} ${vfrac(remainder / factor, denominator / factor)}`;
+    }
+
+    function simplifiedFraction(numerator, denominator) {
+      if (!numerator) return "0";
+      const factor = gcd(numerator, denominator);
+      return vfrac(numerator / factor, denominator / factor);
+    }
+
     function formatCoeff(value) {
       if (value === 1) return "";
       if (value === -1) return "-";
@@ -1499,6 +1637,7 @@
       const mode = getCurrentMode();
       if (!currentExample) currentExample = mode.generate();
       const step = currentExample.steps[currentStep];
+      document.body.dataset.mode = currentModeId;
       renderModeButtons();
       document.getElementById("modeTitle").textContent = mode.title;
       document.getElementById("promptText").innerHTML = currentExample.prompt;
@@ -1522,62 +1661,70 @@
     }
 
     function fractionDivisionVisual(ex, stage) {
-      const total = ex.whole * ex.denom;
-      const groups = Math.floor(total / ex.num);
-      const remainder = total % ex.num;
-      const wholeCells = Array.from({ length: ex.whole }, () => `
-        <div class="whole unsplit"><span class="whole-label">1</span></div>
-      `).join("");
-      const splitCells = Array.from({ length: total }, (_, flatIndex) => {
-        const group = Math.floor(flatIndex / ex.num);
-        const posInGroup = flatIndex % ex.num;
-        const isRemainder = stage >= 2 && flatIndex >= groups * ex.num;
-        const color = groupColors[group % groupColors.length];
-        const grouped = stage >= 2 && !isRemainder;
-        const groupEdge = grouped
-          ? ex.num === 1
-            ? "group-single"
-            : posInGroup === 0
-              ? "group-first"
-              : posInGroup === ex.num - 1
-                ? "group-last"
-                : "group-middle"
-          : "";
-        const wholeEnd = (flatIndex + 1) % ex.denom === 0 && flatIndex !== total - 1 ? "whole-end" : "";
-        const label = stage >= 3 && grouped && posInGroup === 0
-          ? `<span class="piece-group-label">${group + 1}</span>`
-          : "";
-        return `
-          <span class="division-piece ${grouped ? "grouped" : ""} ${groupEdge} ${isRemainder ? "remainder" : ""} ${wholeEnd}" style="--group-color:${color}">
-            ${label}
-          </span>
-        `;
+      const wholeCards = Array.from({ length: ex.whole }, (_, wholeIndex) => {
+        if (stage === 0) {
+          return `<div class="division-whole-card unsplit"><span class="whole-label">1</span></div>`;
+        }
+        const units = Array.from({ length: ex.denom }, (_, unitIndex) => {
+          const isFit = stage >= 2 && unitIndex < ex.groupsPerWhole * ex.num;
+          const groupInWhole = Math.floor(unitIndex / ex.num);
+          const posInGroup = unitIndex % ex.num;
+          const isLeftover = stage >= 2 && unitIndex >= ex.groupsPerWhole * ex.num;
+          const groupNumber = wholeIndex * ex.groupsPerWhole + groupInWhole + 1;
+          const color = groupColors[(groupNumber - 1) % groupColors.length];
+          const fitStart = isFit && posInGroup === 0 ? "fit-start" : "";
+          const fitEnd = isFit && posInGroup === ex.num - 1 ? "fit-end" : "";
+          const badge = stage >= 2 && isFit && posInGroup === 0 ? `<span class="division-badge">${groupNumber}</span>` : "";
+          return `
+            <span class="division-unit ${isFit ? "fit" : ""} ${fitStart} ${fitEnd} ${isLeftover ? "leftover" : ""} ${isLeftover && stage >= 3 ? "collected" : ""}" style="--group-color:${color}">
+              ${badge}
+            </span>
+          `;
+        }).join("");
+        return `<div class="division-whole-card" style="--denom:${ex.denom}">${units}</div>`;
       }).join("");
-      const splitLayer = stage >= 1 ? `
-        <div class="division-layer">
-          <div class="division-layer-title">Same wholes split into ${partName(ex.denom)}</div>
-          <div class="division-piece-strip" style="--piece-count:${total}">
-            ${splitCells}
+      const leftoverPool = stage >= 3 && ex.leftoverPieces ? `
+        <div class="leftover-stage">
+          <div class="leftover-title">Put the leftover ${partName(ex.denom)} together</div>
+          <div class="leftover-pool">
+            ${Array.from({ length: ex.leftoverPieces }, (_, index) => {
+              const extraGroupIndex = Math.floor(index / ex.num);
+              const posInGroup = index % ex.num;
+              const inExtraGroup = index < ex.extraGroups * ex.num;
+              const finalLeftover = !inExtraGroup;
+              const groupStart = inExtraGroup && posInGroup === 0 ? "group-start" : "";
+              const groupEnd = inExtraGroup && posInGroup === ex.num - 1 ? "group-end" : "";
+              const badge = stage >= 4 && inExtraGroup && posInGroup === 0
+                ? `<span class="division-badge">${ex.baseGroups + extraGroupIndex + 1}</span>`
+                : "";
+              return `<span class="leftover-chip ${inExtraGroup ? "extra-group" : ""} ${groupStart} ${groupEnd} ${finalLeftover ? "final-leftover" : ""}">${badge}</span>`;
+            }).join("")}
           </div>
         </div>
       ` : "";
-      const groupText = remainder
-        ? `${groups} complete groups of ${vfrac(ex.num, ex.denom)}, with ${remainder} of ${ex.num} parts left over.`
-        : `${groups} complete groups of ${vfrac(ex.num, ex.denom)}.`;
-      const countLine = stage >= 2 ? `
+      const resultRow = stage >= 4 ? `
+        <div class="result-row">
+          <span class="result-pill">${ex.baseGroups}</span>
+          <span class="big-equation">+</span>
+          <span class="result-pill">${ex.extraGroups}</span>
+          ${ex.remainder ? `<span class="big-equation">+</span><span class="result-pill">${simplifiedFraction(ex.remainder, ex.num)}</span>` : ""}
+          <span class="big-equation">=</span>
+          <span class="result-pill">${ex.answer}</span>
+        </div>
+      ` : "";
+      const countLine = stage >= 5 ? `
         <div class="division-count-line">
-          ${stage >= 3 ? groupText : `Now group every ${ex.num} ${partName(ex.denom)} to make ${vfrac(ex.num, ex.denom)}.`}
+          ${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${ex.whole} &times; ${vfrac(ex.denom, ex.num)} = ${ex.answer}
         </div>
       ` : "";
       return `
         <div class="fraction-division-model">
-          <div class="division-layer">
-            <div class="division-layer-title">Original whole amount</div>
-            <div class="whole-row division-original-row" style="--whole-count:${Math.min(ex.whole, 6)}">${wholeCells}</div>
+          <div class="division-stage">
+            <div class="division-wholes" style="--whole-count:${Math.min(ex.whole, 6)}">${wholeCards}</div>
           </div>
-          ${splitLayer}
+          ${leftoverPool}
+          ${resultRow}
           ${countLine}
-          <div class="hint-line">${stage < 1 ? "Keep the whole number visible before repartitioning." : stage < 2 ? "The denominator tells us how to split each whole." : `Each outlined group is ${vfrac(ex.num, ex.denom)}.`}</div>
         </div>
       `;
     }
