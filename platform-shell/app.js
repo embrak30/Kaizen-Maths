@@ -2299,7 +2299,7 @@ const tools = [
     status: "Imported",
     description: "Use teacher-led visual methods to reveal the structure behind fraction division, equivalent fractions, adding fractions, area multiplication, factorisation, and percentages.",
     tags: ["classroom", "visual maths", "structure of mathematics", "conceptual understanding", "fractions", "fraction division", "equivalent fractions", "area models", "factorisation", "percentages", "teacher training"],
-    toolPath: "tools/maths-structure-lab/index.html?v=maths-structure-lab-3",
+    toolPath: "tools/maths-structure-lab/index.html?v=maths-structure-lab-4",
     imported: true,
     teacherNotes: [
       "Designed for modelling why key mathematical methods work before pupils use the shortcut.",

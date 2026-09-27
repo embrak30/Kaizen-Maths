@@ -413,6 +413,15 @@
       text-align: center;
     }
 
+    .mixed-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.16em;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
     .big-equation {
       font-family: var(--math-font);
       font-size: clamp(1.35rem, 3.2vw, 2.55rem);
@@ -606,8 +615,10 @@
       min-height: 44px;
       padding: 8px 12px;
       border-radius: 999px;
-      display: inline-grid;
-      place-items: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.16em;
       background: linear-gradient(135deg, rgba(24, 184, 173, 0.94), rgba(112, 72, 232, 0.88));
       color: #fff;
       font-size: clamp(1rem, 1.4vw, 1.22rem);
@@ -985,8 +996,11 @@
 
     .method-box {
       min-height: 70px;
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.22em;
       padding: 12px;
       border-radius: 8px;
       background: linear-gradient(135deg, rgba(112, 72, 232, 0.10), rgba(24, 184, 173, 0.10));
@@ -1520,20 +1534,26 @@
               {
                 label: "Split the whole",
                 text: `Split 100% into ${ex.parts} equal parts.`,
-                method: `${100 / ex.parts}% = ${onePart}`,
+                method: `${100 / ex.parts}% each`,
                 visual: () => percentVisual(model, 1)
+              },
+              {
+                label: "Find each part",
+                text: `Each ${100 / ex.parts}% part is worth ${onePart}.`,
+                method: `${100 / ex.parts}% = ${onePart}`,
+                visual: () => percentVisual(model, 2)
               },
               {
                 label: "Shade the target percent",
                 text: `${ex.p}% is ${ex.shaded} of those equal parts.`,
                 method: `${ex.shaded} &times; ${onePart} = ${answer}`,
-                visual: () => percentVisual(model, 2)
+                visual: () => percentVisual(model, 3)
               },
               {
                 label: "Write the result",
                 text: "The model shows the part of the whole that the percentage represents.",
                 method: `${ex.p}% of ${ex.amount} = ${answer}`,
-                visual: () => percentVisual(model, 3)
+                visual: () => percentVisual(model, 4)
               }
             ]
           };
@@ -1565,7 +1585,7 @@
     function mixedQuotient(groups, remainder, denominator) {
       if (!remainder) return `${groups}`;
       const factor = gcd(remainder, denominator);
-      return `${groups} ${vfrac(remainder / factor, denominator / factor)}`;
+      return `<span class="mixed-number"><span>${groups}</span>${vfrac(remainder / factor, denominator / factor)}</span>`;
     }
 
     function simplifiedFraction(numerator, denominator) {
@@ -1832,7 +1852,7 @@
             <div class="bar-label">100%</div>
             ${stage >= 1 ? percentBar(ex, stage) : `<div class="bar" style="--parts:1"><span class="bar-part">${ex.amount}</span></div>`}
           </div>
-          <div class="big-equation">${stage >= 3 ? `${ex.p}% of ${ex.amount} = ${ex.answer}` : stage >= 1 ? `${100 / ex.parts}% = ${ex.onePart}` : `100% = ${ex.amount}`}</div>
+          <div class="big-equation">${stage >= 4 ? `${ex.p}% of ${ex.amount} = ${ex.answer}` : stage >= 2 ? `${100 / ex.parts}% = ${ex.onePart}` : stage >= 1 ? `${100 / ex.parts}% each` : `100% = ${ex.amount}`}</div>
         </div>
       `;
     }
@@ -1840,8 +1860,8 @@
     function percentBar(ex, stage) {
       const cells = [];
       for (let i = 0; i < ex.parts; i++) {
-        const shaded = stage >= 2 && i < ex.shaded;
-        const label = stage >= 1 ? `${100 / ex.parts}%` : "";
+        const shaded = stage >= 3 && i < ex.shaded;
+        const label = stage >= 2 ? `${ex.onePart}` : stage >= 1 ? `${100 / ex.parts}%` : "";
         cells.push(`<span class="bar-part ${shaded ? "shaded-a" : ""}">${label}</span>`);
       }
       return `<div class="bar" style="--parts:${ex.parts}">${cells.join("")}</div>`;
