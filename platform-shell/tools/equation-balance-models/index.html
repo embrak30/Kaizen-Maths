@@ -231,7 +231,7 @@
 
     .mode-strip {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
       gap: 8px;
       min-height: 46px;
     }
@@ -536,6 +536,186 @@
       background: rgba(112, 72, 232, 0.07);
     }
 
+    .scale .picture-system {
+      grid-column: 1 / -1;
+    }
+
+    .picture-system {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .picture-context {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      color: #263552;
+      font-size: clamp(0.82rem, 1.15vw, 1rem);
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .picture-context span {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(20, 184, 166, 0.12);
+      border: 1px solid rgba(20, 184, 166, 0.2);
+    }
+
+    .picture-board {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .picture-board.single {
+      grid-template-rows: minmax(0, 1fr);
+    }
+
+    .picture-equation {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 0.58fr);
+      gap: clamp(8px, 1.1vw, 14px);
+      align-items: center;
+      padding: clamp(9px, 1.1vw, 14px);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(241, 253, 250, 0.93));
+      border: 2px solid rgba(20, 184, 166, 0.18);
+      box-shadow: 0 9px 20px rgba(19, 39, 74, 0.08);
+      overflow: hidden;
+    }
+
+    .picture-equation.main {
+      border-color: rgba(255, 138, 31, 0.34);
+      background:
+        linear-gradient(135deg, rgba(255, 250, 239, 0.98), rgba(255, 255, 255, 0.96));
+    }
+
+    .picture-equation.result {
+      border-color: rgba(112, 72, 232, 0.32);
+      background:
+        linear-gradient(135deg, rgba(244, 240, 255, 0.98), rgba(255, 255, 255, 0.96));
+    }
+
+    .picture-side {
+      min-width: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(5px, 0.75vw, 9px);
+      overflow: hidden;
+    }
+
+    .picture-equals {
+      display: grid;
+      place-items: center;
+      color: var(--purple);
+      font-family: var(--math-font);
+      font-size: clamp(2rem, 4.3vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .picture-amount,
+    .picture-calc,
+    .picture-final {
+      display: grid;
+      place-items: center;
+      min-width: clamp(70px, 8vw, 118px);
+      min-height: clamp(46px, 5vw, 76px);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 3px solid rgba(22, 33, 63, 0.18);
+      background: #fff;
+      color: #172033;
+      font-size: clamp(1.25rem, 2.3vw, 2.15rem);
+      font-weight: 950;
+      line-height: 1;
+      box-shadow: 0 8px 18px rgba(19, 39, 74, 0.09);
+    }
+
+    .picture-calc {
+      min-width: clamp(120px, 17vw, 240px);
+      min-height: 46px;
+      color: #7c2d12;
+      background: rgba(255, 138, 31, 0.13);
+      border-color: rgba(255, 138, 31, 0.26);
+      font-size: clamp(0.86rem, 1.35vw, 1.18rem);
+      line-height: 1.18;
+      text-align: center;
+    }
+
+    .picture-final {
+      min-width: clamp(150px, 20vw, 270px);
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      border-color: rgba(255, 255, 255, 0.5);
+      font-size: clamp(1.1rem, 1.9vw, 1.72rem);
+      line-height: 1.18;
+      text-align: center;
+    }
+
+    .picture-token {
+      position: relative;
+      flex: 0 0 auto;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      place-items: center;
+      width: clamp(54px, 6.2vw, 88px);
+      height: clamp(58px, 6.4vw, 92px);
+      padding: 5px;
+      border-radius: 8px;
+      border: 3px solid rgba(22, 33, 63, 0.2);
+      background:
+        linear-gradient(135deg, rgba(20, 184, 166, 0.17), rgba(255, 255, 255, 0.95));
+      box-shadow: 0 8px 17px rgba(19, 39, 74, 0.08);
+    }
+
+    .picture-token.target {
+      background:
+        linear-gradient(135deg, rgba(112, 72, 232, 0.17), rgba(255, 255, 255, 0.95));
+      border-color: rgba(112, 72, 232, 0.28);
+    }
+
+    .picture-token.solved {
+      background:
+        linear-gradient(135deg, rgba(32, 178, 107, 0.18), rgba(255, 255, 255, 0.95));
+      border-color: rgba(32, 178, 107, 0.34);
+    }
+
+    .picture-icon {
+      display: grid;
+      place-items: center;
+      font-size: clamp(1.45rem, 3.1vw, 2.5rem);
+      line-height: 1;
+    }
+
+    .picture-value {
+      width: 100%;
+      min-height: 18px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: #064e3b;
+      background: rgba(20, 184, 166, 0.12);
+      font-size: clamp(0.62rem, 0.78vw, 0.78rem);
+      font-weight: 950;
+      line-height: 1;
+    }
+
     .crossed::before,
     .crossed::after {
       content: "";
@@ -596,6 +776,10 @@
     .model-card.animating .crossed,
     .model-card.animating .added,
     .model-card.animating .group,
+    .model-card.animating .picture-token.solved,
+    .model-card.animating .picture-token.target,
+    .model-card.animating .picture-calc,
+    .model-card.animating .picture-final,
     .model-card.animating .symbolic-line {
       animation: balancePulse 3000ms ease-out both;
     }
@@ -622,6 +806,10 @@
       .model-card.animating .crossed,
       .model-card.animating .added,
       .model-card.animating .group,
+      .model-card.animating .picture-token.solved,
+      .model-card.animating .picture-token.target,
+      .model-card.animating .picture-calc,
+      .model-card.animating .picture-final,
       .model-card.animating .symbolic-line {
         animation: none;
       }
@@ -686,6 +874,7 @@
       <h3>Teaching Flow</h3>
       <ul>
         <li>Begin with the concrete picture balance so pupils see equal value.</li>
+        <li>Use picture puzzles to build substitution reasoning before introducing letters.</li>
         <li>Move to algebra tiles and counters once the balance idea is secure.</li>
         <li>Use the crossed-out objects to show that the same quantity is removed from both sides.</li>
         <li>For negative terms, distinguish positive counters, negative counters, positive x tiles, and negative x tiles.</li>
@@ -769,6 +958,67 @@
               step("Look at what remains", `Only the ${ex.a} equal mystery boxes are left on the left side.`, "Ask: what is left on each side after the same amount is removed?", () => simpleVisual(ex, "box", 2), `${ex.a} boxes = ${ex.total - ex.b}`),
               step("Share equally", `Split the remaining counters into ${ex.a} equal groups.`, "Ask: what does one equal group tell us about one mystery box?", () => simpleVisual(ex, "box", 3), `One box = ${ex.total - ex.b} &divide; ${ex.a}`),
               step("Reveal the value", `Each mystery box is worth ${ex.x}.`, "Connect the picture to the formal algebraic method.", () => simpleVisual(ex, "box", 4), `box = ${ex.x}`)
+            ]
+          };
+        }
+      },
+      {
+        id: "picturePuzzles",
+        label: "Picture Puzzles",
+        title: "Pictorial Equation Puzzles",
+        generate: () => {
+          const examples = [
+            {
+              context: "Pencils and pens",
+              unit: "$",
+              knownKey: "a",
+              targetKey: "b",
+              knownCount: 2,
+              mainCounts: { a: 3, b: 2 },
+              a: { name: "pencil", plural: "pencils", icon: "✏️", value: 1 },
+              b: { name: "pen", plural: "pens", icon: "🖊️", value: 3 }
+            },
+            {
+              context: "Tickets and snacks",
+              unit: "$",
+              knownKey: "a",
+              targetKey: "b",
+              knownCount: 3,
+              mainCounts: { a: 2, b: 2 },
+              a: { name: "ticket", plural: "tickets", icon: "🎟️", value: 4 },
+              b: { name: "snack", plural: "snacks", icon: "🍿", value: 5 }
+            },
+            {
+              context: "Stars and diamonds",
+              unit: "",
+              knownKey: "a",
+              targetKey: "b",
+              knownCount: 2,
+              mainCounts: { a: 2, b: 1 },
+              a: { name: "star", plural: "stars", icon: "★", value: 3 },
+              b: { name: "diamond", plural: "diamonds", icon: "◆", value: 5 }
+            },
+            {
+              context: "Books and rulers",
+              unit: "$",
+              knownKey: "a",
+              targetKey: "b",
+              knownCount: 2,
+              mainCounts: { a: 3, b: 2 },
+              a: { name: "book", plural: "books", icon: "📘", value: 2 },
+              b: { name: "ruler", plural: "rulers", icon: "📏", value: 4 }
+            }
+          ];
+          const ex = picturePuzzle(pick(examples));
+          return {
+            prompt: `${ex.knownCount} ${nameFor(ex.knownItem, ex.knownCount)} = ${amount(ex, ex.knownTotal)}. ${ex.mainCounts.a} ${nameFor(ex.a, ex.mainCounts.a)} + ${ex.mainCounts.b} ${nameFor(ex.b, ex.mainCounts.b)} = ${amount(ex, ex.mainTotal)}. Find one ${ex.targetItem.name}.`,
+            steps: [
+              step("Read the clues", "Start with the picture clue and the main picture puzzle. The repeated pictures have equal values.", "Ask pupils which row is easiest to solve first, and why.", () => picturePuzzleVisual(ex, 0), `Find one ${ex.targetItem.name}`),
+              step("Solve the clue", `${ex.knownCount} ${nameFor(ex.knownItem, ex.knownCount)} are worth ${amount(ex, ex.knownTotal)}, so one ${ex.knownItem.name} is ${amount(ex, ex.knownValue)}.`, "The clue gives one picture value without using algebra symbols.", () => picturePuzzleVisual(ex, 1), `One ${ex.knownItem.name} = ${amount(ex, ex.knownValue)}`),
+              step("Use the clue", `Replace each known ${ex.knownItem.name} in the main puzzle with ${amount(ex, ex.knownValue)}.`, "This is substitution in a pictorial form: known pictures can now be treated as known values.", () => picturePuzzleVisual(ex, 2), `${ex.mainCounts[ex.knownKey]} known pictures = ${amount(ex, ex.knownPart)}`),
+              step("Remove the known value", `The known pictures are worth ${amount(ex, ex.knownPart)}, so the ${nameFor(ex.targetItem, ex.targetCount)} must be worth ${amount(ex, ex.remaining)}.`, "Ask: what remains after the known part is removed from the total?", () => picturePuzzleVisual(ex, 3), `${amount(ex, ex.mainTotal)} - ${amount(ex, ex.knownPart)} = ${amount(ex, ex.remaining)}`),
+              step("Share equally", `Share ${amount(ex, ex.remaining)} equally between the ${ex.targetCount} ${nameFor(ex.targetItem, ex.targetCount)}.`, "Each matching picture must have the same value.", () => picturePuzzleVisual(ex, 4), `${amount(ex, ex.remaining)} ÷ ${ex.targetCount} = ${amount(ex, ex.targetValue)}`),
+              step("State the missing value", `One ${ex.targetItem.name} is worth ${amount(ex, ex.targetValue)}.`, "Now connect this back to formal algebra: each picture can later become a variable.", () => picturePuzzleVisual(ex, 5), `One ${ex.targetItem.name} = ${amount(ex, ex.targetValue)}`)
             ]
           };
         }
@@ -984,6 +1234,139 @@
       void card.offsetWidth;
       card.classList.add("animating");
       animationTimer = setTimeout(() => card.classList.remove("animating"), 3100);
+    }
+
+    function picturePuzzle(raw) {
+      const ex = {
+        ...raw,
+        mainCounts: { ...raw.mainCounts },
+        a: { ...raw.a },
+        b: { ...raw.b }
+      };
+      ex.knownItem = ex[ex.knownKey];
+      ex.targetItem = ex[ex.targetKey];
+      ex.knownValue = ex.knownItem.value;
+      ex.targetValue = ex.targetItem.value;
+      ex.targetCount = ex.mainCounts[ex.targetKey];
+      ex.knownTotal = ex.knownCount * ex.knownValue;
+      ex.knownPart = ex.mainCounts[ex.knownKey] * ex.knownValue;
+      ex.remaining = ex.targetCount * ex.targetValue;
+      ex.mainTotal = ex.knownPart + ex.remaining;
+      return ex;
+    }
+
+    function picturePuzzleVisual(ex, stage) {
+      const clue = pictureEquation(
+        pictureTokens(ex, ex.knownKey, ex.knownCount, { solved: stage >= 1, showValue: stage >= 1 }),
+        pictureAmount(ex, ex.knownTotal),
+        "clue"
+      );
+      const main = pictureEquation(
+        `${pictureTokens(ex, "a", ex.mainCounts.a, {
+          solved: stage >= 2 && ex.knownKey === "a",
+          showValue: stage >= 2 && ex.knownKey === "a",
+          crossed: stage === 3 && ex.knownKey === "a",
+          unknown: ex.targetKey === "a"
+        })}${pictureTokens(ex, "b", ex.mainCounts.b, {
+          solved: stage >= 2 && ex.knownKey === "b",
+          showValue: stage >= 2 && ex.knownKey === "b",
+          crossed: stage === 3 && ex.knownKey === "b",
+          unknown: ex.targetKey === "b"
+        })}`,
+        stage === 3
+          ? pictureCalc(`${amount(ex, ex.mainTotal)} - ${amount(ex, ex.knownPart)} = ${amount(ex, ex.remaining)}`)
+          : stage >= 2
+            ? pictureCalc(`Known part: ${ex.mainCounts[ex.knownKey]} × ${amount(ex, ex.knownValue)} = ${amount(ex, ex.knownPart)}`)
+            : pictureAmount(ex, ex.mainTotal),
+        "main"
+      );
+      const remaining = pictureEquation(
+        pictureTokens(ex, ex.targetKey, ex.targetCount, { target: true, unknown: stage < 4, solved: stage >= 4, showValue: stage >= 4 }),
+        pictureAmount(ex, ex.remaining),
+        "result"
+      );
+      const shared = pictureEquation(
+        pictureTokens(ex, ex.targetKey, ex.targetCount, { target: true, solved: true, showValue: true }),
+        pictureCalc(`${amount(ex, ex.remaining)} ÷ ${ex.targetCount} = ${amount(ex, ex.targetValue)}`),
+        "result"
+      );
+      const final = pictureEquation(
+        pictureTokens(ex, ex.targetKey, 1, { target: true, solved: true, showValue: true }),
+        pictureFinal(`One ${ex.targetItem.name} = ${amount(ex, ex.targetValue)}`),
+        "result"
+      );
+      const rowsByStage = [
+        [clue, main],
+        [clue, main],
+        [clue, main],
+        [main, remaining],
+        [remaining, shared],
+        [final]
+      ];
+      const rows = rowsByStage[stage] || rowsByStage[0];
+      return `
+        <div class="picture-system">
+          <p class="picture-context">
+            <span>${ex.context}</span>
+            <span>${stage < 2 ? "Use the clue first" : stage < 4 ? "Replace known pictures" : "Share the remaining value"}</span>
+          </p>
+          <div class="picture-board ${rows.length === 1 ? "single" : ""}">
+            ${rows.join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function pictureEquation(left, right, type = "") {
+      return `
+        <div class="picture-equation ${type}">
+          <div class="picture-side">${left}</div>
+          <div class="picture-equals">=</div>
+          <div class="picture-side">${right}</div>
+        </div>
+      `;
+    }
+
+    function pictureTokens(ex, key, count, options = {}) {
+      const item = ex[key];
+      const showValue = options.showValue || false;
+      const valueText = showValue ? amount(ex, item.value) : options.unknown ? "?" : "";
+      return Array.from({ length: count }, () => {
+        const classes = [
+          "picture-token",
+          options.target || key === ex.targetKey ? "target" : "",
+          options.solved ? "solved" : "",
+          options.crossed ? "crossed" : ""
+        ].filter(Boolean).join(" ");
+        return `
+          <span class="${classes}" title="${item.name}">
+            <span class="picture-icon">${item.icon}</span>
+            ${valueText ? `<span class="picture-value">${valueText}</span>` : ""}
+          </span>
+        `;
+      }).join("");
+    }
+
+    function pictureAmount(ex, value) {
+      return `<span class="picture-amount">${amount(ex, value)}</span>`;
+    }
+
+    function pictureCalc(text) {
+      return `<span class="picture-calc">${text}</span>`;
+    }
+
+    function pictureFinal(text) {
+      return `<span class="picture-final">${text}</span>`;
+    }
+
+    function amount(ex, value) {
+      if (ex.unit === "$") return `$${value}`;
+      if (ex.unit) return `${value} ${ex.unit}`;
+      return String(value);
+    }
+
+    function nameFor(item, count) {
+      return count === 1 ? item.name : item.plural;
     }
 
     function simpleVisual(ex, tileKind, stage) {

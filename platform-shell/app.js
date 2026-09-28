@@ -2316,14 +2316,14 @@ const tools = [
     type: "Interactive Display",
     access: "Free",
     status: "Imported",
-    description: "Use concrete, pictorial, and symbolic balance models to teach solving equations, including two-step equations, variables on both sides, negative constants, and negative x terms.",
-    tags: ["classroom", "visual maths", "equations", "equation balance", "solving equations", "algebra tiles", "variables both sides", "negative x", "conceptual algebra", "teacher training"],
-    toolPath: "tools/equation-balance-models/index.html?v=equation-balance-models-2",
+    description: "Use concrete, pictorial puzzle, and symbolic balance models to teach solving equations, including pre-algebra picture reasoning, two-step equations, variables on both sides, negative constants, and negative x terms.",
+    tags: ["classroom", "visual maths", "equations", "equation balance", "picture puzzles", "pre-algebra", "solving equations", "algebra tiles", "variables both sides", "negative x", "conceptual algebra", "teacher training"],
+    toolPath: "tools/equation-balance-models/index.html?v=equation-balance-models-3",
     imported: true,
     teacherNotes: [
       "Designed as a focused classroom explanation tool for solving equations by balance.",
-      "Begins with concrete picture balances, then moves through algebra tiles and counters into symbolic algebra.",
-      "Modes cover one-step equations, two-step equations, variables on both sides, negative constants, and negative x terms.",
+      "Begins with concrete picture balances and pictorial puzzle reasoning, then moves through algebra tiles and counters into symbolic algebra.",
+      "Modes cover picture puzzles, one-step equations, two-step equations, variables on both sides, negative constants, and negative x terms.",
       "Use the crossed-out objects to show that the same quantity is removed from both sides before simplifying."
     ]
   },
