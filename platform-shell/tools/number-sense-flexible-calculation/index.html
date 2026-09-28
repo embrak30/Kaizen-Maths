@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Sense: Flexible Calculation | Kaizen Maths</title>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <script src="../../auth-config.js?v=tool-access-guard-3"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-3"></script>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #607089;
+      --line: #d7e4ee;
+      --paper: #ffffff;
+      --teal: #14b8a6;
+      --teal-dark: #087a76;
+      --blue: #2f80ed;
+      --purple: #7048e8;
+      --orange: #ff8a1f;
+      --rose: #ef476f;
+      --green: #20b26b;
+      --yellow: #ffd166;
+      --math-font: "KaTeX_Math", "KaTeX_Main", "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+      --ui-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --shadow: 0 16px 38px rgba(19, 39, 74, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      color: var(--ink);
+      font-family: var(--ui-font);
+      background:
+        radial-gradient(circle at 10% 18%, rgba(20, 184, 166, 0.16), transparent 30%),
+        radial-gradient(circle at 88% 72%, rgba(255, 138, 31, 0.13), transparent 32%),
+        repeating-linear-gradient(135deg, rgba(47, 128, 237, 0.045) 0 1px, transparent 1px 28px),
+        #f8fcff;
+    }
+
+    button,
+    select {
+      border: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .app {
+      height: 100vh;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .topbar {
+      min-height: 74px;
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 8px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.16), transparent 34%),
+        linear-gradient(135deg, #14233a, #244a75 52%, #0f766e);
+      box-shadow: var(--shadow);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.18rem, 2vw, 1.72rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+      font-weight: 950;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: clamp(0.78rem, 1vw, 0.92rem);
+      line-height: 1.28;
+      font-weight: 700;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(74px, 1fr));
+      gap: 8px;
+      align-items: center;
+    }
+
+    .action-btn {
+      min-height: 38px;
+      padding: 8px 9px;
+      border-radius: 8px;
+      color: #23304c;
+      background: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      box-shadow: 0 6px 14px rgba(19, 39, 74, 0.14);
+      font-size: clamp(0.67rem, 0.8vw, 0.84rem);
+      font-weight: 950;
+      line-height: 1.05;
+      transition: transform 90ms ease, box-shadow 150ms ease;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(19, 39, 74, 0.18);
+    }
+
+    .action-btn.primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .action-btn.new-action {
+      color: #fff;
+      background: linear-gradient(135deg, var(--green), var(--teal-dark));
+    }
+
+    .mode-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .mode-btn {
+      min-width: 0;
+      min-height: 44px;
+      padding: 8px 9px;
+      border-radius: 8px;
+      color: #25304f;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(47, 128, 237, 0.14);
+      box-shadow: 0 6px 16px rgba(19, 39, 74, 0.07);
+      font-size: clamp(0.68rem, 0.86vw, 0.9rem);
+      font-weight: 950;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: transform 90ms ease, background 150ms ease, color 150ms ease;
+    }
+
+    .mode-btn:hover {
+      transform: translateY(-1px);
+      background: #fff4e7;
+      color: #a14700;
+      border-color: rgba(255, 138, 31, 0.45);
+    }
+
+    .mode-btn.active {
+      color: #fff;
+      background: linear-gradient(135deg, var(--orange), var(--rose));
+    }
+
+    .board {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(22, 33, 63, 0.10);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .prompt-band {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 16px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(20, 184, 166, 0.94), rgba(112, 72, 232, 0.84)),
+        linear-gradient(90deg, var(--teal), var(--purple));
+    }
+
+    .prompt-title {
+      margin: 0 0 4px;
+      font-size: 0.73rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.86;
+      font-weight: 950;
+    }
+
+    .prompt {
+      margin: 0;
+      font-family: var(--math-font);
+      font-size: clamp(1.2rem, 2.2vw, 1.9rem);
+      line-height: 1.12;
+      font-weight: 650;
+    }
+
+    .step-chip {
+      min-width: 130px;
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--ink);
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+      font-weight: 950;
+      border: 2px solid rgba(255, 209, 102, 0.95);
+    }
+
+    .step-chip small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 2px;
+    }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.16fr) minmax(250px, 0.84fr);
+      gap: 12px;
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .model-card,
+    .practice-card {
+      min-height: 0;
+      border-radius: 8px;
+      border: 1px solid rgba(47, 128, 237, 0.12);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(241, 253, 250, 0.94)),
+        repeating-linear-gradient(135deg, rgba(47, 128, 237, 0.035) 0 1px, transparent 1px 26px);
+      overflow: hidden;
+    }
+
+    .model-card {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      gap: 8px;
+      padding: clamp(10px, 1.35vw, 18px);
+    }
+
+    .action-line {
+      min-height: 42px;
+      display: grid;
+      place-items: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(255, 138, 31, 0.12);
+      color: #9a3412;
+      font-size: clamp(0.82rem, 1.08vw, 1rem);
+      font-weight: 950;
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    .visual-stage {
+      min-height: 0;
+      display: grid;
+      align-content: center;
+      gap: clamp(10px, 1.35vw, 16px);
+      overflow: hidden;
+    }
+
+    .calc-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .number-card,
+    .operator-card,
+    .note-card {
+      display: grid;
+      place-items: center;
+      min-width: clamp(76px, 7.5vw, 116px);
+      min-height: clamp(54px, 5.2vw, 78px);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 3px solid rgba(22, 33, 63, 0.15);
+      background: #fff;
+      color: #172033;
+      font-family: var(--math-font);
+      font-size: clamp(1.25rem, 2.8vw, 2.25rem);
+      font-weight: 650;
+      line-height: 1;
+      text-align: center;
+      box-shadow: 0 8px 17px rgba(19, 39, 74, 0.08);
+    }
+
+    .number-card.original {
+      border-color: rgba(47, 128, 237, 0.28);
+      background: linear-gradient(135deg, rgba(47, 128, 237, 0.12), #fff);
+    }
+
+    .number-card.changed {
+      border-color: rgba(20, 184, 166, 0.35);
+      background: linear-gradient(135deg, rgba(20, 184, 166, 0.16), #fff);
+    }
+
+    .number-card.removed {
+      border-color: rgba(239, 68, 68, 0.26);
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), #fff);
+    }
+
+    .operator-card {
+      min-width: 44px;
+      border-color: rgba(112, 72, 232, 0.22);
+      background: rgba(112, 72, 232, 0.08);
+      color: var(--purple);
+      font-size: clamp(1.4rem, 3vw, 2.35rem);
+      box-shadow: none;
+    }
+
+    .note-card {
+      min-width: clamp(160px, 20vw, 270px);
+      min-height: 42px;
+      color: #7c2d12;
+      background: rgba(255, 138, 31, 0.13);
+      border-color: rgba(255, 138, 31, 0.26);
+      font-family: var(--ui-font);
+      font-size: clamp(0.86rem, 1.22vw, 1.08rem);
+      font-weight: 950;
+      line-height: 1.2;
+    }
+
+    .chunk-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .chunk {
+      min-height: 88px;
+      display: grid;
+      gap: 6px;
+      align-content: center;
+      justify-items: center;
+      padding: 9px;
+      border-radius: 8px;
+      background: #fff;
+      border: 2px solid rgba(20, 184, 166, 0.18);
+      box-shadow: 0 8px 17px rgba(19, 39, 74, 0.07);
+      text-align: center;
+    }
+
+    .chunk strong {
+      color: var(--teal-dark);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .chunk span {
+      font-family: var(--math-font);
+      font-size: clamp(1.05rem, 1.9vw, 1.55rem);
+      font-weight: 650;
+      line-height: 1.1;
+    }
+
+    .chunk.negative span {
+      color: #b42318;
+    }
+
+    .bar-model {
+      display: grid;
+      grid-template-columns: repeat(var(--parts, 4), minmax(0, 1fr));
+      gap: 4px;
+      width: min(100%, 780px);
+      margin: 0 auto;
+    }
+
+    .bar-part {
+      min-height: clamp(44px, 6vw, 70px);
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(22, 33, 63, 0.18);
+      background: rgba(47, 128, 237, 0.13);
+      color: #1d3557;
+      font-family: var(--math-font);
+      font-size: clamp(1rem, 1.8vw, 1.42rem);
+      font-weight: 650;
+    }
+
+    .bar-part.friendly {
+      background: rgba(20, 184, 166, 0.18);
+      border-color: rgba(20, 184, 166, 0.42);
+    }
+
+    .bar-part.leftover {
+      background: rgba(255, 138, 31, 0.16);
+      border-color: rgba(255, 138, 31, 0.42);
+    }
+
+    .property-line {
+      min-height: 46px;
+      display: grid;
+      place-items: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #172033;
+      background: linear-gradient(135deg, rgba(112, 72, 232, 0.09), rgba(20, 184, 166, 0.10));
+      border: 1px solid rgba(112, 72, 232, 0.16);
+      font-family: var(--math-font);
+      font-size: clamp(1rem, 1.65vw, 1.45rem);
+      line-height: 1.18;
+      text-align: center;
+    }
+
+    .practice-card {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      padding: 12px;
+      gap: 10px;
+    }
+
+    .practice-head {
+      display: grid;
+      gap: 5px;
+    }
+
+    .practice-head h2 {
+      margin: 0;
+      color: #172033;
+      font-size: clamp(0.98rem, 1.35vw, 1.25rem);
+      line-height: 1.1;
+    }
+
+    .practice-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 760;
+      line-height: 1.28;
+    }
+
+    .practice-list {
+      min-height: 0;
+      display: grid;
+      gap: 8px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .practice-item {
+      display: grid;
+      gap: 6px;
+      padding: 9px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid rgba(20, 184, 166, 0.16);
+      box-shadow: 0 6px 13px rgba(19, 39, 74, 0.06);
+    }
+
+    .practice-question {
+      margin: 0;
+      font-family: var(--math-font);
+      font-size: clamp(1rem, 1.4vw, 1.28rem);
+      font-weight: 650;
+      line-height: 1.14;
+      color: #172033;
+    }
+
+    .practice-strategy {
+      display: none;
+      margin: 0;
+      color: #087a76;
+      font-size: 0.84rem;
+      font-weight: 850;
+      line-height: 1.24;
+    }
+
+    .practice-item.show .practice-strategy {
+      display: block;
+    }
+
+    .mini-btn {
+      justify-self: start;
+      min-height: 28px;
+      padding: 5px 8px;
+      border-radius: 7px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      font-size: 0.72rem;
+      font-weight: 950;
+    }
+
+    .teacher-strip {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      min-height: 60px;
+      padding: 10px 16px;
+      background:
+        linear-gradient(90deg, rgba(20, 184, 166, 0.10), rgba(255, 138, 31, 0.10)),
+        #fff;
+      border-top: 1px solid rgba(20, 184, 166, 0.16);
+    }
+
+    .talk-label {
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: var(--teal-dark);
+      background: rgba(20, 184, 166, 0.14);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .talk-text {
+      margin: 0;
+      color: #263552;
+      font-size: clamp(0.9rem, 1.16vw, 1.05rem);
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .model-card.animating .number-card.changed,
+    .model-card.animating .number-card.removed,
+    .model-card.animating .note-card,
+    .model-card.animating .chunk,
+    .model-card.animating .bar-part,
+    .model-card.animating .property-line {
+      animation: structurePulse 3000ms ease-out both;
+    }
+
+    @keyframes structurePulse {
+      0% {
+        opacity: 0.36;
+        transform: scale(0.98);
+        filter: saturate(0.7);
+      }
+      34% {
+        opacity: 1;
+        transform: scale(1.018);
+        filter: saturate(1.25);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: saturate(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .model-card.animating .number-card.changed,
+      .model-card.animating .number-card.removed,
+      .model-card.animating .note-card,
+      .model-card.animating .chunk,
+      .model-card.animating .bar-part,
+      .model-card.animating .property-line {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 980px) {
+      html,
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .mode-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+        overflow: visible;
+      }
+
+      .model-card {
+        min-height: 520px;
+      }
+
+      .practice-card {
+        min-height: 340px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        padding: 8px;
+      }
+
+      .actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .mode-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .prompt-band,
+      .teacher-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .chunk-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Number Sense: Flexible Calculation</h1>
+        <p>Teacher-led examples that show how compensation, partitioning, and distributive thinking make calculations more meaningful.</p>
+      </div>
+      <div class="actions">
+        <button class="action-btn new-action" type="button" onclick="newExample()">New</button>
+        <button class="action-btn" type="button" onclick="previousStep()">Back</button>
+        <button class="action-btn primary" type="button" onclick="nextStep()">Next Step</button>
+        <button class="action-btn" type="button" onclick="showAll()">Show All</button>
+        <button class="action-btn" type="button" onclick="resetSteps()">Reset</button>
+      </div>
+    </header>
+
+    <nav class="mode-strip" id="modeStrip" aria-label="Number sense strategy type"></nav>
+
+    <section class="board">
+      <div class="prompt-band">
+        <div>
+          <p class="prompt-title" id="modeTitle">Flexible calculation</p>
+          <p class="prompt" id="promptText"></p>
+        </div>
+        <div class="step-chip">
+          <small>Reveal</small>
+          <span id="stepCounter">Step 1</span>
+        </div>
+      </div>
+
+      <div class="workspace">
+        <div class="model-card" id="modelCard">
+          <div class="action-line" id="actionLine"></div>
+          <div class="visual-stage" id="visualStage"></div>
+          <div class="property-line" id="propertyLine"></div>
+        </div>
+
+        <aside class="practice-card">
+          <div class="practice-head">
+            <h2>Practice the decision</h2>
+            <p>Students should explain the friendly change before calculating. Reveal each suggested strategy only after discussion.</p>
+          </div>
+          <div class="practice-list" id="practiceList"></div>
+        </aside>
+      </div>
+
+      <div class="teacher-strip">
+        <span class="talk-label" id="talkLabel">Teacher prompt</span>
+        <p class="talk-text" id="talkText"></p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const modes = [
+      {
+        id: "compensation",
+        label: "Subtraction Compensation",
+        title: "Subtraction by Compensation",
+        generate: () => {
+          const examples = [
+            { top: 1000, bottom: 377, change: -1 },
+            { top: 803, bottom: 269, change: -4 },
+            { top: 902, bottom: 468, change: -3 },
+            { top: 1200, bottom: 587, change: -1 },
+            { top: 705, bottom: 288, change: -6 }
+          ];
+          const ex = completeCompensation(pick(examples));
+          return {
+            prompt: `${ex.top} &minus; ${ex.bottom}`,
+            property: "If the same amount is added to or subtracted from both numbers, the difference stays the same.",
+            practice: [
+              practice(`${ex.top + 100} &minus; ${ex.bottom + 23}`, "Look for a same-change adjustment that creates a friendlier top or bottom number."),
+              practice("803 &minus; 269", "Subtract 4 from both numbers to make 799 - 265."),
+              practice("1000 &minus; 377", "Subtract 1 from both numbers to avoid regrouping through zeros."),
+              practice("902 &minus; 468", "Subtract 3 from both numbers to make 899 - 465."),
+              practice("1200 &minus; 587", "Subtract 1 from both numbers to make 1199 - 586.")
+            ],
+            steps: [
+              step("Notice the structure", `The calculation is ${ex.top} &minus; ${ex.bottom}. The top number is awkward because of the zeros or the regrouping it creates.`, "Ask: which number could be changed slightly to make the subtraction easier?", () => compensationVisual(ex, 0), `${ex.top} &minus; ${ex.bottom}`),
+              step("Change both numbers equally", `${changeText(ex.change)} both numbers. This keeps the difference unchanged.`, "The important idea is not the trick; it is that the distance between the two numbers has not changed.", () => compensationVisual(ex, 1), `${ex.top} &minus; ${ex.bottom} = ${ex.newTop} &minus; ${ex.newBottom}`),
+              step("Subtract the friendlier numbers", `Now subtract ${ex.newTop} &minus; ${ex.newBottom}. This is a more sensible calculation.`, "Invite pupils to explain why the new subtraction is easier than the original one.", () => compensationVisual(ex, 2), `${ex.newTop} &minus; ${ex.newBottom} = ${ex.answer}`),
+              step("Check the invariant", `The answer is still ${ex.answer}, because both original numbers were changed by ${Math.abs(ex.change)} in the same direction.`, "Use the word difference: the difference has been preserved.", () => compensationVisual(ex, 3), `${ex.top} &minus; ${ex.bottom} = ${ex.answer}`)
+            ]
+          };
+        }
+      },
+      {
+        id: "partitionSubtraction",
+        label: "Partition Subtraction",
+        title: "Subtraction by Place-Value Parts",
+        generate: () => {
+          const examples = [
+            { top: 836, bottom: 265 },
+            { top: 877, bottom: 293 },
+            { top: 724, bottom: 358 },
+            { top: 941, bottom: 276 },
+            { top: 682, bottom: 157 }
+          ];
+          const ex = completePartition(pick(examples));
+          return {
+            prompt: `${ex.top} &minus; ${ex.bottom}`,
+            property: "Numbers can be partitioned by place value, and partial differences can be recombined, even when one part is negative.",
+            practice: [
+              practice("836 &minus; 265", "Try 800 - 200, 30 - 60, and 6 - 5, then recombine."),
+              practice("877 &minus; 293", "Subtract hundreds, tens, and ones separately, then combine the partial differences."),
+              practice("724 &minus; 358", "The tens and ones may create negative partial results. Keep them and recombine."),
+              practice("941 &minus; 276", "Use 900 - 200, 40 - 70, and 1 - 6."),
+              practice("682 &minus; 157", "Partition both numbers, subtract each place, then recombine.")
+            ],
+            steps: [
+              step("Partition both numbers", `Break ${ex.top} and ${ex.bottom} into hundreds, tens, and ones.`, "This method works because each number is being decomposed into place-value parts.", () => partitionVisual(ex, 0), `${ex.top} = ${ex.topParts.join(" + ")}`),
+              step("Subtract matching parts", "Subtract hundreds from hundreds, tens from tens, and ones from ones.", "Do not hide a negative partial difference. It tells us that one part is short and must be combined later.", () => partitionVisual(ex, 1), `${ex.hDiff} + ${ex.tDiff} + ${ex.oDiff}`),
+              step("Recombine the parts", `Combine the partial differences: ${ex.hDiff} ${signedText(ex.tDiff)} ${signedText(ex.oDiff)}.`, "Ask pupils what each partial difference contributes to the final answer.", () => partitionVisual(ex, 2), `${ex.hDiff} ${signedText(ex.tDiff)} ${signedText(ex.oDiff)} = ${ex.answer}`),
+              step("State the answer", `${ex.top} &minus; ${ex.bottom} = ${ex.answer}.`, "This shows subtraction as structure, not just a written algorithm.", () => partitionVisual(ex, 3), `${ex.top} &minus; ${ex.bottom} = ${ex.answer}`)
+            ]
+          };
+        }
+      },
+      {
+        id: "friendlyDivision",
+        label: "Flexible Division",
+        title: "Division by Friendly Chunks",
+        generate: () => {
+          const examples = [
+            { dividend: 195, divisor: 50, chunks: [150, 45] },
+            { dividend: 275, divisor: 25, chunks: [250, 25] },
+            { dividend: 168, divisor: 12, chunks: [120, 48] },
+            { dividend: 315, divisor: 15, chunks: [300, 15] },
+            { dividend: 364, divisor: 28, chunks: [280, 84] }
+          ];
+          const ex = completeDivision(pick(examples));
+          return {
+            prompt: `${ex.dividend} &divide; ${ex.divisor}`,
+            property: "Division can be made easier by splitting the dividend into useful multiples of the divisor.",
+            practice: [
+              practice("195 &divide; 50", "Split 195 into 150 + 45, because 150 is a clear multiple of 50."),
+              practice("275 &divide; 25", "Split into 250 + 25."),
+              practice("168 &divide; 12", "Split into 120 + 48."),
+              practice("315 &divide; 15", "Split into 300 + 15."),
+              practice("364 &divide; 28", "Split into 280 + 84.")
+            ],
+            steps: [
+              step("Look for a friendly multiple", `Find a useful multiple of ${ex.divisor} inside ${ex.dividend}.`, "This is division as asking: how many groups of the divisor fit?", () => divisionVisual(ex, 0), `${ex.dividend} &divide; ${ex.divisor}`),
+              step("Split the dividend", `Write ${ex.dividend} as ${ex.chunks.join(" + ")}.`, "The split is chosen because each part is easier to divide.", () => divisionVisual(ex, 1), `(${ex.chunks.join(" + ")}) &divide; ${ex.divisor}`),
+              step("Divide each part", `Divide each chunk by ${ex.divisor}.`, "This uses the distributive structure of division over addition when the divisor is the same.", () => divisionVisual(ex, 2), ex.quotients.map((q, i) => `${ex.chunks[i]} &divide; ${ex.divisor} = ${q}`).join(";&nbsp; ")),
+              step("Add the partial quotients", `Add the partial quotients to get ${ex.answer}.`, "Connect the parts back to the original whole.", () => divisionVisual(ex, 3), `${ex.quotients.join(" + ")} = ${ex.answer}`)
+            ]
+          };
+        }
+      },
+      {
+        id: "distribution",
+        label: "Break Multiplication",
+        title: "Multiplication by Distributive Thinking",
+        generate: () => {
+          const examples = [
+            { a: 23, b: 6, parts: [20, 3] },
+            { a: 48, b: 25, parts: [50, -2] },
+            { a: 37, b: 9, parts: [40, -3] },
+            { a: 16, b: 24, parts: [20, 4], splitSecond: true },
+            { a: 59, b: 5, parts: [60, -1] }
+          ];
+          const ex = completeMultiplication(pick(examples));
+          return {
+            prompt: `${ex.a} &times; ${ex.b}`,
+            property: "A factor can be broken into useful parts, then each part can be multiplied and recombined.",
+            practice: [
+              practice("23 &times; 6", "Break 23 into 20 + 3."),
+              practice("48 &times; 25", "Think of 48 as 50 - 2."),
+              practice("37 &times; 9", "Think of 37 as 40 - 3."),
+              practice("16 &times; 24", "Break 24 into 20 + 4."),
+              practice("59 &times; 5", "Think of 59 as 60 - 1.")
+            ],
+            steps: [
+              step("Choose a helpful split", `Break one factor into friendlier parts: ${ex.splitText}.`, "Ask pupils why this split helps. The choice is part of the mathematics.", () => multiplicationVisual(ex, 0), `${ex.originalExpression}`),
+              step("Multiply each part", "Multiply each part by the other factor.", "This is the distributive property in a number-sense form.", () => multiplicationVisual(ex, 1), ex.partialText),
+              step("Recombine", `Recombine the partial products to get ${ex.answer}.`, "Name the structure: multiply the parts, then add or subtract the products.", () => multiplicationVisual(ex, 2), `${ex.recombineText} = ${ex.answer}`),
+              step("State the answer", `${ex.a} &times; ${ex.b} = ${ex.answer}.`, "This prepares pupils for expansion in algebra later.", () => multiplicationVisual(ex, 3), `${ex.a} &times; ${ex.b} = ${ex.answer}`)
+            ]
+          };
+        }
+      }
+    ];
+
+    let currentModeId = modes[0].id;
+    let currentExample = null;
+    let currentStep = 0;
+    let animationTimer = null;
+
+    function pick(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function practice(question, strategy) {
+      return { question, strategy };
+    }
+
+    function step(action, text, talk, visual, symbolic) {
+      return { action, text, talk, visual, symbolic };
+    }
+
+    function getMode() {
+      return modes.find((mode) => mode.id === currentModeId) || modes[0];
+    }
+
+    function setMode(id) {
+      currentModeId = id;
+      currentExample = getMode().generate();
+      currentStep = 0;
+      render();
+    }
+
+    function newExample() {
+      currentExample = getMode().generate();
+      currentStep = 0;
+      render(true);
+    }
+
+    function nextStep() {
+      currentStep = Math.min(currentStep + 1, currentExample.steps.length - 1);
+      render(true);
+    }
+
+    function previousStep() {
+      currentStep = Math.max(currentStep - 1, 0);
+      render(true);
+    }
+
+    function showAll() {
+      currentStep = currentExample.steps.length - 1;
+      render(true);
+    }
+
+    function resetSteps() {
+      currentStep = 0;
+      render(true);
+    }
+
+    function renderModeButtons() {
+      document.getElementById("modeStrip").innerHTML = modes.map((mode) => `
+        <button class="mode-btn ${mode.id === currentModeId ? "active" : ""}" type="button" onclick="setMode('${mode.id}')">${mode.label}</button>
+      `).join("");
+    }
+
+    function render(animate = false) {
+      const mode = getMode();
+      if (!currentExample) currentExample = mode.generate();
+      const activeStep = currentExample.steps[currentStep];
+      renderModeButtons();
+      document.getElementById("modeTitle").textContent = mode.title;
+      document.getElementById("promptText").innerHTML = currentExample.prompt;
+      document.getElementById("stepCounter").textContent = `Step ${currentStep + 1} of ${currentExample.steps.length}`;
+      document.getElementById("actionLine").innerHTML = activeStep.text;
+      document.getElementById("visualStage").innerHTML = activeStep.visual();
+      document.getElementById("propertyLine").innerHTML = currentExample.property;
+      document.getElementById("talkLabel").textContent = activeStep.action;
+      document.getElementById("talkText").innerHTML = activeStep.talk;
+      renderPractice(currentExample.practice);
+      if (animate) animateModel();
+    }
+
+    function renderPractice(items) {
+      document.getElementById("practiceList").innerHTML = items.map((item, index) => `
+        <article class="practice-item">
+          <p class="practice-question">${item.question}</p>
+          <button class="mini-btn" type="button" onclick="togglePractice(${index})">Reveal strategy</button>
+          <p class="practice-strategy">${item.strategy}</p>
+        </article>
+      `).join("");
+    }
+
+    function togglePractice(index) {
+      const cards = Array.from(document.querySelectorAll(".practice-item"));
+      cards[index]?.classList.toggle("show");
+    }
+
+    function animateModel() {
+      const card = document.getElementById("modelCard");
+      clearTimeout(animationTimer);
+      card.classList.remove("animating");
+      void card.offsetWidth;
+      card.classList.add("animating");
+      animationTimer = setTimeout(() => card.classList.remove("animating"), 3100);
+    }
+
+    function completeCompensation(ex) {
+      const newTop = ex.top + ex.change;
+      const newBottom = ex.bottom + ex.change;
+      return {
+        ...ex,
+        newTop,
+        newBottom,
+        answer: ex.top - ex.bottom
+      };
+    }
+
+    function completePartition(ex) {
+      const topParts = placeParts(ex.top);
+      const bottomParts = placeParts(ex.bottom);
+      const hDiff = topParts[0] - bottomParts[0];
+      const tDiff = topParts[1] - bottomParts[1];
+      const oDiff = topParts[2] - bottomParts[2];
+      return {
+        ...ex,
+        topParts,
+        bottomParts,
+        hDiff,
+        tDiff,
+        oDiff,
+        answer: ex.top - ex.bottom
+      };
+    }
+
+    function completeDivision(ex) {
+      const quotients = ex.chunks.map((chunk) => tidyNumber(chunk / ex.divisor));
+      return {
+        ...ex,
+        quotients,
+        answer: tidyNumber(ex.dividend / ex.divisor)
+      };
+    }
+
+    function completeMultiplication(ex) {
+      const splitSecond = Boolean(ex.splitSecond);
+      const fixed = splitSecond ? ex.a : ex.b;
+      const splitValue = splitSecond ? ex.b : ex.a;
+      const partials = ex.parts.map((part) => part * fixed);
+      const signedParts = ex.parts.map((part, index) => index === 0 ? `${part}` : signedText(part)).join(" ");
+      const partialText = ex.parts.map((part, index) => {
+        const term = `(${Math.abs(part)} &times; ${fixed})`;
+        if (index === 0) return part < 0 ? `-${term}` : term;
+        return part < 0 ? ` &minus; ${term}` : ` + ${term}`;
+      }).join("");
+      const recombineText = partials.map((part, index) => index === 0 ? `${part}` : signedText(part)).join(" ");
+      return {
+        ...ex,
+        fixed,
+        splitValue,
+        partials,
+        answer: ex.a * ex.b,
+        splitText: splitSecond ? `${ex.b} = ${signedParts}` : `${ex.a} = ${signedParts}`,
+        originalExpression: splitSecond ? `${ex.a} &times; (${signedParts})` : `(${signedParts}) &times; ${ex.b}`,
+        partialText,
+        recombineText
+      };
+    }
+
+    function compensationVisual(ex, stage) {
+      if (stage === 0) {
+        return calcRow([
+          numberCard(ex.top, "original"),
+          operatorCard("&minus;"),
+          numberCard(ex.bottom, "original")
+        ]);
+      }
+      if (stage === 1) {
+        return `
+          ${calcRow([numberCard(ex.top, "original"), operatorCard("&minus;"), numberCard(ex.bottom, "original")])}
+          ${calcRow([noteCard(`${changeText(ex.change)} both numbers`), operatorCard("&darr;")])}
+          ${calcRow([numberCard(ex.newTop, "changed"), operatorCard("&minus;"), numberCard(ex.newBottom, "changed")])}
+        `;
+      }
+      if (stage === 2) {
+        return `
+          ${calcRow([numberCard(ex.newTop, "changed"), operatorCard("&minus;"), numberCard(ex.newBottom, "changed"), operatorCard("="), numberCard(ex.answer, "changed")])}
+          ${calcRow([noteCard("Friendlier subtraction; same difference")])}
+        `;
+      }
+      return `
+        ${calcRow([numberCard(ex.top, "original"), operatorCard("&minus;"), numberCard(ex.bottom, "original"), operatorCard("="), numberCard(ex.answer, "changed")])}
+        ${calcRow([noteCard(`${ex.newTop} - ${ex.newBottom} gives the same answer because the distance is unchanged.`)])}
+      `;
+    }
+
+    function partitionVisual(ex, stage) {
+      if (stage === 0) {
+        return `
+          ${calcRow([numberCard(ex.top, "original"), operatorCard("="), numberCard(ex.topParts.join(" + "), "changed")])}
+          ${calcRow([numberCard(ex.bottom, "original"), operatorCard("="), numberCard(ex.bottomParts.join(" + "), "removed")])}
+        `;
+      }
+      if (stage === 1) {
+        return `
+          <div class="chunk-grid">
+            ${chunk("Hundreds", `${ex.topParts[0]} - ${ex.bottomParts[0]} = ${ex.hDiff}`)}
+            ${chunk("Tens", `${ex.topParts[1]} - ${ex.bottomParts[1]} = ${ex.tDiff}`, ex.tDiff < 0)}
+            ${chunk("Ones", `${ex.topParts[2]} - ${ex.bottomParts[2]} = ${ex.oDiff}`, ex.oDiff < 0)}
+          </div>
+        `;
+      }
+      if (stage === 2) {
+        return calcRow([
+          numberCard(ex.hDiff, "changed"),
+          operatorCard(signOnly(ex.tDiff)),
+          numberCard(Math.abs(ex.tDiff), ex.tDiff < 0 ? "removed" : "changed"),
+          operatorCard(signOnly(ex.oDiff)),
+          numberCard(Math.abs(ex.oDiff), ex.oDiff < 0 ? "removed" : "changed"),
+          operatorCard("="),
+          numberCard(ex.answer, "changed")
+        ]);
+      }
+      return calcRow([
+        numberCard(ex.top, "original"),
+        operatorCard("&minus;"),
+        numberCard(ex.bottom, "original"),
+        operatorCard("="),
+        numberCard(ex.answer, "changed")
+      ]);
+    }
+
+    function divisionVisual(ex, stage) {
+      if (stage === 0) {
+        return `
+          ${barModel([`${ex.dividend}`], [])}
+          ${calcRow([noteCard(`Find chunks of ${ex.divisor} inside ${ex.dividend}.`)])}
+        `;
+      }
+      if (stage === 1) {
+        return `
+          ${barModel(ex.chunks.map(String), [0])}
+          ${calcRow([numberCard(ex.dividend, "original"), operatorCard("="), numberCard(ex.chunks.join(" + "), "changed")])}
+        `;
+      }
+      if (stage === 2) {
+        return `
+          ${barModel(ex.chunks.map((chunk, index) => `${chunk} ÷ ${ex.divisor} = ${ex.quotients[index]}`), ex.chunks.map((_, i) => i))}
+        `;
+      }
+      return calcRow([
+        numberCard(ex.quotients.join(" + "), "changed"),
+        operatorCard("="),
+        numberCard(ex.answer, "changed")
+      ]);
+    }
+
+    function multiplicationVisual(ex, stage) {
+      if (stage === 0) {
+        return `
+          ${calcRow([numberCard(ex.a, "original"), operatorCard("&times;"), numberCard(ex.b, "original")])}
+          ${calcRow([noteCard(`Use ${ex.splitText}`)])}
+        `;
+      }
+      if (stage === 1) {
+        return `
+          <div class="chunk-grid">
+            ${ex.parts.map((part, index) => chunk(`Part ${index + 1}`, `${part} × ${ex.fixed} = ${ex.partials[index]}`, part < 0)).join("")}
+          </div>
+        `;
+      }
+      if (stage === 2) {
+        return calcRow([
+          numberCard(ex.recombineText, "changed"),
+          operatorCard("="),
+          numberCard(ex.answer, "changed")
+        ]);
+      }
+      return calcRow([
+        numberCard(ex.a, "original"),
+        operatorCard("&times;"),
+        numberCard(ex.b, "original"),
+        operatorCard("="),
+        numberCard(ex.answer, "changed")
+      ]);
+    }
+
+    function placeParts(value) {
+      const hundreds = Math.floor(value / 100) * 100;
+      const tens = Math.floor((value % 100) / 10) * 10;
+      const ones = value % 10;
+      return [hundreds, tens, ones];
+    }
+
+    function calcRow(items) {
+      return `<div class="calc-row">${items.join("")}</div>`;
+    }
+
+    function numberCard(value, tone = "") {
+      return `<span class="number-card ${tone}">${value}</span>`;
+    }
+
+    function operatorCard(value) {
+      return `<span class="operator-card">${value}</span>`;
+    }
+
+    function noteCard(value) {
+      return `<span class="note-card">${value}</span>`;
+    }
+
+    function chunk(label, value, negative = false) {
+      return `<div class="chunk ${negative ? "negative" : ""}"><strong>${label}</strong><span>${value}</span></div>`;
+    }
+
+    function barModel(parts, friendlyIndexes = []) {
+      return `
+        <div class="bar-model" style="--parts:${parts.length}">
+          ${parts.map((part, index) => `<div class="bar-part ${friendlyIndexes.includes(index) ? "friendly" : index > 0 ? "leftover" : ""}">${part}</div>`).join("")}
+        </div>
+      `;
+    }
+
+    function changeText(change) {
+      return change < 0 ? `Subtract ${Math.abs(change)} from` : `Add ${change} to`;
+    }
+
+    function signedText(value) {
+      return value < 0 ? `- ${Math.abs(value)}` : `+ ${value}`;
+    }
+
+    function signOnly(value) {
+      return value < 0 ? "&minus;" : "+";
+    }
+
+    function tidyNumber(value) {
+      return Number.isInteger(value) ? value : Number(value.toFixed(2));
+    }
+
+    render();
+  </script>
+</body>
+</html>

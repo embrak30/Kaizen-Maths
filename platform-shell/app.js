@@ -780,6 +780,25 @@ const tools = [
     ]
   },
   {
+    slug: "number-sense-flexible-calculation",
+    title: "Number Sense: Flexible Calculation",
+    category: "Numbers",
+    level: "KS2 / KS3",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "Use teacher-led examples to develop flexible calculation strategies, including subtraction compensation, place-value partitioning, friendly division chunks, and distributive multiplication.",
+    tags: ["numbers", "number sense", "flexible calculation", "mental maths", "compensation", "partitioning", "subtraction", "division", "multiplication", "distributive property", "place value", "conceptual understanding"],
+    toolPath: "tools/number-sense-flexible-calculation/index.html?v=number-sense-1",
+    imported: true,
+    teacherNotes: [
+      "Designed for modelling arithmetic as sense-making before pupils rely on written algorithms.",
+      "Modes cover subtraction compensation, place-value partitioning, friendly division chunks, and distributive multiplication.",
+      "Use Next Step to reveal the strategic decision first, then the calculation.",
+      "Practice prompts ask pupils to choose and explain a method before seeing the suggested strategy."
+    ]
+  },
+  {
     slug: "fractions-practice",
     title: "Fraction Arithmetic and Mixed Numbers",
     category: "Numbers",
@@ -23452,6 +23471,8 @@ const curatedRelatedToolSlugs = {
   "circle-theorems": ["formal-geometric-proof", "missing-angles", "polygons-angles", "circles-area-circumference"],
   "earth-geometry": ["bearings", "trigonometric-ratios", "circles-area-circumference", "sectors-arc-length"],
   "bearings": ["trigonometric-ratios", "earth-geometry", "missing-angles", "sine-cosine-rule"],
+  "number-sense-flexible-calculation": ["four-operations", "maths-structure-lab", "bar-models", "area-models"],
+  "four-operations": ["number-sense-flexible-calculation", "integer-operations", "order-of-operations", "decimals-practice-lab"],
   "integer-operations": ["four-operations", "order-of-operations", "absolute-values", "number-bases-number-sets"],
   "fractions-practice": ["fractions", "decimals-practice-lab", "simple-percentage-tasks", "ratio-proportion"],
   "financial-real-life-maths": ["percentages-real-world", "simple-percentage-tasks", "ratio-proportion", "decimals-practice-lab"],
