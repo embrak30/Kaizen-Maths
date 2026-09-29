@@ -2766,6 +2766,10 @@ const state = {
   classroomRemoteControllerCleanup: null,
   classroomRemoteControllerSession: null,
   classroomRemoteControllerTool: "pointer",
+  classroomRemoteInkSettings: {
+    color: "#172033",
+    width: 4
+  },
   pupilTask: null,
   pupilTaskCode: "",
   pupilTaskLoading: false,
@@ -3754,6 +3758,7 @@ function classroomRemoteCommandLabel(action) {
     "annotation-clear": "Clear writing",
     "annotation-save": "Save writing",
     "annotation-restore": "Restore writing",
+    "annotation-stroke-batch": "Writing",
     "pointer-hide": "Hide pointer",
     "set-activity": "Activity change",
     disconnect: "Disconnect"
@@ -3765,11 +3770,124 @@ function classroomRemoteClamp(value, min = 0, max = 1) {
   return Math.max(min, Math.min(max, Number(value) || 0));
 }
 
+function classroomRemoteSafeColor(color, fallback = "#172033") {
+  return typeof color === "string" && /^#[0-9a-f]{3,8}$/i.test(color.trim())
+    ? color.trim()
+    : fallback;
+}
+
+function classroomRemoteStrokeId(prefix = "stroke") {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function classroomRemoteStrokeStyle(tool = "pen", stroke = {}) {
+  const safeTool = ["pen", "highlighter", "eraser"].includes(tool) ? tool : "pen";
+  if (safeTool === "highlighter") {
+    return {
+      color: classroomRemoteSafeColor(stroke.color, "#facc15"),
+      width: classroomRemoteClamp(stroke.width ?? 18, 8, 34),
+      alpha: classroomRemoteClamp(stroke.alpha ?? 0.34, 0.12, 0.62),
+      composite: "source-over"
+    };
+  }
+  if (safeTool === "eraser") {
+    return {
+      color: "rgba(0,0,0,1)",
+      width: classroomRemoteClamp(stroke.width ?? 30, 12, 48),
+      alpha: 1,
+      composite: "destination-out"
+    };
+  }
+  return {
+    color: classroomRemoteSafeColor(stroke.color, "#172033"),
+    width: classroomRemoteClamp(stroke.width ?? 4, 1.5, 18),
+    alpha: classroomRemoteClamp(stroke.alpha ?? 1, 0.3, 1),
+    composite: "source-over"
+  };
+}
+
+function classroomRemoteStrokeMeta(stroke = {}, fallbackTool = "pen") {
+  const fallback = ["pen", "highlighter", "eraser"].includes(fallbackTool) ? fallbackTool : "pen";
+  const tool = ["pen", "highlighter", "eraser"].includes(stroke?.tool) ? stroke.tool : fallback;
+  const style = classroomRemoteStrokeStyle(tool, stroke);
+  return {
+    tool,
+    color: style.color,
+    width: style.width,
+    alpha: style.alpha,
+    composite: style.composite
+  };
+}
+
+function classroomRemotePointDistance(first, second) {
+  const dx = Number(first?.x) - Number(second?.x);
+  const dy = Number(first?.y) - Number(second?.y);
+  if (!Number.isFinite(dx) || !Number.isFinite(dy)) return 0;
+  return Math.hypot(dx, dy);
+}
+
+function classroomRemoteShouldAppendPoint(points = [], nextPoint, minDistance = 0.0025) {
+  if (!nextPoint || !Number.isFinite(nextPoint.x) || !Number.isFinite(nextPoint.y)) return false;
+  const lastPoint = points[points.length - 1];
+  return !lastPoint || classroomRemotePointDistance(lastPoint, nextPoint) >= minDistance;
+}
+
+function drawClassroomSmoothStroke(context, rawPoints = [], style = {}, scaleX = 1, scaleY = 1) {
+  if (!context || !rawPoints.length) return;
+  const points = rawPoints
+    .map((point) => ({
+      x: Number(point?.x) * scaleX,
+      y: Number(point?.y) * scaleY
+    }))
+    .filter((point) => Number.isFinite(point.x) && Number.isFinite(point.y));
+  if (!points.length) return;
+  const settings = classroomRemoteStrokeStyle(style.tool || "pen", style);
+  context.save();
+  context.globalAlpha = settings.alpha;
+  context.globalCompositeOperation = settings.composite;
+  context.strokeStyle = settings.color;
+  context.fillStyle = settings.color;
+  context.lineWidth = settings.width;
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  if (points.length === 1) {
+    context.beginPath();
+    context.arc(points[0].x, points[0].y, settings.width / 2, 0, Math.PI * 2);
+    context.fill();
+    context.restore();
+    return;
+  }
+  context.beginPath();
+  context.moveTo(points[0].x, points[0].y);
+  if (points.length === 2) {
+    context.lineTo(points[1].x, points[1].y);
+  } else {
+    for (let index = 1; index < points.length - 1; index += 1) {
+      const current = points[index];
+      const next = points[index + 1];
+      const midX = (current.x + next.x) / 2;
+      const midY = (current.y + next.y) / 2;
+      context.quadraticCurveTo(current.x, current.y, midX, midY);
+    }
+    const lastPoint = points[points.length - 1];
+    context.lineTo(lastPoint.x, lastPoint.y);
+  }
+  context.stroke();
+  context.restore();
+}
+
 function classroomRemotePointFromEvent(event, element) {
   const rect = element.getBoundingClientRect();
   const x = rect.width ? (event.clientX - rect.left) / rect.width : 0;
   const y = rect.height ? (event.clientY - rect.top) / rect.height : 0;
-  return { x: classroomRemoteClamp(x), y: classroomRemoteClamp(y) };
+  const pressure = Number.isFinite(event.pressure) && event.pressure > 0
+    ? event.pressure
+    : event.pointerType === "mouse" ? 0.5 : 0.62;
+  return {
+    x: classroomRemoteClamp(x),
+    y: classroomRemoteClamp(y),
+    p: classroomRemoteClamp(pressure, 0.1, 1)
+  };
 }
 
 function bindClassroomRemoteStage(session) {
@@ -3781,9 +3899,13 @@ function bindClassroomRemoteStage(session) {
   if (!context) return;
   let drawing = false;
   let activeStroke = null;
+  const localPreviewStrokes = [];
   let pointerSending = false;
+  let commandSending = false;
   let strokeSending = false;
   let lastPointerSentAt = 0;
+  let strokeSyncTimer = null;
+  let strokeSyncPending = false;
 
   function resizeCanvas() {
     const rect = canvas.getBoundingClientRect();
@@ -3799,44 +3921,80 @@ function bindClassroomRemoteStage(session) {
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  function localSettings(tool = state.classroomRemoteControllerTool) {
-    if (tool === "highlighter") return { color: "#facc15", width: 18, alpha: 0.34, composite: "source-over" };
-    if (tool === "eraser") return { color: "rgba(0,0,0,1)", width: 30, alpha: 1, composite: "destination-out" };
-    return { color: "#172033", width: 3.4, alpha: 1, composite: "source-over" };
+  function currentRemoteInk() {
+    const settings = state.classroomRemoteInkSettings || {};
+    return {
+      color: classroomRemoteSafeColor(settings.color, "#172033"),
+      width: classroomRemoteClamp(settings.width ?? 4, 2, 14)
+    };
+  }
+
+  function currentRemoteStrokeMeta(tool = state.classroomRemoteControllerTool) {
+    const ink = currentRemoteInk();
+    if (tool === "highlighter") {
+      return classroomRemoteStrokeMeta({
+        tool,
+        color: "#facc15",
+        width: Math.max(14, ink.width * 4.2),
+        alpha: 0.36
+      }, tool);
+    }
+    if (tool === "eraser") {
+      return classroomRemoteStrokeMeta({
+        tool,
+        width: Math.max(18, ink.width * 5.5)
+      }, tool);
+    }
+    return classroomRemoteStrokeMeta({
+      tool: "pen",
+      color: ink.color,
+      width: ink.width,
+      alpha: 1
+    }, "pen");
+  }
+
+  function clearLocalCanvas() {
+    resizeCanvas();
+    const rect = canvas.getBoundingClientRect();
+    context.clearRect(0, 0, rect.width, rect.height);
   }
 
   function drawLocalStroke(stroke) {
     if (!stroke?.points?.length) return;
     resizeCanvas();
     const rect = canvas.getBoundingClientRect();
-    const settings = localSettings(stroke.tool);
-    context.save();
-    context.globalAlpha = settings.alpha;
-    context.globalCompositeOperation = settings.composite;
-    context.strokeStyle = settings.color;
-    context.fillStyle = settings.color;
-    context.lineWidth = settings.width;
-    context.lineCap = "round";
-    context.lineJoin = "round";
-    context.beginPath();
-    context.moveTo(stroke.points[0].x * rect.width, stroke.points[0].y * rect.height);
-    stroke.points.slice(1).forEach((point) => context.lineTo(point.x * rect.width, point.y * rect.height));
-    context.stroke();
-    if (stroke.points.length === 1) {
-      context.beginPath();
-      context.arc(stroke.points[0].x * rect.width, stroke.points[0].y * rect.height, settings.width / 2, 0, Math.PI * 2);
-      context.fill();
-    }
-    context.restore();
+    const settings = classroomRemoteStrokeMeta(stroke, stroke.tool);
+    drawClassroomSmoothStroke(context, stroke.points, settings, rect.width, rect.height);
+  }
+
+  function redrawLocalPreview() {
+    clearLocalCanvas();
+    localPreviewStrokes.forEach(drawLocalStroke);
+    if (activeStroke) drawLocalStroke(activeStroke);
   }
 
   function updateToolButtons() {
     stage.dataset.remoteTool = state.classroomRemoteControllerTool;
+    const workspace = document.querySelector(".classroom-remote-workspace");
+    if (workspace) workspace.dataset.remoteTool = state.classroomRemoteControllerTool || "pointer";
     document.querySelectorAll("[data-remote-tool]").forEach((button) => {
       const active = button.dataset.remoteTool === state.classroomRemoteControllerTool;
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", String(active));
     });
+  }
+
+  function updateInkControls() {
+    const ink = currentRemoteInk();
+    document.querySelectorAll("[data-remote-color]").forEach((button) => {
+      const active = classroomRemoteSafeColor(button.dataset.remoteColor, "") === ink.color;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+    const widthInput = document.getElementById("classroomRemoteWidth");
+    const widthOutput = document.getElementById("classroomRemoteWidthValue");
+    if (widthInput) widthInput.value = String(Math.round(ink.width));
+    if (widthOutput) widthOutput.textContent = `${Math.round(ink.width)} px`;
   }
 
   async function sendStageCommand(action, payload = {}, options = {}) {
@@ -3845,10 +4003,10 @@ function bindClassroomRemoteStage(session) {
     if (options.stream) {
       if (pointerSending) return;
       pointerSending = true;
-    } else if (strokeSending) {
+    } else if (commandSending) {
       return;
     } else {
-      strokeSending = true;
+      commandSending = true;
     }
     try {
       const updated = await sendClassroomRemoteCommand(activeSession, action, payload);
@@ -3859,8 +4017,45 @@ function bindClassroomRemoteStage(session) {
       if (note) note.textContent = `Could not send ${classroomRemoteCommandLabel(action).toLowerCase()}: ${error.message}`;
     } finally {
       if (options.stream) pointerSending = false;
-      else strokeSending = false;
+      else commandSending = false;
     }
+  }
+
+  async function sendStrokeBatch() {
+    window.clearTimeout(strokeSyncTimer);
+    const activeSession = state.classroomRemoteControllerSession || session;
+    if (!activeSession?.id || !localPreviewStrokes.length) return;
+    if (strokeSending) {
+      strokeSyncPending = true;
+      return;
+    }
+    strokeSending = true;
+    strokeSyncPending = false;
+    try {
+      const strokes = localPreviewStrokes.slice(-120).map((stroke) => ({
+        id: stroke.id || classroomRemoteStrokeId("remote-stroke"),
+        ...classroomRemoteStrokeMeta(stroke, stroke.tool || "pen"),
+        points: (stroke.points || []).map((point) => ({
+          x: classroomRemoteClamp(point?.x),
+          y: classroomRemoteClamp(point?.y),
+          p: classroomRemoteClamp(point?.p ?? 0.62, 0.1, 1)
+        }))
+      }));
+      const updated = await sendClassroomRemoteCommand(activeSession, "annotation-stroke-batch", { strokes });
+      if (updated) state.classroomRemoteControllerSession = updated;
+    } catch (error) {
+      const status = document.getElementById("classroomRemoteControllerStatus");
+      const note = status?.querySelector(".classroom-remote-live-status");
+      if (note) note.textContent = `Could not send writing: ${error.message}`;
+    } finally {
+      strokeSending = false;
+      if (strokeSyncPending) strokeSyncTimer = window.setTimeout(sendStrokeBatch, 160);
+    }
+  }
+
+  function scheduleStrokeBatch() {
+    window.clearTimeout(strokeSyncTimer);
+    strokeSyncTimer = window.setTimeout(sendStrokeBatch, 180);
   }
 
   function sendPointer(event, immediate = false) {
@@ -3874,11 +4069,33 @@ function bindClassroomRemoteStage(session) {
     button.addEventListener("click", () => {
       state.classroomRemoteControllerTool = button.dataset.remoteTool || "pointer";
       updateToolButtons();
+      updateInkControls();
     });
+  });
+
+  document.getElementById("classroomRemoteControllerStatus")?.querySelectorAll("[data-remote-color]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.classroomRemoteInkSettings = {
+        ...currentRemoteInk(),
+        color: classroomRemoteSafeColor(button.dataset.remoteColor, "#172033")
+      };
+      state.classroomRemoteControllerTool = "pen";
+      updateToolButtons();
+      updateInkControls();
+    });
+  });
+
+  document.getElementById("classroomRemoteWidth")?.addEventListener("input", (event) => {
+    state.classroomRemoteInkSettings = {
+      ...currentRemoteInk(),
+      width: classroomRemoteClamp(event.target.value, 2, 14)
+    };
+    updateInkControls();
   });
 
   resizeCanvas();
   updateToolButtons();
+  updateInkControls();
   window.addEventListener("resize", resizeCanvas, { passive: true });
 
   canvas.addEventListener("pointerdown", (event) => {
@@ -3891,11 +4108,13 @@ function bindClassroomRemoteStage(session) {
       return;
     }
     drawing = true;
+    const meta = currentRemoteStrokeMeta(tool);
     activeStroke = {
-      tool,
+      id: classroomRemoteStrokeId("remote-stroke"),
+      ...meta,
       points: [classroomRemotePointFromEvent(event, canvas)]
     };
-    drawLocalStroke(activeStroke);
+    redrawLocalPreview();
   });
 
   canvas.addEventListener("pointermove", (event) => {
@@ -3906,9 +4125,11 @@ function bindClassroomRemoteStage(session) {
       return;
     }
     if (!drawing || !activeStroke) return;
-    activeStroke.points.push(classroomRemotePointFromEvent(event, canvas));
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    drawLocalStroke(activeStroke);
+    const point = classroomRemotePointFromEvent(event, canvas);
+    if (classroomRemoteShouldAppendPoint(activeStroke.points, point, 0.0022)) {
+      activeStroke.points.push(point);
+      redrawLocalPreview();
+    }
   });
 
   function finishRemoteStroke(event) {
@@ -3917,10 +4138,15 @@ function bindClassroomRemoteStage(session) {
     if (!drawing || !activeStroke) return;
     event.preventDefault();
     canvas.releasePointerCapture?.(event.pointerId);
-    if (activeStroke.points.length < 2) activeStroke.points.push(classroomRemotePointFromEvent(event, canvas));
-    drawLocalStroke(activeStroke);
-    sendStageCommand("annotation-stroke", { stroke: activeStroke });
+    const point = classroomRemotePointFromEvent(event, canvas);
+    if (activeStroke.points.length < 2 || classroomRemoteShouldAppendPoint(activeStroke.points, point, 0.0022)) {
+      activeStroke.points.push(point);
+    }
+    const finishedStroke = activeStroke;
+    localPreviewStrokes.push(finishedStroke);
     activeStroke = null;
+    redrawLocalPreview();
+    scheduleStrokeBatch();
     drawing = false;
   }
 
@@ -3996,15 +4222,34 @@ function renderClassroomRemoteStatus(session, message = "", options = {}) {
         <button class="button" type="button" data-remote-command="timer-stop">Stop</button>
       </div>
       <section class="classroom-remote-workspace" aria-label="Pointer and annotation workspace">
+        <div class="classroom-remote-workspace-head">
+          <div>
+            <h3>Tablet writing workspace</h3>
+            <p>Write, highlight, point, or erase on the projected classroom display.</p>
+          </div>
+        </div>
         <div class="classroom-remote-tool-row" aria-label="Remote tools">
           <button class="button" type="button" data-remote-tool="pointer" aria-pressed="true">Pointer</button>
           <button class="button" type="button" data-remote-tool="pen" aria-pressed="false">Pen</button>
           <button class="button" type="button" data-remote-tool="highlighter" aria-pressed="false">Highlighter</button>
           <button class="button" type="button" data-remote-tool="eraser" aria-pressed="false">Eraser</button>
         </div>
+        <div class="classroom-remote-ink-controls" aria-label="Ink settings">
+          <div class="classroom-remote-swatch-row" aria-label="Pen colours">
+            <button class="classroom-remote-swatch" type="button" data-remote-color="#172033" aria-label="Dark ink" style="--swatch-color:#172033"></button>
+            <button class="classroom-remote-swatch" type="button" data-remote-color="#2563eb" aria-label="Blue ink" style="--swatch-color:#2563eb"></button>
+            <button class="classroom-remote-swatch" type="button" data-remote-color="#dc2626" aria-label="Red ink" style="--swatch-color:#dc2626"></button>
+            <button class="classroom-remote-swatch" type="button" data-remote-color="#0f8f91" aria-label="Teal ink" style="--swatch-color:#0f8f91"></button>
+          </div>
+          <label class="classroom-remote-width-control" for="classroomRemoteWidth">
+            <span>Stroke</span>
+            <input id="classroomRemoteWidth" type="range" min="2" max="14" step="1" value="4">
+            <output id="classroomRemoteWidthValue" for="classroomRemoteWidth">4 px</output>
+          </label>
+        </div>
         <div class="classroom-remote-input-stage" id="classroomRemoteInputStage">
           <canvas id="classroomRemoteDrawCanvas" aria-label="Touch area for pointer and writing"></canvas>
-          <span>Use this space as the projected board surface.</span>
+          <span>Use this as the tablet board surface.</span>
         </div>
         <div class="classroom-remote-markup-actions">
           <button class="button" type="button" data-remote-command="pointer-hide">Hide Pointer</button>
@@ -28624,37 +28869,33 @@ function bindToolFrame(tool, options = {}) {
     return context;
   }
 
-  function annotationSettings(tool = annotationState.tool) {
+  function annotationSettings(tool = annotationState.tool, stroke = {}) {
     if (tool === "highlighter") {
-      return { color: "#facc15", width: 18, alpha: 0.32, composite: "source-over" };
+      return classroomRemoteStrokeStyle("highlighter", {
+        color: stroke.color || "#facc15",
+        width: stroke.width ?? 18,
+        alpha: stroke.alpha ?? 0.32
+      });
     }
     if (tool === "eraser") {
-      return { color: "rgba(0,0,0,1)", width: 28, alpha: 1, composite: "destination-out" };
+      return classroomRemoteStrokeStyle("eraser", {
+        width: stroke.width ?? 28
+      });
     }
-    return { color: "#1f2937", width: 3.2, alpha: 1, composite: "source-over" };
+    return classroomRemoteStrokeStyle("pen", {
+      color: stroke.color || "#1f2937",
+      width: stroke.width ?? 3.2,
+      alpha: stroke.alpha ?? 1
+    });
   }
 
   function drawAnnotationStroke(stroke, context = annotationContext()) {
     if (!context || !stroke?.points?.length) return;
-    const settings = annotationSettings(stroke.tool);
-    context.save();
-    context.globalAlpha = settings.alpha;
-    context.globalCompositeOperation = settings.composite;
-    context.strokeStyle = settings.color;
-    context.fillStyle = settings.color;
-    context.lineWidth = settings.width;
-    context.lineCap = "round";
-    context.lineJoin = "round";
-    context.beginPath();
-    context.moveTo(stroke.points[0].x, stroke.points[0].y);
-    stroke.points.slice(1).forEach((point) => context.lineTo(point.x, point.y));
-    context.stroke();
-    if (stroke.points.length === 1) {
-      context.beginPath();
-      context.arc(stroke.points[0].x, stroke.points[0].y, settings.width / 2, 0, Math.PI * 2);
-      context.fill();
-    }
-    context.restore();
+    const settings = {
+      ...annotationSettings(stroke.tool, stroke),
+      tool: ["pen", "highlighter", "eraser"].includes(stroke.tool) ? stroke.tool : "pen"
+    };
+    drawClassroomSmoothStroke(context, stroke.points, settings);
   }
 
   function renderAnnotations() {
@@ -28721,7 +28962,14 @@ function bindToolFrame(tool, options = {}) {
 
   function annotationPoint(event) {
     const rect = annotationCanvas.getBoundingClientRect();
-    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    const pressure = Number.isFinite(event.pressure) && event.pressure > 0
+      ? event.pressure
+      : event.pointerType === "mouse" ? 0.5 : 0.62;
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+      p: classroomRemoteClamp(pressure, 0.1, 1)
+    };
   }
 
   function startAnnotationStroke(event) {
@@ -28730,8 +28978,14 @@ function bindToolFrame(tool, options = {}) {
     resizeAnnotationCanvas();
     annotationCanvas.setPointerCapture?.(event.pointerId);
     annotationState.drawing = true;
+    const settings = annotationSettings(annotationState.tool);
     annotationState.currentStroke = {
+      id: classroomRemoteStrokeId("board-stroke"),
       tool: annotationState.tool,
+      color: settings.color,
+      width: settings.width,
+      alpha: settings.alpha,
+      composite: settings.composite,
       points: [annotationPoint(event)]
     };
     renderAnnotations();
@@ -28740,14 +28994,21 @@ function bindToolFrame(tool, options = {}) {
   function continueAnnotationStroke(event) {
     if (!annotationCanvas || !annotationState.active || !annotationState.drawing || !annotationState.currentStroke) return;
     event.preventDefault();
-    annotationState.currentStroke.points.push(annotationPoint(event));
-    renderAnnotations();
+    const point = annotationPoint(event);
+    if (classroomRemoteShouldAppendPoint(annotationState.currentStroke.points, point, 2.2)) {
+      annotationState.currentStroke.points.push(point);
+      renderAnnotations();
+    }
   }
 
   function finishAnnotationStroke(event) {
     if (!annotationCanvas || !annotationState.drawing || !annotationState.currentStroke) return;
     event.preventDefault();
     annotationCanvas.releasePointerCapture?.(event.pointerId);
+    const point = annotationPoint(event);
+    if (annotationState.currentStroke.points.length < 2 || classroomRemoteShouldAppendPoint(annotationState.currentStroke.points, point, 2.2)) {
+      annotationState.currentStroke.points.push(point);
+    }
     annotationState.strokes.push(annotationState.currentStroke);
     annotationState.currentStroke = null;
     annotationState.drawing = false;
@@ -28772,26 +29033,45 @@ function bindToolFrame(tool, options = {}) {
   function remoteStrokeToLocal(stroke) {
     const width = annotationState.width || annotationCanvas?.getBoundingClientRect?.().width || 1;
     const height = annotationState.height || annotationCanvas?.getBoundingClientRect?.().height || 1;
+    const meta = classroomRemoteStrokeMeta(stroke, "pen");
     return {
-      tool: ["pen", "highlighter", "eraser"].includes(stroke?.tool) ? stroke.tool : "pen",
+      id: typeof stroke?.id === "string" && stroke.id.length < 80 ? stroke.id : classroomRemoteStrokeId("remote-stroke"),
+      ...meta,
       points: (stroke?.points || [])
         .map((point) => ({
           x: classroomRemoteClamp(point?.x) * width,
-          y: classroomRemoteClamp(point?.y) * height
+          y: classroomRemoteClamp(point?.y) * height,
+          p: classroomRemoteClamp(point?.p ?? 0.62, 0.1, 1)
         }))
         .filter((point) => Number.isFinite(point.x) && Number.isFinite(point.y))
     };
   }
 
-  function addRemoteAnnotationStroke(stroke) {
-    if (!annotationCanvas) return;
+  function addRemoteAnnotationStroke(stroke, options = {}) {
+    if (!annotationCanvas) return false;
     resizeAnnotationCanvas();
     const localStroke = remoteStrokeToLocal(stroke);
-    if (!localStroke.points.length) return;
+    if (!localStroke.points.length) return false;
+    if (localStroke.id && annotationState.strokes.some((existingStroke) => existingStroke.id === localStroke.id)) return false;
     annotationState.strokes.push(localStroke);
     annotationState.currentStroke = null;
-    renderAnnotations();
-    scheduleClassroomRemoteDisplayState(true);
+    if (!options.deferRender) {
+      renderAnnotations();
+      scheduleClassroomRemoteDisplayState(true);
+    }
+    return true;
+  }
+
+  function addRemoteAnnotationBatch(strokes = []) {
+    if (!Array.isArray(strokes) || !strokes.length) return;
+    let changed = false;
+    strokes.forEach((stroke) => {
+      changed = addRemoteAnnotationStroke(stroke, { deferRender: true }) || changed;
+    });
+    if (changed) {
+      renderAnnotations();
+      scheduleClassroomRemoteDisplayState(true);
+    }
   }
 
   function moveRemotePointer(point) {
@@ -28841,10 +29121,12 @@ function bindToolFrame(tool, options = {}) {
     const width = annotationState.width || annotationCanvas?.getBoundingClientRect?.().width || 1;
     const height = annotationState.height || annotationCanvas?.getBoundingClientRect?.().height || 1;
     return annotationState.strokes.map((stroke) => ({
-      tool: stroke.tool || "pen",
+      id: stroke.id || classroomRemoteStrokeId("board-stroke"),
+      ...classroomRemoteStrokeMeta(stroke, stroke.tool || "pen"),
       points: (stroke.points || []).map((point) => ({
         x: classroomRemoteClamp(point.x / width),
-        y: classroomRemoteClamp(point.y / height)
+        y: classroomRemoteClamp(point.y / height),
+        p: classroomRemoteClamp(point.p ?? 0.62, 0.1, 1)
       }))
     }));
   }
@@ -28867,13 +29149,18 @@ function bindToolFrame(tool, options = {}) {
     resizeAnnotationCanvas();
     const width = annotationState.width || annotationCanvas.getBoundingClientRect().width || 1;
     const height = annotationState.height || annotationCanvas.getBoundingClientRect().height || 1;
-    annotationState.strokes = snapshot.strokes.map((stroke) => ({
-      tool: ["pen", "highlighter", "eraser"].includes(stroke?.tool) ? stroke.tool : "pen",
-      points: (stroke.points || []).map((point) => ({
-        x: classroomRemoteClamp(point?.x) * width,
-        y: classroomRemoteClamp(point?.y) * height
-      }))
-    })).filter((stroke) => stroke.points.length);
+    annotationState.strokes = snapshot.strokes.map((stroke) => {
+      const meta = classroomRemoteStrokeMeta(stroke, stroke?.tool || "pen");
+      return {
+        id: typeof stroke?.id === "string" && stroke.id.length < 80 ? stroke.id : classroomRemoteStrokeId("board-stroke"),
+        ...meta,
+        points: (stroke.points || []).map((point) => ({
+          x: classroomRemoteClamp(point?.x) * width,
+          y: classroomRemoteClamp(point?.y) * height,
+          p: classroomRemoteClamp(point?.p ?? 0.62, 0.1, 1)
+        }))
+      };
+    }).filter((stroke) => stroke.points.length);
     annotationState.currentStroke = null;
     renderAnnotations();
     scheduleClassroomRemoteDisplayState(true);
@@ -29142,6 +29429,10 @@ function bindToolFrame(tool, options = {}) {
     }
     if (action === "annotation-stroke") {
       addRemoteAnnotationStroke(command.stroke || {});
+      return;
+    }
+    if (action === "annotation-stroke-batch") {
+      addRemoteAnnotationBatch(command.strokes || []);
       return;
     }
     if (action === "annotation-undo") {
