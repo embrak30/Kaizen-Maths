@@ -3579,6 +3579,31 @@ function classroomRemoteOptionList(options = [], selected = "") {
   }).join("");
 }
 
+function classroomRemoteCleanQuestionHtml(value = "", fallbackText = "") {
+  const raw = String(value || "").trim();
+  if (!raw && fallbackText) return `<p>${escapeHtml(fallbackText)}</p>`;
+  if (!raw) return "";
+  const template = document.createElement("template");
+  template.innerHTML = raw;
+  template.content.querySelectorAll("script, style, iframe, object, embed, link, meta, base, form, input, button, select, textarea").forEach((node) => node.remove());
+  template.content.querySelectorAll("*").forEach((node) => {
+    Array.from(node.attributes || []).forEach((attribute) => {
+      const name = attribute.name.toLowerCase();
+      const value = attribute.value || "";
+      if (name.startsWith("on") || /javascript:/i.test(value)) {
+        node.removeAttribute(attribute.name);
+      }
+    });
+  });
+  const clean = template.innerHTML.trim();
+  if (clean.length > 9000) return `<p>${escapeHtml(classroomRemoteTrimText(fallbackText || template.content.textContent || "", 700))}</p>`;
+  return clean || (fallbackText ? `<p>${escapeHtml(fallbackText)}</p>` : "");
+}
+
+function classroomRemoteIsOneQuestionMode(displayState = {}) {
+  return Boolean(displayState.singleQuestionMode || displayState.displayMode === "one-example");
+}
+
 function classroomRemoteActivityHtml(displayState = {}) {
   const levels = Array.isArray(displayState.levels) ? displayState.levels : [];
   const types = classroomRemoteLevelTypes(displayState);
@@ -3612,17 +3637,23 @@ function classroomRemoteActivityHtml(displayState = {}) {
 
 function classroomRemotePreviewHtml(displayState = {}) {
   const title = displayState.typeLabel || displayState.levelTitle || displayState.tool_title || "Current classroom display";
+  const oneQuestionMode = classroomRemoteIsOneQuestionMode(displayState);
   const meta = [
+    oneQuestionMode ? "One Question" : "Practice Set",
     displayState.levelTitle,
     displayState.typeLabel,
     displayState.answersVisible ? "Answers showing" : "",
     displayState.stepsVisible ? "Steps showing" : ""
   ].filter(Boolean).join(" · ");
+  const questionHtml = oneQuestionMode
+    ? classroomRemoteCleanQuestionHtml(displayState.primaryQuestionHtml || "", displayState.primaryQuestion || "")
+    : "";
 
   return `
-    <section class="classroom-remote-preview">
+    <section class="classroom-remote-preview${oneQuestionMode ? " classroom-remote-preview-one" : ""}">
       <h3>${escapeHtml(classroomRemoteTrimText(title, 90) || "Current classroom display")}</h3>
       ${meta ? `<p>${escapeHtml(meta)}</p>` : ""}
+      ${questionHtml ? `<div class="classroom-remote-current-question">${questionHtml}</div>` : ""}
     </section>
   `;
 }
@@ -3754,6 +3785,8 @@ function classroomRemoteCommandLabel(action) {
     "timer-2": "2 minute timer",
     "timer-5": "5 minute timer",
     "timer-stop": "Timer stop",
+    "mode-example": "One question mode",
+    "mode-practice": "Practice set mode",
     "annotation-undo": "Undo",
     "annotation-clear": "Clear writing",
     "annotation-save": "Save writing",
@@ -3897,6 +3930,7 @@ function bindClassroomRemoteStage(session) {
 
   const context = canvas.getContext("2d");
   if (!context) return;
+  const oneQuestionMode = stage.dataset.singleQuestion === "true";
   let drawing = false;
   let activeStroke = null;
   const localPreviewStrokes = [];
@@ -3953,6 +3987,12 @@ function bindClassroomRemoteStage(session) {
     }, "pen");
   }
 
+  function allowedRemoteTool(tool) {
+    const requested = ["pointer", "pen", "highlighter", "eraser"].includes(tool) ? tool : "pointer";
+    if (oneQuestionMode) return requested;
+    return ["pointer", "highlighter"].includes(requested) ? requested : "pointer";
+  }
+
   function clearLocalCanvas() {
     resizeCanvas();
     const rect = canvas.getBoundingClientRect();
@@ -3974,6 +4014,7 @@ function bindClassroomRemoteStage(session) {
   }
 
   function updateToolButtons() {
+    state.classroomRemoteControllerTool = allowedRemoteTool(state.classroomRemoteControllerTool);
     stage.dataset.remoteTool = state.classroomRemoteControllerTool;
     const workspace = document.querySelector(".classroom-remote-workspace");
     if (workspace) workspace.dataset.remoteTool = state.classroomRemoteControllerTool || "pointer";
@@ -4067,7 +4108,7 @@ function bindClassroomRemoteStage(session) {
 
   document.getElementById("classroomRemoteControllerStatus")?.querySelectorAll("[data-remote-tool]").forEach((button) => {
     button.addEventListener("click", () => {
-      state.classroomRemoteControllerTool = button.dataset.remoteTool || "pointer";
+      state.classroomRemoteControllerTool = allowedRemoteTool(button.dataset.remoteTool || "pointer");
       updateToolButtons();
       updateInkControls();
     });
@@ -4102,7 +4143,7 @@ function bindClassroomRemoteStage(session) {
     event.preventDefault();
     resizeCanvas();
     canvas.setPointerCapture?.(event.pointerId);
-    const tool = state.classroomRemoteControllerTool || "pointer";
+    const tool = allowedRemoteTool(state.classroomRemoteControllerTool || "pointer");
     if (tool === "pointer") {
       sendPointer(event, true);
       return;
@@ -4119,7 +4160,7 @@ function bindClassroomRemoteStage(session) {
 
   canvas.addEventListener("pointermove", (event) => {
     event.preventDefault();
-    const tool = state.classroomRemoteControllerTool || "pointer";
+    const tool = allowedRemoteTool(state.classroomRemoteControllerTool || "pointer");
     if (tool === "pointer") {
       sendPointer(event);
       return;
@@ -4133,7 +4174,7 @@ function bindClassroomRemoteStage(session) {
   });
 
   function finishRemoteStroke(event) {
-    const tool = state.classroomRemoteControllerTool || "pointer";
+    const tool = allowedRemoteTool(state.classroomRemoteControllerTool || "pointer");
     if (tool === "pointer") return;
     if (!drawing || !activeStroke) return;
     event.preventDefault();
@@ -4169,7 +4210,9 @@ function renderClassroomRemoteStatus(session, message = "", options = {}) {
     type: displayState.type || "",
     levelTitle: displayState.levelTitle || "",
     typeLabel: displayState.typeLabel || "",
+    displayMode: displayState.displayMode || "",
     questions: (displayState.questions || []).map((question) => question?.text || question?.question || "").join("|"),
+    primaryQuestion: displayState.primaryQuestion || "",
     answersVisible: Boolean(displayState.answersVisible),
     stepsVisible: Boolean(displayState.stepsVisible),
     annotationCount: Number(displayState.annotationCount || 0),
@@ -4195,6 +4238,7 @@ function renderClassroomRemoteStatus(session, message = "", options = {}) {
           ? "Joining classroom display"
           : "Pairing code not found";
   const statusMessage = message || (connected ? "" : classroomRemoteStatusCopy(session));
+  const oneQuestionMode = classroomRemoteIsOneQuestionMode(displayState);
   target.dataset.remoteConnected = connected ? "true" : "false";
   target.dataset.sessionId = session?.id || "";
   target.dataset.displaySignature = displaySignature;
@@ -4220,21 +4264,23 @@ function renderClassroomRemoteStatus(session, message = "", options = {}) {
         <button class="button" type="button" data-remote-command="timer-2">2m</button>
         <button class="button" type="button" data-remote-command="timer-5">5m</button>
         <button class="button" type="button" data-remote-command="timer-stop">Stop</button>
+        <button class="button${oneQuestionMode ? " active" : ""}" type="button" data-remote-command="mode-example">One</button>
+        <button class="button${oneQuestionMode ? "" : " active"}" type="button" data-remote-command="mode-practice">Set</button>
       </div>
-      <section class="classroom-remote-workspace" aria-label="Pointer and annotation workspace">
+      <section class="classroom-remote-workspace${oneQuestionMode ? " one-question" : " practice-set"}" aria-label="Pointer and annotation workspace" data-single-question="${oneQuestionMode ? "true" : "false"}">
         <div class="classroom-remote-workspace-head">
           <div>
-            <h3>Tablet writing workspace</h3>
-            <p>Write, highlight, point, or erase on the projected classroom display.</p>
+            <h3>${oneQuestionMode ? "Tablet writing workspace" : "Pointer and highlight"}</h3>
+            <p>${oneQuestionMode ? "Work the active question on the tablet and project the writing live." : "Use pointer or highlighter to draw attention. Switch to One for worked solutions."}</p>
           </div>
         </div>
         <div class="classroom-remote-tool-row" aria-label="Remote tools">
           <button class="button" type="button" data-remote-tool="pointer" aria-pressed="true">Pointer</button>
-          <button class="button" type="button" data-remote-tool="pen" aria-pressed="false">Pen</button>
+          ${oneQuestionMode ? `<button class="button" type="button" data-remote-tool="pen" aria-pressed="false">Pen</button>` : ""}
           <button class="button" type="button" data-remote-tool="highlighter" aria-pressed="false">Highlighter</button>
-          <button class="button" type="button" data-remote-tool="eraser" aria-pressed="false">Eraser</button>
+          ${oneQuestionMode ? `<button class="button" type="button" data-remote-tool="eraser" aria-pressed="false">Eraser</button>` : ""}
         </div>
-        <div class="classroom-remote-ink-controls" aria-label="Ink settings">
+        ${oneQuestionMode ? `<div class="classroom-remote-ink-controls" aria-label="Ink settings">
           <div class="classroom-remote-swatch-row" aria-label="Pen colours">
             <button class="classroom-remote-swatch" type="button" data-remote-color="#172033" aria-label="Dark ink" style="--swatch-color:#172033"></button>
             <button class="classroom-remote-swatch" type="button" data-remote-color="#2563eb" aria-label="Blue ink" style="--swatch-color:#2563eb"></button>
@@ -4246,10 +4292,10 @@ function renderClassroomRemoteStatus(session, message = "", options = {}) {
             <input id="classroomRemoteWidth" type="range" min="2" max="14" step="1" value="4">
             <output id="classroomRemoteWidthValue" for="classroomRemoteWidth">4 px</output>
           </label>
-        </div>
+        </div>` : ""}
         <div class="classroom-remote-input-stage" id="classroomRemoteInputStage">
           <canvas id="classroomRemoteDrawCanvas" aria-label="Touch area for pointer and writing"></canvas>
-          <span>Use this as the tablet board surface.</span>
+          <span>${oneQuestionMode ? "Use this as the tablet board surface." : "Point or highlight only in practice set mode."}</span>
         </div>
         <div class="classroom-remote-markup-actions">
           <button class="button" type="button" data-remote-command="pointer-hide">Hide Pointer</button>
@@ -29174,21 +29220,36 @@ function bindToolFrame(tool, options = {}) {
     return classroomRemoteTrimText(clone.textContent || "", maxLength);
   }
 
-  function collectFrameQuestions(doc) {
+  function framePreviewHtml(element, maxTextLength = 700) {
+    if (!element) return "";
+    const clone = element.cloneNode(true);
+    (clone.querySelectorAll?.(".problem-answer,.answer-section,.steps-section,.solution-steps,.final-answer,.teacher-tab,.sidebar,.timer-modal,button,input,select,textarea") || []).forEach((node) => node.remove());
+    return classroomRemoteCleanQuestionHtml(clone.innerHTML || "", framePreviewText(element, maxTextLength));
+  }
+
+  function collectFrameQuestionEntries(doc) {
     const selectors = [".problem-item", ".question-card", ".problem-row", ".task-card"];
     const nodes = selectors.flatMap((selector) => Array.from(doc.querySelectorAll(selector)));
     const seen = new Set();
     return nodes
-      .map((node) => framePreviewText(node))
-      .filter(Boolean)
-      .filter((text) => {
+      .map((node) => ({
+        text: framePreviewText(node),
+        html: framePreviewHtml(node)
+      }))
+      .filter((entry) => entry.text)
+      .filter((entry) => {
+        const text = entry.text || "";
         const key = text.toLowerCase();
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
       })
       .slice(0, 5)
-      .map((text) => ({ text }));
+      .map((entry) => ({ text: entry.text, html: entry.html }));
+  }
+
+  function collectFrameQuestions(doc) {
+    return collectFrameQuestionEntries(doc).map((entry) => ({ text: entry.text }));
   }
 
   function collectClassroomRemoteDisplayState() {
@@ -29204,6 +29265,11 @@ function bindToolFrame(tool, options = {}) {
       levels: [],
       types: [],
       questions: [],
+      displayMode: "practice-set",
+      singleQuestionMode: false,
+      questionCount: 0,
+      primaryQuestion: "",
+      primaryQuestionHtml: "",
       answersVisible: false,
       stepsVisible: false,
       annotationCount: annotationState.strokes.length,
@@ -29229,13 +29295,22 @@ function bindToolFrame(tool, options = {}) {
       const typeLabel = types.find((item) => String(item.id) === currentType)?.label
         || doc.querySelector("#type-dropdown option:checked")?.textContent?.trim()
         || "";
+      const questionEntries = collectFrameQuestionEntries(doc);
+      const sharedExampleMode = Boolean(frame?.contentWindow?.KaizenTeacherExample?.isActive?.());
+      const classExampleMode = doc.documentElement?.classList?.contains("teacher-example-mode");
+      const oneQuestionMode = Boolean(sharedExampleMode || classExampleMode);
       baseState.level = apiState.level ?? "";
       baseState.type = currentType;
       baseState.levelTitle = apiState.levelTitle || doc.getElementById("level-title")?.textContent?.trim() || "";
       baseState.typeLabel = typeLabel;
       baseState.levels = levels;
       baseState.types = types;
-      baseState.questions = collectFrameQuestions(doc);
+      baseState.questions = questionEntries.map((entry) => ({ text: entry.text }));
+      baseState.questionCount = questionEntries.length;
+      baseState.displayMode = oneQuestionMode ? "one-example" : "practice-set";
+      baseState.singleQuestionMode = oneQuestionMode;
+      baseState.primaryQuestion = questionEntries[0]?.text || "";
+      baseState.primaryQuestionHtml = oneQuestionMode ? questionEntries[0]?.html || "" : "";
       baseState.answersVisible = Boolean(doc.querySelector(".problem-answer.visible,.answer-section.visible"));
       baseState.stepsVisible = Boolean(doc.querySelector(".steps-section.visible,.solution-section.visible"));
     });
@@ -29251,7 +29326,9 @@ function bindToolFrame(tool, options = {}) {
     const signature = JSON.stringify({
       level: displayState.level,
       type: displayState.type,
+      displayMode: displayState.displayMode,
       questions: displayState.questions.map((question) => question.text).join("|"),
+      primaryQuestion: displayState.primaryQuestion,
       answersVisible: displayState.answersVisible,
       stepsVisible: displayState.stepsVisible,
       annotationCount: displayState.annotationCount,
@@ -29364,6 +29441,27 @@ function bindToolFrame(tool, options = {}) {
     return clicked;
   }
 
+  function setFrameDisplayMode(action) {
+    const oneExample = action === "mode-example";
+    let applied = false;
+    try {
+      const teacherExample = frame?.contentWindow?.KaizenTeacherExample;
+      if (typeof teacherExample?.setActive === "function") {
+        teacherExample.setActive(oneExample);
+        applied = true;
+      }
+    } catch (error) {
+      applied = false;
+    }
+    if (applied) {
+      clearAnnotations();
+      scheduleClassroomFit();
+      scheduleAnnotationResize();
+      scheduleClassroomRemoteDisplayState(true);
+    }
+    return applied;
+  }
+
   function applyClassroomRemoteActivity(activity = {}) {
     const level = activity.level;
     const type = activity.type;
@@ -29413,6 +29511,10 @@ function bindToolFrame(tool, options = {}) {
     }
     if (["timer-2", "timer-5", "timer-stop"].includes(action)) {
       clickFrameTimerAction(action);
+      return;
+    }
+    if (["mode-example", "mode-practice"].includes(action)) {
+      setFrameDisplayMode(action);
       return;
     }
     if (action === "set-activity") {

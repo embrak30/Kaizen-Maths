@@ -10385,6 +10385,38 @@ button.certification-course-card {
   font-weight: 750;
 }
 
+.classroom-remote-preview-one {
+  border-color: rgba(111, 76, 195, 0.22);
+  background:
+    linear-gradient(135deg, rgba(247, 244, 255, 0.88), rgba(231, 251, 250, 0.7)),
+    #fff;
+}
+
+.classroom-remote-current-question {
+  display: grid;
+  gap: 8px;
+  max-height: 240px;
+  overflow: auto;
+  padding: 10px;
+  border: 1px solid rgba(111, 76, 195, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.classroom-remote-current-question :is(p, div, ol, ul) {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.classroom-remote-current-question :is(svg, img) {
+  max-width: 100%;
+  height: auto;
+}
+
 .classroom-remote-preview ol {
   display: grid;
   gap: 6px;
@@ -10456,6 +10488,12 @@ button.certification-course-card {
   justify-content: center;
   padding: 7px 8px;
   font-size: 0.88rem;
+}
+
+.classroom-remote-controls .button.active {
+  border-color: rgba(15, 143, 145, 0.55);
+  background: linear-gradient(135deg, var(--teal), var(--violet));
+  color: #fff;
 }
 
 .classroom-remote-workspace {
@@ -10585,6 +10623,11 @@ button.certification-course-card {
   overflow: hidden;
 }
 
+.classroom-remote-workspace.practice-set .classroom-remote-input-stage,
+.classroom-remote-workspace.practice-set .classroom-remote-input-stage canvas {
+  min-height: min(30vh, 270px);
+}
+
 .classroom-remote-input-stage[data-remote-tool="pointer"] {
   cursor: pointer;
 }
@@ -10668,6 +10711,11 @@ button.certification-course-card {
   .classroom-remote-input-stage,
   .classroom-remote-input-stage canvas {
     min-height: 360px;
+  }
+
+  .classroom-remote-workspace.practice-set .classroom-remote-input-stage,
+  .classroom-remote-workspace.practice-set .classroom-remote-input-stage canvas {
+    min-height: 240px;
   }
 }
 
