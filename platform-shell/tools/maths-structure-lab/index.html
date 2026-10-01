@@ -343,17 +343,17 @@
       min-height: 0;
       display: grid;
       place-items: center;
-      padding: 14px;
+      padding: 8px;
       overflow: hidden;
     }
 
     .model-card {
       position: relative;
-      width: min(100%, 900px);
-      height: min(100%, 600px);
+      width: 100%;
+      height: 100%;
       display: grid;
       place-items: center;
-      padding: clamp(12px, 2vw, 24px);
+      padding: clamp(8px, 1.3vw, 16px);
       border-radius: 8px;
       border: 1px solid rgba(47, 128, 237, 0.12);
       background:
@@ -362,22 +362,13 @@
       overflow: hidden;
     }
 
-    .scale-note {
-      position: absolute;
-      right: 12px;
-      bottom: 10px;
-      color: #7b879a;
-      font-size: 0.66rem;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-    }
-
     .visual {
       width: 100%;
       height: 100%;
       display: grid;
       place-items: center;
-      gap: 14px;
+      gap: 10px;
+      min-height: 0;
     }
 
     .visual > * {
@@ -456,17 +447,18 @@
 
     .fraction-division-model {
       height: 100%;
-      align-content: stretch;
-      gap: 8px;
+      align-content: start;
+      gap: 6px;
+      overflow: hidden;
     }
 
     .division-presenter-note {
       width: min(100%, 920px);
       display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 6px 10px;
+      grid-template-columns: 1fr;
+      gap: 3px;
       align-items: center;
-      padding: 9px 12px;
+      padding: 7px 10px;
       border-radius: 8px;
       background:
         linear-gradient(135deg, rgba(24, 184, 173, 0.13), rgba(255, 209, 102, 0.20)),
@@ -475,31 +467,15 @@
       box-shadow: 0 8px 20px rgba(19, 39, 74, 0.08);
     }
 
-    .teacher-mode-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 5px 8px;
-      border-radius: 999px;
-      color: #fff;
-      background: linear-gradient(135deg, var(--teal), var(--purple));
-      font-size: clamp(0.56rem, 0.72vw, 0.68rem);
-      font-weight: 950;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
     .division-presenter-note > strong {
       color: #172033;
-      font-size: clamp(0.9rem, 1.18vw, 1.06rem);
+      font-size: clamp(0.84rem, 1vw, 0.98rem);
       line-height: 1.1;
     }
 
     .division-presenter-note > span:last-child {
-      grid-column: 2;
       color: #3d4b67;
-      font-size: clamp(0.78rem, 0.9vw, 0.92rem);
+      font-size: clamp(0.72rem, 0.82vw, 0.86rem);
       font-weight: 760;
       line-height: 1.25;
     }
@@ -508,8 +484,8 @@
       width: min(100%, 920px);
       min-height: 0;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(190px, 0.36fr);
-      gap: 9px;
+      grid-template-columns: minmax(0, 1fr) minmax(170px, 0.32fr);
+      gap: 7px;
       align-items: stretch;
     }
 
@@ -517,8 +493,8 @@
       min-width: 0;
       display: grid;
       align-content: center;
-      gap: 9px;
-      padding: 10px;
+      gap: 7px;
+      padding: 8px;
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.82);
       border: 1px solid rgba(47, 128, 237, 0.12);
@@ -526,12 +502,12 @@
 
     .division-wholes {
       display: grid;
-      grid-template-columns: repeat(var(--whole-count), minmax(54px, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(var(--whole-count), minmax(46px, 1fr));
+      gap: 6px;
     }
 
     .division-whole-card {
-      min-height: clamp(78px, 12vh, 112px);
+      min-height: clamp(56px, 9vh, 88px);
       display: grid;
       grid-template-columns: repeat(var(--denom), 1fr);
       border: 3px solid #172033;
@@ -611,13 +587,13 @@
       min-width: 0;
       display: grid;
       align-content: start;
-      gap: 8px;
+      gap: 6px;
     }
 
     .division-side-card {
       display: grid;
-      gap: 6px;
-      padding: 10px;
+      gap: 4px;
+      padding: 7px;
       border-radius: 8px;
       background: #ffffff;
       border: 1px solid rgba(22, 33, 63, 0.10);
@@ -648,8 +624,8 @@
     .mini-pieces {
       display: grid;
       grid-template-columns: repeat(var(--mini-parts), 1fr);
-      gap: 3px;
-      min-height: 28px;
+      gap: 2px;
+      min-height: 22px;
     }
 
     .mini-piece {
@@ -668,8 +644,8 @@
     .leftover-stage {
       width: min(100%, 920px);
       display: grid;
-      gap: 8px;
-      padding: 10px;
+      gap: 6px;
+      padding: 7px;
       border-radius: 8px;
       background:
         linear-gradient(135deg, rgba(255, 247, 237, 0.94), rgba(232, 252, 249, 0.9));
@@ -688,13 +664,13 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .leftover-chip {
       position: relative;
-      width: clamp(38px, 4vw, 54px);
-      height: clamp(38px, 4vw, 54px);
+      width: clamp(28px, 3vw, 42px);
+      height: clamp(28px, 3vw, 42px);
       display: inline-grid;
       place-items: center;
       background:
@@ -733,7 +709,7 @@
     }
 
     .relationship-card {
-      min-height: 58px;
+      min-height: 46px;
       display: grid;
       place-items: center;
       gap: 3px;
@@ -770,13 +746,13 @@
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 10px;
+      gap: 7px;
     }
 
     .result-pill {
       min-width: 74px;
-      min-height: 44px;
-      padding: 8px 12px;
+      min-height: 36px;
+      padding: 6px 10px;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
@@ -791,7 +767,7 @@
 
     .division-count-line {
       width: min(100%, 920px);
-      padding: 8px 12px;
+      padding: 7px 10px;
       border-radius: 8px;
       background: rgba(24, 184, 173, 0.10);
       color: #24324d;
@@ -804,7 +780,7 @@
       width: min(100%, 920px);
       display: grid;
       place-items: center;
-      padding: 9px 12px;
+      padding: 7px 10px;
       border-radius: 8px;
       color: #fff;
       background: linear-gradient(135deg, var(--purple), var(--teal));
@@ -1345,7 +1321,6 @@
         <div class="model-wrap">
           <div class="model-card" id="modelCard">
             <div class="visual" id="visual"></div>
-            <div class="scale-note">Not drawn to scale</div>
           </div>
         </div>
       </article>
@@ -1484,28 +1459,34 @@
             prompt: `Show why ${vfrac(ex.n, ex.d)} = ${vfrac(ex.n * ex.scale, ex.d * ex.scale)}`,
             steps: [
               {
-                label: "Start with one whole",
-                text: `Split the same whole into ${ex.d} equal parts and shade ${ex.n}.`,
+                label: "Start with the same whole",
+                text: `Keep one whole fixed. First split it into ${ex.d} equal parts.`,
                 method: `${vfrac(ex.n, ex.d)}`,
                 visual: () => equivalentVisual(ex, 0)
               },
               {
-                label: "Refine each part",
-                text: `Split each existing part into ${ex.scale} smaller equal parts.`,
-                method: `${ex.d} &times; ${ex.scale} = ${ex.d * ex.scale} parts`,
+                label: "Show the original amount",
+                text: `Shade ${ex.n} of the ${ex.d} equal parts. This is the amount that must stay the same.`,
+                method: `${ex.n} out of ${ex.d} parts = ${vfrac(ex.n, ex.d)}`,
                 visual: () => equivalentVisual(ex, 1)
               },
               {
-                label: "Count shaded parts",
-                text: `Each shaded part becomes ${ex.scale} shaded smaller parts.`,
-                method: `${ex.n} &times; ${ex.scale} = ${ex.n * ex.scale}`,
+                label: "Refine the whole",
+                text: `Now split each original part into ${ex.scale} smaller equal parts.`,
+                method: `${ex.d} &times; ${ex.scale} = ${ex.d * ex.scale} parts`,
                 visual: () => equivalentVisual(ex, 2)
               },
               {
-                label: "Write the equivalent fraction",
-                text: "The shaded region is the same size, but it is described with more equal parts.",
-                method: `${vfrac(ex.n, ex.d)} = ${vfrac(ex.n * ex.scale, ex.d * ex.scale)}`,
+                label: "Count the refined shaded parts",
+                text: `Each shaded part becomes ${ex.scale} shaded smaller parts.`,
+                method: `${ex.n} &times; ${ex.scale} = ${ex.n * ex.scale}`,
                 visual: () => equivalentVisual(ex, 3)
+              },
+              {
+                label: "Write the equivalent fraction",
+                text: "The shaded amount has not changed. Only the size and number of equal parts changed.",
+                method: `${vfrac(ex.n, ex.d)} = ${vfrac(ex.n * ex.scale, ex.d * ex.scale)}`,
+                visual: () => equivalentVisual(ex, 4)
               }
             ]
           };
@@ -1547,27 +1528,39 @@
             steps: [
               {
                 label: "See the problem",
-                text: "The two fractions are split into different-sized parts.",
+                text: "The two fractions use different-sized parts, so they cannot be counted together yet.",
                 method: `${vfrac(ex.a, ex.b)} + ${vfrac(ex.c, ex.d)}`,
                 visual: () => addingVisual(ex, 0)
               },
               {
-                label: "Make common parts",
-                text: `Use ${common} equal parts so both fractions use the same size pieces.`,
+                label: "Choose common parts",
+                text: `Use ${common} equal parts so both fractions are measured using the same unit size.`,
                 method: `Common denominator = ${common}`,
                 visual: () => addingVisual(ex, 1)
               },
               {
-                label: "Convert each fraction",
-                text: `Rewrite both fractions in ${common}ths.`,
-                method: `${vfrac(ex.a, ex.b)} = ${vfrac(left, common)}, ${vfrac(ex.c, ex.d)} = ${vfrac(right, common)}`,
+                label: "Convert the first fraction",
+                text: `Rewrite ${vfrac(ex.a, ex.b)} using ${common} equal parts.`,
+                method: `${vfrac(ex.a, ex.b)} = ${vfrac(left, common)}`,
                 visual: () => addingVisual(ex, 2)
               },
               {
-                label: "Add the numerators",
-                text: "Now the parts are the same size, so count the shaded parts altogether.",
-                method: `${vfrac(left, common)} + ${vfrac(right, common)} = ${vfrac(sum, common)} = ${simplified}`,
+                label: "Convert the second fraction",
+                text: `Rewrite ${vfrac(ex.c, ex.d)} using the same ${common} equal parts.`,
+                method: `${vfrac(ex.c, ex.d)} = ${vfrac(right, common)}`,
                 visual: () => addingVisual(ex, 3)
+              },
+              {
+                label: "Combine the common parts",
+                text: "Now the parts are the same size, so combine the shaded parts on one bar.",
+                method: `${left} + ${right} = ${sum}`,
+                visual: () => addingVisual(ex, 4)
+              },
+              {
+                label: "Write the result",
+                text: "The denominator stays the same because the unit size has not changed.",
+                method: `${vfrac(left, common)} + ${vfrac(right, common)} = ${vfrac(sum, common)} = ${simplified}`,
+                visual: () => addingVisual(ex, 5)
               }
             ]
           };
@@ -1611,22 +1604,34 @@
                 visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 0)
               },
               {
-                label: "Partition the sides",
-                text: `Split ${ex.a} into ${aT} and ${aO}, and split ${ex.b} into ${bT} and ${bO}.`,
-                method: `${ex.a} = ${aT} + ${aO}, ${ex.b} = ${bT} + ${bO}`,
+                label: "Partition one side",
+                text: `Split ${ex.a} into a tens part and a ones part.`,
+                method: `${ex.a} = ${aT} + ${aO}`,
                 visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 1)
               },
               {
-                label: "Find each area",
-                text: "Multiply each row part by each column part.",
-                method: `${aT}&times;${bT}, ${aT}&times;${bO}, ${aO}&times;${bT}, ${aO}&times;${bO}`,
+                label: "Partition the other side",
+                text: `Split ${ex.b} into a tens part and a ones part.`,
+                method: `${ex.b} = ${bT} + ${bO}`,
                 visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 2)
               },
               {
-                label: "Add the partial products",
-                text: "The whole product is the sum of the smaller rectangle areas.",
-                method: `${aT * bT} + ${aT * bO} + ${aO * bT} + ${aO * bO} = ${ex.a * ex.b}`,
+                label: "Create every section",
+                text: "Each section represents one partial product.",
+                method: `Every row part multiplies every column part`,
                 visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 3)
+              },
+              {
+                label: "Find each area",
+                text: "Calculate each smaller rectangle area.",
+                method: `${aT}&times;${bT}, ${aT}&times;${bO}, ${aO}&times;${bT}, ${aO}&times;${bO}`,
+                visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 4)
+              },
+              {
+                label: "Add the partial products",
+                text: "The whole product is the sum of all the smaller rectangle areas.",
+                method: `${aT * bT} + ${aT * bO} + ${aO * bT} + ${aO * bO} = ${ex.a * ex.b}`,
+                visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 5)
               }
             ]
           };
@@ -1669,21 +1674,33 @@
               },
               {
                 label: "Find the shared factor",
-                text: `Both terms share a factor of ${ex.h}.`,
+                text: `Both terms share a common factor of ${ex.h}.`,
                 method: `HCF(${first}, ${second}) = ${ex.h}`,
                 visual: () => factorVisual({ ...ex, first, second, bracket }, 1)
               },
               {
-                label: "Use the common factor as a side",
-                text: `If one side is ${ex.h}, the remaining widths are ${formatCoeff(ex.p)}x and ${ex.q}.`,
+                label: "Divide each term by the common factor",
+                text: `Removing the common factor leaves the widths that go inside the bracket.`,
                 method: `${formatCoeff(first)}x &divide; ${ex.h} = ${formatCoeff(ex.p)}x, ${second} &divide; ${ex.h} = ${ex.q}`,
                 visual: () => factorVisual({ ...ex, first, second, bracket }, 2)
+              },
+              {
+                label: "Use the factor as a side",
+                text: `Use ${ex.h} as the shared side of the rectangle.`,
+                method: `Common side = ${ex.h}`,
+                visual: () => factorVisual({ ...ex, first, second, bracket }, 3)
+              },
+              {
+                label: "Build the bracket",
+                text: `The remaining widths are ${formatCoeff(ex.p)}x and ${ex.q}.`,
+                method: `${formatCoeff(ex.p)}x + ${ex.q}`,
+                visual: () => factorVisual({ ...ex, first, second, bracket }, 4)
               },
               {
                 label: "Write the factorised form",
                 text: "The common side outside the bracket multiplies everything inside the bracket.",
                 method: `${formatCoeff(first)}x + ${second} = ${bracket}`,
-                visual: () => factorVisual({ ...ex, first, second, bracket }, 3)
+                visual: () => factorVisual({ ...ex, first, second, bracket }, 5)
               }
             ]
           };
@@ -1724,7 +1741,7 @@
               },
               {
                 label: "Split the whole",
-                text: `Split 100% into ${ex.parts} equal parts.`,
+                text: `Split 100% into ${ex.parts} equal parts so the target percentage is easy to count.`,
                 method: `${100 / ex.parts}% each`,
                 visual: () => percentVisual(model, 1)
               },
@@ -1741,10 +1758,16 @@
                 visual: () => percentVisual(model, 3)
               },
               {
+                label: "Count the shaded values",
+                text: `Each shaded part is worth ${onePart}, so count ${ex.shaded} equal values.`,
+                method: `${Array(ex.shaded).fill(onePart).join(" + ")} = ${answer}`,
+                visual: () => percentVisual(model, 4)
+              },
+              {
                 label: "Write the result",
                 text: "The model shows the part of the whole that the percentage represents.",
                 method: `${ex.p}% of ${ex.amount} = ${answer}`,
-                visual: () => percentVisual(model, 4)
+                visual: () => percentVisual(model, 5)
               }
             ]
           };
@@ -1955,8 +1978,8 @@
       const sideCards = [
         stage === 0 ? `
           <div class="division-side-card">
-            <strong>Teacher lens</strong>
-            <span>Keep the language as "groups that fit" before introducing a rule.</span>
+            <strong>Meaning</strong>
+            <span>Start with groups that fit before introducing a rule.</span>
           </div>
         ` : "",
         stage >= 1 ? `
@@ -2039,7 +2062,6 @@
       return `
         <div class="fraction-division-model">
           <div class="division-presenter-note">
-            <span class="teacher-mode-pill">Teacher mode</span>
             <strong>${callout.title}</strong>
             <span>${callout.body}</span>
           </div>
@@ -2064,13 +2086,15 @@
         <div class="bar-stack">
           <div class="bar-line">
             <div class="bar-label">Original</div>
-            ${bar(ex.d, ex.n, 0, true)}
+            ${bar(ex.d, stage >= 1 ? ex.n : 0, 0, true)}
           </div>
-          <div class="bar-line">
-            <div class="bar-label">${stage >= 1 ? "Refined" : "Same whole"}</div>
-            ${stage >= 1 ? bar(refinedParts, ex.n * ex.scale, 0, stage >= 2) : `<div class="bar" style="--parts:${ex.d}">${Array.from({ length: ex.d }, (_, i) => `<span class="bar-part ${i < ex.n ? "shaded-a" : ""}"></span>`).join("")}</div>`}
-          </div>
-          <div class="big-equation">${stage >= 3 ? `${vfrac(ex.n, ex.d)} = ${vfrac(ex.n * ex.scale, refinedParts)}` : "The shaded amount stays the same."}</div>
+          ${stage >= 2 ? `
+            <div class="bar-line">
+              <div class="bar-label">Refined</div>
+              ${bar(refinedParts, stage >= 3 ? ex.n * ex.scale : 0, 0, true)}
+            </div>
+          ` : ""}
+          <div class="big-equation">${stage >= 4 ? `${vfrac(ex.n, ex.d)} = ${vfrac(ex.n * ex.scale, refinedParts)}` : stage >= 3 ? `${ex.n * ex.scale} shaded parts out of ${refinedParts}` : "The same whole is being repartitioned."}</div>
         </div>
       `;
     }
@@ -2084,17 +2108,19 @@
         <div class="bar-stack">
           <div class="bar-line">
             <div class="bar-label">${vfrac(ex.a, ex.b)}</div>
-            ${stage >= 1 ? bar(common, left, 0, stage >= 2) : bar(ex.b, ex.a, 0, true)}
+            ${stage >= 1 ? bar(common, stage >= 2 ? left : 0, 0, true) : bar(ex.b, ex.a, 0, true)}
           </div>
           <div class="bar-line">
             <div class="bar-label">${vfrac(ex.c, ex.d)}</div>
-            ${stage >= 1 ? bar(common, 0, right, stage >= 2) : bar(ex.d, ex.c, 0, true)}
+            ${stage >= 1 ? bar(common, 0, stage >= 3 ? right : 0, true) : bar(ex.d, ex.c, 0, true)}
           </div>
-          <div class="bar-line">
-            <div class="bar-label">Together</div>
-            ${stage >= 3 ? bar(common, left, right, true) : `<div class="bar" style="--parts:${common}">${Array.from({ length: common }, () => `<span class="bar-part"></span>`).join("")}</div>`}
-          </div>
-          <div class="big-equation">${stage >= 3 ? `${vfrac(left, common)} + ${vfrac(right, common)} = ${vfrac(sum, common)}` : `Common parts: ${common}`}</div>
+          ${stage >= 4 ? `
+            <div class="bar-line">
+              <div class="bar-label">Together</div>
+              ${bar(common, left, right, true)}
+            </div>
+          ` : ""}
+          <div class="big-equation">${stage >= 5 ? `${vfrac(left, common)} + ${vfrac(right, common)} = ${vfrac(sum, common)}` : stage >= 4 ? `${left} + ${right} = ${sum}` : `Common parts: ${common}`}</div>
         </div>
       `;
     }
@@ -2112,14 +2138,14 @@
 
     function areaVisual(ex, stage) {
       const entries = [
-        { cls: "area-head", value: stage >= 1 ? ex.bT : "" },
-        { cls: "area-head", value: stage >= 1 ? ex.bO : "" },
+        { cls: "area-head", value: stage >= 2 ? ex.bT : "" },
+        { cls: "area-head", value: stage >= 2 ? ex.bO : "" },
         { cls: "area-side", value: stage >= 1 ? ex.aT : "" },
-        { cls: "area-cell", value: stage >= 2 ? ex.aT * ex.bT : "" },
-        { cls: "area-cell", value: stage >= 2 ? ex.aT * ex.bO : "" },
+        { cls: "area-cell", value: stage >= 4 ? ex.aT * ex.bT : "" },
+        { cls: "area-cell", value: stage >= 4 ? ex.aT * ex.bO : "" },
         { cls: "area-side", value: stage >= 1 ? ex.aO : "" },
-        { cls: "area-cell", value: stage >= 2 ? ex.aO * ex.bT : "" },
-        { cls: "area-cell", value: stage >= 2 ? ex.aO * ex.bO : "" }
+        { cls: "area-cell", value: stage >= 4 ? ex.aO * ex.bT : "" },
+        { cls: "area-cell", value: stage >= 4 ? ex.aO * ex.bO : "" }
       ];
       return `
         <div class="area-layout">
@@ -2127,7 +2153,7 @@
             <div class="area-corner"></div>
             ${entries.map((item) => `<div class="${item.cls}">${item.value}</div>`).join("")}
           </div>
-          <div class="big-equation">${stage >= 3 ? `${ex.a} &times; ${ex.b} = ${ex.a * ex.b}` : "Partition the rectangle before calculating."}</div>
+          <div class="big-equation">${stage >= 5 ? `${ex.a} &times; ${ex.b} = ${ex.a * ex.b}` : stage >= 4 ? `${ex.aT * ex.bT} + ${ex.aT * ex.bO} + ${ex.aO * ex.bT} + ${ex.aO * ex.bO}` : stage >= 3 ? "Four partial-product sections" : "Partition the rectangle before calculating."}</div>
         </div>
       `;
     }
@@ -2148,8 +2174,9 @@
             <span class="term-tile num-term">${ex.second}</span>
           </div>
           ${stage >= 1 ? `<div class="hint-line">Common factor: ${ex.h}</div>` : ""}
-          ${stage >= 2 ? rectangle : ""}
-          <div class="big-equation">${stage >= 3 ? ex.bracket : "Rebuild one rectangle from the terms."}</div>
+          ${stage >= 2 ? `<div class="hint-line">${formatCoeff(ex.first)}x &divide; ${ex.h} = ${formatCoeff(ex.p)}x, ${ex.second} &divide; ${ex.h} = ${ex.q}</div>` : ""}
+          ${stage >= 3 ? rectangle : ""}
+          <div class="big-equation">${stage >= 5 ? ex.bracket : stage >= 4 ? `${ex.h}(${formatCoeff(ex.p)}x + ${ex.q})` : "Rebuild one rectangle from the terms."}</div>
         </div>
       `;
     }
@@ -2161,7 +2188,7 @@
             <div class="bar-label">100%</div>
             ${stage >= 1 ? percentBar(ex, stage) : `<div class="bar" style="--parts:1"><span class="bar-part">${ex.amount}</span></div>`}
           </div>
-          <div class="big-equation">${stage >= 4 ? `${ex.p}% of ${ex.amount} = ${ex.answer}` : stage >= 2 ? `${100 / ex.parts}% = ${ex.onePart}` : stage >= 1 ? `${100 / ex.parts}% each` : `100% = ${ex.amount}`}</div>
+          <div class="big-equation">${stage >= 5 ? `${ex.p}% of ${ex.amount} = ${ex.answer}` : stage >= 4 ? `${Array(ex.shaded).fill(ex.onePart).join(" + ")} = ${ex.answer}` : stage >= 2 ? `${100 / ex.parts}% = ${ex.onePart}` : stage >= 1 ? `${100 / ex.parts}% each` : `100% = ${ex.amount}`}</div>
         </div>
       `;
     }
