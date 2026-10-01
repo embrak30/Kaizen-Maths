@@ -455,31 +455,90 @@
     }
 
     .fraction-division-model {
-      align-content: center;
-      gap: 10px;
+      height: 100%;
+      align-content: stretch;
+      gap: 8px;
+    }
+
+    .division-presenter-note {
+      width: min(100%, 920px);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px 10px;
+      align-items: center;
+      padding: 9px 12px;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(24, 184, 173, 0.13), rgba(255, 209, 102, 0.20)),
+        #fff;
+      border: 1px solid rgba(24, 184, 173, 0.24);
+      box-shadow: 0 8px 20px rgba(19, 39, 74, 0.08);
+    }
+
+    .teacher-mode-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 8px;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      font-size: clamp(0.56rem, 0.72vw, 0.68rem);
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .division-presenter-note > strong {
+      color: #172033;
+      font-size: clamp(0.9rem, 1.18vw, 1.06rem);
+      line-height: 1.1;
+    }
+
+    .division-presenter-note > span:last-child {
+      grid-column: 2;
+      color: #3d4b67;
+      font-size: clamp(0.78rem, 0.9vw, 0.92rem);
+      font-weight: 760;
+      line-height: 1.25;
+    }
+
+    .division-explain-grid {
+      width: min(100%, 920px);
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(190px, 0.36fr);
+      gap: 9px;
+      align-items: stretch;
     }
 
     .division-stage {
-      width: min(100%, 860px);
+      min-width: 0;
       display: grid;
-      gap: 10px;
+      align-content: center;
+      gap: 9px;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(47, 128, 237, 0.12);
     }
 
     .division-wholes {
       display: grid;
-      grid-template-columns: repeat(var(--whole-count), minmax(74px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(var(--whole-count), minmax(54px, 1fr));
+      gap: 8px;
     }
 
     .division-whole-card {
-      min-height: clamp(92px, 15vh, 128px);
+      min-height: clamp(78px, 12vh, 112px);
       display: grid;
       grid-template-columns: repeat(var(--denom), 1fr);
-      border: 4px solid #172033;
+      border: 3px solid #172033;
       border-radius: 8px;
       overflow: hidden;
       background: #fff;
-      box-shadow: 0 10px 18px rgba(19, 39, 74, 0.10);
+      box-shadow: 0 8px 16px rgba(19, 39, 74, 0.09);
     }
 
     .division-whole-card.unsplit {
@@ -529,6 +588,12 @@
       opacity: 0.42;
     }
 
+    .division-unit-label {
+      color: #25304f;
+      font-size: clamp(0.78rem, 1vw, 0.98rem);
+      font-weight: 900;
+    }
+
     .division-badge {
       display: inline-grid;
       place-items: center;
@@ -542,8 +607,66 @@
       font-weight: 950;
     }
 
+    .division-side-panel {
+      min-width: 0;
+      display: grid;
+      align-content: start;
+      gap: 8px;
+    }
+
+    .division-side-card {
+      display: grid;
+      gap: 6px;
+      padding: 10px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid rgba(22, 33, 63, 0.10);
+      box-shadow: 0 8px 16px rgba(19, 39, 74, 0.07);
+    }
+
+    .division-side-card > strong {
+      color: #172033;
+      font-size: clamp(0.76rem, 0.88vw, 0.9rem);
+      font-weight: 950;
+      line-height: 1.12;
+    }
+
+    .division-side-card > span {
+      color: #3d4b67;
+      font-size: clamp(0.72rem, 0.82vw, 0.86rem);
+      font-weight: 780;
+      line-height: 1.25;
+    }
+
+    .division-side-card > .big-side-math {
+      color: #0f766e;
+      font-family: var(--math-font);
+      font-size: clamp(1rem, 1.35vw, 1.34rem);
+      font-weight: 700;
+    }
+
+    .mini-pieces {
+      display: grid;
+      grid-template-columns: repeat(var(--mini-parts), 1fr);
+      gap: 3px;
+      min-height: 28px;
+    }
+
+    .mini-piece {
+      border-radius: 4px;
+      border: 1px solid rgba(22, 33, 63, 0.20);
+      background: rgba(232, 239, 247, 0.86);
+    }
+
+    .mini-piece.active {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.04)),
+        rgba(24, 184, 173, 0.42);
+      border-color: rgba(8, 122, 118, 0.70);
+    }
+
     .leftover-stage {
-      width: min(100%, 860px);
+      width: min(100%, 920px);
       display: grid;
       gap: 8px;
       padding: 10px;
@@ -601,8 +724,48 @@
       border-color: rgba(185, 28, 28, 0.70);
     }
 
+    .leftover-relationship {
+      width: min(100%, 920px);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .relationship-card {
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      gap: 3px;
+      padding: 8px;
+      border-radius: 8px;
+      text-align: center;
+      background: #fff;
+      border: 1px solid rgba(22, 33, 63, 0.12);
+      box-shadow: 0 8px 16px rgba(19, 39, 74, 0.07);
+    }
+
+    .relationship-card > strong {
+      color: #172033;
+      font-size: clamp(0.72rem, 0.82vw, 0.84rem);
+      font-weight: 950;
+    }
+
+    .relationship-card > span {
+      color: #344258;
+      font-size: clamp(0.78rem, 0.96vw, 0.98rem);
+      font-weight: 820;
+      line-height: 1.22;
+    }
+
+    .relationship-arrow {
+      color: var(--orange);
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      font-weight: 950;
+    }
+
     .result-row {
-      width: min(100%, 860px);
+      width: min(100%, 920px);
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -627,7 +790,7 @@
     }
 
     .division-count-line {
-      width: min(100%, 860px);
+      width: min(100%, 920px);
       padding: 8px 12px;
       border-radius: 8px;
       background: rgba(24, 184, 173, 0.10);
@@ -635,6 +798,19 @@
       text-align: center;
       font-size: clamp(0.92rem, 1.35vw, 1.14rem);
       font-weight: 900;
+    }
+
+    .division-final-line {
+      width: min(100%, 920px);
+      display: grid;
+      place-items: center;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--purple), var(--teal));
+      font-size: clamp(1.05rem, 1.55vw, 1.45rem);
+      font-weight: 950;
+      box-shadow: 0 10px 22px rgba(24, 184, 173, 0.20);
     }
 
     body[data-mode="fractionDivision"] .step-panel {
@@ -1194,9 +1370,9 @@
         title: "Division by a Fraction",
         focus: "How many fractional groups fit into the whole amount?",
         points: [
-          "Start by making the whole number visible as separate wholes.",
-          "Split every whole using the denominator of the divisor.",
-          "Group the parts using the numerator of the divisor before showing invert and multiply."
+          "Read division as a measurement question: how many divisor-sized groups fit?",
+          "Use the denominator to create the unit size before grouping.",
+          "Measure any leftover against the divisor, not against one whole."
         ],
         generate: () => {
           const options = [
@@ -1212,6 +1388,7 @@
           const baseGroups = ex.whole * groupsPerWhole;
           const leftoverPieces = ex.whole * leftoverPerWhole;
           const extraGroups = Math.floor(leftoverPieces / ex.num);
+          const totalPieces = ex.whole * ex.denom;
           const remainder = leftoverPieces % ex.num;
           const groups = baseGroups + extraGroups;
           const answer = mixedQuotient(groups, remainder, ex.num);
@@ -1223,6 +1400,8 @@
             baseGroups,
             leftoverPieces,
             extraGroups,
+            totalPieces,
+            groups,
             remainder
           };
           return {
@@ -1230,40 +1409,52 @@
             prompt: `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)}`,
             steps: [
               {
-                label: "Start with the wholes",
-                text: `Show ${ex.whole} wholes.`,
-                method: `${ex.whole} = ${Array(ex.whole).fill("1").join(" + ")}`,
+                label: "Frame the meaning",
+                text: `Read this as: how many groups of ${vfrac(ex.num, ex.denom)} fit inside ${ex.whole} wholes?`,
+                method: `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} means "how many ${vfrac(ex.num, ex.denom)} groups?"`,
                 visual: () => fractionDivisionVisual(model, 0)
               },
               {
-                label: "Split every whole",
-                text: `Split each whole into ${ex.denom} equal parts.`,
-                method: `${ex.whole} = ${ex.whole * ex.denom} ${partName(ex.denom)}`,
+                label: "Partition by the denominator",
+                text: `Because the divisor is measured in ${partName(ex.denom)}, split every whole into ${ex.denom} equal parts.`,
+                method: `${ex.whole} wholes = ${totalPieces} ${partName(ex.denom)}`,
                 visual: () => fractionDivisionVisual(model, 1)
               },
               {
-                label: `Show ${ex.num}/${ex.denom}`,
-                text: `Mark the ${vfrac(ex.num, ex.denom)} groups that fit inside each whole.`,
-                method: `${baseGroups} group${baseGroups === 1 ? "" : "s"} so far`,
+                label: "Build the divisor group",
+                text: `One group of ${vfrac(ex.num, ex.denom)} is made from ${countParts(ex.num, ex.denom)}.`,
+                method: `${vfrac(ex.num, ex.denom)} = ${countParts(ex.num, ex.denom)}`,
                 visual: () => fractionDivisionVisual(model, 2)
               },
               {
-                label: "Use the leftovers",
-                text: `Put the leftover ${partName(ex.denom)} together to make more ${vfrac(ex.num, ex.denom)} groups.`,
-                method: `${leftoverPieces} ${partName(ex.denom)} = ${extraGroups} more group${extraGroups === 1 ? "" : "s"}${remainder ? ` and ${remainder} left` : ""}`,
+                label: "Collect the leftovers",
+                text: `The unused ${partName(ex.denom)} from each whole can be regrouped into more ${vfrac(ex.num, ex.denom)} groups.`,
+                method: `${leftoverPieces} ${partName(ex.denom)} gives ${extraGroups} more group${extraGroups === 1 ? "" : "s"}${remainder ? `, with ${countParts(remainder, ex.denom)} left` : ""}`,
                 visual: () => fractionDivisionVisual(model, 3)
               },
               {
-                label: "Count the groups",
-                text: "Count all the complete groups and any part of a final group.",
-                method: `${baseGroups} + ${extraGroups}${remainder ? ` + ${simplifiedFraction(remainder, ex.num)}` : ""} = ${answer}`,
+                label: "Count complete groups",
+                text: "Count only the complete divisor-sized groups first.",
+                method: `${baseGroups} + ${extraGroups} = ${groups} complete group${groups === 1 ? "" : "s"}`,
                 visual: () => fractionDivisionVisual(model, 4)
               },
               {
-                label: "Connect to the rule",
-                text: "The reciprocal rule gives the same result as the model.",
-                method: `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${ex.whole} &times; ${vfrac(ex.denom, ex.num)} = ${answer}`,
+                label: "Interpret the leftover",
+                text: `${countParts(remainder, ex.denom)} is not ${simplifiedFraction(remainder, ex.denom)} of the answer. It is compared with the divisor group of ${countParts(ex.num, ex.denom)}.`,
+                method: `${countParts(remainder, ex.denom)} out of ${countParts(ex.num, ex.denom)} = ${simplifiedFraction(remainder, ex.num)} of a group`,
                 visual: () => fractionDivisionVisual(model, 5)
+              },
+              {
+                label: "State the quotient",
+                text: `The quotient is the number of complete ${vfrac(ex.num, ex.denom)} groups plus the part of the next group.`,
+                method: `${groups}${remainder ? ` + ${simplifiedFraction(remainder, ex.num)}` : ""} = ${answer}`,
+                visual: () => fractionDivisionVisual(model, 6)
+              },
+              {
+                label: "Connect to the formal rule",
+                text: "Now connect the visual grouping to the reciprocal method. The rule records the same structure more efficiently.",
+                method: `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${ex.whole} &times; ${vfrac(ex.denom, ex.num)} = ${answer}`,
+                visual: () => fractionDivisionVisual(model, 7)
               }
             ]
           };
@@ -1605,6 +1796,15 @@
       return names[denom] || `${denom}ths`;
     }
 
+    function partUnitName(denom) {
+      const names = { 2: "half", 3: "third", 4: "quarter", 5: "fifth", 6: "sixth", 8: "eighth", 10: "tenth" };
+      return names[denom] || `${denom}th`;
+    }
+
+    function countParts(count, denom) {
+      return `${count} ${count === 1 ? partUnitName(denom) : partName(denom)}`;
+    }
+
     function ordinalPart(denom) {
       const names = { 2: "halves", 3: "thirds", 4: "quarters", 5: "fifths", 6: "sixths", 8: "eighths", 10: "tenths" };
       return names[denom] || `${denom} equal parts`;
@@ -1680,7 +1880,55 @@
       animTimer = setTimeout(() => card.classList.remove("step-animating"), 3100);
     }
 
+    function divisionMiniPieces(total, active = 0) {
+      return `
+        <div class="mini-pieces" style="--mini-parts:${total}">
+          ${Array.from({ length: total }, (_, index) => `<span class="mini-piece ${index < active ? "active" : ""}"></span>`).join("")}
+        </div>
+      `;
+    }
+
+    function divisionCallout(ex, stage) {
+      const divisor = vfrac(ex.num, ex.denom);
+      const messages = [
+        {
+          title: "Meaning before method",
+          body: `Ask: how many ${divisor} groups can be measured from ${ex.whole} whole units?`
+        },
+        {
+          title: "The denominator creates the unit",
+          body: `We split into ${partName(ex.denom)} because the divisor is written in ${partName(ex.denom)}.`
+        },
+        {
+          title: "The numerator creates the group",
+          body: `${countParts(ex.num, ex.denom)} make one copy of ${divisor}. Now count copies of that group.`
+        },
+        {
+          title: "Leftovers can still combine",
+          body: `The unused pieces from each whole are not thrown away; they are pooled and grouped again.`
+        },
+        {
+          title: "Count complete divisor groups first",
+          body: `${ex.baseGroups} groups from the wholes plus ${ex.extraGroups} regrouped group${ex.extraGroups === 1 ? "" : "s"} gives ${ex.groups}.`
+        },
+        {
+          title: "The key conceptual bridge",
+          body: `The leftover is compared with the divisor group: ${countParts(ex.remainder, ex.denom)} out of ${countParts(ex.num, ex.denom)}.`
+        },
+        {
+          title: "The answer is a count of groups",
+          body: `${ex.groups} full group${ex.groups === 1 ? "" : "s"} and ${simplifiedFraction(ex.remainder, ex.num)} of the next group.`
+        },
+        {
+          title: "Then connect to the efficient rule",
+          body: `The reciprocal method is now a summary of the grouping model, not a trick.`
+        }
+      ];
+      return messages[Math.min(stage, messages.length - 1)];
+    }
+
     function fractionDivisionVisual(ex, stage) {
+      const callout = divisionCallout(ex, stage);
       const wholeCards = Array.from({ length: ex.whole }, (_, wholeIndex) => {
         if (stage === 0) {
           return `<div class="division-whole-card unsplit"><span class="whole-label">1</span></div>`;
@@ -1695,17 +1943,50 @@
           const fitStart = isFit && posInGroup === 0 ? "fit-start" : "";
           const fitEnd = isFit && posInGroup === ex.num - 1 ? "fit-end" : "";
           const badge = stage >= 2 && isFit && posInGroup === 0 ? `<span class="division-badge">${groupNumber}</span>` : "";
+          const unitLabel = stage === 1 && unitIndex === 0 ? `<span class="division-unit-label">${vfrac(1, ex.denom)}</span>` : "";
           return `
             <span class="division-unit ${isFit ? "fit" : ""} ${fitStart} ${fitEnd} ${isLeftover ? "leftover" : ""} ${isLeftover && stage >= 3 ? "collected" : ""}" style="--group-color:${color}">
-              ${badge}
+              ${badge || unitLabel}
             </span>
           `;
         }).join("");
         return `<div class="division-whole-card" style="--denom:${ex.denom}">${units}</div>`;
       }).join("");
+      const sideCards = [
+        stage === 0 ? `
+          <div class="division-side-card">
+            <strong>Teacher lens</strong>
+            <span>Keep the language as "groups that fit" before introducing a rule.</span>
+          </div>
+        ` : "",
+        stage >= 1 ? `
+          <div class="division-side-card">
+            <strong>Unit size</strong>
+            <span>Each small part is ${vfrac(1, ex.denom)} of a whole.</span>
+            ${divisionMiniPieces(ex.denom, 1)}
+          </div>
+        ` : "",
+        stage >= 2 ? `
+          <div class="division-side-card">
+            <strong>Divisor size</strong>
+            <span class="big-side-math">${vfrac(ex.num, ex.denom)}</span>
+            <span>${countParts(ex.num, ex.denom)} make one divisor group.</span>
+            ${divisionMiniPieces(ex.denom, ex.num)}
+          </div>
+        ` : "",
+        stage >= 5 ? `
+          <div class="division-side-card">
+            <strong>Leftover meaning</strong>
+            <span>${countParts(ex.remainder, ex.denom)} is ${simplifiedFraction(ex.remainder, ex.num)} of the divisor group.</span>
+          </div>
+        ` : ""
+      ].join("");
+      const leftoverTitle = stage >= 4
+        ? `${countParts(ex.leftoverPieces, ex.denom)} regroup into ${ex.extraGroups} more complete group${ex.extraGroups === 1 ? "" : "s"}${ex.remainder ? `, with ${countParts(ex.remainder, ex.denom)} left` : ""}.`
+        : `Pool the unused ${partName(ex.denom)} from the wholes.`;
       const leftoverPool = stage >= 3 && ex.leftoverPieces ? `
         <div class="leftover-stage">
-          <div class="leftover-title">Put the leftover ${partName(ex.denom)} together</div>
+          <div class="leftover-title">${leftoverTitle}</div>
           <div class="leftover-pool">
             ${Array.from({ length: ex.leftoverPieces }, (_, index) => {
               const extraGroupIndex = Math.floor(index / ex.num);
@@ -1717,8 +1998,21 @@
               const badge = stage >= 4 && inExtraGroup && posInGroup === 0
                 ? `<span class="division-badge">${ex.baseGroups + extraGroupIndex + 1}</span>`
                 : "";
-              return `<span class="leftover-chip ${inExtraGroup ? "extra-group" : ""} ${groupStart} ${groupEnd} ${finalLeftover ? "final-leftover" : ""}">${badge}</span>`;
+              return `<span class="leftover-chip ${inExtraGroup ? "extra-group" : ""} ${groupStart} ${groupEnd} ${finalLeftover && stage >= 5 ? "final-leftover" : ""}">${badge}</span>`;
             }).join("")}
+          </div>
+        </div>
+      ` : "";
+      const leftoverRelationship = stage >= 5 ? `
+        <div class="leftover-relationship">
+          <div class="relationship-card">
+            <strong>Divisor group</strong>
+            <span>${vfrac(ex.num, ex.denom)} = ${countParts(ex.num, ex.denom)}</span>
+          </div>
+          <div class="relationship-arrow">=&gt;</div>
+          <div class="relationship-card">
+            <strong>Left over</strong>
+            <span>${countParts(ex.remainder, ex.denom)} is ${simplifiedFraction(ex.remainder, ex.num)} of a group</span>
           </div>
         </div>
       ` : "";
@@ -1727,23 +2021,38 @@
           <span class="result-pill">${ex.baseGroups}</span>
           <span class="big-equation">+</span>
           <span class="result-pill">${ex.extraGroups}</span>
-          ${ex.remainder ? `<span class="big-equation">+</span><span class="result-pill">${simplifiedFraction(ex.remainder, ex.num)}</span>` : ""}
+          ${stage >= 6 && ex.remainder ? `<span class="big-equation">+</span><span class="result-pill">${simplifiedFraction(ex.remainder, ex.num)}</span>` : ""}
           <span class="big-equation">=</span>
-          <span class="result-pill">${ex.answer}</span>
+          <span class="result-pill">${stage >= 6 ? ex.answer : ex.groups}</span>
         </div>
       ` : "";
-      const countLine = stage >= 5 ? `
+      const finalLine = stage >= 6 ? `
+        <div class="division-final-line">
+          ${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${ex.answer}
+        </div>
+      ` : "";
+      const countLine = stage >= 7 ? `
         <div class="division-count-line">
           ${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${ex.whole} &times; ${vfrac(ex.denom, ex.num)} = ${ex.answer}
         </div>
       ` : "";
       return `
         <div class="fraction-division-model">
-          <div class="division-stage">
-            <div class="division-wholes" style="--whole-count:${Math.min(ex.whole, 6)}">${wholeCards}</div>
+          <div class="division-presenter-note">
+            <span class="teacher-mode-pill">Teacher mode</span>
+            <strong>${callout.title}</strong>
+            <span>${callout.body}</span>
+          </div>
+          <div class="division-explain-grid">
+            <div class="division-stage">
+              <div class="division-wholes" style="--whole-count:${Math.min(ex.whole, 6)}">${wholeCards}</div>
+            </div>
+            <div class="division-side-panel">${sideCards}</div>
           </div>
           ${leftoverPool}
+          ${leftoverRelationship}
           ${resultRow}
+          ${finalLine}
           ${countLine}
         </div>
       `;
