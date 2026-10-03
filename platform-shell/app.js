@@ -2335,14 +2335,14 @@ const tools = [
     type: "Interactive Display",
     access: "Free",
     status: "Imported",
-    description: "Use teacher-led visual methods to reveal the structure behind fraction division, equivalent fractions, adding fractions, area multiplication, factorisation, and percentages.",
-    tags: ["classroom", "visual maths", "structure of mathematics", "conceptual understanding", "fractions", "fraction division", "equivalent fractions", "area models", "factorisation", "percentages", "teacher training"],
-    toolPath: "tools/maths-structure-lab/index.html?v=maths-structure-lab-4",
+    description: "Use teacher-led visual methods to reveal the structure behind fraction division, equivalent fractions, adding fractions, area multiplication, and percentages.",
+    tags: ["classroom", "visual maths", "structure of mathematics", "conceptual understanding", "fractions", "fraction division", "equivalent fractions", "area models", "percentages", "teacher training"],
+    toolPath: "tools/maths-structure-lab/index.html?v=maths-structure-lab-5",
     imported: true,
     teacherNotes: [
       "Designed for modelling why key mathematical methods work before pupils use the shortcut.",
       "Use Next Step to reveal each visual structure gradually, then connect the model to the symbolic rule.",
-      "Modes cover fraction division, equivalent fractions, adding fractions, multiplication as area, factorisation using an area model, and percentages of amounts.",
+      "Modes cover fraction division, equivalent fractions, adding fractions, multiplication as area, and percentages of amounts.",
       "Useful for intervention, teacher training, whole-class explanation, and building mathematical language around structure."
     ]
   },

@@ -231,7 +231,7 @@
 
     .mode-strip {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 8px;
       min-height: 46px;
     }
@@ -357,7 +357,9 @@
       border-radius: 8px;
       border: 1px solid rgba(47, 128, 237, 0.12);
       background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(241, 253, 250, 0.92)),
+        radial-gradient(circle at 12% 12%, rgba(255, 209, 102, 0.24), transparent 28%),
+        radial-gradient(circle at 88% 16%, rgba(24, 184, 173, 0.20), transparent 30%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(232, 252, 249, 0.94)),
         repeating-linear-gradient(135deg, rgba(47, 128, 237, 0.035) 0 1px, transparent 1px 26px);
       overflow: hidden;
     }
@@ -373,6 +375,79 @@
 
     .visual > * {
       max-width: 100%;
+    }
+
+    .structure-stage {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .structure-stage.no-equation {
+      grid-template-rows: minmax(0, 1fr);
+    }
+
+    .structure-svg {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      display: block;
+      overflow: visible;
+    }
+
+    .structure-label {
+      font-family: var(--ui-font);
+      font-weight: 950;
+      fill: #172033;
+      letter-spacing: 0;
+    }
+
+    .structure-math {
+      font-family: var(--math-font);
+      font-weight: 600;
+      fill: #172033;
+      letter-spacing: 0;
+    }
+
+    .structure-note {
+      font-family: var(--ui-font);
+      font-weight: 830;
+      fill: #40506b;
+      letter-spacing: 0;
+    }
+
+    .structure-equation {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.2em;
+      padding: 7px 12px;
+      border-radius: 8px;
+      color: #fff;
+      background: linear-gradient(135deg, #7048e8, #13aaa2 54%, #ff8a1f);
+      box-shadow: 0 12px 28px rgba(22, 33, 63, 0.16);
+      font-family: var(--math-font);
+      font-size: clamp(1.05rem, 1.65vw, 1.5rem);
+      font-weight: 650;
+      line-height: 1.15;
+      text-align: center;
+    }
+
+    .structure-equation.quiet {
+      color: #172033;
+      background: linear-gradient(135deg, rgba(255, 209, 102, 0.38), rgba(24, 184, 173, 0.18));
+      border: 1px solid rgba(24, 184, 173, 0.28);
+      box-shadow: none;
+    }
+
+    .reveal-stage {
+      transform-origin: center;
     }
 
     .math {
@@ -1083,7 +1158,8 @@
     .model-card.step-animating .bar,
     .model-card.step-animating .area-cell,
     .model-card.step-animating .term-tile,
-    .model-card.step-animating .balance-tile {
+    .model-card.step-animating .balance-tile,
+    .model-card.step-animating .reveal-stage {
       animation: structureReveal 3000ms ease-out both;
     }
 
@@ -1200,7 +1276,8 @@
       .model-card.step-animating .bar,
       .model-card.step-animating .area-cell,
       .model-card.step-animating .term-tile,
-      .model-card.step-animating .balance-tile {
+      .model-card.step-animating .balance-tile,
+      .model-card.step-animating .reveal-stage {
         animation: none;
       }
     }
@@ -1338,7 +1415,7 @@
   </main>
 
   <script>
-    const modes = [
+    const allModes = [
       {
         id: "fractionDivision",
         label: "Fraction Division",
@@ -1460,24 +1537,24 @@
             steps: [
               {
                 label: "Start with the same whole",
-                text: `Keep one whole fixed. First split it into ${ex.d} equal parts.`,
-                method: `${vfrac(ex.n, ex.d)}`,
+                text: "Begin with one fixed whole. The amount must stay in the same position as the parts change.",
+                method: "Same whole",
                 visual: () => equivalentVisual(ex, 0)
               },
               {
-                label: "Show the original amount",
-                text: `Shade ${ex.n} of the ${ex.d} equal parts. This is the amount that must stay the same.`,
+                label: "Partition and shade fraction 1",
+                text: `Split the whole into ${ex.d} equal parts, then shade ${ex.n} of them.`,
                 method: `${ex.n} out of ${ex.d} parts = ${vfrac(ex.n, ex.d)}`,
                 visual: () => equivalentVisual(ex, 1)
               },
               {
-                label: "Refine the whole",
-                text: `Now split each original part into ${ex.scale} smaller equal parts.`,
+                label: "Repartition the same whole",
+                text: `Keep the same shaded amount, then split each original part into ${ex.scale} smaller equal parts.`,
                 method: `${ex.d} &times; ${ex.scale} = ${ex.d * ex.scale} parts`,
                 visual: () => equivalentVisual(ex, 2)
               },
               {
-                label: "Count the refined shaded parts",
+                label: "Count fraction 2",
                 text: `Each shaded part becomes ${ex.scale} shaded smaller parts.`,
                 method: `${ex.n} &times; ${ex.scale} = ${ex.n * ex.scale}`,
                 visual: () => equivalentVisual(ex, 3)
@@ -1527,27 +1604,27 @@
             prompt: `${vfrac(ex.a, ex.b)} + ${vfrac(ex.c, ex.d)}`,
             steps: [
               {
-                label: "See the problem",
-                text: "The two fractions use different-sized parts, so they cannot be counted together yet.",
+                label: "Start with two equal wholes",
+                text: "Use two bars of the same size so each fraction is measured against the same whole.",
                 method: `${vfrac(ex.a, ex.b)} + ${vfrac(ex.c, ex.d)}`,
                 visual: () => addingVisual(ex, 0)
               },
               {
-                label: "Choose common parts",
-                text: `Use ${common} equal parts so both fractions are measured using the same unit size.`,
-                method: `Common denominator = ${common}`,
+                label: "Show the first fraction",
+                text: `Partition the first whole into ${ex.b} equal parts and shade ${ex.a}.`,
+                method: `${vfrac(ex.a, ex.b)}`,
                 visual: () => addingVisual(ex, 1)
               },
               {
-                label: "Convert the first fraction",
-                text: `Rewrite ${vfrac(ex.a, ex.b)} using ${common} equal parts.`,
-                method: `${vfrac(ex.a, ex.b)} = ${vfrac(left, common)}`,
+                label: "Show the second fraction",
+                text: `Partition the second whole into ${ex.d} equal parts and shade ${ex.c}.`,
+                method: `${vfrac(ex.c, ex.d)}`,
                 visual: () => addingVisual(ex, 2)
               },
               {
-                label: "Convert the second fraction",
-                text: `Rewrite ${vfrac(ex.c, ex.d)} using the same ${common} equal parts.`,
-                method: `${vfrac(ex.c, ex.d)} = ${vfrac(right, common)}`,
+                label: "Use common parts",
+                text: `Repartition both bars into ${common} equal parts so the shaded parts can be counted together.`,
+                method: `${vfrac(ex.a, ex.b)} = ${vfrac(left, common)}, ${vfrac(ex.c, ex.d)} = ${vfrac(right, common)}`,
                 visual: () => addingVisual(ex, 3)
               },
               {
@@ -1559,7 +1636,9 @@
               {
                 label: "Write the result",
                 text: "The denominator stays the same because the unit size has not changed.",
-                method: `${vfrac(left, common)} + ${vfrac(right, common)} = ${vfrac(sum, common)} = ${simplified}`,
+                method: g > 1
+                  ? `${vfrac(left, common)} + ${vfrac(right, common)} = ${vfrac(sum, common)} = ${simplified}`
+                  : `${vfrac(left, common)} + ${vfrac(right, common)} = ${vfrac(sum, common)}`,
                 visual: () => addingVisual(ex, 5)
               }
             ]
@@ -1622,16 +1701,34 @@
                 visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 3)
               },
               {
-                label: "Find each area",
-                text: "Calculate each smaller rectangle area.",
-                method: `${aT}&times;${bT}, ${aT}&times;${bO}, ${aO}&times;${bT}, ${aO}&times;${bO}`,
+                label: "Find the first area",
+                text: "Reveal the first partial product only. This keeps the structure visible.",
+                method: `${aT} &times; ${bT} = ${aT * bT}`,
                 visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 4)
+              },
+              {
+                label: "Find the second area",
+                text: "Move to the next smaller rectangle and calculate its area.",
+                method: `${aT} &times; ${bO} = ${aT * bO}`,
+                visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 5)
+              },
+              {
+                label: "Find the third area",
+                text: "Every row part must multiply every column part.",
+                method: `${aO} &times; ${bT} = ${aO * bT}`,
+                visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 6)
+              },
+              {
+                label: "Find the fourth area",
+                text: "Reveal the final small rectangle before adding the parts.",
+                method: `${aO} &times; ${bO} = ${aO * bO}`,
+                visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 7)
               },
               {
                 label: "Add the partial products",
                 text: "The whole product is the sum of all the smaller rectangle areas.",
                 method: `${aT * bT} + ${aT * bO} + ${aO * bT} + ${aO * bO} = ${ex.a * ex.b}`,
-                visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 5)
+                visual: () => areaVisual({ ...ex, aT, aO, bT, bO }, 8)
               }
             ]
           };
@@ -1742,38 +1839,46 @@
               {
                 label: "Split the whole",
                 text: `Split 100% into ${ex.parts} equal parts so the target percentage is easy to count.`,
-                method: `${100 / ex.parts}% each`,
+                method: `${ex.parts} equal parts`,
                 visual: () => percentVisual(model, 1)
               },
               {
-                label: "Find each part",
-                text: `Each ${100 / ex.parts}% part is worth ${onePart}.`,
-                method: `${100 / ex.parts}% = ${onePart}`,
+                label: "Label each percentage part",
+                text: `Each equal part is ${100 / ex.parts}% of the whole.`,
+                method: `${100}% &divide; ${ex.parts} = ${100 / ex.parts}%`,
                 visual: () => percentVisual(model, 2)
+              },
+              {
+                label: "Find the value of each part",
+                text: `Since ${ex.amount} is the whole, each ${100 / ex.parts}% part is worth ${onePart}.`,
+                method: `${ex.amount} &divide; ${ex.parts} = ${onePart}`,
+                visual: () => percentVisual(model, 3)
               },
               {
                 label: "Shade the target percent",
                 text: `${ex.p}% is ${ex.shaded} of those equal parts.`,
                 method: `${ex.shaded} &times; ${onePart} = ${answer}`,
-                visual: () => percentVisual(model, 3)
+                visual: () => percentVisual(model, 4)
               },
               {
                 label: "Count the shaded values",
                 text: `Each shaded part is worth ${onePart}, so count ${ex.shaded} equal values.`,
                 method: `${Array(ex.shaded).fill(onePart).join(" + ")} = ${answer}`,
-                visual: () => percentVisual(model, 4)
+                visual: () => percentVisual(model, 5)
               },
               {
                 label: "Write the result",
                 text: "The model shows the part of the whole that the percentage represents.",
                 method: `${ex.p}% of ${ex.amount} = ${answer}`,
-                visual: () => percentVisual(model, 5)
+                visual: () => percentVisual(model, 6)
               }
             ]
           };
         }
       }
     ];
+
+    const modes = allModes.filter((mode) => mode.id !== "factorisation");
 
     let currentModeId = modes[0].id;
     let currentExample = null;
@@ -1903,200 +2008,215 @@
       animTimer = setTimeout(() => card.classList.remove("step-animating"), 3100);
     }
 
-    function divisionMiniPieces(total, active = 0) {
+    function safeText(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function visualStage(svgContent, equation = "", tone = "") {
       return `
-        <div class="mini-pieces" style="--mini-parts:${total}">
-          ${Array.from({ length: total }, (_, index) => `<span class="mini-piece ${index < active ? "active" : ""}"></span>`).join("")}
+        <div class="structure-stage ${equation ? "" : "no-equation"}">
+          <svg class="structure-svg" viewBox="0 0 1000 610" role="img" aria-hidden="true">
+            ${svgContent}
+          </svg>
+          ${equation ? `<div class="structure-equation ${tone}">${equation}</div>` : ""}
         </div>
       `;
     }
 
-    function divisionCallout(ex, stage) {
-      const divisor = vfrac(ex.num, ex.denom);
-      const messages = [
-        {
-          title: "Meaning before method",
-          body: `Ask: how many ${divisor} groups can be measured from ${ex.whole} whole units?`
-        },
-        {
-          title: "The denominator creates the unit",
-          body: `We split into ${partName(ex.denom)} because the divisor is written in ${partName(ex.denom)}.`
-        },
-        {
-          title: "The numerator creates the group",
-          body: `${countParts(ex.num, ex.denom)} make one copy of ${divisor}. Now count copies of that group.`
-        },
-        {
-          title: "Leftovers can still combine",
-          body: `The unused pieces from each whole are not thrown away; they are pooled and grouped again.`
-        },
-        {
-          title: "Count complete divisor groups first",
-          body: `${ex.baseGroups} groups from the wholes plus ${ex.extraGroups} regrouped group${ex.extraGroups === 1 ? "" : "s"} gives ${ex.groups}.`
-        },
-        {
-          title: "The key conceptual bridge",
-          body: `The leftover is compared with the divisor group: ${countParts(ex.remainder, ex.denom)} out of ${countParts(ex.num, ex.denom)}.`
-        },
-        {
-          title: "The answer is a count of groups",
-          body: `${ex.groups} full group${ex.groups === 1 ? "" : "s"} and ${simplifiedFraction(ex.remainder, ex.num)} of the next group.`
-        },
-        {
-          title: "Then connect to the efficient rule",
-          body: `The reciprocal method is now a summary of the grouping model, not a trick.`
+    function svgText(text, x, y, size = 24, extra = "") {
+      return `<text class="structure-label" x="${x}" y="${y}" font-size="${size}" ${extra}>${safeText(text)}</text>`;
+    }
+
+    function svgNote(text, x, y, size = 20, extra = "") {
+      return `<text class="structure-note" x="${x}" y="${y}" font-size="${size}" ${extra}>${safeText(text)}</text>`;
+    }
+
+    function drawSvgBar(x, y, width, height, parts, options = {}) {
+      const {
+        shadeA = 0,
+        shadeB = 0,
+        fillA = "#14b8a6",
+        fillB = "#f97316",
+        labels = [],
+        stroke = "#172033",
+        splitStroke = "#9fb6c8"
+      } = options;
+      const partWidth = width / parts;
+      let output = "";
+      for (let i = 0; i < parts; i++) {
+        const isA = i < shadeA;
+        const isB = !isA && i < shadeA + shadeB;
+        const fill = isA ? fillA : isB ? fillB : "#ffffff";
+        const opacity = isA || isB ? 0.72 : 1;
+        output += `<rect x="${x + i * partWidth}" y="${y}" width="${partWidth}" height="${height}" fill="${fill}" fill-opacity="${opacity}" stroke="${splitStroke}" stroke-width="1.6" />`;
+        const label = labels[i];
+        if (label) {
+          if (Array.isArray(label)) {
+            label.forEach((line, lineIndex) => {
+              output += `<text class="structure-label" x="${x + i * partWidth + partWidth / 2}" y="${y + height / 2 - 8 + lineIndex * 25}" text-anchor="middle" font-size="19">${safeText(line)}</text>`;
+            });
+          } else {
+            output += `<text class="structure-label" x="${x + i * partWidth + partWidth / 2}" y="${y + height / 2 + 7}" text-anchor="middle" font-size="22">${safeText(label)}</text>`;
+          }
         }
-      ];
-      return messages[Math.min(stage, messages.length - 1)];
+      }
+      output += `<rect x="${x}" y="${y}" width="${width}" height="${height}" rx="10" fill="none" stroke="${stroke}" stroke-width="5" />`;
+      return output;
     }
 
     function fractionDivisionVisual(ex, stage) {
-      const callout = divisionCallout(ex, stage);
-      const wholeCards = Array.from({ length: ex.whole }, (_, wholeIndex) => {
-        if (stage === 0) {
-          return `<div class="division-whole-card unsplit"><span class="whole-label">1</span></div>`;
-        }
-        const units = Array.from({ length: ex.denom }, (_, unitIndex) => {
-          const isFit = stage >= 2 && unitIndex < ex.groupsPerWhole * ex.num;
-          const groupInWhole = Math.floor(unitIndex / ex.num);
-          const posInGroup = unitIndex % ex.num;
-          const isLeftover = stage >= 2 && unitIndex >= ex.groupsPerWhole * ex.num;
-          const groupNumber = wholeIndex * ex.groupsPerWhole + groupInWhole + 1;
-          const color = groupColors[(groupNumber - 1) % groupColors.length];
-          const fitStart = isFit && posInGroup === 0 ? "fit-start" : "";
-          const fitEnd = isFit && posInGroup === ex.num - 1 ? "fit-end" : "";
-          const badge = stage >= 2 && isFit && posInGroup === 0 ? `<span class="division-badge">${groupNumber}</span>` : "";
-          const unitLabel = stage === 1 && unitIndex === 0 ? `<span class="division-unit-label">${vfrac(1, ex.denom)}</span>` : "";
-          return `
-            <span class="division-unit ${isFit ? "fit" : ""} ${fitStart} ${fitEnd} ${isLeftover ? "leftover" : ""} ${isLeftover && stage >= 3 ? "collected" : ""}" style="--group-color:${color}">
-              ${badge || unitLabel}
-            </span>
-          `;
-        }).join("");
-        return `<div class="division-whole-card" style="--denom:${ex.denom}">${units}</div>`;
-      }).join("");
-      const sideCards = [
-        stage === 0 ? `
-          <div class="division-side-card">
-            <strong>Meaning</strong>
-            <span>Start with groups that fit before introducing a rule.</span>
-          </div>
-        ` : "",
-        stage >= 1 ? `
-          <div class="division-side-card">
-            <strong>Unit size</strong>
-            <span>Each small part is ${vfrac(1, ex.denom)} of a whole.</span>
-            ${divisionMiniPieces(ex.denom, 1)}
-          </div>
-        ` : "",
-        stage >= 2 ? `
-          <div class="division-side-card">
-            <strong>Divisor size</strong>
-            <span class="big-side-math">${vfrac(ex.num, ex.denom)}</span>
-            <span>${countParts(ex.num, ex.denom)} make one divisor group.</span>
-            ${divisionMiniPieces(ex.denom, ex.num)}
-          </div>
-        ` : "",
-        stage >= 5 ? `
-          <div class="division-side-card">
-            <strong>Leftover meaning</strong>
-            <span>${countParts(ex.remainder, ex.denom)} is ${simplifiedFraction(ex.remainder, ex.num)} of the divisor group.</span>
-          </div>
-        ` : ""
-      ].join("");
-      const leftoverTitle = stage >= 4
-        ? `${countParts(ex.leftoverPieces, ex.denom)} regroup into ${ex.extraGroups} more complete group${ex.extraGroups === 1 ? "" : "s"}${ex.remainder ? `, with ${countParts(ex.remainder, ex.denom)} left` : ""}.`
-        : `Pool the unused ${partName(ex.denom)} from the wholes.`;
-      const leftoverPool = stage >= 3 && ex.leftoverPieces ? `
-        <div class="leftover-stage">
-          <div class="leftover-title">${leftoverTitle}</div>
-          <div class="leftover-pool">
-            ${Array.from({ length: ex.leftoverPieces }, (_, index) => {
-              const extraGroupIndex = Math.floor(index / ex.num);
-              const posInGroup = index % ex.num;
-              const inExtraGroup = index < ex.extraGroups * ex.num;
-              const finalLeftover = !inExtraGroup;
-              const groupStart = inExtraGroup && posInGroup === 0 ? "group-start" : "";
-              const groupEnd = inExtraGroup && posInGroup === ex.num - 1 ? "group-end" : "";
-              const badge = stage >= 4 && inExtraGroup && posInGroup === 0
-                ? `<span class="division-badge">${ex.baseGroups + extraGroupIndex + 1}</span>`
-                : "";
-              return `<span class="leftover-chip ${inExtraGroup ? "extra-group" : ""} ${groupStart} ${groupEnd} ${finalLeftover && stage >= 5 ? "final-leftover" : ""}">${badge}</span>`;
-            }).join("")}
-          </div>
-        </div>
-      ` : "";
-      const leftoverRelationship = stage >= 5 ? `
-        <div class="leftover-relationship">
-          <div class="relationship-card">
-            <strong>Divisor group</strong>
-            <span>${vfrac(ex.num, ex.denom)} = ${countParts(ex.num, ex.denom)}</span>
-          </div>
-          <div class="relationship-arrow">=&gt;</div>
-          <div class="relationship-card">
-            <strong>Left over</strong>
-            <span>${countParts(ex.remainder, ex.denom)} is ${simplifiedFraction(ex.remainder, ex.num)} of a group</span>
-          </div>
-        </div>
-      ` : "";
-      const resultRow = stage >= 4 ? `
-        <div class="result-row">
-          <span class="result-pill">${ex.baseGroups}</span>
-          <span class="big-equation">+</span>
-          <span class="result-pill">${ex.extraGroups}</span>
-          ${stage >= 6 && ex.remainder ? `<span class="big-equation">+</span><span class="result-pill">${simplifiedFraction(ex.remainder, ex.num)}</span>` : ""}
-          <span class="big-equation">=</span>
-          <span class="result-pill">${stage >= 6 ? ex.answer : ex.groups}</span>
-        </div>
-      ` : "";
-      const finalLine = stage >= 6 ? `
-        <div class="division-final-line">
-          ${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${ex.answer}
-        </div>
-      ` : "";
-      const countLine = stage >= 7 ? `
-        <div class="division-count-line">
-          ${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${ex.whole} &times; ${vfrac(ex.denom, ex.num)} = ${ex.answer}
-        </div>
-      ` : "";
-      return `
-        <div class="fraction-division-model">
-          <div class="division-presenter-note">
-            <strong>${callout.title}</strong>
-            <span>${callout.body}</span>
-          </div>
-          <div class="division-explain-grid">
-            <div class="division-stage">
-              <div class="division-wholes" style="--whole-count:${Math.min(ex.whole, 6)}">${wholeCards}</div>
-            </div>
-            <div class="division-side-panel">${sideCards}</div>
-          </div>
-          ${leftoverPool}
-          ${leftoverRelationship}
-          ${resultRow}
-          ${finalLine}
-          ${countLine}
-        </div>
+      const notes = [
+        "Start with the whole amount: count how many divisor-sized groups fit.",
+        `Split each whole into ${ex.denom} equal parts because the divisor uses ${partName(ex.denom)}.`,
+        `${ex.num} of those parts make one divisor group.`,
+        "Pool the unused pieces so they can form more divisor-sized groups.",
+        "Count complete groups first.",
+        "Compare the leftover with the divisor group, not with one whole.",
+        "State the quotient as complete groups plus any part of the next group.",
+        "The reciprocal rule is the symbolic summary of the same grouping."
+      ];
+      const wholeCount = Math.min(ex.whole, 6);
+      const gap = 14;
+      const wholeW = Math.min(126, (850 - (wholeCount - 1) * gap) / wholeCount);
+      const wholeH = 86;
+      const x0 = (1000 - (wholeCount * wholeW + (wholeCount - 1) * gap)) / 2;
+      const y0 = 96;
+      let svg = `
+        ${svgNote(notes[Math.min(stage, notes.length - 1)], 500, 42, 24, 'text-anchor="middle"')}
+        ${svgText(`${ex.whole} whole${ex.whole === 1 ? "" : "s"}`, x0, y0 - 18, 20)}
       `;
+
+      for (let wholeIndex = 0; wholeIndex < wholeCount; wholeIndex++) {
+        const x = x0 + wholeIndex * (wholeW + gap);
+        if (stage === 0) {
+          svg += `
+            <rect class="reveal-stage" x="${x}" y="${y0}" width="${wholeW}" height="${wholeH}" rx="12" fill="#fff" stroke="#172033" stroke-width="5" />
+            ${svgText("1", x + wholeW / 2, y0 + wholeH / 2 + 11, 34, 'text-anchor="middle"')}
+          `;
+          continue;
+        }
+        const partW = wholeW / ex.denom;
+        for (let part = 0; part < ex.denom; part++) {
+          const groupableLimit = ex.groupsPerWhole * ex.num;
+          const isGrouped = stage >= 2 && part < groupableLimit;
+          const isLeftover = stage >= 3 && part >= groupableLimit;
+          const fill = isGrouped ? groupColors[(wholeIndex * ex.groupsPerWhole + Math.floor(part / ex.num)) % groupColors.length] : isLeftover ? "#ffd7aa" : "#fff";
+          svg += `<rect x="${x + part * partW}" y="${y0}" width="${partW}" height="${wholeH}" fill="${fill}" fill-opacity="${isGrouped ? 0.84 : 1}" stroke="#9fb6c8" stroke-width="1.6" />`;
+        }
+        svg += `<rect x="${x}" y="${y0}" width="${wholeW}" height="${wholeH}" rx="12" fill="none" stroke="#172033" stroke-width="5" />`;
+        if (stage === 1) {
+          svg += svgText(`1/${ex.denom}`, x + partW / 2, y0 + wholeH / 2 + 8, 19, 'text-anchor="middle"');
+        }
+        if (stage >= 2) {
+          for (let group = 0; group < ex.groupsPerWhole; group++) {
+            const gx = x + group * ex.num * partW;
+            const groupNumber = wholeIndex * ex.groupsPerWhole + group + 1;
+            svg += `
+              <rect class="reveal-stage" x="${gx + 3}" y="${y0 + 8}" width="${ex.num * partW - 6}" height="${wholeH - 16}" rx="10" fill="none" stroke="#172033" stroke-width="4" />
+              <circle cx="${gx + (ex.num * partW) / 2}" cy="${y0 + wholeH / 2}" r="17" fill="#172033" />
+              ${svgText(groupNumber, gx + (ex.num * partW) / 2, y0 + wholeH / 2 + 7, 20, 'text-anchor="middle" style="fill:#fff;"')}
+            `;
+          }
+        }
+      }
+
+      if (stage >= 3 && ex.leftoverPieces) {
+        const pieceGap = 7;
+        const pieceW = Math.min(44, (760 - (ex.leftoverPieces - 1) * pieceGap) / ex.leftoverPieces);
+        const poolW = ex.leftoverPieces * pieceW + (ex.leftoverPieces - 1) * pieceGap;
+        const px0 = (1000 - poolW) / 2;
+        const py = 245;
+        svg += `
+          <g class="reveal-stage">
+            ${svgText("Pool the unused pieces", 500, py - 22, 22, 'text-anchor="middle"')}
+        `;
+        for (let i = 0; i < ex.leftoverPieces; i++) {
+          const inExtraGroup = stage >= 4 && i < ex.extraGroups * ex.num;
+          const isRemainder = stage >= 5 && i >= ex.extraGroups * ex.num;
+          const fill = inExtraGroup ? "#22c55e" : isRemainder ? "#fb7185" : "#ffd7aa";
+          svg += `<rect x="${px0 + i * (pieceW + pieceGap)}" y="${py}" width="${pieceW}" height="46" rx="9" fill="${fill}" fill-opacity="0.84" stroke="#172033" stroke-width="3" />`;
+        }
+        if (stage >= 4) {
+          for (let group = 0; group < ex.extraGroups; group++) {
+            const gx = px0 + group * ex.num * (pieceW + pieceGap) - 4;
+            const groupW = ex.num * pieceW + (ex.num - 1) * pieceGap + 8;
+            svg += `<rect x="${gx}" y="${py - 6}" width="${groupW}" height="58" rx="12" fill="none" stroke="#15803d" stroke-width="5" />`;
+          }
+        }
+        svg += "</g>";
+      }
+
+      if (stage >= 5) {
+        const compareY = 375;
+        const divisorX = 255;
+        const leftoverX = 625;
+        const miniW = 44;
+        svg += `
+          <g class="reveal-stage">
+            ${svgText("One divisor group", divisorX + ex.num * miniW / 2, compareY - 24, 22, 'text-anchor="middle"')}
+        `;
+        for (let i = 0; i < ex.num; i++) {
+          svg += `<rect x="${divisorX + i * miniW}" y="${compareY}" width="${miniW}" height="48" fill="#14b8a6" fill-opacity="0.78" stroke="#172033" stroke-width="3" />`;
+        }
+        svg += svgText("left over", leftoverX + Math.max(1, ex.remainder) * miniW / 2, compareY - 24, 22, 'text-anchor="middle"');
+        for (let i = 0; i < Math.max(1, ex.remainder); i++) {
+          svg += `<rect x="${leftoverX + i * miniW}" y="${compareY}" width="${miniW}" height="48" fill="${ex.remainder ? "#fb7185" : "#e5e7eb"}" fill-opacity="0.82" stroke="#172033" stroke-width="3" />`;
+        }
+        svg += svgText(`${ex.remainder} out of ${ex.num}`, 500, compareY + 105, 24, 'text-anchor="middle"');
+        svg += "</g>";
+      }
+
+      let equation = stage >= 7
+        ? `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${ex.whole} &times; ${vfrac(ex.denom, ex.num)} = ${ex.answer}`
+        : stage >= 6
+          ? `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)} = ${ex.answer}`
+          : stage >= 5
+            ? `${countParts(ex.remainder, ex.denom)} out of ${countParts(ex.num, ex.denom)} = ${simplifiedFraction(ex.remainder, ex.num)} of a group`
+            : stage >= 4
+              ? `${ex.baseGroups} + ${ex.extraGroups} = ${ex.groups} complete groups`
+              : stage >= 2
+                ? `${vfrac(ex.num, ex.denom)} = ${countParts(ex.num, ex.denom)}`
+                : stage >= 1
+                  ? `${ex.whole} wholes = ${ex.totalPieces} ${partName(ex.denom)}`
+                  : `${ex.whole} &divide; ${vfrac(ex.num, ex.denom)}`;
+      return visualStage(svg, equation);
     }
 
     function equivalentVisual(ex, stage) {
       const refinedParts = ex.d * ex.scale;
-      return `
-        <div class="bar-stack">
-          <div class="bar-line">
-            <div class="bar-label">Original</div>
-            ${bar(ex.d, stage >= 1 ? ex.n : 0, 0, true)}
-          </div>
-          ${stage >= 2 ? `
-            <div class="bar-line">
-              <div class="bar-label">Refined</div>
-              ${bar(refinedParts, stage >= 3 ? ex.n * ex.scale : 0, 0, true)}
-            </div>
-          ` : ""}
-          <div class="big-equation">${stage >= 4 ? `${vfrac(ex.n, ex.d)} = ${vfrac(ex.n * ex.scale, refinedParts)}` : stage >= 3 ? `${ex.n * ex.scale} shaded parts out of ${refinedParts}` : "The same whole is being repartitioned."}</div>
-        </div>
+      const x = 170;
+      const w = 660;
+      const h = 86;
+      let svg = `
+        ${svgNote("The whole stays fixed. Only the partition changes.", 500, 45, 24, 'text-anchor="middle"')}
+        ${svgText("Fraction 1", 115, 152, 22, 'text-anchor="middle"')}
+        ${drawSvgBar(x, 105, w, h, stage >= 1 ? ex.d : 1, { shadeA: stage >= 1 ? ex.n : 0, fillA: "#14b8a6" })}
       `;
+      if (stage >= 2) {
+        svg += `
+          <g class="reveal-stage">
+            ${svgText("Fraction 2", 115, 315, 22, 'text-anchor="middle"')}
+            ${drawSvgBar(x, 268, w, h, refinedParts, { shadeA: stage >= 3 ? ex.n * ex.scale : 0, fillA: "#f97316" })}
+          </g>
+        `;
+      }
+      if (stage >= 3) {
+        svg += svgText(`${ex.n * ex.scale} shaded parts out of ${refinedParts}`, 500, 418, 26, 'text-anchor="middle"');
+      }
+      const equation = stage >= 4
+        ? `${vfrac(ex.n, ex.d)} = ${vfrac(ex.n * ex.scale, refinedParts)}`
+        : stage >= 3
+          ? `${ex.n} &times; ${ex.scale} = ${ex.n * ex.scale}`
+          : stage >= 2
+            ? `${ex.d} &times; ${ex.scale} = ${refinedParts} equal parts`
+            : stage >= 1
+              ? `${ex.n} out of ${ex.d} parts`
+              : "One fixed whole";
+      return visualStage(svg, equation, stage >= 4 ? "" : "quiet");
     }
 
     function addingVisual(ex, stage) {
@@ -2104,58 +2224,98 @@
       const left = ex.a * (common / ex.b);
       const right = ex.c * (common / ex.d);
       const sum = left + right;
-      return `
-        <div class="bar-stack">
-          <div class="bar-line">
-            <div class="bar-label">${vfrac(ex.a, ex.b)}</div>
-            ${stage >= 1 ? bar(common, stage >= 2 ? left : 0, 0, true) : bar(ex.b, ex.a, 0, true)}
-          </div>
-          <div class="bar-line">
-            <div class="bar-label">${vfrac(ex.c, ex.d)}</div>
-            ${stage >= 1 ? bar(common, 0, stage >= 3 ? right : 0, true) : bar(ex.d, ex.c, 0, true)}
-          </div>
-          ${stage >= 4 ? `
-            <div class="bar-line">
-              <div class="bar-label">Together</div>
-              ${bar(common, left, right, true)}
-            </div>
-          ` : ""}
-          <div class="big-equation">${stage >= 5 ? `${vfrac(left, common)} + ${vfrac(right, common)} = ${vfrac(sum, common)}` : stage >= 4 ? `${left} + ${right} = ${sum}` : `Common parts: ${common}`}</div>
-        </div>
+      const x = 178;
+      const w = 650;
+      const h = 66;
+      let svg = `
+        ${svgNote("Keep the wholes the same size, then create common parts.", 500, 42, 24, 'text-anchor="middle"')}
+        ${svgText("First fraction", 94, 128, 20, 'text-anchor="middle"')}
+        ${drawSvgBar(x, 92, w, h, stage >= 3 ? common : stage >= 1 ? ex.b : 1, { shadeA: stage >= 3 ? left : stage >= 1 ? ex.a : 0, fillA: "#14b8a6" })}
+        ${svgText("Second fraction", 94, 235, 20, 'text-anchor="middle"')}
+        ${drawSvgBar(x, 200, w, h, stage >= 3 ? common : stage >= 2 ? ex.d : 1, { shadeA: stage >= 3 ? right : stage >= 2 ? ex.c : 0, fillA: "#f97316" })}
       `;
-    }
-
-    function bar(parts, shadedA, shadedB = 0, labels = false) {
-      const cells = [];
-      for (let i = 0; i < parts; i++) {
-        const a = i < shadedA;
-        const b = i >= shadedA && i < shadedA + shadedB;
-        const cls = a && b ? "shaded-both" : a ? "shaded-a" : b ? "shaded-b" : "";
-        cells.push(`<span class="bar-part ${cls}">${labels && cls ? "" : ""}</span>`);
+      if (stage >= 4) {
+        svg += `
+          <g class="reveal-stage">
+            ${svgText("Together", 94, 357, 20, 'text-anchor="middle"')}
+            ${drawSvgBar(x, 320, w, h, common, { shadeA: left, shadeB: right, fillA: "#14b8a6", fillB: "#f97316" })}
+            ${svgText(`${left} + ${right} = ${sum} common parts`, 500, 425, 24, 'text-anchor="middle"')}
+          </g>
+        `;
       }
-      return `<div class="bar" style="--parts:${parts}">${cells.join("")}</div>`;
+      const equation = stage >= 5
+        ? `${vfrac(left, common)} + ${vfrac(right, common)} = ${vfrac(sum, common)}`
+        : stage >= 4
+          ? `${left} + ${right} = ${sum}`
+          : stage >= 3
+            ? `Common denominator = ${common}`
+            : stage >= 2
+              ? `${vfrac(ex.c, ex.d)}`
+              : stage >= 1
+                ? `${vfrac(ex.a, ex.b)}`
+                : "Two equal wholes";
+      return visualStage(svg, equation, stage >= 5 ? "" : "quiet");
     }
 
     function areaVisual(ex, stage) {
-      const entries = [
-        { cls: "area-head", value: stage >= 2 ? ex.bT : "" },
-        { cls: "area-head", value: stage >= 2 ? ex.bO : "" },
-        { cls: "area-side", value: stage >= 1 ? ex.aT : "" },
-        { cls: "area-cell", value: stage >= 4 ? ex.aT * ex.bT : "" },
-        { cls: "area-cell", value: stage >= 4 ? ex.aT * ex.bO : "" },
-        { cls: "area-side", value: stage >= 1 ? ex.aO : "" },
-        { cls: "area-cell", value: stage >= 4 ? ex.aO * ex.bT : "" },
-        { cls: "area-cell", value: stage >= 4 ? ex.aO * ex.bO : "" }
+      const x = 218;
+      const y = 106;
+      const w = 570;
+      const h = 330;
+      const col1 = 390;
+      const row1 = 220;
+      const cells = [
+        { x, y, w: col1, h: row1, color: "#14b8a6", product: ex.aT * ex.bT, factors: `${ex.aT} × ${ex.bT}`, reveal: 4 },
+        { x: x + col1, y, w: w - col1, h: row1, color: "#f97316", product: ex.aT * ex.bO, factors: `${ex.aT} × ${ex.bO}`, reveal: 5 },
+        { x, y: y + row1, w: col1, h: h - row1, color: "#7048e8", product: ex.aO * ex.bT, factors: `${ex.aO} × ${ex.bT}`, reveal: 6 },
+        { x: x + col1, y: y + row1, w: w - col1, h: h - row1, color: "#facc15", product: ex.aO * ex.bO, factors: `${ex.aO} × ${ex.bO}`, reveal: 7 }
       ];
-      return `
-        <div class="area-layout">
-          <div class="area-grid">
-            <div class="area-corner"></div>
-            ${entries.map((item) => `<div class="${item.cls}">${item.value}</div>`).join("")}
-          </div>
-          <div class="big-equation">${stage >= 5 ? `${ex.a} &times; ${ex.b} = ${ex.a * ex.b}` : stage >= 4 ? `${ex.aT * ex.bT} + ${ex.aT * ex.bO} + ${ex.aO * ex.bT} + ${ex.aO * ex.bO}` : stage >= 3 ? "Four partial-product sections" : "Partition the rectangle before calculating."}</div>
-        </div>
+      let svg = `
+        ${svgNote("Partition the rectangle, then reveal each partial product one at a time.", 500, 42, 24, 'text-anchor="middle"')}
+        <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="12" fill="#fff" stroke="#172033" stroke-width="5" />
       `;
+      if (stage >= 1) {
+        svg += `
+          <line class="reveal-stage" x1="${x}" y1="${y + row1}" x2="${x + w}" y2="${y + row1}" stroke="#172033" stroke-width="4" />
+          ${svgText(ex.aT, x - 44, y + row1 / 2 + 8, 26, 'text-anchor="middle"')}
+          ${svgText(ex.aO, x - 44, y + row1 + (h - row1) / 2 + 8, 26, 'text-anchor="middle"')}
+        `;
+      }
+      if (stage >= 2) {
+        svg += `
+          <line class="reveal-stage" x1="${x + col1}" y1="${y}" x2="${x + col1}" y2="${y + h}" stroke="#172033" stroke-width="4" />
+          ${svgText(ex.bT, x + col1 / 2, y - 22, 26, 'text-anchor="middle"')}
+          ${svgText(ex.bO, x + col1 + (w - col1) / 2, y - 22, 26, 'text-anchor="middle"')}
+        `;
+      }
+      if (stage >= 3) {
+        cells.forEach((cell) => {
+          svg += `<rect class="reveal-stage" x="${cell.x + 4}" y="${cell.y + 4}" width="${cell.w - 8}" height="${cell.h - 8}" rx="10" fill="${cell.color}" fill-opacity="0.16" stroke="${cell.color}" stroke-width="2" />`;
+        });
+      }
+      cells.forEach((cell) => {
+        if (stage >= cell.reveal) {
+          svg += `
+            <g class="reveal-stage">
+              <rect x="${cell.x + 10}" y="${cell.y + 10}" width="${cell.w - 20}" height="${cell.h - 20}" rx="12" fill="${cell.color}" fill-opacity="0.72" stroke="#172033" stroke-width="3" />
+              ${svgText(cell.factors, cell.x + cell.w / 2, cell.y + cell.h / 2 - 8, 25, 'text-anchor="middle"')}
+              ${svgText(`= ${cell.product}`, cell.x + cell.w / 2, cell.y + cell.h / 2 + 28, 25, 'text-anchor="middle"')}
+            </g>
+          `;
+        }
+      });
+      const equation = stage >= 8
+        ? `${ex.a} &times; ${ex.b} = ${ex.aT * ex.bT} + ${ex.aT * ex.bO} + ${ex.aO * ex.bT} + ${ex.aO * ex.bO} = ${ex.a * ex.b}`
+        : stage >= 4
+          ? cells.filter((cell) => stage >= cell.reveal).map((cell) => cell.product).join(" + ")
+          : stage >= 3
+            ? "Four partial-product sections"
+            : stage >= 2
+              ? `${ex.b} = ${ex.bT} + ${ex.bO}`
+              : stage >= 1
+                ? `${ex.a} = ${ex.aT} + ${ex.aO}`
+                : `${ex.a} &times; ${ex.b}`;
+      return visualStage(svg, equation, stage >= 8 ? "" : "quiet");
     }
 
     function factorVisual(ex, stage) {
@@ -2182,25 +2342,53 @@
     }
 
     function percentVisual(ex, stage) {
-      return `
-        <div class="bar-stack">
-          <div class="bar-line">
-            <div class="bar-label">100%</div>
-            ${stage >= 1 ? percentBar(ex, stage) : `<div class="bar" style="--parts:1"><span class="bar-part">${ex.amount}</span></div>`}
-          </div>
-          <div class="big-equation">${stage >= 5 ? `${ex.p}% of ${ex.amount} = ${ex.answer}` : stage >= 4 ? `${Array(ex.shaded).fill(ex.onePart).join(" + ")} = ${ex.answer}` : stage >= 2 ? `${100 / ex.parts}% = ${ex.onePart}` : stage >= 1 ? `${100 / ex.parts}% each` : `100% = ${ex.amount}`}</div>
-        </div>
-      `;
-    }
-
-    function percentBar(ex, stage) {
-      const cells = [];
-      for (let i = 0; i < ex.parts; i++) {
-        const shaded = stage >= 3 && i < ex.shaded;
-        const label = stage >= 2 ? `${ex.onePart}` : stage >= 1 ? `${100 / ex.parts}%` : "";
-        cells.push(`<span class="bar-part ${shaded ? "shaded-a" : ""}">${label}</span>`);
+      const x = 118;
+      const y = 220;
+      const w = 764;
+      const h = 112;
+      const partPercent = 100 / ex.parts;
+      let svg = `${svgNote("Start with the whole, then split it into useful percentage parts.", 500, 50, 24, 'text-anchor="middle"')}`;
+      if (stage === 0) {
+        svg += `
+          <rect class="reveal-stage" x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff" stroke="#172033" stroke-width="5" />
+          ${svgText("100%", x + w / 2, y - 22, 28, 'text-anchor="middle"')}
+          ${svgText(ex.amount, x + w / 2, y + h / 2 + 13, 40, 'text-anchor="middle"')}
+        `;
+      } else {
+        const cellW = w / ex.parts;
+        for (let i = 0; i < ex.parts; i++) {
+          const shaded = stage >= 4 && i < ex.shaded;
+          const fill = shaded ? "#14b8a6" : "#fff";
+          svg += `<rect x="${x + i * cellW}" y="${y}" width="${cellW}" height="${h}" fill="${fill}" fill-opacity="${shaded ? 0.78 : 1}" stroke="#9fb6c8" stroke-width="1.8" />`;
+          if (stage >= 2) {
+            svg += svgText(`${partPercent}%`, x + i * cellW + cellW / 2, y - 18, 20, 'text-anchor="middle"');
+          }
+          if (stage >= 3) {
+            svg += svgText(ex.onePart, x + i * cellW + cellW / 2, y + h / 2 + 7, 23, 'text-anchor="middle"');
+          }
+        }
+        svg += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="none" stroke="#172033" stroke-width="5" />`;
+        if (stage >= 4) {
+          svg += `<rect class="reveal-stage" x="${x + 4}" y="${y + 4}" width="${cellW * ex.shaded - 8}" height="${h - 8}" rx="12" fill="none" stroke="#0f766e" stroke-width="5" />`;
+        }
       }
-      return `<div class="bar" style="--parts:${ex.parts}">${cells.join("")}</div>`;
+      if (stage >= 5) {
+        svg += svgText(`${Array(ex.shaded).fill(ex.onePart).join(" + ")} = ${ex.answer}`, 500, 420, 30, 'text-anchor="middle"');
+      }
+      const equation = stage >= 6
+        ? `${ex.p}% of ${ex.amount} = ${ex.answer}`
+        : stage >= 5
+          ? `${Array(ex.shaded).fill(ex.onePart).join(" + ")} = ${ex.answer}`
+          : stage >= 4
+            ? `${ex.p}% is ${ex.shaded} part${ex.shaded === 1 ? "" : "s"}`
+            : stage >= 3
+              ? `${ex.amount} &divide; ${ex.parts} = ${ex.onePart}`
+              : stage >= 2
+                ? `${100}% &divide; ${ex.parts} = ${partPercent}%`
+                : stage >= 1
+                  ? `${ex.parts} equal parts`
+                  : `100% = ${ex.amount}`;
+      return visualStage(svg, equation, stage >= 6 ? "" : "quiet");
     }
 
     function balanceVisual(ex, stage) {
