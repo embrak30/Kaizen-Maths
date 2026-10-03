@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surd Structure Visualiser | Kaizen Maths</title>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <script src="../../auth-config.js?v=tool-access-guard-3"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-3"></script>
+  <style>
+    :root {
+      --ink: #16213f;
+      --muted: #64748b;
+      --line: #d8e6f0;
+      --paper: #ffffff;
+      --teal: #14b8a6;
+      --teal-dark: #087a76;
+      --blue: #2f80ed;
+      --purple: #7048e8;
+      --orange: #ff8a1f;
+      --rose: #ef476f;
+      --green: #20b26b;
+      --yellow: #ffd166;
+      --math-font: "KaTeX_Math", "KaTeX_Main", "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+      --ui-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --shadow: 0 16px 34px rgba(19, 39, 74, 0.15);
+      --soft-shadow: 0 8px 22px rgba(19, 39, 74, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      color: var(--ink);
+      font-family: var(--ui-font);
+      background:
+        radial-gradient(circle at 10% 16%, rgba(20, 184, 166, 0.16), transparent 30%),
+        radial-gradient(circle at 86% 78%, rgba(255, 138, 31, 0.13), transparent 32%),
+        repeating-linear-gradient(135deg, rgba(47, 128, 237, 0.045) 0 1px, transparent 1px 28px),
+        #f8fcff;
+    }
+
+    button,
+    select {
+      border: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      z-index: 1001;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: translateY(-50%);
+      padding: 14px 8px;
+      border-radius: 0 8px 8px 0;
+      color: #fff;
+      background: linear-gradient(180deg, var(--purple), var(--teal));
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      box-shadow: 0 8px 20px rgba(20, 25, 60, 0.24);
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      background: rgba(5, 10, 30, 0.42);
+      transition: opacity 180ms ease;
+    }
+
+    .sidebar-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 -390px;
+      z-index: 1000;
+      width: min(390px, 88vw);
+      background: #fff;
+      box-shadow: 12px 0 34px rgba(12, 20, 45, 0.24);
+      transition: left 180ms ease;
+      overflow-y: auto;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-header {
+      padding: 22px 24px;
+      color: #fff;
+      font-size: 1.16rem;
+      font-weight: 950;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .sidebar-content {
+      padding: 22px 24px 28px;
+      line-height: 1.55;
+    }
+
+    .sidebar-content h3 {
+      margin: 18px 0 8px;
+      color: var(--teal-dark);
+      font-size: 1rem;
+    }
+
+    .sidebar-content p,
+    .sidebar-content li {
+      margin: 0 0 8px;
+      color: #44516c;
+    }
+
+    .sidebar-content ul {
+      margin: 0 0 12px;
+      padding-left: 20px;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 10px;
+      padding: 12px 16px 14px;
+    }
+
+    .topbar {
+      min-height: 72px;
+      display: grid;
+      grid-template-columns: minmax(320px, 0.92fr) minmax(0, 1.08fr);
+      gap: 10px;
+      align-items: center;
+      padding: 9px 12px;
+      border: 1px solid rgba(20, 184, 166, 0.24);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(235, 253, 250, 0.94)),
+        linear-gradient(90deg, rgba(20, 184, 166, 0.14), rgba(255, 138, 31, 0.10));
+      box-shadow: var(--soft-shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      flex: 0 0 50px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--purple), var(--teal));
+      box-shadow: 0 12px 22px rgba(20, 184, 166, 0.25);
+      font-size: 1.35rem;
+      font-weight: 950;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.16rem, 1.9vw, 1.62rem);
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: clamp(0.72rem, 0.9vw, 0.86rem);
+      font-weight: 750;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: minmax(150px, 1.35fr) repeat(5, minmax(74px, 0.72fr));
+      gap: 7px;
+      align-items: center;
+    }
+
+    .example-select,
+    .action-btn {
+      min-height: 38px;
+      padding: 8px 8px;
+      border-radius: 8px;
+      color: #25304f;
+      background: #fff;
+      border: 1px solid rgba(22, 33, 63, 0.12);
+      box-shadow: 0 6px 14px rgba(19, 39, 74, 0.08);
+      font-size: clamp(0.66rem, 0.78vw, 0.84rem);
+      font-weight: 900;
+      line-height: 1.05;
+    }
+
+    .example-select {
+      width: 100%;
+      color: #172033;
+      font-weight: 850;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(19, 39, 74, 0.12);
+    }
+
+    .action-btn.primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .action-btn.new-action {
+      color: #fff;
+      background: linear-gradient(135deg, var(--green), var(--teal-dark));
+    }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.45fr);
+      gap: 12px;
+    }
+
+    .board,
+    .step-panel {
+      min-height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(22, 33, 63, 0.10);
+      box-shadow: var(--shadow);
+    }
+
+    .board {
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .prompt-band {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 16px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(20, 184, 166, 0.94), rgba(112, 72, 232, 0.84)),
+        linear-gradient(90deg, var(--teal), var(--purple));
+    }
+
+    .prompt-title {
+      margin: 0 0 4px;
+      font-size: 0.73rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.86;
+    }
+
+    .prompt {
+      margin: 0;
+      font-family: var(--math-font);
+      font-size: clamp(1.28rem, 2.4vw, 2.1rem);
+      line-height: 1.12;
+      font-weight: 650;
+    }
+
+    .step-chip {
+      min-width: 130px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: var(--ink);
+      background: #fff;
+      border: 2px solid rgba(255, 209, 102, 0.95);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+      text-align: center;
+      font-weight: 950;
+    }
+
+    .step-chip small {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--muted);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .model-wrap {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      overflow: hidden;
+    }
+
+    .model-card {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      gap: 8px;
+      padding: clamp(8px, 1.2vw, 14px);
+      border-radius: 8px;
+      border: 1px solid rgba(47, 128, 237, 0.12);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(241, 253, 250, 0.92)),
+        repeating-linear-gradient(135deg, rgba(47, 128, 237, 0.035) 0 1px, transparent 1px 26px);
+      overflow: hidden;
+    }
+
+    .callout {
+      display: grid;
+      gap: 3px;
+      align-content: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(20, 184, 166, 0.12), rgba(255, 209, 102, 0.20)),
+        #fff;
+      border: 1px solid rgba(20, 184, 166, 0.24);
+      box-shadow: 0 8px 20px rgba(19, 39, 74, 0.08);
+    }
+
+    .callout strong {
+      color: #172033;
+      font-size: clamp(0.86rem, 1vw, 1rem);
+      font-weight: 950;
+      line-height: 1.08;
+    }
+
+    .callout span {
+      color: #3d4b67;
+      font-size: clamp(0.74rem, 0.84vw, 0.88rem);
+      font-weight: 760;
+      line-height: 1.25;
+    }
+
+    .model-main {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(360px, 0.72fr) minmax(220px, 0.28fr);
+      gap: 12px;
+      align-items: center;
+    }
+
+    .square-zone {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .square-wrap {
+      width: min(72vh, 93%, 560px);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto 1fr auto;
+      gap: 7px;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .top-side-label,
+    .bottom-side-label {
+      grid-column: 1;
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #172033;
+      font-family: var(--math-font);
+      font-size: clamp(0.95rem, 1.3vw, 1.22rem);
+      font-weight: 700;
+    }
+
+    .right-side-label {
+      grid-column: 2;
+      grid-row: 2;
+      min-width: 32px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      color: #172033;
+      font-family: var(--math-font);
+      font-size: clamp(0.9rem, 1.2vw, 1.14rem);
+      font-weight: 700;
+    }
+
+    .square {
+      grid-column: 1;
+      grid-row: 2;
+      width: min(100%, 52vh);
+      aspect-ratio: 1 / 1;
+      display: grid;
+      grid-template-columns: repeat(var(--parts), 1fr);
+      grid-template-rows: repeat(var(--parts), 1fr);
+      overflow: hidden;
+      border: 4px solid #172033;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 14px 28px rgba(19, 39, 74, 0.16);
+    }
+
+    .square.single {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+      place-items: center;
+      background:
+        radial-gradient(circle at 30% 24%, rgba(20, 184, 166, 0.16), transparent 34%),
+        #fff;
+    }
+
+    .cell {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      border-left: 1.5px solid rgba(23, 32, 51, 0.24);
+      border-top: 1.5px solid rgba(23, 32, 51, 0.24);
+      color: #172033;
+      background: rgba(255, 255, 255, 0.95);
+      font-family: var(--math-font);
+      font-size: clamp(0.62rem, 1.2vw, 1.15rem);
+      font-weight: 700;
+    }
+
+    .cell:nth-child(odd) {
+      background: rgba(20, 184, 166, 0.12);
+    }
+
+    .cell:nth-child(4n) {
+      background: rgba(255, 209, 102, 0.18);
+    }
+
+    .cell:nth-child(1) {
+      border-left: 0;
+      border-top: 0;
+    }
+
+    .area-label {
+      display: grid;
+      place-items: center;
+      gap: 6px;
+      color: #172033;
+      text-align: center;
+    }
+
+    .area-label span:first-child {
+      color: var(--teal-dark);
+      font-size: clamp(0.9rem, 1.1vw, 1rem);
+      font-family: var(--ui-font);
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .area-label span:last-child {
+      font-family: var(--math-font);
+      font-size: clamp(2.2rem, 6vw, 4.3rem);
+      font-weight: 700;
+    }
+
+    .side-strip {
+      grid-column: 1;
+      display: grid;
+      grid-template-columns: repeat(var(--parts), 1fr);
+      width: 100%;
+      overflow: hidden;
+      border: 3px solid rgba(20, 184, 166, 0.9);
+      border-radius: 8px;
+      background: rgba(232, 252, 249, 0.92);
+    }
+
+    .side-piece {
+      min-height: 38px;
+      display: grid;
+      place-items: center;
+      border-left: 1.5px solid rgba(8, 122, 118, 0.42);
+      color: #0f766e;
+      font-family: var(--math-font);
+      font-size: clamp(0.88rem, 1.15vw, 1.12rem);
+      font-weight: 700;
+    }
+
+    .side-piece:first-child {
+      border-left: 0;
+    }
+
+    .concept-stack {
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .concept-card {
+      display: grid;
+      gap: 5px;
+      padding: 9px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid rgba(22, 33, 63, 0.10);
+      box-shadow: 0 8px 16px rgba(19, 39, 74, 0.07);
+    }
+
+    .concept-card strong {
+      color: #172033;
+      font-size: clamp(0.74rem, 0.86vw, 0.9rem);
+      font-weight: 950;
+      line-height: 1.12;
+    }
+
+    .concept-card span {
+      color: #3d4b67;
+      font-size: clamp(0.72rem, 0.84vw, 0.88rem);
+      font-weight: 780;
+      line-height: 1.25;
+    }
+
+    .concept-card .math-line {
+      color: #0f766e;
+      font-family: var(--math-font);
+      font-size: clamp(1rem, 1.35vw, 1.35rem);
+      font-weight: 700;
+    }
+
+    .equation-line {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.34em;
+      min-height: 52px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--purple), var(--teal));
+      box-shadow: 0 10px 22px rgba(20, 184, 166, 0.20);
+      font-family: var(--math-font);
+      font-size: clamp(1.05rem, 1.75vw, 1.7rem);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .surd {
+      display: inline-flex;
+      align-items: flex-start;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    .root-sign {
+      padding-right: 0.02em;
+      font-size: 1.08em;
+      line-height: 1.02;
+    }
+
+    .radicand {
+      display: inline-block;
+      padding: 0.04em 0.08em 0;
+      border-top: 0.08em solid currentColor;
+      line-height: 1.02;
+    }
+
+    .step-panel {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .step-panel h2 {
+      margin: 0;
+      color: var(--teal-dark);
+      font-size: clamp(1rem, 1.45vw, 1.24rem);
+      line-height: 1.1;
+    }
+
+    .step-copy {
+      min-height: 0;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+    }
+
+    .step-label {
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: var(--teal-dark);
+      background: rgba(20, 184, 166, 0.13);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .step-text {
+      margin: 0;
+      color: #263552;
+      font-size: clamp(0.94rem, 1.2vw, 1.1rem);
+      font-weight: 850;
+      line-height: 1.34;
+    }
+
+    .method-box {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.28em;
+      padding: 12px;
+      border-radius: 8px;
+      color: #172033;
+      background: linear-gradient(135deg, rgba(112, 72, 232, 0.10), rgba(20, 184, 166, 0.10));
+      border: 1px solid rgba(112, 72, 232, 0.17);
+      font-family: var(--math-font);
+      font-size: clamp(1.08rem, 1.75vw, 1.58rem);
+      line-height: 1.22;
+      text-align: center;
+    }
+
+    .teacher-points {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .teacher-points li {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 8px;
+      color: #44516c;
+      font-size: clamp(0.76rem, 0.94vw, 0.9rem);
+      font-weight: 720;
+      line-height: 1.28;
+    }
+
+    .teacher-points li::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-top: 5px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 0 4px rgba(255, 138, 31, 0.15);
+    }
+
+    .model-card.step-animating .square,
+    .model-card.step-animating .cell,
+    .model-card.step-animating .side-piece,
+    .model-card.step-animating .concept-card,
+    .model-card.step-animating .equation-line {
+      animation: structureReveal 2800ms ease-out both;
+    }
+
+    @keyframes structureReveal {
+      0% {
+        opacity: 0.36;
+        filter: saturate(0.7);
+        transform: scale(0.985);
+      }
+      34% {
+        opacity: 1;
+        filter: saturate(1.18);
+        transform: scale(1.01);
+      }
+      100% {
+        opacity: 1;
+        filter: saturate(1);
+        transform: scale(1);
+      }
+    }
+
+    @media (max-width: 980px) {
+      html,
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .topbar,
+      .workspace,
+      .model-main {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .example-select {
+        grid-column: 1 / -1;
+      }
+
+      .model-card {
+        min-height: 640px;
+      }
+
+      .square-wrap {
+        width: min(92vw, 560px);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .app {
+        padding: 10px;
+      }
+
+      .actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .prompt-band {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="teacher-tab" type="button" onclick="toggleSidebar()">TEACHER NOTES</button>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Surd Structure Visualiser</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool shows simplification of surds as a square area and side-length argument.</p>
+      <h3>Teaching Move</h3>
+      <ul>
+        <li>Begin with the area of the whole square, not with the shortcut.</li>
+        <li>Ask pupils what the side length must be if the area is known.</li>
+        <li>Use the square factor to split the whole square into equal smaller squares.</li>
+        <li>Connect the side count to the coefficient outside the radical.</li>
+      </ul>
+      <h3>Key Point</h3>
+      <p>The coefficient is not moved outside the radical by magic. It is the number of equal radical side lengths along one side of the original square.</p>
+    </div>
+  </aside>
+
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">&radic;</div>
+        <div>
+          <h1>Surd Structure Visualiser</h1>
+          <p class="subtitle">A square-area model for explaining why radical simplification works.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <select class="example-select" id="exampleSelect" aria-label="Choose surd example" onchange="selectExample(this.value)"></select>
+        <button class="action-btn new-action" type="button" onclick="newExample()">New</button>
+        <button class="action-btn" type="button" onclick="previousStep()">Back</button>
+        <button class="action-btn primary" type="button" onclick="nextStep()">Next Step</button>
+        <button class="action-btn" type="button" onclick="showAll()">Show All</button>
+        <button class="action-btn" type="button" onclick="resetSteps()">Reset</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <article class="board">
+        <div class="prompt-band">
+          <div>
+            <p class="prompt-title">Simplify by structure</p>
+            <p class="prompt" id="promptText"></p>
+          </div>
+          <div class="step-chip">
+            <small>Reveal</small>
+            <span id="stepCounter">Step 1</span>
+          </div>
+        </div>
+        <div class="model-wrap">
+          <div class="model-card" id="modelCard">
+            <div class="callout" id="callout"></div>
+            <div class="model-main" id="modelMain"></div>
+            <div class="equation-line" id="equationLine"></div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="step-panel">
+        <h2 id="structureHeading">Structure</h2>
+        <div class="step-copy">
+          <div class="step-label" id="stepLabel">Step 1</div>
+          <p class="step-text" id="stepText"></p>
+          <div class="method-box" id="methodBox"></div>
+        </div>
+        <ul class="teacher-points" id="teacherPoints"></ul>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const examples = [
+      { area: 40, factor: 2, core: 10 },
+      { area: 45, factor: 3, core: 5 },
+      { area: 48, factor: 4, core: 3 },
+      { area: 72, factor: 6, core: 2 },
+      { area: 75, factor: 5, core: 3 },
+      { area: 80, factor: 4, core: 5 },
+      { area: 108, factor: 6, core: 3 },
+      { area: 125, factor: 5, core: 5 }
+    ];
+
+    const teacherPoints = [
+      "A square of area n has side length square root n.",
+      "The square factor tells us how many equal smaller squares fit in a square grid.",
+      "The coefficient outside the radical counts side-length pieces.",
+      "The remaining radicand is the area of each smaller square."
+    ];
+
+    let currentIndex = 0;
+    let currentStep = 0;
+    let animTimer = null;
+
+    function surd(value) {
+      return `<span class="surd"><span class="root-sign">&radic;</span><span class="radicand">${value}</span></span>`;
+    }
+
+    function squared(value) {
+      return `${value}<sup>2</sup>`;
+    }
+
+    function expression(ex) {
+      return `${ex.factor}${surd(ex.core)}`;
+    }
+
+    function squareFactor(ex) {
+      return ex.factor * ex.factor;
+    }
+
+    function stepsFor(ex) {
+      return [
+        {
+          label: "Start with area",
+          callout: "Meaning before method",
+          text: `Treat ${surd(ex.area)} as the side length of a square whose area is ${ex.area}.`,
+          method: `Area = ${ex.area}, so side length = ${surd(ex.area)}`
+        },
+        {
+          label: "Find the square factor",
+          callout: "Look for a square inside the area",
+          text: `${ex.area} can be written as ${squareFactor(ex)} multiplied by ${ex.core}.`,
+          method: `${ex.area} = ${squareFactor(ex)} &times; ${ex.core} = ${squared(ex.factor)} &times; ${ex.core}`
+        },
+        {
+          label: "Split the square",
+          callout: "The square factor becomes the grid",
+          text: `Split the square into a ${ex.factor} by ${ex.factor} grid. That makes ${squareFactor(ex)} smaller equal squares.`,
+          method: `${ex.factor} &times; ${ex.factor} = ${squareFactor(ex)} smaller squares`
+        },
+        {
+          label: "Name each small side",
+          callout: "Each smaller square has its own radical side",
+          text: `Each smaller square has area ${ex.core}, so each smaller side length is ${surd(ex.core)}.`,
+          method: `Small square area = ${ex.core}, so small side = ${surd(ex.core)}`
+        },
+        {
+          label: "Count along one side",
+          callout: "The outside number counts side pieces",
+          text: `One side of the large square is made from ${ex.factor} copies of ${surd(ex.core)}.`,
+          method: `${Array(ex.factor).fill(surd(ex.core)).join(" + ")} = ${expression(ex)}`
+        },
+        {
+          label: "Write the simplification",
+          callout: "The visual model matches the symbolic rule",
+          text: `The side length ${surd(ex.area)} is the same as ${ex.factor} side pieces of length ${surd(ex.core)}.`,
+          method: `${surd(ex.area)} = ${surd(`${squareFactor(ex)} &times; ${ex.core}`)} = ${ex.factor}${surd(ex.core)}`
+        }
+      ];
+    }
+
+    function renderExampleOptions() {
+      const select = document.getElementById("exampleSelect");
+      select.innerHTML = examples.map((ex, index) => {
+        const plain = `sqrt(${ex.area}) = ${ex.factor}sqrt(${ex.core})`;
+        return `<option value="${index}" ${index === currentIndex ? "selected" : ""}>${plain}</option>`;
+      }).join("");
+    }
+
+    function selectExample(index) {
+      currentIndex = Number(index);
+      currentStep = 0;
+      render(true);
+    }
+
+    function newExample() {
+      const next = Math.floor(Math.random() * examples.length);
+      currentIndex = next === currentIndex ? (next + 1) % examples.length : next;
+      currentStep = 0;
+      render(true);
+    }
+
+    function nextStep() {
+      currentStep = Math.min(currentStep + 1, stepsFor(examples[currentIndex]).length - 1);
+      render(true);
+    }
+
+    function previousStep() {
+      currentStep = Math.max(currentStep - 1, 0);
+      render(true);
+    }
+
+    function showAll() {
+      currentStep = stepsFor(examples[currentIndex]).length - 1;
+      render(true);
+    }
+
+    function resetSteps() {
+      currentStep = 0;
+      render(true);
+    }
+
+    function visibleEquation(ex, step) {
+      if (step <= 0) return `${surd(ex.area)} is the side length of a square with area ${ex.area}`;
+      if (step === 1) return `${ex.area} = ${squareFactor(ex)} &times; ${ex.core}`;
+      if (step === 2) return `${squareFactor(ex)} smaller squares, each with area ${ex.core}`;
+      if (step === 3) return `Each small side is ${surd(ex.core)}`;
+      if (step === 4) return `${ex.factor} copies of ${surd(ex.core)} make the full side`;
+      return `${surd(ex.area)} = ${surd(`${squareFactor(ex)} &times; ${ex.core}`)} = ${expression(ex)}`;
+    }
+
+    function renderSquare(ex, step) {
+      if (step <= 1) {
+        return `
+          <div class="square-wrap">
+            <div class="top-side-label">${surd(ex.area)}</div>
+            <div class="square single" style="--parts:1">
+              <div class="area-label">
+                <span>Area</span>
+                <span>${ex.area}</span>
+              </div>
+            </div>
+            <div class="right-side-label">${surd(ex.area)}</div>
+            <div class="bottom-side-label">${step === 1 ? `${ex.area} = ${squareFactor(ex)} &times; ${ex.core}` : "side length"}</div>
+          </div>
+        `;
+      }
+
+      const total = squareFactor(ex);
+      const labelEveryCell = ex.factor <= 4 || step >= 3;
+      const cells = Array.from({ length: total }, (_, index) => {
+        const label = labelEveryCell ? (step >= 3 ? `${ex.core}` : "") : "";
+        return `<span class="cell">${label}</span>`;
+      }).join("");
+      const sideStrip = step >= 4 ? `
+        <div class="side-strip" style="--parts:${ex.factor}">
+          ${Array.from({ length: ex.factor }, () => `<span class="side-piece">${surd(ex.core)}</span>`).join("")}
+        </div>
+      ` : `<div class="bottom-side-label">${ex.factor} equal side pieces</div>`;
+      return `
+        <div class="square-wrap">
+          <div class="top-side-label">${step >= 4 ? `${ex.factor} copies of ${surd(ex.core)}` : `${surd(ex.area)}`}</div>
+          <div class="square" style="--parts:${ex.factor}">
+            ${cells}
+          </div>
+          <div class="right-side-label">${step >= 3 ? `${ex.factor} copies` : `${ex.factor} parts`}</div>
+          ${sideStrip}
+        </div>
+      `;
+    }
+
+    function renderConceptCards(ex, step) {
+      const cards = [
+        {
+          show: true,
+          title: "Whole square",
+          math: `Area = ${ex.area}`,
+          body: `The original side is ${surd(ex.area)}.`
+        },
+        {
+          show: step >= 1,
+          title: "Square factor",
+          math: `${ex.area} = ${squared(ex.factor)} &times; ${ex.core}`,
+          body: `${squared(ex.factor)} gives a ${ex.factor} by ${ex.factor} grid.`
+        },
+        {
+          show: step >= 3,
+          title: "Small square",
+          math: `Area = ${ex.core}`,
+          body: `Each small side is ${surd(ex.core)}.`
+        },
+        {
+          show: step >= 4,
+          title: "Full side",
+          math: `${ex.factor} &times; ${surd(ex.core)} = ${expression(ex)}`,
+          body: "The coefficient counts the number of equal radical side lengths."
+        }
+      ];
+      return cards.filter((card) => card.show).map((card) => `
+        <div class="concept-card">
+          <strong>${card.title}</strong>
+          <span class="math-line">${card.math}</span>
+          <span>${card.body}</span>
+        </div>
+      `).join("");
+    }
+
+    function render(animate = false) {
+      const ex = examples[currentIndex];
+      const steps = stepsFor(ex);
+      const step = steps[currentStep];
+      renderExampleOptions();
+      document.getElementById("promptText").innerHTML = `Simplify ${surd(ex.area)}`;
+      document.getElementById("stepCounter").textContent = `Step ${currentStep + 1} of ${steps.length}`;
+      document.getElementById("structureHeading").textContent = "Square-area model";
+      document.getElementById("stepLabel").textContent = step.label;
+      document.getElementById("stepText").innerHTML = step.text;
+      document.getElementById("methodBox").innerHTML = step.method;
+      document.getElementById("teacherPoints").innerHTML = teacherPoints.map((point) => `<li>${point}</li>`).join("");
+      document.getElementById("callout").innerHTML = `<strong>${step.callout}</strong><span>${step.text}</span>`;
+      document.getElementById("modelMain").innerHTML = `
+        <div class="square-zone">${renderSquare(ex, currentStep)}</div>
+        <div class="concept-stack">${renderConceptCards(ex, currentStep)}</div>
+      `;
+      document.getElementById("equationLine").innerHTML = visibleEquation(ex, currentStep);
+      if (animate) animateModel();
+    }
+
+    function animateModel() {
+      const card = document.getElementById("modelCard");
+      clearTimeout(animTimer);
+      card.classList.remove("step-animating");
+      void card.offsetWidth;
+      card.classList.add("step-animating");
+      animTimer = setTimeout(() => card.classList.remove("step-animating"), 2800);
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    render();
+  </script>
+</body>
+</html>

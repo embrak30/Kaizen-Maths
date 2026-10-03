@@ -1296,6 +1296,25 @@ const tools = [
     ]
   },
   {
+    slug: "surd-structure-visualiser",
+    title: "Surd Structure Visualiser",
+    category: "Algebra",
+    level: "KS3 / GCSE",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "Use a square-area model to show why simplifying radicals works, connecting square factors to side lengths such as root 40 equals 2 root 10.",
+    tags: ["algebra", "surds", "radicals", "roots", "visual maths", "structure of mathematics", "conceptual understanding", "area model", "simplifying"],
+    toolPath: "tools/surd-structure-visualiser/index.html?v=surd-structure-1",
+    imported: true,
+    teacherNotes: [
+      "Designed for teacher-led explanation before pupils use the shortcut for simplifying radicals.",
+      "Represents root n as the side length of a square with area n.",
+      "Uses the square factor to split the square into an equal grid of smaller squares.",
+      "Shows that the coefficient outside the radical counts how many smaller radical side lengths make the full side."
+    ]
+  },
+  {
     slug: "logarithms-practice",
     title: "Logarithms and Exponential Equations",
     category: "Algebra",
@@ -2465,6 +2484,7 @@ const algebraToolGroups = {
   "bracket-expansion": "Algebra Foundations",
   "exponents-index-notation": "Algebra Foundations",
   "surds-radicals": "Algebra Foundations",
+  "surd-structure-visualiser": "Algebra Foundations",
   "algebraic-fractions": "Algebra Foundations",
   "absolute-values": "Algebra Foundations",
   "linear-equations": "Equations and Inequalities",
@@ -23766,6 +23786,8 @@ const curatedRelatedToolSlugs = {
   "four-operations": ["number-sense-flexible-calculation", "integer-operations", "order-of-operations", "decimals-practice-lab"],
   "integer-operations": ["four-operations", "order-of-operations", "absolute-values", "number-bases-number-sets"],
   "fractions-practice": ["fractions", "decimals-practice-lab", "simple-percentage-tasks", "ratio-proportion"],
+  "surds-radicals": ["surd-structure-visualiser", "exponents-index-notation", "pythagoras-theorem", "quadratic-equations"],
+  "surd-structure-visualiser": ["surds-radicals", "maths-structure-lab", "area-models", "exponents-index-notation"],
   "financial-real-life-maths": ["percentages-real-world", "simple-percentage-tasks", "ratio-proportion", "decimals-practice-lab"],
   "percentages-real-world": ["financial-real-life-maths", "simple-percentage-tasks", "ratio-proportion", "upper-lower-bounds"],
   "algebraic-fractions": ["factorisation", "advanced-factorisation", "quadratic-factorisation", "linear-equations"],
