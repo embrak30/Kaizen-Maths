@@ -1305,7 +1305,7 @@ const tools = [
     status: "Imported",
     description: "Use a square-area model to show why simplifying radicals works, connecting square factors to side lengths such as root 40 equals 2 root 10.",
     tags: ["algebra", "surds", "radicals", "roots", "visual maths", "structure of mathematics", "conceptual understanding", "area model", "simplifying"],
-    toolPath: "tools/surd-structure-visualiser/index.html?v=surd-structure-1",
+    toolPath: "tools/surd-structure-visualiser/index.html?v=surd-structure-2",
     imported: true,
     teacherNotes: [
       "Designed for teacher-led explanation before pupils use the shortcut for simplifying radicals.",

@@ -239,8 +239,8 @@
     .workspace {
       min-height: 0;
       display: grid;
-      grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.45fr);
-      gap: 12px;
+      grid-template-columns: minmax(0, 1fr) minmax(235px, 0.22fr);
+      gap: 10px;
     }
 
     .board,
@@ -321,7 +321,7 @@
       height: 100%;
       display: grid;
       grid-template-rows: auto minmax(0, 1fr) auto;
-      gap: 8px;
+      gap: 6px;
       padding: clamp(8px, 1.2vw, 14px);
       border-radius: 8px;
       border: 1px solid rgba(47, 128, 237, 0.12);
@@ -335,7 +335,7 @@
       display: grid;
       gap: 3px;
       align-content: center;
-      padding: 8px 10px;
+      padding: 7px 10px;
       border-radius: 8px;
       background:
         linear-gradient(135deg, rgba(20, 184, 166, 0.12), rgba(255, 209, 102, 0.20)),
@@ -346,38 +346,42 @@
 
     .callout strong {
       color: #172033;
-      font-size: clamp(0.86rem, 1vw, 1rem);
+      font-size: clamp(0.78rem, 0.9vw, 0.92rem);
       font-weight: 950;
       line-height: 1.08;
     }
 
     .callout span {
       color: #3d4b67;
-      font-size: clamp(0.74rem, 0.84vw, 0.88rem);
+      font-size: clamp(0.68rem, 0.78vw, 0.82rem);
       font-weight: 760;
       line-height: 1.25;
     }
 
     .model-main {
       min-height: 0;
-      display: grid;
-      grid-template-columns: minmax(360px, 0.72fr) minmax(220px, 0.28fr);
-      gap: 12px;
+      display: flex;
       align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
 
     .square-zone {
+      width: 100%;
+      height: 100%;
       min-height: 0;
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
 
     .square-wrap {
-      width: min(72vh, 93%, 560px);
+      width: min(100%, 72vh, 720px);
+      max-height: 100%;
       display: grid;
-      grid-template-columns: 1fr auto;
       grid-template-rows: auto 1fr auto;
-      gap: 7px;
+      gap: 5px;
       align-items: center;
       justify-items: center;
     }
@@ -392,26 +396,14 @@
       gap: 8px;
       color: #172033;
       font-family: var(--math-font);
-      font-size: clamp(0.95rem, 1.3vw, 1.22rem);
-      font-weight: 700;
-    }
-
-    .right-side-label {
-      grid-column: 2;
-      grid-row: 2;
-      min-width: 32px;
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      color: #172033;
-      font-family: var(--math-font);
-      font-size: clamp(0.9rem, 1.2vw, 1.14rem);
+      font-size: clamp(0.82rem, 1.05vw, 1.1rem);
       font-weight: 700;
     }
 
     .square {
       grid-column: 1;
       grid-row: 2;
-      width: min(100%, 52vh);
+      width: min(100%, 66vh, 680px);
       aspect-ratio: 1 / 1;
       display: grid;
       grid-template-columns: repeat(var(--parts), 1fr);
@@ -442,7 +434,7 @@
       color: #172033;
       background: rgba(255, 255, 255, 0.95);
       font-family: var(--math-font);
-      font-size: clamp(0.62rem, 1.2vw, 1.15rem);
+      font-size: clamp(0.58rem, 0.82vw, 0.92rem);
       font-weight: 700;
     }
 
@@ -457,6 +449,29 @@
     .cell:nth-child(1) {
       border-left: 0;
       border-top: 0;
+    }
+
+    .cell.sample-cell {
+      outline: 4px solid rgba(255, 138, 31, 0.82);
+      outline-offset: -5px;
+      background:
+        linear-gradient(135deg, rgba(255, 209, 102, 0.40), rgba(20, 184, 166, 0.20)),
+        #fff;
+    }
+
+    .cell-label {
+      display: grid;
+      gap: 2px;
+      text-align: center;
+      color: #172033;
+      font-family: var(--ui-font);
+      font-size: clamp(0.56rem, 0.75vw, 0.82rem);
+      font-weight: 900;
+      line-height: 1.05;
+    }
+
+    .cell-label .mathml {
+      font-size: 1.35em;
     }
 
     .area-label {
@@ -478,7 +493,7 @@
 
     .area-label span:last-child {
       font-family: var(--math-font);
-      font-size: clamp(2.2rem, 6vw, 4.3rem);
+      font-size: clamp(1.85rem, 4.8vw, 3.65rem);
       font-weight: 700;
     }
 
@@ -494,13 +509,13 @@
     }
 
     .side-piece {
-      min-height: 38px;
+      min-height: 30px;
       display: grid;
       place-items: center;
       border-left: 1.5px solid rgba(8, 122, 118, 0.42);
       color: #0f766e;
       font-family: var(--math-font);
-      font-size: clamp(0.88rem, 1.15vw, 1.12rem);
+      font-size: clamp(0.62rem, 0.82vw, 0.92rem);
       font-weight: 700;
     }
 
@@ -509,16 +524,20 @@
     }
 
     .concept-stack {
+      display: none;
+    }
+
+    .legacy-concept-stack {
       display: grid;
       align-content: center;
-      gap: 8px;
+      gap: 6px;
       min-width: 0;
     }
 
     .concept-card {
       display: grid;
-      gap: 5px;
-      padding: 9px;
+      gap: 4px;
+      padding: 8px;
       border-radius: 8px;
       background: #fff;
       border: 1px solid rgba(22, 33, 63, 0.10);
@@ -527,14 +546,14 @@
 
     .concept-card strong {
       color: #172033;
-      font-size: clamp(0.74rem, 0.86vw, 0.9rem);
+      font-size: clamp(0.68rem, 0.78vw, 0.84rem);
       font-weight: 950;
       line-height: 1.12;
     }
 
     .concept-card span {
       color: #3d4b67;
-      font-size: clamp(0.72rem, 0.84vw, 0.88rem);
+      font-size: clamp(0.66rem, 0.76vw, 0.82rem);
       font-weight: 780;
       line-height: 1.25;
     }
@@ -542,7 +561,7 @@
     .concept-card .math-line {
       color: #0f766e;
       font-family: var(--math-font);
-      font-size: clamp(1rem, 1.35vw, 1.35rem);
+      font-size: clamp(0.9rem, 1.06vw, 1.12rem);
       font-weight: 700;
     }
 
@@ -553,48 +572,45 @@
       align-items: center;
       gap: 0.34em;
       min-height: 52px;
-      padding: 8px 10px;
+      padding: 7px 10px;
       border-radius: 8px;
       color: #fff;
       background: linear-gradient(135deg, var(--purple), var(--teal));
       box-shadow: 0 10px 22px rgba(20, 184, 166, 0.20);
       font-family: var(--math-font);
-      font-size: clamp(1.05rem, 1.75vw, 1.7rem);
+      font-size: clamp(0.98rem, 1.55vw, 1.5rem);
       font-weight: 700;
       text-align: center;
     }
 
-    .surd {
-      display: inline-flex;
-      align-items: flex-start;
-      white-space: nowrap;
-      vertical-align: middle;
-    }
-
-    .root-sign {
-      padding-right: 0.02em;
-      font-size: 1.08em;
-      line-height: 1.02;
-    }
-
-    .radicand {
+    .mathml {
       display: inline-block;
-      padding: 0.04em 0.08em 0;
-      border-top: 0.08em solid currentColor;
-      line-height: 1.02;
+      font-family: var(--math-font);
+      font-size: 1em;
+      vertical-align: -0.12em;
+    }
+
+    .top-side-label .mathml,
+    .bottom-side-label .mathml {
+      font-size: 1.08em;
+    }
+
+    .equation-line .mathml,
+    .method-box .mathml {
+      font-size: 1.04em;
     }
 
     .step-panel {
       display: grid;
       grid-template-rows: auto minmax(0, 1fr) auto;
-      gap: 12px;
-      padding: 16px;
+      gap: 10px;
+      padding: 12px;
     }
 
     .step-panel h2 {
       margin: 0;
       color: var(--teal-dark);
-      font-size: clamp(1rem, 1.45vw, 1.24rem);
+      font-size: clamp(0.9rem, 1.16vw, 1.08rem);
       line-height: 1.1;
     }
 
@@ -620,25 +636,25 @@
     .step-text {
       margin: 0;
       color: #263552;
-      font-size: clamp(0.94rem, 1.2vw, 1.1rem);
+      font-size: clamp(0.78rem, 0.96vw, 0.94rem);
       font-weight: 850;
       line-height: 1.34;
     }
 
     .method-box {
-      min-height: 64px;
+      min-height: 54px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
       gap: 0.28em;
-      padding: 12px;
+      padding: 10px;
       border-radius: 8px;
       color: #172033;
       background: linear-gradient(135deg, rgba(112, 72, 232, 0.10), rgba(20, 184, 166, 0.10));
       border: 1px solid rgba(112, 72, 232, 0.17);
       font-family: var(--math-font);
-      font-size: clamp(1.08rem, 1.75vw, 1.58rem);
+      font-size: clamp(0.92rem, 1.25vw, 1.22rem);
       line-height: 1.22;
       text-align: center;
     }
@@ -653,10 +669,10 @@
 
     .teacher-points li {
       display: grid;
-      grid-template-columns: 20px 1fr;
-      gap: 8px;
+      grid-template-columns: 16px 1fr;
+      gap: 6px;
       color: #44516c;
-      font-size: clamp(0.76rem, 0.94vw, 0.9rem);
+      font-size: clamp(0.68rem, 0.82vw, 0.8rem);
       font-weight: 720;
       line-height: 1.28;
     }
@@ -709,8 +725,7 @@
       }
 
       .topbar,
-      .workspace,
-      .model-main {
+      .workspace {
         grid-template-columns: 1fr;
       }
 
@@ -831,26 +846,45 @@
     ];
 
     const teacherPoints = [
-      "A square of area n has side length square root n.",
-      "The square factor tells us how many equal smaller squares fit in a square grid.",
-      "The coefficient outside the radical counts side-length pieces.",
-      "The remaining radicand is the area of each smaller square."
+      "Start with the square area, then reason about its side length.",
+      "Use the square factor to create equal smaller squares.",
+      "Count the smaller side lengths along one full side."
     ];
 
     let currentIndex = 0;
     let currentStep = 0;
     let animTimer = null;
 
+    function mathml(inner) {
+      return `<math class="mathml" display="inline">${inner}</math>`;
+    }
+
+    function mn(value) {
+      return `<mn>${value}</mn>`;
+    }
+
+    function mo(value) {
+      return `<mo>${value}</mo>`;
+    }
+
+    function mrow(inner) {
+      return `<mrow>${inner}</mrow>`;
+    }
+
     function surd(value) {
-      return `<span class="surd"><span class="root-sign">&radic;</span><span class="radicand">${value}</span></span>`;
+      return mathml(`<msqrt>${mn(value)}</msqrt>`);
+    }
+
+    function surdProduct(left, right) {
+      return mathml(`<msqrt>${mrow(`${mn(left)}${mo("&times;")}${mn(right)}`)}</msqrt>`);
     }
 
     function squared(value) {
-      return `${value}<sup>2</sup>`;
+      return mathml(`<msup>${mn(value)}${mn(2)}</msup>`);
     }
 
     function expression(ex) {
-      return `${ex.factor}${surd(ex.core)}`;
+      return mathml(`${mn(ex.factor)}<msqrt>${mn(ex.core)}</msqrt>`);
     }
 
     function squareFactor(ex) {
@@ -893,7 +927,7 @@
           label: "Write the simplification",
           callout: "The visual model matches the symbolic rule",
           text: `The side length ${surd(ex.area)} is the same as ${ex.factor} side pieces of length ${surd(ex.core)}.`,
-          method: `${surd(ex.area)} = ${surd(`${squareFactor(ex)} &times; ${ex.core}`)} = ${ex.factor}${surd(ex.core)}`
+          method: `${surd(ex.area)} = ${surdProduct(squareFactor(ex), ex.core)} = ${expression(ex)}`
         }
       ];
     }
@@ -901,7 +935,7 @@
     function renderExampleOptions() {
       const select = document.getElementById("exampleSelect");
       select.innerHTML = examples.map((ex, index) => {
-        const plain = `sqrt(${ex.area}) = ${ex.factor}sqrt(${ex.core})`;
+        const plain = `Example ${index + 1}: area ${ex.area}`;
         return `<option value="${index}" ${index === currentIndex ? "selected" : ""}>${plain}</option>`;
       }).join("");
     }
@@ -945,7 +979,7 @@
       if (step === 2) return `${squareFactor(ex)} smaller squares, each with area ${ex.core}`;
       if (step === 3) return `Each small side is ${surd(ex.core)}`;
       if (step === 4) return `${ex.factor} copies of ${surd(ex.core)} make the full side`;
-      return `${surd(ex.area)} = ${surd(`${squareFactor(ex)} &times; ${ex.core}`)} = ${expression(ex)}`;
+      return `${surd(ex.area)} = ${surdProduct(squareFactor(ex), ex.core)} = ${expression(ex)}`;
     }
 
     function renderSquare(ex, step) {
@@ -959,17 +993,16 @@
                 <span>${ex.area}</span>
               </div>
             </div>
-            <div class="right-side-label">${surd(ex.area)}</div>
             <div class="bottom-side-label">${step === 1 ? `${ex.area} = ${squareFactor(ex)} &times; ${ex.core}` : "side length"}</div>
           </div>
         `;
       }
 
       const total = squareFactor(ex);
-      const labelEveryCell = ex.factor <= 4 || step >= 3;
       const cells = Array.from({ length: total }, (_, index) => {
-        const label = labelEveryCell ? (step >= 3 ? `${ex.core}` : "") : "";
-        return `<span class="cell">${label}</span>`;
+        const sample = step >= 3 && index === 0;
+        const label = sample ? `<span class="cell-label"><span>Area</span><span>${ex.core}</span></span>` : "";
+        return `<span class="cell ${sample ? "sample-cell" : ""}">${label}</span>`;
       }).join("");
       const sideStrip = step >= 4 ? `
         <div class="side-strip" style="--parts:${ex.factor}">
@@ -982,7 +1015,6 @@
           <div class="square" style="--parts:${ex.factor}">
             ${cells}
           </div>
-          <div class="right-side-label">${step >= 3 ? `${ex.factor} copies` : `${ex.factor} parts`}</div>
           ${sideStrip}
         </div>
       `;
@@ -1039,7 +1071,6 @@
       document.getElementById("callout").innerHTML = `<strong>${step.callout}</strong><span>${step.text}</span>`;
       document.getElementById("modelMain").innerHTML = `
         <div class="square-zone">${renderSquare(ex, currentStep)}</div>
-        <div class="concept-stack">${renderConceptCards(ex, currentStep)}</div>
       `;
       document.getElementById("equationLine").innerHTML = visibleEquation(ex, currentStep);
       if (animate) animateModel();
