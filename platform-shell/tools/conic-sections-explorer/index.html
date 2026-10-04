@@ -22,7 +22,7 @@
       --purple: #6554c0;
       --rose: #e54879;
       --green: #16a34a;
-      --math-font: "KaTeX_Math", "KaTeX_Main", "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+      --math-font: "KaTeX_Main", "STIX Two Math", "Cambria Math", "Segoe UI Symbol", serif;
       --ui-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --shadow: 0 16px 36px rgba(18, 34, 58, 0.15);
     }
@@ -70,8 +70,8 @@
       grid-template-columns: minmax(260px, 1fr) auto;
       gap: 14px;
       align-items: center;
-      min-height: 76px;
-      padding: 12px 16px;
+      min-height: 68px;
+      padding: 9px 14px;
       color: #fff;
       background: linear-gradient(135deg, #13223a, #0f766e 68%, #f97316 145%);
       box-shadow: 0 10px 28px rgba(15, 23, 42, 0.22);
@@ -87,9 +87,9 @@
     }
 
     .brand p {
-      margin: 4px 0 0;
+      margin: 3px 0 0;
       color: rgba(236, 253, 245, 0.92);
-      font-size: 0.82rem;
+      font-size: 0.76rem;
       font-weight: 720;
       line-height: 1.25;
     }
@@ -103,8 +103,8 @@
 
     .mode-btn,
     .action-btn {
-      min-height: 36px;
-      padding: 8px 11px;
+      min-height: 34px;
+      padding: 7px 10px;
       border-radius: 8px;
       color: #fff;
       background: rgba(255, 255, 255, 0.13);
@@ -129,9 +129,9 @@
     .workspace {
       min-height: 0;
       display: grid;
-      grid-template-columns: 285px minmax(0, 1fr);
-      gap: 12px;
-      padding: 12px;
+      grid-template-columns: 270px minmax(0, 1fr);
+      gap: 10px;
+      padding: 10px;
       overflow: hidden;
     }
 
@@ -148,20 +148,20 @@
     .side-panel {
       display: grid;
       grid-template-rows: auto auto 1fr;
-      gap: 10px;
-      padding: 12px;
+      gap: 8px;
+      padding: 10px;
     }
 
     .panel-block {
       display: grid;
-      gap: 8px;
+      gap: 6px;
       min-width: 0;
     }
 
     .panel-title {
       margin: 0;
       color: var(--teal-dark);
-      font-size: 0.76rem;
+      font-size: 0.7rem;
       font-weight: 950;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -169,8 +169,8 @@
 
     select {
       width: 100%;
-      min-height: 42px;
-      padding: 8px 10px;
+      min-height: 38px;
+      padding: 7px 9px;
       border: 1px solid #99f6e4;
       border-radius: 8px;
       background: white;
@@ -181,16 +181,16 @@
     .control-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 6px;
     }
 
     .control-grid button,
     .wide-btn {
-      min-height: 42px;
+      min-height: 38px;
       border-radius: 8px;
       color: #fff;
       background: var(--teal);
-      font-size: 0.84rem;
+      font-size: 0.78rem;
       font-weight: 920;
       box-shadow: 0 8px 18px rgba(16, 167, 160, 0.22);
     }
@@ -216,9 +216,27 @@
       background: linear-gradient(135deg, var(--blue), var(--teal));
     }
 
+    .slider-label {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .point-slider {
+      width: 100%;
+      accent-color: var(--teal);
+    }
+
+    .point-slider:disabled {
+      opacity: 0.35;
+    }
+
     .definition {
       display: grid;
-      gap: 8px;
+      gap: 6px;
       min-height: 0;
       overflow: hidden;
     }
@@ -227,13 +245,13 @@
       border: 1px solid #dff4f1;
       border-left: 6px solid var(--teal);
       border-radius: 9px;
-      padding: 10px 11px;
+      padding: 8px 9px;
       background: linear-gradient(135deg, rgba(240, 253, 250, 0.95), rgba(255, 247, 237, 0.72));
     }
 
     .definition-card h2 {
       margin: 0 0 5px;
-      font-size: 1rem;
+      font-size: 0.92rem;
       line-height: 1.16;
       font-weight: 950;
     }
@@ -241,7 +259,7 @@
     .definition-card p {
       margin: 0;
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: 0.73rem;
       font-weight: 680;
       line-height: 1.32;
     }
@@ -249,15 +267,15 @@
     .equation-chip {
       display: inline-grid;
       align-items: center;
-      margin-top: 9px;
-      min-height: 38px;
-      padding: 7px 10px;
+      margin-top: 7px;
+      min-height: 34px;
+      padding: 6px 9px;
       border-radius: 9px;
       color: #13223a;
       background: #fff;
       border: 1px solid rgba(16, 167, 160, 0.20);
       font-family: var(--math-font);
-      font-size: 1.08rem;
+      font-size: 0.98rem;
       font-weight: 700;
       box-shadow: 0 6px 15px rgba(15, 23, 42, 0.07);
     }
@@ -265,19 +283,20 @@
     .step-list {
       min-height: 0;
       display: grid;
-      gap: 7px;
-      overflow: hidden;
+      gap: 5px;
+      overflow-y: auto;
+      padding-right: 2px;
     }
 
     .step {
       display: grid;
-      grid-template-columns: 30px 1fr;
-      gap: 8px;
+      grid-template-columns: 25px 1fr;
+      gap: 6px;
       align-items: start;
-      min-height: 48px;
-      padding: 8px;
+      min-height: 0;
+      padding: 6px;
       border: 1px solid #e3edf5;
-      border-radius: 9px;
+      border-radius: 8px;
       background: #fff;
       opacity: 0.42;
     }
@@ -295,8 +314,8 @@
     .step-num {
       display: grid;
       place-items: center;
-      width: 30px;
-      height: 30px;
+      width: 25px;
+      height: 25px;
       border-radius: 999px;
       color: #fff;
       background: var(--teal);
@@ -321,17 +340,23 @@
 
     .step strong {
       display: block;
-      margin-bottom: 2px;
-      font-size: 0.82rem;
+      margin-bottom: 1px;
+      font-size: 0.7rem;
       line-height: 1.18;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .step span {
       display: block;
       color: var(--muted);
-      font-size: 0.75rem;
+      font-size: 0.62rem;
       font-weight: 660;
-      line-height: 1.25;
+      line-height: 1.12;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .board {
@@ -347,7 +372,7 @@
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 12px;
       align-items: center;
-      padding: 11px 14px;
+      padding: 8px 12px;
       border-bottom: 1px solid #dce8f2;
       background: rgba(255, 255, 255, 0.72);
     }
@@ -362,18 +387,18 @@
     .board-subtitle {
       margin: 3px 0 0;
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 720;
       line-height: 1.25;
     }
 
     .stage-pill {
-      min-width: 110px;
-      padding: 7px 10px;
+      min-width: 98px;
+      padding: 6px 9px;
       border-radius: 999px;
       color: #fff;
       background: linear-gradient(135deg, var(--purple), var(--teal));
-      font-size: 0.82rem;
+      font-size: 0.76rem;
       font-weight: 950;
       text-align: center;
       white-space: nowrap;
@@ -382,9 +407,9 @@
     .display-grid {
       min-height: 0;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 300px;
-      gap: 12px;
-      padding: 12px;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 260px);
+      gap: 10px;
+      padding: 10px;
       overflow: hidden;
     }
 
@@ -413,8 +438,8 @@
     .insight-box {
       display: grid;
       grid-template-rows: auto 1fr auto;
-      gap: 10px;
-      padding: 12px;
+      gap: 8px;
+      padding: 10px;
       background:
         linear-gradient(180deg, rgba(240, 253, 250, 0.88), rgba(255, 255, 255, 0.98));
     }
@@ -422,7 +447,7 @@
     .insight-box h3 {
       margin: 0;
       color: var(--teal-dark);
-      font-size: 0.9rem;
+      font-size: 0.78rem;
       font-weight: 950;
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -432,12 +457,12 @@
       min-height: 0;
       display: grid;
       align-content: start;
-      gap: 10px;
+      gap: 8px;
       overflow: hidden;
     }
 
     .formula-card {
-      padding: 10px;
+      padding: 8px;
       border-radius: 10px;
       background: #fff;
       border: 1px solid rgba(16, 167, 160, 0.18);
@@ -446,7 +471,7 @@
 
     .formula-card .label {
       color: var(--muted);
-      font-size: 0.72rem;
+      font-size: 0.64rem;
       font-weight: 900;
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -455,15 +480,16 @@
     .formula-card .math {
       margin-top: 4px;
       font-family: var(--math-font);
-      font-size: 1.2rem;
+      font-size: 0.98rem;
       font-weight: 700;
-      line-height: 1.3;
+      line-height: 1.18;
+      overflow-wrap: anywhere;
     }
 
     .insight-text {
       margin: 0;
       color: #34435a;
-      font-size: 0.86rem;
+      font-size: 0.74rem;
       font-weight: 690;
       line-height: 1.38;
     }
@@ -489,7 +515,7 @@
     .legend {
       display: grid;
       gap: 6px;
-      font-size: 0.74rem;
+      font-size: 0.66rem;
       font-weight: 820;
       color: var(--muted);
     }
@@ -534,7 +560,8 @@
 
     .math-text {
       font-family: var(--math-font);
-      font-weight: 700;
+      font-style: italic;
+      font-weight: 650;
     }
 
     .grid-line {
@@ -596,6 +623,31 @@
       fill: rgba(255, 255, 255, 0.9);
       stroke: rgba(213, 228, 239, 0.9);
       stroke-width: 1;
+    }
+
+    .svg-equation {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(213, 228, 239, 0.95);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.94);
+      color: #13223a;
+      font-family: var(--math-font);
+      font-style: italic;
+      font-size: 17px;
+      font-weight: 650;
+      line-height: 1.05;
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.07);
+    }
+
+    .svg-equation .frac {
+      font-size: 0.92em;
+    }
+
+    .svg-equation .frac > span:first-child {
+      border-bottom-width: 1.6px;
     }
 
     .fade-in {
@@ -725,6 +777,8 @@
             <button type="button" id="resetBtn">Reset</button>
           </div>
           <button class="wide-btn" type="button" id="moveBtn">Move Point</button>
+          <label class="slider-label" for="pointSlider">Drag point P</label>
+          <input class="point-slider" id="pointSlider" type="range" min="0" max="100" value="18">
         </section>
 
         <section class="definition">
@@ -794,6 +848,7 @@
     const equationMath = document.getElementById("equationMath");
     const insightText = document.getElementById("insightText");
     const moveBtn = document.getElementById("moveBtn");
+    const pointSlider = document.getElementById("pointSlider");
 
     const SVG_NS = "http://www.w3.org/2000/svg";
     const graph = {
@@ -880,8 +935,8 @@
         title: "Eccentricity Family",
         summary: "Eccentricity describes how far a conic is from being circular.",
         subtitle: "Changing e changes the type and shape of the conic.",
-        equation: "e = <span class=\"frac\"><span>distance to focus</span><span>distance to directrix</span></span>",
-        definition: "e controls the conic type",
+        equation: "e = <span class=\"frac\"><span>FP</span><span>PD</span></span>",
+        definition: "e = <span class=\"frac\"><span>FP</span><span>PD</span></span>",
         insight: "As e increases, the family moves from circle to ellipse, then parabola, then hyperbola. This gives one unifying idea behind the four conics.",
         steps: [
           ["e = 0", "The circle is perfectly balanced around one centre."],
@@ -916,29 +971,75 @@
       return node;
     }
 
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function wrapLabel(text, maxChars) {
+      const words = String(text).split(/\s+/).filter(Boolean);
+      const lines = [];
+      let current = "";
+      words.forEach((word) => {
+        const next = current ? `${current} ${word}` : word;
+        if (next.length > maxChars && current) {
+          lines.push(current);
+          current = word;
+        } else {
+          current = next;
+        }
+      });
+      if (current) lines.push(current);
+      return lines.slice(0, 3);
+    }
+
     function addText(text, x, y, options = {}) {
       const group = add("g", { class: options.fade ? "fade-in" : "" });
       const padX = options.padX ?? 8;
       const padY = options.padY ?? 5;
-      const width = Math.max(options.width || text.length * 8.5 + padX * 2, options.minWidth || 0);
-      const height = options.height || 28;
+      const width = Math.max(options.width || text.length * 7.8 + padX * 2, options.minWidth || 0);
+      const fontSize = options.size || 15;
+      const shouldWrap = options.wrap !== false && !options.math && options.box !== false && width >= 105;
+      const lines = shouldWrap ? wrapLabel(text, Math.max(12, Math.floor((width - padX * 2) / 7.1))) : [text];
+      const lineHeight = fontSize * 1.1;
+      const height = options.height || Math.max(24, lines.length * lineHeight + padY * 2);
+      const safeX = options.clamp === false ? x : clamp(x, 14, 1000 - width - 14);
+      const safeY = options.clamp === false ? y : clamp(y, height / 2 + 8, 640 - height / 2 - 8);
       if (options.box !== false) {
         add("rect", {
-          x: x - padX,
-          y: y - height / 2,
+          x: safeX - padX,
+          y: safeY - height / 2,
           width,
           height,
           rx: 8,
           class: "label-bg"
         }, group);
       }
-      add("text", {
-        x,
-        y,
-        "font-size": options.size || 17,
-        class: options.math ? "math-text" : ""
-      }, group).textContent = text;
+      const firstY = safeY - ((lines.length - 1) * lineHeight) / 2;
+      lines.forEach((line, index) => {
+        add("text", {
+          x: safeX,
+          y: firstY + index * lineHeight,
+          "font-size": fontSize,
+          class: options.math ? "math-text" : ""
+        }, group).textContent = line;
+      });
       return group;
+    }
+
+    function addEquationBox(html, x, y, options = {}) {
+      const width = options.width || 170;
+      const height = options.height || 52;
+      const safeX = clamp(x, 16, 1000 - width - 16);
+      const safeY = clamp(y, 16, 640 - height - 16);
+      const foreign = add("foreignObject", {
+        x: safeX,
+        y: safeY,
+        width,
+        height,
+        class: options.fade ? "fade-in" : ""
+      });
+      foreign.innerHTML = `<div xmlns="http://www.w3.org/1999/xhtml" class="svg-equation">${html}</div>`;
+      return foreign;
     }
 
     function pathFromPoints(points) {
@@ -1048,7 +1149,7 @@
         addText("Foci together at the centre", xScale(-4.95), yScale(-3.75), { width: 225, fade: true });
       }
       if (state.stage >= 4) {
-        addText("x² + y² = 9", xScale(2.6), yScale(-3.72), { math: true, width: 128, fade: true });
+        addEquationBox("x² + y² = 9", xScale(2.42), yScale(-4.08), { width: 142, height: 42, fade: true });
       }
     }
 
@@ -1080,7 +1181,7 @@
         addText("Focus (a, 0)", xScale(a) + 22, yScale(0) + 34, { width: 110, fade: true, math: true });
       }
       if (state.stage >= 4) {
-        addText("y² = 4ax", xScale(2.85), yScale(-3.65), { width: 112, fade: true, math: true });
+        addEquationBox("y² = 4ax", xScale(2.72), yScale(-4.03), { width: 130, height: 42, fade: true });
       }
     }
 
@@ -1117,10 +1218,10 @@
       if (state.stage >= 3) {
         add("line", { x1: xScale(-directrix), y1: graph.top, x2: xScale(-directrix), y2: graph.top + graph.height, class: "guide fade-in" });
         add("line", { x1: xScale(directrix), y1: graph.top, x2: xScale(directrix), y2: graph.top + graph.height, class: "guide fade-in" });
-        addText("e = c/a", xScale(2.25), yScale(-3.7), { width: 90, fade: true, math: true });
+        addEquationBox("e = <span class=\"frac\"><span>c</span><span>a</span></span>", xScale(2.25), yScale(-4.05), { width: 86, height: 52, fade: true });
       }
       if (state.stage >= 4) {
-        addText("x²/a² + y²/b² = 1", xScale(-5.25), yScale(-3.7), { width: 178, fade: true, math: true });
+        addEquationBox("<span class=\"frac\"><span>x²</span><span>a²</span></span> + <span class=\"frac\"><span>y²</span><span>b²</span></span> = 1", xScale(-5.25), yScale(-4.05), { width: 194, height: 56, fade: true });
         addText(`e ≈ ${e.toFixed(2)}`, xScale(3.45), yScale(3.65), { width: 86, fade: true, math: true });
       }
     }
@@ -1163,7 +1264,7 @@
         addText("asymptotes", xScale(3.25), yScale(2.35), { width: 100, fade: true });
       }
       if (state.stage >= 4) {
-        addText("x²/a² - y²/b² = 1", xScale(-5.2), yScale(-3.7), { width: 178, fade: true, math: true });
+        addEquationBox("<span class=\"frac\"><span>x²</span><span>a²</span></span> - <span class=\"frac\"><span>y²</span><span>b²</span></span> = 1", xScale(-5.2), yScale(-4.05), { width: 194, height: 56, fade: true });
         addText(`e ≈ ${e.toFixed(2)} > 1`, xScale(2.9), yScale(-3.7), { width: 118, fade: true, math: true });
       }
     }
@@ -1171,55 +1272,62 @@
     function drawEccentricityFamily() {
       svg.innerHTML = "";
       const panels = [
-        { label: "Circle", e: "e = 0", x: 154, y: 305, color: "#2563eb" },
-        { label: "Ellipse", e: "0 < e < 1", x: 380, y: 305, color: "#10a7a0" },
-        { label: "Parabola", e: "e = 1", x: 610, y: 305, color: "#f97316" },
-        { label: "Hyperbola", e: "e > 1", x: 835, y: 305, color: "#6554c0" }
+        { label: "Circle", e: "e = 0", x: 160, color: "#2563eb" },
+        { label: "Ellipse", e: "0 < e < 1", x: 386, color: "#10a7a0" },
+        { label: "Parabola", e: "e = 1", x: 612, color: "#f97316" },
+        { label: "Hyperbola", e: "e > 1", x: 838, color: "#6554c0" }
       ];
-      add("rect", { x: 36, y: 36, width: 928, height: 568, rx: 22, fill: "#fbfdff", stroke: "#d5e4ef", "stroke-width": 2 });
-      addText("Eccentricity links the conic family", 72, 78, { box: false, size: 25 });
-      addText("Think of e as the shape controller: small e is closed and rounded, e = 1 is exactly parabolic, and e > 1 opens into two branches.", 72, 116, { width: 825, height: 36, fade: true });
+      add("rect", { x: 36, y: 34, width: 928, height: 572, rx: 20, fill: "#fbfdff", stroke: "#d5e4ef", "stroke-width": 2 });
+      addText("Eccentricity is a shape controller", 68, 68, { box: false, size: 23 });
+      addText("Use the same idea, distance to a focus compared with distance to a directrix. The value of e decides the conic.", 68, 106, { width: 610, height: 42, fade: true });
+      addEquationBox("e = <span class=\"frac\"><span>FP</span><span>PD</span></span>", 742, 70, { width: 148, height: 64, fade: true });
+
+      add("line", { x1: 116, y1: 176, x2: 888, y2: 176, stroke: "#0f766e", "stroke-width": 5, "stroke-linecap": "round" });
       panels.forEach((panel, index) => {
         const revealed = state.stage >= index;
+        add("circle", { cx: panel.x, cy: 176, r: revealed ? 10 : 7, fill: revealed ? panel.color : "#cbd5e1", stroke: "#fff", "stroke-width": 3 });
+        if (revealed) {
+          addText(panel.e, panel.x - 46, 206, { width: 92, height: 28, size: 14, fade: true, math: true });
+        }
         add("rect", {
-          x: panel.x - 95,
-          y: 178,
-          width: 190,
-          height: 315,
-          rx: 18,
+          x: panel.x - 86,
+          y: 252,
+          width: 172,
+          height: 250,
+          rx: 16,
           fill: revealed ? "#ffffff" : "#f1f5f9",
           stroke: revealed ? panel.color : "#d9e4ef",
-          "stroke-width": revealed ? 3 : 1.5,
+          "stroke-width": revealed ? 2.8 : 1.4,
           class: "fade-in"
         });
         if (revealed) {
           if (panel.label === "Circle") {
-            add("circle", { cx: panel.x, cy: panel.y, r: 58, fill: "none", stroke: panel.color, "stroke-width": 6 });
-            add("circle", { cx: panel.x, cy: panel.y, r: 7, fill: "#ef4444" });
+            add("circle", { cx: panel.x, cy: 365, r: 50, fill: "none", stroke: panel.color, "stroke-width": 6 });
+            add("circle", { cx: panel.x, cy: 365, r: 6, fill: "#ef4444" });
           } else if (panel.label === "Ellipse") {
-            add("ellipse", { cx: panel.x, cy: panel.y, rx: 72, ry: 45, fill: "none", stroke: panel.color, "stroke-width": 6 });
-            add("circle", { cx: panel.x - 38, cy: panel.y, r: 6, fill: "#ef4444" });
-            add("circle", { cx: panel.x + 38, cy: panel.y, r: 6, fill: "#ef4444" });
+            add("ellipse", { cx: panel.x, cy: 365, rx: 64, ry: 40, fill: "none", stroke: panel.color, "stroke-width": 6 });
+            add("circle", { cx: panel.x - 34, cy: 365, r: 5.5, fill: "#ef4444" });
+            add("circle", { cx: panel.x + 34, cy: 365, r: 5.5, fill: "#ef4444" });
           } else if (panel.label === "Parabola") {
             const pts = [];
-            for (let t = -2.1; t <= 2.1; t += 0.08) pts.push({ x: panel.x - 35 + 14 * t * t, y: panel.y + 28 * t });
+            for (let t = -2.0; t <= 2.0; t += 0.08) pts.push({ x: panel.x - 36 + 13 * t * t, y: 365 + 26 * t });
             add("path", { d: pts.map((p, i) => `${i ? "L" : "M"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" "), fill: "none", stroke: panel.color, "stroke-width": 6, "stroke-linecap": "round" });
-            add("circle", { cx: panel.x + 34, cy: panel.y, r: 6, fill: "#ef4444" });
-            add("line", { x1: panel.x - 68, y1: panel.y - 85, x2: panel.x - 68, y2: panel.y + 85, stroke: "#e54879", "stroke-width": 4, "stroke-dasharray": "8 7" });
+            add("circle", { cx: panel.x + 31, cy: 365, r: 5.5, fill: "#ef4444" });
+            add("line", { x1: panel.x - 64, y1: 288, x2: panel.x - 64, y2: 442, stroke: "#e54879", "stroke-width": 4, "stroke-dasharray": "8 7" });
           } else {
-            add("path", { d: `M ${panel.x + 8} ${panel.y - 82} C ${panel.x + 58} ${panel.y - 56}, ${panel.x + 58} ${panel.y + 56}, ${panel.x + 8} ${panel.y + 82}`, fill: "none", stroke: panel.color, "stroke-width": 6, "stroke-linecap": "round" });
-            add("path", { d: `M ${panel.x - 8} ${panel.y - 82} C ${panel.x - 58} ${panel.y - 56}, ${panel.x - 58} ${panel.y + 56}, ${panel.x - 8} ${panel.y + 82}`, fill: "none", stroke: panel.color, "stroke-width": 6, "stroke-linecap": "round" });
-            add("circle", { cx: panel.x - 54, cy: panel.y, r: 6, fill: "#ef4444" });
-            add("circle", { cx: panel.x + 54, cy: panel.y, r: 6, fill: "#ef4444" });
+            add("path", { d: `M ${panel.x + 8} 292 C ${panel.x + 56} 320, ${panel.x + 56} 410, ${panel.x + 8} 438`, fill: "none", stroke: panel.color, "stroke-width": 6, "stroke-linecap": "round" });
+            add("path", { d: `M ${panel.x - 8} 292 C ${panel.x - 56} 320, ${panel.x - 56} 410, ${panel.x - 8} 438`, fill: "none", stroke: panel.color, "stroke-width": 6, "stroke-linecap": "round" });
+            add("circle", { cx: panel.x - 52, cy: 365, r: 5.5, fill: "#ef4444" });
+            add("circle", { cx: panel.x + 52, cy: 365, r: 5.5, fill: "#ef4444" });
           }
-          addText(panel.label, panel.x - 63, 515, { box: false, size: 19 });
-          addText(panel.e, panel.x - 58, 546, { width: 116, size: 17, math: true });
+          addText(panel.label, panel.x - 42, 276, { box: false, size: 17 });
         } else {
-          addText("Reveal", panel.x - 28, panel.y, { box: false, size: 18 });
+          addText("Reveal", panel.x - 27, 365, { box: false, size: 16 });
         }
       });
-      add("path", { d: "M 112 575 C 310 615, 624 616, 890 574", fill: "none", stroke: "#f5b71b", "stroke-width": 6, "stroke-linecap": "round" });
-      add("path", { d: "M 872 558 L 903 572 L 878 593", fill: "none", stroke: "#f5b71b", "stroke-width": 6, "stroke-linecap": "round", "stroke-linejoin": "round" });
+      addText("As e increases, the curve moves from closed and rounded to open and split.", 126, 550, { width: 650, height: 34, fade: true });
+      add("path", { d: "M 790 545 L 886 545", fill: "none", stroke: "#f5b71b", "stroke-width": 6, "stroke-linecap": "round" });
+      add("path", { d: "M 868 528 L 892 545 L 868 562", fill: "none", stroke: "#f5b71b", "stroke-width": 6, "stroke-linecap": "round", "stroke-linejoin": "round" });
     }
 
     function drawCurrent() {
@@ -1264,6 +1372,9 @@
       insightText.textContent = data.steps[state.stage]?.[1] || data.insight;
       if (state.stage >= max) insightText.textContent = data.insight;
       modeSelect.value = state.mode;
+      pointSlider.value = Math.round(state.progress * 100);
+      pointSlider.disabled = state.mode === "eccentricity";
+      if (!state.moving) moveBtn.textContent = state.mode === "eccentricity" ? "Reveal Family" : "Move Point";
       [...modeButtons.querySelectorAll("[data-mode]")].forEach((button) => {
         button.classList.toggle("active", button.dataset.mode === state.mode);
       });
@@ -1304,6 +1415,7 @@
 
     function moveTick() {
       state.progress = (state.progress + 0.006) % 1;
+      pointSlider.value = Math.round(state.progress * 100);
       drawCurrent();
     }
 
@@ -1343,6 +1455,13 @@
     document.getElementById("showBtn").addEventListener("click", showAll);
     document.getElementById("resetBtn").addEventListener("click", reset);
     moveBtn.addEventListener("click", toggleMove);
+    pointSlider.addEventListener("input", () => {
+      if (state.mode === "eccentricity") return;
+      stopMoving();
+      state.progress = Number(pointSlider.value) / 100;
+      state.stage = Math.max(state.stage, 2);
+      render();
+    });
 
     document.getElementById("fullscreenBtn").addEventListener("click", async () => {
       if (!document.fullscreenElement) {

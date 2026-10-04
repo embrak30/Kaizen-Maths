@@ -257,5 +257,8 @@
     tagButtons();
     labelDiagrams();
   });
-  observer.observe(document.documentElement, { childList: true, subtree: true });
+  const observerTarget = document.documentElement || document.body;
+  if (observerTarget?.nodeType) {
+    observer.observe(observerTarget, { childList: true, subtree: true });
+  }
 })();
