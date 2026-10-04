@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conic Sections Explorer | Kaizen Maths</title>
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <script src="../../auth-config.js?v=tool-access-guard-3"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-3"></script>
+  <style>
+    :root {
+      --ink: #13223a;
+      --muted: #5d6f86;
+      --line: #d5e4ef;
+      --paper: #ffffff;
+      --soft: #f4fbff;
+      --teal: #10a7a0;
+      --teal-dark: #08736f;
+      --orange: #f97316;
+      --gold: #f5b71b;
+      --blue: #2563eb;
+      --purple: #6554c0;
+      --rose: #e54879;
+      --green: #16a34a;
+      --math-font: "KaTeX_Math", "KaTeX_Main", "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+      --ui-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --shadow: 0 16px 36px rgba(18, 34, 58, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      color: var(--ink);
+      font-family: var(--ui-font);
+      background:
+        linear-gradient(135deg, rgba(16, 167, 160, 0.13), rgba(249, 115, 22, 0.10)),
+        repeating-linear-gradient(135deg, rgba(37, 99, 235, 0.045) 0 1px, transparent 1px 30px),
+        #f8fcff;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      min-height: 76px;
+      padding: 12px 16px;
+      color: #fff;
+      background: linear-gradient(135deg, #13223a, #0f766e 68%, #f97316 145%);
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.22);
+      z-index: 5;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.05rem, 1.6vw, 1.42rem);
+      line-height: 1.05;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: rgba(236, 253, 245, 0.92);
+      font-size: 0.82rem;
+      font-weight: 720;
+      line-height: 1.25;
+    }
+
+    .top-actions {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .mode-btn,
+    .action-btn {
+      min-height: 36px;
+      padding: 8px 11px;
+      border-radius: 8px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.13);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .mode-btn.active {
+      color: #13223a;
+      background: #ffffff;
+      border-color: #ffffff;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.16);
+    }
+
+    .action-btn {
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 285px minmax(0, 1fr);
+      gap: 12px;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .side-panel,
+    .board {
+      min-height: 0;
+      border: 1px solid rgba(16, 167, 160, 0.23);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .side-panel {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 10px;
+      padding: 12px;
+    }
+
+    .panel-block {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .panel-title {
+      margin: 0;
+      color: var(--teal-dark);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    select {
+      width: 100%;
+      min-height: 42px;
+      padding: 8px 10px;
+      border: 1px solid #99f6e4;
+      border-radius: 8px;
+      background: white;
+      color: var(--ink);
+      font-weight: 820;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .control-grid button,
+    .wide-btn {
+      min-height: 42px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--teal);
+      font-size: 0.84rem;
+      font-weight: 920;
+      box-shadow: 0 8px 18px rgba(16, 167, 160, 0.22);
+    }
+
+    .control-grid button:nth-child(2) {
+      background: var(--purple);
+      box-shadow: 0 8px 18px rgba(101, 84, 192, 0.20);
+    }
+
+    .control-grid button:nth-child(3) {
+      background: var(--gold);
+      color: #13223a;
+      box-shadow: 0 8px 18px rgba(245, 183, 27, 0.22);
+    }
+
+    .control-grid button:nth-child(4) {
+      background: var(--orange);
+      box-shadow: 0 8px 18px rgba(249, 115, 22, 0.22);
+    }
+
+    .wide-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--blue), var(--teal));
+    }
+
+    .definition {
+      display: grid;
+      gap: 8px;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .definition-card {
+      border: 1px solid #dff4f1;
+      border-left: 6px solid var(--teal);
+      border-radius: 9px;
+      padding: 10px 11px;
+      background: linear-gradient(135deg, rgba(240, 253, 250, 0.95), rgba(255, 247, 237, 0.72));
+    }
+
+    .definition-card h2 {
+      margin: 0 0 5px;
+      font-size: 1rem;
+      line-height: 1.16;
+      font-weight: 950;
+    }
+
+    .definition-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 680;
+      line-height: 1.32;
+    }
+
+    .equation-chip {
+      display: inline-grid;
+      align-items: center;
+      margin-top: 9px;
+      min-height: 38px;
+      padding: 7px 10px;
+      border-radius: 9px;
+      color: #13223a;
+      background: #fff;
+      border: 1px solid rgba(16, 167, 160, 0.20);
+      font-family: var(--math-font);
+      font-size: 1.08rem;
+      font-weight: 700;
+      box-shadow: 0 6px 15px rgba(15, 23, 42, 0.07);
+    }
+
+    .step-list {
+      min-height: 0;
+      display: grid;
+      gap: 7px;
+      overflow: hidden;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 8px;
+      align-items: start;
+      min-height: 48px;
+      padding: 8px;
+      border: 1px solid #e3edf5;
+      border-radius: 9px;
+      background: #fff;
+      opacity: 0.42;
+    }
+
+    .step.revealed {
+      opacity: 1;
+      border-color: rgba(16, 167, 160, 0.30);
+      background: linear-gradient(135deg, #fff, #f6fffd);
+    }
+
+    .step.current {
+      outline: 2px solid rgba(249, 115, 22, 0.42);
+    }
+
+    .step-num {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--teal);
+      font-weight: 950;
+    }
+
+    .step:nth-child(2) .step-num {
+      background: var(--purple);
+    }
+
+    .step:nth-child(3) .step-num {
+      background: var(--orange);
+    }
+
+    .step:nth-child(4) .step-num {
+      background: var(--blue);
+    }
+
+    .step:nth-child(5) .step-num {
+      background: var(--green);
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 0.82rem;
+      line-height: 1.18;
+    }
+
+    .step span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 660;
+      line-height: 1.25;
+    }
+
+    .board {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 253, 250, 0.88)),
+        #fff;
+    }
+
+    .board-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 11px 14px;
+      border-bottom: 1px solid #dce8f2;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .board-title {
+      margin: 0;
+      font-size: clamp(1.05rem, 1.5vw, 1.38rem);
+      line-height: 1.1;
+      font-weight: 950;
+    }
+
+    .board-subtitle {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 720;
+      line-height: 1.25;
+    }
+
+    .stage-pill {
+      min-width: 110px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--purple), var(--teal));
+      font-size: 0.82rem;
+      font-weight: 950;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .display-grid {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 12px;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .svg-wrap,
+    .insight-box {
+      min-height: 0;
+      border: 1px solid #dce8f2;
+      border-radius: 10px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .svg-wrap {
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .conic-svg {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      touch-action: none;
+    }
+
+    .insight-box {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 10px;
+      padding: 12px;
+      background:
+        linear-gradient(180deg, rgba(240, 253, 250, 0.88), rgba(255, 255, 255, 0.98));
+    }
+
+    .insight-box h3 {
+      margin: 0;
+      color: var(--teal-dark);
+      font-size: 0.9rem;
+      font-weight: 950;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .insight-main {
+      min-height: 0;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .formula-card {
+      padding: 10px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid rgba(16, 167, 160, 0.18);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+    }
+
+    .formula-card .label {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .formula-card .math {
+      margin-top: 4px;
+      font-family: var(--math-font);
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .insight-text {
+      margin: 0;
+      color: #34435a;
+      font-size: 0.86rem;
+      font-weight: 690;
+      line-height: 1.38;
+    }
+
+    .frac {
+      display: inline-grid;
+      grid-template-rows: auto auto;
+      align-items: center;
+      justify-items: center;
+      line-height: 1;
+      vertical-align: middle;
+    }
+
+    .frac > span:first-child {
+      padding: 0 0.18em 0.12em;
+      border-bottom: 1.8px solid currentColor;
+    }
+
+    .frac > span:last-child {
+      padding-top: 0.1em;
+    }
+
+    .legend {
+      display: grid;
+      gap: 6px;
+      font-size: 0.74rem;
+      font-weight: 820;
+      color: var(--muted);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .swatch {
+      width: 24px;
+      height: 4px;
+      border-radius: 99px;
+      background: var(--teal);
+    }
+
+    .swatch.focus {
+      background: var(--orange);
+    }
+
+    .swatch.directrix {
+      background: var(--rose);
+      background-image: repeating-linear-gradient(90deg, #fff 0 4px, transparent 4px 8px);
+    }
+
+    .swatch.distance {
+      background: var(--purple);
+    }
+
+    .kaizen-diagram-scale-note {
+      display: none !important;
+    }
+
+    svg text {
+      font-family: var(--ui-font);
+      fill: #26364f;
+      font-weight: 800;
+      dominant-baseline: middle;
+      letter-spacing: 0;
+    }
+
+    .math-text {
+      font-family: var(--math-font);
+      font-weight: 700;
+    }
+
+    .grid-line {
+      stroke: #e3edf6;
+      stroke-width: 1;
+    }
+
+    .axis {
+      stroke: #16213f;
+      stroke-width: 2.2;
+    }
+
+    .curve {
+      fill: none;
+      stroke: var(--teal);
+      stroke-width: 4.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 5px 6px rgba(16, 167, 160, 0.18));
+    }
+
+    .curve-secondary {
+      stroke: var(--blue);
+    }
+
+    .guide {
+      stroke: var(--rose);
+      stroke-width: 3.4;
+      stroke-dasharray: 10 8;
+    }
+
+    .distance {
+      stroke: var(--purple);
+      stroke-width: 3.4;
+      stroke-dasharray: 7 7;
+    }
+
+    .asymptote {
+      stroke: #9aa8ba;
+      stroke-width: 2.2;
+      stroke-dasharray: 9 9;
+    }
+
+    .point {
+      fill: var(--orange);
+      stroke: #fff;
+      stroke-width: 3;
+    }
+
+    .point-focus {
+      fill: var(--rose);
+    }
+
+    .point-centre {
+      fill: var(--blue);
+    }
+
+    .label-bg {
+      fill: rgba(255, 255, 255, 0.9);
+      stroke: rgba(213, 228, 239, 0.9);
+      stroke-width: 1;
+    }
+
+    .fade-in {
+      animation: fadeUp 360ms ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .board:fullscreen {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .app:fullscreen {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(0, 1fr);
+      }
+
+      .side-panel {
+        grid-template-columns: 230px minmax(0, 1fr) 200px;
+        grid-template-rows: auto;
+        align-items: start;
+      }
+
+      .definition {
+        display: none;
+      }
+
+      .display-grid {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr) auto;
+      }
+
+      .insight-box {
+        min-height: 150px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr;
+      }
+
+      .legend {
+        align-content: start;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .workspace {
+        padding: 8px;
+      }
+
+      .side-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .display-grid {
+        padding: 8px;
+      }
+
+      .board-header {
+        grid-template-columns: 1fr;
+      }
+
+      .stage-pill {
+        justify-self: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" id="appShell">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Conic Sections Explorer</h1>
+        <p>Focus, directrix, eccentricity, and standard equations as one visual story</p>
+      </div>
+      <div class="top-actions" id="modeButtons">
+        <button class="mode-btn active" type="button" data-mode="circle">Circle</button>
+        <button class="mode-btn" type="button" data-mode="parabola">Parabola</button>
+        <button class="mode-btn" type="button" data-mode="ellipse">Ellipse</button>
+        <button class="mode-btn" type="button" data-mode="hyperbola">Hyperbola</button>
+        <button class="mode-btn" type="button" data-mode="eccentricity">Eccentricity</button>
+        <button class="action-btn" type="button" id="fullscreenBtn">Full Screen</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <aside class="side-panel">
+        <section class="panel-block">
+          <h2 class="panel-title">Display</h2>
+          <select id="modeSelect" aria-label="Select conic display">
+            <option value="circle">Circle: one fixed distance</option>
+            <option value="parabola">Parabola: focus and directrix</option>
+            <option value="ellipse">Ellipse: constant sum of distances</option>
+            <option value="hyperbola">Hyperbola: constant difference of distances</option>
+            <option value="eccentricity">Eccentricity family</option>
+          </select>
+        </section>
+
+        <section class="panel-block">
+          <h2 class="panel-title">Reveal</h2>
+          <div class="control-grid">
+            <button type="button" id="backBtn">Back</button>
+            <button type="button" id="nextBtn">Next</button>
+            <button type="button" id="showBtn">Show All</button>
+            <button type="button" id="resetBtn">Reset</button>
+          </div>
+          <button class="wide-btn" type="button" id="moveBtn">Move Point</button>
+        </section>
+
+        <section class="definition">
+          <article class="definition-card">
+            <h2 id="sideTitle">Circle</h2>
+            <p id="sideSummary">A circle is the set of points at a fixed distance from one centre.</p>
+            <div class="equation-chip" id="sideEquation">x² + y² = r²</div>
+          </article>
+          <div class="step-list" id="stepList" aria-live="polite"></div>
+        </section>
+      </aside>
+
+      <section class="board" id="board">
+        <header class="board-header">
+          <div>
+            <h2 class="board-title" id="boardTitle">Circle</h2>
+            <p class="board-subtitle" id="boardSubtitle">The distance from the centre is constant.</p>
+          </div>
+          <div class="stage-pill" id="stagePill">Step 1 of 5</div>
+        </header>
+
+        <section class="display-grid">
+          <div class="svg-wrap" data-kaizen-scale-note="true">
+            <svg class="conic-svg" id="conicSvg" viewBox="0 0 1000 640" role="img" aria-label="Conic section coordinate display"></svg>
+            <span class="kaizen-diagram-scale-note" aria-hidden="true"></span>
+          </div>
+
+          <aside class="insight-box">
+            <h3 id="insightTitle">What to notice</h3>
+            <div class="insight-main">
+              <article class="formula-card">
+                <div class="label">Definition</div>
+                <div class="math" id="definitionMath">CP = r</div>
+              </article>
+              <article class="formula-card">
+                <div class="label">Equation</div>
+                <div class="math" id="equationMath">x² + y² = r²</div>
+              </article>
+              <p class="insight-text" id="insightText">Every point on the circle keeps the same distance from the centre.</p>
+            </div>
+            <div class="legend">
+              <div class="legend-item"><span class="swatch"></span>Conic curve</div>
+              <div class="legend-item"><span class="swatch focus"></span>Focus, centre, or moving point</div>
+              <div class="legend-item"><span class="swatch directrix"></span>Directrix / guide line</div>
+              <div class="legend-item"><span class="swatch distance"></span>Distance relationship</div>
+            </div>
+          </aside>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const svg = document.getElementById("conicSvg");
+    const appShell = document.getElementById("appShell");
+    const board = document.getElementById("board");
+    const modeButtons = document.getElementById("modeButtons");
+    const modeSelect = document.getElementById("modeSelect");
+    const stepList = document.getElementById("stepList");
+    const sideTitle = document.getElementById("sideTitle");
+    const sideSummary = document.getElementById("sideSummary");
+    const sideEquation = document.getElementById("sideEquation");
+    const boardTitle = document.getElementById("boardTitle");
+    const boardSubtitle = document.getElementById("boardSubtitle");
+    const stagePill = document.getElementById("stagePill");
+    const definitionMath = document.getElementById("definitionMath");
+    const equationMath = document.getElementById("equationMath");
+    const insightText = document.getElementById("insightText");
+    const moveBtn = document.getElementById("moveBtn");
+
+    const SVG_NS = "http://www.w3.org/2000/svg";
+    const graph = {
+      left: 72,
+      top: 42,
+      width: 748,
+      height: 548,
+      xMin: -6,
+      xMax: 6,
+      yMin: -4.4,
+      yMax: 4.4
+    };
+
+    const state = {
+      mode: "circle",
+      stage: 0,
+      progress: 0.18,
+      moving: false,
+      timer: null
+    };
+
+    const copy = {
+      circle: {
+        title: "Circle",
+        summary: "A circle is the set of points at a fixed distance from one centre.",
+        subtitle: "The distance from the centre is constant.",
+        equation: "x² + y² = r²",
+        definition: "CP = r",
+        insight: "A circle is the special conic where the eccentricity is 0. It can be viewed as an ellipse whose two foci have collapsed into the centre.",
+        steps: [
+          ["Start with a centre", "The centre is the fixed reference point."],
+          ["Keep one distance fixed", "The moving point must stay r units from the centre."],
+          ["Trace all possible positions", "Those positions form the circular curve."],
+          ["Write the equation", "For centre (0, 0), the equation records x² + y² as the fixed squared distance."],
+          ["Connect to conics", "A circle has eccentricity e = 0; it is the most symmetric conic."]
+        ]
+      },
+      parabola: {
+        title: "Parabola",
+        summary: "A parabola is the set of points equally distant from one focus and one directrix.",
+        subtitle: "Distance to the focus equals perpendicular distance to the directrix.",
+        equation: "y² = 4ax",
+        definition: "PF = distance from P to directrix",
+        insight: "The focus pulls the curve one way, while the directrix balances it. Every point on the parabola satisfies the same equality of distances.",
+        steps: [
+          ["Place the focus and directrix", "The focus is a point; the directrix is a fixed straight line."],
+          ["Choose a moving point P", "P belongs to the parabola only when two distances match."],
+          ["Compare the distances", "PF equals the shortest distance from P to the directrix."],
+          ["Read the parameter a", "The focus is (a, 0) and the directrix is x = -a."],
+          ["Write the equation", "For this orientation, the distance rule simplifies to y² = 4ax."]
+        ]
+      },
+      ellipse: {
+        title: "Ellipse",
+        summary: "An ellipse is the set of points where the sum of distances to two foci is constant.",
+        subtitle: "The total PF₁ + PF₂ stays the same.",
+        equation: "<span class=\"frac\"><span>x²</span><span>a²</span></span> + <span class=\"frac\"><span>y²</span><span>b²</span></span> = 1",
+        definition: "PF₁ + PF₂ = 2a",
+        insight: "The foci control the stretch of the ellipse. The closer the eccentricity is to 1, the more elongated the ellipse becomes.",
+        steps: [
+          ["Start with two foci", "The foci sit inside the ellipse on the major axis."],
+          ["Choose a moving point P", "P can move, but the total distance back to the two foci is fixed."],
+          ["Keep the sum constant", "PF₁ + PF₂ always equals 2a."],
+          ["Relate a, b, and c", "For an ellipse, c² = a² - b² and e = c/a."],
+          ["Write the equation", "The standard form records the horizontal and vertical scale of the curve."]
+        ]
+      },
+      hyperbola: {
+        title: "Hyperbola",
+        summary: "A hyperbola is the set of points where the difference of distances to two foci is constant.",
+        subtitle: "The absolute difference |PF₁ - PF₂| stays the same.",
+        equation: "<span class=\"frac\"><span>x²</span><span>a²</span></span> - <span class=\"frac\"><span>y²</span><span>b²</span></span> = 1",
+        definition: "|PF₁ - PF₂| = 2a",
+        insight: "The asymptotes show the direction the branches approach. For a hyperbola, eccentricity is greater than 1.",
+        steps: [
+          ["Start with two foci", "The foci lie outside the central gap."],
+          ["Choose a point on one branch", "The point belongs to the hyperbola when a distance difference is fixed."],
+          ["Keep the difference constant", "|PF₁ - PF₂| always equals 2a."],
+          ["Show the asymptotes", "The branches get closer to these guide lines as they move outward."],
+          ["Write the equation", "The minus sign separates the hyperbola from the ellipse."]
+        ]
+      },
+      eccentricity: {
+        title: "Eccentricity Family",
+        summary: "Eccentricity describes how far a conic is from being circular.",
+        subtitle: "Changing e changes the type and shape of the conic.",
+        equation: "e = <span class=\"frac\"><span>distance to focus</span><span>distance to directrix</span></span>",
+        definition: "e controls the conic type",
+        insight: "As e increases, the family moves from circle to ellipse, then parabola, then hyperbola. This gives one unifying idea behind the four conics.",
+        steps: [
+          ["e = 0", "The circle is perfectly balanced around one centre."],
+          ["0 < e < 1", "The ellipse is closed and has two foci."],
+          ["e = 1", "The parabola is exactly balanced between focus and directrix."],
+          ["e > 1", "The hyperbola opens into two branches."],
+          ["One family", "Focus, directrix, distance, and eccentricity connect the shapes."]
+        ]
+      }
+    };
+
+    function xScale(x) {
+      return graph.left + ((x - graph.xMin) / (graph.xMax - graph.xMin)) * graph.width;
+    }
+
+    function yScale(y) {
+      return graph.top + graph.height - ((y - graph.yMin) / (graph.yMax - graph.yMin)) * graph.height;
+    }
+
+    function createSvg(tag, attrs = {}, children = []) {
+      const node = document.createElementNS(SVG_NS, tag);
+      Object.entries(attrs).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) node.setAttribute(key, String(value));
+      });
+      children.forEach((child) => node.appendChild(child));
+      return node;
+    }
+
+    function add(tag, attrs = {}, parent = svg) {
+      const node = createSvg(tag, attrs);
+      parent.appendChild(node);
+      return node;
+    }
+
+    function addText(text, x, y, options = {}) {
+      const group = add("g", { class: options.fade ? "fade-in" : "" });
+      const padX = options.padX ?? 8;
+      const padY = options.padY ?? 5;
+      const width = Math.max(options.width || text.length * 8.5 + padX * 2, options.minWidth || 0);
+      const height = options.height || 28;
+      if (options.box !== false) {
+        add("rect", {
+          x: x - padX,
+          y: y - height / 2,
+          width,
+          height,
+          rx: 8,
+          class: "label-bg"
+        }, group);
+      }
+      add("text", {
+        x,
+        y,
+        "font-size": options.size || 17,
+        class: options.math ? "math-text" : ""
+      }, group).textContent = text;
+      return group;
+    }
+
+    function pathFromPoints(points) {
+      return points.map((point, index) => `${index ? "L" : "M"} ${xScale(point.x).toFixed(2)} ${yScale(point.y).toFixed(2)}`).join(" ");
+    }
+
+    function drawGrid() {
+      add("rect", {
+        x: graph.left,
+        y: graph.top,
+        width: graph.width,
+        height: graph.height,
+        rx: 14,
+        fill: "#fbfdff",
+        stroke: "#d4e1ec",
+        "stroke-width": 1.5
+      });
+
+      for (let x = Math.ceil(graph.xMin); x <= Math.floor(graph.xMax); x += 1) {
+        add("line", {
+          x1: xScale(x),
+          y1: graph.top,
+          x2: xScale(x),
+          y2: graph.top + graph.height,
+          class: "grid-line"
+        });
+      }
+      for (let y = Math.ceil(graph.yMin); y <= Math.floor(graph.yMax); y += 1) {
+        add("line", {
+          x1: graph.left,
+          y1: yScale(y),
+          x2: graph.left + graph.width,
+          y2: yScale(y),
+          class: "grid-line"
+        });
+      }
+
+      add("line", { x1: xScale(graph.xMin), y1: yScale(0), x2: xScale(graph.xMax), y2: yScale(0), class: "axis" });
+      add("line", { x1: xScale(0), y1: yScale(graph.yMin), x2: xScale(0), y2: yScale(graph.yMax), class: "axis" });
+      addText("x", xScale(graph.xMax) + 12, yScale(0), { box: false, size: 19, math: true });
+      addText("y", xScale(0) + 12, yScale(graph.yMax) - 14, { box: false, size: 19, math: true });
+    }
+
+    function drawPoint(point, label, className = "point", dx = 12, dy = -14) {
+      add("circle", {
+        cx: xScale(point.x),
+        cy: yScale(point.y),
+        r: 8,
+        class: `${className} fade-in`
+      });
+      if (label) addText(label, xScale(point.x) + dx, yScale(point.y) + dy, { box: true, size: 16, fade: true, minWidth: 34 });
+    }
+
+    function drawSegment(a, b, className = "distance") {
+      add("line", {
+        x1: xScale(a.x),
+        y1: yScale(a.y),
+        x2: xScale(b.x),
+        y2: yScale(b.y),
+        class: `${className} fade-in`
+      });
+    }
+
+    function circlePoint() {
+      const theta = state.progress * Math.PI * 2;
+      return { x: 3 * Math.cos(theta), y: 3 * Math.sin(theta) };
+    }
+
+    function parabolaPoint() {
+      const a = 1.15;
+      const t = -1.75 + state.progress * 3.5;
+      return { x: a * t * t, y: 2 * a * t };
+    }
+
+    function ellipsePoint() {
+      const theta = state.progress * Math.PI * 2;
+      return { x: 3.45 * Math.cos(theta), y: 2.25 * Math.sin(theta) };
+    }
+
+    function hyperbolaPoint() {
+      const a = 2.0;
+      const b = 1.35;
+      const t = -1.22 + state.progress * 2.44;
+      return { x: a * Math.cosh(t), y: b * Math.sinh(t) };
+    }
+
+    function drawCircle() {
+      drawGrid();
+      const centre = { x: 0, y: 0 };
+      const point = circlePoint();
+      add("circle", {
+        cx: xScale(0),
+        cy: yScale(0),
+        r: Math.abs(xScale(3) - xScale(0)),
+        class: "curve"
+      });
+      if (state.stage >= 0) drawPoint(centre, "C", "point-centre", 12, -16);
+      if (state.stage >= 1) {
+        drawPoint(point, "P", "point", 12, -15);
+        drawSegment(centre, point, "distance");
+        addText("CP = r", (xScale(centre.x) + xScale(point.x)) / 2 + 12, (yScale(centre.y) + yScale(point.y)) / 2 - 14, { math: true, fade: true });
+      }
+      if (state.stage >= 2) {
+        addText("Every point stays the same distance from C", 110, 82, { width: 310, fade: true });
+      }
+      if (state.stage >= 3) {
+        addText("Foci together at the centre", xScale(-4.95), yScale(-3.75), { width: 225, fade: true });
+      }
+      if (state.stage >= 4) {
+        addText("x² + y² = 9", xScale(2.6), yScale(-3.72), { math: true, width: 128, fade: true });
+      }
+    }
+
+    function drawParabola() {
+      drawGrid();
+      const a = 1.15;
+      const focus = { x: a, y: 0 };
+      const point = parabolaPoint();
+      const foot = { x: -a, y: point.y };
+      const curve = [];
+      for (let y = -4.1; y <= 4.1; y += 0.08) {
+        curve.push({ x: (y * y) / (4 * a), y });
+      }
+      add("path", { d: pathFromPoints(curve), class: "curve" });
+      addText("V", xScale(0) + 10, yScale(0) + 18, { box: false, size: 16, math: true });
+      if (state.stage >= 0) drawPoint(focus, "F", "point-focus", 12, -16);
+      if (state.stage >= 1) {
+        add("line", { x1: xScale(-a), y1: graph.top, x2: xScale(-a), y2: graph.top + graph.height, class: "guide fade-in" });
+        addText("directrix  x = -a", xScale(-a) - 132, graph.top + 30, { width: 126, fade: true, math: true });
+      }
+      if (state.stage >= 2) {
+        drawPoint(point, "P", "point", 12, -16);
+        drawSegment(point, focus, "distance");
+        drawSegment(point, foot, "distance");
+        addText("PF", (xScale(point.x) + xScale(focus.x)) / 2 + 10, (yScale(point.y) + yScale(focus.y)) / 2 - 14, { math: true, fade: true });
+        addText("same distance", (xScale(point.x) + xScale(foot.x)) / 2 - 62, yScale(point.y) - 18, { width: 120, fade: true });
+      }
+      if (state.stage >= 3) {
+        addText("Focus (a, 0)", xScale(a) + 22, yScale(0) + 34, { width: 110, fade: true, math: true });
+      }
+      if (state.stage >= 4) {
+        addText("y² = 4ax", xScale(2.85), yScale(-3.65), { width: 112, fade: true, math: true });
+      }
+    }
+
+    function drawEllipse() {
+      drawGrid();
+      const a = 3.45;
+      const b = 2.25;
+      const c = Math.sqrt(a * a - b * b);
+      const e = c / a;
+      const directrix = (a * a) / c;
+      const f1 = { x: -c, y: 0 };
+      const f2 = { x: c, y: 0 };
+      const point = ellipsePoint();
+      const curve = [];
+      for (let i = 0; i <= 240; i += 1) {
+        const theta = (i / 240) * Math.PI * 2;
+        curve.push({ x: a * Math.cos(theta), y: b * Math.sin(theta) });
+      }
+      add("path", { d: pathFromPoints(curve) + " Z", class: "curve" });
+      add("line", { x1: xScale(-a), y1: yScale(0), x2: xScale(a), y2: yScale(0), stroke: "#94a3b8", "stroke-width": 2.2, "stroke-dasharray": "6 7" });
+      add("line", { x1: xScale(0), y1: yScale(-b), x2: xScale(0), y2: yScale(b), stroke: "#94a3b8", "stroke-width": 2.2, "stroke-dasharray": "6 7" });
+      if (state.stage >= 0) {
+        drawPoint(f1, "F₁", "point-focus", -38, -16);
+        drawPoint(f2, "F₂", "point-focus", 12, -16);
+      }
+      if (state.stage >= 1) {
+        drawPoint(point, "P", "point", 12, -16);
+      }
+      if (state.stage >= 2) {
+        drawSegment(point, f1, "distance");
+        drawSegment(point, f2, "distance");
+        addText("PF₁ + PF₂ = 2a", xScale(-1.25), yScale(3.65), { width: 154, fade: true, math: true });
+      }
+      if (state.stage >= 3) {
+        add("line", { x1: xScale(-directrix), y1: graph.top, x2: xScale(-directrix), y2: graph.top + graph.height, class: "guide fade-in" });
+        add("line", { x1: xScale(directrix), y1: graph.top, x2: xScale(directrix), y2: graph.top + graph.height, class: "guide fade-in" });
+        addText("e = c/a", xScale(2.25), yScale(-3.7), { width: 90, fade: true, math: true });
+      }
+      if (state.stage >= 4) {
+        addText("x²/a² + y²/b² = 1", xScale(-5.25), yScale(-3.7), { width: 178, fade: true, math: true });
+        addText(`e ≈ ${e.toFixed(2)}`, xScale(3.45), yScale(3.65), { width: 86, fade: true, math: true });
+      }
+    }
+
+    function drawHyperbola() {
+      drawGrid();
+      const a = 2.0;
+      const b = 1.35;
+      const c = Math.sqrt(a * a + b * b);
+      const e = c / a;
+      const directrix = (a * a) / c;
+      const f1 = { x: -c, y: 0 };
+      const f2 = { x: c, y: 0 };
+      const point = hyperbolaPoint();
+      const right = [];
+      const left = [];
+      for (let t = -1.48; t <= 1.48; t += 0.04) {
+        right.push({ x: a * Math.cosh(t), y: b * Math.sinh(t) });
+        left.push({ x: -a * Math.cosh(t), y: b * Math.sinh(t) });
+      }
+      add("line", { x1: xScale(graph.xMin), y1: yScale((b / a) * graph.xMin), x2: xScale(graph.xMax), y2: yScale((b / a) * graph.xMax), class: "asymptote" });
+      add("line", { x1: xScale(graph.xMin), y1: yScale((-b / a) * graph.xMin), x2: xScale(graph.xMax), y2: yScale((-b / a) * graph.xMax), class: "asymptote" });
+      add("path", { d: pathFromPoints(right), class: "curve" });
+      add("path", { d: pathFromPoints(left), class: "curve curve-secondary" });
+      if (state.stage >= 0) {
+        drawPoint(f1, "F₁", "point-focus", -38, -16);
+        drawPoint(f2, "F₂", "point-focus", 12, -16);
+      }
+      if (state.stage >= 1) {
+        drawPoint(point, "P", "point", 12, -16);
+      }
+      if (state.stage >= 2) {
+        drawSegment(point, f1, "distance");
+        drawSegment(point, f2, "distance");
+        addText("|PF₁ - PF₂| = 2a", xScale(-1.85), yScale(3.65), { width: 170, fade: true, math: true });
+      }
+      if (state.stage >= 3) {
+        add("line", { x1: xScale(-directrix), y1: graph.top, x2: xScale(-directrix), y2: graph.top + graph.height, class: "guide fade-in" });
+        add("line", { x1: xScale(directrix), y1: graph.top, x2: xScale(directrix), y2: graph.top + graph.height, class: "guide fade-in" });
+        addText("asymptotes", xScale(3.25), yScale(2.35), { width: 100, fade: true });
+      }
+      if (state.stage >= 4) {
+        addText("x²/a² - y²/b² = 1", xScale(-5.2), yScale(-3.7), { width: 178, fade: true, math: true });
+        addText(`e ≈ ${e.toFixed(2)} > 1`, xScale(2.9), yScale(-3.7), { width: 118, fade: true, math: true });
+      }
+    }
+
+    function drawEccentricityFamily() {
+      svg.innerHTML = "";
+      const panels = [
+        { label: "Circle", e: "e = 0", x: 154, y: 305, color: "#2563eb" },
+        { label: "Ellipse", e: "0 < e < 1", x: 380, y: 305, color: "#10a7a0" },
+        { label: "Parabola", e: "e = 1", x: 610, y: 305, color: "#f97316" },
+        { label: "Hyperbola", e: "e > 1", x: 835, y: 305, color: "#6554c0" }
+      ];
+      add("rect", { x: 36, y: 36, width: 928, height: 568, rx: 22, fill: "#fbfdff", stroke: "#d5e4ef", "stroke-width": 2 });
+      addText("Eccentricity links the conic family", 72, 78, { box: false, size: 25 });
+      addText("Think of e as the shape controller: small e is closed and rounded, e = 1 is exactly parabolic, and e > 1 opens into two branches.", 72, 116, { width: 825, height: 36, fade: true });
+      panels.forEach((panel, index) => {
+        const revealed = state.stage >= index;
+        add("rect", {
+          x: panel.x - 95,
+          y: 178,
+          width: 190,
+          height: 315,
+          rx: 18,
+          fill: revealed ? "#ffffff" : "#f1f5f9",
+          stroke: revealed ? panel.color : "#d9e4ef",
+          "stroke-width": revealed ? 3 : 1.5,
+          class: "fade-in"
+        });
+        if (revealed) {
+          if (panel.label === "Circle") {
+            add("circle", { cx: panel.x, cy: panel.y, r: 58, fill: "none", stroke: panel.color, "stroke-width": 6 });
+            add("circle", { cx: panel.x, cy: panel.y, r: 7, fill: "#ef4444" });
+          } else if (panel.label === "Ellipse") {
+            add("ellipse", { cx: panel.x, cy: panel.y, rx: 72, ry: 45, fill: "none", stroke: panel.color, "stroke-width": 6 });
+            add("circle", { cx: panel.x - 38, cy: panel.y, r: 6, fill: "#ef4444" });
+            add("circle", { cx: panel.x + 38, cy: panel.y, r: 6, fill: "#ef4444" });
+          } else if (panel.label === "Parabola") {
+            const pts = [];
+            for (let t = -2.1; t <= 2.1; t += 0.08) pts.push({ x: panel.x - 35 + 14 * t * t, y: panel.y + 28 * t });
+            add("path", { d: pts.map((p, i) => `${i ? "L" : "M"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" "), fill: "none", stroke: panel.color, "stroke-width": 6, "stroke-linecap": "round" });
+            add("circle", { cx: panel.x + 34, cy: panel.y, r: 6, fill: "#ef4444" });
+            add("line", { x1: panel.x - 68, y1: panel.y - 85, x2: panel.x - 68, y2: panel.y + 85, stroke: "#e54879", "stroke-width": 4, "stroke-dasharray": "8 7" });
+          } else {
+            add("path", { d: `M ${panel.x + 8} ${panel.y - 82} C ${panel.x + 58} ${panel.y - 56}, ${panel.x + 58} ${panel.y + 56}, ${panel.x + 8} ${panel.y + 82}`, fill: "none", stroke: panel.color, "stroke-width": 6, "stroke-linecap": "round" });
+            add("path", { d: `M ${panel.x - 8} ${panel.y - 82} C ${panel.x - 58} ${panel.y - 56}, ${panel.x - 58} ${panel.y + 56}, ${panel.x - 8} ${panel.y + 82}`, fill: "none", stroke: panel.color, "stroke-width": 6, "stroke-linecap": "round" });
+            add("circle", { cx: panel.x - 54, cy: panel.y, r: 6, fill: "#ef4444" });
+            add("circle", { cx: panel.x + 54, cy: panel.y, r: 6, fill: "#ef4444" });
+          }
+          addText(panel.label, panel.x - 63, 515, { box: false, size: 19 });
+          addText(panel.e, panel.x - 58, 546, { width: 116, size: 17, math: true });
+        } else {
+          addText("Reveal", panel.x - 28, panel.y, { box: false, size: 18 });
+        }
+      });
+      add("path", { d: "M 112 575 C 310 615, 624 616, 890 574", fill: "none", stroke: "#f5b71b", "stroke-width": 6, "stroke-linecap": "round" });
+      add("path", { d: "M 872 558 L 903 572 L 878 593", fill: "none", stroke: "#f5b71b", "stroke-width": 6, "stroke-linecap": "round", "stroke-linejoin": "round" });
+    }
+
+    function drawCurrent() {
+      if (state.mode === "eccentricity") {
+        drawEccentricityFamily();
+        return;
+      }
+      svg.innerHTML = "";
+      if (state.mode === "circle") drawCircle();
+      if (state.mode === "parabola") drawParabola();
+      if (state.mode === "ellipse") drawEllipse();
+      if (state.mode === "hyperbola") drawHyperbola();
+    }
+
+    function renderStepList() {
+      const steps = copy[state.mode].steps;
+      stepList.innerHTML = steps.map((step, index) => {
+        const visible = index <= state.stage;
+        return `
+          <article class="step ${visible ? "revealed" : ""} ${index === state.stage ? "current" : ""}">
+            <div class="step-num">${index + 1}</div>
+            <div>
+              <strong>${step[0]}</strong>
+              <span>${visible ? step[1] : "Reveal this idea when ready."}</span>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function render() {
+      const data = copy[state.mode];
+      const max = data.steps.length - 1;
+      sideTitle.textContent = data.title;
+      sideSummary.textContent = data.summary;
+      sideEquation.innerHTML = data.equation;
+      boardTitle.textContent = data.title;
+      boardSubtitle.textContent = data.subtitle;
+      stagePill.textContent = `Step ${Math.min(state.stage + 1, data.steps.length)} of ${data.steps.length}`;
+      definitionMath.innerHTML = data.definition;
+      equationMath.innerHTML = data.equation;
+      insightText.textContent = data.steps[state.stage]?.[1] || data.insight;
+      if (state.stage >= max) insightText.textContent = data.insight;
+      modeSelect.value = state.mode;
+      [...modeButtons.querySelectorAll("[data-mode]")].forEach((button) => {
+        button.classList.toggle("active", button.dataset.mode === state.mode);
+      });
+      renderStepList();
+      drawCurrent();
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      state.stage = 0;
+      state.progress = 0.18;
+      stopMoving();
+      render();
+    }
+
+    function nextStep() {
+      const max = copy[state.mode].steps.length - 1;
+      state.stage = Math.min(max, state.stage + 1);
+      render();
+    }
+
+    function previousStep() {
+      state.stage = Math.max(0, state.stage - 1);
+      render();
+    }
+
+    function showAll() {
+      state.stage = copy[state.mode].steps.length - 1;
+      render();
+    }
+
+    function reset() {
+      state.stage = 0;
+      state.progress = 0.18;
+      stopMoving();
+      render();
+    }
+
+    function moveTick() {
+      state.progress = (state.progress + 0.006) % 1;
+      drawCurrent();
+    }
+
+    function stopMoving() {
+      if (state.timer) window.clearInterval(state.timer);
+      state.timer = null;
+      state.moving = false;
+      moveBtn.textContent = "Move Point";
+    }
+
+    function toggleMove() {
+      if (state.mode === "eccentricity") {
+        showAll();
+        return;
+      }
+      if (state.moving) {
+        stopMoving();
+        render();
+        return;
+      }
+      state.moving = true;
+      moveBtn.textContent = "Stop Moving";
+      state.stage = Math.max(state.stage, 2);
+      render();
+      state.timer = window.setInterval(moveTick, 28);
+    }
+
+    modeButtons.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-mode]");
+      if (!button) return;
+      setMode(button.dataset.mode);
+    });
+
+    modeSelect.addEventListener("change", () => setMode(modeSelect.value));
+    document.getElementById("nextBtn").addEventListener("click", nextStep);
+    document.getElementById("backBtn").addEventListener("click", previousStep);
+    document.getElementById("showBtn").addEventListener("click", showAll);
+    document.getElementById("resetBtn").addEventListener("click", reset);
+    moveBtn.addEventListener("click", toggleMove);
+
+    document.getElementById("fullscreenBtn").addEventListener("click", async () => {
+      if (!document.fullscreenElement) {
+        await appShell.requestFullscreen?.();
+      } else {
+        await document.exitFullscreen?.();
+      }
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      document.getElementById("fullscreenBtn").textContent = document.fullscreenElement ? "Exit Full Screen" : "Full Screen";
+    });
+
+    render();
+  </script>
+</body>
+</html>

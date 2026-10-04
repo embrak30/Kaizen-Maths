@@ -2195,6 +2195,25 @@ const tools = [
     ]
   },
   {
+    slug: "conic-sections-explorer",
+    title: "Conic Sections Explorer",
+    category: "Classroom Tools",
+    level: "A-Level / Further Maths / Precalculus / CAPE",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "Open a dynamic conic sections display for exploring circles, parabolas, ellipses, hyperbolas, foci, directrices, eccentricity, and standard equations.",
+    tags: ["classroom", "dynamic displays", "conic sections", "focus", "directrix", "eccentricity", "circle", "parabola", "ellipse", "hyperbola", "coordinate geometry", "precalculus", "further maths", "CAPE"],
+    toolPath: "tools/conic-sections-explorer/index.html?v=conic-explorer-1",
+    imported: true,
+    teacherNotes: [
+      "Designed as a teacher-led concept display for showing how conic sections are defined by distance relationships.",
+      "Teachers can reveal the curve, focus or foci, directrix, distance relationship, eccentricity, and standard equation step by step.",
+      "The moving point helps students see that the defining distance relationship stays true across the curve.",
+      "Use the eccentricity view to connect circle, ellipse, parabola, and hyperbola as one family of curves."
+    ]
+  },
+  {
     slug: "concept-explainer",
     title: "Concept Explainer",
     category: "Classroom Tools",
@@ -2616,6 +2635,7 @@ const subjectToolGroups = {
   "Classroom Tools": {
     "classroom-displays": "Board Displays and Visuals",
     "dynamic-classroom-displays": "Board Displays and Visuals",
+    "conic-sections-explorer": "Board Displays and Visuals",
     "concept-explainer": "Board Displays and Visuals",
     "anchor-charts": "Board Displays and Visuals",
     "elementary-manipulatives": "Board Displays and Visuals",
@@ -23766,7 +23786,8 @@ const curatedRelatedToolSlugs = {
   "friction": ["newtons-second-law", "work-energy-power", "equations-of-motion", "moments"],
   "work-energy-power": ["friction", "newtons-second-law", "equations-of-motion", "motion-graphs-constant-acceleration"],
   "classroom-displays": ["concept-explainer", "dynamic-classroom-displays", "bar-models", "area-models"],
-  "dynamic-classroom-displays": ["concept-explainer", "classroom-displays", "graph-transformations-curve-sketching", "circle-theorems"],
+  "dynamic-classroom-displays": ["conic-sections-explorer", "concept-explainer", "classroom-displays", "graph-transformations-curve-sketching"],
+  "conic-sections-explorer": ["equation-of-a-circle", "conic-intersections", "polar-coordinates", "dynamic-classroom-displays"],
   "concept-explainer": ["anchor-charts", "classroom-displays", "dynamic-classroom-displays", "bar-models"],
   "anchor-charts": ["elementary-manipulatives", "elementary-maths-playground", "bar-models", "area-models"],
   "word-search-builder": ["fractions-table", "elementary-starter-board", "elementary-maths-playground", "classroom-displays"],
@@ -23777,6 +23798,7 @@ const curatedRelatedToolSlugs = {
   "elementary-maths-playground": ["anchor-charts", "bar-models", "area-models", "elementary-starter-board"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
   "midpoint-length-lines": ["straight-lines", "equation-of-a-circle", "transformations", "pythagoras-theorem"],
+  "equation-of-a-circle": ["conic-sections-explorer", "conic-intersections", "straight-lines", "transformations"],
   "formal-geometric-proof": ["missing-angles", "polygons-angles", "circle-theorems", "transformations"],
   "polygons-angles": ["formal-geometric-proof", "missing-angles", "circle-theorems", "loci-constructions"],
   "circle-theorems": ["formal-geometric-proof", "missing-angles", "polygons-angles", "circles-area-circumference"],
@@ -23794,6 +23816,7 @@ const curatedRelatedToolSlugs = {
   "transposition-formulae": ["linear-equations", "substitution", "functions", "algebraic-fractions"],
   "linear-programming": ["inequalities", "straight-lines", "graph-transformations-curve-sketching", "simultaneous-equations"],
   "graph-transformations-curve-sketching": ["functions", "straight-lines", "transformations", "quadratic-equations"],
+  "conic-intersections": ["conic-sections-explorer", "equation-of-a-circle", "straight-lines", "quadratic-equations"],
   "matrices": ["linear-algebra", "advanced-matrices", "further-vectors", "simultaneous-equations"],
   "advanced-matrices": ["linear-algebra", "matrices", "further-vectors", "complex-numbers"],
   "linear-algebra": ["matrices", "advanced-matrices", "further-vectors", "simultaneous-equations"],
@@ -23803,7 +23826,7 @@ const curatedRelatedToolSlugs = {
   "integration-algebraic-fractions": ["partial-fractions", "advanced-integration", "integration", "numerical-methods"],
   "partial-fractions": ["integration-algebraic-fractions", "algebraic-fractions", "advanced-factorisation", "advanced-integration"],
   "complex-numbers": ["polar-coordinates", "roots-of-equations", "trigonometric-functions", "advanced-matrices"],
-  "polar-coordinates": ["complex-numbers", "trigonometric-functions", "graph-transformations-curve-sketching", "hyperbolic-functions"],
+  "polar-coordinates": ["conic-sections-explorer", "complex-numbers", "trigonometric-functions", "graph-transformations-curve-sketching"],
   "trig-graphs-transformations": ["trig-equation-solver", "trigonometric-functions", "graph-transformations-curve-sketching", "sine-cosine-rule"],
   "roots-of-equations": ["numerical-methods", "complex-numbers", "functions", "graph-transformations-curve-sketching"],
   "numerical-methods": ["roots-of-equations", "integration", "advanced-integration", "differential-equations"],
@@ -24558,6 +24581,23 @@ function toolInsightProfile(tool) {
         "How does the equation change when the centre moves, and how does it change when only the radius changes?",
         "How does the animation help explain the transformation rule, not just the final position?",
         "How could a student use the dynamic display to explain the result before writing the formal solution?"
+      ]
+    },
+    {
+      match: () => tool.slug === "conic-sections-explorer" || has("conic sections", "focus", "directrix", "eccentricity", "ellipse", "hyperbola", "parabola"),
+      misconceptions: [
+        "Thinking the focus is a point on the curve, rather than a fixed reference point used to define the curve.",
+        "Treating a directrix as an asymptote; a directrix defines a distance relationship, while an asymptote is approached by a branch.",
+        "Using the standard equations by memory without connecting the plus or minus sign to the distance rule for an ellipse or hyperbola.",
+        "Assuming a circle has two visible foci like an ellipse, instead of seeing it as the special case where the foci coincide at the centre.",
+        "Confusing eccentricity with size; eccentricity describes shape type and stretch, not simply how large the graph is."
+      ],
+      questions: [
+        "What distance relationship must stay true as point P moves on this curve?",
+        "How does the diagram show why a parabola has one focus and one directrix, but an ellipse or hyperbola uses two foci?",
+        "What feature of the distance rule explains the difference between the ellipse equation and the hyperbola equation?",
+        "How does changing eccentricity change the type of conic without changing the idea of a focus-based definition?",
+        "Which parts of the standard equation can be predicted from the diagram before doing any algebra?"
       ]
     },
     {
@@ -28624,7 +28664,7 @@ function bindToolFrame(tool, options = {}) {
       doc.addEventListener("input", handleFrameInteraction, true);
       if ("ResizeObserver" in window) {
         const observer = new ResizeObserver(scheduleClassroomFit);
-        observer.observe(doc.body);
+        if (doc.body) observer.observe(doc.body);
       }
     });
   }
