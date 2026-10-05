@@ -343,7 +343,7 @@
       min-height: 0;
       display: grid;
       place-items: center;
-      padding: 8px;
+      padding: 5px;
       overflow: hidden;
     }
 
@@ -353,7 +353,7 @@
       height: 100%;
       display: grid;
       place-items: center;
-      padding: clamp(8px, 1.3vw, 16px);
+      padding: clamp(6px, 0.9vw, 10px);
       border-radius: 8px;
       border: 1px solid rgba(47, 128, 237, 0.12);
       background:
@@ -383,7 +383,7 @@
       min-height: 0;
       display: grid;
       grid-template-rows: minmax(0, 1fr) auto;
-      gap: 8px;
+      gap: 5px;
       align-items: stretch;
     }
 
@@ -421,19 +421,19 @@
     }
 
     .structure-equation {
-      min-height: 48px;
+      min-height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
       gap: 0.2em;
-      padding: 7px 12px;
-      border-radius: 8px;
+      padding: 5px 10px;
+      border-radius: 6px;
       color: #fff;
       background: linear-gradient(135deg, #7048e8, #13aaa2 54%, #ff8a1f);
       box-shadow: 0 12px 28px rgba(22, 33, 63, 0.16);
       font-family: var(--math-font);
-      font-size: clamp(1.05rem, 1.65vw, 1.5rem);
+      font-size: clamp(0.98rem, 1.38vw, 1.28rem);
       font-weight: 650;
       line-height: 1.15;
       text-align: center;
@@ -586,7 +586,7 @@
       display: grid;
       grid-template-columns: repeat(var(--denom), 1fr);
       border: 3px solid #172033;
-      border-radius: 8px;
+      border-radius: 0;
       overflow: hidden;
       background: #fff;
       box-shadow: 0 8px 16px rgba(19, 39, 74, 0.09);
@@ -704,7 +704,7 @@
     }
 
     .mini-piece {
-      border-radius: 4px;
+      border-radius: 0;
       border: 1px solid rgba(22, 33, 63, 0.20);
       background: rgba(232, 239, 247, 0.86);
     }
@@ -721,7 +721,7 @@
       display: grid;
       gap: 6px;
       padding: 7px;
-      border-radius: 8px;
+      border-radius: 0;
       background:
         linear-gradient(135deg, rgba(255, 247, 237, 0.94), rgba(232, 252, 249, 0.9));
       border: 1px solid rgba(255, 138, 31, 0.22);
@@ -751,7 +751,7 @@
       background:
         repeating-linear-gradient(135deg, rgba(255, 138, 31, 0.34) 0 7px, rgba(255, 255, 255, 0.86) 7px 14px);
       border: 3px solid rgba(138, 62, 0, 0.78);
-      border-radius: 8px;
+      border-radius: 0;
     }
 
     .leftover-chip.extra-group {
@@ -896,7 +896,7 @@
       grid-template-columns: repeat(var(--denom), 1fr);
       position: relative;
       overflow: hidden;
-      border-radius: 4px;
+      border-radius: 0;
     }
 
     .whole.unsplit {
@@ -987,12 +987,12 @@
     }
 
     .bar {
-      height: clamp(54px, 9vh, 82px);
+      height: clamp(82px, 13vh, 122px);
       display: grid;
       grid-template-columns: repeat(var(--parts), 1fr);
       border: 4px solid #172033;
       background: #fff;
-      border-radius: 4px;
+      border-radius: 0;
       overflow: hidden;
     }
 
@@ -1492,8 +1492,8 @@
               },
               {
                 label: "Interpret the leftover",
-                text: `${countParts(remainder, ex.denom)} is not ${simplifiedFraction(remainder, ex.denom)} of the answer. It is compared with the divisor group of ${countParts(ex.num, ex.denom)}.`,
-                method: `${countParts(remainder, ex.denom)} out of ${countParts(ex.num, ex.denom)} = ${simplifiedFraction(remainder, ex.num)} of a group`,
+                text: `${countParts(remainder, ex.denom)} is not ${simplifiedFraction(remainder, ex.denom)} of the answer. Compare it with one divisor group, which contains ${countParts(ex.num, ex.denom)}.`,
+                method: `${remainder} leftover piece${remainder === 1 ? "" : "s"} out of ${ex.num} divisor pieces = ${simplifiedFraction(remainder, ex.num)} of the next group`,
                 visual: () => fractionDivisionVisual(model, 5)
               },
               {
@@ -2064,7 +2064,7 @@
           }
         }
       }
-      output += `<rect x="${x}" y="${y}" width="${width}" height="${height}" rx="10" fill="none" stroke="${stroke}" stroke-width="5" />`;
+      output += `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="none" stroke="${stroke}" stroke-width="5" />`;
       return output;
     }
 
@@ -2080,22 +2080,22 @@
         "The reciprocal rule is the symbolic summary of the same grouping."
       ];
       const wholeCount = Math.min(ex.whole, 6);
-      const gap = 14;
-      const wholeW = Math.min(126, (850 - (wholeCount - 1) * gap) / wholeCount);
-      const wholeH = 86;
+      const gap = 10;
+      const wholeW = Math.min(146, (900 - (wholeCount - 1) * gap) / wholeCount);
+      const wholeH = 122;
       const x0 = (1000 - (wholeCount * wholeW + (wholeCount - 1) * gap)) / 2;
-      const y0 = 96;
+      const y0 = 74;
       let svg = `
-        ${svgNote(notes[Math.min(stage, notes.length - 1)], 500, 42, 24, 'text-anchor="middle"')}
-        ${svgText(`${ex.whole} whole${ex.whole === 1 ? "" : "s"}`, x0, y0 - 18, 20)}
+        ${svgNote(notes[Math.min(stage, notes.length - 1)], 500, 34, 22, 'text-anchor="middle"')}
+        ${svgText(`${ex.whole} whole${ex.whole === 1 ? "" : "s"}`, x0, y0 - 14, 20)}
       `;
 
       for (let wholeIndex = 0; wholeIndex < wholeCount; wholeIndex++) {
         const x = x0 + wholeIndex * (wholeW + gap);
         if (stage === 0) {
           svg += `
-            <rect class="reveal-stage" x="${x}" y="${y0}" width="${wholeW}" height="${wholeH}" rx="12" fill="#fff" stroke="#172033" stroke-width="5" />
-            ${svgText("1", x + wholeW / 2, y0 + wholeH / 2 + 11, 34, 'text-anchor="middle"')}
+            <rect class="reveal-stage" x="${x}" y="${y0}" width="${wholeW}" height="${wholeH}" fill="#fff" stroke="#172033" stroke-width="5" />
+            ${svgText("1", x + wholeW / 2, y0 + wholeH / 2 + 13, 40, 'text-anchor="middle"')}
           `;
           continue;
         }
@@ -2107,16 +2107,16 @@
           const fill = isGrouped ? groupColors[(wholeIndex * ex.groupsPerWhole + Math.floor(part / ex.num)) % groupColors.length] : isLeftover ? "#ffd7aa" : "#fff";
           svg += `<rect x="${x + part * partW}" y="${y0}" width="${partW}" height="${wholeH}" fill="${fill}" fill-opacity="${isGrouped ? 0.84 : 1}" stroke="#9fb6c8" stroke-width="1.6" />`;
         }
-        svg += `<rect x="${x}" y="${y0}" width="${wholeW}" height="${wholeH}" rx="12" fill="none" stroke="#172033" stroke-width="5" />`;
+        svg += `<rect x="${x}" y="${y0}" width="${wholeW}" height="${wholeH}" fill="none" stroke="#172033" stroke-width="5" />`;
         if (stage === 1) {
-          svg += svgText(`1/${ex.denom}`, x + partW / 2, y0 + wholeH / 2 + 8, 19, 'text-anchor="middle"');
+          svg += svgText(`one ${partUnitName(ex.denom)}`, x + wholeW / 2, y0 + wholeH / 2 + 8, 19, 'text-anchor="middle"');
         }
         if (stage >= 2) {
           for (let group = 0; group < ex.groupsPerWhole; group++) {
             const gx = x + group * ex.num * partW;
             const groupNumber = wholeIndex * ex.groupsPerWhole + group + 1;
             svg += `
-              <rect class="reveal-stage" x="${gx + 3}" y="${y0 + 8}" width="${ex.num * partW - 6}" height="${wholeH - 16}" rx="10" fill="none" stroke="#172033" stroke-width="4" />
+              <rect class="reveal-stage" x="${gx + 3}" y="${y0 + 8}" width="${ex.num * partW - 6}" height="${wholeH - 16}" fill="none" stroke="#172033" stroke-width="4" />
               <circle cx="${gx + (ex.num * partW) / 2}" cy="${y0 + wholeH / 2}" r="17" fill="#172033" />
               ${svgText(groupNumber, gx + (ex.num * partW) / 2, y0 + wholeH / 2 + 7, 20, 'text-anchor="middle" style="fill:#fff;"')}
             `;
@@ -2126,47 +2126,52 @@
 
       if (stage >= 3 && ex.leftoverPieces) {
         const pieceGap = 7;
-        const pieceW = Math.min(44, (760 - (ex.leftoverPieces - 1) * pieceGap) / ex.leftoverPieces);
+        const pieceW = Math.min(54, (860 - (ex.leftoverPieces - 1) * pieceGap) / ex.leftoverPieces);
         const poolW = ex.leftoverPieces * pieceW + (ex.leftoverPieces - 1) * pieceGap;
         const px0 = (1000 - poolW) / 2;
-        const py = 245;
+        const py = 236;
         svg += `
           <g class="reveal-stage">
-            ${svgText("Pool the unused pieces", 500, py - 22, 22, 'text-anchor="middle"')}
+            ${svgText("Pool the unused pieces", 500, py - 18, 22, 'text-anchor="middle"')}
         `;
         for (let i = 0; i < ex.leftoverPieces; i++) {
           const inExtraGroup = stage >= 4 && i < ex.extraGroups * ex.num;
           const isRemainder = stage >= 5 && i >= ex.extraGroups * ex.num;
           const fill = inExtraGroup ? "#22c55e" : isRemainder ? "#fb7185" : "#ffd7aa";
-          svg += `<rect x="${px0 + i * (pieceW + pieceGap)}" y="${py}" width="${pieceW}" height="46" rx="9" fill="${fill}" fill-opacity="0.84" stroke="#172033" stroke-width="3" />`;
+          svg += `<rect x="${px0 + i * (pieceW + pieceGap)}" y="${py}" width="${pieceW}" height="56" fill="${fill}" fill-opacity="0.84" stroke="#172033" stroke-width="3" />`;
         }
         if (stage >= 4) {
           for (let group = 0; group < ex.extraGroups; group++) {
             const gx = px0 + group * ex.num * (pieceW + pieceGap) - 4;
             const groupW = ex.num * pieceW + (ex.num - 1) * pieceGap + 8;
-            svg += `<rect x="${gx}" y="${py - 6}" width="${groupW}" height="58" rx="12" fill="none" stroke="#15803d" stroke-width="5" />`;
+            svg += `<rect x="${gx}" y="${py - 6}" width="${groupW}" height="68" fill="none" stroke="#15803d" stroke-width="5" />`;
           }
         }
         svg += "</g>";
       }
 
       if (stage >= 5) {
-        const compareY = 375;
-        const divisorX = 255;
-        const leftoverX = 625;
-        const miniW = 44;
+        const compareY = 348;
+        const divisorX = 185;
+        const leftoverX = 610;
+        const miniW = 58;
+        const miniH = 64;
         svg += `
           <g class="reveal-stage">
             ${svgText("One divisor group", divisorX + ex.num * miniW / 2, compareY - 24, 22, 'text-anchor="middle"')}
         `;
         for (let i = 0; i < ex.num; i++) {
-          svg += `<rect x="${divisorX + i * miniW}" y="${compareY}" width="${miniW}" height="48" fill="#14b8a6" fill-opacity="0.78" stroke="#172033" stroke-width="3" />`;
+          svg += `<rect x="${divisorX + i * miniW}" y="${compareY}" width="${miniW}" height="${miniH}" fill="#14b8a6" fill-opacity="0.78" stroke="#172033" stroke-width="3" />`;
         }
-        svg += svgText("left over", leftoverX + Math.max(1, ex.remainder) * miniW / 2, compareY - 24, 22, 'text-anchor="middle"');
-        for (let i = 0; i < Math.max(1, ex.remainder); i++) {
-          svg += `<rect x="${leftoverX + i * miniW}" y="${compareY}" width="${miniW}" height="48" fill="${ex.remainder ? "#fb7185" : "#e5e7eb"}" fill-opacity="0.82" stroke="#172033" stroke-width="3" />`;
+        svg += `<rect x="${divisorX}" y="${compareY}" width="${ex.num * miniW}" height="${miniH}" fill="none" stroke="#0f766e" stroke-width="5" />`;
+        svg += svgText("leftover measured against a full group", leftoverX + ex.num * miniW / 2, compareY - 24, 20, 'text-anchor="middle"');
+        for (let i = 0; i < ex.num; i++) {
+          const filled = i < ex.remainder;
+          svg += `<rect x="${leftoverX + i * miniW}" y="${compareY}" width="${miniW}" height="${miniH}" fill="${filled ? "#fb7185" : "#ffffff"}" fill-opacity="${filled ? "0.82" : "1"}" stroke="${filled ? "#172033" : "#94a3b8"}" stroke-width="${filled ? "3" : "2"}" stroke-dasharray="${filled ? "0" : "7 5"}" />`;
         }
-        svg += svgText(`${ex.remainder} out of ${ex.num}`, 500, compareY + 105, 24, 'text-anchor="middle"');
+        svg += `<rect x="${leftoverX}" y="${compareY}" width="${ex.num * miniW}" height="${miniH}" fill="none" stroke="#be123c" stroke-width="5" />`;
+        svg += svgText(`${ex.remainder} leftover piece${ex.remainder === 1 ? "" : "s"} out of ${ex.num} divisor pieces`, 500, compareY + 104, 24, 'text-anchor="middle"');
+        svg += svgText(`so the leftover is part of the next ${ex.num}-piece group`, 500, compareY + 136, 20, 'text-anchor="middle"');
         svg += "</g>";
       }
 
@@ -2188,24 +2193,24 @@
 
     function equivalentVisual(ex, stage) {
       const refinedParts = ex.d * ex.scale;
-      const x = 170;
-      const w = 660;
-      const h = 86;
+      const x = 142;
+      const w = 716;
+      const h = 118;
       let svg = `
-        ${svgNote("The whole stays fixed. Only the partition changes.", 500, 45, 24, 'text-anchor="middle"')}
-        ${svgText("Fraction 1", 115, 152, 22, 'text-anchor="middle"')}
-        ${drawSvgBar(x, 105, w, h, stage >= 1 ? ex.d : 1, { shadeA: stage >= 1 ? ex.n : 0, fillA: "#14b8a6" })}
+        ${svgNote("The same fixed rectangle is being repartitioned.", 500, 34, 22, 'text-anchor="middle"')}
+        ${svgText("Fraction 1", 94, 160, 22, 'text-anchor="middle"')}
+        ${drawSvgBar(x, 96, w, h, stage >= 1 ? ex.d : 1, { shadeA: stage >= 1 ? ex.n : 0, fillA: "#14b8a6" })}
       `;
       if (stage >= 2) {
         svg += `
           <g class="reveal-stage">
-            ${svgText("Fraction 2", 115, 315, 22, 'text-anchor="middle"')}
-            ${drawSvgBar(x, 268, w, h, refinedParts, { shadeA: stage >= 3 ? ex.n * ex.scale : 0, fillA: "#f97316" })}
+            ${svgText("Fraction 2", 94, 334, 22, 'text-anchor="middle"')}
+            ${drawSvgBar(x, 270, w, h, refinedParts, { shadeA: stage >= 3 ? ex.n * ex.scale : 0, fillA: "#f97316" })}
           </g>
         `;
       }
       if (stage >= 3) {
-        svg += svgText(`${ex.n * ex.scale} shaded parts out of ${refinedParts}`, 500, 418, 26, 'text-anchor="middle"');
+        svg += svgText(`${ex.n * ex.scale} shaded parts out of ${refinedParts}`, 500, 432, 26, 'text-anchor="middle"');
       }
       const equation = stage >= 4
         ? `${vfrac(ex.n, ex.d)} = ${vfrac(ex.n * ex.scale, refinedParts)}`
@@ -2224,22 +2229,22 @@
       const left = ex.a * (common / ex.b);
       const right = ex.c * (common / ex.d);
       const sum = left + right;
-      const x = 178;
-      const w = 650;
-      const h = 66;
+      const x = 158;
+      const w = 700;
+      const h = 88;
       let svg = `
-        ${svgNote("Keep the wholes the same size, then create common parts.", 500, 42, 24, 'text-anchor="middle"')}
-        ${svgText("First fraction", 94, 128, 20, 'text-anchor="middle"')}
-        ${drawSvgBar(x, 92, w, h, stage >= 3 ? common : stage >= 1 ? ex.b : 1, { shadeA: stage >= 3 ? left : stage >= 1 ? ex.a : 0, fillA: "#14b8a6" })}
-        ${svgText("Second fraction", 94, 235, 20, 'text-anchor="middle"')}
-        ${drawSvgBar(x, 200, w, h, stage >= 3 ? common : stage >= 2 ? ex.d : 1, { shadeA: stage >= 3 ? right : stage >= 2 ? ex.c : 0, fillA: "#f97316" })}
+        ${svgNote("Keep the wholes the same size, then create common parts.", 500, 34, 22, 'text-anchor="middle"')}
+        ${svgText("First fraction", 92, 133, 20, 'text-anchor="middle"')}
+        ${drawSvgBar(x, 88, w, h, stage >= 3 ? common : stage >= 1 ? ex.b : 1, { shadeA: stage >= 3 ? left : stage >= 1 ? ex.a : 0, fillA: "#14b8a6" })}
+        ${svgText("Second fraction", 92, 256, 20, 'text-anchor="middle"')}
+        ${drawSvgBar(x, 210, w, h, stage >= 3 ? common : stage >= 2 ? ex.d : 1, { shadeA: stage >= 3 ? right : stage >= 2 ? ex.c : 0, fillA: "#f97316" })}
       `;
       if (stage >= 4) {
         svg += `
           <g class="reveal-stage">
-            ${svgText("Together", 94, 357, 20, 'text-anchor="middle"')}
-            ${drawSvgBar(x, 320, w, h, common, { shadeA: left, shadeB: right, fillA: "#14b8a6", fillB: "#f97316" })}
-            ${svgText(`${left} + ${right} = ${sum} common parts`, 500, 425, 24, 'text-anchor="middle"')}
+            ${svgText("Together", 92, 381, 20, 'text-anchor="middle"')}
+            ${drawSvgBar(x, 336, w, h, common, { shadeA: left, shadeB: right, fillA: "#14b8a6", fillB: "#f97316" })}
+            ${svgText(`${left} + ${right} = ${sum} common parts`, 500, 456, 24, 'text-anchor="middle"')}
           </g>
         `;
       }
@@ -2272,7 +2277,7 @@
       ];
       let svg = `
         ${svgNote("Partition the rectangle, then reveal each partial product one at a time.", 500, 42, 24, 'text-anchor="middle"')}
-        <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="12" fill="#fff" stroke="#172033" stroke-width="5" />
+        <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff" stroke="#172033" stroke-width="5" />
       `;
       if (stage >= 1) {
         svg += `
@@ -2290,14 +2295,14 @@
       }
       if (stage >= 3) {
         cells.forEach((cell) => {
-          svg += `<rect class="reveal-stage" x="${cell.x + 4}" y="${cell.y + 4}" width="${cell.w - 8}" height="${cell.h - 8}" rx="10" fill="${cell.color}" fill-opacity="0.16" stroke="${cell.color}" stroke-width="2" />`;
+          svg += `<rect class="reveal-stage" x="${cell.x + 4}" y="${cell.y + 4}" width="${cell.w - 8}" height="${cell.h - 8}" fill="${cell.color}" fill-opacity="0.16" stroke="${cell.color}" stroke-width="2" />`;
         });
       }
       cells.forEach((cell) => {
         if (stage >= cell.reveal) {
           svg += `
             <g class="reveal-stage">
-              <rect x="${cell.x + 10}" y="${cell.y + 10}" width="${cell.w - 20}" height="${cell.h - 20}" rx="12" fill="${cell.color}" fill-opacity="0.72" stroke="#172033" stroke-width="3" />
+              <rect x="${cell.x + 10}" y="${cell.y + 10}" width="${cell.w - 20}" height="${cell.h - 20}" fill="${cell.color}" fill-opacity="0.72" stroke="#172033" stroke-width="3" />
               ${svgText(cell.factors, cell.x + cell.w / 2, cell.y + cell.h / 2 - 8, 25, 'text-anchor="middle"')}
               ${svgText(`= ${cell.product}`, cell.x + cell.w / 2, cell.y + cell.h / 2 + 28, 25, 'text-anchor="middle"')}
             </g>
@@ -2342,15 +2347,15 @@
     }
 
     function percentVisual(ex, stage) {
-      const x = 118;
-      const y = 220;
-      const w = 764;
-      const h = 112;
+      const x = 105;
+      const y = 190;
+      const w = 790;
+      const h = 150;
       const partPercent = 100 / ex.parts;
-      let svg = `${svgNote("Start with the whole, then split it into useful percentage parts.", 500, 50, 24, 'text-anchor="middle"')}`;
+      let svg = `${svgNote("Start with the whole, then split it into useful percentage parts.", 500, 34, 22, 'text-anchor="middle"')}`;
       if (stage === 0) {
         svg += `
-          <rect class="reveal-stage" x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff" stroke="#172033" stroke-width="5" />
+          <rect class="reveal-stage" x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff" stroke="#172033" stroke-width="5" />
           ${svgText("100%", x + w / 2, y - 22, 28, 'text-anchor="middle"')}
           ${svgText(ex.amount, x + w / 2, y + h / 2 + 13, 40, 'text-anchor="middle"')}
         `;
@@ -2367,13 +2372,13 @@
             svg += svgText(ex.onePart, x + i * cellW + cellW / 2, y + h / 2 + 7, 23, 'text-anchor="middle"');
           }
         }
-        svg += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="none" stroke="#172033" stroke-width="5" />`;
+        svg += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="#172033" stroke-width="5" />`;
         if (stage >= 4) {
-          svg += `<rect class="reveal-stage" x="${x + 4}" y="${y + 4}" width="${cellW * ex.shaded - 8}" height="${h - 8}" rx="12" fill="none" stroke="#0f766e" stroke-width="5" />`;
+          svg += `<rect class="reveal-stage" x="${x + 4}" y="${y + 4}" width="${cellW * ex.shaded - 8}" height="${h - 8}" fill="none" stroke="#0f766e" stroke-width="5" />`;
         }
       }
       if (stage >= 5) {
-        svg += svgText(`${Array(ex.shaded).fill(ex.onePart).join(" + ")} = ${ex.answer}`, 500, 420, 30, 'text-anchor="middle"');
+        svg += svgText(`${Array(ex.shaded).fill(ex.onePart).join(" + ")} = ${ex.answer}`, 500, 440, 30, 'text-anchor="middle"');
       }
       const equation = stage >= 6
         ? `${ex.p}% of ${ex.amount} = ${ex.answer}`

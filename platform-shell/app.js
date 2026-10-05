@@ -2204,7 +2204,7 @@ const tools = [
     status: "Imported",
     description: "Open a dynamic conic sections display for exploring circles, parabolas, ellipses, hyperbolas, foci, directrices, eccentricity, and standard equations.",
     tags: ["classroom", "dynamic displays", "conic sections", "focus", "directrix", "eccentricity", "circle", "parabola", "ellipse", "hyperbola", "coordinate geometry", "precalculus", "further maths", "CAPE"],
-    toolPath: "tools/conic-sections-explorer/index.html?v=conic-explorer-1",
+    toolPath: "tools/conic-sections-explorer/index.html?v=conic-explorer-2",
     imported: true,
     teacherNotes: [
       "Designed as a teacher-led concept display for showing how conic sections are defined by distance relationships.",
