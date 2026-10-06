@@ -214,7 +214,7 @@
     function cleanText(html){return String(html).replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim()}
     function math(content){return "$"+content+"$"}
     function display(content){return "$$"+content+"$$"}
-    function limitLatex(variable,target,body){return "\\lim_{"+variable+"\\to "+target+"} "+body}
+    function limitLatex(variable,target,body){return "\\lim\\limits_{"+variable+"\\to "+target+"} "+body}
     function limitAnswer(target,value){return math("\\lim = "+value)}
     function instructionForType(type){return typeInstructions[type]||"Answer each question."}
     function makeProblem(type,prompt,answer,steps){
@@ -294,7 +294,7 @@
       const ans=fracLatex(topVal,bottomVal);
       return makeProblem(type, math(limitLatex("x",a,"\\dfrac{"+top+"}{"+bottom+"}")), math(ans), [
         "The denominator does not approach zero, so the quotient law can be used.",
-        display("\\begin{aligned}"+limitLatex("x",a,"\\dfrac{"+top+"}{"+bottom+"}")+"&=\\dfrac{\\lim_{x\\to "+a+"}("+top+")}{\\lim_{x\\to "+a+"}("+bottom+")}\\\\&=\\dfrac{"+top.replaceAll("x","("+a+")")+"}{"+bottom.replaceAll("x","("+a+")")+"}\\\\&=\\dfrac{"+topVal+"}{"+bottomVal+"}\\\\&="+ans+"\\end{aligned}")
+        display("\\begin{aligned}"+limitLatex("x",a,"\\dfrac{"+top+"}{"+bottom+"}")+"&=\\dfrac{\\lim\\limits_{x\\to "+a+"}("+top+")}{\\lim\\limits_{x\\to "+a+"}("+bottom+")}\\\\&=\\dfrac{"+top.replaceAll("x","("+a+")")+"}{"+bottom.replaceAll("x","("+a+")")+"}\\\\&=\\dfrac{"+topVal+"}{"+bottomVal+"}\\\\&="+ans+"\\end{aligned}")
       ]);
     }
 
@@ -306,11 +306,11 @@
       const diff=binomialXMinus(a);
       const condition=side==="+"?diff+">0":diff+"<0";
       const absForm=side==="+"?diff:"-("+diff+")";
-      return makeProblem(type, math("\\lim_{x\\to "+a+"^{"+side+"}} \\dfrac{|"+diff+"|}{"+diff+"}"), math(ans), [
+      return makeProblem(type, math("\\lim\\limits_{x\\to "+a+"^{"+side+"}} \\dfrac{|"+diff+"|}{"+diff+"}"), math(ans), [
         "This is a one-sided limit, so use the sign of "+math(diff)+" on the "+signText+" of "+math(a)+".",
         "As "+math("x\\to "+a+"^{"+side+"}")+", "+math(condition)+".",
         display("\\begin{aligned}|"+diff+"|&="+absForm+"\\\\\\dfrac{|"+diff+"|}{"+diff+"}&=\\dfrac{"+absForm+"}{"+diff+"}\\\\&="+ans+"\\end{aligned}"),
-        display("\\lim_{x\\to "+a+"^{"+side+"}} \\dfrac{|"+diff+"|}{"+diff+"}="+ans)
+        display("\\lim\\limits_{x\\to "+a+"^{"+side+"}} \\dfrac{|"+diff+"|}{"+diff+"}="+ans)
       ]);
     }
 
@@ -326,13 +326,13 @@
       const leftRule=linearLatex(m1,b1);
       const rightRule=linearLatex(m2,b2);
       const exists=left===right;
-      return makeProblem(type, "For "+math("f(x)=\\begin{cases}"+leftRule+",&x<"+a+"\\\\"+rightRule+",&x>"+a+"\\end{cases}")+" find the one-sided limits at "+math("x="+a)+" and decide whether "+math("\\lim_{x\\to "+a+"}f(x)")+" exists.", exists?math(left):"Does not exist", [
+      return makeProblem(type, "For "+math("f(x)=\\begin{cases}"+leftRule+",&x<"+a+"\\\\"+rightRule+",&x>"+a+"\\end{cases}")+" find the one-sided limits at "+math("x="+a)+" and decide whether "+math("\\lim\\limits_{x\\to "+a+"}f(x)")+" exists.", exists?math(left):"Does not exist", [
         "Use the rule that applies on the left of "+math(a)+".",
-        display("\\begin{aligned}\\lim_{x\\to "+a+"^-}f(x)&=\\lim_{x\\to "+a+"^-}("+leftRule+")\\\\&="+leftRule.replaceAll("x","("+a+")")+"\\\\&="+left+"\\end{aligned}"),
+        display("\\begin{aligned}\\lim\\limits_{x\\to "+a+"^-}f(x)&=\\lim\\limits_{x\\to "+a+"^-}("+leftRule+")\\\\&="+leftRule.replaceAll("x","("+a+")")+"\\\\&="+left+"\\end{aligned}"),
         "Use the rule that applies on the right of "+math(a)+".",
-        display("\\begin{aligned}\\lim_{x\\to "+a+"^+}f(x)&=\\lim_{x\\to "+a+"^+}("+rightRule+")\\\\&="+rightRule.replaceAll("x","("+a+")")+"\\\\&="+right+"\\end{aligned}"),
+        display("\\begin{aligned}\\lim\\limits_{x\\to "+a+"^+}f(x)&=\\lim\\limits_{x\\to "+a+"^+}("+rightRule+")\\\\&="+rightRule.replaceAll("x","("+a+")")+"\\\\&="+right+"\\end{aligned}"),
         left===right ? "The left-hand and right-hand limits are equal, so the two-sided limit exists." : "The left-hand and right-hand limits are different, so the two-sided limit does not exist.",
-        left===right ? display("\\lim_{x\\to "+a+"}f(x)="+left) : display("\\lim_{x\\to "+a+"}f(x)\\text{ does not exist}")
+        left===right ? display("\\lim\\limits_{x\\to "+a+"}f(x)="+left) : display("\\lim\\limits_{x\\to "+a+"}f(x)\\text{ does not exist}")
       ]);
     }
 
@@ -341,12 +341,12 @@
       const xs=[a-0.1,a-0.01,a-0.001,a+0.001,a+0.01,a+0.1];
       const vals=xs.map(x=>(x+a).toFixed(3));
       const table='<div class="limit-table-wrap"><table class="limit-table"><tr><th>x</th>'+xs.map(x=>'<td>'+x.toFixed(3)+'</td>').join("")+'</tr><tr><th>f(x)</th>'+vals.map(v=>'<td>'+v+'</td>').join("")+'</tr></table></div>';
-      const prompt="The table shows values of "+math("f(x)=\\dfrac{x^2-"+(a*a)+"}{x-"+a+"}")+" near "+math("x="+a)+". Estimate "+math("\\lim_{x\\to "+a+"}f(x)")+"."+table;
+      const prompt="The table shows values of "+math("f(x)=\\dfrac{x^2-"+(a*a)+"}{x-"+a+"}")+" near "+math("x="+a)+". Estimate "+math("\\lim\\limits_{x\\to "+a+"}f(x)")+"."+table;
       return makeProblem(type,prompt,math(2*a),[
         "The values of "+math("x")+" approach "+math(a)+" from both sides.",
         "The corresponding values of "+math("f(x)")+" approach "+math(2*a)+".",
         "Algebra confirms the table pattern.",
-        display("\\begin{aligned}\\lim_{x\\to "+a+"}\\dfrac{x^2-"+(a*a)+"}{x-"+a+"}&=\\lim_{x\\to "+a+"}\\dfrac{(x-"+a+")(x+"+a+")}{x-"+a+"}\\\\&=\\lim_{x\\to "+a+"}(x+"+a+")\\\\&="+(2*a)+"\\end{aligned}")
+        display("\\begin{aligned}\\lim\\limits_{x\\to "+a+"}\\dfrac{x^2-"+(a*a)+"}{x-"+a+"}&=\\lim\\limits_{x\\to "+a+"}\\dfrac{(x-"+a+")(x+"+a+")}{x-"+a+"}\\\\&=\\lim\\limits_{x\\to "+a+"}(x+"+a+")\\\\&="+(2*a)+"\\end{aligned}")
       ]);
     }
 
@@ -360,9 +360,9 @@
       const top=polyLatex([[a,2],[b,1],[c,0]]);
       const bottom=polyLatex([[d,2],[e,1],[f,0]]);
       const ans=fracLatex(a,d);
-      return makeProblem(type, math("\\lim_{x\\to\\infty}\\dfrac{"+top+"}{"+bottom+"}"), math(ans), [
+      return makeProblem(type, math("\\lim\\limits_{x\\to\\infty}\\dfrac{"+top+"}{"+bottom+"}"), math(ans), [
         "The highest power in the numerator and denominator is "+math("x^2")+", so divide every term by "+math("x^2")+".",
-        display("\\begin{aligned}\\lim_{x\\to\\infty}\\dfrac{"+top+"}{"+bottom+"}&=\\lim_{x\\to\\infty}\\dfrac{"+a+" + \\dfrac{"+b+"}{x} + \\dfrac{"+c+"}{x^2}}{"+d+" + \\dfrac{"+e+"}{x} + \\dfrac{"+f+"}{x^2}}\\end{aligned}"),
+        display("\\begin{aligned}\\lim\\limits_{x\\to\\infty}\\dfrac{"+top+"}{"+bottom+"}&=\\lim\\limits_{x\\to\\infty}\\dfrac{"+a+" + \\dfrac{"+b+"}{x} + \\dfrac{"+c+"}{x^2}}{"+d+" + \\dfrac{"+e+"}{x} + \\dfrac{"+f+"}{x^2}}\\end{aligned}"),
         "As "+math("x\\to\\infty")+", the terms "+math("\\dfrac{1}{x}")+" and "+math("\\dfrac{1}{x^2}")+" tend to zero.",
         display("\\begin{aligned}\\lim&=\\dfrac{"+a+"+0+0}{"+d+"+0+0}\\\\&="+ans+"\\end{aligned}")
       ]);
@@ -374,10 +374,10 @@
       const f=linearLatex(m,c);
       return makeProblem(type, "Use first principles to differentiate "+math("f(x)="+f)+".", math("f'(x)="+m), [
         "Start with the first-principles definition.",
-        display("f'(x)=\\lim_{h\\to 0}\\dfrac{f(x+h)-f(x)}{h}"),
+        display("f'(x)=\\lim\\limits_{h\\to 0}\\dfrac{f(x+h)-f(x)}{h}"),
         display("\\begin{aligned}f(x+h)&="+m+"(x+h)"+signedConst(c)+"\\\\&="+m+"x"+signedConst(m)+"h"+signedConst(c)+"\\end{aligned}"),
         display("\\begin{aligned}f(x+h)-f(x)&=("+m+"x"+signedConst(m)+"h"+signedConst(c)+")-("+f+")\\\\&="+m+"h\\end{aligned}"),
-        display("\\begin{aligned}f'(x)&=\\lim_{h\\to 0}\\dfrac{"+m+"h}{h}\\\\&=\\lim_{h\\to 0}"+m+"\\\\&="+m+"\\end{aligned}")
+        display("\\begin{aligned}f'(x)&=\\lim\\limits_{h\\to 0}\\dfrac{"+m+"h}{h}\\\\&=\\lim\\limits_{h\\to 0}"+m+"\\\\&="+m+"\\end{aligned}")
       ]);
     }
 
@@ -392,10 +392,10 @@
       const factor=coeffVar(2*a,"x",1)+signedBody(a,"h")+signedConst(b);
       return makeProblem(type, "Use first principles to differentiate "+math("f(x)="+f)+".", math("f'(x)="+deriv), [
         "Start with the first-principles definition.",
-        display("f'(x)=\\lim_{h\\to 0}\\dfrac{f(x+h)-f(x)}{h}"),
+        display("f'(x)=\\lim\\limits_{h\\to 0}\\dfrac{f(x+h)-f(x)}{h}"),
         display("\\begin{aligned}f(x+h)&="+coeffTimes(a,"(x+h)^2")+signedConst(b)+"(x+h)"+signedConst(c)+"\\\\&="+coeffTimes(a,"(x^2+2xh+h^2)")+signedConst(b)+"x"+signedBody(b,"h")+signedConst(c)+"\\\\&="+expanded+"\\end{aligned}"),
         display("\\begin{aligned}f(x+h)-f(x)&=("+expanded+")-("+f+")\\\\&="+change+"\\\\&=h("+factor+")\\end{aligned}"),
-        display("\\begin{aligned}f'(x)&=\\lim_{h\\to 0}\\dfrac{h("+factor+")}{h}\\\\&=\\lim_{h\\to 0}("+factor+")\\\\&="+deriv+"\\end{aligned}")
+        display("\\begin{aligned}f'(x)&=\\lim\\limits_{h\\to 0}\\dfrac{h("+factor+")}{h}\\\\&=\\lim\\limits_{h\\to 0}("+factor+")\\\\&="+deriv+"\\end{aligned}")
       ]);
     }
 
@@ -410,11 +410,11 @@
       const factor=signedBody(3*a,"x^{2}",true)+signedBody(3*a,"xh")+signedBody(a,"h^{2}")+signedConst(b);
       return makeProblem(type, "Use first principles to differentiate "+math("f(x)="+f)+".", math("f'(x)="+deriv), [
         "Start with the first-principles definition.",
-        display("f'(x)=\\lim_{h\\to 0}\\dfrac{f(x+h)-f(x)}{h}"),
+        display("f'(x)=\\lim\\limits_{h\\to 0}\\dfrac{f(x+h)-f(x)}{h}"),
         "Use the expansion "+math("(x+h)^3=x^3+3x^2h+3xh^2+h^3")+".",
         display("\\begin{aligned}f(x+h)&="+coeffTimes(a,"(x+h)^3")+signedConst(b)+"(x+h)"+signedConst(c)+"\\\\&="+expanded+"\\end{aligned}"),
         display("\\begin{aligned}f(x+h)-f(x)&=("+expanded+")-("+f+")\\\\&="+change+"\\\\&=h("+factor+")\\end{aligned}"),
-        display("\\begin{aligned}f'(x)&=\\lim_{h\\to 0}\\dfrac{h("+factor+")}{h}\\\\&=\\lim_{h\\to 0}("+factor+")\\\\&="+deriv+"\\end{aligned}")
+        display("\\begin{aligned}f'(x)&=\\lim\\limits_{h\\to 0}\\dfrac{h("+factor+")}{h}\\\\&=\\lim\\limits_{h\\to 0}("+factor+")\\\\&="+deriv+"\\end{aligned}")
       ]);
     }
 
@@ -427,10 +427,10 @@
       const grad=2*a*p;
       return makeProblem(type, "Use first principles to find the gradient of "+math("f(x)="+f)+" at "+math("x="+p)+".", math(grad), [
         "Use the point form of the first-principles definition.",
-        display("f'("+p+")=\\lim_{h\\to 0}\\dfrac{f("+p+"+h)-f("+p+")}{h}"),
+        display("f'("+p+")=\\lim\\limits_{h\\to 0}\\dfrac{f("+p+"+h)-f("+p+")}{h}"),
         display("\\begin{aligned}f("+p+"+h)&="+coeffTimes(a,"("+p+"+h)^2")+signedConst(c)+"\\\\&="+coeffTimes(a,"("+p*p+signedConst(2*p)+"h+h^2)")+signedConst(c)+"\\\\&="+fp+signedConst(2*a*p)+"h"+signedConst(a)+"h^2\\end{aligned}"),
         display("f("+p+")="+fp),
-        display("\\begin{aligned}f'("+p+")&=\\lim_{h\\to 0}\\dfrac{("+fp+signedConst(2*a*p)+"h"+signedConst(a)+"h^2)-"+fp+"}{h}\\\\&=\\lim_{h\\to 0}\\dfrac{h("+grad+signedConst(a)+"h)}{h}\\\\&=\\lim_{h\\to 0}("+grad+signedConst(a)+"h)\\\\&="+grad+"\\end{aligned}")
+        display("\\begin{aligned}f'("+p+")&=\\lim\\limits_{h\\to 0}\\dfrac{("+fp+signedConst(2*a*p)+"h"+signedConst(a)+"h^2)-"+fp+"}{h}\\\\&=\\lim\\limits_{h\\to 0}\\dfrac{h("+grad+signedConst(a)+"h)}{h}\\\\&=\\lim\\limits_{h\\to 0}("+grad+signedConst(a)+"h)\\\\&="+grad+"\\end{aligned}")
       ]);
     }
 
@@ -445,9 +445,9 @@
       const right=linearLatex(m2,b2);
       return makeProblem(type, "Find "+math("k")+" so that "+math("f(x)=\\begin{cases}"+left+",&x<"+a+"\\\\k,&x="+a+"\\\\"+right+",&x>"+a+"\\end{cases}")+" is continuous at "+math("x="+a)+".", math("k="+L), [
         "For continuity, the left-hand limit, right-hand limit, and function value must all be equal.",
-        display("\\begin{aligned}\\lim_{x\\to "+a+"^-}f(x)&="+left.replaceAll("x","("+a+")")+"\\\\&="+L+"\\end{aligned}"),
-        display("\\begin{aligned}\\lim_{x\\to "+a+"^+}f(x)&="+right.replaceAll("x","("+a+")")+"\\\\&="+L+"\\end{aligned}"),
-        "The two one-sided limits are equal, so "+math("\\lim_{x\\to "+a+"}f(x)="+L)+".",
+        display("\\begin{aligned}\\lim\\limits_{x\\to "+a+"^-}f(x)&="+left.replaceAll("x","("+a+")")+"\\\\&="+L+"\\end{aligned}"),
+        display("\\begin{aligned}\\lim\\limits_{x\\to "+a+"^+}f(x)&="+right.replaceAll("x","("+a+")")+"\\\\&="+L+"\\end{aligned}"),
+        "The two one-sided limits are equal, so "+math("\\lim\\limits_{x\\to "+a+"}f(x)="+L)+".",
         "Set the function value equal to the limit: "+math("k="+L)+"."
       ]);
     }
@@ -462,12 +462,12 @@
       const actualNumerator=polyLatex([[1,2],[p,1],[k,0]]);
       const denom=binomialXMinus(r);
       const limitValue=r-s;
-      return makeProblem(type, "Find "+math("k")+" so that "+math("\\lim_{x\\to "+r+"}\\dfrac{"+numerator+"}{"+denom+"}")+" exists, then evaluate the limit.", math("k="+k+",\\ \\lim="+limitValue), [
+      return makeProblem(type, "Find "+math("k")+" so that "+math("\\lim\\limits_{x\\to "+r+"}\\dfrac{"+numerator+"}{"+denom+"}")+" exists, then evaluate the limit.", math("k="+k+",\\ \\lim="+limitValue), [
         "For a finite limit, the numerator must also be zero when "+math("x="+r)+", because the denominator is zero there.",
         display("\\begin{aligned}"+r+"^2"+signedProduct(p,"("+r+")")+" + k&=0\\\\"+(r*r+p*r)+"+k&=0\\\\k&="+k+"\\end{aligned}"),
         "Substitute "+math("k="+k)+" and factorise the numerator.",
         display(actualNumerator+"=("+denom+")("+binomialXMinus(s)+")"),
-        display("\\begin{aligned}\\lim_{x\\to "+r+"}\\dfrac{("+denom+")("+binomialXMinus(s)+")}{"+denom+"}&=\\lim_{x\\to "+r+"}("+binomialXMinus(s)+")\\\\&="+r+signedConst(-s)+"\\\\&="+limitValue+"\\end{aligned}")
+        display("\\begin{aligned}\\lim\\limits_{x\\to "+r+"}\\dfrac{("+denom+")("+binomialXMinus(s)+")}{"+denom+"}&=\\lim\\limits_{x\\to "+r+"}("+binomialXMinus(s)+")\\\\&="+r+signedConst(-s)+"\\\\&="+limitValue+"\\end{aligned}")
       ]);
     }
 
@@ -482,9 +482,9 @@
       const line=coeffVar(m,"x",1)+signedConst(intercept);
       return makeProblem(type, "Use first principles to find the equation of the tangent to "+math("y="+f)+" at "+math("x="+p)+".", math("y="+line), [
         "First find the gradient from first principles.",
-        display("f'("+p+")=\\lim_{h\\to 0}\\dfrac{f("+p+"+h)-f("+p+")}{h}"),
+        display("f'("+p+")=\\lim\\limits_{h\\to 0}\\dfrac{f("+p+"+h)-f("+p+")}{h}"),
         display("\\begin{aligned}f("+p+"+h)&="+coeffTimes(a,"("+p+"+h)^2")+signedConst(c)+"\\\\&="+y0+signedConst(2*a*p)+"h"+signedConst(a)+"h^2\\end{aligned}"),
-        display("\\begin{aligned}f'("+p+")&=\\lim_{h\\to 0}\\dfrac{("+y0+signedConst(2*a*p)+"h"+signedConst(a)+"h^2)-"+y0+"}{h}\\\\&=\\lim_{h\\to 0}("+m+signedConst(a)+"h)\\\\&="+m+"\\end{aligned}"),
+        display("\\begin{aligned}f'("+p+")&=\\lim\\limits_{h\\to 0}\\dfrac{("+y0+signedConst(2*a*p)+"h"+signedConst(a)+"h^2)-"+y0+"}{h}\\\\&=\\lim\\limits_{h\\to 0}("+m+signedConst(a)+"h)\\\\&="+m+"\\end{aligned}"),
         "Find the point on the curve: "+math("f("+p+")="+y0)+", so the point is "+math("("+p+","+y0+")")+".",
         "Use point-gradient form.",
         display("\\begin{aligned}y-"+y0+"&="+m+"(x-"+p+")\\\\y&="+line+"\\end{aligned}")

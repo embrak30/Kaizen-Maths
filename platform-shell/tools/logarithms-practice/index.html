@@ -802,6 +802,10 @@
       return ' <span class="operation">·</span> ';
     }
 
+    function exponentialFactor(coefficient, base, exponent) {
+      return coefficient + "(" + base + sup(exponent) + ")";
+    }
+
     function formatApprox(value) {
       return Number(value.toFixed(3)).toString();
     }
@@ -1023,11 +1027,11 @@
             const result = coefficient * Math.pow(base, power);
             problem = {
               badge: "equations",
-              equation: "Solve: " + coefficient + multiplyDot() + base + sup("x") + " = " + result,
+              equation: "Solve: " + exponentialFactor(coefficient, base, "x") + " = " + result,
               answer: "x = " + power,
               steps: [
                 stepLabel(1) + " Identify the multiplier attached to the exponential term",
-                "The coefficient " + coefficient + " is multiplying " + base + sup("x") + ".",
+                "The coefficient " + coefficient + " is multiplying the whole exponential term " + base + sup("x") + ".",
                 stepLabel(2) + " Divide both sides by " + coefficient,
                 base + sup("x") + " = " + result + " / " + coefficient + " = " + Math.pow(base, power),
                 stepLabel(3) + " Rewrite as a matching power",
