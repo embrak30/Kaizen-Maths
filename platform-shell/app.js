@@ -4593,6 +4593,7 @@ function worksheetMathFragment(value) {
     .replace(/\\neq/g, "≠")
     .replace(/\\Rightarrow/g, "⇒")
     .replace(/\\rightarrow/g, "→")
+    .replace(/\\to/g, "→")
     .replace(/\\leq?/g, "≤")
     .replace(/\\geq?/g, "≥")
     .replace(/\\lt/g, "<")
@@ -4612,7 +4613,7 @@ function worksheetMathFragment(value) {
     .replace(/\\cot/g, "cot")
     .replace(/\b(sin|cos|tan|sec|csc|cot)-1(?=\s*\()/g, "$1^-1")
     .replace(/\\ln/g, "ln");
-  const tokenPattern = /∑_\{(?<sumLowerBrace>[^{}]+)\}\^\{?(?<sumUpperBrace>[^{}\s]+)\}?|∑_(?<sumLowerSimple>-?[A-Za-z0-9]+)\^(?<sumUpperSimple>-?[A-Za-z0-9]+)|∫_\{(?<integralLowerBrace>[^{}]+)\}\^\{?(?<integralUpperBrace>[^{}\s]+)\}?|∫_(?<integralLowerSimple>-?[0-9]+)\^(?<integralUpperSimple>-?[0-9]+)|\^\{\\d?frac\{(?<supFracNumerator>[^{}]+)\}\{(?<supFracDenominator>[^{}]+)\}\}|\\d?frac\{(?<fracNumerator>[^{}]+)\}\{(?<fracDenominator>[^{}]+)\}|\^\{(?<supBrace>[^{}]+)\}|\^\((?<supParen>[^()]+)\)|\^(?<supSimple>-?[A-Za-z0-9])|_\{(?<subBrace>[^{}]+)\}|_(?<subSimple>-?[A-Za-z0-9∞]+)|(?<implicitBase>[A-Za-z])(?<implicitPower>[2-9])(?=\b)/g;
+  const tokenPattern = /\\lim(?:\\limits)?_\{(?<limitLowerBrace>(?:[^{}]|\{[^{}]*\})+)\}|\\lim(?:\\limits)?_(?<limitLowerSimple>[^\s]+)|∑_\{(?<sumLowerBrace>[^{}]+)\}\^\{?(?<sumUpperBrace>[^{}\s]+)\}?|∑_(?<sumLowerSimple>-?[A-Za-z0-9]+)\^(?<sumUpperSimple>-?[A-Za-z0-9]+)|∫_\{(?<integralLowerBrace>[^{}]+)\}\^\{?(?<integralUpperBrace>[^{}\s]+)\}?|∫_(?<integralLowerSimple>-?[0-9]+)\^(?<integralUpperSimple>-?[0-9]+)|\^\{\\d?frac\{(?<supFracNumerator>[^{}]+)\}\{(?<supFracDenominator>[^{}]+)\}\}|\\d?frac\{(?<fracNumerator>[^{}]+)\}\{(?<fracDenominator>[^{}]+)\}|\^\{(?<supBrace>[^{}]+)\}|\^\((?<supParen>[^()]+)\)|\^(?<supSimple>-?[A-Za-z0-9])|_\{(?<subBrace>[^{}]+)\}|_(?<subSimple>-?[A-Za-z0-9∞]+)|(?<implicitBase>[A-Za-z])(?<implicitPower>[2-9])(?=\b)/g;
   let lastIndex = 0;
   let match;
 
@@ -4647,11 +4648,26 @@ function worksheetMathFragment(value) {
     return operator;
   }
 
+  function createLimitOperator(lowerText) {
+    const operator = document.createElement("span");
+    operator.className = "worksheet-limit-operator";
+    const glyph = document.createElement("span");
+    glyph.className = "worksheet-limit-symbol";
+    glyph.textContent = "lim";
+    const lower = document.createElement("span");
+    lower.className = "worksheet-limit-lower";
+    lower.appendChild(worksheetMathFragment(lowerText));
+    operator.append(glyph, lower);
+    return operator;
+  }
+
   while ((match = tokenPattern.exec(source)) !== null) {
     appendText(source.slice(lastIndex, match.index));
     const groups = match.groups || {};
 
-    if ((groups.sumLowerBrace !== undefined && groups.sumUpperBrace !== undefined) || (groups.sumLowerSimple !== undefined && groups.sumUpperSimple !== undefined)) {
+    if (groups.limitLowerBrace !== undefined || groups.limitLowerSimple !== undefined) {
+      fragment.appendChild(createLimitOperator(groups.limitLowerBrace ?? groups.limitLowerSimple ?? ""));
+    } else if ((groups.sumLowerBrace !== undefined && groups.sumUpperBrace !== undefined) || (groups.sumLowerSimple !== undefined && groups.sumUpperSimple !== undefined)) {
       fragment.appendChild(createLimitedOperator("∑", groups.sumLowerBrace ?? groups.sumLowerSimple, groups.sumUpperBrace ?? groups.sumUpperSimple));
     } else if ((groups.integralLowerBrace !== undefined && groups.integralUpperBrace !== undefined) || (groups.integralLowerSimple !== undefined && groups.integralUpperSimple !== undefined)) {
       const integral = document.createElement("span");

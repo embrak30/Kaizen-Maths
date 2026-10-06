@@ -11597,6 +11597,29 @@ sup .worksheet-fraction > span:last-child {
   white-space: nowrap;
 }
 
+.worksheet-limit-operator {
+  display: inline-grid;
+  grid-template-rows: auto auto;
+  align-items: center;
+  justify-items: center;
+  margin: 0 0.16em;
+  vertical-align: middle;
+  font-family: var(--math-font);
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+.worksheet-limit-symbol {
+  font-size: 1.04em;
+  line-height: 0.85;
+}
+
+.worksheet-limit-lower {
+  font-size: 0.56em;
+  line-height: 0.95;
+  white-space: nowrap;
+}
+
 .worksheet-question-text .system-equations,
 .worksheet-question-text .prob-table {
   margin-top: 8px;

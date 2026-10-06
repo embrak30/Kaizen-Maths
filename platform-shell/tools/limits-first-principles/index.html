@@ -215,6 +215,8 @@
     function math(content){return "$"+content+"$"}
     function display(content){return "$$"+content+"$$"}
     function limitLatex(variable,target,body){return "\\lim\\limits_{"+variable+"\\to "+target+"} "+body}
+    function oneSidedTarget(value,side){return (value<0?"("+value+")":String(value))+"^{"+side+"}"}
+    function oneSidedLimitLatex(variable,value,side,body){return limitLatex(variable,oneSidedTarget(value,side),body)}
     function limitAnswer(target,value){return math("\\lim = "+value)}
     function instructionForType(type){return typeInstructions[type]||"Answer each question."}
     function makeProblem(type,prompt,answer,steps){
@@ -306,11 +308,12 @@
       const diff=binomialXMinus(a);
       const condition=side==="+"?diff+">0":diff+"<0";
       const absForm=side==="+"?diff:"-("+diff+")";
-      return makeProblem(type, math("\\lim\\limits_{x\\to "+a+"^{"+side+"}} \\dfrac{|"+diff+"|}{"+diff+"}"), math(ans), [
+      const approach=oneSidedTarget(a,side);
+      return makeProblem(type, math(oneSidedLimitLatex("x",a,side,"\\dfrac{|"+diff+"|}{"+diff+"}")), math(ans), [
         "This is a one-sided limit, so use the sign of "+math(diff)+" on the "+signText+" of "+math(a)+".",
-        "As "+math("x\\to "+a+"^{"+side+"}")+", "+math(condition)+".",
+        "As "+math("x\\to "+approach)+", "+math(condition)+".",
         display("\\begin{aligned}|"+diff+"|&="+absForm+"\\\\\\dfrac{|"+diff+"|}{"+diff+"}&=\\dfrac{"+absForm+"}{"+diff+"}\\\\&="+ans+"\\end{aligned}"),
-        display("\\lim\\limits_{x\\to "+a+"^{"+side+"}} \\dfrac{|"+diff+"|}{"+diff+"}="+ans)
+        display(oneSidedLimitLatex("x",a,side,"\\dfrac{|"+diff+"|}{"+diff+"}")+"="+ans)
       ]);
     }
 
@@ -328,9 +331,9 @@
       const exists=left===right;
       return makeProblem(type, "For "+math("f(x)=\\begin{cases}"+leftRule+",&x<"+a+"\\\\"+rightRule+",&x>"+a+"\\end{cases}")+" find the one-sided limits at "+math("x="+a)+" and decide whether "+math("\\lim\\limits_{x\\to "+a+"}f(x)")+" exists.", exists?math(left):"Does not exist", [
         "Use the rule that applies on the left of "+math(a)+".",
-        display("\\begin{aligned}\\lim\\limits_{x\\to "+a+"^-}f(x)&=\\lim\\limits_{x\\to "+a+"^-}("+leftRule+")\\\\&="+leftRule.replaceAll("x","("+a+")")+"\\\\&="+left+"\\end{aligned}"),
+        display("\\begin{aligned}"+oneSidedLimitLatex("x",a,"-","f(x)")+"&="+oneSidedLimitLatex("x",a,"-","("+leftRule+")")+"\\\\&="+leftRule.replaceAll("x","("+a+")")+"\\\\&="+left+"\\end{aligned}"),
         "Use the rule that applies on the right of "+math(a)+".",
-        display("\\begin{aligned}\\lim\\limits_{x\\to "+a+"^+}f(x)&=\\lim\\limits_{x\\to "+a+"^+}("+rightRule+")\\\\&="+rightRule.replaceAll("x","("+a+")")+"\\\\&="+right+"\\end{aligned}"),
+        display("\\begin{aligned}"+oneSidedLimitLatex("x",a,"+","f(x)")+"&="+oneSidedLimitLatex("x",a,"+","("+rightRule+")")+"\\\\&="+rightRule.replaceAll("x","("+a+")")+"\\\\&="+right+"\\end{aligned}"),
         left===right ? "The left-hand and right-hand limits are equal, so the two-sided limit exists." : "The left-hand and right-hand limits are different, so the two-sided limit does not exist.",
         left===right ? display("\\lim\\limits_{x\\to "+a+"}f(x)="+left) : display("\\lim\\limits_{x\\to "+a+"}f(x)\\text{ does not exist}")
       ]);
@@ -445,8 +448,8 @@
       const right=linearLatex(m2,b2);
       return makeProblem(type, "Find "+math("k")+" so that "+math("f(x)=\\begin{cases}"+left+",&x<"+a+"\\\\k,&x="+a+"\\\\"+right+",&x>"+a+"\\end{cases}")+" is continuous at "+math("x="+a)+".", math("k="+L), [
         "For continuity, the left-hand limit, right-hand limit, and function value must all be equal.",
-        display("\\begin{aligned}\\lim\\limits_{x\\to "+a+"^-}f(x)&="+left.replaceAll("x","("+a+")")+"\\\\&="+L+"\\end{aligned}"),
-        display("\\begin{aligned}\\lim\\limits_{x\\to "+a+"^+}f(x)&="+right.replaceAll("x","("+a+")")+"\\\\&="+L+"\\end{aligned}"),
+        display("\\begin{aligned}"+oneSidedLimitLatex("x",a,"-","f(x)")+"&="+left.replaceAll("x","("+a+")")+"\\\\&="+L+"\\end{aligned}"),
+        display("\\begin{aligned}"+oneSidedLimitLatex("x",a,"+","f(x)")+"&="+right.replaceAll("x","("+a+")")+"\\\\&="+L+"\\end{aligned}"),
         "The two one-sided limits are equal, so "+math("\\lim\\limits_{x\\to "+a+"}f(x)="+L)+".",
         "Set the function value equal to the limit: "+math("k="+L)+"."
       ]);
