@@ -4729,6 +4729,8 @@ function textLooksWorksheetMathLike(text) {
 
 function formatWorksheetMathText(text) {
   return normaliseAlgebraUnitCoefficients(decodeCommonMathEntities(text))
+    .replace(/\\lim/g, "lim")
+    .replace(/\\limits/g, "")
     .replace(/(?<=[A-Za-z0-9)\]°])\s*(=|≤|≥|<|>|≈|≠)\s*(?=-?[A-Za-z0-9(]|[πθ])/g, " $1 ")
     .replace(/(?<=[A-Za-z0-9)\]°])\s*(×|÷|·)\s*(?=-?[A-Za-z0-9(]|[πθ])/g, " $1 ")
     .replace(/(?<=[A-Za-z0-9)\]°])\s*([+−])\s*(?=-?[A-Za-z0-9(]|[πθ])/g, " $1 ")
@@ -4736,6 +4738,23 @@ function formatWorksheetMathText(text) {
     .replace(/(?<=[A-Za-z])\s-\s(?=[A-Za-z]{2,})/g, "-")
     .replace(/\s{2,}/g, " ")
     .trim();
+}
+
+function worksheetLatexAlignedHtml(value) {
+  return String(value ?? "").replace(/(?:\$\$\s*)?\\begin\{aligned\}([\s\S]*?)\\end\{aligned\}(?:\s*\$\$)?/g, (_, body) => {
+    const rows = body
+      .split(/\\\\/g)
+      .map((row) => row.trim().replace(/^\s*&\s*/, "").replace(/\s*&\s*/g, " "))
+      .filter(Boolean);
+
+    if (!rows.length) return "";
+
+    return `
+      <div class="worksheet-aligned-math">
+        ${rows.map((row) => `<div class="worksheet-aligned-row">${worksheetContentHtml(row)}</div>`).join("")}
+      </div>
+    `;
+  });
 }
 
 function worksheetLatexArrayHtml(value) {
@@ -4932,7 +4951,7 @@ function worksheetDecodeTextNodes(root) {
 }
 
 function worksheetContentHtml(value) {
-  const rawSource = worksheetLatexArrayHtml(value);
+  const rawSource = worksheetLatexAlignedHtml(worksheetLatexArrayHtml(value));
   const hasHtml = /<[a-z][\s\S]*>/i.test(rawSource);
   const source = hasHtml ? rawSource : decodeCommonMathEntities(rawSource);
   const template = document.createElement("template");

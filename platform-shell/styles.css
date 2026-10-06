@@ -11620,6 +11620,19 @@ sup .worksheet-fraction > span:last-child {
   white-space: nowrap;
 }
 
+.worksheet-aligned-math {
+  display: grid;
+  gap: 0.25em;
+  margin: 0.18em 0;
+  max-width: 100%;
+}
+
+.worksheet-aligned-row {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 .worksheet-question-text .system-equations,
 .worksheet-question-text .prob-table {
   margin-top: 8px;
