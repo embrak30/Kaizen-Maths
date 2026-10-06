@@ -4724,7 +4724,7 @@ function normaliseAlgebraUnitCoefficients(value) {
 
 function textLooksWorksheetMathLike(text) {
   const source = decodeCommonMathEntities(text);
-  return /(\$\$|\\\(|\\\[|[_^]|[A-Za-z0-9)\]}]\s*@\s*(?:\{[^{}]+\}|\([^()]+\)|-?\d+)|[A-Za-z][2-9]\b|\\d?frac|\\sqrt|\\displaystyle|\\boxed|\\text|\\left|\\right|\\big|\\quad|\\;|\\,|\\times|\\cdot|\\pm|\+\/-|\\approx|\\neq|\\Rightarrow|\\rightarrow|\\leq?|\\geq?|\\lt|\\gt|\\infty|\\theta|\\alpha|\\beta|\\gamma|\\Delta|\\pi|\\sin|\\cos|\\tan|\\sec|\\csc|\\cot|\\ln|[A-Za-z0-9)\]°]\s*[=<>≤≥]\s*-?[A-Za-z0-9(]|[A-Za-z]\s*[+\-]\s*\d|\d\s*[+\-×÷*/]\s*-?\d|\d+[A-Za-z]\s*[+\-]\s*\d|\d\s*[×÷*/]\s*\d)/.test(source);
+  return /(\$\$|\$[^\s$](?:[^$]*[^\s$])?\$|\\\(|\\\[|[_^]|[A-Za-z0-9)\]}]\s*@\s*(?:\{[^{}]+\}|\([^()]+\)|-?\d+)|[A-Za-z][2-9]\b|\\d?frac|\\sqrt|\\displaystyle|\\boxed|\\text|\\left|\\right|\\big|\\quad|\\;|\\,|\\times|\\cdot|\\pm|\+\/-|\\approx|\\neq|\\Rightarrow|\\rightarrow|\\leq?|\\geq?|\\lt|\\gt|\\infty|\\theta|\\alpha|\\beta|\\gamma|\\Delta|\\pi|\\sin|\\cos|\\tan|\\sec|\\csc|\\cot|\\ln|[A-Za-z0-9)\]°]\s*[=<>≤≥]\s*-?[A-Za-z0-9(]|[A-Za-z]\s*[+\-]\s*\d|\d\s*[+\-×÷*/]\s*-?\d|\d+[A-Za-z]\s*[+\-]\s*\d|\d\s*[×÷*/]\s*\d)/.test(source);
 }
 
 function formatWorksheetMathText(text) {
