@@ -212,7 +212,7 @@
     function arc(cx,cy,r,a1,a2,cls='construction-arc'){const s=pOn(cx,cy,r,a1),e=pOn(cx,cy,r,a2),large=Math.abs(a2-a1)>180?1:0,sweep=a2>a1?1:0;return `<path class="${cls}" d="M ${s.x.toFixed(1)} ${s.y.toFixed(1)} A ${r} ${r} 0 ${large} ${sweep} ${e.x.toFixed(1)} ${e.y.toFixed(1)}"></path>`}
     function point(x,y,name,dx=10,dy=-10,cls='point-dot'){x=Number(x);y=Number(y);return `<circle class="${cls}" cx="${x}" cy="${y}" r="5"></circle><text class="point-label" x="${x+dx}" y="${y+dy}">${name}</text>`}
     function label(text,x,y,cls='measure-label',anchor='middle'){return `<text class="${cls}" x="${x}" y="${y}" text-anchor="${anchor}">${text}</text>`}
-    function svg(inner,labelText='Construction diagram'){return `<svg class="construction-svg" viewBox="0 0 520 360" role="img" aria-label="${labelText}">${inner}<text class="small-note" x="260" y="342" text-anchor="middle">Not drawn to scale</text></svg>`}
+    function svg(inner,labelText='Construction diagram'){return `<svg class="construction-svg" viewBox="0 0 520 360" role="img" aria-label="${labelText}">${inner}</svg>`}
     function diagramWrap(diagram){return `<div class="diagram-wrap">${diagram}</div>`}
     function answerDiagram(diagram){return `<div class="answer-diagram">${diagram}</div>`}
     function problemShell(prompt,diagram,answer,steps,badge){return{instruction:setInstructions[currentType]||'',equation:`<div class="loci-row">${diagramWrap(diagram)}<div class="question-text">${prompt}</div></div>`,question:cleanText(prompt),answer,steps,badge}}

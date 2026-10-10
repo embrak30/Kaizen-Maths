@@ -4950,6 +4950,23 @@ function worksheetDecodeTextNodes(root) {
   });
 }
 
+function worksheetAddDiagramScaleNotes(root) {
+  const noteText = "Image is not drawn to scale";
+  const hosts = root.querySelectorAll(".diagram-wrap, .shape-diagram, .diagram-box, .diagram-card, .diagram-panel, .worksheet-embedded-diagram, .graph-wrap, .graph-frame, .chart-wrap, .curve-wrap, .polar-diagram, .motion-diagram, .bearing-diagram, .projectile-diagram");
+  hosts.forEach((host) => {
+    if (!host.querySelector("svg, canvas")) return;
+    host.querySelectorAll("svg text").forEach((text) => {
+      const content = (text.textContent || "").replace(/\s+/g, " ").trim();
+      if (content === "Not drawn to scale" || content === noteText) text.remove();
+    });
+    if (host.querySelector(".worksheet-diagram-scale-note, .gcse-diagram-scale-note, .kaizen-diagram-scale-note, .scale-note")) return;
+    const note = document.createElement("span");
+    note.className = "worksheet-diagram-scale-note";
+    note.textContent = noteText;
+    host.appendChild(note);
+  });
+}
+
 function worksheetContentHtml(value) {
   const rawSource = worksheetLatexAlignedHtml(worksheetLatexArrayHtml(value));
   const hasHtml = /<[a-z][\s\S]*>/i.test(rawSource);
@@ -4995,6 +5012,7 @@ function worksheetContentHtml(value) {
 
   worksheetReplaceRawMatrixText(template.content);
   worksheetDecodeTextNodes(template.content);
+  worksheetAddDiagramScaleNotes(template.content);
 
   const walker = document.createTreeWalker(template.content, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
@@ -8041,16 +8059,19 @@ function gcseSvgBackedText(x, y, label, width = 86) {
 }
 
 function gcseDiagramFrame(title, svg) {
+  const isScaleTitle = String(title).trim().toLowerCase() === "not drawn to scale";
+  const displayTitle = isScaleTitle ? "Diagram" : title;
   return `
     <div class="gcse-diagram">
-      <span>${escapeHtml(title)}</span>
+      <span>${escapeHtml(displayTitle)}</span>
       ${svg}
+      <span class="gcse-diagram-scale-note">Image is not drawn to scale</span>
     </div>
   `;
 }
 
 function gcseRightTriangleDiagram({ baseLabel, heightLabel, hypLabel }) {
-  return gcseDiagramFrame("Not drawn to scale", `
+  return gcseDiagramFrame("Diagram", `
     <svg viewBox="0 0 300 190" role="img" aria-label="Right-angled triangle diagram">
       <polygon points="54,142 246,142 246,42" fill="#ffffff" stroke="#111111" stroke-width="3" />
       <path d="M226 142 L226 122 L246 122" fill="none" stroke="#111111" stroke-width="2.4" />
@@ -8109,7 +8130,7 @@ function gcseTreeDiagram({ red, blue, total, format = "fraction" }) {
 }
 
 function gcseAreaComparisonDiagram({ triangleBase, triangleHeight, shortSide, longSide, trapHeight }) {
-  return gcseDiagramFrame("Not drawn to scale", `
+  return gcseDiagramFrame("Diagram", `
     <svg viewBox="0 0 440 190" role="img" aria-label="Triangle and trapezium area diagram">
       <polygon points="48,142 196,142 196,48" fill="#ffffff" stroke="#111111" stroke-width="3" />
       <line x1="196" y1="48" x2="196" y2="142" stroke="#111111" stroke-width="2.5" stroke-dasharray="6 5" />

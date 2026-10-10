@@ -156,7 +156,7 @@
     function choice(arr){return arr[Math.floor(Math.random()*arr.length)]}
     function deg(n){return n+"&deg;"}
     function cleanText(html){const template=document.createElement("template");template.innerHTML=String(html||"");return template.content.textContent.replace(/\s+/g," ").trim()}
-    function svg(inner){return `<svg viewBox="0 0 270 230" role="img" aria-label="Geometric proof diagram">${inner}<text class="diagram-note" x="135" y="220" text-anchor="middle">Not drawn to scale</text></svg>`}
+    function svg(inner){return `<svg viewBox="0 0 270 230" role="img" aria-label="Geometric proof diagram">${inner}</svg>`}
     function pt(x,y){return{x,y}}
     function line(a,b,cls="geo-line"){return `<line class="${cls}" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"></line>`}
     function poly(points,cls="geo-fill"){return `<polygon class="${cls}" points="${points.map((p)=>`${p.x},${p.y}`).join(" ")}"></polygon>`}

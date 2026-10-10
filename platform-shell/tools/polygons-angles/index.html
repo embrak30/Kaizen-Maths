@@ -149,7 +149,7 @@
     function exprPlain(a,b){const first=a===1?'x':`${a}x`;if(b===0)return first;if(b>0)return `${first} + ${b}`;return `${first} - ${Math.abs(b)}`}
     function coeffX(a){return a===1?'x':`${a}x`}
     function problemShell(prompt,diagram,answer,steps,badge){return{equation:`<div class="polygon-row"><div class="diagram-wrap">${diagram}</div><div class="question-text">${prompt}</div></div>`,question:cleanText(prompt),answer,steps,badge}}
-    function svg(inner){return `<svg viewBox="0 0 270 230" role="img" aria-label="Polygon angle diagram">${inner}<text class="diagram-note" x="135" y="220" text-anchor="middle">Not drawn to scale</text></svg>`}
+    function svg(inner){return `<svg viewBox="0 0 270 230" role="img" aria-label="Polygon angle diagram">${inner}</svg>`}
     function point(cx,cy,r,angle){const rad=angle*Math.PI/180;return{x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)}}
     function regularPoints(n,cx=135,cy=111,r=68){return Array.from({length:n},(_,i)=>point(cx,cy,r,-90+i*360/n))}
     function pointsAttr(points){return points.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')}

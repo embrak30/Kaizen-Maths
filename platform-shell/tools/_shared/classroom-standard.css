@@ -296,17 +296,17 @@ html.kaizen-classroom-standard :where(.problem-set-header) {
 }
 
 .kaizen-diagram-scale-note {
-  position: absolute;
-  right: 6px;
-  bottom: 4px;
-  z-index: 12;
-  display: inline-flex;
+  position: static;
+  z-index: auto;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  max-width: calc(100% - 12px);
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.88);
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 4px;
+  padding: 0 2px;
+  border-radius: 0;
+  background: transparent;
   color: #526174;
   font-family: var(--kaizen-ui-font);
   font-size: 10px;
@@ -314,7 +314,7 @@ html.kaizen-classroom-standard :where(.problem-set-header) {
   line-height: 1.1;
   letter-spacing: 0;
   pointer-events: none;
-  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.10);
+  box-shadow: none;
 }
 
 html.kaizen-classroom-fit :where(.teacher-tab) {

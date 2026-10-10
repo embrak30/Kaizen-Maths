@@ -14,7 +14,8 @@
     ".action-buttons"
   ].join(",");
   const TIMER_HOSTS = ".timer-section, .timerWrap";
-  const SCALE_NOTE_TEXT = "Not drawn to scale";
+  const SCALE_NOTE_TEXT = "Image is not drawn to scale";
+  const OLD_SCALE_NOTE_TEXT = "Not drawn to scale";
   const DIAGRAM_CANDIDATES = "svg, canvas";
   const DIAGRAM_HOSTS = [
     ".diagram-wrap",
@@ -103,18 +104,22 @@
     return element.parentElement && element.parentElement !== document.body ? element.parentElement : element;
   }
 
+  function removeInlineScaleNotes(host) {
+    host.querySelectorAll?.("svg text").forEach((text) => {
+      const content = textOf(text);
+      if (content === SCALE_NOTE_TEXT || content === OLD_SCALE_NOTE_TEXT) text.remove();
+    });
+  }
+
   function labelDiagrams(rootElement = document) {
     rootElement.querySelectorAll(DIAGRAM_CANDIDATES).forEach((element) => {
       if (!isLikelyDiagram(element)) return;
       const host = noteHostFor(element);
       if (!host) return;
-      const hasScaleText = host.textContent && host.textContent.includes(SCALE_NOTE_TEXT);
-      const hasScaleNote = Boolean(host.querySelector?.(".kaizen-diagram-scale-note"));
-      if (host.dataset.kaizenScaleNote === "true" && (hasScaleText || hasScaleNote)) return;
-      if (host.textContent && host.textContent.includes(SCALE_NOTE_TEXT)) {
-        host.dataset.kaizenScaleNote = "true";
-        return;
-      }
+      removeInlineScaleNotes(host);
+      const hasScaleNote = Boolean(host.querySelector?.(".kaizen-diagram-scale-note, .worksheet-diagram-scale-note, .gcse-diagram-scale-note, .scale-note")) ||
+        Boolean(host.textContent && host.textContent.includes(SCALE_NOTE_TEXT));
+      if (host.dataset.kaizenScaleNote === "true" && hasScaleNote) return;
       const note = document.createElement("span");
       note.className = "kaizen-diagram-scale-note";
       note.textContent = SCALE_NOTE_TEXT;
