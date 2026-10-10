@@ -2394,7 +2394,7 @@ const tools = [
     status: "Imported",
     description: "Create printable maths vocabulary word searches from teacher-entered words, with selectable grid size, direction controls, student sheet, answer key, and print/save PDF options.",
     tags: ["classroom", "word search", "vocabulary", "maths vocabulary", "puzzle", "printable", "starter", "retrieval", "cover lesson"],
-    toolPath: "tools/word-search-builder/index.html?v=word-search-builder-2",
+    toolPath: "tools/word-search-builder/index.html?v=word-search-builder-print-3",
     imported: true,
     teacherNotes: [
       "Teachers enter their own topic vocabulary or generate a random maths vocabulary list, then the tool places the words into a printable grid.",
