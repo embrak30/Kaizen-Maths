@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decimal Place Value | Kaizen Maths</title>
+  <link rel="stylesheet" href="../_shared/math-look.css?v=math-font-1">
+  <link rel="stylesheet" href="../_shared/number-look.css?v=number-font-1">
+  <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <script src="../../auth-config.js?v=tool-access-guard-3"></script>
+  <script src="../_shared/tool-access-guard.js?v=tool-access-guard-3"></script>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5f6f89;
+      --line: #d8e5ef;
+      --paper: #ffffff;
+      --teal: #14b8a6;
+      --teal-dark: #087a76;
+      --blue: #2f80ed;
+      --purple: #7048e8;
+      --orange: #ff8a1f;
+      --rose: #ef476f;
+      --green: #21a66b;
+      --yellow: #ffd166;
+      --math-font: "KaTeX_Math", "KaTeX_Main", "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+      --ui-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --shadow: 0 16px 38px rgba(19, 39, 74, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      color: var(--ink);
+      font-family: var(--ui-font);
+      background:
+        radial-gradient(circle at 8% 12%, rgba(20, 184, 166, 0.17), transparent 32%),
+        radial-gradient(circle at 92% 72%, rgba(255, 138, 31, 0.14), transparent 34%),
+        repeating-linear-gradient(135deg, rgba(47, 128, 237, 0.05) 0 1px, transparent 1px 28px),
+        #f7fcff;
+      overflow-x: hidden;
+    }
+
+    button,
+    select {
+      border: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .teacher-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      z-index: 1001;
+      transform: translateY(-50%);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      border-radius: 0 8px 8px 0;
+      padding: 15px 8px;
+      background: var(--purple);
+      color: white;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+      font-size: 0.85rem;
+      font-weight: 900;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: -390px;
+      top: 0;
+      z-index: 1000;
+      width: 390px;
+      max-width: 86vw;
+      height: 100vh;
+      overflow-y: auto;
+      background: #fff;
+      box-shadow: 2px 0 22px rgba(0, 0, 0, 0.25);
+      transition: left 0.25s ease;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-header {
+      padding: 18px 20px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal-dark), var(--purple));
+      font-size: 1.2rem;
+      font-weight: 950;
+    }
+
+    .sidebar-content {
+      padding: 22px;
+      line-height: 1.55;
+      color: #344054;
+    }
+
+    .sidebar-content h3 {
+      margin: 18px 0 8px;
+      color: var(--teal-dark);
+      border-bottom: 2px solid rgba(20, 184, 166, 0.3);
+      padding-bottom: 5px;
+      font-size: 1.02rem;
+    }
+
+    .sidebar-content ul {
+      margin: 0 0 12px 20px;
+    }
+
+    .sidebar-content li {
+      margin-bottom: 7px;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      visibility: hidden;
+      background: rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transition: 0.25s ease;
+    }
+
+    .sidebar-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .container {
+      width: min(1500px, calc(100% - 22px));
+      margin: 11px auto;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr;
+      gap: 10px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      min-height: 78px;
+      padding: 13px 16px;
+      border-radius: 10px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 10% 12%, rgba(255, 255, 255, 0.18), transparent 35%),
+        linear-gradient(135deg, #14233a, #244a75 52%, #0f766e);
+      box-shadow: var(--shadow);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.25rem, 2vw, 1.85rem);
+      line-height: 1.05;
+      font-weight: 950;
+    }
+
+    .header p {
+      margin: 5px 0 0;
+      max-width: 880px;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: clamp(0.78rem, 1vw, 0.94rem);
+      font-weight: 700;
+      line-height: 1.28;
+    }
+
+    .header-chip {
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 0.78rem;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .tab {
+      min-width: 0;
+      min-height: 45px;
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: #25304f;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(47, 128, 237, 0.14);
+      box-shadow: 0 6px 16px rgba(19, 39, 74, 0.07);
+      font-size: clamp(0.72rem, 0.9vw, 0.95rem);
+      font-weight: 950;
+      transition: transform 90ms ease, background 150ms ease, color 150ms ease;
+    }
+
+    .tab:hover {
+      transform: translateY(-1px);
+      background: #fff4e7;
+      color: #a14700;
+      border-color: rgba(255, 138, 31, 0.45);
+    }
+
+    .tab.active {
+      color: #fff;
+      background: linear-gradient(135deg, var(--orange), var(--rose));
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) auto auto;
+      gap: 10px;
+      align-items: stretch;
+      border: 1px solid rgba(22, 33, 63, 0.1);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 10px 26px rgba(19, 39, 74, 0.08);
+      padding: 10px;
+    }
+
+    .level-info {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 360px);
+      gap: 10px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .level-copy {
+      min-width: 0;
+    }
+
+    .level-info h3 {
+      margin: 0 0 3px;
+      color: #18233a;
+      font-size: clamp(1rem, 1.4vw, 1.22rem);
+      font-weight: 950;
+    }
+
+    .level-info p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .dropdown-container {
+      min-width: 0;
+    }
+
+    .type-dropdown {
+      width: 100%;
+      min-height: 42px;
+      border: 2px solid rgba(20, 184, 166, 0.24);
+      border-radius: 9px;
+      padding: 7px 10px;
+      background: #fff;
+      color: #172033;
+      font-weight: 850;
+      outline: none;
+    }
+
+    .action-buttons,
+    .timer-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      min-height: 40px;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #23304c;
+      background: #fff;
+      border: 1px solid rgba(47, 128, 237, 0.16);
+      box-shadow: 0 6px 14px rgba(19, 39, 74, 0.09);
+      font-size: 0.86rem;
+      font-weight: 950;
+      line-height: 1.05;
+      transition: transform 90ms ease, box-shadow 150ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(19, 39, 74, 0.15);
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+    }
+
+    .btn-success {
+      color: #fff;
+      background: linear-gradient(135deg, var(--green), var(--teal-dark));
+    }
+
+    .btn-warning {
+      color: #fff;
+      background: linear-gradient(135deg, #f59f00, #ff7a1a);
+    }
+
+    .btn-danger {
+      color: #fff;
+      background: linear-gradient(135deg, #e03131, #c2255c);
+    }
+
+    .btn.mode-active {
+      color: #fff;
+      background: linear-gradient(135deg, #243b73, var(--purple));
+    }
+
+    .timer-display {
+      min-width: 86px;
+      min-height: 40px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(20, 184, 166, 0.22);
+      border-radius: 8px;
+      color: #243b73;
+      background: #fff;
+      font-weight: 950;
+      font-size: 0.95rem;
+    }
+
+    .timer-display.active {
+      border-color: var(--teal);
+      color: var(--teal-dark);
+    }
+
+    .timer-display.warning {
+      border-color: #e03131;
+      color: #e03131;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .problems-section {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 10px;
+    }
+
+    .problem-set-header {
+      display: none;
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      box-shadow: 0 10px 26px rgba(19, 39, 74, 0.12);
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .problem-set-header.visible {
+      display: block;
+    }
+
+    .problem-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .problem-list.one-example {
+      min-height: 0;
+    }
+
+    .problem-item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 12px;
+      border: 1px solid rgba(22, 33, 63, 0.1);
+      border-left: 7px solid var(--teal);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.97);
+      box-shadow: 0 10px 26px rgba(19, 39, 74, 0.08);
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .problem-list.one-example .problem-item {
+      min-height: min(580px, calc(100vh - 250px));
+    }
+
+    .problem-number {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(135deg, var(--purple), #243b73);
+      font-weight: 950;
+      font-size: 1.08rem;
+      flex-shrink: 0;
+    }
+
+    .problem-content {
+      min-width: 0;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .question-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .equation {
+      min-width: 0;
+      color: #14233a;
+      font-family: var(--math-font);
+      font-size: clamp(1.45rem, 2.15vw, 2.35rem);
+      line-height: 1.18;
+      font-weight: 650;
+      overflow-wrap: anywhere;
+    }
+
+    .instruction {
+      display: block;
+      margin-bottom: 4px;
+      color: #667085;
+      font-family: var(--ui-font);
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .problem-answer {
+      display: none;
+      max-width: 380px;
+      border-radius: 999px;
+      padding: 8px 13px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--green), var(--teal-dark));
+      font-weight: 950;
+      font-size: 1rem;
+      text-align: center;
+      box-shadow: 0 9px 18px rgba(12, 122, 111, 0.18);
+    }
+
+    .problem-answer.visible {
+      display: block;
+      animation: slideIn 0.28s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .chart-wrap,
+    .shift-wrap {
+      display: grid;
+      gap: 7px;
+      border-radius: 12px;
+      padding: 10px;
+      background:
+        linear-gradient(135deg, rgba(20, 184, 166, 0.08), rgba(112, 72, 232, 0.07)),
+        #fff;
+      border: 1px solid rgba(20, 184, 166, 0.17);
+      overflow-x: auto;
+    }
+
+    .place-chart {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      min-width: 720px;
+      background: #fff;
+      border: 2px solid #25304f;
+    }
+
+    .place-chart th,
+    .place-chart td {
+      border: 1px solid #b9c7d6;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .place-chart th {
+      height: 34px;
+      padding: 5px 4px;
+      color: #25304f;
+      background: #eef7ff;
+      font-size: 0.72rem;
+      line-height: 1.05;
+      font-weight: 950;
+    }
+
+    .place-chart td {
+      height: 58px;
+      color: #102033;
+      font-family: var(--math-font);
+      font-size: clamp(1.42rem, 2.3vw, 2.35rem);
+      font-weight: 700;
+      background: #fff;
+    }
+
+    .place-chart .decimal-point-col {
+      width: 38px;
+      color: #fff;
+      background: #25304f;
+    }
+
+    .place-chart .decimal-point-cell {
+      color: #fff;
+      background: #25304f;
+      font-size: 2rem;
+    }
+
+    .place-chart .whole-col {
+      background: #fff7e8;
+    }
+
+    .place-chart .decimal-col {
+      background: #e9fbf7;
+    }
+
+    .place-chart .active-col {
+      color: #fff;
+      background: linear-gradient(135deg, var(--orange), var(--rose));
+    }
+
+    .place-chart td.active-col {
+      color: #fff;
+      box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.78);
+    }
+
+    .place-chart td.empty {
+      color: transparent;
+    }
+
+    .chart-caption {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      color: #475467;
+      font-size: 0.82rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .legend {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      background: linear-gradient(135deg, var(--orange), var(--rose));
+    }
+
+    .shift-arrow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+      color: #25304f;
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .shift-arrow span {
+      min-height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      padding: 7px 12px;
+    }
+
+    .solution-steps {
+      display: none;
+      border-radius: 12px;
+      border-left: 5px solid var(--blue);
+      padding: 11px 13px;
+      background: #eef7ff;
+      color: #1d2939;
+    }
+
+    .solution-steps.visible {
+      display: block;
+      animation: slideDown 0.26s ease;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .answer-label {
+      margin-bottom: 8px;
+      color: #174f95;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+    }
+
+    .step {
+      margin: 7px 0;
+      color: #25304f;
+      font-size: 1.02rem;
+      line-height: 1.38;
+      font-weight: 720;
+    }
+
+    .step-equation {
+      margin: 8px 0;
+      border-radius: 9px;
+      padding: 8px 10px;
+      color: #243b73;
+      background: rgba(255, 255, 255, 0.82);
+      font-family: var(--math-font);
+      font-size: 1.16rem;
+      line-height: 1.32;
+      text-align: center;
+      font-weight: 650;
+    }
+
+    .final-answer {
+      margin-top: 10px;
+      border-radius: 9px;
+      padding: 10px 12px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--green), var(--teal-dark));
+      text-align: center;
+      font-size: 1.16rem;
+      font-weight: 950;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 2px 8px;
+      color: #fff;
+      background: var(--purple);
+      font-family: var(--ui-font);
+      font-size: 0.86em;
+      font-weight: 950;
+    }
+
+    .mini-frac {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+      line-height: 1.05;
+      font-family: var(--math-font);
+      font-weight: 650;
+    }
+
+    .mini-frac span {
+      display: block;
+      padding: 0 0.18em;
+    }
+
+    .mini-frac span:first-child {
+      border-bottom: 1.5px solid currentColor;
+    }
+
+    .empty-state {
+      display: grid;
+      place-items: center;
+      min-height: 320px;
+      border: 2px dashed #c5d6e4;
+      border-radius: 12px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.84);
+      text-align: center;
+      padding: 28px;
+      font-weight: 800;
+    }
+
+    .timer-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.64);
+    }
+
+    .timer-modal.hidden {
+      display: none;
+    }
+
+    .modal-content {
+      width: min(360px, 90vw);
+      border-radius: 14px;
+      background: #fff;
+      padding: 26px;
+      text-align: center;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
+    }
+
+    .modal-content h2 {
+      margin: 0 0 9px;
+      color: #e03131;
+      font-size: 1.7rem;
+    }
+
+    .modal-content p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    @media (max-width: 1100px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .level-info {
+        grid-template-columns: 1fr;
+      }
+
+      .action-buttons,
+      .timer-section {
+        justify-content: flex-start;
+      }
+
+      .question-row {
+        grid-template-columns: 1fr;
+      }
+
+      .problem-answer {
+        max-width: none;
+        justify-self: start;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .container {
+        width: min(100% - 14px, 1500px);
+        margin: 7px auto;
+      }
+
+      .header {
+        grid-template-columns: 1fr;
+      }
+
+      .header-chip {
+        justify-self: start;
+      }
+
+      .tabs {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .problem-item {
+        grid-template-columns: 1fr;
+      }
+
+      .problem-number {
+        width: 36px;
+        height: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="teacher-tab" type="button" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</button>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Decimal Place Value</div>
+    <div class="sidebar-content">
+      <h3>Purpose</h3>
+      <p>This tool develops place-value understanding from whole-number columns into tenths, hundredths, and thousandths.</p>
+      <h3>Teaching Emphasis</h3>
+      <ul>
+        <li>Use column language: tens, ones, tenths, hundredths, thousandths.</li>
+        <li>Connect each decimal column to a fraction of one whole.</li>
+        <li>When multiplying or dividing by powers of 10, say that the digits move through fixed place-value columns. The decimal point stays fixed between ones and tenths.</li>
+      </ul>
+      <h3>Common Misconceptions</h3>
+      <ul>
+        <li>Thinking 0.08 is larger than 0.7 because 8 is larger than 7.</li>
+        <li>Reading 3.45 as “three point forty-five” without recognising tenths and hundredths.</li>
+        <li>Moving the decimal point instead of moving digits into new place-value columns.</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="container">
+    <header class="header">
+      <div>
+        <h1>Decimal Place Value Builder</h1>
+        <p>Use place-value columns to read, build, decompose, compare, and scale decimal numbers.</p>
+      </div>
+      <div class="header-chip">Tenths · Hundredths · Thousandths</div>
+    </header>
+
+    <nav class="tabs" aria-label="Place value levels">
+      <button class="tab active" type="button" onclick="switchLevel(1)">Level 1: Whole Bridge</button>
+      <button class="tab" type="button" onclick="switchLevel(2)">Level 2: Decimal Columns</button>
+      <button class="tab" type="button" onclick="switchLevel(3)">Level 3: Build & Decompose</button>
+      <button class="tab" type="button" onclick="switchLevel(4)">Level 4: Powers of 10</button>
+    </nav>
+
+    <section class="controls">
+      <div class="level-info">
+        <div class="level-copy">
+          <h3 id="level-title">Level 1: Whole-number bridge</h3>
+          <p id="level-description">Read and value whole-number columns before extending the same structure into decimals.</p>
+        </div>
+        <div class="dropdown-container">
+          <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()"></select>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-success" type="button" onclick="generateNewSet()">New</button>
+        <button class="btn btn-primary" type="button" onclick="showAnswers()">Answers</button>
+        <button class="btn btn-warning" type="button" onclick="showSteps()">Steps</button>
+        <button class="btn btn-primary mode-active" id="practiceBtn" type="button" onclick="setDisplayMode('practice')">Practice Set</button>
+        <button class="btn" id="exampleBtn" type="button" onclick="setDisplayMode('example')">One Example</button>
+      </div>
+
+      <div class="timer-section">
+        <div id="timer-display" class="timer-display">Ready</div>
+        <button class="btn btn-primary" type="button" onclick="startTimer(2)">2 Min</button>
+        <button class="btn btn-warning" type="button" onclick="startTimer(5)">5 Min</button>
+        <button class="btn btn-danger" type="button" onclick="stopTimer()">Stop</button>
+      </div>
+    </section>
+
+    <section class="problems-section">
+      <div id="problem-set-header" class="problem-set-header"></div>
+      <ol id="problem-list" class="problem-list"></ol>
+    </section>
+  </main>
+
+  <div id="timer-modal" class="timer-modal hidden">
+    <div class="modal-content">
+      <h2>Time's Up</h2>
+      <p>Ready to review the place-value reasoning?</p>
+      <button class="btn btn-primary" type="button" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+    let currentType = "select";
+    let displayMode = "practice";
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let timerActive = false;
+    let problems = [];
+    let answersVisible = false;
+    let stepsVisible = false;
+
+    const PLACE_COLUMNS = [
+      { key: "thousands", label: "Thousands", short: "Th", kind: "whole", value: 1000 },
+      { key: "hundreds", label: "Hundreds", short: "H", kind: "whole", value: 100 },
+      { key: "tens", label: "Tens", short: "T", kind: "whole", value: 10 },
+      { key: "ones", label: "Ones", short: "O", kind: "whole", value: 1 },
+      { key: "point", label: ".", short: ".", kind: "point", value: null },
+      { key: "tenths", label: "Tenths", short: "t", kind: "decimal", value: 0.1, fraction: [1, 10] },
+      { key: "hundredths", label: "Hundredths", short: "h", kind: "decimal", value: 0.01, fraction: [1, 100] },
+      { key: "thousandths", label: "Thousandths", short: "th", kind: "decimal", value: 0.001, fraction: [1, 1000] }
+    ];
+
+    const levelConfigs = {
+      1: {
+        title: "Level 1: Whole-number bridge",
+        description: "Read and value whole-number columns before extending the same structure into decimals.",
+        types: [
+          ["digit_value_whole", "Type 1: Value of a whole-number digit"],
+          ["expanded_whole", "Type 2: Expanded form with whole numbers"],
+          ["compose_whole", "Type 3: Build a whole number from parts"],
+          ["mixed", "Mixed practice"]
+        ]
+      },
+      2: {
+        title: "Level 2: Decimal columns",
+        description: "Identify tenths, hundredths, and thousandths, and name the value of decimal digits.",
+        types: [
+          ["identify_decimal_place", "Type 1: Identify decimal place"],
+          ["value_decimal_digit", "Type 2: Value of a decimal digit"],
+          ["compare_decimals", "Type 3: Compare decimals using columns"],
+          ["order_decimals", "Type 4: Order decimals using columns"],
+          ["mixed", "Mixed practice"]
+        ]
+      },
+      3: {
+        title: "Level 3: Build and decompose decimals",
+        description: "Write decimals in expanded form, compose decimals from parts, and solve missing-digit questions.",
+        types: [
+          ["expanded_decimal", "Type 1: Expanded decimal form"],
+          ["compose_decimal", "Type 2: Compose a decimal from parts"],
+          ["missing_digit", "Type 3: Missing decimal digit"],
+          ["number_from_clues", "Type 4: Number from place-value clues"],
+          ["mixed", "Mixed practice"]
+        ]
+      },
+      4: {
+        title: "Level 4: Powers of 10",
+        description: "Multiply and divide decimals by powers of 10 by shifting digits through fixed place-value columns.",
+        types: [
+          ["multiply_power10", "Type 1: Multiply by 10, 100, or 1000"],
+          ["divide_power10", "Type 2: Divide by 10, 100, or 1000"],
+          ["shift_missing", "Type 3: Missing value in a power-of-10 shift"],
+          ["mixed", "Mixed practice"]
+        ]
+      }
+    };
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.querySelector(".sidebar-overlay").classList.toggle("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.querySelector(".sidebar-overlay").classList.remove("active");
+    }
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function choice(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function trimNumber(value, places = 6) {
+      return Number(value).toFixed(places).replace(/(\.\d*?[1-9])0+$/u, "$1").replace(/\.0+$/u, "");
+    }
+
+    function placeFraction(placeKey) {
+      const column = PLACE_COLUMNS.find(item => item.key === placeKey);
+      if (!column?.fraction) return String(column?.value ?? "");
+      return `<span class="mini-frac"><span>${column.fraction[0]}</span><span>${column.fraction[1]}</span></span>`;
+    }
+
+    function placeValueText(placeKey) {
+      const map = {
+        thousands: "1000",
+        hundreds: "100",
+        tens: "10",
+        ones: "1",
+        tenths: "0.1",
+        hundredths: "0.01",
+        thousandths: "0.001"
+      };
+      return map[placeKey] || "";
+    }
+
+    function placeValueWord(placeKey) {
+      return PLACE_COLUMNS.find(item => item.key === placeKey)?.label.toLowerCase() || placeKey;
+    }
+
+    function digitValue(digit, placeKey) {
+      const column = PLACE_COLUMNS.find(item => item.key === placeKey);
+      return Number(digit) * Number(column.value || 0);
+    }
+
+    function formatDigitValue(digit, placeKey) {
+      const value = digitValue(digit, placeKey);
+      if (value >= 1) return String(value);
+      return trimNumber(value, 3);
+    }
+
+    function makeDecimalString(options = {}) {
+      const maxWhole = options.maxWhole ?? 999;
+      const places = options.places ?? choice([1, 2, 3]);
+      const whole = random(options.minWhole ?? 0, maxWhole);
+      let decimal = "";
+      for (let i = 0; i < places; i += 1) decimal += String(random(0, 9));
+      if (/^0+$/u.test(decimal)) decimal = decimal.slice(0, -1) + String(random(1, 9));
+      return `${whole}.${decimal}`;
+    }
+
+    function makeWholeString() {
+      return String(random(120, 9876));
+    }
+
+    function splitForChart(value) {
+      const text = String(value);
+      const [wholeRaw, decimalRaw = ""] = text.split(".");
+      const whole = wholeRaw.replace(/^-/u, "").padStart(4, " ");
+      const decimal = decimalRaw.padEnd(3, " ");
+      return {
+        thousands: whole[whole.length - 4] || " ",
+        hundreds: whole[whole.length - 3] || " ",
+        tens: whole[whole.length - 2] || " ",
+        ones: whole[whole.length - 1] || "0",
+        point: ".",
+        tenths: decimal[0] || " ",
+        hundredths: decimal[1] || " ",
+        thousandths: decimal[2] || " "
+      };
+    }
+
+    function renderPlaceChart(value, options = {}) {
+      const digits = splitForChart(value);
+      const highlight = options.highlight || "";
+      const caption = options.caption || "The decimal point stays fixed between ones and tenths.";
+      const heads = PLACE_COLUMNS.map(column => {
+        const classes = [
+          column.kind === "whole" ? "whole-col" : "",
+          column.kind === "decimal" ? "decimal-col" : "",
+          column.kind === "point" ? "decimal-point-col" : "",
+          highlight === column.key ? "active-col" : ""
+        ].filter(Boolean).join(" ");
+        const label = column.kind === "decimal"
+          ? `${column.label}<br>${placeFraction(column.key)}`
+          : column.label;
+        return `<th class="${classes}">${label}</th>`;
+      }).join("");
+      const cells = PLACE_COLUMNS.map(column => {
+        const valueText = column.key === "point" ? "." : digits[column.key];
+        const empty = column.key !== "point" && String(valueText).trim() === "";
+        const classes = [
+          column.kind === "whole" ? "whole-col" : "",
+          column.kind === "decimal" ? "decimal-col" : "",
+          column.kind === "point" ? "decimal-point-cell" : "",
+          highlight === column.key ? "active-col" : "",
+          empty ? "empty" : ""
+        ].filter(Boolean).join(" ");
+        return `<td class="${classes}">${empty ? "0" : valueText}</td>`;
+      }).join("");
+      return `
+        <div class="chart-wrap">
+          <table class="place-chart" aria-label="Place value chart">
+            <thead><tr>${heads}</tr></thead>
+            <tbody><tr>${cells}</tr></tbody>
+          </table>
+          <div class="chart-caption"><span>${caption}</span><span class="legend"><span class="legend-dot"></span>Focus column</span></div>
+        </div>`;
+    }
+
+    function renderShiftChart(before, after, label) {
+      return `
+        <div class="shift-wrap">
+          ${renderPlaceChart(before, { caption: `Start: ${before}` })}
+          <div class="shift-arrow"><hr><span>${label}</span><hr></div>
+          ${renderPlaceChart(after, { caption: `After the digits shift: ${after}` })}
+        </div>`;
+    }
+
+    function stepEquation(html) {
+      return `<div class="step-equation">${html}</div>`;
+    }
+
+    function textStep(html) {
+      return `<div class="step">${html}</div>`;
+    }
+
+    function makeProblem() {
+      const config = levelConfigs[currentLevel];
+      const candidates = currentType === "mixed" || currentType === "select"
+        ? config.types.map(item => item[0]).filter(type => type !== "mixed")
+        : [currentType];
+      return generateByType(choice(candidates));
+    }
+
+    function generateByType(type) {
+      switch (type) {
+        case "digit_value_whole": {
+          const value = makeWholeString();
+          const visiblePlaces = ["thousands", "hundreds", "tens", "ones"].filter(place => splitForChart(value)[place].trim());
+          const place = choice(visiblePlaces);
+          const digit = splitForChart(value)[place];
+          const answer = formatDigitValue(digit, place);
+          return {
+            badge: "Whole number place value",
+            question: `<span class="instruction">Find the digit value</span>What is the value of the digit <span class="pill">${digit}</span> in ${value}?`,
+            visual: renderPlaceChart(value, { highlight: place, caption: `The highlighted digit is in the ${placeValueWord(place)} column.` }),
+            answer,
+            steps: [
+              textStep(`The digit ${digit} is in the ${placeValueWord(place)} column.`),
+              stepEquation(`${digit} × ${placeValueText(place)} = ${answer}`),
+              textStep(`So the value of the digit is ${answer}.`)
+            ]
+          };
+        }
+        case "expanded_whole": {
+          const value = makeWholeString();
+          const digits = splitForChart(value);
+          const terms = ["thousands", "hundreds", "tens", "ones"]
+            .filter(place => digits[place].trim() && digits[place] !== "0")
+            .map(place => `${digits[place]} × ${placeValueText(place)}`);
+          const answer = terms.join(" + ");
+          return {
+            badge: "Expanded form",
+            question: `<span class="instruction">Write in expanded form</span>Write ${value} in expanded form.`,
+            visual: renderPlaceChart(value, { caption: "Each digit is worth its digit multiplied by its column value." }),
+            answer,
+            steps: [
+              textStep("Read each non-zero digit with its column value."),
+              stepEquation(answer),
+              textStep(`This recombines to make ${value}.`)
+            ]
+          };
+        }
+        case "compose_whole": {
+          const parts = [
+            ["hundreds", random(1, 9)],
+            ["tens", random(1, 9)],
+            ["ones", random(1, 9)]
+          ];
+          if (Math.random() > 0.35) parts.unshift(["thousands", random(1, 6)]);
+          const value = parts.reduce((sum, [place, digit]) => sum + digitValue(digit, place), 0);
+          const prompt = parts.map(([place, digit]) => `${digit} ${placeValueWord(place)}`).join(", ");
+          return {
+            badge: "Build a number",
+            question: `<span class="instruction">Compose the number</span>Build the number with ${prompt}.`,
+            visual: renderPlaceChart(String(value), { caption: "Place each digit in the named column." }),
+            answer: String(value),
+            steps: [
+              textStep("Put each digit into its matching place-value column."),
+              stepEquation(parts.map(([place, digit]) => `${digit} × ${placeValueText(place)}`).join(" + ")),
+              stepEquation(`= ${value}`)
+            ]
+          };
+        }
+        case "identify_decimal_place": {
+          const value = makeDecimalString({ places: choice([2, 3]) });
+          const digits = splitForChart(value);
+          const usedPlaces = ["tenths", "hundredths", "thousandths"].filter(key => digits[key].trim());
+          const nonZeroPlaces = usedPlaces.filter(key => digits[key] !== "0");
+          const place = choice(nonZeroPlaces.length ? nonZeroPlaces : usedPlaces);
+          const digit = digits[place];
+          return {
+            badge: "Decimal columns",
+            question: `<span class="instruction">Name the place</span>In ${value}, which place is occupied by the digit <span class="pill">${digit}</span>?`,
+            visual: renderPlaceChart(value, { highlight: place, caption: `${digit} is highlighted in the ${placeValueWord(place)} column.` }),
+            answer: placeValueWord(place),
+            steps: [
+              textStep("Start at the decimal point and move to the right."),
+              textStep("The first column is tenths, the second is hundredths, and the third is thousandths."),
+              stepEquation(`${digit} is in the ${placeValueWord(place)} column.`)
+            ]
+          };
+        }
+        case "value_decimal_digit": {
+          const value = makeDecimalString({ places: 3 });
+          const digits = splitForChart(value);
+          const nonZeroPlaces = ["tenths", "hundredths", "thousandths"].filter(key => digits[key] !== "0");
+          const place = choice(nonZeroPlaces.length ? nonZeroPlaces : ["tenths", "hundredths", "thousandths"]);
+          const digit = digits[place];
+          const answer = `${formatDigitValue(digit, place)} (${digit} ${placeValueWord(place)})`;
+          return {
+            badge: "Decimal digit value",
+            question: `<span class="instruction">Find the digit value</span>What is the value of the digit <span class="pill">${digit}</span> in ${value}?`,
+            visual: renderPlaceChart(value, { highlight: place, caption: `The ${placeValueWord(place)} column is worth ${placeValueText(place)} for each digit.` }),
+            answer,
+            steps: [
+              textStep(`The digit ${digit} is in the ${placeValueWord(place)} column.`),
+              stepEquation(`${digit} × ${placeValueText(place)} = ${formatDigitValue(digit, place)}`),
+              textStep(`So the value is ${answer}.`)
+            ]
+          };
+        }
+        case "compare_decimals": {
+          const a = makeDecimalString({ maxWhole: 19, places: choice([2, 3]) });
+          let b = makeDecimalString({ maxWhole: 19, places: choice([2, 3]) });
+          if (Number(a) === Number(b)) b = trimNumber(Number(b) + 0.01, 3);
+          const relation = Number(a) > Number(b) ? ">" : "<";
+          const firstDifference = findFirstDifferentColumn(a, b);
+          return {
+            badge: "Compare decimals",
+            question: `<span class="instruction">Compare using columns</span>Insert &lt; or &gt;: ${a} ___ ${b}`,
+            visual: `${renderPlaceChart(a, { highlight: firstDifference, caption: `First number: ${a}` })}${renderPlaceChart(b, { highlight: firstDifference, caption: `Second number: ${b}` })}`,
+            answer: `${a} ${relation} ${b}`,
+            steps: [
+              textStep("Compare from left to right: whole number, tenths, hundredths, then thousandths."),
+              textStep(`The first different column is ${placeValueWord(firstDifference)}.`),
+              stepEquation(`${a} ${relation} ${b}`)
+            ]
+          };
+        }
+        case "order_decimals": {
+          const values = Array.from({ length: 4 }, () => makeDecimalString({ maxWhole: 9, places: choice([1, 2, 3]) }));
+          const sorted = [...values].sort((a, b) => Number(a) - Number(b));
+          return {
+            badge: "Order decimals",
+            question: `<span class="instruction">Order the numbers</span>Order from smallest to largest: ${values.join(", ")}`,
+            visual: values.map(value => renderPlaceChart(value, { caption: value })).join(""),
+            answer: sorted.join(" < "),
+            steps: [
+              textStep("Compare whole numbers first. If they match, compare tenths, then hundredths, then thousandths."),
+              stepEquation(sorted.join(" < "))
+            ]
+          };
+        }
+        case "expanded_decimal": {
+          const value = makeDecimalString({ maxWhole: 99, places: 3 });
+          const digits = splitForChart(value);
+          const places = ["tens", "ones", "tenths", "hundredths", "thousandths"].filter(place => digits[place].trim() && digits[place] !== "0");
+          const answer = places.map(place => `${digits[place]} × ${placeValueText(place)}`).join(" + ");
+          return {
+            badge: "Expanded decimals",
+            question: `<span class="instruction">Expand the decimal</span>Write ${value} in expanded form.`,
+            visual: renderPlaceChart(value, { caption: "Use every non-zero digit and its place value." }),
+            answer,
+            steps: [
+              textStep("Separate the number by place-value columns."),
+              stepEquation(answer),
+              textStep(`These parts add back together to make ${value}.`)
+            ]
+          };
+        }
+        case "compose_decimal": {
+          const whole = random(1, 8);
+          const tenths = random(1, 9);
+          const hundredths = random(0, 9);
+          const thousandths = random(0, 9);
+          const value = `${whole}.${tenths}${hundredths}${thousandths}`;
+          return {
+            badge: "Compose decimals",
+            question: `<span class="instruction">Build the decimal</span>Build the number: ${whole} ones, ${tenths} tenths, ${hundredths} hundredths, ${thousandths} thousandths.`,
+            visual: renderPlaceChart(value, { caption: "Each named part goes into its matching column." }),
+            answer: value,
+            steps: [
+              textStep("Put the whole-number part in the ones column."),
+              textStep("Put the decimal digits into tenths, hundredths, and thousandths."),
+              stepEquation(`${whole} + ${tenths} × 0.1 + ${hundredths} × 0.01 + ${thousandths} × 0.001 = ${value}`)
+            ]
+          };
+        }
+        case "missing_digit": {
+          const value = makeDecimalString({ maxWhole: 19, places: 3 });
+          const place = choice(["tenths", "hundredths", "thousandths"]);
+          const digits = splitForChart(value);
+          const answer = digits[place];
+          const masked = maskPlace(value, place);
+          return {
+            badge: "Missing digit",
+            question: `<span class="instruction">Find the missing digit</span>${masked} has ${answer} ${placeValueWord(place)}. What digit is missing?`,
+            visual: renderPlaceChart(masked.replace("□", "0"), { highlight: place, caption: `The missing digit belongs in the ${placeValueWord(place)} column.` }),
+            answer,
+            steps: [
+              textStep(`The clue says the ${placeValueWord(place)} digit is ${answer}.`),
+              stepEquation(`${masked} → ${value}`),
+              textStep(`The missing digit is ${answer}.`)
+            ]
+          };
+        }
+        case "number_from_clues": {
+          const ones = random(1, 9);
+          const tenths = random(1, 9);
+          const hundredths = random(0, 9);
+          const thousandths = random(0, 9);
+          const value = `${ones}.${tenths}${hundredths}${thousandths}`;
+          return {
+            badge: "Place-value clues",
+            question: `<span class="instruction">Use the clues</span>The number has ${ones} ones, ${tenths} tenths, ${hundredths} hundredths, and ${thousandths} thousandths. Write the number.`,
+            visual: renderPlaceChart(value, { caption: "Read the clues into columns from left to right." }),
+            answer: value,
+            steps: [
+              textStep("Place each digit in the column named by the clue."),
+              stepEquation(`${ones}.${tenths}${hundredths}${thousandths}`),
+              textStep(`The number is ${value}.`)
+            ]
+          };
+        }
+        case "multiply_power10": {
+          const before = makeDecimalString({ maxWhole: 9, places: 3 });
+          const power = choice([10, 100, 1000]);
+          const after = trimNumber(Number(before) * power, 3);
+          const places = Math.log10(power);
+          return {
+            badge: "Multiply by powers of 10",
+            question: `<span class="instruction">Digits move left</span>Calculate ${before} × ${power}.`,
+            visual: renderShiftChart(before, after, `Digits shift ${places} place${places === 1 ? "" : "s"} left`),
+            answer: after,
+            steps: [
+              textStep(`Multiplying by ${power} makes the number ${power} times larger.`),
+              textStep(`The digits shift ${places} place${places === 1 ? "" : "s"} left into larger-value columns.`),
+              textStep("The decimal point stays fixed between ones and tenths."),
+              stepEquation(`${before} × ${power} = ${after}`)
+            ]
+          };
+        }
+        case "divide_power10": {
+          const before = trimNumber(random(120, 9876) / 10, 1);
+          const power = choice([10, 100, 1000]);
+          const after = trimNumber(Number(before) / power, 5);
+          const places = Math.log10(power);
+          return {
+            badge: "Divide by powers of 10",
+            question: `<span class="instruction">Digits move right</span>Calculate ${before} ÷ ${power}.`,
+            visual: renderShiftChart(before, after, `Digits shift ${places} place${places === 1 ? "" : "s"} right`),
+            answer: after,
+            steps: [
+              textStep(`Dividing by ${power} makes the number ${power} times smaller.`),
+              textStep(`The digits shift ${places} place${places === 1 ? "" : "s"} right into smaller-value columns.`),
+              textStep("The decimal point stays fixed between ones and tenths."),
+              stepEquation(`${before} ÷ ${power} = ${after}`)
+            ]
+          };
+        }
+        case "shift_missing": {
+          const before = makeDecimalString({ maxWhole: 8, places: 2 });
+          const operation = choice(["×", "÷"]);
+          const power = choice([10, 100]);
+          const after = operation === "×" ? trimNumber(Number(before) * power, 3) : trimNumber(Number(before) / power, 5);
+          const places = Math.log10(power);
+          const direction = operation === "×" ? "left" : "right";
+          return {
+            badge: "Missing shift value",
+            question: `<span class="instruction">Complete the calculation</span>${before} ${operation} ${power} = □`,
+            visual: renderShiftChart(before, after, `Digits shift ${places} place${places === 1 ? "" : "s"} ${direction}`),
+            answer: after,
+            steps: [
+              textStep(`${operation === "×" ? "Multiplying" : "Dividing"} by ${power} shifts the digits ${direction}.`),
+              textStep("The decimal point stays fixed; the digits move through the columns."),
+              stepEquation(`${before} ${operation} ${power} = ${after}`)
+            ]
+          };
+        }
+        default:
+          return generateByType("value_decimal_digit");
+      }
+    }
+
+    function findFirstDifferentColumn(a, b) {
+      const da = splitForChart(a);
+      const db = splitForChart(b);
+      return ["thousands", "hundreds", "tens", "ones", "tenths", "hundredths", "thousandths"].find(place => (da[place] || " ") !== (db[place] || " ")) || "thousandths";
+    }
+
+    function maskPlace(value, place) {
+      const [whole, decimal = ""] = String(value).split(".");
+      const decimalPlaces = ["tenths", "hundredths", "thousandths"];
+      if (!decimalPlaces.includes(place)) return value;
+      const chars = decimal.padEnd(3, "0").split("");
+      chars[decimalPlaces.indexOf(place)] = "□";
+      return `${whole}.${chars.join("")}`;
+    }
+
+    function switchLevel(level) {
+      currentLevel = level;
+      currentType = "select";
+      document.querySelectorAll(".tab").forEach((tab, index) => tab.classList.toggle("active", index + 1 === level));
+      const config = levelConfigs[level];
+      document.getElementById("level-title").textContent = config.title;
+      document.getElementById("level-description").textContent = config.description;
+      const dropdown = document.getElementById("type-dropdown");
+      dropdown.innerHTML = `<option value="select">Select Question Type</option>${config.types.map(([value, label]) => `<option value="${value}">${label}</option>`).join("")}`;
+      dropdown.value = "select";
+      showBlankPage();
+    }
+
+    function typeChanged() {
+      currentType = document.getElementById("type-dropdown").value;
+      if (currentType === "select") showBlankPage();
+      else generateNewSet();
+    }
+
+    function setDisplayMode(mode) {
+      displayMode = mode;
+      document.getElementById("practiceBtn").classList.toggle("mode-active", mode === "practice");
+      document.getElementById("exampleBtn").classList.toggle("mode-active", mode === "example");
+      if (currentType !== "select") generateNewSet();
+    }
+
+    function showBlankPage() {
+      document.getElementById("problem-set-header").classList.remove("visible");
+      document.getElementById("problem-list").className = "problem-list";
+      document.getElementById("problem-list").innerHTML = `
+        <li class="empty-state">
+          <div>
+            <strong>Select a question type to begin.</strong><br>
+            Use the chart to connect whole-number columns to tenths, hundredths, and thousandths.
+          </div>
+        </li>`;
+    }
+
+    function generateNewSet() {
+      if (currentType === "select") {
+        showBlankPage();
+        return;
+      }
+      problems = [];
+      answersVisible = false;
+      stepsVisible = false;
+      const count = displayMode === "example" ? 1 : 5;
+      for (let i = 0; i < count; i += 1) problems.push(makeProblem());
+      renderProblems();
+    }
+
+    function renderProblems() {
+      const list = document.getElementById("problem-list");
+      const header = document.getElementById("problem-set-header");
+      list.className = `problem-list${displayMode === "example" ? " one-example" : ""}`;
+      list.innerHTML = "";
+      if (!problems.length) {
+        header.classList.remove("visible");
+        return;
+      }
+      header.textContent = problems[0].badge;
+      header.className = "problem-set-header visible";
+      problems.forEach((problem, index) => {
+        const li = document.createElement("li");
+        li.className = "problem-item";
+        const stepsHtml = problem.steps.join("");
+        li.innerHTML = `
+          <div class="problem-number">${index + 1}</div>
+          <div class="problem-content">
+            <div class="question-row">
+              <div class="equation">${problem.question}</div>
+              <div class="problem-answer" id="quick-answer-${index}">${problem.answer}</div>
+            </div>
+            ${problem.visual}
+            <div class="solution-steps" id="steps-${index}">
+              <div class="answer-label">Solution steps</div>
+              ${stepsHtml}
+              <div class="final-answer">${problem.answer}</div>
+            </div>
+          </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function showAnswers() {
+      answersVisible = !answersVisible;
+      for (let i = 0; i < problems.length; i += 1) {
+        const answer = document.getElementById(`quick-answer-${i}`);
+        if (answer) answer.classList.toggle("visible", answersVisible);
+      }
+    }
+
+    function showSteps() {
+      stepsVisible = !stepsVisible;
+      for (let i = 0; i < problems.length; i += 1) {
+        const steps = document.getElementById(`steps-${i}`);
+        if (steps) steps.classList.toggle("visible", stepsVisible);
+      }
+    }
+
+    function startTimer(minutes) {
+      if (timerActive) stopTimer();
+      timeRemaining = minutes * 60;
+      timerActive = true;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining -= 1;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) timerFinished();
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerActive = false;
+      const display = document.getElementById("timer-display");
+      display.textContent = "Ready";
+      display.className = "timer-display";
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = document.getElementById("timer-display");
+      display.textContent = `${minutes}:${String(seconds).padStart(2, "0")}`;
+      display.className = timeRemaining <= 30 ? "timer-display warning" : "timer-display active";
+    }
+
+    function timerFinished() {
+      stopTimer();
+      const display = document.getElementById("timer-display");
+      display.textContent = "Time Up";
+      display.className = "timer-display warning";
+      document.getElementById("timer-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("timer-modal").classList.add("hidden");
+    }
+
+    switchLevel(1);
+  </script>
+  <script src="../_shared/worksheet-standard.js?v=worksheet-standard-26"></script>
+  <script src="../_shared/classroom-standard.js?v=classroom-standard-3"></script>
+</body>
+</html>
