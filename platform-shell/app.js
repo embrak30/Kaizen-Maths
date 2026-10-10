@@ -686,25 +686,6 @@ const tools = [
     ]
   },
   {
-    slug: "decimal-place-value",
-    title: "Decimal Place Value Builder",
-    category: "Numbers",
-    level: "KS2 / KS3 / Grade 5-7",
-    type: "Practice Generator",
-    access: "Free",
-    status: "Imported",
-    description: "Generate visual place-value practice for whole-number columns, tenths, hundredths, thousandths, expanded decimal form, comparing decimals, and powers-of-10 digit shifts.",
-    tags: ["numbers", "place value", "decimals", "tenths", "hundredths", "thousandths", "expanded form", "powers of 10", "elementary", "middle school"],
-    toolPath: "tools/decimal-place-value/index.html?v=decimal-place-value-1",
-    imported: true,
-    teacherNotes: [
-      "Level 1 bridges from whole-number columns into decimal place value.",
-      "Level 2 focuses on tenths, hundredths, and thousandths using a place-value chart.",
-      "Level 3 builds and decomposes decimals through expanded form and place-value clues.",
-      "Level 4 models multiplying and dividing by powers of 10 as digits shifting through fixed columns, with the decimal point staying fixed between ones and tenths."
-    ]
-  },
-  {
     slug: "integer-operations",
     title: "Integer Operations",
     category: "Numbers",
@@ -2296,13 +2277,13 @@ const tools = [
     type: "Classroom Routine",
     access: "Free",
     status: "Imported",
-    description: "Generate quick visual starter questions for counting, number bonds, place value, comparing numbers, missing numbers, arrays, fractions, time, money, shapes, and Four Ops number reasoning.",
-    tags: ["classroom", "primary", "elementary", "starter", "bell work", "number sense", "four operations", "place value", "fractions", "time", "money", "shapes"],
-    toolPath: "tools/elementary-starter-board/index.html?v=elementary-starter-board-4",
+    description: "Generate quick visual starter questions for counting, number bonds, whole-number and decimal place value, comparing numbers, missing numbers, arrays, fractions, time, money, shapes, and Four Ops number reasoning.",
+    tags: ["classroom", "primary", "elementary", "starter", "bell work", "number sense", "four operations", "place value", "decimal place value", "fractions", "time", "money", "shapes"],
+    toolPath: "tools/elementary-starter-board/index.html?v=elementary-starter-board-5",
     imported: true,
     teacherNotes: [
       "Designed for short start-of-lesson routines with answers hidden until the teacher is ready to reveal them.",
-      "Teachers can generate one large starter question, a four-question board, or a colourful Four Ops spider diagram for number reasoning.",
+      "Teachers can generate one large starter question, a four-question board, decimal place-value block starters, or a colourful Four Ops spider diagram for number reasoning.",
       "Use the reveal buttons to support the ask, discuss, reveal classroom flow."
     ]
   },
@@ -2588,7 +2569,6 @@ const subjectToolGroups = {
     "four-operations": "Number Fluency and Operations",
     "order-of-operations": "Number Fluency and Operations",
     "decimals-practice-lab": "Number Fluency and Operations",
-    "decimal-place-value": "Number Fluency and Operations",
     "integer-operations": "Number Fluency and Operations",
     "hcf-lcm": "Number Fluency and Operations",
     "fractions-practice": "Fractions, Decimals and Percentages",
@@ -23882,8 +23862,7 @@ const curatedRelatedToolSlugs = {
   "bearings": ["trigonometric-ratios", "earth-geometry", "missing-angles", "sine-cosine-rule"],
   "number-sense-flexible-calculation": ["four-operations", "maths-structure-lab", "bar-models", "area-models"],
   "four-operations": ["number-sense-flexible-calculation", "integer-operations", "order-of-operations", "decimals-practice-lab"],
-  "decimal-place-value": ["decimals-practice-lab", "powers-of-10", "number-sense-flexible-calculation", "fractions-practice"],
-  "decimals-practice-lab": ["decimal-place-value", "powers-of-10", "fractions-practice", "number-sense-flexible-calculation"],
+  "decimals-practice-lab": ["powers-of-10", "fractions-practice", "number-sense-flexible-calculation", "four-operations"],
   "integer-operations": ["four-operations", "order-of-operations", "absolute-values", "number-bases-number-sets"],
   "fractions-practice": ["fractions", "decimals-practice-lab", "simple-percentage-tasks", "ratio-proportion"],
   "surds-radicals": ["surd-structure-visualiser", "exponents-index-notation", "pythagoras-theorem", "quadratic-equations"],
