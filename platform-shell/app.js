@@ -1909,12 +1909,12 @@ const tools = [
     type: "Practice Generator",
     access: "Free",
     status: "Imported",
-    description: "Generate simplification questions for like terms, two-variable expressions, and advanced products or powers.",
-    tags: ["algebra", "simplification", "like terms", "collecting terms", "expressions", "KaTeX"],
-    toolPath: "tools/simplification/index.html?v=batch2-steps-1",
+    description: "Generate simplification questions for like terms, bracket expansion, two-variable expressions, and advanced products or powers.",
+    tags: ["algebra", "simplification", "like terms", "collecting terms", "expanding brackets", "expressions", "KaTeX"],
+    toolPath: "tools/simplification/index.html?v=simplification-expand-products-1",
     imported: true,
     teacherNotes: [
-      "Builds fluency from collecting like terms to advanced multi-variable simplification.",
+      "Builds fluency from collecting like terms to bracket expansion and advanced multi-variable simplification.",
       "Useful for modelling why variable patterns must match before coefficients combine.",
       "A natural candidate for later shared algebra-term rendering helpers."
     ]
