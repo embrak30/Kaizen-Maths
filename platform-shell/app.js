@@ -4566,14 +4566,31 @@ function decodeCommonMathEntities(value, options = {}) {
   return text.replace(/&amp;/gi, "&");
 }
 
+function worksheetUnwrapBoxedMath(value) {
+  let source = String(value ?? "");
+  let start = source.indexOf("\\boxed{");
+  while (start !== -1) {
+    const bodyStart = start + 7;
+    let depth = 1;
+    let end = bodyStart;
+    for (; end < source.length && depth > 0; end += 1) {
+      if (source[end] === "{") depth += 1;
+      if (source[end] === "}") depth -= 1;
+    }
+    if (depth !== 0) break;
+    source = source.slice(0, start) + source.slice(bodyStart, end - 1) + source.slice(end);
+    start = source.indexOf("\\boxed{", start);
+  }
+  return source;
+}
+
 function worksheetMathFragment(value) {
   const fragment = document.createDocumentFragment();
-  const source = normaliseAlgebraUnitCoefficients(decodeCommonMathEntities(value))
+  const source = worksheetUnwrapBoxedMath(normaliseAlgebraUnitCoefficients(decodeCommonMathEntities(value)))
     .replace(/\\\(|\\\)|\\\[|\\\]|\$\$/g, "")
     .replace(/\$/g, "")
     .replace(/\\left|\\right/g, "")
     .replace(/\\displaystyle/g, "")
-    .replace(/\\boxed\{([^{}]+)\}/g, "$1")
     .replace(/\\text\{([^{}]+)\}/g, "$1")
     .replace(/\\int/g, "∫")
     .replace(/\\sum/g, "∑")
