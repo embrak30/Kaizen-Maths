@@ -188,15 +188,23 @@
     }
     function wholePolynomialDerivativeStep(terms,lead="f'(x)"){
       return {
-        text:'Differentiate the whole polynomial in one line, applying the power rule to each term.',
+        text:'Combine the term derivatives.',
         equation:'\\begin{aligned}'+lead+'&=\\dfrac{d}{dx}\\left('+polynomialLatex(terms)+'\\right)\\\\&='+derivativeProcessLatex(terms)+'\\\\&='+derivativeText(terms)+'\\end{aligned}'
       };
+    }
+    function termDerivativeSteps(terms){
+      return terms.flatMap(([c,p])=>p===0 ? [{text:'Differentiate the constant.',equation:`\\dfrac{d}{dx}(${c})=0`}] : [
+        {text:'Substitute into the power rule.',equation:`\\dfrac{d}{dx}(${coeffLatex(c,p)})=(${c})(${p})x^{${p}-1}`},
+        {text:'Multiply the coefficient; subtract 1 from the power.',equation:`(${c})(${p})=${c*p},\\quad ${p}-1=${p-1}`},
+        {text:'Write this term’s derivative.',equation:`\\dfrac{d}{dx}(${coeffLatex(c,p)})=${coeffLatex(c*p,p-1)}`}
+      ]);
     }
     function problemFromTerms(terms,badge,extraSteps=[]){
       const original = '$f(x) = ' + polynomialLatex(terms) + '$';
       const derivative = "$f'(x) = " + derivativeText(terms) + "$";
       const steps = [
         { text:'Use the power rule.', equation:'\\dfrac{d}{dx}\\left(ax^n\\right)=a\\cdot n x^{n-1}' },
+        ...termDerivativeSteps(terms),
         wholePolynomialDerivativeStep(terms)
       ];
       steps.push(...extraSteps);
@@ -205,6 +213,7 @@
     function derivativeRuleSteps(terms){
       const steps = [
         { text:'Use the power rule before substituting any values.', equation:'\\dfrac{d}{dx}\\left(ax^n\\right)=a\\cdot n x^{n-1}' },
+        ...termDerivativeSteps(terms),
         wholePolynomialDerivativeStep(terms)
       ];
       return steps;
@@ -287,7 +296,9 @@
           { text:'Find the tangent gradient using the same x-value.', equation:"m = f'("+x+") = "+(2*a)+"("+x+") + "+b+" = "+m },
           { text:'Use point-gradient form.', equation:'y - y_1 = m(x - x_1)' },
           { text:'Substitute the point and gradient.', equation:'y - '+y+' = '+m+'(x - '+x+')' },
-          { text:'Rearrange to give the tangent equation.', equation:line }
+          { text:'Expand the bracket.', equation:'y - '+y+' = '+m+'x - '+(m*x) },
+          { text:'Add '+y+' to both sides.', equation:'y = '+m+'x - '+(m*x)+' + '+y },
+          { text:'Simplify.', equation:line }
         ]
       };
     }
@@ -313,7 +324,9 @@
           { text:'The normal gradient is the negative reciprocal of the tangent gradient.', equation:'m_{\\text{normal}} = -\\dfrac{1}{'+tangentM+'}' },
           { text:'Use point-gradient form.', equation:'y - y_1 = m(x - x_1)' },
           { text:'Substitute the point and normal gradient.', equation:'y - '+y+' = '+slopeText+'(x - '+x+')' },
-          { text:'Rearrange to give the normal equation.', equation:line }
+          { text:'Expand the bracket.', equation:'y - '+y+' = '+slopeText+'x + \\dfrac{'+x+'}{'+tangentM+'}' },
+          { text:'Add '+y+' to both sides.', equation:'y = '+slopeText+'x + \\dfrac{'+x+'}{'+tangentM+'} + '+y },
+          { text:'Simplify the intercept (round if needed).', equation:line }
         ]
       };
     }

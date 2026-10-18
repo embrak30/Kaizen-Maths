@@ -193,7 +193,10 @@
         'Differentiate: $\\dfrac{du}{dx}=' + a + '$, so $du=' + a + '\\,dx$ and $dx=\\dfrac{1}{' + a + '}\\,du$.',
         'Substitute into the integral: $\\displaystyle \\int ' + k + '(' + inner + ')^{' + n + '}\\,dx = \\int ' + k + 'u^{' + n + '}\\cdot \\dfrac{1}{' + a + '}\\,du$.',
         'Simplify the constant: $\\displaystyle \\int ' + m + 'u^{' + n + '}\\,du$.',
-        'Integrate with respect to $u$: $\\displaystyle ' + m + '\\cdot \\dfrac{u^{' + (n+1) + '}}{' + (n+1) + '} + C = ' + latexCoeffProduct(coeff, 'u^{' + (n+1) + '}') + ' + C$.',
+        'New power: $' + n + '+1=' + (n+1) + '$.',
+        'Integrate: $' + m + '\\cdot\\dfrac{u^{' + (n+1) + '}}{' + (n+1) + '}+C$.',
+        'Simplify the coefficient: $' + m + '/' + (n+1) + '=' + coeff + '$.',
+        '$' + latexCoeffProduct(coeff, 'u^{' + (n+1) + '}') + '+C$.',
         'Replace $u$ with $' + inner + '$: ' + answer + '.'
       ]);
     }
@@ -209,7 +212,10 @@
         'Differentiate: $\\dfrac{du}{dx}=' + deriv + '$, so $du=(' + deriv + ')\\,dx$.',
         'The factor $(' + deriv + ')\\,dx$ appears in the integral, so replace it with $du$.',
         'The integral becomes $\\displaystyle \\int ' + m + 'u^{' + n + '}\\,du$.',
-        'Integrate: $\\displaystyle ' + m + '\\cdot \\dfrac{u^{' + (n+1) + '}}{' + (n+1) + '} + C = ' + latexCoeffProduct(coeff, 'u^{' + (n+1) + '}') + ' + C$.',
+        'New power: $' + n + '+1=' + (n+1) + '$.',
+        'Integrate: $' + m + '\\cdot\\dfrac{u^{' + (n+1) + '}}{' + (n+1) + '}+C$.',
+        'Simplify the coefficient: $' + m + '/' + (n+1) + '=' + coeff + '$.',
+        '$' + latexCoeffProduct(coeff, 'u^{' + (n+1) + '}') + '+C$.',
         'Replace $u$ with the original expression: ' + answer + '.'
       ]);
     }
@@ -256,7 +262,11 @@
         'When $x=' + x2 + '$, $u=' + a + '(' + x2 + ')' + signedNumber(b) + '=' + u2 + '$.',
         'The integral becomes $\\displaystyle \\int_{' + u1 + '}^{' + u2 + '} ' + m + 'u^{' + n + '}\\,du$.',
         'Integrate: $\\displaystyle \\left[' + frac(m,n+1) + 'u^{' + (n+1) + '}\\right]_{' + u1 + '}^{' + u2 + '}$.',
-        'Substitute the limits: $\\displaystyle ' + frac(m,n+1) + '(' + u2 + '^{' + (n+1) + '}-' + u1 + '^{' + (n+1) + '}) = ' + exact + '$.'
+        'Upper value: $F(' + u2 + ')=' + frac(m,n+1) + '(' + u2 + ')^{' + (n+1) + '}$.',
+        'Lower value: $F(' + u1 + ')=' + frac(m,n+1) + '(' + u1 + ')^{' + (n+1) + '}$.',
+        'Subtract: $' + frac(m,n+1) + '[(' + u2 + ')^{' + (n+1) + '}-(' + u1 + ')^{' + (n+1) + '}]$.',
+        'Evaluate the powers: $' + frac(m,n+1) + '[(' + Math.pow(u2,n+1) + ')-(' + Math.pow(u1,n+1) + ')]$.',
+        '$' + exact + '$.'
       ]);
     }
 
@@ -272,10 +282,15 @@
       return asProblem(type, '$\\displaystyle \\int_{' + x1 + '}^{' + x2 + '} ' + m + '(' + deriv + ')(' + inner + ')^{' + n + '}\\,dx$', answer, [
         'Let $u=' + inner + '$.',
         'Then $du=(' + deriv + ')\\,dx$.',
-        'Change the limits: when $x=' + x1 + '$, $u=' + u1 + '$; when $x=' + x2 + '$, $u=' + u2 + '$.',
+        'Lower limit: $u=' + a + '(' + x1 + ')^2+(' + b + ')(' + x1 + ')+(' + c + ')=' + u1 + '$.',
+        'Upper limit: $u=' + a + '(' + x2 + ')^2+(' + b + ')(' + x2 + ')+(' + c + ')=' + u2 + '$.',
         'The integral becomes $\\displaystyle \\int_{' + u1 + '}^{' + u2 + '} ' + m + 'u^{' + n + '}\\,du$.',
         'Integrate: $\\displaystyle \\left[' + frac(m,n+1) + 'u^{' + (n+1) + '}\\right]_{' + u1 + '}^{' + u2 + '}$.',
-        'Substitute the limits: $\\displaystyle ' + frac(m,n+1) + '(' + u2 + '^{' + (n+1) + '}-' + u1 + '^{' + (n+1) + '}) = ' + exact + '$.'
+        'Upper value: $F(' + u2 + ')=' + frac(m,n+1) + '(' + u2 + ')^{' + (n+1) + '}$.',
+        'Lower value: $F(' + u1 + ')=' + frac(m,n+1) + '(' + u1 + ')^{' + (n+1) + '}$.',
+        'Subtract: $' + frac(m,n+1) + '[(' + u2 + ')^{' + (n+1) + '}-(' + u1 + ')^{' + (n+1) + '}]$.',
+        'Evaluate the powers: $' + frac(m,n+1) + '[(' + Math.pow(u2,n+1) + ')-(' + Math.pow(u1,n+1) + ')]$.',
+        '$' + exact + '$.'
       ]);
     }
 
@@ -287,7 +302,9 @@
         'Choose $u=x$ and $dv=e^{' + a + 'x}\\,dx$.',
         'Then $du=dx$ and $v=\\displaystyle \\int e^{' + a + 'x}\\,dx=\\dfrac{e^{' + a + 'x}}{' + a + '}$.',
         'Substitute into the formula: $\\displaystyle \\int x e^{' + a + 'x}\\,dx = x\\cdot \\dfrac{e^{' + a + 'x}}{' + a + '} - \\int \\dfrac{e^{' + a + 'x}}{' + a + '}\\,dx$.',
-        'Integrate the remaining exponential: $\\displaystyle \\int \\dfrac{e^{' + a + 'x}}{' + a + '}\\,dx = \\dfrac{e^{' + a + 'x}}{' + (a*a) + '}$.',
+        'Take out the constant: $\\int \\dfrac{e^{' + a + 'x}}{' + a + '}\\,dx=\\dfrac{1}{' + a + '}\\int e^{' + a + 'x}\\,dx$.',
+        'Integrate: $\\dfrac{1}{' + a + '}\\cdot\\dfrac{e^{' + a + 'x}}{' + a + '}$.',
+        'Simplify: $\\displaystyle \\int \\dfrac{e^{' + a + 'x}}{' + a + '}\\,dx = \\dfrac{e^{' + a + 'x}}{' + (a*a) + '}$.',
         'Therefore ' + answer + '.'
       ]);
     }
@@ -301,7 +318,9 @@
           'Choose $u=x$ and $dv=\\sin(' + a + 'x)\\,dx$.',
           'Then $du=dx$ and $v=-\\dfrac{\\cos(' + a + 'x)}{' + a + '}$.',
           'Substitute: $\\displaystyle \\int x\\sin(' + a + 'x)\\,dx = -\\dfrac{x\\cos(' + a + 'x)}{' + a + '} - \\int \\left(-\\dfrac{\\cos(' + a + 'x)}{' + a + '}\\right)\\,dx$.',
-          'The remaining integral is $\\displaystyle \\dfrac{1}{' + a + '}\\int \\cos(' + a + 'x)\\,dx = \\dfrac{\\sin(' + a + 'x)}{' + (a*a) + '}$.',
+          'The two minus signs give a plus.',
+          '$\\dfrac{1}{' + a + '}\\int\\cos(' + a + 'x)\\,dx=\\dfrac{1}{' + a + '}\\cdot\\dfrac{\\sin(' + a + 'x)}{' + a + '}$.',
+          'Simplify: $\\displaystyle \\dfrac{1}{' + a + '}\\int \\cos(' + a + 'x)\\,dx = \\dfrac{\\sin(' + a + 'x)}{' + (a*a) + '}$.',
           'Therefore ' + answer + '.'
         ]);
       }
@@ -311,7 +330,9 @@
         'Choose $u=x$ and $dv=\\cos(' + a + 'x)\\,dx$.',
         'Then $du=dx$ and $v=\\dfrac{\\sin(' + a + 'x)}{' + a + '}$.',
         'Substitute: $\\displaystyle \\int x\\cos(' + a + 'x)\\,dx = \\dfrac{x\\sin(' + a + 'x)}{' + a + '} - \\int \\dfrac{\\sin(' + a + 'x)}{' + a + '}\\,dx$.',
-        'The remaining integral is $\\displaystyle -\\dfrac{1}{' + a + '}\\int \\sin(' + a + 'x)\\,dx = \\dfrac{\\cos(' + a + 'x)}{' + (a*a) + '}$.',
+        '$\\int\\sin(' + a + 'x)\\,dx=-\\dfrac{\\cos(' + a + 'x)}{' + a + '}$.',
+        '$-\\dfrac{1}{' + a + '}\\left(-\\dfrac{\\cos(' + a + 'x)}{' + a + '}\\right)$.',
+        'Simplify: $\\displaystyle -\\dfrac{1}{' + a + '}\\int \\sin(' + a + 'x)\\,dx = \\dfrac{\\cos(' + a + 'x)}{' + (a*a) + '}$.',
         'Therefore ' + answer + '.'
       ]);
     }
@@ -323,7 +344,9 @@
       return asProblem(type, '$\\displaystyle \\int ' + logText + '\\,dx$', answer, [
         'Use integration by parts because the integral contains a logarithm.',
         'Choose $u=' + logText + '$ and $dv=dx$.',
-        'Then $du=\\dfrac{1}{x}\\,dx$ and $v=x$.',
+        '$\\dfrac{du}{dx}=\\dfrac{1}{' + a + 'x}\\cdot' + a + '=\\dfrac{1}{x}$.',
+        '$du=\\dfrac{1}{x}\\,dx$.',
+        '$v=\\int1\\,dx=x$.',
         'Substitute into $\\displaystyle \\int u\\,dv=uv-\\int v\\,du$.',
         '$\\displaystyle \\int ' + logText + '\\,dx = x' + logText + ' - \\int x\\cdot \\dfrac{1}{x}\\,dx$.',
         'Simplify the remaining integral: $\\displaystyle \\int 1\\,dx=x$.',
@@ -336,13 +359,18 @@
       const upper=1;
       const exact='\\dfrac{e^{' + a + '}(' + a + '-1)+1}{' + (a*a) + '}';
       return asProblem(type, '$\\displaystyle \\int_{0}^{1} x e^{' + a + 'x}\\,dx$', '$' + exact + '$', [
-        'First find the indefinite integral using integration by parts.',
-        'Choose $u=x$ and $dv=e^{' + a + 'x}\\,dx$, so $du=dx$ and $v=\\dfrac{e^{' + a + 'x}}{' + a + '}$.',
+        'Use $\\int u\\,dv=uv-\\int v\\,du$.',
+        '$u=x,\\quad du=dx$.',
+        '$dv=e^{' + a + 'x}\\,dx,\\quad v=\\dfrac{e^{' + a + 'x}}{' + a + '}$.',
+        '$\\int xe^{' + a + 'x}\\,dx=x\\dfrac{e^{' + a + 'x}}{' + a + '}-\\dfrac{1}{' + a + '}\\int e^{' + a + 'x}\\,dx$.',
+        '$\\dfrac{1}{' + a + '}\\int e^{' + a + 'x}\\,dx=\\dfrac{1}{' + a + '}\\cdot\\dfrac{e^{' + a + 'x}}{' + a + '}$.',
         '$\\displaystyle \\int x e^{' + a + 'x}\\,dx=\\dfrac{x e^{' + a + 'x}}{' + a + '}-\\dfrac{e^{' + a + 'x}}{' + (a*a) + '}+C$.',
         'Now use the bounds: $\\displaystyle \\left[\\dfrac{x e^{' + a + 'x}}{' + a + '}-\\dfrac{e^{' + a + 'x}}{' + (a*a) + '}\\right]_{0}^{' + upper + '}$.',
         'At $x=1$: $\\displaystyle \\dfrac{e^{' + a + '}}{' + a + '}-\\dfrac{e^{' + a + '}}{' + (a*a) + '}$.',
         'At $x=0$: $\\displaystyle 0-\\dfrac{1}{' + (a*a) + '}$.',
-        'Subtract lower from upper: $' + exact + '$.'
+        'Subtract lower from upper: $\\dfrac{e^{' + a + '}}{' + a + '}-\\dfrac{e^{' + a + '}}{' + (a*a) + '}-(-\\dfrac{1}{' + (a*a) + '})$.',
+        'Use a common denominator: $\\dfrac{' + a + 'e^{' + a + '}-e^{' + a + '}+1}{' + (a*a) + '}$.',
+        'Factor: $' + exact + '$.'
       ]);
     }
 

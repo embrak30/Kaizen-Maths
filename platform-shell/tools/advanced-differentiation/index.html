@@ -124,32 +124,62 @@
     function exprEquation(terms,c){return implicitExpr(terms)+'='+c}
     function productStep(A,B){return A===1?B:`${A}\\left(${B}\\right)`}
     function linearFrac(num,den){return `\\dfrac{${num}}{${den}}`}
-    function implicitBasicProblem(){return pick([
-      ()=>{const a=random(1,4),b=random(1,4),c=random(12,80),eq=exprEquation([[a,'x^2'],[b,'y^2']],c),ans=`-\\dfrac{${a===1?'x':a+'x'}}{${b===1?'y':b+'y'}}`;return{equation:`Given $${eq}$, find $\\dfrac{dy}{dx}$.`,answer:`$$\\dfrac{dy}{dx}=${ans}$$`,steps:[`Differentiate $${eq}$ with respect to \\(x\\).`,`$$${productStep(2*a,'x')}+${productStep(2*b,'y\\dfrac{dy}{dx}')}=0$$`,'Move the term without \\(dy/dx\\) to the other side.',`$$${productStep(2*b,'y\\dfrac{dy}{dx}')}=-${2*a}x$$`,'Divide by the coefficient of \\(dy/dx\\).',`$$\\boxed{\\dfrac{dy}{dx}=${ans}}$$`]}},
-      ()=>{const c=random(12,90),eq=exprEquation([[1,'x^3'],[1,'y^3']],c);return{equation:`Given $${eq}$, find $\\dfrac{dy}{dx}$.`,answer:'$$\\dfrac{dy}{dx}=-\\dfrac{x^2}{y^2}$$',steps:[`Differentiate $${eq}$ with respect to \\(x\\).`,'$$3x^2+3y^2\\dfrac{dy}{dx}=0$$','Move \\(3x^2\\) to the other side.','$$3y^2\\dfrac{dy}{dx}=-3x^2$$','Divide by \\(3y^2\\).','$$\\boxed{\\dfrac{dy}{dx}=-\\dfrac{x^2}{y^2}}$$']}},
-      ()=>{const A=random(2,5),B=random(2,5),c=random(12,90),eq=exprEquation([[1,'x^2'],[A,'xy'],[B,'y^2']],c),den=`${A}x+${2*B}y`,num=`2x+${A}y`;return{equation:`Given $${eq}$, find $\\dfrac{dy}{dx}$.`,answer:`$$\\dfrac{dy}{dx}=-\\dfrac{${num}}{${den}}$$`,steps:[`Differentiate $${eq}$ term by term.`,'For \\(xy\\), use the product rule: \\(\\dfrac{d}{dx}(xy)=x\\dfrac{dy}{dx}+y\\).',`$$2x+${A}\\left(x\\dfrac{dy}{dx}+y\\right)+${2*B}y\\dfrac{dy}{dx}=0$$`,'Expand and collect the terms containing \\(dy/dx\\).',`$$(${den})\\dfrac{dy}{dx}=-(${num})$$`,`$$\\boxed{\\dfrac{dy}{dx}=-\\dfrac{${num}}{${den}}}$$`]}},
-      ()=>{const c=random(12,90),eq=exprEquation([[1,'x^2y'],[1,'y^2']],c);return{equation:`Given $${eq}$, find $\\dfrac{dy}{dx}$.`,answer:'$$\\dfrac{dy}{dx}=-\\dfrac{2xy}{x^2+2y}$$',steps:[`Differentiate $${eq}$ with respect to \\(x\\).`,'Use the product rule on \\(x^2y\\): \\(\\dfrac{d}{dx}(x^2y)=2xy+x^2\\dfrac{dy}{dx}\\).','$$2xy+x^2\\dfrac{dy}{dx}+2y\\dfrac{dy}{dx}=0$$','Collect the terms containing \\(dy/dx\\).','$$(x^2+2y)\\dfrac{dy}{dx}=-2xy$$','$$\\boxed{\\dfrac{dy}{dx}=-\\dfrac{2xy}{x^2+2y}}$$']}},
-      ()=>{const k=random(4,12);return{equation:`Given $xy=${k}$, find $\\dfrac{dy}{dx}$.`,answer:'$$\\dfrac{dy}{dx}=-\\dfrac{y}{x}$$',steps:['Differentiate both sides with respect to \\(x\\). Use the product rule on \\(xy\\).','$$\\dfrac{d}{dx}(xy)=x\\dfrac{dy}{dx}+y$$','$$x\\dfrac{dy}{dx}+y=0$$','Move \\(y\\) to the other side.','$$x\\dfrac{dy}{dx}=-y$$','Divide by \\(x\\).','$$\\boxed{\\dfrac{dy}{dx}=-\\dfrac{y}{x}}$$']}}
-    ])()}
-    function implicitAtPointProblem(){return pick([
-      ()=>{const a=random(1,4),b=random(1,4),x=random(1,5),y=random(1,5),c=a*x*x+b*y*y,m=frac(-a*x,b*y),eq=exprEquation([[a,'x^2'],[b,'y^2']],c);return{equation:`For $${eq}$, find $\\dfrac{dy}{dx}$ at $(${x},${y})$.`,answer:`$$\\dfrac{dy}{dx}=${fTex(m)}$$`,steps:['First differentiate implicitly.',`$$${2*a}x+${2*b}y\\dfrac{dy}{dx}=0$$`,`$$\\dfrac{dy}{dx}=-\\dfrac{${a}x}{${b}y}$$`,`Substitute \\(x=${x}\\), \\(y=${y}\\).`,`$$\\dfrac{dy}{dx}=-\\dfrac{${a}(${x})}{${b}(${y})}=${fTex(m)}$$`]}},
-      ()=>{const x=random(1,6),y=random(1,6),k=x*y,m=frac(-y,x);return{equation:`For $xy=${k}$, find $\\dfrac{dy}{dx}$ at $(${x},${y})$.`,answer:`$$\\dfrac{dy}{dx}=${fTex(m)}$$`,steps:['Differentiate \\(xy=k\\) using the product rule.','$$x\\dfrac{dy}{dx}+y=0$$','$$\\dfrac{dy}{dx}=-\\dfrac{y}{x}$$',`$$\\dfrac{dy}{dx}=-\\dfrac{${y}}{${x}}=${fTex(m)}$$`]}},
-      ()=>{const A=random(2,5),B=random(2,5),x=random(1,4),y=random(1,4),c=x*x+A*x*y+B*y*y,m=frac(-(2*x+A*y),A*x+2*B*y),eq=exprEquation([[1,'x^2'],[A,'xy'],[B,'y^2']],c);return{equation:`For $${eq}$, find $\\dfrac{dy}{dx}$ at $(${x},${y})$.`,answer:`$$\\dfrac{dy}{dx}=${fTex(m)}$$`,steps:['Differentiate implicitly and use the product rule for \\(xy\\).',`$$2x+${A}\\left(x\\dfrac{dy}{dx}+y\\right)+${2*B}y\\dfrac{dy}{dx}=0$$`,`$$(${A}x+${2*B}y)\\dfrac{dy}{dx}=-(2x+${A}y)$$`,`$$\\dfrac{dy}{dx}=-${linearFrac(`2x+${A}y`,`${A}x+${2*B}y`)}$$`,`Substitute \\(x=${x}\\), \\(y=${y}\\).`,`$$\\dfrac{dy}{dx}=${fTex(m)}$$`]}},
-      ()=>{const x=random(1,4),y=random(1,5),c=x*x*y+y*y,m=frac(-2*x*y,x*x+2*y),eq=exprEquation([[1,'x^2y'],[1,'y^2']],c);return{equation:`For $${eq}$, find $\\dfrac{dy}{dx}$ at $(${x},${y})$.`,answer:`$$\\dfrac{dy}{dx}=${fTex(m)}$$`,steps:['Differentiate \\(x^2y\\) using the product rule.', '$$2xy+x^2\\dfrac{dy}{dx}+2y\\dfrac{dy}{dx}=0$$', '$$(x^2+2y)\\dfrac{dy}{dx}=-2xy$$', '$$\\dfrac{dy}{dx}=-\\dfrac{2xy}{x^2+2y}$$', `Substitute \\(x=${x}\\), \\(y=${y}\\).`, `$$\\dfrac{dy}{dx}=${fTex(m)}$$`]}}
-    ])()}
-    function implicitSecondDerivativeProblem(){return pick([
-      ()=>{const a=random(1,4),b=random(1,4),c=random(12,80),eq=exprEquation([[a,'x^2'],[b,'y^2']],c),den=b*b===1?'y^3':`${b*b}y^3`,ans=`-\\dfrac{${a*c}}{${den}}`;return{equation:`For $${eq}$, find $\\dfrac{d^2y}{dx^2}$.`,answer:`$$\\dfrac{d^2y}{dx^2}=${ans}$$`,steps:['Start by finding the first derivative.',`$$${2*a}x+${2*b}y\\dfrac{dy}{dx}=0$$`,`$$\\dfrac{dy}{dx}=-\\dfrac{${a}x}{${b}y}$$`,'Differentiate the first derivative using the quotient rule, then substitute the original equation.',`$$\\dfrac{d^2y}{dx^2}=-\\dfrac{${a}(${a}x^2+${b}y^2)}{${den}}$$`,`Since \\(${a}x^2+${b}y^2=${c}\\), substitute this into the numerator.`,`$$\\boxed{\\dfrac{d^2y}{dx^2}=${ans}}$$`]}},
-      ()=>{const c=random(12,80),eq=exprEquation([[1,'x^3'],[1,'y^3']],c);return{equation:`For $${eq}$, find $\\dfrac{d^2y}{dx^2}$.`,answer:`$$\\dfrac{d^2y}{dx^2}=-\\dfrac{${2*c}x}{y^5}$$`,steps:['First differentiate implicitly.','$$3x^2+3y^2\\dfrac{dy}{dx}=0$$','$$\\dfrac{dy}{dx}=-\\dfrac{x^2}{y^2}$$','Differentiate \\(-x^2y^{-2}\\) using the product rule and chain rule.','$$\\dfrac{d^2y}{dx^2}=-\\dfrac{2x}{y^2}+\\dfrac{2x^2}{y^3}\\dfrac{dy}{dx}$$','Substitute \\(\\dfrac{dy}{dx}=-\\dfrac{x^2}{y^2}\\), then use \\(x^3+y^3='+c+'\\).',`$$\\boxed{\\dfrac{d^2y}{dx^2}=-\\dfrac{${2*c}x}{y^5}}$$`]}}
-    ])()}
-    function implicitTangentProblem(){return pick([
-      ()=>{const x=random(1,4),y=random(1,4),A=random(2,5),B=random(2,5),c=x*x+A*x*y+B*y*y,m=frac(-(2*x+A*y),A*x+2*B*y),line=lineStd(m.n,m.d,x,y),eq=exprEquation([[1,'x^2'],[A,'xy'],[B,'y^2']],c);return{equation:`For $${eq}$, find the tangent line at $(${x},${y})$.`,answer:`$$${line}$$`,steps:['Differentiate implicitly and collect the derivative terms.',hMathLine(`2x + ${A}(x${hDydx()} + y) + ${2*B}y${hDydx()} = 0`),hMathLine(`(${A}x + ${2*B}y)${hDydx()} = −(2x + ${A}y)`),hMathLine(`${hDydx()} = −${hFrac(`2x + ${A}y`,`${A}x + ${2*B}y`)}`),`Substitute \\(x=${x}\\), \\(y=${y}\\) to find the tangent gradient.`,hMathLine(`m = ${hFractionValue(m)}`),'Use point-gradient form, then rearrange.',hMathLine(hBox(line))]}},
-      ()=>{const a=random(1,4),b=random(1,4),x=random(1,5),y=random(1,5),c=a*x*x+b*y*y,m=frac(-a*x,b*y),line=lineStd(m.n,m.d,x,y),eq=exprEquation([[a,'x^2'],[b,'y^2']],c);return{equation:`For $${eq}$, find the tangent line at $(${x},${y})$.`,answer:`$$${line}$$`,steps:['Differentiate implicitly.',hMathLine(`${2*a}x + ${2*b}y${hDydx()} = 0`),hMathLine(`${hDydx()} = −${hFrac(`${a}x`,`${b}y`)}`),`Substitute \\(x=${x}\\), \\(y=${y}\\).`,hMathLine(`m = ${hFractionValue(m)}`),'Use point-gradient form, then rearrange.',hMathLine(hBox(line))]}},
-      ()=>{const x=random(1,4),y=random(1,5),c=x*x*y+y*y,m=frac(-2*x*y,x*x+2*y),line=lineStd(m.n,m.d,x,y),eq=exprEquation([[1,'x^2y'],[1,'y^2']],c);return{equation:`For $${eq}$, find the tangent line at $(${x},${y})$.`,answer:`$$${line}$$`,steps:['Differentiate \\(x^2y\\) using the product rule.',hMathLine(`2xy + x^2${hDydx()} + 2y${hDydx()} = 0`),hMathLine(`(x^2 + 2y)${hDydx()} = −2xy`),hMathLine(`${hDydx()} = −${hFrac('2xy','x^2 + 2y')}`),`Substitute \\(x=${x}\\), \\(y=${y}\\).`,hMathLine(`m = ${hFractionValue(m)}`),'Use point-gradient form, then rearrange.',hMathLine(hBox(line))]}}
-    ])()}
-    function implicitRelatedRatesProblem(){return pick([
-      ()=>{const k=random(4,12),dx=random(1,5),x=choiceDivisor(k),y=k/x,rate=frac(-y*dx,x);return{equation:`Given $xy=${k}$ with $\\dfrac{dx}{dt}=${dx}$, find $\\dfrac{dy}{dt}$ at $x=${x}$ and $y=${y}$.`,answer:`$$\\dfrac{dy}{dt}=${fTex(rate)}$$`,steps:['Differentiate both sides with respect to time \\(t\\).','Use the product rule because both \\(x\\) and \\(y\\) can change with time.','$$x\\dfrac{dy}{dt}+y\\dfrac{dx}{dt}=0$$','$$\\dfrac{dy}{dt}=-\\dfrac{y}{x}\\dfrac{dx}{dt}$$',`$$\\dfrac{dy}{dt}=-\\dfrac{${y}}{${x}}(${dx})=${fTex(rate)}$$`]}},
-      ()=>{const a=random(1,4),b=random(1,4),x=random(1,5),y=random(1,5),dx=random(1,5),c=a*x*x+b*y*y,rate=frac(-a*x*dx,b*y),eq=exprEquation([[a,'x^2'],[b,'y^2']],c);return{equation:`Given $${eq}$ and $\\dfrac{dx}{dt}=${dx}$, find $\\dfrac{dy}{dt}$ at $x=${x}$ and $y=${y}$.`,answer:`$$\\dfrac{dy}{dt}=${fTex(rate)}$$`,steps:['Differentiate both sides with respect to time \\(t\\).',`$$${2*a}x\\dfrac{dx}{dt}+${2*b}y\\dfrac{dy}{dt}=0$$`,'Rearrange for \\(dy/dt\\).',`$$\\dfrac{dy}{dt}=-\\dfrac{${a}x}{${b}y}\\dfrac{dx}{dt}$$`,`Substitute \\(x=${x}\\), \\(y=${y}\\), and \\(\\dfrac{dx}{dt}=${dx}\\).`,`$$\\dfrac{dy}{dt}=${fTex(rate)}$$`]}}
-    ])()}
+    function supportedImplicitModel(kind, x, y){
+      const a=random(1,4),b=random(1,4),A=random(2,5),B=random(2,5);
+      if(kind===0)return {terms:[[a,'x^2'],[b,'y^2']],value:a*x*x+b*y*y,num:`${2*a}x`,den:`${2*b}y`,numAt:2*a*x,denAt:2*b*y,
+        parts:[`\\dfrac{d}{dx}(${a}x^2)=${a}\\cdot2x=${2*a}x`,`\\dfrac{d}{dx}(${b}y^2)=${b}\\cdot2y\\dfrac{dy}{dx}=${2*b}y\\dfrac{dy}{dx}`],expanded:`${2*a}x+${2*b}y\\dfrac{dy}{dx}=0`,collected:`${2*b}y\\dfrac{dy}{dx}=-${2*a}x`};
+      if(kind===1)return {terms:[[1,'x^3'],[1,'y^3']],value:x**3+y**3,num:'3x^2',den:'3y^2',numAt:3*x*x,denAt:3*y*y,
+        parts:['\\dfrac{d}{dx}(x^3)=3x^2','\\dfrac{d}{dx}(y^3)=3y^2\\dfrac{dy}{dx}'],expanded:'3x^2+3y^2\\dfrac{dy}{dx}=0',collected:'3y^2\\dfrac{dy}{dx}=-3x^2'};
+      if(kind===2)return {terms:[[1,'x^2'],[A,'xy'],[B,'y^2']],value:x*x+A*x*y+B*y*y,num:`2x+${A}y`,den:`${A}x+${2*B}y`,numAt:2*x+A*y,denAt:A*x+2*B*y,
+        parts:['\\dfrac{d}{dx}(x^2)=2x',`\\dfrac{d}{dx}(${A}xy)=${A}\\left(x\\dfrac{dy}{dx}+y\\right)`,`\\dfrac{d}{dx}(${B}y^2)=${2*B}y\\dfrac{dy}{dx}`],
+        before:`2x+${A}\\left(x\\dfrac{dy}{dx}+y\\right)+${2*B}y\\dfrac{dy}{dx}=0`,expanded:`2x+${A}x\\dfrac{dy}{dx}+${A}y+${2*B}y\\dfrac{dy}{dx}=0`,moved:`${A}x\\dfrac{dy}{dx}+${2*B}y\\dfrac{dy}{dx}=-2x-${A}y`,collected:`(${A}x+${2*B}y)\\dfrac{dy}{dx}=-(2x+${A}y)`};
+      if(kind===3)return {terms:[[1,'x^2y'],[1,'y^2']],value:x*x*y+y*y,num:'2xy',den:'x^2+2y',numAt:2*x*y,denAt:x*x+2*y,
+        parts:['\\dfrac{d}{dx}(x^2y)=x^2\\dfrac{dy}{dx}+y(2x)','\\dfrac{d}{dx}(y^2)=2y\\dfrac{dy}{dx}'],expanded:'2xy+x^2\\dfrac{dy}{dx}+2y\\dfrac{dy}{dx}=0',moved:'x^2\\dfrac{dy}{dx}+2y\\dfrac{dy}{dx}=-2xy',collected:'(x^2+2y)\\dfrac{dy}{dx}=-2xy'};
+      return {terms:[[1,'xy']],value:x*y,num:'y',den:'x',numAt:y,denAt:x,parts:['\\dfrac{d}{dx}(xy)=x\\dfrac{dy}{dx}+y(1)'],expanded:'x\\dfrac{dy}{dx}+y=0',collected:'x\\dfrac{dy}{dx}=-y'};
+    }
+    function implicitFirstSteps(model,c){
+      const steps=['Differentiate each term. Remember: y depends on x.'];
+      model.parts.forEach(part=>steps.push(`$$${part}$$`));
+      steps.push(`$$\\dfrac{d}{dx}(${c})=0$$`);
+      if(model.before)steps.push('Put the derivatives together.',`$$${model.before}$$`,'Expand the brackets.');
+      steps.push(`$$${model.expanded}$$`,'Move the terms without dy/dx.');
+      if(model.moved)steps.push(`$$${model.moved}$$`,'Factor out dy/dx.');
+      steps.push(`$$${model.collected}$$`,'Divide by the coefficient of dy/dx.',`$$\\dfrac{dy}{dx}=-\\dfrac{${model.num}}{${model.den}}$$`);
+      return steps;
+    }
+    function supportedImplicitProblem(mode){
+      const x=random(1,5),y=random(1,5),kind=random(0,4),model=supportedImplicitModel(kind,x,y);
+      const c=mode==='basic'?random(12,80):model.value,eq=exprEquation(model.terms,c);
+      const steps=implicitFirstSteps(model,c),slope=frac(-model.numAt,model.denAt);
+      if(mode==='basic')return {equation:`Given $${eq}$, find $\\dfrac{dy}{dx}$.`,answer:`$$\\dfrac{dy}{dx}=-\\dfrac{${model.num}}{${model.den}}$$`,steps};
+      // Show the substitution itself before evaluating or reducing the fraction.
+      const at=expr=>expr.replace(/x/g,`(${x})`).replace(/y/g,`(${y})`);
+      steps.push(`Substitute x = ${x}, y = ${y}.`,`$$m=-\\dfrac{${at(model.num)}}{${at(model.den)}}$$`,`$$m=-\\dfrac{${model.numAt}}{${model.denAt}}$$`,`$$m=${fTex(slope)}$$`);
+      if(mode==='point')return {equation:`For $${eq}$, find $\\dfrac{dy}{dx}$ at $(${x},${y})$.`,answer:`$$\\dfrac{dy}{dx}=${fTex(slope)}$$`,steps};
+      steps.push('Use point-gradient form.','$$y-y_1=m(x-x_1)$$',`$$y-${y}=${fTex(slope)}(x-${x})$$`,'Clear the denominator.',`$$${slope.d}(y-${y})=${slope.n}(x-${x})$$`,'Expand.',`$$${slope.d}y-${slope.d*y}=${slope.n}x-(${slope.n*x})$$`,'Collect all terms on one side.',`$$${lineStd(slope.n,slope.d,x,y)}$$`);
+      return {equation:`For $${eq}$, find the tangent line at $(${x},${y})$.`,answer:`$$${lineStd(slope.n,slope.d,x,y)}$$`,steps};
+    }
+    function implicitBasicProblem(){return supportedImplicitProblem('basic')}
+    function implicitAtPointProblem(){return supportedImplicitProblem('point')}
+    function implicitTangentProblem(){return supportedImplicitProblem('tangent')}
+    function implicitSecondDerivativeProblem(){
+      const a=random(1,4),b=random(1,4),c=random(12,80),cubic=random(0,1)===1;
+      if(cubic){
+        const model=supportedImplicitModel(1,1,1),ans=`-\\dfrac{${2*c}x}{y^5}`;
+        return {equation:`For $x^3+y^3=${c}$, find $\\dfrac{d^2y}{dx^2}$.`,answer:`$$\\dfrac{d^2y}{dx^2}=${ans}$$`,steps:[...implicitFirstSteps(model,c),'Cancel the common factor 3.','$$\\dfrac{dy}{dx}=-\\dfrac{x^2}{y^2}=-x^2y^{-2}$$','Use the product rule.','$$\\dfrac{d^2y}{dx^2}=(-2x)y^{-2}+(-x^2)\\dfrac{d}{dx}(y^{-2})$$','Differentiate the y-power using the chain rule.','$$\\dfrac{d}{dx}(y^{-2})=-2y^{-3}\\dfrac{dy}{dx}$$','$$\\dfrac{d^2y}{dx^2}=-2xy^{-2}+2x^2y^{-3}\\dfrac{dy}{dx}$$','Substitute the first derivative.','$$\\dfrac{d^2y}{dx^2}=-2xy^{-2}+2x^2y^{-3}(-x^2y^{-2})$$','$$\\dfrac{d^2y}{dx^2}=-\\dfrac{2x}{y^2}-\\dfrac{2x^4}{y^5}$$','Use a common denominator.','$$\\dfrac{d^2y}{dx^2}=-\\dfrac{2xy^3+2x^4}{y^5}$$','Factor the numerator.','$$\\dfrac{d^2y}{dx^2}=-\\dfrac{2x(y^3+x^3)}{y^5}$$',`Use x³ + y³ = ${c}.`,`$$\\dfrac{d^2y}{dx^2}=-\\dfrac{2x(${c})}{y^5}$$`,`$$\\dfrac{d^2y}{dx^2}=${ans}$$`]};
+      }
+      const model={parts:[`\\dfrac{d}{dx}(${a}x^2)=${2*a}x`,`\\dfrac{d}{dx}(${b}y^2)=${2*b}y\\dfrac{dy}{dx}`],expanded:`${2*a}x+${2*b}y\\dfrac{dy}{dx}=0`,collected:`${2*b}y\\dfrac{dy}{dx}=-${2*a}x`,num:`${2*a}x`,den:`${2*b}y`};
+      const den=`${b*b}y^3`,ans=`-\\dfrac{${a*c}}{${den}}`;
+      return {equation:`For $${a}x^2+${b}y^2=${c}$, find $\\dfrac{d^2y}{dx^2}$.`,answer:`$$\\dfrac{d^2y}{dx^2}=${ans}$$`,steps:[...implicitFirstSteps(model,c),'Cancel the common factor 2.',`$$\\dfrac{dy}{dx}=-\\dfrac{${a}x}{${b}y}$$`,'Differentiate using the quotient rule.','$$\\dfrac{d}{dx}\\left(\\dfrac{u}{v}\\right)=\\dfrac{u\u0027v-uv\u0027}{v^2}$$',`$$u=-${a}x,\\quad u\u0027=-${a}$$`,`$$v=${b}y,\\quad v\u0027=${b}\\dfrac{dy}{dx}$$`,`$$\\dfrac{d^2y}{dx^2}=\\dfrac{(-${a})(${b}y)-(-${a}x)(${b}dy/dx)}{${b*b}y^2}$$`,'Substitute the first derivative.',`$$\\dfrac{d^2y}{dx^2}=\\dfrac{-${a*b}y+${a*b}x(-${a}x/(${b}y))}{${b*b}y^2}$$`,`$$\\dfrac{d^2y}{dx^2}=\\dfrac{-${a*b}y-${a*a}x^2/y}{${b*b}y^2}$$`,'Multiply numerator and denominator by y.',`$$\\dfrac{d^2y}{dx^2}=-\\dfrac{${a*b}y^2+${a*a}x^2}{${den}}$$`,'Factor the numerator.',`$$\\dfrac{d^2y}{dx^2}=-\\dfrac{${a}(${a}x^2+${b}y^2)}{${den}}$$`,`Use ${a}x² + ${b}y² = ${c}.`,`$$\\dfrac{d^2y}{dx^2}=-\\dfrac{${a}(${c})}{${den}}$$`,`$$\\dfrac{d^2y}{dx^2}=${ans}$$`]};
+    }
+    function implicitRelatedRatesProblem(){
+      if(random(0,1)===0){
+        const k=random(4,12),dx=random(1,5),x=choiceDivisor(k),y=k/x,rate=frac(-y*dx,x);
+        return {equation:`Given $xy=${k}$ with $\\dfrac{dx}{dt}=${dx}$, find $\\dfrac{dy}{dt}$ at $x=${x}$ and $y=${y}$.`,answer:`$$\\dfrac{dy}{dt}=${fTex(rate)}$$`,steps:['Use the product rule; both x and y depend on time.','$$\\dfrac{d}{dt}(xy)=x\\dfrac{dy}{dt}+y\\dfrac{dx}{dt}$$',`$$\\dfrac{d}{dt}(${k})=0$$`,'$$x\\dfrac{dy}{dt}+y\\dfrac{dx}{dt}=0$$','Move the dx/dt term.','$$x\\dfrac{dy}{dt}=-y\\dfrac{dx}{dt}$$','Divide by x.','$$\\dfrac{dy}{dt}=-\\dfrac{y}{x}\\dfrac{dx}{dt}$$','Substitute.',`$$\\dfrac{dy}{dt}=-\\dfrac{${y}}{${x}}(${dx})$$`,`$$\\dfrac{dy}{dt}=-\\dfrac{${y*dx}}{${x}}$$`,`$$\\dfrac{dy}{dt}=${fTex(rate)}$$`]};
+      }
+      const a=random(1,4),b=random(1,4),x=random(1,5),y=random(1,5),dx=random(1,5),c=a*x*x+b*y*y,rate=frac(-a*x*dx,b*y);
+      return {equation:`Given $${a}x^2+${b}y^2=${c}$ and $\\dfrac{dx}{dt}=${dx}$, find $\\dfrac{dy}{dt}$ at $x=${x}$ and $y=${y}$.`,answer:`$$\\dfrac{dy}{dt}=${fTex(rate)}$$`,steps:['Differentiate each term with respect to time.',`$$\\dfrac{d}{dt}(${a}x^2)=${2*a}x\\dfrac{dx}{dt}$$`,`$$\\dfrac{d}{dt}(${b}y^2)=${2*b}y\\dfrac{dy}{dt}$$`,`$$\\dfrac{d}{dt}(${c})=0$$`,`$$${2*a}x\\dfrac{dx}{dt}+${2*b}y\\dfrac{dy}{dt}=0$$`,'Move the dx/dt term.',`$$${2*b}y\\dfrac{dy}{dt}=-${2*a}x\\dfrac{dx}{dt}$$`,'Divide by the coefficient of dy/dt.',`$$\\dfrac{dy}{dt}=-\\dfrac{${2*a}x}{${2*b}y}\\dfrac{dx}{dt}$$`,'Cancel the common factor 2.',`$$\\dfrac{dy}{dt}=-\\dfrac{${a}x}{${b}y}\\dfrac{dx}{dt}$$`,'Substitute the given values.',`$$\\dfrac{dy}{dt}=-\\dfrac{${a}(${x})}{${b}(${y})}(${dx})$$`,`$$\\dfrac{dy}{dt}=-\\dfrac{${a*x*dx}}{${b*y}}$$`,`$$\\dfrac{dy}{dt}=${fTex(rate)}$$`]};
+    }
     function generateProblem(){const type=currentType==='select'?levelConfigs[currentLevel].types[random(0,levelConfigs[currentLevel].types.length-1)]:currentType;let p={};
       if(type==='implicit_basic'){p=implicitBasicProblem()}
       else if(type==='implicit_at_point'){p=implicitAtPointProblem()}
@@ -157,8 +187,38 @@
       else if(type==='implicit_tangent_line'){p=implicitTangentProblem()}
       else if(type==='implicit_related_rates'){p=implicitRelatedRatesProblem()}
       else if(type==='param_first_derivative'){const a=randCoef(),b=random(-4,4),c=random(-3,3),d=randCoef(),e=random(-4,4),f=random(-4,4),g=random(-3,3),x=quad(a,b,c),y=cubic(d,e,f,g),dy=poly([{c:3*d,p:2},{c:2*e,p:1},{c:f,p:0}]),dx=lin(2*a,b);p={equation:`For $x(t)=${x}$ and $y(t)=${y}$, find $\\dfrac{dy}{dx}$.`,answer:`$$\\dfrac{dy}{dx}=\\dfrac{${dy}}{${dx}}$$`,steps:['For parametric equations, differentiate both \\(x\\) and \\(y\\) with respect to \\(t\\).',`$$\\dfrac{dx}{dt}=${dx}$$`,`$$\\dfrac{dy}{dt}=${dy}$$`,'Use the parametric derivative formula.','$$\\dfrac{dy}{dx}=\\dfrac{dy/dt}{dx/dt}$$',`Substitute the two derivatives.`,`$$\\boxed{\\dfrac{dy}{dx}=\\dfrac{${dy}}{${dx}}}$$`]}}
-      else if(type==='param_second_derivative'){const a=randCoef(),b=random(-4,4),d=randCoef(),e=random(-4,4),x=quad(a,b,0),y=poly([{c:d,p:3},{c:e,p:2}]),dx=lin(2*a,b),dy=poly([{c:3*d,p:2},{c:2*e,p:1}]),num=poly([{c:6*a*d,p:2},{c:6*d*b,p:1},{c:2*e*b,p:0}]);p={equation:`For $x(t)=${x}$ and $y(t)=${y}$, find $\\dfrac{d^2y}{dx^2}$.`,answer:`$$\\dfrac{d^2y}{dx^2}=\\dfrac{${num}}{(${dx})^3}$$`,steps:['Find the first parametric derivative.','$$\\dfrac{dy}{dx}=\\dfrac{dy/dt}{dx/dt}$$',`$$\\dfrac{dy}{dx}=\\dfrac{${dy}}{${dx}}$$`,'For the second derivative, differentiate \\(dy/dx\\) with respect to \\(t\\), then divide by \\(dx/dt\\).','$$\\dfrac{d^2y}{dx^2}=\\dfrac{\\dfrac{d}{dt}\\left(\\dfrac{dy}{dx}\\right)}{dx/dt}$$','Apply the quotient rule to \\(dy/dx\\), then divide by \\(dx/dt\\).',`$$\\boxed{\\dfrac{d^2y}{dx^2}=\\dfrac{${num}}{(${dx})^3}}$$`]}}
-      else if(type==='param_tangent_normal'){const a=randCoef(),b=random(-4,4),c=random(-3,3),d=randCoef(),e=random(-4,4),f=random(-4,4),g=random(-3,3),t=random(-2,2),x0=a*t*t+b*t+c,y0=d*t*t*t+e*t*t+f*t+g,dx=2*a*t+b,dy=3*d*t*t+2*e*t+f,m=dx===0?null:frac(dy,dx),tan=m?lineStd(m.n,m.d,x0,y0):verticalLine(x0),mn=dy===0?null:frac(-dx,dy),nor=mn?lineStd(mn.n,mn.d,x0,y0):verticalLine(x0);p={equation:`Find tangent and normal at $t=${t}$ for $x(t)=${quad(a,b,c)}$ and $y(t)=${cubic(d,e,f,g)}$.`,answer:`$$\\text{Tangent: }${tan}\\quad\\text{Normal: }${nor}$$`,steps:[`First find the point by substituting \\(t=${t}\\).`,`$$x=${x0},\\quad y=${y0}$$`,'Differentiate both parametric equations with respect to \\(t\\).',`$$\\dfrac{dx}{dt}=${dx},\\quad \\dfrac{dy}{dt}=${dy}$$`,'The tangent gradient is \\(m=\\dfrac{dy/dt}{dx/dt}\\).',m?`$$m=${fTex(m)}$$`:'$$m\\text{ is undefined, so the tangent is vertical.}$$','The normal gradient is the negative reciprocal of the tangent gradient, when defined.','Use point-gradient form for both lines, then rearrange.','$$\\boxed{\\text{Tangent: }'+tan+'\\quad\\text{Normal: }'+nor+'}$$']}}
+      else if(type==='param_second_derivative'){const a=randCoef(),b=random(-4,4),d=randCoef(),e=random(-4,4),x=quad(a,b,0),y=poly([{c:d,p:3},{c:e,p:2}]),dx=lin(2*a,b),dy=poly([{c:3*d,p:2},{c:2*e,p:1}]),num=poly([{c:6*a*d,p:2},{c:6*d*b,p:1},{c:2*e*b,p:0}]);p={equation:`For $x(t)=${x}$ and $y(t)=${y}$, find $\\dfrac{d^2y}{dx^2}$.`,answer:`$$\\dfrac{d^2y}{dx^2}=\\dfrac{${num}}{(${dx})^3}$$`,steps:['Find the first parametric derivative.','$$\\dfrac{dy}{dx}=\\dfrac{dy/dt}{dx/dt}$$',`$$\\dfrac{dy}{dx}=\\dfrac{${dy}}{${dx}}$$`,'For the second derivative, differentiate \\(dy/dx\\) with respect to \\(t\\), then divide by \\(dx/dt\\).','$$\\dfrac{d^2y}{dx^2}=\\dfrac{d}{dt}(dy/dx)\\cdot\\dfrac{1}{dx/dt}$$',`$$\\dfrac{dx}{dt}=${dx},\\quad \\dfrac{dy}{dt}=${dy}$$`,
+        `$$u=${dy},\\quad v=${dx}$$`,
+        `$$u'=${lin(6*d,2*e)},\\quad v'=${2*a}$$`,
+        'Use the quotient rule.',
+        "$$\\dfrac{d}{dt}(u/v)=\\dfrac{u'v-uv'}{v^2}$$",
+        `$$\\dfrac{d}{dt}(dy/dx)=\\dfrac{(${lin(6*d,2*e)})(${dx})-(${dy})(${2*a})}{(${dx})^2}$$`,
+        'Expand the numerator.',
+        `$$\\dfrac{d}{dt}(dy/dx)=\\dfrac{${poly([{c:12*a*d,p:2},{c:6*d*b+4*a*e,p:1},{c:2*e*b,p:0}])}-(${poly([{c:6*a*d,p:2},{c:4*a*e,p:1}])})}{(${dx})^2}$$`,
+        'Collect like terms.',
+        `$$\\dfrac{d}{dt}(dy/dx)=\\dfrac{${num}}{(${dx})^2}$$`,
+        'Divide by dx/dt.',
+        `$$\\dfrac{d^2y}{dx^2}=\\dfrac{${num}}{(${dx})^2}\\cdot\\dfrac{1}{${dx}}$$`,`$$\\boxed{\\dfrac{d^2y}{dx^2}=\\dfrac{${num}}{(${dx})^3}}$$`]}}
+      else if(type==='param_tangent_normal'){
+        const a=randCoef(),b=random(-4,4),c=random(-3,3),d=randCoef(),e=random(-4,4),f=random(-4,4),g=random(-3,3),t=random(-2,2);
+        const x0=a*t*t+b*t+c,y0=d*t*t*t+e*t*t+f*t+g,dx=2*a*t+b,dy=3*d*t*t+2*e*t+f;
+        if(dx===0&&dy===0)return generateProblem();
+        const m=dx===0?null:frac(dy,dx),mn=dy===0?null:frac(-dx,dy);
+        const tan=m?lineStd(m.n,m.d,x0,y0):verticalLine(x0),nor=mn?lineStd(mn.n,mn.d,x0,y0):verticalLine(x0);
+        const steps=[`Substitute t = ${t}.`,`$$x=${a}(${t})^2+(${b})(${t})+(${c})$$`,`$$x=${x0}$$`,`$$y=${d}(${t})^3+(${e})(${t})^2+(${f})(${t})+(${g})$$`,`$$y=${y0}$$`,'Differentiate each parametric equation.',`$$\\dfrac{dx}{dt}=${2*a}t+(${b})$$`,`$$\\dfrac{dy}{dt}=${3*d}t^2+(${2*e})t+(${f})$$`,'Substitute the parameter value.',`$$\\dfrac{dx}{dt}=${2*a}(${t})+(${b})=${dx}$$`,`$$\\dfrac{dy}{dt}=${3*d}(${t})^2+(${2*e})(${t})+(${f})=${dy}$$`,'$$m=\\dfrac{dy/dt}{dx/dt}$$'];
+        if(m)steps.push(`$$m=\\dfrac{${dy}}{${dx}}=${fTex(m)}$$`);
+        else steps.push('dx/dt = 0, dy/dt ≠ 0: the tangent is vertical.');
+        if(dx===0)steps.push('The normal is horizontal.','$$m_{normal}=0$$');
+        else if(dy===0)steps.push('The tangent is horizontal; the normal is vertical.');
+        else steps.push('Take the negative reciprocal.',`$$m_{normal}=-\\dfrac{${dx}}{${dy}}=${fTex(mn)}$$`);
+        for(const [label,slope,line] of [['Tangent',m,tan],['Normal',mn,nor]]){
+          steps.push(label+':');
+          if(slope)steps.push('$$y-y_1=m(x-x_1)$$',`$$y-(${y0})=${fTex(slope)}(x-(${x0}))$$`,`$$${slope.d}(y-(${y0}))=${slope.n}(x-(${x0}))$$`,`$$${slope.d}y-(${slope.d*y0})=${slope.n}x-(${slope.n*x0})$$`);
+          else steps.push(`$$x=${x0}$$`);
+          steps.push(`$$${line}$$`);
+        }
+        p={equation:`Find tangent and normal at $t=${t}$ for $x(t)=${quad(a,b,c)}$ and $y(t)=${cubic(d,e,f,g)}$.`,answer:`$$\\text{Tangent: }${tan}\\quad\\text{Normal: }${nor}$$`,steps};
+      }
       else if(type==='param_arc_slope_zero'){const a=randCoef(),b=random(-4,4),d=randCoef(),e=random(-4,4),f=random(-4,4),dx=lin(2*a,b),dy=poly([{c:3*d,p:2},{c:2*e,p:1},{c:f,p:0}]);p={equation:`For $x(t)=${quad(a,b,0)}$ and $y(t)=${cubic(d,e,f,0)}$, find where tangents are horizontal or vertical.`,answer:`$$\\text{Horizontal: }${dy}=0\\quad\\text{Vertical: }${dx}=0$$`,steps:['For parametric curves, \\(dy/dx=(dy/dt)/(dx/dt)\\).','A horizontal tangent happens when \\(dy/dt=0\\), provided \\(dx/dt\\ne0\\).','A vertical tangent happens when \\(dx/dt=0\\), provided \\(dy/dt\\ne0\\).',`$$\\dfrac{dy}{dt}=${dy}$$`,`$$\\dfrac{dx}{dt}=${dx}$$`,`$$\\boxed{\\text{Horizontal: }${dy}=0\\quad\\text{Vertical: }${dx}=0}$$`]}}
       else if(type==='param_area_optional'){const A=random(0,1),B=A+random(1,3),a=randCoef(),b=random(-4,4),d=randCoef(),e=random(-4,4),x=quad(a,b,0),y=lin(d,e),dx=lin(2*a,b);p={equation:`Express the area from $t=${A}$ to $t=${B}$ for $x(t)=${x}$, $y(t)=${y}$.`,answer:`$$A=\\int_{${A}}^{${B}}(${y})(${dx})\\,dt$$`,steps:['Area under a parametric curve is found using \\(A=\\int y\\,dx\\).','Because \\(x\\) is given in terms of \\(t\\), replace \\(dx\\) with \\(\\dfrac{dx}{dt}\\,dt\\).',`$$\\dfrac{dx}{dt}=${dx}$$`,`Substitute \\(y(t)=${y}\\), \\(dx/dt=${dx}\\), and the bounds for \\(t\\).`,`$$\\boxed{A=\\int_{${A}}^{${B}}(${y})(${dx})\\,dt}$$`]}}
       return p}

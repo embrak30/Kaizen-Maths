@@ -329,9 +329,14 @@
         `Decompose the fraction first.`,
         `${frac(numExp,den)} = ${frac('A',`x + ${a}`)} + ${frac('B',`x + ${b}`)}.`,
         `${numExp} = A(x + ${b}) + B(x + ${a}).`,
-        `Comparing coefficients gives A = ${num(A)} and B = ${num(B)}.`,
+        `Put x = &minus;${a}: ${num(-m*a+n)} = A(${b-a}) + B(0).`,
+        `A = ${simpleFrac(-m*a+n,b-a)} = ${num(A)}.`,
+        `Put x = &minus;${b}: ${num(-m*b+n)} = A(0) + B(${a-b}).`,
+        `B = ${simpleFrac(-m*b+n,a-b)} = ${num(B)}.`,
         `So ${frac(numExp,den)} = ${frac(num(A),`x + ${a}`)} + ${frac(num(B),`x + ${b}`)}.`,
-        `Integrate term by term: ${answer}.`
+        `&int; ${frac(num(A),`x + ${a}`)} dx = ${num(A)}ln|x + ${a}|.`,
+        `&int; ${frac(num(B),`x + ${b}`)} dx = ${num(B)}ln|x + ${b}|.`,
+        `Combine: ${answer}.`
       ];
       return problem(prompt,answer,steps,'distinct_linear_pf');
     }
@@ -345,8 +350,14 @@
         `Use the repeated-factor form.`,
         `${frac(numExp,den)} = ${frac('A',`x + ${a}`)} + ${frac('B',`(x + ${a})<sup>2</sup>`)}.`,
         `${numExp} = A(x + ${a}) + B.`,
-        `Comparing coefficients gives A = ${num(A)} and B = ${num(B)}.`,
+        `Expand: ${numExp} = Ax + ${a}A + B.`,
+        `Compare x-coefficients: A = ${num(A)}.`,
+        `Compare constants: ${n} = ${a}(${num(A)}) + B.`,
+        `B = ${n} &minus; (${a*A}) = ${num(B)}.`,
         `&int; ${frac(num(A),`x + ${a}`)} dx = ${num(A)}ln|x + ${a}|.`,
+        `Rewrite: ${frac(num(B),`(x + ${a})<sup>2</sup>`)} = ${num(B)}(x + ${a})<sup>&minus;2</sup>.`,
+        `New power: &minus;2 + 1 = &minus;1.`,
+        `Divide by &minus;1: ${frac(num(B),'&minus;1')}(x + ${a})<sup>&minus;1</sup>.`,
         `&int; ${frac(num(B),`(x + ${a})<sup>2</sup>`)} dx = ${num(-B)}${frac('1',`x + ${a}`)}.`,
         `Final answer: ${answer}.`
       ];
@@ -365,9 +376,17 @@
       const steps=[
         `The fraction is improper, so divide or rewrite it first.`,
         `${frac(numerator,den)} = ${q} + ${frac(`${linear(A+B,A*b+B*a)}`,den)}.`,
-        `Now decompose the proper fraction.`,
+        `Let ${frac(linear(A+B,A*b+B*a),den)} = ${frac('A',`x + ${a}`)} + ${frac('B',`x + ${b}`)}.`,
+        `${linear(A+B,A*b+B*a)} = A(x + ${b}) + B(x + ${a}).`,
+        `Put x = &minus;${a}: ${num(A*(b-a))} = A(${b-a}).`,
+        `A = ${simpleFrac(A*(b-a),b-a)}.`,
+        `Put x = &minus;${b}: ${num(B*(a-b))} = B(${a-b}).`,
+        `B = ${simpleFrac(B*(a-b),a-b)}.`,
         `${frac(`${linear(A+B,A*b+B*a)}`,den)} = ${frac(num(A),`x + ${a}`)} + ${frac(num(B),`x + ${b}`)}.`,
         `So the integrand is ${q} + ${frac(num(A),`x + ${a}`)} + ${frac(num(B),`x + ${b}`)}.`,
+        `&int; ${q} dx = ${q}x.`,
+        `&int; ${frac(num(A),`x + ${a}`)} dx = ${num(A)}ln|x + ${a}|.`,
+        `&int; ${frac(num(B),`x + ${b}`)} dx = ${num(B)}ln|x + ${b}|.`,
         `Integrate term by term: ${answer}.`
       ];
       return problem(prompt,answer,steps,'improper_pf');

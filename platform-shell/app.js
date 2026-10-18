@@ -157,7 +157,7 @@ const tools = [
     status: "Imported",
     description: "Generate polynomial differentiation questions using the power rule, gradients, tangent lines, and normal lines.",
     tags: ["algebra", "calculus", "differentiation", "derivatives", "polynomials", "tangents", "normals"],
-    toolPath: "tools/differentiation-polynomials/index.html?v=poly-diff-one-line-3",
+    toolPath: "tools/differentiation-polynomials/index.html?v=calculus-supported-steps-2",
     imported: true,
     teacherNotes: [
       "Builds from single-term power rule fluency into multi-term polynomials.",
@@ -175,7 +175,7 @@ const tools = [
     status: "Imported",
     description: "Generate foundation integration practice covering reverse differentiation, indefinite integrals, definite integrals, and the trapezium rule.",
     tags: ["algebra", "calculus", "integration", "integrals", "trapezium rule", "area under curve"],
-    toolPath: "tools/integration/index.html?v=calculus-algebra-steps-1",
+    toolPath: "tools/integration/index.html?v=calculus-supported-steps-2",
     imported: true,
     teacherNotes: [
       "Starts with integration as reverse differentiation and the constant of integration.",
@@ -193,7 +193,7 @@ const tools = [
     status: "Imported",
     description: "Generate advanced integration practice for substitution, definite substitution, logarithmic derivative forms, and integration by parts.",
     tags: ["algebra", "calculus", "integration", "substitution", "integration by parts", "A-Level Pure", "Further Maths"],
-    toolPath: "tools/advanced-integration/index.html?v=advanced-integration-1",
+    toolPath: "tools/advanced-integration/index.html?v=calculus-supported-steps-2",
     imported: true,
     teacherNotes: [
       "Substitution sets show the choice of u, calculation of du/dx, replacement of dx, integration in u, and return to x.",
@@ -249,7 +249,7 @@ const tools = [
     status: "Imported",
     description: "Generate integration practice for algebraic fractions, including logarithmic forms, simplification, polynomial division, partial fractions, and quadratic denominator forms.",
     tags: ["algebra", "calculus", "integration", "algebraic fractions", "rational functions", "partial fractions", "logarithms", "inverse tangent", "polynomial division", "A-Level", "Further Maths"],
-    toolPath: "tools/integration-algebraic-fractions/index.html?v=integration-algebraic-fractions-1",
+    toolPath: "tools/integration-algebraic-fractions/index.html?v=calculus-supported-steps-2",
     imported: true,
     teacherNotes: [
       "Level 1 covers linear denominator logarithmic forms and numerator-as-derivative structures.",
@@ -514,7 +514,7 @@ const tools = [
     status: "Imported",
     description: "Generate general differentiation practice for product rule, quotient rule, chain rule, trigonometric, logarithmic, tangent, normal, and turning-point problems.",
     tags: ["algebra", "calculus", "differentiation", "power rule", "product rule", "quotient rule", "chain rule", "trigonometry", "logarithms"],
-    toolPath: "tools/differentiation-rules-general/index.html?v=diff-rules-one-line-1",
+    toolPath: "tools/differentiation-rules-general/index.html?v=calculus-supported-steps-2",
     imported: true,
     teacherNotes: [
       "Extends polynomial differentiation into product, quotient, chain, trigonometric, and logarithmic rules.",
@@ -532,7 +532,7 @@ const tools = [
     status: "Imported",
     description: "Generate trigonometric differentiation practice with chain rule, product rule, quotient rule, and mixed-rule challenges.",
     tags: ["algebra", "calculus", "differentiation", "trigonometry", "chain rule", "product rule", "quotient rule"],
-    toolPath: "tools/differentiation-rules/index.html?v=batch1-steps-1",
+    toolPath: "tools/differentiation-rules/index.html?v=calculus-supported-steps-2",
     imported: true,
     teacherNotes: [
       "Focuses on trigonometric differentiation from core derivatives through composite, product, and quotient rule tasks.",
@@ -550,7 +550,7 @@ const tools = [
     status: "Imported",
     description: "Practise derivatives of inverse trigonometric functions, including chain rule, evaluated gradients, tangents, and normals.",
     tags: ["algebra", "calculus", "differentiation", "inverse trigonometry", "chain rule", "tangents", "normals"],
-    toolPath: "tools/inverse-trig-differentiation/index.html?v=batch1-steps-1",
+    toolPath: "tools/inverse-trig-differentiation/index.html?v=calculus-supported-steps-2",
     imported: true,
     teacherNotes: [
       "Covers sin^-1, cos^-1, tan^-1, cot^-1, sec^-1, and csc^-1 derivative forms.",
@@ -641,7 +641,7 @@ const tools = [
     status: "Imported",
     description: "Generate implicit and parametric differentiation practice, including second derivatives, tangent and normal lines, related rates, and parameter slope analysis.",
     tags: ["algebra", "calculus", "differentiation", "implicit differentiation", "parametric differentiation", "tangents", "normals"],
-    toolPath: "tools/advanced-differentiation/index.html?v=advanced-diff-implicit-variety-1",
+    toolPath: "tools/advanced-differentiation/index.html?v=calculus-supported-steps-2",
     imported: true,
     teacherNotes: [
       "Level 1 covers implicit dy/dx, slopes at points, second derivatives, tangent lines, and related rates.",

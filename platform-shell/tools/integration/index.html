@@ -131,7 +131,7 @@
     function fToLatex(F){ return F.d===1 ? String(F.n) : '\\dfrac{'+F.n+'}{'+F.d+'}'; }
     function fDiv(A,B){ return Frac(A.n*B.d,A.d*B.n); }
     function signedJoin(parts){
-      return parts.map((s,i)=>{ const neg=s.startsWith('-'); return (i===0?'':(neg?' - ':' + ')) + (neg?s.slice(1):s); }).join('');
+      return parts.map((s,i)=>{ const neg=s.startsWith('-'); return (i===0?(neg?'-':''):(neg?' - ':' + ')) + (neg?s.slice(1):s); }).join('');
     }
     function powLatex(p){ if(p===0) return '1'; if(p===1) return 'x'; return 'x^{'+p+'}'; }
     function coeffPower(coeff,p){
@@ -285,28 +285,44 @@
       const steps=[integralRuleStep()];
       const pieces=polynomialAntiderivativePieces(terms,steps);
       const Fb=evalPolyTerms(terms,hi), Fa=evalPolyTerms(terms,lo), val=Fb-Fa;
-      steps.push(mathStep('Name the antiderivative \\(F(x)\\).', 'F(x)='+signedJoin(pieces)));
-      steps.push(mathStep('Substitute the upper limit.', 'F('+hi+')='+Fb.toFixed(3)));
-      steps.push(mathStep('Substitute the lower limit.', 'F('+lo+')='+Fa.toFixed(3)));
-      steps.push(mathStep('Subtract lower from upper.', 'F('+hi+')-F('+lo+')='+Fb.toFixed(3)+'-('+Fa.toFixed(3)+')='+val.toFixed(3)));
+      definiteEvaluationSteps(steps,pieces,terms,lo,hi,x=>evalPolyTerms(terms,x));
       return {equation:'Evaluate $\\displaystyle \\int_{'+lo+'}^{'+hi+'} \\big('+integrand+'\\big)\\,dx$.',answer:Number.isInteger(val)?'$= '+val+'$':'$\\approx '+val.toFixed(2)+'$',steps};
     }
+    function definiteEvaluationSteps(steps,pieces,terms,lo,hi,evalF,fractional=false){
+      const substituted=x=>signedJoin(pieces.map(piece=>piece.replace(/x/g,`(${x})`)));
+      steps.push(mathStep('Combine the integrated terms.', 'F(x)='+signedJoin(pieces)));
+      steps.push(mathStep('Upper limit: substitute before calculating.', `F(${hi})=${substituted(hi)}`));
+      steps.push(mathStep('Evaluate the upper limit.', `F(${hi})\\approx ${evalF(hi).toFixed(6)}`));
+      steps.push(mathStep('Lower limit: substitute before calculating.', `F(${lo})=${substituted(lo)}`));
+      steps.push(mathStep('Evaluate the lower limit.', `F(${lo})\\approx ${evalF(lo).toFixed(6)}`));
+      steps.push(mathStep('Subtract lower from upper; round at the end.', `F(${hi})-F(${lo})\\approx ${evalF(hi).toFixed(6)}-(${evalF(lo).toFixed(6)})\\approx ${(evalF(hi)-evalF(lo)).toFixed(2)}`));
+    }
     function genDefiniteFractional(){
-      const lo=random(1,3), hi=lo+random(2,4);
+      const lo=random(1,3),hi=lo+random(2,4);
       const choices=[{n:3,d:2},{n:5,d:2},{n:4,d:3},{n:-3,d:2},{n:-5,d:3}];
       const terms=[0,1].map(()=>({c:choice([-4,-3,-2,2,3,4,6]),...choice(choices)}));
       const integrand=terms.map((t,i)=>fracPowerTerm(t.c,t.n,t.d,i===0)).join('');
-      function evalF(x){ return terms.reduce((s,t)=>s + t.c*(t.d/(t.n+t.d))*Math.pow(x,t.n/t.d+1),0); }
-      const val=evalF(hi)-evalF(lo);
-      const steps=[{text:'Integrate each fractional or negative power, then substitute the bounds.'},{text:'Compute $F('+hi+')-F('+lo+')$ and round if needed.'}];
-      return {equation:'Evaluate $\\displaystyle \\int_{'+lo+'}^{'+hi+'} \\big('+integrand+'\\big)\\,dx$.',answer:'$\\approx '+val.toFixed(2)+'$',steps};
+      const evalF=x=>terms.reduce((sum,t)=>sum+t.c*t.d/(t.n+t.d)*Math.pow(x,(t.n+t.d)/t.d),0);
+      const steps=[integralRuleStep()],pieces=[];
+      for(const t of terms){
+        const n=t.n+t.d;
+        const coeff=Frac(t.c*t.d,n),c=coeff.n===coeff.d?'':coeff.n===-coeff.d?'-':fToLatex(coeff);
+        const out=c+`x^{\\frac{${n}}{${t.d}}}`;
+        pieces.push(out);
+        steps.push(mathStep('Add 1 to the power.',addOnePowerText(t.n,t.d)));
+        steps.push(mathStep('Divide by the new power.',`\\int ${fracPowerTerm(t.c,t.n,t.d,true)}\\,dx=${t.c}\\cdot\\dfrac{${t.d}}{${n}}x^{\\frac{${n}}{${t.d}}}`));
+        steps.push(mathStep('Simplify this term.',`${t.c}\\cdot\\dfrac{${t.d}}{${n}}x^{\\frac{${n}}{${t.d}}}=${out}`));
+      }
+      definiteEvaluationSteps(steps,pieces,terms,lo,hi,evalF,true);
+      return {equation:'Evaluate $\\displaystyle \\int_{'+lo+'}^{'+hi+'} \\big('+integrand+'\\big)\\,dx$.',answer:'$\\approx '+(evalF(hi)-evalF(lo)).toFixed(2)+'$',steps};
     }
     function genDefiniteMixed(){
-      const lo=random(1,3), hi=lo+random(2,4);
+      const lo=random(1,3),hi=lo+random(2,4);
       const terms=[{c:choice([2,3,4,5,-2,-3]),p:random(2,4)},{c:choice([2,3,4,-2,-3]),p:-random(2,4)}];
       const integrand=terms.map((t,i)=>termLatex(t.c,t.p,i===0)).join('');
-      const val=evalPolyTerms(terms,hi)-evalPolyTerms(terms,lo);
-      const steps=[{text:'Find an antiderivative, writing negative powers neatly as fractions.'},{text:'Substitute the upper and lower limits with brackets.'}];
+      const steps=[integralRuleStep()],pieces=polynomialAntiderivativePieces(terms,steps);
+      const evalF=x=>evalPolyTerms(terms,x),val=evalF(hi)-evalF(lo);
+      definiteEvaluationSteps(steps,pieces,terms,lo,hi,evalF);
       return {equation:'Evaluate $\\displaystyle \\int_{'+lo+'}^{'+hi+'} \\big('+integrand+'\\big)\\,dx$.',answer:Number.isInteger(val)?'$= '+val+'$':'$\\approx '+val.toFixed(2)+'$',steps};
     }
     function trapTableHTML(xVals,yVals){
@@ -319,6 +335,10 @@
       const xs=[], ys=[]; for(let i=0;i<=n;i++){ xs.push(lo+i*h); ys.push(f(xs[i])); }
       const inside=ys.slice(1,-1).reduce((s,v)=>s+v,0), T=(h/2)*(ys[0]+2*inside+ys[ys.length-1]);
       const steps=[{text:'Step size: $h=('+hi+'-'+lo+')/'+n+'='+h.toFixed(3)+'$.'},{text:trapTableHTML(xs,ys)},{text:'$T=\\dfrac{h}{2}(y_0+2(y_1+\\cdots+y_{n-1})+y_n)$.'},{text:'$T\\approx '+T.toFixed(2)+'$.'}];
+      steps.splice(steps.length-1,0,
+        mathStep('Add the interior ordinates.', `S=${ys.slice(1,-1).map(v=>`(${v.toFixed(3)})`).join('+')}\\approx ${inside.toFixed(6)}`),
+        mathStep('Substitute into the trapezium rule.', `T\\approx \\dfrac{${h.toFixed(6)}}{2}\\left(${ys[0].toFixed(6)}+2(${inside.toFixed(6)})+(${ys[ys.length-1].toFixed(6)})\\right)`),
+        mathStep('Calculate the bracket first.', `T\\approx ${h.toFixed(6)}/2\\times (${(ys[0]+2*inside+ys[ys.length-1]).toFixed(6)})`));
       return {equation:'Use the trapezium rule with $n='+n+'$ strips to approximate $\\displaystyle \\int_{'+lo+'}^{'+hi+'} ('+A+'x^2 '+(B<0?'-':'+' )+' '+Math.abs(B)+'x '+(C<0?'-':'+')+' '+Math.abs(C)+')\\,dx$.',answer:'$\\approx '+T.toFixed(2)+'$',steps};
     }
     function genTrapFromTable(){
@@ -328,6 +348,10 @@
       const xs=[], ys=[]; for(let i=0;i<=n;i++){ xs.push(lo+i*h); ys.push(f(xs[i])); }
       const inside=ys.slice(1,-1).reduce((s,v)=>s+v,0), T=(h/2)*(ys[0]+2*inside+ys[ys.length-1]);
       const steps=[{text:'Confirm $h=('+hi+'-'+lo+')/'+n+'='+h.toFixed(3)+'$.'},{text:trapTableHTML(xs,ys)},{text:'Use $T=\\dfrac{h}{2}(y_0+2\\sum y_i+y_n)$.'},{text:'$T\\approx '+T.toFixed(2)+'$.'}];
+      steps.splice(steps.length-1,0,
+        mathStep('Add the interior ordinates.', `S=${ys.slice(1,-1).map(v=>`(${v.toFixed(3)})`).join('+')}\\approx ${inside.toFixed(6)}`),
+        mathStep('Substitute into the trapezium rule.', `T\\approx \\dfrac{${h.toFixed(6)}}{2}\\left(${ys[0].toFixed(6)}+2(${inside.toFixed(6)})+(${ys[ys.length-1].toFixed(6)})\\right)`),
+        mathStep('Calculate the bracket first.', `T\\approx ${h.toFixed(6)}/2\\times (${(ys[0]+2*inside+ys[ys.length-1]).toFixed(6)})`));
       return {equation:'Use the table and the trapezium rule to approximate $\\displaystyle \\int_{'+lo+'}^{'+hi+'} y\\,dx$ with $n='+n+'$ strips.',answer:'$\\approx '+T.toFixed(2)+'$',steps};
     }
     function enrichIntegrationProblem(problem,type){

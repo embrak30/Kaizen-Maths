@@ -140,7 +140,7 @@
       return terms.map(([c,p],i)=>signedDerivativeProcessTerm(c,p,i===0)).join('')||'0';
     }
     function wholeDerivativeStep(expr,process,der){
-      return ruleStep('Differentiate the whole expression in one line, then simplify.', '\\begin{aligned}\\dfrac{dy}{dx}&=\\dfrac{d}{dx}\\left('+expr+'\\right)\\\\&='+process+'\\\\&='+der+'\\end{aligned}');
+      return ruleStep('Combine the term derivatives.', '\\begin{aligned}\\dfrac{dy}{dx}&=\\dfrac{d}{dx}\\left('+expr+'\\right)\\\\&='+process+'\\\\&='+der+'\\end{aligned}');
     }
     function basicPower(kind){
       const steps=[ruleStep('Use the <span class="rule-name">Power Rule</span> and show the substitution into the rule.', '\\dfrac{d}{dx}\\left(ax^n\\right)=a\\cdot n x^{n-1}')];let expr='',der='';
@@ -150,6 +150,10 @@
         expr=terms.map((t,i)=>mono(t[0],t[1],i===0)).join('');
         const derivativeTerms=terms.filter(([_,p])=>p!==0).map(([c,p],i)=>mono(c*p,p-1,i===0));
         der=derivativeTerms.join('')||'0';
+        terms.forEach(([c,p])=>{
+          steps.push(ruleStep('Differentiate this term.', powerRuleEquation(c,p)));
+          if(p>1)steps.push(ruleStep('Calculate the coefficient and exponent.',`(${c})(${p})=${c*p},\\quad ${p}-1=${p-1}`));
+        });
         steps.push(wholeDerivativeStep(expr,derivativeProcessLatex(terms),der));
       }
       if(kind==='fractional_indices'){
@@ -169,21 +173,56 @@
       if(kind==='mixed_powers'){
         expr='3x^4 - 2x^{-3} + 6x^{\\frac{3}{2}}';
         der='12x^3 + 6x^{-4} + 9x^{\\frac{1}{2}}';
+        steps.push(ruleStep('First term: apply the power rule.', '\\dfrac{d}{dx}(3x^4)=3\\cdot4x^{4-1}'));
+        steps.push(ruleStep('Simplify.', '\\dfrac{d}{dx}(3x^4)=12x^3'));
+        steps.push(ruleStep('Second term: keep both negative signs.', '\\dfrac{d}{dx}(-2x^{-3})=(-2)(-3)x^{-3-1}'));
+        steps.push(ruleStep('Simplify.', '\\dfrac{d}{dx}(-2x^{-3})=6x^{-4}'));
+        steps.push(ruleStep('Third term: use the fractional power.', '\\dfrac{d}{dx}(6x^{\\frac{3}{2}})=6\\cdot\\dfrac{3}{2}x^{\\frac{3}{2}-1}'));
+        steps.push(ruleStep('Calculate the coefficient and power.', '6\\cdot\\dfrac{3}{2}=9,\\quad \\dfrac{3}{2}-1=\\dfrac{1}{2}'));
         steps.push(wholeDerivativeStep(expr,'3\\cdot4x^{4-1} + (-2)(-3)x^{-3-1} + 6\\cdot\\dfrac{3}{2}x^{\\frac{3}{2}-1}',der));
       }
       const answer='$\\dfrac{dy}{dx} = '+der+'$';
       if(!['standard_polynomials','mixed_powers'].includes(kind))steps.push(ruleStep('Write the simplified derivative.', '\\dfrac{dy}{dx}='+der));
       return{equation:'$y = '+expr+'$',answer,steps}
     }
-    function productRule(){const a=random(2,4),b=random(2,5),p=random(2,4),q=random(2,3);const eq='$y=('+lin(a,b)+')^'+p+'(x - '+q+')^2$';const ans='$\\dfrac{dy}{dx} = '+p*a+'('+lin(a,b)+')^{'+(p-1)+'}(x-'+q+')^2 + 2('+lin(a,b)+')^'+p+'(x-'+q+')$';return{equation:eq,answer:ans,steps:[{text:'This is a product of two functions, so use the product rule.'},{text:'Let $u=('+lin(a,b)+')^'+p+'$ and $v=(x-'+q+')^2$.'},{text:'Differentiate the first factor using the chain rule: $u\\prime='+(p*a)+'('+lin(a,b)+')^{'+(p-1)+'}$.'},{text:'Differentiate the second factor: $v\\prime=2(x-'+q+')$.'},{text:'Use $y\\prime=u\\prime v+uv\\prime$.'},{text:'Therefore: '+ans}]}}
-    function chainRule(){const a=random(2,5),b=random(2,5),p=random(3,6);const eq='$y=('+lin(a,b)+')^'+p+'$';const ans='$\\dfrac{dy}{dx} = '+(p*a)+'('+lin(a,b)+')^{'+(p-1)+'}$';return{equation:eq,answer:ans,steps:[{text:'This is a composite function, so use the chain rule.'},{text:'Let $u='+lin(a,b)+'$ so $y=u^'+p+'$.'},{text:'Differentiate the outer function: $dy/du='+p+'u^{'+(p-1)+'}$.'},{text:'Differentiate the inner function: $du/dx='+a+'$.'},{text:'Multiply $dy/du$ by $du/dx$ and substitute $u='+lin(a,b)+'$.'},{text:'Therefore: '+ans}]}}
-    function quotientRule(){const a=random(2,5),p=random(2,4),b=random(2,5),c=random(1,4);const eq='$y=\\dfrac{'+a+'x^'+p+'}{'+lin(b,c)+'}$';const ans='$\\dfrac{dy}{dx}=\\dfrac{'+(a*p)+'x^{'+(p-1)+'}('+lin(b,c)+')-'+a+'x^'+p+'('+b+')}{('+lin(b,c)+')^2}$';return{equation:eq,answer:ans,steps:[{text:'This is a quotient, so identify the numerator and denominator first.'},{text:'Let $u='+a+'x^'+p+'$ and $v='+lin(b,c)+'$.'},{text:'Differentiate them separately: $u\\prime='+(a*p)+'x^{'+(p-1)+'}$ and $v\\prime='+b+'$.'},{text:'Use $y\\prime=\\dfrac{u\\prime v-uv\\prime}{v^2}$.'},{text:'Substitute $u$, $v$, $u\\prime$, and $v\\prime$ carefully.'},{text:'Therefore: '+ans}]}}
-    function comboRule(){const eq='$y=(x^2+3x)^3\\sin(2x)$';const ans='$\\dfrac{dy}{dx}=3(x^2+3x)^2(2x+3)\\sin(2x)+2(x^2+3x)^3\\cos(2x)$';return{equation:eq,answer:ans,steps:[{text:'This combines product rule and chain rule.'},{text:'Let $u=(x^2+3x)^3$ and $v=\\sin(2x)$.'},{text:'Differentiate $u$: $u\\prime=3(x^2+3x)^2(2x+3)$.'},{text:'Differentiate $v$: $v\\prime=2\\cos(2x)$.'},{text:'Apply $y\\prime=u\\prime v+uv\\prime$.'},{text:'Therefore: '+ans}]}}
-    function trigRule(){const k=random(2,5),a=random(2,4);const useSin=Math.random()<.5;const eq='$y='+k+'x^2'+(useSin?'\\sin':'\\cos')+'('+a+'x)$';const ans=useSin?'$\\dfrac{dy}{dx}='+2*k+'x\\sin('+a+'x)+'+(k*a)+'x^2\\cos('+a+'x)$':'$\\dfrac{dy}{dx}='+2*k+'x\\cos('+a+'x)-'+(k*a)+'x^2\\sin('+a+'x)$';return{equation:eq,answer:ans,steps:[{text:'This is a product of an algebraic factor and a trigonometric factor.'},{text:'Differentiate the algebraic factor using the power rule.'},{text:'Differentiate the trigonometric factor using the chain rule, remembering the inner derivative.'},{text:'Substitute into the product rule.'},{text:'Therefore: '+ans}]}}
-    function logRule(){const a=random(2,5),p=random(2,4);const eq='$y=('+a+'x^'+p+'+3)\\ln(x)$';const ans='$\\dfrac{dy}{dx}='+(a*p)+'x^{'+(p-1)+'}\\ln(x)+\\dfrac{'+a+'x^'+p+'+3}{x}$';return{equation:eq,answer:ans,steps:[{text:'This is a product involving a logarithm.'},{text:'Let $u='+a+'x^'+p+'+3$ and $v=\\ln(x)$.'},{text:'Differentiate: $u\\prime='+(a*p)+'x^{'+(p-1)+'}$ and $v\\prime=1/x$.'},{text:'Apply product rule: $y\\prime=u\\prime v+uv\\prime$.'},{text:'Therefore: '+ans}]}}
-    function mixedAdv(){const eq='$y=x^3\\ln(x)\\cos(x)$';const ans='$\\dfrac{dy}{dx}=3x^2\\ln(x)\\cos(x)+x^2\\cos(x)-x^3\\ln(x)\\sin(x)$';return{equation:eq,answer:ans,steps:[{text:'This has three factors, so use the three-factor product rule.'},{text:'Write $y=fgh$, where $f=x^3$, $g=\\ln(x)$, and $h=\\cos(x)$.'},{text:'Then $y\\prime=f\\prime gh+fg\\prime h+fgh\\prime$.'},{text:'Differentiate each factor: $f\\prime=3x^2$, $g\\prime=1/x$, and $h\\prime=-\\sin(x)$.'},{text:'Substitute and simplify each term.'},{text:'Therefore: '+ans}]}}
-    function tangentNormal(){const a=random(1,3),b=random(2,5),x=random(1,4),y=a*x*x+b*x+2,m=2*a*x+b,c=y-m*x;const eq='Find the tangent to $y='+a+'x^2+'+b+'x+2$ at $x='+x+'$.';const ans='$y='+m+'x'+(c>=0?'+'+c:c)+'$';return{equation:eq,answer:ans,steps:[{text:'Differentiate the curve to find the gradient function.'},{text:'$dy/dx='+(2*a)+'x+'+b+'$.'},{text:'Substitute $x='+x+'$ into the gradient function: $m='+m+'$.'},{text:'Substitute $x='+x+'$ into the original curve to get the point $('+x+','+y+')$.'},{text:'Use point-slope form: $y-y_1=m(x-x_1)$.'},{text:'Therefore: '+ans}]}}
-    function turning(){const eq='Find turning points of $y=2x^3-9x^2+12x-4$.';const ans='Solve $6x^2-18x+12=0$, then classify using $12x-18$.';return{equation:eq,answer:ans,steps:[{text:'Turning points occur where the gradient is zero.'},{text:'Differentiate: $dy/dx=6x^2-18x+12$.'},{text:'Set $dy/dx=0$: $6x^2-18x+12=0$.'},{text:'Factorise: $6(x-1)(x-2)=0$, so $x=1$ or $x=2$.'},{text:'Use $d^2y/dx^2=12x-18$ to classify each point.'},{text:'Therefore: '+ans}]}}
+    function productRule(){
+      const a=random(2,4),b=random(2,5),p=random(2,4),q=random(2,3),u=`(${lin(a,b)})^{${p}}`,v=`(x-${q})^2`,up=`${p*a}(${lin(a,b)})^{${p-1}}`,vp=`2(x-${q})`;
+      return {equation:`$y=${u}${v}$`,answer:`$\\dfrac{dy}{dx}=${up}${v}+${u}${vp}$`,steps:[
+        {text:`$u=${u},\\quad v=${v}$`},{text:`$u'=${p}(${lin(a,b)})^{${p}-1}\\cdot${a}$`},{text:`$u'=${up}$`},{text:`$v'=2(x-${q})^{2-1}\\cdot1$`},{text:`$v'=${vp}$`},{text:"$y'=u'v+uv'$"},{text:`$y'=(${up})(${v})+(${u})(${vp})$`}]};
+    }
+    function chainRule(){
+      const a=random(2,5),b=random(2,5),p=random(3,6),inner=lin(a,b),der=`${p*a}(${inner})^{${p-1}}`;
+      return {equation:`$y=(${inner})^{${p}}$`,answer:`$\\dfrac{dy}{dx}=${der}$`,steps:[{text:`$u=${inner},\\quad y=u^{${p}}$`},{text:`$\\dfrac{dy}{du}=${p}u^{${p}-1}$`},{text:`$\\dfrac{dy}{du}=${p}u^{${p-1}}$`},{text:`$\\dfrac{du}{dx}=${a}$`},{text:'$\\dfrac{dy}{dx}=\\dfrac{dy}{du}\\cdot\\dfrac{du}{dx}$'},{text:`$\\dfrac{dy}{dx}=${p}u^{${p-1}}\\cdot${a}$`},{text:`$\\dfrac{dy}{dx}=${p}(${inner})^{${p-1}}\\cdot${a}$`},{text:`$\\dfrac{dy}{dx}=${der}$`}]};
+    }
+    function quotientRule(){
+      const a=random(2,5),p=random(2,4),b=random(2,5),c=random(1,4),u=`${a}x^{${p}}`,v=lin(b,c),up=`${a*p}x^{${p-1}}`,answer=`$\\dfrac{dy}{dx}=\\dfrac{${up}(${v})-(${u})(${b})}{(${v})^2}$`;
+      return {equation:`$y=\\dfrac{${u}}{${v}}$`,answer,steps:[{text:`$u=${u},\\quad v=${v}$`},{text:`$u'=${a}\\cdot${p}x^{${p}-1}$`},{text:`$u'=${up}$`},{text:`$v'=${b}$`},{text:"$y'=\\dfrac{u'v-uv'}{v^2}$"},{text:`$u'v=(${up})(${v})$`},{text:`$uv'=(${u})(${b})$`},{text:`$v^2=(${v})^2$`},{text:answer}]};
+    }
+    function comboRule(){
+      const answer='$\\dfrac{dy}{dx}=3(x^2+3x)^2(2x+3)\\sin(2x)+2(x^2+3x)^3\\cos(2x)$';
+      return {equation:'$y=(x^2+3x)^3\\sin(2x)$',answer,steps:[{text:'$u=(x^2+3x)^3,\\quad v=\\sin(2x)$'},{text:'$w=x^2+3x,\\quad w\u0027=2x+3$'},{text:'$u\u0027=3w^2w\u0027$'},{text:'$u\u0027=3(x^2+3x)^2(2x+3)$'},{text:'$v\u0027=\\cos(2x)\\cdot2$'},{text:'$v\u0027=2\\cos(2x)$'},{text:"$y'=u'v+uv'$"},{text:'$y\u0027=[3(x^2+3x)^2(2x+3)]\\sin(2x)+(x^2+3x)^3[2\\cos(2x)]$'},{text:answer}]};
+    }
+    function trigRule(){
+      const k=random(2,5),a=random(2,4),sin=Math.random()<.5,trig=sin?'\\sin':'\\cos',prime=sin?'\\cos':'-\\sin',u=`${k}x^2`,v=`${trig}(${a}x)`;
+      const answer=`$\\dfrac{dy}{dx}=${2*k}x${v}${sin?'+':'-'}${k*a}x^2${sin?'\\cos':'\\sin'}(${a}x)$`;
+      return {equation:`$y=${u}${v}$`,answer,steps:[{text:`$u=${u},\\quad v=${v}$`},{text:`$u'=${k}\\cdot2x^{2-1}$`},{text:`$u'=${2*k}x$`},{text:`$w=${a}x,\\quad w'=${a}$`},{text:`$v'=${prime}(w)w'$`},{text:`$v'=${prime}(${a}x)\\cdot${a}$`},{text:"$y'=u'v+uv'$"},{text:`$y'=(${2*k}x)(${v})+(${u})[${prime}(${a}x)\\cdot${a}]$`},{text:answer}]};
+    }
+    function logRule(){
+      const a=random(2,5),p=random(2,4),u=`${a}x^{${p}}+3`,up=`${a*p}x^{${p-1}}`,answer=`$\\dfrac{dy}{dx}=${up}\\ln(x)+\\dfrac{${u}}{x}$`;
+      return {equation:`$y=(${u})\\ln(x)$`,answer,steps:[{text:`$u=${u},\\quad v=\\ln(x)$`},{text:`$u'=${a}\\cdot${p}x^{${p}-1}+0$`},{text:`$u'=${up}$`},{text:"$v'=\\dfrac{1}{x}$"},{text:"$y'=u'v+uv'$"},{text:`$y'=(${up})\\ln(x)+(${u})\\cdot\\dfrac{1}{x}$`},{text:answer}]};
+    }
+    function mixedAdv(){
+      const answer='$\\dfrac{dy}{dx}=3x^2\\ln(x)\\cos(x)+x^2\\cos(x)-x^3\\ln(x)\\sin(x)$';
+      return {equation:'$y=x^3\\ln(x)\\cos(x)$',answer,steps:[{text:'$f=x^3,\\quad g=\\ln(x),\\quad h=\\cos(x)$'},{text:"$f'=3x^2$"},{text:"$g'=\\dfrac{1}{x}$"},{text:"$h'=-\\sin(x)$"},{text:"$y'=f'gh+fg'h+fgh'$"},{text:"$y'=3x^2\\ln(x)\\cos(x)+x^3\\dfrac{1}{x}\\cos(x)+x^3\\ln(x)(-\\sin(x))$"},{text:'$x^3/x=x^2$'},{text:answer}]};
+    }
+    function tangentNormal(){
+      const a=random(1,3),b=random(2,5),x=random(1,4),y=a*x*x+b*x+2,m=2*a*x+b,c=y-m*x,answer=`$y=${m}x${c>=0?'+':''}${c}$`;
+      return {equation:`Find the tangent to $y=${a}x^2+${b}x+2$ at $x=${x}$.`,answer,steps:[{text:`$y'=${a}\\cdot2x^{2-1}+${b}+0$`},{text:`$y'=${2*a}x+${b}$`},{text:`$m=${2*a}(${x})+${b}$`},{text:`$m=${2*a*x}+${b}=${m}$`},{text:`$y_1=${a}(${x})^2+${b}(${x})+2$`},{text:`$y_1=${a*x*x}+${b*x}+2=${y}$`},{text:'$y-y_1=m(x-x_1)$'},{text:`$y-${y}=${m}(x-${x})$`},{text:`$y-${y}=${m}x-${m*x}$`},{text:`$y=${m}x-${m*x}+${y}$`},{text:answer}]};
+    }
+    function turning(){
+      const answer='Maximum at $(1,1)$; minimum at $(2,0)$.';
+      return {equation:'Find turning points of $y=2x^3-9x^2+12x-4$.',answer,steps:[{text:"$y'=2\\cdot3x^{3-1}-9\\cdot2x^{2-1}+12$"},{text:"$y'=6x^2-18x+12$"},{text:'Set the gradient to zero: $6x^2-18x+12=0$.'},{text:'Divide by 6: $x^2-3x+2=0$.'},{text:'Factor: $(x-1)(x-2)=0$.'},{text:'$x-1=0$ or $x-2=0$.'},{text:'$x=1$ or $x=2$.'},{text:'$y(1)=2(1)^3-9(1)^2+12(1)-4=1$'},{text:'$y(2)=2(2)^3-9(2)^2+12(2)-4=0$'},{text:"$y''=12x-18$"},{text:"$y''(1)=12(1)-18=-6<0$: maximum."},{text:"$y''(2)=12(2)-18=6>0$: minimum."},{text:answer}]};
+    }
     function generateProblem(){const types=currentType==='select'?levelConfigs[currentLevel].types:[currentType];const t=choice(types);if(['standard_polynomials','fractional_indices','negative_indices','mixed_powers'].includes(t))return basicPower(t);if(t==='product_rule')return productRule();if(t==='chain_rule')return chainRule();if(t==='quotient_rule')return quotientRule();if(t==='combination')return comboRule();if(t==='trig_functions')return trigRule();if(t==='log_functions')return logRule();if(t==='mixed_advanced')return mixedAdv();if(t==='tangents_normals')return tangentNormal();if(t==='turning_points')return turning();return basicPower('standard_polynomials')}
     function switchLevel(level){currentLevel=level;currentType='select';document.querySelectorAll('.tab').forEach((tab,i)=>tab.classList.toggle('active',i+1===level));const cfg=levelConfigs[level];document.getElementById('level-title').textContent=cfg.title;document.getElementById('level-description').textContent=cfg.description;const opts={1:[['standard_polynomials','Type 1: Standard Polynomials'],['fractional_indices','Type 2: Fractional Indices'],['negative_indices','Type 3: Negative Indices'],['mixed_powers','Type 4: Mixed Powers']],2:[['product_rule','Type 1: Product Rule'],['chain_rule','Type 2: Chain Rule'],['quotient_rule','Type 3: Quotient Rule'],['combination','Type 4: Combination']],3:[['trig_functions','Type 1: Trigonometric Functions'],['log_functions','Type 2: Logarithmic Functions'],['mixed_advanced','Type 3: Mixed Advanced']],4:[['tangents_normals','Type 1: Tangents and Normals'],['turning_points','Type 2: Turning Points']]};const dd=document.getElementById('type-dropdown');dd.innerHTML='<option value="select">Select Question Type</option>'+opts[level].map(([v,l])=>'<option value="'+v+'">'+l+'</option>').join('');dd.value='select';header();showBlankPage()}
     function typeChanged(){currentType=document.getElementById('type-dropdown').value;header();currentType==='select'?showBlankPage():generateNewSet()}
