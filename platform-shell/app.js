@@ -175,7 +175,7 @@ const tools = [
     status: "Imported",
     description: "Generate foundation integration practice covering reverse differentiation, indefinite integrals, definite integrals, and the trapezium rule.",
     tags: ["algebra", "calculus", "integration", "integrals", "trapezium rule", "area under curve"],
-    toolPath: "tools/integration/index.html?v=calculus-supported-steps-2",
+    toolPath: "tools/integration/index.html?v=cross-section-link-1",
     imported: true,
     teacherNotes: [
       "Starts with integration as reverse differentiation and the constant of integration.",
@@ -221,6 +221,26 @@ const tools = [
     ]
   },
   {
+    slug: "cross-section-solids",
+    title: "Solids from Cross-sections",
+    category: "Algebra",
+    level: "A-Level / Further Maths / AP Calculus",
+    type: "Interactive Explainer",
+    access: "Free",
+    status: "Imported",
+    description: "Explore a rotatable 3D solid built from square, equilateral-triangle, or circular cross-sections between y = √x and y = x². Connect segment length, cross-sectional area, and the volume integral.",
+    tags: ["calculus", "integration", "volume", "cross-sections", "3D", "visualisation", "explainer", "square", "equilateral triangle", "radius", "diameter", "AP Calculus"],
+    toolPath: "tools/cross-section-solids/index.html?v=cross-section-studio-1",
+    imported: true,
+    teacherNotes: [
+      "Build the idea in five stages: region, segment, cross-section, solid, and volume integral.",
+      "Drag to orbit, scroll to zoom, or choose Face-on to see the selected cross-section in its own plane.",
+      "Compare a square, an equilateral triangle, a circle whose diameter is the segment, and a circle whose radius is the segment.",
+      "Circular sections extend on both sides of the base plane. The shaded region determines their dimensions.",
+      "The base region is fixed; the solid is sampled for display and its volume is evaluated exactly."
+    ]
+  },
+  {
     slug: "volumes-of-revolution",
     title: "Volumes of Revolution",
     category: "Algebra",
@@ -230,7 +250,7 @@ const tools = [
     status: "Imported",
     description: "Generate integration practice for volumes of revolution, including the disc method, expanded radius expressions, washers between curves, y-axis rotation, and parameter problems.",
     tags: ["algebra", "calculus", "integration", "volumes of revolution", "disc method", "washer method", "A-Level Pure", "Further Maths"],
-    toolPath: "tools/volumes-of-revolution/index.html?v=volumes-revolution-1",
+    toolPath: "tools/volumes-of-revolution/index.html?v=cross-section-link-1",
     imported: true,
     teacherNotes: [
       "Students identify the radius first, then use the correct volume formula for the axis of rotation.",
@@ -2537,6 +2557,7 @@ const algebraToolGroups = {
   "integration": "Calculus",
   "advanced-integration": "Calculus",
   "volumes-of-revolution": "Calculus",
+  "cross-section-solids": "Calculus",
   "integration-algebraic-fractions": "Calculus",
   "differential-equations": "Calculus",
   "partial-fractions": "A-Level and Further Pure",
@@ -23894,9 +23915,10 @@ const curatedRelatedToolSlugs = {
   "matrices": ["linear-algebra", "advanced-matrices", "further-vectors", "simultaneous-equations"],
   "advanced-matrices": ["linear-algebra", "matrices", "further-vectors", "complex-numbers"],
   "linear-algebra": ["matrices", "advanced-matrices", "further-vectors", "simultaneous-equations"],
-  "integration": ["advanced-integration", "volumes-of-revolution", "integration-algebraic-fractions", "differentiation-polynomials"],
+  "integration": ["cross-section-solids", "advanced-integration", "volumes-of-revolution", "integration-algebraic-fractions", "differentiation-polynomials"],
   "advanced-integration": ["volumes-of-revolution", "integration-algebraic-fractions", "integration", "differential-equations"],
-  "volumes-of-revolution": ["integration", "advanced-integration", "integration-algebraic-fractions", "differentiation-polynomials"],
+  "cross-section-solids": ["integration", "volumes-of-revolution", "advanced-integration"],
+  "volumes-of-revolution": ["cross-section-solids", "integration", "advanced-integration", "integration-algebraic-fractions", "differentiation-polynomials"],
   "integration-algebraic-fractions": ["partial-fractions", "advanced-integration", "integration", "numerical-methods"],
   "partial-fractions": ["integration-algebraic-fractions", "algebraic-fractions", "advanced-factorisation", "advanced-integration"],
   "complex-numbers": ["polar-coordinates", "roots-of-equations", "trigonometric-functions", "advanced-matrices"],
@@ -24233,6 +24255,21 @@ function toolInsightProfile(tool) {
   const has = (...needles) => needles.some((needle) => haystack.includes(needle));
   const matches = (pattern) => pattern.test(haystack);
   const profiles = [
+    {
+      match: () => tool.slug === "cross-section-solids",
+      misconceptions: [
+        "Integrating the segment length instead of the cross-sectional area.",
+        "Using the whole segment as a circle's radius when it represents the diameter.",
+        "Using the side length as the height of an equilateral triangle.",
+        "Thinking the solid is formed by rotating the base region rather than stacking sections perpendicular to the x-axis."
+      ],
+      questions: [
+        "Why is the segment length sqrt(x) - x squared, and why must that length be converted into an area?",
+        "How does the circular area change if the same segment represents a radius instead of a diameter?",
+        "What does the thin slice represent in the volume integral?",
+        "Why do all four solids share the same integral multiplied by a different constant?"
+      ]
+    },
     {
       match: () => tool.slug === "loci-constructions" || (haystack.includes("loci") && has("constructions", "perpendicular bisector", "angle bisector")),
       misconceptions: [
@@ -25372,6 +25409,12 @@ function toolClassroomQuestions(tool) {
 }
 
 function toolUseSuggestions(tool) {
+  if (tool.slug === "cross-section-solids") return [
+    "Start with the base plane, then reveal the segment, cross-section, complete solid, and volume in sequence.",
+    "Use Face-on and drag-to-orbit to connect the shape's dimensions to its area formula.",
+    "Keep x fixed while changing shapes; compare the two circular modes and explain the factor of four.",
+    "Use the final thin slice to explain why the volume is the integral of cross-sectional area."
+  ];
   return [
     "Use one example for teacher modelling before moving to a short practice set.",
     "Ask students to explain the first step before revealing the worked solution.",
