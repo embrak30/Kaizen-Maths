@@ -1,0 +1,1087 @@
+{
+  "collection": "Algebraic Substitution",
+  "version": "1.0",
+  "seed": 20261020,
+  "generator": "tools/substitution/index.html",
+  "packs": [
+    {
+      "id": "AS-01",
+      "slug": "as-01-linear-expressions",
+      "title": "Linear expressions",
+      "topic": "Algebraic Substitution",
+      "level": 1,
+      "types": [
+        "type1_single"
+      ],
+      "kind": "Focused",
+      "estimatedMinutes": 10,
+      "description": "Substitute positive and negative values into linear expressions.",
+      "questions": [
+        {
+          "given": "\\(x=8\\)",
+          "expression": "\\(2x+7\\)",
+          "answer": "\\(23\\)",
+          "steps": [
+            "Substitute \\(x=8\\).",
+            "$$2\\cdot 8 +7$$",
+            "$$16 +7$$",
+            "$$23$$"
+          ],
+          "question": "Given: x=8<br>Find: 2x+7",
+          "type": "type1_single",
+          "number": 1
+        },
+        {
+          "given": "\\(x=-4\\)",
+          "expression": "\\(5x-5\\)",
+          "answer": "\\(-25\\)",
+          "steps": [
+            "Substitute \\(x=-4\\).",
+            "$$5\\cdot (-4) -5$$",
+            "$$-20 -5$$",
+            "$$-25$$"
+          ],
+          "question": "Given: x=-4<br>Find: 5x-5",
+          "type": "type1_single",
+          "number": 2
+        },
+        {
+          "given": "\\(x=6\\)",
+          "expression": "\\(6x-6\\)",
+          "answer": "\\(30\\)",
+          "steps": [
+            "Substitute \\(x=6\\).",
+            "$$6\\cdot 6 -6$$",
+            "$$36 -6$$",
+            "$$30$$"
+          ],
+          "question": "Given: x=6<br>Find: 6x-6",
+          "type": "type1_single",
+          "number": 3
+        },
+        {
+          "given": "\\(x=-3\\)",
+          "expression": "\\(7x-2\\)",
+          "answer": "\\(-23\\)",
+          "steps": [
+            "Substitute \\(x=-3\\).",
+            "$$7\\cdot (-3) -2$$",
+            "$$-21 -2$$",
+            "$$-23$$"
+          ],
+          "question": "Given: x=-3<br>Find: 7x-2",
+          "type": "type1_single",
+          "number": 4
+        },
+        {
+          "given": "\\(x=4\\)",
+          "expression": "\\(2x-9\\)",
+          "answer": "\\(-1\\)",
+          "steps": [
+            "Substitute \\(x=4\\).",
+            "$$2\\cdot 4 -9$$",
+            "$$8 -9$$",
+            "$$-1$$"
+          ],
+          "question": "Given: x=4<br>Find: 2x-9",
+          "type": "type1_single",
+          "number": 5
+        },
+        {
+          "given": "\\(x=-3\\)",
+          "expression": "\\(8x-3\\)",
+          "answer": "\\(-27\\)",
+          "steps": [
+            "Substitute \\(x=-3\\).",
+            "$$8\\cdot (-3) -3$$",
+            "$$-24 -3$$",
+            "$$-27$$"
+          ],
+          "question": "Given: x=-3<br>Find: 8x-3",
+          "type": "type1_single",
+          "number": 6
+        },
+        {
+          "given": "\\(x=-4\\)",
+          "expression": "\\(5x-6\\)",
+          "answer": "\\(-26\\)",
+          "steps": [
+            "Substitute \\(x=-4\\).",
+            "$$5\\cdot (-4) -6$$",
+            "$$-20 -6$$",
+            "$$-26$$"
+          ],
+          "question": "Given: x=-4<br>Find: 5x-6",
+          "type": "type1_single",
+          "number": 7
+        },
+        {
+          "given": "\\(x=-2\\)",
+          "expression": "\\(8x+10\\)",
+          "answer": "\\(-6\\)",
+          "steps": [
+            "Substitute \\(x=-2\\).",
+            "$$8\\cdot (-2) +10$$",
+            "$$-16 +10$$",
+            "$$-6$$"
+          ],
+          "question": "Given: x=-2<br>Find: 8x+10",
+          "type": "type1_single",
+          "number": 8
+        }
+      ],
+      "version": "1.0",
+      "sourceTool": "substitution"
+    },
+    {
+      "id": "AS-02",
+      "slug": "as-02-quadratic-expressions",
+      "title": "Quadratic expressions",
+      "topic": "Algebraic Substitution",
+      "level": 1,
+      "types": [
+        "type2_single"
+      ],
+      "kind": "Focused",
+      "estimatedMinutes": 10,
+      "description": "Substitute into squared terms, then follow the order of operations.",
+      "questions": [
+        {
+          "given": "\\(x=5\\)",
+          "expression": "\\(x^2+2x\\)",
+          "answer": "\\(35\\)",
+          "steps": [
+            "Substitute \\(x=5\\).",
+            "$$(5)^2 +2\\cdot 5 $$",
+            "$$25 +10 $$",
+            "$$35$$"
+          ],
+          "question": "Given: x=5<br>Find: x^2+2x",
+          "type": "type2_single",
+          "number": 1
+        },
+        {
+          "given": "\\(x=-3\\)",
+          "expression": "\\(x^2+3x+5\\)",
+          "answer": "\\(5\\)",
+          "steps": [
+            "Substitute \\(x=-3\\).",
+            "$$(-3)^2 +3\\cdot (-3) +5$$",
+            "$$9 -9 +5$$",
+            "$$5$$"
+          ],
+          "question": "Given: x=-3<br>Find: x^2+3x+5",
+          "type": "type2_single",
+          "number": 2
+        },
+        {
+          "given": "\\(x=-4\\)",
+          "expression": "\\(x^2+3x-1\\)",
+          "answer": "\\(3\\)",
+          "steps": [
+            "Substitute \\(x=-4\\).",
+            "$$(-4)^2 +3\\cdot (-4) -1$$",
+            "$$16 -12 -1$$",
+            "$$3$$"
+          ],
+          "question": "Given: x=-4<br>Find: x^2+3x-1",
+          "type": "type2_single",
+          "number": 3
+        },
+        {
+          "given": "\\(x=-1\\)",
+          "expression": "\\(x^2+5x-8\\)",
+          "answer": "\\(-12\\)",
+          "steps": [
+            "Substitute \\(x=-1\\).",
+            "$$(-1)^2 +5\\cdot (-1) -8$$",
+            "$$1 -5 -8$$",
+            "$$-12$$"
+          ],
+          "question": "Given: x=-1<br>Find: x^2+5x-8",
+          "type": "type2_single",
+          "number": 4
+        },
+        {
+          "given": "\\(x=3\\)",
+          "expression": "\\(x^2+4x-7\\)",
+          "answer": "\\(14\\)",
+          "steps": [
+            "Substitute \\(x=3\\).",
+            "$$(3)^2 +4\\cdot 3 -7$$",
+            "$$9 +12 -7$$",
+            "$$14$$"
+          ],
+          "question": "Given: x=3<br>Find: x^2+4x-7",
+          "type": "type2_single",
+          "number": 5
+        },
+        {
+          "given": "\\(x=-4\\)",
+          "expression": "\\(x^2+2x+6\\)",
+          "answer": "\\(14\\)",
+          "steps": [
+            "Substitute \\(x=-4\\).",
+            "$$(-4)^2 +2\\cdot (-4) +6$$",
+            "$$16 -8 +6$$",
+            "$$14$$"
+          ],
+          "question": "Given: x=-4<br>Find: x^2+2x+6",
+          "type": "type2_single",
+          "number": 6
+        }
+      ],
+      "version": "1.0",
+      "sourceTool": "substitution"
+    },
+    {
+      "id": "AS-03",
+      "slug": "as-03-two-variables",
+      "title": "Two variables",
+      "topic": "Algebraic Substitution",
+      "level": 2,
+      "types": [
+        "type1_multiple"
+      ],
+      "kind": "Focused",
+      "estimatedMinutes": 10,
+      "description": "Substitute two values and evaluate each term before combining.",
+      "questions": [
+        {
+          "given": "\\(x=0,\\;y=4\\)",
+          "expression": "\\(5x+5y\\)",
+          "answer": "\\(20\\)",
+          "steps": [
+            "Substitute \\(x=0,\\;y=4\\).",
+            "$$5\\cdot 0 +5\\cdot 4$$",
+            "$$0 +20$$",
+            "$$20$$"
+          ],
+          "question": "Given: x=0,\\;y=4<br>Find: 5x+5y",
+          "type": "type1_multiple",
+          "number": 1
+        },
+        {
+          "given": "\\(x=-2,\\;y=0\\)",
+          "expression": "\\(4x+2y\\)",
+          "answer": "\\(-8\\)",
+          "steps": [
+            "Substitute \\(x=-2,\\;y=0\\).",
+            "$$4\\cdot (-2) +2\\cdot 0$$",
+            "$$-8 $$",
+            "$$-8$$"
+          ],
+          "question": "Given: x=-2,\\;y=0<br>Find: 4x+2y",
+          "type": "type1_multiple",
+          "number": 2
+        },
+        {
+          "given": "\\(x=0,\\;y=-3\\)",
+          "expression": "\\(5x+2y\\)",
+          "answer": "\\(-6\\)",
+          "steps": [
+            "Substitute \\(x=0,\\;y=-3\\).",
+            "$$5\\cdot 0 +2\\cdot (-3)$$",
+            "$$0 -6$$",
+            "$$-6$$"
+          ],
+          "question": "Given: x=0,\\;y=-3<br>Find: 5x+2y",
+          "type": "type1_multiple",
+          "number": 3
+        },
+        {
+          "given": "\\(x=2,\\;y=4\\)",
+          "expression": "\\(8x+5y\\)",
+          "answer": "\\(36\\)",
+          "steps": [
+            "Substitute \\(x=2,\\;y=4\\).",
+            "$$8\\cdot 2 +5\\cdot 4$$",
+            "$$16 +20$$",
+            "$$36$$"
+          ],
+          "question": "Given: x=2,\\;y=4<br>Find: 8x+5y",
+          "type": "type1_multiple",
+          "number": 4
+        },
+        {
+          "given": "\\(x=0,\\;y=1\\)",
+          "expression": "\\(7x+7y\\)",
+          "answer": "\\(7\\)",
+          "steps": [
+            "Substitute \\(x=0,\\;y=1\\).",
+            "$$7\\cdot 0 +7\\cdot 1$$",
+            "$$0 +7$$",
+            "$$7$$"
+          ],
+          "question": "Given: x=0,\\;y=1<br>Find: 7x+7y",
+          "type": "type1_multiple",
+          "number": 5
+        },
+        {
+          "given": "\\(x=6,\\;y=-4\\)",
+          "expression": "\\(3x+3y\\)",
+          "answer": "\\(6\\)",
+          "steps": [
+            "Substitute \\(x=6,\\;y=-4\\).",
+            "$$3\\cdot 6 +3\\cdot (-4)$$",
+            "$$18 -12$$",
+            "$$6$$"
+          ],
+          "question": "Given: x=6,\\;y=-4<br>Find: 3x+3y",
+          "type": "type1_multiple",
+          "number": 6
+        }
+      ],
+      "version": "1.0",
+      "sourceTool": "substitution"
+    },
+    {
+      "id": "AS-04",
+      "slug": "as-04-three-variables",
+      "title": "Three variables",
+      "topic": "Algebraic Substitution",
+      "level": 2,
+      "types": [
+        "type2_multiple"
+      ],
+      "kind": "Focused",
+      "estimatedMinutes": 10,
+      "description": "Keep track of three values and the signs between terms.",
+      "questions": [
+        {
+          "given": "\\(a=3,\\;b=3,\\;c=1\\)",
+          "expression": "\\(3a - 6b +2c\\)",
+          "answer": "\\(-7\\)",
+          "steps": [
+            "Substitute values.",
+            "$$3\\cdot 3 - 6\\cdot 3 +2\\cdot 1$$",
+            "$$9 -18 +2$$",
+            "$$-7$$"
+          ],
+          "question": "Given: a=3,\\;b=3,\\;c=1<br>Find: 3a - 6b +2c",
+          "type": "type2_multiple",
+          "number": 1
+        },
+        {
+          "given": "\\(a=0,\\;b=0,\\;c=0\\)",
+          "expression": "\\(5a - 4b +2c\\)",
+          "answer": "\\(0\\)",
+          "steps": [
+            "Substitute values.",
+            "$$5\\cdot 0 - 4\\cdot 0 +2\\cdot 0$$",
+            "$$0  $$",
+            "$$0$$"
+          ],
+          "question": "Given: a=0,\\;b=0,\\;c=0<br>Find: 5a - 4b +2c",
+          "type": "type2_multiple",
+          "number": 2
+        },
+        {
+          "given": "\\(a=0,\\;b=-1,\\;c=-2\\)",
+          "expression": "\\(4a - 4b +4c\\)",
+          "answer": "\\(-4\\)",
+          "steps": [
+            "Substitute values.",
+            "$$4\\cdot 0 - 4\\cdot (-1) +4\\cdot (-2)$$",
+            "$$0 +4 -8$$",
+            "$$-4$$"
+          ],
+          "question": "Given: a=0,\\;b=-1,\\;c=-2<br>Find: 4a - 4b +4c",
+          "type": "type2_multiple",
+          "number": 3
+        },
+        {
+          "given": "\\(a=3,\\;b=-4,\\;c=-3\\)",
+          "expression": "\\(6a - 3b +5c\\)",
+          "answer": "\\(15\\)",
+          "steps": [
+            "Substitute values.",
+            "$$6\\cdot 3 - 3\\cdot (-4) +5\\cdot (-3)$$",
+            "$$18 +12 -15$$",
+            "$$15$$"
+          ],
+          "question": "Given: a=3,\\;b=-4,\\;c=-3<br>Find: 6a - 3b +5c",
+          "type": "type2_multiple",
+          "number": 4
+        },
+        {
+          "given": "\\(a=3,\\;b=0,\\;c=-5\\)",
+          "expression": "\\(4a - 3b +5c\\)",
+          "answer": "\\(-13\\)",
+          "steps": [
+            "Substitute values.",
+            "$$4\\cdot 3 - 3\\cdot 0 +5\\cdot (-5)$$",
+            "$$12  -25$$",
+            "$$-13$$"
+          ],
+          "question": "Given: a=3,\\;b=0,\\;c=-5<br>Find: 4a - 3b +5c",
+          "type": "type2_multiple",
+          "number": 5
+        },
+        {
+          "given": "\\(a=1,\\;b=3,\\;c=-3\\)",
+          "expression": "\\(4a - 3b +5c\\)",
+          "answer": "\\(-20\\)",
+          "steps": [
+            "Substitute values.",
+            "$$4\\cdot 1 - 3\\cdot 3 +5\\cdot (-3)$$",
+            "$$4 -9 -15$$",
+            "$$-20$$"
+          ],
+          "question": "Given: a=1,\\;b=3,\\;c=-3<br>Find: 4a - 3b +5c",
+          "type": "type2_multiple",
+          "number": 6
+        }
+      ],
+      "version": "1.0",
+      "sourceTool": "substitution"
+    },
+    {
+      "id": "AS-05",
+      "slug": "as-05-powers-and-products",
+      "title": "Powers and products",
+      "topic": "Algebraic Substitution",
+      "level": 2,
+      "types": [
+        "type3_multiple"
+      ],
+      "kind": "Focused",
+      "estimatedMinutes": 10,
+      "description": "Evaluate squares and products involving positive and negative values.",
+      "questions": [
+        {
+          "given": "\\(a=0,\\;b=0\\)",
+          "expression": "\\(a^2 - 4ab + b^2\\)",
+          "answer": "\\(0\\)",
+          "steps": [
+            "Substitute \\(a=0,\\;b=0\\).",
+            "$$(0)^2 - 4(0)(0) + (0)^2$$",
+            "$$0  $$",
+            "$$0$$"
+          ],
+          "question": "Given: a=0,\\;b=0<br>Find: a^2 - 4ab + b^2",
+          "type": "type3_multiple",
+          "number": 1
+        },
+        {
+          "given": "\\(a=1,\\;b=0\\)",
+          "expression": "\\(a^2 - 4ab + b^2\\)",
+          "answer": "\\(1\\)",
+          "steps": [
+            "Substitute \\(a=1,\\;b=0\\).",
+            "$$(1)^2 - 4(1)(0) + (0)^2$$",
+            "$$1  $$",
+            "$$1$$"
+          ],
+          "question": "Given: a=1,\\;b=0<br>Find: a^2 - 4ab + b^2",
+          "type": "type3_multiple",
+          "number": 2
+        },
+        {
+          "given": "\\(a=0,\\;b=2\\)",
+          "expression": "\\(a^2 - 6ab + b^2\\)",
+          "answer": "\\(4\\)",
+          "steps": [
+            "Substitute \\(a=0,\\;b=2\\).",
+            "$$(0)^2 - 6(0)(2) + (2)^2$$",
+            "$$0  +4$$",
+            "$$4$$"
+          ],
+          "question": "Given: a=0,\\;b=2<br>Find: a^2 - 6ab + b^2",
+          "type": "type3_multiple",
+          "number": 3
+        },
+        {
+          "given": "\\(a=1,\\;b=4\\)",
+          "expression": "\\(a^2 - 2ab + b^2\\)",
+          "answer": "\\(9\\)",
+          "steps": [
+            "Substitute \\(a=1,\\;b=4\\).",
+            "$$(1)^2 - 2(1)(4) + (4)^2$$",
+            "$$1 -8 +16$$",
+            "$$9$$"
+          ],
+          "question": "Given: a=1,\\;b=4<br>Find: a^2 - 2ab + b^2",
+          "type": "type3_multiple",
+          "number": 4
+        },
+        {
+          "given": "\\(a=4,\\;b=-1\\)",
+          "expression": "\\(a^2 - 5ab + b^2\\)",
+          "answer": "\\(37\\)",
+          "steps": [
+            "Substitute \\(a=4,\\;b=-1\\).",
+            "$$(4)^2 - 5(4)(-1) + (-1)^2$$",
+            "$$16 +20 +1$$",
+            "$$37$$"
+          ],
+          "question": "Given: a=4,\\;b=-1<br>Find: a^2 - 5ab + b^2",
+          "type": "type3_multiple",
+          "number": 5
+        }
+      ],
+      "version": "1.0",
+      "sourceTool": "substitution"
+    },
+    {
+      "id": "AS-06",
+      "slug": "as-06-substituting-an-expression",
+      "title": "Substituting an expression",
+      "topic": "Algebraic Substitution",
+      "level": 3,
+      "types": [
+        "type1_expression"
+      ],
+      "kind": "Focused",
+      "estimatedMinutes": 10,
+      "description": "Replace a variable with a linear expression, then expand and simplify.",
+      "questions": [
+        {
+          "given": "\\(x=3y-2\\)",
+          "expression": "\\(6x-7\\)",
+          "task": "Write in terms of \\(y\\) and simplify",
+          "answer": "\\(18y-19\\)",
+          "steps": [
+            "No numerical value for \\(y\\) is given, so the answer should be an expression in terms of \\(y\\).",
+            "Substitute \\(x=3y-2\\).",
+            "$$6\\big(3y-2\\big) -7$$",
+            "$$18y -12 -7$$",
+            "$$18y-19$$"
+          ],
+          "question": "Given: x=3y-2<br>Write in terms of y and simplify: 6x-7",
+          "type": "type1_expression",
+          "number": 1
+        },
+        {
+          "given": "\\(x=6y+5\\)",
+          "expression": "\\(3x+3\\)",
+          "task": "Write in terms of \\(y\\) and simplify",
+          "answer": "\\(18y+18\\)",
+          "steps": [
+            "No numerical value for \\(y\\) is given, so the answer should be an expression in terms of \\(y\\).",
+            "Substitute \\(x=6y+5\\).",
+            "$$3\\big(6y+5\\big) +3$$",
+            "$$18y +15 +3$$",
+            "$$18y+18$$"
+          ],
+          "question": "Given: x=6y+5<br>Write in terms of y and simplify: 3x+3",
+          "type": "type1_expression",
+          "number": 2
+        },
+        {
+          "given": "\\(x=2y+1\\)",
+          "expression": "\\(5x-2\\)",
+          "task": "Write in terms of \\(y\\) and simplify",
+          "answer": "\\(10y+3\\)",
+          "steps": [
+            "No numerical value for \\(y\\) is given, so the answer should be an expression in terms of \\(y\\).",
+            "Substitute \\(x=2y+1\\).",
+            "$$5\\big(2y+1\\big) -2$$",
+            "$$10y +5 -2$$",
+            "$$10y+3$$"
+          ],
+          "question": "Given: x=2y+1<br>Write in terms of y and simplify: 5x-2",
+          "type": "type1_expression",
+          "number": 3
+        },
+        {
+          "given": "\\(x=4y+4\\)",
+          "expression": "\\(4x-7\\)",
+          "task": "Write in terms of \\(y\\) and simplify",
+          "answer": "\\(16y+9\\)",
+          "steps": [
+            "No numerical value for \\(y\\) is given, so the answer should be an expression in terms of \\(y\\).",
+            "Substitute \\(x=4y+4\\).",
+            "$$4\\big(4y+4\\big) -7$$",
+            "$$16y +16 -7$$",
+            "$$16y+9$$"
+          ],
+          "question": "Given: x=4y+4<br>Write in terms of y and simplify: 4x-7",
+          "type": "type1_expression",
+          "number": 4
+        }
+      ],
+      "version": "1.0",
+      "sourceTool": "substitution"
+    },
+    {
+      "id": "AS-07",
+      "slug": "as-07-combining-expressions",
+      "title": "Combining expressions",
+      "topic": "Algebraic Substitution",
+      "level": 3,
+      "types": [
+        "type2_expression"
+      ],
+      "kind": "Focused",
+      "estimatedMinutes": 10,
+      "description": "Substitute an expression and collect like terms.",
+      "questions": [
+        {
+          "given": "\\(a=2b+2\\)",
+          "expression": "\\(5a+4b\\)",
+          "task": "Write in terms of \\(b\\) and simplify",
+          "answer": "\\(14b+10\\)",
+          "steps": [
+            "No numerical value for \\(b\\) is given, so the answer should be an expression in terms of \\(b\\).",
+            "Substitute \\(a=2b+2\\).",
+            "$$5\\big(2b+2\\big) + 4b$$",
+            "$$10b +10 + 4b$$",
+            "$$(10+4)b +10 = 14b+10$$"
+          ],
+          "question": "Given: a=2b+2<br>Write in terms of b and simplify: 5a+4b",
+          "type": "type2_expression",
+          "number": 1
+        },
+        {
+          "given": "\\(a=3b+5\\)",
+          "expression": "\\(2a+5b\\)",
+          "task": "Write in terms of \\(b\\) and simplify",
+          "answer": "\\(11b+10\\)",
+          "steps": [
+            "No numerical value for \\(b\\) is given, so the answer should be an expression in terms of \\(b\\).",
+            "Substitute \\(a=3b+5\\).",
+            "$$2\\big(3b+5\\big) + 5b$$",
+            "$$6b +10 + 5b$$",
+            "$$(6+5)b +10 = 11b+10$$"
+          ],
+          "question": "Given: a=3b+5<br>Write in terms of b and simplify: 2a+5b",
+          "type": "type2_expression",
+          "number": 2
+        },
+        {
+          "given": "\\(a=6b+1\\)",
+          "expression": "\\(2a+6b\\)",
+          "task": "Write in terms of \\(b\\) and simplify",
+          "answer": "\\(18b+2\\)",
+          "steps": [
+            "No numerical value for \\(b\\) is given, so the answer should be an expression in terms of \\(b\\).",
+            "Substitute \\(a=6b+1\\).",
+            "$$2\\big(6b+1\\big) + 6b$$",
+            "$$12b +2 + 6b$$",
+            "$$(12+6)b +2 = 18b+2$$"
+          ],
+          "question": "Given: a=6b+1<br>Write in terms of b and simplify: 2a+6b",
+          "type": "type2_expression",
+          "number": 3
+        },
+        {
+          "given": "\\(a=2b-5\\)",
+          "expression": "\\(3a+6b\\)",
+          "task": "Write in terms of \\(b\\) and simplify",
+          "answer": "\\(12b-15\\)",
+          "steps": [
+            "No numerical value for \\(b\\) is given, so the answer should be an expression in terms of \\(b\\).",
+            "Substitute \\(a=2b-5\\).",
+            "$$3\\big(2b-5\\big) + 6b$$",
+            "$$6b -15 + 6b$$",
+            "$$(6+6)b -15 = 12b-15$$"
+          ],
+          "question": "Given: a=2b-5<br>Write in terms of b and simplify: 3a+6b",
+          "type": "type2_expression",
+          "number": 4
+        }
+      ],
+      "version": "1.0",
+      "sourceTool": "substitution"
+    },
+    {
+      "id": "AS-08",
+      "slug": "as-08-quadratic-and-cubic-expressions",
+      "title": "Quadratic and cubic expressions",
+      "topic": "Algebraic Substitution",
+      "level": 4,
+      "types": [
+        "complex_substitution"
+      ],
+      "kind": "Focused",
+      "estimatedMinutes": 10,
+      "description": "Substitute a linear expression into quadratic, cubic and product terms.",
+      "questions": [
+        {
+          "given": "\\(y=3x-2\\)",
+          "expression": "\\(2x^3 -2x^2 +5y +1\\)",
+          "task": "Write in terms of \\(x\\) and simplify",
+          "answer": "\\(2x^3-2x^2+15x-9\\)",
+          "steps": [
+            "No numerical value for \\(x\\) is given, so the answer should be an expression in terms of \\(x\\).",
+            "Substitute \\(y=3x-2\\).",
+            "$$2x^3 -2x^2 +5\\big(3x-2\\big) +1$$",
+            "$$2x^3 -2x^2 +15x -10 +1$$",
+            "$$2x^3-2x^2+15x-9$$"
+          ],
+          "question": "Given: y=3x-2<br>Write in terms of x and simplify: 2x^3 -2x^2 +5y +1",
+          "type": "complex_substitution",
+          "number": 1
+        },
+        {
+          "given": "\\(y=5x-2\\)",
+          "expression": "\\(6x^2 +4y +6\\)",
+          "task": "Write in terms of \\(x\\) and simplify",
+          "answer": "\\(6x^2+20x-2\\)",
+          "steps": [
+            "No numerical value for \\(x\\) is given, so the answer should be an expression in terms of \\(x\\).",
+            "Substitute \\(y=5x-2\\).",
+            "$$6x^2 +4\\big(5x-2\\big) +6$$",
+            "$$6x^2 +20x -8 +6$$",
+            "$$6x^2+20x-2$$"
+          ],
+          "question": "Given: y=5x-2<br>Write in terms of x and simplify: 6x^2 +4y +6",
+          "type": "complex_substitution",
+          "number": 2
+        },
+        {
+          "given": "\\(y=3x\\)",
+          "expression": "\\(3x^2 + 5xy +5y -4\\)",
+          "task": "Write in terms of \\(x\\) and simplify",
+          "answer": "\\(18x^2+15x-4\\)",
+          "steps": [
+            "No numerical value for \\(x\\) is given, so the answer should be an expression in terms of \\(x\\).",
+            "Substitute \\(y=3x\\).",
+            "$$3x^2 + 5x\\big(3x\\big) +5\\big(3x\\big) -4$$",
+            "$$3x^2 + 15x^2  +15x  -4$$",
+            "$$(3+15)x^2 +15x -4$$",
+            "$$18x^2+15x-4$$"
+          ],
+          "question": "Given: y=3x<br>Write in terms of x and simplify: 3x^2 + 5xy +5y -4",
+          "type": "complex_substitution",
+          "number": 3
+        },
+        {
+          "given": "\\(y=3x\\)",
+          "expression": "\\(4x^2 + 3xy +3y +2\\)",
+          "task": "Write in terms of \\(x\\) and simplify",
+          "answer": "\\(13x^2+9x+2\\)",
+          "steps": [
+            "No numerical value for \\(x\\) is given, so the answer should be an expression in terms of \\(x\\).",
+            "Substitute \\(y=3x\\).",
+            "$$4x^2 + 3x\\big(3x\\big) +3\\big(3x\\big) +2$$",
+            "$$4x^2 + 9x^2  +9x  +2$$",
+            "$$(4+9)x^2 +9x +2$$",
+            "$$13x^2+9x+2$$"
+          ],
+          "question": "Given: y=3x<br>Write in terms of x and simplify: 4x^2 + 3xy +3y +2",
+          "type": "complex_substitution",
+          "number": 4
+        }
+      ],
+      "version": "1.0",
+      "sourceTool": "substitution"
+    },
+    {
+      "id": "AS-09",
+      "slug": "as-09-single-variable-mixed-practice",
+      "title": "Single variable - mixed practice",
+      "topic": "Algebraic Substitution",
+      "level": 1,
+      "types": [
+        "type1_single",
+        "type2_single"
+      ],
+      "kind": "Mixed",
+      "estimatedMinutes": 10,
+      "description": "Mix linear and quadratic substitution in one short practice session.",
+      "questions": [
+        {
+          "given": "\\(x=6\\)",
+          "expression": "\\(7x+10\\)",
+          "answer": "\\(52\\)",
+          "steps": [
+            "Substitute \\(x=6\\).",
+            "$$7\\cdot 6 +10$$",
+            "$$42 +10$$",
+            "$$52$$"
+          ],
+          "question": "Given: x=6<br>Find: 7x+10",
+          "type": "type1_single",
+          "number": 1
+        },
+        {
+          "given": "\\(x=-3\\)",
+          "expression": "\\(x^2+4x-8\\)",
+          "answer": "\\(-11\\)",
+          "steps": [
+            "Substitute \\(x=-3\\).",
+            "$$(-3)^2 +4\\cdot (-3) -8$$",
+            "$$9 -12 -8$$",
+            "$$-11$$"
+          ],
+          "question": "Given: x=-3<br>Find: x^2+4x-8",
+          "type": "type2_single",
+          "number": 2
+        },
+        {
+          "given": "\\(x=6\\)",
+          "expression": "\\(7x+2\\)",
+          "answer": "\\(44\\)",
+          "steps": [
+            "Substitute \\(x=6\\).",
+            "$$7\\cdot 6 +2$$",
+            "$$42 +2$$",
+            "$$44$$"
+          ],
+          "question": "Given: x=6<br>Find: 7x+2",
+          "type": "type1_single",
+          "number": 3
+        },
+        {
+          "given": "\\(x=0\\)",
+          "expression": "\\(x^2+3x+4\\)",
+          "answer": "\\(4\\)",
+          "steps": [
+            "Substitute \\(x=0\\).",
+            "$$(0)^2 +3\\cdot 0 +4$$",
+            "$$0  +4$$",
+            "$$4$$"
+          ],
+          "question": "Given: x=0<br>Find: x^2+3x+4",
+          "type": "type2_single",
+          "number": 4
+        },
+        {
+          "given": "\\(x=1\\)",
+          "expression": "\\(6x-8\\)",
+          "answer": "\\(-2\\)",
+          "steps": [
+            "Substitute \\(x=1\\).",
+            "$$6\\cdot 1 -8$$",
+            "$$6 -8$$",
+            "$$-2$$"
+          ],
+          "question": "Given: x=1<br>Find: 6x-8",
+          "type": "type1_single",
+          "number": 5
+        },
+        {
+          "given": "\\(x=5\\)",
+          "expression": "\\(x^2+3x-4\\)",
+          "answer": "\\(36\\)",
+          "steps": [
+            "Substitute \\(x=5\\).",
+            "$$(5)^2 +3\\cdot 5 -4$$",
+            "$$25 +15 -4$$",
+            "$$36$$"
+          ],
+          "question": "Given: x=5<br>Find: x^2+3x-4",
+          "type": "type2_single",
+          "number": 6
+        },
+        {
+          "given": "\\(x=8\\)",
+          "expression": "\\(6x-8\\)",
+          "answer": "\\(40\\)",
+          "steps": [
+            "Substitute \\(x=8\\).",
+            "$$6\\cdot 8 -8$$",
+            "$$48 -8$$",
+            "$$40$$"
+          ],
+          "question": "Given: x=8<br>Find: 6x-8",
+          "type": "type1_single",
+          "number": 7
+        },
+        {
+          "given": "\\(x=-3\\)",
+          "expression": "\\(x^2+6x+1\\)",
+          "answer": "\\(-8\\)",
+          "steps": [
+            "Substitute \\(x=-3\\).",
+            "$$(-3)^2 +6\\cdot (-3) +1$$",
+            "$$9 -18 +1$$",
+            "$$-8$$"
+          ],
+          "question": "Given: x=-3<br>Find: x^2+6x+1",
+          "type": "type2_single",
+          "number": 8
+        }
+      ],
+      "version": "1.0",
+      "sourceTool": "substitution"
+    },
+    {
+      "id": "AS-10",
+      "slug": "as-10-multiple-variables-mixed-practice",
+      "title": "Multiple variables - mixed practice",
+      "topic": "Algebraic Substitution",
+      "level": 2,
+      "types": [
+        "type1_multiple",
+        "type2_multiple",
+        "type3_multiple"
+      ],
+      "kind": "Mixed",
+      "estimatedMinutes": 10,
+      "description": "Mix two variables, three variables, squares and products.",
+      "questions": [
+        {
+          "given": "\\(x=6,\\;y=5\\)",
+          "expression": "\\(6x+5y\\)",
+          "answer": "\\(61\\)",
+          "steps": [
+            "Substitute \\(x=6,\\;y=5\\).",
+            "$$6\\cdot 6 +5\\cdot 5$$",
+            "$$36 +25$$",
+            "$$61$$"
+          ],
+          "question": "Given: x=6,\\;y=5<br>Find: 6x+5y",
+          "type": "type1_multiple",
+          "number": 1
+        },
+        {
+          "given": "\\(a=-2,\\;b=-1,\\;c=0\\)",
+          "expression": "\\(4a - 4b +3c\\)",
+          "answer": "\\(-4\\)",
+          "steps": [
+            "Substitute values.",
+            "$$4\\cdot (-2) - 4\\cdot (-1) +3\\cdot 0$$",
+            "$$-8 +4 $$",
+            "$$-4$$"
+          ],
+          "question": "Given: a=-2,\\;b=-1,\\;c=0<br>Find: 4a - 4b +3c",
+          "type": "type2_multiple",
+          "number": 2
+        },
+        {
+          "given": "\\(a=2,\\;b=-3\\)",
+          "expression": "\\(a^2 - 6ab + b^2\\)",
+          "answer": "\\(49\\)",
+          "steps": [
+            "Substitute \\(a=2,\\;b=-3\\).",
+            "$$(2)^2 - 6(2)(-3) + (-3)^2$$",
+            "$$4 +36 +9$$",
+            "$$49$$"
+          ],
+          "question": "Given: a=2,\\;b=-3<br>Find: a^2 - 6ab + b^2",
+          "type": "type3_multiple",
+          "number": 3
+        },
+        {
+          "given": "\\(x=2,\\;y=1\\)",
+          "expression": "\\(5x+2y\\)",
+          "answer": "\\(12\\)",
+          "steps": [
+            "Substitute \\(x=2,\\;y=1\\).",
+            "$$5\\cdot 2 +2\\cdot 1$$",
+            "$$10 +2$$",
+            "$$12$$"
+          ],
+          "question": "Given: x=2,\\;y=1<br>Find: 5x+2y",
+          "type": "type1_multiple",
+          "number": 4
+        },
+        {
+          "given": "\\(a=-3,\\;b=-4,\\;c=1\\)",
+          "expression": "\\(2a - 6b +2c\\)",
+          "answer": "\\(20\\)",
+          "steps": [
+            "Substitute values.",
+            "$$2\\cdot (-3) - 6\\cdot (-4) +2\\cdot 1$$",
+            "$$-6 +24 +2$$",
+            "$$20$$"
+          ],
+          "question": "Given: a=-3,\\;b=-4,\\;c=1<br>Find: 2a - 6b +2c",
+          "type": "type2_multiple",
+          "number": 5
+        },
+        {
+          "given": "\\(a=-3,\\;b=1\\)",
+          "expression": "\\(a^2 - 6ab + b^2\\)",
+          "answer": "\\(28\\)",
+          "steps": [
+            "Substitute \\(a=-3,\\;b=1\\).",
+            "$$(-3)^2 - 6(-3)(1) + (1)^2$$",
+            "$$9 +18 +1$$",
+            "$$28$$"
+          ],
+          "question": "Given: a=-3,\\;b=1<br>Find: a^2 - 6ab + b^2",
+          "type": "type3_multiple",
+          "number": 6
+        }
+      ],
+      "version": "1.0",
+      "sourceTool": "substitution"
+    },
+    {
+      "id": "AS-11",
+      "slug": "as-11-expression-substitution-mixed-practice",
+      "title": "Expression substitution - mixed practice",
+      "topic": "Algebraic Substitution",
+      "level": 3,
+      "types": [
+        "type1_expression",
+        "type2_expression"
+      ],
+      "kind": "Mixed",
+      "estimatedMinutes": 10,
+      "description": "Mix substitution into a single expression with collecting like terms.",
+      "questions": [
+        {
+          "given": "\\(x=5y-5\\)",
+          "expression": "\\(5x+5\\)",
+          "task": "Write in terms of \\(y\\) and simplify",
+          "answer": "\\(25y-20\\)",
+          "steps": [
+            "No numerical value for \\(y\\) is given, so the answer should be an expression in terms of \\(y\\).",
+            "Substitute \\(x=5y-5\\).",
+            "$$5\\big(5y-5\\big) +5$$",
+            "$$25y -25 +5$$",
+            "$$25y-20$$"
+          ],
+          "question": "Given: x=5y-5<br>Write in terms of y and simplify: 5x+5",
+          "type": "type1_expression",
+          "number": 1
+        },
+        {
+          "given": "\\(a=6b-6\\)",
+          "expression": "\\(4a+2b\\)",
+          "task": "Write in terms of \\(b\\) and simplify",
+          "answer": "\\(26b-24\\)",
+          "steps": [
+            "No numerical value for \\(b\\) is given, so the answer should be an expression in terms of \\(b\\).",
+            "Substitute \\(a=6b-6\\).",
+            "$$4\\big(6b-6\\big) + 2b$$",
+            "$$24b -24 + 2b$$",
+            "$$(24+2)b -24 = 26b-24$$"
+          ],
+          "question": "Given: a=6b-6<br>Write in terms of b and simplify: 4a+2b",
+          "type": "type2_expression",
+          "number": 2
+        },
+        {
+          "given": "\\(x=3y+5\\)",
+          "expression": "\\(3x\\)",
+          "task": "Write in terms of \\(y\\) and simplify",
+          "answer": "\\(9y+15\\)",
+          "steps": [
+            "No numerical value for \\(y\\) is given, so the answer should be an expression in terms of \\(y\\).",
+            "Substitute \\(x=3y+5\\).",
+            "$$3\\big(3y+5\\big) $$",
+            "$$9y +15 $$",
+            "$$9y+15$$"
+          ],
+          "question": "Given: x=3y+5<br>Write in terms of y and simplify: 3x",
+          "type": "type1_expression",
+          "number": 3
+        },
+        {
+          "given": "\\(a=5b+6\\)",
+          "expression": "\\(5a+4b\\)",
+          "task": "Write in terms of \\(b\\) and simplify",
+          "answer": "\\(29b+30\\)",
+          "steps": [
+            "No numerical value for \\(b\\) is given, so the answer should be an expression in terms of \\(b\\).",
+            "Substitute \\(a=5b+6\\).",
+            "$$5\\big(5b+6\\big) + 4b$$",
+            "$$25b +30 + 4b$$",
+            "$$(25+4)b +30 = 29b+30$$"
+          ],
+          "question": "Given: a=5b+6<br>Write in terms of b and simplify: 5a+4b",
+          "type": "type2_expression",
+          "number": 4
+        }
+      ],
+      "version": "1.0",
+      "sourceTool": "substitution"
+    }
+  ]
+}

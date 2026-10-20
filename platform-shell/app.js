@@ -30184,6 +30184,10 @@ function updateRouteSeo(parts) {
         ? `Browse ${collectionName.toLowerCase()} question generators, worked examples, and classroom practice tools in Kaizen Maths.`
         : "Browse curriculum collections inside Kaizen Maths."
     },
+    "practice-packs": {
+      title: routeTitle("Practice Packs"),
+      description: "Download ready-made Kaizen Maths practice packs with question sheets, answer sheets and worked solutions. Start with algebraic substitution."
+    },
     "worksheet-generator": {
       title: routeTitle("Worksheet Builder"),
       description: "Create printable maths worksheets, homework, quizzes, assessments, and intervention sheets from Kaizen Maths topic question generators."
@@ -30252,6 +30256,11 @@ function updateRouteSeo(parts) {
 
   const seo = routeSeo[route] || routeSeo.home;
   setPageSeo(seo.title, seo.description);
+}
+
+function renderPracticePacks() {
+  app.innerHTML = `${pageHeader("Practice Packs", "Ready-made PDFs for focused classroom practice, with answers and worked solutions.", `<a class="button secondary" href="#/worksheet-generator">Worksheet Builder</a>`)}<section class="practice-pack-library" id="practice-pack-library" aria-label="Downloadable practice packs"></section>`;
+  window.KaizenPracticePacks.mount(document.getElementById("practice-pack-library"));
 }
 
 function renderRoute() {
@@ -30383,6 +30392,8 @@ function renderRoute() {
     renderToolDetail(parts[1]);
   } else if (parts[0] === "classroom" && parts[1]) {
     renderClassroomTool(parts[1]);
+  } else if (parts[0] === "practice-packs") {
+    renderPracticePacks();
   } else if (parts[0] === "tools") {
     renderToolLibrary();
   } else if (parts[0] === "coverage-map") {
