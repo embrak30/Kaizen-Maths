@@ -150,9 +150,10 @@
     $('explanation-content').innerHTML='<p>'+message.replace('<div','</p><div')+(message.includes('<div')?'':'</p>');
     $('volume-panel').dataset.revealed=String(state.stage===4);$('volume-working').setAttribute('aria-hidden',String(state.stage!==4));$('working-placeholder').setAttribute('aria-hidden',String(state.stage===4));$('solid-key').style.visibility=state.stage<3?'hidden':'visible';$('solid-key').hidden=false;
     $('area-formula').textContent=`A(x) = ${factor}(√x − x²)²`;
-    $('integral-formula').textContent=`V = ${factor}∫₀¹ (√x − x²)² dx`;
-    $('expanded-formula').innerHTML=`= ${factor}∫₀¹ (x − 2x<sup>5/2</sup> + x⁴) dx`;
-    $('antiderivative-formula').innerHTML=`= ${factor}[x²/2 − 4x<sup>7/2</sup>/7 + x⁵/5]₀¹`;
+    const integral='<span class="bounded-integral" role="math" aria-label="integral from zero to one"><span class="integral-glyph" aria-hidden="true">∫</span><span class="upper-limit" aria-hidden="true">1</span><span class="lower-limit" aria-hidden="true">0</span></span>';
+    $('integral-formula').innerHTML=`V = ${factor}${integral} (√x − x²)² dx`;
+    $('expanded-formula').innerHTML=`= ${factor}${integral} (x − 2x<sup>5/2</sup> + x⁴) dx`;
+    $('antiderivative-formula').innerHTML=`= ${factor}[x²/2 − 4x<sup>7/2</sup>/7 + x⁵/5]<span class="evaluation-limits" aria-label="evaluated from zero to one"><span>1</span><span>0</span></span>`;
     $('evaluation-formula').textContent=`= ${factor}(1/2 − 4/7 + 1/5) = ${factor}(9/70)`;
     $('volume-exact').textContent=def.exact;$('volume-decimal').textContent=`≈ ${(def.factor*9/70).toFixed(5)} cubic units`;
     document.querySelectorAll('[data-shape]').forEach(b=>{const active=b.dataset.shape===state.shape;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',active);});
