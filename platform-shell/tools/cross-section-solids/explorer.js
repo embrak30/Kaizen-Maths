@@ -31,11 +31,11 @@
     const horizontal=ca*x-sa*y,depth=sa*x+ca*y;
     return [horizontal,ce*z-se*depth,ce*depth+se*z];
   }
-  function project(point){const p=cameraPoint(point),scale=Math.min(width*.59,height*.67)*state.zoom;return [width/2+p[0]*scale,height*.52-p[1]*scale,p[2]];}
+  function project(point){const p=cameraPoint(point),scale=Math.min(width*.69,height*.69)*state.zoom;return [width/2+p[0]*scale,height*.52-p[1]*scale,p[2]];}
   function path(points,close=false){ctx.beginPath();points.forEach((p,i)=>{const q=project(p);if(i===0)ctx.moveTo(q[0],q[1]);else ctx.lineTo(q[0],q[1]);});if(close)ctx.closePath();}
   function line(points,color,width=1,dashed=false){path(points);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dashed?[5,5]:[]);ctx.stroke();ctx.setLineDash([]);}
   function polygon(points,fill,stroke=null,lineWidth=1){path(points,true);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lineWidth;ctx.stroke();}}
-  function text(point,label,color=palette.ink,size=13,dx=0,dy=0){const p=project(point);ctx.font=`${Math.round(size*1.2)}px "Cambria Math", Georgia, serif`;ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,p[0]+dx,p[1]+dy);}
+  function text(point,label,color=palette.ink,size=13,dx=0,dy=0){const p=project(point);ctx.font=`${size}px "Cambria Math", Georgia, serif`;ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,p[0]+dx,p[1]+dy);}
   function dot(point,color,r=4){const p=project(point);ctx.beginPath();ctx.arc(p[0],p[1],r,0,TAU);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();}
   function grid(){
     for(let t=0;t<1.201;t+=.2){line([[t,0,0],[t,1.2,0]],'rgba(179,193,208,.24)');line([[0,t,0],[1.2,t,0]],'rgba(179,193,208,.24)');}
@@ -137,12 +137,11 @@
   function update(){
     const def=shapes[state.shape],factor=def.multiplier?`${def.multiplier} `:'';
     $('length-label').textContent=def.dimension;$('shape-note').textContent=def.note;
-    $('construct-label').innerHTML=`Build the ${def.name}<small>Give the segment a second dimension.</small>`;
-    $('stage-count').textContent=`${state.stage+1} / 5`;
+    $('construct-label').textContent='Section';
     const titles=['The base region','Measure the segment',`Build the ${def.name}`,'A solid made of cross-sections','From cross-sections to volume'];
     const subtitles=['Two curves, one enclosed region.','A length, before it becomes an area.','Turn the view to see the shape clearly.','Same shape. Changing size.','The integral adds the areas of the slices.'];
     $('scene-title').textContent=titles[state.stage];$('scene-subtitle').textContent=subtitles[state.stage];
-    $('explanation-number').textContent=String(state.stage+1).padStart(2,'0');$('explanation-title').textContent=messages[state.stage][0];
+    $('explanation-title').textContent=messages[state.stage][0];
     let message=messages[state.stage][1];
     if(state.stage===2){
       message=state.shape==='square'?'Build a square on the segment. Both its width and height are s.':state.shape==='triangle'?'Build an equilateral triangle on the segment. Its height is (√3 / 2)s.':state.shape==='diameter'?'Use the segment as the diameter. The centre is its midpoint, so the radius is s / 2. The circle extends on both sides of the base plane.':'Use the segment as a radius. The centre is its lower endpoint, and the other endpoint lies on the circumference. The full circle extends beyond the base region.';

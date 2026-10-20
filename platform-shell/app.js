@@ -230,7 +230,7 @@ const tools = [
     status: "Imported",
     description: "Explore a rotatable 3D solid built from square, equilateral-triangle, or circular cross-sections between y = √x and y = x². Connect segment length, cross-sectional area, and the volume integral.",
     tags: ["calculus", "integration", "volume", "cross-sections", "3D", "visualisation", "explainer", "square", "equilateral triangle", "radius", "diameter", "AP Calculus"],
-    toolPath: "tools/cross-section-solids/index.html?v=classroom-stable-2",
+    toolPath: "tools/cross-section-solids/index.html?v=square-workspace-3",
     imported: true,
     teacherNotes: [
       "Build the idea in five stages: region, segment, cross-section, solid, and volume integral.",
