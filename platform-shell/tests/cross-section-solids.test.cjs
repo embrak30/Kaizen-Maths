@@ -6,7 +6,7 @@ const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'tools/cross-section-solids/index.html'), 'utf8');
 const nodes = new Map();
 function element(id = '') {
-  return { id, value: '', textContent: '', innerHTML: '', hidden: false, dataset: {}, attributes: {}, listeners: {},
+  return { id, value: '', textContent: '', innerHTML: '', hidden: false, dataset: {}, attributes: {}, style: {}, listeners: {},
     classList: { toggle() {}, remove() {} }, setAttribute(k, v) { this.attributes[k] = String(v); },
     addEventListener(type, handler) { this.listeners[type] = handler; },
     getBoundingClientRect() { return { width: 900, height: 600 }; }, setPointerCapture() {} };
@@ -54,7 +54,7 @@ for (const shape of Object.keys(explorer.shapes)) {
 function click(data, value) { buttons.find(b => b.dataset[data] === value).listeners.click(); }
 click('shape', 'diameter'); assert.equal(explorer.state.stage, 2);
 assert.equal(nodes.get('length-label').textContent, 'Diameter');
-click('stage', '4'); assert.equal(nodes.get('volume-panel').hidden, false);
+click('stage', '4'); assert.equal(nodes.get('volume-panel').dataset.revealed, 'true');
 assert.equal(nodes.get('volume-exact').textContent, '9π / 280');
 click('shape', 'radius'); assert.equal(nodes.get('volume-exact').textContent, '9π / 70');
 nodes.get('position').listeners.input({ target: { value: '1000' } });

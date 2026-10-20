@@ -35,7 +35,7 @@
   function path(points,close=false){ctx.beginPath();points.forEach((p,i)=>{const q=project(p);if(i===0)ctx.moveTo(q[0],q[1]);else ctx.lineTo(q[0],q[1]);});if(close)ctx.closePath();}
   function line(points,color,width=1,dashed=false){path(points);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dashed?[5,5]:[]);ctx.stroke();ctx.setLineDash([]);}
   function polygon(points,fill,stroke=null,lineWidth=1){path(points,true);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lineWidth;ctx.stroke();}}
-  function text(point,label,color=palette.ink,size=13,dx=0,dy=0){const p=project(point);ctx.font=`${size}px "Cambria Math", Georgia, serif`;ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,p[0]+dx,p[1]+dy);}
+  function text(point,label,color=palette.ink,size=13,dx=0,dy=0){const p=project(point);ctx.font=`${Math.round(size*1.2)}px "Cambria Math", Georgia, serif`;ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,p[0]+dx,p[1]+dy);}
   function dot(point,color,r=4){const p=project(point);ctx.beginPath();ctx.arc(p[0],p[1],r,0,TAU);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();}
   function grid(){
     for(let t=0;t<1.201;t+=.2){line([[t,0,0],[t,1.2,0]],'rgba(179,193,208,.24)');line([[0,t,0],[1.2,t,0]],'rgba(179,193,208,.24)');}
@@ -149,7 +149,7 @@
       message+=`<div class="math-line">A(x) = ${def.area}</div>`;
     }
     $('explanation-content').innerHTML='<p>'+message.replace('<div','</p><div')+(message.includes('<div')?'':'</p>');
-    $('volume-panel').hidden=state.stage!==4;$('solid-key').hidden=state.stage<3;
+    $('volume-panel').dataset.revealed=String(state.stage===4);$('volume-working').setAttribute('aria-hidden',String(state.stage!==4));$('working-placeholder').setAttribute('aria-hidden',String(state.stage===4));$('solid-key').style.visibility=state.stage<3?'hidden':'visible';$('solid-key').hidden=false;
     $('area-formula').textContent=`A(x) = ${factor}(√x − x²)²`;
     $('integral-formula').textContent=`V = ${factor}∫₀¹ (√x − x²)² dx`;
     $('expanded-formula').innerHTML=`= ${factor}∫₀¹ (x − 2x<sup>5/2</sup> + x⁴) dx`;
