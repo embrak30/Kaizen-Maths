@@ -24,7 +24,7 @@ def math_markup(s):
  s=re.sub(r'(^|[=(,+×])\s*−\s*(?=\d|[a-z])',lambda m:m[1]+'−',s)
  s=html.escape(s)
  s=re.sub(r'(?<![A-Za-z])([abcxy]{1,3})(?![A-Za-z])',r'<font name="STIXItalic">\1</font>',s)
- return re.sub(r'\^\{?(-?\d+)\}?',r'<super>\1</super>',s)
+ return re.sub(r'\^\{?(-?\d+)\}?',r'<super size="60%" rise="38%">\1</super>',s)
 
 def math(c,s,x,y,width,size=21,color=INK):
  p=Paragraph(math_markup(s),ParagraphStyle('math',fontName='STIX',fontSize=size,leading=size*1.25,textColor=HexColor(color)))
