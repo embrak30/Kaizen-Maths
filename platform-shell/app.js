@@ -228,16 +228,17 @@ const tools = [
     type: "Interactive Explainer",
     access: "Free",
     status: "Imported",
-    description: "Explore a rotatable 3D solid built from square, equilateral-triangle, or circular cross-sections between y = √x and y = x². Connect segment length, cross-sectional area, and the volume integral.",
+    description: "Choose base functions or teaching presets and explore rotatable 3D solids with square, equilateral-triangle, or circular cross-sections. See crossing curves, separate regions, and explicit volume integrals.",
     tags: ["calculus", "integration", "volume", "cross-sections", "3D", "visualisation", "explainer", "square", "equilateral triangle", "radius", "diameter", "AP Calculus"],
-    toolPath: "tools/cross-section-solids/index.html?v=cross-section-regions-1",
+    toolPath: "tools/cross-section-solids/index.html?v=cross-section-classroom-2",
     imported: true,
     teacherNotes: [
       "Build the idea in five stages: region, segment, cross-section, solid, and volume integral.",
       "Drag to orbit, scroll to zoom, or choose Face-on to see the selected cross-section in its own plane.",
       "Compare a square, an equilateral triangle, a circle whose diameter is the segment, and a circle whose radius is the segment.",
       "Circular sections extend on both sides of the base plane. The shaded region determines their dimensions.",
-      "The base region is fixed; the solid is sampled for display and its volume is evaluated exactly."
+      "Volume working substitutes the actual functions into each piece’s integral. Presets include exact totals; other pairings use numerical integration.",
+      "Choose two functions from the dropdowns; the interval is set automatically. Hover over a base region or focus a construction stage for guidance."
     ]
   },
   {

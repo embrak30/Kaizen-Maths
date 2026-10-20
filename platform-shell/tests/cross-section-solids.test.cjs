@@ -88,11 +88,18 @@ assert.equal(crossing.pieces.length,2);assert.equal(crossing.pieces[0].upper,1);
 assert.equal(Functions.create('sin(2x)','0','-pi','pi').pieces.length,4);
 assert.equal(Functions.create('(x-.2)^2','0','0','1').pieces.length,2);
 assert.equal(Functions.create('(x-.2)*(x-.201)*(x-.8)','0','0','1').roots.length,3);
-function apply(f1,f2,a,b){nodes.get('function-one').value=f1;nodes.get('function-two').value=f2;nodes.get('bound-a').value=a;nodes.get('bound-b').value=b;nodes.get('function-form').listeners.submit({preventDefault(){}});}
-apply('x^3','x','-1','1');assert.equal(explorer.model.pieces.length,2);near(explorer.volume('square'),16/105);
-click('shape','square');click('stage','4');assert(nodes.get('expanded-formula').innerHTML.includes('f₁ − f₂'));assert(nodes.get('expanded-formula').innerHTML.includes('f₂ − f₁'));
+function apply(f1,f2){nodes.get('function-one').value=f1;nodes.get('function-two').value=f2;nodes.get('function-one').listeners.change();}
+apply('x^3','x');assert.equal(explorer.model.pieces.length,2);near(explorer.volume('square'),16/105);
+assert.equal(explorer.model.a,-1);assert.equal(explorer.model.b,1);
+click('shape','square');click('stage','4');assert(nodes.get('expanded-formula').innerHTML.includes('((x³) − (x))²'));assert(nodes.get('expanded-formula').innerHTML.includes('((x) − (x³))²'));
 nodes.get('region-focus').value='0';nodes.get('region-focus').listeners.change();near(explorer.volume('square'),8/105);
-apply('1/x','0','-1','1');assert.equal(nodes.get('function-error').hidden,false);near(explorer.volume('square'),8/105);
-apply('sin(2x)','0','-pi','pi');assert.equal(explorer.model.pieces.length,4);near(explorer.volume('square'),Math.PI,1e-8);
+apply('x','x');assert.equal(nodes.get('function-error').hidden,false);near(explorer.volume('square'),8/105);
+apply('sin(2x)','0');assert.equal(explorer.model.pieces.length,4);near(explorer.volume('square'),Math.PI,1e-8);near(explorer.model.a,-Math.PI);
+apply('sqrt(x)','cos(x)');assert.equal(explorer.model.a,0);assert.equal(explorer.model.b,1);
+assert(!html.includes('id="bound-a"'));assert(html.includes('<select id="function-one">'));assert(html.includes('classroom.css'));
 clock+=1000;frames.shift()(clock);
-console.log('PASS: editable functions, safe parsing, discontinuity rejection, close roots, tangencies, crossing order, per-region volumes and rendering.');
+console.log('PASS: function dropdowns, automatic domains, duplicate rejection, explicit integrands, per-region volumes and rendering.');
+
+const curated=[...html.split('<select id="function-one">')[1].split('</select>')[0].matchAll(/value="([^"]+)"/g)].map(m=>m[1]);
+let pairCount=0;for(const f1 of curated)for(const f2 of curated){if(f1===f2)continue;apply(f1,f2);assert.equal(nodes.get('function-error').hidden,true,`${f1}, ${f2}`);assert(Number.isFinite(explorer.volume('square')));pairCount++;}
+assert.equal(pairCount,110);console.log('PASS: all 110 curated function pairings.');

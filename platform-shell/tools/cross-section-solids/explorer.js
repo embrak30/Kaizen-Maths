@@ -7,7 +7,12 @@
   const Functions=window.CrossSectionFunctions;
   let model=Functions.create('sqrt(x)','x^2','0','1'),revision=0,focus='all';
   const TAU=Math.PI*2, lower=x=>model.lower(x),upper=x=>model.upper(x),side=x=>model.side(x);
-  const fmt=x=>Math.abs(x)<1e-9?'0':Number(x.toPrecision(7)).toString();
+  const fmt=x=>{
+    if(Math.abs(x)<1e-9)return '0';
+    for(const d of [1,2,3,4,6,8,12]){const n=Math.round(x/Math.PI*d);if(n&&Math.abs(x-n*Math.PI/d)<1e-7)return `${n<0?'−':''}${Math.abs(n)===1?'':Math.abs(n)}π${d===1?'':'/'+d}`;}
+    return Number(x.toPrecision(5)).toString();
+  };
+  const expression=s=>({'sqrt(x)':'√x','x^2':'x²','x^3':'x³','x^4':'x⁴','1-x^2':'1 − x²','sin(x)':'sin(x)','sin(2x)':'sin(2x)','cos(x)':'cos(x)'}[s]||s);
   const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const pieces=()=>focus==='all'?model.pieces:[model.pieces[+focus]];
   const domain=()=>focus==='all'?[model.a,model.b]:[pieces()[0].a,pieces()[0].b];
@@ -15,9 +20,9 @@
   function fit(){
     const pts=[];for(let i=0;i<=120;i++)pts.push(...section(model.a+(model.b-model.a)*i/120));
     const mins=[0,1,2].map(k=>Math.min(...pts.map(p=>p[k]))),maxs=[0,1,2].map(k=>Math.max(...pts.map(p=>p[k])));
-    return {center:mins.map((v,k)=>(v+maxs[k])/2),span:Math.max(...mins.map((v,k)=>maxs[k]-v),.01)};
+    return {extent:mins.map((v,k)=>maxs[k]-v),center:mins.map((v,k)=>(v+maxs[k])/2),span:Math.max(...mins.map((v,k)=>maxs[k]-v),.01)};
   }
-  let bounds;
+  let bounds,projectionScale=1;
   const shapes={
     square:{name:'square',dimension:'Side length',factor:1,area:'s²',multiplier:'',exact:'9 / 70',note:'The square’s height equals its side length.'},
     triangle:{name:'equilateral triangle',dimension:'Side length',factor:Math.sqrt(3)/4,area:'(√3 / 4)s²',multiplier:'(√3 / 4)',exact:'9√3 / 280',note:'Height = (√3 / 2)s. Area = ½ × base × height.'},
@@ -46,7 +51,12 @@
     const horizontal=ca*x-sa*y,depth=sa*x+ca*y;
     return [horizontal,ce*z-se*depth,ce*depth+se*z];
   }
-  function project(point){const p=cameraPoint(point),scale=Math.min(width*.62,height*.62)*state.zoom/(state.view==='section'?Math.max(model.maxGap*(state.shape==='radius'?2:1),.01):bounds.span);return [width/2+p[0]*scale,height*.52-p[1]*scale,p[2]];}
+  function scaleForView(){
+    if(state.view==='section')return Math.min(width*.76,height*.76)*state.zoom/Math.max(model.maxGap*(state.shape==='radius'?2:1),.01);
+    const [dx,dy,dz]=bounds.extent,ca=Math.abs(Math.cos(state.azimuth)),sa=Math.abs(Math.sin(state.azimuth)),ce=Math.abs(Math.cos(state.elevation)),se=Math.abs(Math.sin(state.elevation));
+    return Math.min(width*.82/Math.max(ca*dx+sa*dy,.01),height*.76/Math.max(ce*dz+se*(sa*dx+ca*dy),.01))*state.zoom;
+  }
+  function project(point){const p=cameraPoint(point);return [width/2+p[0]*projectionScale,height*.5-p[1]*projectionScale,p[2]];}
   function path(points,close=false){ctx.beginPath();points.forEach((p,i)=>{const q=project(p);if(i===0)ctx.moveTo(q[0],q[1]);else ctx.lineTo(q[0],q[1]);});if(close)ctx.closePath();}
   function line(points,color,width=1,dashed=false){path(points);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dashed?[5,5]:[]);ctx.stroke();ctx.setLineDash([]);}
   function polygon(points,fill,stroke=null,lineWidth=1){path(points,true);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lineWidth;ctx.stroke();}}
@@ -110,6 +120,7 @@
     if(s<.008){ctx.fillStyle='#7d8c9e';ctx.font='12px "Segoe UI", sans-serif';ctx.textAlign='center';ctx.fillText('At the intersection, the cross-section has zero area.',width/2,height-63);}
   }
   function render(){
+    projectionScale=scaleForView();
     ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
     const key=[width,height,dpr,state.shape,state.stage>=2,state.stage>=3,state.fill,state.azimuth,state.elevation,state.zoom,state.view,state.view==='section'?state.x:0,revision,focus].join('|');
     if(key!==backgroundKey){
@@ -132,12 +143,12 @@
     const [a,b]=domain();$('position').value=Math.round((state.x-a)/(b-a)*1000);$('position-value').textContent=`x = ${state.x.toFixed(2)}`;
     $('length-value').textContent=s.toFixed(4);$('area-value').textContent=(def.factor*s*s).toFixed(4);
     const first=model.f1(state.x)>=model.f2(state.x);$('curve-order').textContent=s<1e-8?'The curves meet here: s = 0.':`${first?'f₁':'f₂'} is above ${first?'f₂':'f₁'} here.`;
-    $('segment-formula').textContent=`s(x) = ${first?'f₁(x) − f₂(x)':'f₂(x) − f₁(x)'} = ${s.toFixed(4)}`;
+    $('segment-formula').textContent=`s = (${expression(first?model.f1Input:model.f2Input)}) − (${expression(first?model.f2Input:model.f1Input)})`;
   }
   function update(){
     bounds=fit();
     const def=shapes[state.shape],factor=def.multiplier?`${def.multiplier} `:'';
-    $('length-label').textContent=def.dimension;$('shape-note').textContent=def.note;
+    $('length-label').textContent=def.dimension;$('shape-note').textContent=def.note;$('shape-note').setAttribute('title',def.note);
     $('construct-label').textContent='Section';
     const titles=['The base region','Measure the segment',`Build the ${def.name}`,'A solid made of cross-sections','From cross-sections to volume'];
     const subtitles=['Two curves, one enclosed region.','A length, before it becomes an area.','Turn the view to see the shape clearly.','Same shape. Changing size.','The integral adds the areas of the slices.'];
@@ -161,23 +172,24 @@
     $('antiderivative-formula').innerHTML=`= ${factor}[x²/2 − 4x<sup>7/2</sup>/7 + x⁵/5]<span class="evaluation-limits" aria-label="evaluated from zero to one"><span>1</span><span>0</span></span>`;
     $('evaluation-formula').textContent=`= ${factor}(1/2 − 4/7 + 1/5) = ${factor}(9/70)`;
     $('volume-exact').textContent=def.exact;$('volume-decimal').textContent=`≈ ${(def.factor*9/70).toFixed(5)} cubic units`;
-    $('legend-one').textContent=`f₁ = ${model.f1Input}`;$('legend-two').textContent=`f₂ = ${model.f2Input}`;
+    $('legend-one').textContent=`f₁ = ${expression(model.f1Input)}`;$('legend-two').textContent=`f₂ = ${expression(model.f2Input)}`;
     $('setup').textContent=`Base: f₁(x) = ${model.f1Input}, f₂(x) = ${model.f2Input}; ${fmt(model.a)} ≤ x ≤ ${fmt(model.b)}. Sections are perpendicular to x.`;
     const [a,b]=domain();$('range-start').textContent=`x = ${fmt(a)}`;$('range-end').textContent=`x = ${fmt(b)}`;
     if(model.preset!=='original'){
       const selected=pieces(),base=selected.reduce((v,p)=>v+p.baseVolume,0),value=base*def.factor;
-      $('area-formula').textContent=`A(x) = ${factor}|f₁(x) − f₂(x)|²`;
+      $('area-formula').textContent=`A(x) = ${factor}|${expression(model.f1Input)} − (${expression(model.f2Input)})|²`;
       $('integral-formula').textContent='V = '+selected.map(p=>`V${p.index+1}`).join(' + ');
-      $('expanded-formula').innerHTML=selected.map(p=>`<div class="piece-integral" style="border-color:rgb(${colors[p.index%4]})">V${p.index+1} = ${factor}<span class="bounded-integral"><span class="integral-glyph">∫</span><span class="upper-limit">${fmt(p.b)}</span><span class="lower-limit">${fmt(p.a)}</span></span> (f${p.upper===1?'₁':'₂'} − f${p.lower===1?'₁':'₂'})² dx<br><small>s = (${escape(p.upper===1?model.f1Input:model.f2Input)}) − (${escape(p.lower===1?model.f1Input:model.f2Input)})<br>V${p.index+1} ≈ ${(p.baseVolume*def.factor).toFixed(5)}</small></div>`).join('');
-      $('antiderivative-formula').textContent='Each piece uses its own upper − lower.';
-      $('evaluation-formula').textContent='Add the positive contributions.';
+      $('expanded-formula').dataset.many=String(selected.length>4);
+      $('expanded-formula').innerHTML=selected.map(p=>`<div class="piece-integral" style="border-color:rgb(${colors[p.index%4]})">V${p.index+1} = ${factor}<span class="bounded-integral"><span class="integral-glyph">∫</span><span class="upper-limit">${fmt(p.b)}</span><span class="lower-limit">${fmt(p.a)}</span></span> ((${escape(expression(p.upper===1?model.f1Input:model.f2Input))}) − (${escape(expression(p.lower===1?model.f1Input:model.f2Input))}))² dx<small>V${p.index+1} ≈ ${(p.baseVolume*def.factor).toFixed(5)}</small></div>`).join('');
+      $('antiderivative-formula').textContent='V ≈ '+selected.map(p=>(p.baseVolume*def.factor).toFixed(5)).join(' + ');
+      $('evaluation-formula').textContent=`= ${value.toFixed(5)} cubic units`;
       const exactBases={crossing:focus==='all'?'16/105':'8/105',sine:focus==='all'?'π':'π/2',waves:focus==='all'?'π':'π/4',touching:focus==='all'?'2/5':'1/5'};
       $('volume-answer-label').textContent=exactBases[model.preset]?'EXACT VOLUME':'NUMERICAL VOLUME';
       $('volume-exact').textContent=exactBases[model.preset]?`${factor}(${exactBases[model.preset]})`:`≈ ${value.toFixed(5)}`;
       $('volume-decimal').textContent=`≈ ${value.toFixed(5)} cubic units`;
     }else $('volume-answer-label').textContent='EXACT VOLUME';
     document.querySelectorAll('[data-shape]').forEach(b=>{const active=b.dataset.shape===state.shape;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',active);});
-    document.querySelectorAll('[data-stage]').forEach(b=>{const active=+b.dataset.stage===state.stage;b.classList.toggle('current',active);b.setAttribute('aria-pressed',active);});
+    document.querySelectorAll('[data-stage]').forEach(b=>{const active=+b.dataset.stage===state.stage;b.classList.toggle('current',active);b.setAttribute('aria-pressed',active);const help=['Identify intersections and the regions between the two curves.','At each x, measure upper curve minus lower curve. The order can change at an intersection.','Build the chosen shape on the segment. Use Face-on to see its dimensions.','Stack the cross-sections along x to build each coloured piece.','Split at intersections, integrate each area, and add the positive volumes.'][+b.dataset.stage];b.setAttribute('title',help);b.setAttribute('data-help',help);});
     const next=['Show the segment','Build the cross-section','Reveal the solid','Connect to the integral','Back to the region'];
     $('next').innerHTML=`${next[state.stage]} <span>→</span>`;
     updateMeasurements();dirty=true;
@@ -195,15 +207,25 @@
   document.querySelectorAll('[data-stage]').forEach(b=>b.addEventListener('click',()=>stage(+b.dataset.stage)));
   document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>view(b.dataset.view)));
   function describeRegions(){
-    $('intersection-list').textContent=model.roots.length?`Intersections: x ≈ ${model.roots.map(fmt).join(', ')} (rounded)`:'No intersections inside the interval; endpoints bound the region.';
+    $('intersection-list').textContent=model.roots.length?`Intersections: x ≈ ${model.roots.map(fmt).join(', ')} (approx. where needed)`:'No intersections inside the interval; endpoints bound the region.';
     $('region-focus').innerHTML='<option value="all">All regions · total volume</option>'+model.pieces.map(p=>`<option value="${p.index}">Region ${p.index+1}: ${fmt(p.a)} to ${fmt(p.b)}</option>`).join('');
-    $('region-list').innerHTML=model.pieces.map(p=>`<p style="border-left:4px solid rgb(${colors[p.index%4]})"><strong>Region ${p.index+1}</strong> · ${fmt(p.a)} ≤ x ≤ ${fmt(p.b)}<br>Upper: f${p.upper===1?'₁':'₂'} · lower: f${p.lower===1?'₁':'₂'}<br><small>s = (${escape(p.upper===1?model.f1Input:model.f2Input)}) − (${escape(p.lower===1?model.f1Input:model.f2Input)})</small></p>`).join('');
+    $('region-list').innerHTML=model.pieces.map(p=>`<p style="border-left:4px solid rgb(${colors[p.index%4]})"><strong>Region ${p.index+1}</strong> · ${fmt(p.a)} ≤ x ≤ ${fmt(p.b)}<br>Upper: f${p.upper===1?'₁':'₂'} · lower: f${p.lower===1?'₁':'₂'}<br><small>s = (${escape(expression(p.upper===1?model.f1Input:model.f2Input))}) − (${escape(expression(p.lower===1?model.f1Input:model.f2Input))})</small></p>`).join('');
   }
-  $('function-form').addEventListener('submit',e=>{e.preventDefault();try{
-    const next=Functions.create($('function-one').value,$('function-two').value,$('bound-a').value,$('bound-b').value);
-    model=next;revision++;focus='all';state.x=(model.pieces[0].a+model.pieces[0].b)/2;state.fill=1;build=null;play(false);$('function-error').hidden=true;describeRegions();update();
-  }catch(error){$('function-error').textContent=error.message;$('function-error').hidden=false;}});
-  $('example').addEventListener('change',()=>{const p=Functions.presets[$('example').value];$('function-one').value=p.f1;$('function-two').value=p.f2;$('bound-a').value=p.a;$('bound-b').value=p.b;$('function-form').requestSubmit();});
+  function applyFunctions(f1,f2,a,b){try{
+    const next=Functions.create(f1,f2,a,b);
+    model=next;revision++;focus='all';state.x=(model.pieces[0].a+model.pieces[0].b)/2;state.fill=1;build=null;play(false);$('function-error').hidden=true;
+    $('auto-range').textContent=`Automatic range: ${fmt(model.a)} ≤ x ≤ ${fmt(model.b)}`;
+    describeRegions();update();
+  }catch(error){$('function-error').textContent=error.message;$('function-error').hidden=false;}}
+  function chooseFunctions(){
+    const f1=$('function-one').value,f2=$('function-two').value;
+    if(f1===f2){$('function-error').textContent='Choose two different functions to create a region.';$('function-error').hidden=false;$('function-one').value=model.f1Input;$('function-two').value=model.f2Input;return;}
+    const squareRoot=[f1,f2].includes('sqrt(x)'),trig=[f1,f2].some(f=>/sin|cos/.test(f));
+    $('example').value='chosen';applyFunctions(f1,f2,squareRoot?'0':trig?'-pi':'-1',squareRoot?'1':trig?'pi':'1');
+  }
+  $('function-form').addEventListener('submit',e=>e.preventDefault());
+  ['function-one','function-two'].forEach(id=>$(id).addEventListener('change',chooseFunctions));
+  $('example').addEventListener('change',()=>{const p=Functions.presets[$('example').value];if(!p)return;$('function-one').value=p.f1;$('function-two').value=p.f2;applyFunctions(p.f1,p.f2,p.a,p.b);});
   $('region-focus').addEventListener('change',()=>{focus=$('region-focus').value;const p=pieces()[0];state.x=(p.a+p.b)/2;state.fill=1;build=null;update();});
   describeRegions();
   $('next').addEventListener('click',()=>stage((state.stage+1)%5));
@@ -213,8 +235,20 @@
   $('spin').addEventListener('click',()=>{state.spin=!state.spin;animation=null;$('spin').setAttribute('aria-pressed',state.spin);state.view='custom';document.querySelectorAll('[data-view]').forEach(b=>b.classList.remove('active'));dirty=true;});
   $('reset').addEventListener('click',()=>{play(false);view('perspective');});
   $('teacher-help').addEventListener('click',()=>{const open=$('teacher-notes').hidden;$('teacher-notes').hidden=!open;$('teacher-help').setAttribute('aria-expanded',open);});
-  canvas.addEventListener('pointerdown',e=>{manualView();drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
-  canvas.addEventListener('pointermove',e=>{if(!drag)return;state.azimuth+=(e.clientX-drag.x)*.008;state.elevation=clamp(state.elevation+(e.clientY-drag.y)*.006,-1.45,1.55);drag={x:e.clientX,y:e.clientY};dirty=true;});
+  function hoverRegion(event){
+    const rect=canvas.getBoundingClientRect(),px=event.clientX-rect.left,py=event.clientY-rect.top;
+    let found=null;
+    for(const piece of pieces()){
+      const polygon=[];for(let i=0;i<=40;i++){const x=lerp(piece.a,piece.b,i/40);polygon.push(project([x,upper(x),0]));}for(let i=40;i>=0;i--){const x=lerp(piece.a,piece.b,i/40);polygon.push(project([x,lower(x),0]));}
+      let inside=false;for(let i=0,j=polygon.length-1;i<polygon.length;j=i++){const [xi,yi]=polygon[i],[xj,yj]=polygon[j];if(((yi>py)!==(yj>py))&&(px<(xj-xi)*(py-yi)/(yj-yi)+xi))inside=!inside;}
+      if(inside){found=piece;break;}
+    }
+    const tip=$('scene-help');tip.hidden=!found;
+    if(found)tip.textContent=`Region ${found.index+1}: ${fmt(found.a)} ≤ x ≤ ${fmt(found.b)}. Upper: ${expression(found.upper===1?model.f1Input:model.f2Input)}. Lower: ${expression(found.lower===1?model.f1Input:model.f2Input)}. Segment = upper − lower. ${state.stage>=2?shapes[state.shape].note:''}`;
+  }
+  canvas.addEventListener('pointerleave',()=>{$('scene-help').hidden=true;});
+  canvas.addEventListener('pointerdown',e=>{$('scene-help').hidden=true;manualView();drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointermove',e=>{if(!drag){hoverRegion(e);return;}state.azimuth+=(e.clientX-drag.x)*.008;state.elevation=clamp(state.elevation+(e.clientY-drag.y)*.006,-1.45,1.55);drag={x:e.clientX,y:e.clientY};dirty=true;});
   const release=()=>{drag=null;};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);canvas.addEventListener('lostpointercapture',release);
   canvas.addEventListener('wheel',e=>{e.preventDefault();animation=null;state.zoom=clamp(state.zoom*Math.exp(-e.deltaY*.001),.55,2.5);dirty=true;},{passive:false});
   canvas.addEventListener('keydown',e=>{

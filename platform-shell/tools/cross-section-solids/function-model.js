@@ -136,7 +136,9 @@
     const pieces=[];
     for(let i=0;i<cuts.length-1;i++){
       const lo=cuts[i],hi=cuts[i+1],mid=(lo+hi)/2,upper=diff(mid)>=0?1:2;
-      const result=integrate(x=>diff(x)**2,lo,hi,1e-10*Math.max(1,maxGap*maxGap*(hi-lo)));
+      const tolerance=1e-10*Math.max(1,maxGap*maxGap*(hi-lo));
+      // x = t² removes the square-root endpoint slope for the curated root functions.
+      const result=lo===0&&(f1Input==='sqrt(x)'||f2Input==='sqrt(x)')?integrate(t=>diff(t*t)**2*2*t,0,Math.sqrt(hi),tolerance):integrate(x=>diff(x)**2,lo,hi,tolerance);
       if(result.value>1e-14)pieces.push({a:lo,b:hi,upper,lower:upper===1?2:1,baseVolume:result.value,error:result.error,index:pieces.length});
     }
     if(!pieces.length)throw Error('No non-zero region was found between these curves.');
