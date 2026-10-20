@@ -49,7 +49,8 @@
     const [x,y,z]=point.map((v,k)=>v-center[k]);
     const ca=Math.cos(state.azimuth),sa=Math.sin(state.azimuth),ce=Math.cos(state.elevation),se=Math.sin(state.elevation);
     const horizontal=ca*x-sa*y,depth=sa*x+ca*y;
-    return [horizontal,ce*z-se*depth,ce*depth+se*z];
+    // Positive y points upwards in the base-plane view; positive z rises in perspective.
+    return [horizontal,ce*z+se*depth,ce*depth-se*z];
   }
   function scaleForView(){
     if(state.view==='section')return Math.min(width*.76,height*.76)*state.zoom/Math.max(model.maxGap*(state.shape==='radius'?2:1),.01);
@@ -273,7 +274,7 @@
     frame=requestAnimationFrame(tick);
   }
   // Exposed geometry is useful for mathematical checks and future base-region examples.
-  window.crossSectionExplorer={section,side,shapes,state,stage,view,volume:shape=>shapes[shape].factor*pieces().reduce((v,p)=>v+p.baseVolume,0),get model(){return model;}};
+  window.crossSectionExplorer={section,side,shapes,state,stage,view,project,volume:shape=>shapes[shape].factor*pieces().reduce((v,p)=>v+p.baseVolume,0),get model(){return model;}};
   update();resize();frame=requestAnimationFrame(tick);
   window.addEventListener('pagehide',()=>cancelAnimationFrame(frame));
   window.addEventListener('pageshow',()=>{lastTime=performance.now();cancelAnimationFrame(frame);frame=requestAnimationFrame(tick);});

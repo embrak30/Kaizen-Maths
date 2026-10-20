@@ -230,7 +230,7 @@ const tools = [
     status: "Imported",
     description: "Choose base functions or teaching presets and explore rotatable 3D solids with square, equilateral-triangle, or circular cross-sections. See crossing curves, separate regions, and explicit volume integrals.",
     tags: ["calculus", "integration", "volume", "cross-sections", "3D", "visualisation", "explainer", "square", "equilateral triangle", "radius", "diameter", "AP Calculus"],
-    toolPath: "tools/cross-section-solids/index.html?v=cross-section-classroom-2",
+    toolPath: "tools/cross-section-solids/index.html?v=cross-section-orientation-3",
     imported: true,
     teacherNotes: [
       "Build the idea in five stages: region, segment, cross-section, solid, and volume integral.",

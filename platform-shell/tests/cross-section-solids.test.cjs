@@ -103,3 +103,18 @@ console.log('PASS: function dropdowns, automatic domains, duplicate rejection, e
 const curated=[...html.split('<select id="function-one">')[1].split('</select>')[0].matchAll(/value="([^"]+)"/g)].map(m=>m[1]);
 let pairCount=0;for(const f1 of curated)for(const f2 of curated){if(f1===f2)continue;apply(f1,f2);assert.equal(nodes.get('function-error').hidden,true,`${f1}, ${f2}`);assert(Number.isFinite(explorer.volume('square')));pairCount++;}
 assert.equal(pairCount,110);console.log('PASS: all 110 curated function pairings.');
+
+apply('x^2','x^3');
+click('view','top');clock+=1000;frames.shift()(clock);
+const origin=explorer.project([0,0,0]),positiveX=explorer.project([1,0,0]),positiveY=explorer.project([0,1,0]);
+assert(positiveX[0]>origin[0],'Base plane: positive x must point right');
+assert(positiveY[1]<origin[1],'Base plane: positive y must point up');
+for(const x of [-1,-.5,.5,1]){const p=explorer.project([x,explorer.model.f1(x),0]);assert(p[1]<origin[1],'x² must lie above the x-axis on both sides');}
+assert(explorer.project([-.5,explorer.model.f2(-.5),0])[1]>origin[1],'Negative x³ must be below the x-axis');
+assert(explorer.project([.5,explorer.model.f2(.5),0])[1]<origin[1],'Positive x³ must be above the x-axis');
+apply('x^3','x^2');clock+=1000;frames.shift()(clock);
+assert(explorer.project([.5,explorer.model.f2(.5),0])[1]<explorer.project([.5,0,0])[1],'x² orientation is independent of function slot');
+click('view','perspective');clock+=1000;frames.shift()(clock);
+assert(explorer.project([0,1,0])[1]<explorer.project([0,0,0])[1],'Default perspective: positive y rises');
+assert(explorer.project([0,0,1])[1]<explorer.project([0,0,0])[1],'Default perspective: positive z rises');
+console.log('PASS: standard axis orientation, x² opens upwards in either slot, x³ signs, and positive z in perspective.');
