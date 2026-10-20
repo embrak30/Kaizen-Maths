@@ -42,7 +42,7 @@ def question_page(pack,total):
  stroke(c,'#A59DE6');c.setLineWidth(3);c.line(421,H-148,454,H-116);c.line(454,H-116,474,H-136)
  c.restoreState()
  fill(c,PURPLE);c.roundRect(32,H-64,29,29,6,fill=1,stroke=0);text(c,39,H-57,'K','STIX',23,'#FFFFFF')
- text(c,71,H-45,'KAIZEN MATHS','SansBold',11,PURPLE);text(c,71,H-59,'10-MINUTE PRACTICE','Sans',7.4,MUTED)
+ text(c,71,H-45,'KAIZEN MATHS','SansBold',11,PURPLE);text(c,71,H-59,'STARTER & EXIT TICKET PACK','Sans',7.4,MUTED)
  text(c,32,H-102,'Algebraic substitution','STIX',29)
  text(c,33,H-126,pack['title'],'SansBold',14,INK)
  text(c,33,H-145,pack['description'],'Sans',10.5,MUTED)
@@ -51,7 +51,8 @@ def question_page(pack,total):
  text(c,43,H-171,f"10 MINUTES   /   {len(pack['questions'])} QUESTIONS   /   {pack['id']}",'SansBold',9,TEAL)
  text(c,32,H-203,'Name','Sans',10,MUTED);stroke(c,LINE);c.setLineWidth(.65);c.line(61,H-206,325,H-206)
  text(c,367,H-203,'Date','Sans',10,MUTED);c.line(394,H-206,W-32,H-206)
- text(c,32,H-225,'Show your working. Use brackets for negative values.','Sans',10.5,INK)
+ text(c,32,H-220,'Show your working. Use brackets for negative values.','Sans',10.5,INK)
+ text(c,32,H-235,'Starter: use the full set. Exit ticket: choose 2-3 questions.','Sans',9,TEAL)
  left=32;gap=14;cw=(W-2*left-gap)/2;top=H-244;bottom=52;rowgap=11;rows=mathlib.ceil(len(pack['questions'])/2);ch=(top-bottom-(rows-1)*rowgap)/rows
  for i,q in enumerate(pack['questions']):
   x=left+(i%2)*(cw+gap);y=top-(i//2)*(ch+rowgap);accent=PURPLE if i%2==0 else TEAL
@@ -70,6 +71,6 @@ def question_page(pack,total):
  # Restrained footer brand detail, outside writing areas.
  stroke(c,LINE);c.line(32,39,W-32,39)
  fill(c,PURPLE);c.rect(32,38,38,2,fill=1,stroke=0);fill(c,TEAL);c.rect(70,38,18,2,fill=1,stroke=0)
- text(c,32,24,'KAIZEN MATHS  /  PRACTICE PACKS','SansBold',7.5,MUTED)
+ text(c,32,24,'KAIZEN MATHS  /  STARTERS & EXIT TICKETS','SansBold',7.5,MUTED)
  c.setFont('Sans',8);fill(c,MUTED);c.drawRightString(W-32,24,f"{pack['id']}  ·  Questions  ·  1 / {total}")
  c.showPage();c.save();b.seek(0);return PdfReader(b).pages[0]

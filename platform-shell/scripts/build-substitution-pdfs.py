@@ -42,7 +42,7 @@ def header(c,pack,section,page,total):
  c.setFillColor(HexColor(PURPLE));c.roundRect(36,H-61,27,27,5,fill=1,stroke=0)
  c.setFillColor(HexColor('#FFFFFF'));c.setFont('BodyBold',17);c.drawString(42,H-54,'K')
  c.setFont('BodyBold',9);c.setFillColor(HexColor(INK));c.drawString(73,H-44,'KAIZEN MATHS')
- c.setFont('Body',8);c.setFillColor(HexColor(MUTED));c.drawString(73,H-58,'10-MINUTE PRACTICE  /  ALGEBRAIC SUBSTITUTION')
+ c.setFont('Body',8);c.setFillColor(HexColor(MUTED));c.drawString(73,H-58,'STARTERS & EXIT TICKETS  /  ALGEBRAIC SUBSTITUTION')
  c.setFont('BodyBold',9);c.setFillColor(HexColor(TEAL));c.drawRightString(W-36,H-44,pack['id'])
  c.setStrokeColor(HexColor(LINE));c.line(36,H-76,W-36,H-76)
  c.setFont('Body',8);c.setFillColor(HexColor(MUTED));c.drawString(36,26,f"{pack['id']}  ·  {section}  ·  Version {pack['version']}");c.drawRightString(W-36,26,f'{page} / {total}')
@@ -84,7 +84,7 @@ def build(pack):
   c.showPage()
  c.save();buffer.seek(0);suffix=PdfReader(buffer);writer=PdfWriter();writer.add_page(design.question_page(pack,total))
  for page in suffix.pages:writer.add_page(page)
- writer.add_metadata({'/Title':'Algebraic Substitution | '+pack['title']+' | '+pack['id'],'/Author':'Kaizen Maths'})
+ writer.add_metadata({'/Title':'Starter & Exit Ticket Packs | Algebraic Substitution | '+pack['title']+' | '+pack['id'],'/Author':'Kaizen Maths'})
  with out.open('wb') as stream:writer.write(stream)
  reader=PdfReader(out);assert len(reader.pages)==total
  for page in reader.pages:
@@ -106,5 +106,5 @@ def build(pack):
 
  return {k:pack[k] for k in ['id','slug','title','topic','level','kind','estimatedMinutes','description','version','types']}|{'questionCount':len(qs),'pageCount':total,'pdf':str(public.relative_to(ROOT)),'preview':f"assets/practice-packs/substitution/previews/{pack['slug']}.png",'sections':['Questions','Answer sheet','Worked solutions']}
 if __name__=='__main__':
- data=json.loads((ROOT/'data/practice-packs/substitution.json').read_text());catalog={'version':1,'collection':'Algebraic Substitution','packs':[build(p) for p in data['packs']]}
+ data=json.loads((ROOT/'data/practice-packs/substitution.json').read_text());catalog={'version':1,'collection':'Algebraic Substitution','branding':'Starter & Exit Ticket Packs','packs':[build(p) for p in data['packs']]}
  (ROOT/'assets/practice-packs/catalog.json').write_text(json.dumps(catalog,indent=2)+'\n');print(f"Built {len(catalog['packs'])} branded PDFs ({sum(p['pageCount'] for p in catalog['packs'])} pages).")

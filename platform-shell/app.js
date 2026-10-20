@@ -30186,8 +30186,8 @@ function updateRouteSeo(parts) {
         : "Browse curriculum collections inside Kaizen Maths."
     },
     "practice-packs": {
-      title: routeTitle("Practice Packs"),
-      description: "Download ready-made Kaizen Maths practice packs with question sheets, answer sheets and worked solutions. Start with algebraic substitution."
+      title: routeTitle("Starter & Exit Ticket Packs"),
+      description: "Download ready-made Kaizen Maths starter and exit ticket packs with questions, answers and worked solutions. Start with algebraic substitution."
     },
     "worksheet-generator": {
       title: routeTitle("Worksheet Builder"),
@@ -30260,7 +30260,7 @@ function updateRouteSeo(parts) {
 }
 
 function renderPracticePacks() {
-  app.innerHTML = `${pageHeader("Practice Packs", "Ready-made PDFs for focused classroom practice, with answers and worked solutions.", `<a class="button secondary" href="#/worksheet-generator">Worksheet Builder</a>`)}<section class="practice-pack-library" id="practice-pack-library" aria-label="Downloadable practice packs"></section>`;
+  app.innerHTML = `${pageHeader("Starter & Exit Ticket Packs", "Ready-made lesson starters and quick checks of understanding, with answers and worked solutions.", `<a class="button secondary" href="#/worksheet-generator">Worksheet Builder</a>`)}<section class="practice-pack-library" id="practice-pack-library" aria-label="Downloadable starter and exit ticket packs"></section>`;
   window.KaizenPracticePacks.mount(document.getElementById("practice-pack-library"));
 }
 
