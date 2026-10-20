@@ -230,7 +230,7 @@ const tools = [
     status: "Imported",
     description: "Explore a rotatable 3D solid built from square, equilateral-triangle, or circular cross-sections between y = √x and y = x². Connect segment length, cross-sectional area, and the volume integral.",
     tags: ["calculus", "integration", "volume", "cross-sections", "3D", "visualisation", "explainer", "square", "equilateral triangle", "radius", "diameter", "AP Calculus"],
-    toolPath: "tools/cross-section-solids/index.html?v=revolution-explainer-link-1",
+    toolPath: "tools/cross-section-solids/index.html?v=cross-section-regions-1",
     imported: true,
     teacherNotes: [
       "Build the idea in five stages: region, segment, cross-section, solid, and volume integral.",
@@ -270,7 +270,7 @@ const tools = [
     status: "Imported",
     description: "Generate integration practice for volumes of revolution, including the disc method, expanded radius expressions, washers between curves, y-axis rotation, and parameter problems.",
     tags: ["algebra", "calculus", "integration", "volumes of revolution", "disc method", "washer method", "A-Level Pure", "Further Maths"],
-    toolPath: "tools/volumes-of-revolution/index.html?v=revolution-explainer-link-1",
+    toolPath: "tools/volumes-of-revolution/index.html?v=cross-section-regions-1",
     imported: true,
     teacherNotes: [
       "Students identify the radius first, then use the correct volume formula for the axis of rotation.",

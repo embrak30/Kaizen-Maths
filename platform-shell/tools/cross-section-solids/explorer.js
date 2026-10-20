@@ -4,12 +4,25 @@
   const canvas=$('scene'),ctx=canvas.getContext('2d');
   const background=document.createElement('canvas'),backgroundContext=background.getContext('2d');
   let backgroundKey='';
-  const TAU=Math.PI*2, lower=x=>x*x,upper=x=>Math.sqrt(x),side=x=>upper(x)-lower(x);
+  const Functions=window.CrossSectionFunctions;
+  let model=Functions.create('sqrt(x)','x^2','0','1'),revision=0,focus='all';
+  const TAU=Math.PI*2, lower=x=>model.lower(x),upper=x=>model.upper(x),side=x=>model.side(x);
+  const fmt=x=>Math.abs(x)<1e-9?'0':Number(x.toPrecision(7)).toString();
+  const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const pieces=()=>focus==='all'?model.pieces:[model.pieces[+focus]];
+  const domain=()=>focus==='all'?[model.a,model.b]:[pieces()[0].a,pieces()[0].b];
+  const colors=['83,125,198','34,160,143','165,102,194','213,151,54'];
+  function fit(){
+    const pts=[];for(let i=0;i<=120;i++)pts.push(...section(model.a+(model.b-model.a)*i/120));
+    const mins=[0,1,2].map(k=>Math.min(...pts.map(p=>p[k]))),maxs=[0,1,2].map(k=>Math.max(...pts.map(p=>p[k])));
+    return {center:mins.map((v,k)=>(v+maxs[k])/2),span:Math.max(...mins.map((v,k)=>maxs[k]-v),.01)};
+  }
+  let bounds;
   const shapes={
     square:{name:'square',dimension:'Side length',factor:1,area:'s²',multiplier:'',exact:'9 / 70',note:'The square’s height equals its side length.'},
     triangle:{name:'equilateral triangle',dimension:'Side length',factor:Math.sqrt(3)/4,area:'(√3 / 4)s²',multiplier:'(√3 / 4)',exact:'9√3 / 280',note:'Height = (√3 / 2)s. Area = ½ × base × height.'},
     diameter:{name:'circle',dimension:'Diameter',factor:Math.PI/4,area:'π(s / 2)² = (π / 4)s²',multiplier:'(π / 4)',exact:'9π / 280',note:'Radius = s / 2. The centre is the segment’s midpoint; the circle extends above and below z = 0.'},
-    radius:{name:'circle',dimension:'Radius',factor:Math.PI,area:'πs²',multiplier:'π',exact:'9π / 70',note:'Radius = s. The centre is on y = x²; the full circle extends beyond the base region and both sides of z = 0.'}
+    radius:{name:'circle',dimension:'Radius',factor:Math.PI,area:'πs²',multiplier:'π',exact:'9π / 70',note:'Radius = s. The centre is on the lower curve; the full circle extends beyond the base region and both sides of z = 0.'}
   };
   const state={shape:'square',stage:0,x:.5,azimuth:-.85,elevation:.57,zoom:1,playing:false,spin:false,fill:1,sectionProgress:1,view:'perspective'};
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -26,65 +39,50 @@
     return Array.from({length:64},(_,i)=>{const angle=TAU*i/64;return [x,center+r*Math.cos(angle),r*Math.sin(angle)];});
   }
   function cameraPoint(point){
-    const [x,y,z]=[point[0]-.5,point[1]-.48,point[2]-(state.shape==='square'?.14:state.shape==='triangle'?.10:0)];
+    const s=side(state.x),y0=lower(state.x);
+    const center=state.view==='section'?[state.x,state.shape==='radius'?y0:y0+s/2,state.shape==='square'?s/2:state.shape==='triangle'?s*Math.sqrt(3)/4:0]:bounds.center;
+    const [x,y,z]=point.map((v,k)=>v-center[k]);
     const ca=Math.cos(state.azimuth),sa=Math.sin(state.azimuth),ce=Math.cos(state.elevation),se=Math.sin(state.elevation);
     const horizontal=ca*x-sa*y,depth=sa*x+ca*y;
     return [horizontal,ce*z-se*depth,ce*depth+se*z];
   }
-  function project(point){const p=cameraPoint(point),scale=Math.min(width*.69,height*.69)*state.zoom;return [width/2+p[0]*scale,height*.52-p[1]*scale,p[2]];}
+  function project(point){const p=cameraPoint(point),scale=Math.min(width*.62,height*.62)*state.zoom/(state.view==='section'?Math.max(model.maxGap*(state.shape==='radius'?2:1),.01):bounds.span);return [width/2+p[0]*scale,height*.52-p[1]*scale,p[2]];}
   function path(points,close=false){ctx.beginPath();points.forEach((p,i)=>{const q=project(p);if(i===0)ctx.moveTo(q[0],q[1]);else ctx.lineTo(q[0],q[1]);});if(close)ctx.closePath();}
   function line(points,color,width=1,dashed=false){path(points);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dashed?[5,5]:[]);ctx.stroke();ctx.setLineDash([]);}
   function polygon(points,fill,stroke=null,lineWidth=1){path(points,true);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lineWidth;ctx.stroke();}}
   function text(point,label,color=palette.ink,size=13,dx=0,dy=0){const p=project(point);ctx.font=`${size}px "Cambria Math", Georgia, serif`;ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,p[0]+dx,p[1]+dy);}
   function dot(point,color,r=4){const p=project(point);ctx.beginPath();ctx.arc(p[0],p[1],r,0,TAU);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();}
   function grid(){
-    for(let t=0;t<1.201;t+=.2){line([[t,0,0],[t,1.2,0]],'rgba(179,193,208,.24)');line([[0,t,0],[1.2,t,0]],'rgba(179,193,208,.24)');}
-    line([[-.1,0,0],[1.25,0,0]],'#a6b3c2',1.2);line([[0,-.1,0],[0,1.25,0]],'#a6b3c2',1.2);
-    if(state.stage>=2)line([[0,0,state.shape==='diameter'||state.shape==='radius'?-.55:0],[0,0,.72]],'#b9c4d1',1,true);
-    text([1.3,0,0],'x','#7c8b9e',15);text([0,1.3,0],'y','#7c8b9e',15);if(state.stage>=2)text([0,0,.79],'z','#8794a5',14);
-    text([0,0,0],'0','#95a1b0',11,-12,11);text([1,0,0],'1','#95a1b0',11,0,15);text([0,1,0],'1','#95a1b0',11,-12,0);
+    const lo=model.a,hi=model.b,ylo=model.min,yhi=model.max;
+    for(let i=0;i<=5;i++){const x=lerp(lo,hi,i/5),y=lerp(ylo,yhi,i/5);line([[x,ylo,0],[x,yhi,0]],'rgba(179,193,208,.24)');line([[lo,y,0],[hi,y,0]],'rgba(179,193,208,.24)');}
+    const axisY=clamp(0,ylo,yhi),axisX=clamp(0,lo,hi);
+    line([[lo,axisY,0],[hi,axisY,0]],'#a6b3c2');line([[axisX,ylo,0],[axisX,yhi,0]],'#a6b3c2');
+    text([hi,axisY,0],'x',palette.ink,14,17,0);text([axisX,yhi,0],'y',palette.ink,14,-15,-12);
+    text([lo,axisY,0],fmt(lo),palette.ink,11,0,17);text([hi,axisY,0],fmt(hi),palette.ink,11,0,17);
   }
-  function drawRegion(){
-    const points=[];for(let i=0;i<=120;i++){const x=i/120;points.push([x,upper(x),0]);}for(let i=120;i>=0;i--){const x=i/120;points.push([x,lower(x),0]);}
-    polygon(points,'rgba(121,144,178,.11)');
-  }
+  function drawRegion(){pieces().forEach(p=>{const pts=[];for(let i=0;i<=100;i++){const x=lerp(p.a,p.b,i/100);pts.push([x,upper(x),0]);}for(let i=100;i>=0;i--){const x=lerp(p.a,p.b,i/100);pts.push([x,lower(x),0]);}polygon(pts,`rgba(${colors[p.index%4]},.18)`);});}
   function drawCurves(){
-    const high=[],low=[];for(let i=0;i<=160;i++){const x=i/160;high.push([x,upper(x),0]);low.push([x,lower(x),0]);}
-    line(high,palette.purple,2.7);line(low,palette.teal,2.7);
-    dot([0,0,0],'#7687a0',3);dot([1,1,0],'#7687a0',3);
-    if(state.view!=='section'){
-      text([.28,upper(.28),0],'y = √x',palette.purple,15,-18,-18);
-      text([.75,lower(.75),0],'y = x²',palette.teal,15,24,19);
-    }
+    const one=[],two=[];for(let i=0;i<=320;i++){const x=lerp(model.a,model.b,i/320);one.push([x,model.f1(x),0]);two.push([x,model.f2(x),0]);}
+    line(one,palette.purple,2.7);line(two,palette.teal,2.7);
+    model.roots.forEach(x=>{dot([x,model.f1(x),0],'#7687a0',3);if(state.view!=='section')text([x,model.f1(x),0],`x = ${fmt(x)}`,palette.ink,12,0,19);});
   }
   function solidFaces(){
-    const count=state.shape==='square'||state.shape==='triangle'?100:80,faces=[];
-    for(let i=0;i<count;i++){
-      const x1=i/count*state.fill,x2=(i+1)/count*state.fill,a=section(x1),b=section(x2);
-      for(let j=0;j<a.length;j++){
-        const next=(j+1)%a.length,points=[a[j],b[j],b[next],a[next]];
-        const depth=points.reduce((sum,p)=>sum+cameraPoint(p)[2],0)/4;
-        const normalShade=state.shape==='square'?[.75,.9,1,.8][j]:.8+.18*Math.sin(j/a.length*TAU);
-        faces.push({points,depth,color:`rgba(${Math.round(94*normalShade)},${Math.round(137*normalShade)},${Math.round(186*normalShade)},.22)`});
-      }
-    }
-    if(state.fill<.999)faces.push({points:section(state.fill),depth:cameraPoint([state.fill,.5,0])[2],color:'rgba(94,137,186,.19)'});
-    return faces;
+    const faces=[],[a,b]=domain(),end=lerp(a,b,state.fill);
+    pieces().forEach(p=>{const stop=Math.min(p.b,end);if(stop<=p.a)return;
+      for(let i=0;i<64;i++){const x1=lerp(p.a,stop,i/64),x2=lerp(p.a,stop,(i+1)/64),a=section(x1),b=section(x2);
+        for(let j=0;j<a.length;j++){const next=(j+1)%a.length,points=[a[j],b[j],b[next],a[next]];faces.push({points,depth:points.reduce((v,q)=>v+cameraPoint(q)[2],0)/4,color:`rgba(${colors[p.index%4]},.22)`});}}
+      [p.a,stop].forEach(x=>{const points=section(x);faces.push({points,depth:cameraPoint(points[0])[2],color:`rgba(${colors[p.index%4]},.2)`});});
+    });return faces;
   }
   function drawSolid(){
-    const faces=solidFaces().sort((a,b)=>a.depth-b.depth);faces.forEach(f=>polygon(f.points,f.color));
-    // Section outlines make the direction of stacking readable without hiding the surface.
-    for(let i=1;i<16;i++){
-      const x=i/16*state.fill;line([...section(x),section(x)[0]],'rgba(73,112,161,.16)',.8);
-    }
-    if(state.shape==='square'||state.shape==='triangle'){
-      for(let j=0;j<section(.5).length;j++){const edge=[];for(let i=0;i<=100;i++)edge.push(section(i/100*state.fill)[j]);line(edge,'rgba(75,111,155,.38)',1);}
-    }
+    solidFaces().sort((a,b)=>a.depth-b.depth).forEach(f=>polygon(f.points,f.color));
+    const [a,b]=domain(),end=lerp(a,b,state.fill);
+    pieces().forEach(p=>{const stop=Math.min(p.b,end);if(stop<=p.a)return;for(let i=1;i<12;i++){const pts=section(lerp(p.a,stop,i/12));line([...pts,pts[0]],`rgba(${colors[p.index%4]},.3)`,.8);}});
   }
   function drawSlice(){
     const x=state.x,y=lower(x),s=side(x),points=section(x).map(p=>[p[0],p[1],p[2]*state.sectionProgress]);
-    if(state.stage===4&&x<.975){
-      const thickness=.025,back=section(x+thickness);
+    if(state.stage===4&&x<domain()[1]-(domain()[1]-domain()[0])*.025){
+      const thickness=(domain()[1]-domain()[0])*.025,back=section(x+thickness);
       for(let j=0;j<points.length;j++){
         const next=(j+1)%points.length;
         polygon([points[j],back[j],back[next],points[next]],'rgba(224,136,61,.19)');
@@ -113,7 +111,7 @@
   }
   function render(){
     ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
-    const key=[width,height,dpr,state.shape,state.stage>=2,state.stage>=3,state.fill,state.azimuth,state.elevation,state.zoom,state.view].join('|');
+    const key=[width,height,dpr,state.shape,state.stage>=2,state.stage>=3,state.fill,state.azimuth,state.elevation,state.zoom,state.view,state.view==='section'?state.x:0,revision,focus].join('|');
     if(key!==backgroundKey){
       grid();drawRegion();if(state.stage>=3)drawSolid();drawCurves();
       background.width=canvas.width;background.height=canvas.height;
@@ -131,10 +129,13 @@
   ];
   function updateMeasurements(){
     const def=shapes[state.shape],s=side(state.x);
-    $('position').value=Math.round(state.x*1000);$('position-value').textContent=`x = ${state.x.toFixed(2)}`;
+    const [a,b]=domain();$('position').value=Math.round((state.x-a)/(b-a)*1000);$('position-value').textContent=`x = ${state.x.toFixed(2)}`;
     $('length-value').textContent=s.toFixed(4);$('area-value').textContent=(def.factor*s*s).toFixed(4);
+    const first=model.f1(state.x)>=model.f2(state.x);$('curve-order').textContent=s<1e-8?'The curves meet here: s = 0.':`${first?'f₁':'f₂'} is above ${first?'f₂':'f₁'} here.`;
+    $('segment-formula').textContent=`s(x) = ${first?'f₁(x) − f₂(x)':'f₂(x) − f₁(x)'} = ${s.toFixed(4)}`;
   }
   function update(){
+    bounds=fit();
     const def=shapes[state.shape],factor=def.multiplier?`${def.multiplier} `:'';
     $('length-label').textContent=def.dimension;$('shape-note').textContent=def.note;
     $('construct-label').textContent='Section';
@@ -143,6 +144,10 @@
     $('scene-title').textContent=titles[state.stage];$('scene-subtitle').textContent=subtitles[state.stage];
     $('explanation-title').textContent=messages[state.stage][0];
     let message=messages[state.stage][1];
+    if(state.stage===0)message=`${model.pieces.length} region${model.pieces.length===1?'':'s'} on the chosen interval. Each intersection separates pieces; compare the purple f₁ and teal f₂ curves in each piece.`;
+    if(state.stage===1)message='At this x, identify the upper curve. Subtract the lower curve to obtain a positive segment length. When the curves cross, their order swaps.';
+    if(state.stage===3)message='Stack the sections along x. Each coloured piece comes from one base region. At an intersection, the segment and section shrink to zero.';
+    if(state.stage===4)message='Split the integral at each intersection. Write upper minus lower separately on each interval, square the length, then add the volumes.';
     if(state.stage===2){
       message=state.shape==='square'?'Build a square on the segment. Both its width and height are s.':state.shape==='triangle'?'Build an equilateral triangle on the segment. Its height is (√3 / 2)s.':state.shape==='diameter'?'Use the segment as the diameter. The centre is its midpoint, so the radius is s / 2. The circle extends on both sides of the base plane.':'Use the segment as a radius. The centre is its lower endpoint, and the other endpoint lies on the circumference. The full circle extends beyond the base region.';
       message+=`<div class="math-line">A(x) = ${def.area}</div>`;
@@ -156,13 +161,28 @@
     $('antiderivative-formula').innerHTML=`= ${factor}[x²/2 − 4x<sup>7/2</sup>/7 + x⁵/5]<span class="evaluation-limits" aria-label="evaluated from zero to one"><span>1</span><span>0</span></span>`;
     $('evaluation-formula').textContent=`= ${factor}(1/2 − 4/7 + 1/5) = ${factor}(9/70)`;
     $('volume-exact').textContent=def.exact;$('volume-decimal').textContent=`≈ ${(def.factor*9/70).toFixed(5)} cubic units`;
+    $('legend-one').textContent=`f₁ = ${model.f1Input}`;$('legend-two').textContent=`f₂ = ${model.f2Input}`;
+    $('setup').textContent=`Base: f₁(x) = ${model.f1Input}, f₂(x) = ${model.f2Input}; ${fmt(model.a)} ≤ x ≤ ${fmt(model.b)}. Sections are perpendicular to x.`;
+    const [a,b]=domain();$('range-start').textContent=`x = ${fmt(a)}`;$('range-end').textContent=`x = ${fmt(b)}`;
+    if(model.preset!=='original'){
+      const selected=pieces(),base=selected.reduce((v,p)=>v+p.baseVolume,0),value=base*def.factor;
+      $('area-formula').textContent=`A(x) = ${factor}|f₁(x) − f₂(x)|²`;
+      $('integral-formula').textContent='V = '+selected.map(p=>`V${p.index+1}`).join(' + ');
+      $('expanded-formula').innerHTML=selected.map(p=>`<div class="piece-integral" style="border-color:rgb(${colors[p.index%4]})">V${p.index+1} = ${factor}<span class="bounded-integral"><span class="integral-glyph">∫</span><span class="upper-limit">${fmt(p.b)}</span><span class="lower-limit">${fmt(p.a)}</span></span> (f${p.upper===1?'₁':'₂'} − f${p.lower===1?'₁':'₂'})² dx<br><small>s = (${escape(p.upper===1?model.f1Input:model.f2Input)}) − (${escape(p.lower===1?model.f1Input:model.f2Input)})<br>V${p.index+1} ≈ ${(p.baseVolume*def.factor).toFixed(5)}</small></div>`).join('');
+      $('antiderivative-formula').textContent='Each piece uses its own upper − lower.';
+      $('evaluation-formula').textContent='Add the positive contributions.';
+      const exactBases={crossing:focus==='all'?'16/105':'8/105',sine:focus==='all'?'π':'π/2',waves:focus==='all'?'π':'π/4',touching:focus==='all'?'2/5':'1/5'};
+      $('volume-answer-label').textContent=exactBases[model.preset]?'EXACT VOLUME':'NUMERICAL VOLUME';
+      $('volume-exact').textContent=exactBases[model.preset]?`${factor}(${exactBases[model.preset]})`:`≈ ${value.toFixed(5)}`;
+      $('volume-decimal').textContent=`≈ ${value.toFixed(5)} cubic units`;
+    }else $('volume-answer-label').textContent='EXACT VOLUME';
     document.querySelectorAll('[data-shape]').forEach(b=>{const active=b.dataset.shape===state.shape;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',active);});
     document.querySelectorAll('[data-stage]').forEach(b=>{const active=+b.dataset.stage===state.stage;b.classList.toggle('current',active);b.setAttribute('aria-pressed',active);});
     const next=['Show the segment','Build the cross-section','Reveal the solid','Connect to the integral','Back to the region'];
     $('next').innerHTML=`${next[state.stage]} <span>→</span>`;
     updateMeasurements();dirty=true;
   }
-  function stage(n){state.stage=n;build=null;construction=null;state.fill=1;state.sectionProgress=1;if(n===2&&!reduced){state.sectionProgress=0;construction={start:performance.now(),duration:850};}if(n===3&&!reduced){state.fill=.001;build={start:performance.now(),duration:1600};}if(n>=1&&(state.x<.01||state.x>.99))state.x=.5;update();}
+  function stage(n){state.stage=n;build=null;construction=null;state.fill=1;state.sectionProgress=1;if(n===2&&!reduced){state.sectionProgress=0;construction={start:performance.now(),duration:850};}if(n===3&&!reduced){state.fill=.001;build={start:performance.now(),duration:1600};}if(n>=1&&side(state.x)<1e-8){const p=pieces()[0];state.x=(p.a+p.b)/2;}update();}
   function view(name){
     if(name==='section'&&state.stage<2)stage(2);
     const target=name==='top'?{azimuth:0,elevation:Math.PI/2,zoom:1.03}:name==='section'?{azimuth:Math.PI/2,elevation:0,zoom:1.08}:{azimuth:-.85,elevation:.57,zoom:1};
@@ -174,8 +194,20 @@
   document.querySelectorAll('[data-shape]').forEach(b=>b.addEventListener('click',()=>{state.shape=b.dataset.shape;state.fill=1;build=null;if(state.stage<2)state.stage=2;state.sectionProgress=1;construction=null;if(state.stage===2&&!reduced){state.sectionProgress=0;construction={start:performance.now(),duration:850};}update();}));
   document.querySelectorAll('[data-stage]').forEach(b=>b.addEventListener('click',()=>stage(+b.dataset.stage)));
   document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>view(b.dataset.view)));
+  function describeRegions(){
+    $('intersection-list').textContent=model.roots.length?`Intersections: x ≈ ${model.roots.map(fmt).join(', ')} (rounded)`:'No intersections inside the interval; endpoints bound the region.';
+    $('region-focus').innerHTML='<option value="all">All regions · total volume</option>'+model.pieces.map(p=>`<option value="${p.index}">Region ${p.index+1}: ${fmt(p.a)} to ${fmt(p.b)}</option>`).join('');
+    $('region-list').innerHTML=model.pieces.map(p=>`<p style="border-left:4px solid rgb(${colors[p.index%4]})"><strong>Region ${p.index+1}</strong> · ${fmt(p.a)} ≤ x ≤ ${fmt(p.b)}<br>Upper: f${p.upper===1?'₁':'₂'} · lower: f${p.lower===1?'₁':'₂'}<br><small>s = (${escape(p.upper===1?model.f1Input:model.f2Input)}) − (${escape(p.lower===1?model.f1Input:model.f2Input)})</small></p>`).join('');
+  }
+  $('function-form').addEventListener('submit',e=>{e.preventDefault();try{
+    const next=Functions.create($('function-one').value,$('function-two').value,$('bound-a').value,$('bound-b').value);
+    model=next;revision++;focus='all';state.x=(model.pieces[0].a+model.pieces[0].b)/2;state.fill=1;build=null;play(false);$('function-error').hidden=true;describeRegions();update();
+  }catch(error){$('function-error').textContent=error.message;$('function-error').hidden=false;}});
+  $('example').addEventListener('change',()=>{const p=Functions.presets[$('example').value];$('function-one').value=p.f1;$('function-two').value=p.f2;$('bound-a').value=p.a;$('bound-b').value=p.b;$('function-form').requestSubmit();});
+  $('region-focus').addEventListener('change',()=>{focus=$('region-focus').value;const p=pieces()[0];state.x=(p.a+p.b)/2;state.fill=1;build=null;update();});
+  describeRegions();
   $('next').addEventListener('click',()=>stage((state.stage+1)%5));
-  $('position').addEventListener('input',e=>{state.x=+e.target.value/1000;if(state.stage<1)stage(1);updateMeasurements();dirty=true;});
+  $('position').addEventListener('input',e=>{state.x=lerp(...domain(),+e.target.value/1000);if(state.stage<1)stage(1);updateMeasurements();dirty=true;});
   function play(active){state.playing=active;$('play').textContent=active?'Ⅱ':'▶';$('play').setAttribute('aria-pressed',active);$('play').setAttribute('aria-label',active?'Pause cross-section animation':'Animate the cross-section');}
   $('play').addEventListener('click',()=>{if(state.stage<2)stage(2);play(!state.playing);});
   $('spin').addEventListener('click',()=>{state.spin=!state.spin;animation=null;$('spin').setAttribute('aria-pressed',state.spin);state.view='custom';document.querySelectorAll('[data-view]').forEach(b=>b.classList.remove('active'));dirty=true;});
@@ -200,14 +232,14 @@
       if(animation){const t=clamp((now-animation.start)/animation.duration,0,1),v=ease(t);for(const k of ['azimuth','elevation','zoom'])state[k]=lerp(animation.from[k],animation.target[k],v);if(t===1)animation=null;dirty=true;}
       if(construction){const t=clamp((now-construction.start)/construction.duration,0,1);state.sectionProgress=ease(t);if(t===1)construction=null;dirty=true;}
       if(build){const t=clamp((now-build.start)/build.duration,0,1);state.fill=ease(t);if(t===1)build=null;dirty=true;}
-      if(state.playing){state.x+=dt*.115;if(state.x>1)state.x=0;updateMeasurements();dirty=true;}
+      if(state.playing){const [a,b]=domain();state.x+=dt*.115*(b-a);if(state.x>b)state.x=a;updateMeasurements();dirty=true;}
       if(state.spin){state.azimuth+=dt*.17;dirty=true;}
       if(dirty)render();
     }
     frame=requestAnimationFrame(tick);
   }
   // Exposed geometry is useful for mathematical checks and future base-region examples.
-  window.crossSectionExplorer={section,side,shapes,state,stage,view,volume:shape=>shapes[shape].factor*9/70};
+  window.crossSectionExplorer={section,side,shapes,state,stage,view,volume:shape=>shapes[shape].factor*pieces().reduce((v,p)=>v+p.baseVolume,0),get model(){return model;}};
   update();resize();frame=requestAnimationFrame(tick);
   window.addEventListener('pagehide',()=>cancelAnimationFrame(frame));
   window.addEventListener('pageshow',()=>{lastTime=performance.now();cancelAnimationFrame(frame);frame=requestAnimationFrame(tick);});

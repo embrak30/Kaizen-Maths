@@ -24,6 +24,7 @@ const context = vm.createContext({ console, Math, performance: { now: () => cloc
     createElement: () => ({getContext: () => new Proxy({}, {get: () => () => {}})}),
     getElementById: id => nodes.get(id), querySelectorAll: selector => buttons.filter(b => selector.includes(Object.keys(b.dataset)[0])) } });
 nodes.get('scene').getContext = () => new Proxy({}, { get: () => () => {} });
+context.window.CrossSectionFunctions = require('../tools/cross-section-solids/function-model.js');
 vm.runInContext(fs.readFileSync(path.join(root, 'tools/cross-section-solids/explorer.js'), 'utf8'), context);
 const explorer = context.window.crossSectionExplorer;
 const near = (a, b, tolerance = 1e-10) => assert(Math.abs(a - b) <= tolerance, `${a} != ${b}`);
@@ -76,3 +77,22 @@ for (const slug of ['integration', 'volumes-of-revolution']) {
   assert(page.includes('index.html#/tools/cross-section-solids'));
 }
 console.log('PASS: all four geometries, independent volume integration, endpoint areas, shape/stage controls, camera keyboard controls, animation/rendering, and integration links.');
+
+const Functions = context.window.CrossSectionFunctions;
+near(Functions.evaluate(Functions.parse('-x^2').ast, 3), -9);
+near(Functions.evaluate(Functions.parse('2x + sin(pi/2)').ast, 3), 7);
+for(const input of ['alert(1)', 'x;process.exit()', 'window.x']) assert.throws(()=>Functions.parse(input));
+for(const args of [['1/x','0','-1','1'],['sqrt(x)','0','-1','1'],['tan(x)','0','0','pi'],['x','x','0','1']]) assert.throws(()=>Functions.create(...args));
+const crossing=Functions.create('x^3','x','-1','1');
+assert.equal(crossing.pieces.length,2);assert.equal(crossing.pieces[0].upper,1);assert.equal(crossing.pieces[1].upper,2);near(crossing.baseVolume,16/105,1e-9);
+assert.equal(Functions.create('sin(2x)','0','-pi','pi').pieces.length,4);
+assert.equal(Functions.create('(x-.2)^2','0','0','1').pieces.length,2);
+assert.equal(Functions.create('(x-.2)*(x-.201)*(x-.8)','0','0','1').roots.length,3);
+function apply(f1,f2,a,b){nodes.get('function-one').value=f1;nodes.get('function-two').value=f2;nodes.get('bound-a').value=a;nodes.get('bound-b').value=b;nodes.get('function-form').listeners.submit({preventDefault(){}});}
+apply('x^3','x','-1','1');assert.equal(explorer.model.pieces.length,2);near(explorer.volume('square'),16/105);
+click('shape','square');click('stage','4');assert(nodes.get('expanded-formula').innerHTML.includes('f₁ − f₂'));assert(nodes.get('expanded-formula').innerHTML.includes('f₂ − f₁'));
+nodes.get('region-focus').value='0';nodes.get('region-focus').listeners.change();near(explorer.volume('square'),8/105);
+apply('1/x','0','-1','1');assert.equal(nodes.get('function-error').hidden,false);near(explorer.volume('square'),8/105);
+apply('sin(2x)','0','-pi','pi');assert.equal(explorer.model.pieces.length,4);near(explorer.volume('square'),Math.PI,1e-8);
+clock+=1000;frames.shift()(clock);
+console.log('PASS: editable functions, safe parsing, discontinuity rejection, close roots, tangencies, crossing order, per-region volumes and rendering.');
