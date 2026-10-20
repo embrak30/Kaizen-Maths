@@ -27,3 +27,5 @@ footer{display:flex;align-items:center;gap:16px;padding:16px 2px;font-size:10px;
 .workspace .kaizen-diagram-scale-note,.workspace .worksheet-diagram-scale-note,.workspace .gcse-diagram-scale-note{display:none!important}
 .visual-panel{overflow:clip}.scene-top{position:sticky;top:0;z-index:5}
 .evaluation-limits{font-size:1em;height:1.4em;grid-template-rows:.7em .7em;vertical-align:-.3em;width:.45em}.evaluation-limits>span{font-size:.58em;line-height:1;text-align:center}.evaluation-limits>span:first-child{align-self:start}.evaluation-limits>span:last-child{align-self:end}
+
+.sibling-tool-link{font-size:13px;color:#315d88;text-decoration:none;margin-left:auto;white-space:nowrap}.sibling-tool-link:hover{text-decoration:underline}@media(max-width:760px){.masthead{flex-wrap:wrap}.sibling-tool-link{font-size:12px;margin-left:0}}

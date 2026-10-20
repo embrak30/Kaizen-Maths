@@ -230,7 +230,7 @@ const tools = [
     status: "Imported",
     description: "Explore a rotatable 3D solid built from square, equilateral-triangle, or circular cross-sections between y = √x and y = x². Connect segment length, cross-sectional area, and the volume integral.",
     tags: ["calculus", "integration", "volume", "cross-sections", "3D", "visualisation", "explainer", "square", "equilateral triangle", "radius", "diameter", "AP Calculus"],
-    toolPath: "tools/cross-section-solids/index.html?v=top-controls-4",
+    toolPath: "tools/cross-section-solids/index.html?v=revolution-explainer-link-1",
     imported: true,
     teacherNotes: [
       "Build the idea in five stages: region, segment, cross-section, solid, and volume integral.",
@@ -238,6 +238,26 @@ const tools = [
       "Compare a square, an equilateral triangle, a circle whose diameter is the segment, and a circle whose radius is the segment.",
       "Circular sections extend on both sides of the base plane. The shaded region determines their dimensions.",
       "The base region is fixed; the solid is sampled for display and its volume is evaluated exactly."
+    ]
+  },
+  {
+    slug: "revolution-explorer",
+    title: "Volumes of Revolution · 3D Explorer",
+    category: "Algebra",
+    level: "A-Level / Further Maths / AP Calculus",
+    type: "Interactive Explainer",
+    access: "Free",
+    status: "Imported",
+    description: "Animate a region revolving about the x-axis or y-axis. Rotate a perpendicular strip into a disc or washer, reveal the solid, and connect its radii to the volume integral.",
+    tags: ["calculus", "integration", "volume", "volumes of revolution", "3D", "explainer", "disc method", "washer method", "x-axis", "y-axis", "AP Calculus"],
+    toolPath: "tools/revolution-explorer/index.html?v=revolution-explorer-1",
+    imported: true,
+    teacherNotes: [
+      "Choose a disc or washer region, then use Region, Strip, Revolve, Solid, and Volume in sequence.",
+      "Revolve animates the mathematical rotation; Orbit camera changes only the viewpoint.",
+      "Switch axes to use vertical strips and dx, or horizontal strips and dy. Read the region description when changing axes.",
+      "Use Face-on to see why a washer has area pi times outer radius squared minus inner radius squared.",
+      "All area and volume formulas describe a complete 360-degree turn. The revolution angle can be paused or adjusted manually."
     ]
   },
   {
@@ -250,7 +270,7 @@ const tools = [
     status: "Imported",
     description: "Generate integration practice for volumes of revolution, including the disc method, expanded radius expressions, washers between curves, y-axis rotation, and parameter problems.",
     tags: ["algebra", "calculus", "integration", "volumes of revolution", "disc method", "washer method", "A-Level Pure", "Further Maths"],
-    toolPath: "tools/volumes-of-revolution/index.html?v=cross-section-link-1",
+    toolPath: "tools/volumes-of-revolution/index.html?v=revolution-explainer-link-1",
     imported: true,
     teacherNotes: [
       "Students identify the radius first, then use the correct volume formula for the axis of rotation.",
@@ -2558,6 +2578,7 @@ const algebraToolGroups = {
   "advanced-integration": "Calculus",
   "volumes-of-revolution": "Calculus",
   "cross-section-solids": "Calculus",
+  "revolution-explorer": "Calculus",
   "integration-algebraic-fractions": "Calculus",
   "differential-equations": "Calculus",
   "partial-fractions": "A-Level and Further Pure",
@@ -23917,8 +23938,9 @@ const curatedRelatedToolSlugs = {
   "linear-algebra": ["matrices", "advanced-matrices", "further-vectors", "simultaneous-equations"],
   "integration": ["cross-section-solids", "advanced-integration", "volumes-of-revolution", "integration-algebraic-fractions", "differentiation-polynomials"],
   "advanced-integration": ["volumes-of-revolution", "integration-algebraic-fractions", "integration", "differential-equations"],
-  "cross-section-solids": ["integration", "volumes-of-revolution", "advanced-integration"],
-  "volumes-of-revolution": ["cross-section-solids", "integration", "advanced-integration", "integration-algebraic-fractions", "differentiation-polynomials"],
+  "revolution-explorer": ["volumes-of-revolution", "cross-section-solids", "integration"],
+  "cross-section-solids": ["revolution-explorer", "integration", "volumes-of-revolution", "advanced-integration"],
+  "volumes-of-revolution": ["revolution-explorer", "cross-section-solids", "integration", "advanced-integration", "integration-algebraic-fractions", "differentiation-polynomials"],
   "integration-algebraic-fractions": ["partial-fractions", "advanced-integration", "integration", "numerical-methods"],
   "partial-fractions": ["integration-algebraic-fractions", "algebraic-fractions", "advanced-factorisation", "advanced-integration"],
   "complex-numbers": ["polar-coordinates", "roots-of-equations", "trigonometric-functions", "advanced-matrices"],
@@ -24255,6 +24277,21 @@ function toolInsightProfile(tool) {
   const has = (...needles) => needles.some((needle) => haystack.includes(needle));
   const matches = (pattern) => pattern.test(haystack);
   const profiles = [
+    {
+      match: () => tool.slug === "revolution-explorer",
+      misconceptions: [
+        "Confusing rotation of the camera with revolution of the region about an axis.",
+        "Using pi times (R - r) squared instead of subtracting the two disc areas.",
+        "Using vertical strips and dx for the disc or washer method about the y-axis, instead of horizontal strips and dy.",
+        "Treating the area or volume of a partial sweep as the displayed full-turn integral."
+      ],
+      questions: [
+        "Does this strip touch the axis, and will it generate a disc or a washer?",
+        "Where are the two radii measured from?",
+        "What changes in the integral when the region is described using horizontal strips?",
+        "How is revolving one strip different from revolving the whole region?"
+      ]
+    },
     {
       match: () => tool.slug === "cross-section-solids",
       misconceptions: [
@@ -25409,6 +25446,12 @@ function toolClassroomQuestions(tool) {
 }
 
 function toolUseSuggestions(tool) {
+  if (tool.slug === "revolution-explorer") return [
+    "Start with Base plane to identify the region, axis and perpendicular strip.",
+    "Pause the revolution midway, then use Face-on to compare a disc with a washer.",
+    "Compare the x-axis and y-axis descriptions before revealing the volume integral.",
+    "Follow the practice link for generated volume-of-revolution questions."
+  ];
   if (tool.slug === "cross-section-solids") return [
     "Start with the base plane, then reveal the segment, cross-section, complete solid, and volume in sequence.",
     "Use Face-on and drag-to-orbit to connect the shape's dimensions to its area formula.",
