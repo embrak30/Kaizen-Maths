@@ -12,7 +12,8 @@ assert.equal(packs.filter(p=>matches(p,'no such pack','','')).length,0);
 for(const p of packs){
  const pdf=fs.readFileSync(path.join(root,p.pdf));assert(pdf.subarray(0,5).equals(Buffer.from('%PDF-')));assert(fs.existsSync(path.join(root,p.preview)));
  const original=fs.readFileSync(path.join(root,'output/pdf/substitution',p.slug+'.pdf'));assert(original.equals(pdf));
- assert(p.sections.includes('Questions')&&p.sections.includes('Answer sheet')&&p.sections.includes('Worked solutions'));
+ assert(p.sections.includes('Starters')&&p.sections.includes('Exit tickets')&&p.sections.includes('Teacher answers and worked solutions'));
+ assert.equal(p.starterQuestionCount,4);assert([2,3].includes(p.exitQuestionCount));assert([1,2].includes(p.exitVariantCount));assert.equal(p.pageCount,3);
 }
 const source=JSON.parse(fs.readFileSync(path.join(root,'data/practice-packs/substitution.json'),'utf8'));
 assert.equal(source.packs.reduce((n,p)=>n+p.questions.length,0),61);

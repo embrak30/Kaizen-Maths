@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "collection": "Algebraic Substitution",
   "branding": "Starter & Exit Ticket Packs",
   "packs": [
@@ -10,20 +10,24 @@
       "topic": "Algebraic Substitution",
       "level": 1,
       "kind": "Focused",
-      "estimatedMinutes": 10,
       "description": "Substitute positive and negative values into linear expressions.",
       "version": "1.0",
       "types": [
         "type1_single"
       ],
+      "estimatedMinutes": 5,
       "questionCount": 8,
-      "pageCount": 4,
+      "starterQuestionCount": 4,
+      "exitQuestionCount": 3,
+      "exitVariantCount": 2,
+      "format": "half-page starters / quarter-page exit tickets",
+      "pageCount": 3,
       "pdf": "assets/practice-packs/substitution/as-01-linear-expressions.pdf",
       "preview": "assets/practice-packs/substitution/previews/as-01-linear-expressions.png",
       "sections": [
-        "Questions",
-        "Answer sheet",
-        "Worked solutions"
+        "Starters",
+        "Exit tickets",
+        "Teacher answers and worked solutions"
       ]
     },
     {
@@ -33,20 +37,24 @@
       "topic": "Algebraic Substitution",
       "level": 1,
       "kind": "Focused",
-      "estimatedMinutes": 10,
       "description": "Substitute into squared terms, then follow the order of operations.",
       "version": "1.0",
       "types": [
         "type2_single"
       ],
+      "estimatedMinutes": 5,
       "questionCount": 6,
-      "pageCount": 4,
+      "starterQuestionCount": 4,
+      "exitQuestionCount": 3,
+      "exitVariantCount": 1,
+      "format": "half-page starters / quarter-page exit tickets",
+      "pageCount": 3,
       "pdf": "assets/practice-packs/substitution/as-02-quadratic-expressions.pdf",
       "preview": "assets/practice-packs/substitution/previews/as-02-quadratic-expressions.png",
       "sections": [
-        "Questions",
-        "Answer sheet",
-        "Worked solutions"
+        "Starters",
+        "Exit tickets",
+        "Teacher answers and worked solutions"
       ]
     },
     {
@@ -56,20 +64,24 @@
       "topic": "Algebraic Substitution",
       "level": 2,
       "kind": "Focused",
-      "estimatedMinutes": 10,
       "description": "Substitute two values and evaluate each term before combining.",
       "version": "1.0",
       "types": [
         "type1_multiple"
       ],
+      "estimatedMinutes": 5,
       "questionCount": 6,
-      "pageCount": 4,
+      "starterQuestionCount": 4,
+      "exitQuestionCount": 3,
+      "exitVariantCount": 1,
+      "format": "half-page starters / quarter-page exit tickets",
+      "pageCount": 3,
       "pdf": "assets/practice-packs/substitution/as-03-two-variables.pdf",
       "preview": "assets/practice-packs/substitution/previews/as-03-two-variables.png",
       "sections": [
-        "Questions",
-        "Answer sheet",
-        "Worked solutions"
+        "Starters",
+        "Exit tickets",
+        "Teacher answers and worked solutions"
       ]
     },
     {
@@ -79,20 +91,24 @@
       "topic": "Algebraic Substitution",
       "level": 2,
       "kind": "Focused",
-      "estimatedMinutes": 10,
       "description": "Keep track of three values and the signs between terms.",
       "version": "1.0",
       "types": [
         "type2_multiple"
       ],
+      "estimatedMinutes": 5,
       "questionCount": 6,
-      "pageCount": 4,
+      "starterQuestionCount": 4,
+      "exitQuestionCount": 3,
+      "exitVariantCount": 1,
+      "format": "half-page starters / quarter-page exit tickets",
+      "pageCount": 3,
       "pdf": "assets/practice-packs/substitution/as-04-three-variables.pdf",
       "preview": "assets/practice-packs/substitution/previews/as-04-three-variables.png",
       "sections": [
-        "Questions",
-        "Answer sheet",
-        "Worked solutions"
+        "Starters",
+        "Exit tickets",
+        "Teacher answers and worked solutions"
       ]
     },
     {
@@ -102,20 +118,24 @@
       "topic": "Algebraic Substitution",
       "level": 2,
       "kind": "Focused",
-      "estimatedMinutes": 10,
       "description": "Evaluate squares and products involving positive and negative values.",
       "version": "1.0",
       "types": [
         "type3_multiple"
       ],
+      "estimatedMinutes": 5,
       "questionCount": 5,
-      "pageCount": 4,
+      "starterQuestionCount": 4,
+      "exitQuestionCount": 3,
+      "exitVariantCount": 1,
+      "format": "half-page starters / quarter-page exit tickets",
+      "pageCount": 3,
       "pdf": "assets/practice-packs/substitution/as-05-powers-and-products.pdf",
       "preview": "assets/practice-packs/substitution/previews/as-05-powers-and-products.png",
       "sections": [
-        "Questions",
-        "Answer sheet",
-        "Worked solutions"
+        "Starters",
+        "Exit tickets",
+        "Teacher answers and worked solutions"
       ]
     },
     {
@@ -125,20 +145,24 @@
       "topic": "Algebraic Substitution",
       "level": 3,
       "kind": "Focused",
-      "estimatedMinutes": 10,
       "description": "Replace a variable with a linear expression, then expand and simplify.",
       "version": "1.0",
       "types": [
         "type1_expression"
       ],
+      "estimatedMinutes": 8,
       "questionCount": 4,
+      "starterQuestionCount": 4,
+      "exitQuestionCount": 2,
+      "exitVariantCount": 1,
+      "format": "half-page starters / quarter-page exit tickets",
       "pageCount": 3,
       "pdf": "assets/practice-packs/substitution/as-06-substituting-an-expression.pdf",
       "preview": "assets/practice-packs/substitution/previews/as-06-substituting-an-expression.png",
       "sections": [
-        "Questions",
-        "Answer sheet",
-        "Worked solutions"
+        "Starters",
+        "Exit tickets",
+        "Teacher answers and worked solutions"
       ]
     },
     {
@@ -148,20 +172,24 @@
       "topic": "Algebraic Substitution",
       "level": 3,
       "kind": "Focused",
-      "estimatedMinutes": 10,
       "description": "Substitute an expression and collect like terms.",
       "version": "1.0",
       "types": [
         "type2_expression"
       ],
+      "estimatedMinutes": 8,
       "questionCount": 4,
+      "starterQuestionCount": 4,
+      "exitQuestionCount": 2,
+      "exitVariantCount": 1,
+      "format": "half-page starters / quarter-page exit tickets",
       "pageCount": 3,
       "pdf": "assets/practice-packs/substitution/as-07-combining-expressions.pdf",
       "preview": "assets/practice-packs/substitution/previews/as-07-combining-expressions.png",
       "sections": [
-        "Questions",
-        "Answer sheet",
-        "Worked solutions"
+        "Starters",
+        "Exit tickets",
+        "Teacher answers and worked solutions"
       ]
     },
     {
@@ -171,20 +199,24 @@
       "topic": "Algebraic Substitution",
       "level": 4,
       "kind": "Focused",
-      "estimatedMinutes": 10,
       "description": "Substitute a linear expression into quadratic, cubic and product terms.",
       "version": "1.0",
       "types": [
         "complex_substitution"
       ],
+      "estimatedMinutes": 8,
       "questionCount": 4,
-      "pageCount": 4,
+      "starterQuestionCount": 4,
+      "exitQuestionCount": 2,
+      "exitVariantCount": 1,
+      "format": "half-page starters / quarter-page exit tickets",
+      "pageCount": 3,
       "pdf": "assets/practice-packs/substitution/as-08-quadratic-and-cubic-expressions.pdf",
       "preview": "assets/practice-packs/substitution/previews/as-08-quadratic-and-cubic-expressions.png",
       "sections": [
-        "Questions",
-        "Answer sheet",
-        "Worked solutions"
+        "Starters",
+        "Exit tickets",
+        "Teacher answers and worked solutions"
       ]
     },
     {
@@ -194,21 +226,25 @@
       "topic": "Algebraic Substitution",
       "level": 1,
       "kind": "Mixed",
-      "estimatedMinutes": 10,
       "description": "Mix linear and quadratic substitution in one short practice session.",
       "version": "1.0",
       "types": [
         "type1_single",
         "type2_single"
       ],
+      "estimatedMinutes": 5,
       "questionCount": 8,
-      "pageCount": 4,
+      "starterQuestionCount": 4,
+      "exitQuestionCount": 3,
+      "exitVariantCount": 2,
+      "format": "half-page starters / quarter-page exit tickets",
+      "pageCount": 3,
       "pdf": "assets/practice-packs/substitution/as-09-single-variable-mixed-practice.pdf",
       "preview": "assets/practice-packs/substitution/previews/as-09-single-variable-mixed-practice.png",
       "sections": [
-        "Questions",
-        "Answer sheet",
-        "Worked solutions"
+        "Starters",
+        "Exit tickets",
+        "Teacher answers and worked solutions"
       ]
     },
     {
@@ -218,7 +254,6 @@
       "topic": "Algebraic Substitution",
       "level": 2,
       "kind": "Mixed",
-      "estimatedMinutes": 10,
       "description": "Mix two variables, three variables, squares and products.",
       "version": "1.0",
       "types": [
@@ -226,14 +261,19 @@
         "type2_multiple",
         "type3_multiple"
       ],
+      "estimatedMinutes": 5,
       "questionCount": 6,
-      "pageCount": 4,
+      "starterQuestionCount": 4,
+      "exitQuestionCount": 3,
+      "exitVariantCount": 1,
+      "format": "half-page starters / quarter-page exit tickets",
+      "pageCount": 3,
       "pdf": "assets/practice-packs/substitution/as-10-multiple-variables-mixed-practice.pdf",
       "preview": "assets/practice-packs/substitution/previews/as-10-multiple-variables-mixed-practice.png",
       "sections": [
-        "Questions",
-        "Answer sheet",
-        "Worked solutions"
+        "Starters",
+        "Exit tickets",
+        "Teacher answers and worked solutions"
       ]
     },
     {
@@ -243,21 +283,25 @@
       "topic": "Algebraic Substitution",
       "level": 3,
       "kind": "Mixed",
-      "estimatedMinutes": 10,
       "description": "Mix substitution into a single expression with collecting like terms.",
       "version": "1.0",
       "types": [
         "type1_expression",
         "type2_expression"
       ],
+      "estimatedMinutes": 8,
       "questionCount": 4,
+      "starterQuestionCount": 4,
+      "exitQuestionCount": 2,
+      "exitVariantCount": 1,
+      "format": "half-page starters / quarter-page exit tickets",
       "pageCount": 3,
       "pdf": "assets/practice-packs/substitution/as-11-expression-substitution-mixed-practice.pdf",
       "preview": "assets/practice-packs/substitution/previews/as-11-expression-substitution-mixed-practice.png",
       "sections": [
-        "Questions",
-        "Answer sheet",
-        "Worked solutions"
+        "Starters",
+        "Exit tickets",
+        "Teacher answers and worked solutions"
       ]
     }
   ]
