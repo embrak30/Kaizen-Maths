@@ -34,7 +34,7 @@ async function textInline(s){
  const pattern=/\\\(([\s\S]*?)\\\)|\$\$([\s\S]*?)\$\$|\\\[([\s\S]*?)\\\]|\$([^$\n]+)\$/g;let out='',last=0;
  for(const m of String(s).matchAll(pattern)){
   out+=simpleText(s.slice(last,m.index));const tex=m[1]??m[2]??m[3]??m[4];
-  if(m[4]&&(/^\s*\d[\d,.]*\s+$/.test(tex)||(!/[\\^_={}+*\/()\x27<>,\-]/.test(tex)&&!/^\s*(?:[a-z]{1,3}|[+-]?\d+(?:\.\d+)?)\s*$/i.test(tex))))out+=simpleText(m[0]);else out+=await inlineMath(tex);last=m.index+m[0].length;
+  if(m[4]&&(/^\s*\d[\d,.]*\s+$/.test(tex)||(!/[\\^_={}+*\/()\x27<>,\-]/.test(tex)&&!/^\s*(?:[a-z]{1,3}|[+-]?\d+(?:\.\d+)?[a-z]?)\s*$/i.test(tex))))out+=simpleText(m[0]);else out+=await inlineMath(tex);last=m.index+m[0].length;
  }out+=simpleText(s.slice(last));return out;
 }
 function simpleText(s){

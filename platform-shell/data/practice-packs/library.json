@@ -34028,8 +34028,8 @@
           "questionText": "$y=(3x + 4)^{3}(x-2)^2$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx}=9(3x + 4)^{2}(x-2)^2+(3x + 4)^{3}2(x-2)$",
-          "answerText": "$\\dfrac{dy}{dx}=9(3x + 4)^{2}(x-2)^2+(3x + 4)^{3}2(x-2)$",
+          "answer": "$\\dfrac{dy}{dx}=5(3x + 4)^{2}(x-2)(3x - 2)$",
+          "answerText": "$\\dfrac{dy}{dx}=5(3x + 4)^{2}(x-2)(3x - 2)$",
           "steps": [
             "$u=(3x + 4)^{3},\\quad v=(x-2)^2$",
             "$u'=3(3x + 4)^{3-1}\\cdot3$",
@@ -34037,7 +34037,15 @@
             "$v'=2(x-2)^{2-1}\\cdot1$",
             "$v'=2(x-2)$",
             "$y'=u'v+uv'$",
-            "$y'=(9(3x + 4)^{2})((x-2)^2)+((3x + 4)^{3})(2(x-2))$"
+            "$y'=(9(3x + 4)^{2})((x-2)^2)+((3x + 4)^{3})(2(x-2))$",
+            "Factor out the common factor $(3x + 4)^{2}(x-2)$.",
+            "$y'=(3x + 4)^{2}(x-2)\\big[9(x-2)+2(3x + 4)\\big]$",
+            "Expand and collect inside the bracket.",
+            "$y'=(3x + 4)^{2}(x-2)\\big[9x-18+6x+8\\big]$",
+            "$y'=(3x + 4)^{2}(x-2)(15x - 10)$",
+            "Take out the numerical factor $5$ from the last bracket.",
+            "Write the factorised derivative.",
+            "$\\dfrac{dy}{dx}=5(3x + 4)^{2}(x-2)(3x - 2)$"
           ],
           "stepText": [
             "$u=(3x + 4)^{3},\\quad v=(x-2)^2$",
@@ -34046,11 +34054,19 @@
             "$v'=2(x-2)^{2-1}\\cdot1$",
             "$v'=2(x-2)$",
             "$y'=u'v+uv'$",
-            "$y'=(9(3x + 4)^{2})((x-2)^2)+((3x + 4)^{3})(2(x-2))$"
+            "$y'=(9(3x + 4)^{2})((x-2)^2)+((3x + 4)^{3})(2(x-2))$",
+            "Factor out the common factor $(3x + 4)^{2}(x-2)$.",
+            "$y'=(3x + 4)^{2}(x-2)\\big[9(x-2)+2(3x + 4)\\big]$",
+            "Expand and collect inside the bracket.",
+            "$y'=(3x + 4)^{2}(x-2)\\big[9x-18+6x+8\\big]$",
+            "$y'=(3x + 4)^{2}(x-2)(15x - 10)$",
+            "Take out the numerical factor $5$ from the last bracket.",
+            "Write the factorised derivative.",
+            "$\\dfrac{dy}{dx}=5(3x + 4)^{2}(x-2)(3x - 2)$"
           ],
           "raw": {
             "equation": "$y=(3x + 4)^{3}(x-2)^2$",
-            "answer": "$\\dfrac{dy}{dx}=9(3x + 4)^{2}(x-2)^2+(3x + 4)^{3}2(x-2)$",
+            "answer": "$\\dfrac{dy}{dx}=5(3x + 4)^{2}(x-2)(3x - 2)$",
             "steps": [
               {
                 "text": "$u=(3x + 4)^{3},\\quad v=(x-2)^2$"
@@ -34072,6 +34088,30 @@
               },
               {
                 "text": "$y'=(9(3x + 4)^{2})((x-2)^2)+((3x + 4)^{3})(2(x-2))$"
+              },
+              {
+                "text": "Factor out the common factor $(3x + 4)^{2}(x-2)$."
+              },
+              {
+                "text": "$y'=(3x + 4)^{2}(x-2)\\big[9(x-2)+2(3x + 4)\\big]$"
+              },
+              {
+                "text": "Expand and collect inside the bracket."
+              },
+              {
+                "text": "$y'=(3x + 4)^{2}(x-2)\\big[9x-18+6x+8\\big]$"
+              },
+              {
+                "text": "$y'=(3x + 4)^{2}(x-2)(15x - 10)$"
+              },
+              {
+                "text": "Take out the numerical factor $5$ from the last bracket."
+              },
+              {
+                "text": "Write the factorised derivative."
+              },
+              {
+                "text": "$\\dfrac{dy}{dx}=5(3x + 4)^{2}(x-2)(3x - 2)$"
               }
             ]
           }
@@ -34145,8 +34185,8 @@
           "questionText": "$y=\\dfrac{5x^{2}}{2x + 2}$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx}=\\dfrac{10x^{1}(2x + 2)-(5x^{2})(2)}{(2x + 2)^2}$",
-          "answerText": "$\\dfrac{dy}{dx}=\\dfrac{10x^{1}(2x + 2)-(5x^{2})(2)}{(2x + 2)^2}$",
+          "answer": "$\\dfrac{dy}{dx}=\\dfrac{5x(x + 2)}{2(x + 1)^2}$",
+          "answerText": "$\\dfrac{dy}{dx}=\\dfrac{5x(x + 2)}{2(x + 1)^2}$",
           "steps": [
             "$u=5x^{2},\\quad v=2x + 2$",
             "$u'=5\\cdot2x^{2-1}$",
@@ -34156,7 +34196,16 @@
             "$u'v=(10x^{1})(2x + 2)$",
             "$uv'=(5x^{2})(2)$",
             "$v^2=(2x + 2)^2$",
-            "$\\dfrac{dy}{dx}=\\dfrac{10x^{1}(2x + 2)-(5x^{2})(2)}{(2x + 2)^2}$"
+            "$\\dfrac{dy}{dx}=\\dfrac{10x^{1}(2x + 2)-(5x^{2})(2)}{(2x + 2)^2}$",
+            "Factor $5x$ out of the numerator.",
+            "$y'=\\dfrac{5x\\big[2(2x + 2)-2x\\big]}{(2x + 2)^2}$",
+            "Expand and collect inside the bracket.",
+            "$y'=\\dfrac{5x\\big[4x+4-2x\\big]}{(2x + 2)^2}$",
+            "$y'=\\dfrac{5x(2x + 4)}{(2x + 2)^2}$",
+            "Take out the numerical factor $2$ from the numerator bracket.",
+            "Use $2x + 2=2(x + 1)$ and reduce the constant fraction.",
+            "Write the factorised derivative.",
+            "$\\dfrac{dy}{dx}=\\dfrac{5x(x + 2)}{2(x + 1)^2}$"
           ],
           "stepText": [
             "$u=5x^{2},\\quad v=2x + 2$",
@@ -34167,11 +34216,20 @@
             "$u'v=(10x^{1})(2x + 2)$",
             "$uv'=(5x^{2})(2)$",
             "$v^2=(2x + 2)^2$",
-            "$\\dfrac{dy}{dx}=\\dfrac{10x^{1}(2x + 2)-(5x^{2})(2)}{(2x + 2)^2}$"
+            "$\\dfrac{dy}{dx}=\\dfrac{10x^{1}(2x + 2)-(5x^{2})(2)}{(2x + 2)^2}$",
+            "Factor $5x$ out of the numerator.",
+            "$y'=\\dfrac{5x\\big[2(2x + 2)-2x\\big]}{(2x + 2)^2}$",
+            "Expand and collect inside the bracket.",
+            "$y'=\\dfrac{5x\\big[4x+4-2x\\big]}{(2x + 2)^2}$",
+            "$y'=\\dfrac{5x(2x + 4)}{(2x + 2)^2}$",
+            "Take out the numerical factor $2$ from the numerator bracket.",
+            "Use $2x + 2=2(x + 1)$ and reduce the constant fraction.",
+            "Write the factorised derivative.",
+            "$\\dfrac{dy}{dx}=\\dfrac{5x(x + 2)}{2(x + 1)^2}$"
           ],
           "raw": {
             "equation": "$y=\\dfrac{5x^{2}}{2x + 2}$",
-            "answer": "$\\dfrac{dy}{dx}=\\dfrac{10x^{1}(2x + 2)-(5x^{2})(2)}{(2x + 2)^2}$",
+            "answer": "$\\dfrac{dy}{dx}=\\dfrac{5x(x + 2)}{2(x + 1)^2}$",
             "steps": [
               {
                 "text": "$u=5x^{2},\\quad v=2x + 2$"
@@ -34199,6 +34257,33 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx}=\\dfrac{10x^{1}(2x + 2)-(5x^{2})(2)}{(2x + 2)^2}$"
+              },
+              {
+                "text": "Factor $5x$ out of the numerator."
+              },
+              {
+                "text": "$y'=\\dfrac{5x\\big[2(2x + 2)-2x\\big]}{(2x + 2)^2}$"
+              },
+              {
+                "text": "Expand and collect inside the bracket."
+              },
+              {
+                "text": "$y'=\\dfrac{5x\\big[4x+4-2x\\big]}{(2x + 2)^2}$"
+              },
+              {
+                "text": "$y'=\\dfrac{5x(2x + 4)}{(2x + 2)^2}$"
+              },
+              {
+                "text": "Take out the numerical factor $2$ from the numerator bracket."
+              },
+              {
+                "text": "Use $2x + 2=2(x + 1)$ and reduce the constant fraction."
+              },
+              {
+                "text": "Write the factorised derivative."
+              },
+              {
+                "text": "$\\dfrac{dy}{dx}=\\dfrac{5x(x + 2)}{2(x + 1)^2}$"
               }
             ]
           }
@@ -34211,8 +34296,8 @@
           "questionText": "$y=(x^2+3x)^3\\sin(2x)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx}=3(x^2+3x)^2(2x+3)\\sin(2x)+2(x^2+3x)^3\\cos(2x)$",
-          "answerText": "$\\dfrac{dy}{dx}=3(x^2+3x)^2(2x+3)\\sin(2x)+2(x^2+3x)^3\\cos(2x)$",
+          "answer": "$\\dfrac{dy}{dx}=x^2(x+3)^2\\big[3(2x+3)\\sin(2x)+2x(x+3)\\cos(2x)\\big]$",
+          "answerText": "$\\dfrac{dy}{dx}=x^2(x+3)^2\\big[3(2x+3)\\sin(2x)+2x(x+3)\\cos(2x)\\big]$",
           "steps": [
             "$u=(x^2+3x)^3,\\quad v=\\sin(2x)$",
             "$w=x^2+3x,\\quad w'=2x+3$",
@@ -34222,7 +34307,9 @@
             "$v'=2\\cos(2x)$",
             "$y'=u'v+uv'$",
             "$y'=[3(x^2+3x)^2(2x+3)]\\sin(2x)+(x^2+3x)^3[2\\cos(2x)]$",
-            "$\\dfrac{dy}{dx}=3(x^2+3x)^2(2x+3)\\sin(2x)+2(x^2+3x)^3\\cos(2x)$"
+            "$\\dfrac{dy}{dx}=3(x^2+3x)^2(2x+3)\\sin(2x)+2(x^2+3x)^3\\cos(2x)$",
+            "Factor out $(x^2+3x)^2$, then use $x^2+3x=x(x+3)$.",
+            "$\\dfrac{dy}{dx}=x^2(x+3)^2\\big[3(2x+3)\\sin(2x)+2x(x+3)\\cos(2x)\\big]$"
           ],
           "stepText": [
             "$u=(x^2+3x)^3,\\quad v=\\sin(2x)$",
@@ -34233,11 +34320,13 @@
             "$v'=2\\cos(2x)$",
             "$y'=u'v+uv'$",
             "$y'=[3(x^2+3x)^2(2x+3)]\\sin(2x)+(x^2+3x)^3[2\\cos(2x)]$",
-            "$\\dfrac{dy}{dx}=3(x^2+3x)^2(2x+3)\\sin(2x)+2(x^2+3x)^3\\cos(2x)$"
+            "$\\dfrac{dy}{dx}=3(x^2+3x)^2(2x+3)\\sin(2x)+2(x^2+3x)^3\\cos(2x)$",
+            "Factor out $(x^2+3x)^2$, then use $x^2+3x=x(x+3)$.",
+            "$\\dfrac{dy}{dx}=x^2(x+3)^2\\big[3(2x+3)\\sin(2x)+2x(x+3)\\cos(2x)\\big]$"
           ],
           "raw": {
             "equation": "$y=(x^2+3x)^3\\sin(2x)$",
-            "answer": "$\\dfrac{dy}{dx}=3(x^2+3x)^2(2x+3)\\sin(2x)+2(x^2+3x)^3\\cos(2x)$",
+            "answer": "$\\dfrac{dy}{dx}=x^2(x+3)^2\\big[3(2x+3)\\sin(2x)+2x(x+3)\\cos(2x)\\big]$",
             "steps": [
               {
                 "text": "$u=(x^2+3x)^3,\\quad v=\\sin(2x)$"
@@ -34265,6 +34354,12 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx}=3(x^2+3x)^2(2x+3)\\sin(2x)+2(x^2+3x)^3\\cos(2x)$"
+              },
+              {
+                "text": "Factor out $(x^2+3x)^2$, then use $x^2+3x=x(x+3)$."
+              },
+              {
+                "text": "$\\dfrac{dy}{dx}=x^2(x+3)^2\\big[3(2x+3)\\sin(2x)+2x(x+3)\\cos(2x)\\big]$"
               }
             ]
           }
@@ -34277,8 +34372,8 @@
           "questionText": "$y=(2x + 2)^{4}(x-3)^2$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx}=8(2x + 2)^{3}(x-3)^2+(2x + 2)^{4}2(x-3)$",
-          "answerText": "$\\dfrac{dy}{dx}=8(2x + 2)^{3}(x-3)^2+(2x + 2)^{4}2(x-3)$",
+          "answer": "$\\dfrac{dy}{dx}=32(x + 1)^{3}(x-3)(3x - 5)$",
+          "answerText": "$\\dfrac{dy}{dx}=32(x + 1)^{3}(x-3)(3x - 5)$",
           "steps": [
             "$u=(2x + 2)^{4},\\quad v=(x-3)^2$",
             "$u'=4(2x + 2)^{4-1}\\cdot2$",
@@ -34286,7 +34381,16 @@
             "$v'=2(x-3)^{2-1}\\cdot1$",
             "$v'=2(x-3)$",
             "$y'=u'v+uv'$",
-            "$y'=(8(2x + 2)^{3})((x-3)^2)+((2x + 2)^{4})(2(x-3))$"
+            "$y'=(8(2x + 2)^{3})((x-3)^2)+((2x + 2)^{4})(2(x-3))$",
+            "Factor out the common factor $(2x + 2)^{3}(x-3)$.",
+            "$y'=(2x + 2)^{3}(x-3)\\big[8(x-3)+2(2x + 2)\\big]$",
+            "Expand and collect inside the bracket.",
+            "$y'=(2x + 2)^{3}(x-3)\\big[8x-24+4x+4\\big]$",
+            "$y'=(2x + 2)^{3}(x-3)(12x - 20)$",
+            "Take out the numerical factor $4$ from the last bracket.",
+            "Also use $2x + 2=2(x + 1)$ and collect the constant factors.",
+            "Write the factorised derivative.",
+            "$\\dfrac{dy}{dx}=32(x + 1)^{3}(x-3)(3x - 5)$"
           ],
           "stepText": [
             "$u=(2x + 2)^{4},\\quad v=(x-3)^2$",
@@ -34295,11 +34399,20 @@
             "$v'=2(x-3)^{2-1}\\cdot1$",
             "$v'=2(x-3)$",
             "$y'=u'v+uv'$",
-            "$y'=(8(2x + 2)^{3})((x-3)^2)+((2x + 2)^{4})(2(x-3))$"
+            "$y'=(8(2x + 2)^{3})((x-3)^2)+((2x + 2)^{4})(2(x-3))$",
+            "Factor out the common factor $(2x + 2)^{3}(x-3)$.",
+            "$y'=(2x + 2)^{3}(x-3)\\big[8(x-3)+2(2x + 2)\\big]$",
+            "Expand and collect inside the bracket.",
+            "$y'=(2x + 2)^{3}(x-3)\\big[8x-24+4x+4\\big]$",
+            "$y'=(2x + 2)^{3}(x-3)(12x - 20)$",
+            "Take out the numerical factor $4$ from the last bracket.",
+            "Also use $2x + 2=2(x + 1)$ and collect the constant factors.",
+            "Write the factorised derivative.",
+            "$\\dfrac{dy}{dx}=32(x + 1)^{3}(x-3)(3x - 5)$"
           ],
           "raw": {
             "equation": "$y=(2x + 2)^{4}(x-3)^2$",
-            "answer": "$\\dfrac{dy}{dx}=8(2x + 2)^{3}(x-3)^2+(2x + 2)^{4}2(x-3)$",
+            "answer": "$\\dfrac{dy}{dx}=32(x + 1)^{3}(x-3)(3x - 5)$",
             "steps": [
               {
                 "text": "$u=(2x + 2)^{4},\\quad v=(x-3)^2$"
@@ -34321,6 +34434,33 @@
               },
               {
                 "text": "$y'=(8(2x + 2)^{3})((x-3)^2)+((2x + 2)^{4})(2(x-3))$"
+              },
+              {
+                "text": "Factor out the common factor $(2x + 2)^{3}(x-3)$."
+              },
+              {
+                "text": "$y'=(2x + 2)^{3}(x-3)\\big[8(x-3)+2(2x + 2)\\big]$"
+              },
+              {
+                "text": "Expand and collect inside the bracket."
+              },
+              {
+                "text": "$y'=(2x + 2)^{3}(x-3)\\big[8x-24+4x+4\\big]$"
+              },
+              {
+                "text": "$y'=(2x + 2)^{3}(x-3)(12x - 20)$"
+              },
+              {
+                "text": "Take out the numerical factor $4$ from the last bracket."
+              },
+              {
+                "text": "Also use $2x + 2=2(x + 1)$ and collect the constant factors."
+              },
+              {
+                "text": "Write the factorised derivative."
+              },
+              {
+                "text": "$\\dfrac{dy}{dx}=32(x + 1)^{3}(x-3)(3x - 5)$"
               }
             ]
           }
@@ -34394,8 +34534,8 @@
           "questionText": "$y=\\dfrac{3x^{4}}{4x + 3}$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx}=\\dfrac{12x^{3}(4x + 3)-(3x^{4})(4)}{(4x + 3)^2}$",
-          "answerText": "$\\dfrac{dy}{dx}=\\dfrac{12x^{3}(4x + 3)-(3x^{4})(4)}{(4x + 3)^2}$",
+          "answer": "$\\dfrac{dy}{dx}=\\dfrac{36x^{3}(x + 1)}{(4x + 3)^2}$",
+          "answerText": "$\\dfrac{dy}{dx}=\\dfrac{36x^{3}(x + 1)}{(4x + 3)^2}$",
           "steps": [
             "$u=3x^{4},\\quad v=4x + 3$",
             "$u'=3\\cdot4x^{4-1}$",
@@ -34405,7 +34545,15 @@
             "$u'v=(12x^{3})(4x + 3)$",
             "$uv'=(3x^{4})(4)$",
             "$v^2=(4x + 3)^2$",
-            "$\\dfrac{dy}{dx}=\\dfrac{12x^{3}(4x + 3)-(3x^{4})(4)}{(4x + 3)^2}$"
+            "$\\dfrac{dy}{dx}=\\dfrac{12x^{3}(4x + 3)-(3x^{4})(4)}{(4x + 3)^2}$",
+            "Factor $3x^{3}$ out of the numerator.",
+            "$y'=\\dfrac{3x^{3}\\big[4(4x + 3)-4x\\big]}{(4x + 3)^2}$",
+            "Expand and collect inside the bracket.",
+            "$y'=\\dfrac{3x^{3}\\big[16x+12-4x\\big]}{(4x + 3)^2}$",
+            "$y'=\\dfrac{3x^{3}(12x + 12)}{(4x + 3)^2}$",
+            "Take out the numerical factor $12$ from the numerator bracket.",
+            "Write the factorised derivative.",
+            "$\\dfrac{dy}{dx}=\\dfrac{36x^{3}(x + 1)}{(4x + 3)^2}$"
           ],
           "stepText": [
             "$u=3x^{4},\\quad v=4x + 3$",
@@ -34416,11 +34564,19 @@
             "$u'v=(12x^{3})(4x + 3)$",
             "$uv'=(3x^{4})(4)$",
             "$v^2=(4x + 3)^2$",
-            "$\\dfrac{dy}{dx}=\\dfrac{12x^{3}(4x + 3)-(3x^{4})(4)}{(4x + 3)^2}$"
+            "$\\dfrac{dy}{dx}=\\dfrac{12x^{3}(4x + 3)-(3x^{4})(4)}{(4x + 3)^2}$",
+            "Factor $3x^{3}$ out of the numerator.",
+            "$y'=\\dfrac{3x^{3}\\big[4(4x + 3)-4x\\big]}{(4x + 3)^2}$",
+            "Expand and collect inside the bracket.",
+            "$y'=\\dfrac{3x^{3}\\big[16x+12-4x\\big]}{(4x + 3)^2}$",
+            "$y'=\\dfrac{3x^{3}(12x + 12)}{(4x + 3)^2}$",
+            "Take out the numerical factor $12$ from the numerator bracket.",
+            "Write the factorised derivative.",
+            "$\\dfrac{dy}{dx}=\\dfrac{36x^{3}(x + 1)}{(4x + 3)^2}$"
           ],
           "raw": {
             "equation": "$y=\\dfrac{3x^{4}}{4x + 3}$",
-            "answer": "$\\dfrac{dy}{dx}=\\dfrac{12x^{3}(4x + 3)-(3x^{4})(4)}{(4x + 3)^2}$",
+            "answer": "$\\dfrac{dy}{dx}=\\dfrac{36x^{3}(x + 1)}{(4x + 3)^2}$",
             "steps": [
               {
                 "text": "$u=3x^{4},\\quad v=4x + 3$"
@@ -34448,6 +34604,30 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx}=\\dfrac{12x^{3}(4x + 3)-(3x^{4})(4)}{(4x + 3)^2}$"
+              },
+              {
+                "text": "Factor $3x^{3}$ out of the numerator."
+              },
+              {
+                "text": "$y'=\\dfrac{3x^{3}\\big[4(4x + 3)-4x\\big]}{(4x + 3)^2}$"
+              },
+              {
+                "text": "Expand and collect inside the bracket."
+              },
+              {
+                "text": "$y'=\\dfrac{3x^{3}\\big[16x+12-4x\\big]}{(4x + 3)^2}$"
+              },
+              {
+                "text": "$y'=\\dfrac{3x^{3}(12x + 12)}{(4x + 3)^2}$"
+              },
+              {
+                "text": "Take out the numerical factor $12$ from the numerator bracket."
+              },
+              {
+                "text": "Write the factorised derivative."
+              },
+              {
+                "text": "$\\dfrac{dy}{dx}=\\dfrac{36x^{3}(x + 1)}{(4x + 3)^2}$"
               }
             ]
           }
@@ -34484,8 +34664,8 @@
           "questionText": "$y=3x^2\\cos(4x)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx}=6x\\cos(4x)-12x^2\\sin(4x)$",
-          "answerText": "$\\dfrac{dy}{dx}=6x\\cos(4x)-12x^2\\sin(4x)$",
+          "answer": "$\\dfrac{dy}{dx}=6x\\big[\\cos(4x)-2x\\sin(4x)\\big]$",
+          "answerText": "$\\dfrac{dy}{dx}=6x\\big[\\cos(4x)-2x\\sin(4x)\\big]$",
           "steps": [
             "$u=3x^2,\\quad v=\\cos(4x)$",
             "$u'=3\\cdot2x^{2-1}$",
@@ -34495,7 +34675,9 @@
             "$v'=-\\sin(4x)\\cdot4$",
             "$y'=u'v+uv'$",
             "$y'=(6x)(\\cos(4x))+(3x^2)[-\\sin(4x)\\cdot4]$",
-            "$\\dfrac{dy}{dx}=6x\\cos(4x)-12x^2\\sin(4x)$"
+            "$\\dfrac{dy}{dx}=6x\\cos(4x)-12x^2\\sin(4x)$",
+            "Factor out the common factor $6x$.",
+            "$\\dfrac{dy}{dx}=6x\\big[\\cos(4x)-2x\\sin(4x)\\big]$"
           ],
           "stepText": [
             "$u=3x^2,\\quad v=\\cos(4x)$",
@@ -34506,11 +34688,13 @@
             "$v'=-\\sin(4x)\\cdot4$",
             "$y'=u'v+uv'$",
             "$y'=(6x)(\\cos(4x))+(3x^2)[-\\sin(4x)\\cdot4]$",
-            "$\\dfrac{dy}{dx}=6x\\cos(4x)-12x^2\\sin(4x)$"
+            "$\\dfrac{dy}{dx}=6x\\cos(4x)-12x^2\\sin(4x)$",
+            "Factor out the common factor $6x$.",
+            "$\\dfrac{dy}{dx}=6x\\big[\\cos(4x)-2x\\sin(4x)\\big]$"
           ],
           "raw": {
             "equation": "$y=3x^2\\cos(4x)$",
-            "answer": "$\\dfrac{dy}{dx}=6x\\cos(4x)-12x^2\\sin(4x)$",
+            "answer": "$\\dfrac{dy}{dx}=6x\\big[\\cos(4x)-2x\\sin(4x)\\big]$",
             "steps": [
               {
                 "text": "$u=3x^2,\\quad v=\\cos(4x)$"
@@ -34538,6 +34722,12 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx}=6x\\cos(4x)-12x^2\\sin(4x)$"
+              },
+              {
+                "text": "Factor out the common factor $6x$."
+              },
+              {
+                "text": "$\\dfrac{dy}{dx}=6x\\big[\\cos(4x)-2x\\sin(4x)\\big]$"
               }
             ]
           }
@@ -34550,8 +34740,8 @@
           "questionText": "$y=(3x^{4}+3)\\ln(x)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx}=12x^{3}\\ln(x)+\\dfrac{3x^{4}+3}{x}$",
-          "answerText": "$\\dfrac{dy}{dx}=12x^{3}\\ln(x)+\\dfrac{3x^{4}+3}{x}$",
+          "answer": "$\\dfrac{dy}{dx}=3x^{3}\\big(4\\ln(x)+1\\big)+\\dfrac{3}{x}$",
+          "answerText": "$\\dfrac{dy}{dx}=3x^{3}\\big(4\\ln(x)+1\\big)+\\dfrac{3}{x}$",
           "steps": [
             "$u=3x^{4}+3,\\quad v=\\ln(x)$",
             "$u'=3\\cdot4x^{4-1}+0$",
@@ -34559,7 +34749,11 @@
             "$v'=\\dfrac{1}{x}$",
             "$y'=u'v+uv'$",
             "$y'=(12x^{3})\\ln(x)+(3x^{4}+3)\\cdot\\dfrac{1}{x}$",
-            "$\\dfrac{dy}{dx}=12x^{3}\\ln(x)+\\dfrac{3x^{4}+3}{x}$"
+            "$\\dfrac{dy}{dx}=12x^{3}\\ln(x)+\\dfrac{3x^{4}+3}{x}$",
+            "Split the fraction into two terms.",
+            "$y'=12x^{3}\\ln(x)+3x^{3}+\\dfrac{3}{x}$",
+            "Factor the first two terms using $3x^{3}$.",
+            "$\\dfrac{dy}{dx}=3x^{3}\\big(4\\ln(x)+1\\big)+\\dfrac{3}{x}$"
           ],
           "stepText": [
             "$u=3x^{4}+3,\\quad v=\\ln(x)$",
@@ -34568,11 +34762,15 @@
             "$v'=\\dfrac{1}{x}$",
             "$y'=u'v+uv'$",
             "$y'=(12x^{3})\\ln(x)+(3x^{4}+3)\\cdot\\dfrac{1}{x}$",
-            "$\\dfrac{dy}{dx}=12x^{3}\\ln(x)+\\dfrac{3x^{4}+3}{x}$"
+            "$\\dfrac{dy}{dx}=12x^{3}\\ln(x)+\\dfrac{3x^{4}+3}{x}$",
+            "Split the fraction into two terms.",
+            "$y'=12x^{3}\\ln(x)+3x^{3}+\\dfrac{3}{x}$",
+            "Factor the first two terms using $3x^{3}$.",
+            "$\\dfrac{dy}{dx}=3x^{3}\\big(4\\ln(x)+1\\big)+\\dfrac{3}{x}$"
           ],
           "raw": {
             "equation": "$y=(3x^{4}+3)\\ln(x)$",
-            "answer": "$\\dfrac{dy}{dx}=12x^{3}\\ln(x)+\\dfrac{3x^{4}+3}{x}$",
+            "answer": "$\\dfrac{dy}{dx}=3x^{3}\\big(4\\ln(x)+1\\big)+\\dfrac{3}{x}$",
             "steps": [
               {
                 "text": "$u=3x^{4}+3,\\quad v=\\ln(x)$"
@@ -34594,6 +34792,18 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx}=12x^{3}\\ln(x)+\\dfrac{3x^{4}+3}{x}$"
+              },
+              {
+                "text": "Split the fraction into two terms."
+              },
+              {
+                "text": "$y'=12x^{3}\\ln(x)+3x^{3}+\\dfrac{3}{x}$"
+              },
+              {
+                "text": "Factor the first two terms using $3x^{3}$."
+              },
+              {
+                "text": "$\\dfrac{dy}{dx}=3x^{3}\\big(4\\ln(x)+1\\big)+\\dfrac{3}{x}$"
               }
             ]
           }
@@ -34606,8 +34816,8 @@
           "questionText": "$y=2x^2\\sin(3x)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx}=4x\\sin(3x)+6x^2\\cos(3x)$",
-          "answerText": "$\\dfrac{dy}{dx}=4x\\sin(3x)+6x^2\\cos(3x)$",
+          "answer": "$\\dfrac{dy}{dx}=2x\\big[2\\sin(3x)+3x\\cos(3x)\\big]$",
+          "answerText": "$\\dfrac{dy}{dx}=2x\\big[2\\sin(3x)+3x\\cos(3x)\\big]$",
           "steps": [
             "$u=2x^2,\\quad v=\\sin(3x)$",
             "$u'=2\\cdot2x^{2-1}$",
@@ -34617,7 +34827,9 @@
             "$v'=\\cos(3x)\\cdot3$",
             "$y'=u'v+uv'$",
             "$y'=(4x)(\\sin(3x))+(2x^2)[\\cos(3x)\\cdot3]$",
-            "$\\dfrac{dy}{dx}=4x\\sin(3x)+6x^2\\cos(3x)$"
+            "$\\dfrac{dy}{dx}=4x\\sin(3x)+6x^2\\cos(3x)$",
+            "Factor out the common factor $2x$.",
+            "$\\dfrac{dy}{dx}=2x\\big[2\\sin(3x)+3x\\cos(3x)\\big]$"
           ],
           "stepText": [
             "$u=2x^2,\\quad v=\\sin(3x)$",
@@ -34628,11 +34840,13 @@
             "$v'=\\cos(3x)\\cdot3$",
             "$y'=u'v+uv'$",
             "$y'=(4x)(\\sin(3x))+(2x^2)[\\cos(3x)\\cdot3]$",
-            "$\\dfrac{dy}{dx}=4x\\sin(3x)+6x^2\\cos(3x)$"
+            "$\\dfrac{dy}{dx}=4x\\sin(3x)+6x^2\\cos(3x)$",
+            "Factor out the common factor $2x$.",
+            "$\\dfrac{dy}{dx}=2x\\big[2\\sin(3x)+3x\\cos(3x)\\big]$"
           ],
           "raw": {
             "equation": "$y=2x^2\\sin(3x)$",
-            "answer": "$\\dfrac{dy}{dx}=4x\\sin(3x)+6x^2\\cos(3x)$",
+            "answer": "$\\dfrac{dy}{dx}=2x\\big[2\\sin(3x)+3x\\cos(3x)\\big]$",
             "steps": [
               {
                 "text": "$u=2x^2,\\quad v=\\sin(3x)$"
@@ -34660,6 +34874,12 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx}=4x\\sin(3x)+6x^2\\cos(3x)$"
+              },
+              {
+                "text": "Factor out the common factor $2x$."
+              },
+              {
+                "text": "$\\dfrac{dy}{dx}=2x\\big[2\\sin(3x)+3x\\cos(3x)\\big]$"
               }
             ]
           }
@@ -34672,8 +34892,8 @@
           "questionText": "$y=(5x^{3}+3)\\ln(x)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx}=15x^{2}\\ln(x)+\\dfrac{5x^{3}+3}{x}$",
-          "answerText": "$\\dfrac{dy}{dx}=15x^{2}\\ln(x)+\\dfrac{5x^{3}+3}{x}$",
+          "answer": "$\\dfrac{dy}{dx}=5x^{2}\\big(3\\ln(x)+1\\big)+\\dfrac{3}{x}$",
+          "answerText": "$\\dfrac{dy}{dx}=5x^{2}\\big(3\\ln(x)+1\\big)+\\dfrac{3}{x}$",
           "steps": [
             "$u=5x^{3}+3,\\quad v=\\ln(x)$",
             "$u'=5\\cdot3x^{3-1}+0$",
@@ -34681,7 +34901,11 @@
             "$v'=\\dfrac{1}{x}$",
             "$y'=u'v+uv'$",
             "$y'=(15x^{2})\\ln(x)+(5x^{3}+3)\\cdot\\dfrac{1}{x}$",
-            "$\\dfrac{dy}{dx}=15x^{2}\\ln(x)+\\dfrac{5x^{3}+3}{x}$"
+            "$\\dfrac{dy}{dx}=15x^{2}\\ln(x)+\\dfrac{5x^{3}+3}{x}$",
+            "Split the fraction into two terms.",
+            "$y'=15x^{2}\\ln(x)+5x^{2}+\\dfrac{3}{x}$",
+            "Factor the first two terms using $5x^{2}$.",
+            "$\\dfrac{dy}{dx}=5x^{2}\\big(3\\ln(x)+1\\big)+\\dfrac{3}{x}$"
           ],
           "stepText": [
             "$u=5x^{3}+3,\\quad v=\\ln(x)$",
@@ -34690,11 +34914,15 @@
             "$v'=\\dfrac{1}{x}$",
             "$y'=u'v+uv'$",
             "$y'=(15x^{2})\\ln(x)+(5x^{3}+3)\\cdot\\dfrac{1}{x}$",
-            "$\\dfrac{dy}{dx}=15x^{2}\\ln(x)+\\dfrac{5x^{3}+3}{x}$"
+            "$\\dfrac{dy}{dx}=15x^{2}\\ln(x)+\\dfrac{5x^{3}+3}{x}$",
+            "Split the fraction into two terms.",
+            "$y'=15x^{2}\\ln(x)+5x^{2}+\\dfrac{3}{x}$",
+            "Factor the first two terms using $5x^{2}$.",
+            "$\\dfrac{dy}{dx}=5x^{2}\\big(3\\ln(x)+1\\big)+\\dfrac{3}{x}$"
           ],
           "raw": {
             "equation": "$y=(5x^{3}+3)\\ln(x)$",
-            "answer": "$\\dfrac{dy}{dx}=15x^{2}\\ln(x)+\\dfrac{5x^{3}+3}{x}$",
+            "answer": "$\\dfrac{dy}{dx}=5x^{2}\\big(3\\ln(x)+1\\big)+\\dfrac{3}{x}$",
             "steps": [
               {
                 "text": "$u=5x^{3}+3,\\quad v=\\ln(x)$"
@@ -34716,6 +34944,18 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx}=15x^{2}\\ln(x)+\\dfrac{5x^{3}+3}{x}$"
+              },
+              {
+                "text": "Split the fraction into two terms."
+              },
+              {
+                "text": "$y'=15x^{2}\\ln(x)+5x^{2}+\\dfrac{3}{x}$"
+              },
+              {
+                "text": "Factor the first two terms using $5x^{2}$."
+              },
+              {
+                "text": "$\\dfrac{dy}{dx}=5x^{2}\\big(3\\ln(x)+1\\big)+\\dfrac{3}{x}$"
               }
             ]
           }
@@ -34728,8 +34968,8 @@
           "questionText": "$y=4x^2\\sin(2x)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx}=8x\\sin(2x)+8x^2\\cos(2x)$",
-          "answerText": "$\\dfrac{dy}{dx}=8x\\sin(2x)+8x^2\\cos(2x)$",
+          "answer": "$\\dfrac{dy}{dx}=8x\\big[\\sin(2x)+x\\cos(2x)\\big]$",
+          "answerText": "$\\dfrac{dy}{dx}=8x\\big[\\sin(2x)+x\\cos(2x)\\big]$",
           "steps": [
             "$u=4x^2,\\quad v=\\sin(2x)$",
             "$u'=4\\cdot2x^{2-1}$",
@@ -34739,7 +34979,9 @@
             "$v'=\\cos(2x)\\cdot2$",
             "$y'=u'v+uv'$",
             "$y'=(8x)(\\sin(2x))+(4x^2)[\\cos(2x)\\cdot2]$",
-            "$\\dfrac{dy}{dx}=8x\\sin(2x)+8x^2\\cos(2x)$"
+            "$\\dfrac{dy}{dx}=8x\\sin(2x)+8x^2\\cos(2x)$",
+            "Factor out the common factor $8x$.",
+            "$\\dfrac{dy}{dx}=8x\\big[\\sin(2x)+x\\cos(2x)\\big]$"
           ],
           "stepText": [
             "$u=4x^2,\\quad v=\\sin(2x)$",
@@ -34750,11 +34992,13 @@
             "$v'=\\cos(2x)\\cdot2$",
             "$y'=u'v+uv'$",
             "$y'=(8x)(\\sin(2x))+(4x^2)[\\cos(2x)\\cdot2]$",
-            "$\\dfrac{dy}{dx}=8x\\sin(2x)+8x^2\\cos(2x)$"
+            "$\\dfrac{dy}{dx}=8x\\sin(2x)+8x^2\\cos(2x)$",
+            "Factor out the common factor $8x$.",
+            "$\\dfrac{dy}{dx}=8x\\big[\\sin(2x)+x\\cos(2x)\\big]$"
           ],
           "raw": {
             "equation": "$y=4x^2\\sin(2x)$",
-            "answer": "$\\dfrac{dy}{dx}=8x\\sin(2x)+8x^2\\cos(2x)$",
+            "answer": "$\\dfrac{dy}{dx}=8x\\big[\\sin(2x)+x\\cos(2x)\\big]$",
             "steps": [
               {
                 "text": "$u=4x^2,\\quad v=\\sin(2x)$"
@@ -34782,6 +35026,12 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx}=8x\\sin(2x)+8x^2\\cos(2x)$"
+              },
+              {
+                "text": "Factor out the common factor $8x$."
+              },
+              {
+                "text": "$\\dfrac{dy}{dx}=8x\\big[\\sin(2x)+x\\cos(2x)\\big]$"
               }
             ]
           }
@@ -34794,8 +35044,8 @@
           "questionText": "$y=(2x^{3}+3)\\ln(x)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx}=6x^{2}\\ln(x)+\\dfrac{2x^{3}+3}{x}$",
-          "answerText": "$\\dfrac{dy}{dx}=6x^{2}\\ln(x)+\\dfrac{2x^{3}+3}{x}$",
+          "answer": "$\\dfrac{dy}{dx}=2x^{2}\\big(3\\ln(x)+1\\big)+\\dfrac{3}{x}$",
+          "answerText": "$\\dfrac{dy}{dx}=2x^{2}\\big(3\\ln(x)+1\\big)+\\dfrac{3}{x}$",
           "steps": [
             "$u=2x^{3}+3,\\quad v=\\ln(x)$",
             "$u'=2\\cdot3x^{3-1}+0$",
@@ -34803,7 +35053,11 @@
             "$v'=\\dfrac{1}{x}$",
             "$y'=u'v+uv'$",
             "$y'=(6x^{2})\\ln(x)+(2x^{3}+3)\\cdot\\dfrac{1}{x}$",
-            "$\\dfrac{dy}{dx}=6x^{2}\\ln(x)+\\dfrac{2x^{3}+3}{x}$"
+            "$\\dfrac{dy}{dx}=6x^{2}\\ln(x)+\\dfrac{2x^{3}+3}{x}$",
+            "Split the fraction into two terms.",
+            "$y'=6x^{2}\\ln(x)+2x^{2}+\\dfrac{3}{x}$",
+            "Factor the first two terms using $2x^{2}$.",
+            "$\\dfrac{dy}{dx}=2x^{2}\\big(3\\ln(x)+1\\big)+\\dfrac{3}{x}$"
           ],
           "stepText": [
             "$u=2x^{3}+3,\\quad v=\\ln(x)$",
@@ -34812,11 +35066,15 @@
             "$v'=\\dfrac{1}{x}$",
             "$y'=u'v+uv'$",
             "$y'=(6x^{2})\\ln(x)+(2x^{3}+3)\\cdot\\dfrac{1}{x}$",
-            "$\\dfrac{dy}{dx}=6x^{2}\\ln(x)+\\dfrac{2x^{3}+3}{x}$"
+            "$\\dfrac{dy}{dx}=6x^{2}\\ln(x)+\\dfrac{2x^{3}+3}{x}$",
+            "Split the fraction into two terms.",
+            "$y'=6x^{2}\\ln(x)+2x^{2}+\\dfrac{3}{x}$",
+            "Factor the first two terms using $2x^{2}$.",
+            "$\\dfrac{dy}{dx}=2x^{2}\\big(3\\ln(x)+1\\big)+\\dfrac{3}{x}$"
           ],
           "raw": {
             "equation": "$y=(2x^{3}+3)\\ln(x)$",
-            "answer": "$\\dfrac{dy}{dx}=6x^{2}\\ln(x)+\\dfrac{2x^{3}+3}{x}$",
+            "answer": "$\\dfrac{dy}{dx}=2x^{2}\\big(3\\ln(x)+1\\big)+\\dfrac{3}{x}$",
             "steps": [
               {
                 "text": "$u=2x^{3}+3,\\quad v=\\ln(x)$"
@@ -34838,6 +35096,18 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx}=6x^{2}\\ln(x)+\\dfrac{2x^{3}+3}{x}$"
+              },
+              {
+                "text": "Split the fraction into two terms."
+              },
+              {
+                "text": "$y'=6x^{2}\\ln(x)+2x^{2}+\\dfrac{3}{x}$"
+              },
+              {
+                "text": "Factor the first two terms using $2x^{2}$."
+              },
+              {
+                "text": "$\\dfrac{dy}{dx}=2x^{2}\\big(3\\ln(x)+1\\big)+\\dfrac{3}{x}$"
               }
             ]
           }
@@ -34850,8 +35120,8 @@
           "questionText": "$y=2x^2\\cos(4x)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx}=4x\\cos(4x)-8x^2\\sin(4x)$",
-          "answerText": "$\\dfrac{dy}{dx}=4x\\cos(4x)-8x^2\\sin(4x)$",
+          "answer": "$\\dfrac{dy}{dx}=4x\\big[\\cos(4x)-2x\\sin(4x)\\big]$",
+          "answerText": "$\\dfrac{dy}{dx}=4x\\big[\\cos(4x)-2x\\sin(4x)\\big]$",
           "steps": [
             "$u=2x^2,\\quad v=\\cos(4x)$",
             "$u'=2\\cdot2x^{2-1}$",
@@ -34861,7 +35131,9 @@
             "$v'=-\\sin(4x)\\cdot4$",
             "$y'=u'v+uv'$",
             "$y'=(4x)(\\cos(4x))+(2x^2)[-\\sin(4x)\\cdot4]$",
-            "$\\dfrac{dy}{dx}=4x\\cos(4x)-8x^2\\sin(4x)$"
+            "$\\dfrac{dy}{dx}=4x\\cos(4x)-8x^2\\sin(4x)$",
+            "Factor out the common factor $4x$.",
+            "$\\dfrac{dy}{dx}=4x\\big[\\cos(4x)-2x\\sin(4x)\\big]$"
           ],
           "stepText": [
             "$u=2x^2,\\quad v=\\cos(4x)$",
@@ -34872,11 +35144,13 @@
             "$v'=-\\sin(4x)\\cdot4$",
             "$y'=u'v+uv'$",
             "$y'=(4x)(\\cos(4x))+(2x^2)[-\\sin(4x)\\cdot4]$",
-            "$\\dfrac{dy}{dx}=4x\\cos(4x)-8x^2\\sin(4x)$"
+            "$\\dfrac{dy}{dx}=4x\\cos(4x)-8x^2\\sin(4x)$",
+            "Factor out the common factor $4x$.",
+            "$\\dfrac{dy}{dx}=4x\\big[\\cos(4x)-2x\\sin(4x)\\big]$"
           ],
           "raw": {
             "equation": "$y=2x^2\\cos(4x)$",
-            "answer": "$\\dfrac{dy}{dx}=4x\\cos(4x)-8x^2\\sin(4x)$",
+            "answer": "$\\dfrac{dy}{dx}=4x\\big[\\cos(4x)-2x\\sin(4x)\\big]$",
             "steps": [
               {
                 "text": "$u=2x^2,\\quad v=\\cos(4x)$"
@@ -34904,6 +35178,12 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx}=4x\\cos(4x)-8x^2\\sin(4x)$"
+              },
+              {
+                "text": "Factor out the common factor $4x$."
+              },
+              {
+                "text": "$\\dfrac{dy}{dx}=4x\\big[\\cos(4x)-2x\\sin(4x)\\big]$"
               }
             ]
           }
@@ -35706,8 +35986,8 @@
           "questionText": "$y = \\sec(4x + 9)\\,\\tan(5x + 8)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = 4\\,\\sec(4x + 9)\\tan(4x + 9)\\,\\tan(5x + 8) + \\sec(4x + 9)\\,5\\,\\sec^{2}(5x + 8)$",
-          "answerText": "$\\dfrac{dy}{dx} = 4\\,\\sec(4x + 9)\\tan(4x + 9)\\,\\tan(5x + 8) + \\sec(4x + 9)\\,5\\,\\sec^{2}(5x + 8)$",
+          "answer": "$\\dfrac{dy}{dx} = \\sec(4x + 9)\\big[4\\,\\tan(4x + 9)\\,\\tan(5x + 8) + 5\\,\\big(\\sec(5x + 8)\\big)^{2}\\big]$",
+          "answerText": "$\\dfrac{dy}{dx} = \\sec(4x + 9)\\big[4\\,\\tan(4x + 9)\\,\\tan(5x + 8) + 5\\,\\big(\\sec(5x + 8)\\big)^{2}\\big]$",
           "steps": [
             "Write the two factors as $f=\\sec(4x + 9)$ and $g=\\tan(5x + 8)$.",
             "Use product rule: $(fg)\\prime=f\\prime g+fg\\prime$.",
@@ -35716,7 +35996,9 @@
             "$g'=(\\sec^{2}(5x + 8))(5)$",
             "$g'=5\\,\\sec^{2}(5x + 8)$",
             "Substitute into the product rule: $y' = (4\\,\\sec(4x + 9)\\tan(4x + 9))(\\tan(5x + 8)) + (\\sec(4x + 9))(5\\,\\sec^{2}(5x + 8))$.",
-            "Final form: $\\dfrac{dy}{dx} = 4\\,\\sec(4x + 9)\\tan(4x + 9)\\,\\tan(5x + 8) + \\sec(4x + 9)\\,5\\,\\sec^{2}(5x + 8)$"
+            "$y'=4\\,\\sec(4x + 9)\\tan(4x + 9)\\,\\tan(5x + 8) + 5\\,\\sec(4x + 9)\\,\\sec^{2}(5x + 8)$",
+            "Factor out the common factor $\\sec(4x + 9)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\sec(4x + 9)\\big[4\\,\\tan(4x + 9)\\,\\tan(5x + 8) + 5\\,\\big(\\sec(5x + 8)\\big)^{2}\\big]$"
           ],
           "stepText": [
             "Write the two factors as $f=\\sec(4x + 9)$ and $g=\\tan(5x + 8)$.",
@@ -35726,11 +36008,13 @@
             "$g'=(\\sec^{2}(5x + 8))(5)$",
             "$g'=5\\,\\sec^{2}(5x + 8)$",
             "Substitute into the product rule: $y' = (4\\,\\sec(4x + 9)\\tan(4x + 9))(\\tan(5x + 8)) + (\\sec(4x + 9))(5\\,\\sec^{2}(5x + 8))$.",
-            "Final form: $\\dfrac{dy}{dx} = 4\\,\\sec(4x + 9)\\tan(4x + 9)\\,\\tan(5x + 8) + \\sec(4x + 9)\\,5\\,\\sec^{2}(5x + 8)$"
+            "$y'=4\\,\\sec(4x + 9)\\tan(4x + 9)\\,\\tan(5x + 8) + 5\\,\\sec(4x + 9)\\,\\sec^{2}(5x + 8)$",
+            "Factor out the common factor $\\sec(4x + 9)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\sec(4x + 9)\\big[4\\,\\tan(4x + 9)\\,\\tan(5x + 8) + 5\\,\\big(\\sec(5x + 8)\\big)^{2}\\big]$"
           ],
           "raw": {
             "equation": "$y = \\sec(4x + 9)\\,\\tan(5x + 8)$",
-            "answer": "$\\dfrac{dy}{dx} = 4\\,\\sec(4x + 9)\\tan(4x + 9)\\,\\tan(5x + 8) + \\sec(4x + 9)\\,5\\,\\sec^{2}(5x + 8)$",
+            "answer": "$\\dfrac{dy}{dx} = \\sec(4x + 9)\\big[4\\,\\tan(4x + 9)\\,\\tan(5x + 8) + 5\\,\\big(\\sec(5x + 8)\\big)^{2}\\big]$",
             "steps": [
               {
                 "text": "Write the two factors as $f=\\sec(4x + 9)$ and $g=\\tan(5x + 8)$."
@@ -35754,7 +36038,13 @@
                 "text": "Substitute into the product rule: $y' = (4\\,\\sec(4x + 9)\\tan(4x + 9))(\\tan(5x + 8)) + (\\sec(4x + 9))(5\\,\\sec^{2}(5x + 8))$."
               },
               {
-                "text": "Final form: $\\dfrac{dy}{dx} = 4\\,\\sec(4x + 9)\\tan(4x + 9)\\,\\tan(5x + 8) + \\sec(4x + 9)\\,5\\,\\sec^{2}(5x + 8)$"
+                "text": "$y'=4\\,\\sec(4x + 9)\\tan(4x + 9)\\,\\tan(5x + 8) + 5\\,\\sec(4x + 9)\\,\\sec^{2}(5x + 8)$"
+              },
+              {
+                "text": "Factor out the common factor $\\sec(4x + 9)$."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = \\sec(4x + 9)\\big[4\\,\\tan(4x + 9)\\,\\tan(5x + 8) + 5\\,\\big(\\sec(5x + 8)\\big)^{2}\\big]$"
               }
             ]
           }
@@ -35818,8 +36108,8 @@
           "questionText": "$y = \\dfrac{\\cos(3x - 8)}{\\csc(-7x + 9)}$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = \\dfrac{(-3\\,\\sin(3x - 8))\\,\\csc(-7x + 9) - \\cos(3x - 8)\\,(7\\,\\csc(-7x + 9)\\cot(-7x + 9))}{\\big(\\csc(-7x + 9)\\big)^{2}}$",
-          "answerText": "$\\dfrac{dy}{dx} = \\dfrac{(-3\\,\\sin(3x - 8))\\,\\csc(-7x + 9) - \\cos(3x - 8)\\,(7\\,\\csc(-7x + 9)\\cot(-7x + 9))}{\\big(\\csc(-7x + 9)\\big)^{2}}$",
+          "answer": "$\\dfrac{dy}{dx} = \\dfrac{-\\big[3\\,\\sin(3x - 8) + 7\\,\\cos(3x - 8)\\,\\cot(-7x + 9)\\big]}{\\csc(-7x + 9)}$",
+          "answerText": "$\\dfrac{dy}{dx} = \\dfrac{-\\big[3\\,\\sin(3x - 8) + 7\\,\\cos(3x - 8)\\,\\cot(-7x + 9)\\big]}{\\csc(-7x + 9)}$",
           "steps": [
             "Identify the numerator and denominator: $u=\\cos(3x - 8)$ and $v=\\csc(-7x + 9)$.",
             "Use quotient rule: $(u/v)\\prime=(u\\prime v-uv\\prime)/v^2$.",
@@ -35828,7 +36118,11 @@
             "$v'=(-\\csc(-7x + 9)\\cot(-7x + 9))(-7)$",
             "$v'=7\\,\\csc(-7x + 9)\\cot(-7x + 9)$",
             "Substitute into the quotient rule before simplifying.",
-            "$\\dfrac{dy}{dx} = \\dfrac{(-3\\,\\sin(3x - 8))\\,\\csc(-7x + 9) - \\cos(3x - 8)\\,(7\\,\\csc(-7x + 9)\\cot(-7x + 9))}{\\big(\\csc(-7x + 9)\\big)^{2}}$"
+            "$\\dfrac{dy}{dx} = \\dfrac{(-3\\,\\sin(3x - 8))\\,\\csc(-7x + 9) - \\cos(3x - 8)\\,(7\\,\\csc(-7x + 9)\\cot(-7x + 9))}{\\big(\\csc(-7x + 9)\\big)^{2}}$",
+            "Factor out the common factor $-\\csc(-7x + 9)$.",
+            "$y'=\\dfrac{-\\csc(-7x + 9)\\big[3\\,\\sin(3x - 8) + 7\\,\\cos(3x - 8)\\,\\cot(-7x + 9)\\big]}{\\big(\\csc(-7x + 9)\\big)^{2}}$",
+            "Cancel common numerator and denominator factors.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{-\\big[3\\,\\sin(3x - 8) + 7\\,\\cos(3x - 8)\\,\\cot(-7x + 9)\\big]}{\\csc(-7x + 9)}$"
           ],
           "stepText": [
             "Identify the numerator and denominator: $u=\\cos(3x - 8)$ and $v=\\csc(-7x + 9)$.",
@@ -35838,11 +36132,15 @@
             "$v'=(-\\csc(-7x + 9)\\cot(-7x + 9))(-7)$",
             "$v'=7\\,\\csc(-7x + 9)\\cot(-7x + 9)$",
             "Substitute into the quotient rule before simplifying.",
-            "$\\dfrac{dy}{dx} = \\dfrac{(-3\\,\\sin(3x - 8))\\,\\csc(-7x + 9) - \\cos(3x - 8)\\,(7\\,\\csc(-7x + 9)\\cot(-7x + 9))}{\\big(\\csc(-7x + 9)\\big)^{2}}$"
+            "$\\dfrac{dy}{dx} = \\dfrac{(-3\\,\\sin(3x - 8))\\,\\csc(-7x + 9) - \\cos(3x - 8)\\,(7\\,\\csc(-7x + 9)\\cot(-7x + 9))}{\\big(\\csc(-7x + 9)\\big)^{2}}$",
+            "Factor out the common factor $-\\csc(-7x + 9)$.",
+            "$y'=\\dfrac{-\\csc(-7x + 9)\\big[3\\,\\sin(3x - 8) + 7\\,\\cos(3x - 8)\\,\\cot(-7x + 9)\\big]}{\\big(\\csc(-7x + 9)\\big)^{2}}$",
+            "Cancel common numerator and denominator factors.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{-\\big[3\\,\\sin(3x - 8) + 7\\,\\cos(3x - 8)\\,\\cot(-7x + 9)\\big]}{\\csc(-7x + 9)}$"
           ],
           "raw": {
             "equation": "$y = \\dfrac{\\cos(3x - 8)}{\\csc(-7x + 9)}$",
-            "answer": "$\\dfrac{dy}{dx} = \\dfrac{(-3\\,\\sin(3x - 8))\\,\\csc(-7x + 9) - \\cos(3x - 8)\\,(7\\,\\csc(-7x + 9)\\cot(-7x + 9))}{\\big(\\csc(-7x + 9)\\big)^{2}}$",
+            "answer": "$\\dfrac{dy}{dx} = \\dfrac{-\\big[3\\,\\sin(3x - 8) + 7\\,\\cos(3x - 8)\\,\\cot(-7x + 9)\\big]}{\\csc(-7x + 9)}$",
             "steps": [
               {
                 "text": "Identify the numerator and denominator: $u=\\cos(3x - 8)$ and $v=\\csc(-7x + 9)$."
@@ -35867,6 +36165,18 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx} = \\dfrac{(-3\\,\\sin(3x - 8))\\,\\csc(-7x + 9) - \\cos(3x - 8)\\,(7\\,\\csc(-7x + 9)\\cot(-7x + 9))}{\\big(\\csc(-7x + 9)\\big)^{2}}$"
+              },
+              {
+                "text": "Factor out the common factor $-\\csc(-7x + 9)$."
+              },
+              {
+                "text": "$y'=\\dfrac{-\\csc(-7x + 9)\\big[3\\,\\sin(3x - 8) + 7\\,\\cos(3x - 8)\\,\\cot(-7x + 9)\\big]}{\\big(\\csc(-7x + 9)\\big)^{2}}$"
+              },
+              {
+                "text": "Cancel common numerator and denominator factors."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{-\\big[3\\,\\sin(3x - 8) + 7\\,\\cos(3x - 8)\\,\\cot(-7x + 9)\\big]}{\\csc(-7x + 9)}$"
               }
             ]
           }
@@ -35879,8 +36189,8 @@
           "questionText": "$y = \\big(\\tan(-8x - 5)\\big)^{3}\\,\\csc(-9x + 1)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = -24\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\sec^{2}(-8x - 5)\\,\\csc(-9x + 1) + \\big(\\tan(-8x - 5)\\big)^{3}\\,9\\,\\csc(-9x + 1)\\cot(-9x + 1)$",
-          "answerText": "$\\dfrac{dy}{dx} = -24\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\sec^{2}(-8x - 5)\\,\\csc(-9x + 1) + \\big(\\tan(-8x - 5)\\big)^{3}\\,9\\,\\csc(-9x + 1)\\cot(-9x + 1)$",
+          "answer": "$\\dfrac{dy}{dx} = -3\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\csc(-9x + 1)\\big[8\\,\\big(\\sec(-8x - 5)\\big)^{2} - 3\\,\\tan(-8x - 5)\\,\\cot(-9x + 1)\\big]$",
+          "answerText": "$\\dfrac{dy}{dx} = -3\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\csc(-9x + 1)\\big[8\\,\\big(\\sec(-8x - 5)\\big)^{2} - 3\\,\\tan(-8x - 5)\\,\\cot(-9x + 1)\\big]$",
           "steps": [
             "This is a product, and the first factor also needs the chain rule.",
             "Let $f=\\big(\\tan(-8x - 5)\\big)^{3}$ and $g=\\csc(-9x + 1)$.",
@@ -35890,7 +36200,9 @@
             "$g'=9\\,\\csc(-9x + 1)\\cot(-9x + 1)$",
             "Apply product rule: $y\\prime=f\\prime g+fg\\prime$.",
             "$y'=(-24\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\sec^{2}(-8x - 5))(\\csc(-9x + 1))+(\\big(\\tan(-8x - 5)\\big)^{3})(9\\,\\csc(-9x + 1)\\cot(-9x + 1))$",
-            "$\\dfrac{dy}{dx} = -24\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\sec^{2}(-8x - 5)\\,\\csc(-9x + 1) + \\big(\\tan(-8x - 5)\\big)^{3}\\,9\\,\\csc(-9x + 1)\\cot(-9x + 1)$"
+            "$y'=-24\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\sec^{2}(-8x - 5)\\,\\csc(-9x + 1) + 9\\,\\big(\\tan(-8x - 5)\\big)^{3}\\,\\csc(-9x + 1)\\cot(-9x + 1)$",
+            "Factor out the common factor $-3\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\csc(-9x + 1)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = -3\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\csc(-9x + 1)\\big[8\\,\\big(\\sec(-8x - 5)\\big)^{2} - 3\\,\\tan(-8x - 5)\\,\\cot(-9x + 1)\\big]$"
           ],
           "stepText": [
             "This is a product, and the first factor also needs the chain rule.",
@@ -35901,11 +36213,13 @@
             "$g'=9\\,\\csc(-9x + 1)\\cot(-9x + 1)$",
             "Apply product rule: $y\\prime=f\\prime g+fg\\prime$.",
             "$y'=(-24\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\sec^{2}(-8x - 5))(\\csc(-9x + 1))+(\\big(\\tan(-8x - 5)\\big)^{3})(9\\,\\csc(-9x + 1)\\cot(-9x + 1))$",
-            "$\\dfrac{dy}{dx} = -24\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\sec^{2}(-8x - 5)\\,\\csc(-9x + 1) + \\big(\\tan(-8x - 5)\\big)^{3}\\,9\\,\\csc(-9x + 1)\\cot(-9x + 1)$"
+            "$y'=-24\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\sec^{2}(-8x - 5)\\,\\csc(-9x + 1) + 9\\,\\big(\\tan(-8x - 5)\\big)^{3}\\,\\csc(-9x + 1)\\cot(-9x + 1)$",
+            "Factor out the common factor $-3\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\csc(-9x + 1)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = -3\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\csc(-9x + 1)\\big[8\\,\\big(\\sec(-8x - 5)\\big)^{2} - 3\\,\\tan(-8x - 5)\\,\\cot(-9x + 1)\\big]$"
           ],
           "raw": {
             "equation": "$y = \\big(\\tan(-8x - 5)\\big)^{3}\\,\\csc(-9x + 1)$",
-            "answer": "$\\dfrac{dy}{dx} = -24\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\sec^{2}(-8x - 5)\\,\\csc(-9x + 1) + \\big(\\tan(-8x - 5)\\big)^{3}\\,9\\,\\csc(-9x + 1)\\cot(-9x + 1)$",
+            "answer": "$\\dfrac{dy}{dx} = -3\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\csc(-9x + 1)\\big[8\\,\\big(\\sec(-8x - 5)\\big)^{2} - 3\\,\\tan(-8x - 5)\\,\\cot(-9x + 1)\\big]$",
             "steps": [
               {
                 "text": "This is a product, and the first factor also needs the chain rule."
@@ -35932,7 +36246,13 @@
                 "text": "$y'=(-24\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\sec^{2}(-8x - 5))(\\csc(-9x + 1))+(\\big(\\tan(-8x - 5)\\big)^{3})(9\\,\\csc(-9x + 1)\\cot(-9x + 1))$"
               },
               {
-                "text": "$\\dfrac{dy}{dx} = -24\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\sec^{2}(-8x - 5)\\,\\csc(-9x + 1) + \\big(\\tan(-8x - 5)\\big)^{3}\\,9\\,\\csc(-9x + 1)\\cot(-9x + 1)$"
+                "text": "$y'=-24\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\sec^{2}(-8x - 5)\\,\\csc(-9x + 1) + 9\\,\\big(\\tan(-8x - 5)\\big)^{3}\\,\\csc(-9x + 1)\\cot(-9x + 1)$"
+              },
+              {
+                "text": "Factor out the common factor $-3\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\csc(-9x + 1)$."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = -3\\,\\big(\\tan(-8x - 5)\\big)^{2}\\,\\csc(-9x + 1)\\big[8\\,\\big(\\sec(-8x - 5)\\big)^{2} - 3\\,\\tan(-8x - 5)\\,\\cot(-9x + 1)\\big]$"
               }
             ]
           }
@@ -35945,8 +36265,8 @@
           "questionText": "$y = \\sin(9x + 4)\\,\\tan(8x - 3)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = 9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + \\sin(9x + 4)\\,8\\,\\sec^{2}(8x - 3)$",
-          "answerText": "$\\dfrac{dy}{dx} = 9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + \\sin(9x + 4)\\,8\\,\\sec^{2}(8x - 3)$",
+          "answer": "$\\dfrac{dy}{dx} = 9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + 8\\,\\sin(9x + 4)\\,\\big(\\sec(8x - 3)\\big)^{2}$",
+          "answerText": "$\\dfrac{dy}{dx} = 9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + 8\\,\\sin(9x + 4)\\,\\big(\\sec(8x - 3)\\big)^{2}$",
           "steps": [
             "Write the two factors as $f=\\sin(9x + 4)$ and $g=\\tan(8x - 3)$.",
             "Use product rule: $(fg)\\prime=f\\prime g+fg\\prime$.",
@@ -35955,7 +36275,9 @@
             "$g'=(\\sec^{2}(8x - 3))(8)$",
             "$g'=8\\,\\sec^{2}(8x - 3)$",
             "Substitute into the product rule: $y' = (9\\,\\cos(9x + 4))(\\tan(8x - 3)) + (\\sin(9x + 4))(8\\,\\sec^{2}(8x - 3))$.",
-            "Final form: $\\dfrac{dy}{dx} = 9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + \\sin(9x + 4)\\,8\\,\\sec^{2}(8x - 3)$"
+            "$y'=9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + 8\\,\\sin(9x + 4)\\,\\sec^{2}(8x - 3)$",
+            "No further common factor remains.",
+            "Factorised final form: $\\dfrac{dy}{dx} = 9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + 8\\,\\sin(9x + 4)\\,\\big(\\sec(8x - 3)\\big)^{2}$"
           ],
           "stepText": [
             "Write the two factors as $f=\\sin(9x + 4)$ and $g=\\tan(8x - 3)$.",
@@ -35965,11 +36287,13 @@
             "$g'=(\\sec^{2}(8x - 3))(8)$",
             "$g'=8\\,\\sec^{2}(8x - 3)$",
             "Substitute into the product rule: $y' = (9\\,\\cos(9x + 4))(\\tan(8x - 3)) + (\\sin(9x + 4))(8\\,\\sec^{2}(8x - 3))$.",
-            "Final form: $\\dfrac{dy}{dx} = 9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + \\sin(9x + 4)\\,8\\,\\sec^{2}(8x - 3)$"
+            "$y'=9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + 8\\,\\sin(9x + 4)\\,\\sec^{2}(8x - 3)$",
+            "No further common factor remains.",
+            "Factorised final form: $\\dfrac{dy}{dx} = 9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + 8\\,\\sin(9x + 4)\\,\\big(\\sec(8x - 3)\\big)^{2}$"
           ],
           "raw": {
             "equation": "$y = \\sin(9x + 4)\\,\\tan(8x - 3)$",
-            "answer": "$\\dfrac{dy}{dx} = 9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + \\sin(9x + 4)\\,8\\,\\sec^{2}(8x - 3)$",
+            "answer": "$\\dfrac{dy}{dx} = 9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + 8\\,\\sin(9x + 4)\\,\\big(\\sec(8x - 3)\\big)^{2}$",
             "steps": [
               {
                 "text": "Write the two factors as $f=\\sin(9x + 4)$ and $g=\\tan(8x - 3)$."
@@ -35993,7 +36317,13 @@
                 "text": "Substitute into the product rule: $y' = (9\\,\\cos(9x + 4))(\\tan(8x - 3)) + (\\sin(9x + 4))(8\\,\\sec^{2}(8x - 3))$."
               },
               {
-                "text": "Final form: $\\dfrac{dy}{dx} = 9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + \\sin(9x + 4)\\,8\\,\\sec^{2}(8x - 3)$"
+                "text": "$y'=9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + 8\\,\\sin(9x + 4)\\,\\sec^{2}(8x - 3)$"
+              },
+              {
+                "text": "No further common factor remains."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = 9\\,\\cos(9x + 4)\\,\\tan(8x - 3) + 8\\,\\sin(9x + 4)\\,\\big(\\sec(8x - 3)\\big)^{2}$"
               }
             ]
           }
@@ -36057,8 +36387,8 @@
           "questionText": "$y = \\dfrac{\\csc(-2x + 1)}{\\tan(6x - 7)}$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = \\dfrac{(2\\,\\csc(-2x + 1)\\cot(-2x + 1))\\,\\tan(6x - 7) - \\csc(-2x + 1)\\,(6\\,\\sec^{2}(6x - 7))}{\\big(\\tan(6x - 7)\\big)^{2}}$",
-          "answerText": "$\\dfrac{dy}{dx} = \\dfrac{(2\\,\\csc(-2x + 1)\\cot(-2x + 1))\\,\\tan(6x - 7) - \\csc(-2x + 1)\\,(6\\,\\sec^{2}(6x - 7))}{\\big(\\tan(6x - 7)\\big)^{2}}$",
+          "answer": "$\\dfrac{dy}{dx} = \\dfrac{2\\,\\csc(-2x + 1)\\big[\\cot(-2x + 1)\\,\\tan(6x - 7) - 3\\,\\big(\\sec(6x - 7)\\big)^{2}\\big]}{\\big(\\tan(6x - 7)\\big)^{2}}$",
+          "answerText": "$\\dfrac{dy}{dx} = \\dfrac{2\\,\\csc(-2x + 1)\\big[\\cot(-2x + 1)\\,\\tan(6x - 7) - 3\\,\\big(\\sec(6x - 7)\\big)^{2}\\big]}{\\big(\\tan(6x - 7)\\big)^{2}}$",
           "steps": [
             "Identify the numerator and denominator: $u=\\csc(-2x + 1)$ and $v=\\tan(6x - 7)$.",
             "Use quotient rule: $(u/v)\\prime=(u\\prime v-uv\\prime)/v^2$.",
@@ -36067,7 +36397,9 @@
             "$v'=(\\sec^{2}(6x - 7))(6)$",
             "$v'=6\\,\\sec^{2}(6x - 7)$",
             "Substitute into the quotient rule before simplifying.",
-            "$\\dfrac{dy}{dx} = \\dfrac{(2\\,\\csc(-2x + 1)\\cot(-2x + 1))\\,\\tan(6x - 7) - \\csc(-2x + 1)\\,(6\\,\\sec^{2}(6x - 7))}{\\big(\\tan(6x - 7)\\big)^{2}}$"
+            "$\\dfrac{dy}{dx} = \\dfrac{(2\\,\\csc(-2x + 1)\\cot(-2x + 1))\\,\\tan(6x - 7) - \\csc(-2x + 1)\\,(6\\,\\sec^{2}(6x - 7))}{\\big(\\tan(6x - 7)\\big)^{2}}$",
+            "Factor out the common factor $2\\,\\csc(-2x + 1)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{2\\,\\csc(-2x + 1)\\big[\\cot(-2x + 1)\\,\\tan(6x - 7) - 3\\,\\big(\\sec(6x - 7)\\big)^{2}\\big]}{\\big(\\tan(6x - 7)\\big)^{2}}$"
           ],
           "stepText": [
             "Identify the numerator and denominator: $u=\\csc(-2x + 1)$ and $v=\\tan(6x - 7)$.",
@@ -36077,11 +36409,13 @@
             "$v'=(\\sec^{2}(6x - 7))(6)$",
             "$v'=6\\,\\sec^{2}(6x - 7)$",
             "Substitute into the quotient rule before simplifying.",
-            "$\\dfrac{dy}{dx} = \\dfrac{(2\\,\\csc(-2x + 1)\\cot(-2x + 1))\\,\\tan(6x - 7) - \\csc(-2x + 1)\\,(6\\,\\sec^{2}(6x - 7))}{\\big(\\tan(6x - 7)\\big)^{2}}$"
+            "$\\dfrac{dy}{dx} = \\dfrac{(2\\,\\csc(-2x + 1)\\cot(-2x + 1))\\,\\tan(6x - 7) - \\csc(-2x + 1)\\,(6\\,\\sec^{2}(6x - 7))}{\\big(\\tan(6x - 7)\\big)^{2}}$",
+            "Factor out the common factor $2\\,\\csc(-2x + 1)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{2\\,\\csc(-2x + 1)\\big[\\cot(-2x + 1)\\,\\tan(6x - 7) - 3\\,\\big(\\sec(6x - 7)\\big)^{2}\\big]}{\\big(\\tan(6x - 7)\\big)^{2}}$"
           ],
           "raw": {
             "equation": "$y = \\dfrac{\\csc(-2x + 1)}{\\tan(6x - 7)}$",
-            "answer": "$\\dfrac{dy}{dx} = \\dfrac{(2\\,\\csc(-2x + 1)\\cot(-2x + 1))\\,\\tan(6x - 7) - \\csc(-2x + 1)\\,(6\\,\\sec^{2}(6x - 7))}{\\big(\\tan(6x - 7)\\big)^{2}}$",
+            "answer": "$\\dfrac{dy}{dx} = \\dfrac{2\\,\\csc(-2x + 1)\\big[\\cot(-2x + 1)\\,\\tan(6x - 7) - 3\\,\\big(\\sec(6x - 7)\\big)^{2}\\big]}{\\big(\\tan(6x - 7)\\big)^{2}}$",
             "steps": [
               {
                 "text": "Identify the numerator and denominator: $u=\\csc(-2x + 1)$ and $v=\\tan(6x - 7)$."
@@ -36106,6 +36440,12 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx} = \\dfrac{(2\\,\\csc(-2x + 1)\\cot(-2x + 1))\\,\\tan(6x - 7) - \\csc(-2x + 1)\\,(6\\,\\sec^{2}(6x - 7))}{\\big(\\tan(6x - 7)\\big)^{2}}$"
+              },
+              {
+                "text": "Factor out the common factor $2\\,\\csc(-2x + 1)$."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{2\\,\\csc(-2x + 1)\\big[\\cot(-2x + 1)\\,\\tan(6x - 7) - 3\\,\\big(\\sec(6x - 7)\\big)^{2}\\big]}{\\big(\\tan(6x - 7)\\big)^{2}}$"
               }
             ]
           }
@@ -36193,8 +36533,8 @@
           "questionText": "$y = \\big(\\sec(3x + 8)\\big)^{2}\\,\\sin(-9x - 7)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = 6\\,\\big(\\sec(3x + 8)\\big)^{1}\\,\\sec(3x + 8)\\tan(3x + 8)\\,\\sin(-9x - 7) + \\big(\\sec(3x + 8)\\big)^{2}\\,-9\\,\\cos(-9x - 7)$",
-          "answerText": "$\\dfrac{dy}{dx} = 6\\,\\big(\\sec(3x + 8)\\big)^{1}\\,\\sec(3x + 8)\\tan(3x + 8)\\,\\sin(-9x - 7) + \\big(\\sec(3x + 8)\\big)^{2}\\,-9\\,\\cos(-9x - 7)$",
+          "answer": "$\\dfrac{dy}{dx} = 3\\,\\big(\\sec(3x + 8)\\big)^{2}\\big[2\\,\\tan(3x + 8)\\,\\sin(-9x - 7) - 3\\,\\cos(-9x - 7)\\big]$",
+          "answerText": "$\\dfrac{dy}{dx} = 3\\,\\big(\\sec(3x + 8)\\big)^{2}\\big[2\\,\\tan(3x + 8)\\,\\sin(-9x - 7) - 3\\,\\cos(-9x - 7)\\big]$",
           "steps": [
             "This is a product, and the first factor also needs the chain rule.",
             "Let $f=\\big(\\sec(3x + 8)\\big)^{2}$ and $g=\\sin(-9x - 7)$.",
@@ -36204,7 +36544,9 @@
             "$g'=-9\\,\\cos(-9x - 7)$",
             "Apply product rule: $y\\prime=f\\prime g+fg\\prime$.",
             "$y'=(6\\,\\big(\\sec(3x + 8)\\big)^{1}\\,\\sec(3x + 8)\\tan(3x + 8))(\\sin(-9x - 7))+(\\big(\\sec(3x + 8)\\big)^{2})(-9\\,\\cos(-9x - 7))$",
-            "$\\dfrac{dy}{dx} = 6\\,\\big(\\sec(3x + 8)\\big)^{1}\\,\\sec(3x + 8)\\tan(3x + 8)\\,\\sin(-9x - 7) + \\big(\\sec(3x + 8)\\big)^{2}\\,-9\\,\\cos(-9x - 7)$"
+            "$y'=6\\,\\big(\\sec(3x + 8)\\big)^{1}\\,\\sec(3x + 8)\\tan(3x + 8)\\,\\sin(-9x - 7) - 9\\,\\big(\\sec(3x + 8)\\big)^{2}\\,\\cos(-9x - 7)$",
+            "Factor out the common factor $3\\,\\big(\\sec(3x + 8)\\big)^{2}$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = 3\\,\\big(\\sec(3x + 8)\\big)^{2}\\big[2\\,\\tan(3x + 8)\\,\\sin(-9x - 7) - 3\\,\\cos(-9x - 7)\\big]$"
           ],
           "stepText": [
             "This is a product, and the first factor also needs the chain rule.",
@@ -36215,11 +36557,13 @@
             "$g'=-9\\,\\cos(-9x - 7)$",
             "Apply product rule: $y\\prime=f\\prime g+fg\\prime$.",
             "$y'=(6\\,\\big(\\sec(3x + 8)\\big)^{1}\\,\\sec(3x + 8)\\tan(3x + 8))(\\sin(-9x - 7))+(\\big(\\sec(3x + 8)\\big)^{2})(-9\\,\\cos(-9x - 7))$",
-            "$\\dfrac{dy}{dx} = 6\\,\\big(\\sec(3x + 8)\\big)^{1}\\,\\sec(3x + 8)\\tan(3x + 8)\\,\\sin(-9x - 7) + \\big(\\sec(3x + 8)\\big)^{2}\\,-9\\,\\cos(-9x - 7)$"
+            "$y'=6\\,\\big(\\sec(3x + 8)\\big)^{1}\\,\\sec(3x + 8)\\tan(3x + 8)\\,\\sin(-9x - 7) - 9\\,\\big(\\sec(3x + 8)\\big)^{2}\\,\\cos(-9x - 7)$",
+            "Factor out the common factor $3\\,\\big(\\sec(3x + 8)\\big)^{2}$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = 3\\,\\big(\\sec(3x + 8)\\big)^{2}\\big[2\\,\\tan(3x + 8)\\,\\sin(-9x - 7) - 3\\,\\cos(-9x - 7)\\big]$"
           ],
           "raw": {
             "equation": "$y = \\big(\\sec(3x + 8)\\big)^{2}\\,\\sin(-9x - 7)$",
-            "answer": "$\\dfrac{dy}{dx} = 6\\,\\big(\\sec(3x + 8)\\big)^{1}\\,\\sec(3x + 8)\\tan(3x + 8)\\,\\sin(-9x - 7) + \\big(\\sec(3x + 8)\\big)^{2}\\,-9\\,\\cos(-9x - 7)$",
+            "answer": "$\\dfrac{dy}{dx} = 3\\,\\big(\\sec(3x + 8)\\big)^{2}\\big[2\\,\\tan(3x + 8)\\,\\sin(-9x - 7) - 3\\,\\cos(-9x - 7)\\big]$",
             "steps": [
               {
                 "text": "This is a product, and the first factor also needs the chain rule."
@@ -36246,7 +36590,13 @@
                 "text": "$y'=(6\\,\\big(\\sec(3x + 8)\\big)^{1}\\,\\sec(3x + 8)\\tan(3x + 8))(\\sin(-9x - 7))+(\\big(\\sec(3x + 8)\\big)^{2})(-9\\,\\cos(-9x - 7))$"
               },
               {
-                "text": "$\\dfrac{dy}{dx} = 6\\,\\big(\\sec(3x + 8)\\big)^{1}\\,\\sec(3x + 8)\\tan(3x + 8)\\,\\sin(-9x - 7) + \\big(\\sec(3x + 8)\\big)^{2}\\,-9\\,\\cos(-9x - 7)$"
+                "text": "$y'=6\\,\\big(\\sec(3x + 8)\\big)^{1}\\,\\sec(3x + 8)\\tan(3x + 8)\\,\\sin(-9x - 7) - 9\\,\\big(\\sec(3x + 8)\\big)^{2}\\,\\cos(-9x - 7)$"
+              },
+              {
+                "text": "Factor out the common factor $3\\,\\big(\\sec(3x + 8)\\big)^{2}$."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = 3\\,\\big(\\sec(3x + 8)\\big)^{2}\\big[2\\,\\tan(3x + 8)\\,\\sin(-9x - 7) - 3\\,\\cos(-9x - 7)\\big]$"
               }
             ]
           }
@@ -36310,8 +36660,8 @@
           "questionText": "$y = \\big(\\tan(-4x + 3)\\big)^{3}\\,\\sec(-5x + 8)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = -12\\,\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec^{2}(-4x + 3)\\,\\sec(-5x + 8) + \\big(\\tan(-4x + 3)\\big)^{3}\\,-5\\,\\sec(-5x + 8)\\tan(-5x + 8)$",
-          "answerText": "$\\dfrac{dy}{dx} = -12\\,\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec^{2}(-4x + 3)\\,\\sec(-5x + 8) + \\big(\\tan(-4x + 3)\\big)^{3}\\,-5\\,\\sec(-5x + 8)\\tan(-5x + 8)$",
+          "answer": "$\\dfrac{dy}{dx} = -\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec(-5x + 8)\\big[12\\,\\big(\\sec(-4x + 3)\\big)^{2} + 5\\,\\tan(-4x + 3)\\,\\tan(-5x + 8)\\big]$",
+          "answerText": "$\\dfrac{dy}{dx} = -\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec(-5x + 8)\\big[12\\,\\big(\\sec(-4x + 3)\\big)^{2} + 5\\,\\tan(-4x + 3)\\,\\tan(-5x + 8)\\big]$",
           "steps": [
             "This is a product, and the first factor also needs the chain rule.",
             "Let $f=\\big(\\tan(-4x + 3)\\big)^{3}$ and $g=\\sec(-5x + 8)$.",
@@ -36321,7 +36671,9 @@
             "$g'=-5\\,\\sec(-5x + 8)\\tan(-5x + 8)$",
             "Apply product rule: $y\\prime=f\\prime g+fg\\prime$.",
             "$y'=(-12\\,\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec^{2}(-4x + 3))(\\sec(-5x + 8))+(\\big(\\tan(-4x + 3)\\big)^{3})(-5\\,\\sec(-5x + 8)\\tan(-5x + 8))$",
-            "$\\dfrac{dy}{dx} = -12\\,\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec^{2}(-4x + 3)\\,\\sec(-5x + 8) + \\big(\\tan(-4x + 3)\\big)^{3}\\,-5\\,\\sec(-5x + 8)\\tan(-5x + 8)$"
+            "$y'=-12\\,\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec^{2}(-4x + 3)\\,\\sec(-5x + 8) - 5\\,\\big(\\tan(-4x + 3)\\big)^{3}\\,\\sec(-5x + 8)\\tan(-5x + 8)$",
+            "Factor out the common factor $-\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec(-5x + 8)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = -\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec(-5x + 8)\\big[12\\,\\big(\\sec(-4x + 3)\\big)^{2} + 5\\,\\tan(-4x + 3)\\,\\tan(-5x + 8)\\big]$"
           ],
           "stepText": [
             "This is a product, and the first factor also needs the chain rule.",
@@ -36332,11 +36684,13 @@
             "$g'=-5\\,\\sec(-5x + 8)\\tan(-5x + 8)$",
             "Apply product rule: $y\\prime=f\\prime g+fg\\prime$.",
             "$y'=(-12\\,\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec^{2}(-4x + 3))(\\sec(-5x + 8))+(\\big(\\tan(-4x + 3)\\big)^{3})(-5\\,\\sec(-5x + 8)\\tan(-5x + 8))$",
-            "$\\dfrac{dy}{dx} = -12\\,\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec^{2}(-4x + 3)\\,\\sec(-5x + 8) + \\big(\\tan(-4x + 3)\\big)^{3}\\,-5\\,\\sec(-5x + 8)\\tan(-5x + 8)$"
+            "$y'=-12\\,\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec^{2}(-4x + 3)\\,\\sec(-5x + 8) - 5\\,\\big(\\tan(-4x + 3)\\big)^{3}\\,\\sec(-5x + 8)\\tan(-5x + 8)$",
+            "Factor out the common factor $-\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec(-5x + 8)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = -\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec(-5x + 8)\\big[12\\,\\big(\\sec(-4x + 3)\\big)^{2} + 5\\,\\tan(-4x + 3)\\,\\tan(-5x + 8)\\big]$"
           ],
           "raw": {
             "equation": "$y = \\big(\\tan(-4x + 3)\\big)^{3}\\,\\sec(-5x + 8)$",
-            "answer": "$\\dfrac{dy}{dx} = -12\\,\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec^{2}(-4x + 3)\\,\\sec(-5x + 8) + \\big(\\tan(-4x + 3)\\big)^{3}\\,-5\\,\\sec(-5x + 8)\\tan(-5x + 8)$",
+            "answer": "$\\dfrac{dy}{dx} = -\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec(-5x + 8)\\big[12\\,\\big(\\sec(-4x + 3)\\big)^{2} + 5\\,\\tan(-4x + 3)\\,\\tan(-5x + 8)\\big]$",
             "steps": [
               {
                 "text": "This is a product, and the first factor also needs the chain rule."
@@ -36363,7 +36717,13 @@
                 "text": "$y'=(-12\\,\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec^{2}(-4x + 3))(\\sec(-5x + 8))+(\\big(\\tan(-4x + 3)\\big)^{3})(-5\\,\\sec(-5x + 8)\\tan(-5x + 8))$"
               },
               {
-                "text": "$\\dfrac{dy}{dx} = -12\\,\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec^{2}(-4x + 3)\\,\\sec(-5x + 8) + \\big(\\tan(-4x + 3)\\big)^{3}\\,-5\\,\\sec(-5x + 8)\\tan(-5x + 8)$"
+                "text": "$y'=-12\\,\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec^{2}(-4x + 3)\\,\\sec(-5x + 8) - 5\\,\\big(\\tan(-4x + 3)\\big)^{3}\\,\\sec(-5x + 8)\\tan(-5x + 8)$"
+              },
+              {
+                "text": "Factor out the common factor $-\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec(-5x + 8)$."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = -\\big(\\tan(-4x + 3)\\big)^{2}\\,\\sec(-5x + 8)\\big[12\\,\\big(\\sec(-4x + 3)\\big)^{2} + 5\\,\\tan(-4x + 3)\\,\\tan(-5x + 8)\\big]$"
               }
             ]
           }
@@ -36427,8 +36787,8 @@
           "questionText": "$y = \\big(\\sin(-4x - 1)\\big)^{3}\\,\\cot(8x + 7)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = -12\\,\\big(\\sin(-4x - 1)\\big)^{2}\\,\\cos(-4x - 1)\\,\\cot(8x + 7) + \\big(\\sin(-4x - 1)\\big)^{3}\\,-8\\,\\csc^{2}(8x + 7)$",
-          "answerText": "$\\dfrac{dy}{dx} = -12\\,\\big(\\sin(-4x - 1)\\big)^{2}\\,\\cos(-4x - 1)\\,\\cot(8x + 7) + \\big(\\sin(-4x - 1)\\big)^{3}\\,-8\\,\\csc^{2}(8x + 7)$",
+          "answer": "$\\dfrac{dy}{dx} = -4\\,\\big(\\sin(-4x - 1)\\big)^{2}\\big[3\\,\\cos(-4x - 1)\\,\\cot(8x + 7) + 2\\,\\sin(-4x - 1)\\,\\big(\\csc(8x + 7)\\big)^{2}\\big]$",
+          "answerText": "$\\dfrac{dy}{dx} = -4\\,\\big(\\sin(-4x - 1)\\big)^{2}\\big[3\\,\\cos(-4x - 1)\\,\\cot(8x + 7) + 2\\,\\sin(-4x - 1)\\,\\big(\\csc(8x + 7)\\big)^{2}\\big]$",
           "steps": [
             "This is a product, and the first factor also needs the chain rule.",
             "Let $f=\\big(\\sin(-4x - 1)\\big)^{3}$ and $g=\\cot(8x + 7)$.",
@@ -36438,7 +36798,9 @@
             "$g'=-8\\,\\csc^{2}(8x + 7)$",
             "Apply product rule: $y\\prime=f\\prime g+fg\\prime$.",
             "$y'=(-12\\,\\big(\\sin(-4x - 1)\\big)^{2}\\,\\cos(-4x - 1))(\\cot(8x + 7))+(\\big(\\sin(-4x - 1)\\big)^{3})(-8\\,\\csc^{2}(8x + 7))$",
-            "$\\dfrac{dy}{dx} = -12\\,\\big(\\sin(-4x - 1)\\big)^{2}\\,\\cos(-4x - 1)\\,\\cot(8x + 7) + \\big(\\sin(-4x - 1)\\big)^{3}\\,-8\\,\\csc^{2}(8x + 7)$"
+            "$y'=-12\\,\\big(\\sin(-4x - 1)\\big)^{2}\\,\\cos(-4x - 1)\\,\\cot(8x + 7) - 8\\,\\big(\\sin(-4x - 1)\\big)^{3}\\,\\csc^{2}(8x + 7)$",
+            "Factor out the common factor $-4\\,\\big(\\sin(-4x - 1)\\big)^{2}$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = -4\\,\\big(\\sin(-4x - 1)\\big)^{2}\\big[3\\,\\cos(-4x - 1)\\,\\cot(8x + 7) + 2\\,\\sin(-4x - 1)\\,\\big(\\csc(8x + 7)\\big)^{2}\\big]$"
           ],
           "stepText": [
             "This is a product, and the first factor also needs the chain rule.",
@@ -36449,11 +36811,13 @@
             "$g'=-8\\,\\csc^{2}(8x + 7)$",
             "Apply product rule: $y\\prime=f\\prime g+fg\\prime$.",
             "$y'=(-12\\,\\big(\\sin(-4x - 1)\\big)^{2}\\,\\cos(-4x - 1))(\\cot(8x + 7))+(\\big(\\sin(-4x - 1)\\big)^{3})(-8\\,\\csc^{2}(8x + 7))$",
-            "$\\dfrac{dy}{dx} = -12\\,\\big(\\sin(-4x - 1)\\big)^{2}\\,\\cos(-4x - 1)\\,\\cot(8x + 7) + \\big(\\sin(-4x - 1)\\big)^{3}\\,-8\\,\\csc^{2}(8x + 7)$"
+            "$y'=-12\\,\\big(\\sin(-4x - 1)\\big)^{2}\\,\\cos(-4x - 1)\\,\\cot(8x + 7) - 8\\,\\big(\\sin(-4x - 1)\\big)^{3}\\,\\csc^{2}(8x + 7)$",
+            "Factor out the common factor $-4\\,\\big(\\sin(-4x - 1)\\big)^{2}$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = -4\\,\\big(\\sin(-4x - 1)\\big)^{2}\\big[3\\,\\cos(-4x - 1)\\,\\cot(8x + 7) + 2\\,\\sin(-4x - 1)\\,\\big(\\csc(8x + 7)\\big)^{2}\\big]$"
           ],
           "raw": {
             "equation": "$y = \\big(\\sin(-4x - 1)\\big)^{3}\\,\\cot(8x + 7)$",
-            "answer": "$\\dfrac{dy}{dx} = -12\\,\\big(\\sin(-4x - 1)\\big)^{2}\\,\\cos(-4x - 1)\\,\\cot(8x + 7) + \\big(\\sin(-4x - 1)\\big)^{3}\\,-8\\,\\csc^{2}(8x + 7)$",
+            "answer": "$\\dfrac{dy}{dx} = -4\\,\\big(\\sin(-4x - 1)\\big)^{2}\\big[3\\,\\cos(-4x - 1)\\,\\cot(8x + 7) + 2\\,\\sin(-4x - 1)\\,\\big(\\csc(8x + 7)\\big)^{2}\\big]$",
             "steps": [
               {
                 "text": "This is a product, and the first factor also needs the chain rule."
@@ -36480,7 +36844,13 @@
                 "text": "$y'=(-12\\,\\big(\\sin(-4x - 1)\\big)^{2}\\,\\cos(-4x - 1))(\\cot(8x + 7))+(\\big(\\sin(-4x - 1)\\big)^{3})(-8\\,\\csc^{2}(8x + 7))$"
               },
               {
-                "text": "$\\dfrac{dy}{dx} = -12\\,\\big(\\sin(-4x - 1)\\big)^{2}\\,\\cos(-4x - 1)\\,\\cot(8x + 7) + \\big(\\sin(-4x - 1)\\big)^{3}\\,-8\\,\\csc^{2}(8x + 7)$"
+                "text": "$y'=-12\\,\\big(\\sin(-4x - 1)\\big)^{2}\\,\\cos(-4x - 1)\\,\\cot(8x + 7) - 8\\,\\big(\\sin(-4x - 1)\\big)^{3}\\,\\csc^{2}(8x + 7)$"
+              },
+              {
+                "text": "Factor out the common factor $-4\\,\\big(\\sin(-4x - 1)\\big)^{2}$."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = -4\\,\\big(\\sin(-4x - 1)\\big)^{2}\\big[3\\,\\cos(-4x - 1)\\,\\cot(8x + 7) + 2\\,\\sin(-4x - 1)\\,\\big(\\csc(8x + 7)\\big)^{2}\\big]$"
               }
             ]
           }
@@ -36568,8 +36938,8 @@
           "questionText": "$y = \\dfrac{\\sec(-2x + 3)}{\\cos(-7x - 8)}$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = \\dfrac{(-2\\,\\sec(-2x + 3)\\tan(-2x + 3))\\,\\cos(-7x - 8) - \\sec(-2x + 3)\\,(7\\,\\sin(-7x - 8))}{\\big(\\cos(-7x - 8)\\big)^{2}}$",
-          "answerText": "$\\dfrac{dy}{dx} = \\dfrac{(-2\\,\\sec(-2x + 3)\\tan(-2x + 3))\\,\\cos(-7x - 8) - \\sec(-2x + 3)\\,(7\\,\\sin(-7x - 8))}{\\big(\\cos(-7x - 8)\\big)^{2}}$",
+          "answer": "$\\dfrac{dy}{dx} = \\dfrac{-\\sec(-2x + 3)\\big[2\\,\\tan(-2x + 3)\\,\\cos(-7x - 8) + 7\\,\\sin(-7x - 8)\\big]}{\\big(\\cos(-7x - 8)\\big)^{2}}$",
+          "answerText": "$\\dfrac{dy}{dx} = \\dfrac{-\\sec(-2x + 3)\\big[2\\,\\tan(-2x + 3)\\,\\cos(-7x - 8) + 7\\,\\sin(-7x - 8)\\big]}{\\big(\\cos(-7x - 8)\\big)^{2}}$",
           "steps": [
             "Identify the numerator and denominator: $u=\\sec(-2x + 3)$ and $v=\\cos(-7x - 8)$.",
             "Use quotient rule: $(u/v)\\prime=(u\\prime v-uv\\prime)/v^2$.",
@@ -36578,7 +36948,9 @@
             "$v'=(-\\sin(-7x - 8))(-7)$",
             "$v'=7\\,\\sin(-7x - 8)$",
             "Substitute into the quotient rule before simplifying.",
-            "$\\dfrac{dy}{dx} = \\dfrac{(-2\\,\\sec(-2x + 3)\\tan(-2x + 3))\\,\\cos(-7x - 8) - \\sec(-2x + 3)\\,(7\\,\\sin(-7x - 8))}{\\big(\\cos(-7x - 8)\\big)^{2}}$"
+            "$\\dfrac{dy}{dx} = \\dfrac{(-2\\,\\sec(-2x + 3)\\tan(-2x + 3))\\,\\cos(-7x - 8) - \\sec(-2x + 3)\\,(7\\,\\sin(-7x - 8))}{\\big(\\cos(-7x - 8)\\big)^{2}}$",
+            "Factor out the common factor $-\\sec(-2x + 3)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{-\\sec(-2x + 3)\\big[2\\,\\tan(-2x + 3)\\,\\cos(-7x - 8) + 7\\,\\sin(-7x - 8)\\big]}{\\big(\\cos(-7x - 8)\\big)^{2}}$"
           ],
           "stepText": [
             "Identify the numerator and denominator: $u=\\sec(-2x + 3)$ and $v=\\cos(-7x - 8)$.",
@@ -36588,11 +36960,13 @@
             "$v'=(-\\sin(-7x - 8))(-7)$",
             "$v'=7\\,\\sin(-7x - 8)$",
             "Substitute into the quotient rule before simplifying.",
-            "$\\dfrac{dy}{dx} = \\dfrac{(-2\\,\\sec(-2x + 3)\\tan(-2x + 3))\\,\\cos(-7x - 8) - \\sec(-2x + 3)\\,(7\\,\\sin(-7x - 8))}{\\big(\\cos(-7x - 8)\\big)^{2}}$"
+            "$\\dfrac{dy}{dx} = \\dfrac{(-2\\,\\sec(-2x + 3)\\tan(-2x + 3))\\,\\cos(-7x - 8) - \\sec(-2x + 3)\\,(7\\,\\sin(-7x - 8))}{\\big(\\cos(-7x - 8)\\big)^{2}}$",
+            "Factor out the common factor $-\\sec(-2x + 3)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{-\\sec(-2x + 3)\\big[2\\,\\tan(-2x + 3)\\,\\cos(-7x - 8) + 7\\,\\sin(-7x - 8)\\big]}{\\big(\\cos(-7x - 8)\\big)^{2}}$"
           ],
           "raw": {
             "equation": "$y = \\dfrac{\\sec(-2x + 3)}{\\cos(-7x - 8)}$",
-            "answer": "$\\dfrac{dy}{dx} = \\dfrac{(-2\\,\\sec(-2x + 3)\\tan(-2x + 3))\\,\\cos(-7x - 8) - \\sec(-2x + 3)\\,(7\\,\\sin(-7x - 8))}{\\big(\\cos(-7x - 8)\\big)^{2}}$",
+            "answer": "$\\dfrac{dy}{dx} = \\dfrac{-\\sec(-2x + 3)\\big[2\\,\\tan(-2x + 3)\\,\\cos(-7x - 8) + 7\\,\\sin(-7x - 8)\\big]}{\\big(\\cos(-7x - 8)\\big)^{2}}$",
             "steps": [
               {
                 "text": "Identify the numerator and denominator: $u=\\sec(-2x + 3)$ and $v=\\cos(-7x - 8)$."
@@ -36617,6 +36991,12 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx} = \\dfrac{(-2\\,\\sec(-2x + 3)\\tan(-2x + 3))\\,\\cos(-7x - 8) - \\sec(-2x + 3)\\,(7\\,\\sin(-7x - 8))}{\\big(\\cos(-7x - 8)\\big)^{2}}$"
+              },
+              {
+                "text": "Factor out the common factor $-\\sec(-2x + 3)$."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{-\\sec(-2x + 3)\\big[2\\,\\tan(-2x + 3)\\,\\cos(-7x - 8) + 7\\,\\sin(-7x - 8)\\big]}{\\big(\\cos(-7x - 8)\\big)^{2}}$"
               }
             ]
           }
@@ -36629,8 +37009,8 @@
           "questionText": "$y = \\big(\\sec(2x - 1)\\big)^{2}\\,\\cot(2x - 7)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = 4\\,\\big(\\sec(2x - 1)\\big)^{1}\\,\\sec(2x - 1)\\tan(2x - 1)\\,\\cot(2x - 7) + \\big(\\sec(2x - 1)\\big)^{2}\\,-2\\,\\csc^{2}(2x - 7)$",
-          "answerText": "$\\dfrac{dy}{dx} = 4\\,\\big(\\sec(2x - 1)\\big)^{1}\\,\\sec(2x - 1)\\tan(2x - 1)\\,\\cot(2x - 7) + \\big(\\sec(2x - 1)\\big)^{2}\\,-2\\,\\csc^{2}(2x - 7)$",
+          "answer": "$\\dfrac{dy}{dx} = 2\\,\\big(\\sec(2x - 1)\\big)^{2}\\big[2\\,\\tan(2x - 1)\\,\\cot(2x - 7) - \\big(\\csc(2x - 7)\\big)^{2}\\big]$",
+          "answerText": "$\\dfrac{dy}{dx} = 2\\,\\big(\\sec(2x - 1)\\big)^{2}\\big[2\\,\\tan(2x - 1)\\,\\cot(2x - 7) - \\big(\\csc(2x - 7)\\big)^{2}\\big]$",
           "steps": [
             "This is a product, and the first factor also needs the chain rule.",
             "Let $f=\\big(\\sec(2x - 1)\\big)^{2}$ and $g=\\cot(2x - 7)$.",
@@ -36640,7 +37020,9 @@
             "$g'=-2\\,\\csc^{2}(2x - 7)$",
             "Apply product rule: $y\\prime=f\\prime g+fg\\prime$.",
             "$y'=(4\\,\\big(\\sec(2x - 1)\\big)^{1}\\,\\sec(2x - 1)\\tan(2x - 1))(\\cot(2x - 7))+(\\big(\\sec(2x - 1)\\big)^{2})(-2\\,\\csc^{2}(2x - 7))$",
-            "$\\dfrac{dy}{dx} = 4\\,\\big(\\sec(2x - 1)\\big)^{1}\\,\\sec(2x - 1)\\tan(2x - 1)\\,\\cot(2x - 7) + \\big(\\sec(2x - 1)\\big)^{2}\\,-2\\,\\csc^{2}(2x - 7)$"
+            "$y'=4\\,\\big(\\sec(2x - 1)\\big)^{1}\\,\\sec(2x - 1)\\tan(2x - 1)\\,\\cot(2x - 7) - 2\\,\\big(\\sec(2x - 1)\\big)^{2}\\,\\csc^{2}(2x - 7)$",
+            "Factor out the common factor $2\\,\\big(\\sec(2x - 1)\\big)^{2}$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = 2\\,\\big(\\sec(2x - 1)\\big)^{2}\\big[2\\,\\tan(2x - 1)\\,\\cot(2x - 7) - \\big(\\csc(2x - 7)\\big)^{2}\\big]$"
           ],
           "stepText": [
             "This is a product, and the first factor also needs the chain rule.",
@@ -36651,11 +37033,13 @@
             "$g'=-2\\,\\csc^{2}(2x - 7)$",
             "Apply product rule: $y\\prime=f\\prime g+fg\\prime$.",
             "$y'=(4\\,\\big(\\sec(2x - 1)\\big)^{1}\\,\\sec(2x - 1)\\tan(2x - 1))(\\cot(2x - 7))+(\\big(\\sec(2x - 1)\\big)^{2})(-2\\,\\csc^{2}(2x - 7))$",
-            "$\\dfrac{dy}{dx} = 4\\,\\big(\\sec(2x - 1)\\big)^{1}\\,\\sec(2x - 1)\\tan(2x - 1)\\,\\cot(2x - 7) + \\big(\\sec(2x - 1)\\big)^{2}\\,-2\\,\\csc^{2}(2x - 7)$"
+            "$y'=4\\,\\big(\\sec(2x - 1)\\big)^{1}\\,\\sec(2x - 1)\\tan(2x - 1)\\,\\cot(2x - 7) - 2\\,\\big(\\sec(2x - 1)\\big)^{2}\\,\\csc^{2}(2x - 7)$",
+            "Factor out the common factor $2\\,\\big(\\sec(2x - 1)\\big)^{2}$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = 2\\,\\big(\\sec(2x - 1)\\big)^{2}\\big[2\\,\\tan(2x - 1)\\,\\cot(2x - 7) - \\big(\\csc(2x - 7)\\big)^{2}\\big]$"
           ],
           "raw": {
             "equation": "$y = \\big(\\sec(2x - 1)\\big)^{2}\\,\\cot(2x - 7)$",
-            "answer": "$\\dfrac{dy}{dx} = 4\\,\\big(\\sec(2x - 1)\\big)^{1}\\,\\sec(2x - 1)\\tan(2x - 1)\\,\\cot(2x - 7) + \\big(\\sec(2x - 1)\\big)^{2}\\,-2\\,\\csc^{2}(2x - 7)$",
+            "answer": "$\\dfrac{dy}{dx} = 2\\,\\big(\\sec(2x - 1)\\big)^{2}\\big[2\\,\\tan(2x - 1)\\,\\cot(2x - 7) - \\big(\\csc(2x - 7)\\big)^{2}\\big]$",
             "steps": [
               {
                 "text": "This is a product, and the first factor also needs the chain rule."
@@ -36682,7 +37066,13 @@
                 "text": "$y'=(4\\,\\big(\\sec(2x - 1)\\big)^{1}\\,\\sec(2x - 1)\\tan(2x - 1))(\\cot(2x - 7))+(\\big(\\sec(2x - 1)\\big)^{2})(-2\\,\\csc^{2}(2x - 7))$"
               },
               {
-                "text": "$\\dfrac{dy}{dx} = 4\\,\\big(\\sec(2x - 1)\\big)^{1}\\,\\sec(2x - 1)\\tan(2x - 1)\\,\\cot(2x - 7) + \\big(\\sec(2x - 1)\\big)^{2}\\,-2\\,\\csc^{2}(2x - 7)$"
+                "text": "$y'=4\\,\\big(\\sec(2x - 1)\\big)^{1}\\,\\sec(2x - 1)\\tan(2x - 1)\\,\\cot(2x - 7) - 2\\,\\big(\\sec(2x - 1)\\big)^{2}\\,\\csc^{2}(2x - 7)$"
+              },
+              {
+                "text": "Factor out the common factor $2\\,\\big(\\sec(2x - 1)\\big)^{2}$."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = 2\\,\\big(\\sec(2x - 1)\\big)^{2}\\big[2\\,\\tan(2x - 1)\\,\\cot(2x - 7) - \\big(\\csc(2x - 7)\\big)^{2}\\big]$"
               }
             ]
           }
@@ -36695,8 +37085,8 @@
           "questionText": "$y = \\csc(8x + 5)\\,\\sin(-9x - 2)$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = -8\\,\\csc(8x + 5)\\cot(8x + 5)\\,\\sin(-9x - 2) + \\csc(8x + 5)\\,-9\\,\\cos(-9x - 2)$",
-          "answerText": "$\\dfrac{dy}{dx} = -8\\,\\csc(8x + 5)\\cot(8x + 5)\\,\\sin(-9x - 2) + \\csc(8x + 5)\\,-9\\,\\cos(-9x - 2)$",
+          "answer": "$\\dfrac{dy}{dx} = -\\csc(8x + 5)\\big[8\\,\\cot(8x + 5)\\,\\sin(-9x - 2) + 9\\,\\cos(-9x - 2)\\big]$",
+          "answerText": "$\\dfrac{dy}{dx} = -\\csc(8x + 5)\\big[8\\,\\cot(8x + 5)\\,\\sin(-9x - 2) + 9\\,\\cos(-9x - 2)\\big]$",
           "steps": [
             "Write the two factors as $f=\\csc(8x + 5)$ and $g=\\sin(-9x - 2)$.",
             "Use product rule: $(fg)\\prime=f\\prime g+fg\\prime$.",
@@ -36705,7 +37095,9 @@
             "$g'=(\\cos(-9x - 2))(-9)$",
             "$g'=-9\\,\\cos(-9x - 2)$",
             "Substitute into the product rule: $y' = (-8\\,\\csc(8x + 5)\\cot(8x + 5))(\\sin(-9x - 2)) + (\\csc(8x + 5))(-9\\,\\cos(-9x - 2))$.",
-            "Final form: $\\dfrac{dy}{dx} = -8\\,\\csc(8x + 5)\\cot(8x + 5)\\,\\sin(-9x - 2) + \\csc(8x + 5)\\,-9\\,\\cos(-9x - 2)$"
+            "$y'=-8\\,\\csc(8x + 5)\\cot(8x + 5)\\,\\sin(-9x - 2) - 9\\,\\csc(8x + 5)\\,\\cos(-9x - 2)$",
+            "Factor out the common factor $-\\csc(8x + 5)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = -\\csc(8x + 5)\\big[8\\,\\cot(8x + 5)\\,\\sin(-9x - 2) + 9\\,\\cos(-9x - 2)\\big]$"
           ],
           "stepText": [
             "Write the two factors as $f=\\csc(8x + 5)$ and $g=\\sin(-9x - 2)$.",
@@ -36715,11 +37107,13 @@
             "$g'=(\\cos(-9x - 2))(-9)$",
             "$g'=-9\\,\\cos(-9x - 2)$",
             "Substitute into the product rule: $y' = (-8\\,\\csc(8x + 5)\\cot(8x + 5))(\\sin(-9x - 2)) + (\\csc(8x + 5))(-9\\,\\cos(-9x - 2))$.",
-            "Final form: $\\dfrac{dy}{dx} = -8\\,\\csc(8x + 5)\\cot(8x + 5)\\,\\sin(-9x - 2) + \\csc(8x + 5)\\,-9\\,\\cos(-9x - 2)$"
+            "$y'=-8\\,\\csc(8x + 5)\\cot(8x + 5)\\,\\sin(-9x - 2) - 9\\,\\csc(8x + 5)\\,\\cos(-9x - 2)$",
+            "Factor out the common factor $-\\csc(8x + 5)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = -\\csc(8x + 5)\\big[8\\,\\cot(8x + 5)\\,\\sin(-9x - 2) + 9\\,\\cos(-9x - 2)\\big]$"
           ],
           "raw": {
             "equation": "$y = \\csc(8x + 5)\\,\\sin(-9x - 2)$",
-            "answer": "$\\dfrac{dy}{dx} = -8\\,\\csc(8x + 5)\\cot(8x + 5)\\,\\sin(-9x - 2) + \\csc(8x + 5)\\,-9\\,\\cos(-9x - 2)$",
+            "answer": "$\\dfrac{dy}{dx} = -\\csc(8x + 5)\\big[8\\,\\cot(8x + 5)\\,\\sin(-9x - 2) + 9\\,\\cos(-9x - 2)\\big]$",
             "steps": [
               {
                 "text": "Write the two factors as $f=\\csc(8x + 5)$ and $g=\\sin(-9x - 2)$."
@@ -36743,7 +37137,13 @@
                 "text": "Substitute into the product rule: $y' = (-8\\,\\csc(8x + 5)\\cot(8x + 5))(\\sin(-9x - 2)) + (\\csc(8x + 5))(-9\\,\\cos(-9x - 2))$."
               },
               {
-                "text": "Final form: $\\dfrac{dy}{dx} = -8\\,\\csc(8x + 5)\\cot(8x + 5)\\,\\sin(-9x - 2) + \\csc(8x + 5)\\,-9\\,\\cos(-9x - 2)$"
+                "text": "$y'=-8\\,\\csc(8x + 5)\\cot(8x + 5)\\,\\sin(-9x - 2) - 9\\,\\csc(8x + 5)\\,\\cos(-9x - 2)$"
+              },
+              {
+                "text": "Factor out the common factor $-\\csc(8x + 5)$."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = -\\csc(8x + 5)\\big[8\\,\\cot(8x + 5)\\,\\sin(-9x - 2) + 9\\,\\cos(-9x - 2)\\big]$"
               }
             ]
           }
@@ -36756,8 +37156,8 @@
           "questionText": "$y = \\dfrac{\\sec(7x - 8)}{\\sin(3x - 1)}$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = \\dfrac{(7\\,\\sec(7x - 8)\\tan(7x - 8))\\,\\sin(3x - 1) - \\sec(7x - 8)\\,(3\\,\\cos(3x - 1))}{\\big(\\sin(3x - 1)\\big)^{2}}$",
-          "answerText": "$\\dfrac{dy}{dx} = \\dfrac{(7\\,\\sec(7x - 8)\\tan(7x - 8))\\,\\sin(3x - 1) - \\sec(7x - 8)\\,(3\\,\\cos(3x - 1))}{\\big(\\sin(3x - 1)\\big)^{2}}$",
+          "answer": "$\\dfrac{dy}{dx} = \\dfrac{\\sec(7x - 8)\\big[7\\,\\tan(7x - 8)\\,\\sin(3x - 1) - 3\\,\\cos(3x - 1)\\big]}{\\big(\\sin(3x - 1)\\big)^{2}}$",
+          "answerText": "$\\dfrac{dy}{dx} = \\dfrac{\\sec(7x - 8)\\big[7\\,\\tan(7x - 8)\\,\\sin(3x - 1) - 3\\,\\cos(3x - 1)\\big]}{\\big(\\sin(3x - 1)\\big)^{2}}$",
           "steps": [
             "Identify the numerator and denominator: $u=\\sec(7x - 8)$ and $v=\\sin(3x - 1)$.",
             "Use quotient rule: $(u/v)\\prime=(u\\prime v-uv\\prime)/v^2$.",
@@ -36766,7 +37166,9 @@
             "$v'=(\\cos(3x - 1))(3)$",
             "$v'=3\\,\\cos(3x - 1)$",
             "Substitute into the quotient rule before simplifying.",
-            "$\\dfrac{dy}{dx} = \\dfrac{(7\\,\\sec(7x - 8)\\tan(7x - 8))\\,\\sin(3x - 1) - \\sec(7x - 8)\\,(3\\,\\cos(3x - 1))}{\\big(\\sin(3x - 1)\\big)^{2}}$"
+            "$\\dfrac{dy}{dx} = \\dfrac{(7\\,\\sec(7x - 8)\\tan(7x - 8))\\,\\sin(3x - 1) - \\sec(7x - 8)\\,(3\\,\\cos(3x - 1))}{\\big(\\sin(3x - 1)\\big)^{2}}$",
+            "Factor out the common factor $\\sec(7x - 8)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{\\sec(7x - 8)\\big[7\\,\\tan(7x - 8)\\,\\sin(3x - 1) - 3\\,\\cos(3x - 1)\\big]}{\\big(\\sin(3x - 1)\\big)^{2}}$"
           ],
           "stepText": [
             "Identify the numerator and denominator: $u=\\sec(7x - 8)$ and $v=\\sin(3x - 1)$.",
@@ -36776,11 +37178,13 @@
             "$v'=(\\cos(3x - 1))(3)$",
             "$v'=3\\,\\cos(3x - 1)$",
             "Substitute into the quotient rule before simplifying.",
-            "$\\dfrac{dy}{dx} = \\dfrac{(7\\,\\sec(7x - 8)\\tan(7x - 8))\\,\\sin(3x - 1) - \\sec(7x - 8)\\,(3\\,\\cos(3x - 1))}{\\big(\\sin(3x - 1)\\big)^{2}}$"
+            "$\\dfrac{dy}{dx} = \\dfrac{(7\\,\\sec(7x - 8)\\tan(7x - 8))\\,\\sin(3x - 1) - \\sec(7x - 8)\\,(3\\,\\cos(3x - 1))}{\\big(\\sin(3x - 1)\\big)^{2}}$",
+            "Factor out the common factor $\\sec(7x - 8)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{\\sec(7x - 8)\\big[7\\,\\tan(7x - 8)\\,\\sin(3x - 1) - 3\\,\\cos(3x - 1)\\big]}{\\big(\\sin(3x - 1)\\big)^{2}}$"
           ],
           "raw": {
             "equation": "$y = \\dfrac{\\sec(7x - 8)}{\\sin(3x - 1)}$",
-            "answer": "$\\dfrac{dy}{dx} = \\dfrac{(7\\,\\sec(7x - 8)\\tan(7x - 8))\\,\\sin(3x - 1) - \\sec(7x - 8)\\,(3\\,\\cos(3x - 1))}{\\big(\\sin(3x - 1)\\big)^{2}}$",
+            "answer": "$\\dfrac{dy}{dx} = \\dfrac{\\sec(7x - 8)\\big[7\\,\\tan(7x - 8)\\,\\sin(3x - 1) - 3\\,\\cos(3x - 1)\\big]}{\\big(\\sin(3x - 1)\\big)^{2}}$",
             "steps": [
               {
                 "text": "Identify the numerator and denominator: $u=\\sec(7x - 8)$ and $v=\\sin(3x - 1)$."
@@ -36805,6 +37209,12 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx} = \\dfrac{(7\\,\\sec(7x - 8)\\tan(7x - 8))\\,\\sin(3x - 1) - \\sec(7x - 8)\\,(3\\,\\cos(3x - 1))}{\\big(\\sin(3x - 1)\\big)^{2}}$"
+              },
+              {
+                "text": "Factor out the common factor $\\sec(7x - 8)$."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{\\sec(7x - 8)\\big[7\\,\\tan(7x - 8)\\,\\sin(3x - 1) - 3\\,\\cos(3x - 1)\\big]}{\\big(\\sin(3x - 1)\\big)^{2}}$"
               }
             ]
           }
@@ -36817,8 +37227,8 @@
           "questionText": "$y = \\dfrac{\\sin(-9x - 1)}{\\sec(5x + 9)}$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = \\dfrac{(-9\\,\\cos(-9x - 1))\\,\\sec(5x + 9) - \\sin(-9x - 1)\\,(5\\,\\sec(5x + 9)\\tan(5x + 9))}{\\big(\\sec(5x + 9)\\big)^{2}}$",
-          "answerText": "$\\dfrac{dy}{dx} = \\dfrac{(-9\\,\\cos(-9x - 1))\\,\\sec(5x + 9) - \\sin(-9x - 1)\\,(5\\,\\sec(5x + 9)\\tan(5x + 9))}{\\big(\\sec(5x + 9)\\big)^{2}}$",
+          "answer": "$\\dfrac{dy}{dx} = \\dfrac{-\\big[9\\,\\cos(-9x - 1) + 5\\,\\sin(-9x - 1)\\,\\tan(5x + 9)\\big]}{\\sec(5x + 9)}$",
+          "answerText": "$\\dfrac{dy}{dx} = \\dfrac{-\\big[9\\,\\cos(-9x - 1) + 5\\,\\sin(-9x - 1)\\,\\tan(5x + 9)\\big]}{\\sec(5x + 9)}$",
           "steps": [
             "Identify the numerator and denominator: $u=\\sin(-9x - 1)$ and $v=\\sec(5x + 9)$.",
             "Use quotient rule: $(u/v)\\prime=(u\\prime v-uv\\prime)/v^2$.",
@@ -36827,7 +37237,11 @@
             "$v'=(\\sec(5x + 9)\\tan(5x + 9))(5)$",
             "$v'=5\\,\\sec(5x + 9)\\tan(5x + 9)$",
             "Substitute into the quotient rule before simplifying.",
-            "$\\dfrac{dy}{dx} = \\dfrac{(-9\\,\\cos(-9x - 1))\\,\\sec(5x + 9) - \\sin(-9x - 1)\\,(5\\,\\sec(5x + 9)\\tan(5x + 9))}{\\big(\\sec(5x + 9)\\big)^{2}}$"
+            "$\\dfrac{dy}{dx} = \\dfrac{(-9\\,\\cos(-9x - 1))\\,\\sec(5x + 9) - \\sin(-9x - 1)\\,(5\\,\\sec(5x + 9)\\tan(5x + 9))}{\\big(\\sec(5x + 9)\\big)^{2}}$",
+            "Factor out the common factor $-\\sec(5x + 9)$.",
+            "$y'=\\dfrac{-\\sec(5x + 9)\\big[9\\,\\cos(-9x - 1) + 5\\,\\sin(-9x - 1)\\,\\tan(5x + 9)\\big]}{\\big(\\sec(5x + 9)\\big)^{2}}$",
+            "Cancel common numerator and denominator factors.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{-\\big[9\\,\\cos(-9x - 1) + 5\\,\\sin(-9x - 1)\\,\\tan(5x + 9)\\big]}{\\sec(5x + 9)}$"
           ],
           "stepText": [
             "Identify the numerator and denominator: $u=\\sin(-9x - 1)$ and $v=\\sec(5x + 9)$.",
@@ -36837,11 +37251,15 @@
             "$v'=(\\sec(5x + 9)\\tan(5x + 9))(5)$",
             "$v'=5\\,\\sec(5x + 9)\\tan(5x + 9)$",
             "Substitute into the quotient rule before simplifying.",
-            "$\\dfrac{dy}{dx} = \\dfrac{(-9\\,\\cos(-9x - 1))\\,\\sec(5x + 9) - \\sin(-9x - 1)\\,(5\\,\\sec(5x + 9)\\tan(5x + 9))}{\\big(\\sec(5x + 9)\\big)^{2}}$"
+            "$\\dfrac{dy}{dx} = \\dfrac{(-9\\,\\cos(-9x - 1))\\,\\sec(5x + 9) - \\sin(-9x - 1)\\,(5\\,\\sec(5x + 9)\\tan(5x + 9))}{\\big(\\sec(5x + 9)\\big)^{2}}$",
+            "Factor out the common factor $-\\sec(5x + 9)$.",
+            "$y'=\\dfrac{-\\sec(5x + 9)\\big[9\\,\\cos(-9x - 1) + 5\\,\\sin(-9x - 1)\\,\\tan(5x + 9)\\big]}{\\big(\\sec(5x + 9)\\big)^{2}}$",
+            "Cancel common numerator and denominator factors.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{-\\big[9\\,\\cos(-9x - 1) + 5\\,\\sin(-9x - 1)\\,\\tan(5x + 9)\\big]}{\\sec(5x + 9)}$"
           ],
           "raw": {
             "equation": "$y = \\dfrac{\\sin(-9x - 1)}{\\sec(5x + 9)}$",
-            "answer": "$\\dfrac{dy}{dx} = \\dfrac{(-9\\,\\cos(-9x - 1))\\,\\sec(5x + 9) - \\sin(-9x - 1)\\,(5\\,\\sec(5x + 9)\\tan(5x + 9))}{\\big(\\sec(5x + 9)\\big)^{2}}$",
+            "answer": "$\\dfrac{dy}{dx} = \\dfrac{-\\big[9\\,\\cos(-9x - 1) + 5\\,\\sin(-9x - 1)\\,\\tan(5x + 9)\\big]}{\\sec(5x + 9)}$",
             "steps": [
               {
                 "text": "Identify the numerator and denominator: $u=\\sin(-9x - 1)$ and $v=\\sec(5x + 9)$."
@@ -36866,6 +37284,18 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx} = \\dfrac{(-9\\,\\cos(-9x - 1))\\,\\sec(5x + 9) - \\sin(-9x - 1)\\,(5\\,\\sec(5x + 9)\\tan(5x + 9))}{\\big(\\sec(5x + 9)\\big)^{2}}$"
+              },
+              {
+                "text": "Factor out the common factor $-\\sec(5x + 9)$."
+              },
+              {
+                "text": "$y'=\\dfrac{-\\sec(5x + 9)\\big[9\\,\\cos(-9x - 1) + 5\\,\\sin(-9x - 1)\\,\\tan(5x + 9)\\big]}{\\big(\\sec(5x + 9)\\big)^{2}}$"
+              },
+              {
+                "text": "Cancel common numerator and denominator factors."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{-\\big[9\\,\\cos(-9x - 1) + 5\\,\\sin(-9x - 1)\\,\\tan(5x + 9)\\big]}{\\sec(5x + 9)}$"
               }
             ]
           }
@@ -36929,8 +37359,8 @@
           "questionText": "$y = \\dfrac{\\csc(6x + 5)}{\\sin(7x - 2)}$",
           "given": "",
           "instruction": "",
-          "answer": "$\\dfrac{dy}{dx} = \\dfrac{(-6\\,\\csc(6x + 5)\\cot(6x + 5))\\,\\sin(7x - 2) - \\csc(6x + 5)\\,(7\\,\\cos(7x - 2))}{\\big(\\sin(7x - 2)\\big)^{2}}$",
-          "answerText": "$\\dfrac{dy}{dx} = \\dfrac{(-6\\,\\csc(6x + 5)\\cot(6x + 5))\\,\\sin(7x - 2) - \\csc(6x + 5)\\,(7\\,\\cos(7x - 2))}{\\big(\\sin(7x - 2)\\big)^{2}}$",
+          "answer": "$\\dfrac{dy}{dx} = \\dfrac{-\\csc(6x + 5)\\big[6\\,\\cot(6x + 5)\\,\\sin(7x - 2) + 7\\,\\cos(7x - 2)\\big]}{\\big(\\sin(7x - 2)\\big)^{2}}$",
+          "answerText": "$\\dfrac{dy}{dx} = \\dfrac{-\\csc(6x + 5)\\big[6\\,\\cot(6x + 5)\\,\\sin(7x - 2) + 7\\,\\cos(7x - 2)\\big]}{\\big(\\sin(7x - 2)\\big)^{2}}$",
           "steps": [
             "Identify the numerator and denominator: $u=\\csc(6x + 5)$ and $v=\\sin(7x - 2)$.",
             "Use quotient rule: $(u/v)\\prime=(u\\prime v-uv\\prime)/v^2$.",
@@ -36939,7 +37369,9 @@
             "$v'=(\\cos(7x - 2))(7)$",
             "$v'=7\\,\\cos(7x - 2)$",
             "Substitute into the quotient rule before simplifying.",
-            "$\\dfrac{dy}{dx} = \\dfrac{(-6\\,\\csc(6x + 5)\\cot(6x + 5))\\,\\sin(7x - 2) - \\csc(6x + 5)\\,(7\\,\\cos(7x - 2))}{\\big(\\sin(7x - 2)\\big)^{2}}$"
+            "$\\dfrac{dy}{dx} = \\dfrac{(-6\\,\\csc(6x + 5)\\cot(6x + 5))\\,\\sin(7x - 2) - \\csc(6x + 5)\\,(7\\,\\cos(7x - 2))}{\\big(\\sin(7x - 2)\\big)^{2}}$",
+            "Factor out the common factor $-\\csc(6x + 5)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{-\\csc(6x + 5)\\big[6\\,\\cot(6x + 5)\\,\\sin(7x - 2) + 7\\,\\cos(7x - 2)\\big]}{\\big(\\sin(7x - 2)\\big)^{2}}$"
           ],
           "stepText": [
             "Identify the numerator and denominator: $u=\\csc(6x + 5)$ and $v=\\sin(7x - 2)$.",
@@ -36949,11 +37381,13 @@
             "$v'=(\\cos(7x - 2))(7)$",
             "$v'=7\\,\\cos(7x - 2)$",
             "Substitute into the quotient rule before simplifying.",
-            "$\\dfrac{dy}{dx} = \\dfrac{(-6\\,\\csc(6x + 5)\\cot(6x + 5))\\,\\sin(7x - 2) - \\csc(6x + 5)\\,(7\\,\\cos(7x - 2))}{\\big(\\sin(7x - 2)\\big)^{2}}$"
+            "$\\dfrac{dy}{dx} = \\dfrac{(-6\\,\\csc(6x + 5)\\cot(6x + 5))\\,\\sin(7x - 2) - \\csc(6x + 5)\\,(7\\,\\cos(7x - 2))}{\\big(\\sin(7x - 2)\\big)^{2}}$",
+            "Factor out the common factor $-\\csc(6x + 5)$.",
+            "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{-\\csc(6x + 5)\\big[6\\,\\cot(6x + 5)\\,\\sin(7x - 2) + 7\\,\\cos(7x - 2)\\big]}{\\big(\\sin(7x - 2)\\big)^{2}}$"
           ],
           "raw": {
             "equation": "$y = \\dfrac{\\csc(6x + 5)}{\\sin(7x - 2)}$",
-            "answer": "$\\dfrac{dy}{dx} = \\dfrac{(-6\\,\\csc(6x + 5)\\cot(6x + 5))\\,\\sin(7x - 2) - \\csc(6x + 5)\\,(7\\,\\cos(7x - 2))}{\\big(\\sin(7x - 2)\\big)^{2}}$",
+            "answer": "$\\dfrac{dy}{dx} = \\dfrac{-\\csc(6x + 5)\\big[6\\,\\cot(6x + 5)\\,\\sin(7x - 2) + 7\\,\\cos(7x - 2)\\big]}{\\big(\\sin(7x - 2)\\big)^{2}}$",
             "steps": [
               {
                 "text": "Identify the numerator and denominator: $u=\\csc(6x + 5)$ and $v=\\sin(7x - 2)$."
@@ -36978,6 +37412,12 @@
               },
               {
                 "text": "$\\dfrac{dy}{dx} = \\dfrac{(-6\\,\\csc(6x + 5)\\cot(6x + 5))\\,\\sin(7x - 2) - \\csc(6x + 5)\\,(7\\,\\cos(7x - 2))}{\\big(\\sin(7x - 2)\\big)^{2}}$"
+              },
+              {
+                "text": "Factor out the common factor $-\\csc(6x + 5)$."
+              },
+              {
+                "text": "Factorised final form: $\\dfrac{dy}{dx} = \\dfrac{-\\csc(6x + 5)\\big[6\\,\\cot(6x + 5)\\,\\sin(7x - 2) + 7\\,\\cos(7x - 2)\\big]}{\\big(\\sin(7x - 2)\\big)^{2}}$"
               }
             ]
           }

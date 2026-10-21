@@ -2,8 +2,8 @@
   "practicePackCount": 373,
   "otherPublicPdfCount": 1,
   "pdfCount": 374,
-  "pageCount": 2491,
-  "preparedBlocksChecked": 24982,
+  "pageCount": 2499,
+  "preparedBlocksChecked": 25070,
   "findings": [],
   "files": [
     {
@@ -623,13 +623,13 @@
     },
     {
       "slug": "differentiation-rules-level-2",
-      "pages": 6,
-      "sha256": "d3a22d7018d9746220963995cc52fe34dc47e84f24242ca08ce7b38701b626d3"
+      "pages": 9,
+      "sha256": "324b0d52f8aa894f258b3837e19417a495754bd4e8fa8e546327360f7233d881"
     },
     {
       "slug": "differentiation-rules-level-3",
-      "pages": 6,
-      "sha256": "68524d4b1ca38b8b51b12c34e4206946a5e856c65566c546f5c54920db978554"
+      "pages": 9,
+      "sha256": "cdf5526a0253f2bc5b405eb263e223c99a8a13f1c9f6767a62f955acf0158a22"
     },
     {
       "slug": "differentiation-rules-level-4",
@@ -839,17 +839,17 @@
     {
       "slug": "trig-differentiation-rules-level-2",
       "pages": 6,
-      "sha256": "5b18ff3f3825febba9245f93246b5ca7f6d5d46a19c8203eab4ac73f83bc96e9"
+      "sha256": "f185cd80b2ea32a2b5a6c33a18ec1f8ddd1dfe4f14f8e75c303a0ea3ef9b7350"
     },
     {
       "slug": "trig-differentiation-rules-level-3",
       "pages": 6,
-      "sha256": "6e2fe69a8344702badfbf0b33f7fe8546dcae041dbff42a1266a0bf42aa1dd6c"
+      "sha256": "2204b24ea410f822426c326a1d1fbf31aab115a40a37874b97a64079dc934ec4"
     },
     {
       "slug": "trig-differentiation-rules-level-4",
-      "pages": 6,
-      "sha256": "f6eb5ed6d2aedc6396e371a6613454a96598e4a02df154e16e1b38dbf65dcd01"
+      "pages": 8,
+      "sha256": "f41326a631b8bcad05a91027d4fb51690a93c1f36f35f238239716cbf05bd891"
     },
     {
       "slug": "trig-equation-solver-level-1",

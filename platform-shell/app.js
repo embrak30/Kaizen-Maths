@@ -555,7 +555,7 @@ const tools = [
     status: "Imported",
     description: "Generate general differentiation practice for product rule, quotient rule, chain rule, trigonometric, logarithmic, tangent, normal, and turning-point problems.",
     tags: ["algebra", "calculus", "differentiation", "power rule", "product rule", "quotient rule", "chain rule", "trigonometry", "logarithms"],
-    toolPath: "tools/differentiation-rules-general/index.html?v=calculus-supported-steps-2",
+    toolPath: "tools/differentiation-rules-general/index.html?v=factorised-derivatives-3",
     imported: true,
     teacherNotes: [
       "Extends polynomial differentiation into product, quotient, chain, trigonometric, and logarithmic rules.",
@@ -573,7 +573,7 @@ const tools = [
     status: "Imported",
     description: "Generate trigonometric differentiation practice with chain rule, product rule, quotient rule, and mixed-rule challenges.",
     tags: ["algebra", "calculus", "differentiation", "trigonometry", "chain rule", "product rule", "quotient rule"],
-    toolPath: "tools/differentiation-rules/index.html?v=calculus-supported-steps-2",
+    toolPath: "tools/differentiation-rules/index.html?v=factorised-derivatives-3",
     imported: true,
     teacherNotes: [
       "Focuses on trigonometric differentiation from core derivatives through composite, product, and quotient rule tasks.",

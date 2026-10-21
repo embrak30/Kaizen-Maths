@@ -1,7 +1,7 @@
 {
   "date": "2026-10-21",
   "newPacksBuilt": 362,
-  "newPdfPagesRendered": 2457,
+  "newPdfPagesRendered": 2465,
   "renderErrors": 0,
   "layoutErrors": 0,
   "mathsChecks": {
@@ -38,11 +38,18 @@
   "visualReview": "Representative student and teacher pages across subjects, diagrams, tables, column vectors, matrices, fractions, calculus and dense contextual problems.",
   "latexAudit": {
     "practicePackCount": 373,
-    "practicePackPages": 2490,
+    "practicePackPages": 2498,
     "totalPublicPdfCount": 374,
-    "totalPublicPages": 2491,
-    "preparedBlocksChecked": 24982,
+    "totalPublicPages": 2499,
+    "preparedBlocksChecked": 25070,
     "findings": 0,
     "report": "data/practice-packs/latex-audit.json"
+  },
+  "derivativeFactorisation": {
+    "generatedExamplesChecked": 600,
+    "independentDerivativeComparisons": 3000,
+    "intermediateStepComparisons": 2074,
+    "updatedPracticePacks": 5,
+    "failures": 0
   }
 }

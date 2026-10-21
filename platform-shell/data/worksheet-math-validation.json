@@ -1,5 +1,5 @@
 {
-  "fragmentsChecked": 20615,
+  "fragmentsChecked": 20703,
   "findings": [],
   "regressions": [
     "Nested fractions",

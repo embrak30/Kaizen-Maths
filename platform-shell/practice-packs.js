@@ -1,6 +1,6 @@
 (() => {
  'use strict';
- let catalogPromise;const VERSION='complete-library-7',PAGE_SIZE=24;
+ let catalogPromise;const VERSION='factorised-derivatives-8',PAGE_SIZE=24;
  const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const searchText=s=>String(s).toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'');
  const levelNames={1:'Single variable',2:'Multiple variables',3:'Expression substitution',4:'Quadratic and cubic expressions'};
