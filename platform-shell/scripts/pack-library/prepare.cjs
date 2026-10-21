@@ -30,15 +30,15 @@ async function inlineMath(tex){
  }
  const im=await mathImage(tex);return `<img src="${im.file}" width="${im.w.toFixed(3)}" height="${im.h.toFixed(3)}" valign="${(-im.depth).toFixed(3)}"/>`;}
 async function textInline(s){
- if(/\\(?:begin|frac|dfrac|sqrt|cdot|text|le|ge|gt|lt|times)\b/.test(s)&&!/[$]|\\[([]/.test(s)){return inlineMath(s);}
+ if(/\\[A-Za-z]+\b/.test(s)&&!/[$]|\\[([]/.test(s)){return inlineMath(s);}
  const pattern=/\\\(([\s\S]*?)\\\)|\$\$([\s\S]*?)\$\$|\\\[([\s\S]*?)\\\]|\$([^$\n]+)\$/g;let out='',last=0;
  for(const m of String(s).matchAll(pattern)){
   out+=simpleText(s.slice(last,m.index));const tex=m[1]??m[2]??m[3]??m[4];
-  if(m[4]&&!/[\\^_={}+*\/-]/.test(tex)&&!/^\s*(?:[a-z]{1,3}|[+-]?\d+(?:\.\d+)?)\s*$/i.test(tex))out+=simpleText(m[0]);else out+=await inlineMath(tex);last=m.index+m[0].length;
+  if(m[4]&&(/^\s*\d[\d,.]*\s+$/.test(tex)||(!/[\\^_={}+*\/()\x27<>,\-]/.test(tex)&&!/^\s*(?:[a-z]{1,3}|[+-]?\d+(?:\.\d+)?)\s*$/i.test(tex))))out+=simpleText(m[0]);else out+=await inlineMath(tex);last=m.index+m[0].length;
  }out+=simpleText(s.slice(last));return out;
 }
 function simpleText(s){
- return esc(String(s)).replace(/\^\{([^}]+)\}|\^(-?\d+|[a-z])/g,(_,a,b)=>`<super size="60%" rise="38%">${a||b}</super>`).replace(/_\{([^}]+)\}|_([0-9])/g,(_,a,b)=>`<sub size="60%">${a||b}</sub>`);
+ return esc(String(s)).replace(/\^\{([^}]+)\}|\^\(([^()]*)\)|\^(-?(?:[A-Za-zλ]+|\d+(?:\.\d+)?))/g,(_,a,b,c)=>`<super size="60%" rise="38%">${(a||b||c).replace(/lambda/g,'λ')}</super>` ).replace(/_\{([^}]+)\}|_([0-9])/g,(_,a,b)=>`<sub size="60%">${a||b}</sub>`);
 }
 async function inline(n){
  if(n.nodeType===3)return textInline(n.textContent);if(n.nodeType!==1)return '';

@@ -201,7 +201,7 @@ def build(pack,folder):
   rule(c,28,30,W-28,30);d.text(c,28,17,'KAIZEN MATHS · STARTERS & EXIT TICKETS','SansBold',7,d.MUTED);c.setFont('Sans',8);c.drawRightString(W-28,17,f'Teacher copy · Page {student_pages+index+1} of {total}');c.showPage()
  c.save();reader=PdfReader(out);assert len(reader.pages)==total
  for page in reader.pages:
-  t=page.extract_text();assert not re.search(r'\bNaN\b|=\s*undefined\b|\\(?:frac|begin|sqrt|cdot)\b',t),(pack['id'],'unrendered maths')
+  t=page.extract_text();assert not re.search(r'\bNaN\b|=\s*undefined\b|\\[A-Za-z]+|\^|\$(?!\d)',t),(pack['id'],'unrendered maths')
  return {k:v for k,v in pack.items() if k!='questions'}|{'questionCount':len(allq),'starterQuestionCount':max(map(len,starters)),'exitQuestionCount':max(map(len,exits)),'starterVariantCount':len(starters),'exitVariantCount':len(exits),'estimatedMinutes':5,'pageCount':total,'studentPageCount':student_pages,'teacherPageCount':len(teachers),'format':'half-page starters / quarter-page exit tickets','sections':['Starters','Exit tickets','Teacher answers and worked solutions'],'pdf':f"assets/practice-packs/library/{out.name}",'preview':f"assets/practice-packs/library/previews/{pack['slug']}.png"}
 
 if __name__=='__main__':

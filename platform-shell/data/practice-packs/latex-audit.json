@@ -1,0 +1,1880 @@
+{
+  "practicePackCount": 373,
+  "otherPublicPdfCount": 1,
+  "pdfCount": 374,
+  "pageCount": 2491,
+  "preparedBlocksChecked": 24982,
+  "findings": [],
+  "files": [
+    {
+      "slug": "as-01-linear-expressions",
+      "pages": 3,
+      "sha256": "2d5f658e58d4e5466144a024ed6df66ee161ba67057b40a40c9ff236edcd71e5"
+    },
+    {
+      "slug": "as-02-quadratic-expressions",
+      "pages": 3,
+      "sha256": "7bb4c7afc722ec4cf73869368d47ff40f2fe4cf2ecbac98ae4ef894df84f61a7"
+    },
+    {
+      "slug": "as-03-two-variables",
+      "pages": 3,
+      "sha256": "69525e12633e186876a1f27f59c8f2b9fa5517b20e11bc05fb040a05a97d8ca2"
+    },
+    {
+      "slug": "as-04-three-variables",
+      "pages": 3,
+      "sha256": "68ca04765f12043a4deb2ef509d40134a99cd48bd8c1b31c3dc21fcb3c19d874"
+    },
+    {
+      "slug": "as-05-powers-and-products",
+      "pages": 3,
+      "sha256": "1596cf926f5f72d6f2ea10e384cf4ce7c209a5114eca46d8d45f4550742d8ba2"
+    },
+    {
+      "slug": "as-06-substituting-an-expression",
+      "pages": 3,
+      "sha256": "791419f7d652d4c94ecf84784c69dd303178d4a8e83413b16c53c6802aa047fb"
+    },
+    {
+      "slug": "as-07-combining-expressions",
+      "pages": 3,
+      "sha256": "23042b8e1d97bc6783edc57f9279be342a45d879e6c811a2f14cfd024285e724"
+    },
+    {
+      "slug": "as-08-quadratic-and-cubic-expressions",
+      "pages": 3,
+      "sha256": "16eb3e7a63298f940c486f159fa588d99b6753913402af3a277a82eb095cf47d"
+    },
+    {
+      "slug": "as-09-single-variable-mixed-practice",
+      "pages": 3,
+      "sha256": "841985e1da616884a41ceac68cf5e53c286181fdde7c1512cb99594695d2477e"
+    },
+    {
+      "slug": "as-10-multiple-variables-mixed-practice",
+      "pages": 3,
+      "sha256": "2c445173409bfdaf2cbf86776083ced64fbddedfdb259b3d39a0656ee486103a"
+    },
+    {
+      "slug": "as-11-expression-substitution-mixed-practice",
+      "pages": 3,
+      "sha256": "11e45203437e5773f37dbae3ff4a421e5fac60dab03861eecbcbaf770bc03a83"
+    },
+    {
+      "slug": "advanced-differentiation-level-1",
+      "pages": 10,
+      "sha256": "3654185a8bb9bab49cee0936dca0a7e2ee67dec90bb82872561cb3bda938e419"
+    },
+    {
+      "slug": "advanced-differentiation-level-2",
+      "pages": 8,
+      "sha256": "bb67c70ff2c0605daf504b7359acd3c923f3d5067964742eab0758fcc397972d"
+    },
+    {
+      "slug": "advanced-factorisation-level-1",
+      "pages": 5,
+      "sha256": "e22972ee5d16c9eb8e928e23a9a0cb0abd8dcddfcff7d3f9a121af2c0348ebdf"
+    },
+    {
+      "slug": "advanced-factorisation-level-2",
+      "pages": 5,
+      "sha256": "ef1e40367a3f53f4453142e1bf6875a7cb39c8a0c9810a2d9a21024dc169c1f3"
+    },
+    {
+      "slug": "advanced-factorisation-level-3",
+      "pages": 5,
+      "sha256": "1a311b9e9d80f8548a50848c661ee517c425dca478957c141bc8566c957d3230"
+    },
+    {
+      "slug": "advanced-factorisation-level-4",
+      "pages": 5,
+      "sha256": "47d0ce8ffc9bf23e489affb5c2200de432177682853a8305773c5e6ee2fe0826"
+    },
+    {
+      "slug": "advanced-matrices-level-1",
+      "pages": 6,
+      "sha256": "5051ef8ca3b3c59596eccc15130ffddbfb220f2f62269933487ed61a1bca3dd5"
+    },
+    {
+      "slug": "advanced-matrices-level-2",
+      "pages": 6,
+      "sha256": "b38718ca47f2fc1293ef502ab59458dae00d807c9db12dea0d4c8098ee8832a2"
+    },
+    {
+      "slug": "advanced-matrices-level-3",
+      "pages": 6,
+      "sha256": "88ddfd88c3a993f913cee2f64cc145f2ac59963bd5b00f23bf7abb59da0ee978"
+    },
+    {
+      "slug": "advanced-matrices-level-4",
+      "pages": 9,
+      "sha256": "b97f93e62a8afb361554ba2ee3a50279914cd80a8c119a5fd27ff3b745c9acad"
+    },
+    {
+      "slug": "algebraic-fractions-level-1",
+      "pages": 6,
+      "sha256": "dc88a17ee5cb093ec50f3a59b10a02bde82aa8efbdbc7608f08ec0b3e9d2f449"
+    },
+    {
+      "slug": "algebraic-fractions-level-2",
+      "pages": 6,
+      "sha256": "379bf89de75fd189191527c7b3bdc071278809b53692fe560caa33834fcf0ab9"
+    },
+    {
+      "slug": "algebraic-fractions-level-3",
+      "pages": 6,
+      "sha256": "92cf6941cd5b4351ce14a70369ea05f87a6c19f0e28cc7e63e213e368d7dace9"
+    },
+    {
+      "slug": "algebraic-fractions-level-4",
+      "pages": 6,
+      "sha256": "6a37bfb6761865e2528a996f175164e60adb37a370bb18e41f4e52cfe6c846f3"
+    },
+    {
+      "slug": "simplification-level-1",
+      "pages": 5,
+      "sha256": "32e1c759cc1198cc34326338071e3a46a371967f5f200ccb04e95978449bcec3"
+    },
+    {
+      "slug": "simplification-level-2",
+      "pages": 5,
+      "sha256": "71440cf209234549e5620ac680241d66f3b1f9c53e044569a74fb7043bbfd116"
+    },
+    {
+      "slug": "simplification-level-3",
+      "pages": 5,
+      "sha256": "e9194a48d1cc117e433a8071fdd386714ace755d75d9dde54dcac1011ab7998a"
+    },
+    {
+      "slug": "sequences-series-level-1",
+      "pages": 5,
+      "sha256": "2a4d766d5a8f878c4388c014e0ca50b6b69f60a83716e4c900a94f33cb0143a1"
+    },
+    {
+      "slug": "sequences-series-level-2",
+      "pages": 5,
+      "sha256": "30b9dc9714566c7f4a5d62018bdcab6a631f9d017839a5d6ab813c7ce0a8b90c"
+    },
+    {
+      "slug": "differentiation-polynomials-level-1",
+      "pages": 5,
+      "sha256": "46c0cd7250a0ef205a8b017dcf09390ef2f929d602c01b3f3a6e27e246694507"
+    },
+    {
+      "slug": "differentiation-polynomials-level-2",
+      "pages": 6,
+      "sha256": "fdb809ffd43084c7441d2a1d81aa30eab7019948bb3a04fefb14c8d4b2f7601e"
+    },
+    {
+      "slug": "differentiation-polynomials-level-3",
+      "pages": 9,
+      "sha256": "046eab42d4fd6dc04b44542532e538363fbdda350dfdb9640e378900aa553e71"
+    },
+    {
+      "slug": "integration-level-1",
+      "pages": 6,
+      "sha256": "2e3d05971ab9124212d60086592cb3dea111ba833a20ac2dcc757b71601a0b3c"
+    },
+    {
+      "slug": "integration-level-2",
+      "pages": 9,
+      "sha256": "8f2452c2e6bfc920cf8a7827b78000d8872465ed46762b53a1d7956fc45a240a"
+    },
+    {
+      "slug": "integration-level-3",
+      "pages": 9,
+      "sha256": "4115548111e9808a94910b551c219a9a54c79ee953982251529465dfb215aae0"
+    },
+    {
+      "slug": "binomial-expansion-level-1",
+      "pages": 5,
+      "sha256": "1346e778873bcd24d82cc1f7d5f9ad3a3d4b521d00e022ce925f6cd9f0d8ed6b"
+    },
+    {
+      "slug": "binomial-expansion-level-2",
+      "pages": 5,
+      "sha256": "11e029801ef9aa53cfb48b7726e37fe6f69c09bc7a630ba3ba96e1ef801d8e2e"
+    },
+    {
+      "slug": "binomial-expansion-level-3",
+      "pages": 6,
+      "sha256": "5859aa47df358da8e953656a1a8e3e39e409f8bc8fd49e412dd3d5257b4f96f4"
+    },
+    {
+      "slug": "bracket-expansion-level-1",
+      "pages": 5,
+      "sha256": "296322b426c55aa6783694bed82e8158d5140d9b12ffb4d9473cc04a04771e90"
+    },
+    {
+      "slug": "bracket-expansion-level-2",
+      "pages": 5,
+      "sha256": "9ae365dec89cdcfc0c5bb6f4a38e2425ee8fbb00edb420a01a8dab7ef99733b8"
+    },
+    {
+      "slug": "bracket-expansion-level-3",
+      "pages": 5,
+      "sha256": "3e817dac423dffd47063000f8ce04264f6a6d95926e6c1af3b409cce20ccce27"
+    },
+    {
+      "slug": "complex-numbers-level-1",
+      "pages": 5,
+      "sha256": "90c3b652da3af942aa3b8f38aaec50e59d5a9c53ffb150eb5bbefd1c46386f7d"
+    },
+    {
+      "slug": "complex-numbers-level-2",
+      "pages": 5,
+      "sha256": "eaecafe15f7d35558dd7b2dacdb31742670f0f7053661ccafa27f58336c18509"
+    },
+    {
+      "slug": "complex-numbers-level-3",
+      "pages": 5,
+      "sha256": "632c82bfde0efb657df7858ed518320e8def22d75c4e37f5e375c90946ae8b2d"
+    },
+    {
+      "slug": "complex-numbers-level-4",
+      "pages": 5,
+      "sha256": "e0ba94e6a8765157c6cb9e4d88f484fbd27b4a5d61e99dfed6985a8c6dcc57a8"
+    },
+    {
+      "slug": "differential-equations-level-1",
+      "pages": 6,
+      "sha256": "0f506f7850d517eac28ae30d9eb13e49c28a18d6bdbe02b423f4adacc16d59aa"
+    },
+    {
+      "slug": "differential-equations-level-2",
+      "pages": 6,
+      "sha256": "5571f7e0fe18322b170d3544b7eb4c0be774fe73eaed85cbe7a999aff850d30f"
+    },
+    {
+      "slug": "differential-equations-level-3",
+      "pages": 6,
+      "sha256": "65c1f8e473da2dfb55634a855e324c1268c150ec9617ac0db5e2f06e9ef4e255"
+    },
+    {
+      "slug": "differential-equations-level-4",
+      "pages": 9,
+      "sha256": "a873ace619655d9d75831e646b898b1d76e101b80f12afd4d47fda63bcea74d6"
+    },
+    {
+      "slug": "quadratic-factorisation-level-1",
+      "pages": 6,
+      "sha256": "c45ea3619e53ded4ae11223d471c9b78dafc75ae1e305209e9d82caadc796047"
+    },
+    {
+      "slug": "quadratic-factorisation-level-2",
+      "pages": 6,
+      "sha256": "d43567a0921817cdc52cc05d5e887a21f757b86c3d9b93f2f75838022b07aa6c"
+    },
+    {
+      "slug": "quadratic-factorisation-level-3",
+      "pages": 6,
+      "sha256": "45a788577c5508e5d9dff39dea886afa89e4c1e5df6b615b808a7813394d0950"
+    },
+    {
+      "slug": "functions-level-1",
+      "pages": 5,
+      "sha256": "939581e6a90837ec06d3de019cff6425acc356e7f13591e18ea3aad51b5a23f6"
+    },
+    {
+      "slug": "functions-level-2",
+      "pages": 6,
+      "sha256": "f0db2287cb76853ad7ebd88cb7292c130d4c4ef15455586e243a484bc313980d"
+    },
+    {
+      "slug": "functions-level-3",
+      "pages": 6,
+      "sha256": "91247edd89ede41c2f16524768aab3288ed2561ea3a31c882fd7da277d751326"
+    },
+    {
+      "slug": "further-vectors-level-1",
+      "pages": 6,
+      "sha256": "90cca4b14ca556b6f1a7d24dcaf553a280d5fa277abaa3494c15acb8e78bb853"
+    },
+    {
+      "slug": "further-vectors-level-2",
+      "pages": 6,
+      "sha256": "33df7bbaedcac96830078f05312c906aa64642ca01083f16ebc2f9b21088c7c0"
+    },
+    {
+      "slug": "further-vectors-level-3",
+      "pages": 6,
+      "sha256": "f0e235b64304371018bb592609e858b048ada049fa35ef3e14a6fa62e7cfe465"
+    },
+    {
+      "slug": "further-vectors-level-4",
+      "pages": 6,
+      "sha256": "f9c74599b9c4face45198ba057c116d3553de25f4f7e4d55033340b7458c2b77"
+    },
+    {
+      "slug": "graph-transformations-curve-sketching-level-1",
+      "pages": 10,
+      "sha256": "7620ad0c9369a2be82cf099d31f00787cfe2e901465622ee87eb78b3ac8ab5f8"
+    },
+    {
+      "slug": "graph-transformations-curve-sketching-level-2",
+      "pages": 12,
+      "sha256": "a073465025f1287eae7f18bad3eebd7f3e234675cd185ffd222ce0ba64f50a93"
+    },
+    {
+      "slug": "graph-transformations-curve-sketching-level-3",
+      "pages": 10,
+      "sha256": "90b11935fdfc0cc2f89fed778a36061d5c8dd71cf3a1bca3d59c0fb3fb56156f"
+    },
+    {
+      "slug": "graph-transformations-curve-sketching-level-4",
+      "pages": 10,
+      "sha256": "7597027e202d4ea22be956e9b51c2a7b7cd07b12904827dc4cdb0e94ae9e129a"
+    },
+    {
+      "slug": "hyperbolic-functions-level-1",
+      "pages": 5,
+      "sha256": "eb88e78c47cbd790d9dd16627bedf97aab8107b53e73a891710f71e0eaf8a342"
+    },
+    {
+      "slug": "hyperbolic-functions-level-2",
+      "pages": 6,
+      "sha256": "b3e521df6c33e9df7113cc32f322fe2c074e360e23f4b2711a023819fe2c2bdc"
+    },
+    {
+      "slug": "hyperbolic-functions-level-3",
+      "pages": 5,
+      "sha256": "1d24d1114e6682102c75859768e2c1b57089e45b8f023535f5d6ad7e03df5254"
+    },
+    {
+      "slug": "hyperbolic-functions-level-4",
+      "pages": 5,
+      "sha256": "ca3be4f925b5d13a4d1e553f2f8ba7489953c1302ee242448171c7c2d8ffff03"
+    },
+    {
+      "slug": "exponents-index-notation-level-1",
+      "pages": 4,
+      "sha256": "73d6071bc83fa210d5cf7dd1b4050262de72d6231169605b5f308220d8d97840"
+    },
+    {
+      "slug": "exponents-index-notation-level-2",
+      "pages": 5,
+      "sha256": "d20063287fb9c5010965fb961131160c9851ddff3b866a5ed938fd47faac5571"
+    },
+    {
+      "slug": "exponents-index-notation-level-3",
+      "pages": 5,
+      "sha256": "1503f722ba16439465ec9d5e5a3c7507a6432e5c1e687159bb702f2f8c51cf14"
+    },
+    {
+      "slug": "inequalities-level-1",
+      "pages": 6,
+      "sha256": "c41b88500bc4e99352b0d781e1e61c0009b74445e07f59afc075efe1f5e12583"
+    },
+    {
+      "slug": "inequalities-level-2",
+      "pages": 6,
+      "sha256": "4006c9c6f024f6c672501070b4c9fc132cba1f77f4b845f87883bbded0736343"
+    },
+    {
+      "slug": "advanced-integration-level-1",
+      "pages": 7,
+      "sha256": "d37d37170469d49b21772d8e07aa3fbf51e8a9f7f8ccd72df683beb5eb5b359b"
+    },
+    {
+      "slug": "advanced-integration-level-2",
+      "pages": 6,
+      "sha256": "92bf675ba8589a429aae428b1947bf3d54608ecb007ed01191f5a29ba166dc46"
+    },
+    {
+      "slug": "advanced-integration-level-3",
+      "pages": 9,
+      "sha256": "90cadbd489613f5cfcc2bce66856366e250fb08852a16d99c7124898520d5cfe"
+    },
+    {
+      "slug": "advanced-integration-level-4",
+      "pages": 7,
+      "sha256": "52fdbe4310b503158dc9d471a57e473e04921a3c606f69eeb2d4d90db79f579e"
+    },
+    {
+      "slug": "integration-algebraic-fractions-level-1",
+      "pages": 5,
+      "sha256": "e850b8578fb5cbe7fc11aad68c2e5b222337c912e7f7d58eadf290c78f13fe21"
+    },
+    {
+      "slug": "integration-algebraic-fractions-level-2",
+      "pages": 5,
+      "sha256": "4dd813c6c7f467f938b43781dfb7f3b28fcb803fff28178a9025710e5145b72a"
+    },
+    {
+      "slug": "integration-algebraic-fractions-level-3",
+      "pages": 9,
+      "sha256": "123d1af488a6dfdfaf8c7b19fb403d940ad0a8d3a637e111c8d8f986c010452b"
+    },
+    {
+      "slug": "integration-algebraic-fractions-level-4",
+      "pages": 5,
+      "sha256": "0e617db453f24c33e26355047cb317e288a1c362afbc51fabcda0f4b680e0e4b"
+    },
+    {
+      "slug": "inverse-trig-differentiation-level-1",
+      "pages": 6,
+      "sha256": "5d5629f67195db13456f774d6e9e06209dbc69fe5c8505cfca4364b2644af9e7"
+    },
+    {
+      "slug": "inverse-trig-differentiation-level-2",
+      "pages": 9,
+      "sha256": "1d5ca79a2fbc21a3bd4bb3583b697b5c84c6b79fc4635b6d957d55d0ef49d5ed"
+    },
+    {
+      "slug": "limits-first-principles-level-1",
+      "pages": 6,
+      "sha256": "5e14c7982fd2040d0126decf8d891fd06d12b9d15f59bc96d83a82aef752bdad"
+    },
+    {
+      "slug": "limits-first-principles-level-2",
+      "pages": 6,
+      "sha256": "7c9a67cfe7636ee54e102b79dede24a6f037b3a02bb57ebf410dad4139315bf3"
+    },
+    {
+      "slug": "limits-first-principles-level-3",
+      "pages": 6,
+      "sha256": "5656d6478037532a9108254d001d71e18c83593f2732351f6cd98fb09e1bc1e0"
+    },
+    {
+      "slug": "limits-first-principles-level-4",
+      "pages": 6,
+      "sha256": "8fa0e2028da5484100029e9a5360d1782df58f3f92aa7d764fa7c96ec34a052f"
+    },
+    {
+      "slug": "conic-intersections-level-1",
+      "pages": 9,
+      "sha256": "1b77c8a7af6b87c3b687441e3624a8b81fd4ee0dca499bfeb04079f96d972952"
+    },
+    {
+      "slug": "conic-intersections-level-2",
+      "pages": 6,
+      "sha256": "7e986ba411cde0b81246b90d4030302ee5b041edd942148568d294c86250d731"
+    },
+    {
+      "slug": "conic-intersections-level-3",
+      "pages": 6,
+      "sha256": "2c88919522333d3ddefc655433a6b67ef5f454fa8fdcc070f78f0b3b3c82e697"
+    },
+    {
+      "slug": "conic-intersections-level-4",
+      "pages": 7,
+      "sha256": "55fcf998bcc8a8bd9e75730f53ad2f794e2eda26bec46838e44d57d0d354bb8f"
+    },
+    {
+      "slug": "linear-algebra-level-1",
+      "pages": 6,
+      "sha256": "954a674be25ddd4e650f4d6b9a0a391e3e691f567df900b1c4b994f256d02d48"
+    },
+    {
+      "slug": "linear-algebra-level-2",
+      "pages": 6,
+      "sha256": "4d3b758167ffa2e256b308ac5fe358610585cc2275b71c9efb235ad3ec4733c3"
+    },
+    {
+      "slug": "linear-algebra-level-3",
+      "pages": 6,
+      "sha256": "439b0507585e09d874785275fe7685d0f11908ba3e2947d538259c6c1fd666eb"
+    },
+    {
+      "slug": "linear-algebra-level-4",
+      "pages": 6,
+      "sha256": "ec1a5eb71c8d4caf5e1b4d329942e2615c91f08b8cddc15c90beeb4d49a2781a"
+    },
+    {
+      "slug": "linear-equations-level-1",
+      "pages": 4,
+      "sha256": "037eb5c95a95ff08946ec10354c113db9975e94cf80c045d6521c87ed2515ae2"
+    },
+    {
+      "slug": "linear-equations-level-2",
+      "pages": 5,
+      "sha256": "4d7cfc98fb70a529681b57db42fc9ab06da63648a2204b977e6df09435847d7b"
+    },
+    {
+      "slug": "linear-equations-level-3",
+      "pages": 6,
+      "sha256": "d519ae31006c204724e99ab365b25a76862d7a6919e5f88927623603e80edb4e"
+    },
+    {
+      "slug": "linear-programming-level-1",
+      "pages": 10,
+      "sha256": "9c49ad553afd73209822e945c9eb09c6478407a860a812bb435e98e249cf2e5f"
+    },
+    {
+      "slug": "linear-programming-level-2",
+      "pages": 10,
+      "sha256": "40abb2a925b02b029ddae57d7b5f3a3633d7cce8250ddb4452a1a8665a1b458c"
+    },
+    {
+      "slug": "linear-programming-level-3",
+      "pages": 10,
+      "sha256": "16f9af832a81050d27dd91685329fe6cc1e54d0979894391b040a52e9bdb8887"
+    },
+    {
+      "slug": "logarithms-practice-level-1",
+      "pages": 6,
+      "sha256": "4db43d6fa6dbf162048216799e5ce26f65bff6ae3d69362587c3c0f194e17e36"
+    },
+    {
+      "slug": "logarithms-practice-level-2",
+      "pages": 6,
+      "sha256": "38b1c1d170736446a592107656a44bdb488727652e48f3af4fe7d419d12c537f"
+    },
+    {
+      "slug": "logarithms-practice-level-3",
+      "pages": 6,
+      "sha256": "2881480716bd3832361f55ce70242125a7b4376efcf6cf42bd13d3aac68d0a43"
+    },
+    {
+      "slug": "matrices-level-1",
+      "pages": 6,
+      "sha256": "40ed5a0cf54fbe7f4a0ebcf95f66e256433f861c385e1997b994adaddadcfdda"
+    },
+    {
+      "slug": "matrices-level-2",
+      "pages": 6,
+      "sha256": "9b71c0974e25e2e7d788a66f7768fca463535b2d006bc48929e2a1ccf6570b8f"
+    },
+    {
+      "slug": "matrices-level-3",
+      "pages": 5,
+      "sha256": "ab227220d402c57ce7c21f995122e1882ccdcaa120bf2bd79faaa6c079790a72"
+    },
+    {
+      "slug": "absolute-values-level-1",
+      "pages": 5,
+      "sha256": "cd7262a2162e8e8c51e82213d1dbbfd958141ec659192311ea69ea88d6a038ec"
+    },
+    {
+      "slug": "absolute-values-level-2",
+      "pages": 6,
+      "sha256": "8ab9daf62a509afa93ef599bbf1f401e2d24e1f3ac8507b42d3903c29b4a1640"
+    },
+    {
+      "slug": "absolute-values-level-3",
+      "pages": 9,
+      "sha256": "7d3f542082b21ef5c81428740312ffb7db182f7efc5f599b47d1c503932949b8"
+    },
+    {
+      "slug": "numerical-methods-level-1",
+      "pages": 5,
+      "sha256": "9f44816471f8a2b84af63ba7d89923134193567980bf08480c604cf94d3875b0"
+    },
+    {
+      "slug": "numerical-methods-level-2",
+      "pages": 6,
+      "sha256": "291fe8da2301bf180c33aefccd298a7f87faae65a4a34e2a65f93c8865509c6e"
+    },
+    {
+      "slug": "numerical-methods-level-3",
+      "pages": 5,
+      "sha256": "0bb85892a5ff2bd997a757cb6c4a61405a6c8029d99aeb4984d192647600926d"
+    },
+    {
+      "slug": "numerical-methods-level-4",
+      "pages": 5,
+      "sha256": "6002773c5ac79c293099e1e9675aee1983c4d25c90ca16e0d9ad3f14882acadd"
+    },
+    {
+      "slug": "partial-fractions-level-1",
+      "pages": 6,
+      "sha256": "a79fd9fd0d2b4285fdfd8bfd4b5cfbdda22becf9514318449a46c81c15aee654"
+    },
+    {
+      "slug": "partial-fractions-level-2",
+      "pages": 6,
+      "sha256": "e36c5c79e77239fa5a2f6d83fca7faea2b52eeb21b372089062f05b02c5744e8"
+    },
+    {
+      "slug": "partial-fractions-level-3",
+      "pages": 6,
+      "sha256": "1c0b4e19b66d92f70c015c455e1225bc53d3d6c09f1f8ac62f0d76f6e7e3ca70"
+    },
+    {
+      "slug": "partial-fractions-level-4",
+      "pages": 6,
+      "sha256": "4a069a11e0e5e3efd42554f61fe55dfc0a06eed56e9945621f6033928f595322"
+    },
+    {
+      "slug": "polar-coordinates-level-1",
+      "pages": 10,
+      "sha256": "5390d09f0fb39ccb9e8fda51650355d30b8e69dd82f3e2649e6276458a8326b0"
+    },
+    {
+      "slug": "polar-coordinates-level-2",
+      "pages": 10,
+      "sha256": "e10eaf0126da5f0592ae16d880818a18fac5117ec81764ab464715f4e6ffc1e3"
+    },
+    {
+      "slug": "polar-coordinates-level-3",
+      "pages": 10,
+      "sha256": "0038459927dce3705bdaaf677641360f140fa5e05d0174965d6aa633f920af1f"
+    },
+    {
+      "slug": "polar-coordinates-level-4",
+      "pages": 10,
+      "sha256": "fb233806c419cecdc55c9082ab5a337473d87abdc5d51f1d69e25f3d5429a46f"
+    },
+    {
+      "slug": "differentiation-rules-level-1",
+      "pages": 5,
+      "sha256": "1dfb37d74155131ff3f182eabeaa7fbc7f009a27f0b2d6a36d57524650de52b7"
+    },
+    {
+      "slug": "differentiation-rules-level-2",
+      "pages": 6,
+      "sha256": "d3a22d7018d9746220963995cc52fe34dc47e84f24242ca08ce7b38701b626d3"
+    },
+    {
+      "slug": "differentiation-rules-level-3",
+      "pages": 6,
+      "sha256": "68524d4b1ca38b8b51b12c34e4206946a5e856c65566c546f5c54920db978554"
+    },
+    {
+      "slug": "differentiation-rules-level-4",
+      "pages": 5,
+      "sha256": "9512ec45af8e6c788a6b797e51f03df40cc34134ed7413895fa54aefa3553703"
+    },
+    {
+      "slug": "proof-by-induction-level-1",
+      "pages": 6,
+      "sha256": "0801ceabc0d5d1d7227aba2b71f36b2b770baa4ec3e09c5acff37b3684e96e5b"
+    },
+    {
+      "slug": "proof-by-induction-level-2",
+      "pages": 6,
+      "sha256": "cafa8832923c267359f937055a9e5e77ba0fb775eaa57b505790b597a4d1f74f"
+    },
+    {
+      "slug": "proof-by-induction-level-3",
+      "pages": 6,
+      "sha256": "f4057255e1aa9f5da96f139879e2d3ed2f3108df4ade224f91f4b4c273db062d"
+    },
+    {
+      "slug": "proof-by-induction-level-4",
+      "pages": 9,
+      "sha256": "1056aa3ac65e330d8e97750a69a0751e9dc85787c073635cd3387169ef34af02"
+    },
+    {
+      "slug": "quadratic-equations-level-1",
+      "pages": 6,
+      "sha256": "e8c141f20bc7cb56e305c63a2b70d1bd9a743860f0e017337d95010ee4c54b54"
+    },
+    {
+      "slug": "quadratic-equations-level-2",
+      "pages": 6,
+      "sha256": "f085dcffe1a2ac60690ec4ecf662b38379bca7dfc0a77c85e67205fdaa508f31"
+    },
+    {
+      "slug": "quadratic-equations-level-3",
+      "pages": 6,
+      "sha256": "873e42d2383b500a37b330916214285a4a48233a935e20a13f3ea6ac28a8713a"
+    },
+    {
+      "slug": "quadratic-equations-level-4",
+      "pages": 6,
+      "sha256": "2b922d4cd9cf7ee5b03dcccd61fdf2a9fb060423e22e0360306738e206ee5c6f"
+    },
+    {
+      "slug": "remainder-theorem-level-1",
+      "pages": 6,
+      "sha256": "84dc5e64029391cd541d3b0002a3d33ba407a0f28df589cd1f50fefa4a8087e9"
+    },
+    {
+      "slug": "remainder-theorem-level-2",
+      "pages": 5,
+      "sha256": "f9a8c505267d9938e8d533a009946be02c762bce21475a757c63c9f2064ed50d"
+    },
+    {
+      "slug": "remainder-theorem-level-3",
+      "pages": 5,
+      "sha256": "81c89dc6718083086ab94ed954f3704c6ac6132db1a184e647bf40f0bd80ecdf"
+    },
+    {
+      "slug": "roots-of-equations-level-1",
+      "pages": 5,
+      "sha256": "9bb6ea255d2a61fca41aa39d3ce4ceb7f0b08501e106071dd1a77c5537a70b31"
+    },
+    {
+      "slug": "roots-of-equations-level-2",
+      "pages": 5,
+      "sha256": "290d4493a288bb79d3a65793d1d6845f21cfd5272354c63b90896ebb5e8252a3"
+    },
+    {
+      "slug": "roots-of-equations-level-3",
+      "pages": 5,
+      "sha256": "05a2a31005ba598d10ed4af4f68e97743825bc84be1fd1fe371a5eecccf2b477"
+    },
+    {
+      "slug": "roots-of-equations-level-4",
+      "pages": 5,
+      "sha256": "6c331dd11165b251ffeb23424b80daca57302baf229378a368dffb2a8d994905"
+    },
+    {
+      "slug": "sequences-level-1",
+      "pages": 5,
+      "sha256": "8569dbb19e69aa7e28f55934099b41f59905f5a8039bbeff17b4fc56df99c548"
+    },
+    {
+      "slug": "sequences-level-2",
+      "pages": 5,
+      "sha256": "5a68886530a8c9b197c85ef6d14768971ccaff9f1d2d16c0633704d2ce6fb03a"
+    },
+    {
+      "slug": "simultaneous-equations-level-1",
+      "pages": 9,
+      "sha256": "2ee39fb5d5e0c8efe86c1de6b1d50531a4139b5faee9015246153c2a20586cb1"
+    },
+    {
+      "slug": "simultaneous-equations-level-2",
+      "pages": 9,
+      "sha256": "06d7fa991dbcb2a9358aa5b726e6bde593d0b9441cc00f6f390cfa3c6f86f3b1"
+    },
+    {
+      "slug": "sine-cosine-rule-level-1",
+      "pages": 5,
+      "sha256": "35b1f5bf33f95beaf1dcdfba6d2f77579ff09dd26837e3386926c7a1c335d88e"
+    },
+    {
+      "slug": "sine-cosine-rule-level-2",
+      "pages": 5,
+      "sha256": "91581e6040d40f141f82cecccf62458624ba989ed3f0e0a445d6dedac8fc5883"
+    },
+    {
+      "slug": "straight-lines-level-1",
+      "pages": 5,
+      "sha256": "38ba88b8d57a99a1f89ccd5e76db42aeb4f4c3124fdbc412ad8a39e7e8451bdb"
+    },
+    {
+      "slug": "straight-lines-level-2",
+      "pages": 5,
+      "sha256": "532e7b3da83c332e4846d96935c8ed90f58b52484d15be6e88028acc849db020"
+    },
+    {
+      "slug": "straight-lines-level-3",
+      "pages": 5,
+      "sha256": "dc48f2846dcf51f0579d30065a6d341eb1c9a1eb04ba5bf1e4812f867f907f6d"
+    },
+    {
+      "slug": "straight-lines-level-4",
+      "pages": 6,
+      "sha256": "39a95deee1cf914f0240a5253a7c7d77708d0c3e6bc51ce4d6724de22204a753"
+    },
+    {
+      "slug": "surds-radicals-level-1",
+      "pages": 6,
+      "sha256": "f5b0871e9fd45675c06cd5e446ef207f0715fa4c1d4af9a5a1c15b31a49d0760"
+    },
+    {
+      "slug": "surds-radicals-level-2",
+      "pages": 6,
+      "sha256": "b178bf97a072fef5dbc24510a1e8ff26232bad3fd7067fa782733b365c9e759f"
+    },
+    {
+      "slug": "surds-radicals-level-3",
+      "pages": 6,
+      "sha256": "a349ce469cd045c281868ebd220b225205a3d9ecbacab25bb47beec674a0606f"
+    },
+    {
+      "slug": "series-expansions-level-1",
+      "pages": 5,
+      "sha256": "a9dddaec7f2c67aaf402106bd27e243f19e9f46a33954e43c26e7200a7de2e06"
+    },
+    {
+      "slug": "series-expansions-level-2",
+      "pages": 5,
+      "sha256": "e59776f6fc13d07c67d1ab6c560e13914ff97ce8e851e21272c34500da717799"
+    },
+    {
+      "slug": "series-expansions-level-3",
+      "pages": 5,
+      "sha256": "fd74d29858a23638c109f7958ceb8bc8c6854f6dedcaabac4b0c91893dbc66a2"
+    },
+    {
+      "slug": "series-expansions-level-4",
+      "pages": 6,
+      "sha256": "d6e8c12304ad5ccdd478ba7726e9a8b01407b17e6209a59c2461f5ff79f385ba"
+    },
+    {
+      "slug": "transposition-formulae-level-1",
+      "pages": 6,
+      "sha256": "f412c59c3c5cbebcd464bc73472dc89c1cdb2a8a8e882eae2ebb57916cada107"
+    },
+    {
+      "slug": "transposition-formulae-level-2",
+      "pages": 6,
+      "sha256": "469fe81774cca85bb5f59affe2f9734a5358cf79a2165c9112a34494d931543a"
+    },
+    {
+      "slug": "transposition-formulae-level-3",
+      "pages": 6,
+      "sha256": "4c03321dcb2a7c1f723f83238422d6655075a5be4a42ee04f0c981c3c531f0d2"
+    },
+    {
+      "slug": "transposition-formulae-level-4",
+      "pages": 6,
+      "sha256": "96a31eb137159c1a3a602761b61fb55c7da8938c2ec1b31e0cef12e583248696"
+    },
+    {
+      "slug": "trigonometric-functions-level-1",
+      "pages": 7,
+      "sha256": "1686f290b9c55f3cb07363295576a40f41fd927276260fafc53fd571df8d3dd9"
+    },
+    {
+      "slug": "trigonometric-functions-level-2",
+      "pages": 5,
+      "sha256": "778ff8583ff98501e1f7c9f43b7f8c8e0f8695cf91ead7e0d5c5341572d4911c"
+    },
+    {
+      "slug": "trigonometric-functions-level-3",
+      "pages": 5,
+      "sha256": "b357ab2f2bbdf76d79e9b61e7a8e93c842f1a7c55c28e7f016be08dd347cb37c"
+    },
+    {
+      "slug": "trig-differentiation-rules-level-1",
+      "pages": 6,
+      "sha256": "24eb68ca6e982e79b1cf34b75af61b795a65a48fa84e3281e44c8411823ba058"
+    },
+    {
+      "slug": "trig-differentiation-rules-level-2",
+      "pages": 6,
+      "sha256": "5b18ff3f3825febba9245f93246b5ca7f6d5d46a19c8203eab4ac73f83bc96e9"
+    },
+    {
+      "slug": "trig-differentiation-rules-level-3",
+      "pages": 6,
+      "sha256": "6e2fe69a8344702badfbf0b33f7fe8546dcae041dbff42a1266a0bf42aa1dd6c"
+    },
+    {
+      "slug": "trig-differentiation-rules-level-4",
+      "pages": 6,
+      "sha256": "f6eb5ed6d2aedc6396e371a6613454a96598e4a02df154e16e1b38dbf65dcd01"
+    },
+    {
+      "slug": "trig-equation-solver-level-1",
+      "pages": 5,
+      "sha256": "5ce5263e1e2d97eda5d6dcb1621f6f27c0a0744a242d8f884337ff4d8947679c"
+    },
+    {
+      "slug": "trig-equation-solver-level-2",
+      "pages": 6,
+      "sha256": "524999a4cf497104172f9349d7517125c424e4f1156575b4d82055fb37e7369d"
+    },
+    {
+      "slug": "trig-graphs-transformations-level-1",
+      "pages": 9,
+      "sha256": "3833680f988d608ae64806c02e0c2ea98d2f4953202224db36bc6785f0b57e4e"
+    },
+    {
+      "slug": "trig-graphs-transformations-level-2",
+      "pages": 16,
+      "sha256": "db6fa41cdd4c0ad80d3600345724220c0adc389055074903c70ef60d68eaccaf"
+    },
+    {
+      "slug": "trig-graphs-transformations-level-3",
+      "pages": 14,
+      "sha256": "68b09aaf69342f7a9a4c55d824307653cd4eaef66668b908d06943f9e214422c"
+    },
+    {
+      "slug": "trig-graphs-transformations-level-4",
+      "pages": 15,
+      "sha256": "052cdcfb60ce59822f3b4ffbbdba9268d2a3cd9649c1146a4d9942a342e4652d"
+    },
+    {
+      "slug": "volumes-of-revolution-level-1",
+      "pages": 6,
+      "sha256": "c31c2b2ee6f335a4b81d87a19c246a8d37fe9ec1179ef703c6214762fcaa08d4"
+    },
+    {
+      "slug": "volumes-of-revolution-level-2",
+      "pages": 6,
+      "sha256": "3943b718063159727a8042a2b8a5fa00ffbfcda096a532182983110056c46403"
+    },
+    {
+      "slug": "volumes-of-revolution-level-3",
+      "pages": 6,
+      "sha256": "13e685a040f788bae7c52cfb0c0b9406d83169cd47af6af43560df70d60abdc4"
+    },
+    {
+      "slug": "volumes-of-revolution-level-4",
+      "pages": 6,
+      "sha256": "4ae7cf39d07e5c973d73ba3571653d0b36bb7e62daa5917ae476688b01144e6a"
+    },
+    {
+      "slug": "circles-area-circumference-level-1",
+      "pages": 10,
+      "sha256": "9e785af036faaa279db0d5d6f667baa1d55ed8ab33dc25d739c10841da3f9f4d"
+    },
+    {
+      "slug": "circles-area-circumference-level-2",
+      "pages": 10,
+      "sha256": "d59211f01c59b514bdcaede590439616195432ae87d74210fc105597677528f6"
+    },
+    {
+      "slug": "circles-area-circumference-level-3",
+      "pages": 10,
+      "sha256": "f68ec58ec3b14a890969d9d61b0b203f815bf6c8a4939f69dca29ade67e74826"
+    },
+    {
+      "slug": "area-rectangles-level-1",
+      "pages": 10,
+      "sha256": "8777496ed4d7d95c6560ae140bcd452546bf7847ce820dc8e3270feb7fce4d7f"
+    },
+    {
+      "slug": "area-rectangles-level-2",
+      "pages": 10,
+      "sha256": "54f385ca2e442ca3ad00f9fe61dd49d484a39c9b50db707d98ff436a3468189d"
+    },
+    {
+      "slug": "area-rectangles-level-3",
+      "pages": 10,
+      "sha256": "87f71efa28f8f0720ba98a969edd6543270b1e80319a363c8ac0bfc641b484cd"
+    },
+    {
+      "slug": "area-triangles-level-1",
+      "pages": 7,
+      "sha256": "68010712280ea63d06d7b9a231086385989ddba251d02bb80b20ed712fa69df2"
+    },
+    {
+      "slug": "area-triangles-level-2",
+      "pages": 7,
+      "sha256": "a83c3d9a131cadd8a8fefa777e02643cea97b285d64c4ade6d32d9f5cb0180f1"
+    },
+    {
+      "slug": "area-triangles-level-3",
+      "pages": 10,
+      "sha256": "dd2571db88909c3bd0ed7f618b6b1f00ef956ef2deecd8e8a1d92de3551e8b40"
+    },
+    {
+      "slug": "bearings-level-1",
+      "pages": 10,
+      "sha256": "7b8a54d4b4b62387669a608bcbf14b1093039aadd9b8752bd5ac22fe8d2a3517"
+    },
+    {
+      "slug": "bearings-level-2",
+      "pages": 10,
+      "sha256": "3cccc0378583c150fc4660d0b734708f44cc66d45f99c5e667c7ef931006328d"
+    },
+    {
+      "slug": "bearings-level-3",
+      "pages": 10,
+      "sha256": "053a56e6d2abc187202fd26dc5ca1d91cc863692ebeda5045567fda830501bcc"
+    },
+    {
+      "slug": "circle-theorems-level-1",
+      "pages": 10,
+      "sha256": "3d093dd9c817d477e292d75c027148d96122b01bb9f21230c3aad6b8d5b49268"
+    },
+    {
+      "slug": "circle-theorems-level-2",
+      "pages": 10,
+      "sha256": "e06432e3c485680c2a4875434e0378e9273ecbf60022960f6d344f7ade743adb"
+    },
+    {
+      "slug": "circle-theorems-level-3",
+      "pages": 10,
+      "sha256": "a5c16c7a12223542bc6cab13ab42734fcc9b61c2fead029f3d2b327c390e1788"
+    },
+    {
+      "slug": "free-vectors-level-1",
+      "pages": 6,
+      "sha256": "f139aa58acddbeb029eb6bf5bb80617b981980006185e58883dfc66767fb17c1"
+    },
+    {
+      "slug": "free-vectors-level-2",
+      "pages": 6,
+      "sha256": "cc4825e215b057917aee1846c34c25a9b4a9c5ab187c2aae5535b326fde6dd66"
+    },
+    {
+      "slug": "free-vectors-level-3",
+      "pages": 6,
+      "sha256": "3d184fd3314b8feb7bb28cd19cdc4cd13b031e3a1c0d1265e413bb3ad07daf0d"
+    },
+    {
+      "slug": "cylinders-cones-volume-surface-area-level-1",
+      "pages": 10,
+      "sha256": "382ffa518e295050d38cb2eb61d1ebd073e373aa11fee887018eedc8cc784309"
+    },
+    {
+      "slug": "cylinders-cones-volume-surface-area-level-2",
+      "pages": 10,
+      "sha256": "2cdd6521c25f79dc433822cbc2d86a021da6736935419089c1fc66ba8bebd2e4"
+    },
+    {
+      "slug": "cylinders-cones-volume-surface-area-level-3",
+      "pages": 10,
+      "sha256": "bc6cacb759f134192c436b0f41761114efcf778f3d0f200534e04e4254545e5f"
+    },
+    {
+      "slug": "earth-geometry-level-1",
+      "pages": 10,
+      "sha256": "335cc4e6d037e59106a2ce711d875ab6a2d863ac160aaecbdfbdb165eea10be7"
+    },
+    {
+      "slug": "earth-geometry-level-2",
+      "pages": 10,
+      "sha256": "081013493dc630eedb952e6240aac98315b6558db0f8ddd26a1dd67d5e471fab"
+    },
+    {
+      "slug": "earth-geometry-level-3",
+      "pages": 10,
+      "sha256": "34dee5cb55138e56c9cb9953c4555f41e20b516d0e327784741d32dabe8b6695"
+    },
+    {
+      "slug": "equation-of-a-circle-level-1",
+      "pages": 5,
+      "sha256": "464352b63b61fedf2cefc839cc8602814e6be1b3a135b8f731ec3fb7594d6569"
+    },
+    {
+      "slug": "equation-of-a-circle-level-2",
+      "pages": 5,
+      "sha256": "b2f05e650728a91bc5e167462412ab1e9268ac83a5bb7f40d5bb8a9a012864e8"
+    },
+    {
+      "slug": "equation-of-a-circle-level-3",
+      "pages": 6,
+      "sha256": "49c1af81ee5a46be442e2ad8ca08bf97ed1a11ba0ef61211c66f3ec0fe3b0596"
+    },
+    {
+      "slug": "equation-of-a-circle-level-4",
+      "pages": 6,
+      "sha256": "8dcda3f40b753e52863f29cc693f1c05f70c1875d6c61981afa9554a506eb2b4"
+    },
+    {
+      "slug": "formal-geometric-proof-level-1",
+      "pages": 10,
+      "sha256": "10c0e1d0bc1647351ae7e9cf034a046b20d52216c9f3e9e631d09b3d99701d20"
+    },
+    {
+      "slug": "formal-geometric-proof-level-2",
+      "pages": 10,
+      "sha256": "29d9587e733880cca4475c2baa0997a5c4bb64b6e2308b2e24b767f3d023b118"
+    },
+    {
+      "slug": "formal-geometric-proof-level-3",
+      "pages": 7,
+      "sha256": "db6aba28fee06665c3d42b4a784d80096f99cc4f716af6da76c634e8b0ee4093"
+    },
+    {
+      "slug": "formal-geometric-proof-level-4",
+      "pages": 9,
+      "sha256": "c1d94fa9282f540d085073ed2e7c9ae22239396f61c1b973fe313461eaa3423f"
+    },
+    {
+      "slug": "loci-constructions-level-1",
+      "pages": 9,
+      "sha256": "2fc22860d4483965244678fee2ef9284a6b8ca442bc101d6e15c5f0e9ec8c378"
+    },
+    {
+      "slug": "loci-constructions-level-2",
+      "pages": 10,
+      "sha256": "cc9acb7696147bd27409ed756db42f5636bb795221e97b7d7df42140a61bb38a"
+    },
+    {
+      "slug": "loci-constructions-level-3",
+      "pages": 10,
+      "sha256": "e3cff478ca1972c51c5c7e5938fe97d19239fafc9b48dced91a9f346465ccb80"
+    },
+    {
+      "slug": "midpoint-length-lines-level-1",
+      "pages": 5,
+      "sha256": "55f37f04ebafc9bdd02eb42e0dd3c54f435b532ce8f7814ad1a4854c0c8c4da2"
+    },
+    {
+      "slug": "midpoint-length-lines-level-2",
+      "pages": 5,
+      "sha256": "ae2b3e8677cd262728b20c35eae68506abf1a200c26c261b82d3902bda0679b8"
+    },
+    {
+      "slug": "midpoint-length-lines-level-3",
+      "pages": 5,
+      "sha256": "3844b16ad6731433aac8f072ae945e228237264462f688f653bde0d324b04f45"
+    },
+    {
+      "slug": "midpoint-length-lines-level-4",
+      "pages": 5,
+      "sha256": "77296eb008e44ac594ab8d1831dd930db941042d9aa65612935064ac53a73a17"
+    },
+    {
+      "slug": "missing-angles-level-1",
+      "pages": 10,
+      "sha256": "eee511fed814652519bf56b3232ca999f5b3afb830f1479e79f8c13fba54c8b1"
+    },
+    {
+      "slug": "missing-angles-level-2",
+      "pages": 10,
+      "sha256": "d20d18cb78d33c97c48160556f5c7067c42efc711efab7fa8e6e4ed21f0f9d1d"
+    },
+    {
+      "slug": "missing-angles-level-3",
+      "pages": 10,
+      "sha256": "de7893a7ee0039ce912c5e1f71577197497b9a350cefc68c541f18ce3ea9e66b"
+    },
+    {
+      "slug": "polygons-angles-level-1",
+      "pages": 10,
+      "sha256": "c85bd097f12317a951c4c5b017d0e480e0ea869535bf2117c4732947c49368b0"
+    },
+    {
+      "slug": "polygons-angles-level-2",
+      "pages": 10,
+      "sha256": "a2dc5543b597f50fdae601c71bda921dfd528c7798e7eb0694137e187dcfb8ad"
+    },
+    {
+      "slug": "polygons-angles-level-3",
+      "pages": 10,
+      "sha256": "4f43c4bf3432f305c1af3acf7f32e4dad1f98e305ba1f130333196f26ecfa5fe"
+    },
+    {
+      "slug": "volume-surface-area-prisms-level-1",
+      "pages": 10,
+      "sha256": "a43d82682541f23bfea23325a65f53d9c521ad76db59b5d98556d4859260dc29"
+    },
+    {
+      "slug": "volume-surface-area-prisms-level-2",
+      "pages": 7,
+      "sha256": "b410d58ededcc5db27e0eb99ce68c8af5f9104d88fb8acd4ed7dad9652b44941"
+    },
+    {
+      "slug": "volume-surface-area-prisms-level-3",
+      "pages": 10,
+      "sha256": "c3f1ab93f92edbbf0e651538a92c7352c7510ae5f725f4d5ca158d06309075a1"
+    },
+    {
+      "slug": "pythagoras-theorem-level-1",
+      "pages": 10,
+      "sha256": "5735bd8e233d9c1a702a0ee6d0a5889bc42a4e4c098a8ecdd4bf62a3a21aa00f"
+    },
+    {
+      "slug": "pythagoras-theorem-level-2",
+      "pages": 10,
+      "sha256": "f1af7dfd08a810f1e40dd8ca34741de7c152e9212fd9f54d4f2da0c7b1bd3568"
+    },
+    {
+      "slug": "pythagoras-theorem-level-3",
+      "pages": 10,
+      "sha256": "5fed1d392e69fa050f6663477ba6f0ee80d1176054209fe4ad030c0727c2c4df"
+    },
+    {
+      "slug": "trigonometric-ratios-level-1",
+      "pages": 10,
+      "sha256": "5be0b098810e7e944cb734ed461dab3950e6a1a71da6ef1dd5e722d0a78fcb7e"
+    },
+    {
+      "slug": "trigonometric-ratios-level-2",
+      "pages": 10,
+      "sha256": "101662918a002deeace6ea1a8ecc35a8638548c0472f6ab9758c0b10ee55ffcc"
+    },
+    {
+      "slug": "trigonometric-ratios-level-3",
+      "pages": 10,
+      "sha256": "3e14f83da9ccb89d3be473ec87ffcdb489b5070163fe894de97986eed3523cd6"
+    },
+    {
+      "slug": "scale-drawing-similar-shapes-level-1",
+      "pages": 10,
+      "sha256": "ef5adc33853ce8307ad581732fd660f1eb1c66eb8f06c013e2138fda52d7b2a0"
+    },
+    {
+      "slug": "scale-drawing-similar-shapes-level-2",
+      "pages": 10,
+      "sha256": "cdf8af21c8a8a36de3037ae11857d3e164c9d44b3013d9708b2a67e6c0cf3316"
+    },
+    {
+      "slug": "scale-drawing-similar-shapes-level-3",
+      "pages": 10,
+      "sha256": "66dcdcd7e67d41fc6734f5be63bdf89af264ac12de7590fb20e6891083e3fa17"
+    },
+    {
+      "slug": "scale-drawing-similar-shapes-level-4",
+      "pages": 10,
+      "sha256": "0e6cfffac0d717c4df876b7608cf0f8a72e6759e20d67367fa74c65253925fa2"
+    },
+    {
+      "slug": "sectors-arc-length-level-1",
+      "pages": 10,
+      "sha256": "40989d43102130aacb4a7affc76bbc44b7eb0ea7ceaa3e3059580265e976fc7e"
+    },
+    {
+      "slug": "sectors-arc-length-level-2",
+      "pages": 10,
+      "sha256": "0373fd730949fe62fa1e4e87d02a76bea16828dbcbd8a5bfdfb9014b26514f6c"
+    },
+    {
+      "slug": "sectors-arc-length-level-3",
+      "pages": 10,
+      "sha256": "f28d97704cf856ea4b5bc95d1d7e06a648a4d8aab697ff79f2b73081cf4bc23f"
+    },
+    {
+      "slug": "pyramids-spheres-volume-surface-area-level-1",
+      "pages": 10,
+      "sha256": "ee20c6cd00486eea43b4ed33ee0cc45ae195d773fc5384eab8d85c3021129f5b"
+    },
+    {
+      "slug": "pyramids-spheres-volume-surface-area-level-2",
+      "pages": 10,
+      "sha256": "3589bbde6b24dbd5c6d397ea49722c885c42f6d5b14a653585d743b3164e9b0f"
+    },
+    {
+      "slug": "pyramids-spheres-volume-surface-area-level-3",
+      "pages": 10,
+      "sha256": "e1f4d469f2a4d4da12364b3aeec716ddefaa78b4c7edc8f9701474ef5c90b633"
+    },
+    {
+      "slug": "transformations-level-1",
+      "pages": 10,
+      "sha256": "99895689e97e90a76ef3cc9f90568d81575167d500a17fa169ba006d10153981"
+    },
+    {
+      "slug": "transformations-level-2",
+      "pages": 10,
+      "sha256": "64ed44ef4b92507273ffb07dc7e0ce0fd85db29761186e8fa98f15c91e368b24"
+    },
+    {
+      "slug": "transformations-level-3",
+      "pages": 10,
+      "sha256": "0e75b409eff0620e983ac02408ec37bbef62f4340e2f7b9958eb915c76bd0b91"
+    },
+    {
+      "slug": "transformations-level-4",
+      "pages": 10,
+      "sha256": "365b8b731777fed0161d2314dbc9bf60b5f55a9af31b42214174835cf5602d92"
+    },
+    {
+      "slug": "friction-level-1",
+      "pages": 5,
+      "sha256": "503286c70664ac9b46d4a29a08a297be8b4b446f08d1d695bff6c1b293acadf7"
+    },
+    {
+      "slug": "friction-level-2",
+      "pages": 6,
+      "sha256": "5466470f07a8dd880051282e92964b332c5afa568216e0c33a2e92f4d81d1f8f"
+    },
+    {
+      "slug": "friction-level-3",
+      "pages": 6,
+      "sha256": "bdbcb2d56d615ce35e61586e4f59a2869ad35857be3d931e9dd448af8cbfcc6c"
+    },
+    {
+      "slug": "moments-level-1",
+      "pages": 10,
+      "sha256": "2e1e1c26685f82aa087fc8f2bbf9e169db289f9e2c86e8781d5933f365afb657"
+    },
+    {
+      "slug": "moments-level-2",
+      "pages": 10,
+      "sha256": "198fc72b444a2710f2d7028afb91b23d14c4ba8f9da4f31bf4728df247b72aa2"
+    },
+    {
+      "slug": "moments-level-3",
+      "pages": 10,
+      "sha256": "c79e3443e750801015bba6ad4eabc14e6bae954e0566b39f02e7b26723a85463"
+    },
+    {
+      "slug": "momentum-level-1",
+      "pages": 6,
+      "sha256": "bf428b69b6d5619346e0edafdcec71a9a889357b57c7a37544691bad937e622e"
+    },
+    {
+      "slug": "momentum-level-2",
+      "pages": 6,
+      "sha256": "832891e84d5dc5dd296cdea91b4850bfac3c505e2be2096eecb686a96d3ec05d"
+    },
+    {
+      "slug": "momentum-level-3",
+      "pages": 6,
+      "sha256": "356e58d2c85de432efeddae50b3ac824dc1d4320e3727141954560ffd6420edc"
+    },
+    {
+      "slug": "motion-graphs-constant-acceleration-level-1",
+      "pages": 7,
+      "sha256": "f04b452cbbee9024ec3dea16bf7c9359446df6ffa8beec9a4b3f583e270e8e17"
+    },
+    {
+      "slug": "motion-graphs-constant-acceleration-level-2",
+      "pages": 10,
+      "sha256": "840177c381ae5ffff65a70e63713fd15da9a838bb12b255ba8d1a936749e6831"
+    },
+    {
+      "slug": "motion-graphs-constant-acceleration-level-3",
+      "pages": 9,
+      "sha256": "8eb5445e82ee0c00484301ad7cbcdbb863361bc21ec888ed4c2b947a52669074"
+    },
+    {
+      "slug": "newtons-second-law-level-1",
+      "pages": 5,
+      "sha256": "c60d92357f435c5789956a4734364ad11ed34905fbd6fef74ce10dc29b0e79a4"
+    },
+    {
+      "slug": "newtons-second-law-level-2",
+      "pages": 6,
+      "sha256": "68425334db86449b795545ffef1daa9db7bb1112591aebe975802c203133a94b"
+    },
+    {
+      "slug": "newtons-second-law-level-3",
+      "pages": 6,
+      "sha256": "bc6a322ac462f66b7efe21bdcd10f12d401f084ff02e9a398407cb2b9fd2f406"
+    },
+    {
+      "slug": "projectiles-level-1",
+      "pages": 10,
+      "sha256": "8d3a54abee9e0e5989e48b2a452fe8c471fe83e2cc0c78311681d52582edba8a"
+    },
+    {
+      "slug": "projectiles-level-2",
+      "pages": 10,
+      "sha256": "8a357f3741cfbdddd5b3e5aa2d241fd1d5425f9257289c73b746a18efc48082e"
+    },
+    {
+      "slug": "projectiles-level-3",
+      "pages": 10,
+      "sha256": "4fd9906e9e6241efe5f1efcb5e831f25c7bd2528e55b13a141dba4fd57e80bc3"
+    },
+    {
+      "slug": "equations-of-motion-level-1",
+      "pages": 6,
+      "sha256": "4c92fba0309a5eb09b6114a5dfb29bcf83a0ea6cc683e248414dad62070246ea"
+    },
+    {
+      "slug": "equations-of-motion-level-2",
+      "pages": 6,
+      "sha256": "6fcf06fefd1b398c05192f8fd3516f5dedba6b5ce77921a1ebd39d8634d20880"
+    },
+    {
+      "slug": "equations-of-motion-level-3",
+      "pages": 6,
+      "sha256": "54dc2eba1c3102553e561fb287624df53da9f9e8f489a80decbd98486104028a"
+    },
+    {
+      "slug": "work-energy-power-level-1",
+      "pages": 5,
+      "sha256": "28173ec647dd4a69ac427b9ae714f6bf5bf24810ece7d730dd20cf57382953a9"
+    },
+    {
+      "slug": "work-energy-power-level-2",
+      "pages": 5,
+      "sha256": "73c22ba286dd90725d23586f2cbab3e6dbc42b461624f78d6d699ac2e95f58b2"
+    },
+    {
+      "slug": "work-energy-power-level-3",
+      "pages": 6,
+      "sha256": "4fb74941ff801154f885a0bba8eb5ec3b6c97bbb1f4bd86dd54bfbb41182a5fb"
+    },
+    {
+      "slug": "four-operations-level-1",
+      "pages": 5,
+      "sha256": "fd163d4895b239aa7aa68166bf58b2a3af2b68eab6a0c8a850ab69c1f5c82dd5"
+    },
+    {
+      "slug": "four-operations-level-2",
+      "pages": 5,
+      "sha256": "30b135a4377fe8be3d24b95dbfe8c6addaa8792cf0354d3841eddf61c03138a2"
+    },
+    {
+      "slug": "four-operations-level-3",
+      "pages": 6,
+      "sha256": "00ac4b68bd530a6b5fab73e0392ae15b545963c829fcefb0500484fd6fd39b13"
+    },
+    {
+      "slug": "four-operations-level-4",
+      "pages": 5,
+      "sha256": "a3d02bb47845b6e943175d0486c89427e449f4861d157b598b4f753489766d27"
+    },
+    {
+      "slug": "decimals-practice-lab-level-1",
+      "pages": 5,
+      "sha256": "62d5264935cbe1e8330bb50524e78b0f171afdb14bc6dd34286e4fa51cf398d5"
+    },
+    {
+      "slug": "decimals-practice-lab-level-2",
+      "pages": 5,
+      "sha256": "464fa9c4e288b4d3961c6d34c65aeaf2ea5104323baf6d09785b219882913b16"
+    },
+    {
+      "slug": "decimals-practice-lab-level-3",
+      "pages": 5,
+      "sha256": "39ebd4ff40cde799072bef35331f1298bb5ba6f6c081bfc4db4b2fc8887499ac"
+    },
+    {
+      "slug": "financial-real-life-maths-level-1",
+      "pages": 5,
+      "sha256": "575471fef54a8d546d5216d3839f334179d8e203ce294f297680bc7d088f762a"
+    },
+    {
+      "slug": "financial-real-life-maths-level-2",
+      "pages": 6,
+      "sha256": "d4f8d13dca29d0d198eeea3b4926f5492269de2a12ce0559a093ac158212723b"
+    },
+    {
+      "slug": "financial-real-life-maths-level-3",
+      "pages": 6,
+      "sha256": "d284e7ee1f707e56cd0db8afccfd59fd9a738cbb9f3df59b71cc6eac3dc4e722"
+    },
+    {
+      "slug": "financial-real-life-maths-level-4",
+      "pages": 6,
+      "sha256": "27027f51cbcf8f61520e78caa31a8b8b63138f923820253855d64e80612fc6f2"
+    },
+    {
+      "slug": "fractions-practice-level-1",
+      "pages": 4,
+      "sha256": "5cb1503d2d3e26283211f2d8df1844a54881973fb14549521e5e63bcfa5ca979"
+    },
+    {
+      "slug": "fractions-practice-level-2",
+      "pages": 4,
+      "sha256": "f9aa0e174eba50ebdb0e9bc4542359bc0ab3f6c37303b074698022756c5460ba"
+    },
+    {
+      "slug": "fractions-practice-level-3",
+      "pages": 5,
+      "sha256": "13b3fcdeb5e4a4507d326cfbac9ca6ff9af3cb4ffbfe5250ac3006ad226754fa"
+    },
+    {
+      "slug": "fractions-practice-level-4",
+      "pages": 6,
+      "sha256": "ed2f4c7912c351d285e3697942146af1e5a2c770a7259a4a40234f60d4c8fec8"
+    },
+    {
+      "slug": "hcf-lcm-level-1",
+      "pages": 5,
+      "sha256": "e0a800910f9faa13830522e2cacac609ef2f6732d178bbe6938d4ad17a493c22"
+    },
+    {
+      "slug": "hcf-lcm-level-2",
+      "pages": 6,
+      "sha256": "1a99a96ef5f145439958fefe78b66df30a239083790ca59fbdb916dbe9a14dfb"
+    },
+    {
+      "slug": "hcf-lcm-level-3",
+      "pages": 5,
+      "sha256": "e068ab5053ebc7acb09f11ed02ef171a26a88ba2dd7e6eb7285c27260cd22356"
+    },
+    {
+      "slug": "hcf-lcm-level-4",
+      "pages": 4,
+      "sha256": "64e6c5859b9d47b19198d6b3b08d5a6088b9c5c1e2d68d3fa451f84491decd7d"
+    },
+    {
+      "slug": "integer-operations-level-1",
+      "pages": 5,
+      "sha256": "0e1ff4ddfb2310fd84a9d6feebcd024f8a6413a5d4c71cd82f74480faf5ef336"
+    },
+    {
+      "slug": "integer-operations-level-2",
+      "pages": 5,
+      "sha256": "5a687f9471046aaa7eda00dbc3f8ef1ceb9ff25b71dea06f13db73a1ba6c5edb"
+    },
+    {
+      "slug": "integer-operations-level-3",
+      "pages": 5,
+      "sha256": "4dead314addad1288e71fb9e805353e7b3e276966a8cb92f59f3c4116ca078c2"
+    },
+    {
+      "slug": "integer-operations-level-4",
+      "pages": 5,
+      "sha256": "ccb919395c391e67d5e4a3df4ac56c18874f4c54c3828924c601a0502830bfd3"
+    },
+    {
+      "slug": "number-bases-number-sets-level-1",
+      "pages": 4,
+      "sha256": "59ac95f8e9a664073b44b6fb0ca05387bcc9e2c2b6926673b620827de2aab046"
+    },
+    {
+      "slug": "number-bases-number-sets-level-2",
+      "pages": 5,
+      "sha256": "46e91a0a1fe6aaf326d8ee5b819fe4c0e50c3c300c280e1148c396f9ac3fe668"
+    },
+    {
+      "slug": "number-bases-number-sets-level-3",
+      "pages": 5,
+      "sha256": "37ac38f39a7dbd6701a1666107ae390c9786313416f92073ae4210538636bd21"
+    },
+    {
+      "slug": "number-bases-number-sets-level-4",
+      "pages": 5,
+      "sha256": "2d8938793102a5358d1714f389d849eb1589d91b13e1695c00d1b5b300ede1ce"
+    },
+    {
+      "slug": "order-of-operations-level-1",
+      "pages": 5,
+      "sha256": "51f5d41defb1074d7e2222426394e29605d47e979c0ec9432da4214e9db766b0"
+    },
+    {
+      "slug": "order-of-operations-level-2",
+      "pages": 5,
+      "sha256": "da0ab9b9dff62b582d6f0c96c27dcc2d829867113114f4654d3c4fcebfe3bdc6"
+    },
+    {
+      "slug": "order-of-operations-level-3",
+      "pages": 6,
+      "sha256": "7d6071760bb3bfbb38893ef6ada71d09c23df4c20de8faf0f3f7b0e9dd4bb627"
+    },
+    {
+      "slug": "percentages-real-world-level-1",
+      "pages": 5,
+      "sha256": "0a035ec03b1bb2736302db0846a1e17e346897a355d49eb4fb884b96af0c82da"
+    },
+    {
+      "slug": "percentages-real-world-level-2",
+      "pages": 5,
+      "sha256": "2ae9136c5a8ee1ce474386b7b63fb2b549bf38877c5159260804d10fb5ebfa9d"
+    },
+    {
+      "slug": "percentages-real-world-level-3",
+      "pages": 5,
+      "sha256": "60b074db4fc20d6cd9d9fa273873cedf5803f472e1d707fce0276a9729b0fa51"
+    },
+    {
+      "slug": "percentages-real-world-level-4",
+      "pages": 5,
+      "sha256": "06794dbc4229a76466620d983c31f7bd2330d5cfce468a0851cbc4bd3481838c"
+    },
+    {
+      "slug": "simple-percentage-tasks-level-1",
+      "pages": 5,
+      "sha256": "7c1ca5e176f7783997f12c7e385a2321f130ec26d34b4fc473955612d6c553ec"
+    },
+    {
+      "slug": "simple-percentage-tasks-level-2",
+      "pages": 5,
+      "sha256": "9b38054bd44a9c802e6bf566440f7ce5024e47dc9a6890719e3e181caa995503"
+    },
+    {
+      "slug": "simple-percentage-tasks-level-3",
+      "pages": 5,
+      "sha256": "9788c9c5a018e692c7b4cf48933f689922738a68efa606062a86ae5c08ee0854"
+    },
+    {
+      "slug": "simple-percentage-tasks-level-4",
+      "pages": 5,
+      "sha256": "ff624455183ddd57dfd19e997a554d52adeb1ddc2d1e7ca5994efbd9664265a6"
+    },
+    {
+      "slug": "powers-of-10-level-1",
+      "pages": 6,
+      "sha256": "e1b434c6db04b434aa7c30f42a36403871563a32aed11f65011f5053e05a2866"
+    },
+    {
+      "slug": "powers-of-10-level-2",
+      "pages": 6,
+      "sha256": "4b4d5ae36db3284db1a2158248f0235aabc46da753a27695f1c7083c8c0a1331"
+    },
+    {
+      "slug": "powers-of-10-level-3",
+      "pages": 6,
+      "sha256": "457befe49b8fedd528376123ba15a67f975f28cf61f02a34a997a81c3a629949"
+    },
+    {
+      "slug": "ratio-proportion-level-1",
+      "pages": 6,
+      "sha256": "d8ed239256f28543f6aa732780c4e8cf44c357f6a6bfc3fbc472f95b85aa8d32"
+    },
+    {
+      "slug": "ratio-proportion-level-2",
+      "pages": 5,
+      "sha256": "6124c6e95dc7bee6a6c9091971afa8a5aea62c44c5998ae50444b80c557f995e"
+    },
+    {
+      "slug": "ratio-proportion-level-3",
+      "pages": 5,
+      "sha256": "5a44028530e244f0652d36d97ef5353b9a5a6c942fbc5e7ef2cfa444cb9a1ffe"
+    },
+    {
+      "slug": "conversions-teaching-level-1",
+      "pages": 5,
+      "sha256": "df8de2d6d7f9fc58ee0d20e1a30c2d9e44ab4235095341f6485464d3c0c2f041"
+    },
+    {
+      "slug": "conversions-teaching-level-2",
+      "pages": 4,
+      "sha256": "b93d190e6485170d663ca882e8a9d9c1e409455a425bfcb971b0b3ef59994d37"
+    },
+    {
+      "slug": "upper-lower-bounds-level-1",
+      "pages": 5,
+      "sha256": "e7b81c9985fcf50085acb75c60f0e8ada2d14f7c543a2533aa62eac55e66b897"
+    },
+    {
+      "slug": "upper-lower-bounds-level-2",
+      "pages": 5,
+      "sha256": "807f690e391ba682c8c4f637106d32aa0dd224e3dcbf4d817534658dceb745c0"
+    },
+    {
+      "slug": "upper-lower-bounds-level-3",
+      "pages": 6,
+      "sha256": "5c20fa682b9927278a190e02d4e4bb6cbdc2260e8472febdb648b7ce7c20556e"
+    },
+    {
+      "slug": "upper-lower-bounds-level-4",
+      "pages": 5,
+      "sha256": "91ab1662ad824a6941444168440afd45159934c0f371a73549eabf522ccddee3"
+    },
+    {
+      "slug": "averages-range-level-1",
+      "pages": 6,
+      "sha256": "393264851b41043798a5dde63da234c57e6e592e86d6e174bc2025fcdc6042e1"
+    },
+    {
+      "slug": "averages-range-level-2",
+      "pages": 6,
+      "sha256": "b8378ab23bd3b8bbf6f82b17c0a2b988c94d492731bec9cf8fc91dc5c7a4702a"
+    },
+    {
+      "slug": "averages-range-level-3",
+      "pages": 4,
+      "sha256": "5cfdfa3215e7e2004802b624da2f866bd56a2c023812b920fccbb317b51a8355"
+    },
+    {
+      "slug": "averages-range-level-4",
+      "pages": 4,
+      "sha256": "0e9aaa5c7ca6869dee235c073f2c809d8880f8d7e31804972ff612e00c03412b"
+    },
+    {
+      "slug": "binomial-geometric-distribution-level-1",
+      "pages": 5,
+      "sha256": "9685ab4f7a76b9e06c677c2256efffcdc7f556b3821ab9339f0d20d638e9b9aa"
+    },
+    {
+      "slug": "binomial-geometric-distribution-level-2",
+      "pages": 5,
+      "sha256": "10896891c8279e96f2e17a7d2059995378a9cdbe44f0b8664e9bc988462725f9"
+    },
+    {
+      "slug": "binomial-geometric-distribution-level-3",
+      "pages": 5,
+      "sha256": "eadad6378e98f7fc6392245b3e75ecded28e73bcbe30f3a833cf2f7a94e122c1"
+    },
+    {
+      "slug": "confidence-intervals-level-1",
+      "pages": 5,
+      "sha256": "85a9693f0c660f7267c12ee296313bd768269444e52b72aac8094c90bab1ceab"
+    },
+    {
+      "slug": "confidence-intervals-level-2",
+      "pages": 5,
+      "sha256": "a3043e71a83a2b4a4671e5dda870ddaf6281d7e66cbd67738fedd2c63c4de665"
+    },
+    {
+      "slug": "confidence-intervals-level-3",
+      "pages": 5,
+      "sha256": "1b02c1c5e883df930fd69475c2fa1d0cbbe566c1b335e1667d07d109c721366a"
+    },
+    {
+      "slug": "confidence-intervals-level-4",
+      "pages": 6,
+      "sha256": "73b34b807e748f20ced8ad47bc2781a257a4e841bcf879b4b6070529703659c8"
+    },
+    {
+      "slug": "continuous-random-variables-level-1",
+      "pages": 6,
+      "sha256": "6a4da2953c168e7572775fa4180215c40d709b62ff107769ea97aeb743c24dbb"
+    },
+    {
+      "slug": "continuous-random-variables-level-2",
+      "pages": 6,
+      "sha256": "92b162de309144fea0870fd5adf9d967e07536ebb21c5a15492f224aa13262b6"
+    },
+    {
+      "slug": "continuous-random-variables-level-3",
+      "pages": 5,
+      "sha256": "428f20f4bf4ae1071f0557412fa20ee5525677fa05bb729c3723192b553785a2"
+    },
+    {
+      "slug": "correlation-regression-level-1",
+      "pages": 7,
+      "sha256": "909433e3c3f20b6b32b14c4fa201daaae71351224309452272ad4f1c7665b4e7"
+    },
+    {
+      "slug": "correlation-regression-level-2",
+      "pages": 9,
+      "sha256": "630e970655edb166595064750dfa0e2613394974b5d66ca861c521c7f1adb28b"
+    },
+    {
+      "slug": "correlation-regression-level-3",
+      "pages": 8,
+      "sha256": "b4a860a86bb09d49448a600e6eca8f21075239e2cac169bc1f143c247c6c9a6b"
+    },
+    {
+      "slug": "cumulative-frequency-curves-level-1",
+      "pages": 10,
+      "sha256": "2f107c753945e49154d818e0f78c7b62991e69d796c2b71770dc85b4bcf3788d"
+    },
+    {
+      "slug": "cumulative-frequency-curves-level-2",
+      "pages": 10,
+      "sha256": "2cb613b94290cd03d0bda0319a55f49d838efc589747865153389ede06bc36ee"
+    },
+    {
+      "slug": "cumulative-frequency-curves-level-3",
+      "pages": 10,
+      "sha256": "937dd94724d8687e5b89b1366f1fb096453a83420636c8b3be7d404dad7198e0"
+    },
+    {
+      "slug": "discrete-random-variables-level-1",
+      "pages": 6,
+      "sha256": "94e31dfd67563795923b5fa46349ef7faad81feb2f54eaa51a283b5d33080c96"
+    },
+    {
+      "slug": "discrete-random-variables-level-2",
+      "pages": 6,
+      "sha256": "e3d49484f21178ee020dc0b7c83b44df536be18457d22e7826eaf36b9451149a"
+    },
+    {
+      "slug": "discrete-random-variables-level-3",
+      "pages": 5,
+      "sha256": "922f8bbb42c34f6b45c6bf17e6488af546da7b4c9ebbeb79631ea9ea2b63b0b7"
+    },
+    {
+      "slug": "histograms-level-1",
+      "pages": 10,
+      "sha256": "aece74c1ba1442425440792d55a70517416788ca6aa98bd292273b5b8cfe14bd"
+    },
+    {
+      "slug": "histograms-level-2",
+      "pages": 10,
+      "sha256": "5b6b4ce6076cf00a9189db3301966327c0d542fef4dde4eb551939bbc5ca3ad5"
+    },
+    {
+      "slug": "histograms-level-3",
+      "pages": 10,
+      "sha256": "9a43f4bee310241e230690e8295e94a55566f20e4258d2f04222e5840f42e0d8"
+    },
+    {
+      "slug": "hypothesis-testing-level-1",
+      "pages": 6,
+      "sha256": "0cae5b2d92ad7573476d4a0343cbd648d523d952b688a37200c27670c75b8b9d"
+    },
+    {
+      "slug": "hypothesis-testing-level-2",
+      "pages": 7,
+      "sha256": "cb682926118f887f451b76072089948556c9001ceb1b8a916a04553b4b2a87ff"
+    },
+    {
+      "slug": "hypothesis-testing-level-3",
+      "pages": 9,
+      "sha256": "b68e22728577b9ba7147e7821791c015d3894d28a304206e4e6767d3b80f3064"
+    },
+    {
+      "slug": "kaizen-large-data-set-level-1",
+      "pages": 5,
+      "sha256": "fa36e28c6c5c8a0572e9829899d45bb61217b488a49a50e724ae9e57837fdd51"
+    },
+    {
+      "slug": "kaizen-large-data-set-level-2",
+      "pages": 4,
+      "sha256": "1deef104560de8a1df6c1f8c09216f6dc31b65f8aefa2644a623c781b0fee103"
+    },
+    {
+      "slug": "kaizen-large-data-set-level-3",
+      "pages": 5,
+      "sha256": "12c879cdb37262bd0d771b08beff72d3d285be5eb122f7c1cc5e3eb432b739d9"
+    },
+    {
+      "slug": "kaizen-large-data-set-level-4",
+      "pages": 3,
+      "sha256": "7e17eb619157bf0ea28792ae7ed1cf62418554d1e4c5a95deb0cbef76cf1c159"
+    },
+    {
+      "slug": "normal-distribution-level-1",
+      "pages": 9,
+      "sha256": "f38207abb647563e46d6bb53b33202a17ba7a24a42130224644babab115e69f8"
+    },
+    {
+      "slug": "normal-distribution-level-2",
+      "pages": 9,
+      "sha256": "f568449d9518923ee20ae05cf41aaedf39bd223742b870dd620ec273f22696d4"
+    },
+    {
+      "slug": "normal-distribution-level-3",
+      "pages": 6,
+      "sha256": "8da9848f1df9e9f60ba7964b6bd4970490443dbc96e8efb66d210b209d6c79f9"
+    },
+    {
+      "slug": "permutations-combinations-level-1",
+      "pages": 5,
+      "sha256": "573885dbbfa23f5beb2904ab39a499cd2f4797bfb74ae2b57c4af6793f097c99"
+    },
+    {
+      "slug": "permutations-combinations-level-2",
+      "pages": 5,
+      "sha256": "80d0b4e0b302bea79fe3f434de57d345e2b559a9df2bf670b4197897c64083c8"
+    },
+    {
+      "slug": "permutations-combinations-level-3",
+      "pages": 5,
+      "sha256": "d454789a6f82c9db6c727d0bf396faed4a1ef96c4a4ccc67e1de6357f33407c9"
+    },
+    {
+      "slug": "poisson-distribution-level-1",
+      "pages": 5,
+      "sha256": "e64c70a713a5ec6d3cb5da667828e7e4c776b006ba7c03dbe3b5feb9a0be12bc"
+    },
+    {
+      "slug": "poisson-distribution-level-2",
+      "pages": 5,
+      "sha256": "594dc8bb3a31553a3a87ebc5b5b3338546a4b337e179aa566ec93385b3da0114"
+    },
+    {
+      "slug": "poisson-distribution-level-3",
+      "pages": 5,
+      "sha256": "fae08feb948fddb16bf94e81129c798fa36363e0455da86b4fedbfc2e9c92e56"
+    },
+    {
+      "slug": "poisson-distribution-level-4",
+      "pages": 5,
+      "sha256": "ed88e2d310296e554ccdb9ba524c7c1409df7376220c181f256e2ba086d76830"
+    },
+    {
+      "slug": "sampling-methods-bias-level-1",
+      "pages": 5,
+      "sha256": "5888173a40f2bac12533b340a544231677a9e4b930c5133a04ec6a54740c7763"
+    },
+    {
+      "slug": "sampling-methods-bias-level-2",
+      "pages": 7,
+      "sha256": "89bac4edc336f03b58126d837ba86e6f85ccb4a9d9fcdca637afb2b0753d6a71"
+    },
+    {
+      "slug": "sampling-methods-bias-level-3",
+      "pages": 6,
+      "sha256": "95ce2228149089687a36f31e924c0e364364fa69dd8a116cc3adb491be467d95"
+    },
+    {
+      "slug": "tree-diagrams-conditional-probability-level-1",
+      "pages": 7,
+      "sha256": "bdf2a67a2a242ee5f50f2a5857b2c4f515a4f95dc783bfbdd05956e7bc9834a5"
+    },
+    {
+      "slug": "tree-diagrams-conditional-probability-level-2",
+      "pages": 7,
+      "sha256": "50b6d78d036c7d514a51bd3fc2dd0d1e9caef8a8a4d8316d63e7ca351d81d94f"
+    },
+    {
+      "slug": "tree-diagrams-conditional-probability-level-3",
+      "pages": 6,
+      "sha256": "e72d72bee961742a7ca46a3a6a7e3d20b95faef34faa9962df13f4807b73e590"
+    },
+    {
+      "slug": "venn-diagrams-level-1",
+      "pages": 10,
+      "sha256": "cd4229a4c9717e44b8febed638898c9678fb6a3ca2edc6aa95f58275cde21f11"
+    },
+    {
+      "slug": "venn-diagrams-level-2",
+      "pages": 8,
+      "sha256": "f67875ddc19bd59af8ef4a4335795542d5d953b050e4b1deb4c9e3c7aff06bcb"
+    },
+    {
+      "slug": "venn-diagrams-level-3",
+      "pages": 10,
+      "sha256": "7d298c1bc2e38ff7c08381be1a5c6f95444696fbad60bfef1418a9613a423513"
+    },
+    {
+      "slug": "other-kaizen-maths-research-informed-design",
+      "pages": 1,
+      "sha256": "93c76c6d94bd5ab035250d6e9138b73c2b82ea98b6c6fc967b20e76875ae0773"
+    }
+  ]
+}

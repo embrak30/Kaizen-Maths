@@ -4628,10 +4628,17 @@ function worksheetUnwrapBoxedMath(value) {
 }
 
 function worksheetMathFragment(value) {
+  const rendered = window.KaizenWorksheetMath?.render(value);
+  if (rendered?.changed) {
+    const wrapper = document.createElement("span");
+    wrapper.className = "worksheet-math-inline";
+    wrapper.innerHTML = rendered.html;
+    return wrapper;
+  }
   const fragment = document.createDocumentFragment();
   const source = worksheetUnwrapBoxedMath(normaliseAlgebraUnitCoefficients(decodeCommonMathEntities(value)))
     .replace(/\\\(|\\\)|\\\[|\\\]|\$\$/g, "")
-    .replace(/\$/g, "")
+    .replace(/\$([^$]+)\$/g, (match, tex) => /^\s*\d[\d,.]*\s+/.test(tex) ? match : tex)
     .replace(/\\left|\\right/g, "")
     .replace(/\\displaystyle/g, "")
     .replace(/\\text\{([^{}]+)\}/g, "$1")
@@ -4673,7 +4680,7 @@ function worksheetMathFragment(value) {
     .replace(/\\cot/g, "cot")
     .replace(/\b(sin|cos|tan|sec|csc|cot)-1(?=\s*\()/g, "$1^-1")
     .replace(/\\ln/g, "ln");
-  const tokenPattern = /\\lim(?:\\limits)?_\{(?<limitLowerBrace>(?:[^{}]|\{[^{}]*\})+)\}|\\lim(?:\\limits)?_(?<limitLowerSimple>[^\s]+)|∑_\{(?<sumLowerBrace>[^{}]+)\}\^\{?(?<sumUpperBrace>[^{}\s]+)\}?|∑_(?<sumLowerSimple>-?[A-Za-z0-9]+)\^(?<sumUpperSimple>-?[A-Za-z0-9]+)|∫_\{(?<integralLowerBrace>[^{}]+)\}\^\{?(?<integralUpperBrace>[^{}\s]+)\}?|∫_(?<integralLowerSimple>-?[0-9]+)\^(?<integralUpperSimple>-?[0-9]+)|\^\{\\d?frac\{(?<supFracNumerator>[^{}]+)\}\{(?<supFracDenominator>[^{}]+)\}\}|\\d?frac\{(?<fracNumerator>[^{}]+)\}\{(?<fracDenominator>[^{}]+)\}|\^\{(?<supBrace>[^{}]+)\}|\^\((?<supParen>[^()]+)\)|\^(?<supSimple>-?[A-Za-z0-9])|_\{(?<subBrace>[^{}]+)\}|_(?<subSimple>-?[A-Za-z0-9∞]+)|(?<implicitBase>[A-Za-z])(?<implicitPower>[2-9])(?=\b)/g;
+  const tokenPattern = /\\lim(?:\\limits)?_\{(?<limitLowerBrace>(?:[^{}]|\{[^{}]*\})+)\}|\\lim(?:\\limits)?_(?<limitLowerSimple>[^\s]+)|∑_\{(?<sumLowerBrace>[^{}]+)\}\^\{?(?<sumUpperBrace>[^{}\s]+)\}?|∑_(?<sumLowerSimple>-?[A-Za-z0-9]+)\^(?<sumUpperSimple>-?[A-Za-z0-9]+)|∫_\{(?<integralLowerBrace>[^{}]+)\}\^\{?(?<integralUpperBrace>[^{}\s]+)\}?|∫_(?<integralLowerSimple>-?[0-9]+)\^(?<integralUpperSimple>-?[0-9]+)|\^\{\\d?frac\{(?<supFracNumerator>[^{}]+)\}\{(?<supFracDenominator>[^{}]+)\}\}|\\d?frac\{(?<fracNumerator>[^{}]+)\}\{(?<fracDenominator>[^{}]+)\}|\^\{(?<supBrace>[^{}]+)\}|\^\((?<supParen>[^()]+)\)|\^(?<supSimple>-?(?:\d+(?:\.\d+)?|[A-Za-z]+|[α-ωΑ-Ω]))|_\{(?<subBrace>[^{}]+)\}|_(?<subSimple>-?[A-Za-z0-9∞]+)|(?<implicitBase>[A-Za-z])(?<implicitPower>[2-9])(?=\b)/g;
   let lastIndex = 0;
   let match;
 
@@ -4757,7 +4764,7 @@ function worksheetMathFragment(value) {
         fragment.appendChild(document.createTextNode(groups.implicitBase));
       }
       const sup = document.createElement("sup");
-      sup.textContent = groups.supBrace ?? groups.supParen ?? groups.supSimple ?? groups.implicitPower ?? "";
+      sup.textContent = (groups.supBrace ?? groups.supParen ?? groups.supSimple ?? groups.implicitPower ?? "").replace(/\blambda\b/g, "λ");
       fragment.appendChild(sup);
     }
 
@@ -4975,7 +4982,7 @@ function worksheetReplaceRawMatrixText(root) {
       if (parent && ["SCRIPT", "STYLE", "TEXTAREA", "SELECT", "OPTION", "SUP", "SUB"].includes(parent.tagName)) {
         return NodeFilter.FILTER_REJECT;
       }
-      if (parent?.closest?.("svg,.matrix-wrap")) {
+      if (parent?.closest?.("svg,.matrix-wrap,.katex,.worksheet-tex")) {
         return NodeFilter.FILTER_REJECT;
       }
       return NodeFilter.FILTER_ACCEPT;
@@ -4997,7 +5004,7 @@ function worksheetDecodeTextNodes(root) {
       if (parent && ["SCRIPT", "STYLE", "TEXTAREA", "SELECT", "OPTION"].includes(parent.tagName)) {
         return NodeFilter.FILTER_REJECT;
       }
-      if (parent?.closest?.("svg")) {
+      if (parent?.closest?.("svg,.katex,.worksheet-tex")) {
         return NodeFilter.FILTER_REJECT;
       }
       return NodeFilter.FILTER_ACCEPT;
@@ -5028,7 +5035,8 @@ function worksheetAddDiagramScaleNotes(root) {
 }
 
 function worksheetContentHtml(value) {
-  const rawSource = worksheetLatexAlignedHtml(worksheetLatexArrayHtml(value));
+  const mathSource = window.KaizenWorksheetMath?.render(value)?.html ?? value;
+  const rawSource = worksheetLatexAlignedHtml(worksheetLatexArrayHtml(mathSource));
   const hasHtml = /<[a-z][\s\S]*>/i.test(rawSource);
   const source = hasHtml ? rawSource : decodeCommonMathEntities(rawSource);
   const template = document.createElement("template");
@@ -5080,7 +5088,7 @@ function worksheetContentHtml(value) {
       if (parent && ["SCRIPT", "STYLE", "TEXTAREA", "SELECT", "OPTION", "SUP", "SUB"].includes(parent.tagName)) {
         return NodeFilter.FILTER_REJECT;
       }
-      if (parent?.closest?.("svg")) {
+      if (parent?.closest?.("svg,.katex,.worksheet-tex")) {
         return NodeFilter.FILTER_REJECT;
       }
       return textLooksWorksheetMathLike(node.nodeValue)

@@ -35,5 +35,14 @@
     "Clear filters",
     "24-card pagination"
   ],
-  "visualReview": "Representative student and teacher pages across subjects, diagrams, tables, column vectors, matrices, fractions, calculus and dense contextual problems."
+  "visualReview": "Representative student and teacher pages across subjects, diagrams, tables, column vectors, matrices, fractions, calculus and dense contextual problems.",
+  "latexAudit": {
+    "practicePackCount": 373,
+    "practicePackPages": 2490,
+    "totalPublicPdfCount": 374,
+    "totalPublicPages": 2491,
+    "preparedBlocksChecked": 24982,
+    "findings": 0,
+    "report": "data/practice-packs/latex-audit.json"
+  }
 }

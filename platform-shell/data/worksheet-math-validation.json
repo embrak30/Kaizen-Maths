@@ -1,0 +1,15 @@
+{
+  "fragmentsChecked": 20615,
+  "findings": [],
+  "regressions": [
+    "Nested fractions",
+    "Piecewise conditions with less-than signs",
+    "Raw TeX steps",
+    "Primes",
+    "Coordinates",
+    "Negative and compound exponents",
+    "Multiple-digit exponents",
+    "Currency preserved"
+  ],
+  "renderer": "Bundled KaTeX 0.16.9 with native plain-text math fallback"
+}

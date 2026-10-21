@@ -110,3 +110,5 @@ src/app/tools/[slug]/page.tsx
 The library at `#/practice-packs` includes 373 packs covering all 110 active standard practice generators. Serve the folder over HTTP so the catalogue can load. Explainers are excluded. Student sheets use half-page starters and quarter-page exit tickets, with separate teacher answers and worked solutions.
 
 Published PDFs and previews are under `assets/practice-packs/`. Frozen question sources, coverage and validation reports are under `data/practice-packs/`. Rebuild instructions are in `scripts/pack-library/README.md`. The new downloads and previews use approximately 89 MB; previews load lazily and results show 24 packs at a time.
+
+Worksheet Builder typesets TeX using bundled KaTeX (including local fonts) before parsing question HTML. This preserves nested fractions, cases and inequalities and works without a maths CDN. `node tests/worksheet-math.test.cjs` checks over 20,000 real question, answer and solution fragments, plus currency and exponent regressions.

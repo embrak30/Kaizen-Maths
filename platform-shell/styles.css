@@ -14394,3 +14394,9 @@ sup .worksheet-fraction > span:last-child {
 /* A searchable, paged collection keeps hundreds of print packs easy to browse. */
 .pack-filters{grid-template-columns:minmax(180px,1.7fr) minmax(110px,1fr) minmax(150px,1.4fr) minmax(110px,1fr) minmax(115px,1fr) auto}.pack-topic-label{font-size:12px;color:#5354a0;font-weight:700;margin:12px 0 5px}.pack-more{text-align:center;margin:24px 0}.pack-level:empty{display:none}
 @media(max-width:1150px){.pack-filters{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:650px){.pack-filters{grid-template-columns:1fr 1fr}.pack-search{grid-column:1/-1}}@media(max-width:430px){.pack-filters{grid-template-columns:1fr}.pack-search{grid-column:auto}}
+
+/* KaTeX keeps fractions, cases and limits intact in the screen and print worksheet. */
+.worksheet-tex { display: inline; }
+.worksheet-tex .katex { font-size: 1em; white-space: normal; }
+.worksheet-tex .katex-display { display: inline-block; margin: .15em 0; text-align: left; max-width: 100%; }
+.worksheet-tex .katex-html { white-space: nowrap; }

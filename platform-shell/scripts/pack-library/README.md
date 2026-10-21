@@ -18,3 +18,5 @@ Student slips preserve the questions. Histogram/cumulative-frequency student sli
 Intermediate render assets and bounded build manifests live in tmp/pdfs; only PDFs and compact previews are published. Preview generation is lazy in the browser, and cards load 24 at a time.
 
 Each slip also carries the source tool's set instruction when needed; simple derivative-only prompts explicitly ask students to differentiate. The linear-programming cards already contain the full task and keep that original instruction. Cylinder boundary arcs are printed as unfilled strokes to keep the diagram clear.
+
+Run `python scripts/pack-library/audit_latex.py` after publishing the local assets. It scans every page of every public PDF and every prepared print block for raw commands, math delimiters, caret powers, missing glyphs and unresolved values. Dollar currency amounts are preserved. The persistent report includes file hashes in `data/practice-packs/latex-audit.json`. The builder also rejects leaked commands, math dollar delimiters and caret powers before accepting a PDF. Regression cases are in `tests/practice-pack-latex.test.cjs`.
