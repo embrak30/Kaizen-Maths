@@ -33,6 +33,7 @@ http://127.0.0.1:4173/
 #/
 #/tools
 #/tools/substitution
+#/practice-packs
 #/collections/algebra
 #/collections/numbers
 #/collections/classroom-tools
@@ -103,3 +104,9 @@ src/app/tools/[slug]/page.tsx
 3. Set `imported: true` for each copied tool.
 4. Add accounts, subscriptions, school workspaces, analytics, saved sets, and exact-share question seeds.
 5. Convert individual tools only when there is a clear reason to go beyond iframe hosting.
+
+## Starter and Exit Ticket Packs
+
+The library at `#/practice-packs` includes 373 packs covering all 110 active standard practice generators. Serve the folder over HTTP so the catalogue can load. Explainers are excluded. Student sheets use half-page starters and quarter-page exit tickets, with separate teacher answers and worked solutions.
+
+Published PDFs and previews are under `assets/practice-packs/`. Frozen question sources, coverage and validation reports are under `data/practice-packs/`. Rebuild instructions are in `scripts/pack-library/README.md`. The new downloads and previews use approximately 89 MB; previews load lazily and results show 24 packs at a time.

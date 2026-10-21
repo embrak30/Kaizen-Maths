@@ -1,0 +1,11 @@
+{
+  "name": "kaizen-practice-pack-build",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Offline rendering dependencies for frozen practice pack generation",
+  "dependencies": {
+    "jsdom": "26.1.0",
+    "mathjax-full": "3.2.2",
+    "mathjs": "14.9.1"
+  }
+}

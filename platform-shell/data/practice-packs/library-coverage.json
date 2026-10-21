@@ -1,0 +1,668 @@
+{
+  "activeGeneratorCount": 110,
+  "packCount": 373,
+  "newPackCount": 362,
+  "newQuestionCount": 2516,
+  "coveredQuestionTypes": 1152,
+  "newDownloadAndPreviewBytes": 89151608,
+  "coverage": [
+    {
+      "slug": "substitution",
+      "status": "Existing 11 focused and mixed packs"
+    },
+    {
+      "slug": "quadratic-equations",
+      "title": "Quadratic Equations",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "algebraic-fractions",
+      "title": "Algebraic Fractions",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "straight-lines",
+      "title": "Straight Line Graphs and Gradients",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "linear-programming",
+      "title": "Linear Programming",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "conic-intersections",
+      "title": "Line and Curve Intersections",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "differentiation-polynomials",
+      "title": "Basic Differentiation of Polynomials",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "integration",
+      "title": "Basic Integration and Definite Integrals",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "advanced-integration",
+      "title": "Integration by Substitution and Parts",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "limits-first-principles",
+      "title": "Limits and First Principles",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "volumes-of-revolution",
+      "title": "Volumes of Revolution",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "integration-algebraic-fractions",
+      "title": "Integration of Algebraic Fractions",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "partial-fractions",
+      "title": "Partial Fractions: Decomposition",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "matrices",
+      "title": "Matrices: Operations, Determinants and Inverses",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "advanced-matrices",
+      "title": "Advanced Matrices: Transformations and Eigenvalues",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "linear-algebra",
+      "title": "Linear Algebra: Systems, Span, Basis and Transformations",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "further-vectors",
+      "title": "Further Vectors: Lines, Planes and Products",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "proof-by-induction",
+      "title": "Proof by Induction",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "roots-of-equations",
+      "title": "Roots of Equations and Transformations of Roots",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "series-expansions",
+      "title": "Taylor and Maclaurin Series",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "numerical-methods",
+      "title": "Numerical Methods: Iteration, Newton-Raphson and Trapezium Rule",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "complex-numbers",
+      "title": "Complex Numbers",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "polar-coordinates",
+      "title": "Polar Coordinates and Polar Curves",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "hyperbolic-functions",
+      "title": "Hyperbolic Functions",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "differential-equations",
+      "title": "Differential Equations: First and Second Order",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "differentiation-rules",
+      "title": "Product, Quotient and Chain Rule",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "trig-differentiation-rules",
+      "title": "Trigonometric Differentiation",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "inverse-trig-differentiation",
+      "title": "Inverse Trig Differentiation",
+      "status": "Exported",
+      "packCount": 2
+    },
+    {
+      "slug": "trig-equation-solver",
+      "title": "Trigonometric Equation Solver",
+      "status": "Exported",
+      "packCount": 2
+    },
+    {
+      "slug": "trig-graphs-transformations",
+      "title": "Trigonometric Graphs and Transformations",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "trigonometric-functions",
+      "title": "Trig Identities, Proofs and Equations",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "sequences-series",
+      "title": "Arithmetic and Geometric Sequences and Series",
+      "status": "Exported",
+      "packCount": 2
+    },
+    {
+      "slug": "advanced-differentiation",
+      "title": "Advanced Differentiation",
+      "status": "Exported",
+      "packCount": 2
+    },
+    {
+      "slug": "hcf-lcm",
+      "title": "HCF, LCM and Prime Factorisation",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "decimals-practice-lab",
+      "title": "Decimal Place Value and Operations",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "integer-operations",
+      "title": "Integer Operations",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "powers-of-10",
+      "title": "Powers of 10 and Standard Form",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "number-bases-number-sets",
+      "title": "Number Bases and Number Sets",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "upper-lower-bounds",
+      "title": "Upper and Lower Bounds",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "four-operations",
+      "title": "Addition, Subtraction, Multiplication and Division",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "fractions-practice",
+      "title": "Fraction Arithmetic and Mixed Numbers",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "simple-percentage-tasks",
+      "title": "Percentage Fluency",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "ratio-proportion",
+      "title": "Ratio and Proportion",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "area-rectangles",
+      "title": "Area and Perimeter of Rectangles",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "pythagoras-theorem",
+      "title": "Pythagoras' Theorem",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "scale-drawing-similar-shapes",
+      "title": "Scale Drawings and Similar Shapes",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "area-triangles",
+      "title": "Area and Perimeter of Triangles",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "circles-area-circumference",
+      "title": "Area and Circumference of Circles",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "equation-of-a-circle",
+      "title": "Equation of a Circle",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "midpoint-length-lines",
+      "title": "Midpoint and Length of Line Segments",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "transformations",
+      "title": "Transformations",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "loci-constructions",
+      "title": "Loci and Constructions",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "sectors-arc-length",
+      "title": "Sectors, Arc Length and Area",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "trigonometric-ratios",
+      "title": "Right-Angled Trigonometry",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "bearings",
+      "title": "Bearings",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "earth-geometry",
+      "title": "Earth Geometry",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "free-vectors",
+      "title": "Column Vectors and Vector Geometry",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "missing-angles",
+      "title": "Missing Angles in Lines and Shapes",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "polygons-angles",
+      "title": "Polygons and Interior/Exterior Angles",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "circle-theorems",
+      "title": "Circle Theorems",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "formal-geometric-proof",
+      "title": "Formal Geometric Proof",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "volume-surface-area-prisms",
+      "title": "Prisms: Volume and Surface Area",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "cylinders-cones-volume-surface-area",
+      "title": "Cylinders and Cones: Volume and Surface Area",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "pyramids-spheres-volume-surface-area",
+      "title": "Spheres: Volume and Surface Area",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "exponents-index-notation",
+      "title": "Indices and Exponent Laws",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "absolute-values",
+      "title": "Modulus and Absolute Value",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "surds-radicals",
+      "title": "Surds and Radicals",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "logarithms-practice",
+      "title": "Logarithms and Exponential Equations",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "sine-cosine-rule",
+      "title": "Sine Rule, Cosine Rule and Triangle Area",
+      "status": "Exported",
+      "packCount": 2
+    },
+    {
+      "slug": "conversions-teaching",
+      "title": "Unit Conversions and Compound Measures",
+      "status": "Exported",
+      "packCount": 2
+    },
+    {
+      "slug": "discrete-random-variables",
+      "title": "Discrete Random Variables and Probability Distributions",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "histograms",
+      "title": "Histograms and Frequency Density",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "cumulative-frequency-curves",
+      "title": "Cumulative Frequency Curves and Ogives",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "sampling-methods-bias",
+      "title": "Sampling Methods and Bias",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "motion-graphs-constant-acceleration",
+      "title": "Motion Graphs and Constant Acceleration",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "equations-of-motion",
+      "title": "SUVAT and Equations of Motion",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "newtons-second-law",
+      "title": "Newton's Second Law: F = ma",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "friction",
+      "title": "Friction and Rough Surfaces",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "work-energy-power",
+      "title": "Work, Energy and Power",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "moments",
+      "title": "Moments and Equilibrium",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "projectiles",
+      "title": "Projectile Motion",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "momentum",
+      "title": "Momentum and Impulse",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "continuous-random-variables",
+      "title": "Continuous Random Variables and Density Functions",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "normal-distribution",
+      "title": "Normal Distribution and Standardisation",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "hypothesis-testing",
+      "title": "Hypothesis Testing and Inference",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "confidence-intervals",
+      "title": "Confidence Intervals",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "correlation-regression",
+      "title": "Correlation and Regression",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "binomial-geometric-distribution",
+      "title": "Binomial and Geometric Distributions",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "poisson-distribution",
+      "title": "Poisson Distribution",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "kaizen-large-data-set",
+      "title": "Large Data Set Practice",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "tree-diagrams-conditional-probability",
+      "title": "Tree Diagrams and Conditional Probability",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "venn-diagrams",
+      "title": "Venn Diagrams and Set Probability",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "permutations-combinations",
+      "title": "Permutations and Combinations",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "quadratic-factorisation",
+      "title": "Factorising Quadratic Expressions",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "advanced-factorisation",
+      "title": "Advanced Factorisation: Grouping, Difference of Squares and Cubics",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "binomial-expansion",
+      "title": "Binomial Expansion",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "sequences",
+      "title": "Sequences and nth Terms",
+      "status": "Exported",
+      "packCount": 2
+    },
+    {
+      "slug": "inequalities",
+      "title": "Inequalities",
+      "status": "Exported",
+      "packCount": 2
+    },
+    {
+      "slug": "simplification",
+      "title": "Algebraic Simplification",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "transposition-formulae",
+      "title": "Transposition of Formulae: Changing the Subject",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "functions",
+      "title": "Function Notation, Composite and Inverse Functions",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "graph-transformations-curve-sketching",
+      "title": "Graph Transformations and Curve Sketching",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "bracket-expansion",
+      "title": "Bracket Expansion",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "linear-equations",
+      "title": "Linear Equations",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "simultaneous-equations",
+      "title": "Simultaneous Equations",
+      "status": "Exported",
+      "packCount": 2
+    },
+    {
+      "slug": "remainder-theorem",
+      "title": "Remainder and Factor Theorem",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "order-of-operations",
+      "title": "Order of Operations",
+      "status": "Exported",
+      "packCount": 3
+    },
+    {
+      "slug": "percentages-real-world",
+      "title": "Percentage Applications: Finance and Contexts",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "financial-real-life-maths",
+      "title": "Financial Real-Life Maths",
+      "status": "Exported",
+      "packCount": 4
+    },
+    {
+      "slug": "averages-range",
+      "title": "Averages, Range and Missing Values",
+      "status": "Exported",
+      "packCount": 4
+    }
+  ]
+}

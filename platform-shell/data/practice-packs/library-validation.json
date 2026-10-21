@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-21",
+  "newPacksBuilt": 362,
+  "newPdfPagesRendered": 2457,
+  "renderErrors": 0,
+  "layoutErrors": 0,
+  "mathsChecks": {
+    "checked": 223,
+    "byMode": {
+      "equation-roots": 46,
+      "equivalence": 56,
+      "derivative": 38,
+      "antiderivative": 17,
+      "arithmetic": 66
+    },
+    "failures": []
+  },
+  "simultaneousEquations": {
+    "systemsChecked": 500,
+    "workedEqualitiesChecked": 3400,
+    "failures": 0
+  },
+  "catalogue": {
+    "packs": 373,
+    "standardGenerators": 110,
+    "configuredQuestionTypesInNewPacks": 1152,
+    "allLevelsCovered": true,
+    "publicCopiesMatch": true
+  },
+  "browserChecks": [
+    "Search",
+    "Subject-dependent topics",
+    "Topic selection",
+    "Level selection",
+    "Clear filters",
+    "24-card pagination"
+  ],
+  "visualReview": "Representative student and teacher pages across subjects, diagrams, tables, column vectors, matrices, fractions, calculus and dense contextual problems."
+}

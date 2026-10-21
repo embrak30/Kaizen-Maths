@@ -2062,7 +2062,7 @@ const tools = [
     status: "Imported",
     description: "Generate simultaneous linear equation questions for substitution and elimination with exact fractional working.",
     tags: ["algebra", "simultaneous equations", "systems of equations", "substitution", "elimination", "fractions", "KaTeX"],
-    toolPath: "tools/simultaneous-equations/index.html?v=simultaneous-worksheet-1",
+    toolPath: "tools/simultaneous-equations/index.html?v=elimination-signs-2",
     imported: true,
     teacherNotes: [
       "Covers substitution and elimination, including mixed retrieval sets.",
@@ -30187,7 +30187,7 @@ function updateRouteSeo(parts) {
     },
     "practice-packs": {
       title: routeTitle("Starter & Exit Ticket Packs"),
-      description: "Download ready-made Kaizen Maths starter and exit ticket packs with questions, answers and worked solutions. Start with algebraic substitution."
+      description: "Download Kaizen Maths starter and exit ticket packs for number, algebra, geometry, statistics and mechanics, with student slips, answers and worked solutions."
     },
     "worksheet-generator": {
       title: routeTitle("Worksheet Builder"),

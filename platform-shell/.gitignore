@@ -1,0 +1,9 @@
+# Reproducible PDF intermediates; published downloads live under assets/practice-packs.
+/tmp/pdfs/library-assets/
+/tmp/pdfs/library-prepared.json
+/tmp/pdfs/library-render-errors.json
+/tmp/pdfs/library-build-*.json
+/tmp/pdfs/library-maths-checks.json
+/tmp/pdfs/library-qa/
+/scripts/pack-library/__pycache__/
+__pycache__/

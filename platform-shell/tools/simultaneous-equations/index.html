@@ -197,6 +197,7 @@
       const b2=randomNonZeroAvoid(2,5,new Set([1,-1]));
       const x=random(1,4), y=m*x+b, c2=a2*x+b2*y;
       const ex=a2+b2*m, ec=b2*b, rhs=c2-ec;
+      if(ex===0)return makeEasySubstitution();
       return{equationsLatex:[`y = ${latexFirstCoeff(m,'x')}${latexNextCoeff(b,'')}`,latexEquationFromCoeffs(a2,b2,c2)],answerLatex:`x = ${x},\\; y = ${y}`,steps:[
         t('Step 1: Write the system.'),mth(`\\begin{cases}y = ${latexFirstCoeff(m,'x')}${latexNextCoeff(b,'')} \\\\ ${latexEquationFromCoeffs(a2,b2,c2)}\\end{cases}`),
         t('Step 2: Substitute the expression for y into the second equation.'),mth(`${a2}x + ${b2}\\left(${latexFirstCoeff(m,'x')}${latexNextCoeff(b,'')}\\right) = ${c2}`),
@@ -213,6 +214,7 @@
       const c3=a3*x+b3*y;
       const a4=randomNonZeroAvoid(2,6,new Set([1,-1]));
       let b4=randomNonZeroAvoid(2,6,new Set([1,-1])); if(Math.random()<.5)b4=-b4;
+      if(a3*b4===a4*b3)return makeHarderSubstitution();
       const c4=a4*x+b4*y;
       const numX=c4*b3-b4*c3, denX=a4*b3-b4*a3;
       const numY=c3*a4-a3*c4, denY=b3*a4-a3*b4;
@@ -229,6 +231,7 @@
       const x=random(1,4), y=random(1,4);
       const a=randomNonZeroAvoid(2,6,new Set([1,-1])), b1=randomNonZeroAvoid(2,6,new Set([1,-1]));
       let b2=randomNonZeroAvoid(2,6,new Set([1,-1])); if(Math.random()<.5)b2=-b2;
+      if(b1===b2)return makeEasyElimination();
       const c1=a*x+b1*y, c2=a*x+b2*y, coeffY=b1-b2, constY=c1-c2, numX=c1-b1*y;
       return{equationsLatex:[latexEquationFromCoeffs(a,b1,c1),latexEquationFromCoeffs(a,b2,c2)],answerLatex:`x = ${x},\\; y = ${y}`,steps:[
         t('Step 1: Write the system.'),mth(`\\begin{cases}${latexEquationFromCoeffs(a,b1,c1)} \\\\ ${latexEquationFromCoeffs(a,b2,c2)}\\end{cases}`),
@@ -241,6 +244,7 @@
       const x=random(1,4), y=random(1,4);
       const a1=randomNonZeroAvoid(2,5,new Set([1,-1])), b1=randomNonZeroAvoid(2,4,new Set([1,-1]));
       const a2=randomNonZeroAvoid(2,5,new Set([1,-1,a1])), b2=randomNonZeroAvoid(2,5,new Set([1,-1]));
+      if(a1*b2===a2*b1)return makeScalingElimination();
       const c1=a1*x+b1*y, c2=a2*x+b2*y, lcm=(a1*a2)/gcd(a1,a2), s1=lcm/a1, s2=lcm/a2;
       const nb1=s1*b1, nc1=s1*c1, nb2=s2*b2, nc2=s2*c2, coeffY=nb1-nb2, constY=nc1-nc2, numX=c1-b1*y;
       return{equationsLatex:[latexEquationFromCoeffs(a1,b1,c1),latexEquationFromCoeffs(a2,b2,c2)],answerLatex:`x = ${x},\\; y = ${y}`,steps:[
@@ -254,13 +258,15 @@
       const x=random(1,4), y=random(1,4);
       const a1=randomNonZeroAvoid(3,7,new Set([1,-1])), b1=randomNonZeroAvoid(2,6,new Set([1,-1]));
       const a2=randomNonZeroAvoid(2,6,new Set([1,-1])); let b2=randomNonZeroAvoid(2,6,new Set([1,-1])); if(Math.random()<.5)b2=-b2;
+      if(a1*b2===a2*b1)return makeHarderElimination();
       const c1=a1*x+b1*y, c2=a2*x+b2*y, lcm=(Math.abs(b1)*Math.abs(b2))/gcd(b1,b2);
       const s1=lcm/Math.abs(b1), s2=lcm/Math.abs(b2);
-      const na1=s1*a1, nb1=s1*b1, nc1=s1*c1, na2=-s2*a2, nb2=-s2*b2, nc2=-s2*c2;
+      const secondScale=b2>0?-s2:s2;
+      const na1=s1*a1, nb1=s1*b1, nc1=s1*c1, na2=secondScale*a2, nb2=secondScale*b2, nc2=secondScale*c2;
       const coeffX=na1+na2, constX=nc1+nc2, numY=c1-a1*x;
       return{equationsLatex:[latexEquationFromCoeffs(a1,b1,c1),latexEquationFromCoeffs(a2,b2,c2)],answerLatex:`x = ${x},\\; y = ${y}`,steps:[
         t('Step 1: Write the system.'),mth(`\\begin{cases}${latexEquationFromCoeffs(a1,b1,c1)} \\\\ ${latexEquationFromCoeffs(a2,b2,c2)}\\end{cases}`),
-        t('Step 2: Make y-coefficients equal and opposite.'),mth(`\\text{LCM}(|${b1}|,|${b2}|) = ${lcm}`),mth(`${s1}\\times (${latexEquationFromCoeffs(a1,b1,c1)}) \\Rightarrow ${latexEquationFromCoeffs(na1,nb1,nc1)}`),mth(`${-s2}\\times (${latexEquationFromCoeffs(a2,b2,c2)}) \\Rightarrow ${latexEquationFromCoeffs(na2,nb2,nc2)}`),
+        t('Step 2: Make y-coefficients equal and opposite.'),mth(`\\text{LCM}(|${b1}|,|${b2}|) = ${lcm}`),mth(`${s1}\\times (${latexEquationFromCoeffs(a1,b1,c1)}) \\Rightarrow ${latexEquationFromCoeffs(na1,nb1,nc1)}`),mth(`${secondScale}\\times (${latexEquationFromCoeffs(a2,b2,c2)}) \\Rightarrow ${latexEquationFromCoeffs(na2,nb2,nc2)}`),
         t('Step 3: Add the new equations to eliminate y.'),mth(`${coeffX}x = ${constX}`),mth(`x = ${latexFraction(constX,coeffX)} = ${x}`),
         t('Step 4: Back-substitute for y.'),mth(`${a1}\\times ${x} + ${b1}y = ${c1}`),mth(`y = ${latexFraction(numY,b1)} = ${y}`)
       ]};
