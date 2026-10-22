@@ -1,0 +1,8 @@
+.rule-question{display:grid;grid-template-columns:minmax(220px,360px) minmax(0,1fr);gap:18px;align-items:center;width:100%}
+.rule-diagram,.rule-solution-diagram{width:100%;max-width:360px;min-width:0}
+.rule-diagram svg,.rule-solution-diagram svg{display:block;width:100%;height:auto}
+.rule-prompt{font-size:1.05em;line-height:1.6}
+.rule-solution-diagram{background:#fff;border:1px solid #dbe5ef;border-radius:8px;padding:10px;margin:12px 0}
+@media(max-width:700px){.rule-question{grid-template-columns:1fr}.rule-diagram{margin:auto}}
+
+.equation:has(.rule-question){width:100%;min-width:0;flex:1}

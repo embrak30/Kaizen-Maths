@@ -34,6 +34,8 @@
   <script src="../../auth-config.js?v=tool-access-guard-3"></script>
   <script src="../_shared/tool-access-guard.js?v=tool-access-guard-3"></script>
 
+  <script src="../_shared/question-diagrams.js?v=question-diagrams-2"></script>
+  <link rel="stylesheet" href="../_shared/question-diagrams.css?v=question-diagrams-2">
 </head>
 <body>
   <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
@@ -46,14 +48,14 @@
       <p>This tool supports teaching non-right triangles using the Sine Rule, Cosine Rule, and sine area formula.</p>
       <h3>Level Guide</h3>
       <ul>
-        <li><strong>Level 1:</strong> Find a side, find an angle, and find area using 1/2 ab sin C.</li>
+        <li><strong>Level 1:</strong> Find a side, find all possible angles, and find area using 1/2 ab sin C.</li>
         <li><strong>Level 2:</strong> Use the Cosine Rule for sides and angles, then combine rules in mixed questions.</li>
       </ul>
       <h3>Assessment Ideas</h3>
       <ul>
         <li>Identify the correct rule from the given data: AAS, ASA, SSA, SAS, or SSS.</li>
         <li>Check appropriate rounding and units.</li>
-        <li>Discuss ambiguous cases for the Sine Rule after students master the standard cases.</li>
+        <li>Angle questions check the supplementary angle; ambiguous cases show both possible triangles in the worked solution.</li>
       </ul>
       <h3>Common Misconceptions</h3>
       <ul>
@@ -83,7 +85,7 @@
           <select class="type-dropdown" id="type-dropdown" onchange="typeChanged()">
             <option value="select">Select Question Type</option>
             <option value="sr_find_side">Type 1: Sine Rule - Find a side</option>
-            <option value="sr_find_angle_general">Type 2: Sine Rule - Find an angle</option>
+            <option value="sr_find_angle_general">Type 2: Sine Rule - Find all possible angles</option>
             <option value="area_sine">Type 3: Area - 1/2 ab sin C</option>
           </select>
         </div>
@@ -135,7 +137,7 @@
         description: "Use the Sine Rule to find sides and angles; use the sine area formula for areas.",
         options: [
           ["sr_find_side", "Type 1: Sine Rule - Find a side"],
-          ["sr_find_angle_general", "Type 2: Sine Rule - Find an angle"],
+          ["sr_find_angle_general", "Type 2: Sine Rule - Find all possible angles"],
           ["area_sine", "Type 3: Area - 1/2 ab sin C"]
         ]
       },
@@ -152,7 +154,7 @@
 
     const typeDisplayNames = {
       sr_find_side: "Type 1: Sine Rule - Find a side",
-      sr_find_angle_general: "Type 2: Sine Rule - Find an angle",
+      sr_find_angle_general: "Type 2: Sine Rule - Find all possible angles",
       area_sine: "Type 3: Area - 1/2 ab sin C",
       cr_find_side: "Type 1: Cosine Rule - Find a side",
       cr_find_angle: "Type 2: Cosine Rule - Find an angle",
@@ -224,12 +226,14 @@
       return { A, B, C: 180 - A - B };
     }
 
+    function triangleQuestion(prompt,a,b,C,labels,key){return '<div class="rule-question"><div class="rule-diagram">'+KaizenQuestionDiagrams.triangle({a,b,C,labels,key})+'</div><div class="rule-prompt">'+prompt+'</div></div>';}
+
     function genSineFindSide() {
       const triangle = generateAnglePair();
       const a = choice([7, 8, 9, 10, 11, 12]);
       const b = sinDeg(triangle.B) / sinDeg(triangle.A) * a;
       return {
-        equation: "In triangle ABC, A = " + triangle.A + "°, B = " + triangle.B + "°, and a = " + a + " cm. Find b to 2 d.p.",
+        equation: triangleQuestion("In triangle ABC, A = " + triangle.A + "°, B = " + triangle.B + "°, and a = " + a + " cm. Find b to 2 d.p.",a,b,triangle.C,{sides:{a:"a = "+a+" cm",b:"b = ?"},angles:{A:triangle.A+"°",B:triangle.B+"°"}},["sine-side",triangle,a]),
         answer: "b = " + fmtLen(b),
         steps: [
           math("Sine Rule: a / sin A = b / sin B"),
@@ -243,23 +247,14 @@
     }
 
     function genSineFindAngleGeneral() {
-      const triangle = generateAnglePair();
-      const a = choice([8, 9, 10, 11, 12, 13]);
-      const b = sinDeg(triangle.B) / sinDeg(triangle.A) * a;
-      const sinB = b * sinDeg(triangle.A) / a;
-      const B = asinDeg(Math.max(-1, Math.min(1, sinB)));
-      return {
-        equation: "In triangle ABC, A = " + triangle.A + "°, a = " + a + " cm, and b = " + b.toFixed(2) + " cm. Find B to 1 d.p.",
-        answer: "B = " + fmtAng(B),
-        steps: [
-          math("Sine Rule: a / sin A = b / sin B"),
-          math("sin B = (b × sin A) / a"),
-          math("sin B = (" + b.toFixed(2) + " × sin " + triangle.A + "°) / " + a),
-          math("sin B ≈ " + sinB.toFixed(4)),
-          math("B ≈ sin⁻¹(" + sinB.toFixed(4) + ") ≈ " + fmtAng(B)),
-          math("B = " + fmtAng(B))
-        ]
-      };
+      let triangle;do{triangle=generateAnglePair();}while(Math.abs(triangle.A-triangle.B)<15);
+      const a=choice([8,9,10,11,12,13]),b=Number((sinDeg(triangle.B)/sinDeg(triangle.A)*a).toFixed(2)),sinB=b*sinDeg(triangle.A)/a;
+      const first=asinDeg(Math.max(-1,Math.min(1,sinB))),second=180-first,candidates=[first,second].filter((B,i,list)=>triangle.A+B<180-1e-8&&(i===0||Math.abs(B-list[0])>1e-8));
+      const labels={sides:{a:'a = '+a+' cm',b:'b = '+b.toFixed(2)+' cm'},angles:{A:triangle.A+'°',B:'?'}};
+      const prompt='In triangle ABC, A = '+triangle.A+'°, a = '+a+' cm, and b = '+b.toFixed(2)+' cm. Find all possible values of B to 1 d.p.';
+      const answer='B = '+candidates.map(fmtAng).join(' or '),steps=[math('Sine Rule: sin B = (b × sin A) / a'),math('sin B = ('+b.toFixed(2)+' × sin '+triangle.A+'°) / '+a+' ≈ '+sinB.toFixed(4)),math('B₁ = sin⁻¹('+sinB.toFixed(4)+') ≈ '+fmtAng(first)),math('B₂ = 180° - '+first.toFixed(4)+'° ≈ '+fmtAng(second)),math('A + B₁ ≈ '+(triangle.A+first).toFixed(2)+'°; A + B₂ ≈ '+(triangle.A+second).toFixed(2)+'°'),candidates.length===2?'Both sums are below 180°, so there are two possible triangles.':'Reject the second angle: A + B₂ is at least 180°.',math(answer)];
+      if(candidates.length===2)candidates.forEach((B,i)=>steps.push('<div class="rule-solution-diagram"><strong>Triangle '+(i+1)+'</strong>'+KaizenQuestionDiagrams.triangle({a,b,C:180-triangle.A-B,labels:{...labels,angles:{A:triangle.A+'°',B:fmtAng(B)}},key:['sine-angle-solution',triangle.A,a,b,i],view:i})+'</div>'));
+      return {equation:triangleQuestion(prompt,a,b,180-triangle.A-first,labels,['sine-angle',triangle.A,a,b]),answer,steps,triangleData:{A:triangle.A,a,b,solutions:candidates}};
     }
 
     function genAreaSine() {
@@ -268,7 +263,7 @@
       const C = random(30, 120);
       const area = 0.5 * a * b * sinDeg(C);
       return {
-        equation: "In triangle ABC, a = " + a + " cm, b = " + b + " cm, and included angle C = " + C + "°. Find the area to 2 d.p.",
+        equation: triangleQuestion("In triangle ABC, a = " + a + " cm, b = " + b + " cm, and included angle C = " + C + "°. Find the area to 2 d.p.",a,b,C,{sides:{a:"a = "+a+" cm",b:"b = "+b+" cm"},angles:{C:C+"°"}},["area",a,b,C]),
         answer: "Area = " + fmtArea(area),
         steps: [
           math("Area = 1/2 ab sin C"),
@@ -287,7 +282,7 @@
       const cSquared = a * a + b * b - 2 * a * b * cosDeg(C);
       const c = Math.sqrt(cSquared);
       return {
-        equation: "In triangle ABC, a = " + a + " cm, b = " + b + " cm, and included angle C = " + C + "°. Find c to 2 d.p.",
+        equation: triangleQuestion("In triangle ABC, a = " + a + " cm, b = " + b + " cm, and included angle C = " + C + "°. Find c to 2 d.p.",a,b,C,{sides:{a:"a = "+a+" cm",b:"b = "+b+" cm",c:"c = ?"},angles:{C:C+"°"}},["cosine-side",a,b,C]),
         answer: "c = " + fmtLen(c),
         steps: [
           math("Cosine Rule: c² = a² + b² - 2ab cos C"),
@@ -310,7 +305,7 @@
       const cosC = (a * a + b * b - c * c) / (2 * a * b);
       const C = acosDeg(Math.max(-1, Math.min(1, cosC)));
       return {
-        equation: "In triangle ABC, a = " + a + " cm, b = " + b + " cm, and c = " + c + " cm. Find angle C to 1 d.p.",
+        equation: triangleQuestion("In triangle ABC, a = " + a + " cm, b = " + b + " cm, and c = " + c + " cm. Find angle C to 1 d.p.",a,b,C,{sides:{a:"a = "+a+" cm",b:"b = "+b+" cm",c:"c = "+c+" cm"},angles:{C:"?"}},["cosine-angle",a,b,c]),
         answer: "C = " + fmtAng(C),
         steps: [
           math("cos C = (a² + b² - c²) / (2ab)"),
@@ -328,7 +323,7 @@
       const b = sinDeg(triangle.B) / sinDeg(triangle.A) * a;
       const area = 0.5 * a * b * sinDeg(triangle.C);
       return {
-        equation: "In triangle ABC, A = " + triangle.A + "°, B = " + triangle.B + "°, and a = " + a + " cm. Find b and the area.",
+        equation: triangleQuestion("In triangle ABC, A = " + triangle.A + "°, B = " + triangle.B + "°, and a = " + a + " cm. Find b and the area.",a,b,triangle.C,{sides:{a:"a = "+a+" cm",b:"b = ?"},angles:{A:triangle.A+"°",B:triangle.B+"°",C:"?"}},["mixed",triangle,a]),
         answer: "b = " + fmtLen(b) + "; Area = " + fmtArea(area),
         steps: [
           math("Use the Sine Rule first: b = (sin B / sin A) × a"),

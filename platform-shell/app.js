@@ -1235,7 +1235,7 @@ const tools = [
     status: "Imported",
     description: "Generate prism practice for volume, surface area, triangular prisms, cuboids, reverse dimensions, and mixed unit-aware questions.",
     tags: ["geometry", "volume", "surface area", "prisms", "cuboids", "triangular prisms", "3D shapes", "units"],
-    toolPath: "tools/volume-surface-area-prisms/index.html?v=prisms-6",
+    toolPath: "tools/volume-surface-area-prisms/index.html?v=labelled-diagrams-2",
     imported: true,
     teacherNotes: [
       "Level 1 covers volume of cuboids and triangular prisms using cross-section area times length.",
@@ -1253,7 +1253,7 @@ const tools = [
     status: "Imported",
     description: "Generate diagram-based practice for volume and surface area of cylinders and cones, including reverse and mixed questions.",
     tags: ["geometry", "volume", "surface area", "cylinders", "cones", "3D shapes", "pi", "units"],
-    toolPath: "tools/cylinders-cones-volume-surface-area/index.html?v=cylinders-cones-1",
+    toolPath: "tools/cylinders-cones-volume-surface-area/index.html?v=labelled-diagrams-2",
     imported: true,
     teacherNotes: [
       "Level 1 covers volume of cylinders and cones, emphasising vertical height for cone volume.",
@@ -1271,7 +1271,7 @@ const tools = [
     status: "Imported",
     description: "Generate diagram-based practice for volume and surface area of spheres, including reverse radius questions.",
     tags: ["geometry", "volume", "surface area", "spheres", "3D shapes", "pi", "units"],
-    toolPath: "tools/pyramids-spheres-volume-surface-area/index.html?v=spheres-2",
+    toolPath: "tools/pyramids-spheres-volume-surface-area/index.html?v=labelled-diagrams-2",
     imported: true,
     teacherNotes: [
       "Level 1 covers volume of spheres from a given radius.",
@@ -1384,10 +1384,10 @@ const tools = [
     status: "Imported",
     description: "Generate non-right triangle trigonometry practice covering the Sine Rule, Cosine Rule, sine area formula, and mixed multi-step problems.",
     tags: ["algebra", "trigonometry", "sine rule", "cosine rule", "triangle area", "non-right triangles"],
-    toolPath: "tools/sine-cosine-rule/index.html?v=step-structure-1",
+    toolPath: "tools/sine-cosine-rule/index.html?v=labelled-diagrams-2",
     imported: true,
     teacherNotes: [
-      "Level 1 covers Sine Rule side and angle problems plus the sine area formula.",
+      "Level 1 covers labelled Sine Rule side and angle problems, including both possible triangles in ambiguous cases, plus the sine area formula.",
       "Level 2 covers Cosine Rule side and angle problems plus mixed tasks.",
       "Generated examples use valid non-right triangles with rounded final answers and units.",
       "Worked steps model rule selection, substitution, calculator evaluation, and final rounding."

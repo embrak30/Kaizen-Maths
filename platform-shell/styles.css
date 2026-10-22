@@ -14400,3 +14400,15 @@ sup .worksheet-fraction > span:last-child {
 .worksheet-tex .katex { font-size: 1em; white-space: normal; }
 .worksheet-tex .katex-display { display: inline-block; margin: .15em 0; text-align: left; max-width: 100%; }
 .worksheet-tex .katex-html { white-space: nowrap; }
+
+/* Self-contained labelled diagrams retain their text and label backgrounds in worksheets. */
+.worksheet-question-text .rule-question{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.worksheet-question-text .rule-question .rule-diagram{flex:1 1 250px}
+.worksheet-question-text .rule-question .rule-prompt{flex:1 1 200px}
+.worksheet-question-text .shape-row:has(svg[data-diagram-kind="solid"]){display:flex;flex-wrap:wrap}
+.worksheet-question-text .shape-row:has(svg[data-diagram-kind="solid"]) .shape-diagram{flex:1 1 250px}
+.worksheet-question-text .shape-row:has(svg[data-diagram-kind="solid"]) .card-prompt{flex:1 1 160px}
+.worksheet-question-text .rule-diagram,.worksheet-steps .rule-solution-diagram{max-width:340px;width:100%}
+.worksheet-question-text svg[data-diagram-kind] text{stroke:none;paint-order:normal}
+.worksheet-question-text svg[data-diagram-kind] .qd-label-backing{fill:#fff;stroke:none}
+@media(max-width:700px){.worksheet-question-text .rule-question{grid-template-columns:1fr}}

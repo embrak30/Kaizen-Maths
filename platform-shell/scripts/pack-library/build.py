@@ -154,9 +154,12 @@ def teacher_pages(pack,aliases):
   content.extend(q['print']['steps'] or q['print']['answer'])
   items=flows(content,width,11,175)
   chunks=[];current=[];used=0
-  for item,h in items:
+  for item_index,(item,h) in enumerate(items):
    if h>H-190:raise DoesNotFit('A teacher block cannot fit on A4')
-   if used+h+4>H-190:chunks.append(current);current=[];used=0
+   needed=h+4
+   # Keep each possible-triangle caption with its diagram across a page break.
+   if re.fullmatch(r'Triangle \d+',getattr(item,'getPlainText',lambda:'')()) and item_index+1<len(items) and isinstance(items[item_index+1][0],Image):needed+=items[item_index+1][1]+4
+   if used+needed>H-190:chunks.append(current);current=[];used=0
    current.append((item,h));used+=h+4
   if current:chunks.append(current)
   for index,chunk in enumerate(chunks):blocks.append((' / '.join(aliases[q['number']])+(' (continued)' if index else ''),chunk))

@@ -2,8 +2,8 @@
   "practicePackCount": 373,
   "otherPublicPdfCount": 1,
   "pdfCount": 374,
-  "pageCount": 2499,
-  "preparedBlocksChecked": 25070,
+  "pageCount": 2509,
+  "preparedBlocksChecked": 25094,
   "findings": [],
   "files": [
     {
@@ -733,13 +733,13 @@
     },
     {
       "slug": "sine-cosine-rule-level-1",
-      "pages": 5,
-      "sha256": "35b1f5bf33f95beaf1dcdfba6d2f77579ff09dd26837e3386926c7a1c335d88e"
+      "pages": 10,
+      "sha256": "47f2ad2034882ea33a2e7eafb9838c5428f3163a61049ee3d23481ec525b195b"
     },
     {
       "slug": "sine-cosine-rule-level-2",
-      "pages": 5,
-      "sha256": "91581e6040d40f141f82cecccf62458624ba989ed3f0e0a445d6dedac8fc5883"
+      "pages": 10,
+      "sha256": "c5353e76556cede791573516962d41d1ae56d46aced8bf2625712fa78094a882"
     },
     {
       "slug": "straight-lines-level-1",
@@ -994,17 +994,17 @@
     {
       "slug": "cylinders-cones-volume-surface-area-level-1",
       "pages": 10,
-      "sha256": "382ffa518e295050d38cb2eb61d1ebd073e373aa11fee887018eedc8cc784309"
+      "sha256": "d68a119f9b6c291eb6fc0470a029074107b4e38a9749a18072cce2d948a0fbdd"
     },
     {
       "slug": "cylinders-cones-volume-surface-area-level-2",
       "pages": 10,
-      "sha256": "2cdd6521c25f79dc433822cbc2d86a021da6736935419089c1fc66ba8bebd2e4"
+      "sha256": "f76c6bb3987d3ab2556396b68463e1380aca2d5d8d68488f6465bb8d4a2c386d"
     },
     {
       "slug": "cylinders-cones-volume-surface-area-level-3",
       "pages": 10,
-      "sha256": "bc6cacb759f134192c436b0f41761114efcf778f3d0f200534e04e4254545e5f"
+      "sha256": "fc83fa558332eaebd3bdd8548b01a3bee5509b6e26de9630af7b53ffcf35417d"
     },
     {
       "slug": "earth-geometry-level-1",
@@ -1129,17 +1129,17 @@
     {
       "slug": "volume-surface-area-prisms-level-1",
       "pages": 10,
-      "sha256": "a43d82682541f23bfea23325a65f53d9c521ad76db59b5d98556d4859260dc29"
+      "sha256": "3628faa8bc605688a1fcbabd41d9447ac70810cf65ea3265bc2da608a614e4e5"
     },
     {
       "slug": "volume-surface-area-prisms-level-2",
       "pages": 7,
-      "sha256": "b410d58ededcc5db27e0eb99ce68c8af5f9104d88fb8acd4ed7dad9652b44941"
+      "sha256": "fbc2f9bc19c4c9e21b4f253f096bf0382d54a6a57e3e8d22f22c18522e604493"
     },
     {
       "slug": "volume-surface-area-prisms-level-3",
       "pages": 10,
-      "sha256": "c3f1ab93f92edbbf0e651538a92c7352c7510ae5f725f4d5ca158d06309075a1"
+      "sha256": "2b02ec6cf4a8a41804b464cbe9ec1cdf84e28367221bab33b96a0c5feb9af557"
     },
     {
       "slug": "pythagoras-theorem-level-1",
@@ -1209,17 +1209,17 @@
     {
       "slug": "pyramids-spheres-volume-surface-area-level-1",
       "pages": 10,
-      "sha256": "ee20c6cd00486eea43b4ed33ee0cc45ae195d773fc5384eab8d85c3021129f5b"
+      "sha256": "781274b1775e8a3b0ffec8d8301c1e0dc53f22ce9b1d6ba9b8c49df34fdbb1ff"
     },
     {
       "slug": "pyramids-spheres-volume-surface-area-level-2",
       "pages": 10,
-      "sha256": "3589bbde6b24dbd5c6d397ea49722c885c42f6d5b14a653585d743b3164e9b0f"
+      "sha256": "47e3a668df77a0cd850bec8a5685aaf6319d06ad7b3b74c48a5e4996a1cc0c48"
     },
     {
       "slug": "pyramids-spheres-volume-surface-area-level-3",
       "pages": 10,
-      "sha256": "e1f4d469f2a4d4da12364b3aeec716ddefaa78b4c7edc8f9701474ef5c90b633"
+      "sha256": "55327d98cd8f9a31289b2861c40a55a6fe1a82f7e9bbb86d15339604512ee941"
     },
     {
       "slug": "transformations-level-1",
