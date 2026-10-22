@@ -1384,7 +1384,7 @@ const tools = [
     status: "Imported",
     description: "Generate non-right triangle trigonometry practice covering the Sine Rule, Cosine Rule, sine area formula, and mixed multi-step problems.",
     tags: ["algebra", "trigonometry", "sine rule", "cosine rule", "triangle area", "non-right triangles"],
-    toolPath: "tools/sine-cosine-rule/index.html?v=labelled-diagrams-2",
+    toolPath: "tools/sine-cosine-rule/index.html?v=triangle-grid-1",
     imported: true,
     teacherNotes: [
       "Level 1 covers labelled Sine Rule side and angle problems, including both possible triangles in ambiguous cases, plus the sine area formula.",

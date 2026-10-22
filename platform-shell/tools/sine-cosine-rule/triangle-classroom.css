@@ -1,0 +1,28 @@
+/* Four board-sized questions; diagrams never trigger page scaling. */
+.triangle-classroom .container{max-width:1600px;width:100%}
+.triangle-classroom .problem-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.triangle-classroom .problem-item{margin:0;padding:16px;min-width:0;transition:none}
+.triangle-classroom .problem-item:hover{transform:none}
+.triangle-classroom .problem-header{display:flex;flex-direction:column;align-items:stretch}
+.triangle-classroom .problem-left{align-items:flex-start;width:100%}
+.triangle-classroom .rule-question{display:flex;flex-direction:column;gap:4px}
+.triangle-classroom .rule-diagram{max-width:480px;width:100%;margin:auto}
+.triangle-classroom .rule-prompt{font-family:var(--kaizen-ui-font);font-size:1rem;line-height:1.45;width:100%}
+.triangle-classroom .problem-answer{margin:4px 0 0;max-width:100%;align-self:stretch;text-align:center}
+.triangle-classroom .math{font-size:1.1rem;line-height:1.8;white-space:normal}
+.triangle-classroom .fraction{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.25;margin:0 .2em}
+.triangle-classroom .fraction .numerator{display:block;border-bottom:1.5px solid currentColor;padding:0 .18em .12em}
+.triangle-classroom .fraction .denominator{display:block;padding:.12em .18em 0}
+.triangle-classroom .problem-list>div:only-child:not(.problem-item){grid-column:1/-1}
+@media(max-width:700px){.triangle-classroom .problem-list{grid-template-columns:1fr}}
+@media(min-width:701px){
+  .triangle-classroom .header{padding:10px 16px}
+  .triangle-classroom .header h1{font-size:1.65rem}
+  .triangle-classroom .tabs .tab{padding:8px}
+  .triangle-classroom .controls{padding:10px 15px;gap:8px}
+  .triangle-classroom .problems-section{padding:12px 20px;min-height:0}
+  .triangle-classroom .problem-item{padding:10px 12px}
+  .triangle-classroom .rule-diagram svg{height:clamp(140px,calc((100dvh - 390px)/2),280px);width:100%;object-fit:contain}
+  .triangle-classroom .rule-prompt{line-height:1.35}
+  .triangle-classroom .problem-header{margin-bottom:0}
+}

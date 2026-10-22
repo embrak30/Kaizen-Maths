@@ -7,6 +7,11 @@ for(const slug of ['sine-cosine-rule','volume-surface-area-prisms','cylinders-co
   const q=r.api.generate({level:level.id,type:type.id,count:1}).problems[0],el=doc.createElement('div');el.innerHTML=q.question;assert(el.querySelector('svg[data-diagram-kind]'),slug+'/'+type.id+' loses diagram in worksheet');assert(!/NaN|undefined/.test(q.question));samples++;
  }
  if(slug==='sine-cosine-rule'){
+  require('node:vm').runInContext("currentType='cr_find_angle';generateNewSet();showSteps()",r.context);
+  assert.equal(doc.querySelectorAll('.problem-item').length,4);
+  assert.equal(doc.querySelectorAll('.steps-section .fraction').length,8);
+  for(const gen of ['genSineFindSide','genSineFindAngleGeneral','genAreaSine','genCosineFindAngle','genMixed']){const el=doc.createElement('div');el.innerHTML=r.context[gen]().steps.join('');assert(el.querySelector('.fraction'));assert(!el.textContent.includes('/'));}
+
   for(let view=0;view<6;view++){
    const p=diagrams.triangleGeometry(9,12,110,view),dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);near(dist(p.B,p.C)/dist(p.A,p.C),9/12);near((dist(p.A,p.C)**2+dist(p.B,p.C)**2-dist(p.A,p.B)**2)/(2*dist(p.A,p.C)*dist(p.B,p.C)),Math.cos(110*Math.PI/180));
    const el=doc.createElement('div');el.innerHTML=diagrams.triangle({a:9,b:12,C:110,view,labels:{sides:{a:'a = 9 cm',b:'b = 12 cm',c:'c = ?'},angles:{C:'110°'}}});assert.equal(el.querySelector('[data-side=a]').getAttribute('data-edge'),'BC');assert.equal(el.querySelector('[data-side=b]').getAttribute('data-edge'),'AC');assert.equal(el.querySelector('[data-side=c]').getAttribute('data-edge'),'AB');

@@ -36,8 +36,9 @@
 
   <script src="../_shared/question-diagrams.js?v=question-diagrams-2"></script>
   <link rel="stylesheet" href="../_shared/question-diagrams.css?v=question-diagrams-2">
+  <link rel="stylesheet" href="triangle-classroom.css?v=triangle-grid-1">
 </head>
-<body>
+<body class="triangle-classroom">
   <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
   <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
@@ -212,6 +213,10 @@
       return 180 * Math.acos(value) / Math.PI;
     }
 
+    function frac(top, bottom) {
+      return '<span class="fraction"><span class="numerator">' + top + '</span><span class="denominator">' + bottom + '</span></span>';
+    }
+
     function math(text) {
       return '<div class="math">' + text + "</div>";
     }
@@ -236,9 +241,9 @@
         equation: triangleQuestion("In triangle ABC, A = " + triangle.A + "°, B = " + triangle.B + "°, and a = " + a + " cm. Find b to 2 d.p.",a,b,triangle.C,{sides:{a:"a = "+a+" cm",b:"b = ?"},angles:{A:triangle.A+"°",B:triangle.B+"°"}},["sine-side",triangle,a]),
         answer: "b = " + fmtLen(b),
         steps: [
-          math("Sine Rule: a / sin A = b / sin B"),
-          math("b = (sin B / sin A) × a"),
-          math("b = (sin " + triangle.B + "° / sin " + triangle.A + "°) × " + a),
+          math("Sine Rule: " + frac("a", "sin A") + " = " + frac("b", "sin B")),
+          math("b = " + frac("sin B", "sin A") + " × a"),
+          math("b = " + frac("sin " + triangle.B + "°", "sin " + triangle.A + "°") + " × " + a),
           math("sin " + triangle.B + "° ≈ " + sinDeg(triangle.B).toFixed(4) + ", sin " + triangle.A + "° ≈ " + sinDeg(triangle.A).toFixed(4)),
           math("b ≈ " + b.toFixed(4)),
           math("b = " + fmtLen(b))
@@ -252,7 +257,7 @@
       const first=asinDeg(Math.max(-1,Math.min(1,sinB))),second=180-first,candidates=[first,second].filter((B,i,list)=>triangle.A+B<180-1e-8&&(i===0||Math.abs(B-list[0])>1e-8));
       const labels={sides:{a:'a = '+a+' cm',b:'b = '+b.toFixed(2)+' cm'},angles:{A:triangle.A+'°',B:'?'}};
       const prompt='In triangle ABC, A = '+triangle.A+'°, a = '+a+' cm, and b = '+b.toFixed(2)+' cm. Find all possible values of B to 1 d.p.';
-      const answer='B = '+candidates.map(fmtAng).join(' or '),steps=[math('Sine Rule: sin B = (b × sin A) / a'),math('sin B = ('+b.toFixed(2)+' × sin '+triangle.A+'°) / '+a+' ≈ '+sinB.toFixed(4)),math('B₁ = sin⁻¹('+sinB.toFixed(4)+') ≈ '+fmtAng(first)),math('B₂ = 180° - '+first.toFixed(4)+'° ≈ '+fmtAng(second)),math('A + B₁ ≈ '+(triangle.A+first).toFixed(2)+'°; A + B₂ ≈ '+(triangle.A+second).toFixed(2)+'°'),candidates.length===2?'Both sums are below 180°, so there are two possible triangles.':'Reject the second angle: A + B₂ is at least 180°.',math(answer)];
+      const answer='B = '+candidates.map(fmtAng).join(' or '),steps=[math('Sine Rule: sin B = '+frac('b × sin A','a')),math('sin B = '+frac(b.toFixed(2)+' × sin '+triangle.A+'°',a)+' ≈ '+sinB.toFixed(4)),math('B₁ = sin⁻¹('+sinB.toFixed(4)+') ≈ '+fmtAng(first)),math('B₂ = 180° - '+first.toFixed(4)+'° ≈ '+fmtAng(second)),math('A + B₁ ≈ '+(triangle.A+first).toFixed(2)+'°; A + B₂ ≈ '+(triangle.A+second).toFixed(2)+'°'),candidates.length===2?'Both sums are below 180°, so there are two possible triangles.':'Reject the second angle: A + B₂ is at least 180°.',math(answer)];
       if(candidates.length===2)candidates.forEach((B,i)=>steps.push('<div class="rule-solution-diagram"><strong>Triangle '+(i+1)+'</strong>'+KaizenQuestionDiagrams.triangle({a,b,C:180-triangle.A-B,labels:{...labels,angles:{A:triangle.A+'°',B:fmtAng(B)}},key:['sine-angle-solution',triangle.A,a,b,i],view:i})+'</div>'));
       return {equation:triangleQuestion(prompt,a,b,180-triangle.A-first,labels,['sine-angle',triangle.A,a,b]),answer,steps,triangleData:{A:triangle.A,a,b,solutions:candidates}};
     }
@@ -266,8 +271,8 @@
         equation: triangleQuestion("In triangle ABC, a = " + a + " cm, b = " + b + " cm, and included angle C = " + C + "°. Find the area to 2 d.p.",a,b,C,{sides:{a:"a = "+a+" cm",b:"b = "+b+" cm"},angles:{C:C+"°"}},["area",a,b,C]),
         answer: "Area = " + fmtArea(area),
         steps: [
-          math("Area = 1/2 ab sin C"),
-          math("Area = 1/2 × " + a + " × " + b + " × sin " + C + "°"),
+          math("Area = " + frac("1", "2") + " ab sin C"),
+          math("Area = " + frac("1", "2") + " × " + a + " × " + b + " × sin " + C + "°"),
           math("sin " + C + "° ≈ " + sinDeg(C).toFixed(4)),
           math("Area ≈ " + area.toFixed(4)),
           math("Area = " + fmtArea(area))
@@ -308,8 +313,8 @@
         equation: triangleQuestion("In triangle ABC, a = " + a + " cm, b = " + b + " cm, and c = " + c + " cm. Find angle C to 1 d.p.",a,b,C,{sides:{a:"a = "+a+" cm",b:"b = "+b+" cm",c:"c = "+c+" cm"},angles:{C:"?"}},["cosine-angle",a,b,c]),
         answer: "C = " + fmtAng(C),
         steps: [
-          math("cos C = (a² + b² - c²) / (2ab)"),
-          math("cos C = (" + (a * a) + " + " + (b * b) + " - " + (c * c) + ") / (2 × " + a + " × " + b + ")"),
+          math("cos C = " + frac("a² + b² - c²", "2ab")),
+          math("cos C = " + frac((a * a) + " + " + (b * b) + " - " + (c * c), "2 × " + a + " × " + b)),
           math("cos C ≈ " + cosC.toFixed(4)),
           math("C ≈ cos⁻¹(" + cosC.toFixed(4) + ") ≈ " + fmtAng(C)),
           math("C = " + fmtAng(C))
@@ -326,12 +331,12 @@
         equation: triangleQuestion("In triangle ABC, A = " + triangle.A + "°, B = " + triangle.B + "°, and a = " + a + " cm. Find b and the area.",a,b,triangle.C,{sides:{a:"a = "+a+" cm",b:"b = ?"},angles:{A:triangle.A+"°",B:triangle.B+"°",C:"?"}},["mixed",triangle,a]),
         answer: "b = " + fmtLen(b) + "; Area = " + fmtArea(area),
         steps: [
-          math("Use the Sine Rule first: b = (sin B / sin A) × a"),
-          math("b = (sin " + triangle.B + "° / sin " + triangle.A + "°) × " + a + " ≈ " + b.toFixed(4)),
+          math("Use the Sine Rule first: b = " + frac("sin B", "sin A") + " × a"),
+          math("b = " + frac("sin " + triangle.B + "°", "sin " + triangle.A + "°") + " × " + a + " ≈ " + b.toFixed(4)),
           math("b = " + fmtLen(b)),
           math("C = 180° - " + triangle.A + "° - " + triangle.B + "° = " + triangle.C + "°"),
-          math("Area = 1/2 ab sin C"),
-          math("Area ≈ 1/2 × " + a + " × " + b.toFixed(4) + " × sin " + triangle.C + "° ≈ " + area.toFixed(4)),
+          math("Area = " + frac("1", "2") + " ab sin C"),
+          math("Area ≈ " + frac("1", "2") + " × " + a + " × " + b.toFixed(4) + " × sin " + triangle.C + "° ≈ " + area.toFixed(4)),
           math("Area = " + fmtArea(area))
         ]
       };
@@ -406,7 +411,7 @@
       problems = [];
       answersVisible = false;
       stepsVisible = false;
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 4; i++) {
         problems.push(generateProblem());
       }
       renderProblems();
