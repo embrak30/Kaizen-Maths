@@ -1,6 +1,6 @@
 const SITE_NAME = "Kaizen Maths";
-const SITE_TITLE = "Kaizen Maths | Practical Maths Resources and Make It Count";
-const SITE_DESCRIPTION = "Kaizen Maths provides practical mathematics resources for teachers. Make It Count brings those resources together with online teacher development, coaching, and sustained implementation support.";
+const SITE_TITLE = "Maths Questions & Worksheets for Teachers | Kaizen Maths";
+const SITE_DESCRIPTION = "Exam-style maths questions, worksheets, starters and worked solutions for busy maths teachers. Explore free samples or try the teacher workspace for 30 days.";
 const CLASSROOM_STANDARD_VERSION = "classroom-standard-3";
 const MAKE_IT_COUNT_LOGO = "assets/brand/make-it-count-brighter-futures.png";
 
@@ -5776,12 +5776,12 @@ const homepageFeaturedVideo = {
 };
 
 const defaultHomepageHeroContent = {
-  eyebrow: "Kaizen Maths + Make It Count",
-  headline: "Better mathematics teaching starts with the right resources and support.",
-  subheading: "Kaizen Maths provides practical mathematics resources for teachers. Through Make It Count, we are working to bring those resources together with online professional development and ongoing implementation support to schools that need them.",
-  highlight_1: "Practical classroom resources for everyday teaching",
-  highlight_2: "Online teacher development and sustained support",
-  highlight_3: "Funded partnerships for schools that need mathematics support",
+  eyebrow: "For busy maths teachers",
+  headline: "Maths teachers: exam-style questions, worksheets and starters for your next lesson.",
+  subheading: "Choose a topic, generate fresh questions and show each worked step. Print a worksheet or project the same maths for your class, without hunting across scattered sites.",
+  highlight_1: "Fresh questions by topic and level",
+  highlight_2: "Worked solutions for classroom explanation",
+  highlight_3: "Printable starters, exit tickets and worksheets",
   gallery_label: "Inside Kaizen Maths",
   gallery_heading: "See the workspace in action"
 };
@@ -6632,11 +6632,10 @@ function writeJsonStorage(key, value) {
 }
 
 function homepageHeroContent() {
-  return {
-    ...defaultHomepageHeroContent,
-    ...readJsonStorage(homepageContentStorageKey, {}),
-    ...state.homepageContent
-  };
+  const content = {...defaultHomepageHeroContent, ...readJsonStorage(homepageContentStorageKey, {}), ...state.homepageContent};
+  const previous = {"eyebrow": "Kaizen Maths + Make It Count", "headline": "Better mathematics teaching starts with the right resources and support.", "subheading": "Kaizen Maths provides practical mathematics resources for teachers. Through Make It Count, we are working to bring those resources together with online professional development and ongoing implementation support to schools that need them.", "highlight_1": "Practical classroom resources for everyday teaching", "highlight_2": "Online teacher development and sustained support", "highlight_3": "Funded partnerships for schools that need mathematics support"};
+  for (const [key,value] of Object.entries(previous)) if(content[key]===value) content[key]=defaultHomepageHeroContent[key];
+  return content;
 }
 
 function normaliseHomepageScreenshot(row, index = 0) {
@@ -7479,6 +7478,7 @@ function testimonialDisplayList() {
   const source = state.siteTestimonials.length ? state.siteTestimonials : defaultTestimonials;
   const visible = source
     .map(normaliseTestimonial)
+    .map(item => { const proof = (window.KaizenMarketingProof?.testimonials || []).find(p => p.approved && p.slot_id === item.slot_id); return proof ? {...item, ...proof} : item; })
     .filter((item) => item.is_active && item.quote)
     .sort((a, b) => a.sort_order - b.sort_order);
   return visible.length ? visible : defaultTestimonials;
@@ -11677,6 +11677,7 @@ function renderOurStoryPage() {
       "Kaizen Maths was created by a mathematics educator with more than 30 years of experience in teaching, school leadership, research, and educational development.",
       `<a class="button primary" href="#/kaizen-maths">Explore The Resource</a><a class="button" href="#/make-it-count">Make It Count</a>`
     )}
+    ${window.KaizenMarketing.proofHtml(window.KaizenMarketingProof)}
     <section class="mission-page">
       <article class="mission-hero-panel">
         <div>
@@ -11792,7 +11793,7 @@ function renderHome() {
     ["Support stronger explanations", "Use worked examples, revealable steps, diagrams, and classroom displays to model methods clearly."],
     ["Create differentiated practice", "Generate fresh questions by topic, level, question type, and purpose for different groups."],
     ["Strengthen intervention", "Use focused practice, pupil tasks, worksheets, and assessment evidence to revisit gaps."],
-    ["Build department consistency", "Give teachers a shared resource structure while preserving teacher choice and professional judgement."],
+    ["Build department consistency", "Build a shared resource structure your department can use for planning and intervention, while preserving teacher choice and professional judgement."],
     ["Protect teacher wellbeing", "Reduce the repeated workload of searching, formatting, and rebuilding mathematics resources from scratch."]
   ];
   const audienceCards = [
@@ -11813,8 +11814,7 @@ function renderHome() {
     <section class="home-hero mission-home-hero">
       <div class="home-hero-actions">
         <a class="button primary" href="#/kaizen-maths">Explore Kaizen Maths</a>
-        <a class="button" href="#/make-it-count">Discover Make It Count</a>
-        <a class="button" href="#/partners">Partner With Us</a>
+        <a class="marketing-secondary-link" href="#/make-it-count">Discover Make It Count</a>
       </div>
       <div class="hero-copy">
         <span class="eyebrow">${escapeHtml(heroContent.eyebrow)}</span>
@@ -11841,6 +11841,7 @@ function renderHome() {
         <div class="home-testimonial-carousel" id="homeTestimonialCarousel">
           ${testimonials.map((item, index) => `
             <article class="home-testimonial-slide ${index === 0 ? "active" : ""}" data-testimonial-slide>
+              ${item.photo ? `<img class="marketing-avatar" src="${escapeHtml(item.photo)}" alt="${escapeHtml(item.person_name)}" loading="lazy">` : ""}
               <p>&ldquo;${escapeHtml(item.quote)}&rdquo;</p>
               <footer>
                 <strong>${escapeHtml(item.person_name || "Maths teacher")}</strong>
@@ -11855,21 +11856,6 @@ function renderHome() {
       </aside>
     </section>
 
-    <section class="mission-card-row section-block" aria-labelledby="missionOverviewTitle">
-      <div class="section-heading">
-        <span class="eyebrow">The New Direction</span>
-        <h2 id="missionOverviewTitle">A resource, a programme, and a route to support more schools</h2>
-      </div>
-      <div class="home-card-grid mission-overview-grid">
-        ${missionCards.map(([label, title, copy]) => `
-          <article class="home-card mission-home-card">
-            <span class="eyebrow">${label}</span>
-            <h3>${title}</h3>
-            <p>${copy}</p>
-          </article>
-        `).join("")}
-      </div>
-    </section>
 
     <section class="home-workflow section-block" aria-labelledby="workflowTitle">
       <div class="section-heading">
@@ -11887,19 +11873,6 @@ function renderHome() {
       </div>
     </section>
 
-    <section class="mission-programme-band" aria-labelledby="makeItCountHomeTitle">
-      <div>
-        <span class="eyebrow">${escapeHtml(programme.home_programme_eyebrow)}</span>
-        <h2 id="makeItCountHomeTitle">${escapeHtml(programme.home_programme_heading)}</h2>
-        <p>${escapeHtml(programme.home_programme_copy)}</p>
-      </div>
-      ${programmeLogoHtml("make-it-count-logo-card home-make-it-count-logo", programme)}
-      <div class="button-row">
-        <a class="button primary" href="#/make-it-count">Read About The Initiative</a>
-        <a class="button" href="#/school-interest">School Interest</a>
-        <a class="button" href="#/partner-interest">Funding And Partners</a>
-      </div>
-    </section>
 
     <section class="coverage-home-band" aria-labelledby="homeCoverageTitle">
       <div>
@@ -11910,6 +11883,7 @@ function renderHome() {
       <div class="coverage-home-counts" aria-label="Coverage counts">
         ${curriculumMapAreas.map((area) => `<span><strong>${coverageToolsFor(area).length}</strong>${escapeHtml(area.title)}</span>`).join("")}
       </div>
+      ${window.KaizenMarketing.proofHtml({adoption:window.KaizenMarketingProof?.adoption})}
       <a class="button primary" href="#/coverage-map">View Coverage Map</a>
     </section>
 
@@ -11940,6 +11914,34 @@ function renderHome() {
       </div>
     </section>
 
+    <section class="mission-card-row section-block" aria-labelledby="missionOverviewTitle">
+      <div class="section-heading">
+        <span class="eyebrow">Resources and support</span>
+        <h2 id="missionOverviewTitle">Choose classroom resources or talk to us about teacher development</h2>
+      </div>
+      <div class="home-card-grid mission-overview-grid">
+        ${missionCards.map(([label, title, copy]) => `
+          <article class="home-card mission-home-card">
+            <span class="eyebrow">${label}</span>
+            <h3>${title}</h3>
+            <p>${copy}</p>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+    <section class="mission-programme-band" aria-labelledby="makeItCountHomeTitle">
+      <div>
+        <span class="eyebrow">${escapeHtml(programme.home_programme_eyebrow)}</span>
+        <h2 id="makeItCountHomeTitle">${escapeHtml(programme.home_programme_heading)}</h2>
+        <p>${escapeHtml(programme.home_programme_copy)}</p>
+      </div>
+      ${programmeLogoHtml("make-it-count-logo-card home-make-it-count-logo", programme)}
+      <div class="button-row">
+        <a class="button primary" href="#/make-it-count">Read About The Initiative</a>
+        <a class="button" href="#/school-interest">School Interest</a>
+        <a class="button" href="#/partner-interest">Funding And Partners</a>
+      </div>
+    </section>
     <section class="home-audiences section-block" aria-labelledby="audienceTitle">
       <div class="section-heading">
         <span class="eyebrow">Who It Supports</span>
@@ -11987,13 +11989,16 @@ function renderHome() {
         <a class="button" href="#/research-informed">Research-Informed Design</a>
       </div>
     </section>
+    ${window.KaizenMarketing.faqHtml()}
+    ${window.KaizenMarketing.proofHtml({founder:window.KaizenMarketingProof?.founder})}
+    <p class="marketing-scope">Built for adult maths teachers and tutors to prepare and explain mathematics. This is not a pupil self-study subscription or a replacement for your teaching judgement.</p>
+    <p class="marketing-comparisons"><a href="/pricing">See teacher and school prices</a> · <a href="/vs/drfrostmaths">Compare with Dr Frost Maths</a> · <a href="/vs/mathletics">Compare with Mathletics</a> · <a href="/our-story">Our story</a></p>
     <section class="final-cta" aria-labelledby="finalCtaTitle">
       <span class="eyebrow">Next Step</span>
-      <h2 id="finalCtaTitle">Explore the resource. Discover the initiative. Start the conversation.</h2>
+      <h2 id="finalCtaTitle">Find the maths for your next lesson.</h2>
       <div class="button-row">
         <a class="button primary" href="#/kaizen-maths">Explore Kaizen Maths</a>
-        <a class="button" href="#/make-it-count">Discover Make It Count</a>
-        <a class="button" href="#/contact">Contact / Enquire</a>
+        <a class="marketing-secondary-link" href="/pricing">See prices and trial details</a>
       </div>
     </section>
   `;
@@ -12025,6 +12030,7 @@ function homeInterfaceGalleryHtml(screenshots = homepageScreenshotList(), heroCo
       <div class="hero-gallery-dots" aria-hidden="true">
         ${screenshots.map((_, index) => `<span class="${index === 0 ? "active" : ""}" data-screenshot-dot></span>`).join("")}
       </div>
+      <figure class="marketing-output"><a href="assets/practice-packs/substitution/as-01-linear-expressions.pdf"><img src="assets/practice-packs/substitution/previews/as-01-linear-expressions.png" alt="Finished algebraic substitution Level 1 starter and exit ticket sheet, ready to print" loading="lazy"></a><figcaption><strong>The finished sheet: algebraic substitution, Level 1</strong><span>Open the real PDF: student practice, answers and worked solutions.</span></figcaption></figure>
     </section>
   `;
 }
@@ -12085,8 +12091,10 @@ function homepageVideoPanelHtml() {
         <div class="button-row">
           <a class="button primary" href="#/kaizen-university">Certification Pathway</a>
           <a class="button" href="#/how-to-use-this-site">Open Site Guide</a>
+          <a class="marketing-secondary-link" href="https://www.youtube.com/channel/UCYVeEP4k1ognbmXuxNZMJGA" target="_blank" rel="noopener noreferrer">Kaizen Maths Academy on YouTube</a>
         </div>
       </div>
+      ${window.KaizenMarketing.proofHtml({externalMention:window.KaizenMarketingProof?.externalMention})}
     </section>
   `;
 }
@@ -17449,6 +17457,7 @@ function renderToolLibrary(extraCategory = "") {
       collectionTitle,
       extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Search the virtual textbook by topic. Choose a level, generate fresh questions, show answers or worked steps, use the timer, and project the set in Classroom View."
     )}
+    <details class="workspace-directory"><summary>Topics, builders and teacher reference</summary><nav aria-label="Workspace directory">${document.getElementById("workspaceDirectoryTemplate")?.innerHTML || ""}</nav></details>
     ${visible.length
       ? renderGroupedToolIndex(visible, collectionTitle, { groupByCategory: !extraCategory })
       : `<div class="panel empty-state">No tools match the current filters.</div>`}
@@ -27056,6 +27065,7 @@ function renderUpgrade() {
       `<a class="button primary" href="#/book-demo">Book a Demo</a><a class="button" href="#/tools">Browse Tools</a>`
     )}
     <section class="upgrade-page">
+      <p><a href="/pricing">Public pricing, trial limits and access comparison</a></p>
       <article class="panel trial-notice">
         <span class="eyebrow">Teacher Trial</span>
         <h2>Try the full workspace for 30 days</h2>
@@ -27084,24 +27094,24 @@ function renderUpgrade() {
       <section class="pricing-grid" aria-label="Pricing options">
         <article class="panel pricing-card">
           <span class="eyebrow">Early Adopter</span>
-          <h2>Monthly</h2>
-          <p class="pricing-price">£9.99/month</p>
+          <h2>Teacher monthly</h2>
+          <p class="pricing-price">${window.KaizenMarketing.money(window.KaizenMarketing.pricing.monthly)}/month</p>
           <p class="pricing-note">Expected standard price: £14.99/month</p>
           <p>Flexible access for one teacher. Use the full topic library, board-ready generators, worked solutions, worksheet builder, and assessment practice.</p>
           <button class="button primary" type="button" data-checkout-plan="monthly">${isSignedIn() ? "Upgrade Monthly" : "Sign In To Upgrade"}</button>
         </article>
         <article class="panel pricing-card featured">
           <span class="eyebrow">Early Adopter</span>
-          <h2>Annual</h2>
-          <p class="pricing-price">£89/year</p>
+          <h2>Teacher annual</h2>
+          <p class="pricing-price">${window.KaizenMarketing.money(window.KaizenMarketing.pricing.annual)}/year</p>
           <p class="pricing-note">Expected standard price: £149/year</p>
           <p>Best for teachers who want full access across the year for planning, classroom practice, homework, revision, intervention, and assessment.</p>
           <button class="button primary" type="button" data-checkout-plan="annual">${isSignedIn() ? "Upgrade Annual" : "Sign In To Upgrade"}</button>
         </article>
         <article class="panel pricing-card">
           <span class="eyebrow">Early Adopter</span>
-          <h2>Department Access</h2>
-          <p class="pricing-price">From £299/year</p>
+          <h2>School licence</h2>
+          <p class="pricing-price">From ${window.KaizenMarketing.money(window.KaizenMarketing.pricing.school)}/year</p>
           <p class="pricing-note">Expected standard price: from £499/year</p>
           <p>For schools that want several teachers to use the full virtual mathematics textbook across lessons, homework, intervention, revision, and assessment.</p>
           <div class="button-row">
@@ -27111,6 +27121,8 @@ function renderUpgrade() {
         </article>
       </section>
 
+      ${window.KaizenMarketing.comparisonTable()}
+      ${window.KaizenMarketing.faqHtml()}
       <section class="panel upgrade-details">
         <h2>What Paid Access Unlocks</h2>
         <div class="badge-row">
@@ -30513,3 +30525,12 @@ window.setTimeout(() => {
 }, 1200);
 
 renderRoute();
+
+function bindMarketingNavigation() {
+  document.querySelectorAll('[data-marketing-signin]').forEach(button => {
+    button.textContent=isSignedIn()?'Open workspace':'Sign in with Google';
+    if(!button.dataset.bound){button.dataset.bound='true';button.addEventListener('click',()=>{if(isSignedIn())location.hash='#/tools';else window.KaizenAuth?.signInWithGoogle?.();});}
+  });
+}
+bindMarketingNavigation();
+window.addEventListener('kaizen-auth-change',bindMarketingNavigation);

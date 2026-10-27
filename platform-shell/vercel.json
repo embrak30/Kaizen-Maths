@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/pricing", "destination": "/pricing/index.html" },
+    { "source": "/our-story", "destination": "/our-story/index.html" },
+    { "source": "/vs/drfrostmaths", "destination": "/vs/drfrostmaths/index.html" },
+    { "source": "/vs/mathletics", "destination": "/vs/mathletics/index.html" }
+  ]
+}
