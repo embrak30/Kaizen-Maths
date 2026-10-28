@@ -63,3 +63,7 @@ Exact Vercel rewrites add /pricing, /our-story, /vs/drfrostmaths and /vs/mathlet
 - https://www.mathletics.com/uk/ — school quote route; pupil activities, games, automatic marking and reporting.
 
 Comparisons are scoped and sourced, not claims that Kaizen is universally better. Provider details can change.
+
+## Dashboard and shell follow-up — 28 October 2026
+
+Public pricing, story and comparison content now renders inside the same application shell as Explore. In-app links preserve the sidebar and topbar DOM; direct links retain the same shell and prerendered content. A root base URL keeps tool and asset URLs valid from nested public routes. Explore now has resource action cards, topic shortcuts and a three-column reference panel rather than the former copied sidebar list. The reference groups retain curriculum, training, pupil, school and support destinations. Navigation identity, direct paths, popstate and billing regression checks are in the marketing test.

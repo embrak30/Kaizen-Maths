@@ -5212,7 +5212,7 @@ function filteredTools(extraCategory) {
 }
 
 function setActiveNav() {
-  const path = location.hash || "#/";
+  const path = location.hash || location.pathname.replace(/\/index\.html$/, "").replace(/\/$/, "") || "#/";
   const cleanPath = path.split("?")[0];
   const parts = cleanPath.replace(/^#\/?/, "").split("/");
   const toolRouteSlug = ["tools", "classroom"].includes(parts[0]) ? parts[1] || "" : "";
@@ -17457,7 +17457,7 @@ function renderToolLibrary(extraCategory = "") {
       collectionTitle,
       extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Search the virtual textbook by topic. Choose a level, generate fresh questions, show answers or worked steps, use the timer, and project the set in Classroom View."
     )}
-    <details class="workspace-directory"><summary>Topics, builders and teacher reference</summary><nav aria-label="Workspace directory">${document.getElementById("workspaceDirectoryTemplate")?.innerHTML || ""}</nav></details>
+    ${exploreDashboardHtml(extraCategory)}
     ${visible.length
       ? renderGroupedToolIndex(visible, collectionTitle, { groupByCategory: !extraCategory })
       : `<div class="panel empty-state">No tools match the current filters.</div>`}
@@ -30096,7 +30096,7 @@ function bindToolFrame(tool, options = {}) {
 }
 
 function routeParts() {
-  return (location.hash || "#/").split("?")[0].replace(/^#\/?/, "").split("/");
+  return (location.hash || location.pathname.replace(/\/index\.html$/, "").replace(/\/$/, "") || "#/").split("?")[0].replace(/^#?\/?/, "").split("/");
 }
 
 function routeTitle(text) {
@@ -30306,9 +30306,15 @@ function renderRoute() {
     homeScreenshotTimer = null;
   }
   updateRouteSeo(parts);
+  const publicPage=window.KaizenPublicPages?.find(page=>page.path==='/' + parts.join('/'));
+  const canonicalUrl='https://kaizenmaths.com'+(publicPage?.path || '/');
+  document.querySelector('link[rel="canonical"]')?.setAttribute('href',canonicalUrl);
+  updateMetaTag('meta[property="og:url"]','content',canonicalUrl);
   document.body.dataset.route = parts[0] || "home";
   if (!parts[0]) {
     renderHome();
+  } else if (parts[0] === "pricing" || parts[0] === "vs") {
+    renderPublicMarketingPage(parts);
   } else if (parts[0] === "kaizen-maths") {
     renderKaizenMathsResourcePage();
   } else if (parts[0] === "make-it-count") {
@@ -30326,7 +30332,7 @@ function renderRoute() {
   } else if (parts[0] === "programme-status") {
     renderProgrammeStatusPage(parts[1] || "");
   } else if (parts[0] === "our-story") {
-    renderOurStoryPage();
+    renderPublicMarketingPage(parts);
   } else if (parts[0] === "contact") {
     renderContactPage();
   } else if (parts[0] === "beta-feedback") {
@@ -30534,3 +30540,46 @@ function bindMarketingNavigation() {
 }
 bindMarketingNavigation();
 window.addEventListener('kaizen-auth-change',bindMarketingNavigation);
+
+function renderPublicMarketingPage(parts) {
+  const path='/'+parts.join('/');
+  const entry=window.KaizenPublicPages?.find(page=>page.path===path);
+  if(!entry){renderHome();return;}
+  app.innerHTML='<div class="marketing-content">'+entry.body+'</div>';
+  setPageSeo(titleWithSite(entry.title),entry.description);
+}
+function exploreDashboardHtml(category='') {
+  const cards=[
+    ['▦','Worksheet Builder','Choose topics and print a sheet with answers.','#/worksheet-generator','teal'],
+    ['▤','Starters & exit tickets','Ready-made packs for the start or end of a lesson.','#/practice-packs','violet'],
+    ['✓','Exam & assessment builder','Build a practice paper with worked solutions.','#/gcse-exam-style','amber']
+  ];
+  const topics=[['Algebra','algebra'],['Number','numbers'],['Geometry','geometry'],['Statistics','statistics'],['Mechanics','mechanics'],['Classroom tools','classroom-tools']];
+  const groups=[
+    ['Plan your teaching',[['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
+    ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Classroom tools','#/collections/classroom-tools'],['Kaizen University','#/kaizen-university']]],
+    ['Work with learners',[['Pupil tasks','#/class-tasks'],['Tutor Workspace','#/tutor-workspace'],['School space','#/school-space'],['Book a demo','#/book-demo'],['Contact / enquire','#/contact'],['Partners','#/partners']]]
+  ];
+  return `<section class="explore-dashboard" aria-label="Explore teaching resources">
+    <div class="explore-intro"><div><span class="eyebrow">Your teaching workspace</span><h2>What are you preparing today?</h2><p>Start with a resource, or choose a topic below for fresh questions and worked steps.</p></div><a class="explore-guide" href="#/how-to-use-this-site">New here? Take a quick tour ↗</a></div>
+    <div class="explore-actions">${cards.map(([icon,title,description,href,tone])=>`<a class="explore-action ${tone}" href="${href}"><span class="explore-icon" aria-hidden="true">${icon}</span><span><strong>${title}</strong><span>${description}</span></span><span class="explore-arrow" aria-hidden="true">↗</span></a>`).join('')}</div>
+    <nav class="explore-topics" aria-label="Browse maths topics"><span>Browse by topic</span><a href="#/tools" ${!category?'aria-current="page"':''}>All topics</a>${topics.map(([name,slug])=>`<a href="#/collections/${slug}" ${category===slug?'aria-current="page"':''}>${name}</a>`).join('')}</nav>
+    <details class="workspace-directory"><summary><span><strong>Teacher reference & workspace guide</strong><span>Curriculum maps, training, pupil tasks and school access</span></span><span class="directory-toggle" aria-hidden="true">+</span></summary><nav aria-label="Workspace directory">${groups.map(([title,links])=>`<section class="directory-group"><h3>${title}</h3>${links.map(([label,href])=>`<a href="${href}">${label}<span aria-hidden="true">↗</span></a>`).join('')}</section>`).join('')}</nav></details>
+  </section>`;
+}
+
+// Keep the application shell mounted when moving between public pages and the library.
+document.addEventListener('click', event => {
+  const link=event.target.closest?.('a[href]');
+  if(!link||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||link.target||link.hasAttribute('download'))return;
+  const url=new URL(link.href,location.href);
+  if(url.origin!==location.origin)return;
+  const path=url.pathname.replace(/\/index\.html$/,'').replace(/\/$/,'');
+  const publicPage=!url.hash&&window.KaizenPublicPages?.some(page=>page.path===path);
+  const workspaceLink=url.hash.startsWith('#/')&&(url.pathname==='/'||url.pathname===location.pathname);
+  if(!publicPage&&!workspaceLink)return;
+  event.preventDefault();
+  history.pushState({},'',url.pathname+url.search+url.hash);
+  renderRoute();
+});
+window.addEventListener('popstate',renderRoute);
