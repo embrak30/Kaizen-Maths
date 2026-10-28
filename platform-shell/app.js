@@ -17454,8 +17454,8 @@ function renderToolLibrary(extraCategory = "") {
   };
   app.innerHTML = `
     ${pageHeader(
-      collectionTitle,
-      extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Search the virtual textbook by topic. Choose a level, generate fresh questions, show answers or worked steps, use the timer, and project the set in Classroom View."
+      extraCategory ? collectionTitle : "Explore maths resources",
+      extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Fresh questions, worked steps and printable resources for your next lesson."
     )}
     ${exploreDashboardHtml(extraCategory)}
     ${visible.length
@@ -30313,6 +30313,8 @@ function renderRoute() {
   document.body.dataset.route = parts[0] || "home";
   if (!parts[0]) {
     renderHome();
+  } else if (parts[0] === "teacher-reference") {
+    renderTeacherReference();
   } else if (parts[0] === "pricing" || parts[0] === "vs") {
     renderPublicMarketingPage(parts);
   } else if (parts[0] === "kaizen-maths") {
@@ -30532,15 +30534,6 @@ window.setTimeout(() => {
 
 renderRoute();
 
-function bindMarketingNavigation() {
-  document.querySelectorAll('[data-marketing-signin]').forEach(button => {
-    button.textContent=isSignedIn()?'Open workspace':'Sign in with Google';
-    if(!button.dataset.bound){button.dataset.bound='true';button.addEventListener('click',()=>{if(isSignedIn())location.hash='#/tools';else window.KaizenAuth?.signInWithGoogle?.();});}
-  });
-}
-bindMarketingNavigation();
-window.addEventListener('kaizen-auth-change',bindMarketingNavigation);
-
 function renderPublicMarketingPage(parts) {
   const path='/'+parts.join('/');
   const entry=window.KaizenPublicPages?.find(page=>page.path===path);
@@ -30554,17 +30547,10 @@ function exploreDashboardHtml(category='') {
     ['▤','Starters & exit tickets','Ready-made packs for the start or end of a lesson.','#/practice-packs','violet'],
     ['✓','Exam & assessment builder','Build a practice paper with worked solutions.','#/gcse-exam-style','amber']
   ];
-  const topics=[['Algebra','algebra'],['Number','numbers'],['Geometry','geometry'],['Statistics','statistics'],['Mechanics','mechanics'],['Classroom tools','classroom-tools']];
-  const groups=[
-    ['Plan your teaching',[['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
-    ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Classroom tools','#/collections/classroom-tools'],['Kaizen University','#/kaizen-university']]],
-    ['Work with learners',[['Pupil tasks','#/class-tasks'],['Tutor Workspace','#/tutor-workspace'],['School space','#/school-space'],['Book a demo','#/book-demo'],['Contact / enquire','#/contact'],['Partners','#/partners']]]
-  ];
   return `<section class="explore-dashboard" aria-label="Explore teaching resources">
-    <div class="explore-intro"><div><span class="eyebrow">Your teaching workspace</span><h2>What are you preparing today?</h2><p>Start with a resource, or choose a topic below for fresh questions and worked steps.</p></div><a class="explore-guide" href="#/how-to-use-this-site">New here? Take a quick tour ↗</a></div>
+    <div class="explore-intro"><p>Build a resource, or browse the topics below.</p><a class="explore-guide" href="#/how-to-use-this-site">New here? Take a quick tour ↗</a></div>
     <div class="explore-actions">${cards.map(([icon,title,description,href,tone])=>`<a class="explore-action ${tone}" href="${href}"><span class="explore-icon" aria-hidden="true">${icon}</span><span><strong>${title}</strong><span>${description}</span></span><span class="explore-arrow" aria-hidden="true">↗</span></a>`).join('')}</div>
-    <nav class="explore-topics" aria-label="Browse maths topics"><span>Browse by topic</span><a href="#/tools" ${!category?'aria-current="page"':''}>All topics</a>${topics.map(([name,slug])=>`<a href="#/collections/${slug}" ${category===slug?'aria-current="page"':''}>${name}</a>`).join('')}</nav>
-    <details class="workspace-directory"><summary><span><strong>Teacher reference & workspace guide</strong><span>Curriculum maps, training, pupil tasks and school access</span></span><span class="directory-toggle" aria-hidden="true">+</span></summary><nav aria-label="Workspace directory">${groups.map(([title,links])=>`<section class="directory-group"><h3>${title}</h3>${links.map(([label,href])=>`<a href="${href}">${label}<span aria-hidden="true">↗</span></a>`).join('')}</section>`).join('')}</nav></details>
+    <div class="explore-browse-heading"><h2>Browse by topic</h2><p>Open a topic tab to see its tools.</p></div>
   </section>`;
 }
 
@@ -30583,3 +30569,14 @@ document.addEventListener('click', event => {
   renderRoute();
 });
 window.addEventListener('popstate',renderRoute);
+
+function renderTeacherReference() {
+  setPageSeo(titleWithSite("Teacher reference & workspace guide"),"Curriculum maps, training, pupil tasks and school access, together in one place.");
+  const groups=[
+    ['Plan your teaching',[['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
+    ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Classroom tools','#/collections/classroom-tools'],['Kaizen University','#/kaizen-university']]],
+    ['Work with learners',[['Pupil tasks','#/class-tasks'],['Tutor Workspace','#/tutor-workspace'],['School space','#/school-space'],['Book a demo','#/book-demo'],['Contact / enquire','#/contact'],['Partners','#/partners']]]
+  ];
+  app.innerHTML=pageHeader('Teacher reference & workspace guide','Curriculum maps, training, pupil tasks and school access, together in one place.')+
+    '<section class="teacher-reference-page"><nav aria-label="Workspace directory">'+groups.map(([title,links])=>`<section class="directory-group"><h2>${title}</h2>${links.map(([label,href])=>`<a href="${href}">${label}<span aria-hidden="true">↗</span></a>`).join('')}</section>`).join('')+'</nav></section>';
+}

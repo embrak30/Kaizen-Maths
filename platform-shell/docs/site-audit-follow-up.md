@@ -67,3 +67,5 @@ Comparisons are scoped and sourced, not claims that Kaizen is universally better
 ## Dashboard and shell follow-up — 28 October 2026
 
 Public pricing, story and comparison content now renders inside the same application shell as Explore. In-app links preserve the sidebar and topbar DOM; direct links retain the same shell and prerendered content. A root base URL keeps tool and asset URLs valid from nested public routes. Explore now has resource action cards, topic shortcuts and a three-column reference panel rather than the former copied sidebar list. The reference groups retain curriculum, training, pupil, school and support destinations. Navigation identity, direct paths, popstate and billing regression checks are in the marketing test.
+
+Teacher reference now has its own sidebar route in place of the former Open workspace button. Explore contains three resource cards and a compact grid of all seven topic tabs, verified together in a 1280×720 desktop viewport. The reference panel is no longer repeated on Explore. Mobile retains a responsive stacked layout.
