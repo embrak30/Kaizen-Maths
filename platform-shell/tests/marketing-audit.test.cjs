@@ -8,7 +8,7 @@ assert.equal(doc.querySelectorAll('.home-hero-actions .button.primary').length,1
 assert.equal(doc.querySelectorAll('.sidebar .nav-list > a,.sidebar .nav-list > button').length,7);
 assert.equal(doc.querySelectorAll('.mobile-nav .nav-list > a,.mobile-nav .nav-list > button').length,7);
 const section=[...doc.querySelector('#app').children];assert(section.indexOf(doc.querySelector('.home-benefits'))<section.indexOf(doc.querySelector('.mission-programme-band')));
-assert.equal(doc.querySelectorAll('.marketing-faq details').length,6);assert(!doc.querySelector('.marketing-founder,.marketing-adoption,.marketing-mention'));assert.equal(M.proofHtml(proof),'');
+assert.equal(doc.querySelectorAll('.marketing-faq details').length,6);assert(doc.querySelector('.marketing-founder').textContent.includes('Dr Megel Barker'));assert(!doc.querySelector('.marketing-adoption,.marketing-mention'));assert(!doc.querySelector('.marketing-founder img'));assert(M.proofHtml(proof).includes('Dr Megel Barker'));
 assert(doc.querySelector('.marketing-output a').href.endsWith('.pdf'));
 // Test actual legacy routes, their handlers and the relocated workspace directory.
 home.window.location.hash='#/tools';home.window.renderRoute();assert(doc.querySelector('.explore-actions [href="#/worksheet-generator"]'));assert(!doc.querySelector('.workspace-directory'));assert.equal(doc.querySelectorAll('.tool-index-group').length,7);
@@ -38,7 +38,7 @@ const sitemap=fs.readFileSync(root+'/sitemap.xml','utf8');assert(!sitemap.includ
 // Navigation must preserve the exact sidebar DOM node, not replace the application shell.
 const sidebar=doc.querySelector('.sidebar');
 doc.querySelector('.sidebar a[href="/pricing"]').click();assert(doc.querySelector('.marketing-content .marketing-cards'));assert.equal(doc.querySelector('.sidebar'),sidebar);assert(doc.querySelector('.sidebar a[href="/pricing"]').classList.contains('active'));
-doc.querySelector('.sidebar a[href="/our-story"]').click();assert.match(doc.querySelector('#app h1').textContent,/shaped by/);assert.equal(doc.querySelector('.sidebar'),sidebar);
+doc.querySelector('.sidebar a[href="/our-story"]').click();assert.match(doc.querySelector('#app h1').textContent,/shaped by/);assert.equal(doc.querySelector('.sidebar'),sidebar);assert(doc.querySelector('#app').textContent.includes('Embark Education'));assert(doc.querySelector('#app').textContent.includes('conceptual teaching tools'));
 doc.querySelector('.sidebar a[href="#/tools"]').click();assert(doc.querySelector('.explore-actions'));assert.equal(doc.querySelector('.sidebar'),sidebar);
 assert.equal(doc.querySelectorAll('.explore-action').length,3);assert.equal(doc.querySelectorAll('.directory-group').length,0);doc.querySelector('.sidebar a[href="#/teacher-reference"]').click();assert.equal(doc.querySelectorAll('.directory-group').length,3);assert(doc.querySelector('[href="#/coverage-map"]'));assert.equal(doc.querySelector('.sidebar'),sidebar);
 for(const route of ['/pricing','/our-story','/vs/drfrostmaths','/vs/mathletics']){const deep=app();deep.window.history.replaceState({},'',route);deep.window.renderRoute();assert(deep.window.document.querySelector('.marketing-content'));assert(deep.window.document.querySelector('.sidebar'));assert.equal(new URL('tools/substitution/index.html',deep.window.document.baseURI).pathname,'/tools/substitution/index.html');deep.window.close();}

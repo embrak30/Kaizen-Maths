@@ -26,7 +26,7 @@ vm.runInContext(fs.readFileSync(root+'/app.js','utf8'),dom.getInternalVMContext(
 const content=w.document.getElementById('app').innerHTML;
 html=html.replace(/(<main id="app" tabindex="-1">)[\s\S]*?<\/main>/,(_,open)=>open+content+'</main>');
 html=html.replace(/\s*<script type="application\/ld\+json" data-marketing-schema>[\s\S]*?<\/script>/g,'');
-html=html.replace('</head>',M.schemas('/').map(x=>'<script type="application/ld+json" data-marketing-schema>'+JSON.stringify(x).replace(/</g,'\\u003c')+'</script>').join('\n')+'\n</head>');
+html=html.replace('</head>',M.schemas('/',proof).map(x=>'<script type="application/ld+json" data-marketing-schema>'+JSON.stringify(x).replace(/</g,'\\u003c')+'</script>').join('\n')+'\n</head>');
 html=html.replace(/Kaizen Maths \| Practical Maths Resources and Make It Count/g,'Maths Questions & Worksheets for Teachers | Kaizen Maths').replace(/Kaizen Maths provides practical mathematics resources for teachers\. Make It Count brings those resources together with online teacher development, coaching, and sustained implementation support\./g,'Exam-style maths questions, worksheets, starters and worked solutions for busy maths teachers. Explore free samples or try the teacher workspace for 30 days.');
 fs.writeFileSync(indexPath,html.split('\n').map(line=>line.trimEnd()).join('\n'));dom.window.close();
 const routes=['/','/pricing','/our-story','/vs/drfrostmaths','/vs/mathletics'];

@@ -11671,39 +11671,7 @@ function adminProgrammeEnquiryCardHtml(enquiry) {
 }
 
 function renderOurStoryPage() {
-  app.innerHTML = `
-    ${pageHeader(
-      "Our Story",
-      "Kaizen Maths was created by a mathematics educator with more than 30 years of experience in teaching, school leadership, research, and educational development.",
-      `<a class="button primary" href="#/kaizen-maths">Explore The Resource</a><a class="button" href="#/make-it-count">Make It Count</a>`
-    )}
-    ${window.KaizenMarketing.proofHtml(window.KaizenMarketingProof)}
-    <section class="mission-page">
-      <article class="mission-hero-panel">
-        <div>
-          <span class="eyebrow">Founder Story</span>
-          <h2>Kaizen Maths grew from the practical reality of mathematics teaching.</h2>
-          <p>After more than three decades in education across Jamaica, the United Kingdom, and Oman, the need was clear: teachers need reliable, flexible, classroom-ready mathematics resources that help them prepare, explain, practise, assess, and intervene without losing hours searching and rebuilding materials.</p>
-          <p>Kaizen Maths began as that resource. Make It Count is the next step: a way to combine the resource with professional development, coaching, and sustained support so that more teachers and schools can benefit from it.</p>
-        </div>
-        <aside class="mission-claim-card">
-          <strong>Central principle</strong>
-          <p>Kaizen Maths is the resource. Make It Count is the initiative through which that resource can serve more teachers and schools.</p>
-        </aside>
-      </article>
-
-      <section class="mission-split">
-        <article class="panel">
-          <h2>Why the emphasis is changing</h2>
-          <p>Kaizen Maths remains a viable digital resource with individual, school, and institutional access routes. The public message is now broader: the aim is not simply to sell access to a mathematics tool, but to create a sustainable educational model where practical resources and teacher development work together.</p>
-        </article>
-        <article class="panel">
-          <h2>What stays the same</h2>
-          <p>The working product remains intact. Teachers can still use the tool library, classroom view, worksheet builder, assessment builder, pupil module, curriculum alignment, and training resources. The new story gives those tools a clearer educational purpose.</p>
-        </article>
-      </section>
-    </section>
-  `;
+  renderPublicMarketingPage(['our-story']);
 }
 
 function renderContactPage() {
