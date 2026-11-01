@@ -16,7 +16,7 @@ home.window.location.hash='#/upgrade';home.window.renderRoute();assert.equal(doc
 home.window.KaizenAuth={state:{session:{user:{id:'test-user',email:'test@example.invalid'}},profile:{role:'pro'}}};home.window.renderRoute();assert(doc.querySelector('#manageBilling'));assert.equal(doc.querySelectorAll('[data-checkout-plan]').length,2);
 home.window.KaizenAuth.state.profile={role:'trial',trial_ends_at:'2000-01-01T00:00:00Z'};assert.equal(home.window.currentUserRole(),'free');
 // No session is needed for public pricing and comparisons; markup contains its own useful content.
-for(const url of ['/pricing','/our-story','/vs/drfrostmaths','/vs/mathletics']){
+for(const url of ['/pricing','/our-story','/vs/drfrostmaths','/vs/mathletics','/guides/make-a-worksheet']){
  const file=path.join(root,url,'index.html'),page=new JSDOM(fs.readFileSync(file,'utf8')).window.document;assert.equal(page.querySelectorAll('h1').length,1);assert.equal(page.querySelector('link[rel=canonical]').href,'https://kaizenmaths.com'+url);
  assert(!/\b(undefined|NaN)\b/.test(page.body.textContent));
  for(const script of page.querySelectorAll('script[type="application/ld+json"]'))assert(JSON.parse(script.textContent));
@@ -34,13 +34,19 @@ const schema=[...doc.querySelectorAll('script[data-marketing-schema]')].map(x=>J
 assert.equal(M.proofHtml({adoption:{approved:true,count:null,asOf:'2026-10-27'}}),'');assert(M.proofHtml({adoption:{approved:true,count:12,label:'teachers signed up',asOf:'2026-10-27'}}).includes('12'));
 assert(M.proofHtml({founder:{approved:true,name:'<Test>'}}).includes('&lt;Test&gt;'));
 const robots=fs.readFileSync(root+'/robots.txt','utf8');for(const bot of ['GPTBot','ClaudeBot','PerplexityBot','OAI-SearchBot'])assert(robots.includes('User-agent: '+bot));
-const sitemap=fs.readFileSync(root+'/sitemap.xml','utf8');assert(!sitemap.includes('#'));assert.equal((sitemap.match(/<loc>/g)||[]).length,5);
+const sitemap=fs.readFileSync(root+'/sitemap.xml','utf8');assert(!sitemap.includes('#'));assert.equal((sitemap.match(/<loc>/g)||[]).length,6);
 // Navigation must preserve the exact sidebar DOM node, not replace the application shell.
 const sidebar=doc.querySelector('.sidebar');
 doc.querySelector('.sidebar a[href="/pricing"]').click();assert(doc.querySelector('.marketing-content .marketing-cards'));assert.equal(doc.querySelector('.sidebar'),sidebar);assert(doc.querySelector('.sidebar a[href="/pricing"]').classList.contains('active'));
 doc.querySelector('.sidebar a[href="/our-story"]').click();assert.match(doc.querySelector('#app h1').textContent,/shaped by/);assert.equal(doc.querySelector('.sidebar'),sidebar);assert(doc.querySelector('#app').textContent.includes('Embark Education'));assert(doc.querySelector('#app').textContent.includes('conceptual teaching tools'));
 doc.querySelector('.sidebar a[href="#/tools"]').click();assert(doc.querySelector('.explore-actions'));assert.equal(doc.querySelector('.sidebar'),sidebar);
 assert.equal(doc.querySelectorAll('.explore-action').length,3);assert.equal(doc.querySelectorAll('.directory-group').length,0);doc.querySelector('.sidebar a[href="#/teacher-reference"]').click();assert.equal(doc.querySelectorAll('.directory-group').length,3);assert(doc.querySelector('[href="#/coverage-map"]'));assert.equal(doc.querySelector('.sidebar'),sidebar);
-for(const route of ['/pricing','/our-story','/vs/drfrostmaths','/vs/mathletics']){const deep=app();deep.window.history.replaceState({},'',route);deep.window.renderRoute();assert(deep.window.document.querySelector('.marketing-content'));assert(deep.window.document.querySelector('.sidebar'));assert.equal(new URL('tools/substitution/index.html',deep.window.document.baseURI).pathname,'/tools/substitution/index.html');deep.window.close();}
+for(const route of ['/pricing','/our-story','/vs/drfrostmaths','/vs/mathletics','/guides/make-a-worksheet']){const deep=app();deep.window.history.replaceState({},'',route);deep.window.renderRoute();assert(deep.window.document.querySelector('.marketing-content'));assert(deep.window.document.querySelector('.sidebar'));assert.equal(new URL('tools/substitution/index.html',deep.window.document.baseURI).pathname,'/tools/substitution/index.html');deep.window.close();}
+doc.querySelector('[href="/guides/make-a-worksheet"]').click();
+assert.equal(doc.querySelector('.sidebar'),sidebar);
+assert.equal(doc.querySelectorAll('.walkthrough-step').length,6);
+let scrolled=false;const target=doc.querySelector('.walkthrough-step');target.scrollIntoView=()=>{scrolled=true;};
+doc.querySelector('[data-guide-target]').click();assert(scrolled);assert.equal(home.window.location.pathname,'/guides/make-a-worksheet');
+assert.deepEqual(fs.readFileSync(root+'/assets/guides/worksheet-builder/kaizen-maths-worksheet-guide.pdf'),fs.readFileSync(root+'/output/pdf/kaizen-maths-worksheet-guide.pdf'));
 home.window.history.replaceState({},'','/pricing');home.window.dispatchEvent(new home.window.PopStateEvent('popstate'));assert(doc.querySelector('.marketing-content .marketing-cards'));assert.equal(doc.querySelector('.sidebar'),sidebar);
 home.window.close();console.log('PASS: public pricing, FAQ/schema parity, existing checkout actions, real output links, 7-item desktop/mobile nav, workspace destinations, honest proof gating and crawl map.');

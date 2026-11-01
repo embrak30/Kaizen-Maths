@@ -17440,6 +17440,7 @@ function renderSiteGuide() {
       <div class="site-guide-actions">
         <a class="button" href="#/">Back to Dashboard</a>
         <a class="button" href="#/tools">Browse Library</a>
+        <a class="button primary" href="/guides/make-a-worksheet">Make a worksheet: screenshot guide</a>
       </div>
       <iframe class="site-guide-frame" src="tools/interface-guide/index.html?v=how-to-use-site-4" title="How to Use This Site" loading="eager"></iframe>
     </section>
@@ -18207,6 +18208,7 @@ function renderWorksheetGenerator() {
     </section>
   `;
 
+  document.querySelector(".worksheet-page-header")?.insertAdjacentHTML("beforeend",'<p class="worksheet-guide-link"><a href="/guides/make-a-worksheet">New to Worksheet Builder? Follow the screenshot guide or download the PDF.</a></p>');
   bindWorksheetGenerator();
 }
 
@@ -30283,7 +30285,7 @@ function renderRoute() {
     renderHome();
   } else if (parts[0] === "teacher-reference") {
     renderTeacherReference();
-  } else if (parts[0] === "pricing" || parts[0] === "vs") {
+  } else if (parts[0] === "pricing" || parts[0] === "vs" || parts[0] === "guides") {
     renderPublicMarketingPage(parts);
   } else if (parts[0] === "kaizen-maths") {
     renderKaizenMathsResourcePage();
@@ -30522,6 +30524,11 @@ function exploreDashboardHtml(category='') {
   </section>`;
 }
 
+document.addEventListener("click", event => {
+  const control = event.target.closest?.("[data-guide-target]");
+  if (control) document.getElementById(control.dataset.guideTarget)?.scrollIntoView({behavior:"smooth",block:"start"});
+});
+
 // Keep the application shell mounted when moving between public pages and the library.
 document.addEventListener('click', event => {
   const link=event.target.closest?.('a[href]');
@@ -30542,7 +30549,7 @@ function renderTeacherReference() {
   setPageSeo(titleWithSite("Teacher reference & workspace guide"),"Curriculum maps, training, pupil tasks and school access, together in one place.");
   const groups=[
     ['Plan your teaching',[['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
-    ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Classroom tools','#/collections/classroom-tools'],['Kaizen University','#/kaizen-university']]],
+    ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Make a worksheet: screenshot guide','/guides/make-a-worksheet'],['Classroom tools','#/collections/classroom-tools'],['Kaizen University','#/kaizen-university']]],
     ['Work with learners',[['Pupil tasks','#/class-tasks'],['Tutor Workspace','#/tutor-workspace'],['School space','#/school-space'],['Book a demo','#/book-demo'],['Contact / enquire','#/contact'],['Partners','#/partners']]]
   ];
   app.innerHTML=pageHeader('Teacher reference & workspace guide','Curriculum maps, training, pupil tasks and school access, together in one place.')+
