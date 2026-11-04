@@ -11527,12 +11527,46 @@ function programmeCommitmentEmailTemplate(item) {
   return { subject, body };
 }
 
+function programmeLeadershipMeetingEmailTemplate(item) {
+  const school = item.school_name || item.organisation_name || "your school";
+  const contact = item.contact_name || "colleague";
+  return {
+    subject: `Make It Count: leadership planning meeting for ${school}`,
+    body: [
+      `Dear ${contact},`,
+      "",
+      `Thank you for confirming ${school}'s commitment to Make It Count. I would now like to arrange a meeting with your school leadership and mathematics lead to agree the next phase together.`,
+      "",
+      "The meeting will give us an opportunity to:",
+      "- discuss your school's priorities and the intended outcomes;",
+      "- lay out the programme plan, responsibilities and proposed timetable;",
+      "- agree the initial teacher orientation, training and ongoing support;",
+      "- confirm the participating teachers and how their Kaizen Maths access will be arranged;",
+      "- agree the first classroom activities, review points and next steps.",
+      "",
+      "Please share two or three suitable dates and times, including your time zone, and let me know who will attend. Ideally, the principal or a senior leader and the mathematics lead would join us. We can then confirm a meeting time and send the joining details.",
+      "",
+      "Following the meeting, we will share the agreed plan and confirm the arrangements for beginning support and setting up access.",
+      "",
+      "I look forward to working with you and your team.",
+      "",
+      "Kind regards,",
+      "Dr Megel Barker",
+      "Embark Education | Kaizen Maths",
+      "Make It Count"
+    ].join("\n")
+  };
+}
+
 function adminProgrammeCommitmentEmailHtml(item) {
-  if (!item.public_token || !["shortlisted", "commitment_requested"].includes(item.status)) return "";
-  const template = programmeCommitmentEmailTemplate(item);
+  const meetingStage = ["committed", "confirmed"].includes(item.status) && item.enquiry_type !== "partner_interest";
+  const commitmentStage = item.public_token && ["shortlisted", "commitment_requested"].includes(item.status);
+  if (!meetingStage && !commitmentStage) return "";
+  const template = meetingStage ? programmeLeadershipMeetingEmailTemplate(item) : programmeCommitmentEmailTemplate(item);
   return `
     <div class="programme-enquiry-copy programme-email-template">
-      <strong>Commitment request email template</strong>
+      <strong>${meetingStage ? "Leadership meeting invitation — draft letter" : "Commitment request email template"}</strong>
+      ${meetingStage ? "<p>Ready after commitment is received. Review and copy this draft to arrange the next phase; access and meeting details are agreed separately.</p>" : ""}
       <label>
         Subject
         <input type="text" readonly value="${escapeHtml(template.subject)}">
