@@ -3372,7 +3372,7 @@ function toolCatalogDataShouldRerenderCurrentRoute() {
 
 function authSensitiveRouteShouldRerender() {
   const route = routeParts()[0] || "home";
-  return ["tools", "classroom", "classroom-remote", "curriculum-alignments", "worksheet-generator", "gcse-exam-style", "class-tasks", "admin", "tutor-workspace", "school-space", "upgrade", "kaizen-university"].includes(route);
+  return ["tools", "classroom", "classroom-remote", "curriculum-alignments", "worksheet-generator", "gcse-exam-style", "class-tasks", "admin", "tutor-workspace", "school-space", "upgrade", "kaizen-university", "bar-modelling-course"].includes(route);
 }
 
 function currentAuthAccessKey() {
@@ -5931,7 +5931,12 @@ const adminUniversitySections = [
     intro: "The video shown in the homepage hero area.",
     videos: [homepageFeaturedVideo]
   },
-  ...universitySections
+  ...universitySections,
+  {
+    title: "Teaching with Bar Models — Mason Hall pilot",
+    intro: "Optional lesson videos; written teaching and challenges remain available without a video.",
+    videos: (window.KaizenBarCourseData?.lessons || []).map(lesson => ({id: `bar-course-${lesson.id}`, title: lesson.title, description: lesson.focus}))
+  }
 ];
 
 function allUniversityVideos() {
@@ -17543,6 +17548,12 @@ function renderKaizenUniversity() {
         "Complete the Kaizen Certified Teacher pathway through ordered training modules, short videos, and quick checks. Each module opens after the previous module is complete.",
         `<a class="button" href="#/">Back to Dashboard</a><a class="button primary" href="#/how-to-use-this-site">Open Site Guide</a>`
       )}
+      <section class="panel" style="margin-bottom:24px">
+        <p class="eyebrow">Teaching strategies · Mason Hall pilot</p>
+        <h2>Teaching with Bar Models</h2>
+        <p>Fractions, percentages and ratio, then reverse and multi-step problems. Eight lessons with bar diagrams, step-by-step reveals, independent challenges and before-and-after checks.</p>
+        <a class="button primary" href="#/bar-modelling-course">Open bar modelling course</a>
+      </section>
       <section class="certification-course-intro panel">
         <div>
           <span class="eyebrow">Kaizen Certified Teacher</span>
@@ -30449,6 +30460,17 @@ function renderRoute() {
     renderTrustPage(parts[1] || "");
   } else if (parts[0] === "research-informed") {
     renderResearchInformedPage();
+  } else if (parts[0] === "bar-modelling-course") {
+    setPageSeo(titleWithSite("Teaching with Bar Models"), "Mason Hall teacher development pilot: fractions, percentages, ratios and reverse problems.");
+    window.KaizenBarCourse.mount(app, {
+      userId: authState().session?.user?.id,
+      signIn: () => { window.KaizenAuth?.signInWithGoogle?.(); },
+      videoForLesson: lesson => {
+        const video = universityVideoOverrides({id: `bar-course-${lesson.id}`, title: lesson.title});
+        const id = youtubeIdFromUrl(video.youtube_url);
+        return /^[a-zA-Z0-9_-]{11}$/.test(id) ? `https://www.youtube-nocookie.com/embed/${id}` : "";
+      }
+    });
   } else if (parts[0] === "kaizen-university") {
     renderKaizenUniversity();
   } else if (parts[0] === "teacher") {

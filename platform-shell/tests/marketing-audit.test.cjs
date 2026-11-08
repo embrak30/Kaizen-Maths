@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.resolve(__dirname,'..');const {JSDOM,VirtualConsole}=require(process.env.KAIZEN_MARKETING_NODE_MODULES?path.join(process.env.KAIZEN_MARKETING_NODE_MODULES,'jsdom'):'jsdom');
 const M=require(root+'/assets/site/marketing.js'),proof=require(root+'/assets/site/marketing-proof.js');
-function app(hash='') {const dom=new JSDOM(fs.readFileSync(root+'/index.html','utf8'),{url:'https://kaizenmaths.com/'+hash,runScripts:'outside-only',virtualConsole:new VirtualConsole()});const w=dom.window;w.setTimeout=w.setInterval=w.requestAnimationFrame=()=>0;w.KaizenMarketing=M;w.KaizenMarketingProof=proof;w.KaizenPublicPages=require(root+'/assets/site/public-pages.js');vm.runInContext(fs.readFileSync(root+'/app.js','utf8'),dom.getInternalVMContext());return dom;}
+function app(hash='') {const dom=new JSDOM(fs.readFileSync(root+'/index.html','utf8'),{url:'https://kaizenmaths.com/'+hash,runScripts:'outside-only',virtualConsole:new VirtualConsole()});const w=dom.window;w.setTimeout=w.setInterval=w.requestAnimationFrame=()=>0;w.KaizenMarketing=M;w.KaizenMarketingProof=proof;w.KaizenPublicPages=require(root+'/assets/site/public-pages.js');for(const file of ['bar-modelling-data.js','bar-modelling.js'])vm.runInContext(fs.readFileSync(root+'/assets/courses/'+file,'utf8'),dom.getInternalVMContext());vm.runInContext(fs.readFileSync(root+'/app.js','utf8'),dom.getInternalVMContext());return dom;}
 const home=app(),doc=home.window.document;
 assert.equal(doc.querySelectorAll('#app h1').length,1);assert.match(doc.querySelector('h1').textContent,/Maths teachers/);
 assert.equal(doc.querySelectorAll('.home-hero-actions .button.primary').length,1);assert.equal(doc.querySelectorAll('.home-hero-actions .button').length,1);assert(!doc.querySelector('.home-hero-actions [href="#/partners"]'));
@@ -49,4 +49,12 @@ let scrolled=false;const target=doc.querySelector('.walkthrough-step');target.sc
 doc.querySelector('[data-guide-target]').click();assert(scrolled);assert.equal(home.window.location.pathname,'/guides/make-a-worksheet');
 assert.deepEqual(fs.readFileSync(root+'/assets/guides/worksheet-builder/kaizen-maths-worksheet-guide.pdf'),fs.readFileSync(root+'/output/pdf/kaizen-maths-worksheet-guide.pdf'));
 home.window.history.replaceState({},'','/pricing');home.window.dispatchEvent(new home.window.PopStateEvent('popstate'));assert(doc.querySelector('.marketing-content .marketing-cards'));assert.equal(doc.querySelector('.sidebar'),sidebar);
+const course=app('#/bar-modelling-course');
+assert(course.window.document.querySelector('#bm-sign-in'));
+course.window.KaizenAuth={state:{session:{user:{id:'course-test'}},profile:{role:'pro'}}};course.window.renderRoute();
+assert(course.window.document.querySelector('.bm-course'));
+assert(course.window.document.querySelector('.sidebar'));
+assert.equal(course.window.document.querySelectorAll('.bm-nav [data-view]').length,12);
+assert(course.window.authSensitiveRouteShouldRerender());
+course.window.close();
 home.window.close();console.log('PASS: public pricing, FAQ/schema parity, existing checkout actions, real output links, 7-item desktop/mobile nav, workspace destinations, honest proof gating and crawl map.');
