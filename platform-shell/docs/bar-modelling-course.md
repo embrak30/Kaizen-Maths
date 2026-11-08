@@ -15,3 +15,13 @@ Before using records for a formal evaluation, agree participant information, par
 Content: `assets/courses/bar-modelling-data.js`. UI: `assets/courses/bar-modelling.js` and CSS. Integration: `app.js`, `index.html`; regenerate static shared-shell pages with `scripts/marketing/build.cjs` when changing shared includes.
 
 Checks: `tests/bar-modelling-course.test.cjs` and `tests/marketing-audit.test.cjs` (jsdom).
+
+## Admin preview
+
+Administrators have an “Admin preview — skip checks” link on the university course card, and an “Admin preview” link within the course. The route is `#/bar-modelling-course/preview`. Preview eligibility comes from the existing `isAdmin()` check; entering the URL as a teacher does not bypass the starting check. Preview opens all lessons, solutions and assessments, shows an admin numerical answer key, and uses temporary in-memory state. It does not load or update the teacher progress record, record assessments or export a learner record. Exit preview to return to normal participation.
+
+## Grades 4–6 revision (8 November 2026)
+
+The course now carries a lesson-level teaching-method map to Jamaica NSC Grades 4–6, using the Ministry’s 2021 second-edition essential objectives. Foundations include equal sharing and comparison. Seven optional classroom bridges include quarters of quantities, 25% and a simple two-operation remainder problem, with diagrams and worked solutions. Grade 6 percentage and ratio connections are identified; compound reverse contexts and longer sequences are explicitly teacher extensions. Use these selectively with pupils. Money is Jamaican dollars (J$).
+
+The overview links the source document and the Ministry’s 2025–2026 modified-curriculum notice. The course does not claim verified 2026–2027 PEP coverage or Ministry endorsement. Teachers select their grade and objective in the classroom reflection. The seven-item checks are teacher-development checks with extension items, not PEP papers or pupil benchmarks. Numerical answers and the eight-lesson completion structure are unchanged, so existing local progress is retained. New assessment attempts record the curriculum revision. Downloads identify the source, revision and lesson scope.

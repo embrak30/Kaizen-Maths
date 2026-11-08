@@ -3,3 +3,5 @@
 .bm-video iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px}
 
 .bm-fraction{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.12;font-family:"Cambria Math",Cambria,serif;margin:0 .16em;font-size:.94em}.bm-fraction>span:first-child{border-bottom:1px solid currentColor;padding:0 .14em .08em}.bm-fraction>span:last-child{padding:.08em .14em 0}
+
+.bm-grade-tags{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.bm-grade-tags span,.bm-assessment-scope{padding:6px 12px;background:#eee9f8;color:#584375;border-radius:8px;font-weight:650;font-size:.9rem}.bm-assessment-scope{display:inline-block}.bm-table-wrap{overflow-x:auto}.bm-curriculum table{width:100%;border-collapse:collapse;font-size:.92rem}.bm-curriculum th,.bm-curriculum td{text-align:left;vertical-align:top;border-bottom:1px solid #cddae3;padding:12px}.bm-bridges article{border-bottom:1px solid #dce5eb;padding-bottom:12px}

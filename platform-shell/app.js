@@ -17551,8 +17551,9 @@ function renderKaizenUniversity() {
       <section class="panel" style="margin-bottom:24px">
         <p class="eyebrow">Teaching strategies · Mason Hall pilot</p>
         <h2>Teaching with Bar Models</h2>
-        <p>Fractions, percentages and ratio, then reverse and multi-step problems. Eight lessons with bar diagrams, step-by-step reveals, independent challenges and before-and-after checks.</p>
+        <p>For Grades 4–6 teachers: classroom foundations, fractions, percentages and ratio, with reverse and multi-step teacher extensions. Eight lessons with curriculum notes, bar diagrams, worked steps and before-and-after teacher checks.</p>
         <a class="button primary" href="#/bar-modelling-course">Open bar modelling course</a>
+        ${isAdmin() ? '<a class="button" href="#/bar-modelling-course/preview">Admin preview — skip checks</a>' : ""}
       </section>
       <section class="certification-course-intro panel">
         <div>
@@ -30461,9 +30462,11 @@ function renderRoute() {
   } else if (parts[0] === "research-informed") {
     renderResearchInformedPage();
   } else if (parts[0] === "bar-modelling-course") {
-    setPageSeo(titleWithSite("Teaching with Bar Models"), "Mason Hall teacher development pilot: fractions, percentages, ratios and reverse problems.");
+    setPageSeo(titleWithSite("Teaching with Bar Models"), "Mason Hall Grades 4–6 teacher development: NSC curriculum connections, classroom bar models and teacher extension problems.");
     window.KaizenBarCourse.mount(app, {
       userId: authState().session?.user?.id,
+      canPreview: isAdmin(),
+      preview: isAdmin() && parts[1] === "preview",
       signIn: () => { window.KaizenAuth?.signInWithGoogle?.(); },
       videoForLesson: lesson => {
         const video = universityVideoOverrides({id: `bar-course-${lesson.id}`, title: lesson.title});
