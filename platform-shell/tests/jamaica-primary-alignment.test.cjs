@@ -1,0 +1,28 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const {JSDOM,VirtualConsole}=require(process.env.KAIZEN_MARKETING_NODE_MODULES?path.join(process.env.KAIZEN_MARKETING_NODE_MODULES,'jsdom'):'jsdom');
+const root=path.resolve(__dirname,'..');
+const dom=new JSDOM(fs.readFileSync(root+'/index.html','utf8'),{url:'https://kaizenmaths.com/#/curriculum-alignments/jamaica-nsc-4-6',runScripts:'outside-only',virtualConsole:new VirtualConsole()});
+const w=dom.window;w.setTimeout=w.setInterval=w.requestAnimationFrame=()=>0;
+w.KaizenMarketing=require(root+'/assets/site/marketing.js');w.KaizenMarketingProof=require(root+'/assets/site/marketing-proof.js');w.KaizenPublicPages=require(root+'/assets/site/public-pages.js');
+vm.runInContext(fs.readFileSync(root+'/app.js','utf8'),dom.getInternalVMContext());
+const framework=vm.runInContext("curriculumAlignmentById('jamaica-nsc-4-6')",dom.getInternalVMContext());
+const catalog=vm.runInContext('tools',dom.getInternalVMContext());
+assert.equal(framework.standards.length,15);
+for(const grade of [4,5,6])for(const strand of ['Number','Measurement','Geometry','Algebra','Statistics and Probability'])assert(framework.standards.some(r=>r.code===`Grade ${grade} ${strand}`));
+for(const row of framework.standards){assert(row.coverageNote);assert.equal(row.coverage,'Partial');for(const [slug,use] of row.tools){const tool=catalog.find(t=>t.slug===slug);assert(tool,slug);assert(fs.existsSync(root+'/'+tool.toolPath.split('?')[0]),tool.toolPath);assert(use);}}
+const doc=w.document;
+assert.equal(doc.querySelectorAll('.textbook-alignment-table tbody tr').length,15);
+assert.equal(doc.querySelectorAll('.curriculum-coverage-note').length,15);
+assert(doc.querySelector('.curriculum-source-note a').href.includes('educate.gov.jm'));
+assert(doc.querySelector('[href="#/bar-modelling-course"]'));
+assert(doc.querySelector('option[value="jamaica-nsc-4-6"]'));
+assert(doc.querySelector('option[value="jamaica-nsc-7-9"]'));
+assert(!doc.querySelector('.textbook-tool-chip.missing'));
+assert(!/undefined|NaN/.test(doc.querySelector('#app').textContent));
+for(const focus of ['Jamaica NSC Grades 4–6; PEP preparation','Jamaica NSC Grades 4-6','Jamaica NSC Grade 4 to 6','PEP','Jamaica Primary'])assert.equal(w.inferCurriculumIdFromSchoolContext({curriculum_focus:focus}),'jamaica-nsc-4-6',focus);
+assert.equal(w.inferCurriculumIdFromSchoolContext({curriculum_focus:'Jamaica NSC Grades 7-9'}),'jamaica-nsc-7-9');
+assert.equal(w.inferCurriculumIdFromSchoolContext({curriculum_focus:'UK KS2'}),'uk-ks2-mathematics');
+assert.equal(w.inferCurriculumIdFromSchoolContext({default_curriculum_id:'jamaica-nsc-7-9',curriculum_focus:'PEP'}),'jamaica-nsc-7-9');
+let printed=false;w.print=()=>{printed=true;};doc.querySelector('#exportCurriculumPdf').click();assert(printed);assert(doc.body.classList.contains('printing-curriculum-alignment'));w.dispatchEvent(new w.Event('afterprint'));assert(!doc.body.classList.contains('printing-curriculum-alignment'));
+assert(doc.querySelector('.curriculum-reverse-list').textContent.includes('Grade 6: Number'));
+dom.window.close();console.log('PASS: 15 primary strands, real tool links, source/coverage notes, primary school inference, secondary preservation and print export.');

@@ -16544,6 +16544,423 @@ const curriculumAlignmentFrameworks = [
     ]
   },
   {
+    "id": "jamaica-nsc-4-6",
+    "label": "Jamaica NSC 4-6 (Primary / PEP)",
+    "country": "Jamaica",
+    "status": "Mapped",
+    "title": "Jamaica NSC Grades 4-6 Mathematics Curriculum Alignment",
+    "description": "A primary grade-and-strand planning map connecting Jamaica NSC mathematics to selected Kaizen tools, classroom models, practice and teacher-led activities.",
+    "basis": "Strand-level planning map based on the Ministry’s 2021 NSC essential objectives. Coverage describes resource support, not a complete objective audit. Check current PEP assessment guidance separately.",
+    "sources": [
+      {
+        "title": "Ministry NSC Grades 4–6: Essential Objectives, 2nd edition (2021), mathematics pp. 10–26",
+        "url": "https://educate.gov.jm/wp-content/uploads/2021/10/2nd-Edition_-Curriculum-Analysis-Essential-Objectives-Grades-4-6-_-Sept-2021.pdf#page=17"
+      }
+    ],
+    "alignmentNote": "Partial means that linked tools support selected parts of a strand; the note names activities that still need teacher-led or additional resources. Select primary-appropriate levels. This map is not a complete PEP paper specification or Ministry endorsement.",
+    "coursePath": "#/bar-modelling-course",
+    "standards": [
+      {
+        "code": "Grade 4 Number",
+        "title": "Grade 4: Number",
+        "focus": "Whole-number place value, sets, arithmetic, fraction comparison, fraction operations and decimals.",
+        "coverage": "Partial",
+        "coverageNote": "Large-number reading, fraction ordering and naming set members need teacher-led tasks.",
+        "tools": [
+          [
+            "four-operations",
+            "select multiplication and division practice at a suitable level"
+          ],
+          [
+            "decimals-practice-lab",
+            "model decimal arithmetic"
+          ],
+          [
+            "fractions-practice",
+            "select fraction equivalence and common-denominator operations"
+          ],
+          [
+            "elementary-manipulatives",
+            "use place-value blocks and fraction bars"
+          ],
+          [
+            "number-bases-number-sets",
+            "select number classification; supply set-member tasks separately"
+          ]
+        ],
+        "teacherMove": "Begin with a concrete model, then ask pupils to explain why their calculation matches the situation. Avoid advanced number-base modes."
+      },
+      {
+        "code": "Grade 4 Measurement",
+        "title": "Grade 4: Measurement",
+        "focus": "Metric units, time, temperature, perimeter and area on grids.",
+        "coverage": "Partial",
+        "coverageNote": "Practical estimating, thermometer reading and irregular-area counting require classroom equipment or teacher-created tasks.",
+        "tools": [
+          [
+            "conversions-teaching",
+            "select simple metric conversions"
+          ],
+          [
+            "area-rectangles",
+            "support area and perimeter calculations"
+          ],
+          [
+            "elementary-manipulatives",
+            "use clock faces and grids"
+          ],
+          [
+            "anchor-charts",
+            "revisit measurement language"
+          ]
+        ],
+        "teacherMove": "Have pupils estimate and measure real objects before generating numerical practice; record the unit on every line."
+      },
+      {
+        "code": "Grade 4 Geometry",
+        "title": "Grade 4: Geometry",
+        "focus": "Angles, lines, symmetry, grids, congruence, polygons, cubes and cuboids.",
+        "coverage": "Partial",
+        "coverageNote": "Physical construction, drawing accuracy and folding nets are not automatically assessed.",
+        "tools": [
+          [
+            "concept-explainer",
+            "reveal shape properties"
+          ],
+          [
+            "classroom-displays",
+            "project grids and solid diagrams"
+          ],
+          [
+            "transformations",
+            "select simple flips, slides and turns"
+          ],
+          [
+            "anchor-charts",
+            "support shape vocabulary"
+          ]
+        ],
+        "teacherMove": "Use paper shapes and nets alongside the display. Keep formal coordinate transformation notation as teacher extension."
+      },
+      {
+        "code": "Grade 4 Algebra",
+        "title": "Grade 4: Algebra",
+        "focus": "Patterns, expressions, equations, operation choice and substitution.",
+        "coverage": "Partial",
+        "coverageNote": "Teachers must supply and discuss age-appropriate worded and geometric-pattern tasks.",
+        "tools": [
+          [
+            "sequences",
+            "select simple number patterns"
+          ],
+          [
+            "equation-balance-models",
+            "model an unknown with balance"
+          ],
+          [
+            "bar-models",
+            "represent word problems before symbols"
+          ],
+          [
+            "substitution",
+            "select simple formula substitution"
+          ]
+        ],
+        "teacherMove": "Ask pupils to tell the story of a bar model, then write a matching number sentence. Use only the simplest equation modes."
+      },
+      {
+        "code": "Grade 4 Statistics and Probability",
+        "title": "Grade 4: Statistics and Probability",
+        "focus": "Averages, picture/bar/line/pie graphs and likely outcomes.",
+        "coverage": "Partial",
+        "coverageNote": "Pictograph construction, pie-chart reading and practical chance experiments need additional teacher-prepared resources.",
+        "tools": [
+          [
+            "averages-range",
+            "select small-data mean, median and mode"
+          ],
+          [
+            "classroom-displays",
+            "use blank axes for teacher-drawn graphs"
+          ]
+        ],
+        "teacherMove": "Collect a small class dataset. Draw the required graph on blank axes and discuss what it tells us before calculating an average."
+      },
+      {
+        "code": "Grade 5 Number",
+        "title": "Grade 5: Number",
+        "focus": "Eight-digit place value, number types, factors, multiples, decimals and fractional arithmetic.",
+        "coverage": "Partial",
+        "coverageNote": "Large-number reading, set classification and the complete range of word problems require teacher selection or additions.",
+        "tools": [
+          [
+            "hcf-lcm",
+            "support common-factor and multiple reasoning"
+          ],
+          [
+            "decimals-practice-lab",
+            "select decimal ordering, rounding and arithmetic"
+          ],
+          [
+            "fractions-practice",
+            "select unlike-denominator and fraction-product tasks"
+          ],
+          [
+            "four-operations",
+            "practise division"
+          ],
+          [
+            "bar-models",
+            "connect fractional quantities to diagrams"
+          ]
+        ],
+        "teacherMove": "Keep the same whole visible when comparing fractions. Select questions with manageable numbers before increasing the calculation demand."
+      },
+      {
+        "code": "Grade 5 Measurement",
+        "title": "Grade 5: Measurement",
+        "focus": "Time intervals, temperature differences, metric relationships, perimeter and rectangular area.",
+        "coverage": "Partial",
+        "coverageNote": "Elapsed-time contexts, hands-on measuring and fixed-area perimeter investigations need teacher-created activities.",
+        "tools": [
+          [
+            "conversions-teaching",
+            "practise selected metric conversions"
+          ],
+          [
+            "area-rectangles",
+            "select area and perimeter tasks"
+          ],
+          [
+            "integer-operations",
+            "support temperature-difference number-line reasoning"
+          ],
+          [
+            "elementary-manipulatives",
+            "model time on clock faces"
+          ]
+        ],
+        "teacherMove": "Explore rectangles with the same area on squared paper. Use generated questions to consolidate the relationships pupils notice."
+      },
+      {
+        "code": "Grade 5 Geometry",
+        "title": "Grade 5: Geometry",
+        "focus": "Angles, triangle properties, symmetry, directions, reflections and pyramids.",
+        "coverage": "Partial",
+        "coverageNote": "Protractor measurement, compass-direction routes and physical pyramid nets need classroom work.",
+        "tools": [
+          [
+            "concept-explainer",
+            "introduce shape properties"
+          ],
+          [
+            "classroom-displays",
+            "use diagrams and grids for explanation"
+          ],
+          [
+            "transformations",
+            "select simple reflections"
+          ],
+          [
+            "missing-angles",
+            "select suitable angle tasks"
+          ]
+        ],
+        "teacherMove": "Let pupils measure, fold or build first. Use diagrams in several orientations and avoid treating a rotated drawing as a different shape."
+      },
+      {
+        "code": "Grade 5 Algebra",
+        "title": "Grade 5: Algebra",
+        "focus": "Patterns, comparisons, formula substitution and missing-number equations.",
+        "coverage": "Partial",
+        "coverageNote": "Fractional unknowns, contextual reasoning and comparisons need careful task selection.",
+        "tools": [
+          [
+            "sequences",
+            "select arithmetic pattern rules"
+          ],
+          [
+            "substitution",
+            "practise simple substitution"
+          ],
+          [
+            "linear-equations",
+            "select one-step equations"
+          ],
+          [
+            "equation-balance-models",
+            "show equal operations on both sides"
+          ]
+        ],
+        "teacherMove": "Move from a verbal rule to a table, then to a number sentence. Ask pupils to check the unknown in the original statement."
+      },
+      {
+        "code": "Grade 5 Statistics and Probability",
+        "title": "Grade 5: Statistics and Probability",
+        "focus": "Data displays, averages, range and simple chance experiments.",
+        "coverage": "Partial",
+        "coverageNote": "Double bar graphs, pictographs, pie charts and primary chance experiments lack dedicated complete generators.",
+        "tools": [
+          [
+            "averages-range",
+            "select small-data summaries"
+          ],
+          [
+            "classroom-displays",
+            "provide blank axes and tables for live modelling"
+          ]
+        ],
+        "teacherMove": "Use pupil-collected anonymous counts and simple coin or dice experiments. Treat blank templates as teaching support, not finished assessment items."
+      },
+      {
+        "code": "Grade 6 Number",
+        "title": "Grade 6: Number",
+        "focus": "Sets, powers, factors, fractions, decimals, ratio, percentages and recovering wholes.",
+        "coverage": "Partial",
+        "coverageNote": "Check each chosen level, including reverse percentages in multiples of five; advanced tool modes exceed primary scope.",
+        "tools": [
+          [
+            "venn-diagrams",
+            "select two-set regions"
+          ],
+          [
+            "hcf-lcm",
+            "support prime factors"
+          ],
+          [
+            "exponents-index-notation",
+            "select basic exponential notation"
+          ],
+          [
+            "fractions-practice",
+            "select fraction arithmetic"
+          ],
+          [
+            "decimals-practice-lab",
+            "support decimal calculation"
+          ],
+          [
+            "ratio-proportion",
+            "select equivalent ratios"
+          ],
+          [
+            "simple-percentage-tasks",
+            "practise simple percentages"
+          ],
+          [
+            "bar-models",
+            "model percentages and known parts of an unknown whole"
+          ]
+        ],
+        "teacherMove": "Name the reference whole before calculating. Use the bar-modelling course for explanation and the generators for selected practice."
+      },
+      {
+        "code": "Grade 6 Measurement",
+        "title": "Grade 6: Measurement",
+        "focus": "Scale, time, perimeter, area, volume, circles and speed relationships.",
+        "coverage": "Partial",
+        "coverageNote": "Physical measurement, tessellation, time and speed contexts need teacher-led supplements; omit secondary-only modes.",
+        "tools": [
+          [
+            "scale-drawing-similar-shapes",
+            "select simple scale tasks"
+          ],
+          [
+            "area-rectangles",
+            "support perimeter and rectangular area"
+          ],
+          [
+            "area-triangles",
+            "select right-triangle area"
+          ],
+          [
+            "volume-surface-area-prisms",
+            "select cuboid volume"
+          ],
+          [
+            "circles-area-circumference",
+            "select circle circumference"
+          ],
+          [
+            "conversions-teaching",
+            "support suitable unit conversions"
+          ]
+        ],
+        "teacherMove": "Begin volume with layers of unit cubes. Keep advanced prism surface-area and similarity tasks outside the selected primary lesson."
+      },
+      {
+        "code": "Grade 6 Geometry",
+        "title": "Grade 6: Geometry",
+        "focus": "Solids, nets, symmetry, coordinates, reflection, similarity, congruence and angles.",
+        "coverage": "Partial",
+        "coverageNote": "Polyhedron construction, tessellation and protractor skills need physical or teacher-prepared activities.",
+        "tools": [
+          [
+            "concept-explainer",
+            "support circle and solid vocabulary"
+          ],
+          [
+            "classroom-displays",
+            "use solids and coordinate grids"
+          ],
+          [
+            "transformations",
+            "select first-quadrant reflections"
+          ],
+          [
+            "missing-angles",
+            "select primary-level angle relationships"
+          ]
+        ],
+        "teacherMove": "Use nets and real solids with the visual display. Limit coordinate work to the first quadrant for the mapped objective."
+      },
+      {
+        "code": "Grade 6 Algebra",
+        "title": "Grade 6: Algebra",
+        "focus": "Substitution, number sentences, simple equations and contextual arithmetic.",
+        "coverage": "Partial",
+        "coverageNote": "Written reasoning and operation-choice tasks need teacher assessment; advanced equations are outside this map.",
+        "tools": [
+          [
+            "substitution",
+            "select one- and two-variable tasks"
+          ],
+          [
+            "linear-equations",
+            "select simple equations"
+          ],
+          [
+            "bar-models",
+            "connect contexts to number sentences"
+          ],
+          [
+            "equation-balance-models",
+            "explain inverse operations"
+          ]
+        ],
+        "teacherMove": "Ask pupils to draw, explain, calculate and check. Use the simplest generated examples instead of the entire secondary tool range."
+      },
+      {
+        "code": "Grade 6 Statistics and Probability",
+        "title": "Grade 6: Statistics and Probability",
+        "focus": "Data trends, stem-and-leaf representation, graph interpretation and simple probabilities.",
+        "coverage": "Partial",
+        "coverageNote": "Stem-and-leaf and elementary probability need teacher-created tasks. Secondary probability-tree tools are not presented as direct coverage.",
+        "tools": [
+          [
+            "averages-range",
+            "support data summaries where useful"
+          ],
+          [
+            "classroom-displays",
+            "provide blank axes and tables for teacher modelling"
+          ]
+        ],
+        "teacherMove": "Prepare a small stem-and-leaf dataset and list coin or dice outcomes together. Ask pupils to justify the sample space."
+      }
+    ]
+  },
+  {
     id: "jamaica-nsc-7-9",
     label: "Jamaica NSC 7-9",
     country: "Jamaica",
@@ -16923,6 +17340,9 @@ function inferCurriculumIdFromSchoolContext(context = currentSchoolContext()) {
     context?.pilot_name
   ].join(" "));
   if (!text) return "";
+  const jamaicaContext = /\bjamaica\b|\bnsc\b/.test(text);
+  const primaryGrades = /\bgrades?\s*4\s*(?:[-–—]|to)\s*6\b|\bprimary\b/.test(text);
+  if (/\bpep\b/.test(text) || (jamaicaContext && primaryGrades)) return "jamaica-nsc-4-6";
   if (text.includes("jamaica") || text.includes("nsc")) return "jamaica-nsc-7-9";
   if (text.includes("cape")) return "cape-mathematics";
   if (text.includes("csec")) return "csec";
@@ -17087,6 +17507,15 @@ function renderCurriculumAlignments() {
         ${curriculumAlignmentSelect(framework)}
       </section>
 
+      ${framework.sources?.length ? `
+        <section class="textbook-map-panel curriculum-source-note">
+          <h2>Source and coverage</h2>
+          <p>${escapeHtml(framework.basis)}</p>
+          <p>${escapeHtml(framework.alignmentNote || "")}</p>
+          <ul>${framework.sources.map(source => `<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a></li>`).join("")}</ul>
+          ${framework.coursePath ? `<a class="button" href="${escapeHtml(framework.coursePath)}">Teaching with Bar Models — Grades 4–6</a>` : ""}
+        </section>
+      ` : ""}
       ${hasStandards ? `
         <section class="textbook-map-panel">
           <div class="coverage-panel-head">
@@ -17114,6 +17543,7 @@ function renderCurriculumAlignments() {
                   </th>
                   <td>
                     <p class="textbook-focus-line">${escapeHtml(standard.focus)}</p>
+                    ${standard.coverageNote ? `<p class="curriculum-coverage-note"><strong>${escapeHtml(standard.coverage)} coverage:</strong> ${escapeHtml(standard.coverageNote)}</p>` : ""}
                     <small class="textbook-use-line">${escapeHtml(standard.teacherMove)}</small>
                   </td>
                   <td>
@@ -30205,7 +30635,7 @@ function updateRouteSeo(parts) {
     },
     "curriculum-alignments": {
       title: routeTitle("Curriculum Alignments"),
-      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, Ontario Mathematics, Australian Curriculum Mathematics, Finland Mathematics, UK KS2 Mathematics, UK KS3 Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, Oman GED Mathematics, and Jamaica NSC Grades 7-9 Mathematics."
+      description: "Map curriculum standards to Kaizen Maths tools, classroom displays, worked examples, and worksheet generators. Current pilot alignments include Common Core Mathematics, Ontario Mathematics, Australian Curriculum Mathematics, Finland Mathematics, UK KS2 Mathematics, UK KS3 Mathematics, GCSE Mathematics, Pearson Edexcel Mathematics, Cambridge IGCSE Mathematics, Singapore Mathematics, IB Mathematics, AP Mathematics, UK A-Level Mathematics, UK Further Mathematics, CSEC Mathematics, CAPE Mathematics, Oman GED Mathematics, and Jamaica NSC Grades 4-6 and Grades 7-9 Mathematics."
     },
     "textbook-alignments": {
       title: routeTitle("Textbook Alignments"),
