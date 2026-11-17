@@ -2348,6 +2348,20 @@ const tools = [
     ]
   },
   {
+    slug: "pep-practice",
+    title: "PEP-style Practice",
+    category: "Numbers",
+    level: "Primary / Jamaica Grades 4–6",
+    type: "Practice Generator",
+    access: "Trial",
+    status: "Imported",
+    description: "Original Jamaica PEP-style topic practice and linked tasks for Grades 4–6. Switch between assessment-style questions and bar-model support for the same questions, with worked solutions and suggested marks.",
+    tags: ["PEP", "Jamaica", "primary", "fractions", "percentages", "ratio", "money", "measurement", "word problems"],
+    toolPath: "tools/pep-practice/index.html?v=pep-practice-2",
+    imported: true,
+    teacherNotes: ["Select a grade and skill, or use a linked task. Assessment-style questions are the default; add bar-model support for the same questions when teaching.", "Print either question version, both versions together, answers, or a complete pack with worked solutions and suggested marking guidance.", "Original classroom practice covering selected number and measurement skills; not an official PEP paper or a full curriculum assessment."]
+  },
+  {
     slug: "bar-models",
     title: "Bar Models",
     category: "Classroom Tools",
@@ -16567,6 +16581,7 @@ const curriculumAlignmentFrameworks = [
         "coverage": "Partial",
         "coverageNote": "Large-number reading, fraction ordering and naming set members need teacher-led tasks.",
         "tools": [
+          ["pep-practice", "generate original grade-specific topic practice or linked number and measurement tasks"],
           [
             "four-operations",
             "select multiplication and division practice at a suitable level"
@@ -16597,6 +16612,7 @@ const curriculumAlignmentFrameworks = [
         "coverage": "Partial",
         "coverageNote": "Practical estimating, thermometer reading and irregular-area counting require classroom equipment or teacher-created tasks.",
         "tools": [
+          ["pep-practice", "generate original grade-specific topic practice or linked number and measurement tasks"],
           [
             "conversions-teaching",
             "select simple metric conversions"
@@ -16693,6 +16709,7 @@ const curriculumAlignmentFrameworks = [
         "coverage": "Partial",
         "coverageNote": "Large-number reading, set classification and the complete range of word problems require teacher selection or additions.",
         "tools": [
+          ["pep-practice", "generate original grade-specific topic practice or linked number and measurement tasks"],
           [
             "hcf-lcm",
             "support common-factor and multiple reasoning"
@@ -16723,6 +16740,7 @@ const curriculumAlignmentFrameworks = [
         "coverage": "Partial",
         "coverageNote": "Elapsed-time contexts, hands-on measuring and fixed-area perimeter investigations need teacher-created activities.",
         "tools": [
+          ["pep-practice", "generate original grade-specific topic practice or linked number and measurement tasks"],
           [
             "conversions-teaching",
             "practise selected metric conversions"
@@ -16819,6 +16837,7 @@ const curriculumAlignmentFrameworks = [
         "coverage": "Partial",
         "coverageNote": "Check each chosen level, including reverse percentages in multiples of five; advanced tool modes exceed primary scope.",
         "tools": [
+          ["pep-practice", "generate original grade-specific topic practice or linked number and measurement tasks"],
           [
             "venn-diagrams",
             "select two-set regions"
@@ -16861,6 +16880,7 @@ const curriculumAlignmentFrameworks = [
         "coverage": "Partial",
         "coverageNote": "Physical measurement, tessellation, time and speed contexts need teacher-led supplements; omit secondary-only modes.",
         "tools": [
+          ["pep-practice", "generate original grade-specific topic practice or linked number and measurement tasks"],
           [
             "scale-drawing-similar-shapes",
             "select simple scale tasks"
