@@ -1,0 +1,1036 @@
+{
+  "units": [
+    {
+      "n": 1,
+      "title": "Limits and continuity",
+      "rows": [
+        {
+          "code": "1.1",
+          "title": "Change at an instant",
+          "status": "New",
+          "basis": "LIM (background)",
+          "need": "Graph, table and context bank; pilot 1.1 drafted.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.2",
+          "title": "Limit notation",
+          "status": "Extend",
+          "basis": "LIM",
+          "need": "Interpret notation; distinguish value from limit.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.3",
+          "title": "Limits from graphs",
+          "status": "New",
+          "basis": "GRF (background)",
+          "need": "Open/closed points; one-sided and two-sided limits.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.4",
+          "title": "Limits from tables",
+          "status": "Core",
+          "basis": "LIM",
+          "need": "Vary approach patterns; include misleading tables.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.5",
+          "title": "Algebraic properties of limits",
+          "status": "Core",
+          "basis": "LIM",
+          "need": "Add explanations of law applicability.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.6",
+          "title": "Algebraic manipulation of limits",
+          "status": "Core",
+          "basis": "LIM",
+          "need": "Balance factoring, conjugates and domain restrictions.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.7",
+          "title": "Selecting limit procedures",
+          "status": "Extend",
+          "basis": "LIM",
+          "need": "Require method choice, not a labelled procedure.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.8",
+          "title": "Squeeze Theorem",
+          "status": "New",
+          "basis": "None identified",
+          "need": "Build bounding graphs and theorem justification.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.9",
+          "title": "Multiple representations of limits",
+          "status": "Extend",
+          "basis": "LIM + GRF",
+          "need": "Link verbal, symbolic, numerical and graphical data.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.10",
+          "title": "Types of discontinuities",
+          "status": "Extend",
+          "basis": "LIM",
+          "need": "Add graphical classification and explanations.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.11",
+          "title": "Continuity at a point",
+          "status": "Extend",
+          "basis": "LIM",
+          "need": "Require all continuity conditions, not just substitution.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.12",
+          "title": "Continuity over an interval",
+          "status": "Extend",
+          "basis": "LIM",
+          "need": "Include endpoints, domains and interval reasoning.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.13",
+          "title": "Removing discontinuities",
+          "status": "Core",
+          "basis": "LIM",
+          "need": "Reuse parameters; add explanation of the repair.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.14",
+          "title": "Infinite limits and vertical asymptotes",
+          "status": "Extend",
+          "basis": "LIM + GRF",
+          "need": "Add signed one-sided unbounded behaviour.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.15",
+          "title": "Limits at infinity and horizontal asymptotes",
+          "status": "Core",
+          "basis": "LIM",
+          "need": "Add graph and end-behaviour interpretations.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "1.16",
+          "title": "Intermediate Value Theorem",
+          "status": "New",
+          "basis": "LIM (background)",
+          "need": "Verify hypotheses; distinguish existence from uniqueness.",
+          "scope": "AB + BC"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Differentiation: definition and basic rules",
+      "rows": [
+        {
+          "code": "2.1",
+          "title": "Average and instantaneous rates",
+          "status": "Extend",
+          "basis": "LIM + POL",
+          "need": "Context, secant/tangent and units bank.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "2.2",
+          "title": "Derivative definition and notation",
+          "status": "Core",
+          "basis": "LIM",
+          "need": "Use both derivative definitions and interpret notation.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "2.3",
+          "title": "Estimating derivatives at a point",
+          "status": "New",
+          "basis": "LIM (background)",
+          "need": "Tangent, secant and table estimates; uncertainty.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "2.4",
+          "title": "Differentiability and continuity",
+          "status": "New",
+          "basis": "LIM (background)",
+          "need": "Corners, cusps, vertical tangents and discontinuities.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "2.5",
+          "title": "Power rule",
+          "status": "Core",
+          "basis": "POL",
+          "need": "Select AP-relevant exponents; vary task demands.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "2.6",
+          "title": "Constant, sum and multiple rules",
+          "status": "Core",
+          "basis": "POL",
+          "need": "Add evaluation and representation questions.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "2.7",
+          "title": "Derivatives of sin, cos, exponential and log",
+          "status": "Core",
+          "basis": "DER + TRIG",
+          "need": "Check AP forms, domain and radians.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "2.8",
+          "title": "Product rule",
+          "status": "Core",
+          "basis": "DER",
+          "need": "Add table-based and contextual product questions.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "2.9",
+          "title": "Quotient rule",
+          "status": "Core",
+          "basis": "DER",
+          "need": "Add table-based questions; check simplified answers.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "2.10",
+          "title": "Other trigonometric derivatives",
+          "status": "Core",
+          "basis": "TRIG",
+          "need": "Include reciprocal trig functions with AP notation.",
+          "scope": "AB + BC"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Composite, implicit and inverse differentiation",
+      "rows": [
+        {
+          "code": "3.1",
+          "title": "Chain rule",
+          "status": "Core",
+          "basis": "DER + TRIG",
+          "need": "Add function tables and composite-function graphs.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "3.2",
+          "title": "Implicit differentiation",
+          "status": "Core",
+          "basis": "ADV",
+          "need": "Add interpretation; preserve derivative factors.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "3.3",
+          "title": "Derivatives of inverse functions",
+          "status": "Extend",
+          "basis": "DER + INV",
+          "need": "New general inverse-function and table questions.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "3.4",
+          "title": "Inverse trigonometric derivatives",
+          "status": "Core",
+          "basis": "INV",
+          "need": "Filter to required AP functions; exclude unrelated forms.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "3.5",
+          "title": "Selecting derivative procedures",
+          "status": "Extend",
+          "basis": "DER + ADV",
+          "need": "Mixed unlabelled rule choices and justifications.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "3.6",
+          "title": "Higher-order derivatives",
+          "status": "Core",
+          "basis": "ADV",
+          "need": "Add graphs, notation and context for second derivatives.",
+          "scope": "AB + BC"
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Contextual applications of differentiation",
+      "rows": [
+        {
+          "code": "4.1",
+          "title": "Meaning of a derivative in context",
+          "status": "New",
+          "basis": "DER (background)",
+          "need": "Units, sign and instantaneous-rate interpretations.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "4.2",
+          "title": "Position, velocity and acceleration",
+          "status": "Extend",
+          "basis": "POL + DER",
+          "need": "Variable motion; direction, speed and total distance.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "4.3",
+          "title": "Rates in other applied contexts",
+          "status": "New",
+          "basis": "DER (background)",
+          "need": "Meaningful models, units and data representations.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "4.4",
+          "title": "Introduction to related rates",
+          "status": "Extend",
+          "basis": "ADV",
+          "need": "Identify quantities, constants and time dependencies.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "4.5",
+          "title": "Solving related rates",
+          "status": "Extend",
+          "basis": "ADV",
+          "need": "Varied geometry and sign reasoning; pilot 4.5 drafted.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "4.6",
+          "title": "Local linearity and linearization",
+          "status": "Extend",
+          "basis": "POL + DER",
+          "need": "Approximation; over/underestimation from concavity.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "4.7",
+          "title": "L'Hospital's Rule",
+          "status": "New",
+          "basis": "LIM + DER (background)",
+          "need": "Indeterminate forms; hypotheses; transformed expressions.",
+          "scope": "AB + BC"
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Analytical applications of differentiation",
+      "rows": [
+        {
+          "code": "5.1",
+          "title": "Mean Value Theorem",
+          "status": "New",
+          "basis": "LIM + DER (background)",
+          "need": "Verify hypotheses and justify existence of c.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "5.2",
+          "title": "EVT, extrema and critical points",
+          "status": "Extend",
+          "basis": "DER",
+          "need": "Separate local/global extrema and endpoint reasoning.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "5.3",
+          "title": "Increasing and decreasing intervals",
+          "status": "Extend",
+          "basis": "DER + GRF",
+          "need": "Derivative sign charts and graphical evidence.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "5.4",
+          "title": "First Derivative Test",
+          "status": "Extend",
+          "basis": "DER",
+          "need": "Sign changes; non-extremal critical points.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "5.5",
+          "title": "Candidates Test for absolute extrema",
+          "status": "Extend",
+          "basis": "DER",
+          "need": "Closed intervals, endpoints and complete comparison.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "5.6",
+          "title": "Concavity over a domain",
+          "status": "New",
+          "basis": "DER (background)",
+          "need": "Second-derivative signs and inflection conditions.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "5.7",
+          "title": "Second Derivative Test",
+          "status": "Extend",
+          "basis": "DER + ADV",
+          "need": "Include inconclusive tests and valid conclusions.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "5.8",
+          "title": "Sketching functions and derivatives",
+          "status": "New",
+          "basis": "GRF (background)",
+          "need": "Match derivative behaviour to original graphs.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "5.9",
+          "title": "Connecting f, f' and f''",
+          "status": "New",
+          "basis": "GRF + DER (background)",
+          "need": "Graph/table reasoning across all three functions.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "5.10",
+          "title": "Introduction to optimization",
+          "status": "New",
+          "basis": "DER (background)",
+          "need": "Build objective, constraint and feasible domain.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "5.11",
+          "title": "Solving optimization problems",
+          "status": "New",
+          "basis": "DER (background)",
+          "need": "Varied contexts; justify optimum and endpoints.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "5.12",
+          "title": "Behaviour of implicit relations",
+          "status": "Extend",
+          "basis": "ADV",
+          "need": "Horizontal/vertical tangents; second-derivative analysis.",
+          "scope": "AB + BC"
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Integration and accumulation of change",
+      "rows": [
+        {
+          "code": "6.1",
+          "title": "Accumulations of change",
+          "status": "New",
+          "basis": "INT (background)",
+          "need": "Net accumulation with units and variable rates.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "6.2",
+          "title": "Riemann-sum area approximations",
+          "status": "Extend",
+          "basis": "INT + NUM",
+          "need": "Add left, right and midpoint sums, not only trapezoids.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "6.3",
+          "title": "Summation and definite-integral notation",
+          "status": "New",
+          "basis": "INT (background)",
+          "need": "Translate sums, limits and integrals.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "6.4",
+          "title": "FTC and accumulation functions",
+          "status": "New",
+          "basis": "INT + DER (background)",
+          "need": "Variable upper bounds and derivative interpretation.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "6.5",
+          "title": "Behaviour of accumulation functions",
+          "status": "New",
+          "basis": "INT (background)",
+          "need": "Read signed areas; extrema and concavity.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "6.6",
+          "title": "Properties of definite integrals",
+          "status": "Extend",
+          "basis": "INT",
+          "need": "Orientation, additivity, bounds and symmetry.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "6.7",
+          "title": "FTC and definite integrals",
+          "status": "Core",
+          "basis": "INT",
+          "need": "Link antiderivatives to evaluation and meaning.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "6.8",
+          "title": "Antiderivatives and indefinite integrals",
+          "status": "Core",
+          "basis": "INT",
+          "need": "Include constants, domains and initial conditions.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "6.9",
+          "title": "Integration by substitution",
+          "status": "Core",
+          "basis": "AINT",
+          "need": "Filter required forms; change bounds carefully.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "6.10",
+          "title": "Long division and completing the square",
+          "status": "Core",
+          "basis": "FRAC",
+          "need": "Reuse division and completed-square types; vary forms.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "6.11",
+          "title": "Integration by parts",
+          "status": "Core",
+          "basis": "AINT",
+          "need": "Add method selection and definite forms.",
+          "scope": "BC only"
+        },
+        {
+          "code": "6.12",
+          "title": "Linear partial fractions",
+          "status": "Core",
+          "basis": "FRAC",
+          "need": "Restrict to AP-required decompositions; check forms.",
+          "scope": "BC only"
+        },
+        {
+          "code": "6.13",
+          "title": "Improper integrals",
+          "status": "New",
+          "basis": "INT + LIM (background)",
+          "need": "Limits at singularities and infinity; convergence.",
+          "scope": "BC only"
+        },
+        {
+          "code": "6.14",
+          "title": "Selecting antidifferentiation techniques",
+          "status": "Extend",
+          "basis": "INT + AINT",
+          "need": "Mixed unlabelled choices; respect AB/BC filters.",
+          "scope": "AB + BC"
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Differential equations",
+      "rows": [
+        {
+          "code": "7.1",
+          "title": "Modelling with differential equations",
+          "status": "Extend",
+          "basis": "DE",
+          "need": "AP-relevant verbal models and units.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "7.2",
+          "title": "Verifying differential-equation solutions",
+          "status": "Extend",
+          "basis": "DE + DER",
+          "need": "Substitution checks, domains and initial conditions.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "7.3",
+          "title": "Sketching slope fields",
+          "status": "New",
+          "basis": "DE (background)",
+          "need": "Generate fields and solution-curve sketches.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "7.4",
+          "title": "Reasoning using slope fields",
+          "status": "New",
+          "basis": "DE (background)",
+          "need": "Equilibria, solution behaviour and curve matching.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "7.5",
+          "title": "Euler's Method",
+          "status": "Core",
+          "basis": "NUM",
+          "need": "Add AP tables, unequal steps and approximation reasoning.",
+          "scope": "BC only"
+        },
+        {
+          "code": "7.6",
+          "title": "Separation of variables: general solutions",
+          "status": "Core",
+          "basis": "DE",
+          "need": "Keep singular/equilibrium solutions in view.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "7.7",
+          "title": "Particular solutions and initial conditions",
+          "status": "Core",
+          "basis": "DE",
+          "need": "Check intervals and initial-condition substitution.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "7.8",
+          "title": "Exponential differential-equation models",
+          "status": "Core",
+          "basis": "DE",
+          "need": "Add model interpretation and parameter recovery.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "7.9",
+          "title": "Logistic models",
+          "status": "New",
+          "basis": "DE (background)",
+          "need": "Carrying capacity, equilibria and inflection behaviour.",
+          "scope": "BC only"
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Applications of integration",
+      "rows": [
+        {
+          "code": "8.1",
+          "title": "Average value of a function",
+          "status": "Extend",
+          "basis": "INT",
+          "need": "Distinguish average value from average rate.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "8.2",
+          "title": "Motion using integrals",
+          "status": "New",
+          "basis": "INT + DER (background)",
+          "need": "Displacement versus total distance; sign changes.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "8.3",
+          "title": "Accumulation in applied contexts",
+          "status": "New",
+          "basis": "INT (background)",
+          "need": "Initial amount, net change, inflow and outflow.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "8.4",
+          "title": "Area between curves: functions of x",
+          "status": "Extend",
+          "basis": "INT + XSEC",
+          "need": "Create full worksheet questions; select top/bottom.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "8.5",
+          "title": "Area between curves: functions of y",
+          "status": "Extend",
+          "basis": "INT + XSEC",
+          "need": "Horizontal strips and right/left boundaries.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "8.6",
+          "title": "Area across multiple intersections",
+          "status": "Extend",
+          "basis": "INT + XSEC",
+          "need": "Locate crossings and split intervals correctly.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "8.7",
+          "title": "Cross-sections: squares and rectangles",
+          "status": "Extend",
+          "basis": "XSEC + INT",
+          "need": "Explainer exists; build graded questions and solutions.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "8.8",
+          "title": "Cross-sections: triangles and semicircles",
+          "status": "Extend",
+          "basis": "XSEC + INT",
+          "need": "Shape factors; radius/diameter distinctions.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "8.9",
+          "title": "Discs around coordinate axes",
+          "status": "Core",
+          "basis": "REV",
+          "need": "Reuse x/y-axis disc families; add diagram interpretation.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "8.10",
+          "title": "Discs around other axes",
+          "status": "Extend",
+          "basis": "REV + REVX",
+          "need": "Shifted axes need new families, not just shifted functions.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "8.11",
+          "title": "Washers around coordinate axes",
+          "status": "Core",
+          "basis": "REV",
+          "need": "Reuse washer families; extend graphical interpretation.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "8.12",
+          "title": "Washers around other axes",
+          "status": "Extend",
+          "basis": "REV + REVX",
+          "need": "Shifted axes; subtract squared radii correctly.",
+          "scope": "AB + BC"
+        },
+        {
+          "code": "8.13",
+          "title": "Arc length and distance travelled",
+          "status": "New",
+          "basis": "ADV + INT (background)",
+          "need": "Generate arc-length integrals and motion contexts.",
+          "scope": "BC only"
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "title": "Parametric, polar and vector-valued functions",
+      "rows": [
+        {
+          "code": "9.1",
+          "title": "Parametric equations and first derivatives",
+          "status": "Core",
+          "basis": "ADV",
+          "need": "Add AP graphs and parameter interpretation.",
+          "scope": "BC only"
+        },
+        {
+          "code": "9.2",
+          "title": "Parametric second derivatives",
+          "status": "Core",
+          "basis": "ADV",
+          "need": "Retain division by the parameter derivative.",
+          "scope": "BC only"
+        },
+        {
+          "code": "9.3",
+          "title": "Parametric arc length",
+          "status": "New",
+          "basis": "ADV + INT (background)",
+          "need": "Arc-length setup, intervals and numerical integration.",
+          "scope": "BC only"
+        },
+        {
+          "code": "9.4",
+          "title": "Differentiating vector-valued functions",
+          "status": "New",
+          "basis": "DER (background)",
+          "need": "Component derivatives; existing VEC is geometry only.",
+          "scope": "BC only"
+        },
+        {
+          "code": "9.5",
+          "title": "Integrating vector-valued functions",
+          "status": "New",
+          "basis": "INT (background)",
+          "need": "Initial position and vector antiderivatives.",
+          "scope": "BC only"
+        },
+        {
+          "code": "9.6",
+          "title": "Parametric and vector motion",
+          "status": "New",
+          "basis": "ADV (background)",
+          "need": "Velocity, acceleration, speed and distance.",
+          "scope": "BC only"
+        },
+        {
+          "code": "9.7",
+          "title": "Polar coordinates and differentiation",
+          "status": "Core",
+          "basis": "POLAR",
+          "need": "Filter derivative forms; include tangent reasoning.",
+          "scope": "BC only"
+        },
+        {
+          "code": "9.8",
+          "title": "Area bounded by one polar curve",
+          "status": "Core",
+          "basis": "POLAR",
+          "need": "Check full traversal and avoid double counting.",
+          "scope": "BC only"
+        },
+        {
+          "code": "9.9",
+          "title": "Area bounded by two polar curves",
+          "status": "Extend",
+          "basis": "POLAR",
+          "need": "Add interval selection, intersections and shading.",
+          "scope": "BC only"
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "title": "Infinite sequences and series",
+      "rows": [
+        {
+          "code": "10.1",
+          "title": "Convergent and divergent infinite series",
+          "status": "Extend",
+          "basis": "SEQ",
+          "need": "Partial-sum limits; sequences versus series.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.2",
+          "title": "Geometric series",
+          "status": "Core",
+          "basis": "SEQ",
+          "need": "Include convergence conditions and contextual sums.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.3",
+          "title": "nth-term divergence test",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Zero term limit is inconclusive, not proof of convergence.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.4",
+          "title": "Integral Test",
+          "status": "New",
+          "basis": "INT + SEQ (background)",
+          "need": "Positivity, continuity and decreasing hypotheses.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.5",
+          "title": "Harmonic and p-series",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Classification and boundary cases.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.6",
+          "title": "Comparison Tests",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Direct and limit comparison; justify valid comparisons.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.7",
+          "title": "Alternating Series Test",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Monotonicity, term limits and convergence reasoning.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.8",
+          "title": "Ratio Test",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Limit cases and inconclusive outcomes.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.9",
+          "title": "Absolute and conditional convergence",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Test original and absolute-value series separately.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.10",
+          "title": "Alternating Series Error Bound",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Error tolerance and required term count.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.11",
+          "title": "Taylor polynomial approximations",
+          "status": "Core",
+          "basis": "SER",
+          "need": "Use derivative data, centres and approximation meaning.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.12",
+          "title": "Lagrange Error Bound",
+          "status": "New",
+          "basis": "SER (background)",
+          "need": "Derivative bounds, interval and remainder estimates.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.13",
+          "title": "Radius and interval of convergence",
+          "status": "Extend",
+          "basis": "SER",
+          "need": "Ratio/root work and separate endpoint tests.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.14",
+          "title": "Taylor and Maclaurin series",
+          "status": "Core",
+          "basis": "SER",
+          "need": "Match required expansions and validity intervals.",
+          "scope": "BC only"
+        },
+        {
+          "code": "10.15",
+          "title": "Representing functions as power series",
+          "status": "Core",
+          "basis": "SER",
+          "need": "Termwise operations and convergence qualifications.",
+          "scope": "BC only"
+        }
+      ]
+    }
+  ],
+  "toolDirectory": {
+    "LIM": [
+      "Limits and First Principles",
+      "limits-first-principles"
+    ],
+    "POL": [
+      "Basic Differentiation of Polynomials",
+      "differentiation-polynomials"
+    ],
+    "DER": [
+      "Product, Quotient and Chain Rule",
+      "differentiation-rules"
+    ],
+    "TRIG": [
+      "Trigonometric Differentiation",
+      "trig-differentiation-rules"
+    ],
+    "INV": [
+      "Inverse Trig Differentiation",
+      "inverse-trig-differentiation"
+    ],
+    "ADV": [
+      "Advanced Differentiation",
+      "advanced-differentiation"
+    ],
+    "INT": [
+      "Basic Integration and Definite Integrals",
+      "integration"
+    ],
+    "AINT": [
+      "Integration by Substitution and Parts",
+      "advanced-integration"
+    ],
+    "FRAC": [
+      "Integration with Algebraic Fractions",
+      "integration-algebraic-fractions"
+    ],
+    "NUM": [
+      "Numerical Methods",
+      "numerical-methods"
+    ],
+    "DE": [
+      "Differential Equations",
+      "differential-equations"
+    ],
+    "GRF": [
+      "Graph Transformations and Curve Sketching",
+      "graph-transformations-curve-sketching"
+    ],
+    "XSEC": [
+      "Solids from Cross-sections (explainer)",
+      "cross-section-solids"
+    ],
+    "REV": [
+      "Volumes of Revolution (practice generator)",
+      "volumes-of-revolution"
+    ],
+    "REVX": [
+      "Volumes of Revolution 3D Explorer",
+      "revolution-explorer"
+    ],
+    "POLAR": [
+      "Polar Coordinates",
+      "polar-coordinates"
+    ],
+    "SEQ": [
+      "Sequences and Series",
+      "sequences-series"
+    ],
+    "SER": [
+      "Taylor and Maclaurin Series",
+      "series-expansions"
+    ],
+    "VEC": [
+      "Further Vectors (geometry, not vector calculus)",
+      "further-vectors"
+    ]
+  },
+  "reviewDate": "2026-11-17",
+  "statusMeaning": {
+    "Core": "Procedural family candidate; not complete AP coverage",
+    "Extend": "Related content needs AP extension",
+    "New": "No dedicated matching family identified"
+  }
+}

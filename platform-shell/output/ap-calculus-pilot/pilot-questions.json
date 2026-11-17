@@ -1,0 +1,793 @@
+{
+  "1.1": [
+    {
+      "n": 1,
+      "title": "A net change in a tank",
+      "prompt": [
+        "A tank contains V(t) litres of water t minutes after a valve is opened. V(3) = 180 and V(7) = 100.",
+        "(a) Find the average rate of change of volume from t = 3 to t = 7.",
+        "(b) Interpret the sign and units of your answer."
+      ],
+      "answer": "-20 L/min; the volume decreases by an average of 20 litres per minute.",
+      "steps": [
+        [
+          "Change in volume [1]",
+          "180 and 100 are volumes; subtract final minus initial.",
+          "ΔV = 100 - 180 = -80 L"
+        ],
+        [
+          "Divide by elapsed time [1]",
+          "Elapsed time is 7 - 3 = 4 minutes. A negative rate means a decrease.",
+          "Average rate = [[-80|4]] = -20 L/min"
+        ]
+      ],
+      "marks": 2,
+      "hints": [
+        "Write final volume minus initial volume over elapsed time.",
+        "Explain the sign as well as naming the units."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": null
+    },
+    {
+      "n": 2,
+      "title": "Reading a journey graph",
+      "prompt": [
+        "The graph shows a robot’s distance D from a station. The graph is made of straight segments.",
+        "(a) Find its average rate of change over 0 ≤ t ≤ 8.",
+        "(b) State an interval on which its distance is constant.",
+        "(c) Compare the instantaneous rates at t = 1 and t = 6. Explain using the graph."
+      ],
+      "answer": "37.5 m/min; [2, 5]; both instantaneous rates are 60 m/min.",
+      "steps": [
+        [
+          "Whole interval [1]",
+          "Use the endpoint values, even though the journey has several stages.",
+          "Average rate = [[300 - 0|8 - 0]] = 37.5 m/min"
+        ],
+        [
+          "Constant interval [1]",
+          "The horizontal segment is from t = 2 to t = 5.",
+          ""
+        ],
+        [
+          "Compare local slopes [2]",
+          "Both times lie inside straight segments. Their slopes are equal.",
+          "At 1: [[120 - 0|2 - 0]] = 60; at 6: [[300 - 120|8 - 5]] = 60 m/min"
+        ]
+      ],
+      "marks": 4,
+      "hints": [
+        "For (a), use the first and last points.",
+        "For (c), use the slope of the straight segment containing each time."
+      ],
+      "visual": "journey",
+      "table": null,
+      "diagram": null
+    },
+    {
+      "n": 3,
+      "title": "What does the expression mean?",
+      "prompt": [
+        "H(t) models the water depth in a pond, in centimetres, t days after monitoring begins. Assume H is smooth near t = 6.",
+        "Interpret the following expression, including its interval and units. Explain how it relates to the rate at t = 6."
+      ],
+      "answer": "Average depth change on [6, 6.02], in cm/day; an estimate of the instantaneous rate at day 6, not necessarily its exact value.",
+      "steps": [
+        [
+          "Interpret the quotient [1]",
+          "The numerator is a change in depth; the denominator is the elapsed time.",
+          "[[H(6.02) - H(6)|0.02]]"
+        ],
+        [
+          "Connect to an instant [1]",
+          "It is the average rate over [6, 6.02], measured in cm/day. For a smooth model, a short interval can estimate the rate at t = 6. A finite interval does not by itself give an exact instantaneous rate.",
+          ""
+        ]
+      ],
+      "marks": 2,
+      "hints": [
+        "Identify what the numerator measures and what the denominator measures.",
+        "Distinguish an average over an interval from a rate at one instant."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": null,
+      "equation": "[[H(6.02) - H(6)|0.02]]"
+    },
+    {
+      "n": 4,
+      "title": "Estimating a heating rate",
+      "prompt": [
+        "T(t) is a smooth temperature model in degrees Celsius; t is in minutes.",
+        "(a) Calculate the average rates on [3.9, 4] and [4, 4.1].",
+        "(b) Use these rates to estimate the instantaneous heating rate at t = 4."
+      ],
+      "answer": "21.5 °C/min and 22.5 °C/min; approximately 22 °C/min at t = 4.",
+      "steps": [
+        [
+          "Left interval [1]",
+          "Use a change in temperature divided by a change in time.",
+          "[[70 - 67.85|4 - 3.9]] = [[2.15|0.1]] = 21.5 °C/min"
+        ],
+        [
+          "Right interval [1]",
+          "Use the values just after the target time.",
+          "[[72.25 - 70|4.1 - 4]] = [[2.25|0.1]] = 22.5 °C/min"
+        ],
+        [
+          "Estimate [1]",
+          "A reasonable estimate from the neighbouring rates is 22 °C/min. It is an estimate, not an exact conclusion from the table.",
+          "[[21.5 + 22.5|2]] = 22 °C/min"
+        ]
+      ],
+      "marks": 3,
+      "hints": [
+        "Work from times immediately before and after 4.",
+        "Compare the two slopes before selecting an estimate."
+      ],
+      "visual": null,
+      "table": [
+        [
+          "t (min)",
+          "3.8",
+          "3.9",
+          "4",
+          "4.1",
+          "4.2"
+        ],
+        [
+          [
+            "T(t) (°C)",
+            "65.8",
+            "67.85",
+            "70",
+            "72.25",
+            "74.6"
+          ]
+        ]
+      ],
+      "diagram": null
+    },
+    {
+      "n": 5,
+      "title": "A tangent and a secant",
+      "prompt": [
+        "The solid curve is a robot’s position s(t). The dashed line is tangent at (2, 40) and passes through (1, 0) and (3, 80).",
+        "(a) Find its instantaneous velocity at t = 2 using the tangent.",
+        "(b) Find its average velocity over [0, 2]. Why do the answers differ?"
+      ],
+      "answer": "40 m/s instantaneous; 20 m/s average. One is a local tangent slope, the other an interval secant slope.",
+      "steps": [
+        [
+          "Tangent slope [1]",
+          "Use two labelled points on the tangent, not two arbitrary points on the curve.",
+          "Instantaneous velocity = [[80 - 0|3 - 1]] = 40 m/s"
+        ],
+        [
+          "Secant slope [1]",
+          "The curve starts at (0, 0) and passes through (2, 40).",
+          "Average velocity = [[40 - 0|2 - 0]] = 20 m/s"
+        ],
+        [
+          "Compare [1]",
+          "The first describes the rate at t = 2. The second describes the net position change per second over [0, 2]. The curve’s slope is changing.",
+          ""
+        ]
+      ],
+      "marks": 3,
+      "hints": [
+        "The dashed tangent describes the instant.",
+        "The straight line joining two curve points describes an interval."
+      ],
+      "visual": "robot",
+      "table": null,
+      "diagram": null
+    },
+    {
+      "n": 6,
+      "title": "A decreasing reservoir volume",
+      "prompt": [
+        "V(t) is a smooth reservoir-volume model in cubic metres; t is in hours.",
+        "(a) Find average rates on [9.9, 10] and [10, 10.1].",
+        "(b) Estimate the instantaneous rate at t = 10 and interpret its sign."
+      ],
+      "answer": "-9.9 m³/h and -10.1 m³/h; approximately -10 m³/h, so volume is decreasing.",
+      "steps": [
+        [
+          "Before 10 [1]",
+          "Subtract the earlier volume from the later volume.",
+          "[[500 - 500.99|10 - 9.9]] = -9.9 m³/h"
+        ],
+        [
+          "After 10 [1]",
+          "The time interval remains positive; volume change is negative.",
+          "[[498.99 - 500|10.1 - 10]] = -10.1 m³/h"
+        ],
+        [
+          "Estimate and interpret [1]",
+          "The neighbouring rates suggest about -10 m³/h at t = 10: a loss of about 10 cubic metres per hour.",
+          ""
+        ]
+      ],
+      "marks": 3,
+      "hints": [
+        "Keep final minus initial in both numerator and denominator.",
+        "A decreasing quantity has a negative rate."
+      ],
+      "visual": null,
+      "table": [
+        [
+          "t (h)",
+          "9.9",
+          "10",
+          "10.1"
+        ],
+        [
+          [
+            "V(t) (m³)",
+            "500.99",
+            "500",
+            "498.99"
+          ]
+        ]
+      ],
+      "diagram": null
+    },
+    {
+      "n": 7,
+      "title": "Zero rate does not mean no change",
+      "prompt": [
+        "The curve shows a smooth concentration model C(t). The dashed tangent at t = 3 is horizontal. C(2) = C(4) = 3.",
+        "(a) State the instantaneous rate at t = 3.",
+        "(b) Find the average rate over [2, 4].",
+        "(c) Does your answer to (b) mean concentration is constant throughout that interval? Explain."
+      ],
+      "answer": "0 mg/L per min at t = 3; average rate 0 mg/L per min; not constant on [2, 4].",
+      "steps": [
+        [
+          "Instantaneous rate [1]",
+          "A horizontal tangent has slope zero.",
+          "Rate at t = 3 is 0 mg/L per min."
+        ],
+        [
+          "Average rate [1]",
+          "The endpoint concentrations are equal.",
+          "[[3 - 3|4 - 2]] = 0 mg/L per min"
+        ],
+        [
+          "Reasoning [1]",
+          "No. The concentration decreases then increases. Zero net change across an interval does not mean no change within it.",
+          ""
+        ]
+      ],
+      "marks": 3,
+      "hints": [
+        "Read the slope of the tangent for (a).",
+        "Equal endpoint values tell you about net change, not all intermediate values."
+      ],
+      "visual": "concentration",
+      "table": null,
+      "diagram": null
+    },
+    {
+      "n": 8,
+      "title": "Choosing the correct rate expression",
+      "prompt": [
+        "W(t) is the total volume, in litres, that has passed a sensor after t seconds. Assume W is smooth near t = 5.",
+        "Which expression is the average rate over [5, 5.01] and can be used to estimate the instantaneous flow rate at t = 5? Choose one and explain."
+      ],
+      "answer": "C; change in volume divided by 0.01 seconds.",
+      "steps": [
+        [
+          "Choice [1]",
+          "The required change is W(5.01) - W(5), and the elapsed time is 0.01 seconds.",
+          "C: [[W(5.01) - W(5)|0.01]]"
+        ],
+        [
+          "Explanation [1]",
+          "This is an interval average in L/s. A nearby short interval can estimate the instantaneous rate for a smooth model; it does not guarantee an exact value.",
+          ""
+        ]
+      ],
+      "marks": 2,
+      "hints": [
+        "Check that both the numerator and denominator describe the stated interval.",
+        "A difference alone is a volume, not a flow rate."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": null,
+      "choices": [
+        "A: [[W(5)|5]]",
+        "B: [[W(6) - W(4)|2]]",
+        "C: [[W(5.01) - W(5)|0.01]]",
+        "D: W(5.01) - W(5)"
+      ]
+    },
+    {
+      "n": 9,
+      "title": "What two measurements cannot tell us",
+      "prompt": [
+        "A smooth position function f satisfies f(2) = 14 m and f(6) = 30 m; time is in seconds.",
+        "(a) Find its average velocity over [2, 6].",
+        "(b) A pupil says its instantaneous velocity at t = 3 must therefore equal this average. Is the conclusion justified? Explain."
+      ],
+      "answer": "4 m/s; no. Two endpoint values do not determine the local slope at t = 3.",
+      "steps": [
+        [
+          "Average [1]",
+          "Use the endpoints.",
+          "[[30 - 14|6 - 2]] = 4 m/s"
+        ],
+        [
+          "Insufficient information [1]",
+          "The same endpoints can lie on different smooth curves, whose slopes at t = 3 differ.",
+          ""
+        ],
+        [
+          "Example or clear reasoning [1]",
+          "A straight line has constant rate 4. Adding a curved term that is zero at both endpoints preserves the average but can change the local slope. A sketch of two such curves is also acceptable.",
+          "f(t) = 4t + 6; g(t) = 4t + 6 + (t - 2)(t - 6)"
+        ]
+      ],
+      "marks": 3,
+      "hints": [
+        "Imagine more than one smooth curve joining the same two points.",
+        "Does fixing the endpoints fix a tangent at an interior point?"
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": null
+    },
+    {
+      "n": 10,
+      "title": "Closing in on an instant",
+      "prompt": [
+        "h(t) models a plant’s height, in centimetres, t weeks after observation begins. Assume the model is smooth near t = 3.",
+        "(a) Calculate the average rates on [3, 3.1] and [3, 3.01].",
+        "(b) Estimate the rate at t = 3.",
+        "(c) Why can we not calculate this rate simply by using the interval [3, 3]?"
+      ],
+      "answer": "4.1 cm/week; 4.01 cm/week; approximately 4 cm/week; [3, 3] would require division by zero.",
+      "steps": [
+        [
+          "First average [1]",
+          "The elapsed time is 0.1 week.",
+          "[[10.41 - 10|3.1 - 3]] = 4.1 cm/week"
+        ],
+        [
+          "Closer average [1]",
+          "The elapsed time is 0.01 week. The slopes suggest about 4 cm/week at t = 3.",
+          "[[10.0401 - 10|3.01 - 3]] = 4.01 cm/week"
+        ],
+        [
+          "Why an interval is needed [1]",
+          "Using [3, 3] gives 0 divided by 0, which is undefined. An instantaneous rate is approached through rates over shrinking nonzero intervals.",
+          ""
+        ]
+      ],
+      "marks": 3,
+      "hints": [
+        "Keep the time difference nonzero when forming each quotient.",
+        "Compare how the averages change as the interval narrows."
+      ],
+      "visual": null,
+      "table": [
+        [
+          "t (weeks)",
+          "3",
+          "3.01",
+          "3.1"
+        ],
+        [
+          [
+            "h(t) (cm)",
+            "10",
+            "10.0401",
+            "10.41"
+          ]
+        ]
+      ],
+      "diagram": null
+    }
+  ],
+  "4.5": [
+    {
+      "n": 1,
+      "title": "Two changing dimensions",
+      "prompt": [
+        "An area quantity A is related to lengths x and y by A = 3xy. All quantities vary smoothly with time t in seconds.",
+        "At one instant x = 2 cm and y = 5 cm. Their rates are given below. Find the rate of change of A."
+      ],
+      "answer": "54 cm²/s.",
+      "steps": [
+        [
+          "Differentiate first [1]",
+          "Both lengths change, so apply the product rule with respect to time.",
+          "[[dA|dt]] = 3(x [[dy|dt]] + y [[dx|dt]])"
+        ],
+        [
+          "Substitute [1]",
+          "Use the values at the stated instant only after differentiating.",
+          "[[dA|dt]] = 3(2(-1) + 5(4)) = 3(-2 + 20)"
+        ],
+        [
+          "Simplify and interpret [1]",
+          "The area quantity is increasing.",
+          "[[dA|dt]] = 54 cm²/s"
+        ]
+      ],
+      "marks": 3,
+      "hints": [
+        "Treat x and y as functions of time.",
+        "Differentiate the product before inserting the snapshot values."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": "equation",
+      "equation": "[[dx|dt]] = 4 cm/s; [[dy|dt]] = -1 cm/s"
+    },
+    {
+      "n": 2,
+      "title": "A growing square",
+      "prompt": [
+        "A square metal plate expands while remaining square. When its side length is 12 cm, its area is increasing at 48 cm²/s.",
+        "How fast is its side length increasing at that instant?"
+      ],
+      "answer": "2 cm/s.",
+      "steps": [
+        [
+          "Model [1]",
+          "Let s(t) be the side length.",
+          "A = s²"
+        ],
+        [
+          "Differentiate and substitute [1]",
+          "Differentiate with respect to t before setting s = 12.",
+          "[[dA|dt]] = 2s [[ds|dt]]; 48 = 24 [[ds|dt]]"
+        ],
+        [
+          "Solve [1]",
+          "The positive value indicates expansion.",
+          "[[ds|dt]] = [[48|24]] = 2 cm/s"
+        ]
+      ],
+      "marks": 3,
+      "hints": [
+        "Let s be a changing side length.",
+        "Relate area to s, then differentiate with respect to time."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": "square"
+    },
+    {
+      "n": 3,
+      "title": "Inflating a sphere",
+      "prompt": [
+        "A spherical balloon has radius 6 cm at an instant when its radius increases at 0.5 cm/s.",
+        "Find the rate at which its volume increases. Give an exact answer. Use the sphere-volume formula below."
+      ],
+      "answer": "72π cm³/s.",
+      "steps": [
+        [
+          "Model [1]",
+          "Use the sphere-volume relationship.",
+          "V = [[4|3]]πr³"
+        ],
+        [
+          "Differentiate [1]",
+          "The chain rule introduces the radius rate.",
+          "[[dV|dt]] = 4πr² [[dr|dt]]"
+        ],
+        [
+          "Substitute [1]",
+          "Insert the instantaneous radius and radius rate.",
+          "[[dV|dt]] = 4π(6²)(0.5)"
+        ],
+        [
+          "Evaluate [1]",
+          "Keep π for an exact answer; volume rate uses cubic units per second.",
+          "[[dV|dt]] = 72π cm³/s"
+        ]
+      ],
+      "marks": 4,
+      "hints": [
+        "The radius is a function of time.",
+        "Include dr/dt when differentiating r³."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": "sphere",
+      "equation": "V = [[4|3]]πr³"
+    },
+    {
+      "n": 4,
+      "title": "A sliding ladder",
+      "prompt": [
+        "A rigid 13 m ladder leans against a vertical wall on level ground. Its foot moves away from the wall at 0.6 m/s.",
+        "When its foot is 5 m from the wall, how fast is the top moving? State both a signed rate and the direction of motion."
+      ],
+      "answer": "[[dy|dt]] = -0.25 m/s; the top moves down at 0.25 m/s.",
+      "steps": [
+        [
+          "Model and snapshot [1]",
+          "Let x be the foot’s distance from the wall and y the top’s height.",
+          "x² + y² = 13²; y² = 169 - 25 = 144; y = 12"
+        ],
+        [
+          "Differentiate [1]",
+          "The ladder length is constant.",
+          "2x [[dx|dt]] + 2y [[dy|dt]] = 0"
+        ],
+        [
+          "Substitute and solve [1]",
+          "The foot moves away, so its distance rate is positive.",
+          "10(0.6) + 24 [[dy|dt]] = 0; [[dy|dt]] = [[-6|24]] = -0.25"
+        ],
+        [
+          "Interpret [1]",
+          "Height is decreasing: the top moves down at 0.25 m/s.",
+          ""
+        ]
+      ],
+      "marks": 4,
+      "hints": [
+        "Label the horizontal distance x and vertical height y.",
+        "Find the missing height at the instant, then use the differentiated relationship."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": "ladder"
+    },
+    {
+      "n": 5,
+      "title": "Approaching and leaving a crossing",
+      "prompt": [
+        "Two carts move on perpendicular straight tracks meeting at a crossing. Cart A is 30 m from the crossing and moving towards it at 3 m/s. Cart B is 40 m from the crossing and moving away at 4 m/s.",
+        "Find the rate of change of the distance between the carts at that instant. Are they getting closer or farther apart?"
+      ],
+      "answer": "1.4 m/s; they are moving farther apart.",
+      "steps": [
+        [
+          "Model and signs [1]",
+          "Let x and y be distances from the crossing, and z the separation. The x-rate is -3 m/s; the y-rate is 4 m/s.",
+          "z² = x² + y²; z = 50 m"
+        ],
+        [
+          "Differentiate [1]",
+          "All three distances may change.",
+          "2z [[dz|dt]] = 2x [[dx|dt]] + 2y [[dy|dt]]"
+        ],
+        [
+          "Substitute [1]",
+          "Keep the approach rate negative.",
+          "50 [[dz|dt]] = 30(-3) + 40(4) = 70"
+        ],
+        [
+          "Solve and interpret [1]",
+          "Positive separation rate means farther apart.",
+          "[[dz|dt]] = [[70|50]] = 1.4 m/s"
+        ]
+      ],
+      "marks": 4,
+      "hints": [
+        "Distances from the crossing are nonnegative, but their rates can have different signs.",
+        "Use Pythagoras to connect the two track distances and the separation."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": "carts"
+    },
+    {
+      "n": 6,
+      "title": "Filling a conical tank",
+      "prompt": [
+        "A cone-shaped tank stands with its vertex down. Its full height is 10 m and its top radius is 5 m. Water enters at 3π m³/min.",
+        "When the water is 6 m deep, how fast is its depth increasing? Use the cone-volume formula below."
+      ],
+      "answer": "1/3 m/min.",
+      "steps": [
+        [
+          "Similar triangles [1]",
+          "The water surface radius changes with depth.",
+          "[[r|h]] = [[5|10]] = [[1|2]]; r = [[h|2]]"
+        ],
+        [
+          "One-variable model [1]",
+          "Substitute the radius-depth relationship before differentiating.",
+          "V = [[1|3]]π [[h²|4]] h = [[πh³|12]]"
+        ],
+        [
+          "Differentiate [1]",
+          "Use the chain rule.",
+          "[[dV|dt]] = [[πh²|4]] [[dh|dt]]"
+        ],
+        [
+          "Substitute and solve [1]",
+          "At h = 6, the coefficient is 9π.",
+          "3π = 9π [[dh|dt]]; [[dh|dt]] = [[1|3]] m/min"
+        ]
+      ],
+      "marks": 4,
+      "hints": [
+        "Compare the small water cone with the full tank using similar triangles.",
+        "Eliminate r so that volume is expressed in terms of depth alone."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": "cone",
+      "equation": "V = [[1|3]]πr²h"
+    },
+    {
+      "n": 7,
+      "title": "Watching a rising balloon",
+      "prompt": [
+        "An observer stands 40 m horizontally from a balloon’s launch point. The balloon rises vertically at 2 m/s. Let θ be its angle of elevation in radians.",
+        "Find the rate of change of θ when the balloon is 30 m above the ground. Give an exact answer."
+      ],
+      "answer": "4/125 rad/s.",
+      "steps": [
+        [
+          "Model [1]",
+          "Let h be height. The horizontal distance remains fixed.",
+          "tan θ = [[h|40]]"
+        ],
+        [
+          "Differentiate [1]",
+          "Differentiate both sides with respect to time.",
+          "sec² θ [[dθ|dt]] = [[1|40]] [[dh|dt]]"
+        ],
+        [
+          "Snapshot values [1]",
+          "Use the height and fixed distance to find tan θ, then use sec² θ = 1 + tan² θ.",
+          "sec² θ = 1 + [[9|16]] = [[25|16]]"
+        ],
+        [
+          "Solve [1]",
+          "Use radians for the angular rate.",
+          "[[25|16]] [[dθ|dt]] = [[2|40]]; [[dθ|dt]] = [[4|125]] rad/s"
+        ]
+      ],
+      "marks": 4,
+      "hints": [
+        "Connect the angle and height with a trigonometric ratio.",
+        "Differentiate the angle as a function of time; work in radians."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": "angle"
+    },
+    {
+      "n": 8,
+      "title": "A moving shadow",
+      "prompt": [
+        "A 1.5 m tall person walks at 2 m/s directly away from a 6 m tall streetlight on level ground.",
+        "Let x be the person’s distance from the pole and s the shadow’s length. Find (a) the rate at which the shadow length increases, and (b) the speed of the tip of the shadow away from the pole."
+      ],
+      "answer": "Shadow length: 2/3 m/s; shadow-tip speed: 8/3 m/s.",
+      "steps": [
+        [
+          "Similar triangles [1]",
+          "The large triangle’s base is x + s, not x.",
+          "[[6|x + s]] = [[1.5|s]]"
+        ],
+        [
+          "Simplify [1]",
+          "Cross-multiply and collect the s terms.",
+          "6s = 1.5(x + s); 4.5s = 1.5x; s = [[x|3]]"
+        ],
+        [
+          "Shadow rate [1]",
+          "Differentiate with respect to time.",
+          "[[ds|dt]] = [[1|3]] [[dx|dt]] = [[2|3]] m/s"
+        ],
+        [
+          "Tip position [1]",
+          "The tip is x + s metres from the pole.",
+          "Tip rate = [[dx|dt]] + [[ds|dt]]"
+        ],
+        [
+          "Tip speed [1]",
+          "Both terms are positive.",
+          "Tip speed = 2 + [[2|3]] = [[8|3]] m/s"
+        ]
+      ],
+      "marks": 5,
+      "hints": [
+        "Draw the two similar triangles. The large base reaches the shadow’s tip.",
+        "Distinguish shadow length s from the tip’s position x + s."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": "shadow"
+    },
+    {
+      "n": 9,
+      "title": "A cylinder and a tempting error",
+      "prompt": [
+        "A cylinder has fixed height 10 cm and an expanding radius r(t). Its volume increases at 200π cm³/min. At the instant considered, r = 5 cm.",
+        "(a) Find the rate at which the radius increases.",
+        "(b) A pupil substitutes r = 5 in V = 10πr² before differentiating, then concludes that the volume rate is zero. Explain the error."
+      ],
+      "answer": "[[dr|dt]] = 2 cm/min. A snapshot radius cannot replace the changing radius before differentiation.",
+      "steps": [
+        [
+          "Model [1]",
+          "The height is fixed but the radius is not.",
+          "V = 10πr²"
+        ],
+        [
+          "Differentiate and substitute [1]",
+          "Differentiate the changing relationship first.",
+          "[[dV|dt]] = 20πr [[dr|dt]]; 200π = 100π [[dr|dt]]"
+        ],
+        [
+          "Solve [1]",
+          "Cancel 100π.",
+          "[[dr|dt]] = 2 cm/min"
+        ],
+        [
+          "Explain [1]",
+          "The value 5 cm applies only at one instant. Substitution first erases the time dependence and produces a constant snapshot, not a volume function valid over time.",
+          ""
+        ]
+      ],
+      "marks": 4,
+      "hints": [
+        "Ask which quantity is constant throughout the process and which is a snapshot.",
+        "Retain r(t) until after differentiation."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": "cylinder"
+    },
+    {
+      "n": 10,
+      "title": "Fixed area, changing perimeter",
+      "prompt": [
+        "A rectangular display has constant area 96 m². At an instant its length is 12 m and its width is 8 m. The length increases at 0.5 m/min.",
+        "(a) Find the rate of change of its width.",
+        "(b) Find the rate of change of its perimeter. Explain how the area can stay constant while the perimeter changes."
+      ],
+      "answer": "Width: -1/3 m/min; perimeter: 1/3 m/min. The width decreases as the length increases; constant area does not require constant perimeter.",
+      "steps": [
+        [
+          "Area relationship [1]",
+          "Let L and w vary while their product remains fixed.",
+          "Lw = 96; L [[dw|dt]] + w [[dL|dt]] = 0"
+        ],
+        [
+          "Width rate [1]",
+          "Insert the snapshot dimensions.",
+          "12 [[dw|dt]] + 8(0.5) = 0; [[dw|dt]] = [[-1|3]] m/min"
+        ],
+        [
+          "Perimeter model [1]",
+          "Both dimensions change.",
+          "P = 2L + 2w; [[dP|dt]] = 2 [[dL|dt]] + 2 [[dw|dt]]"
+        ],
+        [
+          "Perimeter rate [1]",
+          "Add the signed length and width contributions.",
+          "[[dP|dt]] = 2(0.5) + 2(-[[1|3]]) = [[1|3]] m/min"
+        ],
+        [
+          "Interpret [1]",
+          "The width shrinks enough to hold the product Lw fixed. At these dimensions the sum L + w still increases, so the perimeter increases.",
+          ""
+        ]
+      ],
+      "marks": 5,
+      "hints": [
+        "Differentiate the constant-area relationship to find the unknown width rate.",
+        "Then use a separate relationship for perimeter."
+      ],
+      "visual": null,
+      "table": null,
+      "diagram": "rectangle"
+    }
+  ]
+}
