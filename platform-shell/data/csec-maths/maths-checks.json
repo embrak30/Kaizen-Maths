@@ -1,0 +1,494 @@
+{
+  "checks": [
+    {
+      "pack": "M1-38",
+      "question": 1,
+      "passed": true
+    },
+    {
+      "pack": "M1-38",
+      "question": 2,
+      "passed": true
+    },
+    {
+      "pack": "M1-38",
+      "question": 3,
+      "passed": true
+    },
+    {
+      "pack": "M1-38",
+      "question": 4,
+      "passed": true
+    },
+    {
+      "pack": "M1-38",
+      "question": 5,
+      "passed": true
+    },
+    {
+      "pack": "M1-38",
+      "question": 6,
+      "passed": true
+    },
+    {
+      "pack": "M1-38",
+      "question": 7,
+      "passed": true
+    },
+    {
+      "pack": "M1-38",
+      "question": 8,
+      "passed": true
+    },
+    {
+      "pack": "M1-39",
+      "question": 1,
+      "passed": true
+    },
+    {
+      "pack": "M1-39",
+      "question": 2,
+      "passed": true
+    },
+    {
+      "pack": "M1-39",
+      "question": 3,
+      "passed": true
+    },
+    {
+      "pack": "M1-39",
+      "question": 4,
+      "passed": true
+    },
+    {
+      "pack": "M1-39",
+      "question": 5,
+      "passed": true
+    },
+    {
+      "pack": "M1-39",
+      "question": 6,
+      "passed": true
+    },
+    {
+      "pack": "M1-39",
+      "question": 7,
+      "passed": true
+    },
+    {
+      "pack": "M1-39",
+      "question": 8,
+      "passed": true
+    },
+    {
+      "pack": "M1-40",
+      "question": 1,
+      "passed": true
+    },
+    {
+      "pack": "M1-40",
+      "question": 2,
+      "passed": true
+    },
+    {
+      "pack": "M1-40",
+      "question": 3,
+      "passed": true
+    },
+    {
+      "pack": "M1-40",
+      "question": 4,
+      "passed": true
+    },
+    {
+      "pack": "M1-40",
+      "question": 5,
+      "passed": true
+    },
+    {
+      "pack": "M1-40",
+      "question": 6,
+      "passed": true
+    },
+    {
+      "pack": "M1-40",
+      "question": 7,
+      "passed": true
+    },
+    {
+      "pack": "M1-40",
+      "question": 8,
+      "passed": true
+    },
+    {
+      "pack": "M1-41",
+      "question": 1,
+      "passed": true
+    },
+    {
+      "pack": "M1-41",
+      "question": 2,
+      "passed": true
+    },
+    {
+      "pack": "M1-41",
+      "question": 3,
+      "passed": true
+    },
+    {
+      "pack": "M1-41",
+      "question": 4,
+      "passed": true
+    },
+    {
+      "pack": "M1-41",
+      "question": 5,
+      "passed": true
+    },
+    {
+      "pack": "M1-41",
+      "question": 6,
+      "passed": true
+    },
+    {
+      "pack": "M1-41",
+      "question": 7,
+      "passed": true
+    },
+    {
+      "pack": "M1-41",
+      "question": 8,
+      "passed": true
+    },
+    {
+      "pack": "M1-42",
+      "question": 1,
+      "passed": true
+    },
+    {
+      "pack": "M1-42",
+      "question": 2,
+      "passed": true
+    },
+    {
+      "pack": "M1-42",
+      "question": 3,
+      "passed": true
+    },
+    {
+      "pack": "M1-42",
+      "question": 4,
+      "passed": true
+    },
+    {
+      "pack": "M1-42",
+      "question": 5,
+      "passed": true
+    },
+    {
+      "pack": "M1-42",
+      "question": 6,
+      "passed": true
+    },
+    {
+      "pack": "M1-42",
+      "question": 7,
+      "passed": true
+    },
+    {
+      "pack": "M1-42",
+      "question": 8,
+      "passed": true
+    },
+    {
+      "pack": "M1-43",
+      "question": 1,
+      "passed": true
+    },
+    {
+      "pack": "M1-43",
+      "question": 2,
+      "passed": true
+    },
+    {
+      "pack": "M1-43",
+      "question": 3,
+      "passed": true
+    },
+    {
+      "pack": "M1-43",
+      "question": 4,
+      "passed": true
+    },
+    {
+      "pack": "M1-43",
+      "question": 5,
+      "passed": true
+    },
+    {
+      "pack": "M1-43",
+      "question": 6,
+      "passed": true
+    },
+    {
+      "pack": "M1-43",
+      "question": 7,
+      "passed": true
+    },
+    {
+      "pack": "M1-43",
+      "question": 8,
+      "passed": true
+    },
+    {
+      "pack": "M1-44",
+      "question": 1,
+      "passed": true
+    },
+    {
+      "pack": "M1-44",
+      "question": 2,
+      "passed": true
+    },
+    {
+      "pack": "M1-44",
+      "question": 3,
+      "passed": true
+    },
+    {
+      "pack": "M1-44",
+      "question": 4,
+      "passed": true
+    },
+    {
+      "pack": "M1-44",
+      "question": 5,
+      "passed": true
+    },
+    {
+      "pack": "M1-44",
+      "question": 6,
+      "passed": true
+    },
+    {
+      "pack": "M1-44",
+      "question": 7,
+      "passed": true
+    },
+    {
+      "pack": "M1-44",
+      "question": 8,
+      "passed": true
+    },
+    {
+      "pack": "M1-45",
+      "question": 1,
+      "passed": true
+    },
+    {
+      "pack": "M1-45",
+      "question": 2,
+      "passed": true
+    },
+    {
+      "pack": "M1-45",
+      "question": 3,
+      "passed": true
+    },
+    {
+      "pack": "M1-45",
+      "question": 4,
+      "passed": true
+    },
+    {
+      "pack": "M1-45",
+      "question": 5,
+      "passed": true
+    },
+    {
+      "pack": "M1-45",
+      "question": 6,
+      "passed": true
+    },
+    {
+      "pack": "M1-45",
+      "question": 7,
+      "passed": true
+    },
+    {
+      "pack": "M1-45",
+      "question": 8,
+      "passed": true
+    },
+    {
+      "pack": "M1-46",
+      "question": 1,
+      "passed": true
+    },
+    {
+      "pack": "M1-46",
+      "question": 2,
+      "passed": true
+    },
+    {
+      "pack": "M1-46",
+      "question": 3,
+      "passed": true
+    },
+    {
+      "pack": "M1-46",
+      "question": 4,
+      "passed": true
+    },
+    {
+      "pack": "M1-46",
+      "question": 5,
+      "passed": true
+    },
+    {
+      "pack": "M1-46",
+      "question": 6,
+      "passed": true
+    },
+    {
+      "pack": "M1-46",
+      "question": 7,
+      "passed": true
+    },
+    {
+      "pack": "M1-46",
+      "question": 8,
+      "passed": true
+    },
+    {
+      "pack": "M1-48",
+      "question": 1,
+      "passed": true
+    },
+    {
+      "pack": "M1-48",
+      "question": 2,
+      "passed": true
+    },
+    {
+      "pack": "M1-48",
+      "question": 3,
+      "passed": true
+    },
+    {
+      "pack": "M1-48",
+      "question": 4,
+      "passed": true
+    },
+    {
+      "pack": "M1-48",
+      "question": 5,
+      "passed": true
+    },
+    {
+      "pack": "M1-48",
+      "question": 6,
+      "passed": true
+    },
+    {
+      "pack": "M1-48",
+      "question": 7,
+      "passed": true
+    },
+    {
+      "pack": "M1-48",
+      "question": 8,
+      "passed": true
+    },
+    {
+      "pack": "M3-19",
+      "question": 1,
+      "passed": true,
+      "method": "Enumerated every feasible integer point; all polygon vertices are integral."
+    },
+    {
+      "pack": "M3-19",
+      "question": 2,
+      "passed": true,
+      "method": "Enumerated every feasible integer point; all polygon vertices are integral."
+    },
+    {
+      "pack": "M3-19",
+      "question": 3,
+      "passed": true,
+      "method": "Enumerated every feasible integer point; all polygon vertices are integral."
+    },
+    {
+      "pack": "M3-19",
+      "question": 4,
+      "passed": true,
+      "method": "Enumerated every feasible integer point; all polygon vertices are integral."
+    },
+    {
+      "pack": "M3-19",
+      "question": 5,
+      "passed": true,
+      "method": "Enumerated every feasible integer point; all polygon vertices are integral."
+    },
+    {
+      "pack": "M3-19",
+      "question": 6,
+      "passed": true,
+      "method": "Enumerated every feasible integer point; all polygon vertices are integral."
+    },
+    {
+      "pack": "M3-19",
+      "question": 7,
+      "passed": true,
+      "method": "Enumerated every feasible integer point; all polygon vertices are integral."
+    },
+    {
+      "pack": "M3-19",
+      "question": 8,
+      "passed": true,
+      "method": "Enumerated every feasible integer point; all polygon vertices are integral."
+    },
+    {
+      "pack": "M1-50",
+      "question": 1,
+      "passed": true
+    },
+    {
+      "pack": "M1-50",
+      "question": 2,
+      "passed": true
+    },
+    {
+      "pack": "M1-50",
+      "question": 3,
+      "passed": true
+    },
+    {
+      "pack": "M1-50",
+      "question": 4,
+      "passed": true
+    },
+    {
+      "pack": "M1-50",
+      "question": 5,
+      "passed": true
+    },
+    {
+      "pack": "M1-50",
+      "question": 6,
+      "passed": true
+    },
+    {
+      "pack": "M1-50",
+      "question": 7,
+      "passed": true
+    },
+    {
+      "pack": "M1-50",
+      "question": 8,
+      "passed": true
+    }
+  ],
+  "total": 96,
+  "limitations": "Independent recalculations cover selected new banks, not every answer in the reused libraries."
+}

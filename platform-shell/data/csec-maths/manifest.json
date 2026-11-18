@@ -1,0 +1,1852 @@
+[
+  {
+    "id": "M1-01",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Integers and order of operations",
+    "tools": [
+      "integer-operations"
+    ],
+    "student": "assets/csec-maths/m1-01-student.pdf",
+    "teacher": "assets/csec-maths/m1-01-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 14,
+    "studentHash": "36bfd86375a6d2f5339e7b363364e5b899879585f8e467843c0693de1a713818",
+    "teacherHash": "f4c601139ef71c93875d7fd9d5d36a73d4861813c086d5d48e24183e6b758344"
+  },
+  {
+    "id": "M1-02",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Fractions: the four operations",
+    "tools": [
+      "fractions-practice"
+    ],
+    "student": "assets/csec-maths/m1-02-student.pdf",
+    "teacher": "assets/csec-maths/m1-02-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "86922fd5230eca3075ba4177c28b382d09f9a24a947b9414a4cb2f34dd3a3b69",
+    "teacherHash": "1eb6b42277e62a3ec52fd70bd8e2372f0dcfab792d6ddabeea9b912e2a81c4b7"
+  },
+  {
+    "id": "M1-03",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Decimal calculations",
+    "tools": [
+      "decimals-practice-lab"
+    ],
+    "student": "assets/csec-maths/m1-03-student.pdf",
+    "teacher": "assets/csec-maths/m1-03-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "3a4c6f61d02ca05927d103c6f39faabdfc5b2a94ec08e52e5ce8aa2e308b34a9",
+    "teacherHash": "8c7db41529c29a6fe373d1249697d055d95cc3d0b180f97da59992fc4fcc04c4"
+  },
+  {
+    "id": "M1-04",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Fractions, decimals and percentages",
+    "tools": [
+      "simple-percentage-tasks"
+    ],
+    "student": "assets/csec-maths/m1-04-student.pdf",
+    "teacher": "assets/csec-maths/m1-04-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 8,
+    "studentHash": "bfbe2707dfc97208c00f8b7ce8aaf39fe413e443bcaec5918e71382ee4ca28ee",
+    "teacherHash": "eedeef5481d967f85eeee32ebf0d9f1d9ea1225f0ee09c3d740ad768cb993702"
+  },
+  {
+    "id": "M1-05",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Fractions of quantities",
+    "tools": [
+      "fractions-practice"
+    ],
+    "student": "assets/csec-maths/m1-05-student.pdf",
+    "teacher": "assets/csec-maths/m1-05-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "4070d8817d0fcc4b5a0c68e21d9f8b7673a9ea761c65faede8e139ed406d0422",
+    "teacherHash": "f66ed8fa17d73704841e0944da7500a1f75bf636d8d851c069751b27c7ccb555"
+  },
+  {
+    "id": "M1-06",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Percentages of quantities",
+    "tools": [
+      "simple-percentage-tasks"
+    ],
+    "student": "assets/csec-maths/m1-06-student.pdf",
+    "teacher": "assets/csec-maths/m1-06-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "52c9f647235def999de24458fb28bce9a8c7edcd98827ef23a2e503e1ea418a8",
+    "teacherHash": "b670b8bb4d77ffb6e9e1f5501b85d93477bd351eb9a2834e6ac3d95848ba3035"
+  },
+  {
+    "id": "M1-07",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Factors, multiples, HCF and LCM",
+    "tools": [
+      "hcf-lcm"
+    ],
+    "student": "assets/csec-maths/m1-07-student.pdf",
+    "teacher": "assets/csec-maths/m1-07-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "1dd66f7a825f8b990b2667f3d24d9056446a98c3bfc835ff6342b0308111d5fd",
+    "teacherHash": "89dcaa37f363496184bc172ddc8d9bf0277fc593ef67e905c69bf098c635e99f"
+  },
+  {
+    "id": "M1-08",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Powers, roots and reciprocals",
+    "tools": [
+      "exponents-index-notation"
+    ],
+    "student": "assets/csec-maths/m1-08-student.pdf",
+    "teacher": "assets/csec-maths/m1-08-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 9,
+    "studentHash": "cb984e1b45509bb821a54627ec330d465ca57f76c72d1c9a1c7ec929a7a20a9f",
+    "teacherHash": "f3a0df9e0f4e2e42d645385227f0f92900c90c863a75538cbc5ce14b3241f181"
+  },
+  {
+    "id": "M1-09",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Standard form",
+    "tools": [
+      "powers-of-10"
+    ],
+    "student": "assets/csec-maths/m1-09-student.pdf",
+    "teacher": "assets/csec-maths/m1-09-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 5,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "addb8cb6006cbaa1439e84b76c3cc53f84381a7bad3ef99ab964b0bacff681f3",
+    "teacherHash": "448d17e70817a660a6616e6fe08adf0423d337a891ec60a9cfe56fda8a008582"
+  },
+  {
+    "id": "M1-10",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Rounding and estimation",
+    "tools": [
+      "decimals-practice-lab"
+    ],
+    "student": "assets/csec-maths/m1-10-student.pdf",
+    "teacher": "assets/csec-maths/m1-10-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 11,
+    "studentHash": "b60b205b821a00c8843782819b5a202875b56f291bab674e04d978bb0ddeef97",
+    "teacherHash": "09690d45b36f39baf3cb06921af0a565864127dc160ff514fd9e8fabd6e4dcea"
+  },
+  {
+    "id": "M1-11",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Recurring decimals and fractional indices",
+    "tools": [
+      "exponents-index-notation"
+    ],
+    "student": "assets/csec-maths/m1-11-student.pdf",
+    "teacher": "assets/csec-maths/m1-11-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 20,
+    "studentHash": "77ffd32597d879542ba5d0135c1c0a4cdb35a55c06c0b97025a5ec040ef519e5",
+    "teacherHash": "836127f0862b18abb5c56f3130fec8f30066e0cbcd7a7274285207e0c5ca89f7"
+  },
+  {
+    "id": "M1-12",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Linear and pattern sequences",
+    "tools": [
+      "sequences"
+    ],
+    "student": "assets/csec-maths/m1-12-student.pdf",
+    "teacher": "assets/csec-maths/m1-12-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 17,
+    "studentHash": "c939202018056db8cea0248caa745405f4e00107c2a2e3ddb33bfa77bd5ba0c7",
+    "teacherHash": "488837eed3d728777b55c4e9ab60c9de09c8e8632402a13b8db45a40b38eafb2"
+  },
+  {
+    "id": "M1-13",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Simplifying and sharing in a ratio",
+    "tools": [
+      "ratio-proportion"
+    ],
+    "student": "assets/csec-maths/m1-13-student.pdf",
+    "teacher": "assets/csec-maths/m1-13-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "ad38268a24a0b1baf5b32f8e53072380965346582554ca38d416ef0591e5dc93",
+    "teacherHash": "d70bd9ab4f4f977e3f75645d6fd3aa149514001a6cff746b85f3aa2cc46bcf28"
+  },
+  {
+    "id": "M1-14",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Ratio and fraction connections",
+    "tools": [
+      "ratio-proportion"
+    ],
+    "student": "assets/csec-maths/m1-14-student.pdf",
+    "teacher": "assets/csec-maths/m1-14-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "8d805faaf0a797d8142efef0c98d1214b556479faf184440aa4cc93d1879f793",
+    "teacherHash": "170947c474e27b2ce51a9f0346097d83c859dd3be278ccf4d031a8d78ebee0c4"
+  },
+  {
+    "id": "M1-15",
+    "area": "Number Theory & Computation",
+    "module": 1,
+    "title": "Recipes and mixtures",
+    "tools": [
+      "ratio-proportion"
+    ],
+    "student": "assets/csec-maths/m1-15-student.pdf",
+    "teacher": "assets/csec-maths/m1-15-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "e666debf41263fd3d1dc1b9366462153e0d2e1fec2043d121fa8f742aa9bf1d4",
+    "teacherHash": "007e6969265aad7889314bf00d73d4788e7ca6f441298cbb445808e4f677272e"
+  },
+  {
+    "id": "M1-16",
+    "area": "Consumer Arithmetic",
+    "module": 1,
+    "title": "Percentage change",
+    "tools": [
+      "simple-percentage-tasks"
+    ],
+    "student": "assets/csec-maths/m1-16-student.pdf",
+    "teacher": "assets/csec-maths/m1-16-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "d47aae9a0f97ec064f7fcfff6630a70d65ba5fac72a73097251fa439da9fb28a",
+    "teacherHash": "65d44e2685f61c17c1c15886f97069ed492674711653a768cb881798ac05a435"
+  },
+  {
+    "id": "M1-17",
+    "area": "Consumer Arithmetic",
+    "module": 1,
+    "title": "Reverse percentages",
+    "tools": [
+      "simple-percentage-tasks"
+    ],
+    "student": "assets/csec-maths/m1-17-student.pdf",
+    "teacher": "assets/csec-maths/m1-17-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "23903a30e61dc2b72b1310f6c6a9f8b2967a09d57fcac930df17b445df57b05b",
+    "teacherHash": "1ba650592bf59c8e8a251dc6ad0a2d3041d1f923f668f1339d236c0bb9f7e827"
+  },
+  {
+    "id": "M1-18",
+    "area": "Consumer Arithmetic",
+    "module": 1,
+    "title": "Interest, growth and depreciation",
+    "tools": [
+      "financial-real-life-maths"
+    ],
+    "student": "assets/csec-maths/m1-18-student.pdf",
+    "teacher": "assets/csec-maths/m1-18-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "c6b7ac53b2d63469589b394c2165b8a2b4bff0ff24230d3c7e6a924b44f5435d",
+    "teacherHash": "f90f0c6b89f8b5abda98f96ff8c5fc5c361c21ea43f41d9b9284d1384499f0c8"
+  },
+  {
+    "id": "M1-19",
+    "area": "Sets",
+    "module": 1,
+    "title": "Venn diagrams and sets",
+    "tools": [
+      "venn-diagrams"
+    ],
+    "student": "assets/csec-maths/m1-19-student.pdf",
+    "teacher": "assets/csec-maths/m1-19-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "dc672e33d9815c22cdde5eaf63ccdf6fa29fb94106bc7b0d4381eaa533bee924",
+    "teacherHash": "44bc76d332ca591fdbc4b16e16c5f607533d4f86d45d5dfab7e979b8346a09e0"
+  },
+  {
+    "id": "M1-20",
+    "area": "Measurement",
+    "module": 1,
+    "title": "Unit conversions",
+    "tools": [
+      "conversions-teaching"
+    ],
+    "student": "assets/csec-maths/m1-20-student.pdf",
+    "teacher": "assets/csec-maths/m1-20-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 8,
+    "studentHash": "fc184d963d959ba331554a0027529ad1df8eef7105faed732543c35017aec42f",
+    "teacherHash": "663f6f9e9b0840e8e9571cf060bbae35b26c6e744bca11ee3b93aa418a688ed3"
+  },
+  {
+    "id": "M1-21",
+    "area": "Measurement",
+    "module": 1,
+    "title": "Speed, density and pressure",
+    "tools": [
+      "conversions-teaching"
+    ],
+    "student": "assets/csec-maths/m1-21-student.pdf",
+    "teacher": "assets/csec-maths/m1-21-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "f66cc35252c2ed65ab176aad936e05a77aefcc8c1b1f66a9b14ad7b85132a14c",
+    "teacherHash": "e4dab1c2e3842b00d297b018677a4fb51a85f7ffc230ff5738a020f2e2ad3c78"
+  },
+  {
+    "id": "M1-22",
+    "area": "Measurement",
+    "module": 1,
+    "title": "Areas of triangles, parallelograms and trapezia",
+    "tools": [
+      "area-triangles"
+    ],
+    "student": "assets/csec-maths/m1-22-student.pdf",
+    "teacher": "assets/csec-maths/m1-22-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "7efab5c8c529c67f00fffa67015a1364a30caf308a757dae6fbbe787a29e8291",
+    "teacherHash": "504fded4d925ff1920b7311a0a3ac44314ac588a1ea35f2f860b74dfea22c74b"
+  },
+  {
+    "id": "M1-23",
+    "area": "Measurement",
+    "module": 1,
+    "title": "Compound area and perimeter",
+    "tools": [
+      "area-rectangles"
+    ],
+    "student": "assets/csec-maths/m1-23-student.pdf",
+    "teacher": "assets/csec-maths/m1-23-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "8c19408a9c7428fcc9e461a234e684c172a7aae982175767ff1a5748887cbf0c",
+    "teacherHash": "00d2b1faa5a76f4984e987361c048e64aaabb5f5be3e99bce959d94e279828ee"
+  },
+  {
+    "id": "M1-24",
+    "area": "Measurement",
+    "module": 1,
+    "title": "Circles: area and circumference",
+    "tools": [
+      "circles-area-circumference"
+    ],
+    "student": "assets/csec-maths/m1-24-student.pdf",
+    "teacher": "assets/csec-maths/m1-24-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 19,
+    "studentHash": "9f739f4eab22cae47e56a474937dede9c5f5e1815c1242be9692275a6cddf5ab",
+    "teacherHash": "06e00d273a517d8ed14fb8c4eaebd24860fed80b3ad64791b3615837f3f64270"
+  },
+  {
+    "id": "M1-25",
+    "area": "Measurement",
+    "module": 1,
+    "title": "Arcs and sectors",
+    "tools": [
+      "sectors-arc-length"
+    ],
+    "student": "assets/csec-maths/m1-25-student.pdf",
+    "teacher": "assets/csec-maths/m1-25-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "a932c8a348f3f75b296904c4c84dedfd956cb383dd3ce77a347acf269eb2dd7f",
+    "teacherHash": "e9d9854c5e49434b6108ea2016df75069c7442ced6b1e45c7149b32729186b95"
+  },
+  {
+    "id": "M1-26",
+    "area": "Measurement",
+    "module": 1,
+    "title": "Volume of prisms",
+    "tools": [
+      "volume-surface-area-prisms"
+    ],
+    "student": "assets/csec-maths/m1-26-student.pdf",
+    "teacher": "assets/csec-maths/m1-26-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "edb6ea0c86370003e920ba278d9a5bf6d95894b39ab16d0202c2d5c0212ca1f9",
+    "teacherHash": "693a0bfb4e19db1723d75a034e9a4b42c9800540bb8d135c12060ba83700fa88"
+  },
+  {
+    "id": "M1-27",
+    "area": "Measurement",
+    "module": 1,
+    "title": "Surface area of prisms",
+    "tools": [
+      "volume-surface-area-prisms"
+    ],
+    "student": "assets/csec-maths/m1-27-student.pdf",
+    "teacher": "assets/csec-maths/m1-27-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "cd6d2e3c62a21d88b53d864aa41f3b08ed41c31b182e8bcdb962aa97138354e6",
+    "teacherHash": "bf34882c766213e0ac6150ac72b3eed55fecf0ccc8644ad226637b8a4970739b"
+  },
+  {
+    "id": "M1-28",
+    "area": "Measurement",
+    "module": 1,
+    "title": "Cylinders",
+    "tools": [
+      "cylinders-cones-volume-surface-area"
+    ],
+    "student": "assets/csec-maths/m1-28-student.pdf",
+    "teacher": "assets/csec-maths/m1-28-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 20,
+    "studentHash": "fa056c8747d925c1cb65a53a2c8541fda049f93b8f2b45a87cbf9a7c49f2b5f8",
+    "teacherHash": "12bcd01a9ecc7b1e8150f6f227905c1f2241800131555ae8ef9d5d1093d1a848"
+  },
+  {
+    "id": "M1-29",
+    "area": "Measurement",
+    "module": 1,
+    "title": "Cones, pyramids and spheres",
+    "tools": [
+      "pyramids-spheres-volume-surface-area"
+    ],
+    "student": "assets/csec-maths/m1-29-student.pdf",
+    "teacher": "assets/csec-maths/m1-29-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "14f38baad9007bccd1929116499ab205f86be5fa0143cd6b892ccd0c78243d0f",
+    "teacherHash": "bd6586a80807eaa0dbe7cd671f2cde96417bd0555b80ef8be72be0a8be0b90e6"
+  },
+  {
+    "id": "M1-30",
+    "area": "Algebra 1",
+    "module": 1,
+    "title": "Notation and collecting like terms",
+    "tools": [
+      "simplification"
+    ],
+    "student": "assets/csec-maths/m1-30-student.pdf",
+    "teacher": "assets/csec-maths/m1-30-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "2495e63b27b3822990f21ef637103b1308e104e113ceae31a8f5b0d3a36178af",
+    "teacherHash": "cd2dbdac126ee6773ea31934104368eff727c29632dc3f06969bd6f191fced43"
+  },
+  {
+    "id": "M1-31",
+    "area": "Algebra 1",
+    "module": 1,
+    "title": "Substitution",
+    "tools": [
+      "substitution"
+    ],
+    "student": "assets/csec-maths/m1-31-student.pdf",
+    "teacher": "assets/csec-maths/m1-31-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "20a3ec383ed0563a84379e8f3ee31c8bccb98d0b55ccb1232030b820680292ba",
+    "teacherHash": "687a14b448f0ec49b03090f9bb212386cabf9b39645a580d0f8bca9b505ce03a"
+  },
+  {
+    "id": "M1-32",
+    "area": "Algebra 1",
+    "module": 1,
+    "title": "Expanding single brackets",
+    "tools": [
+      "bracket-expansion"
+    ],
+    "student": "assets/csec-maths/m1-32-student.pdf",
+    "teacher": "assets/csec-maths/m1-32-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "2f9bc7bae7d979749e6eba85dd474121d6e65ff60d44fb076e4a7e352764fc3b",
+    "teacherHash": "09bc01398792a309892ddb98a70d3674b5193384f3ad93063755d943edceff9a"
+  },
+  {
+    "id": "M1-33",
+    "area": "Algebra 1",
+    "module": 1,
+    "title": "Expanding double brackets",
+    "tools": [
+      "bracket-expansion"
+    ],
+    "student": "assets/csec-maths/m1-33-student.pdf",
+    "teacher": "assets/csec-maths/m1-33-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "ff547aede07f9b46518190976f38f28e8155f98e9b06acb207bc3ab860604cc9",
+    "teacherHash": "c827f5935b1846086ce2ada9b3b9d1ffd527092cf45285abeb4aa2627fae76a9"
+  },
+  {
+    "id": "M1-34",
+    "area": "Algebra 1",
+    "module": 1,
+    "title": "Linear equations",
+    "tools": [
+      "linear-equations"
+    ],
+    "student": "assets/csec-maths/m1-34-student.pdf",
+    "teacher": "assets/csec-maths/m1-34-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 5,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "e2723a032920d406c402287dbac10a46971dff022d70d9297af4e29b3367f0ce",
+    "teacherHash": "608eebbb8b0b2e9010bb32021af86fd013bd4c5c774a53dd3ac9b495998f7400"
+  },
+  {
+    "id": "M1-35",
+    "area": "Algebra 1",
+    "module": 1,
+    "title": "Forming equations from contexts",
+    "tools": [
+      "linear-equations"
+    ],
+    "student": "assets/csec-maths/m1-35-student.pdf",
+    "teacher": "assets/csec-maths/m1-35-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "d6e52ba27478681e993a51fa91930572ab794eaa56aa9e1af988348e398cf07b",
+    "teacherHash": "a6801dd02cd333682d9abfb9ef863329912cb8b56d2f111a531549921cd1790b"
+  },
+  {
+    "id": "M1-36",
+    "area": "Algebra 1",
+    "module": 1,
+    "title": "Rearranging formulae",
+    "tools": [
+      "transposition-formulae"
+    ],
+    "student": "assets/csec-maths/m1-36-student.pdf",
+    "teacher": "assets/csec-maths/m1-36-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "52d47c0f444f9ccb44febf983636e1d6f396118cd9c20e6840e1550a23eececc",
+    "teacherHash": "41668d477f7c61598260e12eca5a00369077a7a17985ecb9dfb34085f158eb3d"
+  },
+  {
+    "id": "M1-37",
+    "area": "Introduction to Graphs",
+    "module": 1,
+    "title": "Gradients and intercepts",
+    "tools": [
+      "straight-lines"
+    ],
+    "student": "assets/csec-maths/m1-37-student.pdf",
+    "teacher": "assets/csec-maths/m1-37-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "36242a9fa1bbae8632a816619ee17ccc4bd976dec80259d5ae624e5cc65e7f08",
+    "teacherHash": "83de3d6fff876a6a00ff5ba9c7e3eb2541190340769b4415dea662336c3640e7"
+  },
+  {
+    "id": "M2-01",
+    "area": "Relations, Functions & Graphs 1",
+    "module": 2,
+    "title": "Coordinates and midpoints",
+    "tools": [
+      "midpoint-length-lines"
+    ],
+    "student": "assets/csec-maths/m2-01-student.pdf",
+    "teacher": "assets/csec-maths/m2-01-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 15,
+    "studentHash": "0e6c9d647ba62f9592ca7cfc34e8323434c182cc03ac54fae2ae4ecd6826d38a",
+    "teacherHash": "a21304de5d78e80b5a48cefc7ace9a6f2fc113ceb015132e77aa156a5ae4a7c7"
+  },
+  {
+    "id": "M2-02",
+    "area": "Algebra 2",
+    "module": 2,
+    "title": "Index laws",
+    "tools": [
+      "exponents-index-notation"
+    ],
+    "student": "assets/csec-maths/m2-02-student.pdf",
+    "teacher": "assets/csec-maths/m2-02-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "cfb19a10ef90c349e0998216f3fef18b558755befb2a403489fc86f9bbf725d7",
+    "teacherHash": "fa9b65d5807b5182ff4c4edd54debee053e525fe9b29c86c3c3dee291c4f5f29"
+  },
+  {
+    "id": "M2-03",
+    "area": "Algebra 2",
+    "module": 2,
+    "title": "Factorising common factors",
+    "tools": [
+      "advanced-factorisation"
+    ],
+    "student": "assets/csec-maths/m2-03-student.pdf",
+    "teacher": "assets/csec-maths/m2-03-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "de4309d43cabfca71a6b929b9b0642d9fada80837c39d2d104ad76a7d963f99b",
+    "teacherHash": "7ded7aedbc068d43d557de405409c582645dcee297d2ccbd43c7c7e9ddda41ba"
+  },
+  {
+    "id": "M2-04",
+    "area": "Algebra 2",
+    "module": 2,
+    "title": "Factorising monic quadratics",
+    "tools": [
+      "quadratic-factorisation"
+    ],
+    "student": "assets/csec-maths/m2-04-student.pdf",
+    "teacher": "assets/csec-maths/m2-04-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "5bc2f76bc213b95b15222703eeee2d526fe8ef9993d8e58cad2354921dc72a91",
+    "teacherHash": "91c24c48db28368bf72483b8ec6b2780d333cae51fd8b3f37172ca521ff2f72e"
+  },
+  {
+    "id": "M2-05",
+    "area": "Algebra 2",
+    "module": 2,
+    "title": "Solving quadratics by factorising",
+    "tools": [
+      "quadratic-equations"
+    ],
+    "student": "assets/csec-maths/m2-05-student.pdf",
+    "teacher": "assets/csec-maths/m2-05-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 5,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "56e9bd1385656bdde3deb849b1b094f13f9abdcd1fbc878e72d5d0f2eec4e46d",
+    "teacherHash": "83e765651e307bfc37ec9cfbe462eb36e075436ba20128369cef644eec6e16ac"
+  },
+  {
+    "id": "M2-06",
+    "area": "Algebra 2",
+    "module": 2,
+    "title": "Quadratic formula",
+    "tools": [
+      "quadratic-equations"
+    ],
+    "student": "assets/csec-maths/m2-06-student.pdf",
+    "teacher": "assets/csec-maths/m2-06-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 6,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "67edd859c182f3bb0caafdde23e3897b95873052a73947112ca36861b33379cd",
+    "teacherHash": "962ac7626210498b10ed6a279a0dd05120085e94ccf0e2ddf6710313134e5b49"
+  },
+  {
+    "id": "M2-07",
+    "area": "Algebra 2",
+    "module": 2,
+    "title": "Algebraic fractions",
+    "tools": [
+      "algebraic-fractions"
+    ],
+    "student": "assets/csec-maths/m2-07-student.pdf",
+    "teacher": "assets/csec-maths/m2-07-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 6,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "f0e049ca1b617a5092af1f99b81e572ce5d66bfcbacf312affec028e6082f5b4",
+    "teacherHash": "5072d640247de1d5c5535fdd90f1017957282759668bc0be4307ad089371f828"
+  },
+  {
+    "id": "M2-08",
+    "area": "Algebra 2",
+    "module": 2,
+    "title": "Simultaneous linear equations",
+    "tools": [
+      "simultaneous-equations"
+    ],
+    "student": "assets/csec-maths/m2-08-student.pdf",
+    "teacher": "assets/csec-maths/m2-08-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "c13894da11c34899930155d023ccbf02aff3adde36336410b5625bc26a1b6445",
+    "teacherHash": "f1417114cd5bcee128c85d0e896a10854f4e9975bac08e2c98d2d84b00a45bf4"
+  },
+  {
+    "id": "M2-09",
+    "area": "Algebra 2",
+    "module": 2,
+    "title": "Linear and quadratic simultaneous equations",
+    "tools": [
+      "conic-intersections"
+    ],
+    "student": "assets/csec-maths/m2-09-student.pdf",
+    "teacher": "assets/csec-maths/m2-09-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 7,
+    "questions": 8,
+    "marks": 32,
+    "studentHash": "86a5cfb4a63b63fd0498f54cc2ecf829d236cc8893ecfbb50a81c3149679d4f1",
+    "teacherHash": "8ef7f7080fa7461934d801132a15069b653ebc30616f159148dc63eeb7e00b7b"
+  },
+  {
+    "id": "M2-10",
+    "area": "Algebra 2",
+    "module": 2,
+    "title": "Direct and inverse proportion in context",
+    "tools": [
+      "ratio-proportion"
+    ],
+    "student": "assets/csec-maths/m2-10-student.pdf",
+    "teacher": "assets/csec-maths/m2-10-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "00684ed842d0565c328ced2df6c540898ce91dc0b9a3fe0d8c02c9890ed50c19",
+    "teacherHash": "0569712d9cea011ea1583baad97449f617a8b3c0523bf5c5b915965fcf25dbf8"
+  },
+  {
+    "id": "M2-11",
+    "area": "Algebra 2",
+    "module": 2,
+    "title": "Direct and inverse proportion equations",
+    "tools": [
+      "ratio-proportion"
+    ],
+    "student": "assets/csec-maths/m2-11-student.pdf",
+    "teacher": "assets/csec-maths/m2-11-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "62a1d0972f02df30c8cbaa3effa0563314dc34559856f9412d3cca0e6cebc8c4",
+    "teacherHash": "afa23dcc9c2995af04cebf53c29cb5d9c7b588ed4d1f8c74421aecebcfa5c977"
+  },
+  {
+    "id": "M2-12",
+    "area": "Relations, Functions & Graphs 1",
+    "module": 2,
+    "title": "Equations of straight lines",
+    "tools": [
+      "straight-lines"
+    ],
+    "student": "assets/csec-maths/m2-12-student.pdf",
+    "teacher": "assets/csec-maths/m2-12-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "a02fa6d09dbc8cf623868be6a2f8a78fad4b7fae096ec350d24afb839684ad74",
+    "teacherHash": "f83971bbc1d9c7dc6e8f76eacd508c95864c8b19f6109e582c73001700969b3d"
+  },
+  {
+    "id": "M2-13",
+    "area": "Relations, Functions & Graphs 1",
+    "module": 2,
+    "title": "Quadratic graphs and graphical solutions",
+    "tools": [
+      "graph-transformations-curve-sketching"
+    ],
+    "student": "assets/csec-maths/m2-13-student.pdf",
+    "teacher": "assets/csec-maths/m2-13-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 12,
+    "studentHash": "702c4693a687bb1f9fac5285d0693dab71eb35c03228d9a06e521b5a1bd6a738",
+    "teacherHash": "6fa1631c61e0635940fe7fac3740c7b842eed5e907898f42694618d495387574"
+  },
+  {
+    "id": "M2-14",
+    "area": "Relations, Functions & Graphs 1",
+    "module": 2,
+    "title": "Completing the square and turning points",
+    "tools": [
+      "quadratic-equations"
+    ],
+    "student": "assets/csec-maths/m2-14-student.pdf",
+    "teacher": "assets/csec-maths/m2-14-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 22,
+    "studentHash": "78dcce581263909e899e309cf9dc86f95139424089d8a2c565126ea564bdab6c",
+    "teacherHash": "640bbb6457179043a5a3d30f20bd8a9d9e9343f73bb5a200e34840d529725f0d"
+  },
+  {
+    "id": "M2-15",
+    "area": "Relations, Functions & Graphs 1",
+    "module": 2,
+    "title": "Composite and inverse functions",
+    "tools": [
+      "functions"
+    ],
+    "student": "assets/csec-maths/m2-15-student.pdf",
+    "teacher": "assets/csec-maths/m2-15-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 22,
+    "studentHash": "1ed472177ed5c8932dc6e0f07ba533926d309ff499db75903329a9908f060260",
+    "teacherHash": "204a9a40fef040ba7d7df93b62b74f9ed0d6ea2b830cae90f474ded88a3a7bd8"
+  },
+  {
+    "id": "M2-16",
+    "area": "Geometry & Trigonometry 1",
+    "module": 2,
+    "title": "Core angle facts",
+    "tools": [
+      "missing-angles"
+    ],
+    "student": "assets/csec-maths/m2-16-student.pdf",
+    "teacher": "assets/csec-maths/m2-16-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "1194b591c3b6309812447223a74c2798374f310809f60d8a35d2308375849e4e",
+    "teacherHash": "1c67f735f04fb077b84e650a08e97b46336278ec730889ad672636c054036d70"
+  },
+  {
+    "id": "M2-17",
+    "area": "Geometry & Trigonometry 1",
+    "module": 2,
+    "title": "Parallel lines and angle reasoning",
+    "tools": [
+      "missing-angles"
+    ],
+    "student": "assets/csec-maths/m2-17-student.pdf",
+    "teacher": "assets/csec-maths/m2-17-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "dbd402b11479e6190108ac8faa81eb4ad81d2f465206b4d559b6fe33e22fa50e",
+    "teacherHash": "cc279deefde96910b829dc1b949e48e9135f61d99166357a2abea7be4ef8ddd4"
+  },
+  {
+    "id": "M2-18",
+    "area": "Geometry & Trigonometry 1",
+    "module": 2,
+    "title": "Polygon angles",
+    "tools": [
+      "polygons-angles"
+    ],
+    "student": "assets/csec-maths/m2-18-student.pdf",
+    "teacher": "assets/csec-maths/m2-18-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "cb349779a95d40db937c1257850ed6c70c29c3eb224b99540157846066b90c48",
+    "teacherHash": "d389236f1a7eeb5cd36d3d4d25e32849880e50bcf93253a9694331019778a6d3"
+  },
+  {
+    "id": "M2-19",
+    "area": "Geometry & Trigonometry 1",
+    "module": 2,
+    "title": "Triangles, quadrilaterals and symmetry",
+    "tools": [],
+    "student": "assets/csec-maths/m2-19-student.pdf",
+    "teacher": "assets/csec-maths/m2-19-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 12,
+    "studentHash": "fea0dc41d9586fc86ff54ec053c3f268d6385b039f27711d4ffa1b6c8dba86d5",
+    "teacherHash": "441f4e145e3cf4bc55e8ea3e11edd90d813b1cc315147bdd934cefe85ec9e7f0"
+  },
+  {
+    "id": "M2-20",
+    "area": "Geometry & Trigonometry 1",
+    "module": 2,
+    "title": "Congruence and geometric reasoning",
+    "tools": [
+      "formal-geometric-proof"
+    ],
+    "student": "assets/csec-maths/m2-20-student.pdf",
+    "teacher": "assets/csec-maths/m2-20-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 13,
+    "studentHash": "572923ee9185b86103cf3273434922accf55396761285a5ab5fd8d7dd54ef784",
+    "teacherHash": "17212d9ca53d4debd11515ebe2182bd8fd46381320e06e9aec0e705c36124843"
+  },
+  {
+    "id": "M2-21",
+    "area": "Geometry & Trigonometry 1",
+    "module": 2,
+    "title": "Ruler and compass constructions",
+    "tools": [
+      "loci-constructions"
+    ],
+    "student": "assets/csec-maths/m2-21-student.pdf",
+    "teacher": "assets/csec-maths/m2-21-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "89ec7742f264a7879c2e37bbb80ec6b33b45cfd4b420faca00d97c6c61c8ee1d",
+    "teacherHash": "d361def8a2c1604b512b6da0dc56265abb871232a8daad3c6aab0d466787f0fc"
+  },
+  {
+    "id": "M2-22",
+    "area": "Geometry & Trigonometry 1",
+    "module": 2,
+    "title": "Loci and regions",
+    "tools": [
+      "loci-constructions"
+    ],
+    "student": "assets/csec-maths/m2-22-student.pdf",
+    "teacher": "assets/csec-maths/m2-22-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "428ee3db5f5008514ff7450b8df7a9881b1b85991e60255e611210b8f42ce929",
+    "teacherHash": "c7e429c1abdec35b40ccf22bf2452ad79b9cb91856ccf9a24b0125953c329bdc"
+  },
+  {
+    "id": "M2-23",
+    "area": "Geometry & Trigonometry 1",
+    "module": 2,
+    "title": "Pythagoras\u2019s theorem",
+    "tools": [
+      "pythagoras-theorem"
+    ],
+    "student": "assets/csec-maths/m2-23-student.pdf",
+    "teacher": "assets/csec-maths/m2-23-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "9b9f360a155b55ee6170452a4c61e99bd7e36c524b1a54a4d7046b41b33a5229",
+    "teacherHash": "78dc26586c966428ddc07a3f913c2e7d95c4a62b391cfbf89ec6ef396047acdc"
+  },
+  {
+    "id": "M2-24",
+    "area": "Geometry & Trigonometry 1",
+    "module": 2,
+    "title": "Right-angled trigonometry",
+    "tools": [
+      "trigonometric-ratios"
+    ],
+    "student": "assets/csec-maths/m2-24-student.pdf",
+    "teacher": "assets/csec-maths/m2-24-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "87acc6f213c06fe1018970e9764d44b8922022ef16bdc8b99f2515a967941308",
+    "teacherHash": "b2c138eb017ed4aa2f8e52ef1abc35b99b6583cbd8cdbb86eb679abdc0d2c82e"
+  },
+  {
+    "id": "M2-25",
+    "area": "Geometry & Trigonometry 1",
+    "module": 2,
+    "title": "3D Pythagoras and trigonometry",
+    "tools": [
+      "pythagoras-theorem"
+    ],
+    "student": "assets/csec-maths/m2-25-student.pdf",
+    "teacher": "assets/csec-maths/m2-25-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 32,
+    "studentHash": "3c702a754bda4354bba3bda247c8787d8196ede49a558e62fc1025b6aa037811",
+    "teacherHash": "2bc4b3cf77d9c412efd33f958245e1dd3e1323aaa722ec3b08ad70a7c8c4020e"
+  },
+  {
+    "id": "M2-26",
+    "area": "Geometry & Trigonometry 1",
+    "module": 2,
+    "title": "Similar shapes: lengths, areas and volumes",
+    "tools": [
+      "scale-drawing-similar-shapes"
+    ],
+    "student": "assets/csec-maths/m2-26-student.pdf",
+    "teacher": "assets/csec-maths/m2-26-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "437970912b857fa3d4d5201dda360c614de5ef3f3fb712970e80eec4ea5ecc25",
+    "teacherHash": "3741301ef593f5896e0f426200621244b7ea19d4e75a3c8e914e51a1c8ec2813"
+  },
+  {
+    "id": "M2-27",
+    "area": "Statistics 1",
+    "module": 2,
+    "title": "Mean, median, mode and range",
+    "tools": [
+      "averages-range"
+    ],
+    "student": "assets/csec-maths/m2-27-student.pdf",
+    "teacher": "assets/csec-maths/m2-27-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 12,
+    "studentHash": "4b95640d030830680264ed8d5935a17ddb1fe996f7102b21e54e9d5df2f05d94",
+    "teacherHash": "8895420dc62bdecb1a4f3a41dc77de2fc1f3571f09765f2283ef8fb16a493103"
+  },
+  {
+    "id": "M2-28",
+    "area": "Statistics 1",
+    "module": 2,
+    "title": "Frequency tables and missing values",
+    "tools": [
+      "averages-range"
+    ],
+    "student": "assets/csec-maths/m2-28-student.pdf",
+    "teacher": "assets/csec-maths/m2-28-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 10,
+    "studentHash": "59c5306165aa9527b06e7a3705187e09e2ecaa31f2934856b7cd8e311cbe1078",
+    "teacherHash": "ba0792e1a010316f35d86f9dbf054ca57421e5cfe96752d312fe72aa70fe7888"
+  },
+  {
+    "id": "M2-29",
+    "area": "Statistics 1",
+    "module": 2,
+    "title": "Pie charts",
+    "tools": [],
+    "student": "assets/csec-maths/m2-29-student.pdf",
+    "teacher": "assets/csec-maths/m2-29-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 15,
+    "studentHash": "e6c4756f792fdeeb915998ecb9367ea7010658f8c6e5773fe88c8b7dfeee51d8",
+    "teacherHash": "2d65e97dc917b71e08b37ec688ded4a7d514644bc8b0d5bc85ecbdf989686e10"
+  },
+  {
+    "id": "M2-30",
+    "area": "Statistics 1",
+    "module": 2,
+    "title": "Bar charts and pictograms",
+    "tools": [],
+    "student": "assets/csec-maths/m2-30-student.pdf",
+    "teacher": "assets/csec-maths/m2-30-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 11,
+    "studentHash": "c2b95ec29c94050e8ebd74ce9991d50f0a8059ac22bb1481c3fead19c77584b3",
+    "teacherHash": "c89b13e7aea83eae8a0494e33a1134a61732e357cc61380494d9dbf643ff1223"
+  },
+  {
+    "id": "M2-31",
+    "area": "Statistics 1",
+    "module": 2,
+    "title": "Sampling and interpreting data",
+    "tools": [
+      "sampling-methods-bias"
+    ],
+    "student": "assets/csec-maths/m2-31-student.pdf",
+    "teacher": "assets/csec-maths/m2-31-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 15,
+    "studentHash": "954facb0ca6c1230832714a54104c86937c14518b375a2459c8a2b70dcd70e77",
+    "teacherHash": "812eac17f2d6d5c1d423692667f96a41afe0f5eb4d60b1a13cb96de0e1f96286"
+  },
+  {
+    "id": "M2-32",
+    "area": "Statistics 1",
+    "module": 2,
+    "title": "Probability scales and single events",
+    "tools": [],
+    "student": "assets/csec-maths/m2-32-student.pdf",
+    "teacher": "assets/csec-maths/m2-32-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 9,
+    "studentHash": "5229ccd57dae0cbfa23b86830ebaf32a86e630e73ec0042e06a332830563230c",
+    "teacherHash": "e7f14d13c456ee0a0e811b6e47bcf94d70dfd53634848ad95f1f169d7d656e12"
+  },
+  {
+    "id": "M2-33",
+    "area": "Statistics 1",
+    "module": 2,
+    "title": "Possibility spaces and systematic counting",
+    "tools": [],
+    "student": "assets/csec-maths/m2-33-student.pdf",
+    "teacher": "assets/csec-maths/m2-33-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "859d7b47c7b2d7a0914fdcc98184bf888e9c16f7b1166320062f2cb749a975f2",
+    "teacherHash": "220e94a7f87ae4685bec42af2845643858dcb65400425051741bcef7eadd4840"
+  },
+  {
+    "id": "M2-34",
+    "area": "Vectors & Matrices 1",
+    "module": 2,
+    "title": "Vector calculations",
+    "tools": [
+      "free-vectors"
+    ],
+    "student": "assets/csec-maths/m2-34-student.pdf",
+    "teacher": "assets/csec-maths/m2-34-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "bb059a491f739ad625225d813a8691169e91590535e5c18251fb8e71278f890a",
+    "teacherHash": "c3f5517dce2af3339b8f76bcebba3f476186969f255abaa4d598c6f43072c16e"
+  },
+  {
+    "id": "M3-01",
+    "area": "Statistics 2",
+    "module": 3,
+    "title": "Grouped averages and estimated mean",
+    "tools": [
+      "averages-range"
+    ],
+    "student": "assets/csec-maths/m3-01-student.pdf",
+    "teacher": "assets/csec-maths/m3-01-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 14,
+    "studentHash": "a86bb29816b4738aff620bd7b0f1ddc2e1b5f02ac16d0d7cb8f86013b36ecbe2",
+    "teacherHash": "f2a442ffb61c30fc9536ca5337c69d2379e21726299c03da71e06ee51cd2f827"
+  },
+  {
+    "id": "M3-02",
+    "area": "Statistics 2",
+    "module": 3,
+    "title": "Time series and line graphs",
+    "tools": [],
+    "student": "assets/csec-maths/m3-02-student.pdf",
+    "teacher": "assets/csec-maths/m3-02-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 12,
+    "studentHash": "4dcc101522e79a49438188c85345c58c48c29bbbf9bd8caba399efcdd7673712",
+    "teacherHash": "5bb91cb2f513dffcc9347c16b54ec7af9f7755f082076a0c2968f640dbc7f0f2"
+  },
+  {
+    "id": "M3-03",
+    "area": "Statistics 2",
+    "module": 3,
+    "title": "Cumulative frequency",
+    "tools": [
+      "cumulative-frequency-curves"
+    ],
+    "student": "assets/csec-maths/m3-03-student.pdf",
+    "teacher": "assets/csec-maths/m3-03-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "e7117b78bb8b69bb150bb7f78b859e44977de9808709e35ca4bbc77ec79e2a14",
+    "teacherHash": "a23b3696adcd5f391cedd996983a782e39596e1b191dc7a9ba20526f514deed8"
+  },
+  {
+    "id": "M3-04",
+    "area": "Statistics 2",
+    "module": 3,
+    "title": "Relative frequency and expected outcomes",
+    "tools": [],
+    "student": "assets/csec-maths/m3-04-student.pdf",
+    "teacher": "assets/csec-maths/m3-04-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 13,
+    "studentHash": "f06ec8175c8ac6fd027fd57d5c88da9657feb291f5b3cdf67d177a392921c209",
+    "teacherHash": "c5c8407233d099b4294e91c2547663770a86356fed2e1da405bb0447bb178dc9"
+  },
+  {
+    "id": "M3-05",
+    "area": "Statistics 2",
+    "module": 3,
+    "title": "Independent events and tree diagrams",
+    "tools": [
+      "tree-diagrams-conditional-probability"
+    ],
+    "student": "assets/csec-maths/m3-05-student.pdf",
+    "teacher": "assets/csec-maths/m3-05-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "416465ad2dd8e88ff7cf1f30fd0e8936c6fe8d3763b6a73338cbfdfd0b9a3513",
+    "teacherHash": "f6fd5c3863678e9f38106205d8c667f7e9ca6d4d2e31b37c04ed45ca523062fe"
+  },
+  {
+    "id": "M3-06",
+    "area": "Relations, Functions & Graphs 2",
+    "module": 3,
+    "title": "Linear inequalities",
+    "tools": [
+      "inequalities"
+    ],
+    "student": "assets/csec-maths/m3-06-student.pdf",
+    "teacher": "assets/csec-maths/m3-06-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "851637bba079b90df7d5225364e54fafb817bfdb0374e5699977fc9f5a53f5f7",
+    "teacherHash": "efc40f06deb1f10021309d86fcf62192d750ec6320175475b463a0775a693f04"
+  },
+  {
+    "id": "M3-07",
+    "area": "Relations, Functions & Graphs 2",
+    "module": 3,
+    "title": "Distance-time graphs",
+    "tools": [],
+    "student": "assets/csec-maths/m3-07-student.pdf",
+    "teacher": "assets/csec-maths/m3-07-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 11,
+    "studentHash": "136e164f9c92e78f8bc0d0c245f81f185e07cf3242563ea47587587cdd683e1d",
+    "teacherHash": "05a414a1e7f59662dbce29a71df6605398c4ad751acfc94840eb3fd3b860cdf8"
+  },
+  {
+    "id": "M3-08",
+    "area": "Relations, Functions & Graphs 2",
+    "module": 3,
+    "title": "Inequality regions",
+    "tools": [
+      "inequalities"
+    ],
+    "student": "assets/csec-maths/m3-08-student.pdf",
+    "teacher": "assets/csec-maths/m3-08-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 15,
+    "studentHash": "38138f7b825380d436d95f0990f035f71d6f74b3a80bee2fbe384787366ce41f",
+    "teacherHash": "9c64941d748a2f6a0181d4be66b982c2c893b3a762469d292217e350aea659b0"
+  },
+  {
+    "id": "M3-09",
+    "area": "Geometry & Trigonometry 2",
+    "module": 3,
+    "title": "Translations and reflections",
+    "tools": [
+      "transformations"
+    ],
+    "student": "assets/csec-maths/m3-09-student.pdf",
+    "teacher": "assets/csec-maths/m3-09-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "6d561cb3c4ff55ea26c9cf97f65f04f966586e19c13fa458897e977e4dfeb986",
+    "teacherHash": "1d4ce959778a4b8586256ad171ef597e6b322f76318f0cb1f25f33633c38b320"
+  },
+  {
+    "id": "M3-10",
+    "area": "Geometry & Trigonometry 2",
+    "module": 3,
+    "title": "Rotations and enlargements",
+    "tools": [
+      "transformations"
+    ],
+    "student": "assets/csec-maths/m3-10-student.pdf",
+    "teacher": "assets/csec-maths/m3-10-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "874131c096efbd578caade1ac4731fac11f0de9f965cbd796739efc9a7cabef0",
+    "teacherHash": "c77bb6c322f46e1079528388c2826c009128c223f959a47a5732e8c63be3b199"
+  },
+  {
+    "id": "M3-11",
+    "area": "Geometry & Trigonometry 2",
+    "module": 3,
+    "title": "Negative and combined transformations",
+    "tools": [
+      "transformations"
+    ],
+    "student": "assets/csec-maths/m3-11-student.pdf",
+    "teacher": "assets/csec-maths/m3-11-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "50bc2ee4e394a8cf78cb06f3f5aa99a9e63ba31522e8318bc8258671347a3f71",
+    "teacherHash": "401c69a2081fd6a377fe4ae0a1b03076fba2ac25433b618da521e22a2fb12f0f"
+  },
+  {
+    "id": "M3-12",
+    "area": "Geometry & Trigonometry 2",
+    "module": 3,
+    "title": "Bearings",
+    "tools": [
+      "bearings"
+    ],
+    "student": "assets/csec-maths/m3-12-student.pdf",
+    "teacher": "assets/csec-maths/m3-12-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "4145a5054e78c7720314b9f42af63ef5cd67c76c322aa40d53eafa5f39712192",
+    "teacherHash": "752cdcddb97fc514e0a8924be2bd6cd3e5a7b3412a6fdd8b843c72b73f90f3a5"
+  },
+  {
+    "id": "M3-13",
+    "area": "Geometry & Trigonometry 2",
+    "module": 3,
+    "title": "Sine rule, cosine rule and triangle area",
+    "tools": [
+      "sine-cosine-rule"
+    ],
+    "student": "assets/csec-maths/m3-13-student.pdf",
+    "teacher": "assets/csec-maths/m3-13-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "7fcb33760b3afcd482685b0ac1730309ec3b78b5cf68a6ba41f7aed466ee7f04",
+    "teacherHash": "a7cf7cb969096b1caafeadaaf38721871b08769a487e457f945560c0add25557"
+  },
+  {
+    "id": "M3-14",
+    "area": "Geometry & Trigonometry 2",
+    "module": 3,
+    "title": "Circle theorems",
+    "tools": [
+      "circle-theorems"
+    ],
+    "student": "assets/csec-maths/m3-14-student.pdf",
+    "teacher": "assets/csec-maths/m3-14-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "83bba8ed1e2c1efbbf290187333953a80937b8e71d2e3867d490f50a4ee98c20",
+    "teacherHash": "45ba997bebd04c760b7ccf1425bdab2b8bf0bcfd3c73e477dd0ae435c71e7451"
+  },
+  {
+    "id": "M3-15",
+    "area": "Vectors & Matrices 2",
+    "module": 3,
+    "title": "Vector geometry and proof",
+    "tools": [
+      "free-vectors"
+    ],
+    "student": "assets/csec-maths/m3-15-student.pdf",
+    "teacher": "assets/csec-maths/m3-15-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 18,
+    "studentHash": "c4d7b32eea18254d55aae97042f38b07ffb14948afd7f8574823b4ce4b6bf078",
+    "teacherHash": "9b04d2e173d76039a94c23413009d80229e468b1f1d91fb6c8e89171c297adad"
+  },
+  {
+    "id": "M3-16",
+    "area": "Vectors & Matrices 2",
+    "module": 3,
+    "title": "Matrix operations and determinants",
+    "tools": [
+      "matrices"
+    ],
+    "student": "assets/csec-maths/m3-16-student.pdf",
+    "teacher": "assets/csec-maths/m3-16-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "acd75afe428b4465acad886e80fecd89aba8f818a799ff5abff18e0eb53a889b",
+    "teacherHash": "02d511095cc9c84078c2fe0ac7183c73d78eebb7aad94382a7e3cd642b8b34e9"
+  },
+  {
+    "id": "M3-17",
+    "area": "Vectors & Matrices 2",
+    "module": 3,
+    "title": "Inverse matrices and systems",
+    "tools": [
+      "matrices"
+    ],
+    "student": "assets/csec-maths/m3-17-student.pdf",
+    "teacher": "assets/csec-maths/m3-17-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "4ab69f02fe39cdd9c7bd84104c30fcec23c1f3996da25e6b77249f555a208d36",
+    "teacherHash": "8f23e0a9c2bcd0299890fc0388306b8871f1ac1f26f0d36dde58f1f741b90a1d"
+  },
+  {
+    "id": "M1-38",
+    "area": "Consumer Arithmetic",
+    "module": 1,
+    "title": "Discount, markup, profit, loss and sales tax",
+    "tools": [
+      "financial-real-life-maths"
+    ],
+    "student": "assets/csec-maths/m1-38-student.pdf",
+    "teacher": "assets/csec-maths/m1-38-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "d29125f2c2a238274e275dd12f78023d6265c78882b85c931d499c66d500e754",
+    "teacherHash": "05019df0a0419e4d5f9f153e6c3d58c00b9db87f4058aa64c7468eb9f979f147"
+  },
+  {
+    "id": "M1-39",
+    "area": "Consumer Arithmetic",
+    "module": 1,
+    "title": "Percentage profit and loss",
+    "tools": [
+      "financial-real-life-maths"
+    ],
+    "student": "assets/csec-maths/m1-39-student.pdf",
+    "teacher": "assets/csec-maths/m1-39-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "caffcd6bfb3e5d81aa4876cd0388c95e41dd97175931e6e5ec6e894c3c14221b",
+    "teacherHash": "cdfd69cbe1cd4397bac97a0b579e95a605c871275dd4728b31dadeae86f25818"
+  },
+  {
+    "id": "M1-40",
+    "area": "Consumer Arithmetic",
+    "module": 1,
+    "title": "Hire purchase and instalments",
+    "tools": [
+      "financial-real-life-maths"
+    ],
+    "student": "assets/csec-maths/m1-40-student.pdf",
+    "teacher": "assets/csec-maths/m1-40-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "32d6f88eee3aa61abcc34b3929e2f905047c11cea2c09af17a519e3ed40f47e8",
+    "teacherHash": "6f3fd97afe06023de49110d9afb40bd8dd55fdaeb8d5a6be3963ac1d29924a17"
+  },
+  {
+    "id": "M1-41",
+    "area": "Consumer Arithmetic",
+    "module": 1,
+    "title": "Simple interest",
+    "tools": [
+      "financial-real-life-maths"
+    ],
+    "student": "assets/csec-maths/m1-41-student.pdf",
+    "teacher": "assets/csec-maths/m1-41-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "4a6ca9ebbe159c4d27e8340cebbb4f7309a4816c02b6adfb6e221884dd8c7ccd",
+    "teacherHash": "f739b059a6fb1faa114260c230efaa65e664f8fea18fc1de57f4decb2651a92f"
+  },
+  {
+    "id": "M1-42",
+    "area": "Consumer Arithmetic",
+    "module": 1,
+    "title": "Wages and overtime",
+    "tools": [
+      "financial-real-life-maths"
+    ],
+    "student": "assets/csec-maths/m1-42-student.pdf",
+    "teacher": "assets/csec-maths/m1-42-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "9e613ea5bcff1d01dd0ce7f7cdb51b386788c59576c8498e3a5da1bbc1a117e0",
+    "teacherHash": "b52f500082fcb23e578c2b100cf40b2517d1a9b894c119d58ece7759ce5dda12"
+  },
+  {
+    "id": "M1-43",
+    "area": "Consumer Arithmetic",
+    "module": 1,
+    "title": "Income tax and net pay",
+    "tools": [
+      "financial-real-life-maths"
+    ],
+    "student": "assets/csec-maths/m1-43-student.pdf",
+    "teacher": "assets/csec-maths/m1-43-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "35679112f06246c651b5fb528220e97d5b80cfb87a613e66c2dc9feb0d73b40c",
+    "teacherHash": "e3e5e90a5471985f73c9916dce1561fa560e0a477a8f291af9ea88e39b96df27"
+  },
+  {
+    "id": "M1-44",
+    "area": "Consumer Arithmetic",
+    "module": 1,
+    "title": "Utility bills and tiered tariffs",
+    "tools": [
+      "financial-real-life-maths"
+    ],
+    "student": "assets/csec-maths/m1-44-student.pdf",
+    "teacher": "assets/csec-maths/m1-44-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "9960d2b4f7c522311d62335e41557474b8e2b4ef1eb5f43b3bbf67c788d43048",
+    "teacherHash": "5461725a4c2a3bd355a9d42430e717e0aeeecfd0eede219f31d5b1881d41fd98"
+  },
+  {
+    "id": "M1-45",
+    "area": "Consumer Arithmetic",
+    "module": 1,
+    "title": "Currency conversion and fees",
+    "tools": [
+      "ratio-proportion"
+    ],
+    "student": "assets/csec-maths/m1-45-student.pdf",
+    "teacher": "assets/csec-maths/m1-45-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "bd23c0f0a493218894b92f3537c6c15e80fdb312b78eb323b9de90ef649e5888",
+    "teacherHash": "a5139f3466da7e1b29a8b1870387e960b7f48cf998ac99c8fc5e5072105c26b0"
+  },
+  {
+    "id": "M1-46",
+    "area": "Consumer Arithmetic",
+    "module": 1,
+    "title": "Insurance premiums and excesses",
+    "tools": [
+      "financial-real-life-maths"
+    ],
+    "student": "assets/csec-maths/m1-46-student.pdf",
+    "teacher": "assets/csec-maths/m1-46-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "020dc75ea5f5f53488d03e2131dc6bb4d1dd4039c87c83316f163d6623c24d51",
+    "teacherHash": "e0230024096905bfe33a8e900b39c2b7cfff88b7391ef359cad68dd80233ef1e"
+  },
+  {
+    "id": "M1-47",
+    "area": "Sets",
+    "module": 1,
+    "title": "Set notation, unions and complements",
+    "tools": [
+      "venn-diagrams"
+    ],
+    "student": "assets/csec-maths/m1-47-student.pdf",
+    "teacher": "assets/csec-maths/m1-47-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "eef7162b0eca31c2e2c5c767d96b129ce485099730d4f9a9eca6019264a86bcc",
+    "teacherHash": "48554fb65e9b178c152bd4e606059f911d8347f9384dfa33e4c596fbfd92582f"
+  },
+  {
+    "id": "M1-48",
+    "area": "Sets",
+    "module": 1,
+    "title": "Subsets and cardinality",
+    "tools": [
+      "venn-diagrams"
+    ],
+    "student": "assets/csec-maths/m1-48-student.pdf",
+    "teacher": "assets/csec-maths/m1-48-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "c7bc24fa268fe41bc6cfbd48bff5f63af0844e96edf0bca6f637751b9bc1af7b",
+    "teacherHash": "1bcbf36f944189219230ed387b0d9c91f820d19d862bfe9986b62090d4570959"
+  },
+  {
+    "id": "M2-35",
+    "area": "Relations, Functions & Graphs 1",
+    "module": 2,
+    "title": "Relations, domain, range and mappings",
+    "tools": [
+      "functions"
+    ],
+    "student": "assets/csec-maths/m2-35-student.pdf",
+    "teacher": "assets/csec-maths/m2-35-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "3c55d66c10c9e2032698e26b3c443aa5643847a5ad7ff79bb7529f8beb684401",
+    "teacherHash": "7ee5b6aa675fcb552790e4b0d92019c94181b88d79b0b5303966f8620ff23044"
+  },
+  {
+    "id": "M2-36",
+    "area": "Vectors & Matrices 1",
+    "module": 2,
+    "title": "Matrix addition and scalar multiplication",
+    "tools": [
+      "matrices"
+    ],
+    "student": "assets/csec-maths/m2-36-student.pdf",
+    "teacher": "assets/csec-maths/m2-36-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "12a0f257d506a554acee2bffcf979048d2609dd85b5bb58d951c66df1b95d71a",
+    "teacherHash": "7ee8e80631b202306877bd7c70ed6b6a0c5e05897d73efa35409ca19aaec5564"
+  },
+  {
+    "id": "M2-37",
+    "area": "Vectors & Matrices 1",
+    "module": 2,
+    "title": "Matrix multiplication and order",
+    "tools": [
+      "matrices"
+    ],
+    "student": "assets/csec-maths/m2-37-student.pdf",
+    "teacher": "assets/csec-maths/m2-37-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "4a6b789c0efaae57e27cf3a61f28a4f1f773fee908fed6d76cbe8d40b3e53dd3",
+    "teacherHash": "bc60c7faf1602ec663b48bfc82fcf8fb26c955d8e4b7622df2b34c8dcadbe294"
+  },
+  {
+    "id": "M3-18",
+    "area": "Vectors & Matrices 2",
+    "module": 3,
+    "title": "Matrices for transformations",
+    "tools": [
+      "matrices"
+    ],
+    "student": "assets/csec-maths/m3-18-student.pdf",
+    "teacher": "assets/csec-maths/m3-18-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "fd107ae0973c66912f512f8ecee2eafc61df4f33c65eebd13c79ced323dfc2cc",
+    "teacherHash": "a890444987ca09af1914f91f0419edc0a4f0226cad22678c6de8a75d7724913f"
+  },
+  {
+    "id": "M3-19",
+    "area": "Relations, Functions & Graphs 2",
+    "module": 3,
+    "title": "Linear programming",
+    "tools": [
+      "linear-programming"
+    ],
+    "student": "assets/csec-maths/m3-19-student.pdf",
+    "teacher": "assets/csec-maths/m3-19-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 32,
+    "studentHash": "dd028b005b4ddc809ccc1e4b587312f5e6c33a33e7bdc6d7ae1181d8517f3f89",
+    "teacherHash": "196f5352813e970549933ada1b5f84ffbc152a472aaf4761cafe0a80c4ba9055"
+  },
+  {
+    "id": "M3-20",
+    "area": "Geometry & Trigonometry 2",
+    "module": 3,
+    "title": "Areas of circle segments",
+    "tools": [
+      "sine-cosine-rule"
+    ],
+    "student": "assets/csec-maths/m3-20-student.pdf",
+    "teacher": "assets/csec-maths/m3-20-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "c2cfa835e2115c8addfca5e179dd07a1a2ac59e2037e97d326f2af11c42b52a4",
+    "teacherHash": "083ae5c2e1b2a65131c9e1ad11e105e64ac57a23e632c86323fa16554b0e3f62"
+  },
+  {
+    "id": "M1-49",
+    "area": "Introduction to Graphs",
+    "module": 1,
+    "title": "Coordinates and the Cartesian plane",
+    "tools": [
+      "straight-lines"
+    ],
+    "student": "assets/csec-maths/m1-49-student.pdf",
+    "teacher": "assets/csec-maths/m1-49-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "59600e5fa18c69400df69f87c54ce17c5641d16509a8fce5878366324f787740",
+    "teacherHash": "477aa632aadfecb61389ae03cc66ea071f3e5f34ce8d171cdb799daf8826f7d3"
+  },
+  {
+    "id": "M1-50",
+    "area": "Measurement",
+    "module": 1,
+    "title": "Time calculations and timetables",
+    "tools": [
+      "conversions-teaching"
+    ],
+    "student": "assets/csec-maths/m1-50-student.pdf",
+    "teacher": "assets/csec-maths/m1-50-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "6e7830ddc32b3feb1c0d6a676051ad654ec2002e1fd067ac5b73e7ec0500dd96",
+    "teacherHash": "3e19908b9580eee1d423497a36549331906476bc8c33b5b0295bb9b6fb49a89f"
+  },
+  {
+    "id": "M2-38",
+    "area": "Statistics 1",
+    "module": 2,
+    "title": "Interpreting standard deviation",
+    "tools": [],
+    "student": "assets/csec-maths/m2-38-student.pdf",
+    "teacher": "assets/csec-maths/m2-38-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "6be9d2f7741c7d67bb0cae28b7659ebed1837187da00705dd220a0ffffab052c",
+    "teacherHash": "48b5f0652418a771bbfd058853f77e9d4ac9a3da41f235a04f2e0244ff05ea02"
+  },
+  {
+    "id": "M3-21",
+    "area": "Statistics 2",
+    "module": 3,
+    "title": "Equal-width histograms and frequency polygons",
+    "tools": [],
+    "student": "assets/csec-maths/m3-21-student.pdf",
+    "teacher": "assets/csec-maths/m3-21-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "ab245b314a3b6819d04faf5c73dd12ddee07d016c08dcf602ee64227364f6c56",
+    "teacherHash": "875fd121fd2c3ff713f4e958163de71995dacc16b1dc3fcca82f749591f39d85"
+  },
+  {
+    "id": "M3-22",
+    "area": "Relations, Functions & Graphs 2",
+    "module": 3,
+    "title": "Cubic and reciprocal-square graphs",
+    "tools": [
+      "graph-transformations-curve-sketching"
+    ],
+    "student": "assets/csec-maths/m3-22-student.pdf",
+    "teacher": "assets/csec-maths/m3-22-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "ef333b155c8d0eec1b2ea5f59f629fbf4dfb614df1580aa9e442838ed0ca1510",
+    "teacherHash": "087dddc60e8e9d4bcacab259e5ec1e8c0f7dbacc16e2a4c33b576a9e20b77eca"
+  }
+]

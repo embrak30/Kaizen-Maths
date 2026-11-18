@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const {JSDOM,VirtualConsole}=require(path.join(process.env.KAIZEN_PACK_NODE_MODULES||'/tmp/kaizen-ap-runtime/node_modules','jsdom')),root=path.resolve(__dirname,'..');
 const dom=new JSDOM(fs.readFileSync(root+'/index.html','utf8'),{url:'http://localhost/#/ib-maths',runScripts:'outside-only',virtualConsole:new VirtualConsole()}),w=dom.window,doc=w.document;w.setTimeout=w.setInterval=w.requestAnimationFrame=()=>0;
-for(const f of ['assets/site/ib-maths-data.js','assets/site/ib-maths.js','app.js'])vm.runInContext(fs.readFileSync(root+'/'+f,'utf8'),dom.getInternalVMContext());
+for(const f of ['assets/site/ib-maths-data.js','assets/site/ib-maths.js','assets/site/csec-maths-data.js','assets/site/csec-maths.js','app.js'])vm.runInContext(fs.readFileSync(root+'/'+f,'utf8'),dom.getInternalVMContext());
 const sidebar=doc.querySelector('.sidebar'),data=w.KaizenIBData,source=JSON.parse(fs.readFileSync(root+'/data/ib-maths/library.json'));
 assert.equal(data.packs.length,138);assert.equal(doc.querySelector('h1').textContent,'IB Mathematics');assert(doc.querySelector('.sidebar [href="#/ready-made-resources"]').classList.contains('active'));
 for(const course of Object.keys(data.courses)){
@@ -28,5 +28,5 @@ assert(!byTitle('Connected rates of change').courses.includes('aa-sl'));assert.d
 const toolSlugs=vm.runInContext('tools.map(t=>t.slug)',dom.getInternalVMContext());
 for(const p of data.packs){for(const slug of p.tools)assert(toolSlugs.includes(slug),p.id+' '+slug);assert.equal(p.questions,8);assert.equal(p.studentPages,1);for(const role of ['student','teacher'])assert(fs.statSync(root+'/'+p[role]).size>1000);for(const sl of ['aa-sl','ai-sl'])if(p.courses.includes(sl))assert(p.courses.includes(sl.replace('-sl','-hl')));}
 const missing=doc.createElement('div'),saved=w.KaizenIBData;w.KaizenIBData=null;w.KaizenIB.mount(missing);assert(missing.textContent.includes('could not load'));w.KaizenIBData=saved;
-w.location.hash='#/ready-made-resources';w.renderRoute();assert(doc.querySelector('[href="#/ib-maths"]'));assert.equal(doc.querySelectorAll('.resource-choice').length,5);
+w.location.hash='#/ready-made-resources';w.renderRoute();assert(doc.querySelector('[href="#/ib-maths"]'));assert.equal(doc.querySelectorAll('.resource-choice').length,6);
 dom.window.close();console.log('PASS: 138 IB PDF pairs, all four course mappings, every topic group and pagination, course-aware search, safe escaping, fallback, persistent navigation and specific SL/HL boundaries.');

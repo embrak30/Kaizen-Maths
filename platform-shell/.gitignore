@@ -46,3 +46,10 @@ __pycache__/
 /tmp/pdfs/ib-library-errors.json
 /tmp/pdfs/ib-layout-errors.json
 /tmp/pdfs/ib-library-review/
+
+# CSEC Mathematics print intermediates.
+/tmp/pdfs/csec-library-assets/
+/tmp/pdfs/csec-library-prepared.json
+/tmp/pdfs/csec-library-errors.json
+/tmp/pdfs/csec-layout-errors.json
+/tmp/pdfs/csec-library-review/

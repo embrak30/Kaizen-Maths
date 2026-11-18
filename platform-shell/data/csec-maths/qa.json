@@ -1,0 +1,33 @@
+{
+  "packs": 110,
+  "questions": 880,
+  "pdfs": 220,
+  "pages": 531,
+  "studentPages": 110,
+  "checks": [
+    "Every PDF rendered",
+    "One-page student sets at fixed 11pt prose",
+    "Question numbering and mark totals",
+    "Text/image bounds",
+    "No raw LaTeX, caret or dollar delimiters",
+    "Content hashes and download paths",
+    "Student/teacher separation and permissions"
+  ],
+  "errors": [],
+  "visualReview": {
+    "studentContactSheets": 10,
+    "fullStudentSamples": [
+      "M1-43",
+      "M2-36"
+    ],
+    "fullTeacherSamples": [
+      "M3-19 p1",
+      "M3-20 p1",
+      "M1-44 p1",
+      "M3-21 p1"
+    ],
+    "result": "Readable layouts and equations; source diagrams retain original styling."
+  },
+  "independentNumericalChecks": 96,
+  "applicationTestSuitesPassed": 8
+}
