@@ -39,3 +39,10 @@ __pycache__/
 /tmp/pdfs/gcse-library-errors.json
 /tmp/pdfs/gcse-layout-errors.json
 /tmp/pdfs/gcse-library-review/
+
+# IB Mathematics print intermediates.
+/tmp/pdfs/ib-library-assets/
+/tmp/pdfs/ib-library-prepared.json
+/tmp/pdfs/ib-library-errors.json
+/tmp/pdfs/ib-layout-errors.json
+/tmp/pdfs/ib-library-review/

@@ -1,0 +1,16 @@
+{
+  "checked": "2026-11-18",
+  "courseFamily": "First assessment 2021; exams through 2028",
+  "guides": [
+    {
+      "course": "AA",
+      "url": "https://www.ibo.org/globalassets/new-structure/university-admission/pdfs/subject-guides/mathematics-analysis-approaches-guide.pdf"
+    },
+    {
+      "course": "AI",
+      "url": "https://ibo.org/globalassets/new-structure/university-admission/pdfs/dp-mathematics-applications-and-interpretation-guide-en.pdf"
+    }
+  ],
+  "nextRevision": "https://www.ibo.org/university-admission/latest-curriculum-updates/dp-mathematics-analysis-and-approaches-updates/",
+  "notes": "Public first-assessment-2021 guides used for course boundaries. Original Kaizen topic labels, not official syllabus clause numbers. Check school programme-resource-centre amendments when planning assessments."
+}

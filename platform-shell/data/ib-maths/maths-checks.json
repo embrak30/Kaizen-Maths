@@ -1,0 +1,741 @@
+{
+  "checks": [
+    {
+      "name": "finite series",
+      "passed": true
+    },
+    {
+      "name": "finite series",
+      "passed": true
+    },
+    {
+      "name": "finite series",
+      "passed": true
+    },
+    {
+      "name": "finite series",
+      "passed": true
+    },
+    {
+      "name": "finite series",
+      "passed": true
+    },
+    {
+      "name": "finite series",
+      "passed": true
+    },
+    {
+      "name": "finite series",
+      "passed": true
+    },
+    {
+      "name": "finite series",
+      "passed": true
+    },
+    {
+      "name": "complex modulus",
+      "passed": true
+    },
+    {
+      "name": "complex modulus",
+      "passed": true
+    },
+    {
+      "name": "complex modulus",
+      "passed": true
+    },
+    {
+      "name": "complex modulus",
+      "passed": true
+    },
+    {
+      "name": "complex modulus",
+      "passed": true
+    },
+    {
+      "name": "complex modulus",
+      "passed": true
+    },
+    {
+      "name": "complex modulus",
+      "passed": true
+    },
+    {
+      "name": "complex modulus",
+      "passed": true
+    },
+    {
+      "name": "complex quotient",
+      "passed": true
+    },
+    {
+      "name": "complex quotient",
+      "passed": true
+    },
+    {
+      "name": "complex quotient",
+      "passed": true
+    },
+    {
+      "name": "complex quotient",
+      "passed": true
+    },
+    {
+      "name": "complex quotient",
+      "passed": true
+    },
+    {
+      "name": "complex quotient",
+      "passed": true
+    },
+    {
+      "name": "complex quotient",
+      "passed": true
+    },
+    {
+      "name": "complex quotient",
+      "passed": true
+    },
+    {
+      "name": "linear system",
+      "passed": true
+    },
+    {
+      "name": "linear system",
+      "passed": true
+    },
+    {
+      "name": "linear system",
+      "passed": true
+    },
+    {
+      "name": "linear system",
+      "passed": true
+    },
+    {
+      "name": "linear system",
+      "passed": true
+    },
+    {
+      "name": "linear system",
+      "passed": true
+    },
+    {
+      "name": "linear system",
+      "passed": true
+    },
+    {
+      "name": "linear system",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix product entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "matrix inverse entry",
+      "passed": true
+    },
+    {
+      "name": "cross orthogonality",
+      "passed": true
+    },
+    {
+      "name": "cross orthogonality",
+      "passed": true
+    },
+    {
+      "name": "cross orthogonality",
+      "passed": true
+    },
+    {
+      "name": "cross orthogonality",
+      "passed": true
+    },
+    {
+      "name": "cross orthogonality",
+      "passed": true
+    },
+    {
+      "name": "cross orthogonality",
+      "passed": true
+    },
+    {
+      "name": "cross orthogonality",
+      "passed": true
+    },
+    {
+      "name": "cross orthogonality",
+      "passed": true
+    },
+    {
+      "name": "pdf normalization",
+      "passed": true
+    },
+    {
+      "name": "pdf normalization",
+      "passed": true
+    },
+    {
+      "name": "pdf normalization",
+      "passed": true
+    },
+    {
+      "name": "pdf normalization",
+      "passed": true
+    },
+    {
+      "name": "pdf normalization",
+      "passed": true
+    },
+    {
+      "name": "pdf normalization",
+      "passed": true
+    },
+    {
+      "name": "pdf normalization",
+      "passed": true
+    },
+    {
+      "name": "pdf normalization",
+      "passed": true
+    },
+    {
+      "name": "Markov normalization",
+      "passed": true
+    },
+    {
+      "name": "Markov normalization",
+      "passed": true
+    },
+    {
+      "name": "Markov normalization",
+      "passed": true
+    },
+    {
+      "name": "Markov normalization",
+      "passed": true
+    },
+    {
+      "name": "Markov normalization",
+      "passed": true
+    },
+    {
+      "name": "Markov normalization",
+      "passed": true
+    },
+    {
+      "name": "Markov normalization",
+      "passed": true
+    },
+    {
+      "name": "Markov normalization",
+      "passed": true
+    },
+    {
+      "name": "polynomial derivative",
+      "passed": true
+    },
+    {
+      "name": "polynomial derivative",
+      "passed": true
+    },
+    {
+      "name": "polynomial derivative",
+      "passed": true
+    },
+    {
+      "name": "polynomial derivative",
+      "passed": true
+    },
+    {
+      "name": "polynomial derivative",
+      "passed": true
+    },
+    {
+      "name": "polynomial derivative",
+      "passed": true
+    },
+    {
+      "name": "polynomial derivative",
+      "passed": true
+    },
+    {
+      "name": "polynomial derivative",
+      "passed": true
+    },
+    {
+      "name": "antiderivative",
+      "passed": true
+    },
+    {
+      "name": "antiderivative",
+      "passed": true
+    },
+    {
+      "name": "antiderivative",
+      "passed": true
+    },
+    {
+      "name": "antiderivative",
+      "passed": true
+    },
+    {
+      "name": "antiderivative",
+      "passed": true
+    },
+    {
+      "name": "antiderivative",
+      "passed": true
+    },
+    {
+      "name": "antiderivative",
+      "passed": true
+    },
+    {
+      "name": "antiderivative",
+      "passed": true
+    },
+    {
+      "name": "partial fractions integral",
+      "passed": true
+    },
+    {
+      "name": "partial fractions integral",
+      "passed": true
+    },
+    {
+      "name": "partial fractions integral",
+      "passed": true
+    },
+    {
+      "name": "partial fractions integral",
+      "passed": true
+    },
+    {
+      "name": "partial fractions integral",
+      "passed": true
+    },
+    {
+      "name": "partial fractions integral",
+      "passed": true
+    },
+    {
+      "name": "partial fractions integral",
+      "passed": true
+    },
+    {
+      "name": "partial fractions integral",
+      "passed": true
+    },
+    {
+      "name": "elementary derivative",
+      "passed": true
+    },
+    {
+      "name": "elementary derivative",
+      "passed": true
+    },
+    {
+      "name": "elementary derivative",
+      "passed": true
+    },
+    {
+      "name": "elementary derivative",
+      "passed": true
+    },
+    {
+      "name": "elementary derivative",
+      "passed": true
+    },
+    {
+      "name": "elementary derivative",
+      "passed": true
+    },
+    {
+      "name": "elementary derivative",
+      "passed": true
+    },
+    {
+      "name": "elementary derivative",
+      "passed": true
+    },
+    {
+      "name": "sin cosine derivative",
+      "passed": true
+    },
+    {
+      "name": "sin cosine derivative",
+      "passed": true
+    },
+    {
+      "name": "sin cosine derivative",
+      "passed": true
+    },
+    {
+      "name": "sin cosine derivative",
+      "passed": true
+    },
+    {
+      "name": "sin cosine derivative",
+      "passed": true
+    },
+    {
+      "name": "sin cosine derivative",
+      "passed": true
+    },
+    {
+      "name": "sin cosine derivative",
+      "passed": true
+    },
+    {
+      "name": "sin cosine derivative",
+      "passed": true
+    },
+    {
+      "name": "elementary integral",
+      "passed": true
+    },
+    {
+      "name": "elementary integral",
+      "passed": true
+    },
+    {
+      "name": "elementary integral",
+      "passed": true
+    },
+    {
+      "name": "elementary integral",
+      "passed": true
+    },
+    {
+      "name": "elementary integral",
+      "passed": true
+    },
+    {
+      "name": "elementary integral",
+      "passed": true
+    },
+    {
+      "name": "elementary integral",
+      "passed": true
+    },
+    {
+      "name": "elementary integral",
+      "passed": true
+    },
+    {
+      "name": "reverse chain rule",
+      "passed": true
+    },
+    {
+      "name": "reverse chain rule",
+      "passed": true
+    },
+    {
+      "name": "reverse chain rule",
+      "passed": true
+    },
+    {
+      "name": "reverse chain rule",
+      "passed": true
+    },
+    {
+      "name": "reverse chain rule",
+      "passed": true
+    },
+    {
+      "name": "reverse chain rule",
+      "passed": true
+    },
+    {
+      "name": "reverse chain rule",
+      "passed": true
+    },
+    {
+      "name": "reverse chain rule",
+      "passed": true
+    },
+    {
+      "name": "Maclaurin coefficients",
+      "passed": true
+    },
+    {
+      "name": "Maclaurin coefficients",
+      "passed": true
+    },
+    {
+      "name": "Maclaurin coefficients",
+      "passed": true
+    },
+    {
+      "name": "Maclaurin coefficients",
+      "passed": true
+    },
+    {
+      "name": "Maclaurin coefficients",
+      "passed": true
+    },
+    {
+      "name": "Maclaurin coefficients",
+      "passed": true
+    },
+    {
+      "name": "Maclaurin coefficients",
+      "passed": true
+    },
+    {
+      "name": "Maclaurin coefficients",
+      "passed": true
+    }
+  ],
+  "limitations": "Selected algebraic families checked symbolically; not an independent verification of every answer."
+}

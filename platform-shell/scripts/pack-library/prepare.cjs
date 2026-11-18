@@ -20,7 +20,7 @@ async function raster(svg,key,w,h){
 }
 async function mathImage(tex,display=false){
  tex=tex.replace(/\\(?:bigg?|Bigg?)(?=[()\[\]|])/g,'').replace(/\\limits(?=\s*[_^])/g,'\\limits');const key=crypto.createHash('sha1').update(tex+'|'+display).digest('hex');if(cache.has(key))return cache.get(key);
- const markup=adaptor.outerHTML(mj.convert(tex,{display}));if(/data-mjx-error|mjx-merror/.test(markup))throw Error('TeX: '+tex);
+ const markup=adaptor.outerHTML(mj.convert(tex,{display}));if(/data-mjx-error|mjx-merror/.test(markup)||(process.env.KAIZEN_PACK_STRICT_TEX==='1'&&/data-mml-node="mtext"[^>]*fill="red"/.test(markup)))throw Error('TeX: '+tex);
  let svg=markup.match(/<svg[\s\S]*<\/svg>/)[0];const box=svg.match(/viewBox="([^"]+)"/)[1].split(/\s+/).map(Number),size=12,w=box[2]/1000*size,h=box[3]/1000*size,depth=Math.max(0,(box[1]+box[3])/1000*size);
  svg=svg.replace(/currentColor/g,'#26344b');const file=await raster(svg,key,Math.max(w,1),Math.max(h,1));const val={file,w,h,depth};cache.set(key,val);return val;
 }
