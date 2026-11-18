@@ -1,0 +1,26 @@
+[
+  {
+    "name": "fraction 2/3 of 36",
+    "passed": true
+  },
+  {
+    "name": "fraction 3/5 of 45",
+    "passed": true
+  },
+  {
+    "name": "fraction 5/8 of 64",
+    "passed": true
+  },
+  {
+    "name": "fraction 7/10 of 120",
+    "passed": true
+  },
+  {
+    "name": "fraction 3/4 of 88",
+    "passed": true
+  },
+  {
+    "name": "fraction 4/7 of 63",
+    "passed": true
+  }
+]

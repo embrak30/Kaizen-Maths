@@ -1,0 +1,402 @@
+{
+  "checks": [
+    {
+      "pack": "N06",
+      "question": 1,
+      "check": "percentage multiplication",
+      "passed": true
+    },
+    {
+      "pack": "N06",
+      "question": 2,
+      "check": "percentage multiplication",
+      "passed": true
+    },
+    {
+      "pack": "N06",
+      "question": 3,
+      "check": "percentage multiplication",
+      "passed": true
+    },
+    {
+      "pack": "N06",
+      "question": 4,
+      "check": "percentage multiplication",
+      "passed": true
+    },
+    {
+      "pack": "N06",
+      "question": 5,
+      "check": "percentage multiplication",
+      "passed": true
+    },
+    {
+      "pack": "N06",
+      "question": 6,
+      "check": "percentage multiplication",
+      "passed": true
+    },
+    {
+      "pack": "N06",
+      "question": 7,
+      "check": "percentage multiplication",
+      "passed": true
+    },
+    {
+      "pack": "N06",
+      "question": 8,
+      "check": "percentage multiplication",
+      "passed": true
+    },
+    {
+      "pack": "A07",
+      "question": 1,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A07",
+      "question": 2,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A07",
+      "question": 3,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A07",
+      "question": 4,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A07",
+      "question": 5,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A07",
+      "question": 6,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A07",
+      "question": 7,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A07",
+      "question": 8,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 1,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 1,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 2,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 2,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 3,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 3,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 4,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 4,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 5,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 5,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 6,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 6,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 7,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 7,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 8,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A16",
+      "question": 8,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 1,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 1,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 2,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 2,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 3,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 3,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 4,
+      "check": "negative discriminant and no real roots",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 5,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 5,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 6,
+      "check": "negative discriminant and no real roots",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 7,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 7,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 8,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "A17",
+      "question": 8,
+      "check": "equation root independently solved",
+      "passed": true
+    },
+    {
+      "pack": "R03",
+      "question": 2,
+      "check": "currency direction and conversion",
+      "passed": true
+    },
+    {
+      "pack": "R03",
+      "question": 4,
+      "check": "currency direction and conversion",
+      "passed": true
+    },
+    {
+      "pack": "R03",
+      "question": 6,
+      "check": "currency direction and conversion",
+      "passed": true
+    },
+    {
+      "pack": "R03",
+      "question": 8,
+      "check": "currency direction and conversion",
+      "passed": true
+    },
+    {
+      "pack": "R07",
+      "question": 1,
+      "check": "percentage change",
+      "passed": true
+    },
+    {
+      "pack": "R07",
+      "question": 2,
+      "check": "percentage change",
+      "passed": true
+    },
+    {
+      "pack": "R07",
+      "question": 3,
+      "check": "percentage change",
+      "passed": true
+    },
+    {
+      "pack": "R07",
+      "question": 4,
+      "check": "percentage change",
+      "passed": true
+    },
+    {
+      "pack": "R07",
+      "question": 5,
+      "check": "percentage change",
+      "passed": true
+    },
+    {
+      "pack": "R07",
+      "question": 6,
+      "check": "percentage change",
+      "passed": true
+    },
+    {
+      "pack": "R07",
+      "question": 7,
+      "check": "percentage change",
+      "passed": true
+    },
+    {
+      "pack": "R07",
+      "question": 8,
+      "check": "percentage change",
+      "passed": true
+    },
+    {
+      "pack": "R08",
+      "question": 1,
+      "check": "reverse percentage division",
+      "passed": true
+    },
+    {
+      "pack": "R08",
+      "question": 2,
+      "check": "reverse percentage division",
+      "passed": true
+    },
+    {
+      "pack": "R08",
+      "question": 3,
+      "check": "reverse percentage division",
+      "passed": true
+    },
+    {
+      "pack": "R08",
+      "question": 4,
+      "check": "reverse percentage division",
+      "passed": true
+    },
+    {
+      "pack": "R08",
+      "question": 5,
+      "check": "reverse percentage division",
+      "passed": true
+    },
+    {
+      "pack": "R08",
+      "question": 6,
+      "check": "reverse percentage division",
+      "passed": true
+    },
+    {
+      "pack": "R08",
+      "question": 7,
+      "check": "reverse percentage division",
+      "passed": true
+    },
+    {
+      "pack": "R08",
+      "question": 8,
+      "check": "reverse percentage division",
+      "passed": true
+    }
+  ],
+  "count": 66,
+  "limitations": "Independent numerical checks cover the explicitly named families. Other solutions have source checks and editorial review, not an independent proof of every answer."
+}

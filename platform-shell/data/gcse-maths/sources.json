@@ -1,0 +1,9 @@
+{
+  "framework": "Common GCSE (9\u20131) mathematics subject content, England",
+  "publisher": "Department for Education",
+  "publication": "DFE-00233-2013",
+  "guidance": "https://www.gov.uk/government/publications/gcse-mathematics-subject-content-and-assessment-objectives",
+  "pdf": "https://assets.publishing.service.gov.uk/media/5a7cb5b040f0b6629523b52c/GCSE_mathematics_subject_content_and_assessment_objectives.pdf",
+  "reviewed": "2026-11-18",
+  "note": "Kaizen pack IDs (N01, A01, etc.) are not official specification clause numbers. Source references are stored separately in plan.json. These are original topic-practice materials, not an exam-board paper or official mark scheme."
+}

@@ -1,0 +1,1888 @@
+[
+  {
+    "id": "N01",
+    "reference": "N1\u20133",
+    "area": "Number",
+    "tier": "Foundation",
+    "title": "Integers and order of operations",
+    "tools": [
+      "integer-operations"
+    ],
+    "student": "assets/gcse-maths/n01-student.pdf",
+    "teacher": "assets/gcse-maths/n01-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 14,
+    "studentHash": "a0c4ae0b652cd91c58ecb5ad8395f45bd28ba88dbd016bfd9b7ba042d40e2a75",
+    "teacherHash": "583887cd8dc6b11eb77ba9489e2c9ff44c61d3e0dd7cb23c9367a687c9bd3d95"
+  },
+  {
+    "id": "N02",
+    "reference": "N2",
+    "area": "Number",
+    "tier": "Foundation",
+    "title": "Fractions: the four operations",
+    "tools": [
+      "fractions-practice"
+    ],
+    "student": "assets/gcse-maths/n02-student.pdf",
+    "teacher": "assets/gcse-maths/n02-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "a1899e53a103f5b95c88a5f17023c0bb864ab607bff8e7888a2033603130009a",
+    "teacherHash": "9fa0694c8cc65071f04480087867b701a5ee0f08f715db7feea8e6974df3e401"
+  },
+  {
+    "id": "N03",
+    "reference": "N2",
+    "area": "Number",
+    "tier": "Foundation",
+    "title": "Decimal calculations",
+    "tools": [
+      "decimals-practice-lab"
+    ],
+    "student": "assets/gcse-maths/n03-student.pdf",
+    "teacher": "assets/gcse-maths/n03-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "1a3094693a51f0c6f7491fff2c23399cb69212d9f8939e005fb09d6e731cf55e",
+    "teacherHash": "ff1a0f8e0aafd928fdbe2ce59ec343f9d9f7b430a8954160b0e49e7c9f3b24ab"
+  },
+  {
+    "id": "N04",
+    "reference": "N10\u201312",
+    "area": "Number",
+    "tier": "Foundation",
+    "title": "Fractions, decimals and percentages",
+    "tools": [
+      "simple-percentage-tasks"
+    ],
+    "student": "assets/gcse-maths/n04-student.pdf",
+    "teacher": "assets/gcse-maths/n04-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 8,
+    "studentHash": "694378b7ebaeadf5f21c4d13085c4c53d142500aa4abe2fb6927a02c942891d7",
+    "teacherHash": "6a1ac3cf1b93fba0e3cdf2b1d5687a6242b02283e45f7a55c25b515245202be0"
+  },
+  {
+    "id": "N05",
+    "reference": "N12",
+    "area": "Number",
+    "tier": "Foundation",
+    "title": "Fractions of quantities",
+    "tools": [
+      "fractions-practice"
+    ],
+    "student": "assets/gcse-maths/n05-student.pdf",
+    "teacher": "assets/gcse-maths/n05-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "63c763ab60b33da49f79f84f507805ae0f9955e9cf28fc8d342b53ad80582592",
+    "teacherHash": "4c3bd9bfbf0fd85cf7845e4cd794209a243a9416dbf7c5d0b5d58cf1cc48c4d3"
+  },
+  {
+    "id": "N06",
+    "reference": "N12",
+    "area": "Number",
+    "tier": "Foundation",
+    "title": "Percentages of quantities",
+    "tools": [
+      "simple-percentage-tasks"
+    ],
+    "student": "assets/gcse-maths/n06-student.pdf",
+    "teacher": "assets/gcse-maths/n06-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "e41622cf96eaf36dc75250660157fa29b6e6abbcce5490433875597410adf89f",
+    "teacherHash": "4b2302780a9e32f4def928876ed2eee41a730b4c64af00a9ba17184014782a5f"
+  },
+  {
+    "id": "N07",
+    "reference": "N4",
+    "area": "Number",
+    "tier": "Foundation",
+    "title": "Factors, multiples, HCF and LCM",
+    "tools": [
+      "hcf-lcm"
+    ],
+    "student": "assets/gcse-maths/n07-student.pdf",
+    "teacher": "assets/gcse-maths/n07-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "a676d73a99fbea4100fb5d6f0bd4726d617cdcc60e0d82901f79789240e325df",
+    "teacherHash": "cc925cefc06caa057617875a2ee984d0be28e3f8f19e4b7808dbd8cf71f8cbab"
+  },
+  {
+    "id": "N08",
+    "reference": "N3, N6",
+    "area": "Number",
+    "tier": "Foundation",
+    "title": "Powers, roots and reciprocals",
+    "tools": [
+      "exponents-index-notation"
+    ],
+    "student": "assets/gcse-maths/n08-student.pdf",
+    "teacher": "assets/gcse-maths/n08-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 9,
+    "studentHash": "835097692732c911bb3d249fc631b7d256033a6e32dc1f52ae63a792c2127330",
+    "teacherHash": "985218a4116d2b124d6ef603adb47f8431b121d2b23982a34c24fd5b4ba4028b"
+  },
+  {
+    "id": "N09",
+    "reference": "N7",
+    "area": "Number",
+    "tier": "Foundation",
+    "title": "Index laws",
+    "tools": [
+      "exponents-index-notation"
+    ],
+    "student": "assets/gcse-maths/n09-student.pdf",
+    "teacher": "assets/gcse-maths/n09-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "2bdc609d45a0ee8353513ef7108f52b2f95229a008def2a44b6cd6fc6e5ab2c3",
+    "teacherHash": "16a9aa80984760ddef2c523e1b3f3c40894566fe595e2ca9a27adf27a021782d"
+  },
+  {
+    "id": "N10",
+    "reference": "N9",
+    "area": "Number",
+    "tier": "Foundation",
+    "title": "Standard form",
+    "tools": [
+      "powers-of-10"
+    ],
+    "student": "assets/gcse-maths/n10-student.pdf",
+    "teacher": "assets/gcse-maths/n10-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 5,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "7dab562c452b807ffd788b43e2f8dbb7df97e9ceeca3332f94c6d37c97469069",
+    "teacherHash": "af564961ecaa6c138c78c03c9ee3a794dee5858b9458901b48311138adbe5da5"
+  },
+  {
+    "id": "N11",
+    "reference": "N14\u201315",
+    "area": "Number",
+    "tier": "Foundation",
+    "title": "Rounding and estimation",
+    "tools": [
+      "decimals-practice-lab"
+    ],
+    "student": "assets/gcse-maths/n11-student.pdf",
+    "teacher": "assets/gcse-maths/n11-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 11,
+    "studentHash": "da687dab2e981f6190ef76de8e4ba19ee4afca116e2de83402108334e676557b",
+    "teacherHash": "91685d88ff387b02f660d3474d5f87331e8ee3c8568571033a16f6c23d45828a"
+  },
+  {
+    "id": "N12",
+    "reference": "N15",
+    "area": "Number",
+    "tier": "Foundation",
+    "title": "Error intervals",
+    "tools": [
+      "upper-lower-bounds"
+    ],
+    "student": "assets/gcse-maths/n12-student.pdf",
+    "teacher": "assets/gcse-maths/n12-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "20621a218dc26d6aa389bbbbe08c1617b917d423e87559061a408f059f73bb2e",
+    "teacherHash": "fe329570eafa2c9adce5edff04b76897a0c3bb05bc7749ed1bd5db01edf630fe"
+  },
+  {
+    "id": "N13",
+    "reference": "N16",
+    "area": "Number",
+    "tier": "Higher",
+    "title": "Calculations with bounds",
+    "tools": [
+      "upper-lower-bounds"
+    ],
+    "student": "assets/gcse-maths/n13-student.pdf",
+    "teacher": "assets/gcse-maths/n13-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "4ebba81197f4a55ff78329f5ef3cae985c8f7f1839692aabede33031ada36725",
+    "teacherHash": "e4038a132f7955bf540bfcaa5165ff03787ada0701f8874b98f27900d275069b"
+  },
+  {
+    "id": "N14",
+    "reference": "N8",
+    "area": "Number",
+    "tier": "Higher",
+    "title": "Surds and rationalising",
+    "tools": [
+      "surds-radicals"
+    ],
+    "student": "assets/gcse-maths/n14-student.pdf",
+    "teacher": "assets/gcse-maths/n14-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 6,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "2f92033bb65571aae3982bf46a596cbf285b71ecd71511eab76707830c639832",
+    "teacherHash": "02862c70ab56cfb57c892ec4ef636241c525cddfd1fdee2b381135fa07034f1c"
+  },
+  {
+    "id": "N15",
+    "reference": "N7\u201310",
+    "area": "Number",
+    "tier": "Higher",
+    "title": "Recurring decimals and fractional indices",
+    "tools": [
+      "exponents-index-notation"
+    ],
+    "student": "assets/gcse-maths/n15-student.pdf",
+    "teacher": "assets/gcse-maths/n15-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 20,
+    "studentHash": "e1fbc716e4fe336c64d531aed19df06514b76120cebdd3dfbe4c262ac548b8ad",
+    "teacherHash": "f3f13f59cfd3465ba431ba28a247e16ceb8d1c811185146cc7cab0217e9c3c3c"
+  },
+  {
+    "id": "A01",
+    "reference": "A1, A3\u20134",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Notation and collecting like terms",
+    "tools": [
+      "simplification"
+    ],
+    "student": "assets/gcse-maths/a01-student.pdf",
+    "teacher": "assets/gcse-maths/a01-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "c709e0cbd3977e59eff67e0654bb7adc719d2e458a0109d89fbf1fd5135b38ec",
+    "teacherHash": "e06ff51731ef07b8b2a65c9a5d3119722d7d9d7d70046514c2399f1805a8a91f"
+  },
+  {
+    "id": "A02",
+    "reference": "A2",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Substitution",
+    "tools": [
+      "substitution"
+    ],
+    "student": "assets/gcse-maths/a02-student.pdf",
+    "teacher": "assets/gcse-maths/a02-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "6865bc8503af1ef27cbbf6b389a7848231a54ec421644cac635819349c97d684",
+    "teacherHash": "1edd135f96628524191f4887affcd9d8b07cc34011163b095ba77e78827de2b0"
+  },
+  {
+    "id": "A03",
+    "reference": "A4",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Expanding single brackets",
+    "tools": [
+      "bracket-expansion"
+    ],
+    "student": "assets/gcse-maths/a03-student.pdf",
+    "teacher": "assets/gcse-maths/a03-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "0b96f3ab588cb4a1a9d54011b8a4fb61b5eea583e6f38f2a134b3181cf63737e",
+    "teacherHash": "32c1ccdae98fea64713ad4b89e3703dfcff063984d63e8d4a200cd4b7b77bab0"
+  },
+  {
+    "id": "A04",
+    "reference": "A4",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Expanding double brackets",
+    "tools": [
+      "bracket-expansion"
+    ],
+    "student": "assets/gcse-maths/a04-student.pdf",
+    "teacher": "assets/gcse-maths/a04-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "3416081269847b15fd0fa754c28a5713cac685b3c687aff87beb9340354cb27a",
+    "teacherHash": "d804bd79749f0b7f872c6ca5522297e554b8e085b968e81ba8f03267babd3cae"
+  },
+  {
+    "id": "A05",
+    "reference": "A4",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Factorising common factors",
+    "tools": [
+      "advanced-factorisation"
+    ],
+    "student": "assets/gcse-maths/a05-student.pdf",
+    "teacher": "assets/gcse-maths/a05-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "db4c7d0484d500c29655af00105a7b6ce94c583596d3c4aba71b7ea6a9e771f5",
+    "teacherHash": "b360ce21b01ed4ee72486882fff3a25cd9e2dbca185332db7bdc86d2a71fa5da"
+  },
+  {
+    "id": "A06",
+    "reference": "A4",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Factorising monic quadratics",
+    "tools": [
+      "quadratic-factorisation"
+    ],
+    "student": "assets/gcse-maths/a06-student.pdf",
+    "teacher": "assets/gcse-maths/a06-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "b2157c0725e8577db1a70b3c5694f90ad3cf2d06392cc06334d517393377be5e",
+    "teacherHash": "bbfd60c2908929c33c93c262dc5271b44cbe24cbb9796f66ada83741e754fe4e"
+  },
+  {
+    "id": "A07",
+    "reference": "A17",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Linear equations",
+    "tools": [
+      "linear-equations"
+    ],
+    "student": "assets/gcse-maths/a07-student.pdf",
+    "teacher": "assets/gcse-maths/a07-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 5,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "3c4a19ff45332577a8ff1ae2745e44c6a9339c7d3be11bb0e8038283573ec99c",
+    "teacherHash": "1fa6b885af305335c64ff1ea0367bb91759ba8659604c1aa681b2a763cf641da"
+  },
+  {
+    "id": "A08",
+    "reference": "A21",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Forming equations from contexts",
+    "tools": [
+      "linear-equations"
+    ],
+    "student": "assets/gcse-maths/a08-student.pdf",
+    "teacher": "assets/gcse-maths/a08-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "10685e75c22d75656b849ebdda153b500f089a424e05902f6f9009790ea30004",
+    "teacherHash": "0f2c0209e4824b725f44c0c684909d6681d0e32bfa7246a3d51b905a370d4ba0"
+  },
+  {
+    "id": "A09",
+    "reference": "A5",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Rearranging formulae",
+    "tools": [
+      "transposition-formulae"
+    ],
+    "student": "assets/gcse-maths/a09-student.pdf",
+    "teacher": "assets/gcse-maths/a09-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "7c85af3d6772714c235d487ee63088e24ea0764e777bd783a05cfb2b731ce72f",
+    "teacherHash": "79f236fcfaa6c43e2aa788346b06962c4399b8fc3e384c99fd61f191255e0aa8"
+  },
+  {
+    "id": "A10",
+    "reference": "A22",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Linear inequalities",
+    "tools": [
+      "inequalities"
+    ],
+    "student": "assets/gcse-maths/a10-student.pdf",
+    "teacher": "assets/gcse-maths/a10-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "4d96aa42135762c436781c90109ce76dc1d5d3aa1e81e2165c8763c554f00144",
+    "teacherHash": "876054d202c81511b8f0704381ceab515be464360ff5d64a7a6c75c3bf4010b9"
+  },
+  {
+    "id": "A11",
+    "reference": "A23\u201325",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Linear and pattern sequences",
+    "tools": [
+      "sequences"
+    ],
+    "student": "assets/gcse-maths/a11-student.pdf",
+    "teacher": "assets/gcse-maths/a11-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 17,
+    "studentHash": "3064a30ecceeb8a25c00a60e755892c6617932c1ad53d2a6a059c58d17fb2e86",
+    "teacherHash": "f1573942db54b53049440c431a5b9f11e4a119b0f823ef2e0be6d793b24e0dcf"
+  },
+  {
+    "id": "A12",
+    "reference": "A8",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Coordinates and midpoints",
+    "tools": [
+      "midpoint-length-lines"
+    ],
+    "student": "assets/gcse-maths/a12-student.pdf",
+    "teacher": "assets/gcse-maths/a12-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 15,
+    "studentHash": "49733599af35a33c76038d6966d7f3bccd66437d8ff873721f8a8de6a51d5b74",
+    "teacherHash": "4589a022b31269c28bb1c45a3f82cf3db96a7ceb15c6b2cf9fd0ff2deb36c51e"
+  },
+  {
+    "id": "A13",
+    "reference": "A9\u201310",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Gradients and intercepts",
+    "tools": [
+      "straight-lines"
+    ],
+    "student": "assets/gcse-maths/a13-student.pdf",
+    "teacher": "assets/gcse-maths/a13-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "9de55787d5645532eeade9cf6b18a3dff103bf251c52e27d0240d3c9c75cd8fe",
+    "teacherHash": "0f2012ac82be3cc8680f2215e35b1e984e2244adc5d5f84b4c00221f079c1de8"
+  },
+  {
+    "id": "A14",
+    "reference": "A9\u201310",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Equations of straight lines",
+    "tools": [
+      "straight-lines"
+    ],
+    "student": "assets/gcse-maths/a14-student.pdf",
+    "teacher": "assets/gcse-maths/a14-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "01e70e34bd1718ad77b62c65a2b030012c95c26c1db87def4bbea8ec9133e9fe",
+    "teacherHash": "aef9c63b7a6a98c610bab08fd8b2dca4337e9b92b601f6c9d995368e896c82fa"
+  },
+  {
+    "id": "A15",
+    "reference": "A11\u201312, A18",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Quadratic graphs and graphical solutions",
+    "tools": [
+      "graph-transformations-curve-sketching"
+    ],
+    "student": "assets/gcse-maths/a15-student.pdf",
+    "teacher": "assets/gcse-maths/a15-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 12,
+    "studentHash": "57daa3948ff53dba6d297b5b7fde7a297a9a7f82f78bdee28053193619c9bc3d",
+    "teacherHash": "406ad147d6b2ff116a0a0fc7e36c60640f5751758f3622a8272907067f523b5e"
+  },
+  {
+    "id": "A16",
+    "reference": "A18",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Solving quadratics by factorising",
+    "tools": [
+      "quadratic-equations"
+    ],
+    "student": "assets/gcse-maths/a16-student.pdf",
+    "teacher": "assets/gcse-maths/a16-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 5,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "1bc3a1cece73a2f3669c9a65cea1ae401ba15b408ae4c264d13d58015a9b3b85",
+    "teacherHash": "9d2fb01a3dde57c06768172c97ff6d2a2ae1e517879f36b49e861684aad30816"
+  },
+  {
+    "id": "A17",
+    "reference": "A18",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Quadratic formula",
+    "tools": [
+      "quadratic-equations"
+    ],
+    "student": "assets/gcse-maths/a17-student.pdf",
+    "teacher": "assets/gcse-maths/a17-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 6,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "1fb3177fbdb18758807b6c5b25cc8db6cde3a5d2e7d577b036699607fb5010be",
+    "teacherHash": "3d700da0d70eb5b578ec08d211b9e716e1b340b06f5279d1c256e22729ecc38d"
+  },
+  {
+    "id": "A18",
+    "reference": "A11, A18",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Completing the square and turning points",
+    "tools": [
+      "quadratic-equations"
+    ],
+    "student": "assets/gcse-maths/a18-student.pdf",
+    "teacher": "assets/gcse-maths/a18-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 22,
+    "studentHash": "88455a91cd1c7aff91ec7ab121cffcbe02cf10bdfb72c81e4b330f8151dc0b13",
+    "teacherHash": "eb00bdc47616fc4b93f53c7264ba93088960c36c0c8d21362e21259faec6da57"
+  },
+  {
+    "id": "A19",
+    "reference": "A4",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Algebraic fractions",
+    "tools": [
+      "algebraic-fractions"
+    ],
+    "student": "assets/gcse-maths/a19-student.pdf",
+    "teacher": "assets/gcse-maths/a19-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 6,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "517c348eea0a3ed3a6637401baa150d3192134e36f61ee21e566e17e551fe5d8",
+    "teacherHash": "cefb05f2276c0c331d57ee884703abc3e696b7914c76f2774078456e7ff8f350"
+  },
+  {
+    "id": "A20",
+    "reference": "A7",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Composite and inverse functions",
+    "tools": [
+      "functions"
+    ],
+    "student": "assets/gcse-maths/a20-student.pdf",
+    "teacher": "assets/gcse-maths/a20-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 22,
+    "studentHash": "489efa4ee887e4b70d36adc85c421dbc32023857855bf8c8ccdd645f8d6999b0",
+    "teacherHash": "fd38bad0a05a34292c9503992e6627504ebe71edbbf7e832182615c6a302addf"
+  },
+  {
+    "id": "A21",
+    "reference": "A20",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Iteration",
+    "tools": [
+      "numerical-methods"
+    ],
+    "student": "assets/gcse-maths/a21-student.pdf",
+    "teacher": "assets/gcse-maths/a21-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "e76ccb4d70f2fe0f987c9eaeac1618c517b8a2c02cdb3c9e20d72d85681eb3ed",
+    "teacherHash": "dcfc48004c1b94cc8f29a09d48d0a871ae82771a5fb6154970a3652242a40aff"
+  },
+  {
+    "id": "A22",
+    "reference": "A24\u201325",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Quadratic sequences",
+    "tools": [
+      "sequences"
+    ],
+    "student": "assets/gcse-maths/a22-student.pdf",
+    "teacher": "assets/gcse-maths/a22-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 5,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "647584da3fc0d6c78eb5cbe8842f86999f71a646b2f927d7928d4f6c78928e42",
+    "teacherHash": "bc4909da580c8b38a229ed09dd9015cc516d2b0ea982457c5ade3687934401b1"
+  },
+  {
+    "id": "A23",
+    "reference": "A12",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Cubic, reciprocal, exponential and trig graphs",
+    "tools": [
+      "trig-graphs-transformations"
+    ],
+    "student": "assets/gcse-maths/a23-student.pdf",
+    "teacher": "assets/gcse-maths/a23-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "324b0eb9ec89e26163bee8c2e77532c8f3eca7febaca108a5d7fd45f24fc31e4",
+    "teacherHash": "2853d8cae7288e551980fd353dbca848ea6f443a8b0b150f045e77e535095556"
+  },
+  {
+    "id": "A24",
+    "reference": "A13",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Translations and reflections of graphs",
+    "tools": [
+      "graph-transformations-curve-sketching"
+    ],
+    "student": "assets/gcse-maths/a24-student.pdf",
+    "teacher": "assets/gcse-maths/a24-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "e875126da0ffd91178e369044c805386e7021168e5a8d70e38ae064c227c18be",
+    "teacherHash": "7a395cf363ccfaf454d363ccc46f55ad2f0071ea067fe2ac7ebcaf3ffd350998"
+  },
+  {
+    "id": "A25",
+    "reference": "A6",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Algebraic proof",
+    "tools": [],
+    "student": "assets/gcse-maths/a25-student.pdf",
+    "teacher": "assets/gcse-maths/a25-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 22,
+    "studentHash": "678684d67504e5433f65ee262f52b9fef6176dd8e93821839361fec5e6423c23",
+    "teacherHash": "d362444282c36eba3efd7658f5a564b5102b493a6b9e43931deae259c71548d4"
+  },
+  {
+    "id": "A26",
+    "reference": "A22",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Quadratic inequalities",
+    "tools": [
+      "inequalities"
+    ],
+    "student": "assets/gcse-maths/a26-student.pdf",
+    "teacher": "assets/gcse-maths/a26-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 22,
+    "studentHash": "8b0eba6cf022f4106bf86c5d64700294c36ce6b6e793e9af809bd630ec980649",
+    "teacherHash": "192b9ebba8eeb216878518bacb002a3f2e8f3e7f990c5072c655529941fc2f05"
+  },
+  {
+    "id": "A27",
+    "reference": "A16",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Circles centred at the origin and tangents",
+    "tools": [
+      "equation-of-a-circle"
+    ],
+    "student": "assets/gcse-maths/a27-student.pdf",
+    "teacher": "assets/gcse-maths/a27-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "d4e622c29d7bd5f09d156e1ab3f814f570ec2c0c1613b2103140a9bd00b80346",
+    "teacherHash": "1f9b4fafc856aee5fa12629c46249c55a39aec413f714be88a835ba53a696f23"
+  },
+  {
+    "id": "A28",
+    "reference": "A19",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Simultaneous linear equations",
+    "tools": [
+      "simultaneous-equations"
+    ],
+    "student": "assets/gcse-maths/a28-student.pdf",
+    "teacher": "assets/gcse-maths/a28-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "0753d38402decdc3f24816daeac41a9efbe7c02344e7a07f28e886f79f435493",
+    "teacherHash": "5240f138a524b029c71564fab30bc36c6eb0a0c907d65bd7ab55d04f0c98a0eb"
+  },
+  {
+    "id": "A29",
+    "reference": "A19",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Linear and quadratic simultaneous equations",
+    "tools": [
+      "conic-intersections"
+    ],
+    "student": "assets/gcse-maths/a29-student.pdf",
+    "teacher": "assets/gcse-maths/a29-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 7,
+    "questions": 8,
+    "marks": 32,
+    "studentHash": "9d13bfe5353d165401e6589b2c53259b44aacb7bec513d845cb5ed3de0891502",
+    "teacherHash": "b9d27e516fccd71475e82874211217d9f84e904aaf001b203aa436bfb19497f8"
+  },
+  {
+    "id": "R01",
+    "reference": "R4\u20135",
+    "area": "Ratio & Proportion",
+    "tier": "Foundation",
+    "title": "Simplifying and sharing in a ratio",
+    "tools": [
+      "ratio-proportion"
+    ],
+    "student": "assets/gcse-maths/r01-student.pdf",
+    "teacher": "assets/gcse-maths/r01-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "958a914862911c04a02b7b2a668f80c89dd556560c1a18fb2de23ec9a17b9ec6",
+    "teacherHash": "1ddeb63f8efad7b41850a079ca3ffe59af0862c7d9f292646241e0697e41c6e4"
+  },
+  {
+    "id": "R02",
+    "reference": "R3, R6\u20138, N11",
+    "area": "Ratio & Proportion",
+    "tier": "Foundation",
+    "title": "Ratio and fraction connections",
+    "tools": [
+      "ratio-proportion"
+    ],
+    "student": "assets/gcse-maths/r02-student.pdf",
+    "teacher": "assets/gcse-maths/r02-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "4b44477df87a59b6da9ce046e9a19e2622c60c3a86a1f64a42deffec5843d756",
+    "teacherHash": "19e5c520473b993a324e5aafada063f7a7689639f48ec7cd37d3d72d983f5be6"
+  },
+  {
+    "id": "R03",
+    "reference": "R2, R5",
+    "area": "Ratio & Proportion",
+    "tier": "Foundation",
+    "title": "Scales, maps and exchange rates",
+    "tools": [
+      "ratio-proportion"
+    ],
+    "student": "assets/gcse-maths/r03-student.pdf",
+    "teacher": "assets/gcse-maths/r03-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "6ff252c880dc4942d6bc80032d3c9836994ec6c5f379a76590cc9abe67fead2f",
+    "teacherHash": "c718070aacf141461790342e1ad7a482e350c10c648616c2df41696259b92b15"
+  },
+  {
+    "id": "R04",
+    "reference": "R5\u20137",
+    "area": "Ratio & Proportion",
+    "tier": "Foundation",
+    "title": "Recipes and mixtures",
+    "tools": [
+      "ratio-proportion"
+    ],
+    "student": "assets/gcse-maths/r04-student.pdf",
+    "teacher": "assets/gcse-maths/r04-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "e1495ecf7d245ab1e5c73d2721d19b77d3e706dacdb23f7b66f3ac4ddda85a14",
+    "teacherHash": "271821de761d34d47d9ecedeaa027227b0f11f62ef27288abb1af8ad162923d9"
+  },
+  {
+    "id": "R05",
+    "reference": "R1, N13",
+    "area": "Ratio & Proportion",
+    "tier": "Foundation",
+    "title": "Unit conversions",
+    "tools": [
+      "conversions-teaching"
+    ],
+    "student": "assets/gcse-maths/r05-student.pdf",
+    "teacher": "assets/gcse-maths/r05-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 8,
+    "studentHash": "fee4f7f436de2b8b47aa9c6c3f7286a31d8157fd2de34e11903f0b605e7cad02",
+    "teacherHash": "e547cb4e3187ef7b929d40cf7d642502220c6863451346728954646da3aebc46"
+  },
+  {
+    "id": "R06",
+    "reference": "R1, R11",
+    "area": "Ratio & Proportion",
+    "tier": "Foundation",
+    "title": "Speed, density and pressure",
+    "tools": [
+      "conversions-teaching"
+    ],
+    "student": "assets/gcse-maths/r06-student.pdf",
+    "teacher": "assets/gcse-maths/r06-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "0a458742e9c268d744575215f4edad6b966281eb83d058b9307a405bde843c2e",
+    "teacherHash": "2ec5a10413ab1ec351aeb3b29f83f920258628139159b90317e640c581cb2a0d"
+  },
+  {
+    "id": "R07",
+    "reference": "R9",
+    "area": "Ratio & Proportion",
+    "tier": "Foundation",
+    "title": "Percentage change",
+    "tools": [
+      "simple-percentage-tasks"
+    ],
+    "student": "assets/gcse-maths/r07-student.pdf",
+    "teacher": "assets/gcse-maths/r07-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "3364ba9432e8a453954d9187c6a8a67d74f71c1a153012cef9f22cdb2736c8b5",
+    "teacherHash": "6e8db3ab78218f1cb31c982deb2b94c7289dc3a80c9d050664c8f78d46d00265"
+  },
+  {
+    "id": "R08",
+    "reference": "R9",
+    "area": "Ratio & Proportion",
+    "tier": "Foundation",
+    "title": "Reverse percentages",
+    "tools": [
+      "simple-percentage-tasks"
+    ],
+    "student": "assets/gcse-maths/r08-student.pdf",
+    "teacher": "assets/gcse-maths/r08-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "3fa473d837d83b0cc183fbd7a074efce4aa3ec778b97705a5db089769ae224bf",
+    "teacherHash": "b75b3ec81c3bfa30e4cafddec15a1de9fee445b171532febdcccc0f8a2dcfa80"
+  },
+  {
+    "id": "R09",
+    "reference": "R9, R16",
+    "area": "Ratio & Proportion",
+    "tier": "Foundation",
+    "title": "Interest, growth and depreciation",
+    "tools": [
+      "financial-real-life-maths"
+    ],
+    "student": "assets/gcse-maths/r09-student.pdf",
+    "teacher": "assets/gcse-maths/r09-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "450b5abc9a01cc72e3eeb2bd1ce69afb883a07359df4b4e341090b29421b473e",
+    "teacherHash": "abf6fac0117346f619abf170426864c8243dfd69b87f0f3294037d65085adb4a"
+  },
+  {
+    "id": "R10",
+    "reference": "R10",
+    "area": "Ratio & Proportion",
+    "tier": "Foundation",
+    "title": "Direct and inverse proportion in context",
+    "tools": [
+      "ratio-proportion"
+    ],
+    "student": "assets/gcse-maths/r10-student.pdf",
+    "teacher": "assets/gcse-maths/r10-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "330311e8c3c137daf106c8b8ee1964fdf62b070776af307e67e2a99996eaf6d1",
+    "teacherHash": "557d10e270009df9242ae85ed934b1a3cd08442aaf5b63b6e4476447e28ff4fd"
+  },
+  {
+    "id": "R11",
+    "reference": "R13\u201314",
+    "area": "Ratio & Proportion",
+    "tier": "Higher",
+    "title": "Direct and inverse proportion equations",
+    "tools": [
+      "ratio-proportion"
+    ],
+    "student": "assets/gcse-maths/r11-student.pdf",
+    "teacher": "assets/gcse-maths/r11-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "bbd0b738dbf69a32096e096f52b829bdc63e7a001e11fb770524030be707362f",
+    "teacherHash": "1d7c75325634c3dd9d37089102ed0e49cdec54db54b39164468ab44dec340117"
+  },
+  {
+    "id": "R12",
+    "reference": "R16",
+    "area": "Ratio & Proportion",
+    "tier": "Higher",
+    "title": "Growth, decay and repeated processes",
+    "tools": [
+      "percentages-real-world"
+    ],
+    "student": "assets/gcse-maths/r12-student.pdf",
+    "teacher": "assets/gcse-maths/r12-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "e4feac0585ed184dc9c9905469812d32e45669a460208f6267a83afa2c04db20",
+    "teacherHash": "889a14dfb94b746b7743d3b30c31d66a22f78ccf51319b8ed0e04f615cb56051"
+  },
+  {
+    "id": "G01",
+    "reference": "G3",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Core angle facts",
+    "tools": [
+      "missing-angles"
+    ],
+    "student": "assets/gcse-maths/g01-student.pdf",
+    "teacher": "assets/gcse-maths/g01-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "2e907a033d85134eb37d0f5e4dfbcb43601afe2c1fdcd27228e54c3c336087b1",
+    "teacherHash": "66a50c030cd920d7c0619476203ce1f1fa428b2d2d427b4978c6891a5c81aff0"
+  },
+  {
+    "id": "G02",
+    "reference": "G3",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Parallel lines and angle reasoning",
+    "tools": [
+      "missing-angles"
+    ],
+    "student": "assets/gcse-maths/g02-student.pdf",
+    "teacher": "assets/gcse-maths/g02-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "2633e52a0b43b590a1680b37af7e38e5a6a5d5b25fc1ef64bf9ca1943378f082",
+    "teacherHash": "e8a978bbc0f9db13107e2ae70081ea2f6a6b964a2d8419e4a570e32acb657843"
+  },
+  {
+    "id": "G03",
+    "reference": "G3",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Polygon angles",
+    "tools": [
+      "polygons-angles"
+    ],
+    "student": "assets/gcse-maths/g03-student.pdf",
+    "teacher": "assets/gcse-maths/g03-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "8998aed15be893bfd6b63649f279b54dab8e12dec2e802b42450b3399c52ec5c",
+    "teacherHash": "5ca31bb38659ab46685fb77a4e544f30868dacfa3ad0faaf025c0955de743bb3"
+  },
+  {
+    "id": "G04",
+    "reference": "G1, G4",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Triangles, quadrilaterals and symmetry",
+    "tools": [],
+    "student": "assets/gcse-maths/g04-student.pdf",
+    "teacher": "assets/gcse-maths/g04-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 12,
+    "studentHash": "bb809e40b6d86a5f2fde5a9d5353d3d1077ea88c51a1351a8bd7439a6aaf4c97",
+    "teacherHash": "4874b9c91f84b23423d97d0c3b7a87ea6a9061951333ce865aa3991cb105d669"
+  },
+  {
+    "id": "G05",
+    "reference": "G5\u20136",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Congruence and geometric reasoning",
+    "tools": [
+      "formal-geometric-proof"
+    ],
+    "student": "assets/gcse-maths/g05-student.pdf",
+    "teacher": "assets/gcse-maths/g05-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 13,
+    "studentHash": "f15d7e0e7b0aeb5114c345760d5686f23e5b20f863211e22b2945000a64a4cfc",
+    "teacherHash": "4206526ca57e4b0fe57f1e82f0500c81983af0ee5980fe599bec6ee82e7d5cf9"
+  },
+  {
+    "id": "G06",
+    "reference": "G7, G24",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Translations and reflections",
+    "tools": [
+      "transformations"
+    ],
+    "student": "assets/gcse-maths/g06-student.pdf",
+    "teacher": "assets/gcse-maths/g06-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "8fb6456da013ff3dc179c3b0de63103f3af23f3d94a9fce58c911f960d20e9bd",
+    "teacherHash": "c0e92736b0ef7c1282bd3a30044af7aef7825842c7b89a853890633a492b5221"
+  },
+  {
+    "id": "G07",
+    "reference": "G7\u20138",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Rotations and enlargements",
+    "tools": [
+      "transformations"
+    ],
+    "student": "assets/gcse-maths/g07-student.pdf",
+    "teacher": "assets/gcse-maths/g07-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "946f92d01484925073525235ab4916522bb2fa5c73efd6226ead25e6504c45fc",
+    "teacherHash": "e93a331653a35f2be3aae626a294b1dc0d222a312891b2d052961974732f47fb"
+  },
+  {
+    "id": "G08",
+    "reference": "G7\u20138",
+    "area": "Geometry & Measures",
+    "tier": "Higher",
+    "title": "Negative and combined transformations",
+    "tools": [
+      "transformations"
+    ],
+    "student": "assets/gcse-maths/g08-student.pdf",
+    "teacher": "assets/gcse-maths/g08-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "e074948622b1999a90cab2ef8cc80f2f110be282de97b94701b721c041b843de",
+    "teacherHash": "fba9b421e50c8cd752f222afc74e08783271d428fbbbfdd2d8ec6adb8d2f921d"
+  },
+  {
+    "id": "G09",
+    "reference": "G16",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Areas of triangles, parallelograms and trapezia",
+    "tools": [
+      "area-triangles"
+    ],
+    "student": "assets/gcse-maths/g09-student.pdf",
+    "teacher": "assets/gcse-maths/g09-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "615c1801fd9c4f3ed31216a4fc79f8f706adc6eace1c6e2ebd2ee27e8c55febf",
+    "teacherHash": "8ef4c9417717480a3ace4a82669a2f03c3a157c15358add0592895bb880ebbfa"
+  },
+  {
+    "id": "G10",
+    "reference": "G16\u201317",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Compound area and perimeter",
+    "tools": [
+      "area-rectangles"
+    ],
+    "student": "assets/gcse-maths/g10-student.pdf",
+    "teacher": "assets/gcse-maths/g10-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "7ead9880a9f129ef0cf8053593d99c6f23d2458ac011eaa503e2ea04ce8b870f",
+    "teacherHash": "c94eacdb88fdcf3cddaea7d7569e37aa6fc99b7e4cd1850dd14dcc4fe6d41ab6"
+  },
+  {
+    "id": "G11",
+    "reference": "G9, G17",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Circles: area and circumference",
+    "tools": [
+      "circles-area-circumference"
+    ],
+    "student": "assets/gcse-maths/g11-student.pdf",
+    "teacher": "assets/gcse-maths/g11-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 19,
+    "studentHash": "316735b6e49261a86c27d597a91db058e77a6b0ac8b30bc644c77163a655f159",
+    "teacherHash": "c3462a95fc84ba116a31289768c584425fdb5e70c74e1229d128c8f69ca5adb6"
+  },
+  {
+    "id": "G12",
+    "reference": "G18",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Arcs and sectors",
+    "tools": [
+      "sectors-arc-length"
+    ],
+    "student": "assets/gcse-maths/g12-student.pdf",
+    "teacher": "assets/gcse-maths/g12-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "5f97356160d73e3e62f008b65f0b746fdf2de585130744efb07c72061f9266e9",
+    "teacherHash": "bd2efafcf8632ec11fac3e0947ed01b71e18af91bd6db9eb39e3ff6036422653"
+  },
+  {
+    "id": "G13",
+    "reference": "G16",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Volume of prisms",
+    "tools": [
+      "volume-surface-area-prisms"
+    ],
+    "student": "assets/gcse-maths/g13-student.pdf",
+    "teacher": "assets/gcse-maths/g13-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "ae28cd45c697f46920e4118e1a14ba12cb5978d7d6f46b9b26bac07e80416a6a",
+    "teacherHash": "ed0ec45db59b53645349f98c20fb5ded1941cbc558205c087a4041a2dbf5bed4"
+  },
+  {
+    "id": "G14",
+    "reference": "G17",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Surface area of prisms",
+    "tools": [
+      "volume-surface-area-prisms"
+    ],
+    "student": "assets/gcse-maths/g14-student.pdf",
+    "teacher": "assets/gcse-maths/g14-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "a8caec6a543af1652d8072de7c2ee0f9d573c8f9d61741c1f30ea5c509442c9c",
+    "teacherHash": "1899759bda3314ca0a1d4859ad9074ee19fdb70f260371d56c45c1458f7f49ca"
+  },
+  {
+    "id": "G15",
+    "reference": "G16\u201317",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Cylinders",
+    "tools": [
+      "cylinders-cones-volume-surface-area"
+    ],
+    "student": "assets/gcse-maths/g15-student.pdf",
+    "teacher": "assets/gcse-maths/g15-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 20,
+    "studentHash": "73a52446a4e6b0be064806e9389294e2608f1e16ec7b711a5dbc811ae10c31ca",
+    "teacherHash": "d228c31d5784e87e138893fa414992cbe08feaaca463fcd44e97fce1bc99f824"
+  },
+  {
+    "id": "G16",
+    "reference": "G17",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Cones, pyramids and spheres",
+    "tools": [
+      "pyramids-spheres-volume-surface-area"
+    ],
+    "student": "assets/gcse-maths/g16-student.pdf",
+    "teacher": "assets/gcse-maths/g16-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "00dd9f16f5e6b59e5279ecae6a1d81be11f6988e1363a940521ae105b9c08d85",
+    "teacherHash": "75d772b3184447a680b7638e0721f20ade30753cfeb430776d5ce0402264f606"
+  },
+  {
+    "id": "G17",
+    "reference": "G12\u201313",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "3D shapes, plans and elevations",
+    "tools": [],
+    "student": "assets/gcse-maths/g17-student.pdf",
+    "teacher": "assets/gcse-maths/g17-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 12,
+    "studentHash": "5601dbca554083c8606e7168c3a6885d2a4fe7753833f8184807e177d42babd9",
+    "teacherHash": "1c694941ae936d8d474e3d645c2d5a66775006d0756240448617a822ff47afed"
+  },
+  {
+    "id": "G18",
+    "reference": "G2",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Ruler and compass constructions",
+    "tools": [
+      "loci-constructions"
+    ],
+    "student": "assets/gcse-maths/g18-student.pdf",
+    "teacher": "assets/gcse-maths/g18-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "4a37175f839af86b411871e7d8dde55339548541a9fd9ffd7133a664a173f4d5",
+    "teacherHash": "e047c419f2c6cfa7f2e7e1b674376517298a9270c4bfcdf01340fc94ae4e05c7"
+  },
+  {
+    "id": "G19",
+    "reference": "G2",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Loci and regions",
+    "tools": [
+      "loci-constructions"
+    ],
+    "student": "assets/gcse-maths/g19-student.pdf",
+    "teacher": "assets/gcse-maths/g19-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "083a233f2c9f64cb3930dcf47b8d1392bebf2d0b7ad062a221a4f2807598927c",
+    "teacherHash": "d10e9791f332aa2514682844455a765bbc9acb34cb3a4f1f1daa9aedb5fff055"
+  },
+  {
+    "id": "G20",
+    "reference": "G15",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Bearings",
+    "tools": [
+      "bearings"
+    ],
+    "student": "assets/gcse-maths/g20-student.pdf",
+    "teacher": "assets/gcse-maths/g20-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "2f9f1f52942f17dc935ad9cc6aa471c4cb9f611ceb23b806b24857d415c7ee00",
+    "teacherHash": "7de3e97f5f1cb8364f53d91bd54132f6925d63b54950d2eb28dc682b448054d9"
+  },
+  {
+    "id": "G21",
+    "reference": "G20",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Pythagoras\u2019s theorem",
+    "tools": [
+      "pythagoras-theorem"
+    ],
+    "student": "assets/gcse-maths/g21-student.pdf",
+    "teacher": "assets/gcse-maths/g21-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "28a1eb46b726c5fe9bd723767bebc0f86bcf51c88e4c2853f2cc13523c86c0d3",
+    "teacherHash": "a417435cad85269d3182734ff1a3d8449a39f51ec5049483fbcf4db5f513b935"
+  },
+  {
+    "id": "G22",
+    "reference": "G20",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Right-angled trigonometry",
+    "tools": [
+      "trigonometric-ratios"
+    ],
+    "student": "assets/gcse-maths/g22-student.pdf",
+    "teacher": "assets/gcse-maths/g22-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "329e20dad3d2b69e0165da8041bfc58f86810a4de7170beb1f9d18ccc28b47d1",
+    "teacherHash": "f47ec6c841c1707f24955fcf8b8ebd4fc38bd94531cd330b992c7414e76de183"
+  },
+  {
+    "id": "G23",
+    "reference": "G21",
+    "area": "Geometry & Measures",
+    "tier": "Foundation",
+    "title": "Exact trigonometric values",
+    "tools": [
+      "trigonometric-ratios"
+    ],
+    "student": "assets/gcse-maths/g23-student.pdf",
+    "teacher": "assets/gcse-maths/g23-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 8,
+    "studentHash": "0cf11f4472c7a41cad571813050bb8d269856e7e8ba2eb4246d3bec3a0491114",
+    "teacherHash": "9b7bd5c903d21744d89ef378112fb61086fc244db236e879dd8ad3feb88b8433"
+  },
+  {
+    "id": "G24",
+    "reference": "G20",
+    "area": "Geometry & Measures",
+    "tier": "Higher",
+    "title": "3D Pythagoras and trigonometry",
+    "tools": [
+      "pythagoras-theorem"
+    ],
+    "student": "assets/gcse-maths/g24-student.pdf",
+    "teacher": "assets/gcse-maths/g24-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 32,
+    "studentHash": "f24cd884eb5565d26427be6a205efb24ec581303fb578840ac67206e92594226",
+    "teacherHash": "61ca2b58f22777b4aa8a25d4c79339ee66e36056621ec7061e1a847a849b26f1"
+  },
+  {
+    "id": "G25",
+    "reference": "G22\u201323",
+    "area": "Geometry & Measures",
+    "tier": "Higher",
+    "title": "Sine rule, cosine rule and triangle area",
+    "tools": [
+      "sine-cosine-rule"
+    ],
+    "student": "assets/gcse-maths/g25-student.pdf",
+    "teacher": "assets/gcse-maths/g25-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "9c03cf50e11adc2fd43db22f150c2764bcbc36890e4f97ee4d0e52cf5e3bc69b",
+    "teacherHash": "1e5f4dc4a14d94507e056c13a40861400b37cc57eb8989cb068b218e389646dc"
+  },
+  {
+    "id": "G26",
+    "reference": "G10",
+    "area": "Geometry & Measures",
+    "tier": "Higher",
+    "title": "Circle theorems",
+    "tools": [
+      "circle-theorems"
+    ],
+    "student": "assets/gcse-maths/g26-student.pdf",
+    "teacher": "assets/gcse-maths/g26-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "6ec047b777a1eb3b20705667d35c263467a4c70e733e66361f22b8d94fcb3eb8",
+    "teacherHash": "f5ad2a2d230b9f812332a5714cc3c5a1b96726bb20a0fea92410b32d1a333887"
+  },
+  {
+    "id": "G27",
+    "reference": "G25",
+    "area": "Geometry & Measures",
+    "tier": "Higher",
+    "title": "Vector calculations",
+    "tools": [
+      "free-vectors"
+    ],
+    "student": "assets/gcse-maths/g27-student.pdf",
+    "teacher": "assets/gcse-maths/g27-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "6be48a4f3b9299f2e9df28b51dedef27dd358b3951e0b8e6b00ddcbfb878b247",
+    "teacherHash": "508d2a6246c720b6bb3234c3af3b40eaf3087d435af88148d81551fc96e1f15d"
+  },
+  {
+    "id": "G28",
+    "reference": "G25",
+    "area": "Geometry & Measures",
+    "tier": "Higher",
+    "title": "Vector geometry and proof",
+    "tools": [
+      "free-vectors"
+    ],
+    "student": "assets/gcse-maths/g28-student.pdf",
+    "teacher": "assets/gcse-maths/g28-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 18,
+    "studentHash": "cf0ded36763e46c5a60c5e40f132305e572fe1cb41a310ee208f7ab12a0ddb4a",
+    "teacherHash": "97539a4ed9c97f75139eb60b69c4daae7bddf823c7e3508bb62651c54fdecb65"
+  },
+  {
+    "id": "G29",
+    "reference": "G19, R12",
+    "area": "Geometry & Measures",
+    "tier": "Higher",
+    "title": "Similar shapes: lengths, areas and volumes",
+    "tools": [
+      "scale-drawing-similar-shapes"
+    ],
+    "student": "assets/gcse-maths/g29-student.pdf",
+    "teacher": "assets/gcse-maths/g29-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "d815aefa37f02827eec3cebf5d6a15a89524fffdbefb702f89d2f4ff8a1ba86e",
+    "teacherHash": "ac9999207a8b6c00f3b7050cc402f0c773544fb08c1b71918da7b68c5403c9b5"
+  },
+  {
+    "id": "P01",
+    "reference": "P2\u20134",
+    "area": "Probability",
+    "tier": "Foundation",
+    "title": "Probability scales and single events",
+    "tools": [],
+    "student": "assets/gcse-maths/p01-student.pdf",
+    "teacher": "assets/gcse-maths/p01-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 9,
+    "studentHash": "43682e394b6a2c425b9e98b7b89ed29694015aeda4cbb9e0af841dea8f9aa411",
+    "teacherHash": "d68e71d427b8b263fb3eaa8b213c3f9165bfa29cbb1a59ef371d05cb276b0534"
+  },
+  {
+    "id": "P02",
+    "reference": "P1\u20133, P5",
+    "area": "Probability",
+    "tier": "Foundation",
+    "title": "Relative frequency and expected outcomes",
+    "tools": [],
+    "student": "assets/gcse-maths/p02-student.pdf",
+    "teacher": "assets/gcse-maths/p02-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 13,
+    "studentHash": "bd431c9397399dc07c799ee8f8943cad7621b92c926543c2d22750b0c6c8d4f2",
+    "teacherHash": "005af4a4443291eb225f9c4f4834424733c029cfcf2cdb8ed19e63e8c0f3d439"
+  },
+  {
+    "id": "P03",
+    "reference": "P6\u20137, N5",
+    "area": "Probability",
+    "tier": "Foundation",
+    "title": "Possibility spaces and systematic counting",
+    "tools": [],
+    "student": "assets/gcse-maths/p03-student.pdf",
+    "teacher": "assets/gcse-maths/p03-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "1707f83e9f5808b4098ce5786b5807dd85a8ced8edc930d458ebcf4315bac861",
+    "teacherHash": "b03fc1e3496437ee8e7ef910fd53a9b4ca6c062b8db78123f7b5387adac82658"
+  },
+  {
+    "id": "P04",
+    "reference": "P6",
+    "area": "Probability",
+    "tier": "Foundation",
+    "title": "Venn diagrams and sets",
+    "tools": [
+      "venn-diagrams"
+    ],
+    "student": "assets/gcse-maths/p04-student.pdf",
+    "teacher": "assets/gcse-maths/p04-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "32fa31b82911f90ea45d66d8a25069b6f790806ceb5ce636a9e7c7f5efb219e5",
+    "teacherHash": "f4594a6ec6353ca9bbd30e9e1d82ed96cf4841fca3dcc83f360699f844a0a8cd"
+  },
+  {
+    "id": "P05",
+    "reference": "P8",
+    "area": "Probability",
+    "tier": "Foundation",
+    "title": "Independent events and tree diagrams",
+    "tools": [
+      "tree-diagrams-conditional-probability"
+    ],
+    "student": "assets/gcse-maths/p05-student.pdf",
+    "teacher": "assets/gcse-maths/p05-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "759dec44a8c8c8de8d80651ce3a380c2e3cf37203cc7e14d2f92dd591393670d",
+    "teacherHash": "c9cc3e57c8ca6d625ab27c5f90ff9b0cf0902d116291bf8f216292a8bfbf8242"
+  },
+  {
+    "id": "P06",
+    "reference": "P8",
+    "area": "Probability",
+    "tier": "Higher",
+    "title": "Dependent events and tree diagrams",
+    "tools": [
+      "tree-diagrams-conditional-probability"
+    ],
+    "student": "assets/gcse-maths/p06-student.pdf",
+    "teacher": "assets/gcse-maths/p06-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "d54d999f1ef128b972253c7516439abc7b9946f3d28fdb9743a7cfd46ba35416",
+    "teacherHash": "6ff8837037011209c788bb68a346a69350e6a7b21f34fa8db15fcdb3c59b243f"
+  },
+  {
+    "id": "P07",
+    "reference": "P9",
+    "area": "Probability",
+    "tier": "Higher",
+    "title": "Conditional probability and two-way tables",
+    "tools": [
+      "tree-diagrams-conditional-probability"
+    ],
+    "student": "assets/gcse-maths/p07-student.pdf",
+    "teacher": "assets/gcse-maths/p07-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 13,
+    "studentHash": "5283499d2194b7124a9a899d04ba33e0928ea3d2b142a8498e719242195601c7",
+    "teacherHash": "cccd121b85e70616830f4308cf6d372612eebdc28ac7552f1fd4ef8f5a4dcbcd"
+  },
+  {
+    "id": "S01",
+    "reference": "S4",
+    "area": "Statistics",
+    "tier": "Foundation",
+    "title": "Mean, median, mode and range",
+    "tools": [
+      "averages-range"
+    ],
+    "student": "assets/gcse-maths/s01-student.pdf",
+    "teacher": "assets/gcse-maths/s01-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 12,
+    "studentHash": "4812b9d5837e3cc651712a12f6f1b54b5eb865752dfed3d4a053c14565f9a746",
+    "teacherHash": "e385f05f85b7f9f12b3ae4b98a9e0791a1ef46e2173abf8c63792c01c8fc198b"
+  },
+  {
+    "id": "S02",
+    "reference": "S2, S4",
+    "area": "Statistics",
+    "tier": "Foundation",
+    "title": "Frequency tables and missing values",
+    "tools": [
+      "averages-range"
+    ],
+    "student": "assets/gcse-maths/s02-student.pdf",
+    "teacher": "assets/gcse-maths/s02-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 10,
+    "studentHash": "aa8739973b165132de7649589812bf4715383c9b62fa6a5d3b11ab690f0288d6",
+    "teacherHash": "fa5e72da7437b293c3f83b551bfc4f1227dfc8309b0affa6a91fcec3f6a9c097"
+  },
+  {
+    "id": "S03",
+    "reference": "S4",
+    "area": "Statistics",
+    "tier": "Foundation",
+    "title": "Grouped averages and estimated mean",
+    "tools": [
+      "averages-range"
+    ],
+    "student": "assets/gcse-maths/s03-student.pdf",
+    "teacher": "assets/gcse-maths/s03-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 14,
+    "studentHash": "fc7e37fb9e2788690b1127e7ec8ecaa9fedc0420601432d5fb6e18bdfd388dc2",
+    "teacherHash": "d4f946ca68be14a07703ce5deae7592067567dd21558748a9b6c08a4b37dc639"
+  },
+  {
+    "id": "S04",
+    "reference": "S2",
+    "area": "Statistics",
+    "tier": "Foundation",
+    "title": "Pie charts",
+    "tools": [],
+    "student": "assets/gcse-maths/s04-student.pdf",
+    "teacher": "assets/gcse-maths/s04-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 15,
+    "studentHash": "104bc9ae2aefb97344f5ab6fbfb4578a02eeefaac1338212478a12700097774d",
+    "teacherHash": "8d57421d180aa1b484c2fe71d1a3ec35d9b93d26881ad36cd0ac22c23f5a3981"
+  },
+  {
+    "id": "S05",
+    "reference": "S2",
+    "area": "Statistics",
+    "tier": "Foundation",
+    "title": "Bar charts and pictograms",
+    "tools": [],
+    "student": "assets/gcse-maths/s05-student.pdf",
+    "teacher": "assets/gcse-maths/s05-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 11,
+    "studentHash": "a6b568e9ed4520d0385e27a2146cb7cc1acdff8fca336dad493a6a82b8e583fa",
+    "teacherHash": "fe03b7ef7c7fbbec2fd0fa4ed938ab0fd0e5001bfbaa46d0cddcbb00f3683976"
+  },
+  {
+    "id": "S06",
+    "reference": "S2",
+    "area": "Statistics",
+    "tier": "Foundation",
+    "title": "Time series and line graphs",
+    "tools": [],
+    "student": "assets/gcse-maths/s06-student.pdf",
+    "teacher": "assets/gcse-maths/s06-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 12,
+    "studentHash": "900c8b3fa7a4cf66ac1c44ebd2e2785ab7ff60f6f77fc8b23d4d521a81eb37cc",
+    "teacherHash": "ddc57c8a32dc72d45c543c860981ceab2e1edacc77f1e50b400f53b55b5e1ed1"
+  },
+  {
+    "id": "S07",
+    "reference": "S6",
+    "area": "Statistics",
+    "tier": "Foundation",
+    "title": "Scatter graphs and lines of best fit",
+    "tools": [
+      "correlation-regression"
+    ],
+    "student": "assets/gcse-maths/s07-student.pdf",
+    "teacher": "assets/gcse-maths/s07-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 12,
+    "studentHash": "e6cf1e86e529d8a552d365c8f24798139870623b40b65462b11ef60ba5f8208d",
+    "teacherHash": "5df504d92bee2f85e679aa2fc26be5dd504b106717e4886c5dd291505dccdfba"
+  },
+  {
+    "id": "S08",
+    "reference": "S3",
+    "area": "Statistics",
+    "tier": "Higher",
+    "title": "Histograms and frequency density",
+    "tools": [
+      "histograms"
+    ],
+    "student": "assets/gcse-maths/s08-student.pdf",
+    "teacher": "assets/gcse-maths/s08-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "c5fe2c65c79643b7071a263e71ffe3ec4c73a43f48df1e5747458d3b315221aa",
+    "teacherHash": "f110f14949da40b88b57bb9c972df9ca4a48aaef5a560a916cb911d3d81f979e"
+  },
+  {
+    "id": "S09",
+    "reference": "S3",
+    "area": "Statistics",
+    "tier": "Higher",
+    "title": "Cumulative frequency",
+    "tools": [
+      "cumulative-frequency-curves"
+    ],
+    "student": "assets/gcse-maths/s09-student.pdf",
+    "teacher": "assets/gcse-maths/s09-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "019a115e890cd8ceb64e0ec8276513ae969fe8da2e053567df89fc94572acd0f",
+    "teacherHash": "5e4ba2e9a9bd99e04e60924ed6e01911ed63b7b1f2628c33ee340508ec6a42bc"
+  },
+  {
+    "id": "S10",
+    "reference": "S4",
+    "area": "Statistics",
+    "tier": "Higher",
+    "title": "Box plots and comparing distributions",
+    "tools": [
+      "cumulative-frequency-curves"
+    ],
+    "student": "assets/gcse-maths/s10-student.pdf",
+    "teacher": "assets/gcse-maths/s10-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "fddebe1bdb1202e66ceded340fada2fe4ebbc9995dd132e8611dea899cf0a992",
+    "teacherHash": "c3630812af6addcfae43ed7553db4af100fb242b5ff68ad68c0cf516093ea03b"
+  },
+  {
+    "id": "S11",
+    "reference": "S1, S5",
+    "area": "Statistics",
+    "tier": "Foundation",
+    "title": "Sampling and interpreting data",
+    "tools": [
+      "sampling-methods-bias"
+    ],
+    "student": "assets/gcse-maths/s11-student.pdf",
+    "teacher": "assets/gcse-maths/s11-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 15,
+    "studentHash": "477de4ceee4780db526c40f28d3cf412f4184eea6549343a9c604d4b32bd7c26",
+    "teacherHash": "761be94e8cdcb172f9ade85584cc2480f3e8db7af63c92f41b19edf3c6372c77"
+  },
+  {
+    "id": "A30",
+    "reference": "A14, R14",
+    "area": "Algebra",
+    "tier": "Foundation",
+    "title": "Distance-time graphs",
+    "tools": [],
+    "student": "assets/gcse-maths/a30-student.pdf",
+    "teacher": "assets/gcse-maths/a30-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 11,
+    "studentHash": "7c516eb9981f83227b0754d0db297ef0a2b43d2df500bccda7a0bc370dd65d39",
+    "teacherHash": "d5f73bed3846574f95a9bebab0a9c329ac7a5eafe049c673a45d2ffd5c3c8752"
+  },
+  {
+    "id": "A31",
+    "reference": "A15, R15",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Rates of change and areas under graphs",
+    "tools": [],
+    "student": "assets/gcse-maths/a31-student.pdf",
+    "teacher": "assets/gcse-maths/a31-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 16,
+    "studentHash": "e7d69e527f9e6d8be08ee3f403b05271eb59ac5ac138a6e3ec10f75ec7289fee",
+    "teacherHash": "e23a9ac25f45cd89d9d57f2b5c916778100601cb6fc862d5e4b3e9d9c5347d84"
+  },
+  {
+    "id": "A32",
+    "reference": "A22",
+    "area": "Algebra",
+    "tier": "Higher",
+    "title": "Inequality regions",
+    "tools": [
+      "inequalities"
+    ],
+    "student": "assets/gcse-maths/a32-student.pdf",
+    "teacher": "assets/gcse-maths/a32-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 3,
+    "questions": 8,
+    "marks": 15,
+    "studentHash": "c9c65603e4bf79d8d7169d6ed60753487848741e469aa5ebd1a8cb899db768da",
+    "teacherHash": "206c086fb6e0366bd429feab296168e8e3f1ad5c888080129bd204d739cdece6"
+  }
+]

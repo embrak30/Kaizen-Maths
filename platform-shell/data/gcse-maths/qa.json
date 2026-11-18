@@ -1,0 +1,18 @@
+{
+  "packs": 106,
+  "questions": 848,
+  "pdfs": 212,
+  "pages": 507,
+  "studentPages": 106,
+  "checks": [
+    "Every PDF rendered",
+    "One-page student sets at fixed 11pt prose",
+    "Question numbering and mark totals",
+    "Text/image bounds",
+    "No raw LaTeX, caret or dollar delimiters",
+    "Content hashes and download paths",
+    "Student/teacher separation and permissions"
+  ],
+  "errors": [],
+  "targetedRecheck": "G13 and G14 student diagrams: final labels corrected, rebuilt and re-rendered. One page, notation, text/image bounds and hashes rechecked."
+}

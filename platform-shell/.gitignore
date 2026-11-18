@@ -32,3 +32,10 @@ __pycache__/
 /tmp/pdfs/9ma0-library-errors.json
 /tmp/pdfs/9ma0-layout-errors.json
 /tmp/pdfs/9ma0-library-review/
+
+# GCSE PDF build and print-review intermediates.
+/tmp/pdfs/gcse-library-assets/
+/tmp/pdfs/gcse-library-prepared.json
+/tmp/pdfs/gcse-library-errors.json
+/tmp/pdfs/gcse-layout-errors.json
+/tmp/pdfs/gcse-library-review/

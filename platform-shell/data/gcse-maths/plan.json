@@ -1,0 +1,2186 @@
+{
+  "qualification": "Board-neutral GCSE (9–1), England",
+  "source": "https://www.gov.uk/government/publications/gcse-mathematics-subject-content-and-assessment-objectives",
+  "packs": [
+    {
+      "id": "N01",
+      "area": "Number",
+      "title": "Integers and order of operations",
+      "tier": "Foundation",
+      "reference": "N1–3",
+      "tools": [
+        "integer-operations"
+      ],
+      "sourceTool": "integer-operations",
+      "mode": "generator",
+      "selection": {
+        "tool": "integer-operations",
+        "activities": [
+          [
+            3,
+            "multiply_divide_integers"
+          ],
+          [
+            3,
+            "integer_order_operations"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "N02",
+      "area": "Number",
+      "title": "Fractions: the four operations",
+      "tier": "Foundation",
+      "reference": "N2",
+      "tools": [
+        "fractions-practice"
+      ],
+      "sourceTool": "fractions-practice",
+      "mode": "generator",
+      "selection": {
+        "tool": "fractions-practice",
+        "activities": [
+          [
+            4,
+            "add_proper"
+          ],
+          [
+            4,
+            "subtract_proper"
+          ],
+          [
+            4,
+            "multiply_proper"
+          ],
+          [
+            4,
+            "divide_proper"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "N03",
+      "area": "Number",
+      "title": "Decimal calculations",
+      "tier": "Foundation",
+      "reference": "N2",
+      "tools": [
+        "decimals-practice-lab"
+      ],
+      "sourceTool": "decimals-practice-lab",
+      "mode": "generator",
+      "selection": {
+        "tool": "decimals-practice-lab",
+        "activities": [
+          [
+            2,
+            "add_sub"
+          ],
+          [
+            2,
+            "multiply_decimals"
+          ],
+          [
+            2,
+            "divide_whole"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "N04",
+      "area": "Number",
+      "title": "Fractions, decimals and percentages",
+      "tier": "Foundation",
+      "reference": "N10–12",
+      "tools": [
+        "simple-percentage-tasks"
+      ],
+      "sourceTool": "simple-percentage-tasks",
+      "mode": "generator",
+      "selection": {
+        "tool": "simple-percentage-tasks",
+        "activities": [
+          [
+            1,
+            "percentage_to_decimal"
+          ],
+          [
+            1,
+            "percentage_to_fraction"
+          ],
+          [
+            1,
+            "decimal_to_percentage"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "N05",
+      "area": "Number",
+      "title": "Fractions of quantities",
+      "tier": "Foundation",
+      "reference": "N12",
+      "tools": [
+        "fractions-practice"
+      ],
+      "sourceTool": "fractions-practice",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "N06",
+      "area": "Number",
+      "title": "Percentages of quantities",
+      "tier": "Foundation",
+      "reference": "N12",
+      "tools": [
+        "simple-percentage-tasks"
+      ],
+      "sourceTool": "simple-percentage-tasks",
+      "mode": "generator",
+      "selection": {
+        "tool": "simple-percentage-tasks",
+        "activities": [
+          [
+            3,
+            "percentage_of_quantities"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "N07",
+      "area": "Number",
+      "title": "Factors, multiples, HCF and LCM",
+      "tier": "Foundation",
+      "reference": "N4",
+      "tools": [
+        "hcf-lcm"
+      ],
+      "sourceTool": "hcf-lcm",
+      "mode": "generator",
+      "selection": {
+        "tool": "hcf-lcm",
+        "activities": [
+          [
+            1,
+            "hcf_basic"
+          ],
+          [
+            1,
+            "lcm_basic"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "N08",
+      "area": "Number",
+      "title": "Powers, roots and reciprocals",
+      "tier": "Foundation",
+      "reference": "N3, N6",
+      "tools": [
+        "exponents-index-notation"
+      ],
+      "sourceTool": "exponents-index-notation",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "N09",
+      "area": "Number",
+      "title": "Index laws",
+      "tier": "Foundation",
+      "reference": "N7",
+      "tools": [
+        "exponents-index-notation"
+      ],
+      "sourceTool": "exponents-index-notation",
+      "mode": "generator",
+      "selection": {
+        "tool": "exponents-index-notation",
+        "activities": [
+          [
+            2,
+            "same_base_multiplication"
+          ],
+          [
+            2,
+            "same_base_division"
+          ],
+          [
+            2,
+            "power_of_power"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "N10",
+      "area": "Number",
+      "title": "Standard form",
+      "tier": "Foundation",
+      "reference": "N9",
+      "tools": [
+        "powers-of-10"
+      ],
+      "sourceTool": "powers-of-10",
+      "mode": "generator",
+      "selection": {
+        "tool": "powers-of-10",
+        "activities": [
+          [
+            3,
+            "express_standard"
+          ],
+          [
+            3,
+            "evaluate_standard"
+          ],
+          [
+            3,
+            "calculate_standard"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "N11",
+      "area": "Number",
+      "title": "Rounding and estimation",
+      "tier": "Foundation",
+      "reference": "N14–15",
+      "tools": [
+        "decimals-practice-lab"
+      ],
+      "sourceTool": "decimals-practice-lab",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "N12",
+      "area": "Number",
+      "title": "Error intervals",
+      "tier": "Foundation",
+      "reference": "N15",
+      "tools": [
+        "upper-lower-bounds"
+      ],
+      "sourceTool": "upper-lower-bounds",
+      "mode": "generator",
+      "selection": {
+        "tool": "upper-lower-bounds",
+        "activities": [
+          [
+            1,
+            "bounds_from_rounding"
+          ],
+          [
+            1,
+            "error_interval"
+          ],
+          [
+            1,
+            "nearest_accuracy"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "N13",
+      "area": "Number",
+      "title": "Calculations with bounds",
+      "tier": "Higher",
+      "reference": "N16",
+      "tools": [
+        "upper-lower-bounds"
+      ],
+      "sourceTool": "upper-lower-bounds",
+      "mode": "generator",
+      "selection": {
+        "tool": "upper-lower-bounds",
+        "activities": [
+          [
+            2,
+            "sum_difference"
+          ],
+          [
+            2,
+            "product_quotient"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "N14",
+      "area": "Number",
+      "title": "Surds and rationalising",
+      "tier": "Higher",
+      "reference": "N8",
+      "tools": [
+        "surds-radicals"
+      ],
+      "sourceTool": "surds-radicals",
+      "mode": "generator",
+      "selection": {
+        "tool": "surds-radicals",
+        "activities": [
+          [
+            3,
+            "rationalize_simple"
+          ],
+          [
+            3,
+            "rationalize_binomial"
+          ],
+          [
+            3,
+            "expand_surds"
+          ],
+          [
+            3,
+            "difference_squares"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "N15",
+      "area": "Number",
+      "title": "Recurring decimals and fractional indices",
+      "tier": "Higher",
+      "reference": "N7–10",
+      "tools": [
+        "exponents-index-notation"
+      ],
+      "sourceTool": "exponents-index-notation",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "A01",
+      "area": "Algebra",
+      "title": "Notation and collecting like terms",
+      "tier": "Foundation",
+      "reference": "A1, A3–4",
+      "tools": [
+        "simplification"
+      ],
+      "sourceTool": "simplification",
+      "mode": "generator",
+      "selection": {
+        "tool": "simplification",
+        "activities": [
+          [
+            2,
+            "two_var_basic"
+          ],
+          [
+            2,
+            "two_var_constants"
+          ],
+          [
+            2,
+            "expand_constant_brackets"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A02",
+      "area": "Algebra",
+      "title": "Substitution",
+      "tier": "Foundation",
+      "reference": "A2",
+      "tools": [
+        "substitution"
+      ],
+      "sourceTool": "substitution",
+      "mode": "generator",
+      "selection": {
+        "tool": "substitution",
+        "activities": [
+          [
+            1,
+            "type1_single"
+          ],
+          [
+            1,
+            "type2_single"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A03",
+      "area": "Algebra",
+      "title": "Expanding single brackets",
+      "tier": "Foundation",
+      "reference": "A4",
+      "tools": [
+        "bracket-expansion"
+      ],
+      "sourceTool": "bracket-expansion",
+      "mode": "generator",
+      "selection": {
+        "tool": "bracket-expansion",
+        "activities": [
+          [
+            1,
+            "type1_single"
+          ],
+          [
+            1,
+            "type2_single"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A04",
+      "area": "Algebra",
+      "title": "Expanding double brackets",
+      "tier": "Foundation",
+      "reference": "A4",
+      "tools": [
+        "bracket-expansion"
+      ],
+      "sourceTool": "bracket-expansion",
+      "mode": "generator",
+      "selection": {
+        "tool": "bracket-expansion",
+        "activities": [
+          [
+            2,
+            "type1_double"
+          ],
+          [
+            2,
+            "type2_double"
+          ],
+          [
+            2,
+            "type3_double"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A05",
+      "area": "Algebra",
+      "title": "Factorising common factors",
+      "tier": "Foundation",
+      "reference": "A4",
+      "tools": [
+        "advanced-factorisation"
+      ],
+      "sourceTool": "advanced-factorisation",
+      "mode": "generator",
+      "selection": {
+        "tool": "advanced-factorisation",
+        "activities": [
+          [
+            1,
+            "number_common"
+          ],
+          [
+            1,
+            "variable_common"
+          ],
+          [
+            1,
+            "number_variable_common"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A06",
+      "area": "Algebra",
+      "title": "Factorising monic quadratics",
+      "tier": "Foundation",
+      "reference": "A4",
+      "tools": [
+        "quadratic-factorisation"
+      ],
+      "sourceTool": "quadratic-factorisation",
+      "mode": "generator",
+      "selection": {
+        "tool": "quadratic-factorisation",
+        "activities": [
+          [
+            1,
+            "monic_positive"
+          ],
+          [
+            1,
+            "monic_signs"
+          ],
+          [
+            1,
+            "difference_squares"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A07",
+      "area": "Algebra",
+      "title": "Linear equations",
+      "tier": "Foundation",
+      "reference": "A17",
+      "tools": [
+        "linear-equations"
+      ],
+      "sourceTool": "linear-equations",
+      "mode": "generator",
+      "selection": {
+        "tool": "linear-equations",
+        "activities": [
+          [
+            3,
+            "both_sides"
+          ],
+          [
+            3,
+            "dist_both"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A08",
+      "area": "Algebra",
+      "title": "Forming equations from contexts",
+      "tier": "Foundation",
+      "reference": "A21",
+      "tools": [
+        "linear-equations"
+      ],
+      "sourceTool": "linear-equations",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "A09",
+      "area": "Algebra",
+      "title": "Rearranging formulae",
+      "tier": "Foundation",
+      "reference": "A5",
+      "tools": [
+        "transposition-formulae"
+      ],
+      "sourceTool": "transposition-formulae",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "A10",
+      "area": "Algebra",
+      "title": "Linear inequalities",
+      "tier": "Foundation",
+      "reference": "A22",
+      "tools": [
+        "inequalities"
+      ],
+      "sourceTool": "inequalities",
+      "mode": "generator",
+      "selection": {
+        "tool": "inequalities",
+        "activities": [
+          [
+            1,
+            "one_step"
+          ],
+          [
+            1,
+            "two_step"
+          ],
+          [
+            1,
+            "frac_dec"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A11",
+      "area": "Algebra",
+      "title": "Linear and pattern sequences",
+      "tier": "Foundation",
+      "reference": "A23–25",
+      "tools": [
+        "sequences"
+      ],
+      "sourceTool": "sequences",
+      "mode": "generator",
+      "selection": {
+        "tool": "sequences",
+        "activities": [
+          [
+            1,
+            "arithmetic_next"
+          ],
+          [
+            1,
+            "geometric_next"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A12",
+      "area": "Algebra",
+      "title": "Coordinates and midpoints",
+      "tier": "Foundation",
+      "reference": "A8",
+      "tools": [
+        "midpoint-length-lines"
+      ],
+      "sourceTool": "midpoint-length-lines",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "A13",
+      "area": "Algebra",
+      "title": "Gradients and intercepts",
+      "tier": "Foundation",
+      "reference": "A9–10",
+      "tools": [
+        "straight-lines"
+      ],
+      "sourceTool": "straight-lines",
+      "mode": "generator",
+      "selection": {
+        "tool": "straight-lines",
+        "activities": [
+          [
+            1,
+            "gradient_two_points"
+          ],
+          [
+            1,
+            "gradient_from_equation"
+          ],
+          [
+            2,
+            "find_y_intercept"
+          ],
+          [
+            2,
+            "find_x_intercept"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A14",
+      "area": "Algebra",
+      "title": "Equations of straight lines",
+      "tier": "Foundation",
+      "reference": "A9–10",
+      "tools": [
+        "straight-lines"
+      ],
+      "sourceTool": "straight-lines",
+      "mode": "generator",
+      "selection": {
+        "tool": "straight-lines",
+        "activities": [
+          [
+            3,
+            "equation_two_points"
+          ],
+          [
+            3,
+            "equation_point_gradient"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A15",
+      "area": "Algebra",
+      "title": "Quadratic graphs and graphical solutions",
+      "tier": "Foundation",
+      "reference": "A11–12, A18",
+      "tools": [
+        "graph-transformations-curve-sketching"
+      ],
+      "sourceTool": "graph-transformations-curve-sketching",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "A16",
+      "area": "Algebra",
+      "title": "Solving quadratics by factorising",
+      "tier": "Foundation",
+      "reference": "A18",
+      "tools": [
+        "quadratic-equations"
+      ],
+      "sourceTool": "quadratic-equations",
+      "mode": "generator",
+      "selection": {
+        "tool": "quadratic-equations",
+        "activities": [
+          [
+            2,
+            "type1_standard"
+          ],
+          [
+            2,
+            "type3_standard"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A17",
+      "area": "Algebra",
+      "title": "Quadratic formula",
+      "tier": "Higher",
+      "reference": "A18",
+      "tools": [
+        "quadratic-equations"
+      ],
+      "sourceTool": "quadratic-equations",
+      "mode": "generator",
+      "selection": {
+        "tool": "quadratic-equations",
+        "activities": [
+          [
+            3,
+            "type1_general"
+          ],
+          [
+            3,
+            "type2_general"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A18",
+      "area": "Algebra",
+      "title": "Completing the square and turning points",
+      "tier": "Higher",
+      "reference": "A11, A18",
+      "tools": [
+        "quadratic-equations"
+      ],
+      "sourceTool": "quadratic-equations",
+      "mode": "reuse",
+      "selection": "P2.3c"
+    },
+    {
+      "id": "A19",
+      "area": "Algebra",
+      "title": "Algebraic fractions",
+      "tier": "Higher",
+      "reference": "A4",
+      "tools": [
+        "algebraic-fractions"
+      ],
+      "sourceTool": "algebraic-fractions",
+      "mode": "generator",
+      "selection": {
+        "tool": "algebraic-fractions",
+        "activities": [
+          [
+            3,
+            "add_same_denominator"
+          ],
+          [
+            3,
+            "add_different_denominators"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A20",
+      "area": "Algebra",
+      "title": "Composite and inverse functions",
+      "tier": "Higher",
+      "reference": "A7",
+      "tools": [
+        "functions"
+      ],
+      "sourceTool": "functions",
+      "mode": "reuse",
+      "selection": "P2.8"
+    },
+    {
+      "id": "A21",
+      "area": "Algebra",
+      "title": "Iteration",
+      "tier": "Higher",
+      "reference": "A20",
+      "tools": [
+        "numerical-methods"
+      ],
+      "sourceTool": "numerical-methods",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "A22",
+      "area": "Algebra",
+      "title": "Quadratic sequences",
+      "tier": "Higher",
+      "reference": "A24–25",
+      "tools": [
+        "sequences"
+      ],
+      "sourceTool": "sequences",
+      "mode": "generator",
+      "selection": {
+        "tool": "sequences",
+        "activities": [
+          [
+            2,
+            "simple_quadratic"
+          ],
+          [
+            2,
+            "quadratic_next"
+          ],
+          [
+            2,
+            "complex_quadratic"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A23",
+      "area": "Algebra",
+      "title": "Cubic, reciprocal, exponential and trig graphs",
+      "tier": "Higher",
+      "reference": "A12",
+      "tools": [
+        "trig-graphs-transformations"
+      ],
+      "sourceTool": "trig-graphs-transformations",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "A24",
+      "area": "Algebra",
+      "title": "Translations and reflections of graphs",
+      "tier": "Higher",
+      "reference": "A13",
+      "tools": [
+        "graph-transformations-curve-sketching"
+      ],
+      "sourceTool": "graph-transformations-curve-sketching",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "A25",
+      "area": "Algebra",
+      "title": "Algebraic proof",
+      "tier": "Higher",
+      "reference": "A6",
+      "tools": [],
+      "sourceTool": "limits-first-principles",
+      "mode": "reuse",
+      "selection": "P1.1a"
+    },
+    {
+      "id": "A26",
+      "area": "Algebra",
+      "title": "Quadratic inequalities",
+      "tier": "Higher",
+      "reference": "A22",
+      "tools": [
+        "inequalities"
+      ],
+      "sourceTool": "inequalities",
+      "mode": "reuse",
+      "selection": "P2.5a"
+    },
+    {
+      "id": "A27",
+      "area": "Algebra",
+      "title": "Circles centred at the origin and tangents",
+      "tier": "Higher",
+      "reference": "A16",
+      "tools": [
+        "equation-of-a-circle"
+      ],
+      "sourceTool": "equation-of-a-circle",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "A28",
+      "area": "Algebra",
+      "title": "Simultaneous linear equations",
+      "tier": "Foundation",
+      "reference": "A19",
+      "tools": [
+        "simultaneous-equations"
+      ],
+      "sourceTool": "simultaneous-equations",
+      "mode": "generator",
+      "selection": {
+        "tool": "simultaneous-equations",
+        "activities": [
+          [
+            2,
+            "easy_elimination"
+          ],
+          [
+            2,
+            "elimination_with_scaling"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A29",
+      "area": "Algebra",
+      "title": "Linear and quadratic simultaneous equations",
+      "tier": "Higher",
+      "reference": "A19",
+      "tools": [
+        "conic-intersections"
+      ],
+      "sourceTool": "conic-intersections",
+      "mode": "generator",
+      "selection": {
+        "tool": "conic-intersections",
+        "activities": [
+          [
+            2,
+            "parabola_line_horizontal"
+          ],
+          [
+            2,
+            "parabola_line_general"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "R01",
+      "area": "Ratio & Proportion",
+      "title": "Simplifying and sharing in a ratio",
+      "tier": "Foundation",
+      "reference": "R4–5",
+      "tools": [
+        "ratio-proportion"
+      ],
+      "sourceTool": "ratio-proportion",
+      "mode": "generator",
+      "selection": {
+        "tool": "ratio-proportion",
+        "activities": [
+          [
+            1,
+            "ratio_simplification"
+          ],
+          [
+            1,
+            "share_in_ratio"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "R02",
+      "area": "Ratio & Proportion",
+      "title": "Ratio and fraction connections",
+      "tier": "Foundation",
+      "reference": "R3, R6–8, N11",
+      "tools": [
+        "ratio-proportion"
+      ],
+      "sourceTool": "ratio-proportion",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "R03",
+      "area": "Ratio & Proportion",
+      "title": "Scales, maps and exchange rates",
+      "tier": "Foundation",
+      "reference": "R2, R5",
+      "tools": [
+        "ratio-proportion"
+      ],
+      "sourceTool": "ratio-proportion",
+      "mode": "generator",
+      "selection": {
+        "tool": "ratio-proportion",
+        "activities": [
+          [
+            2,
+            "scale_maps"
+          ],
+          [
+            2,
+            "exchange_rates"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "R04",
+      "area": "Ratio & Proportion",
+      "title": "Recipes and mixtures",
+      "tier": "Foundation",
+      "reference": "R5–7",
+      "tools": [
+        "ratio-proportion"
+      ],
+      "sourceTool": "ratio-proportion",
+      "mode": "generator",
+      "selection": {
+        "tool": "ratio-proportion",
+        "activities": [
+          [
+            2,
+            "recipe_mixtures"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "R05",
+      "area": "Ratio & Proportion",
+      "title": "Unit conversions",
+      "tier": "Foundation",
+      "reference": "R1, N13",
+      "tools": [
+        "conversions-teaching"
+      ],
+      "sourceTool": "conversions-teaching",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "R06",
+      "area": "Ratio & Proportion",
+      "title": "Speed, density and pressure",
+      "tier": "Foundation",
+      "reference": "R1, R11",
+      "tools": [
+        "conversions-teaching"
+      ],
+      "sourceTool": "conversions-teaching",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "R07",
+      "area": "Ratio & Proportion",
+      "title": "Percentage change",
+      "tier": "Foundation",
+      "reference": "R9",
+      "tools": [
+        "simple-percentage-tasks"
+      ],
+      "sourceTool": "simple-percentage-tasks",
+      "mode": "generator",
+      "selection": {
+        "tool": "simple-percentage-tasks",
+        "activities": [
+          [
+            3,
+            "percentage_increase"
+          ],
+          [
+            3,
+            "percentage_decrease"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "R08",
+      "area": "Ratio & Proportion",
+      "title": "Reverse percentages",
+      "tier": "Foundation",
+      "reference": "R9",
+      "tools": [
+        "simple-percentage-tasks"
+      ],
+      "sourceTool": "simple-percentage-tasks",
+      "mode": "generator",
+      "selection": {
+        "tool": "simple-percentage-tasks",
+        "activities": [
+          [
+            4,
+            "reverse_percentage"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "R09",
+      "area": "Ratio & Proportion",
+      "title": "Interest, growth and depreciation",
+      "tier": "Foundation",
+      "reference": "R9, R16",
+      "tools": [
+        "financial-real-life-maths"
+      ],
+      "sourceTool": "financial-real-life-maths",
+      "mode": "generator",
+      "selection": {
+        "tool": "financial-real-life-maths",
+        "activities": [
+          [
+            3,
+            "simple_interest"
+          ],
+          [
+            3,
+            "compound_depreciation"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "R10",
+      "area": "Ratio & Proportion",
+      "title": "Direct and inverse proportion in context",
+      "tier": "Foundation",
+      "reference": "R10",
+      "tools": [
+        "ratio-proportion"
+      ],
+      "sourceTool": "ratio-proportion",
+      "mode": "generator",
+      "selection": {
+        "tool": "ratio-proportion",
+        "activities": [
+          [
+            3,
+            "direct_proportion"
+          ],
+          [
+            3,
+            "indirect_proportion"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "R11",
+      "area": "Ratio & Proportion",
+      "title": "Direct and inverse proportion equations",
+      "tier": "Higher",
+      "reference": "R13–14",
+      "tools": [
+        "ratio-proportion"
+      ],
+      "sourceTool": "ratio-proportion",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "R12",
+      "area": "Ratio & Proportion",
+      "title": "Growth, decay and repeated processes",
+      "tier": "Higher",
+      "reference": "R16",
+      "tools": [
+        "percentages-real-world"
+      ],
+      "sourceTool": "percentages-real-world",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "G01",
+      "area": "Geometry & Measures",
+      "title": "Core angle facts",
+      "tier": "Foundation",
+      "reference": "G3",
+      "tools": [
+        "missing-angles"
+      ],
+      "sourceTool": "missing-angles",
+      "mode": "generator",
+      "selection": {
+        "tool": "missing-angles",
+        "activities": [
+          [
+            1,
+            "straight_line"
+          ],
+          [
+            1,
+            "triangle_angles"
+          ],
+          [
+            1,
+            "quadrilateral_angles"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G02",
+      "area": "Geometry & Measures",
+      "title": "Parallel lines and angle reasoning",
+      "tier": "Foundation",
+      "reference": "G3",
+      "tools": [
+        "missing-angles"
+      ],
+      "sourceTool": "missing-angles",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "G03",
+      "area": "Geometry & Measures",
+      "title": "Polygon angles",
+      "tier": "Foundation",
+      "reference": "G3",
+      "tools": [
+        "polygons-angles"
+      ],
+      "sourceTool": "polygons-angles",
+      "mode": "generator",
+      "selection": {
+        "tool": "polygons-angles",
+        "activities": [
+          [
+            2,
+            "regular_interior"
+          ],
+          [
+            2,
+            "regular_exterior"
+          ],
+          [
+            2,
+            "sides_from_exterior"
+          ],
+          [
+            2,
+            "sides_from_interior"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G04",
+      "area": "Geometry & Measures",
+      "title": "Triangles, quadrilaterals and symmetry",
+      "tier": "Foundation",
+      "reference": "G1, G4",
+      "tools": [],
+      "sourceTool": "limits-first-principles",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "G05",
+      "area": "Geometry & Measures",
+      "title": "Congruence and geometric reasoning",
+      "tier": "Foundation",
+      "reference": "G5–6",
+      "tools": [
+        "formal-geometric-proof"
+      ],
+      "sourceTool": "formal-geometric-proof",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "G06",
+      "area": "Geometry & Measures",
+      "title": "Translations and reflections",
+      "tier": "Foundation",
+      "reference": "G7, G24",
+      "tools": [
+        "transformations"
+      ],
+      "sourceTool": "transformations",
+      "mode": "generator",
+      "selection": {
+        "tool": "transformations",
+        "activities": [
+          [
+            1,
+            "translation_vectors"
+          ],
+          [
+            1,
+            "reflection_axis_lines"
+          ],
+          [
+            1,
+            "reflection_diagonal_lines"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G07",
+      "area": "Geometry & Measures",
+      "title": "Rotations and enlargements",
+      "tier": "Foundation",
+      "reference": "G7–8",
+      "tools": [
+        "transformations"
+      ],
+      "sourceTool": "transformations",
+      "mode": "generator",
+      "selection": {
+        "tool": "transformations",
+        "activities": [
+          [
+            2,
+            "rotation_origin"
+          ],
+          [
+            2,
+            "rotation_centre"
+          ],
+          [
+            2,
+            "enlargement_positive"
+          ],
+          [
+            2,
+            "enlargement_fractional"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G08",
+      "area": "Geometry & Measures",
+      "title": "Negative and combined transformations",
+      "tier": "Higher",
+      "reference": "G7–8",
+      "tools": [
+        "transformations"
+      ],
+      "sourceTool": "transformations",
+      "mode": "generator",
+      "selection": {
+        "tool": "transformations",
+        "activities": [
+          [
+            4,
+            "negative_enlargement"
+          ],
+          [
+            4,
+            "combined_transformations"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G09",
+      "area": "Geometry & Measures",
+      "title": "Areas of triangles, parallelograms and trapezia",
+      "tier": "Foundation",
+      "reference": "G16",
+      "tools": [
+        "area-triangles"
+      ],
+      "sourceTool": "area-triangles",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "G10",
+      "area": "Geometry & Measures",
+      "title": "Compound area and perimeter",
+      "tier": "Foundation",
+      "reference": "G16–17",
+      "tools": [
+        "area-rectangles"
+      ],
+      "sourceTool": "area-rectangles",
+      "mode": "generator",
+      "selection": {
+        "tool": "area-rectangles",
+        "activities": [
+          [
+            2,
+            "compound_area"
+          ],
+          [
+            2,
+            "compound_missing"
+          ],
+          [
+            2,
+            "compound_context"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G11",
+      "area": "Geometry & Measures",
+      "title": "Circles: area and circumference",
+      "tier": "Foundation",
+      "reference": "G9, G17",
+      "tools": [
+        "circles-area-circumference"
+      ],
+      "sourceTool": "circles-area-circumference",
+      "mode": "generator",
+      "selection": {
+        "tool": "circles-area-circumference",
+        "activities": [
+          [
+            3,
+            "circumference_to_area"
+          ],
+          [
+            3,
+            "area_to_circumference"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G12",
+      "area": "Geometry & Measures",
+      "title": "Arcs and sectors",
+      "tier": "Foundation",
+      "reference": "G18",
+      "tools": [
+        "sectors-arc-length"
+      ],
+      "sourceTool": "sectors-arc-length",
+      "mode": "generator",
+      "selection": {
+        "tool": "sectors-arc-length",
+        "activities": [
+          [
+            3,
+            "arc_and_area"
+          ],
+          [
+            3,
+            "arc_to_area"
+          ],
+          [
+            3,
+            "area_to_arc"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G13",
+      "area": "Geometry & Measures",
+      "title": "Volume of prisms",
+      "tier": "Foundation",
+      "reference": "G16",
+      "tools": [
+        "volume-surface-area-prisms"
+      ],
+      "sourceTool": "volume-surface-area-prisms",
+      "mode": "generator",
+      "selection": {
+        "tool": "volume-surface-area-prisms",
+        "activities": [
+          [
+            1,
+            "cuboid_volume"
+          ],
+          [
+            1,
+            "tri_prism_volume"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G14",
+      "area": "Geometry & Measures",
+      "title": "Surface area of prisms",
+      "tier": "Foundation",
+      "reference": "G17",
+      "tools": [
+        "volume-surface-area-prisms"
+      ],
+      "sourceTool": "volume-surface-area-prisms",
+      "mode": "generator",
+      "selection": {
+        "tool": "volume-surface-area-prisms",
+        "activities": [
+          [
+            2,
+            "cuboid_surface_area"
+          ],
+          [
+            2,
+            "tri_prism_surface_area"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G15",
+      "area": "Geometry & Measures",
+      "title": "Cylinders",
+      "tier": "Foundation",
+      "reference": "G16–17",
+      "tools": [
+        "cylinders-cones-volume-surface-area"
+      ],
+      "sourceTool": "cylinders-cones-volume-surface-area",
+      "mode": "generator",
+      "selection": {
+        "tool": "cylinders-cones-volume-surface-area",
+        "activities": [
+          [
+            1,
+            "cylinder_volume"
+          ],
+          [
+            2,
+            "cylinder_surface_area"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G16",
+      "area": "Geometry & Measures",
+      "title": "Cones, pyramids and spheres",
+      "tier": "Foundation",
+      "reference": "G17",
+      "tools": [
+        "pyramids-spheres-volume-surface-area"
+      ],
+      "sourceTool": "pyramids-spheres-volume-surface-area",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "G17",
+      "area": "Geometry & Measures",
+      "title": "3D shapes, plans and elevations",
+      "tier": "Foundation",
+      "reference": "G12–13",
+      "tools": [],
+      "sourceTool": "limits-first-principles",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "G18",
+      "area": "Geometry & Measures",
+      "title": "Ruler and compass constructions",
+      "tier": "Foundation",
+      "reference": "G2",
+      "tools": [
+        "loci-constructions"
+      ],
+      "sourceTool": "loci-constructions",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "G19",
+      "area": "Geometry & Measures",
+      "title": "Loci and regions",
+      "tier": "Foundation",
+      "reference": "G2",
+      "tools": [
+        "loci-constructions"
+      ],
+      "sourceTool": "loci-constructions",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "G20",
+      "area": "Geometry & Measures",
+      "title": "Bearings",
+      "tier": "Foundation",
+      "reference": "G15",
+      "tools": [
+        "bearings"
+      ],
+      "sourceTool": "bearings",
+      "mode": "generator",
+      "selection": {
+        "tool": "bearings",
+        "activities": [
+          [
+            2,
+            "hidden_bearing"
+          ],
+          [
+            2,
+            "reverse_hidden_bearing"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G21",
+      "area": "Geometry & Measures",
+      "title": "Pythagoras’s theorem",
+      "tier": "Foundation",
+      "reference": "G20",
+      "tools": [
+        "pythagoras-theorem"
+      ],
+      "sourceTool": "pythagoras-theorem",
+      "mode": "generator",
+      "selection": {
+        "tool": "pythagoras-theorem",
+        "activities": [
+          [
+            1,
+            "hypotenuse_basic"
+          ],
+          [
+            1,
+            "short_side_basic"
+          ],
+          [
+            2,
+            "decimal_units"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G22",
+      "area": "Geometry & Measures",
+      "title": "Right-angled trigonometry",
+      "tier": "Foundation",
+      "reference": "G20",
+      "tools": [
+        "trigonometric-ratios"
+      ],
+      "sourceTool": "trigonometric-ratios",
+      "mode": "generator",
+      "selection": {
+        "tool": "trigonometric-ratios",
+        "activities": [
+          [
+            2,
+            "sine_cosine_sides"
+          ],
+          [
+            2,
+            "tangent_sides"
+          ],
+          [
+            3,
+            "inverse_sin_cos"
+          ],
+          [
+            3,
+            "inverse_tan"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G23",
+      "area": "Geometry & Measures",
+      "title": "Exact trigonometric values",
+      "tier": "Foundation",
+      "reference": "G21",
+      "tools": [
+        "trigonometric-ratios"
+      ],
+      "sourceTool": "trigonometric-ratios",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "G24",
+      "area": "Geometry & Measures",
+      "title": "3D Pythagoras and trigonometry",
+      "tier": "Higher",
+      "reference": "G20",
+      "tools": [
+        "pythagoras-theorem"
+      ],
+      "sourceTool": "pythagoras-theorem",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "G25",
+      "area": "Geometry & Measures",
+      "title": "Sine rule, cosine rule and triangle area",
+      "tier": "Higher",
+      "reference": "G22–23",
+      "tools": [
+        "sine-cosine-rule"
+      ],
+      "sourceTool": "sine-cosine-rule",
+      "mode": "generator",
+      "selection": {
+        "tool": "sine-cosine-rule",
+        "activities": [
+          [
+            1,
+            "sr_find_side"
+          ],
+          [
+            1,
+            "area_sine"
+          ],
+          [
+            2,
+            "cr_find_side"
+          ],
+          [
+            2,
+            "cr_find_angle"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G26",
+      "area": "Geometry & Measures",
+      "title": "Circle theorems",
+      "tier": "Higher",
+      "reference": "G10",
+      "tools": [
+        "circle-theorems"
+      ],
+      "sourceTool": "circle-theorems",
+      "mode": "generator",
+      "selection": {
+        "tool": "circle-theorems",
+        "activities": [
+          [
+            1,
+            "centre_circumference"
+          ],
+          [
+            1,
+            "semicircle_angle"
+          ],
+          [
+            1,
+            "same_segment"
+          ],
+          [
+            1,
+            "cyclic_quadrilateral"
+          ],
+          [
+            1,
+            "tangent_radius"
+          ],
+          [
+            1,
+            "alternate_segment"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G27",
+      "area": "Geometry & Measures",
+      "title": "Vector calculations",
+      "tier": "Higher",
+      "reference": "G25",
+      "tools": [
+        "free-vectors"
+      ],
+      "sourceTool": "free-vectors",
+      "mode": "generator",
+      "selection": {
+        "tool": "free-vectors",
+        "activities": [
+          [
+            2,
+            "scalar_multiple"
+          ],
+          [
+            2,
+            "scalar_addition"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G28",
+      "area": "Geometry & Measures",
+      "title": "Vector geometry and proof",
+      "tier": "Higher",
+      "reference": "G25",
+      "tools": [
+        "free-vectors"
+      ],
+      "sourceTool": "free-vectors",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "G29",
+      "area": "Geometry & Measures",
+      "title": "Similar shapes: lengths, areas and volumes",
+      "tier": "Higher",
+      "reference": "G19, R12",
+      "tools": [
+        "scale-drawing-similar-shapes"
+      ],
+      "sourceTool": "scale-drawing-similar-shapes",
+      "mode": "generator",
+      "selection": {
+        "tool": "scale-drawing-similar-shapes",
+        "activities": [
+          [
+            4,
+            "area_ratio_find_area"
+          ],
+          [
+            4,
+            "area_ratio_find_length"
+          ],
+          [
+            4,
+            "volume_ratio"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P01",
+      "area": "Probability",
+      "title": "Probability scales and single events",
+      "tier": "Foundation",
+      "reference": "P2–4",
+      "tools": [],
+      "sourceTool": "limits-first-principles",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P02",
+      "area": "Probability",
+      "title": "Relative frequency and expected outcomes",
+      "tier": "Foundation",
+      "reference": "P1–3, P5",
+      "tools": [],
+      "sourceTool": "limits-first-principles",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P03",
+      "area": "Probability",
+      "title": "Possibility spaces and systematic counting",
+      "tier": "Foundation",
+      "reference": "P6–7, N5",
+      "tools": [],
+      "sourceTool": "limits-first-principles",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P04",
+      "area": "Probability",
+      "title": "Venn diagrams and sets",
+      "tier": "Foundation",
+      "reference": "P6",
+      "tools": [
+        "venn-diagrams"
+      ],
+      "sourceTool": "venn-diagrams",
+      "mode": "generator",
+      "selection": {
+        "tool": "venn-diagrams",
+        "activities": [
+          [
+            1,
+            "read_two_set"
+          ],
+          [
+            1,
+            "complete_two_set"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P05",
+      "area": "Probability",
+      "title": "Independent events and tree diagrams",
+      "tier": "Foundation",
+      "reference": "P8",
+      "tools": [
+        "tree-diagrams-conditional-probability"
+      ],
+      "sourceTool": "tree-diagrams-conditional-probability",
+      "mode": "generator",
+      "selection": {
+        "tool": "tree-diagrams-conditional-probability",
+        "activities": [
+          [
+            1,
+            "independent_path"
+          ],
+          [
+            1,
+            "exactly_one"
+          ],
+          [
+            1,
+            "at_least_one"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P06",
+      "area": "Probability",
+      "title": "Dependent events and tree diagrams",
+      "tier": "Higher",
+      "reference": "P8",
+      "tools": [
+        "tree-diagrams-conditional-probability"
+      ],
+      "sourceTool": "tree-diagrams-conditional-probability",
+      "mode": "generator",
+      "selection": {
+        "tool": "tree-diagrams-conditional-probability",
+        "activities": [
+          [
+            2,
+            "without_replacement_path"
+          ],
+          [
+            2,
+            "without_replacement_either"
+          ],
+          [
+            2,
+            "complete_conditional"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P07",
+      "area": "Probability",
+      "title": "Conditional probability and two-way tables",
+      "tier": "Higher",
+      "reference": "P9",
+      "tools": [
+        "tree-diagrams-conditional-probability"
+      ],
+      "sourceTool": "tree-diagrams-conditional-probability",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S01",
+      "area": "Statistics",
+      "title": "Mean, median, mode and range",
+      "tier": "Foundation",
+      "reference": "S4",
+      "tools": [
+        "averages-range"
+      ],
+      "sourceTool": "averages-range",
+      "mode": "generator",
+      "selection": {
+        "tool": "averages-range",
+        "activities": [
+          [
+            2,
+            "combined_odd"
+          ],
+          [
+            2,
+            "combined_even"
+          ],
+          [
+            2,
+            "combined_repeated"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "S02",
+      "area": "Statistics",
+      "title": "Frequency tables and missing values",
+      "tier": "Foundation",
+      "reference": "S2, S4",
+      "tools": [
+        "averages-range"
+      ],
+      "sourceTool": "averages-range",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S03",
+      "area": "Statistics",
+      "title": "Grouped averages and estimated mean",
+      "tier": "Foundation",
+      "reference": "S4",
+      "tools": [
+        "averages-range"
+      ],
+      "sourceTool": "averages-range",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S04",
+      "area": "Statistics",
+      "title": "Pie charts",
+      "tier": "Foundation",
+      "reference": "S2",
+      "tools": [],
+      "sourceTool": "limits-first-principles",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S05",
+      "area": "Statistics",
+      "title": "Bar charts and pictograms",
+      "tier": "Foundation",
+      "reference": "S2",
+      "tools": [],
+      "sourceTool": "limits-first-principles",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S06",
+      "area": "Statistics",
+      "title": "Time series and line graphs",
+      "tier": "Foundation",
+      "reference": "S2",
+      "tools": [],
+      "sourceTool": "limits-first-principles",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S07",
+      "area": "Statistics",
+      "title": "Scatter graphs and lines of best fit",
+      "tier": "Foundation",
+      "reference": "S6",
+      "tools": [
+        "correlation-regression"
+      ],
+      "sourceTool": "correlation-regression",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S08",
+      "area": "Statistics",
+      "title": "Histograms and frequency density",
+      "tier": "Higher",
+      "reference": "S3",
+      "tools": [
+        "histograms"
+      ],
+      "sourceTool": "histograms",
+      "mode": "reuse",
+      "selection": "S2.1a"
+    },
+    {
+      "id": "S09",
+      "area": "Statistics",
+      "title": "Cumulative frequency",
+      "tier": "Higher",
+      "reference": "S3",
+      "tools": [
+        "cumulative-frequency-curves"
+      ],
+      "sourceTool": "cumulative-frequency-curves",
+      "mode": "reuse",
+      "selection": "S2.1c"
+    },
+    {
+      "id": "S10",
+      "area": "Statistics",
+      "title": "Box plots and comparing distributions",
+      "tier": "Higher",
+      "reference": "S4",
+      "tools": [
+        "cumulative-frequency-curves"
+      ],
+      "sourceTool": "cumulative-frequency-curves",
+      "mode": "reuse",
+      "selection": "S2.1b"
+    },
+    {
+      "id": "S11",
+      "area": "Statistics",
+      "title": "Sampling and interpreting data",
+      "tier": "Foundation",
+      "reference": "S1, S5",
+      "tools": [
+        "sampling-methods-bias"
+      ],
+      "sourceTool": "sampling-methods-bias",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "A30",
+      "area": "Algebra",
+      "title": "Distance-time graphs",
+      "tier": "Foundation",
+      "reference": "A14, R14",
+      "tools": [],
+      "sourceTool": "limits-first-principles",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "A31",
+      "area": "Algebra",
+      "title": "Rates of change and areas under graphs",
+      "tier": "Higher",
+      "reference": "A15, R15",
+      "tools": [],
+      "sourceTool": "limits-first-principles",
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "A32",
+      "area": "Algebra",
+      "title": "Inequality regions",
+      "tier": "Higher",
+      "reference": "A22",
+      "tools": [
+        "inequalities"
+      ],
+      "sourceTool": "inequalities",
+      "mode": "authored",
+      "selection": null
+    }
+  ]
+}

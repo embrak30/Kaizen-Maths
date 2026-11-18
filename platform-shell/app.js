@@ -5232,8 +5232,8 @@ function setActiveNav() {
   const toolRouteSlug = ["tools", "classroom"].includes(parts[0]) ? parts[1] || "" : "";
   const activeTool = toolRouteSlug ? tools.find((tool) => tool.slug === toolRouteSlug) : null;
   const activeCollectionHref = activeTool ? `#/collections/${categorySlug(activeTool.category)}` : "";
-  const activeParentHref = ["ap-calculus", "alevel-maths"].includes(parts[0]) ? "#/tools" : parts[0] === "textbook-assessments" ? "#/textbook-alignments" : "";
-  const resourceParent = ["ap-calculus", "alevel-maths", "practice-packs", "ready-made-resources"].includes(parts[0]) ? "#/ready-made-resources"
+  const activeParentHref = ["ap-calculus", "alevel-maths", "gcse-maths"].includes(parts[0]) ? "#/tools" : parts[0] === "textbook-assessments" ? "#/textbook-alignments" : "";
+  const resourceParent = ["ap-calculus", "alevel-maths", "gcse-maths", "practice-packs", "ready-made-resources"].includes(parts[0]) ? "#/ready-made-resources"
     : ["worksheet-generator", "gcse-exam-style"].includes(parts[0]) ? "#/worksheet-generator"
     : ["teaching-tools", "collections", "classroom", "classroom-remote"].includes(parts[0]) || (parts[0] === "tools" && parts[1]) ? "#/teaching-tools" : "";
   document.querySelectorAll(".nav-list a, .sidebar-utility a").forEach((link) => {
@@ -30683,6 +30683,10 @@ function updateRouteSeo(parts) {
         ? `Browse ${collectionName.toLowerCase()} question generators, worked examples, and classroom practice tools in Kaizen Maths.`
         : "Browse curriculum collections inside Kaizen Maths."
     },
+    "gcse-maths": {
+      title: routeTitle("GCSE Mathematics worksheets"),
+      description: "Board-neutral GCSE 9–1 topic worksheets, with Foundation and Higher filters, one-page student sheets and separate worked solutions and suggested marks."
+    },
     "alevel-maths": {
       title: routeTitle("Edexcel A level Mathematics worksheets"),
       description: "Edexcel UK 9MA0 Pure, Statistics and Mechanics: eight-question one-page worksheets, worked solutions and suggested marks."
@@ -30907,6 +30911,9 @@ function renderRoute() {
     renderToolDetail(parts[1]);
   } else if (parts[0] === "classroom" && parts[1]) {
     renderClassroomTool(parts[1]);
+  } else if (parts[0] === "gcse-maths") {
+    app.innerHTML = `<div id="gcse-maths-library"></div>`;
+    window.KaizenGCSE.mount(document.getElementById("gcse-maths-library"), { tools });
   } else if (parts[0] === "alevel-maths") {
     app.innerHTML = `<div id="alevel-maths-library"></div>`;
     window.KaizenALevel.mount(document.getElementById("alevel-maths-library"), { tools });
@@ -31067,8 +31074,9 @@ function renderExploreOverview() {
 
 function renderReadyMadeResources() {
   app.innerHTML = pageHeader("Ready-Made Resources", "Choose a collection. Download the student sheet and the answers or worked solutions you need.") +
-    `<section class="resource-overview" aria-label="Ready-made resource collections">${resourceChoiceCards([
+    `<section class="resource-overview resource-collections" aria-label="Ready-made resource collections">${resourceChoiceCards([
       ['▤','Starters & Exit Tickets','Short practice packs for the start or end of a lesson, with answers and worked solutions.','#/practice-packs','violet','<a class="resource-choice-action" href="#/practice-packs">Browse starters & exit tickets →</a>'],
+      ['✓','GCSE Mathematics','Board-neutral Foundation and Higher topic sheets, with eight questions per page and separate worked solutions.','#/gcse-maths','teal','<a class="resource-choice-action" href="#/gcse-maths">Browse GCSE Mathematics →</a>'],
       ['∫','AP Calculus','AB and BC topic worksheets: eight questions on one A4 page, with separate teacher solutions and suggested marks.','#/ap-calculus','teal','<a class="resource-choice-action" href="#/ap-calculus">Browse AP Calculus →</a>'],
       ['A','A level Mathematics','Edexcel UK 9MA0 Pure, Statistics and Mechanics: one-page student sheets and separate worked solutions.','#/alevel-maths','amber','<a class="resource-choice-action" href="#/alevel-maths">Browse A level Mathematics →</a>']
     ])}</section>`;
@@ -31098,7 +31106,7 @@ window.addEventListener('popstate',renderRoute);
 function renderTeacherReference() {
   setPageSeo(titleWithSite("Teacher reference & workspace guide"),"Curriculum maps, training, pupil tasks and school access, together in one place.");
   const groups=[
-    ['Plan your teaching',[['AP Calculus worksheets','#/ap-calculus'],['Edexcel A level worksheets','#/alevel-maths'],['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
+    ['Plan your teaching',[['GCSE worksheets','#/gcse-maths'],['AP Calculus worksheets','#/ap-calculus'],['Edexcel A level worksheets','#/alevel-maths'],['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
     ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Make a worksheet: screenshot guide','/guides/make-a-worksheet'],['Classroom tools','#/collections/classroom-tools'],['Kaizen University','#/kaizen-university']]],
     ['Work with learners',[['Pupil tasks','#/class-tasks'],['Tutor Workspace','#/tutor-workspace'],['School space','#/school-space'],['Book a demo','#/book-demo'],['Contact / enquire','#/contact'],['Partners','#/partners']]]
   ];
