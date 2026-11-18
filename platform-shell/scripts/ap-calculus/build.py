@@ -30,13 +30,20 @@ def header(c,pack,kind,page):
  y=b.short_text(c,pack['id']+'  '+pack['title'],L,H-52,WIDTH,22,True,INK)
  y=b.short_text(c,kind,L,y-9,WIDTH,12,True,TEAL)
  c.setStrokeColor(HexColor(LINE));c.line(L,y-12,W-L,y-12)
- label(c,'Original topic practice | Not an official College Board paper',L,24,8,color=MUTED);c.drawRightString(W-L,24,str(page));return y-28
+ if kind.startswith('Kaizen Calculus One-Pagers'):
+  label(c,'© Kaizen Mathematics. Permission granted to print and copy for classroom teaching and personal study.',L,38,7.8,color=MUTED)
+  label(c,'Create additional practice using the Kaizen Worksheet Builder.',L,26,7.8,color=MUTED)
+  label(c,'Original topic practice | Not an official College Board paper',L,14,7.2,color=MUTED)
+  c.drawRightString(W-L,14,str(page))
+ else:
+  label(c,'Original topic practice | Not an official College Board paper',L,24,8,color=MUTED);c.drawRightString(W-L,24,str(page))
+ return y-28
 
 def draw_questions(pack,path):
  # A measured two-column sheet: readable type, variable row heights, no shrink-to-fit.
  assert len(pack['questions'])==8
  c=canvas.Canvas(str(path),pagesize=(W,H),invariant=1)
- y=header(c,pack,'Eight questions | One-page practice',1)
+ y=header(c,pack,'Kaizen Calculus One-Pagers | Eight questions',1)
  label(c,'Name: ___________________________    Date: ______________',L,y-2,9.5,color=MUTED)
  y=b.short_text(c,'Answer on separate paper. Show your working and reasoning; include units where appropriate.',L,y-16,WIDTH,9.5,color=MUTED)-16
  gap=24;cw=(WIDTH-gap)/2;rows=[]
@@ -107,7 +114,7 @@ if __name__=='__main__':
  for pack in source['packs']:
   stem='ap-'+pack['id'].replace('.','-');qp=OUT/(stem+'-questions.pdf');ap=OUT/(stem+'-answers.pdf')
   qpages=draw_questions(pack,qp);apages=draw_answers(pack,ap);validate(qp);validate(ap);totalpages+=qpages+apages
-  published[pack['id']]={'questions':qp.relative_to(ROOT).as_posix(),'answers':ap.relative_to(ROOT).as_posix(),'questionPages':qpages,'answerPages':apages,'marks':sum(q['marks'] for q in pack['questions']),'questionCount':8,'calculator':'Calculator optional','revision':'2026-11-18.3','preview':f'assets/ap-calculus/previews/{stem}.png'}
+  published[pack['id']]={'questions':qp.relative_to(ROOT).as_posix(),'answers':ap.relative_to(ROOT).as_posix(),'questionPages':qpages,'answerPages':apages,'marks':sum(q['marks'] for q in pack['questions']),'questionCount':8,'calculator':'Calculator optional','revision':'2026-11-18.4','preview':f'assets/ap-calculus/previews/{stem}.png'}
  mapping=json.loads((ROOT/'output/ap-calculus-pilot/topic-map.json').read_text());toolkeys=mapping['toolDirectory'];units=[]
  for unit in mapping['units']:
   topics=[]
@@ -117,5 +124,5 @@ if __name__=='__main__':
     if re.search(r'\b'+key+r'\b',t['basis']):related.append(slug)
    topics.append({'id':t['code'],'title':t['title'],'scope':t['scope'],'objective':'Practise '+t['title'].lower()+' through calculation, interpretation and mathematical reasoning.','tools':related,'developmentNote':'A dedicated eight-question set and its worked marking scheme are being prepared for this topic.','pack':published.get(t['code'])})
   units.append({'number':unit['n'],'title':unit['title'],'topics':topics})
- data={'version':1,'revision':'2026-11-18.3','units':units};(DATA/'catalog.json').write_text(json.dumps(data,indent=2)+'\n');(ROOT/'assets/site/ap-calculus-data.js').write_text('window.KaizenAPCalculusData = '+json.dumps(data,ensure_ascii=False,separators=(',',':'))+';\n')
+ data={'version':1,'revision':'2026-11-18.4','units':units};(DATA/'catalog.json').write_text(json.dumps(data,indent=2)+'\n');(ROOT/'assets/site/ap-calculus-data.js').write_text('window.KaizenAPCalculusData = '+json.dumps(data,ensure_ascii=False,separators=(',',':'))+';\n')
  manifests={id:{**p,'questionHash':hashlib.sha256((ROOT/p['questions']).read_bytes()).hexdigest(),'answerHash':hashlib.sha256((ROOT/p['answers']).read_bytes()).hexdigest()} for id,p in published.items()};(DATA/'pdf-manifest.json').write_text(json.dumps(manifests,indent=2)+'\n');print(f'Built {len(published)} packs, {totalpages} PDF pages, {len(list(OUT.glob("*.pdf")))} PDF files.')

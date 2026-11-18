@@ -30,3 +30,5 @@ Use the PDF skill's authoring marker before producing new PDFs. Node dependencie
 7. Run `scripts/marketing/build.cjs` to update shared-shell public pages when script includes change, then rerun the marketing test.
 
 Source and PDF checks are local. No payment settings, auth policies, database schemas or production infrastructure are changed. Downloads follow the existing public practice-pack asset model. No new sign-in or entitlement mechanism is introduced.
+
+Student sheets are branded **Kaizen Calculus One-Pagers**. Their footer grants permission to print and copy for classroom teaching and personal study, and points teachers to the Kaizen Worksheet Builder for additional practice. This does not change site access controls.

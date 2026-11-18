@@ -12,7 +12,10 @@ def check(path):
   for i,p in enumerate(pdf.pages,1):
    text=p.extract_text() or '';assert text.strip(),(path.name,i,'empty text')
    assert not re.search(r'\\[A-Za-z]+|\$|\^|\ufffd|=\s*undefined|\bNaN\b',text),(path.name,i,'notation')
-   if path.stem.endswith('-questions'):assert not any(s in text for s in ['Teacher answer key','Worked solutions','Suggested award']),(path.name,i,'teacher content')
+   if path.stem.endswith('-questions'):
+    assert not any(s in text for s in ['Teacher answer key','Worked solutions','Suggested award']),(path.name,i,'teacher content')
+    for required in ['Kaizen Calculus One-Pagers','© Kaizen Mathematics. Permission granted to print and copy for classroom teaching and personal study.','Create additional practice using the Kaizen Worksheet Builder.']:
+     assert required in text,(path.name,i,'missing branding or permission',required)
    for ch in p.chars:assert 24<=ch['x0']<=ch['x1']<=p.width-24 and 8<=ch['top']<=ch['bottom']<=p.height-12,(path.name,i,'text bounds',ch['text'])
    for im in p.images:assert im['x0']>=25 and im['x1']<=p.width-25 and im['top']>=45 and im['bottom']<=p.height-40,(path.name,i,'image bounds',im)
    info.append({'pdf':path.name,'page':i,'characters':len(p.chars),'images':len(p.images)})
