@@ -14,3 +14,7 @@ __pycache__/
 /tmp/pdfs/factorised-derivatives-preview.html
 /tmp/pdfs/factorisation-changed-packs.json
 /tmp/diagram-qa/
+# AP Calculus PDF build intermediates; published files live under assets/ap-calculus.
+/tmp/pdfs/ap-library-assets/
+/tmp/pdfs/ap-library-prepared.json
+/tmp/pdfs/ap-library-errors.json

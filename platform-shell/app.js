@@ -5232,7 +5232,7 @@ function setActiveNav() {
   const toolRouteSlug = ["tools", "classroom"].includes(parts[0]) ? parts[1] || "" : "";
   const activeTool = toolRouteSlug ? tools.find((tool) => tool.slug === toolRouteSlug) : null;
   const activeCollectionHref = activeTool ? `#/collections/${categorySlug(activeTool.category)}` : "";
-  const activeParentHref = parts[0] === "textbook-assessments" ? "#/textbook-alignments" : "";
+  const activeParentHref = parts[0] === "ap-calculus" ? "#/tools" : parts[0] === "textbook-assessments" ? "#/textbook-alignments" : "";
   document.querySelectorAll(".nav-list a, .sidebar-utility a").forEach((link) => {
     const href = link.getAttribute("href");
     const isCurrentRoute = href === cleanPath || (href !== "#/" && cleanPath.startsWith(href));
@@ -17458,6 +17458,7 @@ function renderCurriculumAlignments() {
         `<a class="button primary" href="#/coverage-map">Coverage Map</a><a class="button" href="#/textbook-alignments">Textbook Alignments</a>`
       )}
       <section class="textbook-page curriculum-page">
+      ${framework.id === "ap-courses" || framework.standards?.some(s => s.code === "AP Calculus AB") ? `<div class="ap-curriculum-link"><a class="button primary" href="#/ap-calculus">AP Calculus topic worksheets & answer schemes ↗</a></div>` : ""}
         <section class="textbook-hero-panel curriculum-hero-panel curriculum-chooser-hero">
           <div class="curriculum-hero-copy">
             <span class="eyebrow">Curriculum Alignment Hub</span>
@@ -30671,6 +30672,10 @@ function updateRouteSeo(parts) {
         ? `Browse ${collectionName.toLowerCase()} question generators, worked examples, and classroom practice tools in Kaizen Maths.`
         : "Browse curriculum collections inside Kaizen Maths."
     },
+    "ap-calculus": {
+      title: routeTitle("AP Calculus topic worksheets"),
+      description: "Browse AP Calculus AB and BC by syllabus topic. Download ten-question worksheets and separate answers, worked solutions and suggested marks."
+    },
     "practice-packs": {
       title: routeTitle("Starter & Exit Ticket Packs"),
       description: "Download Kaizen Maths starter and exit ticket packs for number, algebra, geometry, statistics and mechanics, with student slips, answers and worked solutions."
@@ -30887,6 +30892,11 @@ function renderRoute() {
     renderToolDetail(parts[1]);
   } else if (parts[0] === "classroom" && parts[1]) {
     renderClassroomTool(parts[1]);
+  } else if (parts[0] === "ap-calculus") {
+    app.innerHTML = `<div id="ap-calculus-library"></div>`;
+    window.KaizenAPCalculus.mount(document.getElementById("ap-calculus-library"), { topicId: parts[1] || "", tools });
+    const topic = window.KaizenAPCalculusData?.units.flatMap(unit => unit.topics).find(topic => topic.id === parts[1]);
+    if (topic) setPageSeo(titleWithSite(`AP Calculus ${topic.id}: ${topic.title}`), `Original practice for ${topic.title}, with separate question and teacher PDFs where available.`);
   } else if (parts[0] === "practice-packs") {
     renderPracticePacks();
   } else if (parts[0] === "tools") {
@@ -31024,7 +31034,8 @@ function exploreDashboardHtml(category='') {
   const cards=[
     ['▦','Worksheet Builder','Choose topics and print a sheet with answers.','#/worksheet-generator','teal'],
     ['▤','Starters & exit tickets','Ready-made packs for the start or end of a lesson.','#/practice-packs','violet'],
-    ['✓','Exam & assessment builder','Build a practice paper with worked solutions.','#/gcse-exam-style','amber']
+    ['✓','Exam & assessment builder','Build a practice paper with worked solutions.','#/gcse-exam-style','amber'],
+    ['∫','AP Calculus','Topic worksheets, answers and suggested marks.','#/ap-calculus','teal']
   ];
   return `<section class="explore-dashboard" aria-label="Explore teaching resources">
     <div class="explore-intro"><p>Build a resource, or browse the topics below.</p><a class="explore-guide" href="#/how-to-use-this-site">New here? Take a quick tour ↗</a></div>
@@ -31057,7 +31068,7 @@ window.addEventListener('popstate',renderRoute);
 function renderTeacherReference() {
   setPageSeo(titleWithSite("Teacher reference & workspace guide"),"Curriculum maps, training, pupil tasks and school access, together in one place.");
   const groups=[
-    ['Plan your teaching',[['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
+    ['Plan your teaching',[['AP Calculus worksheets','#/ap-calculus'],['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
     ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Make a worksheet: screenshot guide','/guides/make-a-worksheet'],['Classroom tools','#/collections/classroom-tools'],['Kaizen University','#/kaizen-university']]],
     ['Work with learners',[['Pupil tasks','#/class-tasks'],['Tutor Workspace','#/tutor-workspace'],['School space','#/school-space'],['Book a demo','#/book-demo'],['Contact / enquire','#/contact'],['Partners','#/partners']]]
   ];

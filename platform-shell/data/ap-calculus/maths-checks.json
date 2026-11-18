@@ -1,0 +1,1450 @@
+{
+  "questions": 360,
+  "automatedChecks": 107,
+  "notAutomaticallyChecked": 253,
+  "checked": [
+    {
+      "key": "1.5/1",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.5/2",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.5/3",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.5/4",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.5/5",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.5/6",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.5/7",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.5/8",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.6/1",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.6/2",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.6/3",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.6/4",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.6/5",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.6/6",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.6/7",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.6/8",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.15/1",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.15/2",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.15/3",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.15/4",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.15/5",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.15/6",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.15/7",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "1.15/8",
+      "mode": "two-sided-numerical-limit"
+    },
+    {
+      "key": "2.5/1",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.5/2",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.5/3",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.5/4",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.5/5",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.5/6",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.5/7",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.5/8",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.6/1",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.6/2",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.6/3",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.6/4",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.6/5",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.6/6",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.6/7",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.6/8",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.7/1",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.7/2",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.7/3",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.7/4",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.7/5",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.7/6",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.7/7",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.7/8",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.8/1",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.8/2",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.8/3",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.8/4",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.8/5",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.8/6",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.8/7",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.8/8",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.9/1",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.9/2",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.9/3",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.9/4",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.9/5",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.9/6",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.9/7",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.9/8",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.10/1",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.10/2",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.10/3",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.10/4",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.10/5",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.10/6",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.10/7",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "2.10/8",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "3.1/1",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "3.1/2",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "3.1/3",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "3.1/4",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "3.1/5",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "3.1/6",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "3.1/7",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "3.1/8",
+      "mode": "independent-symbolic-derivative"
+    },
+    {
+      "key": "6.8/1",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.8/2",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.8/4",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.8/5",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.8/6",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.8/7",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.8/8",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.9/1",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.9/2",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.9/3",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.9/4",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.9/5",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.9/6",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.9/7",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.9/8",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.11/1",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.11/3",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.11/5",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "6.11/7",
+      "mode": "differentiate-antiderivative"
+    },
+    {
+      "key": "9.2/1",
+      "mode": "parametric-second-derivative"
+    },
+    {
+      "key": "9.2/2",
+      "mode": "parametric-second-derivative"
+    },
+    {
+      "key": "9.2/3",
+      "mode": "parametric-second-derivative"
+    },
+    {
+      "key": "9.2/4",
+      "mode": "parametric-second-derivative"
+    },
+    {
+      "key": "9.2/5",
+      "mode": "parametric-second-derivative"
+    },
+    {
+      "key": "9.2/6",
+      "mode": "parametric-second-derivative"
+    },
+    {
+      "key": "9.2/7",
+      "mode": "parametric-second-derivative"
+    },
+    {
+      "key": "9.2/8",
+      "mode": "parametric-second-derivative"
+    }
+  ],
+  "manual": [
+    {
+      "key": "1.4/1",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.4/2",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.4/3",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.4/4",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.4/5",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.4/6",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.4/7",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.4/8",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.4/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.4/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.5/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.5/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.6/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.6/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.13/1",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.13/2",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.13/3",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.13/4",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.13/5",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.13/6",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.13/7",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.13/8",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.13/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.13/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.15/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "1.15/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.2/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "2.2/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "2.2/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "2.2/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "2.2/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "2.2/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "2.2/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "2.2/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "2.2/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.2/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.5/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.5/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.6/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.6/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.7/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.7/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.8/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.8/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.9/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.9/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.10/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "2.10/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "3.1/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "3.1/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "3.2/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.2/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.2/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.2/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.2/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.2/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.2/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.2/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.2/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "3.2/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "3.4/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.4/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.4/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.4/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.4/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.4/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.4/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.4/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.4/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "3.4/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "3.6/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.6/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.6/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.6/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.6/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.6/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.6/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.6/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "3.6/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "3.6/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "6.7/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.7/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.7/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.7/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.7/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.7/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.7/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.7/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.7/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "6.7/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "6.8/3",
+      "reason": "Parser does not cover notation: Cannot process function \"logabs\" in derivative: the function is not su"
+    },
+    {
+      "key": "6.8/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "6.8/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "6.9/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "6.9/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "6.10/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.10/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.10/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.10/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.10/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.10/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.10/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.10/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.10/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "6.10/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "6.11/2",
+      "reason": "Parser does not cover notation: Cannot process function \"xsin\" in derivative: the function is not supp"
+    },
+    {
+      "key": "6.11/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.11/6",
+      "reason": "Parser does not cover notation: Cannot process function \"xcos\" in derivative: the function is not supp"
+    },
+    {
+      "key": "6.11/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.11/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "6.11/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "6.12/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.12/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.12/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.12/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.12/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.12/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.12/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.12/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "6.12/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "6.12/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "7.5/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.5/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.5/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.5/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.5/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.5/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.5/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.5/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.5/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "7.5/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "7.6/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.6/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.6/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.6/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.6/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.6/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.6/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.6/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.6/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "7.6/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "7.7/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.7/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.7/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.7/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.7/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.7/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.7/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.7/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.7/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "7.7/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "7.8/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.8/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.8/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.8/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.8/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.8/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.8/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.8/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "7.8/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "7.8/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "8.9/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.9/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.9/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.9/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.9/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.9/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.9/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.9/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.9/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "8.9/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "8.11/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.11/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.11/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.11/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.11/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.11/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.11/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.11/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "8.11/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "8.11/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "9.1/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.1/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.1/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.1/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.1/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.1/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.1/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.1/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.1/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "9.1/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "9.2/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "9.2/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "9.7/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.7/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.7/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.7/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.7/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.7/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.7/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.7/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.7/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "9.7/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "9.8/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.8/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.8/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.8/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.8/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.8/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.8/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.8/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "9.8/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "9.8/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "10.2/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.2/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.2/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.2/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.2/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.2/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.2/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.2/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.2/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "10.2/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "10.11/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.11/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.11/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.11/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.11/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.11/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.11/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.11/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.11/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "10.11/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "10.14/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.14/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.14/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.14/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.14/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.14/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.14/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.14/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.14/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "10.14/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "10.15/1",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.15/2",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.15/3",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.15/4",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.15/5",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.15/6",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.15/7",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.15/8",
+      "reason": "Model/initial-condition/series/table or domain check; not checked by this parser."
+    },
+    {
+      "key": "10.15/9",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    },
+    {
+      "key": "10.15/10",
+      "reason": "Authored interpretation/reasoning or multi-part worked calculation; not checked by this parser."
+    }
+  ],
+  "failures": []
+}

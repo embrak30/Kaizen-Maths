@@ -27,3 +27,6 @@ body[data-route="tools"] .tool-index-group[open],body[data-route="collections"] 
 @media(min-width:1001px){body[data-route="tools"] .explore-action{padding:15px;min-height:106px}body[data-route="tools"] .explore-action strong{margin-bottom:5px}body[data-route="tools"] .page-header{margin-bottom:16px}}
 @media(max-width:1000px){body[data-route="tools"] .tool-index-groups,body[data-route="collections"] .tool-index-groups{grid-template-columns:repeat(2,minmax(0,1fr))}.teacher-reference-page nav{grid-template-columns:1fr}}
 @media(max-width:600px){body[data-route="tools"] .tool-index-groups,body[data-route="collections"] .tool-index-groups{grid-template-columns:1fr}.explore-browse-heading{align-items:flex-start;flex-direction:column;gap:5px}}
+
+@media(min-width:1250px){.explore-actions{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.ap-curriculum-link{margin-bottom:20px}

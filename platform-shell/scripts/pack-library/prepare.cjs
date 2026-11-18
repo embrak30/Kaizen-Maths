@@ -4,9 +4,9 @@ const {base,inventory}=require('./runtime.cjs'),{JSDOM}=require(path.join(base,'
 const {createCanvas,loadImage,GlobalFonts}=require('/Users/barker/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/@napi-rs/canvas');
 const {mathjax}=require(path.join(base,'mathjax-full/js/mathjax.js')),{TeX}=require(path.join(base,'mathjax-full/js/input/tex.js')),{SVG}=require(path.join(base,'mathjax-full/js/output/svg.js')),{liteAdaptor}=require(path.join(base,'mathjax-full/js/adaptors/liteAdaptor.js')),{RegisterHTMLHandler}=require(path.join(base,'mathjax-full/js/handlers/html.js')),{AllPackages}=require(path.join(base,'mathjax-full/js/input/tex/AllPackages.js'));
 const adaptor=liteAdaptor();RegisterHTMLHandler(adaptor);const mj=mathjax.document('',{InputJax:new TeX({packages:AllPackages}),OutputJax:new SVG({fontCache:'none'})});
-const root=path.resolve(__dirname,'../..'),folder=path.join(root,'tmp/pdfs/library-assets');fs.mkdirSync(folder,{recursive:true});
+const root=path.resolve(__dirname,'../..'),folder=path.resolve(root,process.env.KAIZEN_PACK_ASSETS||'tmp/pdfs/library-assets');fs.mkdirSync(folder,{recursive:true});
 const toolPaths=Object.fromEntries(inventory(root).map(t=>[t.slug,t.toolPath.split('?')[0]]));
-const source=JSON.parse(fs.readFileSync(path.join(root,'data/practice-packs/library.json'))),errors=[],cache=new Map();
+const source=JSON.parse(fs.readFileSync(path.resolve(root,process.env.KAIZEN_PACK_SOURCE||'data/practice-packs/library.json'))),errors=[],cache=new Map();
 GlobalFonts.registerFromPath('/System/Library/Fonts/Supplemental/STIXTwoText.ttf','Times New Roman');GlobalFonts.registerFromPath('/Users/barker/.cache/codex-runtimes/codex-primary-runtime/dependencies/native/libreoffice-headless/libreoffice/LibreOfficeDev.app/Contents/Resources/fonts/truetype/Carlito-Regular.ttf','Arial');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const unicode={'−':'-','×':'\\times ','÷':'\\div ','π':'\\pi ','θ':'\\theta ','μ':'\\mu ','σ':'\\sigma ','α':'\\alpha ','β':'\\beta ','λ':'\\lambda ','∞':'\\infty ','±':'\\pm ','≤':'\\le ','≥':'\\ge ','ℝ':'\\mathbb{R}','ℕ':'\\mathbb{N}','ℤ':'\\mathbb{Z}','ℚ':'\\mathbb{Q}','ℂ':'\\mathbb{C}'};
@@ -97,5 +97,5 @@ async function blocks(value,doc,css){
   }catch(e){errors.push({pack:pack.id,tool:pack.sourceTool,question:q.number,error:e.message});}
   if(++done%25===0)console.log('Prepared '+done+'/'+source.packs.length+' packs');
  }
- dom?.window.close();fs.writeFileSync(path.join(root,'tmp/pdfs/library-prepared.json'),JSON.stringify({...source,renderErrors:errors}));fs.writeFileSync(path.join(root,'tmp/pdfs/library-render-errors.json'),JSON.stringify(errors,null,2));console.log(JSON.stringify({prepared:done,assets:fs.readdirSync(folder).length,errors:errors.length}));if(errors.length)process.exitCode=1;
+ dom?.window.close();fs.writeFileSync(path.resolve(root,process.env.KAIZEN_PACK_OUTPUT||'tmp/pdfs/library-prepared.json'),JSON.stringify({...source,renderErrors:errors}));fs.writeFileSync(path.resolve(root,process.env.KAIZEN_PACK_ERRORS||'tmp/pdfs/library-render-errors.json'),JSON.stringify(errors,null,2));console.log(JSON.stringify({prepared:done,assets:fs.readdirSync(folder).length,errors:errors.length}));if(errors.length)process.exitCode=1;
 })();

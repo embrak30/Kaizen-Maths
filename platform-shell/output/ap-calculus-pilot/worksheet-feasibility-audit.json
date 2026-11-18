@@ -1,0 +1,3550 @@
+{
+  "counts": {
+    "Pilot": 2,
+    "Author pack": 73,
+    "Reuse core": 36
+  },
+  "units": [
+    {
+      "n": 1,
+      "title": "Limits and continuity",
+      "rows": [
+        {
+          "code": "1.1",
+          "title": "Change at an instant",
+          "status": "New",
+          "basis": "LIM (background)",
+          "need": "Graph, table and context bank; pilot 1.1 drafted.",
+          "scope": "AB + BC",
+          "delivery": "Pilot",
+          "fixedPDF": "Feasible; draft exists",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.2",
+          "title": "Limit notation",
+          "status": "Extend",
+          "basis": "LIM",
+          "need": "Interpret notation; distinguish value from limit.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.3",
+          "title": "Limits from graphs",
+          "status": "New",
+          "basis": "GRF (background)",
+          "need": "Open/closed points; one-sided and two-sided limits.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.4",
+          "title": "Limits from tables",
+          "status": "Core",
+          "basis": "LIM",
+          "need": "Vary approach patterns; include misleading tables.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.5",
+          "title": "Algebraic properties of limits",
+          "status": "Core",
+          "basis": "LIM",
+          "need": "Add explanations of law applicability.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.6",
+          "title": "Algebraic manipulation of limits",
+          "status": "Core",
+          "basis": "LIM",
+          "need": "Balance factoring, conjugates and domain restrictions.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.7",
+          "title": "Selecting limit procedures",
+          "status": "Extend",
+          "basis": "LIM",
+          "need": "Require method choice, not a labelled procedure.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.8",
+          "title": "Squeeze Theorem",
+          "status": "New",
+          "basis": "None identified",
+          "need": "Build bounding graphs and theorem justification.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.9",
+          "title": "Multiple representations of limits",
+          "status": "Extend",
+          "basis": "LIM + GRF",
+          "need": "Link verbal, symbolic, numerical and graphical data.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.10",
+          "title": "Types of discontinuities",
+          "status": "Extend",
+          "basis": "LIM",
+          "need": "Add graphical classification and explanations.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.11",
+          "title": "Continuity at a point",
+          "status": "Extend",
+          "basis": "LIM",
+          "need": "Require all continuity conditions, not just substitution.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.12",
+          "title": "Continuity over an interval",
+          "status": "Extend",
+          "basis": "LIM",
+          "need": "Include endpoints, domains and interval reasoning.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.13",
+          "title": "Removing discontinuities",
+          "status": "Core",
+          "basis": "LIM",
+          "need": "Reuse parameters; add explanation of the repair.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.14",
+          "title": "Infinite limits and vertical asymptotes",
+          "status": "Extend",
+          "basis": "LIM + GRF",
+          "need": "Add signed one-sided unbounded behaviour.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.15",
+          "title": "Limits at infinity and horizontal asymptotes",
+          "status": "Core",
+          "basis": "LIM",
+          "need": "Add graph and end-behaviour interpretations.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "1.16",
+          "title": "Intermediate Value Theorem",
+          "status": "New",
+          "basis": "LIM (background)",
+          "need": "Verify hypotheses; distinguish existence from uniqueness.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Differentiation: definition and basic rules",
+      "rows": [
+        {
+          "code": "2.1",
+          "title": "Average and instantaneous rates",
+          "status": "Extend",
+          "basis": "LIM + POL",
+          "need": "Context, secant/tangent and units bank.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "2.2",
+          "title": "Derivative definition and notation",
+          "status": "Core",
+          "basis": "LIM",
+          "need": "Use both derivative definitions and interpret notation.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "2.3",
+          "title": "Estimating derivatives at a point",
+          "status": "New",
+          "basis": "LIM (background)",
+          "need": "Tangent, secant and table estimates; uncertainty.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "2.4",
+          "title": "Differentiability and continuity",
+          "status": "New",
+          "basis": "LIM (background)",
+          "need": "Corners, cusps, vertical tangents and discontinuities.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "2.5",
+          "title": "Power rule",
+          "status": "Core",
+          "basis": "POL",
+          "need": "Select AP-relevant exponents; vary task demands.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "2.6",
+          "title": "Constant, sum and multiple rules",
+          "status": "Core",
+          "basis": "POL",
+          "need": "Add evaluation and representation questions.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "2.7",
+          "title": "Derivatives of sin, cos, exponential and log",
+          "status": "Core",
+          "basis": "DER + TRIG",
+          "need": "Check AP forms, domain and radians.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "2.8",
+          "title": "Product rule",
+          "status": "Core",
+          "basis": "DER",
+          "need": "Add table-based and contextual product questions.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "2.9",
+          "title": "Quotient rule",
+          "status": "Core",
+          "basis": "DER",
+          "need": "Add table-based questions; check simplified answers.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "2.10",
+          "title": "Other trigonometric derivatives",
+          "status": "Core",
+          "basis": "TRIG",
+          "need": "Include reciprocal trig functions with AP notation.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Composite, implicit and inverse differentiation",
+      "rows": [
+        {
+          "code": "3.1",
+          "title": "Chain rule",
+          "status": "Core",
+          "basis": "DER + TRIG",
+          "need": "Add function tables and composite-function graphs.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "3.2",
+          "title": "Implicit differentiation",
+          "status": "Core",
+          "basis": "ADV",
+          "need": "Add interpretation; preserve derivative factors.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "3.3",
+          "title": "Derivatives of inverse functions",
+          "status": "Extend",
+          "basis": "DER + INV",
+          "need": "New general inverse-function and table questions.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "3.4",
+          "title": "Inverse trigonometric derivatives",
+          "status": "Core",
+          "basis": "INV",
+          "need": "Filter to required AP functions; exclude unrelated forms.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "3.5",
+          "title": "Selecting derivative procedures",
+          "status": "Extend",
+          "basis": "DER + ADV",
+          "need": "Mixed unlabelled rule choices and justifications.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "3.6",
+          "title": "Higher-order derivatives",
+          "status": "Core",
+          "basis": "ADV",
+          "need": "Add graphs, notation and context for second derivatives.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Contextual applications of differentiation",
+      "rows": [
+        {
+          "code": "4.1",
+          "title": "Meaning of a derivative in context",
+          "status": "New",
+          "basis": "DER (background)",
+          "need": "Units, sign and instantaneous-rate interpretations.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "4.2",
+          "title": "Position, velocity and acceleration",
+          "status": "Extend",
+          "basis": "POL + DER",
+          "need": "Variable motion; direction, speed and total distance.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "4.3",
+          "title": "Rates in other applied contexts",
+          "status": "New",
+          "basis": "DER (background)",
+          "need": "Meaningful models, units and data representations.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "4.4",
+          "title": "Introduction to related rates",
+          "status": "Extend",
+          "basis": "ADV",
+          "need": "Identify quantities, constants and time dependencies.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "4.5",
+          "title": "Solving related rates",
+          "status": "Extend",
+          "basis": "ADV",
+          "need": "Varied geometry and sign reasoning; pilot 4.5 drafted.",
+          "scope": "AB + BC",
+          "delivery": "Pilot",
+          "fixedPDF": "Feasible; draft exists",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "4.6",
+          "title": "Local linearity and linearization",
+          "status": "Extend",
+          "basis": "POL + DER",
+          "need": "Approximation; over/underestimation from concavity.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "4.7",
+          "title": "L'Hospital's Rule",
+          "status": "New",
+          "basis": "LIM + DER (background)",
+          "need": "Indeterminate forms; hypotheses; transformed expressions.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Analytical applications of differentiation",
+      "rows": [
+        {
+          "code": "5.1",
+          "title": "Mean Value Theorem",
+          "status": "New",
+          "basis": "LIM + DER (background)",
+          "need": "Verify hypotheses and justify existence of c.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "5.2",
+          "title": "EVT, extrema and critical points",
+          "status": "Extend",
+          "basis": "DER",
+          "need": "Separate local/global extrema and endpoint reasoning.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "5.3",
+          "title": "Increasing and decreasing intervals",
+          "status": "Extend",
+          "basis": "DER + GRF",
+          "need": "Derivative sign charts and graphical evidence.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "5.4",
+          "title": "First Derivative Test",
+          "status": "Extend",
+          "basis": "DER",
+          "need": "Sign changes; non-extremal critical points.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "5.5",
+          "title": "Candidates Test for absolute extrema",
+          "status": "Extend",
+          "basis": "DER",
+          "need": "Closed intervals, endpoints and complete comparison.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "5.6",
+          "title": "Concavity over a domain",
+          "status": "New",
+          "basis": "DER (background)",
+          "need": "Second-derivative signs and inflection conditions.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "5.7",
+          "title": "Second Derivative Test",
+          "status": "Extend",
+          "basis": "DER + ADV",
+          "need": "Include inconclusive tests and valid conclusions.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "5.8",
+          "title": "Sketching functions and derivatives",
+          "status": "New",
+          "basis": "GRF (background)",
+          "need": "Match derivative behaviour to original graphs.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "5.9",
+          "title": "Connecting f, f' and f''",
+          "status": "New",
+          "basis": "GRF + DER (background)",
+          "need": "Graph/table reasoning across all three functions.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "5.10",
+          "title": "Introduction to optimization",
+          "status": "New",
+          "basis": "DER (background)",
+          "need": "Build objective, constraint and feasible domain.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "5.11",
+          "title": "Solving optimization problems",
+          "status": "New",
+          "basis": "DER (background)",
+          "need": "Varied contexts; justify optimum and endpoints.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "5.12",
+          "title": "Behaviour of implicit relations",
+          "status": "Extend",
+          "basis": "ADV",
+          "need": "Horizontal/vertical tangents; second-derivative analysis.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Integration and accumulation of change",
+      "rows": [
+        {
+          "code": "6.1",
+          "title": "Accumulations of change",
+          "status": "New",
+          "basis": "INT (background)",
+          "need": "Net accumulation with units and variable rates.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.2",
+          "title": "Riemann-sum area approximations",
+          "status": "Extend",
+          "basis": "INT + NUM",
+          "need": "Add left, right and midpoint sums, not only trapezoids.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.3",
+          "title": "Summation and definite-integral notation",
+          "status": "New",
+          "basis": "INT (background)",
+          "need": "Translate sums, limits and integrals.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.4",
+          "title": "FTC and accumulation functions",
+          "status": "New",
+          "basis": "INT + DER (background)",
+          "need": "Variable upper bounds and derivative interpretation.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.5",
+          "title": "Behaviour of accumulation functions",
+          "status": "New",
+          "basis": "INT (background)",
+          "need": "Read signed areas; extrema and concavity.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.6",
+          "title": "Properties of definite integrals",
+          "status": "Extend",
+          "basis": "INT",
+          "need": "Orientation, additivity, bounds and symmetry.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.7",
+          "title": "FTC and definite integrals",
+          "status": "Core",
+          "basis": "INT",
+          "need": "Link antiderivatives to evaluation and meaning.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.8",
+          "title": "Antiderivatives and indefinite integrals",
+          "status": "Core",
+          "basis": "INT",
+          "need": "Include constants, domains and initial conditions.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.9",
+          "title": "Integration by substitution",
+          "status": "Core",
+          "basis": "AINT",
+          "need": "Filter required forms; change bounds carefully.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.10",
+          "title": "Long division and completing the square",
+          "status": "Core",
+          "basis": "FRAC",
+          "need": "Reuse division and completed-square types; vary forms.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.11",
+          "title": "Integration by parts",
+          "status": "Core",
+          "basis": "AINT",
+          "need": "Add method selection and definite forms.",
+          "scope": "BC only",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.12",
+          "title": "Linear partial fractions",
+          "status": "Core",
+          "basis": "FRAC",
+          "need": "Restrict to AP-required decompositions; check forms.",
+          "scope": "BC only",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.13",
+          "title": "Improper integrals",
+          "status": "New",
+          "basis": "INT + LIM (background)",
+          "need": "Limits at singularities and infinity; convergence.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "6.14",
+          "title": "Selecting antidifferentiation techniques",
+          "status": "Extend",
+          "basis": "INT + AINT",
+          "need": "Mixed unlabelled choices; respect AB/BC filters.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Differential equations",
+      "rows": [
+        {
+          "code": "7.1",
+          "title": "Modelling with differential equations",
+          "status": "Extend",
+          "basis": "DE",
+          "need": "AP-relevant verbal models and units.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "7.2",
+          "title": "Verifying differential-equation solutions",
+          "status": "Extend",
+          "basis": "DE + DER",
+          "need": "Substitution checks, domains and initial conditions.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "7.3",
+          "title": "Sketching slope fields",
+          "status": "New",
+          "basis": "DE (background)",
+          "need": "Generate fields and solution-curve sketches.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "7.4",
+          "title": "Reasoning using slope fields",
+          "status": "New",
+          "basis": "DE (background)",
+          "need": "Equilibria, solution behaviour and curve matching.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "7.5",
+          "title": "Euler's Method",
+          "status": "Core",
+          "basis": "NUM",
+          "need": "Add AP tables, unequal steps and approximation reasoning.",
+          "scope": "BC only",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "7.6",
+          "title": "Separation of variables: general solutions",
+          "status": "Core",
+          "basis": "DE",
+          "need": "Keep singular/equilibrium solutions in view.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "7.7",
+          "title": "Particular solutions and initial conditions",
+          "status": "Core",
+          "basis": "DE",
+          "need": "Check intervals and initial-condition substitution.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "7.8",
+          "title": "Exponential differential-equation models",
+          "status": "Core",
+          "basis": "DE",
+          "need": "Add model interpretation and parameter recovery.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "7.9",
+          "title": "Logistic models",
+          "status": "New",
+          "basis": "DE (background)",
+          "need": "Carrying capacity, equilibria and inflection behaviour.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Applications of integration",
+      "rows": [
+        {
+          "code": "8.1",
+          "title": "Average value of a function",
+          "status": "Extend",
+          "basis": "INT",
+          "need": "Distinguish average value from average rate.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "8.2",
+          "title": "Motion using integrals",
+          "status": "New",
+          "basis": "INT + DER (background)",
+          "need": "Displacement versus total distance; sign changes.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "8.3",
+          "title": "Accumulation in applied contexts",
+          "status": "New",
+          "basis": "INT (background)",
+          "need": "Initial amount, net change, inflow and outflow.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "8.4",
+          "title": "Area between curves: functions of x",
+          "status": "Extend",
+          "basis": "INT + XSEC",
+          "need": "Create full worksheet questions; select top/bottom.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "8.5",
+          "title": "Area between curves: functions of y",
+          "status": "Extend",
+          "basis": "INT + XSEC",
+          "need": "Horizontal strips and right/left boundaries.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "8.6",
+          "title": "Area across multiple intersections",
+          "status": "Extend",
+          "basis": "INT + XSEC",
+          "need": "Locate crossings and split intervals correctly.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "8.7",
+          "title": "Cross-sections: squares and rectangles",
+          "status": "Extend",
+          "basis": "XSEC + INT",
+          "need": "Explainer exists; build graded questions and solutions.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "8.8",
+          "title": "Cross-sections: triangles and semicircles",
+          "status": "Extend",
+          "basis": "XSEC + INT",
+          "need": "Shape factors; radius/diameter distinctions.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "8.9",
+          "title": "Discs around coordinate axes",
+          "status": "Core",
+          "basis": "REV",
+          "need": "Reuse x/y-axis disc families; add diagram interpretation.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "8.10",
+          "title": "Discs around other axes",
+          "status": "Extend",
+          "basis": "REV + REVX",
+          "need": "Shifted axes need new families, not just shifted functions.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "8.11",
+          "title": "Washers around coordinate axes",
+          "status": "Core",
+          "basis": "REV",
+          "need": "Reuse washer families; extend graphical interpretation.",
+          "scope": "AB + BC",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "8.12",
+          "title": "Washers around other axes",
+          "status": "Extend",
+          "basis": "REV + REVX",
+          "need": "Shifted axes; subtract squared radii correctly.",
+          "scope": "AB + BC",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "8.13",
+          "title": "Arc length and distance travelled",
+          "status": "New",
+          "basis": "ADV + INT (background)",
+          "need": "Generate arc-length integrals and motion contexts.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "title": "Parametric, polar and vector-valued functions",
+      "rows": [
+        {
+          "code": "9.1",
+          "title": "Parametric equations and first derivatives",
+          "status": "Core",
+          "basis": "ADV",
+          "need": "Add AP graphs and parameter interpretation.",
+          "scope": "BC only",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "9.2",
+          "title": "Parametric second derivatives",
+          "status": "Core",
+          "basis": "ADV",
+          "need": "Retain division by the parameter derivative.",
+          "scope": "BC only",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "9.3",
+          "title": "Parametric arc length",
+          "status": "New",
+          "basis": "ADV + INT (background)",
+          "need": "Arc-length setup, intervals and numerical integration.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "9.4",
+          "title": "Differentiating vector-valued functions",
+          "status": "New",
+          "basis": "DER (background)",
+          "need": "Component derivatives; existing VEC is geometry only.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "9.5",
+          "title": "Integrating vector-valued functions",
+          "status": "New",
+          "basis": "INT (background)",
+          "need": "Initial position and vector antiderivatives.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "9.6",
+          "title": "Parametric and vector motion",
+          "status": "New",
+          "basis": "ADV (background)",
+          "need": "Velocity, acceleration, speed and distance.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "9.7",
+          "title": "Polar coordinates and differentiation",
+          "status": "Core",
+          "basis": "POLAR",
+          "need": "Filter derivative forms; include tangent reasoning.",
+          "scope": "BC only",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "9.8",
+          "title": "Area bounded by one polar curve",
+          "status": "Core",
+          "basis": "POLAR",
+          "need": "Check full traversal and avoid double counting.",
+          "scope": "BC only",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "9.9",
+          "title": "Area bounded by two polar curves",
+          "status": "Extend",
+          "basis": "POLAR",
+          "need": "Add interval selection, intersections and shading.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": true,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "title": "Infinite sequences and series",
+      "rows": [
+        {
+          "code": "10.1",
+          "title": "Convergent and divergent infinite series",
+          "status": "Extend",
+          "basis": "SEQ",
+          "need": "Partial-sum limits; sequences versus series.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.2",
+          "title": "Geometric series",
+          "status": "Core",
+          "basis": "SEQ",
+          "need": "Include convergence conditions and contextual sums.",
+          "scope": "BC only",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.3",
+          "title": "nth-term divergence test",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Zero term limit is inconclusive, not proof of convergence.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.4",
+          "title": "Integral Test",
+          "status": "New",
+          "basis": "INT + SEQ (background)",
+          "need": "Positivity, continuity and decreasing hypotheses.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.5",
+          "title": "Harmonic and p-series",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Classification and boundary cases.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.6",
+          "title": "Comparison Tests",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Direct and limit comparison; justify valid comparisons.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.7",
+          "title": "Alternating Series Test",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Monotonicity, term limits and convergence reasoning.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.8",
+          "title": "Ratio Test",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Limit cases and inconclusive outcomes.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.9",
+          "title": "Absolute and conditional convergence",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Test original and absolute-value series separately.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.10",
+          "title": "Alternating Series Error Bound",
+          "status": "New",
+          "basis": "SEQ (background)",
+          "need": "Error tolerance and required term count.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.11",
+          "title": "Taylor polynomial approximations",
+          "status": "Core",
+          "basis": "SER",
+          "need": "Use derivative data, centres and approximation meaning.",
+          "scope": "BC only",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.12",
+          "title": "Lagrange Error Bound",
+          "status": "New",
+          "basis": "SER (background)",
+          "need": "Derivative bounds, interval and remainder estimates.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.13",
+          "title": "Radius and interval of convergence",
+          "status": "Extend",
+          "basis": "SER",
+          "need": "Ratio/root work and separate endpoint tests.",
+          "scope": "BC only",
+          "delivery": "Author pack",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": true,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.14",
+          "title": "Taylor and Maclaurin series",
+          "status": "Core",
+          "basis": "SER",
+          "need": "Match required expansions and validity intervals.",
+          "scope": "BC only",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        },
+        {
+          "code": "10.15",
+          "title": "Representing functions as power series",
+          "status": "Core",
+          "basis": "SER",
+          "need": "Termwise operations and convergence qualifications.",
+          "scope": "BC only",
+          "delivery": "Reuse core",
+          "fixedPDF": "Feasible; not authored",
+          "visualWork": false,
+          "extraValidation": false,
+          "publication": "Not published; content approval and separate-file QA required"
+        }
+      ]
+    }
+  ],
+  "capabilitySmokeChecks": [
+    {
+      "slug": "differentiation-polynomials",
+      "types": [
+        {
+          "level": 1,
+          "type": "single_term",
+          "label": "Single term differentiation",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "coefficients",
+          "label": "Coefficients with single terms",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "constants_linear",
+          "label": "Constants and linear functions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "quadratic",
+          "label": "Quadratic functions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "cubic",
+          "label": "Cubic functions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "higher_degree",
+          "label": "Higher degree polynomials",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "gradient_at_point",
+          "label": "Find gradient at a point",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "tangent_equations",
+          "label": "Find tangent equation",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "normal_equations",
+          "label": "Find normal equation",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "integration",
+      "types": [
+        {
+          "level": 1,
+          "type": "indef_basic_poly",
+          "label": "Basic Polynomials",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "indef_fractional",
+          "label": "Fractional Indices",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "indef_negative",
+          "label": "Negative Powers",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "def_basic_poly",
+          "label": "Definite Integrals - Polynomials",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "def_fractional",
+          "label": "Definite Integrals - Fractional/Negative Powers",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "trap_from_function",
+          "label": "Trapezium Rule from a Function",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "trap_from_table",
+          "label": "Trapezium Rule from a Table",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "advanced-integration",
+      "types": [
+        {
+          "level": 1,
+          "type": "sub_linear_power",
+          "label": "Linear substitution powers",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "sub_quadratic_power",
+          "label": "Quadratic substitution powers",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "sub_exponential",
+          "label": "Exponential substitution",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "sub_log_derivative",
+          "label": "Derivative over function",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "sub_definite_linear",
+          "label": "Definite linear substitution",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "sub_definite_quadratic",
+          "label": "Definite quadratic substitution",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "parts_x_exp",
+          "label": "By parts with x e^(kx)",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "parts_x_sin_cos",
+          "label": "By parts with x sin(kx) or x cos(kx)",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "parts_log",
+          "label": "By parts with logarithms",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "parts_definite",
+          "label": "Definite integration by parts",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "limits-first-principles",
+      "types": [
+        {
+          "level": 1,
+          "type": "direct_substitution",
+          "label": "Direct substitution limits",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "factor_cancel",
+          "label": "Factorise and cancel first",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "rationalise_surd",
+          "label": "Rationalise before evaluating",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "limit_laws",
+          "label": "Limit laws with fractions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "one_sided_absolute",
+          "label": "One-sided absolute value limits",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "piecewise_limits",
+          "label": "Piecewise one-sided limits",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "limit_from_table",
+          "label": "Estimate a limit from a table",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "infinity_rational",
+          "label": "Limits as x tends to infinity",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "first_principles_linear",
+          "label": "Linear functions from first principles",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "first_principles_quadratic",
+          "label": "Quadratics from first principles",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "first_principles_cubic",
+          "label": "Cubics from first principles",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "derivative_at_point",
+          "label": "Gradient at a point from first principles",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "continuity_parameter",
+          "label": "Continuity with a parameter",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "parameter_limit",
+          "label": "Find a parameter so a limit exists",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "tangent_first_principles",
+          "label": "Tangent equation from first principles",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "volumes-of-revolution",
+      "types": [
+        {
+          "level": 1,
+          "type": "disc_linear",
+          "label": "Linear radius about the x-axis",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "disc_power",
+          "label": "Power function radius",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "disc_root",
+          "label": "Square-root radius",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "expand_quadratic",
+          "label": "Square a quadratic expression",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "expand_shifted_linear",
+          "label": "Square a shifted linear expression",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "washer_constant_inner",
+          "label": "Outer curve and constant inner radius",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "washer_two_lines",
+          "label": "Two linear radii",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "washer_curve_line",
+          "label": "Curve and line washer",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "y_axis_linear",
+          "label": "Rotate about the y-axis",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "y_axis_root",
+          "label": "Square-root form about the y-axis",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "find_parameter",
+          "label": "Find a parameter from volume",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "integration-algebraic-fractions",
+      "types": [
+        {
+          "level": 1,
+          "type": "linear_log",
+          "label": "Linear denominator logarithm",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "derivative_over_function",
+          "label": "Numerator is derivative of denominator",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "split_linear_fraction",
+          "label": "Split a linear algebraic fraction",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "cancel_factor",
+          "label": "Cancel before integrating",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "division_linear",
+          "label": "Divide by a linear factor",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "improper_linear",
+          "label": "Improper algebraic fraction",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "distinct_linear_pf",
+          "label": "Distinct linear factors",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "repeated_linear_pf",
+          "label": "Repeated linear factor",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "improper_pf",
+          "label": "Improper partial fraction integral",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "quadratic_log",
+          "label": "Quadratic logarithmic derivative",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "basic_arctan",
+          "label": "Standard inverse tangent form",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "complete_square_arctan",
+          "label": "Complete the square first",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "log_arctan_split",
+          "label": "Logarithm and inverse tangent split",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "further-vectors",
+      "types": [
+        {
+          "level": 1,
+          "type": "position_displacement",
+          "label": "Position and displacement vectors",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "magnitude_3d",
+          "label": "Magnitude of a 3D vector",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "unit_vector",
+          "label": "Unit vectors",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "ratio_section",
+          "label": "Ratio and section formula",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "dot_product_angle",
+          "label": "Angle using scalar product",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "perpendicular_parameter",
+          "label": "Perpendicular vectors with a parameter",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "projection_vector",
+          "label": "Projection of one vector onto another",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "line_through_points",
+          "label": "Vector equation of a line",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "point_on_line",
+          "label": "Check whether a point lies on a line",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "line_intersection",
+          "label": "Intersection of two vector lines",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "point_to_line_distance",
+          "label": "Distance from a point to a line",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "cross_product",
+          "label": "Cross product",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "plane_from_point_normal",
+          "label": "Plane from point and normal",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "plane_from_three_points",
+          "label": "Plane through three points",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "line_plane_intersection",
+          "label": "Line-plane intersection",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "series-expansions",
+      "types": [
+        {
+          "level": 1,
+          "type": "standard_maclaurin",
+          "label": "Standard Maclaurin series",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "derivatives_at_zero",
+          "label": "Maclaurin series from derivatives",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "simple_expansions",
+          "label": "Expand to a given order",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "validity",
+          "label": "Interval or condition of validity",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "substitution",
+          "label": "Substitute into a standard series",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "product_series",
+          "label": "Products of series",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "reciprocal_quotient",
+          "label": "Reciprocal and quotient series",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "approximation",
+          "label": "Approximation using a series",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "taylor_formula",
+          "label": "Taylor polynomial from derivatives",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "taylor_standard",
+          "label": "Taylor series about a point",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "taylor_approximation",
+          "label": "Taylor approximation near a point",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "taylor_derivatives",
+          "label": "Find derivative values from a Taylor series",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "limits",
+          "label": "Limits using series",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "coefficients",
+          "label": "Coefficients in products of series",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "differential_equations",
+          "label": "Series solutions to differential equations",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "numerical-methods",
+      "types": [
+        {
+          "level": 1,
+          "type": "sign_change",
+          "label": "Locate a root by sign change",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "bisection_step",
+          "label": "One bisection step",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "fixed_point_iteration",
+          "label": "Fixed-point iteration",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "newton_one_step",
+          "label": "One Newton-Raphson step",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "newton_two_steps",
+          "label": "Two Newton-Raphson iterations",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "newton_formula",
+          "label": "Derive and use an iteration formula",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "trapezium_table",
+          "label": "Trapezium rule from a table",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "trapezium_function",
+          "label": "Trapezium rule from a function",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "trapezium_interval_count",
+          "label": "Find the step size and number of strips",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "euler_one_step",
+          "label": "One Euler step",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "euler_table",
+          "label": "Euler table",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "euler_reverse",
+          "label": "Find the step size used",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "polar-coordinates",
+      "types": [
+        {
+          "level": 1,
+          "type": "polar_to_cartesian",
+          "label": "Polar to Cartesian coordinates",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "cartesian_to_polar",
+          "label": "Cartesian to polar coordinates",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "equivalent_coordinates",
+          "label": "Equivalent polar coordinates",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "standard_curves",
+          "label": "Standard polar curves",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "circle_curves",
+          "label": "Circles from polar equations",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "point_on_curve",
+          "label": "Points on polar curves",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "intersections",
+          "label": "Intersections of polar curves",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "line_curve_intersections",
+          "label": "Intersections with \u03b8 = \u03b1",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "polar_gradients",
+          "label": "Gradients of polar curves",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "sector_area",
+          "label": "Area of polar sectors",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "circle_area",
+          "label": "Area enclosed by r = a cos \u03b8 or r = a sin \u03b8",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "simple_integral_area",
+          "label": "Area by direct integration",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "differential-equations",
+      "types": [
+        {
+          "level": 1,
+          "type": "separable_power",
+          "label": "Separable equations with powers of x",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "separable_initial",
+          "label": "Separable equations with initial conditions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "separable_exponential",
+          "label": "Exponential growth or decay equations",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "linear_constant",
+          "label": "First-order linear with constant terms",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "linear_initial",
+          "label": "First-order linear with initial conditions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "linear_polynomial_rhs",
+          "label": "First-order linear with polynomial right side",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "linear_exponential_rhs",
+          "label": "First-order linear with exponential right side",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "second_distinct",
+          "label": "Distinct real auxiliary roots",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "second_repeated",
+          "label": "Repeated auxiliary roots",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "second_complex",
+          "label": "Complex auxiliary roots",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "second_forced",
+          "label": "Simple non-homogeneous equations",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "model_growth_decay",
+          "label": "Growth and decay models",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "model_cooling",
+          "label": "Newton cooling models",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "model_mixing",
+          "label": "Mixing models",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "model_condition",
+          "label": "Models with a second condition",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "differentiation-rules",
+      "types": [
+        {
+          "level": 1,
+          "type": "standard_polynomials",
+          "label": "Standard Polynomials",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "fractional_indices",
+          "label": "Fractional Indices",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "negative_indices",
+          "label": "Negative Indices",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "product_rule",
+          "label": "Product Rule",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "chain_rule",
+          "label": "Chain Rule",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "quotient_rule",
+          "label": "Quotient Rule",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "combination",
+          "label": "Combination",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "trig_functions",
+          "label": "Trigonometric Functions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "log_functions",
+          "label": "Log Functions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "tangents_normals",
+          "label": "Tangents Normals",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "turning_points",
+          "label": "Turning Points",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "trig-differentiation-rules",
+      "types": [
+        {
+          "level": 1,
+          "type": "standard_polynomials",
+          "label": "Basic Trigonometric with linear inner",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "fractional_indices",
+          "label": "Powers of Trigonometric with chain and power rules",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "negative_indices",
+          "label": "Sec, csc, and cot basics",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "product_rule",
+          "label": "Product rule with Trigonometric functions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "chain_rule",
+          "label": "Chain rule with Trigonometric inner functions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "quotient_rule",
+          "label": "Quotient rule with Trigonometric functions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "combination",
+          "label": "Combination of Trigonometric rules",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "trig_functions",
+          "label": "Advanced nested Trigonometric chains",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "log_functions",
+          "label": "Trigonometric powers multiplied by Trigonometric functions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "tangents_normals",
+          "label": "Mixed Practice",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "turning_points",
+          "label": "Mixed Practice",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "inverse-trig-differentiation",
+      "types": [
+        {
+          "level": 1,
+          "type": "inv_basic",
+          "label": "Basic inverse trigonometric chain rule",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "inv_power",
+          "label": "Powers of inverse trigonometric functions",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "inv_at_point",
+          "label": "Evaluate y' at a point",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "tan_line",
+          "label": "Tangent at a point",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "norm_line",
+          "label": "Normal at a point",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "sequences-series",
+      "types": [
+        {
+          "level": 1,
+          "type": "arith_nth_term",
+          "label": "Arithmetic nth Term",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "arith_find_d_a",
+          "label": "Find a and d",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "arith_sum_first_n",
+          "label": "Arithmetic Sum S_n",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "arith_find_n_from_term",
+          "label": "Find n from a Term",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "sigma_arith_linear",
+          "label": "Sigma of Linear Term",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "geom_nth_term",
+          "label": "Geometric nth Term",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "geom_find_r_a",
+          "label": "Find a and r",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "geom_sum_first_n",
+          "label": "Geometric Sum S_n",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "geom_sum_infinity",
+          "label": "Sum to Infinity",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "sigma_geom",
+          "label": "Sigma of Geometric Term",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "advanced-differentiation",
+      "types": [
+        {
+          "level": 1,
+          "type": "implicit_basic",
+          "label": "dy/dx from F(x,y)=0",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "implicit_at_point",
+          "label": "dy/dx at a point",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "implicit_second_derivative",
+          "label": "d^2y/dx^2",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "implicit_tangent_line",
+          "label": "Tangent line at a point",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "implicit_related_rates",
+          "label": "One-equation related rate",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "param_first_derivative",
+          "label": "Parametric dy/dx",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "param_second_derivative",
+          "label": "Parametric d^2y/dx^2",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "param_tangent_normal",
+          "label": "Tangent and normal at t=t_0",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "param_arc_slope_zero",
+          "label": "Where dy/dx=0 or undefined",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "param_area_optional",
+          "label": "Parametric area",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": false,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "slug": "graph-transformations-curve-sketching",
+      "types": [
+        {
+          "level": 1,
+          "type": "identify_parent",
+          "label": "Identify Parent Graphs",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "features_parent",
+          "label": "State Key Features",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 1,
+          "type": "match_graph_equation",
+          "label": "Match Graph to Equation",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "vertical_translation",
+          "label": "Vertical Translations",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "horizontal_translation",
+          "label": "Horizontal Translations",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "reflection",
+          "label": "Reflections",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 2,
+          "type": "stretch",
+          "label": "Stretches",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "combined_from_equation",
+          "label": "Combined Transformations from Equation",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "describe_transformation",
+          "label": "Describe a Transformation",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 3,
+          "type": "transform_key_points",
+          "label": "Transform Key Points",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "quadratic_features",
+          "label": "Quadratic Curve Sketching",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "reciprocal_asymptotes",
+          "label": "Reciprocal Graphs and Asymptotes",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "cubic_roots",
+          "label": "Cubic Curves from Roots",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        },
+        {
+          "level": 4,
+          "type": "exponential_transform",
+          "label": "Exponential Transformations",
+          "count": 2,
+          "hasAnswers": true,
+          "hasSteps": true,
+          "diagrams": true,
+          "ok": true
+        }
+      ]
+    }
+  ],
+  "note": "All topics feasible for fixed authored packs; publication requires mathematical and PDF QA. No application changes."
+}
