@@ -22,7 +22,7 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
  for path,result in zip(files,pool.map(check,files)):pages+=result
 for id,p in manifest.items():
  stem='ap-'+id.replace('.','-');subprocess.run(['pdftoppm','-f','1','-l','1','-singlefile','-scale-to','850','-png',str(ROOT/p['questions']),str(OUT/'previews'/stem)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.PIPE)
- assert len(PdfReader(ROOT/p['questions']).pages)==p['questionPages'];assert len(PdfReader(ROOT/p['answers']).pages)==p['answerPages']
+ assert p['questionCount']==8 and p['questionPages']==1;assert len(PdfReader(ROOT/p['questions']).pages)==1;assert len(PdfReader(ROOT/p['answers']).pages)==p['answerPages']
  assert hashlib.sha256((ROOT/p['questions']).read_bytes()).hexdigest()==p['questionHash']
  assert hashlib.sha256((ROOT/p['answers']).read_bytes()).hexdigest()==p['answerHash']
 thumbs=sorted(QA.glob('*.png'))

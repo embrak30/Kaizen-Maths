@@ -1,104 +1,38 @@
 {
-  "pdfs": 78,
-  "pages": 442,
-  "checks": "All pages rendered; bounds, notation, pupil/teacher isolation, page counts and hashes checked. Visual contact sheets require review.",
+  "pdfs": 76,
+  "pages": 229,
+  "checks": "All 76 PDFs rendered; bounds, notation, pupil/teacher isolation, page counts and hashes checked. All 38 one-page question sheets visually reviewed, with full-size graph, table and derivative spot checks.",
   "errors": [],
   "pageDetails": [
     {
       "pdf": "ap-1-1-answers.pdf",
       "page": 1,
-      "characters": 1649,
-      "images": 0
+      "characters": 1109,
+      "images": 4
     },
     {
       "pdf": "ap-1-1-answers.pdf",
       "page": 2,
-      "characters": 786,
-      "images": 0
+      "characters": 1174,
+      "images": 6
     },
     {
       "pdf": "ap-1-1-answers.pdf",
       "page": 3,
-      "characters": 948,
-      "images": 0
+      "characters": 1192,
+      "images": 4
     },
     {
       "pdf": "ap-1-1-answers.pdf",
       "page": 4,
-      "characters": 961,
-      "images": 0
-    },
-    {
-      "pdf": "ap-1-1-answers.pdf",
-      "page": 5,
-      "characters": 826,
-      "images": 0
-    },
-    {
-      "pdf": "ap-1-1-answers.pdf",
-      "page": 6,
-      "characters": 1043,
-      "images": 0
+      "characters": 1301,
+      "images": 3
     },
     {
       "pdf": "ap-1-1-questions.pdf",
       "page": 1,
-      "characters": 888,
-      "images": 0
-    },
-    {
-      "pdf": "ap-1-1-questions.pdf",
-      "page": 2,
-      "characters": 862,
-      "images": 0
-    },
-    {
-      "pdf": "ap-1-1-questions.pdf",
-      "page": 3,
-      "characters": 902,
-      "images": 0
-    },
-    {
-      "pdf": "ap-1-1-questions.pdf",
-      "page": 4,
-      "characters": 1021,
-      "images": 0
-    },
-    {
-      "pdf": "ap-1-1-questions.pdf",
-      "page": 5,
-      "characters": 945,
-      "images": 0
-    },
-    {
-      "pdf": "ap-1-1-supported.pdf",
-      "page": 1,
-      "characters": 1114,
-      "images": 0
-    },
-    {
-      "pdf": "ap-1-1-supported.pdf",
-      "page": 2,
-      "characters": 1115,
-      "images": 0
-    },
-    {
-      "pdf": "ap-1-1-supported.pdf",
-      "page": 3,
-      "characters": 1125,
-      "images": 0
-    },
-    {
-      "pdf": "ap-1-1-supported.pdf",
-      "page": 4,
-      "characters": 1275,
-      "images": 0
-    },
-    {
-      "pdf": "ap-1-1-supported.pdf",
-      "page": 5,
-      "characters": 1202,
-      "images": 0
+      "characters": 1652,
+      "images": 3
     },
     {
       "pdf": "ap-1-13-answers.pdf",
@@ -121,44 +55,14 @@
     {
       "pdf": "ap-1-13-answers.pdf",
       "page": 4,
-      "characters": 687,
-      "images": 8
-    },
-    {
-      "pdf": "ap-1-13-answers.pdf",
-      "page": 5,
-      "characters": 639,
+      "characters": 638,
       "images": 9
     },
     {
       "pdf": "ap-1-13-questions.pdf",
       "page": 1,
-      "characters": 564,
-      "images": 6
-    },
-    {
-      "pdf": "ap-1-13-questions.pdf",
-      "page": 2,
-      "characters": 564,
-      "images": 6
-    },
-    {
-      "pdf": "ap-1-13-questions.pdf",
-      "page": 3,
-      "characters": 564,
-      "images": 6
-    },
-    {
-      "pdf": "ap-1-13-questions.pdf",
-      "page": 4,
-      "characters": 564,
-      "images": 6
-    },
-    {
-      "pdf": "ap-1-13-questions.pdf",
-      "page": 5,
-      "characters": 467,
-      "images": 7
+      "characters": 1211,
+      "images": 25
     },
     {
       "pdf": "ap-1-15-answers.pdf",
@@ -181,50 +85,20 @@
     {
       "pdf": "ap-1-15-answers.pdf",
       "page": 4,
-      "characters": 777,
-      "images": 15
+      "characters": 801,
+      "images": 12
     },
     {
       "pdf": "ap-1-15-answers.pdf",
       "page": 5,
-      "characters": 684,
-      "images": 9
-    },
-    {
-      "pdf": "ap-1-15-answers.pdf",
-      "page": 6,
-      "characters": 685,
-      "images": 11
+      "characters": 537,
+      "images": 7
     },
     {
       "pdf": "ap-1-15-questions.pdf",
       "page": 1,
-      "characters": 436,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-15-questions.pdf",
-      "page": 2,
-      "characters": 436,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-15-questions.pdf",
-      "page": 3,
-      "characters": 436,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-15-questions.pdf",
-      "page": 4,
-      "characters": 436,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-15-questions.pdf",
-      "page": 5,
-      "characters": 495,
-      "images": 2
+      "characters": 800,
+      "images": 8
     },
     {
       "pdf": "ap-1-4-answers.pdf",
@@ -247,44 +121,14 @@
     {
       "pdf": "ap-1-4-answers.pdf",
       "page": 4,
-      "characters": 1032,
-      "images": 4
-    },
-    {
-      "pdf": "ap-1-4-answers.pdf",
-      "page": 5,
-      "characters": 784,
+      "characters": 783,
       "images": 3
     },
     {
       "pdf": "ap-1-4-questions.pdf",
       "page": 1,
-      "characters": 608,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-4-questions.pdf",
-      "page": 2,
-      "characters": 609,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-4-questions.pdf",
-      "page": 3,
-      "characters": 600,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-4-questions.pdf",
-      "page": 4,
-      "characters": 600,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-4-questions.pdf",
-      "page": 5,
-      "characters": 586,
-      "images": 4
+      "characters": 1475,
+      "images": 10
     },
     {
       "pdf": "ap-1-5-answers.pdf",
@@ -307,44 +151,14 @@
     {
       "pdf": "ap-1-5-answers.pdf",
       "page": 4,
-      "characters": 696,
-      "images": 5
-    },
-    {
-      "pdf": "ap-1-5-answers.pdf",
-      "page": 5,
-      "characters": 768,
+      "characters": 767,
       "images": 2
     },
     {
       "pdf": "ap-1-5-questions.pdf",
       "page": 1,
-      "characters": 416,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-5-questions.pdf",
-      "page": 2,
-      "characters": 416,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-5-questions.pdf",
-      "page": 3,
-      "characters": 416,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-5-questions.pdf",
-      "page": 4,
-      "characters": 416,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-5-questions.pdf",
-      "page": 5,
-      "characters": 487,
-      "images": 6
+      "characters": 777,
+      "images": 12
     },
     {
       "pdf": "ap-1-6-answers.pdf",
@@ -373,50 +187,20 @@
     {
       "pdf": "ap-1-6-answers.pdf",
       "page": 5,
-      "characters": 672,
-      "images": 7
-    },
-    {
-      "pdf": "ap-1-6-answers.pdf",
-      "page": 6,
-      "characters": 398,
+      "characters": 649,
       "images": 6
     },
     {
       "pdf": "ap-1-6-answers.pdf",
-      "page": 7,
-      "characters": 819,
-      "images": 9
+      "page": 6,
+      "characters": 509,
+      "images": 4
     },
     {
       "pdf": "ap-1-6-questions.pdf",
       "page": 1,
-      "characters": 436,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-6-questions.pdf",
-      "page": 2,
-      "characters": 436,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-6-questions.pdf",
-      "page": 3,
-      "characters": 436,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-6-questions.pdf",
-      "page": 4,
-      "characters": 436,
-      "images": 2
-    },
-    {
-      "pdf": "ap-1-6-questions.pdf",
-      "page": 5,
-      "characters": 510,
-      "images": 5
+      "characters": 854,
+      "images": 11
     },
     {
       "pdf": "ap-10-11-answers.pdf",
@@ -439,44 +223,14 @@
     {
       "pdf": "ap-10-11-answers.pdf",
       "page": 4,
-      "characters": 1047,
-      "images": 8
-    },
-    {
-      "pdf": "ap-10-11-answers.pdf",
-      "page": 5,
-      "characters": 594,
+      "characters": 593,
       "images": 6
     },
     {
       "pdf": "ap-10-11-questions.pdf",
       "page": 1,
-      "characters": 489,
-      "images": 1
-    },
-    {
-      "pdf": "ap-10-11-questions.pdf",
-      "page": 2,
-      "characters": 573,
-      "images": 0
-    },
-    {
-      "pdf": "ap-10-11-questions.pdf",
-      "page": 3,
-      "characters": 512,
-      "images": 0
-    },
-    {
-      "pdf": "ap-10-11-questions.pdf",
-      "page": 4,
-      "characters": 502,
-      "images": 0
-    },
-    {
-      "pdf": "ap-10-11-questions.pdf",
-      "page": 5,
-      "characters": 491,
-      "images": 6
+      "characters": 1093,
+      "images": 7
     },
     {
       "pdf": "ap-10-14-answers.pdf",
@@ -499,43 +253,13 @@
     {
       "pdf": "ap-10-14-answers.pdf",
       "page": 4,
-      "characters": 896,
-      "images": 14
-    },
-    {
-      "pdf": "ap-10-14-answers.pdf",
-      "page": 5,
-      "characters": 874,
+      "characters": 873,
       "images": 3
     },
     {
       "pdf": "ap-10-14-questions.pdf",
       "page": 1,
-      "characters": 439,
-      "images": 0
-    },
-    {
-      "pdf": "ap-10-14-questions.pdf",
-      "page": 2,
-      "characters": 443,
-      "images": 0
-    },
-    {
-      "pdf": "ap-10-14-questions.pdf",
-      "page": 3,
-      "characters": 446,
-      "images": 0
-    },
-    {
-      "pdf": "ap-10-14-questions.pdf",
-      "page": 4,
-      "characters": 447,
-      "images": 0
-    },
-    {
-      "pdf": "ap-10-14-questions.pdf",
-      "page": 5,
-      "characters": 573,
+      "characters": 943,
       "images": 1
     },
     {
@@ -559,44 +283,14 @@
     {
       "pdf": "ap-10-15-answers.pdf",
       "page": 4,
-      "characters": 1080,
-      "images": 12
-    },
-    {
-      "pdf": "ap-10-15-answers.pdf",
-      "page": 5,
-      "characters": 787,
+      "characters": 786,
       "images": 13
     },
     {
       "pdf": "ap-10-15-questions.pdf",
       "page": 1,
-      "characters": 465,
-      "images": 0
-    },
-    {
-      "pdf": "ap-10-15-questions.pdf",
-      "page": 2,
-      "characters": 483,
-      "images": 1
-    },
-    {
-      "pdf": "ap-10-15-questions.pdf",
-      "page": 3,
-      "characters": 462,
-      "images": 1
-    },
-    {
-      "pdf": "ap-10-15-questions.pdf",
-      "page": 4,
-      "characters": 468,
-      "images": 0
-    },
-    {
-      "pdf": "ap-10-15-questions.pdf",
-      "page": 5,
-      "characters": 540,
-      "images": 5
+      "characters": 959,
+      "images": 7
     },
     {
       "pdf": "ap-10-2-answers.pdf",
@@ -619,44 +313,14 @@
     {
       "pdf": "ap-10-2-answers.pdf",
       "page": 4,
-      "characters": 483,
-      "images": 8
-    },
-    {
-      "pdf": "ap-10-2-answers.pdf",
-      "page": 5,
-      "characters": 691,
+      "characters": 690,
       "images": 6
     },
     {
       "pdf": "ap-10-2-questions.pdf",
       "page": 1,
-      "characters": 406,
-      "images": 6
-    },
-    {
-      "pdf": "ap-10-2-questions.pdf",
-      "page": 2,
-      "characters": 406,
-      "images": 6
-    },
-    {
-      "pdf": "ap-10-2-questions.pdf",
-      "page": 3,
-      "characters": 406,
-      "images": 6
-    },
-    {
-      "pdf": "ap-10-2-questions.pdf",
-      "page": 4,
-      "characters": 406,
-      "images": 6
-    },
-    {
-      "pdf": "ap-10-2-questions.pdf",
-      "page": 5,
-      "characters": 429,
-      "images": 3
+      "characters": 725,
+      "images": 21
     },
     {
       "pdf": "ap-2-10-answers.pdf",
@@ -673,44 +337,14 @@
     {
       "pdf": "ap-2-10-answers.pdf",
       "page": 3,
-      "characters": 786,
-      "images": 10
-    },
-    {
-      "pdf": "ap-2-10-answers.pdf",
-      "page": 4,
-      "characters": 445,
-      "images": 7
+      "characters": 634,
+      "images": 13
     },
     {
       "pdf": "ap-2-10-questions.pdf",
       "page": 1,
-      "characters": 461,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-10-questions.pdf",
-      "page": 2,
-      "characters": 461,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-10-questions.pdf",
-      "page": 3,
-      "characters": 461,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-10-questions.pdf",
-      "page": 4,
-      "characters": 461,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-10-questions.pdf",
-      "page": 5,
-      "characters": 437,
-      "images": 4
+      "characters": 853,
+      "images": 16
     },
     {
       "pdf": "ap-2-2-answers.pdf",
@@ -739,44 +373,14 @@
     {
       "pdf": "ap-2-2-answers.pdf",
       "page": 5,
-      "characters": 461,
-      "images": 9
-    },
-    {
-      "pdf": "ap-2-2-answers.pdf",
-      "page": 6,
-      "characters": 885,
-      "images": 8
+      "characters": 721,
+      "images": 7
     },
     {
       "pdf": "ap-2-2-questions.pdf",
       "page": 1,
-      "characters": 417,
-      "images": 2
-    },
-    {
-      "pdf": "ap-2-2-questions.pdf",
-      "page": 2,
-      "characters": 417,
-      "images": 2
-    },
-    {
-      "pdf": "ap-2-2-questions.pdf",
-      "page": 3,
-      "characters": 417,
-      "images": 2
-    },
-    {
-      "pdf": "ap-2-2-questions.pdf",
-      "page": 4,
-      "characters": 417,
-      "images": 2
-    },
-    {
-      "pdf": "ap-2-2-questions.pdf",
-      "page": 5,
-      "characters": 503,
-      "images": 6
+      "characters": 781,
+      "images": 12
     },
     {
       "pdf": "ap-2-5-answers.pdf",
@@ -793,44 +397,14 @@
     {
       "pdf": "ap-2-5-answers.pdf",
       "page": 3,
-      "characters": 722,
+      "characters": 512,
       "images": 6
-    },
-    {
-      "pdf": "ap-2-5-answers.pdf",
-      "page": 4,
-      "characters": 331,
-      "images": 4
     },
     {
       "pdf": "ap-2-5-questions.pdf",
       "page": 1,
-      "characters": 439,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-5-questions.pdf",
-      "page": 2,
-      "characters": 439,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-5-questions.pdf",
-      "page": 3,
-      "characters": 439,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-5-questions.pdf",
-      "page": 4,
-      "characters": 439,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-5-questions.pdf",
-      "page": 5,
-      "characters": 404,
-      "images": 3
+      "characters": 818,
+      "images": 15
     },
     {
       "pdf": "ap-2-6-answers.pdf",
@@ -847,44 +421,14 @@
     {
       "pdf": "ap-2-6-answers.pdf",
       "page": 3,
-      "characters": 733,
-      "images": 7
-    },
-    {
-      "pdf": "ap-2-6-answers.pdf",
-      "page": 4,
-      "characters": 488,
-      "images": 2
+      "characters": 658,
+      "images": 5
     },
     {
       "pdf": "ap-2-6-questions.pdf",
       "page": 1,
-      "characters": 461,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-6-questions.pdf",
-      "page": 2,
-      "characters": 461,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-6-questions.pdf",
-      "page": 3,
-      "characters": 461,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-6-questions.pdf",
-      "page": 4,
-      "characters": 461,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-6-questions.pdf",
-      "page": 5,
-      "characters": 435,
-      "images": 5
+      "characters": 849,
+      "images": 17
     },
     {
       "pdf": "ap-2-7-answers.pdf",
@@ -901,44 +445,14 @@
     {
       "pdf": "ap-2-7-answers.pdf",
       "page": 3,
-      "characters": 797,
+      "characters": 595,
       "images": 9
-    },
-    {
-      "pdf": "ap-2-7-answers.pdf",
-      "page": 4,
-      "characters": 407,
-      "images": 4
     },
     {
       "pdf": "ap-2-7-questions.pdf",
       "page": 1,
-      "characters": 473,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-7-questions.pdf",
-      "page": 2,
-      "characters": 473,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-7-questions.pdf",
-      "page": 3,
-      "characters": 473,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-7-questions.pdf",
-      "page": 4,
-      "characters": 473,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-7-questions.pdf",
-      "page": 5,
-      "characters": 479,
-      "images": 4
+      "characters": 892,
+      "images": 16
     },
     {
       "pdf": "ap-2-8-answers.pdf",
@@ -961,44 +475,14 @@
     {
       "pdf": "ap-2-8-answers.pdf",
       "page": 4,
-      "characters": 578,
-      "images": 12
-    },
-    {
-      "pdf": "ap-2-8-answers.pdf",
-      "page": 5,
-      "characters": 608,
+      "characters": 607,
       "images": 6
     },
     {
       "pdf": "ap-2-8-questions.pdf",
       "page": 1,
-      "characters": 441,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-8-questions.pdf",
-      "page": 2,
-      "characters": 441,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-8-questions.pdf",
-      "page": 3,
-      "characters": 441,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-8-questions.pdf",
-      "page": 4,
-      "characters": 441,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-8-questions.pdf",
-      "page": 5,
-      "characters": 456,
-      "images": 5
+      "characters": 870,
+      "images": 17
     },
     {
       "pdf": "ap-2-9-answers.pdf",
@@ -1021,44 +505,14 @@
     {
       "pdf": "ap-2-9-answers.pdf",
       "page": 4,
-      "characters": 581,
-      "images": 12
-    },
-    {
-      "pdf": "ap-2-9-answers.pdf",
-      "page": 5,
-      "characters": 559,
+      "characters": 558,
       "images": 8
     },
     {
       "pdf": "ap-2-9-questions.pdf",
       "page": 1,
-      "characters": 442,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-9-questions.pdf",
-      "page": 2,
-      "characters": 442,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-9-questions.pdf",
-      "page": 3,
-      "characters": 442,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-9-questions.pdf",
-      "page": 4,
-      "characters": 442,
-      "images": 4
-    },
-    {
-      "pdf": "ap-2-9-questions.pdf",
-      "page": 5,
-      "characters": 445,
-      "images": 8
+      "characters": 858,
+      "images": 20
     },
     {
       "pdf": "ap-3-1-answers.pdf",
@@ -1087,44 +541,14 @@
     {
       "pdf": "ap-3-1-answers.pdf",
       "page": 5,
-      "characters": 345,
-      "images": 15
-    },
-    {
-      "pdf": "ap-3-1-answers.pdf",
-      "page": 6,
-      "characters": 685,
-      "images": 9
+      "characters": 527,
+      "images": 6
     },
     {
       "pdf": "ap-3-1-questions.pdf",
       "page": 1,
-      "characters": 379,
-      "images": 2
-    },
-    {
-      "pdf": "ap-3-1-questions.pdf",
-      "page": 2,
-      "characters": 379,
-      "images": 2
-    },
-    {
-      "pdf": "ap-3-1-questions.pdf",
-      "page": 3,
-      "characters": 379,
-      "images": 2
-    },
-    {
-      "pdf": "ap-3-1-questions.pdf",
-      "page": 4,
-      "characters": 379,
-      "images": 2
-    },
-    {
-      "pdf": "ap-3-1-questions.pdf",
-      "page": 5,
-      "characters": 415,
-      "images": 7
+      "characters": 654,
+      "images": 13
     },
     {
       "pdf": "ap-3-2-answers.pdf",
@@ -1171,50 +595,14 @@
     {
       "pdf": "ap-3-2-answers.pdf",
       "page": 8,
-      "characters": 591,
-      "images": 11
-    },
-    {
-      "pdf": "ap-3-2-answers.pdf",
-      "page": 9,
-      "characters": 639,
+      "characters": 625,
       "images": 12
-    },
-    {
-      "pdf": "ap-3-2-answers.pdf",
-      "page": 10,
-      "characters": 504,
-      "images": 7
     },
     {
       "pdf": "ap-3-2-questions.pdf",
       "page": 1,
-      "characters": 359,
-      "images": 5
-    },
-    {
-      "pdf": "ap-3-2-questions.pdf",
-      "page": 2,
-      "characters": 375,
-      "images": 4
-    },
-    {
-      "pdf": "ap-3-2-questions.pdf",
-      "page": 3,
-      "characters": 377,
-      "images": 5
-    },
-    {
-      "pdf": "ap-3-2-questions.pdf",
-      "page": 4,
-      "characters": 359,
-      "images": 5
-    },
-    {
-      "pdf": "ap-3-2-questions.pdf",
-      "page": 5,
-      "characters": 481,
-      "images": 6
+      "characters": 651,
+      "images": 20
     },
     {
       "pdf": "ap-3-4-answers.pdf",
@@ -1243,44 +631,14 @@
     {
       "pdf": "ap-3-4-answers.pdf",
       "page": 5,
-      "characters": 529,
-      "images": 17
-    },
-    {
-      "pdf": "ap-3-4-answers.pdf",
-      "page": 6,
-      "characters": 780,
+      "characters": 625,
       "images": 8
     },
     {
       "pdf": "ap-3-4-questions.pdf",
       "page": 1,
-      "characters": 498,
-      "images": 2
-    },
-    {
-      "pdf": "ap-3-4-questions.pdf",
-      "page": 2,
-      "characters": 498,
-      "images": 2
-    },
-    {
-      "pdf": "ap-3-4-questions.pdf",
-      "page": 3,
-      "characters": 498,
-      "images": 2
-    },
-    {
-      "pdf": "ap-3-4-questions.pdf",
-      "page": 4,
-      "characters": 498,
-      "images": 2
-    },
-    {
-      "pdf": "ap-3-4-questions.pdf",
-      "page": 5,
-      "characters": 451,
-      "images": 5
+      "characters": 972,
+      "images": 11
     },
     {
       "pdf": "ap-3-6-answers.pdf",
@@ -1339,164 +697,50 @@
     {
       "pdf": "ap-3-6-answers.pdf",
       "page": 10,
-      "characters": 446,
-      "images": 14
-    },
-    {
-      "pdf": "ap-3-6-answers.pdf",
-      "page": 11,
-      "characters": 515,
-      "images": 11
-    },
-    {
-      "pdf": "ap-3-6-answers.pdf",
-      "page": 12,
-      "characters": 510,
-      "images": 11
-    },
-    {
-      "pdf": "ap-3-6-answers.pdf",
-      "page": 13,
-      "characters": 569,
+      "characters": 568,
       "images": 8
     },
     {
       "pdf": "ap-3-6-questions.pdf",
       "page": 1,
-      "characters": 353,
-      "images": 4
-    },
-    {
-      "pdf": "ap-3-6-questions.pdf",
-      "page": 2,
-      "characters": 353,
-      "images": 4
-    },
-    {
-      "pdf": "ap-3-6-questions.pdf",
-      "page": 3,
-      "characters": 353,
-      "images": 4
-    },
-    {
-      "pdf": "ap-3-6-questions.pdf",
-      "page": 4,
-      "characters": 353,
-      "images": 4
-    },
-    {
-      "pdf": "ap-3-6-questions.pdf",
-      "page": 5,
-      "characters": 397,
-      "images": 5
+      "characters": 517,
+      "images": 17
     },
     {
       "pdf": "ap-4-5-answers.pdf",
       "page": 1,
-      "characters": 1230,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-answers.pdf",
-      "page": 2,
-      "characters": 754,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-answers.pdf",
-      "page": 3,
-      "characters": 918,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-answers.pdf",
-      "page": 4,
-      "characters": 969,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-answers.pdf",
-      "page": 5,
-      "characters": 557,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-answers.pdf",
-      "page": 6,
-      "characters": 571,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-answers.pdf",
-      "page": 7,
-      "characters": 587,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-answers.pdf",
-      "page": 8,
-      "characters": 712,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-questions.pdf",
-      "page": 1,
-      "characters": 761,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-questions.pdf",
-      "page": 2,
-      "characters": 772,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-questions.pdf",
-      "page": 3,
-      "characters": 906,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-questions.pdf",
-      "page": 4,
-      "characters": 876,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-questions.pdf",
-      "page": 5,
       "characters": 975,
-      "images": 0
+      "images": 10
     },
     {
-      "pdf": "ap-4-5-supported.pdf",
-      "page": 1,
-      "characters": 1052,
-      "images": 0
-    },
-    {
-      "pdf": "ap-4-5-supported.pdf",
+      "pdf": "ap-4-5-answers.pdf",
       "page": 2,
-      "characters": 1057,
-      "images": 0
+      "characters": 1041,
+      "images": 11
     },
     {
-      "pdf": "ap-4-5-supported.pdf",
+      "pdf": "ap-4-5-answers.pdf",
       "page": 3,
-      "characters": 1311,
-      "images": 0
+      "characters": 674,
+      "images": 13
     },
     {
-      "pdf": "ap-4-5-supported.pdf",
+      "pdf": "ap-4-5-answers.pdf",
       "page": 4,
-      "characters": 1215,
-      "images": 0
+      "characters": 1081,
+      "images": 16
     },
     {
-      "pdf": "ap-4-5-supported.pdf",
+      "pdf": "ap-4-5-answers.pdf",
       "page": 5,
-      "characters": 1303,
-      "images": 0
+      "characters": 999,
+      "images": 11
+    },
+    {
+      "pdf": "ap-4-5-questions.pdf",
+      "page": 1,
+      "characters": 1487,
+      "images": 6
     },
     {
       "pdf": "ap-6-10-answers.pdf",
@@ -1519,44 +763,14 @@
     {
       "pdf": "ap-6-10-answers.pdf",
       "page": 4,
-      "characters": 1043,
-      "images": 9
-    },
-    {
-      "pdf": "ap-6-10-answers.pdf",
-      "page": 5,
-      "characters": 607,
+      "characters": 606,
       "images": 7
     },
     {
       "pdf": "ap-6-10-questions.pdf",
       "page": 1,
-      "characters": 367,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-10-questions.pdf",
-      "page": 2,
-      "characters": 367,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-10-questions.pdf",
-      "page": 3,
-      "characters": 367,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-10-questions.pdf",
-      "page": 4,
-      "characters": 367,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-10-questions.pdf",
-      "page": 5,
-      "characters": 414,
-      "images": 2
+      "characters": 528,
+      "images": 8
     },
     {
       "pdf": "ap-6-11-answers.pdf",
@@ -1585,50 +799,20 @@
     {
       "pdf": "ap-6-11-answers.pdf",
       "page": 5,
-      "characters": 567,
-      "images": 17
+      "characters": 709,
+      "images": 16
     },
     {
       "pdf": "ap-6-11-answers.pdf",
       "page": 6,
-      "characters": 506,
-      "images": 17
-    },
-    {
-      "pdf": "ap-6-11-answers.pdf",
-      "page": 7,
-      "characters": 809,
-      "images": 13
+      "characters": 358,
+      "images": 6
     },
     {
       "pdf": "ap-6-11-questions.pdf",
       "page": 1,
-      "characters": 396,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-11-questions.pdf",
-      "page": 2,
-      "characters": 414,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-11-questions.pdf",
-      "page": 3,
-      "characters": 396,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-11-questions.pdf",
-      "page": 4,
-      "characters": 414,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-11-questions.pdf",
-      "page": 5,
-      "characters": 421,
-      "images": 5
+      "characters": 697,
+      "images": 11
     },
     {
       "pdf": "ap-6-12-answers.pdf",
@@ -1657,50 +841,14 @@
     {
       "pdf": "ap-6-12-answers.pdf",
       "page": 5,
-      "characters": 822,
-      "images": 11
-    },
-    {
-      "pdf": "ap-6-12-answers.pdf",
-      "page": 6,
-      "characters": 670,
+      "characters": 621,
       "images": 10
-    },
-    {
-      "pdf": "ap-6-12-answers.pdf",
-      "page": 7,
-      "characters": 391,
-      "images": 5
     },
     {
       "pdf": "ap-6-12-questions.pdf",
       "page": 1,
-      "characters": 352,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-12-questions.pdf",
-      "page": 2,
-      "characters": 352,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-12-questions.pdf",
-      "page": 3,
-      "characters": 352,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-12-questions.pdf",
-      "page": 4,
-      "characters": 352,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-12-questions.pdf",
-      "page": 5,
-      "characters": 399,
-      "images": 2
+      "characters": 513,
+      "images": 8
     },
     {
       "pdf": "ap-6-7-answers.pdf",
@@ -1759,56 +907,14 @@
     {
       "pdf": "ap-6-7-answers.pdf",
       "page": 10,
-      "characters": 689,
-      "images": 14
-    },
-    {
-      "pdf": "ap-6-7-answers.pdf",
-      "page": 11,
-      "characters": 736,
-      "images": 10
-    },
-    {
-      "pdf": "ap-6-7-answers.pdf",
-      "page": 12,
-      "characters": 575,
-      "images": 12
-    },
-    {
-      "pdf": "ap-6-7-answers.pdf",
-      "page": 13,
-      "characters": 702,
+      "characters": 644,
       "images": 6
     },
     {
       "pdf": "ap-6-7-questions.pdf",
       "page": 1,
-      "characters": 351,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-7-questions.pdf",
-      "page": 2,
-      "characters": 351,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-7-questions.pdf",
-      "page": 3,
-      "characters": 351,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-7-questions.pdf",
-      "page": 4,
-      "characters": 351,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-7-questions.pdf",
-      "page": 5,
-      "characters": 424,
-      "images": 8
+      "characters": 531,
+      "images": 14
     },
     {
       "pdf": "ap-6-8-answers.pdf",
@@ -1855,50 +961,14 @@
     {
       "pdf": "ap-6-8-answers.pdf",
       "page": 8,
-      "characters": 785,
-      "images": 14
-    },
-    {
-      "pdf": "ap-6-8-answers.pdf",
-      "page": 9,
-      "characters": 796,
-      "images": 12
-    },
-    {
-      "pdf": "ap-6-8-answers.pdf",
-      "page": 10,
-      "characters": 812,
+      "characters": 628,
       "images": 9
     },
     {
       "pdf": "ap-6-8-questions.pdf",
       "page": 1,
-      "characters": 357,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-8-questions.pdf",
-      "page": 2,
-      "characters": 357,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-8-questions.pdf",
-      "page": 3,
-      "characters": 357,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-8-questions.pdf",
-      "page": 4,
-      "characters": 357,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-8-questions.pdf",
-      "page": 5,
-      "characters": 466,
-      "images": 4
+      "characters": 550,
+      "images": 10
     },
     {
       "pdf": "ap-6-9-answers.pdf",
@@ -1927,50 +997,14 @@
     {
       "pdf": "ap-6-9-answers.pdf",
       "page": 5,
-      "characters": 683,
-      "images": 17
-    },
-    {
-      "pdf": "ap-6-9-answers.pdf",
-      "page": 6,
-      "characters": 759,
-      "images": 18
-    },
-    {
-      "pdf": "ap-6-9-answers.pdf",
-      "page": 7,
-      "characters": 426,
-      "images": 5
+      "characters": 827,
+      "images": 13
     },
     {
       "pdf": "ap-6-9-questions.pdf",
       "page": 1,
-      "characters": 443,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-9-questions.pdf",
-      "page": 2,
-      "characters": 443,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-9-questions.pdf",
-      "page": 3,
-      "characters": 446,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-9-questions.pdf",
-      "page": 4,
-      "characters": 443,
-      "images": 2
-    },
-    {
-      "pdf": "ap-6-9-questions.pdf",
-      "page": 5,
-      "characters": 435,
-      "images": 4
+      "characters": 815,
+      "images": 10
     },
     {
       "pdf": "ap-7-5-answers.pdf",
@@ -1993,44 +1027,14 @@
     {
       "pdf": "ap-7-5-answers.pdf",
       "page": 4,
-      "characters": 883,
-      "images": 0
-    },
-    {
-      "pdf": "ap-7-5-answers.pdf",
-      "page": 5,
-      "characters": 688,
+      "characters": 687,
       "images": 9
     },
     {
       "pdf": "ap-7-5-questions.pdf",
       "page": 1,
-      "characters": 458,
-      "images": 2
-    },
-    {
-      "pdf": "ap-7-5-questions.pdf",
-      "page": 2,
-      "characters": 448,
-      "images": 1
-    },
-    {
-      "pdf": "ap-7-5-questions.pdf",
-      "page": 3,
-      "characters": 463,
-      "images": 1
-    },
-    {
-      "pdf": "ap-7-5-questions.pdf",
-      "page": 4,
-      "characters": 458,
-      "images": 2
-    },
-    {
-      "pdf": "ap-7-5-questions.pdf",
-      "page": 5,
-      "characters": 545,
-      "images": 8
+      "characters": 997,
+      "images": 12
     },
     {
       "pdf": "ap-7-6-answers.pdf",
@@ -2053,44 +1057,14 @@
     {
       "pdf": "ap-7-6-answers.pdf",
       "page": 4,
-      "characters": 795,
-      "images": 10
-    },
-    {
-      "pdf": "ap-7-6-answers.pdf",
-      "page": 5,
-      "characters": 774,
+      "characters": 773,
       "images": 15
     },
     {
       "pdf": "ap-7-6-questions.pdf",
       "page": 1,
-      "characters": 520,
-      "images": 3
-    },
-    {
-      "pdf": "ap-7-6-questions.pdf",
-      "page": 2,
-      "characters": 520,
-      "images": 3
-    },
-    {
-      "pdf": "ap-7-6-questions.pdf",
-      "page": 3,
-      "characters": 520,
-      "images": 3
-    },
-    {
-      "pdf": "ap-7-6-questions.pdf",
-      "page": 4,
-      "characters": 520,
-      "images": 3
-    },
-    {
-      "pdf": "ap-7-6-questions.pdf",
-      "page": 5,
-      "characters": 515,
-      "images": 3
+      "characters": 1075,
+      "images": 12
     },
     {
       "pdf": "ap-7-7-answers.pdf",
@@ -2119,50 +1093,20 @@
     {
       "pdf": "ap-7-7-answers.pdf",
       "page": 5,
-      "characters": 785,
-      "images": 10
+      "characters": 790,
+      "images": 11
     },
     {
       "pdf": "ap-7-7-answers.pdf",
       "page": 6,
-      "characters": 822,
-      "images": 8
-    },
-    {
-      "pdf": "ap-7-7-answers.pdf",
-      "page": 7,
-      "characters": 861,
-      "images": 11
+      "characters": 578,
+      "images": 6
     },
     {
       "pdf": "ap-7-7-questions.pdf",
       "page": 1,
-      "characters": 546,
-      "images": 4
-    },
-    {
-      "pdf": "ap-7-7-questions.pdf",
-      "page": 2,
-      "characters": 546,
-      "images": 4
-    },
-    {
-      "pdf": "ap-7-7-questions.pdf",
-      "page": 3,
-      "characters": 546,
-      "images": 4
-    },
-    {
-      "pdf": "ap-7-7-questions.pdf",
-      "page": 4,
-      "characters": 546,
-      "images": 4
-    },
-    {
-      "pdf": "ap-7-7-questions.pdf",
-      "page": 5,
-      "characters": 434,
-      "images": 4
+      "characters": 1070,
+      "images": 16
     },
     {
       "pdf": "ap-7-8-answers.pdf",
@@ -2191,50 +1135,20 @@
     {
       "pdf": "ap-7-8-answers.pdf",
       "page": 5,
-      "characters": 803,
-      "images": 2
+      "characters": 816,
+      "images": 7
     },
     {
       "pdf": "ap-7-8-answers.pdf",
       "page": 6,
-      "characters": 754,
-      "images": 1
-    },
-    {
-      "pdf": "ap-7-8-answers.pdf",
-      "page": 7,
-      "characters": 839,
-      "images": 11
+      "characters": 486,
+      "images": 5
     },
     {
       "pdf": "ap-7-8-questions.pdf",
       "page": 1,
-      "characters": 549,
-      "images": 2
-    },
-    {
-      "pdf": "ap-7-8-questions.pdf",
-      "page": 2,
-      "characters": 549,
-      "images": 2
-    },
-    {
-      "pdf": "ap-7-8-questions.pdf",
-      "page": 3,
-      "characters": 551,
-      "images": 2
-    },
-    {
-      "pdf": "ap-7-8-questions.pdf",
-      "page": 4,
-      "characters": 550,
-      "images": 2
-    },
-    {
-      "pdf": "ap-7-8-questions.pdf",
-      "page": 5,
-      "characters": 529,
-      "images": 6
+      "characters": 1190,
+      "images": 12
     },
     {
       "pdf": "ap-8-11-answers.pdf",
@@ -2257,50 +1171,20 @@
     {
       "pdf": "ap-8-11-answers.pdf",
       "page": 4,
-      "characters": 615,
-      "images": 18
+      "characters": 683,
+      "images": 12
     },
     {
       "pdf": "ap-8-11-answers.pdf",
       "page": 5,
-      "characters": 672,
-      "images": 9
-    },
-    {
-      "pdf": "ap-8-11-answers.pdf",
-      "page": 6,
-      "characters": 644,
-      "images": 6
+      "characters": 413,
+      "images": 3
     },
     {
       "pdf": "ap-8-11-questions.pdf",
       "page": 1,
-      "characters": 494,
-      "images": 8
-    },
-    {
-      "pdf": "ap-8-11-questions.pdf",
-      "page": 2,
-      "characters": 494,
-      "images": 8
-    },
-    {
-      "pdf": "ap-8-11-questions.pdf",
-      "page": 3,
-      "characters": 494,
-      "images": 8
-    },
-    {
-      "pdf": "ap-8-11-questions.pdf",
-      "page": 4,
-      "characters": 494,
-      "images": 8
-    },
-    {
-      "pdf": "ap-8-11-questions.pdf",
-      "page": 5,
-      "characters": 497,
-      "images": 5
+      "characters": 1014,
+      "images": 29
     },
     {
       "pdf": "ap-8-9-answers.pdf",
@@ -2323,50 +1207,20 @@
     {
       "pdf": "ap-8-9-answers.pdf",
       "page": 4,
-      "characters": 725,
-      "images": 21
+      "characters": 679,
+      "images": 13
     },
     {
       "pdf": "ap-8-9-answers.pdf",
       "page": 5,
-      "characters": 782,
-      "images": 15
-    },
-    {
-      "pdf": "ap-8-9-answers.pdf",
-      "page": 6,
-      "characters": 399,
+      "characters": 398,
       "images": 4
     },
     {
       "pdf": "ap-8-9-questions.pdf",
       "page": 1,
-      "characters": 479,
-      "images": 6
-    },
-    {
-      "pdf": "ap-8-9-questions.pdf",
-      "page": 2,
-      "characters": 479,
-      "images": 6
-    },
-    {
-      "pdf": "ap-8-9-questions.pdf",
-      "page": 3,
-      "characters": 479,
-      "images": 6
-    },
-    {
-      "pdf": "ap-8-9-questions.pdf",
-      "page": 4,
-      "characters": 479,
-      "images": 6
-    },
-    {
-      "pdf": "ap-8-9-questions.pdf",
-      "page": 5,
-      "characters": 509,
-      "images": 6
+      "characters": 988,
+      "images": 24
     },
     {
       "pdf": "ap-9-1-answers.pdf",
@@ -2389,50 +1243,20 @@
     {
       "pdf": "ap-9-1-answers.pdf",
       "page": 4,
-      "characters": 753,
-      "images": 17
+      "characters": 804,
+      "images": 16
     },
     {
       "pdf": "ap-9-1-answers.pdf",
       "page": 5,
-      "characters": 700,
-      "images": 11
-    },
-    {
-      "pdf": "ap-9-1-answers.pdf",
-      "page": 6,
-      "characters": 606,
-      "images": 10
+      "characters": 420,
+      "images": 4
     },
     {
       "pdf": "ap-9-1-questions.pdf",
       "page": 1,
-      "characters": 422,
-      "images": 5
-    },
-    {
-      "pdf": "ap-9-1-questions.pdf",
-      "page": 2,
-      "characters": 422,
-      "images": 5
-    },
-    {
-      "pdf": "ap-9-1-questions.pdf",
-      "page": 3,
-      "characters": 422,
-      "images": 5
-    },
-    {
-      "pdf": "ap-9-1-questions.pdf",
-      "page": 4,
-      "characters": 422,
-      "images": 5
-    },
-    {
-      "pdf": "ap-9-1-questions.pdf",
-      "page": 5,
-      "characters": 488,
-      "images": 5
+      "characters": 755,
+      "images": 20
     },
     {
       "pdf": "ap-9-2-answers.pdf",
@@ -2479,56 +1303,14 @@
     {
       "pdf": "ap-9-2-answers.pdf",
       "page": 8,
-      "characters": 548,
-      "images": 14
-    },
-    {
-      "pdf": "ap-9-2-answers.pdf",
-      "page": 9,
-      "characters": 545,
-      "images": 14
-    },
-    {
-      "pdf": "ap-9-2-answers.pdf",
-      "page": 10,
-      "characters": 648,
-      "images": 12
-    },
-    {
-      "pdf": "ap-9-2-answers.pdf",
-      "page": 11,
-      "characters": 486,
-      "images": 7
+      "characters": 925,
+      "images": 15
     },
     {
       "pdf": "ap-9-2-questions.pdf",
       "page": 1,
-      "characters": 368,
-      "images": 6
-    },
-    {
-      "pdf": "ap-9-2-questions.pdf",
-      "page": 2,
-      "characters": 368,
-      "images": 6
-    },
-    {
-      "pdf": "ap-9-2-questions.pdf",
-      "page": 3,
-      "characters": 368,
-      "images": 6
-    },
-    {
-      "pdf": "ap-9-2-questions.pdf",
-      "page": 4,
-      "characters": 368,
-      "images": 6
-    },
-    {
-      "pdf": "ap-9-2-questions.pdf",
-      "page": 5,
-      "characters": 400,
-      "images": 8
+      "characters": 549,
+      "images": 26
     },
     {
       "pdf": "ap-9-7-answers.pdf",
@@ -2551,49 +1333,19 @@
     {
       "pdf": "ap-9-7-answers.pdf",
       "page": 4,
-      "characters": 974,
-      "images": 12
-    },
-    {
-      "pdf": "ap-9-7-answers.pdf",
-      "page": 5,
-      "characters": 839,
+      "characters": 878,
       "images": 11
     },
     {
       "pdf": "ap-9-7-answers.pdf",
-      "page": 6,
-      "characters": 466,
+      "page": 5,
+      "characters": 465,
       "images": 2
     },
     {
       "pdf": "ap-9-7-questions.pdf",
       "page": 1,
-      "characters": 450,
-      "images": 0
-    },
-    {
-      "pdf": "ap-9-7-questions.pdf",
-      "page": 2,
-      "characters": 452,
-      "images": 0
-    },
-    {
-      "pdf": "ap-9-7-questions.pdf",
-      "page": 3,
-      "characters": 450,
-      "images": 0
-    },
-    {
-      "pdf": "ap-9-7-questions.pdf",
-      "page": 4,
-      "characters": 452,
-      "images": 0
-    },
-    {
-      "pdf": "ap-9-7-questions.pdf",
-      "page": 5,
-      "characters": 449,
+      "characters": 824,
       "images": 6
     },
     {
@@ -2617,43 +1369,13 @@
     {
       "pdf": "ap-9-8-answers.pdf",
       "page": 4,
-      "characters": 726,
-      "images": 10
-    },
-    {
-      "pdf": "ap-9-8-answers.pdf",
-      "page": 5,
-      "characters": 770,
+      "characters": 769,
       "images": 5
     },
     {
       "pdf": "ap-9-8-questions.pdf",
       "page": 1,
-      "characters": 475,
-      "images": 0
-    },
-    {
-      "pdf": "ap-9-8-questions.pdf",
-      "page": 2,
-      "characters": 487,
-      "images": 0
-    },
-    {
-      "pdf": "ap-9-8-questions.pdf",
-      "page": 3,
-      "characters": 427,
-      "images": 0
-    },
-    {
-      "pdf": "ap-9-8-questions.pdf",
-      "page": 4,
-      "characters": 474,
-      "images": 0
-    },
-    {
-      "pdf": "ap-9-8-questions.pdf",
-      "page": 5,
-      "characters": 456,
+      "characters": 882,
       "images": 5
     }
   ]

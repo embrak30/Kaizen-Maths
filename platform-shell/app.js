@@ -30674,7 +30674,7 @@ function updateRouteSeo(parts) {
     },
     "ap-calculus": {
       title: routeTitle("AP Calculus topic worksheets"),
-      description: "Browse AP Calculus AB and BC by syllabus topic. Download ten-question worksheets and separate answers, worked solutions and suggested marks."
+      description: "Browse AP Calculus AB and BC by syllabus topic. Download eight-question, one-page worksheets and separate answers, worked solutions and suggested marks."
     },
     "practice-packs": {
       title: routeTitle("Starter & Exit Ticket Packs"),

@@ -23,27 +23,33 @@ def header(c,pack,kind,page):
  label(c,'Original topic practice | Not an official College Board paper',L,24,8,color=MUTED);c.drawRightString(W-L,24,str(page));return y-28
 
 def draw_questions(pack,path):
- c=canvas.Canvas(str(path),pagesize=(W,H),invariant=1);pages=0;pageplan=[];pending=[];used=0
- for q in pack['questions']:
-  items=b.flows(q['print']['question'],WIDTH,12.5,diagram_max=155);hh=b.height(items);space=max(265,hh+105)+28
-  if space>590:raise ValueError(f"Question {pack['id']}/{q['number']} too long: {hh}")
-  if pending and used+space>590:pageplan.append(pending);pending=[];used=0
-  pending.append((q,items,space));used+=space
- if pending:pageplan.append(pending)
- for page in pageplan:
-  pages+=1;y=header(c,pack,'Questions | Ten main questions',pages)
-  label(c,'Name: ___________________________    Date: ______________',L,y-4,10,color=MUTED)
-  y=b.short_text(c,'Show your working and justify your conclusions. Exact answers are accepted; a calculator is optional.',L,y-18,WIDTH,10,color=MUTED)-17
-  available=y-55;slot=available/len(page)
-  for j,(q,items,_) in enumerate(page):
-   top=y-j*slot;label(c,str(q['number']).zfill(2),L,top-4,12,'SansBold',TEAL);c.setFont('Sans',9);c.drawRightString(W-L,top-4,str(q['marks'])+' marks')
-   bottom=b.draw_flows(c,items,L,top-18,WIDTH)
-   if bottom<top-slot+75:raise ValueError('Working space exhausted '+pack['id']+'/'+str(q['number']))
-   c.setLineWidth(.4);c.setStrokeColor(HexColor('#e1e8e5'))
-   for liney in range(int(top-slot+20),int(bottom-10),21):c.line(L,liney,W-L,liney)
-   if j<len(page)-1:c.setStrokeColor(HexColor(LINE));c.line(L,top-slot+5,W-L,top-slot+5)
-  c.showPage()
- c.save();return pages
+ # A measured two-column sheet: readable type, variable row heights, no shrink-to-fit.
+ assert len(pack['questions'])==8
+ c=canvas.Canvas(str(path),pagesize=(W,H),invariant=1)
+ y=header(c,pack,'Eight questions | One-page practice',1)
+ label(c,'Name: ___________________________    Date: ______________',L,y-2,9.5,color=MUTED)
+ y=b.short_text(c,'Answer on separate paper. Show your working and reasoning; include units where appropriate.',L,y-16,WIDTH,9.5,color=MUTED)-16
+ gap=24;cw=(WIDTH-gap)/2;rows=[]
+ for i in range(0,8,2):
+  row=[]
+  for q in pack['questions'][i:i+2]:
+   items=b.flows(q['print']['question'],cw,11,diagram_max=85)
+   row.append((q,items,b.height(items)+27))
+  rows.append(row)
+ heights=[max(110,max(v[2] for v in row)) for row in rows]
+ available=y-52
+ if sum(heights)>available:raise ValueError(f"One-page overflow {pack['id']}: {sum(heights):.1f} > {available:.1f}; edit the prompts, not the font")
+ extra=(available-sum(heights))/4
+ for row,h in zip(rows,heights):
+  h+=extra
+  for col,(q,items,_) in enumerate(row):
+   x=L+col*(cw+gap);label(c,str(q['number']).zfill(2),x,y,11,'SansBold',TEAL)
+   c.setFont('Sans',8.5);c.drawRightString(x+cw,y,str(q['marks'])+' marks')
+   bottom=b.draw_flows(c,items,x,y-15,cw)
+   if bottom<y-h+9:raise ValueError('Question overlaps next row '+pack['id'])
+   c.setStrokeColor(HexColor(LINE));c.setLineWidth(.45);c.line(x,y-h+7,x+cw,y-h+7)
+  y-=h
+ c.showPage();c.save();return 1
 
 def teacher_chunks(q):
  parts=[('Answer',q['print']['answer'])]
@@ -86,16 +92,12 @@ def validate(path):
  return len(r.pages)
 
 if __name__=='__main__':
- source=json.loads((ROOT/'tmp/pdfs/ap-library-prepared.json').read_text());assert not source['renderErrors'];published={};totalpages=0
+ source=json.loads((ROOT/'tmp/pdfs/ap-library-prepared.json').read_text());assert not source['renderErrors'];assert len(source['packs'])==38;published={};totalpages=0
+ for old in OUT.glob('*-supported.pdf'):old.unlink()
  for pack in source['packs']:
   stem='ap-'+pack['id'].replace('.','-');qp=OUT/(stem+'-questions.pdf');ap=OUT/(stem+'-answers.pdf')
   qpages=draw_questions(pack,qp);apages=draw_answers(pack,ap);validate(qp);validate(ap);totalpages+=qpages+apages
-  published[pack['id']]={'questions':qp.relative_to(ROOT).as_posix(),'answers':ap.relative_to(ROOT).as_posix(),'questionPages':qpages,'answerPages':apages,'marks':sum(q['marks'] for q in pack['questions']),'questionCount':10,'calculator':'Calculator optional','revision':'2026-11-18.1','preview':f'assets/ap-calculus/previews/{stem}.png'}
- for id in ['1.1','4.5']:
-  stem='ap-'+id.replace('.','-');src=ROOT/'output/pdf'/('ap-calculus-'+id.replace('.','-')+'-pilot.pdf');qp=OUT/(stem+'-questions.pdf');ap=OUT/(stem+'-answers.pdf');sp=OUT/(stem+'-supported.pdf')
-  qpages=subset(src,qp,0,5);apages=subset(src,ap,10,len(PdfReader(src).pages));subset(src,sp,5,10)
-  marks=28 if id=='1.1' else 40;totalpages+=qpages+apages+5
-  published[id]={'questions':qp.relative_to(ROOT).as_posix(),'answers':ap.relative_to(ROOT).as_posix(),'supported':sp.relative_to(ROOT).as_posix(),'questionPages':qpages,'answerPages':apages,'marks':marks,'questionCount':10,'calculator':'No calculator required','revision':'2026-11-18.1','preview':f'assets/ap-calculus/previews/{stem}.png'}
+  published[pack['id']]={'questions':qp.relative_to(ROOT).as_posix(),'answers':ap.relative_to(ROOT).as_posix(),'questionPages':qpages,'answerPages':apages,'marks':sum(q['marks'] for q in pack['questions']),'questionCount':8,'calculator':'Calculator optional','revision':'2026-11-18.2','preview':f'assets/ap-calculus/previews/{stem}.png'}
  mapping=json.loads((ROOT/'output/ap-calculus-pilot/topic-map.json').read_text());toolkeys=mapping['toolDirectory'];units=[]
  for unit in mapping['units']:
   topics=[]
@@ -103,7 +105,7 @@ if __name__=='__main__':
    related=[]
    for key,(_,slug) in toolkeys.items():
     if re.search(r'\b'+key+r'\b',t['basis']):related.append(slug)
-   topics.append({'id':t['code'],'title':t['title'],'scope':t['scope'],'objective':'Practise '+t['title'].lower()+' through calculation, interpretation and mathematical reasoning.','tools':related,'developmentNote':'A dedicated ten-question set and its worked marking scheme are being prepared for this topic.','pack':published.get(t['code'])})
+   topics.append({'id':t['code'],'title':t['title'],'scope':t['scope'],'objective':'Practise '+t['title'].lower()+' through calculation, interpretation and mathematical reasoning.','tools':related,'developmentNote':'A dedicated eight-question set and its worked marking scheme are being prepared for this topic.','pack':published.get(t['code'])})
   units.append({'number':unit['n'],'title':unit['title'],'topics':topics})
- data={'version':1,'revision':'2026-11-18.1','units':units};(DATA/'catalog.json').write_text(json.dumps(data,indent=2)+'\n');(ROOT/'assets/site/ap-calculus-data.js').write_text('window.KaizenAPCalculusData = '+json.dumps(data,ensure_ascii=False,separators=(',',':'))+';\n')
+ data={'version':1,'revision':'2026-11-18.2','units':units};(DATA/'catalog.json').write_text(json.dumps(data,indent=2)+'\n');(ROOT/'assets/site/ap-calculus-data.js').write_text('window.KaizenAPCalculusData = '+json.dumps(data,ensure_ascii=False,separators=(',',':'))+';\n')
  manifests={id:{**p,'questionHash':hashlib.sha256((ROOT/p['questions']).read_bytes()).hexdigest(),'answerHash':hashlib.sha256((ROOT/p['answers']).read_bytes()).hexdigest()} for id,p in published.items()};(DATA/'pdf-manifest.json').write_text(json.dumps(manifests,indent=2)+'\n');print(f'Built {len(published)} packs, {totalpages} PDF pages, {len(list(OUT.glob("*.pdf")))} PDF files.')

@@ -18,3 +18,5 @@ __pycache__/
 /tmp/pdfs/ap-library-assets/
 /tmp/pdfs/ap-library-prepared.json
 /tmp/pdfs/ap-library-errors.json
+
+/tmp/pdfs/ap-one-page-source.json

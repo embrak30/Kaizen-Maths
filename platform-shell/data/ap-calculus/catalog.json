@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": "2026-11-18.1",
+  "revision": "2026-11-18.2",
   "units": [
     {
       "number": 1,
@@ -14,17 +14,16 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-1-1-questions.pdf",
             "answers": "assets/ap-calculus/ap-1-1-answers.pdf",
-            "supported": "assets/ap-calculus/ap-1-1-supported.pdf",
-            "questionPages": 5,
-            "answerPages": 6,
-            "marks": 28,
-            "questionCount": 10,
-            "calculator": "No calculator required",
-            "revision": "2026-11-18.1",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 23,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-1-1.png"
           }
         },
@@ -36,7 +35,7 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -47,7 +46,7 @@
           "tools": [
             "graph-transformations-curve-sketching"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -58,16 +57,16 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-1-4-questions.pdf",
             "answers": "assets/ap-calculus/ap-1-4-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 28,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-1-4.png"
           }
         },
@@ -79,16 +78,16 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-1-5-questions.pdf",
             "answers": "assets/ap-calculus/ap-1-5-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 29,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 23,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-1-5.png"
           }
         },
@@ -100,16 +99,16 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-1-6-questions.pdf",
             "answers": "assets/ap-calculus/ap-1-6-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 7,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 6,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-1-6.png"
           }
         },
@@ -121,7 +120,7 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -130,7 +129,7 @@
           "scope": "AB + BC",
           "objective": "Practise squeeze theorem through calculation, interpretation and mathematical reasoning.",
           "tools": [],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -142,7 +141,7 @@
             "limits-first-principles",
             "graph-transformations-curve-sketching"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -153,7 +152,7 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -164,7 +163,7 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -175,7 +174,7 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -186,16 +185,16 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-1-13-questions.pdf",
             "answers": "assets/ap-calculus/ap-1-13-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 29,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 23,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-1-13.png"
           }
         },
@@ -208,7 +207,7 @@
             "limits-first-principles",
             "graph-transformations-curve-sketching"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -219,16 +218,16 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-1-15-questions.pdf",
             "answers": "assets/ap-calculus/ap-1-15-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 6,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 5,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-1-15.png"
           }
         },
@@ -240,7 +239,7 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         }
       ]
@@ -258,7 +257,7 @@
             "limits-first-principles",
             "differentiation-polynomials"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -269,16 +268,16 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-2-2-questions.pdf",
             "answers": "assets/ap-calculus/ap-2-2-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 6,
-            "marks": 29,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 5,
+            "marks": 23,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-2-2.png"
           }
         },
@@ -290,7 +289,7 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -301,7 +300,7 @@
           "tools": [
             "limits-first-principles"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -312,16 +311,16 @@
           "tools": [
             "differentiation-polynomials"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-2-5-questions.pdf",
             "answers": "assets/ap-calculus/ap-2-5-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 4,
-            "marks": 21,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 3,
+            "marks": 17,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-2-5.png"
           }
         },
@@ -333,16 +332,16 @@
           "tools": [
             "differentiation-polynomials"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-2-6-questions.pdf",
             "answers": "assets/ap-calculus/ap-2-6-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 4,
-            "marks": 21,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 3,
+            "marks": 17,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-2-6.png"
           }
         },
@@ -355,16 +354,16 @@
             "differentiation-rules",
             "trig-differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-2-7-questions.pdf",
             "answers": "assets/ap-calculus/ap-2-7-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 4,
-            "marks": 21,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 3,
+            "marks": 17,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-2-7.png"
           }
         },
@@ -376,16 +375,16 @@
           "tools": [
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-2-8-questions.pdf",
             "answers": "assets/ap-calculus/ap-2-8-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 22,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 18,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-2-8.png"
           }
         },
@@ -397,16 +396,16 @@
           "tools": [
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-2-9-questions.pdf",
             "answers": "assets/ap-calculus/ap-2-9-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 22,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 18,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-2-9.png"
           }
         },
@@ -418,16 +417,16 @@
           "tools": [
             "trig-differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-2-10-questions.pdf",
             "answers": "assets/ap-calculus/ap-2-10-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 4,
-            "marks": 22,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 3,
+            "marks": 18,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-2-10.png"
           }
         }
@@ -446,16 +445,16 @@
             "differentiation-rules",
             "trig-differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-3-1-questions.pdf",
             "answers": "assets/ap-calculus/ap-3-1-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 6,
-            "marks": 29,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 5,
+            "marks": 23,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-3-1.png"
           }
         },
@@ -467,16 +466,16 @@
           "tools": [
             "advanced-differentiation"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-3-2-questions.pdf",
             "answers": "assets/ap-calculus/ap-3-2-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 10,
-            "marks": 29,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 8,
+            "marks": 23,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-3-2.png"
           }
         },
@@ -489,7 +488,7 @@
             "differentiation-rules",
             "inverse-trig-differentiation"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -500,16 +499,16 @@
           "tools": [
             "inverse-trig-differentiation"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-3-4-questions.pdf",
             "answers": "assets/ap-calculus/ap-3-4-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 6,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 5,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-3-4.png"
           }
         },
@@ -522,7 +521,7 @@
             "differentiation-rules",
             "advanced-differentiation"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -533,16 +532,16 @@
           "tools": [
             "advanced-differentiation"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-3-6-questions.pdf",
             "answers": "assets/ap-calculus/ap-3-6-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 13,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 10,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-3-6.png"
           }
         }
@@ -560,7 +559,7 @@
           "tools": [
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -572,7 +571,7 @@
             "differentiation-polynomials",
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -583,7 +582,7 @@
           "tools": [
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -594,7 +593,7 @@
           "tools": [
             "advanced-differentiation"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -605,17 +604,16 @@
           "tools": [
             "advanced-differentiation"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-4-5-questions.pdf",
             "answers": "assets/ap-calculus/ap-4-5-answers.pdf",
-            "supported": "assets/ap-calculus/ap-4-5-supported.pdf",
-            "questionPages": 5,
-            "answerPages": 8,
-            "marks": 40,
-            "questionCount": 10,
-            "calculator": "No calculator required",
-            "revision": "2026-11-18.1",
+            "questionPages": 1,
+            "answerPages": 5,
+            "marks": 31,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-4-5.png"
           }
         },
@@ -628,7 +626,7 @@
             "differentiation-polynomials",
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -640,7 +638,7 @@
             "limits-first-principles",
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         }
       ]
@@ -658,7 +656,7 @@
             "limits-first-principles",
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -669,7 +667,7 @@
           "tools": [
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -681,7 +679,7 @@
             "differentiation-rules",
             "graph-transformations-curve-sketching"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -692,7 +690,7 @@
           "tools": [
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -703,7 +701,7 @@
           "tools": [
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -714,7 +712,7 @@
           "tools": [
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -726,7 +724,7 @@
             "differentiation-rules",
             "advanced-differentiation"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -737,7 +735,7 @@
           "tools": [
             "graph-transformations-curve-sketching"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -749,7 +747,7 @@
             "differentiation-rules",
             "graph-transformations-curve-sketching"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -760,7 +758,7 @@
           "tools": [
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -771,7 +769,7 @@
           "tools": [
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -782,7 +780,7 @@
           "tools": [
             "advanced-differentiation"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         }
       ]
@@ -799,7 +797,7 @@
           "tools": [
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -811,7 +809,7 @@
             "integration",
             "numerical-methods"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -822,7 +820,7 @@
           "tools": [
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -834,7 +832,7 @@
             "differentiation-rules",
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -845,7 +843,7 @@
           "tools": [
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -856,7 +854,7 @@
           "tools": [
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -867,16 +865,16 @@
           "tools": [
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-6-7-questions.pdf",
             "answers": "assets/ap-calculus/ap-6-7-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 13,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 10,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-6-7.png"
           }
         },
@@ -888,16 +886,16 @@
           "tools": [
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-6-8-questions.pdf",
             "answers": "assets/ap-calculus/ap-6-8-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 10,
-            "marks": 29,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 8,
+            "marks": 23,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-6-8.png"
           }
         },
@@ -909,16 +907,16 @@
           "tools": [
             "advanced-integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-6-9-questions.pdf",
             "answers": "assets/ap-calculus/ap-6-9-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 7,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 5,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-6-9.png"
           }
         },
@@ -930,16 +928,16 @@
           "tools": [
             "integration-algebraic-fractions"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-6-10-questions.pdf",
             "answers": "assets/ap-calculus/ap-6-10-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-6-10.png"
           }
         },
@@ -951,16 +949,16 @@
           "tools": [
             "advanced-integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-6-11-questions.pdf",
             "answers": "assets/ap-calculus/ap-6-11-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 7,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 6,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-6-11.png"
           }
         },
@@ -972,16 +970,16 @@
           "tools": [
             "integration-algebraic-fractions"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-6-12-questions.pdf",
             "answers": "assets/ap-calculus/ap-6-12-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 7,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 5,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-6-12.png"
           }
         },
@@ -994,7 +992,7 @@
             "limits-first-principles",
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1006,7 +1004,7 @@
             "integration",
             "advanced-integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         }
       ]
@@ -1023,7 +1021,7 @@
           "tools": [
             "differential-equations"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1035,7 +1033,7 @@
             "differentiation-rules",
             "differential-equations"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1046,7 +1044,7 @@
           "tools": [
             "differential-equations"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1057,7 +1055,7 @@
           "tools": [
             "differential-equations"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1068,16 +1066,16 @@
           "tools": [
             "numerical-methods"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-7-5-questions.pdf",
             "answers": "assets/ap-calculus/ap-7-5-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 29,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 23,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-7-5.png"
           }
         },
@@ -1089,16 +1087,16 @@
           "tools": [
             "differential-equations"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-7-6-questions.pdf",
             "answers": "assets/ap-calculus/ap-7-6-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-7-6.png"
           }
         },
@@ -1110,16 +1108,16 @@
           "tools": [
             "differential-equations"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-7-7-questions.pdf",
             "answers": "assets/ap-calculus/ap-7-7-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 7,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 6,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-7-7.png"
           }
         },
@@ -1131,16 +1129,16 @@
           "tools": [
             "differential-equations"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-7-8-questions.pdf",
             "answers": "assets/ap-calculus/ap-7-8-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 7,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 6,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-7-8.png"
           }
         },
@@ -1152,7 +1150,7 @@
           "tools": [
             "differential-equations"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         }
       ]
@@ -1169,7 +1167,7 @@
           "tools": [
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1181,7 +1179,7 @@
             "differentiation-rules",
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1192,7 +1190,7 @@
           "tools": [
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1204,7 +1202,7 @@
             "integration",
             "cross-section-solids"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1216,7 +1214,7 @@
             "integration",
             "cross-section-solids"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1228,7 +1226,7 @@
             "integration",
             "cross-section-solids"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1240,7 +1238,7 @@
             "integration",
             "cross-section-solids"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1252,7 +1250,7 @@
             "integration",
             "cross-section-solids"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1263,16 +1261,16 @@
           "tools": [
             "volumes-of-revolution"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-8-9-questions.pdf",
             "answers": "assets/ap-calculus/ap-8-9-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 6,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 5,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-8-9.png"
           }
         },
@@ -1285,7 +1283,7 @@
             "volumes-of-revolution",
             "revolution-explorer"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1296,16 +1294,16 @@
           "tools": [
             "volumes-of-revolution"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-8-11-questions.pdf",
             "answers": "assets/ap-calculus/ap-8-11-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 6,
-            "marks": 29,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 5,
+            "marks": 23,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-8-11.png"
           }
         },
@@ -1318,7 +1316,7 @@
             "volumes-of-revolution",
             "revolution-explorer"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1330,7 +1328,7 @@
             "advanced-differentiation",
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         }
       ]
@@ -1347,16 +1345,16 @@
           "tools": [
             "advanced-differentiation"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-9-1-questions.pdf",
             "answers": "assets/ap-calculus/ap-9-1-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 6,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 5,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-9-1.png"
           }
         },
@@ -1368,16 +1366,16 @@
           "tools": [
             "advanced-differentiation"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-9-2-questions.pdf",
             "answers": "assets/ap-calculus/ap-9-2-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 11,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 8,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-9-2.png"
           }
         },
@@ -1390,7 +1388,7 @@
             "advanced-differentiation",
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1401,7 +1399,7 @@
           "tools": [
             "differentiation-rules"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1412,7 +1410,7 @@
           "tools": [
             "integration"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1423,7 +1421,7 @@
           "tools": [
             "advanced-differentiation"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1434,16 +1432,16 @@
           "tools": [
             "polar-coordinates"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-9-7-questions.pdf",
             "answers": "assets/ap-calculus/ap-9-7-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 6,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 5,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-9-7.png"
           }
         },
@@ -1455,16 +1453,16 @@
           "tools": [
             "polar-coordinates"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-9-8-questions.pdf",
             "answers": "assets/ap-calculus/ap-9-8-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 29,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 23,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-9-8.png"
           }
         },
@@ -1476,7 +1474,7 @@
           "tools": [
             "polar-coordinates"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         }
       ]
@@ -1493,7 +1491,7 @@
           "tools": [
             "sequences-series"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1504,16 +1502,16 @@
           "tools": [
             "sequences-series"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-10-2-questions.pdf",
             "answers": "assets/ap-calculus/ap-10-2-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 29,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 23,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-10-2.png"
           }
         },
@@ -1525,7 +1523,7 @@
           "tools": [
             "sequences-series"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1537,7 +1535,7 @@
             "integration",
             "sequences-series"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1548,7 +1546,7 @@
           "tools": [
             "sequences-series"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1559,7 +1557,7 @@
           "tools": [
             "sequences-series"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1570,7 +1568,7 @@
           "tools": [
             "sequences-series"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1581,7 +1579,7 @@
           "tools": [
             "sequences-series"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1592,7 +1590,7 @@
           "tools": [
             "sequences-series"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1603,7 +1601,7 @@
           "tools": [
             "sequences-series"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1614,16 +1612,16 @@
           "tools": [
             "series-expansions"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-10-11-questions.pdf",
             "answers": "assets/ap-calculus/ap-10-11-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-10-11.png"
           }
         },
@@ -1635,7 +1633,7 @@
           "tools": [
             "series-expansions"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1646,7 +1644,7 @@
           "tools": [
             "series-expansions"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": null
         },
         {
@@ -1657,16 +1655,16 @@
           "tools": [
             "series-expansions"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-10-14-questions.pdf",
             "answers": "assets/ap-calculus/ap-10-14-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 29,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 23,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-10-14.png"
           }
         },
@@ -1678,16 +1676,16 @@
           "tools": [
             "series-expansions"
           ],
-          "developmentNote": "A dedicated ten-question set and its worked marking scheme are being prepared for this topic.",
+          "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-10-15-questions.pdf",
             "answers": "assets/ap-calculus/ap-10-15-answers.pdf",
-            "questionPages": 5,
-            "answerPages": 5,
-            "marks": 30,
-            "questionCount": 10,
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 24,
+            "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.1",
+            "revision": "2026-11-18.2",
             "preview": "assets/ap-calculus/previews/ap-10-15.png"
           }
         }

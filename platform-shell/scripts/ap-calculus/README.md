@@ -2,7 +2,7 @@
 
 `#/ap-calculus` lists all 111 numbered topics from the supplied Course at a Glance. The AB filter shows the 81 shared topics; BC includes those plus 30 BC-only topics. Scope is topic-level; shared topics can include additional BC essential knowledge.
 
-The first batch supplies 38 fixed ten-question packs: 27 shared topics and 11 BC-only topics. Each topic has separate question and teacher PDFs; the two earlier pilots also have supported question sheets. The other 73 topics have honest development pages with no placeholder download links. This is a static resource library, not an on-demand random worksheet generator or official AP exam paper.
+The first batch supplies 38 fixed eight-question, one-page packs: 27 shared topics and 11 BC-only topics. Each topic has separate question and teacher PDFs. The other 73 topics have honest development pages with no placeholder download links. This is a static resource library, not an on-demand random worksheet generator or official AP exam paper.
 
 ## Files
 
@@ -20,9 +20,9 @@ Teacher files preserve the equation fields from generator steps, not just the ex
 Use the PDF skill's authoring marker before producing new PDFs. Node dependencies are the existing `scripts/pack-library/package.json` dependencies (`jsdom`, `mathjax-full`, `mathjs`). For this build they were installed under `/tmp/kaizen-ap-runtime/node_modules`; set `KAIZEN_PACK_NODE_MODULES` to the actual installed location. Python requires reportlab, pypdf and Pillow; PDF QA additionally uses pdfplumber and Poppler. The existing project print helpers use the configured bundled fonts.
 
 1. Run `node scripts/ap-calculus/export.cjs` to freeze questions.
-2. Run `node scripts/ap-calculus/verify-maths.cjs` for independent checks where the notation can be parsed. Its report distinguishes automatically checked questions from those outside the parser; this is not a full formal proof of every answer.
-3. Run `scripts/pack-library/prepare.cjs` with `KAIZEN_PACK_SOURCE=data/ap-calculus/questions.json`, `KAIZEN_PACK_ASSETS=tmp/pdfs/ap-library-assets`, `KAIZEN_PACK_OUTPUT=tmp/pdfs/ap-library-prepared.json`, and `KAIZEN_PACK_ERRORS=tmp/pdfs/ap-library-errors.json`.
-4. Run `python scripts/ap-calculus/build.py`. Any rendering error stops the build. This creates 78 PDFs, including two optional supported files, and the catalogues. It splits existing pilot pages; it does not alter their contents.
+2. Run `python scripts/ap-calculus/one-page-source.py` to select six procedure and two reasoning questions from each ten-question bank, and adapt the two pilots. This writes `data/ap-calculus/print-questions.json`; the full source banks remain intact. Then run `node scripts/ap-calculus/verify-maths.cjs` for independent checks where the notation can be parsed. Its report distinguishes automatically checked questions from those outside the parser; this is not a full formal proof of every answer.
+3. Run `scripts/pack-library/prepare.cjs` with `KAIZEN_PACK_SOURCE=data/ap-calculus/print-questions.json`, `KAIZEN_PACK_ASSETS=tmp/pdfs/ap-library-assets`, `KAIZEN_PACK_OUTPUT=tmp/pdfs/ap-library-prepared.json`, and `KAIZEN_PACK_ERRORS=tmp/pdfs/ap-library-errors.json`.
+4. Run `python scripts/ap-calculus/build.py`. Any rendering error stops the build. This creates 76 PDFs, and the catalogues. All question PDFs must fit one A4 side at 11pt body size. The build stops on overflow rather than shrinking the font. Teacher PDFs are rebuilt with matching numbers and marks. The earlier supported pilot variants are retired from this library to avoid mismatched numbering; the original pilot review files remain intact.
 5. Run `python scripts/ap-calculus/qa.py`. It renders every page, validates bounds and notation, verifies pupil/teacher separation and hashes, and generates first-page previews. Contact sheets go to `/tmp/kaizen-ap-pdf-qa`; visually review them and inspect representative dense equations at full size.
 6. Run `node tests/ap-calculus.test.cjs` with `KAIZEN_MARKETING_NODE_MODULES` set to the jsdom directory. Run existing marketing and curriculum tests after application navigation changes.
 7. Run `scripts/marketing/build.cjs` to update shared-shell public pages when script includes change, then rerun the marketing test.
