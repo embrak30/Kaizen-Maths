@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": "2026-11-18.2",
+  "revision": "2026-11-18.3",
   "units": [
     {
       "number": 1,
@@ -23,7 +23,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-1-1.png"
           }
         },
@@ -66,7 +66,7 @@
             "marks": 22,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-1-4.png"
           }
         },
@@ -87,7 +87,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-1-5.png"
           }
         },
@@ -108,7 +108,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-1-6.png"
           }
         },
@@ -194,7 +194,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-1-13.png"
           }
         },
@@ -227,7 +227,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-1-15.png"
           }
         },
@@ -277,7 +277,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-2-2.png"
           }
         },
@@ -320,7 +320,7 @@
             "marks": 17,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-2-5.png"
           }
         },
@@ -341,7 +341,7 @@
             "marks": 17,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-2-6.png"
           }
         },
@@ -363,7 +363,7 @@
             "marks": 17,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-2-7.png"
           }
         },
@@ -384,7 +384,7 @@
             "marks": 18,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-2-8.png"
           }
         },
@@ -405,7 +405,7 @@
             "marks": 18,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-2-9.png"
           }
         },
@@ -426,7 +426,7 @@
             "marks": 18,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-2-10.png"
           }
         }
@@ -454,7 +454,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-3-1.png"
           }
         },
@@ -475,7 +475,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-3-2.png"
           }
         },
@@ -508,7 +508,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-3-4.png"
           }
         },
@@ -541,7 +541,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-3-6.png"
           }
         }
@@ -613,7 +613,7 @@
             "marks": 31,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-4-5.png"
           }
         },
@@ -874,7 +874,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-6-7.png"
           }
         },
@@ -895,7 +895,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-6-8.png"
           }
         },
@@ -916,7 +916,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-6-9.png"
           }
         },
@@ -937,7 +937,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-6-10.png"
           }
         },
@@ -958,7 +958,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-6-11.png"
           }
         },
@@ -979,7 +979,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-6-12.png"
           }
         },
@@ -1075,7 +1075,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-7-5.png"
           }
         },
@@ -1096,7 +1096,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-7-6.png"
           }
         },
@@ -1117,7 +1117,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-7-7.png"
           }
         },
@@ -1138,7 +1138,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-7-8.png"
           }
         },
@@ -1270,7 +1270,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-8-9.png"
           }
         },
@@ -1303,7 +1303,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-8-11.png"
           }
         },
@@ -1354,7 +1354,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-9-1.png"
           }
         },
@@ -1375,7 +1375,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-9-2.png"
           }
         },
@@ -1441,7 +1441,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-9-7.png"
           }
         },
@@ -1462,7 +1462,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-9-8.png"
           }
         },
@@ -1511,7 +1511,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-10-2.png"
           }
         },
@@ -1621,7 +1621,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-10-11.png"
           }
         },
@@ -1664,7 +1664,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-10-14.png"
           }
         },
@@ -1685,7 +1685,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.2",
+            "revision": "2026-11-18.3",
             "preview": "assets/ap-calculus/previews/ap-10-15.png"
           }
         }

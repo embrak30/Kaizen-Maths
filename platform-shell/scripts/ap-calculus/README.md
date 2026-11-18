@@ -2,7 +2,7 @@
 
 `#/ap-calculus` lists all 111 numbered topics from the supplied Course at a Glance. The AB filter shows the 81 shared topics; BC includes those plus 30 BC-only topics. Scope is topic-level; shared topics can include additional BC essential knowledge.
 
-The first batch supplies 38 fixed eight-question, one-page packs: 27 shared topics and 11 BC-only topics. Each topic has separate question and teacher PDFs. The other 73 topics have honest development pages with no placeholder download links. This is a static resource library, not an on-demand random worksheet generator or official AP exam paper.
+The first batch supplies 38 fixed eight-question, one-page packs: 27 shared topics and 11 BC-only topics. Each topic has separate question and teacher PDFs. The other 73 topics are labelled Not yet available, with no placeholder PDF links. Unit buttons replace the list in place; search spans the selected course. Existing topic URLs open the corresponding unit with that row highlighted. Student and teacher PDFs link directly from the list; available teaching tools appear alongside them. This is a static resource library, not an on-demand random worksheet generator or official AP exam paper.
 
 ## Files
 
@@ -12,6 +12,8 @@ The first batch supplies 38 fixed eight-question, one-page packs: 27 shared topi
 - `data/ap-calculus/catalog.json`, `pdf-manifest.json`: all topics and available resources, page counts, marks and file hashes.
 - `assets/ap-calculus/`: published PDFs and first-page previews.
 - `output/ap-calculus-pilot/`: existing syllabus map, two pilot sources and earlier audit artifacts.
+
+AP worksheet prose uses Georgia with its bold/italic variants; mathematical notation keeps STIX/MathJax. This font change is local to the AP builder.
 
 Teacher files preserve the equation fields from generator steps, not just the explanation strings. Initial-condition solutions choose the appropriate square-root branch. Polar tool diagrams that are merely illustrative are omitted from these fixed worksheets; the full mathematical prompt is preserved. Inverse-trig selection excludes unrelated reciprocal inverse-trig families. New product and quotient answers retain useful factorisation.
 

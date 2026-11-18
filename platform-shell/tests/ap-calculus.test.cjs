@@ -5,15 +5,18 @@ assert.equal(all.length,111);assert.equal(new Set(all.map(t=>t.id)).size,111);as
 for(const topic of all){if(topic.pack){assert.equal(topic.pack.questionCount,8);assert(topic.pack.questionPages===1&&topic.pack.answerPages>0);for(const name of ['questions','answers','preview','supported'])if(topic.pack[name])assert(fs.existsSync(path.join(root,topic.pack[name])),topic.pack[name]);assert.notEqual(topic.pack.questions,topic.pack.answers);assert(manifest[topic.id]);}}
 const dom=new JSDOM(fs.readFileSync(root+'/index.html','utf8'),{url:'https://kaizenmaths.test/#/ap-calculus',runScripts:'outside-only',virtualConsole:new VirtualConsole()}),w=dom.window,context=dom.getInternalVMContext();w.setTimeout=w.setInterval=w.requestAnimationFrame=()=>0;w.KaizenMarketing=require(root+'/assets/site/marketing.js');w.KaizenMarketingProof=require(root+'/assets/site/marketing-proof.js');w.KaizenPublicPages=require(root+'/assets/site/public-pages.js');
 for(const file of ['assets/site/ap-calculus-data.js','assets/site/ap-calculus.js','app.js'])vm.runInContext(fs.readFileSync(root+'/'+file,'utf8'),context);
-const doc=w.document;assert.equal(doc.querySelectorAll('.ap-topic-card').length,81);assert(!doc.querySelector('.ap-unit[id="ap-unit-9"]'));assert(doc.querySelector('.sidebar'));assert(doc.querySelector('.mobile-nav'));assert.equal(doc.querySelectorAll('#app h1').length,1);
-doc.querySelector('[data-ap-course=bc]').click();assert.equal(doc.querySelectorAll('.ap-topic-card').length,111);assert(w.location.hash.includes('course=bc'));
-doc.querySelector('#ap-available').checked=true;doc.querySelector('#ap-available').dispatchEvent(new w.Event('change'));assert.equal(doc.querySelectorAll('.ap-topic-card').length,38);
-doc.querySelector('#ap-search').value='chain';doc.querySelector('#ap-search').dispatchEvent(new w.Event('input'));assert.equal(doc.querySelectorAll('.ap-topic-card').length,1);assert(doc.querySelector('.ap-topic-card').href.includes('/3.1?'));
+const doc=w.document;
 function go(hash){w.location.hash=hash;w.renderRoute();}
-go('#/ap-calculus/1.1');assert.equal(doc.querySelectorAll('.ap-download-grid a').length,2);assert(!doc.querySelector('.ap-supported'));assert.equal(doc.querySelectorAll('.ap-preview img').length,1);assert(!doc.querySelector('iframe'));assert(doc.title.includes('1.1'));
-for(const a of doc.querySelectorAll('.ap-download a,.ap-supported a')){assert(a.href.includes('/assets/ap-calculus/'));assert.equal(a.target,'_blank');assert(a.rel.includes('noopener'));}
-go('#/ap-calculus/10.3');assert(doc.querySelector('.ap-pending-panel'));assert.equal(doc.querySelectorAll('a[href$=".pdf"]').length,0);assert(!doc.querySelector('a[aria-disabled]'));assert(doc.querySelector('.sidebar'));
-go('#/ap-calculus/unknown');assert(doc.querySelector('h1').textContent.includes('not found'));assert(doc.querySelector('a[href="#/ap-calculus"]'));
+assert.equal(doc.querySelectorAll('.ap-topic-row').length,16);assert.equal(doc.querySelectorAll('[data-ap-unit]').length,8);assert(doc.querySelector('.sidebar'));assert(doc.querySelector('.mobile-nav'));
+const first=doc.getElementById('ap-topic-1.1');assert.equal(first.querySelectorAll('a').length,3);assert(first.textContent.includes('Student Pack'));assert(first.textContent.includes('Teacher Pack'));assert(first.querySelector('a[href$="-questions.pdf"]'));assert(!doc.querySelector('.ap-topic-card'));
+doc.querySelector('[data-ap-unit="2"]').click();assert.equal(doc.querySelectorAll('.ap-topic-row').length,10);assert(!doc.getElementById('ap-topic-1.1'));assert(w.location.hash.includes('unit=2'));assert.equal(doc.querySelectorAll('[data-ap-unit][aria-pressed=true]').length,1);
+doc.querySelector('[data-ap-course=bc]').click();assert.equal(doc.querySelectorAll('[data-ap-unit]').length,10);
+doc.querySelector('[data-ap-unit="10"]').click();assert(doc.getElementById('ap-topic-10.1'));doc.querySelector('[data-ap-course=ab]').click();assert.equal(doc.querySelector('[data-ap-unit][aria-pressed=true]').dataset.apUnit,'1');
+doc.querySelector('#ap-search').value='chain';doc.querySelector('#ap-search').dispatchEvent(new w.Event('input'));assert.equal(doc.querySelectorAll('.ap-topic-row').length,1);assert(doc.getElementById('ap-topic-3.1'));
+doc.querySelector('#ap-search').value='';doc.querySelector('#ap-search').dispatchEvent(new w.Event('input'));doc.querySelector('#ap-available').checked=true;doc.querySelector('#ap-available').dispatchEvent(new w.Event('change'));assert.equal(doc.querySelectorAll('.ap-topic-row').length,6);
+for(const a of doc.querySelectorAll('a[href$=".pdf"]')){assert(a.href.includes('/assets/ap-calculus/'));assert.equal(a.target,'_blank');assert(a.rel.includes('noopener'));}
+go('#/ap-calculus/1.1');assert(doc.getElementById('ap-topic-1.1').classList.contains('ap-current-topic'));assert(!doc.querySelector('.ap-download-grid'));
+go('#/ap-calculus/10.3');assert(doc.getElementById('ap-topic-10.3'));assert.equal(doc.getElementById('ap-topic-10.3').querySelectorAll('a[href$=".pdf"]').length,0);
 go('#/ap-calculus?course=bc&q=%3Cscript%3E');assert(!doc.querySelector('#app script'));assert(doc.querySelector('.ap-empty'));
 go('#/tools');assert(doc.querySelector('.explore-actions a[href="#/ap-calculus"]'));
 go('#/teacher-reference');assert(doc.querySelector('#app a[href="#/ap-calculus"]'));

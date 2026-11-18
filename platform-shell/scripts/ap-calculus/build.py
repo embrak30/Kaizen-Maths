@@ -6,8 +6,18 @@ sys.path.insert(0,str(ROOT/'scripts/pack-library'))
 spec=importlib.util.spec_from_file_location('pack_print',ROOT/'scripts/pack-library/build.py');b=importlib.util.module_from_spec(spec);spec.loader.exec_module(b)
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.colors import HexColor
 from pypdf import PdfReader,PdfWriter
+# AP-only prose face: Georgia gives the questions a textbook feel; equations keep STIX/MathJax.
+for name,file in [('APText','Georgia.ttf'),('APTextBold','Georgia Bold.ttf'),('APTextItalic','Georgia Italic.ttf'),('APTextBoldItalic','Georgia Bold Italic.ttf')]:
+ pdfmetrics.registerFont(TTFont(name,'/System/Library/Fonts/Supplemental/'+file))
+pdfmetrics.registerFontFamily('APText',normal='APText',bold='APTextBold',italic='APTextItalic',boldItalic='APTextBoldItalic')
+_original_markup=b.markup
+def ap_markup(source,width,size):
+ content,font=_original_markup(source,width,size)
+ return content,('APText' if font=='Sans' else font)
+b.markup=ap_markup
 W,H=b.W,b.H;L=43;WIDTH=W-86;OUT=ROOT/'assets/ap-calculus';OUT.mkdir(exist_ok=True);(OUT/'previews').mkdir(exist_ok=True)
 DATA=ROOT/'data/ap-calculus';DATA.mkdir(exist_ok=True)
 TEAL='#146d65';INK='#203b43';MUTED='#596b72';LINE='#d3e1db'
@@ -97,7 +107,7 @@ if __name__=='__main__':
  for pack in source['packs']:
   stem='ap-'+pack['id'].replace('.','-');qp=OUT/(stem+'-questions.pdf');ap=OUT/(stem+'-answers.pdf')
   qpages=draw_questions(pack,qp);apages=draw_answers(pack,ap);validate(qp);validate(ap);totalpages+=qpages+apages
-  published[pack['id']]={'questions':qp.relative_to(ROOT).as_posix(),'answers':ap.relative_to(ROOT).as_posix(),'questionPages':qpages,'answerPages':apages,'marks':sum(q['marks'] for q in pack['questions']),'questionCount':8,'calculator':'Calculator optional','revision':'2026-11-18.2','preview':f'assets/ap-calculus/previews/{stem}.png'}
+  published[pack['id']]={'questions':qp.relative_to(ROOT).as_posix(),'answers':ap.relative_to(ROOT).as_posix(),'questionPages':qpages,'answerPages':apages,'marks':sum(q['marks'] for q in pack['questions']),'questionCount':8,'calculator':'Calculator optional','revision':'2026-11-18.3','preview':f'assets/ap-calculus/previews/{stem}.png'}
  mapping=json.loads((ROOT/'output/ap-calculus-pilot/topic-map.json').read_text());toolkeys=mapping['toolDirectory'];units=[]
  for unit in mapping['units']:
   topics=[]
@@ -107,5 +117,5 @@ if __name__=='__main__':
     if re.search(r'\b'+key+r'\b',t['basis']):related.append(slug)
    topics.append({'id':t['code'],'title':t['title'],'scope':t['scope'],'objective':'Practise '+t['title'].lower()+' through calculation, interpretation and mathematical reasoning.','tools':related,'developmentNote':'A dedicated eight-question set and its worked marking scheme are being prepared for this topic.','pack':published.get(t['code'])})
   units.append({'number':unit['n'],'title':unit['title'],'topics':topics})
- data={'version':1,'revision':'2026-11-18.2','units':units};(DATA/'catalog.json').write_text(json.dumps(data,indent=2)+'\n');(ROOT/'assets/site/ap-calculus-data.js').write_text('window.KaizenAPCalculusData = '+json.dumps(data,ensure_ascii=False,separators=(',',':'))+';\n')
+ data={'version':1,'revision':'2026-11-18.3','units':units};(DATA/'catalog.json').write_text(json.dumps(data,indent=2)+'\n');(ROOT/'assets/site/ap-calculus-data.js').write_text('window.KaizenAPCalculusData = '+json.dumps(data,ensure_ascii=False,separators=(',',':'))+';\n')
  manifests={id:{**p,'questionHash':hashlib.sha256((ROOT/p['questions']).read_bytes()).hexdigest(),'answerHash':hashlib.sha256((ROOT/p['answers']).read_bytes()).hexdigest()} for id,p in published.items()};(DATA/'pdf-manifest.json').write_text(json.dumps(manifests,indent=2)+'\n');print(f'Built {len(published)} packs, {totalpages} PDF pages, {len(list(OUT.glob("*.pdf")))} PDF files.')
