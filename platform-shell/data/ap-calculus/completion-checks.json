@@ -1,0 +1,294 @@
+{
+  "symbolicChecks": 72,
+  "checks": [
+    {
+      "check": "2.1 rate 1",
+      "passed": true
+    },
+    {
+      "check": "2.1 rate 2",
+      "passed": true
+    },
+    {
+      "check": "2.1 rate 3",
+      "passed": true
+    },
+    {
+      "check": "2.1 rate 4",
+      "passed": true
+    },
+    {
+      "check": "2.1 rate 5",
+      "passed": true
+    },
+    {
+      "check": "2.1 rate 6",
+      "passed": true
+    },
+    {
+      "check": "2.3 symmetric slope 1",
+      "passed": true
+    },
+    {
+      "check": "2.3 symmetric slope 2",
+      "passed": true
+    },
+    {
+      "check": "2.3 symmetric slope 3",
+      "passed": true
+    },
+    {
+      "check": "2.3 symmetric slope 4",
+      "passed": true
+    },
+    {
+      "check": "2.3 symmetric slope 5",
+      "passed": true
+    },
+    {
+      "check": "2.3 symmetric slope 6",
+      "passed": true
+    },
+    {
+      "check": "3.5 x**2*sin(x)",
+      "passed": true
+    },
+    {
+      "check": "3.5 exp(x)/(x + 1)",
+      "passed": true
+    },
+    {
+      "check": "3.5 (3*x + 1)**5",
+      "passed": true
+    },
+    {
+      "check": "3.5 log(x**2 + 1)",
+      "passed": true
+    },
+    {
+      "check": "3.5 (x**2 + 1)/(x - 1)",
+      "passed": true
+    },
+    {
+      "check": "3.5 exp(x)*sin(x**2)",
+      "passed": true
+    },
+    {
+      "check": "4.2 acceleration 1",
+      "passed": true
+    },
+    {
+      "check": "4.2 acceleration 2",
+      "passed": true
+    },
+    {
+      "check": "4.2 acceleration 3",
+      "passed": true
+    },
+    {
+      "check": "4.2 acceleration 4",
+      "passed": true
+    },
+    {
+      "check": "4.2 acceleration 5",
+      "passed": true
+    },
+    {
+      "check": "4.2 acceleration 6",
+      "passed": true
+    },
+    {
+      "check": "5.5 minimum 1",
+      "passed": true
+    },
+    {
+      "check": "5.5 minimum 2",
+      "passed": true
+    },
+    {
+      "check": "5.5 minimum 3",
+      "passed": true
+    },
+    {
+      "check": "5.5 minimum 4",
+      "passed": true
+    },
+    {
+      "check": "5.5 minimum 5",
+      "passed": true
+    },
+    {
+      "check": "5.5 minimum 6",
+      "passed": true
+    },
+    {
+      "check": "6.14 integral 2*x*exp(x**2)",
+      "passed": true
+    },
+    {
+      "check": "6.14 integral x*exp(x)",
+      "passed": true
+    },
+    {
+      "check": "6.14 integral 1/(x**2 + 1)",
+      "passed": true
+    },
+    {
+      "check": "6.14 integral 1/(x*(x + 1))",
+      "passed": true
+    },
+    {
+      "check": "6.14 integral (x**2 + 1)/(x + 1)",
+      "passed": true
+    },
+    {
+      "check": "6.14 integral cos(3*x)",
+      "passed": true
+    },
+    {
+      "check": "7.2 solution 1",
+      "passed": true
+    },
+    {
+      "check": "7.2 solution 2",
+      "passed": true
+    },
+    {
+      "check": "7.2 solution 3",
+      "passed": true
+    },
+    {
+      "check": "7.2 solution 4",
+      "passed": true
+    },
+    {
+      "check": "7.2 solution 5",
+      "passed": true
+    },
+    {
+      "check": "7.2 solution 6",
+      "passed": true
+    },
+    {
+      "check": "8.1 average 1",
+      "passed": true
+    },
+    {
+      "check": "8.1 average 2",
+      "passed": true
+    },
+    {
+      "check": "8.1 average 3",
+      "passed": true
+    },
+    {
+      "check": "8.1 average 4",
+      "passed": true
+    },
+    {
+      "check": "8.1 average 5",
+      "passed": true
+    },
+    {
+      "check": "8.1 average 6",
+      "passed": true
+    },
+    {
+      "check": "8.2 distance 1",
+      "passed": true
+    },
+    {
+      "check": "8.2 distance 2",
+      "passed": true
+    },
+    {
+      "check": "8.2 distance 3",
+      "passed": true
+    },
+    {
+      "check": "8.2 distance 4",
+      "passed": true
+    },
+    {
+      "check": "8.2 distance 5",
+      "passed": true
+    },
+    {
+      "check": "8.2 distance 6",
+      "passed": true
+    },
+    {
+      "check": "8.4 area 1",
+      "passed": true
+    },
+    {
+      "check": "8.4 area 2",
+      "passed": true
+    },
+    {
+      "check": "8.4 area 3",
+      "passed": true
+    },
+    {
+      "check": "8.4 area 4",
+      "passed": true
+    },
+    {
+      "check": "8.4 area 5",
+      "passed": true
+    },
+    {
+      "check": "8.4 area 6",
+      "passed": true
+    },
+    {
+      "check": "8.6 split area 1",
+      "passed": true
+    },
+    {
+      "check": "8.6 split area 2",
+      "passed": true
+    },
+    {
+      "check": "8.6 split area 3",
+      "passed": true
+    },
+    {
+      "check": "8.6 split area 4",
+      "passed": true
+    },
+    {
+      "check": "8.6 split area 5",
+      "passed": true
+    },
+    {
+      "check": "8.6 split area 6",
+      "passed": true
+    },
+    {
+      "check": "8.12 washer 1",
+      "passed": true
+    },
+    {
+      "check": "8.12 washer 2",
+      "passed": true
+    },
+    {
+      "check": "8.12 washer 3",
+      "passed": true
+    },
+    {
+      "check": "8.12 washer 4",
+      "passed": true
+    },
+    {
+      "check": "8.12 washer 5",
+      "passed": true
+    },
+    {
+      "check": "8.12 washer 6",
+      "passed": true
+    }
+  ],
+  "note": "Symbolic identities cover selected arithmetic and calculus families. Conceptual arguments and diagrams require editorial review; this is not a formal proof of all answers."
+}

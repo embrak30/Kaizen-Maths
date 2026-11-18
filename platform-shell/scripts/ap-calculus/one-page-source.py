@@ -56,5 +56,8 @@ for id,choices in prompts.items():
    steps.append(tex('<p><b>'+title+'</b> '+note+'</p>')+(tex('<p>'+eq+'</p>') if eq else ''));criteria.append(title+'.')
   p['questions'].append({'number':n,'question':question,'questionText':re.sub('<[^>]+>',' ',question),'answer':tex(q['answer']),'steps':steps,'criteria':criteria,'marks':q['marks'],'origin':'authored-pilot'})
  src['packs'].append(p)
+completion=ROOT/'data/ap-calculus/completion-questions.json'
+if completion.exists():src['packs'].extend(json.loads(completion.read_text())['packs'])
+assert len({p['id'] for p in src['packs']})==len(src['packs'])
 (ROOT/'data/ap-calculus/print-questions.json').write_text(json.dumps(src,indent=2))
-print('Selected eight questions for each of 38 packs.')
+print(f"Selected eight questions for each of {len(src['packs'])} packs.")

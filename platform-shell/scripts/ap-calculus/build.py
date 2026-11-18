@@ -82,7 +82,8 @@ def draw_answers(pack,path):
   nonlocal page,y
   c.showPage();page+=1;y=header(c,pack,'Answers, worked solutions & suggested marks',page)
  for q in pack['questions']:
-  if y<240:new_page()
+  lead=b.height(b.flows(q['print']['answer'],WIDTH,12,diagram_max=165))+19+14+65+3*len(q['print']['answer'])
+  if y<max(240,lead):new_page()
   label(c,'Question '+str(q['number'])+'  |  '+str(q['marks'])+' marks',L,y,12,'SansBold',TEAL);y-=19
   for name,blocks in teacher_chunks(q):
    items=b.flows(blocks,WIDTH,12,diagram_max=165)
@@ -109,12 +110,12 @@ def validate(path):
  return len(r.pages)
 
 if __name__=='__main__':
- source=json.loads((ROOT/'tmp/pdfs/ap-library-prepared.json').read_text());assert not source['renderErrors'];assert len(source['packs'])==38;published={};totalpages=0
+ source=json.loads((ROOT/'tmp/pdfs/ap-library-prepared.json').read_text());assert not source['renderErrors'];assert len(source['packs'])==111;published={};totalpages=0
  for old in OUT.glob('*-supported.pdf'):old.unlink()
  for pack in source['packs']:
   stem='ap-'+pack['id'].replace('.','-');qp=OUT/(stem+'-questions.pdf');ap=OUT/(stem+'-answers.pdf')
   qpages=draw_questions(pack,qp);apages=draw_answers(pack,ap);validate(qp);validate(ap);totalpages+=qpages+apages
-  published[pack['id']]={'questions':qp.relative_to(ROOT).as_posix(),'answers':ap.relative_to(ROOT).as_posix(),'questionPages':qpages,'answerPages':apages,'marks':sum(q['marks'] for q in pack['questions']),'questionCount':8,'calculator':'Calculator optional','revision':'2026-11-18.4','preview':f'assets/ap-calculus/previews/{stem}.png'}
+  published[pack['id']]={'questions':qp.relative_to(ROOT).as_posix(),'answers':ap.relative_to(ROOT).as_posix(),'questionPages':qpages,'answerPages':apages,'marks':sum(q['marks'] for q in pack['questions']),'questionCount':8,'calculator':'Calculator optional','revision':'2026-11-18.5','preview':f'assets/ap-calculus/previews/{stem}.png'}
  mapping=json.loads((ROOT/'output/ap-calculus-pilot/topic-map.json').read_text());toolkeys=mapping['toolDirectory'];units=[]
  for unit in mapping['units']:
   topics=[]
@@ -124,5 +125,5 @@ if __name__=='__main__':
     if re.search(r'\b'+key+r'\b',t['basis']):related.append(slug)
    topics.append({'id':t['code'],'title':t['title'],'scope':t['scope'],'objective':'Practise '+t['title'].lower()+' through calculation, interpretation and mathematical reasoning.','tools':related,'developmentNote':'A dedicated eight-question set and its worked marking scheme are being prepared for this topic.','pack':published.get(t['code'])})
   units.append({'number':unit['n'],'title':unit['title'],'topics':topics})
- data={'version':1,'revision':'2026-11-18.4','units':units};(DATA/'catalog.json').write_text(json.dumps(data,indent=2)+'\n');(ROOT/'assets/site/ap-calculus-data.js').write_text('window.KaizenAPCalculusData = '+json.dumps(data,ensure_ascii=False,separators=(',',':'))+';\n')
+ data={'version':1,'revision':'2026-11-18.5','units':units};(DATA/'catalog.json').write_text(json.dumps(data,indent=2)+'\n');(ROOT/'assets/site/ap-calculus-data.js').write_text('window.KaizenAPCalculusData = '+json.dumps(data,ensure_ascii=False,separators=(',',':'))+';\n')
  manifests={id:{**p,'questionHash':hashlib.sha256((ROOT/p['questions']).read_bytes()).hexdigest(),'answerHash':hashlib.sha256((ROOT/p['answers']).read_bytes()).hexdigest()} for id,p in published.items()};(DATA/'pdf-manifest.json').write_text(json.dumps(manifests,indent=2)+'\n');print(f'Built {len(published)} packs, {totalpages} PDF pages, {len(list(OUT.glob("*.pdf")))} PDF files.')

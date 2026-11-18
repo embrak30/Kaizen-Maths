@@ -1,0 +1,806 @@
+{
+  "independentSymbolicChecks": 160,
+  "checks": [
+    {
+      "topic": "2.1",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "2.3",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "4.2",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "4.3",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "4.4",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "5.1",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "5.5 minimum",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "5.5 endpoint",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "5.7 maximum",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "5.7 minimum",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "6.1",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "6.4",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "6.5 minimum",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "7.9",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "8.1",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "8.2 distance",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "8.3",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "8.4",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "8.6",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "8.7",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "8.8",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "8.10",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "8.12",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "9.9",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "2.1",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "2.3",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "4.2",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "4.3",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "4.4",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "5.1",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "5.5 minimum",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "5.5 endpoint",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "5.7 maximum",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "5.7 minimum",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "6.1",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "6.4",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "6.5 minimum",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "7.9",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "8.1",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "8.2 distance",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "8.3",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "8.4",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "8.6",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "8.7",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "8.8",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "8.10",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "8.12",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "9.9",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "2.1",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "2.3",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "4.2",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "4.3",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "4.4",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "5.1",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "5.5 minimum",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "5.5 endpoint",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "5.7 maximum",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "5.7 minimum",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "6.1",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "6.4",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "6.5 minimum",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "7.9",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "8.1",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "8.2 distance",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "8.3",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "8.4",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "8.6",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "8.7",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "8.8",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "8.10",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "8.12",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "9.9",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "2.1",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "2.3",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "4.2",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "4.3",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "4.4",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "5.1",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "5.5 minimum",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "5.5 endpoint",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "5.7 maximum",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "5.7 minimum",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "6.1",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "6.4",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "6.5 minimum",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "7.9",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "8.1",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "8.2 distance",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "8.3",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "8.4",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "8.6",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "8.7",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "8.8",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "8.10",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "8.12",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "9.9",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "2.1",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "2.3",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "4.2",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "4.3",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "4.4",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "5.1",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "5.5 minimum",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "5.5 endpoint",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "5.7 maximum",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "5.7 minimum",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "6.1",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "6.4",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "6.5 minimum",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "7.9",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "8.1",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "8.2 distance",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "8.3",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "8.4",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "8.6",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "8.7",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "8.8",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "8.10",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "8.12",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "9.9",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "2.1",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "2.3",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "4.2",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "4.3",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "4.4",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "5.1",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "5.5 minimum",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "5.5 endpoint",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "5.7 maximum",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "5.7 minimum",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "6.1",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "6.4",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "6.5 minimum",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "7.9",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "8.1",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "8.2 distance",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "8.3",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "8.4",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "8.6",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "8.7",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "8.8",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "8.10",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "8.12",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "9.9",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "4.7",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "4.7",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "4.7",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "4.7",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "4.7",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "4.7",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "4.6",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "topic": "4.6",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "topic": "4.6",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "topic": "4.6",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "topic": "4.6",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "4.6",
+      "case": 6,
+      "passed": true
+    },
+    {
+      "topic": "8.7 extra",
+      "case": 7,
+      "passed": true
+    },
+    {
+      "topic": "8.10 extra",
+      "case": 7,
+      "passed": true
+    },
+    {
+      "topic": "8.13 extra",
+      "case": 5,
+      "passed": true
+    },
+    {
+      "topic": "5.12 extra",
+      "case": 7,
+      "passed": true
+    }
+  ],
+  "limits": "Checks independently validate selected authored formula families. They do not certify every conceptual answer or diagram."
+}

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": "2026-11-18.4",
+  "revision": "2026-11-18.5",
   "units": [
     {
       "number": 1,
@@ -23,7 +23,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-1-1.png"
           }
         },
@@ -36,7 +36,17 @@
             "limits-first-principles"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-1-2-questions.pdf",
+            "answers": "assets/ap-calculus/ap-1-2-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 3,
+            "marks": 16,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-1-2.png"
+          }
         },
         {
           "id": "1.3",
@@ -47,7 +57,17 @@
             "graph-transformations-curve-sketching"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-1-3-questions.pdf",
+            "answers": "assets/ap-calculus/ap-1-3-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-1-3.png"
+          }
         },
         {
           "id": "1.4",
@@ -66,7 +86,7 @@
             "marks": 22,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-1-4.png"
           }
         },
@@ -87,7 +107,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-1-5.png"
           }
         },
@@ -108,7 +128,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-1-6.png"
           }
         },
@@ -121,7 +141,17 @@
             "limits-first-principles"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-1-7-questions.pdf",
+            "answers": "assets/ap-calculus/ap-1-7-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-1-7.png"
+          }
         },
         {
           "id": "1.8",
@@ -130,7 +160,17 @@
           "objective": "Practise squeeze theorem through calculation, interpretation and mathematical reasoning.",
           "tools": [],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-1-8-questions.pdf",
+            "answers": "assets/ap-calculus/ap-1-8-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-1-8.png"
+          }
         },
         {
           "id": "1.9",
@@ -142,7 +182,17 @@
             "graph-transformations-curve-sketching"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-1-9-questions.pdf",
+            "answers": "assets/ap-calculus/ap-1-9-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 21,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-1-9.png"
+          }
         },
         {
           "id": "1.10",
@@ -153,7 +203,17 @@
             "limits-first-principles"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-1-10-questions.pdf",
+            "answers": "assets/ap-calculus/ap-1-10-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-1-10.png"
+          }
         },
         {
           "id": "1.11",
@@ -164,7 +224,17 @@
             "limits-first-principles"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-1-11-questions.pdf",
+            "answers": "assets/ap-calculus/ap-1-11-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-1-11.png"
+          }
         },
         {
           "id": "1.12",
@@ -175,7 +245,17 @@
             "limits-first-principles"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-1-12-questions.pdf",
+            "answers": "assets/ap-calculus/ap-1-12-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-1-12.png"
+          }
         },
         {
           "id": "1.13",
@@ -194,7 +274,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-1-13.png"
           }
         },
@@ -208,7 +288,17 @@
             "graph-transformations-curve-sketching"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-1-14-questions.pdf",
+            "answers": "assets/ap-calculus/ap-1-14-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-1-14.png"
+          }
         },
         {
           "id": "1.15",
@@ -227,7 +317,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-1-15.png"
           }
         },
@@ -240,7 +330,17 @@
             "limits-first-principles"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-1-16-questions.pdf",
+            "answers": "assets/ap-calculus/ap-1-16-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-1-16.png"
+          }
         }
       ]
     },
@@ -258,7 +358,17 @@
             "differentiation-polynomials"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-2-1-questions.pdf",
+            "answers": "assets/ap-calculus/ap-2-1-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-2-1.png"
+          }
         },
         {
           "id": "2.2",
@@ -277,7 +387,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-2-2.png"
           }
         },
@@ -290,7 +400,17 @@
             "limits-first-principles"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-2-3-questions.pdf",
+            "answers": "assets/ap-calculus/ap-2-3-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-2-3.png"
+          }
         },
         {
           "id": "2.4",
@@ -301,7 +421,17 @@
             "limits-first-principles"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-2-4-questions.pdf",
+            "answers": "assets/ap-calculus/ap-2-4-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-2-4.png"
+          }
         },
         {
           "id": "2.5",
@@ -320,7 +450,7 @@
             "marks": 17,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-2-5.png"
           }
         },
@@ -341,7 +471,7 @@
             "marks": 17,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-2-6.png"
           }
         },
@@ -363,7 +493,7 @@
             "marks": 17,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-2-7.png"
           }
         },
@@ -384,7 +514,7 @@
             "marks": 18,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-2-8.png"
           }
         },
@@ -405,7 +535,7 @@
             "marks": 18,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-2-9.png"
           }
         },
@@ -426,7 +556,7 @@
             "marks": 18,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-2-10.png"
           }
         }
@@ -454,7 +584,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-3-1.png"
           }
         },
@@ -475,7 +605,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-3-2.png"
           }
         },
@@ -489,7 +619,17 @@
             "inverse-trig-differentiation"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-3-3-questions.pdf",
+            "answers": "assets/ap-calculus/ap-3-3-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-3-3.png"
+          }
         },
         {
           "id": "3.4",
@@ -508,7 +648,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-3-4.png"
           }
         },
@@ -522,7 +662,17 @@
             "advanced-differentiation"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-3-5-questions.pdf",
+            "answers": "assets/ap-calculus/ap-3-5-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-3-5.png"
+          }
         },
         {
           "id": "3.6",
@@ -541,7 +691,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-3-6.png"
           }
         }
@@ -560,7 +710,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-4-1-questions.pdf",
+            "answers": "assets/ap-calculus/ap-4-1-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-4-1.png"
+          }
         },
         {
           "id": "4.2",
@@ -572,7 +732,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-4-2-questions.pdf",
+            "answers": "assets/ap-calculus/ap-4-2-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-4-2.png"
+          }
         },
         {
           "id": "4.3",
@@ -583,7 +753,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-4-3-questions.pdf",
+            "answers": "assets/ap-calculus/ap-4-3-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-4-3.png"
+          }
         },
         {
           "id": "4.4",
@@ -594,7 +774,17 @@
             "advanced-differentiation"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-4-4-questions.pdf",
+            "answers": "assets/ap-calculus/ap-4-4-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-4-4.png"
+          }
         },
         {
           "id": "4.5",
@@ -613,7 +803,7 @@
             "marks": 31,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-4-5.png"
           }
         },
@@ -627,7 +817,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-4-6-questions.pdf",
+            "answers": "assets/ap-calculus/ap-4-6-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-4-6.png"
+          }
         },
         {
           "id": "4.7",
@@ -639,7 +839,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-4-7-questions.pdf",
+            "answers": "assets/ap-calculus/ap-4-7-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-4-7.png"
+          }
         }
       ]
     },
@@ -657,7 +867,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-5-1-questions.pdf",
+            "answers": "assets/ap-calculus/ap-5-1-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-5-1.png"
+          }
         },
         {
           "id": "5.2",
@@ -668,7 +888,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-5-2-questions.pdf",
+            "answers": "assets/ap-calculus/ap-5-2-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-5-2.png"
+          }
         },
         {
           "id": "5.3",
@@ -680,7 +910,17 @@
             "graph-transformations-curve-sketching"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-5-3-questions.pdf",
+            "answers": "assets/ap-calculus/ap-5-3-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-5-3.png"
+          }
         },
         {
           "id": "5.4",
@@ -691,7 +931,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-5-4-questions.pdf",
+            "answers": "assets/ap-calculus/ap-5-4-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-5-4.png"
+          }
         },
         {
           "id": "5.5",
@@ -702,7 +952,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-5-5-questions.pdf",
+            "answers": "assets/ap-calculus/ap-5-5-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-5-5.png"
+          }
         },
         {
           "id": "5.6",
@@ -713,7 +973,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-5-6-questions.pdf",
+            "answers": "assets/ap-calculus/ap-5-6-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-5-6.png"
+          }
         },
         {
           "id": "5.7",
@@ -725,7 +995,17 @@
             "advanced-differentiation"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-5-7-questions.pdf",
+            "answers": "assets/ap-calculus/ap-5-7-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-5-7.png"
+          }
         },
         {
           "id": "5.8",
@@ -736,7 +1016,17 @@
             "graph-transformations-curve-sketching"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-5-8-questions.pdf",
+            "answers": "assets/ap-calculus/ap-5-8-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 7,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-5-8.png"
+          }
         },
         {
           "id": "5.9",
@@ -748,7 +1038,17 @@
             "graph-transformations-curve-sketching"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-5-9-questions.pdf",
+            "answers": "assets/ap-calculus/ap-5-9-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-5-9.png"
+          }
         },
         {
           "id": "5.10",
@@ -759,7 +1059,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-5-10-questions.pdf",
+            "answers": "assets/ap-calculus/ap-5-10-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-5-10.png"
+          }
         },
         {
           "id": "5.11",
@@ -770,7 +1080,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-5-11-questions.pdf",
+            "answers": "assets/ap-calculus/ap-5-11-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-5-11.png"
+          }
         },
         {
           "id": "5.12",
@@ -781,7 +1101,17 @@
             "advanced-differentiation"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-5-12-questions.pdf",
+            "answers": "assets/ap-calculus/ap-5-12-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 23,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-5-12.png"
+          }
         }
       ]
     },
@@ -798,7 +1128,17 @@
             "integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-6-1-questions.pdf",
+            "answers": "assets/ap-calculus/ap-6-1-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-6-1.png"
+          }
         },
         {
           "id": "6.2",
@@ -810,7 +1150,17 @@
             "numerical-methods"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-6-2-questions.pdf",
+            "answers": "assets/ap-calculus/ap-6-2-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-6-2.png"
+          }
         },
         {
           "id": "6.3",
@@ -821,7 +1171,17 @@
             "integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-6-3-questions.pdf",
+            "answers": "assets/ap-calculus/ap-6-3-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-6-3.png"
+          }
         },
         {
           "id": "6.4",
@@ -833,7 +1193,17 @@
             "integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-6-4-questions.pdf",
+            "answers": "assets/ap-calculus/ap-6-4-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-6-4.png"
+          }
         },
         {
           "id": "6.5",
@@ -844,7 +1214,17 @@
             "integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-6-5-questions.pdf",
+            "answers": "assets/ap-calculus/ap-6-5-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-6-5.png"
+          }
         },
         {
           "id": "6.6",
@@ -855,7 +1235,17 @@
             "integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-6-6-questions.pdf",
+            "answers": "assets/ap-calculus/ap-6-6-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-6-6.png"
+          }
         },
         {
           "id": "6.7",
@@ -874,7 +1264,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-6-7.png"
           }
         },
@@ -895,7 +1285,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-6-8.png"
           }
         },
@@ -916,7 +1306,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-6-9.png"
           }
         },
@@ -937,7 +1327,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-6-10.png"
           }
         },
@@ -958,7 +1348,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-6-11.png"
           }
         },
@@ -979,7 +1369,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-6-12.png"
           }
         },
@@ -993,7 +1383,17 @@
             "integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-6-13-questions.pdf",
+            "answers": "assets/ap-calculus/ap-6-13-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-6-13.png"
+          }
         },
         {
           "id": "6.14",
@@ -1005,7 +1405,17 @@
             "advanced-integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-6-14-questions.pdf",
+            "answers": "assets/ap-calculus/ap-6-14-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-6-14.png"
+          }
         }
       ]
     },
@@ -1022,7 +1432,17 @@
             "differential-equations"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-7-1-questions.pdf",
+            "answers": "assets/ap-calculus/ap-7-1-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-7-1.png"
+          }
         },
         {
           "id": "7.2",
@@ -1034,7 +1454,17 @@
             "differential-equations"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-7-2-questions.pdf",
+            "answers": "assets/ap-calculus/ap-7-2-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-7-2.png"
+          }
         },
         {
           "id": "7.3",
@@ -1045,7 +1475,17 @@
             "differential-equations"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-7-3-questions.pdf",
+            "answers": "assets/ap-calculus/ap-7-3-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 5,
+            "marks": 20,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-7-3.png"
+          }
         },
         {
           "id": "7.4",
@@ -1056,7 +1496,17 @@
             "differential-equations"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-7-4-questions.pdf",
+            "answers": "assets/ap-calculus/ap-7-4-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-7-4.png"
+          }
         },
         {
           "id": "7.5",
@@ -1075,7 +1525,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-7-5.png"
           }
         },
@@ -1096,7 +1546,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-7-6.png"
           }
         },
@@ -1117,7 +1567,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-7-7.png"
           }
         },
@@ -1138,7 +1588,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-7-8.png"
           }
         },
@@ -1151,7 +1601,17 @@
             "differential-equations"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-7-9-questions.pdf",
+            "answers": "assets/ap-calculus/ap-7-9-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-7-9.png"
+          }
         }
       ]
     },
@@ -1168,7 +1628,17 @@
             "integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-8-1-questions.pdf",
+            "answers": "assets/ap-calculus/ap-8-1-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-8-1.png"
+          }
         },
         {
           "id": "8.2",
@@ -1180,7 +1650,17 @@
             "integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-8-2-questions.pdf",
+            "answers": "assets/ap-calculus/ap-8-2-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-8-2.png"
+          }
         },
         {
           "id": "8.3",
@@ -1191,7 +1671,17 @@
             "integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-8-3-questions.pdf",
+            "answers": "assets/ap-calculus/ap-8-3-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-8-3.png"
+          }
         },
         {
           "id": "8.4",
@@ -1203,7 +1693,17 @@
             "cross-section-solids"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-8-4-questions.pdf",
+            "answers": "assets/ap-calculus/ap-8-4-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-8-4.png"
+          }
         },
         {
           "id": "8.5",
@@ -1215,7 +1715,17 @@
             "cross-section-solids"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-8-5-questions.pdf",
+            "answers": "assets/ap-calculus/ap-8-5-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-8-5.png"
+          }
         },
         {
           "id": "8.6",
@@ -1227,7 +1737,17 @@
             "cross-section-solids"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-8-6-questions.pdf",
+            "answers": "assets/ap-calculus/ap-8-6-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-8-6.png"
+          }
         },
         {
           "id": "8.7",
@@ -1239,7 +1759,17 @@
             "cross-section-solids"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-8-7-questions.pdf",
+            "answers": "assets/ap-calculus/ap-8-7-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-8-7.png"
+          }
         },
         {
           "id": "8.8",
@@ -1251,7 +1781,17 @@
             "cross-section-solids"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-8-8-questions.pdf",
+            "answers": "assets/ap-calculus/ap-8-8-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-8-8.png"
+          }
         },
         {
           "id": "8.9",
@@ -1270,7 +1810,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-8-9.png"
           }
         },
@@ -1284,7 +1824,17 @@
             "revolution-explorer"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-8-10-questions.pdf",
+            "answers": "assets/ap-calculus/ap-8-10-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-8-10.png"
+          }
         },
         {
           "id": "8.11",
@@ -1303,7 +1853,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-8-11.png"
           }
         },
@@ -1317,7 +1867,17 @@
             "revolution-explorer"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-8-12-questions.pdf",
+            "answers": "assets/ap-calculus/ap-8-12-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-8-12.png"
+          }
         },
         {
           "id": "8.13",
@@ -1329,7 +1889,17 @@
             "integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-8-13-questions.pdf",
+            "answers": "assets/ap-calculus/ap-8-13-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 20,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-8-13.png"
+          }
         }
       ]
     },
@@ -1354,7 +1924,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-9-1.png"
           }
         },
@@ -1375,7 +1945,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-9-2.png"
           }
         },
@@ -1389,7 +1959,17 @@
             "integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-9-3-questions.pdf",
+            "answers": "assets/ap-calculus/ap-9-3-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-9-3.png"
+          }
         },
         {
           "id": "9.4",
@@ -1400,7 +1980,17 @@
             "differentiation-rules"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-9-4-questions.pdf",
+            "answers": "assets/ap-calculus/ap-9-4-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-9-4.png"
+          }
         },
         {
           "id": "9.5",
@@ -1411,7 +2001,17 @@
             "integration"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-9-5-questions.pdf",
+            "answers": "assets/ap-calculus/ap-9-5-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-9-5.png"
+          }
         },
         {
           "id": "9.6",
@@ -1422,7 +2022,17 @@
             "advanced-differentiation"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-9-6-questions.pdf",
+            "answers": "assets/ap-calculus/ap-9-6-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-9-6.png"
+          }
         },
         {
           "id": "9.7",
@@ -1441,7 +2051,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-9-7.png"
           }
         },
@@ -1462,7 +2072,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-9-8.png"
           }
         },
@@ -1475,7 +2085,17 @@
             "polar-coordinates"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-9-9-questions.pdf",
+            "answers": "assets/ap-calculus/ap-9-9-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-9-9.png"
+          }
         }
       ]
     },
@@ -1492,7 +2112,17 @@
             "sequences-series"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-10-1-questions.pdf",
+            "answers": "assets/ap-calculus/ap-10-1-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-10-1.png"
+          }
         },
         {
           "id": "10.2",
@@ -1511,7 +2141,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-10-2.png"
           }
         },
@@ -1524,7 +2154,17 @@
             "sequences-series"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-10-3-questions.pdf",
+            "answers": "assets/ap-calculus/ap-10-3-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-10-3.png"
+          }
         },
         {
           "id": "10.4",
@@ -1536,7 +2176,17 @@
             "sequences-series"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-10-4-questions.pdf",
+            "answers": "assets/ap-calculus/ap-10-4-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-10-4.png"
+          }
         },
         {
           "id": "10.5",
@@ -1547,7 +2197,17 @@
             "sequences-series"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-10-5-questions.pdf",
+            "answers": "assets/ap-calculus/ap-10-5-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-10-5.png"
+          }
         },
         {
           "id": "10.6",
@@ -1558,7 +2218,17 @@
             "sequences-series"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-10-6-questions.pdf",
+            "answers": "assets/ap-calculus/ap-10-6-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-10-6.png"
+          }
         },
         {
           "id": "10.7",
@@ -1569,7 +2239,17 @@
             "sequences-series"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-10-7-questions.pdf",
+            "answers": "assets/ap-calculus/ap-10-7-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-10-7.png"
+          }
         },
         {
           "id": "10.8",
@@ -1580,7 +2260,17 @@
             "sequences-series"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-10-8-questions.pdf",
+            "answers": "assets/ap-calculus/ap-10-8-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-10-8.png"
+          }
         },
         {
           "id": "10.9",
@@ -1591,7 +2281,17 @@
             "sequences-series"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-10-9-questions.pdf",
+            "answers": "assets/ap-calculus/ap-10-9-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-10-9.png"
+          }
         },
         {
           "id": "10.10",
@@ -1602,7 +2302,17 @@
             "sequences-series"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-10-10-questions.pdf",
+            "answers": "assets/ap-calculus/ap-10-10-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-10-10.png"
+          }
         },
         {
           "id": "10.11",
@@ -1621,7 +2331,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-10-11.png"
           }
         },
@@ -1634,7 +2344,17 @@
             "series-expansions"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-10-12-questions.pdf",
+            "answers": "assets/ap-calculus/ap-10-12-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-10-12.png"
+          }
         },
         {
           "id": "10.13",
@@ -1645,7 +2365,17 @@
             "series-expansions"
           ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
-          "pack": null
+          "pack": {
+            "questions": "assets/ap-calculus/ap-10-13-questions.pdf",
+            "answers": "assets/ap-calculus/ap-10-13-answers.pdf",
+            "questionPages": 1,
+            "answerPages": 4,
+            "marks": 22,
+            "questionCount": 8,
+            "calculator": "Calculator optional",
+            "revision": "2026-11-18.5",
+            "preview": "assets/ap-calculus/previews/ap-10-13.png"
+          }
         },
         {
           "id": "10.14",
@@ -1664,7 +2394,7 @@
             "marks": 23,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-10-14.png"
           }
         },
@@ -1685,7 +2415,7 @@
             "marks": 24,
             "questionCount": 8,
             "calculator": "Calculator optional",
-            "revision": "2026-11-18.4",
+            "revision": "2026-11-18.5",
             "preview": "assets/ap-calculus/previews/ap-10-15.png"
           }
         }

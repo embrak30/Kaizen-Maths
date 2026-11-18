@@ -16,6 +16,8 @@ def check(path):
     assert not any(s in text for s in ['Teacher answer key','Worked solutions','Suggested award']),(path.name,i,'teacher content')
     for required in ['Kaizen Calculus One-Pagers','© Kaizen Mathematics. Permission granted to print and copy for classroom teaching and personal study.','Create additional practice using the Kaizen Worksheet Builder.']:
      assert required in text,(path.name,i,'missing branding or permission',required)
+   if 'The completed slope field is shown.' in text:
+    assert any(im['x1']-im['x0']>150 and im['bottom']-im['top']>100 for im in p.images),(path.name,i,'slope field separated from answer')
    for ch in p.chars:assert 24<=ch['x0']<=ch['x1']<=p.width-24 and 8<=ch['top']<=ch['bottom']<=p.height-12,(path.name,i,'text bounds',ch['text'])
    for im in p.images:assert im['x0']>=25 and im['x1']<=p.width-25 and im['top']>=45 and im['bottom']<=p.height-40,(path.name,i,'image bounds',im)
    info.append({'pdf':path.name,'page':i,'characters':len(p.chars),'images':len(p.images)})
