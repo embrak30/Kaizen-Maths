@@ -3381,12 +3381,12 @@ function isAdmin() {
 
 function toolCatalogDataShouldRerenderCurrentRoute() {
   const route = routeParts()[0] || "home";
-  return ["home", "tools", "collections", "coverage-map", "curriculum-alignments", "textbook-alignments", "textbook-assessments", "admin"].includes(route);
+  return ["home", "tools", "teaching-tools", "collections", "coverage-map", "curriculum-alignments", "textbook-alignments", "textbook-assessments", "admin"].includes(route);
 }
 
 function authSensitiveRouteShouldRerender() {
   const route = routeParts()[0] || "home";
-  return ["tools", "classroom", "classroom-remote", "curriculum-alignments", "worksheet-generator", "gcse-exam-style", "class-tasks", "admin", "tutor-workspace", "school-space", "upgrade", "kaizen-university", "bar-modelling-course"].includes(route);
+  return ["tools", "teaching-tools", "classroom", "classroom-remote", "curriculum-alignments", "worksheet-generator", "gcse-exam-style", "class-tasks", "admin", "tutor-workspace", "school-space", "upgrade", "kaizen-university", "bar-modelling-course"].includes(route);
 }
 
 function currentAuthAccessKey() {
@@ -5233,12 +5233,16 @@ function setActiveNav() {
   const activeTool = toolRouteSlug ? tools.find((tool) => tool.slug === toolRouteSlug) : null;
   const activeCollectionHref = activeTool ? `#/collections/${categorySlug(activeTool.category)}` : "";
   const activeParentHref = ["ap-calculus", "alevel-maths"].includes(parts[0]) ? "#/tools" : parts[0] === "textbook-assessments" ? "#/textbook-alignments" : "";
+  const resourceParent = ["ap-calculus", "alevel-maths", "practice-packs", "ready-made-resources"].includes(parts[0]) ? "#/ready-made-resources"
+    : ["worksheet-generator", "gcse-exam-style"].includes(parts[0]) ? "#/worksheet-generator"
+    : ["teaching-tools", "collections", "classroom", "classroom-remote"].includes(parts[0]) || (parts[0] === "tools" && parts[1]) ? "#/teaching-tools" : "";
   document.querySelectorAll(".nav-list a, .sidebar-utility a").forEach((link) => {
     const href = link.getAttribute("href");
     const isCurrentRoute = href === cleanPath || (href !== "#/" && cleanPath.startsWith(href));
     const isToolParentCollection = Boolean(activeCollectionHref && href === activeCollectionHref);
     const isMappedParent = Boolean(activeParentHref && href === activeParentHref);
-    link.classList.toggle("active", isCurrentRoute || isToolParentCollection || isMappedParent);
+    link.classList.toggle("active", isCurrentRoute || isToolParentCollection || isMappedParent || (resourceParent && href === resourceParent) || (resourceParent && href === "#/tools"));
+    if (href === cleanPath) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current");
   });
 }
 
@@ -17912,10 +17916,9 @@ function renderToolLibrary(extraCategory = "") {
   };
   app.innerHTML = `
     ${pageHeader(
-      extraCategory ? collectionTitle : "Explore maths resources",
-      extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Fresh questions, worked steps and printable resources for your next lesson."
+      extraCategory ? collectionTitle : "Teaching Tools",
+      extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Question generators, interactive diagrams and conceptual explainers. Choose a topic to find a tool."
     )}
-    ${exploreDashboardHtml(extraCategory)}
     ${visible.length
       ? renderGroupedToolIndex(visible, collectionTitle, { groupByCategory: !extraCategory })
       : `<div class="panel empty-state">No tools match the current filters.</div>`}
@@ -30636,8 +30639,16 @@ function updateRouteSeo(parts) {
       title: routeTitle("Contact / Enquire"),
       description: "Contact Kaizen Maths about the resource, Make It Count, school access, funded partnerships, or professional development support."
     },
+    "teaching-tools": {
+      title: routeTitle("Teaching Tools"),
+      description: "Browse mathematics question generators, interactive diagrams and conceptual explainers by topic."
+    },
+    "ready-made-resources": {
+      title: routeTitle("Ready-Made Resources"),
+      description: "Download starters, exit tickets, AP Calculus and Edexcel A level topic worksheets with answers and worked solutions."
+    },
     "tools": {
-      title: routeTitle(parts[1] ? "Tool Information" : "Maths Tool Library"),
+      title: routeTitle(parts[1] ? "Tool Information" : "Explore maths resources"),
       description: parts[1]
         ? "Read teacher guidance, topics covered, curriculum links, misconceptions, and related tools before launching Classroom View."
         : "Browse Kaizen Maths topic generators, classroom display tools, worksheets, and assessment resources for maths teachers."
@@ -30906,8 +30917,12 @@ function renderRoute() {
     if (topic) setPageSeo(titleWithSite(`AP Calculus ${topic.id}: ${topic.title}`), `Original practice for ${topic.title}, with separate question and teacher PDFs where available.`);
   } else if (parts[0] === "practice-packs") {
     renderPracticePacks();
-  } else if (parts[0] === "tools") {
+  } else if (parts[0] === "teaching-tools") {
     renderToolLibrary();
+  } else if (parts[0] === "ready-made-resources") {
+    renderReadyMadeResources();
+  } else if (parts[0] === "tools") {
+    renderExploreOverview();
   } else if (parts[0] === "coverage-map") {
     renderCoverageMap();
   } else if (parts[0] === "curriculum-alignments") {
@@ -30968,9 +30983,9 @@ function closeMobileNav() {
 
 globalSearch.addEventListener("input", (event) => {
   state.query = event.target.value;
-  if (!location.hash.startsWith("#/tools") && !location.hash.startsWith("#/collections")) {
+  if (!location.hash.startsWith("#/teaching-tools") && !location.hash.startsWith("#/collections")) {
     pendingFocusTarget = "globalSearch";
-    location.hash = "#/tools";
+    location.hash = "#/teaching-tools";
   } else {
     pendingFocusTarget = "globalSearch";
     renderRoute();
@@ -31037,19 +31052,26 @@ function renderPublicMarketingPage(parts) {
   app.innerHTML='<div class="marketing-content">'+entry.body+'</div>';
   setPageSeo(titleWithSite(entry.title),entry.description);
 }
-function exploreDashboardHtml(category='') {
-  const cards=[
-    ['▦','Worksheet Builder','Choose topics and print a sheet with answers.','#/worksheet-generator','teal'],
-    ['▤','Starters & exit tickets','Ready-made packs for the start or end of a lesson.','#/practice-packs','violet'],
-    ['✓','Exam & assessment builder','Build a practice paper with worked solutions.','#/gcse-exam-style','amber'],
-    ['∫','AP Calculus','Topic worksheets, answers and suggested marks.','#/ap-calculus','teal'],
-    ['A','A level Mathematics','Edexcel UK topic worksheets and worked solutions.','#/alevel-maths','violet']
-  ];
-  return `<section class="explore-dashboard" aria-label="Explore teaching resources">
-    <div class="explore-intro"><p>Build a resource, or browse the topics below.</p><a class="explore-guide" href="#/how-to-use-this-site">New here? Take a quick tour ↗</a></div>
-    <div class="explore-actions">${cards.map(([icon,title,description,href,tone])=>`<a class="explore-action ${tone}" href="${href}"><span class="explore-icon" aria-hidden="true">${icon}</span><span><strong>${title}</strong><span>${description}</span></span><span class="explore-arrow" aria-hidden="true">↗</span></a>`).join('')}</div>
-    <div class="explore-browse-heading"><h2>Browse by topic</h2><p>Open a topic tab to see its tools.</p></div>
-  </section>`;
+function resourceChoiceCards(cards) {
+  return `<div class="resource-choice-grid">${cards.map(([icon,title,description,href,tone,extra])=>`<article class="resource-choice ${tone}"><span class="explore-icon" aria-hidden="true">${icon}</span><h2><a href="${href}">${title}</a></h2><p>${description}</p>${extra || ""}</article>`).join("")}</div>`;
+}
+
+function renderExploreOverview() {
+  app.innerHTML = pageHeader("Explore maths resources", "Choose a tool for your lesson, build a worksheet, or download a ready-made resource.") +
+    `<section class="resource-overview" aria-label="Explore teaching resources">${resourceChoiceCards([
+      ['◈','Teaching Tools','Question generators, interactive diagrams and conceptual explainers for your lessons.','#/teaching-tools','teal','<a class="resource-choice-action" href="#/teaching-tools">Browse teaching tools →</a>'],
+      ['▦','Build a Worksheet','Choose topics and create your own questions, worksheets and tests, with answers and worked solutions.','#/worksheet-generator','amber','<a class="resource-choice-action" href="#/worksheet-generator">Open Worksheet Builder →</a><a class="resource-choice-secondary" href="#/gcse-exam-style">Exam & assessment builder</a>'],
+      ['▤','Ready-Made Resources','Download starters, exit tickets and topic worksheets, with separate answers and worked solutions.','#/ready-made-resources','violet','<a class="resource-choice-action" href="#/ready-made-resources">Browse ready-made resources →</a>']
+    ])}<p class="resource-overview-help"><a href="#/how-to-use-this-site">New here? Take a quick tour ↗</a><span>Courses and professional development are in <a href="#/teacher-reference">Teacher reference & workspace guide</a>.</span></p></section>`;
+}
+
+function renderReadyMadeResources() {
+  app.innerHTML = pageHeader("Ready-Made Resources", "Choose a collection. Download the student sheet and the answers or worked solutions you need.") +
+    `<section class="resource-overview" aria-label="Ready-made resource collections">${resourceChoiceCards([
+      ['▤','Starters & Exit Tickets','Short practice packs for the start or end of a lesson, with answers and worked solutions.','#/practice-packs','violet','<a class="resource-choice-action" href="#/practice-packs">Browse starters & exit tickets →</a>'],
+      ['∫','AP Calculus','AB and BC topic worksheets: eight questions on one A4 page, with separate teacher solutions and suggested marks.','#/ap-calculus','teal','<a class="resource-choice-action" href="#/ap-calculus">Browse AP Calculus →</a>'],
+      ['A','A level Mathematics','Edexcel UK 9MA0 Pure, Statistics and Mechanics: one-page student sheets and separate worked solutions.','#/alevel-maths','amber','<a class="resource-choice-action" href="#/alevel-maths">Browse A level Mathematics →</a>']
+    ])}</section>`;
 }
 
 document.addEventListener("click", event => {

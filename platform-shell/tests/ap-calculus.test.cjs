@@ -18,7 +18,7 @@ for(const a of doc.querySelectorAll('a[href$=".pdf"]')){assert(a.href.includes('
 go('#/ap-calculus/1.1');assert(doc.getElementById('ap-topic-1.1').classList.contains('ap-current-topic'));assert(!doc.querySelector('.ap-download-grid'));
 go('#/ap-calculus/10.3');assert(doc.getElementById('ap-topic-10.3'));assert.equal(doc.getElementById('ap-topic-10.3').querySelectorAll('a[href$=".pdf"]').length,2);
 go('#/ap-calculus?course=bc&q=%3Cscript%3E');assert(!doc.querySelector('#app script'));assert(doc.querySelector('.ap-empty'));
-go('#/tools');assert(doc.querySelector('.explore-actions a[href="#/ap-calculus"]'));
+go('#/ready-made-resources');assert(doc.querySelector('.resource-choice a[href="#/ap-calculus"]'));
 go('#/teacher-reference');assert(doc.querySelector('#app a[href="#/ap-calculus"]'));
 const sources=JSON.parse(fs.readFileSync(root+'/data/ap-calculus/questions.json'));assert.equal(sources.packs.length,36);
 for(const p of sources.packs){assert.equal(p.questions.length,10);assert.equal(new Set(p.questions.map(q=>q.question)).size,10);assert.equal(p.questions.slice(0,6).concat(p.questions.slice(-2)).reduce((s,q)=>s+q.marks,0),manifest[p.id].marks);for(const q of p.questions){assert(q.answer&&q.steps.length);if(q.origin==='generator'&&!['7.6'].includes(p.id)){for(const step of q.raw.steps||[])if(step.equation)assert(q.steps.some(s=>s.includes(step.equation)),p.id+' omitted equation field');}assert.equal(q.criteria.reduce((s,c)=>s+Number(c.match(/\[(\d+)\]/)[1]),0),q.marks);if(p.id==='3.4')assert(!/\\(?:cot|sec|csc|cos)\^\{-1\}/.test(q.question));if(['9.7','9.8'].includes(p.id))assert(!q.question.includes('<svg'));}}

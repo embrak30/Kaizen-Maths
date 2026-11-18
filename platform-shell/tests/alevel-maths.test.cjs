@@ -14,6 +14,6 @@ const input=doc.querySelector('#alevel-search');input.value='normal';input.dispa
 w.location.hash='#/alevel-maths?area=invalid&group=invalid';w.renderRoute();assert(doc.querySelectorAll('.ap-topic-row').length>0);
 w.location.hash='#/curriculum-alignments';w.renderRoute();assert(doc.querySelector('.curriculum-chooser-hero'));assert.equal(sidebar,doc.querySelector('.sidebar'));
 w.location.hash='#/curriculum-alignments/pearson-edexcel';w.renderRoute();assert(doc.querySelector('.ap-curriculum-link [href="#/alevel-maths"]'));
-w.location.hash='#/tools';w.renderRoute();assert(doc.querySelector('.explore-action[href="#/alevel-maths"]'));
+w.location.hash='#/ready-made-resources';w.renderRoute();assert(doc.querySelector('.resource-choice a[href="#/alevel-maths"]'));
 for(const p of w.KaizenALevelData.packs){assert.equal(p.questions,8);assert.equal(p.studentPages,1);for(const role of ['student','teacher'])assert(fs.statSync(root+'/'+p[role]).size>1000);}
 d.window.close();console.log('PASS: 140 download pairs, subject/topic filters, search, hostile input escaping, fallback routes, persistent sidebar and curriculum chooser.');
