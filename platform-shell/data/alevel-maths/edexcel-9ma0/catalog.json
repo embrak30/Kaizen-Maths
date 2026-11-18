@@ -1,0 +1,2610 @@
+{
+  "qualification": "Edexcel UK A level Mathematics 9MA0",
+  "revision": "2026-11-18",
+  "packs": [
+    {
+      "id": "P1.1a",
+      "reference": "1.1",
+      "area": "Pure",
+      "group": 1,
+      "title": "Deduction",
+      "tools": [],
+      "student": "assets/alevel-maths/edexcel-9ma0/p1-1a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p1-1a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "3fdd27e9cf1729fae496543de44880c275fea9956c85bdcac1422839319df1dd",
+      "teacherHash": "917f94328ea5dfe8163bc1958861147ab1f21c8214a56ac58be00ecf9215b6b1"
+    },
+    {
+      "id": "P1.1b",
+      "reference": "1.1",
+      "area": "Pure",
+      "group": 1,
+      "title": "Exhaustion and counterexamples",
+      "tools": [],
+      "student": "assets/alevel-maths/edexcel-9ma0/p1-1b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p1-1b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 20,
+      "studentHash": "76f79b2cd5cd62e235a38ed568109c319013ae94994b27f4055b40b8a5b2d7de",
+      "teacherHash": "b2d4fcbdc5df6c539f18c66d5d71ccad1fc17e7c13182cb68f9b98889c73816a"
+    },
+    {
+      "id": "P1.1c",
+      "reference": "1.1",
+      "area": "Pure",
+      "group": 1,
+      "title": "Contradiction",
+      "tools": [],
+      "student": "assets/alevel-maths/edexcel-9ma0/p1-1c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p1-1c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 20,
+      "studentHash": "ce6edccb90abfae52fb8b1d23a299ea5881c8ff152bbe21ca7c179513b40cdea",
+      "teacherHash": "1f2ec67bf214ffc26819ccdd1766b44de291565f1297cce1f73aae6510fae039"
+    },
+    {
+      "id": "P2.1",
+      "reference": "2.1",
+      "area": "Pure",
+      "group": 2,
+      "title": "Rational indices",
+      "tools": [
+        "exponents-index-notation"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-1-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-1-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "4716fa183629798f16da54cf4f3275c2e751bcc898ffa3fcbeca50c152174923",
+      "teacherHash": "8ac25e033d3a0b7e204a3100e942579287b21bffdbbbc4c2af3ab25de51fab32"
+    },
+    {
+      "id": "P2.2",
+      "reference": "2.2",
+      "area": "Pure",
+      "group": 2,
+      "title": "Surds and rationalisation",
+      "tools": [
+        "surds-radicals"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-2-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-2-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "8450d109bfc34ea9480cc8e0bc724fc4e5942821478aa6f20c3eae2ebccf553e",
+      "teacherHash": "0c1b3ee5f60bd3820dfb0c0bb2d7cd5b6ac6e9abe1d4465e55ec76918c7301b2"
+    },
+    {
+      "id": "P2.3a",
+      "reference": "2.3",
+      "area": "Pure",
+      "group": 2,
+      "title": "Quadratics and discriminants",
+      "tools": [
+        "quadratic-equations",
+        "graph-transformations-curve-sketching"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-3a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-3a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 25,
+      "studentHash": "37162b9099b5813d7aca735891cc3f0afd967e132d16a4c5a0ba15472c7d6463",
+      "teacherHash": "f3ab7ac2d300b2f3fa108e45460d3a7954fd5c0ed369ebb09252ed8edf56275d"
+    },
+    {
+      "id": "P2.3b",
+      "reference": "2.3",
+      "area": "Pure",
+      "group": 2,
+      "title": "Discriminants and parameters",
+      "tools": [
+        "quadratic-equations",
+        "graph-transformations-curve-sketching"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-3b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-3b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "32980bf864490690eb7fa7eb3a96c9e22c7a7a8687c90a88ee572565d24bbb8f",
+      "teacherHash": "15f05f4c89961dc6aa6999a632a70c621f27675b4dd69619fbe7557e43d0e408"
+    },
+    {
+      "id": "P2.3c",
+      "reference": "2.3",
+      "area": "Pure",
+      "group": 2,
+      "title": "Completing the square and graphs",
+      "tools": [
+        "quadratic-equations",
+        "graph-transformations-curve-sketching"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-3c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-3c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "f9a692459882898f880768c25bffc40d3bb8dcd4794f5e4932a6fff5e93a0833",
+      "teacherHash": "e3984a7c85710f36c90861833072a5e0c0544182fa0d822deadee136ddf526c0"
+    },
+    {
+      "id": "P2.4",
+      "reference": "2.4",
+      "area": "Pure",
+      "group": 2,
+      "title": "Linear and quadratic simultaneous equations",
+      "tools": [
+        "simultaneous-equations",
+        "conic-intersections"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-4-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-4-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "e5611b4e1c331646cc8637519ff29bc79daee71ebdad49458d5c931743dafe92",
+      "teacherHash": "3d77a0f2ed8a53a7c00cb3506826b8c11bedf3eed67fb7902bc56a5f2c508732"
+    },
+    {
+      "id": "P2.5a",
+      "reference": "2.5",
+      "area": "Pure",
+      "group": 2,
+      "title": "Linear and quadratic inequalities",
+      "tools": [
+        "inequalities"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-5a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-5a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "eadae3ae13364ffb2db1a11001fc00208852a05cbcd301d8c151d80331cd50fa",
+      "teacherHash": "d02431b3b8f509e591e595d234343da9b9f156a430678419cd168a959bbdb355"
+    },
+    {
+      "id": "P2.5b",
+      "reference": "2.5",
+      "area": "Pure",
+      "group": 2,
+      "title": "Rational inequalities and regions",
+      "tools": [
+        "inequalities"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-5b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-5b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 20,
+      "studentHash": "57ea4431523f01b05f7b8a1791c8ca872abd1dcc8e2d7176aff6b8bdbe723a23",
+      "teacherHash": "32d58ab828c6a92ad698a545679db8f9a5c98fac3e67a3720e1746e92bdbe8a1"
+    },
+    {
+      "id": "P2.6a",
+      "reference": "2.6",
+      "area": "Pure",
+      "group": 2,
+      "title": "Polynomial division and factor theorem",
+      "tools": [
+        "remainder-theorem",
+        "advanced-factorisation",
+        "algebraic-fractions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-6a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-6a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "20527d5c4bf8e1d2e31b13b6fb225b87f29adc1b404aaa7f715f1efb81b0576c",
+      "teacherHash": "1230711084b33e62a639936c712f70f1e1d8499c0f5fc6b70f1a014637276d86"
+    },
+    {
+      "id": "P2.6b",
+      "reference": "2.6",
+      "area": "Pure",
+      "group": 2,
+      "title": "Rational algebra",
+      "tools": [
+        "remainder-theorem",
+        "advanced-factorisation",
+        "algebraic-fractions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-6b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-6b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "2557a84f7207e0a79169a159fb3f897c820131765f5abd9676d868ba5cc7b956",
+      "teacherHash": "38877976ac4d46a0c9ad7a292f78b4b165b2c559c980df9c3928528f3103104d"
+    },
+    {
+      "id": "P2.7a",
+      "reference": "2.7",
+      "area": "Pure",
+      "group": 2,
+      "title": "Polynomial and reciprocal graphs",
+      "tools": [
+        "graph-transformations-curve-sketching",
+        "absolute-values"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-7a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-7a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "7f7e43a1486cfa5f7fe1f925fe4d728810043711a862c0a245ae56d36b2a733f",
+      "teacherHash": "36cfd262a340c730d289a13b0e265cd89b42d63f967df870636175d78fb45736"
+    },
+    {
+      "id": "P2.7b",
+      "reference": "2.7",
+      "area": "Pure",
+      "group": 2,
+      "title": "Modulus graphs and equations",
+      "tools": [
+        "graph-transformations-curve-sketching",
+        "absolute-values"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-7b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-7b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "8b40504208645039d6cb519ec771d1f543b2d34f2e1b19fc8ca6bee29bf6ce48",
+      "teacherHash": "25c3d5d2a7c7d7556c3a6e6ea6f0b249d829c888199390b768c16b777fb968de"
+    },
+    {
+      "id": "P2.8",
+      "reference": "2.8",
+      "area": "Pure",
+      "group": 2,
+      "title": "Composite and inverse functions",
+      "tools": [
+        "functions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-8-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-8-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "0c2aca58e95a17a3d8e330f08db87b07355c64f58ef7ccfa696b8ac3cae65b83",
+      "teacherHash": "0d2fd92b44b2a3c4b8c8320d34560e34732368296635082527d1839e7d3cad17"
+    },
+    {
+      "id": "P2.9",
+      "reference": "2.9",
+      "area": "Pure",
+      "group": 2,
+      "title": "Combined graph transformations",
+      "tools": [
+        "graph-transformations-curve-sketching",
+        "trig-graphs-transformations"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-9-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-9-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "4f9c8ca4e612e8cc0bd9206fe71c848915a147b1a0bde8ce4212e95da9facbdc",
+      "teacherHash": "e2556d76979ef72759ba4a4cba7d5ee5d6e24b6eae997d2be17cc529ec3344c1"
+    },
+    {
+      "id": "P2.10",
+      "reference": "2.10",
+      "area": "Pure",
+      "group": 2,
+      "title": "Partial fractions: distinct and repeated factors",
+      "tools": [
+        "partial-fractions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-10-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-10-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "d7632e06b0fb22919fc1b0688eb0da29dd3304b98aff380a653a59d48042bf90",
+      "teacherHash": "107e013c5dfca2d929bf0edc84c7dfb72a906414f89e472aa45c6f8776c050ec"
+    },
+    {
+      "id": "P2.11",
+      "reference": "2.11",
+      "area": "Pure",
+      "group": 2,
+      "title": "Choosing and critiquing function models",
+      "tools": [
+        "functions",
+        "logarithms-practice",
+        "trigonometric-functions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p2-11-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p2-11-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "4d038820f98db6524a163045e36cf4d7778fb626f5731ad454174fd424bb9fe3",
+      "teacherHash": "b043ed45cbf5f47fbf52d813c08cab87bb74981b9c45110ae7fa73e09958658d"
+    },
+    {
+      "id": "P3.1",
+      "reference": "3.1",
+      "area": "Pure",
+      "group": 3,
+      "title": "Straight-line geometry and models",
+      "tools": [
+        "straight-lines"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p3-1-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p3-1-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "7fa1c8d0585d9088234bb94cc20aa5f42967c21638a607cee3ce890a58fa112c",
+      "teacherHash": "0477cdf840108cf725269c395b0b173e99f8f3e04c6705333bb222e743d23962"
+    },
+    {
+      "id": "P3.2a",
+      "reference": "3.2",
+      "area": "Pure",
+      "group": 3,
+      "title": "Circles and tangents",
+      "tools": [
+        "equation-of-a-circle",
+        "conic-intersections"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p3-2a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p3-2a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "dfe07966a806505fd7cf1a86277581d043b9c8f60073dfcc1eccd2a35b12de70",
+      "teacherHash": "9b25ac2b27d66ba2ec12bbe296bc6fbe4893cf02ae6838d34d439751c1c26f27"
+    },
+    {
+      "id": "P3.2b",
+      "reference": "3.2",
+      "area": "Pure",
+      "group": 3,
+      "title": "Circle geometry in coordinates",
+      "tools": [
+        "equation-of-a-circle",
+        "conic-intersections"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p3-2b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p3-2b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "f01a8afa237fe4c3c0506b243422e3b6b492421da6b99baa8cdc19685de7a057",
+      "teacherHash": "f983ab9314da368410fd4e483c019c98450ac034ae07ea6f536172f86c94a2b0"
+    },
+    {
+      "id": "P3.3",
+      "reference": "3.3",
+      "area": "Pure",
+      "group": 3,
+      "title": "Cartesian and parametric forms",
+      "tools": [
+        "advanced-differentiation"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p3-3-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p3-3-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "968b2c2687b5f5c22241123deeeee518596b2909119b6dd8b36638345699293a",
+      "teacherHash": "99901d7afdd25b95fa25712d8c0bd21894e68cfe019d5a835d1759b0701f6b78"
+    },
+    {
+      "id": "P3.4",
+      "reference": "3.4",
+      "area": "Pure",
+      "group": 3,
+      "title": "Parametric modelling",
+      "tools": [
+        "advanced-differentiation"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p3-4-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p3-4-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 21,
+      "studentHash": "39ee29514d3c5ebb94ad9725d60343eec24d5bf68fef57680442b50324da0484",
+      "teacherHash": "f030bd8640abc3d2d9c06d8e5577f1a828ed8f9fd1329ac3f7e523d9636fb22b"
+    },
+    {
+      "id": "P4.1a",
+      "reference": "4.1",
+      "area": "Pure",
+      "group": 4,
+      "title": "Positive-integer binomial expansions",
+      "tools": [
+        "binomial-expansion"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p4-1a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p4-1a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "2c2cb9b3aa4a08fe49702bfddc598b2050a67f05516bb4c8ff6be895181553a7",
+      "teacherHash": "c8b756b0286d6a1482c9300be05820098500154b681c5686626a533d11f60005"
+    },
+    {
+      "id": "P4.1b",
+      "reference": "4.1",
+      "area": "Pure",
+      "group": 4,
+      "title": "Rational binomial expansions and validity",
+      "tools": [
+        "binomial-expansion"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p4-1b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p4-1b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "08be72c100ecede8c13d3e0e645b145de86817e69035175b8285e8fbddafac52",
+      "teacherHash": "df3886d004bbba59b9084704cef7543b3e7ea3c0c043797127c5650c698859ca"
+    },
+    {
+      "id": "P4.2",
+      "reference": "4.2",
+      "area": "Pure",
+      "group": 4,
+      "title": "Recurrence relations and sequence behaviour",
+      "tools": [
+        "sequences",
+        "sequences-series"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p4-2-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p4-2-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 21,
+      "studentHash": "be1f9c50deecf93ee6c22cdceea53670e35bf83237d11bac2ed9fdc9458d0ba5",
+      "teacherHash": "82ca2f25bc0708a2d6532e7de1a9e35f8e791c0401fe0c64532fd3b54fd80c6b"
+    },
+    {
+      "id": "P4.3",
+      "reference": "4.3",
+      "area": "Pure",
+      "group": 4,
+      "title": "Sigma notation",
+      "tools": [
+        "sequences-series"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p4-3-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p4-3-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "ddef9646806d528dd830803f3d8207c0f735aeb40215e9d511727527832deed1",
+      "teacherHash": "664f41451471f175dd62aa53410e640a8ac2715d2f243497fd3194e7d50f6b29"
+    },
+    {
+      "id": "P4.4",
+      "reference": "4.4",
+      "area": "Pure",
+      "group": 4,
+      "title": "Arithmetic sequences and series",
+      "tools": [
+        "sequences-series"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p4-4-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p4-4-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "b845f56525d2e0d03b6b60433a490023c6ebf7163d795a36fe583a7628909252",
+      "teacherHash": "d679d6169ed2487f9aa342002dd84ff6d3a9317b3102a310bd47ae8fbc5685e1"
+    },
+    {
+      "id": "P4.5",
+      "reference": "4.5",
+      "area": "Pure",
+      "group": 4,
+      "title": "Geometric sequences and series",
+      "tools": [
+        "sequences-series"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p4-5-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p4-5-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "206f587f5cb5b290ec950eda363ec6c12af37093ed01304771840ca7afaa3427",
+      "teacherHash": "8bc62ccd98f683ac778d1f37bddfac7d59fc225ab1c562415b953da6a5fe03e6"
+    },
+    {
+      "id": "P4.6",
+      "reference": "4.6",
+      "area": "Pure",
+      "group": 4,
+      "title": "Sequence and series models",
+      "tools": [
+        "sequences-series",
+        "financial-real-life-maths"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p4-6-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p4-6-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "617bb80f83ca25aa617e613563d4db3d8dba64347638efa710472f9428088f3f",
+      "teacherHash": "af653696156526f314b3ac63b75435a1c15a52bfa56396e9998d42dc7c4a1eaf"
+    },
+    {
+      "id": "P5.1a",
+      "reference": "5.1",
+      "area": "Pure",
+      "group": 5,
+      "title": "Unit-circle trigonometry",
+      "tools": [
+        "trigonometric-functions",
+        "sine-cosine-rule",
+        "sectors-arc-length"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-1a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-1a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "9e9c02175282d9b5a4212f252e48b76ea38bf693f87f558c1fe3a006887b31ee",
+      "teacherHash": "acf20c7a483aebd64556531621c22d93f77bc5db66bf8fc5b259a12ce0523821"
+    },
+    {
+      "id": "P5.1b",
+      "reference": "5.1",
+      "area": "Pure",
+      "group": 5,
+      "title": "Triangle rules and the ambiguous case",
+      "tools": [
+        "trigonometric-functions",
+        "sine-cosine-rule",
+        "sectors-arc-length"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-1b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-1b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "ed0061227ab25727846350263b7ba3c6e7848f9834a2d213af84b83c46d4682c",
+      "teacherHash": "98a358847f1c3563a9bce2090a72578e1437bac2889f76a7299e3cbed8c301c3"
+    },
+    {
+      "id": "P5.1c",
+      "reference": "5.1",
+      "area": "Pure",
+      "group": 5,
+      "title": "Radians and sectors",
+      "tools": [
+        "trigonometric-functions",
+        "sine-cosine-rule",
+        "sectors-arc-length"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-1c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-1c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "020453c51de32b4379c81eae79783780642a9d619e36b5801d767585b165bc5a",
+      "teacherHash": "c033f8d85d41293ac137433738227d23fc8f1689c178abd42ddbb143a967dc13"
+    },
+    {
+      "id": "P5.2",
+      "reference": "5.2",
+      "area": "Pure",
+      "group": 5,
+      "title": "Small-angle approximations",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-2-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-2-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "4f7f453ddeb3e88fd7be5967dc02e816500895866d748e1b882755f71db6ae07",
+      "teacherHash": "53cc86a313f3d03c7757462aaeb5dad275c83d9aacb13e6657d48d0d04ed7438"
+    },
+    {
+      "id": "P5.3",
+      "reference": "5.3",
+      "area": "Pure",
+      "group": 5,
+      "title": "Trigonometric graphs and exact values",
+      "tools": [
+        "trig-graphs-transformations",
+        "trigonometric-functions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-3-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-3-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "5c89ec06d6da2ba9baf8d5dc328cd30c9e0a56b202565697ba39035c573b60b9",
+      "teacherHash": "22091e15e1ece2203481ce3dfa29cf6426dc0c1e4fea59b4513249c47ce67ea4"
+    },
+    {
+      "id": "P5.4",
+      "reference": "5.4",
+      "area": "Pure",
+      "group": 5,
+      "title": "Reciprocal and inverse trigonometric functions",
+      "tools": [
+        "trigonometric-functions",
+        "functions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-4-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-4-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 20,
+      "studentHash": "331a1341845c6bdcc383c2303c47980a28a911304748928ce294e0e707ee4887",
+      "teacherHash": "b8c5688ce0f118cb29a38faef980829980de9fd23d147aeb466cba73a91e441c"
+    },
+    {
+      "id": "P5.5",
+      "reference": "5.5",
+      "area": "Pure",
+      "group": 5,
+      "title": "Fundamental and reciprocal identities",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-5-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-5-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "d345f966dfb9b86e6301b3f6c4037a15afa14cd472dff8f41884a5e4fe24659a",
+      "teacherHash": "79394dc919cd6941e1844ff165a26b0ba9d3ab1be79e8dbb65d40005fa7de414"
+    },
+    {
+      "id": "P5.6a",
+      "reference": "5.6",
+      "area": "Pure",
+      "group": 5,
+      "title": "Addition formulae",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-6a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-6a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "782cff7b5177222da0da367d057f07d19805c82b82ad7cb037b4c0c140ab2fbd",
+      "teacherHash": "58be42ca8df09ca6860cce1e438b14c971e0a8f1305e0a8cfdb0e4fb9a14efc0"
+    },
+    {
+      "id": "P5.6b",
+      "reference": "5.6",
+      "area": "Pure",
+      "group": 5,
+      "title": "Double-angle applications",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-6b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-6b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "4f78fd3e69c80e501cbf7530a1fa7d1b2f60e5cb1702db6ab7292ae91988eab1",
+      "teacherHash": "83f9f04851ce1d94f5a4958c9b90d0367588016f38ee5a6d4c866b7cf8f94253"
+    },
+    {
+      "id": "P5.6c",
+      "reference": "5.6",
+      "area": "Pure",
+      "group": 5,
+      "title": "R-form expressions",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-6c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-6c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "477cc6186762a6352e5572d0d3d2681114d7224ccbf1a7c657048d6b2f76ba92",
+      "teacherHash": "286c449ba08b7471360d8a8969b934e19420e3f0ee37b2401bfcfdd7599686c8"
+    },
+    {
+      "id": "P5.7",
+      "reference": "5.7",
+      "area": "Pure",
+      "group": 5,
+      "title": "Trigonometric equations in intervals",
+      "tools": [
+        "trig-equation-solver"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-7-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-7-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "ae75a2f7dabc502d02f5e7a40a0badea34f208dbd68bc52c7ab92b7ae4ff2cc0",
+      "teacherHash": "b64e09ffd402364f055b5fcb161472838150a4313b05d23c63c439abda9e1110"
+    },
+    {
+      "id": "P5.8",
+      "reference": "5.8",
+      "area": "Pure",
+      "group": 5,
+      "title": "Proving trigonometric identities",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-8-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-8-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "50c09115eb8d76ef4d2be5b9755b2a483b7a09d34f54da518f2d00354875130f",
+      "teacherHash": "7dfbda4b3be8b49a095e8b7da16368d5e39783320cb91e7198be0bd65c3560a5"
+    },
+    {
+      "id": "P5.9",
+      "reference": "5.9",
+      "area": "Pure",
+      "group": 5,
+      "title": "Trigonometric models and applications",
+      "tools": [
+        "trigonometric-functions",
+        "projectiles",
+        "newtons-second-law"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p5-9-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p5-9-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 21,
+      "studentHash": "84eef65e684492e1cca531133a8a43ff9450a0bc0975d2169b4f1cddf76aae5b",
+      "teacherHash": "780a9494bdadee474b92dfd2ada224857b436476797c5cd1802bdbff7d60428b"
+    },
+    {
+      "id": "P6.1",
+      "reference": "6.1",
+      "area": "Pure",
+      "group": 6,
+      "title": "Exponential graphs and transformations",
+      "tools": [
+        "logarithms-practice",
+        "graph-transformations-curve-sketching"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p6-1-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p6-1-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "7fba85c1eab3ed1e4d3d8f120a9325e9d6abfe51d94dde31e4cf78c1f1ac4893",
+      "teacherHash": "092105c0e544e74231e6cf715702cc4409ffb3e7b36636d8379a58e90e7b2d23"
+    },
+    {
+      "id": "P6.2",
+      "reference": "6.2",
+      "area": "Pure",
+      "group": 6,
+      "title": "Exponential gradients and proportional rates",
+      "tools": [
+        "differentiation-rules",
+        "differential-equations"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p6-2-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p6-2-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "0559bbc75a891e66fd5f6a5ebe09e7ee3985dbfb470adfbb6b25510187e23135",
+      "teacherHash": "fea7eb53a73db7fd43164841ed1b065ad5a2a7156e43dd593065feb8b1a27127"
+    },
+    {
+      "id": "P6.3",
+      "reference": "6.3",
+      "area": "Pure",
+      "group": 6,
+      "title": "Logarithms as inverse functions",
+      "tools": [
+        "logarithms-practice",
+        "functions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p6-3-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p6-3-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "ced3ce3bfe64c4b51eb77fc817369dc424c923fea2c615f19fbc6263b14a081d",
+      "teacherHash": "c2d9a3df145cbc5c9acb205bb40890bec3a9b00dd41910e8b36d1fb7997852ee"
+    },
+    {
+      "id": "P6.4",
+      "reference": "6.4",
+      "area": "Pure",
+      "group": 6,
+      "title": "Logarithm laws",
+      "tools": [
+        "logarithms-practice"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p6-4-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p6-4-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "f2ea77e35c05643df47d00288a2a0e3a0694664968269c0ce37beec6a4f0bddb",
+      "teacherHash": "148858bf737a1f4453eb158c462c6f6fee402df7fe483160a6e992ffe5158e8d"
+    },
+    {
+      "id": "P6.5",
+      "reference": "6.5",
+      "area": "Pure",
+      "group": 6,
+      "title": "Exponential equations",
+      "tools": [
+        "logarithms-practice"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p6-5-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p6-5-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "92569c71b24e1ce01830f0114d20af8013ccfe7db2419f37dde321f12f5bb56c",
+      "teacherHash": "0f5743528ad863f1fd722d5abe883d80d75ca69a769954ea81aa1439f7b8af9b"
+    },
+    {
+      "id": "P6.6",
+      "reference": "6.6",
+      "area": "Pure",
+      "group": 6,
+      "title": "Logarithmic straight-line models",
+      "tools": [
+        "logarithms-practice",
+        "straight-lines",
+        "correlation-regression"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p6-6-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p6-6-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "a49b29fee774e15f21723c1e2cd5e89952d5970febf401205798e3bcfbbc4c49",
+      "teacherHash": "eab5f4529d80440d4498ea3d9998463498fd0bd206b54d6e1a1b3f08f68eee41"
+    },
+    {
+      "id": "P6.7",
+      "reference": "6.7",
+      "area": "Pure",
+      "group": 6,
+      "title": "Growth and decay models",
+      "tools": [
+        "logarithms-practice",
+        "differential-equations"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p6-7-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p6-7-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 21,
+      "studentHash": "6c010ae898e37d2b4966e3fa2dd830f89ab7fdca792e155ad0e33a0711855f63",
+      "teacherHash": "bb05c96d4a040fb880a579fcb1591a4a47beda12617de43ed6631ddd1c29a6b1"
+    },
+    {
+      "id": "P7.1a",
+      "reference": "7.1",
+      "area": "Pure",
+      "group": 7,
+      "title": "Derivative meaning and gradient graphs",
+      "tools": [
+        "limits-first-principles",
+        "advanced-differentiation"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-1a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-1a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "83c207692283c8e7457c688e5924acc720cc7980b4cdc6977d160666dd77ba64",
+      "teacherHash": "ee216fc8ffe5c129a96ad3d8981c2d2afaddcb3cb66f5b01c01013a173bed30b"
+    },
+    {
+      "id": "P7.1b",
+      "reference": "7.1",
+      "area": "Pure",
+      "group": 7,
+      "title": "First principles: powers",
+      "tools": [
+        "limits-first-principles",
+        "advanced-differentiation"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-1b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-1b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "daff5d61b46c577850f42b282720828f50637026af923a6906977397a28a4174",
+      "teacherHash": "14bf889c46045edf59037a04cf08985ed34742984d02f96b34c9a7e15e0e52b6"
+    },
+    {
+      "id": "P7.1c",
+      "reference": "7.1",
+      "area": "Pure",
+      "group": 7,
+      "title": "First principles: sine and cosine",
+      "tools": [
+        "limits-first-principles",
+        "advanced-differentiation"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-1c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-1c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "9dc01a2de60a688ce79c5cb2f60e0f730cddbae336cf94460af2b973ab8386ff",
+      "teacherHash": "814d4eab6c14af492b163131ad3ab6865ff344de173cca7156f3791980996bce"
+    },
+    {
+      "id": "P7.1d",
+      "reference": "7.1",
+      "area": "Pure",
+      "group": 7,
+      "title": "Second derivatives and concavity",
+      "tools": [
+        "limits-first-principles",
+        "advanced-differentiation"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-1d-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-1d-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "49700110ef547a1d2215f3a40d47d41db7c2e6e439b9ff4c469bdf83d4160c20",
+      "teacherHash": "aef039ad33f82e8bcaf3a956507954c6423027a8999d7dad2e91eedf0f34139f"
+    },
+    {
+      "id": "P7.2a",
+      "reference": "7.2",
+      "area": "Pure",
+      "group": 7,
+      "title": "Power-rule differentiation",
+      "tools": [
+        "differentiation-polynomials",
+        "differentiation-rules",
+        "trig-differentiation-rules"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-2a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-2a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 17,
+      "studentHash": "2de9c72f78a71c6124ae1164854f6d5d22b2d06b2734bc700099723e4edddeab",
+      "teacherHash": "f7e4a73d9c2aaa1e9f23620ae19ed85dc74802adbf86309b46b4cc05e0f6173f"
+    },
+    {
+      "id": "P7.2b",
+      "reference": "7.2",
+      "area": "Pure",
+      "group": 7,
+      "title": "Exponential and logarithmic derivatives",
+      "tools": [
+        "differentiation-polynomials",
+        "differentiation-rules",
+        "trig-differentiation-rules"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-2b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-2b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "7561c7213d58d71b658b87296b4c659b588cc64391a573ad6f0c92ae69310e1e",
+      "teacherHash": "20c1db5c9ad68639b932738a0d2b61f478934ad93532d9e7e09efd283f2f59af"
+    },
+    {
+      "id": "P7.2c",
+      "reference": "7.2",
+      "area": "Pure",
+      "group": 7,
+      "title": "Trigonometric derivatives",
+      "tools": [
+        "differentiation-polynomials",
+        "differentiation-rules",
+        "trig-differentiation-rules"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-2c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-2c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 18,
+      "studentHash": "cd9b45ca3f20900c9f55fe9ac10fc7323bbe5d55b1594dea0862e44c8cac6646",
+      "teacherHash": "cdaf76c39537fd418d6d008db75ed00f1ddf8d94e81479a46c88545860b1ae78"
+    },
+    {
+      "id": "P7.3a",
+      "reference": "7.3",
+      "area": "Pure",
+      "group": 7,
+      "title": "Tangents and normals",
+      "tools": [
+        "advanced-differentiation",
+        "differentiation-polynomials"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-3a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-3a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "d09a3d2d2199f6160e757ed36716eb4ed00fad707d23accff71a66bd15b01a6e",
+      "teacherHash": "cb9420425b9821bd7539ede4ccc6d720889e879c28f0970461207fd418a91414"
+    },
+    {
+      "id": "P7.3b",
+      "reference": "7.3",
+      "area": "Pure",
+      "group": 7,
+      "title": "Stationary points and curve behaviour",
+      "tools": [
+        "advanced-differentiation",
+        "differentiation-polynomials"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-3b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-3b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "e0b78cb4fb5639f0a2727ee9e5c18123d14b0c0c2d80b05c0a66c137a7b5c603",
+      "teacherHash": "c4ecd67beb7fe79e8d06546f494a163c71dcfb360b163711885f3a3737ac530d"
+    },
+    {
+      "id": "P7.3c",
+      "reference": "7.3",
+      "area": "Pure",
+      "group": 7,
+      "title": "Optimization",
+      "tools": [
+        "advanced-differentiation",
+        "differentiation-polynomials"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-3c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-3c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "0fff9fd009efd11fcb51e9dca682427510e07e6eca6b24c6f64ca8af3c552af1",
+      "teacherHash": "d4edbb9f87de99e7258b3e4cb139be6e48d8234f1d7bd3e8b40875ba190b2c2c"
+    },
+    {
+      "id": "P7.4a",
+      "reference": "7.4",
+      "area": "Pure",
+      "group": 7,
+      "title": "Product quotient and chain rules",
+      "tools": [
+        "differentiation-rules",
+        "advanced-differentiation",
+        "inverse-trig-differentiation"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-4a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-4a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 19,
+      "studentHash": "2d13df8bfda9bfcc11aedb97a6be662fb1b231e3fb5061724f8cd6c1a7f1f63b",
+      "teacherHash": "9f365a3561d3475fd03a4f316e32ecdbe117f3efd74e3a1efa4210a286f59929"
+    },
+    {
+      "id": "P7.4b",
+      "reference": "7.4",
+      "area": "Pure",
+      "group": 7,
+      "title": "Connected rates",
+      "tools": [
+        "differentiation-rules",
+        "advanced-differentiation",
+        "inverse-trig-differentiation"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-4b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-4b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 31,
+      "studentHash": "8fc0c8a18f7eb220ffc6ab93d30ba6d83121a0139cd91adaf7cfcc678a6766b9",
+      "teacherHash": "821255b49b3867dd417f3b61f3c93fde0edf7111abeeddc43d85d05534715b8a"
+    },
+    {
+      "id": "P7.4c",
+      "reference": "7.4",
+      "area": "Pure",
+      "group": 7,
+      "title": "Inverse-function differentiation",
+      "tools": [
+        "differentiation-rules",
+        "advanced-differentiation",
+        "inverse-trig-differentiation"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-4c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-4c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "32174141eced6d89a8216842f1a12723930375518753e903a1614fd50015acdb",
+      "teacherHash": "70872f7887155d305598ab73daa4dd3b531c1293a45991b792080ab463f6282f"
+    },
+    {
+      "id": "P7.5a",
+      "reference": "7.5",
+      "area": "Pure",
+      "group": 7,
+      "title": "Implicit differentiation",
+      "tools": [
+        "advanced-differentiation"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-5a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-5a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 8,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "9dac14dc77fbbbbec37ae39dba7984dc6ca239b61d25417609e27fc9adb38f65",
+      "teacherHash": "7f19280e21c22332fc08433e50ab24e621b8a32eab85cb5aee311202fc4f9ad5"
+    },
+    {
+      "id": "P7.5b",
+      "reference": "7.5",
+      "area": "Pure",
+      "group": 7,
+      "title": "Parametric differentiation",
+      "tools": [
+        "advanced-differentiation"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-5b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-5b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "8731a2fa838a8a36240beae9c626e164340b45e487d2e260c0787f935291cc7a",
+      "teacherHash": "50eb7faa637c51bf7f23180003d4266c1ca25586fa559056f07b96e584aacb99"
+    },
+    {
+      "id": "P7.6",
+      "reference": "7.6",
+      "area": "Pure",
+      "group": 7,
+      "title": "Forming differential equations",
+      "tools": [
+        "differential-equations"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p7-6-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p7-6-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 21,
+      "studentHash": "a01d7eee02416a9b0c55718dd2e23a403d43cd8498cc55b7f7a986e1dd9560e3",
+      "teacherHash": "c0c567c4ddc2c7ca283d2b5e58749e8b6b37c2d3e1dc371be82d33c54713c9d6"
+    },
+    {
+      "id": "P8.1",
+      "reference": "8.1",
+      "area": "Pure",
+      "group": 8,
+      "title": "Integration and differentiation connection",
+      "tools": [
+        "integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-1-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-1-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "9eb11a9830329af05c2d593593b54ff2dfa8b07dc92d65adcb909b8917bf4228",
+      "teacherHash": "9f21b0680a5804c0d7d25f895984d6fa5bcb1bbe60b3f12ea135ace168a0377a"
+    },
+    {
+      "id": "P8.2a",
+      "reference": "8.2",
+      "area": "Pure",
+      "group": 8,
+      "title": "Integrating rational powers",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-2a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-2a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 8,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "e2232abba7169d7e0eb6c4e53e5794305a657eb68cb0af495fd8bdcd41382684",
+      "teacherHash": "487de26eb95d320c05034f3080b97c4347d14ca1e9496967ff6e6fbb8e2f2c19"
+    },
+    {
+      "id": "P8.2b",
+      "reference": "8.2",
+      "area": "Pure",
+      "group": 8,
+      "title": "Standard trig exponential and logarithmic integrals",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-2b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-2b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "950b390d7e1ad068d36195d0aaa330a5514366c46788fa6626405e217fab984e",
+      "teacherHash": "17f55601a79e3cf23424f2c66f129b0b9414ec15d4b666d99ea850091410bf74"
+    },
+    {
+      "id": "P8.2c",
+      "reference": "8.2",
+      "area": "Pure",
+      "group": 8,
+      "title": "Integration using trig identities",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-2c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-2c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "19227f9d584e182a41ff275bf40fa1c824ea428db9428446d660b227acfd1119",
+      "teacherHash": "bbb84c8cbe182313d2f69abca887767964159ffdf2ee8acaf2c1f6336b794cdf"
+    },
+    {
+      "id": "P8.3a",
+      "reference": "8.3",
+      "area": "Pure",
+      "group": 8,
+      "title": "Definite integrals",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-3a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-3a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 10,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "75f4de35ffed378863534a676db01f4735a6ae6cf96c1b2cbdcdadba21ce0532",
+      "teacherHash": "b06d34953f100e8a0e8cf26806a56ec677f8bc83e27ccb9f514c0f07aa7b2547"
+    },
+    {
+      "id": "P8.3b",
+      "reference": "8.3",
+      "area": "Pure",
+      "group": 8,
+      "title": "Areas between curves",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-3b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-3b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "00e2ec4380f52493a0183ffe30d3f46b1bd8798d686bdb94b5ba526d9e14da48",
+      "teacherHash": "e8cdf0812602a95497206e63e9b335b30afcaca8ae5f20f01c2bdb394b8be89a"
+    },
+    {
+      "id": "P8.3c",
+      "reference": "8.3",
+      "area": "Pure",
+      "group": 8,
+      "title": "Parametric areas",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-3c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-3c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "c2d32a73c84e553f7b196c4490ff9c1347fb39b8af0010902b9462cd6bec3671",
+      "teacherHash": "e2bbaab0d214a451f820735ad64da8e8cb160a4041876ea7a8ea264a7f12b0e0"
+    },
+    {
+      "id": "P8.4",
+      "reference": "8.4",
+      "area": "Pure",
+      "group": 8,
+      "title": "Integration as a limit of sums",
+      "tools": [
+        "integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-4-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-4-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "dd428c701b362cbfec7f294c6c37f5e0c13e577d044060d5b4d52bc9f8f38de5",
+      "teacherHash": "3abf65e703a38b8d7c1a67a2dcd3dff255adbd12c402993c4abec0dfa8fad15b"
+    },
+    {
+      "id": "P8.5a",
+      "reference": "8.5",
+      "area": "Pure",
+      "group": 8,
+      "title": "Substitution",
+      "tools": [
+        "advanced-integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-5a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-5a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "a190da4625e1c0c59fc1f3ffe571758a5a44ff48eaaf7bde9d664286dc55e904",
+      "teacherHash": "bde3633bb2ae9ead035c9f0ce38e92869590138e35b8a7200ad2d8929191d6fe"
+    },
+    {
+      "id": "P8.5b",
+      "reference": "8.5",
+      "area": "Pure",
+      "group": 8,
+      "title": "Integration by parts",
+      "tools": [
+        "advanced-integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-5b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-5b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "75196de1fa3d570a5c6359a5785a3f7b22969ea0d0fdf5f12c0f99cdb447b8fd",
+      "teacherHash": "fb0a8a8608a1b4acf8231b2f16cd5ae1669e2348cf046195129c7e1a5e259957"
+    },
+    {
+      "id": "P8.5c",
+      "reference": "8.5",
+      "area": "Pure",
+      "group": 8,
+      "title": "Recognising logarithmic integrals",
+      "tools": [
+        "advanced-integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-5c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-5c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "3c78b7b2f267554c0306d8e79a2b3a3500206a731c673bd385a53ea277e58abf",
+      "teacherHash": "1e94ad740e71c2ec5577ea95b9604e1e3d12b5eabde752b7551abd10c2f0fdc3"
+    },
+    {
+      "id": "P8.6",
+      "reference": "8.6",
+      "area": "Pure",
+      "group": 8,
+      "title": "Integration using partial fractions",
+      "tools": [
+        "integration-algebraic-fractions"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-6-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-6-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "ad5dea7bb232cc4b87b991b6df308b6ab83009ae6987868b33f9072e12d5e9e4",
+      "teacherHash": "53b7b8c90523b32ecdd1664bf343a13b976940fb16e2cb931cbeb574ff2cb4e9"
+    },
+    {
+      "id": "P8.7",
+      "reference": "8.7",
+      "area": "Pure",
+      "group": 8,
+      "title": "Separable differential equations",
+      "tools": [
+        "differential-equations"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-7-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-7-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "f87222ff0c253e075a57ee1a689bc5200f6d4f93b63f0ca60e86b437292ff8ee",
+      "teacherHash": "ff33439d705b5bb8f72d88f264af27556f845903eb923cec2296931fb3d98d86"
+    },
+    {
+      "id": "P8.8",
+      "reference": "8.8",
+      "area": "Pure",
+      "group": 8,
+      "title": "Interpreting differential-equation models",
+      "tools": [
+        "differential-equations"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p8-8-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p8-8-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 7,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "c2c6f706ef78badc4a60127db4730bca9f1a0b894fd4461f12c1d8454aac024b",
+      "teacherHash": "456d720a21401578e2eaa97f36d02bf901e487516c4f1e657a947f8d75bd514c"
+    },
+    {
+      "id": "P9.1",
+      "reference": "9.1",
+      "area": "Pure",
+      "group": 9,
+      "title": "Locating roots by sign changes",
+      "tools": [
+        "numerical-methods"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p9-1-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p9-1-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "773d54db7c0e2b0f922dc41337381d44c9d0d27cefa83cc1c8bc0f23a35d256d",
+      "teacherHash": "32906c3758b475a0c06f021280a48a8386fa3d1027dfbf27513958432c0f7de8"
+    },
+    {
+      "id": "P9.2",
+      "reference": "9.2",
+      "area": "Pure",
+      "group": 9,
+      "title": "Fixed-point iteration and cobweb diagrams",
+      "tools": [
+        "numerical-methods"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p9-2-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p9-2-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 21,
+      "studentHash": "2f31732a1b5bdeddb5e6548e7f7600e0985f08c3ffcf8ee4c89e9db097d3afda",
+      "teacherHash": "a527b2488b8768dce6af762c46c88c05b2b69e34d561c1754cc8da2381bf1734"
+    },
+    {
+      "id": "P9.3",
+      "reference": "9.3",
+      "area": "Pure",
+      "group": 9,
+      "title": "Newton-Raphson and failure cases",
+      "tools": [
+        "numerical-methods"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p9-3-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p9-3-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "6763001e3ed36c0450726021135054a182c05b5637967b0a3b8c10a0aed0d41d",
+      "teacherHash": "f115e4dcf02dd360fd9cd8b2f4dede0616459964d4b5b7db1bbd841490012509"
+    },
+    {
+      "id": "P9.4",
+      "reference": "9.4",
+      "area": "Pure",
+      "group": 9,
+      "title": "Trapezium rule and bounds",
+      "tools": [
+        "numerical-methods"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p9-4-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p9-4-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 21,
+      "studentHash": "9a1cddc147cca295d1646d36b0066dda4344284d12a725a0ce242c2daa2c256b",
+      "teacherHash": "1d1a23fc3288d7cb24870c9fb6885769b37b343ea3d62da92500f558718e02bf"
+    },
+    {
+      "id": "P9.5",
+      "reference": "9.5",
+      "area": "Pure",
+      "group": 9,
+      "title": "Numerical methods in context",
+      "tools": [
+        "numerical-methods"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p9-5-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p9-5-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 20,
+      "studentHash": "25dc4d38c7071cb01eb684f5649eeade34ef63fec6344e25907e211f36fe03f7",
+      "teacherHash": "3ba88f2c61157c6f64a00f30c8c2c8ff13157b5d41639676c3de27064af2bf1e"
+    },
+    {
+      "id": "P10.1",
+      "reference": "10.1",
+      "area": "Pure",
+      "group": 10,
+      "title": "Two- and three-dimensional vector notation",
+      "tools": [
+        "free-vectors",
+        "further-vectors"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p10-1-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p10-1-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "78a8a4b7f4265b0a08424400ddeb27c00ac708b1da5895fdbb2c57a67a2a4bbc",
+      "teacherHash": "189874eba9ee5f7a718608187523ea4d5a020b9cfd99eb95fd4d9d11ab89f0e6"
+    },
+    {
+      "id": "P10.2",
+      "reference": "10.2",
+      "area": "Pure",
+      "group": 10,
+      "title": "Vector magnitudes unit vectors and directions",
+      "tools": [
+        "free-vectors"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p10-2-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p10-2-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "c5f880639455a7237a6e7321b124565dc871f83cb2af8c85567c6cf881b0bfc7",
+      "teacherHash": "40ea7862025dddfcb43b2a9a1bb7dc05f18afc05556b01ce371ea76ae3f6d84d"
+    },
+    {
+      "id": "P10.3",
+      "reference": "10.3",
+      "area": "Pure",
+      "group": 10,
+      "title": "Vector operations and diagrams",
+      "tools": [
+        "free-vectors"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p10-3-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p10-3-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "e29ce57ca6832eda2fb04e09ce5003f21c60ec52389d2464057df386a27c6892",
+      "teacherHash": "d487fd11c9c21c09429d68ffe50f358b542fdcf6cee7810a23e136a710829271"
+    },
+    {
+      "id": "P10.4",
+      "reference": "10.4",
+      "area": "Pure",
+      "group": 10,
+      "title": "Position vectors and distances",
+      "tools": [
+        "free-vectors"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p10-4-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p10-4-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "66c43972c6f6662bca12eb374447c165334a35532c3a4dbf759be3bd8c8e700e",
+      "teacherHash": "58e9ee90ac229c1e530e8a5520dfb42a80274753464b417abe0a1f92c31bd806"
+    },
+    {
+      "id": "P10.5a",
+      "reference": "10.5",
+      "area": "Pure",
+      "group": 10,
+      "title": "Vector geometry",
+      "tools": [
+        "free-vectors",
+        "newtons-second-law",
+        "equations-of-motion"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p10-5a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p10-5a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 23,
+      "studentHash": "fe1ec7b7e1e3fe866103edb33b418a48c6e1429e92b7eb8d9f82a58a0afd0bd6",
+      "teacherHash": "1ad0a963cdba1a50def0f30d6a9490ed58ac5309e6ad7d67449eb8a959df3b33"
+    },
+    {
+      "id": "P10.5b",
+      "reference": "10.5",
+      "area": "Pure",
+      "group": 10,
+      "title": "Vector modelling with forces and motion",
+      "tools": [
+        "free-vectors",
+        "newtons-second-law",
+        "equations-of-motion"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/p10-5b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/p10-5b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "485df2c9f5fee765cc313d8d8a5c54676b761939ab58a4231ef1e8100c3da4b1",
+      "teacherHash": "51c653a7cdf4e3641672750d3ca3120d3fb89f44c48caf7c4af40886374e6146"
+    },
+    {
+      "id": "S1.1a",
+      "reference": "1.1",
+      "area": "Statistics",
+      "group": 1,
+      "title": "Sampling concepts and methods",
+      "tools": [
+        "sampling-methods-bias"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s1-1a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s1-1a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "ea360657ec7b75179f0708dc939e6455f2fd65b9d987f298729c87c46e3aa36e",
+      "teacherHash": "289cc03b63a2a8ea1160de624f50a1726ec74afdd190d35fa38ce6325da582e7"
+    },
+    {
+      "id": "S1.1b",
+      "reference": "1.1",
+      "area": "Statistics",
+      "group": 1,
+      "title": "Critiquing sampling decisions",
+      "tools": [
+        "sampling-methods-bias"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s1-1b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s1-1b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "9c3e04dcc7aea321aff1aa5a1309bcbec2e28bf6ce573f39cd07c9701b37e510",
+      "teacherHash": "b29a7222aa225a7506ed101292b6c0d0f157957af2204e941fd9860b7105e6c6"
+    },
+    {
+      "id": "S2.1a",
+      "reference": "2.1",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Histograms and frequency polygons",
+      "tools": [
+        "histograms",
+        "cumulative-frequency-curves"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s2-1a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s2-1a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "8631ccf444458420f1f3bb485a4cc04336d195246a8b24422f066fa573fe94a7",
+      "teacherHash": "b5c0247b6e578d4956c0dcc72ca66c0c8b4f85b74260d225c6fe2e43d9a37aa4"
+    },
+    {
+      "id": "S2.1b",
+      "reference": "2.1",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Box plots and outliers",
+      "tools": [
+        "histograms",
+        "cumulative-frequency-curves"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s2-1b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s2-1b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "639e85ff14c5aa35f3c62be1c48bb3f5b8a7d0e15d2bef610023f6f829cbbe0e",
+      "teacherHash": "be51d62fd8a20148897883b324698ad7f755b66eaa1205c29f4bb65acd9b3300"
+    },
+    {
+      "id": "S2.1c",
+      "reference": "2.1",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Cumulative frequency diagrams",
+      "tools": [
+        "histograms",
+        "cumulative-frequency-curves"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s2-1c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s2-1c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "1a6b5836c072007f4c1ea0625c597a91707c0b27c933b765eae938bf0069fc76",
+      "teacherHash": "ac79631f1b4830e1083b981444567a46717cebb0dfec215a9fba840bea495158"
+    },
+    {
+      "id": "S2.2",
+      "reference": "2.2",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Scatter diagrams and regression interpretation",
+      "tools": [
+        "correlation-regression"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s2-2-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s2-2-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "3cb4ad469d82927144dc8edcc9f91959cffc1fdb1655a6acdd758f01f4baf824",
+      "teacherHash": "66b06b72c1d6de96493d11ca2c7f466ac77bc245fba214ee19642b19926d2a43"
+    },
+    {
+      "id": "S2.3a",
+      "reference": "2.3",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Summary statistics",
+      "tools": [
+        "averages-range",
+        "cumulative-frequency-curves"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s2-3a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s2-3a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 17,
+      "studentHash": "c36bec906f7b7e5b6418ac517b27bfc327d1eef0d9bce5a3de7b51446b4d337a",
+      "teacherHash": "f29cb5d606f6d81ddcd4a8bb864bc84c19f5f66b000a5bbae183417512a32e88"
+    },
+    {
+      "id": "S2.3b",
+      "reference": "2.3",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Variance standard deviation and coding",
+      "tools": [
+        "averages-range",
+        "cumulative-frequency-curves"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s2-3b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s2-3b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "f0ea2778dc49010066d6ae95c80e51aa20cd2737f20e6570656f854deebe7c0c",
+      "teacherHash": "f400a761de566001fa879fe228556ac8aa09fb36818724bec20efeb2389a7388"
+    },
+    {
+      "id": "S2.3c",
+      "reference": "2.3",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Grouped-data interpolation",
+      "tools": [
+        "averages-range",
+        "cumulative-frequency-curves"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s2-3c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s2-3c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "f4718f4c98ebd0afc984db203e35de0a137fd3abc61546510b35032651c38976",
+      "teacherHash": "225858404a633934d6f7834633f739019ec9595e43bae4116392f4bf5360d806"
+    },
+    {
+      "id": "S2.4",
+      "reference": "2.4",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Outliers data cleaning and representation choices",
+      "tools": [
+        "kaizen-large-data-set",
+        "correlation-regression"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s2-4-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s2-4-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "28b7236f4e6f675d51487425c972762c97a8ce44384806f446745772d0667cd1",
+      "teacherHash": "c19abd2c74977638c8f4b05d53dbc1b1130bdd12d5273b932bb2141e3ce06c6b"
+    },
+    {
+      "id": "S3.1",
+      "reference": "3.1",
+      "area": "Statistics",
+      "group": 3,
+      "title": "Independence and mutual exclusivity",
+      "tools": [
+        "venn-diagrams",
+        "tree-diagrams-conditional-probability"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s3-1-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s3-1-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "b1eca41d0a5f056de7acbaeeddca956fb8fa43572aaf8a7cef631bfda54d2438",
+      "teacherHash": "e2cc640dbfc9fd39f3973da1920af8464c7ca52e29135f98c9b953a2349b5b32"
+    },
+    {
+      "id": "S3.2a",
+      "reference": "3.2",
+      "area": "Statistics",
+      "group": 3,
+      "title": "Conditional probability and trees",
+      "tools": [
+        "tree-diagrams-conditional-probability",
+        "venn-diagrams"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s3-2a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s3-2a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "b3ec84722dea0c9715e49b148bb8fb1a457d8ea5f22de085d9e6a006e3aad096",
+      "teacherHash": "ccad10b0c511c84c121d50567cfe6147c1db36656da9f201ab85386ea4d87a2e"
+    },
+    {
+      "id": "S3.2b",
+      "reference": "3.2",
+      "area": "Statistics",
+      "group": 3,
+      "title": "Venn diagrams and two-way tables",
+      "tools": [
+        "tree-diagrams-conditional-probability",
+        "venn-diagrams"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s3-2b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s3-2b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "216bfb0eef3bb8be7d3cabf71968003dcbcac6d31d54ae4a09e6dcb95d2c83b7",
+      "teacherHash": "df1118b5bcdf9aef1a28c409c7591629766fbc4aefb246609e48ba08cf5c5119"
+    },
+    {
+      "id": "S3.3",
+      "reference": "3.3",
+      "area": "Statistics",
+      "group": 3,
+      "title": "Probability modelling assumptions",
+      "tools": [
+        "tree-diagrams-conditional-probability",
+        "binomial-geometric-distribution"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s3-3-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s3-3-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "02c5d6d8dcd8443cc0bb3d5ac8ffe05a5044e4e06d9328c9fc68b065354bf401",
+      "teacherHash": "60f3217356233b90f6637520100477f64950983fe1ee041d6a938dcd4cf24db0"
+    },
+    {
+      "id": "S4.1a",
+      "reference": "4.1",
+      "area": "Statistics",
+      "group": 4,
+      "title": "Discrete probability models",
+      "tools": [
+        "discrete-random-variables",
+        "binomial-geometric-distribution"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s4-1a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s4-1a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "9ed3b1b6639e0efeea6bd98d41d65f10cb024b66e299445b0eb823b03c4c765c",
+      "teacherHash": "b0ee0dd68c745de7904e18dc99146d3bccc7028dcf65b3d54c9d9c8437488f38"
+    },
+    {
+      "id": "S4.1b",
+      "reference": "4.1",
+      "area": "Statistics",
+      "group": 4,
+      "title": "Binomial probabilities",
+      "tools": [
+        "discrete-random-variables",
+        "binomial-geometric-distribution"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s4-1b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s4-1b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "c2efa562596d6b0db92e4e2ee9deb07004752121c6fa7bc988fe0263c20bce94",
+      "teacherHash": "1de9d98f2437e7b50c37e2c71ba8227d235dac01b2dadd866c77f9c9fb0de6a8"
+    },
+    {
+      "id": "S4.2a",
+      "reference": "4.2",
+      "area": "Statistics",
+      "group": 4,
+      "title": "Normal probabilities",
+      "tools": [
+        "normal-distribution",
+        "binomial-geometric-distribution"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s4-2a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s4-2a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "e550fb5367c25337d9495835de857c6ee04bc493fbc19f2ddb6fabc9b36d2215",
+      "teacherHash": "315e946723162ea14ff687571295d4b9cc16d6fc3f7b995505e55c7fecf3c1aa"
+    },
+    {
+      "id": "S4.2b",
+      "reference": "4.2",
+      "area": "Statistics",
+      "group": 4,
+      "title": "Inverse normal and unknown parameters",
+      "tools": [
+        "normal-distribution",
+        "binomial-geometric-distribution"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s4-2b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s4-2b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "b519ab5784f91b2764cb1e7462834ab06e1fa02f0fdd95660c1b33050b00c27a",
+      "teacherHash": "3ec540edb5e35ce43756f15254b8bb7be6e52f91c1003b51e71b96eb537274ff"
+    },
+    {
+      "id": "S4.2c",
+      "reference": "4.2",
+      "area": "Statistics",
+      "group": 4,
+      "title": "Normal approximation to the binomial",
+      "tools": [
+        "normal-distribution",
+        "binomial-geometric-distribution"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s4-2c-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s4-2c-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "bc646238a8f0f833fd8f3fabbc24017880ebc86da0087fff4f6740d0ff3019b9",
+      "teacherHash": "bf24ad03f44298dea0795cd67a32d02deb3dbab7ca9ec63141e21c9bc765d8d2"
+    },
+    {
+      "id": "S4.3",
+      "reference": "4.3",
+      "area": "Statistics",
+      "group": 4,
+      "title": "Choosing and critiquing distribution models",
+      "tools": [
+        "normal-distribution",
+        "binomial-geometric-distribution"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s4-3-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s4-3-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "d8290d3bf31115989740e3af4dc2dd11889bc4b49ff601cc0dc08808f1129262",
+      "teacherHash": "86621a268e6b0dc6926a1d7ec73f10ad230d440814c7d133691446b265741f4b"
+    },
+    {
+      "id": "S5.1a",
+      "reference": "5.1",
+      "area": "Statistics",
+      "group": 5,
+      "title": "Hypothesis-test language",
+      "tools": [
+        "hypothesis-testing",
+        "correlation-regression"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s5-1a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s5-1a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "ddfc9695cf8b5f3757dcdcde8f43006af861f9611450a54b68de8f5a01a3a380",
+      "teacherHash": "d87d8540bec75f56004ef7073960ca6f38b7ba8e32a2b2dc823bfe9409062dfb"
+    },
+    {
+      "id": "S5.1b",
+      "reference": "5.1",
+      "area": "Statistics",
+      "group": 5,
+      "title": "Correlation significance tests",
+      "tools": [
+        "hypothesis-testing",
+        "correlation-regression"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s5-1b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s5-1b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "8ca9c158c5c1e65be8a22c8d12a581ad808c192686bb2e9d3c4be7381b00c10f",
+      "teacherHash": "870fa9d09a4960be5987336e555ad0615478eaf4bf9da2111e995f65677a2ea3"
+    },
+    {
+      "id": "S5.2a",
+      "reference": "5.2",
+      "area": "Statistics",
+      "group": 5,
+      "title": "Binomial hypothesis testing",
+      "tools": [
+        "hypothesis-testing"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s5-2a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s5-2a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 29,
+      "studentHash": "28a50e0d32bf9d02e713bcf3c0e5b7f6a043bec7c24149c3676a2010a54dd8f8",
+      "teacherHash": "74ad6878d522bd0e21b07c68fd5c950bee499cab7000023ddd73ff48e26f5acf"
+    },
+    {
+      "id": "S5.2b",
+      "reference": "5.2",
+      "area": "Statistics",
+      "group": 5,
+      "title": "Two-tailed binomial tests and critical regions",
+      "tools": [
+        "hypothesis-testing"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s5-2b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s5-2b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "9032d41e8e756e00d0aa1e8f13cdb23e56b52084638bd8e50167dfc8e754fde7",
+      "teacherHash": "5c62cb50dad0e523fea1056530575e075fe9f166eb559717f518041ffc2ab1ee"
+    },
+    {
+      "id": "S5.3",
+      "reference": "5.3",
+      "area": "Statistics",
+      "group": 5,
+      "title": "Normal mean tests with known variance",
+      "tools": [
+        "hypothesis-testing"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/s5-3-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/s5-3-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 7,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "066e3a83a0bc9eaa3fa75645357931de97ca1223221885278a9cd9302ea308e7",
+      "teacherHash": "b82f8e4295eb36066f14fcb08752718036323e5a2364d2b9a9e66d5b153744ea"
+    },
+    {
+      "id": "M6.1",
+      "reference": "6.1",
+      "area": "Mechanics",
+      "group": 6,
+      "title": "Quantities SI units and conversions",
+      "tools": [
+        "conversions-teaching",
+        "newtons-second-law"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m6-1-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m6-1-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "a51b5755368108df3c9c21eafac0be76fdd5411d49b1b71133f8d326f349eadb",
+      "teacherHash": "6fcaae70d647d44e4ede8db0d2ee058c83b05ef0b6e24be1e698ed1690e6ceeb"
+    },
+    {
+      "id": "M7.1",
+      "reference": "7.1",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Motion quantities and language",
+      "tools": [
+        "motion-graphs-constant-acceleration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m7-1-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m7-1-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "60e122150a5fdb2864b9c7926ab42d2976fa4cb5818336fba233a02cdf0c1aa6",
+      "teacherHash": "84c3af7b57a89b8b13885c313a56527cce9725aef892d3b7cb53091c18c70c4a"
+    },
+    {
+      "id": "M7.2a",
+      "reference": "7.2",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Displacement-time graphs",
+      "tools": [
+        "motion-graphs-constant-acceleration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m7-2a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m7-2a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "77f3aaeab3ae989ab3cd24f3254558790d8367f78764511d7e9f65c9d7192449",
+      "teacherHash": "afbf1918f6ad8e30c7dbba93ed87f7b5e11486f4a3ee242938a3c4bef61e05d0"
+    },
+    {
+      "id": "M7.2b",
+      "reference": "7.2",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Velocity-time graphs",
+      "tools": [
+        "motion-graphs-constant-acceleration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m7-2b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m7-2b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "30e6c3d27357a78c35e11a78ca709de9d4ed8896ab4c0c903c13124bdd4e0be5",
+      "teacherHash": "ae7723ed7348046b177201e7c38302b0010db42a24401efab7cb79d6c86b4f2c"
+    },
+    {
+      "id": "M7.3a",
+      "reference": "7.3",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Constant acceleration in one dimension",
+      "tools": [
+        "equations-of-motion"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m7-3a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m7-3a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "9c33b359ded76b166d056a28b840aeaf3f78665f6bdaa3edb244fa0da12a8f36",
+      "teacherHash": "ddff3796ab0896a5c0ebc2525a26a21a7e5db8b44630e4d688b46c6289a31171"
+    },
+    {
+      "id": "M7.3b",
+      "reference": "7.3",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Constant acceleration with vectors",
+      "tools": [
+        "equations-of-motion"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m7-3b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m7-3b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "7e7da793f2a01410db804b63103ee5f3d7f525c56e150d3ccb9bd10ac66de7f6",
+      "teacherHash": "bb5d39da2ce23d799f95a822d3652e95e91c78f491ef7af98fe3a2a054475571"
+    },
+    {
+      "id": "M7.4a",
+      "reference": "7.4",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Variable acceleration in a line",
+      "tools": [
+        "advanced-differentiation",
+        "integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m7-4a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m7-4a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "16ae61ae0638ce07a37276f4f8840d542d35352314d6129f7524dff27342b763",
+      "teacherHash": "9ce3e594748e314871de1c6340f8aa0b2506061a3242a8c7158f1b0d4f36b05b"
+    },
+    {
+      "id": "M7.4b",
+      "reference": "7.4",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Variable acceleration with vectors",
+      "tools": [
+        "advanced-differentiation",
+        "integration"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m7-4b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m7-4b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "6a0a7423a3f5dc1aac7f24d9cd17312a5766273eb130632a9d64afd3c1468006",
+      "teacherHash": "73ceb5b1d6c2cab4948af78f752ec388cb687a11e43f399964a869d9eb2a26a2"
+    },
+    {
+      "id": "M7.5a",
+      "reference": "7.5",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Projectiles: components and trajectories",
+      "tools": [
+        "projectiles"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m7-5a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m7-5a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "c1fb8f6a199eea7f20d489ebf3663f317f3375d7da1544c33593853482d4a7e6",
+      "teacherHash": "dc28a400b75256bbd234bff167adbc7349a33b04b6a03b0998c49e54c50e80ce"
+    },
+    {
+      "id": "M7.5b",
+      "reference": "7.5",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Projectiles: range height and modelling",
+      "tools": [
+        "projectiles"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m7-5b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m7-5b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "0fefaaba6f294988a443c3e582b39e9be4a1c97a03ade645141a54e2d613297e",
+      "teacherHash": "c38fa517a40efe8f3cd7007d3ef4c717855cf88c0cf9cd6363db240f122d5f89"
+    },
+    {
+      "id": "M8.1",
+      "reference": "8.1",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Forces and Newton's first law",
+      "tools": [
+        "newtons-second-law"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m8-1-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m8-1-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "7ea02b792f4deac39071d25b337c08e3db7df359b1cf0d3c1c3ce82ce2d1c4dc",
+      "teacherHash": "56e49642c3e2067df5dfc59a07e88f3afc39884380e92f998c8e1806f5cae2e4"
+    },
+    {
+      "id": "M8.2a",
+      "reference": "8.2",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Resolving forces",
+      "tools": [
+        "newtons-second-law",
+        "friction"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m8-2a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m8-2a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "93fd0484b40255ed2b2a010ec3e5c8715fb746fcdcc6104b25e14f2407dcc5cf",
+      "teacherHash": "d58261ca50964bbf80a7f23d3335e35dd8d7b3d868467d8ec1398e7d14040f45"
+    },
+    {
+      "id": "M8.2b",
+      "reference": "8.2",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Resolving forces and inclines",
+      "tools": [
+        "newtons-second-law",
+        "friction"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m8-2b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m8-2b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "46d5d84b8af3e525ca8852939badf3fcb3f217a58dbb433ae9f792f050587b2f",
+      "teacherHash": "96f8ff597df265bd9c57f1bfa8d3b2a8925a9409f6d06721b7911eae42f75e7f"
+    },
+    {
+      "id": "M8.3",
+      "reference": "8.3",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Weight and vertical motion",
+      "tools": [
+        "newtons-second-law",
+        "equations-of-motion"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m8-3-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m8-3-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "2a79dcfa828f0a547612c69669cb3d7b5ec4132665a4c087ed5743e4e82cc5e0",
+      "teacherHash": "ef947b67c560cc2a024579bb4c82257d89b68f185d42c69507ac57053d13f179"
+    },
+    {
+      "id": "M8.4a",
+      "reference": "8.4",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Connected particles and pulleys",
+      "tools": [
+        "newtons-second-law",
+        "friction"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m8-4a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m8-4a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "f713fe168c79181e3dbe1643a11ad5c1d88878ebcf19db3f6b1c2c7d7e28ce0a",
+      "teacherHash": "f531783a8866e9d9390330793fa6c104747aa768721af3c31ad8be86612bc227"
+    },
+    {
+      "id": "M8.4b",
+      "reference": "8.4",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Coplanar equilibrium",
+      "tools": [
+        "newtons-second-law",
+        "friction"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m8-4b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m8-4b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "852190fd8222af3ce50665f8310e284dd31f00690c287adf25b571a5dca876bf",
+      "teacherHash": "3a8cfa8052f29c6cc8ebfb810c7bcf885681efe51d16990fc04c7a0a355af284"
+    },
+    {
+      "id": "M8.5",
+      "reference": "8.5",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Resultant forces and planar dynamics",
+      "tools": [
+        "newtons-second-law",
+        "free-vectors"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m8-5-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m8-5-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "4abdbf1853b955f4fb9aaea48195256822137790925cdd5e4803458237653647",
+      "teacherHash": "c0f70a4be1eab3e4928f4cb76918bbec229b6ea42125f27e5cb96bd2f116a2d8"
+    },
+    {
+      "id": "M8.6a",
+      "reference": "8.6",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Moving bodies on rough surfaces",
+      "tools": [
+        "friction"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m8-6a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m8-6a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 6,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "fd33c43cf698bdfbeffce07ba00e007343df05076253eb70dcb06321a9c8505e",
+      "teacherHash": "4f2865d2f64206f6272de1774d7e3d905d64dab1ae95799a774dc57414b09302"
+    },
+    {
+      "id": "M8.6b",
+      "reference": "8.6",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Limiting friction and equilibrium",
+      "tools": [
+        "friction"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m8-6b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m8-6b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "0b1ab2ceb19aea7a3e9c6b129b82ca7acc3a53cd5ecfb9bebc56e9a2a9d12864",
+      "teacherHash": "a6601d81723be85e18489264604573d1acf5bd7ff6863f7ad89d02e569cfcabe"
+    },
+    {
+      "id": "M9.1a",
+      "reference": "9.1",
+      "area": "Mechanics",
+      "group": 9,
+      "title": "Moments and rigid-body equilibrium",
+      "tools": [
+        "moments",
+        "friction"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m9-1a-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m9-1a-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 5,
+      "questions": 8,
+      "marks": 24,
+      "studentHash": "0d6a023029e1f86298fff5b7b67c7d8993f83fbd16d74e832ade33d9495b285d",
+      "teacherHash": "db23152a681796ccb8505798f3fd66ea74bcd04a408d6f56ea767f89c87e9bf0"
+    },
+    {
+      "id": "M9.1b",
+      "reference": "9.1",
+      "area": "Mechanics",
+      "group": 9,
+      "title": "Ladders and non-parallel force systems",
+      "tools": [
+        "moments",
+        "friction"
+      ],
+      "student": "assets/alevel-maths/edexcel-9ma0/m9-1b-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/m9-1b-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 4,
+      "questions": 8,
+      "marks": 22,
+      "studentHash": "68938a4ea697110f945f4466ab2d6466fc8c52b89f834a34d6b66d9bec7af31f",
+      "teacherHash": "15cea9c57f2eac8d332f46ff4b9c0206dbaaffca4944844a3a17248cb30f9953"
+    },
+    {
+      "id": "LDS1",
+      "reference": "Data requirement",
+      "area": "Statistics",
+      "group": "LDS",
+      "title": "Pearson LDS context and variable familiarity",
+      "tools": [],
+      "student": "assets/alevel-maths/edexcel-9ma0/lds1-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/lds1-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "5988b6274d5ce6e670b4422a56b714ff034ceffb972c61f6c0e14e07d0916597",
+      "teacherHash": "dd629cdf101312e7db66d55e52412098cf3ed76298f53d2d61197da696f1233b"
+    },
+    {
+      "id": "LDS2",
+      "reference": "Data requirement",
+      "area": "Statistics",
+      "group": "LDS",
+      "title": "Pearson LDS interpretation and data quality",
+      "tools": [],
+      "student": "assets/alevel-maths/edexcel-9ma0/lds2-student.pdf",
+      "teacher": "assets/alevel-maths/edexcel-9ma0/lds2-teacher.pdf",
+      "studentPages": 1,
+      "teacherPages": 3,
+      "questions": 8,
+      "marks": 16,
+      "studentHash": "effbcae57fb91683ae96bcaeabf57ddbbdd75020bbc680245b7d4afab8f5bf42",
+      "teacherHash": "976bc5d3839bfdfda39f0bac085992e5d2bac381bde4fac84c55bbdeff6c37dd"
+    }
+  ],
+  "officialDataSet": "https://qualifications.pearson.com/content/dam/pdf/A%20Level/Mathematics/2017/specification-and-sample-assesment/Pearson%20Edexcel%20GCE%20AS%20and%20AL%20Mathematics%20data%20set%20-%20Issue%201%20(1).xls"
+}

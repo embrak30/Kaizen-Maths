@@ -86,6 +86,7 @@ async function blocks(value,doc,css){
  let activeSlug='',dom,css,done=0;
  for(const pack of source.packs){
   if(pack.sourceTool!==activeSlug){dom?.window.close();activeSlug=pack.sourceTool;const html=fs.readFileSync(path.join(root,toolPaths[activeSlug]),'utf8');dom=new JSDOM(html);css=[...dom.window.document.querySelectorAll('style')].map(s=>s.textContent).join('\n');}
+  if(pack.stimulus)pack.printStimulus=await blocks(pack.stimulus,dom.window.document,css);
   for(const q of pack.questions)try{
    let instruction=q.instruction||'';
    if(!instruction&&['differentiation-polynomials','differentiation-rules','trig-differentiation-rules','inverse-trig-differentiation'].includes(pack.sourceTool)&&/^\s*\$/.test(q.question))instruction='Differentiate with respect to x.';

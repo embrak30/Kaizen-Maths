@@ -1,0 +1,18 @@
+{
+  "packs": 140,
+  "questions": 1120,
+  "pdfs": 280,
+  "pages": 747,
+  "studentPages": 140,
+  "checks": [
+    "Every PDF rendered",
+    "One-page student sets at fixed 11pt prose",
+    "Question numbering and mark totals",
+    "Text/image bounds",
+    "No raw LaTeX, caret or dollar delimiters",
+    "Content hashes and download paths",
+    "Student/teacher separation and permissions"
+  ],
+  "errors": [],
+  "targetedRecheck": "P7.3a student: final punctuation edit re-rendered; one page, bounds, notation and hash passed."
+}

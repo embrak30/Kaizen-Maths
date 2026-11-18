@@ -1,0 +1,354 @@
+{
+  "checks": [
+    {
+      "pack": "P10.1",
+      "question": 1,
+      "check": "displacement component 0",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 1,
+      "check": "displacement component 1",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 1,
+      "check": "displacement component 2",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 2,
+      "check": "Euclidean magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 3,
+      "check": "unit-vector source has nonzero magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 4,
+      "check": "displacement component 0",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 4,
+      "check": "displacement component 1",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 4,
+      "check": "displacement component 2",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 5,
+      "check": "Euclidean magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 6,
+      "check": "unit-vector source has nonzero magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 7,
+      "check": "displacement component 0",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 7,
+      "check": "displacement component 1",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 7,
+      "check": "displacement component 2",
+      "passed": true
+    },
+    {
+      "pack": "P10.1",
+      "question": 8,
+      "check": "Euclidean magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.2",
+      "question": 1,
+      "check": "Euclidean magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.2",
+      "question": 2,
+      "check": "unit-vector source has nonzero magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.2",
+      "question": 3,
+      "check": "Euclidean magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.2",
+      "question": 4,
+      "check": "unit-vector source has nonzero magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.2",
+      "question": 5,
+      "check": "Euclidean magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.2",
+      "question": 6,
+      "check": "unit-vector source has nonzero magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.4",
+      "question": 1,
+      "check": "displacement component 0",
+      "passed": true
+    },
+    {
+      "pack": "P10.4",
+      "question": 1,
+      "check": "displacement component 1",
+      "passed": true
+    },
+    {
+      "pack": "P10.4",
+      "question": 1,
+      "check": "displacement component 2",
+      "passed": true
+    },
+    {
+      "pack": "P10.4",
+      "question": 2,
+      "check": "Euclidean magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.4",
+      "question": 4,
+      "check": "displacement component 0",
+      "passed": true
+    },
+    {
+      "pack": "P10.4",
+      "question": 4,
+      "check": "displacement component 1",
+      "passed": true
+    },
+    {
+      "pack": "P10.4",
+      "question": 4,
+      "check": "displacement component 2",
+      "passed": true
+    },
+    {
+      "pack": "P10.4",
+      "question": 5,
+      "check": "Euclidean magnitude",
+      "passed": true
+    },
+    {
+      "pack": "P10.4",
+      "question": 7,
+      "check": "displacement component 0",
+      "passed": true
+    },
+    {
+      "pack": "P10.4",
+      "question": 7,
+      "check": "displacement component 1",
+      "passed": true
+    },
+    {
+      "pack": "P10.4",
+      "question": 7,
+      "check": "displacement component 2",
+      "passed": true
+    },
+    {
+      "pack": "P10.4",
+      "question": 8,
+      "check": "Euclidean magnitude",
+      "passed": true
+    },
+    {
+      "pack": "S4.1b",
+      "question": 1,
+      "check": "exact rational binomial sum",
+      "passed": true
+    },
+    {
+      "pack": "S4.1b",
+      "question": 2,
+      "check": "exact rational binomial sum",
+      "passed": true
+    },
+    {
+      "pack": "S4.1b",
+      "question": 3,
+      "check": "exact rational binomial sum",
+      "passed": true
+    },
+    {
+      "pack": "S4.1b",
+      "question": 4,
+      "check": "exact rational binomial sum",
+      "passed": true
+    },
+    {
+      "pack": "S4.1b",
+      "question": 5,
+      "check": "exact rational binomial sum",
+      "passed": true
+    },
+    {
+      "pack": "S4.1b",
+      "question": 6,
+      "check": "exact rational binomial sum",
+      "passed": true
+    },
+    {
+      "pack": "S4.1b",
+      "question": 7,
+      "check": "exact rational binomial sum",
+      "passed": true
+    },
+    {
+      "pack": "S4.1b",
+      "question": 8,
+      "check": "exact rational binomial sum",
+      "passed": true
+    },
+    {
+      "pack": "S4.2a",
+      "question": 1,
+      "check": "independent normal CDF",
+      "passed": true
+    },
+    {
+      "pack": "S4.2a",
+      "question": 2,
+      "check": "independent normal CDF",
+      "passed": true
+    },
+    {
+      "pack": "S4.2a",
+      "question": 3,
+      "check": "independent normal CDF",
+      "passed": true
+    },
+    {
+      "pack": "S4.2a",
+      "question": 4,
+      "check": "independent normal CDF",
+      "passed": true
+    },
+    {
+      "pack": "S4.2a",
+      "question": 5,
+      "check": "independent normal CDF",
+      "passed": true
+    },
+    {
+      "pack": "S4.2a",
+      "question": 6,
+      "check": "independent normal CDF",
+      "passed": true
+    },
+    {
+      "pack": "S4.2a",
+      "question": 7,
+      "check": "independent normal CDF",
+      "passed": true
+    },
+    {
+      "pack": "S4.2a",
+      "question": 8,
+      "check": "independent normal CDF",
+      "passed": true
+    },
+    {
+      "pack": "S4.2b",
+      "question": 1,
+      "check": "inverse-normal probability recovery",
+      "passed": true
+    },
+    {
+      "pack": "S4.2b",
+      "question": 2,
+      "check": "inverse-normal probability recovery",
+      "passed": true
+    },
+    {
+      "pack": "S4.2b",
+      "question": 3,
+      "check": "unknown mean probability recovery",
+      "passed": true
+    },
+    {
+      "pack": "S4.2b",
+      "question": 4,
+      "check": "unknown mean probability recovery",
+      "passed": true
+    },
+    {
+      "pack": "S4.2b",
+      "question": 5,
+      "check": "unknown SD probability recovery",
+      "passed": true
+    },
+    {
+      "pack": "S4.2b",
+      "question": 6,
+      "check": "unknown SD probability recovery",
+      "passed": true
+    },
+    {
+      "pack": "S4.2b",
+      "question": 7,
+      "check": "two-parameter lower tail",
+      "passed": true
+    },
+    {
+      "pack": "S4.2b",
+      "question": 7,
+      "check": "two-parameter upper tail",
+      "passed": true
+    },
+    {
+      "pack": "S4.2b",
+      "question": 8,
+      "check": "two-parameter lower tail",
+      "passed": true
+    },
+    {
+      "pack": "S4.2b",
+      "question": 8,
+      "check": "two-parameter upper tail",
+      "passed": true
+    }
+  ],
+  "count": 58,
+  "limitations": "Checks cover the explicitly listed families; they are not a claim of independent verification of every answer."
+}

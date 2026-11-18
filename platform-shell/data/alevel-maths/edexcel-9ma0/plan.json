@@ -1,0 +1,2713 @@
+{
+  "qualification": "9MA0",
+  "packs": [
+    {
+      "id": "P1.1a",
+      "reference": "1.1",
+      "area": "Pure",
+      "group": 1,
+      "title": "Deduction",
+      "tools": [],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P1.1b",
+      "reference": "1.1",
+      "area": "Pure",
+      "group": 1,
+      "title": "Exhaustion and counterexamples",
+      "tools": [],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P1.1c",
+      "reference": "1.1",
+      "area": "Pure",
+      "group": 1,
+      "title": "Contradiction",
+      "tools": [],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P2.1",
+      "reference": "2.1",
+      "area": "Pure",
+      "group": 2,
+      "title": "Rational indices",
+      "tools": [
+        "exponents-index-notation"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P2.2",
+      "reference": "2.2",
+      "area": "Pure",
+      "group": 2,
+      "title": "Surds and rationalisation",
+      "tools": [
+        "surds-radicals"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "surds-radicals",
+        "activities": [
+          [
+            3,
+            "rationalize_simple"
+          ],
+          [
+            3,
+            "rationalize_binomial"
+          ],
+          [
+            3,
+            "expand_surds"
+          ],
+          [
+            3,
+            "difference_squares"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P2.3a",
+      "reference": "2.3",
+      "area": "Pure",
+      "group": 2,
+      "title": "Quadratic equations",
+      "tools": [
+        "quadratic-equations",
+        "graph-transformations-curve-sketching"
+      ],
+      "mode": "pilot",
+      "selection": "P2.3"
+    },
+    {
+      "id": "P2.3b",
+      "reference": "2.3",
+      "area": "Pure",
+      "group": 2,
+      "title": "Discriminants and parameters",
+      "tools": [
+        "quadratic-equations",
+        "graph-transformations-curve-sketching"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P2.3c",
+      "reference": "2.3",
+      "area": "Pure",
+      "group": 2,
+      "title": "Completing the square and graphs",
+      "tools": [
+        "quadratic-equations",
+        "graph-transformations-curve-sketching"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P2.4",
+      "reference": "2.4",
+      "area": "Pure",
+      "group": 2,
+      "title": "Linear and quadratic simultaneous equations",
+      "tools": [
+        "simultaneous-equations",
+        "conic-intersections"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "conic-intersections",
+        "activities": [
+          [
+            2,
+            "parabola_line_vertical"
+          ],
+          [
+            2,
+            "parabola_line_horizontal"
+          ],
+          [
+            2,
+            "parabola_line_general"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P2.5a",
+      "reference": "2.5",
+      "area": "Pure",
+      "group": 2,
+      "title": "Linear and quadratic inequalities",
+      "tools": [
+        "inequalities"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P2.5b",
+      "reference": "2.5",
+      "area": "Pure",
+      "group": 2,
+      "title": "Rational inequalities and regions",
+      "tools": [
+        "inequalities"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P2.6a",
+      "reference": "2.6",
+      "area": "Pure",
+      "group": 2,
+      "title": "Polynomial division and factor theorem",
+      "tools": [
+        "remainder-theorem",
+        "advanced-factorisation",
+        "algebraic-fractions"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "remainder-theorem",
+        "activities": [
+          [
+            1,
+            "syn_cubic_exact"
+          ],
+          [
+            1,
+            "syn_cubic_rem"
+          ],
+          [
+            3,
+            "factor_solve"
+          ],
+          [
+            3,
+            "factor_find_k"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P2.6b",
+      "reference": "2.6",
+      "area": "Pure",
+      "group": 2,
+      "title": "Rational algebra",
+      "tools": [
+        "remainder-theorem",
+        "advanced-factorisation",
+        "algebraic-fractions"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "algebraic-fractions",
+        "activities": [
+          [
+            1,
+            "simplify_factorise"
+          ],
+          [
+            2,
+            "multiply_fractions"
+          ],
+          [
+            2,
+            "divide_fractions"
+          ],
+          [
+            3,
+            "add_different_denominators"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P2.7a",
+      "reference": "2.7",
+      "area": "Pure",
+      "group": 2,
+      "title": "Polynomial and reciprocal graphs",
+      "tools": [
+        "graph-transformations-curve-sketching",
+        "absolute-values"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "graph-transformations-curve-sketching",
+        "activities": [
+          [
+            4,
+            "quadratic_features"
+          ],
+          [
+            4,
+            "reciprocal_asymptotes"
+          ],
+          [
+            4,
+            "cubic_roots"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P2.7b",
+      "reference": "2.7",
+      "area": "Pure",
+      "group": 2,
+      "title": "Modulus graphs and equations",
+      "tools": [
+        "graph-transformations-curve-sketching",
+        "absolute-values"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P2.8",
+      "reference": "2.8",
+      "area": "Pure",
+      "group": 2,
+      "title": "Composite and inverse functions",
+      "tools": [
+        "functions"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P2.9",
+      "reference": "2.9",
+      "area": "Pure",
+      "group": 2,
+      "title": "Combined graph transformations",
+      "tools": [
+        "graph-transformations-curve-sketching",
+        "trig-graphs-transformations"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "graph-transformations-curve-sketching",
+        "activities": [
+          [
+            3,
+            "combined_from_equation"
+          ],
+          [
+            3,
+            "describe_transformation"
+          ],
+          [
+            3,
+            "transform_key_points"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P2.10",
+      "reference": "2.10",
+      "area": "Pure",
+      "group": 2,
+      "title": "Partial fractions: distinct and repeated factors",
+      "tools": [
+        "partial-fractions"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "partial-fractions",
+        "activities": [
+          [
+            1,
+            "distinct_linear"
+          ],
+          [
+            2,
+            "repeated_linear"
+          ],
+          [
+            2,
+            "repeated_linear_coefficients"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P2.11",
+      "reference": "2.11",
+      "area": "Pure",
+      "group": 2,
+      "title": "Choosing and critiquing function models",
+      "tools": [
+        "functions",
+        "logarithms-practice",
+        "trigonometric-functions"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P3.1",
+      "reference": "3.1",
+      "area": "Pure",
+      "group": 3,
+      "title": "Straight-line geometry and models",
+      "tools": [
+        "straight-lines"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "straight-lines",
+        "activities": [
+          [
+            3,
+            "equation_two_points"
+          ],
+          [
+            3,
+            "equation_point_gradient"
+          ],
+          [
+            4,
+            "intersection_point"
+          ],
+          [
+            4,
+            "parallel_perpendicular"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P3.2a",
+      "reference": "3.2",
+      "area": "Pure",
+      "group": 3,
+      "title": "Circles and tangents",
+      "tools": [
+        "equation-of-a-circle",
+        "conic-intersections"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "equation-of-a-circle",
+        "activities": [
+          [
+            1,
+            "centre_radius_expanded"
+          ],
+          [
+            2,
+            "write_from_diameter"
+          ],
+          [
+            4,
+            "tangent_at_point"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P3.2b",
+      "reference": "3.2",
+      "area": "Pure",
+      "group": 3,
+      "title": "Circle geometry in coordinates",
+      "tools": [
+        "equation-of-a-circle",
+        "conic-intersections"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P3.3",
+      "reference": "3.3",
+      "area": "Pure",
+      "group": 3,
+      "title": "Cartesian and parametric forms",
+      "tools": [
+        "advanced-differentiation"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P3.4",
+      "reference": "3.4",
+      "area": "Pure",
+      "group": 3,
+      "title": "Parametric modelling",
+      "tools": [
+        "advanced-differentiation"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P4.1a",
+      "reference": "4.1",
+      "area": "Pure",
+      "group": 4,
+      "title": "Positive-integer binomial expansions",
+      "tools": [
+        "binomial-expansion"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "binomial-expansion",
+        "activities": [
+          [
+            1,
+            "expand_with_numbers"
+          ],
+          [
+            1,
+            "expand_difference"
+          ],
+          [
+            2,
+            "find_coefficient"
+          ],
+          [
+            2,
+            "find_term"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P4.1b",
+      "reference": "4.1",
+      "area": "Pure",
+      "group": 4,
+      "title": "Rational binomial expansions and validity",
+      "tools": [
+        "binomial-expansion"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P4.2",
+      "reference": "4.2",
+      "area": "Pure",
+      "group": 4,
+      "title": "Recurrence relations and sequence behaviour",
+      "tools": [
+        "sequences",
+        "sequences-series"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P4.3",
+      "reference": "4.3",
+      "area": "Pure",
+      "group": 4,
+      "title": "Sigma notation",
+      "tools": [
+        "sequences-series"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "sequences-series",
+        "activities": [
+          [
+            1,
+            "sigma_arith_linear"
+          ],
+          [
+            2,
+            "sigma_geom"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P4.4",
+      "reference": "4.4",
+      "area": "Pure",
+      "group": 4,
+      "title": "Arithmetic sequences and series",
+      "tools": [
+        "sequences-series"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "sequences-series",
+        "activities": [
+          [
+            1,
+            "arith_nth_term"
+          ],
+          [
+            1,
+            "arith_find_d_a"
+          ],
+          [
+            1,
+            "arith_sum_first_n"
+          ],
+          [
+            1,
+            "arith_find_n_from_term"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P4.5",
+      "reference": "4.5",
+      "area": "Pure",
+      "group": 4,
+      "title": "Geometric sequences and series",
+      "tools": [
+        "sequences-series"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "sequences-series",
+        "activities": [
+          [
+            2,
+            "geom_nth_term"
+          ],
+          [
+            2,
+            "geom_find_r_a"
+          ],
+          [
+            2,
+            "geom_sum_first_n"
+          ],
+          [
+            2,
+            "geom_sum_infinity"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P4.6",
+      "reference": "4.6",
+      "area": "Pure",
+      "group": 4,
+      "title": "Sequence and series models",
+      "tools": [
+        "sequences-series",
+        "financial-real-life-maths"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P5.1a",
+      "reference": "5.1",
+      "area": "Pure",
+      "group": 5,
+      "title": "Unit-circle trigonometry",
+      "tools": [
+        "trigonometric-functions",
+        "sine-cosine-rule",
+        "sectors-arc-length"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P5.1b",
+      "reference": "5.1",
+      "area": "Pure",
+      "group": 5,
+      "title": "Triangle rules and the ambiguous case",
+      "tools": [
+        "trigonometric-functions",
+        "sine-cosine-rule",
+        "sectors-arc-length"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "sine-cosine-rule",
+        "activities": [
+          [
+            1,
+            "sr_find_side"
+          ],
+          [
+            1,
+            "sr_find_angle_general"
+          ],
+          [
+            1,
+            "area_sine"
+          ],
+          [
+            2,
+            "cr_find_side"
+          ],
+          [
+            2,
+            "cr_find_angle"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P5.1c",
+      "reference": "5.1",
+      "area": "Pure",
+      "group": 5,
+      "title": "Radians and sectors",
+      "tools": [
+        "trigonometric-functions",
+        "sine-cosine-rule",
+        "sectors-arc-length"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P5.2",
+      "reference": "5.2",
+      "area": "Pure",
+      "group": 5,
+      "title": "Small-angle approximations",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P5.3",
+      "reference": "5.3",
+      "area": "Pure",
+      "group": 5,
+      "title": "Trigonometric graphs and exact values",
+      "tools": [
+        "trig-graphs-transformations",
+        "trigonometric-functions"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "trig-graphs-transformations",
+        "activities": [
+          [
+            1,
+            "identify_standard"
+          ],
+          [
+            1,
+            "state_standard_features"
+          ],
+          [
+            3,
+            "combined_sine_cosine"
+          ],
+          [
+            3,
+            "find_equation_from_graph"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P5.4",
+      "reference": "5.4",
+      "area": "Pure",
+      "group": 5,
+      "title": "Reciprocal and inverse trigonometric functions",
+      "tools": [
+        "trigonometric-functions",
+        "functions"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P5.5",
+      "reference": "5.5",
+      "area": "Pure",
+      "group": 5,
+      "title": "Fundamental and reciprocal identities",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "trigonometric-functions",
+        "activities": [
+          [
+            3,
+            "basic_identity_proofs"
+          ],
+          [
+            3,
+            "reciprocal_identity_proofs"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P5.6a",
+      "reference": "5.6",
+      "area": "Pure",
+      "group": 5,
+      "title": "Addition formulae",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P5.6b",
+      "reference": "5.6",
+      "area": "Pure",
+      "group": 5,
+      "title": "Double-angle applications",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P5.6c",
+      "reference": "5.6",
+      "area": "Pure",
+      "group": 5,
+      "title": "R-form expressions",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P5.7",
+      "reference": "5.7",
+      "area": "Pure",
+      "group": 5,
+      "title": "Trigonometric equations in intervals",
+      "tools": [
+        "trig-equation-solver"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "trig-equation-solver",
+        "activities": [
+          [
+            1,
+            "basic_trig"
+          ],
+          [
+            1,
+            "shifted_trig"
+          ],
+          [
+            2,
+            "quad_sin"
+          ],
+          [
+            2,
+            "quad_cos"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P5.8",
+      "reference": "5.8",
+      "area": "Pure",
+      "group": 5,
+      "title": "Proving trigonometric identities",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "trigonometric-functions",
+        "activities": [
+          [
+            3,
+            "compound_identity_proofs"
+          ],
+          [
+            3,
+            "factorised_identity_proofs"
+          ],
+          [
+            3,
+            "reciprocal_identity_proofs"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P5.9",
+      "reference": "5.9",
+      "area": "Pure",
+      "group": 5,
+      "title": "Trigonometric models and applications",
+      "tools": [
+        "trigonometric-functions",
+        "projectiles",
+        "newtons-second-law"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P6.1",
+      "reference": "6.1",
+      "area": "Pure",
+      "group": 6,
+      "title": "Exponential graphs and transformations",
+      "tools": [
+        "logarithms-practice",
+        "graph-transformations-curve-sketching"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "graph-transformations-curve-sketching",
+        "activities": [
+          [
+            4,
+            "exponential_transform"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P6.2",
+      "reference": "6.2",
+      "area": "Pure",
+      "group": 6,
+      "title": "Exponential gradients and proportional rates",
+      "tools": [
+        "differentiation-rules",
+        "differential-equations"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P6.3",
+      "reference": "6.3",
+      "area": "Pure",
+      "group": 6,
+      "title": "Logarithms as inverse functions",
+      "tools": [
+        "logarithms-practice",
+        "functions"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "logarithms-practice",
+        "activities": [
+          [
+            1,
+            "log_to_index"
+          ],
+          [
+            1,
+            "index_to_log"
+          ],
+          [
+            1,
+            "evaluate_basic"
+          ],
+          [
+            2,
+            "natural_log"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P6.4",
+      "reference": "6.4",
+      "area": "Pure",
+      "group": 6,
+      "title": "Logarithm laws",
+      "tools": [
+        "logarithms-practice"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "logarithms-practice",
+        "activities": [
+          [
+            2,
+            "product_rule"
+          ],
+          [
+            2,
+            "quotient_rule"
+          ],
+          [
+            2,
+            "power_rule"
+          ],
+          [
+            2,
+            "natural_log"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P6.5",
+      "reference": "6.5",
+      "area": "Pure",
+      "group": 6,
+      "title": "Exponential equations",
+      "tools": [
+        "logarithms-practice"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "logarithms-practice",
+        "activities": [
+          [
+            3,
+            "solve_exponential"
+          ],
+          [
+            3,
+            "solve_logarithmic"
+          ],
+          [
+            3,
+            "change_base"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P6.6",
+      "reference": "6.6",
+      "area": "Pure",
+      "group": 6,
+      "title": "Logarithmic straight-line models",
+      "tools": [
+        "logarithms-practice",
+        "straight-lines",
+        "correlation-regression"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P6.7",
+      "reference": "6.7",
+      "area": "Pure",
+      "group": 6,
+      "title": "Growth and decay models",
+      "tools": [
+        "logarithms-practice",
+        "differential-equations"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P7.1a",
+      "reference": "7.1",
+      "area": "Pure",
+      "group": 7,
+      "title": "Derivative meaning and gradient graphs",
+      "tools": [
+        "limits-first-principles",
+        "advanced-differentiation"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "2.1",
+        "5.8"
+      ]
+    },
+    {
+      "id": "P7.1b",
+      "reference": "7.1",
+      "area": "Pure",
+      "group": 7,
+      "title": "First principles: powers",
+      "tools": [
+        "limits-first-principles",
+        "advanced-differentiation"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "2.2"
+      ]
+    },
+    {
+      "id": "P7.1c",
+      "reference": "7.1",
+      "area": "Pure",
+      "group": 7,
+      "title": "First principles: sine and cosine",
+      "tools": [
+        "limits-first-principles",
+        "advanced-differentiation"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P7.1d",
+      "reference": "7.1",
+      "area": "Pure",
+      "group": 7,
+      "title": "Second derivatives and concavity",
+      "tools": [
+        "limits-first-principles",
+        "advanced-differentiation"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "5.6",
+        "5.7"
+      ]
+    },
+    {
+      "id": "P7.2a",
+      "reference": "7.2",
+      "area": "Pure",
+      "group": 7,
+      "title": "Power-rule differentiation",
+      "tools": [
+        "differentiation-polynomials",
+        "differentiation-rules",
+        "trig-differentiation-rules"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "2.5",
+        "2.6"
+      ]
+    },
+    {
+      "id": "P7.2b",
+      "reference": "7.2",
+      "area": "Pure",
+      "group": 7,
+      "title": "Exponential and logarithmic derivatives",
+      "tools": [
+        "differentiation-polynomials",
+        "differentiation-rules",
+        "trig-differentiation-rules"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P7.2c",
+      "reference": "7.2",
+      "area": "Pure",
+      "group": 7,
+      "title": "Trigonometric derivatives",
+      "tools": [
+        "differentiation-polynomials",
+        "differentiation-rules",
+        "trig-differentiation-rules"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "2.10"
+      ]
+    },
+    {
+      "id": "P7.3a",
+      "reference": "7.3",
+      "area": "Pure",
+      "group": 7,
+      "title": "Tangents and normals",
+      "tools": [
+        "advanced-differentiation",
+        "differentiation-polynomials"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "differentiation-polynomials",
+        "activities": [
+          [
+            3,
+            "gradient_at_point"
+          ],
+          [
+            3,
+            "tangent_equations"
+          ],
+          [
+            3,
+            "normal_equations"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P7.3b",
+      "reference": "7.3",
+      "area": "Pure",
+      "group": 7,
+      "title": "Stationary points and curve behaviour",
+      "tools": [
+        "advanced-differentiation",
+        "differentiation-polynomials"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "5.3",
+        "5.4"
+      ]
+    },
+    {
+      "id": "P7.3c",
+      "reference": "7.3",
+      "area": "Pure",
+      "group": 7,
+      "title": "Optimization",
+      "tools": [
+        "advanced-differentiation",
+        "differentiation-polynomials"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "5.11"
+      ]
+    },
+    {
+      "id": "P7.4a",
+      "reference": "7.4",
+      "area": "Pure",
+      "group": 7,
+      "title": "Product quotient and chain rules",
+      "tools": [
+        "differentiation-rules",
+        "advanced-differentiation",
+        "inverse-trig-differentiation"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "2.8",
+        "2.9",
+        "3.1"
+      ]
+    },
+    {
+      "id": "P7.4b",
+      "reference": "7.4",
+      "area": "Pure",
+      "group": 7,
+      "title": "Connected rates",
+      "tools": [
+        "differentiation-rules",
+        "advanced-differentiation",
+        "inverse-trig-differentiation"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "4.5"
+      ]
+    },
+    {
+      "id": "P7.4c",
+      "reference": "7.4",
+      "area": "Pure",
+      "group": 7,
+      "title": "Inverse-function differentiation",
+      "tools": [
+        "differentiation-rules",
+        "advanced-differentiation",
+        "inverse-trig-differentiation"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "3.3"
+      ]
+    },
+    {
+      "id": "P7.5a",
+      "reference": "7.5",
+      "area": "Pure",
+      "group": 7,
+      "title": "Implicit differentiation",
+      "tools": [
+        "advanced-differentiation"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "3.2"
+      ]
+    },
+    {
+      "id": "P7.5b",
+      "reference": "7.5",
+      "area": "Pure",
+      "group": 7,
+      "title": "Parametric differentiation",
+      "tools": [
+        "advanced-differentiation"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "9.1"
+      ]
+    },
+    {
+      "id": "P7.6",
+      "reference": "7.6",
+      "area": "Pure",
+      "group": 7,
+      "title": "Forming differential equations",
+      "tools": [
+        "differential-equations"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P8.1",
+      "reference": "8.1",
+      "area": "Pure",
+      "group": 8,
+      "title": "Integration and differentiation connection",
+      "tools": [
+        "integration"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P8.2a",
+      "reference": "8.2",
+      "area": "Pure",
+      "group": 8,
+      "title": "Integrating rational powers",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "6.8"
+      ]
+    },
+    {
+      "id": "P8.2b",
+      "reference": "8.2",
+      "area": "Pure",
+      "group": 8,
+      "title": "Standard trig exponential and logarithmic integrals",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P8.2c",
+      "reference": "8.2",
+      "area": "Pure",
+      "group": 8,
+      "title": "Integration using trig identities",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P8.3a",
+      "reference": "8.3",
+      "area": "Pure",
+      "group": 8,
+      "title": "Definite integrals",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "6.7"
+      ]
+    },
+    {
+      "id": "P8.3b",
+      "reference": "8.3",
+      "area": "Pure",
+      "group": 8,
+      "title": "Areas between curves",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "8.4",
+        "8.6"
+      ]
+    },
+    {
+      "id": "P8.3c",
+      "reference": "8.3",
+      "area": "Pure",
+      "group": 8,
+      "title": "Parametric areas",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P8.4",
+      "reference": "8.4",
+      "area": "Pure",
+      "group": 8,
+      "title": "Integration as a limit of sums",
+      "tools": [
+        "integration"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "6.3"
+      ]
+    },
+    {
+      "id": "P8.5a",
+      "reference": "8.5",
+      "area": "Pure",
+      "group": 8,
+      "title": "Substitution",
+      "tools": [
+        "advanced-integration"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "6.9"
+      ]
+    },
+    {
+      "id": "P8.5b",
+      "reference": "8.5",
+      "area": "Pure",
+      "group": 8,
+      "title": "Integration by parts",
+      "tools": [
+        "advanced-integration"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "6.11"
+      ]
+    },
+    {
+      "id": "P8.5c",
+      "reference": "8.5",
+      "area": "Pure",
+      "group": 8,
+      "title": "Recognising logarithmic integrals",
+      "tools": [
+        "advanced-integration"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "advanced-integration",
+        "activities": [
+          [
+            2,
+            "sub_log_derivative"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P8.6",
+      "reference": "8.6",
+      "area": "Pure",
+      "group": 8,
+      "title": "Integration using partial fractions",
+      "tools": [
+        "integration-algebraic-fractions"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "integration-algebraic-fractions",
+        "activities": [
+          [
+            1,
+            "linear_log"
+          ],
+          [
+            3,
+            "distinct_linear_pf"
+          ],
+          [
+            3,
+            "repeated_linear_pf"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P8.7",
+      "reference": "8.7",
+      "area": "Pure",
+      "group": 8,
+      "title": "Separable differential equations",
+      "tools": [
+        "differential-equations"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "7.6",
+        "7.7"
+      ]
+    },
+    {
+      "id": "P8.8",
+      "reference": "8.8",
+      "area": "Pure",
+      "group": 8,
+      "title": "Interpreting differential-equation models",
+      "tools": [
+        "differential-equations"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "differential-equations",
+        "activities": [
+          [
+            4,
+            "model_growth_decay"
+          ],
+          [
+            4,
+            "model_cooling"
+          ],
+          [
+            4,
+            "model_condition"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P9.1",
+      "reference": "9.1",
+      "area": "Pure",
+      "group": 9,
+      "title": "Locating roots by sign changes",
+      "tools": [
+        "numerical-methods"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P9.2",
+      "reference": "9.2",
+      "area": "Pure",
+      "group": 9,
+      "title": "Fixed-point iteration and cobweb diagrams",
+      "tools": [
+        "numerical-methods"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P9.3",
+      "reference": "9.3",
+      "area": "Pure",
+      "group": 9,
+      "title": "Newton-Raphson and failure cases",
+      "tools": [
+        "numerical-methods"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "numerical-methods",
+        "activities": [
+          [
+            2,
+            "newton_one_step"
+          ],
+          [
+            2,
+            "newton_two_steps"
+          ],
+          [
+            2,
+            "newton_formula"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P9.4",
+      "reference": "9.4",
+      "area": "Pure",
+      "group": 9,
+      "title": "Trapezium rule and bounds",
+      "tools": [
+        "numerical-methods"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P9.5",
+      "reference": "9.5",
+      "area": "Pure",
+      "group": 9,
+      "title": "Numerical methods in context",
+      "tools": [
+        "numerical-methods"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P10.1",
+      "reference": "10.1",
+      "area": "Pure",
+      "group": 10,
+      "title": "Two- and three-dimensional vector notation",
+      "tools": [
+        "free-vectors",
+        "further-vectors"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "further-vectors",
+        "activities": [
+          [
+            1,
+            "position_displacement"
+          ],
+          [
+            1,
+            "magnitude_3d"
+          ],
+          [
+            1,
+            "unit_vector"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P10.2",
+      "reference": "10.2",
+      "area": "Pure",
+      "group": 10,
+      "title": "Vector magnitudes unit vectors and directions",
+      "tools": [
+        "free-vectors"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "further-vectors",
+        "activities": [
+          [
+            1,
+            "magnitude_3d"
+          ],
+          [
+            1,
+            "unit_vector"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P10.3",
+      "reference": "10.3",
+      "area": "Pure",
+      "group": 10,
+      "title": "Vector operations and diagrams",
+      "tools": [
+        "free-vectors"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "free-vectors",
+        "activities": [
+          [
+            1,
+            "add_vectors"
+          ],
+          [
+            1,
+            "subtract_vectors"
+          ],
+          [
+            2,
+            "scalar_multiple"
+          ],
+          [
+            2,
+            "scalar_addition"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P10.4",
+      "reference": "10.4",
+      "area": "Pure",
+      "group": 10,
+      "title": "Position vectors and distances",
+      "tools": [
+        "free-vectors"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "further-vectors",
+        "activities": [
+          [
+            1,
+            "position_displacement"
+          ],
+          [
+            1,
+            "magnitude_3d"
+          ],
+          [
+            1,
+            "ratio_section"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P10.5a",
+      "reference": "10.5",
+      "area": "Pure",
+      "group": 10,
+      "title": "Vector geometry",
+      "tools": [
+        "free-vectors",
+        "newtons-second-law",
+        "equations-of-motion"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "P10.5b",
+      "reference": "10.5",
+      "area": "Pure",
+      "group": 10,
+      "title": "Vector modelling with forces and motion",
+      "tools": [
+        "free-vectors",
+        "newtons-second-law",
+        "equations-of-motion"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S1.1a",
+      "reference": "1.1",
+      "area": "Statistics",
+      "group": 1,
+      "title": "Sampling concepts and methods",
+      "tools": [
+        "sampling-methods-bias"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "sampling-methods-bias",
+        "activities": [
+          [
+            1,
+            "identify_method"
+          ],
+          [
+            1,
+            "identify_bias"
+          ],
+          [
+            2,
+            "stratified_sample"
+          ],
+          [
+            2,
+            "systematic_sample"
+          ],
+          [
+            2,
+            "random_process"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "S1.1b",
+      "reference": "1.1",
+      "area": "Statistics",
+      "group": 1,
+      "title": "Critiquing sampling decisions",
+      "tools": [
+        "sampling-methods-bias"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "sampling-methods-bias",
+        "activities": [
+          [
+            3,
+            "critique_plan"
+          ],
+          [
+            3,
+            "design_plan"
+          ],
+          [
+            3,
+            "bias_and_improvement"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "S2.1a",
+      "reference": "2.1",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Histograms and frequency polygons",
+      "tools": [
+        "histograms",
+        "cumulative-frequency-curves"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S2.1b",
+      "reference": "2.1",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Box plots and outliers",
+      "tools": [
+        "histograms",
+        "cumulative-frequency-curves"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S2.1c",
+      "reference": "2.1",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Cumulative frequency diagrams",
+      "tools": [
+        "histograms",
+        "cumulative-frequency-curves"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S2.2",
+      "reference": "2.2",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Scatter diagrams and regression interpretation",
+      "tools": [
+        "correlation-regression"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "correlation-regression",
+        "activities": [
+          [
+            1,
+            "interpret_r"
+          ],
+          [
+            1,
+            "correlation_context"
+          ],
+          [
+            3,
+            "interpolation_prediction"
+          ],
+          [
+            3,
+            "extrapolation_warning"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "S2.3a",
+      "reference": "2.3",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Summary statistics",
+      "tools": [
+        "averages-range",
+        "cumulative-frequency-curves"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S2.3b",
+      "reference": "2.3",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Variance standard deviation and coding",
+      "tools": [
+        "averages-range",
+        "cumulative-frequency-curves"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S2.3c",
+      "reference": "2.3",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Grouped-data interpolation",
+      "tools": [
+        "averages-range",
+        "cumulative-frequency-curves"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S2.4",
+      "reference": "2.4",
+      "area": "Statistics",
+      "group": 2,
+      "title": "Outliers data cleaning and representation choices",
+      "tools": [
+        "kaizen-large-data-set",
+        "correlation-regression"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S3.1",
+      "reference": "3.1",
+      "area": "Statistics",
+      "group": 3,
+      "title": "Independence and mutual exclusivity",
+      "tools": [
+        "venn-diagrams",
+        "tree-diagrams-conditional-probability"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S3.2a",
+      "reference": "3.2",
+      "area": "Statistics",
+      "group": 3,
+      "title": "Conditional probability and trees",
+      "tools": [
+        "tree-diagrams-conditional-probability",
+        "venn-diagrams"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "tree-diagrams-conditional-probability",
+        "activities": [
+          [
+            2,
+            "without_replacement_path"
+          ],
+          [
+            2,
+            "complete_conditional"
+          ],
+          [
+            3,
+            "total_probability"
+          ],
+          [
+            3,
+            "reverse_conditional"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "S3.2b",
+      "reference": "3.2",
+      "area": "Statistics",
+      "group": 3,
+      "title": "Venn diagrams and two-way tables",
+      "tools": [
+        "tree-diagrams-conditional-probability",
+        "venn-diagrams"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "venn-diagrams",
+        "activities": [
+          [
+            1,
+            "read_two_set"
+          ],
+          [
+            1,
+            "complete_two_set"
+          ],
+          [
+            2,
+            "probability_from_venn"
+          ],
+          [
+            2,
+            "set_formula"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "S3.3",
+      "reference": "3.3",
+      "area": "Statistics",
+      "group": 3,
+      "title": "Probability modelling assumptions",
+      "tools": [
+        "tree-diagrams-conditional-probability",
+        "binomial-geometric-distribution"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S4.1a",
+      "reference": "4.1",
+      "area": "Statistics",
+      "group": 4,
+      "title": "Discrete probability models",
+      "tools": [
+        "discrete-random-variables",
+        "binomial-geometric-distribution"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "discrete-random-variables",
+        "activities": [
+          [
+            1,
+            "find_probability"
+          ],
+          [
+            1,
+            "complete_distribution"
+          ],
+          [
+            1,
+            "verify_distribution"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "S4.1b",
+      "reference": "4.1",
+      "area": "Statistics",
+      "group": 4,
+      "title": "Binomial probabilities",
+      "tools": [
+        "discrete-random-variables",
+        "binomial-geometric-distribution"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "binomial-geometric-distribution",
+        "activities": [
+          [
+            1,
+            "binomial_exact"
+          ],
+          [
+            1,
+            "binomial_cumulative"
+          ],
+          [
+            1,
+            "binomial_complement"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "S4.2a",
+      "reference": "4.2",
+      "area": "Statistics",
+      "group": 4,
+      "title": "Normal probabilities",
+      "tools": [
+        "normal-distribution",
+        "binomial-geometric-distribution"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "normal-distribution",
+        "activities": [
+          [
+            1,
+            "standard_left"
+          ],
+          [
+            1,
+            "standard_between"
+          ],
+          [
+            2,
+            "general_left_right"
+          ],
+          [
+            2,
+            "general_between"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "S4.2b",
+      "reference": "4.2",
+      "area": "Statistics",
+      "group": 4,
+      "title": "Inverse normal and unknown parameters",
+      "tools": [
+        "normal-distribution",
+        "binomial-geometric-distribution"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "normal-distribution",
+        "activities": [
+          [
+            3,
+            "find_cutoff"
+          ],
+          [
+            3,
+            "find_mu"
+          ],
+          [
+            3,
+            "find_sigma"
+          ],
+          [
+            3,
+            "find_mu_sigma"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "S4.2c",
+      "reference": "4.2",
+      "area": "Statistics",
+      "group": 4,
+      "title": "Normal approximation to the binomial",
+      "tools": [
+        "normal-distribution",
+        "binomial-geometric-distribution"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S4.3",
+      "reference": "4.3",
+      "area": "Statistics",
+      "group": 4,
+      "title": "Choosing and critiquing distribution models",
+      "tools": [
+        "normal-distribution",
+        "binomial-geometric-distribution"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S5.1a",
+      "reference": "5.1",
+      "area": "Statistics",
+      "group": 5,
+      "title": "Hypothesis-test language",
+      "tools": [
+        "hypothesis-testing",
+        "correlation-regression"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S5.1b",
+      "reference": "5.1",
+      "area": "Statistics",
+      "group": 5,
+      "title": "Correlation significance tests",
+      "tools": [
+        "hypothesis-testing",
+        "correlation-regression"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "S5.2a",
+      "reference": "5.2",
+      "area": "Statistics",
+      "group": 5,
+      "title": "One-tailed binomial tests",
+      "tools": [
+        "hypothesis-testing"
+      ],
+      "mode": "pilot",
+      "selection": "S5.2"
+    },
+    {
+      "id": "S5.2b",
+      "reference": "5.2",
+      "area": "Statistics",
+      "group": 5,
+      "title": "Two-tailed binomial tests and critical regions",
+      "tools": [
+        "hypothesis-testing"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "hypothesis-testing",
+        "activities": [
+          [
+            1,
+            "binomial_two_tail"
+          ],
+          [
+            1,
+            "binomial_critical_region"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "S5.3",
+      "reference": "5.3",
+      "area": "Statistics",
+      "group": 5,
+      "title": "Normal mean tests with known variance",
+      "tools": [
+        "hypothesis-testing"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "hypothesis-testing",
+        "activities": [
+          [
+            2,
+            "normal_mean_one_tail"
+          ],
+          [
+            2,
+            "normal_mean_two_tail"
+          ],
+          [
+            2,
+            "normal_critical_value"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "M6.1",
+      "reference": "6.1",
+      "area": "Mechanics",
+      "group": 6,
+      "title": "Quantities SI units and conversions",
+      "tools": [
+        "conversions-teaching",
+        "newtons-second-law"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "M7.1",
+      "reference": "7.1",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Motion quantities and language",
+      "tools": [
+        "motion-graphs-constant-acceleration"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "M7.2a",
+      "reference": "7.2",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Displacement-time graphs",
+      "tools": [
+        "motion-graphs-constant-acceleration"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "M7.2b",
+      "reference": "7.2",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Velocity-time graphs",
+      "tools": [
+        "motion-graphs-constant-acceleration"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "M7.3a",
+      "reference": "7.3",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Constant acceleration in one dimension",
+      "tools": [
+        "equations-of-motion"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "equations-of-motion",
+        "activities": [
+          [
+            1,
+            "find_v"
+          ],
+          [
+            1,
+            "find_s"
+          ],
+          [
+            1,
+            "find_a"
+          ],
+          [
+            1,
+            "find_t"
+          ],
+          [
+            2,
+            "stopping_distance"
+          ],
+          [
+            2,
+            "speed_from_distance"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "M7.3b",
+      "reference": "7.3",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Constant acceleration with vectors",
+      "tools": [
+        "equations-of-motion"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "M7.4a",
+      "reference": "7.4",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Variable acceleration in a line",
+      "tools": [
+        "advanced-differentiation",
+        "integration"
+      ],
+      "mode": "ap-adaptation",
+      "selection": [
+        "4.2",
+        "8.2"
+      ]
+    },
+    {
+      "id": "M7.4b",
+      "reference": "7.4",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Variable acceleration with vectors",
+      "tools": [
+        "advanced-differentiation",
+        "integration"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "M7.5a",
+      "reference": "7.5",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Projectiles: components and trajectories",
+      "tools": [
+        "projectiles"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "projectiles",
+        "activities": [
+          [
+            1,
+            "resolve_velocity"
+          ],
+          [
+            1,
+            "time_to_top"
+          ],
+          [
+            1,
+            "maximum_height"
+          ],
+          [
+            2,
+            "position_after_time"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "M7.5b",
+      "reference": "7.5",
+      "area": "Mechanics",
+      "group": 7,
+      "title": "Projectiles: range height and modelling",
+      "tools": [
+        "projectiles"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "projectiles",
+        "activities": [
+          [
+            2,
+            "range_level_ground"
+          ],
+          [
+            2,
+            "height_at_distance"
+          ],
+          [
+            3,
+            "clear_wall"
+          ],
+          [
+            3,
+            "speed_for_range"
+          ],
+          [
+            3,
+            "projected_from_height"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "M8.1",
+      "reference": "8.1",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Forces and Newton's first law",
+      "tools": [
+        "newtons-second-law"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "M8.2a",
+      "reference": "8.2",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Newton's second law",
+      "tools": [
+        "newtons-second-law",
+        "friction"
+      ],
+      "mode": "pilot",
+      "selection": "M8.2"
+    },
+    {
+      "id": "M8.2b",
+      "reference": "8.2",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Resolving forces and inclines",
+      "tools": [
+        "newtons-second-law",
+        "friction"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "newtons-second-law",
+        "activities": [
+          [
+            2,
+            "driving_resistance"
+          ],
+          [
+            3,
+            "inclined_plane_no_friction"
+          ],
+          [
+            3,
+            "inclined_plane_friction"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "M8.3",
+      "reference": "8.3",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Weight and vertical motion",
+      "tools": [
+        "newtons-second-law",
+        "equations-of-motion"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "equations-of-motion",
+        "activities": [
+          [
+            3,
+            "time_to_top"
+          ],
+          [
+            3,
+            "maximum_height"
+          ],
+          [
+            3,
+            "height_after_time"
+          ],
+          [
+            3,
+            "speed_at_height"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "M8.4a",
+      "reference": "8.4",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Connected particles and pulleys",
+      "tools": [
+        "newtons-second-law",
+        "friction"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "M8.4b",
+      "reference": "8.4",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Coplanar equilibrium",
+      "tools": [
+        "newtons-second-law",
+        "friction"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "M8.5",
+      "reference": "8.5",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Resultant forces and planar dynamics",
+      "tools": [
+        "newtons-second-law",
+        "free-vectors"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "M8.6a",
+      "reference": "8.6",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Moving bodies on rough surfaces",
+      "tools": [
+        "friction"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "friction",
+        "activities": [
+          [
+            2,
+            "horizontal_acceleration"
+          ],
+          [
+            2,
+            "pulling_force"
+          ],
+          [
+            2,
+            "pull_at_angle"
+          ],
+          [
+            3,
+            "slope_acceleration_down"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "M8.6b",
+      "reference": "8.6",
+      "area": "Mechanics",
+      "group": 8,
+      "title": "Limiting friction and equilibrium",
+      "tools": [
+        "friction"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "friction",
+        "activities": [
+          [
+            1,
+            "limiting_friction"
+          ],
+          [
+            1,
+            "coefficient_from_friction"
+          ],
+          [
+            1,
+            "static_or_sliding"
+          ],
+          [
+            3,
+            "slope_about_to_slide_down"
+          ],
+          [
+            3,
+            "slope_limiting_angle"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "M9.1a",
+      "reference": "9.1",
+      "area": "Mechanics",
+      "group": 9,
+      "title": "Moments and rigid-body equilibrium",
+      "tools": [
+        "moments",
+        "friction"
+      ],
+      "mode": "generator",
+      "selection": {
+        "tool": "moments",
+        "activities": [
+          [
+            1,
+            "calculate_moment"
+          ],
+          [
+            1,
+            "resultant_moment"
+          ],
+          [
+            2,
+            "unknown_force"
+          ],
+          [
+            3,
+            "uniform_beam_reactions"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "M9.1b",
+      "reference": "9.1",
+      "area": "Mechanics",
+      "group": 9,
+      "title": "Ladders and non-parallel force systems",
+      "tools": [
+        "moments",
+        "friction"
+      ],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "LDS1",
+      "reference": "Data requirement",
+      "area": "Statistics",
+      "group": 6,
+      "title": "Pearson LDS context and variable familiarity",
+      "tools": [],
+      "mode": "authored",
+      "selection": null
+    },
+    {
+      "id": "LDS2",
+      "reference": "Data requirement",
+      "area": "Statistics",
+      "group": 6,
+      "title": "Pearson LDS interpretation and data quality",
+      "tools": [],
+      "mode": "authored",
+      "selection": null
+    }
+  ]
+}

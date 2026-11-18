@@ -30,3 +30,5 @@ body[data-route="tools"] .tool-index-group[open],body[data-route="collections"] 
 
 @media(min-width:1250px){.explore-actions{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .ap-curriculum-link{margin-bottom:20px}
+@media(min-width:1250px){.explore-actions{grid-template-columns:repeat(5,minmax(0,1fr))}.explore-action{gap:9px}.explore-actions .explore-icon{width:28px;height:28px;font-size:1.1rem}.explore-actions .explore-arrow{display:none}}
+@media(min-width:1250px){.explore-actions .explore-action{display:grid;grid-template-columns:28px minmax(0,1fr);align-content:start;gap:8px 9px}.explore-actions .explore-action>span:nth-child(2){display:contents}.explore-actions .explore-action strong{font-size:.9rem;line-height:1.35;margin-bottom:0}.explore-actions .explore-action>span:nth-child(2)>span{grid-column:1/-1;font-size:.83rem;line-height:1.45}}

@@ -5232,7 +5232,7 @@ function setActiveNav() {
   const toolRouteSlug = ["tools", "classroom"].includes(parts[0]) ? parts[1] || "" : "";
   const activeTool = toolRouteSlug ? tools.find((tool) => tool.slug === toolRouteSlug) : null;
   const activeCollectionHref = activeTool ? `#/collections/${categorySlug(activeTool.category)}` : "";
-  const activeParentHref = parts[0] === "ap-calculus" ? "#/tools" : parts[0] === "textbook-assessments" ? "#/textbook-alignments" : "";
+  const activeParentHref = ["ap-calculus", "alevel-maths"].includes(parts[0]) ? "#/tools" : parts[0] === "textbook-assessments" ? "#/textbook-alignments" : "";
   document.querySelectorAll(".nav-list a, .sidebar-utility a").forEach((link) => {
     const href = link.getAttribute("href");
     const isCurrentRoute = href === cleanPath || (href !== "#/" && cleanPath.startsWith(href));
@@ -17458,7 +17458,6 @@ function renderCurriculumAlignments() {
         `<a class="button primary" href="#/coverage-map">Coverage Map</a><a class="button" href="#/textbook-alignments">Textbook Alignments</a>`
       )}
       <section class="textbook-page curriculum-page">
-      ${framework.id === "ap-courses" || framework.standards?.some(s => s.code === "AP Calculus AB") ? `<div class="ap-curriculum-link"><a class="button primary" href="#/ap-calculus">AP Calculus topic worksheets & answer schemes ↗</a></div>` : ""}
         <section class="textbook-hero-panel curriculum-hero-panel curriculum-chooser-hero">
           <div class="curriculum-hero-copy">
             <span class="eyebrow">Curriculum Alignment Hub</span>
@@ -17519,6 +17518,7 @@ function renderCurriculumAlignments() {
         <h1>${escapeHtml(framework.label)} alignment map</h1>
         <p>${escapeHtml(schoolContextReportLine() || "Generated with Kaizen Maths")}</p>
       </div>
+      ${framework.id === "ap-courses" ? `<div class="ap-curriculum-link"><a class="button primary" href="#/ap-calculus">AP Calculus topic worksheets & answer schemes ↗</a></div>` : framework.id === "pearson-edexcel" ? `<div class="ap-curriculum-link"><a class="button primary" href="#/alevel-maths">Edexcel UK A level topic worksheets & solutions ↗</a></div>` : ""}
       <section class="textbook-hero-panel curriculum-hero-panel curriculum-chooser-hero">
         <div class="curriculum-hero-copy">
           <span class="eyebrow">${explicitFramework ? "Curriculum Alignment Hub" : "School Default Curriculum"}</span>
@@ -30672,6 +30672,10 @@ function updateRouteSeo(parts) {
         ? `Browse ${collectionName.toLowerCase()} question generators, worked examples, and classroom practice tools in Kaizen Maths.`
         : "Browse curriculum collections inside Kaizen Maths."
     },
+    "alevel-maths": {
+      title: routeTitle("Edexcel A level Mathematics worksheets"),
+      description: "Edexcel UK 9MA0 Pure, Statistics and Mechanics: eight-question one-page worksheets, worked solutions and suggested marks."
+    },
     "ap-calculus": {
       title: routeTitle("AP Calculus topic worksheets"),
       description: "Browse AP Calculus AB and BC by syllabus topic. Download eight-question, one-page worksheets and separate answers, worked solutions and suggested marks."
@@ -30892,6 +30896,9 @@ function renderRoute() {
     renderToolDetail(parts[1]);
   } else if (parts[0] === "classroom" && parts[1]) {
     renderClassroomTool(parts[1]);
+  } else if (parts[0] === "alevel-maths") {
+    app.innerHTML = `<div id="alevel-maths-library"></div>`;
+    window.KaizenALevel.mount(document.getElementById("alevel-maths-library"), { tools });
   } else if (parts[0] === "ap-calculus") {
     app.innerHTML = `<div id="ap-calculus-library"></div>`;
     window.KaizenAPCalculus.mount(document.getElementById("ap-calculus-library"), { topicId: parts[1] || "", tools });
@@ -31035,7 +31042,8 @@ function exploreDashboardHtml(category='') {
     ['▦','Worksheet Builder','Choose topics and print a sheet with answers.','#/worksheet-generator','teal'],
     ['▤','Starters & exit tickets','Ready-made packs for the start or end of a lesson.','#/practice-packs','violet'],
     ['✓','Exam & assessment builder','Build a practice paper with worked solutions.','#/gcse-exam-style','amber'],
-    ['∫','AP Calculus','Topic worksheets, answers and suggested marks.','#/ap-calculus','teal']
+    ['∫','AP Calculus','Topic worksheets, answers and suggested marks.','#/ap-calculus','teal'],
+    ['A','A level Mathematics','Edexcel UK topic worksheets and worked solutions.','#/alevel-maths','violet']
   ];
   return `<section class="explore-dashboard" aria-label="Explore teaching resources">
     <div class="explore-intro"><p>Build a resource, or browse the topics below.</p><a class="explore-guide" href="#/how-to-use-this-site">New here? Take a quick tour ↗</a></div>
@@ -31068,7 +31076,7 @@ window.addEventListener('popstate',renderRoute);
 function renderTeacherReference() {
   setPageSeo(titleWithSite("Teacher reference & workspace guide"),"Curriculum maps, training, pupil tasks and school access, together in one place.");
   const groups=[
-    ['Plan your teaching',[['AP Calculus worksheets','#/ap-calculus'],['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
+    ['Plan your teaching',[['AP Calculus worksheets','#/ap-calculus'],['Edexcel A level worksheets','#/alevel-maths'],['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
     ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Make a worksheet: screenshot guide','/guides/make-a-worksheet'],['Classroom tools','#/collections/classroom-tools'],['Kaizen University','#/kaizen-university']]],
     ['Work with learners',[['Pupil tasks','#/class-tasks'],['Tutor Workspace','#/tutor-workspace'],['School space','#/school-space'],['Book a demo','#/book-demo'],['Contact / enquire','#/contact'],['Partners','#/partners']]]
   ];
