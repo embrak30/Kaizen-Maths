@@ -1,0 +1,500 @@
+{
+  "qualification": "Edexcel UK A level Mathematics 9MA0",
+  "revision": "2026-11-18.pilot1",
+  "packs": [
+    {
+      "id": "P2.3",
+      "slug": "quadratics",
+      "sourceTool": "quadratic-equations",
+      "title": "Quadratics and discriminants",
+      "area": "Pure Mathematics",
+      "references": [
+        "2.3",
+        "2.4"
+      ],
+      "instructions": "Answer on separate paper. Show your working. Give exact answers unless a decimal is requested.",
+      "questions": [
+        {
+          "number": 1,
+          "question": "Solve $x^2-5x+6=0$ by factorisation.",
+          "questionText": "Solve $x^2-5x+6=0$ by factorisation.",
+          "answer": "$x=2$ or $x=3$.",
+          "steps": [
+            "<p><b>1.</b> Find two numbers with product 6 and sum -5: -2 and -3.</p>",
+            "<p><b>2.</b> $x^2-5x+6=(x-2)(x-3)$.</p>",
+            "<p><b>3.</b> Set each factor equal to zero: $x=2$ or $x=3$.</p>"
+          ],
+          "criteria": [
+            "M1: Correct factorisation [1].",
+            "A1: Both roots [1]."
+          ],
+          "marks": 2,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 2,
+          "question": "Solve $2x^2+3x-7=0$. Give exact answers.",
+          "questionText": "Solve $2x^2+3x-7=0$. Give exact answers.",
+          "answer": "$x=\\dfrac{-3+\\sqrt{65}}4$ or $x=\\dfrac{-3-\\sqrt{65}}4$.",
+          "steps": [
+            "<p><b>1.</b> Here $a=2$, $b=3$, $c=-7$.</p>",
+            "<p><b>2.</b> The discriminant is $b^2-4ac=9-4(2)(-7)=65$.</p>",
+            "<p><b>3.</b> Apply the quadratic formula: $x=\\dfrac{-3\\pm\\sqrt{65}}{2(2)}$.</p>",
+            "<p><b>4.</b> Simplify the denominator to 4; retain the surd for exact answers.</p>"
+          ],
+          "criteria": [
+            "M1: Correct discriminant [1].",
+            "M1: Correct quadratic-formula substitution [1].",
+            "A1: Both exact roots [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 3,
+          "question": "Write $2x^2-8x+3$ in completed-square form. Hence state the vertex and minimum value.",
+          "questionText": "Write $2x^2-8x+3$ in completed-square form. Hence state the vertex and minimum value.",
+          "answer": "$2(x-2)^2-5$; vertex $(2,-5)$; minimum $-5$.",
+          "steps": [
+            "<p><b>1.</b> Factor the first two terms: $2(x^2-4x)+3$.</p>",
+            "<p><b>2.</b> Complete the square: $x^2-4x=(x-2)^2-4$.</p>",
+            "<p><b>3.</b> So $2(x^2-4x)+3=2(x-2)^2-8+3=2(x-2)^2-5$.</p>",
+            "<p><b>4.</b> The squared term is nonnegative, with value 0 at $x=2$. Hence the minimum is -5 and the vertex is $(2,-5)$.</p>"
+          ],
+          "criteria": [
+            "M1: Valid completion of the square [1].",
+            "A1: Correct completed-square expression [1].",
+            "B1: Correct vertex and minimum [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 4,
+          "question": "Find all values of $k$ for which $x^2+(k-2)x+k=0$ has a repeated real root.",
+          "questionText": "Find all values of $k$ for which $x^2+(k-2)x+k=0$ has a repeated real root.",
+          "answer": "$k=4+2\\sqrt3$ or $k=4-2\\sqrt3$.",
+          "steps": [
+            "<p><b>1.</b> A repeated root requires discriminant zero.</p>",
+            "<p><b>2.</b> $(k-2)^2-4k=0$. Expand to obtain $k^2-8k+4=0$.</p>",
+            "<p><b>3.</b> Complete the square: $(k-4)^2=12$.</p>",
+            "<p><b>4.</b> Taking both square roots gives $k=4\\pm2\\sqrt3$.</p>"
+          ],
+          "criteria": [
+            "M1: Sets discriminant to zero [1].",
+            "M1: Correct quadratic equation in k [1].",
+            "A1: Both parameter values [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 5,
+          "question": "Find the range of $c$ for which $x^2-6x+c&gt;0$ for every real $x$. Explain why the boundary is excluded.",
+          "questionText": "Find the range of $c$ for which $x^2-6x+c>0$ for every real $x$. Explain why the boundary is excluded.",
+          "answer": "$c&gt;9$.",
+          "steps": [
+            "<p><b>1.</b> Complete the square: $x^2-6x+c=(x-3)^2+c-9$.</p>",
+            "<p><b>2.</b> Its minimum occurs at $x=3$ and equals $c-9$.</p>",
+            "<p><b>3.</b> Strict positivity requires $c-9&gt;0$, so $c&gt;9$.</p>",
+            "<p><b>4.</b> At $c=9$ the expression is zero at $x=3$, so that boundary is excluded.</p>"
+          ],
+          "criteria": [
+            "M1: Uses the minimum or discriminant correctly [1].",
+            "A1: Correct strict range [1].",
+            "B1: Explains exclusion of the boundary [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 6,
+          "question": "The line $y=2x+k$ is tangent to $y=x^2-4x+5$. Find $k$ and the point of contact.",
+          "questionText": "The line $y=2x+k$ is tangent to $y=x^2-4x+5$. Find $k$ and the point of contact.",
+          "answer": "$k=-4$; point of contact $(3,2)$.",
+          "steps": [
+            "<p><b>1.</b> At an intersection, $x^2-4x+5=2x+k$, so $x^2-6x+5-k=0$.</p>",
+            "<p><b>2.</b> Tangency requires one repeated intersection: $36-4(5-k)=0$.</p>",
+            "<p><b>3.</b> Thus $16+4k=0$ and $k=-4$.</p>",
+            "<p><b>4.</b> The equation becomes $(x-3)^2=0$, so $x=3$. Substitute into the line: $y=6-4=2$.</p>"
+          ],
+          "criteria": [
+            "M1: Forms the intersection equation [1].",
+            "M1: Applies the repeated-root condition [1].",
+            "A1: Correct k [1].",
+            "A1: Correct point of contact [1]."
+          ],
+          "marks": 4,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 7,
+          "question": "Solve $e^{2x}-5e^x+4=0$, giving exact values of $x$.",
+          "questionText": "Solve $e^{2x}-5e^x+4=0$, giving exact values of $x$.",
+          "answer": "$x=0$ or $x=\\ln4$.",
+          "steps": [
+            "<p><b>1.</b> Let $u=e^x$, so $u&gt;0$ and $e^{2x}=u^2$.</p>",
+            "<p><b>2.</b> Solve $u^2-5u+4=(u-1)(u-4)=0$, giving $u=1$ or $u=4$.</p>",
+            "<p><b>3.</b> Both are positive, so take natural logarithms: $x=\\ln1=0$ or $x=\\ln4$.</p>"
+          ],
+          "criteria": [
+            "M1: Correct substitution [1].",
+            "A1: Both values of the substituted variable [1].",
+            "A1: Both exact x values with domain respected [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 8,
+          "question": "A ball has height $h(t)=-5t^2+20t+1$ metres, $t$ seconds after launch. Find its greatest height and when it occurs. Find when it first reaches the ground ($t&gt;0$).",
+          "questionText": "A ball has height $h(t)=-5t^2+20t+1$ metres, $t$ seconds after launch. Find its greatest height and when it occurs. Find when it first reaches the ground ($t>0$).",
+          "answer": "Greatest height 21 m at 2 s; ground at $t=2+\\dfrac{\\sqrt{105}}5\\approx4.05$ s.",
+          "steps": [
+            "<p><b>1.</b> Complete the square: $h(t)=-5(t-2)^2+21$.</p>",
+            "<p><b>2.</b> The greatest height is 21 m, attained at $t=2$ s because the square has a negative coefficient.</p>",
+            "<p><b>3.</b> At ground level, $-5(t-2)^2+21=0$, hence $(t-2)^2=\\dfrac{21}5$.</p>",
+            "<p><b>4.</b> Thus $t=2\\pm\\dfrac{\\sqrt{105}}5$. The negative branch is less than zero, so the relevant time is approximately 4.05 s.</p>"
+          ],
+          "criteria": [
+            "M1: Correct vertex method [1].",
+            "A1: Height and time with units [1].",
+            "M1: Correct ground-level equation and roots [1].",
+            "A1: Selects the positive time with units [1]."
+          ],
+          "marks": 4,
+          "origin": "original-9ma0-pilot"
+        }
+      ]
+    },
+    {
+      "id": "S5.2",
+      "slug": "binomial-tests",
+      "sourceTool": "hypothesis-testing",
+      "title": "Binomial hypothesis testing",
+      "area": "Statistics",
+      "references": [
+        "4.1",
+        "5.1",
+        "5.2"
+      ],
+      "instructions": "Calculator required. Show hypotheses, probabilities and conclusions. Give probabilities to 4 decimal places.",
+      "questions": [
+        {
+          "number": 1,
+          "question": "A factory claims a 10% defect rate. A random sample of 20 items contains 5 defects. Test at the 5% level whether the defect rate has increased. Assume independence.",
+          "questionText": "A factory claims a 10% defect rate. A random sample of 20 items contains 5 defects. Test at the 5% level whether the defect rate has increased. Assume independence.",
+          "answer": "$p\\text{-value}=0.0432$. Reject the claim of p = 0.10; there is evidence that the defect rate has increased.",
+          "steps": [
+            "<p><b>1.</b> Let X count defects. Under $H_0:p=0.10$, $X\\sim B(20,0.10)$; the alternative is $H_1:p&gt;0.10$.</p>",
+            "<p><b>2.</b> For an upper-tail test, use $P(X\\ge5)=1-P(X\\le4)=0.0432$.</p>",
+            "<p><b>3.</b> Since 0.0432 &lt; 0.05, reject $H_0$.</p>",
+            "<p><b>4.</b> There is sufficient evidence, at the 5% level, that the population defect rate is greater than 10%.</p>"
+          ],
+          "criteria": [
+            "B1: Correct variable, null model and hypotheses [1].",
+            "M1: Uses the correct upper tail [1].",
+            "A1: Correct probability and decision [1].",
+            "B1: Conclusion in context [1]."
+          ],
+          "marks": 4,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 2,
+          "question": "A die is rolled independently 60 times and shows six on 4 occasions. Test at the 5% level whether the probability of a six is below $\\tfrac16$.",
+          "questionText": "A die is rolled independently 60 times and shows six on 4 occasions. Test at the 5% level whether the probability of a six is below $\\tfrac16$.",
+          "answer": "$p\\text{-value}=0.0202$. Reject $H_0$; evidence that the probability of a six is below $\\tfrac16$.",
+          "steps": [
+            "<p><b>1.</b> Let X count sixes. Use $H_0:p=\\tfrac16$ and $H_1:p&lt;\\tfrac16$. Under the null, $X\\sim B(60,\\tfrac16)$.</p>",
+            "<p><b>2.</b> The observed count is unusually small, so calculate $P(X\\le4)=0.0202$.</p>",
+            "<p><b>3.</b> This is below 0.05, so reject $H_0$.</p>",
+            "<p><b>4.</b> There is sufficient evidence that this die gives a six less often than a fair die would.</p>"
+          ],
+          "criteria": [
+            "B1: Correct null binomial model and hypotheses [1].",
+            "M1: Correct lower tail [1].",
+            "A1: Correct probability and decision [1].",
+            "B1: Contextual conclusion [1]."
+          ],
+          "marks": 4,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 3,
+          "question": "A coin gives 16 heads in 20 independent tosses. Test at the 5% level whether it is biased. Use an equal-tail two-sided test.",
+          "questionText": "A coin gives 16 heads in 20 independent tosses. Test at the 5% level whether it is biased. Use an equal-tail two-sided test.",
+          "answer": "Two-sided $p\\text{-value}=0.0118$. Reject fairness; evidence of bias.",
+          "steps": [
+            "<p><b>1.</b> Let X count heads. Use $H_0:p=0.5$, $H_1:p\\ne0.5$ and $X\\sim B(20,0.5)$ under the null.</p>",
+            "<p><b>2.</b> The upper-tail probability is $P(X\\ge16)=0.0059$. Compare it with 0.025.</p>",
+            "<p><b>3.</b> Equivalently, double that tail: the two-sided p-value is 0.0118, below 0.05. Reject $H_0$.</p>",
+            "<p><b>4.</b> There is sufficient evidence that the coin is biased; the observation is in the direction of more heads.</p>"
+          ],
+          "criteria": [
+            "B1: Correct hypotheses and model [1].",
+            "M1: Correct tail and two-sided adjustment [1].",
+            "A1: Correct comparison and decision [1].",
+            "B1: Conclusion about bias [1]."
+          ],
+          "marks": 4,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 4,
+          "question": "Under $H_0$, $X\\sim B(12,0.25)$. An upper-tail test has nominal significance 5%. Find its critical region and actual significance level.",
+          "questionText": "Under $H_0$, $X\\sim B(12,0.25)$. An upper-tail test has nominal significance 5%. Find its critical region and actual significance level.",
+          "answer": "$X\\ge 7$; actual significance 0.0143 (about 1.43%).",
+          "steps": [
+            "<p><b>1.</b> Choose the smallest integer r for which $P(X\\ge r)\\le0.05$.</p>",
+            "<p><b>2.</b> $P(X\\ge6)=0.0544&gt;0.05$, while $P(X\\ge7)=0.0143\\le0.05$.</p>",
+            "<p><b>3.</b> Therefore the critical region is $X\\ge7$ (with $X\\le12$).</p>",
+            "<p><b>4.</b> Its actual significance is the null probability of that region, 0.0143, or approximately 1.43%.</p>"
+          ],
+          "criteria": [
+            "M1: Correct upper-tail cutoff condition [1].",
+            "A1: Probabilities on both sides of the cutoff [1].",
+            "A1: Correct critical region [1].",
+            "B1: Actual significance from region probability [1]."
+          ],
+          "marks": 4,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 5,
+          "question": "Under $H_0$, $X\\sim B(10,0.5)$. Construct a two-tailed 5% critical region with at most 2.5% in each tail. Find its actual significance.",
+          "questionText": "Under $H_0$, $X\\sim B(10,0.5)$. Construct a two-tailed 5% critical region with at most 2.5% in each tail. Find its actual significance.",
+          "answer": "$X\\le1$ or $X\\ge9$; actual significance 0.0215 (about 2.15%).",
+          "steps": [
+            "<p><b>1.</b> The lower-tail target is 0.025. $P(X\\le1)=0.0107$, but $P(X\\le2)=0.0547&gt;0.025$.</p>",
+            "<p><b>2.</b> Symmetry about 5 gives the upper region $X\\ge9$.</p>",
+            "<p><b>3.</b> The full critical region is $X\\le1$ or $X\\ge9$.</p>",
+            "<p><b>4.</b> Add the two tail probabilities: actual significance is 0.0215 \u2248 2.15%.</p>"
+          ],
+          "criteria": [
+            "M1: Correct equal-tail construction [1].",
+            "A1: Correct lower cutoff with boundary check [1].",
+            "A1: Correct upper cutoff and combined region [1].",
+            "B1: Correct actual significance [1]."
+          ],
+          "marks": 4,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 6,
+          "question": "For $H_0:p=0.40$ against $H_1:p&gt;0.40$, an exact binomial test gives p-value 0.073. State the 5% decision and interpret it without claiming the null is proved.",
+          "questionText": "For $H_0:p=0.40$ against $H_1:p>0.40$, an exact binomial test gives p-value 0.073. State the 5% decision and interpret it without claiming the null is proved.",
+          "answer": "Do not reject $H_0$; insufficient evidence that p exceeds 0.40.",
+          "steps": [
+            "<p><b>1.</b> Compare the p-value with the significance level: 0.073 &gt; 0.05.</p>",
+            "<p><b>2.</b> Do not reject $H_0$. There is insufficient evidence of a population proportion above 0.40.</p>",
+            "<p><b>3.</b> This does not prove p = 0.40; the sample has not supplied strong enough evidence against it.</p>"
+          ],
+          "criteria": [
+            "M1: Correct p-value comparison [1].",
+            "A1: Correct decision and contextual direction [1].",
+            "B1: Does not equate non-rejection with proof [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 7,
+          "question": "For $H_0:p=0.20$ against $H_1:p&gt;0.20$, $n=20$ and the observed count is 8. A pupil uses $P(X=8)$ as the p-value. Correct the probability and explain.",
+          "questionText": "For $H_0:p=0.20$ against $H_1:p>0.20$, $n=20$ and the observed count is 8. A pupil uses $P(X=8)$ as the p-value. Correct the probability and explain.",
+          "answer": "Use $P(X\\ge8)=0.0321$, not $P(X=8)=0.0222$.",
+          "steps": [
+            "<p><b>1.</b> Under the null, $X\\sim B(20,0.20)$. The alternative looks for an unusually high count.</p>",
+            "<p><b>2.</b> Include the observed count and every outcome more extreme in that direction: $P(X\\ge8)=1-P(X\\le7)=0.0321$.</p>",
+            "<p><b>3.</b> A single-outcome probability omits 9, 10, \u2026, 20 and is not the required tail probability.</p>"
+          ],
+          "criteria": [
+            "B1: Correct null model and tail direction [1].",
+            "A1: Correct tail probability [1].",
+            "B1: Explains inclusion of more extreme outcomes [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 8,
+          "question": "A player attempts 20 free throws. Their success probability rises as they warm up. Explain why one binomial model may be unsuitable. State another condition it would require.",
+          "questionText": "A player attempts 20 free throws. Their success probability rises as they warm up. Explain why one binomial model may be unsuitable. State another condition it would require.",
+          "answer": "The success probability is not constant; the binomial model also requires independent trials.",
+          "steps": [
+            "<p><b>1.</b> A binomial count assumes a fixed number of trials, each with two outcomes and the same success probability.</p>",
+            "<p><b>2.</b> Warming up changes that probability across the attempts, violating the constant-p assumption.</p>",
+            "<p><b>3.</b> The outcomes must also be independent; this would need justification rather than being inferred from a fixed trial count.</p>"
+          ],
+          "criteria": [
+            "B1: Identifies constant-probability requirement [1].",
+            "B1: Links its failure to the context [1].",
+            "B1: States independence as an additional requirement [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        }
+      ]
+    },
+    {
+      "id": "M8.2",
+      "slug": "resolving-forces",
+      "sourceTool": "newtons-second-law",
+      "title": "Resolving forces",
+      "area": "Mechanics",
+      "references": [
+        "8.1",
+        "8.2",
+        "8.4",
+        "8.5"
+      ],
+      "instructions": "Use g = 9.8 m s\u207b\u00b2. Answer on separate paper. Show force equations; give decimal answers to 3 significant figures.",
+      "questions": [
+        {
+          "number": 1,
+          "question": "A force is $(6\\mathbf i+8\\mathbf j)$ N. Find its magnitude and direction, measured above the positive horizontal axis.",
+          "questionText": "A force is $(6\\mathbf i+8\\mathbf j)$ N. Find its magnitude and direction, measured above the positive horizontal axis.",
+          "answer": "10 N at 53.1\u00b0 above the positive horizontal.",
+          "steps": [
+            "<p><b>1.</b> The perpendicular components are 6 N horizontally and 8 N vertically.</p>",
+            "<p><b>2.</b> Magnitude $=\\sqrt{6^2+8^2}=10$ N.</p>",
+            "<p><b>3.</b> Both components are positive. The angle is $\\theta=\\tan^{-1}(\\tfrac86)=53.130\\ldots^\\circ$.</p>"
+          ],
+          "criteria": [
+            "M1: Uses the perpendicular components for magnitude [1].",
+            "A1: Correct magnitude with unit [1].",
+            "A1: Correct angle and quadrant [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 2,
+          "question": "Resolve a 20 N force at 30\u00b0 above the horizontal into horizontal and vertical components.<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 270 110\" aria-label=\"20 newton force at 30 degrees above horizontal\"><path d=\"M50 85H245 M65 92V15\" fill=\"none\" stroke=\"#a9b9b3\"/><line x1=\"65\" y1=\"85\" x2=\"203.56\" y2=\"5\" stroke=\"#146d65\" stroke-width=\"2\"/><polygon points=\"203.56,5 195.8978314304372,5.728816034129128 199.09790183276047,11.27133797095306\" fill=\"#146d65\"/><text x=\"210\" y=\"17\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">20 N</text><text x=\"95\" y=\"76\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">30\u00b0</text><text x=\"249\" y=\"90\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">x</text></svg>",
+          "questionText": "Resolve a 20 N force at 30\u00b0 above the horizontal into horizontal and vertical components.     20 N  30\u00b0  x  ",
+          "answer": "$10\\sqrt3$ N right; 10 N up.",
+          "steps": [
+            "<p><b>1.</b> The horizontal component is adjacent to the angle: $20\\cos30^\\circ=10\\sqrt3$ N.</p>",
+            "<p><b>2.</b> The vertical component is opposite: $20\\sin30^\\circ=10$ N. Both signs are positive.</p>"
+          ],
+          "criteria": [
+            "M1: Correct sine/cosine allocation [1].",
+            "A1: Both components with directions and units [1]."
+          ],
+          "marks": 2,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 3,
+          "question": "A particle is in equilibrium under three forces. Two are 12 N right and 5 N up. Find the third force as a vector and give its magnitude.<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 270 105\" aria-label=\"Two perpendicular forces on a particle\"><line x1=\"90\" y1=\"80\" x2=\"235\" y2=\"80\" stroke=\"#146d65\" stroke-width=\"2\"/><polygon points=\"235,80 228.0,76.8 228.0,83.2\" fill=\"#146d65\"/><line x1=\"90\" y1=\"80\" x2=\"90\" y2=\"15\" stroke=\"#146d65\" stroke-width=\"2\"/><polygon points=\"90,15 86.8,22.0 93.2,22.0\" fill=\"#146d65\"/><text x=\"155\" y=\"68\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">12 N</text><text x=\"42\" y=\"25\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">5 N</text><circle cx=\"90\" cy=\"80\" r=\"4\" fill=\"#203b43\"/></svg>",
+          "questionText": "A particle is in equilibrium under three forces. Two are 12 N right and 5 N up. Find the third force as a vector and give its magnitude.      12 N  5 N   ",
+          "answer": "$(-12\\mathbf i-5\\mathbf j)$ N; magnitude 13 N.",
+          "steps": [
+            "<p><b>1.</b> The two known forces sum to $(12\\mathbf i+5\\mathbf j)$ N.</p>",
+            "<p><b>2.</b> Equilibrium means zero resultant, so the third force is their negative, $(-12\\mathbf i-5\\mathbf j)$ N.</p>",
+            "<p><b>3.</b> Its magnitude is $\\sqrt{12^2+5^2}=13$ N.</p>"
+          ],
+          "criteria": [
+            "M1: Uses zero resultant [1].",
+            "A1: Correct balancing vector [1].",
+            "A1: Correct magnitude [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 4,
+          "question": "A 4 kg particle slides down a smooth plane inclined at 30\u00b0. Find its acceleration down the plane and the normal reaction.<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 270 115\" aria-label=\"Four kilogram block on a smooth 30 degree incline\"><path d=\"M50 100H240 M70 100L230 7L230 100\" fill=\"none\" stroke=\"#657c75\" stroke-width=\"1.6\"/><polygon points=\"137.9,61 162.1,47 152.1,29.7 127.9,43.7\" fill=\"#e9f3ee\" stroke=\"#146d65\" stroke-width=\"1.6\"/><text x=\"173\" y=\"38\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">4 kg</text><text x=\"94\" y=\"96\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">30\u00b0</text></svg>",
+          "questionText": "A 4 kg particle slides down a smooth plane inclined at 30\u00b0. Find its acceleration down the plane and the normal reaction.    4 kg  30\u00b0  ",
+          "answer": "Acceleration 4.90 m s\u207b\u00b2 down the plane; $R=19.6\\sqrt3\\approx33.9$ N.",
+          "steps": [
+            "<p><b>1.</b> Take down the slope as positive. Weight is $mg=4(9.8)=39.2$ N; smooth means no friction.</p>",
+            "<p><b>2.</b> Parallel to the plane: $39.2\\sin30^\\circ=4a$, giving $a=4.9$ m s\u207b\u00b2.</p>",
+            "<p><b>3.</b> Perpendicular to the plane there is no acceleration: $R=39.2\\cos30^\\circ=19.6\\sqrt3$ N.</p>"
+          ],
+          "criteria": [
+            "B1: Correct weight components and smooth-plane assumption [1].",
+            "A1: Correct acceleration and direction [1].",
+            "A1: Correct normal reaction [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 5,
+          "question": "A 5 kg particle on a smooth horizontal surface is pulled by 20 N at 30\u00b0 above the horizontal. Find its acceleration and normal reaction.<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 270 105\" aria-label=\"Five kilogram block pulled 30 degrees above horizontal\"><path d=\"M20 93H250\" fill=\"none\" stroke=\"#657c75\"/><rect x=\"55\" y=\"66\" width=\"30\" height=\"27\" fill=\"#e9f3ee\" stroke=\"#146d65\"/><line x1=\"70\" y1=\"80\" x2=\"174\" y2=\"20\" stroke=\"#146d65\" stroke-width=\"2\"/><polygon points=\"174,20 166.33758904649315,20.72626329907152 169.53581274882643,26.26985104978256\" fill=\"#146d65\"/><text x=\"185\" y=\"23\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">20 N</text><text x=\"100\" y=\"79\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">30\u00b0</text><text x=\"210\" y=\"85\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">5 kg</text></svg>",
+          "questionText": "A 5 kg particle on a smooth horizontal surface is pulled by 20 N at 30\u00b0 above the horizontal. Find its acceleration and normal reaction.      20 N  30\u00b0  5 kg  ",
+          "answer": "$a=2\\sqrt3\\approx3.46$ m s\u207b\u00b2 right; $R=39.0$ N.",
+          "steps": [
+            "<p><b>1.</b> Horizontally, the driving component is $20\\cos30^\\circ=10\\sqrt3$ N.</p>",
+            "<p><b>2.</b> Apply $F=ma$: $10\\sqrt3=5a$, so $a=2\\sqrt3$ m s\u207b\u00b2.</p>",
+            "<p><b>3.</b> Vertically there is no acceleration: $R+20\\sin30^\\circ=5(9.8)$. Hence $R=49-10=39$ N.</p>"
+          ],
+          "criteria": [
+            "M1: Resolves the applied force correctly [1].",
+            "A1: Correct horizontal acceleration [1].",
+            "A1: Correct vertical balance and reaction [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 6,
+          "question": "Forces $(6\\mathbf i-2\\mathbf j)$ N and $(-2\\mathbf i+8\\mathbf j)$ N act on a 2 kg particle. Find its acceleration vector and acceleration magnitude.",
+          "questionText": "Forces $(6\\mathbf i-2\\mathbf j)$ N and $(-2\\mathbf i+8\\mathbf j)$ N act on a 2 kg particle. Find its acceleration vector and acceleration magnitude.",
+          "answer": "$(2\\mathbf i+3\\mathbf j)$ m s\u207b\u00b2; magnitude $\\sqrt{13}\\approx3.61$ m s\u207b\u00b2.",
+          "steps": [
+            "<p><b>1.</b> Add the forces: $\\mathbf F=(4\\mathbf i+6\\mathbf j)$ N.</p>",
+            "<p><b>2.</b> Use the vector equation $\\mathbf F=m\\mathbf a$: $\\mathbf a=\\tfrac12(4\\mathbf i+6\\mathbf j)=(2\\mathbf i+3\\mathbf j)$ m s\u207b\u00b2.</p>",
+            "<p><b>3.</b> Magnitude $|\\mathbf a|=\\sqrt{2^2+3^2}=\\sqrt{13}$ m s\u207b\u00b2.</p>"
+          ],
+          "criteria": [
+            "M1: Correct resultant force [1].",
+            "A1: Correct acceleration vector [1].",
+            "A1: Correct acceleration magnitude with units [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 7,
+          "question": "A 3 kg particle moves right on a horizontal surface. A 20 N force acts 30\u00b0 below the horizontal; a resistance of 8 N acts left. Find acceleration and normal reaction.<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 270 115\" aria-label=\"20 newton force at 30 degrees below horizontal\"><path d=\"M25 20H250\" fill=\"none\" stroke=\"#a9b9b3\"/><line x1=\"70\" y1=\"20\" x2=\"174\" y2=\"80\" stroke=\"#146d65\" stroke-width=\"2\"/><polygon points=\"174,80 169.53581274882643,73.73014895021743 166.33758904649315,79.27373670092848\" fill=\"#146d65\"/><text x=\"185\" y=\"65\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">20 N</text><text x=\"104\" y=\"35\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">30\u00b0</text><text x=\"18\" y=\"104\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">force is below horizontal</text></svg>",
+          "questionText": "A 3 kg particle moves right on a horizontal surface. A 20 N force acts 30\u00b0 below the horizontal; a resistance of 8 N acts left. Find acceleration and normal reaction.     20 N  30\u00b0  force is below horizontal  ",
+          "answer": "$a=\\dfrac{10\\sqrt3-8}3\\approx3.11$ m s\u207b\u00b2 right; $R=39.4$ N.",
+          "steps": [
+            "<p><b>1.</b> Resolve the applied force: $20\\cos30^\\circ=10\\sqrt3$ N right and $20\\sin30^\\circ=10$ N down.</p>",
+            "<p><b>2.</b> Horizontally, $10\\sqrt3-8=3a$, so $a=\\dfrac{10\\sqrt3-8}3$ m s\u207b\u00b2.</p>",
+            "<p><b>3.</b> Vertically, $R=3(9.8)+10=39.4$ N. The downward pull increases the reaction.</p>"
+          ],
+          "criteria": [
+            "M1: Correct downward and horizontal components [1].",
+            "A1: Correct acceleration with resistance subtracted [1].",
+            "A1: Correct increased normal reaction [1]."
+          ],
+          "marks": 3,
+          "origin": "original-9ma0-pilot"
+        },
+        {
+          "number": 8,
+          "question": "Two light cables support a 100 N load in equilibrium. The left cable makes 30\u00b0 with the horizontal and the right makes 60\u00b0. Find both tensions.<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 270 130\" aria-label=\"Two cables supporting a 100 newton load\"><path d=\"M45 80H225\" fill=\"none\" stroke=\"#a9b9b3\" stroke-dasharray=\"3 3\"/><line x1=\"135\" y1=\"80\" x2=\"67.45\" y2=\"41\" stroke=\"#146d65\" stroke-width=\"2\"/><polygon points=\"67.45,41 71.91217857039405,47.271280762804054 75.11217791293205,41.728717798997835\" fill=\"#146d65\"/><line x1=\"135\" y1=\"80\" x2=\"174\" y2=\"12\" stroke=\"#146d65\" stroke-width=\"2\"/><polygon points=\"174,12 167.7415526898495,16.480160406287922 173.29327765800585,19.664237961554058\" fill=\"#146d65\"/><line x1=\"135\" y1=\"80\" x2=\"135\" y2=\"116\" stroke=\"#9a6a29\" stroke-width=\"2\"/><polygon points=\"135,116 138.2,109.0 131.8,109.0\" fill=\"#9a6a29\"/><text x=\"25\" y=\"33\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">left cable</text><text x=\"186\" y=\"20\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">right cable</text><text x=\"86\" y=\"70\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">30\u00b0</text><text x=\"169\" y=\"69\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">60\u00b0</text><text x=\"148\" y=\"116\" font-family=\"Arial\" font-size=\"14\" fill=\"#203b43\">100 N</text></svg>",
+          "questionText": "Two light cables support a 100 N load in equilibrium. The left cable makes 30\u00b0 with the horizontal and the right makes 60\u00b0. Find both tensions.         left cable  right cable  30\u00b0  60\u00b0  100 N  ",
+          "answer": "Left tension 50 N; right tension $50\\sqrt3\\approx86.6$ N.",
+          "steps": [
+            "<p><b>1.</b> Let the tensions be L and R. Horizontally, $L\\cos30^\\circ=R\\cos60^\\circ$, so $R=\\sqrt3L$.</p>",
+            "<p><b>2.</b> Vertically, $L\\sin30^\\circ+R\\sin60^\\circ=100$.</p>",
+            "<p><b>3.</b> Substitute: $\\tfrac12L+(\\sqrt3L)(\\tfrac{\\sqrt3}2)=100$, so $2L=100$ and $L=50$ N.</p>",
+            "<p><b>4.</b> Then $R=50\\sqrt3$ N. Substitution in both balance equations checks equilibrium.</p>"
+          ],
+          "criteria": [
+            "M1: Correct horizontal balance [1].",
+            "M1: Correct vertical balance [1].",
+            "A1: Correct left tension [1].",
+            "A1: Correct right tension [1]."
+          ],
+          "marks": 4,
+          "origin": "original-9ma0-pilot"
+        }
+      ]
+    }
+  ]
+}

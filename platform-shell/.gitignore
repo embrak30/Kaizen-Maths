@@ -20,3 +20,8 @@ __pycache__/
 /tmp/pdfs/ap-library-errors.json
 
 /tmp/pdfs/ap-one-page-source.json
+
+# Edexcel pilot PDF typesetting intermediates.
+/tmp/pdfs/9ma0-pilot-prepared.json
+/tmp/pdfs/9ma0-pilot-errors.json
+/tmp/pdfs/9ma0-pilot-review/

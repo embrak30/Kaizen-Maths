@@ -1,0 +1,1292 @@
+{
+  "qualification": "Pearson Edexcel UK A level Mathematics",
+  "code": "9MA0",
+  "checked": "2026-11-18",
+  "source": "https://qualifications.pearson.com/content/dam/pdf/A%20Level/Mathematics/2017/specification-and-sample-assesment/a-level-l3-mathematics-specification-issue4.pdf",
+  "sourceIssue": "Issue 4, February 2020; linked by current Pearson qualification page",
+  "scope": "Audit and proposed resource structure only. No worksheets created, no application/database changes.",
+  "summary": {
+    "Pure": {
+      "specificationClauses": 62,
+      "proposedPacks": 92
+    },
+    "Statistics": {
+      "specificationClauses": 14,
+      "proposedPacks": 25
+    },
+    "Mechanics": {
+      "specificationClauses": 13,
+      "proposedPacks": 21
+    }
+  },
+  "additionalDataPacks": [
+    {
+      "id": "LDS1",
+      "title": "Pearson LDS context and variable familiarity",
+      "basis": "Cross-cutting data requirement; not a new numbered specification clause"
+    },
+    {
+      "id": "LDS2",
+      "title": "Pearson LDS interpretation and data quality",
+      "basis": "Cross-cutting data requirement; not a new numbered specification clause"
+    }
+  ],
+  "proposedTotal": 140,
+  "rows": [
+    {
+      "area": "Pure",
+      "specificationReference": "1.1",
+      "id": "P1.1",
+      "proposedPacks": [
+        "Deduction",
+        "Exhaustion and counterexamples",
+        "Contradiction"
+      ],
+      "authoringStatus": "Dedicated authored set",
+      "tools": [],
+      "workRequired": "Write original proof questions; induction is not this specification requirement."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "2.1",
+      "id": "P2.1",
+      "proposedPacks": [
+        "Rational indices"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "exponents-index-notation"
+      ],
+      "workRequired": "Keep all rational powers and domain restrictions consistent."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "2.2",
+      "id": "P2.2",
+      "proposedPacks": [
+        "Surds and rationalisation"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "surds-radicals"
+      ],
+      "workRequired": "Include algebraic surds, not only numerical simplification."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "2.3",
+      "id": "P2.3",
+      "proposedPacks": [
+        "Quadratic equations",
+        "Discriminants and parameters",
+        "Completing the square and graphs"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "quadratic-equations",
+        "graph-transformations-curve-sketching"
+      ],
+      "workRequired": "Include quadratics in a function of the unknown and parameter reasoning."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "2.4",
+      "id": "P2.4",
+      "proposedPacks": [
+        "Linear and quadratic simultaneous equations"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "simultaneous-equations",
+        "conic-intersections"
+      ],
+      "workRequired": "Filter to relevant two-variable systems."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "2.5",
+      "id": "P2.5",
+      "proposedPacks": [
+        "Linear and quadratic inequalities",
+        "Rational inequalities and regions"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "inequalities"
+      ],
+      "workRequired": "Add graphical solution regions and correct boundary conventions."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "2.6",
+      "id": "P2.6",
+      "proposedPacks": [
+        "Polynomial division and factor theorem",
+        "Rational algebra"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "remainder-theorem",
+        "advanced-factorisation",
+        "algebraic-fractions"
+      ],
+      "workRequired": "Use linear divisors; test cancellation domains and cubic factors."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "2.7",
+      "id": "P2.7",
+      "proposedPacks": [
+        "Polynomial and reciprocal graphs",
+        "Modulus graphs and equations"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "graph-transformations-curve-sketching",
+        "absolute-values"
+      ],
+      "workRequired": "Provide original graph images, asymptotes and intersection reasoning."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "2.8",
+      "id": "P2.8",
+      "proposedPacks": [
+        "Composite and inverse functions"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "functions"
+      ],
+      "workRequired": "Check domains, ranges and inverse restrictions."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "2.9",
+      "id": "P2.9",
+      "proposedPacks": [
+        "Combined graph transformations"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "graph-transformations-curve-sketching",
+        "trig-graphs-transformations"
+      ],
+      "workRequired": "Include reflected modulus graphs and combinations."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "2.10",
+      "id": "P2.10",
+      "proposedPacks": [
+        "Partial fractions: distinct and repeated factors"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "partial-fractions"
+      ],
+      "workRequired": "Filter to allowed linear-factor denominator forms, with repeated factors included."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "2.11",
+      "id": "P2.11",
+      "proposedPacks": [
+        "Choosing and critiquing function models"
+      ],
+      "authoringStatus": "Dedicated authored set",
+      "tools": [
+        "functions",
+        "logarithms-practice",
+        "trigonometric-functions"
+      ],
+      "workRequired": "Write contexts, assumptions, limitations and refinements; tool procedures are supporting material."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "3.1",
+      "id": "P3.1",
+      "proposedPacks": [
+        "Straight-line geometry and models"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "straight-lines"
+      ],
+      "workRequired": "Include parallel, perpendicular and contextual equations."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "3.2",
+      "id": "P3.2",
+      "proposedPacks": [
+        "Circles and tangents",
+        "Circle geometry in coordinates"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "equation-of-a-circle",
+        "conic-intersections"
+      ],
+      "workRequired": "Add circumcircle/chord reasoning and diagrams."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "3.3",
+      "id": "P3.3",
+      "proposedPacks": [
+        "Cartesian and parametric forms"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "advanced-differentiation"
+      ],
+      "workRequired": "Existing parametric calculus is support, not full conversion coverage; add parameter-domain tasks."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "3.4",
+      "id": "P3.4",
+      "proposedPacks": [
+        "Parametric modelling"
+      ],
+      "authoringStatus": "Dedicated authored set",
+      "tools": [
+        "advanced-differentiation"
+      ],
+      "workRequired": "Write geometry and motion models without importing out-of-scope polar content."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "4.1",
+      "id": "P4.1",
+      "proposedPacks": [
+        "Positive-integer binomial expansions",
+        "Rational binomial expansions and validity"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "binomial-expansion"
+      ],
+      "workRequired": "Include approximation, validity and partial-fraction links; exclude general Taylor series."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "4.2",
+      "id": "P4.2",
+      "proposedPacks": [
+        "Recurrence relations and sequence behaviour"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "sequences",
+        "sequences-series"
+      ],
+      "workRequired": "Add increasing, decreasing and periodic behaviour, with explanation."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "4.3",
+      "id": "P4.3",
+      "proposedPacks": [
+        "Sigma notation"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "sequences-series"
+      ],
+      "workRequired": "Author translations between sums and notation."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "4.4",
+      "id": "P4.4",
+      "proposedPacks": [
+        "Arithmetic sequences and series"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "sequences-series"
+      ],
+      "workRequired": "Include a derivation of the sum formula in the teacher solutions."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "4.5",
+      "id": "P4.5",
+      "proposedPacks": [
+        "Geometric sequences and series"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "sequences-series"
+      ],
+      "workRequired": "Include finite sums, convergence, unknown n using logs and formula reasoning."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "4.6",
+      "id": "P4.6",
+      "proposedPacks": [
+        "Sequence and series models"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "sequences-series",
+        "financial-real-life-maths"
+      ],
+      "workRequired": "Write realistic saving/payment models and interpret assumptions."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "5.1",
+      "id": "P5.1",
+      "proposedPacks": [
+        "Unit-circle trigonometry",
+        "Triangle rules and the ambiguous case",
+        "Radians and sectors"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "trigonometric-functions",
+        "sine-cosine-rule",
+        "sectors-arc-length"
+      ],
+      "workRequired": "Split this broad clause into readable sheets; include diagrams and ambiguity."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "5.2",
+      "id": "P5.2",
+      "proposedPacks": [
+        "Small-angle approximations"
+      ],
+      "authoringStatus": "Dedicated authored set",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "workRequired": "Dedicated questions needed, including compound expressions and radians."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "5.3",
+      "id": "P5.3",
+      "proposedPacks": [
+        "Trigonometric graphs and exact values"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "trig-graphs-transformations",
+        "trigonometric-functions"
+      ],
+      "workRequired": "Add plotted graphs and interval/period interpretation."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "5.4",
+      "id": "P5.4",
+      "proposedPacks": [
+        "Reciprocal and inverse trigonometric functions"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "trigonometric-functions",
+        "functions"
+      ],
+      "workRequired": "Focus on definitions, domains, ranges and graphs; not general inverse-trig calculus."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "5.5",
+      "id": "P5.5",
+      "proposedPacks": [
+        "Fundamental and reciprocal identities"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "workRequired": "Use only identities within 9MA0."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "5.6",
+      "id": "P5.6",
+      "proposedPacks": [
+        "Addition formulae",
+        "Double-angle applications",
+        "R-form expressions"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "workRequired": "Check geometrical proof coverage and include coefficient/phase reasoning."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "5.7",
+      "id": "P5.7",
+      "proposedPacks": [
+        "Trigonometric equations in intervals"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "trig-equation-solver"
+      ],
+      "workRequired": "Check endpoints and complete solution sets in degrees/radians."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "5.8",
+      "id": "P5.8",
+      "proposedPacks": [
+        "Proving trigonometric identities"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "trigonometric-functions"
+      ],
+      "workRequired": "Write complete logical proofs, preserving equivalence and domains."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "5.9",
+      "id": "P5.9",
+      "proposedPacks": [
+        "Trigonometric models and applications"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "trigonometric-functions",
+        "projectiles",
+        "newtons-second-law"
+      ],
+      "workRequired": "Author contextual modelling and interpretation, not just number substitution."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "6.1",
+      "id": "P6.1",
+      "proposedPacks": [
+        "Exponential graphs and transformations"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "logarithms-practice",
+        "graph-transformations-curve-sketching"
+      ],
+      "workRequired": "Use original graphics and parameter interpretation."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "6.2",
+      "id": "P6.2",
+      "proposedPacks": [
+        "Exponential gradients and proportional rates"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "differentiation-rules",
+        "differential-equations"
+      ],
+      "workRequired": "Add explanations connecting gradients with the exponential model."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "6.3",
+      "id": "P6.3",
+      "proposedPacks": [
+        "Logarithms as inverse functions"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "logarithms-practice",
+        "functions"
+      ],
+      "workRequired": "State valid bases and positive arguments."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "6.4",
+      "id": "P6.4",
+      "proposedPacks": [
+        "Logarithm laws"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "logarithms-practice"
+      ],
+      "workRequired": "Check extraneous solutions and domain restrictions."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "6.5",
+      "id": "P6.5",
+      "proposedPacks": [
+        "Exponential equations"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "logarithms-practice"
+      ],
+      "workRequired": "Allow calculator or exact log form as appropriate."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "6.6",
+      "id": "P6.6",
+      "proposedPacks": [
+        "Logarithmic straight-line models"
+      ],
+      "authoringStatus": "Dedicated authored set",
+      "tools": [
+        "logarithms-practice",
+        "straight-lines",
+        "correlation-regression"
+      ],
+      "workRequired": "Write log-linear/log-log plots and parameter recovery; general log equations are not enough."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "6.7",
+      "id": "P6.7",
+      "proposedPacks": [
+        "Growth and decay models"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "logarithms-practice",
+        "differential-equations"
+      ],
+      "workRequired": "Add limitations, improved models and long-term interpretation."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "7.1",
+      "id": "P7.1",
+      "proposedPacks": [
+        "Derivative meaning and gradient graphs",
+        "First principles: powers",
+        "First principles: sine and cosine",
+        "Second derivatives and concavity"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "limits-first-principles",
+        "advanced-differentiation"
+      ],
+      "workRequired": "Current first-principles generator covers polynomials, not sine/cosine proofs; add these explicitly."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "7.2",
+      "id": "P7.2",
+      "proposedPacks": [
+        "Power-rule differentiation",
+        "Exponential and logarithmic derivatives",
+        "Trigonometric derivatives"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "differentiation-polynomials",
+        "differentiation-rules",
+        "trig-differentiation-rules"
+      ],
+      "workRequired": "Include a^(kx); filter to specification functions."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "7.3",
+      "id": "P7.3",
+      "proposedPacks": [
+        "Tangents and normals",
+        "Stationary points and curve behaviour",
+        "Optimization"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "advanced-differentiation",
+        "differentiation-polynomials"
+      ],
+      "workRequired": "Add full extrema justification and contextual interpretation."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "7.4",
+      "id": "P7.4",
+      "proposedPacks": [
+        "Product quotient and chain rules",
+        "Connected rates",
+        "Inverse-function differentiation"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "differentiation-rules",
+        "advanced-differentiation",
+        "inverse-trig-differentiation"
+      ],
+      "workRequired": "Use inverse differentiation via reciprocal rates; do not import the whole inverse-trig tool."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "7.5",
+      "id": "P7.5",
+      "proposedPacks": [
+        "Implicit differentiation",
+        "Parametric differentiation"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "advanced-differentiation"
+      ],
+      "workRequired": "Implicit/parametric first derivative only; exclude second-parametric-derivative exercises."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "7.6",
+      "id": "P7.6",
+      "proposedPacks": [
+        "Forming differential equations"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "differential-equations"
+      ],
+      "workRequired": "Write model-formulation questions from proportional and inverse-proportional rates."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "8.1",
+      "id": "P8.1",
+      "proposedPacks": [
+        "Integration and differentiation connection"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "integration"
+      ],
+      "workRequired": "Write reverse-process and constant-of-integration reasoning; AP proofs are not automatically aligned."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "8.2",
+      "id": "P8.2",
+      "proposedPacks": [
+        "Integrating rational powers",
+        "Standard trig exponential and logarithmic integrals",
+        "Integration using trig identities"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "workRequired": "Restrict to required forms; include reconstruction from a point."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "8.3",
+      "id": "P8.3",
+      "proposedPacks": [
+        "Definite integrals",
+        "Areas between curves",
+        "Parametric areas"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "integration",
+        "advanced-integration"
+      ],
+      "workRequired": "Write original region diagrams and parametric area working; volumes are not required here."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "8.4",
+      "id": "P8.4",
+      "proposedPacks": [
+        "Integration as a limit of sums"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "integration"
+      ],
+      "workRequired": "Author notation/rectangle-limit explanations; tool is supporting calculus only."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "8.5",
+      "id": "P8.5",
+      "proposedPacks": [
+        "Substitution",
+        "Integration by parts",
+        "Recognising logarithmic integrals"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "advanced-integration"
+      ],
+      "workRequired": "Include repeated parts where appropriate; exclude reduction formulae."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "8.6",
+      "id": "P8.6",
+      "proposedPacks": [
+        "Integration using partial fractions"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "integration-algebraic-fractions"
+      ],
+      "workRequired": "Use allowed linear factors, including repeated factors."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "8.7",
+      "id": "P8.7",
+      "proposedPacks": [
+        "Separable differential equations"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "differential-equations"
+      ],
+      "workRequired": "Include particular solutions, lost equilibria, domains and solution-curve sketches."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "8.8",
+      "id": "P8.8",
+      "proposedPacks": [
+        "Interpreting differential-equation models"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "differential-equations"
+      ],
+      "workRequired": "Write contextual limitations and kinematics interpretation."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "9.1",
+      "id": "P9.1",
+      "proposedPacks": [
+        "Locating roots by sign changes"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "numerical-methods"
+      ],
+      "workRequired": "Include continuity, missed even-multiplicity roots and asymptote counterexamples."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "9.2",
+      "id": "P9.2",
+      "proposedPacks": [
+        "Fixed-point iteration and cobweb diagrams"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "numerical-methods"
+      ],
+      "workRequired": "Existing numerical iterations need dedicated cobweb/staircase graphics."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "9.3",
+      "id": "P9.3",
+      "proposedPacks": [
+        "Newton-Raphson and failure cases"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "numerical-methods"
+      ],
+      "workRequired": "Add tangent diagrams and small/zero-gradient failure reasoning."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "9.4",
+      "id": "P9.4",
+      "proposedPacks": [
+        "Trapezium rule and bounds"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "numerical-methods"
+      ],
+      "workRequired": "Include plots for over/underestimation and bounds."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "9.5",
+      "id": "P9.5",
+      "proposedPacks": [
+        "Numerical methods in context"
+      ],
+      "authoringStatus": "Dedicated authored set",
+      "tools": [
+        "numerical-methods"
+      ],
+      "workRequired": "Write interpretation, accuracy and model limitations rather than isolated iterations."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "10.1",
+      "id": "P10.1",
+      "proposedPacks": [
+        "Two- and three-dimensional vector notation"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "free-vectors",
+        "further-vectors"
+      ],
+      "workRequired": "Check 3D examples explicitly; do not expose planes/cross-product activities."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "10.2",
+      "id": "P10.2",
+      "proposedPacks": [
+        "Vector magnitudes unit vectors and directions"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "free-vectors"
+      ],
+      "workRequired": "Select 2D/3D magnitude and relevant direction tasks."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "10.3",
+      "id": "P10.3",
+      "proposedPacks": [
+        "Vector operations and diagrams"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "free-vectors"
+      ],
+      "workRequired": "Include geometry, parallel vectors and scale factors."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "10.4",
+      "id": "P10.4",
+      "proposedPacks": [
+        "Position vectors and distances"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "free-vectors"
+      ],
+      "workRequired": "Include 3D distances explicitly, not only planar cases."
+    },
+    {
+      "area": "Pure",
+      "specificationReference": "10.5",
+      "id": "P10.5",
+      "proposedPacks": [
+        "Vector geometry",
+        "Vector modelling with forces and motion"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "free-vectors",
+        "newtons-second-law",
+        "equations-of-motion"
+      ],
+      "workRequired": "Write geometrical explanations and contextual vector interpretation."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "1.1",
+      "id": "S1.1",
+      "proposedPacks": [
+        "Sampling concepts and methods",
+        "Critiquing sampling decisions"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "sampling-methods-bias"
+      ],
+      "workRequired": "Cover all specified methods and limitations in context."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "2.1",
+      "id": "S2.1",
+      "proposedPacks": [
+        "Histograms and frequency polygons",
+        "Box plots and outliers",
+        "Cumulative frequency diagrams"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "histograms",
+        "cumulative-frequency-curves"
+      ],
+      "workRequired": "Add dedicated box-plot/frequency-polygon questions and probability-area connections."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "2.2",
+      "id": "S2.2",
+      "proposedPacks": [
+        "Scatter diagrams and regression interpretation"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "correlation-regression"
+      ],
+      "workRequired": "Filter out hand-calculated regression coefficients; give lines for prediction and critique."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "2.3",
+      "id": "S2.3",
+      "proposedPacks": [
+        "Summary statistics",
+        "Variance standard deviation and coding",
+        "Grouped-data interpolation"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "averages-range",
+        "cumulative-frequency-curves"
+      ],
+      "workRequired": "Existing averages are partial support; author summary-square statistics, coding and interpolation."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "2.4",
+      "id": "S2.4",
+      "proposedPacks": [
+        "Outliers data cleaning and representation choices"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "kaizen-large-data-set",
+        "correlation-regression"
+      ],
+      "workRequired": "Give the outlier rule; distinguish invented training data from official LDS work."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "3.1",
+      "id": "S3.1",
+      "proposedPacks": [
+        "Independence and mutual exclusivity"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "venn-diagrams",
+        "tree-diagrams-conditional-probability"
+      ],
+      "workRequired": "Include conceptual comparisons and distribution links; no general PDF calculus required."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "3.2",
+      "id": "S3.2",
+      "proposedPacks": [
+        "Conditional probability and trees",
+        "Venn diagrams and two-way tables"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "tree-diagrams-conditional-probability",
+        "venn-diagrams"
+      ],
+      "workRequired": "Use complete diagrams and test denominators/conditional direction."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "3.3",
+      "id": "S3.3",
+      "proposedPacks": [
+        "Probability modelling assumptions"
+      ],
+      "authoringStatus": "Dedicated authored set",
+      "tools": [
+        "tree-diagrams-conditional-probability",
+        "binomial-geometric-distribution"
+      ],
+      "workRequired": "Write original fairness/independence assumptions and realistic alternatives."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "4.1",
+      "id": "S4.1",
+      "proposedPacks": [
+        "Discrete probability models",
+        "Binomial probabilities"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "discrete-random-variables",
+        "binomial-geometric-distribution"
+      ],
+      "workRequired": "Include discrete uniform; exclude general discrete mean/variance computation and geometric distribution tasks."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "4.2",
+      "id": "S4.2",
+      "proposedPacks": [
+        "Normal probabilities",
+        "Inverse normal and unknown parameters",
+        "Normal approximation to the binomial"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "normal-distribution",
+        "binomial-geometric-distribution"
+      ],
+      "workRequired": "Add the approximation explicitly with model conditions and continuity correction."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "4.3",
+      "id": "S4.3",
+      "proposedPacks": [
+        "Choosing and critiquing distribution models"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "normal-distribution",
+        "binomial-geometric-distribution"
+      ],
+      "workRequired": "Contrast binomial and normal assumptions in actual contexts."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "5.1",
+      "id": "S5.1",
+      "proposedPacks": [
+        "Hypothesis-test language",
+        "Correlation significance tests"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "hypothesis-testing",
+        "correlation-regression"
+      ],
+      "workRequired": "Correlation significance needs original questions with supplied critical values or p-values and hypotheses about population rho."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "5.2",
+      "id": "S5.2",
+      "proposedPacks": [
+        "One-tailed binomial tests",
+        "Two-tailed binomial tests and critical regions"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "hypothesis-testing"
+      ],
+      "workRequired": "Use exact probabilities and contextual conclusions; avoid generic large-sample proportion tests."
+    },
+    {
+      "area": "Statistics",
+      "specificationReference": "5.3",
+      "id": "S5.3",
+      "proposedPacks": [
+        "Normal mean tests with known variance"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "hypothesis-testing"
+      ],
+      "workRequired": "Use sigma/sqrt(n), population-mean hypotheses and stated known/given variance; no t-tests or CLT requirement."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "6.1",
+      "id": "M6.1",
+      "proposedPacks": [
+        "Quantities SI units and conversions"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "conversions-teaching",
+        "newtons-second-law"
+      ],
+      "workRequired": "Include dimensions of weight, force and moment; specify units consistently."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "7.1",
+      "id": "M7.1",
+      "proposedPacks": [
+        "Motion quantities and language"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "motion-graphs-constant-acceleration"
+      ],
+      "workRequired": "Write distance/displacement and speed/velocity reasoning, not just calculations."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "7.2",
+      "id": "M7.2",
+      "proposedPacks": [
+        "Displacement-time graphs",
+        "Velocity-time graphs"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "motion-graphs-constant-acceleration"
+      ],
+      "workRequired": "Include original multi-stage graphs, gradients, signed areas and reversals."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "7.3",
+      "id": "M7.3",
+      "proposedPacks": [
+        "Constant acceleration in one dimension",
+        "Constant acceleration with vectors"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "equations-of-motion"
+      ],
+      "workRequired": "Add formula derivations and explicit 2D vector examples."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "7.4",
+      "id": "M7.4",
+      "proposedPacks": [
+        "Variable acceleration in a line",
+        "Variable acceleration with vectors"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "advanced-differentiation",
+        "integration"
+      ],
+      "workRequired": "Use position/velocity initial conditions and speed versus displacement distinctions."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "7.5",
+      "id": "M7.5",
+      "proposedPacks": [
+        "Projectiles: components and trajectories",
+        "Projectiles: range height and modelling"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "projectiles"
+      ],
+      "workRequired": "Add scaled-independent labelled diagrams, formula derivation and modelling assumptions."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "8.1",
+      "id": "M8.1",
+      "proposedPacks": [
+        "Forces and Newton's first law"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "newtons-second-law"
+      ],
+      "workRequired": "Include force identification and free-body diagrams."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "8.2",
+      "id": "M8.2",
+      "proposedPacks": [
+        "Newton's second law",
+        "Resolving forces and inclines"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "newtons-second-law",
+        "friction"
+      ],
+      "workRequired": "Include scalar/vector force balances and direction conventions."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "8.3",
+      "id": "M8.3",
+      "proposedPacks": [
+        "Weight and vertical motion"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "newtons-second-law",
+        "equations-of-motion"
+      ],
+      "workRequired": "Default g = 9.8 unless specified; distinguish mass from weight."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "8.4",
+      "id": "M8.4",
+      "proposedPacks": [
+        "Connected particles and pulleys",
+        "Coplanar equilibrium"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "newtons-second-law",
+        "friction"
+      ],
+      "workRequired": "Check separate free-body diagrams, action/reaction pairs, tensions and inclines."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "8.5",
+      "id": "M8.5",
+      "proposedPacks": [
+        "Resultant forces and planar dynamics"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "newtons-second-law",
+        "free-vectors"
+      ],
+      "workRequired": "Include magnitude-direction vector diagrams, not only axis-aligned forces."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "8.6",
+      "id": "M8.6",
+      "proposedPacks": [
+        "Moving bodies on rough surfaces",
+        "Limiting friction and equilibrium"
+      ],
+      "authoringStatus": "Strong procedural source",
+      "tools": [
+        "friction"
+      ],
+      "workRequired": "Distinguish F = mu R during sliding from F <= mu R for static friction."
+    },
+    {
+      "area": "Mechanics",
+      "specificationReference": "9.1",
+      "id": "M9.1",
+      "proposedPacks": [
+        "Moments and rigid-body equilibrium",
+        "Ladders and non-parallel force systems"
+      ],
+      "authoringStatus": "Adapt and supplement",
+      "tools": [
+        "moments",
+        "friction"
+      ],
+      "workRequired": "Check non-parallel force and ladder coverage; author any missing diagrams and multi-balance working."
+    }
+  ]
+}

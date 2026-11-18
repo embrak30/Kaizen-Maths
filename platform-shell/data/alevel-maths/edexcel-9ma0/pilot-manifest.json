@@ -1,0 +1,38 @@
+[
+  {
+    "id": "P2.3",
+    "title": "Quadratics and discriminants",
+    "student": "output/pdf/kaizen-9ma0-pilot-quadratics-student.pdf",
+    "teacher": "output/pdf/kaizen-9ma0-pilot-quadratics-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 25,
+    "studentHash": "6c6c7719b3c8327a3605013ca0d9e73b5f2c569af9aecf8955af1cf5bbdd9fa1",
+    "teacherHash": "c4f3a08e5cea6c2e4f33300f4547784c76318c291137a9c7c7f588c86f78e969"
+  },
+  {
+    "id": "S5.2",
+    "title": "Binomial hypothesis testing",
+    "student": "output/pdf/kaizen-9ma0-pilot-binomial-tests-student.pdf",
+    "teacher": "output/pdf/kaizen-9ma0-pilot-binomial-tests-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 29,
+    "studentHash": "2ebde1ce967dcd55e1ce516997905460dde8ae52463e52e47f55221393762ddd",
+    "teacherHash": "222226b77a8d57072b6821ee4627b7ab9f05dbc11be7391f2a5676684be25fe5"
+  },
+  {
+    "id": "M8.2",
+    "title": "Resolving forces",
+    "student": "output/pdf/kaizen-9ma0-pilot-resolving-forces-student.pdf",
+    "teacher": "output/pdf/kaizen-9ma0-pilot-resolving-forces-teacher.pdf",
+    "studentPages": 1,
+    "teacherPages": 4,
+    "questions": 8,
+    "marks": 24,
+    "studentHash": "8234a2d50c37c31a01a58509317e757fb0cb1a207f602d326e67dbaf670ae859",
+    "teacherHash": "0d67e73f3d114ef2820110669611ada73dcef26edeb3861fd1943fe626f427fe"
+  }
+]
