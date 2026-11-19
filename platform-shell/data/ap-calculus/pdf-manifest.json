@@ -9,8 +9,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-4.png",
-    "questionHash": "c761da05d928d18e08d413fa10793f50b84010b9c0442ec727fb61bfe2415897",
-    "answerHash": "9732c9530a79b65dbd41f3704edd24dc7378a4d050910b41d722d510eabcdc9f"
+    "questionHash": "33df2df6798c6f37c458692fc666b18bc1c44a4636b8304485bcb6272e7e2733",
+    "answerHash": "c128dd9a0db63c55b9e97e54504c579b54f24c145a37651072c6b3c70bf8c0e9"
   },
   "1.5": {
     "questions": "assets/ap-calculus/ap-1-5-questions.pdf",
@@ -22,8 +22,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-5.png",
-    "questionHash": "8594fec3d8b3b216910f7524eef44fe6a700dfccb3c7897202f77ce6aca65bf6",
-    "answerHash": "9b118b521a1e90c9902997ce7b14b5df4e94912a427f5876ca3fb0268095c590"
+    "questionHash": "311a956628caeb79645513bce96fb3464f2c6e99aa769930274bef815e50c61d",
+    "answerHash": "f916ae0b607d929b5bf18032418806bc02d95aa090f7131025ff40827ddf970c"
   },
   "1.6": {
     "questions": "assets/ap-calculus/ap-1-6-questions.pdf",
@@ -35,8 +35,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-6.png",
-    "questionHash": "2e71bdfc45294ba94895e58be548b735b1d1accd7eb32b0f50f62e2135dfbeda",
-    "answerHash": "915ae7fd91c07bf1519bb59f4bd5dc16aa76260e52f3cbeea4183183754b4357"
+    "questionHash": "6559c77d06be48c2ee36a80ee0212ae60c813bab118c71f7db45d7c7cf4270f3",
+    "answerHash": "ca05fdbb6b7eb4067dffead7f9f986f6f0c0e7f934a0aeebcea482f80926f77c"
   },
   "1.13": {
     "questions": "assets/ap-calculus/ap-1-13-questions.pdf",
@@ -48,8 +48,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-13.png",
-    "questionHash": "9d0ed32bc34d7f45a57141d7b0c5064fe44bd2166e677fcfd3c68f8af4280b8f",
-    "answerHash": "ada3e060b3321a3a78eab75cfb657d004b57da0983f42f1acaecf7c996d0891d"
+    "questionHash": "1a150da19c171907dda3b4f37909a15d3c4f92068193656753d260e1cbce1681",
+    "answerHash": "4e971e0ffffa6b9582cb62d481f3c411af94da3073a925a5151d82ff603d4550"
   },
   "1.15": {
     "questions": "assets/ap-calculus/ap-1-15-questions.pdf",
@@ -61,8 +61,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-15.png",
-    "questionHash": "abfa8f327707545ac844ab52cced8fe9cee0078c1759ee1773d96943d2397bff",
-    "answerHash": "11434f50e956b653c0ae179354d3a2cc8b754805a4c317fd29dc92ca7167122d"
+    "questionHash": "c9e09c8869d607ee8a9a87c3313d1a5a8fa1235221712a03a21a70e840526a82",
+    "answerHash": "edaf261aacebb4cf7fd67286fe2a3ac1ea164f3957ee0ecfd53c5527a2379b4b"
   },
   "2.2": {
     "questions": "assets/ap-calculus/ap-2-2-questions.pdf",
@@ -74,8 +74,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-2-2.png",
-    "questionHash": "8fa7683325c09283bfd980e91a81a932dc86367f18dd1089dc33f0638d8fb031",
-    "answerHash": "5271bf353164dd68116d10ed7c1ca28026674c63d307970aa28987fa26c39c21"
+    "questionHash": "77c483b66a340ffa22166c29510ab43eb48fb4a5fcea27c976df53264fa51bd7",
+    "answerHash": "18b1732fd533872132a136e179a3f72db5203211756a14eaa3e2208e0950d65d"
   },
   "2.5": {
     "questions": "assets/ap-calculus/ap-2-5-questions.pdf",
@@ -87,8 +87,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-2-5.png",
-    "questionHash": "841a6009c4a603fe5cdbdcb4325e759a625cf28b0c9c8ed2b0d4906c160a662a",
-    "answerHash": "254f4da42ca49a1149968aca350023ad26b2ced25af25ff413782dfe6923795d"
+    "questionHash": "25c117a0ac4e0e3b6880bc9f588db666855b300a29bcb09ff1afcd100970837d",
+    "answerHash": "13586c5eadb36fb2694f39b43dc7186c566af2f575d02031de78b3fec6276c4e"
   },
   "2.6": {
     "questions": "assets/ap-calculus/ap-2-6-questions.pdf",
@@ -100,8 +100,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-2-6.png",
-    "questionHash": "2eeca911b398431d120b8fde89e3e029eab063d67c50c248a74205d1520087ea",
-    "answerHash": "05ed523e6aee7078179fb2e608d1854514ebdcc0339b30df71060fa215685ecf"
+    "questionHash": "f4a98c32307bb8474ee253263c4d6ebab85b137e4d8b9489a3b539a29f3288e8",
+    "answerHash": "ec9a55c72d02c2b9999db3d855f660b9575e050610bb0aa08008e3c780f293b2"
   },
   "2.7": {
     "questions": "assets/ap-calculus/ap-2-7-questions.pdf",
@@ -113,8 +113,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-2-7.png",
-    "questionHash": "e084dfe674134ff68201cd2fed48d567f5065fff0a148e5f6007c679fcf0b225",
-    "answerHash": "bd63f9dee3415e6fd404343fc2f7fd463f4e5aee8c7f46ae721ab9041bb02378"
+    "questionHash": "fba28ecb6ac14cc3f1f7af38cb2079348d0cc275d2c8703662aeba5856b5b853",
+    "answerHash": "37ba4f7e0e443bbcfd17284b3e90c0b51d5773f3a3227cc3ed447c0e7a4d09d2"
   },
   "2.8": {
     "questions": "assets/ap-calculus/ap-2-8-questions.pdf",
@@ -126,8 +126,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-2-8.png",
-    "questionHash": "158f3261866397734a35a9725563916da1336f1eb2325603aa88ffa585faa184",
-    "answerHash": "13a0d2961b2cc116d07925eed99210ca74c11d5a151980a37acf11d62aac4505"
+    "questionHash": "e37baa27bb92e1442f1380578d71ac9daf82745bf4402c2b9f4f8c048826d198",
+    "answerHash": "75dcc126cde3a252ff1cef62d129a8d65b1cd8df7de781885b006e86696871e1"
   },
   "2.9": {
     "questions": "assets/ap-calculus/ap-2-9-questions.pdf",
@@ -139,8 +139,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-2-9.png",
-    "questionHash": "eaf58bc3500ffb85df41c84c605a1603ebd87cfba8b3eb08be00ea955e1239b8",
-    "answerHash": "183286de8cfc1a196be67f67d7f1a49b82d0bfdde0428f9661f4d520cb520f4e"
+    "questionHash": "e232c59d3e20b24bf1770ec65dfa59637814ae7dfe2041521a5482c8e576741e",
+    "answerHash": "58d73f2cf54edf8a89e4ee194d1f6c6572e7b8d1700955134bf39c429f48b478"
   },
   "2.10": {
     "questions": "assets/ap-calculus/ap-2-10-questions.pdf",
@@ -152,21 +152,21 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-2-10.png",
-    "questionHash": "d61fdfe71543f435b8d701c2be883c351b65fb148e6ed3b158b5a8f3b6beb6d2",
-    "answerHash": "80d2a338ffbdf61406504b5ab250ed4d252fb0c79d35126a17992b4d4cb30bea"
+    "questionHash": "1024f4dd50c8286158a59c15fd39d1bdcb3f6d28250b30142b7ee1219fd18c2e",
+    "answerHash": "fc9c9fa24a0f511b7b267e95b65e24130644a39b43b1660f9d3e477f029742e9"
   },
   "3.1": {
     "questions": "assets/ap-calculus/ap-3-1-questions.pdf",
     "answers": "assets/ap-calculus/ap-3-1-answers.pdf",
     "questionPages": 1,
-    "answerPages": 5,
+    "answerPages": 6,
     "marks": 23,
     "questionCount": 8,
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-3-1.png",
     "questionHash": "506635ef71ecc71a3ee6bc3791d4bde74be40947a4529dd0c8d9ae2dcc1b1218",
-    "answerHash": "168172347c26c04d09af452cdc67ea979372b8fef7249469584729ff6b09eb08"
+    "answerHash": "1f05c5c6fa2cf7eaa5d7cc7fd57f0b612ae1a34a05c49db7a0589a1988b60a46"
   },
   "3.2": {
     "questions": "assets/ap-calculus/ap-3-2-questions.pdf",
@@ -178,8 +178,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-3-2.png",
-    "questionHash": "818b45af6be245765dce1ae74ac63856068a53a266494008f2e86280969b7e25",
-    "answerHash": "ff70906569189b5541bcfb562f6669c2f71a323d6c915b65c226fd2f60be6b76"
+    "questionHash": "49bf504b73267cccf21e8f5e7c95b12261acf59103e0dfd51bf7cf50f60f5d32",
+    "answerHash": "36a9bb4b8a719e9d4fa83df0c85e816e656a6afd4e96a403c296859d30fddda4"
   },
   "3.4": {
     "questions": "assets/ap-calculus/ap-3-4-questions.pdf",
@@ -191,34 +191,34 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-3-4.png",
-    "questionHash": "d986cad61c155c38fab1925e4342c9bfdfe461c6724b08067ddadc1353a699a9",
-    "answerHash": "84e3a7beb88ec1946540b231e8d8c44eb83ee9033d05fad2f4a270e4b92e2bab"
+    "questionHash": "d44533661cb2bfa4e4fb8e33c8411a7b3eb772e6b5d1a39afd5504d4125c509c",
+    "answerHash": "c4003b8a2680a348ed8b5f788a92434505143c45bc065e6049c2f462d6c0b275"
   },
   "3.6": {
     "questions": "assets/ap-calculus/ap-3-6-questions.pdf",
     "answers": "assets/ap-calculus/ap-3-6-answers.pdf",
     "questionPages": 1,
-    "answerPages": 10,
+    "answerPages": 11,
     "marks": 24,
     "questionCount": 8,
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-3-6.png",
-    "questionHash": "655e7cc9b7c7d14173992c932e4394807cbabaea701d9d03e1a8abd87aca10a5",
-    "answerHash": "530a40d0c2125121ef579c950d8161268ab01f80bb62e99e8974cce3fffa67fd"
+    "questionHash": "8d10e11e5e3f5a33a6f91e7f2135565084a771cbc68ba89dcb526e7d08ff2af2",
+    "answerHash": "142b44b8ffbc5e69b2aac3f2cdead896a1135f829bc9e5e02d1f734d2fe0c318"
   },
   "6.7": {
     "questions": "assets/ap-calculus/ap-6-7-questions.pdf",
     "answers": "assets/ap-calculus/ap-6-7-answers.pdf",
     "questionPages": 1,
-    "answerPages": 10,
+    "answerPages": 11,
     "marks": 24,
     "questionCount": 8,
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-7.png",
-    "questionHash": "f1373f42f873c46a867ef4fece0d31c789130777201a637dfc2a613943c2c65f",
-    "answerHash": "dab85c99e8e0f891a79af5795a5d63c635748f735c2fc1df983ce463bbee8b37"
+    "questionHash": "451f1f9024fbe62a45efdfc253b98c26649118f20cab28386e15317c47131f79",
+    "answerHash": "ffe8fc54b2c715adef9c45e0394e43249e32c4ef6f53891a52a4189d749bbf9f"
   },
   "6.8": {
     "questions": "assets/ap-calculus/ap-6-8-questions.pdf",
@@ -230,8 +230,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-8.png",
-    "questionHash": "4bcc46ae23e22068af058220134c69a0052ad02386b5f8f288220135b7c887ae",
-    "answerHash": "d5b4934d3db060b9905482748b638791df42522f47fc5fcdddb92366c90b46e2"
+    "questionHash": "bdd141ff7b422aad7357e6ba05f9e9e564af71bd5bd775f7722c9f40290e0f25",
+    "answerHash": "1a0fee3e07065238d0c3e511ee144026cf54ff75e433b500f3b7035cc5ef6988"
   },
   "6.9": {
     "questions": "assets/ap-calculus/ap-6-9-questions.pdf",
@@ -243,8 +243,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-9.png",
-    "questionHash": "cae6e78c94d294040713665873781394b50a3099ddbe5f114186b819e84d7df9",
-    "answerHash": "faa7499a9bdc41a2e79947eaf129ff9b61b40f67603e2e2508be68466254370d"
+    "questionHash": "f6a0066d013e80e675879d6a82271c1fa50092d0099fca1009fe2be128534eda",
+    "answerHash": "16f68b0db752304f05e6f5c710f9367b880cfa79598009f082d5b6e9e52aabe5"
   },
   "6.10": {
     "questions": "assets/ap-calculus/ap-6-10-questions.pdf",
@@ -256,8 +256,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-10.png",
-    "questionHash": "1ebbac0ae1606085b20e8c72b75c63e03f897fbe5f0d8161cc78794e13166442",
-    "answerHash": "cf58cdee4b779d3881e20806fb99d0df7248c74a60a651b73b635dfd3bd4b247"
+    "questionHash": "576d7d0ea7e8f0b7e2527d1d86918c79cc7d50057cb3f27d970a8945df4c5c54",
+    "answerHash": "66069fb5764cebd4eb1dbe05544d7d666585def6f1fafafc003b120ac64266dd"
   },
   "6.11": {
     "questions": "assets/ap-calculus/ap-6-11-questions.pdf",
@@ -269,21 +269,21 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-11.png",
-    "questionHash": "c1a1db7de4cbdbedc9f7a0309069feb4f8e39815db9757c5b59d1494f97047ff",
-    "answerHash": "0083ba23c31a755566f559b7f6f6d0b242e9ed50e2429125b22f75229f68b7e8"
+    "questionHash": "7c1b6a5f8ffb52d15bdfbabebfa659ac23ef5b0730ffec7f3f436148be4feb47",
+    "answerHash": "6a1a9358663baebde7cf22d29ab416627008cb28de0456d4394ec7d30510b9e2"
   },
   "6.12": {
     "questions": "assets/ap-calculus/ap-6-12-questions.pdf",
     "answers": "assets/ap-calculus/ap-6-12-answers.pdf",
     "questionPages": 1,
-    "answerPages": 5,
+    "answerPages": 6,
     "marks": 24,
     "questionCount": 8,
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-12.png",
-    "questionHash": "e7abae53c7f01baa0817fd9205c6596b6edc13cec31d669d4c90f4fd813d623d",
-    "answerHash": "aae22b39edfe4a8b0a4133abf4e89117ac336ae675fb324948e9b5d66c5df8f4"
+    "questionHash": "3382644b6a441c2c5f79a21fd1add97c3d0eaec65ed2a48e86dca10b8f466a82",
+    "answerHash": "98b5165c74df4cefcc7c884ce552926f3f3a6c0bad21968ca78b4c26efbd4ae1"
   },
   "7.5": {
     "questions": "assets/ap-calculus/ap-7-5-questions.pdf",
@@ -295,8 +295,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-7-5.png",
-    "questionHash": "aac404b6b3378175983161705d36bea13276eecc09d1db6f62a8e8250e955d87",
-    "answerHash": "2614d781fe584a0c784bf7a208ab533f453e01194e8eca8105aed1eee3efb102"
+    "questionHash": "7854cc42e780488eb0cbf7b311c664bcaf29aa816caeca7597d6290c362fe319",
+    "answerHash": "0f74025f046358fc1c66d80b03356cf52436ffbe83a15253c94481751168f9c3"
   },
   "7.6": {
     "questions": "assets/ap-calculus/ap-7-6-questions.pdf",
@@ -308,8 +308,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-7-6.png",
-    "questionHash": "6b1e42582898e850ab611d82d9c66a979e425f47e8efba70fb39143edb9310a7",
-    "answerHash": "f7224baed302cfe94377ff300a6429f2a88a2fb2ad92a32592ad81fd3485953c"
+    "questionHash": "37a480334fc94003fc2f5821e69ecd37657da16a9b602e5f36c441f5a177a493",
+    "answerHash": "76d30eea2dd535d5ec409fcec4f5cbd785509269dbff332218dec3b87d9b69cc"
   },
   "7.7": {
     "questions": "assets/ap-calculus/ap-7-7-questions.pdf",
@@ -321,8 +321,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-7-7.png",
-    "questionHash": "7ff857ed94b7ca4fdc4042b0ab9d556d26a1f404594504fd763b68a8b1293263",
-    "answerHash": "eedb87efaf7c08e4f3a0b1d4daec1473ad6bb11876a05805fa552e94660ce95e"
+    "questionHash": "9441b62e8c3564dc157c629e03533eaa2bb7d55ee3e5647e385180958888dcf0",
+    "answerHash": "cd7ce46c2c8077ddc395f1bb6cd465d9139648e0ba0548f98433f4a48839f641"
   },
   "7.8": {
     "questions": "assets/ap-calculus/ap-7-8-questions.pdf",
@@ -334,8 +334,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-7-8.png",
-    "questionHash": "278d647b9dc4d1067769a834dc12b7a82933b9492d12e138a1b8f372a628f6c4",
-    "answerHash": "8c22bca98935d6bc68251e07f7fb2fddff58ebfc0e8b83655c62637aed2d2aef"
+    "questionHash": "6c4812558ec0ffcbbac5dbae5740b3561c2524f2c31ce946b21bb10e63c8698b",
+    "answerHash": "8e5ee6df0be0b89596de5839ae7efe4e80067c9910271a3ea77361acd0473183"
   },
   "8.9": {
     "questions": "assets/ap-calculus/ap-8-9-questions.pdf",
@@ -347,8 +347,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-9.png",
-    "questionHash": "1fecd057eee08c4b53a29a9316fab4d7b06e79b2ba41c02ab47e1b5060aa31cc",
-    "answerHash": "819c717879b5952f78933e1592888c81390746ccd815eb28ad31b8948ea49411"
+    "questionHash": "bef915365e1b77ecf7e75e3b6f0348b31c43eef49c35f6a78b6cf7acb2e02c4f",
+    "answerHash": "76aed87d201c5363951b3d3ba84224c3278c4176bb05cbb9b25160a0b219809c"
   },
   "8.11": {
     "questions": "assets/ap-calculus/ap-8-11-questions.pdf",
@@ -360,8 +360,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-11.png",
-    "questionHash": "ea6e82424ed16b175a1ec7a266d8e1cd516f38de8ff0f3b875d77d0022585412",
-    "answerHash": "f202359de6cea4776dceb487da58065377a105e5846f0328d53fcb1ccf3892ef"
+    "questionHash": "d0bd8af634ac3f623f3be726930616262874ab86607003eed758a0b119e77e4f",
+    "answerHash": "d1413bde9e775e6c926ece516f2a6621aedf12fc1b0c65cf62c1b2678d4eae39"
   },
   "9.1": {
     "questions": "assets/ap-calculus/ap-9-1-questions.pdf",
@@ -373,21 +373,21 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-9-1.png",
-    "questionHash": "cabdebf6f887bab727d47cc747210325b8f11b6a722295b62d7218e739171fa0",
-    "answerHash": "ae551087de1f092a80575e5a2927dc37ac8a29ca318fb7a29fb9c817bc35d789"
+    "questionHash": "95e009f12071f08319c4fae33ee18712ebec5873d07139c9d54142cec344001a",
+    "answerHash": "c8bcbdbae7259199538000ee0f8b36b4efe80d23596576043d7d59e7123ed06f"
   },
   "9.2": {
     "questions": "assets/ap-calculus/ap-9-2-questions.pdf",
     "answers": "assets/ap-calculus/ap-9-2-answers.pdf",
     "questionPages": 1,
-    "answerPages": 8,
+    "answerPages": 9,
     "marks": 24,
     "questionCount": 8,
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-9-2.png",
-    "questionHash": "6a591f35cd744db3f2858e325740f1018125f26a93aee636061e68d26860ba11",
-    "answerHash": "519269b870679d80185ad1b213f236a52dbb2073086d937ba12fc5a413aeacaf"
+    "questionHash": "957906f3db8caa7f818b314adf35eacb8953d86f59cf23d26d3ceb03cfc30f64",
+    "answerHash": "4c290af83957fb38b39c7eb6e42160a74cdec68bea88a3f04ba77caa81cb2966"
   },
   "9.7": {
     "questions": "assets/ap-calculus/ap-9-7-questions.pdf",
@@ -400,7 +400,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-9-7.png",
     "questionHash": "f913717ea3b93e102de5bfba4150f6e15b3ea08d7eba7509b7a68bc9e7930742",
-    "answerHash": "323660154789a4d8b003359b339019011bbe3a5fbdd0fe50577c7fe0bb608013"
+    "answerHash": "d1f338900ec3c360861eaefe924b3786afb2cc4a3e3619e2fbcfcd1fe5bb7e87"
   },
   "9.8": {
     "questions": "assets/ap-calculus/ap-9-8-questions.pdf",
@@ -412,8 +412,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-9-8.png",
-    "questionHash": "ef85a1206b205f0d1cad2e98deeec148c6fb3c92f874fea424f1ed6db07ad6c6",
-    "answerHash": "6781016e2e16baf431721e51b8c6debe7607f406d5d64cbeb1611a2b58b2eb5f"
+    "questionHash": "83a9587630c9d2ca1963b717b9458240ab08839172618313e97305fdee1b625b",
+    "answerHash": "740d48103af40f0c86f55aed5bf7215fc108f2a8e3da6a3fe2a4027089d98b5f"
   },
   "10.2": {
     "questions": "assets/ap-calculus/ap-10-2-questions.pdf",
@@ -425,8 +425,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-2.png",
-    "questionHash": "bd8d9ef15b6acaa165d806d7ebae586a757a126e9aa96ac70460e888017e65de",
-    "answerHash": "b3a91f380a50485f0db460bbddc27e96bd5eb52f3a36ab6fce847624a60bd433"
+    "questionHash": "16da250ccc8540e1c747f99e2506b21fb1aa5a92d81357037ce287833c46198f",
+    "answerHash": "17f6a48b04a7d5a0f86cd1f4ad6f58e593216fff32f1bfc018f5bf9cff354126"
   },
   "10.11": {
     "questions": "assets/ap-calculus/ap-10-11-questions.pdf",
@@ -438,8 +438,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-11.png",
-    "questionHash": "d09a1b33909fab27b48be06829fd287bf4527a49c5fe04923388094b7e75e852",
-    "answerHash": "5ccd2a0d000bfdc1e0344d199c6a41ad7115408d67cf2bea4094ccf8bee66de1"
+    "questionHash": "590fb461fb5fcc0e442ccadcde5a52ceb8ed5c1972ba97eee3ad405f802bddb3",
+    "answerHash": "9b779ac480d8a8c6bfa1d1699c55dccca1848bb15c3b6e50cd0e3127df8b3dcd"
   },
   "10.14": {
     "questions": "assets/ap-calculus/ap-10-14-questions.pdf",
@@ -452,7 +452,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-14.png",
     "questionHash": "ae85bd1d901f49d01cc25d4996beaeae95fff2a517060576caddbe6cdf326628",
-    "answerHash": "af29882990b131261374347f4c358d50f19aab656184ba20d3a7fe9cb4dbe9dd"
+    "answerHash": "bf7660cf1c4152a79067f6a19b4b8c5ac6eb1bc6870e5133414423a763c304c2"
   },
   "10.15": {
     "questions": "assets/ap-calculus/ap-10-15-questions.pdf",
@@ -464,8 +464,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-15.png",
-    "questionHash": "3cc44a10d88f94446a1a940e8317f88b98a49c82c9ed2a242046123caab979ab",
-    "answerHash": "021fdc9bee8e84ae6381d94dadc4a1ee77a85c4c28b592bcd52b0f083a4824a9"
+    "questionHash": "3872b0319892a3b3764f625c3e44061ac5c489d4f8f155975ca3445fc85caed4",
+    "answerHash": "ae43a70ee359149c917d7a3430af3abf6950f9623fd2fc2660b8f719c75a433d"
   },
   "1.1": {
     "questions": "assets/ap-calculus/ap-1-1-questions.pdf",
@@ -477,8 +477,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-1.png",
-    "questionHash": "e2d8f78191684808a32474556430bfcb9e88a343fce8996a2d11902f20f3cbf1",
-    "answerHash": "f6920c0876cda6caad42da08d64ab68e3fd2baa75fa3d59a4fdaa993b25e4690"
+    "questionHash": "e633d825913a44dc6f40b23f33df759389424100067e8ea32c6bc7fefe2ac879",
+    "answerHash": "a64fd08e5e39f1017aa84daa7f6fed329b26eadb1ac2d904209746d5ec55fe4c"
   },
   "4.5": {
     "questions": "assets/ap-calculus/ap-4-5-questions.pdf",
@@ -490,8 +490,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-4-5.png",
-    "questionHash": "f871d95da4ac21afe89f6340177b938bc3d0e7daa16cf79ebca2991f80c8e51c",
-    "answerHash": "b8cf489dc9273470259c210b6bc433e5f47a63c06ddccf5f57df5cdd9773a5fb"
+    "questionHash": "babce352a8d281c68bac067d63695343e8c459a9b96f98c3202b4ac1aa56f965",
+    "answerHash": "55406004bacd201001ae31ea13d81f1b670b95945a3b3a8111a1e28b3f4e13f3"
   },
   "1.2": {
     "questions": "assets/ap-calculus/ap-1-2-questions.pdf",
@@ -503,8 +503,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-2.png",
-    "questionHash": "02bf3ee5a416f9e09f26b434e375f0440ba133d81b5de569ca7c24a880f8346b",
-    "answerHash": "a5e0fe748b76706f961ad17a0dac9d50dcb391b27ce2d388b7ca0a1b8eb724df"
+    "questionHash": "ab9e27921ba12fba2f02f7d34c47e3fbc4f8ab4a575b2fe154d3231d5b1bd850",
+    "answerHash": "359ade6010452944cc2be8a291ff7a7b0e9468ec91332e3e5929dc99fd5e6ec5"
   },
   "1.3": {
     "questions": "assets/ap-calculus/ap-1-3-questions.pdf",
@@ -516,7 +516,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-3.png",
-    "questionHash": "735960eca8734d07c500171bac2a220c7ca8a2645707411298f0943ff7f66150",
+    "questionHash": "ea94f1d9d57cccecbcdabc723a07dda7a7bb234ac346fd8b2e3fbef0a626b9cd",
     "answerHash": "f072b7de2309ecf9fd7e109e6b79860ba93f82812fc9ae050f90436e8a3b979c"
   },
   "1.7": {
@@ -529,8 +529,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-7.png",
-    "questionHash": "fa7e23eac84d558c0e98c6b9ee40b4d52272f7351f4a2f676c76971d50ae75bf",
-    "answerHash": "1f5f51e868d5dae10742c8c45329ac1be477c6488519cf54c01c58f7a7d67179"
+    "questionHash": "8af4f466d3e2b8f144247442f91742703d69454863f117e0c69e3394deb7f1e0",
+    "answerHash": "16683ac8f6fe874005950f7a30283b73439a4a363b97ac62c61631927e736d78"
   },
   "1.8": {
     "questions": "assets/ap-calculus/ap-1-8-questions.pdf",
@@ -542,8 +542,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-8.png",
-    "questionHash": "f4dedf3d5636c68c5d60bede9e1ee77165a54e3d53cfa22fdf5d19bdfbcbdd73",
-    "answerHash": "7ca7f86f0155ee69b8f90bb80a86fd345707a4f9e1e45c8718252a86f62fd275"
+    "questionHash": "e4efcdb50d7dcf99ae5e9c9061ab430463e2cb3898e67e77f682acb52b2fa5ff",
+    "answerHash": "e804b646b2b9471f7a136546d0864d07b8d696534fea8f275aa6a23904e27840"
   },
   "1.9": {
     "questions": "assets/ap-calculus/ap-1-9-questions.pdf",
@@ -555,8 +555,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-9.png",
-    "questionHash": "20cd2a81954748889e392caee34acbc3592ed608c988bd446b5f0fdebbb9dbf1",
-    "answerHash": "742fd3625db21d4e505e529eb522e7b5c175bc33da9603f424cc8aee975a5da6"
+    "questionHash": "f6ea0cb6c1feb76632a6c710abe108603029109ff583b02c9e5b1ae30183fd04",
+    "answerHash": "68146988711edc2e608962112914fd9cd924743bb0612414ed16916a63bf3c73"
   },
   "1.10": {
     "questions": "assets/ap-calculus/ap-1-10-questions.pdf",
@@ -568,7 +568,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-10.png",
-    "questionHash": "747ff8c6a12665c9e602c9e4ff866b5292f30010ee8c8855d60bd8bb14d71339",
+    "questionHash": "8349a60df805ea52f81132834ee07552ff804753d8538308eb73e811a04201e5",
     "answerHash": "884de8cd701b627a3b3a346f9a4d535c401f34e49f682ca07f8028530f57eeb4"
   },
   "1.11": {
@@ -581,7 +581,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-11.png",
-    "questionHash": "62e9e622e2042b4be80192dae0eaa026ba211367dee4b0033f4d36d9e0100dd4",
+    "questionHash": "47f8d2abd7de7d620f999f7b0e63bc4ba4aca271ebd3a365be408d3c33d48526",
     "answerHash": "5306988668091eea39b71f53bfed87da7864d1f653ff1091e313a0b2700611dc"
   },
   "1.12": {
@@ -594,7 +594,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-12.png",
-    "questionHash": "0db0510059f18f8d3bba64740ab56614b142541903bc6ff2716bc817169b02d9",
+    "questionHash": "3cb9626ea8ff6cb3d2ae22fdeb32bc6809310f1a1322db73e8db266dea815375",
     "answerHash": "737a1b2b83bc8d3c873b7fbbc09efcdd6368e0c13d2f92743f39353580c63ebd"
   },
   "1.14": {
@@ -607,7 +607,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-1-14.png",
-    "questionHash": "8c7fa5cf16d0b279fbe2479c3e47a81096253f7dc5aa2617462b1a44efeba7c4",
+    "questionHash": "d205d67de2afc2f0d26a945755f1a97d153e8ae32cbd42f060c96f8f4d565528",
     "answerHash": "c7f9025e44103f0db8340707bb4a56ef8918a25758e3c2759e3175586185576e"
   },
   "1.16": {
@@ -634,7 +634,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-2-1.png",
     "questionHash": "96c1318d4d20247c57779f6925dfc91efc092072a5cae033b71732b80e1425f5",
-    "answerHash": "951bcd47c319ac95129a369471d5f32bfeb71c9840bc5fc8fe1f4f1c3e264dae"
+    "answerHash": "2c3cd618ee3e0afc35c004d95ecc58b55c668e4bd65093b0e2cc6568bc5e4ba9"
   },
   "2.3": {
     "questions": "assets/ap-calculus/ap-2-3-questions.pdf",
@@ -647,7 +647,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-2-3.png",
     "questionHash": "aa8662d25096ecbf2b3a90a6e0471637edc68a01dcbbd90a87cd33023ab46a0a",
-    "answerHash": "ac3a3478e3450a9cccb276f540a116b9b8fa1b102ca0872e49b41e3383490940"
+    "answerHash": "e7d2543ea78c9d802d61fa09572f210b4779899157f927f95afa5f8bc0a3e0bd"
   },
   "2.4": {
     "questions": "assets/ap-calculus/ap-2-4-questions.pdf",
@@ -659,7 +659,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-2-4.png",
-    "questionHash": "54f9169c2799f6e9d71f67d7228fbca890589826408a4de1b74cc469a7a3f959",
+    "questionHash": "5636b685b3326eb63aee0972e809b96fb3a9ca59062e487fd32dbbfd84dfa8d9",
     "answerHash": "4eb4f8f861a17730ce0ec18f8a2c0706ccbf1fffdd6053b5dba1f9590d5cfeaf"
   },
   "3.3": {
@@ -673,7 +673,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-3-3.png",
     "questionHash": "81bbe3debd9d5f08554cfeb0ef423057e93afcbd5dbe0e6593dd90aba17b94f1",
-    "answerHash": "c00c9ffde33324f713a11969014df3e5846d27d10105e753bb311f25c6877b11"
+    "answerHash": "019ab88cb5cfc8ef91cdcd2636d30f8e2563c45cf918af72626fae754adb1d0c"
   },
   "3.5": {
     "questions": "assets/ap-calculus/ap-3-5-questions.pdf",
@@ -685,8 +685,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-3-5.png",
-    "questionHash": "83bd7848c73069e74c31bd625d689268f6ba2b783f34a0688060013bd975157d",
-    "answerHash": "0cbe798d201ab31f1e9005af3bd3c845fdb88dbee084ef18ec0636d801347c6c"
+    "questionHash": "3fa02689a0fc7c0222e05345167b047b2912c70a301a9061cbd376f0b2c784fe",
+    "answerHash": "dd1708e36cd6fa3ead6e18c4a83240782d3d7b07efa774d6357c1f17971988ff"
   },
   "4.1": {
     "questions": "assets/ap-calculus/ap-4-1-questions.pdf",
@@ -725,7 +725,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-4-3.png",
     "questionHash": "ec2d000f722e6f797f1f9b64b671e546c8b44770b9ca7af5ebf1d992fe3618ba",
-    "answerHash": "7ab3160b12a4ed1439ff80984a2a74f6063e68542e0123d9f0a3b5353c6e5d59"
+    "answerHash": "3fb6dbc1cab467e3ad6f8cd01cfb0c6e4c649889b25fbe85818d635d393d1260"
   },
   "4.4": {
     "questions": "assets/ap-calculus/ap-4-4-questions.pdf",
@@ -750,8 +750,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-4-6.png",
-    "questionHash": "dbe623eed8158ce37d6ca4fddfe7e385c40601e523f29970bce5ae3cfb6e5f6a",
-    "answerHash": "8a35ac2a30c9ef73320e413531f9c447e59384e711b9bdf5e5e5957b0e8969f3"
+    "questionHash": "be65ed7834351211374e1fbc875b62f4f4aa8c1afd9a834f885672419f2cd461",
+    "answerHash": "22e9ce99b2d2cbb6418441d24f2d9afd2553a9cf7d0bedec049b099aa091b2e0"
   },
   "4.7": {
     "questions": "assets/ap-calculus/ap-4-7-questions.pdf",
@@ -763,8 +763,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-4-7.png",
-    "questionHash": "cc00f60bb48c7af001fce7cd41d7209fe0b7f1c1412c26c842247358cdc769d2",
-    "answerHash": "f79968cb9051be822865506a85a40a331e8620c37483f657b80fac9b029467a3"
+    "questionHash": "5b3104a23c40d8d7258632909537ce3aee713b8e896a1a7fddea26cf538c0011",
+    "answerHash": "abb5fed4ce0f879252b9a60dbfe1746fea9b7ba8c1fea35434219a9fae87b8a0"
   },
   "5.1": {
     "questions": "assets/ap-calculus/ap-5-1-questions.pdf",
@@ -789,7 +789,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-5-2.png",
-    "questionHash": "714e2636db3dede9cf88c21e452241a8e093dfd3d52794eb303d4e222bbc6d8d",
+    "questionHash": "e578385adc3a30b2bc5ef7ecc38602a4a7fea24e5f0e3f29b7a0ab4669b4c793",
     "answerHash": "19ed72b9920b1d69a000e24e6ff0945593c6b87d4504f14a9f372ffe246b68a8"
   },
   "5.3": {
@@ -854,7 +854,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-5-7.png",
-    "questionHash": "9e7f5a9abfad9c55da90259a8e52ac99feb35eed0d05557db050de0aa23e4a21",
+    "questionHash": "1b27c7b9faed469a1ad3b57de3eae7810b1a13315b5255aeb027900069d81b9e",
     "answerHash": "05a1919b860799c367cde2729512156d1d373d5d70fffc6779b5723a592cf238"
   },
   "5.8": {
@@ -867,7 +867,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-5-8.png",
-    "questionHash": "e57122df7568aaa59f6e5cae081b26c2b91737d5b21cabe2386a68f1cd3e2e2a",
+    "questionHash": "3c15ea2d810a5c9fef6359ef1a0dcbbb41caf8f65b4d0ef8fd1cb1dee83dda4b",
     "answerHash": "eedf234e70e7b7018468563d9922b680a3c75babdeede23af0ef2b05d191d94a"
   },
   "5.9": {
@@ -920,7 +920,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-5-12.png",
     "questionHash": "94e2245362fca36417a209eb2d8c0c19a94170326f3db509b1c609c84aad2b72",
-    "answerHash": "4dcdfe0b78b897891b96a60e1eb7c470c60cb6cb94e6a28dce231fa8b5cc5bdb"
+    "answerHash": "4ab3f9bd7bed7784a4160f949280d5e9229814deea82c4ee186b5c1318082a35"
   },
   "6.1": {
     "questions": "assets/ap-calculus/ap-6-1-questions.pdf",
@@ -933,7 +933,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-1.png",
     "questionHash": "47cf0ee39b1be7abd70c653dd4408be3b9687a39aa0c8f9f47fb52fa7aaa115d",
-    "answerHash": "ce05d2821860495df56b7599327d013cd713a6af7d13aa48557c66f0aeb98ce4"
+    "answerHash": "54afb40b28372705b6b5fe7e4bc0e35e02ba2fb7de604324f1e7d938e38f0dac"
   },
   "6.2": {
     "questions": "assets/ap-calculus/ap-6-2-questions.pdf",
@@ -945,8 +945,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-2.png",
-    "questionHash": "a765f076ff664664f1331294303e30a179411fe4163565804f161fb3cc91ba19",
-    "answerHash": "347fd50c17f645d9124c80fa59893902c4e13e5c69865a546c94ea3cde6d1f62"
+    "questionHash": "b56d2ea410358c525517f21e8b67860871290ba040127fe65e00915de6f88c23",
+    "answerHash": "6785969a403462e74bca70b720e5c67acb7dfc5b61ba0ccf01f658aa19e8eefe"
   },
   "6.3": {
     "questions": "assets/ap-calculus/ap-6-3-questions.pdf",
@@ -958,8 +958,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-3.png",
-    "questionHash": "32dbab5d07ce356a63f7fe89bbdc058b510a109a2894514028a72d132010afd2",
-    "answerHash": "313cc35d76e3d2232df2a74a1023d616bd16a87524a417828c031ddb33c9082c"
+    "questionHash": "d68958aa845aaed16a53c9927c68ffaea7c2e888f273688a035415c61da997df",
+    "answerHash": "890f51e8c51ff4d0e0356ef56e546146edb8698fb12863f91cf0ea13d9ab28ad"
   },
   "6.4": {
     "questions": "assets/ap-calculus/ap-6-4-questions.pdf",
@@ -971,8 +971,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-4.png",
-    "questionHash": "3ede720a0c18573a1ca0a3232ddd74a2bf424231f71c3d71983dd51d14a193c5",
-    "answerHash": "bb8cafc0ffd23ba99f97346a7a68ba55c8fab4a0d4cc56469acd745f426f8987"
+    "questionHash": "b6e810cf0c6534d59cf7b8acc03d67fab355c72ae714919c05f2ddb64d8fe994",
+    "answerHash": "ed288f30ec5dfb59ff9da0cdf8e45a1225041b8ba7e8f75de29233f414dbf2eb"
   },
   "6.5": {
     "questions": "assets/ap-calculus/ap-6-5-questions.pdf",
@@ -984,7 +984,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-5.png",
-    "questionHash": "a849e2096414f44cce51d9f3691ad6092d7464eeeb9c4c404cb699a67cec14a5",
+    "questionHash": "a374679d6a68ca396ed9948c130d1508b393b1073e7a21593a69becde201ee2c",
     "answerHash": "05f66472bd0d2cc2372b43bc74ebcdb990f9b665fa7c79b1cda05454a7cd34d5"
   },
   "6.6": {
@@ -997,7 +997,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-6.png",
-    "questionHash": "7a17be79702263cba252873da3f7338ceeaa1be12da39496c3621416f9754304",
+    "questionHash": "cf10aa314aac5bf746f6bd21f435f6735acb953ad9cc1ec16c59008852a17fb1",
     "answerHash": "073f3aae433e093cc407013a171c495ea58782f841c85db41400f918cabb0abe"
   },
   "6.13": {
@@ -1010,8 +1010,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-13.png",
-    "questionHash": "b0b801f6c08e79605b9dae77ff99ea7373a62101284d742f2c15b8f2faf4c1e8",
-    "answerHash": "09e5ee6a984258c215a29f10a5ff23e8f75918779f27b9899267c0a3ac277fab"
+    "questionHash": "009739cdc939fd6323c1d30dc0d1e5cfe988ad4fd93c91291f474c4c39ab576e",
+    "answerHash": "fee997d1153b25039859d5181d972e57c3162b6f11bbc9e83d11d7a97b4ef082"
   },
   "6.14": {
     "questions": "assets/ap-calculus/ap-6-14-questions.pdf",
@@ -1023,8 +1023,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-6-14.png",
-    "questionHash": "06f309c00060e025b00a59ff13042aa2db44036219776c8aedf744e087b42031",
-    "answerHash": "4f80564865bec6e5d54afddc84bb8a81bb2d0dc6bcc7587c1307737051ac8cab"
+    "questionHash": "2b556adab0d5c5f6a745b078185f09bdbf91f36853e49b2bbefe87b45d02344c",
+    "answerHash": "6552776b787da0beaf077979213cf14f346d555ac292ec198a2c0689f8666104"
   },
   "7.1": {
     "questions": "assets/ap-calculus/ap-7-1-questions.pdf",
@@ -1037,7 +1037,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-7-1.png",
     "questionHash": "e304e50bf4eb9cd80815b9ddc40ecbb70830e2b4d0b5e92179711f6b04154c9a",
-    "answerHash": "1ce22dffc38ef17a4ca00d091811a808cd41f90dadafb2caead0e5211737ef0a"
+    "answerHash": "30b711beffbc0eb6cf1acb02bef5e66ffed002df3324d233dbc2549fad2e3299"
   },
   "7.2": {
     "questions": "assets/ap-calculus/ap-7-2-questions.pdf",
@@ -1088,8 +1088,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-7-9.png",
-    "questionHash": "9c6f9b863e03693e76ad04a8d2c687d0fd7ba2ff9500927b494119ce03f34cfb",
-    "answerHash": "884b07b2e63bd231f74118fe30195f132ba86dab79ca2cef390e2df109d8b896"
+    "questionHash": "dda0775c35061414b1cf45e6147554e0d56af658b56dd47882bc234672ff0d55",
+    "answerHash": "1f191dde88b399e26efa77ec7db351ac5121af1871c16ff388d0070558db66eb"
   },
   "8.1": {
     "questions": "assets/ap-calculus/ap-8-1-questions.pdf",
@@ -1102,7 +1102,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-1.png",
     "questionHash": "b39d4d46e7f0e970309952efb73ce17107aca46182af69cdbb0a32610e28df7b",
-    "answerHash": "f46bcee2fd25999cca0016d5e4e52e390989eac7f7060159dd98cee41e9e58d1"
+    "answerHash": "fd4f83b5b0f1ef4f2b42fb8b024d6e524d0893b9d54a54689d18115214a31035"
   },
   "8.2": {
     "questions": "assets/ap-calculus/ap-8-2-questions.pdf",
@@ -1115,7 +1115,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-2.png",
     "questionHash": "bfb4a15fb927f0baca5afa5710dc0eef3ab83084c81056be089d161500f1c4d3",
-    "answerHash": "6b98ccf7ebfbaaf99bf4af75c36b7ff5781258926f7f5942a672ddbc7d0457ae"
+    "answerHash": "39057275e662e573516830314c67fabe04e99946402e75293b1353b91219f98e"
   },
   "8.3": {
     "questions": "assets/ap-calculus/ap-8-3-questions.pdf",
@@ -1128,7 +1128,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-3.png",
     "questionHash": "139d5764388b1df1dbb06d377a9fcc99b74b87857b3e71d4fb04c091b1a49275",
-    "answerHash": "7181740c1e229d95b6b5aa6ec7c0aba6bb1ea8a1e48e5e625cc71ba6faa87261"
+    "answerHash": "62a654198b23ead5b0ecda955ccc59e2b871c8d5ade60d36395c5f493eb70a62"
   },
   "8.4": {
     "questions": "assets/ap-calculus/ap-8-4-questions.pdf",
@@ -1141,7 +1141,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-4.png",
     "questionHash": "d6f13a518b2a65ed985a2acacc8b50ff229755e66337c4b22959e1ad07f59813",
-    "answerHash": "9d059cb55086ef89d2664d37952a576b7dc7d3aa9c90eb98373ed863771c1cd1"
+    "answerHash": "1a1b4debc44f72eb45004b5a6a9fc9ed60eb8d3fd1b85ef35689e6497080762d"
   },
   "8.5": {
     "questions": "assets/ap-calculus/ap-8-5-questions.pdf",
@@ -1154,7 +1154,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-5.png",
     "questionHash": "38a4c3677628adbdb3cb4deea48dcccd2b1394d1aeb5f11279c25fbfbfad93a2",
-    "answerHash": "d7c3b3d2d7a489dea10906eb990d2cce39504fbadc4132c33cdac8ea8735cb7f"
+    "answerHash": "85936af38e82bd6cd633cfc7d015742eef53f30e25bac1a2b05d6261895ce0b7"
   },
   "8.6": {
     "questions": "assets/ap-calculus/ap-8-6-questions.pdf",
@@ -1166,8 +1166,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-6.png",
-    "questionHash": "b98ae8dc01c130335196aa411c6828e0406f3dc2c8911cf2a27532180d3eb55f",
-    "answerHash": "7b25f2e6131a886ef3bff5c1db80ac02535f16ca7a82373ca12d436dcde9aabc"
+    "questionHash": "e2c4ff0e9a9d6cc10d56316fb4021a83fc8774975f46a0ff02c6f2e12e050e8b",
+    "answerHash": "b3925e6219a5c237686f7179e9f06659023040c7b984f1551f69362f1616c018"
   },
   "8.7": {
     "questions": "assets/ap-calculus/ap-8-7-questions.pdf",
@@ -1180,7 +1180,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-7.png",
     "questionHash": "e77717fa3c8017864cd9e90e9b5475fd0e1052cf4fb3ad70bbdf733ed758fd10",
-    "answerHash": "b11255c5c6dcc621074d6e2b61983f3ed6cb053930f8bec8aab842541fbf515f"
+    "answerHash": "7c2550530611809808b43c061d20fcb8d042cc7eb54b2eb79dc5d641bdbf9952"
   },
   "8.8": {
     "questions": "assets/ap-calculus/ap-8-8-questions.pdf",
@@ -1193,7 +1193,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-8.png",
     "questionHash": "095cef8f337de20d8f45796b5acdc56d154e07b980a578b870ed13d0e583b64d",
-    "answerHash": "dd1e8e75babc526435bb650d6724c21cfd30950addd2d072356e978872e1224c"
+    "answerHash": "a2077b360d8d9b55478df4157dde8a7c31963e63df77d574b32e53c0a6df1215"
   },
   "8.10": {
     "questions": "assets/ap-calculus/ap-8-10-questions.pdf",
@@ -1206,7 +1206,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-10.png",
     "questionHash": "240e8d50815497e824228dc791b1e067500d06282380d79f7813864d349fcc0e",
-    "answerHash": "5d35a2b4abfba1e0fcad0eb05000bb7e57c51ee5a863f28dcf1e5d6b896028f5"
+    "answerHash": "97869327c2a31dd5d073db6a70f52898138c993d50ba86190f0cd0df45ecfd8a"
   },
   "8.12": {
     "questions": "assets/ap-calculus/ap-8-12-questions.pdf",
@@ -1219,7 +1219,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-12.png",
     "questionHash": "a29d41387b0b17546522402e377f4318c23afe7d85939cc7c93ed877fae2f696",
-    "answerHash": "8242185910ab380bb69550b58a79de4773ee5adf78c683148fcb04a32579bd8d"
+    "answerHash": "35f70c138bac23e425946f6ad5bca7dc2d762cf2c623d548aff93c5def1b13b3"
   },
   "8.13": {
     "questions": "assets/ap-calculus/ap-8-13-questions.pdf",
@@ -1231,8 +1231,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-8-13.png",
-    "questionHash": "b37c4c155c5ef9e226fd4dc2cb0a3c3bf7e0fba046739277c79ef645f032e7b4",
-    "answerHash": "6eb184d292adbd5218bf0cb1bd24894633937cdbf5d768871c4f0f0e96d95bc3"
+    "questionHash": "ae67717836f76550e8aaf25069f81a40ae289de10f484bbcc9c2b7087b1537d1",
+    "answerHash": "5fae430fb880bf8005146467e1f917cb1cee9594b3e11499a1fc5d2b2e63051e"
   },
   "9.3": {
     "questions": "assets/ap-calculus/ap-9-3-questions.pdf",
@@ -1244,8 +1244,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-9-3.png",
-    "questionHash": "8dec2a6be91328d744a63079d11673f3dfa6d801e41c4f9d0a2dbf235ed166e4",
-    "answerHash": "fdf03f92d2fd006121dc1309437f02b54962e315cca29de6b64ed2c80d5c049b"
+    "questionHash": "a3a99e16e4a07a1914b344be99bbbc16582dca3ccad92dd6dec6a1a67bd859cb",
+    "answerHash": "dae7a02086fb95dcb262a5a54daa1ae712a625fb73886ffec5579027f0a5bbc8"
   },
   "9.4": {
     "questions": "assets/ap-calculus/ap-9-4-questions.pdf",
@@ -1271,7 +1271,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-9-5.png",
     "questionHash": "16617d8731feb779c2bfb8fdd5f9a2a805d5749e7f5cfd1653300287fc8c5eaf",
-    "answerHash": "5a628b18c1cb4cdfd5bbaf1e17791a7fb3d1da81abcca5fb58bb24d659f9e8d8"
+    "answerHash": "5bbadc2847ab92fbac8fe8a176b876675b0aeef3499b40366b6f71c9b8dc9121"
   },
   "9.6": {
     "questions": "assets/ap-calculus/ap-9-6-questions.pdf",
@@ -1284,7 +1284,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-9-6.png",
     "questionHash": "3c2a0cbf21800029ae86189a8e60cb044ccd860c229a2a21e3c75e1373df0aca",
-    "answerHash": "92e2f1fdd9087dd85234290a8c1fc6e4a5b053ba36e3f1927fddc0bb8ca53c70"
+    "answerHash": "def3e8eed5a0d5ddf47d4b080a0d8d781188bf3609cd01fa2e9a36a5ebb58ba3"
   },
   "9.9": {
     "questions": "assets/ap-calculus/ap-9-9-questions.pdf",
@@ -1297,7 +1297,7 @@
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-9-9.png",
     "questionHash": "9151c5f09941417d6f812b8712e7b69eea0aec8d118ef8ddf5e67d7ac4c26292",
-    "answerHash": "2b2ca9df287289b497bdcbd129eb43ec1274ba07ea8335114284b52bf9c56bef"
+    "answerHash": "fbcf2b370d3554249c4a19721546d777fc7763f2e67c407404d2d025a298a5cd"
   },
   "10.1": {
     "questions": "assets/ap-calculus/ap-10-1-questions.pdf",
@@ -1309,8 +1309,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-1.png",
-    "questionHash": "9f9013418f63b9b1712b4a36065aada1abef24c450876ba6c2c76dbb26b902e9",
-    "answerHash": "72b8d2e4fc090cc5166c59b37b170cd893ce1779dcb360719aa449c755ff70cb"
+    "questionHash": "d909a1b0e3ed193d8209801b2a73b1219dcc880a7fec6fadc3db2f47c940fde7",
+    "answerHash": "044dd6d6e1bd02b1e5878002f6b240e67b579ac6f3fc892afbb645c3015b0c00"
   },
   "10.3": {
     "questions": "assets/ap-calculus/ap-10-3-questions.pdf",
@@ -1322,8 +1322,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-3.png",
-    "questionHash": "2844e8e11979e53999254971bd192f1210c7f150f5d926f9d661ae0f826fefde",
-    "answerHash": "cf3ffc27225f1d15a04c021934b0bf40ea494abf168ccaaaef4daff9e7701176"
+    "questionHash": "96a3e8a52a3ce1be9034ef791b7dd7487242b706ff1b0428cec018b340bbb2db",
+    "answerHash": "87a282119798989e0cc23ce3a4d01a0d2f646c29ff3c4436eaace03d151bdc34"
   },
   "10.4": {
     "questions": "assets/ap-calculus/ap-10-4-questions.pdf",
@@ -1335,8 +1335,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-4.png",
-    "questionHash": "4fde1ce2b44e02a6fd217d98cc45698048899e23f4524ec9be2bcc4e819e3411",
-    "answerHash": "3bee8f0f70d3d7f09a421c39019812eabae43463a8598309fde4d36fee7e6310"
+    "questionHash": "a0a20702fb38d9e6299d5597b476113d390262aee5129273f211b0c09250669b",
+    "answerHash": "f5352f4b3ecb6a516755b0bc8ebd348a940c0147fc42557e61db840c2431d425"
   },
   "10.5": {
     "questions": "assets/ap-calculus/ap-10-5-questions.pdf",
@@ -1348,8 +1348,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-5.png",
-    "questionHash": "1c8d928cb87a13c1305ac67b77c0d41a31c372a9741a426dbd2af1ca15c3f620",
-    "answerHash": "6a417143da542079c8b0bd8746ca33df6ac0961fe284bbcd35e2154dd769798d"
+    "questionHash": "cdb093f183e6db4cc66bbfabe27f8a1378faa0498ddb6dc3c0a4c8085b04dea3",
+    "answerHash": "d341347f7e4f0f539eab893d73efb3cccc45eb025a9d4708fb9c63b7202bf84e"
   },
   "10.6": {
     "questions": "assets/ap-calculus/ap-10-6-questions.pdf",
@@ -1361,7 +1361,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-6.png",
-    "questionHash": "de5da57ad8a3174777389c762e731696979d85fd0fec81191a9f8d3a69ace94e",
+    "questionHash": "811a963395fe70074fff1dff62e63b960e24eee47477d9012e8b67a3334ce7b5",
     "answerHash": "80661004ef8f19c36afb1dc0447556402b5f239344e4adc5e99812a3d652818b"
   },
   "10.7": {
@@ -1374,8 +1374,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-7.png",
-    "questionHash": "56009f37b4a40d3f3eaf04147cebba5deb6b85a152fed174fd2e1b67cdb8a540",
-    "answerHash": "42e79ab41135537c106ef39931b693e94f0af466e8ec1b594462bc3524d8d5a4"
+    "questionHash": "dcb8ad87bbd1932040a1216d19624de6e5d5de371818d2e9dec2b34b3bfd16f2",
+    "answerHash": "d445bce6319b44600f278c7d1f0aa61757638220b28e5e1036e732765b4f0745"
   },
   "10.8": {
     "questions": "assets/ap-calculus/ap-10-8-questions.pdf",
@@ -1387,8 +1387,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-8.png",
-    "questionHash": "30ea5f2d71079ca9904356a83b06e534d306ffb8fe093046fae97dd9403fae92",
-    "answerHash": "c4c57f2fb93e28b7c59d0432fc4c8ab519840af38bbe3e09f0aa5c59f34f29db"
+    "questionHash": "adee2833fb5b40ea14af73cb8a913b84fe05c5acca33ff7c496a44187b1f3ed7",
+    "answerHash": "b4c598e16c8a89f8f57fd975e350bcffef9cee34dbcdd87ee4fc25d5531dcbe3"
   },
   "10.9": {
     "questions": "assets/ap-calculus/ap-10-9-questions.pdf",
@@ -1400,8 +1400,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-9.png",
-    "questionHash": "ae6e08e1ff0af604210641acc2f497d56a2950f02f590bf2680d01b77e401ce1",
-    "answerHash": "231aae9ae7c8060131a4791ca54c83000d86107732b5b96b535a10a963dbb0c5"
+    "questionHash": "fd022592fb1dd0bf5cddac042e34d489a83813147ebe5531100f97635d63762d",
+    "answerHash": "a36bc12b259885061cbb121e6226883b85dcb1de4a43e697ff7aad54ebf5514a"
   },
   "10.10": {
     "questions": "assets/ap-calculus/ap-10-10-questions.pdf",
@@ -1413,8 +1413,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-10.png",
-    "questionHash": "87ec201bf33f46a97405ce19f708e37a7399f6d95d8957dea37d6cad27c9f1fe",
-    "answerHash": "8ef615f5e649faa62da2ef78e854a4547f3828da2059492a8f1379ff48e5414e"
+    "questionHash": "29452961c31487d0ffadaa1585ba14c507392aafd6562692a917edb04be91683",
+    "answerHash": "374cbc8e9f8a737eac3258eafd2df15de5f7f49a2bedc920b0aeae44c5a31ede"
   },
   "10.12": {
     "questions": "assets/ap-calculus/ap-10-12-questions.pdf",
@@ -1426,8 +1426,8 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-12.png",
-    "questionHash": "e63a49add5e6d3095ba7f913044254afc7f6bea8043c6e3dad6da83fd69dca72",
-    "answerHash": "54c23dbd239ea411da9f5f9d3be48d6fb967b4acc7f688d09f93b36de3dd99c1"
+    "questionHash": "75503bd9e5cbe67a71a3a5b83a6d9c8c59c8414131c500094d57bd1b5638b910",
+    "answerHash": "f237a128d93e0823d447ca29d7d55eeae2c64abc0066ac804fef1ea12634e95f"
   },
   "10.13": {
     "questions": "assets/ap-calculus/ap-10-13-questions.pdf",
@@ -1439,7 +1439,7 @@
     "calculator": "Calculator optional",
     "revision": "2026-11-18.5",
     "preview": "assets/ap-calculus/previews/ap-10-13.png",
-    "questionHash": "85615465e75a9fc54eda36a440ab67f570e6dbec0a402274ce36970761c7cd93",
-    "answerHash": "e11e4f15983068500896fa402b7edd23545d76c3314f6a6cee3c8868a2b2e985"
+    "questionHash": "2e658e486aec014a217b1e74f183842a0b12ead6428557f7acbc933f958ad367",
+    "answerHash": "7ba3c49b4f3ec721b0150e095d8e818e44bb3a2b60b89fb45507e6b7f85bcfaa"
   }
 }

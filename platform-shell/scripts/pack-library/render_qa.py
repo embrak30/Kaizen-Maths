@@ -5,7 +5,10 @@ pop='/Users/barker/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/
 packs=sum([json.loads((root/f'tmp/pdfs/library-build-{s}.json').read_text())['packs'] for s in [0,100,200,300]],[])
 # Render every page to prove the embedded assets are valid. Save compact student+teacher contact sheets.
 def render(p):
- prefix=out/p['slug'];subprocess.run([pop,'-scale-to','360','-png',str(root/'output/pdf/library'/(p['slug']+'.pdf')),str(prefix)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.PIPE)
+ prefix=out/p['slug']
+ # A typesetting repair can reduce the page count; do not count obsolete previews.
+ for old in out.glob(p['slug']+'-*.png'):old.unlink()
+ subprocess.run([pop,'-scale-to','360','-png',str(root/'output/pdf/library'/(p['slug']+'.pdf')),str(prefix)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.PIPE)
  files=sorted(out.glob(p['slug']+'-*.png'));assert len(files)==p['pageCount'];return p,files
 results=[]
 with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:

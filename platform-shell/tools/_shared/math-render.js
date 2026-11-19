@@ -51,7 +51,7 @@
   }
 
   function normaliseUnitCoefficients(text) {
-    return normalisePowerAtSymbols(text).replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, '$1$2$3');
+    return (window.KaizenMathNotation?.coefficientProducts(normalisePowerAtSymbols(text)) ?? normalisePowerAtSymbols(text)).replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, '$1$2$3');
   }
 
   function transformTextNode(node) {

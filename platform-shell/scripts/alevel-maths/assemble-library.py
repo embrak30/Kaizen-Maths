@@ -19,7 +19,8 @@ for item in plan:
  def fix(v):
   if isinstance(v,str):
    v=v.replace(r'\cosec',r'\operatorname{cosec}').replace(r'\log{',r'\ln{')
-   v=re.sub(r'\\{2}(?=[A-Za-z])',lambda z:chr(92),v)
+   # Preserve TeX row breaks before a letter (for example the second vector component t + 2).
+   if r'\begin{' not in v:v=re.sub(r'\\{2}(?=[A-Za-z])',lambda z:chr(92),v)
    return re.sub(r'(?<!\$)\$([^$\n]+)\$(?!\$)',lambda m:r'\('+m[1]+r'\)',v)
   if isinstance(v,list):return [fix(x) for x in v]
   if isinstance(v,dict):return {k:fix(x) for k,x in v.items()}

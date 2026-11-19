@@ -4800,7 +4800,7 @@ function normalisePowerAtSymbols(value) {
 }
 
 function normaliseAlgebraUnitCoefficients(value) {
-  return normalisePowerAtSymbols(value).replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, "$1$2$3");
+  return (window.KaizenMathNotation?.coefficientProducts(normalisePowerAtSymbols(value)) ?? normalisePowerAtSymbols(value)).replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, "$1$2$3");
 }
 
 function textLooksWorksheetMathLike(text) {

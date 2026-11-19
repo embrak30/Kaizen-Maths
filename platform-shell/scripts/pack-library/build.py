@@ -50,7 +50,9 @@ def flows(blocks,width,size=12,diagram_max=200):
  for block in blocks:
   if block['kind']=='paragraph':
    content,font=markup(block['html'],width,size)
-   p=Paragraph(content,ParagraphStyle('content',fontName=font,fontSize=size,leading=size*1.35,autoLeading='max',spaceAfter=0,splitLongWords=True,textColor=d.HexColor(d.INK)))
+   image_heights=[float(h) for h in re.findall(r'<img\s+[^>]*height="([\d.]+)"',content)]
+   leading=max([size*1.35]+[h+size*.25 for h in image_heights])
+   p=Paragraph(content,ParagraphStyle('content',fontName=font,fontSize=size,leading=leading,autoLeading='max',spaceAfter=0,splitLongWords=True,textColor=d.HexColor(d.INK)))
    try:_,height=p.wrap(width,2000)
    except Exception as e:raise ValueError('Paragraph: '+block['html'][:180]+' / '+str(e))
    if getattr(p,'minWidth',lambda:0)()>width+2:raise DoesNotFit('Unbreakable expression')

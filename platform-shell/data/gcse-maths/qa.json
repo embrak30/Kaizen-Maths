@@ -13,6 +13,5 @@
     "Content hashes and download paths",
     "Student/teacher separation and permissions"
   ],
-  "errors": [],
-  "targetedRecheck": "G13 and G14 student diagrams: final labels corrected, rebuilt and re-rendered. One page, notation, text/image bounds and hashes rechecked."
+  "errors": []
 }

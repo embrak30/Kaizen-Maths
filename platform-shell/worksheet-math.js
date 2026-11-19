@@ -9,7 +9,7 @@
  }
  function typeset(tex,display=false){
   if(!window.katex)return null;
-  const decoder=document.createElement('textarea');decoder.innerHTML=tex;tex=decoder.value;
+  const decoder=document.createElement('textarea');decoder.innerHTML=tex;tex=window.KaizenMathNotation?.tex(decoder.value) ?? decoder.value;
   try{return '<span class="worksheet-tex">'+window.katex.renderToString(tex,{displayMode:display,output:'htmlAndMathml',throwOnError:true,strict:'ignore',trust:false,maxExpand:1000})+'</span>';}catch(error){return null;}
  }
  function render(value){

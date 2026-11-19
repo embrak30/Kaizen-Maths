@@ -30823,7 +30823,7 @@
         {
           "question": "A particle has initial velocity \\(\\left[\\begin{matrix}1\\\\2\\end{matrix}\\right]\\) m/s and constant acceleration \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) m/s². Find its velocity and displacement after 3 s.",
           "questionText": "A particle has initial velocity \\(\\left[\\begin{matrix}1\\\\2\\end{matrix}\\right]\\) m/s and constant acceleration \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) m/s². Find its velocity and displacement after 3 s.",
-          "answer": "\\(\\left[\\begin{matrix}7\\\\-1\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}12\\\\frac{3}{2}\\end{matrix}\\right]\\) m.",
+          "answer": "\\(\\left[\\begin{matrix}7\\\\-1\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}12\\\\\\frac{3}{2}\\end{matrix}\\right]\\) m.",
           "steps": [
             "<p><b>1.</b> Apply v = u + at component by component.</p>",
             "<p><b>2.</b> Apply \\(s=ut+\\frac12at^2\\) to both components.</p>",
@@ -30841,7 +30841,7 @@
         {
           "question": "A particle has initial velocity \\(\\left[\\begin{matrix}2\\\\2\\end{matrix}\\right]\\) m/s and constant acceleration \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) m/s². Find its velocity and displacement after 3 s.",
           "questionText": "A particle has initial velocity \\(\\left[\\begin{matrix}2\\\\2\\end{matrix}\\right]\\) m/s and constant acceleration \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) m/s². Find its velocity and displacement after 3 s.",
-          "answer": "\\(\\left[\\begin{matrix}8\\\\-1\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}15\\\\frac{3}{2}\\end{matrix}\\right]\\) m.",
+          "answer": "\\(\\left[\\begin{matrix}8\\\\-1\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}15\\\\\\frac{3}{2}\\end{matrix}\\right]\\) m.",
           "steps": [
             "<p><b>1.</b> Apply v = u + at component by component.</p>",
             "<p><b>2.</b> Apply \\(s=ut+\\frac12at^2\\) to both components.</p>",
@@ -30859,7 +30859,7 @@
         {
           "question": "A particle has initial velocity \\(\\left[\\begin{matrix}3\\\\2\\end{matrix}\\right]\\) m/s and constant acceleration \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) m/s². Find its velocity and displacement after 3 s.",
           "questionText": "A particle has initial velocity \\(\\left[\\begin{matrix}3\\\\2\\end{matrix}\\right]\\) m/s and constant acceleration \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) m/s². Find its velocity and displacement after 3 s.",
-          "answer": "\\(\\left[\\begin{matrix}9\\\\-1\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}18\\\\frac{3}{2}\\end{matrix}\\right]\\) m.",
+          "answer": "\\(\\left[\\begin{matrix}9\\\\-1\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}18\\\\\\frac{3}{2}\\end{matrix}\\right]\\) m.",
           "steps": [
             "<p><b>1.</b> Apply v = u + at component by component.</p>",
             "<p><b>2.</b> Apply \\(s=ut+\\frac12at^2\\) to both components.</p>",
@@ -30877,7 +30877,7 @@
         {
           "question": "A particle has initial velocity \\(\\left[\\begin{matrix}4\\\\2\\end{matrix}\\right]\\) m/s and constant acceleration \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) m/s². Find its velocity and displacement after 3 s.",
           "questionText": "A particle has initial velocity \\(\\left[\\begin{matrix}4\\\\2\\end{matrix}\\right]\\) m/s and constant acceleration \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) m/s². Find its velocity and displacement after 3 s.",
-          "answer": "\\(\\left[\\begin{matrix}10\\\\-1\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}21\\\\frac{3}{2}\\end{matrix}\\right]\\) m.",
+          "answer": "\\(\\left[\\begin{matrix}10\\\\-1\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}21\\\\\\frac{3}{2}\\end{matrix}\\right]\\) m.",
           "steps": [
             "<p><b>1.</b> Apply v = u + at component by component.</p>",
             "<p><b>2.</b> Apply \\(s=ut+\\frac12at^2\\) to both components.</p>",
@@ -30895,7 +30895,7 @@
         {
           "question": "A particle has initial velocity \\(\\left[\\begin{matrix}5\\\\2\\end{matrix}\\right]\\) m/s and constant acceleration \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) m/s². Find its velocity and displacement after 3 s.",
           "questionText": "A particle has initial velocity \\(\\left[\\begin{matrix}5\\\\2\\end{matrix}\\right]\\) m/s and constant acceleration \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) m/s². Find its velocity and displacement after 3 s.",
-          "answer": "\\(\\left[\\begin{matrix}11\\\\-1\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}24\\\\frac{3}{2}\\end{matrix}\\right]\\) m.",
+          "answer": "\\(\\left[\\begin{matrix}11\\\\-1\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}24\\\\\\frac{3}{2}\\end{matrix}\\right]\\) m.",
           "steps": [
             "<p><b>1.</b> Apply v = u + at component by component.</p>",
             "<p><b>2.</b> Apply \\(s=ut+\\frac12at^2\\) to both components.</p>",
@@ -30913,7 +30913,7 @@
         {
           "question": "A particle has initial velocity \\(\\left[\\begin{matrix}6\\\\2\\end{matrix}\\right]\\) m/s and constant acceleration \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) m/s². Find its velocity and displacement after 3 s.",
           "questionText": "A particle has initial velocity \\(\\left[\\begin{matrix}6\\\\2\\end{matrix}\\right]\\) m/s and constant acceleration \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) m/s². Find its velocity and displacement after 3 s.",
-          "answer": "\\(\\left[\\begin{matrix}12\\\\-1\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}27\\\\frac{3}{2}\\end{matrix}\\right]\\) m.",
+          "answer": "\\(\\left[\\begin{matrix}12\\\\-1\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}27\\\\\\frac{3}{2}\\end{matrix}\\right]\\) m.",
           "steps": [
             "<p><b>1.</b> Apply v = u + at component by component.</p>",
             "<p><b>2.</b> Apply \\(s=ut+\\frac12at^2\\) to both components.</p>",
@@ -31145,7 +31145,7 @@
           "answer": "\\(\\left[\\begin{matrix}5\\\\4\\end{matrix}\\right]\\) m/s; \\(\\left[\\begin{matrix}\\frac{14}{3}\\\\6\\end{matrix}\\right]\\) m.",
           "steps": [
             "<p><b>1.</b> Integrate each acceleration component.</p>",
-            "<p><b>2.</b> Use the initial velocity to obtain \\(\\left[\\begin{matrix}t^{2} + 1\\t + 2\\end{matrix}\\right]\\).</p>",
+            "<p><b>2.</b> Use the initial velocity to obtain \\(\\left[\\begin{matrix}t^{2} + 1\\\\t + 2\\end{matrix}\\right]\\).</p>",
             "<p><b>3.</b> Integrate velocity from 0 to 2 for displacement.</p>"
           ],
           "criteria": [

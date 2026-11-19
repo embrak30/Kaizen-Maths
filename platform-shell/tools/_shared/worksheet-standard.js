@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.2.8';
+  const VERSION = '0.2.9';
   const MIXED_TYPE_ID = '__kaizen_mixed_practice__';
   const MIXED_TYPE_LABEL = 'Mixed Practice';
 
@@ -83,7 +83,7 @@
   }
 
   function normaliseAlgebraUnitCoefficients(value) {
-    return normalisePowerAtSymbols(value).replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, '$1$2$3');
+    return (window.KaizenMathNotation?.coefficientProducts(normalisePowerAtSymbols(value)) ?? normalisePowerAtSymbols(value)).replace(/(^|[^A-Za-z0-9])([+\-−]?\s*)1([A-Za-z])(?=(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]|\b))/g, '$1$2$3');
   }
 
   function looksLikeSharedInstruction(text) {

@@ -2,7 +2,7 @@
   "packs": 138,
   "questions": 1104,
   "pdfs": 276,
-  "pages": 713,
+  "pages": 715,
   "studentPages": 138,
   "checks": [
     "Every PDF rendered",
@@ -13,32 +13,5 @@
     "Content hashes and download paths",
     "Student/teacher separation and permissions"
   ],
-  "errors": [],
-  "visualReview": {
-    "studentContacts": 12,
-    "studentPagesSampledAtFullSize": [
-      "N15",
-      "N18",
-      "G04",
-      "G17",
-      "S09",
-      "S30"
-    ],
-    "teacherPagesSampled": [
-      "N15 p1",
-      "N18 p1",
-      "N19 p1",
-      "S19 p1",
-      "S21 p1",
-      "S23 p3",
-      "S26 p3",
-      "S30 p1",
-      "C31 p1",
-      "C33 p1",
-      "C40 p1",
-      "F18 p1"
-    ],
-    "corrections": "Retained source diagram CSS; preserved authored matrix row separators; used separate equation lines for three-variable systems; stricter undefined-TeX detection."
-  },
-  "automatedRegressionTests": "7 targeted application/print suites passed"
+  "errors": []
 }

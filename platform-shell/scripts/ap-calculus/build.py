@@ -16,7 +16,8 @@ pdfmetrics.registerFontFamily('APText',normal='APText',bold='APTextBold',italic=
 _original_markup=b.markup
 def ap_markup(source,width,size):
  content,font=_original_markup(source,width,size)
- return content,('APText' if font=='Sans' else font)
+ font='APText' if font=='Sans' else font
+ return b.glyphs(content,font),font
 b.markup=ap_markup
 W,H=b.W,b.H;L=43;WIDTH=W-86;OUT=ROOT/'assets/ap-calculus';OUT.mkdir(exist_ok=True);(OUT/'previews').mkdir(exist_ok=True)
 DATA=ROOT/'data/ap-calculus';DATA.mkdir(exist_ok=True)
