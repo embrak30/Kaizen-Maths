@@ -19,4 +19,12 @@ $('show-count').checked=false;$('show-count').dispatchEvent(new w.Event('change'
 $('start-b').value=0;click('build-b');assert.equal(d.querySelectorAll('[data-zone="b"] .token').length,0);click('reset');assert.equal(d.querySelectorAll('[data-zone="b"] .token').length,0);
 mode('add');click('change');assert(!/\d/.test($('narration').textContent),'hidden counts must not leak through the counting caption');
 change('objects','star');assert([...d.querySelectorAll('use')].every(x=>x.getAttribute('href')==='#star'));
+
+// Fit the available width AND height, including the formerly overflowing second +5.
+Object.defineProperty(w.HTMLElement.prototype,'clientWidth',{configurable:true,get(){return this.classList.contains('object-grid')?900:0;}});
+Object.defineProperty(w.HTMLElement.prototype,'clientHeight',{configurable:true,get(){return this.classList.contains('object-grid')?180:0;}});
+$('show-count').checked=true;mode('add');build(5);change('step','5');
+for(let n=10;n<=30;n+=5){click('change');assert.equal(count(),n);assert.equal(d.querySelectorAll('.token.new').length,5,'only the latest batch is gold');const grid=d.querySelector('.object-grid'),size=parseFloat(grid.style.gridAutoRows),gap=parseFloat(grid.style.gap),rows=Math.ceil(n/10);assert(rows*size+(rows-1)*gap<=168,'objects fit inside the available height');assert(10*size+9*gap+16<=888,'objects fit inside the available width');}
+assert($('change').disabled);click('answer');assert.equal(d.querySelectorAll('.token.new').length,5,'revealing the answer keeps the latest batch identifiable');assert.equal(d.querySelectorAll('.token.counting').length,0,'revealing the answer must not replay counting');assert.match($('hint').textContent,/full/);click('undo');assert.equal(count(),25);
+build(29);assert.equal($('change').textContent,'Add 1');mode('subtract');change('remove-style','move');build(3);assert.equal($('change').textContent,'Take away 3');tokens()[1].click();assert.equal(d.querySelectorAll('.object-slot').length,1);assert(d.querySelector('.object-grid').children[1].classList.contains('object-slot'),'subtraction keeps the removed object’s position');
 dom.window.close();console.log('PASS: addition/count-on, hidden answers, subtraction/return/cross-out, undo/reset, zero, maximum, validation and comparison.');

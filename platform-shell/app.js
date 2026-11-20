@@ -2320,7 +2320,7 @@ const tools = [
     status: "Imported",
     description: "Build colourful collections for Grades 1–3. Add objects and count on, move or cross out objects for subtraction, and compare two groups on the classroom board.",
     tags: ["primary", "lower primary", "elementary", "grade 1", "grade 2", "grade 3", "addition", "subtraction", "counting", "count on", "compare", "sweets", "stars", "visual maths", "manipulatives"],
-    toolPath: "tools/build-add-take-away/index.html?v=build-add-1",
+    toolPath: "tools/build-add-take-away/index.html?v=board-fit-2",
     imported: true,
     teacherNotes: [
       "A teacher-led Grades 1–3 board with sweets, stars, apples and counters, for collections from 0 to 30.",
