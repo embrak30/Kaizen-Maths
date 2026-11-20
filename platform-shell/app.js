@@ -1,7 +1,7 @@
 const SITE_NAME = "Kaizen Maths";
 const SITE_TITLE = "Maths Questions & Worksheets for Teachers | Kaizen Maths";
 const SITE_DESCRIPTION = "Exam-style maths questions, worksheets, starters and worked solutions for busy maths teachers. Explore free samples or try the teacher workspace for 30 days.";
-const CLASSROOM_STANDARD_VERSION = "classroom-standard-3";
+const CLASSROOM_STANDARD_VERSION = "classroom-usage-4";
 const MAKE_IT_COUNT_LOGO = "assets/brand/make-it-count-brighter-futures.png";
 
 function addQueryParam(url, key, value) {
@@ -2811,6 +2811,8 @@ const subjectGroupNotes = {
   "Games and Routines": "Short classroom games, exit tickets, target-number challenges, and plenary routines.",
   "Site Guidance": "Guidance pages for learning the site and the shared tool workflow."
 };
+
+window.KaizenUsageTools = tools.map(({slug,toolPath}) => ({slug,toolPath}));
 
 const state = {
   query: "",
@@ -26456,6 +26458,13 @@ function renderPrivacyNotice() {
           ])}
         </article>
         <article class="panel">
+          <h2>Optional Teacher Usage Reporting</h2>
+          <p>When activated, you can allow account-level usage reporting to help Kaizen administrators understand adoption, support schools and improve the tools. It records workspace visits, tools opened and estimated active time against your teacher account and school. It does not record pupil responses, worksheet contents, keystrokes or screen recordings.</p>
+          <p>Only Kaizen administrators can view reports. Records are kept for up to 180 days, and are deleted with your account. Reporting is optional and does not change your access. Withdrawing permission stops new collection; existing records remain until deletion or expiry. Contact us to request access, correction or deletion.</p>
+          <p>Activity time is estimated from visible use and recent interaction; it is not a measure of teaching quality. Usage reporting is separate from marketing email preferences.</p>
+          <div id="usagePrivacyChoice"></div>
+        </article>
+        <article class="panel">
           <h2>Services Used</h2>
           <p>Kaizen Maths may use Google sign-in, Supabase, Stripe, Vercel, and YouTube embeds to operate the service.</p>
         </article>
@@ -26466,6 +26475,7 @@ function renderPrivacyNotice() {
       </section>
     </section>
   `;
+  window.KaizenUsage?.mountPreference?.(document.getElementById("usagePrivacyChoice"));
 }
 
 function renderDataProtectionPage() {
@@ -28206,6 +28216,7 @@ function renderAdmin() {
     ${pageHeader("Admin", "Manage simple site updates without editing code: homepage content, access rules, curriculum tags, videos, and testimonials.")}
     <section class="admin-tabs" aria-label="Admin sections">
       <button class="admin-tab active" type="button" data-admin-tab="users">Users</button>
+      <button class="admin-tab" type="button" data-admin-tab="usage">Usage</button>
       <button class="admin-tab" type="button" data-admin-tab="launch">Launch Checklist</button>
       <button class="admin-tab" type="button" data-admin-tab="homepage">Homepage</button>
       <button class="admin-tab" type="button" data-admin-tab="programme">Programme</button>
@@ -28236,6 +28247,7 @@ function renderAdmin() {
         </table>
       </div>
     </section>
+    <section class="panel admin-panel admin-tab-panel" data-admin-panel="usage"><div id="adminUsage"></div></section>
     <section class="panel admin-panel admin-tab-panel" data-admin-panel="launch">
       ${launchReadinessChecklistHtml()}
     </section>
@@ -28566,15 +28578,16 @@ function renderAdmin() {
 }
 
 function bindAdmin() {
+  function activateAdminTab(target) {
+    state.adminTab = target;
+    document.querySelectorAll(".admin-tab").forEach((item) => item.classList.toggle("active", item.dataset.adminTab === target));
+    document.querySelectorAll(".admin-tab-panel").forEach((panel) => panel.classList.toggle("active", panel.dataset.adminPanel === target));
+    if (target === "usage") window.KaizenAdminUsage?.mount(document.getElementById("adminUsage"), { tools, schools: state.schools, getClient: () => window.KaizenAuth.getClient() });
+  }
   document.querySelectorAll(".admin-tab").forEach((tab) => {
-    tab.addEventListener("click", () => {
-      const target = tab.dataset.adminTab;
-      document.querySelectorAll(".admin-tab").forEach((item) => item.classList.toggle("active", item === tab));
-      document.querySelectorAll(".admin-tab-panel").forEach((panel) => {
-        panel.classList.toggle("active", panel.dataset.adminPanel === target);
-      });
-    });
+    tab.addEventListener("click", () => activateAdminTab(tab.dataset.adminTab));
   });
+  activateAdminTab(state.adminTab || "users");
 
   const status = document.getElementById("adminAccessStatus");
   const usersStatus = document.getElementById("adminUsersStatus");

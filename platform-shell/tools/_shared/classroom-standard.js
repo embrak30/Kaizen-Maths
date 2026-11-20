@@ -267,3 +267,12 @@
     observer.observe(observerTarget, { childList: true, subtree: true });
   }
 })();
+
+// Relay only an activity signal from teaching frames. Never transmit keys, answers or pointer coordinates.
+(() => {
+ if(window.self===window.top||document.documentElement.dataset.kaizenUsageBridge)return;
+ document.documentElement.dataset.kaizenUsageBridge='1';
+ let last=0;
+ const signal=()=>{const now=Date.now();if(now-last<1000)return;last=now;window.parent.postMessage({type:'kaizen-tool-activity'},window.location.origin);};
+ for(const event of ['pointerdown','keydown','wheel','touchstart'])document.addEventListener(event,signal,{passive:true,capture:true});
+})();
