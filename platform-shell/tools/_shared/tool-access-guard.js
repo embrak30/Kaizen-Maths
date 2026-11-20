@@ -81,7 +81,14 @@
     const path = window.location.pathname;
     const match = path.match(/\/tools\/([^/]+)\/index\.html?$/i) ||
       path.match(/\/tools\/([^/]+)\/?$/i);
-    return match ? decodeURIComponent(match[1]) : "";
+    const folder = match ? decodeURIComponent(match[1]) : "";
+    // These two differentiation tools predate the public catalogue slugs.
+    // Use the catalogue identity for classroom frames, access settings and redirects.
+    const catalogueSlugs = {
+      "differentiation-rules-general": "differentiation-rules",
+      "differentiation-rules": "trig-differentiation-rules"
+    };
+    return catalogueSlugs[folder] || folder;
   }
 
   function isTrustedClassroomFrame() {
