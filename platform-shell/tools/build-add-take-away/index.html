@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Build, Add &amp; Take Away | Kaizen Maths</title>
+<link rel="stylesheet" href="style.css">
+<script src="../../auth-config.js?v=tool-access-guard-3"></script><script src="../_shared/tool-access-guard.js?v=tool-access-slugs-4"></script>
+</head><body>
+<svg class="symbols" aria-hidden="true"><defs>
+<symbol id="star" viewBox="0 0 64 64"><path d="m32 4 8.5 17.2 19 2.8-13.8 13.4L49 56 32 47l-17 9 3.3-18.6L4.5 24l19-2.8Z"/></symbol>
+<symbol id="sweet" viewBox="0 0 64 64"><path d="m6 13 17 9v20L6 51l3-19Zm52 0-17 9v20l17 9-3-19Z"/><rect x="16" y="16" width="32" height="32" rx="12"/><path d="m25 19 14 26M18 27l17 19" fill="none" stroke="white" stroke-width="5" opacity=".6"/></symbol>
+<symbol id="apple" viewBox="0 0 64 64"><path d="M32 21C13 8 3 29 13 48c5 10 12 12 19 8 7 4 14 2 19-8C61 29 51 8 32 21Z"/><path d="M32 22V9m1 6C34 4 45 4 47 5c0 8-7 13-14 10" fill="#287951" stroke="#287951" stroke-width="4" stroke-linecap="round"/><path d="M18 29q-3 7 0 13" fill="none" stroke="white" stroke-width="4" opacity=".65" stroke-linecap="round"/></symbol>
+<symbol id="counter" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26"/><circle cx="32" cy="32" r="19" fill="none" stroke="white" stroke-width="3" opacity=".5"/></symbol>
+</defs></svg>
+<main class="workspace">
+<header><div><span class="brand">KAIZEN MATHS <span>· Grades 1–3</span></span><h1>Build, Add &amp; Take Away</h1></div><div class="header-actions"><button id="help" aria-label="Open teacher guidance">Teacher guide</button><button id="fullscreen">Full screen</button></div></header>
+<nav class="modes" aria-label="Activity"><button data-mode="add" aria-pressed="true">Add more</button><button data-mode="subtract" aria-pressed="false">Take away</button><button data-mode="compare" aria-pressed="false">Compare</button><div class="setup"><label for="objects">Our objects</label><select id="objects"><option value="sweet">Sweets</option><option value="star">Stars</option><option value="apple">Apples</option><option value="counter">Counters</option></select>
+<label for="start">Start with</label><div class="start-row"><input id="start" type="number" min="0" max="30" value="5"><button id="build">Build</button></div></div></nav>
+<div class="layout"><aside class="controls" aria-label="Teacher controls">
+
+<div class="action-controls"><label for="step">Change by</label><select id="step"><option value="1">1 at a time</option><option value="2">2 at a time</option><option value="5">5 at a time</option></select>
+<button id="change" class="primary">Add 1</button><button id="change-b" class="secondary" hidden>Add 1 to group B</button>
+<div id="compare-options" hidden><label for="start-b">Group B starts with</label><div class="start-row"><input id="start-b" type="number" min="0" max="30" value="3"><button id="build-b">Set B</button></div></div>
+<div id="subtract-options" hidden><label for="remove-style">Show removed objects</label><select id="remove-style"><option value="move">Move away</option><option value="cross">Cross out</option></select></div>
+<div id="addition-options"><label for="count-method">Counting</label><select id="count-method"><option value="on">Count on</option><option value="all">Count all</option></select></div>
+</div>
+<div class="view-controls"><label class="check"><input id="show-count" type="checkbox" checked> Show counts</label><label class="check"><input id="show-equation" type="checkbox"> Show number sentence</label><button id="answer">Reveal answer</button></div>
+<div class="history"><button id="undo" disabled>Undo</button><button id="reset">Reset</button></div>
+</aside><section class="display" aria-label="Objects workspace">
+<div class="board-heading"><div><span class="eyebrow" id="activity-label">ADD MORE</span><h2 id="prompt">How many altogether?</h2></div><span class="count-badge" id="total"></span></div>
+<div class="scene" id="scene"></div>
+<div class="narration" aria-live="polite" aria-atomic="true" id="narration">Start with 5. Add some more.</div>
+<div class="math-line" id="math-line" aria-live="polite"></div>
+<div class="board-footer"><span id="hint">Use Add to grow your collection.</span><span>Up to 30 objects</span></div>
+</section></div>
+</main>
+<dialog id="guide"><h2>A picture before a calculation</h2><p>Build a collection. Ask pupils to predict what will happen, make a change, then discuss what they see.</p><ul><li><strong>Add more:</strong> add 1, 2 or 5. Count on highlights the new objects; Count all highlights the whole collection.</li><li><strong>Take away:</strong> tap an object or drag it into the taken-away area. Tap a removed object to return it. Move away and Cross out show the same subtraction.</li><li><strong>Compare:</strong> build two groups. Matching columns help pupils see which group has more and how many more.</li></ul><p>Hide counts and the number sentence for discussion. Reveal the answer when ready. Undo reverses one change; Reset rebuilds the starting collection. This is a teacher-led display, not a pupil assessment.</p><form method="dialog"><button class="primary">Back to the board</button></form></dialog>
+<script src="board.js"></script><script src="../_shared/classroom-standard.js?v=classroom-standard-3"></script>
+</body></html>

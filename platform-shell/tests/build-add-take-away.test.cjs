@@ -1,0 +1,22 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const {base}=require('../scripts/pack-library/runtime.cjs'),{JSDOM}=require(path.join(base,'jsdom'));
+const folder=path.join(__dirname,'../tools/build-add-take-away');
+const dom=new JSDOM(fs.readFileSync(path.join(folder,'index.html'),'utf8'),{runScripts:'outside-only'}),w=dom.window,d=w.document,$=id=>d.getElementById(id);
+vm.runInContext(fs.readFileSync(path.join(folder,'board.js'),'utf8'),dom.getInternalVMContext());
+function click(id){$(id).click();}function change(id,value){$(id).value=value;$(id).dispatchEvent(new w.Event('change'));}function mode(value){d.querySelector(`[data-mode="${value}"]`).click();}function build(n){$('start').value=n;click('build');}function count(){return Number($('total').textContent);}function tokens(){return d.querySelectorAll('.token');}
+assert.equal(count(),5);click('change');assert.equal(count(),6);assert.match($('narration').textContent,/5… 6/);
+change('step','2');click('change');assert.equal(count(),8);assert.match($('narration').textContent,/6… 7, 8/);
+$('show-equation').checked=true;$('show-equation').dispatchEvent(new w.Event('change'));assert.equal($('math-line').textContent,'5 + 3 = ?');click('answer');assert.equal($('math-line').textContent,'5 + 3 = 8');
+click('undo');assert.equal(count(),6);click('reset');assert.equal(count(),5);
+mode('subtract');tokens()[0].click();assert.equal(count(),4);assert.equal(d.querySelector('[data-zone="removed"] .token').getAttribute('aria-label'),'Return sweet 1');d.querySelector('[data-zone="removed"] .token').click();assert.equal(count(),5);
+change('remove-style','cross');click('change');assert.equal(count(),3);assert.equal(d.querySelectorAll('.crossed').length,2);assert.equal(tokens().length,5);click('undo');assert.equal(count(),5);
+build(1);click('change');assert.equal(count(),0);assert($('change').disabled);click('reset');assert.equal(count(),1);
+build(0);assert.equal(count(),0);assert($('change').disabled);mode('add');click('change');assert.equal(count(),2);
+build(29);change('step','5');click('change');assert.equal(count(),30);assert($('change').disabled);click('undo');assert.equal(count(),29);
+build(-1);assert.equal(count(),29);assert(!$('start').checkValidity());build(2.5);assert(!$('start').checkValidity());build(5);
+mode('compare');assert.equal(d.querySelectorAll('.token.matched').length,6);click('answer');assert.equal($('math-line').textContent,'5 − 3 = 2');$('show-equation').checked=false;$('show-equation').dispatchEvent(new w.Event('change'));assert.equal($('math-line').textContent,'Group A has 2 more.');change('step','2');click('change-b');click('answer');assert.equal($('math-line').textContent,'Both groups have the same number.');
+$('show-count').checked=false;$('show-count').dispatchEvent(new w.Event('change'));assert.equal($('total').textContent,'');assert([...d.querySelectorAll('.group-label span')].every(x=>!x.textContent));
+$('start-b').value=0;click('build-b');assert.equal(d.querySelectorAll('[data-zone="b"] .token').length,0);click('reset');assert.equal(d.querySelectorAll('[data-zone="b"] .token').length,0);
+mode('add');click('change');assert(!/\d/.test($('narration').textContent),'hidden counts must not leak through the counting caption');
+change('objects','star');assert([...d.querySelectorAll('use')].every(x=>x.getAttribute('href')==='#star'));
+dom.window.close();console.log('PASS: addition/count-on, hidden answers, subtraction/return/cross-out, undo/reset, zero, maximum, validation and comparison.');

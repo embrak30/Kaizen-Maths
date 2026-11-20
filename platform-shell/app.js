@@ -2311,6 +2311,25 @@ const tools = [
     ]
   },
   {
+    slug: "build-add-take-away",
+    title: "Build, Add & Take Away",
+    category: "Classroom Tools",
+    level: "Primary / Elementary",
+    type: "Interactive Display",
+    access: "Free",
+    status: "Imported",
+    description: "Build colourful collections for Grades 1–3. Add objects and count on, move or cross out objects for subtraction, and compare two groups on the classroom board.",
+    tags: ["primary", "lower primary", "elementary", "grade 1", "grade 2", "grade 3", "addition", "subtraction", "counting", "count on", "compare", "sweets", "stars", "visual maths", "manipulatives"],
+    toolPath: "tools/build-add-take-away/index.html?v=build-add-1",
+    imported: true,
+    teacherNotes: [
+      "A teacher-led Grades 1–3 board with sweets, stars, apples and counters, for collections from 0 to 30.",
+      "Add 1, 2 or 5 and choose count on or count all. For subtraction, tap objects or drag them into the taken-away area; tap again to return them.",
+      "Compare two groups using matched positions. Hide counts and the number sentence before revealing the answer.",
+      "Undo reverses a change; Reset restores the starting collection. Use full screen when projecting."
+    ]
+  },
+  {
     slug: "elementary-starter-board",
     title: "Primary and Elementary Starter Board",
     category: "Classroom Tools",
@@ -2696,6 +2715,7 @@ const subjectToolGroups = {
     "concept-explainer": "Board Displays and Visuals",
     "anchor-charts": "Board Displays and Visuals",
     "elementary-manipulatives": "Board Displays and Visuals",
+    "build-add-take-away": "Board Displays and Visuals",
     "bar-models": "Board Displays and Visuals",
     "area-models": "Board Displays and Visuals",
     "maths-structure-lab": "Board Displays and Visuals",
@@ -3112,6 +3132,7 @@ const freeSampleTools = new Set([
   "anchor-charts",
   "bar-models",
   "area-models",
+  "build-add-take-away",
   "elementary-starter-board",
   "elementary-maths-playground",
   "interface-guide"
@@ -24398,6 +24419,7 @@ const curatedRelatedToolSlugs = {
   "area-models": ["maths-structure-lab", "anchor-charts", "bar-models", "fractions-practice"],
   "maths-structure-lab": ["equation-balance-models", "bar-models", "area-models", "elementary-manipulatives"],
   "equation-balance-models": ["maths-structure-lab", "bar-models", "linear-equations", "simplification"],
+  "build-add-take-away": ["elementary-maths-playground", "elementary-manipulatives", "bar-models", "elementary-starter-board"],
   "elementary-maths-playground": ["anchor-charts", "bar-models", "area-models", "elementary-starter-board"],
   "transformations": ["free-vectors", "scale-drawing-similar-shapes", "straight-lines", "equation-of-a-circle"],
   "midpoint-length-lines": ["straight-lines", "equation-of-a-circle", "transformations", "pythagoras-theorem"],

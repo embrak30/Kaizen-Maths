@@ -8,6 +8,7 @@
     "averages-range",
     "classroom-displays",
     "bar-models",
+    "build-add-take-away",
     "elementary-starter-board",
     "elementary-maths-playground",
     "interface-guide"
