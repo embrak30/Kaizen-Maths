@@ -53,3 +53,9 @@ __pycache__/
 /tmp/pdfs/csec-library-errors.json
 /tmp/pdfs/csec-layout-errors.json
 /tmp/pdfs/csec-library-review/
+
+# Primary topic pack typesetting and visual QA intermediates.
+/tmp/pdfs/primary-*
+
+# Delivery copy; deploy the published primary pack assets instead.
+/output/pdf/primary-packs/

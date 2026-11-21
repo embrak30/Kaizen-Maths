@@ -2376,7 +2376,7 @@ const tools = [
     status: "Imported",
     description: "Primary problem-solving topic practice and linked tasks for Grades 4–6. Switch between assessment-style questions and bar-model support for the same questions, with worked solutions and suggested marks.",
     tags: ["problem solving", "primary", "fractions", "percentages", "ratio", "money", "measurement", "word problems"],
-    toolPath: "tools/pep-practice/index.html?v=pep-practice-4",
+    toolPath: "tools/pep-practice/index.html?v=pep-practice-5",
     imported: true,
     teacherNotes: ["Select a grade and skill, or use a linked task. Assessment-style questions are the default; add bar-model support for the same questions when teaching.", "Print either question version, both versions together, answers, or a complete pack with worked solutions and suggested marking guidance.", "Original classroom practice covering selected number and measurement skills; choose questions to match your class and curriculum."]
   },
@@ -5256,7 +5256,7 @@ function setActiveNav() {
   const activeTool = toolRouteSlug ? tools.find((tool) => tool.slug === toolRouteSlug) : null;
   const activeCollectionHref = activeTool ? `#/collections/${categorySlug(activeTool.category)}` : "";
   const activeParentHref = ["ap-calculus", "alevel-maths", "gcse-maths", "ib-maths", "csec-maths"].includes(parts[0]) ? "#/tools" : parts[0] === "textbook-assessments" ? "#/textbook-alignments" : "";
-  const resourceParent = ["ap-calculus", "alevel-maths", "gcse-maths", "ib-maths", "csec-maths", "practice-packs", "ready-made-resources"].includes(parts[0]) ? "#/ready-made-resources"
+  const resourceParent = ["ap-calculus", "alevel-maths", "gcse-maths", "ib-maths", "csec-maths", "primary-topic-packs", "practice-packs", "ready-made-resources"].includes(parts[0]) ? "#/ready-made-resources"
     : ["worksheet-generator", "gcse-exam-style"].includes(parts[0]) ? "#/worksheet-generator"
     : ["teaching-tools", "collections", "classroom", "classroom-remote"].includes(parts[0]) || (parts[0] === "tools" && parts[1]) ? "#/teaching-tools" : "";
   document.querySelectorAll(".nav-list a, .sidebar-utility a").forEach((link) => {
@@ -30722,6 +30722,7 @@ function updateRouteSeo(parts) {
         ? `Browse ${collectionName.toLowerCase()} question generators, worked examples, and classroom practice tools in Kaizen Maths.`
         : "Browse curriculum collections inside Kaizen Maths."
     },
+    "primary-topic-packs": { title: "Primary Practice Packs | Kaizen Maths", description: "Ten-question topic packs across Grades 4–6 mathematics, with separate student questions, answers, worked solutions and suggested marks." },
     "csec-maths": {
       title: routeTitle("CSEC Mathematics worksheets"),
       description: "CSEC Mathematics ready-made topic worksheets for examinations from May–June 2027: eight questions on one page, with separate worked solutions and suggested marks."
@@ -30965,6 +30966,9 @@ function renderRoute() {
     renderToolDetail(parts[1]);
   } else if (parts[0] === "classroom" && parts[1]) {
     renderClassroomTool(parts[1]);
+  } else if (parts[0] === "primary-topic-packs") {
+    app.innerHTML = '<div id="primary-topic-library"></div>';
+    window.KaizenPrimaryPacks.mount(document.getElementById('primary-topic-library'));
   } else if (parts[0] === "csec-maths") {
     app.innerHTML = `<div id="csec-maths-library"></div>`;
     window.KaizenCSEC.mount(document.getElementById("csec-maths-library"), { tools });
@@ -31135,6 +31139,7 @@ function renderExploreOverview() {
 function renderReadyMadeResources() {
   app.innerHTML = pageHeader("Ready-Made Resources", "Choose a collection. Download the student sheet and the answers or worked solutions you need.") +
     `<section class="resource-overview resource-collections" aria-label="Ready-made resource collections">${resourceChoiceCards([
+      ['▣','Primary Practice Packs','Grades 4–6 across five strands: ten questions per topic, with answers, worked solutions and suggested marks.','#/primary-topic-packs','teal','<a class="resource-choice-action" href="#/primary-topic-packs">Browse primary practice packs →</a>'],
       ['▤','Starters & Exit Tickets','Short practice packs for the start or end of a lesson, with answers and worked solutions.','#/practice-packs','violet','<a class="resource-choice-action" href="#/practice-packs">Browse starters & exit tickets →</a>'],
       ['✓','GCSE Mathematics','Board-neutral Foundation and Higher topic sheets, with eight questions per page and separate worked solutions.','#/gcse-maths','teal','<a class="resource-choice-action" href="#/gcse-maths">Browse GCSE Mathematics →</a>'],
       ['∫','AP Calculus','AB and BC topic worksheets: eight questions on one A4 page, with separate teacher solutions and suggested marks.','#/ap-calculus','teal','<a class="resource-choice-action" href="#/ap-calculus">Browse AP Calculus →</a>'],
@@ -31168,7 +31173,7 @@ window.addEventListener('popstate',renderRoute);
 function renderTeacherReference() {
   setPageSeo(titleWithSite("Teacher reference & workspace guide"),"Curriculum maps, training, pupil tasks and school access, together in one place.");
   const groups=[
-    ['Plan your teaching',[['CSEC Mathematics worksheets','#/csec-maths'],['IB Mathematics worksheets','#/ib-maths'],['GCSE worksheets','#/gcse-maths'],['AP Calculus worksheets','#/ap-calculus'],['Edexcel A level worksheets','#/alevel-maths'],['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
+    ['Plan your teaching',[['Primary practice packs','#/primary-topic-packs'],['CSEC Mathematics worksheets','#/csec-maths'],['IB Mathematics worksheets','#/ib-maths'],['GCSE worksheets','#/gcse-maths'],['AP Calculus worksheets','#/ap-calculus'],['Edexcel A level worksheets','#/alevel-maths'],['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
     ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Make a worksheet: screenshot guide','/guides/make-a-worksheet'],['Classroom tools','#/collections/classroom-tools'],['Kaizen University','#/kaizen-university']]],
     ['Work with learners',[['Pupil tasks','#/class-tasks'],['Tutor Workspace','#/tutor-workspace'],['School space','#/school-space'],['Book a demo','#/book-demo'],['Contact / enquire','#/contact'],['Partners','#/partners']]]
   ];
