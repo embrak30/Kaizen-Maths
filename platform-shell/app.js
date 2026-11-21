@@ -980,6 +980,20 @@ const tools = [
     ]
   },
   {
+    slug: "area-rearrangement",
+    title: "Area by Rearrangement",
+    category: "Geometry",
+    level: "Upper Primary / GCSE",
+    type: "Interactive Explainer",
+    access: "Trial",
+    status: "Imported",
+    description: "Discover circle, parallelogram and triangle area formulae by cutting, moving and combining shapes. Increase equal circle sectors to explore the limiting rectangle.",
+    tags: ["area", "circle", "sectors", "parallelogram", "triangle", "visual proof", "rearrangement", "limits"],
+    toolPath: "tools/area-rearrangement/index.html?v=area-rearrangement-1",
+    imported: true,
+    teacherNotes: ["Four controlled stages connect paper-style rearrangements to area formulae.", "Includes acute, right-angled and obtuse triangles, two parallelogram slants, and 6–256 equal circle sectors.", "Finite circle rearrangements remain curved; the rectangle is a limiting comparison."]
+  },
+  {
     slug: "area-triangles",
     title: "Area and Perimeter of Triangles",
     category: "Geometry",
@@ -2689,6 +2703,7 @@ const subjectToolGroups = {
   },
   Geometry: {
     "area-rectangles": "Area, Perimeter and Circles",
+    "area-rearrangement": "Area, Perimeter and Circles",
     "area-triangles": "Area, Perimeter and Circles",
     "circles-area-circumference": "Area, Perimeter and Circles",
     "sectors-arc-length": "Area, Perimeter and Circles",
@@ -24421,6 +24436,9 @@ function relatedToolTokens(tool) {
 }
 
 const curatedRelatedToolSlugs = {
+  "area-rearrangement": ["circles-area-circumference", "area-triangles", "area-rectangles"],
+  "circles-area-circumference": ["area-rearrangement", "area-rectangles", "area-triangles"],
+  "area-triangles": ["area-rearrangement", "area-rectangles", "circles-area-circumference"],
   "loci-constructions": ["transformations", "missing-angles", "circle-theorems", "scale-drawing-similar-shapes"],
   "sampling-methods-bias": ["kaizen-large-data-set", "averages-range", "histograms", "cumulative-frequency-curves"],
   "histograms": ["cumulative-frequency-curves", "averages-range", "kaizen-large-data-set", "sampling-methods-bias"],
@@ -24818,6 +24836,20 @@ function toolInfoText(tool) {
 }
 
 function toolInsightProfile(tool) {
+  if (tool.slug === "area-rearrangement") return {
+    misconceptions: [
+      "Calling a finite sector arrangement an exact rectangle: its upper and lower edges are still curved.",
+      "Using the full circumference as the limiting base instead of half the circumference, pi r.",
+      "Taking a sloping side as the height instead of measuring perpendicular to the base.",
+      "Giving one triangle the area bh after two congruent triangles have formed the parallelogram."
+    ],
+    questions: [
+      "What stays unchanged when the pieces move, and what changes?",
+      "Why does increasing the number of sectors flatten the curved boundaries?",
+      "Which boundary contains half the circumference, and how does its straight span differ from its arc length?",
+      "Why does the triangle argument still work when the height is outside the triangle?"
+    ]
+  };
   const haystack = toolInfoText(tool);
   const has = (...needles) => needles.some((needle) => haystack.includes(needle));
   const matches = (pattern) => pattern.test(haystack);
@@ -25991,6 +26023,12 @@ function toolClassroomQuestions(tool) {
 }
 
 function toolUseSuggestions(tool) {
+  if (tool.slug === "area-rearrangement") return [
+    "Use the four stages to introduce, prepare, rearrange and connect each area formula.",
+    "Pause or reverse the movement slider; ask pupils to identify what area has been preserved.",
+    "Compare 8, 32 and 256 circle sectors, then discuss the limiting rectangle.",
+    "Recreate the cut-and-slide and duplicate-and-rotate arguments with paper shapes; instructions are in the Teacher guide."
+  ];
   if (tool.slug === "revolution-explorer") return [
     "Start with Base plane to identify the region, axis and perpendicular strip.",
     "Pause the revolution midway, then use Face-on to compare a disc with a washer.",
