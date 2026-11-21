@@ -175,7 +175,7 @@
       display:grid;grid-template-columns:repeat(var(--cols),var(--array-size));gap:var(--array-gap);padding:clamp(10px,1.6vmin,18px);
       max-width:100%;max-height:100%;overflow:hidden;border-radius:18px;background:#f8fafc;border:1px solid var(--line)
     }
-    .array-dot{width:var(--array-size);height:var(--array-size);min-width:14px;min-height:14px;border-radius:50%;box-shadow:0 8px 16px rgba(24,50,74,.12)}
+    .array-dot{width:var(--array-size);height:var(--array-size);min-width:0;min-height:0;border-radius:50%;box-shadow:0 8px 16px rgba(24,50,74,.12)}
     .array-dot:nth-child(4n+1){background:var(--teal)}.array-dot:nth-child(4n+2){background:var(--purple)}.array-dot:nth-child(4n+3){background:var(--amber)}.array-dot:nth-child(4n){background:var(--pink)}
     .array-labels{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
     .mini-chip{padding:8px 12px;border-radius:999px;background:#eef6ff;color:#1d4ed8;font-weight:950}
@@ -186,18 +186,6 @@
     .fraction-piece{border:2px solid #fff;border-radius:10px;background:#e8eef5;box-shadow:inset 0 0 0 1px rgba(24,50,74,.07)}
     .fraction-piece.shaded{background:linear-gradient(135deg,var(--teal),var(--green))}
     .fraction-mystery{font-size:clamp(2.2rem,5vw,4rem);font-weight:1000;color:var(--navy)}
-
-    .clock-wrap{display:grid;gap:clamp(8px,1.4vh,16px);place-items:center;width:100%;height:100%;min-height:0}
-    .clock-face{
-      position:relative;width:min(48vmin,360px);aspect-ratio:1;border:8px solid var(--navy);border-radius:50%;
-      background:radial-gradient(circle at center,#fff 0 56%,#f8fbfd 57% 100%);box-shadow:0 18px 34px rgba(24,50,74,.14)
-    }
-    .clock-face::before{content:"";position:absolute;inset:50% auto auto 50%;width:16px;height:16px;transform:translate(-50%,-50%);border-radius:50%;background:var(--red);z-index:4}
-    .clock-number{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(20vmin,150px))) rotate(calc(-1 * var(--angle)));font-size:clamp(1rem,2.6vmin,1.55rem);font-weight:1000;color:var(--navy)}
-    .hand{position:absolute;left:50%;bottom:50%;border-radius:999px;transform-origin:bottom center;transform:translateX(-50%) rotate(var(--angle));z-index:2}
-    .hour-hand{width:9px;height:28%;background:var(--navy)}
-    .minute-hand{width:6px;height:39%;background:var(--teal)}
-    .clock-tick{position:absolute;left:50%;top:50%;width:3px;height:9px;background:#8aa0b4;border-radius:999px;transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(22.5vmin,168px)))}
 
     .money-wrap{width:100%;height:100%;display:grid;place-items:center;min-height:0}
     .money-board{display:flex;align-items:center;justify-content:center;gap:clamp(10px,1.8vmin,18px);flex-wrap:wrap;max-width:100%;max-height:100%;padding:clamp(10px,1.8vmin,18px);border:1px solid var(--line);border-radius:18px;background:#f8fafc}
@@ -248,9 +236,11 @@
       .parts{gap:16px}
       .shape-board{grid-template-columns:repeat(4,1fr)}
     }
+    .board{grid-template-rows:auto minmax(0,1fr) auto;min-width:0}.board-body{min-width:0}.activity-card{min-width:0}.visual{width:100%;height:100%}.clock-wrap{display:grid;place-items:center;width:100%;height:100%;min-width:0;min-height:0}.clock-wrap .kaizen-diagram-scale-note{display:none!important}.clock-face{display:block;max-width:100%;max-height:100%;flex-shrink:0}
+    .money-wrap{min-width:0}.money-board{display:grid;align-content:center;justify-content:center;width:100%;height:100%;gap:10px;padding:12px;min-height:0;min-width:0;overflow:hidden}.money-slot{display:grid;place-items:center;min-width:0;min-height:0}.money-slot .coin,.money-slot .note{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:none;font-size:calc(24px * var(--money-scale,1));line-height:1.15;box-shadow:0 3px 8px #18324a20}.money-slot .coin{width:calc(90px * var(--money-scale,1));height:calc(90px * var(--money-scale,1));border-width:3px}.money-slot .note{width:calc(150px * var(--money-scale,1));height:calc(90px * var(--money-scale,1));border:3px double #ffffffa0;border-radius:9px}.money-slot small{font-size:.5em;letter-spacing:.08em}.money-slot strong{white-space:nowrap}.answer-pill{max-width:300px;overflow-wrap:anywhere;text-align:center;padding:8px;line-height:1.3}.answer-pill.revealed{font-size:clamp(1rem,1.6vw,1.4rem)}.fullscreen-tools{display:none}.board.fullscreen{width:100vw;height:100dvh;min-height:0}.fullscreen .fullscreen-tools{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.fullscreen .board-foot>span{display:none}[hidden]{display:none!important}
   </style>
   <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
-  <script src="../../auth-config.js?v=tool-access-guard-3"></script>
+  <script src="../../auth-config.js?v=usage-1"></script>
   <script src="../_shared/tool-access-guard.js?v=tool-access-guard-3"></script>
 
 </head>
@@ -273,7 +263,7 @@
         <li><strong>Arrays:</strong> Multiplication arrays using colourful counters.</li>
         <li><strong>Fractions:</strong> Shaded fraction bars with the answer hidden.</li>
         <li><strong>Clock Challenge:</strong> Analogue clock reading tasks with hidden answers.</li>
-        <li><strong>Money:</strong> Coin and note counting, plus make-the-amount prompts.</li>
+        <li><strong>Money:</strong> Count coins and notes, make amounts and find change. Choose Jamaican dollars, US dollars or British pounds.</li>
         <li><strong>Shape Sorter:</strong> Count, name, and sort shapes by simple properties.</li>
         <li><strong>Missing Signs:</strong> Complete number sentences by choosing the operation sign.</li>
       </ul>
@@ -316,6 +306,7 @@
           <label for="activity-type">Focus</label>
           <select id="activity-type" onchange="newTask()"></select>
         </div>
+        <div class="field" id="currency-field" hidden><label for="currency">Currency</label><select id="currency" onchange="newTask()"><option value="JMD">Jamaican dollars (J$)</option><option value="USD">US dollars ($)</option><option value="GBP">British pounds (£)</option></select><small>Teaching money · simplified designs</small></div>
         <div class="field">
           <label for="colour-theme">Colour theme</label>
           <select id="colour-theme" onchange="applyTheme()">
@@ -345,6 +336,7 @@
           <article class="activity-card" id="activity-card"></article>
         </div>
         <footer class="board-foot">
+          <div class="fullscreen-tools"><button class="btn" onclick="newTask()">New task</button><button class="btn" onclick="revealAnswer()">Reveal answer</button><button class="btn" onclick="toggleFullscreen()">Exit full screen</button></div>
           <span>Ask</span>
           <span>Discuss</span>
           <span>Explain</span>
@@ -428,6 +420,7 @@
     }
     function setMode(mode) {
       currentMode = mode;
+      document.getElementById("currency-field").hidden=mode!=="money";
       document.querySelectorAll(".mode-btn").forEach((button) => {
         button.classList.toggle("active", button.dataset.mode === mode);
       });
@@ -458,6 +451,7 @@
           item.textContent = currentTask.inlineAnswer || currentTask.answer;
         }
       });
+      requestAnimationFrame(fitVisual);
     }
     function hideAnswer() {
       answerVisible = false;
@@ -660,30 +654,10 @@
       const displayHour = hour === 0 ? 12 : hour;
       return `${displayHour}:${pad2(minute)}`;
     }
-    function clockNumbers() {
-      return Array.from({ length: 12 }, (_, index) => {
-        const number = index + 1;
-        return `<span class="clock-number" style="--angle:${number * 30}deg">${number}</span>`;
-      }).join("");
-    }
-    function clockTicks() {
-      return Array.from({ length: 60 }, (_, index) => {
-        const height = index % 5 === 0 ? "13px" : "7px";
-        const width = index % 5 === 0 ? "4px" : "2px";
-        return `<span class="clock-tick" style="--angle:${index * 6}deg;height:${height};width:${width}"></span>`;
-      }).join("");
-    }
     function renderClock(hour, minute) {
-      const hourAngle = ((hour % 12) * 30) + (minute * 0.5);
-      const minuteAngle = minute * 6;
-      return `
-        <div class="clock-face">
-          ${clockTicks()}
-          ${clockNumbers()}
-          <span class="hand hour-hand" style="--angle:${hourAngle}deg"></span>
-          <span class="hand minute-hand" style="--angle:${minuteAngle}deg"></span>
-        </div>
-      `;
+      const ticks=Array.from({length:60},(_,i)=>`<line x1="200" y1="${i%5===0?26:32}" x2="200" y2="42" transform="rotate(${i*6} 200 200)" stroke="#8aa0b4" stroke-width="${i%5===0?4:2}"/>`).join('');
+      const numbers=Array.from({length:12},(_,i)=>{const n=i+1,angle=n*Math.PI/6;return `<text x="${200+143*Math.sin(angle)}" y="${200-143*Math.cos(angle)}" text-anchor="middle" dominant-baseline="central" font-size="27" font-weight="800" fill="#173454">${n}</text>`;}).join('');
+      return `<svg class="clock-face" viewBox="0 0 400 400" role="img" aria-label="Analogue clock"><circle cx="200" cy="200" r="190" fill="#f8fbfd" stroke="#173454" stroke-width="9"/>${ticks}${numbers}<line x1="200" y1="200" x2="200" y2="103" transform="rotate(${hour%12*30+minute*.5} 200 200)" stroke="#173454" stroke-width="10" stroke-linecap="round"/><line x1="200" y1="200" x2="200" y2="66" transform="rotate(${minute*6} 200 200)" stroke="var(--teal)" stroke-width="7" stroke-linecap="round"/><circle cx="200" cy="200" r="9" fill="#df554a"/></svg>`;
     }
     function genClock() {
       const type = activityType();
@@ -705,87 +679,46 @@
       setAnswer(answer);
     }
 
-    const moneyValues = [
-      { value: 1, label: "1p", className: "coin silver" },
-      { value: 2, label: "2p", className: "coin silver" },
-      { value: 5, label: "5p", className: "coin" },
-      { value: 10, label: "10p", className: "coin" },
-      { value: 20, label: "20p", className: "coin" },
-      { value: 50, label: "50p", className: "coin" },
-      { value: 100, label: "1 pound", className: "coin silver" },
-      { value: 200, label: "2 pounds", className: "coin silver" },
-      { value: 500, label: "5 pounds", className: "note blue" }
-    ];
-    function formatMoney(pence) {
-      if (pence < 100) return `${pence}p`;
-      const pounds = Math.floor(pence / 100);
-      const pennies = pence % 100;
-      const poundText = pounds === 1 ? "1 pound" : `${pounds} pounds`;
-      return pennies ? `${poundText} ${pennies}p` : poundText;
+    // Jamaican denominations: https://boj.org.jm/core-functions/currency/
+    const moneyCurrencies = {
+      JMD: {name:'Jamaican dollars',base:1,coin:[1,5,10,20],note:[50,100],early:10,lower:20,upper:100,paid:[20,50],paidUpper:[50,100]},
+      USD: {name:'US dollars',base:100,coin:[1,5,10,25],note:[100,500],early:25,lower:100,upper:500,paid:[100,500],paidUpper:[100,500]},
+      GBP: {name:'British pounds',base:100,coin:[1,2,5,10,20,50,100,200],note:[500],early:50,lower:200,upper:500,paid:[100,200],paidUpper:[200,500]}
+    };
+    function currencyCode(){return document.getElementById('currency').value;}
+    function currency(){return moneyCurrencies[currencyCode()]||moneyCurrencies.JMD;}
+    function formatMoney(amount) {
+      if(currencyCode()==='JMD')return `J$${amount}`;
+      if(amount<100)return `${amount}${currencyCode()==='GBP'?'p':'¢'}`;
+      return `${currencyCode()==='GBP'?'£':'$'}${(amount/100).toFixed(amount%100?2:0)}`;
     }
+    function moneyValues(){const c=currency();return [...c.coin.map(value=>({value,label:formatMoney(value),className:'coin'+(value<10?' silver':'')})),...c.note.map(value=>({value,label:formatMoney(value),className:'note'+(value===c.note.at(-1)?' blue':'')}))];}
     function renderMoney(items) {
-      return `
-        <div class="money-board">
-          ${items.map((item) => `<span class="${item.className}">${item.label}</span>`).join("")}
-        </div>
-      `;
+      return `<div class="money-board" aria-label="${currency().name} teaching money">${items.map(item=>`<div class="money-slot"><span class="${item.className}"><small>${currencyCode()}</small><strong>${item.label}</strong></span></div>`).join('')}</div>`;
     }
     function makeMoneyAmount(target) {
-      const usable = moneyValues.filter((item) => item.value <= target && item.value <= 200).sort((a, b) => b.value - a.value);
-      let remaining = target;
-      const items = [];
-      for (const coin of usable) {
-        while (remaining >= coin.value && items.length < 8) {
-          items.push(coin);
-          remaining -= coin.value;
-        }
-      }
-      return { items, remaining };
+      const usable=moneyValues().filter(x=>x.className.includes('coin')).sort((a,b)=>b.value-a.value);let remaining=target;const items=[];
+      for(const coin of usable)while(remaining>=coin.value){items.push(coin);remaining-=coin.value;}
+      return {items,remaining};
     }
     function genMoney() {
-      const type = activityType();
-      const upper = difficulty() === "upper";
-      const available = moneyValues.filter((item) => item.value <= (upper ? 500 : difficulty() === "lower" ? 200 : 50));
-      if (type === "makeamount") {
-        const target = difficulty() === "early" ? choice([10, 15, 20, 25, 30, 40, 50]) : randInt(3, upper ? 20 : 10) * 10;
-        const made = makeMoneyAmount(target);
-        const answer = made.items.length ? made.items.map((item) => item.label).join(" + ") : formatMoney(target);
-        currentTask = { answer };
-        setHead("Money", "Make the amount.");
-        document.getElementById("activity-card").innerHTML = `
-          <div class="prompt">Which coins could make this amount?</div>
-          <div class="visual"><div class="money-wrap"><div class="money-target">${formatMoney(target)}</div></div></div>
-          <div class="subprompt">One way: <span data-answer-fill>?</span></div>
-        `;
-        setAnswer(answer);
-        return;
+      const type=activityType(),c=currency(),upper=difficulty()==='upper';
+      if(type==='makeamount'){
+        const target=c.base===1?(difficulty()==='early'?choice([5,10,15,20,25,30,40,50]):randInt(3,upper?20:10)*10):(difficulty()==='early'?choice([10,15,20,25,30,40,50]):randInt(3,upper?20:10)*10);
+        const made=makeMoneyAmount(target),grouped=new Map();made.items.forEach(x=>grouped.set(x.label,(grouped.get(x.label)||0)+1));
+        const answer=[...grouped].map(([label,n])=>n===1?label:`${n} × ${label}`).join(' + ');
+        currentTask={answer,target,items:made.items,currency:currencyCode()};setHead('Money',`Make the amount · ${c.name}`);
+        document.getElementById('activity-card').innerHTML=`<div class="prompt">Which coins could make this amount?</div><div class="visual"><div class="money-wrap"><div class="money-target">${formatMoney(target)}</div></div></div><div class="subprompt">One way: <span data-answer-fill>?</span></div>`;setAnswer(answer);return;
       }
-      if (type === "change") {
-        const paid = upper ? choice([200, 500]) : choice([100, 200]);
-        const cost = randInt(2, Math.floor((paid - 10) / 5)) * 5;
-        const answer = formatMoney(paid - cost);
-        currentTask = { answer };
-        setHead("Money", "Find the change.");
-        document.getElementById("activity-card").innerHTML = `
-          <div class="prompt">Pay with ${formatMoney(paid)}. The item costs ${formatMoney(cost)}.</div>
-          <div class="visual"><div class="money-wrap">${renderMoney([moneyValues.find((item) => item.value === paid) || available[available.length - 1]])}</div></div>
-          <div class="subprompt">Change: <span data-answer-fill>?</span></div>
-        `;
-        setAnswer(answer);
-        return;
+      if(type==='change'){
+        const paid=choice(upper?c.paidUpper:c.paid),unit=c.base===1?1:5,cost=randInt(1,Math.floor((paid-unit)/unit))*unit,answer=formatMoney(paid-cost);
+        const payment=moneyValues().find(x=>x.value===paid);currentTask={answer,paid,cost,currency:currencyCode()};setHead('Money',`Find the change · ${c.name}`);
+        document.getElementById('activity-card').innerHTML=`<div class="prompt">Pay with ${formatMoney(paid)}. The item costs ${formatMoney(cost)}.</div><div class="visual"><div class="money-wrap">${renderMoney([payment])}</div></div><div class="subprompt">Change: <span data-answer-fill>?</span></div>`;setAnswer(answer);return;
       }
-      const count = difficulty() === "early" ? randInt(3, 5) : randInt(5, upper ? 8 : 7);
-      const items = Array.from({ length: count }, () => choice(available));
-      const total = items.reduce((sum, item) => sum + item.value, 0);
-      const answer = formatMoney(total);
-      currentTask = { answer };
-      setHead("Money", "Count the money.");
-      document.getElementById("activity-card").innerHTML = `
-        <div class="prompt">How much money is shown?</div>
-        <div class="visual"><div class="money-wrap">${renderMoney(items)}</div></div>
-        <div class="subprompt">Total: <span data-answer-fill>?</span></div>
-      `;
-      setAnswer(answer);
+      const available=moneyValues().filter(x=>x.value<=(upper?c.upper:difficulty()==='lower'?c.lower:c.early));
+      const count=difficulty()==='early'?randInt(3,5):randInt(5,upper?8:7),items=Array.from({length:count},()=>choice(available)),total=items.reduce((n,x)=>n+x.value,0),answer=formatMoney(total);
+      currentTask={answer,total,items,currency:currencyCode()};setHead('Money',`Count the money · ${c.name}`);
+      document.getElementById('activity-card').innerHTML=`<div class="prompt">How much money is shown?</div><div class="visual"><div class="money-wrap">${renderMoney(items)}</div></div><div class="subprompt">Total: <span data-answer-fill>?</span></div>`;setAnswer(answer);
     }
 
     const shapeTypes = ["circle", "square", "rectangle", "triangle"];
@@ -954,6 +887,7 @@
       if (currentMode === "shapes") genShapes();
       if (currentMode === "signs") genSigns();
       applyTheme();
+      observeVisual();requestAnimationFrame(fitVisual);
     }
     function applyTheme() {
       const theme = document.getElementById("colour-theme").value;
@@ -974,6 +908,7 @@
     }
     function toggleFullscreen() {
       document.getElementById("board").classList.toggle("fullscreen");
+      requestAnimationFrame(fitVisual);
     }
     function toggleSidebar() {
       document.getElementById("sidebar").classList.toggle("open");
@@ -983,6 +918,22 @@
       document.getElementById("sidebar").classList.remove("open");
       document.querySelector(".sidebar-overlay").classList.remove("active");
     }
+    function fitVisual(){
+      const visual=document.querySelector('#activity-card .visual');if(!visual)return;
+      const width=visual.clientWidth,height=visual.clientHeight;if(!width||!height)return;
+      const clock=visual.querySelector('.clock-face');
+      if(clock){const size=Math.max(1,Math.min(width,height)-12);clock.style.width=size+'px';clock.style.height=size+'px';return;}
+      const money=visual.querySelector('.money-board');
+      if(money){const count=money.children.length,w=width-28,h=height-28;let best={scale:0,cols:1};for(let cols=1;cols<=Math.min(4,count);cols++){const rows=Math.ceil(count/cols),scale=Math.min(1.5,(w-(cols-1)*10)/cols/160,(h-(rows-1)*10)/rows/100);if(scale>best.scale)best={scale,cols};}const scale=Math.max(.05,best.scale);money.style.gridTemplateColumns=`repeat(${best.cols},${160*scale}px)`;money.style.gridAutoRows=`${100*scale}px`;money.style.setProperty('--money-scale',scale);return;}
+      const array=visual.querySelector('.array-grid');
+      if(array){const labels=visual.querySelector('.array-labels'),rows=Number(array.style.getPropertyValue('--rows')),cols=Number(array.style.getPropertyValue('--cols')),style=getComputedStyle(array),wrap=getComputedStyle(array.parentElement),paddingX=parseFloat(style.paddingLeft)+parseFloat(style.paddingRight)+2,paddingY=parseFloat(style.paddingTop)+parseFloat(style.paddingBottom)+2,gap=Math.min(8,Math.max(2,Math.floor(height/rows/8))),labelHeight=labels?.getBoundingClientRect().height||0,wrapGap=parseFloat(wrap.rowGap)||0;const size=Math.max(1,Math.floor(Math.min(52,(width-12-paddingX-(cols-1)*gap)/cols,(height-12-labelHeight-wrapGap-paddingY-(rows-1)*gap)/rows)));array.style.setProperty('--array-size',size+'px');array.style.setProperty('--array-gap',gap+'px');array.style.gridTemplateRows=`repeat(${rows},${size}px)`;return;}
+      // Keep the other existing activity diagrams inside their allocated visual area too.
+      const root=visual.firstElementChild;if(!root)return;root.style.transform='';const w=Math.max(root.scrollWidth,root.getBoundingClientRect().width),h=Math.max(root.scrollHeight,root.getBoundingClientRect().height);const scale=Math.min(1,(width-12)/Math.max(1,w),(height-12)/Math.max(1,h));root.style.transformOrigin='center';root.style.transform=`scale(${Math.max(.05,scale)})`;
+    }
+    const visualObserver=window.ResizeObserver?new ResizeObserver(fitVisual):null;
+    function observeVisual(){visualObserver?.disconnect();const visual=document.querySelector('#activity-card .visual');if(visual)visualObserver?.observe(visual);}
+    window.addEventListener('resize',fitVisual);
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('board').classList.remove('fullscreen');requestAnimationFrame(fitVisual);}});
     document.getElementById("difficulty").addEventListener("change", newTask);
     setMode("bonds");
   </script>
