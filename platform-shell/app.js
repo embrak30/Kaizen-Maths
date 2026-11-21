@@ -10443,7 +10443,7 @@ function renderMakeItCountPage() {
     ${pageHeader(
       "Make It Count",
       "A mathematics teacher development initiative that combines access to Kaizen Maths with online training, coaching, and sustained professional support.",
-      `<a class="button primary" href="#/for-schools">For Schools</a><a class="button" href="#/partners">For Partners</a>${programmeEnquiryButtonHtml("", "button", programme)}`
+      `<a class="button primary" href="#/for-schools">For Schools</a><a class="button" href="#/school-presentation">School Presentation</a><a class="button" href="#/partners">For Partners</a>${programmeEnquiryButtonHtml("", "button", programme)}`
     )}
     <section class="mission-page">
       <article class="mission-hero-panel make-it-count-hero">
@@ -10521,7 +10521,7 @@ function renderForSchoolsPage() {
     ${pageHeader(
       "For Schools",
       "Schools can explore Kaizen Maths as a practical teaching resource and express interest in future Make It Count programme opportunities.",
-      `<a class="button primary" href="#/school-interest">Express Interest</a><a class="button" href="#/make-it-count">Make It Count</a><a class="button" href="#/schools">School Licence Notes</a>`
+      `<a class="button primary" href="#/school-interest">Express Interest</a><a class="button" href="#/school-presentation">School Presentation</a><a class="button" href="#/make-it-count">Make It Count</a><a class="button" href="#/schools">School Licence Notes</a>`
     )}
     <section class="mission-page">
       <article class="mission-hero-panel">
@@ -30638,6 +30638,10 @@ function updateRouteSeo(parts) {
       title: routeTitle("Kaizen Maths Resource"),
       description: "Learn how Kaizen Maths supports mathematics teachers with classroom questions, worked examples, worksheets, assessments, displays, and pupil practice."
     },
+    "school-presentation": {
+      title: routeTitle("Make It Count school presentation"),
+      description: "A guided school briefing on Make It Count professional development and Kaizen Maths classroom resources."
+    },
     "make-it-count": {
       title: routeTitle("Make It Count"),
       description: "Learn about Make It Count, the proposed mathematics teacher development initiative combining Kaizen Maths access with online training, coaching, and sustained implementation support."
@@ -30818,6 +30822,7 @@ function renderPracticePacks() {
 }
 
 function renderRoute() {
+  window.KaizenSchoolPresentation?.unmount?.();
   closeMobileNav();
   updateAdminNavVisibility();
   const parts = routeParts();
@@ -30852,6 +30857,8 @@ function renderRoute() {
     renderPublicMarketingPage(parts);
   } else if (parts[0] === "kaizen-maths") {
     renderKaizenMathsResourcePage();
+  } else if (parts[0] === "school-presentation") {
+    window.KaizenSchoolPresentation.mount(app);
   } else if (parts[0] === "make-it-count") {
     renderMakeItCountPage();
   } else if (parts[0] === "for-schools") {
