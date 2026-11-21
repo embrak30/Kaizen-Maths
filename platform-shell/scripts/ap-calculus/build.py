@@ -124,6 +124,7 @@ if __name__=='__main__':
    related=[]
    for key,(_,slug) in toolkeys.items():
     if re.search(r'\b'+key+r'\b',t['basis']):related.append(slug)
+   if t['code']=='1.8':related=['squeeze-theorem']
    topics.append({'id':t['code'],'title':t['title'],'scope':t['scope'],'objective':'Practise '+t['title'].lower()+' through calculation, interpretation and mathematical reasoning.','tools':related,'developmentNote':'A dedicated eight-question set and its worked marking scheme are being prepared for this topic.','pack':published.get(t['code'])})
   units.append({'number':unit['n'],'title':unit['title'],'topics':topics})
  data={'version':1,'revision':'2026-11-18.5','units':units};(DATA/'catalog.json').write_text(json.dumps(data,indent=2)+'\n');(ROOT/'assets/site/ap-calculus-data.js').write_text('window.KaizenAPCalculusData = '+json.dumps(data,ensure_ascii=False,separators=(',',':'))+';\n')

@@ -110,6 +110,10 @@ if __name__=='__main__':
     if p['grade']==grade:bundle.write(ROOT/p['complete'],Path(p['complete']).name)
  with zipfile.ZipFile(OUT/'all-primary-topic-packs.zip','w',zipfile.ZIP_DEFLATED) as bundle:
   for p in catalog:bundle.write(ROOT/p['complete'],f"grade-{p['grade']}/"+Path(p['complete']).name)
+ from importlib import import_module
+ sys.path.insert(0,str(Path(__file__).parent))
+ attach=import_module('link-tools').attach
+ attach(catalog)
  data={'version':1,'title':'Primary Topic Practice','coverageNote':src['coverageNote'],'sources':src['sources'],'packs':catalog,'downloads':{str(g):f'assets/primary-packs/grade-{g}-topic-packs.zip' for g in [4,5,6]},'allDownload':'assets/primary-packs/all-primary-topic-packs.zip'}
  (DATA/'catalog.json').write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n')
  (ROOT/'assets/site/primary-packs-data.js').write_text('window.KaizenPrimaryPacksData='+json.dumps(data,separators=(',',':'),ensure_ascii=False)+';\n')

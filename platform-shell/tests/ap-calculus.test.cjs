@@ -8,6 +8,7 @@ for(const file of ['assets/site/ap-calculus-data.js','assets/site/ap-calculus.js
 const doc=w.document;
 function go(hash){w.location.hash=hash;w.renderRoute();}
 assert.equal(doc.querySelectorAll('.ap-topic-row').length,16);assert.equal(doc.querySelectorAll('[data-ap-unit]').length,8);assert(doc.querySelector('.sidebar'));assert(doc.querySelector('.mobile-nav'));
+const squeeze=doc.getElementById('ap-topic-1.8');assert(squeeze.querySelector('a[href="#/tools/squeeze-theorem"]'));assert(squeeze.textContent.includes('Squeeze Explainer'));
 const first=doc.getElementById('ap-topic-1.1');assert.equal(first.querySelectorAll('a').length,3);assert(first.textContent.includes('Student Pack'));assert(first.textContent.includes('Teacher Pack'));assert(first.querySelector('a[href$="-questions.pdf"]'));assert(!doc.querySelector('.ap-topic-card'));
 doc.querySelector('[data-ap-unit="2"]').click();assert.equal(doc.querySelectorAll('.ap-topic-row').length,10);assert(!doc.getElementById('ap-topic-1.1'));assert(w.location.hash.includes('unit=2'));assert.equal(doc.querySelectorAll('[data-ap-unit][aria-pressed=true]').length,1);
 doc.querySelector('[data-ap-course=bc]').click();assert.equal(doc.querySelectorAll('[data-ap-unit]').length,10);

@@ -1,0 +1,288 @@
+{
+  "fractions": [
+    [
+      "pep-practice",
+      "Choose this pack\u2019s grade, then Fractions of quantities.",
+      "direct"
+    ],
+    [
+      "bar-models",
+      "Model a known part and recover the whole.",
+      "direct"
+    ]
+  ],
+  "money": [
+    [
+      "pep-practice",
+      "Choose this pack\u2019s grade, then Money & decisions.",
+      "direct"
+    ]
+  ],
+  "measurement": [
+    [
+      "pep-practice",
+      "Choose this pack\u2019s grade, then Area & perimeter.",
+      "direct"
+    ]
+  ],
+  "percent": [
+    [
+      "simple-percentage-tasks",
+      "Choose percentage-of-quantity and reverse-percentage activities; avoid secondary extensions.",
+      "direct"
+    ],
+    [
+      "bar-models",
+      "Show the reference whole before finding a percentage or recovering the whole.",
+      "direct"
+    ]
+  ],
+  "ratio": [
+    [
+      "ratio-proportion",
+      "Choose simple sharing and equivalent-ratio questions.",
+      "direct"
+    ],
+    [
+      "bar-models",
+      "Use equal units to show shares and differences.",
+      "direct"
+    ]
+  ],
+  "sets": [
+    [
+      "number-bases-number-sets",
+      "Use common number-type classification only; listing members of specific finite sets remains in the pack.",
+      "related"
+    ],
+    [
+      "classroom-displays",
+      "Use the two-set Venn diagram for common and combined members.",
+      "related"
+    ]
+  ],
+  "whole-operations": [
+    [
+      "four-operations",
+      "Choose suitable whole-number multiplication, division and inverse operations.",
+      "direct"
+    ]
+  ],
+  "fraction-operations": [
+    [
+      "fractions-practice",
+      "Select like denominators for Grade 4; unlike denominators and products for Grade 5; include division for Grade 6.",
+      "direct"
+    ]
+  ],
+  "decimals": [
+    [
+      "decimals-practice-lab",
+      "Choose place value, ordering or arithmetic at the appropriate level.",
+      "direct"
+    ]
+  ],
+  "units": [
+    [
+      "conversions-teaching",
+      "Use metric and time activities; for Grade 6 choose area-unit conversions. Omit imperial and radian activities.",
+      "direct"
+    ]
+  ],
+  "time": [
+    [
+      "elementary-manipulatives",
+      "Use Clock Face to explain readings and elapsed time; the pack also includes tasks beyond this 12-hour display.",
+      "related"
+    ],
+    [
+      "conversions-teaching",
+      "Select time conversions. The full timetable problems remain on the paper.",
+      "related"
+    ]
+  ],
+  "area-shapes": [
+    [
+      "area-rectangles",
+      "Select simple rectangular area, perimeter and missing-side questions.",
+      "direct"
+    ],
+    [
+      "classroom-displays",
+      "Use blank grids and polygon outlines to build the pack\u2019s diagrams.",
+      "related"
+    ]
+  ],
+  "angles-lines": [
+    [
+      "missing-angles",
+      "Select basic angles on lines; use a physical protractor for measuring and drawing tasks.",
+      "related"
+    ],
+    [
+      "classroom-displays",
+      "Use line and shape outlines for angle and line-property discussions.",
+      "related"
+    ]
+  ],
+  "position": [
+    [
+      "transformations",
+      "Choose simple slides and reflections on a suitable grid; omit matrix transformations and secondary extensions.",
+      "direct"
+    ]
+  ],
+  "solids": [
+    [
+      "classroom-displays",
+      "Choose 3D Solids: cubes and cuboids in Grade 4, pyramids in Grade 5, prisms in Grade 6. Use the printed nets alongside them.",
+      "related"
+    ]
+  ],
+  "patterns": [
+    [
+      "sequences",
+      "Choose simple number-pattern activities and tables; omit quadratic and advanced nth-term questions.",
+      "direct"
+    ]
+  ],
+  "expressions": [
+    [
+      "substitution",
+      "Choose the simplest one- and two-variable substitutions and formulae.",
+      "direct"
+    ]
+  ],
+  "equations": [
+    [
+      "equation-balance-models",
+      "Develop missing-number and simple equation reasoning visually.",
+      "direct"
+    ],
+    [
+      "linear-equations",
+      "Select one-step or straightforward two-step questions only.",
+      "direct"
+    ]
+  ],
+  "graphs": [
+    [
+      "classroom-displays",
+      "Use blank grids and frequency tables to draw the pack\u2019s data displays. This is a drawing template, not a graph-question generator.",
+      "related"
+    ]
+  ],
+  "probability": [
+    [
+      "classroom-displays",
+      "Use the blank tree diagram to list simple coin outcomes. The written chance questions remain in the pack.",
+      "related"
+    ]
+  ],
+  "place-value": [
+    [
+      "elementary-manipulatives",
+      "Choose Place Value Chart; extend the discussion to the larger numbers printed in the pack.",
+      "related"
+    ]
+  ],
+  "fraction-comparison": [
+    [
+      "fractions",
+      "Select equivalence and comparison activities.",
+      "direct"
+    ],
+    [
+      "elementary-manipulatives",
+      "Use Fraction Bars with the same reference whole.",
+      "direct"
+    ]
+  ],
+  "temperature": [
+    [
+      "integer-operations",
+      "Practise simple addition, subtraction and temperature differences; use a number line alongside the tool. It does not display a thermometer.",
+      "related"
+    ]
+  ],
+  "plane-shapes": [
+    [
+      "concept-explainer",
+      "Choose basic shape properties; keep the focus on triangles and quadrilaterals.",
+      "related"
+    ],
+    [
+      "classroom-displays",
+      "Choose 2D Shapes to discuss sides, vertices and orientation.",
+      "related"
+    ]
+  ],
+  "averages": [
+    [
+      "averages-range",
+      "Use small data sets for mean, median, mode, range and reverse questions.",
+      "direct"
+    ]
+  ],
+  "factors": [
+    [
+      "hcf-lcm",
+      "Choose factors and multiples; add prime factorisation for Grade 6.",
+      "direct"
+    ]
+  ],
+  "volume": [
+    [
+      "volume-surface-area-prisms",
+      "Choose cuboid volume and missing-dimension activities; omit advanced prisms.",
+      "direct"
+    ]
+  ],
+  "circles": [
+    [
+      "circles-area-circumference",
+      "Select radius, diameter and circumference; the pack does not require circle area.",
+      "direct"
+    ]
+  ],
+  "scale": [
+    [
+      "scale-drawing-similar-shapes",
+      "Choose simple map scales and actual-length problems.",
+      "direct"
+    ]
+  ],
+  "speed": [
+    [
+      "conversions-teaching",
+      "Use time and speed-unit conversions. Distance\u2013time\u2013speed formula problems remain on the paper.",
+      "related"
+    ]
+  ],
+  "similar": [
+    [
+      "scale-drawing-similar-shapes",
+      "Choose matching corresponding lengths and simple scale factors.",
+      "direct"
+    ],
+    [
+      "transformations",
+      "Show that a reflection or rotation preserves congruence.",
+      "direct"
+    ]
+  ],
+  "stem-leaf": [
+    [
+      "averages-range",
+      "Practise summaries of the same small data sets. Stem-and-leaf construction remains in the pack.",
+      "related"
+    ]
+  ],
+  "fraction-decimal-percent": [
+    [
+      "simple-percentage-tasks",
+      "Select fraction, decimal and percentage conversion activities.",
+      "direct"
+    ]
+  ]
+}

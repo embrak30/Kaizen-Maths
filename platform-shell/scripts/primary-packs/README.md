@@ -16,3 +16,7 @@ Use Node with the existing `KAIZEN_PACK_NODE_MODULES` dependency directory and t
 Each topic has a two-page student PDF, a teacher PDF (answer sheet and worked solutions), and a complete PDF. Download bundles contain complete PDFs, organised by grade. The initial catalogue has 75 packs and 750 questions. Diagrams are native mathematical SVGs; required geometry stays in the assessment questions. Optional teaching bar models are not added to the assessment paper.
 
 A whole-collection ZIP and grade ZIPs are generated. The public ready-made resource route is `#/primary-topic-packs`; the existing sidebar stays mounted.
+
+## Companion teaching tools
+
+`tool-links.json` maps each topic to real registered tools, with activity hints and direct/related classifications. `python scripts/primary-packs/link-tools.py` refreshes links in the catalogue and browser data without touching PDFs. The PDF builder also applies this mapping on rebuild. Related tools support only part of a topic (for example, number summaries alongside a stem-and-leaf pack); do not relabel them as dedicated full-topic generators.

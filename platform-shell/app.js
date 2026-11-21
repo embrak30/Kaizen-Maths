@@ -221,6 +221,20 @@ const tools = [
     ]
   },
   {
+    slug: "squeeze-theorem",
+    title: "Squeeze Theorem Explainer",
+    category: "Algebra",
+    level: "A-Level / AP Calculus AB + BC",
+    type: "Interactive Explainer",
+    access: "Trial",
+    status: "Imported",
+    description: "Reveal bounds and limiting behaviour step by step. Animate a two-sided approach, compare successful and inconclusive bounds, and apply the theorem to an AP-style question.",
+    tags: ["calculus", "limits", "squeeze theorem", "sandwich theorem", "AP Calculus", "explainer", "graphs"],
+    toolPath: "tools/squeeze-theorem/index.html?v=squeeze-1",
+    imported: true,
+    teacherNotes: ["Use five stages: inspect, bounds, approach, conclude and try it.", "The inequality and matching bounding limits justify the result; plotted samples alone are not a proof.", "Different bounding limits are inconclusive: compare a convergent middle function with persistent oscillation."]
+  },
+  {
     slug: "cross-section-solids",
     title: "Solids from Cross-sections",
     category: "Algebra",
@@ -2608,6 +2622,7 @@ const algebraToolGroups = {
   "inverse-trig-differentiation": "Calculus",
   "advanced-differentiation": "Calculus",
   "limits-first-principles": "Calculus",
+  "squeeze-theorem": "Calculus",
   "integration": "Calculus",
   "advanced-integration": "Calculus",
   "volumes-of-revolution": "Calculus",

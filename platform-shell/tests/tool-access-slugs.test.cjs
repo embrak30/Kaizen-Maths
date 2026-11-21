@@ -13,6 +13,8 @@ async function check(folder,parentRoute,expected,standalone=false){
  dom.window.close();
 }
 (async()=>{
+ await check('squeeze-theorem','#/classroom/squeeze-theorem','allowed');
+ await check('squeeze-theorem','#/classroom/squeeze-theorem','squeeze-theorem',true);
  const tools=inventory(path.join(__dirname,'..'));
  for(const tool of tools)await check(tool.toolPath.split('/')[1],`#/classroom/${tool.slug}`,'allowed');
  for(const [folder,slug] of [['differentiation-rules-general','differentiation-rules'],['differentiation-rules','trig-differentiation-rules']]){

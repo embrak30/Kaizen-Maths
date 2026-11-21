@@ -158,7 +158,9 @@
           "title": "Squeeze Theorem",
           "scope": "AB + BC",
           "objective": "Practise squeeze theorem through calculation, interpretation and mathematical reasoning.",
-          "tools": [],
+          "tools": [
+            "squeeze-theorem"
+          ],
           "developmentNote": "A dedicated eight-question set and its worked marking scheme are being prepared for this topic.",
           "pack": {
             "questions": "assets/ap-calculus/ap-1-8-questions.pdf",

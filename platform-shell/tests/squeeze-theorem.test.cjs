@@ -1,0 +1,25 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const root=path.resolve(__dirname,'..'),model=require('../tools/squeeze-theorem/model.js'),{JSDOM}=require(path.join(process.env.KAIZEN_PACK_NODE_MODULES||'/tmp/kaizen-ap-runtime/node_modules','jsdom'));
+for(const e of model.examples){
+ for(let i=1;i<400;i++)for(const side of [-1,1]){const x=e.a+side*e.span*i/400,y=e.value(x);assert(y>=e.lowerValue(x)-1e-12&&y<=e.upperValue(x)+1e-12,e.id);}
+ if(e.common){assert.equal(e.value(e.a),null);for(const h of [.1,.01,.001,.0001])for(const p of model.sample(e,h)){assert(Math.abs(p.middle-e.L)<=h*h+1e-12);assert(Math.abs(p.upper-p.lower-2*h*h)<1e-12);}}
+}
+const bad=model.examples.find(e=>e.id==='unsqueezed');for(let n=1;n<50;n++){assert(Math.abs(bad.value(1/(Math.PI/2+2*Math.PI*n))-1)<1e-10);assert(Math.abs(bad.value(1/(3*Math.PI/2+2*Math.PI*n))+1)<1e-10);}
+const inconclusive=model.examples.find(e=>e.id==='different');assert(!inconclusive.common);assert.equal(inconclusive.knownLimit,0);assert.equal(inconclusive.value(0),0);
+const dom=new JSDOM(fs.readFileSync(root+'/tools/squeeze-theorem/index.html','utf8'),{runScripts:'outside-only',url:'https://kaizen.test/tools/squeeze-theorem/'}),w=dom.window,doc=w.document;let frame;
+w.requestAnimationFrame=cb=>(frame=cb,1);w.cancelAnimationFrame=()=>{frame=null};
+for(const file of ['model.js','explainer.js'])vm.runInContext(fs.readFileSync(root+'/tools/squeeze-theorem/'+file,'utf8'),dom.getInternalVMContext());
+const click=s=>doc.querySelector(s).click();
+assert(doc.querySelectorAll('#graph path').length>=4);assert.equal(doc.querySelector('#samples').rows.length,2);
+for(const e of model.examples){doc.querySelector('#example').value=e.id;doc.querySelector('#example').dispatchEvent(new w.Event('change'));for(let s=0;s<5;s++){click('[data-stage="'+s+'"]');assert(!/NaN|Infinity|undefined/.test(doc.querySelector('#graph').innerHTML));}
+ click('[data-stage="3"]');if(e.common)assert(doc.querySelector('#working').textContent.includes('= '+e.L));else assert(doc.querySelector('#working').textContent.includes('no conclusion'));
+}
+click('[data-stage="4"]');assert(doc.querySelector('#working [style]').getAttribute('style').includes('hidden'));click('#reveal');assert(doc.querySelector('#working [style]').getAttribute('style').includes('visible'));assert(doc.querySelector('#working').textContent.includes('g(x) = 2'));assert(doc.querySelector('#samples').textContent.includes('?'));assert(doc.querySelector('#example').disabled);assert.equal(doc.querySelector('#example').value,'practice');for(const row of doc.querySelectorAll('#samples tr')){const x=Number(row.cells[0].textContent);assert(Math.abs(x-1)<1);}assert(doc.querySelector('#next').disabled);
+click('[data-stage="2"]');click('#play');assert.equal(doc.querySelector('#play').getAttribute('aria-pressed'),'true');click('#play');assert.equal(doc.querySelector('#play').getAttribute('aria-pressed'),'false');
+for(let i=0;i<4;i++)click('#zoom');assert(doc.querySelector('#zoom').disabled);doc.querySelector('#distance').value=100;doc.querySelector('#distance').dispatchEvent(new w.Event('input'));assert(!/NaN|Infinity/.test(doc.querySelector('#graph').innerHTML));click('#reset');assert(!doc.querySelector('#zoom').disabled);
+click('[data-stage="0"]');doc.querySelector('#example').value='shifted';doc.querySelector('#example').dispatchEvent(new w.Event('change'));for(let i=0;i<4;i++)click('#zoom');doc.querySelector('#distance').value=100;doc.querySelector('#distance').dispatchEvent(new w.Event('input'));for(const row of doc.querySelectorAll('#samples tr'))assert(Number(row.cells[3].textContent)>Number(row.cells[1].textContent),'rounded non-zero bounds must remain distinguishable');
+const app=fs.readFileSync(root+'/app.js','utf8'),start=app.indexOf('const tools = ['),tools=vm.runInNewContext(app.slice(start,app.indexOf('\n];',start)+3)+';tools');assert(tools.some(t=>t.slug==='squeeze-theorem'&&t.type==='Interactive Explainer'));
+const data=JSON.parse(fs.readFileSync(root+'/data/ap-calculus/catalog.json'));assert.deepEqual(data.units.flatMap(u=>u.topics).find(t=>t.id==='1.8').tools,['squeeze-theorem']);
+const primary=JSON.parse(fs.readFileSync(root+'/data/primary-packs/catalog.json'));assert.equal(primary.packs.length,75);for(const p of primary.packs){assert(p.tools.length);for(const t of p.tools){assert(tools.some(x=>x.slug===t.slug),t.slug);assert(t.hint);assert(['direct','related'].includes(t.match));}for(const file of ['student','teacher','complete'])assert(fs.existsSync(root+'/'+p[file]));}
+assert(primary.packs.find(p=>p.id==='P6-sets').tools.some(t=>t.slug==='venn-diagrams'));assert(primary.packs.find(p=>p.id==='P6-area-shapes').tools.some(t=>t.slug==='area-triangles'));assert(primary.packs.find(p=>p.id==='P6-stem-leaf').tools.every(t=>t.match==='related'));
+dom.window.close();console.log('PASS: squeeze bounds and limits, counterexamples, five stages, independent AP practice, animation controls, AP 1.8 link and all 75 primary companion mappings.');
