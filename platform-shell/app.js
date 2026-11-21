@@ -10443,7 +10443,7 @@ function renderMakeItCountPage() {
     ${pageHeader(
       "Make It Count",
       "A mathematics teacher development initiative that combines access to Kaizen Maths with online training, coaching, and sustained professional support.",
-      `<a class="button primary" href="#/for-schools">For Schools</a><a class="button" href="#/school-presentation">School Presentation</a><a class="button" href="#/partners">For Partners</a>${programmeEnquiryButtonHtml("", "button", programme)}`
+      `<a class="button primary" href="#/for-schools">For Schools</a>${isAdmin() ? '<a class="button" href="#/school-presentation">School Presentation</a>' : ''}<a class="button" href="#/partners">For Partners</a>${programmeEnquiryButtonHtml("", "button", programme)}`
     )}
     <section class="mission-page">
       <article class="mission-hero-panel make-it-count-hero">
@@ -10521,7 +10521,7 @@ function renderForSchoolsPage() {
     ${pageHeader(
       "For Schools",
       "Schools can explore Kaizen Maths as a practical teaching resource and express interest in future Make It Count programme opportunities.",
-      `<a class="button primary" href="#/school-interest">Express Interest</a><a class="button" href="#/school-presentation">School Presentation</a><a class="button" href="#/make-it-count">Make It Count</a><a class="button" href="#/schools">School Licence Notes</a>`
+      `<a class="button primary" href="#/school-interest">Express Interest</a>${isAdmin() ? '<a class="button" href="#/school-presentation">School Presentation</a>' : ''}<a class="button" href="#/make-it-count">Make It Count</a><a class="button" href="#/schools">School Licence Notes</a>`
     )}
     <section class="mission-page">
       <article class="mission-hero-panel">
@@ -28213,7 +28213,7 @@ function renderAdmin() {
   `;
 
   app.innerHTML = `
-    ${pageHeader("Admin", "Manage simple site updates without editing code: homepage content, access rules, curriculum tags, videos, and testimonials.")}
+    ${pageHeader("Admin", "Manage simple site updates without editing code: homepage content, access rules, curriculum tags, videos, and testimonials.", '<a class="button primary" href="#/school-presentation">School Presentation</a>')}
     <section class="admin-tabs" aria-label="Admin sections">
       <button class="admin-tab active" type="button" data-admin-tab="users">Users</button>
       <button class="admin-tab" type="button" data-admin-tab="usage">Usage</button>
@@ -30858,6 +30858,10 @@ function renderRoute() {
   } else if (parts[0] === "kaizen-maths") {
     renderKaizenMathsResourcePage();
   } else if (parts[0] === "school-presentation") {
+    if (!isAdmin()) {
+      app.innerHTML = pageHeader("School presentation", "This presentation is available to administrator accounts.", '<a class="button primary" href="#/admin">Sign in to admin</a>');
+      return;
+    }
     window.KaizenSchoolPresentation.mount(app);
   } else if (parts[0] === "make-it-count") {
     renderMakeItCountPage();
