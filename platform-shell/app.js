@@ -2376,7 +2376,7 @@ const tools = [
     status: "Imported",
     description: "Original Jamaica PEP-style topic practice and linked tasks for Grades 4–6. Switch between assessment-style questions and bar-model support for the same questions, with worked solutions and suggested marks.",
     tags: ["PEP", "Jamaica", "primary", "fractions", "percentages", "ratio", "money", "measurement", "word problems"],
-    toolPath: "tools/pep-practice/index.html?v=pep-practice-2",
+    toolPath: "tools/pep-practice/index.html?v=pep-practice-3",
     imported: true,
     teacherNotes: ["Select a grade and skill, or use a linked task. Assessment-style questions are the default; add bar-model support for the same questions when teaching.", "Print either question version, both versions together, answers, or a complete pack with worked solutions and suggested marking guidance.", "Original classroom practice covering selected number and measurement skills; not an official PEP paper or a full curriculum assessment."]
   },
