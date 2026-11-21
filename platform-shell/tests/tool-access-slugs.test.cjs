@@ -13,6 +13,8 @@ async function check(folder,parentRoute,expected,standalone=false){
  dom.window.close();
 }
 (async()=>{
+ await check('unit-circle-explainer','#/classroom/unit-circle-explainer','allowed');
+ await check('unit-circle-explainer','#/classroom/unit-circle-explainer','unit-circle-explainer',true);
  await check('squeeze-theorem','#/classroom/squeeze-theorem','allowed');
  await check('squeeze-theorem','#/classroom/squeeze-theorem','squeeze-theorem',true);
  const tools=inventory(path.join(__dirname,'..'));
