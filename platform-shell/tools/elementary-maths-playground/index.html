@@ -180,12 +180,11 @@
     .array-labels{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
     .mini-chip{padding:8px 12px;border-radius:999px;background:#eef6ff;color:#1d4ed8;font-weight:950}
 
-    .fraction-wrap{width:100%;display:grid;gap:clamp(12px,2vh,26px);justify-items:center}
-    .fraction-bar{width:min(100%,860px);display:grid;gap:4px;padding:10px;border-radius:16px;background:#f8fafc;border:1px solid var(--line)}
-    .fraction-row{display:grid;gap:4px;height:clamp(54px,10vh,86px)}
-    .fraction-piece{border:2px solid #fff;border-radius:10px;background:#e8eef5;box-shadow:inset 0 0 0 1px rgba(24,50,74,.07)}
-    .fraction-piece.shaded{background:linear-gradient(135deg,var(--teal),var(--green))}
-    .fraction-mystery{font-size:clamp(2.2rem,5vw,4rem);font-weight:1000;color:var(--navy)}
+    .fraction-wrap{width:100%;height:100%;min-height:0;min-width:0;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:10px}
+    .fraction-models{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);min-height:0;min-width:0;gap:16px}.fraction-models.paired{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .fraction-unit{margin:0;min-height:0;min-width:0;display:grid;place-items:center}.fraction-model{display:block;width:100%;height:100%;min-height:0;min-width:0}.fraction-piece{stroke:none}
+    .fraction-mystery{display:flex;align-items:center;justify-content:center;gap:16px;min-height:70px;font-size:clamp(1.7rem,3vw,2.6rem);font-weight:800;color:var(--navy)}
+    .fraction-number{display:inline-flex;vertical-align:middle;flex-direction:column;align-items:stretch;text-align:center;line-height:1.1;margin:0 .12em;font-size:.9em}.fraction-number>span{padding:.06em .18em}.fraction-number>span+span{border-top:2px solid currentColor}
 
     .money-wrap{width:100%;height:100%;display:grid;place-items:center;min-height:0}
     .money-board{display:flex;align-items:center;justify-content:center;gap:clamp(10px,1.8vmin,18px);flex-wrap:wrap;max-width:100%;max-height:100%;padding:clamp(10px,1.8vmin,18px);border:1px solid var(--line);border-radius:18px;background:#f8fafc}
@@ -201,15 +200,9 @@
     .shape-wrap{width:100%;height:100%;display:grid;place-items:center;min-height:0}
     .shape-board{width:min(100%,900px);height:min(100%,420px);display:grid;grid-template-columns:repeat(5,1fr);grid-auto-rows:minmax(64px,1fr);gap:clamp(8px,1.3vmin,14px);padding:clamp(10px,1.7vmin,18px);border:1px solid var(--line);border-radius:18px;background:#f8fafc}
     .shape-board.single{width:min(100%,360px);height:min(100%,280px);grid-template-columns:1fr;grid-auto-rows:1fr}
-    .shape-board.single .shape{width:clamp(96px,18vmin,150px);height:clamp(96px,18vmin,150px)}
-    .shape-board.single .shape.rectangle{width:clamp(142px,24vmin,210px);height:clamp(76px,12vmin,110px)}
-    .shape-board.single .shape.triangle{border-left-width:clamp(56px,10vmin,82px);border-right-width:clamp(56px,10vmin,82px);border-bottom-width:clamp(110px,18vmin,160px)}
-    .shape-cell{display:grid;place-items:center;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1px rgba(24,50,74,.08)}
-    .shape{width:clamp(42px,7vmin,78px);height:clamp(42px,7vmin,78px);background:var(--shape-color);box-shadow:0 9px 15px rgba(24,50,74,.14)}
-    .shape.circle{border-radius:50%}
-    .shape.square{border-radius:10px}
-    .shape.rectangle{width:clamp(64px,10vmin,104px);height:clamp(34px,5vmin,58px);border-radius:10px}
-    .shape.triangle{width:0;height:0;background:transparent;border-left:clamp(24px,4vmin,42px) solid transparent;border-right:clamp(24px,4vmin,42px) solid transparent;border-bottom:clamp(48px,8vmin,84px) solid var(--shape-color);box-shadow:none}
+    .shape-cell{display:grid;place-items:center;min-width:0;min-height:0;padding:6px;background:#fff}
+    .shape{display:block;width:100%;height:100%;max-width:140px;max-height:140px;min-width:0;min-height:0;background:none;border:0;border-radius:0;box-shadow:none}
+    .shape-board.single .shape{max-width:260px;max-height:260px}
 
     .sign-wrap{width:100%;height:100%;display:grid;place-items:center;min-height:0}
     .sign-card{
@@ -232,12 +225,14 @@
 
     @media(max-width:920px){
       body{overflow:auto}.app{height:auto;min-height:100vh}.header{grid-template-columns:1fr}.top-actions{justify-content:flex-start}
+      .sidebar{max-width:calc(100vw - 30px)}
       .mode-strip{grid-template-columns:1fr 1fr}.workspace{grid-template-columns:1fr}.board{min-height:620px}.answer-pill{min-width:0}
       .parts{gap:16px}
       .shape-board{grid-template-columns:repeat(4,1fr)}
     }
     .board{grid-template-rows:auto minmax(0,1fr) auto;min-width:0}.board-body{min-width:0}.activity-card{min-width:0}.visual{width:100%;height:100%}.clock-wrap{display:grid;place-items:center;width:100%;height:100%;min-width:0;min-height:0}.clock-wrap .kaizen-diagram-scale-note{display:none!important}.clock-face{display:block;max-width:100%;max-height:100%;flex-shrink:0}
     .money-wrap{min-width:0}.money-board{display:grid;align-content:center;justify-content:center;width:100%;height:100%;gap:10px;padding:12px;min-height:0;min-width:0;overflow:hidden}.money-slot{display:grid;place-items:center;min-width:0;min-height:0}.money-slot .coin,.money-slot .note{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:none;font-size:calc(24px * var(--money-scale,1));line-height:1.15;box-shadow:0 3px 8px #18324a20}.money-slot .coin{width:calc(90px * var(--money-scale,1));height:calc(90px * var(--money-scale,1));border-width:3px}.money-slot .note{width:calc(150px * var(--money-scale,1));height:calc(90px * var(--money-scale,1));border:3px double #ffffffa0;border-radius:9px}.money-slot small{font-size:.5em;letter-spacing:.08em}.money-slot strong{white-space:nowrap}.answer-pill{max-width:300px;overflow-wrap:anywhere;text-align:center;padding:8px;line-height:1.3}.answer-pill.revealed{font-size:clamp(1rem,1.6vw,1.4rem)}.fullscreen-tools{display:none}.board.fullscreen{width:100vw;height:100dvh;min-height:0}.fullscreen .fullscreen-tools{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.fullscreen .board-foot>span{display:none}[hidden]{display:none!important}
+    .board:not(.fullscreen) .board-foot{display:none}.visual .kaizen-diagram-scale-note{display:none!important}.teacher-tab{border:0;font-family:inherit}.fraction-models .fraction-piece{border:0;border-radius:0;box-shadow:none}.answer-pill{display:flex;align-items:center;justify-content:center;gap:.3em;flex-wrap:wrap}.answer-pill .fraction-number{font-size:.85em}.fraction-models.paired{gap:10px}
   </style>
   <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
   <script src="../../auth-config.js?v=usage-1"></script>
@@ -245,9 +240,9 @@
 
 </head>
 <body>
-  <div class="teacher-tab" onclick="toggleSidebar()">TEACHER INSTRUCTIONS</div>
+  <button class="teacher-tab" type="button" aria-controls="sidebar" aria-expanded="false" onclick="toggleSidebar()">Teacher explainer</button>
   <div class="sidebar-overlay" onclick="closeSidebar()"></div>
-  <aside class="sidebar" id="sidebar">
+  <aside class="sidebar" id="sidebar" aria-label="Teacher explainer" hidden>
     <div class="sidebar-header">Elementary Maths Playground</div>
     <div class="sidebar-content">
       <h3>How to Use</h3>
@@ -261,12 +256,15 @@
         <li><strong>Number Bonds:</strong> Part-part-whole tasks with a missing part.</li>
         <li><strong>Place Value:</strong> Base-ten blocks for reading hundreds, tens, and ones.</li>
         <li><strong>Arrays:</strong> Multiplication arrays using colourful counters.</li>
-        <li><strong>Fractions:</strong> Shaded fraction bars with the answer hidden.</li>
+        <li><strong>Fractions:</strong> Choose straight-edged bars, equal-sector circles, mixed models or random representations. Mixed models shows bars and circles together; Random chooses a model for each whole. Equal parts always refer to the whole shown.</li>
         <li><strong>Clock Challenge:</strong> Analogue clock reading tasks with hidden answers.</li>
-        <li><strong>Money:</strong> Count coins and notes, make amounts and find change. Choose Jamaican dollars, US dollars or British pounds.</li>
+        <li><strong>Money:</strong> Count coins and notes, make amounts and find change. Choose Jamaican dollars, US dollars or British pounds. The money designs are simplified teaching representations.</li>
         <li><strong>Shape Sorter:</strong> Count, name, and sort shapes by simple properties.</li>
         <li><strong>Missing Signs:</strong> Complete number sentences by choosing the operation sign.</li>
       </ul>
+      <h3>Current activity</h3>
+      <div class="hint-card" id="teacher-note">Ask pupils to find the missing part before revealing the answer.</div>
+      <h3>Concepts to preserve</h3><p>Bars have straight edges and equal-width parts. Circles have equal-angle sectors. Paired models use equal-area wholes, even when one is a bar and one is a circle. A rotated square is still a square; a square is also a rectangle. Rectangle-counting tasks include squares.</p>
       <h3>Teacher Flow</h3>
       <p>Ask pupils what they notice, collect answers, invite explanation, then reveal. This keeps the activity playful while still supporting mathematical language.</p>
     </div>
@@ -276,7 +274,7 @@
     <header class="header">
       <div class="brand">
         <h1>Elementary Maths Playground</h1>
-        <p>Colourful teacher-led number tasks with hidden answers for discussion and reveal.</p>
+        <p>Number, shape, time and money.</p>
       </div>
       <div class="top-actions">
         <select class="select" id="difficulty" aria-label="Difficulty">
@@ -306,7 +304,9 @@
           <label for="activity-type">Focus</label>
           <select id="activity-type" onchange="newTask()"></select>
         </div>
-        <div class="field" id="currency-field" hidden><label for="currency">Currency</label><select id="currency" onchange="newTask()"><option value="JMD">Jamaican dollars (J$)</option><option value="USD">US dollars ($)</option><option value="GBP">British pounds (£)</option></select><small>Teaching money · simplified designs</small></div>
+        <div class="field" id="fraction-field" hidden><label for="fraction-display">Fraction model</label><select id="fraction-display" onchange="newTask()"><option value="bar">Rectangular bars</option><option value="circle">Circles</option><option value="mixed">Mixed models</option><option value="random">Random</option></select></div>
+        <div class="field" id="orientation-field" hidden><label for="shape-orientation">Shape orientation</label><select id="shape-orientation" onchange="newTask()"><option value="standard">Standard</option><option value="varied">Varied rotations</option></select></div>
+        <div class="field" id="currency-field" hidden><label for="currency">Currency</label><select id="currency" onchange="newTask()"><option value="JMD">Jamaican dollars (J$)</option><option value="USD">US dollars ($)</option><option value="GBP">British pounds (£)</option></select></div>
         <div class="field">
           <label for="colour-theme">Colour theme</label>
           <select id="colour-theme" onchange="applyTheme()">
@@ -321,7 +321,7 @@
           <button class="btn purple" type="button" onclick="revealAnswer()">Reveal Answer</button>
           <button class="btn" type="button" onclick="hideAnswer()">Hide Answer</button>
         </div>
-        <div class="hint-card" id="teacher-note">Ask pupils to find the missing part before revealing the answer.</div>
+
       </aside>
 
       <section class="board" id="board">
@@ -337,10 +337,7 @@
         </div>
         <footer class="board-foot">
           <div class="fullscreen-tools"><button class="btn" onclick="newTask()">New task</button><button class="btn" onclick="revealAnswer()">Reveal answer</button><button class="btn" onclick="toggleFullscreen()">Exit full screen</button></div>
-          <span>Ask</span>
-          <span>Discuss</span>
-          <span>Explain</span>
-          <span>Reveal</span>
+
         </footer>
       </section>
     </section>
@@ -421,6 +418,8 @@
     function setMode(mode) {
       currentMode = mode;
       document.getElementById("currency-field").hidden=mode!=="money";
+      document.getElementById("fraction-field").hidden=mode!=="fractions";
+      document.getElementById("orientation-field").hidden=mode!=="shapes";
       document.querySelectorAll(".mode-btn").forEach((button) => {
         button.classList.toggle("active", button.dataset.mode === mode);
       });
@@ -441,14 +440,14 @@
       if (!currentTask) return;
       answerVisible = true;
       const pill = document.getElementById("answer-pill");
-      pill.textContent = currentTask.answer;
+      setMathText(pill, currentTask.answer);
       pill.classList.add("revealed");
       document.querySelectorAll("[data-answer-fill]").forEach((item) => {
         const index = item.dataset.answerIndex;
         if (currentTask.inlineAnswers && index !== undefined) {
-          item.textContent = currentTask.inlineAnswers[Number(index)] || "";
+          setMathText(item, currentTask.inlineAnswers[Number(index)] || "");
         } else {
-          item.textContent = currentTask.inlineAnswer || currentTask.answer;
+          setMathText(item, currentTask.inlineAnswer || currentTask.answer);
         }
       });
       requestAnimationFrame(fitVisual);
@@ -575,75 +574,37 @@
       setAnswer(answer);
     }
 
-    function fractionBar(numerator, denominator, label = "") {
-      return `
-        <div class="fraction-bar" aria-label="${label}">
-          <div class="fraction-row" style="grid-template-columns:repeat(${denominator},1fr)">
-            ${Array.from({ length: denominator }, (_, index) => `<span class="fraction-piece${index < numerator ? " shaded" : ""}"></span>`).join("")}
-          </div>
-        </div>
-      `;
+    function fractionNumber(n,d){return `<span class="fraction-number" role="math" aria-label="${n} over ${d}"><span>${n}</span><span>${d}</span></span>`;}
+    function setMathText(element,text){
+      element.replaceChildren();const value=String(text);let last=0;
+      for(const match of value.matchAll(/(\d+)\/(\d+)/g)){element.append(document.createTextNode(value.slice(last,match.index)));const holder=document.createElement('span');holder.innerHTML=fractionNumber(match[1],match[2]);element.append(holder.firstElementChild);last=match.index+match[0].length;}
+      element.append(document.createTextNode(value.slice(last)));
     }
-    function genFractions() {
-      const type = activityType();
-      const denominators = difficulty() === "upper" ? [4, 5, 6, 8, 10, 12] : difficulty() === "lower" ? [2, 3, 4, 5, 6, 8] : [2, 3, 4];
-      let denominator = choice(denominators);
-      let numerator = randInt(1, denominator - 1);
-      if (type === "equivalent") {
-        denominator = choice([2, 3, 4, 5]);
-        numerator = randInt(1, denominator - 1);
-        const multiplier = choice([2, 3]);
-        const equivalent = `${numerator * multiplier}/${denominator * multiplier}`;
-        const answer = `${numerator}/${denominator} = ${equivalent}`;
-        currentTask = { answer, inlineAnswer: equivalent };
-        setHead("Equivalent Fractions", "Name the equivalent fraction.");
-        document.getElementById("activity-card").innerHTML = `
-          <div class="prompt">What equivalent fraction is shown?</div>
-          <div class="visual">
-            <div class="fraction-wrap">
-              ${fractionBar(numerator, denominator, "First fraction")}
-              ${fractionBar(numerator * multiplier, denominator * multiplier, "Equivalent fraction")}
-              <div class="fraction-mystery">${numerator}/${denominator} = <span data-answer-fill>?</span></div>
-            </div>
-          </div>
-        `;
-        setAnswer(answer);
-        return;
+    function fractionModel(n,d,kind,label,rotation=0){
+      // Every whole has area 320 × 60, including circles in mixed representations.
+      const radius=Math.sqrt(320*60/Math.PI);let pieces='',lines='';
+      if(kind==='bar'){
+        for(let i=0;i<d;i++)pieces+=`<rect class="fraction-piece${i<n?' shaded':''}" x="${20+320*i/d}" y="80" width="${320/d}" height="60" fill="${i<n?'var(--teal)':'#ffffff'}"/>`;
+        for(let i=1;i<d;i++)lines+=`<line x1="${20+320*i/d}" y1="80" x2="${20+320*i/d}" y2="140"/>`;
+        lines+='<rect x="20" y="80" width="320" height="60" fill="none"/>';
+      }else{
+        const point=angle=>[180+radius*Math.cos(angle),110+radius*Math.sin(angle)];
+        for(let i=0;i<d;i++){const a=(rotation-90+i*360/d)*Math.PI/180,b=a+Math.PI*2/d,p=point(a),q=point(b);pieces+=`<path class="fraction-piece${i<n?' shaded':''}" d="M180 110 L${p[0]} ${p[1]} A${radius} ${radius} 0 ${360/d>180?1:0} 1 ${q[0]} ${q[1]} Z" fill="${i<n?'var(--teal)':'#ffffff'}"/>`;lines+=`<line x1="180" y1="110" x2="${p[0]}" y2="${p[1]}"/>`;}
+        lines+=`<circle cx="180" cy="110" r="${radius}" fill="none"/>`;
       }
-      if (type === "compare") {
-        const d2 = choice(denominators);
-        const n2 = randInt(1, d2 - 1);
-        const left = numerator / denominator;
-        const right = n2 / d2;
-        const sign = left > right ? ">" : left < right ? "<" : "=";
-        const answer = `${numerator}/${denominator} ${sign} ${n2}/${d2}`;
-        currentTask = { answer };
-        setHead("Compare Fractions", "Which fraction is larger?");
-        document.getElementById("activity-card").innerHTML = `
-          <div class="prompt">Compare the shaded parts.</div>
-          <div class="visual">
-            <div class="fraction-wrap">
-              ${fractionBar(numerator, denominator, "Left fraction")}
-              ${fractionBar(n2, d2, "Right fraction")}
-              <div class="fraction-mystery">${numerator}/${denominator} <span data-answer-fill>?</span> ${n2}/${d2}</div>
-            </div>
-          </div>
-        `;
-        setAnswer(sign);
-        return;
-      }
-      const answer = `${numerator}/${denominator}`;
-      currentTask = { answer };
-      setHead("Fractions", "What fraction is shaded?");
-      document.getElementById("activity-card").innerHTML = `
-        <div class="prompt">What fraction of the bar is shaded?</div>
-        <div class="visual">
-          <div class="fraction-wrap">
-            ${fractionBar(numerator, denominator, "Shaded fraction")}
-            <div class="fraction-mystery"><span data-answer-fill>?</span></div>
-          </div>
-        </div>
-      `;
+      return `<figure class="fraction-unit"><svg class="fraction-model ${kind}" data-numerator="${n}" data-denominator="${d}" viewBox="0 0 360 220" role="img" aria-label="${label}: ${d} equal parts, ${n} shaded">${pieces}<g stroke="#173454" stroke-width="2" stroke-linejoin="miter">${lines}</g></svg></figure>`;
+    }
+    function fractionKinds(pair){const selected=document.getElementById('fraction-display').value;if(selected==='bar'||selected==='circle')return pair?[selected,selected]:[selected];if(selected==='mixed'&&pair)return ['bar','circle'];return Array.from({length:pair?2:1},()=>choice(['bar','circle']));}
+    function genFractions(){
+      const type=activityType(),denominators=difficulty()==='upper'?[4,5,6,8,10,12]:difficulty()==='lower'?[2,3,4,5,6,8]:[2,3,4];
+      let d=choice(denominators),n=randInt(1,d-1),pairs=[[n,d]],answer='',inlineAnswer='',equation='';
+      if(type==='equivalent'){d=choice([2,3,4,5]);n=randInt(1,d-1);const k=choice([2,3]);pairs=[[n,d],[n*k,d*k]];answer=`${n}/${d} = ${n*k}/${d*k}`;inlineAnswer=`${n*k}/${d*k}`;equation=`${fractionNumber(n,d)} = <span data-answer-fill>?</span>`;setHead('Equivalent Fractions','Name the matching fraction.');}
+      else if(type==='compare'){const d2=choice(denominators),n2=randInt(1,d2-1),sign=n*d2>n2*d?'>':n*d2<n2*d?'<':'=';pairs=[[n,d],[n2,d2]];answer=`${n}/${d} ${sign} ${n2}/${d2}`;inlineAnswer=sign;equation=`${fractionNumber(n,d)} <span data-answer-fill>?</span> ${fractionNumber(n2,d2)}`;setHead('Compare Fractions','Which fraction is larger?');}
+      else{answer=`${n}/${d}`;inlineAnswer=answer;equation='<span data-answer-fill>?</span>';setHead('Fractions','What fraction is shaded?');}
+      if(document.getElementById('fraction-display').value==='mixed'&&pairs.length===1)pairs=[pairs[0],[...pairs[0]]];
+      const kinds=fractionKinds(pairs.length===2),rotation=choice([0,30,60,90]);
+      currentTask={answer,inlineAnswer,fractions:pairs,kinds,rotation};
+      document.getElementById('activity-card').innerHTML=`<div class="prompt">${type==='equivalent'?'What equivalent fraction is shown?':type==='compare'?'Compare the shaded fractions.':pairs.length===2?'What fraction is shaded in both models?':'What fraction of the whole is shaded?'}</div><div class="visual"><div class="fraction-wrap"><div class="fraction-models${pairs.length===2?' paired':''}">${pairs.map(([a,b],i)=>fractionModel(a,b,kinds[i],pairs.length===2?(i===0?'First whole':'Second whole'):'Whole',rotation)).join('')}</div><div class="fraction-mystery">${equation}</div></div></div>`;
       setAnswer(answer);
     }
 
@@ -730,7 +691,10 @@
       ["pink", "#df5ca8"]
     ];
     function renderShape(item) {
-      return `<span class="shape ${item.type}" style="--shape-color:${item.colour}"></span>`;
+      const angle=document.getElementById('shape-orientation').value==='varied'?(item.angle??choice([0,30,45,90,135])):0;
+      const geometry={circle:'<circle cx="100" cy="100" r="55"/>',square:'<rect x="48" y="48" width="104" height="104"/>',rectangle:'<rect x="32" y="62" width="136" height="76"/>',triangle:'<polygon points="100,30 30,160 170,160"/>'}[item.type];
+      const description={circle:'shape with a circular boundary and no vertices',square:'shape with four equal sides and four right angles',rectangle:'shape with four right angles, two long sides and two short sides',triangle:'shape with three straight sides and three vertices'}[item.type];
+      return `<svg class="shape ${item.type}" viewBox="0 0 200 200" role="img" aria-label="${item.colourName||''} ${description}"><g fill="${item.colour}" transform="rotate(${angle} 100 100)">${geometry}</g></svg>`;
     }
     function makeShapeItems(count) {
       return Array.from({ length: count }, () => {
@@ -751,7 +715,7 @@
       if (type === "nameshape") {
         const [colourName, colour] = choice(shapeColours);
         const item = { type: choice(shapeTypes), colourName, colour };
-        const answer = item.type;
+        const answer = item.type === "square" ? "square (also a rectangle)" : item.type;
         currentTask = { answer };
         setHead("Shape Sorter", "Name the shape.");
         document.getElementById("activity-card").innerHTML = `
@@ -777,11 +741,11 @@
         return;
       }
       const target = choice(shapeTypes);
-      const answer = String(items.filter((item) => item.type === target).length);
+      const answer = String(items.filter((item) => item.type === target || (target === "rectangle" && item.type === "square")).length);
       currentTask = { answer };
       setHead("Shape Sorter", "Count by shape.");
       document.getElementById("activity-card").innerHTML = `
-        <div class="prompt">How many ${target}s are there?</div>
+        <div class="prompt">How many ${target}s${target === "rectangle" ? " (including squares)" : ""} are there?</div>
         <div class="visual"><div class="shape-wrap">${renderShapeBoard(items)}</div></div>
         <div class="subprompt">Number of ${target}s: <span data-answer-fill>?</span></div>
       `;
@@ -801,7 +765,7 @@
       return `
         <div class="sign-card">
           <div class="sign-equation">${equation}</div>
-          <div class="sign-hint">${hint}</div>
+
         </div>
       `;
     }
@@ -911,12 +875,10 @@
       requestAnimationFrame(fitVisual);
     }
     function toggleSidebar() {
-      document.getElementById("sidebar").classList.toggle("open");
-      document.querySelector(".sidebar-overlay").classList.toggle("active");
+      const panel=document.getElementById('sidebar'),open=panel.hidden;panel.hidden=!open;panel.classList.toggle('open',open);document.querySelector('.sidebar-overlay').classList.toggle('active',open);document.querySelector('.teacher-tab').setAttribute('aria-expanded',String(open));
     }
     function closeSidebar() {
-      document.getElementById("sidebar").classList.remove("open");
-      document.querySelector(".sidebar-overlay").classList.remove("active");
+      document.getElementById('sidebar').hidden=true;document.getElementById('sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('active');document.querySelector('.teacher-tab').setAttribute('aria-expanded','false');
     }
     function fitVisual(){
       const visual=document.querySelector('#activity-card .visual');if(!visual)return;
@@ -927,13 +889,14 @@
       if(money){const count=money.children.length,w=width-28,h=height-28;let best={scale:0,cols:1};for(let cols=1;cols<=Math.min(4,count);cols++){const rows=Math.ceil(count/cols),scale=Math.min(1.5,(w-(cols-1)*10)/cols/160,(h-(rows-1)*10)/rows/100);if(scale>best.scale)best={scale,cols};}const scale=Math.max(.05,best.scale);money.style.gridTemplateColumns=`repeat(${best.cols},${160*scale}px)`;money.style.gridAutoRows=`${100*scale}px`;money.style.setProperty('--money-scale',scale);return;}
       const array=visual.querySelector('.array-grid');
       if(array){const labels=visual.querySelector('.array-labels'),rows=Number(array.style.getPropertyValue('--rows')),cols=Number(array.style.getPropertyValue('--cols')),style=getComputedStyle(array),wrap=getComputedStyle(array.parentElement),paddingX=parseFloat(style.paddingLeft)+parseFloat(style.paddingRight)+2,paddingY=parseFloat(style.paddingTop)+parseFloat(style.paddingBottom)+2,gap=Math.min(8,Math.max(2,Math.floor(height/rows/8))),labelHeight=labels?.getBoundingClientRect().height||0,wrapGap=parseFloat(wrap.rowGap)||0;const size=Math.max(1,Math.floor(Math.min(52,(width-12-paddingX-(cols-1)*gap)/cols,(height-12-labelHeight-wrapGap-paddingY-(rows-1)*gap)/rows)));array.style.setProperty('--array-size',size+'px');array.style.setProperty('--array-gap',gap+'px');array.style.gridTemplateRows=`repeat(${rows},${size}px)`;return;}
+      if(visual.querySelector('.fraction-wrap'))return;
       // Keep the other existing activity diagrams inside their allocated visual area too.
       const root=visual.firstElementChild;if(!root)return;root.style.transform='';const w=Math.max(root.scrollWidth,root.getBoundingClientRect().width),h=Math.max(root.scrollHeight,root.getBoundingClientRect().height);const scale=Math.min(1,(width-12)/Math.max(1,w),(height-12)/Math.max(1,h));root.style.transformOrigin='center';root.style.transform=`scale(${Math.max(.05,scale)})`;
     }
     const visualObserver=window.ResizeObserver?new ResizeObserver(fitVisual):null;
     function observeVisual(){visualObserver?.disconnect();const visual=document.querySelector('#activity-card .visual');if(visual)visualObserver?.observe(visual);}
     window.addEventListener('resize',fitVisual);
-    document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('board').classList.remove('fullscreen');requestAnimationFrame(fitVisual);}});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();document.getElementById('board').classList.remove('fullscreen');requestAnimationFrame(fitVisual);}});
     document.getElementById("difficulty").addEventListener("change", newTask);
     setMode("bonds");
   </script>

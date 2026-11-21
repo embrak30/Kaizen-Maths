@@ -2357,7 +2357,7 @@ const tools = [
     status: "Imported",
     description: "Open colourful teacher-led elementary maths tasks for number bonds, place value, arrays, fractions, clocks, money, shape sorting, and missing-sign puzzles, with large visuals and hidden answers for classroom discussion.",
     tags: ["classroom", "primary", "elementary", "number bonds", "place value", "arrays", "fractions", "clocks", "money", "shapes", "missing signs", "visual maths", "starter", "retrieval"],
-    toolPath: "tools/elementary-maths-playground/index.html?v=elementary-display-5",
+    toolPath: "tools/elementary-maths-playground/index.html?v=elementary-geometry-6",
     imported: true,
     teacherNotes: [
       "Designed as a colourful board-ready activity space for younger learners.",
