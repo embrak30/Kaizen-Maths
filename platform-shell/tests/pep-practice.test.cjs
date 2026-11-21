@@ -4,6 +4,10 @@ const {openGenerator,inventory}=require('../scripts/pack-library/runtime.cjs');
 const root=path.resolve(__dirname,'..'),tool=inventory(root).find(t=>t.slug==='pep-practice');
 assert(tool);const r=openGenerator(root,tool,8942),{window:w,api}=r,doc=w.document;
 assert.equal(api.getState().levels.length,3);
+assert.equal(doc.querySelector('h1').textContent,'Primary Problem Solving');
+assert(!/PEP|Jamaica|J\$/.test(doc.body.textContent));
+const currencySamples=api.generate({level:6,type:'money',count:20}).problems;
+assert(currencySamples.every(q=>(q.question+q.answer+q.steps.join('')).includes('$')&&!/J\$/.test(q.question+q.answer+q.steps.join(''))));
 let generated=0;
 for(const level of api.getState().levels){
  assert(!level.types.some(t=>level.id===4&&['ratio','percent','reverse'].includes(t.id)));
@@ -88,4 +92,4 @@ doc.querySelector('[data-question="2"]').click();assert.equal(doc.querySelectorA
 doc.querySelector('[data-view=solutions]').click();assert.equal(snapshot(),stable);
 doc.querySelector('#reasoning').value='error';doc.querySelector('#reasoning').dispatchEvent(new w.Event('change'));assert(w.eval("problems.every(q=>q.audit.kind==='error')"));assert.equal(doc.querySelectorAll('.pupil-work').length,4);
 
-console.log(`PEP practice: ${generated} generated items, arithmetic invariants, grade gating, worksheet adapter, reveal and print isolation passed.`);r.dom.window.close();
+console.log(`Primary problem solving: ${generated} generated items, arithmetic invariants, grade gating, worksheet adapter, reveal and print isolation passed.`);r.dom.window.close();
