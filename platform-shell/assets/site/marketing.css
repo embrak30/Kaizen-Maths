@@ -46,3 +46,6 @@ body[data-route="teaching-tools"] .tool-index-group[open],body[data-route="colle
 
 /* GCSE Foundation Number home-learning and mixed-review pilot. */
 .gcse-review-strip{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:11px 14px;margin:0 0 8px;border:1px solid #9fc8b8;border-radius:8px;background:#edf7f1}.gcse-review-strip strong{display:block;color:#205b4d;font-size:15px}.gcse-review-strip small{display:block;color:#536d65;font-size:12px;margin-top:3px}.gcse-review-strip .ap-row-links{flex-shrink:0}.gcse-library .ap-row-links{flex-wrap:wrap}.gcse-library .ap-row-links>a{white-space:nowrap}@media(max-width:900px){.gcse-review-strip{align-items:flex-start;flex-wrap:wrap}.gcse-review-strip .ap-row-links{justify-content:flex-start}}
+
+/* U.S. precalculus topic collection. */
+.precalc-library .ap-row-links{flex-wrap:wrap}.precalc-library .ap-row-links>a{white-space:nowrap}.precalc-pages{display:flex;justify-content:flex-end;align-items:center;gap:14px;margin-top:8px;font-size:12px}.precalc-pages button{border:1px solid #b9d0c8;border-radius:6px;background:#f3f8f5;padding:5px 10px;color:#194e46}.precalc-pages button:disabled{opacity:.45}.precalc-downloads{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px}.precalc-library .ap-topic-row:nth-last-child(-n+3) .ap-tool-menu[open]>div{top:auto;bottom:24px}

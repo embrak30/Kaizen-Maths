@@ -28,5 +28,5 @@ assert(!byTitle('Connected rates of change').courses.includes('aa-sl'));assert.d
 const toolSlugs=vm.runInContext('tools.map(t=>t.slug)',dom.getInternalVMContext());
 for(const p of data.packs){for(const slug of p.tools)assert(toolSlugs.includes(slug),p.id+' '+slug);assert.equal(p.questions,8);assert.equal(p.studentPages,1);for(const role of ['student','teacher'])assert(fs.statSync(root+'/'+p[role]).size>1000);for(const sl of ['aa-sl','ai-sl'])if(p.courses.includes(sl))assert(p.courses.includes(sl.replace('-sl','-hl')));}
 const missing=doc.createElement('div'),saved=w.KaizenIBData;w.KaizenIBData=null;w.KaizenIB.mount(missing);assert(missing.textContent.includes('could not load'));w.KaizenIBData=saved;
-w.location.hash='#/ready-made-resources';w.renderRoute();assert(doc.querySelector('[href="#/ib-maths"]'));assert.equal(doc.querySelectorAll('.resource-choice').length,6);
+w.location.hash='#/ready-made-resources';w.renderRoute();assert(doc.querySelector('[href="#/ib-maths"]'));assert.equal(doc.querySelectorAll('.resource-choice').length,8);
 dom.window.close();console.log('PASS: 138 IB PDF pairs, all four course mappings, every topic group and pagination, course-aware search, safe escaping, fallback, persistent navigation and specific SL/HL boundaries.');

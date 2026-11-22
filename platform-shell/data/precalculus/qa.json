@@ -1,0 +1,21 @@
+{
+  "packs": 48,
+  "questions": 384,
+  "topicPDFs": 96,
+  "pages": 263,
+  "studentPages": 48,
+  "teacherPages": 215,
+  "symbolicAndIndependentChecks": 150,
+  "checks": [
+    "New symbolic claims",
+    "Adapted systems, matrix operations and counting checks",
+    "All source questions and marking totals",
+    "All PDF text and image bounds",
+    "US Letter size",
+    "Every topic PDF page rendered",
+    "Student/teacher separation",
+    "Collection page counts and bookmarks",
+    "No unrendered notation"
+  ],
+  "errors": []
+}
