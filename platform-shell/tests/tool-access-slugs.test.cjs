@@ -13,6 +13,8 @@ async function check(folder,parentRoute,expected,standalone=false){
  dom.window.close();
 }
 (async()=>{
+ await check('odd-one-out','#/classroom/odd-one-out','allowed');
+ await check('odd-one-out','#/classroom/odd-one-out','odd-one-out',true);
  await check('area-rearrangement','#/classroom/area-rearrangement','allowed');
  await check('area-rearrangement','#/classroom/area-rearrangement','area-rearrangement',true);
  await check('unit-circle-explainer','#/classroom/unit-circle-explainer','allowed');

@@ -2423,6 +2423,20 @@ const tools = [
     teacherNotes: ["Select a grade and skill, or use a linked task. Assessment-style questions are the default; add bar-model support for the same questions when teaching.", "Print either question version, both versions together, answers, or a complete pack with worked solutions and suggested marking guidance.", "Original classroom practice covering selected number and measurement skills; choose questions to match your class and curriculum."]
   },
   {
+    slug: "odd-one-out",
+    title: "Odd One Out — OOO",
+    category: "Classroom Tools",
+    level: "Primary / KS3 / GCSE",
+    type: "Interactive Display",
+    access: "Trial",
+    status: "Imported",
+    description: "Four large cards, several defensible choices. Explore number and shape properties through discussion, with 28 checked sets and optional teacher justifications.",
+    tags: ["odd one out", "OOO", "reasoning", "discussion", "number properties", "shape properties", "symmetry", "prime", "polygons"],
+    toolPath: "tools/odd-one-out/index.html?v=ooo-1",
+    imported: true,
+    teacherNotes: ["Every set has a checked mathematical reason for each card to be the odd one out; no choice is automatically marked correct or incorrect.", "Includes 16 number sets and 12 shape sets, two levels, position shuffling and optional shape names.", "Teacher ideas are hidden behind a separate button so the main board stays focused on pupil reasoning."]
+  },
+  {
     slug: "bar-models",
     title: "Bar Models",
     category: "Classroom Tools",
@@ -2762,6 +2776,7 @@ const subjectToolGroups = {
     "elementary-manipulatives": "Board Displays and Visuals",
     "build-add-take-away": "Board Displays and Visuals",
     "bar-models": "Board Displays and Visuals",
+    "odd-one-out": "Board Displays and Visuals",
     "area-models": "Board Displays and Visuals",
     "maths-structure-lab": "Board Displays and Visuals",
     "equation-balance-models": "Board Displays and Visuals",
@@ -24436,6 +24451,7 @@ function relatedToolTokens(tool) {
 }
 
 const curatedRelatedToolSlugs = {
+  "odd-one-out": ["number-sense-flexible-calculation", "polygons-angles", "missing-angles"],
   "area-rearrangement": ["circles-area-circumference", "area-triangles", "area-rectangles"],
   "circles-area-circumference": ["area-rearrangement", "area-rectangles", "area-triangles"],
   "area-triangles": ["area-rearrangement", "area-rectangles", "circles-area-circumference"],
@@ -24836,6 +24852,20 @@ function toolInfoText(tool) {
 }
 
 function toolInsightProfile(tool) {
+  if (tool.slug === "odd-one-out") return {
+    misconceptions: [
+      "Assuming there is one intended answer instead of checking each proposed mathematical property.",
+      "Calling 1 a prime number, or treating 0 as odd or composite.",
+      "Treating squares as separate from rectangles and rhombi rather than recognising inclusive classifications.",
+      "Choosing a shape because of its orientation instead of a property preserved by rotation."
+    ],
+    questions: [
+      "What property does your chosen card have that the other three do not share?",
+      "Can you justify a different choice, or find a reason for every card?",
+      "Does a counterexample among the other cards disprove that explanation?",
+      "Which properties stay the same when the cards are shuffled or a shape is rotated?"
+    ]
+  };
   if (tool.slug === "area-rearrangement") return {
     misconceptions: [
       "Calling a finite sector arrangement an exact rectangle: its upper and lower edges are still curved.",
@@ -26023,6 +26053,12 @@ function toolClassroomQuestions(tool) {
 }
 
 function toolUseSuggestions(tool) {
+  if (tool.slug === "odd-one-out") return [
+    "Show the four cards and ask pupils to choose an odd one out and justify it with a property.",
+    "Highlight any proposed choice without marking it right or wrong; invite a different argument.",
+    "Use Teacher ideas after discussion or during preparation; other valid justifications are welcome.",
+    "Shuffle the same set to separate position from mathematical properties, then choose New set for a fresh comparison."
+  ];
   if (tool.slug === "area-rearrangement") return [
     "Use the four stages to introduce, prepare, rearrange and connect each area formula.",
     "Pause or reverse the movement slider; ask pupils to identify what area has been preserved.",
