@@ -1,0 +1,541 @@
+{
+  "packs": [
+    {
+      "id": "FNR01",
+      "title": "Number Revision 1",
+      "area": "Number",
+      "group": "Calculations",
+      "tier": "Foundation",
+      "sourceTool": "integer-operations",
+      "tools": [
+        "integer-operations",
+        "fractions-practice",
+        "decimals-practice-lab",
+        "simple-percentage-tasks",
+        "hcf-lcm",
+        "exponents-index-notation"
+      ],
+      "instructions": "Answer all 24 questions on separate paper. Show your working. Give fractions in simplest form. A calculator may be used.",
+      "topicIds": [
+        "N01",
+        "N02",
+        "N03",
+        "N04",
+        "N05",
+        "N06",
+        "N07",
+        "N08"
+      ],
+      "questions": [
+        {
+          "number": 1,
+          "question": "Calculate: 16 ÷ 4",
+          "questionText": "Calculate: 16 ÷ 4",
+          "instruction": "",
+          "answer": "4",
+          "steps": [
+            "\\(16\\div4=4\\). Check: \\(4\\times4=16\\)."
+          ],
+          "marks": 1,
+          "criteria": [
+            "B1: 4 [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "integer-operations",
+          "type": "multiply_divide_integers",
+          "sourceTopic": "N01",
+          "sourceTitle": "Integers and order of operations",
+          "sourceQuestion": 1
+        },
+        {
+          "number": 2,
+          "question": "<span class=\"fraction\"><span class=\"numerator\">3</span><span class=\"denominator\">4</span></span> - <span class=\"fraction\"><span class=\"numerator\">1</span><span class=\"denominator\">4</span></span>",
+          "questionText": "<span class=\"fraction\"><span class=\"numerator\">3</span><span class=\"denominator\">4</span></span> - <span class=\"fraction\"><span class=\"numerator\">1</span><span class=\"denominator\">4</span></span>",
+          "instruction": "Calculate and simplify your answer.",
+          "answer": "<span class=\"fraction\"><span class=\"numerator\">1</span><span class=\"denominator\">2</span></span>",
+          "steps": [
+            "The denominators are already equal.",
+            "\\(\\frac34-\\frac14=\\frac{3-1}{4}=\\frac24=\\frac12\\)"
+          ],
+          "marks": 2,
+          "criteria": [
+            "M1: Subtract the numerators over the common denominator [1].",
+            "A1: Correct simplified fraction [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "fractions-practice",
+          "type": "subtract_proper",
+          "sourceTopic": "N02",
+          "sourceTitle": "Fractions: the four operations",
+          "sourceQuestion": 6
+        },
+        {
+          "number": 3,
+          "question": "Calculate: <span class=\"base\">4.6</span> × <span class=\"base\">0.01</span>",
+          "questionText": "Calculate: <span class=\"base\">4.6</span> × <span class=\"base\">0.01</span>",
+          "instruction": "",
+          "answer": "0.046",
+          "steps": [
+            "Multiplying by 0.01 is dividing by 100.",
+            "\\(4.6\\div100=0.046\\)"
+          ],
+          "marks": 2,
+          "criteria": [
+            "M1: Divide 4.6 by 100 [1].",
+            "A1: 0.046 [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "decimals-practice-lab",
+          "type": "multiply_decimals",
+          "sourceTopic": "N03",
+          "sourceTitle": "Decimal calculations",
+          "sourceQuestion": 2
+        },
+        {
+          "number": 4,
+          "question": "Convert <span class=\"percentage\">55%</span> to a decimal",
+          "questionText": "Convert <span class=\"percentage\">55%</span> to a decimal",
+          "instruction": "",
+          "answer": "0.55",
+          "steps": [
+            "Percentage means out of 100.",
+            "\\(55\\%=55\\div100=0.55\\)"
+          ],
+          "marks": 1,
+          "criteria": [
+            "B1: 0.55 [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "simple-percentage-tasks",
+          "type": "percentage_to_decimal",
+          "sourceTopic": "N04",
+          "sourceTitle": "Fractions, decimals and percentages",
+          "sourceQuestion": 1
+        },
+        {
+          "question": "Find \\(\\frac{2}{3}\\) of 36 pupils.",
+          "questionText": "Find \\(\\frac{2}{3}\\) of 36 pupils.",
+          "answer": "24 pupils.",
+          "steps": [
+            "One third: \\(36\\div3=12\\) pupils.",
+            "Two thirds: \\(12\\times2=24\\) pupils."
+          ],
+          "criteria": [
+            "M1: One third is 12 [1].",
+            "A1: 24 pupils [1]."
+          ],
+          "marks": 2,
+          "origin": "selected-topic-question-with-reviewed-working",
+          "number": 5,
+          "sourceTopic": "N05",
+          "sourceTitle": "Fractions of quantities",
+          "sourceQuestion": 1
+        },
+        {
+          "number": 6,
+          "question": "Calculate <span class=\"percentage\">40%</span> of 278",
+          "questionText": "Calculate <span class=\"percentage\">40%</span> of 278",
+          "instruction": "",
+          "answer": "111.2",
+          "steps": [
+            "\\(40\\%=\\frac{40}{100}=0.4\\)",
+            "\\(0.4\\times278=111.2\\)"
+          ],
+          "marks": 2,
+          "criteria": [
+            "M1: Multiply 278 by 0.4 [1].",
+            "A1: 111.2 [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "simple-percentage-tasks",
+          "type": "percentage_of_quantities",
+          "sourceTopic": "N06",
+          "sourceTitle": "Percentages of quantities",
+          "sourceQuestion": 6
+        },
+        {
+          "number": 7,
+          "question": "Find the highest common factor of 16 and 24.",
+          "questionText": "Find the highest common factor of 16 and 24.",
+          "instruction": "",
+          "answer": "8",
+          "steps": [
+            "List the factors.",
+            "16: \\(1,2,4,8,16\\)",
+            "24: \\(1,2,3,4,6,8,12,24\\)",
+            "The greatest common factor is 8."
+          ],
+          "marks": 2,
+          "criteria": [
+            "M1: Valid common-factor method [1].",
+            "A1: Highest common factor is 8 [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "hcf-lcm",
+          "type": "hcf_basic",
+          "sourceTopic": "N07",
+          "sourceTitle": "Factors, multiples, HCF and LCM",
+          "sourceQuestion": 5
+        },
+        {
+          "question": "Evaluate \\(2^{5}\\) exactly.",
+          "questionText": "Evaluate \\(2^{5}\\) exactly.",
+          "answer": "\\(32\\)",
+          "steps": [
+            "\\(2^5=2\\times2\\times2\\times2\\times2\\)",
+            "\\(=4\\times2\\times2\\times2=8\\times2\\times2=32\\)"
+          ],
+          "criteria": [
+            "B1: 32 [1]."
+          ],
+          "marks": 1,
+          "origin": "selected-topic-question-with-reviewed-working",
+          "number": 8,
+          "sourceTopic": "N08",
+          "sourceTitle": "Powers, roots and reciprocals",
+          "sourceQuestion": 1
+        },
+        {
+          "number": 9,
+          "question": "Convert <span class=\"percentage\">40%</span> to a fraction",
+          "questionText": "Convert <span class=\"percentage\">40%</span> to a fraction",
+          "instruction": "",
+          "answer": "<span class=\"fraction\"><span class=\"numerator\">2</span><span class=\"denominator\">5</span></span>",
+          "steps": [
+            "\\(40\\%=\\frac{40}{100}\\)",
+            "\\(\\frac{40\\div20}{100\\div20}=\\frac25\\)"
+          ],
+          "marks": 1,
+          "criteria": [
+            "B1: Correct fraction in simplest form [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "simple-percentage-tasks",
+          "type": "percentage_to_fraction",
+          "sourceTopic": "N04",
+          "sourceTitle": "Fractions, decimals and percentages",
+          "sourceQuestion": 5
+        },
+        {
+          "number": 10,
+          "question": "Calculate: 4 + 5 × 3 - 8",
+          "questionText": "Calculate: 4 + 5 × 3 - 8",
+          "instruction": "",
+          "answer": "11",
+          "steps": [
+            "Multiply first.",
+            "\\(5\\times3=15\\)",
+            "\\(4+15-8=19-8=11\\)"
+          ],
+          "marks": 2,
+          "criteria": [
+            "M1: Multiply 5 by 3 before addition and subtraction [1].",
+            "A1: 11 [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "integer-operations",
+          "type": "integer_order_operations",
+          "sourceTopic": "N01",
+          "sourceTitle": "Integers and order of operations",
+          "sourceQuestion": 8
+        },
+        {
+          "question": "Write 72 as a product of prime factors in index form.",
+          "questionText": "Write 72 as a product of prime factors in index form.",
+          "answer": "\\(2^3\\times3^2\\)",
+          "steps": [
+            "\\(72=2\\times36=2\\times2\\times18\\)",
+            "\\(=2\\times2\\times2\\times3\\times3=2^3\\times3^2\\)"
+          ],
+          "criteria": [
+            "M1: Correct breakdown into prime factors [1].",
+            "A1: Correct index form as shown above [1]."
+          ],
+          "marks": 2,
+          "origin": "selected-topic-question-with-reviewed-working",
+          "number": 11,
+          "sourceTopic": "N07",
+          "sourceTitle": "Factors, multiples, HCF and LCM",
+          "sourceQuestion": 7
+        },
+        {
+          "number": 12,
+          "question": "Calculate: <span class=\"base\">39.3</span> ÷ <span class=\"base\">6</span>",
+          "questionText": "Calculate: <span class=\"base\">39.3</span> ÷ <span class=\"base\">6</span>",
+          "instruction": "",
+          "answer": "6.55",
+          "steps": [
+            "\\(39.3\\div6=(36+3.3)\\div6\\)",
+            "\\(36\\div6=6,\\quad3.3\\div6=0.55\\)",
+            "\\(6+0.55=6.55\\)"
+          ],
+          "marks": 2,
+          "criteria": [
+            "M1: Valid decimal division method [1].",
+            "A1: 6.55 [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "decimals-practice-lab",
+          "type": "divide_whole",
+          "sourceTopic": "N03",
+          "sourceTitle": "Decimal calculations",
+          "sourceQuestion": 3
+        },
+        {
+          "question": "Between which two consecutive integers does √70 lie?",
+          "questionText": "Between which two consecutive integers does √70 lie?",
+          "answer": "8 and 9.",
+          "steps": [
+            "\\(8^2=64,\\quad9^2=81\\)",
+            "\\(64<70<81\\), so \\(8<\\sqrt{70}<9\\).",
+            "The consecutive integers are 8 and 9."
+          ],
+          "criteria": [
+            "M1: Compare 70 with the squares 64 and 81 [1].",
+            "A1: Both consecutive integers, 8 and 9 [1]."
+          ],
+          "marks": 2,
+          "origin": "selected-topic-question-with-reviewed-working",
+          "number": 13,
+          "sourceTopic": "N08",
+          "sourceTitle": "Powers, roots and reciprocals",
+          "sourceQuestion": 7
+        },
+        {
+          "question": "Three fifths of a number is 24. Find the number.",
+          "questionText": "Three fifths of a number is 24. Find the number.",
+          "answer": "40.",
+          "steps": [
+            "Three parts total 24: \\(24\\div3=8\\) per part.",
+            "The whole has five parts: \\(8\\times5=40\\)."
+          ],
+          "criteria": [
+            "M1: One fifth is 8 [1].",
+            "A1: The whole is 40 [1]."
+          ],
+          "marks": 2,
+          "origin": "selected-topic-question-with-reviewed-working",
+          "number": 14,
+          "sourceTopic": "N05",
+          "sourceTitle": "Fractions of quantities",
+          "sourceQuestion": 7
+        },
+        {
+          "number": 15,
+          "question": "<span class=\"fraction\"><span class=\"numerator\">2</span><span class=\"denominator\">6</span></span> × <span class=\"fraction\"><span class=\"numerator\">3</span><span class=\"denominator\">7</span></span>",
+          "questionText": "<span class=\"fraction\"><span class=\"numerator\">2</span><span class=\"denominator\">6</span></span> × <span class=\"fraction\"><span class=\"numerator\">3</span><span class=\"denominator\">7</span></span>",
+          "instruction": "Calculate and simplify your answer.",
+          "answer": "<span class=\"fraction\"><span class=\"numerator\">1</span><span class=\"denominator\">7</span></span>",
+          "steps": [
+            "Multiply numerators and denominators, then simplify.",
+            "\\(\\frac26\\times\\frac37=\\frac{2\\times3}{6\\times7}=\\frac6{42}=\\frac17\\)"
+          ],
+          "marks": 2,
+          "criteria": [
+            "M1: Multiply numerators and denominators [1].",
+            "A1: Correct simplified fraction [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "fractions-practice",
+          "type": "multiply_proper",
+          "sourceTopic": "N02",
+          "sourceTitle": "Fractions: the four operations",
+          "sourceQuestion": 3
+        },
+        {
+          "number": 16,
+          "question": "Calculate <span class=\"percentage\">24%</span> of 352",
+          "questionText": "Calculate <span class=\"percentage\">24%</span> of 352",
+          "instruction": "",
+          "answer": "84.48",
+          "steps": [
+            "\\(24\\%=\\frac{24}{100}=0.24\\)",
+            "\\(0.24\\times352=84.48\\)"
+          ],
+          "marks": 2,
+          "criteria": [
+            "M1: Multiply 352 by 0.24 [1].",
+            "A1: 84.48 [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "simple-percentage-tasks",
+          "type": "percentage_of_quantities",
+          "sourceTopic": "N06",
+          "sourceTitle": "Percentages of quantities",
+          "sourceQuestion": 2
+        },
+        {
+          "question": "A pupil says one quarter of 80 is 320. Explain and correct the error.",
+          "questionText": "A pupil says one quarter of 80 is 320. Explain and correct the error.",
+          "answer": "20; divide by 4 rather than multiply.",
+          "steps": [
+            "The pupil multiplied by 4. A quarter requires division into four equal parts.",
+            "\\(80\\div4=20\\)",
+            "Check: \\(4\\times20=80\\)."
+          ],
+          "criteria": [
+            "M1: Divide 80 by 4 [1].",
+            "A1: 20 and explain that division, not multiplication, is needed [1]."
+          ],
+          "marks": 2,
+          "origin": "selected-topic-question-with-reviewed-working",
+          "number": 17,
+          "sourceTopic": "N05",
+          "sourceTitle": "Fractions of quantities",
+          "sourceQuestion": 8
+        },
+        {
+          "number": 18,
+          "question": "Calculate: <span class=\"base\">70.4</span> <span class=\"operation\">-</span> <span class=\"base\">41.573</span>",
+          "questionText": "Calculate: <span class=\"base\">70.4</span> <span class=\"operation\">-</span> <span class=\"base\">41.573</span>",
+          "instruction": "",
+          "answer": "28.827",
+          "steps": [
+            "Align decimal place values and write the trailing zeros.",
+            "\\(70.400-41.000=29.400\\)",
+            "\\(29.400-0.573=28.827\\)"
+          ],
+          "marks": 2,
+          "criteria": [
+            "M1: Subtract with decimal place values aligned [1].",
+            "A1: 28.827 [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "decimals-practice-lab",
+          "type": "add_sub",
+          "sourceTopic": "N03",
+          "sourceTitle": "Decimal calculations",
+          "sourceQuestion": 4
+        },
+        {
+          "question": "Find the reciprocal of \\(\\frac23\\).",
+          "questionText": "Find the reciprocal of \\(\\frac23\\).",
+          "answer": "\\(\\frac{3}{2}\\)",
+          "steps": [
+            "Exchange numerator and denominator.",
+            "\\(\\frac23\\times\\frac32=1\\)",
+            "The reciprocal is \\(\\frac32\\)."
+          ],
+          "criteria": [
+            "B1: Correct reciprocal [1]."
+          ],
+          "marks": 1,
+          "origin": "selected-topic-question-with-reviewed-working",
+          "number": 19,
+          "sourceTopic": "N08",
+          "sourceTitle": "Powers, roots and reciprocals",
+          "sourceQuestion": 8
+        },
+        {
+          "number": 20,
+          "question": "Calculate: -6 + 6 × (-3) - (-8)",
+          "questionText": "Calculate: -6 + 6 × (-3) - (-8)",
+          "instruction": "",
+          "answer": "-16",
+          "steps": [
+            "Multiply first, then subtract the negative.",
+            "\\(6\\times(-3)=-18\\)",
+            "\\(-6+(-18)-(-8)=-24+8=-16\\)"
+          ],
+          "marks": 2,
+          "criteria": [
+            "M1: Multiply first and interpret subtracting a negative correctly [1].",
+            "A1: -16 [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "integer-operations",
+          "type": "integer_order_operations",
+          "sourceTopic": "N01",
+          "sourceTitle": "Integers and order of operations",
+          "sourceQuestion": 2
+        },
+        {
+          "number": 21,
+          "question": "Calculate <span class=\"percentage\">19%</span> of 719",
+          "questionText": "Calculate <span class=\"percentage\">19%</span> of 719",
+          "instruction": "",
+          "answer": "136.61",
+          "steps": [
+            "\\(19\\%=\\frac{19}{100}=0.19\\)",
+            "\\(0.19\\times719=136.61\\)"
+          ],
+          "marks": 2,
+          "criteria": [
+            "M1: Multiply 719 by 0.19 [1].",
+            "A1: 136.61 [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "simple-percentage-tasks",
+          "type": "percentage_of_quantities",
+          "sourceTopic": "N06",
+          "sourceTitle": "Percentages of quantities",
+          "sourceQuestion": 4
+        },
+        {
+          "number": 22,
+          "question": "<span class=\"fraction\"><span class=\"numerator\">3</span><span class=\"denominator\">6</span></span> ÷ <span class=\"fraction\"><span class=\"numerator\">8</span><span class=\"denominator\">9</span></span>",
+          "questionText": "<span class=\"fraction\"><span class=\"numerator\">3</span><span class=\"denominator\">6</span></span> ÷ <span class=\"fraction\"><span class=\"numerator\">8</span><span class=\"denominator\">9</span></span>",
+          "instruction": "Calculate and simplify your answer.",
+          "answer": "<span class=\"fraction\"><span class=\"numerator\">9</span><span class=\"denominator\">16</span></span>",
+          "steps": [
+            "Multiply by the reciprocal of the divisor.",
+            "\\(\\frac36\\div\\frac89=\\frac36\\times\\frac98\\)",
+            "\\(\\frac{3\\times9}{6\\times8}=\\frac{27}{48}=\\frac9{16}\\)"
+          ],
+          "marks": 2,
+          "criteria": [
+            "M1: Multiply by the reciprocal of the divisor [1].",
+            "A1: Correct simplified fraction [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "fractions-practice",
+          "type": "divide_proper",
+          "sourceTopic": "N02",
+          "sourceTitle": "Fractions: the four operations",
+          "sourceQuestion": 4
+        },
+        {
+          "number": 23,
+          "question": "Convert <span class=\"target\">0.75</span> to a percentage",
+          "questionText": "Convert <span class=\"target\">0.75</span> to a percentage",
+          "instruction": "",
+          "answer": "75%",
+          "steps": [
+            "Multiply the decimal by 100 to express it as a percentage.",
+            "\\(0.75\\times100=75\\), so the answer is 75%."
+          ],
+          "marks": 1,
+          "criteria": [
+            "B1: 75% [1]."
+          ],
+          "origin": "selected-topic-question-with-reviewed-working",
+          "sourceTool": "simple-percentage-tasks",
+          "type": "decimal_to_percentage",
+          "sourceTopic": "N04",
+          "sourceTitle": "Fractions, decimals and percentages",
+          "sourceQuestion": 3
+        },
+        {
+          "question": "Two lights flash together at 12:00. One flashes every 12 seconds and the other every 18 seconds. When do they next flash together?",
+          "questionText": "Two lights flash together at 12:00. One flashes every 12 seconds and the other every 18 seconds. When do they next flash together?",
+          "answer": "12:00:36.",
+          "steps": [
+            "Multiples of 12: \\(12,24,36,\\ldots\\)",
+            "Multiples of 18: \\(18,36,\\ldots\\)",
+            "The least positive common multiple is 36. The next simultaneous flash is 36 seconds after 12:00, at 12:00:36."
+          ],
+          "criteria": [
+            "M1: Find the least common multiple, 36 [1].",
+            "A1: Next simultaneous flash at 12:00:36 [1]."
+          ],
+          "marks": 2,
+          "origin": "selected-topic-question-with-reviewed-working",
+          "number": 24,
+          "sourceTopic": "N07",
+          "sourceTitle": "Factors, multiples, HCF and LCM",
+          "sourceQuestion": 8
+        }
+      ]
+    }
+  ]
+}

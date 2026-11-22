@@ -1,0 +1,20 @@
+{
+  "id": "FNR01",
+  "questions": 24,
+  "topics": 8,
+  "questionsPerTopic": 3,
+  "marks": 42,
+  "studentPages": 2,
+  "teacherPages": 4,
+  "checks": [
+    "24 independently checked answers",
+    "Source question and answer provenance",
+    "Mark totals",
+    "Every page rendered",
+    "Text and equation bounds",
+    "No unrendered notation",
+    "Student/teacher separation",
+    "Content hashes"
+  ],
+  "errors": []
+}

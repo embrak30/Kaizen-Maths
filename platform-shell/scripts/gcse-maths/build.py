@@ -84,5 +84,6 @@ if __name__=='__main__':
  print(json.dumps({'built':len(manifest),'failures':failures},indent=2))
  if failures:sys.exit(1)
  catalogue={'qualification':'Board-neutral GCSE (9–1), England','revision':'2026-11-18','packs':manifest,'contentSource':'https://www.gov.uk/government/publications/gcse-mathematics-subject-content-and-assessment-objectives'}
+ if (DATA/'revision-catalog.json').exists():catalogue['reviews']=json.loads((DATA/'revision-catalog.json').read_text())
  (DATA/'catalog.json').write_text(json.dumps(catalogue,indent=2)+'\n')
  (ROOT/'assets/site/gcse-maths-data.js').write_text('window.KaizenGCSEData='+json.dumps(catalogue,separators=(',',':'))+';\n')
