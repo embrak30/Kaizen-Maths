@@ -49,3 +49,6 @@ body[data-route="teaching-tools"] .tool-index-group[open],body[data-route="colle
 
 /* U.S. precalculus topic collection. */
 .precalc-library .ap-row-links{flex-wrap:wrap}.precalc-library .ap-row-links>a{white-space:nowrap}.precalc-pages{display:flex;justify-content:flex-end;align-items:center;gap:14px;margin-top:8px;font-size:12px}.precalc-pages button{border:1px solid #b9d0c8;border-radius:6px;background:#f3f8f5;padding:5px 10px;color:#194e46}.precalc-pages button:disabled{opacity:.45}.precalc-downloads{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px}.precalc-library .ap-topic-row:nth-last-child(-n+3) .ap-tool-menu[open]>div{top:auto;bottom:24px}
+
+/* One collection download, without adding another panel to the topic tables. */
+.resource-complete-download{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;margin:8px 0;font-size:13px}.resource-complete-download a{font-weight:700;color:#146d65;text-decoration:underline;text-underline-offset:3px}.resource-complete-download span{color:#596b72;font-size:12px}

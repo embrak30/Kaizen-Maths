@@ -31251,12 +31251,12 @@ function renderExploreOverview() {
 }
 
 function renderReadyMadeResources() {
-  app.innerHTML = pageHeader("Ready-Made Resources", "Choose a collection. Download the student sheet and the answers or worked solutions you need.") +
+  app.innerHTML = pageHeader("Ready-Made Resources", "Choose a collection. Download Topic Practice, the Teacher Pack, or Complete for all topics and solutions.") +
     `<section class="resource-overview resource-collections" aria-label="Ready-made resource collections">${resourceChoiceCards([
       ['▣','Primary Practice Packs','Grades 4–6 across five strands: ten questions per topic, with answers, worked solutions and suggested marks.','#/primary-topic-packs','teal','<a class="resource-choice-action" href="#/primary-topic-packs">Browse primary practice packs →</a>'],
       ['▤','Starters & Exit Tickets','Short practice packs for the start or end of a lesson, with answers and worked solutions.','#/practice-packs','violet','<a class="resource-choice-action" href="#/practice-packs">Browse starters & exit tickets →</a>'],
       ['✓','GCSE Mathematics','Board-neutral Foundation and Higher topic sheets, with eight questions per page and separate worked solutions.','#/gcse-maths','teal','<a class="resource-choice-action" href="#/gcse-maths">Browse GCSE Mathematics →</a>'],
-      ['ƒ','U.S. Precalculus','Functions, trigonometry, analytic geometry and more: US Letter home-learning packs with separate teacher solutions.','#/precalculus','violet','<a class="resource-choice-action" href="#/precalculus">Browse U.S. Precalculus →</a>'],
+      ['ƒ','U.S. Precalculus','Functions, trigonometry, analytic geometry and more: US Letter topic practice with separate teacher solutions.','#/precalculus','violet','<a class="resource-choice-action" href="#/precalculus">Browse U.S. Precalculus →</a>'],
       ['∫','AP Calculus','AB and BC topic worksheets: eight questions on one A4 page, with separate teacher solutions and suggested marks.','#/ap-calculus','teal','<a class="resource-choice-action" href="#/ap-calculus">Browse AP Calculus →</a>'],
       ['C','CSEC Mathematics','Topic worksheets across all three modules, with separate worked solutions and suggested marks. For exams from May–June 2027.','#/csec-maths','amber','<a class="resource-choice-action" href="#/csec-maths">Browse CSEC Mathematics →</a>'],
       ['∞','IB Mathematics','AA SL, AA HL, AI SL and AI HL: eight-question topic sheets with separate worked solutions and suggested marks.','#/ib-maths','violet','<a class="resource-choice-action" href="#/ib-maths">Browse IB Mathematics →</a>'],

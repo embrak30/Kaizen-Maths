@@ -1,0 +1,13 @@
+{
+  "collections": 8,
+  "pagesVerified": 6352,
+  "checks": [
+    "Every source file hash",
+    "Every page content stream unchanged",
+    "Page order and section boundaries",
+    "Media and crop boxes",
+    "Collection file hashes",
+    "Section starts rendered for visual review"
+  ],
+  "errors": []
+}
