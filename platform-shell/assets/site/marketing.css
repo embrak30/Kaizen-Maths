@@ -52,3 +52,5 @@ body[data-route="teaching-tools"] .tool-index-group[open],body[data-route="colle
 
 /* One collection download, without adding another panel to the topic tables. */
 .resource-complete-download{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;margin:8px 0;font-size:13px}.resource-complete-download a{font-weight:700;color:#146d65;text-decoration:underline;text-underline-offset:3px}.resource-complete-download span{color:#596b72;font-size:12px}
+
+.resource-complete-download{margin:8px 0 12px;gap:7px 12px}.resource-complete-download a{display:inline-flex;align-items:center;min-height:32px;padding:5px 12px;border:1px solid #146d65;border-radius:6px;background:#e8f4f1;font-size:14px;text-decoration:none}.resource-complete-download a:hover{background:#d4ebe4}.resource-complete-download a:focus-visible{outline:3px solid #7354b1;outline-offset:2px}
