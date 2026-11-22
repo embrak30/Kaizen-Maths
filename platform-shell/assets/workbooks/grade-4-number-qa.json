@@ -1,0 +1,15 @@
+{
+  "studentPages": 19,
+  "teacherPages": 52,
+  "questions": 80,
+  "checks": [
+    "All source question and solution body text unchanged",
+    "Printed continuous page numbers",
+    "Contents links point to correct chapters",
+    "Separate student and teacher editions",
+    "Every page rendered",
+    "Text bounds and notation",
+    "Source and delivery hashes"
+  ],
+  "errors": []
+}

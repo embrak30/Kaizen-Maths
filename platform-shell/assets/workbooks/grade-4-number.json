@@ -1,0 +1,355 @@
+{
+  "title": "Grade 4 Number",
+  "edition": "Pilot 1",
+  "topics": 8,
+  "questions": 80,
+  "scope": "Eight existing Grade 4 Number topic packs. Not a complete Grade 4 course.",
+  "topicOrder": [
+    {
+      "id": "P4-place-value",
+      "title": "Place value & rounding",
+      "goal": "Read, order and round whole numbers."
+    },
+    {
+      "id": "P4-whole-operations",
+      "title": "Whole-number problem solving",
+      "goal": "Choose operations, check answers and interpret remainders."
+    },
+    {
+      "id": "P4-sets",
+      "title": "Sets & membership",
+      "goal": "Describe groups and list each distinct member once."
+    },
+    {
+      "id": "P4-fraction-comparison",
+      "title": "Comparing fractions",
+      "goal": "Use equivalent fractions and compare equal-sized wholes."
+    },
+    {
+      "id": "P4-fraction-operations",
+      "title": "Calculating with fractions",
+      "goal": "Add and subtract fractions with the same denominator."
+    },
+    {
+      "id": "P4-fractions",
+      "title": "Fractions of quantities",
+      "goal": "Find a part, find what remains and work back to a whole."
+    },
+    {
+      "id": "P4-decimals",
+      "title": "Decimals & calculation",
+      "goal": "Use decimal place value to calculate and explain."
+    },
+    {
+      "id": "P4-money",
+      "title": "Money & decisions",
+      "goal": "Find totals and change; compare prices and check a method."
+    }
+  ],
+  "student": {
+    "path": "assets/workbooks/grade-4-number-student-workbook.pdf",
+    "pages": 19,
+    "sha256": "212a6e56273416b9c6891fa87e351bff5f92804a7eeaadfaf47f8fdc9af1f923",
+    "contents": [
+      {
+        "id": "P4-place-value",
+        "title": "Place value & rounding",
+        "questions": 3,
+        "solutions": null
+      },
+      {
+        "id": "P4-whole-operations",
+        "title": "Whole-number problem solving",
+        "questions": 5,
+        "solutions": null
+      },
+      {
+        "id": "P4-sets",
+        "title": "Sets & membership",
+        "questions": 7,
+        "solutions": null
+      },
+      {
+        "id": "P4-fraction-comparison",
+        "title": "Comparing fractions",
+        "questions": 9,
+        "solutions": null
+      },
+      {
+        "id": "P4-fraction-operations",
+        "title": "Calculating with fractions",
+        "questions": 11,
+        "solutions": null
+      },
+      {
+        "id": "P4-fractions",
+        "title": "Fractions of quantities",
+        "questions": 13,
+        "solutions": null
+      },
+      {
+        "id": "P4-decimals",
+        "title": "Decimals & calculation",
+        "questions": 15,
+        "solutions": null
+      },
+      {
+        "id": "P4-money",
+        "title": "Money & decisions",
+        "questions": 17,
+        "solutions": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "P4-place-value",
+        "role": "student",
+        "path": "assets/primary-packs/p4-place-value-student.pdf",
+        "pages": 2,
+        "startPage": 3,
+        "sha256": "431f3d68538c4a9ee65e86aa90ac987284fea9fcd357d8edc4fade84b88073ba"
+      },
+      {
+        "id": "P4-whole-operations",
+        "role": "student",
+        "path": "assets/primary-packs/p4-whole-operations-student.pdf",
+        "pages": 2,
+        "startPage": 5,
+        "sha256": "b422e8737c2b70cee2f9554c71f96d91d4ea2985ba78042d14290953a917bb53"
+      },
+      {
+        "id": "P4-sets",
+        "role": "student",
+        "path": "assets/primary-packs/p4-sets-student.pdf",
+        "pages": 2,
+        "startPage": 7,
+        "sha256": "1c2e1dbb88ac69a649fd301799c7c5abf3bc8de030607f434c8b73b1002ccb96"
+      },
+      {
+        "id": "P4-fraction-comparison",
+        "role": "student",
+        "path": "assets/primary-packs/p4-fraction-comparison-student.pdf",
+        "pages": 2,
+        "startPage": 9,
+        "sha256": "f7fe8a0412a77256194217cb34362aa94c50bc28a1a5bea69c68da9a01615350"
+      },
+      {
+        "id": "P4-fraction-operations",
+        "role": "student",
+        "path": "assets/primary-packs/p4-fraction-operations-student.pdf",
+        "pages": 2,
+        "startPage": 11,
+        "sha256": "7fe588d6a1e15eaa63589df4489be8cbbd0f634c357eb84fd1814cdfcd3e286b"
+      },
+      {
+        "id": "P4-fractions",
+        "role": "student",
+        "path": "assets/primary-packs/p4-fractions-student.pdf",
+        "pages": 2,
+        "startPage": 13,
+        "sha256": "2e2605753adfe5dfda0bf0717400b0704f6fdeff13fa3e1db190946b2ae77307"
+      },
+      {
+        "id": "P4-decimals",
+        "role": "student",
+        "path": "assets/primary-packs/p4-decimals-student.pdf",
+        "pages": 2,
+        "startPage": 15,
+        "sha256": "89f6cb430e62581b31ded4d1667555fb63d6285c5446808902415d08e93feff4"
+      },
+      {
+        "id": "P4-money",
+        "role": "student",
+        "path": "assets/primary-packs/p4-money-student.pdf",
+        "pages": 2,
+        "startPage": 17,
+        "sha256": "81e08af28dff4d19feb9d76cc447adb05f9bda508b2f0c741e2c7bbddfffe53c"
+      }
+    ]
+  },
+  "teacher": {
+    "path": "assets/workbooks/grade-4-number-teacher-edition.pdf",
+    "pages": 52,
+    "sha256": "659339b55e4df66c123898dff7a4617612309f01f8af59e529c2faa41cf7457b",
+    "contents": [
+      {
+        "id": "P4-place-value",
+        "title": "Place value & rounding",
+        "questions": 4,
+        "solutions": 20
+      },
+      {
+        "id": "P4-whole-operations",
+        "title": "Whole-number problem solving",
+        "questions": 6,
+        "solutions": 24
+      },
+      {
+        "id": "P4-sets",
+        "title": "Sets & membership",
+        "questions": 8,
+        "solutions": 29
+      },
+      {
+        "id": "P4-fraction-comparison",
+        "title": "Comparing fractions",
+        "questions": 10,
+        "solutions": 33
+      },
+      {
+        "id": "P4-fraction-operations",
+        "title": "Calculating with fractions",
+        "questions": 12,
+        "solutions": 37
+      },
+      {
+        "id": "P4-fractions",
+        "title": "Fractions of quantities",
+        "questions": 14,
+        "solutions": 41
+      },
+      {
+        "id": "P4-decimals",
+        "title": "Decimals & calculation",
+        "questions": 16,
+        "solutions": 45
+      },
+      {
+        "id": "P4-money",
+        "title": "Money & decisions",
+        "questions": 18,
+        "solutions": 49
+      }
+    ],
+    "sources": [
+      {
+        "id": "P4-place-value",
+        "role": "student",
+        "path": "assets/primary-packs/p4-place-value-student.pdf",
+        "pages": 2,
+        "startPage": 4,
+        "sha256": "431f3d68538c4a9ee65e86aa90ac987284fea9fcd357d8edc4fade84b88073ba"
+      },
+      {
+        "id": "P4-whole-operations",
+        "role": "student",
+        "path": "assets/primary-packs/p4-whole-operations-student.pdf",
+        "pages": 2,
+        "startPage": 6,
+        "sha256": "b422e8737c2b70cee2f9554c71f96d91d4ea2985ba78042d14290953a917bb53"
+      },
+      {
+        "id": "P4-sets",
+        "role": "student",
+        "path": "assets/primary-packs/p4-sets-student.pdf",
+        "pages": 2,
+        "startPage": 8,
+        "sha256": "1c2e1dbb88ac69a649fd301799c7c5abf3bc8de030607f434c8b73b1002ccb96"
+      },
+      {
+        "id": "P4-fraction-comparison",
+        "role": "student",
+        "path": "assets/primary-packs/p4-fraction-comparison-student.pdf",
+        "pages": 2,
+        "startPage": 10,
+        "sha256": "f7fe8a0412a77256194217cb34362aa94c50bc28a1a5bea69c68da9a01615350"
+      },
+      {
+        "id": "P4-fraction-operations",
+        "role": "student",
+        "path": "assets/primary-packs/p4-fraction-operations-student.pdf",
+        "pages": 2,
+        "startPage": 12,
+        "sha256": "7fe588d6a1e15eaa63589df4489be8cbbd0f634c357eb84fd1814cdfcd3e286b"
+      },
+      {
+        "id": "P4-fractions",
+        "role": "student",
+        "path": "assets/primary-packs/p4-fractions-student.pdf",
+        "pages": 2,
+        "startPage": 14,
+        "sha256": "2e2605753adfe5dfda0bf0717400b0704f6fdeff13fa3e1db190946b2ae77307"
+      },
+      {
+        "id": "P4-decimals",
+        "role": "student",
+        "path": "assets/primary-packs/p4-decimals-student.pdf",
+        "pages": 2,
+        "startPage": 16,
+        "sha256": "89f6cb430e62581b31ded4d1667555fb63d6285c5446808902415d08e93feff4"
+      },
+      {
+        "id": "P4-money",
+        "role": "student",
+        "path": "assets/primary-packs/p4-money-student.pdf",
+        "pages": 2,
+        "startPage": 18,
+        "sha256": "81e08af28dff4d19feb9d76cc447adb05f9bda508b2f0c741e2c7bbddfffe53c"
+      },
+      {
+        "id": "P4-place-value",
+        "role": "teacher",
+        "path": "assets/primary-packs/p4-place-value-teacher.pdf",
+        "pages": 4,
+        "startPage": 20,
+        "sha256": "443187a978ee2608a611100c3a1a66a5530381fc8493c8945fc7669ac0d2b7d4"
+      },
+      {
+        "id": "P4-whole-operations",
+        "role": "teacher",
+        "path": "assets/primary-packs/p4-whole-operations-teacher.pdf",
+        "pages": 5,
+        "startPage": 24,
+        "sha256": "35c6e112ddd024c459f88c542b0911dfac11c4a6f6e281321e424c36db57bbf7"
+      },
+      {
+        "id": "P4-sets",
+        "role": "teacher",
+        "path": "assets/primary-packs/p4-sets-teacher.pdf",
+        "pages": 4,
+        "startPage": 29,
+        "sha256": "842812dceb9c6457830dfb741e758bebf07154142b5b114a0ed4c78fae76502f"
+      },
+      {
+        "id": "P4-fraction-comparison",
+        "role": "teacher",
+        "path": "assets/primary-packs/p4-fraction-comparison-teacher.pdf",
+        "pages": 4,
+        "startPage": 33,
+        "sha256": "3f68577293a64c734352de4c0862f263844917f8729c8d3b82e3d8446d2634fe"
+      },
+      {
+        "id": "P4-fraction-operations",
+        "role": "teacher",
+        "path": "assets/primary-packs/p4-fraction-operations-teacher.pdf",
+        "pages": 4,
+        "startPage": 37,
+        "sha256": "7f9abfae3d68c80ebc712088026db7ddab8506a0590a14d7de03dd1aef24e192"
+      },
+      {
+        "id": "P4-fractions",
+        "role": "teacher",
+        "path": "assets/primary-packs/p4-fractions-teacher.pdf",
+        "pages": 4,
+        "startPage": 41,
+        "sha256": "451d7a8124bee767233796e4116cd220177bc3a1ba67cc633d9b72421aa2050f"
+      },
+      {
+        "id": "P4-decimals",
+        "role": "teacher",
+        "path": "assets/primary-packs/p4-decimals-teacher.pdf",
+        "pages": 4,
+        "startPage": 45,
+        "sha256": "6fd6eb1ca8a335f8285e9101c03d1694a3fc82aa2a580b1771824f7f19f25673"
+      },
+      {
+        "id": "P4-money",
+        "role": "teacher",
+        "path": "assets/primary-packs/p4-money-teacher.pdf",
+        "pages": 4,
+        "startPage": 49,
+        "sha256": "ab96ee12b1eb03d94a567eec180b520c87a737ede41e783547fe7a363d72a42f"
+      }
+    ]
+  }
+}
