@@ -2423,6 +2423,20 @@ const tools = [
     teacherNotes: ["Select a grade and skill, or use a linked task. Assessment-style questions are the default; add bar-model support for the same questions when teaching.", "Print either question version, both versions together, answers, or a complete pack with worked solutions and suggested marking guidance.", "Original classroom practice covering selected number and measurement skills; choose questions to match your class and curriculum."]
   },
   {
+    slug: "number-web",
+    title: "Number Web",
+    category: "Classroom Tools",
+    level: "Lower Primary / Primary / KS3",
+    type: "Interactive Display",
+    access: "Trial",
+    status: "Imported",
+    description: "Complete a hexagon number web: three numbers on each branch add to the centre target. Six levels, individual answer checks and a PDF of the same puzzle with an optional answer key.",
+    tags: ["number web", "hexagon", "number bonds", "missing numbers", "addition", "subtraction", "mental maths", "primary", "decimals", "negative numbers", "printable puzzle"],
+    toolPath: "tools/number-web/index.html?v=number-web-1",
+    imported: true,
+    teacherNotes: ["Each branch has three numbers adding to the centre target; exactly one is missing. The near-centre number is part of the sum, not a subtotal.", "Four-, six- and eight-branch webs progress from bonds to 10 and lower-primary numbers to larger whole numbers, tenths and negative integers.", "Download the current puzzle as an A4 PDF, with an optional separate answer key. The question page preserves its original blanks even after on-screen answers are revealed."]
+  },
+  {
     slug: "odd-one-out",
     title: "Odd One Out — OOO",
     category: "Classroom Tools",
@@ -2777,6 +2791,7 @@ const subjectToolGroups = {
     "build-add-take-away": "Board Displays and Visuals",
     "bar-models": "Board Displays and Visuals",
     "odd-one-out": "Board Displays and Visuals",
+    "number-web": "Board Displays and Visuals",
     "area-models": "Board Displays and Visuals",
     "maths-structure-lab": "Board Displays and Visuals",
     "equation-balance-models": "Board Displays and Visuals",
@@ -3195,6 +3210,7 @@ const freeSampleTools = new Set([
   "bar-models",
   "area-models",
   "build-add-take-away",
+  "number-web",
   "elementary-starter-board",
   "elementary-maths-playground",
   "interface-guide"
@@ -24451,6 +24467,7 @@ function relatedToolTokens(tool) {
 }
 
 const curatedRelatedToolSlugs = {
+  "number-web": ["number-sense-flexible-calculation", "build-add-take-away", "integer-operations"],
   "odd-one-out": ["number-sense-flexible-calculation", "polygons-angles", "missing-angles"],
   "area-rearrangement": ["circles-area-circumference", "area-triangles", "area-rectangles"],
   "circles-area-circumference": ["area-rearrangement", "area-rectangles", "area-triangles"],
@@ -24852,6 +24869,10 @@ function toolInfoText(tool) {
 }
 
 function toolInsightProfile(tool) {
+  if (tool.slug === "number-web") return {
+    misconceptions: ["Adding only the two outer numbers instead of all three numbers on a branch.", "Treating the near-centre number as a subtotal rather than one of the three addends.", "Subtracting only one given number from the target, or losing a negative sign in the integer challenge."],
+    questions: ["What total do the two given numbers make? How much more reaches the target?", "How can you check your missing number by adding all three numbers?", "Does moving the blank change the total needed? Can a missing number be negative?"]
+  };
   if (tool.slug === "odd-one-out") return {
     misconceptions: [
       "Assuming there is one intended answer instead of checking each proposed mathematical property.",
@@ -26053,6 +26074,8 @@ function toolClassroomQuestions(tool) {
 }
 
 function toolUseSuggestions(tool) {
+  if (tool.slug === "number-web") return ["Choose a level and target, then invite pupils to solve one branch and explain their reasoning.", "Select a blank to check an answer or reveal one missing number without completing the whole web.", "Use Show answers after discussion; New web makes a fresh puzzle at the same level and target.", "Download the current puzzle as an A4 PDF, with a separate answer-key page if required. Pupils can show their working on paper."];
+
   if (tool.slug === "odd-one-out") return [
     "Show the four cards and ask pupils to choose an odd one out and justify it with a property.",
     "Highlight any proposed choice without marking it right or wrong; invite a different argument.",
