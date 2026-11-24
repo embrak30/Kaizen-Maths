@@ -1889,9 +1889,41 @@
         ? choose(["fraction", "percentOf", "fractionChange", "percentChange", "reversePercent", "ratio", "reverseRatio", "comparison", "equation"])
         : state.mode;
       state.problem = generators[actualMode]();
+      preparePartReveal(state.problem);
       state.stepIndex = 0;
       state.answerRevealed = false;
       render();
+    }
+
+    // Separate constructing equal sections, marking unknowns, and revealing their values.
+    function preparePartReveal(problem) {
+      const d = problem.data;
+      const counts = { fraction: d.den, percentOf: d.structure?.total,
+        fractionChange: d.den, percentChange: d.structure?.total, ratio: d.a + d.b };
+      if (!["fraction", "percentOf", "fractionChange", "percentChange", "ratio"].includes(problem.kind)) return;
+      const count = counts[problem.kind];
+      const empty = makeStep("Show " + count + " equal parts.",
+        "The bar is divided into equal sections, with no values shown yet.", count + " equal parts",
+        "Ask: how many equal parts can you see?");
+      const unknown = makeStep("Mark the unknown values.",
+        "Each question mark stands for the value of one equal part.", "",
+        "Ask: what value must every equal part have?");
+      if (problem.kind === "fraction" || problem.kind === "percentOf") {
+        problem.steps = [empty, unknown, ...problem.steps.slice(2)];
+      } else if (problem.kind === "ratio") {
+        problem.steps = [empty, unknown, ...problem.steps.slice(1)];
+      } else {
+        const whole = d.original;
+        const value = makeStep("Find the value of one part.", "Divide the whole amount equally.",
+          whole + " ÷ " + count + " = " + d.part,
+          "Ask: how does this value fit the whole bar?");
+        problem.steps = [empty, unknown, value, ...problem.steps.slice(2)];
+      }
+      problem.partReveal = true;
+      const whole = d.whole ?? d.original ?? d.total;
+      problem.steps.unshift(makeStep("Identify the whole.",
+        "The undivided bar represents the whole amount.", "Whole = " + whole,
+        "Ask: what does the whole bar represent?"));
     }
 
     function segmentHtml(label, className) {
@@ -1957,7 +1989,7 @@
       const d = problem.data;
       let rows = [];
       if (step === 0) {
-        rows.push(rowHtml("Whole", barHtml(1, { labels: [String(d.whole)] })));
+        rows.push(rowHtml("Equal parts", barHtml(d.den, { labels: repeatedLabels(d.den, "") })));
       } else if (step === 1) {
         rows.push(rowHtml("Equal parts", barHtml(d.den, { unknown: true, labels: repeatedLabels(d.den, "?") })));
       } else if (step === 2) {
@@ -1980,9 +2012,9 @@
       const selected = d.structure.selected;
       let rows = [];
       if (step === 0) {
-        rows.push(rowHtml("Whole", barHtml(1, { labels: [String(d.whole)] })));
+        rows.push(rowHtml("Equal parts", barHtml(total, { labels: repeatedLabels(total, "") })));
       } else if (step === 1) {
-        rows.push(rowHtml("Percent parts", barHtml(total, { labels: repeatedLabels(total, d.percentPerPart + "%") })));
+        rows.push(rowHtml("Percent parts", barHtml(total, { unknown: true, labels: repeatedLabels(total, "?") })));
       } else if (step === 2) {
         rows.push(rowHtml("One part", barHtml(total, { labels: repeatedLabels(total, String(d.part)) })));
       } else {
@@ -2002,12 +2034,9 @@
       const isIncrease = d.direction === "increase";
       const maxParts = Math.max(d.den, d.finalParts);
       let rows = [];
-      const originalLabels = step >= 1 ? repeatedLabels(d.den, step >= 1 ? String(d.part) : "?") : [String(d.original)];
-      rows.push(rowHtml("Original", step === 0
-        ? barHtml(1, { labels: [String(d.original)] })
-        : barHtml(d.den, { maxParts, labels: originalLabels })
-      ));
-      if (step >= 2) {
+      const originalLabels = repeatedLabels(d.den, step === 0 ? "" : step === 1 ? "?" : String(d.part));
+      rows.push(rowHtml("Original", barHtml(d.den, { maxParts, labels: originalLabels })));
+      if (step >= 3) {
         if (isIncrease) {
           rows.push(rowHtml("Change", barHtml(d.den, {
             maxParts,
@@ -2022,7 +2051,7 @@
           })));
         }
       }
-      if (step >= 3) {
+      if (step >= 4) {
         rows.push(rowHtml("Final", barHtml(d.finalParts, {
           maxParts,
           active: Array.from({ length: d.finalParts }, (_, i) => i),
@@ -2039,18 +2068,15 @@
       const isIncrease = d.direction === "increase";
       const maxParts = Math.max(total, d.finalParts);
       let rows = [];
-      rows.push(rowHtml("100%", step === 0
-        ? barHtml(1, { labels: [String(d.original)] })
-        : barHtml(total, { maxParts, labels: repeatedLabels(total, step >= 2 ? String(d.part) : "?") })
-      ));
-      if (step >= 2) {
+      rows.push(rowHtml("100%", barHtml(total, { maxParts, labels: repeatedLabels(total, step === 0 ? "" : step === 1 ? "?" : String(d.part)) })));
+      if (step >= 3) {
         rows.push(rowHtml(d.percent + "%", barHtml(total, {
           maxParts,
           added: Array.from({ length: selected }, (_, i) => i),
           labels: Array.from({ length: total }, (_, i) => i < selected ? String(d.part) : "")
         })));
       }
-      if (step >= 3) {
+      if (step >= 4) {
         rows.push(rowHtml("Final", barHtml(d.finalParts, {
           maxParts,
           active: isIncrease ? Array.from({ length: total }, (_, i) => i) : Array.from({ length: d.finalParts }, (_, i) => i),
@@ -2094,18 +2120,13 @@
     function renderRatio(problem, step) {
       const d = problem.data;
       const totalParts = d.a + d.b;
-      let labels = repeatedLabels(totalParts, step >= 1 ? String(d.part) : "?");
-      if (step === 0) labels = [String(d.total)];
-      const rows = [
-        rowHtml("Whole ratio", step === 0
-          ? barHtml(1, { labels })
-          : barHtml(totalParts, {
-            active: step >= 2 ? Array.from({ length: d.a }, (_, i) => i) : [],
-            added: step >= 3 ? Array.from({ length: d.b }, (_, i) => d.a + i) : [],
-            labels
-          }))
-      ];
-      return modelShell("Ratio model", d.a + ":" + d.b, rows, "The whole is shared by first finding the value of one ratio part.");
+      const labels = repeatedLabels(totalParts, step === 0 ? "" : step === 1 ? "?" : String(d.part));
+      const rows = [rowHtml("Whole ratio", barHtml(totalParts, {
+        active: step >= 3 ? Array.from({ length: d.a }, (_, i) => i) : [],
+        added: step >= 4 ? Array.from({ length: d.b }, (_, i) => d.a + i) : [],
+        labels
+      }))];
+      return modelShell("Ratio model", d.a + ":" + d.b + " · Whole = " + d.total, rows, "The whole is shared by first finding the value of one ratio part.");
     }
 
     function renderReverseRatio(problem, step) {
@@ -2201,6 +2222,19 @@
     }
 
     function renderVisual(problem, step) {
+      if (problem.partReveal) {
+        if (step === 0) {
+          const d = problem.data;
+          const whole = d.whole ?? d.original ?? d.total;
+          const count = d.den ?? d.structure?.total ?? (d.a + d.b);
+          const change = problem.kind === "fractionChange" || problem.kind === "percentChange";
+          const maxParts = change ? Math.max(count, d.finalParts) : count;
+          return modelShell("Whole model", "Whole = " + whole,
+            [rowHtml("Whole", barHtml(1, { labels: [String(whole)], maxParts: maxParts / count }))],
+            "The whole amount is shown before it is divided into equal parts.", change ? 3 : 1);
+        }
+        step -= 1;
+      }
       const renderers = {
         fraction: renderFraction,
         percentOf: renderPercentOf,
