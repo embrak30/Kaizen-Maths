@@ -13,4 +13,16 @@ for(const mode of ['Fractions','Percentage','Fraction Change','Percentage Change
  d.querySelector('#resetBtn').click();assert.equal(values().length,1);assert(/^\d+$/.test(values()[0]));assert(d.querySelector('#answerText').textContent.includes('Hidden'));
 }
 for(const mode of ['Reverse %','Reverse Ratio','Compare','Equations','Mixed']){choose(mode);while(!d.querySelector('#nextBtn').disabled)d.querySelector('#nextBtn').click();assert(!/NaN|undefined/.test(d.querySelector('#modelCard').textContent));}
+// Pupil prompts predict the next reveal, remain optional, and never alter the model.
+assert(d.querySelector('#sidebar').contains(d.querySelector('#teacherPrompt')));
+for(const mode of ['Fractions','Percentage','Fraction Change','Percentage Change','Ratio','Reverse %','Reverse Ratio','Compare','Equations','Mixed'])for(let sample=0;sample<6;sample++){
+ choose(mode);const toggle=d.querySelector('#stagePromptToggle'),question=d.querySelector('#stageQuestion');
+ assert(question.hidden);assert.equal(toggle.getAttribute('aria-expanded'),'false');const model=d.querySelector('#modelCard').innerHTML;
+ toggle.click();assert(!question.hidden);assert.equal(toggle.textContent,'Hide prompt');assert.equal(d.querySelector('#modelCard').innerHTML,model);
+ let steps=0;do{assert(!question.hidden);assert(question.textContent.endsWith('?'));assert(question.textContent.length<115);assert(!/undefined|NaN|Ask:/.test(question.textContent));steps++;if(d.querySelector('#nextBtn').disabled)break;const before=question.textContent;d.querySelector('#nextBtn').click();assert.notEqual(question.textContent,before);}while(steps<10);
+ assert(steps>=4);d.querySelector('#backBtn').click();assert(!question.hidden);toggle.click();assert(question.hidden);d.querySelector('#resetBtn').click();assert(question.hidden);toggle.click();d.querySelector('#newBtn').click();assert(question.hidden);
+}
+choose('Fractions');d.querySelector('#stagePromptToggle').click();assert(d.querySelector('#stageQuestion').textContent.includes('How many equal parts'));
+d.querySelector('#nextBtn').click();assert(d.querySelector('#stageQuestion').textContent.includes('still missing'));
+d.querySelector('#nextBtn').click();assert(d.querySelector('#stageQuestion').textContent.includes('what is one part worth'));assert.equal(d.querySelector('#calculation').textContent,'');
 dom.window.close();console.log('PASS: unsplit whole → empty equal parts → question marks → values in all five forward models, final answers, reset and other-mode smoke checks.');
