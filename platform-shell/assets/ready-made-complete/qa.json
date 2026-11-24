@@ -1,6 +1,6 @@
 {
-  "collections": 8,
-  "pagesVerified": 6352,
+  "collections": 9,
+  "pagesVerified": 6503,
   "checks": [
     "Every source file hash",
     "Every page content stream unchanged",

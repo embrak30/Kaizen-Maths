@@ -14811,6 +14811,507 @@
           "sha256": "976bc5d3839bfdfda39f0bac085992e5d2bac381bde4fac84c55bbdeff6c37dd"
         }
       ]
+    },
+    {
+      "id": "further-maths",
+      "title": "Further Mathematics \u2014 Edexcel UK Core Pure",
+      "path": "assets/ready-made-complete/further-maths-complete.pdf",
+      "topics": 30,
+      "pages": 151,
+      "bytes": 5178763,
+      "sha256": "cb4253878faea8f054b56437db456f4da28776168a49766ab5e14c6a56b08c70",
+      "parts": {
+        "student": {
+          "startPage": 1,
+          "pages": 30
+        },
+        "teacher": {
+          "startPage": 31,
+          "pages": 121
+        }
+      },
+      "sources": [
+        {
+          "id": "CP01",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp01-student.pdf",
+          "pages": 1,
+          "startPage": 1,
+          "sha256": "bc35be5928b232b182bed82636eb1427e55eae4c4c768a88839ddfd0be15f9e1"
+        },
+        {
+          "id": "CP02",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp02-student.pdf",
+          "pages": 1,
+          "startPage": 2,
+          "sha256": "a6750cf448462e3a02881d0067bdaac4449c7e84b6fb802b1c7f219fa74c6fd8"
+        },
+        {
+          "id": "CP03",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp03-student.pdf",
+          "pages": 1,
+          "startPage": 3,
+          "sha256": "3f6ff505338ccede38d37d3b65f922e4d5a44f5b768190dbbbba592bd7f3e932"
+        },
+        {
+          "id": "CP04",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp04-student.pdf",
+          "pages": 1,
+          "startPage": 4,
+          "sha256": "93e4221621c12c31f3edcd1850584581000c907bb1c1f05849732f94ed75ede3"
+        },
+        {
+          "id": "CP05",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp05-student.pdf",
+          "pages": 1,
+          "startPage": 5,
+          "sha256": "1076abab1b69093dd1dbddb2ee9a4769e4ab8a981b42eddb2e2f130c0b45b803"
+        },
+        {
+          "id": "CP06",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp06-student.pdf",
+          "pages": 1,
+          "startPage": 6,
+          "sha256": "dfcd35bba804189645e73fa1b8d420d190faf5bb9ce27b253f1d15cff4dfac04"
+        },
+        {
+          "id": "CP07",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp07-student.pdf",
+          "pages": 1,
+          "startPage": 7,
+          "sha256": "17c8dd706898736f9371e4e7529756e553cb729511d25764bd55a062945e18f6"
+        },
+        {
+          "id": "CP08",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp08-student.pdf",
+          "pages": 1,
+          "startPage": 8,
+          "sha256": "b2e42053d5bbedb6af97a546bda6fc3402b30cd7fccf74ea8d0663b39b1c2e2f"
+        },
+        {
+          "id": "CP09",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp09-student.pdf",
+          "pages": 1,
+          "startPage": 9,
+          "sha256": "04d72279dcfdf654f4ab102ec2770486bebff53a601095fabfe8d278a7cee92a"
+        },
+        {
+          "id": "CP10",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp10-student.pdf",
+          "pages": 1,
+          "startPage": 10,
+          "sha256": "aa74a9c9492af01f568f19c237dc45b9c0bd122d47c28ed57f00faa4e54e6ddf"
+        },
+        {
+          "id": "CP11",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp11-student.pdf",
+          "pages": 1,
+          "startPage": 11,
+          "sha256": "ed5717a24c53d450092b2815449ccb225025dfdc64b6f67258f51c6421ca8452"
+        },
+        {
+          "id": "CP12",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp12-student.pdf",
+          "pages": 1,
+          "startPage": 12,
+          "sha256": "ff2b62b21653220b24bf103efb8b91e0cf93c100c645933d917d32a2cdd88aed"
+        },
+        {
+          "id": "CP13",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp13-student.pdf",
+          "pages": 1,
+          "startPage": 13,
+          "sha256": "070093c913386793cef98b44770495cd329a479ccdc8fdb2c1cb30671d2444be"
+        },
+        {
+          "id": "CP14",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp14-student.pdf",
+          "pages": 1,
+          "startPage": 14,
+          "sha256": "4237c18d14504ffecb42385fa3c17a2abc71e4cd63e5f614112549013b2fca34"
+        },
+        {
+          "id": "CP15",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp15-student.pdf",
+          "pages": 1,
+          "startPage": 15,
+          "sha256": "bbed05f2053b8fde7d8a37ffcba8f7f6272652e69120b9982099af21f679cdde"
+        },
+        {
+          "id": "CP16",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp16-student.pdf",
+          "pages": 1,
+          "startPage": 16,
+          "sha256": "28eca8d6644f98b7e676aba4fa5e61ab3141b0b44519b04c0fb1a1de4020debd"
+        },
+        {
+          "id": "CP17",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp17-student.pdf",
+          "pages": 1,
+          "startPage": 17,
+          "sha256": "cdc4f970c4427396caaa905af1639c05ab299bb4dfb8c2d1907c143d9d7f7028"
+        },
+        {
+          "id": "CP18",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp18-student.pdf",
+          "pages": 1,
+          "startPage": 18,
+          "sha256": "93d11e06eafef66a4e984d7e456782df752adc6eabd8a2da55df157c2b1cf197"
+        },
+        {
+          "id": "CP19",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp19-student.pdf",
+          "pages": 1,
+          "startPage": 19,
+          "sha256": "703c5186afd3e59802563b09a6194e077e5f6358e64399acf964c36c8add31d9"
+        },
+        {
+          "id": "CP20",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp20-student.pdf",
+          "pages": 1,
+          "startPage": 20,
+          "sha256": "24098f2a592a9af8398a2104c339ce12b7fc4a482b7516211079be230d6ca2f9"
+        },
+        {
+          "id": "CP21",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp21-student.pdf",
+          "pages": 1,
+          "startPage": 21,
+          "sha256": "c1e00dd3e6b17014423df3be77ea21e76e43966cdcf471d2c2e62b344b8c35ba"
+        },
+        {
+          "id": "CP22",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp22-student.pdf",
+          "pages": 1,
+          "startPage": 22,
+          "sha256": "481d9e07bbd55968a97419904724f6022c27bdf917041dbbdba18a6da5fb0ca4"
+        },
+        {
+          "id": "CP23",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp23-student.pdf",
+          "pages": 1,
+          "startPage": 23,
+          "sha256": "d8c5ec9a3f406827a7ba4db3ef0589474d9d9251815555b194a5a437074b4219"
+        },
+        {
+          "id": "CP24",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp24-student.pdf",
+          "pages": 1,
+          "startPage": 24,
+          "sha256": "694d198d7b647e9bb216c2c05c971b1bbc8a26aafffa340767469ac73d6ed257"
+        },
+        {
+          "id": "CP25",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp25-student.pdf",
+          "pages": 1,
+          "startPage": 25,
+          "sha256": "4aa657dccc451b830475f9d1a1fdcecbc647d614a0c4d1c2325245ea894d7941"
+        },
+        {
+          "id": "CP26",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp26-student.pdf",
+          "pages": 1,
+          "startPage": 26,
+          "sha256": "492238269fd6cce1b4ff49df478592b01c612c50174cb96ab15eadaeefa24950"
+        },
+        {
+          "id": "CP27",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp27-student.pdf",
+          "pages": 1,
+          "startPage": 27,
+          "sha256": "8d838f272fbce256bb63aea84a730a403fe6be3efa5a1b1fc67e8f0004878e87"
+        },
+        {
+          "id": "CP28",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp28-student.pdf",
+          "pages": 1,
+          "startPage": 28,
+          "sha256": "48c0046a9d46836aeb8543a279a3cd87baa99ac5df473b22f664302c667c0586"
+        },
+        {
+          "id": "CP29",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp29-student.pdf",
+          "pages": 1,
+          "startPage": 29,
+          "sha256": "98f035312cd6a6987d1e3455ad0cfbb48e14402b712482466a65b88618974fb3"
+        },
+        {
+          "id": "CP30",
+          "role": "student",
+          "path": "assets/further-maths/edexcel-9fm0/cp30-student.pdf",
+          "pages": 1,
+          "startPage": 30,
+          "sha256": "b6ff7114498a9f9e83dc345f636f23e0b5f48f8fc38ef79c5b999049747c976a"
+        },
+        {
+          "id": "CP01",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp01-teacher.pdf",
+          "pages": 4,
+          "startPage": 31,
+          "sha256": "0c5efea1db2b5df32e7d15342d7a76713447d95f10c9b9fac7cfe23e9bc0a999"
+        },
+        {
+          "id": "CP02",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp02-teacher.pdf",
+          "pages": 4,
+          "startPage": 35,
+          "sha256": "91a6f860ac6eac3c5ffeacdf518f4e93ecefc6416537eff8caac8c8ee56701c4"
+        },
+        {
+          "id": "CP03",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp03-teacher.pdf",
+          "pages": 4,
+          "startPage": 39,
+          "sha256": "c5008a706ecacf4a449170d58f695e3f5d4694069d37b6e901f0e2c2ede4f6d3"
+        },
+        {
+          "id": "CP04",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp04-teacher.pdf",
+          "pages": 4,
+          "startPage": 43,
+          "sha256": "bb02de8bf490c0f8387bcd20699956f72d068bddc02af8068f2486d2d3f8046c"
+        },
+        {
+          "id": "CP05",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp05-teacher.pdf",
+          "pages": 5,
+          "startPage": 47,
+          "sha256": "207d476c4f410258d8119b5c4e098ab4976475e97832fa493a7f80d25a0cebf7"
+        },
+        {
+          "id": "CP06",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp06-teacher.pdf",
+          "pages": 4,
+          "startPage": 52,
+          "sha256": "9860c9d9897b84186dca868079e47feb7d752ef4673cc07cc59dde649133a1f4"
+        },
+        {
+          "id": "CP07",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp07-teacher.pdf",
+          "pages": 4,
+          "startPage": 56,
+          "sha256": "fd26d36396b6ef5237b0dd4073021cfd531e9c41dcf1c01d0ae11db4733f8921"
+        },
+        {
+          "id": "CP08",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp08-teacher.pdf",
+          "pages": 4,
+          "startPage": 60,
+          "sha256": "a436ee0336925e234d931b910f3b5e511075035162b6a11499faceddc3e3f92e"
+        },
+        {
+          "id": "CP09",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp09-teacher.pdf",
+          "pages": 4,
+          "startPage": 64,
+          "sha256": "828468f4884b03007d83beaa3fdbb758a93114d4d3d3f0b2ebcb9a8e7edf9fe8"
+        },
+        {
+          "id": "CP10",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp10-teacher.pdf",
+          "pages": 4,
+          "startPage": 68,
+          "sha256": "7cab986c29a2de6b4cd0743d6f28130bd86b3b66968758f0c3c54452dd1a581d"
+        },
+        {
+          "id": "CP11",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp11-teacher.pdf",
+          "pages": 4,
+          "startPage": 72,
+          "sha256": "fbc140781e84b5f11da9165e3cf8c1f02f34f463f00ee958c86264564147c84f"
+        },
+        {
+          "id": "CP12",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp12-teacher.pdf",
+          "pages": 4,
+          "startPage": 76,
+          "sha256": "81592b03d69b4aab745a8a89eef3db6042633096757a6d66a0994e6e64105d29"
+        },
+        {
+          "id": "CP13",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp13-teacher.pdf",
+          "pages": 4,
+          "startPage": 80,
+          "sha256": "593448c9ee02e2aba6db89e1a3015e08215cc17cc173228eedf7bcf8bcd48df4"
+        },
+        {
+          "id": "CP14",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp14-teacher.pdf",
+          "pages": 4,
+          "startPage": 84,
+          "sha256": "734570ea54f5138e06e2248bc293bba84587240ee4222f2d6c40e1bc5840d0c0"
+        },
+        {
+          "id": "CP15",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp15-teacher.pdf",
+          "pages": 4,
+          "startPage": 88,
+          "sha256": "eaba73e4a1abbb847ce3595a222ee6bac7364cfecac758bd8eace99432d67832"
+        },
+        {
+          "id": "CP16",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp16-teacher.pdf",
+          "pages": 4,
+          "startPage": 92,
+          "sha256": "61a3e4c63d973282f51992e4f3b402a344d2dc69936769a00e456e93af0ea3b3"
+        },
+        {
+          "id": "CP17",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp17-teacher.pdf",
+          "pages": 4,
+          "startPage": 96,
+          "sha256": "60c85be124cf811be2293a343034352013a914e4eb1eab22274680eb04a751a3"
+        },
+        {
+          "id": "CP18",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp18-teacher.pdf",
+          "pages": 4,
+          "startPage": 100,
+          "sha256": "13db7d241d533642794ef666c4035e95ff02a35c7fc9375f9687ee758a0280e4"
+        },
+        {
+          "id": "CP19",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp19-teacher.pdf",
+          "pages": 4,
+          "startPage": 104,
+          "sha256": "56c1d3faf7169a8d6687a811e4a74c36590d5d7ffeda15e1e1da201ae47485b8"
+        },
+        {
+          "id": "CP20",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp20-teacher.pdf",
+          "pages": 4,
+          "startPage": 108,
+          "sha256": "fd80f7f66a2a76b85a72f540e5c414d19a988f8b18a80f1b3afd28a7c4c57681"
+        },
+        {
+          "id": "CP21",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp21-teacher.pdf",
+          "pages": 4,
+          "startPage": 112,
+          "sha256": "b19b38abc835006c2c2fbf68783d1b70d4df50970492e66b3f4d1654143ad2a2"
+        },
+        {
+          "id": "CP22",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp22-teacher.pdf",
+          "pages": 4,
+          "startPage": 116,
+          "sha256": "161d3dee043141f4a7f6b6c80c041de835343ed90f45f4c85e71505573530bdf"
+        },
+        {
+          "id": "CP23",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp23-teacher.pdf",
+          "pages": 4,
+          "startPage": 120,
+          "sha256": "b7c8674c06ee885a66c52183360ac78e0c6c087b542ba335654080cecaa89638"
+        },
+        {
+          "id": "CP24",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp24-teacher.pdf",
+          "pages": 4,
+          "startPage": 124,
+          "sha256": "599a4e7155a62e3a6e0139d4a8515071edb051c8b36d09ba1b0e1f09e60751c4"
+        },
+        {
+          "id": "CP25",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp25-teacher.pdf",
+          "pages": 4,
+          "startPage": 128,
+          "sha256": "8226caf90c83ea28e4a2e09dcb97b7061768ec0b851495c1efd1a9b04ffb97c4"
+        },
+        {
+          "id": "CP26",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp26-teacher.pdf",
+          "pages": 4,
+          "startPage": 132,
+          "sha256": "13749b42abc430a24d276cde84d53a38026b63e70818dd61c424e5401273e144"
+        },
+        {
+          "id": "CP27",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp27-teacher.pdf",
+          "pages": 4,
+          "startPage": 136,
+          "sha256": "cb31aad8e0de2ef2d783c2a5773bdee47bbaa005de6b8bbeea160e4c24030e09"
+        },
+        {
+          "id": "CP28",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp28-teacher.pdf",
+          "pages": 4,
+          "startPage": 140,
+          "sha256": "3876d4fc80a2a30c258e715e9e88bce99a410d501446a5e0b930975cd1a61dbf"
+        },
+        {
+          "id": "CP29",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp29-teacher.pdf",
+          "pages": 4,
+          "startPage": 144,
+          "sha256": "0de75cd6e7f949a60d502f4245077710b328c0fbc814f3fceb7644b15f71af79"
+        },
+        {
+          "id": "CP30",
+          "role": "teacher",
+          "path": "assets/further-maths/edexcel-9fm0/cp30-teacher.pdf",
+          "pages": 4,
+          "startPage": 148,
+          "sha256": "ccc2e8c26b092c9cce88effd7190d324ebf642a36b026575efef08b9395b12ef"
+        }
+      ]
     }
   ]
 }

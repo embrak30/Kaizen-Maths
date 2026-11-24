@@ -22,5 +22,5 @@ const slugs=vm.runInContext('tools.map(t=>t.slug)',dom.getInternalVMContext());f
 assert(!source.packs.some(p=>/eigenvalues|differentiation|binomial distribution|conditional probability|iteration/i.test(p.title)));
 assert(source.packs.some(p=>p.title==='Linear programming'&&p.module===3));assert(source.packs.some(p=>p.title==='Matrix addition and scalar multiplication'&&p.module===2));assert(source.packs.find(p=>p.title==='Income tax and net pay').questions.every(q=>q.question.includes('illustrative')));
 const empty=doc.createElement('div');w.KaizenCSECData=null;w.KaizenCSEC.mount(empty);assert(empty.textContent.includes('could not load'));w.KaizenCSECData=data;
-w.location.hash='#/ready-made-resources';w.renderRoute();assert(doc.querySelector('[href="#/csec-maths"]'));assert.equal(doc.querySelectorAll('.resource-choice').length,8);
+w.location.hash='#/ready-made-resources';w.renderRoute();assert(doc.querySelector('[href="#/csec-maths"]'));assert.equal(doc.querySelectorAll('.resource-choice').length,9);
 dom.window.close();console.log('PASS: 110 CSEC PDF pairs, all modules/subjects/pagination, cross-module search, safe escaping, invalid-route fallback, existing tool links, curriculum boundaries and persistent sidebar.');

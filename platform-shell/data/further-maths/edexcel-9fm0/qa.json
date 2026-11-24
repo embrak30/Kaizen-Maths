@@ -1,0 +1,9 @@
+{
+  "packs": 30,
+  "questions": 240,
+  "symbolicChecks": 296,
+  "pdfs": 60,
+  "pagesRendered": 151,
+  "scope": "Core Pure only",
+  "editorialReview": "Proofs, geometric descriptions and convergence arguments are not all covered by symbolic checks."
+}

@@ -11,10 +11,11 @@ def records(key):
   return [dict(id=t['id'],title=t['title'],student=t['pack']['questions'],teacher=t['pack']['answers']) for u in read('data/ap-calculus/catalog.json')['units'] for t in u['topics'] if t.get('pack')]
  if key=='practice-packs':
   return [dict(id=p['id'],title=p['topic']+': '+p['title'],complete=p['pdf']) for p in read('assets/practice-packs/catalog.json')['packs']]
+ if key=='further-maths':return read('data/further-maths/edexcel-9fm0/catalog.json')['packs']
  source='data/alevel-maths/edexcel-9ma0/catalog.json' if key=='alevel-maths' else 'data/'+key+'/catalog.json'
  data=read(source)
  return data['packs']+data.get('reviews',[])
-TITLES={'primary-packs':'Primary Practice Packs','practice-packs':'Starters & Exit Tickets','gcse-maths':'GCSE Mathematics — Foundation & Higher','precalculus':'U.S. Precalculus','ap-calculus':'AP Calculus — AB & BC','csec-maths':'CSEC Mathematics','ib-maths':'IB Mathematics — AA & AI, SL & HL','alevel-maths':'A level Mathematics'}
+TITLES={'primary-packs':'Primary Practice Packs','practice-packs':'Starters & Exit Tickets','gcse-maths':'GCSE Mathematics — Foundation & Higher','precalculus':'U.S. Precalculus','ap-calculus':'AP Calculus — AB & BC','csec-maths':'CSEC Mathematics','ib-maths':'IB Mathematics — AA & AI, SL & HL','alevel-maths':'A level Mathematics','further-maths':'Further Mathematics — Edexcel UK Core Pure'}
 selected=set(sys.argv[1:]) or set(TITLES)
 assert selected<=set(TITLES),selected
 manifest=[b for b in read('assets/ready-made-complete/manifest.json')['collections'] if b['id'] not in selected] if (OUT/'manifest.json').exists() else []

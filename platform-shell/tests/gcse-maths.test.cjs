@@ -20,5 +20,5 @@ const search=doc.querySelector('#gcse-search');search.value='surds';search.dispa
 search.value='<svg onload=alert(1)>';search.dispatchEvent(new w.Event('input'));assert(!doc.querySelector('#gcse-results svg'));assert(doc.querySelector('.ap-empty'));
 w.location.hash='#/gcse-maths?tier=invalid&area=invalid&group=invalid';w.renderRoute();assert(doc.querySelector('[data-gcse-tier="foundation"][aria-pressed="true"]'));assert.equal(doc.querySelectorAll('.ap-topic-row').length,8);
 for(const p of data.packs){assert.equal(p.questions,8);assert.equal(p.studentPages,1);for(const role of ['student','teacher'])assert(fs.statSync(root+'/'+p[role]).size>1000);}
-w.location.hash='#/ready-made-resources';w.renderRoute();assert(doc.querySelector('[href="#/gcse-maths"]'));assert.equal(doc.querySelectorAll('.resource-choice').length,8);
+w.location.hash='#/ready-made-resources';w.renderRoute();assert(doc.querySelector('[href="#/gcse-maths"]'));assert.equal(doc.querySelectorAll('.resource-choice').length,9);
 dom.window.close();console.log('PASS: 106 complete GCSE PDF pairs, 75 shared / 31 Higher-only packs, tier and subject/group filters, cross-subject search, escaping, fallback routes and persistent sidebar.');
