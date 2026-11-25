@@ -2423,6 +2423,20 @@ const tools = [
     teacherNotes: ["Select a grade and skill, or use a linked task. Assessment-style questions are the default; add bar-model support for the same questions when teaching.", "Print either question version, both versions together, answers, or a complete pack with worked solutions and suggested marking guidance.", "Original classroom practice covering selected number and measurement skills; choose questions to match your class and curriculum."]
   },
   {
+    slug: "number-trails",
+    title: "Number Trails",
+    category: "Classroom Tools",
+    level: "Primary / KS3",
+    type: "Interactive Display",
+    access: "Trial",
+    status: "Imported",
+    description: "Follow a branching number trail with changing starting numbers and operations. Three levels, exact whole-number division, individual answer reveals and printable challenges.",
+    tags: ["number trails", "number maze", "function machines", "four operations", "addition", "subtraction", "multiplication", "division", "mental maths", "negative numbers", "primary"],
+    toolPath: "tools/number-trails/index.html?v=number-trails-1",
+    imported: true,
+    teacherNotes: ["Follow each arrow from its source circle. Branches use the same source value independently.", "Choose a random challenge or set a starting number. First steps uses addition and subtraction; mixed operations includes exact division; integer challenge allows negative answers.", "Reveal one circle at a time or show all answers. Print / PDF prints the current view; hide answers first for a question sheet."]
+  },
+  {
     slug: "number-web",
     title: "Number Web",
     category: "Classroom Tools",
