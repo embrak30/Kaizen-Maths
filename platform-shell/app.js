@@ -2446,7 +2446,7 @@ const tools = [
     status: "Imported",
     description: "Complete a hexagon number web: three numbers on each branch add to the centre target. Six levels, individual answer checks and a PDF of the same puzzle with an optional answer key.",
     tags: ["number web", "hexagon", "number bonds", "missing numbers", "addition", "subtraction", "mental maths", "primary", "decimals", "negative numbers", "printable puzzle"],
-    toolPath: "tools/number-web/index.html?v=number-web-1",
+    toolPath: "tools/number-web/index.html?v=number-web-click-2",
     imported: true,
     teacherNotes: ["Each branch has three numbers adding to the centre target; exactly one is missing. The near-centre number is part of the sum, not a subtotal.", "Four-, six- and eight-branch webs progress from bonds to 10 and lower-primary numbers to larger whole numbers, tenths and negative integers.", "Download the current puzzle as an A4 PDF, with an optional separate answer key. The question page preserves its original blanks even after on-screen answers are revealed."]
   },

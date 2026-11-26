@@ -4,7 +4,7 @@ Teacher-facing missing-number puzzles. Each independent branch has three addends
 
 Six controlled levels use 4, 6 or 8 branches: bonds to 10; positive integers within 20; within 50; within 200; positive tenths; and integers including negatives. All arithmetic is generated in integer units (tenths use a scale of 10). Blanks are spread over all three positions. Seeds reproduce the displayed puzzle. No pupil accounts, server requests, storage or tracking data are added.
 
-`model.js` holds seeded generation and geometry. `web.js` renders accessible SVG, checks/reveals individual answers, resets levels/targets and downloads PDFs. The desktop workspace puts controls beside a large square diagram; smaller viewports use controls above/below the web. Teacher guidance is in a dialog.
+`model.js` holds seeded generation and geometry. `web.js` renders accessible SVG, checks answers and toggles individual answers by clicking a blank hexagon (or Enter/Space), resets levels/targets and downloads PDFs. The desktop workspace puts controls beside a large square diagram; smaller viewports use controls above/below the web. Teacher guidance is in a dialog.
 
 `pdf.js` writes a vector A4 PDF in-browser with standard PDF base fonts. It uses the same model and coordinates as the SVG. Questions always preserve original blanks, regardless of typed/revealed answers; the optional second page completes those blanks. PDF downloads contain only the current puzzle, not a newly generated puzzle. No CDN, third-party export service or rasterisation is needed.
 
