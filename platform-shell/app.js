@@ -2432,9 +2432,9 @@ const tools = [
     status: "Imported",
     description: "Follow a branching number trail with changing starting numbers and operations. Three levels, exact whole-number division, individual answer reveals and printable challenges.",
     tags: ["number trails", "number maze", "function machines", "four operations", "addition", "subtraction", "multiplication", "division", "mental maths", "negative numbers", "primary"],
-    toolPath: "tools/number-trails/index.html?v=number-trails-1",
+    toolPath: "tools/number-trails/index.html?v=number-trails-pdf-2",
     imported: true,
-    teacherNotes: ["Follow each arrow from its source circle. Branches use the same source value independently.", "Choose a random challenge or set a starting number. First steps uses addition and subtraction; mixed operations includes exact division; integer challenge allows negative answers.", "Reveal one circle at a time or show all answers. Print / PDF prints the current view; hide answers first for a question sheet."]
+    teacherNotes: ["Follow each arrow from its source circle. Branches use the same source value independently.", "Choose a random challenge or set a starting number. First steps uses addition and subtraction; mixed operations includes exact division; integer challenge allows negative answers.", "Reveal one circle at a time or show all answers. Download a sharp vector PDF: a blank question sheet with an optional separate answer key."]
   },
   {
     slug: "number-web",

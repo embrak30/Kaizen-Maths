@@ -12,9 +12,11 @@ two, and identity operations are excluded. Circles have accessible labels for ke
 Individual circle reveals support mouse and keyboard; Show/Hide answers resets
 all answers. New challenges and level changes clear all reveals.
 
-Print / PDF uses browser printing, preserving the currently visible answers.
-Hide answers for a question sheet. This does not generate a separate answer-key
-file or store pupil data. Teacher guidance stays in a dialog.
+Download PDF creates an A4 landscape vector document, with black lines and large
+numbers. Signs are vector paths, avoiding missing multiplication/division glyphs.
+Question sheets always have eleven blank circles regardless of on-screen reveals.
+The optional answer key is a separate second page of the same PDF. No pupil data
+is stored. Teacher guidance stays in a dialog.
 
 `model.js` exports deterministic generation for checks. Run
 `node tests/number-trails.test.cjs` with the shared jsdom runtime available through
