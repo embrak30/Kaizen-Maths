@@ -2423,6 +2423,19 @@ const tools = [
     teacherNotes: ["Select a grade and skill, or use a linked task. Assessment-style questions are the default; add bar-model support for the same questions when teaching.", "Print either question version, both versions together, answers, or a complete pack with worked solutions and suggested marking guidance.", "Original classroom practice covering selected number and measurement skills; choose questions to match your class and curriculum."]
   },
   {
+    slug: "multiplication-methods",
+    title: "Multiplication Methods Explorer",
+    category: "Classroom Tools",
+    level: "Primary / KS3 / Teacher Development",
+    type: "Interactive Explainer",
+    access: "Trial",
+    status: "Imported",
+    description: "Understand six multiplication methods through small teaching steps: partitioning, area grids, column multiplication, lattice, Russian multiplication and doubling/halving. Compare the same partial products across representations.",
+    toolPath: "tools/multiplication-methods/index.html?v=multiplication-methods-1",
+    imported: true,
+    teacherNotes: ["Choose a preset or enter positive whole-number factors: first factor up to 999, second factor up to 99. Switching methods preserves the calculation.", "Next step, Back and Reset reveal individual digit products, regrouping, partial products and diagonal sums. Teacher explanations are kept in a separate panel.", "Compare methods links area-grid rows, partitioned products and column rows using matching colours. Doubling and halving preserves exact halves rather than rounding odd numbers down."]
+  },
+  {
     slug: "number-trails",
     title: "Number Trails",
     category: "Classroom Tools",
@@ -2806,6 +2819,7 @@ const subjectToolGroups = {
     "bar-models": "Board Displays and Visuals",
     "odd-one-out": "Board Displays and Visuals",
     "number-web": "Board Displays and Visuals",
+    "multiplication-methods": "Board Displays and Visuals",
     "area-models": "Board Displays and Visuals",
     "maths-structure-lab": "Board Displays and Visuals",
     "equation-balance-models": "Board Displays and Visuals",
@@ -24883,6 +24897,11 @@ function toolInfoText(tool) {
 }
 
 function toolInsightProfile(tool) {
+  if (tool.slug === "multiplication-methods") return {
+    misconceptions: ["Treating the tens digit as units, or omitting the zero place in a tens partial product.", "Adding lattice cells rather than collecting the same place-value diagonals.", "Rounding an odd factor down in doubling and halving, where its exact half must be retained."],
+    questions: ["Where is the same partial product in each representation?", "Why is a regrouped ten written in the next column?", "Why does Russian multiplication keep the values opposite odd left-hand entries?"]
+  };
+
   if (tool.slug === "number-web") return {
     misconceptions: ["Adding only the two outer numbers instead of all three numbers on a branch.", "Treating the near-centre number as a subtotal rather than one of the three addends.", "Subtracting only one given number from the target, or losing a negative sign in the integer challenge."],
     questions: ["What total do the two given numbers make? How much more reaches the target?", "How can you check your missing number by adding all three numbers?", "Does moving the blank change the total needed? Can a missing number be negative?"]
@@ -26088,6 +26107,8 @@ function toolClassroomQuestions(tool) {
 }
 
 function toolUseSuggestions(tool) {
+  if (tool.slug === "multiplication-methods") return ["Begin with partitioning, then connect it to the area grid and column method using the same factors.", "Use Next step slowly and ask pupils to predict the next digit, partial product or diagonal sum.", "Open Teacher explanation for the mathematical reason, a discussion question and a common misconception.", "Use Compare methods to connect the colour-matched partial products; choose examples where doubling and halving is helpful."];
+
   if (tool.slug === "number-web") return ["Choose a level and target, then invite pupils to solve one branch and explain their reasoning.", "Select a blank to check an answer or reveal one missing number without completing the whole web.", "Use Show answers after discussion; New web makes a fresh puzzle at the same level and target.", "Download the current puzzle as an A4 PDF, with a separate answer-key page if required. Pupils can show their working on paper."];
 
   if (tool.slug === "odd-one-out") return [
