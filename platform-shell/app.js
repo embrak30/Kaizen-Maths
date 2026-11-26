@@ -2431,6 +2431,7 @@ const tools = [
     access: "Trial",
     status: "Imported",
     description: "Understand six multiplication methods through small teaching steps: partitioning, area grids, column multiplication, lattice, Russian multiplication and doubling/halving. Compare the same partial products across representations.",
+    tags: ["multiplication", "teaching methods", "place value", "regrouping", "distributive law", "area model", "partitioning", "lattice", "Russian multiplication", "doubling", "halving", "teacher development"],
     toolPath: "tools/multiplication-methods/index.html?v=multiplication-methods-1",
     imported: true,
     teacherNotes: ["Choose a preset or enter positive whole-number factors: first factor up to 999, second factor up to 99. Switching methods preserves the calculation.", "Next step, Back and Reset reveal individual digit products, regrouping, partial products and diagonal sums. Teacher explanations are kept in a separate panel.", "Compare methods links area-grid rows, partitioned products and column rows using matching colours. Doubling and halving preserves exact halves rather than rounding odd numbers down."]
