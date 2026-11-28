@@ -1,6 +1,9 @@
 (function(){
 'use strict';const M=window.KaizenPythagoras,$=id=>document.getElementById(id),SVG='http://www.w3.org/2000/svg';
-const stages=[['Right triangle','Start with a right angle','The sides a and b meet at 90°. The opposite side, c, is the hypotenuse.'],['Build squares','A square on each leg','Each square has the same side length as its leg. Its area is the side length multiplied by itself.'],['Cut','Five pieces, no area lost','Cut the larger square through its centre, parallel to the sides of the hypotenuse square. Keep the smaller square whole.'],['Rearrange','Slide the same five pieces','Move the pieces into the square on c. Nothing is stretched, resized or added.'],['Area equality','A perfect fit','The same pieces fill the hypotenuse square exactly. The two original square areas add up to its area.']];
+const dissectionStages=[['Right triangle','Start with a right angle','The sides a and b meet at 90°. The opposite side, c, is the hypotenuse.'],['Build squares','A square on each leg','Each square has the same side length as its leg. Its area is the side length multiplied by itself.'],['Cut','Five pieces, no area lost','Cut the larger square through its centre, parallel to the sides of the hypotenuse square. Keep the smaller square whole.'],['Rearrange','Slide the same five pieces','Move the pieces into the square on c. Nothing is stretched, resized or added.'],['Area equality','A perfect fit','The same pieces fill the hypotenuse square exactly. The two original square areas add up to its area.']];
+const countStages=[['Unit squares'],['Hypotenuse grid'],['Move smaller tiles'],['Move larger tiles'],['Area equality']];
+const frameStages=[['Unit squares'],['Hypotenuse grid'],['Move whole block'],['Fill the rim'],['Area equality']];
+let mode='count',stages=countStages;
 let stage=0,p=1,a=4,b=3,geometry=M.build(a,b),frame=0,running=false,whole=false,pausedWhole=false,last=null,hold=0;
 const animated=()=>stage>=1&&stage<=3,fmt=n=>Number(n.toFixed(4)).toLocaleString('en-GB',{maximumFractionDigits:4}),exact=n=>Math.abs(n-Math.round(n))<1e-10?`= ${Math.round(n)}`:`≈ ${fmt(n)}`;
 const smooth=t=>{t=M.clamp(t);return t*t*(3-2*t);};
@@ -10,8 +13,17 @@ const g=geometry,svg=$('diagram'),scale=Math.min(800/(g.H+2*g.V),540/(2*g.H+g.V)
 const point=([x,y])=>[ox+x*scale,oy-y*scale],points=poly=>poly.map(q=>point(q).join(',')).join(' '),poly=(pts,attrs={})=>svg.append(element('polygon',{points:points(pts),...attrs}));
 const line=(from,to,attrs={})=>{const x=point(from),y=point(to);svg.append(element('line',{x1:x[0],y1:x[1],x2:y[0],y2:y[1],...attrs}));};
 const text=(q,str,color='#eaf3ff',size=25,offset=[0,0])=>{const pt=point(q);svg.append(element('text',{x:pt[0]+offset[0],y:pt[1]+offset[1],fill:color,'font-size':size,'font-weight':700,style:`paint-order:stroke;stroke:${color==='#101d2c'?'none':'#101d2c'};stroke-width:5px;stroke-linejoin:round`},str));};
-svg.replaceChildren();svg.setAttribute('aria-label',`Right triangle with legs a = ${fmt(a)}, b = ${fmt(b)}. ${stages[stage][1]}.`);
+svg.replaceChildren();svg.setAttribute('aria-label',`Right triangle with legs a = ${fmt(a)}, b = ${fmt(b)}. ${stages[stage][1]||stages[stage][0]}.`);
 const defs=element('defs'),pattern=element('pattern',{id:'grid',width:40,height:40,patternUnits:'userSpaceOnUse'});pattern.append(element('path',{d:'M 40 0 L 0 0 0 40',fill:'none',stroke:'#254054','stroke-width':.5}));defs.append(pattern);svg.append(defs,element('rect',{width:900,height:650,fill:'url(#grid)'}));
+if(mode!=='dissection'){
+  const lesson=window.KaizenPythagorasSquares.draw({g,mode,stage,p,poly,line,text,scale});
+  $('title').textContent=lesson.heading;$('prompt').textContent=lesson.prompt;$('working').innerHTML=lesson.work;
+  $('working').style.setProperty('--area-a','#176eb1');$('working').style.setProperty('--area-b','#087e6d');
+  $('key-a').textContent=`${g.H} × ${g.H} · ${lesson.bigCount} squares`;$('key-b').textContent=`${g.V} × ${g.V} · ${lesson.smallCount} squares`;
+  document.querySelector('.key-a').style.background='#52b7ff';document.querySelector('.key-b').style.background='#35dfc4';
+  svg.setAttribute('aria-label',`Right triangle ${g.V}, ${g.H}, ${Math.round(g.c)}. ${lesson.heading}.`);
+  controls();return;
+}
 if(stage>=1){poly(g.target,{fill:'#ffe17c', 'fill-opacity':.035,stroke:'#ffe17c','stroke-width':2,'stroke-dasharray':'9 7'});if(stage<3)text([(g.H+g.V)/2,(g.H+g.V)/2],'c²','#ffe17c',36);}
 const bigColor='#52b7ff',smallColor='#35dfc4';
 $('working').style.setProperty('--area-a',g.horizontal==='a'?'#176eb1':'#087e6d');$('working').style.setProperty('--area-b',g.horizontal==='b'?'#176eb1':'#087e6d');
@@ -25,15 +37,30 @@ document.querySelector('.key-a').style.background=g.horizontal==='a'?'linear-gra
 $('step-label').textContent=`Step ${stage+1} of 5`;$('title').textContent=stages[stage][1];$('prompt').textContent=stages[stage][2];
 const A=`<span class="a">a²</span>`,B=`<span class="b">b²</span>`,C=`<span class="c">c²</span>`;
 $('working').innerHTML=stage===0?'<p>a ⟂ b</p><p class="note">c is opposite the right angle.</p>':stage===1?`<p>${A} = ${fmt(a)} × ${fmt(a)} = ${fmt(a*a)}</p><p>${B} = ${fmt(b)} × ${fmt(b)} = ${fmt(b*b)}</p>`:stage===2?'<p>4 pieces + 1 square</p><p class="note">Same shapes. Same total area.</p>':stage===3&&p<.999?'<p>Slide. Keep every piece.</p><p class="note">Watch the outline on c fill up.</p>':`<p class="equation">${A} + ${B} = ${C}</p><p>${fmt(a*a)} + ${fmt(b*b)} = ${fmt(a*a+b*b)}</p><p class="note">${stage===4?`c ${exact(g.c)} · no gaps, no overlaps`:'An exact fit — nothing left over.'}</p>`;
+controls();
+}
+function controls(){
+$('step-label').textContent=`Step ${stage+1} of 5`;
 $('back').disabled=stage===0;$('next').disabled=stage===4;$('position').disabled=!animated();$('position').value=p;$('play').disabled=!animated();$('play').textContent=running&&!whole?'Pause stage':p>=1?'Replay stage':'Play stage';$('play').setAttribute('aria-pressed',String(running&&!whole));$('whole').textContent=whole?'Pause proof':pausedWhole?'Resume proof':'Play whole proof';$('whole').setAttribute('aria-pressed',String(whole));document.querySelectorAll('[data-stage]').forEach(btn=>btn.setAttribute('aria-pressed',String(Number(btn.dataset.stage)===stage)));
 }
 function stop(){cancelAnimationFrame(frame);frame=0;running=false;whole=false;pausedWhole=false;last=null;hold=0;}
-function tick(time){if(!running)return;if(last===null)last=time;const dt=Math.min(100,time-last);last=time;const duration=[1000,3200,2600,11500,2200][stage];if(p<1)p=M.clamp(p+dt/duration);else if(whole){hold+=dt;if(hold>=1100){if(stage<4){stage++;p=0;hold=0;}else{stop();draw();return;}}}else{stop();draw();return;}draw();frame=requestAnimationFrame(tick);}
+function tick(time){if(!running)return;if(last===null)last=time;const dt=Math.min(100,time-last);last=time;const duration=(mode==='dissection'?[1000,3200,2600,11500,2200]:[1000,4000,mode==='frame'?5500:6500,9500,2200])[stage];if(p<1)p=M.clamp(p+dt/duration);else if(whole){hold+=dt;if(hold>=1100){if(stage<4){stage++;p=0;hold=0;}else{stop();draw();return;}}}else{stop();draw();return;}draw();frame=requestAnimationFrame(tick);}
 function start(all=false,resume=false){const savedHold=hold;stop();whole=all;running=true;if(all&&!resume){stage=0;p=0;}else if(!all&&p>=1)p=0;if(resume)hold=savedHold;draw();frame=requestAnimationFrame(tick);}
 function go(n){stop();stage=M.clamp(n,0,4);p=animated()?0:1;$('status').textContent='';if(animated()&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches)start();else{p=1;draw();}}
-$('stages').innerHTML=stages.map(([label],i)=>`<button data-stage="${i}" aria-pressed="${i===0}">${label}</button>`).join('');document.querySelectorAll('[data-stage]').forEach(btn=>btn.addEventListener('click',()=>go(Number(btn.dataset.stage))));
+function stageButtons(){$('stages').innerHTML=stages.map(([label],i)=>`<button data-stage="${i}" aria-pressed="${i===0}">${label}</button>`).join('');document.querySelectorAll('[data-stage]').forEach(btn=>btn.addEventListener('click',()=>go(Number(btn.dataset.stage))));}
+stageButtons();
 $('back').onclick=()=>go(stage-1);$('next').onclick=()=>go(stage+1);$('play').onclick=()=>{if(running){stop();draw();}else start();};$('whole').onclick=()=>{if(whole){const savedHold=hold;stop();pausedWhole=true;hold=savedHold;draw();}else start(true,pausedWhole);};$('position').oninput=()=>{stop();p=Number($('position').value);draw();};$('reset').onclick=()=>{stop();stage=0;p=1;$('status').textContent='';draw();};
-function update(){stop();try{const nextA=$('leg-a').valueAsNumber,nextB=$('leg-b').valueAsNumber;M.validate(nextA,nextB);a=nextA;b=nextB;geometry=M.build(a,b);stage=0;p=1;$('status').textContent='';draw();}catch(e){$('status').textContent=e.message;draw();}}
+function update(){stop();try{const nextA=$('leg-a').valueAsNumber,nextB=$('leg-b').valueAsNumber;M.validate(nextA,nextB);if(mode!=='dissection')M.tilePlan(M.build(nextA,nextB),mode);a=nextA;b=nextB;geometry=M.build(a,b);stage=0;p=1;$('status').textContent='';draw();}catch(e){$('status').textContent=e.message;draw();}}
 for(const id of ['leg-a','leg-b'])$(id).addEventListener('change',()=>{$('preset').value='custom';update();});$('preset').onchange=()=>{if($('preset').value==='custom')return;const values=$('preset').value.split(',');$('leg-a').value=values[0];$('leg-b').value=values[1];update();};
+$('method').onchange=()=>{
+  stop();mode=$('method').value;stages=mode==='dissection'?dissectionStages:mode==='frame'?frameStages:countStages;
+  let reset=false;if(mode!=='dissection'){try{M.tilePlan(geometry,mode);}catch{a=4;b=3;geometry=M.build(a,b);$('leg-a').value=a;$('leg-b').value=b;$('preset').value='4,3';reset=true;}}
+  $('method-note').textContent=mode==='dissection'?'A general proof: five pieces slide without changing shape.':mode==='frame'?'Keep the larger square joined; fill the remaining space with unit squares.':'Whole-unit examples · custom leg lengths are in Dissection proof.';
+  for(const option of $('preset').options)option.disabled=mode!=='dissection'&&['5,5','custom'].includes(option.value);
+  $('leg-a').readOnly=$('leg-b').readOnly=mode!=='dissection';
+  $('leg-a').title=$('leg-b').title=mode==='dissection'?'Change either leg length':'Choose a whole-number triple above. Custom lengths are available in Dissection proof.';
+  stage=0;p=1;stageButtons();$('status').textContent=reset?'Switched to 3–4–5 for whole-unit squares.':'';draw();
+};
+$('method').onchange();
 $('guide-open').onclick=()=>{stop();draw();$('guide').showModal();};$('guide-close').onclick=()=>$('guide').close();document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();draw();}});window.addEventListener('pagehide',stop);draw();
 })();

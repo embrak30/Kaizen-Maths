@@ -4,7 +4,35 @@ Routes: `#/tools/pythagoras-proof` and `#/classroom/pythagoras-proof`.
 Geometry → Trigonometry and Bearings; also in the cross-topic collection
 `#/collections/visual-proofs` (Visual Manipulatives & Proofs).
 
-Five stages: right triangle, grow the leg squares, cut, rearrange, area equality.
+Three methods share the same workspace and animation controls:
+
+- **Count unit squares** (default): 3×3 and 4×4 source grids, five unit spaces
+  along the hypotenuse, nine teal tiles first, sixteen blue tiles next, 5×5 result.
+- **Keep the larger square whole**: rotate and slide the joined 4×4 block into
+  the 5×5 grid; move the nine teal tiles into the remaining L-shaped rim.
+- **Dissection proof**: right triangle, grow the leg squares, cut, rearrange,
+  area equality. This is the original general proof, retained unchanged.
+
+Counting methods require integer legs and integer hypotenuse. They use the
+five triple presets (including 3–4–5, 5–12–13 and 6–8–10); custom/equal-leg inputs
+remain available in Dissection proof. In counting views those inputs are
+read-only, and the teacher guide explains the restriction. Non-triple lengths
+switch to 3–4–5 when entering a counting method, with a visible notice.
+
+Counting illustrates the equality for these known triples; it does not prove
+it for every right triangle. No areas are morphed or stretched: individual tiles
+translate and rotate rigidly. The joined-block variant applies one rigid
+transformation to every cell of the larger square, preserving all adjacencies.
+No fractional cuts are needed because the block rotates to align with the
+hypotenuse grid. Empty gold outlines are measuring spaces, not extra tiles.
+Labels are placed outside the grids; only c's side length sits in the triangle.
+
+`square-view.js` renders the counting views; pure tiling and rigid-motion helpers
+are in `model.js`. `tests/pythagoras-squares.test.cjs` checks every unit tile's
+area/edges at intermediate positions, unique occupancy of every target cell,
+joined-block cohesion, both count orders, controls and method switching.
+
+The original dissection supports:
 Independent legs 1–24, up to two decimals. Five Pythagorean triple presets and
 equal legs. Changing dimensions stops playback and returns to the beginning.
 The larger leg is drawn horizontally, with a/b labels following their inputs.

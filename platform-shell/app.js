@@ -964,11 +964,11 @@ const tools = [
     type: "Interactive Explainer",
     access: "Trial",
     status: "Imported",
-    description: "Build squares on a right triangle, cut the larger square and slide five unchanged pieces into the hypotenuse square. Adjustable legs, Pythagorean triples and a fully animated proof of a² + b² = c².",
+    description: "Explore three animated views of Pythagoras: count and move unit squares, keep the larger square joined and fill the rim, or use a five-piece dissection. Pythagorean triples, adjustable dissection lengths and step-by-step playback.",
     tags: ["pythagoras", "pythagorean theorem", "visual proof", "dissection", "rearrangement", "squares", "hypotenuse", "right triangle", "manipulatives"],
-    toolPath: "tools/pythagoras-proof/index.html?v=pythagoras-proof-1",
+    toolPath: "tools/pythagoras-proof/index.html?v=pythagoras-squares-2",
     imported: true,
-    teacherNotes: ["Perigal’s five-piece dissection uses translations only: four pieces from the larger leg square and the smaller square intact.", "Five controlled stages, play whole proof, pause and scrub. Independent leg lengths from 1 to 24 (up to two decimals), five triple presets and equal legs.", "The final arrangement tiles the hypotenuse square without gaps or overlaps. The teacher guide explains the general fit, including equal and swapped legs."]
+    teacherNotes: ["Three methods in one workspace: move smaller then larger unit squares, move the larger block intact then fill the rim, and Perigal’s general dissection proof.", "Five stages per method, full playback, pause/resume and scrubbing. Counting uses whole-number triples; dissection also supports independent leg lengths from 1 to 24 and equal legs.", "Every counting tile stays a rigid unit square; the intact-block method rotates the whole grid together. Teacher notes distinguish numerical triple demonstrations from the general dissection proof."]
   },
   {
     slug: "pythagoras-theorem",
