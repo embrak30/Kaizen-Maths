@@ -2631,7 +2631,7 @@ const tools = [
     status: "Imported",
     description: "A one-minute target-number challenge where students combine five numbers using operations to hit or get close to a target.",
     tags: ["classroom", "game", "number sense", "operations", "mental maths", "target number"],
-    toolPath: "tools/math-in-a-minute/index.html?v=mobile-controls-2",
+    toolPath: "tools/math-in-a-minute/index.html?v=mobile-board-3",
     imported: true,
     teacherNotes: [
       "Useful as a starter, plenary, or fast whole-class number fluency challenge.",
