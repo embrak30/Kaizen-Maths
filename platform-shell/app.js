@@ -957,6 +957,20 @@ const tools = [
     ]
   },
   {
+    slug: "pythagoras-proof",
+    title: "Pythagoras: A Moving Proof",
+    category: "Geometry",
+    level: "Upper Primary / KS3 / GCSE / IGCSE",
+    type: "Interactive Explainer",
+    access: "Trial",
+    status: "Imported",
+    description: "Build squares on a right triangle, cut the larger square and slide five unchanged pieces into the hypotenuse square. Adjustable legs, Pythagorean triples and a fully animated proof of a² + b² = c².",
+    tags: ["pythagoras", "pythagorean theorem", "visual proof", "dissection", "rearrangement", "squares", "hypotenuse", "right triangle", "manipulatives"],
+    toolPath: "tools/pythagoras-proof/index.html?v=pythagoras-proof-1",
+    imported: true,
+    teacherNotes: ["Perigal’s five-piece dissection uses translations only: four pieces from the larger leg square and the smaller square intact.", "Five controlled stages, play whole proof, pause and scrub. Independent leg lengths from 1 to 24 (up to two decimals), five triple presets and equal legs.", "The final arrangement tiles the hypotenuse square without gaps or overlaps. The teacher guide explains the general fit, including equal and swapped legs."]
+  },
+  {
     slug: "pythagoras-theorem",
     title: "Pythagoras' Theorem",
     category: "Geometry",
@@ -2782,6 +2796,7 @@ const subjectToolGroups = {
     "cylinders-cones-volume-surface-area": "3D Measures",
     "pyramids-spheres-volume-surface-area": "3D Measures",
     "pythagoras-theorem": "Trigonometry and Bearings",
+    "pythagoras-proof": "Trigonometry and Bearings",
     "trigonometric-ratios": "Trigonometry and Bearings",
     "sine-cosine-rule": "Trigonometry and Bearings",
     "bearings": "Trigonometry and Bearings",
@@ -18045,7 +18060,22 @@ function bindToolIndexAccordion() {
   });
 }
 
+const visualProofGroups = {
+  "Visual proofs": ["pythagoras-proof", "area-rearrangement", "radians-explainer", "squeeze-theorem"],
+  "Visual manipulatives": ["unit-circle-explainer", "bar-models", "multiplication-methods", "build-add-take-away", "cross-section-solids", "revolution-explorer"]
+};
+function renderVisualProofs() {
+  setPageSeo(titleWithSite("Visual Manipulatives & Proofs"), "Animated mathematical proofs and manipulatives for classroom teaching, with step-by-step controls.");
+  const visible = filteredTools("");
+  app.innerHTML = pageHeader("Visual Manipulatives & Proofs", "Build an idea step by step. Move the pieces, pause the animation and make the mathematics visible.", `<a class="button" href="#/teaching-tools">All teaching tools</a>`) +
+    `<section class="tool-index-groups" aria-label="Visual manipulatives and proofs">${Object.entries(visualProofGroups).map(([label,slugs]) => {
+      const group = slugs.map(slug => visible.find(tool => tool.slug === slug)).filter(Boolean);
+      return `<section class="panel" style="margin-bottom:12px"><h2>${label}</h2><div class="tool-index-list">${group.length ? group.map(toolIndexRow).join("") : "<p>No tools match the current search.</p>"}</div></section>`;
+    }).join("")}</section>`;
+}
+
 function renderToolLibrary(extraCategory = "") {
+  if (extraCategory === "visual-proofs") { renderVisualProofs(); return; }
   const visible = filteredTools(extraCategory);
   const collectionTitle = extraCategory ? tools.find((tool) => isVisibleTool(tool) && categorySlug(tool.category) === extraCategory)?.category || "Collection" : "Tool Library";
   const collectionDescriptions = {
@@ -18060,7 +18090,8 @@ function renderToolLibrary(extraCategory = "") {
   app.innerHTML = `
     ${pageHeader(
       extraCategory ? collectionTitle : "Teaching Tools",
-      extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Question generators, interactive diagrams and conceptual explainers. Choose a topic to find a tool."
+      extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Question generators, interactive diagrams and conceptual explainers. Choose a topic to find a tool.",
+      `<a class="button" href="#/collections/visual-proofs">Visual Manipulatives &amp; Proofs</a>`
     )}
     ${visible.length
       ? renderGroupedToolIndex(visible, collectionTitle, { groupByCategory: !extraCategory })
@@ -24513,7 +24544,9 @@ function relatedToolTokens(tool) {
 const curatedRelatedToolSlugs = {
   "number-web": ["number-sense-flexible-calculation", "build-add-take-away", "integer-operations"],
   "odd-one-out": ["number-sense-flexible-calculation", "polygons-angles", "missing-angles"],
-  "area-rearrangement": ["circles-area-circumference", "area-triangles", "area-rectangles"],
+  "pythagoras-proof": ["pythagoras-theorem", "area-rearrangement", "radians-explainer"],
+  "pythagoras-theorem": ["pythagoras-proof", "trigonometric-ratios", "area-rearrangement"],
+  "area-rearrangement": ["pythagoras-proof", "circles-area-circumference", "area-triangles", "area-rectangles"],
   "circles-area-circumference": ["area-rearrangement", "area-rectangles", "area-triangles"],
   "area-triangles": ["area-rearrangement", "area-rectangles", "circles-area-circumference"],
   "loci-constructions": ["transformations", "missing-angles", "circle-theorems", "scale-drawing-similar-shapes"],
@@ -24914,6 +24947,10 @@ function toolInfoText(tool) {
 }
 
 function toolInsightProfile(tool) {
+  if (tool.slug === "pythagoras-proof") return {
+    misconceptions: ["Pythagoras applies to right-angled triangles; c is always opposite the right angle.", "The equation compares square areas, not a + b with c.", "The pieces translate without resizing; the final tiling, rather than overlaps during movement, establishes equality."],
+    questions: ["What must stay unchanged as the pieces move?", "Does the fit still work when the legs are equal or are not a Pythagorean triple?", "How does the final fit show a² + b² = c²?"]
+  };
   if (tool.slug === "radians-explainer") return {
     misconceptions: ["Thinking three radius-length arcs exactly fill a semicircle, rather than pi radius lengths.", "Treating pi as an angle unit rather than a number of radians.", "Thinking a larger circle gives a larger radian measure for the same angle, instead of using arc length divided by radius."],
     questions: ["What angle is made when the arc length equals one radius?", "Why is the semicircle arc pi times its radius?", "If we double both radius and arc length, what happens to their ratio?"]
@@ -31338,7 +31375,7 @@ function resourceChoiceCards(cards) {
 function renderExploreOverview() {
   app.innerHTML = pageHeader("Explore maths resources", "Choose a tool for your lesson, build a worksheet, or download a ready-made resource.") +
     `<section class="resource-overview" aria-label="Explore teaching resources">${resourceChoiceCards([
-      ['◈','Teaching Tools','Question generators, interactive diagrams and conceptual explainers for your lessons.','#/teaching-tools','teal','<a class="resource-choice-action" href="#/teaching-tools">Browse teaching tools →</a>'],
+      ['◈','Teaching Tools','Question generators, interactive diagrams and conceptual explainers for your lessons.','#/teaching-tools','teal','<a class="resource-choice-action" href="#/teaching-tools">Browse teaching tools →</a><a class="resource-choice-secondary" href="#/collections/visual-proofs">Visual Manipulatives &amp; Proofs</a>'],
       ['▦','Build a Worksheet','Choose topics and create your own questions, worksheets and tests, with answers and worked solutions.','#/worksheet-generator','amber','<a class="resource-choice-action" href="#/worksheet-generator">Open Worksheet Builder →</a><a class="resource-choice-secondary" href="#/gcse-exam-style">Exam & assessment builder</a>'],
       ['▤','Ready-Made Resources','Download starters, exit tickets and topic worksheets, with separate answers and worked solutions.','#/ready-made-resources','violet','<a class="resource-choice-action" href="#/ready-made-resources">Browse ready-made resources →</a>']
     ])}<p class="resource-overview-help"><a href="#/how-to-use-this-site">New here? Take a quick tour ↗</a><span>Courses and professional development are in <a href="#/teacher-reference">Teacher reference & workspace guide</a>.</span></p></section>`;
@@ -31384,7 +31421,7 @@ function renderTeacherReference() {
   setPageSeo(titleWithSite("Teacher reference & workspace guide"),"Curriculum maps, training, pupil tasks and school access, together in one place.");
   const groups=[
     ['Plan your teaching',[['Primary practice packs','#/primary-topic-packs'],['U.S. Precalculus','#/precalculus'],['CSEC Mathematics worksheets','#/csec-maths'],['IB Mathematics worksheets','#/ib-maths'],['GCSE worksheets','#/gcse-maths'],['AP Calculus worksheets','#/ap-calculus'],['Edexcel A level worksheets','#/alevel-maths'],['Further Mathematics Core Pure','#/further-maths'],['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
-    ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Make a worksheet: screenshot guide','/guides/make-a-worksheet'],['Classroom tools','#/collections/classroom-tools'],['Kaizen University','#/kaizen-university']]],
+    ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Make a worksheet: screenshot guide','/guides/make-a-worksheet'],['Classroom tools','#/collections/classroom-tools'],['Visual Manipulatives & Proofs','#/collections/visual-proofs'],['Kaizen University','#/kaizen-university']]],
     ['Work with learners',[['Pupil tasks','#/class-tasks'],['Tutor Workspace','#/tutor-workspace'],['School space','#/school-space'],['Book a demo','#/book-demo'],['Contact / enquire','#/contact'],['Partners','#/partners']]]
   ];
   app.innerHTML=pageHeader('Teacher reference & workspace guide','Curriculum maps, training, pupil tasks and school access, together in one place.')+

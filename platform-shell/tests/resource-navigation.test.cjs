@@ -6,6 +6,11 @@ const sidebar=doc.querySelector('.sidebar');function go(hash){w.location.hash=ha
 for(const nav of doc.querySelectorAll('.sidebar .nav-list,.mobile-nav .nav-list'))assert.deepEqual([...nav.querySelectorAll('.resource-nav a')].map(a=>a.textContent),['Teaching Tools','Build a Worksheet','Ready-Made Resources']);
 assert.equal(doc.querySelectorAll('.resource-choice').length,3);assert(!doc.querySelector('.tool-index-groups'));assert(doc.querySelector('.resource-overview a[href="#/gcse-exam-style"]'));
 go('#/teaching-tools');assert.equal(doc.querySelector('h1').textContent,'Teaching Tools');assert.equal(doc.querySelectorAll('.tool-index-group').length,7);assert(!doc.querySelector('.resource-choice-grid'));assert(doc.querySelector('.sidebar [href="#/teaching-tools"]').classList.contains('active'));
+// Visual proofs have a cross-topic home without moving their original topic entries.
+assert(doc.querySelector('#app a[href="#/collections/visual-proofs"]'));
+go('#/collections/visual-proofs');assert.equal(doc.querySelector('h1').textContent,'Visual Manipulatives & Proofs');assert.equal(doc.querySelectorAll('#app .tool-index-row').length,10);assert(doc.querySelector('#app a[href="#/tools/pythagoras-proof"]'));assert(doc.querySelector('#app a[href="#/tools/radians-explainer"]'));assert(doc.querySelector('#app a[href="#/tools/bar-models"]'));assert(doc.querySelector('.sidebar [href="#/teaching-tools"]').classList.contains('active'));assert.equal(doc.title,'Visual Manipulatives & Proofs | Kaizen Maths');
+go('#/collections/geometry');assert(doc.querySelector('#app a[href="#/tools/pythagoras-proof"]'));
+go('#/teacher-reference');assert(doc.querySelector('#app a[href="#/collections/visual-proofs"]'));
 // Search from the overview opens the tool browser and continues to work within it.
 go('#/tools');const search=doc.querySelector('#globalSearch');search.value='quadratic';search.dispatchEvent(new w.Event('input'));assert.equal(w.location.hash,'#/teaching-tools');w.renderRoute();assert(doc.querySelector('.tool-index-group'));assert(!doc.querySelector('#app').textContent.includes('No tools match'));
 search.value='';search.dispatchEvent(new w.Event('input'));
