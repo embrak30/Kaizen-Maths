@@ -20,5 +20,10 @@
       "source": "/guides/make-a-worksheet",
       "destination": "/guides/make-a-worksheet/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/newsletter.js": {
+      "maxDuration": 60
+    }
+  }
 }

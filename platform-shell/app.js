@@ -614,6 +614,20 @@ const tools = [
     ]
   },
   {
+    slug: "radians-explainer",
+    title: "Why Pi Radians = 180 Degrees",
+    category: "Algebra",
+    level: "KS3 / GCSE / A-Level / IB / Precalculus",
+    type: "Interactive Explainer",
+    access: "Trial",
+    status: "Imported",
+    description: "Wrap a radius-length arc around a circle, measure the semicircle and connect arc length divided by radius to pi radians and 180 degrees. Step-by-step animation, variable radius and angle exploration.",
+    tags: ["radians", "degrees", "pi", "arc length", "semicircle", "circumference", "angle measure", "trigonometry", "teacher explainer"],
+    toolPath: "tools/radians-explainer/index.html?v=radians-1",
+    imported: true,
+    teacherNotes: ["Six stages connect radius, a one-radian arc, three arcs plus the remainder, half the circumference and the pi-radian half-turn.", "Play, pause or scrub the wrapping/counting animation. Changing radius demonstrates that arc length divided by radius is invariant for a fixed angle.", "Teacher explanations distinguish exact pi from 3.1416 and show why three one-radian arcs do not complete a semicircle. Continue with the linked Unit Circle Explainer."]
+  },
+  {
     slug: "unit-circle-explainer",
     title: "Unit Circle Explainer",
     category: "Algebra",
@@ -2698,6 +2712,7 @@ const algebraToolGroups = {
   "series-expansions": "Sequences and Series",
   "sine-cosine-rule": "Trigonometry",
   "unit-circle-explainer": "Trigonometry",
+  "radians-explainer": "Trigonometry",
   "trig-equation-solver": "Trigonometry",
   "trig-graphs-transformations": "Trigonometry",
   "trigonometric-functions": "Trigonometry",
@@ -24567,7 +24582,8 @@ const curatedRelatedToolSlugs = {
   "partial-fractions": ["integration-algebraic-fractions", "algebraic-fractions", "advanced-factorisation", "advanced-integration"],
   "complex-numbers": ["polar-coordinates", "roots-of-equations", "trigonometric-functions", "advanced-matrices"],
   "polar-coordinates": ["conic-sections-explorer", "complex-numbers", "trigonometric-functions", "graph-transformations-curve-sketching"],
-  "unit-circle-explainer": ["trig-equation-solver", "trig-graphs-transformations", "trigonometric-functions", "trigonometric-ratios"],
+  "radians-explainer": ["unit-circle-explainer", "trigonometric-functions", "circles-area-circumference"],
+  "unit-circle-explainer": ["radians-explainer", "trig-equation-solver", "trig-graphs-transformations", "trigonometric-functions", "trigonometric-ratios"],
   "trig-equation-solver": ["unit-circle-explainer", "trig-graphs-transformations", "trigonometric-functions"],
   "trigonometric-functions": ["unit-circle-explainer", "trig-equation-solver", "trig-graphs-transformations"],
   "trig-graphs-transformations": ["unit-circle-explainer", "trig-equation-solver", "trigonometric-functions", "graph-transformations-curve-sketching", "sine-cosine-rule"],
@@ -24898,6 +24914,11 @@ function toolInfoText(tool) {
 }
 
 function toolInsightProfile(tool) {
+  if (tool.slug === "radians-explainer") return {
+    misconceptions: ["Thinking three radius-length arcs exactly fill a semicircle, rather than pi radius lengths.", "Treating pi as an angle unit rather than a number of radians.", "Thinking a larger circle gives a larger radian measure for the same angle, instead of using arc length divided by radius."],
+    questions: ["What angle is made when the arc length equals one radius?", "Why is the semicircle arc pi times its radius?", "If we double both radius and arc length, what happens to their ratio?"]
+  };
+
   if (tool.slug === "multiplication-methods") return {
     misconceptions: ["Treating the tens digit as units, or omitting the zero place in a tens partial product.", "Adding lattice cells rather than collecting the same place-value diagonals.", "Rounding an odd factor down in doubling and halving, where its exact half must be retained."],
     questions: ["Where is the same partial product in each representation?", "Why is a regrouped ten written in the next column?", "Why does Russian multiplication keep the values opposite odd left-hand entries?"]
@@ -26631,8 +26652,9 @@ function renderPrivacyNotice() {
           <div id="usagePrivacyChoice"></div>
         </article>
         <article class="panel">
-          <h2>Services Used</h2>
-          <p>Kaizen Maths may use Google sign-in, Supabase, Stripe, Vercel, and YouTube embeds to operate the service.</p>
+          <h2>Optional Newsletter</h2><p>Newsletter signup is optional and separate from your account, school access, payment and usage-reporting choices. Brevo hosts the opt-in form and manages subscription records, newsletter delivery and unsubscribe requests. Signing in does not subscribe you. Every newsletter includes an unsubscribe link. Brevo may process email delivery and campaign-response information according to the sending settings; review the information on the signup form.</p><p><a href="#/newsletter">Newsletter signup</a>. Unsubscribe using an email link, or contact us to request access, correction or deletion of newsletter information.</p>
+        </article><article class="panel"><h2>Services Used</h2>
+          <p>Kaizen Maths may use Google sign-in, Supabase, Stripe, Vercel, YouTube embeds and Brevo to operate the service.</p>
         </article>
         <article class="panel">
           <h2>Questions</h2>
@@ -27733,7 +27755,7 @@ function renderUpgrade() {
       `<a class="button primary" href="#/book-demo">Book a Demo</a><a class="button" href="#/tools">Browse Tools</a>`
     )}
     <section class="upgrade-page">
-      <p><a href="/pricing">Public pricing, trial limits and access comparison</a></p>
+      <p><a href="/pricing">Public pricing, trial limits and access comparison</a> · <a href="#/newsletter">Optional newsletter</a></p>
       <article class="panel trial-notice">
         <span class="eyebrow">Teacher Trial</span>
         <h2>Try the full workspace for 30 days</h2>
@@ -28383,6 +28405,7 @@ function renderAdmin() {
     <section class="admin-tabs" aria-label="Admin sections">
       <button class="admin-tab active" type="button" data-admin-tab="users">Users</button>
       <button class="admin-tab" type="button" data-admin-tab="usage">Usage</button>
+      <button class="admin-tab" type="button" data-admin-tab="newsletter">Newsletter</button>
       <button class="admin-tab" type="button" data-admin-tab="launch">Launch Checklist</button>
       <button class="admin-tab" type="button" data-admin-tab="homepage">Homepage</button>
       <button class="admin-tab" type="button" data-admin-tab="programme">Programme</button>
@@ -28414,6 +28437,7 @@ function renderAdmin() {
       </div>
     </section>
     <section class="panel admin-panel admin-tab-panel" data-admin-panel="usage"><div id="adminUsage"></div></section>
+    <section class="panel admin-panel admin-tab-panel" data-admin-panel="newsletter"><div id="adminNewsletter"></div></section>
     <section class="panel admin-panel admin-tab-panel" data-admin-panel="launch">
       ${launchReadinessChecklistHtml()}
     </section>
@@ -28748,6 +28772,7 @@ function bindAdmin() {
     state.adminTab = target;
     document.querySelectorAll(".admin-tab").forEach((item) => item.classList.toggle("active", item.dataset.adminTab === target));
     document.querySelectorAll(".admin-tab-panel").forEach((panel) => panel.classList.toggle("active", panel.dataset.adminPanel === target));
+    if (target === "newsletter") window.KaizenNewsletter?.mountAdmin(document.getElementById("adminNewsletter"), { tools, getClient: () => window.KaizenAuth.getClient() });
     if (target === "usage") window.KaizenAdminUsage?.mount(document.getElementById("adminUsage"), { tools, schools: state.schools, getClient: () => window.KaizenAuth.getClient() });
   }
   document.querySelectorAll(".admin-tab").forEach((tab) => {
@@ -30917,6 +30942,7 @@ function updateRouteSeo(parts) {
       title: routeTitle("AP Calculus topic worksheets"),
       description: "Browse AP Calculus AB and BC by syllabus topic. Download eight-question, one-page worksheets and separate answers, worked solutions and suggested marks."
     },
+    "newsletter": { title: routeTitle("Kaizen Maths newsletter"), description: "Optional teaching ideas, featured tools and resource updates for adult teachers." },
     "practice-packs": {
       title: routeTitle("Starter & Exit Ticket Packs"),
       description: "Download Kaizen Maths starter and exit ticket packs for number, algebra, geometry, statistics and mechanics, with student slips, answers and worked solutions."
@@ -31184,6 +31210,8 @@ function renderRoute() {
     renderTextbookAssessment();
   } else if (parts[0] === "collections" && parts[1]) {
     renderToolLibrary(parts[1]);
+  } else if (parts[0] === "newsletter") {
+    window.KaizenNewsletter.mountSignup(app);
   } else if (parts[0] === "book-demo") {
     renderBookDemo();
   } else if (parts[0] === "schools") {
