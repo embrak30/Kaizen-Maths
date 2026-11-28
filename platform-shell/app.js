@@ -5391,7 +5391,7 @@ function setActiveNav() {
   const activeTool = toolRouteSlug ? tools.find((tool) => tool.slug === toolRouteSlug) : null;
   const activeCollectionHref = activeTool ? `#/collections/${categorySlug(activeTool.category)}` : "";
   const activeParentHref = ["further-maths", "precalculus", "ap-calculus", "alevel-maths", "gcse-maths", "ib-maths", "csec-maths"].includes(parts[0]) ? "#/tools" : parts[0] === "textbook-assessments" ? "#/textbook-alignments" : "";
-  const resourceParent = ["further-maths", "precalculus", "ap-calculus", "alevel-maths", "gcse-maths", "ib-maths", "csec-maths", "primary-topic-packs", "practice-packs", "ready-made-resources"].includes(parts[0]) ? "#/ready-made-resources"
+  const resourceParent = parts[0] === "collections" && parts[1] === "visual-proofs" ? "#/collections/visual-proofs" : ["further-maths", "precalculus", "ap-calculus", "alevel-maths", "gcse-maths", "ib-maths", "csec-maths", "primary-topic-packs", "practice-packs", "ready-made-resources"].includes(parts[0]) ? "#/ready-made-resources"
     : ["worksheet-generator", "gcse-exam-style"].includes(parts[0]) ? "#/worksheet-generator"
     : ["teaching-tools", "collections", "classroom", "classroom-remote"].includes(parts[0]) || (parts[0] === "tools" && parts[1]) ? "#/teaching-tools" : "";
   document.querySelectorAll(".nav-list a, .sidebar-utility a").forEach((link) => {
@@ -18061,17 +18061,26 @@ function bindToolIndexAccordion() {
 }
 
 const visualProofGroups = {
-  "Visual proofs": ["pythagoras-proof", "area-rearrangement", "radians-explainer", "squeeze-theorem"],
-  "Visual manipulatives": ["unit-circle-explainer", "bar-models", "multiplication-methods", "build-add-take-away", "cross-section-solids", "revolution-explorer"]
+  "Visual proofs and demonstrations": ["pythagoras-proof", "area-rearrangement", "radians-explainer", "squeeze-theorem"],
+  "Primary and elementary manipulatives": ["elementary-manipulatives", "build-add-take-away", "bar-models", "area-models", "maths-structure-lab", "multiplication-methods", "number-sense-flexible-calculation", "equation-balance-models", "elementary-maths-playground"],
+  "Secondary and advanced visual tools": ["dynamic-classroom-displays", "conic-sections-explorer", "unit-circle-explainer", "cross-section-solids", "revolution-explorer"],
+  "Supporting visual explanations": ["concept-explainer", "anchor-charts"]
 };
+function isVisualTeachingTool(tool) {
+  return Object.values(visualProofGroups).some(slugs => slugs.includes(tool.slug));
+}
+function visualDirectoryLink(tool) {
+  return isVisualTeachingTool(tool) ? '<a class="button" href="#/collections/visual-proofs">Visual Manipulatives and Proofs</a>' : "";
+}
 function renderVisualProofs() {
-  setPageSeo(titleWithSite("Visual Manipulatives & Proofs"), "Animated mathematical proofs and manipulatives for classroom teaching, with step-by-step controls.");
+  setPageSeo(titleWithSite("Visual Manipulatives and Proofs"), "Teacher-led visual proofs, manipulatives and mathematical methods, together in one directory.");
   const visible = filteredTools("");
-  app.innerHTML = pageHeader("Visual Manipulatives & Proofs", "Build an idea step by step. Move the pieces, pause the animation and make the mathematics visible.", `<a class="button" href="#/teaching-tools">All teaching tools</a>`) +
-    `<section class="tool-index-groups" aria-label="Visual manipulatives and proofs">${Object.entries(visualProofGroups).map(([label,slugs]) => {
+  app.innerHTML = pageHeader("Visual Manipulatives and Proofs", "Change the representation. Show why the mathematics works. Choose a tool below.") +
+    `<nav class="visual-directory" aria-label="Visual manipulatives and proofs">${[[0,2],[1,3]].map(indices => `<div class="visual-directory-column">${indices.map(index => {
+      const [label,slugs] = Object.entries(visualProofGroups)[index];
       const group = slugs.map(slug => visible.find(tool => tool.slug === slug)).filter(Boolean);
-      return `<section class="panel" style="margin-bottom:12px"><h2>${label}</h2><div class="tool-index-list">${group.length ? group.map(toolIndexRow).join("") : "<p>No tools match the current search.</p>"}</div></section>`;
-    }).join("")}</section>`;
+      return `<section><h2>${label}</h2><ul>${group.length ? group.map(tool => `<li><a href="#/tools/${escapeHtml(tool.slug)}">${escapeHtml(tool.title)}</a></li>`).join("") : '<li class="directory-empty">No tools match the current search.</li>'}</ul></section>`;
+    }).join("")}</div>`).join("")}</nav>`;
 }
 
 function renderToolLibrary(extraCategory = "") {
@@ -18091,7 +18100,7 @@ function renderToolLibrary(extraCategory = "") {
     ${pageHeader(
       extraCategory ? collectionTitle : "Teaching Tools",
       extraCategory ? collectionDescriptions[extraCategory] || "A focused set of maths topics for classroom practice, homework, assessment, and projection." : "Question generators, interactive diagrams and conceptual explainers. Choose a topic to find a tool.",
-      `<a class="button" href="#/collections/visual-proofs">Visual Manipulatives &amp; Proofs</a>`
+      `<a class="button" href="#/collections/visual-proofs">Visual Manipulatives and Proofs</a>`
     )}
     ${visible.length
       ? renderGroupedToolIndex(visible, collectionTitle, { groupByCategory: !extraCategory })
@@ -26400,6 +26409,7 @@ function renderToolInformationPage(tool) {
         </div>
         <div class="tool-info-actions">
           <a class="button" href="#/tools">Back to Library</a>
+          ${visualDirectoryLink(tool)}
           <a class="button primary tool-info-launch ${tool.imported ? "" : "disabled"}" href="${classroomHref}">Go to Classroom View</a>
         </div>
       </header>
@@ -31375,7 +31385,7 @@ function resourceChoiceCards(cards) {
 function renderExploreOverview() {
   app.innerHTML = pageHeader("Explore maths resources", "Choose a tool for your lesson, build a worksheet, or download a ready-made resource.") +
     `<section class="resource-overview" aria-label="Explore teaching resources">${resourceChoiceCards([
-      ['◈','Teaching Tools','Question generators, interactive diagrams and conceptual explainers for your lessons.','#/teaching-tools','teal','<a class="resource-choice-action" href="#/teaching-tools">Browse teaching tools →</a><a class="resource-choice-secondary" href="#/collections/visual-proofs">Visual Manipulatives &amp; Proofs</a>'],
+      ['◈','Teaching Tools','Question generators, interactive diagrams and conceptual explainers for your lessons.','#/teaching-tools','teal','<a class="resource-choice-action" href="#/teaching-tools">Browse teaching tools →</a><a class="resource-choice-secondary" href="#/collections/visual-proofs">Visual Manipulatives and Proofs</a>'],
       ['▦','Build a Worksheet','Choose topics and create your own questions, worksheets and tests, with answers and worked solutions.','#/worksheet-generator','amber','<a class="resource-choice-action" href="#/worksheet-generator">Open Worksheet Builder →</a><a class="resource-choice-secondary" href="#/gcse-exam-style">Exam & assessment builder</a>'],
       ['▤','Ready-Made Resources','Download starters, exit tickets and topic worksheets, with separate answers and worked solutions.','#/ready-made-resources','violet','<a class="resource-choice-action" href="#/ready-made-resources">Browse ready-made resources →</a>']
     ])}<p class="resource-overview-help"><a href="#/how-to-use-this-site">New here? Take a quick tour ↗</a><span>Courses and professional development are in <a href="#/teacher-reference">Teacher reference & workspace guide</a>.</span></p></section>`;
@@ -31421,7 +31431,7 @@ function renderTeacherReference() {
   setPageSeo(titleWithSite("Teacher reference & workspace guide"),"Curriculum maps, training, pupil tasks and school access, together in one place.");
   const groups=[
     ['Plan your teaching',[['Primary practice packs','#/primary-topic-packs'],['U.S. Precalculus','#/precalculus'],['CSEC Mathematics worksheets','#/csec-maths'],['IB Mathematics worksheets','#/ib-maths'],['GCSE worksheets','#/gcse-maths'],['AP Calculus worksheets','#/ap-calculus'],['Edexcel A level worksheets','#/alevel-maths'],['Further Mathematics Core Pure','#/further-maths'],['Curriculum alignment','#/curriculum-alignments'],['Coverage map','#/coverage-map'],['Textbook alignment','#/textbook-alignments'],['Research-informed design','#/research-informed'],['School licence notes','#/schools']]],
-    ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Make a worksheet: screenshot guide','/guides/make-a-worksheet'],['Classroom tools','#/collections/classroom-tools'],['Visual Manipulatives & Proofs','#/collections/visual-proofs'],['Kaizen University','#/kaizen-university']]],
+    ['Use the workspace',[['How to use Kaizen Maths','#/how-to-use-this-site'],['Make a worksheet: screenshot guide','/guides/make-a-worksheet'],['Classroom tools','#/collections/classroom-tools'],['Visual Manipulatives and Proofs','#/collections/visual-proofs'],['Kaizen University','#/kaizen-university']]],
     ['Work with learners',[['Pupil tasks','#/class-tasks'],['Tutor Workspace','#/tutor-workspace'],['School space','#/school-space'],['Book a demo','#/book-demo'],['Contact / enquire','#/contact'],['Partners','#/partners']]]
   ];
   app.innerHTML=pageHeader('Teacher reference & workspace guide','Curriculum maps, training, pupil tasks and school access, together in one place.')+
