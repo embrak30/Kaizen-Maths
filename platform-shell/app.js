@@ -2631,7 +2631,7 @@ const tools = [
     status: "Imported",
     description: "A one-minute target-number challenge where students combine five numbers using operations to hit or get close to a target.",
     tags: ["classroom", "game", "number sense", "operations", "mental maths", "target number"],
-    toolPath: "tools/math-in-a-minute/index.html?v=math-in-a-minute-1",
+    toolPath: "tools/math-in-a-minute/index.html?v=mobile-controls-2",
     imported: true,
     teacherNotes: [
       "Useful as a starter, plenary, or fast whole-class number fluency challenge.",
@@ -29547,6 +29547,12 @@ function bindToolFrame(tool, options = {}) {
 
       const availableHeight = Math.max(1, frame.clientHeight - 2);
       const availableWidth = Math.max(1, frame.clientWidth);
+      // Preserve finger-sized game controls on phones; allow native vertical scrolling.
+      if (tool.slug === "math-in-a-minute" && availableWidth <= 720) {
+        doc.body.style.overflow = "auto";
+        doc.documentElement.style.overflow = "auto";
+        return;
+      }
       const expandedPanels = Array.from(doc.querySelectorAll(".steps-section.visible, .answer-section.visible"));
       const previousDisplays = expandedPanels.map((panel) => panel.style.display);
       expandedPanels.forEach((panel) => {

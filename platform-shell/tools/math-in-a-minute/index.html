@@ -496,6 +496,27 @@
     }
   </style>
   <link rel="stylesheet" href="../_shared/classroom-standard.css?v=classroom-standard-3">
+  <style>
+    /* Keep touch controls readable instead of squeezing the game onto a phone. */
+    @media (max-width: 720px) {
+      body { padding: 8px; }
+      body button, body .kaizen-standard-controlbar button, body select {
+        min-height: 48px !important;
+        min-width: 48px !important;
+        font-size: 16px !important;
+        line-height: 1.25 !important;
+        padding: 12px 14px !important;
+        touch-action: manipulation;
+      }
+      .actionBar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .actionBar button.smallBtn { width: 100%; min-height: 52px !important; }
+      .actionBar #endBtn { grid-column: 1 / -1; }
+      .stepsRow { gap: 12px; }
+      .stepsRow > button { flex: 1 1 125px; }
+      body .opBtn { min-width: 60px !important; min-height: 60px !important; font-size: 26px !important; }
+      button:focus-visible, select:focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+    }
+  </style>
   <script src="../../auth-config.js?v=tool-access-guard-3"></script>
   <script src="../_shared/tool-access-guard.js?v=tool-access-guard-3"></script>
 
